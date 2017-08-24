@@ -334,13 +334,17 @@ static grib_trie* init_list(const char* name)
     return 0;
 }
 
+/* For debugging purposes */
 static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
-        const double* data_values, const size_t data_values_count, const grib_values *values, const int count)
+        const double* data_values, const size_t data_values_count,  /* the data pay load */
+        const grib_values *values, const size_t count)  /* keys and their values */
 {
-    int i;
-    printf("ECCODES DEBUG grib_util grib_set_values: setting %d values \n",count);
+    size_t i=0;
+    int isConstant = 1;
+    double v = 0;
+    printf("ECCODES DEBUG grib_util grib_set_values: setting %lu key/value pairs\n",count);
 
-    for(i = 0; i < count ; i++)
+    for(i=0; i<count; i++)
     {
         switch(values[i].type)
         {
@@ -353,23 +357,37 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
         }
     }
 
-    if(spec->bitmapPresent) {
-        int missing = 0;
-        size_t j = 0;
-        double min = 1e100;
-        for(j = 0; j < data_values_count ; j++)
-        {
-            double d = data_values[j] - spec->missingValue;
-            if(d < 0) d = -d;
-
-            if(d < min) {
-                min = d;
+    printf("ECCODES DEBUG grib_util: data_values_count=%lu;\n", data_values_count);
+    for (i=0; i<data_values_count; i++) {
+        if (i==0) v = data_values[i];
+        if (data_values[i] != spec->missingValue) {
+            if (v == spec->missingValue) {
+                v = data_values[i];
+            } else if (v != data_values[i]) {
+                isConstant=0;
+                break;
             }
-
-            if(data_values[j] == spec->missingValue)
-                missing++;
         }
     }
+    if (isConstant) printf("ECCODES DEBUG grib_util: data_values are CONSTANT;\n");
+
+#if 0
+        if (spec->bitmapPresent) {
+            int missing = 0;
+            size_t j = 0;
+            double min = 1e100;
+            for(j = 0; j < data_values_count ; j++)
+            {
+                double d = data_values[j] - spec->missingValue;
+                if(d < 0) d = -d;
+                if(d < min) {
+                    min = d;
+                }
+                if(data_values[j] == spec->missingValue)
+                    missing++;
+            }
+        }
+#endif
 }
 
 static int DBL_EQUAL(double d1, double d2, double tolerance)
