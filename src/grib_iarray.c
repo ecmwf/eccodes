@@ -15,11 +15,13 @@
  ***************************************************************************/
 
 #include "grib_api_internal.h"
+
+/* For debugging purposes */
 void grib_iarray_print(const char* title, const grib_iarray* iarray)
 {
     Assert(iarray);
     size_t i;
-    printf("%s: iarray.n = %ld\t", title, iarray->n);
+    printf("%s: iarray.n=%ld  \t", title, iarray->n);
     for (i=0; i<iarray->n; i++) {
         printf("iarray[%ld]=%ld\t", i, iarray->v[i]);
     }
