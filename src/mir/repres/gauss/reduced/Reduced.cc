@@ -22,7 +22,6 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
 #include "eckit/memory/ScopedPtr.h"
-#include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"

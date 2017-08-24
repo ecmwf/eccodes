@@ -18,9 +18,7 @@
 #include <algorithm>
 #include <iostream>
 #include "eckit/exception/Exceptions.h"
-#include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
-#include "mir/action/misc/AreaCropper.h"
 #include "mir/api/Atlas.h"
 #include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
