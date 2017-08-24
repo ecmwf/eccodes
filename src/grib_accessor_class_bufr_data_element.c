@@ -541,9 +541,11 @@ static int value_count(grib_accessor* a,long* count)
     type=get_native_type(a);
 
     if (type==GRIB_TYPE_STRING) {
+        DebugAssert(self->index < self->numericValues->n);
         idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
         size=grib_sarray_used_size(self->stringValues->v[idx]);
     } else {
+        DebugAssert(self->index < self->numericValues->n);
         size=grib_darray_used_size(self->numericValues->v[self->index]);
     }
 
