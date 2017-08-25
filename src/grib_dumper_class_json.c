@@ -505,7 +505,7 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a)
     grib_dumper_json *self = (grib_dumper_json*)d;
     FILE* out=self->dumper.out;
     unsigned long flags;
-    while (a->attributes[i] && i < MAX_ACCESSOR_ATTRIBUTES) {
+    while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
         self->isAttribute=1;
         if (  (d->option_flags & GRIB_DUMP_FLAG_ALL_ATTRIBUTES ) == 0
                 && (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)== 0 )
