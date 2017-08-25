@@ -9,9 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#define fortint long
-#define fortfloat double
-#define C2FORT(x) (x)
+
 /*
    This is used by make_class.pl
 

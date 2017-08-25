@@ -465,7 +465,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     grib_context* c=NULL;
     int err = 0;
     long count=0;
-    int r;
+    int r=0;
     grib_handle* h=grib_handle_of_accessor(a);
 
     c=a->context;

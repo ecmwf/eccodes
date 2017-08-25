@@ -772,15 +772,17 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
     long rlen = 0;
-    int err=0;
+
     unsigned long i = 0;
     long pos = a->offset*8;
     grib_handle* hand = NULL;
 
 #ifdef DEBUG
-    err=grib_value_count(a,&rlen);
-    Assert(!err);
-    Assert(rlen == 1);
+    {
+        int err = grib_value_count(a,&rlen);
+        Assert(!err);
+        Assert(rlen == 1);
+    }
 #endif
     rlen = 1; /* ECC-480 Performance: avoid func call overhead of grib_value_count */
 

@@ -21,9 +21,9 @@ void grib_darray_print(const char* title, const grib_darray* darray)
 {
     Assert(darray);
     size_t i;
-    printf("%s: darray.n=%ld  \t", title, darray->n);
+    printf("%s: darray.n=%lu  \t", title, (unsigned long)darray->n);
     for (i=0; i<darray->n; i++) {
-        printf("darray[%ld]=%g\t", i, darray->v[i]);
+        printf("darray[%lu]=%g\t", (unsigned long)i, darray->v[i]);
     }
     printf("\n");
 }

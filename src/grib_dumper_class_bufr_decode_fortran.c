@@ -147,7 +147,7 @@ static int destroy(grib_dumper* d)
 static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_bufr_decode_fortran *self = (grib_dumper_bufr_decode_fortran*)d;
-    double value; size_t size = 0;
+    double value=0; size_t size = 0;
     int err = 0;
     int r=0;
     long count=0;
@@ -247,7 +247,7 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
 static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_decode_fortran *self = (grib_dumper_bufr_decode_fortran*)d;
-    long value; size_t size = 0;
+    long value=0; size_t size = 0;
     int err = 0;
     int r=0;
     long count=0;
@@ -324,7 +324,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
 static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* prefix)
 {
     grib_dumper_bufr_decode_fortran *self = (grib_dumper_bufr_decode_fortran*)d;
-    long value; size_t size = 0;
+    long value=0; size_t size = 0;
     int err = 0;
     long count=0;
     grib_context* c=a->context;
@@ -416,7 +416,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     grib_context* c=NULL;
     int err = 0;
     long count=0;
-    int r;
+    int r=0;
     grib_handle* h=grib_handle_of_accessor(a);
 
     c=a->context;

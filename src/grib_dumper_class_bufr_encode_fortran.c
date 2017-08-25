@@ -160,7 +160,7 @@ static char* dval_to_string(grib_context* c, double v)
 static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_bufr_encode_fortran *self = (grib_dumper_bufr_encode_fortran*)d;
-    double value; size_t size = 0;
+    double value=0; size_t size = 0;
     double *values=NULL;
     int err = 0;
     int i,r,icount;
@@ -249,7 +249,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* prefix)
 {
     grib_dumper_bufr_encode_fortran *self = (grib_dumper_bufr_encode_fortran*)d;
-    double value; size_t size = 0;
+    double value=0; size_t size = 0;
     double *values=NULL;
     int err = 0;
     int i,icount;
@@ -327,7 +327,7 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
 static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_encode_fortran *self = (grib_dumper_bufr_encode_fortran*)d;
-    long value; size_t size = 0;
+    long value=0; size_t size = 0;
     long *values=NULL;
     int err = 0;
     int i,r,icount;
@@ -432,7 +432,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
 static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* prefix)
 {
     grib_dumper_bufr_encode_fortran *self = (grib_dumper_bufr_encode_fortran*)d;
-    long value; size_t size = 0;
+    long value=0; size_t size = 0;
     long *values=NULL;
     int err = 0;
     int i,icount;
@@ -504,7 +504,7 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_encode_fortran *self = (grib_dumper_bufr_encode_fortran*)d;
-    double value; size_t size = 1;
+    double value=0; size_t size = 1;
     int r;
     char* sval;
     grib_handle* h=grib_handle_of_accessor(a);
@@ -551,7 +551,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     grib_context* c=NULL;
     int err = 0;
     long count=0;
-    int r;
+    int r = 0;
     grib_handle* h=grib_handle_of_accessor(a);
 
     c=a->context;

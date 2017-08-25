@@ -145,7 +145,7 @@ static int destroy(grib_dumper* d)
 static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_bufr_encode_filter *self = (grib_dumper_bufr_encode_filter*)d;
-    double value; size_t size = 0;
+    double value=0; size_t size = 0;
     double *values=NULL;
     int err = 0;
     int i,r;
@@ -225,7 +225,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* prefix)
 {
     grib_dumper_bufr_encode_filter *self = (grib_dumper_bufr_encode_filter*)d;
-    double value; size_t size = 0;
+    double value=0; size_t size = 0;
     double *values=NULL;
     int err = 0;
     int i,icount;
@@ -287,7 +287,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* p
 static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_encode_filter *self = (grib_dumper_bufr_encode_filter*)d;
-    long value; size_t size = 0;
+    long value=0; size_t size = 0;
     long *values=NULL;
     int err = 0;
     int i,r,icount;
@@ -383,7 +383,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* prefix)
 {
     grib_dumper_bufr_encode_filter *self = (grib_dumper_bufr_encode_filter*)d;
-    long value; size_t size = 0;
+    long value=0; size_t size = 0;
     long *values=NULL;
     int err = 0;
     int i,icount;
@@ -449,7 +449,7 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_encode_filter *self = (grib_dumper_bufr_encode_filter*)d;
-    double value; size_t size = 1;
+    double value=0; size_t size = 1;
     int r;
     grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=h->context;

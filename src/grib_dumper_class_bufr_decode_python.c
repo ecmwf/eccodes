@@ -215,7 +215,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* prefix)
 {
     grib_dumper_bufr_decode_python *self = (grib_dumper_bufr_decode_python*)d;
-    double value; size_t size = 0;
+    double value=0; size_t size = 0;
     int err = 0;
     long count=0;
     char* sval;

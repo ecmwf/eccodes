@@ -342,7 +342,7 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
     size_t i=0;
     int isConstant = 1;
     double v = 0;
-    printf("ECCODES DEBUG grib_util grib_set_values: setting %lu key/value pairs\n",count);
+    printf("ECCODES DEBUG grib_util grib_set_values: setting %lu key/value pairs\n",(unsigned long)count);
 
     for(i=0; i<count; i++)
     {
@@ -357,7 +357,7 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
         }
     }
 
-    printf("ECCODES DEBUG grib_util: data_values_count=%lu;\n", data_values_count);
+    printf("ECCODES DEBUG grib_util: data_values_count=%lu;\n", (unsigned long)data_values_count);
     for (i=0; i<data_values_count; i++) {
         if (i==0) v = data_values[i];
         if (data_values[i] != spec->missingValue) {
@@ -1217,15 +1217,15 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     if((*err = grib_set_double_array(outh,"values",data_values,data_values_count)) != 0)
     {
         FILE* ferror;
-        long i,lcount;
+        size_t ii,lcount;
         grib_context* c=grib_context_get_default();
 
         ferror=fopen("error.data","w");
         lcount=0;
         fprintf(ferror,"# data_values_count=%ld\n",(long)data_values_count);
         fprintf(ferror,"set values={ ");
-        for (i=0;i<data_values_count-1;i++) {
-            fprintf(ferror,"%g, ",data_values[i]);
+        for (ii=0;ii<data_values_count-1;ii++) {
+            fprintf(ferror,"%g, ",data_values[ii]);
             if (lcount>10) {fprintf(ferror,"\n");lcount=0;}
             lcount++;
         }
