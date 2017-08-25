@@ -85,5 +85,7 @@ iterator polar_stereographic(numberOfPoints,missingValue,values,
           jPointsAreConsecutive,
           alternativeRowScanning);
 
+nearest polar_stereographic(values,radius,Nx,Ny);
+
 
 # END   2/template.3.20 ----------------------------------------------------------------------

@@ -1388,7 +1388,6 @@ grib_nearest *grib_nearest_factory(grib_handle *h, grib_arguments *args);
 /* grib_nearest_class_sh.c */
 
 /* grib_nearest_class_lambert_conformal.c */
-int compare_points(const void *a, const void *b);
 
 /* grib_iterator_class_polar_stereographic.c */
 
