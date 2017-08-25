@@ -10,7 +10,7 @@
 #include "eccodes.h"
 #include <ctype.h>
 
-void usage(char* prog) {
+static void usage(const char* prog) {
     printf("usage: %s in1.grib in2.grib what out.grib\n",prog);
     printf("in1.grib   The grib in whose sections we are interested, i.e. the source of the sections (read-only)\n");
     printf("in2.grib   The input grib (read-only)\n");
