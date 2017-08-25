@@ -9,7 +9,7 @@
  */
 #include "grib_api_internal.h"
 
-void usage(char* prog) {
+static void usage(const char* prog) {
   printf("usage: %s infile\n",prog);
   exit(1);
 }
@@ -67,7 +67,7 @@ int main(int argc,char* argv[]) {
 		  	count, edition, (long)size, totalLength, shortName, gridType, levelType, level, step);
 		  grib_handle_delete(h);
 		}
-	} else { 
+	} else {
 		printf("MESSAGE #%ld\n",count);
 	}
     size=bufsize;
