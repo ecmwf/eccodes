@@ -33,7 +33,7 @@ cat > $tempRules <<EOF
  print "[radarBackScatter]";
 EOF
 
-${tools_dir}/bufr_filter $tempRules $input > $tempOut
+${tools_dir}/codes_bufr_filter $tempRules $input > $tempOut
 
 cat > $tempRef << EOF
 59 59 57 51 47 48 45 45 

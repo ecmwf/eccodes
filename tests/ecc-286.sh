@@ -29,7 +29,7 @@ cat > $tempRules <<EOF
  print "[3HourPressureChange]";
 EOF
 
-${tools_dir}/bufr_filter $tempRules $BufrFile > $tempOut
+${tools_dir}/codes_bufr_filter $tempRules $BufrFile > $tempOut
 
 cat > $tempRef <<EOF
 20
