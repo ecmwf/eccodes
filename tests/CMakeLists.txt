@@ -25,6 +25,7 @@ list( APPEND test_bins
       optimize_scaling
       optimize_scaling_sh
       ecc-386
+      ecc-517
       bufr_get_element
       sh_ieee64
       ieee
@@ -50,6 +51,7 @@ list( APPEND tests_no_data_reqd
     uerra
     grib_2nd_order_numValues
     julian
+    ecc-517
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
