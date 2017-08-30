@@ -501,6 +501,26 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 15 ;
 	}
+#Mean discharge in the last 6 hours
+'m**3 s**-1' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 7 ;
+	 lengthOfTimeRange = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean discharge in the last 24 hours
+'m**3 s**-1' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 7 ;
+	 lengthOfTimeRange = 24 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Snow depth at elevation bands
 'kg m**-2' = {
 	 discipline = 2 ;
