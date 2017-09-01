@@ -10,9 +10,6 @@
 
 /*
  * test: reading multi fields messages from memory
- *
- *
- *
  */
 
 #include "grib_api.h"
@@ -20,7 +17,10 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-void usage(char* prog) {printf("usage: %s [-m] file.grib\n",prog);exit(1);}
+static void usage(const char* prog) {
+    printf("usage: %s [-m] file.grib\n",prog);
+    exit(1);
+}
 
 int main(int argc,char* argv[]) {
     struct stat finfo;

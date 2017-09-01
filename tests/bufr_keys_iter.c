@@ -11,7 +11,7 @@
 #include "eccodes.h"
 #include <assert.h>
 
-void usage(const char* prog)
+static void usage(const char* prog)
 {
     printf("usage: %s [-a|-d] infile\n",prog);
     exit(1);

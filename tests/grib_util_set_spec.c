@@ -14,7 +14,7 @@
 
 #define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 
-int get_packing_type_code(const char* packingType)
+static int get_packing_type_code(const char* packingType)
 {
     int result = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
     if (packingType==NULL)
@@ -30,7 +30,7 @@ int get_packing_type_code(const char* packingType)
     return result;
 }
 
-void test_reduced_gg(int remove_local_def, int edition, const char* packingType,
+static void test_reduced_gg(int remove_local_def, int edition, const char* packingType,
                      const char* input_filename, const char* output_filename)
 {
     /* based on copy_spec_from_ksec */
@@ -106,7 +106,7 @@ void test_reduced_gg(int remove_local_def, int edition, const char* packingType,
     fclose(out);
 }
 
-void test_regular_ll(int remove_local_def, int edition, const char* packingType,
+static void test_regular_ll(int remove_local_def, int edition, const char* packingType,
                      const char* input_filename, const char* output_filename)
 {
     /* based on copy_spec_from_ksec */
@@ -186,7 +186,8 @@ void test_regular_ll(int remove_local_def, int edition, const char* packingType,
     fclose(out);
 }
 
-void test_grid_complex_spatial_differencing(int remove_local_def, int edition, const char* packingType,
+#if 0
+static void test_grid_complex_spatial_differencing(int remove_local_def, int edition, const char* packingType,
                      const char* input_filename, const char* output_filename)
 {
     /* based on copy_spec_from_ksec */
@@ -224,7 +225,7 @@ void test_grid_complex_spatial_differencing(int remove_local_def, int edition, c
     CODES_CHECK(codes_get_double(handle, "max",    &theMax),0);
     CODES_CHECK(codes_get_double(handle, "min",    &theMin),0);
     CODES_CHECK(codes_get_double(handle, "average",&theAverage),0);
-    printf("inlen=%ld \t max=%g \t min=%g \t avg=%g\n", inlen, theMax, theMin, theAverage);
+    printf("inlen=%lu \t max=%g \t min=%g \t avg=%g\n", inlen, theMax, theMin, theAverage);
 
     spec.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_LL;
     spec.Nj = 721;
@@ -272,8 +273,9 @@ void test_grid_complex_spatial_differencing(int remove_local_def, int edition, c
     fclose(in);
     fclose(out);
 }
+#endif
 
-void usage(const char *prog)
+static void usage(const char *prog)
 {
     fprintf(stderr, "%s: [-p packingType] [-r] [-e edition] in.grib out.grib\n", prog);
     fprintf(stderr, "-p  packingType: one of grid_jpeg, grid_second_order or grid_simple\n");
