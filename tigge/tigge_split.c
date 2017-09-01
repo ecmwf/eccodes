@@ -211,7 +211,7 @@ static void usage()
     exit(1);
 }
 
-int main(int argc,const char** argv)
+int main(int argc, char** argv)
 {
     int i = 1;
 
