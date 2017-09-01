@@ -29,7 +29,6 @@ list( APPEND test_bins
       bufr_get_element
       sh_ieee64
       ieee
-      grib_encode_pthreads
 )
 
 foreach( tool ${test_bins} )
@@ -53,7 +52,6 @@ list( APPEND tests_no_data_reqd
     grib_2nd_order_numValues
     julian
     ecc-517
-    grib_encode_pthreads
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
@@ -203,6 +201,18 @@ ecbuild_add_test( TARGET eccodes_t_lamb_az_eq_area
 
 # These ones are conditional
 ###########################################
+if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
+    ecbuild_add_executable( TARGET    grib_encode_pthreads
+                            NOINSTALL
+                            SOURCES   grib_encode_pthreads.c
+                            LIBS      eccodes
+    )
+    ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads
+                      TYPE SCRIPT
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh
+    )
+endif()
+
 ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
                   TYPE SCRIPT
                   CONDITION HAVE_NETCDF
