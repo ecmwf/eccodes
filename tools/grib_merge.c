@@ -78,7 +78,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
     return 0;
 }
 
-int idx(double lat,double lon,double latFirst,double lonFirst,double latLast,double lonLast,
+static int idx(double lat,double lon,double latFirst,double lonFirst,double latLast,double lonLast,
         long Ni,double di,double dj)
 {
     long ilon,ilat;
@@ -96,7 +96,7 @@ int idx(double lat,double lon,double latFirst,double lonFirst,double latLast,dou
     return ilon+ilat*Ni;
 }
 
-grib_handle* merge(grib_handle* h1,grib_handle* h2)
+static grib_handle* merge(grib_handle* h1,grib_handle* h2)
 {
     char s1[100]={0,};
     size_t len1;

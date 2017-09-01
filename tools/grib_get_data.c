@@ -89,7 +89,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     size_t bmp_len = 0;
     double *data_values=0,*lats=0,*lons=0;
     int n = 0;
-    size_t size=0;
+    size_t size=0, num_bytes=0;
     long hasMissingValues = 0;
 
     if (grib_options_on("m:")) {
@@ -125,10 +125,11 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     iter=grib_iterator_new(h,0,&err);
 
+    num_bytes = (numberOfPoints+1)*sizeof(double);
     data_values=(double*)calloc(numberOfPoints+1, sizeof(double));
     if (!data_values) {
         fprintf(dump_file, "ERROR: failed to allocate %ld bytes for data values (number of points=%ld)\n",
-                (numberOfPoints+1)*sizeof(double), numberOfPoints);
+                (long)num_bytes, numberOfPoints);
         exit(GRIB_OUT_OF_MEMORY);
     }
 

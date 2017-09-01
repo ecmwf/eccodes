@@ -37,7 +37,7 @@ unsigned char unused(char c)
 }
 */
 
-int next(FILE *f, char *buf)
+static int next(FILE *f, char *buf)
 {
     int c;
     int i = 0;
