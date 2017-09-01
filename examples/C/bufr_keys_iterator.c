@@ -94,7 +94,7 @@ int main(int argc,char* argv[])
             }
             else {
                 /* for arrays */
-                printf("(array of %ld)\n",klen);
+                printf("(array of %lu)\n",klen);
             }
         }
 

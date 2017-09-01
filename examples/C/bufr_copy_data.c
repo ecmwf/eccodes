@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
             printf("Copied %s\n",keys[i]);
             free(keys[i]);
         }
-        printf("Total number of copied keys = %ld\n", nkeys);
+        printf("Total number of copied keys = %lu\n", nkeys);
         free(keys);
 
         codes_handle_delete(h);

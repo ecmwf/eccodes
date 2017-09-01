@@ -21,7 +21,7 @@
 
 #include "eccodes.h"
 
-void usage(const char* prog)
+static void usage(const char* prog)
 {
     printf("usage: %s out.grib\n",prog);
     exit(1);
