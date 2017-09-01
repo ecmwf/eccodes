@@ -21,36 +21,24 @@
 char* INPUT_FILE = NULL;
 void do_stuff(void *data);
 
-/* Structure for passing data to threads */
-struct v
-{
-    int number; 
-    //char *data; /* column */
-};
-
 void *runner(void *ptr); /* the thread function */
 
 int main(int argc, char **argv)
 {
-    int i;
+    long i;
     int thread_counter = 0;
     pthread_t workers[NUM_THREADS];
     INPUT_FILE = argv[1];
     
-    /* We have to create M * N worker threads */
+    /* Create worker threads */
     for (i = 0; i < NUM_THREADS; i++) {
-        struct v *data = (struct v *) malloc(sizeof(struct v));
-        data->number = i;
-        //data->data = NULL;
-
         /* Now we will create the thread passing it data as a paramater*/
-        pthread_create(&workers[thread_counter], NULL, runner, data);
+        pthread_create(&workers[thread_counter], NULL, runner, (void*)i);
         thread_counter++;
     }
 
     /* Waiting for threads to complete */
-    for (i = 0; i < NUM_THREADS; i++)
-    {
+    for (i = 0; i < NUM_THREADS; i++) {
        pthread_join(workers[i], NULL);
     }
 
@@ -63,16 +51,16 @@ void *runner(void *ptr)
     pthread_exit(0);
 }
 
-int encode_file(char *template_file, char *output_file)
+int encode_file(char *input_file, char *output_file)
 {
-    FILE *in = NULL;
-    FILE *out = NULL;
     grib_handle *source_handle = NULL;
     const void *buffer = NULL;
     int err = 0;
  
-    in = fopen(template_file,"r"); assert(in);
-    out = fopen(output_file,"w");  assert(out);
+    FILE* in = fopen(input_file,"r");
+    FILE* out = fopen(output_file,"w");
+    assert(in);
+    assert(out);
 
     while ((source_handle = grib_handle_new_from_file(0, in, &err))!=NULL)
     {
@@ -118,15 +106,13 @@ int encode_file(char *template_file, char *output_file)
     return 0;
 }
 
-void do_stuff(void *ptr)
+void do_stuff(void *arg)
 {
-    /* Casting paramater to struct v pointer */
-    struct v *data = ptr;
-
+    long number = (long)arg;
     char output_file[50];
 
     for (int i=0; i<FILES_PER_ITERATION;i++) {
-        sprintf(output_file,"temp.grib_encode_pthreads.out_%d-%d.grib",data->number,i);
+        sprintf(output_file,"temp.grib_encode_pthreads.out_%d-%d.grib", (int)number, i);
         encode_file(INPUT_FILE,output_file);
     }
 }
