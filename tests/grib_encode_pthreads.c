@@ -110,8 +110,9 @@ void do_stuff(void *arg)
 {
     long number = (long)arg;
     char output_file[50];
+    int i;
 
-    for (int i=0; i<FILES_PER_ITERATION;i++) {
+    for (i=0; i<FILES_PER_ITERATION;i++) {
         sprintf(output_file,"temp.grib_encode_pthreads.out_%d-%d.grib", (int)number, i);
         encode_file(INPUT_FILE,output_file);
     }
