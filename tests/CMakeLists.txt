@@ -29,6 +29,7 @@ list( APPEND test_bins
       bufr_get_element
       sh_ieee64
       ieee
+      grib_encode_pthreads
 )
 
 foreach( tool ${test_bins} )
@@ -52,6 +53,7 @@ list( APPEND tests_no_data_reqd
     grib_2nd_order_numValues
     julian
     ecc-517
+    grib_encode_pthreads
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
