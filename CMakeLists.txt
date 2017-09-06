@@ -104,6 +104,11 @@ ecbuild_add_option( FEATURE MEMFS
 #  ecbuild_warn("MEMFS not supported with Cray C compiler")
 #endif()
 
+if(HAVE_MEMFS)
+  set( _will_install_defs_samples OFF )
+else()
+  set( _will_install_defs_samples ON )
+endif()
 
 # controls installation of files in definitions/ -- note that it still creates the symlinks in the build dir
 # by default, if memfs is available, then we don't need to install definitions
