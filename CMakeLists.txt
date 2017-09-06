@@ -39,18 +39,6 @@ ecbuild_add_option( FEATURE EXAMPLES
     DEFAULT ON
 )
 
-# controls installation of files in definitions/ -- note that it still creates the symlinks in the build dir
-ecbuild_add_option( FEATURE INSTALL_ECCODES_DEFINITIONS
-    DESCRIPTION "Install the ecCodes definitions"
-    DEFAULT ON
-)
-
-# controls installation of files in samples/ and ifs_samples/ -- note that it still creates the symlinks in the build dir
-ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
-    DESCRIPTION "Install the ecCodes samples, including IFS samples"
-    DEFAULT ON
-)
-
 ecbuild_add_option( FEATURE JPG
     DESCRIPTION "Support for JPG decoding/encoding"
     DEFAULT ON
@@ -115,6 +103,21 @@ ecbuild_add_option( FEATURE MEMFS
 #  set( HAVE_MEMFS OFF )
 #  ecbuild_warn("MEMFS not supported with Cray C compiler")
 #endif()
+
+
+# controls installation of files in definitions/ -- note that it still creates the symlinks in the build dir
+# by default, if memfs is available, then we don't need to install definitions
+ecbuild_add_option( FEATURE INSTALL_ECCODES_DEFINITIONS
+    DESCRIPTION "Install the ecCodes definitions"
+    DEFAULT ${HAVE_MEMFS}
+)
+
+# controls installation of files in samples/ and ifs_samples/ -- note that it still creates the symlinks in the build dir
+# by default, if memfs is available, then we don't need to install samples
+ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
+    DESCRIPTION "Install the ecCodes samples, including IFS samples"
+    DEFAULT ${HAVE_MEMFS}
+)
 
 # advanced options (not visible in cmake-gui )
 
