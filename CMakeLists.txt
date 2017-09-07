@@ -96,7 +96,7 @@ ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
     CONDITION EC_HAVE_FMEMOPEN OR EC_HAVE_FUNOPEN
-    REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS"
+    REQUIRED_PACKAGES "PythonInterp VERSION 2.6"
 )
 
 #if( HAVE_MEMFS AND "${CMAKE_C_COMPILER_ID}" STREQUAL "Cray")
