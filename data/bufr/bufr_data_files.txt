@@ -141,4 +141,4 @@ sentinel1.bufr
 srals3_ecmwf4.bufr
 srals3_eumetsat.bufr
 eumetsat_iasi_co.bufr
-eum_iasi_twt.b
+eum_iasi_twt.bufr

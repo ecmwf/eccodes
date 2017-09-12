@@ -12,8 +12,7 @@
 
 /* This code was generated automatically */
 
-
-int main(int argc,const char** argv)
+int main(int argc, char** argv)
 {
     codes_handle *h     = NULL;
     size_t size        = 0;

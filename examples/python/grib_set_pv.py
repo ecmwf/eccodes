@@ -28,7 +28,7 @@ def example():
 
     numberOfLevels = 60
     numberOfCoefficients = 2 * (numberOfLevels + 1)
-    assert(len(pv) == numberOfCoefficients)
+    assert (len(pv) == numberOfCoefficients)
 
     fout = open('grib_set_pv.py.temp.grib', 'w')
     gid = codes_grib_new_from_samples('reduced_gg_sfc_grib1')
@@ -54,6 +54,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == '__main__':
     sys.exit(main())

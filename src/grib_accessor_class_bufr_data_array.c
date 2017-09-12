@@ -912,6 +912,7 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
     double cdval=0,x;
     int err=0;
     bufr_descriptor* bd = descriptor==NULL ? self->expanded->v[i] : descriptor ;
+    /* Assert( b->data == data); */
 
     if (self->change_ref_value_operand > 0 && self->change_ref_value_operand != 255) {
         /* Operator 203YYY: Change Reference Values: Definition phase */
@@ -983,6 +984,9 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
     bufr_descriptor** descriptors=0;
     err=&ret;
     descriptors=self->expanded->v;
+
+    /* Assert(buff->data == data); */
+
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -%ld- \tcode=%6.6ld width=%ld ",
             i,self->expanded->v[i]->code,self->expanded->v[i]->width);
     if (self->compressedData) {
@@ -995,6 +999,7 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
           grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication localWidth width=6");
           width=grib_decode_unsigned_long(data,pos,6);
           if (width) {
+              grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication is NOT constant for compressed data!");
             /* delayed replication number is not constant. NOT IMPLEMENTED */
             return GRIB_NOT_IMPLEMENTED;
           } else {
@@ -1097,6 +1102,7 @@ static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array*
     int err=0;
     unsigned long repetitions=1;
     bufr_descriptor** descriptors=self->expanded->v;
+    /* Assert( buff->data==data); */
 
     switch(descriptors[i]->code) {
     case 31000:
@@ -1153,6 +1159,7 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
     int idx,j;
     int err=0;
     bufr_descriptor* bd = descriptor==NULL ? self->expanded->v[i] : descriptor ;
+    /* Assert( buff->data == data); */
 
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: -%ld- \tcode=%6.6ld width=%ld pos=%ld ulength=%ld ulength_bits=%ld",
             i,bd->code,bd->width,(long)*pos,buff->ulength,buff->ulength_bits);
@@ -1195,6 +1202,7 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
 static int encode_replication(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
         grib_buffer* buff,unsigned char* data,long *pos,int i,long elementIndex,grib_darray* dval,long* numberOfRepetitions)
 {
+    /* Assert( buff->data == data); */
     if (self->compressedData) {
         Assert(grib_darray_used_size(self->numericValues->v[elementIndex])==1);
         *numberOfRepetitions=self->numericValues->v[elementIndex]->v[0];
@@ -2322,7 +2330,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
     default :
         return GRIB_NOT_IMPLEMENTED;
     }
-    data=(unsigned char*)buffer->data;
+    data = buffer->data;
 
     err=get_descriptors(a);
     if (err) return err;
@@ -2403,6 +2411,8 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                 n[inr]=numberOfElementsToRepeat[inr];
                 i++;
 
+                /* ECC-517 */
+                data = buffer->data;
                 err=codec_replication(c,self,iss,buffer,data,&pos,i,elementIndex,dval,&(numberOfRepetitions[inr]));
                 if (err) return err;
 

@@ -1,4 +1,4 @@
-set -x
+set -xe
 export LEX=flex
 export LEX_OUT=gribl.c
 $LEX -o gribl.c gribl.l
@@ -13,3 +13,5 @@ sed 's/fgetc/getc/g' < grib_yacc1.c > grib_yacc.c
 rm -f grib_yacc1.c
 sed 's/yy/grib_yy/g' < y.tab.h > grib_yacc.h
 rm -f y.tab.c y.tab.h
+echo
+echo ALL OK

@@ -17,7 +17,7 @@
 
 #include "eccodes.h"
 
-void usage(char* prog) {
+static void usage(const char* prog) {
     printf("usage: %s infile\n",prog);
     exit(1);
 }
@@ -57,7 +57,7 @@ int main(int argc,char* argv[])
 
         /* get the size of the values array*/
         CODES_CHECK(codes_get_size(h, "numericValues", &values_len),0);
-        printf("  number of expanded values: %ld\n", values_len);
+        printf("  number of expanded values: %lu\n", values_len);
 
         /* allocate array for data values */
         values = (double*)malloc(values_len*sizeof(double));

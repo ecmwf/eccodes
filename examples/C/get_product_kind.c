@@ -15,7 +15,7 @@
  *              and print the kind of product (e.g. GRIB, BUFR etc)
  */
 #include "eccodes.h"
-void usage(const char *app)
+static void usage(const char *app)
 {
     fprintf(stderr,"Usage: %s file\n", app);
 }

@@ -21,7 +21,8 @@ double scale ;
 typedef unsigned long (*ieee_to_long_proc) (double);
 typedef double        (*long_to_ieee_proc) (unsigned long);
 
-void test(unsigned long input, ieee_to_long_proc ieee_to_long, long_to_ieee_proc long_to_ieee)
+#if 0
+static void test(unsigned long input, ieee_to_long_proc ieee_to_long, long_to_ieee_proc long_to_ieee)
 {
     double x1 = long_to_ieee(input);
     unsigned long num2 = ieee_to_long(x1);
@@ -29,8 +30,6 @@ void test(unsigned long input, ieee_to_long_proc ieee_to_long, long_to_ieee_proc
     if (num2!=input) printf("ERROR: input=%ld not equal!!!\n", input);
 }
 
-
-#if 0
 double p(double ref1,double ref2)
 {
 	double scale = (max-ref1) / 65535;
@@ -50,14 +49,14 @@ double p(double ref1,double ref2)
 #endif
 
 /* generate a random floating point number from min to max */
-double randfrom(double min, double max)
+static double randfrom(double minimum, double maximum)
 {
-    double range = (max - min);
+    double range = (maximum - minimum);
     double div = RAND_MAX / range;
-    return min + (rand() / div);
+    return minimum + (rand() / div);
 }
 /* Return 1 on success, 0 on failure */
-int test_doubles(ieee_to_long_proc ieee_to_long, long_to_ieee_proc long_to_ieee)
+static int test_doubles(ieee_to_long_proc ieee_to_long, long_to_ieee_proc long_to_ieee)
 {
     const double tolerance = 1e-7;
     const double increment = 1;

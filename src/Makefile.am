@@ -302,6 +302,7 @@ libeccodes_la_prototypes= \
 	grib_dumper_class_bufr_decode_filter.c \
 	grib_dumper_class_bufr_decode_fortran.c \
 	grib_dumper_class_bufr_decode_python.c \
+	grib_dumper_class_bufr_simple.c \
 	grib_dumper_class_json.c \
 	grib_dumper_class_grib_encode_C.c \
 	grib_dumper_class_wmo.c \
@@ -357,6 +358,7 @@ libeccodes_la_prototypes= \
 	grib_nearest_class_latlon_reduced.c \
 	grib_nearest_class_sh.c \
 	grib_nearest_class_lambert_conformal.c \
+	grib_nearest_class_polar_stereographic.c \
 	grib_iterator_class_polar_stereographic.c \
 	grib_iterator_class_lambert_azimuthal_equal_area.c  \
 	grib_iterator_class_lambert_conformal.c \

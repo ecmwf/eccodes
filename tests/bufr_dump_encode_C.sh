@@ -77,8 +77,11 @@ do
     $COMPILER -o $tempExe $tempSrc -I${INCL_DIR1} -I${INCL_DIR2} $FLAGS_COMPILER $FLAGS_LINKER
 
     # The executable always creates a file called outfile.bufr
-    # valgrind --error-exitcode=1  ./$tempExe
-    ./$tempExe
+    if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
+      valgrind --error-exitcode=1 -q ./$tempExe
+    else
+      ./$tempExe
+    fi
     ${tools_dir}/bufr_compare ${data_dir}/bufr/$file $tempBufr
 
     TEMP_JSON1=${label}.$file.json

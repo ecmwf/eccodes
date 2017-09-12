@@ -48,7 +48,7 @@ do
 
     ${tools_dir}/bufr_dump -Dfilter $f > $fRules
 
-    ${tools_dir}/bufr_filter $fRules $f >/dev/null
+    ${tools_dir}/codes_bufr_filter $fRules $f >/dev/null
 
     rm -f $fRules
   fi

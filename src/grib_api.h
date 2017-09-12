@@ -485,14 +485,14 @@ grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data
 
 
 /**
- *  Create a handle from a message contained in a samples directory.
+ *  Create a handle from a GRIB message contained in the samples directory.
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param res_name    : the resource name
+ * @param sample_name : the name of the sample file (without the .tmpl extension)
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
-grib_handle* grib_handle_new_from_samples (grib_context* c, const char* res_name)  ;
+grib_handle* grib_handle_new_from_samples (grib_context* c, const char* sample_name);
 
 
 
@@ -1348,6 +1348,7 @@ int wmo_read_grib_from_file(FILE* f,void* buffer,size_t* len);
 int wmo_read_bufr_from_file(FILE* f,void* buffer,size_t* len);
 int wmo_read_gts_from_file(FILE* f,void* buffer,size_t* len);
 int wmo_read_any_from_stream(void *stream_data, long (*stream_proc )(void *, void *buffer, long len ), void *buffer, size_t *len);
+void* wmo_read_any_from_stream_malloc(void* stream_data,long (*stream_proc)(void*,void* buffer,long len) ,size_t *size, int* err);
 void *wmo_read_any_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
 void *wmo_read_gts_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
 void *wmo_read_bufr_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);

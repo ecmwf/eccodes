@@ -8,13 +8,15 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
 from eccodes import *
 
 VERBOSE = 1  # verbose error reporting
-missingValue = 1e+20 # A value out of range
+missingValue = 1e+20  # A value out of range
+
 
 def example(INPUT):
     f = open(INPUT)
@@ -41,9 +43,9 @@ def example(INPUT):
             sys.stdout.write("- %d - lat=%.6e lon=%.6e value=" % (i, lat, lon))
 
             if value == missingValue:
-                print "missing"
+                print("missing")
             else:
-                print "%.6f" % value
+                print("%.6f" % value)
 
             i += 1
 
@@ -63,6 +65,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

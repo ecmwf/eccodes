@@ -199,7 +199,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     /* pl[0] is guaranteed to exist. Have already asserted previously */
     for(i=1; i<plsize; ++i) {
-        const long diff = abs(pl[i] - pl[i-1]);
+        const long diff = labs(pl[i] - pl[i-1]);
         /* There are two values at the equator which are equal. */
         /* So diff is either 4 or 0 */
         if (diff != 4 && diff != 0) {

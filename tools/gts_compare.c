@@ -262,10 +262,10 @@ static void printInfo(grib_handle* h)
     lastPrint=count;
 }
 
-static void print_index_key_values(grib_index* index,int counter,const char* error_message)
+static void print_index_key_values(grib_index* index,int cnt,const char* error_message)
 {
     grib_index_key* keys=index->keys;
-    printf("== %d == ",counter);
+    printf("== %d == ", cnt);
     if (error_message) printf("%s == ",error_message);
     while (keys) {
         printf("%s=%s ",keys->name,keys->value);

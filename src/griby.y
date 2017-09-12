@@ -381,11 +381,22 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"signed_bits",$3,$7,$9,$10,NULL,NULL);      free($5);  }
 
     | CODETABLE '[' INTEGER ']' IDENT  argument   default flags
-	{ $$ = grib_action_create_gen(grib_parser_context,$5,"codetable",$3, $6,$7,$8,NULL,NULL);    free($5); }
+    { $$ = grib_action_create_gen(grib_parser_context,$5,"codetable",$3, $6,$7,$8,NULL,NULL);    free($5); }
+
+    | CODETABLE '[' IDENT ']' IDENT  argument   default flags
+    {
+      /* ECC-485: Set length to 0 and prepend the new argument */
+      grib_arguments* a = grib_arguments_new(grib_parser_context, new_accessor_expression(grib_parser_context,$3,0,0),NULL);
+      a->next = $6;
+      $$ = grib_action_create_gen(grib_parser_context, $5, "codetable",
+                                  0, a, /* length=0 and additional argument */
+                                  $7, $8, NULL, NULL);
+      free($5);
+    }
 
 	| CODETABLE '[' INTEGER ']' IDENT  argument   default SET '(' IDENT ')' flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"codetable",$3, $6,$7,$12,NULL,$10);
-					free($5);free($10); }
+           free($5);free($10); }
     
     | CODETABLE '[' INTEGER ']' IDENT  '(' argument_list ')'   default flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"codetable",$3, $7,$9,$10,NULL,NULL);    free($5); }

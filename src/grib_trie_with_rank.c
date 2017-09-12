@@ -477,7 +477,7 @@ int grib_trie_with_rank_insert(grib_trie_with_rank* t,const char* key,void* data
 }
 
 /*
-void *grib_trie_with_rank_get_from_list(grib_trie_with_rank_list* list,int rank) {
+static void *grib_trie_with_rank_get_from_list(grib_trie_with_rank_list* list,int rank) {
   grib_trie_with_rank_list* next=list;
   int r=1;
 

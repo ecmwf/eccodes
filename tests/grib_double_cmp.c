@@ -17,7 +17,7 @@
  */
 #include "grib_api.h"
 
-void usage(char* prog) {
+static void usage(const char* prog) {
     printf("usage: %s filename\n",prog);
     exit(1);
 }

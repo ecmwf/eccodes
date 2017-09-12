@@ -291,9 +291,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
         pos=idx*l;
         buf+=pos;
-        lvalue  = 0;
-        lvalue  <<= 8;
-        lvalue |= buf[octet++] ;
+        lvalue |= buf[octet++];
 
         for ( bc=1; bc<l; bc++ ) {
             lvalue <<= 8;
@@ -482,7 +480,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     grib_accessor_data_simple_packing* self =  (grib_accessor_data_simple_packing*)a;
     grib_handle* gh = grib_handle_of_accessor(a);
 
-    size_t i = 0;
+    size_t i;
     size_t n_vals = *len;
     int err = 0;
     int last;

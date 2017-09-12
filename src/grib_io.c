@@ -107,14 +107,15 @@ static int read_GRIB(reader* r)
     size_t sec3len = 0;
     size_t sec4len = 0;
     unsigned long flags;
-    size_t buflen=16368;
+    size_t buflen = 32768;   /* See ECC-515: was 16368 */
     grib_context* c;
     grib_buffer* buf;
 
     /*TODO proper context*/
     c=grib_context_get_default();
     tmp=(unsigned char*)malloc(buflen);
-    Assert(tmp);
+    if (!tmp)
+        return GRIB_OUT_OF_MEMORY;
     buf=grib_new_buffer(c,tmp,buflen);
     buf->property = GRIB_MY_BUFFER;
 
@@ -267,6 +268,7 @@ static int read_GRIB(reader* r)
                     i++;
                 }
                 /* Read section 2 */
+                GROW_BUF_IF_REQUIRED(i+sec2len);
                 if((r->read(r->read_data,tmp+i,sec2len-3,&err) != sec2len-3) || err)
                     return err;
                 i += sec2len-3;
@@ -592,7 +594,8 @@ static int read_BUFR(reader *r)
     /*TODO proper context*/
     c=grib_context_get_default();
     tmp=(unsigned char*)malloc(buflen);
-    Assert(tmp);
+    if (!tmp)
+        return GRIB_OUT_OF_MEMORY;
     buf=grib_new_buffer(c,tmp,buflen);
     buf->property = GRIB_MY_BUFFER;
     r->offset=r->tell(r->read_data)-4;
@@ -1164,6 +1167,19 @@ static size_t stream_read(void* data,void* buffer,size_t len,int* err)
     return n;
 }
 
+/*================== */
+
+
+static void* allocate_buffer(void *data,size_t* length,int *err)
+{
+    alloc_buffer *u  = (alloc_buffer*)data;
+    u->buffer = malloc(*length);
+    u->size=*length;
+    if(u->buffer == NULL)
+        *err = GRIB_OUT_OF_MEMORY; /* Cannot allocate buffer */
+    return u->buffer;
+}
+
 int wmo_read_any_from_stream(void* stream_data,long (*stream_proc)(void*,void* buffer,long len) ,void* buffer,size_t* len)
 {
     int           err;
@@ -1178,6 +1194,7 @@ int wmo_read_any_from_stream(void* stream_data,long (*stream_proc)(void*,void* b
     u.buffer_size  = *len;
 
     r.message_size    = 0;
+    r.offset          = 0;
     r.read_data       = &s;
     r.read            = &stream_read;
     r.seek            = &stream_seek;
@@ -1193,17 +1210,36 @@ int wmo_read_any_from_stream(void* stream_data,long (*stream_proc)(void*,void* b
     return err;
 }
 
+void* wmo_read_any_from_stream_malloc(void* stream_data,long (*stream_proc)(void*,void* buffer,long len) ,size_t *size, int* err)
+{
+    alloc_buffer u;
+    u.buffer = NULL;
+
+    stream_struct s;
+    reader        r;
+
+    s.stream_data = stream_data;
+    s.stream_proc = stream_proc;
+
+    r.message_size    = 0;
+    r.offset          = 0;
+    r.read_data       = &s;
+    r.read            = &stream_read;
+    r.seek            = &stream_seek;
+    r.seek_from_start = &stream_seek;
+    r.tell            = &stream_tell;
+    r.alloc_data      = &u;
+    r.alloc           = &allocate_buffer;
+    r.headers_only    = 0;
+
+    *err           = read_any(&r, 1, 1, 1, 1);
+    *size          = r.message_size;
+
+    return u.buffer;
+}
+
 /*================== */
 
-static void* allocate_buffer(void *data,size_t* length,int *err)
-{
-    alloc_buffer *u  = (alloc_buffer*)data;
-    u->buffer = malloc(*length);
-    u->size=*length;
-    if(u->buffer == NULL)
-        *err = GRIB_OUT_OF_MEMORY; /* Cannot allocate buffer */
-    return u->buffer;
-}
 
 void *wmo_read_gts_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err)
 {

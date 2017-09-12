@@ -45,7 +45,7 @@ class CodesFile(file):
         self.open_messages = []
 
     def __exit__(self, exception_type, exception_value, traceback):
-        """Close all open messages, release GRIB file handle and close file."""
+        """Close all open messages, release file handle and close file."""
         while self.open_messages:
             self.open_messages.pop().close()
         self.file_handle.close()

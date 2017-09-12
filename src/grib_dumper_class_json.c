@@ -124,20 +124,21 @@ static int destroy(grib_dumper* d)
 static void dump_values(grib_dumper* d,grib_accessor* a)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
-    double value; size_t size = 1;
-    double *values=NULL;
+    double value=0; size_t size = 1;
+    double *values = NULL;
     int err = 0;
     int i;
-    int cols=9;
-    long count=0;
+    int cols = 9;
+    long count = 0;
     double missing_value = GRIB_MISSING_DOUBLE;
-    grib_handle* h=grib_handle_of_accessor(a);
-
-    grib_value_count(a,&count);
-    size=count;
+    grib_handle* h = NULL;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 )
         return;
+
+    h = grib_handle_of_accessor(a);
+    grib_value_count(a,&count);
+    size=count;
 
     if (size>1) {
         values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*size);
@@ -208,18 +209,19 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
-    long value; size_t size = 1;
-    long *values=NULL;
+    long value = 0;
+    size_t size = 1;
+    long *values = NULL;
     int err = 0;
     int i;
-    int cols=9;
-    long count=0;
-
-    grib_value_count(a,&count);
-    size=count;
+    int cols = 9;
+    long count = 0;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 )
         return;
+
+    grib_value_count(a,&count);
+    size=count;
 
     if (size>1) {
         values=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
@@ -291,11 +293,13 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
-    double value; size_t size = 1;
+    double value = 0;
+    size_t size = 1;
 
-    grib_unpack_double(a,&value,&size);
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
+
+    grib_unpack_double(a,&value,&size);
 
     if (self->begin==0 && self->empty==0 && self->isAttribute==0) fprintf(self->dumper.out,",\n");
     else self->begin=0;
@@ -330,11 +334,10 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
     char **values = NULL;
-    size_t size = 0,i=0;
-    grib_context* c=NULL;
+    size_t size = 0, i = 0;
+    grib_context* c = NULL;
     int err = 0;
-    long count=0;
-
+    long count = 0;
     c=a->context;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 )
@@ -399,13 +402,13 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
 static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
-    char *value=NULL;
+    char *value = NULL;
     char *p = NULL;
     size_t size = 0;
-    grib_context* c=NULL;
+    grib_context* c = NULL;
     int err = _grib_get_string_length(a,&size);
 
-    c=a->context;
+    c = a->context;
     if (size==0) return;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
@@ -502,7 +505,7 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a)
     grib_dumper_json *self = (grib_dumper_json*)d;
     FILE* out=self->dumper.out;
     unsigned long flags;
-    while (a->attributes[i] && i < MAX_ACCESSOR_ATTRIBUTES) {
+    while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
         self->isAttribute=1;
         if (  (d->option_flags & GRIB_DUMP_FLAG_ALL_ATTRIBUTES ) == 0
                 && (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)== 0 )

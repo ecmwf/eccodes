@@ -156,7 +156,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         double olat=1.e10;
         long n=0;
 
-        ilat=0,ilon=0;
+        ilat=0; ilon=0;
         if (grib_is_missing(h,self->Nj,&ret)) {
             grib_context_log(h->context, GRIB_LOG_DEBUG,"Key '%s' is missing", self->Nj);
             return ret ? ret : GRIB_GEOCALCULUS_PROBLEM;

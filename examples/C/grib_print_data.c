@@ -19,7 +19,7 @@
 
 #include "eccodes.h"
 
-void usage(const char* prog) {
+static void usage(const char* prog) {
     printf("usage: %s filename\n",prog);
     exit(1);
 }
@@ -72,7 +72,7 @@ int main(int argc, char** argv)
 
     {
         /* Example of accessing specific elements from data values */
-        int i=0;
+        i=0;
         double vals_arr[3] = {0, 0, 0};
         const int NUM = 3;
         int index_arr[3];

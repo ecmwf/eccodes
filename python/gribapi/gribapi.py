@@ -996,8 +996,9 @@ def grib_get_string_array(msgid, key):
 
     GRIB_CHECK(_internal.grib_c_get_string_array(msgid, key, a, s))
 
+    newsize = s.value()
     result = list()
-    for i in range(nval):
+    for i in range(newsize):
         result.append(_internal.stringArray_getitem(a, i))
 
     _internal.delete_stringArray(a)

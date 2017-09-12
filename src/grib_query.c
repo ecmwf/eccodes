@@ -234,8 +234,8 @@ static grib_accessor* search_by_rank(grib_handle* h, const char* name,int rank,c
         return _search_by_rank(data,name,rank);
     } else {
         grib_accessor* ret=NULL;
-        int rank;
-        char* str=get_rank(name,&rank);
+        int rank2;
+        char* str=get_rank(name,&rank2);
         ret=_search_and_cache(h,str,the_namespace);
         grib_context_free(h->context,str);
         return ret;
@@ -369,12 +369,12 @@ grib_accessors_list* grib_find_accessors_list(grib_handle* h,const char* name)
     } else if (name[0]=='#') {
         a=grib_find_accessor(h, name);
         if (a) {
-            char* str;
+            char* str2;
             int r;
             al=(grib_accessors_list*)grib_context_malloc_clear(h->context,sizeof(grib_accessors_list));
-            str=get_rank(name,&r);
+            str2=get_rank(name,&r);
             grib_accessors_list_push(al,a,r);
-            grib_context_free(h->context,str);
+            grib_context_free(h->context,str2);
         }
     } else {
         a=grib_find_accessor(h, name);

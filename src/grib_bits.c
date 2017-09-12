@@ -101,34 +101,36 @@ int grib_encode_signed_long(unsigned char* p, long val , long o, int l)
     return GRIB_SUCCESS;
 }
 
-static void grib_set_bit_on( unsigned char* p, long* bitp){
-
+static void grib_set_bit_on( unsigned char* p, long* bitp)
+{
     p +=  *bitp/8;
     *p |=  (1u << (7-((*bitp)%8)));
     (*bitp)++;
 }
 
-void grib_set_bits_on( unsigned char* p, long* bitp,long nbits){
+void grib_set_bits_on( unsigned char* p, long* bitp,long nbits)
+{
     int i;
     for (i=0;i<nbits;i++) {
       grib_set_bit_on(p,bitp);
     }
 }
 
-static void grib_set_bit_off( unsigned char* p, long* bitp){
-
+static void grib_set_bit_off( unsigned char* p, long* bitp)
+{
     p +=  *bitp/8;
     *p &= ~(1u << (7-((*bitp)%8)));
     (*bitp)++;
 }
 
-int grib_get_bit(const unsigned char* p, long bitp){
+int grib_get_bit(const unsigned char* p, long bitp)
+{
     p += (bitp >> 3);
     return (*p&(1<<(7-(bitp%8))));
 }
 
-void grib_set_bit( unsigned char* p, long bitp, int val){
-
+void grib_set_bit( unsigned char* p, long bitp, int val)
+{
     if(val == 0) grib_set_bit_off(p,&bitp);
     else grib_set_bit_on(p,&bitp);
 }
@@ -166,18 +168,11 @@ int grib_encode_signed_longb(unsigned char* p,  long val ,long *bitp, long nb)
 }
 
 #if GRIB_IBMPOWER67_OPT
-
-#include "grib_bits_ibmpow.c"
-
+ #include "grib_bits_ibmpow.c"
 #else
-#if FAST_BIG_ENDIAN
-
-#include "grib_bits_fast_big_endian.c"
-
-#else
-
-#include "grib_bits_any_endian.c"
-
-#endif
-
+ #if FAST_BIG_ENDIAN
+  #include "grib_bits_fast_big_endian.c"
+ #else
+  #include "grib_bits_any_endian.c"
+ #endif
 #endif

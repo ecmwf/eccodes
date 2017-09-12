@@ -136,7 +136,8 @@ KNOWN_BUFR_KEYS = ['edition', 'masterTableNumber', 'bufrHeaderSubCentre', 'bufrH
                    'typicalHour', 'typicalMinute', 'rdbType', 'newSubtype', 'rdbtimeDay', 'rdbtimeHour',
                    'rdbtimeMinute', 'rdbtimeSecond', 'rectimeDay', 'rectimeHour', 'rectimeMinute', 'rectimeSecond',
                    'correction1', 'correction1Part', 'correction2', 'correction2Part', 'correction3', 'correction3Part',
-                   'correction4', 'correction4Part', 'qualityControl', 'numberOfSubsets', 'localLatitude', 'localLongitude',
+                   'correction4', 'correction4Part', 'qualityControl', 'numberOfSubsets', 'localLatitude',
+                   'localLongitude',
                    'observedData', 'compressedData', 'unexpandedDescriptors', '#1#blockNumber',
                    '#1#blockNumber->percentConfidence', '#1#stationNumber', '#1#stationNumber->percentConfidence',
                    '#1#stationType', '#1#stationType->percentConfidence', '#1#year', '#1#year->percentConfidence',
@@ -148,7 +149,8 @@ KNOWN_BUFR_KEYS = ['edition', 'masterTableNumber', 'bufrHeaderSubCentre', 'bufrH
                    '#1#pressureReducedToMeanSeaLevel->percentConfidence', '#1#3HourPressureChange',
                    '#1#3HourPressureChange->percentConfidence', '#1#characteristicOfPressureTendency',
                    '#1#characteristicOfPressureTendency->percentConfidence', '#1#windDirectionAt10M',
-                   '#1#windDirectionAt10M->percentConfidence', '#1#windSpeedAt10M', '#1#windSpeedAt10M->percentConfidence',
+                   '#1#windDirectionAt10M->percentConfidence', '#1#windSpeedAt10M',
+                   '#1#windSpeedAt10M->percentConfidence',
                    '#1#airTemperatureAt2M', '#1#airTemperatureAt2M->percentConfidence', '#1#dewpointTemperatureAt2M',
                    '#1#dewpointTemperatureAt2M->percentConfidence', '#1#relativeHumidity',
                    '#1#relativeHumidity->percentConfidence', '#1#horizontalVisibility',
@@ -160,22 +162,32 @@ KNOWN_BUFR_KEYS = ['edition', 'masterTableNumber', 'bufrHeaderSubCentre', 'bufrH
                    '#1#cloudAmount->percentConfidence', '#1#heightOfBaseOfCloud',
                    '#1#heightOfBaseOfCloud->percentConfidence', '#1#cloudType', '#1#cloudType->percentConfidence',
                    '#2#cloudType', '#2#cloudType->percentConfidence', '#3#cloudType', '#3#cloudType->percentConfidence',
-                   '#2#verticalSignificanceSurfaceObservations', '#2#verticalSignificanceSurfaceObservations->percentConfidence',
+                   '#2#verticalSignificanceSurfaceObservations',
+                   '#2#verticalSignificanceSurfaceObservations->percentConfidence',
                    '#2#cloudAmount', '#2#cloudAmount->percentConfidence', '#4#cloudType',
-                   '#4#cloudType->percentConfidence', '#2#heightOfBaseOfCloud', '#2#heightOfBaseOfCloud->percentConfidence',
-                   '#3#verticalSignificanceSurfaceObservations', '#3#verticalSignificanceSurfaceObservations->percentConfidence',
-                   '#3#cloudAmount', '#3#cloudAmount->percentConfidence', '#5#cloudType', '#5#cloudType->percentConfidence',
-                   '#3#heightOfBaseOfCloud', '#3#heightOfBaseOfCloud->percentConfidence', '#4#verticalSignificanceSurfaceObservations',
-                   '#4#verticalSignificanceSurfaceObservations->percentConfidence', '#4#cloudAmount', '#4#cloudAmount->percentConfidence',
-                   '#6#cloudType', '#6#cloudType->percentConfidence', '#4#heightOfBaseOfCloud', '#4#heightOfBaseOfCloud->percentConfidence',
-                   '#5#verticalSignificanceSurfaceObservations', '#5#verticalSignificanceSurfaceObservations->percentConfidence', '#5#cloudAmount',
-                   '#5#cloudAmount->percentConfidence', '#7#cloudType', '#7#cloudType->percentConfidence', '#5#heightOfBaseOfCloud',
+                   '#4#cloudType->percentConfidence', '#2#heightOfBaseOfCloud',
+                   '#2#heightOfBaseOfCloud->percentConfidence',
+                   '#3#verticalSignificanceSurfaceObservations',
+                   '#3#verticalSignificanceSurfaceObservations->percentConfidence',
+                   '#3#cloudAmount', '#3#cloudAmount->percentConfidence', '#5#cloudType',
+                   '#5#cloudType->percentConfidence',
+                   '#3#heightOfBaseOfCloud', '#3#heightOfBaseOfCloud->percentConfidence',
+                   '#4#verticalSignificanceSurfaceObservations',
+                   '#4#verticalSignificanceSurfaceObservations->percentConfidence', '#4#cloudAmount',
+                   '#4#cloudAmount->percentConfidence',
+                   '#6#cloudType', '#6#cloudType->percentConfidence', '#4#heightOfBaseOfCloud',
+                   '#4#heightOfBaseOfCloud->percentConfidence',
+                   '#5#verticalSignificanceSurfaceObservations',
+                   '#5#verticalSignificanceSurfaceObservations->percentConfidence', '#5#cloudAmount',
+                   '#5#cloudAmount->percentConfidence', '#7#cloudType', '#7#cloudType->percentConfidence',
+                   '#5#heightOfBaseOfCloud',
                    '#5#heightOfBaseOfCloud->percentConfidence', '#1#totalPrecipitationPast6Hours',
-                   '#1#totalPrecipitationPast6Hours->percentConfidence', '#1#totalSnowDepth', '#1#totalSnowDepth->percentConfidence',
+                   '#1#totalPrecipitationPast6Hours->percentConfidence', '#1#totalSnowDepth',
+                   '#1#totalSnowDepth->percentConfidence',
                    '#1#centre', '#1#generatingApplication']
 
-class TestGribFile(unittest.TestCase):
 
+class TestGribFile(unittest.TestCase):
     """Test GribFile functionality."""
 
     def test_memory_management(self):
@@ -185,7 +197,7 @@ class TestGribFile(unittest.TestCase):
             for i in range(len(grib_file)):
                 msg = GribMessage(grib_file)
                 self.assertEqual(msg["shortName"], "msl")
-                self.assertEqual(msg['count'], i+1)
+                self.assertEqual(msg['count'], i + 1)
             self.assertEqual(len(grib_file.open_messages), 5)
         self.assertEqual(len(grib_file.open_messages), 0)
 
@@ -218,19 +230,18 @@ class TestGribFile(unittest.TestCase):
 
 
 class TestGribMessage(unittest.TestCase):
-
     """Test GribMessage functionality."""
 
     def test_metadata(self):
         """Metadata is read correctly from GribMessage."""
         with GribFile(TESTGRIB) as grib_file:
             msg = GribMessage(grib_file)
-            msg_keys = msg.keys()
+            msg_keys = list(msg.keys())
             for key in KNOWN_GRIB_KEYS:
                 assert key in msg_keys, "key '%s' not found" % key
             # Size of message in bytes
             self.assertEqual(msg.size(), 160219)
-            self.assertEqual(len(msg.keys()), len(msg))
+            self.assertEqual(len(list(msg.keys())), len(msg))
 
     def test_missing_message_behaviour(self):
         """Key with MISSING value."""
@@ -239,7 +250,7 @@ class TestGribMessage(unittest.TestCase):
             self.assertTrue(msg.missing("scaleFactorOfSecondFixedSurface"))
             msg["scaleFactorOfSecondFixedSurface"] = 5
             msg.set_missing("scaleFactorOfSecondFixedSurface")
-            #with self.assertRaises(KeyError):
+            # with self.assertRaises(KeyError):
             #    msg["scaleFactorOfSecondFixedSurface"]
 
     def test_value_setting(self):
@@ -248,21 +259,21 @@ class TestGribMessage(unittest.TestCase):
             msg = GribMessage(grib_file)
             msg["scaleFactorOfSecondFixedSurface"] = 5
             msg["values"] = [1, 2, 3]
-            self.assertEqual( msg['scaleFactorOfSecondFixedSurface'], 5 )
+            self.assertEqual(msg['scaleFactorOfSecondFixedSurface'], 5)
 
     def test_multi_value_setting(self):
         """Multiple keys/values can be set properly."""
         msg = GribMessage(sample='GRIB1')
-        msg[ 'paramId', 'stepType', 'edition' ] = 49, 'avg', 2
-        self.assertEqual( msg['shortName'], '10fg' )
+        msg['paramId', 'stepType', 'edition'] = 49, 'avg', 2
+        self.assertEqual(msg['shortName'], '10fg')
         # Another test
         with GribFile(TESTGRIB) as grib_file:
             msg = GribMessage(grib_file)
-            msg[ 'setLocalDefinition', 'localDefinitionNumber' ] = 1,25
-            msg[ 'typeOfFirstFixedSurface', 'typeOfSecondFixedSurface' ] = 1, 8
-            msg[ ('typeOfFirstFixedSurface','typeOfSecondFixedSurface') ] = (1, 8) #Also works
-            self.assertEqual( msg['localDefinitionNumber'], 25 )
-            self.assertEqual( msg['typeOfLevel'], 'entireAtmosphere' )
+            msg['setLocalDefinition', 'localDefinitionNumber'] = 1, 25
+            msg['typeOfFirstFixedSurface', 'typeOfSecondFixedSurface'] = 1, 8
+            msg[('typeOfFirstFixedSurface', 'typeOfSecondFixedSurface')] = (1, 8)  # Also works
+            self.assertEqual(msg['localDefinitionNumber'], 25)
+            self.assertEqual(msg['typeOfLevel'], 'entireAtmosphere')
 
     def test_serialize(self):
         """Message can be serialized to file."""
@@ -277,11 +288,10 @@ class TestGribMessage(unittest.TestCase):
         with GribFile(TESTGRIB) as grib_file:
             msg = GribMessage(grib_file)
             msg2 = GribMessage(clone=msg)
-            self.assertSequenceEqual(msg.keys(), msg2.keys())
+            self.assertSequenceEqual(list(msg.keys()), list(msg2.keys()))
 
 
 class TestGribIndex(unittest.TestCase):
-
     """Test GribIndex functionality."""
 
     def test_memory_management(self):
@@ -315,7 +325,6 @@ class TestGribIndex(unittest.TestCase):
 
 
 class TestBufrFile(unittest.TestCase):
-
     """Test BufrFile functionality."""
 
     def test_memory_management(self):
@@ -325,7 +334,7 @@ class TestBufrFile(unittest.TestCase):
             for i in range(len(bufr_file)):
                 msg = BufrMessage(bufr_file)
                 self.assertEqual(msg["bufrHeaderCentre"], 98)
-                self.assertEqual(msg['count'], i+1)
+                self.assertEqual(msg['count'], i + 1)
             self.assertEqual(len(bufr_file.open_messages), 3)
         self.assertEquals(len(bufr_file.open_messages), 0)
 
@@ -358,7 +367,6 @@ class TestBufrFile(unittest.TestCase):
 
 
 class TestBufrMessage(unittest.TestCase):
-
     """Test BufrMessage functionality"""
 
     def test_metadata(self):
@@ -366,13 +374,13 @@ class TestBufrMessage(unittest.TestCase):
         with BufrFile(TESTBUFR) as bufr_file:
             msg = BufrMessage(bufr_file)
             msg.unpack()
-            msg_keys = msg.keys()
+            msg_keys = list(msg.keys())
             self.assertEqual(len(msg_keys), 140)
             for key in KNOWN_BUFR_KEYS:
                 assert key in msg_keys
             # Size of message in bytes
             self.assertEqual(msg.size(), 220)
-            self.assertEqual(len(msg.keys()), len(msg))
+            self.assertEqual(len(list(msg.keys())), len(msg))
 
     def test_content(self):
         """Data values are read correctly from BufrMessage."""
@@ -404,14 +412,14 @@ class TestBufrMessage(unittest.TestCase):
         with BufrFile(TESTBUFR) as bufr_file:
             msg = BufrMessage(bufr_file)
             msg2 = BufrMessage(clone=msg)
-            self.assertSequenceEqual(msg.keys(), msg2.keys())
+            self.assertSequenceEqual(list(msg.keys()), list(msg2.keys()))
 
     def test_copy_data(self):
         """Can copy data section from one message to another"""
         bufr = BufrMessage(sample='BUFR3')
         with BufrFile('../../data/bufr/metar_with_2_bias.bufr') as bufr_file:
             bufrin = BufrMessage(bufr_file)
-            ivalues=(
+            ivalues = (
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
@@ -437,19 +445,18 @@ class TestBufrMessage(unittest.TestCase):
             bufr['numberOfSubsets'] = 1
             bufr['observedData'] = 1
             bufr['compressedData'] = 0
-            ivalues=(
-                307011,7006,10004,222000,101023,31031,1031,1032,101023,33007,
-                225000,236000,101023,31031,1031,1032,8024,101001,225255,225000,
-                236000,101023,31031,1031,1032,8024,101001,225255,
-                1063,2001,4001,4002,4003,4004,4005,5002,
-                6002,7001,7006,11001,11016,11017,11002)
+            ivalues = (
+                307011, 7006, 10004, 222000, 101023, 31031, 1031, 1032, 101023, 33007,
+                225000, 236000, 101023, 31031, 1031, 1032, 8024, 101001, 225255, 225000,
+                236000, 101023, 31031, 1031, 1032, 8024, 101001, 225255,
+                1063, 2001, 4001, 4002, 4003, 4004, 4005, 5002,
+                6002, 7001, 7006, 11001, 11016, 11017, 11002)
             bufr['unexpandedDescriptors'] = ivalues
             bufrin.unpack()
             bufrin.copy_data(bufr)
             with open(TEST_OUTPUT, 'w') as test:
                 bufr.write(test)
             os.unlink(TEST_OUTPUT)
-
 
 
 if __name__ == "__main__":

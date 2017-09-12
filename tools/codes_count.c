@@ -10,7 +10,7 @@
 
 #include "grib_api_internal.h"
 
-void usage(const char* prog)
+static void usage(const char* prog)
 {
     printf("usage: %s [-v] infile1 infile2 ... \n",prog);
     exit(1);

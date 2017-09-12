@@ -11,32 +11,58 @@
 #include "eccodes.h"
 #include <assert.h>
 
-void usage(const char* prog)
+static void usage(const char* prog)
 {
-    printf("usage: %s infile\n",prog);
+    printf("usage: %s [-a|-d] infile\n",prog);
     exit(1);
 }
 
+#define ITER_ALL_KEYS  1
+#define ITER_DATA_KEYS 2
+
 int main(int argc,char* argv[])
 {
-    int err = 0;
+    int err = 0, opt = 0;
     codes_handle* h = NULL;
     codes_bufr_keys_iterator* kiter = NULL;
     char* input_filename = NULL;
+    const char* prog = argv[0];
     FILE* f = NULL;
-    /*grib_context* c = grib_context_get_default();*/
+    int iterator_mode = ITER_ALL_KEYS;
     
-    if (argc!=2) usage(argv[0]);
-    input_filename = argv[1];
+    while ((opt = getopt(argc, argv, "ad")) != -1) {
+        switch (opt) {
+            case 'a':
+                iterator_mode = ITER_ALL_KEYS;
+                break;
+            case 'd':
+                iterator_mode = ITER_DATA_KEYS;
+                break;
+            default:
+                usage(prog);
+                break;
+        }
+    }
+    /* After option processing expect just 1 file */
+    if (argc-optind != 1) usage(prog);
+
+    input_filename = argv[argc-1];
     f = fopen(input_filename, "r");
     assert(f);
     h = codes_handle_new_from_file(NULL, f, PRODUCT_BUFR, &err);
     assert(h);
 
     CODES_CHECK(codes_set_long(h,"unpack",1), 0);
+    
+    if (iterator_mode == ITER_ALL_KEYS) {
+        /*printf("Dumping ALL keys\n");*/
+        kiter = codes_bufr_keys_iterator_new(h, 0);
+    } else {
+        /*printf("Dumping only DATA SECTION keys\n");*/
+        assert(iterator_mode == ITER_DATA_KEYS);
+        kiter=codes_bufr_data_section_keys_iterator_new(h);
+    }
 
-    /*kiter=codes_bufr_data_section_keys_iterator_new(h);*/
-    kiter = codes_bufr_keys_iterator_new(h, 0);
     while(codes_bufr_keys_iterator_next(kiter))
     {
         char* kname = codes_bufr_keys_iterator_get_name(kiter);

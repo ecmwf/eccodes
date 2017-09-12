@@ -19,7 +19,7 @@
 #include <assert.h>
 #include "eccodes.h"
 
-void usage(const char* prog) {
+static void usage(const char* prog) {
     fprintf(stderr, "usage: %s in out\n",prog);
     exit(1);
 }

@@ -24,7 +24,7 @@ set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} 
 
 include( ecbuild_system NO_POLICY_SCOPE )
 
-ecbuild_requires_macro_version( 2.6 )
+ecbuild_requires_macro_version( 2.7.2 )
 
 ###############################################################################
 # local project
@@ -39,25 +39,13 @@ ecbuild_add_option( FEATURE EXAMPLES
     DEFAULT ON
 )
 
-# controls installation of files in definitions/ -- note that it still crate the symlinks in the build dir
-ecbuild_add_option( FEATURE INSTALL_ECCODES_DEFINITIONS
-    DESCRIPTION "Install the eccodes definitions"
-    DEFAULT ON
-)
-
-# controls installation of files in samples/ and ifs_samples/ -- note that it still crate the symlinks in the build dir
-ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
-    DESCRIPTION "Install the eccodes samples, including IFS samples"
-    DEFAULT ON
-)
-
 ecbuild_add_option( FEATURE JPG
-    DESCRIPTION "support for JPG decoding/encoding"
+    DESCRIPTION "Support for JPG decoding/encoding"
     DEFAULT ON
 )
 
 ecbuild_add_option( FEATURE PNG
-    DESCRIPTION "support for PNG decoding/encoding"
+    DESCRIPTION "Support for PNG decoding/encoding"
     DEFAULT OFF
     REQUIRED_PACKAGES PNG
 )
@@ -70,26 +58,26 @@ else()
 endif()
 
 ecbuild_add_option( FEATURE NETCDF
-    DESCRIPTION "support for GRIB to NetCDF conversion"
+    DESCRIPTION "Support for GRIB to NetCDF conversion"
     DEFAULT ON
     REQUIRED_PACKAGES NetCDF
     NO_TPL
 )
 
 ecbuild_add_option( FEATURE AEC
-    DESCRIPTION "support for Adaptive Entropy Coding"
+    DESCRIPTION "Support for Adaptive Entropy Coding"
     DEFAULT OFF
     REQUIRED_PACKAGES AEC
 )
 
 ecbuild_add_option( FEATURE PYTHON
-    DESCRIPTION "build the ecCodes Python interface"
+    DESCRIPTION "Build the ecCodes Python interface"
     DEFAULT ON
     REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy
 )
 
 ecbuild_add_option( FEATURE FORTRAN
-    DESCRIPTION "build the ecCodes Fortran interface"
+    DESCRIPTION "Build the ecCodes Fortran interface"
     DEFAULT ON
     # REQUIRED_LANGUAGES Fortran # TODO
 )
@@ -108,7 +96,7 @@ ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
     CONDITION EC_HAVE_FMEMOPEN OR EC_HAVE_FUNOPEN
-    REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS"
+    REQUIRED_PACKAGES PythonInterp
 )
 
 #if( HAVE_MEMFS AND "${CMAKE_C_COMPILER_ID}" STREQUAL "Cray")
@@ -116,14 +104,34 @@ ecbuild_add_option( FEATURE MEMFS
 #  ecbuild_warn("MEMFS not supported with Cray C compiler")
 #endif()
 
+if(HAVE_MEMFS)
+  set( _will_install_defs_samples OFF )
+else()
+  set( _will_install_defs_samples ON )
+endif()
+
+# controls installation of files in definitions/ -- note that it still creates the symlinks in the build dir
+# by default, if memfs is available, then we don't need to install definitions
+ecbuild_add_option( FEATURE INSTALL_ECCODES_DEFINITIONS
+    DESCRIPTION "Install the ecCodes definitions"
+    DEFAULT ${_will_install_defs_samples}
+)
+
+# controls installation of files in samples/ and ifs_samples/ -- note that it still creates the symlinks in the build dir
+# by default, if memfs is available, then we don't need to install samples
+ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
+    DESCRIPTION "Install the ecCodes samples, including IFS samples"
+    DEFAULT ${_will_install_defs_samples}
+)
+
 # advanced options (not visible in cmake-gui )
 
-ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "enable memory management" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "enable memory alignment"  DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE GRIB_TIMER          DESCRIPTION "enable timer" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "enable POSIX threads" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "enable OMP threads" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "enable extended regression testing" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "Enable memory management" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "Enable memory alignment"  DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE GRIB_TIMER          DESCRIPTION "Enable timer" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable POSIX threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable OMP threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "Enable extended regression testing" DEFAULT OFF ADVANCED )
 
 ###############################################################################
 # macro processing
@@ -342,7 +350,7 @@ if( NOT PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME )
   set( ECCODES_FOUND            TRUE PARENT_SCOPE )
   set( ECCODES_DEFINITIONS      ${ECCODES_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
   set( ECCODES_INCLUDE_DIRS     ${ECCODES_INCLUDE_DIRS} ${ECCODES_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
-  set( ECCODES_LIBRARIES        ${ECCODES_LIBRARIES}    ${ECCODES_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
+  set( ECCODES_LIBRARIES        ${ECCODES_LIBRARIES}    ${ECCODES_EXTRA_LIBRARIES} PARENT_SCOPE )
   set( ECCODES_INSTALL_EXTRA_TOOLS  ${ECCODES_INSTALL_EXTRA_TOOLS} PARENT_SCOPE )
   set( ECCODES_DEFINITION_PATH  ${CMAKE_BINARY_DIR}/${ECCODES_DEFINITION_SUFF}  PARENT_SCOPE )
   set( ECCODES_SAMPLES_PATH     ${CMAKE_BINARY_DIR}/${ECCODES_SAMPLES_SUFF}     PARENT_SCOPE )
@@ -356,7 +364,7 @@ ecbuild_pkgconfig(
   DESCRIPTION    "The ecCodes library"
   LIBRARIES      eccodes
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
-  VARIABLES      HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+  VARIABLES      HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
                  HAVE_NETCDF HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
@@ -368,7 +376,7 @@ if( EC_HAVE_FORTRAN )
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
                         ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
-    VARIABLES           HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+    VARIABLES           HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                         HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
                         HAVE_NETCDF HAVE_PYTHON HAVE_PNG HAVE_AEC
   )

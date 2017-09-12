@@ -45,6 +45,7 @@ meta GDSPresent gds_is_present(gridDescriptionSectionPresent,gridDefinition,bitm
 flagbit bitmapPresent(section1Flags,6) :dump;
 alias bitmapSectionPresent=bitmapPresent;
 alias geography.bitmapPresent=bitmapPresent;
+alias missingValuesPresent=bitmapPresent : read_only;
 transient angularPrecision=1000;  # milli degrees
 
 if(gridDescriptionSectionPresent){

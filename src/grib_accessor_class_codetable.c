@@ -182,12 +182,30 @@ static int grib_load_codetable(grib_context* c,const char* filename,
 static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
     int n=0;
+    long new_len = len;
+    grib_handle* hand = grib_handle_of_accessor(a);
     grib_accessor_codetable* self  = (grib_accessor_codetable*)a;
     grib_action* act=(grib_action*)(a->creator);
+    DebugAssert(len == self->nbytes);
 
-    self->tablename = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
-    self->masterDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-    self->localDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    if (new_len == 0) {
+        /* ECC-485: When the codetable length is 0, it means we are passing
+         * its length as an identifier not an integer. This identifier is
+         * added to the argument list (at the beginning)
+         */
+        new_len = grib_arguments_get_long(hand,params,n++);
+        if ( new_len <= 0 ) {
+            grib_context_log(a->context,GRIB_LOG_FATAL,"%s: codetable length must be a positive integer",a->name);
+        }
+        self->nbytes = new_len;
+    }
+
+    self->tablename = grib_arguments_get_string(hand,params,n++);
+    if (self->tablename == NULL) {
+        grib_context_log(a->context,GRIB_LOG_FATAL,"%s: codetable table is invalid",a->name);
+    }
+    self->masterDir = grib_arguments_get_name(hand,params,n++); /* can be NULL */
+    self->localDir  = grib_arguments_get_name(hand,params,n++); /* can be NULL */
 
     /*if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)
     printf("-------- %s type string (%ld)\n",a->name,a->flags);*/
@@ -197,7 +215,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
         if (!a->vvalue)
             a->vvalue = (grib_virtual_value*)grib_context_malloc_clear(a->context,sizeof(grib_virtual_value));
         a->vvalue->type=grib_accessor_get_native_type(a);
-        a->vvalue->length=len;
+        a->vvalue->length = new_len;
         if (act->default_value!=NULL) {
             const char* p = 0;
             size_t s_len = 1;
@@ -205,11 +223,11 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
             int ret=0;
             double d;
             char tmp[1024];
-            grib_expression* expression=grib_arguments_get_expression(grib_handle_of_accessor(a),act->default_value,0);
-            int type = grib_expression_native_type(grib_handle_of_accessor(a),expression);
+            grib_expression* expression=grib_arguments_get_expression(hand,act->default_value,0);
+            int type = grib_expression_native_type(hand,expression);
             switch(type) {
             case GRIB_TYPE_DOUBLE:
-                grib_expression_evaluate_double(grib_handle_of_accessor(a),expression,&d);
+                grib_expression_evaluate_double(hand,expression,&d);
                 grib_pack_double(a,&d,&s_len);
                 break;
 
@@ -231,7 +249,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
             }
         }
     } else {
-        a->length = len;
+        a->length = new_len;
     }
 }
 
@@ -754,15 +772,17 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
     long rlen = 0;
-    int err=0;
+
     unsigned long i = 0;
     long pos = a->offset*8;
     grib_handle* hand = NULL;
 
 #ifdef DEBUG
-    err=grib_value_count(a,&rlen);
-    Assert(!err);
-    Assert(rlen == 1);
+    {
+        int err = grib_value_count(a,&rlen);
+        Assert(!err);
+        Assert(rlen == 1);
+    }
 #endif
     rlen = 1; /* ECC-480 Performance: avoid func call overhead of grib_value_count */
 

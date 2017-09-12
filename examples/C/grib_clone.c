@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include "eccodes.h"
 
-void usage(char *app)
+static void usage(const char *app)
 {
     fprintf(stderr,"Usage is: %s input_file ouput_file\n", app);
 }

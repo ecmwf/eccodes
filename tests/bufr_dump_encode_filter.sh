@@ -51,7 +51,7 @@ do
 
     ${tools_dir}/bufr_dump -Efilter $f > $fRules
 
-    ${tools_dir}/bufr_filter -o $fBufrTmp $fRules $f
+    ${tools_dir}/codes_bufr_filter -o $fBufrTmp $fRules $f
     ${tools_dir}/bufr_compare $fBufrTmp $f
 
     TEMP_JSON1=${label}.$f.json

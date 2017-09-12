@@ -11,7 +11,7 @@
 #include "eccodes.h"
 #include <assert.h>
 
-void compare_doubles(const double d1, const double d2, const double epsilon)
+static void compare_doubles(const double d1, const double d2, const double epsilon)
 {
    assert(fabs(d1 - d2) < epsilon);
 }

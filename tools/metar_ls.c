@@ -239,7 +239,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h) {
   }
   
   if (options->latlon) {
-    int err=0;
+    err=0;
 	double min;
     if (!n) n=grib_nearest_new(h,&err);
     GRIB_CHECK_NOLINE(err,0);

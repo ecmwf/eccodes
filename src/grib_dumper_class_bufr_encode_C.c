@@ -154,7 +154,7 @@ static char* dval_to_string(grib_context* c, double v)
 static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_bufr_encode_C *self = (grib_dumper_bufr_encode_C*)d;
-    double value; size_t size = 0;
+    double value=0; size_t size = 0;
     double *values=NULL;
     int err = 0;
     int i,r,icount;
@@ -164,11 +164,11 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     grib_context* c=a->context;
     grib_handle* h=grib_handle_of_accessor(a);
 
-    grib_value_count(a,&count);
-    size=count;
-
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) !=0)
         return;
+
+    grib_value_count(a,&count);
+    size=count;
 
     if (size>1) {
         values=(double*)grib_context_malloc_clear(c,sizeof(double)*size);
@@ -241,7 +241,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* prefix)
 {
     grib_dumper_bufr_encode_C *self = (grib_dumper_bufr_encode_C*)d;
-    double value; size_t size = 0;
+    double value=0; size_t size = 0;
     double *values=NULL;
     int err = 0;
     int i,icount;
@@ -250,11 +250,11 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
     char* sval;
     grib_context* c=a->context;
 
-    grib_value_count(a,&count);
-    size=count;
-
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) !=0)
         return;
+
+    grib_value_count(a,&count);
+    size=count;
 
     if (size>1) {
         values=(double*)grib_context_malloc_clear(c,sizeof(double)*size);
@@ -319,7 +319,7 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
 static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_encode_C *self = (grib_dumper_bufr_encode_C*)d;
-    long value; size_t size = 0;
+    long value=0; size_t size = 0;
     long *values=NULL;
     int err = 0;
     int i,r,icount;
@@ -328,10 +328,11 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
     grib_context* c=a->context;
     grib_handle* h=grib_handle_of_accessor(a);
 
+    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 )
+        return;
+
     grib_value_count(a,&count);
     size=count;
-
-    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0  ) return;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
         if (self->isLeaf==0) {
@@ -425,7 +426,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
 static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* prefix)
 {
     grib_dumper_bufr_encode_C *self = (grib_dumper_bufr_encode_C*)d;
-    long value; size_t size = 0;
+    long value=0; size_t size = 0;
     long *values=NULL;
     int err = 0;
     int i,icount;
@@ -433,11 +434,11 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     long count=0;
     grib_context* c=a->context;
 
+    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0 )
+        return;
+
     grib_value_count(a,&count);
     size=count;
-
-    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
-        return;
 
     if (size>1) {
         values=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
@@ -498,16 +499,16 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_encode_C *self = (grib_dumper_bufr_encode_C*)d;
-    double value; size_t size = 1;
+    double value=0; size_t size = 1;
     int r;
     char* sval;
     grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=h->context;
 
-    grib_unpack_double(a,&value,&size);
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
+    grib_unpack_double(a,&value,&size);
     self->empty=0;
 
     r=compute_bufr_key_rank(h,self->keys,a->name);
@@ -542,13 +543,11 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     grib_dumper_bufr_encode_C *self = (grib_dumper_bufr_encode_C*)d;
     char **values;
     size_t size = 0,i=0;
-    grib_context* c=NULL;
+    grib_context* c=a->context;
     int err = 0;
     long count=0;
-    int r;
+    int r=0;
     grib_handle* h=grib_handle_of_accessor(a);
-
-    c=a->context;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
@@ -574,9 +573,9 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 
     err = grib_unpack_string_array(a,values,&size);
     for  (i=0;i<size-1;i++) {
-        fprintf(self->dumper.out,"  svalues[%lu]=\"%s\"; \n", i, values[i]);
+        fprintf(self->dumper.out,"  svalues[%lu]=\"%s\"; \n", (unsigned long)i, values[i]);
     }
-    fprintf(self->dumper.out,"  svalues[%lu]=\"%s\";\n", i, values[i]);
+    fprintf(self->dumper.out,"  svalues[%lu]=\"%s\";\n", (unsigned long)i, values[i]);
 
     if (self->isLeaf==0) {
         if ((r=compute_bufr_key_rank(h,self->keys,a->name))!=0)
@@ -610,12 +609,11 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     char *value=NULL;
     char *p = NULL;
     size_t size = 0;
-    grib_context* c=NULL;
+    grib_context* c = a->context;
     int r;
     int err = _grib_get_string_length(a,&size);
     grib_handle* h=grib_handle_of_accessor(a);
 
-    c=a->context;
     if (size==0) return;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -690,11 +688,11 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
     grib_get_long_array(h,key,val,&size);
     for (i=0;i<size-1;i++) {
         if (icount>cols || i==0) {fprintf(f,"\n  ");icount=0;}
-        fprintf(f,"ivalues[%lu]=%ld; ", i, val[i]);
+        fprintf(f,"ivalues[%lu]=%ld; ", (unsigned long)i, val[i]);
         icount++;
     }
     if (icount>cols) {fprintf(f,"\n  ");}
-    fprintf(f,"ivalues[%lu]=%ld;\n", size-1, val[size-1]);
+    fprintf(f,"ivalues[%lu]=%ld;\n", (unsigned long)(size-1), val[size-1]);
 
     grib_context_free(h->context,val);
     fprintf(f,"  CODES_CHECK(codes_set_long_array(h, \"%s\", ivalues, size), 0);\n",print_key);

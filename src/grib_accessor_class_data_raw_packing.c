@@ -148,181 +148,179 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
-  grib_accessor_data_raw_packing *self =(grib_accessor_data_raw_packing*)a;
+    grib_accessor_data_raw_packing *self =(grib_accessor_data_raw_packing*)a;
 
-  self->number_of_values      = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->precision       = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  a->flags |= GRIB_ACCESSOR_FLAG_DATA;
+    self->number_of_values      = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+    self->precision       = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+    a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
 static int value_count(grib_accessor* a,long* n_vals)
 {
-  grib_accessor_data_raw_packing *self =(grib_accessor_data_raw_packing*)a;
-  *n_vals= 0;
-  return grib_get_long_internal(grib_handle_of_accessor(a),self->number_of_values,n_vals);
+    grib_accessor_data_raw_packing *self =(grib_accessor_data_raw_packing*)a;
+    *n_vals= 0;
+    return grib_get_long_internal(grib_handle_of_accessor(a),self->number_of_values,n_vals);
 }
 
-static int  unpack_double(grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  grib_accessor_data_raw_packing *self =(grib_accessor_data_raw_packing*)a;
-  unsigned char* buf = NULL;
-  int bytes = 0;
-  size_t nvals = 0;
-  long inlen = grib_byte_count(a);
+    grib_accessor_data_raw_packing *self =(grib_accessor_data_raw_packing*)a;
+    unsigned char* buf = NULL;
+    int bytes = 0;
+    size_t nvals = 0;
+    long inlen = grib_byte_count(a);
 
-  long precision = 0;
+    long precision = 0;
 
-  int code = GRIB_SUCCESS;
+    int code = GRIB_SUCCESS;
 
-  if((code = grib_get_long_internal(grib_handle_of_accessor(a),self->precision,&precision))
-      != GRIB_SUCCESS)
-    return code;
+    if((code = grib_get_long_internal(grib_handle_of_accessor(a),self->precision,&precision))
+            != GRIB_SUCCESS)
+        return code;
 
-  self->dirty=0;
+    self->dirty=0;
 
-  buf =  (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
-  buf += grib_byte_offset(a);
+    buf =  (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
+    buf += grib_byte_offset(a);
 
-  switch(precision)
-  {
+    switch(precision)
+    {
     case 1:
-      bytes = 4;
-      break;
-
+        bytes = 4;
+        break;
     case 2:
-      bytes = 8;
-      break;
-
+        bytes = 8;
+        break;
     default:
-      return GRIB_NOT_IMPLEMENTED;
-      break;
-  }
+        return GRIB_NOT_IMPLEMENTED;
+        break;
+    }
 
-  nvals = inlen / bytes;
+    nvals = inlen / bytes;
 
-  if(*len < nvals)
-    return GRIB_ARRAY_TOO_SMALL;
+    if(*len < nvals)
+        return GRIB_ARRAY_TOO_SMALL;
 
-  code=grib_ieee_decode_array(a->context,buf,nvals,bytes,val);
+    code=grib_ieee_decode_array(a->context,buf,nvals,bytes,val);
 
-  *len = nvals;
+    *len = nvals;
 
-  return code;
+    return code;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-  grib_accessor_data_raw_packing *self =(grib_accessor_data_raw_packing*)a;
+    grib_accessor_data_raw_packing *self =(grib_accessor_data_raw_packing*)a;
 
-  int bytes = 0;
-  unsigned char* buffer = NULL;
+    int bytes = 0;
+    unsigned char* buffer = NULL;
 
-  long precision = 0;
+    long precision = 0;
 
-  double*  values = (double*)val;
-  size_t inlen = *len;
+    double*  values = (double*)val;
+    size_t inlen = *len;
 
-  int free_buffer = 0;
-  int free_values = 0;
+    int free_buffer = 0;
+    int free_values = 0;
 
-  int code = GRIB_SUCCESS;
+    int code = GRIB_SUCCESS;
 
-  size_t bufsize = 0;
+    size_t bufsize = 0;
 
-  if (*len ==0) return GRIB_NO_VALUES;
+    if (*len ==0) return GRIB_NO_VALUES;
 
-  if((code = grib_get_long_internal(grib_handle_of_accessor(a),self->precision,&precision))
-      != GRIB_SUCCESS)
-    return code;
+    if((code = grib_get_long_internal(grib_handle_of_accessor(a),self->precision,&precision))
+            != GRIB_SUCCESS)
+        return code;
 
-  self->dirty=1;
+    self->dirty=1;
 
-  switch(precision)
-  {
+    switch(precision)
+    {
     case 1:
-      bytes = 4;
-      break;
+        bytes = 4;
+        break;
 
     case 2:
-      bytes = 8;
-      break;
+        bytes = 8;
+        break;
 
     default:
-      code = GRIB_NOT_IMPLEMENTED;
-      goto clean_up;
-      break;
-  }
+        code = GRIB_NOT_IMPLEMENTED;
+        goto clean_up;
+        break;
+    }
 
-  bufsize = bytes*inlen;
+    bufsize = bytes*inlen;
 
-  buffer = (unsigned char*)grib_context_malloc(a->context, bufsize);
+    buffer = (unsigned char*)grib_context_malloc(a->context, bufsize);
 
-  if(!buffer)
-  {
-    code = GRIB_OUT_OF_MEMORY;
-    goto clean_up;
-  }
+    if(!buffer)
+    {
+        code = GRIB_OUT_OF_MEMORY;
+        goto clean_up;
+    }
 
-  code=grib_ieee_encode_array(a->context,values,inlen,bytes,buffer);
+    code=grib_ieee_encode_array(a->context,values,inlen,bytes,buffer);
 
 clean_up:
-  if(free_buffer) free(buffer);
-  if(free_values) free(values);
+    if(free_buffer) free(buffer);
+    if(free_values) free(values);
 
-  grib_buffer_replace(a, buffer, bufsize,1,1);
+    grib_buffer_replace(a, buffer, bufsize,1,1);
 
-  grib_context_buffer_free(a->context,buffer);
+    grib_context_buffer_free(a->context,buffer);
 
-  code = grib_set_long(grib_handle_of_accessor(a),self->number_of_values, inlen);
-  if(code==GRIB_READ_ONLY) code=0;
+    code = grib_set_long(grib_handle_of_accessor(a),self->number_of_values, inlen);
+    if(code==GRIB_READ_ONLY) code=0;
 
-  return code;
-
+    return code;
 }
 
-static int  unpack_double_element(grib_accessor* a, size_t idx, double* val) {
-  int ret=0;
-  grib_accessor_data_raw_packing *self =(grib_accessor_data_raw_packing*)a;
-  unsigned char* buf = NULL;
-  int bytes = 0;
-  size_t nvals = 0;
-  long inlen = grib_byte_count(a);
-  long pos;
+static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
+    int ret=0;
+    grib_accessor_data_raw_packing *self =(grib_accessor_data_raw_packing*)a;
+    unsigned char* buf = NULL;
+    int bytes = 0;
+    size_t nvals = 0;
+    long inlen = grib_byte_count(a);
+    long pos;
 
-  long precision = 0;
+    long precision = 0;
 
-  if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->precision,&precision))
-      != GRIB_SUCCESS)
-    return ret;
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->precision,&precision))
+            != GRIB_SUCCESS)
+        return ret;
 
-  self->dirty=0;
+    self->dirty=0;
 
-  buf =  (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
-  buf += grib_byte_offset(a);
+    buf =  (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
+    buf += grib_byte_offset(a);
 
-  switch(precision)
-  {
+    switch(precision)
+    {
     case 1:
-      bytes = 4;
-      break;
+        bytes = 4;
+        break;
 
     case 2:
-      bytes = 8;
-      break;
+        bytes = 8;
+        break;
 
     default:
-      return GRIB_NOT_IMPLEMENTED;
-      break;
-  }
+        return GRIB_NOT_IMPLEMENTED;
+        break;
+    }
 
-  pos=bytes*idx;
-  
-  Assert(pos<=inlen);
-  
-  nvals = 1;
-  buf+=pos;
-  
-  ret=grib_ieee_decode_array(a->context,buf,nvals,bytes,val);
+    pos=bytes*idx;
 
-  return ret;
+    Assert(pos<=inlen);
+
+    nvals = 1;
+    buf+=pos;
+
+    ret=grib_ieee_decode_array(a->context,buf,nvals,bytes,val);
+
+    return ret;
 }

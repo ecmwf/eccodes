@@ -288,13 +288,17 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
     grib_context* c=a->context;
 
     if (self->compressedData) {
+        DebugAssert(self->index < self->numericValues->n);
         idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
+        DebugAssert(idx < self->stringValues->n);
         count=grib_sarray_used_size(self->stringValues->v[idx]);
         for (i=0;i<count;i++) {
             val[i]=grib_context_strdup(c,self->stringValues->v[idx]->v[i]);
         }
         *len=count;
     } else {
+        DebugAssert(self->subsetNumber < self->numericValues->n);
+        DebugAssert(self->index < self->numericValues->v[self->subsetNumber]->n);
         idx=(int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000-1;
         val[0]=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
         *len=1;
@@ -354,12 +358,15 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len)
     }
 
     if (self->compressedData) {
+        DebugAssert(self->index < self->numericValues->n);
         idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
         if (idx < 0) return GRIB_INTERNAL_ERROR;
         str=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
     } else {
+        DebugAssert(self->subsetNumber < self->numericValues->n);
         idx=(int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000-1;
         if (idx < 0) return GRIB_INTERNAL_ERROR;
+        DebugAssert(idx < self->stringValues->n);
         str=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
     }
 
@@ -420,11 +427,15 @@ static int unpack_long (grib_accessor* a, long* val, size_t *len)
 
     if (self->compressedData) {
         for (i=0;i<count;i++) {
+            DebugAssert(self->index < self->numericValues->n);
+            DebugAssert(i < self->numericValues->v[self->index]->n);
             val[i]= self->numericValues->v[self->index]->v[i] == GRIB_MISSING_DOUBLE ?
                     GRIB_MISSING_LONG : (long)self->numericValues->v[self->index]->v[i];
         }
         *len=count;
     } else {
+        DebugAssert(self->subsetNumber < self->numericValues->n);
+        DebugAssert(self->index < self->numericValues->v[self->subsetNumber]->n);
         val[0]= self->numericValues->v[self->subsetNumber]->v[self->index] == GRIB_MISSING_DOUBLE ?
                 GRIB_MISSING_LONG : (long)self->numericValues->v[self->subsetNumber]->v[self->index];
         *len=1;
@@ -445,10 +456,14 @@ static int unpack_double (grib_accessor* a, double* val, size_t *len)
 
     if (self->compressedData) {
         for (i=0;i<count;i++) {
+            DebugAssert(self->index < self->numericValues->n);
+            DebugAssert(i < self->numericValues->v[self->index]->n);
             val[i]=self->numericValues->v[self->index]->v[i];
         }
         *len=count;
     } else {
+        DebugAssert(self->subsetNumber < self->numericValues->n);
+        DebugAssert(self->index < self->numericValues->v[self->subsetNumber]->n);
         val[0]=self->numericValues->v[self->subsetNumber]->v[self->index];
         *len=1;
     }
@@ -526,9 +541,11 @@ static int value_count(grib_accessor* a,long* count)
     type=get_native_type(a);
 
     if (type==GRIB_TYPE_STRING) {
+        DebugAssert(self->index < self->numericValues->n);
         idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
         size=grib_sarray_used_size(self->stringValues->v[idx]);
     } else {
+        DebugAssert(self->index < self->numericValues->n);
         size=grib_darray_used_size(self->numericValues->v[self->index]);
     }
 

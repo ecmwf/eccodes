@@ -31,7 +31,7 @@ cat > $tempRules <<EOF
  write;
 EOF
 
-${tools_dir}/bufr_filter -o $tempOut $tempRules $BufrFile
+${tools_dir}/codes_bufr_filter -o $tempOut $tempRules $BufrFile
 
 # There are two differences. So this should fail
 set +e

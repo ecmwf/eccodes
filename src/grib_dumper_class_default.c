@@ -139,7 +139,7 @@ static void aliases(grib_dumper* d,grib_accessor* a)
 static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_default *self = (grib_dumper_default*)d;
-    long value; size_t size = 1;
+    long value=0; size_t size = 1;
     long *values=NULL;
     int err = 0;
     int i;
@@ -209,8 +209,8 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_default *self = (grib_dumper_default*)d;
     int i;
-    long lvalue;
-    double dvalue;
+    long lvalue = 0;
+    double dvalue = 0;
     size_t size = 1;
     int err = 0;
     int isDouble=0;

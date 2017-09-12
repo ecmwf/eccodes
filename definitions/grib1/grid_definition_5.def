@@ -81,9 +81,12 @@ iterator polar_stereographic(numberOfPoints,missingValue,values,
           latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
           southPoleOnProjectionPlane,
           orientationOfTheGridInDegrees,
+          LaDInDegrees,
           Dx,Dy,
           iScansNegatively,
           jScansPositively,
           jPointsAreConsecutive,
           alternativeRowScanning);
+
+nearest polar_stereographic(values,radius,Nx,Ny);
 

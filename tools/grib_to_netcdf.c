@@ -1089,16 +1089,16 @@ static err to_expand_mem(field *g)
         g->values = (double*) grib_context_malloc(ctx, sizeof(double) * g->value_count);
         if((e = grib_get_double_array(g->handle, "values", g->values, &count)))
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get decode values %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot decode values %s", grib_get_error_message(e));
             return e;
         }
 
         if(count != g->value_count)
             grib_context_log(ctx, GRIB_LOG_FATAL, "ecCodes: value count mismatch %d %d", count, g->value_count);
 
-        if((e = grib_get_long(g->handle, "bitmapPresent", &bitmap)))
+        if((e = grib_get_long(g->handle, "missingValuesPresent", &bitmap)))
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get bitmapPresent %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get missingValuesPresent %s", grib_get_error_message(e));
             return e;
         }
 
@@ -1843,6 +1843,8 @@ typedef struct ncoptions {
     request *mars_description;
     boolean mmeans; /* Whether this dataset is Monthly Means */
     boolean climatology; /* Whether this dataset is climatology */
+    boolean shuffle;
+    long deflate;
 } ncoptions_t;
 
 ncoptions_t setup;
@@ -2044,11 +2046,15 @@ static void get_nc_options(const request *user_r)
     const char *checkvalidtime_env = NULL;
     const char *validtime = get_value(user_r, "usevalidtime", 0);
     const char *refdate = get_value(user_r, "referencedate", 0);
+    const char *shuffle = get_value(user_r, "shuffle", 0);
+    const char *deflate = get_value(user_r, "deflate", 0);
 
     const char *title = get_value(user_r, "title", 0);
     const char *history = get_value(user_r, "history", 0);
     const char *unlimited = get_value(user_r, "unlimited", 0);
 
+    setup.shuffle = shuffle ? (strcmp(shuffle, "true") == 0) : FALSE;
+    setup.deflate = deflate ? ((strcmp(deflate, "none") == 0) ? -1 : atol(deflate)) : -1;
     setup.usevalidtime = validtime ? (strcmp(validtime, "true") == 0) : FALSE;
     setup.refdate = refdate ? atol(refdate) : 19000101;
     setup.auto_refdate = refdate ? (strcmp(get_value(user_r, "referencedate", 0), "AUTOMATIC") == 0) : FALSE;
@@ -2856,10 +2862,34 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
     int var_id = 0; /* Variable ID */
     int dims[1024];
 
+    size_t chunks[NC_MAX_DIMS] = {0,}; /* For chunking */
+    err e = 0;
+    
+    long ni;
+    long nj;
+    
+    field *f = get_field(fs, 0, expand_mem);
+    if((e = grib_get_long(f->handle, "Ni", &ni)) != GRIB_SUCCESS) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni %s", grib_get_error_message(e));
+        return e;
+    }
+    if ((e = grib_get_long(f->handle, "Nj", &nj)) != GRIB_SUCCESS) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj %s", grib_get_error_message(e));
+        return e;
+    }
+    release_field(f);
+
+    /* Count dimensions per axis */
+    for(i = 0; i < naxis; ++i)
+        chunks[naxis - i - 1] = 1;
+
+    chunks[naxis] = nj; /* latitude */
+    chunks[naxis + 1] = ni; /* longitude */
+
     /* START DEFINITIONS */
 
     /* Define latitude/longitude dimensions */
-    err e = def_latlon(ncid, fs);
+    e = def_latlon(ncid, fs);
     if (e != GRIB_SUCCESS)
         return e;
 
@@ -3004,12 +3034,20 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
 
     for(i = 0; i < subsetcnt; ++i)
     {
-
         printf("%s: Defining variable '%s'.\n", grib_tool_name, subsets[i].att.name);
 
         stat = nc_def_var(ncid, subsets[i].att.name, subsets[i].att.nctype, n, dims, &var_id);
         check_err(stat, __LINE__, __FILE__);
 
+        if (setup.deflate > -1)
+        {
+            stat = nc_def_var_chunking(ncid, var_id, NC_CHUNKED, chunks);
+            check_err(stat, __LINE__, __FILE__);
+
+            /* Set compression settings for a variable */
+            stat = nc_def_var_deflate(ncid, var_id, setup.shuffle, 1, setup.deflate);
+            check_err(stat, __LINE__, __FILE__);
+        }
         if(subsets[i].scale)
         {
             compute_scale(&subsets[i]);
@@ -3835,6 +3873,10 @@ grib_option grib_options[] = {
                 "\n\t\t3 -> netCDF-4 file format"
                 "\n\t\t4 -> netCDF-4 classic model file format\n"
                 , 0, 1, "2" },
+        { "d:", "level",          "\n\t\tDeflate data (compression level). Only for netCDF-4 output format."
+                "\n\t\tPossible values [0,9]. Default None." 
+                "\n\t\tChunking strategy based on GRIB message.\n", 0, 1, "6" },
+        { "s", 0, "Shuffle data before deflation compression.\n", 0, 1, 0 },
         { "u:", "dimension",  "\n\t\tSet dimension to be an unlimited dimension.\n", 0, 1, "time" }
 };
 
@@ -3843,6 +3885,7 @@ static fieldset *fs = NULL;
 static request* data_r = NULL;
 request *user_r = NULL;
 static int option_kind = 2; /* By default NetCDF3, 64-bit offset */
+static int deflate_option = 0;
 
 /* Table of formats for legal -k values. Inspired by nccopy */
 struct KindValue {
@@ -3977,6 +4020,43 @@ int grib_tool_init(grib_runtime_options* options)
             exit(1);
         }
     }
+
+    if (grib_options_on("d:"))
+    {
+        if (option_kind == 3 || option_kind == 4) { /* netCDF-4 */
+            char* theArg = grib_options_get_option("d:");
+            if (!is_number(theArg) || atol(theArg)<0 || atol(theArg)>9 ) {
+                fprintf(stderr, "Invalid deflate option: %s (must be 0 to 9)\n", theArg);
+                usage();
+                exit(1);
+            }
+            set_value(user_r, "deflate", theArg);
+            deflate_option=1;
+        } else {
+            fprintf(stderr, "Invalid deflate option for non netCDF-4 output formats\n");
+            usage();
+            exit(1);
+        }
+    }
+    else
+    {
+        set_value(user_r, "deflate", "none");
+    }
+
+    if(grib_options_on("s"))
+    {
+        if(deflate_option)
+            set_value(user_r, "shuffle", "true");
+        else
+        {
+            fprintf(stderr, "Invalid shuffle option. Deflate option needed.\n");
+            usage();
+            exit(1);
+        }
+
+    }
+    else
+        set_value(user_r, "shuffle", "false");
 
     if(grib_options_on("R:"))
     {

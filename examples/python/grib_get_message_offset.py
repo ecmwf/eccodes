@@ -14,6 +14,7 @@
 # Description: how to get the message offset
 #
 
+from __future__ import print_function
 import traceback
 import sys
 from eccodes import *
@@ -23,18 +24,18 @@ VERBOSE = 1  # verbose error reporting
 
 def example():
     if len(sys.argv) < 2:
-        print >>sys.stderr, 'Usage: ', sys.argv[0], ' file'
+        print('Usage: ', sys.argv[0], ' file', file=sys.stderr)
         sys.exit(1)
 
     f = open(sys.argv[1])
     while 1:
-        id = codes_grib_new_from_file(f)
-        if id is None:
+        ident = codes_grib_new_from_file(f)
+        if ident is None:
             break
 
-        print codes_get_message_offset(id)
+        print(codes_get_message_offset(ident))
 
-        codes_release(id)
+        codes_release(ident)
 
     f.close()
 
@@ -49,6 +50,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())
