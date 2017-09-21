@@ -158,16 +158,13 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_octahedral_gaussian* self = (grib_accessor_octahedral_gaussian*)a;
     int ret = GRIB_SUCCESS;
-    long N,Ni;
+    long Ni;
     long plpresent=0;
     long* pl=NULL; /* pl array */
     size_t plsize=0, i=0;
     grib_handle* hand = grib_handle_of_accessor(a);
 
     grib_context* c=a->context;
-
-    if((ret = grib_get_long_internal(hand, self->N,&N)) != GRIB_SUCCESS)
-        return ret;
 
     if((ret = grib_get_long_internal(hand, self->Ni,&Ni)) != GRIB_SUCCESS)
         return ret;
