@@ -14,6 +14,8 @@
  */
 
 #include "grib_tools.h"
+#include <stdlib.h>
+
 #if HAVE_LIBJASPER
 /* Remove compiler warnings re macros being redefined */
 #undef PACKAGE_BUGREPORT
@@ -982,6 +984,16 @@ void grib_print_full_statistics(grib_runtime_options* options)
                 options->filter_handle_count,options->handle_count,options->file_count);
 }
 
+static int filenames_equal(const char * f1, const char * f2)
+{
+    char resolved1[8192] = {0,};
+    char resolved2[8192] = {0,};
+    realpath(f1, resolved1);
+    realpath(f2, resolved2);
+    int eq = (strcmp(resolved1, resolved2)==0);
+    return eq;
+}
+
 void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
 {
     const void *buffer;
@@ -1000,6 +1012,13 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     }
 
     err = grib_recompose_name(h, NULL, options->outfile->name, filename, 0);
+
+    // Check outfile is not same as infile
+    if (filenames_equal(options->infile->name, filename)) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                "output file '%s' is the same as input file. Aborting\n", filename);
+        exit(GRIB_IO_PROBLEM);
+    }
 
     of = grib_file_open(filename, "w", &err);
 
