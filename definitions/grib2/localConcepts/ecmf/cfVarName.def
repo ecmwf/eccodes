@@ -12065,6 +12065,12 @@
 	}
 #Peak period of 1D spectra
 'pp1d' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 34 ;
+	}
+#Peak period of 1D spectra
+'pp1d' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 231 ;
