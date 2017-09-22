@@ -12019,7 +12019,7 @@
 	 table2Version = 140 ;
 	 indicatorOfParameter = 220 ;
 	}
-#Mean wave period based on second moment
+#Mean zero-crossing wave period
 '140221' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 221 ;
@@ -12069,7 +12069,7 @@
 	 table2Version = 140 ;
 	 indicatorOfParameter = 230 ;
 	}
-#Peak period of 1D spectra
+#Peak wave period
 '140231' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 231 ;

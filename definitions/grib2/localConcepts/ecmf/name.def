@@ -12009,14 +12009,14 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 220 ;
 	}
-#Mean wave period based on second moment
-'Mean wave period based on second moment' = {
+#Mean zero-crossing wave period
+'Mean zero-crossing wave period' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 28 ;
 	}
-#Mean wave period based on second moment
-'Mean wave period based on second moment' = {
+#Mean zero-crossing wave period
+'Mean zero-crossing wave period' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 221 ;
@@ -12063,14 +12063,14 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 228 ;
 	}
-#Peak period of 1D spectra
-'Peak period of 1D spectra' = {
+#Peak wave period
+'Peak wave period' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 34 ;
 	}
-#Peak period of 1D spectra
-'Peak period of 1D spectra' = {
+#Peak wave period
+'Peak wave period' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 231 ;
