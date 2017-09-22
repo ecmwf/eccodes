@@ -12011,6 +12011,12 @@
 	}
 #Mean wave period based on second moment
 '140221' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 28 ;
+	}
+#Mean wave period based on second moment
+'140221' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 221 ;
