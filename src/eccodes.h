@@ -798,7 +798,17 @@ int codes_get_double_elements(codes_handle* h, const char* key, int* i, long siz
 */
 int codes_get_string(codes_handle* h, const char* key, char* mesg, size_t *length  );
 
-int codes_get_string_array(codes_handle* h, const char* name, char** val, size_t *length);
+/**
+*  Get string array values from a key. If several keys of the same name are present, the last one is returned
+* @see  codes_set_string_array
+*
+* @param h       : the handle to get the data from
+* @param key     : the key to be searched
+* @param vals    : the address of a string array where the data will be retrieved
+* @param length  : the address of a size_t that contains allocated length of the array on input, and that contains the actual length of the array on output
+* @return        0 if OK, integer value on error
+*/
+int codes_get_string_array(codes_handle* h, const char* key, char** vals, size_t *length);
 
 /**
 *  Get raw bytes values from a key. If several keys of the same name are present, the last one is returned
@@ -816,11 +826,11 @@ int codes_get_bytes(codes_handle* h, const char* key, unsigned char* bytes, size
 *  Get double array values from a key. If several keys of the same name are present, the last one is returned
 * @see  codes_set_double_array
 *
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param vals       : the address of a double array where the data will be retrieved
-* @param length      : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
-* @return            0 if OK, integer value on error
+* @param h        : the handle to get the data from
+* @param key      : the key to be searched
+* @param vals     : the address of a double array where the data will be retrieved
+* @param length   : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
+* @return         0 if OK, integer value on error
 */
 int codes_get_double_array(codes_handle* h, const char* key, double* vals, size_t *length);
 

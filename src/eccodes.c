@@ -349,9 +349,9 @@ int codes_get_string(grib_handle* h, const char* key, char* mesg, size_t *length
 {
     return grib_get_string(h,key,mesg,length);
 }
-int codes_get_string_array(grib_handle* h, const char* name, char** val, size_t *length)
+int codes_get_string_array(grib_handle* h, const char* key, char** vals, size_t *length)
 {
-    return grib_get_string_array(h,name,val,length);
+    return grib_get_string_array(h,key,vals,length);
 }
 int codes_get_bytes(grib_handle* h, const char* key, unsigned char* bytes, size_t *length)
 {
