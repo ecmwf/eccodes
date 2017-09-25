@@ -35,8 +35,10 @@ grib_option grib_options[]={
                 "\n\t\t         C       -> C program to encode the input BUFR"
                 "\n\t\tDefault mode is filter.\n",
                 0,1,"filter"},
+
         {"S",0,0,1,0,0},
         {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
+        {"p",0,"Plain dump.\n",0,1,0},
         /* {"D",0,0,0,1,0},  */  /* See ECC-215 */
         {"d",0,"Print all data values.\n",1,1,0},
         {"u",0,"Print only some values.\n",0,1,0},
@@ -110,6 +112,11 @@ int grib_tool_init(grib_runtime_options* options)
                 | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
+    if  (grib_options_on("p")) {
+        options->dump_mode = "bufr_simple";
+        json=0;
+    }
+
     if (grib_options_on("D:")) {
         options->dump_mode = grib_options_get_option("D:");
         json=0;
@@ -171,7 +178,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
     else {
         char tmp[1024];
         sprintf(tmp,"FILE: %s ",options->current_infile->name);
-        if (!grib_options_on("C"))
+        if (!grib_options_on("p"))
             fprintf(stdout,"***** %s\n",tmp);
     }
 

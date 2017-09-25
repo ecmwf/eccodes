@@ -189,18 +189,19 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         fprintf(self->dumper.out, "%g",values[i]);
 
         depth-=2;
-        fprintf(self->dumper.out,"};\n");
+        fprintf(self->dumper.out,"}\n");
         grib_context_free(c,values);
     } else {
         r=compute_bufr_key_rank(h,self->keys,a->name);
-        if( !grib_is_missing_double(a,value) ) {
+        if (r!=0)
+            fprintf(self->dumper.out,"#%d#%s=",r,a->name);
+        else
+            fprintf(self->dumper.out,"%s=",a->name);
 
-            if (r!=0)
-                fprintf(self->dumper.out,"#%d#%s=",r,a->name);
-            else
-                fprintf(self->dumper.out,"%s=",a->name);
-
-            fprintf(self->dumper.out,"%g;\n",value);
+        if (!grib_is_missing_double(a,value)) {
+            fprintf(self->dumper.out,"%g\n",value);
+        } else {
+            fprintf(self->dumper.out,"MISSING\n");
         }
     }
 
@@ -260,12 +261,14 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* p
         fprintf(self->dumper.out,"%g", values[i]);
 
         depth-=2;
-        fprintf(self->dumper.out,"};\n");
+        fprintf(self->dumper.out,"}\n");
         grib_context_free(c,values);
     } else {
         /* int r=compute_bufr_key_rank(h,self->keys,a->name); */
         if( !grib_is_missing_double(a,value) ) {
-            fprintf(self->dumper.out,"%s->%s = %g;\n", prefix, a->name, value);
+            fprintf(self->dumper.out,"%s->%s = %g\n", prefix, a->name, value);
+        } else {
+            fprintf(self->dumper.out,"%s->%s = MISSING\n", prefix, a->name);
         }
     }
 
@@ -349,17 +352,19 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out,"%ld ",values[i]);
 
         depth-=2;
-        fprintf(self->dumper.out,"};\n");
+        fprintf(self->dumper.out,"}\n");
         grib_context_free(a->context,values);
     } else {
         r=compute_bufr_key_rank(h,self->keys,a->name);
-        if( !grib_is_missing_long(a,value) ) {
-            if (r!=0)
-                fprintf(self->dumper.out,"#%d#%s=",r,a->name);
-            else
-                fprintf(self->dumper.out,"%s=",a->name);
+        if (r!=0)
+            fprintf(self->dumper.out,"#%d#%s=",r,a->name);
+        else
+            fprintf(self->dumper.out,"%s=",a->name);
 
-            fprintf(self->dumper.out,"%ld;\n",value);
+        if( !grib_is_missing_long(a,value) ) {
+            fprintf(self->dumper.out,"%ld\n",value);
+        } else {
+            fprintf(self->dumper.out,"MISSING\n");
         }
     }
 
@@ -417,14 +422,16 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
         fprintf(self->dumper.out,"%ld ",values[i]);
         depth-=2;
-        fprintf(self->dumper.out,"};\n");
+        fprintf(self->dumper.out,"}\n");
         grib_context_free(a->context,values);
 
     } else {
         /* int r=compute_bufr_key_rank(h,self->keys,a->name); */
         if( !grib_is_missing_long(a,value) ) {
             fprintf(self->dumper.out,"%s->%s = ",prefix,a->name);
-            fprintf(self->dumper.out,"%ld ;\n",value);
+            fprintf(self->dumper.out,"%ld\n",value);
+        } else {
+            fprintf(self->dumper.out,"%s->%s = MISSING\n",prefix,a->name);
         }
     }
 
@@ -463,13 +470,15 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     self->empty=0;
 
     r=compute_bufr_key_rank(h,self->keys,a->name);
-    if( !grib_is_missing_double(a,value) ) {
-        if (r!=0)
-            fprintf(self->dumper.out,"#%d#%s=",r,a->name);
-        else
-            fprintf(self->dumper.out,"%s=",a->name);
+    if (r!=0)
+        fprintf(self->dumper.out,"#%d#%s=",r,a->name);
+    else
+        fprintf(self->dumper.out,"%s=",a->name);
 
-        fprintf(self->dumper.out,"%g;\n",value);
+    if( !grib_is_missing_double(a,value) ) {
+        fprintf(self->dumper.out,"%g\n",value);
+    } else {
+        fprintf(self->dumper.out,"MISSING\n");
     }
 
     if (self->isLeaf==0) {
@@ -538,7 +547,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 
     depth-=2;
 
-    fprintf(self->dumper.out, "};\n");
+    fprintf(self->dumper.out, "}\n");
 
     if (self->isLeaf==0) {
         char* prefix;
@@ -601,7 +610,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         else
             fprintf(self->dumper.out,"%s=",a->name);
     }
-    fprintf(self->dumper.out,"\"%s\";\n",value);
+    fprintf(self->dumper.out,"\"%s\"\n",value);
 
     if (self->isLeaf==0) {
         char* prefix;
@@ -647,7 +656,7 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
         icount++;
     }
     if (icount>cols) {fprintf(f,"\n      ");}
-    fprintf(f,"%ld};\n",val[size-1]);
+    fprintf(f,"%ld}\n",val[size-1]);
 
     grib_context_free(h->context,val);
 }
