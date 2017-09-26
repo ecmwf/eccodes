@@ -230,7 +230,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* p
     double *values=NULL;
     int err = 0;
     int i,icount;
-    int cols=2;
+    int cols=9;
     long count=0;
     grib_context* c=a->context;
 
@@ -392,7 +392,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     long *values=NULL;
     int err = 0;
     int i,icount;
-    int cols=4;
+    int cols=9;
     long count=0;
     grib_context* c=a->context;
 
