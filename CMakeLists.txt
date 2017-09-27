@@ -39,18 +39,6 @@ ecbuild_add_option( FEATURE EXAMPLES
     DEFAULT ON
 )
 
-# controls installation of files in definitions/ -- note that it still creates the symlinks in the build dir
-ecbuild_add_option( FEATURE INSTALL_ECCODES_DEFINITIONS
-    DESCRIPTION "Install the ecCodes definitions"
-    DEFAULT ON
-)
-
-# controls installation of files in samples/ and ifs_samples/ -- note that it still creates the symlinks in the build dir
-ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
-    DESCRIPTION "Install the ecCodes samples, including IFS samples"
-    DEFAULT ON
-)
-
 ecbuild_add_option( FEATURE JPG
     DESCRIPTION "Support for JPG decoding/encoding"
     DEFAULT ON
