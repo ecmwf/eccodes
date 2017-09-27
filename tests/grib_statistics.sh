@@ -57,4 +57,11 @@ ${tools_dir}/grib_set -s offsetValuesBy=0.5                     $input $temp1
 ${tools_dir}/grib_set -s missingValue=1.0E34,offsetValuesBy=0.5 $input $temp2
 ${tools_dir}/grib_compare $temp1 $temp2
 
+# ECC-511
+# GRIB2 message from NCEP/GFS with grid_complex_spatial_differencing and
+# missingValueManagementUsed. No bitmap but missing values embedded in data
+input=${data_dir}/gfs.complex.mvmu.grib2
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $input`
+[ "$stats" = "2.81 0.00 0.30" ]
+
 rm -f $temp1 $temp2

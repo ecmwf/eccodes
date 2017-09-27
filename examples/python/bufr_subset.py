@@ -14,6 +14,7 @@
 #
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -24,7 +25,6 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-
     # open bufr file
     f = open(INPUT)
 
@@ -37,7 +37,7 @@ def example():
         if bufr is None:
             break
 
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
@@ -46,21 +46,20 @@ def example():
         # find out the number of subsets
         key = 'numberOfSubsets'
         numberOfSubsets = codes_get(bufr, 'numberOfSubsets')
-        print ' %s: %d' % (key, numberOfSubsets)
+        print(' %s: %d' % (key, numberOfSubsets))
 
         # loop over the subsets
         for i in range(1, numberOfSubsets + 1):
-
             # read and print some data values
 
             key = '/subsetNumber=%d/blockNumber' % i
-            print key
+            print(key)
             val = codes_get_long(bufr, key)
-            print '  %s= %d' % (key, val)
+            print('  %s= %d' % (key, val))
 
             key = '/subsetNumber=%d/stationNumber' % i
             val = codes_get_long(bufr, key)
-            print '  %s: %d' % (key, val)
+            print('  %s: %d' % (key, val))
 
         cnt += 1
 
@@ -81,6 +80,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

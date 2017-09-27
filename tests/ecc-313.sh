@@ -37,7 +37,7 @@ cat > $tempRules <<EOF
  print "h2=[heightOfBarometerAboveMeanSeaLevel]";
 EOF
 
-${tools_dir}/bufr_filter $tempRules $input > $tempOut
+${tools_dir}/codes_bufr_filter $tempRules $input > $tempOut
 
 cat > $tempRef << EOF
 h1=10 60 215 564 685 5 5 555 

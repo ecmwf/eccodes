@@ -18,9 +18,9 @@
 #include "eccodes.h"
 #include <assert.h>
 
-void usage(char *app)
+static void usage(const char *prog)
 {
-    fprintf(stderr,"Usage is: %s input_file ouput_file\n", app);
+    fprintf(stderr,"Usage is: %s input_file ouput_file\n", prog);
 }
 
 int main(int argc, char *argv[])

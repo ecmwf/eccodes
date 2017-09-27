@@ -25,7 +25,10 @@ list( APPEND test_bins
       optimize_scaling
       optimize_scaling_sh
       ecc-386
+      ecc-517
       bufr_get_element
+      sh_ieee64
+      ieee
 )
 
 foreach( tool ${test_bins} )
@@ -48,6 +51,7 @@ list( APPEND tests_no_data_reqd
     uerra
     grib_2nd_order_numValues
     julian
+    ecc-517
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
@@ -76,6 +80,7 @@ list( APPEND tests_data_reqd
     ecc-379
     ecc-393
     ecc-433
+    ecc-490
     gts_get
     gts_ls
     gts_compare
@@ -85,6 +90,7 @@ list( APPEND tests_data_reqd
     metar_compare
     bufr_set
     ieee
+    sh_ieee64
     optimize_scaling
     optimize_scaling_sh
     grib1to2
@@ -195,6 +201,18 @@ ecbuild_add_test( TARGET eccodes_t_lamb_az_eq_area
 
 # These ones are conditional
 ###########################################
+if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
+    ecbuild_add_executable( TARGET    grib_encode_pthreads
+                            NOINSTALL
+                            SOURCES   grib_encode_pthreads.c
+                            LIBS      eccodes
+    )
+    ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads
+                      TYPE SCRIPT
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh
+    )
+endif()
+
 ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
                   TYPE SCRIPT
                   CONDITION HAVE_NETCDF

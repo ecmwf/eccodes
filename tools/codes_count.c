@@ -10,7 +10,7 @@
 
 #include "grib_api_internal.h"
 
-void usage(const char* prog)
+static void usage(const char* prog)
 {
     printf("usage: %s [-v] infile1 infile2 ... \n",prog);
     exit(1);
@@ -73,7 +73,9 @@ int main(int argc,char* argv[])
         count_curr=0;
         err=count_messages(infh, message_type, &count_curr);
         if (err) {
-            fprintf(stderr,"Invalid message(s) found in %s\n", filename);
+            fprintf(stderr,"Invalid message(s) found in %s", filename);
+            if (count_curr>0) fprintf(stderr," (got as far as %lu)", count_curr);
+            fprintf(stderr,"\n");
             exit(err);
 #ifdef DONT_EXIT_ON_BAD_APPLE
             /* If we did not want to fail but warn and continue */

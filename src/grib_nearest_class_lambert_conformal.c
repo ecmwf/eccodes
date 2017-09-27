@@ -127,7 +127,7 @@ typedef struct PointStore {
 } PointStore ;
 
 /* Comparison function to sort points by distance */
-int compare_points(const void* a, const void* b)
+static int compare_points(const void* a, const void* b)
 {
     PointStore *pA = (PointStore*)a;
     PointStore *pB = (PointStore*)b;

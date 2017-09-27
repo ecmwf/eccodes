@@ -732,7 +732,7 @@ const char* grib_accessor_get_name(grib_accessor* a) {
 grib_accessor* _grib_accessor_get_attribute(grib_accessor* a,const char* name,int* index)
 {
     int i=0;
-    while (a->attributes[i] && i<MAX_ACCESSOR_ATTRIBUTES) {
+    while (i<MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
         if (!strcmp(a->attributes[i]->name,name)) {
             *index=i;
             return a->attributes[i];

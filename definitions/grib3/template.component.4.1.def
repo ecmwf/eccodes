@@ -124,7 +124,7 @@ alias DyInDegrees = jDirectionIncrementInDegrees;
 #  iterator latlon(numberOfPoints,missingValue,values,
 #                  longitudeFirstInDegrees,DiInDegrees  ,
 #                  Ni,Nj,iScansNegatively,
-#                  latitudeFirstInDegrees, DjInDegrees,jScansPositively);
+#                  latitudeFirstInDegrees, DjInDegrees,jScansPositively,jPointsAreConsecutive);
 #  nearest regular(values,radius,Ni,Nj);
 #}
 meta latLonValues latlonvalues(values);

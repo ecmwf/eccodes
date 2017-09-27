@@ -10,7 +10,10 @@
 
 #include "grib_tools.h"
 
-void usage(const char*);
+static void usage_and_exit(const char* progname) {
+    printf("\nUsage: %s [-v] [-d] [-s]\n",progname);
+    exit(1);
+}
 
 #define INFO_PRINT_ALL              0
 #define INFO_PRINT_VERSION          (1<<0)
@@ -43,12 +46,12 @@ int main( int argc,char* argv[])
             print_flags|=INFO_PRINT_SAMPLES_PATH;
             break;
         default:
-            usage(argv[0]);
+            usage_and_exit(argv[0]);
         }
     }
 
     nfiles=argc-optind;
-    if (nfiles != 0) usage(argv[0]);
+    if (nfiles != 0) usage_and_exit(argv[0]);
 
     if (print_flags ==  INFO_PRINT_ALL) {
         printf("\n");
@@ -113,9 +116,4 @@ int main( int argc,char* argv[])
     }
 
     return 0;
-}
-
-void usage(const char* progname) {
-    printf("\nUsage: %s [-v] [-d] [-s]\n",progname);
-    exit(1);
 }

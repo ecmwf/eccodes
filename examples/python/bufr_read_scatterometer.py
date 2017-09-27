@@ -19,7 +19,7 @@
 # understand the structure of these messages.
 #
 
-
+from __future__ import print_function
 import traceback
 import sys
 
@@ -30,7 +30,6 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-
     # open bufr file
     f = open(INPUT)
 
@@ -43,7 +42,7 @@ def example():
         if bufr is None:
             break
 
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
 
         # We need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
@@ -60,7 +59,7 @@ def example():
         # Get the total number of subsets.
         numObs = codes_get(bufr, "numberOfSubsets")
 
-        print '  Number of values: %ld' % (numObs)
+        print('  Number of values: %ld' % numObs)
 
         # Get latitude (for all the subsets)
         lat = codes_get_array(bufr, "latitude")
@@ -74,15 +73,15 @@ def example():
 
         # Check that all arrays are same size
         if len(lat) != numObs or len(lon) != numObs or len(bscat) != numObs:
-            print 'inconsistent array dimension'
+            print('inconsistent array dimension')
             return 1
 
         # Print the values
-        print "pixel  lat    lon    backscatter"
-        print "-------------------------------"
+        print("pixel  lat    lon    backscatter")
+        print("-------------------------------")
 
-        for i in xrange(numObs):
-            print "%3d %.2f %.2f %.2f" % (i + 1, lat[i], lon[i], bscat[i])
+        for i in range(numObs):
+            print("%3d %.2f %.2f %.2f" % (i + 1, lat[i], lon[i], bscat[i]))
 
         cnt += 1
 
@@ -103,6 +102,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

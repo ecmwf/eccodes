@@ -189,7 +189,7 @@ static int concept_condition_expression_true(grib_handle* h,grib_concept_conditi
     case GRIB_TYPE_STRING:
         ok = (grib_get_string(h,c->name,buf,&len) == GRIB_SUCCESS) &&
         ((cval = grib_expression_evaluate_string(h,c->expression,tmp,&size,&err)) != NULL) &&
-        (err==0) && (strcmp(buf,cval) == 0);
+        (err==0) && (grib_inline_strcmp(buf,cval) == 0);
         break;
 
     default:

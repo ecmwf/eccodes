@@ -24,7 +24,7 @@ set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} 
 
 include( ecbuild_system NO_POLICY_SCOPE )
 
-ecbuild_requires_macro_version( 2.6 )
+ecbuild_requires_macro_version( 2.7.2 )
 
 ###############################################################################
 # local project
@@ -108,13 +108,33 @@ ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
     CONDITION EC_HAVE_FMEMOPEN OR EC_HAVE_FUNOPEN
-    REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS"
+    REQUIRED_PACKAGES PythonInterp
 )
 
 #if( HAVE_MEMFS AND "${CMAKE_C_COMPILER_ID}" STREQUAL "Cray")
 #  set( HAVE_MEMFS OFF )
 #  ecbuild_warn("MEMFS not supported with Cray C compiler")
 #endif()
+
+if(HAVE_MEMFS)
+  set( _will_install_defs_samples OFF )
+else()
+  set( _will_install_defs_samples ON )
+endif()
+
+# controls installation of files in definitions/ -- note that it still creates the symlinks in the build dir
+# by default, if memfs is available, then we don't need to install definitions
+ecbuild_add_option( FEATURE INSTALL_ECCODES_DEFINITIONS
+    DESCRIPTION "Install the ecCodes definitions"
+    DEFAULT ${_will_install_defs_samples}
+)
+
+# controls installation of files in samples/ and ifs_samples/ -- note that it still creates the symlinks in the build dir
+# by default, if memfs is available, then we don't need to install samples
+ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
+    DESCRIPTION "Install the ecCodes samples, including IFS samples"
+    DEFAULT ${_will_install_defs_samples}
+)
 
 # advanced options (not visible in cmake-gui )
 

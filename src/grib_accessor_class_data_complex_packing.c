@@ -355,7 +355,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
         return 0;
     }
 
-    packed_offset = grib_byte_offset(a) +  4*(sub_k+1)*(sub_k+2);
+    packed_offset = grib_byte_offset(a) +  bytes*(sub_k+1)*(sub_k+2);
 
     lpos = 8*(packed_offset-offsetdata);
 
@@ -394,8 +394,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
         {
             for(hcount=0;hcount<sub_k+1;hcount++)
             {
-                val[i++] =  decode_float(grib_decode_unsigned_long(hres,&hpos,32));
-                val[i++] =  decode_float(grib_decode_unsigned_long(hres,&hpos,32));
+                val[i++] =  decode_float(grib_decode_unsigned_long(hres,&hpos,8*bytes));
+                val[i++] =  decode_float(grib_decode_unsigned_long(hres,&hpos,8*bytes));
 
                 if (GRIBEX_sh_bug_present && hcount==sub_k){
                     /*  bug in ecmwf data, last row (K+1)is scaled but should not */
@@ -691,7 +691,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         grib_get_double_internal(gh,self->laplacianOperator,&laplacianOperator);
     }
 
-    hsize = 4*(sub_k+1)*(sub_k+2);
+    hsize = bytes*(sub_k+1)*(sub_k+2);
     lsize = ((n_vals - ((sub_k+1)*(sub_k+2)))*bits_per_value)/8;
 
     buflen = hsize+lsize;
@@ -813,16 +813,16 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             {
                 if ( GRIBEX_sh_bug_present && hcount==sub_k ) {
                     /* _test(val[i]*d*scals[lup],1); */
-                    grib_encode_unsigned_long(hres, encode_float((val[i++]*d)*scals[lup]) , &hpos, 32);
+                    grib_encode_unsigned_long(hres, encode_float((val[i++]*d)*scals[lup]) , &hpos, 8*bytes);
                     /* _test(val[i]*d*scals[lup],1); */
-                    grib_encode_unsigned_long(hres, encode_float((val[i++]*d)*scals[lup]) , &hpos, 32);
+                    grib_encode_unsigned_long(hres, encode_float((val[i++]*d)*scals[lup]) , &hpos, 8*bytes);
                 }else{
 
                     /* _test(val[i]*d,0); */
 
-                    grib_encode_unsigned_long(hres, encode_float(val[i++]) , &hpos, 32);
+                    grib_encode_unsigned_long(hres, encode_float(val[i++]) , &hpos, 8*bytes);
                     /* _test(val[i]*d,0); */
-                    grib_encode_unsigned_long(hres, encode_float(val[i++]) , &hpos, 32);
+                    grib_encode_unsigned_long(hres, encode_float(val[i++]) , &hpos, 8*bytes);
                 }
                 lup++;
             }

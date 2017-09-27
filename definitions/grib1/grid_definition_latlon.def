@@ -59,7 +59,7 @@ if(missing(Ni)){
 } else {
    iterator latlon(numberOfPoints,missingValue,values,longitudeFirstInDegrees,
                    DiInDegrees ,Ni,Nj,iScansNegatively ,
-                   latitudeFirstInDegrees,DjInDegrees,jScansPositively );
+                   latitudeFirstInDegrees,DjInDegrees,jScansPositively,jPointsAreConsecutive);
    nearest regular(values,radius,Ni,Nj);
 }
 

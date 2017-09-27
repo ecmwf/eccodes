@@ -21,7 +21,7 @@
 
 #define MAX_VAL_LEN  1024
 
-void usage(char* prog) {
+static void usage(const char* prog) {
     printf("usage: %s infile\n",prog);
     exit(1);
 }
@@ -94,7 +94,7 @@ int main(int argc,char* argv[])
             }
             else {
                 /* for arrays */
-                printf("(array of %ld)\n",klen);
+                printf("(array of %lu)\n",klen);
             }
         }
 

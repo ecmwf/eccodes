@@ -9,7 +9,7 @@
 !
 !  Description:
 !       How to use keys_iterator to get all the available
-!       keys in a message.
+!       keys in a GRIB message.
 !
 !
 !
@@ -43,7 +43,7 @@ program keys_iterator
     do
       call codes_keys_iterator_next(kiter, iret)
 
-      if (iret .ne. CODES_SUCCESS) exit
+      if (iret .ne. CODES_SUCCESS) exit !terminate the loop
 
       call codes_keys_iterator_get_name(kiter,key)
       call codes_get(igrib,trim(key),value)
@@ -61,4 +61,3 @@ program keys_iterator
   call codes_close_file(ifile)
 
 end program keys_iterator
-

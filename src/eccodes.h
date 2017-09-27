@@ -356,6 +356,15 @@ The codes_handle is the structure giving access to parsed message values by keys
 */
 int codes_count_in_file(codes_context* c, FILE* f,int* n);
 
+/**
+*  Counts the messages contained in a file.
+*
+* @param c           : the context from which the handle will be created (NULL for default context)
+* @param filename    : the path to the file
+* @param n           : the number of messages in the file
+* @return            0 if OK, integer value on error
+*/
+int codes_count_in_filename(codes_context* c, const char* filename, int* n);
 
 /**
 *  Create a handle from a file resource.
@@ -449,24 +458,24 @@ codes_handle* codes_handle_new_from_message_copy(codes_context* c, const void* d
 
 
 /**
- *  Create a handle from a GRIB message contained in a samples directory.
+ *  Create a handle from a GRIB message contained in the samples directory.
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param res_name    : the resource name
+ * @param sample_name : the name of the sample file (without the .tmpl extension)
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
-codes_handle* codes_grib_handle_new_from_samples (codes_context* c, const char* res_name)  ;
+codes_handle* codes_grib_handle_new_from_samples (codes_context* c, const char* sample_name);
 
 /**
  *  Create a handle from a BUFR message contained in a samples directory.
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param res_name    : the resource name
+ * @param sample_name : the name of the sample file (without the .tmpl extension)
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
-codes_handle* codes_bufr_handle_new_from_samples (codes_context* c, const char* res_name)  ;
+codes_handle* codes_bufr_handle_new_from_samples (codes_context* c, const char* sample_name);
 
 
 /**
@@ -789,7 +798,17 @@ int codes_get_double_elements(codes_handle* h, const char* key, int* i, long siz
 */
 int codes_get_string(codes_handle* h, const char* key, char* mesg, size_t *length  );
 
-int codes_get_string_array(codes_handle* h, const char* name, char** val, size_t *length);
+/**
+*  Get string array values from a key. If several keys of the same name are present, the last one is returned
+* @see  codes_set_string_array
+*
+* @param h       : the handle to get the data from
+* @param key     : the key to be searched
+* @param vals    : the address of a string array where the data will be retrieved
+* @param length  : the address of a size_t that contains allocated length of the array on input, and that contains the actual length of the array on output
+* @return        0 if OK, integer value on error
+*/
+int codes_get_string_array(codes_handle* h, const char* key, char** vals, size_t *length);
 
 /**
 *  Get raw bytes values from a key. If several keys of the same name are present, the last one is returned
@@ -807,11 +826,11 @@ int codes_get_bytes(codes_handle* h, const char* key, unsigned char* bytes, size
 *  Get double array values from a key. If several keys of the same name are present, the last one is returned
 * @see  codes_set_double_array
 *
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param vals       : the address of a double array where the data will be retrieved
-* @param length      : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
-* @return            0 if OK, integer value on error
+* @param h        : the handle to get the data from
+* @param key      : the key to be searched
+* @param vals     : the address of a double array where the data will be retrieved
+* @param length   : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
+* @return         0 if OK, integer value on error
 */
 int codes_get_double_array(codes_handle* h, const char* key, double* vals, size_t *length);
 

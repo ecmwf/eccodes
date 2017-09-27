@@ -34,8 +34,8 @@ or edit "iterator.class" and rerun ./make_class.pl
 
 static void init_class              (grib_iterator_class*);
 
-static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
-static int next               (grib_iterator* i, double *lat, double *lon, double *val);
+static int init               (grib_iterator* iter,grib_handle*,grib_arguments*);
+static int next               (grib_iterator* iter, double *lat, double *lon, double *val);
 
 
 typedef struct grib_iterator_latlon{
@@ -48,11 +48,12 @@ typedef struct grib_iterator_latlon{
 	double   *los;
 	long      nap;
 	long      nam;
-	long iScansNegatively;
-	long isRotated;
-	double angleOfRotation;
-	double southPoleLat;
-	double southPoleLon;
+	long      iScansNegatively;
+	long      isRotated;
+	double    angleOfRotation;
+	double    southPoleLat;
+	double    southPoleLon;
+	long      jPointsAreConsecutive;
 /* Members defined in latlon */
 } grib_iterator_latlon;
 
@@ -142,25 +143,35 @@ void unrotate(grib_handle* h,
     *outlon = ret_lon;
 }
 
-static int next(grib_iterator* i, double *lat, double *lon, double *val)
+static int next(grib_iterator* iter, double *lat, double *lon, double *val)
 {
     /* GRIB-238: Support rotated lat/lon grids */
-
     double ret_lat, ret_lon, ret_val;
-    grib_iterator_latlon* self = (grib_iterator_latlon*)i;
+    grib_iterator_latlon* self = (grib_iterator_latlon*)iter;
 
-    if((long)i->e >= (long)(i->nv-1))  return 0;
+    if((long)iter->e >= (long)(iter->nv-1))  return 0;
 
-    i->e++;
+    iter->e++;
 
-    ret_lat = self->las[(long)floor(i->e/self->nap)];
-    ret_lon = self->los[(long)i->e%self->nap];
-    ret_val = i->data[i->e];
+    /* Assumptions:
+     *   All rows scan in the same direction (alternativeRowScanning==0)
+     */
+    if (!self->jPointsAreConsecutive) {
+        /* Adjacent points in i (x) direction are consecutive */
+        ret_lat = self->las[(long)floor(iter->e/self->nap)];
+        ret_lon = self->los[(long)iter->e%self->nap];
+        ret_val = iter->data[iter->e];
+    } else {
+        /* Adjacent points in j (y) direction is consecutive */
+        ret_lon = self->los[(long)iter->e/self->nam];
+        ret_lat = self->las[(long)floor(iter->e%self->nam)];
+        ret_val = iter->data[iter->e];
+    }
 
     if (self->isRotated)
     {
         double new_lat = 0, new_lon = 0;
-        unrotate(i->h, ret_lat, ret_lon,
+        unrotate(iter->h, ret_lat, ret_lon,
                 self->angleOfRotation, self->southPoleLat, self->southPoleLon,
                 &new_lat, &new_lon);
         ret_lat = new_lat;
@@ -173,42 +184,43 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val)
     return 1;
 }
 
-static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
+static int init(grib_iterator* iter, grib_handle* h,grib_arguments* args)
 {
-    grib_iterator_latlon* self = (grib_iterator_latlon*)i;
-    int ret = GRIB_SUCCESS;
+    grib_iterator_latlon* self = (grib_iterator_latlon*)iter;
+    int err = 0;
     double jdir;
-    double laf;
+    double lat1;
     long jScansPositively;
     long lai;
 
-    const char* latofirst   = grib_arguments_get_name(h,args,self->carg++);
-    const char* jdirec      = grib_arguments_get_name(h,args,self->carg++);
-    const char* s_jScansPositively   = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_lat1      = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_jdir      = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_jScansPos = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_jPtsConsec = grib_arguments_get_name(h,args,self->carg++);
     self->angleOfRotation = 0;
     self->isRotated = 0;
     self->southPoleLat = 0;
     self->southPoleLon = 0;
 
-    if ((ret = grib_get_long(h, "is_rotated_grid", &self->isRotated))) return ret;
+    if ((err = grib_get_long(h, "is_rotated_grid", &self->isRotated))) return err;
     if (self->isRotated) {
-        if ((ret = grib_get_double_internal(h,"angleOfRotation",                  &self->angleOfRotation))) return ret;
-        if ((ret = grib_get_double_internal(h,"latitudeOfSouthernPoleInDegrees",  &self->southPoleLat))) return ret;
-        if ((ret = grib_get_double_internal(h,"longitudeOfSouthernPoleInDegrees", &self->southPoleLon))) return ret;
+        if ((err = grib_get_double_internal(h,"angleOfRotation",                  &self->angleOfRotation))) return err;
+        if ((err = grib_get_double_internal(h,"latitudeOfSouthernPoleInDegrees",  &self->southPoleLat))) return err;
+        if ((err = grib_get_double_internal(h,"longitudeOfSouthernPoleInDegrees", &self->southPoleLon))) return err;
     }
 
-    if((ret = grib_get_double_internal(h,latofirst,     &laf))) return ret;
-    if((ret = grib_get_double_internal(h,jdirec,        &jdir))) return ret;
-    if((ret = grib_get_long_internal(h,s_jScansPositively,&jScansPositively)))
-        return ret;
+    if((err = grib_get_double_internal(h, s_lat1,  &lat1))) return err;
+    if((err = grib_get_double_internal(h, s_jdir,  &jdir))) return err;
+    if((err = grib_get_long_internal(h, s_jScansPos,  &jScansPositively))) return err;
+    if((err = grib_get_long_internal(h, s_jPtsConsec, &self->jPointsAreConsecutive))) return err;
 
     if (jScansPositively) jdir=-jdir;
 
     for( lai = 0; lai <  self->nam; lai++ )  {
-        self->las[lai] = laf;
-        laf -= jdir ;
+        self->las[lai] = lat1;
+        lat1 -= jdir ;
     }
 
-    i->e = -1;
-    return ret;
+    iter->e = -1;
+    return err;
 }

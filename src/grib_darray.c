@@ -16,6 +16,18 @@
 
 #include "grib_api_internal.h"
 
+/* For debugging purposes */
+void grib_darray_print(const char* title, const grib_darray* darray)
+{
+    Assert(darray);
+    size_t i;
+    printf("%s: darray.n=%lu  \t", title, (unsigned long)darray->n);
+    for (i=0; i<darray->n; i++) {
+        printf("darray[%lu]=%g\t", (unsigned long)i, darray->v[i]);
+    }
+    printf("\n");
+}
+
 grib_darray* grib_darray_new_from_array(grib_context* c,double* a,size_t size)
 {
   size_t i;

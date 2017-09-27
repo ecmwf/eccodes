@@ -334,13 +334,17 @@ static grib_trie* init_list(const char* name)
     return 0;
 }
 
+/* For debugging purposes */
 static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
-        const double* data_values, const size_t data_values_count, const grib_values *values, const int count)
+        const double* data_values, const size_t data_values_count,  /* the data pay load */
+        const grib_values *values, const size_t count)  /* keys and their values */
 {
-    int i;
-    printf("ECCODES DEBUG grib_util grib_set_values: setting %d values \n",count);
+    size_t i=0;
+    int isConstant = 1;
+    double v = 0;
+    printf("ECCODES DEBUG grib_util grib_set_values: setting %lu key/value pairs\n",(unsigned long)count);
 
-    for(i = 0; i < count ; i++)
+    for(i=0; i<count; i++)
     {
         switch(values[i].type)
         {
@@ -353,23 +357,37 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
         }
     }
 
-    if(spec->bitmapPresent) {
-        int missing = 0;
-        size_t j = 0;
-        double min = 1e100;
-        for(j = 0; j < data_values_count ; j++)
-        {
-            double d = data_values[j] - spec->missingValue;
-            if(d < 0) d = -d;
-
-            if(d < min) {
-                min = d;
+    printf("ECCODES DEBUG grib_util: data_values_count=%lu;\n", (unsigned long)data_values_count);
+    for (i=0; i<data_values_count; i++) {
+        if (i==0) v = data_values[i];
+        if (data_values[i] != spec->missingValue) {
+            if (v == spec->missingValue) {
+                v = data_values[i];
+            } else if (v != data_values[i]) {
+                isConstant=0;
+                break;
             }
-
-            if(data_values[j] == spec->missingValue)
-                missing++;
         }
     }
+    if (isConstant) printf("ECCODES DEBUG grib_util: data_values are CONSTANT;\n");
+
+#if 0
+        if (spec->bitmapPresent) {
+            int missing = 0;
+            size_t j = 0;
+            double min = 1e100;
+            for(j = 0; j < data_values_count ; j++)
+            {
+                double d = data_values[j] - spec->missingValue;
+                if(d < 0) d = -d;
+                if(d < min) {
+                    min = d;
+                }
+                if(data_values[j] == spec->missingValue)
+                    missing++;
+            }
+        }
+#endif
 }
 
 static int DBL_EQUAL(double d1, double d2, double tolerance)
@@ -688,11 +706,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     }
 
     if (packing_spec->deleteLocalDefinition) {
-        /* TODO: We need two calls because of grib1/grib2 issues re removing local defs! */
-        if (editionNumber==1){
-            SET_LONG_VALUE("deleteLocalDefinition",1);
-        }
-        SET_LONG_VALUE("setLocalDefinition", 0);
+        SET_LONG_VALUE("deleteLocalDefinition",1);
     }
 
     len=100;
@@ -1203,15 +1217,15 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     if((*err = grib_set_double_array(outh,"values",data_values,data_values_count)) != 0)
     {
         FILE* ferror;
-        long i,lcount;
+        size_t ii,lcount;
         grib_context* c=grib_context_get_default();
 
         ferror=fopen("error.data","w");
         lcount=0;
         fprintf(ferror,"# data_values_count=%ld\n",(long)data_values_count);
         fprintf(ferror,"set values={ ");
-        for (i=0;i<data_values_count-1;i++) {
-            fprintf(ferror,"%g, ",data_values[i]);
+        for (ii=0;ii<data_values_count-1;ii++) {
+            fprintf(ferror,"%g, ",data_values[ii]);
             if (lcount>10) {fprintf(ferror,"\n");lcount=0;}
             lcount++;
         }
@@ -1313,8 +1327,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     }
 
     if (packing_spec->deleteLocalDefinition) {
-        /* TODO: We need two calls because of grib1/grib2 issues re removing local defs! */
-        grib_set_long(outh,"setLocalDefinition", 0);
         grib_set_long(outh,"deleteLocalDefinition", 1);
     }
 
@@ -1640,33 +1652,32 @@ char* codes_getenv(const char* name)
 {
     /* Look for the new ecCodes environment variable names */
     /* if not found, then look for old grib_api ones for backward compatibility */
-    const char* old_name = name;
-    char* result = NULL;
-
-    /* Test the most commonly used variables first */
-    if      (STR_EQ(name, "ECCODES_SAMPLES_PATH")) old_name="GRIB_SAMPLES_PATH";
-    else if (STR_EQ(name, "ECCODES_DEFINITION_PATH")) old_name="GRIB_DEFINITION_PATH";
-    else if (STR_EQ(name, "ECCODES_DEBUG")) old_name="GRIB_API_DEBUG";
-
-    else if (STR_EQ(name, "ECCODES_FAIL_IF_LOG_MESSAGE")) old_name="GRIB_API_FAIL_IF_LOG_MESSAGE";
-    else if (STR_EQ(name, "ECCODES_GRIB_WRITE_ON_FAIL")) old_name="GRIB_API_WRITE_ON_FAIL";
-    else if (STR_EQ(name, "ECCODES_GRIB_LARGE_CONSTANT_FIELDS")) old_name="GRIB_API_LARGE_CONSTANT_FIELDS";
-    else if (STR_EQ(name, "ECCODES_NO_ABORT")) old_name="GRIB_API_NO_ABORT";
-    else if (STR_EQ(name, "ECCODES_GRIBEX_MODE_ON")) old_name="GRIB_GRIBEX_MODE_ON";
-    else if (STR_EQ(name, "ECCODES_GRIB_IEEE_PACKING")) old_name="GRIB_IEEE_PACKING";
-    else if (STR_EQ(name, "ECCODES_IO_BUFFER_SIZE")) old_name="GRIB_API_IO_BUFFER_SIZE";
-    else if (STR_EQ(name, "ECCODES_LOG_STREAM")) old_name="GRIB_API_LOG_STREAM";
-    else if (STR_EQ(name, "ECCODES_GRIB_NO_BIG_GROUP_SPLIT")) old_name="GRIB_API_NO_BIG_GROUP_SPLIT";
-    else if (STR_EQ(name, "ECCODES_GRIB_NO_SPD")) old_name="GRIB_API_NO_SPD";
-    else if (STR_EQ(name, "ECCODES_GRIB_KEEP_MATRIX")) old_name="GRIB_API_KEEP_MATRIX";
-    else if (STR_EQ(name, "_ECCODES_ECMWF_TEST_DEFINITION_PATH")) old_name="_GRIB_API_ECMWF_TEST_DEFINITION_PATH";
-    else if (STR_EQ(name, "_ECCODES_ECMWF_TEST_SAMPLES_PATH")) old_name="_GRIB_API_ECMWF_TEST_SAMPLES_PATH";
-    else if (STR_EQ(name, "ECCODES_GRIB_JPEG")) old_name="GRIB_JPEG";
-    else if (STR_EQ(name, "ECCODES_GRIB_DUMP_JPG_FILE")) old_name="GRIB_DUMP_JPG_FILE";
-    else if (STR_EQ(name, "ECCODES_PRINT_MISSING")) old_name="GRIB_PRINT_MISSING";
-
-    result = getenv(name);
+    char* result = getenv(name);
     if (result == NULL) {
+        const char* old_name = name;
+
+        /* Test the most commonly used variables first */
+        if      (STR_EQ(name, "ECCODES_SAMPLES_PATH")) old_name="GRIB_SAMPLES_PATH";
+        else if (STR_EQ(name, "ECCODES_DEFINITION_PATH")) old_name="GRIB_DEFINITION_PATH";
+        else if (STR_EQ(name, "ECCODES_DEBUG")) old_name="GRIB_API_DEBUG";
+
+        else if (STR_EQ(name, "ECCODES_FAIL_IF_LOG_MESSAGE")) old_name="GRIB_API_FAIL_IF_LOG_MESSAGE";
+        else if (STR_EQ(name, "ECCODES_GRIB_WRITE_ON_FAIL")) old_name="GRIB_API_WRITE_ON_FAIL";
+        else if (STR_EQ(name, "ECCODES_GRIB_LARGE_CONSTANT_FIELDS")) old_name="GRIB_API_LARGE_CONSTANT_FIELDS";
+        else if (STR_EQ(name, "ECCODES_NO_ABORT")) old_name="GRIB_API_NO_ABORT";
+        else if (STR_EQ(name, "ECCODES_GRIBEX_MODE_ON")) old_name="GRIB_GRIBEX_MODE_ON";
+        else if (STR_EQ(name, "ECCODES_GRIB_IEEE_PACKING")) old_name="GRIB_IEEE_PACKING";
+        else if (STR_EQ(name, "ECCODES_IO_BUFFER_SIZE")) old_name="GRIB_API_IO_BUFFER_SIZE";
+        else if (STR_EQ(name, "ECCODES_LOG_STREAM")) old_name="GRIB_API_LOG_STREAM";
+        else if (STR_EQ(name, "ECCODES_GRIB_NO_BIG_GROUP_SPLIT")) old_name="GRIB_API_NO_BIG_GROUP_SPLIT";
+        else if (STR_EQ(name, "ECCODES_GRIB_NO_SPD")) old_name="GRIB_API_NO_SPD";
+        else if (STR_EQ(name, "ECCODES_GRIB_KEEP_MATRIX")) old_name="GRIB_API_KEEP_MATRIX";
+        else if (STR_EQ(name, "_ECCODES_ECMWF_TEST_DEFINITION_PATH")) old_name="_GRIB_API_ECMWF_TEST_DEFINITION_PATH";
+        else if (STR_EQ(name, "_ECCODES_ECMWF_TEST_SAMPLES_PATH")) old_name="_GRIB_API_ECMWF_TEST_SAMPLES_PATH";
+        else if (STR_EQ(name, "ECCODES_GRIB_JPEG")) old_name="GRIB_JPEG";
+        else if (STR_EQ(name, "ECCODES_GRIB_DUMP_JPG_FILE")) old_name="GRIB_DUMP_JPG_FILE";
+        else if (STR_EQ(name, "ECCODES_PRINT_MISSING")) old_name="GRIB_PRINT_MISSING";
+
         result = getenv(old_name);
     }
     return result;

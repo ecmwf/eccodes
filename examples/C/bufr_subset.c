@@ -17,11 +17,6 @@
 
 #include "eccodes.h"
 
-void usage(char* prog) {
-    printf("usage: %s infile\n",prog);
-    exit(1);
-}
-
 int main(int argc,char* argv[])
 {
     char key[200]={0,};

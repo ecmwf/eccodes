@@ -1273,8 +1273,8 @@ end subroutine codes_keys_iterator_new
   !> @param iterid   keys iterator id created with @ref codes_keys_iterator_new
   !> @param status   CODES_SUCCESS if next iterator exists, integer value if no more elements to iterate on
 subroutine codes_keys_iterator_next ( iterid , status)
-    integer(kind=kindOfInt),          intent(in)  :: iterid
-    integer(kind=kindOfInt),optional, intent(out) :: status
+    integer(kind=kindOfInt),   intent(in)  :: iterid
+    integer(kind=kindOfInt),   intent(out) :: status
 
     call grib_keys_iterator_next ( iterid , status)
 end subroutine codes_keys_iterator_next
@@ -1361,9 +1361,9 @@ end subroutine codes_bufr_keys_iterator_new
   !> @param iterid   keys iterator id created with @ref codes_bufr_keys_iterator_new
   !> @param status   CODES_SUCCESS if next iterator exists, integer value if no more elements to iterate on
 subroutine codes_bufr_keys_iterator_next (iterid , status)
-    integer(kind=kindOfInt),          intent(in)  :: iterid
-    integer(kind=kindOfInt),optional, intent(out) :: status
-    integer(kind=kindOfInt)                       :: iret
+    integer(kind=kindOfInt), intent(in)  :: iterid
+    integer(kind=kindOfInt), intent(out) :: status
+    integer(kind=kindOfInt)              :: iret
 
     status = GRIB_SUCCESS
     iret = codes_f_bufr_keys_iterator_next( iterid )

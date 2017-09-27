@@ -70,18 +70,6 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
     return 0;
 }
 
-/* Return 1 if the GRIB message has missing values encoded in data section and not in bitmap */
-/* e.g. grid_complex_spatial_differencing with missingValueManagementUsed enabled */
-static int hasMissingValuesButNoBitmap(grib_handle* h)
-{
-    long missingValueManagementUsed = 0;
-    int err = grib_get_long(h, "missingValueManagementUsed", &missingValueManagementUsed);
-    if (!err) {
-        /* Key exists */
-        return (missingValueManagementUsed!=0);
-    }
-    return 0;
-}
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     int err=0;
@@ -101,10 +89,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     size_t bmp_len = 0;
     double *data_values=0,*lats=0,*lons=0;
     int n = 0;
-    size_t size=0;
-    /* Cater for GRIBs which have missing values but no bitmap! */
-    /* e.g. grid_complex_spatial_differencing with 'missingValueManagementUsed' enabled */
-    const int missingValuesButNoBitmap = hasMissingValuesButNoBitmap(h);
+    size_t size=0, num_bytes=0;
+    long hasMissingValues = 0;
 
     if (grib_options_on("m:")) {
         /* User wants to see missing values */
@@ -139,10 +125,11 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     iter=grib_iterator_new(h,0,&err);
 
+    num_bytes = (numberOfPoints+1)*sizeof(double);
     data_values=(double*)calloc(numberOfPoints+1, sizeof(double));
     if (!data_values) {
         fprintf(dump_file, "ERROR: failed to allocate %ld bytes for data values (number of points=%ld)\n",
-                (numberOfPoints+1)*sizeof(double), numberOfPoints);
+                (long)num_bytes, numberOfPoints);
         exit(GRIB_OUT_OF_MEMORY);
     }
 
@@ -171,6 +158,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         exit(err);
     }
 
+    /* Cater for GRIBs which have missing values but no bitmap */
+    /* See ECC-511 */
+    GRIB_CHECK(grib_get_long(h,"missingValuesPresent",&hasMissingValues),0);
     GRIB_CHECK(grib_get_long(h,"bitmapPresent",&bitmapPresent),0);
     if (bitmapPresent)
     {
@@ -196,9 +186,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if (skip_missing==0){
         /* Show missing values in data */
         for (i=0;i<numberOfPoints;i++) {
-            int is_missing_val = (bitmapPresent && bitmap[i] == 0);
-            if (!bitmapPresent && missingValuesButNoBitmap) {
-                is_missing_val = (data_values[i] == missingValue);
+            int is_missing_val = 0;
+            if (hasMissingValues) {
+                if (bitmapPresent) is_missing_val = (bitmap[i] == 0);
+                else is_missing_val = (data_values[i] == missingValue);
             }
             if (iter) fprintf(dump_file,"%9.3f%9.3f ",lats[i],lons[i]);
 
@@ -216,9 +207,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     } else if ( skip_missing==1 ){
         /* Skip the missing values in data */
         for (i=0;i<numberOfPoints;i++) {
-            int is_missing_val = (bitmapPresent && bitmap[i] == 0);
-            if (!bitmapPresent && missingValuesButNoBitmap) {
-                is_missing_val = (data_values[i] == missingValue);
+            int is_missing_val = 0;
+            if (hasMissingValues) {
+                if (bitmapPresent) is_missing_val = (bitmap[i] == 0);
+                else is_missing_val = (data_values[i] == missingValue);
             }
             if (!is_missing_val){
                 if (iter) fprintf(dump_file,"%9.3f%9.3f ",lats[i],lons[i]);

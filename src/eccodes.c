@@ -40,6 +40,11 @@ int codes_count_in_file(grib_context* c, FILE* f,int* n)
 {
     return grib_count_in_file(c,f,n);
 }
+int codes_count_in_filename(grib_context* c, const char* filename, int* n)
+{
+    return grib_count_in_filename(c, filename, n);
+}
+
 grib_context* codes_context_get_default(void)
 {
     return grib_context_get_default();
@@ -162,9 +167,9 @@ grib_handle* codes_handle_new_from_message_copy(grib_context* c, const void* dat
 {
     return grib_handle_new_from_message_copy(c,data,data_len);
 }
-grib_handle* codes_grib_handle_new_from_samples (grib_context* c, const char* res_name)
+grib_handle* codes_grib_handle_new_from_samples(grib_context* c, const char* sample_name)
 {
-    return grib_handle_new_from_samples(c, res_name);
+    return grib_handle_new_from_samples(c, sample_name);
 }
 grib_handle* codes_handle_clone(grib_handle* h)
 {
@@ -344,9 +349,9 @@ int codes_get_string(grib_handle* h, const char* key, char* mesg, size_t *length
 {
     return grib_get_string(h,key,mesg,length);
 }
-int codes_get_string_array(grib_handle* h, const char* name, char** val, size_t *length)
+int codes_get_string_array(grib_handle* h, const char* key, char** vals, size_t *length)
 {
-    return grib_get_string_array(h,name,val,length);
+    return grib_get_string_array(h,key,vals,length);
 }
 int codes_get_bytes(grib_handle* h, const char* key, unsigned char* bytes, size_t *length)
 {

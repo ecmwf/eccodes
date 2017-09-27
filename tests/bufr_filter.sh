@@ -45,7 +45,7 @@ bufr_files=`cat bufr_data_files.txt`
 for f in ${bufr_files} ; do
    echo "file: $f" >> $fLog
    ${tools_dir}/codes_bufr_filter $fRules $f >> $fLog
-   ${tools_dir}/bufr_filter       $fRules $f >> $fLog  # See ECC-205
+   ${tools_dir}/codes_bufr_filter       $fRules $f >> $fLog  # See ECC-205
 done
 
 #-----------------------------------------------------------
@@ -1013,7 +1013,7 @@ fOut="g2nd_208.bufr.out"
 
 echo "Test: extract subsets compressed data" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}/codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
 
 cat > ${fRules} <<EOF
 set unpack=1;
@@ -1025,7 +1025,7 @@ print "orbitNumber=[orbitNumber!10]";
 print "casRegistryNumber=[casRegistryNumber!10]";
 EOF
 
-${tools_dir}/bufr_filter $fRules $fOut  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $fOut  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 === message number 1
@@ -1062,7 +1062,7 @@ f="gosat.bufr"
 
 echo "Test: firstOrderStatistics" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_filter $fRules $f  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $f  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 decimalScaleOfFollowingSignificands->firstOrderStatisticalValue=-15 -15 -15 -15 -15 -15 -15 -15 -15 -15 
@@ -1109,7 +1109,7 @@ fOut="asel_139.bufr.out"
 
 echo "Test: delayed replication compressed data" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}/codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
 
 cat > ${fRules} <<EOF
 set unpack=1;
@@ -1120,7 +1120,7 @@ print "#3#windSpeedAt10M=[#3#windSpeedAt10M]";
 print "#5#windSpeedAt10M=[#5#windSpeedAt10M]";
 EOF
 
-${tools_dir}/bufr_filter $fRules $fOut  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $fOut  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 delayedDescriptorReplicationFactor=5
@@ -1161,7 +1161,7 @@ fOut="out.bufr"
 
 echo "Test: create new BUFR with bitmap" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}/codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
 
 cat > ${fRules} <<EOF
 set unpack=1;
@@ -1170,7 +1170,7 @@ print "delayedDescriptorReplicationFactor=[delayedDescriptorReplicationFactor!20
 print "dataPresentIndicator=[dataPresentIndicator!20]";
 EOF
 
-${tools_dir}/bufr_filter $fRules $fOut  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $fOut  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 delayedDescriptorReplicationFactor=4 1 4 15 2 2
@@ -1213,7 +1213,7 @@ f="go15_87.bufr"
 echo "Test: create new BUFR with bitmap" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter $fRules $f  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $f  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 numberOfSubsets=128
@@ -1328,7 +1328,7 @@ f="metar_with_2_bias.bufr"
 echo "Test: Data with two bias correction wrong bitmap" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter $fRules $f  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $f  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 70
@@ -1355,7 +1355,7 @@ f="temp-land-with-substituted-values.bufr"
 echo "Test: Data with substituted value" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter $fRules $f  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $f  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 110
@@ -1382,7 +1382,7 @@ f="syno_1.bufr"
 echo "Test: Nested delayed replication" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter $fRules $f  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $f  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 -1e+100 -1e+100 2 -1e+100 -1e+100 3 -1e+100 -1e+100 
@@ -1409,7 +1409,7 @@ f="imssnow.bufr"
 echo "Test: Simple thinning" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter -o ${f}.out $fRules $f
+${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
 
 cat > $fRules <<EOF
 set unpack=1;
@@ -1418,7 +1418,7 @@ print "longitude=[longitude]";
 print "height=[height]";
 EOF
 
-${tools_dir}/bufr_filter $fRules ${f}.out > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules ${f}.out > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 latitude=4.93301 5.17216 5.40243 5.62361 7.86075
@@ -1446,7 +1446,7 @@ f="go15_87.bufr"
 echo "Test: subset extraction constant values" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter -o ${f}.out $fRules $f
+${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
 
 cat > $fRules <<EOF
 set unpack=1;
@@ -1456,14 +1456,14 @@ set doExtractSubsets=1;
 write;
 EOF
 
-${tools_dir}/bufr_filter -o ${f}.out.out $fRules ${f}.out
+${tools_dir}/codes_bufr_filter -o ${f}.out.out $fRules ${f}.out
 
 cat > $fRules <<EOF
 set unpack=1;
 print "latitude=[latitude]";
 EOF
 
-${tools_dir}/bufr_filter $fRules ${f}.out.out > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules ${f}.out.out > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 latitude=0
@@ -1488,14 +1488,14 @@ f="amsu_55.bufr"
 echo "Test: fix for ECC-389" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter -o ${f}.out $fRules $f
+${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
 
 cat > $fRules <<EOF
 set unpack=1;
 print "[#14#brightnessTemperature]";
 EOF
 
-${tools_dir}/bufr_filter $fRules ${f}.out > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules ${f}.out > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 266.53
@@ -1519,7 +1519,7 @@ f="bssh_176.bufr"
 
  # This should fail. Out of Range
 set +e
-${tools_dir}/bufr_filter -o ${f}.out $fRules $f
+${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
 status=$?
 set -e
 [ $status -ne 0 ]
@@ -1534,7 +1534,7 @@ cat > $fRules <<EOF
  print "airTemperature=[airTemperature], width=[airTemperature->width]";
  write;
 EOF
-${tools_dir}/bufr_filter -o ${f}.out $fRules $f > ${f}.log
+${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 airTemperature=$HIGH_TEMPERATURE, width=26
@@ -1587,7 +1587,7 @@ f="syno_1.bufr"
 echo "Test: Julian Date" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter $fRules $f  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $f  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 match

@@ -61,14 +61,14 @@ program precision
   maxv=values2(1)
   minv=maxv
   do i=1,size
-     a=abs(values2(i)-values1(i))
-     if ( values2(i) .gt. maxv ) maxv=values2(i)
-     if ( values2(i) .lt. maxv ) minv=values2(i)
-     if ( values2(i) .ne. 0 ) then
-        r=abs((values2(i)-values1(i))/values2(i))
-     endif
-     if ( a .gt. maxa ) maxa=a
-     if ( r .gt. maxr ) maxr=r
+    a=abs(values2(i)-values1(i))
+    if ( values2(i) .gt. maxv ) maxv=values2(i)
+    if ( values2(i) .lt. maxv ) minv=values2(i)
+    if ( values2(i) .ne. 0 ) then
+      r=abs((values2(i)-values1(i))/values2(i))
+    endif
+    if ( a .gt. maxa ) maxa=a
+    if ( r .gt. maxr ) maxr=r
   enddo
   write(*,*) "max absolute error = ",maxa
   write(*,*) "max relative error = ",maxr
@@ -90,4 +90,3 @@ program precision
   deallocate(values1)
   deallocate(values2)
 end program precision
-

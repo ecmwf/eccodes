@@ -137,37 +137,37 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
     grib_accessor_md5* self = (grib_accessor_md5*)a;
-  char* b=0;
+    char* b=0;
     int n=0;
-  grib_string_list* current=0;
-  grib_context* context=a->context;
+    grib_string_list* current=0;
+    grib_context* context=a->context;
 
     self->offset = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-  self->length = grib_arguments_get_expression(grib_handle_of_accessor(a),arg,n++);
-  self->blacklist=0;
-  while ( (b=(char*)grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++)) !=NULL) {
-    if (! self->blacklist) {
-      self->blacklist=(grib_string_list*)grib_context_malloc_clear(context,sizeof(grib_string_list));
-      self->blacklist->value=grib_context_strdup(context,b);
-      current=self->blacklist;
-    } else {
-      current->next=(grib_string_list*)grib_context_malloc_clear(context,sizeof(grib_string_list));
-      current->next->value=grib_context_strdup(context,b);
-      current=current->next;
+    self->length = grib_arguments_get_expression(grib_handle_of_accessor(a),arg,n++);
+    self->blacklist=0;
+    while ( (b=(char*)grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++)) !=NULL) {
+        if (! self->blacklist) {
+            self->blacklist=(grib_string_list*)grib_context_malloc_clear(context,sizeof(grib_string_list));
+            self->blacklist->value=grib_context_strdup(context,b);
+            current=self->blacklist;
+        } else {
+            current->next=(grib_string_list*)grib_context_malloc_clear(context,sizeof(grib_string_list));
+            current->next->value=grib_context_strdup(context,b);
+            current=current->next;
+        }
     }
-  }
     a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
-
 }
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_STRING;
+static int  get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_STRING;
 }
 
-
-static int compare(grib_accessor* a, grib_accessor* b) {
+static int compare(grib_accessor* a, grib_accessor* b)
+{
     int retval=GRIB_SUCCESS;
 
     size_t alen = 0;
@@ -188,7 +188,8 @@ static int compare(grib_accessor* a, grib_accessor* b) {
     return retval;
 }
 
-static int unpack_string(grib_accessor*a , char*  v, size_t *len){
+static int unpack_string(grib_accessor*a , char*  v, size_t *len)
+{
     grib_accessor_md5* self = (grib_accessor_md5*)a;
     unsigned mess_len;
     unsigned char* mess;
@@ -208,7 +209,7 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
     if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->offset,&offset))
             != GRIB_SUCCESS)
         return ret;
-  if((ret = grib_expression_evaluate_long(grib_handle_of_accessor(a),self->length,&length))
+    if((ret = grib_expression_evaluate_long(grib_handle_of_accessor(a),self->length,&length))
             != GRIB_SUCCESS)
         return ret;
 
@@ -217,10 +218,10 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
     mess_len=length;
 
     blacklist=a->context->blacklist;
-  /* passed blacklist overrides context blacklist. 
+    /* passed blacklist overrides context blacklist.
      Consider to modify following line to extend context blacklist.
-  */
-  if (self->blacklist) blacklist=self->blacklist;
+     */
+    if (self->blacklist) blacklist=self->blacklist;
     while (blacklist && blacklist->value) {
         b=grib_find_accessor(grib_handle_of_accessor(a),blacklist->value);
         if (!b) {

@@ -7,6 +7,7 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -32,9 +33,9 @@ def example():
 
         for key in keys:
             try:
-                print '  %s: %s' % (key, codes_get(gid, key))
+                print('  %s: %s' % (key, codes_get(gid, key)))
             except CodesInternalError as err:
-                print 'Error with key="%s" : %s' % (key, err.msg)
+                print('Error with key="%s" : %s' % (key, err.msg))
 
         codes_release(gid)
 
@@ -51,6 +52,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

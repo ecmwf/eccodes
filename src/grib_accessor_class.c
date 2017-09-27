@@ -100,12 +100,13 @@ grib_section* grib_create_root_section(const grib_context *context, grib_handle 
 static GRIB_INLINE grib_accessor_class* get_class(grib_context* c,char* type)
 {
     int i;
-    const int table_count = NUMBER(table);
+    int table_count = 0;
     grib_accessor_class** the_class=NULL;
 
     if ( (the_class=(grib_accessor_class**)grib_trie_get(c->classes,type))!=NULL)
         return *(the_class);
 
+    table_count = NUMBER(table);
     for(i = 0; i < table_count ; i++) {
         if( grib_inline_strcmp(type,table[i].type) == 0 )
         {
@@ -208,7 +209,7 @@ static void link_same_attributes(grib_accessor* a,grib_accessor* b)
     int idx=0;
     grib_accessor* bAttribute=NULL;
     if (a==NULL || b==NULL) return;
-    while (a->attributes[i] && i<MAX_ACCESSOR_ATTRIBUTES) {
+    while (i<MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
         bAttribute=_grib_accessor_get_attribute(b,a->attributes[i]->name,&idx);
         if (bAttribute) a->attributes[i]->same=bAttribute;
         i++;

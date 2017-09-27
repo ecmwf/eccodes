@@ -13,6 +13,14 @@ print(dirs)
 FILES = {}
 NAMES = []
 
+# Binary to ASCII function. Different in Python 2 and 3
+try:
+    str(b'\x23\x20','ascii')
+    ascii = lambda x: str(x, 'ascii')  # Python 3
+except:
+    ascii = lambda x: str(x)           # Python 2
+
+
 # The last argument is the generated C file
 g = open(sys.argv[-1], "w")
 
@@ -49,9 +57,7 @@ for directory in dirs:
                 # Read two characters at a time and convert to C hex
                 # e.g. 23 -> 0x23
                 for n in range(0, len(fcont), 2):
-                    twoChars = fcont[n:n+2]
-                    if sys.version_info.major > 2:
-                        twoChars = str(twoChars,'ascii')
+                    twoChars = ascii(fcont[n:n+2])
                     print("0x%s," % (twoChars,), end="", file=g)
                     i += 1
                     if (i % 20) == 0:

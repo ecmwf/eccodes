@@ -26,7 +26,7 @@ cat > $tempRules <<EOF
  write;
 EOF
 
-${tools_dir}/bufr_filter -o $tempOut $tempRules $BufrFile
+${tools_dir}/codes_bufr_filter -o $tempOut $tempRules $BufrFile
 
 # There is a difference in localLongitude, rel error=6.58627e-06
 # So this should fail

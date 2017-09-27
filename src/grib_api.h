@@ -403,6 +403,17 @@ The grib_handle is the structure giving access to parsed grib values by keys.
 int grib_count_in_file(grib_context* c, FILE* f,int* n);
 
 /**
+*  Counts the messages contained in a file.
+*
+* @param c           : the context from which the handle will be created (NULL for default context)
+* @param filename    : the path to the file
+* @param n           : the number of messages in the file
+* @return            0 if OK, integer value on error
+*/
+int grib_count_in_filename(grib_context* c, const char* filename, int* n);
+
+
+/**
 *  Create a handle from a file resource.
 *  The file is read until a message is found. The message is then copied.
 *  Remember always to delete the handle when it is not needed anymore to avoid
@@ -474,14 +485,14 @@ grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data
 
 
 /**
- *  Create a handle from a message contained in a samples directory.
+ *  Create a handle from a GRIB message contained in the samples directory.
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param res_name    : the resource name
+ * @param sample_name : the name of the sample file (without the .tmpl extension)
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
-grib_handle* grib_handle_new_from_samples (grib_context* c, const char* res_name)  ;
+grib_handle* grib_handle_new_from_samples (grib_context* c, const char* sample_name);
 
 
 
@@ -805,7 +816,17 @@ int grib_get_double_elements(grib_handle* h, const char* key, int* i, long size,
 */
 int grib_get_string(grib_handle* h, const char* key, char* mesg, size_t *length);
 
-int grib_get_string_array(grib_handle* h, const char* name, char** val, size_t *length);
+/**
+*  Get string array values from a key. If several keys of the same name are present, the last one is returned
+* @see  grib_set_string_array
+*
+* @param h       : the handle to get the data from
+* @param key     : the key to be searched
+* @param vals    : the address of a string array where the data will be retrieved
+* @param length  : the address of a size_t that contains allocated length of the array on input, and that contains the actual length of the array on output
+* @return        0 if OK, integer value on error
+*/
+int grib_get_string_array(grib_handle* h, const char* key, char** vals, size_t *length);
 
 /**
 *  Get raw bytes values from a key. If several keys of the same name are present, the last one is returned
@@ -1337,6 +1358,7 @@ int wmo_read_grib_from_file(FILE* f,void* buffer,size_t* len);
 int wmo_read_bufr_from_file(FILE* f,void* buffer,size_t* len);
 int wmo_read_gts_from_file(FILE* f,void* buffer,size_t* len);
 int wmo_read_any_from_stream(void *stream_data, long (*stream_proc )(void *, void *buffer, long len ), void *buffer, size_t *len);
+void* wmo_read_any_from_stream_malloc(void* stream_data,long (*stream_proc)(void*,void* buffer,long len) ,size_t *size, int* err);
 void *wmo_read_any_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
 void *wmo_read_gts_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
 void *wmo_read_bufr_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);

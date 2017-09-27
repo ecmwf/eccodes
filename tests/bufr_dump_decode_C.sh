@@ -77,8 +77,11 @@ do
 
     $COMPILER -o $tempExe $tempSrc -I${INCL_DIR1} -I${INCL_DIR2} $FLAGS_COMPILER $FLAGS_LINKER
 
-    # valgrind --error-exitcode=1  ./$tempExe
-    ./$tempExe $filePath
+    if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
+      valgrind --error-exitcode=1 -q ./$tempExe $filePath
+    else
+      ./$tempExe $filePath
+    fi
   fi
 
   rm -f $tempExe $tempSrc

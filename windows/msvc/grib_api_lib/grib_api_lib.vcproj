@@ -1685,6 +1685,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_nearest_class_polar_stereographic.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_nearest_class_reduced.c"
 				>
 			</File>
