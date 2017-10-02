@@ -10,24 +10,20 @@
 
 . ./include.sh
 
-
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_get_string_array_test_c"
 
-#Define tmp file
+# Define tmp file
 fTmp=${label}.tmp.txt
 rm -f $fTmp
 
-#We check "syno_multi.bufr". The path is
-#hardcoded in the example
-
 REDIRECT=/dev/null
 
-#Write the key values into a file
+# Write the output into a file
 ${examples_dir}/c_bufr_get_string_array 2> $REDIRECT > $fTmp
 
-#TODO: check the results
-#cat  $fTmp
+# Check the results
+grep -q 'stationOrSiteName string array size = 128' $fTmp
 
-#Clean up
+# Clean up
 rm -f $fTmp

@@ -9,7 +9,7 @@
  */
 
 /*
- * C Implementation: bufr_get_keys
+ * C Implementation: bufr_get_string_array
  *
  * Description: how to get an array of strings from a BUFR message.
  *
@@ -21,11 +21,9 @@ int main(int argc,char* argv[])
 {
     codes_handle* h=NULL;
 
-    long strsize;
-    size_t size = 0;
+    size_t i=0, size = 0;
     size_t len=0;
-    int i, err=0;
-    int cnt=0;
+    int err=0, cnt=0;
     char** strArray = NULL; /* array of strings */
     const char* infile = "../../data/bufr/pgps_110.bufr";
 
@@ -48,22 +46,18 @@ int main(int argc,char* argv[])
           i.e. unpack the data values */
         CODES_CHECK(codes_set_long(h, "unpack", 1),0);
 
-        /* read and print some data values */
-
-        /* Get the width of the strings which is the same for all of them */
-        CODES_CHECK(codes_get_long(h, "stationOrSiteName->width", &strsize),0);
-
-        /* The width is given in bits. Convert to bytes */
-        strsize /= 8;
-        printf("stationOrSiteName->width = %ld bytes\n", strsize);
-
-        /* get the size and allocate memory*/
-        CODES_CHECK(codes_get_length(h, "stationOrSiteName", &len), 0);
+        /* get the size and allocate memory */
+        CODES_CHECK(codes_get_size(h, "stationOrSiteName", &len), 0);
         strArray = (char**)malloc(len * sizeof(char*));
+        if (!strArray) {
+            printf("Error: Could not allocate memory\n");
+            return 1;
+        }
         CODES_CHECK(codes_get_string_array(h, "stationOrSiteName", strArray, &size), 0);
         for(i=0; i<size; ++i) {
             printf("%s\n", strArray[i]);
         }
+        printf("stationOrSiteName string array size = %lu\n", (unsigned long)size);
 
         /* free allocated arrays */
         for(i=0; i<size; ++i) free( strArray[i] );
