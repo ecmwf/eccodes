@@ -345,8 +345,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
         const std::vector<double> &values = field.values(i);
 
 
-        for (auto j = values.begin(); j != values.end(); ++j) {
-            double x = *j;
+        for (const auto& x : values) {
             ASSERT(x < 3e38);
             ASSERT(x > -3e38);
         }
