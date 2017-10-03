@@ -1230,7 +1230,11 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
     case 223000:
     case 236000:
         cancel_bitmap(self);
-        while (descriptors[edi[iel]]->code>=100000 || iel==0) iel--;
+        if (iel < 0) { return GRIB_ENCODING_ERROR; }
+        while (descriptors[edi[iel]]->code>=100000 || iel==0) {
+            iel--;
+            if (iel < 0) { return GRIB_ENCODING_ERROR; }
+        }
         bitmapEndElementsDescriptorsIndex=iel;
         /*looking for another bitmap and pointing before it.
           This behaviour is not documented in the Manual on codes it is copied from BUFRDC
@@ -1332,7 +1336,11 @@ static int build_bitmap_new_data(grib_accessor_bufr_data_array *self,unsigned ch
     case 222000:
     case 223000:
     case 236000:
-        while (descriptors[edi[iel]]->code>=100000) iel--;
+        if (iel < 0) { return GRIB_ENCODING_ERROR; }
+        while (descriptors[edi[iel]]->code>=100000) {
+            iel--;
+            if (iel < 0) { return GRIB_ENCODING_ERROR; }
+        }
         bitmapEndElementsDescriptorsIndex=iel;
         /*looking for another bitmap and pointing before it.
           This behaviour is not documented in the Manual on codes it is copied from BUFRDC
@@ -2530,15 +2538,19 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                         if (flag==PROCESS_DECODE) {
                             grib_iarray_push(elementsDescriptorsIndex,i);
                             push_zero_element(self,dval);
-                            if (descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 )
-                                build_bitmap(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                            if ( descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 ) {
+                                err = build_bitmap(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                                if (err) return err;
+                            }
                         } else if (flag==PROCESS_ENCODE) {
-                            if (descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 )
+                            if ( descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 )
                                 restart_bitmap(self);
                         } else if (flag==PROCESS_NEW_DATA) {
                             grib_iarray_push(elementsDescriptorsIndex,i);
-                            if (descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 )
-                                build_bitmap_new_data(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                            if ( descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 ) {
+                                err = build_bitmap_new_data(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                                if (err) return err;
+                            }
                         }
                         elementIndex++;
                     }
@@ -2577,12 +2589,14 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                     if (flag==PROCESS_DECODE) {
                         grib_iarray_push(elementsDescriptorsIndex,i);
                         if (decoding) push_zero_element(self,dval);
-                        build_bitmap(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                        err = build_bitmap(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                        if (err) return err;
                     } else if (flag==PROCESS_ENCODE) {
                         restart_bitmap(self);
                     } else if (flag==PROCESS_NEW_DATA) {
                         grib_iarray_push(elementsDescriptorsIndex,i);
-                        build_bitmap_new_data(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                        err = build_bitmap_new_data(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                        if (err) return err;
                     }
                     elementIndex++;
                     break;

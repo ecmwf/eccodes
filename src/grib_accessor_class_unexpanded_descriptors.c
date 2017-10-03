@@ -196,7 +196,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     int ret=0,i;
     long pos = 0;
     unsigned long f,x,y;
-    unsigned char* buf        = NULL;
+    unsigned char* buf = NULL;
     grib_accessor* expanded=NULL;
     size_t buflen=*len*2;
     long createNewData=1;
@@ -221,9 +221,13 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
     expanded=grib_find_accessor(grib_handle_of_accessor(a),"expandedCodes");
     Assert(expanded!=NULL);
-    grib_accessor_class_expanded_descriptors_set_do_expand(expanded,1);
-    grib_set_long(grib_handle_of_accessor(a),"unpack",3);
-    grib_set_long(grib_handle_of_accessor(a),"unpack",1);
+    ret = grib_accessor_class_expanded_descriptors_set_do_expand(expanded,1);
+    if (ret != GRIB_SUCCESS) return ret;
+
+    ret = grib_set_long(grib_handle_of_accessor(a),"unpack",3);
+    if (ret != GRIB_SUCCESS) return ret;
+
+    ret = grib_set_long(grib_handle_of_accessor(a),"unpack",1);
 
     return ret;
 }
