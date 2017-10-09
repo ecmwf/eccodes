@@ -423,11 +423,13 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
 
 static int pack_double(grib_accessor* a, const double* cval, size_t *len)
 {
+    int err = 0;
     grib_handle* gh = grib_handle_of_accessor(a);
     char type[]="grid_second_order";
     size_t size=strlen(type);
 
-    grib_set_string(gh,"packingType",type,&size);
+    err = grib_set_string(gh,"packingType",type,&size);
+    if (err) return err;
 
     return grib_set_double_array(gh,"values",cval,*len);
 }
