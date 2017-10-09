@@ -1018,8 +1018,11 @@ void codes_assertion_failed(const char* message, const char* file, int line)
     /* Default behaviour is to abort
      * unless user has supplied his own assertion routine */
     if (assertion == NULL) {
+        grib_context *c = grib_context_get_default();
         fprintf(stderr, "ecCodes assertion failed: `%s' in %s:%d\n", message, file, line);
-        abort();
+        if (!c->no_abort) {
+            abort();
+        }
     }
     else {
         char buffer[10240];
