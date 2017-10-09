@@ -489,7 +489,10 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     if((err = grib_get_long_internal(gh,self->binary_scale_factor,&binary_scale_factor )) != GRIB_SUCCESS)  return err;
     if((err = grib_get_long_internal(gh,self->decimal_scale_factor,&decimal_scale_factor )) != GRIB_SUCCESS)  return err;
     if((err = grib_get_long_internal(gh,self->typeOfOriginalFieldValues,&typeOfOriginalFieldValues )) != GRIB_SUCCESS)  return err;
-    if((err = grib_get_long_internal(gh,self->groupSplittingMethodUsed,&groupSplittingMethodUsed )) != GRIB_SUCCESS)  return err;
+
+    /* Don't call grib_get_long_internal to suppress error message being output */
+    if((err = grib_get_long(gh,self->groupSplittingMethodUsed,&groupSplittingMethodUsed )) != GRIB_SUCCESS)  return err;
+
     if((err = grib_get_long_internal(gh,self->missingValueManagementUsed,&missingValueManagementUsed )) != GRIB_SUCCESS)  return err;
     if((err = grib_get_long_internal(gh,self->primaryMissingValueSubstitute,&primaryMissingValueSubstitute )) != GRIB_SUCCESS)  return err;
     if((err = grib_get_long_internal(gh,self->secondaryMissingValueSubstitute,&secondaryMissingValueSubstitute )) != GRIB_SUCCESS)  return err;
