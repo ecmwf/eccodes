@@ -155,6 +155,8 @@ const std::string& Representation::uniqueName() const {
         makeName(os);
         uniqueName_ = os.str();
     }
+
+    ASSERT(!uniqueName_.empty());
     return uniqueName_;
 }
 
