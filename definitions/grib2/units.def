@@ -843,6 +843,12 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
 	}
+#Mean zero-crossing wave period
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 28 ;
+	}
 #Significant height of combined wind waves and swell
 'm' = {
 	 discipline = 10 ;
@@ -854,6 +860,12 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 14 ;
+	}
+#Peak wave period
+'s' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 34 ;
 	}
 #Mean wave period
 's' = {
