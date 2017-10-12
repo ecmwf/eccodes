@@ -28,7 +28,7 @@ echo "-# It's possible to produce a grib edition 2 file from a grib edition 1 ju
 At this stage of development all the geography parameters, level and time information is correctly translated, for the product
 definition extra set calls must be done. To do this properly, \ref grib_filter is suggested. \\n
 \\verbatim 
-grib_set -s edition=2 ../data/reduced_gaussian_pressure_level.grib1
+grib_set -s edition=2 ../data/reduced_gaussian_pressure_level.grib1 out.grib2
 \\endverbatim\\n"
 
 echo "-# With grib edition 2 is possible to compress data using the jpeg algorithm. 
