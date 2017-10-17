@@ -369,7 +369,7 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
             }
         }
     }
-    if (isConstant) printf("ECCODES DEBUG grib_util: data_values are CONSTANT;\n");
+    printf("ECCODES DEBUG grib_util: data_values are CONSTANT? %d\n", isConstant);
 
 #if 0
         if (spec->bitmapPresent) {
