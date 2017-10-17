@@ -26,7 +26,7 @@ echo "-# To set scaleFactorOfSecondFixedSurface to missing only for the fields f
 
 echo "-# It's possible to produce a grib edition 2 file from a grib edition 1 just changing the edition number with grib_set.
 At this stage of development all the geography parameters, level and time information is correctly translated, for the product
-definition extra set calls must be done. To do this properly, \ref grib_filter is suggested. \\n
+definition extra set calls must be done. To do this properly, please use the grib_filter tool. \\n
 \\verbatim 
 grib_set -s edition=2 ../data/reduced_gaussian_pressure_level.grib1 out.grib2
 \\endverbatim\\n"

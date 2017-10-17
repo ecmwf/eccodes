@@ -91,7 +91,7 @@ The possible types are:
 When the type \"n\" is used all the set of keys belonging to the specified namespace
 are compared assuming their own native type.
 To illustrate how these options work we change the values coded in 
-a message using grib_filter with the following rules file (see \ref grib_filter). "
+a message using grib_filter with the following rules file (see grib_filter). "
 echo "\\verbatim
 set bitsPerValue=10;
 set values={1,2.5,3,4,5,6,70};
