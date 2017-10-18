@@ -20,8 +20,62 @@ unsigned[4] numberOfPointsInDomain : dump;
 alias numberOfPoints=numberOfPointsInDomain;
 alias numberOfDataPoints=numberOfPointsInDomain;
 
+alias is_rotated_grid=zero;
+
 codetable[2] horizontalDomainTemplateNumber ('4.0.table',masterDir,localDir) =0 : dump,edition_specific;
 template horizontalDomainTemplate "grib3/template.4.[horizontalDomainTemplateNumber:i].def";
+
+concept gridType {
+ "regular_ll"            = { horizontalDomainTemplateNumber=0;  }  # PLPresent=0;
+ #"reduced_ll"            = { horizontalDomainTemplateNumber=0;  PLPresent=1;  }
+ "rotated_ll"            = { horizontalDomainTemplateNumber=1;  }  # PLPresent=0;
+ "stretched_ll"          = { horizontalDomainTemplateNumber=2;  }  # PLPresent=0;
+ "stretched_rotated_ll"  = { horizontalDomainTemplateNumber=3;  }  # PLPresent=0;
+ #"mercator"              = { horizontalDomainTemplateNumber=10; PLPresent=0;  }
+ #"transverse_mercator"   = { horizontalDomainTemplateNumber=12; PLPresent=0;  }
+ #"polar_stereographic"   = { horizontalDomainTemplateNumber=20; PLPresent=0;  }
+ #"lambert"               = { horizontalDomainTemplateNumber=30; PLPresent=0;  }
+ #"albers"                = { horizontalDomainTemplateNumber=31; PLPresent=0;  }
+
+ #"regular_gg"            = { horizontalDomainTemplateNumber=40; PLPresent=0;  }
+ "reduced_gg"            = { horizontalDomainTemplateNumber=40; } #PLPresent=1;
+                             # numberOfOctectsForNumberOfPoints=2;iDirectionIncrementGiven=0;numberOfPointsAlongAParallel = missing(); }
+
+ #"rotated_gg"            = { horizontalDomainTemplateNumber=41; PLPresent=0;  }
+ #"reduced_rotated_gg"    = { horizontalDomainTemplateNumber=41; PLPresent=1; numberOfOctectsForNumberOfPoints=2;iDirectionIncrementGiven=0;numberOfPointsAlongAParallel = missing(); }
+
+ #"stretched_gg"          = { horizontalDomainTemplateNumber=42; PLPresent=0;  }
+ #"reduced_stretched_gg"  = { horizontalDomainTemplateNumber=42; PLPresent=1; numberOfOctectsForNumberOfPoints=2;iDirectionIncrementGiven=0;numberOfPointsAlongAParallel = missing(); }
+
+ #"stretched_rotated_gg"  = { horizontalDomainTemplateNumber=43; PLPresent=0;  }
+ #"reduced_stretched_rotated_gg" = { horizontalDomainTemplateNumber=43; PLPresent=1; numberOfOctectsForNumberOfPoints=2;iDirectionIncrementGiven=0;numberOfPointsAlongAParallel = missing(); }
+
+# For consistency add the prefix regular_
+#"regular_rotated_gg"           = { horizontalDomainTemplateNumber=41; PLPresent=0; } # = rotated_gg
+#"regular_stretched_gg"         = { horizontalDomainTemplateNumber=42; PLPresent=0; } # = stretched_gg
+#"regular_stretched_rotated_gg" = { horizontalDomainTemplateNumber=43; PLPresent=0; } # = stretched_rotated_gg
+
+ #"sh"                    = { horizontalDomainTemplateNumber=50; PLPresent=0;}
+ #"rotated_sh"            = { horizontalDomainTemplateNumber=51; PLPresent=0;}
+ #"stretched_sh"          = { horizontalDomainTemplateNumber=52; PLPresent=0;}
+ #"stretched_rotated_sh"  = { horizontalDomainTemplateNumber=53; PLPresent=0;}
+ #"space_view"            = { horizontalDomainTemplateNumber=90; PLPresent=0;}
+ #"triangular_grid"       = { horizontalDomainTemplateNumber=100;PLPresent=0;}
+ #"unstructured_grid"     = { horizontalDomainTemplateNumber=101;PLPresent=0;}
+ #"equatorial_azimuthal_equidistant" = { horizontalDomainTemplateNumber=110; PLPresent=0;}
+ #"azimuth_range"         = { horizontalDomainTemplateNumber=120;PLPresent=0; }
+ #"irregular_latlon"      = { horizontalDomainTemplateNumber=130;PLPresent=0; }
+ #"lambert_azimuthal_equal_area"= { horizontalDomainTemplateNumber=140;PLPresent=0; }
+ #"cross_section"         = { horizontalDomainTemplateNumber=1000;PLPresent=0; }
+ #"Hovmoller"             = { horizontalDomainTemplateNumber=1100;PLPresent=0; }
+ #"time_section"          = { horizontalDomainTemplateNumber=1200;PLPresent=0; }
+ #"unknown"               = {PLPresent=0;}
+ #"unknown_PLPresent"     = {PLPresent=1;}
+} : dump;
+
+alias ls.gridType=gridType;
+alias geography.gridType=gridType;
+alias typeOfGrid=gridType;
 
 
 ###########################
