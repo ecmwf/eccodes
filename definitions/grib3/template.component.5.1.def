@@ -99,19 +99,19 @@ alias vertical.topLevel=topLevel;
 
 
 # See GRIB-74 why we store the pressureUnits in a transient
-transient tempPressureUnits=pressureUnits;
-if (!(typeOfLevel is "surface")) {
-    if (tempPressureUnits is "Pa") {
-        meta marsLevel scale(level,one,hundred) : read_only;
-        alias mars.levelist=marsLevel;
-    } else {
-        alias mars.levelist = level;
-    }
-}
-alias mars.levtype  = typeOfFirstFixedSurface;
-# GRIB-372: levelist alias does not pertain to surface parameters
-if (levtype is "sfc") {
-    unalias mars.levelist;
-}
+#transient tempPressureUnits=pressureUnits;
+#if (!(typeOfLevel is "surface")) {
+#    if (tempPressureUnits is "Pa") {
+#        meta marsLevel scale(level,one,hundred) : read_only;
+#        alias mars.levelist=marsLevel;
+#    } else {
+#        alias mars.levelist = level;
+#    }
+#}
+#alias mars.levtype  = typeOfFirstFixedSurface;
+## GRIB-372: levelist alias does not pertain to surface parameters
+#if (levtype is "sfc") {
+#    unalias mars.levelist;
+#}
 
 alias ls.typeOfLevel=typeOfLevel;

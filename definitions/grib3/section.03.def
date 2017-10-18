@@ -32,11 +32,11 @@ unsigned[1] minute ;
 unsigned[1] second ;
 
 meta  dataDate g2date(year,month,day) : dump;
-alias mars.date = dataDate;
+# alias mars.date = dataDate;
 alias ls.date = dataDate;
 meta  julianDay julian_day(dataDate,hour,minute,second) : edition_specific;
 meta  dataTime  time(hour,minute,second) : dump;
-alias mars.time = dataTime;
+# alias mars.time = dataTime;
 
 codetable[2] timeDomainTemplateNumber ('3.2.table',masterDir,localDir) =0 : dump,edition_specific;
 template timeDomainTemplate "grib3/template.3.[timeDomainTemplateNumber:l].def";
