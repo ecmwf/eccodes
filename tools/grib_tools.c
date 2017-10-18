@@ -192,15 +192,13 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
     int err=0;
     grib_failed *failed=NULL,*p=NULL;
     grib_handle* h=NULL;
-    grib_context* c=NULL;
-    grib_tools_file* infile=NULL;
+    grib_tools_file* infile=options->infile;
     char** filenames;
     size_t files_count=0;
     grib_fieldset* set=NULL;
     int i=0;
-    c=grib_context_get_default();
+    grib_context* c=grib_context_get_default();
 
-    infile=options->infile;
     if(infile) infile->failed=NULL;
 
     files_count=0;
@@ -274,15 +272,13 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
     /*int nofail=0;*/
     grib_failed *failed=NULL,*p=NULL;
     grib_handle* h=NULL;
-    grib_context* c=NULL;
-    grib_tools_file* infile=NULL;
+    grib_tools_file* infile=options->infile;
 
-    c=grib_context_get_default();
+    grib_context* c=grib_context_get_default();
     options->file_count=0;
     options->handle_count=0;
     options->filter_handle_count=0;
     options->current_infile=options->infile;
-    infile=options->infile;
     infile->failed=NULL;
 
     if (grib_options_on("7")) c->no_fail_on_wrong_length=1;
@@ -424,13 +420,12 @@ static int navigate(grib_field_tree* fields,grib_runtime_options* options)
 static int grib_tool_index(grib_runtime_options* options)
 {
     int err=0;
-    grib_context* c=NULL;
     char* f1=options->infile->name;
     char* f2=options->infile_extra->name;
     grib_index_key *k1,*k2;
     int found=0;
 
-    c=grib_context_get_default();
+    grib_context* c=grib_context_get_default();
 
     options->index1=grib_index_read(c,f1,&err);
     if (err)
@@ -596,11 +591,8 @@ static int process(grib_context* c,grib_runtime_options* options,const char* pat
 
 static int grib_tool_onlyfiles(grib_runtime_options* options)
 {
-    grib_context* c=NULL;
-    grib_tools_file* infile=NULL;
-
-    c=grib_context_get_default();
-    infile=options->infile;
+    grib_context* c=grib_context_get_default();
+    grib_tools_file* infile=options->infile;
 
     while (infile!=NULL && infile->name!=NULL) {
 
@@ -657,6 +649,14 @@ static void grib_print_header(grib_runtime_options* options,grib_handle* h)
     }
 }
 
+static int cmpstringp(const void *p1, const void *p2)
+{
+    /* The actual arguments to this function are "pointers to
+       pointers to char", but strcmp(3) arguments are "pointers
+       to char", hence the following cast plus dereference */
+    return strcmp(* (char * const *) p1, * (char * const *) p2);
+}
+
 static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle* h, const char* ns)
 {
     int i=0;
@@ -697,7 +697,32 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
 
         grib_keys_iterator_delete(kiter);
         if (options->print_keys_count==0 && options->latlon == 0 ) {
-            printf("ERROR: namespace \"%s\" does not contain any key\n",ns);
+            int i=0,j=0,k=0,ns_count=0;
+            char* all_namespace_vals[1024] = {NULL,}; /* sorted array containing all namespaces */
+            printf("ERROR: namespace \"%s\" does not contain any key.\n",ns);
+            printf("Here are the available namespaces in this message:\n");
+            for (i=0; i<ACCESSORS_ARRAY_SIZE; i++) {
+                grib_accessor* anAccessor = h->accessors[i];
+                if (anAccessor) {
+                    for (j=0; j<MAX_ACCESSOR_NAMES; j++) {
+                        char* a_namespace = (char*)anAccessor->all_name_spaces[j];
+                        if (a_namespace) {
+                            all_namespace_vals[k++] = a_namespace;
+                            ns_count++;
+                        }
+                    }
+                }
+            }
+            qsort(&all_namespace_vals, ns_count, sizeof(char*), cmpstringp);
+            for(i=0; i<ns_count; ++i) {
+                if (all_namespace_vals[i]) {
+                    int print_it = 1;
+                    if (i>0 && strcmp(all_namespace_vals[i], all_namespace_vals[i-1]) == 0) {
+                        print_it = 0;  /* skip duplicate entries */
+                    }
+                    if (print_it) printf("\t%s\n", all_namespace_vals[i]);
+                }
+            }
             exit(1);
         }
     }
