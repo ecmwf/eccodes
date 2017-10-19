@@ -165,7 +165,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
 
 
-    data::MIRField& field = ctx.field();
+    const data::MIRField& field = ctx.field();
     input::MIRInput& input = ctx.input();
 
     field.validate();
@@ -221,7 +221,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
         field.representation()->fill(info);
 
         // Extra settings (paramId comes from here)
-        for (auto k : field.metadata(i)) {
+        for (const auto& k : field.metadata(i)) {
             long j = info.packing.extra_settings_count++;
             ASSERT(j < long(sizeof(info.packing.extra_settings) / sizeof(info.packing.extra_settings[0])));
 
