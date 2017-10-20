@@ -72,7 +72,7 @@ void ReducedLL::makeName(std::ostream& out) const {
 
 size_t ReducedLL::numberOfPoints() const {
     size_t total = 0;
-    for (auto j : pl_) {
+    for (const auto& j : pl_) {
         total += size_t(j);
     }
     return total;

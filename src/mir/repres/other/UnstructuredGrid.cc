@@ -78,8 +78,8 @@ void UnstructuredGrid::makeName(std::ostream& out) const {
     out << "unstructured-" << latitudes_.size() << "-";
 
     eckit::MD5 md5;
-    for (auto j : latitudes_)  { md5 << j; }
-    for (auto j : longitudes_) { md5 << j; }
+    for (const auto& j : latitudes_)  { md5 << j; }
+    for (const auto& j : longitudes_) { md5 << j; }
     out << std::string(md5);
 }
 
