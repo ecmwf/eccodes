@@ -268,8 +268,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     }
 
     if (options->latlon) {
-        err=0;
         double min;
+        err=0;
         if (!n) n=grib_nearest_new(h,&err);
         if (err == GRIB_NOT_IMPLEMENTED) {
             char grid_type[100];
