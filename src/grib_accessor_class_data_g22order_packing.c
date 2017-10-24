@@ -614,8 +614,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     if (orderOfSpatialDifferencing) {
         long bias = 0;
-        ref_p     = 0;
         unsigned long extras[2] = {0,};
+        ref_p     = 0;
 
         /* For Complex packing, order == 0 */
         /* For Complex packing and spatial differencing, order == 1 or 2 (code table 5.6) */
