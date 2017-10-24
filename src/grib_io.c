@@ -1569,8 +1569,9 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n)
 int grib_count_in_filename(grib_context* c, const char* filename, int* n)
 {
     int err=0;
+    FILE* fp = NULL;
     if (!c) c=grib_context_get_default();
-    FILE* fp = fopen(filename, "r");
+    fp = fopen(filename, "r");
     if (!fp) {
         grib_context_log(c, GRIB_LOG_ERROR,"grib_count_in_filename: Unable to read file \"%s\"", filename);
         perror(filename);
