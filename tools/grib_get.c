@@ -177,9 +177,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options,grib_handle* h)
     }
 
     if (options->latlon) {
+        int i;
         double min;
         err=0;
-        int i;
         if (!n) n=grib_nearest_new(h,&err);
         GRIB_CHECK_NOLINE(err,0);
         GRIB_CHECK_NOLINE(grib_nearest_find(n,h,lat,lon,0,
