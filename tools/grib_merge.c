@@ -9,10 +9,9 @@
  */
 
 /*
- * C Implementation: grib_copy
+ * C Implementation: grib_merge
  *
  * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
- *
  *
  */
 
@@ -23,6 +22,7 @@
 grib_handle *hh=0;
 grib_values key_values[MAX_KEY_VALUES];
 int key_values_size=MAX_KEY_VALUES;
+static const char* md5Key = "md5Product";
 
 char* grib_tool_description="Merge two fields with identical parameters and different geographical area";
 char* grib_tool_name="grib_merge";
@@ -126,7 +126,7 @@ static grib_handle* merge(grib_handle* h1,grib_handle* h2)
      */
 
     /* same products? */
-    if (grib_key_equal(h1,h2,"md5Product",GRIB_TYPE_STRING,&err)==0 && err==0) {
+    if (grib_key_equal(h1,h2,md5Key,GRIB_TYPE_STRING,&err)==0 && err==0) {
         return NULL;
     }
 
@@ -297,17 +297,27 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     grib_handle* hm=0;
     char md5[200]={0,};
     char fname[210]={0,};
-    size_t lmd5;
+    size_t lmd5=32;
 
     if (!hh) { hh=grib_handle_clone(h); return 0; }
-    grib_get_string(h,"md5Product",md5,&lmd5);
+    err = grib_get_string(h,md5Key,md5,&lmd5);
+    if (err) {
+        fprintf(stderr, "grib_merge error getting key %s: %s\n", 
+                md5Key, grib_get_error_message(err));
+        exit(err);
+    }
     sprintf(fname,"_%s.orig.grib",md5);
-    grib_write_message(h,fname,"a");
+    err = grib_write_message(h,fname,"a");
 
     if ((hm=merge(h,hh))==NULL ) {
         grib_tools_write_message(options,hh);
         lmd5=sizeof(md5)/sizeof(*md5);
-        grib_get_string(hh,"md5Product",md5,&lmd5);
+        err = grib_get_string(hh,md5Key,md5,&lmd5);
+        if (err) {
+            fprintf(stderr, "grib_merge error getting key %s: %s\n", 
+                    md5Key, grib_get_error_message(err));
+            exit(err);
+        }
         sprintf(fname,"_%s.merge.grib",md5);
         grib_write_message(hh,fname,"a");
     }

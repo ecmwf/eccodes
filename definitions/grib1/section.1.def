@@ -322,3 +322,5 @@ if (stepTypeForConversion is "accum" ) {
 }
 
 meta md5Section1 md5(offsetSection1,section1Length);
+# md5(start,length,blacklisted1,blacklisted2,...);
+meta md5Product md5(offsetSection1,section1Length,gridDefinition,section1Flags,decimalScaleFactor);
