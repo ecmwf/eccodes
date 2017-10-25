@@ -12,7 +12,14 @@
  * C Implementation: grib_merge
  *
  * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
- *
+ * Description:
+ * In Observations team we need a tool to merge the GRIB messages coming from GTS.
+ * They come with compatible grid (lat/lon) but they are split in different quadrants.
+ * This tool should be able to merge different quadrants in one bigger grid,
+ * automatically recognising when this can be done by checking that the fields have the same
+ * parameter, step, ... and compatible grid.
+ * The current solution is to have a grib_merge working on an input file and writing in output the
+ * merged fields working out automatically what has to be merged.
  */
 
 #include "grib_tools.h"
@@ -22,6 +29,9 @@
 grib_handle *hh=0;
 grib_values key_values[MAX_KEY_VALUES];
 int key_values_size=MAX_KEY_VALUES;
+
+/* This key was added to provide a unique ID for the product description used by the merge
+ * tool to identify the fields to be merged */
 static const char* md5Key = "md5Product";
 
 char* grib_tool_description="Merge two fields with identical parameters and different geographical area";
