@@ -1914,6 +1914,11 @@ int grib_f_release(int* hid){
 /*****************************************************************************/
 static void do_the_dump(grib_handle* h)
 {
+    /* Add some debugging info too */
+    printf("ecCodes version: ");    grib_print_api_version(stdout);   printf("\n");
+    printf("Definitions path: %s\n", grib_definition_path(NULL));
+    printf("Samples path:     %s\n", grib_samples_path(NULL));
+
     if (h->product_kind == PRODUCT_GRIB)
     {
         const int dump_flags = GRIB_DUMP_FLAG_VALUES
