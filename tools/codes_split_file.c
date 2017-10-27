@@ -41,6 +41,7 @@ static int split_file(FILE* in, const char* filename, int nchunks,unsigned long 
     out=fopen(ofilename,"w");
     if (!out) {
       perror(ofilename);
+      free(ofilename);
       return GRIB_IO_PROBLEM;
     }
 
@@ -49,8 +50,8 @@ static int split_file(FILE* in, const char* filename, int nchunks,unsigned long 
         if (mesg!=NULL && err==0) {
           if (fwrite(mesg,1,size,out)!=size) {
             perror(ofilename);
+            free(ofilename);
             fclose(out);
-            fclose(in);
             return GRIB_IO_PROBLEM;
           }
           grib_context_free(c,mesg);
@@ -62,6 +63,7 @@ static int split_file(FILE* in, const char* filename, int nchunks,unsigned long 
             out=fopen(ofilename,"w");
             if (!out) {
               perror(ofilename);
+              free(ofilename);
               return GRIB_IO_PROBLEM;
             }
             read_size=0;
@@ -70,6 +72,7 @@ static int split_file(FILE* in, const char* filename, int nchunks,unsigned long 
         }
     }
     fclose(out);
+    free(ofilename);
 
     if (err==GRIB_END_OF_FILE) err=GRIB_SUCCESS;
 
@@ -83,7 +86,6 @@ int main(int argc,char* argv[])
     int i, verbose=0;
     int err=0,nchunks=0;
     unsigned long count=0;
-    int message_type = 0; /* GRIB, BUFR etc */
 
     if (argc <3) usage(argv[0]);
 
