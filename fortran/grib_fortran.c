@@ -135,6 +135,12 @@ struct l_bufr_keys_iterator {
     l_bufr_keys_iterator* next;
 };
 
+typedef struct l_binary_message l_binary_message;
+struct l_binary_message {
+    size_t size;
+    void* data;
+};
+
 static l_grib_handle* handle_set = NULL;
 static l_grib_index* index_set = NULL;
 static l_grib_multi_handle* multi_handle_set = NULL;
@@ -142,6 +148,7 @@ static l_grib_file*   file_set   = NULL;
 static l_grib_iterator* iterator_set = NULL;
 static l_grib_keys_iterator* keys_iterator_set = NULL;
 static l_bufr_keys_iterator* bufr_keys_iterator_set = NULL;
+static grib_oarray* binary_messages = NULL;
 
 static char* cast_char(char* buf, char* fortstr,int len)
 {
@@ -1621,6 +1628,85 @@ int grib_f_copy_namespace(int* gidsrc,char* name,int* giddest,int len){
     return grib_f_copy_namespace_(gidsrc,name,giddest,len);
 }
 
+/*****************************************************************************/
+int any_f_load_all_from_file(int* fid,int* n) {
+    int err = 0;
+    off_t offset=0;
+    void *data = NULL;
+    size_t olen = 0;
+    l_binary_message* msg=0;
+    FILE* f = get_file(*fid);
+    grib_context* c=grib_context_get_default();
+
+    /* this needs a callback to a destructor*/
+    /* grib_oarray_delete_content(c,binary_messages); */
+
+    grib_oarray_delete(c,binary_messages);
+    binary_messages=grib_oarray_new(c,1000,1000);
+
+    if (f) {
+      while (err!=GRIB_END_OF_FILE) {
+        data = wmo_read_any_from_file_malloc ( f, 0,&olen,&offset,&err );
+        msg=(l_binary_message*)grib_context_malloc_clear(c,sizeof(l_binary_message));
+        msg->data=data;
+        msg->size=olen;
+
+        if (err==0 && data) grib_oarray_push(c,binary_messages,msg);
+      }
+      if (err==GRIB_END_OF_FILE) err=0;
+    }
+    *n=binary_messages->n;
+    return err;
+}
+int any_f_load_all_from_file_(int* fid,int* n) {
+    return any_f_load_all_from_file(fid,n);
+}
+int any_f_load_all_from_file__(int* fid,int* n) {
+    return any_f_load_all_from_file(fid,n);
+}
+
+int any_f_new_from_loaded(int* msgid,int* gid){
+    int err = 0;
+    grib_handle *h = NULL;
+    grib_context* c=grib_context_get_default();
+
+    /* fortran convention of 1 based index*/
+    int n=*msgid-1;
+
+    l_binary_message* msg=grib_oarray_get(binary_messages,n);
+
+    if (msg && msg->data)
+      h=grib_handle_new_from_message_copy (c,msg->data,msg->size );
+
+    if(h){
+      push_handle(h,gid);
+      return GRIB_SUCCESS;
+    } else {
+      *gid=-1;
+      return GRIB_END_OF_FILE;
+    }
+    *gid=-1;
+    return GRIB_INVALID_FILE;
+}
+
+int any_f_new_from_loaded_(int* msgid,int* gid){
+  return any_f_new_from_loaded(msgid,gid);
+}
+int any_f_new_from_loaded__(int* msgid,int* gid){
+  return any_f_new_from_loaded(msgid,gid);
+}
+
+int codes_f_clear_loaded_from_file() {
+    grib_context* c=grib_context_get_default();
+    /* grib_oarray_delete_content(c,binary_messages); */
+    grib_oarray_delete(c,binary_messages);
+}
+int codes_f_clear_loaded_from_file_() {
+  return codes_f_clear_loaded_from_file();
+}
+int codes_f_clear_loaded_from_file__() {
+  return codes_f_clear_loaded_from_file();
+}
 /*****************************************************************************/
 int grib_f_count_in_file(int* fid,int* n) {
     int err = 0;
