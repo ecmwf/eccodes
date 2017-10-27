@@ -18,7 +18,7 @@ ecbuild_add_library( TARGET    grib_tools
 
 # tools binaries
 list( APPEND grib_tools_bins
-             codes_info codes_count
+             codes_info codes_count codes_split_file
              grib_histogram grib_filter grib_ls grib_dump grib_merge
              grib2ppm grib_set grib_get grib_get_data grib_copy
              grib_compare codes_parser grib_index_build
