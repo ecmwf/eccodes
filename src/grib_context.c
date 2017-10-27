@@ -63,25 +63,15 @@ static void init()
 #if MANAGE_MEM
 
 #else
-static long cnt = 0;
-static long cntp = 0;
 
 static void default_long_lasting_free(const grib_context* c, void* p)
 {
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
     free(p);
-    GRIB_MUTEX_LOCK(&mutex_mem);
-    cntp--;
-    GRIB_MUTEX_UNLOCK(&mutex_mem);
 }
 
 static void* default_long_lasting_malloc(const grib_context* c, size_t size)
 {
     void* ret;
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&mutex_mem);
-    cntp++;
-    GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
     if (!ret) {
         grib_context_log(c,GRIB_LOG_FATAL,"default_long_lasting_malloc: error allocating %lu bytes",(unsigned long)size);
@@ -92,20 +82,12 @@ static void* default_long_lasting_malloc(const grib_context* c, size_t size)
 
 static void default_buffer_free(const grib_context* c, void* p)
 {
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
     free(p);
-    GRIB_MUTEX_LOCK(&mutex_mem);
-    cntp--;
-    GRIB_MUTEX_UNLOCK(&mutex_mem);
 }
 
 static void* default_buffer_malloc(const grib_context* c, size_t size)
 {
     void* ret;
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&mutex_mem);
-    cntp++;
-    GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
     if (!ret) {
         grib_context_log(c,GRIB_LOG_FATAL,"default_buffer_malloc: error allocating %lu bytes",(unsigned long)size);
@@ -127,20 +109,12 @@ static void* default_buffer_realloc(const grib_context* c, void* p, size_t size)
 
 static void default_free(const grib_context* c, void* p)
 {
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
     free(p);
-    GRIB_MUTEX_LOCK(&mutex_mem);
-    cnt--;
-    GRIB_MUTEX_UNLOCK(&mutex_mem);
 }
 
 static void* default_malloc(const grib_context* c, size_t size)
 {
     void* ret;
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&mutex_mem);
-    cnt++;
-    GRIB_MUTEX_UNLOCK(&mutex_mem);
     ret=malloc(size);
     if (!ret) {
         grib_context_log(c,GRIB_LOG_FATAL,"default_malloc: error allocating %lu bytes",(unsigned long)size);

@@ -10,6 +10,36 @@
 
 #include "grib_api_internal.h"
 
+#if GRIB_PTHREADS
+ static pthread_once_t once  = PTHREAD_ONCE_INIT;
+ static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
+ static void init() {
+  pthread_mutexattr_t attr;
+  pthread_mutexattr_init(&attr);
+  pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+  pthread_mutex_init(&mutex1,&attr);
+  pthread_mutex_init(&mutex2,&attr);
+  pthread_mutexattr_destroy(&attr);
+ }
+#elif GRIB_OMP_THREADS
+ static int once = 0;
+ static omp_nest_lock_t mutex1;
+ static omp_nest_lock_t mutex2;
+ static void init()
+ {
+    GRIB_OMP_CRITICAL(lock_grib_io_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex1);
+            omp_init_nest_lock(&mutex2);
+            once = 1;
+        }
+    }
+ }
+#endif
+
 
 #define  GRIB 0x47524942
 #define  BUDG 0x42554447
@@ -1332,7 +1362,11 @@ static void *_wmo_read_any_from_file_malloc(FILE* f,int* err,size_t *size,off_t 
     r.headers_only    = headers_only;
     r.offset          = 0;
 
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex1);
     *err           = read_any(&r, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
+    GRIB_MUTEX_UNLOCK(&mutex1); 
+
     *size          = r.message_size;
     *offset        = r.offset;
 

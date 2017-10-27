@@ -954,6 +954,49 @@ subroutine codes_new_from_file (ifile, msgid , product_kind, status)
     end if
 end subroutine codes_new_from_file
 
+  !> Load in memory all messages from a file without decoding.
+  !>
+  !> @param ifile     id of the file opened with @ref codes_open_file
+  !> @param nmessages number of messages loaded
+  !> @param status    CODES_SUCCESS if OK, CODES_END_OF_FILE at the end of file, or error code
+subroutine codes_any_load_all_from_file ( ifile, nmessages , status)
+    integer(kind=kindOfInt),intent(in)              :: ifile
+    integer(kind=kindOfInt),intent(out)          :: nmessages
+    integer(kind=kindOfInt)                       :: iret
+    integer(kind=kindOfInt),optional,intent(out)    :: status
+
+    iret=any_f_load_all_from_file ( ifile, nmessages)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret,'any_f_load_all_from_file','')
+    endif
+
+end subroutine codes_any_load_all_from_file 
+
+  !> Decode message from loaded.
+  !>
+  !> The message can be accessed through its msgid and it will be available\n
+  !> until @ref codes_release is called.\n
+  !>
+  !> @param imsg      id of the binary message 
+  !> @param msgid     id of the message loaded in memory
+  !> @param status    CODES_SUCCESS if OK, CODES_END_OF_FILE at the end of file, or error code
+subroutine codes_any_new_from_loaded ( imsg, msgid , status)
+    integer(kind=kindOfInt),intent(in)              :: imsg
+    integer(kind=kindOfInt),intent(out)             :: msgid
+    integer(kind=kindOfInt)                       :: iret
+    integer(kind=kindOfInt),optional,intent(out)    :: status
+
+    iret=any_f_new_from_loaded( imsg, msgid )
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret,'any_f_new_from_loaded','')
+    endif
+
+end subroutine codes_any_new_from_loaded 
+
   !> Load in memory a message from a file.
   !>
   !> The message can be accessed through its msgid and it will be available\n
