@@ -9,14 +9,17 @@
  */
 
 #include "grib_api_internal.h"
+#include <assert.h>
 
+static int verbose = 0;
+static const char* OUTPUT_FILENAME_FORMAT = "%s_%02d"; /* x_01, x_02 etc */
 static void usage(const char* prog)
 {
     printf("usage: %s [-v] nchunks infile\n",prog);
     exit(1);
 }
 
-static int split_file(FILE* in, const char* filename, int nchunks,unsigned long *count)
+static int split_file(FILE* in, const char* filename, const int nchunks, unsigned long *count)
 {
     void* mesg=NULL;
     FILE* out;
@@ -29,48 +32,53 @@ static int split_file(FILE* in, const char* filename, int nchunks,unsigned long 
 
     if (!in) return 1;
 
+    /* name of output file */
     ofilename=(char*)calloc(1,strlen(filename)+10);
 
     fseeko(in, 0, SEEK_END);
     insize = ftello(in);
     fseeko(in, 0, SEEK_SET);
+    assert(nchunks > 0);
     chunk_size=insize/nchunks;
 
     i=1;
-    sprintf(ofilename,"%s_%d",filename,i);
+    sprintf(ofilename, OUTPUT_FILENAME_FORMAT, filename, i);
     out=fopen(ofilename,"w");
     if (!out) {
-      perror(ofilename);
-      free(ofilename);
-      return GRIB_IO_PROBLEM;
+        perror(ofilename);
+        free(ofilename);
+        return GRIB_IO_PROBLEM;
     }
 
     while ( err!=GRIB_END_OF_FILE ) {
-        mesg=wmo_read_any_from_file_malloc(in,0,  &size,&offset,&err);
+        mesg=wmo_read_any_from_file_malloc(in, 0, &size, &offset, &err);
         if (mesg!=NULL && err==0) {
-          if (fwrite(mesg,1,size,out)!=size) {
-            perror(ofilename);
-            free(ofilename);
-            fclose(out);
-            return GRIB_IO_PROBLEM;
-          }
-          grib_context_free(c,mesg);
-          read_size+=size;
-          if (read_size>chunk_size) {
-            fclose(out);
-            i++;
-            sprintf(ofilename,"%s_%d",filename,i);
-            out=fopen(ofilename,"w");
-            if (!out) {
-              perror(ofilename);
-              free(ofilename);
-              return GRIB_IO_PROBLEM;
+            if (fwrite(mesg,1,size,out)!=size) {
+                perror(ofilename);
+                free(ofilename);
+                fclose(out);
+                return GRIB_IO_PROBLEM;
             }
-            read_size=0;
-          }
-          (*count)++;
+            grib_context_free(c,mesg);
+            read_size+=size;
+            if (read_size>chunk_size) {
+                if (verbose) printf("Wrote output file %s\n", ofilename);
+                fclose(out);
+                i++;
+                /* Start writing to the next file */
+                sprintf(ofilename, OUTPUT_FILENAME_FORMAT, filename, i);
+                out=fopen(ofilename,"w");
+                if (!out) {
+                    perror(ofilename);
+                    free(ofilename);
+                    return GRIB_IO_PROBLEM;
+                }
+                read_size=0;
+            }
+            (*count)++;
         }
     }
+    if (verbose) printf("Wrote output file %s\n", ofilename);
     fclose(out);
     free(ofilename);
 
@@ -83,7 +91,8 @@ int main(int argc,char* argv[])
 {
     FILE* infh = NULL;
     char* filename;
-    int i, verbose=0;
+    int i, status=0;
+    struct stat s;
     int err=0,nchunks=0;
     unsigned long count=0;
 
@@ -91,31 +100,43 @@ int main(int argc,char* argv[])
 
     i=1;
     if (strcmp(argv[i], "-v")==0) {
-      i++;
-      verbose = 1;
-      if (argc !=4) usage(argv[0]);
+        i++;
+        verbose = 1;
+        if (argc !=4) usage(argv[0]);
     }
 
     /* add some error checking */
     nchunks=atoi(argv[i]);
+    if (nchunks<1) {
+        fprintf(stderr,"ERROR: Invalid number %d. Please specify a positive integer.\n", nchunks);
+        return 1;
+    }
 
     i++;
     filename=argv[i];
+    if (stat(filename, &s)==0) {
+        if (S_ISDIR(s.st_mode)) {
+            fprintf(stderr, "ERROR: %s: Is a directory\n", filename);
+            return 1;
+        }
+    }
     infh=fopen(filename,"r");
     if (!infh) {
-      perror(filename);
-      exit(1);
+        perror(filename);
+        return 1;
     }
 
     count=0;
-    err=split_file(infh, filename,nchunks, &count);
+    err=split_file(infh, filename, nchunks, &count);
     if (err) {
-      fprintf(stderr,"Invalid message(s) found in %s", filename);
-      fprintf(stderr,"\n");
+        fprintf(stderr,"ERROR: Failed to split file %s", filename);
+        fprintf(stderr,"\n");
+        status = 1;
+    } else {
+        if (verbose) printf ("%7lu %s\n", count, filename);
     }
-    if (verbose) printf ("%7lu %s\n", count, filename);
 
     fclose(infh);
 
-    return 0;
+    return status;
 }
