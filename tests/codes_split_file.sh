@@ -30,6 +30,10 @@ ${tools_dir}/grib_ls $temp_dir/mixed.grib_3
 total=`${tools_dir}/codes_count $temp_dir/mixed.grib_[1-3]`
 [ $total -eq 14 ]
 
+cat $temp_dir/mixed.grib_[1-3] > temp
+${tools_dir}/grib_compare $input temp
+
+
 # Test 2: File with 248 messages
 # -----------------------------
 cp ${data_dir}/tigge_ecmwf.grib2 $temp_dir
@@ -37,6 +41,9 @@ input=$temp_dir/tigge_ecmwf.grib2
 ${tools_dir}/codes_split_file 10 $input
 total=`${tools_dir}/codes_count $temp_dir/tigge_ecmwf.grib2_[0-9]*`
 [ $total -eq 248 ]
+
+cat $temp_dir/tigge_ecmwf.grib2_1 $temp_dir/tigge_ecmwf.grib2_[2-9] $temp_dir/tigge_ecmwf.grib2_10 > temp
+${tools_dir}/grib_compare $input temp
 
 
 # Clean up
