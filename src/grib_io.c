@@ -761,7 +761,7 @@ static int read_BUFR(reader *r)
     return err;
 }
 
-static int read_any(reader *r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
+static int _read_any(reader *r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
 {
     unsigned char c;
     int err = 0;
@@ -831,6 +831,15 @@ static int read_any(reader *r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_o
     }
 
     return err;
+}
+static int read_any(reader *r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
+{
+    int result = 0;
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex1);
+    result = _read_any(r, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
+    GRIB_MUTEX_UNLOCK(&mutex1);
+    return result;
 }
 
 static int read_any_gts(reader *r)
@@ -1362,10 +1371,7 @@ static void *_wmo_read_any_from_file_malloc(FILE* f,int* err,size_t *size,off_t 
     r.headers_only    = headers_only;
     r.offset          = 0;
 
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&mutex1);
     *err           = read_any(&r, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
-    GRIB_MUTEX_UNLOCK(&mutex1); 
 
     *size          = r.message_size;
     *offset        = r.offset;
