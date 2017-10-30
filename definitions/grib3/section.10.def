@@ -17,7 +17,7 @@ unsigned[1] numberOfSection = 10: read_only;
 # Data in a format described by data template 10.X,
 # where X is the Data Template number given in bytes 12-13 of Section 8
 position offsetBeforeData;
-template dataValues "grib3/template.10.[dataRepresentationTemplateNumber:i].def";
+template dataValues "grib3/templates/data.10.[dataRepresentationTemplateNumber:i].def";
 
 meta changeDecimalPrecision decimal_precision(bitsPerValue,decimalScaleFactor,changingPrecision,values): edition_specific;
 meta decimalPrecision decimal_precision(bitsPerValue,decimalScaleFactor,changingPrecision): edition_specific;

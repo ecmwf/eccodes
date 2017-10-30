@@ -23,7 +23,7 @@ alias numberOfDataPoints=numberOfPointsInDomain;
 alias is_rotated_grid=zero;
 
 codetable[2] horizontalDomainTemplateNumber ('4.0.table',masterDir,localDir) =0 : dump,edition_specific;
-template horizontalDomainTemplate "grib3/template.4.[horizontalDomainTemplateNumber:i].def";
+template horizontalDomainTemplate "grib3/templates/horizontal_domain.4.[horizontalDomainTemplateNumber:i].def";
 
 concept gridType {
  "regular_ll"            = { horizontalDomainTemplateNumber=0;  }  # PLPresent=0;

@@ -61,12 +61,12 @@ concept is_uerra(zero) {
 
 unsigned[2] originatorLocalTemplateNumber = missing() : dump,edition_specific,can_be_missing;
 unsigned[2] lengthOfOriginatorLocalTemplate = 0: dump,edition_specific;
-template_nofail originatorLocalTemplate "grib3/template.1.originator.[originatorLocalTemplateNumber:i].def";
+template_nofail originatorLocalTemplate "grib3/templates/originator.1.[originatorLocalTemplateNumber:i].def";
 
 
 unsigned[2] projectLocalTemplateNumber = missing() : dump,edition_specific,can_be_missing;
 unsigned[2] lengthOfProjectLocalTemplate = 0: dump,edition_specific;
-template_nofail projectLocalTemplate "grib3/template.1.project.[projectLocalTemplateNumber:i].def";
+template_nofail projectLocalTemplate "grib3/templates/project.1.[projectLocalTemplateNumber:i].def";
 
 #  Type of processed data in this GRIB message
 #codetable[1] typeOfProcessedData ('1.4.table',masterDir,localDir) = 255  : dump,string_type,no_fail;

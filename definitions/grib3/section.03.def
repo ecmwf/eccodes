@@ -39,7 +39,7 @@ meta  dataTime  time(hour,minute,second) : dump;
 # alias mars.time = dataTime;
 
 codetable[2] timeDomainTemplateNumber ('3.2.table',masterDir,localDir) =0 : dump,edition_specific;
-template timeDomainTemplate "grib3/template.3.[timeDomainTemplateNumber:l].def";
+template timeDomainTemplate "grib3/templates/time_domain.3.[timeDomainTemplateNumber:l].def";
 
 meta md5Section3 md5(offsetSection3,section3Length);
 alias md5TimeDomainSection = md5Section3;

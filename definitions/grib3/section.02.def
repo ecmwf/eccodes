@@ -37,7 +37,7 @@ unsigned[2] numberOfDistinctSection9s = 1: dump;
 # the index template number shall be set to missing and the length of index template shall be set to 0
 unsigned[2] indexTemplateNumber = missing() : dump,can_be_missing;
 unsigned[4] lengthOfIndexTemplate = 0: dump,edition_specific;
-template_nofail indexTemplate "grib3/template.2.[indexTemplateNumber:i].def";
+template_nofail indexTemplate "grib3/templates/repetitions_and_index.2.[indexTemplateNumber:i].def";
 
 #if ( addEmptySection2 == 0 ) {
 #    if ( grib2LocalSectionPresent==1 or ( section2Length>5 or new() ) ) {

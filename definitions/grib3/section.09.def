@@ -19,6 +19,6 @@ unsigned[1] numberOfSection = 9: read_only;
 unsigned[2] section9UniqueIdentifier; # SUI
 
 codetable[2] overlayTemplateNumber ('9.0.table',masterDir,localDir) =0 : dump,edition_specific;
-template overlayTemplate "grib3/template.9.[overlayTemplateNumber:i].def";
+template overlayTemplate "grib3/templates/overlay.9.[overlayTemplateNumber:i].def";
 
 meta md5Section9 md5(offsetSection9, section9Length);
