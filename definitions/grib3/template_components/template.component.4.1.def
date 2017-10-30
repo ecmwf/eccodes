@@ -75,7 +75,7 @@ unsigned[4] jDirectionIncrement : can_be_missing,edition_specific;
 alias Dj =  jDirectionIncrement;
 alias Dy =  jDirectionIncrement;
 
-include "grib3/template.4.scanning_mode.def";
+include "grib3/template_components/4.scanning_mode.def";
 
 
 meta g2grid g2grid(

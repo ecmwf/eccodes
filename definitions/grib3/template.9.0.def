@@ -10,4 +10,4 @@
 # TEMPLATE 9.0, Bitmap
 
 # Bitmap
-include "grib3/tc/template.component.9.0.def";
+include "grib3/template_components/template.component.9.0.def";
