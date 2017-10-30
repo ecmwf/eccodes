@@ -10,4 +10,4 @@
 # TEMPLATE 5.1, Vertical layer
 
 # Vertical layer
-include "grib3/template.component.5.1.def";
+include "grib3/tc/template.component.5.1.def";

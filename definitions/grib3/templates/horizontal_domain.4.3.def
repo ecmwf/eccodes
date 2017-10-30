@@ -10,7 +10,7 @@
 # TEMPLATE 4.3, Stretched and rotated latitude/longitude regular grid on ellipsoidal planet
 
 # Ellipsoid of revolution defined with axis lengths
-include "grib3/tc/4.0.ellipsoid_with_axis_lengthes.def"
+include "grib3/tc/4.0.ellipsoid_with_axis_lengths.def"
 
 # Latitude/longitude regular grid
 include "grib3/tc/4.1.latlon_regular_grid.def"

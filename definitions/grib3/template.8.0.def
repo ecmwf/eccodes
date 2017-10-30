@@ -10,4 +10,4 @@
 # TEMPLATE 8.0, Simple packing
 
 # Simple packing
-include "grib3/template.component.8.0.def";
+include "grib3/tc/template.component.8.0.def";

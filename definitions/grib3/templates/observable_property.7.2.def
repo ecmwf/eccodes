@@ -10,7 +10,7 @@
 # TEMPLATE 7.2, Atmospheric chemical or physical constituents
 
 # Observable property by discipline, category and number
-include "grib3/template.component.7.0.def";
+include "grib3/tc/template.component.7.0.def";
 
 # Chemical or physical constituents
-include "grib3/template.component.7.2.def";
+include "grib3/tc/template.component.7.2.def";
