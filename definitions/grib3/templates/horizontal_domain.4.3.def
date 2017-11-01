@@ -10,13 +10,13 @@
 # TEMPLATE 4.3, Stretched and rotated latitude/longitude regular grid on ellipsoidal planet
 
 # Ellipsoid of revolution defined with axis lengths
-include "grib3/template_components/4.0.ellipsoid_with_axis_lengths.def"
+include "grib3/template_components/4.0.ellipsoid_with_axis_lengths.def";
 
 # Latitude/longitude regular grid
-include "grib3/template_components/4.1.latlon_regular_grid.def"
+include "grib3/template_components/4.1.latlon_regular_grid.def";
 
 # Rotation of latitude/longitude coordinate system
-include "grib3/template_components/4.2.latlon_rotation.def"
+include "grib3/template_components/4.2.latlon_rotation.def";
 
 # Stretching of latitude/longitude coordinate system
-include "grib3/template_components/4.3.latlon_stretching.def"
+include "grib3/template_components/4.3.latlon_stretching.def";
