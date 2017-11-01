@@ -82,8 +82,8 @@
 1231 mmam Multi-model multi-annual forecast means
 1232 mmaw Multi-model multi-annual forecast wave
 1233 mmwm Multi-model multi-annual forecast wave means
-1240 esmm EUROSIP monthly means
-1241 ehmm EUROSIP hindcast monthly means
+1240 esmm Combined multi-model monthly means
+1241 ehmm Combined multi-model hindcast monthly means
 1242 edmm Ensemble data assimilation monthly means
 1243 edmo Ensemble data assimilation monthly means of daily means
 1244 ewmo Ensemble wave data assimilation monthly means of daily means 

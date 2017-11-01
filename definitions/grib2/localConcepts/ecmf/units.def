@@ -9431,6 +9431,30 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 48 ;
 	}
+#Averaged total lightning flash density over the past 3 hours
+'flashes km**-2 day**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 57 ;
+	}
+#Averaged total lightning flash density over the past 6 hours
+'flashes km**-2 day**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 58 ;
+	}
+#Averaged cloud-to-ground lightning flash density over the past 3 hours
+'flashes km**-2 day**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 59 ;
+	}
+#Averaged cloud-to-ground lightning flash density over the past 6 hours
+'flashes km**-2 day**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 60 ;
+	}
 #Total column rain water
 'kg m**-2' = {
 	 discipline = 192 ;
