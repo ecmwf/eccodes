@@ -10,4 +10,4 @@
 # TEMPLATE 5.0, Vertical level
 
 # Vertical level
-include "grib3/template_components/template.component.5.0.def";
+include "grib3/template_components/5.0.vertical_level.def";

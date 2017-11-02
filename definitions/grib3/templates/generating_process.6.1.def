@@ -10,10 +10,10 @@
 # TEMPLATE 6.1, Individual ensemble forecast or analysis
 
 # Process type and identifier
-include "grib3/template_components/template.component.6.0.def";
+include "grib3/template_components/6.0.process_type_identifier.def";
 
 # Ensemble size
-include "grib3/template_components/template.component.6.1.def";
+include "grib3/template_components/6.1.ensemble_size.def";
 
 # Ensemble member
-include "grib3/template_components/template.component.6.2.def";
+include "grib3/template_components/6.2.ensemble_member.def";
