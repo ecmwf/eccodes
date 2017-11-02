@@ -16169,22 +16169,22 @@
 	 table2Version = 211 ;
 	 indicatorOfParameter = 6 ;
 	}
-#Hydrophobic Organic Matter Aerosol Mixing Ratio
+#Hydrophilic Organic Matter Aerosol Mixing Ratio
 'kg kg**-1' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 7 ;
 	}
-#Hydrophilic Organic Matter Aerosol Mixing Ratio
+#Hydrophobic Organic Matter Aerosol Mixing Ratio
 'kg kg**-1' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 8 ;
 	}
-#Hydrophobic Black Carbon Aerosol Mixing Ratio
+#Hydrophilic Black Carbon Aerosol Mixing Ratio
 'kg kg**-1' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 9 ;
 	}
-#Hydrophilic Black Carbon Aerosol Mixing Ratio
+#Hydrophobic Black Carbon Aerosol Mixing Ratio
 'kg kg**-1' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 10 ;
