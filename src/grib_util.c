@@ -1330,6 +1330,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         grib_set_long(outh,"deleteLocalDefinition", 1);
     }
 
+#if 0   /* Disable check: need to re-examine GRIB-864 */
     if ( (*err = check_handle_against_spec(outh, editionNumber, spec, global_grid)) != GRIB_SUCCESS)
     {
         grib_context* c=grib_context_get_default();
@@ -1341,7 +1342,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             grib_write_message(outh,"error.grib","w");
         goto cleanup;
     }
-
+#endif
     if (h->context->debug==-1)
         printf("ECCODES DEBUG: grib_util_set_spec end\n");
 
