@@ -16413,14 +16413,14 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 63 ;
 	}
-#Total column Carbon Dioxide
-'kg m**-2' = {
+#CO2 column-mean molar fraction
+'ppm' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 64 ;
 	}
-#Total column Methane
-'kg m**-2' = {
+#CH4 column-mean molar fraction
+'ppb' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 65 ;

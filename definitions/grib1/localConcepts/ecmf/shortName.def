@@ -15679,12 +15679,12 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 63 ;
 	}
-#Total column Carbon Dioxide
+#CO2 column-mean molar fraction
 'tcco2' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 64 ;
 	}
-#Total column Methane
+#CH4 column-mean molar fraction
 'tcch4' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 65 ;

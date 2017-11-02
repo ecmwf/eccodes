@@ -16413,13 +16413,13 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 63 ;
 	}
-#Total column Carbon Dioxide
+#CO2 column-mean molar fraction
 'tcco2' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 64 ;
 	}
-#Total column Methane
+#CH4 column-mean molar fraction
 'tcch4' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;

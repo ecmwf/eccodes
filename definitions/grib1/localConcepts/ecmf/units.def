@@ -15679,13 +15679,13 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 63 ;
 	}
-#Total column Carbon Dioxide
-'kg m**-2' = {
+#CO2 column-mean molar fraction
+'ppm' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 64 ;
 	}
-#Total column Methane
-'kg m**-2' = {
+#CH4 column-mean molar fraction
+'ppb' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 65 ;
 	}
