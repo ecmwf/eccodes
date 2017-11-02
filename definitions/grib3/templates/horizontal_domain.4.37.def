@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 4.27, Rotated Regular Latitudes, Periodic Longitudes with number of points per parallel on ellipsoidal planet
+# TEMPLATE 4.37, Rotated Regular Latitudes, non-periodic Longitudes with number of points per parallel on ellipsoidal planet, sub-grid
 
 # Ellipsoid of revolution defined with axis lengths
 include "grib3/template_components/4.0.ellipsoid_with_axis_lengths.def";
@@ -15,8 +15,14 @@ include "grib3/template_components/4.0.ellipsoid_with_axis_lengths.def";
 # Regular Latitudes
 include "grib3/template_components/4.8.regular_latitudes.def";
 
-# Periodic Longitudes with number of points per parallel
-include "grib3/template_components/4.5.longitudes_with_number_of_points_per_parallel.def";
+# Non-periodic Longitudes with number of points per parallel
+include "grib3/template_components/4.7.nonperiodic_longitudes_with_number_of_points_per_parallel.def";
+
+# Selection of latitudes
+include "grib3/template_components/4.10.latitudes_selection.def";
+
+# Selection of points per parallel
+include "grib3/template_components/4.11.points_per_parallel_selection.def";
 
 # Rotation of latitude/longitude coordinate system
 include "grib3/template_components/4.2.latlon_rotation.def";

@@ -1,0 +1,23 @@
+# Copyright 2005-2017 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# 
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+# TEMPLATE 4.26, Rotated Latitudes simple packing, regular Longitudes on ellipsoidal planet
+
+# Ellipsoid of revolution defined with axis lengths
+include "grib3/template_components/4.0.ellipsoid_with_axis_lengths.def";
+
+# Latitudes simple packing
+include "grib3/template_components/4.4.latitudes_simple_packing.def";
+
+# Regular longitudes
+include "grib3/template_components/4.9.regular_longitudes.def";
+
+# Rotation of latitude/longitude coordinate system
+include "grib3/template_components/4.2.latlon_rotation.def";
+

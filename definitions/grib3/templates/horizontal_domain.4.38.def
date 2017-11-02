@@ -7,14 +7,23 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 4.12, Regular Latitudes, regular Longitudes on ellipsoidal planet
+# TEMPLATE 4.38, Rotated Regular Latitudes, regular Longitudes on ellipsoidal planet
 
 # Ellipsoid of revolution defined with axis lengths
 include "grib3/template_components/4.0.ellipsoid_with_axis_lengths.def";
 
-#  Regular Latitudes
+# Regular Latitudes
 include "grib3/template_components/4.8.regular_latitudes.def";
 
-# Regular Longitudes
+# Regular longitudes
 include "grib3/template_components/4.9.regular_longitudes.def";
+
+# Selection of latitudes
+include "grib3/template_components/4.10.latitudes_selection.def";
+
+# Latitude_longitude unstructured mesh simple packing
+include "grib3/template_components/4.12.latlon_unstructured_mesh_simple_packing.def";
+
+# Rotation of latitude/longitude coordinate system
+include "grib3/template_components/4.2.latlon_rotation.def";
 

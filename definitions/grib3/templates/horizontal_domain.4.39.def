@@ -7,11 +7,11 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# TEMPLATE 4.21, Latitude_longitude irregular grid on ellipsoidal planet simple packing 
+# TEMPLATE 4.39, Latitude_longitude unstructured mesh on ellipsoidal planet simple packing
 
 # Ellipsoid of revolution defined with axis lengths
 include "grib3/template_components/4.0.ellipsoid_with_axis_lengths.def";
 
-#  Latitude_longitude irregular grid simple packing
-include "grib3/template_components/4.13.latlon_irregular_grid_simple_packing.def";
+# Latitude_longitude unstructured mesh simple packing
+include "grib3/template_components/4.12.latlon_unstructured_mesh_simple_packing.def";
 
