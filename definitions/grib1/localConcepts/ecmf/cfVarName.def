@@ -15469,22 +15469,22 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 6 ;
 	}
-#Hydrophobic Organic Matter Aerosol Mixing Ratio
+#Hydrophilic Organic Matter Aerosol Mixing Ratio
 'aermr07' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 7 ;
 	}
-#Hydrophilic Organic Matter Aerosol Mixing Ratio
+#Hydrophobic Organic Matter Aerosol Mixing Ratio
 'aermr08' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 8 ;
 	}
-#Hydrophobic Black Carbon Aerosol Mixing Ratio
+#Hydrophilic Black Carbon Aerosol Mixing Ratio
 'aermr09' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 9 ;
 	}
-#Hydrophilic Black Carbon Aerosol Mixing Ratio
+#Hydrophobic Black Carbon Aerosol Mixing Ratio
 'aermr10' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 10 ;
@@ -15805,12 +15805,12 @@
 	 indicatorOfParameter = 96 ;
 	}
 #Wildfire fraction of area observed
-'bffire' = {
+'offire' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 97 ;
 	}
 #Number of positive FRP pixels per grid cell
-'oafire' = {
+'nofrp' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 98 ;
 	}
@@ -16505,7 +16505,7 @@
 	 indicatorOfParameter = 96 ;
 	}
 #Wildfire fraction of area observed
-'bffirediff' = {
+'offirediff' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 97 ;
 	}
