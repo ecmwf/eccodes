@@ -10,4 +10,4 @@
 # TEMPLATE 7.0, Observable property by discipline, category and number
 
 # Observable property by discipline, category and number
-include "grib3/template_components/template.component.7.0.def";
+include "grib3/template_components/7.0.observable_property_discipline_category_number.def";

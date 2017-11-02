@@ -10,4 +10,4 @@
 # TEMPLATE 6.0, Forecast, analysis or observation
 
 # Process type and identifier
-include "grib3/template_components/template.component.6.0.def";
+include "grib3/template_components/6.0.process_type_identifier.def";
