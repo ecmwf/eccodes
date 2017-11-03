@@ -243,7 +243,7 @@ void Representation::reorder(long, std::vector<double>&) const {
 
 void Representation::crop(const param::MIRParametrisation&, context::Context&) const {
     std::ostringstream os;
-    os << "Representation::cropToDomain() not implemented for " << *this;
+    os << "Representation::crop() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
