@@ -1330,9 +1330,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         grib_set_long(outh,"deleteLocalDefinition", 1);
     }
 
-#if 0   /* Disable check: need to re-examine GRIB-864 */
+    /* Disable check: need to re-examine GRIB-864 */
     if ( (*err = check_handle_against_spec(outh, editionNumber, spec, global_grid)) != GRIB_SUCCESS)
     {
+#if 0
         grib_context* c=grib_context_get_default();
         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed! %s\n", grib_get_error_message(*err));
         if (editionNumber == 1) {
@@ -1341,8 +1342,9 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         if (c->write_on_fail)
             grib_write_message(outh,"error.grib","w");
         goto cleanup;
-    }
 #endif
+    }
+
     if (h->context->debug==-1)
         printf("ECCODES DEBUG: grib_util_set_spec end\n");
 
