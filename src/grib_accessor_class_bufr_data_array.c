@@ -2255,7 +2255,7 @@ static void set_input_bitmap(grib_handle* h,grib_accessor_bufr_data_array *self)
 static int process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset)
 {
     int err=0;
-    long  inr,innr,ir;
+    long  inr,innr,ir,ip;
     long n[MAX_NESTED_REPLICATIONS]={0,};
     long nn[MAX_NESTED_REPLICATIONS]={0,};
     long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS]={0,};
@@ -2395,6 +2395,8 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         }
         elementIndex=0;
 
+        numberOfNestedRepetitions=0;
+        inr=0;
         for (i=0;i<numberOfDescriptors;i++) {
             grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data processing: elementNumber=%ld code=%6.6ld", icount++,descriptors[i]->code);
             switch(descriptors[i]->F) {
@@ -2434,9 +2436,16 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                         n[inr-1]-=numberOfElementsToRepeat[inr]+2;
                         /* if the empty nested repetition is at the end of the nesting repetition
                            we need to re-point to the start of the nesting repetition */
-                        if (n[inr-1]==0) {
-                            nn[inr-1]--;
-                            if (nn[inr-1]<=0) numberOfNestedRepetitions--;
+                        ip=inr-1;
+                        while (ip>=0 && n[ip]==0) {
+                            nn[ip]--;
+                            if (nn[ip]<=0) {
+                              numberOfNestedRepetitions--;
+                            } else {
+                              n[ip]=numberOfElementsToRepeat[ip];
+                              i=startRepetition[ip];
+                            }
+                            ip--;
                         }
                     }
                     numberOfNestedRepetitions--;
