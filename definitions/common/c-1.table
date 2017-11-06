@@ -75,6 +75,8 @@
 # 186 to 198 Reserved for centres in Region I which are not listed above
 # 199 to 209 Reserved for centres in Region V which are not in the list above
 195 wiix Indonesia (NMC)
+204 204  National Institute of Water and Atmospheric Research (NIWA - New Zealand)
+# 205-209 Reserved
 210 210  Frascati (ESA/ESRIN)
 211 211  Lannion
 212 212  Lisboa
@@ -98,4 +100,3 @@
 254 eums EUMETSAT Operation Centre
 # 255 Missing value
 255 consensus Consensus
-
