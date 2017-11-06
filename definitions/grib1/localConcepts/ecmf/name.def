@@ -14414,13 +14414,13 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 179 ;
 	}
-#East-West surface stress
-'East-West surface stress' = {
+#East-West surface stress rate of accumulation
+'East-West surface stress rate of accumulation' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 180 ;
 	}
-#North-South surface stress
-'North-South surface stress' = {
+#North-South surface stress rate of accumulation
+'North-South surface stress rate of accumulation' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 181 ;
 	}
@@ -14474,8 +14474,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 211 ;
 	}
-#Solar insolation
-'Solar insolation' = {
+#Solar insolation rate of accumulation
+'Solar insolation rate of accumulation' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 212 ;
 	}
@@ -14519,8 +14519,8 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Stratiform precipitation (Large-scale precipitation) anomaly
-'Stratiform precipitation (Large-scale precipitation) anomaly' = {
+#Stratiform precipitation (Large-scale precipitation) anomalous rate of accumulation
+'Stratiform precipitation (Large-scale precipitation) anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 142 ;
 	}
@@ -14539,13 +14539,13 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Surface sensible heat flux anomaly
-'Surface sensible heat flux anomaly' = {
+#Surface sensible heat flux anomalous rate of accumulation
+'Surface sensible heat flux anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface latent heat flux anomaly
-'Surface latent heat flux anomaly' = {
+#Surface latent heat flux anomalous rate of accumulation
+'Surface latent heat flux anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 147 ;
 	}
@@ -14564,48 +14564,48 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Surface solar radiation downwards anomaly
-'Surface solar radiation downwards anomaly' = {
+#Surface solar radiation downwards anomalous rate of accumulation
+'Surface solar radiation downwards anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 169 ;
 	}
-#Surface thermal radiation downwards anomaly
-'Surface thermal radiation downwards anomaly' = {
+#Surface thermal radiation downwards anomalous rate of accumulation
+'Surface thermal radiation downwards anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 175 ;
 	}
-#Surface solar radiation anomaly
-'Surface solar radiation anomaly' = {
+#Surface solar radiation anomalous rate of accumulation
+'Surface solar radiation anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Surface thermal radiation anomaly
-'Surface thermal radiation anomaly' = {
+#Surface thermal radiation anomalous rate of accumulation
+'Surface thermal radiation anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Top solar radiation anomaly
-'Top solar radiation anomaly' = {
+#Top solar radiation anomalous rate of accumulation
+'Top solar radiation anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Top thermal radiation anomaly
-'Top thermal radiation anomaly' = {
+#Top thermal radiation anomalous rate of accumulation
+'Top thermal radiation anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 179 ;
 	}
-#East-West surface stress anomaly
-'East-West surface stress anomaly' = {
+#East-West surface stress anomalous rate of accumulation
+'East-West surface stress anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 180 ;
 	}
-#North-South surface stress anomaly
-'North-South surface stress anomaly' = {
+#North-South surface stress anomalous rate of accumulation
+'North-South surface stress anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Evaporation anomaly
-'Evaporation anomaly' = {
+#Evaporation anomalous rate of accumulation
+'Evaporation anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 182 ;
 	}
@@ -14629,8 +14629,8 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 197 ;
 	}
-#Runoff anomaly
-'Runoff anomaly' = {
+#Runoff anomalous rate of accumulation
+'Runoff anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 205 ;
 	}
@@ -14654,8 +14654,8 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 211 ;
 	}
-#Solar insolation anomaly
-'Solar insolation anomaly' = {
+#Solar insolation anomalous rate of accumulation
+'Solar insolation anomalous rate of accumulation' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 212 ;
 	}
