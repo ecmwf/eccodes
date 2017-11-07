@@ -378,7 +378,7 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
             if (v > maxVal) maxVal=v;
         }
     }
-    printf("ECCODES DEBUG grib_util: data_values are CONSTANT? %d\t(minVal=%g, maxVal=%g)\n",
+    printf("ECCODES DEBUG grib_util: data_values are CONSTANT? %d\t(min=%.16e, max=%.16e)\n",
            isConstant, minVal, maxVal);
 
 #if 0
