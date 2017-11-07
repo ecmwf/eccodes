@@ -102,20 +102,20 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
     bool ok = false;
 
     long bits;
-    if (param.get("user.accuracy", bits)) {
+    if (param.user().get("accuracy", bits)) {
         out << "accuracy=" << bits;
         ok = true;
     }
 
     std::string packing;
-    if (param.get("user.packing", packing)) {
+    if (param.user().get("packing", packing)) {
         if (ok) { out << ","; }
         out << "packing=" << packing;
         ok = true;
     }
 
     long edition;
-    if (param.get("user.edition", edition)) {
+    if (param.user().get("edition", edition)) {
         if (ok) { out << ","; }
         out << "edition=" << edition;
         ok = true;
@@ -129,8 +129,8 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation &param1,
     long bits1 = -1;
     long bits2 = -1;
 
-    param1.get("user.accuracy", bits1);
-    param2.get("user.accuracy", bits2);
+    param1.user().get("accuracy", bits1);
+    param2.user().get("accuracy", bits2);
 
     if (bits1 != bits2) {
         return false;
@@ -139,8 +139,8 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation &param1,
     std::string packing1;
     std::string packing2;
 
-    param1.get("user.packing", packing1);
-    param1.get("user.packing", packing2);
+    param1.user().get("packing", packing1);
+    param1.user().get("packing", packing2);
 
     if (packing1 != packing2) {
         return false;
@@ -149,8 +149,8 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation &param1,
     long edition1 = -1;
     long edition2 = -1;
 
-    param1.get("user.edition", edition1);
-    param2.get("user.edition", edition2);
+    param1.user().get("edition", edition1);
+    param2.user().get("edition", edition2);
 
     if (edition1 != edition2) {
         return false;
@@ -207,13 +207,13 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
         info.packing.accuracy = GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT;
 
         long bits;
-        if (parametrisation.get("user.accuracy", bits)) {
+        if (parametrisation.user().get("accuracy", bits)) {
             info.packing.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
             info.packing.bitsPerValue = bits;
         }
 
         long edition;
-        if (parametrisation.get("user.edition", edition)) {
+        if (parametrisation.user().get("edition", edition)) {
             info.packing.editionNumber = edition;
         }
 
@@ -231,7 +231,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
         }
 
         std::string packing;
-        if (parametrisation.get("user.packing", packing)) {
+        if (parametrisation.user().get("packing", packing)) {
             const packing::Packer &packer = packing::Packer::lookup(packing);
 #if 0
             packer.fill(info, *field.representation());
@@ -395,7 +395,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
         static bool checkArea = eckit::Resource<bool>("$MIR_CHECK_AREA", false);
         if (checkArea) {
             std::vector<double> v;
-            if (parametrisation.get("user.area", v) && v.size() == 4) {
+            if (parametrisation.user().get("area", v) && v.size() == 4) {
 
                 util::BoundingBox user(v[0], v[1], v[2], v[3]);
 
