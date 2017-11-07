@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include <float.h>
 
 #ifdef ECCODES_ON_WINDOWS
  /* Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions) */
@@ -341,7 +342,7 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
 {
     size_t i=0;
     int isConstant = 1;
-    double v = 0;
+    double v = 0, minVal=DBL_MAX, maxVal=-DBL_MAX;
     printf("ECCODES DEBUG grib_util grib_set_values: setting %lu key/value pairs\n",(unsigned long)count);
 
     for(i=0; i<count; i++)
@@ -369,7 +370,16 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
             }
         }
     }
-    printf("ECCODES DEBUG grib_util: data_values are CONSTANT? %d\n", isConstant);
+    
+    for (i=0; i<data_values_count; i++) {
+        v = data_values[i];
+        if (v!=spec->missingValue) {
+            if (v < minVal) minVal=v;
+            if (v > maxVal) maxVal=v;
+        }
+    }
+    printf("ECCODES DEBUG grib_util: data_values are CONSTANT? %d\t(minVal=%g, maxVal=%g)\n",
+           isConstant, minVal, maxVal);
 
 #if 0
         if (spec->bitmapPresent) {
