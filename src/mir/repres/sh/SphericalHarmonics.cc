@@ -28,7 +28,7 @@ namespace sh {
 
 
 SphericalHarmonics::SphericalHarmonics(const param::MIRParametrisation &parametrisation) {
-    ASSERT(parametrisation.fieldParametrisation().get("truncation", truncation_));
+    ASSERT(parametrisation.get("truncation", truncation_));
 }
 
 
