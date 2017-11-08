@@ -65,6 +65,12 @@ grib_check_key_equals $temp level,scaledValueOfFirstFixedSurface,scaleFactorOfFi
 ${tools_dir}/grib_set -s typeOfFirstFixedSurface=103,level=2.4 $sample_g2 $temp
 grib_check_key_equals $temp level:d,scaledValueOfFirstFixedSurface,scaleFactorOfFirstFixedSurface '2.4 240 2'
 
+# Use a parameter which has two levels
+${tools_dir}/grib_set -s paramId=228086,topLevel=1.3,bottomLevel=5.4 $sample_g2 $temp
+grib_check_key_equals $temp 'topLevel:d,bottomLevel:d' '1.3 5.4'
+grib_check_key_equals $temp scaleFactorOfFirstFixedSurface,scaledValueOfFirstFixedSurface '2 130'
+grib_check_key_equals $temp scaleFactorOfSecondFixedSurface,scaledValueOfSecondFixedSurface '2 540'
+
 # GRIB-492
 ${tools_dir}/grib_set -s indicatorOfTypeOfLevel=110 $sample_g1 $temp
 res=`${tools_dir}/grib_get -p indicatorOfTypeOfLevel:l,topLevel,bottomLevel $temp`
