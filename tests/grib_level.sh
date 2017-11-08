@@ -59,6 +59,12 @@ EOF
 ${tools_dir}/grib_filter level.filter $file > test.dump
 diff temp.level.good test.dump
 
+# Use of 'level' key for GRIB2
+${tools_dir}/grib_set -s typeOfFirstFixedSurface=103,level=24 $sample_g2 $temp
+grib_check_key_equals $temp level,scaledValueOfFirstFixedSurface,scaleFactorOfFirstFixedSurface '24 24 0'
+${tools_dir}/grib_set -s typeOfFirstFixedSurface=103,level=2.4 $sample_g2 $temp
+grib_check_key_equals $temp level:d,scaledValueOfFirstFixedSurface,scaleFactorOfFirstFixedSurface '2.4 240 2'
+
 # GRIB-492
 ${tools_dir}/grib_set -s indicatorOfTypeOfLevel=110 $sample_g1 $temp
 res=`${tools_dir}/grib_get -p indicatorOfTypeOfLevel:l,topLevel,bottomLevel $temp`
