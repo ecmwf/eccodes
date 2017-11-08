@@ -3169,6 +3169,14 @@ int grib_f_get_string(int* gid, char* key, char* val,  int len, int len2){
     return  grib_f_get_string_( gid,  key,  val,   len,  len2);
 }
 
+static int is_all_spaces(const char *s)
+{
+    while (*s != '\0') {
+        if (!isspace(*s)) return 0;
+        s++;
+    }
+    return 1;
+}
 int grib_f_set_string_(int* gid, char* key, char* val, int len, int len2){
 
     grib_handle *h = get_handle(*gid);
@@ -3181,8 +3189,11 @@ int grib_f_set_string_(int* gid, char* key, char* val, int len, int len2){
     if(!h) return GRIB_INVALID_GRIB;
     
     /* For BUFR, the value may contain spaces e.g. stationOrSiteName='CAMPO NOVO' */
+    /* So do not use cast_char. cast_char_no_cut does not stop at first space */
     val_str = cast_char_no_cut(buf2,val,len2);
-    rtrim( val_str ); /* trim spaces at end of string */
+    if (val_str && !is_all_spaces(val_str)) {
+        rtrim( val_str ); /* trim spaces at end of string */
+    }
 
     return grib_set_string(h, cast_char(buf,key,len), val_str, &lsize);
 }
