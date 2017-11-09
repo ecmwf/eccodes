@@ -3319,6 +3319,11 @@
 	 table2Version = 132 ;
 	 indicatorOfParameter = 44 ;
 	}
+#Water vapour flux index
+'wvfi' = {
+	 table2Version = 132 ;
+	 indicatorOfParameter = 45 ;
+	}
 #Convective available potential energy index
 'capei' = {
 	 table2Version = 132 ;
@@ -3488,6 +3493,11 @@
 'p193.151' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 193 ;
+	}
+#Water vapour flux
+'wvf' = {
+	 table2Version = 162 ;
+	 indicatorOfParameter = 45 ;
 	}
 #Vertical integral of divergence of cloud liquid water flux
 'p79.162' = {
