@@ -86,4 +86,17 @@ input=${data_dir}/tigge_pf_ecmwf.grib2
 res=`${tools_dir}/grib_get -wcount=7 -F%.20f -p level:d $input`
 [ "$res" = "2.00000000000000000000" ]
 
+# ECC-530: Setting typeOfSecondFixedSurface should not overwrite
+# scale factor and scaled value of first fixed surface
+cat >level.filter<<EOF
+  set typeOfFirstFixedSurface=106;
+  set scaleFactorOfFirstFixedSurface=-2;
+  set scaledValueOfFirstFixedSurface=4;
+  set typeOfSecondFixedSurface=106; # Should not overwrite
+  assert(scaledValueOfFirstFixedSurface == 4);
+  assert(scaleFactorOfFirstFixedSurface == -2);
+  assert(level==400);
+EOF
+${tools_dir}/grib_filter level.filter $sample_g2
+
 rm -f level.filter temp.level.good test.dump $temp
