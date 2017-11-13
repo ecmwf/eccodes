@@ -1171,6 +1171,10 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
             idx=((int)self->numericValues->v[elementIndex]->v[0]/1000-1)/self->numberOfSubsets;
             err=encode_string_array(c,buff,pos,bd,self,self->stringValues->v[idx]);
         } else {
+            if (self->numericValues->v[subsetIndex] == NULL) {
+                grib_context_log(c,GRIB_LOG_ERROR,"Invalid subset index %d (number of subsets=%ld)", subsetIndex, self->numberOfSubsets);
+                return GRIB_INVALID_ARGUMENT;
+            }
             idx=(int)self->numericValues->v[subsetIndex]->v[elementIndex]/1000-1;
             err=encode_string_value(c,buff,pos,bd,self,self->stringValues->v[idx]->v[0]);
         }
