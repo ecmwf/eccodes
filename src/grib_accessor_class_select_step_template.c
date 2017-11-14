@@ -199,6 +199,12 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         case 47: /* EPS aerosol */
             productDefinitionTemplateNumberNew=45;
             break;
+        case 72: /* non-EPS post-processing */
+            productDefinitionTemplateNumberNew=70;
+            break;
+        case 73: /* EPS post-processing */
+            productDefinitionTemplateNumberNew=71;
+            break;
         case 0:
         case 1:
         case 2:
@@ -249,6 +255,12 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             break;
         case 45: /* EPS aerosol */
             productDefinitionTemplateNumberNew=47;
+            break;
+        case 70: /* non-EPS post-processing */
+            productDefinitionTemplateNumberNew=72;
+            break;
+        case 71:  /* EPS post-processing */
+            productDefinitionTemplateNumberNew=73;
             break;
         case 7:
         case 8:
