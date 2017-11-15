@@ -338,10 +338,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
      * However when the user directly sets the level or when we are changing edition, then
      * we do want to change the scale/value.
     */
+#if 0
     if (hand->loader && hand->loader->changing_edition==0) {
         change_scale_and_value = 0;
     }
-    
+#endif
     if (change_scale_and_value) {
         if (type_first>9) {
             if((ret = grib_set_long_internal(hand, self->scale_first,scale_first))
