@@ -10,6 +10,6 @@
 . ./include.sh
 
 for i in `seq 0 100`; do
-   #echo iteration $i
+   echo iteration $i
    ${examples_dir}/c_bufr_pthreads
 done
