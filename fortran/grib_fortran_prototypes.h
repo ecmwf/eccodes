@@ -141,6 +141,14 @@ int any_f_new_from_file_(int *fid, int *gid);
 int any_f_new_from_file__(int *fid, int *gid);
 int any_f_new_from_file(int *fid, int *gid);
 
+int any_f_scan_file_(int* fid,int* n);
+int any_f_scan_file__(int* fid,int* n);
+int any_f_scan_file(int* fid,int* n);
+
+int any_f_new_from_scanned_file_(int* fid,int* msgid,int* gid);
+int any_f_new_from_scanned_file__(int* fid,int* msgid,int* gid);
+int any_f_new_from_scanned_file(int* fid,int* msgid,int* gid);
+
 int any_f_load_all_from_file_(int* fid,int* n);
 int any_f_load_all_from_file__(int* fid,int* n);
 int any_f_load_all_from_file(int* fid,int* n);
