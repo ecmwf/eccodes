@@ -37,6 +37,8 @@ res=`${tools_dir}/grib_get -M -p angleOfRotation,stretchingFactorScaled $temp2`
 # Section 5 templates: Vertical Domain
 # -----------------------------------------
 ${tools_dir}/grib_set -M -s verticalDomainTemplateNumber=1 $temp1 $temp2
+res=`${tools_dir}/grib_get -M -p level,scaleFactorOfFirstFixedSurface,scaledValueOfFirstFixedSurface $temp2`
+[ "$res" = "500 0 50000" ]
 res=`${tools_dir}/grib_get -M -p scaleFactorOfFirstFixedSurface,scaleFactorOfSecondFixedSurface $temp2`
 [ "$res" = "0 MISSING" ]
 
