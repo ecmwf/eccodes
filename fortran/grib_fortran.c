@@ -35,6 +35,7 @@
 static pthread_once_t once  = PTHREAD_ONCE_INIT;
 static pthread_mutex_t handle_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t index_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t read_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t multi_handle_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t keys_iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -46,6 +47,7 @@ static void init() {
     pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
     pthread_mutex_init(&handle_mutex,&attr);
     pthread_mutex_init(&index_mutex,&attr);
+    pthread_mutex_init(&read_mutex,&attr);
     pthread_mutex_init(&multi_handle_mutex,&attr);
     pthread_mutex_init(&iterator_mutex,&attr);
     pthread_mutex_init(&keys_iterator_mutex,&attr);
@@ -141,6 +143,12 @@ struct l_binary_message {
     void* data;
 };
 
+typedef struct l_message_info l_message_info;
+struct l_message_info {
+    off_t offset;
+    size_t size;
+};
+
 static l_grib_handle* handle_set = NULL;
 static l_grib_index* index_set = NULL;
 static l_grib_multi_handle* multi_handle_set = NULL;
@@ -149,6 +157,7 @@ static l_grib_iterator* iterator_set = NULL;
 static l_grib_keys_iterator* keys_iterator_set = NULL;
 static l_bufr_keys_iterator* bufr_keys_iterator_set = NULL;
 static grib_oarray* binary_messages = NULL;
+static grib_oarray* info_messages = NULL;
 
 static char* cast_char(char* buf, char* fortstr,int len)
 {
@@ -1626,6 +1635,83 @@ int grib_f_copy_namespace__(int* gidsrc,char* name,int* giddest,int len){
 }
 int grib_f_copy_namespace(int* gidsrc,char* name,int* giddest,int len){
     return grib_f_copy_namespace_(gidsrc,name,giddest,len);
+}
+
+/*****************************************************************************/
+int any_f_scan_file(int* fid,int* n) {
+    int err = 0;
+    off_t offset=0;
+    void *data = NULL;
+    size_t olen = 0;
+    l_message_info* msg=0;
+    FILE* f = get_file(*fid);
+    grib_context* c=grib_context_get_default();
+
+    /* this needs a callback to a destructor*/
+    /* grib_oarray_delete_content(c,binary_messages); */
+
+    grib_oarray_delete(c,info_messages);
+    info_messages=grib_oarray_new(c,1000,1000);
+
+    if (f) {
+      while (err!=GRIB_END_OF_FILE) {
+        data = wmo_read_any_from_file_malloc ( f, 0,&olen,&offset,&err );
+        msg=(l_message_info*)grib_context_malloc_clear(c,sizeof(l_message_info));
+        msg->offset=offset;
+        msg->size=olen;
+
+        if (err==0 && data) grib_oarray_push(c,info_messages,msg);
+        grib_context_free(c,data);
+      }
+      if (err==GRIB_END_OF_FILE) err=0;
+    }
+    *n=info_messages->n;
+    return err;
+}
+int any_f_scan_file_(int* fid,int* n) {
+    return any_f_scan_file(fid,n);
+}
+int any_f_scan_file__(int* fid,int* n) {
+    return any_f_scan_file(fid,n);
+}
+
+int any_f_new_from_scanned_file(int* fid,int* msgid,int* gid)
+{
+    grib_handle *h = NULL;
+    grib_context* c=grib_context_get_default();
+    int err=0;
+    FILE* f = get_file(*fid);
+
+    /* fortran convention of 1 based index*/
+    const int n=*msgid-1;
+
+    l_message_info* msg=grib_oarray_get(info_messages,n);
+
+    if (msg && f) {
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&read_mutex);
+      fseeko(f,msg->offset,SEEK_SET);
+      h=any_new_from_file (c,f,&err);
+    GRIB_MUTEX_UNLOCK(&read_mutex);
+    }
+    if (err) return err;
+
+    if(h){
+        push_handle(h,gid);
+        return GRIB_SUCCESS;
+    } else {
+        *gid=-1;
+        return GRIB_END_OF_FILE;
+    }
+    *gid=-1;
+    return GRIB_INVALID_FILE;
+}
+
+int any_f_new_from_scanned_file_(int* fid,int* msgid,int* gid){
+  return any_f_new_from_scanned_file(fid,msgid,gid);
+}
+int any_f_new_from_scanned_file__(int* fid,int* msgid,int* gid){
+  return any_f_new_from_scanned_file(fid,msgid,gid);
 }
 
 /*****************************************************************************/

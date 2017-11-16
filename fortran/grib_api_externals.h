@@ -27,6 +27,8 @@ integer, external :: grib_f_new_from_message, &
                      any_f_new_from_file, &
                      any_f_load_all_from_file, &
                      any_f_new_from_loaded, &
+                     any_f_scan_file, &
+                     any_f_new_from_scanned_file, &
                      codes_f_clear_loaded_from_file, &
                      grib_f_new_from_file, &
                      bufr_f_new_from_file, &

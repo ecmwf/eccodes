@@ -954,6 +954,53 @@ subroutine codes_new_from_file (ifile, msgid , product_kind, status)
     end if
 end subroutine codes_new_from_file
 
+  !> Scan a file to search for messages without decoding.
+  !>
+  !> @param ifile     id of the file opened with @ref codes_open_file
+  !> @param nmessages number of messages found
+  !> @param status    CODES_SUCCESS if OK, CODES_END_OF_FILE at the end of file, or error code
+subroutine codes_any_scan_file ( ifile, nmessages , status)
+    integer(kind=kindOfInt),intent(in)              :: ifile
+    integer(kind=kindOfInt),intent(out)          :: nmessages
+    integer(kind=kindOfInt)                       :: iret
+    integer(kind=kindOfInt),optional,intent(out)    :: status
+
+    iret=any_f_scan_file ( ifile, nmessages)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret,'any_f_scan_file','')
+    endif
+
+end subroutine codes_any_scan_file 
+
+  !> Decode message from scanned file. This function provides direct access to the n-th message in a file.
+  !> A call to codes_any_scan_file must precede a call to this function. The file needs to be scanned to prepare
+  !> direct access by rank.
+  !>
+  !> The message can be accessed through its msgid and it will be available\n
+  !> until @ref codes_release is called.\n
+  !>
+  !> @param ifile     id of the file opened with @ref codes_open_file
+  !> @param nmsg      n-th message in the file to be read
+  !> @param msgid     id of the message loaded in memory
+  !> @param status    CODES_SUCCESS if OK, CODES_END_OF_FILE at the end of file, or error code
+subroutine codes_any_new_from_scanned_file ( ifile, nmsg, msgid , status)
+    integer(kind=kindOfInt),intent(in)              :: ifile
+    integer(kind=kindOfInt),intent(in)              :: nmsg
+    integer(kind=kindOfInt),intent(out)             :: msgid
+    integer(kind=kindOfInt)                       :: iret
+    integer(kind=kindOfInt),optional,intent(out)    :: status
+
+    iret=any_f_new_from_scanned_file( ifile, nmsg, msgid )
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret,'any_f_new_from_scanned_file','')
+    endif
+
+end subroutine codes_any_new_from_scanned_file 
+
   !> Load in memory all messages from a file without decoding.
   !>
   !> @param ifile     id of the file opened with @ref codes_open_file
