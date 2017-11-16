@@ -1,7 +1,14 @@
-# Vertical Coordinate Template Component 5.1 - Vertical layer
+# Copyright 2005-2017 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
 
 #  Type of first fixed surface
-codetable[1] typeOfFirstFixedSurface ('5.1.table',masterDir,localDir) : dump,no_copy,edition_specific,string_type;
+codetable[1] typeOfFirstFixedSurface ('4.5.table',masterDir,localDir) : dump,no_copy,edition_specific,string_type;
 meta unitsOfFirstFixedSurface codetable_units(typeOfFirstFixedSurface) : dump;
 meta nameOfFirstFixedSurface codetable_title(typeOfFirstFixedSurface) : dump;
 
@@ -12,7 +19,7 @@ signed[1] scaleFactorOfFirstFixedSurface = missing()  : can_be_missing,dump,no_c
 unsigned[4] scaledValueOfFirstFixedSurface = missing()  : can_be_missing,dump,no_copy,edition_specific;
 
 #  Type of second fixed surface
-codetable[1] typeOfSecondFixedSurface ('5.1.table',masterDir,localDir) = 255 : dump,no_copy,edition_specific;
+codetable[1] typeOfSecondFixedSurface ('4.5.table',masterDir,localDir) = 255 : dump,no_copy,edition_specific;
 meta unitsOfSecondFixedSurface codetable_units(typeOfSecondFixedSurface) : dump;
 meta nameOfSecondFixedSurface codetable_title(typeOfSecondFixedSurface) : dump;
 
@@ -22,8 +29,6 @@ signed[1] scaleFactorOfSecondFixedSurface = missing() : can_be_missing,dump,no_c
 #  Scaled value of second fixed surface
 unsigned[4] scaledValueOfSecondFixedSurface = missing() : can_be_missing,dump,no_copy,edition_specific;
 
-
-#######
 transient pressureUnits="hPa";
 
 concept_nofail vertical.typeOfLevel (unknown) {
@@ -60,9 +65,11 @@ concept_nofail vertical.typeOfLevel (unknown) {
   'pressureFromGroundLayer' = {typeOfFirstFixedSurface=108;typeOfSecondFixedSurface=108;}
   'potentialVorticity' = {typeOfFirstFixedSurface=109; typeOfSecondFixedSurface=255;}
   'eta' = {typeOfFirstFixedSurface=111;  typeOfSecondFixedSurface=255;}
+
 # In the case of Generalized vertical height coordinates, NV must be 6
   'generalVertical' = {genVertHeightCoords=1; typeOfFirstFixedSurface=150; NV=6;}
   'generalVerticalLayer' = {genVertHeightCoords=1; typeOfFirstFixedSurface=150; typeOfSecondFixedSurface=150; NV=6;}
+
   'depthBelowSea' = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=255;}
   'entireAtmosphere' = {typeOfFirstFixedSurface=1;typeOfSecondFixedSurface=8;}
   'entireOcean' = {typeOfFirstFixedSurface=1;typeOfSecondFixedSurface=9;}
@@ -97,21 +104,30 @@ alias vertical.level=level;
 alias vertical.bottomLevel=bottomLevel;
 alias vertical.topLevel=topLevel;
 
-
-# See GRIB-74 why we store the pressureUnits in a transient
-#transient tempPressureUnits=pressureUnits;
-#if (!(typeOfLevel is "surface")) {
-#    if (tempPressureUnits is "Pa") {
-#        meta marsLevel scale(level,one,hundred) : read_only;
-#        alias mars.levelist=marsLevel;
-#    } else {
-#        alias mars.levelist = level;
-#    }
-#}
-#alias mars.levtype  = typeOfFirstFixedSurface;
-## GRIB-372: levelist alias does not pertain to surface parameters
-#if (levtype is "sfc") {
-#    unalias mars.levelist;
-#}
-
+alias extraDim=zero;
+if (defined(extraDimensionPresent)) {
+    if (extraDimensionPresent) {
+        alias extraDim=one;
+    }
+}
+if (extraDim) {
+    alias mars.levelist = dimension;
+    alias mars.levtype = dimensionType;
+} else {
+    # See GRIB-74 why we store the pressureUnits in a transient
+    transient tempPressureUnits=pressureUnits;
+    if (!(typeOfLevel is "surface")) {
+        if (tempPressureUnits is "Pa") {
+            meta marsLevel scale(level,one,hundred) : read_only;
+            alias mars.levelist=marsLevel;
+        } else {
+            alias mars.levelist = level;
+        }
+    }
+    alias mars.levtype  = typeOfFirstFixedSurface;
+    # GRIB-372: levelist alias does not pertain to surface parameters
+    if (levtype is "sfc") {
+        unalias mars.levelist;
+    }
+}
 alias ls.typeOfLevel=typeOfLevel;

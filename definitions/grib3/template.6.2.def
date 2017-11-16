@@ -10,10 +10,10 @@
 # TEMPLATE 6.2, Statistical post-processing of all ensemble members
 
 # Process type and identifier
-include "grib3/template_components/template.component.6.0.def";
+include "grib3/template.component.6.0.def";
 
 # Ensemble size
-include "grib3/template_components/template.component.6.1.def";
+include "grib3/template.component.6.1.def";
 
 # Statistical post-processing of ensemble members
-include "grib3/template_components/template.component.6.3.def";
+include "grib3/template.component.6.3.def";
