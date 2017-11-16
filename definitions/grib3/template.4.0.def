@@ -10,7 +10,7 @@
 # TEMPLATE 4.0, Latitude/longitude regular grid on ellipsoidal planet
 
 # Ellipsoid of revolution defined with axis lengths
-include "grib3/template_components/template.component.4.0.def";
+include "grib3/template.component.4.0.def";
 
 # Latitude/longitude regular grid
-include "grib3/template_components/template.component.4.1.def";
+include "grib3/template.component.4.1.def";
