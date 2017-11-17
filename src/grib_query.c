@@ -395,6 +395,7 @@ static grib_accessor* search_and_cache(grib_handle* h, const char* name,const ch
         int rank=-1;
         char* basename=get_rank(name,&rank);
         a=search_by_rank(h,basename,rank,the_namespace);
+        grib_context_free(h->context,basename);
     } else {
         a=_search_and_cache(h,name,the_namespace);
     }
