@@ -204,6 +204,9 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     len=1024;
     if (self->localDir != NULL) grib_get_string(h,self->localDir,localDir,&len);
 
+    GRIB_MUTEX_INIT_ONCE(&once,&thread_init);
+    GRIB_MUTEX_LOCK(&mutex1);
+
     if (*masterDir!=0) {
         char name[1024]={0,};
         char recomposed[1024]={0,};
@@ -228,12 +231,11 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     if (!filename) {
         grib_context_log(c,GRIB_LOG_ERROR,"unable to find def file %s",self->dictionary);
         *err=GRIB_FILE_NOT_FOUND;
-        return NULL;
+        dictionary=NULL;
+        goto the_end;
     } else {
         grib_context_log(c,GRIB_LOG_DEBUG,"found def file %s",filename);
     }
-    GRIB_MUTEX_INIT_ONCE(&once,&thread_init);
-    GRIB_MUTEX_LOCK(&mutex1);
 
     dictionary=(grib_trie*)grib_trie_get(c->lists,dictName);
     if (dictionary) {

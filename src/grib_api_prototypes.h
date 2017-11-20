@@ -997,6 +997,8 @@ void grib_context_set_handle_file_count(grib_context *c, int new_count);
 void grib_context_set_handle_total_count(grib_context *c, int new_count);
 void grib_context_increment_handle_file_count(grib_context *c);
 void grib_context_increment_handle_total_count(grib_context *c);
+bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context* c,const char* key,long* u,size_t size);
+void grib_context_expanded_descriptors_list_push(grib_context* c,const char* key,bufr_descriptors_array* expanded,bufr_descriptors_array* unexpanded);
 void codes_set_codes_assertion_failed_proc(codes_assertion_failed_proc proc);
 void codes_assertion_failed(const char *message, const char *file, int line);
 

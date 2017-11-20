@@ -732,16 +732,16 @@ grib_concept_value* grib_parse_concept_file( grib_context* gc,const char* filena
 grib_hash_array_value* grib_parse_hash_array_file( grib_context* gc,const char* filename)
 {
     GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&mutex_hash_array);
+    GRIB_MUTEX_LOCK(&mutex_file);
 
     gc = gc ? gc : grib_context_get_default();
     grib_parser_context = gc;
 
     if(parse(gc,filename) == 0) {
-        GRIB_MUTEX_UNLOCK(&mutex_hash_array);
+        GRIB_MUTEX_UNLOCK(&mutex_file);
         return grib_parser_hash_array;
     } else {
-        GRIB_MUTEX_UNLOCK(&mutex_hash_array);
+        GRIB_MUTEX_UNLOCK(&mutex_file);
         return NULL;
     }
 }
