@@ -57,6 +57,7 @@ static void init() {
 static int once = 0;
 static omp_nest_lock_t handle_mutex;
 static omp_nest_lock_t index_mutex;
+static omp_nest_lock_t read_mutex;
 static omp_nest_lock_t multi_handle_mutex;
 static omp_nest_lock_t iterator_mutex;
 static omp_nest_lock_t keys_iterator_mutex;
@@ -69,6 +70,7 @@ static void init()
         {
             omp_init_nest_lock(&handle_mutex);
             omp_init_nest_lock(&index_mutex);
+            omp_init_nest_lock(&read_mutex);
             omp_init_nest_lock(&multi_handle_mutex);
             omp_init_nest_lock(&iterator_mutex);
             omp_init_nest_lock(&keys_iterator_mutex);
@@ -1654,16 +1656,16 @@ int any_f_scan_file(int* fid,int* n) {
     info_messages=grib_oarray_new(c,1000,1000);
 
     if (f) {
-      while (err!=GRIB_END_OF_FILE) {
-        data = wmo_read_any_from_file_malloc ( f, 0,&olen,&offset,&err );
-        msg=(l_message_info*)grib_context_malloc_clear(c,sizeof(l_message_info));
-        msg->offset=offset;
-        msg->size=olen;
-
-        if (err==0 && data) grib_oarray_push(c,info_messages,msg);
-        grib_context_free(c,data);
-      }
-      if (err==GRIB_END_OF_FILE) err=0;
+        while (err!=GRIB_END_OF_FILE) {
+            data = wmo_read_any_from_file_malloc ( f, 0,&olen,&offset,&err );
+            msg=(l_message_info*)grib_context_malloc_clear(c,sizeof(l_message_info));
+            msg->offset=offset;
+            msg->size=olen;
+            
+            if (err==0 && data) grib_oarray_push(c,info_messages,msg);
+            grib_context_free(c,data);
+        }
+        if (err==GRIB_END_OF_FILE) err=0;
     }
     *n=info_messages->n;
     return err;
@@ -1688,11 +1690,11 @@ int any_f_new_from_scanned_file(int* fid,int* msgid,int* gid)
     l_message_info* msg=grib_oarray_get(info_messages,n);
 
     if (msg && f) {
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&read_mutex);
-      fseeko(f,msg->offset,SEEK_SET);
-      h=any_new_from_file (c,f,&err);
-    GRIB_MUTEX_UNLOCK(&read_mutex);
+        GRIB_MUTEX_INIT_ONCE(&once,&init);
+        GRIB_MUTEX_LOCK(&read_mutex);
+        fseeko(f,msg->offset,SEEK_SET);
+        h=any_new_from_file (c,f,&err);
+        GRIB_MUTEX_UNLOCK(&read_mutex);
     }
     if (err) return err;
 
