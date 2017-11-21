@@ -25,16 +25,18 @@ static void* process_bufr(void* arg)
     FILE* fin = (FILE*)arg;
     int err = 0;
     codes_handle* h = NULL;
-    long numSubsets = 0;
+    long numSubsets = 0, lVal = 0;
     size_t size = 0, i=0;
     double* dValues = NULL;
     /* Each thread gets a different message handle */
     h = codes_handle_new_from_file(NULL, fin, PRODUCT_BUFR, &err);
     assert(h);
 
+    /* Check expected values for this BUFR file */
     CODES_CHECK(codes_get_long(h,"numberOfSubsets", &numSubsets),0);
-    /*printf("numberOfSubsets=%ld\n", numSubsets);*/
-    assert( numSubsets == 1 ); /* Specific test for this BUFR file */
+    assert( numSubsets == 1 );
+    CODES_CHECK(codes_get_long(h, "rectimeSecond", &lVal), 0);
+    assert( lVal == 27 );
 
     CODES_CHECK(codes_set_long(h, "unpack", 1),0);
 
@@ -43,12 +45,17 @@ static void* process_bufr(void* arg)
     size = numSubsets;
     CODES_CHECK(codes_get_double_array(h, "latitude", dValues, &size), 0);
     for(i=0; i<size; ++i) {
-        /*printf("lat[%lu]=%g\n", i, dValues[i]);*/
         /* Specific test for latitudes in this BUFR file */
         assert( dValues[0] < 79 && dValues[0] > 70 );
     }
-
     free(dValues);
+    
+    /* Some encoding too */
+    CODES_CHECK(codes_set_long(h, "bufrHeaderCentre", 88),0);
+    CODES_CHECK(codes_set_long(h, "blockNumber", 2), 0);
+    CODES_CHECK(codes_set_long(h, "#3#verticalSignificanceSurfaceObservations", 8), 0);
+    CODES_CHECK(codes_set_long(h, "pack", 1), 0);
+
     pthread_exit(NULL);
 }
 
@@ -74,7 +81,7 @@ int main(int argc, char** argv)
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
     pthread_join(thread3, NULL);
-    
+
     fclose(fin);
     codes_handle_delete(h1);
     codes_handle_delete(h2);
