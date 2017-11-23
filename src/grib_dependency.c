@@ -31,6 +31,7 @@ static grib_handle* handle_of(grib_accessor* observed)
     /* printf("+++++ %s = %p\n",observed->name,observed); */
     /* printf("+++++       h=%p\n",observed->h); */
     /* special case for BUFR attributes parentless */
+    Assert(observed);
     if (observed->parent==NULL) {
         return observed->h;
     }
