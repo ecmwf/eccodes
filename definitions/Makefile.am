@@ -179,6 +179,78 @@ dist_definitionsbufr_tables_0_local_101_98_0_codetables_DATA = \
 	bufr/tables/0/local/101/98/0/codetables/8193.table\
 	bufr/tables/0/local/101/98/0/codetables/8195.table
 
+definitionsbufr_tables_0_local_19_1_254_0dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/19-1/254/0
+dist_definitionsbufr_tables_0_local_19_1_254_0_DATA = \
+	bufr/tables/0/local/19-1/254/0/element.table
+
+definitionsbufr_tables_0_local_19_1_98_0dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/19-1/98/0
+dist_definitionsbufr_tables_0_local_19_1_98_0_DATA = \
+	bufr/tables/0/local/19-1/98/0/element.table\
+	bufr/tables/0/local/19-1/98/0/sequence.def
+
+definitionsbufr_tables_0_local_19_1_98_0_6dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/19-1/98/0/6
+dist_definitionsbufr_tables_0_local_19_1_98_0_6_DATA = \
+	bufr/tables/0/local/19-1/98/0/6/element.table
+
+definitionsbufr_tables_0_local_19_1_98_0_codetablesdir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/19-1/98/0/codetables
+dist_definitionsbufr_tables_0_local_19_1_98_0_codetables_DATA = \
+	bufr/tables/0/local/19-1/98/0/codetables/13202.table\
+	bufr/tables/0/local/19-1/98/0/codetables/20252.table\
+	bufr/tables/0/local/19-1/98/0/codetables/20253.table\
+	bufr/tables/0/local/19-1/98/0/codetables/21196.table\
+	bufr/tables/0/local/19-1/98/0/codetables/21199.table\
+	bufr/tables/0/local/19-1/98/0/codetables/21227.table\
+	bufr/tables/0/local/19-1/98/0/codetables/2194.table\
+	bufr/tables/0/local/19-1/98/0/codetables/2196.table\
+	bufr/tables/0/local/19-1/98/0/codetables/2199.table\
+	bufr/tables/0/local/19-1/98/0/codetables/2207.table\
+	bufr/tables/0/local/19-1/98/0/codetables/2231.table\
+	bufr/tables/0/local/19-1/98/0/codetables/2232.table\
+	bufr/tables/0/local/19-1/98/0/codetables/2251.table\
+	bufr/tables/0/local/19-1/98/0/codetables/2252.table\
+	bufr/tables/0/local/19-1/98/0/codetables/2254.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33195.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33205.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33206.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33207.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33208.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33209.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33220.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33221.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33222.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33223.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33224.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33225.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33226.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33227.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33228.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33229.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33230.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33232.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33233.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33234.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33236.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33237.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33238.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33239.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33240.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33243.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33244.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33245.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33246.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33247.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33248.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33249.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33252.table\
+	bufr/tables/0/local/19-1/98/0/codetables/33254.table\
+	bufr/tables/0/local/19-1/98/0/codetables/40203.table\
+	bufr/tables/0/local/19-1/98/0/codetables/40211.table\
+	bufr/tables/0/local/19-1/98/0/codetables/49193.table\
+	bufr/tables/0/local/19-1/98/0/codetables/49194.table\
+	bufr/tables/0/local/19-1/98/0/codetables/8193.table\
+	bufr/tables/0/local/19-1/98/0/codetables/8195.table\
+	bufr/tables/0/local/19-1/98/0/codetables/8201.table
+
 definitionsbufr_tables_0_local_2_98_0dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/2/98/0
 dist_definitionsbufr_tables_0_local_2_98_0_DATA = \
 	bufr/tables/0/local/2/98/0/element.table\
@@ -7985,6 +8057,476 @@ dist_definitionsbufr_tables_0_wmo_28_codetables_DATA = \
 	bufr/tables/0/wmo/28/codetables/8088.table\
 	bufr/tables/0/wmo/28/codetables/8091.table
 
+definitionsbufr_tables_0_wmo_29dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/wmo/29
+dist_definitionsbufr_tables_0_wmo_29_DATA = \
+	bufr/tables/0/wmo/29/element.table\
+	bufr/tables/0/wmo/29/sequence.def
+
+definitionsbufr_tables_0_wmo_29_codetablesdir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/wmo/29/codetables
+dist_definitionsbufr_tables_0_wmo_29_codetables_DATA = \
+	bufr/tables/0/wmo/29/codetables/1003.table\
+	bufr/tables/0/wmo/29/codetables/10063.table\
+	bufr/tables/0/wmo/29/codetables/10064.table\
+	bufr/tables/0/wmo/29/codetables/1007.table\
+	bufr/tables/0/wmo/29/codetables/1024.table\
+	bufr/tables/0/wmo/29/codetables/1028.table\
+	bufr/tables/0/wmo/29/codetables/1029.table\
+	bufr/tables/0/wmo/29/codetables/1033.table\
+	bufr/tables/0/wmo/29/codetables/1034.table\
+	bufr/tables/0/wmo/29/codetables/1036.table\
+	bufr/tables/0/wmo/29/codetables/1038.table\
+	bufr/tables/0/wmo/29/codetables/1052.table\
+	bufr/tables/0/wmo/29/codetables/1090.table\
+	bufr/tables/0/wmo/29/codetables/1092.table\
+	bufr/tables/0/wmo/29/codetables/1101.table\
+	bufr/tables/0/wmo/29/codetables/11030.table\
+	bufr/tables/0/wmo/29/codetables/11031.table\
+	bufr/tables/0/wmo/29/codetables/11037.table\
+	bufr/tables/0/wmo/29/codetables/11038.table\
+	bufr/tables/0/wmo/29/codetables/11039.table\
+	bufr/tables/0/wmo/29/codetables/1150.table\
+	bufr/tables/0/wmo/29/codetables/1151.table\
+	bufr/tables/0/wmo/29/codetables/13038.table\
+	bufr/tables/0/wmo/29/codetables/13039.table\
+	bufr/tables/0/wmo/29/codetables/13040.table\
+	bufr/tables/0/wmo/29/codetables/13041.table\
+	bufr/tables/0/wmo/29/codetables/13051.table\
+	bufr/tables/0/wmo/29/codetables/13056.table\
+	bufr/tables/0/wmo/29/codetables/13057.table\
+	bufr/tables/0/wmo/29/codetables/15025.table\
+	bufr/tables/0/wmo/29/codetables/19001.table\
+	bufr/tables/0/wmo/29/codetables/19008.table\
+	bufr/tables/0/wmo/29/codetables/19010.table\
+	bufr/tables/0/wmo/29/codetables/19100.table\
+	bufr/tables/0/wmo/29/codetables/19101.table\
+	bufr/tables/0/wmo/29/codetables/19102.table\
+	bufr/tables/0/wmo/29/codetables/19103.table\
+	bufr/tables/0/wmo/29/codetables/19104.table\
+	bufr/tables/0/wmo/29/codetables/19105.table\
+	bufr/tables/0/wmo/29/codetables/19107.table\
+	bufr/tables/0/wmo/29/codetables/19108.table\
+	bufr/tables/0/wmo/29/codetables/19109.table\
+	bufr/tables/0/wmo/29/codetables/19110.table\
+	bufr/tables/0/wmo/29/codetables/19113.table\
+	bufr/tables/0/wmo/29/codetables/19117.table\
+	bufr/tables/0/wmo/29/codetables/19119.table\
+	bufr/tables/0/wmo/29/codetables/20003.table\
+	bufr/tables/0/wmo/29/codetables/20004.table\
+	bufr/tables/0/wmo/29/codetables/20005.table\
+	bufr/tables/0/wmo/29/codetables/20006.table\
+	bufr/tables/0/wmo/29/codetables/20008.table\
+	bufr/tables/0/wmo/29/codetables/20009.table\
+	bufr/tables/0/wmo/29/codetables/2001.table\
+	bufr/tables/0/wmo/29/codetables/20011.table\
+	bufr/tables/0/wmo/29/codetables/20012.table\
+	bufr/tables/0/wmo/29/codetables/20017.table\
+	bufr/tables/0/wmo/29/codetables/20018.table\
+	bufr/tables/0/wmo/29/codetables/2002.table\
+	bufr/tables/0/wmo/29/codetables/20021.table\
+	bufr/tables/0/wmo/29/codetables/20022.table\
+	bufr/tables/0/wmo/29/codetables/20023.table\
+	bufr/tables/0/wmo/29/codetables/20024.table\
+	bufr/tables/0/wmo/29/codetables/20025.table\
+	bufr/tables/0/wmo/29/codetables/20026.table\
+	bufr/tables/0/wmo/29/codetables/20027.table\
+	bufr/tables/0/wmo/29/codetables/20028.table\
+	bufr/tables/0/wmo/29/codetables/20029.table\
+	bufr/tables/0/wmo/29/codetables/2003.table\
+	bufr/tables/0/wmo/29/codetables/20032.table\
+	bufr/tables/0/wmo/29/codetables/20033.table\
+	bufr/tables/0/wmo/29/codetables/20034.table\
+	bufr/tables/0/wmo/29/codetables/20035.table\
+	bufr/tables/0/wmo/29/codetables/20036.table\
+	bufr/tables/0/wmo/29/codetables/20037.table\
+	bufr/tables/0/wmo/29/codetables/2004.table\
+	bufr/tables/0/wmo/29/codetables/20040.table\
+	bufr/tables/0/wmo/29/codetables/20041.table\
+	bufr/tables/0/wmo/29/codetables/20042.table\
+	bufr/tables/0/wmo/29/codetables/20045.table\
+	bufr/tables/0/wmo/29/codetables/20048.table\
+	bufr/tables/0/wmo/29/codetables/20050.table\
+	bufr/tables/0/wmo/29/codetables/20055.table\
+	bufr/tables/0/wmo/29/codetables/20056.table\
+	bufr/tables/0/wmo/29/codetables/20062.table\
+	bufr/tables/0/wmo/29/codetables/20063.table\
+	bufr/tables/0/wmo/29/codetables/2007.table\
+	bufr/tables/0/wmo/29/codetables/20071.table\
+	bufr/tables/0/wmo/29/codetables/2008.table\
+	bufr/tables/0/wmo/29/codetables/20085.table\
+	bufr/tables/0/wmo/29/codetables/20086.table\
+	bufr/tables/0/wmo/29/codetables/20087.table\
+	bufr/tables/0/wmo/29/codetables/20089.table\
+	bufr/tables/0/wmo/29/codetables/20090.table\
+	bufr/tables/0/wmo/29/codetables/20101.table\
+	bufr/tables/0/wmo/29/codetables/20102.table\
+	bufr/tables/0/wmo/29/codetables/20103.table\
+	bufr/tables/0/wmo/29/codetables/20104.table\
+	bufr/tables/0/wmo/29/codetables/20105.table\
+	bufr/tables/0/wmo/29/codetables/20106.table\
+	bufr/tables/0/wmo/29/codetables/20107.table\
+	bufr/tables/0/wmo/29/codetables/20108.table\
+	bufr/tables/0/wmo/29/codetables/2011.table\
+	bufr/tables/0/wmo/29/codetables/20119.table\
+	bufr/tables/0/wmo/29/codetables/20124.table\
+	bufr/tables/0/wmo/29/codetables/2013.table\
+	bufr/tables/0/wmo/29/codetables/20136.table\
+	bufr/tables/0/wmo/29/codetables/20137.table\
+	bufr/tables/0/wmo/29/codetables/20138.table\
+	bufr/tables/0/wmo/29/codetables/2014.table\
+	bufr/tables/0/wmo/29/codetables/2015.table\
+	bufr/tables/0/wmo/29/codetables/2016.table\
+	bufr/tables/0/wmo/29/codetables/2017.table\
+	bufr/tables/0/wmo/29/codetables/2019.table\
+	bufr/tables/0/wmo/29/codetables/2020.table\
+	bufr/tables/0/wmo/29/codetables/2021.table\
+	bufr/tables/0/wmo/29/codetables/2022.table\
+	bufr/tables/0/wmo/29/codetables/2023.table\
+	bufr/tables/0/wmo/29/codetables/2024.table\
+	bufr/tables/0/wmo/29/codetables/2025.table\
+	bufr/tables/0/wmo/29/codetables/2030.table\
+	bufr/tables/0/wmo/29/codetables/2031.table\
+	bufr/tables/0/wmo/29/codetables/2032.table\
+	bufr/tables/0/wmo/29/codetables/2033.table\
+	bufr/tables/0/wmo/29/codetables/2034.table\
+	bufr/tables/0/wmo/29/codetables/2036.table\
+	bufr/tables/0/wmo/29/codetables/2037.table\
+	bufr/tables/0/wmo/29/codetables/2038.table\
+	bufr/tables/0/wmo/29/codetables/2039.table\
+	bufr/tables/0/wmo/29/codetables/2040.table\
+	bufr/tables/0/wmo/29/codetables/2041.table\
+	bufr/tables/0/wmo/29/codetables/2042.table\
+	bufr/tables/0/wmo/29/codetables/2044.table\
+	bufr/tables/0/wmo/29/codetables/2045.table\
+	bufr/tables/0/wmo/29/codetables/2046.table\
+	bufr/tables/0/wmo/29/codetables/2047.table\
+	bufr/tables/0/wmo/29/codetables/2048.table\
+	bufr/tables/0/wmo/29/codetables/2049.table\
+	bufr/tables/0/wmo/29/codetables/2050.table\
+	bufr/tables/0/wmo/29/codetables/2051.table\
+	bufr/tables/0/wmo/29/codetables/2052.table\
+	bufr/tables/0/wmo/29/codetables/2053.table\
+	bufr/tables/0/wmo/29/codetables/2054.table\
+	bufr/tables/0/wmo/29/codetables/2055.table\
+	bufr/tables/0/wmo/29/codetables/2056.table\
+	bufr/tables/0/wmo/29/codetables/2057.table\
+	bufr/tables/0/wmo/29/codetables/2058.table\
+	bufr/tables/0/wmo/29/codetables/2059.table\
+	bufr/tables/0/wmo/29/codetables/2060.table\
+	bufr/tables/0/wmo/29/codetables/2061.table\
+	bufr/tables/0/wmo/29/codetables/2062.table\
+	bufr/tables/0/wmo/29/codetables/2064.table\
+	bufr/tables/0/wmo/29/codetables/2066.table\
+	bufr/tables/0/wmo/29/codetables/2070.table\
+	bufr/tables/0/wmo/29/codetables/2080.table\
+	bufr/tables/0/wmo/29/codetables/2081.table\
+	bufr/tables/0/wmo/29/codetables/2083.table\
+	bufr/tables/0/wmo/29/codetables/2084.table\
+	bufr/tables/0/wmo/29/codetables/2095.table\
+	bufr/tables/0/wmo/29/codetables/2096.table\
+	bufr/tables/0/wmo/29/codetables/2097.table\
+	bufr/tables/0/wmo/29/codetables/2099.table\
+	bufr/tables/0/wmo/29/codetables/2101.table\
+	bufr/tables/0/wmo/29/codetables/2103.table\
+	bufr/tables/0/wmo/29/codetables/2104.table\
+	bufr/tables/0/wmo/29/codetables/21066.table\
+	bufr/tables/0/wmo/29/codetables/21067.table\
+	bufr/tables/0/wmo/29/codetables/21068.table\
+	bufr/tables/0/wmo/29/codetables/21069.table\
+	bufr/tables/0/wmo/29/codetables/21070.table\
+	bufr/tables/0/wmo/29/codetables/21072.table\
+	bufr/tables/0/wmo/29/codetables/21073.table\
+	bufr/tables/0/wmo/29/codetables/21076.table\
+	bufr/tables/0/wmo/29/codetables/21109.table\
+	bufr/tables/0/wmo/29/codetables/21115.table\
+	bufr/tables/0/wmo/29/codetables/21116.table\
+	bufr/tables/0/wmo/29/codetables/21119.table\
+	bufr/tables/0/wmo/29/codetables/21144.table\
+	bufr/tables/0/wmo/29/codetables/21148.table\
+	bufr/tables/0/wmo/29/codetables/2115.table\
+	bufr/tables/0/wmo/29/codetables/21150.table\
+	bufr/tables/0/wmo/29/codetables/21155.table\
+	bufr/tables/0/wmo/29/codetables/21158.table\
+	bufr/tables/0/wmo/29/codetables/21159.table\
+	bufr/tables/0/wmo/29/codetables/21169.table\
+	bufr/tables/0/wmo/29/codetables/2119.table\
+	bufr/tables/0/wmo/29/codetables/2131.table\
+	bufr/tables/0/wmo/29/codetables/2137.table\
+	bufr/tables/0/wmo/29/codetables/2138.table\
+	bufr/tables/0/wmo/29/codetables/2139.table\
+	bufr/tables/0/wmo/29/codetables/2143.table\
+	bufr/tables/0/wmo/29/codetables/2144.table\
+	bufr/tables/0/wmo/29/codetables/2145.table\
+	bufr/tables/0/wmo/29/codetables/2146.table\
+	bufr/tables/0/wmo/29/codetables/2147.table\
+	bufr/tables/0/wmo/29/codetables/2148.table\
+	bufr/tables/0/wmo/29/codetables/2149.table\
+	bufr/tables/0/wmo/29/codetables/2150.table\
+	bufr/tables/0/wmo/29/codetables/2151.table\
+	bufr/tables/0/wmo/29/codetables/2152.table\
+	bufr/tables/0/wmo/29/codetables/2158.table\
+	bufr/tables/0/wmo/29/codetables/2159.table\
+	bufr/tables/0/wmo/29/codetables/2160.table\
+	bufr/tables/0/wmo/29/codetables/2161.table\
+	bufr/tables/0/wmo/29/codetables/2162.table\
+	bufr/tables/0/wmo/29/codetables/2163.table\
+	bufr/tables/0/wmo/29/codetables/2164.table\
+	bufr/tables/0/wmo/29/codetables/2165.table\
+	bufr/tables/0/wmo/29/codetables/2166.table\
+	bufr/tables/0/wmo/29/codetables/2167.table\
+	bufr/tables/0/wmo/29/codetables/2169.table\
+	bufr/tables/0/wmo/29/codetables/2170.table\
+	bufr/tables/0/wmo/29/codetables/2172.table\
+	bufr/tables/0/wmo/29/codetables/2175.table\
+	bufr/tables/0/wmo/29/codetables/2176.table\
+	bufr/tables/0/wmo/29/codetables/2177.table\
+	bufr/tables/0/wmo/29/codetables/2178.table\
+	bufr/tables/0/wmo/29/codetables/2179.table\
+	bufr/tables/0/wmo/29/codetables/2180.table\
+	bufr/tables/0/wmo/29/codetables/2181.table\
+	bufr/tables/0/wmo/29/codetables/2182.table\
+	bufr/tables/0/wmo/29/codetables/2183.table\
+	bufr/tables/0/wmo/29/codetables/2184.table\
+	bufr/tables/0/wmo/29/codetables/2185.table\
+	bufr/tables/0/wmo/29/codetables/2186.table\
+	bufr/tables/0/wmo/29/codetables/2187.table\
+	bufr/tables/0/wmo/29/codetables/2188.table\
+	bufr/tables/0/wmo/29/codetables/2189.table\
+	bufr/tables/0/wmo/29/codetables/2191.table\
+	bufr/tables/0/wmo/29/codetables/22056.table\
+	bufr/tables/0/wmo/29/codetables/22060.table\
+	bufr/tables/0/wmo/29/codetables/22061.table\
+	bufr/tables/0/wmo/29/codetables/22067.table\
+	bufr/tables/0/wmo/29/codetables/22068.table\
+	bufr/tables/0/wmo/29/codetables/22120.table\
+	bufr/tables/0/wmo/29/codetables/22121.table\
+	bufr/tables/0/wmo/29/codetables/22122.table\
+	bufr/tables/0/wmo/29/codetables/22123.table\
+	bufr/tables/0/wmo/29/codetables/22178.table\
+	bufr/tables/0/wmo/29/codetables/23001.table\
+	bufr/tables/0/wmo/29/codetables/23002.table\
+	bufr/tables/0/wmo/29/codetables/23003.table\
+	bufr/tables/0/wmo/29/codetables/23004.table\
+	bufr/tables/0/wmo/29/codetables/23005.table\
+	bufr/tables/0/wmo/29/codetables/23006.table\
+	bufr/tables/0/wmo/29/codetables/23007.table\
+	bufr/tables/0/wmo/29/codetables/23008.table\
+	bufr/tables/0/wmo/29/codetables/23009.table\
+	bufr/tables/0/wmo/29/codetables/23016.table\
+	bufr/tables/0/wmo/29/codetables/23018.table\
+	bufr/tables/0/wmo/29/codetables/23031.table\
+	bufr/tables/0/wmo/29/codetables/23032.table\
+	bufr/tables/0/wmo/29/codetables/24003.table\
+	bufr/tables/0/wmo/29/codetables/25004.table\
+	bufr/tables/0/wmo/29/codetables/25005.table\
+	bufr/tables/0/wmo/29/codetables/25006.table\
+	bufr/tables/0/wmo/29/codetables/25009.table\
+	bufr/tables/0/wmo/29/codetables/25010.table\
+	bufr/tables/0/wmo/29/codetables/25011.table\
+	bufr/tables/0/wmo/29/codetables/25012.table\
+	bufr/tables/0/wmo/29/codetables/25013.table\
+	bufr/tables/0/wmo/29/codetables/25015.table\
+	bufr/tables/0/wmo/29/codetables/25017.table\
+	bufr/tables/0/wmo/29/codetables/25020.table\
+	bufr/tables/0/wmo/29/codetables/25021.table\
+	bufr/tables/0/wmo/29/codetables/25022.table\
+	bufr/tables/0/wmo/29/codetables/25023.table\
+	bufr/tables/0/wmo/29/codetables/25024.table\
+	bufr/tables/0/wmo/29/codetables/25029.table\
+	bufr/tables/0/wmo/29/codetables/25030.table\
+	bufr/tables/0/wmo/29/codetables/25031.table\
+	bufr/tables/0/wmo/29/codetables/25032.table\
+	bufr/tables/0/wmo/29/codetables/25033.table\
+	bufr/tables/0/wmo/29/codetables/25034.table\
+	bufr/tables/0/wmo/29/codetables/25035.table\
+	bufr/tables/0/wmo/29/codetables/25036.table\
+	bufr/tables/0/wmo/29/codetables/25040.table\
+	bufr/tables/0/wmo/29/codetables/25041.table\
+	bufr/tables/0/wmo/29/codetables/25042.table\
+	bufr/tables/0/wmo/29/codetables/25053.table\
+	bufr/tables/0/wmo/29/codetables/25063.table\
+	bufr/tables/0/wmo/29/codetables/25069.table\
+	bufr/tables/0/wmo/29/codetables/25086.table\
+	bufr/tables/0/wmo/29/codetables/25090.table\
+	bufr/tables/0/wmo/29/codetables/25093.table\
+	bufr/tables/0/wmo/29/codetables/25095.table\
+	bufr/tables/0/wmo/29/codetables/25096.table\
+	bufr/tables/0/wmo/29/codetables/25097.table\
+	bufr/tables/0/wmo/29/codetables/25098.table\
+	bufr/tables/0/wmo/29/codetables/25099.table\
+	bufr/tables/0/wmo/29/codetables/25110.table\
+	bufr/tables/0/wmo/29/codetables/25112.table\
+	bufr/tables/0/wmo/29/codetables/25113.table\
+	bufr/tables/0/wmo/29/codetables/25120.table\
+	bufr/tables/0/wmo/29/codetables/25122.table\
+	bufr/tables/0/wmo/29/codetables/25123.table\
+	bufr/tables/0/wmo/29/codetables/25124.table\
+	bufr/tables/0/wmo/29/codetables/25150.table\
+	bufr/tables/0/wmo/29/codetables/25174.table\
+	bufr/tables/0/wmo/29/codetables/25181.table\
+	bufr/tables/0/wmo/29/codetables/25182.table\
+	bufr/tables/0/wmo/29/codetables/25184.table\
+	bufr/tables/0/wmo/29/codetables/25185.table\
+	bufr/tables/0/wmo/29/codetables/25187.table\
+	bufr/tables/0/wmo/29/codetables/25188.table\
+	bufr/tables/0/wmo/29/codetables/26010.table\
+	bufr/tables/0/wmo/29/codetables/29001.table\
+	bufr/tables/0/wmo/29/codetables/29002.table\
+	bufr/tables/0/wmo/29/codetables/3001.table\
+	bufr/tables/0/wmo/29/codetables/3003.table\
+	bufr/tables/0/wmo/29/codetables/30031.table\
+	bufr/tables/0/wmo/29/codetables/30032.table\
+	bufr/tables/0/wmo/29/codetables/3004.table\
+	bufr/tables/0/wmo/29/codetables/3008.table\
+	bufr/tables/0/wmo/29/codetables/3010.table\
+	bufr/tables/0/wmo/29/codetables/3011.table\
+	bufr/tables/0/wmo/29/codetables/3012.table\
+	bufr/tables/0/wmo/29/codetables/3016.table\
+	bufr/tables/0/wmo/29/codetables/3017.table\
+	bufr/tables/0/wmo/29/codetables/3018.table\
+	bufr/tables/0/wmo/29/codetables/3019.table\
+	bufr/tables/0/wmo/29/codetables/3020.table\
+	bufr/tables/0/wmo/29/codetables/3021.table\
+	bufr/tables/0/wmo/29/codetables/3022.table\
+	bufr/tables/0/wmo/29/codetables/3023.table\
+	bufr/tables/0/wmo/29/codetables/3027.table\
+	bufr/tables/0/wmo/29/codetables/31021.table\
+	bufr/tables/0/wmo/29/codetables/31031.table\
+	bufr/tables/0/wmo/29/codetables/33002.table\
+	bufr/tables/0/wmo/29/codetables/33003.table\
+	bufr/tables/0/wmo/29/codetables/33005.table\
+	bufr/tables/0/wmo/29/codetables/33006.table\
+	bufr/tables/0/wmo/29/codetables/33015.table\
+	bufr/tables/0/wmo/29/codetables/33020.table\
+	bufr/tables/0/wmo/29/codetables/33021.table\
+	bufr/tables/0/wmo/29/codetables/33022.table\
+	bufr/tables/0/wmo/29/codetables/33023.table\
+	bufr/tables/0/wmo/29/codetables/33024.table\
+	bufr/tables/0/wmo/29/codetables/33025.table\
+	bufr/tables/0/wmo/29/codetables/33026.table\
+	bufr/tables/0/wmo/29/codetables/33027.table\
+	bufr/tables/0/wmo/29/codetables/33028.table\
+	bufr/tables/0/wmo/29/codetables/33030.table\
+	bufr/tables/0/wmo/29/codetables/33031.table\
+	bufr/tables/0/wmo/29/codetables/33032.table\
+	bufr/tables/0/wmo/29/codetables/33033.table\
+	bufr/tables/0/wmo/29/codetables/33035.table\
+	bufr/tables/0/wmo/29/codetables/33037.table\
+	bufr/tables/0/wmo/29/codetables/33038.table\
+	bufr/tables/0/wmo/29/codetables/33039.table\
+	bufr/tables/0/wmo/29/codetables/33041.table\
+	bufr/tables/0/wmo/29/codetables/33042.table\
+	bufr/tables/0/wmo/29/codetables/33043.table\
+	bufr/tables/0/wmo/29/codetables/33044.table\
+	bufr/tables/0/wmo/29/codetables/33047.table\
+	bufr/tables/0/wmo/29/codetables/33048.table\
+	bufr/tables/0/wmo/29/codetables/33049.table\
+	bufr/tables/0/wmo/29/codetables/33050.table\
+	bufr/tables/0/wmo/29/codetables/33060.table\
+	bufr/tables/0/wmo/29/codetables/33066.table\
+	bufr/tables/0/wmo/29/codetables/33070.table\
+	bufr/tables/0/wmo/29/codetables/33071.table\
+	bufr/tables/0/wmo/29/codetables/33072.table\
+	bufr/tables/0/wmo/29/codetables/33075.table\
+	bufr/tables/0/wmo/29/codetables/33076.table\
+	bufr/tables/0/wmo/29/codetables/33077.table\
+	bufr/tables/0/wmo/29/codetables/33078.table\
+	bufr/tables/0/wmo/29/codetables/33079.table\
+	bufr/tables/0/wmo/29/codetables/33080.table\
+	bufr/tables/0/wmo/29/codetables/33081.table\
+	bufr/tables/0/wmo/29/codetables/33082.table\
+	bufr/tables/0/wmo/29/codetables/33083.table\
+	bufr/tables/0/wmo/29/codetables/33084.table\
+	bufr/tables/0/wmo/29/codetables/33085.table\
+	bufr/tables/0/wmo/29/codetables/33086.table\
+	bufr/tables/0/wmo/29/codetables/33087.table\
+	bufr/tables/0/wmo/29/codetables/33088.table\
+	bufr/tables/0/wmo/29/codetables/35000.table\
+	bufr/tables/0/wmo/29/codetables/35001.table\
+	bufr/tables/0/wmo/29/codetables/35030.table\
+	bufr/tables/0/wmo/29/codetables/35031.table\
+	bufr/tables/0/wmo/29/codetables/35032.table\
+	bufr/tables/0/wmo/29/codetables/35033.table\
+	bufr/tables/0/wmo/29/codetables/35034.table\
+	bufr/tables/0/wmo/29/codetables/35035.table\
+	bufr/tables/0/wmo/29/codetables/40005.table\
+	bufr/tables/0/wmo/29/codetables/40006.table\
+	bufr/tables/0/wmo/29/codetables/40011.table\
+	bufr/tables/0/wmo/29/codetables/40012.table\
+	bufr/tables/0/wmo/29/codetables/40013.table\
+	bufr/tables/0/wmo/29/codetables/40020.table\
+	bufr/tables/0/wmo/29/codetables/40023.table\
+	bufr/tables/0/wmo/29/codetables/40024.table\
+	bufr/tables/0/wmo/29/codetables/40025.table\
+	bufr/tables/0/wmo/29/codetables/40028.table\
+	bufr/tables/0/wmo/29/codetables/40036.table\
+	bufr/tables/0/wmo/29/codetables/4059.table\
+	bufr/tables/0/wmo/29/codetables/4080.table\
+	bufr/tables/0/wmo/29/codetables/42004.table\
+	bufr/tables/0/wmo/29/codetables/5069.table\
+	bufr/tables/0/wmo/29/codetables/8001.table\
+	bufr/tables/0/wmo/29/codetables/8002.table\
+	bufr/tables/0/wmo/29/codetables/8003.table\
+	bufr/tables/0/wmo/29/codetables/8004.table\
+	bufr/tables/0/wmo/29/codetables/8005.table\
+	bufr/tables/0/wmo/29/codetables/8006.table\
+	bufr/tables/0/wmo/29/codetables/8007.table\
+	bufr/tables/0/wmo/29/codetables/8008.table\
+	bufr/tables/0/wmo/29/codetables/8009.table\
+	bufr/tables/0/wmo/29/codetables/8010.table\
+	bufr/tables/0/wmo/29/codetables/8011.table\
+	bufr/tables/0/wmo/29/codetables/8012.table\
+	bufr/tables/0/wmo/29/codetables/8013.table\
+	bufr/tables/0/wmo/29/codetables/8014.table\
+	bufr/tables/0/wmo/29/codetables/8015.table\
+	bufr/tables/0/wmo/29/codetables/8016.table\
+	bufr/tables/0/wmo/29/codetables/8017.table\
+	bufr/tables/0/wmo/29/codetables/8018.table\
+	bufr/tables/0/wmo/29/codetables/8019.table\
+	bufr/tables/0/wmo/29/codetables/8021.table\
+	bufr/tables/0/wmo/29/codetables/8023.table\
+	bufr/tables/0/wmo/29/codetables/8024.table\
+	bufr/tables/0/wmo/29/codetables/8025.table\
+	bufr/tables/0/wmo/29/codetables/8026.table\
+	bufr/tables/0/wmo/29/codetables/8029.table\
+	bufr/tables/0/wmo/29/codetables/8032.table\
+	bufr/tables/0/wmo/29/codetables/8033.table\
+	bufr/tables/0/wmo/29/codetables/8034.table\
+	bufr/tables/0/wmo/29/codetables/8035.table\
+	bufr/tables/0/wmo/29/codetables/8036.table\
+	bufr/tables/0/wmo/29/codetables/8037.table\
+	bufr/tables/0/wmo/29/codetables/8038.table\
+	bufr/tables/0/wmo/29/codetables/8039.table\
+	bufr/tables/0/wmo/29/codetables/8040.table\
+	bufr/tables/0/wmo/29/codetables/8041.table\
+	bufr/tables/0/wmo/29/codetables/8042.table\
+	bufr/tables/0/wmo/29/codetables/8043.table\
+	bufr/tables/0/wmo/29/codetables/8050.table\
+	bufr/tables/0/wmo/29/codetables/8051.table\
+	bufr/tables/0/wmo/29/codetables/8052.table\
+	bufr/tables/0/wmo/29/codetables/8053.table\
+	bufr/tables/0/wmo/29/codetables/8054.table\
+	bufr/tables/0/wmo/29/codetables/8060.table\
+	bufr/tables/0/wmo/29/codetables/8065.table\
+	bufr/tables/0/wmo/29/codetables/8066.table\
+	bufr/tables/0/wmo/29/codetables/8070.table\
+	bufr/tables/0/wmo/29/codetables/8072.table\
+	bufr/tables/0/wmo/29/codetables/8074.table\
+	bufr/tables/0/wmo/29/codetables/8075.table\
+	bufr/tables/0/wmo/29/codetables/8076.table\
+	bufr/tables/0/wmo/29/codetables/8077.table\
+	bufr/tables/0/wmo/29/codetables/8079.table\
+	bufr/tables/0/wmo/29/codetables/8080.table\
+	bufr/tables/0/wmo/29/codetables/8081.table\
+	bufr/tables/0/wmo/29/codetables/8082.table\
+	bufr/tables/0/wmo/29/codetables/8083.table\
+	bufr/tables/0/wmo/29/codetables/8085.table\
+	bufr/tables/0/wmo/29/codetables/8086.table\
+	bufr/tables/0/wmo/29/codetables/8087.table\
+	bufr/tables/0/wmo/29/codetables/8088.table\
+	bufr/tables/0/wmo/29/codetables/8091.table\
+	bufr/tables/0/wmo/29/codetables/8092.table\
+	bufr/tables/0/wmo/29/codetables/8093.table
+
 definitionsbufr_tables_0_wmo_6dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/wmo/6
 dist_definitionsbufr_tables_0_wmo_6_DATA = \
 	bufr/tables/0/wmo/6/element.table\
@@ -10278,6 +10820,8 @@ dist_definitionsgrib2_DATA = \
 	grib2/template.4.6.def\
 	grib2/template.4.60.def\
 	grib2/template.4.61.def\
+	grib2/template.4.67.def\
+	grib2/template.4.68.def\
 	grib2/template.4.7.def\
 	grib2/template.4.70.def\
 	grib2/template.4.71.def\
@@ -12044,6 +12588,138 @@ dist_definitionsgrib2_tables_2_DATA = \
 	grib2/tables/2/5.9.table\
 	grib2/tables/2/6.0.table\
 	grib2/tables/2/stepType.table
+
+definitionsgrib2_tables_20dir = @ECCODES_DEFINITION_PATH@/grib2/tables/20
+dist_definitionsgrib2_tables_20_DATA = \
+	grib2/tables/20/0.0.table\
+	grib2/tables/20/1.0.table\
+	grib2/tables/20/1.1.table\
+	grib2/tables/20/1.2.table\
+	grib2/tables/20/1.3.table\
+	grib2/tables/20/1.4.table\
+	grib2/tables/20/1.5.table\
+	grib2/tables/20/1.6.table\
+	grib2/tables/20/3.0.table\
+	grib2/tables/20/3.1.table\
+	grib2/tables/20/3.10.table\
+	grib2/tables/20/3.11.table\
+	grib2/tables/20/3.15.table\
+	grib2/tables/20/3.2.table\
+	grib2/tables/20/3.20.table\
+	grib2/tables/20/3.21.table\
+	grib2/tables/20/3.3.table\
+	grib2/tables/20/3.4.table\
+	grib2/tables/20/3.5.table\
+	grib2/tables/20/3.6.table\
+	grib2/tables/20/3.7.table\
+	grib2/tables/20/3.8.table\
+	grib2/tables/20/3.9.table\
+	grib2/tables/20/4.0.table\
+	grib2/tables/20/4.1.0.table\
+	grib2/tables/20/4.1.1.table\
+	grib2/tables/20/4.1.10.table\
+	grib2/tables/20/4.1.192.table\
+	grib2/tables/20/4.1.2.table\
+	grib2/tables/20/4.1.3.table\
+	grib2/tables/20/4.10.table\
+	grib2/tables/20/4.11.table\
+	grib2/tables/20/4.12.table\
+	grib2/tables/20/4.13.table\
+	grib2/tables/20/4.14.table\
+	grib2/tables/20/4.15.table\
+	grib2/tables/20/4.192.table\
+	grib2/tables/20/4.2.0.0.table\
+	grib2/tables/20/4.2.0.1.table\
+	grib2/tables/20/4.2.0.13.table\
+	grib2/tables/20/4.2.0.14.table\
+	grib2/tables/20/4.2.0.15.table\
+	grib2/tables/20/4.2.0.16.table\
+	grib2/tables/20/4.2.0.17.table\
+	grib2/tables/20/4.2.0.18.table\
+	grib2/tables/20/4.2.0.19.table\
+	grib2/tables/20/4.2.0.190.table\
+	grib2/tables/20/4.2.0.191.table\
+	grib2/tables/20/4.2.0.2.table\
+	grib2/tables/20/4.2.0.20.table\
+	grib2/tables/20/4.2.0.3.table\
+	grib2/tables/20/4.2.0.4.table\
+	grib2/tables/20/4.2.0.5.table\
+	grib2/tables/20/4.2.0.6.table\
+	grib2/tables/20/4.2.0.7.table\
+	grib2/tables/20/4.2.1.0.table\
+	grib2/tables/20/4.2.1.1.table\
+	grib2/tables/20/4.2.1.2.table\
+	grib2/tables/20/4.2.10.0.table\
+	grib2/tables/20/4.2.10.1.table\
+	grib2/tables/20/4.2.10.191.table\
+	grib2/tables/20/4.2.10.2.table\
+	grib2/tables/20/4.2.10.3.table\
+	grib2/tables/20/4.2.10.4.table\
+	grib2/tables/20/4.2.2.0.table\
+	grib2/tables/20/4.2.2.3.table\
+	grib2/tables/20/4.2.2.4.table\
+	grib2/tables/20/4.2.2.5.table\
+	grib2/tables/20/4.2.3.0.table\
+	grib2/tables/20/4.2.3.1.table\
+	grib2/tables/20/4.2.3.2.table\
+	grib2/tables/20/4.2.3.3.table\
+	grib2/tables/20/4.2.3.4.table\
+	grib2/tables/20/4.2.3.5.table\
+	grib2/tables/20/4.2.3.6.table\
+	grib2/tables/20/4.201.table\
+	grib2/tables/20/4.202.table\
+	grib2/tables/20/4.203.table\
+	grib2/tables/20/4.204.table\
+	grib2/tables/20/4.205.table\
+	grib2/tables/20/4.206.table\
+	grib2/tables/20/4.207.table\
+	grib2/tables/20/4.208.table\
+	grib2/tables/20/4.209.table\
+	grib2/tables/20/4.210.table\
+	grib2/tables/20/4.211.table\
+	grib2/tables/20/4.212.table\
+	grib2/tables/20/4.213.table\
+	grib2/tables/20/4.215.table\
+	grib2/tables/20/4.216.table\
+	grib2/tables/20/4.217.table\
+	grib2/tables/20/4.218.table\
+	grib2/tables/20/4.219.table\
+	grib2/tables/20/4.220.table\
+	grib2/tables/20/4.221.table\
+	grib2/tables/20/4.222.table\
+	grib2/tables/20/4.223.table\
+	grib2/tables/20/4.224.table\
+	grib2/tables/20/4.225.table\
+	grib2/tables/20/4.227.table\
+	grib2/tables/20/4.230.table\
+	grib2/tables/20/4.233.table\
+	grib2/tables/20/4.234.table\
+	grib2/tables/20/4.236.table\
+	grib2/tables/20/4.240.table\
+	grib2/tables/20/4.241.table\
+	grib2/tables/20/4.242.table\
+	grib2/tables/20/4.243.table\
+	grib2/tables/20/4.3.table\
+	grib2/tables/20/4.4.table\
+	grib2/tables/20/4.5.table\
+	grib2/tables/20/4.6.table\
+	grib2/tables/20/4.7.table\
+	grib2/tables/20/4.8.table\
+	grib2/tables/20/4.9.table\
+	grib2/tables/20/4.91.table\
+	grib2/tables/20/5.0.table\
+	grib2/tables/20/5.1.table\
+	grib2/tables/20/5.2.table\
+	grib2/tables/20/5.3.table\
+	grib2/tables/20/5.4.table\
+	grib2/tables/20/5.40.table\
+	grib2/tables/20/5.40000.table\
+	grib2/tables/20/5.5.table\
+	grib2/tables/20/5.50002.table\
+	grib2/tables/20/5.6.table\
+	grib2/tables/20/5.7.table\
+	grib2/tables/20/6.0.table\
+	grib2/tables/20/stepType.table
 
 definitionsgrib2_tables_3dir = @ECCODES_DEFINITION_PATH@/grib2/tables/3
 dist_definitionsgrib2_tables_3_DATA = \
@@ -14411,6 +15087,22 @@ definitionsgrib2_tables_local_ecmf_4dir = @ECCODES_DEFINITION_PATH@/grib2/tables
 dist_definitionsgrib2_tables_local_ecmf_4_DATA = \
 	grib2/tables/local/ecmf/4/1.2.table
 
+definitionsgrib2_tables_local_edzw_1dir = @ECCODES_DEFINITION_PATH@/grib2/tables/local/edzw/1
+dist_definitionsgrib2_tables_local_edzw_1_DATA = \
+	grib2/tables/local/edzw/1/4.2.0.192.table\
+	grib2/tables/local/edzw/1/4.2.0.193.table\
+	grib2/tables/local/edzw/1/4.2.0.194.table\
+	grib2/tables/local/edzw/1/4.2.0.195.table\
+	grib2/tables/local/edzw/1/4.2.0.196.table\
+	grib2/tables/local/edzw/1/4.2.0.197.table\
+	grib2/tables/local/edzw/1/4.2.0.198.table\
+	grib2/tables/local/edzw/1/4.2.0.199.table\
+	grib2/tables/local/edzw/1/4.2.0.254.table\
+	grib2/tables/local/edzw/1/4.2.215.19.table\
+	grib2/tables/local/edzw/1/4.2.215.2.table\
+	grib2/tables/local/edzw/1/4.2.215.5.table\
+	grib2/tables/local/edzw/1/4.2.215.7.table
+
 definitionsgrib2_tables_local_kwbc_1dir = @ECCODES_DEFINITION_PATH@/grib2/tables/local/kwbc/1
 dist_definitionsgrib2_tables_local_kwbc_1_DATA = \
 	grib2/tables/local/kwbc/1/4.5.table
@@ -14496,138 +15188,21 @@ dist_definitionsgrib3_DATA = \
 	grib3/section.11.def\
 	grib3/sections.def\
 	grib3/shortName.def\
-	grib3/template.1.0.def\
-	grib3/template.1.1.def\
-	grib3/template.1.2.def\
-	grib3/template.1.calendar.def\
-	grib3/template.1.offset.def\
 	grib3/template.10.0.def\
 	grib3/template.3.0.def\
-	grib3/template.3.1.def\
-	grib3/template.3.10.def\
-	grib3/template.3.100.def\
-	grib3/template.3.1000.def\
-	grib3/template.3.101.def\
 	grib3/template.3.110.def\
-	grib3/template.3.1100.def\
-	grib3/template.3.12.def\
-	grib3/template.3.120.def\
-	grib3/template.3.1200.def\
-	grib3/template.3.130.def\
 	grib3/template.3.140.def\
-	grib3/template.3.2.def\
 	grib3/template.3.20.def\
-	grib3/template.3.3.def\
-	grib3/template.3.30.def\
-	grib3/template.3.31.def\
-	grib3/template.3.4.def\
-	grib3/template.3.40.def\
-	grib3/template.3.41.def\
-	grib3/template.3.42.def\
-	grib3/template.3.43.def\
-	grib3/template.3.5.def\
-	grib3/template.3.50.def\
-	grib3/template.3.51.def\
-	grib3/template.3.52.def\
-	grib3/template.3.53.def\
-	grib3/template.3.90.def\
-	grib3/template.3.gaussian.def\
-	grib3/template.3.grid.def\
-	grib3/template.3.latlon.def\
-	grib3/template.3.latlon_vares.def\
 	grib3/template.3.resolution_flags.def\
-	grib3/template.3.rotation.def\
-	grib3/template.3.scanning_mode.def\
-	grib3/template.3.shape_of_the_earth.def\
-	grib3/template.3.spherical_harmonics.def\
-	grib3/template.3.stretching.def\
 	grib3/template.4.0.def\
 	grib3/template.4.1.def\
-	grib3/template.4.10.def\
-	grib3/template.4.1000.def\
-	grib3/template.4.1001.def\
-	grib3/template.4.1002.def\
-	grib3/template.4.11.def\
-	grib3/template.4.1100.def\
-	grib3/template.4.1101.def\
-	grib3/template.4.12.def\
-	grib3/template.4.13.def\
-	grib3/template.4.14.def\
-	grib3/template.4.15.def\
 	grib3/template.4.2.def\
-	grib3/template.4.20.def\
-	grib3/template.4.2000.def\
-	grib3/template.4.254.def\
 	grib3/template.4.3.def\
-	grib3/template.4.30.def\
-	grib3/template.4.31.def\
-	grib3/template.4.311.def\
-	grib3/template.4.32.def\
-	grib3/template.4.33.def\
-	grib3/template.4.34.def\
-	grib3/template.4.40.def\
-	grib3/template.4.40033.def\
-	grib3/template.4.40034.def\
-	grib3/template.4.41.def\
-	grib3/template.4.42.def\
-	grib3/template.4.43.def\
-	grib3/template.4.44.def\
-	grib3/template.4.45.def\
-	grib3/template.4.46.def\
-	grib3/template.4.47.def\
-	grib3/template.4.48.def\
-	grib3/template.4.51.def\
-	grib3/template.4.53.def\
-	grib3/template.4.54.def\
-	grib3/template.4.55.def\
-	grib3/template.4.56.def\
-	grib3/template.4.57.def\
-	grib3/template.4.6.def\
-	grib3/template.4.60.def\
-	grib3/template.4.61.def\
-	grib3/template.4.7.def\
-	grib3/template.4.8.def\
-	grib3/template.4.9.def\
-	grib3/template.4.91.def\
-	grib3/template.4.categorical.def\
-	grib3/template.4.circular_cluster.def\
-	grib3/template.4.derived.def\
-	grib3/template.4.eps.def\
 	grib3/template.4.horizontal.def\
-	grib3/template.4.parameter.def\
-	grib3/template.4.parameter_aerosol.def\
-	grib3/template.4.parameter_aerosol_44.def\
-	grib3/template.4.parameter_aerosol_optical.def\
-	grib3/template.4.parameter_chemical.def\
-	grib3/template.4.parameter_chemical_distribution.def\
-	grib3/template.4.parameter_partition.def\
-	grib3/template.4.parameter_tile.def\
-	grib3/template.4.percentile.def\
-	grib3/template.4.point_in_time.def\
-	grib3/template.4.probability.def\
-	grib3/template.4.rectangular_cluster.def\
-	grib3/template.4.reforecast.def\
 	grib3/template.4.resolution_flags.def\
 	grib3/template.4.scanning_mode.def\
-	grib3/template.4.statistical.def\
 	grib3/template.5.0.def\
 	grib3/template.5.1.def\
-	grib3/template.5.2.def\
-	grib3/template.5.3.def\
-	grib3/template.5.4.def\
-	grib3/template.5.40.def\
-	grib3/template.5.40000.def\
-	grib3/template.5.40010.def\
-	grib3/template.5.41.def\
-	grib3/template.5.42.def\
-	grib3/template.5.50.def\
-	grib3/template.5.50000.def\
-	grib3/template.5.50001.def\
-	grib3/template.5.50002.def\
-	grib3/template.5.51.def\
-	grib3/template.5.6.def\
-	grib3/template.5.61.def\
-	grib3/template.5.second_order.def\
 	grib3/template.6.0.def\
 	grib3/template.6.1.def\
 	grib3/template.6.2.def\
@@ -14636,19 +15211,6 @@ dist_definitionsgrib3_DATA = \
 	grib3/template.7.2.def\
 	grib3/template.7.3.def\
 	grib3/template.7.4.def\
-	grib3/template.7.40.def\
-	grib3/template.7.40000.def\
-	grib3/template.7.40010.def\
-	grib3/template.7.41.def\
-	grib3/template.7.42.def\
-	grib3/template.7.50.def\
-	grib3/template.7.50000.def\
-	grib3/template.7.50001.def\
-	grib3/template.7.50002.def\
-	grib3/template.7.51.def\
-	grib3/template.7.6.def\
-	grib3/template.7.61.def\
-	grib3/template.7.second_order.def\
 	grib3/template.8.0.def\
 	grib3/template.8.1.def\
 	grib3/template.8.missing_value.def\
@@ -14674,7 +15236,6 @@ dist_definitionsgrib3_DATA = \
 	grib3/template.component.8.0.def\
 	grib3/template.component.8.1.def\
 	grib3/template.component.9.0.def\
-	grib3/template.second_order.def\
 	grib3/tiggeLocalVersion.table\
 	grib3/tigge_name.def\
 	grib3/tigge_parameter.def\
@@ -14965,6 +15526,10 @@ dist_definitionsgrib3_tables_local_ecmf_DATA = \
 definitionsgrib3_tables_local_ecmf_4dir = @ECCODES_DEFINITION_PATH@/grib3/tables/local/ecmf/4
 dist_definitionsgrib3_tables_local_ecmf_4_DATA = \
 	grib3/tables/local/ecmf/4/1.2.table
+
+definitionsgrib3_template_componentsdir = @ECCODES_DEFINITION_PATH@/grib3/template_components
+dist_definitionsgrib3_template_components_DATA = \
+	grib3/template_components/4.8.regular_latitudes.def
 
 definitionsgtsdir = @ECCODES_DEFINITION_PATH@/gts
 dist_definitionsgts_DATA = \
