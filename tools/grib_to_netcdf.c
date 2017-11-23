@@ -412,7 +412,6 @@ static void add_value(request *r, const char *parname, const char *fmt, ...)
     va_end(list);
 
     put_value(r, parname, buffer, TRUE, FALSE, FALSE);
-    va_end(list);
 }
 
 static void _reqmerge2(request *a, const request *b)
