@@ -386,6 +386,7 @@ static int select_datetime(grib_accessor* a)
         subsets=0;
 
     } else {
+        grib_context_log(c, GRIB_LOG_ERROR, "Time interval extraction not implemented for uncompressed BUFR messages");
         return GRIB_NOT_IMPLEMENTED;
     }
 
