@@ -73,6 +73,7 @@ list( APPEND tests_data_reqd
     bufr_change_edition
     bufr_keys_iter
     bufr_get_element
+    bufr_wmo_tables
     ecc-197
     ecc-286
     ecc-288
