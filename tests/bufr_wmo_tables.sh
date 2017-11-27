@@ -36,8 +36,9 @@ do
   input=${data_dir}/bufr/$file
   mtv=`${tools_dir}/bufr_get -p masterTablesVersionNumber $input`
   # Must exclude old versions (before 14):
-  #   Sequence 312060 changed content from v15 to v16:
-  #   021062 backscatter became 021088 wetBackscatter!
+  #   1. Sequence 312060 changed content from v15 to v16:
+  #      021062 backscatter became 021088 wetBackscatter!
+  #   2. Descriptor 014030 width went from 16 bits to 20 bits (e.g. bssh_170.bufr)
   # Also exclude version 19:
   #   This has the issue with local tables (eum_iasi_twt.bufr and eumetsat_iasi_co.bufr)
   #   because they only work for v19 as we only have definitions/bufr/tables/0/local/19-1
