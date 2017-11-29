@@ -31,13 +31,19 @@ RotatedFromPL::RotatedFromPL(const param::MIRParametrisation &parametrisation):
 }
 
 
-RotatedFromPL::~RotatedFromPL() {
-}
-
-
 RotatedFromPL::RotatedFromPL(long N, const std::vector<long> &pl, const util::BoundingBox &bbox, const util::Rotation& rotation):
     FromPL(N, pl, bbox),
     rotation_(rotation) {
+}
+
+
+RotatedFromPL::RotatedFromPL(const std::vector<long>& pl, const util::Rotation& rotation) :
+    FromPL(pl),
+    rotation_(rotation) {
+}
+
+
+RotatedFromPL::~RotatedFromPL() {
 }
 
 
