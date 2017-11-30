@@ -15,7 +15,7 @@
 set +e
 tmp_out=tmp_msg.out
 skip_test=0
-rm -f $tmp_out | true
+rm -f $tmp_out
 # Invoke the grib_to_netcdf command with no options. If NetCDF was enabled
 # we get a usage message otherwise we get a specific message. Note: In both cases
 # the command fails.
@@ -27,7 +27,7 @@ if [ $? -eq 0 ]; then
 fi
 # Restore the set -e so any error causes us to exit
 set -e
-rm -f $tmp_out | true
+rm -f $tmp_out
 if [ $skip_test -eq 1 ]; then
   echo "NetCDF was not enabled. Skipping this test."
   exit 0
@@ -51,7 +51,7 @@ for dt in $ncf_types
 do
    for f in $grib_files
    do
-      rm -f $tmp_netcdf | true
+      rm -f $tmp_netcdf
       if [ -f "${data_dir}/$f" ]; then
         ${tools_dir}/grib_to_netcdf -D $dt -o $tmp_netcdf ${data_dir}/$f >/dev/null
 	${tools_dir}/grib_to_netcdf -T -o $tmp_netcdf ${data_dir}/$f >/dev/null
@@ -67,5 +67,4 @@ ${tools_dir}/grib_to_netcdf -k 2 -o $tmp_netcdf $input >/dev/null
 #${tools_dir}/grib_to_netcdf -k 3 -o $tmp_netcdf $input >/dev/null
 #${tools_dir}/grib_to_netcdf -k 4 -o $tmp_netcdf $input >/dev/null
 
-rm -f $tmp_netcdf | true
-
+rm -f $tmp_netcdf

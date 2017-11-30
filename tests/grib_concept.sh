@@ -83,6 +83,6 @@ do
     false
     exit
   fi
-  rm -f $tmp | true
+  rm -f $tmp
 
 done

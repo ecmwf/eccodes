@@ -65,7 +65,7 @@ ${tools_dir}/grib_ls -plevels tmp_rlls.grib1 | grep MISSING>/dev/null
 
 ${tools_dir}/grib_set -s typeOfLevel=depthBelowLandLayer,bottomLevel=missing regular_latlon_surface.grib1 tmp_rlls.grib1
 ${tools_dir}/grib_ls -plevels tmp_rlls.grib1 | grep MISSING>/dev/null
-rm -f tmp_rlls.grib1 | true
+rm -f tmp_rlls.grib1
 
 # GRIB-305. GRIB edition 1 file with one large message
 if [ -f "sst_globus0083.grib" ]; then

@@ -34,7 +34,7 @@ cat syno_multi.bufr temp_101.bufr > $fBufrInput
 # Test: copy synop messages 
 #----------------------------------------------------
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 echo "Test: copy synop messages " >> $fLog
 ${tools_dir}/bufr_copy -w dataCategory=0 $fBufrInput $fBufrTmp >> $fLog
@@ -48,7 +48,7 @@ done
 # Test: copy non-synop messages 
 #----------------------------------------------------
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 echo "Test: copy non-synop messages " >> $fLog
 ${tools_dir}/bufr_copy -w dataCategory!=0 $fBufrInput $fBufrTmp >> $fLog
@@ -60,8 +60,8 @@ ${tools_dir}/bufr_copy -w dataCategory!=0 $fBufrInput $fBufrTmp >> $fLog
 # Test: use the square brackets to insert the value of a key
 #-------------------------------------------------------------------
 
-rm -f ${fBufrTmp} | true
-rm -f ${fBufrTmp}_*.bufr | true
+rm -f ${fBufrTmp}
+rm -f ${fBufrTmp}_*.bufr
 
 echo "Test: use the square brackets to insert the value of a key " >> $fLog
 ${tools_dir}/bufr_copy $fBufrInput ${fBufrTmp}_[dataCategory].bufr >> $fLog
@@ -69,11 +69,9 @@ ${tools_dir}/bufr_copy $fBufrInput ${fBufrTmp}_[dataCategory].bufr >> $fLog
 [ -s ${fBufrTmp}_0.bufr ]
 [ -s ${fBufrTmp}_2.bufr ]
 
-rm -f ${fBufrTmp}_*.bufr | true
+rm -f ${fBufrTmp}_*.bufr
 
 #Clean up
 rm -f $fLog 
-rm -f $fBufrTmp | true
-rm -f $fBufrInput | true
-
-
+rm -f $fBufrTmp
+rm -f $fBufrInput

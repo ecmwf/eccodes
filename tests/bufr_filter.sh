@@ -76,7 +76,7 @@ if (statid == 1003) {
 }		
 EOF
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_multi.bufr"
 echo "Test: filter SYNOP message according to conditions" >> $fLog
@@ -616,7 +616,7 @@ set year=2001;
 set airTemperatureAt2M=234.5;
 EOF
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_1.bufr"
 echo "Test: setting keys" >> $fLog
@@ -634,7 +634,7 @@ EOF
 #Clean up
 rm -f ${dSplit}/*
 rm -f $fLog $fRules 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 #-----------------------------------------------------------
 # Test: set unexpandedDescriptors no create new data
