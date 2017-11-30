@@ -24,8 +24,11 @@ REDIRECT=/dev/null
 
 blacklist=masterTablesVersionNumber
 
+# Get the latest BUFR master tables version
+sample=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+latest_wmo_version=`${tools_dir}/bufr_get -p masterTablesVersionNumberLatest $sample`
+
 # In version 29, some key names changed. So blacklist them
-latest_wmo_version=29
 blacklist=$blacklist",bandwidthCorrectionCoefficient1ForAtovs,bandwidthCorrectionCoefficient2ForAtovs,tovsOrAtovsProductQualifier"
 
 # The units for centre also changed
