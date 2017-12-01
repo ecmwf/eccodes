@@ -8,6 +8,13 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+/*
+ * Description:
+ * Split an input file (GRIB, BUFR etc) into chunks of roughly the same size.
+ * The output files are named input_01, input_02 etc. This is much faster than grib_copy/bufr_copy
+ *
+ */
+
 #include "grib_api_internal.h"
 #include <assert.h>
 
