@@ -631,6 +631,12 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Fraction of snow cover
+'Proportion' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 121 ;
+	}
 #Soil temperature
 'K' = {
 	 discipline = 2 ;

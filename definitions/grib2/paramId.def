@@ -631,6 +631,12 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 is_uerra = 0 ;
 	}
+#Fraction of snow cover
+'260289' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 121 ;
+	}
 #Soil temperature
 '260360' = {
 	 discipline = 2 ;

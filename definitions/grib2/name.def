@@ -631,6 +631,12 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 lengthOfTimeRange = 24 ;
 	}
+#Fraction of snow cover
+'Fraction of snow cover' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 121 ;
+	}
 #Soil temperature
 'Soil temperature' = {
 	 discipline = 2 ;

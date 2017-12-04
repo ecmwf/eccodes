@@ -631,6 +631,12 @@
 	 lengthOfTimeRange = 24 ;
 	 is_uerra = 0 ;
 	}
+#Fraction of snow cover
+'fscov' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 121 ;
+	}
 #Soil temperature
 'sot' = {
 	 discipline = 2 ;
