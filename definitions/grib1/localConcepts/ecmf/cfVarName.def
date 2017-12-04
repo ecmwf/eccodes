@@ -3319,6 +3319,11 @@
 	 table2Version = 132 ;
 	 indicatorOfParameter = 44 ;
 	}
+#Water vapour flux index
+'wvfi' = {
+	 table2Version = 132 ;
+	 indicatorOfParameter = 45 ;
+	}
 #Convective available potential energy index
 'capei' = {
 	 table2Version = 132 ;
@@ -3488,6 +3493,11 @@
 'p193.151' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 193 ;
+	}
+#Water vapour flux
+'wvf' = {
+	 table2Version = 162 ;
+	 indicatorOfParameter = 45 ;
 	}
 #Vertical integral of divergence of cloud liquid water flux
 'p79.162' = {
@@ -15805,12 +15815,12 @@
 	 indicatorOfParameter = 96 ;
 	}
 #Wildfire fraction of area observed
-'bffire' = {
+'offire' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 97 ;
 	}
 #Number of positive FRP pixels per grid cell
-'oafire' = {
+'nofrp' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 98 ;
 	}
@@ -16505,7 +16515,7 @@
 	 indicatorOfParameter = 96 ;
 	}
 #Wildfire fraction of area observed
-'bffirediff' = {
+'offirediff' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 97 ;
 	}
