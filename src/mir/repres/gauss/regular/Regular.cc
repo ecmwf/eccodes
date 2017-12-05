@@ -198,7 +198,7 @@ bool Regular::getLongestElementDiagonal(double& d) const {
                          atlas::PointLonLat(we, latAwayFromEquator.value()) ));
 
         l1 = l2;
-        l2 = lats[j]
+        l2 = lats[j];
     }
 
     ASSERT(d > 0.);
