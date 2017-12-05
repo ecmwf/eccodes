@@ -17,7 +17,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = get_native_type;init
-   IMPLEMENTS = compare;unpack_string;value_count
+   IMPLEMENTS = compare;unpack_string;value_count;destroy
    MEMBERS = const char* offset
    MEMBERS = grib_expression* length
    MEMBERS = grib_string_list* blacklist
@@ -38,6 +38,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int  get_native_type(grib_accessor*);
 static int unpack_string (grib_accessor*, char*, size_t *len);
 static int value_count(grib_accessor*,long*);
+static void destroy(grib_context*,grib_accessor*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
@@ -61,7 +62,7 @@ static grib_accessor_class _grib_accessor_class_md5 = {
     &init_class,                 /* init_class */
     &init,                       /* init                      */
     0,                  /* post_init                      */
-    0,                    /* free mem                       */
+    &destroy,                    /* free mem                       */
     0,                       /* describes himself         */
     0,                /* get length of section     */
     0,              /* get length of string      */
@@ -241,6 +242,21 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len)
     grib_context_free(a->context,mess);
 
     return ret;
+}
+
+static void destroy(grib_context* c,grib_accessor* a)
+{
+    grib_accessor_md5* self = (grib_accessor_md5*)a;
+    if (self->blacklist) {
+        grib_string_list* next=self->blacklist;
+        grib_string_list* cur=self->blacklist;
+        while(next) {
+            cur=next;
+            next=next->next;
+            grib_context_free(c,cur->value);
+            grib_context_free(c,cur);
+        }
+    }
 }
 
 static int value_count(grib_accessor* a,long* count)
