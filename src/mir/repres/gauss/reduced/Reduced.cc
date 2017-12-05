@@ -446,7 +446,7 @@ bool Reduced::getLongestElementDiagonal(double& d) const {
     Latitude l1(Latitude::NORTH_POLE);
     Latitude l2(lats[0]);
 
-    for (size_t j = 1; j < lats.size(); ++j, l1 = l2, l2 = lats[j]) {
+    for (size_t j = 1; j < lats.size(); ++j) {
 
         const eckit::Fraction we = Longitude::GLOBE.fraction() / (std::min(pl[j - 1], pl[j]));
         const Latitude&
@@ -456,6 +456,9 @@ bool Reduced::getLongestElementDiagonal(double& d) const {
         d = std::max(d, atlas::util::Earth::distanceInMeters(
                          atlas::PointLonLat(0., latCloserToEquator.value()),
                          atlas::PointLonLat(we, latAwayFromEquator.value()) ));
+
+        l1 = l2;
+        l2 = lats[j];
     }
 
     ASSERT(d > 0.);

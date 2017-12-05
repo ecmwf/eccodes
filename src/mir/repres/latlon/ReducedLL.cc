@@ -97,7 +97,7 @@ bool ReducedLL::getLongestElementDiagonal(double& d) const {
     Latitude lat1(dom.north());
     Latitude lat2(dom.north() - sn);
 
-    for (size_t j = 1; j < pl_.size(); ++j, lat1 = lat2, lat2 -= sn) {
+    for (size_t j = 1; j < pl_.size(); ++j) {
 
         const long Di(std::min(pl_[j - 1], pl_[j]) - (periodic? 0:1));
         ASSERT(Di > 0);
@@ -110,6 +110,9 @@ bool ReducedLL::getLongestElementDiagonal(double& d) const {
         d = std::max(d, atlas::util::Earth::distanceInMeters(
                          atlas::PointLonLat(0., latCloserToEquator.value()),
                          atlas::PointLonLat(we, latAwayFromEquator.value()) ));
+
+        lat1 = lat2;
+        lat2 -= sn;
     }
 
     ASSERT(d > 0.);
