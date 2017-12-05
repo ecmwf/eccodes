@@ -186,16 +186,19 @@ bool Regular::getLongestElementDiagonal(double& d) const {
     Latitude l1(Latitude::NORTH_POLE);
     Latitude l2(lats[0]);
 
-    for (size_t j = 1; j < lats.size(); ++j, l1 = l2, l2 = lats[j]) {
+    for (size_t j = 1; j < lats.size(); ++j) {
 
         const eckit::Fraction we = Longitude::GLOBE.fraction() / (N_ * 4);
         const Latitude&
-                latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value())? l1 : l2),
-                latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value())? l2 : l1);
+        latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l1 : l2),
+                           latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l2 : l1);
 
         d = std::max(d, atlas::util::Earth::distanceInMeters(
                          atlas::PointLonLat(0., latCloserToEquator.value()),
                          atlas::PointLonLat(we, latAwayFromEquator.value()) ));
+
+        l1 = l2;
+        l2 = lats[j]
     }
 
     ASSERT(d > 0.);
@@ -314,14 +317,14 @@ Regular::RegularIterator::~RegularIterator() {
 void Regular::RegularIterator::print(std::ostream& out) const {
     out << "RegularIterator["
         <<  "west="  << west_
-         << ",N="     << N_
-         << ",Ni="    << Ni_
-         << ",Nj="    << Nj_
-         << ",i="     << i_
-         << ",j="     << j_
-         << ",k="     << k_
-         << ",count=" << count_
-         << "]";
+        << ",N="     << N_
+        << ",Ni="    << Ni_
+        << ",Nj="    << Nj_
+        << ",i="     << i_
+        << ",j="     << j_
+        << ",k="     << k_
+        << ",count=" << count_
+        << "]";
 }
 
 
