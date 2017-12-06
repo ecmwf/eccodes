@@ -9431,6 +9431,30 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 48 ;
 	}
+#Averaged total lightning flash density over the past 3 hours
+'Averaged total lightning flash density over the past 3 hours' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 57 ;
+	}
+#Averaged total lightning flash density over the past 6 hours
+'Averaged total lightning flash density over the past 6 hours' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 58 ;
+	}
+#Averaged cloud-to-ground lightning flash density over the past 3 hours
+'Averaged cloud-to-ground lightning flash density over the past 3 hours' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 59 ;
+	}
+#Averaged cloud-to-ground lightning flash density over the past 6 hours
+'Averaged cloud-to-ground lightning flash density over the past 6 hours' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 60 ;
+	}
 #Total column rain water
 'Total column rain water' = {
 	 discipline = 192 ;
@@ -14877,14 +14901,14 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 179 ;
 	}
-#East-West surface stress
-'East-West surface stress' = {
+#East-West surface stress rate of accumulation
+'East-West surface stress rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 180 ;
 	}
-#North-South surface stress
-'North-South surface stress' = {
+#North-South surface stress rate of accumulation
+'North-South surface stress rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 181 ;
@@ -14949,8 +14973,8 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 211 ;
 	}
-#Solar insolation
-'Solar insolation' = {
+#Solar insolation rate of accumulation
+'Solar insolation rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 212 ;
@@ -15003,8 +15027,8 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 50 ;
 	}
-#Stratiform precipitation (Large-scale precipitation) anomaly
-'Stratiform precipitation (Large-scale precipitation) anomaly' = {
+#Stratiform precipitation (Large-scale precipitation) anomalous rate of accumulation
+'Stratiform precipitation (Large-scale precipitation) anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 142 ;
@@ -15027,14 +15051,14 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 145 ;
 	}
-#Surface sensible heat flux anomaly
-'Surface sensible heat flux anomaly' = {
+#Surface sensible heat flux anomalous rate of accumulation
+'Surface sensible heat flux anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 146 ;
 	}
-#Surface latent heat flux anomaly
-'Surface latent heat flux anomaly' = {
+#Surface latent heat flux anomalous rate of accumulation
+'Surface latent heat flux anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 147 ;
@@ -15057,56 +15081,56 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 154 ;
 	}
-#Surface solar radiation downwards anomaly
-'Surface solar radiation downwards anomaly' = {
+#Surface solar radiation downwards anomalous rate of accumulation
+'Surface solar radiation downwards anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 169 ;
 	}
-#Surface thermal radiation downwards anomaly
-'Surface thermal radiation downwards anomaly' = {
+#Surface thermal radiation downwards anomalous rate of accumulation
+'Surface thermal radiation downwards anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 175 ;
 	}
-#Surface solar radiation anomaly
-'Surface solar radiation anomaly' = {
+#Surface solar radiation anomalous rate of accumulation
+'Surface solar radiation anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 176 ;
 	}
-#Surface thermal radiation anomaly
-'Surface thermal radiation anomaly' = {
+#Surface thermal radiation anomalous rate of accumulation
+'Surface thermal radiation anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 177 ;
 	}
-#Top solar radiation anomaly
-'Top solar radiation anomaly' = {
+#Top solar radiation anomalous rate of accumulation
+'Top solar radiation anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 178 ;
 	}
-#Top thermal radiation anomaly
-'Top thermal radiation anomaly' = {
+#Top thermal radiation anomalous rate of accumulation
+'Top thermal radiation anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 179 ;
 	}
-#East-West surface stress anomaly
-'East-West surface stress anomaly' = {
+#East-West surface stress anomalous rate of accumulation
+'East-West surface stress anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 180 ;
 	}
-#North-South surface stress anomaly
-'North-South surface stress anomaly' = {
+#North-South surface stress anomalous rate of accumulation
+'North-South surface stress anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 181 ;
 	}
-#Evaporation anomaly
-'Evaporation anomaly' = {
+#Evaporation anomalous rate of accumulation
+'Evaporation anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 182 ;
@@ -15135,8 +15159,8 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 197 ;
 	}
-#Runoff anomaly
-'Runoff anomaly' = {
+#Runoff anomalous rate of accumulation
+'Runoff anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 205 ;
@@ -15165,8 +15189,8 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 211 ;
 	}
-#Solar insolation anomaly
-'Solar insolation anomaly' = {
+#Solar insolation anomalous rate of accumulation
+'Solar insolation anomalous rate of accumulation' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 212 ;
@@ -16137,26 +16161,26 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 6 ;
 	}
-#Hydrophobic Organic Matter Aerosol Mixing Ratio
-'Hydrophobic Organic Matter Aerosol Mixing Ratio' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 7 ;
-	}
 #Hydrophilic Organic Matter Aerosol Mixing Ratio
 'Hydrophilic Organic Matter Aerosol Mixing Ratio' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
+	 parameterNumber = 7 ;
+	}
+#Hydrophobic Organic Matter Aerosol Mixing Ratio
+'Hydrophobic Organic Matter Aerosol Mixing Ratio' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
 	 parameterNumber = 8 ;
 	}
-#Hydrophobic Black Carbon Aerosol Mixing Ratio
-'Hydrophobic Black Carbon Aerosol Mixing Ratio' = {
+#Hydrophilic Black Carbon Aerosol Mixing Ratio
+'Hydrophilic Black Carbon Aerosol Mixing Ratio' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 9 ;
 	}
-#Hydrophilic Black Carbon Aerosol Mixing Ratio
-'Hydrophilic Black Carbon Aerosol Mixing Ratio' = {
+#Hydrophobic Black Carbon Aerosol Mixing Ratio
+'Hydrophobic Black Carbon Aerosol Mixing Ratio' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 10 ;
@@ -16389,14 +16413,14 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 63 ;
 	}
-#Total column Carbon Dioxide
-'Total column Carbon Dioxide' = {
+#CO2 column-mean molar fraction
+'CO2 column-mean molar fraction' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 64 ;
 	}
-#Total column Methane
-'Total column Methane' = {
+#CH4 column-mean molar fraction
+'CH4 column-mean molar fraction' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 65 ;
@@ -16905,26 +16929,26 @@
 	 parameterCategory = 211 ;
 	 parameterNumber = 6 ;
 	}
-#Hydrophobic Organic Matter Aerosol Mixing Ratio
-'Hydrophobic Organic Matter Aerosol Mixing Ratio' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 7 ;
-	}
 #Hydrophilic Organic Matter Aerosol Mixing Ratio
 'Hydrophilic Organic Matter Aerosol Mixing Ratio' = {
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
+	 parameterNumber = 7 ;
+	}
+#Hydrophobic Organic Matter Aerosol Mixing Ratio
+'Hydrophobic Organic Matter Aerosol Mixing Ratio' = {
+	 discipline = 192 ;
+	 parameterCategory = 211 ;
 	 parameterNumber = 8 ;
 	}
-#Hydrophobic Black Carbon Aerosol Mixing Ratio
-'Hydrophobic Black Carbon Aerosol Mixing Ratio' = {
+#Hydrophilic Black Carbon Aerosol Mixing Ratio
+'Hydrophilic Black Carbon Aerosol Mixing Ratio' = {
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 9 ;
 	}
-#Hydrophilic Black Carbon Aerosol Mixing Ratio
-'Hydrophilic Black Carbon Aerosol Mixing Ratio' = {
+#Hydrophobic Black Carbon Aerosol Mixing Ratio
+'Hydrophobic Black Carbon Aerosol Mixing Ratio' = {
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 10 ;

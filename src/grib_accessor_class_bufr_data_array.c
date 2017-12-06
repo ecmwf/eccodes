@@ -1171,6 +1171,10 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
             idx=((int)self->numericValues->v[elementIndex]->v[0]/1000-1)/self->numberOfSubsets;
             err=encode_string_array(c,buff,pos,bd,self,self->stringValues->v[idx]);
         } else {
+            if (self->numericValues->v[subsetIndex] == NULL) {
+                grib_context_log(c,GRIB_LOG_ERROR,"Invalid subset index %d (number of subsets=%ld)", subsetIndex, self->numberOfSubsets);
+                return GRIB_INVALID_ARGUMENT;
+            }
             idx=(int)self->numericValues->v[subsetIndex]->v[elementIndex]/1000-1;
             err=encode_string_value(c,buff,pos,bd,self,self->stringValues->v[idx]->v[0]);
         }
@@ -1230,7 +1234,11 @@ static int build_bitmap(grib_accessor_bufr_data_array *self,unsigned char* data,
     case 223000:
     case 236000:
         cancel_bitmap(self);
-        while (descriptors[edi[iel]]->code>=100000 || iel==0) iel--;
+        if (iel < 0) { return GRIB_ENCODING_ERROR; }
+        while (descriptors[edi[iel]]->code>=100000 || iel==0) {
+            iel--;
+            if (iel < 0) { return GRIB_ENCODING_ERROR; }
+        }
         bitmapEndElementsDescriptorsIndex=iel;
         /*looking for another bitmap and pointing before it.
           This behaviour is not documented in the Manual on codes it is copied from BUFRDC
@@ -1332,7 +1340,11 @@ static int build_bitmap_new_data(grib_accessor_bufr_data_array *self,unsigned ch
     case 222000:
     case 223000:
     case 236000:
-        while (descriptors[edi[iel]]->code>=100000) iel--;
+        if (iel < 0) { return GRIB_ENCODING_ERROR; }
+        while (descriptors[edi[iel]]->code>=100000) {
+            iel--;
+            if (iel < 0) { return GRIB_ENCODING_ERROR; }
+        }
         bitmapEndElementsDescriptorsIndex=iel;
         /*looking for another bitmap and pointing before it.
           This behaviour is not documented in the Manual on codes it is copied from BUFRDC
@@ -2247,7 +2259,7 @@ static void set_input_bitmap(grib_handle* h,grib_accessor_bufr_data_array *self)
 static int process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset)
 {
     int err=0;
-    long  inr,innr,ir;
+    long  inr,innr,ir,ip;
     long n[MAX_NESTED_REPLICATIONS]={0,};
     long nn[MAX_NESTED_REPLICATIONS]={0,};
     long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS]={0,};
@@ -2387,6 +2399,8 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         }
         elementIndex=0;
 
+        numberOfNestedRepetitions=0;
+        inr=0;
         for (i=0;i<numberOfDescriptors;i++) {
             grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data processing: elementNumber=%ld code=%6.6ld", icount++,descriptors[i]->code);
             switch(descriptors[i]->F) {
@@ -2426,9 +2440,16 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                         n[inr-1]-=numberOfElementsToRepeat[inr]+2;
                         /* if the empty nested repetition is at the end of the nesting repetition
                            we need to re-point to the start of the nesting repetition */
-                        if (n[inr-1]==0) {
-                            nn[inr-1]--;
-                            if (nn[inr-1]<=0) numberOfNestedRepetitions--;
+                        ip=inr-1;
+                        while (ip>=0 && n[ip]==0) {
+                            nn[ip]--;
+                            if (nn[ip]<=0) {
+                              numberOfNestedRepetitions--;
+                            } else {
+                              n[ip]=numberOfElementsToRepeat[ip];
+                              i=startRepetition[ip];
+                            }
+                            ip--;
                         }
                     }
                     numberOfNestedRepetitions--;
@@ -2530,15 +2551,19 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                         if (flag==PROCESS_DECODE) {
                             grib_iarray_push(elementsDescriptorsIndex,i);
                             push_zero_element(self,dval);
-                            if (descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 )
-                                build_bitmap(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                            if ( descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 ) {
+                                err = build_bitmap(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                                if (err) return err;
+                            }
                         } else if (flag==PROCESS_ENCODE) {
-                            if (descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 )
+                            if ( descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 )
                                 restart_bitmap(self);
                         } else if (flag==PROCESS_NEW_DATA) {
                             grib_iarray_push(elementsDescriptorsIndex,i);
-                            if (descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 )
-                                build_bitmap_new_data(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                            if ( descriptors[i+1] && descriptors[i+1]->code!=236000 && descriptors[i+1]->code!=237000 ) {
+                                err = build_bitmap_new_data(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                                if (err) return err;
+                            }
                         }
                         elementIndex++;
                     }
@@ -2577,12 +2602,14 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                     if (flag==PROCESS_DECODE) {
                         grib_iarray_push(elementsDescriptorsIndex,i);
                         if (decoding) push_zero_element(self,dval);
-                        build_bitmap(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                        err = build_bitmap(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                        if (err) return err;
                     } else if (flag==PROCESS_ENCODE) {
                         restart_bitmap(self);
                     } else if (flag==PROCESS_NEW_DATA) {
                         grib_iarray_push(elementsDescriptorsIndex,i);
-                        build_bitmap_new_data(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                        err = build_bitmap_new_data(self,data,&pos,elementIndex,elementsDescriptorsIndex,i);
+                        if (err) return err;
                     }
                     elementIndex++;
                     break;

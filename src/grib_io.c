@@ -10,6 +10,36 @@
 
 #include "grib_api_internal.h"
 
+#if GRIB_PTHREADS
+ static pthread_once_t once  = PTHREAD_ONCE_INIT;
+ static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
+ static void init() {
+  pthread_mutexattr_t attr;
+  pthread_mutexattr_init(&attr);
+  pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+  pthread_mutex_init(&mutex1,&attr);
+  pthread_mutex_init(&mutex2,&attr);
+  pthread_mutexattr_destroy(&attr);
+ }
+#elif GRIB_OMP_THREADS
+ static int once = 0;
+ static omp_nest_lock_t mutex1;
+ static omp_nest_lock_t mutex2;
+ static void init()
+ {
+    GRIB_OMP_CRITICAL(lock_grib_io_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex1);
+            omp_init_nest_lock(&mutex2);
+            once = 1;
+        }
+    }
+ }
+#endif
+
 
 #define  GRIB 0x47524942
 #define  BUDG 0x42554447
@@ -731,7 +761,7 @@ static int read_BUFR(reader *r)
     return err;
 }
 
-static int read_any(reader *r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
+static int _read_any(reader *r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
 {
     unsigned char c;
     int err = 0;
@@ -801,6 +831,15 @@ static int read_any(reader *r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_o
     }
 
     return err;
+}
+static int read_any(reader *r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
+{
+    int result = 0;
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex1);
+    result = _read_any(r, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
+    GRIB_MUTEX_UNLOCK(&mutex1);
+    return result;
 }
 
 static int read_any_gts(reader *r)
@@ -1212,11 +1251,11 @@ int wmo_read_any_from_stream(void* stream_data,long (*stream_proc)(void*,void* b
 
 void* wmo_read_any_from_stream_malloc(void* stream_data,long (*stream_proc)(void*,void* buffer,long len) ,size_t *size, int* err)
 {
-    alloc_buffer u;
-    u.buffer = NULL;
-
+    alloc_buffer  u;
     stream_struct s;
     reader        r;
+
+    u.buffer = NULL;
 
     s.stream_data = stream_data;
     s.stream_proc = stream_proc;
@@ -1333,6 +1372,7 @@ static void *_wmo_read_any_from_file_malloc(FILE* f,int* err,size_t *size,off_t 
     r.offset          = 0;
 
     *err           = read_any(&r, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
+
     *size          = r.message_size;
     *offset        = r.offset;
 
@@ -1569,8 +1609,9 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n)
 int grib_count_in_filename(grib_context* c, const char* filename, int* n)
 {
     int err=0;
+    FILE* fp = NULL;
     if (!c) c=grib_context_get_default();
-    FILE* fp = fopen(filename, "r");
+    fp = fopen(filename, "r");
     if (!fp) {
         grib_context_log(c, GRIB_LOG_ERROR,"grib_count_in_filename: Unable to read file \"%s\"", filename);
         perror(filename);

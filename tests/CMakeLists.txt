@@ -73,6 +73,7 @@ list( APPEND tests_data_reqd
     bufr_change_edition
     bufr_keys_iter
     bufr_get_element
+    bufr_wmo_tables
     ecc-197
     ecc-286
     ecc-288
@@ -81,6 +82,7 @@ list( APPEND tests_data_reqd
     ecc-393
     ecc-433
     ecc-490
+    ecc-556
     gts_get
     gts_ls
     gts_compare
@@ -133,6 +135,7 @@ list( APPEND tests_data_reqd
     grib_util_set_spec
     local_MeteoFrance
     grib_neg_fctime
+    codes_split_file
 )
 if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
     list(APPEND tests_data_reqd bufr_dump_encode_fortran)

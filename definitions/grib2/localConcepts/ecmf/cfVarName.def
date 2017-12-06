@@ -9431,6 +9431,30 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 48 ;
 	}
+#Averaged total lightning flash density over the past 3 hours
+'litota3' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 57 ;
+	}
+#Averaged total lightning flash density over the past 6 hours
+'litota6' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 58 ;
+	}
+#Averaged cloud-to-ground lightning flash density over the past 3 hours
+'licga3' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 59 ;
+	}
+#Averaged cloud-to-ground lightning flash density over the past 6 hours
+'licga6' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 60 ;
+	}
 #Total column rain water
 'tcrw' = {
 	 discipline = 192 ;
@@ -14877,14 +14901,14 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 179 ;
 	}
-#East-West surface stress
-'p180.172' = {
+#East-West surface stress rate of accumulation
+'ewssra' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 180 ;
 	}
-#North-South surface stress
-'p181.172' = {
+#North-South surface stress rate of accumulation
+'nsssra' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 181 ;
@@ -14949,8 +14973,8 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 211 ;
 	}
-#Solar insolation
-'p212.172' = {
+#Solar insolation rate of accumulation
+'soira' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 212 ;
@@ -15003,8 +15027,8 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 50 ;
 	}
-#Stratiform precipitation (Large-scale precipitation) anomaly
-'p142.173' = {
+#Stratiform precipitation (Large-scale precipitation) anomalous rate of accumulation
+'lspara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 142 ;
@@ -15027,14 +15051,14 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 145 ;
 	}
-#Surface sensible heat flux anomaly
-'p146.173' = {
+#Surface sensible heat flux anomalous rate of accumulation
+'sshfara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 146 ;
 	}
-#Surface latent heat flux anomaly
-'p147.173' = {
+#Surface latent heat flux anomalous rate of accumulation
+'slhfara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 147 ;
@@ -15057,56 +15081,56 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 154 ;
 	}
-#Surface solar radiation downwards anomaly
-'p169.173' = {
+#Surface solar radiation downwards anomalous rate of accumulation
+'ssrdara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 169 ;
 	}
-#Surface thermal radiation downwards anomaly
-'p175.173' = {
+#Surface thermal radiation downwards anomalous rate of accumulation
+'strdara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 175 ;
 	}
-#Surface solar radiation anomaly
-'p176.173' = {
+#Surface solar radiation anomalous rate of accumulation
+'ssrara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 176 ;
 	}
-#Surface thermal radiation anomaly
-'p177.173' = {
+#Surface thermal radiation anomalous rate of accumulation
+'strara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 177 ;
 	}
-#Top solar radiation anomaly
-'p178.173' = {
+#Top solar radiation anomalous rate of accumulation
+'tsrara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 178 ;
 	}
-#Top thermal radiation anomaly
-'p179.173' = {
+#Top thermal radiation anomalous rate of accumulation
+'ttrara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 179 ;
 	}
-#East-West surface stress anomaly
-'p180.173' = {
+#East-West surface stress anomalous rate of accumulation
+'ewssara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 180 ;
 	}
-#North-South surface stress anomaly
-'p181.173' = {
+#North-South surface stress anomalous rate of accumulation
+'nsssara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 181 ;
 	}
-#Evaporation anomaly
-'p182.173' = {
+#Evaporation anomalous rate of accumulation
+'evara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 182 ;
@@ -15135,8 +15159,8 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 197 ;
 	}
-#Runoff anomaly
-'p205.173' = {
+#Runoff anomalous rate of accumulation
+'roara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 205 ;
@@ -15165,8 +15189,8 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 211 ;
 	}
-#Solar insolation anomaly
-'p212.173' = {
+#Solar insolation anomalous rate of accumulation
+'soiara' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 212 ;
@@ -16137,25 +16161,25 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 6 ;
 	}
-#Hydrophobic Organic Matter Aerosol Mixing Ratio
+#Hydrophilic Organic Matter Aerosol Mixing Ratio
 'aermr07' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 7 ;
 	}
-#Hydrophilic Organic Matter Aerosol Mixing Ratio
+#Hydrophobic Organic Matter Aerosol Mixing Ratio
 'aermr08' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 8 ;
 	}
-#Hydrophobic Black Carbon Aerosol Mixing Ratio
+#Hydrophilic Black Carbon Aerosol Mixing Ratio
 'aermr09' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 9 ;
 	}
-#Hydrophilic Black Carbon Aerosol Mixing Ratio
+#Hydrophobic Black Carbon Aerosol Mixing Ratio
 'aermr10' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
@@ -16389,13 +16413,13 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 63 ;
 	}
-#Total column Carbon Dioxide
+#CO2 column-mean molar fraction
 'tcco2' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 64 ;
 	}
-#Total column Methane
+#CH4 column-mean molar fraction
 'tcch4' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
@@ -16905,25 +16929,25 @@
 	 parameterCategory = 211 ;
 	 parameterNumber = 6 ;
 	}
-#Hydrophobic Organic Matter Aerosol Mixing Ratio
+#Hydrophilic Organic Matter Aerosol Mixing Ratio
 'aermr07diff' = {
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 7 ;
 	}
-#Hydrophilic Organic Matter Aerosol Mixing Ratio
+#Hydrophobic Organic Matter Aerosol Mixing Ratio
 'aermr08diff' = {
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 8 ;
 	}
-#Hydrophobic Black Carbon Aerosol Mixing Ratio
+#Hydrophilic Black Carbon Aerosol Mixing Ratio
 'aermr09diff' = {
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 9 ;
 	}
-#Hydrophilic Black Carbon Aerosol Mixing Ratio
+#Hydrophobic Black Carbon Aerosol Mixing Ratio
 'aermr10diff' = {
 	 discipline = 192 ;
 	 parameterCategory = 211 ;

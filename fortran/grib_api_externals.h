@@ -25,6 +25,11 @@ integer, external :: grib_f_new_from_message, &
                      codes_bufr_f_new_from_samples, &
                      grib_f_read_any_from_file, &
                      any_f_new_from_file, &
+                     any_f_load_all_from_file, &
+                     any_f_new_from_loaded, &
+                     any_f_scan_file, &
+                     any_f_new_from_scanned_file, &
+                     codes_f_clear_loaded_from_file, &
                      grib_f_new_from_file, &
                      bufr_f_new_from_file, &
                      grib_f_headers_only_new_from_file

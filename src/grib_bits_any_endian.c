@@ -13,6 +13,34 @@
  *                                                                         *
  ***************************************************************************/
 
+#if GRIB_PTHREADS
+static pthread_once_t once  = PTHREAD_ONCE_INIT;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+static void init() {
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&mutex,&attr);
+    pthread_mutexattr_destroy(&attr);
+}
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex;
+
+static void init()
+{
+    GRIB_OMP_CRITICAL(lock_grib_bits_any_endian_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex);
+            once = 1;
+        }
+    }
+}
+#endif
+
 typedef struct bits_all_one_t {
     int inited;
     int size;
@@ -26,21 +54,31 @@ static void init_bits_all_one()
     int size=sizeof(long)*8;
     long* v=0;
     unsigned long cmask=-1;
-    bits_all_one.size=size;
-    bits_all_one.inited=1;
-    v=bits_all_one.v+size;
-    /*
-     * The result of a shift operation is undefined if the RHS is negative or
-     * greater than or equal to the number of bits in the (promoted) shift-expression
-     */
-    /* *v= cmask << size; */
-    *v = -1;
-    while (size>0)  *(--v)= ~(cmask << --size);
+    if (!bits_all_one.inited) {
+        bits_all_one.size=size;
+        bits_all_one.inited=1;
+        v=bits_all_one.v+size;
+        /*
+         * The result of a shift operation is undefined if the RHS is negative or
+         * greater than or equal to the number of bits in the (promoted) shift-expression
+         */
+        /* *v= cmask << size; */
+        *v = -1;
+        while (size>0)  *(--v)= ~(cmask << --size);
+    }
 }
 
+static void init_bits_all_one_if_needed()
+{
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex);
+    if (!bits_all_one.inited) init_bits_all_one();
+    GRIB_MUTEX_UNLOCK(&mutex);
+}
 int grib_is_all_bits_one(long val, long nbits)
 {
-    if (!bits_all_one.inited) init_bits_all_one();
+    /*if (!bits_all_one.inited) init_bits_all_one();*/
+    init_bits_all_one_if_needed();
     return bits_all_one.v[nbits]==val;
 }
 

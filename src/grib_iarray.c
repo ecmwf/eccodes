@@ -19,8 +19,8 @@
 /* For debugging purposes */
 void grib_iarray_print(const char* title, const grib_iarray* iarray)
 {
-    Assert(iarray);
     size_t i;
+    Assert(iarray);
     printf("%s: iarray.n=%lu  \t", title, (unsigned long)iarray->n);
     for (i=0; i<iarray->n; i++) {
         printf("iarray[%lu]=%ld\t", (unsigned long)i, iarray->v[i]);

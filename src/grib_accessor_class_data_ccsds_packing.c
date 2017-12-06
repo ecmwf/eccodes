@@ -230,8 +230,10 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->ccsds_flags,&ccsds_flags)) != GRIB_SUCCESS)
+    /* ECC-477: Don't call grib_get_long_internal to suppress error message being output */
+    if((err = grib_get_long(grib_handle_of_accessor(a),self->ccsds_flags,&ccsds_flags)) != GRIB_SUCCESS)
         return err;
+
     if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->ccsds_block_size, &ccsds_block_size)) != GRIB_SUCCESS)
         return err;
     if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)

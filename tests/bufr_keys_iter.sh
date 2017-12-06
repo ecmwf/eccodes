@@ -40,6 +40,12 @@ typicalMinute
 typicalSecond
 rdbType
 oldSubtype
+localYear
+localMonth
+localDay
+localHour
+localMinute
+localSecond
 rdbtimeDay
 rdbtimeHour
 rdbtimeMinute

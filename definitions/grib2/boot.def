@@ -9,7 +9,7 @@
 
 # This gets updated twice a year by WMO.
 # See http://www.wmo.int/pages/prog/www/WMOCodes/WMO306_vI2/LatestVERSION/LatestVERSION.html
-constant tablesVersionLatest = 19 : edition_specific;
+constant tablesVersionLatest = 20 : edition_specific;
 
 constant one = 1 : hidden ;
 constant million = 1000000 : hidden;
@@ -17,6 +17,7 @@ constant grib2divider   = 1000000;
 alias extraDimensionPresent=zero;
 alias is_tigge = zero;
 alias is_s2s = zero;
+transient is_efas = 0;
 transient angularPrecision=grib2divider;  # micro degrees
 
 meta gts_header gts_header() : no_copy,hidden,read_only;

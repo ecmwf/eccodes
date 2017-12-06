@@ -359,6 +359,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         print_header(options);
         dumper=grib_dump_content_with_dumper(h,dumper,stdout,dumper_name,options->dump_flags,0);
         if (!dumper) exit(1);
+        if (grib_options_on("p")) {
+            printf("\n"); /* One blank line to separate the messages */
+        }
     }
 
     return 0;

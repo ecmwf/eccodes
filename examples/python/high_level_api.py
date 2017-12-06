@@ -375,7 +375,7 @@ class TestBufrMessage(unittest.TestCase):
             msg = BufrMessage(bufr_file)
             msg.unpack()
             msg_keys = list(msg.keys())
-            self.assertEqual(len(msg_keys), 140)
+            self.assertEqual(len(msg_keys), 146)
             for key in KNOWN_BUFR_KEYS:
                 assert key in msg_keys
             # Size of message in bytes

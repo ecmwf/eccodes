@@ -106,12 +106,14 @@ static int evaluate_long(grib_expression* g,grib_handle* h,long* lres)
         if(p)
         {
             long val = 0;
-            int ktype = 0;
-            grib_get_long_internal(h,p,&val);
-            if (grib_get_native_type(h, p, &ktype) == GRIB_SUCCESS) {
-                /* Currently only supported for integer keys. Not double or string */
-                Assert( ktype == GRIB_TYPE_LONG);
-            }
+            int err = 0;
+            err = grib_get_long_internal(h,p,&val);
+            if (err) return err;
+            /* Note: This does not cope with keys like typeOfSecondFixedSurface
+             * which are codetable entries with values like 255: this value is
+             * not classed as 'missing'!
+             * (See ECC-594)
+             */
             *lres = (val == GRIB_MISSING_LONG);
             return GRIB_SUCCESS;
         }

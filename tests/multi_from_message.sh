@@ -30,6 +30,6 @@ do
   ${tools_dir}/grib_get -M -p count,shortName,level $infile > $out2
   diff $out1 $out2
 
-  rm -f $out1 $out2 | true
+  rm -f $out1 $out2
 
 done

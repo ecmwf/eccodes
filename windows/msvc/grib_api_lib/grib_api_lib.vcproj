@@ -1441,6 +1441,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_dumper_class_bufr_simple.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_dumper_class_debug.c"
 				>
 			</File>

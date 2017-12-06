@@ -25,7 +25,7 @@ do
   ref_num=$file.num.ref
   diff_num=$file.num.diff
 
-  rm -f $res_num | true
+  rm -f $res_num
 
   set +e
   ${tools_dir}/codes_bufr_filter bufrdc_num_ref.filter $file 2> $REDIRECT > $res_num

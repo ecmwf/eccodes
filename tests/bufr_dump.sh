@@ -55,7 +55,7 @@ unset ECCODES_LOG_STREAM
 #echo "Test: malformed bufr file " >> $fLog
 
 
-#rm -f $fJsonTmp | true
+#rm -f $fJsonTmp
 
 #fBufr=${data_dir}/bufr/"bad.bufr"
 # See ECC-276
@@ -72,7 +72,7 @@ unset ECCODES_LOG_STREAM
 # FIND another way to test this operator
 #echo "Test: operator 207003 " >> $fLog
 
-#rm -f $fJsonTmp | true
+#rm -f $fJsonTmp
 
 #fBufr=${data_dir}/bufr/"207003.bufr"
 #fJsonRef=${data_dir}/bufr/"207003.bufr.json.ref"
@@ -83,6 +83,6 @@ unset ECCODES_LOG_STREAM
 #
 #Clean up
 #rm -f $fLog 
-#rm -f $fJsonTmp | true
+#rm -f $fJsonTmp
 
 rm -f $fLog

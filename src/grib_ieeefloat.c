@@ -208,7 +208,7 @@ double grib_long_to_ieee(unsigned long x)
 
 #ifdef DEBUG
     if ( x > 0 && x < 0x800000 ) {
-        fprintf(stderr, "grib_long_to_ieee: Invalid input %ld\n", x);
+        fprintf(stderr, "grib_long_to_ieee: Invalid input %lu\n", x);
         Assert(0);
     }
 #endif

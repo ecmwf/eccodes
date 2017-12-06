@@ -23,7 +23,7 @@ packing2="
 	grid_simple_matrix"
 
 temp=temp.grib_
-rm -f $temp || true
+rm -f $temp
 
 # --- test changing the packing
 # arg 1    : input grib file
@@ -51,7 +51,7 @@ function test_packing() {
 		shift
 	done
 
-	rm -f $temp || true
+	rm -f $temp
 }
 
 test_packing $grib1 $packing1

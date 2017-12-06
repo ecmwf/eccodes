@@ -519,55 +519,6 @@ static bufr_descriptors_array* do_expand(grib_accessor* a,bufr_descriptors_array
     return expanded;
 }
 
-static bufr_descriptors_array* expanded_descriptors_list_get(grib_context* c,const char* key,long* u,size_t size) {
-  bufr_descriptors_map_list*  expandedUnexpandedMapList;
-  size_t i=0;
-  int found=0;
-
-  if (!c->expanded_descriptors) {
-    c->expanded_descriptors=(grib_trie*)grib_trie_new(c);
-    return NULL;
-  }
-  expandedUnexpandedMapList=(bufr_descriptors_map_list*)grib_trie_get(c->expanded_descriptors,key);
-  found=0;
-  while (expandedUnexpandedMapList) {
-    if (expandedUnexpandedMapList->unexpanded->n==size) {
-      found=1;
-      for (i=0;i<size;i++) {
-        if (expandedUnexpandedMapList->unexpanded->v[i]->code!=u[i]) {
-          found=0;
-          break;
-        }
-      }
-    }
-    if (found) return expandedUnexpandedMapList->expanded;
-    expandedUnexpandedMapList=expandedUnexpandedMapList->next;
-  }
-
-  return NULL;
-}
-
-static void expanded_descriptor_list_push(grib_context* c,grib_trie* expanded_descriptors,const char* key,bufr_descriptors_array* expanded,bufr_descriptors_array* unexpanded) {
-  bufr_descriptors_map_list* descriptorsList=NULL;
-  bufr_descriptors_map_list* next=NULL;
-  bufr_descriptors_map_list*  newdescriptorsList=NULL;
-
-  newdescriptorsList=(bufr_descriptors_map_list*)grib_context_malloc_clear(c,sizeof(bufr_descriptors_map_list));
-  newdescriptorsList->expanded=expanded;
-  newdescriptorsList->unexpanded=unexpanded;
-
-  descriptorsList=(bufr_descriptors_map_list*)grib_trie_get(expanded_descriptors,key);
-  if (descriptorsList) {
-    next=descriptorsList;
-    while(next->next) {
-      next=next->next;
-    }
-    next->next=newdescriptorsList;
-  } else {
-    grib_trie_insert(expanded_descriptors,key,newdescriptorsList);
-  }
-}
-
 static int expand(grib_accessor* a)
 {
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
@@ -617,7 +568,7 @@ static int expand(grib_accessor* a)
     if (err) return err;
 
     sprintf(key,"%ld_%ld_%ld_%ld_%ld",centre,masterTablesVersionNumber,localTablesVersionNumber,masterTablesNumber,u[0]);
-    expanded=expanded_descriptors_list_get(c,key,u,unexpandedSize);
+    expanded=grib_context_expanded_descriptors_list_get(c,key,u,unexpandedSize);
     if (expanded) {
       self->expanded=expanded;
       grib_context_free(c,u);
@@ -666,7 +617,7 @@ static int expand(grib_accessor* a)
     ccp.associatedFieldWidth=0;
     ccp.newStringWidth=0;
     self->expanded=do_expand(a,unexpanded,&ccp,&err);
-    expanded_descriptor_list_push(c,c->expanded_descriptors,key,self->expanded,unexpanded_copy);
+    grib_context_expanded_descriptors_list_push(c,key,self->expanded,unexpanded_copy);
     grib_bufr_descriptors_array_delete(unexpanded);
 
     return err;

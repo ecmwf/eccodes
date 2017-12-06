@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include <float.h>
 
 #ifdef ECCODES_ON_WINDOWS
  /* Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions) */
@@ -341,7 +342,7 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
 {
     size_t i=0;
     int isConstant = 1;
-    double v = 0;
+    double v = 0, minVal=DBL_MAX, maxVal=-DBL_MAX;
     printf("ECCODES DEBUG grib_util grib_set_values: setting %lu key/value pairs\n",(unsigned long)count);
 
     for(i=0; i<count; i++)
@@ -369,7 +370,16 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
             }
         }
     }
-    if (isConstant) printf("ECCODES DEBUG grib_util: data_values are CONSTANT;\n");
+    
+    for (i=0; i<data_values_count; i++) {
+        v = data_values[i];
+        if (v!=spec->missingValue) {
+            if (v < minVal) minVal=v;
+            if (v > maxVal) maxVal=v;
+        }
+    }
+    printf("ECCODES DEBUG grib_util: data_values are CONSTANT? %d\t(min=%.16e, max=%.16e)\n",
+           isConstant, minVal, maxVal);
 
 #if 0
         if (spec->bitmapPresent) {
@@ -390,11 +400,12 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
 #endif
 }
 
+/*
 static int DBL_EQUAL(double d1, double d2, double tolerance)
 {
     return fabs(d1-d2) < tolerance;
 }
-
+*/
 /* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
 static int grib1_angle_can_be_encoded(const double angle)
 {
@@ -408,7 +419,7 @@ static int grib1_angle_can_be_encoded(const double angle)
 }
 
 /* Returns a boolean: 1 if angle is too small, 0 otherwise */
-static int angle_too_small(const double angle, const double angular_precision)
+/*static int angle_too_small(const double angle, const double angular_precision)
 {
     const double a = fabs(angle);
     if (a > 0 && a < angular_precision) return 1;
@@ -420,8 +431,9 @@ static double normalise_angle(double angle)
     while (angle<0)   angle += 360;
     while (angle>360) angle -= 360;
     return angle;
-}
+}*/
 
+#if 0
 /* Check what is coded in the handle is what is requested by the spec. */
 /* Return GRIB_SUCCESS if the geometry matches, otherwise the error code */
 static int check_handle_against_spec(grib_handle* handle, const long edition,
@@ -547,6 +559,7 @@ static int check_handle_against_spec(grib_handle* handle, const long edition,
     }
     return GRIB_SUCCESS;
 }
+#endif
 
 static const char* get_grid_type_name(const int spec_grid_type)
 {
@@ -1201,8 +1214,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         }
     }
 
-    if (h->context->debug==-1)
+    if (h->context->debug==-1) {
+        printf("ECCODES DEBUG grib_util: global_grid = %d\n", global_grid);
         print_values(h->context,spec,data_values,data_values_count,values,count);
+    }
 
     if((*err = grib_set_values(outh,values,count)) != 0)
     {
@@ -1330,8 +1345,11 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         grib_set_long(outh,"deleteLocalDefinition", 1);
     }
 
+    /* Disable check: need to re-examine GRIB-864 */
+#if 0
     if ( (*err = check_handle_against_spec(outh, editionNumber, spec, global_grid)) != GRIB_SUCCESS)
     {
+
         grib_context* c=grib_context_get_default();
         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed! %s\n", grib_get_error_message(*err));
         if (editionNumber == 1) {
@@ -1341,7 +1359,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             grib_write_message(outh,"error.grib","w");
         goto cleanup;
     }
-
+#endif
     if (h->context->debug==-1)
         printf("ECCODES DEBUG: grib_util_set_spec end\n");
 

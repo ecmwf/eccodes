@@ -30,6 +30,10 @@ static int range ()
     return (int)(log (DBL_MAX) / log (10))-1;
 }
 
+#ifdef ECCODES_ON_WINDOWS
+#define log2(a) ( log(a)/1.44269504088896340736 )
+#endif
+
 static void factec (int * krep, const double pa, const int knbit, const long kdec, const int range, long * ke, int * knutil)
 {
     *krep = 0;

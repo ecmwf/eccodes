@@ -32,6 +32,7 @@
 31 c3 C3S: Copernicus Climate Change Service
 32 yp YOPP
 33 l5 ERA5L: ERA5 of land surface parameters
+34 lw WMO Lead Centre Wave Forecast Verification
 99 te Test
 100 at Austria
 101 be Belgium

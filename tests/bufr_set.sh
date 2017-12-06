@@ -30,7 +30,7 @@ fBufrTmp=${label}".bufr.tmp"
 # Test: setting header for single message file
 #----------------------------------------------------
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_1.bufr"
 echo "Test: setting header for single message file" >> $fLog
@@ -44,7 +44,7 @@ centre=`${tools_dir}/bufr_get -p bufrHeaderCentre $fBufrTmp`
 # Test: setting header for multi-message file
 #----------------------------------------------------
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_multi.bufr"
 echo "Test: setting header for multi-message file" >> $fLog
@@ -63,7 +63,7 @@ done
 
 #TODO: when ECC-37 is fixed we need to enable it.
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_1.bufr"
 echo "Test: setting data values" >> $fLog
@@ -80,7 +80,7 @@ echo "file: $f" >> $fLog
 
 #TODO: when ECC-37 is fixed we need to enable it.
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_multi.bufr"
 echo "Test: setting data values for multi-message file" >> $fLog
@@ -163,4 +163,4 @@ set -e
 
 #Clean up
 rm -f $fLog 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp

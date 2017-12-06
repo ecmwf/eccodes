@@ -74,7 +74,7 @@ static char* get_key(char** keys,int *type)
     char* key=NULL;
     char* p=NULL;
 
-    if (*keys == 0 || keys==NULL) return NULL;
+    if (keys==NULL || *keys == 0) return NULL;
     *type=GRIB_TYPE_UNDEFINED;
     p=*keys;
     while (*p == ' ') p++;
@@ -1080,7 +1080,7 @@ int _codes_index_add_file(grib_index* index,const char* filename,int message_typ
         } else
             field_tree->field=field;
 
-        if (h) grib_handle_delete(h);
+        grib_handle_delete(h);
     }
 
     grib_file_close(file->name, 0, &err);
@@ -1384,7 +1384,7 @@ int grib_index_select_long(grib_index* index,const char* skey,long value)
                 "key \"%s\" not found in index",skey);
         return err;
     }
-
+    Assert(key);
     sprintf(key->value,"%ld",value);
     grib_index_rewind(index);
     return 0;
@@ -1416,7 +1416,7 @@ int grib_index_select_double(grib_index* index,const char* skey,double value)
                 "key \"%s\" not found in index",skey);
         return err;
     }
-
+    Assert(key);
     sprintf(key->value,"%g",value);
     grib_index_rewind(index);
     return 0;
@@ -1448,7 +1448,7 @@ int grib_index_select_string(grib_index* index,const char* skey,char* value)
                 "key \"%s\" not found in index",skey);
         return err;
     }
-
+    Assert(key);
     sprintf(key->value,"%s",value);
     grib_index_rewind(index);
     return 0;
