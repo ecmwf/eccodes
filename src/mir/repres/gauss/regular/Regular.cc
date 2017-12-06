@@ -189,9 +189,8 @@ bool Regular::getLongestElementDiagonal(double& d) const {
     for (size_t j = 1; j < lats.size(); ++j) {
 
         const eckit::Fraction we = Longitude::GLOBE.fraction() / (N_ * 4);
-        const Latitude&
-        latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l1 : l2),
-                           latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l2 : l1);
+        const Latitude& latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l1 : l2);
+        const Latitude& latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l2 : l1);
 
         d = std::max(d, atlas::util::Earth::distanceInMeters(
                          atlas::PointLonLat(0., latCloserToEquator.value()),
