@@ -22,6 +22,7 @@
 #include "eckit/thread/AutoLock.h"
 #include "eckit/thread/Mutex.h"
 #include "eckit/config/Resource.h"
+#include "eckit/log/ResourceUsage.h"
 
 #include "mir/action/context/Context.h"
 #include "mir/config/LibMir.h"
@@ -163,6 +164,7 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation &param1,
 
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation, context::Context& ctx) {
 
+    eckit::TraceResourceUsage<LibMir> usage("GribOutput::save");
 
 
     const data::MIRField& field = ctx.field();
