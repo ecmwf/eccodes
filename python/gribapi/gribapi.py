@@ -1613,6 +1613,9 @@ def grib_get(msgid, key, ktype=None):
     @return scalar value of key as int, float or str
     @exception GribInternalError
     """
+    if not key:
+        raise ValueError("Invalid key name")
+
     if ktype is None:
         ktype = grib_get_native_type(msgid, key)
 
