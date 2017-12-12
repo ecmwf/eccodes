@@ -139,11 +139,10 @@ static void aliases(grib_dumper* d,grib_accessor* a)
 static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_wmo *self = (grib_dumper_wmo*)d;
-    long value = 0; size_t size =0;
+    long value = 0; size_t size = 0;
     long *values=NULL;
-    int err = 0;
-    int i=0;
-    long count=0;
+    int err = 0, i = 0;
+    long count = 0;
 
     grib_value_count(a,&count);
     size=count;
