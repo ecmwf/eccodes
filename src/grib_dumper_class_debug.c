@@ -128,18 +128,17 @@ static void aliases(grib_dumper* d,grib_accessor* a)
 static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_debug *self = (grib_dumper_debug*)d;
-    long value=0; size_t size = 1;
+    long value=0; size_t size = 0;
     long *values=NULL; /* array of long */
     long count = 0;
-    int err = 0, i = 0;
+    int err = 0, i = 0, more = 0;
 
     grib_value_count(a,&count);size=count;
 
-    if( a->length == 0  &&
-            (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
+    if (a->length == 0 && (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
         return;
 
-    if( (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0 &&
+    if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0 &&
             (d->option_flags & GRIB_DUMP_FLAG_READ_ONLY) == 0)
         return;
 
@@ -155,16 +154,28 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
 
     if (size>1) {
-        int cols=19;
-        int icount=0;
-        fprintf(self->dumper.out,"%ld-%ld %s %s = { \t",self->begin,self->theEnd,a->creator->op,a->name);
+        fprintf(self->dumper.out,"%ld-%ld %s %s = {\n",self->begin,self->theEnd,a->creator->op,a->name);
         if (values) {
-            for (i=0;i<size;i++) {
-                if (icount>cols) {fprintf(self->dumper.out,"\n\t\t\t\t");icount=0;}
-                fprintf(self->dumper.out,"%ld ",values[i]);
-                icount++;
+            int k = 0;
+            if(size > 100) {
+                more = size - 100;
+                size = 100;
             }
-            fprintf(self->dumper.out,"}\n");
+            while(k < size) {
+                int j;
+                for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
+                for(j = 0; j < 8 && k < size; j++, k++) {
+                    fprintf(self->dumper.out,"%ld",values[k]);
+                    if(k != size-1) fprintf(self->dumper.out,", ");
+                }
+                fprintf(self->dumper.out,"\n");
+            }
+            if(more) {
+                for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
+                fprintf(self->dumper.out,"... %d more values\n",more);
+            }
+            for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
+            fprintf(self->dumper.out,"} # %s %s \n",a->creator->op, a->name);
             grib_context_free(a->context,values);
         }
     } else {
