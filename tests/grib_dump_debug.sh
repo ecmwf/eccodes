@@ -9,6 +9,8 @@
 #
 
 . ./include.sh
+label="grib_dump_debug"
+temp=temp.$label.txt
 
 REDIRECT=/dev/null
 
@@ -68,6 +70,15 @@ v.grib2
 
 for file in $files; do
    if [ -f ${data_dir}/$file ]; then
-      ${tools_dir}/grib_dump -Da ${data_dir}/$file 2> $REDIRECT > $REDIRECT
+      ${tools_dir}/grib_dump -Da ${data_dir}/$file > $temp 2>&1
+      set +e
+      # Look for the word ERROR in output. We should not find any
+      grep -q 'ERROR ' $temp
+      if [ $? -eq 0 ]; then
+         echo "File $file: found string ERROR in grib_dump output!"
+         exit 1
+      fi
+      set -e
    fi
 done
+rm -f $temp
