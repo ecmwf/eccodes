@@ -145,7 +145,6 @@
   !> @param[in] msgid     id of the message loaded in memory
   !> @param[in] key       key name
   !> @param[out] value    value can be a scalar or array of integer(4),real(4),real(8).
-  !>                      Arrays must support the \b allocatable attribute.
   !> @param[out] status   CODES_SUCCESS if OK, integer value on error
   interface codes_set
     module procedure codes_set_int, &
