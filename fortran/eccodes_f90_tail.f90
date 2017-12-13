@@ -1817,10 +1817,10 @@ end subroutine codes_bufr_copy_data
   !> @param value      string array value
   !> @param status     CODES_SUCCESS if OK, integer value on error
 subroutine codes_set_string_array ( msgid, key, value, status )
-    integer(kind=kindOfInt),                     intent(in)   :: msgid
-    character(len=*),                            intent(in)   :: key
-    character(len=*), dimension(:),allocatable,  intent(in)   :: value
-    integer(kind=kindOfInt),optional,            intent(out)  :: status
+    integer(kind=kindOfInt),            intent(in)   :: msgid
+    character(len=*),                   intent(in)   :: key
+    character(len=*), dimension(:),     intent(in)   :: value
+    integer(kind=kindOfInt),optional,   intent(out)  :: status
 
     character                 :: cvalue(size(value)*len(value(0)))
     character                 :: svalue(len(value(0)))
