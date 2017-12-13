@@ -1810,6 +1810,7 @@ end subroutine codes_bufr_copy_data
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
+  !> Note: This function supports the \b allocatable array attribute
   !>
   !> @param msgid      id of the message loaded in memory
   !> @param key        key name

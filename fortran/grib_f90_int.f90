@@ -66,9 +66,10 @@
   !>
   !> Given a \em msgid and \em key as input a \em value for the \em key is returned.
   !> In some cases the \em value can be an array rather than a scalar.
-  !> As examples of array keys we have "values","pl", "pv" respectively the data values,
-  !> the list of number of points for each latitude in a reduced grid and the list of
-  !> vertical levels. In these cases the \em value array must be allocated by the caller
+  !> As examples of GRIB array keys we have "values" (the data values),
+  !> "pl" (the list of number of points for each latitude in a reduced grid) and
+  !> "pv" (the list of vertical levels).
+  !> In these cases the \em value array must be allocated by the caller
   !> and their required dimension can be obtained with \ref grib_get_size. \n
   !> The \em value can be integer(4), real(4), real(8), character.
   !> Although each key has its own native type, a key of type integer
@@ -123,9 +124,10 @@
   !>
   !> The given \em value is set for the \em key in the \em msgid message.
   !> In some cases the \em value can be an array rather than a scalar.
-  !> As examples of array keys we have "values","pl", "pv" respectively the data values,
-  !> the list of number of points for each latitude in a reduced grid and the list of
-  !> vertical levels. In these cases the \em value array must be allocated by the caller
+  !> As examples of GRIB array keys we have "values" (the data values),
+  !> "pl" (the list of number of points for each latitude in a reduced grid) and
+  !> "pv" (the list of vertical levels).
+  !> In these cases the \em value array must be allocated by the caller
   !> and their required dimension can be obtained with \ref grib_get_size. \n
   !> The msgid references to a message loaded in memory.
   !>
