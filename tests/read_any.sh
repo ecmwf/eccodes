@@ -13,11 +13,11 @@
 infile=${data_dir}/mixed.grib
 outfile=${data_dir}/read_any.out
 
-if [ ! -f ${infile} ]
-then
-  echo no data to test
-  exit 0
-fi
+#if [ ! -f ${infile} ]
+#then
+#  echo no data to test
+#  exit 0
+#fi
 
 $test_dir/read_any $infile > ${outfile}
 

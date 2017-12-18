@@ -13,11 +13,11 @@
 . ./include.sh
 infile=${data_dir}/index.grib
 
-if [ ! -f ${infile} ]
-then
-  echo no data to test
-  exit 0
-fi
+#if [ ! -f ${infile} ]
+#then
+#  echo no data to test
+#  exit 0
+#fi
 
 ${test_dir}/index ${infile} > index.out
 

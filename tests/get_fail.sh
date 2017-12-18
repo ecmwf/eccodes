@@ -12,11 +12,14 @@
 
 REDIRECT=/dev/null
 
-set +e 
+# Check input file has been downloaded
+[ -f ${data_dir}/regular_latlon_surface.grib1 ]
 
+# Expect failure as the key does not exist
+set +e
 ${tools_dir}/grib_get -p gribname ${data_dir}/regular_latlon_surface.grib1 2> $REDIRECT > $REDIRECT
 
-if [ $? -eq 0 ] 
-  then
+if [ $? -eq 0 ] ; then
+  # Should not have succeeded
   exit 1;
 fi

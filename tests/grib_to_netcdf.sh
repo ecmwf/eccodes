@@ -52,10 +52,9 @@ do
    for f in $grib_files
    do
       rm -f $tmp_netcdf
-      if [ -f "${data_dir}/$f" ]; then
-        ${tools_dir}/grib_to_netcdf -D $dt -o $tmp_netcdf ${data_dir}/$f >/dev/null
-	${tools_dir}/grib_to_netcdf -T -o $tmp_netcdf ${data_dir}/$f >/dev/null
-      fi
+      [ -f ${data_dir}/$f ]
+      ${tools_dir}/grib_to_netcdf -D $dt -o $tmp_netcdf ${data_dir}/$f >/dev/null
+      ${tools_dir}/grib_to_netcdf -T -o $tmp_netcdf ${data_dir}/$f >/dev/null
    done
 done
 

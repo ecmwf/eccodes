@@ -9,6 +9,8 @@
 
 . ./include.sh
 
+${examples_dir}/c_grib_print_data ../../data/constant_field.grib1 >/dev/null
+
 numberOfValues=`${examples_dir}/c_grib_print_data ../../data/constant_field.grib1 | grep values | awk '{print $1}'`
 
 if [ $numberOfValues -ne 99200 ]
@@ -16,5 +18,3 @@ then
   echo ERROR: wrong number of values
   exit 1;
 fi
-
-
