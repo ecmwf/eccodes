@@ -39,6 +39,9 @@ outfile2=$infile.tmp_jpeg.2
 
 rm -f $outfile1 $outfile2
 
+# Test dump
+${tools_dir}/grib_dump -Da $infile >/dev/null 2>&1
+
 ${tools_dir}/grib_set -s packingType=grid_simple $infile $outfile1
 ${tools_dir}/grib_compare -P -b $BLACKLIST,typeOfCompressionUsed,targetCompressionRatio $infile $outfile1 > $REDIRECT
 ${tools_dir}/grib_set -s packingType=grid_jpeg $outfile1 $outfile2
