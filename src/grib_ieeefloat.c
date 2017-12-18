@@ -384,39 +384,28 @@ unsigned long grib_ieee_to_long(double x)
 
 #ifdef IEEE
 
+
+/* 
+ * To make these two routines consistent to grib_ieee_to_long and grib_long_to_ieee,
+ * we should not do any byte swapping but rather perform a raw copy.
+ * Byte swapping is actually implemented in grib_decode_unsigned_long and
+ * grib_encode_unsigned_long.
+ */
+
 unsigned long grib_ieee64_to_long(double x)
 {
-    unsigned long lval = 0;
-#if IEEE_LE
-    unsigned char s[8]={0,};
-    unsigned char* buf=(unsigned char*)&x;
-    int j=0;
-    for (j=7;j>=0;j--)
-        s[j]= *(buf++);
-    memcpy(&lval,s,8);
-#elif IEEE_BE
+    unsigned long lval;
     memcpy(&lval,&x,8);
-#endif
     return lval;
 }
 
-double grib_long_to_ieee64(unsigned long x){
-    double dval = 0.0;
-#if IEEE_LE
-    unsigned char s[8]={0,};
-    unsigned char* buf=(unsigned char*)&x;
-    int j=0;
-    for (j=7;j>=0;j--)
-        s[j]= *(buf++);
-    memcpy(&dval,s,8);
-#elif IEEE_BE
+double grib_long_to_ieee64 (unsigned long x)
+{
+    double dval;
     memcpy(&dval,&x,8);
-#else
-    Assert(!"Neither IEEE_LE nor IEEE_BE defined.");
-#endif
-
     return dval;
 }
+
 
 int grib_ieee_decode_array(grib_context* c,unsigned char* buf,size_t nvals,int bytes,double* val)
 {
