@@ -64,6 +64,15 @@ tigge_af_ecmwf.grib2
 tigge_cf_ecmwf.grib2
 "
 
+set +u
+# Check HAVE_JPEG is defined and is equal to 1
+if [ "x$HAVE_JPEG" != x ]; then
+    if [ $HAVE_JPEG -eq 1 ]; then
+        # Include files which have messages with grid_jpeg packing
+        files="jpeg.grib2  multi.grib2  reduced_gaussian_surface_jpeg.grib2  v.grib2 "$files
+    fi
+fi
+
 for file in $files; do
    if [ -f ${data_dir}/$file ]; then
       ${tools_dir}/grib_dump -Da ${data_dir}/$file > $temp 2>&1
