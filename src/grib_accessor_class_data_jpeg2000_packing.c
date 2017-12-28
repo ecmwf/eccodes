@@ -201,6 +201,19 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
         }
     }
 
+    if (a->context->debug==-1) {
+        switch (self->jpeg_lib) {
+            case 0:
+                printf("ECCODES DEBUG jpeg2000_packing: jpeg_lib not set!\n"); break;
+            case JASPER_LIB:
+                printf("ECCODES DEBUG jpeg2000_packing: using JASPER_LIB\n");   break;
+            case OPENJPEG_LIB:
+                printf("ECCODES DEBUG jpeg2000_packing: using OPENJPEG_LIB\n"); break;
+            default:
+                Assert(0); break;
+        }
+    }
+
     self->dump_jpg = codes_getenv("ECCODES_GRIB_DUMP_JPG_FILE");
 
     if(first) {
