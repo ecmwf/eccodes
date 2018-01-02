@@ -42,12 +42,12 @@ do
   # Check original BUFR file against one we generated from sample
   ${tools_dir}/bufr_compare $inputBufr $tempBufr
 
-  TEMP_JSON1=${label}.$file.json
-  TEMP_JSON2=${label}.$tempBufr.json
-  ${tools_dir}/bufr_dump $inputBufr > $TEMP_JSON1
-  ${tools_dir}/bufr_dump $tempBufr  > $TEMP_JSON2
-  diff $TEMP_JSON1 $TEMP_JSON2 2>/dev/null
-  rm -f $TEMP_JSON1 $TEMP_JSON2
+  TEMP_OUT1=${label}.$file.dump.out
+  TEMP_OUT2=${label}.$tempBufr.dump.out
+  ${tools_dir}/bufr_dump -p $inputBufr > $TEMP_OUT1
+  ${tools_dir}/bufr_dump -p $tempBufr  > $TEMP_OUT2
+  diff $TEMP_OUT1 $TEMP_OUT2
+  rm -f $TEMP_OUT1 $TEMP_OUT2
 
   rm -f $tempSrc $tempBufr
 done

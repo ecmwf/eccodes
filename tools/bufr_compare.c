@@ -741,10 +741,22 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
         {
             if(grib_inline_strcmp(sval1,sval2) != 0)
             {
-                printInfo(handle1);
-                printf("string [%s]: [%s] != [%s]\n", name, sval1, sval2);
-                err1 = GRIB_VALUE_MISMATCH;
-                save_error(c,name);
+                /* Check if strings are 'missing'.
+                 * Note: one string could have all its bits=1 and the other empty */
+                int equal = 0;
+                grib_accessor* a1 = grib_find_accessor(handle1, name);
+                grib_accessor* a2 = grib_find_accessor(handle2, name);
+                int is_miss_1 = grib_is_missing_string(a1, (unsigned char *)sval1, len1);
+                int is_miss_2 = grib_is_missing_string(a2, (unsigned char *)sval2, len2);
+                if ( is_miss_1 && is_miss_2 ) {
+                    equal = 1;
+                }
+                if (!equal) {
+                    printInfo(handle1);
+                    printf("string [%s]: [%s] != [%s]\n", name, sval1, sval2);
+                    err1 = GRIB_VALUE_MISMATCH;
+                    save_error(c,name);
+                }
             }
         }
 

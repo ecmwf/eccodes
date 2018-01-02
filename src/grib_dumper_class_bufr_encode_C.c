@@ -144,10 +144,18 @@ static int destroy(grib_dumper* d)
     return GRIB_SUCCESS;
 }
 
+static char* lval_to_string(grib_context* c, long v)
+{
+    char* sval=grib_context_malloc_clear(c,sizeof(char)*40);
+    if (v == GRIB_MISSING_LONG) sprintf(sval,"CODES_MISSING_LONG");
+    else                        sprintf(sval,"%ld",v);
+    return sval;
+}
 static char* dval_to_string(grib_context* c, double v)
 {
     char* sval=(char*)grib_context_malloc_clear(c,sizeof(char)*40);
-    sprintf(sval,"%.18e",v);
+    if (v == GRIB_MISSING_DOUBLE) sprintf(sval,"CODES_MISSING_DOUBLE");
+    else                          sprintf(sval,"%.18e",v);
     return sval;
 }
 
@@ -208,16 +216,12 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
             fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double_array(h, \"%s\", rvalues, size), 0);\n",a->name);
     } else {
         r=compute_bufr_key_rank(h,self->keys,a->name);
-        if( !grib_is_missing_double(a,value) ) {
-
-            sval=dval_to_string(c,value);
-            if (r!=0)
-                fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"#%d#%s\", %s), 0);\n", r, a->name, sval);
-            else
-                fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"%s\", %s), 0);\n", a->name, sval);
-
-            grib_context_free(c,sval);
-        }
+        sval=dval_to_string(c,value);
+        if (r!=0)
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"#%d#%s\", %s), 0);\n", r, a->name, sval);
+        else
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"%s\", %s), 0);\n", a->name, sval);
+        grib_context_free(c,sval);
     }
 
     if (self->isLeaf==0) {
@@ -290,15 +294,9 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
 
         fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double_array(h, \"%s->%s\", rvalues, size), 0);\n", prefix,a->name);
     } else {
-        /* int r=compute_bufr_key_rank(h,self->keys,a->name); */
-        if( !grib_is_missing_double(a,value) ) {
-
-            sval=dval_to_string(c,value);
-            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"%s->%s\", %s), 0);\n", prefix,a->name, sval);
-
-            grib_context_free(c,sval);
-
-        }
+        sval=dval_to_string(c,value);
+        fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"%s->%s\", %s), 0);\n", prefix,a->name, sval);
+        grib_context_free(c,sval);
     }
 
     if (self->isLeaf==0) {
@@ -325,6 +323,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
     int i,r,icount;
     int cols=4;
     long count=0;
+    char* sval = NULL;
     grib_context* c=a->context;
     grib_handle* h=grib_handle_of_accessor(a);
 
@@ -388,22 +387,22 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
 
     } else {
         r=compute_bufr_key_rank(h,self->keys,a->name);
-        if( !grib_is_missing_long(a,value) ) {
-            int doing_unexpandedDescriptors=0;
-            if (r!=0) {
-                fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"#%d#%s\", ", r,a->name);
-            } else {
-                if (strcmp(a->name, "unexpandedDescriptors")==0) {
-                    doing_unexpandedDescriptors=1;
-                    fprintf(self->dumper.out,"\n  /* Create the structure of the data section */\n");
-                }
-                fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"%s\", ", a->name);
+        sval=lval_to_string(c,value);
+        int doing_unexpandedDescriptors=0;
+        if (r!=0) {
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"#%d#%s\", ", r,a->name);
+        } else {
+            if (strcmp(a->name, "unexpandedDescriptors")==0) {
+                doing_unexpandedDescriptors=1;
+                fprintf(self->dumper.out,"\n  /* Create the structure of the data section */\n");
             }
-
-            fprintf(self->dumper.out,"%ld), 0);\n",value);
-            if (doing_unexpandedDescriptors)
-                fprintf(self->dumper.out,"\n");
+            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"%s\", ", a->name);
         }
+
+        fprintf(self->dumper.out,"%s), 0);\n",sval);
+        grib_context_free(c,sval);
+        if (doing_unexpandedDescriptors)
+            fprintf(self->dumper.out,"\n");
     }
 
     if (self->isLeaf==0) {
@@ -471,11 +470,10 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long_array(h, \"%s->%s\", ivalues, size), 0);\n", prefix,a->name);
 
     } else {
-        /* int r=compute_bufr_key_rank(h,self->keys,a->name); */
-        if( !grib_is_missing_long(a,value) ) {
-            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"%s->%s\", ", prefix,a->name);
-            fprintf(self->dumper.out,"%ld), 0);\n",value);
-        }
+        char* sval=lval_to_string(c,value);
+        fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"%s->%s\", ", prefix,a->name);
+        fprintf(self->dumper.out,"%s), 0);\n",sval);
+        grib_context_free(c,sval);
     }
 
     if (self->isLeaf==0) {
@@ -512,15 +510,13 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     self->empty=0;
 
     r=compute_bufr_key_rank(h,self->keys,a->name);
-    if( !grib_is_missing_double(a,value) ) {
-        sval=dval_to_string(c,value);
-        if (r!=0)
-            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"#%d#%s\", %s), 0);\n", r,a->name, sval);
-        else
-            fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"%s\", %s), 0);\n", a->name, sval);
 
-        grib_context_free(c,sval);
-    }
+    sval=dval_to_string(c,value);
+    if (r!=0)
+        fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"#%d#%s\", %s), 0);\n", r,a->name, sval);
+    else
+        fprintf(self->dumper.out,"  CODES_CHECK(codes_set_double(h, \"%s\", %s), 0);\n", a->name, sval);
+    grib_context_free(c,sval);
 
     if (self->isLeaf==0) {
         char* prefix;
@@ -630,8 +626,9 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     err = grib_unpack_string(a,value,&size);
     p=value;
     r=compute_bufr_key_rank(h,self->keys,a->name);
-    if (grib_is_missing_string(a,(unsigned char *)value,size))
-        return;
+    if (grib_is_missing_string(a,(unsigned char *)value,size)) {
+        strcpy(value, ""); /* Empty string means MISSING string */
+    }
 
     while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 

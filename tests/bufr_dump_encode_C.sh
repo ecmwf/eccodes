@@ -84,12 +84,12 @@ do
     fi
     ${tools_dir}/bufr_compare ${data_dir}/bufr/$file $tempBufr
 
-    TEMP_JSON1=${label}.$file.json
-    TEMP_JSON2=${label}.$tempBufr.json
-    ${tools_dir}/bufr_dump ${data_dir}/bufr/$file > $TEMP_JSON1
-    ${tools_dir}/bufr_dump $tempBufr              > $TEMP_JSON2
-    diff $TEMP_JSON1 $TEMP_JSON2
-    rm -f $TEMP_JSON1 $TEMP_JSON2
+    TEMP_OUT1=${label}.$file.dump.out
+    TEMP_OUT2=${label}.$tempBufr.dump.out
+    ${tools_dir}/bufr_dump -p ${data_dir}/bufr/$file > $TEMP_OUT1
+    ${tools_dir}/bufr_dump -p $tempBufr              > $TEMP_OUT2
+    diff $TEMP_OUT1 $TEMP_OUT2
+    rm -f $TEMP_OUT1 $TEMP_OUT2
   fi
 
   rm -f $tempExe $tempSrc $tempBufr

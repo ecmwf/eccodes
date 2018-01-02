@@ -41,6 +41,7 @@ if command -v pkg-config >/dev/null 2>&1; then
     INSTALL_DIR=`grep -w CMAKE_INSTALL_PREFIX $CACHE_FILE | cut -d'=' -f2`
     FLAGS_LINKER=`echo $FLAGS_LINKER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
     FLAGS_COMPILER=`echo $FLAGS_COMPILER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
+    FLAGS_COMPILER="$FLAGS_COMPILER -ffree-line-length-0"
 
     # TODO: For now only support when shared libs enabled
     SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`
@@ -73,12 +74,12 @@ do
     ./$tempExe
     ${tools_dir}/bufr_compare ${data_dir}/bufr/$file $tempBufr
 
-    TEMP_JSON1=${label}.$file.json
-    TEMP_JSON2=${label}.$tempBufr.json
-    ${tools_dir}/bufr_dump ${data_dir}/bufr/$file > $TEMP_JSON1
-    ${tools_dir}/bufr_dump $tempBufr              > $TEMP_JSON2
-    diff $TEMP_JSON1 $TEMP_JSON2
-    rm -f $TEMP_JSON1 $TEMP_JSON2
+    TEMP_OUT1=${label}.$file.dump.out
+    TEMP_OUT2=${label}.$tempBufr.dump.out
+    ${tools_dir}/bufr_dump -p ${data_dir}/bufr/$file > $TEMP_OUT1
+    ${tools_dir}/bufr_dump -p $tempBufr              > $TEMP_OUT2
+    diff $TEMP_OUT1 $TEMP_OUT2
+    rm -f $TEMP_OUT1 $TEMP_OUT2
   fi
 
   rm -f $tempExe $tempSrc $tempBufr
