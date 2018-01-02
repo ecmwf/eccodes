@@ -386,9 +386,9 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
             fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long_array(h, \"%s\", ivalues, size), 0);\n",a->name);
 
     } else {
+        int doing_unexpandedDescriptors=0;
         r=compute_bufr_key_rank(h,self->keys,a->name);
         sval=lval_to_string(c,value);
-        int doing_unexpandedDescriptors=0;
         if (r!=0) {
             fprintf(self->dumper.out,"  CODES_CHECK(codes_set_long(h, \"#%d#%s\", ", r,a->name);
         } else {
