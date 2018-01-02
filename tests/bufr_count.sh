@@ -24,8 +24,9 @@ count=`${tools_dir}/codes_count $input`
 # Files with invalid (unreadable) messages
 # -----------------------------------------
 temp=$input.truncated
-# Remove last 4 bytes of multi message BUFR file
-head --bytes=-4 $input > $temp
+# BUFR file size = 660 bytes. Write out only the first 640 bytes
+# thereby creating an unreadable final message
+head -c 640 $input > $temp
 
 set +e
 # Without -f, bufr_count should fail
