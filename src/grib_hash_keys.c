@@ -8335,7 +8335,7 @@ grib_keys_hash_get (const char *str, unsigned int len)
   return 0;
 }
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
