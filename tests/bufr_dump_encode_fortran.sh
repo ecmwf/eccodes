@@ -41,7 +41,6 @@ if command -v pkg-config >/dev/null 2>&1; then
     INSTALL_DIR=`grep -w CMAKE_INSTALL_PREFIX $CACHE_FILE | cut -d'=' -f2`
     FLAGS_LINKER=`echo $FLAGS_LINKER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
     FLAGS_COMPILER=`echo $FLAGS_COMPILER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
-    FLAGS_COMPILER="$FLAGS_COMPILER -ffree-line-length-0"
 
     # TODO: For now only support when shared libs enabled
     SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`

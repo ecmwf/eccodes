@@ -168,6 +168,45 @@ static char* dval_to_string(grib_context* c, double v)
     return sval;
 }
 
+/* Some lines can grow longer than Fortran compilers allow (=132). */
+/* This is mainly due to long key names with attributes. */
+/* The resturn value of this function must be freed by the caller */
+static char* break_line(grib_context* c, const char* input)
+{
+    /* Break a long line using Fortran continuation characters */
+    char* result=NULL;
+    char* a_token = NULL;
+    int first = 1;
+    const size_t len = strlen(input);
+    /* Add a bit more for inserted newlines and continuation characters */
+    result = (char*)grib_context_malloc_clear(c,sizeof(char)*len+100);
+
+    /* No need to alter input which is already too short or has newlines */
+    if (len < 70 || strchr(input, '\n')) {
+        strcpy(result, input);
+        return result;
+    }
+
+    /* A Fortran multi-line string has two ampersands. E.g. */
+    /* 'hello &
+     * &world'  is the same as 'hello world'
+     */
+    a_token = strtok((char*)input, "->");
+    while (a_token) {
+        if (first) {
+            first = 0;
+            strcat(result, a_token);
+        } else {
+            char tmp[256] = {0,};
+            sprintf(tmp, "->&\n    &%s", a_token);
+            strcat(result, tmp);
+        }
+        a_token = strtok(NULL, "->");
+    }
+
+    return result;
+}
+
 static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_bufr_encode_fortran *self = (grib_dumper_bufr_encode_fortran*)d;
@@ -440,6 +479,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     int i,icount;
     int cols=4;
     long count=0;
+    char* pref = NULL;
     grib_context* c=a->context;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -456,6 +496,10 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     }
 
     self->empty=0;
+
+    /* Fortran standard specifies the maximum length of a free-form source line is 132 characters */
+    /* Break long prefix string into multiple lines to avoid compiler error */
+    pref = break_line(c, prefix);
 
     if (size>1) {
         fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
@@ -475,11 +519,11 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         fprintf(self->dumper.out,"/)\n");
         grib_context_free(a->context,values);
 
-        fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s' &\n,ivalues)\n",prefix,a->name);
+        fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s' &\n,ivalues)\n",pref,a->name);
 
     } else {
         char* sval=lval_to_string(c,value);
-        fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s'&\n,",prefix,a->name);
+        fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s'&\n,",pref,a->name);
         fprintf(self->dumper.out,"%s)\n",sval);
         grib_context_free(c,sval);
     }
@@ -487,14 +531,15 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     if (self->isLeaf==0) {
         char* prefix1;
 
-        prefix1=(char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+strlen(prefix)+5));
-        sprintf(prefix1,"%s->%s",prefix,a->name);
+        prefix1=(char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+strlen(pref)+5));
+        sprintf(prefix1,"%s->%s",pref,a->name);
 
         dump_attributes(d,a,prefix1);
 
         grib_context_free(c,prefix1);
         depth-=2;
     }
+    grib_context_free(c,pref);
     (void)err; /* TODO */
 }
 
