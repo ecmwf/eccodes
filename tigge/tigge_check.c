@@ -1132,7 +1132,7 @@ static void verify(grib_handle* h)
         values = (double*)malloc(sizeof(double)*(count));
         if(!values)
         {
-            printf("%s, field %d [%s]: failed to allocate %ld bytes\n",file,field,param,(long)sizeof(double)*(count));
+            printf("%s, field %d [%s]: failed to allocate %ld bytes\n",file,field,param,(long)(sizeof(double)*count));
             error++;
             return;
         }

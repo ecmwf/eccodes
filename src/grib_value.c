@@ -1323,7 +1323,6 @@ int grib_get_long_array(grib_handle* h, const char* name, long* val, size_t *len
         if (!al) return GRIB_NOT_FOUND;
         ret=grib_accessors_list_unpack_long(al,val,length);
         grib_context_free(h->context,al);
-        return ret;
     } else  {
         a=grib_find_accessor(h, name);
         if(!a) return GRIB_NOT_FOUND;

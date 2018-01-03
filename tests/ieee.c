@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 
 		if(grib_ieee_to_long(grib_long_to_ieee(i)) != i)
 		{
-			printf("i=%ld i=%lx e=%g x=%lx\n",i,i,grib_long_to_ieee(i),grib_ieee_to_long(grib_long_to_ieee(i)));
+			printf("i=%lu i=%lx e=%g x=%lx\n",i,i,grib_long_to_ieee(i),grib_ieee_to_long(grib_long_to_ieee(i)));
 			/*assert(grib_ieee_to_long(grib_long_to_ieee(i)) == i);*/
 			assert(0);
 		}

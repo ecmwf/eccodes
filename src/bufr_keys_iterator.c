@@ -96,10 +96,6 @@ static int skip(bufr_keys_iterator* kiter)
     } else  {
         return 1;
     }
-
-    mark_seen(kiter,kiter->current->name);
-
-    return 0;
 }
 
 static int next_attribute(bufr_keys_iterator* kiter)

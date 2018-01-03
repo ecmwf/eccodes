@@ -697,7 +697,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
 
         grib_keys_iterator_delete(kiter);
         if (options->print_keys_count==0 && options->latlon == 0 ) {
-            int i=0,j=0,k=0,ns_count=0;
+            int j=0,k=0,ns_count=0;
             char* all_namespace_vals[1024] = {NULL,}; /* sorted array containing all namespaces */
             printf("ERROR: namespace \"%s\" does not contain any key.\n",ns);
             printf("Here are the available namespaces in this message:\n");

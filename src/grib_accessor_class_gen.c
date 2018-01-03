@@ -393,7 +393,6 @@ static int pack_expression(grib_accessor* a, grib_expression *e)
             /*if (hand->context->debug)
                 printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %ld\n", a->name,lval);*/
             return grib_pack_long(a,&lval,&len);
-            break;
         }
 
         case GRIB_TYPE_DOUBLE: {
@@ -402,7 +401,6 @@ static int pack_expression(grib_accessor* a, grib_expression *e)
             /*if (hand->context->debug)
                 printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %g\n", a->name, dval);*/
             return grib_pack_double(a,&dval,&len);
-            break;
         }
 
         case GRIB_TYPE_STRING: {
@@ -417,7 +415,6 @@ static int pack_expression(grib_accessor* a, grib_expression *e)
             /*if (hand->context->debug)
                 printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %s\n", a->name, cval);*/
             return grib_pack_string(a,cval,&len);
-            break;
         }
     }
 

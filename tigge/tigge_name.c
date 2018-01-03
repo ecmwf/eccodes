@@ -27,7 +27,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-#define CHECK(a) check(#a,a)
+/* #define CHECK(a) check(#a,a) */
 #define NUMBER(a) (sizeof(a)/sizeof(a[0]))
 
 int error = 0;
@@ -37,7 +37,8 @@ const char* param = "unknown";
 int list_mode = 0;
 int compare_mode = 0;
 
-void check(const char* name,int a)
+#if 0
+static void check(const char* name,int a)
 {
     if(!a) {
         printf("%s, field %d [%s]: %s failed\n",file,field,param,name);
@@ -45,31 +46,7 @@ void check(const char* name,int a)
     }
 }
 
-long get(grib_handle *h,const char* what)
-{
-    int e; long val;
-    if((e = grib_get_long(h,what,&val)) != GRIB_SUCCESS)
-    {
-        printf("%s, field %d [%s]: cannot get %s: %s\n",file,field,param,what,grib_get_error_message(e));
-        error++;
-        val = -1;
-    }
-    return val;
-}
-
-char* sget(grib_handle *h,const char* what,char* val,size_t size)
-{
-    int e; 
-    if((e = grib_get_string(h,what,val,&size)) != GRIB_SUCCESS)
-    {
-        printf("%s, field %d [%s]: cannot get %s: %s\n",file,field,param,what,grib_get_error_message(e));
-        error++;
-    }
-    return val;
-}
-
-
-double dget(grib_handle *h,const char* what)
+static double dget(grib_handle *h,const char* what)
 {
     int e; double val;
     if((e = grib_get_double(h,what,&val)) != GRIB_SUCCESS)
@@ -81,28 +58,51 @@ double dget(grib_handle *h,const char* what)
     return val;
 }
 
-int missing(grib_handle *h,const char* what)
+static int missing(grib_handle *h,const char* what)
 {
     int err=0;
     return grib_is_missing(h,what,&err);
 }
 
-int eq(grib_handle *h,const char* what,long value)
+static int eq(grib_handle *h,const char* what,long value)
 {
     return get(h,what) == value;
 }
 
-int ne(grib_handle *h,const char* what,long value)
+static int ne(grib_handle *h,const char* what,long value)
 {
     return get(h,what) != value;
 }
 
-int ge(grib_handle *h,const char* what,long value)
+static int ge(grib_handle *h,const char* what,long value)
 {
     return get(h,what) >= value;
 }
+#endif
+static long get(grib_handle *h,const char* what)
+{
+    int e; long val;
+    if((e = grib_get_long(h,what,&val)) != GRIB_SUCCESS)
+    {
+        printf("%s, field %d [%s]: cannot get %s: %s\n",file,field,param,what,grib_get_error_message(e));
+        error++;
+        val = -1;
+    }
+    return val;
+}
 
-void verify(grib_handle *h,const char* full,const char* base)
+static char* sget(grib_handle *h,const char* what,char* val,size_t size)
+{
+    int e; 
+    if((e = grib_get_string(h,what,val,&size)) != GRIB_SUCCESS)
+    {
+        printf("%s, field %d [%s]: cannot get %s: %s\n",file,field,param,what,grib_get_error_message(e));
+        error++;
+    }
+    return val;
+}
+
+static void verify(grib_handle *h,const char* full,const char* base)
 {
     char wmo_name[1024];
     char origin[80];
@@ -152,7 +152,7 @@ void verify(grib_handle *h,const char* full,const char* base)
     }
 }
 
-void validate(const char* path)
+static void validate(const char* path)
 {
     FILE *f = fopen(path,"r");
     grib_handle *h = 0;
@@ -198,13 +198,13 @@ void validate(const char* path)
     }
 }
 
-void usage()
+static void usage()
 {
     printf("tigge_name [-l] [-c] files ....\n");
     exit(1);
 }
 
-void scan(const char* name)
+static void scan(const char* name)
 {
     DIR *dir;
     if((dir = opendir(name)) != NULL)
