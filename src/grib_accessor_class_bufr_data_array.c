@@ -2394,6 +2394,9 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                 /* sval=grib_sarray_new(c,10,10); */
             }
         } else {
+            if (self->elementsDescriptorsIndex==NULL) {
+                return GRIB_ENCODING_ERROR;  /* See ECC-359 */
+            }
             elementsDescriptorsIndex=self->elementsDescriptorsIndex->v[iss];
             dval=self->numericValues->v[iss];
         }

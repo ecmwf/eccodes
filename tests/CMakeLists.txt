@@ -51,6 +51,7 @@ list( APPEND tests_no_data_reqd
     uerra
     grib_2nd_order_numValues
     julian
+    ecc-359
     ecc-517
 )
 # These tests do require data downloads
