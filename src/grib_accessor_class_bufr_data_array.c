@@ -1772,10 +1772,15 @@ static GRIB_INLINE int significanceQualifierIndex(int X,int Y)
     return ret;
 }
 
-static GRIB_INLINE void reset_deeper_qualifiers(grib_accessor* significanceQualifierGroup[],int* significanceQualifierDepth, int depth)
+static GRIB_INLINE void reset_deeper_qualifiers(
+    grib_accessor* significanceQualifierGroup[], const int* const significanceQualifierDepth, int depth)
 {
     int i;
-    for (i=0;i<number_of_qualifiers;i++) {
+    /* Optimisation: Loop inversion
+     * This is faster than:
+     *   for (i=0;i<number_of_qualifiers;i++)
+     */
+    for (i=number_of_qualifiers; i--; ) {
         if (significanceQualifierDepth[i]>depth) {
             significanceQualifierGroup[i]=0;
         }
