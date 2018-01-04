@@ -158,6 +158,8 @@ static void init_class(grib_accessor_class* c)
 /* END_CLASS_IMP */
 
 #define MYDEBUG 0
+#define DESC_SIZE_INIT 400 /* Initial size for grib_bufr_descriptors_array_new */
+#define DESC_SIZE_INCR 400 /* Increment size for grib_bufr_descriptors_array_new */
 
 typedef struct change_coding_params {
     int associatedFieldWidth;
@@ -251,7 +253,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
         v=(long*)grib_context_malloc_clear(c,sizeof(long)*size);
         *err=grib_get_long_array(grib_handle_of_accessor(a),self->sequence,v,&size);
         if (*err) return 0;
-        inner_unexpanded=grib_bufr_descriptors_array_new(c,100,100);
+        inner_unexpanded=grib_bufr_descriptors_array_new(c,DESC_SIZE_INIT,DESC_SIZE_INCR);
         for (i=0;i<size;i++) {
             vv=grib_bufr_descriptor_new(self->tablesAccessor,v[i],err);
             inner_unexpanded=grib_bufr_descriptors_array_push(inner_unexpanded,vv);
@@ -283,7 +285,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             grib_bufr_descriptors_array_push(expanded,u);
             idx=expanded->n-1;
             size=0;
-            inner_unexpanded=grib_bufr_descriptors_array_new(c,100,100);
+            inner_unexpanded=grib_bufr_descriptors_array_new(c,DESC_SIZE_INIT,DESC_SIZE_INCR);
 
             for (j=0;j<us->X+1;j++) {
                 DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded, u0);
@@ -322,7 +324,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
                 printf("+++ pop  %06ld\n",ur[j]->code);
 #endif
             }
-            inner_unexpanded=grib_bufr_descriptors_array_new(c,100,100);
+            inner_unexpanded=grib_bufr_descriptors_array_new(c,DESC_SIZE_INIT,DESC_SIZE_INCR);
             for (j=0;j<us->X;j++) {
                 urc=grib_bufr_descriptor_clone(ur[j]);
                 grib_bufr_descriptors_array_push(inner_unexpanded,urc);
@@ -476,7 +478,7 @@ static bufr_descriptors_array* do_expand(grib_accessor* a,bufr_descriptors_array
     global_depth++;
 #endif
 
-    expanded=grib_bufr_descriptors_array_new(c,100,100);
+    expanded=grib_bufr_descriptors_array_new(c,DESC_SIZE_INIT,DESC_SIZE_INCR);
 
 #if MYDEBUG
     {
@@ -580,8 +582,8 @@ static int expand(grib_accessor* a)
         Assert(self->tablesAccessor);
     }
 
-    unexpanded=grib_bufr_descriptors_array_new(c,unexpandedSize,100);
-    unexpanded_copy=grib_bufr_descriptors_array_new(c,unexpandedSize,100);
+    unexpanded=grib_bufr_descriptors_array_new(c,unexpandedSize,DESC_SIZE_INCR);
+    unexpanded_copy=grib_bufr_descriptors_array_new(c,unexpandedSize,DESC_SIZE_INCR);
     operator206yyy_width = 0;
     for (i=0;i<unexpandedSize;i++) {
         bufr_descriptor* aDescriptor1 = grib_bufr_descriptor_new(self->tablesAccessor, u[i], &err);
