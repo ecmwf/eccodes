@@ -52,6 +52,7 @@ list( APPEND tests_no_data_reqd
     grib_2nd_order_numValues
     julian
     ecc-517
+    grib_efas
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
