@@ -1776,11 +1776,7 @@ static GRIB_INLINE void reset_deeper_qualifiers(
     grib_accessor* significanceQualifierGroup[], const int* const significanceQualifierDepth, int depth)
 {
     int i;
-    /* Optimisation: Loop inversion
-     * This is faster than:
-     *   for (i=0;i<number_of_qualifiers;i++)
-     */
-    for (i=number_of_qualifiers; i--; ) {
+    for (i=0;i<number_of_qualifiers;i++) {
         if (significanceQualifierDepth[i]>depth) {
             significanceQualifierGroup[i]=0;
         }
@@ -1957,6 +1953,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     long groupNumber=0;
     /*long indexOfGroupNumber=0;*/
     int depth;
+    int max_depth = -1; /* highest value of depth */
     int idx;
     grib_context* c=a->context;
     int qualityPresent=0;
@@ -2038,15 +2035,18 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 continue;  /* Descriptor does not have an associated key e.g. inside op 203YYY */
             }
             elementFromBitmap=NULL;
-            if (descriptor->F==0 && IS_QUALIFIER(descriptor->X)
-            && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
+            if (descriptor->F==0 && IS_QUALIFIER(descriptor->X) &&
+                self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
                 int sidx=significanceQualifierIndex(descriptor->X,descriptor->Y);
                 groupNumber++;
 
                 if (significanceQualifierGroup[sidx]) {
                     groupSection=significanceQualifierGroup[sidx]->parent;
                     depth=significanceQualifierDepth[sidx];
-                    reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,depth);
+                    if (depth < max_depth) {
+                        /* If depth >= max_depth, then no entry will be deeper so no need for call */
+                        reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,depth);
+                    }
                 } else {
                     /* if (forceGroupClosure) { */
                     /* groupSection=sectionUp; */
@@ -2070,6 +2070,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
 
                 significanceQualifierGroup[sidx]=gaGroup;
                 significanceQualifierDepth[sidx]=depth;
+                if (depth > max_depth) max_depth = depth;
                 incrementBitmapIndex=1;
                 dump=1;
             } else if (descriptor->code == 31031 && incrementBitmapIndex!=0) {
@@ -2091,6 +2092,9 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     groupSection=bitmapGroup[bitmapIndex]->parent;
                     depth=bitmapDepth[bitmapIndex];
                     reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,depth);
+                    /* TODO: This branch is not reached in our tests! could cause problems!!
+                     * Should pass in number of elements of group/depth arrays and not assume 'number_of_qualifiers'!
+                     */
                     reset_deeper_qualifiers(bitmapGroup,bitmapDepth,depth);
                 } else {
                     groupSection=section;
