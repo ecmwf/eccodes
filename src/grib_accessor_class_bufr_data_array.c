@@ -1773,10 +1773,12 @@ static GRIB_INLINE int significanceQualifierIndex(int X,int Y)
 }
 
 static GRIB_INLINE void reset_deeper_qualifiers(
-    grib_accessor* significanceQualifierGroup[], const int* const significanceQualifierDepth, int depth)
+    grib_accessor* significanceQualifierGroup[],
+    const int* const significanceQualifierDepth,
+    int numElements, int depth)
 {
     int i;
-    for (i=0;i<number_of_qualifiers;i++) {
+    for (i=0;i<numElements;i++) {
         if (significanceQualifierDepth[i]>depth) {
             significanceQualifierGroup[i]=0;
         }
@@ -2045,7 +2047,8 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     depth=significanceQualifierDepth[sidx];
                     if (depth < max_depth) {
                         /* If depth >= max_depth, then no entry will be deeper so no need for call */
-                        reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,depth);
+                        reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,
+                                                number_of_qualifiers,depth);
                     }
                 } else {
                     /* if (forceGroupClosure) { */
@@ -2091,11 +2094,10 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 if (bitmapGroup[bitmapIndex]) {
                     groupSection=bitmapGroup[bitmapIndex]->parent;
                     depth=bitmapDepth[bitmapIndex];
-                    reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,depth);
-                    /* TODO: This branch is not reached in our tests! could cause problems!!
-                     * Should pass in number of elements of group/depth arrays and not assume 'number_of_qualifiers'!
-                     */
-                    reset_deeper_qualifiers(bitmapGroup,bitmapDepth,depth);
+                    reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,
+                                            number_of_qualifiers,depth);
+                    /* TODO: This branch is not reached in our tests! */
+                    reset_deeper_qualifiers(bitmapGroup,bitmapDepth,MAX_NUMBER_OF_BITMAPS,depth);
                 } else {
                     groupSection=section;
                     depth++;
