@@ -14,7 +14,7 @@ set -u
 # This is the test for the JIRA issue ECC-490.
 # It tests changing GRIB templates
 # ---------------------------------------------------------
-label="ecc-490-test"
+label="grib_ecc-490-test"
 tempSample=temp.${label}.sample.grib
 tempRules=temp.${label}.filter
 tempOut=temp.${label}.grib

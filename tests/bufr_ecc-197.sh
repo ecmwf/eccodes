@@ -15,7 +15,7 @@
 # It tests decoding a BUFR file which cannot be done unless
 # we extend the definitions to include extra files
 # ---------------------------------------------------------
-label="ecc-197-test"
+label="bufr_ecc-197-test"
 
 input=${data_dir}/bufr/vos308014_v3_26.bufr
 if [ ! -f $input ]; then

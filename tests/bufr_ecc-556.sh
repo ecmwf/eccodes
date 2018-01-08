@@ -15,7 +15,7 @@ set -u
 # This is the test for the JIRA issue ECC-556.
 # It tests typicalDate for BUFR edition 4
 # ---------------------------------------------------------
-label="ecc-556-test"
+label="bufr_ecc-556-test"
 
 # In this BUFR message the typicalYear should have been encoded
 # as 2012 but it is actually 12!

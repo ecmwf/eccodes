@@ -11,7 +11,7 @@
 . ./include.sh
 
 #Define a common label for all the tmp files
-label="ecc_448_test_p"
+label="bufr_ecc_448_test_p"
 
 #Define tmp file
 fTmp=${label}".tmp.txt"
@@ -23,7 +23,7 @@ REDIRECT=/dev/null
 f=${data_dir}/bufr/syno_1.bufr
 
 #The input ($f) is hardcoded in the example!!!
-$PYTHON $examples_src/ecc-448.py 2> $REDIRECT > $fTmp
+$PYTHON $examples_src/bufr_ecc-448.py 2> $REDIRECT > $fTmp
 
 #TODO: check the output
 grep -q '#6#cloudType->percentConfidence' $fTmp

@@ -63,9 +63,9 @@ TESTS = definitions.sh \
         md5.sh \
         grib_util_set_spec.sh \
         grib_neg_fctime.sh \
-        ecc-197.sh \
-        ecc-286.sh \
-        ecc-288.sh
+        bufr_ecc-197.sh \
+        bufr_ecc-286.sh \
+        bufr_ecc-288.sh
 
 # First download all the necessary data for testing
 # Note: if download fails, no tests will be done

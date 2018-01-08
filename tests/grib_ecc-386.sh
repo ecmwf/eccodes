@@ -11,4 +11,4 @@
 . ./include.sh
 
 input=${data_dir}/test_file.grib2
-exec ${test_dir}/ecc-386 $input
+exec ${test_dir}/grib_ecc-386 $input

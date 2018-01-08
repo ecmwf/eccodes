@@ -25,7 +25,7 @@ list( APPEND test_bins
       optimize_scaling
       optimize_scaling_sh
       grib_ecc-386
-      ecc-517
+      bufr_ecc-517
       bufr_get_element
       sh_ieee64
       ieee
@@ -51,8 +51,8 @@ list( APPEND tests_no_data_reqd
     uerra
     grib_2nd_order_numValues
     julian
-    ecc-359
-    ecc-517
+    bufr_ecc-359
+    bufr_ecc-517
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
@@ -75,15 +75,15 @@ list( APPEND tests_data_reqd
     bufr_keys_iter
     bufr_get_element
     bufr_wmo_tables
-    ecc-197
-    ecc-286
-    ecc-288
-    ecc-313
-    ecc-379
-    ecc-393
-    ecc-433
+    bufr_ecc-197
+    bufr_ecc-286
+    bufr_ecc-288
+    bufr_ecc-313
+    bufr_ecc-379
+    bufr_ecc-393
+    bufr_ecc-433
     grib_ecc-490
-    ecc-556
+    bufr_ecc-556
     gts_get
     gts_ls
     gts_compare

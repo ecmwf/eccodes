@@ -16,7 +16,7 @@
 # Currently we cannot ENCODE with this operator. This test is
 # for DECODING only
 # ---------------------------------------------------------
-label="ecc-313-test"
+label="bufr_ecc-313-test"
 tempRules=temp.${label}.filter
 tempOut=temp.${label}.txt
 tempRef=temp.${label}.ref

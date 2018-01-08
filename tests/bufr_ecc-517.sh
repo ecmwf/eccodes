@@ -14,7 +14,7 @@ OUTPUT=temp.ecc-517.bufr
 TEMP=temp.ecc-517.txt
 
 # Run program to create output BUFR file with replication
-${test_dir}/ecc-517 $OUTPUT
+${test_dir}/bufr_ecc-517 $OUTPUT
 
 # Check file is OK and has the expected number of descriptors
 ${tools_dir}/bufr_dump -jf $OUTPUT > $TEMP

@@ -11,31 +11,32 @@
 . ./include.sh
 
 # ---------------------------------------------------------
-# This is the test for the JIRA issue ECC-286.
-# It tests setting a key which starts with a digit
+# This is the test for the JIRA issue ECC-288
+# It tests bufr_compare with a relative tolerance
 # ---------------------------------------------------------
 cd ${data_dir}/bufr
-label="ecc_286_test"
+label="bufr_ecc_288_test"
 
 tempRules=temp.${label}.filter
 tempOut=temp.${label}.out
-tempRef=temp.${label}.ref
 BufrFile=syno_1.bufr
 
 cat > $tempRules <<EOF
- set unpack=1;
- print "[3HourPressureChange]";
- set 3HourPressureChange=21;
- print "[3HourPressureChange]";
+ set localLongitude=151.831;
+ write;
 EOF
 
-${tools_dir}/codes_bufr_filter $tempRules $BufrFile > $tempOut
+${tools_dir}/codes_bufr_filter -o $tempOut $tempRules $BufrFile
 
-cat > $tempRef <<EOF
-20
-21
-EOF
+# There is a difference in localLongitude, rel error=6.58627e-06
+# So this should fail
+set +e
+${tools_dir}/bufr_compare $tempOut $BufrFile
+status=$?
+set -e
+[ $status -eq 1 ]
 
-diff $tempRef $tempOut
+# Now apply the option and now it should pass
+${tools_dir}/bufr_compare -R localLongitude=6.59e-06  $tempOut $BufrFile
 
-rm -rf $tempOut $tempRef $tempRules
+rm -rf $tempOut $tempRules
