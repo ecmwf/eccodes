@@ -161,8 +161,8 @@ static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* 
 
     if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(observed), self->expression,&lres))
             != GRIB_SUCCESS) return ret;
-
-    if(0 && self->loop)
+#ifdef DEBUG
+    if(self->loop)
     {
         printf("LOOP detected...\n");
         printf("WHEN triggered by %s %ld\n",observed->name,lres);
@@ -170,7 +170,7 @@ static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* 
         printf("\n");
         return ret;
     }
-
+#endif
     self->loop = 1;
 
     if(lres)
