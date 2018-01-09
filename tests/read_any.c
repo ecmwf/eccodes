@@ -46,7 +46,7 @@ int main(int argc,char* argv[]) {
   size=bufsize;
   count=1;
   while ((ret=grib_read_any_from_file(c,f,buffer,&size))==GRIB_SUCCESS) {
-	if (1) {
+	if ((1)) {
 		h=grib_handle_new_from_message_copy(c,buffer,size);
 		if (!h) {
 		  printf("unable to new from message\n");
