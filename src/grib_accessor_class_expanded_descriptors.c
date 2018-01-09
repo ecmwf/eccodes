@@ -362,7 +362,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             au->units=grib_context_strdup(c,"associated units");
 #if MYDEBUG
             for (idepth=0;idepth<global_depth;idepth++) printf("\t");
-            printf("+++ push %06ld (%ld %g %ld)",au->code,au->scale,au->reference,au->width);
+            printf("+++ push %06ld (%ld %ld %ld)",au->code,au->scale,au->reference,au->width);
 #endif
             grib_bufr_descriptors_array_push(expanded,au);
             size++;
@@ -371,7 +371,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
         for (idepth=0;idepth<global_depth;idepth++) printf("\t");
         printf("+++ pop  %06ld\n",u->code);
         for (idepth=0;idepth<global_depth;idepth++) printf("\t");
-        printf("+++ push %06ld [type=%d] (%ld %g %ld)",u->code,
+        printf("+++ push %06ld [type=%d] (%ld %ld %ld)",u->code,
                 u->type,u->scale,u->reference,u->width);
 #endif
         if ( u->type!=BUFR_DESCRIPTOR_TYPE_FLAG  &&
@@ -391,7 +391,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             u->width=ccp->newStringWidth;
         }
 #if MYDEBUG
-        printf("->(%ld %g %ld)\n",u->scale,u->reference,u->width);
+        printf("->(%ld %ld %ld)\n",u->scale,u->reference,u->width);
 #endif
         grib_bufr_descriptors_array_push(expanded,u);
         break;
@@ -506,7 +506,7 @@ static bufr_descriptors_array* do_expand(grib_accessor* a,bufr_descriptors_array
             bufr_descriptor* xx=grib_bufr_descriptors_array_get(expanded,i);
             for (idepth=0;idepth<global_depth;idepth++) printf("\t");
             printf("==  %-6d== %06ld ",i,xx->code);
-            printf("%ld %g %ld",xx->scale,xx->reference,xx->width);
+            printf("%ld %ld %ld",xx->scale,xx->reference,xx->width);
             printf("\n");
         }
         for (idepth=0;idepth<global_depth;idepth++) printf("\t");

@@ -272,7 +272,7 @@ static size_t get_length(grib_accessor* a)
 }
 
 /* Operator 203YYY: Store the TableB code and changed reference value in linked list */
-static void tableB_override_store_ref_val(grib_context* c, grib_accessor_bufr_data_array *self, int code, double new_ref_val)
+static void tableB_override_store_ref_val(grib_context* c, grib_accessor_bufr_data_array *self, int code, long new_ref_val)
 {
     bufr_tableb_override* tb=(bufr_tableb_override*)grib_context_malloc_clear(c, sizeof(bufr_tableb_override));
     tb->code = code;
@@ -287,7 +287,7 @@ static void tableB_override_store_ref_val(grib_context* c, grib_accessor_bufr_da
     }
 }
 /* Operator 203YYY: Retrieve changed reference value from linked list */
-static int tableB_override_get_ref_val(grib_accessor_bufr_data_array *self, int code, double* out_ref_val)
+static int tableB_override_get_ref_val(grib_accessor_bufr_data_array *self, int code, long* out_ref_val)
 {
     bufr_tableb_override* p = self->tableb_override;
     while (p) {
@@ -917,10 +917,10 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
     if (self->change_ref_value_operand > 0 && self->change_ref_value_operand != 255) {
         /* Operator 203YYY: Change Reference Values: Definition phase */
         const int number_of_bits = self->change_ref_value_operand;
-        double new_ref_val = (double)grib_decode_signed_longb(data, pos, number_of_bits);
+        long new_ref_val = grib_decode_signed_longb(data, pos, number_of_bits);
         grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -**- \tcode=203YYY width=%ld pos=%ld -> %ld",
                 number_of_bits,(long)*pos,(long)(*pos-a->offset*8));
-        grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: Store for code %6.6ld => new ref val %g", bd->code, new_ref_val);
+        grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: Store for code %6.6ld => new ref val %ld", bd->code, new_ref_val);
         tableB_override_store_ref_val(c, self, bd->code, new_ref_val);
         bd->nokey=1;
         err=check_end_data(c, self, number_of_bits); /*advance bitsToEnd*/
@@ -958,7 +958,7 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         /* numeric or codetable or flagtable */
         /* Operator 203: Check if we have changed ref value for this element. If so modify bd->reference */
         if (self->change_ref_value_operand!=0 && tableB_override_get_ref_val(self, bd->code, &(bd->reference)) == GRIB_SUCCESS) {
-            grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: For code %6.6ld, changed ref val: %g", bd->code, bd->reference);
+            grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: For code %6.6ld, changed ref val: %ld", bd->code, bd->reference);
         }
 
         if (self->compressedData) {
@@ -1183,7 +1183,7 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         if (self->compressedData) {
             err=encode_double_array(c,buff,pos,bd,self,self->numericValues->v[elementIndex]);
             if (err) {
-                grib_context_log(c,GRIB_LOG_ERROR,"encoding %s ( code=%6.6ld width=%ld scale=%g reference=%d )",
+                grib_context_log(c,GRIB_LOG_ERROR,"encoding %s ( code=%6.6ld width=%ld scale=%g reference=%ld )",
                         bd->shortName, bd->code, bd->width,
                         bd->scale, bd->reference);
                 for (j=0;j<grib_darray_used_size(self->numericValues->v[elementIndex]);j++)

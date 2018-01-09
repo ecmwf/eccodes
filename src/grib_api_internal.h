@@ -790,7 +790,7 @@ struct bufr_descriptor {
   char*  units;
   long   scale;
   double factor;
-  double reference;
+  long   reference;
   long   width;
   int    nokey; /* set if descriptor does not have an associated key */
   grib_accessor* a;
@@ -816,7 +816,7 @@ typedef struct bufr_tableb_override bufr_tableb_override;
 struct bufr_tableb_override {
   bufr_tableb_override* next;
   int                   code;
-  double                new_ref_val;
+  long                  new_ref_val;
 };
 
 struct codes_condition {

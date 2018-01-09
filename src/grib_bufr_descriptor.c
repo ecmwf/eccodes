@@ -84,7 +84,7 @@ int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor,int code,bufr_d
     return err;
 }
 
-void grib_bufr_descriptor_set_reference(bufr_descriptor* v,double reference)
+void grib_bufr_descriptor_set_reference(bufr_descriptor* v,long reference)
 {
     if (!v) return;
     v->reference=reference;
