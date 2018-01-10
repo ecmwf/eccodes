@@ -136,4 +136,25 @@ EOF
 
 diff $outputRef $outputFilt
 
+# Uncompressed message
+# ---------------------
+inputBufr="delayed_repl_01.bufr"
+outputBufr=${label}.${inputBufr}.out
+cat > $fRules <<EOF
+ transient originalNumberOfSubsets = numberOfSubsets;
+ set extractAreaNorthLatitude = -21.0;
+ set extractAreaSouthLatitude = -25.0;
+ set extractAreaWestLongitude = 136;
+ set extractAreaEastLongitude = 154;
+ set extractAreaLongitudeRank=1;
+ set doExtractArea=1;
+ write;
+ print "extracted [numberOfSubsets] of [originalNumberOfSubsets] subsets";
+ assert(3 == extractedAreaNumberOfSubsets);
+EOF
+
+${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
+ns=`${tools_dir}/bufr_get -p numberOfSubsets $outputBufr`
+[ $ns -eq 3 ]
+
 rm -f $outputRef $outputFilt $outputBufr $fLog $fRules
