@@ -180,9 +180,6 @@ static int select_area(grib_accessor* a)
     grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=h->context;
 
-    ret=grib_get_long(h,"compressedData",&compressed);
-    if (ret) return ret;
-
     double *lat=0;
     double *lon=0;
     size_t n;
@@ -193,6 +190,9 @@ static int select_area(grib_accessor* a)
     size_t nsubsets=0;
     char latstr[20]={0,};
     char lonstr[20]={0,};
+
+    ret=grib_get_long(h,"compressedData",&compressed);
+    if (ret) return ret;
 
     ret=grib_get_long(h,self->numberOfSubsets,&numberOfSubsets);
     if (ret) return ret;
@@ -216,8 +216,8 @@ static int select_area(grib_accessor* a)
     if (compressed) {
         ret=grib_get_double_array(h,latstr,lat,&n);
         if (ret) return ret;
-        if (n>numberOfSubsets) {
-            /* n could be less than the number of subsets if all latitudes are the same */
+        if (! (n==1 || n==numberOfSubsets) ) {
+            /* n can be 1 if all latitudes are the same */
             return GRIB_INTERNAL_ERROR;
         }
     } else {
@@ -232,8 +232,8 @@ static int select_area(grib_accessor* a)
     if (compressed) {
         ret=grib_get_double_array(h,lonstr,lon,&n);
         if (ret) return ret;
-        if (n>numberOfSubsets) {
-            /* n could be less than the number of subsets if all longitudes are the same */
+        if (! (n==1 || n==numberOfSubsets) ) {
+            /* n can be 1 if all longitudes are the same */
             return GRIB_INTERNAL_ERROR;
         }
     } else {
