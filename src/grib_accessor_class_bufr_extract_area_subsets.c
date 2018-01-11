@@ -172,6 +172,12 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_LONG;
 }
 
+/* Copy first element of array into all others */
+static void fill_in(double a[], long length)
+{
+    long i;
+    for (i=1; i<length; ++i) a[i] = a[0];
+}
 static int select_area(grib_accessor* a)
 {
     int ret=0;
@@ -211,6 +217,7 @@ static int select_area(grib_accessor* a)
         sprintf(latstr,"#%ld#latitude",latRank);
     }
 
+    /* Latitudes */
     n=numberOfSubsets;
     lat=(double*)grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
     if (compressed) {
@@ -220,14 +227,23 @@ static int select_area(grib_accessor* a)
             /* n can be 1 if all latitudes are the same */
             return GRIB_INTERNAL_ERROR;
         }
+        if (n == 1) {
+            fill_in(lat, numberOfSubsets);
+        }
     } else {
+        size_t values_len=0;
         for(i=0; i<numberOfSubsets; ++i) {
             sprintf(latstr,"#%ld#latitude", i+1);
+            ret = grib_get_size(h, latstr, &values_len); if (ret) return ret;
+            if (values_len>1)
+                return GRIB_NOT_IMPLEMENTED;
             ret=grib_get_double(h,latstr,&(lat[i]));
             if (ret) return ret;
         }
     }
 
+    /* Longitudes */
+    n=numberOfSubsets;
     lon=(double*)grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
     if (compressed) {
         ret=grib_get_double_array(h,lonstr,lon,&n);
@@ -236,9 +252,16 @@ static int select_area(grib_accessor* a)
             /* n can be 1 if all longitudes are the same */
             return GRIB_INTERNAL_ERROR;
         }
+        if (n == 1) {
+            fill_in(lon, numberOfSubsets);
+        }
     } else {
+        size_t values_len=0;
         for(i=0; i<numberOfSubsets; ++i) {
             sprintf(lonstr,"#%ld#longitude", i+1);
+            ret = grib_get_size(h, lonstr, &values_len); if (ret) return ret;
+            if (values_len>1)
+                return GRIB_NOT_IMPLEMENTED;
             ret=grib_get_double(h,lonstr,&(lon[i]));
             if (ret) return ret;
         }
