@@ -173,6 +173,34 @@ static double date_to_julian(long year,long month,long day,long hour,long minute
     return result;
 }
 
+/* Helper function to construct the array of long for year, month, day etc. */
+/* The boolean zero_on_error flag is for the case where codes_get fails and we fill with zeros */
+static int build_long_array(grib_context* c, grib_handle* h, int compressed,
+                       long** array, const char* key, long numberOfSubsets, int zero_on_error)
+{
+    int err = 0;
+    size_t n=numberOfSubsets;
+    *array=(long*)grib_context_malloc_clear(c, sizeof(long)*numberOfSubsets);
+    err = grib_get_long_array(h, key, *array, &n);
+    if (zero_on_error) {
+        if (err) {
+            err = 0;
+            (*array)[0] = 0;
+            n = 1;
+        }
+    }
+    if (err) return err;
+    if (n!=numberOfSubsets) {
+        if (n==1) {
+            long i;
+            for (i=1;i<numberOfSubsets;i++) (*array)[i]=(*array)[0];
+        } else {
+            return GRIB_INTERNAL_ERROR;
+        }
+    }
+    return err;
+}
+
 static int select_datetime(grib_accessor* a)
 {
     int ret=0;
@@ -236,60 +264,27 @@ static int select_datetime(grib_accessor* a)
         if (ret) return ret;
         sprintf(secondstr,"#%ld#second",secondRank);
 
-        n=numberOfSubsets;
-        year=(long*)grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-        ret=grib_get_long_array(h,yearstr,year,&n);
+        /* YEAR */
+        ret = build_long_array(c, h, compressed, &year, yearstr, numberOfSubsets, 0);
         if (ret) return ret;
-        if (n!=numberOfSubsets) {
-            if (n==1) {
-                for (i=1;i<numberOfSubsets;i++) year[i]=year[0];
-            } else return GRIB_INTERNAL_ERROR;
-        }
 
-        n=numberOfSubsets;
-        month=(long*)grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-        ret=grib_get_long_array(h,monthstr,month,&n);
+        /* MONTH */
+        ret = build_long_array(c, h, compressed, &month, monthstr, numberOfSubsets, 0);
         if (ret) return ret;
-        if (n!=numberOfSubsets) {
-            if (n==1) {
-                for (i=1;i<numberOfSubsets;i++) month[i]=month[0];
-            } else return GRIB_INTERNAL_ERROR;
-        }
 
-        n=numberOfSubsets;
-        day=(long*)grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-        ret=grib_get_long_array(h,daystr,day,&n);
+        /* DAY */
+        ret = build_long_array(c, h, compressed, &day, daystr, numberOfSubsets, 0);
         if (ret) return ret;
-        if (n!=numberOfSubsets) {
-            if (n==1) {
-                for (i=1;i<numberOfSubsets;i++) day[i]=day[0];
-            } else return GRIB_INTERNAL_ERROR;
-        }
 
-        n=numberOfSubsets;
-        hour=(long*)grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-        ret=grib_get_long_array(h,hourstr,hour,&n);
+        /* HOUR */
+        ret = build_long_array(c, h, compressed, &hour, hourstr, numberOfSubsets, 0);
         if (ret) return ret;
-        if (n!=numberOfSubsets) {
-            if (n==1) {
-                for (i=1;i<numberOfSubsets;i++) hour[i]=hour[0];
-            } else return GRIB_INTERNAL_ERROR;
-        }
 
-        n=numberOfSubsets;
-        minute=(long*)grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-        ret=grib_get_long_array(h,minutestr,minute,&n);
-        if (ret) {
-            ret=0;
-            minute[0]=0;
-            n=1;
-        }
-        if (n!=numberOfSubsets) {
-            if (n==1) {
-                for (i=1;i<numberOfSubsets;i++) minute[i]=minute[0];
-            } else return GRIB_INTERNAL_ERROR;
-        }
+        /* MINUTE: Special treatment if error => set all entries to zero */
+        ret = build_long_array(c, h, compressed, &minute, minutestr, numberOfSubsets, 1);
+        if (ret) return ret;
 
+        /* SECOND: Double array */
         n=numberOfSubsets;
         second=(double*)grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
         ret=grib_get_double_array(h,secondstr,second,&n);
