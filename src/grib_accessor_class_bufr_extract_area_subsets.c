@@ -276,7 +276,7 @@ static int select_area(grib_accessor* a)
     ret=grib_get_double(h,self->extractAreaSouthLatitude,&latSouth);
     if (ret) return ret;
 
-    for (i=0;i<n;i++) {
+    for (i=0;i<numberOfSubsets;i++) {
         /* printf("++++++ lat: %g <= %g <= %g lon: %g <= %g <= %g \n",latSouth,lat[i],latNorth,lonWest,lon[i],lonEast); */
         if (lat[i]>=latSouth && lat[i]<=latNorth && lon[i]>=lonWest && lon[i]<=lonEast) {
             grib_iarray_push(subsets,i+1);
