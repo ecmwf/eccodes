@@ -676,6 +676,9 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
         if (*v == GRIB_MISSING_DOUBLE) {
             grib_set_bits_on(buff->data,pos,modifiedWidth);
         } else {
+            if (*v > maxAllowed || *v < minAllowed) {
+                return GRIB_OUT_OF_RANGE; /* ECC-611 */
+            }
             lval=round(*v * inverseFactor)-modifiedReference;
             grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
         }
