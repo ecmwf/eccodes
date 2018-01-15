@@ -2981,6 +2981,30 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 120 ;
 	}
+#Wildfire day-time radiative power
+'210167' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 167 ;
+	}
+#Wildfire night-time radiative power
+'210169' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 169 ;
+	}
+#Wildfire day-time inverse variance of radiative power
+'210177' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 177 ;
+	}
+#Wildfire night-time inverse variance of radiative power
+'210179' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 179 ;
+	}
 #UV visible albedo for direct radiation, isotropic component 
 '210186' = {
 	 discipline = 192 ;

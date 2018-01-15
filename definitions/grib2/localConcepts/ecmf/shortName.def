@@ -2981,6 +2981,30 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 120 ;
 	}
+#Wildfire day-time radiative power
+'frpdayfire' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 167 ;
+	}
+#Wildfire night-time radiative power
+'frpngtfire' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 169 ;
+	}
+#Wildfire day-time inverse variance of radiative power
+'frpdayivar' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 177 ;
+	}
+#Wildfire night-time inverse variance of radiative power
+'frpngtivar' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 179 ;
+	}
 #UV visible albedo for direct radiation, isotropic component 
 'aluvpi' = {
 	 discipline = 192 ;
