@@ -2982,13 +2982,13 @@
 	 parameterNumber = 120 ;
 	}
 #Wildfire day-time radiative power
-'W**-2 m**4' = {
+'W m**-2' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 167 ;
 	}
 #Wildfire night-time radiative power
-'W**-2 m**4' = {
+'W m**-2' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 169 ;
