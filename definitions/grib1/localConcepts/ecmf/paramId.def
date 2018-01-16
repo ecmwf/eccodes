@@ -3674,6 +3674,21 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 141 ;
 	}
+#Standardised precipitation index valid for 3 months
+'170001' = {
+	 table2Version = 170 ;
+	 indicatorOfParameter = 1 ;
+	}
+#Standardised precipitation index valid for 6 months
+'170002' = {
+	 table2Version = 170 ;
+	 indicatorOfParameter = 2 ;
+	}
+#Standardised precipitation index valid for 12 months
+'170003' = {
+	 table2Version = 170 ;
+	 indicatorOfParameter = 3 ;
+	}
 #100 metre U wind component anomaly
 '171006' = {
 	 table2Version = 171 ;

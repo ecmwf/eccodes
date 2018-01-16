@@ -129,7 +129,6 @@ list( APPEND tests_data_reqd
     tigge
     tigge_conversions
     read_any
-    grib_padding
     grib_dump
     grib_dump_debug
     grib_util_set_spec
@@ -142,6 +141,7 @@ if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
     list(APPEND tests_data_reqd bufr_dump_decode_fortran)
 endif()
 if( ENABLE_EXTRA_TESTS )
+    list(APPEND tests_data_reqd grib_padding)
     list(APPEND tests_data_reqd bufr_dump_encode_C)
     list(APPEND tests_data_reqd bufr_dump_decode_C)
 endif()

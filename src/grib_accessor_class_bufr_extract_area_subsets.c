@@ -172,6 +172,12 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_LONG;
 }
 
+/* Copy first element of array into all others */
+static void fill_in(double a[], long length)
+{
+    long i;
+    for (i=1; i<length; ++i) a[i] = a[0];
+}
 static int select_area(grib_accessor* a)
 {
     int ret=0;
@@ -180,86 +186,121 @@ static int select_area(grib_accessor* a)
     grib_handle* h=grib_handle_of_accessor(a);
     grib_context* c=h->context;
 
+    double *lat=0;
+    double *lon=0;
+    size_t n;
+    double lonWest,lonEast,latNorth,latSouth;
+    long numberOfSubsets,i,latRank,lonRank;
+    grib_iarray* subsets;
+    long *subsets_ar=0;
+    size_t nsubsets=0;
+    char latstr[20]={0,};
+    char lonstr[20]={0,};
+
     ret=grib_get_long(h,"compressedData",&compressed);
     if (ret) return ret;
 
+    ret=grib_get_long(h,self->numberOfSubsets,&numberOfSubsets);
+    if (ret) return ret;
+
+    subsets=grib_iarray_new(c,numberOfSubsets,10);
+
+    ret=grib_set_long(h,"unpack",1);
+    if (ret) return ret;
+
     if (compressed) {
-        double *lat=0;
-        double *lon=0;
-        size_t n;
-        double lonWest,lonEast,latNorth,latSouth;
-        long numberOfSubsets,i,latRank,lonRank;
-        grib_iarray* subsets;
-        long *subsets_ar=0;
-        size_t nsubsets=0;
-        char latstr[20]={0,};
-        char lonstr[20]={0,};
-
-        ret=grib_get_long(h,self->numberOfSubsets,&numberOfSubsets);
-        if (ret) return ret;
-
-        subsets=grib_iarray_new(c,numberOfSubsets,10);
-
-        ret=grib_set_long(h,"unpack",1);
-        if (ret) return ret;
-
         ret=grib_get_long(h,self->extractAreaLongitudeRank,&lonRank);
         if (ret) return ret;
         sprintf(lonstr,"#%ld#longitude",lonRank);
         ret=grib_get_long(h,self->extractAreaLatitudeRank,&latRank);
         if (ret) return ret;
         sprintf(latstr,"#%ld#latitude",latRank);
+    }
 
-        n=numberOfSubsets;
-        lat=(double*)grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
+    /* Latitudes */
+    n=numberOfSubsets;
+    lat=(double*)grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
+    if (compressed) {
         ret=grib_get_double_array(h,latstr,lat,&n);
         if (ret) return ret;
-        if (n!=numberOfSubsets) return GRIB_INTERNAL_ERROR;
+        if (! (n==1 || n==numberOfSubsets) ) {
+            /* n can be 1 if all latitudes are the same */
+            return GRIB_INTERNAL_ERROR;
+        }
+        if (n == 1) {
+            fill_in(lat, numberOfSubsets);
+        }
+    } else {
+        size_t values_len=0;
+        for(i=0; i<numberOfSubsets; ++i) {
+            sprintf(latstr,"#%ld#latitude", i+1);
+            ret = grib_get_size(h, latstr, &values_len); if (ret) return ret;
+            if (values_len>1)
+                return GRIB_NOT_IMPLEMENTED;
+            ret=grib_get_double(h,latstr,&(lat[i]));
+            if (ret) return ret;
+        }
+    }
 
-        lon=(double*)grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
+    /* Longitudes */
+    n=numberOfSubsets;
+    lon=(double*)grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
+    if (compressed) {
         ret=grib_get_double_array(h,lonstr,lon,&n);
         if (ret) return ret;
-        if (n!=numberOfSubsets) return GRIB_INTERNAL_ERROR;
-
-        ret=grib_get_double(h,self->extractAreaWestLongitude,&lonWest);
-        if (ret) return ret;
-        ret=grib_get_double(h,self->extractAreaEastLongitude,&lonEast);
-        if (ret) return ret;
-        ret=grib_get_double(h,self->extractAreaNorthLatitude,&latNorth);
-        if (ret) return ret;
-        ret=grib_get_double(h,self->extractAreaSouthLatitude,&latSouth);
-        if (ret) return ret;
-
-        for (i=0;i<numberOfSubsets;i++) {
-            /* printf("++++++ lat: %g <= %g <= %g lon: %g <= %g <= %g \n",latSouth,lat[i],latNorth,lonWest,lon[i],lonEast); */
-            if (lat[i]>=latSouth && lat[i]<=latNorth && lon[i]>=lonWest && lon[i]<=lonEast) {
-                grib_iarray_push(subsets,i+1);
-                /* printf("++++++++ %ld\n",i+1); */
-            }
+        if (! (n==1 || n==numberOfSubsets) ) {
+            /* n can be 1 if all longitudes are the same */
+            return GRIB_INTERNAL_ERROR;
         }
-
-        nsubsets=grib_iarray_used_size(subsets);
-        ret=grib_set_long(h,self->extractedAreaNumberOfSubsets,nsubsets);
-        if (ret) return ret;
-
-        if (nsubsets!=0) {
-            subsets_ar=grib_iarray_get_array(subsets);
-            ret=grib_set_long_array(h,self->extractSubsetList,subsets_ar,nsubsets);
-            if (ret) return ret;
-
-            ret=grib_set_long(h,self->doExtractSubsets,1);
-            if (ret) return ret;
+        if (n == 1) {
+            fill_in(lon, numberOfSubsets);
         }
-
-        grib_context_free(c,lat);
-        grib_context_free(c,lon);
-        grib_iarray_delete(subsets);
-        subsets=0;
-
     } else {
-        grib_context_log(c, GRIB_LOG_ERROR, "Area extraction not implemented for uncompressed BUFR messages");
-        return GRIB_NOT_IMPLEMENTED;
+        size_t values_len=0;
+        for(i=0; i<numberOfSubsets; ++i) {
+            sprintf(lonstr,"#%ld#longitude", i+1);
+            ret = grib_get_size(h, lonstr, &values_len); if (ret) return ret;
+            if (values_len>1)
+                return GRIB_NOT_IMPLEMENTED;
+            ret=grib_get_double(h,lonstr,&(lon[i]));
+            if (ret) return ret;
+        }
     }
+
+    ret=grib_get_double(h,self->extractAreaWestLongitude,&lonWest);
+    if (ret) return ret;
+    ret=grib_get_double(h,self->extractAreaEastLongitude,&lonEast);
+    if (ret) return ret;
+    ret=grib_get_double(h,self->extractAreaNorthLatitude,&latNorth);
+    if (ret) return ret;
+    ret=grib_get_double(h,self->extractAreaSouthLatitude,&latSouth);
+    if (ret) return ret;
+
+    for (i=0;i<numberOfSubsets;i++) {
+        /* printf("++++++ lat: %g <= %g <= %g lon: %g <= %g <= %g \n",latSouth,lat[i],latNorth,lonWest,lon[i],lonEast); */
+        if (lat[i]>=latSouth && lat[i]<=latNorth && lon[i]>=lonWest && lon[i]<=lonEast) {
+            grib_iarray_push(subsets,i+1);
+            /* printf("++++++++ %ld\n",i+1); */
+        }
+    }
+
+    nsubsets=grib_iarray_used_size(subsets);
+    ret=grib_set_long(h,self->extractedAreaNumberOfSubsets,nsubsets);
+    if (ret) return ret;
+
+    if (nsubsets!=0) {
+        subsets_ar=grib_iarray_get_array(subsets);
+        ret=grib_set_long_array(h,self->extractSubsetList,subsets_ar,nsubsets);
+        if (ret) return ret;
+
+        ret=grib_set_long(h,self->doExtractSubsets,1);
+        if (ret) return ret;
+    }
+
+    grib_context_free(c,lat);
+    grib_context_free(c,lon);
+    grib_iarray_delete(subsets);
+    subsets=0;
 
     return ret;
 }
