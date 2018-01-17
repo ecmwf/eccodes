@@ -2945,6 +2945,12 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 59 ;
 	}
+#Injection height (from IS4FIRES)
+'injh' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 60 ;
+	}
 #Particulate matter d < 1 um
 'pm1' = {
 	 discipline = 192 ;
