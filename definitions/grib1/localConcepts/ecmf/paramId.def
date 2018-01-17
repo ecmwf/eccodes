@@ -3899,6 +3899,11 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 59 ;
 	}
+#Injection height (from IS4FIRES)
+'210060' = {
+	 table2Version = 210 ;
+	 indicatorOfParameter = 60 ;
+	}
 #Particulate matter d < 1 um
 '210072' = {
 	 table2Version = 210 ;
