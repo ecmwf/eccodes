@@ -536,10 +536,8 @@ static GRIB_INLINE void reset_deeper_qualifiers(grib_accessor* significanceQuali
 #endif
 static int decode_elements(grib_accessor* a)
 {
-    {
-        Assert(!"The accessor bufr_data is not used");
-    }
     int err=0;
+    Assert(!"The accessor bufr_data is not used");
 #if 0
     grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
     unsigned char* data =NULL;
