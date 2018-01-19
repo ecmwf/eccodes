@@ -233,8 +233,8 @@ typedef struct grib_accessor_bufr_data_element {
 #define NUMBER_OF_QUALIFIERS_PER_CATEGORY 256
 #define NUMBER_OF_QUALIFIERS_CATEGORIES 3
 
-static int number_of_qualifiers=NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES;
-
+/*static int number_of_qualifiers=NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES;*/
+#if 0
 static GRIB_INLINE int significanceQualifierIndex(int X,int Y)
 {
     int a[]={-1,0,1,-1,-1,-1,-1,-1,2};
@@ -252,11 +252,12 @@ static long init_length(grib_accessor* a)
 
     return section4Length-4;
 }
-
+#endif
 static int get_elements_and_decode(grib_accessor* a);
 
 static void init(grib_accessor* a,const long v, grib_arguments* params)
 {
+#if 0
     grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
     int n = 0;
 
@@ -298,6 +299,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
     a->length = init_length(a);
 
     /* Assert(a->length>=0); */
+#endif
 }
 
 static void self_clear(grib_context* c,grib_accessor_bufr_data* self)
@@ -365,6 +367,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
+#if 0
 static int get_descriptors(grib_accessor* a)
 {
     int err=0;
@@ -530,10 +533,14 @@ static GRIB_INLINE void reset_deeper_qualifiers(grib_accessor* significanceQuali
         }
     }
 }
-
+#endif
 static int decode_elements(grib_accessor* a)
 {
+    {
+        Assert(!"The accessor bufr_data is not used");
+    }
     int err=0;
+#if 0
     grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
     unsigned char* data =NULL;
     int forceGroupClosure=0;
@@ -856,6 +863,7 @@ static int decode_elements(grib_accessor* a)
     grib_context_free(c,F);
     grib_context_free(c,X);
     grib_context_free(c,Y);
+#endif
     return err;
 }
 
@@ -870,6 +878,8 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static int value_count(grib_accessor* a,long* count)
 {
+    return GRIB_NOT_IMPLEMENTED;
+#if 0
     int err=0;
     grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
     grib_handle* h=grib_handle_of_accessor(a);
@@ -881,10 +891,13 @@ static int value_count(grib_accessor* a,long* count)
 
     *count=self->numberOfElements*self->numberOfDataSubsets;
     return err;
+#endif
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
+    return GRIB_NOT_IMPLEMENTED;
+#if 0
     int err=0;
 
     err=get_elements_and_decode(a);
@@ -892,6 +905,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     if (!val) return GRIB_SUCCESS;
     else return GRIB_NOT_IMPLEMENTED;
+#endif
 }
 
 static int get_elements_and_decode(grib_accessor* a)
