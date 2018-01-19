@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
     grib_handle *result = NULL,*h;
     double* values = NULL;
     double *tmp = NULL;
-    size_t size,count,j;
+    size_t size=0,count,j;
 
     long step      = 0;
     long startStep = 0;

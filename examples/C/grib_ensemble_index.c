@@ -22,7 +22,7 @@ int main(int argc, char * argv[])
     int ret;
     int i, j;
     int count=0;
-    size_t paramIdSize, numberSize, values_len;
+    size_t paramIdSize, numberSize, values_len=0;
     char** paramId;
     long* number;
     double* values;

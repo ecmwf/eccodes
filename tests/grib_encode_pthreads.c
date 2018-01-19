@@ -51,7 +51,7 @@ void *runner(void *ptr)
     pthread_exit(0);
 }
 
-int encode_file(char *input_file, char *output_file)
+static int encode_file(char *input_file, char *output_file)
 {
     grib_handle *source_handle = NULL;
     const void *buffer = NULL;
