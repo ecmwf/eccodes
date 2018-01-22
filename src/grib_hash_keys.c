@@ -11000,9 +11000,6 @@ void grib_hash_keys_delete(grib_itrie *t)
 
 int grib_hash_keys_get_id(grib_itrie* t,const char* key)
 {
-    const char *k=key;
-    grib_itrie* last=t;
-
     const struct grib_keys_hash* hash=grib_keys_hash_get(key,strlen(key));
 
     if (hash) {
@@ -11011,19 +11008,23 @@ int grib_hash_keys_get_id(grib_itrie* t,const char* key)
     }
 
     /* printf("+++ \"%s\"\n",key); */
+    {
+        const char *k=key;
+        grib_itrie* last=t;
 
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&mutex);
+        GRIB_MUTEX_INIT_ONCE(&once,&init);
+        GRIB_MUTEX_LOCK(&mutex);
 
-    while(*k && t)  t = t->next[mapping[(int)*k++]];
+        while(*k && t)  t = t->next[mapping[(int)*k++]];
 
-    if(t != NULL && t->id != -1) {
-        GRIB_MUTEX_UNLOCK(&mutex);
-        return t->id+TOTAL_KEYWORDS+1;
-    } else {
-        int ret=grib_hash_keys_insert(last,key);
-        GRIB_MUTEX_UNLOCK(&mutex);
-        return ret+TOTAL_KEYWORDS+1;
+        if(t != NULL && t->id != -1) {
+            GRIB_MUTEX_UNLOCK(&mutex);
+            return t->id+TOTAL_KEYWORDS+1;
+        } else {
+            int ret=grib_hash_keys_insert(last,key);
+            GRIB_MUTEX_UNLOCK(&mutex);
+            return ret+TOTAL_KEYWORDS+1;
+        }
     }
 }
 
