@@ -63,8 +63,12 @@ concept efas_forecast {
   "ens"  = { inputOriginatingCentre=98; marsType = "pf"; } # ensemble
   "ens"  = { inputOriginatingCentre=98; marsType = "cf"; } # ensemble
 
+# DWD rules
   "global"  = { inputOriginatingCentre=78; inputProcessIdentifier = 1; }
   "lam"     = { inputOriginatingCentre=78; inputProcessIdentifier = 2; }
-  
+
+# TODO: For now anything coming from cnmc (COSMO) is local area
+  "lam"     = { inputOriginatingCentre=80; }
+
   "unknown" = { dummy = 1; }
 } : hidden;
