@@ -1,5 +1,5 @@
 #!/usr/bin/ksh
-
+set -ex
 cat > accessor_class_list.gperf <<EOF
 %{
 #include "grib_api_internal.h"
