@@ -127,10 +127,12 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     grib_accessor* a=NULL;
     size_t size=0;
 
-    c = get_class(p->h->context,creator->op);
-#ifdef USE_GPERF_HASHING
+    /* Using the TRIE:
+     *   c = get_class(p->h->context,creator->op);
+     */
+    /* Use the hash table from gperf */
     c=*((grib_accessor_classes_hash(creator->op,strlen(creator->op)))->cclass);
-#endif
+
     a = (grib_accessor*) grib_context_malloc_clear(p->h->context,c->size);
 
     a->name                = creator->name;
