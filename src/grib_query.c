@@ -455,7 +455,7 @@ char* grib_split_name_attribute(grib_context* c,const char* name,char* attribute
 grib_accessor* grib_find_accessor(grib_handle* h, const char* name)
 {
     grib_accessor* aret = NULL;
-
+    Assert(h);
     if (h->product_kind == PRODUCT_GRIB) {
         aret = _grib_find_accessor(h, name); /* ECC-144: Performance */
     }
