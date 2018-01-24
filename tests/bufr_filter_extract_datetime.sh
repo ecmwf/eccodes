@@ -190,6 +190,32 @@ if [ $status -eq 0 ]; then
    exit 1
 fi
 
+#-----------------------------------------------------------
+# Test boundary case
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+ transient originalNumberOfSubsets=numberOfSubsets;
+ transient extractDateTimeYearStart  =2012;
+ transient extractDateTimeMonthStart =10;
+ transient extractDateTimeDayStart   =31;
+ transient extractDateTimeHourStart  =0;
+ transient extractDateTimeMinuteStart=1;
+ transient extractDateTimeSecondStart=24;
+
+ transient extractDateTimeYearEnd    =2012;
+ transient extractDateTimeMonthEnd   =10;
+ transient extractDateTimeDayEnd     =31;
+ transient extractDateTimeHourEnd    =0;
+ transient extractDateTimeMinuteEnd  =1;
+ transient extractDateTimeSecondEnd  =31;#25;
+
+ set doExtractDateTime=1;
+ print "extracted [extractedDateTimeNumberOfSubsets] of [originalNumberOfSubsets] subsets";
+ assert(extractedDateTimeNumberOfSubsets==0);
+EOF
+inputBufr="amsa_55.bufr"
+outputBufr=${label}.${inputBufr}.out
+${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
 
 
 rm -f $outputRef $outputFilt $outputBufr $fLog $fRules
