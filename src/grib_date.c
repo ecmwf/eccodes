@@ -69,6 +69,14 @@ int grib_julian_to_datetime(double jd,long *year,long* month,long* day,
 int grib_datetime_to_julian(long year,long month,long day,
         long hour,long minute,long second,double* jd)
 {
+    return grib_datetime_to_julian_d(year,month,day,hour,minute,second,jd);
+}
+
+/* This version can deal with seconds provided as a double. Supporting milliseconds etc */
+int grib_datetime_to_julian_d(
+        long year,long month,long day,long hour,long minute,
+        double second, double* jd)
+{
     double a,b,dday;
     long y,m;
 
@@ -77,7 +85,7 @@ int grib_datetime_to_julian(long year,long month,long day,
     if ( month < 3) {
         y=year-1;
         m=month+12;
-    }else {
+    } else {
         y=year;
         m=month;
     }

@@ -156,20 +156,24 @@ static int get_native_type(grib_accessor* a)
 }
 
 /* Convert input date to Julian number. If date is invalid, return -1 */
-static double date_to_julian(long year,long month,long day,long hour,long minute,long second)
+static double date_to_julian(long year,long month,long day,long hour,long minute,double second)
 {
     double result = 0;
-    grib_datetime_to_julian(year,month,day,hour,minute,second, &result);
+    /* For validating the date/time, we specify seconds as an integer */
+    long lSecond = (long)second;
+    grib_datetime_to_julian(year,month,day,hour,minute,lSecond, &result);
 
     {
         /* Check conversion worked by going other way */
-        long year1, month1, day1, hour1, minute1, second1;
-        grib_julian_to_datetime(result, &year1, &month1, &day1, &hour1, &minute1, &second1);
-        if (year1 != year || month1 != month || day1 != day || minute1 != minute || second1 != second)
+        long year1, month1, day1, hour1, minute1, lSecond1;
+        grib_julian_to_datetime(result, &year1, &month1, &day1, &hour1, &minute1, &lSecond1);
+        if (year1 != year || month1 != month || day1 != day || minute1 != minute || lSecond1 != lSecond)
         {
-            result = -1; /* Failed. Invalid date*/
+            return -1; /* Failed. Invalid date*/
         }
     }
+    /* Now get the proper Julian number specifying the seconds in double precision */
+    grib_datetime_to_julian_d(year,month,day,hour,minute,second, &result);
     return result;
 }
 
@@ -343,33 +347,19 @@ static int select_datetime(grib_accessor* a)
         }
 
         for (i=0;i<numberOfSubsets;i++) {
-            long rounded_second=(long)round(second[i]);
-            if (rounded_second==60) { rounded_second=59;} /* Yikes */
-
-            sprintf( datetime_str, "%04ld/%02ld/%02ld %02ld:%02ld:%02ld",year[i],month[i],day[i],hour[i],minute[i], rounded_second );
-            julianDT = date_to_julian( year[i],month[i],day[i],hour[i],minute[i],rounded_second );
-
+            sprintf( datetime_str, "%04ld/%02ld/%02ld %02ld:%02ld:%.3f",year[i],month[i],day[i],hour[i],minute[i],second[i] );
+            julianDT = date_to_julian( year[i],month[i],day[i],hour[i],minute[i],second[i]);
             if (julianDT == -1) {
                 grib_context_log(c,GRIB_LOG_ERROR,"Invalid date/time: %s", datetime_str);
                 return GRIB_INTERNAL_ERROR;
             }
 
+            //printf("SN: datetime_str=%s j=%.15f\t", datetime_str, julianDT);
             if (julianDT>=julianStart && julianEnd>=julianDT) {
-                /* Unfortunately our date_to_julian function does not deal with seconds as a double! */
-                /* This can cause errors during the rounding to an integer. See ECC-614 */
-                double julTemp1, julTemp2;
-                long second_floor = (long)floor(second[i]);
-                long second_ceil  = (long)ceil(second[i]);
-                if (second_ceil==60) second_ceil=59; /* Yikes */
-
-                julTemp1 = date_to_julian( year[i],month[i],day[i],hour[i],minute[i],second_floor );
-                julTemp2 = date_to_julian( year[i],month[i],day[i],hour[i],minute[i],second_ceil );
-                // Check floor and ceiling of seconds as well
-                if (julTemp1 >= julianStart && julTemp1 <= julianEnd &&
-                    julTemp2 >= julianStart && julTemp2 <= julianEnd)
-                {
-                    grib_iarray_push(subsets,i+1);
-                }
+                //printf(" ....ADDING subset %ld\n",i);
+                grib_iarray_push(subsets,i+1);
+            } else {
+                //printf(" ....Exclude subset %ld\n",i);
             }
         }
 

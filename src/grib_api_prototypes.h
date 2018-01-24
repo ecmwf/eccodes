@@ -1005,6 +1005,7 @@ void codes_assertion_failed(const char *message, const char *file, int line);
 /* grib_date.c */
 int grib_julian_to_datetime(double jd, long *year, long *month, long *day, long *hour, long *minute, long *second);
 int grib_datetime_to_julian(long year, long month, long day, long hour, long minute, long second, double *jd);
+int grib_datetime_to_julian_d(long year,long month,long day,long hour,long minute,double second, double* jd);
 long grib_julian_to_date(long jdate);
 long grib_date_to_julian(long ddate);
 
