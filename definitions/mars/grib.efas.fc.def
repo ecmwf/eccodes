@@ -1,4 +1,7 @@
 alias mars.step = startStep;
 
-meta efas_suite_name sprintf("%s_%s_%s", inputOriginatingCentre, efas_forecast, efas_post_proc) : no_copy;
-alias mars.origin = efas_suite_name;
+#meta efas_suite_name sprintf("%s_%s_%s", inputOriginatingCentre, efas_forecast, efas_post_proc) : no_copy;
+alias mars.origin = inputOriginatingCentre;
+
+meta efas_model sprintf("%s", efas_post_proc) : no_copy;
+alias mars.model = efas_model;

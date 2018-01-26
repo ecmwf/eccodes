@@ -45,13 +45,8 @@ ${tools_dir}/grib_set -s \
     setLocalDefinition=1,localDefinitionNumber=41,type=pf,inputOriginatingCentre=ecmf,typeOfPostProcessing=1 \
     $temp1 $temp2
 grib_check_key_equals $temp2 is_efas,productDefinitionTemplateNumber,typeOfStatisticalProcessing '1 73 1'
-#${tools_dir}/grib_ls -m $temp2
-grib_check_key_equals $temp2 mars.origin 'ecmf_ens_lisflood'
-${tools_dir}/grib_set -s type=fc $temp2 $temp3
-grib_check_key_equals $temp3 mars.origin 'ecmf_hres_lisflood'
-${tools_dir}/grib_set -s type=fu $temp2 $temp3
-grib_check_key_equals $temp3 mars.origin 'ecmf_lisflood'
-
+grib_check_key_equals $temp2 mars.origin 'ecmf'
+grib_check_key_equals $temp2 mars.model  'lisflood'
 
 # Parameter tests
 ${tools_dir}/grib_set -s paramId=260267 $temp2 $temp3

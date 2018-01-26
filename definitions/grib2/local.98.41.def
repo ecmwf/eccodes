@@ -55,20 +55,20 @@ concept efas_post_proc {
 } : hidden;
 
 # Note: the key inputOriginatingCentre is in the PDTNs 70, 71, 72 and 73
-concept efas_forecast {
-  "griddedobs" = { inputOriginatingCentre=98; marsType = "an"; }
-  # "reanalysis" = { inputOriginatingCentre=98; marsType = "an"; }
-
-  "hres" = { inputOriginatingCentre=98; marsType = "fc"; } # deterministic
-  "ens"  = { inputOriginatingCentre=98; marsType = "pf"; } # ensemble
-  "ens"  = { inputOriginatingCentre=98; marsType = "cf"; } # ensemble
-
+#concept efas_forecast {
+#  "griddedobs" = { inputOriginatingCentre=98; marsType = "an"; }
+#  # "reanalysis" = { inputOriginatingCentre=98; marsType = "an"; }
+#
+#  "hres" = { inputOriginatingCentre=98; marsType = "fc"; } # deterministic
+#  "ens"  = { inputOriginatingCentre=98; marsType = "pf"; } # ensemble
+#  "ens"  = { inputOriginatingCentre=98; marsType = "cf"; } # ensemble
+#
 # DWD rules
-  "global"  = { inputOriginatingCentre=78; inputProcessIdentifier = 1; }
-  "lam"     = { inputOriginatingCentre=78; inputProcessIdentifier = 2; }
-
+#  "global"  = { inputOriginatingCentre=78; inputProcessIdentifier = 1; }
+#  "lam"     = { inputOriginatingCentre=78; inputProcessIdentifier = 2; }
+#
 # TODO: For now anything coming from cnmc (COSMO) is local area
-  "lam"     = { inputOriginatingCentre=80; }
-
-  "unknown" = { dummy = 1; }
-} : hidden;
+#  "lam"     = { inputOriginatingCentre=80; }
+#
+#  "unknown" = { dummy = 1; }
+#} : hidden;
