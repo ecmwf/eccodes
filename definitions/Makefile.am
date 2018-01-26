@@ -56,6 +56,10 @@ dist_definitionsbufr_tables_0_local_1_98_0_DATA = \
 	bufr/tables/0/local/1/98/0/element.table\
 	bufr/tables/0/local/1/98/0/sequence.def
 
+definitionsbufr_tables_0_local_1_98_0_2dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/1/98/0/2
+dist_definitionsbufr_tables_0_local_1_98_0_2_DATA = \
+	bufr/tables/0/local/1/98/0/2/element.table
+
 definitionsbufr_tables_0_local_1_98_0_6dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/1/98/0/6
 dist_definitionsbufr_tables_0_local_1_98_0_6_DATA = \
 	bufr/tables/0/local/1/98/0/6/element.table
