@@ -4099,6 +4099,120 @@ dist_definitionsbufr_tables_0_wmo_19_codetables_DATA = \
 	bufr/tables/0/wmo/19/codetables/8085.table\
 	bufr/tables/0/wmo/19/codetables/8086.table
 
+definitionsbufr_tables_0_wmo_2dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/wmo/2
+dist_definitionsbufr_tables_0_wmo_2_DATA = \
+	bufr/tables/0/wmo/2/element.table\
+	bufr/tables/0/wmo/2/sequence.def
+
+definitionsbufr_tables_0_wmo_2_codetablesdir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/wmo/2/codetables
+dist_definitionsbufr_tables_0_wmo_2_codetables_DATA = \
+	bufr/tables/0/wmo/2/codetables/1003.table\
+	bufr/tables/0/wmo/2/codetables/10063.table\
+	bufr/tables/0/wmo/2/codetables/1007.table\
+	bufr/tables/0/wmo/2/codetables/1031.table\
+	bufr/tables/0/wmo/2/codetables/1032.table\
+	bufr/tables/0/wmo/2/codetables/11031.table\
+	bufr/tables/0/wmo/2/codetables/11037.table\
+	bufr/tables/0/wmo/2/codetables/11038.table\
+	bufr/tables/0/wmo/2/codetables/11039.table\
+	bufr/tables/0/wmo/2/codetables/13041.table\
+	bufr/tables/0/wmo/2/codetables/19001.table\
+	bufr/tables/0/wmo/2/codetables/19008.table\
+	bufr/tables/0/wmo/2/codetables/20003.table\
+	bufr/tables/0/wmo/2/codetables/20004.table\
+	bufr/tables/0/wmo/2/codetables/20005.table\
+	bufr/tables/0/wmo/2/codetables/2001.table\
+	bufr/tables/0/wmo/2/codetables/20011.table\
+	bufr/tables/0/wmo/2/codetables/20012.table\
+	bufr/tables/0/wmo/2/codetables/20017.table\
+	bufr/tables/0/wmo/2/codetables/2002.table\
+	bufr/tables/0/wmo/2/codetables/2003.table\
+	bufr/tables/0/wmo/2/codetables/20032.table\
+	bufr/tables/0/wmo/2/codetables/20033.table\
+	bufr/tables/0/wmo/2/codetables/20034.table\
+	bufr/tables/0/wmo/2/codetables/20035.table\
+	bufr/tables/0/wmo/2/codetables/20036.table\
+	bufr/tables/0/wmo/2/codetables/20037.table\
+	bufr/tables/0/wmo/2/codetables/2004.table\
+	bufr/tables/0/wmo/2/codetables/20041.table\
+	bufr/tables/0/wmo/2/codetables/20062.table\
+	bufr/tables/0/wmo/2/codetables/20063.table\
+	bufr/tables/0/wmo/2/codetables/2011.table\
+	bufr/tables/0/wmo/2/codetables/2012.table\
+	bufr/tables/0/wmo/2/codetables/2013.table\
+	bufr/tables/0/wmo/2/codetables/2014.table\
+	bufr/tables/0/wmo/2/codetables/2015.table\
+	bufr/tables/0/wmo/2/codetables/2021.table\
+	bufr/tables/0/wmo/2/codetables/2022.table\
+	bufr/tables/0/wmo/2/codetables/2023.table\
+	bufr/tables/0/wmo/2/codetables/2024.table\
+	bufr/tables/0/wmo/2/codetables/2025.table\
+	bufr/tables/0/wmo/2/codetables/2030.table\
+	bufr/tables/0/wmo/2/codetables/2031.table\
+	bufr/tables/0/wmo/2/codetables/2032.table\
+	bufr/tables/0/wmo/2/codetables/2033.table\
+	bufr/tables/0/wmo/2/codetables/2034.table\
+	bufr/tables/0/wmo/2/codetables/2036.table\
+	bufr/tables/0/wmo/2/codetables/2041.table\
+	bufr/tables/0/wmo/2/codetables/2061.table\
+	bufr/tables/0/wmo/2/codetables/2062.table\
+	bufr/tables/0/wmo/2/codetables/2064.table\
+	bufr/tables/0/wmo/2/codetables/2070.table\
+	bufr/tables/0/wmo/2/codetables/2101.table\
+	bufr/tables/0/wmo/2/codetables/2103.table\
+	bufr/tables/0/wmo/2/codetables/2104.table\
+	bufr/tables/0/wmo/2/codetables/2131.table\
+	bufr/tables/0/wmo/2/codetables/22061.table\
+	bufr/tables/0/wmo/2/codetables/23001.table\
+	bufr/tables/0/wmo/2/codetables/23002.table\
+	bufr/tables/0/wmo/2/codetables/23003.table\
+	bufr/tables/0/wmo/2/codetables/23004.table\
+	bufr/tables/0/wmo/2/codetables/23005.table\
+	bufr/tables/0/wmo/2/codetables/23006.table\
+	bufr/tables/0/wmo/2/codetables/23007.table\
+	bufr/tables/0/wmo/2/codetables/23008.table\
+	bufr/tables/0/wmo/2/codetables/23009.table\
+	bufr/tables/0/wmo/2/codetables/23016.table\
+	bufr/tables/0/wmo/2/codetables/23018.table\
+	bufr/tables/0/wmo/2/codetables/23031.table\
+	bufr/tables/0/wmo/2/codetables/23032.table\
+	bufr/tables/0/wmo/2/codetables/24003.table\
+	bufr/tables/0/wmo/2/codetables/25004.table\
+	bufr/tables/0/wmo/2/codetables/25005.table\
+	bufr/tables/0/wmo/2/codetables/25006.table\
+	bufr/tables/0/wmo/2/codetables/25009.table\
+	bufr/tables/0/wmo/2/codetables/25010.table\
+	bufr/tables/0/wmo/2/codetables/25011.table\
+	bufr/tables/0/wmo/2/codetables/25012.table\
+	bufr/tables/0/wmo/2/codetables/25013.table\
+	bufr/tables/0/wmo/2/codetables/25015.table\
+	bufr/tables/0/wmo/2/codetables/25017.table\
+	bufr/tables/0/wmo/2/codetables/25020.table\
+	bufr/tables/0/wmo/2/codetables/25021.table\
+	bufr/tables/0/wmo/2/codetables/25030.table\
+	bufr/tables/0/wmo/2/codetables/25032.table\
+	bufr/tables/0/wmo/2/codetables/25033.table\
+	bufr/tables/0/wmo/2/codetables/25034.table\
+	bufr/tables/0/wmo/2/codetables/29001.table\
+	bufr/tables/0/wmo/2/codetables/29002.table\
+	bufr/tables/0/wmo/2/codetables/30031.table\
+	bufr/tables/0/wmo/2/codetables/30032.table\
+	bufr/tables/0/wmo/2/codetables/31021.table\
+	bufr/tables/0/wmo/2/codetables/31031.table\
+	bufr/tables/0/wmo/2/codetables/33002.table\
+	bufr/tables/0/wmo/2/codetables/33003.table\
+	bufr/tables/0/wmo/2/codetables/8001.table\
+	bufr/tables/0/wmo/2/codetables/8002.table\
+	bufr/tables/0/wmo/2/codetables/8003.table\
+	bufr/tables/0/wmo/2/codetables/8004.table\
+	bufr/tables/0/wmo/2/codetables/8005.table\
+	bufr/tables/0/wmo/2/codetables/8007.table\
+	bufr/tables/0/wmo/2/codetables/8011.table\
+	bufr/tables/0/wmo/2/codetables/8012.table\
+	bufr/tables/0/wmo/2/codetables/8021.table\
+	bufr/tables/0/wmo/2/codetables/8023.table\
+	bufr/tables/0/wmo/2/codetables/8024.table
+
 definitionsbufr_tables_0_wmo_20dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/wmo/20
 dist_definitionsbufr_tables_0_wmo_20_DATA = \
 	bufr/tables/0/wmo/20/element.table\
@@ -9876,6 +9990,7 @@ dist_definitionsbufr_tables_0_wmo_latest_codetables_DATA = \
 	bufr/tables/0/wmo/latest/codetables/20063.table\
 	bufr/tables/0/wmo/latest/codetables/2007.table\
 	bufr/tables/0/wmo/latest/codetables/20071.table\
+	bufr/tables/0/wmo/latest/codetables/2008.table\
 	bufr/tables/0/wmo/latest/codetables/20085.table\
 	bufr/tables/0/wmo/latest/codetables/20086.table\
 	bufr/tables/0/wmo/latest/codetables/20087.table\
@@ -9990,6 +10105,8 @@ dist_definitionsbufr_tables_0_wmo_latest_codetables_DATA = \
 	bufr/tables/0/wmo/latest/codetables/2158.table\
 	bufr/tables/0/wmo/latest/codetables/2159.table\
 	bufr/tables/0/wmo/latest/codetables/2160.table\
+	bufr/tables/0/wmo/latest/codetables/2161.table\
+	bufr/tables/0/wmo/latest/codetables/2162.table\
 	bufr/tables/0/wmo/latest/codetables/2163.table\
 	bufr/tables/0/wmo/latest/codetables/2164.table\
 	bufr/tables/0/wmo/latest/codetables/2165.table\
@@ -10110,6 +10227,7 @@ dist_definitionsbufr_tables_0_wmo_latest_codetables_DATA = \
 	bufr/tables/0/wmo/latest/codetables/3021.table\
 	bufr/tables/0/wmo/latest/codetables/3022.table\
 	bufr/tables/0/wmo/latest/codetables/3023.table\
+	bufr/tables/0/wmo/latest/codetables/3027.table\
 	bufr/tables/0/wmo/latest/codetables/31021.table\
 	bufr/tables/0/wmo/latest/codetables/31031.table\
 	bufr/tables/0/wmo/latest/codetables/33002.table\
@@ -10143,6 +10261,7 @@ dist_definitionsbufr_tables_0_wmo_latest_codetables_DATA = \
 	bufr/tables/0/wmo/latest/codetables/33049.table\
 	bufr/tables/0/wmo/latest/codetables/33050.table\
 	bufr/tables/0/wmo/latest/codetables/33060.table\
+	bufr/tables/0/wmo/latest/codetables/33066.table\
 	bufr/tables/0/wmo/latest/codetables/33070.table\
 	bufr/tables/0/wmo/latest/codetables/33071.table\
 	bufr/tables/0/wmo/latest/codetables/33072.table\
@@ -10213,6 +10332,8 @@ dist_definitionsbufr_tables_0_wmo_latest_codetables_DATA = \
 	bufr/tables/0/wmo/latest/codetables/8034.table\
 	bufr/tables/0/wmo/latest/codetables/8035.table\
 	bufr/tables/0/wmo/latest/codetables/8036.table\
+	bufr/tables/0/wmo/latest/codetables/8037.table\
+	bufr/tables/0/wmo/latest/codetables/8038.table\
 	bufr/tables/0/wmo/latest/codetables/8039.table\
 	bufr/tables/0/wmo/latest/codetables/8040.table\
 	bufr/tables/0/wmo/latest/codetables/8041.table\
@@ -10241,7 +10362,9 @@ dist_definitionsbufr_tables_0_wmo_latest_codetables_DATA = \
 	bufr/tables/0/wmo/latest/codetables/8086.table\
 	bufr/tables/0/wmo/latest/codetables/8087.table\
 	bufr/tables/0/wmo/latest/codetables/8088.table\
-	bufr/tables/0/wmo/latest/codetables/8091.table
+	bufr/tables/0/wmo/latest/codetables/8091.table\
+	bufr/tables/0/wmo/latest/codetables/8092.table\
+	bufr/tables/0/wmo/latest/codetables/8093.table
 
 definitionsbufr_tables_3_local_1_98_0dir = @ECCODES_DEFINITION_PATH@/bufr/tables/3/local/1/98/0
 dist_definitionsbufr_tables_3_local_1_98_0_DATA = \
