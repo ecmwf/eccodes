@@ -1,0 +1,4 @@
+# EFAS Domain table. See local definition 41
+0   global Global
+1   local  Local
+255 missing Missing

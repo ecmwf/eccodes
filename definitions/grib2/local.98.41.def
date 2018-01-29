@@ -14,7 +14,7 @@
 unsigned[1] isFillup = missing() : dump, can_be_missing;
 alias local.isFillup = isFillup;
 
-# Forecase Reference Date and Time
+# Forecast Reference Date and Time
 unsigned[2] yearOfForecast   = year   : dump;
 unsigned[1] monthOfForecast  = month  : dump;
 unsigned[1] dayOfForecast    = day    : dump;
@@ -53,6 +53,24 @@ concept efas_post_proc {
   "epic"              = { typeOfPostProcessing=152; }
   "unknown"           = { dummy = 1; }
 } : hidden;
+
+# Domain. Missing, local or global
+codetable[1] efasDomain "grib2/tables/local/ecmf/efas_domain.table" = 255 : dump;
+#unsigned[1] efas_domain = missing() : can_be_missing, dump;
+#concept efasDomain(unknown) {
+#  "local"   = { efas_domain = 0; }
+#  "global"  = { efas_domain = 1; }
+#} : hidden;
+
+# Climatology Date and Time
+unsigned[2] yearOfClimatology    = year   : dump;
+unsigned[1] monthOfClimatology   = month  : dump;
+unsigned[1] dayOfClimatology     = day    : dump;
+unsigned[1] hourOfClimatology    = hour   : dump;
+unsigned[1] minuteOfClimatology  = minute : dump;
+constant    secondsOfClimatology = 0;
+meta dateOfClimatology  g2date(yearOfClimatology,monthOfClimatology, dayOfClimatology) : dump;
+meta timeOfClimatology  time  (hourOfClimatology,minuteOfClimatology,secondsOfClimatology) : dump;
 
 # Note: the key inputOriginatingCentre is in the PDTNs 70, 71, 72 and 73
 #concept efas_forecast {
