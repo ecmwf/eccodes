@@ -16,11 +16,12 @@
 #include "mir/repres/gauss/reduced/FromPL.h"
 
 #include "eckit/exception/Exceptions.h"
+#include "eckit/utils/MD5.h"
 
+#include "mir/api/Atlas.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
-#include "eckit/utils/MD5.h"
 
 
 namespace mir {
