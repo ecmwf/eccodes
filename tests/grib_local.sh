@@ -107,6 +107,7 @@ grib_check_key_equals $temp.3 forecastProbabilityNumber,totalNumberOfForecastPro
 grib_check_key_equals $temp.3 probabilityType,scaledValueOfLowerLimit,scaledValueOfUpperLimit "2 54 56"
 
 # Local Definition 42 for GRIB2 (LC-WFV)
+# ---------------------------------------
 ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=42,lcwfvSuiteName=1 $sample_g2 $temp
 grib_check_key_equals $temp 'mars.origin:s' 'ecmf-wam-glob'
 
