@@ -15,7 +15,7 @@
 
 #include "mir/repres/gauss/reduced/Classic.h"
 
-#include "mir/api/Atlas.h"
+
 #include "mir/api/MIRJob.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"

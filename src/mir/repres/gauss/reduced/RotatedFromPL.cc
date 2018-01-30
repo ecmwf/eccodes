@@ -16,8 +16,6 @@
 #include "mir/repres/gauss/reduced/RotatedFromPL.h"
 
 #include <iostream>
-
-#include "mir/api/Atlas.h"
 #include "mir/util/Grib.h"
 
 

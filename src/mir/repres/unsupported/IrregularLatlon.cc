@@ -16,13 +16,10 @@
 #include "mir/repres/unsupported/IrregularLatlon.h"
 
 #include <iostream>
-
 #include "eckit/exception/Exceptions.h"
 #include "eckit/utils/MD5.h"
-
 #include "mir/api/Atlas.h"
 #include "mir/param/MIRParametrisation.h"
-#include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 
 
