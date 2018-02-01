@@ -73,7 +73,7 @@ eckit::Fraction Reduced::getSmallestIncrement() const {
 }
 
 
-void Reduced::adjustBoundingBoxEastWest(util::BoundingBox& bbox) {
+void Reduced::adjustBoundingBoxEastWest(util::BoundingBox& bbox) const {
     const eckit::Fraction inc = getSmallestIncrement();
 
     Longitude e = bbox.east();

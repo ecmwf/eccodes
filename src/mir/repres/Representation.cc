@@ -187,9 +187,17 @@ std::string Representation::atlasMeshGenerator() const {
     throw eckit::SeriousBug(os.str());
 }
 
+
 util::Domain Representation::domain() const {
     std::ostringstream os;
     os << "Representation::domain() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
+void Representation::adjustBoundingBox(util::BoundingBox&) const {
+    std::ostringstream os;
+    os << "Representation::adjustBoundingBox() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 

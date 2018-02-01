@@ -29,7 +29,6 @@ namespace reduced {
 
 Octahedral::Octahedral(size_t N):
     Reduced(N) {
-    adjustBoundingBoxEastWest(bbox_);
 }
 
 
@@ -39,7 +38,6 @@ Octahedral::~Octahedral() {
 
 Octahedral::Octahedral(long N, const util::BoundingBox& bbox) :
     Reduced(N, bbox) {
-    adjustBoundingBoxEastWest(bbox_);
 }
 
 

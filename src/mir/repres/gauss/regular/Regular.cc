@@ -36,21 +36,18 @@ namespace regular {
 
 Regular::Regular(const param::MIRParametrisation& parametrisation):
     Gaussian(parametrisation) {
-    adjustBoundingBoxEastWest(bbox_);
     setNiNj();
 }
 
 
 Regular::Regular(size_t N):
     Gaussian(N) {
-    adjustBoundingBoxEastWest(bbox_);
     setNiNj();
 }
 
 
 Regular::Regular(size_t N, const util::BoundingBox& bbox):
     Gaussian(N, bbox) {
-    adjustBoundingBoxEastWest(bbox_);
     setNiNj();
 }
 
@@ -116,7 +113,7 @@ eckit::Fraction Regular::getSmallestIncrement() const {
 }
 
 
-void Regular::adjustBoundingBoxEastWest(util::BoundingBox& bbox) {
+void Regular::adjustBoundingBoxEastWest(util::BoundingBox& bbox) const {
     Longitude e = bbox.east();
     Longitude w = bbox.west();
 

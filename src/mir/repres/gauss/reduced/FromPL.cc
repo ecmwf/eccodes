@@ -38,7 +38,6 @@ FromPL::FromPL(const param::MIRParametrisation& parametrisation) :
     Reduced(parametrisation) {
     ASSERT(parametrisation.get("pl", pl_));
     checkPl(pl_);
-    adjustBoundingBoxEastWest(bbox_);
 }
 
 
@@ -50,7 +49,6 @@ FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& b
     Reduced(N, bbox),
     pl_(pl) {
     checkPl(pl_);
-    adjustBoundingBoxEastWest(bbox_);
 }
 
 
@@ -58,7 +56,6 @@ FromPL::FromPL(const std::vector<long>& pl):
     Reduced(pl.size() / 2),
     pl_(pl) {
     checkPl(pl_);
-    adjustBoundingBoxEastWest(bbox_);
 }
 
 
