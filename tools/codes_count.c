@@ -88,7 +88,10 @@ int main(int argc,char* argv[])
             continue;
         }
         filename=argv[i];
-        infh=fopen(filename,"r");
+        if (strcmp(filename,"-")==0)
+            infh=stdin;
+        else
+            infh=fopen(filename,"r");
         if (!infh) {
             perror(filename);
             exit(1);

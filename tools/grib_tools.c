@@ -286,7 +286,10 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
     while (infile!=NULL && infile->name!=NULL) {
 
         if (options->print_statistics && options->verbose) fprintf(dump_file,"%s\n",infile->name);
-        infile->file = fopen(infile->name,"r");
+        if (strcmp(infile->name,"-")==0)
+            infile->file = stdin;
+        else
+            infile->file = fopen(infile->name,"r");
         if(!infile->file) {
             perror(infile->name);
             exit(1);

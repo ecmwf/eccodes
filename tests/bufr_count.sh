@@ -36,7 +36,11 @@ set -e
 [ $status -ne 0 ]
 
 # With -f should count the valid messages
-count=`${tools_dir}/bufr_count -f $temp`
-[ "$count" = "2" ]
+vcount=`${tools_dir}/bufr_count -f $temp`
+[ "$vcount" = "2" ]
+
+# Reading from stdin
+count2=`cat $input | ${tools_dir}/bufr_count -`
+[ $count -eq $count2 ]
 
 rm -f $temp
