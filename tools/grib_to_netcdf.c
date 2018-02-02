@@ -3455,7 +3455,7 @@ static void find_nc_attributes(const request *subset_r, const request *user_r, n
     /* NetCDF does not allow variable names to start with a digit */
     if(!isalpha(att->name[0]))
     {
-        char buf[1024];
+        char buf[1048];
         sprintf(buf,"p%s",att->name);
         strcpy(att->name,buf);
     }
