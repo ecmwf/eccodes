@@ -152,11 +152,11 @@ bool LatLon::sameAs(const Representation& other) const {
 
 
 bool LatLon::isPeriodicWestEast() const {
+    const Longitude we = bbox_.east() - bbox_.west();
+    const Longitude inc = increments_.west_east();
 
-    // if longitude range spans the globe
-    const Longitude range = bbox_.east() - bbox_.west() + increments_.west_east();
-
-    return range.sameWithGrib1Accuracy(Longitude::GLOBE);
+    return  (we + inc).sameWithGrib1Accuracy(Longitude::GLOBE) ||
+            (we + inc) > Longitude::GLOBE;
 }
 
 
@@ -294,6 +294,25 @@ void LatLon::shape(size_t& ni, size_t& nj) const {
 void LatLon::initTrans(Trans_t& trans) const {
     ASSERT(!increments_.isShifted(bbox_));
     ASSERT(trans_set_resol_lonlat(&trans, ni_, nj_) == 0);
+}
+
+
+void LatLon::adjustBoundingBox(util::BoundingBox& bbox) const {
+
+    // adjust East to a maximum of E - W + inc <= 360
+    const Longitude we = bbox.east() - bbox.west();
+    const Longitude inc = increments_.west_east();
+
+    if (we + inc > Longitude::GLOBE) {
+
+        eckit::Fraction div = Longitude::GLOBE.fraction() / inc.fraction();
+        eckit::Fraction::value_type n = div.integralPart() - (div.integer() ? 1 : 0);
+
+        bbox = util::BoundingBox(bbox.north(), bbox.west(),
+                                 bbox.south(), bbox.west() + (n * inc.fraction()) );
+    }
+
+    // adjust North/South is not necessary (yet)
 }
 
 
