@@ -31,7 +31,11 @@
 1054 rjtd Tokyo
 1055 cwao Montreal
 1056 ammc Melbourne
-1057 efas European Flood Awareness System
+1057 efas European Flood Awareness System (EFAS)
+1058 efra European Flood Awareness System (EFAS) reanalysis
+1059 efrf European Flood Awareness System (EFAS) hindcasts
+1060 efse European Flood Awareness System (EFAS) seasonal forecasts
+1061 efmf European Flood Awareness System (EFAS) merged forecasts
 1070 msdc Monthly standard deviation and covariance
 1071 moda Monthly means of daily means
 1072 monr Monthly means using G. Boer's step function
