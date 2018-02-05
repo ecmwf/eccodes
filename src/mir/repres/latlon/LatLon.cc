@@ -306,30 +306,26 @@ void LatLon::adjustBoundingBox(util::BoundingBox& bbox) const {
 
     // adjust East to a maximum of E = W + Ni * inc < W + 360
     // (shifted grids can have 360 - inc < E - W < 360)
-    eckit::Fraction inc = increments_.west_east();
-
-    eckit::Fraction::value_type Ni;
+    eckit::Fraction Ni;
     if (isPeriodicWestEast(bbox, increments_)) {
-        const eckit::Fraction div = Longitude::GLOBE.fraction() / inc;
-        Ni = div.integralPart() - (div.integer() ? 1 : 0);
+        Ni = Longitude::GLOBE.fraction() / increments_.west_east();
+        if (Ni.integer()) {
+            Ni = eckit::Fraction(Ni.integralPart() - 1);
+        }
         ASSERT(Ni > 0);
     } else {
-        const eckit::Fraction div = (bbox.east() - bbox.west()).fraction() / inc;
-        Ni = div.integralPart();
+        Ni = (bbox.east() - bbox.west()).fraction() / increments_.west_east();
     }
 
 
     // adjust North to a maximum of N = S + Nj * inc <= 90
     Latitude range = bbox.north() - bbox.south();
-    if (range > Latitude::GLOBE) {
-        range = Latitude::GLOBE;
-    }
-    eckit::Fraction::value_type Nj = (range.fraction() / increments_.south_north()).integralPart();
+    eckit::Fraction Nj = (range.fraction() / increments_.south_north());
 
 
     // set bounding box
-    Longitude e = bbox.west() + Ni * inc;
-    Latitude n = bbox.south() + Nj * inc;
+    Longitude e = bbox.west() + Ni.integralPart() * increments_.west_east();
+    Latitude n = bbox.south() + Nj.integralPart() * increments_.south_north();
     bbox = util::BoundingBox(n, bbox.west(), bbox.south(), e);
 }
 
