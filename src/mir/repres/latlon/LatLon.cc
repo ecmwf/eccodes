@@ -151,12 +151,17 @@ bool LatLon::sameAs(const Representation& other) const {
 }
 
 
-bool LatLon::isPeriodicWestEast() const {
-    const Longitude we = bbox_.east() - bbox_.west();
-    const Longitude inc = increments_.west_east();
+bool LatLon::isPeriodicWestEast(const util::BoundingBox& bbox, const util::Increments& increments) {
+    const Longitude we = bbox.east() - bbox.west();
+    const Longitude inc = increments.west_east();
 
     return  (we + inc).sameWithGrib1Accuracy(Longitude::GLOBE) ||
             (we + inc) > Longitude::GLOBE;
+}
+
+
+bool LatLon::isPeriodicWestEast() const {
+    return isPeriodicWestEast(bbox_, increments_);
 }
 
 
@@ -299,20 +304,33 @@ void LatLon::initTrans(Trans_t& trans) const {
 
 void LatLon::adjustBoundingBox(util::BoundingBox& bbox) const {
 
-    // adjust East to a maximum of E - W + inc <= 360
-    const Longitude we = bbox.east() - bbox.west();
-    const Longitude inc = increments_.west_east();
+    // adjust East to a maximum of E = W + Ni * inc < W + 360
+    // (shifted grids can have 360 - inc < E - W < 360)
+    eckit::Fraction inc = increments_.west_east();
 
-    if (we + inc > Longitude::GLOBE) {
-
-        eckit::Fraction div = Longitude::GLOBE.fraction() / inc.fraction();
-        eckit::Fraction::value_type n = div.integralPart() - (div.integer() ? 1 : 0);
-
-        bbox = util::BoundingBox(bbox.north(), bbox.west(),
-                                 bbox.south(), bbox.west() + (n * inc.fraction()) );
+    eckit::Fraction::value_type Ni;
+    if (isPeriodicWestEast(bbox, increments_)) {
+        const eckit::Fraction div = Longitude::GLOBE.fraction() / inc;
+        Ni = div.integralPart() - (div.integer() ? 1 : 0);
+        ASSERT(Ni > 0);
+    } else {
+        const eckit::Fraction div = (bbox.east() - bbox.west()).fraction() / inc;
+        Ni = div.integralPart();
     }
 
-    // adjust North/South is not necessary (yet)
+
+    // adjust North to a maximum of N = S + Nj * inc <= 90
+    Latitude range = bbox.north() - bbox.south();
+    if (range > Latitude::GLOBE) {
+        range = Latitude::GLOBE;
+    }
+    eckit::Fraction::value_type Nj = (range.fraction() / increments_.south_north()).integralPart();
+
+
+    // set bounding box
+    Longitude e = bbox.west() + Ni * inc;
+    Latitude n = bbox.south() + Nj * inc;
+    bbox = util::BoundingBox(n, bbox.west(), bbox.south(), e);
 }
 
 
