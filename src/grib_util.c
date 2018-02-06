@@ -420,7 +420,6 @@ static int grib1_angle_can_be_encoded(const double angle)
     if (angle == rounded) return 1;
     return 0; /* sub millidegree. Cannot be encoded in grib1 */
 }
-#endif
 
 /* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
 static int angle_can_be_encoded(const double angle, const double angular_precision)
@@ -434,6 +433,38 @@ static int angle_can_be_encoded(const double angle, const double angular_precisi
     if (angle == rounded) return 1;
     /*printf("      ......... angle cannot be encoded: %.10e\n", angle);*/
     return 0; /* Cannot be encoded */
+}
+#endif
+
+/* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
+static int angle_can_be_encoded(grib_handle* h, const double angle)
+{
+    int ret = 0;
+    int retval = 1;
+    grib_handle* h2 = NULL;
+    char sample_name[16] = {0,};
+    long angular_precision = 0; /* e.g. 1e3 for grib1 and 1e6 for grib2 */
+    long edition = 0, coded = 0;
+    double expanded, diff;
+
+    if((ret = grib_get_long(h,"edition",&edition)) != 0) return ret;
+    if((ret = grib_get_long(h, "angularPrecision", &angular_precision)) != 0) return ret;
+    Assert(angular_precision > 0);
+
+    sprintf(sample_name, "GRIB%ld", edition);
+    h2 = grib_handle_new_from_samples(0, sample_name);
+    if((ret = grib_set_double(h2, "latitudeOfFirstGridPointInDegrees", angle)) != 0) return ret;
+    if((ret = grib_get_long(h2,   "latitudeOfFirstGridPoint", &coded)) != 0) return ret;
+    grib_handle_delete(h2);
+
+    expanded = angle*angular_precision;
+    diff = fabs(expanded - coded);
+    if (diff < 1.0/angular_precision)
+        retval = 1;
+    else
+        retval = 0;
+
+    return retval;
 }
 
 static double adjust_angle(const double angle, const RoundingPolicy policy, const double angular_precision)
@@ -454,7 +485,7 @@ static double adjust_angle(const double angle, const RoundingPolicy policy, cons
  *   longitudeOfFirstGridPointInDegrees
  *   latitudeOfLastGridPointInDegrees
  *   longitudeOfLastGridPointInDegrees
- * and change their values to expand the bounding box ??
+ * and change their values to expand the bounding box
  */
 static int expand_bounding_box(grib_handle* h, grib_values *values, const size_t count)
 {
@@ -485,7 +516,7 @@ static int expand_bounding_box(grib_handle* h, grib_values *values, const size_t
             is_angle = 1;
         }
 
-        if (is_angle && !angle_can_be_encoded(values[i].double_value, angular_precision)) {
+        if (is_angle && !angle_can_be_encoded(h, values[i].double_value)) {
             new_angle = adjust_angle(values[i].double_value, roundingPolicy, angular_precision);
             if (h->context->debug)
                 printf("ECCODES DEBUG  grib_util expand_bounding_box %s: old=%.15e new=%.15e\n", values[i].name, values[i].double_value, new_angle);
@@ -1005,9 +1036,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         SET_LONG_VALUE  ("ijDirectionIncrementGiven",    1);
         if (editionNumber == 1) {
             /* GRIB-863: GRIB1 cannot represent increments less than a millidegree */
-            const double grib1_angular_precision = 1000;
-            if (!angle_can_be_encoded(spec->iDirectionIncrementInDegrees, grib1_angular_precision) ||
-                !angle_can_be_encoded(spec->jDirectionIncrementInDegrees, grib1_angular_precision))
+            if (!angle_can_be_encoded(h, spec->iDirectionIncrementInDegrees) ||
+                !angle_can_be_encoded(h, spec->jDirectionIncrementInDegrees))
             {
                 grib1_high_resolution_fix = 1;
                 /* Set flag to compute the increments */
