@@ -427,9 +427,9 @@ static int angle_can_be_encoded(const double angle, const double angular_precisi
 {
     const double angle_expanded = angle * angular_precision;
     Assert(angular_precision>0);
-    double rounded = (int)(angle_expanded+0.5)/angular_precision;
+    double rounded = (long)(angle_expanded+0.5)/angular_precision;
     if (angle<0) {
-        rounded = (int)(angle_expanded-0.5)/angular_precision;
+        rounded = (long)(angle_expanded-0.5)/angular_precision;
     }
     if (angle == rounded) return 1;
     /*printf("      ......... angle cannot be encoded: %.10e\n", angle);*/
