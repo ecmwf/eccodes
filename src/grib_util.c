@@ -518,8 +518,11 @@ static int expand_bounding_box(grib_handle* h, grib_values *values, const size_t
 
         if (is_angle && !angle_can_be_encoded(h, values[i].double_value)) {
             new_angle = adjust_angle(values[i].double_value, roundingPolicy, angular_precision);
-            if (h->context->debug)
-                printf("ECCODES DEBUG  grib_util expand_bounding_box %s: old=%.15e new=%.15e\n", values[i].name, values[i].double_value, new_angle);
+            if (h->context->debug) {
+                printf("ECCODES DEBUG  grib_util EXPAND_BOUNDING_BOX %s: old=%.15e new=%.15e (%s)\n",
+                       values[i].name, values[i].double_value, new_angle,
+                       (roundingPolicy==eROUND_ANGLE_UP?"Up":"Down"));
+            }
             values[i].double_value = new_angle;
         }
     }
