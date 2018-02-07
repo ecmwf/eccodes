@@ -354,12 +354,12 @@ static int select_datetime(grib_accessor* a)
                 return GRIB_INTERNAL_ERROR;
             }
 
-            //printf("SN: datetime_str=%s j=%.15f\t", datetime_str, julianDT);
+            /*printf("SN: datetime_str=%s j=%.15f\t", datetime_str, julianDT);*/
             if (julianDT>=julianStart && julianEnd>=julianDT) {
-                //printf(" ....ADDING subset %ld\n",i);
+                /*printf(" ....ADDING subset %ld\n",i);*/
                 grib_iarray_push(subsets,i+1);
             } else {
-                //printf(" ....Exclude subset %ld\n",i);
+                /*printf(" ....Exclude subset %ld\n",i);*/
             }
         }
 
