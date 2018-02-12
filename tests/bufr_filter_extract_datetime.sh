@@ -32,6 +32,7 @@ fRules=${label}.filter
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  transient originalNumberOfSubsets = numberOfSubsets;
+ set unpack=1;
 
  transient extractDateTimeYearStart=2012;
  transient extractDateTimeMonthStart=10;
@@ -127,6 +128,7 @@ diff $outputRef $outputFilt
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  transient originalNumberOfSubsets=numberOfSubsets;
+ set unpack=1;
  transient extractDateTimeYearStart=2012;
  transient extractDateTimeMonthStart=19; # Bad month
  transient extractDateTimeDayStart=31;
@@ -161,6 +163,7 @@ fi
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  transient originalNumberOfSubsets=numberOfSubsets;
+ set unpack=1;
  transient extractDateTimeYearStart=2012;
  transient extractDateTimeMonthStart=10;
  transient extractDateTimeDayStart=31;
@@ -195,6 +198,7 @@ fi
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  transient originalNumberOfSubsets=numberOfSubsets;
+ set unpack=1;
  transient extractDateTimeYearStart  =2012;
  transient extractDateTimeMonthStart =10;
  transient extractDateTimeDayStart   =31;
