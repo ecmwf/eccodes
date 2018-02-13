@@ -130,6 +130,31 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
         ok = true;
     }
 
+    double d;
+    if (param.userParametrisation().get("user-north", d)) {
+        if (ok) { out << ","; }
+        out << "user-north=" << d;
+        ok = true;
+    }
+
+    if (param.userParametrisation().get("user-west", d)) {
+        if (ok) { out << ","; }
+        out << "user-west=" << d;
+        ok = true;
+    }
+
+    if (param.userParametrisation().get("user-south", d)) {
+        if (ok) { out << ","; }
+        out << "user-south=" << d;
+        ok = true;
+    }
+
+    if (param.userParametrisation().get("user-east", d)) {
+        if (ok) { out << ","; }
+        out << "user-east=" << d;
+        ok = true;
+    }
+
     return ok;
 }
 
@@ -179,8 +204,8 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation &param1,
 }
 
 
-size_t GribOutput::save(const param::MIRParametrisation &parametrisation, 
-    context::Context& ctx) {
+size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
+                        context::Context& ctx) {
 
     eckit::TraceResourceUsage<LibMir> usage("GribOutput::save");
 
@@ -301,7 +326,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
         round_ne(info.grid.longitudeOfLastGridPointInDegrees, angularPrecisionDouble);
 
         std::string compatibility;
-        if(parametrisation.userParametrisation().get("compatibility", compatibility)) {
+        if (parametrisation.userParametrisation().get("compatibility", compatibility)) {
             const compat::GribCompatibility& c = compat::GribCompatibility::lookup(compatibility);
             c.execute(parametrisation, h, info);
         }
