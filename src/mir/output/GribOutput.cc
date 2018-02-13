@@ -301,7 +301,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
         round_ne(info.grid.longitudeOfLastGridPointInDegrees, angularPrecisionDouble);
 
         std::string compatibility;
-        if(parametrisation.get("compatibility", compatibility)) {
+        if(parametrisation.userParametrisation().get("compatibility", compatibility)) {
             const compat::GribCompatibility& c = compat::GribCompatibility::lookup(compatibility);
             c.execute(parametrisation, info);
         }
