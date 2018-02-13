@@ -34,6 +34,7 @@
 #include "mir/util/Grib.h"
 #include "mir/util/BoundingBox.h"
 #include "mir/input/GribMemoryInput.h"
+#include "mir/compat/GribCompatibility.h"
 
 
 namespace mir {
@@ -122,6 +123,13 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
         ok = true;
     }
 
+    std::string compatibility;
+    if (param.userParametrisation().get("compatibility", compatibility)) {
+        if (ok) { out << ","; }
+        out << "compatibility=" << compatibility;
+        ok = true;
+    }
+
     return ok;
 }
 
@@ -157,12 +165,22 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation &param1,
         return false;
     }
 
+    std::string compatibility1;
+    std::string compatibility2;
+
+    param1.userParametrisation().get("compatibility", compatibility1);
+    param1.userParametrisation().get("compatibility", compatibility2);
+
+    if (compatibility1 != compatibility2) {
+        return false;
+    }
 
     return true;
 }
 
 
-size_t GribOutput::save(const param::MIRParametrisation &parametrisation, context::Context& ctx) {
+size_t GribOutput::save(const param::MIRParametrisation &parametrisation, 
+    context::Context& ctx) {
 
     eckit::TraceResourceUsage<LibMir> usage("GribOutput::save");
 
@@ -256,10 +274,10 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 #endif
         }
 
-        bool remove;
-        if (parametrisation.get("remove-local-extension", remove)) {
-            info.packing.deleteLocalDefinition = remove ? 1 : 0;
-        }
+        // bool remove;
+        // if (parametrisation.get("remove-local-extension", remove)) {
+        //      remove ? 1 : 0;
+        // }
 
         // Give a chance to a sub-class to modify info
         fill(h, info);
@@ -281,6 +299,12 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation, contex
 
         round_sw(info.grid.latitudeOfLastGridPointInDegrees, angularPrecisionDouble);
         round_ne(info.grid.longitudeOfLastGridPointInDegrees, angularPrecisionDouble);
+
+        std::string compatibility;
+        if(parametrisation.get("compatibility", compatibility)) {
+            const compat::GribCompatibility& c = compat::GribCompatibility::lookup(compatibility);
+            c.execute(parametrisation, info);
+        }
 
         if (eckit::Log::debug<LibMir>()) {
             X(info.grid.grid_type);
