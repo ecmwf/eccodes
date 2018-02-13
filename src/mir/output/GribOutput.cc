@@ -128,31 +128,9 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
         if (ok) { out << ","; }
         out << "compatibility=" << compatibility;
         ok = true;
-    }
 
-    double d;
-    if (param.userParametrisation().get("user-north", d)) {
-        if (ok) { out << ","; }
-        out << "user-north=" << d;
-        ok = true;
-    }
-
-    if (param.userParametrisation().get("user-west", d)) {
-        if (ok) { out << ","; }
-        out << "user-west=" << d;
-        ok = true;
-    }
-
-    if (param.userParametrisation().get("user-south", d)) {
-        if (ok) { out << ","; }
-        out << "user-south=" << d;
-        ok = true;
-    }
-
-    if (param.userParametrisation().get("user-east", d)) {
-        if (ok) { out << ","; }
-        out << "user-east=" << d;
-        ok = true;
+        const compat::GribCompatibility& c = compat::GribCompatibility::lookup(compatibility);
+        c.printParametrisation(out, param);
     }
 
     return ok;
@@ -174,7 +152,7 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation &param1,
     std::string packing2;
 
     param1.userParametrisation().get("packing", packing1);
-    param1.userParametrisation().get("packing", packing2);
+    param2.userParametrisation().get("packing", packing2);
 
     if (packing1 != packing2) {
         return false;
@@ -194,10 +172,18 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation &param1,
     std::string compatibility2;
 
     param1.userParametrisation().get("compatibility", compatibility1);
-    param1.userParametrisation().get("compatibility", compatibility2);
+    param2.userParametrisation().get("compatibility", compatibility2);
 
     if (compatibility1 != compatibility2) {
         return false;
+    }
+
+    if (!compatibility1.empty()) {
+        const compat::GribCompatibility& c = compat::GribCompatibility::lookup(compatibility1);
+
+        if (!c.sameParametrisation(param1, param2)) {
+            return false;
+        }
     }
 
     return true;
