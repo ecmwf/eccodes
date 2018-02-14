@@ -54,8 +54,8 @@ concept efas_post_proc {
   "unknown"           = { dummy = 1; }
 } : hidden;
 
-# Domain. Missing, local or global
-codetable[1] efasDomain "grib2/tables/local/ecmf/efas_domain.table" = 255 : dump, string_type;
+#Domain. Missing, local or global
+#codetable[1] efasDomain "grib2/tables/local/ecmf/efas_domain.table" = 255 : dump, string_type;
 #unsigned[1] efas_domain = missing() : can_be_missing, dump;
 #concept efasDomain(unknown) {
 #  "local"   = { efas_domain = 0; }
