@@ -43,7 +43,7 @@ static void init()
     pthread_mutex_init(&mutex_file,&attr);
     pthread_mutex_init(&mutex_rules,&attr);
     pthread_mutex_init(&mutex_concept,&attr);
-	pthread_mutex_init(&mutex_hash_array,&attr);
+    pthread_mutex_init(&mutex_hash_array,&attr);
     pthread_mutex_init(&mutex_stream,&attr);
     pthread_mutex_init(&mutex_parse,&attr);
     pthread_mutexattr_destroy(&attr);
@@ -174,7 +174,8 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_print(grib_accessor* a,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
+int grib_accessor_print(grib_accessor* a,const char* name,int type,const char* format,
+                        const char* separator,int maxcols,int* newline,FILE* out)
 {
     size_t size=0;
     char* sval=NULL;
@@ -285,7 +286,8 @@ int grib_accessor_print(grib_accessor* a,const char* name,int type,const char* f
     return ret;
 }
 
-int grib_accessors_list_print(grib_handle* h,grib_accessors_list* al,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
+int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const char* name,
+                              int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
 {
     size_t size=0,len=0,replen=0;
     char* sval=NULL;
@@ -459,9 +461,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
 
                     if(ret != GRIB_SUCCESS)
                     {
-                        /*
-                 grib_context_log(h->context, GRIB_LOG_ERROR,"grib_recompose_print: Could not recompose print : %s", uname);
-                         */
+                        /* grib_context_log(h->context, GRIB_LOG_ERROR,"grib_recompose_print: Could not recompose print : %s", uname); */
                         return ret;
                     }
                 }
@@ -477,7 +477,6 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
             fprintf(out,"%c",uname[i]);
             type=-1;
         }
-
     }
     if (newline) fprintf(out,"\n");
 
