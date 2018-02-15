@@ -113,39 +113,6 @@ eckit::Fraction Regular::getSmallestIncrement() const {
 }
 
 
-void Regular::adjustBoundingBoxEastWest(util::BoundingBox& bbox) const {
-    Longitude e = bbox.east();
-    Longitude w = bbox.west();
-
-    bool adjustedEast = false;
-    bool adjustedWest = false;
-
-    eckit::Fraction inc = getSmallestIncrement();
-    if (e - w > Longitude::GLOBE - inc) {
-        adjustedEast = true;
-        e = w + Longitude::GLOBE - inc;
-    }
-
-    const long range = 4 * long(N_);
-    for (long i = -range; i <= range; ++i) {
-        const Longitude l = w - i * inc;
-        if (!adjustedEast && bbox.east().sameWithGrib1Accuracy(l)) {
-            adjustedEast = true;
-            e = l;
-        }
-        if (!adjustedWest && bbox.west().sameWithGrib1Accuracy(l)) {
-            adjustedWest = true;
-            w = l;
-        }
-        if (adjustedEast && adjustedWest) {
-            break;
-        }
-    }
-
-    bbox = util::BoundingBox(bbox.north(), w, bbox.south(), e);
-}
-
-
 size_t Regular::numberOfPoints() const {
     if (isGlobal()) {
         ASSERT(Nj_ == N_ * 2);
