@@ -576,6 +576,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     size_t size = 0;
     grib_context* c=NULL;
     int r = 0;
+    int is_missing = 0;
     int err = _grib_get_string_length(a,&size);
     grib_handle* h=grib_handle_of_accessor(a);
 
@@ -598,8 +599,9 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     err = grib_unpack_string(a,value,&size);
     p=value;
     r=compute_bufr_key_rank(h,self->keys,a->name);
-    if (grib_is_missing_string(a,(unsigned char *)value,size))
-        return;
+    if (grib_is_missing_string(a,(unsigned char *)value,size)) {
+        is_missing = 1;
+    }
 
     while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 
@@ -610,7 +612,8 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         else
             fprintf(self->dumper.out,"%s=",a->name);
     }
-    fprintf(self->dumper.out,"\"%s\"\n",value);
+    if (is_missing) fprintf(self->dumper.out,"%s\n", "MISSING");
+    else            fprintf(self->dumper.out,"\"%s\"\n",value);
 
     if (self->isLeaf==0) {
         char* prefix;
