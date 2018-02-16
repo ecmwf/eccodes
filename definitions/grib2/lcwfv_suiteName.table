@@ -1,14 +1,22 @@
 # LC-WFV table of suite names
-0  unknown              Unknown
-1  ecmf-wam-glob        Wave Model run on HRES-WAM global domain by ECMWF
-2  ecmf-saw-glob        Wave Model run on HRES-SAW global domain by ECMWF
-3  fnmo-wavewatch-glob  Wave Watch model run on global domain by FNMOC
-4  edzw-wam-gwam        WAM model run on global domain by DWD
-5  edzw-wam-ewam        WAM model run on EWAM domain by DWD
-6  edzw-wam-cwam        WAM model run on CWAM domain by DWD
-7  rjtd-mri3-glob       MRI-III model run on global domain by JMA
-8  sabm-wavewatch-glob  Wave Watch model run on global domain by SHN/SMN
-9  sabm-wavewatch-aus   Wave Watch model run on Austral domain by SHN/SMN
-10 sabm-wavewatch-plat  Wave Watch model run on Plataforma domain by SHN/SMN
-11 sabm-wavewatch-lit   Wave Watch model run on Litoral domain by SHN/SMN
-12 sabm-wavewatch-pam   Wave Watch model run on Pampa domain by SHN/SMN
+0 unknown Unknown
+1 ecmf Wave model run by ECMWF
+2 egrr Wave model run by UKMO
+3 fnmo Wave model run by FNMOC
+4 cwao Wave model run by ECCC
+5 kwbc Wave model run by NCEP
+6 lfpw Wave model run by METFR
+7 edzw Wave model run by DWD
+8 ammc Wave model run by BoM
+# Note: code==84 and subcentre==202
+#       lops = Laboratoire D'Oceanographie Physique et Spatiale
+9 lops Wave model run by LOPS
+10 rjtd Wave model run by JMA
+11 rksl Wave model run by KMA
+12 lemm Wave model run by PRTOS
+13 ekmi Wave model run by DMI
+14 niwa Wave model run by NIWA
+15 enmi Wave model run by METNO
+16 sabm Wave model run by SHN/SM
+17 nzkl Wave model run by NZMS
+18 cnmc Wave model run by METEOAM
