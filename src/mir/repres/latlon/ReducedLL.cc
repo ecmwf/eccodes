@@ -107,7 +107,7 @@ bool ReducedLL::getLongestElementDiagonal(double& d) const {
                 latAwayFromEquator(std::abs(lat1.value()) > std::abs(lat2.value())? lat1 : lat2),
                 latCloserToEquator(std::abs(lat1.value()) > std::abs(lat2.value())? lat2 : lat1);
 
-        d = std::max(d, atlas::util::Earth::distanceInMeters(
+        d = std::max(d, atlas::util::Earth::distance(
                          atlas::PointLonLat(0., latCloserToEquator.value()),
                          atlas::PointLonLat(we, latAwayFromEquator.value()) ));
 

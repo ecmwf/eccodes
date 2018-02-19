@@ -198,7 +198,7 @@ bool LatLon::getLongestElementDiagonal(double& d) const {
     const eckit::Fraction& sn = increments_.south_north();
     const eckit::Fraction& we = increments_.west_east();
 
-    d = atlas::util::Earth::distanceInMeters(
+    d = atlas::util::Earth::distance(
                 atlas::PointLonLat(0., 0.),
                 atlas::PointLonLat(we, sn) );
     return true;
