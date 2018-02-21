@@ -61,13 +61,13 @@ Iterator *RotatedLL::iterator() const {
             return LatLonIterator::next(lat, lon);
         }
     public:
-        RotatedLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, double we, double ns, const util::Rotation& rotation) :
-            LatLonIterator(ni, nj, north, west, we, ns),
+        RotatedLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, const util::Increments& increments, const util::Rotation& rotation) :
+            LatLonIterator(ni, nj, north, west, increments),
             Iterator(rotation) {
         }
     };
 
-    return new RotatedLLIterator(ni_, nj_, bbox_.north(), bbox_.west(), increments_.west_east(), increments_.south_north(), rotation_);
+    return new RotatedLLIterator(ni_, nj_, bbox_.north(), bbox_.west(), increments_, rotation_);
 }
 
 

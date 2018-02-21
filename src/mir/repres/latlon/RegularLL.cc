@@ -57,12 +57,12 @@ Iterator* RegularLL::iterator() const {
             return LatLonIterator::next(lat, lon);
         }
     public:
-        RegularLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, double we, double ns) :
-            LatLonIterator(ni, nj, north, west, we, ns) {
+        RegularLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, const util::Increments& increments) :
+            LatLonIterator(ni, nj, north, west, increments) {
         }
     };
 
-    return new RegularLLIterator(ni_, nj_, bbox_.north(), bbox_.west(), increments_.west_east(), increments_.south_north());
+    return new RegularLLIterator(ni_, nj_, bbox_.north(), bbox_.west(), increments_);
 }
 
 
