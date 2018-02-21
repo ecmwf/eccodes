@@ -1470,6 +1470,7 @@ int strcmp_nocase(const char *s1, const char *s2);
 void rtrim(char *s);
 const char *extract_filename(const char *filepath);
 char **string_split(char *inputString, const char *delimiter);
+int string_to_long(const char* input, long* output);
 
 /* functions.c */
 long grib_op_eq(long a, long b);
