@@ -92,27 +92,27 @@ char** string_split(char* inputString, const char* delimiter)
     return result;
 }
 
-/* Return 0 if can convert input to an integer, 1 otherwise */
+/* Return GRIB_SUCCESS if can convert input to an integer, GRIB_INVALID_ARGUMENT otherwise */
 int string_to_long(const char* input, long* output)
 {
     const int base = 10;
     char *endptr;
-    errno = 0;
     long val = 0;
 
-    if (!input) return 1;
+    if (!input) return GRIB_INVALID_ARGUMENT;
 
+    errno = 0;
     val = strtol(input, &endptr, base);
     if ( (errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) ||
          (errno != 0 && val == 0) )
     {
-        //perror("strtol");
-        return 1;
+        /*perror("strtol");*/
+        return GRIB_INVALID_ARGUMENT;
     }
     if (endptr == input) {
-        //fprintf(stderr, "No digits were found. EXIT_FAILURE\n");
-        return 1;
+        /*fprintf(stderr, "No digits were found. EXIT_FAILURE\n");*/
+        return GRIB_INVALID_ARGUMENT;
     }
     *output = val;
-    return 0; // OK
+    return GRIB_SUCCESS;
 }
