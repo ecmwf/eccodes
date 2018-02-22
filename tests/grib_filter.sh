@@ -65,14 +65,14 @@ result=`${tools_dir}/grib_filter  ${data_dir}/formatint.rules  $ECCODES_SAMPLES_
 cat > ${data_dir}/formatint.rules <<EOF
 print "[values\!0]";
 EOF
-numlines=`${tools_dir}/grib_filter  ${data_dir}/formatint.rules  $ECCODES_SAMPLES_PATH/GRIB1.tmpl | wc -l`
+numlines=`${tools_dir}/grib_filter  ${data_dir}/formatint.rules  $ECCODES_SAMPLES_PATH/GRIB1.tmpl | wc -l | tr -d ' '`
 [ "$numlines" = "1" ]
 
 # If there is an error in the num columns, use 8
 cat > ${data_dir}/formatint.rules <<EOF
 print "[values\!XXX]";
 EOF
-numlines=`${tools_dir}/grib_filter  ${data_dir}/formatint.rules  $ECCODES_SAMPLES_PATH/GRIB1.tmpl | wc -l`
+numlines=`${tools_dir}/grib_filter  ${data_dir}/formatint.rules  $ECCODES_SAMPLES_PATH/GRIB1.tmpl | wc -l | tr -d ' '`
 [ "$numlines" = "8146" ]
 
 # Convert from grib1 to grib2 "Generalized vertical height coordinates"
