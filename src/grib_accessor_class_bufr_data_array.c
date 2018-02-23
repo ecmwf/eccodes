@@ -2483,14 +2483,14 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                         return GRIB_INTERNAL_ERROR;
                     }
                     if (descriptors[i]->Y == 255) {
-                        grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Termination");
+                        grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Y=255, definition of new reference values is concluded");
                         self->change_ref_value_operand = 255;
                     } else if (descriptors[i]->Y == 0) {
-                        grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Clearing override of table B");
+                        grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Y=0, clearing override of table B");
                         tableB_override_clear(c, self);
                         self->change_ref_value_operand = 0;
                     } else {
-                        grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Definition: Num bits=%d",descriptors[i]->Y);
+                        grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Definition phase: Num bits=%d",descriptors[i]->Y);
                         self->change_ref_value_operand = descriptors[i]->Y;
                     }
                     /*grib_iarray_push(elementsDescriptorsIndex,i);*/
