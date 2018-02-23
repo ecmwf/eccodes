@@ -243,24 +243,33 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     }
 
     if (size>1) {
+        int doing_unexpandedDescriptors=0;
         int icount=0;
         if (self->isLeaf==0) {
             fprintf(self->dumper.out,"%-*s",depth," ");
             fprintf(self->dumper.out,"\"value\" :\n");
         }
         fprintf(self->dumper.out,"%-*s[",depth," ");
+        if (strcmp(a->name, "unexpandedDescriptors")==0)
+            doing_unexpandedDescriptors = 1;
         depth+=2;
         for (i=0;i<size-1;i++) {
             if (icount>cols || i==0) {fprintf(self->dumper.out,"\n%-*s",depth," ");icount=0;}
             if (grib_is_missing_long(a,values[i])) {
                 fprintf(self->dumper.out,"null, ");
             } else {
-                fprintf(self->dumper.out,"%ld, ",values[i]);
+                if (doing_unexpandedDescriptors)
+                    fprintf(self->dumper.out,"%06ld, ",values[i]);
+                else
+                    fprintf(self->dumper.out,"%ld, ",values[i]);
             }
             icount++;
         }
         if (icount>cols) fprintf(self->dumper.out,"\n%-*s",depth," ");
-        fprintf(self->dumper.out,"%ld ",values[i]);
+        if (doing_unexpandedDescriptors)
+            fprintf(self->dumper.out,"%06ld ",values[i]);
+        else
+            fprintf(self->dumper.out,"%ld ",values[i]);
 
         depth-=2;
         fprintf(self->dumper.out,"\n%-*s]",depth," ");
