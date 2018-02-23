@@ -280,9 +280,15 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             }
         }
         GRIB_CHECK_NOLINE(err,0);
-        GRIB_CHECK_NOLINE(grib_nearest_find(n,h,lat,lon,0,
+        {
+            int nn_flag = 0;
+            if (options->latlon_mask) {
+                nn_flag = mode; /* ECC-638 */
+            }
+            GRIB_CHECK_NOLINE(grib_nearest_find(n,h,lat,lon,nn_flag,
                 options->lats,options->lons,options->values,
                 options->distances,options->indexes,&size),0);
+        }
 
         if (!options->latlon_mask) {
             min=options->distances[0];
