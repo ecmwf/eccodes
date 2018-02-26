@@ -257,6 +257,16 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
             }
         }
         break;
+    case 41: /* EFAS: uses post-processing templates */
+        if (isInstant) {
+            if (eps==1) productDefinitionTemplateNumberNew=71;
+            else        productDefinitionTemplateNumberNew=70;
+        } else {
+            /* non-instantaneous: accum etc */
+            if (eps==1) productDefinitionTemplateNumberNew=73;
+            else        productDefinitionTemplateNumberNew=72;
+        }
+        break;
 
     case 15: /* Seasonal forecast data */
     case 16: /* Seasonal forecast monthly mean data */

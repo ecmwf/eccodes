@@ -631,6 +631,28 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 is_uerra = 0 ;
 	}
+#Total precipitation in the last 6 hours
+'260267' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 lengthOfTimeRange = 6 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 is_efas = 1 ;
+	}
+#Total precipitation in the last 24 hours
+'260268' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 lengthOfTimeRange = 24 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 is_efas = 1 ;
+	}
 #Fraction of snow cover
 '260289' = {
 	 discipline = 0 ;
