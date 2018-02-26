@@ -10787,6 +10787,7 @@ dist_definitionsgrib2_DATA = \
 	grib2/grib2LocalSectionNumber.82.table\
 	grib2/grib2LocalSectionNumber.85.table\
 	grib2/grib2LocalSectionNumber.98.table\
+	grib2/lcwfv_suiteName.table\
 	grib2/local.82.0.def\
 	grib2/local.82.82.def\
 	grib2/local.82.83.def\
@@ -10814,6 +10815,8 @@ dist_definitionsgrib2_DATA = \
 	grib2/local.98.36.def\
 	grib2/local.98.38.def\
 	grib2/local.98.39.def\
+	grib2/local.98.41.def\
+	grib2/local.98.42.def\
 	grib2/local.98.5.def\
 	grib2/local.98.500.def\
 	grib2/local.98.7.def\
@@ -15691,6 +15694,11 @@ dist_definitionsmars_DATA = \
 	mars/grib.edmo.cl.def\
 	mars/grib.edmo.fc.def\
 	mars/grib.edmo.ssd.def\
+	mars/grib.efas.an.def\
+	mars/grib.efas.cf.def\
+	mars/grib.efas.fc.def\
+	mars/grib.efas.fu.def\
+	mars/grib.efas.pf.def\
 	mars/grib.efhc.cf.def\
 	mars/grib.efhc.icp.def\
 	mars/grib.efhc.pf.def\
