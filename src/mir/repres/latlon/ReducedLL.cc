@@ -24,6 +24,7 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Grib.h"
 
 
 namespace mir {
@@ -160,7 +161,7 @@ bool ReducedLL::isPeriodicWestEast() const {
 
     const Longitude we = bbox_.east() - bbox_.west();
     const Longitude inc = Longitude::GLOBE - we;
-    return (inc * maxpl).sameWithGrib1Accuracy(Longitude::GLOBE);
+    return same_with_grib1_accuracy(inc * maxpl, Longitude::GLOBE);
 }
 
 

@@ -16,8 +16,15 @@
 #define Grib_H
 
 #include "eckit/exception/Exceptions.h"
+#include "eckit/types/FloatCompare.h"
 
 #include <grib_api.h>
+
+template< typename T >
+bool same_with_grib1_accuracy(const T& a, const T& b) {
+    static const double GRIB1EPSILON = 0.001;
+    return eckit::types::is_approximately_equal(a.value(), b.value(), GRIB1EPSILON);
+}
 
 inline bool grib_call(int e, const char *call, bool missingOK = false) {
     if (e) {

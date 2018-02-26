@@ -155,7 +155,7 @@ bool LatLon::isPeriodicWestEast(const util::BoundingBox& bbox, const util::Incre
     const Longitude we = bbox.east() - bbox.west();
     const Longitude inc = increments.west_east().longitude();
 
-    return  (we + inc).sameWithGrib1Accuracy(Longitude::GLOBE) ||
+    return  same_with_grib1_accuracy(we + inc, Longitude::GLOBE) ||
             (we + inc) > Longitude::GLOBE;
 }
 
@@ -171,8 +171,8 @@ bool LatLon::includesNorthPole() const {
     const Latitude range = bbox_.north() - bbox_.south();
     const Latitude reach = std::min(bbox_.north() + increments_.south_north().latitude(), Latitude::NORTH_POLE);
 
-    return  range.sameWithGrib1Accuracy(Latitude::GLOBE) ||
-            reach.sameWithGrib1Accuracy(Latitude::NORTH_POLE);
+    return  same_with_grib1_accuracy(range, Latitude::GLOBE) ||
+            same_with_grib1_accuracy(reach, Latitude::NORTH_POLE);
 }
 
 
@@ -182,8 +182,8 @@ bool LatLon::includesSouthPole() const {
     const Latitude range = bbox_.north() - bbox_.south();
     const Latitude reach = std::max(bbox_.south() - increments_.south_north().latitude(), Latitude::SOUTH_POLE);
 
-    return  range.sameWithGrib1Accuracy(Latitude::GLOBE) ||
-            reach.sameWithGrib1Accuracy(Latitude::SOUTH_POLE);
+    return  same_with_grib1_accuracy(range, Latitude::GLOBE) ||
+            same_with_grib1_accuracy(reach, Latitude::SOUTH_POLE);
 }
 
 
