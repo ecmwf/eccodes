@@ -213,7 +213,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
 
     set=grib_fieldset_new_from_files(0,filenames,files_count,0,0,0,options->orderby,&err);
     if (err) {
-        grib_context_log(c,GRIB_LOG_FATAL,"unable to create index for input file %s (%s)",
+        grib_context_log(c,GRIB_LOG_ERROR,"unable to create index for input file %s (%s)",
                 filenames[0],grib_get_error_message(err));
         exit(err);
     }
