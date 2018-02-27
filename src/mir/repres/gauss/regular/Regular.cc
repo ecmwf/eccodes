@@ -37,17 +37,25 @@ namespace regular {
 Regular::Regular(const param::MIRParametrisation& parametrisation):
     Gaussian(parametrisation) {
     setNiNj();
+    Gaussian::correctBoundingBox();
 }
 
 
 Regular::Regular(size_t N):
     Gaussian(N) {
     setNiNj();
+    Gaussian::correctBoundingBox();
 }
 
 
-Regular::Regular(size_t N, const util::BoundingBox& bbox):
+Regular::Regular(size_t N, const util::BoundingBox& bbox, bool correctBoundingBox):
     Gaussian(N, bbox) {
+
+    // NOTE: BoundingBox is corrected if it isn't the result of area cropping
+    if (correctBoundingBox) {
+        Gaussian::correctBoundingBox();
+    }
+
     setNiNj();
 }
 
@@ -62,10 +70,10 @@ void Regular::fill(grib_info& info) const  {
 
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_GG;
 
-    info.grid.N = N_;
-    info.grid.iDirectionIncrementInDegrees = 90.0 / N_;
-    info.grid.Ni = Ni_;
-    info.grid.Nj = Nj_;
+    info.grid.N = long(N_);
+    info.grid.iDirectionIncrementInDegrees = getSmallestIncrement();
+    info.grid.Ni = long(Ni_);
+    info.grid.Nj = long(Nj_);
 
     bbox_.fill(info);
 

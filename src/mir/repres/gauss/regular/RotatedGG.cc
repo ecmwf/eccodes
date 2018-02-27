@@ -36,14 +36,20 @@ RotatedGG::~RotatedGG() {
 }
 
 
-RotatedGG::RotatedGG(size_t N, const util::BoundingBox& bbox, const util::Rotation& rotation):
-    Regular(N, bbox),
+RotatedGG::RotatedGG(size_t N, const util::Rotation& rotation) :
+    Regular(N),
+    rotation_(rotation) {
+}
+
+
+RotatedGG::RotatedGG(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox, bool correctBoundingBox) :
+    Regular(N, bbox, correctBoundingBox),
     rotation_(rotation) {
 }
 
 
 const Gridded *RotatedGG::cropped(const util::BoundingBox& bbox) const {
-    return new RotatedGG(N_, bbox, rotation_);
+    return new RotatedGG(N_, rotation_, bbox, false);
 }
 
 

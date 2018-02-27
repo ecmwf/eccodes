@@ -38,6 +38,7 @@ FromPL::FromPL(const param::MIRParametrisation& parametrisation) :
     Reduced(parametrisation) {
     ASSERT(parametrisation.get("pl", pl_));
     checkPl(pl_);
+    Gaussian::correctBoundingBox();
 }
 
 
@@ -45,9 +46,15 @@ FromPL::~FromPL() {
 }
 
 
-FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox) :
+FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox, bool correctBoundingBox) :
     Reduced(N, bbox),
     pl_(pl) {
+
+    // NOTE: BoundingBox is corrected if it isn't the result of area cropping
+    if (correctBoundingBox) {
+        Gaussian::correctBoundingBox();
+    }
+
     checkPl(pl_);
 }
 
@@ -56,6 +63,7 @@ FromPL::FromPL(const std::vector<long>& pl):
     Reduced(pl.size() / 2),
     pl_(pl) {
     checkPl(pl_);
+    Gaussian::correctBoundingBox();
 }
 
 

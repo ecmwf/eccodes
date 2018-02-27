@@ -31,8 +31,8 @@ RotatedFromPL::RotatedFromPL(const param::MIRParametrisation &parametrisation):
 }
 
 
-RotatedFromPL::RotatedFromPL(long N, const std::vector<long> &pl, const util::BoundingBox &bbox, const util::Rotation& rotation):
-    FromPL(N, pl, bbox),
+RotatedFromPL::RotatedFromPL(size_t N, const std::vector<long> &pl, const util::BoundingBox &bbox, const util::Rotation& rotation, bool correctBoundingBox) :
+    FromPL(N, pl, bbox, correctBoundingBox),
     rotation_(rotation) {
 }
 
@@ -64,7 +64,7 @@ void RotatedFromPL::fill(grib_info &info) const  {
 }
 
 
-void RotatedFromPL::fill(api::MIRJob &job) const  {
+void RotatedFromPL::fill(api::MIRJob&) const  {
     NOTIMP;
 }
 
@@ -75,7 +75,7 @@ atlas::Grid RotatedFromPL::atlasGrid() const {
 
 
 const Reduced* RotatedFromPL::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
-    return new RotatedFromPL(N_, pl, bbox, rotation_);
+    return new RotatedFromPL(N_, pl, bbox, rotation_, false);
 }
 
 
