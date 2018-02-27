@@ -73,5 +73,6 @@ if (oldSubtype < 255 ) {
 alias ls.rdbType=rdbType;
 alias ls.rdbSubtype=rdbSubtype;
 
-unsigned[1] spare1;
+# Data assimilation loop for purpose of Continuous DA. See ECC-641
+unsigned[1] daLoop;
 
