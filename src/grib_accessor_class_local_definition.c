@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -226,6 +226,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     case 1:  /* MARS labelling */
     case 36: /* MARS labelling for long window 4Dvar system */
     case 40: /* MARS labeling with domain and model (for LAM) */
+    case 42: /* LC-WFV: Wave forecast verification */
         if (isInstant) {
             /* type=em || type=es  */
             if (type==17) {
@@ -254,6 +255,16 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
             } else {
                 productDefinitionTemplateNumberNew=8;
             }
+        }
+        break;
+    case 41: /* EFAS: uses post-processing templates */
+        if (isInstant) {
+            if (eps==1) productDefinitionTemplateNumberNew=71;
+            else        productDefinitionTemplateNumberNew=70;
+        } else {
+            /* non-instantaneous: accum etc */
+            if (eps==1) productDefinitionTemplateNumberNew=73;
+            else        productDefinitionTemplateNumberNew=72;
         }
         break;
 

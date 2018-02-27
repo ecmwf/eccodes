@@ -39,7 +39,6 @@ list( APPEND tests
    grib_nearest
    grib_print_data
    grib_samples
-   grib_set_keys
    grib_set_pv
    grib_set_missing
    binary_message
@@ -60,7 +59,7 @@ list( APPEND tests
    get_product_kind
    gts_get_keys
    metar_get_keys
-   ecc-448
+   bufr_ecc-448
 )
 
 # The high level python test requires new features in the unittest
@@ -68,6 +67,7 @@ list( APPEND tests
 if( HAVE_PYTHON AND PYTHON_VERSION_STRING VERSION_GREATER "2.7" )
     ecbuild_info("Python examples: Adding test for High-level Pythonic Interface")
     list( APPEND tests high_level_api )
+    list( APPEND tests grib_set_keys ) # Uses OrderedDict
 endif()
 
 foreach( test ${tests} )

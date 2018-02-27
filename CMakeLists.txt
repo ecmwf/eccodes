@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2017 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -85,6 +85,7 @@ ecbuild_add_option( FEATURE FORTRAN
 # TODO Remove this after REQUIRED_LANGUAGES
 if( ENABLE_FORTRAN )
     # will set EC_HAVE_FORTRAN with the result
+    set( EC_HAVE_FORTRAN 0 )
     ecbuild_enable_fortran( MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
     set( HAVE_FORTRAN ${EC_HAVE_FORTRAN} )
 else()
@@ -340,7 +341,7 @@ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 # temporary -- add support for ecbuild 1.0.x sub-project inclusion
 # to remove once mars server & client use eckit & ecbuild >= 1.1
 
-if( EC_HAVE_FORTRAN )
+if( HAVE_FORTRAN )
     list( APPEND ECCODES_INCLUDE_DIRS  ${CMAKE_Fortran_MODULE_DIRECTORY} )
     list( APPEND ECCODES_LIBRARIES eccodes_f90 )
 endif()
@@ -368,7 +369,7 @@ ecbuild_pkgconfig(
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
                  HAVE_NETCDF HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
-if( EC_HAVE_FORTRAN )
+if( HAVE_FORTRAN )
   ecbuild_pkgconfig(
     NAME                eccodes_f90
     URL                 "https://software.ecmwf.int/wiki/display/ECC/"

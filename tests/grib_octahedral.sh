@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,9 +15,13 @@ REDIRECT=/dev/null
 this_test="octa_grid.test"
 temp=temp.$this_test
 
-input=${data_dir}/msl.octa.glob.grib1
+# All our current GRIB samples (with reduced gaussian grids) are NON-Octahedral
+for s in $ECCODES_SAMPLES_PATH/reduced_gg_pl*tmpl; do
+    grib_check_key_equals $s "isOctahedral" "0"
+done
 
-# Check 'global' key
+# Check an actual global Octahedral
+input=${data_dir}/msl.octa.glob.grib1
 grib_check_key_equals $input "global,isOctahedral" "1 1"
 
 # Check numberOfDataPoints

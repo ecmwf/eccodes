@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -1705,8 +1705,6 @@ int any_f_new_from_scanned_file(int* fid,int* msgid,int* gid)
         *gid=-1;
         return GRIB_END_OF_FILE;
     }
-    *gid=-1;
-    return GRIB_INVALID_FILE;
 }
 
 int any_f_new_from_scanned_file_(int* fid,int* msgid,int* gid){
@@ -1773,8 +1771,6 @@ int any_f_new_from_loaded(int* msgid,int* gid)
         *gid=-1;
         return GRIB_END_OF_FILE;
     }
-    *gid=-1;
-    return GRIB_INVALID_FILE;
 }
 
 int any_f_new_from_loaded_(int* msgid,int* gid){
@@ -2513,15 +2509,12 @@ int grib_f_set_int_array(int* gid, char* key, int* val, int* size,  int len){
 /*****************************************************************************/
 int grib_f_set_long_array_(int* gid, char* key, long* val, int* size,  int len){
     grib_handle *h = get_handle(*gid);
-    int err = GRIB_SUCCESS;
     char buf[1024];
     size_t lsize = *size;
 
     if(!h) return GRIB_INVALID_GRIB;
 
-    return  grib_set_long_array(h, cast_char(buf,key,len), val, lsize);
-
-    return err;
+    return grib_set_long_array(h, cast_char(buf,key,len), val, lsize);
 }
 int grib_f_set_long_array__(int* gid, char* key, long* val, int* size,  int len){
     return grib_f_set_long_array_( gid,  key,  val,  size,   len);

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -32,6 +32,7 @@ fRules=${label}.filter
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  transient originalNumberOfSubsets = numberOfSubsets;
+ set unpack=1;
  set extractAreaNorthLatitude=52.5;
  set extractAreaSouthLatitude=51.1;
  set extractAreaWestLongitude=155.2;
@@ -142,6 +143,7 @@ inputBufr="delayed_repl_01.bufr"
 outputBufr=${label}.${inputBufr}.out
 cat > $fRules <<EOF
  transient originalNumberOfSubsets = numberOfSubsets;
+ set unpack=1;
  set extractAreaNorthLatitude = -21.0;
  set extractAreaSouthLatitude = -25.0;
  set extractAreaWestLongitude = 136;

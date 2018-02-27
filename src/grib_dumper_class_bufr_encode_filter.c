@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -590,8 +590,9 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     err = grib_unpack_string(a,value,&size);
     p=value;
     r=compute_bufr_key_rank(h,self->keys,a->name);
-    if (grib_is_missing_string(a,(unsigned char *)value,size))
-        return;
+    if (grib_is_missing_string(a,(unsigned char *)value,size)) {
+        strcpy(value, ""); /* Empty string means MISSING string */
+    }
 
     while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 

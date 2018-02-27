@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -144,17 +144,67 @@ static int destroy(grib_dumper* d)
     return GRIB_SUCCESS;
 }
 
+static char* lval_to_string(grib_context* c, long v)
+{
+    char* sval=grib_context_malloc_clear(c,sizeof(char)*40);
+    if (v == GRIB_MISSING_LONG) sprintf(sval,"CODES_MISSING_LONG");
+    else                        sprintf(sval,"%ld",v);
+    return sval;
+}
 static char* dval_to_string(grib_context* c, double v)
 {
     char* sval=(char*)grib_context_malloc_clear(c,sizeof(char)*40);
-    char* p;
-    sprintf(sval,"%.18e",v);
-    p=sval;
-    while (*p !=0 ) {
-        if (*p == 'e') *p='d';
-        p++;
+    if (v == GRIB_MISSING_DOUBLE) {
+        sprintf(sval,"CODES_MISSING_DOUBLE");
+    } else {
+        char* p;
+        sprintf(sval,"%.18e",v);
+        p=sval;
+        while (*p !=0 ) {
+            if (*p == 'e') *p='d';
+            p++;
+        }
     }
     return sval;
+}
+
+/* Some lines can grow longer than Fortran compilers allow (=132). */
+/* This is mainly due to long key names with attributes. */
+/* The resturn value of this function must be freed by the caller */
+static char* break_line(grib_context* c, const char* input)
+{
+    /* Break a long line using Fortran continuation characters */
+    char* result=NULL;
+    char* a_token = NULL;
+    int first = 1;
+    const size_t len = strlen(input);
+    /* Add a bit more for inserted newlines and continuation characters */
+    result = (char*)grib_context_malloc_clear(c,sizeof(char)*len+100);
+
+    /* No need to alter input which is already too short or has newlines */
+    if (len < 70 || strchr(input, '\n')) {
+        strcpy(result, input);
+        return result;
+    }
+
+    /* A Fortran multi-line string has two ampersands. E.g. */
+    /* 'hello &
+     * &world'  is the same as 'hello world'
+     */
+    a_token = strtok((char*)input, "->");
+    while (a_token) {
+        if (first) {
+            first = 0;
+            strcat(result, a_token);
+        } else {
+            char tmp[256] = {0,};
+            sprintf(tmp, "->&\n    &%s", a_token);
+            strcat(result, tmp);
+        }
+        a_token = strtok(NULL, "->");
+    }
+
+    return result;
 }
 
 static void dump_values(grib_dumper* d, grib_accessor* a)
@@ -215,17 +265,12 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
             fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',rvalues)\n",a->name);
     } else {
         r=compute_bufr_key_rank(h,self->keys,a->name);
-        if( !grib_is_missing_double(a,value) ) {
-
-            sval=dval_to_string(c,value);
-            if (r!=0)
-                fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',%s)\n",r,a->name,sval);
-            else
-                fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',%s)\n",a->name,sval);
-
-            grib_context_free(c,sval);
-
-        }
+        sval=dval_to_string(c,value);
+        if (r!=0)
+            fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',%s)\n",r,a->name,sval);
+        else
+            fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',%s)\n",a->name,sval);
+        grib_context_free(c,sval);
     }
 
     if (self->isLeaf==0) {
@@ -299,14 +344,9 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
 
         fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s' &\n,rvalues)\n",prefix,a->name);
     } else {
-        if( !grib_is_missing_double(a,value) ) {
-
-            sval=dval_to_string(c,value);
-            fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s' &\n,%s)\n",prefix,a->name,sval);
-
-            grib_context_free(c,sval);
-
-        }
+        sval=dval_to_string(c,value);
+        fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s' &\n,%s)\n",prefix,a->name,sval);
+        grib_context_free(c,sval);
     }
 
     if (self->isLeaf==0) {
@@ -333,6 +373,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
     int i,r,icount;
     int cols=4;
     long count=0;
+    char* sval = NULL;
     grib_context* c=a->context;
     grib_handle* h=grib_handle_of_accessor(a);
 
@@ -393,23 +434,23 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
             fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',ivalues)\n",a->name);
 
     } else {
+        int doing_unexpandedDescriptors=0;
         r=compute_bufr_key_rank(h,self->keys,a->name);
-        if( !grib_is_missing_long(a,value) ) {
-            int doing_unexpandedDescriptors=0;
-            if (r!=0) {
-                fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',",r,a->name);
-            } else {
-                if (strcmp(a->name, "unexpandedDescriptors")==0) {
-                    doing_unexpandedDescriptors=1;
-                    fprintf(self->dumper.out,"\n  ! Create the structure of the data section\n");
-                }
-                fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',",a->name);
+        sval=lval_to_string(c,value);
+        if (r!=0) {
+            fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',",r,a->name);
+        } else {
+            if (strcmp(a->name, "unexpandedDescriptors")==0) {
+                doing_unexpandedDescriptors=1;
+                fprintf(self->dumper.out,"\n  ! Create the structure of the data section\n");
             }
-
-            fprintf(self->dumper.out,"%ld)\n",value);
-            if (doing_unexpandedDescriptors)
-                fprintf(self->dumper.out,"\n");
+            fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',",a->name);
         }
+
+        fprintf(self->dumper.out,"%s)\n",sval);
+        grib_context_free(c,sval);
+        if (doing_unexpandedDescriptors)
+            fprintf(self->dumper.out,"\n");
     }
 
     if (self->isLeaf==0) {
@@ -438,6 +479,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     int i,icount;
     int cols=4;
     long count=0;
+    char* pref = NULL;
     grib_context* c=a->context;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -454,6 +496,10 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     }
 
     self->empty=0;
+
+    /* Fortran standard specifies the maximum length of a free-form source line is 132 characters */
+    /* Break long prefix string into multiple lines to avoid compiler error */
+    pref = break_line(c, prefix);
 
     if (size>1) {
         fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
@@ -473,27 +519,27 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         fprintf(self->dumper.out,"/)\n");
         grib_context_free(a->context,values);
 
-        fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s' &\n,ivalues)\n",prefix,a->name);
+        fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s' &\n,ivalues)\n",pref,a->name);
 
     } else {
-        /* int r=compute_bufr_key_rank(h,self->keys,a->name); */
-        if( !grib_is_missing_long(a,value) ) {
-            fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s'&\n,",prefix,a->name);
-            fprintf(self->dumper.out,"%ld)\n",value);
-        }
+        char* sval=lval_to_string(c,value);
+        fprintf(self->dumper.out,"  call codes_set(ibufr,'%s->%s'&\n,",pref,a->name);
+        fprintf(self->dumper.out,"%s)\n",sval);
+        grib_context_free(c,sval);
     }
 
     if (self->isLeaf==0) {
         char* prefix1;
 
-        prefix1=(char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+strlen(prefix)+5));
-        sprintf(prefix1,"%s->%s",prefix,a->name);
+        prefix1=(char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+strlen(pref)+5));
+        sprintf(prefix1,"%s->%s",pref,a->name);
 
         dump_attributes(d,a,prefix1);
 
         grib_context_free(c,prefix1);
         depth-=2;
     }
+    grib_context_free(c,pref);
     (void)err; /* TODO */
 }
 
@@ -517,15 +563,13 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     self->empty=0;
 
     r=compute_bufr_key_rank(h,self->keys,a->name);
-    if( !grib_is_missing_double(a,value) ) {
-        sval=dval_to_string(c,value);
-        if (r!=0)
-            fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',%s)\n",r,a->name,sval);
-        else
-            fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',%s)\n",a->name,sval);
 
-        grib_context_free(c,sval);
-    }
+    sval=dval_to_string(c,value);
+    if (r!=0)
+        fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',%s)\n",r,a->name,sval);
+    else
+        fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',%s)\n",a->name,sval);
+    grib_context_free(c,sval);
 
     if (self->isLeaf==0) {
         char* prefix;
@@ -640,8 +684,9 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     err = grib_unpack_string(a,value,&size);
     p=value;
     r=compute_bufr_key_rank(h,self->keys,a->name);
-    if (grib_is_missing_string(a,(unsigned char *)value,size))
-        return;
+    if (grib_is_missing_string(a,(unsigned char *)value,size)) {
+        strcpy(value, ""); /* Empty string means MISSING string */
+    }
 
     while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 

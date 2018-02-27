@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -496,7 +496,7 @@ int grib_openjpeg_decode(grib_context *c, unsigned char *buf, size_t *buflen, do
         err = GRIB_DECODING_ERROR;
         goto cleanup;
     }
-    if ( (image->numcomps != 1) || !(image->x1 * image->y1) ) {
+    if ( (image->numcomps != 1) || (image->x1 * image->y1)==0 ) {
         err = GRIB_DECODING_ERROR;
         goto cleanup;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -790,7 +790,7 @@ struct bufr_descriptor {
   char*  units;
   long   scale;
   double factor;
-  double reference;
+  long   reference;
   long   width;
   int    nokey; /* set if descriptor does not have an associated key */
   grib_accessor* a;
@@ -816,7 +816,7 @@ typedef struct bufr_tableb_override bufr_tableb_override;
 struct bufr_tableb_override {
   bufr_tableb_override* next;
   int                   code;
-  double                new_ref_val;
+  long                  new_ref_val;
 };
 
 struct codes_condition {

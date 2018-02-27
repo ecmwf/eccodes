@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -741,10 +741,22 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
         {
             if(grib_inline_strcmp(sval1,sval2) != 0)
             {
-                printInfo(handle1);
-                printf("string [%s]: [%s] != [%s]\n", name, sval1, sval2);
-                err1 = GRIB_VALUE_MISMATCH;
-                save_error(c,name);
+                /* Check if strings are 'missing'.
+                 * Note: one string could have all its bits=1 and the other empty */
+                int equal = 0;
+                grib_accessor* a1 = grib_find_accessor(handle1, name);
+                grib_accessor* a2 = grib_find_accessor(handle2, name);
+                int is_miss_1 = grib_is_missing_string(a1, (unsigned char *)sval1, len1);
+                int is_miss_2 = grib_is_missing_string(a2, (unsigned char *)sval2, len2);
+                if ( is_miss_1 && is_miss_2 ) {
+                    equal = 1;
+                }
+                if (!equal) {
+                    printInfo(handle1);
+                    printf("string [%s]: [%s] != [%s]\n", name, sval1, sval2);
+                    err1 = GRIB_VALUE_MISMATCH;
+                    save_error(c,name);
+                }
             }
         }
 
@@ -878,7 +890,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
         }
         if(err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1==len2)
         {
-            int i,imaxdiff;
+            int imaxdiff;
             double diff;
             double *pv1,*pv2,dnew1,dnew2;
             maxdiff=0;
@@ -919,11 +931,11 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                         printf("\n\ttolerance=%.16e",value_tolerance);
                     } else {
                         /* One or both values are missing */
-                        char* sval1 = double_as_string(c, dval1[imaxdiff]);
-                        char* sval2 = double_as_string(c, dval2[imaxdiff]);
-                        printf("\tdiff. element %d: %s %s", imaxdiff, sval1, sval2);
-                        grib_context_free(c,sval1);
-                        grib_context_free(c,sval2);
+                        char* svalA = double_as_string(c, dval1[imaxdiff]);
+                        char* svalB = double_as_string(c, dval2[imaxdiff]);
+                        printf("\tdiff. element %d: %s %s", imaxdiff, svalA, svalB);
+                        grib_context_free(c,svalA);
+                        grib_context_free(c,svalB);
                     }
                     if (packingError2!=0 || packingError1!=0)
                         printf(" packingError: [%g] [%g]",packingError1,packingError2);
@@ -946,11 +958,11 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                         printf("\ttolerance=%g\n",value_tolerance);
                     } else {
                         /* One or both values are missing */
-                        char* sval1 = double_as_string(c, dval1[0]);
-                        char* sval2 = double_as_string(c, dval2[0]);
-                        printf("double [%s]: [%s] != [%s]\n", name, sval1, sval2);
-                        grib_context_free(c,sval1);
-                        grib_context_free(c,sval2);
+                        char* svalA = double_as_string(c, dval1[0]);
+                        char* svalB = double_as_string(c, dval2[0]);
+                        printf("double [%s]: [%s] != [%s]\n", name, svalA, svalB);
+                        grib_context_free(c,svalA);
+                        grib_context_free(c,svalB);
                     }
                 }
             }
@@ -991,7 +1003,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
         {
             if(memcmp(uval1,uval2,len1) != 0)
             {
-                int i;
                 for(i = 0; i < len1; i++) {
                     if(uval1[i] != uval2[i])
                     {

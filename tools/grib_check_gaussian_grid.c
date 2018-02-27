@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -34,7 +34,7 @@ void usage(const char* prog)
 {
     printf("usage: %s [-f] grib_file grib_file ...\n\n",prog);
     printf("Check geometry of GRIB fields with a Gaussian Grid.\n");
-    printf("(The grid is assumed to be global)\n\n");
+    printf("(The grid is assumed to be GLOBAL)\n\n");
     printf("Options:\n");
     printf("-f  Do not exit on first error\n");
     printf("\n");
@@ -44,9 +44,11 @@ void usage(const char* prog)
 /* Print an error message and die */
 void error(const char* fmt, ...)
 {
+    char buf[1024] = {0,};
     va_list list;
     va_start(list,fmt);
-    vfprintf(stderr, fmt, list);
+    sprintf(buf, "  %s", fmt); /* indent a bit */
+    vfprintf(stderr, buf, list);
     va_end(list);
 
     ++error_count;
@@ -88,7 +90,8 @@ int process_file(const char* filename)
 
         if (err != CODES_SUCCESS) CODES_CHECK(err,0);
         ++msg_num;
-        printf("\tProcessing GRIB message #%d\n", msg_num);
+        CODES_CHECK(codes_get_long(h,"edition",&edition),0);
+        printf(" Processing GRIB message #%d (edition=%ld)\n", msg_num, edition);
 
         len = 32;
         CODES_CHECK(codes_get_string(h,"gridType",gridType,&len),0);
@@ -97,12 +100,11 @@ int process_file(const char* filename)
         grid_ok = is_regular || is_reduced;
         if( !grid_ok ) {
             /*error("ERROR: gridType should be Reduced or Regular Gaussian Grid!\n");*/
-            printf("\tWARNING: gridType should be Reduced or Regular Gaussian Grid! Ignoring\n");
+            printf(" WARNING: gridType should be Reduced or Regular Gaussian Grid! Ignoring\n");
             codes_handle_delete(h);
             continue;
         }
 
-        CODES_CHECK(codes_get_long(h,"edition",&edition),0);
         CODES_CHECK(codes_get_long(h,"N",&N),0);
         CODES_CHECK(codes_get_long(h,"Nj",&Nj),0);
         CODES_CHECK(codes_get_long(h,"numberOfDataPoints",&numberOfDataPoints),0);
@@ -115,20 +117,20 @@ int process_file(const char* filename)
         angular_tolerance = get_precision(edition);
 
         if (N <= 0) {
-            error("ERROR: N should be > 0!\n", N);
+            error("ERROR: N should be > 0\n", N);
         }
         if ( Nj != 2*N ) {
-            error("ERROR: Nj is %ld but should be 2*N (%ld)!\n", Nj, 2*N);
+            error("ERROR: Nj is %ld but should be 2*N (%ld)\n", Nj, 2*N);
         }
 
         if (lon1 != 0) {
-            error("ERROR: latitudeOfFirstGridPointInDegrees=%f but should be 0!\n", lon1);
+            error("ERROR: latitudeOfFirstGridPointInDegrees=%f but should be 0\n", lon1);
         }
         expected_lon2 = 360.0 - 360.0/(4*N);
 
         /* Check first and last latitudes */
         if (lat1 != -lat2) {
-            error("First latitude must be = last latitude but opposite in sign: lat1=%f, lat2=%f\n",
+            error("ERROR: First latitude must be = last latitude but opposite in sign: lat1=%f, lat2=%f\n",
                     lat1, lat2);
         }
         /* Note: grib_get_gaussian_latitudes() assumes the 'lats' array has 2N elements! */
@@ -137,10 +139,10 @@ int process_file(const char* filename)
         CODES_CHECK(codes_get_gaussian_latitudes(N,lats), 0);
 
         if (!DBL_EQUAL(lats[0], lat1, angular_tolerance)) {
-            error("First latitude %f must be %f\n", lat1, lats[0]);
+            error("ERROR: latitudeOfFirstGridPointInDegrees=%f but should be %f\n", lat1, lats[0]);
         }
         if (!DBL_EQUAL(lats[Nj-1], lat2, angular_tolerance)) {
-            error("Last latitude %f must be %f\n", lat2, lats[Nj-1]);
+            error("ERROR: latitudeOfLastGridPointInDegrees=%f but should be %f\n", lat2, lats[Nj-1]);
         }
 
         if (is_reduced) {
@@ -152,16 +154,16 @@ int process_file(const char* filename)
             is_missing_Di = codes_is_missing(h, "iDirectionIncrement", &err);
             assert(err == CODES_SUCCESS);
             if (!is_missing_Ni) {
-                error("ERROR: For a reduced gaussian grid Ni should be missing!\n");
+                error("ERROR: For a reduced gaussian grid Ni should be missing\n");
             }
             if (!is_missing_Di) {
-                error("ERROR: For a reduced gaussian grid iDirectionIncrement should be missing!\n");
+                error("ERROR: For a reduced gaussian grid iDirectionIncrement should be missing\n");
             }
 
             CODES_CHECK(codes_get_size(h, "pl", &pl_len),0);
             assert(pl_len>0);
             if (pl_len != 2*N) {
-                error("ERROR: Length of pl array is %ld but should be 2*N (%ld)!\n", pl_len, 2*N);
+                error("ERROR: Length of pl array is %ld but should be 2*N (%ld)\n", pl_len, 2*N);
             }
             pl = (long*)malloc(pl_len*sizeof(long));
             assert(pl);
@@ -173,7 +175,7 @@ int process_file(const char* filename)
                 const long pl_start = pl[i];
                 const long pl_end = pl[pl_len-1-i];
                 if ( pl_start != pl_end ) {
-                    error("ERROR: pl array is not symmetric: pl[%ld]=%ld, pl[%ld]=%ld!\n",
+                    error("ERROR: pl array is not symmetric: pl[%ld]=%ld, pl[%ld]=%ld\n",
                             i, pl_start,  pl_len-1-i, pl_end);
                 }
             }
@@ -184,23 +186,23 @@ int process_file(const char* filename)
                 if (pl[i] > max_pl) max_pl = pl[i];
             }
             if (pl_sum != numberOfDataPoints) {
-                error("ERROR: Sum of pl array %ld does not match numberOfDataPoints %ld!\n", pl_sum, numberOfDataPoints);
+                error("ERROR: Sum of pl array %ld does not match numberOfDataPoints %ld\n", pl_sum, numberOfDataPoints);
             }
             CODES_CHECK(codes_get_long(h,"isOctahedral",&is_octahedral),0);
             if (is_octahedral) {
-                printf("\tThis is an Octahedral Gaussian grid!\n");
+                printf("  This is an Octahedral Gaussian grid\n");
                 expected_lon2 = 360.0 - 360.0/max_pl;
             }
             free(pl);
         }
 
         if (fabs(lon2 - expected_lon2) > angular_tolerance) {
-            error("ERROR: longitudeOfLastGridPointInDegrees=%f but should be %f!\n", lon2, expected_lon2);
+            error("ERROR: longitudeOfLastGridPointInDegrees=%f but should be %f\n", lon2, expected_lon2);
         }
 
         CODES_CHECK(codes_get_size(h, "values", &sizeOfValuesArray),0);
         if (sizeOfValuesArray != numberOfDataPoints) {
-            error("Number of data points %d different from size of values array %d\n",
+            error("ERROR: Number of data points %d different from size of values array %d\n",
                   numberOfDataPoints, sizeOfValuesArray);
         }
 
@@ -249,6 +251,7 @@ int main(int argc, char** argv)
     else
     {
         printf("Error count: %d\n", error_count);
+        return 1;
     }
 
     return 0;

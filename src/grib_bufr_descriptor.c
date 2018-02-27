@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -84,7 +84,7 @@ int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor,int code,bufr_d
     return err;
 }
 
-void grib_bufr_descriptor_set_reference(bufr_descriptor* v,double reference)
+void grib_bufr_descriptor_set_reference(bufr_descriptor* v,long reference)
 {
     if (!v) return;
     v->reference=reference;

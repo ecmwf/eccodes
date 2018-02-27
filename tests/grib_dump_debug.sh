@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,6 +9,8 @@
 #
 
 . ./include.sh
+label="grib_dump_debug"
+temp=temp.$label.txt
 
 REDIRECT=/dev/null
 
@@ -39,16 +41,13 @@ spherical_model_level.grib1
 spherical_pressure_level.grib1
 constant_field.grib2
 gfs.c255.grib2
-jpeg.grib2
 missing.grib2
-multi.grib2
 multi_created.grib2
 reduced_gaussian_model_level.grib2
 reduced_gaussian_pressure_level.grib2
 reduced_gaussian_pressure_level_constant.grib2
 reduced_gaussian_sub_area.grib2
 reduced_gaussian_surface.grib2
-reduced_gaussian_surface_jpeg.grib2
 reduced_latlon_surface.grib2
 reduced_latlon_surface_constant.grib2
 regular_gaussian_model_level.grib2
@@ -63,11 +62,28 @@ spherical_pressure_level.grib2
 test_uuid.grib2
 tigge_af_ecmwf.grib2
 tigge_cf_ecmwf.grib2
-v.grib2
 "
+
+set +u
+# Check HAVE_JPEG is defined and is equal to 1
+if [ "x$HAVE_JPEG" != x ]; then
+    if [ $HAVE_JPEG -eq 1 ]; then
+        # Include files which have messages with grid_jpeg packing
+        files="jpeg.grib2  multi.grib2  reduced_gaussian_surface_jpeg.grib2  v.grib2 "$files
+    fi
+fi
 
 for file in $files; do
    if [ -f ${data_dir}/$file ]; then
-      ${tools_dir}/grib_dump -Da ${data_dir}/$file 2> $REDIRECT > $REDIRECT
+      ${tools_dir}/grib_dump -Da ${data_dir}/$file > $temp 2>&1
+      set +e
+      # Look for the word ERROR in output. We should not find any
+      grep -q 'ERROR ' $temp
+      if [ $? -eq 0 ]; then
+         echo "File $file: found string ERROR in grib_dump output!"
+         exit 1
+      fi
+      set -e
    fi
 done
+rm -f $temp

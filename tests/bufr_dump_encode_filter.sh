@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -54,12 +54,12 @@ do
     ${tools_dir}/codes_bufr_filter -o $fBufrTmp $fRules $f
     ${tools_dir}/bufr_compare $fBufrTmp $f
 
-    TEMP_JSON1=${label}.$f.json
-    TEMP_JSON2=${label}.$fBufrTmp.json
-    ${tools_dir}/bufr_dump $f        > $TEMP_JSON1
-    ${tools_dir}/bufr_dump $fBufrTmp > $TEMP_JSON2
-    diff $TEMP_JSON1 $TEMP_JSON2
-    rm -f $TEMP_JSON1 $TEMP_JSON2
+    TEMP_OUT1=${label}.$f.dump.out
+    TEMP_OUT2=${label}.$fBufrTmp.dump.out
+    ${tools_dir}/bufr_dump -p $f        > $TEMP_OUT1
+    ${tools_dir}/bufr_dump -p $fBufrTmp > $TEMP_OUT2
+    diff $TEMP_OUT1 $TEMP_OUT2
+    rm -f $TEMP_OUT1 $TEMP_OUT2
 
     rm -f $fBufrTmp $fRules
   fi

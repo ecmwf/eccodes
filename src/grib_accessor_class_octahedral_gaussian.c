@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -154,6 +154,48 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     self->pl           = grib_arguments_get_name(hand,c,n++);
 }
 
+/* Returns 1 (=true) if input pl array is Octahedral, 0 otherwise.
+ * Possible cases for the deltas in an octahedral pl array:
+ *  +4 .. +4        Top part, above equator
+ *  +4 .. 0         Top part, above and including equator
+ *  +4.. 0  -4..    Middle part, above, equator and below
+ *  0 -4..          Equator and below
+ *  -4 ..-4         All below equator
+ * Anything else is considered not octahedral
+ */
+static int is_pl_octahedral(const long pl[], size_t size)
+{
+    long i;
+    long prev_diff = -1;
+    for(i=1; i<size; ++i) {
+        const long diff = pl[i] - pl[i-1];
+        if (diff == 0) {
+            /* prev must be +4 or undef */
+            if (! (prev_diff==+4 || i==1) ) {
+                return 0;
+            }
+        } else {
+            if (labs(diff) != 4) {
+                return 0;
+            }
+            if (diff == +4) {
+                /* prev must be +4 or undef */
+                if (! (prev_diff==+4 || i==1) ) {
+                    return 0;
+                }
+            }
+            if (diff == -4) {
+                /* prev must be 0, -4 or undef */
+                if (! (prev_diff==-4 || prev_diff==0 || i==1) ) {
+                    return 0;
+                }
+            }
+        }
+        prev_diff = diff;
+    }
+    return 1; /* it's octahedral */
+}
+
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_octahedral_gaussian* self = (grib_accessor_octahedral_gaussian*)a;
@@ -161,7 +203,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     long Ni;
     long plpresent=0;
     long* pl=NULL; /* pl array */
-    size_t plsize=0, i=0;
+    size_t plsize=0;
     grib_handle* hand = grib_handle_of_accessor(a);
 
     grib_context* c=a->context;
@@ -195,19 +237,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
         return ret;
 
     /* pl[0] is guaranteed to exist. Have already asserted previously */
-    for(i=1; i<plsize; ++i) {
-        const long diff = labs(pl[i] - pl[i-1]);
-        /* There are two values at the equator which are equal. */
-        /* So diff is either 4 or 0 */
-        if (diff != 4 && diff != 0) {
-            *val = 0; /* Not octahedral */
-            grib_context_free(c, pl);
-            return GRIB_SUCCESS;
-        }
-    }
+    *val = is_pl_octahedral(pl, plsize);
     grib_context_free(c, pl);
 
-    *val=1;  /* It is Octahedral */
     return ret;
 }
 

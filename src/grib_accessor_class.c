@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -97,6 +97,7 @@ grib_section* grib_create_root_section(const grib_context *context, grib_handle 
     return s;
 }
 
+/* Only used if ACCESSOR_FACTORY_USE_TRIE */
 static GRIB_INLINE grib_accessor_class* get_class(grib_context* c,char* type)
 {
     int i;
@@ -127,10 +128,13 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     grib_accessor* a=NULL;
     size_t size=0;
 
-    c = get_class(p->h->context,creator->op);
-#ifdef USE_GPERF_HASHING
+#ifdef ACCESSOR_FACTORY_USE_TRIE
+     c = get_class(p->h->context,creator->op);
+#else
+    /* Use the hash table built with gperf (See make_accessor_class_hash.ksh) */
     c=*((grib_accessor_classes_hash(creator->op,strlen(creator->op)))->cclass);
 #endif
+
     a = (grib_accessor*) grib_context_malloc_clear(p->h->context,c->size);
 
     a->name                = creator->name;

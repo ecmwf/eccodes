@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -105,5 +105,10 @@ ${tools_dir}/grib_set -s edition=2 $temp.2 $temp.3
 grib_check_key_equals $temp.3 edition,productDefinitionTemplateNumber "2 5"
 grib_check_key_equals $temp.3 forecastProbabilityNumber,totalNumberOfForecastProbabilities "2 25"
 grib_check_key_equals $temp.3 probabilityType,scaledValueOfLowerLimit,scaledValueOfUpperLimit "2 54 56"
+
+# Local Definition 42 for GRIB2 (LC-WFV)
+# ---------------------------------------
+${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=42,lcwfvSuiteName=9 $sample_g2 $temp
+grib_check_key_equals $temp 'mars.origin:s' 'lops'
 
 rm -f $temp $temp.1 $temp.2 $temp.3

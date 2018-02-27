@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -551,10 +551,11 @@ int grib_is_missing_string(grib_accessor* a, unsigned char* x, size_t len)
 {
     /* For a string value to be missing, every character has to be */
     /* all 1's (i.e. 0xFF) */
+    /* Note: An empty string is also classified as missing */
     int ret;
     size_t i=0;
 
-    if (len==0) return 0;
+    if (len==0) return 1; /* empty string */
     ret=1;
     for (i=0;i<len;i++) {
         if (x[i] != 0xFF ) {
@@ -1322,7 +1323,6 @@ int grib_get_long_array(grib_handle* h, const char* name, long* val, size_t *len
         if (!al) return GRIB_NOT_FOUND;
         ret=grib_accessors_list_unpack_long(al,val,length);
         grib_context_free(h->context,al);
-        return ret;
     } else  {
         a=grib_find_accessor(h, name);
         if(!a) return GRIB_NOT_FOUND;
@@ -1706,9 +1706,10 @@ int codes_copy_key(grib_handle* h1,grib_handle* h2,const char* key,int type)
     size_t len1,len;
     int err=0;
 
-    if (  type != GRIB_TYPE_DOUBLE &&
-            type != GRIB_TYPE_LONG   &&
-            type != GRIB_TYPE_STRING    ) {
+    if ( type != GRIB_TYPE_DOUBLE &&
+         type != GRIB_TYPE_LONG   &&
+         type != GRIB_TYPE_STRING )
+    {
         err=grib_get_native_type(h1,key,&type);
         if (err) return err;
     }
@@ -1721,7 +1722,7 @@ int codes_copy_key(grib_handle* h1,grib_handle* h2,const char* key,int type)
         if (len1==1) {
             err=grib_get_double(h1,key,&d);
             if (err) return err;
-            grib_context_log(h1->context,GRIB_LOG_DEBUG,"codes_copy_key: %s=%g\n",key,d);
+            grib_context_log(h1->context,GRIB_LOG_DEBUG,"codes_copy_key double: %s=%g\n",key,d);
             err=grib_set_double(h2,key,d);
             return err;
         } else {
@@ -1737,7 +1738,7 @@ int codes_copy_key(grib_handle* h1,grib_handle* h2,const char* key,int type)
         if (len1==1) {
             err=grib_get_long(h1,key,&l);
             if (err) return err;
-            grib_context_log(h1->context,GRIB_LOG_DEBUG,"codes_copy_key: %s=%ld\n",key,l);
+            grib_context_log(h1->context,GRIB_LOG_DEBUG,"codes_copy_key long: %s=%ld\n",key,l);
             err=grib_set_long(h2,key,l);
             return err;
         } else {
@@ -1755,7 +1756,7 @@ int codes_copy_key(grib_handle* h1,grib_handle* h2,const char* key,int type)
             s=(char*)grib_context_malloc_clear(h1->context,len);
             err=grib_get_string(h1,key,s,&len);
             if (err) return err;
-            grib_context_log(h1->context,GRIB_LOG_DEBUG,"codes_copy_key: %s=%s\n",key,s);
+            grib_context_log(h1->context,GRIB_LOG_DEBUG,"codes_copy_key str: %s=%s\n",key,s);
             err=grib_set_string(h2,key,s,&len);
             grib_context_free(h1->context,s);
             return err;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -51,7 +51,7 @@ void *runner(void *ptr)
     pthread_exit(0);
 }
 
-int encode_file(char *input_file, char *output_file)
+static int encode_file(char *input_file, char *output_file)
 {
     grib_handle *source_handle = NULL;
     const void *buffer = NULL;

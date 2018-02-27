@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -339,10 +339,7 @@ void grib_hash_keys_delete(grib_itrie *t)
 
 int grib_hash_keys_get_id(grib_itrie* t,const char* key)
 {
-    const char *k=key;
-    grib_itrie* last=t;
-
-    struct grib_keys_hash* hash=grib_keys_hash_get(key,strlen(key));
+    const struct grib_keys_hash* hash=grib_keys_hash_get(key,strlen(key));
 
     if (hash) {
         /* printf("%s found %s (%d)\n",key,hash->name,hash->id); */
@@ -350,19 +347,23 @@ int grib_hash_keys_get_id(grib_itrie* t,const char* key)
     }
 
     /* printf("+++ \"%s\"\n",key); */
+    {
+        const char *k=key;
+        grib_itrie* last=t;
 
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&mutex);
+        GRIB_MUTEX_INIT_ONCE(&once,&init);
+        GRIB_MUTEX_LOCK(&mutex);
 
-    while(*k && t)  t = t->next[mapping[(int)*k++]];
+        while(*k && t)  t = t->next[mapping[(int)*k++]];
 
-    if(t != NULL && t->id != -1) {
-        GRIB_MUTEX_UNLOCK(&mutex);
-        return t->id+TOTAL_KEYWORDS+1;
-    } else {
-        int ret=grib_hash_keys_insert(last,key);
-        GRIB_MUTEX_UNLOCK(&mutex);
-        return ret+TOTAL_KEYWORDS+1;
+        if(t != NULL && t->id != -1) {
+            GRIB_MUTEX_UNLOCK(&mutex);
+            return t->id+TOTAL_KEYWORDS+1;
+        } else {
+            int ret=grib_hash_keys_insert(last,key);
+            GRIB_MUTEX_UNLOCK(&mutex);
+            return ret+TOTAL_KEYWORDS+1;
+        }
     }
 }
 

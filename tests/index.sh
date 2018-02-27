@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -13,11 +13,11 @@
 . ./include.sh
 infile=${data_dir}/index.grib
 
-if [ ! -f ${infile} ]
-then
-  echo no data to test
-  exit 0
-fi
+#if [ ! -f ${infile} ]
+#then
+#  echo no data to test
+#  exit 0
+#fi
 
 ${test_dir}/index ${infile} > index.out
 

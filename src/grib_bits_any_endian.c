@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -156,7 +156,7 @@ char* grib_decode_string(const unsigned char* bitStream, long *bitOffset, size_t
 /* A mask with x least-significant bits set, possibly 0 or >=32 */
 /* -1UL is 1111111... in every bit in binary representation */
 #define BIT_MASK(x) \
-        (((x) >= max_nbits) ? \
+        (((x) == max_nbits) ? \
                 (unsigned long) -1UL : (1UL << (x)) - 1)
 /**
  * decode a value consisting of nbits from an octet-bitstream to long-representation
@@ -309,7 +309,15 @@ int grib_encode_unsigned_longb(unsigned char* p, unsigned long val ,long *bitp, 
         fprintf(stderr, "Number of bits (%ld) exceeds maximum number of bits (%d)\n", nb, max_nbits);
         Assert(0);
     }
-
+#ifdef DEBUG
+    {
+        unsigned long maxV = grib_power(nb,2);
+        if (val > maxV) {
+            fprintf(stderr, "grib_encode_unsigned_longb: Value=%ld, but number of bits=%ld!\n", val, nb);
+            Assert(0);
+        }
+    }
+#endif
     for(i=nb-1; i >= 0; i--){
         if(test(val,i))
             grib_set_bit_on (p, bitp);

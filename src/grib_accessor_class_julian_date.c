@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -421,7 +421,6 @@ static int pack_expression(grib_accessor* a, grib_expression *e)
             /*if (hand->context->debug)
                     printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %ld\n", a->name,lval);*/
             return grib_pack_long(a,&lval,&len);
-            break;
         }
 
         case GRIB_TYPE_DOUBLE: {
@@ -430,7 +429,6 @@ static int pack_expression(grib_accessor* a, grib_expression *e)
             /*if (hand->context->debug)
                     printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %g\n", a->name, dval);*/
             return grib_pack_double(a,&dval,&len);
-            break;
         }
 
         case GRIB_TYPE_STRING: {
@@ -445,7 +443,6 @@ static int pack_expression(grib_accessor* a, grib_expression *e)
             /*if (hand->context->debug)
                     printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %s\n", a->name, cval);*/
             return grib_pack_string(a,cval,&len);
-            break;
         }
     }
 

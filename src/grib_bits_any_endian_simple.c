@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,6 +12,13 @@
  *   Enrico Fucile  - 19.06.2007                                           *
  *                                                                         *
  ***************************************************************************/
+
+/* A mask with x least-significant bits set, possibly 0 or >=32 */
+/* -1UL is 1111111... in every bit in binary representation */
+#define BIT_MASK1(x) \
+        (((x) >= max_nbits) ? \
+                (unsigned long) -1UL : (1UL << (x)) - 1)
+
 /**
  * decode an array of n_vals values from a octet-stream
  *
@@ -24,7 +31,7 @@
 int grib_decode_long_array(const unsigned char* p, long *bitp, long bitsPerValue,
         size_t n_vals,long* val)
 {
-    unsigned long mask = BIT_MASK(bitsPerValue);
+    unsigned long mask = BIT_MASK1(bitsPerValue);
 
     /* pi: position of bitp in p[]. >>3 == /8 */
     long pi = *bitp / 8;
@@ -119,7 +126,7 @@ int grib_decode_double_array(const unsigned char* p, long *bitp, long bitsPerVal
     }
     else
     {
-        unsigned long mask = BIT_MASK(bitsPerValue);
+        unsigned long mask = BIT_MASK1(bitsPerValue);
 
         /* pi: position of bitp in p[]. >>3 == /8 */
         long pi = *bitp / 8;

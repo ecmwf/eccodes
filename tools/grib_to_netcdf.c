@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -1073,7 +1073,7 @@ static err to_expand_mem(field *g)
 
         if((e = grib_get_size(g->handle, "values", &g->value_count)))
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get number of values %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get number of values: %s", grib_get_error_message(e));
             return e;
         }
 
@@ -1081,14 +1081,14 @@ static err to_expand_mem(field *g)
 
         if((e = grib_set_double(g->handle, "missingValue", global_missing_value)))
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot set missingValue %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot set missingValue: %s", grib_get_error_message(e));
             return e;
         }
 
         g->values = (double*) grib_context_malloc(ctx, sizeof(double) * g->value_count);
         if((e = grib_get_double_array(g->handle, "values", g->values, &count)))
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot decode values %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot decode values: %s", grib_get_error_message(e));
             return e;
         }
 
@@ -1097,7 +1097,7 @@ static err to_expand_mem(field *g)
 
         if((e = grib_get_long(g->handle, "missingValuesPresent", &bitmap)))
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get missingValuesPresent %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get missingValuesPresent: %s", grib_get_error_message(e));
             return e;
         }
 
@@ -2137,6 +2137,25 @@ static int set_dimension(int ncid, const char *name, int n, int xtype, const cha
     return var_id;
 }
 
+static int check_grid(field *f)
+{
+    err e = 0;
+    char grid_type[80];
+    size_t size = sizeof(grid_type);
+
+    if ((e = grib_get_string(f->handle, "typeOfGrid", grid_type, &size)) != GRIB_SUCCESS)
+    {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get typeOfGrid %s", grib_get_error_message(e));
+        return e;
+    }
+
+    if (strcmp(grid_type, "regular_ll") != 0 && (strcmp(grid_type, "regular_gg") != 0))
+    {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+    return e;
+}
 static int def_latlon(int ncid, fieldset *fs)
 {
     int n = 0;
@@ -2146,25 +2165,12 @@ static int def_latlon(int ncid, fieldset *fs)
 
     field *g = get_field(fs, 0, expand_mem);
 
-    char grid_type[80];
-    size_t size;
-    size = sizeof(grid_type);
-    if((e = grib_get_string(g->handle, "typeOfGrid", grid_type, &size)) != GRIB_SUCCESS)
-    {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get typeOfGrid %s", grib_get_error_message(e));
-        return e;
-    }
-
-    if(strcmp(grid_type, "regular_ll") != 0 && (strcmp(grid_type, "regular_gg") != 0) )
-    {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
-        return GRIB_GEOCALCULUS_PROBLEM;
-    }
+    Assert( check_grid(g)==GRIB_SUCCESS );
 
     /* Define longitude */
     if((e = grib_get_size(g->handle, "distinctLongitudes", &l)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
         return e;
     }
     n = l;
@@ -2173,7 +2179,7 @@ static int def_latlon(int ncid, fieldset *fs)
     /* Define latitude */
     if((e = grib_get_size(g->handle, "distinctLatitudes", &l)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
         return e;
     }
     n = l;
@@ -2207,7 +2213,7 @@ static int put_latlon(int ncid, fieldset *fs)
     /* Get info in degrees */
     if((e = grib_get_double(g->handle, "iDirectionIncrementInDegrees", &ew_stride)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get iDirectionIncrementInDegrees %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get iDirectionIncrementInDegrees: %s", grib_get_error_message(e));
         return e;
     }
 
@@ -2234,14 +2240,14 @@ static int put_latlon(int ncid, fieldset *fs)
 
     if((e = grib_get_size(g->handle, "distinctLatitudes", &nj)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
         return e;
 
     }
 
     if((e = grib_get_size(g->handle, "distinctLongitudes", &ni)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
         return e;
 
     }
@@ -2259,7 +2265,7 @@ static int put_latlon(int ncid, fieldset *fs)
     check_err(stat, __LINE__, __FILE__);
     if((e = grib_get_double_array(g->handle, "distinctLongitudes", dvalues, &n)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
         return e;
     }
     Assert(n == ni);
@@ -2275,7 +2281,7 @@ static int put_latlon(int ncid, fieldset *fs)
     check_err(stat, __LINE__, __FILE__);
     if((e = grib_get_double_array(g->handle, "distinctLatitudes", dvalues, &n)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
         return e;
     }
 
@@ -2324,7 +2330,7 @@ static int compute_scale(dataset_t *subset)
 
         if((e = grib_get_size(g->handle, "values", &len)) != GRIB_SUCCESS)
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get size of values %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get size of values: %s", grib_get_error_message(e));
             return e;
         }
 
@@ -2337,7 +2343,7 @@ static int compute_scale(dataset_t *subset)
         }
         if((e = grib_get_double_array(g->handle, "values", vals, &len)) != GRIB_SUCCESS)
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get values %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get values: %s", grib_get_error_message(e));
             return e;
         }
 
@@ -2707,13 +2713,13 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
     /* Define longitude */
     if((e = grib_get_long(f->handle, "Ni", &ni)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
         return e;
     }
     /* Define latitude */
     if((e = grib_get_long(f->handle, "Nj", &nj)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
         return e;
     }
 
@@ -2753,7 +2759,7 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
 
         if((e = grib_get_size(g->handle, "values", &len)) != GRIB_SUCCESS)
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get size of values %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get size of values: %s", grib_get_error_message(e));
             return e;
         }
 
@@ -2766,7 +2772,7 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
         }
         if((e = grib_get_double_array(g->handle, "values", vals, &len)) != GRIB_SUCCESS)
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get values %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get values: %s", grib_get_error_message(e));
             return e;
         }
 
@@ -2793,13 +2799,13 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
 
             if((e = grib_get_long(g->handle, "Ni", &ni)) != GRIB_SUCCESS)
             {
-                grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni %s", grib_get_error_message(e));
+                grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
                 return e;
             }
             /* Define latitude */
             if((e = grib_get_long(g->handle, "Nj", &nj)) != GRIB_SUCCESS)
             {
-                grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj %s", grib_get_error_message(e));
+                grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
                 return e;
             }
 
@@ -2868,12 +2874,18 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
     long nj;
     
     field *f = get_field(fs, 0, expand_mem);
+
+    if ((e=check_grid(f)) != GRIB_SUCCESS) {
+        release_field(f);
+        return e;
+    }
+
     if((e = grib_get_long(f->handle, "Ni", &ni)) != GRIB_SUCCESS) {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
         return e;
     }
     if ((e = grib_get_long(f->handle, "Nj", &nj)) != GRIB_SUCCESS) {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
         return e;
     }
     release_field(f);
@@ -3443,7 +3455,7 @@ static void find_nc_attributes(const request *subset_r, const request *user_r, n
     /* NetCDF does not allow variable names to start with a digit */
     if(!isalpha(att->name[0]))
     {
-        char buf[1024];
+        char buf[1048];
         sprintf(buf,"p%s",att->name);
         strcpy(att->name,buf);
     }

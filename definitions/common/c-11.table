@@ -75,7 +75,7 @@
 # 186 to 198 Reserved for centres in Region I which are not listed above
 # 199 to 209 Reserved for centres in Region V which are not in the list above
 195 wiix Indonesia (NMC)
-204 204  National Institute of Water and Atmospheric Research (NIWA - New Zealand)
+204 niwa  National Institute of Water and Atmospheric Research (NIWA - New Zealand)
 210 210  Frascati (ESA/ESRIN)
 211 211  Lannion
 212 212  Lisboa

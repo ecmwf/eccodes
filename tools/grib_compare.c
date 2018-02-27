@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -141,7 +141,7 @@ grib_option grib_options[]={
 };
 
 grib_handle* global_handle=NULL;
-int counter=0;
+int global_counter=0;
 int theStart=-1;
 int theEnd=-1;
 
@@ -168,7 +168,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int ret=0,i;
+    int ret=0,i=0;
     int nfiles=1;
     char orderby[]="md5Headers";
     grib_context* context=grib_context_get_default();
@@ -206,7 +206,6 @@ int grib_tool_init(grib_runtime_options* options)
 
     if (grib_options_on("b:")) {
         grib_string_list *next=0;
-        int i=0;
         blacklist=(grib_string_list*)grib_context_malloc_clear(context,sizeof(grib_string_list));
         blacklist->value=grib_context_strdup(context,options->set_values[0].name);
         next=blacklist;
@@ -379,10 +378,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if (options->through_index) {
         grib_index* idx1=options->index1;
         verbose=0;
-        counter++;
+        global_counter++;
 
-        if ( theStart>0 && counter < theStart ) return 0;
-        if ( theEnd>0 && counter > theEnd ) {
+        if ( theStart>0 && global_counter < theStart ) return 0;
+        if ( theEnd>0 && global_counter > theEnd ) {
             options->stop=1;
             return 0;
         }
@@ -395,12 +394,12 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             printf("file1=\"%s\" ",filename);
             filename=grib_get_field_file(options->index1,&offset);
             printf("file2=\"%s\" \n",filename);
-            print_index_key_values(options->index1,counter);
+            print_index_key_values(options->index1,global_counter);
         }
 
         if (!global_handle) {
             if (!options->verbose)
-                print_index_key_values(idx1,counter);
+                print_index_key_values(idx1,global_counter);
             printf("====== NOT FOUND in %s\n",options->infile->name);
         }
 
@@ -746,7 +745,6 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         }
         if(err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1==len2)
         {
-            int i;
             countdiff=0;
             for(i = 0; i < len1; i++)
                 if(lval1[i] != lval2[i])  countdiff++;
@@ -860,7 +858,7 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         }
         if(err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1==len2)
         {
-            int i,imaxdiff;
+            int imaxdiff;
             double diff;
             double *pv1,*pv2,dnew1,dnew2;
             maxdiff=0;
@@ -963,7 +961,6 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         {
             if(memcmp(uval1,uval2,len1) != 0)
             {
-                int i;
                 for(i = 0; i < len1; i++)
                     if(uval1[i] != uval2[i])
                     {

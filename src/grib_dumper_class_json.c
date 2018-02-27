@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -405,6 +405,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     char *value = NULL;
     char *p = NULL;
     size_t size = 0;
+    int is_missing = 0;
     grib_context* c = NULL;
     int err = _grib_get_string_length(a,&size);
 
@@ -427,6 +428,9 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 
     err = grib_unpack_string(a,value,&size);
     p=value;
+    if (grib_is_missing_string(a,(unsigned char *)value,size)) {
+        is_missing = 1;
+    }
 
     while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 
@@ -438,7 +442,8 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
         fprintf(self->dumper.out,"\n%-*s",depth," ");
         fprintf(self->dumper.out,"\"value\" : ");
     }
-    fprintf(self->dumper.out,"\"%s\"",value);
+    if (is_missing) fprintf(self->dumper.out,"%s", "null");
+    else            fprintf(self->dumper.out,"\"%s\"",value);
 
     /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
 

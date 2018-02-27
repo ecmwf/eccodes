@@ -66,7 +66,7 @@ Since some values can not be set to missing you can get an error for those keys.
 \endverbatim\n
 -# It's possible to produce a grib edition 2 file from a grib edition 1 just changing the edition number with grib_set.
 At this stage of development all the geography parameters, level and time information is correctly translated, for the product
-definition extra set calls must be done. To do this properly, \ref grib_filter is suggested. \n
+definition extra 'set' calls must be done. To do this properly, use the tool grib_filter.\n
 \verbatim 
 grib_set -s edition=2 ../data/reduced_gaussian_pressure_level.grib1
 \endverbatim\n

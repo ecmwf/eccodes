@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 
 		if(grib_ieee_to_long(grib_long_to_ieee(i)) != i)
 		{
-			printf("i=%ld i=%lx e=%g x=%lx\n",i,i,grib_long_to_ieee(i),grib_ieee_to_long(grib_long_to_ieee(i)));
+			printf("i=%lu i=%lx e=%g x=%lx\n",i,i,grib_long_to_ieee(i),grib_ieee_to_long(grib_long_to_ieee(i)));
 			/*assert(grib_ieee_to_long(grib_long_to_ieee(i)) == i);*/
 			assert(0);
 		}

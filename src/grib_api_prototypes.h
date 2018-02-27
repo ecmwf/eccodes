@@ -173,7 +173,7 @@ void grib_hash_array_value_delete(grib_context *c, grib_hash_array_value *v);
 bufr_descriptor *grib_bufr_descriptor_new(grib_accessor *tables_accessor, int code, int *err);
 bufr_descriptor *grib_bufr_descriptor_clone(bufr_descriptor *d);
 int grib_bufr_descriptor_set_code(grib_accessor *tables_accessor, int code, bufr_descriptor *v);
-void grib_bufr_descriptor_set_reference(bufr_descriptor *v, double reference);
+void grib_bufr_descriptor_set_reference(bufr_descriptor *v, long reference);
 void grib_bufr_descriptor_set_width(bufr_descriptor *v, long width);
 void grib_bufr_descriptor_set_scale(bufr_descriptor *v, long scale);
 int grib_bufr_descriptor_can_be_missing(bufr_descriptor *v);
@@ -1005,6 +1005,7 @@ void codes_assertion_failed(const char *message, const char *file, int line);
 /* grib_date.c */
 int grib_julian_to_datetime(double jd, long *year, long *month, long *day, long *hour, long *minute, long *second);
 int grib_datetime_to_julian(long year, long month, long day, long hour, long minute, long second, double *jd);
+int grib_datetime_to_julian_d(long year,long month,long day,long hour,long minute,double second, double* jd);
 long grib_julian_to_date(long jdate);
 long grib_date_to_julian(long ddate);
 
@@ -1100,7 +1101,7 @@ void grib_math_delete(grib_context *c, grib_math *m);
 grib_math *grib_math_new(grib_context *c, const char *formula, int *err);
 
 /* grib_hash_keys.c */
-struct grib_keys_hash *grib_keys_hash_get(const char *str, unsigned int len);
+const struct grib_keys_hash *grib_keys_hash_get(const char *str, unsigned int len);
 grib_itrie *grib_hash_keys_new(grib_context *c, int *count);
 void grib_hash_keys_delete(grib_itrie *t);
 int grib_hash_keys_get_id(grib_itrie *t, const char *key);

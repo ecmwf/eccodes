@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -34,14 +34,14 @@ localDefinitions=`find ${def_dir}/grib1/ -name 'local.98.*def' | sed -e 's:.*/::
 
 for l1 in $localDefinitions
 do
-    ${tools_dir}/grib_set -s localDefinitionNumber=$l1 $temp locx.grib1
-    ${tools_dir}/grib_filter $$_f locx.grib1
+    ${tools_dir}/grib_set -M -s localDefinitionNumber=$l1 $temp locx.grib1
+    ${tools_dir}/grib_filter -M $$_f locx.grib1
     for l2 in $localDefinitions
     do
         if [ $l1 -ne $l2 ]; then
             #echo "$l1 -> $l2"
-            ${tools_dir}/grib_set -s localDefinitionNumber=$l2 locx.grib1 locy.grib1
-            ${tools_dir}/grib_filter $$_f locy.grib1
+            ${tools_dir}/grib_set -M -s localDefinitionNumber=$l2 locx.grib1 locy.grib1
+            ${tools_dir}/grib_filter -M $$_f locy.grib1
         fi
     done
 done

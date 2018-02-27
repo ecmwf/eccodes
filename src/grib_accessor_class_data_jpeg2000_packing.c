@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -198,6 +198,19 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
             self->jpeg_lib=JASPER_LIB;
         } else if (!strcmp(user_lib,"openjpeg")) {
             self->jpeg_lib=OPENJPEG_LIB;
+        }
+    }
+
+    if (a->context->debug==-1) {
+        switch (self->jpeg_lib) {
+            case 0:
+                printf("ECCODES DEBUG jpeg2000_packing: jpeg_lib not set!\n"); break;
+            case JASPER_LIB:
+                printf("ECCODES DEBUG jpeg2000_packing: using JASPER_LIB\n");   break;
+            case OPENJPEG_LIB:
+                printf("ECCODES DEBUG jpeg2000_packing: using OPENJPEG_LIB\n"); break;
+            default:
+                Assert(0); break;
         }
     }
 

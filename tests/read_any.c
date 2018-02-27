@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -46,7 +46,7 @@ int main(int argc,char* argv[]) {
   size=bufsize;
   count=1;
   while ((ret=grib_read_any_from_file(c,f,buffer,&size))==GRIB_SUCCESS) {
-	if (1) {
+	if ((1)) {
 		h=grib_handle_new_from_message_copy(c,buffer,size);
 		if (!h) {
 		  printf("unable to new from message\n");

@@ -2945,6 +2945,12 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 59 ;
 	}
+#Injection height (from IS4FIRES)
+'m' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 60 ;
+	}
 #Particulate matter d < 1 um
 'kg m**-3' = {
 	 discipline = 192 ;
@@ -2980,6 +2986,30 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 120 ;
+	}
+#Wildfire day-time radiative power
+'W m**-2' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 167 ;
+	}
+#Wildfire night-time radiative power
+'W m**-2' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 169 ;
+	}
+#Wildfire day-time inverse variance of radiative power
+'W**-2 m**4' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 177 ;
+	}
+#Wildfire night-time inverse variance of radiative power
+'W**-2 m**4' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 179 ;
 	}
 #UV visible albedo for direct radiation, isotropic component 
 '(0 - 1)' = {
