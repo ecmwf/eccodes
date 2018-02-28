@@ -73,7 +73,7 @@ atlas::Grid RotatedOctahedral::atlasGrid() const {
 }
 
 
-const Reduced *RotatedOctahedral::cropped(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
+const Reduced *RotatedOctahedral::croppedRepresentation(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
     // We lose the RotatedOctahedral nature of the grid
     return new RotatedFromPL(N_, pl, bbox, rotation_, false);
 }

@@ -49,13 +49,10 @@ FromPL::~FromPL() {
 FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox, bool correctBoundingBox) :
     Reduced(N, bbox),
     pl_(pl) {
-
-    // NOTE: BoundingBox is corrected if it isn't the result of area cropping
+    checkPl(pl_);
     if (correctBoundingBox) {
         Gaussian::correctBoundingBox();
     }
-
-    checkPl(pl_);
 }
 
 

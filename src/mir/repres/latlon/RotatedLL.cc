@@ -121,8 +121,8 @@ bool RotatedLL::sameAs(const Representation& other) const {
 }
 
 
-const RotatedLL* RotatedLL::cropped(const util::BoundingBox& bbox) const {
-    // Called by AreaCropper::execute and GlobaliseFilter::execute
+const RotatedLL* RotatedLL::croppedRepresentation(const util::BoundingBox& bbox) const {
+    // Called by AreaCropper::execute and MethodWeighted::adjustOutputRepresentation
     return new RotatedLL(bbox, increments_, rotation_);
 }
 

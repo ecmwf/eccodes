@@ -135,9 +135,9 @@ void Representation::shape(size_t&, size_t&) const {
 }
 
 
-const Representation *Representation::cropped(const util::BoundingBox&) const {
+const Representation *Representation::croppedRepresentation(const util::BoundingBox&) const {
     std::ostringstream os;
-    os << "Representation::cropped() not implemented for " << *this;
+    os << "Representation::croppedRepresentation() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
@@ -195,9 +195,16 @@ util::Domain Representation::domain() const {
 }
 
 
-void Representation::adjustBoundingBox(util::BoundingBox&) const {
+const util::BoundingBox& Representation::boundingBox() const {
     std::ostringstream os;
-    os << "Representation::adjustBoundingBox() not implemented for " << *this;
+    os << "Representation::boundingBox() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
+util::BoundingBox Representation::croppedBoundingBox(const util::BoundingBox&) const {
+    std::ostringstream os;
+    os << "Representation::croppedBoundingBox() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 

@@ -33,28 +33,45 @@ namespace repres {
 namespace latlon {
 
 
+namespace {
+
+
+static void check(const util::BoundingBox& bbox, const util::Increments& inc, size_t ni, size_t nj) {
+    eckit::Fraction we = inc.west_east().longitude().fraction();
+    eckit::Fraction sn = inc.south_north().latitude().fraction();
+    ASSERT(bbox.west()  + (ni - 1) * we == bbox.east());
+    ASSERT(bbox.south() + (nj - 1) * sn == bbox.north());
+}
+
+
+}  // (anonymous namespace)
+
+
 LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
     Gridded(parametrisation),
     increments_(parametrisation) {
+    correctBoundingBox();
+
     ASSERT(parametrisation.get("Ni", ni_));
     ASSERT(parametrisation.get("Nj", nj_));
+
+    check(bbox_, increments_, ni_, nj_);
 }
 
 
 LatLon::LatLon(const util::BoundingBox& bbox, const util::Increments& increments) :
     Gridded(bbox),
-    increments_(increments){
-    setNiNj();
+    increments_(increments) {
+    correctBoundingBox();
+
+    ni_ = increments_.computeNi(bbox_);
+    nj_ = increments_.computeNj(bbox_);
+
+    check(bbox_, increments_, ni_, nj_);
 }
 
 
 LatLon::~LatLon() {
-}
-
-
-void LatLon::setNiNj() {
-    ni_ = increments_.computeNi(bbox_);
-    nj_ = increments_.computeNj(bbox_);
 }
 
 
@@ -151,39 +168,27 @@ bool LatLon::sameAs(const Representation& other) const {
 }
 
 
-bool LatLon::isPeriodicWestEast(const util::BoundingBox& bbox, const util::Increments& increments) {
-    const Longitude we = bbox.east() - bbox.west();
-    const Longitude inc = increments.west_east().longitude();
-
-    return  same_with_grib1_accuracy(we + inc, Longitude::GLOBE) ||
-            (we + inc) > Longitude::GLOBE;
-}
-
-
 bool LatLon::isPeriodicWestEast() const {
-    return isPeriodicWestEast(bbox_, increments_);
+
+    // if range West-East is within one increment (or greater than) 360 degree
+    const Longitude& inc = increments_.west_east().longitude();
+    return bbox_.east() - bbox_.west() + inc >= Longitude::GLOBE;
 }
 
 
 bool LatLon::includesNorthPole() const {
 
-    // if latitude range spans the globe, or within one increment from bounding box North
-    const Latitude range = bbox_.north() - bbox_.south();
-    const Latitude reach = std::min(bbox_.north() + increments_.south_north().latitude(), Latitude::NORTH_POLE);
-
-    return  same_with_grib1_accuracy(range, Latitude::GLOBE) ||
-            same_with_grib1_accuracy(reach, Latitude::NORTH_POLE);
+    // if North latitude is within one increment from North Pole
+    const Latitude& inc = increments_.south_north().latitude();
+    return bbox_.north() + inc > Latitude::NORTH_POLE;
 }
 
 
 bool LatLon::includesSouthPole() const {
 
-    // if latitude range spans the globe, or within one increment from bounding box South
-    const Latitude range = bbox_.north() - bbox_.south();
-    const Latitude reach = std::max(bbox_.south() - increments_.south_north().latitude(), Latitude::SOUTH_POLE);
-
-    return  same_with_grib1_accuracy(range, Latitude::GLOBE) ||
-            same_with_grib1_accuracy(reach, Latitude::SOUTH_POLE);
+    // if South latitude is within one increment from South Pole
+    const Latitude& inc = increments_.south_north().latitude();
+    return bbox_.south() - inc < Latitude::SOUTH_POLE;
 }
 
 
@@ -221,7 +226,7 @@ Representation* LatLon::globalise(data::MIRField& field) const {
 
     util::BoundingBox newbbox(bbox_.north(), bbox_.west(), Latitude::SOUTH_POLE, bbox_.east());
 
-    eckit::ScopedPtr<LatLon> newll(const_cast<LatLon*>(cropped(newbbox)));
+    eckit::ScopedPtr<LatLon> newll(const_cast<LatLon*>(croppedRepresentation(newbbox)));
 
     ASSERT(newll->nj_ > nj_);
     ASSERT(newll->ni_ == ni_);
@@ -253,10 +258,25 @@ std::string LatLon::atlasMeshGenerator() const {
 }
 
 
-const LatLon* LatLon::cropped(const util::BoundingBox&) const {
+const LatLon* LatLon::croppedRepresentation(const util::BoundingBox&) const {
     std::ostringstream os;
-    os << "LatLon::cropped() not implemented for " << *this;
+    os << "LatLon::croppedRepresentation() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
+}
+
+
+void LatLon::correctBoundingBox() {
+
+    util::BoundingBox newBox = croppedBoundingBox(bbox_);
+
+    if (newBox != bbox_) {
+        eckit::Channel& log = eckit::Log::debug<LibMir>();
+        std::streamsize old = log.precision(12);
+        log << "Correcting bounding box from " << bbox_ << " to " << newBox << "." << std::endl;
+        log.precision(old);
+
+        bbox_ = newBox;
+    }
 }
 
 
@@ -302,34 +322,52 @@ void LatLon::initTrans(Trans_t& trans) const {
 }
 
 
-void LatLon::adjustBoundingBox(util::BoundingBox& bbox) const {
-    const eckit::Fraction we = increments_.west_east().longitude().fraction();
-    const eckit::Fraction sn = increments_.south_north().latitude().fraction();
-
+util::BoundingBox LatLon::croppedBoundingBox(const util::BoundingBox& bbox) const {
+    using eckit::Fraction;
 
     // adjust East to a maximum of E = W + Ni * inc < W + 360
     // (shifted grids can have 360 - inc < E - W < 360)
-    eckit::Fraction Ni;
-    if (isPeriodicWestEast(bbox, increments_)) {
-        Ni = Longitude::GLOBE.fraction() / we;
-        if (Ni.integer()) {
-            Ni = eckit::Fraction(Ni.integralPart() - 1);
+    Longitude e = bbox.east();
+    Longitude w = bbox.west();
+
+    Fraction range_we = (e - w).fraction();
+    if (range_we > 0) {
+        Fraction we = increments_.west_east().longitude().fraction();
+        Fraction Ni = range_we / we;
+        if (range_we + we >= Longitude::GLOBE.fraction()) {
+            Ni = Longitude::GLOBE.fraction() / we;
+            if (Ni.integer()) {
+                Ni -= 1;
+            }
         }
-        ASSERT(Ni > 0);
-    } else {
-        Ni = (bbox.east() - bbox.west()).fraction() / we;
+        range_we = Ni.integralPart() * we;
     }
+    e = w + range_we;
 
 
     // adjust North to a maximum of N = S + Nj * inc <= 90
-    Latitude range = bbox.north() - bbox.south();
-    eckit::Fraction Nj = (range.fraction() / sn);
+    Latitude n = bbox.north();
+    Latitude s = bbox.south();
+
+    if (same_with_grib1_accuracy(n, Latitude::NORTH_POLE)) {
+        n = Latitude::NORTH_POLE;
+    }
+
+    if (same_with_grib1_accuracy(s, Latitude::SOUTH_POLE)) {
+        s = Latitude::SOUTH_POLE;
+    }
+
+    Fraction range_sn = (n - s).fraction();
+    if (range_sn > 0) {
+        Fraction sn = increments_.south_north().latitude().fraction();
+        Fraction Nj = range_sn / sn;
+        range_sn = Nj.integralPart() * sn;
+    }
+    n = s + range_sn;
 
 
     // set bounding box
-    Longitude e = bbox.west() + Ni.integralPart() * we;
-    Latitude n = bbox.south() + Nj.integralPart() * sn;
-    bbox = util::BoundingBox(n, bbox.west(), bbox.south(), e);
+    return util::BoundingBox(n, w, s, e);
 }
 
 

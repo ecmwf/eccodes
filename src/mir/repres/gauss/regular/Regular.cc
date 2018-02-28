@@ -34,28 +34,25 @@ namespace gauss {
 namespace regular {
 
 
-Regular::Regular(const param::MIRParametrisation& parametrisation):
+Regular::Regular(const param::MIRParametrisation& parametrisation) :
     Gaussian(parametrisation) {
-    setNiNj();
     Gaussian::correctBoundingBox();
+    setNiNj();
 }
 
 
-Regular::Regular(size_t N):
+Regular::Regular(size_t N) :
     Gaussian(N) {
-    setNiNj();
     Gaussian::correctBoundingBox();
+    setNiNj();
 }
 
 
-Regular::Regular(size_t N, const util::BoundingBox& bbox, bool correctBoundingBox):
+Regular::Regular(size_t N, const util::BoundingBox& bbox, bool correctBoundingBox) :
     Gaussian(N, bbox) {
-
-    // NOTE: BoundingBox is corrected if it isn't the result of area cropping
     if (correctBoundingBox) {
         Gaussian::correctBoundingBox();
     }
-
     setNiNj();
 }
 
@@ -139,36 +136,14 @@ size_t Regular::numberOfPoints() const {
 
 
 bool Regular::getLongestElementDiagonal(double& d) const {
+    eckit::Fraction inc = getSmallestIncrement();
 
-    // Look for a majorant of all element diagonals, using the difference of
-    // latitudes closest/furthest from equator and longitude furthest from
-    // Greenwich
+    double l = inc / 2;
+    d = atlas::util::Earth::distance(
+                atlas::PointLonLat(-l, -l),
+                atlas::PointLonLat( l,  l) );
 
-    const std::vector<double>& lats = latitudes();
-    ASSERT(N_ * 2 == lats.size());
-    ASSERT(N_);
-
-    d = 0.;
-    Latitude l1(Latitude::NORTH_POLE);
-    Latitude l2(lats[0]);
-
-    for (size_t j = 1; j < lats.size(); ++j) {
-
-        const eckit::Fraction we = Longitude::GLOBE.fraction() / (N_ * 4);
-        const Latitude& latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l1 : l2);
-        const Latitude& latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l2 : l1);
-
-        d = std::max(d, atlas::util::Earth::distance(
-                         atlas::PointLonLat(0., latCloserToEquator.value()),
-                         atlas::PointLonLat(we, latAwayFromEquator.value()) ));
-
-        l1 = l2;
-        l2 = lats[j];
-    }
-
-    ASSERT(d > 0.);
     return true;
-
 }
 
 

@@ -339,7 +339,7 @@ void Reduced::validate(const std::vector<double>& values) const {
 }
 
 
-const Reduced *Reduced::cropped(const util::BoundingBox& bbox) const  {
+const Reduced *Reduced::croppedRepresentation(const util::BoundingBox& bbox) const  {
     const std::vector<long>& pl = pls();
     std::vector<long> newpl;
     newpl.reserve(pl.size());
@@ -357,13 +357,13 @@ const Reduced *Reduced::cropped(const util::BoundingBox& bbox) const  {
         }
     }
 
-    return cropped(bbox, newpl);
+    return croppedRepresentation(bbox, newpl);
 }
 
 
-const Reduced *Reduced::cropped(const util::BoundingBox&, const std::vector<long>&) const {
+const Reduced *Reduced::croppedRepresentation(const util::BoundingBox&, const std::vector<long>&) const {
     std::ostringstream os;
-    os << "Reduced::cropped() not implemented for " << *this;
+    os << "Reduced::croppedRepresentation() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
