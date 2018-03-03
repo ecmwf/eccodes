@@ -368,24 +368,6 @@ const Reduced *Reduced::croppedRepresentation(const util::BoundingBox&, const st
 }
 
 
-void Reduced::initTrans(Trans_t& trans) const {
-
-
-    const std::vector<long>& pl = pls();
-    ASSERT(pl.size());
-
-    std::vector<int> pli(pl.size());
-    ASSERT(pl.size() == pli.size());
-
-    for (size_t i = 0; i < pl.size(); ++i) {
-        pli[i] = int(pl[i]);
-    }
-
-    ASSERT(trans_set_resol(&trans, int(pli.size()), &pli[0]) == 0);
-
-}
-
-
 size_t Reduced::numberOfPoints() const {
     size_t total = 0;
 

@@ -316,12 +316,6 @@ void LatLon::shape(size_t& ni, size_t& nj) const {
 }
 
 
-void LatLon::initTrans(Trans_t& trans) const {
-    ASSERT(!increments_.isShifted(bbox_));
-    ASSERT(trans_set_resol_lonlat(&trans, ni_, nj_) == 0);
-}
-
-
 util::BoundingBox LatLon::croppedBoundingBox(const util::BoundingBox& bbox) const {
     using eckit::Fraction;
 
