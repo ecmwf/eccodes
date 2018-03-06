@@ -591,7 +591,10 @@ static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     int err=0,n,ival;
     int k,j,modifiedWidth,width;
 
-    if (self->iss_list==NULL) return GRIB_INTERNAL_ERROR;
+    if (self->iss_list==NULL) {
+        grib_context_log(c, GRIB_LOG_ERROR,"encode_string_array: self->iss_list==NULL");
+        return GRIB_INTERNAL_ERROR;
+    }
 
     n=grib_iarray_used_size(self->iss_list);
 
@@ -652,7 +655,10 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     double val0;
     const int dont_fail_if_out_of_range = c->bufr_set_to_missing_if_out_of_range;/* ECC-379 */
 
-    if (self->iss_list==NULL) return GRIB_INTERNAL_ERROR;
+    if (self->iss_list==NULL) {
+        grib_context_log(c, GRIB_LOG_ERROR,"encode_double_array: self->iss_list==NULL");
+        return GRIB_INTERNAL_ERROR;
+    }
 
     modifiedReference= bd->reference;
     modifiedFactor= bd->factor;
@@ -1891,7 +1897,8 @@ static int bitmap_ref_skip(grib_accessors_list* al,int* err)
     return 0;
 }
 
-static int bitmap_init(bitmap_s* bitmap,grib_accessors_list* bitmapStart,int bitmapSize,grib_accessors_list* lastAccessorInList)
+static int bitmap_init(grib_context* c, bitmap_s* bitmap,
+                       grib_accessors_list* bitmapStart, int bitmapSize, grib_accessors_list* lastAccessorInList)
 {
     int ret=0,i;
     bitmap->cursor=bitmapStart->next;
@@ -1902,7 +1909,10 @@ static int bitmap_init(bitmap_s* bitmap,grib_accessors_list* bitmapStart,int bit
     bitmap->referredElement=bitmapStart;
     while (bitmap_ref_skip(bitmap->referredElement,&ret)) bitmap->referredElement=bitmap->referredElement->prev;
     for (i=1;i<bitmapSize;i++) {
-        if (bitmap->referredElement==NULL) return GRIB_INTERNAL_ERROR;
+        if (bitmap->referredElement==NULL) {
+            grib_context_log(c, GRIB_LOG_ERROR,"bitmap_init: bitmap->referredElement==NULL");
+            return GRIB_INTERNAL_ERROR;
+        }
         bitmap->referredElement=bitmap->referredElement->prev;
     }
     bitmap->referredElementStart=bitmap->referredElement;
@@ -2140,7 +2150,8 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 bitmap.cursor=0;
                 dump=1;
             } else if ( ( descriptor->X==33 || bufr_descriptor_is_marker(descriptor) )  && qualityPresent) {
-                if (!bitmap.referredElement) bitmap_init(&bitmap,bitmapStart[bitmapIndex],bitmapSize[bitmapIndex],lastAccessorInList);
+                if (!bitmap.referredElement)
+                    bitmap_init(c, &bitmap,bitmapStart[bitmapIndex],bitmapSize[bitmapIndex],lastAccessorInList);
                 elementFromBitmap=get_element_from_bitmap(a,&bitmap);
                 dump=1;
                 /* } else if ( descriptor->Y==1 && IS_QUALIFIER(self->expanded->v[idx-1]->X)==0) { */
