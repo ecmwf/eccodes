@@ -4208,8 +4208,12 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
                     grib_context_log(ctx, GRIB_LOG_ERROR, "Internal description");
                     print_all_requests(temp_data_r);
                 }
-                grib_context_log(ctx, GRIB_LOG_ERROR, "Hint: This may be due to several fields having the same validity time.");
-                grib_context_log(ctx, GRIB_LOG_ERROR, "Try using the -T option (Do not use time of validity)");
+                if (grib_options_on("T")) {
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "Hint: This may be due to several fields having the same date, time and step.");
+                } else {
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "Hint: This may be due to several fields having the same validity time.");
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "Try using the -T option (Do not use time of validity)");
+                }
                 exit(1);
             }
         }
