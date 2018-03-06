@@ -1185,6 +1185,10 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
                 return GRIB_INVALID_ARGUMENT;
             }
             idx=(int)self->numericValues->v[subsetIndex]->v[elementIndex]/1000-1;
+            if (idx < 0 || idx >= self->stringValues->n) {
+                grib_context_log(c,GRIB_LOG_ERROR,"encode_element: %s: Invalid index %d", bd->shortName, idx);
+                return GRIB_INVALID_ARGUMENT;
+            }
             err=encode_string_value(c,buff,pos,bd,self,self->stringValues->v[idx]->v[0]);
         }
     } else {
