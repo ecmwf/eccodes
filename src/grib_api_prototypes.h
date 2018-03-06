@@ -1471,6 +1471,7 @@ void rtrim(char *s);
 const char *extract_filename(const char *filepath);
 char **string_split(char *inputString, const char *delimiter);
 int string_to_long(const char* input, long* output);
+int string_ends_with(const char* str1, const char* str2);
 
 /* functions.c */
 long grib_op_eq(long a, long b);

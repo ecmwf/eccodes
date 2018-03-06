@@ -116,3 +116,16 @@ int string_to_long(const char* input, long* output)
     *output = val;
     return GRIB_SUCCESS;
 }
+
+/* Return 1 if str1 ends with str2, 0 otherwise */
+int string_ends_with(const char* str1, const char* str2)
+{
+    const size_t len1 = strlen(str1);
+    const size_t len2 = strlen(str2);
+    if (len2 > len1)
+        return 0;
+
+    if (strcmp(&str1[len1-len2], str2) == 0)
+        return 1;
+    return 0;
+}
