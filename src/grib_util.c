@@ -32,6 +32,8 @@
  #endif
 #endif
 
+typedef enum {eROUND_ANGLE_UP, eROUND_ANGLE_DOWN} RoundingPolicy;
+
 static void set_total_length(unsigned char* buffer,long *section_length,long *section_offset,int edition,size_t totalLength)
 {
     long off;
@@ -349,16 +351,16 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
     {
         switch(values[i].type)
         {
-        case GRIB_TYPE_LONG: printf("ECCODES DEBUG grib_util: => %s =  %ld;\n"
+        case GRIB_TYPE_LONG: printf("ECCODES DEBUG  grib_util: => %s =  %ld;\n"
                 ,values[i].name,(long)values[i].long_value); break;
-        case GRIB_TYPE_DOUBLE: printf("ECCODES DEBUG grib_util: => %s = %.16e;\n"
+        case GRIB_TYPE_DOUBLE: printf("ECCODES DEBUG  grib_util: => %s = %.16e;\n"
                 ,values[i].name,values[i].double_value); break;
-        case GRIB_TYPE_STRING: printf("ECCODES DEBUG grib_util: => %s = \"%s\";\n"
+        case GRIB_TYPE_STRING: printf("ECCODES DEBUG  grib_util: => %s = \"%s\";\n"
                 ,values[i].name,values[i].string_value); break;
         }
     }
 
-    printf("ECCODES DEBUG grib_util: data_values_count=%lu;\n", (unsigned long)data_values_count);
+    printf("ECCODES DEBUG  grib_util: data_values_count=%lu;\n", (unsigned long)data_values_count);
     for (i=0; i<data_values_count; i++) {
         if (i==0) v = data_values[i];
         if (data_values[i] != spec->missingValue) {
@@ -378,7 +380,7 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
             if (v > maxVal) maxVal=v;
         }
     }
-    printf("ECCODES DEBUG grib_util: data_values are CONSTANT? %d\t(min=%.16e, max=%.16e)\n",
+    printf("ECCODES DEBUG  grib_util: data_values are CONSTANT? %d\t(min=%.16e, max=%.16e)\n",
            isConstant, minVal, maxVal);
 
 #if 0
@@ -406,6 +408,7 @@ static int DBL_EQUAL(double d1, double d2, double tolerance)
     return fabs(d1-d2) < tolerance;
 }
 */
+#if 0
 /* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
 static int grib1_angle_can_be_encoded(const double angle)
 {
@@ -416,6 +419,114 @@ static int grib1_angle_can_be_encoded(const double angle)
     }
     if (angle == rounded) return 1;
     return 0; /* sub millidegree. Cannot be encoded in grib1 */
+}
+
+/* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
+static int angle_can_be_encoded(const double angle, const double angular_precision)
+{
+    const double angle_expanded = angle * angular_precision;
+    Assert(angular_precision>0);
+    double rounded = (long)(angle_expanded+0.5)/angular_precision;
+    if (angle<0) {
+        rounded = (long)(angle_expanded-0.5)/angular_precision;
+    }
+    if (angle == rounded) return 1;
+    /*printf("      ......... angle cannot be encoded: %.10e\n", angle);*/
+    return 0; /* Cannot be encoded */
+}
+#endif
+
+/* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
+static int angle_can_be_encoded(grib_handle* h, const double angle)
+{
+    int ret = 0;
+    int retval = 1;
+    grib_handle* h2 = NULL;
+    char sample_name[16] = {0,};
+    long angular_precision = 0; /* e.g. 1e3 for grib1 and 1e6 for grib2 */
+    long edition = 0, coded = 0;
+    double expanded, diff;
+
+    if((ret = grib_get_long(h,"edition",&edition)) != 0) return ret;
+    if((ret = grib_get_long(h, "angularPrecision", &angular_precision)) != 0) return ret;
+    Assert(angular_precision > 0);
+
+    sprintf(sample_name, "GRIB%ld", edition);
+    h2 = grib_handle_new_from_samples(0, sample_name);
+    if((ret = grib_set_double(h2, "latitudeOfFirstGridPointInDegrees", angle)) != 0) return ret;
+    if((ret = grib_get_long(h2,   "latitudeOfFirstGridPoint", &coded)) != 0) return ret;
+    grib_handle_delete(h2);
+
+    expanded = angle*angular_precision;
+    diff = fabs(expanded - coded);
+    if (diff < 1.0/angular_precision)
+        retval = 1;
+    else
+        retval = 0;
+
+    return retval;
+}
+
+static double adjust_angle(const double angle, const RoundingPolicy policy, const double angular_precision)
+{
+    double result = 0;
+    Assert(angular_precision > 0);
+    result = angle * angular_precision;
+    if (policy == eROUND_ANGLE_UP)
+        result = round(result+0.5);
+    else
+        result = round(result-0.5);
+    result = result / angular_precision;
+    return result;
+}
+
+/* Search key=value array for:
+ *   latitudeOfFirstGridPointInDegrees
+ *   longitudeOfFirstGridPointInDegrees
+ *   latitudeOfLastGridPointInDegrees
+ *   longitudeOfLastGridPointInDegrees
+ * and change their values to expand the bounding box
+ */
+static int expand_bounding_box(grib_handle* h, grib_values *values, const size_t count)
+{
+    int ret = GRIB_SUCCESS;
+    size_t i=0;
+    double new_angle = 0;
+    RoundingPolicy roundingPolicy = eROUND_ANGLE_UP;
+    long angular_precision = 0; /* e.g. 1e3 for grib1 and 1e6 for grib2 */
+    if((ret = grib_get_long(h, "angularPrecision", &angular_precision)) != 0)
+        return ret;
+
+    for(i=0; i<count; i++) {
+        int is_angle = 0;
+        if (strcmp(values[i].name, "longitudeOfFirstGridPointInDegrees")==0) {
+            roundingPolicy = eROUND_ANGLE_DOWN;
+            is_angle = 1;
+        }
+        else if (strcmp(values[i].name, "longitudeOfLastGridPointInDegrees")==0) {
+            roundingPolicy = eROUND_ANGLE_UP;
+            is_angle = 1;
+        }
+        else if (strcmp(values[i].name, "latitudeOfFirstGridPointInDegrees")==0) {
+            roundingPolicy = eROUND_ANGLE_UP;
+            is_angle = 1;
+        }
+        else if (strcmp(values[i].name, "latitudeOfLastGridPointInDegrees")==0) {
+            roundingPolicy = eROUND_ANGLE_DOWN;
+            is_angle = 1;
+        }
+
+        if (is_angle && !angle_can_be_encoded(h, values[i].double_value)) {
+            new_angle = adjust_angle(values[i].double_value, roundingPolicy, angular_precision);
+            if (h->context->debug) {
+                printf("ECCODES DEBUG  grib_util EXPAND_BOUNDING_BOX %s: old=%.15e new=%.15e (%s)\n",
+                       values[i].name, values[i].double_value, new_angle,
+                       (roundingPolicy==eROUND_ANGLE_UP?"Up":"Down"));
+            }
+            values[i].double_value = new_angle;
+        }
+    }
+    return ret;
 }
 
 /* Returns a boolean: 1 if angle is too small, 0 otherwise */
@@ -701,6 +812,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     size_t slen=17;
     int grib1_high_resolution_fix = 0; /* boolean: See GRIB-863 */
     int global_grid = 0; /* boolean */
+    int expandBoundingBox = 0;
 
     static grib_util_packing_spec default_packing_spec = {0, };
     Assert(h);
@@ -927,8 +1039,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         SET_LONG_VALUE  ("ijDirectionIncrementGiven",    1);
         if (editionNumber == 1) {
             /* GRIB-863: GRIB1 cannot represent increments less than a millidegree */
-            if (!grib1_angle_can_be_encoded(spec->iDirectionIncrementInDegrees) ||
-                    !grib1_angle_can_be_encoded(spec->jDirectionIncrementInDegrees))
+            if (!angle_can_be_encoded(h, spec->iDirectionIncrementInDegrees) ||
+                !angle_can_be_encoded(h, spec->jDirectionIncrementInDegrees))
             {
                 grib1_high_resolution_fix = 1;
                 /* Set flag to compute the increments */
@@ -1172,13 +1284,24 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     if(packing_spec->extra_settings_count) {
         for(i = 0; i < packing_spec->extra_settings_count; i++) {
             Assert(count < 1024);
-            values[count++] = packing_spec->extra_settings[i];
-            if (strcmp(packing_spec->extra_settings[i].name, "global")==0 &&
-                    packing_spec->extra_settings[i].long_value == 1)
+            if (strcmp(packing_spec->extra_settings[i].name, "expandBoundingBox")==0)
             {
-                /* GRIB-922: Request is for a global grid. Setting this key will
-                 * calculate the lat/lon values. So the spec's lat/lon can be ignored */
-                global_grid = 1;
+                if (packing_spec->extra_settings[i].long_value == 1) {
+                    /* ECC-625: Request is for expansion of bounding box (sub-area).
+                     * This is also called the "snap-out" policy */
+                    expandBoundingBox = 1;
+                }
+            }
+            else
+            {
+                values[count++] = packing_spec->extra_settings[i];
+                if (strcmp(packing_spec->extra_settings[i].name, "global")==0 &&
+                        packing_spec->extra_settings[i].long_value == 1)
+                {
+                    /* GRIB-922: Request is for a global grid. Setting this key will
+                     * calculate the lat/lon values. So the spec's lat/lon can be ignored */
+                    global_grid = 1;
+                }
             }
         }
     }
@@ -1216,6 +1339,17 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     if (h->context->debug==-1) {
         printf("ECCODES DEBUG grib_util: global_grid = %d\n", global_grid);
+        printf("ECCODES DEBUG grib_util: expandBoundingBox = %d\n", expandBoundingBox);
+        print_values(h->context,spec,data_values,data_values_count,values,count);
+    }
+
+    /* Apply adjustments to bounding box if needed */
+    if (expandBoundingBox) {
+        if ((*err=expand_bounding_box(outh, values, count)) != 0)
+        {
+            fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot expand bounding box: %s\n",grib_get_error_message(*err));
+            goto cleanup;
+        }
         print_values(h->context,spec,data_values,data_values_count,values,count);
     }
 
@@ -1449,6 +1583,7 @@ int grib_moments(grib_handle* h,double east,double north,double west,double sout
     grib_context_free(c,lat);
     grib_context_free(c,lon);
     grib_context_free(c,values);
+    (void)mass;
 
     return ret;
 }
