@@ -119,11 +119,9 @@ static int write_mem(void* data, const char* buf, int len) {
 
 static fpos_t seek_mem(void *data, fpos_t pos, int whence) {
     mem_file* f = (mem_file*)data;
-
     long newpos = 0;
 
     switch (whence) {
-
     case SEEK_SET:
         newpos = (long)pos;
         break;
@@ -146,7 +144,6 @@ static fpos_t seek_mem(void *data, fpos_t pos, int whence) {
 
   f->pos = newpos;
   return newpos;
-
 }
 
 static int close_mem(void *data) {
@@ -163,7 +160,6 @@ static FILE* fmemopen(const char* buffer, size_t size, const char* mode){
     f->size = size;
 
     return funopen(f, &read_mem, &write_mem, &seek_mem, &close_mem);
-
 }
 
 #endif
@@ -173,9 +169,7 @@ static size_t entries_count = sizeof(entries)/sizeof(entries[0]);
 static const unsigned char* find(const char* path, size_t* length) {
     size_t i;
 
-
     for(i = 0; i < entries_count; i++) {
-
         if(strcmp(path, entries[i].path) == 0) {
             /*printf("Found in MEMFS %s\\n", path);*/
             *length = entries[i].length;
@@ -184,7 +178,6 @@ static const unsigned char* find(const char* path, size_t* length) {
     }
 
     return NULL;
-
 }
 
 int codes_memfs_exists(const char* path) {
