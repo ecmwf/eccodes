@@ -155,6 +155,17 @@ c=`${tools_dir}/grib_count temp.out.gfilter.20070122.320.grib`
 grib_check_key_equals temp.out.gfilter.20070122.320.grib "date,level" "20070122 320"
 rm -f temp.out.gfilter.*.grib
 
+# ECC-648: Set codetable key to array
+# ------------------------------------
+cat >temp.filt <<EOF
+  set productDefinitionTemplateNumber = 11;
+  set numberOfTimeRange = 3;
+  set typeOfStatisticalProcessing = {3, 1, 2};
+  write;
+EOF
+${tools_dir}/grib_filter -o temp_filt.grib2 temp.filt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+stats=`echo 'print "[typeOfStatisticalProcessing]";' | ${tools_dir}/grib_filter - temp_filt.grib2`
+[ "$stats" = "3 1 2" ]
 
 rm -f temp_filt.grib2 temp.filt
 rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules
