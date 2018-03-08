@@ -90,12 +90,18 @@ bool UnstructuredGrid::sameAs(const Representation& other) const {
 }
 
 
-void UnstructuredGrid::fill(grib_info &info) const  {
+util::BoundingBox UnstructuredGrid::extendedBoundingBox(const util::BoundingBox& bbox) const {
+    eckit::Log::debug<LibMir>() << "UnstructuredGrid::extendedBoundingBox(): bounding box not extended" << std::endl;
+    return bbox;
+}
+
+
+void UnstructuredGrid::fill(grib_info&) const  {
     NOTIMP;
 }
 
 
-void UnstructuredGrid::fill(api::MIRJob &job) const  {
+void UnstructuredGrid::fill(api::MIRJob&) const  {
     NOTIMP;
 }
 
