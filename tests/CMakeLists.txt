@@ -107,7 +107,7 @@ list( APPEND tests_data_reqd
     grib_filter
     grib_multi
     budg
-    gridType
+    grib_gridType
     grib_octahedral
     grib_global
     grib_concept
