@@ -315,7 +315,11 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
             char sbuf[1024]={0,};
             len = sizeof(sbuf);
             ret = grib_unpack_string(al->accessor,sbuf,&len);
-            fprintf(out,"%s",sbuf);
+            if (grib_is_missing_string(al->accessor,(unsigned char *)sbuf,len)) {
+                fprintf(out,"%s","MISSING");
+            } else {
+                fprintf(out,"%s",sbuf);
+            }
         } else {
             int i=0;
             int cols=0;
@@ -391,7 +395,8 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
         *newline=0;
         break;
     default:
-        grib_context_log(h->context, GRIB_LOG_WARNING,"grib_accessor_print: Problem to print \"%s\", invalid type %d", a->name,type);
+        grib_context_log(h->context, GRIB_LOG_WARNING,
+                         "grib_accessor_print: Problem printing \"%s\", invalid type %d", a->name, grib_get_type_name(type));
     }
     return ret;
 }
