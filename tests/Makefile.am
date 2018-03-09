@@ -1,5 +1,5 @@
 TESTS = definitions.sh \
-        calendar.sh \
+        grib_calendar.sh \
         bufrdc_desc_ref.sh \
         bufrdc_ref.sh \
         bufr_dump.sh \

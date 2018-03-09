@@ -45,7 +45,7 @@ endforeach()
 # These tests do not require any data downloads
 list( APPEND tests_no_data_reqd
     definitions
-    calendar
+    grib_calendar
     unit_tests
     md5
     uerra
