@@ -285,7 +285,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
         std::string compatibility;
         if (parametrisation.userParametrisation().get("compatibility", compatibility)) {
             const compat::GribCompatibility& c = compat::GribCompatibility::lookup(compatibility);
-            c.execute(parametrisation, h, info);
+            c.execute(*this, parametrisation, h, info);
         }
 
         if (eckit::Log::debug<LibMir>()) {
