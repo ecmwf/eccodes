@@ -1780,16 +1780,16 @@ int any_f_new_from_loaded__(int* msgid,int* gid){
   return any_f_new_from_loaded(msgid,gid);
 }
 
-int codes_f_clear_loaded_from_file() {
+int codes_f_clear_loaded_from_file(void) {
     grib_context* c=grib_context_get_default();
     /* grib_oarray_delete_content(c,binary_messages); */
     grib_oarray_delete(c,binary_messages);
     return GRIB_SUCCESS;
 }
-int codes_f_clear_loaded_from_file_() {
+int codes_f_clear_loaded_from_file_(void) {
   return codes_f_clear_loaded_from_file();
 }
-int codes_f_clear_loaded_from_file__() {
+int codes_f_clear_loaded_from_file__(void) {
   return codes_f_clear_loaded_from_file();
 }
 /*****************************************************************************/

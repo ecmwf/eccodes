@@ -112,7 +112,7 @@ grib_options_help grib_options_help_list[] ={
 int grib_options_help_count=sizeof(grib_options_help_list)/sizeof(grib_options_help);
 
 
-void usage()
+void usage(void)
 {
     int i=0;
     printf("\nNAME \t%s\n\n",grib_tool_name);
@@ -402,7 +402,7 @@ char* grib_options_get_args(char* id)
     return err;
 }
 
-void usage_doxygen()
+void usage_doxygen(void)
 {
     int i=0;
     printf("/*!  \\page %s %s\n",grib_tool_name,grib_tool_name);
@@ -422,7 +422,7 @@ void usage_doxygen()
 }
 
 #if 0
-void usage_doxygen() {
+void usage_doxygen(void) {
     int i=0;
     printf("/*!  \\page %s %s\n",grib_tool_name,grib_tool_name);
     printf("\\section DESCRIPTION \n%s\n\n",grib_tool_description);

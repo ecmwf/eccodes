@@ -8,7 +8,5 @@ int grib_optimize_decimal_factor (grib_accessor * a, const char * reference_valu
                                   const int compat_gribex, const int compat_32bit, 
                                   long * kdec, long * kbin, double * ref);
 
-int grib_use_optimized_decimal_factor ();
-
 #endif
 
