@@ -282,6 +282,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
         // Give a chance to a sub-class to modify info
         fill(h, info);
 
+        std::string compatibility;
         if (parametrisation.userParametrisation().get("compatibility", compatibility)) {
             const compat::GribCompatibility& c = compat::GribCompatibility::lookup(compatibility);
             c.execute(parametrisation, h, info);
