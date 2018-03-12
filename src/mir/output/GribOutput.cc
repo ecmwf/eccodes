@@ -89,17 +89,6 @@ size_t GribOutput::copy(const param::MIRParametrisation &param, context::Context
     return total;
 }
 
-static double round_sw(double x, double scale) {
-    // round with sub-'scale' precision (under floor-truncated 'scale')
-    return floor(x * scale + 0.1) / scale;
-}
-
-
-static double round_ne(double x, double scale) {
-    // round with sub-'scale' precision (under ceil-truncated 'scale')
-    return ceil(x * scale - 0.1) / scale;
-}
-
 bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParametrisation &param) const {
     bool ok = false;
 
@@ -293,26 +282,9 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
         // Give a chance to a sub-class to modify info
         fill(h, info);
 
-        // Round bounding box to GRIB accuracy (should work with ANY edition)
-        long angularPrecision = 0;
-        if (info.packing.editionNumber == 0) {
-            GRIB_CALL(grib_get_long(h, "angularPrecision", &angularPrecision));
-            ASSERT(angularPrecision > 0);
-        } else if (info.packing.editionNumber == 1) {
-            angularPrecision = 1000;
-        } else {
-            angularPrecision = 1000000;
-        }
-        double angularPrecisionDouble = double(angularPrecision);
-
-        round_ne(info.grid.latitudeOfFirstGridPointInDegrees, angularPrecisionDouble);
-        round_sw(info.grid.longitudeOfFirstGridPointInDegrees, angularPrecisionDouble);
-
-        round_sw(info.grid.latitudeOfLastGridPointInDegrees, angularPrecisionDouble);
-        round_ne(info.grid.longitudeOfLastGridPointInDegrees, angularPrecisionDouble);
-
-        std::string compatibility;
-        if (parametrisation.userParametrisation().get("compatibility", compatibility)) {
+        std::string compatibility = "grib-round-to-angular-precision";
+        parametrisation.userParametrisation().get("grib-compatibility", compatibility);
+        if (compatibility.length()) {
             const compat::GribCompatibility& c = compat::GribCompatibility::lookup(compatibility);
             c.execute(parametrisation, h, info);
         }
