@@ -289,6 +289,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
         }
 
         if (eckit::Log::debug<LibMir>()) {
+            const std::streamsize p(eckit::Log::debug<LibMir>().precision(12));
             X(info.grid.grid_type);
             X(info.grid.Ni);
             X(info.grid.Nj);
@@ -344,6 +345,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
                 }
 
             }
+            eckit::Log::debug<LibMir>().precision(p);
         }
 
 
