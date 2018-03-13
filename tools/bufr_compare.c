@@ -486,7 +486,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     if(compare_handles(global_handle,h,options)) {
         error++;
-        if (!force) exit(1);
+        if (!two_way) {
+            /* If two_way mode: Don't exit yet. Show further differences */
+            if (!force) exit(1);
+        }
     }
     if (two_way) {
         /* ECC-431 */
@@ -494,6 +497,11 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if(compare_handles(h, global_handle, options)) {
             error++;
             if (!force) exit(1);
+        } else {
+            if (error) {
+                /* Error from first pass */
+                if (!force) exit(1);
+            }
         }
     }
 
