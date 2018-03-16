@@ -24,8 +24,9 @@ except:
     ascii = lambda x: str(x)           # Python 2
 
 
-# The last argument is the generated C file
-g = open(sys.argv[-1], "w")
+# The last argument is the path of the generated C file
+output_file_path = sys.argv[-1]
+g = open(output_file_path, "w")
 
 for directory in dirs:
 
@@ -203,3 +204,4 @@ FILE* codes_memfs_open(const char* path) {
 }
 
 """, file=g)
+print ('Created ',output_file_path)
