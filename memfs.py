@@ -30,9 +30,9 @@ for directory in dirs:
     dname = os.path.basename(directory)
     NAMES.append(dname)
 
-    for dirname, _, files in os.walk(directory):
+    for dirpath, dirnames, files in os.walk(directory):
         for name in files:
-            full = '%s/%s' % (dirname, name)
+            full = '%s/%s' % (dirpath, name)
             _, ext = os.path.splitext(full)
             if ext not in ['.def', '.table', '.tmpl']:
                 continue
