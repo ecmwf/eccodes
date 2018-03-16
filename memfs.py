@@ -7,6 +7,9 @@ import binascii
 
 assert len(sys.argv) > 2
 
+# For now exclude GRIB3 as it is still experimental
+EXCLUDED = 'grib3'
+
 dirs = [os.path.realpath(x) for x in sys.argv[1:-1]]
 print(dirs)
 
@@ -31,8 +34,11 @@ for directory in dirs:
     NAMES.append(dname)
 
     for dirpath, dirnames, files in os.walk(directory):
-        # For now exclude GRIB3 as it is still experimental
-        dirnames[:] = [dirname for dirname in dirnames if dirname != 'grib3']
+        if EXCLUDED in dirnames:
+            print('Note: %s/%s will not be included.' % (dirpath,EXCLUDED))
+
+        # Prune the walk by modifying the dirnames in-place
+        dirnames[:] = [dirname for dirname in dirnames if dirname != EXCLUDED]
         for name in files:
             full = '%s/%s' % (dirpath, name)
             _, ext = os.path.splitext(full)
