@@ -180,7 +180,7 @@ Iterator* Reduced::unrotatedIterator() const {
 
     class ReducedUnrotatedGGIterator : protected ReducedIterator, public Iterator {
         void print(std::ostream& out) const {
-            out << "RegularGGIterator[";
+            out << "ReducedUnrotatedGGIterator[";
             Iterator::print(out);
             out << ",";
             ReducedIterator::print(out);
@@ -203,7 +203,7 @@ Iterator *Reduced::rotatedIterator(const util::Rotation& rotation) const {
 
     class ReducedRotatedGGIterator : protected ReducedIterator, public Iterator {
         void print(std::ostream& out) const {
-            out << "RegularGGIterator[";
+            out << "ReducedRotatedGGIterator[";
             Iterator::print(out);
             out << ",";
             ReducedIterator::print(out);
