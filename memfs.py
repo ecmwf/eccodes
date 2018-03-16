@@ -31,6 +31,8 @@ for directory in dirs:
     NAMES.append(dname)
 
     for dirpath, dirnames, files in os.walk(directory):
+        # For now exclude GRIB3 as it is still experimental
+        dirnames[:] = [dirname for dirname in dirnames if dirname != 'grib3']
         for name in files:
             full = '%s/%s' % (dirpath, name)
             _, ext = os.path.splitext(full)
