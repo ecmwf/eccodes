@@ -26,7 +26,6 @@
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
-#include "mir/repres/Iterator.h"
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
@@ -73,153 +72,31 @@ eckit::Fraction Reduced::getSmallestIncrement() const {
 }
 
 
-class ReducedIterator {
-    const std::vector<double>& latitudes_;
-    const std::vector<long>& pl_;
-    const util::Domain domain_;
-    size_t ni_;
-    const size_t nj_;
-    eckit::Fraction lon_;
-    eckit::Fraction inc_;
-    size_t i_;
-    size_t j_;
-    size_t k_;
-    size_t p_;
-    size_t count_;
-protected:
-    ~ReducedIterator();
-    void print(std::ostream&) const;
-    bool next(Latitude&, Longitude&);
-public:
-    ReducedIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const util::Domain&);
-};
-
-
-ReducedIterator::ReducedIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const util::Domain& dom) :
-    latitudes_(latitudes),
-    pl_(pl),
-    domain_(dom),
-    nj_(pl_.size()),
-    i_(0),
-    j_(0),
-    k_(0),
-    p_(0),
-    count_(0) {
-
-    // latitudes_/pl_ cover the whole globe
-    ASSERT(pl_.size() <= latitudes_.size());
-    ASSERT(pl_.size() >= 2);
-
-    // position to first latitude and first/last longitude
-
-    while (k_ < latitudes_.size() && domain_.north() < latitudes_[k_]) {
-        k_++;
-    }
-    ASSERT(k_ < latitudes_.size());
-
-    ni_ = size_t(pl_[p_++]);
-    inc_ = eckit::Fraction(360, ni_);
-    lon_ = eckit::Fraction(0.0);
-
-}
-
-
-ReducedIterator::~ReducedIterator() {
-}
-
-
-void ReducedIterator::print(std::ostream& out) const {
-    out << "ReducedIterator["
-        <<  "domain=" << domain_
-        << ",ni="     << ni_
-        << ",nj="     << nj_
-        << ",i="      << i_
-        << ",j="      << j_
-        << ",k="      << k_
-        << ",p="      << p_
-        << ",count="  << count_
-        << "]";
-}
-
-
-bool ReducedIterator::next(Latitude& lat, Longitude& lon) {
-    while (j_ < nj_ && i_ < ni_) {
-
-        ASSERT(j_ + k_ < latitudes_.size());
-
-        lat = latitudes_[j_ + k_];
-        lon = lon_;
-
-        i_++;
-        lon_ += inc_;
-
-        if (i_ == ni_) {
-            j_++;
-            if (j_ < nj_) {
-                ASSERT(p_ < pl_.size());
-                ni_ = size_t(pl_[p_++]);
-                ASSERT(ni_);
-                lon_ = eckit::Fraction(0);
-                inc_ = Longitude::GLOBE.fraction() / ni_;
-                i_ = 0;
-
-
-            }
-        }
-
-        if (domain_.contains(lat, lon)) {
-            count_++;
-            return true;
-        }
-    }
-    return false;
-}
-
-
 Iterator* Reduced::unrotatedIterator() const {
 
-    class ReducedUnrotatedGGIterator : protected ReducedIterator, public Iterator {
-        void print(std::ostream& out) const {
-            out << "ReducedUnrotatedGGIterator[";
-            Iterator::print(out);
-            out << ",";
-            ReducedIterator::print(out);
-            out << "]";
-        }
-        bool next(Latitude& lat, Longitude& lon) {
-            return ReducedIterator::next(lat, lon);
-        }
-    public:
-        ReducedUnrotatedGGIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const util::Domain& dom) :
-            ReducedIterator(latitudes, pl, dom) {
-        }
+    // Lambda captures a vector reference, ok because the representation
+    // holding the vector lives longer than the iterator
+    const std::vector<long>& pl = pls();
+    auto Ni = [&pl](size_t i) {
+        ASSERT(i < pl.size());
+        return pl[i];
     };
 
-    return new ReducedUnrotatedGGIterator(latitudes(), pls(), domain());
+    return Gaussian::unrotatedIterator(Ni);
 }
 
 
-Iterator *Reduced::rotatedIterator(const util::Rotation& rotation) const {
+Iterator* Reduced::rotatedIterator(const util::Rotation& rotation) const {
 
-    class ReducedRotatedGGIterator : protected ReducedIterator, public Iterator {
-        void print(std::ostream& out) const {
-            out << "ReducedRotatedGGIterator[";
-            Iterator::print(out);
-            out << ",";
-            ReducedIterator::print(out);
-            out << "]";
-        }
-        bool next(Latitude& lat, Longitude& lon) {
-            return ReducedIterator::next(lat, lon);
-        }
-    public:
-        ReducedRotatedGGIterator(const std::vector<double>& latitudes, const std::vector<long>& pl, const util::Domain& dom, const util::Rotation& rotation) :
-            ReducedIterator(latitudes, pl, dom),
-            Iterator(rotation) {
-        }
+    // Lambda captures a vector reference, ok because the representation
+    // holding the vector lives longer than the iterator
+    const std::vector<long>& pl = pls();
+    auto Ni = [&pl](size_t i) {
+        ASSERT(i < pl.size());
+        return pl[i];
     };
 
-    return new ReducedRotatedGGIterator(latitudes(), pls(), domain(), rotation);
+    return Gaussian::rotatedIterator(Ni, rotation);
 }
 
 
