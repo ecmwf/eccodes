@@ -8111,7 +8111,7 @@
 	 parameterCategory = 217 ;
 	 parameterNumber = 3 ;
 	}
-#Methane
+#Methane (chemistry)
 'kg kg**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 217 ;

@@ -8249,8 +8249,8 @@
 	 table2Version = 217 ;
 	 indicatorOfParameter = 3 ;
 	}
-#Methane
-'ch4' = {
+#Methane (chemistry)
+'ch4_c' = {
 	 table2Version = 217 ;
 	 indicatorOfParameter = 4 ;
 	}

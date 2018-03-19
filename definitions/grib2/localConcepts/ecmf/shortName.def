@@ -8111,8 +8111,8 @@
 	 parameterCategory = 217 ;
 	 parameterNumber = 3 ;
 	}
-#Methane
-'ch4' = {
+#Methane (chemistry)
+'ch4_c' = {
 	 discipline = 192 ;
 	 parameterCategory = 217 ;
 	 parameterNumber = 4 ;
