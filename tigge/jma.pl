@@ -9,7 +9,7 @@
 
 #!/usr/bin/perl -I/usr/local/lib/metaps/lib/grib_api/current/perl
 
-use lib qw(/home/ma/mab/grib/api/lib);
+use lib qw(/path/to/install/grib/api/lib);
 
 use GRIB::API;
 use strict;
