@@ -8399,6 +8399,906 @@
 	 parameterCategory = 217 ;
 	 parameterNumber = 56 ;
 	}
+#Carbon dioxide (chemistry)
+'217057' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 57 ;
+	}
+#Nitrous oxide (chemistry)
+'217058' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 58 ;
+	}
+#Water vapour (chemistry)
+'217059' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 59 ;
+	}
+#Oxygen
+'217060' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 60 ;
+	}
+#Singlet oxygen
+'217061' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 61 ;
+	}
+#Singlet delta oxygen
+'217062' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 62 ;
+	}
+#Chlorine dioxide
+'217063' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 63 ;
+	}
+#Chlorine nitrate
+'217064' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 64 ;
+	}
+#Hypochlorous acid
+'217065' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 65 ;
+	}
+#Chlorine
+'217066' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 66 ;
+	}
+#Nitryl chloride
+'217067' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 67 ;
+	}
+#Hydrogen bromide
+'217068' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 68 ;
+	}
+#Dichlorine dioxide
+'217069' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 69 ;
+	}
+#Hypobromous acid
+'217070' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 70 ;
+	}
+#Trichlorofluoromethane
+'217071' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 71 ;
+	}
+#Dichlorodifluoromethane
+'217072' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 72 ;
+	}
+#Trichlorotrifluoroethane
+'217073' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 73 ;
+	}
+#Dichlorotetrafluoroethane
+'217074' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 74 ;
+	}
+#Chloropentafluoroethane
+'217075' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 75 ;
+	}
+#Tetrachloromethane
+'217076' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 76 ;
+	}
+#Methyl chloroform
+'217077' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 77 ;
+	}
+#Methyl chloride
+'217078' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 78 ;
+	}
+#Chlorodifluoromethane
+'217079' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 79 ;
+	}
+#Methyl bromide
+'217080' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 80 ;
+	}
+#Dibromodifluoromethane
+'217081' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 81 ;
+	}
+#Bromochlorodifluoromethane
+'217082' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 82 ;
+	}
+#Trifluorobromomethane
+'217083' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 83 ;
+	}
+#Cbrf2cbrf2
+'217084' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 84 ;
+	}
+#Sulfuric acid
+'217085' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 85 ;
+	}
+#Nitrous acid
+'217086' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 86 ;
+	}
+#Alkanes low oh rate
+'217087' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 87 ;
+	}
+#Alkanes med oh rate
+'217088' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 88 ;
+	}
+#Alkanes high oh rate
+'217089' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 89 ;
+	}
+#Terminal alkenes
+'217090' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 90 ;
+	}
+#Internal alkenes
+'217091' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 91 ;
+	}
+#Ethylperoxy radical
+'217092' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 92 ;
+	}
+#Butadiene
+'217093' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 93 ;
+	}
+#Ethyl hydroperoxide
+'217094' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 94 ;
+	}
+#A-pinene cyclic terpenes
+'217095' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 95 ;
+	}
+#Acetic acid
+'217096' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 96 ;
+	}
+#D-limonene cyclic diene
+'217097' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 97 ;
+	}
+#Acetaldehyde
+'217098' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 98 ;
+	}
+#Toluene and less reactive aromatics
+'217099' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 99 ;
+	}
+#Xylene and more reactive aromatics
+'217100' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 100 ;
+	}
+#Glycolaldehyde
+'217101' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 101 ;
+	}
+#Cresol
+'217102' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 102 ;
+	}
+#Acetaldehyde and higher
+'217103' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 103 ;
+	}
+#Peracetic acid
+'217104' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 104 ;
+	}
+#Ketones
+'217105' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 105 ;
+	}
+#Hoch2ch2o2
+'217106' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 106 ;
+	}
+#Glyoxal
+'217107' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 107 ;
+	}
+#Hoch2ch2o
+'217108' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 108 ;
+	}
+#Unsaturated dicarbonyls
+'217109' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 109 ;
+	}
+#Methacrolein
+'217110' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 110 ;
+	}
+#Unsaturated hydroxy dicarbonyl
+'217111' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 111 ;
+	}
+#Isopropyldioxidanyl
+'217112' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 112 ;
+	}
+#Hydroxy ketone
+'217113' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 113 ;
+	}
+#Isopropyl hydroperoxide
+'217114' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 114 ;
+	}
+#C3h6oho2
+'217115' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 115 ;
+	}
+#C3h6ohooh
+'217116' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 116 ;
+	}
+#Higher organic peroxides
+'217117' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 117 ;
+	}
+#Hydroxyacetone
+'217118' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 118 ;
+	}
+#Peroxyacetic acid
+'217119' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 119 ;
+	}
+#Ch3coch2o2
+'217120' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 120 ;
+	}
+#Peroxy radical from c2h6
+'217121' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 121 ;
+	}
+#Peroxy radical from hc3
+'217122' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 122 ;
+	}
+#Peroxy radical from hc5
+'217123' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 123 ;
+	}
+#Lumped alkenes
+'217124' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 124 ;
+	}
+#Peroxy radical from hc8
+'217125' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 125 ;
+	}
+#Lumped alkanes
+'217126' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 126 ;
+	}
+#Peroxy radical from c2h4
+'217127' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 127 ;
+	}
+#C4h8o
+'217128' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 128 ;
+	}
+#Peroxy radical from terminal alkenes
+'217129' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 129 ;
+	}
+#C4h9o3
+'217130' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 130 ;
+	}
+#Peroxy radical from internal alkenes
+'217131' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 131 ;
+	}
+#Ch3coch(oo)ch3
+'217132' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 132 ;
+	}
+#Peroxy radical from c5h8
+'217133' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 133 ;
+	}
+#Ch3coch(ooh)ch3
+'217134' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 134 ;
+	}
+#Peroxy radical from a-pinene cyclic terpenes
+'217135' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 135 ;
+	}
+#Ch2=c(ch3)co3
+'217136' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 136 ;
+	}
+#Peroxy radical from d-limonene cyclic diene
+'217137' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 137 ;
+	}
+#Methylvinylketone
+'217138' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 138 ;
+	}
+#Phenoxy radical
+'217139' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 139 ;
+	}
+#Peroxy radical from toluene and less reactive aromatics
+'217140' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 140 ;
+	}
+#Ch3c(o)ch(oo)ch2oh
+'217141' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 141 ;
+	}
+#Peroxy radical from xylene and more reactive aromatics
+'217142' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 142 ;
+	}
+#H3c(o)ch(ooh)ch2oh
+'217143' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 143 ;
+	}
+#Peroxy radical from cresol
+'217144' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 144 ;
+	}
+#Unsaturated pans
+'217145' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 145 ;
+	}
+#Unsaturated acyl peroxy radical
+'217146' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 146 ;
+	}
+#Peroxy radical from ketones
+'217147' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 147 ;
+	}
+#C5h11o2
+'217148' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 148 ;
+	}
+#No3-alkenes adduct reacting to form carbonitrates
+'217149' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 149 ;
+	}
+#C5h11ooh
+'217150' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 150 ;
+	}
+#No3-alkenes adduct reacting via decomposition
+'217151' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 151 ;
+	}
+#Hoch2c(ch3)=chcho
+'217152' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 152 ;
+	}
+#C5h6o2
+'217153' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 153 ;
+	}
+#Trop sulfuric acid
+'217154' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 154 ;
+	}
+#Oxides
+'217155' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 155 ;
+	}
+#Ch2chc(ch3)(oo)ch2ono2
+'217156' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 156 ;
+	}
+#C3 organic nitrate
+'217157' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 157 ;
+	}
+#Chlorine oxides
+'217158' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 158 ;
+	}
+#Bromine oxides
+'217159' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 159 ;
+	}
+#Hoch2c(ooh)(ch3)chchoh
+'217160' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 160 ;
+	}
+#Hoch2c(ooh)(ch3)ch=ch2
+'217161' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 161 ;
+	}
+#Lumped aromatics
+'217162' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 162 ;
+	}
+#Dimethyl sulfoxyde
+'217163' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 163 ;
+	}
+#C7h9o5
+'217164' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 164 ;
+	}
+#C7h10o5
+'217165' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 165 ;
+	}
+#Hydrogensulfide
+'217166' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 166 ;
+	}
+#C7h10o6
+'217167' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 167 ;
+	}
+#All nitrogen oxides
+'217168' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 168 ;
+	}
+#Chlorine family
+'217169' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 169 ;
+	}
+#C10h16(oh)(oo)
+'217170' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 170 ;
+	}
+#Bromine family
+'217171' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 171 ;
+	}
+#C10h18o3
+'217172' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 172 ;
+	}
+#Nitrogen atom
+'217173' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 173 ;
+	}
+#Chlorine monoxide
+'217174' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 174 ;
+	}
+#Chlorine atom
+'217175' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 175 ;
+	}
+#Bromine monoxide
+'217176' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 176 ;
+	}
+#Hydrogen atom
+'217177' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 177 ;
+	}
+#Methyl group
+'217178' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 178 ;
+	}
+#Aromatic-ho from toluene and less reactive aromatics
+'217179' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 179 ;
+	}
+#Aromatic-ho from xylene and more reactive aromatics
+'217180' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 180 ;
+	}
+#Ammonium nitrate
+'217181' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 181 ;
+	}
+#Aromatic-ho from csl
+'217182' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 182 ;
+	}
+#Secondary organic aerosol type 1
+'217183' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 183 ;
+	}
+#Secondary organic aerosol type 2a
+'217184' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 184 ;
+	}
+#Secondary organic aerosol type 2b
+'217185' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 185 ;
+	}
+#Condensable gas type 1
+'217186' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 186 ;
+	}
+#Condensable gas type 2a
+'217187' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 187 ;
+	}
+#Condensable gas type 2b
+'217188' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 188 ;
+	}
+#Sulfur trioxide
+'217189' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 189 ;
+	}
+#Carbonyl sulfide
+'217190' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 190 ;
+	}
+#Bromine atom
+'217191' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 191 ;
+	}
+#Bromine
+'217192' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 192 ;
+	}
+#Bromine monochloride
+'217193' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 193 ;
+	}
+#Bromine nitrate
+'217194' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 194 ;
+	}
+#Dibromomethane
+'217195' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 195 ;
+	}
+#Methoxy radical
+'217196' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 196 ;
+	}
+#Tribromomethane
+'217197' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 197 ;
+	}
+#Asymmetric chlorine dioxide radical
+'217198' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 198 ;
+	}
+#Hydrogen
+'217199' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 199 ;
+	}
+#Hydrogen chloride
+'217200' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 200 ;
+	}
+#Formyl radical
+'217201' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 201 ;
+	}
+#Hydrogen fluoride
+'217202' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 202 ;
+	}
+#Oxygen atom
+'217203' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 203 ;
+	}
+#Excited oxygen atom
+'217204' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 204 ;
+	}
+#Ground state oxygen atom
+'217205' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 205 ;
+	}
+#Stratospheric aerosol
+'217206' = {
+	 discipline = 192 ;
+	 parameterCategory = 217 ;
+	 parameterNumber = 206 ;
+	}
 #Total column hydrogen peroxide
 '218003' = {
 	 discipline = 192 ;
