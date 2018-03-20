@@ -10361,6 +10361,30 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 48 ;
 	}
+#Instantaneous total lightning density
+'litoti' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 50 ;
+	}
+#Averaged total lightning density since previous post-processing
+'litota' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 51 ;
+	}
+#Instantaneous cloud-to-ground lightning density
+'licgi' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 52 ;
+	}
+#Averaged cloud-to-ground lightning density since previous post-processing
+'licga' = {
+	 discipline = 192 ;
+	 parameterCategory = 228 ;
+	 parameterNumber = 53 ;
+	}
 #Averaged total lightning flash density over the past 3 hours
 'litota3' = {
 	 discipline = 192 ;
