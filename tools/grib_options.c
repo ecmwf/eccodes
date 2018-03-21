@@ -93,9 +93,9 @@ grib_options_help grib_options_help_list[] ={
   {"P:","key[:{s|d|i}],key[:{s|d|i}],...",
    "\n\t\tAs -p adding the declared keys to the default list.\n"},
   {"R:","key1=relative_error1,key2=relative_error2,...\n",
-   "\tCompare floating point values using the relative error as tolerance."
-"\n\t\tkey1=relative_error will compare key1 using relative_error1."
-"\n\t\tall=relative_error will compare all the floating point keys using relative_error. Default all=0.\n"},
+        "\tCompare floating point values using the relative error as tolerance."
+        "\n\t\tkey1=relative_error1 will compare key1 using relative_error1."
+        "\n\t\tall=relative_error will compare all the floating point keys using relative_error. Default all=0.\n"},
   {"S",0,"Strict. Only messages matching all the constraints are copied to"
    "\n\t\tthe output file\n"},
   {"T:","T | B | M | A","Message type. T->GTS, B->BUFR, M->METAR (Experimental),A->Any (Experimental).\n\t\t\tThe input file is interpreted according to the message type.\n"},

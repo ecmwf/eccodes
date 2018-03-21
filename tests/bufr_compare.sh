@@ -153,6 +153,14 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+#----------------------------------------------------
+# ECC-656: using relative comparison (-R) with 'all'
+#----------------------------------------------------
+f='airc_142.bufr'
+echo 'set unpack=1;set airTemperature=228; set height=1.037e+04; set pack=1; write;' |\
+    ${tools_dir}/codes_bufr_filter -o $fBufrTmp - $f
+${tools_dir}/bufr_compare -R airTemperature=0.004,height=0.001 $f $fBufrTmp
+${tools_dir}/bufr_compare -R all=0.004 $f $fBufrTmp
 
 # Clean up
 # -------------
