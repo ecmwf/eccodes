@@ -71,6 +71,12 @@ int grib_tool_init(grib_runtime_options* options)
         }
     }
 #endif
+    /* ECC-657: If user supplied -p to print some keys, turn on verbose */
+    if (grib_options_on("p:")) {
+        if (grib_options_get_option("p:")) {
+            options->verbose = 1;
+        }
+    }
     return 0;
 }
 
