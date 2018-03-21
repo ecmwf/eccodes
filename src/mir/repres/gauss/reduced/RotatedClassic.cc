@@ -38,7 +38,7 @@ RotatedClassic::~RotatedClassic() {
 
 
 void RotatedClassic::print(std::ostream &out) const {
-    out << "RotatedGGClassic[N" << N_ << ",bbox=" << bbox_ << ",rotation=" << rotation_  << "]";
+    out << "RotatedClassic[N" << N_ << ",bbox=" << bbox_ << ",rotation=" << rotation_  << "]";
 }
 
 
@@ -47,7 +47,19 @@ void RotatedClassic::makeName(std::ostream& out) const {
     rotation_.makeName(out);
 }
 
-bool RotatedClassic::sameAs(const Representation& other) const { NOTIMP; }
+
+bool RotatedClassic::sameAs(const Representation&) const {
+    NOTIMP;
+}
+
+
+util::BoundingBox RotatedClassic::extendedBoundingBox(const util::BoundingBox& bbox, double angle) const {
+
+    // cropping bounding box after extending guarantees the representation can use it
+    util::BoundingBox extended(bbox);
+    Gridded::extendBoundingBox(extended, angle);
+    return extended;
+}
 
 
 Iterator* RotatedClassic::iterator() const {
@@ -62,7 +74,7 @@ void RotatedClassic::fill(grib_info &info) const  {
 }
 
 
-void RotatedClassic::fill(api::MIRJob &job) const  {
+void RotatedClassic::fill(api::MIRJob&) const  {
     NOTIMP;
 }
 

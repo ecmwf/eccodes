@@ -48,7 +48,7 @@ RotatedFromPL::~RotatedFromPL() {
 
 
 void RotatedFromPL::print(std::ostream &out) const {
-    out << "RotatedGGFromPL[N" << N_ << "]";
+    out << "RotatedFromPL[N" << N_ << "]";
 }
 
 
@@ -91,8 +91,17 @@ bool RotatedFromPL::sameAs(const Representation& other) const {
 }
 
 
+util::BoundingBox RotatedFromPL::extendedBoundingBox(const util::BoundingBox& bbox, double angle) const {
+
+    // cropping bounding box after extending guarantees the representation can use it
+    util::BoundingBox extended(bbox);
+    Gridded::extendBoundingBox(extended, angle);
+    return extended;
+}
+
+
 namespace {
-static RepresentationBuilder<RotatedFromPL> rotatedGG("reduced_rotated_gg"); // Name is what is returned by grib_api
+static RepresentationBuilder<RotatedFromPL> rotatedFromPL("reduced_rotated_gg"); // Name is what is returned by grib_api
 }
 
 

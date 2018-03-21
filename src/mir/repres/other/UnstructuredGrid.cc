@@ -90,9 +90,11 @@ bool UnstructuredGrid::sameAs(const Representation& other) const {
 }
 
 
-util::BoundingBox UnstructuredGrid::extendedBoundingBox(const util::BoundingBox& bbox) const {
-    eckit::Log::debug<LibMir>() << "UnstructuredGrid::extendedBoundingBox(): bounding box not extended" << std::endl;
-    return bbox;
+util::BoundingBox UnstructuredGrid::extendedBoundingBox(double) const {
+    eckit::Log::warning() << "UnstructuredGrid::extendedBoundingBox(): assuming grid is global" << std::endl;
+
+    const util::Domain global = util::Domain::makeGlobal();
+    return util::BoundingBox(global.north(), global.west(), global.south(), global.east());
 }
 
 

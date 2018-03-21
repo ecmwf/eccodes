@@ -365,12 +365,6 @@ util::BoundingBox LatLon::croppedBoundingBox(const util::BoundingBox& bbox) cons
 }
 
 
-util::BoundingBox LatLon::extendedBoundingBox(const util::BoundingBox& bbox) const {
-    // FIXME of course this is the opposite of what we want
-    return croppedBoundingBox(bbox);
-}
-
-
 LatLon::LatLonIterator::LatLonIterator(size_t ni, size_t nj, Latitude north, Longitude west, const util::Increments& increments) :
     ni_(ni),
     nj_(nj),

@@ -38,7 +38,7 @@ RotatedOctahedral::~RotatedOctahedral() {
 
 
 void RotatedOctahedral::print(std::ostream &out) const {
-    out << "RotatedGGOctahedral[N" << N_ << ",bbox=" << bbox_ << ",rotation=" << rotation_ << "]";
+    out << "RotatedOctahedral[N" << N_ << ",bbox=" << bbox_ << ",rotation=" << rotation_ << "]";
 }
 
 
@@ -48,7 +48,18 @@ void RotatedOctahedral::makeName(std::ostream& out) const {
 }
 
 
-bool RotatedOctahedral::sameAs(const Representation& other) const { NOTIMP; }
+bool RotatedOctahedral::sameAs(const Representation&) const {
+    NOTIMP;
+}
+
+
+util::BoundingBox RotatedOctahedral::extendedBoundingBox(const util::BoundingBox& bbox, double angle) const {
+
+    // cropping bounding box after extending guarantees the representation can use it
+    util::BoundingBox extended(bbox);
+    Gridded::extendBoundingBox(extended, angle);
+    return extended;
+}
 
 
 Iterator* RotatedOctahedral::iterator() const {
