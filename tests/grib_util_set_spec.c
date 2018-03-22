@@ -72,7 +72,7 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     outlen = inlen;
     spec.iDirectionIncrementInDegrees = 1.5;
     spec.jDirectionIncrementInDegrees = 1.5;
-    spec.latitudeOfFirstGridPointInDegrees  = 87.863799;
+    spec.latitudeOfFirstGridPointInDegrees  = 87.8637991;
     spec.longitudeOfFirstGridPointInDegrees = 0.0;
     spec.latitudeOfLastGridPointInDegrees   = -spec.latitudeOfFirstGridPointInDegrees;
     spec.longitudeOfLastGridPointInDegrees  = 357.187500;
@@ -83,6 +83,13 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     packing_spec.bitsPerValue = 24;
     packing_spec.accuracy=GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
     packing_spec.packing=GRIB_UTIL_PACKING_USE_PROVIDED;
+    
+    /*Extra settings
+    packing_spec.extra_settings_count++;
+    packing_spec.extra_settings[0].type = GRIB_TYPE_LONG;
+    packing_spec.extra_settings[0].name = "expandBoundingBox";
+    packing_spec.extra_settings[0].long_value = 1;
+    */
 
     finalh = grib_util_set_spec(
             handle,
@@ -104,6 +111,7 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     grib_handle_delete(finalh);
     fclose(in);
     fclose(out);
+    /*printf("ALL OK: %s\n", __func__);*/
 }
 
 static void test_regular_ll(int remove_local_def, int edition, const char* packingType,
