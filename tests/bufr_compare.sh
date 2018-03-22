@@ -162,6 +162,24 @@ echo 'set unpack=1;set airTemperature=228; set height=1.037e+04; set pack=1; wri
 ${tools_dir}/bufr_compare -R airTemperature=0.004,height=0.001 $f $fBufrTmp
 ${tools_dir}/bufr_compare -R all=0.004 $f $fBufrTmp
 
+#----------------------------------------------------
+# ECC-658: apply relative comparison (-R) to all
+# ranks of a given key
+#----------------------------------------------------
+f='PraticaTemp.bufr'
+${tools_dir}/codes_bufr_filter -o $fBufrTmp - $f <<EOF
+ set unpack=1;
+ set #1#airTemperature=288.41;
+ set #2#airTemperature=286.15;
+ set #3#airTemperature=280.95;
+ set #4#airTemperature=280.32;
+ set #5#airTemperature=280.43;
+ set pack=1;
+ write;
+EOF
+# The relative differences are around 3.5e-5. Suppress all instances
+${tools_dir}/bufr_compare -R airTemperature=4e-5 $f $fBufrTmp
+
 # Clean up
 # -------------
 rm -f $fLog $fBufrTmp $fBufrInput1 $fBufrInput2 $fRules

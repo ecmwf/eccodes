@@ -620,6 +620,28 @@ static char* double_as_string(grib_context* c, double v)
     else                          sprintf(sval,"%.20e",v);
     return sval;
 }
+
+/* Return the part of the key name without the '#rank#' part */
+static char* get_keyname_without_rank(const char* name)
+{
+    char* p=(char*)name;
+    char* end=p;
+    char* ret=NULL;
+
+    if (*p=='#') {
+        strtol(++p,&end,10);
+        if ( *end != '#') {
+            DebugAssert(!"Badly formed rank in key");
+        } else {
+            /* Take everything after 2nd '#' */
+            grib_context* c=grib_context_get_default();
+            end++;
+            ret=grib_context_strdup(c,end);
+        }
+    }
+    return ret;
+}
+
 static int compare_values(grib_runtime_options* options, grib_handle* handle1, grib_handle *handle2, const char *name, int type)
 {
     size_t len1 = 0;
@@ -902,12 +924,21 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 }
             }
             if (!all_specified) {
+                char* basename = NULL;
                 for (i=0;i<options->tolerance_count;i++) {
-                    if ( strcmp( (options->tolerance[i]).name,name)==0 ) {
+                    if ( strcmp( (options->tolerance[i]).name, name)==0 ) {
                         value_tolerance=(options->tolerance[i]).double_value;
                         break;
+                    } else {
+                        /* Check if the key without its rank has a relative tolerance */
+                        basename = get_keyname_without_rank(name);
+                        if ( basename && strcmp( (options->tolerance[i]).name, basename)==0 ) {
+                            value_tolerance=(options->tolerance[i]).double_value;
+                            break;
+                        }
                     }
                 }
+                if (basename) grib_context_free(handle1->context, basename);
             }
         }
 
