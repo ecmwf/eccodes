@@ -837,6 +837,8 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
             value = GRIB_MISSING_DOUBLE;  /* Ignore the bad value and instead use 'missing' */
             grib_set_bits_on(buff->data,pos,modifiedWidth);
         } else {
+            grib_context_log(c, GRIB_LOG_DEBUG, "encode_double_value: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
+                             bd->shortName, value, minAllowed, maxAllowed);
             return GRIB_OUT_OF_RANGE;
         }
     }
@@ -1209,7 +1211,8 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
             }
             err=encode_double_value(c,buff,pos,bd,self,self->numericValues->v[subsetIndex]->v[elementIndex]);
             if (err) {
-                grib_context_log(c,GRIB_LOG_ERROR,"encoding %s=%g",bd->shortName,self->numericValues->v[subsetIndex]->v[elementIndex]);
+                grib_context_log(c,GRIB_LOG_ERROR,"Cannot encode %s=%g (subset=%d)", /*subsetIndex starts from 0*/
+                                 bd->shortName, self->numericValues->v[subsetIndex]->v[elementIndex], subsetIndex+1);
             }
         }
     }
