@@ -1224,7 +1224,7 @@ static int encode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
 {
     /* Assert( buff->data == data); */
     if (self->compressedData) {
-        Assert(grib_darray_used_size(self->numericValues->v[elementIndex])==1);
+        DebugAssert(grib_darray_used_size(self->numericValues->v[elementIndex])==1);
         *numberOfRepetitions=self->numericValues->v[elementIndex]->v[0];
     } else {
         *numberOfRepetitions=self->numericValues->v[subsetIndex]->v[elementIndex];
@@ -1784,7 +1784,7 @@ static GRIB_INLINE int significanceQualifierIndex(int X,int Y)
 {
     int a[]={-1,0,1,-1,2,3,4,5,6};
     int ret=Y+a[X]*NUMBER_OF_QUALIFIERS_PER_CATEGORY;
-    Assert(ret>0);
+    DebugAssert(ret>0);
     return ret;
 }
 
@@ -2334,7 +2334,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         decoding=1;
         do_clean=1;
         dataAccessor=grib_find_accessor(grib_handle_of_accessor(a),self->bufrDataEncodedName);
-        Assert(dataAccessor);
+        DebugAssert(dataAccessor);
         dataOffset=accessor_raw_get_offset(dataAccessor);
         pos=dataOffset*8;
         codec_element=&decode_element;
@@ -2455,7 +2455,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                 /* Delayed replication */
                 inr=numberOfNestedRepetitions;
                 numberOfNestedRepetitions++;
-                Assert(numberOfNestedRepetitions<=MAX_NESTED_REPLICATIONS);
+                DebugAssert(numberOfNestedRepetitions<=MAX_NESTED_REPLICATIONS);
                 numberOfElementsToRepeat[inr]=descriptors[i]->X;
                 n[inr]=numberOfElementsToRepeat[inr];
                 i++;
