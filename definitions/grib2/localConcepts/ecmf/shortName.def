@@ -9593,6 +9593,906 @@
 	 parameterCategory = 218 ;
 	 parameterNumber = 56 ;
 	}
+#Total column of carbon dioxide (chemistry)
+'tc_co2_c' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 57 ;
+	}
+#Total column of nitrous oxide (chemistry)
+'tc_n2o_c' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 58 ;
+	}
+#Total column of water vapour (chemistry)
+'tc_h2o' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 59 ;
+	}
+#Total column of oxygen
+'tc_o2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 60 ;
+	}
+#Total column of singlet oxygen
+'tc_o2_1s' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 61 ;
+	}
+#Total column of singlet delta oxygen
+'tc_o2_1d' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 62 ;
+	}
+#Total column of chlorine dioxide
+'tc_oclo' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 63 ;
+	}
+#Total column of chlorine nitrate
+'tc_clono2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 64 ;
+	}
+#Total column of hypochlorous acid
+'tc_hocl' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 65 ;
+	}
+#Total column of chlorine
+'tc_cl2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 66 ;
+	}
+#Total column of nitryl chloride
+'tc_clno2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 67 ;
+	}
+#Total column of hydrogen bromide
+'tc_hbr' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 68 ;
+	}
+#Total column of dichlorine dioxide
+'tc_cl2o2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 69 ;
+	}
+#Total column of hypobromous acid
+'tc_hobr' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 70 ;
+	}
+#Total column of trichlorofluoromethane
+'tc_cfc11' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 71 ;
+	}
+#Total column of dichlorodifluoromethane
+'tc_cfc12' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 72 ;
+	}
+#Total column of trichlorotrifluoroethane
+'tc_cfc113' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 73 ;
+	}
+#Total column of dichlorotetrafluoroethane
+'tc_cfc114' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 74 ;
+	}
+#Total column of chloropentafluoroethane
+'tc_cfc115' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 75 ;
+	}
+#Total column of tetrachloromethane
+'tc_ccl4' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 76 ;
+	}
+#Total column of methyl chloroform
+'tc_ch3ccl3' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 77 ;
+	}
+#Total column of methyl chloride
+'tc_ch3cl' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 78 ;
+	}
+#Total column of chlorodifluoromethane
+'tc_hcfc22' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 79 ;
+	}
+#Total column of methyl bromide
+'tc_ch3br' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 80 ;
+	}
+#Total column of dibromodifluoromethane
+'tc_ha1202' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 81 ;
+	}
+#Total column of bromochlorodifluoromethane
+'tc_ha1211' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 82 ;
+	}
+#Total column of trifluorobromomethane
+'tc_ha1301' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 83 ;
+	}
+#Total column of cbrf2cbrf2
+'tc_ha2402' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 84 ;
+	}
+#Total column of sulfuric acid
+'tc_h2so4' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 85 ;
+	}
+#Total column of nitrous acid
+'tc_hono' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 86 ;
+	}
+#Total column of alkanes low oh rate
+'tc_hc3' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 87 ;
+	}
+#Total column of alkanes med oh rate
+'tc_hc5' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 88 ;
+	}
+#Total column of alkanes high oh rate
+'tc_hc8' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 89 ;
+	}
+#Total column of terminal alkenes
+'tc_olt' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 90 ;
+	}
+#Total column of internal alkenes
+'tc_oli' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 91 ;
+	}
+#Total column of ethylperoxy radical
+'tc_c2h5o2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 92 ;
+	}
+#Total column of butadiene
+'tc_dien' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 93 ;
+	}
+#Total column of ethyl hydroperoxide
+'tc_c2h5ooh' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 94 ;
+	}
+#Total column of a-pinene cyclic terpenes
+'tc_api' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 95 ;
+	}
+#Total column of acetic acid
+'tc_ch3cooh' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 96 ;
+	}
+#Total column of d-limonene cyclic diene
+'tc_lim' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 97 ;
+	}
+#Total column of acetaldehyde
+'tc_ch3cho' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 98 ;
+	}
+#Total column of toluene and less reactive aromatics
+'tc_tol' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 99 ;
+	}
+#Total column of xylene and more reactive aromatics
+'tc_xyl' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 100 ;
+	}
+#Total column of glycolaldehyde
+'tc_glyald' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 101 ;
+	}
+#Total column of cresol
+'tc_cresol' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 102 ;
+	}
+#Total column of acetaldehyde and higher
+'tc_ald' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 103 ;
+	}
+#Total column of peracetic acid
+'tc_ch3coooh' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 104 ;
+	}
+#Total column of ketones
+'tc_ket' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 105 ;
+	}
+#Total column of hoch2ch2o2
+'tc_eo2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 106 ;
+	}
+#Total column of glyoxal
+'tc_glyoxal' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 107 ;
+	}
+#Total column of hoch2ch2o
+'tc_eo' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 108 ;
+	}
+#Total column of unsaturated dicarbonyls
+'tc_dcb' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 109 ;
+	}
+#Total column of methacrolein
+'tc_macr' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 110 ;
+	}
+#Total column of unsaturated hydroxy dicarbonyl
+'tc_udd' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 111 ;
+	}
+#Total column of isopropyldioxidanyl
+'tc_c3h7o2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 112 ;
+	}
+#Total column of hydroxy ketone
+'tc_hket' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 113 ;
+	}
+#Total column of isopropyl hydroperoxide
+'tc_c3h7ooh' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 114 ;
+	}
+#Total column of c3h6oho2
+'tc_po2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 115 ;
+	}
+#Total column of c3h6ohooh
+'tc_pooh' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 116 ;
+	}
+#Total column of higher organic peroxides
+'tc_op2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 117 ;
+	}
+#Total column of hydroxyacetone
+'tc_hyac' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 118 ;
+	}
+#Total column of peroxyacetic acid
+'tc_paa' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 119 ;
+	}
+#Total column of ch3coch2o2
+'tc_ro2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 120 ;
+	}
+#Total column of peroxy radical from c2h6
+'tc_ethp' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 121 ;
+	}
+#Total column of peroxy radical from hc3
+'tc_hc3p' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 122 ;
+	}
+#Total column of peroxy radical from hc5
+'tc_hc5p' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 123 ;
+	}
+#Total column of lumped alkenes
+'tc_bigene' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 124 ;
+	}
+#Total column of peroxy radical from hc8
+'tc_hc8p' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 125 ;
+	}
+#Total column of lumped alkanes
+'tc_bigalk' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 126 ;
+	}
+#Total column of peroxy radical from c2h4
+'tc_etep' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 127 ;
+	}
+#Total column of c4h8o
+'tc_mek' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 128 ;
+	}
+#Total column of peroxy radical from terminal alkenes
+'tc_oltp' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 129 ;
+	}
+#Total column of c4h9o3
+'tc_eneo2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 130 ;
+	}
+#Total column of peroxy radical from internal alkenes
+'tc_olip' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 131 ;
+	}
+#Total column of ch3coch(oo)ch3
+'tc_meko2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 132 ;
+	}
+#Total column of peroxy radical from c5h8
+'tc_isopo2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 133 ;
+	}
+#Total column of ch3coch(ooh)ch3
+'tc_mekooh' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 134 ;
+	}
+#Total column of peroxy radical from a-pinene cyclic terpenes
+'tc_apip' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 135 ;
+	}
+#Total column of ch2=c(ch3)co3
+'tc_mco3' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 136 ;
+	}
+#Total column of peroxy radical from d-limonene cyclic diene
+'tc_limp' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 137 ;
+	}
+#Total column of methylvinylketone
+'tc_mvk' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 138 ;
+	}
+#Total column of phenoxy radical
+'tc_pho' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 139 ;
+	}
+#Total column of peroxy radical from toluene and less reactive aromatics
+'tc_tolp' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 140 ;
+	}
+#Total column of ch3c(o)ch(oo)ch2oh
+'tc_macro2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 141 ;
+	}
+#Total column of peroxy radical from xylene and more reactive aromatics
+'tc_xylp' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 142 ;
+	}
+#Total column of h3c(o)ch(ooh)ch2oh
+'tc_macrooh' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 143 ;
+	}
+#Total column of peroxy radical from cresol
+'tc_cslp' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 144 ;
+	}
+#Total column of unsaturated pans
+'tc_mpan' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 145 ;
+	}
+#Total column of unsaturated acyl peroxy radical
+'tc_tco3_c' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 146 ;
+	}
+#Total column of peroxy radical from ketones
+'tc_ketp' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 147 ;
+	}
+#Total column of c5h11o2
+'tc_alko2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 148 ;
+	}
+#Total column of no3-alkenes adduct reacting to form carbonitrates
+'tc_olnn' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 149 ;
+	}
+#Total column of c5h11ooh
+'tc_alkooh' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 150 ;
+	}
+#Total column of no3-alkenes adduct reacting via decomposition
+'tc_olnd' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 151 ;
+	}
+#Total column of hoch2c(ch3)=chcho
+'tc_bigald' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 152 ;
+	}
+#Total column of c5h6o2
+'tc_hydrald' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 153 ;
+	}
+#Total column of trop sulfuric acid
+'tc_sulf' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 154 ;
+	}
+#Total column of oxides
+'tc_ox' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 155 ;
+	}
+#Total column of ch2chc(ch3)(oo)ch2ono2
+'tc_isopno3' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 156 ;
+	}
+#Total column of c3 organic nitrate
+'tc_onitr' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 157 ;
+	}
+#Total column of chlorine oxides
+'tc_clox' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 158 ;
+	}
+#Total column of bromine oxides
+'tc_brox' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 159 ;
+	}
+#Total column of hoch2c(ooh)(ch3)chchoh
+'tc_xooh' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 160 ;
+	}
+#Total column of hoch2c(ooh)(ch3)ch=ch2
+'tc_isopooh' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 161 ;
+	}
+#Total column of lumped aromatics
+'tc_toluene' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 162 ;
+	}
+#Total column of dimethyl sulfoxyde
+'tc_dmso' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 163 ;
+	}
+#Total column of c7h9o5
+'tc_tolo2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 164 ;
+	}
+#Total column of c7h10o5
+'tc_tolooh' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 165 ;
+	}
+#Total column of hydrogensulfide
+'tc_h2s' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 166 ;
+	}
+#Total column of c7h10o6
+'tc_xoh' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 167 ;
+	}
+#Total column of all nitrogen oxides
+'tc_noy' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 168 ;
+	}
+#Total column of chlorine family
+'tc_cly' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 169 ;
+	}
+#Total column of c10h16(oh)(oo)
+'tc_terpo2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 170 ;
+	}
+#Total column of bromine family
+'tc_bry' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 171 ;
+	}
+#Total column of c10h18o3
+'tc_terpooh' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 172 ;
+	}
+#Total column of nitrogen atom
+'tc_n' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 173 ;
+	}
+#Total column of chlorine monoxide
+'tc_clo' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 174 ;
+	}
+#Total column of chlorine atom
+'tc_cl_c' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 175 ;
+	}
+#Total column of bromine monoxide
+'tc_bro' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 176 ;
+	}
+#Total column of hydrogen atom
+'tc_h_c' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 177 ;
+	}
+#Total column of methyl group
+'tc_ch3' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 178 ;
+	}
+#Total column of aromatic-ho from toluene and less reactive aromatics
+'tc_addt' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 179 ;
+	}
+#Total column of aromatic-ho from xylene and more reactive aromatics
+'tc_addx' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 180 ;
+	}
+#Total column of ammonium nitrate
+'tc_nh4no3' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 181 ;
+	}
+#Total column of aromatic-ho from csl
+'tc_addc' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 182 ;
+	}
+#Total column of secondary organic aerosol type 1
+'tc_soa1' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 183 ;
+	}
+#Total column of secondary organic aerosol type 2a
+'tc_soa2a' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 184 ;
+	}
+#Total column of secondary organic aerosol type 2b
+'tc_soa2b' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 185 ;
+	}
+#Total column of condensable gas type 1
+'tc_sog1' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 186 ;
+	}
+#Total column of condensable gas type 2a
+'tc_sog2a' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 187 ;
+	}
+#Total column of condensable gas type 2b
+'tc_sog2b' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 188 ;
+	}
+#Total column of sulfur trioxide
+'tc_so3' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 189 ;
+	}
+#Total column of carbonyl sulfide
+'tc_ocs_c' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 190 ;
+	}
+#Total column of bromine atom
+'tc_br' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 191 ;
+	}
+#Total column of bromine
+'tc_br2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 192 ;
+	}
+#Total column of bromine monochloride
+'tc_brcl' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 193 ;
+	}
+#Total column of bromine nitrate
+'tc_brono2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 194 ;
+	}
+#Total column of dibromomethane
+'tc_ch2br2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 195 ;
+	}
+#Total column of methoxy radical
+'tc_ch3o' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 196 ;
+	}
+#Total column of tribromomethane
+'tc_chbr3' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 197 ;
+	}
+#Total column of asymmetric chlorine dioxide radical
+'tc_cloo' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 198 ;
+	}
+#Total column of hydrogen
+'tc_h2' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 199 ;
+	}
+#Total column of hydrogen chloride
+'tc_hcl' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 200 ;
+	}
+#Total column of formyl radical
+'tc_hco' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 201 ;
+	}
+#Total column of hydrogen fluoride
+'tc_hf' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 202 ;
+	}
+#Total column of oxygen atom
+'tc_o' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 203 ;
+	}
+#Total column of excited oxygen atom
+'tc_o1d' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 204 ;
+	}
+#Total column of ground state oxygen atom
+'tc_o3p' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 205 ;
+	}
+#Total column of stratospheric aerosol
+'tc_strataer' = {
+	 discipline = 192 ;
+	 parameterCategory = 218 ;
+	 parameterNumber = 206 ;
+	}
 #Ozone emissions
 'e_go3' = {
 	 discipline = 192 ;
