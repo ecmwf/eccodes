@@ -10830,901 +10830,901 @@
 	 parameterNumber = 56 ;
 	}
 #Emissions of carbon dioxide (chemistry)
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 57 ;
 	}
 #Emissions of nitrous oxide (chemistry)
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 58 ;
 	}
 #Emissions of water vapour (chemistry)
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 59 ;
 	}
 #Emissions of oxygen
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 60 ;
 	}
 #Emissions of singlet oxygen
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 61 ;
 	}
 #Emissions of singlet delta oxygen
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 62 ;
 	}
 #Emissions of chlorine dioxide
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 63 ;
 	}
 #Emissions of chlorine nitrate
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 64 ;
 	}
 #Emissions of hypochlorous acid
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 65 ;
 	}
 #Emissions of chlorine
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 66 ;
 	}
 #Emissions of nitryl chloride
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 67 ;
 	}
 #Emissions of hydrogen bromide
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 68 ;
 	}
 #Emissions of dichlorine dioxide
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 69 ;
 	}
 #Emissions of hypobromous acid
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 70 ;
 	}
 #Emissions of trichlorofluoromethane
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 71 ;
 	}
 #Emissions of dichlorodifluoromethane
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 72 ;
 	}
 #Emissions of trichlorotrifluoroethane
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 73 ;
 	}
 #Emissions of dichlorotetrafluoroethane
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 74 ;
 	}
 #Emissions of chloropentafluoroethane
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 75 ;
 	}
 #Emissions of tetrachloromethane
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 76 ;
 	}
 #Emissions of methyl chloroform
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 77 ;
 	}
 #Emissions of methyl chloride
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 78 ;
 	}
 #Emissions of chlorodifluoromethane
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 79 ;
 	}
 #Emissions of methyl bromide
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 80 ;
 	}
 #Emissions of dibromodifluoromethane
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 81 ;
 	}
 #Emissions of bromochlorodifluoromethane
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 82 ;
 	}
 #Emissions of trifluorobromomethane
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 83 ;
 	}
 #Emissions of cbrf2cbrf2
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 84 ;
 	}
 #Emissions of sulfuric acid
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 85 ;
 	}
 #Emissions of nitrous acid
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 86 ;
 	}
 #Emissions of alkanes low oh rate
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 87 ;
 	}
 #Emissions of alkanes med oh rate
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 88 ;
 	}
 #Emissions of alkanes high oh rate
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 89 ;
 	}
 #Emissions of terminal alkenes
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 90 ;
 	}
 #Emissions of internal alkenes
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 91 ;
 	}
 #Emissions of ethylperoxy radical
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 92 ;
 	}
 #Emissions of butadiene
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 93 ;
 	}
 #Emissions of ethyl hydroperoxide
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 94 ;
 	}
 #Emissions of a-pinene cyclic terpenes
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 95 ;
 	}
 #Emissions of acetic acid
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 96 ;
 	}
 #Emissions of d-limonene cyclic diene
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 97 ;
 	}
 #Emissions of acetaldehyde
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 98 ;
 	}
 #Emissions of toluene and less reactive aromatics
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 99 ;
 	}
 #Emissions of xylene and more reactive aromatics
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 100 ;
 	}
 #Emissions of glycolaldehyde
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 101 ;
 	}
 #Emissions of cresol
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 102 ;
 	}
 #Emissions of acetaldehyde and higher
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 103 ;
 	}
 #Emissions of peracetic acid
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 104 ;
 	}
 #Emissions of ketones
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 105 ;
 	}
 #Emissions of hoch2ch2o2
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 106 ;
 	}
 #Emissions of glyoxal
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 107 ;
 	}
 #Emissions of hoch2ch2o
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 108 ;
 	}
 #Emissions of unsaturated dicarbonyls
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 109 ;
 	}
 #Emissions of methacrolein
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 110 ;
 	}
 #Emissions of unsaturated hydroxy dicarbonyl
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 111 ;
 	}
 #Emissions of isopropyldioxidanyl
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 112 ;
 	}
 #Emissions of hydroxy ketone
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 113 ;
 	}
 #Emissions of isopropyl hydroperoxide
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 114 ;
 	}
 #Emissions of c3h6oho2
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 115 ;
 	}
 #Emissions of c3h6ohooh
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 116 ;
 	}
 #Emissions of higher organic peroxides
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 117 ;
 	}
 #Emissions of hydroxyacetone
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 118 ;
 	}
 #Emissions of peroxyacetic acid
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 119 ;
 	}
 #Emissions of ch3coch2o2
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 120 ;
 	}
 #Emissions of peroxy radical from c2h6
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 121 ;
 	}
 #Emissions of peroxy radical from hc3
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 122 ;
 	}
 #Emissions of peroxy radical from hc5
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 123 ;
 	}
 #Emissions of lumped alkenes
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 124 ;
 	}
 #Emissions of peroxy radical from hc8
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 125 ;
 	}
 #Emissions of lumped alkanes
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 126 ;
 	}
 #Emissions of peroxy radical from c2h4
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 127 ;
 	}
 #Emissions of c4h8o
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 128 ;
 	}
 #Emissions of peroxy radical from terminal alkenes
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 129 ;
 	}
 #Emissions of c4h9o3
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 130 ;
 	}
 #Emissions of peroxy radical from internal alkenes
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 131 ;
 	}
 #Emissions of ch3coch(oo)ch3
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 132 ;
 	}
 #Emissions of peroxy radical from c5h8
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 133 ;
 	}
 #Emissions of ch3coch(ooh)ch3
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 134 ;
 	}
 #Emissions of peroxy radical from a-pinene cyclic terpenes
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 135 ;
 	}
 #Emissions of ch2=c(ch3)co3
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 136 ;
 	}
 #Emissions of peroxy radical from d-limonene cyclic diene
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 137 ;
 	}
 #Emissions of methylvinylketone
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 138 ;
 	}
 #Emissions of phenoxy radical
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 139 ;
 	}
 #Emissions of peroxy radical from toluene and less reactive aromatics
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 140 ;
 	}
 #Emissions of ch3c(o)ch(oo)ch2oh
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 141 ;
 	}
 #Emissions of peroxy radical from xylene and more reactive aromatics
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 142 ;
 	}
 #Emissions of h3c(o)ch(ooh)ch2oh
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 143 ;
 	}
 #Emissions of peroxy radical from cresol
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 144 ;
 	}
 #Emissions of unsaturated pans
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 145 ;
 	}
 #Emissions of unsaturated acyl peroxy radical
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 146 ;
 	}
 #Emissions of peroxy radical from ketones
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 147 ;
 	}
 #Emissions of c5h11o2
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 148 ;
 	}
 #Emissions of no3-alkenes adduct reacting to form carbonitrates
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 149 ;
 	}
 #Emissions of c5h11ooh
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 150 ;
 	}
 #Emissions of no3-alkenes adduct reacting via decomposition
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 151 ;
 	}
 #Emissions of hoch2c(ch3)=chcho
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 152 ;
 	}
 #Emissions of c5h6o2
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 153 ;
 	}
 #Emissions of trop sulfuric acid
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 154 ;
 	}
 #Emissions of oxides
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 155 ;
 	}
 #Emissions of ch2chc(ch3)(oo)ch2ono2
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 156 ;
 	}
 #Emissions of c3 organic nitrate
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 157 ;
 	}
 #Emissions of chlorine oxides
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 158 ;
 	}
 #Emissions of bromine oxides
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 159 ;
 	}
 #Emissions of hoch2c(ooh)(ch3)chchoh
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 160 ;
 	}
 #Emissions of hoch2c(ooh)(ch3)ch=ch2
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 161 ;
 	}
 #Emissions of lumped aromatics
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 162 ;
 	}
 #Emissions of dimethyl sulfoxyde
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 163 ;
 	}
 #Emissions of c7h9o5
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 164 ;
 	}
 #Emissions of c7h10o5
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 165 ;
 	}
 #Emissions of hydrogensulfide
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 166 ;
 	}
 #Emissions of c7h10o6
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 167 ;
 	}
 #Emissions of all nitrogen oxides
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 168 ;
 	}
 #Emissions of chlorine family
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 169 ;
 	}
 #Emissions of c10h16(oh)(oo)
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 170 ;
 	}
 #Emissions of bromine family
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 171 ;
 	}
 #Emissions of c10h18o3
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 172 ;
 	}
 #Emissions of nitrogen atom
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 173 ;
 	}
 #Emissions of chlorine monoxide
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 174 ;
 	}
 #Emissions of chlorine atom
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 175 ;
 	}
 #Emissions of bromine monoxide
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 176 ;
 	}
 #Emissions of hydrogen atom
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 177 ;
 	}
 #Emissions of methyl group
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 178 ;
 	}
 #Emissions of aromatic-ho from toluene and less reactive aromatics
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 179 ;
 	}
 #Emissions of aromatic-ho from xylene and more reactive aromatics
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 180 ;
 	}
 #Emissions of ammonium nitrate
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 181 ;
 	}
 #Emissions of aromatic-ho from csl
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 182 ;
 	}
 #Emissions of secondary organic aerosol type 1
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 183 ;
 	}
 #Emissions of secondary organic aerosol type 2a
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 184 ;
 	}
 #Emissions of secondary organic aerosol type 2b
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 185 ;
 	}
 #Emissions of condensable gas type 1
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 186 ;
 	}
 #Emissions of condensable gas type 2a
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 187 ;
 	}
 #Emissions of condensable gas type 2b
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 188 ;
 	}
 #Emissions of sulfur trioxide
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 189 ;
 	}
 #Emissions of carbonyl sulfide
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 190 ;
 	}
 #Emissions of bromine atom
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 191 ;
 	}
 #Emissions of bromine
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 192 ;
 	}
 #Emissions of bromine monochloride
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 193 ;
 	}
 #Emissions of bromine nitrate
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 194 ;
 	}
 #Emissions of dibromomethane
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 195 ;
 	}
 #Emissions of methoxy radical
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 196 ;
 	}
 #Emissions of tribromomethane
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 197 ;
 	}
 #Emissions of asymmetric chlorine dioxide radical
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 198 ;
 	}
 #Emissions of hydrogen
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 199 ;
 	}
 #Emissions of hydrogen chloride
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 200 ;
 	}
 #Emissions of formyl radical
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 201 ;
 	}
 #Emissions of hydrogen fluoride
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 202 ;
 	}
 #Emissions of oxygen atom
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 203 ;
 	}
 #Emissions of excited oxygen atom
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 204 ;
 	}
 #Emissions of ground state oxygen atom
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 205 ;
 	}
 #Emissions of stratospheric aerosol
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 206 ;
