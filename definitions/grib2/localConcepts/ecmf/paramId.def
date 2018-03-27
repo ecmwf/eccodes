@@ -10829,6 +10829,906 @@
 	 parameterCategory = 219 ;
 	 parameterNumber = 56 ;
 	}
+#Emissions of carbon dioxide (chemistry)
+'219057' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 57 ;
+	}
+#Emissions of nitrous oxide (chemistry)
+'219058' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 58 ;
+	}
+#Emissions of water vapour (chemistry)
+'219059' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 59 ;
+	}
+#Emissions of oxygen
+'219060' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 60 ;
+	}
+#Emissions of singlet oxygen
+'219061' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 61 ;
+	}
+#Emissions of singlet delta oxygen
+'219062' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 62 ;
+	}
+#Emissions of chlorine dioxide
+'219063' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 63 ;
+	}
+#Emissions of chlorine nitrate
+'219064' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 64 ;
+	}
+#Emissions of hypochlorous acid
+'219065' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 65 ;
+	}
+#Emissions of chlorine
+'219066' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 66 ;
+	}
+#Emissions of nitryl chloride
+'219067' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 67 ;
+	}
+#Emissions of hydrogen bromide
+'219068' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 68 ;
+	}
+#Emissions of dichlorine dioxide
+'219069' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 69 ;
+	}
+#Emissions of hypobromous acid
+'219070' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 70 ;
+	}
+#Emissions of trichlorofluoromethane
+'219071' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 71 ;
+	}
+#Emissions of dichlorodifluoromethane
+'219072' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 72 ;
+	}
+#Emissions of trichlorotrifluoroethane
+'219073' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 73 ;
+	}
+#Emissions of dichlorotetrafluoroethane
+'219074' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 74 ;
+	}
+#Emissions of chloropentafluoroethane
+'219075' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 75 ;
+	}
+#Emissions of tetrachloromethane
+'219076' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 76 ;
+	}
+#Emissions of methyl chloroform
+'219077' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 77 ;
+	}
+#Emissions of methyl chloride
+'219078' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 78 ;
+	}
+#Emissions of chlorodifluoromethane
+'219079' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 79 ;
+	}
+#Emissions of methyl bromide
+'219080' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 80 ;
+	}
+#Emissions of dibromodifluoromethane
+'219081' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 81 ;
+	}
+#Emissions of bromochlorodifluoromethane
+'219082' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 82 ;
+	}
+#Emissions of trifluorobromomethane
+'219083' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 83 ;
+	}
+#Emissions of cbrf2cbrf2
+'219084' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 84 ;
+	}
+#Emissions of sulfuric acid
+'219085' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 85 ;
+	}
+#Emissions of nitrous acid
+'219086' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 86 ;
+	}
+#Emissions of alkanes low oh rate
+'219087' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 87 ;
+	}
+#Emissions of alkanes med oh rate
+'219088' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 88 ;
+	}
+#Emissions of alkanes high oh rate
+'219089' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 89 ;
+	}
+#Emissions of terminal alkenes
+'219090' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 90 ;
+	}
+#Emissions of internal alkenes
+'219091' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 91 ;
+	}
+#Emissions of ethylperoxy radical
+'219092' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 92 ;
+	}
+#Emissions of butadiene
+'219093' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 93 ;
+	}
+#Emissions of ethyl hydroperoxide
+'219094' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 94 ;
+	}
+#Emissions of a-pinene cyclic terpenes
+'219095' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 95 ;
+	}
+#Emissions of acetic acid
+'219096' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 96 ;
+	}
+#Emissions of d-limonene cyclic diene
+'219097' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 97 ;
+	}
+#Emissions of acetaldehyde
+'219098' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 98 ;
+	}
+#Emissions of toluene and less reactive aromatics
+'219099' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 99 ;
+	}
+#Emissions of xylene and more reactive aromatics
+'219100' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 100 ;
+	}
+#Emissions of glycolaldehyde
+'219101' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 101 ;
+	}
+#Emissions of cresol
+'219102' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 102 ;
+	}
+#Emissions of acetaldehyde and higher
+'219103' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 103 ;
+	}
+#Emissions of peracetic acid
+'219104' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 104 ;
+	}
+#Emissions of ketones
+'219105' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 105 ;
+	}
+#Emissions of hoch2ch2o2
+'219106' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 106 ;
+	}
+#Emissions of glyoxal
+'219107' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 107 ;
+	}
+#Emissions of hoch2ch2o
+'219108' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 108 ;
+	}
+#Emissions of unsaturated dicarbonyls
+'219109' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 109 ;
+	}
+#Emissions of methacrolein
+'219110' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 110 ;
+	}
+#Emissions of unsaturated hydroxy dicarbonyl
+'219111' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 111 ;
+	}
+#Emissions of isopropyldioxidanyl
+'219112' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 112 ;
+	}
+#Emissions of hydroxy ketone
+'219113' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 113 ;
+	}
+#Emissions of isopropyl hydroperoxide
+'219114' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 114 ;
+	}
+#Emissions of c3h6oho2
+'219115' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 115 ;
+	}
+#Emissions of c3h6ohooh
+'219116' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 116 ;
+	}
+#Emissions of higher organic peroxides
+'219117' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 117 ;
+	}
+#Emissions of hydroxyacetone
+'219118' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 118 ;
+	}
+#Emissions of peroxyacetic acid
+'219119' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 119 ;
+	}
+#Emissions of ch3coch2o2
+'219120' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 120 ;
+	}
+#Emissions of peroxy radical from c2h6
+'219121' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 121 ;
+	}
+#Emissions of peroxy radical from hc3
+'219122' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 122 ;
+	}
+#Emissions of peroxy radical from hc5
+'219123' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 123 ;
+	}
+#Emissions of lumped alkenes
+'219124' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 124 ;
+	}
+#Emissions of peroxy radical from hc8
+'219125' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 125 ;
+	}
+#Emissions of lumped alkanes
+'219126' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 126 ;
+	}
+#Emissions of peroxy radical from c2h4
+'219127' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 127 ;
+	}
+#Emissions of c4h8o
+'219128' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 128 ;
+	}
+#Emissions of peroxy radical from terminal alkenes
+'219129' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 129 ;
+	}
+#Emissions of c4h9o3
+'219130' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 130 ;
+	}
+#Emissions of peroxy radical from internal alkenes
+'219131' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 131 ;
+	}
+#Emissions of ch3coch(oo)ch3
+'219132' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 132 ;
+	}
+#Emissions of peroxy radical from c5h8
+'219133' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 133 ;
+	}
+#Emissions of ch3coch(ooh)ch3
+'219134' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 134 ;
+	}
+#Emissions of peroxy radical from a-pinene cyclic terpenes
+'219135' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 135 ;
+	}
+#Emissions of ch2=c(ch3)co3
+'219136' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 136 ;
+	}
+#Emissions of peroxy radical from d-limonene cyclic diene
+'219137' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 137 ;
+	}
+#Emissions of methylvinylketone
+'219138' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 138 ;
+	}
+#Emissions of phenoxy radical
+'219139' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 139 ;
+	}
+#Emissions of peroxy radical from toluene and less reactive aromatics
+'219140' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 140 ;
+	}
+#Emissions of ch3c(o)ch(oo)ch2oh
+'219141' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 141 ;
+	}
+#Emissions of peroxy radical from xylene and more reactive aromatics
+'219142' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 142 ;
+	}
+#Emissions of h3c(o)ch(ooh)ch2oh
+'219143' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 143 ;
+	}
+#Emissions of peroxy radical from cresol
+'219144' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 144 ;
+	}
+#Emissions of unsaturated pans
+'219145' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 145 ;
+	}
+#Emissions of unsaturated acyl peroxy radical
+'219146' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 146 ;
+	}
+#Emissions of peroxy radical from ketones
+'219147' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 147 ;
+	}
+#Emissions of c5h11o2
+'219148' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 148 ;
+	}
+#Emissions of no3-alkenes adduct reacting to form carbonitrates
+'219149' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 149 ;
+	}
+#Emissions of c5h11ooh
+'219150' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 150 ;
+	}
+#Emissions of no3-alkenes adduct reacting via decomposition
+'219151' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 151 ;
+	}
+#Emissions of hoch2c(ch3)=chcho
+'219152' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 152 ;
+	}
+#Emissions of c5h6o2
+'219153' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 153 ;
+	}
+#Emissions of trop sulfuric acid
+'219154' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 154 ;
+	}
+#Emissions of oxides
+'219155' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 155 ;
+	}
+#Emissions of ch2chc(ch3)(oo)ch2ono2
+'219156' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 156 ;
+	}
+#Emissions of c3 organic nitrate
+'219157' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 157 ;
+	}
+#Emissions of chlorine oxides
+'219158' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 158 ;
+	}
+#Emissions of bromine oxides
+'219159' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 159 ;
+	}
+#Emissions of hoch2c(ooh)(ch3)chchoh
+'219160' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 160 ;
+	}
+#Emissions of hoch2c(ooh)(ch3)ch=ch2
+'219161' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 161 ;
+	}
+#Emissions of lumped aromatics
+'219162' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 162 ;
+	}
+#Emissions of dimethyl sulfoxyde
+'219163' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 163 ;
+	}
+#Emissions of c7h9o5
+'219164' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 164 ;
+	}
+#Emissions of c7h10o5
+'219165' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 165 ;
+	}
+#Emissions of hydrogensulfide
+'219166' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 166 ;
+	}
+#Emissions of c7h10o6
+'219167' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 167 ;
+	}
+#Emissions of all nitrogen oxides
+'219168' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 168 ;
+	}
+#Emissions of chlorine family
+'219169' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 169 ;
+	}
+#Emissions of c10h16(oh)(oo)
+'219170' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 170 ;
+	}
+#Emissions of bromine family
+'219171' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 171 ;
+	}
+#Emissions of c10h18o3
+'219172' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 172 ;
+	}
+#Emissions of nitrogen atom
+'219173' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 173 ;
+	}
+#Emissions of chlorine monoxide
+'219174' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 174 ;
+	}
+#Emissions of chlorine atom
+'219175' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 175 ;
+	}
+#Emissions of bromine monoxide
+'219176' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 176 ;
+	}
+#Emissions of hydrogen atom
+'219177' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 177 ;
+	}
+#Emissions of methyl group
+'219178' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 178 ;
+	}
+#Emissions of aromatic-ho from toluene and less reactive aromatics
+'219179' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 179 ;
+	}
+#Emissions of aromatic-ho from xylene and more reactive aromatics
+'219180' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 180 ;
+	}
+#Emissions of ammonium nitrate
+'219181' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 181 ;
+	}
+#Emissions of aromatic-ho from csl
+'219182' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 182 ;
+	}
+#Emissions of secondary organic aerosol type 1
+'219183' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 183 ;
+	}
+#Emissions of secondary organic aerosol type 2a
+'219184' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 184 ;
+	}
+#Emissions of secondary organic aerosol type 2b
+'219185' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 185 ;
+	}
+#Emissions of condensable gas type 1
+'219186' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 186 ;
+	}
+#Emissions of condensable gas type 2a
+'219187' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 187 ;
+	}
+#Emissions of condensable gas type 2b
+'219188' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 188 ;
+	}
+#Emissions of sulfur trioxide
+'219189' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 189 ;
+	}
+#Emissions of carbonyl sulfide
+'219190' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 190 ;
+	}
+#Emissions of bromine atom
+'219191' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 191 ;
+	}
+#Emissions of bromine
+'219192' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 192 ;
+	}
+#Emissions of bromine monochloride
+'219193' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 193 ;
+	}
+#Emissions of bromine nitrate
+'219194' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 194 ;
+	}
+#Emissions of dibromomethane
+'219195' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 195 ;
+	}
+#Emissions of methoxy radical
+'219196' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 196 ;
+	}
+#Emissions of tribromomethane
+'219197' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 197 ;
+	}
+#Emissions of asymmetric chlorine dioxide radical
+'219198' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 198 ;
+	}
+#Emissions of hydrogen
+'219199' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 199 ;
+	}
+#Emissions of hydrogen chloride
+'219200' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 200 ;
+	}
+#Emissions of formyl radical
+'219201' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 201 ;
+	}
+#Emissions of hydrogen fluoride
+'219202' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 202 ;
+	}
+#Emissions of oxygen atom
+'219203' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 203 ;
+	}
+#Emissions of excited oxygen atom
+'219204' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 204 ;
+	}
+#Emissions of ground state oxygen atom
+'219205' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 205 ;
+	}
+#Emissions of stratospheric aerosol
+'219206' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 206 ;
+	}
 #Ozone deposition velocity
 '221001' = {
 	 discipline = 192 ;
