@@ -11729,6 +11729,90 @@
 	 parameterCategory = 219 ;
 	 parameterNumber = 206 ;
 	}
+#Wildfire flux of paraffins
+'219207' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 207 ;
+	}
+#Wildfire flux of olefines
+'219208' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 208 ;
+	}
+#Wildfire flux of aldehydes
+'219209' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 209 ;
+	}
+#Wildfire flux of ketones
+'219210' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 210 ;
+	}
+#Wildfire flux of f a-pinene cyclic terpenes
+'219211' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 211 ;
+	}
+#Wildfire flux of  toluene less reactive aromatics
+'219212' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 212 ;
+	}
+#Wildfire flux of xylene more reactive aromatics
+'219213' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 213 ;
+	}
+#Wildfire flux of d-limonene cyclic diene
+'219214' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 214 ;
+	}
+#Wildfire flux of  terminal alkenes
+'219215' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 215 ;
+	}
+#Wildfire flux of  alkanes low oh rate
+'219216' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 216 ;
+	}
+#Wildfire flux of alkanes med oh rate
+'219217' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 217 ;
+	}
+#Wildfire flux of alkanes high oh rate
+'219218' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 218 ;
+	}
+#Wildfire flux of hydrogen cyanide
+'219219' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 219 ;
+	}
+#Wildfire flux of acetonitrile
+'219220' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 220 ;
+	}
 #Ozone deposition velocity
 '221001' = {
 	 discipline = 192 ;

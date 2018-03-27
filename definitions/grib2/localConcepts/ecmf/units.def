@@ -11729,6 +11729,90 @@
 	 parameterCategory = 219 ;
 	 parameterNumber = 206 ;
 	}
+#Wildfire flux of paraffins
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 207 ;
+	}
+#Wildfire flux of olefines
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 208 ;
+	}
+#Wildfire flux of aldehydes
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 209 ;
+	}
+#Wildfire flux of ketones
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 210 ;
+	}
+#Wildfire flux of f a-pinene cyclic terpenes
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 211 ;
+	}
+#Wildfire flux of  toluene less reactive aromatics
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 212 ;
+	}
+#Wildfire flux of xylene more reactive aromatics
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 213 ;
+	}
+#Wildfire flux of d-limonene cyclic diene
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 214 ;
+	}
+#Wildfire flux of  terminal alkenes
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 215 ;
+	}
+#Wildfire flux of  alkanes low oh rate
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 216 ;
+	}
+#Wildfire flux of alkanes med oh rate
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 217 ;
+	}
+#Wildfire flux of alkanes high oh rate
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 218 ;
+	}
+#Wildfire flux of hydrogen cyanide
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 219 ;
+	}
+#Wildfire flux of acetonitrile
+'kg m**-2 s**-1' = {
+	 discipline = 192 ;
+	 parameterCategory = 219 ;
+	 parameterNumber = 220 ;
+	}
 #Ozone deposition velocity
 'm s**-1' = {
 	 discipline = 192 ;
