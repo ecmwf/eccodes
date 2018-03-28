@@ -1353,7 +1353,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot expand bounding box: %s\n",grib_get_error_message(*err));
             goto cleanup;
         }
-        print_values(h->context,spec,data_values,data_values_count,values,count);
     }
 
     if((*err = grib_set_values(outh,values,count)) != 0)
