@@ -10494,337 +10494,337 @@
 	 parameterNumber = 206 ;
 	}
 #Ozone emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 1 ;
 	}
 #Nitrogen oxides emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 2 ;
 	}
 #Hydrogen peroxide emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 3 ;
 	}
 #Methane emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 4 ;
 	}
 #Carbon monoxide emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 5 ;
 	}
 #Nitric acid emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 6 ;
 	}
 #Methyl peroxide emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 7 ;
 	}
 #Formaldehyde emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 8 ;
 	}
 #Paraffins emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 9 ;
 	}
 #Ethene emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 10 ;
 	}
 #Olefins emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 11 ;
 	}
 #Aldehydes emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 12 ;
 	}
 #Peroxyacetyl nitrate emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 13 ;
 	}
 #Peroxides emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 14 ;
 	}
 #Organic nitrates emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 15 ;
 	}
 #Isoprene emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 16 ;
 	}
 #Sulfur dioxide emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 17 ;
 	}
 #Dimethyl sulfide emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 18 ;
 	}
 #Ammonia emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 19 ;
 	}
 #Sulfate emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 20 ;
 	}
 #Ammonium emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 21 ;
 	}
 #Methane sulfonic acid emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 22 ;
 	}
 #Methyl glyoxal emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 23 ;
 	}
 #Stratospheric ozone emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 24 ;
 	}
 #Radon emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 25 ;
 	}
 #Lead emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 26 ;
 	}
 #Nitrogen monoxide emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 27 ;
 	}
 #Hydroperoxy radical emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 28 ;
 	}
 #Methylperoxy radical emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 29 ;
 	}
 #Hydroxyl radical emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 30 ;
 	}
 #Nitrogen dioxide emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 31 ;
 	}
 #Nitrate radical emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 32 ;
 	}
 #Dinitrogen pentoxide emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 33 ;
 	}
 #Pernitric acid emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 34 ;
 	}
 #Peroxy acetyl radical emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 35 ;
 	}
 #Organic ethers emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 36 ;
 	}
 #PAR budget corrector emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 37 ;
 	}
 #NO to NO2 operator emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 38 ;
 	}
 #NO to alkyl nitrate operator emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 39 ;
 	}
 #Amine emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 40 ;
 	}
 #Polar stratospheric cloud emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 41 ;
 	}
 #Methanol emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 42 ;
 	}
 #Formic acid emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 43 ;
 	}
 #Methacrylic acid emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 44 ;
 	}
 #Ethane emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 45 ;
 	}
 #Ethanol emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 46 ;
 	}
 #Propane emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 47 ;
 	}
 #Propene emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 48 ;
 	}
 #Terpenes emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 49 ;
 	}
 #Methacrolein MVK  emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 50 ;
 	}
 #Nitrate emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 51 ;
 	}
 #Acetone emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 52 ;
 	}
 #Acetone product emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 53 ;
 	}
 #IC3H7O2 emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 54 ;
 	}
 #HYPROPO2 emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 55 ;
 	}
 #Nitrogen oxides Transp emissions
-'kg m**-2' = {
+'kg m**-2 s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 219 ;
 	 parameterNumber = 56 ;
