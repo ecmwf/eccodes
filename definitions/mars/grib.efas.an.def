@@ -1,9 +1,8 @@
+# EFAS analysis (water balance)
 alias mars.step = startStep;
 
 alias mars.date = dateOfForecast;
 alias mars.time = timeOfForecast;
-
-# Water Balance
 
 #meta efas_suite_name sprintf("%s_%s_%s", inputOriginatingCentre, efas_forecast, efas_post_proc) : no_copy;
 alias mars.origin = inputOriginatingCentre;

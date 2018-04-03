@@ -1,9 +1,6 @@
-alias mars.step = startStep;
-
+# EFAS Gridded observations
 alias mars.date = dateOfForecast;
 alias mars.time = timeOfForecast;
-
-# Gridded observations
 
 alias mars.origin = inputOriginatingCentre;
 

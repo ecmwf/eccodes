@@ -64,6 +64,23 @@ ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=41,yearOfFor
   $sample $temp1
 grib_check_key_equals $temp1 anoffset 25
 
+# ECC-663: MARS step
+types="an fu"
+for t in $types; do
+  ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=41,type=$t,stepType=accum,stepRange=12-36,paramId=260268 \
+  $sample $temp1
+  grib_check_key_equals $temp1 mars.step 12 # start step
+  #${tools_dir}/grib_dump -Da $temp1 | grep mars.step
+done
+
+types="go fc pf cf"
+for t in $types; do
+  ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=41,type=$t,stepType=accum,stepRange=12-36,paramId=260268 \
+  $sample $temp1
+  grib_check_key_equals $temp1 mars.step 36 # end step
+  #${tools_dir}/grib_dump -Da $temp1 | grep mars.step
+done
+
 
 # Clean up
 rm -f $sample $temp1 $temp2 $temp3
