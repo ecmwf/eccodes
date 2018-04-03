@@ -63,6 +63,7 @@ ${tools_dir}/grib_set -s paramId=260267 $temp1 $temp2
 ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=41,yearOfForecast=2007,monthOfForecast=3,dayOfForecast=24,hourOfForecast=13 \
   $sample $temp1
 grib_check_key_equals $temp1 anoffset 25
+grib_check_key_equals $temp1 anoffsetFirst,anoffsetLast,anoffsetFrequency "MISSING MISSING MISSING"
 
 # ECC-663: MARS step
 types="an fu"
