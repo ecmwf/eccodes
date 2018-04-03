@@ -916,8 +916,9 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             return h;
         }
 
-        if (h->context->debug==-1)
+        if (h->context->debug==-1) {
             print_values(h->context,spec,data_values,data_values_count,values,count);
+        }
 
         if((*err = grib_set_values(h,values,count)) != 0)
         {
