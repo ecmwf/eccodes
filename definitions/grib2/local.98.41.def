@@ -36,6 +36,11 @@ meta _anoffset round(diffInHours, 10): dump,long_type;
 transient anoffset = _anoffset; # needed to force anoffset to be integer
 alias local.anoffset = anoffset;
 
+# ECC-662
+unsigned[2] anoffsetFirst     = missing(): dump, can_be_missing;
+unsigned[2] anoffsetLast      = missing(): dump, can_be_missing;
+unsigned[2] anoffsetFrequency = missing(): dump, can_be_missing;
+
 # Boolean
 transient is_efas = 1;
 
