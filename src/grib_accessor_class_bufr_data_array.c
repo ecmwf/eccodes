@@ -310,6 +310,7 @@ static void tableB_override_clear(grib_context* c, grib_accessor_bufr_data_array
     }
     self->tableb_override=NULL;
 }
+/*
 static void tableB_override_dump(grib_accessor_bufr_data_array *self)
 {
     bufr_tableb_override* p = self->tableb_override;
@@ -320,6 +321,7 @@ static void tableB_override_dump(grib_accessor_bufr_data_array *self)
         ++i;
     }
 }
+*/
 
 static void init(grib_accessor* a,const long v, grib_arguments* params)
 {
@@ -2513,7 +2515,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                     if (descriptors[i]->Y == 255) {
                         grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Y=255, definition of new reference values is concluded");
                         self->change_ref_value_operand = 255;
-                        if (c->debug == -1) tableB_override_dump(self);
+                        /*if (c->debug) tableB_override_dump(self);*/
                     } else if (descriptors[i]->Y == 0) {
                         grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Y=0, clearing override of table B");
                         tableB_override_clear(c, self);
