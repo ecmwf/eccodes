@@ -323,6 +323,9 @@ static void tableB_override_dump(grib_accessor_bufr_data_array *self)
 }
 */
 
+#define DYN_ARRAY_SIZE_INIT 1000 /* Initial size for grib_iarray_new and grib_darray_new */
+#define DYN_ARRAY_SIZE_INCR 1000 /* Increment size for grib_iarray_new and grib_darray_new */
+
 static void init(grib_accessor* a,const long v, grib_arguments* params)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
@@ -554,7 +557,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
       dval=GRIB_MISSING_DOUBLE;
       lval=0;
       grib_context_log(c, GRIB_LOG_DEBUG," modifiedWidth=%ld lval=%ld dval=%g", modifiedWidth,lval,dval);
-      ret=grib_darray_new(c,100,100);
+      ret=grib_darray_new(c,DYN_ARRAY_SIZE_INIT,DYN_ARRAY_SIZE_INCR);
       grib_darray_push(c,ret,dval);
       *err=0;
       return ret;
@@ -563,14 +566,14 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
     localReference=(long)lval+modifiedReference;
     localWidth=grib_decode_unsigned_long(data,pos,6);
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tlocalWidth=%ld",localWidth);
-    ret=grib_darray_new(c,100,100);
+    ret=grib_darray_new(c,DYN_ARRAY_SIZE_INIT,DYN_ARRAY_SIZE_INCR);
     if (localWidth) {
         CHECK_END_DATA_RETURN(c, self, localWidth*self->numberOfSubsets, NULL);
         if (*err) {
           dval=GRIB_MISSING_DOUBLE;
           lval=0;
           grib_context_log(c, GRIB_LOG_DEBUG," modifiedWidth=%ld lval=%ld dval=%g", modifiedWidth,lval,dval);
-          ret=grib_darray_new(c,100,100);
+          ret=grib_darray_new(c,DYN_ARRAY_SIZE_INIT,DYN_ARRAY_SIZE_INCR);
           grib_darray_push(c,ret,dval);
           *err=0;
           return ret;
@@ -2432,9 +2435,9 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data processing: subsetNumber=%ld", iss+1);
 
         if (flag!=PROCESS_ENCODE) {
-            elementsDescriptorsIndex=grib_iarray_new(c,100,100);
+            elementsDescriptorsIndex=grib_iarray_new(c,DYN_ARRAY_SIZE_INIT,DYN_ARRAY_SIZE_INCR);
             if (!self->compressedData) {
-                dval=grib_darray_new(c,100,100);
+                dval=grib_darray_new(c,DYN_ARRAY_SIZE_INIT,DYN_ARRAY_SIZE_INCR);
                 /* sval=grib_sarray_new(c,10,10); */
             }
         } else {
