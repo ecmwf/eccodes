@@ -23,6 +23,9 @@ transient inputShortDelayedDescriptorReplicationFactor={-1} : hidden;
 
 transient inputDataPresentIndicator={-1} : hidden;
 
+# For operator 203YYY: Table B override
+transient overriddenReferenceValues={0} : hidden;
+
 transient extractSubset=-1 : hidden;
 transient extractSubsetList={-1} : hidden;
 transient extractSubsetIntervalStart=-1 : hidden;

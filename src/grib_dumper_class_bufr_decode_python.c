@@ -547,6 +547,7 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
 {
     size_t size=0;
     if (grib_get_size(h,key,&size)==GRIB_NOT_FOUND) return;
+    if (size==0) return;
 
     fprintf(f,"    iVals = codes_get_array(ibufr, '%s')\n",print_key);
 }
@@ -566,6 +567,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         _dump_long_array(h,self->dumper.out,"delayedDescriptorReplicationFactor","inputDelayedDescriptorReplicationFactor");
         _dump_long_array(h,self->dumper.out,"shortDelayedDescriptorReplicationFactor","inputShortDelayedDescriptorReplicationFactor");
         _dump_long_array(h,self->dumper.out,"extendedDelayedDescriptorReplicationFactor","inputExtendedDelayedDescriptorReplicationFactor");
+        _dump_long_array(h,self->dumper.out,"overriddenReferenceValues","overriddenReferenceValues");
         grib_dump_accessors_block(d,block);
         depth-=2;
     } else if (!grib_inline_strcmp(a->name,"groupNumber")) {

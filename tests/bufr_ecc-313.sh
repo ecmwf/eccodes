@@ -35,6 +35,7 @@ cat > $tempRules <<EOF
  set unpack=1;
  print "h1=[heightOfStationGroundAboveMeanSeaLevel]";
  print "h2=[heightOfBarometerAboveMeanSeaLevel]";
+ print "rv=[overriddenReferenceValues]";
 EOF
 
 ${tools_dir}/codes_bufr_filter $tempRules $input > $tempOut
@@ -62,8 +63,10 @@ h2=11 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100
 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -387 -1e+100 -1e+100 
 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 938 -1e+100 -1e+100 
 -1e+100 -1e+100
+rv=-5000 -5000
 EOF
 
 diff $tempRef $tempOut
+
 
 rm -f $tempRules $tempRef $tempOut

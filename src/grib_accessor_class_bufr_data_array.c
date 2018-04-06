@@ -310,6 +310,26 @@ static void tableB_override_clear(grib_context* c, grib_accessor_bufr_data_array
     }
     self->tableb_override=NULL;
 }
+/* Operator 203YYY: Copy contents of linked list to the transient array key */
+static int tableB_override_set_key(grib_handle* h, grib_accessor_bufr_data_array *self)
+{
+    int err = GRIB_SUCCESS;
+    size_t size = 0;
+    long* refVals = NULL;
+    grib_iarray* refValArray = grib_iarray_new(h->context, 10, 10);
+    bufr_tableb_override* p = self->tableb_override;
+    while (p) {
+        grib_iarray_push(refValArray, p->new_ref_val);
+        p = p->next;
+    }
+    size = grib_iarray_used_size(refValArray);
+    if (size > 0) {
+        refVals = grib_iarray_get_array(refValArray);
+        err=grib_set_long_array(h, "overriddenReferenceValues", refVals, size);
+    }
+    grib_iarray_delete(refValArray);
+    return err;
+}
 /*
 static void tableB_override_dump(grib_accessor_bufr_data_array *self)
 {
@@ -2519,6 +2539,11 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                         grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Y=255, definition of new reference values is concluded");
                         self->change_ref_value_operand = 255;
                         /*if (c->debug) tableB_override_dump(self);*/
+                        if (iss == 0) {
+                            /*Write out the contents of the TableB overridden reference values to the transient array key*/
+                            err = tableB_override_set_key(h, self);
+                            if (err) return err;
+                        }
                     } else if (descriptors[i]->Y == 0) {
                         grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Y=0, clearing override of table B");
                         tableB_override_clear(c, self);
