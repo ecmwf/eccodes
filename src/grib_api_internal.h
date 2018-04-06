@@ -10,7 +10,7 @@
 
 /**
     include private headers used for all internal functions of
-    grib_api, not seen by the user of the API
+    ecCodes, not seen by the user of the API
   */
 
 #ifndef grib_api_internal_H
@@ -1505,7 +1505,6 @@ typedef struct j2k_encode_helper {
   unsigned char*   jpeg_buffer;
 
 } j2k_encode_helper;
-
 
 #include "grib_api_prototypes.h"
 
