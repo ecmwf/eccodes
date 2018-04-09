@@ -65,6 +65,9 @@
    MEMBERS    = grib_trie_with_rank* dataAccessorsTrie
    MEMBERS    = grib_sarray* tempStrings
    MEMBERS    = int change_ref_value_operand
+   MEMBERS    = size_t refValListSize
+   MEMBERS    = long* refValList
+   MEMBERS    = long refValIndex
    MEMBERS    = bufr_tableb_override* tableb_override
 
    END_CLASS_DEF
@@ -140,6 +143,9 @@ typedef struct grib_accessor_bufr_data_array {
 	grib_trie_with_rank* dataAccessorsTrie;
 	grib_sarray* tempStrings;
 	int change_ref_value_operand;
+    size_t refValListSize;
+    long* refValList;
+    long refValIndex;
 	bufr_tableb_override* tableb_override;
 } grib_accessor_bufr_data_array;
 
@@ -330,6 +336,22 @@ static int tableB_override_set_key(grib_handle* h, grib_accessor_bufr_data_array
     grib_iarray_delete(refValArray);
     return err;
 }
+/* Check numBits is sufficient for entries in the overridden reference values list*/
+static int check_overridden_reference_values(const grib_context *c, long* refValList, size_t refValListSize, int numBits)
+{
+    const long maxval = (1 << (numBits-1))-1;
+    const long minval = -(1 << (numBits-1));
+    size_t i=0;
+    for(i=0; i<refValListSize; ++i) {
+        grib_context_log(c, GRIB_LOG_DEBUG, "check_overridden_reference_values: refValList[%ld]=%ld", i,refValList[i]);
+        if (refValList[i] < minval || refValList[i] > maxval) {
+            grib_context_log(c, GRIB_LOG_ERROR, "Overridden reference value: entry %d (%ld) does not fit in %d bits (specified by operator 203)",
+                    refValList[i], i, numBits);
+            return GRIB_OUT_OF_RANGE;
+        }
+    }
+    return GRIB_SUCCESS;
+}
 /*
 static void tableB_override_dump(grib_accessor_bufr_data_array *self)
 {
@@ -371,8 +393,11 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
     self->expanded=0;
     self->expandedAccessor=0;
     self->dataAccessorsTrie=0;
-    self->change_ref_value_operand=0; /* 0, 255 or YYY */
-    self->tableb_override = NULL;
+    self->change_ref_value_operand=0; /* Operator 203YYY: 0, 255 or YYY */
+    self->refValListSize = 0;         /* Operator 203YYY: size of overridden reference values array */
+    self->refValList=NULL;            /* Operator 203YYY: overridden reference values array */
+    self->refValIndex=0;              /* Operator 203YYY: index into overridden reference values array */
+    self->tableb_override = NULL;     /* Operator 203YYY: Table B lookup linked list */
 
     a->length=0;
     self->bitsToEndData=get_length(a)*8;
@@ -417,6 +442,9 @@ static void self_clear(grib_context* c,grib_accessor_bufr_data_array* self)
     if (self->inputExtendedReplications) grib_context_free(c,self->inputExtendedReplications);
     if (self->inputShortReplications) grib_context_free(c,self->inputShortReplications);
     self->change_ref_value_operand = 0;
+    self->refValListSize = 0;
+    if (self->refValList) grib_context_free(c, self->refValList);
+    self->refValIndex=0;
     tableB_override_clear(c, self);
 }
 
@@ -1002,7 +1030,7 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         }
     } else {
         /* numeric or codetable or flagtable */
-        /* Operator 203: Check if we have changed ref value for this element. If so modify bd->reference */
+        /* Operator 203YYY: Check if we have changed ref value for this element. If so modify bd->reference */
         if (self->change_ref_value_operand!=0 && tableB_override_get_ref_val(self, bd->code, &(bd->reference)) == GRIB_SUCCESS) {
             grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: For code %6.6ld, changed ref val: %ld", bd->code, bd->reference);
         }
@@ -1108,6 +1136,26 @@ static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* sel
 
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: \tcode=%6.6ld width=%ld pos=%ld ulength=%ld ulength_bits=%ld",
             bd->code,bd->width,(long)*pos,buff->ulength,buff->ulength_bits);
+
+    if (self->change_ref_value_operand > 0 && self->change_ref_value_operand != 255) {
+        /* Operator 203YYY: Change Reference Values: Encoding definition phase */
+        long currRefVal=-1;
+        long numBits = self->change_ref_value_operand;
+        Assert( self->refValListSize > 0 );
+        Assert( self->refValIndex < self->refValListSize );
+        currRefVal = self->refValList[self->refValIndex];
+        grib_context_log(c,GRIB_LOG_DEBUG, "encode_new_element: Operator 203YYY: writing ref val %ld (self->refValIndex=%ld)",
+                currRefVal, self->refValIndex);
+        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+numBits);
+        err = grib_encode_signed_longb(buff->data, currRefVal, pos, numBits);
+        if (err) {
+            grib_context_log(c,GRIB_LOG_ERROR,"encoding overridden reference value %ld for %s (code=%6.6ld)",
+                    currRefVal, bd->shortName, bd->code);
+        }
+        self->refValIndex++;
+        return err;
+    }
+
     if (bd->type==BUFR_DESCRIPTOR_TYPE_STRING) {
         /* string */
         slen=bd->width/8;
@@ -1209,6 +1257,26 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
 
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: -%ld- \tcode=%6.6ld width=%ld pos=%ld ulength=%ld ulength_bits=%ld",
             i,bd->code,bd->width,(long)*pos,buff->ulength,buff->ulength_bits);
+
+    if (self->change_ref_value_operand > 0 && self->change_ref_value_operand != 255) {
+        /* Operator 203YYY: Change Reference Values: Encoding definition phase */
+        long currRefVal=-1;
+        long numBits = self->change_ref_value_operand;
+        Assert( self->refValListSize > 0 );
+        Assert( self->refValIndex < self->refValListSize );
+        currRefVal = self->refValList[self->refValIndex];
+        grib_context_log(c,GRIB_LOG_DEBUG, "encode_element: Operator 203YYY: writing ref val %ld (self->refValIndex=%ld)",
+                        currRefVal, self->refValIndex);
+        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+numBits);
+        err = grib_encode_signed_longb(buff->data, currRefVal, pos, numBits);
+        if (err) {
+            grib_context_log(c,GRIB_LOG_ERROR,"encoding overridden reference value %ld for %s (code=%6.6ld)",
+                    currRefVal, bd->shortName, bd->code);
+        }
+        self->refValIndex++;
+        return err;
+    }
+
     if (bd->type==BUFR_DESCRIPTOR_TYPE_STRING) {
         /* string */
         /* grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data encoding: \t %s = %s",
@@ -2404,6 +2472,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         subsetList=(long*)grib_context_malloc_clear(c,subsetListSize*sizeof(long));
         err=grib_get_long_array(grib_handle_of_accessor(a),"extractSubsetList",subsetList,&subsetListSize);
         if (err) return err;
+
         codec_replication=&encode_replication;
         break;
     default :
@@ -2431,6 +2500,17 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         self->elementsDescriptorsIndex=grib_viarray_new(c,100,100);
     }
 
+    if (flag != PROCESS_DECODE) {      /* Operator 203YYY: key "overriddenReferenceValues" */
+        err=grib_get_size(h, "overriddenReferenceValues", &self->refValListSize);
+        if (err) return err;
+        if (self->refValList) grib_context_free(c, self->refValList);
+        if (self->refValListSize > 0) {
+            self->refValList=(long*)grib_context_malloc_clear(c, self->refValListSize*sizeof(long));
+            err=grib_get_long_array(grib_handle_of_accessor(a),"overriddenReferenceValues", self->refValList, &self->refValListSize);
+            if (err) return err;
+        }
+    }
+
     numberOfDescriptors=grib_bufr_descriptors_array_used_size(self->expanded);
 
     if (self->iss_list) {
@@ -2453,6 +2533,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         }
 
         grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data processing: subsetNumber=%ld", iss+1);
+        self->refValIndex = 0;
 
         if (flag!=PROCESS_ENCODE) {
             elementsDescriptorsIndex=grib_iarray_new(c,DYN_ARRAY_SIZE_INIT,DYN_ARRAY_SIZE_INCR);
@@ -2531,15 +2612,15 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
 
                 case 3:
                     /* Change reference values */
-                    if (flag != PROCESS_DECODE) {
-                        grib_context_log(c,GRIB_LOG_ERROR,"process_elements: operator %d supported for decoding only",descriptors[i]->X);
-                        return GRIB_INTERNAL_ERROR;
-                    }
+                    //if (flag != PROCESS_DECODE) {
+                    //    grib_context_log(c,GRIB_LOG_ERROR,"process_elements: operator %d supported for decoding only",descriptors[i]->X);
+                    //    return GRIB_INTERNAL_ERROR;
+                    //}
                     if (descriptors[i]->Y == 255) {
                         grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Y=255, definition of new reference values is concluded");
                         self->change_ref_value_operand = 255;
                         /*if (c->debug) tableB_override_dump(self);*/
-                        if (iss == 0) {
+                        if (iss == 0 && flag == PROCESS_DECODE) {
                             /*Write out the contents of the TableB overridden reference values to the transient array key*/
                             err = tableB_override_set_key(h, self);
                             if (err) return err;
@@ -2549,9 +2630,14 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                         tableB_override_clear(c, self);
                         self->change_ref_value_operand = 0;
                     } else {
-                        grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Definition phase: Num bits=%d",descriptors[i]->Y);
-                        self->change_ref_value_operand = descriptors[i]->Y;
+                        const int numBits = descriptors[i]->Y;
+                        grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Definition phase: Num bits=%d", numBits);
+                        self->change_ref_value_operand = numBits;
                         tableB_override_clear(c, self);
+                        if (flag != PROCESS_DECODE) {
+                            err = check_overridden_reference_values(c, self->refValList, self->refValListSize, numBits);
+                            if (err) return err;
+                        }
                     }
                     /*grib_iarray_push(elementsDescriptorsIndex,i);*/
                     if (decoding) push_zero_element(self,dval);
