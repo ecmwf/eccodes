@@ -811,7 +811,7 @@ struct bufr_descriptors_map_list {
   bufr_descriptors_map_list* next;
 };
 
-/* BUFR: operator 203: Table B changed reference values */
+/* BUFR: Operator 203YYY: Linked list storing Table B changed reference values */
 typedef struct bufr_tableb_override bufr_tableb_override;
 struct bufr_tableb_override {
   bufr_tableb_override* next;
