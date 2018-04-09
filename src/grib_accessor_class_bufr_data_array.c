@@ -332,6 +332,7 @@ static int tableB_override_set_key(grib_handle* h, grib_accessor_bufr_data_array
     if (size > 0) {
         refVals = grib_iarray_get_array(refValArray);
         err=grib_set_long_array(h, "overriddenReferenceValues", refVals, size);
+        grib_context_free(h->context, refVals);
     }
     grib_iarray_delete(refValArray);
     return err;
