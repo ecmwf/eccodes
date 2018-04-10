@@ -39,7 +39,7 @@ ${tools_dir}/codes_bufr_filter -o $tempBufr $tempRules $input
 cat > $tempRules <<EOF
  set unpack=1;
  print " numSubs=[numberOfSubsets]";
- print " refVals={[overriddenReferenceValues',']}";
+ print " refVals={[inputOverriddenReferenceValues',']}";
  print " height=[heightOfStationGroundAboveMeanSeaLevel]";
  print " height->ref=[heightOfStationGroundAboveMeanSeaLevel->reference]";
 EOF

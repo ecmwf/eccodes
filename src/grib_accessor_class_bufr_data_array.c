@@ -232,6 +232,8 @@ static void init_class(grib_accessor_class* c)
 #define PROCESS_NEW_DATA   1
 #define PROCESS_ENCODE     2
 
+#define OVERRIDDEN_REFERENCE_VALUES_KEY "inputOverriddenReferenceValues"
+
 #ifdef ECCODES_ON_WINDOWS
 #define round(a) ( (a) >=0 ? ((a)+0.5) : ((a)-0.5) )
 #endif
@@ -331,7 +333,7 @@ static int tableB_override_set_key(grib_handle* h, grib_accessor_bufr_data_array
     size = grib_iarray_used_size(refValArray);
     if (size > 0) {
         refVals = grib_iarray_get_array(refValArray);
-        err=grib_set_long_array(h, "overriddenReferenceValues", refVals, size);
+        err=grib_set_long_array(h, OVERRIDDEN_REFERENCE_VALUES_KEY, refVals, size);
         grib_context_free(h->context, refVals);
     }
     grib_iarray_delete(refValArray);
@@ -2515,13 +2517,13 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         self->elementsDescriptorsIndex=grib_viarray_new(c,100,100);
     }
 
-    if (flag != PROCESS_DECODE) {      /* Operator 203YYY: key "overriddenReferenceValues" */
-        err=grib_get_size(h, "overriddenReferenceValues", &self->refValListSize);
+    if (flag != PROCESS_DECODE) {      /* Operator 203YYY: key OVERRIDDEN_REFERENCE_VALUES_KEY */
+        err=grib_get_size(h, OVERRIDDEN_REFERENCE_VALUES_KEY, &self->refValListSize);
         if (err) return err;
         if (self->refValList) grib_context_free(c, self->refValList);
         if (self->refValListSize > 0) {
             self->refValList=(long*)grib_context_malloc_clear(c, self->refValListSize*sizeof(long));
-            err=grib_get_long_array(grib_handle_of_accessor(a),"overriddenReferenceValues", self->refValList, &self->refValListSize);
+            err=grib_get_long_array(grib_handle_of_accessor(a),OVERRIDDEN_REFERENCE_VALUES_KEY, self->refValList, &self->refValListSize);
             if (err) return err;
         }
     }

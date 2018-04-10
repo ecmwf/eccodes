@@ -618,8 +618,8 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         _dump_long_array(h,self->dumper.out,"delayedDescriptorReplicationFactor","inputDelayedDescriptorReplicationFactor");
         _dump_long_array(h,self->dumper.out,"shortDelayedDescriptorReplicationFactor","inputShortDelayedDescriptorReplicationFactor");
         _dump_long_array(h,self->dumper.out,"extendedDelayedDescriptorReplicationFactor","inputExtendedDelayedDescriptorReplicationFactor");
-        /* Do not show the overriddenReferenceValues array. That's more for ENCODING */
-        /*_dump_long_array(h,self->dumper.out,"overriddenReferenceValues","overriddenReferenceValues");*/
+        /* Do not show the inputOverriddenReferenceValues array. That's more for ENCODING */
+        /*_dump_long_array(h,self->dumper.out,"inputOverriddenReferenceValues","inputOverriddenReferenceValues");*/
         grib_dump_accessors_block(d,block);
         depth-=2;
     } else if (!grib_inline_strcmp(a->name,"groupNumber")) {

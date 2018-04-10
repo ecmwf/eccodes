@@ -24,14 +24,16 @@ transient inputShortDelayedDescriptorReplicationFactor={-1} : hidden;
 transient inputDataPresentIndicator={-1} : hidden;
 
 # For operator 203YYY: Table B override
-transient overriddenReferenceValues={0} : hidden;
+transient inputOverriddenReferenceValues={0} : hidden;
 
 transient extractSubset=-1 : hidden;
 transient extractSubsetList={-1} : hidden;
 transient extractSubsetIntervalStart=-1 : hidden;
 transient extractSubsetIntervalEnd=-1 : hidden;
 
-meta doExtractSubsets bufr_extract_subsets(numericValues,pack,numberOfSubsets,extractSubset,extractSubsetIntervalStart,extractSubsetIntervalEnd,extractSubsetList)=0 : hidden;
+meta doExtractSubsets bufr_extract_subsets(
+    numericValues,pack,numberOfSubsets,extractSubset,extractSubsetIntervalStart,extractSubsetIntervalEnd,
+    extractSubsetList)=0 : hidden;
 
 transient extractAreaWestLongitude=1.1 : hidden;
 transient extractAreaEastLongitude=1.1 : hidden;
@@ -52,8 +54,9 @@ transient extractDateTimeDayStart=1 : hidden;
 transient extractDateTimeHourStart=1 : hidden;
 transient extractDateTimeMinuteStart=1 : hidden;
 transient extractDateTimeSecondStart=1 : hidden;
-meta extractDateTimeStart julian_date(extractDateTimeYearStart,extractDateTimeMonthStart,extractDateTimeDayStart,
-                                        extractDateTimeHourStart,extractDateTimeMinuteStart,extractDateTimeSecondStart) : hidden;
+meta extractDateTimeStart julian_date(
+    extractDateTimeYearStart,extractDateTimeMonthStart,extractDateTimeDayStart,
+    extractDateTimeHourStart,extractDateTimeMinuteStart,extractDateTimeSecondStart) : hidden;
 
 transient extractDateTimeYearEnd=2016 : hidden;
 transient extractDateTimeMonthEnd=1 : hidden;
@@ -61,8 +64,9 @@ transient extractDateTimeDayEnd=1 : hidden;
 transient extractDateTimeHourEnd=1 : hidden;
 transient extractDateTimeMinuteEnd=1 : hidden;
 transient extractDateTimeSecondEnd=1 : hidden;
-meta extractDateTimeEnd julian_date(extractDateTimeYearEnd,extractDateTimeMonthEnd,extractDateTimeDayEnd,
-                                        extractDateTimeHourEnd,extractDateTimeMinuteEnd,extractDateTimeSecondEnd) : hidden;
+meta extractDateTimeEnd julian_date(
+    extractDateTimeYearEnd,extractDateTimeMonthEnd,extractDateTimeDayEnd,
+    extractDateTimeHourEnd,extractDateTimeMinuteEnd,extractDateTimeSecondEnd) : hidden;
 
 transient extractDateTimeYearRank=1 : hidden;
 transient extractDateTimeMonthRank=1 : hidden;
@@ -77,7 +81,9 @@ meta doExtractDateTime bufr_extract_datetime_subsets(doExtractSubsets,numberOfSu
 transient simpleThinningStart=1 : hidden;
 transient simpleThinningMissingRadius=0 : hidden;
 transient simpleThinningSkip=1 : hidden;
-meta doSimpleThinning bufr_simple_thinning(doExtractSubsets,numberOfSubsets,extractSubsetList,simpleThinningStart,simpleThinningMissingRadius,simpleThinningSkip)=0 : hidden;
+meta doSimpleThinning bufr_simple_thinning(
+    doExtractSubsets,numberOfSubsets,extractSubsetList,simpleThinningStart,simpleThinningMissingRadius,
+    simpleThinningSkip)=0 : hidden;
 
 transient userDateStart = 0 : hidden;
 transient userTimeStart = 0 : hidden;

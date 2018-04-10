@@ -33,7 +33,7 @@ cat > $tempRules <<EOF
  set unpack=1;
  print "h1=[heightOfStationGroundAboveMeanSeaLevel]";
  print "h2=[heightOfBarometerAboveMeanSeaLevel]";
- print "rv=[overriddenReferenceValues]";
+ print "rv=[inputOverriddenReferenceValues]";
  print "rf1=[#1#heightOfStationGroundAboveMeanSeaLevel->reference]";
 EOF
 
