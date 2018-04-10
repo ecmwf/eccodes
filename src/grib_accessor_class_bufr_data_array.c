@@ -1142,8 +1142,15 @@ static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* sel
         /* Operator 203YYY: Change Reference Values: Encoding definition phase */
         long currRefVal=-1;
         long numBits = self->change_ref_value_operand;
-        Assert( self->refValListSize > 0 );
-        Assert( self->refValIndex < self->refValListSize );
+        if ( self->refValListSize == 0 ) {
+            grib_context_log(c, GRIB_LOG_ERROR,"encode_new_element: Overridden Reference Values array is empty!");
+            return GRIB_ENCODING_ERROR;
+        }
+        if ( self->refValIndex >= self->refValListSize ) {
+            grib_context_log(c, GRIB_LOG_ERROR,"encode_new_element: Overridden Reference Values error: index=%ld, size=%ld",
+                self->refValIndex, self->refValListSize);
+            return GRIB_ENCODING_ERROR;
+        }
         currRefVal = self->refValList[self->refValIndex];
         grib_context_log(c,GRIB_LOG_DEBUG, "encode_new_element: Operator 203YYY: writing ref val %ld (self->refValIndex=%ld)",
                 currRefVal, self->refValIndex);
@@ -1263,8 +1270,15 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         /* Operator 203YYY: Change Reference Values: Encoding definition phase */
         long currRefVal=-1;
         long numBits = self->change_ref_value_operand;
-        Assert( self->refValListSize > 0 );
-        Assert( self->refValIndex < self->refValListSize );
+        if ( self->refValListSize == 0 ) {
+            grib_context_log(c, GRIB_LOG_ERROR,"encode_new_element: Overridden Reference Values array is empty!");
+            return GRIB_ENCODING_ERROR;
+        }
+        if ( self->refValIndex >= self->refValListSize ) {
+            grib_context_log(c, GRIB_LOG_ERROR,"encode_new_element: Overridden Reference Values error: index=%ld, size=%ld",
+                self->refValIndex, self->refValListSize);
+            return GRIB_ENCODING_ERROR;
+        }
         currRefVal = self->refValList[self->refValIndex];
         grib_context_log(c,GRIB_LOG_DEBUG, "encode_element: Operator 203YYY: writing ref val %ld (self->refValIndex=%ld)",
                         currRefVal, self->refValIndex);
