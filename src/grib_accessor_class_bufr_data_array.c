@@ -1125,6 +1125,39 @@ static int encode_new_bitmap(grib_context* c,grib_buffer* buff,long *pos,int idx
     return err;
 }
 
+/* Operator 203YYY: Change Reference Values: Encoding definition phase */
+static int encode_overridden_reference_value(grib_context* c, grib_accessor_bufr_data_array* self,
+        grib_buffer* buff, long *pos, bufr_descriptor* bd)
+{
+    int err = 0;
+    long currRefVal = -1;
+    long numBits = self->change_ref_value_operand;
+    /* We must be encoding between 203YYY and 203255 */
+    Assert(self->change_ref_value_operand > 0 && self->change_ref_value_operand != 255);
+    if ( self->refValListSize == 0 ) {
+        grib_context_log(c, GRIB_LOG_ERROR,"encode_new_element: Overridden Reference Values array is empty!");
+        return GRIB_ENCODING_ERROR;
+    }
+    if ( self->refValIndex >= self->refValListSize ) {
+        grib_context_log(c, GRIB_LOG_ERROR,"encode_new_element: Overridden Reference Values: index=%ld, size=%ld. "
+                "\nThe number of overridden reference values must be equal to "
+                "number of descriptors between operator 203YYY and 203255",
+                self->refValIndex, self->refValListSize);
+        return GRIB_ENCODING_ERROR;
+    }
+    currRefVal = self->refValList[self->refValIndex];
+    grib_context_log(c,GRIB_LOG_DEBUG, "encode_new_element: Operator 203YYY: writing ref val %ld (self->refValIndex=%ld)",
+            currRefVal, self->refValIndex);
+    grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+numBits);
+    err = grib_encode_signed_longb(buff->data, currRefVal, pos, numBits);
+    if (err) {
+        grib_context_log(c,GRIB_LOG_ERROR,"encoding overridden reference value %ld for %s (code=%6.6ld)",
+                currRefVal, bd->shortName, bd->code);
+    }
+    self->refValIndex++;
+    return err;
+}
+
 static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* self,int subsetIndex,
         grib_buffer* buff,unsigned char* data,long *pos,int i,bufr_descriptor* descriptor,
         long elementIndex,grib_darray* dval,grib_sarray* sval)
@@ -1142,29 +1175,7 @@ static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* sel
 
     if (self->change_ref_value_operand > 0 && self->change_ref_value_operand != 255) {
         /* Operator 203YYY: Change Reference Values: Encoding definition phase */
-        long currRefVal=-1;
-        long numBits = self->change_ref_value_operand;
-        if ( self->refValListSize == 0 ) {
-            grib_context_log(c, GRIB_LOG_ERROR,"encode_new_element: Overridden Reference Values array is empty!");
-            return GRIB_ENCODING_ERROR;
-        }
-        if ( self->refValIndex >= self->refValListSize ) {
-            grib_context_log(c, GRIB_LOG_ERROR,"encode_new_element: Overridden Reference Values: index=%ld, size=%ld. "
-                                        "\nThe number of overridden reference values must be equal to "
-                                        "number of descriptors between operator 203YYY and 203255",
-                                        self->refValIndex, self->refValListSize);
-            return GRIB_ENCODING_ERROR;
-        }
-        currRefVal = self->refValList[self->refValIndex];
-        grib_context_log(c,GRIB_LOG_DEBUG, "encode_new_element: Operator 203YYY: writing ref val %ld (self->refValIndex=%ld)",
-                currRefVal, self->refValIndex);
-        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+numBits);
-        err = grib_encode_signed_longb(buff->data, currRefVal, pos, numBits);
-        if (err) {
-            grib_context_log(c,GRIB_LOG_ERROR,"encoding overridden reference value %ld for %s (code=%6.6ld)",
-                    currRefVal, bd->shortName, bd->code);
-        }
-        self->refValIndex++;
+        err = encode_overridden_reference_value(c, self, buff, pos, bd);
         return err;
     }
 
@@ -1272,27 +1283,7 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
 
     if (self->change_ref_value_operand > 0 && self->change_ref_value_operand != 255) {
         /* Operator 203YYY: Change Reference Values: Encoding definition phase */
-        long currRefVal=-1;
-        long numBits = self->change_ref_value_operand;
-        if ( self->refValListSize == 0 ) {
-            grib_context_log(c, GRIB_LOG_ERROR,"encode_new_element: Overridden Reference Values array is empty!");
-            return GRIB_ENCODING_ERROR;
-        }
-        if ( self->refValIndex >= self->refValListSize ) {
-            grib_context_log(c, GRIB_LOG_ERROR,"encode_new_element: Overridden Reference Values error: index=%ld, size=%ld",
-                self->refValIndex, self->refValListSize);
-            return GRIB_ENCODING_ERROR;
-        }
-        currRefVal = self->refValList[self->refValIndex];
-        grib_context_log(c,GRIB_LOG_DEBUG, "encode_element: Operator 203YYY: writing ref val %ld (self->refValIndex=%ld)",
-                        currRefVal, self->refValIndex);
-        grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+numBits);
-        err = grib_encode_signed_longb(buff->data, currRefVal, pos, numBits);
-        if (err) {
-            grib_context_log(c,GRIB_LOG_ERROR,"encoding overridden reference value %ld for %s (code=%6.6ld)",
-                    currRefVal, bd->shortName, bd->code);
-        }
-        self->refValIndex++;
+        err = encode_overridden_reference_value(c, self, buff, pos, bd);
         return err;
     }
 
@@ -2413,7 +2404,7 @@ static void set_input_bitmap(grib_handle* h,grib_accessor_bufr_data_array *self)
 static int process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset)
 {
     int err=0;
-    long  inr,innr,ir,ip;
+    long inr,innr,ir,ip;
     long n[MAX_NESTED_REPLICATIONS]={0,};
     long nn[MAX_NESTED_REPLICATIONS]={0,};
     long numberOfElementsToRepeat[MAX_NESTED_REPLICATIONS]={0,};
