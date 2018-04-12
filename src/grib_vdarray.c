@@ -16,6 +16,20 @@
 
 #include "grib_api_internal.h"
 
+/* For debugging purposes */
+void grib_vdarray_print(const char* title, const grib_vdarray* vdarray)
+{
+    size_t i;
+    char text[100]={0,};
+    Assert(vdarray);
+    printf("%s: vdarray.n=%lu\n", title, (unsigned long)vdarray->n);
+    for (i=0; i<vdarray->n; i++) {
+        sprintf(text, " vdarray->v[%ld]", i);
+        grib_darray_print(text, vdarray->v[i]);
+    }
+    printf("\n");
+}
+
 grib_vdarray* grib_vdarray_new(grib_context* c,size_t size,size_t incsize)
 {
     grib_vdarray* v=NULL;
