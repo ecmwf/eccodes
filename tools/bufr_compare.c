@@ -495,6 +495,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if (two_way) {
         /* ECC-651 and ECC-431 */
         handles_swapped = 1;
+        if (verbose) printf("  Swapping handles (two-way mode)\n");
         if(compare_handles(h, global_handle, options)) {
             error++;
             if (!force) exit(1);
@@ -667,7 +668,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
 
     type1=type;
     type2=type;
-    if (verbose) printf("  comparing %s",name);
+    if (verbose && !handles_swapped) printf("  comparing %s",name);
 
     if( type1==GRIB_TYPE_UNDEFINED && (err = grib_get_native_type(handle1,name,&type1)) != GRIB_SUCCESS)
     {
