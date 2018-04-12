@@ -1149,8 +1149,10 @@ static int encode_new_element(grib_context* c,grib_accessor_bufr_data_array* sel
             return GRIB_ENCODING_ERROR;
         }
         if ( self->refValIndex >= self->refValListSize ) {
-            grib_context_log(c, GRIB_LOG_ERROR,"encode_new_element: Overridden Reference Values error: index=%ld, size=%ld",
-                self->refValIndex, self->refValListSize);
+            grib_context_log(c, GRIB_LOG_ERROR,"encode_new_element: Overridden Reference Values: index=%ld, size=%ld. "
+                                        "\nThe number of overridden reference values must be equal to "
+                                        "number of descriptors between operator 203YYY and 203255",
+                                        self->refValIndex, self->refValListSize);
             return GRIB_ENCODING_ERROR;
         }
         currRefVal = self->refValList[self->refValIndex];
@@ -2642,6 +2644,16 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                             err = tableB_override_set_key(h, self);
                             if (err) return err;
                         }
+                        if (flag != PROCESS_DECODE) {
+                            /* Encoding operator 203YYY */
+                            if (self->refValIndex != self->refValListSize) {
+                                grib_context_log(c, GRIB_LOG_ERROR,
+                                        "process_elements: The number of overridden reference values (%ld) different from"
+                                        " number of descriptors between operator 203YYY and 203255 (%ld)",
+                                        self->refValListSize, self->refValIndex);
+                                return GRIB_ENCODING_ERROR;
+                            }
+                        }
                     } else if (descriptors[i]->Y == 0) {
                         grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: Y=0, clearing override of table B");
                         tableB_override_clear(c, self);
@@ -2861,6 +2873,8 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
             grib_vdarray_push(c,self->numericValues,dval);
         }
     }
+
+    /*if (c->debug) grib_vdarray_print("process_elements: self->numericValues", self->numericValues);*/
 
     if(decoding) {
         err=create_keys(a,0,0,0);
