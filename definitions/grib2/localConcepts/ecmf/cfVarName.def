@@ -13231,6 +13231,15 @@
 	}
 #Averaged cloud-to-ground lightning flash density over the past 3 hours
 'licga3' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 3 ;
+	}
+#Averaged cloud-to-ground lightning flash density over the past 3 hours
+'licga3' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 59 ;

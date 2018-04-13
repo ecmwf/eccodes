@@ -13231,6 +13231,15 @@
 	}
 #Averaged cloud-to-ground lightning flash density over the past 3 hours
 '228059' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	}
+#Averaged cloud-to-ground lightning flash density over the past 3 hours
+'228059' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 59 ;

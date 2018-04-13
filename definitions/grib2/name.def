@@ -323,6 +323,15 @@
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 6 ;
 	}
+#Averaged cloud-to-ground lightning flash density over the past 3 hours
+'Averaged cloud-to-ground lightning flash density over the past 3 hours' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 lengthOfTimeRange = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Soil moisture top 20 cm
 'Soil moisture top 20 cm' = {
 	 discipline = 2 ;
