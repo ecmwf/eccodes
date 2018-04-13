@@ -13201,6 +13201,15 @@
 	}
 #Averaged total lightning flash density over the past 3 hours
 'Averaged total lightning flash density over the past 3 hours' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 lengthOfTimeRange = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Averaged total lightning flash density over the past 3 hours
+'Averaged total lightning flash density over the past 3 hours' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 57 ;

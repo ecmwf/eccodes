@@ -13201,6 +13201,15 @@
 	}
 #Averaged total lightning flash density over the past 3 hours
 'litota3' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	}
+#Averaged total lightning flash density over the past 3 hours
+'litota3' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 57 ;
@@ -19898,7 +19907,7 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 1 ;
-}
+	}
 #Sea Salt Aerosol (0.5 - 5 um) Mixing Ratio
 'aermr02' = {
 	 discipline = 192 ;
@@ -19922,7 +19931,7 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 5 ;
-	 }
+	}
 #Dust Aerosol (0.9 - 20 um) Mixing Ratio
 'aermr06' = {
 	 discipline = 192 ;

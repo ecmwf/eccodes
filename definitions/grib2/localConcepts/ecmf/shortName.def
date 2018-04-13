@@ -13201,6 +13201,15 @@
 	}
 #Averaged total lightning flash density over the past 3 hours
 'litota3' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	}
+#Averaged total lightning flash density over the past 3 hours
+'litota3' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 57 ;
