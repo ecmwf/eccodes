@@ -13163,7 +13163,13 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 51 ;
 	}
-#Instantaneous cloud-to-ground lightning density
+#Instantaneous cloud-to-ground lightning flash density
+'licgi' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	}
+#Instantaneous cloud-to-ground lightning flash density
 'licgi' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;

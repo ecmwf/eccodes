@@ -263,6 +263,12 @@
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
 	}
+#Instantaneous cloud-to-ground lightning flash density
+'Instantaneous cloud-to-ground lightning flash density' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	}
 #Unbalanced component of specific humidity
 'Unbalanced component of specific humidity' = {
 	 discipline = 0 ;

@@ -9394,8 +9394,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 51 ;
 	}
-#Instantaneous cloud-to-ground lightning density
-'Instantaneous cloud-to-ground lightning density' = {
+#Instantaneous cloud-to-ground lightning flash density
+'Instantaneous cloud-to-ground lightning flash density' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 52 ;
 	}

@@ -13163,8 +13163,14 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 51 ;
 	}
-#Instantaneous cloud-to-ground lightning density
-'Instantaneous cloud-to-ground lightning density' = {
+#Instantaneous cloud-to-ground lightning flash density
+'Instantaneous cloud-to-ground lightning flash density' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	}
+#Instantaneous cloud-to-ground lightning flash density
+'Instantaneous cloud-to-ground lightning flash density' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 52 ;
