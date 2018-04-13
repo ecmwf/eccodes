@@ -257,6 +257,36 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 27 ;
 	}
+#Instantaneous total lightning flash density
+'Instantaneous total lightning flash density' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	}
+#Averaged total lightning flash density over the past hour
+'Averaged total lightning flash density over the past hour' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 1 ;
+	}
+#Instantaneous cloud-to-ground lightning flash density
+'Instantaneous cloud-to-ground lightning flash density' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	}
+#Averaged cloud-to-ground lightning flash density over the past hour
+'Averaged cloud-to-ground lightning flash density over the past hour' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 lengthOfTimeRange = 1 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Unbalanced component of specific humidity
 'Unbalanced component of specific humidity' = {
 	 discipline = 0 ;
@@ -274,6 +304,42 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 120 ;
+	}
+#Averaged total lightning flash density over the past 3 hours
+'Averaged total lightning flash density over the past 3 hours' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 3 ;
+	}
+#Averaged total lightning flash density over the past 6 hours
+'Averaged total lightning flash density over the past 6 hours' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 6 ;
+	}
+#Averaged cloud-to-ground lightning flash density over the past 3 hours
+'Averaged cloud-to-ground lightning flash density over the past 3 hours' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 lengthOfTimeRange = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Averaged cloud-to-ground lightning flash density over the past 6 hours
+'Averaged cloud-to-ground lightning flash density over the past 6 hours' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 6 ;
 	}
 #Soil moisture top 20 cm
 'Soil moisture top 20 cm' = {

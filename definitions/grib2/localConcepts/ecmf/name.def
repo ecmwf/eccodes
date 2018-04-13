@@ -9461,29 +9461,68 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 48 ;
 	}
-#Instantaneous total lightning density
-'Instantaneous total lightning density' = {
+#Instantaneous total lightning flash density
+'Instantaneous total lightning flash density' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	}
+#Instantaneous total lightning flash density
+'Instantaneous total lightning flash density' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 50 ;
 	}
-#Averaged total lightning density since previous post-processing
-'Averaged total lightning density since previous post-processing' = {
+#Averaged total lightning flash density over the past hour
+'Averaged total lightning flash density over the past hour' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 1 ;
+	}
+#Averaged total lightning flash density over the past hour
+'Averaged total lightning flash density over the past hour' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 51 ;
 	}
-#Instantaneous cloud-to-ground lightning density
-'Instantaneous cloud-to-ground lightning density' = {
+#Instantaneous cloud-to-ground lightning flash density
+'Instantaneous cloud-to-ground lightning flash density' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	}
+#Instantaneous cloud-to-ground lightning flash density
+'Instantaneous cloud-to-ground lightning flash density' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 52 ;
 	}
-#Averaged cloud-to-ground lightning density since previous post-processing
-'Averaged cloud-to-ground lightning density since previous post-processing' = {
+#Averaged cloud-to-ground lightning flash density over the past hour
+'Averaged cloud-to-ground lightning flash density over the past hour' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 1 ;
+	}
+#Averaged cloud-to-ground lightning flash density over the past hour
+'Averaged cloud-to-ground lightning flash density over the past hour' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 53 ;
+	}
+#Averaged total lightning flash density over the past 3 hours
+'Averaged total lightning flash density over the past 3 hours' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 lengthOfTimeRange = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Averaged total lightning flash density over the past 3 hours
 'Averaged total lightning flash density over the past 3 hours' = {
@@ -9493,15 +9532,42 @@
 	}
 #Averaged total lightning flash density over the past 6 hours
 'Averaged total lightning flash density over the past 6 hours' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 6 ;
+	}
+#Averaged total lightning flash density over the past 6 hours
+'Averaged total lightning flash density over the past 6 hours' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 58 ;
 	}
 #Averaged cloud-to-ground lightning flash density over the past 3 hours
 'Averaged cloud-to-ground lightning flash density over the past 3 hours' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 lengthOfTimeRange = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Averaged cloud-to-ground lightning flash density over the past 3 hours
+'Averaged cloud-to-ground lightning flash density over the past 3 hours' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 59 ;
+	}
+#Averaged cloud-to-ground lightning flash density over the past 6 hours
+'Averaged cloud-to-ground lightning flash density over the past 6 hours' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 lengthOfTimeRange = 6 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Averaged cloud-to-ground lightning flash density over the past 6 hours
 'Averaged cloud-to-ground lightning flash density over the past 6 hours' = {

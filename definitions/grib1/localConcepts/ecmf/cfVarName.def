@@ -9384,23 +9384,23 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 48 ;
 	}
-#Instantaneous total lightning density
+#Instantaneous total lightning flash density
 'litoti' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Averaged total lightning density since previous post-processing
-'litota' = {
+#Averaged total lightning flash density over the past hour
+'litota1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 51 ;
 	}
-#Instantaneous cloud-to-ground lightning density
+#Instantaneous cloud-to-ground lightning flash density
 'licgi' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 52 ;
 	}
-#Averaged cloud-to-ground lightning density since previous post-processing
-'licga' = {
+#Averaged cloud-to-ground lightning flash density over the past hour
+'licga1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 53 ;
 	}
