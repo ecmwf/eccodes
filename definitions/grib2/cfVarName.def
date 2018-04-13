@@ -332,6 +332,15 @@
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 3 ;
 	}
+#Averaged cloud-to-ground lightning flash density over the past 6 hours
+'licga6' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 6 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	}
 #Soil moisture top 20 cm
 'sm20' = {
 	 discipline = 2 ;
