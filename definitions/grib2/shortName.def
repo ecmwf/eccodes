@@ -314,6 +314,15 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Averaged total lightning flash density over the past 6 hours
+'litota6' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 6 ;
+	}
 #Soil moisture top 20 cm
 'sm20' = {
 	 discipline = 2 ;

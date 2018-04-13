@@ -13216,6 +13216,15 @@
 	}
 #Averaged total lightning flash density over the past 6 hours
 '228058' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 6 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	}
+#Averaged total lightning flash density over the past 6 hours
+'228058' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 58 ;
