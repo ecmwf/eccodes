@@ -9384,8 +9384,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 48 ;
 	}
-#Instantaneous total lightning density
-'Instantaneous total lightning density' = {
+#Instantaneous total lightning flash density
+'Instantaneous total lightning flash density' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 50 ;
 	}

@@ -257,6 +257,12 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 27 ;
 	}
+#Instantaneous total lightning flash density
+'km**-2 day**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	}
 #Unbalanced component of specific humidity
 'kg kg**-1' = {
 	 discipline = 0 ;

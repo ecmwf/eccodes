@@ -13145,8 +13145,14 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 48 ;
 	}
-#Instantaneous total lightning density
-'Instantaneous total lightning density' = {
+#Instantaneous total lightning flash density
+'Instantaneous total lightning flash density' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	}
+#Instantaneous total lightning flash density
+'Instantaneous total lightning flash density' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 50 ;

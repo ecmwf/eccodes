@@ -13145,50 +13145,56 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 48 ;
 	}
-#Instantaneous total lightning density
-'flashes km**-2 day**-1' = {
+#Instantaneous total lightning flash density
+'km**-2 day**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	}
+#Instantaneous total lightning flash density
+'km**-2 day**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 50 ;
 	}
 #Averaged total lightning density since previous post-processing
-'flashes km**-2 day**-1' = {
+'km**-2 day**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 51 ;
 	}
 #Instantaneous cloud-to-ground lightning density
-'flashes km**-2 day**-1' = {
+'km**-2 day**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 52 ;
 	}
 #Averaged cloud-to-ground lightning density since previous post-processing
-'flashes km**-2 day**-1' = {
+'km**-2 day**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 53 ;
 	}
 #Averaged total lightning flash density over the past 3 hours
-'flashes km**-2 day**-1' = {
+'km**-2 day**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 57 ;
 	}
 #Averaged total lightning flash density over the past 6 hours
-'flashes km**-2 day**-1' = {
+'km**-2 day**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 58 ;
 	}
 #Averaged cloud-to-ground lightning flash density over the past 3 hours
-'flashes km**-2 day**-1' = {
+'km**-2 day**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 59 ;
 	}
 #Averaged cloud-to-ground lightning flash density over the past 6 hours
-'flashes km**-2 day**-1' = {
+'km**-2 day**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 60 ;

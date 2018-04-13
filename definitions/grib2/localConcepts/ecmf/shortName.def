@@ -13145,7 +13145,13 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 48 ;
 	}
-#Instantaneous total lightning density
+#Instantaneous total lightning flash density
+'litoti' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	}
+#Instantaneous total lightning flash density
 'litoti' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;

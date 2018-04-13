@@ -257,6 +257,12 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 27 ;
 	}
+#Instantaneous total lightning flash density
+'litoti' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	}
 #Unbalanced component of specific humidity
 'ucq' = {
 	 discipline = 0 ;
