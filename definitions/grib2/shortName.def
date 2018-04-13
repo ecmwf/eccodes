@@ -263,6 +263,15 @@
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
 	}
+#Averaged total lightning flash density over the past hour
+'litota1' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 1 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	}
 #Instantaneous cloud-to-ground lightning flash density
 'licgi' = {
 	 discipline = 0 ;

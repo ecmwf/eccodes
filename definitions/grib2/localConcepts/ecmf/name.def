@@ -13157,8 +13157,17 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 50 ;
 	}
-#Averaged total lightning density since previous post-processing
-'Averaged total lightning density since previous post-processing' = {
+#Averaged total lightning flash density over the past hour
+'Averaged total lightning flash density over the past hour' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 1 ;
+	}
+#Averaged total lightning flash density over the past hour
+'Averaged total lightning flash density over the past hour' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 51 ;

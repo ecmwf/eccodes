@@ -13157,8 +13157,17 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 50 ;
 	}
-#Averaged total lightning density since previous post-processing
-'litota' = {
+#Averaged total lightning flash density over the past hour
+'litota1' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 1 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	}
+#Averaged total lightning flash density over the past hour
+'litota1' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 51 ;

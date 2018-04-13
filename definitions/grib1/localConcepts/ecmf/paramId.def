@@ -9389,7 +9389,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Averaged total lightning density since previous post-processing
+#Averaged total lightning flash density over the past hour
 '228051' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 51 ;

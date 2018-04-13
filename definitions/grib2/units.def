@@ -263,6 +263,15 @@
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
 	}
+#Averaged total lightning flash density over the past hour
+'km**-2 day**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 4 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 1 ;
+	}
 #Instantaneous cloud-to-ground lightning flash density
 'km**-2 day**-1' = {
 	 discipline = 0 ;

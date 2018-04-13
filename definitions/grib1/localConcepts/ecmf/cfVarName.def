@@ -9389,8 +9389,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Averaged total lightning density since previous post-processing
-'litota' = {
+#Averaged total lightning flash density over the past hour
+'litota1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 51 ;
 	}
