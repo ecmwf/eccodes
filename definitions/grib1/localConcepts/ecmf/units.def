@@ -9399,7 +9399,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 52 ;
 	}
-#Averaged cloud-to-ground lightning density since previous post-processing
+#Averaged cloud-to-ground lightning flash density over the past hour
 'km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 53 ;

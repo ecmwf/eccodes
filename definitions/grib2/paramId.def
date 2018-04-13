@@ -278,6 +278,15 @@
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
 	}
+#Averaged cloud-to-ground lightning flash density over the past hour
+'228053' = {
+	 discipline = 0 ;
+	 parameterCategory = 17 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 1 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	}
 #Unbalanced component of specific humidity
 '228054' = {
 	 discipline = 0 ;
