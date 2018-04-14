@@ -32,7 +32,6 @@ real(kind=8), dimension(:), allocatable       :: values
 
   do while (iret/=CODES_END_OF_FILE)
 
-    ! Get and print some keys form the BUFR header
     write(*,*) 'message: ',count
 
     ! We need to instruct ecCodes to expand all the descriptors
