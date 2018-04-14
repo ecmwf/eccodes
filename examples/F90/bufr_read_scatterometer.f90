@@ -58,7 +58,7 @@ real(kind=8), dimension(:), allocatable :: year
     call codes_get(ibufr,'latitude',latVal);
 
     ! Get longitude (for all the subsets)
-    call codes_get(ibufr,'latitude',lonVal);
+    call codes_get(ibufr,'longitude',lonVal);
 
     allocate(year(numObs))
     call codes_get(ibufr,'year',year);
