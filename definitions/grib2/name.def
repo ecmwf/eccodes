@@ -262,14 +262,18 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Averaged total lightning flash density over the past hour
 'Averaged total lightning flash density over the past hour' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 lengthOfTimeRange = 1 ;
 	}
 #Instantaneous cloud-to-ground lightning flash density
@@ -277,6 +281,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Averaged cloud-to-ground lightning flash density over the past hour
 'Averaged cloud-to-ground lightning flash density over the past hour' = {
@@ -284,8 +290,10 @@
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
 	 lengthOfTimeRange = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Unbalanced component of specific humidity
 'Unbalanced component of specific humidity' = {
@@ -310,8 +318,10 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 lengthOfTimeRange = 3 ;
 	}
 #Averaged total lightning flash density over the past 6 hours
@@ -321,14 +331,18 @@
 	 parameterNumber = 4 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 lengthOfTimeRange = 6 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Averaged cloud-to-ground lightning flash density over the past 3 hours
 'Averaged cloud-to-ground lightning flash density over the past 3 hours' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 lengthOfTimeRange = 3 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
@@ -339,7 +353,9 @@
 	 parameterNumber = 2 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 lengthOfTimeRange = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Soil moisture top 20 cm
 'Soil moisture top 20 cm' = {
