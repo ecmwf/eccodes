@@ -13150,6 +13150,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Instantaneous total lightning flash density
 'litoti' = {
@@ -13162,9 +13164,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 1 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	}
 #Averaged total lightning flash density over the past hour
 'litota1' = {
@@ -13177,6 +13181,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Instantaneous cloud-to-ground lightning flash density
 'licgi' = {
@@ -13189,9 +13195,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 1 ;
 	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 lengthOfTimeRange = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Averaged cloud-to-ground lightning flash density over the past hour
 'licga1' = {
@@ -13204,6 +13212,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 3 ;
 	 indicatorOfUnitForTimeRange = 1 ;
@@ -13219,9 +13229,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 6 ;
 	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
 	}
 #Averaged total lightning flash density over the past 6 hours
 'litota6' = {
@@ -13234,9 +13246,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Averaged cloud-to-ground lightning flash density over the past 3 hours
 'licga3' = {
@@ -13250,7 +13264,9 @@
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
 	 typeOfStatisticalProcessing = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 lengthOfTimeRange = 6 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	}
 #Averaged cloud-to-ground lightning flash density over the past 6 hours
