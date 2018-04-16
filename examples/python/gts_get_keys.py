@@ -8,9 +8,9 @@
 # nor does it submit to any jurisdiction.
 
 #
-# Python implementation: bufr_get_keys
+# Python implementation: gts_get_keys
 #
-# Description: how to read values of different type of keys from BUFR messages.
+# Description: how to read values of different type of keys from GTS messages.
 #
 #
 
@@ -25,7 +25,7 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    # open bufr file
+    # open GTS file
     f = open(INPUT)
 
     cnt = 0
