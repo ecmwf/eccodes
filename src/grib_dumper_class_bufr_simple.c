@@ -651,7 +651,7 @@ static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 {
 }
 
-static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const char* print_key)
+static void _dump_long_array(grib_handle* h, FILE* f, const char* key)
 {
     long* val;
     size_t size=0,i;
@@ -662,7 +662,7 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
 
     val=(long*)grib_context_malloc_clear(h->context,sizeof(long)*size);
     grib_get_long_array(h,key,val,&size);
-    fprintf(f,"%s= {",print_key);
+    fprintf(f,"%s= {", key);
     for (i=0;i<size-1;i++) {
         if (icount>cols || i==0) {fprintf(f,"\n      ");icount=0;}
         fprintf(f,"%ld, ",val[i]);
@@ -686,10 +686,10 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         self->begin=1;
         self->empty=1;
         depth+=2;
-        _dump_long_array(h,self->dumper.out,"dataPresentIndicator","inputDataPresentIndicator");
-        _dump_long_array(h,self->dumper.out,"delayedDescriptorReplicationFactor","inputDelayedDescriptorReplicationFactor");
-        _dump_long_array(h,self->dumper.out,"shortDelayedDescriptorReplicationFactor","inputShortDelayedDescriptorReplicationFactor");
-        _dump_long_array(h,self->dumper.out,"extendedDelayedDescriptorReplicationFactor","inputExtendedDelayedDescriptorReplicationFactor");
+        _dump_long_array(h,self->dumper.out,"dataPresentIndicator");
+        _dump_long_array(h,self->dumper.out,"delayedDescriptorReplicationFactor");
+        _dump_long_array(h,self->dumper.out,"shortDelayedDescriptorReplicationFactor");
+        _dump_long_array(h,self->dumper.out,"extendedDelayedDescriptorReplicationFactor");
         /* Do not show the inputOverriddenReferenceValues array. That's more for ENCODING */
         /*_dump_long_array(h,self->dumper.out,"inputOverriddenReferenceValues","inputOverriddenReferenceValues");*/
         grib_dump_accessors_block(d,block);
