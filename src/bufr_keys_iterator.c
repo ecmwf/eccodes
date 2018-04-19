@@ -31,7 +31,7 @@ bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long f
     ki->names        = NULL;
     ki->i_curr_attribute=0;
     ki->accessor_flags_only= GRIB_ACCESSOR_FLAG_DUMP;
-    ki->accessor_flags_skip= GRIB_ACCESSOR_FLAG_HIDDEN | GRIB_ACCESSOR_FLAG_READ_ONLY;
+    ki->accessor_flags_skip= GRIB_ACCESSOR_FLAG_HIDDEN; /*ECC-568*/
 
     ki->at_start     = 1;
     ki->match        = 0;
