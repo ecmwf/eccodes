@@ -127,6 +127,7 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     FILE* out = NULL;
     const void* buffer = NULL;
     char gridType[128] = {0,};
+    long input_edition = 0;
 
     codes_handle *handle = 0;
     codes_handle *finalh = 0;
@@ -135,6 +136,8 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
 
     in = fopen(input_filename,"r");     assert(in);
     handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);    assert(handle);
+    
+    CODES_CHECK(codes_get_long(handle, "edition", &input_edition), 0);
 
     CODES_CHECK(grib_get_string(handle, "gridType", gridType, &slen),0);
     if (!STR_EQUAL(gridType, "regular_ll")) {
@@ -153,7 +156,7 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     outlen = spec.Nj * spec.Ni;
     spec.iDirectionIncrementInDegrees = 1.5;
     spec.jDirectionIncrementInDegrees = 1.5;
-    spec.latitudeOfFirstGridPointInDegrees  = 60.0;
+    spec.latitudeOfFirstGridPointInDegrees  = 60.0001;
     spec.longitudeOfFirstGridPointInDegrees = -9.0;
     spec.latitudeOfLastGridPointInDegrees   = 40.5;
     spec.longitudeOfLastGridPointInDegrees  = 15.0;
@@ -164,6 +167,11 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     packing_spec.bitsPerValue = 24;
     packing_spec.accuracy=GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
     packing_spec.packing=GRIB_UTIL_PACKING_USE_PROVIDED;
+
+    packing_spec.extra_settings_count++;
+    packing_spec.extra_settings[0].type = GRIB_TYPE_LONG;
+    packing_spec.extra_settings[0].name = "expandBoundingBox";
+    packing_spec.extra_settings[0].long_value = 1;
 
     if (edition != 0) {
         packing_spec.editionNumber = edition;
@@ -182,6 +190,16 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
             &err);
     assert(finalh);
     assert(err == 0);
+
+    /* Check expand_bounding_box worked.
+     * Specified latitudeOfFirstGridPointInDegrees cannot be encoded in GRIB1
+     * so it is rounded up to nearest millidegree */
+    if (input_edition == 1) {
+        const double expected_lat1 = 60.001;
+        double lat1 = 0;
+        CODES_CHECK(codes_get_double(finalh, "latitudeOfFirstGridPointInDegrees", &lat1), 0);
+        assert( fabs(lat1 - expected_lat1) < 1e-10 );
+    }
 
     /* Write out the message to the output file */
     CODES_CHECK(codes_get_message(finalh, &buffer, &size),0);
