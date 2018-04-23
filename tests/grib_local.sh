@@ -111,4 +111,8 @@ grib_check_key_equals $temp.3 probabilityType,scaledValueOfLowerLimit,scaledValu
 ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=42,lcwfvSuiteName=9 $sample_g2 $temp
 grib_check_key_equals $temp 'mars.origin:s' 'lops'
 
+# Extra key in Local Definition 16 for GRIB1. ECC-679
+${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=16,numberOfForecastsInEnsemble=51 $sample_g1 $temp
+grib_check_key_equals $temp 'totalNumber' '51'
+
 rm -f $temp $temp.1 $temp.2 $temp.3
