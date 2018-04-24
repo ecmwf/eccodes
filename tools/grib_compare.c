@@ -127,7 +127,7 @@ grib_option grib_options[]={
     /*  {id, args, help}, on, command_line, value*/
     {"r",0,"Compare files in which the messages are not in the same order. This option is time expensive.\n",0,1,0},
     {"b:",0,0,0,1,0},
-    {"e",0,"Edition independent compare. It is used to compare grib edition 1 and 2.\n",0,1,0},
+    {"e",0,"Edition independent compare. It is used to compare GRIB edition 1 and 2.\n",0,1,0},
     {"2",0,"Enable two-way comparison.\n",0,1,0},
     {"c:",0,0,0,1,0},
     {"S:","start","First field to be processed.\n",0,1,0},
