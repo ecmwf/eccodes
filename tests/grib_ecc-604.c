@@ -7,7 +7,7 @@
 #include "grib_api.h"
 
 #define NUM_THREADS 8
-#define FILES_PER_ITERATION 400
+#define FILES_PER_ITERATION 150
 #define TEMPLATE "../../share/eccodes/samples/gg_sfc_grib2.tmpl"
 
 
@@ -79,7 +79,7 @@ static int encode_file(char *template_file, char *output_file)
     return 0;
 }
 
-void* do_stuff(void *data);
+void do_stuff(void *data);
 
 /* Structure for passing data to threads */
 struct v
@@ -138,7 +138,7 @@ void *runner(void *ptr)
     pthread_exit(0);
 }
 
-void *do_stuff(void *ptr)
+void do_stuff(void *ptr)
 {
     /* Casting paramater to struct v pointer */
     struct v *data = ptr;
