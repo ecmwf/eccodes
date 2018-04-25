@@ -53,6 +53,7 @@ list( APPEND tests_no_data_reqd
     julian
     bufr_ecc-359
     bufr_ecc-517
+    bufr_subTypes
     grib_efas
 )
 # These tests do require data downloads
