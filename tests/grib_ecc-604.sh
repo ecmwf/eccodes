@@ -21,9 +21,15 @@ OUTPUT=output
 mkdir -p $OUTPUT
 time ${test_dir}/grib_ecc-604
 
-#for ofile in $OUTPUT/output*grib; do
-#  ${tools_dir}/grib_compare -H $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl $ofile
-#done
+num=0
+for ofile in $OUTPUT/output*grib; do
+  ${tools_dir}/grib_compare -H $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl $ofile
+  num=`expr $num + 1`
+  # If there are too many output files, comparing each one will take a long time!
+  if [ $num -gt 1000 ]; then
+    break
+  fi
+done
 
 # Clean up
 cd $test_dir

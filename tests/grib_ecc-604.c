@@ -7,7 +7,7 @@
 #include "grib_api.h"
 
 #define NUM_THREADS 8
-#define FILES_PER_ITERATION 500
+#define FILES_PER_ITERATION 400
 #define TEMPLATE "../../share/eccodes/samples/gg_sfc_grib2.tmpl"
 
 
