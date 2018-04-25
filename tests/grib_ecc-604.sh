@@ -33,4 +33,4 @@ done
 
 # Clean up
 cd $test_dir
-#rm -fr $temp_dir
+rm -fr $temp_dir
