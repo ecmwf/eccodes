@@ -9389,8 +9389,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Averaged total lightning flash density over the past hour
-'Averaged total lightning flash density over the past hour' = {
+#Averaged total lightning flash density in the last hour
+'Averaged total lightning flash density in the last hour' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 51 ;
 	}
@@ -9399,8 +9399,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 52 ;
 	}
-#Averaged cloud-to-ground lightning flash density over the past hour
-'Averaged cloud-to-ground lightning flash density over the past hour' = {
+#Averaged cloud-to-ground lightning flash density in the last hour
+'Averaged cloud-to-ground lightning flash density in the last hour' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 53 ;
 	}
