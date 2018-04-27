@@ -318,7 +318,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
         fprintf(self->dumper.out," *** ERR=%d (%s) [grib_dumper_wmo::dump_string]",err,grib_get_error_message(err));
     aliases(d,a);
     fprintf(self->dumper.out,"\n");
-    if (value) grib_context_free(a->context,value);
+    grib_context_free(a->context,value);
 }
 
 static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)
