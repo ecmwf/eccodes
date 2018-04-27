@@ -66,7 +66,7 @@ grib_check_key_equals $temp1 anoffset 25
 grib_check_key_equals $temp1 anoffsetFirst,anoffsetLast,anoffsetFrequency "MISSING MISSING MISSING"
 
 # ECC-663: MARS step
-types="an fu"
+types="an fu go"
 for t in $types; do
   ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=41,type=$t,stepType=accum,stepRange=12-36,paramId=260268 \
   $sample $temp1
@@ -74,7 +74,7 @@ for t in $types; do
   #${tools_dir}/grib_dump -Da $temp1 | grep mars.step
 done
 
-types="go fc pf cf"
+types="fc pf cf"
 for t in $types; do
   ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=41,type=$t,stepType=accum,stepRange=12-36,paramId=260268 \
   $sample $temp1
