@@ -7,7 +7,7 @@
 #include "grib_api.h"
 
 #define NUM_THREADS 8
-#define FILES_PER_ITERATION 150
+#define FILES_PER_ITERATION 300
 #define TEMPLATE "../../share/eccodes/samples/gg_sfc_grib2.tmpl"
 
 
@@ -19,20 +19,20 @@ static int encode_file(char *template_file, char *output_file)
     const void *buffer = NULL;
     size_t size = 0;
     int err = 0;
- 
+
     in = fopen(template_file,"r"); assert(in);
     out = fopen(output_file,"w");  assert(out);
- 
-    /* loop over the messages in the source grib and clone them */
+
+    /* loop over the messages in the source GRIB and clone them */
     while ((source_handle = grib_handle_new_from_file(0, in, &err))!=NULL)
     {
         grib_handle *clone_handle = grib_handle_clone(source_handle);
- 
+
         if (clone_handle == NULL) {
             perror("ERROR: could not clone field");
             return 1;
         }
- 
+
         //GRIB_CHECK(grib_set_long(clone_handle, "centre", 250),0);
 
         size_t values_len= 0;
@@ -40,10 +40,9 @@ static int encode_file(char *template_file, char *output_file)
 
         int i;
         double *values = NULL; 
-           values = (double*)malloc(values_len*sizeof(double));
+        values = (double*)malloc(values_len*sizeof(double));
         long count;
         double d,e;
-
 
         d=10e-8;
         e=d;
@@ -55,16 +54,13 @@ static int encode_file(char *template_file, char *output_file)
             d+=e;
             count++;
         }
- 
+
         GRIB_CHECK(grib_set_long(clone_handle,"bitsPerValue",16),0);
- 
+
         /* set data values */
         GRIB_CHECK(grib_set_double_array(clone_handle,"values",values,values_len),0);
- 
- 
-        /* get the coded message in a buffer */
+
         GRIB_CHECK(grib_get_message(clone_handle,&buffer,&size),0);
-        /* write the buffer to a file */
         if(fwrite(buffer,1,size,out) != size) {
             perror(output_file);
             return 1;
@@ -72,20 +68,19 @@ static int encode_file(char *template_file, char *output_file)
         grib_handle_delete(clone_handle);
         grib_handle_delete(source_handle);
     }
- 
+
     fclose(out);
     fclose(in);
- 
+
     return 0;
 }
 
 void do_stuff(void *data);
 
 /* Structure for passing data to threads */
-struct v
-{
+struct v {
     int number; 
-    char *data; /* column */
+    char *data;
 };
 
 void *runner(void *ptr); /* the thread */
@@ -101,9 +96,9 @@ int main(int argc, char **argv)
     } else {
         printf("Running sequentially in %d runs.\n", NUM_THREADS);
     }
-    
+
     pthread_t workers[NUM_THREADS];
-    
+
     /* We have to create M * N worker threads */
     for (i = 0; i < NUM_THREADS; i++) {
 
@@ -112,15 +107,15 @@ int main(int argc, char **argv)
         data->data = NULL;
 
         if (parallel) {
-            /* Now we will create the thread passing it data as a paramater*/
+            /* Now we will create the thread passing it data as an argument */
             pthread_create(&workers[thread_counter], NULL, runner, data);
-            //pthread_join(workers[thread_counter], NULL);
+            /*pthread_join(workers[thread_counter], NULL);*/
             thread_counter++;
         } else {
             do_stuff(data);
         }
     }
-    
+
     /* Waiting for threads to complete */
     if (parallel) {
         for (i = 0; i < NUM_THREADS; i++)
@@ -128,7 +123,7 @@ int main(int argc, char **argv)
             pthread_join(workers[i], NULL);
         }
     }
-    
+
     return 0;
 }
 
@@ -140,7 +135,7 @@ void *runner(void *ptr)
 
 void do_stuff(void *ptr)
 {
-    /* Casting paramater to struct v pointer */
+    /* Cast argument to struct v pointer */
     struct v *data = ptr;
 
     char output_file[50];
@@ -157,7 +152,7 @@ void do_stuff(void *ptr)
     ltime = time(NULL);
     localtime_r(&ltime, &result);
     strftime(stime, 32, "%H:%M:%S", &result); // Try to get milliseconds here too
-//    asctime_r(&result, stime);
+    //    asctime_r(&result, stime);
 
     printf("%s: Worker %d finished.\n", stime,data->number);
 }
