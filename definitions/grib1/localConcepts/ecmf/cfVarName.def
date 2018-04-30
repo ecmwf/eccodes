@@ -12240,12 +12240,12 @@
 	 indicatorOfParameter = 131 ;
 	}
 #Ocean U wind component
-'ocu' = {
+'p133.150' = {
 	 table2Version = 150 ;
 	 indicatorOfParameter = 133 ;
 	}
 #Ocean V wind component
-'ocv' = {
+'p134.150' = {
 	 table2Version = 150 ;
 	 indicatorOfParameter = 134 ;
 	}

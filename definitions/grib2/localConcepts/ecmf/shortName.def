@@ -16076,13 +16076,13 @@
 	 parameterNumber = 131 ;
 	}
 #Ocean U wind component
-'ocu' = {
+'~' = {
 	 discipline = 192 ;
 	 parameterCategory = 150 ;
 	 parameterNumber = 133 ;
 	}
 #Ocean V wind component
-'ocv' = {
+'~' = {
 	 discipline = 192 ;
 	 parameterCategory = 150 ;
 	 parameterNumber = 134 ;
