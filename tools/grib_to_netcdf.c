@@ -2398,6 +2398,12 @@ static int compute_scale(dataset_t *subset)
     scaled_min = rint((min - ao) / sf);
     scaled_median = rint((median - ao) / sf);
 
+    if (scaled_max > nc_type_values[idx].nc_type_max) {
+        grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: scaled_max (=%lld) > nc_type_max (=%lf). Set sf to 1.0",
+                         scaled_max, nc_type_values[idx].nc_type_max);
+        sf = 1.0;  /* ECC-685 */
+    }
+
     test_scaled_max = (char) scaled_max;
     test_scaled_min = (char) scaled_min;
     test_scaled_median = (char) scaled_median;
