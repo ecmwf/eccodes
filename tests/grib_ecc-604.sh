@@ -19,8 +19,17 @@ cd $temp_dir
 
 OUTPUT=output
 mkdir -p $OUTPUT
-time ${test_dir}/grib_ecc-604
+input=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
+time ${test_dir}/grib_ecc-604 $input
 
+# Run with forge
+# -----------------
+# module swap forge/18.0.1
+# map ${test_dir}/grib_ecc-604 $input &
+#
+
+# Validate results
+# -----------------
 #num=0
 #for ofile in $OUTPUT/output_file_*grib; do
 #  ${tools_dir}/grib_compare -H $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl $ofile
