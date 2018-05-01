@@ -29,22 +29,25 @@ namespace regular {
 RotatedGG::RotatedGG(const param::MIRParametrisation& parametrisation):
     Regular(parametrisation),
     rotation_(parametrisation) {
-}
-
-
-RotatedGG::~RotatedGG() {
+    checkNiNj();
 }
 
 
 RotatedGG::RotatedGG(size_t N, const util::Rotation& rotation) :
     Regular(N),
     rotation_(rotation) {
+    checkNiNj();
 }
 
 
 RotatedGG::RotatedGG(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox, bool correctBoundingBox) :
     Regular(N, bbox, correctBoundingBox),
     rotation_(rotation) {
+    checkNiNj();
+}
+
+
+RotatedGG::~RotatedGG() {
 }
 
 

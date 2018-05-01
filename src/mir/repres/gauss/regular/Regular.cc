@@ -119,19 +119,9 @@ eckit::Fraction Regular::getSmallestIncrement() const {
 
 
 size_t Regular::numberOfPoints() const {
-    if (isGlobal()) {
-        ASSERT(Nj_ == N_ * 2);
-        ASSERT(Ni_ == N_ * 4);
-        return Ni_ * Nj_;
-    }
-    else {
-        size_t total = 0;
-        eckit::ScopedPtr<repres::Iterator> iter(iterator());
-        while (iter->next()) {
-            total++;
-        }
-        return total;
-    }
+    ASSERT(Ni_);
+    ASSERT(Nj_);
+    return Ni_ * Nj_;
 }
 
 
@@ -162,22 +152,29 @@ void Regular::validate(const std::vector<double>& values) const {
 
 void Regular::setNiNj() {
     const util::Domain dom = domain();
+    ASSERT(N_);
 
     Ni_ = N_ * 4;
     if (!dom.isPeriodicEastWest()) {
-        const Latitude lat_middle = (dom.north() + dom.south()) / 2.;
-        const eckit::Fraction inc(90, N_);
+        eckit::Fraction inc = getSmallestIncrement();
 
-        Ni_ = 0;
-        const eckit::Fraction west = dom.west().fraction();
-        for (size_t i = 0; i < N_ * 4; ++i) {
-            const eckit::Fraction lon = west + i * inc;
-            if (dom.contains(lat_middle, lon)) {
-                ++Ni_;
-            }
+        eckit::Fraction w = bbox_.west().fraction();
+        eckit::Fraction::value_type Nw = (w / inc).integralPart();
+        if (Nw * inc < w) {
+            Nw += 1;
         }
+
+        eckit::Fraction e = bbox_.east().fraction();
+        eckit::Fraction::value_type Ne = (e / inc).integralPart();
+        if (Ne * inc > e) {
+            Ne -= 1;
+        }
+
+        ASSERT(Ne - Nw + 1 > 0);
+        Ni_ = size_t(Ne - Nw + 1);
+
+        ASSERT(2 <= Ni_ && Ni_ <= N_ * 4);
     }
-    ASSERT(2 <= Ni_ && Ni_ <= N_ * 4);
 
     Nj_ = N_ * 2;
     if (!dom.includesPoleNorth() || !dom.includesPoleSouth()) {
@@ -189,8 +186,31 @@ void Regular::setNiNj() {
                 ++Nj_;
             }
         }
+        ASSERT(2 <= Nj_ && Nj_ <= N_ * 2);
     }
-    ASSERT(2 <= Nj_ && Nj_ <= N_ * 2);
+}
+
+
+void Regular::checkNiNj() const {
+    if (isGlobal()) {
+        ASSERT(Nj_ == N_ * 2);
+        ASSERT(Ni_ == N_ * 4);
+        return;
+    }
+
+    // check if the Ni*Nj is correct against iterator
+    ASSERT(Ni_);
+    ASSERT(Nj_);
+
+    size_t total = 0;
+    for (eckit::ScopedPtr<repres::Iterator> iter(iterator()); iter->next(); ++total) {
+    }
+
+    if  (total != Ni_ * Nj_) {
+        std::ostringstream oss;
+        oss << "Regular::checkNiNj: calculated Ni=" << Ni_ << ", Nj=" << Nj_ << ", but Ni*Nj = " << (Ni_*Nj_) << " != " << total << " for " << (*this);
+        throw eckit::SeriousBug(oss.str());
+    }
 }
 
 
