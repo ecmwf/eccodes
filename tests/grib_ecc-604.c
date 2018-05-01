@@ -1,14 +1,12 @@
-#include <stdio.h>
 #include <time.h>
 #include <pthread.h>
 #include <assert.h>
-#include <string.h>
 
 #include "grib_api.h"
 
-#define NUM_THREADS 8
-#define FILES_PER_ITERATION 200
-static char* INPUT_FILE = NULL;
+static size_t NUM_THREADS         = 8;
+static size_t FILES_PER_ITERATION = 300;
+static char* INPUT_FILE           = NULL;
 
 static int encode_file(char *template_file, char *output_file)
 {
@@ -42,7 +40,6 @@ static int encode_file(char *template_file, char *output_file)
         for (i=0;i<values_len;i++) {
             if (count>100) {e*=10; count=1;}
             values[i]=d;
-            /*printf("%g \n",values[i]);*/
             d+=e;
             count++;
         }
@@ -72,7 +69,7 @@ void do_stuff(void *data);
 
 /* Structure for passing data to threads */
 struct v {
-    int number;
+    size_t number;
     char *data;
 };
 
@@ -80,25 +77,30 @@ void *runner(void *ptr); /* the thread */
 
 int main(int argc, char **argv)
 {
-    int i;
+    size_t i;
     int thread_counter = 0;
     int parallel = 1;
-    if (argc<2) {
+    const char* prog = argv[0];
+    char* mode;
+    if (argc!=5) {
+        fprintf(stderr, "Usage:\n\t%s seq file numRuns numIter\nOr\n\t%s par file numThreads numIter\n", prog, prog);
         return 1;
     }
-    INPUT_FILE= argv[1];
-    if (argc>2 && strcmp(argv[2],"seq")==0) {
+    mode = argv[1];
+    INPUT_FILE= argv[2];
+    NUM_THREADS = atol(argv[3]);
+    FILES_PER_ITERATION = atol(argv[4]);
+
+    if (strcmp(mode,"seq")==0) {
         parallel = 0;
     }
     if (parallel) {
-        printf("Running parallel in %d threads.\n", NUM_THREADS);
+        printf("Running parallel in %ld threads. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
     } else {
-        printf("Running sequentially in %d runs.\n", NUM_THREADS);
+        printf("Running sequentially in %ld runs. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
     }
 
     pthread_t workers[NUM_THREADS];
-
-    /* We have to create M * N worker threads */
     for (i = 0; i < NUM_THREADS; i++) {
         struct v *data = (struct v *) malloc(sizeof(struct v));
         data->number = i;
@@ -133,11 +135,11 @@ void do_stuff(void *ptr)
 {
     /* Cast argument to struct v pointer */
     struct v *data = ptr;
-
+    size_t i;
     char output_file[50];
 
-    for (int i=0; i<FILES_PER_ITERATION;i++) {
-        sprintf(output_file,"output/output_file_%d-%d.grib",data->number,i);
+    for (i=0; i<FILES_PER_ITERATION;i++) {
+        sprintf(output_file,"output/output_file_%ld-%ld.grib", data->number, i);
         encode_file(INPUT_FILE,output_file);
     }
 
@@ -150,5 +152,5 @@ void do_stuff(void *ptr)
     strftime(stime, 32, "%H:%M:%S", &result); /* Try to get milliseconds here too*/
     /* asctime_r(&result, stime); */
 
-    printf("%s: Worker %d finished.\n", stime,data->number);
+    printf("%s: Worker %ld finished.\n", stime, data->number);
 }

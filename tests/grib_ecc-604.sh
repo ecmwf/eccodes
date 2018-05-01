@@ -17,15 +17,17 @@ rm -fr $temp_dir
 mkdir -p $temp_dir
 cd $temp_dir
 
+NUM_THREADS=8
+NUM_ITER=300
 OUTPUT=output
 mkdir -p $OUTPUT
 input=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
-time ${test_dir}/grib_ecc-604 $input
+time ${test_dir}/grib_ecc-604 par $input $NUM_THREADS $NUM_ITER
 
 # Run with forge
 # -----------------
 # module swap forge/18.0.1
-# map ${test_dir}/grib_ecc-604 $input &
+# map ${test_dir}/grib_ecc-604 par $input $NUM_THREADS $NUM_ITER &
 #
 
 # Validate results
