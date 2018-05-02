@@ -10925,6 +10925,7 @@ dist_definitionsgrib2_DATA = \
 	grib2/template.4.32.def\
 	grib2/template.4.33.def\
 	grib2/template.4.34.def\
+	grib2/template.4.35.def\
 	grib2/template.4.4.def\
 	grib2/template.4.40.def\
 	grib2/template.4.40033.def\
