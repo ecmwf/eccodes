@@ -51,6 +51,11 @@ definitionsbufr_tables_0_local_1_254_0dir = @ECCODES_DEFINITION_PATH@/bufr/table
 dist_definitionsbufr_tables_0_local_1_254_0_DATA = \
 	bufr/tables/0/local/1/254/0/element.table
 
+definitionsbufr_tables_0_local_1_39_0dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/1/39/0
+dist_definitionsbufr_tables_0_local_1_39_0_DATA = \
+	bufr/tables/0/local/1/39/0/element.table\
+	bufr/tables/0/local/1/39/0/sequence.def
+
 definitionsbufr_tables_0_local_1_98_0dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/1/98/0
 dist_definitionsbufr_tables_0_local_1_98_0_DATA = \
 	bufr/tables/0/local/1/98/0/element.table\
@@ -185,7 +190,8 @@ dist_definitionsbufr_tables_0_local_101_98_0_codetables_DATA = \
 
 definitionsbufr_tables_0_local_19_1_254_0dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/19-1/254/0
 dist_definitionsbufr_tables_0_local_19_1_254_0_DATA = \
-	bufr/tables/0/local/19-1/254/0/element.table
+	bufr/tables/0/local/19-1/254/0/element.table\
+	bufr/tables/0/local/19-1/254/0/sequence.def
 
 definitionsbufr_tables_0_local_19_1_98_0dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/19-1/98/0
 dist_definitionsbufr_tables_0_local_19_1_98_0_DATA = \
@@ -286,6 +292,14 @@ dist_definitionsbufr_tables_0_local_4_98_0_DATA = \
 definitionsbufr_tables_0_local_4_98_0_codetablesdir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/4/98/0/codetables
 dist_definitionsbufr_tables_0_local_4_98_0_codetables_DATA = \
 	bufr/tables/0/local/4/98/0/codetables/25192.table
+
+definitionsbufr_tables_0_local_6_98_0dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/6/98/0
+dist_definitionsbufr_tables_0_local_6_98_0_DATA = \
+	bufr/tables/0/local/6/98/0/element.table
+
+definitionsbufr_tables_0_local_6_98_0_codetablesdir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/local/6/98/0/codetables
+dist_definitionsbufr_tables_0_local_6_98_0_codetables_DATA = \
+	bufr/tables/0/local/6/98/0/codetables/3192.table
 
 definitionsbufr_tables_0_wmo_10dir = @ECCODES_DEFINITION_PATH@/bufr/tables/0/wmo/10
 dist_definitionsbufr_tables_0_wmo_10_DATA = \
@@ -12852,6 +12866,140 @@ dist_definitionsgrib2_tables_20_DATA = \
 	grib2/tables/20/6.0.table\
 	grib2/tables/20/stepType.table
 
+definitionsgrib2_tables_21dir = @ECCODES_DEFINITION_PATH@/grib2/tables/21
+dist_definitionsgrib2_tables_21_DATA = \
+	grib2/tables/21/0.0.table\
+	grib2/tables/21/1.0.table\
+	grib2/tables/21/1.1.table\
+	grib2/tables/21/1.2.table\
+	grib2/tables/21/1.3.table\
+	grib2/tables/21/1.4.table\
+	grib2/tables/21/1.5.table\
+	grib2/tables/21/1.6.table\
+	grib2/tables/21/3.0.table\
+	grib2/tables/21/3.1.table\
+	grib2/tables/21/3.10.table\
+	grib2/tables/21/3.11.table\
+	grib2/tables/21/3.15.table\
+	grib2/tables/21/3.2.table\
+	grib2/tables/21/3.20.table\
+	grib2/tables/21/3.21.table\
+	grib2/tables/21/3.3.table\
+	grib2/tables/21/3.4.table\
+	grib2/tables/21/3.5.table\
+	grib2/tables/21/3.6.table\
+	grib2/tables/21/3.7.table\
+	grib2/tables/21/3.8.table\
+	grib2/tables/21/3.9.table\
+	grib2/tables/21/4.0.table\
+	grib2/tables/21/4.1.0.table\
+	grib2/tables/21/4.1.1.table\
+	grib2/tables/21/4.1.10.table\
+	grib2/tables/21/4.1.192.table\
+	grib2/tables/21/4.1.2.table\
+	grib2/tables/21/4.1.3.table\
+	grib2/tables/21/4.10.table\
+	grib2/tables/21/4.11.table\
+	grib2/tables/21/4.12.table\
+	grib2/tables/21/4.13.table\
+	grib2/tables/21/4.14.table\
+	grib2/tables/21/4.15.table\
+	grib2/tables/21/4.16.table\
+	grib2/tables/21/4.192.table\
+	grib2/tables/21/4.2.0.0.table\
+	grib2/tables/21/4.2.0.1.table\
+	grib2/tables/21/4.2.0.13.table\
+	grib2/tables/21/4.2.0.14.table\
+	grib2/tables/21/4.2.0.15.table\
+	grib2/tables/21/4.2.0.16.table\
+	grib2/tables/21/4.2.0.17.table\
+	grib2/tables/21/4.2.0.18.table\
+	grib2/tables/21/4.2.0.19.table\
+	grib2/tables/21/4.2.0.190.table\
+	grib2/tables/21/4.2.0.191.table\
+	grib2/tables/21/4.2.0.2.table\
+	grib2/tables/21/4.2.0.20.table\
+	grib2/tables/21/4.2.0.3.table\
+	grib2/tables/21/4.2.0.4.table\
+	grib2/tables/21/4.2.0.5.table\
+	grib2/tables/21/4.2.0.6.table\
+	grib2/tables/21/4.2.0.7.table\
+	grib2/tables/21/4.2.1.0.table\
+	grib2/tables/21/4.2.1.1.table\
+	grib2/tables/21/4.2.1.2.table\
+	grib2/tables/21/4.2.10.0.table\
+	grib2/tables/21/4.2.10.1.table\
+	grib2/tables/21/4.2.10.191.table\
+	grib2/tables/21/4.2.10.2.table\
+	grib2/tables/21/4.2.10.3.table\
+	grib2/tables/21/4.2.10.4.table\
+	grib2/tables/21/4.2.2.0.table\
+	grib2/tables/21/4.2.2.3.table\
+	grib2/tables/21/4.2.2.4.table\
+	grib2/tables/21/4.2.2.5.table\
+	grib2/tables/21/4.2.3.0.table\
+	grib2/tables/21/4.2.3.1.table\
+	grib2/tables/21/4.2.3.2.table\
+	grib2/tables/21/4.2.3.3.table\
+	grib2/tables/21/4.2.3.4.table\
+	grib2/tables/21/4.2.3.5.table\
+	grib2/tables/21/4.2.3.6.table\
+	grib2/tables/21/4.201.table\
+	grib2/tables/21/4.202.table\
+	grib2/tables/21/4.203.table\
+	grib2/tables/21/4.204.table\
+	grib2/tables/21/4.205.table\
+	grib2/tables/21/4.206.table\
+	grib2/tables/21/4.207.table\
+	grib2/tables/21/4.208.table\
+	grib2/tables/21/4.209.table\
+	grib2/tables/21/4.210.table\
+	grib2/tables/21/4.211.table\
+	grib2/tables/21/4.212.table\
+	grib2/tables/21/4.213.table\
+	grib2/tables/21/4.215.table\
+	grib2/tables/21/4.216.table\
+	grib2/tables/21/4.217.table\
+	grib2/tables/21/4.218.table\
+	grib2/tables/21/4.219.table\
+	grib2/tables/21/4.220.table\
+	grib2/tables/21/4.221.table\
+	grib2/tables/21/4.222.table\
+	grib2/tables/21/4.223.table\
+	grib2/tables/21/4.224.table\
+	grib2/tables/21/4.225.table\
+	grib2/tables/21/4.227.table\
+	grib2/tables/21/4.230.table\
+	grib2/tables/21/4.233.table\
+	grib2/tables/21/4.234.table\
+	grib2/tables/21/4.236.table\
+	grib2/tables/21/4.240.table\
+	grib2/tables/21/4.241.table\
+	grib2/tables/21/4.242.table\
+	grib2/tables/21/4.243.table\
+	grib2/tables/21/4.244.table\
+	grib2/tables/21/4.3.table\
+	grib2/tables/21/4.4.table\
+	grib2/tables/21/4.5.table\
+	grib2/tables/21/4.6.table\
+	grib2/tables/21/4.7.table\
+	grib2/tables/21/4.8.table\
+	grib2/tables/21/4.9.table\
+	grib2/tables/21/4.91.table\
+	grib2/tables/21/5.0.table\
+	grib2/tables/21/5.1.table\
+	grib2/tables/21/5.2.table\
+	grib2/tables/21/5.3.table\
+	grib2/tables/21/5.4.table\
+	grib2/tables/21/5.40.table\
+	grib2/tables/21/5.40000.table\
+	grib2/tables/21/5.5.table\
+	grib2/tables/21/5.50002.table\
+	grib2/tables/21/5.6.table\
+	grib2/tables/21/5.7.table\
+	grib2/tables/21/6.0.table\
+	grib2/tables/21/stepType.table
+
 definitionsgrib2_tables_3dir = @ECCODES_DEFINITION_PATH@/grib2/tables/3
 dist_definitionsgrib2_tables_3_DATA = \
 	grib2/tables/3/0.0.table\
@@ -15699,6 +15847,7 @@ dist_definitionsmars_DATA = \
 	mars/grib.efas.cf.def\
 	mars/grib.efas.fc.def\
 	mars/grib.efas.fu.def\
+	mars/grib.efas.go.def\
 	mars/grib.efas.pf.def\
 	mars/grib.efhc.cf.def\
 	mars/grib.efhc.icp.def\
