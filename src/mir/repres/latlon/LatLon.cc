@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <iostream>
 #include "eckit/exception/Exceptions.h"
+#include "eckit/log/Plural.h"
 #include "eckit/types/Fraction.h"
 #include "mir/api/Atlas.h"
 #include "mir/config/LibMir.h"
@@ -305,8 +306,10 @@ size_t LatLon::frame(std::vector<double>& values, size_t size, double missingVal
 
 
 void LatLon::validate(const std::vector<double>& values) const {
-    eckit::Log::debug<LibMir>() << "LatLon::validate " << values.size() << " ni*nj " << ni_ * nj_ << std::endl;
-    ASSERT(values.size() == ni_ * nj_);
+    const size_t count = numberOfPoints();
+
+    eckit::Log::debug<LibMir>() << "LatLon::validate checked " << eckit::Plural(values.size(), "value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
+    ASSERT(values.size() == count);
 }
 
 
