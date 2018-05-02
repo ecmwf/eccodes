@@ -35,7 +35,7 @@ static void* process_grib(void* threadID)
     CODES_CHECK(codes_set_string(h,"indicatorOfUnitOfTimeRange", "s", &str_len),0);
     CODES_CHECK(codes_set_string(h,"stepUnits", "s", &str_len),0);
     CODES_CHECK(codes_set_long(h, "endStep", 86400), 0);
-    CODES_CHECK(codes_set_long(h,"centre", 80),0);
+    //CODES_CHECK(codes_set_long(h,"centre", 80),0);
 
     CODES_CHECK(codes_get_long(h,"endStep", &step),0);
     CODES_CHECK(codes_get_string(h, "indicatorOfUnitOfTimeRange", mystring, &str_len),0);
@@ -64,6 +64,7 @@ int main(int argc, char** argv)
         printf("Creating thread %ld\n", i);
         error = pthread_create(&threads[i], NULL, process_grib, (void *)i);
         if (error) {
+            assert(0);
             return 1;
         }
     }

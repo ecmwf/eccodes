@@ -41,6 +41,11 @@ time ${test_dir}/grib_ecc-604 par $input $NUM_THREADS $NUM_ITER
 #    break
 #  fi
 #done
+echo "Checking every output file is identical..."
+set +x
+res=`cksum $OUTPUT/output_file_* | awk '{print $1}' | sort -u`
+set -x
+[ "$res" = "2572910830" ]
 
 # Clean up
 cd $test_dir
