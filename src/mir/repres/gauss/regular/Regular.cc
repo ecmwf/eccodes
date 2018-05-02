@@ -142,14 +142,6 @@ atlas::Grid Regular::atlasGrid() const {
 }
 
 
-void Regular::validate(const std::vector<double>& values) const {
-    const size_t count = numberOfPoints();
-
-    eckit::Log::debug<LibMir>() << "Regular::validate checked " << eckit::Plural(values.size(), "value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
-    ASSERT(values.size() == size_t(count));
-}
-
-
 void Regular::setNiNj() {
     const util::Domain dom = domain();
     ASSERT(N_);

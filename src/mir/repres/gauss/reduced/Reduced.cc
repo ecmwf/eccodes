@@ -203,19 +203,6 @@ size_t Reduced::frame(std::vector<double>& values, size_t size, double missingVa
 }
 
 
-void Reduced::validate(const std::vector<double>& values) const {
-    size_t count = numberOfPoints();
-    eckit::Log::debug<LibMir>() << "Reduced::validate checked "
-                                << eckit::Plural(values.size(), "value")
-                                << ", within domain: "
-                                << eckit::BigNum(count)
-                                << "."
-                                << std::endl;
-
-    ASSERT(values.size() == size_t(count));
-}
-
-
 const Reduced *Reduced::croppedRepresentation(const util::BoundingBox& bbox) const  {
     const std::vector<long>& pl = pls();
     std::vector<long> newpl;
