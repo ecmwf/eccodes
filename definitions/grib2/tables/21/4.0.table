@@ -23,7 +23,8 @@
 32 32 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for simulated (synthetic) satellite data 
 33 33 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for simulated (synthetic) satellite data 
 34 34 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer, in a continuous or non-continuous interval for simulated (synthetic) satellite data 
-# 35-39 Reserved 
+35 35 Satellite product with or without associated quality values
+# 36-39 Reserved 
 311 311 Satellite product auxiliary information
 40 40 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for atmospheric chemical constituents 
 41 41 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for atmospheric chemical constituents 
