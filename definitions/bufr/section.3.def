@@ -44,32 +44,32 @@ alias ls.numberOfSubsets=numberOfSubsets;
 if (section2Present && bufrHeaderCentre==98 && section2Length==52) {
 
     if ( rdbType == 2 || rdbType == 3 || rdbType == 8 || rdbType == 12 ) {
-      transient isSatelliteType=1;
+        transient isSatelliteType=1;
     } else {
-      transient isSatelliteType=0;
+        transient isSatelliteType=0;
     }
-		if (isSatelliteType || numberOfSubsets>1) {
-				constant isSatellite=1;
-		} else {
-				constant isSatellite=0;
-		}
+    if (isSatelliteType || numberOfSubsets>1) {
+        constant isSatellite=1;
+    } else {
+        constant isSatellite=0;
+    }
     alias rdb.isSatellite=isSatellite;
-		if (isSatellite) {
+    if (isSatellite) {
         meta localLongitude1 bits(keyData,40,26,-18000000,100000) : dump,no_copy;
         meta localLatitude1 bits(keyData,72,25,-9000000,100000) : dump,no_copy;
         meta localLongitude2 bits(keyMore,0,26,-18000000,100000) : dump,no_copy;
         meta localLatitude2 bits(keyMore,32,25,-9000000,100000) : dump,no_copy;
 
-				if (rdbSubtype > 255 || numberOfSubsets>255 || 
-						( rdbSubtype>=121 && rdbSubtype <=130 ) || 
-						rdbSubtype==31) {
-						meta ls.localNumberOfObservations bits(keySat,0,16) : dump,long_type,no_copy;
-						meta ls.satelliteID bits(keySat,16,16) : dump,long_type,no_copy;
-				} else {
-						meta ls.localNumberOfObservations bits(keySat,0,8) : dump,long_type,no_copy;
-						meta ls.satelliteID bits(keySat,8,16) : dump,long_type,no_copy;
-				}
-		} else {
+        if (oldSubtype == 255 || numberOfSubsets>255 ||
+            ( oldSubtype>=121 && oldSubtype <=130 ) ||
+            oldSubtype==31) {
+            meta ls.localNumberOfObservations bits(keySat,0,16) : dump,long_type,no_copy;
+            meta ls.satelliteID bits(keySat,16,16) : dump,long_type,no_copy;
+        } else {
+            meta ls.localNumberOfObservations bits(keySat,0,8) : dump,long_type,no_copy;
+            meta ls.satelliteID bits(keySat,8,16) : dump,long_type,no_copy;
+        }
+    } else {
         meta ls.localLatitude bits(keyData,72,25,-9000000,100000) : dump,no_copy;
         meta ls.localLongitude bits(keyData,40,26,-18000000,100000) : dump,no_copy;
         alias ls.ident=keyMore : dump,string_type,no_copy;
