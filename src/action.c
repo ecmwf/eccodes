@@ -115,10 +115,11 @@ int grib_create_accessor(grib_section* p, grib_action* a,  grib_loader* h)
     {
         if(c->create_accessor) {
             int ret;
-            GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
-            GRIB_MUTEX_LOCK(&mutex1);
+            /* ECC-604: Do not lock excessively */
+            /*GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);*/
+            /*GRIB_MUTEX_LOCK(&mutex1);*/
             ret=c->create_accessor(p, a, h);
-            GRIB_MUTEX_UNLOCK(&mutex1);
+            /*GRIB_MUTEX_UNLOCK(&mutex1);*/
             return ret;
         }
         c = c->super ? *(c->super) : NULL;
