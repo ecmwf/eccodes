@@ -106,6 +106,80 @@ void Regular::makeName(std::ostream& out) const {
 }
 
 
+util::BoundingBox Regular::croppedBoundingBox(const util::BoundingBox& bbox) const {
+
+    // crop latitude-wise, ensuring exact Gaussian latitudes
+    Latitude n = bbox.north();
+    Latitude s = bbox.south();
+
+    const std::vector<double>& lats = latitudes();
+
+    if (n < lats.back()) {
+        n = lats.back();
+    } else {
+        auto best = std::lower_bound(lats.begin(), lats.end(), n.value(),
+                                     [](const Latitude& l1, const Latitude& l2) {
+            return !(l1 <= l2);
+        });
+        ASSERT(best != lats.end());
+        n = *best;
+    }
+
+    if (s > lats.front()) {
+        s = lats.front();
+    } else {
+        auto best = std::lower_bound(lats.rbegin(), lats.rend(), s.value(),
+                                     [](const Latitude& l1, const Latitude& l2) {
+            return !(l1 >= l2);
+        });
+        ASSERT(best != lats.rend());
+        s = *best;
+    }
+
+
+    // crop longitude-wise
+    Longitude w = bbox.west();
+    Longitude e = bbox.east();
+    ASSERT(w < e);
+    ASSERT(w - e < Longitude::GLOBE);
+
+    eckit::Fraction inc = getSmallestIncrement();
+
+    eckit::Fraction west = w.fraction();
+    eckit::Fraction::value_type Nw = (west / inc).integralPart();
+    if (Nw * inc < west) {
+        Nw += 1;
+    }
+
+    eckit::Fraction east = e.fraction();
+    eckit::Fraction::value_type Ne = (east / inc).integralPart();
+    if (Ne * inc > east) {
+        Ne -= 1;
+    }
+
+    ASSERT(Nw <= Ne);
+
+    w = Nw * inc;
+    e = Ne * inc;
+
+
+    // set bounding box and inform
+    util::BoundingBox cropped(n, w, s, e);
+
+    if (cropped != bbox) {
+        eckit::Channel& log = eckit::Log::debug<LibMir>();
+        std::streamsize old = log.precision(12);
+        log << "Regular::croppedBoundingBox: "
+            << "\n   " << bbox
+            << "\n > " << cropped
+            << std::endl;
+        log.precision(old);
+    }
+
+    return cropped;
+}
+
+
 bool Regular::sameAs(const Representation& other) const {
     const Regular* o = dynamic_cast<const Regular*>(&other);
     return o && (N_ == o->N_) && (bbox_ == o->bbox_);
