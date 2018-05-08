@@ -1,5 +1,6 @@
 /*
- * Test for ECC-604: This version does not clone the GRIB handle
+ * Test for ECC-604: Each thread creates a new GRIB handle and writes it out.
+ *                   It does not clone the handle.
  */
 
 #include <time.h>
@@ -96,6 +97,7 @@ int main(int argc, char **argv)
     }
     if (parallel) {
         printf("Running parallel in %ld threads. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
+        printf("Each thread creates a new GRIB handle and writes it out. No cloning the handle\n");
     } else {
         printf("Running sequentially in %ld runs. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
     }

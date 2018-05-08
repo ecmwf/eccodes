@@ -1,5 +1,6 @@
 /*
- * Test for ECC-604: No output writing
+ * Test for ECC-604: Each thread creates a new GRIB handle and clones it.
+ *                   No output writing.
  */
 #include <time.h>
 #include <pthread.h>
@@ -94,6 +95,7 @@ int main(int argc, char **argv)
     }
     if (parallel) {
         printf("Running parallel in %ld threads. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
+        printf("Each thread creates a new GRIB handle and clones it. No output writing\n");
     } else {
         printf("Running sequentially in %ld runs. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
     }
