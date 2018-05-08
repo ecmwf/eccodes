@@ -40,4 +40,4 @@ HAVE_LIBOPENJPEG=@HAVE_LIBOPENJPEG@
 HAVE_PNG=@HAVE_PNG@
 HAVE_AEC=@HAVE_AEC@
 
-pwd
+echo "Current directory: `pwd`"
