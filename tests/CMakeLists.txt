@@ -218,16 +218,13 @@ if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh
     )
 
-    ecbuild_add_executable( TARGET    grib_ecc-604-1
-                            NOINSTALL
-                            SOURCES   grib_ecc-604-1.c
-                            LIBS      eccodes
-    )
-    ecbuild_add_executable( TARGET    grib_ecc-604-2
-                            NOINSTALL
-                            SOURCES   grib_ecc-604-2.c
-                            LIBS      eccodes
-    )
+    foreach( test grib_ecc-604-1 grib_ecc-604-2 grib_ecc-604-3 )
+        ecbuild_add_executable( TARGET    ${test}
+                                NOINSTALL
+                                SOURCES   ${test}.c
+                                LIBS      eccodes
+        )
+    endforeach()
     ecbuild_add_test( TARGET eccodes_t_grib_ecc-604
                       TYPE SCRIPT
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-604.sh

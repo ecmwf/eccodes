@@ -31,16 +31,23 @@ rm -fr $temp_dir
 mkdir -p $temp_dir
 cd $temp_dir
 
-# Test 01
+# Test 01: clone + output
+# ------------------------
 mkdir -p $OUTPUT
 time ${test_dir}/grib_ecc-604-1 par $input $NUM_THREADS $NUM_ITER
 validate
 
-# Test 02
+# Test 02: No clone + output
+# --------------------------
 rm -fr $OUTPUT
 mkdir -p $OUTPUT
 time ${test_dir}/grib_ecc-604-2 par $input $NUM_THREADS $NUM_ITER
 validate
+
+# Test 03: clone + no output
+# ---------------------------
+rm -fr $OUTPUT
+time ${test_dir}/grib_ecc-604-3 par $input $NUM_THREADS $NUM_ITER
 
 
 # Clean up
