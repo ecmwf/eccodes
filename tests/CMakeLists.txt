@@ -217,9 +217,15 @@ if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
                       TYPE SCRIPT
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh
     )
-    ecbuild_add_executable( TARGET    grib_ecc-604
+
+    ecbuild_add_executable( TARGET    grib_ecc-604-1
                             NOINSTALL
-                            SOURCES   grib_ecc-604.c
+                            SOURCES   grib_ecc-604-1.c
+                            LIBS      eccodes
+    )
+    ecbuild_add_executable( TARGET    grib_ecc-604-2
+                            NOINSTALL
+                            SOURCES   grib_ecc-604-2.c
                             LIBS      eccodes
     )
     ecbuild_add_test( TARGET eccodes_t_grib_ecc-604

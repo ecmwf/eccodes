@@ -1,3 +1,7 @@
+/*
+ * Test for ECC-604: This version does not clone the GRIB handle
+ */
+
 #include <time.h>
 #include <pthread.h>
 #include <assert.h>
@@ -20,18 +24,15 @@ static int encode_file(char *template_file, char *output_file)
     in = fopen(template_file,"r"); assert(in);
     out = fopen(output_file,"w");  assert(out);
 
-    /* loop over the messages in the source GRIB and clone them */
+    /* loop over the messages in the source GRIB */
     while ((source_handle = grib_handle_new_from_file(0, in, &err))!=NULL) {
         int i;
         long count;
         double d,e;
         size_t values_len= 0;
 
-        grib_handle *clone_handle = grib_handle_clone(source_handle);
-        assert(clone_handle);
-
-        /*GRIB_CHECK(grib_set_long(clone_handle, "centre", 250),0);*/
-        GRIB_CHECK(grib_get_size(clone_handle, "values", &values_len),0);
+        /*GRIB_CHECK(grib_set_long(source_handle, "centre", 250),0);*/
+        GRIB_CHECK(grib_get_size(source_handle, "values", &values_len),0);
 
         values = (double*)malloc(values_len*sizeof(double));
         d=10e-8;
@@ -44,17 +45,16 @@ static int encode_file(char *template_file, char *output_file)
             count++;
         }
 
-        GRIB_CHECK(grib_set_long(clone_handle,"bitsPerValue",16),0);
+        GRIB_CHECK(grib_set_long(source_handle,"bitsPerValue",16),0);
 
         /* set data values */
-        GRIB_CHECK(grib_set_double_array(clone_handle,"values",values,values_len),0);
+        GRIB_CHECK(grib_set_double_array(source_handle,"values",values,values_len),0);
 
-        GRIB_CHECK(grib_get_message(clone_handle,&buffer,&size),0);
+        GRIB_CHECK(grib_get_message(source_handle,&buffer,&size),0);
         if(fwrite(buffer,1,size,out) != size) {
             perror(output_file);
             return 1;
         }
-        grib_handle_delete(clone_handle);
         grib_handle_delete(source_handle);
         free(values);
     }

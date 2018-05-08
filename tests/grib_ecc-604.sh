@@ -11,41 +11,37 @@
 . ./include.sh
 
 label="grib_ecc-604"
-
 temp_dir=tempdir.${label}
-rm -fr $temp_dir
-mkdir -p $temp_dir
-cd $temp_dir
+
+validate()
+{
+    echo "Checking every output file is identical..."
+    set +x
+    res=`cksum $OUTPUT/output_file_* | awk '{print $1}' | sort -u`
+    set -x
+    [ "$res" = "2572910830" ]
+}
 
 NUM_THREADS=8
 NUM_ITER=300
 OUTPUT=output
-mkdir -p $OUTPUT
 input=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
-time ${test_dir}/grib_ecc-604 par $input $NUM_THREADS $NUM_ITER
 
-# Run with forge
-# -----------------
-# module swap forge/18.0.1
-# map ${test_dir}/grib_ecc-604 par $input $NUM_THREADS $NUM_ITER &
-#
+rm -fr $temp_dir
+mkdir -p $temp_dir
+cd $temp_dir
 
-# Validate results
-# -----------------
-#num=0
-#for ofile in $OUTPUT/output_file_*grib; do
-#  ${tools_dir}/grib_compare -H $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl $ofile
-#  num=`expr $num + 1`
-#  # If there are too many output files, comparing each one will take a long time!
-#  if [ $num -gt 500 ]; then
-#    break
-#  fi
-#done
-echo "Checking every output file is identical..."
-set +x
-res=`cksum $OUTPUT/output_file_* | awk '{print $1}' | sort -u`
-set -x
-[ "$res" = "2572910830" ]
+# Test 01
+mkdir -p $OUTPUT
+time ${test_dir}/grib_ecc-604-1 par $input $NUM_THREADS $NUM_ITER
+validate
+
+# Test 02
+rm -fr $OUTPUT
+mkdir -p $OUTPUT
+time ${test_dir}/grib_ecc-604-2 par $input $NUM_THREADS $NUM_ITER
+validate
+
 
 # Clean up
 cd $test_dir
