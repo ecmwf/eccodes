@@ -1,0 +1,16 @@
+# LaD - Latitude(s) at which the Mercator projection intersects the Earth
+# (Latitude(s) where Di and Dj are specified)
+signed[4] LaD : edition_specific,no_copy;
+meta geography.LaDInDegrees scale(LaD,oneConstant,grib2divider,truncateDegrees) : dump;
+
+# La2 - latitude of last grid point
+signed[4] latitudeOfLastGridPoint : edition_specific,no_copy;
+alias La2 =  latitudeOfLastGridPoint;
+meta geography.latitudeOfLastGridPointInDegrees scale(latitudeOfLastGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
+
+# Lo2 - longitude of last grid point
+signed[4] longitudeOfLastGridPoint: edition_specific,no_copy ;
+alias Lo2 =  longitudeOfLastGridPoint;
+meta geography.longitudeOfLastGridPointInDegrees scale(longitudeOfLastGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
+
+

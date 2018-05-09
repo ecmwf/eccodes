@@ -76,8 +76,9 @@ concept gridType {
  "stretched_ll"          = { gridDefinitionTemplateNumber=2;  PLPresent=0;  }
  "stretched_rotated_ll"  = { gridDefinitionTemplateNumber=3;  PLPresent=0;  }
  "mercator"              = { gridDefinitionTemplateNumber=10; PLPresent=0;  }
+ "mercator"              = { gridDefinitionTemplateNumber=10; PLPresent=0;  }
  "transverse_mercator"   = { gridDefinitionTemplateNumber=12; PLPresent=0;  }
- "polar_stereographic"   = { gridDefinitionTemplateNumber=20; PLPresent=0;  }
+ "polar_stereographic"     = { gridDefinitionTemplateNumber=20; PLPresent=0;  }
  "lambert"               = { gridDefinitionTemplateNumber=30; PLPresent=0;  }
  "albers"                = { gridDefinitionTemplateNumber=31; PLPresent=0;  }
 
@@ -112,6 +113,12 @@ concept gridType {
  "cross_section"         = { gridDefinitionTemplateNumber=1000;PLPresent=0; }
  "Hovmoller"             = { gridDefinitionTemplateNumber=1100;PLPresent=0; }
  "time_section"          = { gridDefinitionTemplateNumber=1200;PLPresent=0; }
+ "lambert_lam"             = { gridDefinitionTemplateNumber=33; PLPresent=0;  }
+ "mercator_lam"            = { gridDefinitionTemplateNumber=13; PLPresent=0;  }
+ "polar_stereographic_lam" = { gridDefinitionTemplateNumber=23; PLPresent=0;  }
+ "lambert_bf"              = { gridDefinitionTemplateNumber=63; PLPresent=0;  }
+ "mercator_bf"             = { gridDefinitionTemplateNumber=61; PLPresent=0;  }
+ "polar_stereographic_bf"  = { gridDefinitionTemplateNumber=62; PLPresent=0;  }
  "unknown"               = {PLPresent=0;}
  "unknown_PLPresent"     = {PLPresent=1;}
 } : dump;

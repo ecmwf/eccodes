@@ -29,6 +29,8 @@ list( APPEND test_bins
       bufr_get_element
       sh_ieee64
       ieee
+      lam_bf
+      lam_gp
 )
 
 foreach( tool ${test_bins} )
@@ -100,6 +102,8 @@ list( APPEND tests_data_reqd
     sh_ieee64
     optimize_scaling
     optimize_scaling_sh
+    lam_bf 
+    lam_gp 
     grib1to2
     grib2to1
     grib1to3
@@ -261,3 +265,5 @@ ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
+
+

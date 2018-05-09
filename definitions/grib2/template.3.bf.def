@@ -1,0 +1,36 @@
+label "BiFourier coefficients";
+constant biFourierCoefficients=1;
+
+codetable[1]  spectralType ('3.6.table',masterDir,localDir) = 99 : no_copy;
+alias spectralDataRepresentationType=spectralType;
+
+
+
+unsigned[4] biFourierResolutionParameterN : dump;
+
+unsigned[4] biFourierResolutionParameterM : dump;
+
+codetable[1] biFourierTruncationType ('3.99.table',masterDir,localDir) : dump;
+
+#  Lx - Full domain length in X-direction
+unsigned[8] Lx;
+meta  geography.LxInMetres scale(Lx,one,thousand) : dump;
+# Lux - Useful domain length in X-direction
+unsigned[8] Lux;
+meta  geography.LuxInMetres scale(Lux,one,thousand) : dump;
+# Lcx - Coupling domain width in X-direction
+unsigned[8] Lcx;
+meta  geography.LcxInMetres scale(Lcx,one,thousand) : dump;
+
+#  Ly - Full domain length in Y-direction
+unsigned[8] Ly;
+meta  geography.LyInMetres scale(Ly,one,thousand) : dump;
+# Luy - Useful domain length in Y-direction
+unsigned[8] Luy;
+meta  geography.LuyInMetres scale(Luy,one,thousand) : dump;
+# Lcy - Coupling domain width in Y-direction
+unsigned[8] Lcy;
+meta  geography.LcyInMetres scale(Lcy,one,thousand) : dump;
+
+
+
