@@ -11,6 +11,13 @@ meta localMinute bits(keyData,27,6) : dump,long_type,no_copy;
 meta localSecond bits(keyData,33,6) : dump,long_type,no_copy;
 meta spare  bits(keyData,39,1) : no_copy; # 40 bits = 5 bytes
 
+alias mars.localYear=localYear;
+alias mars.localMonth=localMonth;
+alias mars.localDay=localDay;
+alias mars.localHour=localHour;
+alias mars.localMinute=localMinute;
+alias mars.localSecond=localSecond;
+
 meta localDateTime julian_date(localYear,localMonth,localDay,localHour,localMinute,localSecond) : no_copy;
 
 # isSatellite and other stuff moved to section 3
@@ -72,6 +79,9 @@ if (oldSubtype < 255 ) {
 
 alias ls.rdbType=rdbType;
 alias ls.rdbSubtype=rdbSubtype;
+
+alias mars.rdbType=rdbType;
+alias mars.rdbSubtype=rdbSubtype;
 
 #Data assimilation loop for purpose of Continous DA
 unsigned[1] daLoop;
