@@ -33,7 +33,7 @@ namespace latlon {
 
 
 static bool checkPl(const std::vector<long>& pl) {
-    ASSERT(pl.size() >= 2);
+    ASSERT(!pl.empty());
     return *std::min_element(pl.begin(), pl.end()) >= 2;
 }
 
