@@ -220,7 +220,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 37 ;
 	}
-#maximum CAPE in the last 6 hours
+#Maximum CAPE in the last 6 hours
 '228035' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
@@ -231,7 +231,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#maximum CAPES in the last 6 hours
+#Maximum CAPES in the last 6 hours
 '228036' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;

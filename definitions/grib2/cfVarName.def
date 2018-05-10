@@ -220,7 +220,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 37 ;
 	}
-#maximum CAPE in the last 6 hours
+#Maximum CAPE in the last 6 hours
 'mxcape6' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
@@ -231,7 +231,7 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
-#maximum CAPES in the last 6 hours
+#Maximum CAPES in the last 6 hours
 'mxcapes6' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;

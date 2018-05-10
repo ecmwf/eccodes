@@ -220,7 +220,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 37 ;
 	}
-#maximum CAPE in the last 6 hours
+#Maximum CAPE in the last 6 hours
 'J kg**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
@@ -231,7 +231,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	}
-#maximum CAPES in the last 6 hours
+#Maximum CAPES in the last 6 hours
 'm**2 s**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
