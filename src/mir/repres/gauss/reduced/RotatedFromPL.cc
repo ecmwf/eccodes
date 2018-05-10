@@ -31,14 +31,8 @@ RotatedFromPL::RotatedFromPL(const param::MIRParametrisation &parametrisation):
 }
 
 
-RotatedFromPL::RotatedFromPL(size_t N, const std::vector<long> &pl, const util::BoundingBox &bbox, const util::Rotation& rotation, bool correctBoundingBox) :
-    FromPL(N, pl, bbox, correctBoundingBox),
-    rotation_(rotation) {
-}
-
-
-RotatedFromPL::RotatedFromPL(const std::vector<long>& pl, const util::Rotation& rotation) :
-    FromPL(pl),
+RotatedFromPL::RotatedFromPL(size_t N, const std::vector<long>& pl, const util::Rotation& rotation, const util::BoundingBox& bbox) :
+    FromPL(N, pl, bbox),
     rotation_(rotation) {
 }
 
@@ -48,7 +42,11 @@ RotatedFromPL::~RotatedFromPL() {
 
 
 void RotatedFromPL::print(std::ostream &out) const {
-    out << "RotatedFromPL[N" << N_ << "]";
+    out << "RotatedFromPL["
+            "N" << N_
+        << ",bbox=" << bbox_
+        << ",rotation=" << rotation_
+        << "]";
 }
 
 
@@ -74,8 +72,8 @@ atlas::Grid RotatedFromPL::atlasGrid() const {
 }
 
 
-const Reduced* RotatedFromPL::croppedRepresentation(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
-    return new RotatedFromPL(N_, pl, bbox, rotation_, false);
+const Reduced* RotatedFromPL::croppedRepresentation(const util::BoundingBox& bbox, const std::vector<long>& pl) const {
+    return new RotatedFromPL(N_, pl, rotation_, bbox);
 }
 
 

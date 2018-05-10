@@ -33,15 +33,8 @@ RotatedGG::RotatedGG(const param::MIRParametrisation& parametrisation):
 }
 
 
-RotatedGG::RotatedGG(size_t N, const util::Rotation& rotation) :
-    Regular(N),
-    rotation_(rotation) {
-    checkNiNj();
-}
-
-
-RotatedGG::RotatedGG(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox, bool correctBoundingBox) :
-    Regular(N, bbox, correctBoundingBox),
+RotatedGG::RotatedGG(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox) :
+    Regular(N, bbox),
     rotation_(rotation) {
     checkNiNj();
 }
@@ -52,7 +45,7 @@ RotatedGG::~RotatedGG() {
 
 
 const Gridded* RotatedGG::croppedRepresentation(const util::BoundingBox& bbox) const {
-    return new RotatedGG(N_, rotation_, bbox, false);
+    return new RotatedGG(N_, rotation_, bbox);
 }
 
 

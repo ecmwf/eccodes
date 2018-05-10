@@ -36,28 +36,88 @@ namespace regular {
 
 Regular::Regular(const param::MIRParametrisation& parametrisation) :
     Gaussian(parametrisation) {
-    Gaussian::correctBoundingBox();
     setNiNj();
 }
 
 
-Regular::Regular(size_t N) :
-    Gaussian(N) {
-    Gaussian::correctBoundingBox();
-    setNiNj();
-}
-
-
-Regular::Regular(size_t N, const util::BoundingBox& bbox, bool correctBoundingBox) :
+Regular::Regular(size_t N, const util::BoundingBox& bbox) :
     Gaussian(N, bbox) {
-    if (correctBoundingBox) {
-        Gaussian::correctBoundingBox();
-    }
+
+    const std::vector<double>& lats = latitudes();
+    cropToBoundingBox(N_, lats, bbox_);
+
     setNiNj();
 }
 
 
 Regular::~Regular() {
+}
+
+
+void Regular::cropToBoundingBox(size_t N, const std::vector<double>& latitudes, util::BoundingBox& bbox) {
+    ASSERT(N > 0);
+    ASSERT(N * 2 == latitudes.size());
+
+
+    // adjust bounding box North/South
+    Latitude n = bbox.north();
+    Latitude s = bbox.south();
+
+    double latMin = Latitude::NORTH_POLE.value();
+    double latMax = Latitude::SOUTH_POLE.value();
+
+    for (size_t i = 0; i < latitudes.size(); i++) {
+        Latitude ll(latitudes[i]);
+        if ((ll >= s) && (ll <= n)) {
+            if (latMin > latitudes[i]) {
+                latMin = latitudes[i];
+            }
+            if (latMax < latitudes[i]) {
+                latMax = latitudes[i];
+            }
+        }
+    }
+
+    ASSERT(latMin <= latMax);
+    n = latMax;
+    s = latMin;
+
+
+    // adjust bounding box West/East (actually, only East if periodic)
+    Longitude w = bbox.west();
+    Longitude e = bbox.east();
+
+    eckit::Fraction inc = eckit::Fraction(90, N);
+    ASSERT(inc > 0);
+
+    if (e >= w + Longitude::GLOBE - inc) {
+        e = w + Longitude::GLOBE - inc;
+    }
+
+    // ensure 0 <= East - West < 360
+    bool same(e == w);
+    if (!same) {
+        e = e.normalise(w);
+        if (e == w) {
+            e = w + Longitude::GLOBE - inc;
+        }
+    }
+
+
+    // set bounding box and inform
+    util::BoundingBox newbbox = util::BoundingBox(n, w, s, e);
+
+    if (newbbox != bbox) {
+        eckit::Channel& log = eckit::Log::debug<LibMir>();
+        std::streamsize old = log.precision(12);
+        log << "Regular::cropToBoundingBox: "
+            << "\n   " << bbox
+            << "\n > " << newbbox
+            << std::endl;
+        log.precision(old);
+
+        bbox = newbbox;
+    }
 }
 
 

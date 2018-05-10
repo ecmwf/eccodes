@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <set>
 #include <sstream>
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
@@ -42,17 +43,91 @@ Reduced::Reduced(const param::MIRParametrisation& parametrisation):
 }
 
 
-Reduced::Reduced(size_t N):
-    Gaussian(N) {
-}
-
-
 Reduced::Reduced(size_t N, const util::BoundingBox& bbox):
     Gaussian(N, bbox) {
 }
 
 
 Reduced::~Reduced() {
+}
+
+
+void Reduced::cropToBoundingBox(size_t N, const std::vector<double>& latitudes, util::BoundingBox& bbox, std::vector<long>& pl) {
+    ASSERT(N > 0);
+    ASSERT(pl.size() == N * 2);
+    ASSERT(pl.size() == latitudes.size());
+
+
+    // adjust bounding box North/South and clip pl
+    std::vector<long> newpl;
+    newpl.reserve(pl.size());
+
+    Latitude n = bbox.north();
+    Latitude s = bbox.south();
+
+    double latMin = Latitude::NORTH_POLE.value();
+    double latMax = Latitude::SOUTH_POLE.value();
+
+    for (size_t i = 0; i < latitudes.size(); i++) {
+        Latitude ll(latitudes[i]);
+        if ((ll >= s) && (ll <= n)) {
+            newpl.push_back(pl[i]);
+            if (latMin > latitudes[i]) {
+                latMin = latitudes[i];
+            }
+            if (latMax < latitudes[i]) {
+                latMax = latitudes[i];
+            }
+        }
+    }
+
+    ASSERT(latMin <= latMax);
+    n = latMax;
+    s = latMin;
+
+
+    // adjust bounding box West/East (actually, only East if periodic)
+    Longitude w = bbox.west();
+    Longitude e = bbox.east();
+
+
+    const long maxpl = *std::max_element(pl.begin(), pl.end());
+    ASSERT(maxpl);
+
+    eckit::Fraction inc = Longitude::GLOBE.fraction() / maxpl;
+    ASSERT(inc > 0);
+
+    if (e >= w + Longitude::GLOBE - inc) {
+        e = w + Longitude::GLOBE - inc;
+    }
+
+    // ensure 0 <= East - West < 360
+    bool same(e == w);
+    if (!same) {
+        e = e.normalise(w);
+        if (e == w) {
+            e = w + Longitude::GLOBE - inc;
+        }
+    }
+
+
+    // set bounding box and inform
+    util::BoundingBox newbbox = util::BoundingBox(n, w, s, e);
+
+    if (newbbox != bbox) {
+        eckit::Channel& log = eckit::Log::debug<LibMir>();
+        std::streamsize old = log.precision(12);
+        log << "Reduced::cropToBoundingBox: "
+            << "\n   " << bbox
+            << "\n > " << newbbox
+            << "\n   #pl=" << pl.size()
+            << "\n > #pl=" << newpl.size()
+            << std::endl;
+        log.precision(old);
+
+        bbox = newbbox;
+        pl.swap(newpl);
+    }
 }
 
 
@@ -204,24 +279,80 @@ size_t Reduced::frame(std::vector<double>& values, size_t size, double missingVa
 
 
 const Reduced *Reduced::croppedRepresentation(const util::BoundingBox& bbox) const  {
+    return croppedRepresentation(bbox, pls());
+}
+
+
+util::BoundingBox Reduced::croppedBoundingBox(const util::BoundingBox& bbox) const {
     const std::vector<long>& pl = pls();
-    std::vector<long> newpl;
-    newpl.reserve(pl.size());
-
     const std::vector<double>& lats = latitudes();
-    Latitude north = bbox.north();
-    Latitude south = bbox.south();
-
     ASSERT(lats.size() == pl.size());
+
+    Latitude n;
+    Latitude s;
+    eckit::Fraction e;
+    eckit::Fraction w;
+
+    const eckit::Fraction west = bbox.west().fraction();
+    const eckit::Fraction east = bbox.east().fraction();
+
+    bool first = true;
+    std::set<long> NiTried;
 
     for (size_t i = 0; i < lats.size(); i++) {
         Latitude ll(lats[i]);
-        if ((ll >= south) && (ll <= north)) {
-            newpl.push_back(pl[i]);
+        if ((ll >= bbox.south()) && (ll <= bbox.north())) {
+
+            // crop latitude-wise, ensuring exact Gaussian latitudes
+            n = std::max(Latitude(lats[i]), n);
+            s = std::min(Latitude(lats[i]), s);
+
+            // crop longitude-wise, track distinct attempts
+            const long Ni(pl[i]);
+            ASSERT(Ni >= 2);
+            if (NiTried.insert(Ni).second) {
+
+                eckit::Fraction inc = Longitude::GLOBE.fraction() / Ni;
+
+                eckit::Fraction::value_type Nw = (west / inc).integralPart();
+                if (Nw * inc < west) {
+                    Nw += 1;
+                }
+
+                eckit::Fraction::value_type Ne = (east / inc).integralPart();
+                if (Ne * inc > east || Nw + Ne == Ni) {
+                    Ne -= 1;
+                }
+
+                ASSERT(Nw <= Ne);
+                if (w > Nw * inc || first) {
+                    w = Nw * inc;
+                }
+                if (e < Ne * inc || first) {
+                    e = Ne * inc;
+                }
+                first = false;
+            }
         }
     }
 
-    return croppedRepresentation(bbox, newpl);
+    ASSERT(!first);
+
+
+    // set bounding box and inform
+    util::BoundingBox cropped(n, w, s, e);
+
+    if (cropped != bbox) {
+        eckit::Channel& log = eckit::Log::debug<LibMir>();
+        std::streamsize old = log.precision(12);
+        log << "Reduced::croppedBoundingBox: "
+            << "\n   " << bbox
+            << "\n > " << cropped
+            << std::endl;
+        log.precision(old);
+    }
+
+    return cropped;
 }
 
 

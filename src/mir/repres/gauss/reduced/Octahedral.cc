@@ -27,15 +27,8 @@ namespace gauss {
 namespace reduced {
 
 
-Octahedral::Octahedral(size_t N):
+Octahedral::Octahedral(size_t N) :
     Reduced(N) {
-    Gaussian::correctBoundingBox();
-}
-
-
-Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox) :
-    Reduced(N, bbox) {
-    Gaussian::correctBoundingBox();
 }
 
 

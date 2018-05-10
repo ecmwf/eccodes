@@ -16,11 +16,10 @@
 #include "mir/repres/gauss/reduced/FromPL.h"
 
 #include "eckit/exception/Exceptions.h"
-
+#include "eckit/utils/MD5.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
-#include "eckit/utils/MD5.h"
 
 
 namespace mir {
@@ -38,29 +37,22 @@ FromPL::FromPL(const param::MIRParametrisation& parametrisation) :
     Reduced(parametrisation) {
     ASSERT(parametrisation.get("pl", pl_));
     checkPl(pl_);
-    Gaussian::correctBoundingBox();
+}
+
+
+FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox) :
+    Reduced(N, bbox),
+    pl_(pl) {
+    ASSERT(N * 2 == pl.size());
+
+    const std::vector<double>& lats = latitudes();
+    cropToBoundingBox(N, lats, bbox_, pl_);
+
+    checkPl(pl_);
 }
 
 
 FromPL::~FromPL() {
-}
-
-
-FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox, bool correctBoundingBox) :
-    Reduced(N, bbox),
-    pl_(pl) {
-    checkPl(pl_);
-    if (correctBoundingBox) {
-        Gaussian::correctBoundingBox();
-    }
-}
-
-
-FromPL::FromPL(const std::vector<long>& pl):
-    Reduced(pl.size() / 2),
-    pl_(pl) {
-    checkPl(pl_);
-    Gaussian::correctBoundingBox();
 }
 
 

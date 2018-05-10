@@ -90,11 +90,9 @@ bool UnstructuredGrid::sameAs(const Representation& other) const {
 }
 
 
-util::BoundingBox UnstructuredGrid::extendedBoundingBox(double) const {
-    eckit::Log::warning() << "UnstructuredGrid::extendedBoundingBox(): assuming grid is global" << std::endl;
-
-    const util::Domain global = util::Domain::makeGlobal();
-    return util::BoundingBox(global.north(), global.west(), global.south(), global.east());
+util::BoundingBox UnstructuredGrid::extendedBoundingBox(const util::BoundingBox&, double) const {
+    eckit::Log::warning() << "UnstructuredGrid::extendedBoundingBox(): assuming global" << std::endl;
+    return util::BoundingBox();
 }
 
 
@@ -109,8 +107,8 @@ void UnstructuredGrid::fill(api::MIRJob&) const  {
 
 
 util::Domain UnstructuredGrid::domain() const {
-    eckit::Log::warning() << "UnstructuredGrid::domain(): assuming grid is global" << std::endl;
-    return util::Domain::makeGlobal();
+    eckit::Log::warning() << "UnstructuredGrid::domain(): assuming global" << std::endl;
+    return util::Domain();
 }
 
 

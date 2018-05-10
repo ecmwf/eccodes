@@ -27,8 +27,8 @@ namespace gauss {
 namespace reduced {
 
 
-RotatedOctahedral::RotatedOctahedral(size_t N, const util::BoundingBox &bbox, const util::Rotation& rotation):
-    Octahedral(N, bbox),
+RotatedOctahedral::RotatedOctahedral(size_t N, const util::Rotation& rotation):
+    Octahedral(N),
     rotation_(rotation) {
 }
 
@@ -37,8 +37,12 @@ RotatedOctahedral::~RotatedOctahedral() {
 }
 
 
-void RotatedOctahedral::print(std::ostream &out) const {
-    out << "RotatedOctahedral[N" << N_ << ",bbox=" << bbox_ << ",rotation=" << rotation_ << "]";
+void RotatedOctahedral::print(std::ostream& out) const {
+    out << "RotatedOctahedral["
+            "N" << N_
+        << ",bbox=" << bbox_
+        << ",rotation=" << rotation_
+        << "]";
 }
 
 
@@ -84,9 +88,9 @@ atlas::Grid RotatedOctahedral::atlasGrid() const {
 }
 
 
-const Reduced *RotatedOctahedral::croppedRepresentation(const util::BoundingBox &bbox, const std::vector<long> &pl) const {
+const Reduced *RotatedOctahedral::croppedRepresentation(const util::BoundingBox& bbox, const std::vector<long>& pl) const {
     // We lose the RotatedOctahedral nature of the grid
-    return new RotatedFromPL(N_, pl, bbox, rotation_, false);
+    return new RotatedFromPL(N_, pl, rotation_, bbox);
 }
 
 
