@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2015 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -192,7 +192,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
     self->biFourierSubTruncationType = grib_arguments_get_name(gh,args,self->carg++);
     self->biFourierDoNotPackAxes     = grib_arguments_get_name(gh,args,self->carg++);
     self->biFourierMakeTemplate      = grib_arguments_get_name(gh,args,self->carg++);
-    self->numberOfValues             = grib_arguments_get_name(gh,args,self->carg++);
+    /*self->numberOfValues             = grib_arguments_get_name(gh,args,self->carg++);*/
 
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
     self->dirty=1;
@@ -204,9 +204,8 @@ static int value_count(grib_accessor* a,long* numberOfValues)
     grib_handle* gh = grib_handle_of_accessor(a);
     *numberOfValues=0;
 
-    return grib_get_long_internal(gh,self->numberOfValues,numberOfValues);
+    return grib_get_long_internal(gh,self->number_of_values,numberOfValues);
 }
-
 
 #define MAX(x,y) ((x) > (y) ? (x) : (y))
 #define MIN(x,y) ((x) < (y) ? (x) : (y))
@@ -621,14 +620,10 @@ cleanup:
   return NULL;
 }
 
-
-
-static int unpack_double(grib_accessor* a, double* val, size_t *len) {
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
+{
     grib_accessor_data_g2bifourier_packing* self =  (grib_accessor_data_g2bifourier_packing*)a;
     grib_handle* gh = grib_handle_of_accessor(a);
-
-    size_t n_vals_bif = 0;
-    size_t n_vals_sub;
 
     unsigned char* buf  = (unsigned char*)gh->buffer->data;
     unsigned char* hres = NULL;
@@ -701,7 +696,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len) {
     isp = 0;
     for_ij ()
       {
-        double current_val;
         int insub;
 
         calc_insub ();
@@ -748,10 +742,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     int isp;
     bif_trunc_t * bt;
 
-    int last;
     double max = 0;
     double min = 0;
-    grib_context* c = gh->context;
+    /*grib_context* c = gh->context;*/
 
     int ret = GRIB_SUCCESS;
     int i, j, k;
@@ -935,7 +928,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     grib_buffer_replace (a, buf, buflen, 1, 1);
 
-    if ((ret = grib_set_long_internal (gh, self->numberOfValues, bt->n_vals_bif)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal (gh, self->number_of_values, bt->n_vals_bif)) != GRIB_SUCCESS)
       goto cleanup;
 
 cleanup:
