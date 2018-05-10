@@ -920,11 +920,14 @@ int main (int argc, char * argv[])
            char f[128];
            FILE * fp;
            size_t size;
-           char * buffer;
-	   sprintf (f, "lam_gp_%s.grib", grids[igrid]);
+           const void * buffer = NULL;
+           sprintf (f, "lam_gp_%s.grib", grids[igrid]);
            fp = fopen (f, "w");
            GRIB_CHECK (grib_get_message (h, &buffer, &size), 0);
-           fwrite (buffer, 1, size, fp);
+           if (fwrite (buffer, 1, size, fp) != size) {
+               perror(f);
+               return 1;
+           }
            fclose (fp);
          }
 

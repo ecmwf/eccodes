@@ -10,5 +10,8 @@
 
 . ./include.sh
 
- exec $test_dir/lam_gp
-#xterm -e gdb $test_dir/lam_gp
+${test_dir}/lam_gp
+
+${tools_dir}/grib_dump -O lam_gp_lambert_lam.grib
+${tools_dir}/grib_dump -O lam_gp_mercator_lam.grib
+${tools_dir}/grib_dump -O lam_gp_polar_stereographic_lam.grib
