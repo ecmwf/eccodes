@@ -314,29 +314,10 @@ void Regular::setNiNj() {
         }
         ASSERT(2 <= Nj_ && Nj_ <= N_ * 2);
     }
-}
 
-
-void Regular::checkNiNj() const {
-    if (isGlobal()) {
-        ASSERT(Nj_ == N_ * 2);
-        ASSERT(Ni_ == N_ * 4);
-        return;
-    }
-
-    // check if the Ni*Nj is correct against iterator
-    ASSERT(Ni_);
-    ASSERT(Nj_);
-
-    size_t total = 0;
-    for (eckit::ScopedPtr<repres::Iterator> iter(iterator()); iter->next(); ++total) {
-    }
-
-    if  (total != Ni_ * Nj_) {
-        std::ostringstream oss;
-        oss << "Regular::checkNiNj: calculated Ni=" << Ni_ << ", Nj=" << Nj_ << ", but Ni*Nj = " << (Ni_*Nj_) << " != " << total << " for " << (*this);
-        throw eckit::SeriousBug(oss.str());
-    }
+    eckit::Log::debug<LibMir>()
+            << "Regular::setNiNj: Ni*Nj = " << Ni_ << " * " << Nj_ << " = " << (Ni_ * Nj_)
+            << std::endl;
 }
 
 

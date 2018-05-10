@@ -367,13 +367,9 @@ size_t Reduced::numberOfPoints() const {
     size_t total = 0;
 
     if (isGlobal()) {
-
         const std::vector<long>& pl = pls();
-        for (auto j = pl.begin(); j != pl.end(); ++j) {
-            total += *j;
-        }
-    }
-    else {
+        total = size_t(std::accumulate(pl.begin(), pl.end(), 0));
+    } else {
         eckit::ScopedPtr<repres::Iterator> iter(iterator());
         while (iter->next()) {
             total++;
