@@ -97,7 +97,7 @@ void Reduced::cropToBoundingBox(size_t N, const std::vector<double>& latitudes, 
     eckit::Fraction inc = Longitude::GLOBE.fraction() / maxpl;
     ASSERT(inc > 0);
 
-    if (e >= w + Longitude::GLOBE - inc) {
+    if (e > w + Longitude::GLOBE - inc) {
         e = w + Longitude::GLOBE - inc;
     }
 

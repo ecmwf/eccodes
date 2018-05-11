@@ -90,7 +90,7 @@ void Regular::cropToBoundingBox(size_t N, const std::vector<double>& latitudes, 
     eckit::Fraction inc = eckit::Fraction(90, N);
     ASSERT(inc > 0);
 
-    if (e >= w + Longitude::GLOBE - inc) {
+    if (e > w + Longitude::GLOBE - inc) {
         e = w + Longitude::GLOBE - inc;
     }
 
