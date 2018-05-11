@@ -32,6 +32,20 @@ ecbuild_requires_macro_version( 2.7.2 )
 ecbuild_declare_project()
 
 ###############################################################################
+# system checks needed for eccodes_config.h and some options like MEMFS
+
+check_include_files( assert.h         ECCODES_HAVE_ASSERT_H      )
+check_include_files( string.h         ECCODES_HAVE_STRING_H      )
+check_include_files( sys/types.h      ECCODES_HAVE_SYS_TYPES_H   )
+check_include_files( sys/stat.h       ECCODES_HAVE_SYS_STAT_H    )
+check_include_files( fcntl.h          ECCODES_HAVE_FCNTL_H      )
+check_include_files( unistd.h         ECCODES_HAVE_UNISTD_H      )
+check_symbol_exists( fseeko           "stdio.h"    ECCODES_HAVE_FSEEKO )
+check_symbol_exists( posix_memalign   "stdlib.h"   ECCODES_HAVE_POSIX_MEMALIGN )
+check_symbol_exists( fmemopen         "stdio.h"    ECCODES_HAVE_FMEMOPEN )
+check_symbol_exists( funopen          "stdio.h"    ECCODES_HAVE_FUNOPEN )
+
+###############################################################################
 # some variables/options of this project
 
 ecbuild_add_option( FEATURE EXAMPLES
@@ -96,7 +110,7 @@ endif()
 ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
-    CONDITION EC_HAVE_FMEMOPEN OR EC_HAVE_FUNOPEN
+    CONDITION ECCODES_HAVE_FMEMOPEN OR ECCODES_HAVE_FUNOPEN
     REQUIRED_PACKAGES PythonInterp
 )
 
@@ -275,25 +289,6 @@ set( ECCODES_IFS_SAMPLES_PATH ${the_default_data_prefix}/${ECCODES_IFS_SAMPLES_S
 
 ###############################################################################
 ### config header
-
-# system checks needed for eccodes_config.h
-
-ecbuild_cache_check_include_files( assert.h       EC_HAVE_ASSERT_H      )
-
-ecbuild_cache_check_include_files( string.h       EC_HAVE_STRING_H      )
-
-ecbuild_cache_check_symbol_exists( fseeko "stdio.h" EC_HAVE_FSEEKO )
-
-ecbuild_cache_check_include_files( sys/types.h    EC_HAVE_SYS_TYPES_H   )
-
-ecbuild_cache_check_include_files( sys/stat.h     EC_HAVE_SYS_STAT_H    )
-
-ecbuild_cache_check_include_files( fcntl.h        EC_HAVE_FCNTL_H      )
-
-ecbuild_cache_check_include_files( unistd.h       EC_HAVE_UNISTD_H      )
-
-ecbuild_cache_check_symbol_exists( posix_memalign "stdlib.h" EC_HAVE_POSIX_MEMALIGN )
-
 
 ecbuild_generate_config_headers()
 
