@@ -273,7 +273,27 @@ set( ECCODES_DEFINITION_PATH  ${the_default_data_prefix}/${ECCODES_DEFINITION_SU
 set( ECCODES_SAMPLES_PATH     ${the_default_data_prefix}/${ECCODES_SAMPLES_SUFF} )
 set( ECCODES_IFS_SAMPLES_PATH ${the_default_data_prefix}/${ECCODES_IFS_SAMPLES_SUFF} )
 
+###############################################################################
 ### config header
+
+# system checks needed for eccodes_config.h
+
+ecbuild_cache_check_include_files( assert.h       EC_HAVE_ASSERT_H      )
+
+ecbuild_cache_check_include_files( string.h       EC_HAVE_STRING_H      )
+
+ecbuild_cache_check_symbol_exists( fseeko "stdio.h" EC_HAVE_FSEEKO )
+
+ecbuild_cache_check_include_files( sys/types.h    EC_HAVE_SYS_TYPES_H   )
+
+ecbuild_cache_check_include_files( sys/stat.h     EC_HAVE_SYS_STAT_H    )
+
+ecbuild_cache_check_include_files( fcntl.h        EC_HAVE_FCNTL_H      )
+
+ecbuild_cache_check_include_files( unistd.h       EC_HAVE_UNISTD_H      )
+
+ecbuild_cache_check_symbol_exists( posix_memalign "stdlib.h" EC_HAVE_POSIX_MEMALIGN )
+
 
 ecbuild_generate_config_headers()
 
