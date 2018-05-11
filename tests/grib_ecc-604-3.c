@@ -8,9 +8,10 @@
 
 #include "grib_api.h"
 
-static size_t NUM_THREADS         = 8;
-static size_t FILES_PER_ITERATION = 300;
-static char* INPUT_FILE           = NULL;
+/* These are passed in via argv */
+static size_t NUM_THREADS         = 0;
+static size_t FILES_PER_ITERATION = 0;
+static char*  INPUT_FILE          = NULL;
 
 static int decode_file(char *template_file)
 {
@@ -28,7 +29,8 @@ static int decode_file(char *template_file)
         int i;
         long count;
         double d,e;
-        size_t values_len= 0;
+        size_t values_len = 0;
+        size_t str_len = 20;
 
         grib_handle *clone_handle = grib_handle_clone(source_handle);
         assert(clone_handle);
@@ -44,10 +46,14 @@ static int decode_file(char *template_file)
             if (count>100) {e*=10; count=1;}
             values[i]=d;
             d+=e;
+            if (d > 10000) d = 0;
             count++;
         }
 
-        GRIB_CHECK(grib_set_long(clone_handle,"bitsPerValue",16),0);
+        GRIB_CHECK(grib_set_string(clone_handle,"stepUnits", "s", &str_len),0);
+        GRIB_CHECK(grib_set_long(clone_handle, "startStep", 43200), 0);
+        GRIB_CHECK(grib_set_long(clone_handle, "endStep", 86400), 0);
+        GRIB_CHECK(grib_set_long(clone_handle, "bitsPerValue", 16),0);
 
         /* set data values */
         GRIB_CHECK(grib_set_double_array(clone_handle,"values",values,values_len),0);

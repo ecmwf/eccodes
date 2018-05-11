@@ -16,22 +16,27 @@ temp_dir=tempdir.${label}
 validate()
 {
     echo "Checking every output file is identical..."
+    # Get checksum of first file
+    ck1=`cksum $OUTPUT/output_file_0-0.grib | awk '{print $1}'`
     set +x
+    # Get checksum of all of them and sort unique
     res=`cksum $OUTPUT/output_file_* | awk '{print $1}' | sort -u`
     set -x
-    [ "$res" = "2572910830" ]
+    # Should be the same as the first
+    [ "$res" = "$ck1" ]
 }
 
-NUM_THREADS=8
-NUM_ITER=300
+NUM_THREADS=6
+NUM_ITER=200
 OUTPUT=output
 input=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
+# input=$ECCODES_SAMPLES_PATH/gg_sfc_grib1.tmpl
 
 rm -fr $temp_dir
 mkdir -p $temp_dir
 cd $temp_dir
 
-# Test 01: clone + output
+# Test 01: Clone + output
 # ------------------------
 mkdir -p $OUTPUT
 time ${test_dir}/grib_ecc-604-1 par $input $NUM_THREADS $NUM_ITER
@@ -44,7 +49,7 @@ mkdir -p $OUTPUT
 time ${test_dir}/grib_ecc-604-2 par $input $NUM_THREADS $NUM_ITER
 validate
 
-# Test 03: clone + no output
+# Test 03: Clone + no output
 # ---------------------------
 rm -fr $OUTPUT
 time ${test_dir}/grib_ecc-604-3 par $input $NUM_THREADS $NUM_ITER
