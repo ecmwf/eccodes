@@ -9,6 +9,12 @@
 
 constant ieeeFloats   = 0 : hidden, edition_specific;
 transient eps=0;
+constant eight=8 : hidden;
+constant eleven=11 : hidden;
+constant epsPoint=1 : hidden;
+constant epsContinous=11 : hidden;
+constant epsStatisticsPoint=2 : hidden;
+constant epsStatisticsContinous=12 : hidden;
 
 meta headersOnly headers_only();
 
