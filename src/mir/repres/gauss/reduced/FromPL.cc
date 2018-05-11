@@ -61,8 +61,8 @@ void FromPL::makeName(std::ostream& out) const {
     out << "R" << N_ << "-";
 
     eckit::MD5 md5;
-    for (auto j = pl_.begin(); j != pl_.end(); ++j) {
-        md5 << *j;
+    for (const auto& j : pl_) {
+        md5 << j;
     }
 
     out << std::string(md5);

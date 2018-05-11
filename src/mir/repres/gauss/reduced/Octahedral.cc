@@ -15,7 +15,6 @@
 
 #include "mir/repres/gauss/reduced/Octahedral.h"
 
-
 #include "mir/api/MIRJob.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
@@ -82,7 +81,6 @@ const std::vector<long>& Octahedral::pls() const {
         pl_ = pl;
     }
     return pl_;
-
 }
 
 

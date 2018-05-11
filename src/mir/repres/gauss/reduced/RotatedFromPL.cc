@@ -50,6 +50,27 @@ void RotatedFromPL::print(std::ostream &out) const {
 }
 
 
+void RotatedFromPL::makeName(std::ostream& out) const {
+    FromPL::makeName(out);
+    rotation_.makeName(out);
+}
+
+
+bool RotatedFromPL::sameAs(const Representation& other) const {
+    const RotatedFromPL* o = dynamic_cast<const RotatedFromPL*>(&other);
+    return o && (rotation_ == o->rotation_) && FromPL::sameAs(other);
+}
+
+
+util::BoundingBox RotatedFromPL::extendedBoundingBox(const util::BoundingBox& bbox, double angle) const {
+
+    // cropping bounding box after extending guarantees the representation can use it
+    util::BoundingBox extended(bbox);
+    Gridded::extendBoundingBox(extended, angle);
+    return extended;
+}
+
+
 Iterator* RotatedFromPL::iterator() const {
     return rotatedIterator(rotation_);
 }
@@ -74,27 +95,6 @@ atlas::Grid RotatedFromPL::atlasGrid() const {
 
 const Reduced* RotatedFromPL::croppedRepresentation(const util::BoundingBox& bbox, const std::vector<long>& pl) const {
     return new RotatedFromPL(N_, pl, rotation_, bbox);
-}
-
-
-void RotatedFromPL::makeName(std::ostream& out) const {
-    FromPL::makeName(out);
-    rotation_.makeName(out);
-}
-
-
-bool RotatedFromPL::sameAs(const Representation& other) const {
-    const RotatedFromPL* o = dynamic_cast<const RotatedFromPL*>(&other);
-    return o && (rotation_ == o->rotation_) && FromPL::sameAs(other);
-}
-
-
-util::BoundingBox RotatedFromPL::extendedBoundingBox(const util::BoundingBox& bbox, double angle) const {
-
-    // cropping bounding box after extending guarantees the representation can use it
-    util::BoundingBox extended(bbox);
-    Gridded::extendBoundingBox(extended, angle);
-    return extended;
 }
 
 
