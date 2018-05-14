@@ -6341,110 +6341,110 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 149 ;
 	}
-#Assimetry factor at 340 nm
-'Assimetry factor at 340 nm' = {
+#Asymmetry factor at 340 nm
+'Asymmetry factor at 340 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 150 ;
 	}
-#Assimetry factor at 355 nm
-'Assimetry factor at 355 nm' = {
+#Asymmetry factor at 355 nm
+'Asymmetry factor at 355 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 151 ;
 	}
-#Assimetry factor at 380 nm
-'Assimetry factor at 380 nm' = {
+#Asymmetry factor at 380 nm
+'Asymmetry factor at 380 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 152 ;
 	}
-#Assimetry factor at 400 nm
-'Assimetry factor at 400 nm' = {
+#Asymmetry factor at 400 nm
+'Asymmetry factor at 400 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 153 ;
 	}
-#Assimetry factor at 440 nm
-'Assimetry factor at 440 nm' = {
+#Asymmetry factor at 440 nm
+'Asymmetry factor at 440 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 154 ;
 	}
-#Assimetry factor at 469 nm
-'Assimetry factor at 469 nm' = {
+#Asymmetry factor at 469 nm
+'Asymmetry factor at 469 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 155 ;
 	}
-#Assimetry factor at 500 nm
-'Assimetry factor at 500 nm' = {
+#Asymmetry factor at 500 nm
+'Asymmetry factor at 500 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 156 ;
 	}
-#Assimetry factor at 532 nm
-'Assimetry factor at 532 nm' = {
+#Asymmetry factor at 532 nm
+'Asymmetry factor at 532 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 157 ;
 	}
-#Assimetry factor at 550 nm
-'Assimetry factor at 550 nm' = {
+#Asymmetry factor at 550 nm
+'Asymmetry factor at 550 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 158 ;
 	}
-#Assimetry factor at 645 nm
-'Assimetry factor at 645 nm' = {
+#Asymmetry factor at 645 nm
+'Asymmetry factor at 645 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 159 ;
 	}
-#Assimetry factor at 670 nm
-'Assimetry factor at 670 nm' = {
+#Asymmetry factor at 670 nm
+'Asymmetry factor at 670 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 160 ;
 	}
-#Assimetry factor at 800 nm
-'Assimetry factor at 800 nm' = {
+#Asymmetry factor at 800 nm
+'Asymmetry factor at 800 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 161 ;
 	}
-#Assimetry factor at 858 nm
-'Assimetry factor at 858 nm' = {
+#Asymmetry factor at 858 nm
+'Asymmetry factor at 858 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 162 ;
 	}
-#Assimetry factor at 865 nm
-'Assimetry factor at 865 nm' = {
+#Asymmetry factor at 865 nm
+'Asymmetry factor at 865 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 163 ;
 	}
-#Assimetry factor at 1020 nm
-'Assimetry factor at 1020 nm' = {
+#Asymmetry factor at 1020 nm
+'Asymmetry factor at 1020 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 164 ;
 	}
-#Assimetry factor at 1064 nm
-'Assimetry factor at 1064 nm' = {
+#Asymmetry factor at 1064 nm
+'Asymmetry factor at 1064 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 165 ;
 	}
-#Assimetry factor at 1240 nm
-'Assimetry factor at 1240 nm' = {
+#Asymmetry factor at 1240 nm
+'Asymmetry factor at 1240 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 166 ;
 	}
-#Assimetry factor at 1640 nm
-'Assimetry factor at 1640 nm' = {
+#Asymmetry factor at 1640 nm
+'Asymmetry factor at 1640 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 167 ;
@@ -6515,8 +6515,8 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 178 ;
 	}
-#Assimetry factor at 2130 nm
-'Assimetry factor at 2130 nm' = {
+#Asymmetry factor at 2130 nm
+'Asymmetry factor at 2130 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 179 ;

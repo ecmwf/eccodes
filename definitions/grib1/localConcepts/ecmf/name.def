@@ -6774,93 +6774,93 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 149 ;
 	}
-#Assimetry factor at 340 nm
-'Assimetry factor at 340 nm' = {
+#Asymmetry factor at 340 nm
+'Asymmetry factor at 340 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 150 ;
 	}
-#Assimetry factor at 355 nm
-'Assimetry factor at 355 nm' = {
+#Asymmetry factor at 355 nm
+'Asymmetry factor at 355 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 151 ;
 	}
-#Assimetry factor at 380 nm
-'Assimetry factor at 380 nm' = {
+#Asymmetry factor at 380 nm
+'Asymmetry factor at 380 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 152 ;
 	}
-#Assimetry factor at 400 nm
-'Assimetry factor at 400 nm' = {
+#Asymmetry factor at 400 nm
+'Asymmetry factor at 400 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 153 ;
 	}
-#Assimetry factor at 440 nm
-'Assimetry factor at 440 nm' = {
+#Asymmetry factor at 440 nm
+'Asymmetry factor at 440 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Assimetry factor at 469 nm
-'Assimetry factor at 469 nm' = {
+#Asymmetry factor at 469 nm
+'Asymmetry factor at 469 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 155 ;
 	}
-#Assimetry factor at 500 nm
-'Assimetry factor at 500 nm' = {
+#Asymmetry factor at 500 nm
+'Asymmetry factor at 500 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 156 ;
 	}
-#Assimetry factor at 532 nm
-'Assimetry factor at 532 nm' = {
+#Asymmetry factor at 532 nm
+'Asymmetry factor at 532 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 157 ;
 	}
-#Assimetry factor at 550 nm
-'Assimetry factor at 550 nm' = {
+#Asymmetry factor at 550 nm
+'Asymmetry factor at 550 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 158 ;
 	}
-#Assimetry factor at 645 nm
-'Assimetry factor at 645 nm' = {
+#Asymmetry factor at 645 nm
+'Asymmetry factor at 645 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 159 ;
 	}
-#Assimetry factor at 670 nm
-'Assimetry factor at 670 nm' = {
+#Asymmetry factor at 670 nm
+'Asymmetry factor at 670 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 160 ;
 	}
-#Assimetry factor at 800 nm
-'Assimetry factor at 800 nm' = {
+#Asymmetry factor at 800 nm
+'Asymmetry factor at 800 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 161 ;
 	}
-#Assimetry factor at 858 nm
-'Assimetry factor at 858 nm' = {
+#Asymmetry factor at 858 nm
+'Asymmetry factor at 858 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 162 ;
 	}
-#Assimetry factor at 865 nm
-'Assimetry factor at 865 nm' = {
+#Asymmetry factor at 865 nm
+'Asymmetry factor at 865 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 163 ;
 	}
-#Assimetry factor at 1020 nm
-'Assimetry factor at 1020 nm' = {
+#Asymmetry factor at 1020 nm
+'Asymmetry factor at 1020 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 164 ;
 	}
-#Assimetry factor at 1064 nm
-'Assimetry factor at 1064 nm' = {
+#Asymmetry factor at 1064 nm
+'Asymmetry factor at 1064 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 165 ;
 	}
-#Assimetry factor at 1240 nm
-'Assimetry factor at 1240 nm' = {
+#Asymmetry factor at 1240 nm
+'Asymmetry factor at 1240 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 166 ;
 	}
-#Assimetry factor at 1640 nm
-'Assimetry factor at 1640 nm' = {
+#Asymmetry factor at 1640 nm
+'Asymmetry factor at 1640 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 167 ;
 	}
@@ -6919,8 +6919,8 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Assimetry factor at 2130 nm
-'Assimetry factor at 2130 nm' = {
+#Asymmetry factor at 2130 nm
+'Asymmetry factor at 2130 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 179 ;
 	}
