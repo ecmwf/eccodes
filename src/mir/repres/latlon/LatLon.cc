@@ -279,6 +279,13 @@ void LatLon::correctBoundingBox() {
 
 void LatLon::fill(util::MeshGeneratorParameters& params) const {
     params.meshGenerator_ = "structured";
+
+    if (boundingBox().south() > Latitude::EQUATOR) {
+        params.set("force_include_south_pole", true);
+    }
+    if (boundingBox().north() < Latitude::EQUATOR) {
+        params.set("force_include_north_pole", true);
+    }
 }
 
 
