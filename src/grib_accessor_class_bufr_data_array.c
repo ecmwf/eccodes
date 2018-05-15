@@ -2277,6 +2277,8 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 /* } else if ( descriptor->Y==1 && IS_QUALIFIER(self->expanded->v[idx-1]->X)==0) { */
                 /* forceGroupClosure=1; */
                 /* reset_qualifiers(significanceQualifierGroup); */
+            } else if (descriptor->X==33 && !qualityPresent) {
+                dump=1;  /* ECC-690: percentConfidence WITHOUT a bitmap! e.g. NOAA GOES16 BUFR */
             }
 
             if (ide==0 && !self->compressedData) {
@@ -2317,7 +2319,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
 
                 err=grib_accessor_add_attribute(accessor_or_attribute_with_same_name(elementFromBitmap,elementAccessor->name),elementAccessor,1);
             } else if (elementAccessor) {
-
+                int add_key = 1;
                 switch (descriptor->code) {
                 case 999999:
                     associatedFieldAccessor=elementAccessor;
@@ -2334,13 +2336,24 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 case 31021:
                     associatedFieldSignificanceAccessor=elementAccessor;
                     break;
-                case 33007:
-                    break;
+                /*case 33007:*/
+                    /* ECC-690: See later */
+                    /* break; */
                 default:
-                    grib_push_accessor(elementAccessor,section->block);
-                    rank=grib_data_accessors_trie_push(self->dataAccessorsTrie,elementAccessor);
-                    grib_accessors_list_push(self->dataAccessors,elementAccessor,rank);
-                    lastAccessorInList=grib_accessors_list_last(self->dataAccessors);
+                    add_key = 1;
+                    /* ECC-690: percentConfidence WITHOUT a bitmap! e.g. NOAA GOES16 BUFR */
+                    if(descriptor->code==33007 && qualityPresent) {
+                        /* This is the normal standard case. The percentConfidence is ATTACHED
+                         * to another parameter so we do not add it on its own except for GOES16
+                         */
+                        add_key = 0;
+                    }
+                    if (add_key) {
+                        grib_push_accessor(elementAccessor,section->block);
+                        rank=grib_data_accessors_trie_push(self->dataAccessorsTrie,elementAccessor);
+                        grib_accessors_list_push(self->dataAccessors,elementAccessor,rank);
+                        lastAccessorInList=grib_accessors_list_last(self->dataAccessors);
+                    }
                 }
             }
         }
