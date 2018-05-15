@@ -27,6 +27,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "mir/util/MeshGeneratorParameters.h"
 
 
 namespace mir {
@@ -254,11 +255,6 @@ Representation* LatLon::globalise(data::MIRField& field) const {
 }
 
 
-std::string LatLon::atlasMeshGenerator() const {
-    return "structured";
-}
-
-
 const LatLon* LatLon::croppedRepresentation(const util::BoundingBox&) const {
     std::ostringstream os;
     os << "LatLon::croppedRepresentation() not implemented for " << *this;
@@ -278,6 +274,11 @@ void LatLon::correctBoundingBox() {
 
         bbox_ = newBox;
     }
+}
+
+
+void LatLon::fill(util::MeshGeneratorParameters& params) const {
+    params.meshGenerator_ = "structured";
 }
 
 

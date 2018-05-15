@@ -128,6 +128,13 @@ void Representation::fill(api::MIRJob&) const {
 }
 
 
+void Representation::fill(util::MeshGeneratorParameters&) const {
+    std::ostringstream os;
+    os << "Representation::fill(util::MeshGeneratorParameters&) not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
 void Representation::shape(size_t&, size_t&) const {
     std::ostringstream os;
     os << "Representation::shape() not implemented for " << *this;
@@ -177,13 +184,6 @@ bool Representation::sameAs(const Representation&) const {
 atlas::Grid Representation::atlasGrid() const {
     std::ostringstream os;
     os << "Representation::atlasGrid() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
-}
-
-
-std::string Representation::atlasMeshGenerator() const {
-    std::ostringstream os;
-    os << "Representation::atlasMeshGenerator() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 

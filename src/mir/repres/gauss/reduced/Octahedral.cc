@@ -18,6 +18,7 @@
 #include "mir/api/MIRJob.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "mir/util/MeshGeneratorParameters.h"
 
 
 namespace mir {
@@ -80,6 +81,12 @@ const std::vector<long>& Octahedral::pls() const {
         pl_ = pl;
     }
     return pl_;
+}
+
+
+void Octahedral::fill(util::MeshGeneratorParameters& params) const {
+    Gaussian::fill(params);
+    params.set("triangulate", true);
 }
 
 

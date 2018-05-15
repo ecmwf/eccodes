@@ -25,6 +25,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "mir/util/MeshGeneratorParameters.h"
 
 
 namespace mir {
@@ -150,8 +151,8 @@ atlas::Grid ReducedLL::atlasGrid() const {
 }
 
 
-std::string ReducedLL::atlasMeshGenerator() const {
-    return "structured";
+void ReducedLL::fill(util::MeshGeneratorParameters& params) const {
+    params.meshGenerator_ = "structured";
 }
 
 

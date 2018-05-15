@@ -26,6 +26,7 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
+#include "mir/util/MeshGeneratorParameters.h"
 
 
 namespace mir {
@@ -106,6 +107,10 @@ void UnstructuredGrid::fill(api::MIRJob&) const  {
 }
 
 
+void UnstructuredGrid::fill(util::MeshGeneratorParameters& params) const {
+    params.meshGenerator_ = "delaunay";
+}
+
 util::Domain UnstructuredGrid::domain() const {
     eckit::Log::warning() << "UnstructuredGrid::domain(): assuming global" << std::endl;
     return util::Domain();
@@ -130,11 +135,6 @@ atlas::Grid UnstructuredGrid::atlasGrid() const {
     }
 
     return atlas::grid::UnstructuredGrid(pts);
-}
-
-
-std::string UnstructuredGrid::atlasMeshGenerator() const {
-    return "delaunay";
 }
 
 

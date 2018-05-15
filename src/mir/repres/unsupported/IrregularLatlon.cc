@@ -21,6 +21,7 @@
 #include "mir/api/Atlas.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
+#include "mir/util/MeshGeneratorParameters.h"
 
 
 namespace mir {
@@ -130,8 +131,14 @@ bool IrregularLatlon::sameAs(const Representation& other) const {
 }
 
 
-void IrregularLatlon::fill(grib_info &info) const  {
+void IrregularLatlon::fill(grib_info&) const  {
     NOTIMP;
+}
+
+
+void IrregularLatlon::fill(util::MeshGeneratorParameters& params) const {
+    // FIXME confirm meshGenerator_ = "structured" works!
+    params.meshGenerator_ = "delaunay";
 }
 
 
@@ -228,12 +235,6 @@ atlas::Grid IrregularLatlon::atlasGrid() const {
     }
 
     return atlas::grid::UnstructuredGrid(pts);
-}
-
-
-std::string IrregularLatlon::atlasMeshGenerator() const {
-    return "delaunay";
-//FIXME    return "structured";
 }
 
 
