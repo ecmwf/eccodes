@@ -39,14 +39,31 @@ namespace reduced {
 
 
 Reduced::Reduced(const param::MIRParametrisation& parametrisation) :
-    Gaussian(parametrisation) {
+    Gaussian(parametrisation),
+    k_(0),
+    Nj_(0) {
+
+    std::vector<long> pl;
+    ASSERT(parametrisation.get("pl", pl));
+    pls(pl);
+
+    setNj();
+}
+
+
+Reduced::Reduced(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox) :
+    Gaussian(N, bbox),
+    k_(0),
+    Nj_(0),
+    pl_(pl) {
     setNj();
 }
 
 
 Reduced::Reduced(size_t N, const util::BoundingBox& bbox) :
-    Gaussian(N, bbox) {
-    setNj();
+    Gaussian(N, bbox),
+    k_(0),
+    Nj_(0) {
 }
 
 
@@ -77,7 +94,6 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e, bool grib1) const {
 
         const std::vector<long>& pl = pls();
         const std::vector<double>& lats = latitudes();
-        ASSERT(lats.size() == pl.size());
 
         Fraction west = w.fraction();
         Fraction east = e.fraction();
@@ -168,13 +184,27 @@ Iterator* Reduced::rotatedIterator(const util::Rotation& rotation) const {
 }
 
 
+const std::vector<long>& Reduced::pls() const {
+    ASSERT(pl_.size() == N_ * 2);
+    ASSERT(pl_.size() >= k_ + Nj_);
+
+    return pl_;
+}
+
+
+void Reduced::pls(std::vector<long>& pl) {
+    ASSERT(*std::min_element(pl.begin() + k_, pl.begin() + k_ + Nj_) >= 2);
+
+    pl_.swap(pl);
+    pls();
+}
+
+
 void Reduced::setNj() {
     ASSERT(N_ > 0);
 
     const std::vector<long>& pl = pls();
     const std::vector<double>& lats = Gaussian::latitudes();
-    ASSERT(pl.size() == N_ * 2);
-    ASSERT(pl.size() == lats.size());
 
 
     // position to first latitude and first/last longitude

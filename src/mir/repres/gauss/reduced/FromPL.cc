@@ -28,27 +28,13 @@ namespace gauss {
 namespace reduced {
 
 
-static void checkPl(const std::vector<long>& pl, size_t k, size_t Nj) {
-    ASSERT(pl.size() >= k + Nj);
-    ASSERT(*std::min_element(pl.begin() + k, pl.begin() + k + Nj) >= 2);
-}
-
-
 FromPL::FromPL(const param::MIRParametrisation& parametrisation) :
     Reduced(parametrisation) {
-    ASSERT(parametrisation.get("pl", pl_));
-    checkPl(pl_, k_, Nj_);
 }
 
 
 FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox) :
-    Reduced(N, bbox),
-    pl_(pl) {
-    ASSERT(N * 2 == pl.size());
-
-//    bbox_.south()
-//    bbox_ = correctSouthNorth();
-    checkPl(pl_, k_, Nj_);
+    Reduced(N, pl, bbox) {
 }
 
 
@@ -60,7 +46,7 @@ void FromPL::makeName(std::ostream& out) const {
     out << "R" << N_ << "-";
 
     eckit::MD5 md5;
-    for (const auto& j : pl_) {
+    for (const auto& j : pls()) {
         md5 << j;
     }
 
@@ -71,7 +57,7 @@ void FromPL::makeName(std::ostream& out) const {
 
 bool FromPL::sameAs(const Representation& other) const {
     const FromPL* o = dynamic_cast<const FromPL*>(&other);
-    return o && (pl_ == o->pl_) && Reduced::sameAs(other);
+    return o && (pls() == o->pls()) && Reduced::sameAs(other);
 }
 
 
@@ -86,12 +72,7 @@ void FromPL::fill(api::MIRJob& job) const  {
 
 
 atlas::Grid FromPL::atlasGrid() const {
-    return atlas::grid::ReducedGaussianGrid(pl_, domain());
-}
-
-
-const std::vector<long>& FromPL::pls() const {
-    return pl_;
+    return atlas::grid::ReducedGaussianGrid(pls(), domain());
 }
 
 

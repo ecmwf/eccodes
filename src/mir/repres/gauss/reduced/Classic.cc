@@ -28,6 +28,15 @@ namespace reduced {
 
 Classic::Classic(size_t N, const util::BoundingBox& bbox):
     Reduced(N, bbox) {
+
+    atlas::util::Config config;
+    config.set("name", "N" + std::to_string(N_));
+    atlas::grid::ReducedGaussianGrid grid(config);
+    ASSERT(grid);
+
+    std::vector<long> pl(grid.nx());
+    pls(pl);
+    setNj();
 }
 
 
@@ -62,24 +71,6 @@ bool Classic::sameAs(const Representation& other) const {
 
 atlas::Grid Classic::atlasGrid() const {
     return atlas::grid::ReducedGaussianGrid("N" + std::to_string(N_), domain());
-}
-
-
-const std::vector<long>& Classic::pls() const {
-    if (pl_.size() == 0) {
-
-        atlas::util::Config config;
-        config.set("name", "N" + std::to_string(N_));
-        atlas::grid::ReducedGaussianGrid grid(config);
-        ASSERT(grid);
-
-        const std::vector<long>& pl = grid.nx();
-        ASSERT(pl.size() == N_ * 2);
-        ASSERT(*std::min_element(pl.begin(), pl.end()) >= 2);
-
-        pl_ = pl;
-    }
-    return pl_;
 }
 
 
