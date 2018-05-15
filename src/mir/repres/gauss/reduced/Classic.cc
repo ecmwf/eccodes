@@ -26,8 +26,8 @@ namespace gauss {
 namespace reduced {
 
 
-Classic::Classic(size_t N):
-    Reduced(N) {
+Classic::Classic(size_t N, const util::BoundingBox& bbox):
+    Reduced(N, bbox) {
 }
 
 
@@ -66,7 +66,6 @@ atlas::Grid Classic::atlasGrid() const {
 
 
 const std::vector<long>& Classic::pls() const {
-
     if (pl_.size() == 0) {
 
         atlas::util::Config config;

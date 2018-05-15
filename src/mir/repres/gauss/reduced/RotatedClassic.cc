@@ -27,8 +27,8 @@ namespace gauss {
 namespace reduced {
 
 
-RotatedClassic::RotatedClassic(size_t N, const util::Rotation& rotation):
-    Classic(N),
+RotatedClassic::RotatedClassic(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox):
+    Classic(N, bbox),
     rotation_(rotation) {
 }
 
@@ -88,9 +88,8 @@ atlas::Grid RotatedClassic::atlasGrid() const {
 }
 
 
-const Reduced *RotatedClassic::croppedRepresentation(const util::BoundingBox& bbox, const std::vector<long>& pl) const {
-    // We lose the RotatedClassic nature of the grid
-    return new RotatedFromPL(N_, pl, rotation_, bbox);
+const Gridded* RotatedClassic::croppedRepresentation(const util::BoundingBox& bbox) const {
+    return new RotatedClassic(N_, rotation_, bbox);
 }
 
 

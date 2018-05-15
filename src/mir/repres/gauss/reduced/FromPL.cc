@@ -28,16 +28,16 @@ namespace gauss {
 namespace reduced {
 
 
-static bool checkPl(const std::vector<long>& pl) {
-    ASSERT(!pl.empty());
-    return *std::min_element(pl.begin(), pl.end()) >= 2;
+static void checkPl(const std::vector<long>& pl, size_t k, size_t Nj) {
+    ASSERT(pl.size() >= k + Nj);
+    ASSERT(*std::min_element(pl.begin() + k, pl.begin() + k + Nj) >= 2);
 }
 
 
 FromPL::FromPL(const param::MIRParametrisation& parametrisation) :
     Reduced(parametrisation) {
     ASSERT(parametrisation.get("pl", pl_));
-    checkPl(pl_);
+    checkPl(pl_, k_, Nj_);
 }
 
 
@@ -46,10 +46,9 @@ FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& b
     pl_(pl) {
     ASSERT(N * 2 == pl.size());
 
-    const std::vector<double>& lats = latitudes();
-    cropToBoundingBox(N, lats, bbox_, pl_);
-
-    checkPl(pl_);
+//    bbox_.south()
+//    bbox_ = correctSouthNorth();
+    checkPl(pl_, k_, Nj_);
 }
 
 

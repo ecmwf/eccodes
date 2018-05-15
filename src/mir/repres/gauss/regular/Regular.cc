@@ -166,77 +166,45 @@ void Regular::makeName(std::ostream& out) const {
 }
 
 
-util::BoundingBox Regular::croppedBoundingBox(const util::BoundingBox& bbox) const {
+void Regular::correctWestEast(Longitude& w, Longitude& e, bool grib1) const {
+    using eckit::Fraction;
+    ASSERT(w <= e);
 
-    // crop latitude-wise, ensuring exact Gaussian latitudes
-    Latitude n = bbox.north();
-    Latitude s = bbox.south();
+    Fraction inc = getSmallestIncrement();
+    ASSERT(inc > 0);
 
-    const std::vector<double>& lats = latitudes();
+    const Longitude we = e - w;
+    if (e != w && e.normalise(w) == w) {
 
-    if (n < lats.back()) {
-        n = lats.back();
+        // if periodic West/East, adjust East only
+        e = w + Longitude::GLOBE - inc;
+
+    } else if (grib1 ? same_with_grib1_accuracy(we + inc, Longitude::GLOBE) || we + inc > Longitude::GLOBE
+                     : we + inc >= Longitude::GLOBE) {
+
+        // if periodic West/East, adjust East only
+        e = w + Longitude::GLOBE - inc;
+
     } else {
-        auto best = std::lower_bound(lats.begin(), lats.end(), n.value(),
-                                     [](const Latitude& l1, const Latitude& l2) {
-            return !(l1 <= l2);
-        });
-        ASSERT(best != lats.end());
-        n = *best;
+
+        const Fraction west = w.fraction();
+        const Fraction east = e.fraction();
+
+        Fraction::value_type Nw = (west / inc).integralPart();
+        if (Nw * inc < west) {
+            Nw += 1;
+        }
+
+        Fraction::value_type Ne = (east / inc).integralPart();
+        if (Ne * inc > east) {
+            Ne -= 1;
+        }
+
+        ASSERT(Nw <= Ne);
+
+        w = Nw * inc;
+        e = Ne * inc;
     }
-
-    if (s > lats.front()) {
-        s = lats.front();
-    } else {
-        auto best = std::lower_bound(lats.rbegin(), lats.rend(), s.value(),
-                                     [](const Latitude& l1, const Latitude& l2) {
-            return !(l1 >= l2);
-        });
-        ASSERT(best != lats.rend());
-        s = *best;
-    }
-
-
-    // crop longitude-wise
-    Longitude w = bbox.west();
-    Longitude e = bbox.east();
-    ASSERT(w < e);
-    ASSERT(w - e < Longitude::GLOBE);
-
-    eckit::Fraction inc = getSmallestIncrement();
-
-    eckit::Fraction west = w.fraction();
-    eckit::Fraction::value_type Nw = (west / inc).integralPart();
-    if (Nw * inc < west) {
-        Nw += 1;
-    }
-
-    eckit::Fraction east = e.fraction();
-    eckit::Fraction::value_type Ne = (east / inc).integralPart();
-    if (Ne * inc > east) {
-        Ne -= 1;
-    }
-
-    ASSERT(Nw <= Ne);
-
-    w = Nw * inc;
-    e = Ne * inc;
-
-
-    // set bounding box and inform
-    util::BoundingBox cropped(n, w, s, e);
-
-    if (cropped != bbox) {
-        eckit::Channel& log = eckit::Log::debug<LibMir>();
-        std::streamsize old = log.precision(12);
-        log << "Regular::croppedBoundingBox: "
-            << "\n   " << bbox
-            << "\n > " << cropped
-            << std::endl;
-        log.precision(old);
-    }
-
-    return cropped;
 }
 
 
@@ -277,8 +245,8 @@ atlas::Grid Regular::atlasGrid() const {
 
 
 void Regular::setNiNj() {
-    const util::Domain dom = domain();
     ASSERT(N_);
+    const util::Domain dom = domain();
 
     Ni_ = N_ * 4;
     if (!dom.isPeriodicEastWest()) {

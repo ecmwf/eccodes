@@ -26,8 +26,8 @@ namespace gauss {
 namespace reduced {
 
 
-Octahedral::Octahedral(size_t N) :
-    Reduced(N) {
+Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox) :
+    Reduced(N, bbox) {
 }
 
 
@@ -66,7 +66,6 @@ atlas::Grid Octahedral::atlasGrid() const {
 
 
 const std::vector<long>& Octahedral::pls() const {
-
     if (pl_.size() == 0) {
 
         atlas::util::Config config;

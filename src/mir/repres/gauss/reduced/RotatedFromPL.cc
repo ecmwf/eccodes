@@ -93,8 +93,8 @@ atlas::Grid RotatedFromPL::atlasGrid() const {
 }
 
 
-const Reduced* RotatedFromPL::croppedRepresentation(const util::BoundingBox& bbox, const std::vector<long>& pl) const {
-    return new RotatedFromPL(N_, pl, rotation_, bbox);
+const Gridded* RotatedFromPL::croppedRepresentation(const util::BoundingBox& bbox) const {
+    return new RotatedFromPL(N_, pl_, rotation_, bbox);
 }
 
 
