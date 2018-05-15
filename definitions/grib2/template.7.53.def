@@ -26,7 +26,7 @@ meta codedValues data_g2bifourier_packing(
           referenceValue,
           binaryScaleFactor,
           decimalScaleFactor,
-
+          optimizeScaleFactor,
           unpackedSubsetPrecision,
 
           laplacianOperatorIsSet,

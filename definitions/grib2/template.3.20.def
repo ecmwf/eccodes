@@ -1,4 +1,4 @@
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2017 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -25,22 +25,50 @@ alias Nj  = Ny;
 alias numberOfPointsAlongYAxis  = Ny;
 alias geography.Ny=Ny;
 
-include "grib2/template.3.20.part1.def"
+#  La1 - latitude of first grid point
+signed[4] latitudeOfFirstGridPoint : edition_specific ;
+meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
+alias La1 =  latitudeOfFirstGridPoint;
 
+#  Lo1 - longitude of first grid point
+unsigned[4] longitudeOfFirstGridPoint : edition_specific;
+meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
+alias Lo1 =  longitudeOfFirstGridPoint;
+
+#  Resolution and component flag
+# NOTE 1 NOT FOUND
+flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : dump;
+
+#  LaD - Latitude where Dx and Dy are specified
+signed[4] LaD  : edition_specific;
+alias latitudeWhereDxAndDyAreSpecified=LaD;
+meta geography.LaDInDegrees scale(LaD,oneConstant,grib2divider,truncateDegrees) : dump;
+alias latitudeWhereDxAndDyAreSpecifiedInDegrees=LaDInDegrees;
+
+#  LoV - orientation of the grid
+# NOTE 2 NOT FOUND
+signed[4] orientationOfTheGrid  : edition_specific;
+alias LoV =  orientationOfTheGrid ;
+meta geography.orientationOfTheGridInDegrees scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
 
 #  Dx - X-direction grid length
-#  Grid length is in units of 10-3 m at the latitude specified by LaD
+# NOTE 3: Grid length is in units of 10-3 m at the latitude specified by LaD
 unsigned[4] Dx  : edition_specific;
 meta geography.DxInMetres scale(Dx,one,thousand,truncateDegrees) : dump;
 alias xDirectionGridLength=Dx;
 
 #  Dy - Y-direction grid length
-#  Grid length is in units of 10-3 m at the latitude specified by LaD
+# NOTE 3: Grid length is in units of 10-3 m at the latitude specified by LaD
 unsigned[4] Dy  : edition_specific;
 meta geography.DyInMetres scale(Dy,one,thousand,truncateDegrees) : dump;
 alias yDirectionGridLength=Dy;
 
-include "grib2/template.3.20.part2.def"
+#  Projection centre flag
+flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' : dump;
+# Note our flagbit numbers go from 7 to 0, while WMO convention is from 1 to 8
+# If bit 1 is 0, then the North Pole is on the projection plane
+# If bit 1 is 1, then the South Pole is on the projection plane
+flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump;   # WMO bit 1
 
 include "grib2/template.3.scanning_mode.def";
 
@@ -50,14 +78,11 @@ iterator polar_stereographic(numberOfPoints,missingValue,values,
           latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
           southPoleOnProjectionPlane,
           orientationOfTheGridInDegrees,
-          LaDInDegrees,
           DxInMetres,DyInMetres,
           iScansNegatively,
           jScansPositively,
           jPointsAreConsecutive,
           alternativeRowScanning);
-
-nearest polar_stereographic(values,radius,Nx,Ny);
 
 
 # END   2/template.3.20 ----------------------------------------------------------------------
