@@ -204,7 +204,7 @@ void Reduced::setNj() {
     ASSERT(N_ > 0);
 
     const std::vector<long>& pl = pls();
-    const std::vector<double>& lats = Gaussian::latitudes();
+    const std::vector<double>& lats = latitudes();
 
 
     // position to first latitude and first/last longitude
@@ -235,7 +235,7 @@ void Reduced::fill(grib_info& info) const  {
 
     // See copy_spec_from_ksec.c in libemos for info
 
-    const std::vector<long> &pl = pls();
+    const std::vector<long>& pl = pls();
 
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
     info.grid.Nj = long(Nj_);
@@ -261,7 +261,7 @@ void Reduced::fill(grib_info& info) const  {
     */
 
     // for GRIB, a global field is also aligned with Greenwich
-    bool westAtGreenwich = bbox_.west() == Longitude::GREENWICH;;
+    bool westAtGreenwich = bbox_.west() == Longitude::GREENWICH;
 
     long j = info.packing.extra_settings_count++;
     info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
@@ -356,14 +356,10 @@ bool Reduced::getLongestElementDiagonal(double& d) const {
     // latitudes closest/furthest from equator and longitude furthest from
     // Greenwich
 
-    const std::vector<double>& lats = latitudes();
     const std::vector<long>& pl = pls();
-    ASSERT(N_ * 2 == lats.size());
-    ASSERT(N_ * 2 == pl.size());
+    const std::vector<double>& lats = latitudes();
 
     d = 0.;
-    ASSERT(Nj_ > 1);
-    ASSERT(Nj_ + k_ <= pl.size());
     for (size_t j = k_ + 1; j < Nj_; ++j) {
 
         Latitude l1(lats[j - 1]);
@@ -377,9 +373,6 @@ bool Reduced::getLongestElementDiagonal(double& d) const {
         d = std::max(d, atlas::util::Earth::distance(
                          atlas::PointLonLat(0., latCloserToEquator.value()),
                          atlas::PointLonLat(we, latAwayFromEquator.value()) ));
-
-        l1 = l2;
-        l2 = lats[j];
     }
 
     ASSERT(d > 0.);
