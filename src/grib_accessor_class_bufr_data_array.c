@@ -2278,7 +2278,9 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 /* forceGroupClosure=1; */
                 /* reset_qualifiers(significanceQualifierGroup); */
             } else if (descriptor->X==33 && !qualityPresent) {
-                dump=1;  /* ECC-690: percentConfidence WITHOUT a bitmap! e.g. NOAA GOES16 BUFR */
+                if (c->bufr_quality_without_bitmap == 1) {
+                    dump=1;  /* ECC-690: percentConfidence WITHOUT a bitmap! e.g. NOAA GOES16 BUFR */
+                }
             }
 
             if (ide==0 && !self->compressedData) {
@@ -2342,11 +2344,16 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 default:
                     add_key = 1;
                     /* ECC-690: percentConfidence WITHOUT a bitmap! e.g. NOAA GOES16 BUFR */
-                    if(descriptor->code==33007 && qualityPresent) {
-                        /* This is the normal standard case. The percentConfidence is ATTACHED
-                         * to another parameter so we do not add it on its own except for GOES16
-                         */
-                        add_key = 0;
+                    if(descriptor->code==33007) {
+                        add_key = 0; /* Standard behaviour */
+                        if (!qualityPresent) {
+                            if (c->bufr_quality_without_bitmap) {
+                                add_key = 1;
+                            } else {
+                                grib_context_log(c, GRIB_LOG_WARNING,
+                                                 "create_keys: descriptor=%6.6ld: Class 33 quality information without a bitmap!",descriptor->code);
+                            }
+                        }
                     }
                     if (add_key) {
                         grib_push_accessor(elementAccessor,section->block);

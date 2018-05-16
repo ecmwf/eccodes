@@ -1054,6 +1054,7 @@ struct grib_context
     int                             ieee_packing;
     int                             bufrdc_mode;
     int                             bufr_set_to_missing_if_out_of_range;
+    int                             bufr_quality_without_bitmap;
     FILE*                           log_stream;
     grib_trie*                      classes;
     grib_trie*                      lists;
