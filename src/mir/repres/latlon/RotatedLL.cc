@@ -130,9 +130,8 @@ const RotatedLL* RotatedLL::croppedRepresentation(const util::BoundingBox& bbox)
 util::BoundingBox RotatedLL::extendedBoundingBox(const util::BoundingBox& bbox, double angle) const {
 
     // cropping bounding box after extending guarantees the representation can use it
-    util::BoundingBox extended(bbox);
-    Gridded::extendBoundingBox(extended, angle);
-    return extended;
+    util::BoundingBox extended(bbox.extend(angle, rotation_));
+    return croppedBoundingBox(extended);
 }
 
 
