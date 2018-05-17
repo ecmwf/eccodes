@@ -142,10 +142,6 @@ static grib_accessor_class _grib_accessor_class_data_g2bifourier_packing = {
 
 grib_accessor_class* grib_accessor_class_data_g2bifourier_packing = &_grib_accessor_class_data_g2bifourier_packing;
 
-
-typedef unsigned long (*encode_float_proc)(double);
-typedef double        (*decode_float_proc)(unsigned long);
-
 static void init_class(grib_accessor_class* c)
 {
 	c->dump	=	(*(c->super))->dump;
@@ -175,6 +171,9 @@ static void init_class(grib_accessor_class* c)
 }
 
 /* END_CLASS_IMP */
+
+typedef unsigned long (*encode_float_proc)(double);
+typedef double        (*decode_float_proc)(unsigned long);
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
