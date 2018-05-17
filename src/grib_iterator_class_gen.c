@@ -38,10 +38,10 @@ or edit "iterator.class" and rerun ./make_class.pl
 
 static void init_class              (grib_iterator_class*);
 
-static int init               (grib_iterator* iter,grib_handle*,grib_arguments*);
+static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
 static int destroy            (grib_iterator* i);
-static int reset              (grib_iterator* iter);
-static long has_next          (grib_iterator* iter);
+static int reset              (grib_iterator* i);
+static long has_next          (grib_iterator* i);
 
 
 typedef struct grib_iterator_gen{

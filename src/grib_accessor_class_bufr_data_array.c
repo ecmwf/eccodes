@@ -143,9 +143,9 @@ typedef struct grib_accessor_bufr_data_array {
 	grib_trie_with_rank* dataAccessorsTrie;
 	grib_sarray* tempStrings;
 	int change_ref_value_operand;
-    size_t refValListSize;
-    long* refValList;
-    long refValIndex;
+	size_t refValListSize;
+	long* refValList;
+	long refValIndex;
 	bufr_tableb_override* tableb_override;
 } grib_accessor_bufr_data_array;
 

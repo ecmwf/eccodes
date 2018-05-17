@@ -62,12 +62,12 @@ typedef struct grib_iterator_regular{
 	double   *los;
 	long      nap;
 	long      nam;
-	long   iScansNegatively;
-	long   isRotated;
+	long iScansNegatively;
+	long isRotated;
 	double angleOfRotation;
 	double southPoleLat;
 	double southPoleLon;
-	long   jPointsAreConsecutive;
+	long jPointsAreConsecutive;
 } grib_iterator_regular;
 
 extern grib_iterator_class* grib_iterator_class_gen;
