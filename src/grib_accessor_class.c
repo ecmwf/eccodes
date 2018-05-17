@@ -120,7 +120,7 @@ static GRIB_INLINE grib_accessor_class* get_class(grib_context* c,char* type)
     grib_context_log(c,GRIB_LOG_FATAL,"unable to create class %s",type);
     return NULL;
 }
-
+#define ACCESSOR_FACTORY_USE_TRIE /*TODO: sort out the hash of accessor classes */
 grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
         const long len, grib_arguments* params)
 {

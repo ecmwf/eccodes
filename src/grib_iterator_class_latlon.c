@@ -34,8 +34,8 @@ or edit "iterator.class" and rerun ./make_class.pl
 
 static void init_class              (grib_iterator_class*);
 
-static int init               (grib_iterator* iter,grib_handle*,grib_arguments*);
-static int next               (grib_iterator* iter, double *lat, double *lon, double *val);
+static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
+static int next               (grib_iterator* i, double *lat, double *lon, double *val);
 
 
 typedef struct grib_iterator_latlon{
@@ -48,12 +48,12 @@ typedef struct grib_iterator_latlon{
 	double   *los;
 	long      nap;
 	long      nam;
-	long      iScansNegatively;
-	long      isRotated;
-	double    angleOfRotation;
-	double    southPoleLat;
-	double    southPoleLon;
-	long      jPointsAreConsecutive;
+	long iScansNegatively;
+	long isRotated;
+	double angleOfRotation;
+	double southPoleLat;
+	double southPoleLon;
+	long jPointsAreConsecutive;
 /* Members defined in latlon */
 } grib_iterator_latlon;
 
