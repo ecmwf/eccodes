@@ -4275,10 +4275,10 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     printf("%s: Found %d GRIB field%s in %d file%s.\n", grib_tool_name, fs->count, fs->count>1?"s":"", files, files > 1 ? "s" : "");
 
-    /*
-     grib_context_log(ctx, GRIB_LOG_INFO, "Request representing %d fields ", fs->count);
-     print_all_requests(data_r);
-     */
+    if (ctx->debug) {
+        grib_context_log(ctx, GRIB_LOG_INFO, "Request representing %d fields ", fs->count);
+        print_all_requests(data_r);
+    }
 
     /* Split the SOURCE from request into as many datasets as specified */
     count = split_fieldset(fs, data_r, &subsets, user_r, config_r);
@@ -4287,6 +4287,10 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     print_ignored_keys(stdout, user_r);
 
     dims = new_simple_hypercube_from_mars_request(data_r);
+    if (ctx->debug) {
+        grib_context_log(ctx, GRIB_LOG_INFO, "Hypercube");
+        print_hypercube(dims);
+    }
 
     /* In case there is only 1 DATE+TIME+STEP, set at least 1 time as axis */
     set_always_a_time(dims, data_r);
