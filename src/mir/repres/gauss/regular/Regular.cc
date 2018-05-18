@@ -240,12 +240,45 @@ bool Regular::getLongestElementDiagonal(double& d) const {
 
 
 util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) const {
+    using eckit::Fraction;
 
-//    // cropping bounding box after extending guarantees the representation can use it
-//    util::BoundingBox extended(bbox.extend(angle));
-//    return croppedBoundingBox(extended);
+    // adjust West/East to include bbox's West/East (reference own West)
+    Longitude w = bbox.west();
+    Longitude e = bbox.east();
+    {
+        Fraction inc = getSmallestIncrement();
+        Fraction ref = bbox_.west().fraction();
 
-    return bbox;
+        Fraction::value_type Nw = (w.fraction() - ref / inc).integralPart();
+        if (Nw * inc + ref > w.fraction()) {
+            Nw -= 1;
+        }
+        w = Nw * inc + ref;
+
+        Fraction::value_type Nemax = (Longitude::GLOBE.fraction() / inc).integralPart();
+        ref = Nw * inc + ref;
+
+        Fraction::value_type Ne = (e.fraction() - ref / inc).integralPart();
+        if (Ne * inc + ref < e.fraction() && Ne < Nemax) {
+            Ne += 1;
+        }
+        ASSERT(Ne <= Nemax);
+        e = Ne * inc + ref;
+
+        ASSERT(w < e);
+    }
+
+    // adjust South/North to include bbox's South/North ('outwards')
+    Latitude s = bbox.south();
+    Latitude n = bbox.north();
+    correctSouthNorth(s, n, false, false);
+
+
+    // set bounding box
+    const util::BoundingBox extended(n, w, s, e);
+    ASSERT(extended.contains(bbox_));
+
+    return extended;
 }
 
 
