@@ -45,6 +45,14 @@ check_symbol_exists( posix_memalign   "stdlib.h"   ECCODES_HAVE_POSIX_MEMALIGN )
 check_symbol_exists( fmemopen         "stdio.h"    ECCODES_HAVE_FMEMOPEN )
 check_symbol_exists( funopen          "stdio.h"    ECCODES_HAVE_FUNOPEN )
 
+check_c_source_compiles(
+      " typedef int foo_t;
+      static inline foo_t static_foo(){return 0;}
+      foo_t foo(){return 0;}
+      int main(int argc, char *argv[]){return 0;}
+      " ECCODES_HAVE_C_INLINE )
+
+
 ###############################################################################
 # some variables/options of this project
 
