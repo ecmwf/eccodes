@@ -439,13 +439,12 @@ bool LatLon::LatLonIterator::next(Latitude& lat, Longitude& lon) {
 util::BoundingBox LatLon::extendedBoundingBox(const util::BoundingBox& bbox) const {
     using eckit::Fraction;
 
-
     // adjust West/East to include bbox's West/East (reference own West)
     Longitude w = bbox.west();
     Longitude e = bbox.east();
     {
-        const Fraction inc = increments_.west_east().longitude().fraction();
-        const Fraction ref = bbox_.west().fraction();
+        Fraction inc = increments_.west_east().longitude().fraction();
+        Fraction ref = bbox_.west().fraction();
 
         Fraction::value_type Nw = (w.fraction() - ref / inc).integralPart();
         if (Nw * inc + ref > w.fraction()) {
@@ -453,16 +452,17 @@ util::BoundingBox LatLon::extendedBoundingBox(const util::BoundingBox& bbox) con
         }
         w = Nw * inc + ref;
 
+        Fraction::value_type Nemax = (Longitude::GLOBE.fraction() / inc).integralPart();
+        ref = Nw * inc + ref;
+
         Fraction::value_type Ne = (e.fraction() - ref / inc).integralPart();
-        if (Ne * inc + ref < e.fraction()) {
+        if (Ne * inc + ref < e.fraction() && Ne < Nemax) {
             Ne += 1;
         }
+        ASSERT(Ne <= Nemax);
         e = Ne * inc + ref;
 
         ASSERT(w < e);
-        if (e >= w + Longitude::GLOBE) {
-
-        }
     }
 
     // adjust South/North to include bbox's South/North (reference own South)
@@ -486,6 +486,7 @@ util::BoundingBox LatLon::extendedBoundingBox(const util::BoundingBox& bbox) con
         n = Nn * inc + ref;
         ASSERT(n <= Latitude::NORTH_POLE);
     }
+
 
     // set bounding box
     const util::BoundingBox extended(n, w, s, e);
