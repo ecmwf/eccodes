@@ -239,6 +239,16 @@ bool Regular::getLongestElementDiagonal(double& d) const {
 }
 
 
+util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) const {
+
+//    // cropping bounding box after extending guarantees the representation can use it
+//    util::BoundingBox extended(bbox.extend(angle));
+//    return croppedBoundingBox(extended);
+
+    return bbox;
+}
+
+
 atlas::Grid Regular::atlasGrid() const {
     return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), domain());
 }

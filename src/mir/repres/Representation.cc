@@ -209,7 +209,7 @@ util::BoundingBox Representation::croppedBoundingBox(const util::BoundingBox&) c
 }
 
 
-util::BoundingBox Representation::extendedBoundingBox(const util::BoundingBox&, double) const {
+util::BoundingBox Representation::extendedBoundingBox(const util::BoundingBox&) const {
     std::ostringstream os;
     os << "Representation::extendedBoundingBox() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());

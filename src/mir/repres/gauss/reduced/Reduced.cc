@@ -380,6 +380,16 @@ bool Reduced::getLongestElementDiagonal(double& d) const {
 }
 
 
+util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) const {
+
+
+
+
+
+    return bbox;
+}
+
+
 }  // namespace reduced
 }  // namespace gauss
 }  // namespace repres

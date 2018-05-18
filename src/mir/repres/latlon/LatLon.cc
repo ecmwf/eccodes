@@ -436,6 +436,65 @@ bool LatLon::LatLonIterator::next(Latitude& lat, Longitude& lon) {
 }
 
 
+util::BoundingBox LatLon::extendedBoundingBox(const util::BoundingBox& bbox) const {
+    using eckit::Fraction;
+
+
+    // adjust West/East to include bbox's West/East (reference own West)
+    Longitude w = bbox.west();
+    Longitude e = bbox.east();
+    {
+        const Fraction inc = increments_.west_east().longitude().fraction();
+        const Fraction ref = bbox_.west().fraction();
+
+        Fraction::value_type Nw = (w.fraction() - ref / inc).integralPart();
+        if (Nw * inc + ref > w.fraction()) {
+            Nw -= 1;
+        }
+        w = Nw * inc + ref;
+
+        Fraction::value_type Ne = (e.fraction() - ref / inc).integralPart();
+        if (Ne * inc + ref < e.fraction()) {
+            Ne += 1;
+        }
+        e = Ne * inc + ref;
+
+        ASSERT(w < e);
+        if (e >= w + Longitude::GLOBE) {
+
+        }
+    }
+
+    // adjust South/North to include bbox's South/North (reference own South)
+    Latitude s = bbox.south();
+    Latitude n = bbox.north();
+    {
+        const Fraction inc = increments_.south_north().latitude().fraction();
+        const Fraction ref = bbox_.south().fraction();
+
+        Fraction::value_type Ns = (s.fraction() - ref / inc).integralPart();
+        if (Ns * inc + ref > s.fraction()) {
+            Ns -= 1;
+        }
+        s = Ns * inc + ref;
+        ASSERT(s >= Latitude::SOUTH_POLE);
+
+        Fraction::value_type Nn = (n.fraction() - ref / inc).integralPart();
+        if (Nn * inc + ref < n.fraction()) {
+            Nn += 1;
+        }
+        n = Nn * inc + ref;
+        ASSERT(n <= Latitude::NORTH_POLE);
+    }
+
+    // set bounding box
+    const util::BoundingBox extended(n, w, s, e);
+    ASSERT(extended.contains(bbox_));
+
+    return extended;
+}
+
+
 }  // namespace latlon
 }  // namespace repres
 }  // namespace mir

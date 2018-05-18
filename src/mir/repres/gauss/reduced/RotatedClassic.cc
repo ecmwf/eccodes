@@ -57,11 +57,9 @@ bool RotatedClassic::sameAs(const Representation&) const {
 }
 
 
-util::BoundingBox RotatedClassic::extendedBoundingBox(const util::BoundingBox& bbox, double angle) const {
-
-    // cropping bounding box after extending guarantees the representation can use it
-    util::BoundingBox extended(bbox.extend(angle, rotation_));
-    return croppedBoundingBox(extended);
+util::BoundingBox RotatedClassic::extendedBoundingBox(const util::BoundingBox& bbox) const {
+    util::BoundingBox rotated = bbox.rotate(rotation_);
+    return Reduced::extendedBoundingBox(rotated);
 }
 
 
