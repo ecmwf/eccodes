@@ -11549,6 +11549,7 @@ dist_definitionsgrib2_localConcepts_efkl_DATA = \
 
 definitionsgrib2_localConcepts_egrrdir = @ECCODES_DEFINITION_PATH@/grib2/localConcepts/egrr
 dist_definitionsgrib2_localConcepts_egrr_DATA = \
+	grib2/localConcepts/egrr/cfVarName.def\
 	grib2/localConcepts/egrr/name.def\
 	grib2/localConcepts/egrr/paramId.def\
 	grib2/localConcepts/egrr/shortName.def\
