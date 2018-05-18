@@ -13,6 +13,10 @@
 label="grib_ecc-604"
 temp_dir=tempdir.${label}
 
+NUM_THREADS=6
+NUM_ITER=100
+OUTPUT=output
+
 validate()
 {
     echo "Checking every output file is identical..."
@@ -25,34 +29,42 @@ validate()
     # Should be the same as the first
     [ "$res" = "$ck1" ]
 }
+process()
+{
+    input=$1 # The input GRIB file
 
-NUM_THREADS=6
-NUM_ITER=200
-OUTPUT=output
-input=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
-# input=$ECCODES_SAMPLES_PATH/gg_sfc_grib1.tmpl
+    # Test 01: Clone + output
+    # ------------------------
+    rm -fr $OUTPUT;   mkdir -p $OUTPUT
+    time ${test_dir}/grib_ecc-604-1 par $input $NUM_THREADS $NUM_ITER
+    validate
 
+    # Test 02: No clone + output
+    # --------------------------
+    rm -fr $OUTPUT;   mkdir -p $OUTPUT
+    time ${test_dir}/grib_ecc-604-2 par $input $NUM_THREADS $NUM_ITER
+    validate
+
+    # Test 03: Clone + no output
+    # ---------------------------
+    rm -fr $OUTPUT
+    time ${test_dir}/grib_ecc-604-3 par $input $NUM_THREADS $NUM_ITER
+    # Nothing to validate as there is no output
+}
+###################################################
 rm -fr $temp_dir
 mkdir -p $temp_dir
 cd $temp_dir
 
-# Test 01: Clone + output
-# ------------------------
-mkdir -p $OUTPUT
-time ${test_dir}/grib_ecc-604-1 par $input $NUM_THREADS $NUM_ITER
-validate
+# GRIB1 inputs
+process $ECCODES_SAMPLES_PATH/gg_sfc_grib1.tmpl
+process ${data_dir}/gen_bitmap.grib
+process ${data_dir}/spectral_complex.grib1
+#process ${data_dir}/gen.grib
 
-# Test 02: No clone + output
-# --------------------------
-rm -fr $OUTPUT
-mkdir -p $OUTPUT
-time ${test_dir}/grib_ecc-604-2 par $input $NUM_THREADS $NUM_ITER
-validate
-
-# Test 03: Clone + no output
-# ---------------------------
-rm -fr $OUTPUT
-time ${test_dir}/grib_ecc-604-3 par $input $NUM_THREADS $NUM_ITER
+# GRIB2 inputs
+process $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
+process ${data_dir}/sample.grib2
 
 
 # Clean up
