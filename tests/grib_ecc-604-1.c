@@ -27,8 +27,6 @@ static int encode_file(char *template_file, char *output_file)
     /* loop over the messages in the source GRIB and clone them */
     while ((source_handle = grib_handle_new_from_file(0, in, &err))!=NULL) {
         int i;
-        long count;
-        double d,e;
         size_t values_len = 0;
         size_t str_len = 20;
 
@@ -39,15 +37,10 @@ static int encode_file(char *template_file, char *output_file)
         GRIB_CHECK(grib_get_size(clone_handle, "values", &values_len),0);
 
         values = (double*)malloc(values_len*sizeof(double));
-        d=10e-8;
-        e=d;
-        count=1;
+        GRIB_CHECK(grib_get_double_array(clone_handle, "values", values, &values_len),0);
+
         for (i=0;i<values_len;i++) {
-            if (count>100) {e*=10; count=1;}
-            values[i]=d;
-            d+=e;
-            if (d > 10000) d = 0;
-            count++;
+            values[i] *= 0.9;
         }
 
         GRIB_CHECK(grib_set_string(clone_handle,"stepUnits", "s", &str_len),0);
