@@ -13,7 +13,7 @@ if( HAVE_FORTRAN )
                         COMMAND grib_types > grib_kinds.h
                         DEPENDS grib_types )
 
-    if( ${EC_SIZEOF_INT} EQUAL ${EC_SIZEOF_LONG} )
+    if( ${ECCODES_SIZEOF_INT} EQUAL ${ECCODES_SIZEOF_LONG} )
         set( _long_int_interface    grib_f90_int.f90 )
         set( _long_int_interface_ec eccodes_f90_int.f90 )
     else()
@@ -21,7 +21,7 @@ if( HAVE_FORTRAN )
         set( _long_int_interface_ec eccodes_f90_long_int.f90 )
     endif()
 
-    if( ${EC_SIZEOF_INT} EQUAL ${EC_SIZEOF_SIZE_T} )
+    if( ${ECCODES_SIZEOF_INT} EQUAL ${ECCODES_SIZEOF_SIZE_T} )
         set( _sizet_int_interface    grib_f90_int_size_t.f90 )
         set( _sizet_int_interface_ec eccodes_f90_int_size_t.f90 )
     else()

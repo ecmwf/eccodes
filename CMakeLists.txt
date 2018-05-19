@@ -34,12 +34,17 @@ ecbuild_declare_project()
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
 
+check_type_size( int            ECCODES_SIZEOF_INT    )
+check_type_size( long           ECCODES_SIZEOF_LONG   )
+check_type_size( size_t         ECCODES_SIZEOF_SIZE_T )
+
 check_include_files( assert.h         ECCODES_HAVE_ASSERT_H      )
 check_include_files( string.h         ECCODES_HAVE_STRING_H      )
 check_include_files( sys/types.h      ECCODES_HAVE_SYS_TYPES_H   )
 check_include_files( sys/stat.h       ECCODES_HAVE_SYS_STAT_H    )
 check_include_files( fcntl.h          ECCODES_HAVE_FCNTL_H      )
 check_include_files( unistd.h         ECCODES_HAVE_UNISTD_H      )
+
 check_symbol_exists( fseeko           "stdio.h"    ECCODES_HAVE_FSEEKO )
 check_symbol_exists( posix_memalign   "stdlib.h"   ECCODES_HAVE_POSIX_MEMALIGN )
 check_symbol_exists( fmemopen         "stdio.h"    ECCODES_HAVE_FMEMOPEN )
