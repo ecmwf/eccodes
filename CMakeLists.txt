@@ -57,6 +57,7 @@ check_c_source_compiles(
       int main(int argc, char *argv[]){return 0;}
       " ECCODES_HAVE_C_INLINE )
 
+include(eccodes_test_endiness)
 
 ###############################################################################
 # some variables/options of this project
@@ -218,8 +219,8 @@ else()
     set( GRIB_TIMER 0 )
 endif()
 
-set( IS_BIG_ENDIAN 0 )
-if( EC_BIG_ENDIAN )
+set( IS_BIG _ENDIAN 0 )
+if( ECCODES_BIG_ENDIAN )
     set( IS_BIG_ENDIAN 1 )
 endif()
 
