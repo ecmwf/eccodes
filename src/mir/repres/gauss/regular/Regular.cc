@@ -242,41 +242,54 @@ bool Regular::getLongestElementDiagonal(double& d) const {
 util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) const {
     using eckit::Fraction;
 
+
     // adjust West/East to include bbox's West/East (reference own West)
     Longitude w = bbox.west();
     Longitude e = bbox.east();
     {
-        Fraction inc = getSmallestIncrement();
-        Fraction ref = bbox_.west().fraction();
+        Fraction west = bbox.west().fraction();
+        Fraction east = bbox.east().fraction();
 
-        Fraction::value_type Nw = (w.fraction() - ref / inc).integralPart();
-        if (Nw * inc + ref > w.fraction()) {
+        Fraction inc = getSmallestIncrement();
+
+        Fraction::value_type Nw = (west / inc).integralPart();
+        if (Nw * inc > west) {
             Nw -= 1;
         }
-        w = Nw * inc + ref;
+        west = Nw * inc;
 
-        Fraction::value_type Nemax = (Longitude::GLOBE.fraction() / inc).integralPart();
-        ref = Nw * inc + ref;
-
-        Fraction::value_type Ne = (e.fraction() - ref / inc).integralPart();
-        if (Ne * inc + ref < e.fraction() && Ne < Nemax) {
-            Ne += 1;
+        Fraction::value_type Ne = (east / inc).integralPart();
+        if (Ne * inc < east) {
+            if (Ne < (Longitude::GLOBE.fraction() / inc).integralPart()) {
+                Ne += 1;
+            }
         }
-        ASSERT(Ne <= Nemax);
-        e = Ne * inc + ref;
+        east = Ne * inc;
 
+        w = west;
+        e = east;
         ASSERT(w < e);
     }
+
 
     // adjust South/North to include bbox's South/North ('outwards')
     Latitude s = bbox.south();
     Latitude n = bbox.north();
+
     correctSouthNorth(s, n, false, false);
+
+    // generally, user North/South is not a valid Gaussian latitude
+    if (s > bbox.south()) {
+        s = bbox.south();
+    }
+    if (n < bbox.north()) {
+        n = bbox.north();
+    }
 
 
     // set bounding box
     const util::BoundingBox extended(n, w, s, e);
-    ASSERT(extended.contains(bbox_));
+    ASSERT(extended.contains(bbox));
 
     return extended;
 }

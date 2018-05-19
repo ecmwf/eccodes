@@ -381,12 +381,81 @@ bool Reduced::getLongestElementDiagonal(double& d) const {
 
 
 util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) const {
+    using eckit::Fraction;
 
 
+    // adjust West/East to include bbox's West/East (reference own West)
+    Longitude w = bbox.west();
+    Longitude e = bbox.east();
+    {
+        Fraction west = bbox.west().fraction();
+        Fraction east = bbox.east().fraction();
+
+        const std::vector<long>& pl = pls();
+        const std::vector<double>& lats = latitudes();
+
+        bool first = true;
+        std::set<long> NiTried;
+
+        for (size_t j = 0; j < Nj_; ++j) {
+            Latitude ll(lats[k_ + j]);
+
+            // extend longitude-wise, track distinct attempts
+            const long Ni(pl[k_ + j]);
+            ASSERT(Ni >= 2);
+            if (NiTried.insert(Ni).second) {
+
+                Fraction inc = Longitude::GLOBE.fraction() / Ni;
+
+                Fraction::value_type Nw = (bbox.west().fraction() / inc).integralPart();
+                if (Nw * inc > bbox.west().fraction()) {
+                    Nw -= 1;
+                }
+
+                Fraction::value_type Ne = (bbox.east().fraction() / inc).integralPart();
+                if (Ne * inc < bbox.east().fraction()) {
+                    if (Ne < (Longitude::GLOBE.fraction() / inc).integralPart()) {
+                        Ne += 1;
+                    }
+                }
+
+                if (west > Nw * inc || first) {
+                    west = Nw * inc;
+                }
+                if (east < Ne * inc || first) {
+                    east = Ne * inc;
+                }
+                first = false;
+            }
+        }
+        ASSERT(!first);
+
+        w = west;
+        e = east;
+        ASSERT(w < e);
+    }
 
 
+    // adjust South/North to include bbox's South/North ('outwards')
+    Latitude s = bbox.south();
+    Latitude n = bbox.north();
 
-    return bbox;
+    correctSouthNorth(s, n, false, false);
+
+    // generally, user North/South is not a valid Gaussian latitude
+    if (s > bbox.south()) {
+        s = bbox.south();
+    }
+    if (n < bbox.north()) {
+        n = bbox.north();
+    }
+
+
+    // set bounding box
+    const util::BoundingBox extended(n, w, s, e);
+    ASSERT(extended.contains(bbox));
+
+    return extended;
 }
 
 
