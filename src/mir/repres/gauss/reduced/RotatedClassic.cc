@@ -39,7 +39,7 @@ RotatedClassic::~RotatedClassic() {
 
 void RotatedClassic::print(std::ostream &out) const {
     out << "RotatedClassic["
-            "N" << N_
+            "N=" << N_
         << ",bbox=" << bbox_
         << ",rotation=" << rotation_
         << "]";

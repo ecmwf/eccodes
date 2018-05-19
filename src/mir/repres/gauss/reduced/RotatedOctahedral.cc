@@ -39,7 +39,7 @@ RotatedOctahedral::~RotatedOctahedral() {
 
 void RotatedOctahedral::print(std::ostream& out) const {
     out << "RotatedOctahedral["
-            "N" << N_
+            "N=" << N_
         << ",bbox=" << bbox_
         << ",rotation=" << rotation_
         << "]";

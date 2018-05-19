@@ -43,7 +43,7 @@ RotatedFromPL::~RotatedFromPL() {
 
 void RotatedFromPL::print(std::ostream &out) const {
     out << "RotatedFromPL["
-            "N" << N_
+            "N=" << N_
         << ",bbox=" << bbox_
         << ",rotation=" << rotation_
         << "]";
