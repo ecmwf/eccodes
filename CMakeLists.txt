@@ -59,6 +59,9 @@ check_c_source_compiles(
 
 include(eccodes_test_endiness)
 
+ecbuild_debug("ECCODES_BIG_ENDIAN=${ECCODES_BIG_ENDIAN}")
+ecbuild_debug("ECCODES_LITTLE_ENDIAN=${ECCODES_LITTLE_ENDIAN}")
+
 ###############################################################################
 # some variables/options of this project
 
@@ -219,7 +222,7 @@ else()
     set( GRIB_TIMER 0 )
 endif()
 
-set( IS_BIG _ENDIAN 0 )
+set( IS_BIG_ENDIAN 0 )
 if( ECCODES_BIG_ENDIAN )
     set( IS_BIG_ENDIAN 1 )
 endif()
