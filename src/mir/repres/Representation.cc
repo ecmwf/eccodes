@@ -202,13 +202,6 @@ const util::BoundingBox& Representation::boundingBox() const {
 }
 
 
-util::BoundingBox Representation::croppedBoundingBox(const util::BoundingBox&) const {
-    std::ostringstream os;
-    os << "Representation::croppedBoundingBox() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
-}
-
-
 util::BoundingBox Representation::extendedBoundingBox(const util::BoundingBox&) const {
     std::ostringstream os;
     os << "Representation::extendedBoundingBox() not implemented for " << *this;

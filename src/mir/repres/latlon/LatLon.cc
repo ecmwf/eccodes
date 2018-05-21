@@ -263,9 +263,52 @@ const LatLon* LatLon::croppedRepresentation(const util::BoundingBox&) const {
 
 
 void LatLon::correctBoundingBox() {
+    using eckit::Fraction;
 
-    util::BoundingBox newBox = croppedBoundingBox(bbox_);
 
+    // adjust East to a maximum of E = W + Ni * inc < W + 360
+    // (shifted grids can have 360 - inc < E - W < 360)
+    Longitude e = bbox_.east();
+    Longitude w = bbox_.west();
+
+    Fraction range_we = (e - w).fraction();
+    if (range_we > 0) {
+        Fraction we = increments_.west_east().longitude().fraction();
+        Fraction Ni = range_we / we;
+        if (range_we + we >= Longitude::GLOBE.fraction()) {
+            Ni = Longitude::GLOBE.fraction() / we;
+            if (Ni.integer()) {
+                Ni -= 1;
+            }
+        }
+        range_we = Ni.integralPart() * we;
+    }
+    e = w + range_we;
+
+
+    // adjust North to a maximum of N = S + Nj * inc <= 90
+    Latitude n = bbox_.north();
+    Latitude s = bbox_.south();
+
+    if (same_with_grib1_accuracy(n, Latitude::NORTH_POLE)) {
+        n = Latitude::NORTH_POLE;
+    }
+
+    if (same_with_grib1_accuracy(s, Latitude::SOUTH_POLE)) {
+        s = Latitude::SOUTH_POLE;
+    }
+
+    Fraction range_sn = (n - s).fraction();
+    if (range_sn > 0) {
+        Fraction sn = increments_.south_north().latitude().fraction();
+        Fraction Nj = range_sn / sn;
+        range_sn = Nj.integralPart() * sn;
+    }
+    n = s + range_sn;
+
+
+    // set bounding box
+    const util::BoundingBox newBox(n, w, s, e);
     if (newBox != bbox_) {
         eckit::Channel& log = eckit::Log::debug<LibMir>();
         std::streamsize old = log.precision(12);
@@ -324,55 +367,6 @@ void LatLon::validate(const std::vector<double>& values) const {
 void LatLon::shape(size_t& ni, size_t& nj) const {
     ni = ni_;
     nj = nj_;
-}
-
-
-util::BoundingBox LatLon::croppedBoundingBox(const util::BoundingBox& bbox) const {
-    using eckit::Fraction;
-
-    // adjust East to a maximum of E = W + Ni * inc < W + 360
-    // (shifted grids can have 360 - inc < E - W < 360)
-    Longitude e = bbox.east();
-    Longitude w = bbox.west();
-
-    Fraction range_we = (e - w).fraction();
-    if (range_we > 0) {
-        Fraction we = increments_.west_east().longitude().fraction();
-        Fraction Ni = range_we / we;
-        if (range_we + we >= Longitude::GLOBE.fraction()) {
-            Ni = Longitude::GLOBE.fraction() / we;
-            if (Ni.integer()) {
-                Ni -= 1;
-            }
-        }
-        range_we = Ni.integralPart() * we;
-    }
-    e = w + range_we;
-
-
-    // adjust North to a maximum of N = S + Nj * inc <= 90
-    Latitude n = bbox.north();
-    Latitude s = bbox.south();
-
-    if (same_with_grib1_accuracy(n, Latitude::NORTH_POLE)) {
-        n = Latitude::NORTH_POLE;
-    }
-
-    if (same_with_grib1_accuracy(s, Latitude::SOUTH_POLE)) {
-        s = Latitude::SOUTH_POLE;
-    }
-
-    Fraction range_sn = (n - s).fraction();
-    if (range_sn > 0) {
-        Fraction sn = increments_.south_north().latitude().fraction();
-        Fraction Nj = range_sn / sn;
-        range_sn = Nj.integralPart() * sn;
-    }
-    n = s + range_sn;
-
-
-    // set bounding box
-    return util::BoundingBox(n, w, s, e);
 }
 
 
