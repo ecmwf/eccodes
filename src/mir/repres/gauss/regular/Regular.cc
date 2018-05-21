@@ -278,14 +278,6 @@ util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) co
 
     correctSouthNorth(s, n, false, false);
 
-    // generally, user North/South is not a valid Gaussian latitude
-    if (s > bbox.south()) {
-        s = bbox.south();
-    }
-    if (n < bbox.north()) {
-        n = bbox.north();
-    }
-
 
     // set bounding box
     const util::BoundingBox extended(n, w, s, e);

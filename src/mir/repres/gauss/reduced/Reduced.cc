@@ -391,20 +391,17 @@ util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) co
         Fraction west = bbox.west().fraction();
         Fraction east = bbox.east().fraction();
 
-        const std::vector<long>& pl = pls();
-        const std::vector<double>& lats = latitudes();
-
         bool first = true;
         std::set<long> NiTried;
 
-        for (size_t j = 0; j < Nj_; ++j) {
-            Latitude ll(lats[k_ + j]);
+        const std::vector<long>& pl = pls();
+        for (size_t j = k_; j < k_ + Nj_; ++j) {
 
             // extend longitude-wise, track distinct attempts
-            const long Ni(pl[k_ + j]);
-            ASSERT(Ni >= 2);
+            const long Ni(pl[j]);
             if (NiTried.insert(Ni).second) {
 
+                ASSERT(Ni >= 2);
                 Fraction inc = Longitude::GLOBE.fraction() / Ni;
 
                 Fraction::value_type Nw = (bbox.west().fraction() / inc).integralPart();
@@ -441,14 +438,6 @@ util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) co
     Latitude n = bbox.north();
 
     correctSouthNorth(s, n, false, false);
-
-    // generally, user North/South is not a valid Gaussian latitude
-    if (s > bbox.south()) {
-        s = bbox.south();
-    }
-    if (n < bbox.north()) {
-        n = bbox.north();
-    }
 
 
     // set bounding box
