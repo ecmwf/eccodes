@@ -43,10 +43,20 @@ Reduced::Reduced(const param::MIRParametrisation& parametrisation) :
     k_(0),
     Nj_(N_ * 2) {
 
-    std::vector<long> pl;
-    ASSERT(parametrisation.get("pl", pl));
-    pls(pl);
+    std::vector<long> p;
+    ASSERT(parametrisation.get("pl", p));
+    pls(p);
 
+    // adjust latitudes, longitudes and re-set bounding box
+    Latitude n = bbox_.north();
+    Latitude s = bbox_.south();
+    correctSouthNorth(s, n, true);
+
+    Longitude w = bbox_.west();
+    Longitude e = bbox_.east();
+    correctWestEast(w, e, true);
+
+    bbox_ = util::BoundingBox(n, w, s, e);
     setNj();
 }
 
@@ -71,11 +81,15 @@ Reduced::~Reduced() {
 }
 
 
-void Reduced::correctWestEast(Longitude& w, Longitude& e, bool grib1) const {
+void Reduced::correctWestEast(Longitude& w, Longitude& e, bool grib1) {
     using eckit::Fraction;
     ASSERT(w <= e);
 
-    Fraction inc = getSmallestIncrement();
+    const std::vector<long>& pl = pls();
+    const long maxpl = *std::max_element(pl.begin(), pl.end());
+    ASSERT(maxpl);
+
+    Fraction inc = Longitude::GLOBE.fraction() / maxpl;
     ASSERT(inc > 0);
 
     const Longitude we = e - w;
@@ -92,20 +106,18 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e, bool grib1) const {
 
     } else {
 
-        const std::vector<long>& pl = pls();
-        const std::vector<double>& lats = latitudes();
-
-        Fraction west = w.fraction();
-        Fraction east = e.fraction();
+        const Fraction west = w.fraction();
+        const Fraction east = e.fraction();
+        Fraction W = west;
+        Fraction E = east;
 
         bool first = true;
         std::set<long> NiTried;
 
-        for (size_t j = 0; j < Nj_; ++j) {
-            Latitude ll(lats[k_ + j]);
+        for (size_t j = k_; j < k_ + Nj_; ++j) {
 
             // crop longitude-wise, track distinct attempts
-            const long Ni(pl[k_ + j]);
+            const long Ni(pl[j]);
             ASSERT(Ni >= 2);
             if (NiTried.insert(Ni).second) {
 
@@ -121,21 +133,25 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e, bool grib1) const {
                     Ne -= 1;
                 }
 
-                ASSERT(Nw <= Ne);
-                west = Nw * inc;
-                east = Ne * inc;
+                if (Nw <= Ne) {
+                    ASSERT(w <= Longitude(Nw * inc));
+                    ASSERT(Longitude(Ne * inc) <= e);
 
-                if (w > double(west) || first) {
-                    w = west;
+                    if (W > double(Nw * inc) || first) {
+                        W = Nw * inc;
+                    }
+                    if (E < double(Ne * inc) || first) {
+                        E = Ne * inc;
+                    }
+                    first = false;
                 }
-                if (e < double(east) || first) {
-                    e = east;
-                }
-                first = false;
             }
         }
 
         ASSERT(!first);
+        ASSERT(W <= E);
+        w = W;
+        e = E;
     }
 }
 
@@ -187,7 +203,7 @@ Iterator* Reduced::rotatedIterator(const util::Rotation& rotation) const {
 const std::vector<long>& Reduced::pls() const {
     ASSERT(pl_.size() == N_ * 2);
     ASSERT(pl_.size() >= k_ + Nj_);
-    ASSERT(Nj_ >= 2);
+    ASSERT(Nj_ > 0);
 
     return pl_;
 }
@@ -226,7 +242,7 @@ void Reduced::setNj() {
                 break;
             }
         }
-        ASSERT(Nj_ > 1);
+        ASSERT(Nj_ > 0);
         ASSERT(Nj_ + k_ <= pl.size());
     }
 }
@@ -343,6 +359,10 @@ size_t Reduced::numberOfPoints() const {
         total = size_t(std::accumulate(pl.begin(), pl.end(), 0));
     } else {
         eckit::ScopedPtr<repres::Iterator> iter(iterator());
+        eckit::Log::info() << "-------------"
+                           << *iter
+                           << "-------------"
+                           << std::endl;
         while (iter->next()) {
             total++;
         }
@@ -385,7 +405,7 @@ util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) co
     using eckit::Fraction;
 
 
-    // adjust West/East to include bbox's West/East (reference own West)
+    // adjust West/East to include bbox's West/East
     Longitude w = bbox.west();
     Longitude e = bbox.east();
     {
@@ -437,7 +457,6 @@ util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) co
     // adjust South/North to include bbox's South/North ('outwards')
     Latitude s = bbox.south();
     Latitude n = bbox.north();
-
     correctSouthNorth(s, n, false, false);
 
 

@@ -37,6 +37,17 @@ Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox) :
 
     std::vector<long> pl(grid.nx());
     pls(pl);
+
+    // adjust latitudes, longitudes and re-set bounding box
+    Latitude n = bbox.north();
+    Latitude s = bbox.south();
+    correctSouthNorth(s, n);
+
+    Longitude w = bbox.west();
+    Longitude e = bbox.east();
+    correctWestEast(w, e);
+
+    bbox_ = util::BoundingBox(n, w, s, e);
     setNj();
 }
 
