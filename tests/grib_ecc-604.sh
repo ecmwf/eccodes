@@ -60,7 +60,8 @@ cd $temp_dir
 process $ECCODES_SAMPLES_PATH/gg_sfc_grib1.tmpl
 process ${data_dir}/gen_bitmap.grib
 process ${data_dir}/spectral_complex.grib1
-#process ${data_dir}/gen.grib
+process ${data_dir}/gen_ext.grib
+process ${data_dir}/gen_ext_spd_2.grib
 
 # GRIB2 inputs
 process $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
