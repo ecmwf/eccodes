@@ -41,7 +41,7 @@ namespace reduced {
 Reduced::Reduced(const param::MIRParametrisation& parametrisation) :
     Gaussian(parametrisation),
     k_(0),
-    Nj_(0) {
+    Nj_(N_ * 2) {
 
     std::vector<long> pl;
     ASSERT(parametrisation.get("pl", pl));
@@ -54,7 +54,7 @@ Reduced::Reduced(const param::MIRParametrisation& parametrisation) :
 Reduced::Reduced(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox) :
     Gaussian(N, bbox),
     k_(0),
-    Nj_(0),
+    Nj_(N * 2),
     pl_(pl) {
     setNj();
 }
@@ -63,7 +63,7 @@ Reduced::Reduced(size_t N, const std::vector<long>& pl, const util::BoundingBox&
 Reduced::Reduced(size_t N, const util::BoundingBox& bbox) :
     Gaussian(N, bbox),
     k_(0),
-    Nj_(0) {
+    Nj_(N * 2) {
 }
 
 
@@ -187,6 +187,7 @@ Iterator* Reduced::rotatedIterator(const util::Rotation& rotation) const {
 const std::vector<long>& Reduced::pls() const {
     ASSERT(pl_.size() == N_ * 2);
     ASSERT(pl_.size() >= k_ + Nj_);
+    ASSERT(Nj_ >= 2);
 
     return pl_;
 }
@@ -360,7 +361,7 @@ bool Reduced::getLongestElementDiagonal(double& d) const {
     const std::vector<double>& lats = latitudes();
 
     d = 0.;
-    for (size_t j = k_ + 1; j < Nj_; ++j) {
+    for (size_t j = k_ + 1; j < k_ + Nj_; ++j) {
 
         Latitude l1(lats[j - 1]);
         Latitude l2(lats[j]);
