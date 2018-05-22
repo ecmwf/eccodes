@@ -359,10 +359,6 @@ size_t Reduced::numberOfPoints() const {
         total = size_t(std::accumulate(pl.begin(), pl.end(), 0));
     } else {
         eckit::ScopedPtr<repres::Iterator> iter(iterator());
-        eckit::Log::info() << "-------------"
-                           << *iter
-                           << "-------------"
-                           << std::endl;
         while (iter->next()) {
             total++;
         }
