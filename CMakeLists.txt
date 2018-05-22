@@ -32,6 +32,37 @@ ecbuild_requires_macro_version( 2.7.2 )
 ecbuild_declare_project()
 
 ###############################################################################
+# system checks needed for eccodes_config.h and some options like MEMFS
+
+check_type_size( int            ECCODES_SIZEOF_INT    )
+check_type_size( long           ECCODES_SIZEOF_LONG   )
+check_type_size( size_t         ECCODES_SIZEOF_SIZE_T )
+
+check_include_files( assert.h         ECCODES_HAVE_ASSERT_H      )
+check_include_files( string.h         ECCODES_HAVE_STRING_H      )
+check_include_files( sys/types.h      ECCODES_HAVE_SYS_TYPES_H   )
+check_include_files( sys/stat.h       ECCODES_HAVE_SYS_STAT_H    )
+check_include_files( fcntl.h          ECCODES_HAVE_FCNTL_H      )
+check_include_files( unistd.h         ECCODES_HAVE_UNISTD_H      )
+
+check_symbol_exists( fseeko           "stdio.h"    ECCODES_HAVE_FSEEKO )
+check_symbol_exists( posix_memalign   "stdlib.h"   ECCODES_HAVE_POSIX_MEMALIGN )
+check_symbol_exists( fmemopen         "stdio.h"    ECCODES_HAVE_FMEMOPEN )
+check_symbol_exists( funopen          "stdio.h"    ECCODES_HAVE_FUNOPEN )
+
+check_c_source_compiles(
+      " typedef int foo_t;
+      static inline foo_t static_foo(){return 0;}
+      foo_t foo(){return 0;}
+      int main(int argc, char *argv[]){return 0;}
+      " ECCODES_HAVE_C_INLINE )
+
+include(eccodes_test_endiness)
+
+ecbuild_debug("ECCODES_BIG_ENDIAN=${ECCODES_BIG_ENDIAN}")
+ecbuild_debug("ECCODES_LITTLE_ENDIAN=${ECCODES_LITTLE_ENDIAN}")
+
+###############################################################################
 # some variables/options of this project
 
 ecbuild_add_option( FEATURE EXAMPLES
@@ -96,7 +127,7 @@ endif()
 ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
-    CONDITION EC_HAVE_FMEMOPEN OR EC_HAVE_FUNOPEN
+    CONDITION ECCODES_HAVE_FMEMOPEN OR ECCODES_HAVE_FUNOPEN
     REQUIRED_PACKAGES PythonInterp
 )
 
@@ -192,7 +223,7 @@ else()
 endif()
 
 set( IS_BIG_ENDIAN 0 )
-if( EC_BIG_ENDIAN )
+if( ECCODES_BIG_ENDIAN )
     set( IS_BIG_ENDIAN 1 )
 endif()
 
@@ -273,6 +304,7 @@ set( ECCODES_DEFINITION_PATH  ${the_default_data_prefix}/${ECCODES_DEFINITION_SU
 set( ECCODES_SAMPLES_PATH     ${the_default_data_prefix}/${ECCODES_SAMPLES_SUFF} )
 set( ECCODES_IFS_SAMPLES_PATH ${the_default_data_prefix}/${ECCODES_IFS_SAMPLES_SUFF} )
 
+###############################################################################
 ### config header
 
 ecbuild_generate_config_headers()
