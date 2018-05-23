@@ -275,7 +275,7 @@ void Regular::setNiNj() {
                 ++Nj_;
             }
         }
-        ASSERT(2 <= Nj_ && Nj_ <= N_ * 2);
+        ASSERT(Nj_ > 0);
     }
 
     eckit::Log::debug<LibMir>()
