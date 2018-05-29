@@ -204,7 +204,7 @@ static void init_class(grib_accessor_class* c)
 #define MAX_NUMBER_OF_GROUPS 65534
 #define EFDEBUG 0
 
-static unsigned long nbits[64]={
+static const unsigned long nbits[64]={
         0x1,                 0x2,                 0x4,                 0x8, 
         0x10,                0x20,                0x40,                0x80, 
         0x100,               0x200,               0x400,               0x800,
@@ -225,7 +225,7 @@ static unsigned long nbits[64]={
 
 static long number_of_bits(grib_handle*h, unsigned long x)
 {
-    unsigned long *n=nbits;
+    const unsigned long *n=nbits;
     const int count = sizeof(nbits)/sizeof(nbits[0]);
     long i=0;
     while (x>=*n) {

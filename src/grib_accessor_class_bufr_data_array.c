@@ -256,11 +256,21 @@ static void restart_bitmap(grib_accessor_bufr_data_array *self)
     self->bitmapCurrentElementsDescriptorsIndex=self->bitmapStartElementsDescriptorsIndex-1;
 }
 
-static void cancel_bitmap(grib_accessor_bufr_data_array *self) { self->bitmapCurrent=-1;self->bitmapStart=-1; }
+static void cancel_bitmap(grib_accessor_bufr_data_array *self)
+{
+    self->bitmapCurrent=-1;
+    self->bitmapStart=-1;
+}
 
-static int is_bitmap_start_defined(grib_accessor_bufr_data_array *self) { return self->bitmapStart==-1 ? 0 : 1; }
+static int is_bitmap_start_defined(grib_accessor_bufr_data_array *self)
+{
+    return self->bitmapStart==-1 ? 0 : 1;
+}
 
-int accessor_bufr_data_array_create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset) { return create_keys(a,onlySubset,startSubset,endSubset); }
+int accessor_bufr_data_array_create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset)
+{
+    return create_keys(a,onlySubset,startSubset,endSubset);
+}
 
 int accessor_bufr_data_array_process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset)
 {
@@ -1891,7 +1901,7 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
 #define NUMBER_OF_QUALIFIERS_CATEGORIES 7
 #define MAX_NUMBER_OF_BITMAPS 5
 
-static int number_of_qualifiers=NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES;
+static const int number_of_qualifiers=NUMBER_OF_QUALIFIERS_PER_CATEGORY*NUMBER_OF_QUALIFIERS_CATEGORIES;
 
 static GRIB_INLINE int significanceQualifierIndex(int X,int Y)
 {

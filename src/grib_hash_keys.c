@@ -10673,7 +10673,7 @@ grib_keys_hash_get (const char *str, unsigned int len)
  *  Enrico Fucile
  **************************************/
 
-static int mapping[] = {
+static const int mapping[] = {
 0, /* 00 */
 0, /* 01 */
 0, /* 02 */

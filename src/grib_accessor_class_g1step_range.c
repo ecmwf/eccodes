@@ -180,10 +180,9 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
     grib_dump_string(dumper,a,NULL);
-
 }
 
-static int u2s1[] =  {
+static const int u2s1[] =  {
         60,      /* (0) minutes */
         3600,    /* (1) hour    */
         86400,   /* (2) day     */
@@ -202,11 +201,11 @@ static int u2s1[] =  {
         1        /* (15) seconds  */   /* See ECC-316 */
 };
 
-static int units_index[] = {
+static const int units_index[] = {
         1,0,10,11,12,2,0,13,14,15
 };
 
-static int u2s[] =  {
+static const int u2s[] =  {
         60,      /* (0) minutes */
         3600,    /* (1) hour    */
         86400,   /* (2) day     */
