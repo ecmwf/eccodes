@@ -146,7 +146,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
   grib_dump_double(dumper,a,NULL);
 
 }
-static int units[] =  {
+static const int units[] =  {
   0,      /* (0) minutes */
   1,      /* (1) hour    */
   24,     /* (2) day */

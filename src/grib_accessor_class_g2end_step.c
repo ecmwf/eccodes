@@ -202,7 +202,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     grib_dump_double(dumper,a,NULL);
 }
 
-static int u2s2[] =  {
+static const int u2s2[] =  {
         60,      /* (0) minutes */
         3600,    /* (1) hour    */
         86400,   /* (2) day     */
@@ -219,7 +219,7 @@ static int u2s2[] =  {
         1        /* (13) seconds  */
 };
 
-static int u2s[] =  {
+static const int u2s[] =  {
         60,      /* (0) minutes */
         3600,    /* (1) hour    */
         86400,   /* (2) day     */

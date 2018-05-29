@@ -170,7 +170,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
         grib_dump_values(dumper,a);
 }
 
-static unsigned long ones[] = {
+static const unsigned long ones[] = {
         0,
         0xff,
         0xffff,

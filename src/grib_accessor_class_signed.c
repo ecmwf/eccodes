@@ -148,7 +148,6 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
     a->length = len * count;
     self->nbytes = len;
     Assert(a->length>=0);
-
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -161,14 +160,13 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
         grib_dump_values(dumper,a);
 }
 
-static long ones[] = {
+static const long ones[] = {
         0,
         -0x7f,
         -0x7fff,
         -0x7fffff,
         -0x7fffffff,
 };
-
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
