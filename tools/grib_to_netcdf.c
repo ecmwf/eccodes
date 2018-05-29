@@ -3058,12 +3058,16 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
 
         if (setup.deflate > -1)
         {
+#ifdef NC_NETCDF4
             stat = nc_def_var_chunking(ncid, var_id, NC_CHUNKED, chunks);
             check_err(stat, __LINE__, __FILE__);
 
             /* Set compression settings for a variable */
             stat = nc_def_var_deflate(ncid, var_id, setup.shuffle, 1, setup.deflate);
             check_err(stat, __LINE__, __FILE__);
+#else
+            grib_context_log(ctx, GRIB_LOG_ERROR, "Deflate option only supported in NetCDF4");
+#endif
         }
         if(subsets[i].scale)
         {
@@ -3860,7 +3864,7 @@ static int get_creation_mode(int option_kind)
 #else
     case NC_FORMAT_NETCDF4:
     case NC_FORMAT_NETCDF4_CLASSIC:
-        fprintf(stderr,"%s not built with netcdf4, cannot create netCDF-4 files.\n", grib_tool_name);
+        grib_context_log(ctx, GRIB_LOG_ERROR, "%s not built with netcdf4, cannot create netCDF-4 files.", grib_tool_name);
         exit(1);
         break;
 #endif
