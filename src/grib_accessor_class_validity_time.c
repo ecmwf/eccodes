@@ -142,7 +142,7 @@ static void init_class(grib_accessor_class* c)
 /* END_CLASS_IMP */
 
 /* Table of multipliers to convert step units to minutes */
-static double u2m[] =  {
+static const double u2m[] =  {
         1,         /* index 0:  minutes  */
         60,        /* index 1:  hour     */
         24*60,     /* index 2:  day      */
