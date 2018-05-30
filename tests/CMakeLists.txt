@@ -227,6 +227,7 @@ if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
     endforeach()
     ecbuild_add_test( TARGET eccodes_t_grib_ecc-604
                       TYPE SCRIPT
+                      TEST_DEPENDS eccodes_download_gribs
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-604.sh
     )
 endif()
