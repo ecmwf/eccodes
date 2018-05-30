@@ -135,14 +135,13 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->length=0;
+    a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->length=0;
 }
 
 static int  unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  *val = a->context->handle_total_count;
-  *len =1;
-  return 0;
+    *val = grib_context_get_handle_total_count(a->context);
+    *len =1;
+    return 0;
 }
-
