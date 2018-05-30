@@ -13,8 +13,8 @@
 label="grib_ecc-604"
 temp_dir=tempdir.${label}
 
-NUM_THREADS=6
-NUM_ITER=100
+NUM_THREADS=8
+NUM_ITER=50
 OUTPUT=output
 
 validate()
@@ -56,17 +56,30 @@ rm -fr $temp_dir
 mkdir -p $temp_dir
 cd $temp_dir
 
-# GRIB1 inputs
-process $ECCODES_SAMPLES_PATH/gg_sfc_grib1.tmpl
-process ${data_dir}/gen_bitmap.grib
-process ${data_dir}/spectral_complex.grib1
-process ${data_dir}/gen_ext.grib
-process ${data_dir}/gen_ext_spd_2.grib
+GRIB1_INPUTS="
+  $ECCODES_SAMPLES_PATH/gg_sfc_grib1.tmpl
+  ${data_dir}/gen_bitmap.grib
+  ${data_dir}/spectral_complex.grib1
+  ${data_dir}/gen_ext.grib
+  ${data_dir}/gen_ext_spd_2.grib"
 
-# GRIB2 inputs
-process $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
-process ${data_dir}/sample.grib2
+GRIB2_INPUTS="
+  $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
+  ${data_dir}/reduced_gaussian_sub_area.grib2
+  ${data_dir}/test_file.grib2
+  ${data_dir}/sample.grib2"
 
+# Check HAVE_JPEG is defined and is equal to 1
+if [ "x$HAVE_JPEG" != x ]; then
+    if [ $HAVE_JPEG -eq 1 ]; then
+        # Include files which have messages with grid_jpeg packing
+        GRIB2_INPUTS="${data_dir}/jpeg.grib2  ${data_dir}/reduced_gaussian_surface_jpeg.grib2  ${data_dir}/v.grib2 "$GRIB2_INPUTS
+    fi
+fi
+
+for g1 in $GRIB1_INPUTS $GRIB2_INPUTS; do
+    process $g1
+done
 
 # Clean up
 cd $test_dir
