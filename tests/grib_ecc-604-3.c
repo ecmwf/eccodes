@@ -53,6 +53,11 @@ static int decode_file(char *template_file)
 
         GRIB_CHECK(grib_get_message(clone_handle,&buffer,&size),0);
 
+        {
+            FILE *devnull = fopen("/dev/null", "w");
+            grib_dump_content(source_handle,devnull,"wmo",0,NULL);
+        }
+
         grib_handle_delete(clone_handle);
         grib_handle_delete(source_handle);
         free(values);

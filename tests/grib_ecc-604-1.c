@@ -56,6 +56,10 @@ static int encode_file(char *template_file, char *output_file)
             perror(output_file);
             return 1;
         }
+        {
+            FILE *devnull = fopen("/dev/null", "w");
+            grib_dump_content(source_handle,devnull,"wmo",0,NULL);
+        }
         grib_handle_delete(clone_handle);
         grib_handle_delete(source_handle);
         free(values);
