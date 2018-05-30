@@ -13,8 +13,8 @@
 label="grib_ecc-604"
 temp_dir=tempdir.${label}
 
-NUM_THREADS=8
-NUM_ITER=50
+NUM_THREADS=3
+NUM_ITER=10
 OUTPUT=output
 
 validate()
@@ -73,12 +73,13 @@ GRIB2_INPUTS="
 if [ "x$HAVE_JPEG" != x ]; then
     if [ $HAVE_JPEG -eq 1 ]; then
         # Include files which have messages with grid_jpeg packing
-        GRIB2_INPUTS="${data_dir}/jpeg.grib2  ${data_dir}/reduced_gaussian_surface_jpeg.grib2  ${data_dir}/v.grib2 "$GRIB2_INPUTS
+        GRIB2_INPUTS="${data_dir}/jpeg.grib2 ${data_dir}/reduced_gaussian_surface_jpeg.grib2 "$GRIB2_INPUTS
     fi
 fi
+#GRIB2_INPUTS=$GRIB2_INPUTS" ${data_dir}/ccsds.grib2 "
 
-for g1 in $GRIB1_INPUTS $GRIB2_INPUTS; do
-    process $g1
+for gf in $GRIB1_INPUTS $GRIB2_INPUTS; do
+    process $gf
 done
 
 # Clean up
