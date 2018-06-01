@@ -1,0 +1,16 @@
+# This is applicable to EFAS GRIB2 data which uses local definition 41
+# stream must be 'efas'
+
+if (localDefinitionNumber == 41) {
+    # Calculate the difference between the forecast date and the validity date
+    meta the_valTime scale(validityTime,oneConstant,hundred) : read_only, long_type;
+    meta julianValidDay julian_day(validityDate, the_valTime, zero, zero): hidden, no_copy;
+
+    transient diffInDays = (julianForecastDay - julianValidDay) : hidden;   # float
+
+    # Now convert this to hours. First convert to minutes then round up
+    transient diffInHours = (diffInDays * 1440 + 0.5)/60 : hidden;
+    meta _anoffset round(diffInHours, 10): dump,long_type;
+    transient anoffset = _anoffset; # needed to force anoffset to be integer
+    alias local.anoffset = anoffset;
+}

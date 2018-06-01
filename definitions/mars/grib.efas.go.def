@@ -2,15 +2,16 @@
 alias mars.step = startStep;
 
 # See ECC-683
-#alias mars.date = dateOfForecast;
-#alias mars.time = timeOfForecast;
-meta valDate validity_date(dataDate,dataTime,endStep,stepUnits): no_copy;
-meta valTime validity_time(dataDate,dataTime,endStep,stepUnits): no_copy;
-alias mars.date = valDate;
-alias mars.time = valTime;
+alias mars.date = dateOfForecast;
+alias mars.time = timeOfForecast;
+#meta valDate validity_date(dataDate,dataTime,endStep,stepUnits): no_copy;
+#meta valTime validity_time(dataDate,dataTime,endStep,stepUnits): no_copy;
+#alias mars.date = valDate;
+#alias mars.time = valTime;
 
 alias mars.origin = inputOriginatingCentre;
 
+include "mars/efas.anoffset.def"
 alias mars.anoffset=anoffset;
 
 # We need this because 'efas_post_proc' is defined later
