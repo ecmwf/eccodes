@@ -1013,8 +1013,9 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         err=check_end_data(c, self, number_of_bits); /*advance bitsToEnd*/
         return err;
     }
-    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -%ld- \tcode=%6.6ld width=%ld pos=%ld -> %ld",
-            i,bd->code,bd->width,(long)*pos,(long)(*pos-a->offset*8));
+    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -%ld- \tcode=%6.6ld width=%ld scale=%ld ref=%ld (pos=%ld -> %ld)",
+            i, bd->code, bd->width, bd->scale, bd->reference,
+            (long)*pos, (long)(*pos-a->offset*8));
     if (bd->type==BUFR_DESCRIPTOR_TYPE_STRING) {
         /* string */
         if (self->compressedData) {
