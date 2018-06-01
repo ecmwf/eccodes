@@ -1321,7 +1321,7 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         if (self->compressedData) {
             err=encode_double_array(c,buff,pos,bd,self,self->numericValues->v[elementIndex]);
             if (err) {
-                grib_context_log(c,GRIB_LOG_ERROR,"encoding %s ( code=%6.6ld width=%ld scale=%g reference=%ld )",
+                grib_context_log(c,GRIB_LOG_ERROR,"encoding %s ( code=%6.6ld width=%ld scale=%ld reference=%ld )",
                         bd->shortName, bd->code, bd->width,
                         bd->scale, bd->reference);
                 for (j=0;j<grib_darray_used_size(self->numericValues->v[elementIndex]);j++)
