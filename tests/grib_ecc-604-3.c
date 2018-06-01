@@ -55,7 +55,8 @@ static int decode_file(char *template_file)
 
         {
             FILE *devnull = fopen("/dev/null", "w");
-            grib_dump_content(source_handle,devnull,"wmo",0,NULL);
+            grib_dump_content(source_handle, devnull, "debug", 0, NULL);
+            grib_dump_content(clone_handle,  devnull, "debug", 0, NULL);
         }
 
         grib_handle_delete(clone_handle);
