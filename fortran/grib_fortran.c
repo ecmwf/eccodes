@@ -1687,7 +1687,7 @@ int any_f_new_from_scanned_file(int* fid,int* msgid,int* gid)
     /* fortran convention of 1 based index*/
     const int n=*msgid-1;
 
-    l_message_info* msg=grib_oarray_get(info_messages,n);
+    l_message_info* msg=(l_message_info*)grib_oarray_get(info_messages,n);
 
     if (msg && f) {
         GRIB_MUTEX_INIT_ONCE(&once,&init);
@@ -1759,7 +1759,7 @@ int any_f_new_from_loaded(int* msgid,int* gid)
     /* fortran convention of 1 based index*/
     const int n=*msgid-1;
 
-    l_binary_message* msg=grib_oarray_get(binary_messages,n);
+    l_binary_message* msg=(l_binary_message*)grib_oarray_get(binary_messages,n);
 
     if (msg && msg->data)
       h=grib_handle_new_from_message_copy (c,msg->data,msg->size);
