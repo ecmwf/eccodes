@@ -133,11 +133,9 @@ list( APPEND tests_data_reqd
     grib_change_scanning
     grib_statistics
     tigge
-    tigge_conversions
     read_any
     grib_dump
     grib_dump_debug
-    grib_util_set_spec
     local_MeteoFrance
     grib_neg_fctime
     codes_split_file
@@ -147,7 +145,9 @@ if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
     list(APPEND tests_data_reqd bufr_dump_decode_fortran)
 endif()
 if( ENABLE_EXTRA_TESTS )
+    list(APPEND tests_data_reqd grib_util_set_spec)
     list(APPEND tests_data_reqd grib_padding)
+    list(APPEND tests_data_reqd tigge_conversions)
     list(APPEND tests_data_reqd bufr_dump_encode_C)
     list(APPEND tests_data_reqd bufr_dump_decode_C)
 endif()
