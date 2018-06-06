@@ -57,7 +57,7 @@ grib_options_help grib_options_help_list[] ={
   {"o:","output_file",
    "\n\t\tOutput is written to output_file."
    "\n\t\tIf an output file is required and -o is not used, the"
-   " output is written to filter.out\n"},
+   " output is written to 'filter.out'\n"},
   {"p:","key[:{s|d|i}],key[:{s|d|i}],...",
    "\n\t\tDeclaration of keys to print."
    "\n\t\tFor each key a string (key:s), a double (key:d) or an integer (key:i)"
