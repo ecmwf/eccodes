@@ -881,7 +881,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 break;
             default :
                 printf("invalid packing_spec->packing_type = %ld\n",(long)packing_spec->packing_type);
-                abort();
+                *err = GRIB_INTERNAL_ERROR;
+                goto cleanup;
                 break;
             }
             packingTypeIsSet=1;
@@ -906,7 +907,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         default:
             printf("invalid packing_spec->accuracy = %ld\n",(long)packing_spec->accuracy);
-            abort();
+            *err = GRIB_INTERNAL_ERROR;
+            goto cleanup;
             break;
         }
 
@@ -1229,7 +1231,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             break;
         default :
             printf("invalid packing_spec->packing_type = %ld\n",(long)packing_spec->packing_type);
-            abort();
+            *err = GRIB_INTERNAL_ERROR;
+            goto cleanup;
             break;
         }
     }
@@ -1281,7 +1284,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     default:
         printf("invalid packing_spec->accuracy = %ld\n",(long)packing_spec->accuracy);
-        abort();
+        *err = GRIB_INTERNAL_ERROR;
+        goto cleanup;
         break;
     }
 
