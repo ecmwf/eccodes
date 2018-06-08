@@ -185,9 +185,12 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
                     &row_count,&ilon_first,&ilon_last);
             if (ilon_first>ilon_last) ilon_first-=pl[j];
             for (i=ilon_first;i<=ilon_last;i++) {
-#ifdef DEBUG
-                Assert(iter->e < iter->nv);
-#endif
+
+                if(iter->e >= iter->nv){
+                    grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (sub-area)");
+                    return GRIB_GEOCALCULUS_PROBLEM;
+                }
+
                 self->los[iter->e]=((i)*360.0)/pl[j];
                 self->las[iter->e]=lats[j+l];
                 iter->e++;
@@ -199,9 +202,12 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
         for (j=0;j<plsize;j++) {
             row_count=pl[j];
             for (i=0;i<row_count;i++) {
-#ifdef DEBUG
-                Assert(iter->e < iter->nv);
-#endif
+
+                if(iter->e >= iter->nv){
+                    grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (global)");
+                    return GRIB_GEOCALCULUS_PROBLEM;
+                }
+
                 self->los[iter->e]=(i*360.0)/row_count;
                 self->las[iter->e]=lats[j];
                 iter->e++;
