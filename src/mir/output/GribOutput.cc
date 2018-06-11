@@ -59,6 +59,11 @@ public:
 };
 
 
+void eccodes_assertion(const char* message) {
+    throw eckit::SeriousBug(message);
+}
+
+
 GribOutput::GribOutput() {
 }
 
@@ -355,11 +360,8 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
         const std::vector<double> &values = field.values(i);
 
 
-        for (const auto& x : values) {
-            ASSERT(x < 3e38);
-            ASSERT(x > -3e38);
-        }
-
+        // set error callback handling (throws)
+        codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
         grib_handle *result = grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
         HandleFree hf(result); // Make sure handle deleted even in case of exception
