@@ -157,9 +157,9 @@ int any_f_new_from_loaded_(int* msgid,int* gid);
 int any_f_new_from_loaded__(int* msgid,int* gid);
 int any_f_new_from_loaded(int* msgid,int* gid);
 
-int codes_f_clear_loaded_from_file_();
-int codes_f_clear_loaded_from_file__();
-int codes_f_clear_loaded_from_file();
+int codes_f_clear_loaded_from_file_(void);
+int codes_f_clear_loaded_from_file__(void);
+int codes_f_clear_loaded_from_file(void);
 
 int grib_f_new_from_file_(int *fid, int *gid);
 int grib_f_new_from_file__(int *fid, int *gid);

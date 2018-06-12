@@ -1,11 +1,12 @@
-/**
-* Copyright 2005-2018 ECMWF
-*
-* Licensed under the GNU Lesser General Public License which
-* incorporates the terms and conditions of version 3 of the GNU
-* General Public License.
-* See LICENSE and gpl-3.0.txt for details.
-*/
+/*
+ * Copyright 2005-2018 ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
 
 /*****************************************
  *  Enrico Fucile
@@ -604,7 +605,7 @@ static void destroy(grib_context* ct, grib_accessor* a)
 {
     int i=0;
     while (i<MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
-        grib_context_log(ct,GRIB_LOG_DEBUG,"deleting attribute %s->%s",a->name,a->attributes[i]->name);
+        /*grib_context_log(ct,GRIB_LOG_DEBUG,"deleting attribute %s->%s",a->name,a->attributes[i]->name);*/
         /* printf("+++++ %s\n",a->attributes[i]->name); */
         grib_accessor_delete(ct,a->attributes[i]);
         a->attributes[i]=NULL;

@@ -82,8 +82,7 @@ int main(int argc,char* argv[])
 
         /* Check the size (including all the subsets) */
         CODES_CHECK(codes_get_size(h,key_name,&len),0);
-        if(len != numObs)
-        {
+        if(len != numObs) {
             printf("inconsistent number of %s values found!\n",key_name);
             return 1;
         }
@@ -96,8 +95,7 @@ int main(int argc,char* argv[])
 
         /* Check the size (including all the subsets) */
         CODES_CHECK(codes_get_size(h,key_name,&len),0);
-        if(len != numObs)
-        {
+        if(len != numObs) {
             printf("inconsistent number of %s values found!\n",key_name);
             return 1;
         }
@@ -110,8 +108,7 @@ int main(int argc,char* argv[])
 
         /* Check the size (including all the subsets) */
         CODES_CHECK(codes_get_size(h,key_name,&len),0);
-        if(len != numObs)
-        {
+        if(len != numObs) {
             printf("inconsistent number of %s values found!\n",key_name);
             return 1;
         }
@@ -123,8 +120,7 @@ int main(int argc,char* argv[])
         printf("pixel   lat    lon     backscatter    \n");
         printf("-------------------------------\n");
 
-        for(i=0; i < numObs; i++)
-        {
+        for(i=0; i < numObs; i++) {
             printf("%4d %.3f %.3f %.3f \n",
                     i+1,lat[i],lon[i],bscatter[i]);
         }

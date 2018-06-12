@@ -197,15 +197,20 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     if (missingValuesPresent) {
         i=0;
         while (i<size && values[i] == missing) {i++;number_of_missing++;}
-        max=values[i];
-        min=values[i];
-        avg=values[i];
-        for (i=number_of_missing+1;i<size;i++) {
-            value=values[i];
-            if (value > max && value != missing) max=value;
-            if (value < min && value != missing) min=value;
-            if (value != missing) avg+=value;
-            else number_of_missing++;
+        if (number_of_missing == size) {
+            /* ECC-649: All values are missing */
+            min = max = avg = missing;
+        } else {
+            max=values[i];
+            min=values[i];
+            avg=values[i];
+            for (i=number_of_missing+1;i<size;i++) {
+                value=values[i];
+                if (value > max && value != missing) max=value;
+                if (value < min && value != missing) min=value;
+                if (value != missing) avg+=value;
+                else number_of_missing++;
+            }
         }
     } else {
         max=values[0];

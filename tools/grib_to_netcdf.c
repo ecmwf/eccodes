@@ -2398,6 +2398,12 @@ static int compute_scale(dataset_t *subset)
     scaled_min = rint((min - ao) / sf);
     scaled_median = rint((median - ao) / sf);
 
+    if (scaled_max > nc_type_values[idx].nc_type_max) {
+        grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: scaled_max (=%lld) > nc_type_max (=%lf). Set sf to 1.0",
+                         scaled_max, nc_type_values[idx].nc_type_max);
+        sf = 1.0;  /* ECC-685 */
+    }
+
     test_scaled_max = (char) scaled_max;
     test_scaled_min = (char) scaled_min;
     test_scaled_median = (char) scaled_median;
@@ -3052,12 +3058,16 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
 
         if (setup.deflate > -1)
         {
+#ifdef NC_NETCDF4
             stat = nc_def_var_chunking(ncid, var_id, NC_CHUNKED, chunks);
             check_err(stat, __LINE__, __FILE__);
 
             /* Set compression settings for a variable */
             stat = nc_def_var_deflate(ncid, var_id, setup.shuffle, 1, setup.deflate);
             check_err(stat, __LINE__, __FILE__);
+#else
+            grib_context_log(ctx, GRIB_LOG_ERROR, "Deflate option only supported in NetCDF4");
+#endif
         }
         if(subsets[i].scale)
         {
@@ -3854,7 +3864,7 @@ static int get_creation_mode(int option_kind)
 #else
     case NC_FORMAT_NETCDF4:
     case NC_FORMAT_NETCDF4_CLASSIC:
-        fprintf(stderr,"%s not built with netcdf4, cannot create netCDF-4 files.\n", grib_tool_name);
+        grib_context_log(ctx, GRIB_LOG_ERROR, "%s not built with netcdf4, cannot create netCDF-4 files.", grib_tool_name);
         exit(1);
         break;
 #endif
@@ -4208,8 +4218,12 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
                     grib_context_log(ctx, GRIB_LOG_ERROR, "Internal description");
                     print_all_requests(temp_data_r);
                 }
-                grib_context_log(ctx, GRIB_LOG_ERROR, "Hint: This may be due to several fields having the same validity time.");
-                grib_context_log(ctx, GRIB_LOG_ERROR, "Try using the -T option (Do not use time of validity)");
+                if (grib_options_on("T")) {
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "Hint: This may be due to several fields having the same date, time and step.");
+                } else {
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "Hint: This may be due to several fields having the same validity time.");
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "Try using the -T option (Do not use time of validity)");
+                }
                 exit(1);
             }
         }
@@ -4265,10 +4279,10 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     printf("%s: Found %d GRIB field%s in %d file%s.\n", grib_tool_name, fs->count, fs->count>1?"s":"", files, files > 1 ? "s" : "");
 
-    /*
-     grib_context_log(ctx, GRIB_LOG_INFO, "Request representing %d fields ", fs->count);
-     print_all_requests(data_r);
-     */
+    if (ctx->debug) {
+        grib_context_log(ctx, GRIB_LOG_INFO, "Request representing %d fields ", fs->count);
+        print_all_requests(data_r);
+    }
 
     /* Split the SOURCE from request into as many datasets as specified */
     count = split_fieldset(fs, data_r, &subsets, user_r, config_r);
@@ -4277,6 +4291,10 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     print_ignored_keys(stdout, user_r);
 
     dims = new_simple_hypercube_from_mars_request(data_r);
+    if (ctx->debug) {
+        grib_context_log(ctx, GRIB_LOG_INFO, "Hypercube");
+        print_hypercube(dims);
+    }
 
     /* In case there is only 1 DATE+TIME+STEP, set at least 1 time as axis */
     set_always_a_time(dims, data_r);

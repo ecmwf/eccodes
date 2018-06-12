@@ -10,7 +10,7 @@
 
 /**
     include private headers used for all internal functions of
-    grib_api, not seen by the user of the API
+    ecCodes, not seen by the user of the API
   */
 
 #ifndef grib_api_internal_H
@@ -811,7 +811,7 @@ struct bufr_descriptors_map_list {
   bufr_descriptors_map_list* next;
 };
 
-/* BUFR: operator 203: Table B changed reference values */
+/* BUFR: Operator 203YYY: Linked list storing Table B changed reference values */
 typedef struct bufr_tableb_override bufr_tableb_override;
 struct bufr_tableb_override {
   bufr_tableb_override* next;
@@ -1054,6 +1054,7 @@ struct grib_context
     int                             ieee_packing;
     int                             bufrdc_mode;
     int                             bufr_set_to_missing_if_out_of_range;
+    int                             bufr_quality_without_bitmap;
     FILE*                           log_stream;
     grib_trie*                      classes;
     grib_trie*                      lists;
@@ -1505,7 +1506,6 @@ typedef struct j2k_encode_helper {
   unsigned char*   jpeg_buffer;
 
 } j2k_encode_helper;
-
 
 #include "grib_api_prototypes.h"
 

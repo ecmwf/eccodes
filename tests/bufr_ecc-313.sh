@@ -13,8 +13,6 @@
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-313.
 # It tests decoding a BUFR file which uses the operator 203YYY.
-# Currently we cannot ENCODE with this operator. This test is
-# for DECODING only
 # ---------------------------------------------------------
 label="bufr_ecc-313-test"
 tempRules=temp.${label}.filter
@@ -35,6 +33,8 @@ cat > $tempRules <<EOF
  set unpack=1;
  print "h1=[heightOfStationGroundAboveMeanSeaLevel]";
  print "h2=[heightOfBarometerAboveMeanSeaLevel]";
+ print "rv=[inputOverriddenReferenceValues]";
+ print "rf1=[#1#heightOfStationGroundAboveMeanSeaLevel->reference]";
 EOF
 
 ${tools_dir}/codes_bufr_filter $tempRules $input > $tempOut
@@ -62,8 +62,11 @@ h2=11 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100
 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -387 -1e+100 -1e+100 
 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 938 -1e+100 -1e+100 
 -1e+100 -1e+100
+rv=-5000 -5000
+rf1=-5000
 EOF
-
+echo "Expected output:"
+cat $tempRef
 diff $tempRef $tempOut
 
 rm -f $tempRules $tempRef $tempOut

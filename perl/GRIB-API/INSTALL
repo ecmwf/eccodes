@@ -8,6 +8,6 @@ use lib qw(/tmp/test/lib);
 If you don't set INSTALLDIRS, the modules go to /tmp/test/lib/site_perl, so you need
 use lib qw(/tmp/test/lib/site_perl);
 
-perl56 Makefile.PL PREFIX=/home/ma/mab/grib/api INSTALLDIRS=perl
+perl56 Makefile.PL PREFIX=/path/to/install/grib/api INSTALLDIRS=perl
 
-perl Makefile.PL PREFIX=/home/ma/mab/grib/api INSTALLDIRS=perl LD="ld -b32"
+perl Makefile.PL PREFIX=/path/to/install/grib/api INSTALLDIRS=perl LD="ld -b32"

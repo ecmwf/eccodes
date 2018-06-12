@@ -25,7 +25,7 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    # open metar file
+    # open METAR file
     f = open(INPUT)
 
     cnt = 0

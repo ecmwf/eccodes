@@ -639,14 +639,13 @@ const char* grib_get_type_name(int type)
 {
     switch(type)
     {
-    case GRIB_TYPE_LONG:    return "long"; break;
-    case GRIB_TYPE_STRING:  return "string"; break;
-    case GRIB_TYPE_BYTES:   return "bytes"; break;
-    case GRIB_TYPE_DOUBLE:  return "double"; break;
-    case GRIB_TYPE_LABEL:   return "label"; break;
-    case GRIB_TYPE_SECTION: return "section"; break;
+        case GRIB_TYPE_LONG:    return "long"; break;
+        case GRIB_TYPE_STRING:  return "string"; break;
+        case GRIB_TYPE_BYTES:   return "bytes"; break;
+        case GRIB_TYPE_DOUBLE:  return "double"; break;
+        case GRIB_TYPE_LABEL:   return "label"; break;
+        case GRIB_TYPE_SECTION: return "section"; break;
     }
-
     return "unknown";
 }
 

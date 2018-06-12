@@ -81,30 +81,28 @@ static void init_class(grib_action_class* c)
 
 grib_action* grib_action_create_variable( grib_context* context, const char* name, const char* op, const long len,  grib_arguments* params,  grib_arguments* default_value,int flags,const char* name_space)
 {
-	grib_action_variable* a     =  NULL;
-	grib_action_class* c   =  grib_action_class_variable;
-	grib_action* act       =  (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
-	act->next              =  NULL;
-	act->name              =  grib_context_strdup_persistent(context, name);
-	if(name_space)
-	act->name_space              =  grib_context_strdup_persistent(context, name_space);
-	act->op                =  grib_context_strdup_persistent(context, op);
-	act->cclass            =  c;
-	act->context           =  context;
-	act->flags             =  flags;
-	a                      =  (grib_action_variable*)act;
-	a->len                 =  len;
-	a->params              =  params;
-	act->default_value       =  default_value;
+    grib_action_variable* a     =  NULL;
+    grib_action_class* c   =  grib_action_class_variable;
+    grib_action* act       =  (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
+    act->next              =  NULL;
+    act->name              =  grib_context_strdup_persistent(context, name);
+    if(name_space)
+        act->name_space              =  grib_context_strdup_persistent(context, name_space);
+    act->op                =  grib_context_strdup_persistent(context, op);
+    act->cclass            =  c;
+    act->context           =  context;
+    act->flags             =  flags;
+    a                      =  (grib_action_variable*)act;
+    a->len                 =  len;
+    a->params              =  params;
+    act->default_value       =  default_value;
 
-	/* printf("CREATE %s\n",name); */
+    /* printf("CREATE %s\n",name); */
 
-	return act;
+    return act;
 }
 
 static int execute(grib_action* a, grib_handle *h)
 {
-	return grib_create_accessor(h->root, a, NULL );
+    return grib_create_accessor(h->root, a, NULL );
 }
-
-

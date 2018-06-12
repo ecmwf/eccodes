@@ -38,6 +38,8 @@ typicalDay
 typicalHour
 typicalMinute
 typicalSecond
+typicalDate
+typicalTime
 rdbType
 oldSubtype
 localYear
@@ -50,6 +52,7 @@ rdbtimeDay
 rdbtimeHour
 rdbtimeMinute
 rdbtimeSecond
+rdbtimeTime
 rectimeDay
 rectimeHour
 rectimeMinute

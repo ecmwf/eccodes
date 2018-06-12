@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -35,6 +35,11 @@ transient diffInHours = (diffInDays * 1440 + 0.5)/60 : hidden;
 meta _anoffset round(diffInHours, 10): dump,long_type;
 transient anoffset = _anoffset; # needed to force anoffset to be integer
 alias local.anoffset = anoffset;
+
+# ECC-662
+unsigned[2] anoffsetFirst     = missing(): dump, can_be_missing;
+unsigned[2] anoffsetLast      = missing(): dump, can_be_missing;
+unsigned[2] anoffsetFrequency = missing(): dump, can_be_missing;
 
 # Boolean
 transient is_efas = 1;

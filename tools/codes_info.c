@@ -54,17 +54,23 @@ int main( int argc,char* argv[])
     if (nfiles != 0) usage_and_exit(argv[0]);
 
     if (print_flags ==  INFO_PRINT_ALL) {
+        grib_context* context = grib_context_get_default();
         printf("\n");
         printf("%s Version %d.%d.%d",
                 grib_get_package_name(), major,minor,revision);
         /* if (ECCODES_MAJOR_VERSION < 1) printf(" PRE-RELEASE"); */
         printf("\n");
         printf("\n");
+        if(context->debug) {
+            grib_context_log(context, GRIB_LOG_DEBUG, "Git SHA1=%s", grib_get_git_sha1());
+        }
 #if GRIB_PTHREADS
-        grib_context_log(grib_context_get_default(), GRIB_LOG_DEBUG, "PTHREADS enabled");
+        grib_context_log(context, GRIB_LOG_DEBUG, "POSIX threads enabled\n");
+#elif GRIB_OMP_THREADS
+        grib_context_log(context, GRIB_LOG_DEBUG, "OMP threads enabled\n");
 #endif
 #ifdef HAVE_MEMFS
-        grib_context_log(grib_context_get_default(), GRIB_LOG_DEBUG, "MEMFS enabled");
+        grib_context_log(context, GRIB_LOG_DEBUG, "MEMFS enabled");
 #endif
         if ((path=getenv("ECCODES_DEFINITION_PATH")) != NULL) {
             printf("Definition files path from environment variable");

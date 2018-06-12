@@ -220,7 +220,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 37 ;
 	}
-#maximum CAPE in the last 6 hours
+#Maximum CAPE in the last 6 hours
 'mxcape6' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
@@ -231,7 +231,7 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
-#maximum CAPES in the last 6 hours
+#Maximum CAPES in the last 6 hours
 'mxcapes6' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
@@ -265,7 +265,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Averaged total lightning flash density over the past hour
+#Averaged total lightning flash density in the last hour
 'litota1' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
@@ -284,7 +284,7 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
-#Averaged cloud-to-ground lightning flash density over the past hour
+#Averaged cloud-to-ground lightning flash density in the last hour
 'licga1' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
@@ -313,7 +313,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 120 ;
 	}
-#Averaged total lightning flash density over the past 3 hours
+#Averaged total lightning flash density in the last 3 hours
 'litota3' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
@@ -324,7 +324,7 @@
 	 lengthOfTimeRange = 3 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	}
-#Averaged total lightning flash density over the past 6 hours
+#Averaged total lightning flash density in the last 6 hours
 'litota6' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
@@ -335,7 +335,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Averaged cloud-to-ground lightning flash density over the past 3 hours
+#Averaged cloud-to-ground lightning flash density in the last 3 hours
 'licga3' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
@@ -346,7 +346,7 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	}
-#Averaged cloud-to-ground lightning flash density over the past 6 hours
+#Averaged cloud-to-ground lightning flash density in the last 6 hours
 'licga6' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
@@ -817,16 +817,16 @@
 	}
 #Cloudy brightness temperature
 'clbt' = {
-         discipline = 3 ;
-         parameterCategory = 1 ;
-         parameterNumber = 14 ;
-        }
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 14 ;
+	}
 #Clear-sky brightness temperature
 'csbt' = {
-         discipline = 3 ;
-         parameterCategory = 1 ;
-         parameterNumber = 15 ;
-        }
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 15 ;
+	}
 #Scaled radiance
 'p260530' = {
 	 discipline = 3 ;

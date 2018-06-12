@@ -590,7 +590,7 @@ static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 {
 }
 
-static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const char* print_key)
+static void _dump_long_array(grib_handle* h, FILE* f, const char* key)
 {
     size_t size=0;
     if (grib_get_size(h,key,&size)==GRIB_NOT_FOUND) return;
@@ -600,7 +600,7 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
     fprintf(f,"  if (!iValues) { fprintf(stderr, \"Failed to allocate memory (iValues).\\n\"); return 1; }\n");
     fprintf(f,"  size = %lu;", (unsigned long)size);
 
-    fprintf(f,"  CODES_CHECK(codes_get_long_array(h, \"%s\", iValues, &size), 0);\n",print_key);
+    fprintf(f,"  CODES_CHECK(codes_get_long_array(h, \"%s\", iValues, &size), 0);\n",key);
 }
 
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
@@ -614,10 +614,12 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         depth=2;
         self->empty=1;
         depth+=2;
-        _dump_long_array(h,self->dumper.out,"dataPresentIndicator","inputDataPresentIndicator");
-        _dump_long_array(h,self->dumper.out,"delayedDescriptorReplicationFactor","inputDelayedDescriptorReplicationFactor");
-        _dump_long_array(h,self->dumper.out,"shortDelayedDescriptorReplicationFactor","inputShortDelayedDescriptorReplicationFactor");
-        _dump_long_array(h,self->dumper.out,"extendedDelayedDescriptorReplicationFactor","inputExtendedDelayedDescriptorReplicationFactor");
+        _dump_long_array(h,self->dumper.out,"dataPresentIndicator");
+        _dump_long_array(h,self->dumper.out,"delayedDescriptorReplicationFactor");
+        _dump_long_array(h,self->dumper.out,"shortDelayedDescriptorReplicationFactor");
+        _dump_long_array(h,self->dumper.out,"extendedDelayedDescriptorReplicationFactor");
+        /* Do not show the inputOverriddenReferenceValues array. That's more for ENCODING */
+        /*_dump_long_array(h,self->dumper.out,"inputOverriddenReferenceValues","inputOverriddenReferenceValues");*/
         grib_dump_accessors_block(d,block);
         depth-=2;
     } else if (!grib_inline_strcmp(a->name,"groupNumber")) {

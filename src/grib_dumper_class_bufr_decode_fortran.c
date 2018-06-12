@@ -531,12 +531,14 @@ static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 {
 }
 
-static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const char* print_key)
+static void _dump_long_array(grib_handle* h, FILE* f, const char* key)
 {
     size_t size=0;
     if (grib_get_size(h,key,&size)==GRIB_NOT_FOUND) return;
+    if (size==0) return;
 
-    fprintf(f,"  call codes_get(ibufr, '%s', iValues)\n",print_key);
+    fprintf(f,"  if(allocated(iValues)) deallocate(iValues)\n");
+    fprintf(f,"  call codes_get(ibufr, '%s', iValues)\n",key);
 }
 
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
@@ -550,10 +552,12 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         depth=2;
         self->empty=1;
         depth+=2;
-        _dump_long_array(h,self->dumper.out,"dataPresentIndicator","inputDataPresentIndicator");
-        _dump_long_array(h,self->dumper.out,"delayedDescriptorReplicationFactor","inputDelayedDescriptorReplicationFactor");
-        _dump_long_array(h,self->dumper.out,"shortDelayedDescriptorReplicationFactor","inputShortDelayedDescriptorReplicationFactor");
-        _dump_long_array(h,self->dumper.out,"extendedDelayedDescriptorReplicationFactor","inputExtendedDelayedDescriptorReplicationFactor");
+        _dump_long_array(h,self->dumper.out,"dataPresentIndicator");
+        _dump_long_array(h,self->dumper.out,"delayedDescriptorReplicationFactor");
+        _dump_long_array(h,self->dumper.out,"shortDelayedDescriptorReplicationFactor");
+        _dump_long_array(h,self->dumper.out,"extendedDelayedDescriptorReplicationFactor");
+        /* Do not show the inputOverriddenReferenceValues array. That's more for ENCODING */
+        /* _dump_long_array(h,self->dumper.out,"inputOverriddenReferenceValues","inputOverriddenReferenceValues"); */
         grib_dump_accessors_block(d,block);
         depth-=2;
     } else if (!grib_inline_strcmp(a->name,"groupNumber")) {

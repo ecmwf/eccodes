@@ -443,24 +443,39 @@ static int pack_long(grib_accessor* a, const long*  v, size_t *len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
+static int pack_double_array_as_long(grib_accessor* a, const double *v, size_t *len)
+{
+    grib_context* c = a->context;
+    int ret = GRIB_SUCCESS;
+    size_t i = 0;
+    size_t numBytes = *len * (sizeof(long));
+    long* lValues = (long*)grib_context_malloc(c, numBytes);
+    if (!lValues) {
+        grib_context_log(c,GRIB_LOG_ERROR, "unable to allocate %ld bytes\n", numBytes);
+        return GRIB_OUT_OF_MEMORY;
+    }
+    for (i=0;i<*len;i++) lValues[i]=(long)v[i]; /* convert from double to long */
+    ret = grib_pack_long (a , lValues, len);
+    grib_context_free(c, lValues);
+    return ret;
+}
+
 static int pack_double(grib_accessor* a, const double *v, size_t *len)
 {
+    int do_pack_as_long = 0;
     grib_context* c=a->context;
-    if(a->cclass->pack_long && a->cclass->pack_long != &pack_long)
-    {
-        int i=0,ret=0;
-        long* val = (long*)grib_context_malloc(c,*len*(sizeof(long))) ;
-        if (!val) {
-            grib_context_log(c,GRIB_LOG_ERROR,
-                    "unable to allocate %d bytes\n",(int)(*len*(sizeof(long))));
-            return GRIB_OUT_OF_MEMORY;
+    if(a->cclass->pack_long && a->cclass->pack_long != &pack_long) {
+        do_pack_as_long = 1;
+    } else {
+        /* ECC-648: Special case of codetable */
+        if (strcmp(a->cclass->name, "codetable")==0) {
+            do_pack_as_long = 1;
         }
-        for (i=0;i<*len;i++) val[i]=(long)v[i];
-        ret=grib_pack_long (a , val, len);
-        grib_context_free(c,val);
-        return ret;
     }
-    grib_context_log(c,GRIB_LOG_ERROR, " Should not grib_pack %s  as double", a->name);
+    if (do_pack_as_long) {
+        return pack_double_array_as_long(a, v, len);
+    }
+    grib_context_log(c,GRIB_LOG_ERROR, "Should not grib_pack %s as double", a->name);
     return GRIB_NOT_IMPLEMENTED;
 }
 

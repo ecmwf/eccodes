@@ -23,8 +23,8 @@ grib_option grib_options[]={
         {"p:",0,0,1,1,0},
         {"P:",0,0,0,1,0},
         {"w:","key[:{s|d|i}]{=|!=}value,key[:{s|d|i}]=value,...",
-              "\n\t\tWhere clause.\n\t\tSet is only executed for grib messages matching all the "
-              "key/value constraints.\n\t\tIf a grib message does not match the constraints it is"
+              "\n\t\tWhere clause.\n\t\tSet is only executed for GRIB messages matching all the "
+              "key/value constraints.\n\t\tIf a GRIB message does not match the constraints it is"
               " copied unchanged\n\t\tto the output_grib_file. This behaviour can be changed "
               "setting the option -S."
               "\n\t\tA valid constraint is of type key=value or key!=value."
@@ -45,7 +45,7 @@ grib_option grib_options[]={
         {"v",0,0,0,1,0}
 };
 
-char* grib_tool_description="Sets key/value pairs in the input grib file and writes"
+char* grib_tool_description="Sets key/value pairs in the input GRIB file and writes"
         "\n\teach message to the output_grib_file."
         "\n\tIt fails when an error occurs (e.g. key not found).";
 char* grib_tool_name="grib_set";

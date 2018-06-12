@@ -33,7 +33,7 @@ rmdir ${data_dir}/split
 rm -f ${data_dir}/f.rules
 
 # Test with nonexistent keys. Note spelling of centre!
-#######################################################
+# ----------------------------------------------------
 cat >${data_dir}/nonexkey.rules <<EOF
 set center="john";
 EOF
@@ -51,16 +51,32 @@ ${tools_dir}/grib_filter -f ${data_dir}/nonexkey.rules ${data_dir}/tigge_pf_ecmw
 rm -f ${data_dir}/nonexkey.rules
 
 # GRIB-308 format specifier for integer keys
-##############################################
+# -------------------------------------------
 cat > ${data_dir}/formatint.rules <<EOF
 # Pad edition with leading zeroes and level with blanks
 print "edition=[edition%.3d], level=[level%5ld]";
 EOF
 
-result=`${tools_dir}//grib_filter  ${data_dir}/formatint.rules  $ECCODES_SAMPLES_PATH/GRIB1.tmpl`
+result=`${tools_dir}/grib_filter  ${data_dir}/formatint.rules  $ECCODES_SAMPLES_PATH/GRIB1.tmpl`
 [ "$result" = "edition=001, level=  500" ]
 
+# ECC-636 print all array entries on one line, num columns=0
+# ----------------------------------------------------------
+cat > ${data_dir}/formatint.rules <<EOF
+print "[values\!0]";
+EOF
+numlines=`${tools_dir}/grib_filter  ${data_dir}/formatint.rules  $ECCODES_SAMPLES_PATH/GRIB1.tmpl | wc -l | tr -d ' '`
+[ "$numlines" = "1" ]
+
+# If there is an error in the num columns, use 8
+cat > ${data_dir}/formatint.rules <<EOF
+print "[values\!XXX]";
+EOF
+numlines=`${tools_dir}/grib_filter  ${data_dir}/formatint.rules  $ECCODES_SAMPLES_PATH/GRIB1.tmpl | wc -l | tr -d ' '`
+[ "$numlines" = "8146" ]
+
 # Convert from grib1 to grib2 "Generalized vertical height coordinates"
+# ----------------------------------------------------------------------
 cat >temp.filt <<EOF
 set edition=2;
 set typeOfLevel="generalVertical";
@@ -68,12 +84,12 @@ set nlev=41.0;
 write;
 EOF
 
-${tools_dir}//grib_filter -o temp_filt.grib2 temp.filt $ECCODES_SAMPLES_PATH/sh_ml_grib1.tmpl
-result=`${tools_dir}//grib_get -p typeOfFirstFixedSurface,NV,nlev temp_filt.grib2`
+${tools_dir}/grib_filter -o temp_filt.grib2 temp.filt $ECCODES_SAMPLES_PATH/sh_ml_grib1.tmpl
+result=`${tools_dir}/grib_get -p typeOfFirstFixedSurface,NV,nlev temp_filt.grib2`
 [ "$result" = "150 6 41" ]
 
 # GRIB-394: grib_filter arithmetic operators not correct for floating point values
-###################################################################################
+# --------------------------------------------------------------------------------
 cat > ${data_dir}/binop.rules <<EOF
 transient val_exact=209.53530883789062500000;
 if (referenceValue == val_exact) {
@@ -100,11 +116,11 @@ else {
   assert(0);
 }
 EOF
-${tools_dir}//grib_filter  ${data_dir}/binop.rules $ECCODES_SAMPLES_PATH/gg_sfc_grib1.tmpl >/dev/null
+${tools_dir}/grib_filter  ${data_dir}/binop.rules $ECCODES_SAMPLES_PATH/gg_sfc_grib1.tmpl >/dev/null
 
 
 # GRIB-526 grib_filter very picky about format of floats
-########################################################
+# -------------------------------------------------------
 cat >temp.filt <<EOF
 set values = {
   -1000.0,
@@ -114,18 +130,18 @@ set values = {
   .4,
   45. };
 EOF
-${tools_dir}//grib_filter temp.filt $ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_filter temp.filt $ECCODES_SAMPLES_PATH/GRIB1.tmpl
 
 # Test reading from stdin
-echo 'set centre="kwbc";write;' | ${tools_dir}//grib_filter -o temp_filt.grib2 - $ECCODES_SAMPLES_PATH/GRIB2.tmpl
-result=`${tools_dir}//grib_get -p centre temp_filt.grib2`
+echo 'set centre="kwbc";write;' | ${tools_dir}/grib_filter -o temp_filt.grib2 - $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+result=`${tools_dir}/grib_get -p centre temp_filt.grib2`
 [ "$result" = "kwbc" ]
 
 
 # ECC-365: placeholder in the output filename
-########################################################
+# -------------------------------------------
 input=${data_dir}/tigge_cf_ecmwf.grib2
-echo 'write;' | ${tools_dir}//grib_filter -o 'temp.out.gfilter.[date].[level].grib' - $input
+echo 'write;' | ${tools_dir}/grib_filter -o 'temp.out.gfilter.[date].[level].grib' - $input
 [ -f temp.out.gfilter.20070122.925.grib ]
 [ -f temp.out.gfilter.20070122.320.grib ]
 [ -f temp.out.gfilter.20070122.2.grib ]
@@ -134,11 +150,22 @@ echo 'write;' | ${tools_dir}//grib_filter -o 'temp.out.gfilter.[date].[level].gr
 [ -f temp.out.gfilter.20060630.0.grib ]
 [ -f temp.out.gfilter.20060623.0.grib ]
 # Check the contents of one of the output files
-c=`${tools_dir}//grib_count temp.out.gfilter.20070122.320.grib`
+c=`${tools_dir}/grib_count temp.out.gfilter.20070122.320.grib`
 [ "$c" = 1 ]
 grib_check_key_equals temp.out.gfilter.20070122.320.grib "date,level" "20070122 320"
 rm -f temp.out.gfilter.*.grib
 
+# ECC-648: Set codetable key to array
+# ------------------------------------
+cat >temp.filt <<EOF
+  set productDefinitionTemplateNumber = 11;
+  set numberOfTimeRange = 3;
+  set typeOfStatisticalProcessing = {3, 1, 2};
+  write;
+EOF
+${tools_dir}/grib_filter -o temp_filt.grib2 temp.filt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+stats=`echo 'print "[typeOfStatisticalProcessing]";' | ${tools_dir}/grib_filter - temp_filt.grib2`
+[ "$stats" = "3 1 2" ]
 
 rm -f temp_filt.grib2 temp.filt
 rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules

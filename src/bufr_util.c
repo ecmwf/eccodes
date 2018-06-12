@@ -19,7 +19,7 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
     int theRank=0;
     size_t size=0;
     grib_context* c=h->context;
-    Assert(h->product_kind == PRODUCT_BUFR);
+    DebugAssert(h->product_kind == PRODUCT_BUFR);
 
     while (next && next->value && strcmp(next->value,key)) {
         prev=next;

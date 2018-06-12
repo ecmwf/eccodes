@@ -27,11 +27,11 @@ bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long f
 
     ki->filter_flags = filter_flags;
     ki->handle       = h;
-    Assert(h->product_kind == PRODUCT_BUFR);
+    DebugAssert(h->product_kind == PRODUCT_BUFR);
     ki->names        = NULL;
     ki->i_curr_attribute=0;
     ki->accessor_flags_only= GRIB_ACCESSOR_FLAG_DUMP;
-    ki->accessor_flags_skip= GRIB_ACCESSOR_FLAG_HIDDEN | GRIB_ACCESSOR_FLAG_READ_ONLY;
+    ki->accessor_flags_skip= GRIB_ACCESSOR_FLAG_HIDDEN; /*ECC-568*/
 
     ki->at_start     = 1;
     ki->match        = 0;
@@ -51,7 +51,7 @@ bufr_keys_iterator* codes_bufr_data_section_keys_iterator_new(grib_handle* h)
     if (!ki) return NULL;
 
     ki->handle       = h;
-    Assert(h->product_kind == PRODUCT_BUFR);
+    DebugAssert(h->product_kind == PRODUCT_BUFR);
     ki->i_curr_attribute=0;
     ki->accessor_flags_only= GRIB_ACCESSOR_FLAG_BUFR_DATA | GRIB_ACCESSOR_FLAG_DUMP;
     ki->accessor_flags_skip= GRIB_ACCESSOR_FLAG_HIDDEN | GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -180,7 +180,7 @@ char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter)
     char* ret=0;
     grib_context* c = kiter->handle->context;
     grib_string_list* sl = NULL;
-    Assert(kiter->current);
+    DebugAssert(kiter->current);
 
     if (kiter->prefix) {
         int iattribute=kiter->i_curr_attribute-1;

@@ -303,6 +303,9 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
     char default_separator[]=" ";
     grib_accessor* a=al->accessor;
 
+    /* Number of columns specified as 0 means print on ONE line i.e. num cols = infinity */
+    if (maxcols == 0) maxcols = INT_MAX;
+
     if (type==-1) type=grib_accessor_get_native_type(al->accessor);
     grib_accessors_list_value_count(al,&size);
     switch (type) {
@@ -312,7 +315,11 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
             char sbuf[1024]={0,};
             len = sizeof(sbuf);
             ret = grib_unpack_string(al->accessor,sbuf,&len);
-            fprintf(out,"%s",sbuf);
+            if (grib_is_missing_string(al->accessor,(unsigned char *)sbuf,len)) {
+                fprintf(out,"%s","MISSING");
+            } else {
+                fprintf(out,"%s",sbuf);
+            }
         } else {
             int i=0;
             int cols=0;
@@ -388,7 +395,8 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
         *newline=0;
         break;
     default:
-        grib_context_log(h->context, GRIB_LOG_WARNING,"grib_accessor_print: Problem to print \"%s\", invalid type %d", a->name,type);
+        grib_context_log(h->context, GRIB_LOG_WARNING,
+                         "grib_accessor_print: Problem printing \"%s\", invalid type %d", a->name, grib_get_type_name(type));
     }
     return ret;
 }
@@ -409,6 +417,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
     char buff1[1024]={0,};
     int maxcolsd=8;
     int maxcols;
+    long numcols = 0;
     int newline=1;
     const size_t uname_len = strlen(uname);
 
@@ -439,8 +448,13 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
                 break;
             case '!':
                 pp=(char*)uname;
-                maxcols=strtol(uname+i+1,&pp,10);
-                if (maxcols==0) maxcols=maxcolsd;
+                if (string_to_long(uname+i+1, &numcols)==GRIB_SUCCESS) {
+                    maxcols=(int)numcols;
+                } else {
+                    /* Columns specification is invalid integer */
+                    maxcols=maxcolsd;
+                }
+                strtol(uname+i+1,&pp,10);
                 while(pp && *pp!='%' && *pp!='!' && *pp!=']' && *pp!=':' && *pp!='\'' ) pp++;
                 i+=pp-uname-i-1;
                 break;

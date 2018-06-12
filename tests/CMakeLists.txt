@@ -45,7 +45,7 @@ endforeach()
 # These tests do not require any data downloads
 list( APPEND tests_no_data_reqd
     definitions
-    calendar
+    grib_calendar
     unit_tests
     md5
     uerra
@@ -53,6 +53,7 @@ list( APPEND tests_no_data_reqd
     julian
     bufr_ecc-359
     bufr_ecc-517
+    bufr_subTypes
     grib_efas
 )
 # These tests do require data downloads
@@ -80,6 +81,9 @@ list( APPEND tests_data_reqd
     bufr_ecc-286
     bufr_ecc-288
     bufr_ecc-313
+    bufr_ecc-616
+    bufr_ecc-686
+    bufr_ecc-690
     bufr_ecc-379
     bufr_ecc-393
     bufr_ecc-433
@@ -107,7 +111,7 @@ list( APPEND tests_data_reqd
     grib_filter
     grib_multi
     budg
-    gridType
+    grib_gridType
     grib_octahedral
     grib_global
     grib_concept

@@ -88,14 +88,14 @@ grib_options_help grib_options_help_list[] ={
   {"C",0,"C code mode. A C code program generating the message is dumped.\n"},
   {"D",0,"Debug mode.\n"},
   {"H",0,"Print octet content in hexadecimal format.\n"},
-  {"M",0,"Multi-field support off. Turn off support for multiple fields in single grib message.\n"},
+  {"M",0,"Multi-field support off. Turn off support for multiple fields in single GRIB message.\n"},
   {"O",0,"Octet mode. WMO documentation style dump.\n"},
   {"P:","key[:{s|d|i}],key[:{s|d|i}],...",
    "\n\t\tAs -p adding the declared keys to the default list.\n"},
   {"R:","key1=relative_error1,key2=relative_error2,...\n",
-   "\tCompare floating point values using the relative error as tolerance."
-"\n\t\tkey1=relative_error will compare key1 using relative_error1."
-"\n\t\tall=relative_error will compare all the floating point keys using relative_error. Default all=0.\n"},
+        "\tCompare floating point values using the relative error as tolerance."
+        "\n\t\tkey1=relative_error1 will compare key1 using relative_error1."
+        "\n\t\tall=relative_error will compare all the floating point keys using relative_error. Default all=0.\n"},
   {"S",0,"Strict. Only messages matching all the constraints are copied to"
    "\n\t\tthe output file\n"},
   {"T:","T | B | M | A","Message type. T->GTS, B->BUFR, M->METAR (Experimental),A->Any (Experimental).\n\t\t\tThe input file is interpreted according to the message type.\n"},
@@ -112,7 +112,7 @@ grib_options_help grib_options_help_list[] ={
 int grib_options_help_count=sizeof(grib_options_help_list)/sizeof(grib_options_help);
 
 
-void usage()
+void usage(void)
 {
     int i=0;
     printf("\nNAME \t%s\n\n",grib_tool_name);
@@ -402,7 +402,7 @@ char* grib_options_get_args(char* id)
     return err;
 }
 
-void usage_doxygen()
+void usage_doxygen(void)
 {
     int i=0;
     printf("/*!  \\page %s %s\n",grib_tool_name,grib_tool_name);
@@ -422,7 +422,7 @@ void usage_doxygen()
 }
 
 #if 0
-void usage_doxygen() {
+void usage_doxygen(void) {
     int i=0;
     printf("/*!  \\page %s %s\n",grib_tool_name,grib_tool_name);
     printf("\\section DESCRIPTION \n%s\n\n",grib_tool_description);

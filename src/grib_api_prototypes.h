@@ -245,6 +245,7 @@ size_t grib_iarray_used_size(grib_iarray *v);
 int grib_iarray_is_constant(grib_iarray *v);
 
 /* grib_vdarray.c */
+void grib_vdarray_print(const char* title, const grib_vdarray* vdarray);
 grib_vdarray *grib_vdarray_new(grib_context *c, size_t size, size_t incsize);
 grib_vdarray *grib_vdarray_resize(grib_context *c, grib_vdarray *v);
 grib_vdarray *grib_vdarray_push(grib_context *c, grib_vdarray *v, grib_darray *val);
@@ -1470,6 +1471,8 @@ int strcmp_nocase(const char *s1, const char *s2);
 void rtrim(char *s);
 const char *extract_filename(const char *filepath);
 char **string_split(char *inputString, const char *delimiter);
+int string_to_long(const char* input, long* output);
+int string_ends_with(const char* str1, const char* str2);
 
 /* functions.c */
 long grib_op_eq(long a, long b);

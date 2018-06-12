@@ -9,42 +9,45 @@
 #
 
 . ./include.sh
-
+pwd
 #Define a common label for all the tmp files
 label="codes_split_file"
+temp=$label.temp.grib
 
 # Do all the work in a temporary directory
 temp_dir=tempdir.${label}
 mkdir -p $temp_dir
+cd $temp_dir
 
 # Test 1: File with 3 messages
 # -----------------------------
-cp ${data_dir}/mixed.grib $temp_dir
-input=$temp_dir/mixed.grib
+cp ${data_dir}/mixed.grib ./
+input=mixed.grib
 ${tools_dir}/codes_split_file 3 $input
 # There should now be 3 new files. Make sure they are valid
-${tools_dir}/grib_ls $temp_dir/mixed.grib_01
-${tools_dir}/grib_ls $temp_dir/mixed.grib_02
-${tools_dir}/grib_ls $temp_dir/mixed.grib_03
+${tools_dir}/grib_ls mixed.grib_01
+${tools_dir}/grib_ls mixed.grib_02
+${tools_dir}/grib_ls mixed.grib_03
 
-total=`${tools_dir}/codes_count $temp_dir/mixed.grib_*`
+total=`${tools_dir}/codes_count mixed.grib_*`
 [ $total -eq 14 ]
 
-cat $temp_dir/mixed.grib_* > temp
-${tools_dir}/grib_compare $input temp
+cat mixed.grib_* > $temp
+${tools_dir}/grib_compare $input $temp
 
 
 # Test 2: File with 248 messages
 # -----------------------------
-cp ${data_dir}/tigge_ecmwf.grib2 $temp_dir
-input=$temp_dir/tigge_ecmwf.grib2
+cp ${data_dir}/tigge_ecmwf.grib2 ./
+input=tigge_ecmwf.grib2
 ${tools_dir}/codes_split_file 10 $input
-total=`${tools_dir}/codes_count $temp_dir/tigge_ecmwf.grib2_[0-9]*`
+total=`${tools_dir}/codes_count tigge_ecmwf.grib2_[0-9]*`
 [ $total -eq 248 ]
 
-cat $temp_dir/tigge_ecmwf.grib2_0[1-9] $temp_dir/tigge_ecmwf.grib2_10 > temp
-${tools_dir}/grib_compare $input temp
+cat tigge_ecmwf.grib2_0[1-9] tigge_ecmwf.grib2_10 > $temp
+${tools_dir}/grib_compare $input $temp
 
 
 # Clean up
+cd $test_dir
 rm -fr $temp_dir

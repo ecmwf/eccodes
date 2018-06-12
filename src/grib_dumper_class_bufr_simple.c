@@ -335,6 +335,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     self->empty=0;
 
     if (size>1) {
+        int doing_unexpandedDescriptors=0;
         icount=0;
         if ((r=compute_bufr_key_rank(h,self->keys,a->name))!=0)
             fprintf(self->dumper.out,"#%d#%s=",r,a->name);
@@ -342,14 +343,22 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             fprintf(self->dumper.out,"%s=",a->name);
 
         fprintf(self->dumper.out,"{");
+        if (strcmp(a->name, "unexpandedDescriptors")==0)
+            doing_unexpandedDescriptors = 1;
 
         for (i=0;i<size-1;i++) {
             if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
-            fprintf(self->dumper.out,"%ld, ",values[i]);
+            if (doing_unexpandedDescriptors)
+                fprintf(self->dumper.out,"%06ld, ",values[i]);
+            else
+                fprintf(self->dumper.out,"%ld, ",values[i]);
             icount++;
         }
         if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
-        fprintf(self->dumper.out,"%ld ",values[i]);
+        if (doing_unexpandedDescriptors)
+            fprintf(self->dumper.out,"%06ld ",values[i]);
+        else
+            fprintf(self->dumper.out,"%ld ",values[i]);
 
         depth-=2;
         fprintf(self->dumper.out,"}\n");
@@ -642,17 +651,18 @@ static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 {
 }
 
-static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const char* print_key)
+static void _dump_long_array(grib_handle* h, FILE* f, const char* key)
 {
     long* val;
     size_t size=0,i;
     int cols=9,icount=0;
 
     if (grib_get_size(h,key,&size)==GRIB_NOT_FOUND) return;
+    if (size==0) return;
 
     val=(long*)grib_context_malloc_clear(h->context,sizeof(long)*size);
     grib_get_long_array(h,key,val,&size);
-    fprintf(f,"%s= {",print_key);
+    fprintf(f,"%s= {", key);
     for (i=0;i<size-1;i++) {
         if (icount>cols || i==0) {fprintf(f,"\n      ");icount=0;}
         fprintf(f,"%ld, ",val[i]);
@@ -676,10 +686,12 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         self->begin=1;
         self->empty=1;
         depth+=2;
-        _dump_long_array(h,self->dumper.out,"dataPresentIndicator","inputDataPresentIndicator");
-        _dump_long_array(h,self->dumper.out,"delayedDescriptorReplicationFactor","inputDelayedDescriptorReplicationFactor");
-        _dump_long_array(h,self->dumper.out,"shortDelayedDescriptorReplicationFactor","inputShortDelayedDescriptorReplicationFactor");
-        _dump_long_array(h,self->dumper.out,"extendedDelayedDescriptorReplicationFactor","inputExtendedDelayedDescriptorReplicationFactor");
+        _dump_long_array(h,self->dumper.out,"dataPresentIndicator");
+        _dump_long_array(h,self->dumper.out,"delayedDescriptorReplicationFactor");
+        _dump_long_array(h,self->dumper.out,"shortDelayedDescriptorReplicationFactor");
+        _dump_long_array(h,self->dumper.out,"extendedDelayedDescriptorReplicationFactor");
+        /* Do not show the inputOverriddenReferenceValues array. That's more for ENCODING */
+        /*_dump_long_array(h,self->dumper.out,"inputOverriddenReferenceValues","inputOverriddenReferenceValues");*/
         grib_dump_accessors_block(d,block);
         depth-=2;
     } else if (!grib_inline_strcmp(a->name,"groupNumber")) {

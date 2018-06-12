@@ -470,13 +470,24 @@ EOF
 f="ship_9.bufr"
 echo "Test: get string" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
-
 ${tools_dir}/codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
-cat > ${f}.ref <<EOF
-WYM9567
+echo "WYM9567" > ${f}.ref
+
+diff ${f}.ref ${f}.log 
+
+rm -f ${f}.ref ${f}.log
+
+#-----------------------------------------------------------
+# Test:  get string whose value is MISSING (ECC-650)
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+set unpack=1;
+print "[shipOrMobileLandStationIdentifier]";
 EOF
 
+f="btem_109.bufr"
+${tools_dir}/codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
+echo "MISSING" > ${f}.ref
 diff ${f}.ref ${f}.log 
 
 rm -f ${f}.ref ${f}.log

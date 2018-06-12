@@ -64,4 +64,12 @@ set -e
 
 diff ${MYLOG} ${REF}
 
+# Test for operator 203YYY
+# --------------------------
+INPUT=israel_observations_2017041010.bufr
+rm -f ${TEMP}
+$PYTHON ${examples_src}/bufr_copy_data2.py ${INPUT} ${TEMP}
+${tools_dir}/bufr_compare -b meanWindDirectionForSurfaceTo1500M,unexpandedDescriptors ${TEMP} ${INPUT}
+
+
 rm -f ${TEMP} ${REF} ${MYLOG}

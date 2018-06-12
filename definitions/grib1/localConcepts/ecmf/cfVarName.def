@@ -6774,93 +6774,93 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 149 ;
 	}
-#Assimetry factor at 340 nm
-'assimetry340' = {
+#Asymmetry factor at 340 nm
+'asymmetry340' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 150 ;
 	}
-#Assimetry factor at 355 nm
-'assimetry355' = {
+#Asymmetry factor at 355 nm
+'asymmetry355' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 151 ;
 	}
-#Assimetry factor at 380 nm
-'assimetry380' = {
+#Asymmetry factor at 380 nm
+'asymmetry380' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 152 ;
 	}
-#Assimetry factor at 400 nm
-'assimetry400' = {
+#Asymmetry factor at 400 nm
+'asymmetry400' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 153 ;
 	}
-#Assimetry factor at 440 nm
-'assimetry440' = {
+#Asymmetry factor at 440 nm
+'asymmetry440' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Assimetry factor at 469 nm
-'assimetry469' = {
+#Asymmetry factor at 469 nm
+'asymmetry469' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 155 ;
 	}
-#Assimetry factor at 500 nm
-'assimetry500' = {
+#Asymmetry factor at 500 nm
+'asymmetry500' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 156 ;
 	}
-#Assimetry factor at 532 nm
-'assimetry532' = {
+#Asymmetry factor at 532 nm
+'asymmetry532' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 157 ;
 	}
-#Assimetry factor at 550 nm
-'assimetry550' = {
+#Asymmetry factor at 550 nm
+'asymmetry550' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 158 ;
 	}
-#Assimetry factor at 645 nm
-'assimetry645' = {
+#Asymmetry factor at 645 nm
+'asymmetry645' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 159 ;
 	}
-#Assimetry factor at 670 nm
-'assimetry670' = {
+#Asymmetry factor at 670 nm
+'asymmetry670' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 160 ;
 	}
-#Assimetry factor at 800 nm
-'assimetry800' = {
+#Asymmetry factor at 800 nm
+'asymmetry800' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 161 ;
 	}
-#Assimetry factor at 858 nm
-'assimetry858' = {
+#Asymmetry factor at 858 nm
+'asymmetry858' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 162 ;
 	}
-#Assimetry factor at 865 nm
-'assimetry865' = {
+#Asymmetry factor at 865 nm
+'asymmetry865' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 163 ;
 	}
-#Assimetry factor at 1020 nm
-'assimetry1020' = {
+#Asymmetry factor at 1020 nm
+'asymmetry1020' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 164 ;
 	}
-#Assimetry factor at 1064 nm
-'assimetry1064' = {
+#Asymmetry factor at 1064 nm
+'asymmetry1064' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 165 ;
 	}
-#Assimetry factor at 1240 nm
-'assimetry1240' = {
+#Asymmetry factor at 1240 nm
+'asymmetry1240' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 166 ;
 	}
-#Assimetry factor at 1640 nm
-'assimetry1640' = {
+#Asymmetry factor at 1640 nm
+'asymmetry1640' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 167 ;
 	}
@@ -6919,8 +6919,8 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Assimetry factor at 2130 nm
-'assimetry2130' = {
+#Asymmetry factor at 2130 nm
+'asymmetry2130' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 179 ;
 	}
@@ -8249,8 +8249,8 @@
 	 table2Version = 217 ;
 	 indicatorOfParameter = 3 ;
 	}
-#Methane
-'ch4' = {
+#Methane (chemistry)
+'ch4_c' = {
 	 table2Version = 217 ;
 	 indicatorOfParameter = 4 ;
 	}
@@ -9389,7 +9389,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Averaged total lightning flash density over the past hour
+#Averaged total lightning flash density in the last hour
 'litota1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 51 ;
@@ -9399,7 +9399,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 52 ;
 	}
-#Averaged cloud-to-ground lightning flash density over the past hour
+#Averaged cloud-to-ground lightning flash density in the last hour
 'licga1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 53 ;
@@ -12240,12 +12240,12 @@
 	 indicatorOfParameter = 131 ;
 	}
 #Ocean U wind component
-'ocu' = {
+'p133.150' = {
 	 table2Version = 150 ;
 	 indicatorOfParameter = 133 ;
 	}
 #Ocean V wind component
-'ocv' = {
+'p134.150' = {
 	 table2Version = 150 ;
 	 indicatorOfParameter = 134 ;
 	}

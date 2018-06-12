@@ -1,5 +1,5 @@
 TESTS = definitions.sh \
-        calendar.sh \
+        grib_calendar.sh \
         bufrdc_desc_ref.sh \
         bufrdc_ref.sh \
         bufr_dump.sh \
@@ -28,7 +28,7 @@ TESTS = definitions.sh \
         grib_filter.sh  \
         grib_multi.sh \
         budg.sh \
-        gridType.sh \
+        grib_gridType.sh \
         grib_octahedral.sh \
         grib_global.sh \
         grib_concept.sh \

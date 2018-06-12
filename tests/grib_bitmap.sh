@@ -17,6 +17,11 @@ grib2=${data_dir}/regular_latlon_surface.grib2
 infile=${data_dir}/reduced_gaussian_model_level.grib1
 outfile=${data_dir}/with_bitmap.grib1
 outfile1=${data_dir}/without_bitmap.grib1
+temp1=out.bmp.grib1
+temp2=out.bmp.grib2
+tempData1=out.bmp.grib1.data
+tempData2=out.bmp.grib2.data
+tempRules=bitmap.rules
 
 rm -f $outfile
 
@@ -39,7 +44,7 @@ diff $outfile1.dump ${data_dir}/no_bitmap.diff
 
 rm -f $outfile1 $outfile1.dump $outfile $outfile.dump || true
 
-cat > bitmap.rules<<EOF
+cat > $tempRules<<EOF
 set bitmapPresent=1;
 set missingValue=1111;
 set Ni=6;
@@ -48,14 +53,20 @@ set values={1,2,3,4,5,6,7,1111,1111,8,9,10};
 write ;
 EOF
 
-${tools_dir}/grib_filter -o out.bmp.grib1 bitmap.rules $grib1 
-${tools_dir}/grib_filter -o out.bmp.grib2 bitmap.rules $grib2
-#exit 0
+${tools_dir}/grib_filter -o $temp1 $tempRules $grib1 
+${tools_dir}/grib_filter -o $temp2 $tempRules $grib2
 
-${tools_dir}/grib_get_data -m missing out.bmp.grib1 > out.bmp.grib1.data
-${tools_dir}/grib_get_data -m missing out.bmp.grib2 > out.bmp.grib2.data
+${tools_dir}/grib_get_data -m missing $temp1 > $tempData1
+${tools_dir}/grib_get_data -m missing $temp2 > $tempData2
 
-diff out.bmp.grib1.data out.bmp.grib2.data
+diff $tempData1 $tempData2
 
-rm -f  out.bmp.grib1.data out.bmp.grib2.data out.bmp.grib1 out.bmp.grib2 bitmap.rules
+# ECC-511: grid_complex_spatial_differencing
+# To convert to simple packing, must pass in bitmapPresent=1
+# -------------------------------------------
+infile=${data_dir}/gfs.complex.mvmu.grib2
+${tools_dir}/grib_set -r -s bitmapPresent=1,packingType=grid_simple $infile $temp2
+grib_check_key_equals $temp2 bitmapPresent,numberOfMissing,numberOfValues,numberOfPoints "1 556901 481339 1038240"
 
+# Clean up
+rm -f  $tempData1 $tempData2 $temp1 $temp2 $tempRules

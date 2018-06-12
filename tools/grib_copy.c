@@ -15,8 +15,9 @@
 
 #include "grib_tools.h"
 
-char* grib_tool_description="Copies the content of grib files printing"
-        " values of some keys.";
+char* grib_tool_description="Copies the content of GRIB files printing"
+        " values of some keys."
+        "\n\tIf the name of the output_grib_file contains a key enclosed in square brackets, its value will be used.";
 char* grib_tool_name="grib_copy";
 char* grib_tool_usage="[options] grib_file grib_file ... output_grib_file";
 
@@ -29,7 +30,7 @@ grib_option grib_options[]={
         {"p:",0,0,1,1,0},
         {"P:",0,0,0,1,0},
         {"w:","key[:{s|d|i}]{=|!=}value,key[:{s|d|i}]=value,...","\n\t\tWhere clause."
-             "\n\t\tOnly grib messages matching the key/value constraints are copied to the output_grib_file."
+             "\n\t\tOnly GRIB messages matching the key/value constraints are copied to the output_grib_file."
              "\n\t\tA valid constraint is of type key=value or key!=value."
              "\n\t\tFor each key a string (key:s), a "
              "double (key:d) or an integer (key:i)\n\t\ttype can be defined. Default type is string."
@@ -74,6 +75,12 @@ int grib_tool_init(grib_runtime_options* options)
         }
     }
 #endif
+    /* ECC-657: If user supplied -p to print some keys, turn on verbose */
+    if (grib_options_on("p:")) {
+        if (grib_options_get_option("p:")) {
+            options->verbose = 1;
+        }
+    }
     return 0;
 }
 
