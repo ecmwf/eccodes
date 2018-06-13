@@ -807,6 +807,7 @@ long accessor_raw_get_offset(grib_accessor *a);
 /* grib_accessor_class_long_vector.c */
 
 /* grib_gaussian_reduced.c */
+void grib_get_reduced_row_wrapper(grib_handle *h, long pl, double lon_first, double lon_last, long *npoints, long *ilon_first, long *ilon_last);
 void grib_get_reduced_row(long pl, double lon_first, double lon_last, long *npoints, long *ilon_first, long *ilon_last);
 void grib_get_reduced_row2(long pl, double lon_first, double lon_last, long *npoints, long *ilon_first, long *ilon_last);
 

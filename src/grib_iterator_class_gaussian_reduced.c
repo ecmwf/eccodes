@@ -102,7 +102,67 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val)
     return 1;
 }
 
-static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
+/*static void sanity_check(grib_iterator* iter, grib_handle* h)
+{
+    int err = 0;
+    long expectedNumPoints;
+    const size_t numberOfValues = iter->nv;
+    err = grib_get_long(h,"expectedNumberOfPoints",&expectedNumPoints);
+    if (err) return;
+    if (numberOfValues != (size_t)expectedNumPoints) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "expectedNumberOfPoints != size(values) (%ld!=%ld)",
+            expectedNumPoints, (long)numberOfValues);
+    }
+}*/
+
+typedef void (*get_reduced_row_proc)(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last);
+
+/* ECC-445: Try to compute the iterator latitude/longitude values. IF algorithm2 is set, try a different point count */
+static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
+        double lat_first, double lon_first,
+        double lat_last, double lon_last,
+        double* lats, long* pl, size_t plsize, int algorithm2)
+{
+    int err = 0;
+    int l = 0;
+    size_t j = 0;
+    long row_count=0;
+    double d=0;
+    long ilon_first, ilon_last, i;
+    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
+    get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;
+    if (algorithm2) {
+        get_reduced_row = &grib_get_reduced_row2; /* switch to 2nd algorithm */
+    }
+    /*find starting latitude */
+    d = fabs(lats[0] - lats[1]);
+    while (fabs(lat_first-lats[l]) > d ) {l++;}
+
+    iter->e=0;
+    for (j=0;j<plsize;j++) {
+        row_count=0;
+        get_reduced_row(pl[j],lon_first,lon_last, &row_count,&ilon_first,&ilon_last);
+        if (ilon_first>ilon_last) ilon_first-=pl[j];
+        for (i=ilon_first;i<=ilon_last;i++) {
+
+            if(iter->e >= iter->nv){
+                if (algorithm2) {
+                    /* Only print error message on the second pass */
+                    /*sanity_check(iter, h);*/
+                    grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (sub-area)");
+                }
+                return GRIB_WRONG_GRID;
+            }
+
+            self->los[iter->e]=((i)*360.0)/pl[j];
+            self->las[iter->e]=lats[j+l];
+            iter->e++;
+        }
+    }
+    return err;
+}
+
+static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 {
     int ret=GRIB_SUCCESS, j, is_global=0;
     double lat_first=0,lon_first=0,lat_last=0,lon_last=0;
@@ -111,7 +171,7 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     size_t plsize=0;
     long* pl;
     long max_pl=0;
-    long nj=0,order=0,ilon_first,ilon_last,i;
+    long nj=0,order=0,i;
     long row_count=0;
     long editionNumber = 0;
     grib_context* c=h->context;
@@ -173,28 +233,11 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 
     is_global = is_gaussian_global(lat_first, lat_last, lon_first, lon_last, max_pl, lats, angular_precision);
     if ( !is_global ) {
-        int l=0;
         /*sub area*/
-        /*find starting latitude */
-        const double d = fabs(lats[0] - lats[1]);
-        while (fabs(lat_first-lats[l]) > d ) {l++;}
-        iter->e=0;
-        for (j=0;j<plsize;j++) {
-            row_count=0;
-            grib_get_reduced_row(pl[j],lon_first,lon_last,
-                    &row_count,&ilon_first,&ilon_last);
-            if (ilon_first>ilon_last) ilon_first-=pl[j];
-            for (i=ilon_first;i<=ilon_last;i++) {
-
-                if(iter->e >= iter->nv){
-                    grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (sub-area)");
-                    return GRIB_GEOCALCULUS_PROBLEM;
-                }
-
-                self->los[iter->e]=((i)*360.0)/pl[j];
-                self->las[iter->e]=lats[j+l];
-                iter->e++;
-            }
+        ret = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 0);
+        if (ret == GRIB_WRONG_GRID) {
+            /* ECC-445: First attempt failed. Try again with a different algorithm */
+            ret = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 1);
         }
     } else {
         /*global*/
@@ -204,8 +247,9 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
             for (i=0;i<row_count;i++) {
 
                 if(iter->e >= iter->nv){
+                    /*sanity_check(iter, h);*/
                     grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (global)");
-                    return GRIB_GEOCALCULUS_PROBLEM;
+                    return GRIB_WRONG_GRID;
                 }
 
                 self->los[iter->e]=(i*360.0)/row_count;
