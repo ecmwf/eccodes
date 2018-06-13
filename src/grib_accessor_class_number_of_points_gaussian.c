@@ -171,6 +171,8 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     a->length=0;
 }
 
+typedef void (*get_reduced_row_proc)(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last);
+
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     int ret=GRIB_SUCCESS;
@@ -247,6 +249,14 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
         d=fabs(lats[0]-lats[1]);
         if ( !is_global ) {
             /*sub area*/
+            get_reduced_row_proc get_reduced_row = &grib_get_reduced_row; /*function pointer*/
+            long createdByMir=0;
+            if ( grib_get_long(grib_handle_of_accessor(a), "createdByMir", &createdByMir) == GRIB_SUCCESS &&
+                createdByMir == 1 )
+            {
+                Assert(!"#################");
+                get_reduced_row = &grib_get_reduced_row2; /* switch to 2nd algorithm */
+            }
             (void)d;
 #if EFDEBUG
             printf("-------- subarea fabs(lat_first-lats[0])=%g d=%g\n",fabs(lat_first-lats[0]),d);
@@ -262,7 +272,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 #if EFDEBUG
                 printf("--  %d ",j);
 #endif
-                grib_get_reduced_row(pl[j],lon_first,lon_last,&row_count,&ilon_first,&ilon_last);
+                get_reduced_row(pl[j],lon_first,lon_last,&row_count,&ilon_first,&ilon_last);
                 lon_first_row=((ilon_first)*360.0)/pl[j];
                 lon_last_row=((ilon_last)*360.0)/pl[j];
                 *val+=row_count;

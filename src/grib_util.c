@@ -1485,6 +1485,9 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     if (packing_spec->deleteLocalDefinition) {
         grib_set_long(outh,"deleteLocalDefinition", 1);
     }
+    
+    *err = grib_set_long(outh, "createdByMir", 1);
+    Assert(*err == 0);
 
     /* Disable check: need to re-examine GRIB-864 */
 #if 0
