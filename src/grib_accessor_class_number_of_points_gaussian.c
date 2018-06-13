@@ -254,7 +254,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
             if ( grib_get_long(grib_handle_of_accessor(a), "createdByMir", &createdByMir) == GRIB_SUCCESS &&
                 createdByMir == 1 )
             {
-                Assert(!"#################");
                 get_reduced_row = &grib_get_reduced_row2; /* switch to 2nd algorithm */
             }
             (void)d;
