@@ -27,12 +27,14 @@ meta timeOfForecast  time  (hourOfForecast,minuteOfForecast,secondOfForecast) : 
 # Calculate the Julian number for the forecast date and time.
 # This will be a floating point number with units of 'day'
 meta julianForecastDay julian_day(dateOfForecast,hourOfForecast,minuteOfForecast,secondOfForecast): hidden;
+# Calculate the difference between the forecast date and reference date
+transient diffInDays = (julianForecastDay - julianDay) : hidden;   # float
 
-# Note: The 'anoffset' key is the difference between the forecast date and the validity date,
-#       but we cannot calculate it here (in section 2) because the keys validityDate & validityTime
-#       are defined later in section 4.
-#       Therefore that calculation is done when we load the mars config files mars/grib.efas.*.def.
-#       See mars/efas.anoffset.def
+# Now convert this to hours. First convert to minutes then round up
+transient diffInHours = (diffInDays * 1440 + 0.5)/60 : hidden;
+meta _anoffset round(diffInHours, 10): dump,long_type;
+transient anoffset = _anoffset; # needed to force anoffset to be integer
+alias local.anoffset = anoffset;
 
 # ECC-662
 unsigned[2] anoffsetFirst     = missing(): dump, can_be_missing;

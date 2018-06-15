@@ -11,7 +11,6 @@ alias mars.time = timeOfForecast;
 
 alias mars.origin = inputOriginatingCentre;
 
-include "mars/efas.anoffset.def"
 alias mars.anoffset=anoffset;
 
 # We need this because 'efas_post_proc' is defined later
