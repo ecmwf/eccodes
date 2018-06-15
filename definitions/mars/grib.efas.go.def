@@ -1,7 +1,8 @@
 # EFAS Gridded observations
-alias mars.step = startStep;
 
-# See ECC-683
+# ECC-701
+alias mars.step = endStep;
+
 alias mars.date = dateOfForecast;
 alias mars.time = timeOfForecast;
 #meta valDate validity_date(dataDate,dataTime,endStep,stepUnits): no_copy;

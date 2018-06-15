@@ -1,5 +1,7 @@
-# EFAS Fullup
-alias mars.step = startStep;
+# EFAS Fill-up
+
+# ECC-701
+alias mars.step = endStep;
 
 alias mars.date = dateOfForecast;
 alias mars.time = timeOfForecast;
