@@ -72,7 +72,7 @@ GribOutput::~GribOutput() {
 }
 
 
-size_t GribOutput::copy(const param::MIRParametrisation &param, context::Context& ctx) { // Not iterpolation performed
+size_t GribOutput::copy(const param::MIRParametrisation &param, context::Context& ctx) { // No interpolation performed
 
     input::MIRInput& input = ctx.input();
 
