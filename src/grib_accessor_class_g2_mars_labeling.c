@@ -369,8 +369,8 @@ static int extra_set(grib_accessor* a,long val)
             break;
         case 70:    /* Ocean reanalysis     (or) */
         case 71:    /* Flux forcing         (fx) */
-        case 72:    /* EFAS Fill-up         (fu) */
-        case 73:    /* EFAS Simulated Analysis */
+        case 72:    /* Fill-up              (fu) */
+        case 73:    /* Simulation forced with observations (sfo) */
         case 80:    /* Forecast mean        (fcmean) */
         case 81:    /* Forecast maximum     (fcmax) */
         case 82:    /* Forecast minimum     (fcmin) */

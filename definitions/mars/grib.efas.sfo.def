@@ -1,4 +1,5 @@
-# EFAS Simulated Analysis (Water Balance)
+# Simulation forced with observations (EFAS)
+# Water Balance
 
 # ECC-701
 alias mars.step = endStep;

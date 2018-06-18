@@ -66,7 +66,7 @@ grib_check_key_equals $temp1 anoffset 25
 grib_check_key_equals $temp1 anoffsetFirst,anoffsetLast,anoffsetFrequency "MISSING MISSING MISSING"
 
 # MARS step
-types="sia fu go"
+types="sfo fu go"
 for t in $types; do
   ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=41,type=$t,stepType=accum,stepRange=12-36,paramId=260268 \
   $sample $temp1
