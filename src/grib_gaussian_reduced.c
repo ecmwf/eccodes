@@ -23,9 +23,9 @@
 void grib_get_reduced_row_wrapper(grib_handle* h, long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last)
 {
     int err = 0;
-    long createdByMir = 0;
-    err = grib_get_long(h, "createdByMir", &createdByMir);
-    if (!err && createdByMir == 1) {
+    long expandedBoundingBox = 0;
+    err = grib_get_long(h, "expandedBoundingBox", &expandedBoundingBox);
+    if (!err && expandedBoundingBox == 1) {
         grib_get_reduced_row2(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
     } else {
         grib_get_reduced_row(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
