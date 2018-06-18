@@ -103,8 +103,8 @@ void SphericalHarmonics::comparison(std::string& comparator) const {
 void SphericalHarmonics::truncate(
     size_t truncation_from,
     size_t truncation_to,
-    const std::vector<double>& in,
-    std::vector<double>& out ) {
+    const MIRValuesVector& in,
+    MIRValuesVector& out ) {
 
     ASSERT(truncation_to != truncation_from);
 
@@ -152,8 +152,10 @@ void SphericalHarmonics::truncate(
 }
 
 
-const Representation *SphericalHarmonics::truncate(size_t truncation,
-        const std::vector<double> &in, std::vector<double> &out) const {
+const Representation *SphericalHarmonics::truncate(
+        size_t truncation,
+        const MIRValuesVector& in,
+        MIRValuesVector& out) const {
 
 
     if (truncation == truncation_) {
@@ -166,7 +168,7 @@ const Representation *SphericalHarmonics::truncate(size_t truncation,
 }
 
 
-void SphericalHarmonics::validate(const std::vector<double>& values) const {
+void SphericalHarmonics::validate(const MIRValuesVector& values) const {
     ASSERT(values.size() == number_of_complex_coefficients(truncation_) * 2);
 }
 

@@ -284,7 +284,7 @@ void Regular::setNiNj() {
 }
 
 
-size_t Regular::frame(std::vector<double>& values, size_t size, double missingValue) const {
+size_t Regular::frame(MIRValuesVector& values, size_t size, double missingValue) const {
 
     // TODO: Check if that logic cannot also be used for other grid, and therefore move it to a higher class
     validate(values);

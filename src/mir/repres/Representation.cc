@@ -107,7 +107,7 @@ bool Representation::includesSouthPole() const {
 }
 
 
-void Representation::validate(const std::vector<double>&) const {
+void Representation::validate(const MIRValuesVector&) const {
     std::ostringstream os;
     os << "Representation::validate() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
@@ -149,7 +149,7 @@ const Representation *Representation::croppedRepresentation(const util::Bounding
 }
 
 
-const Representation *Representation::truncate(size_t, const std::vector<double>&, std::vector<double>&) const {
+const Representation *Representation::truncate(size_t, const MIRValuesVector&, MIRValuesVector&) const {
     std::ostringstream os;
     os << "Representation::truncate() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
@@ -235,14 +235,14 @@ void Representation::comparison(std::string&) const {
 }
 
 
-size_t Representation::frame(std::vector<double>&, size_t, double) const {
+size_t Representation::frame(MIRValuesVector&, size_t, double) const {
     std::ostringstream os;
     os << "Representation::frame() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 
-void Representation::reorder(long, std::vector<double>&) const {
+void Representation::reorder(long, MIRValuesVector&) const {
     std::ostringstream os;
     os << "Representation::reorder() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
@@ -304,8 +304,8 @@ const Representation* Representation::globalise(data::MIRField& field) const {
     size = latitudes.size();
 
     for (size_t i = 0; i < field.dimensions(); i++ ) {
-        std::vector<double> newvalues(size, missingValue);
-        const std::vector<double>& values = field.direct(i);
+        MIRValuesVector newvalues(size, missingValue);
+        const MIRValuesVector& values = field.direct(i);
         ASSERT(values.size() < size);
 
         for (size_t j = 0 ; j < values.size(); ++j) {

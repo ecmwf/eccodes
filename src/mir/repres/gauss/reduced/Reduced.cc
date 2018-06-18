@@ -293,7 +293,7 @@ void Reduced::fill(api::MIRJob& job) const  {
 }
 
 
-size_t Reduced::frame(std::vector<double>& values, size_t size, double missingValue) const {
+size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue) const {
 
     validate(values);
 

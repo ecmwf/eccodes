@@ -184,7 +184,7 @@ bool ReducedLL::includesSouthPole() const {
 }
 
 
-void ReducedLL::validate(const std::vector<double>& values) const {
+void ReducedLL::validate(const MIRValuesVector& values) const {
     size_t count = 0;
     for (size_t i = 0; i < pl_.size(); i++) {
         count += pl_[i];

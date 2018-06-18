@@ -77,7 +77,7 @@ LatLon::~LatLon() {
 }
 
 
-void LatLon::reorder(long scanningMode, std::vector<double>& values) const {
+void LatLon::reorder(long scanningMode, MIRValuesVector& values) const {
     // Code from ecRegrid, UNTESTED!!!
 
     eckit::Log::debug<LibMir>() << "WARNING: UNTESTED!!! ";
@@ -85,7 +85,7 @@ void LatLon::reorder(long scanningMode, std::vector<double>& values) const {
 
     ASSERT(values.size() == ni_ * nj_);
 
-    std::vector<double> out(values.size());
+    MIRValuesVector out(values.size());
 
     if (scanningMode == jScansPositively) {
         size_t count = 0;
@@ -238,8 +238,8 @@ Representation* LatLon::globalise(data::MIRField& field) const {
     double missingValue = field.missingValue();
 
     for (size_t i = 0; i < field.dimensions(); i++ ) {
-        std::vector<double> newvalues(newn, missingValue);
-        const std::vector<double> &values = field.direct(i);
+        MIRValuesVector newvalues(newn, missingValue);
+        const MIRValuesVector& values = field.direct(i);
         ASSERT(values.size() == n);
 
         for (size_t j = 0 ; j < n; ++j) {
@@ -332,7 +332,7 @@ void LatLon::fill(util::MeshGeneratorParameters& params) const {
 }
 
 
-size_t LatLon::frame(std::vector<double>& values, size_t size, double missingValue) const {
+size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue) const {
 
     // Could be done better, just a demo
     validate(values);
@@ -356,7 +356,7 @@ size_t LatLon::frame(std::vector<double>& values, size_t size, double missingVal
 }
 
 
-void LatLon::validate(const std::vector<double>& values) const {
+void LatLon::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
 
     eckit::Log::debug<LibMir>() << "LatLon::validate checked " << eckit::Plural(values.size(), "value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;

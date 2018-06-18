@@ -73,7 +73,7 @@ void PolarStereographic::fill(grib_info &info) const  {
     NOTIMP;
 }
 
-void PolarStereographic::validate(const std::vector<double> & values) const {
+void PolarStereographic::validate(const MIRValuesVector& values) const {
     ASSERT(values.size() == Nx_ * Ny_);
 }
 

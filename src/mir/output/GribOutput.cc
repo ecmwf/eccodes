@@ -357,7 +357,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
         int flags = 0;
         int err = 0;
 
-        const std::vector<double> &values = field.values(i);
+        const MIRValuesVector& values = field.values(i);
 
 
         // set error callback handling (throws)

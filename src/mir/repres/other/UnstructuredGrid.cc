@@ -138,7 +138,7 @@ atlas::Grid UnstructuredGrid::atlasGrid() const {
 }
 
 
-void UnstructuredGrid::validate(const std::vector<double> &values) const {
+void UnstructuredGrid::validate(const MIRValuesVector& values) const {
     ASSERT(values.size() == latitudes_.size());
     ASSERT(values.size() == longitudes_.size());
 }
