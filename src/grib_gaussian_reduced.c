@@ -28,8 +28,8 @@ typedef struct Fraction_type {
     Fraction_value_type bottom_;
 } Fraction_type;
 
-/*
-const Fraction_value_type MAX_DENOM = sqrt(ULLONG_MAX);
+const Fraction_value_type MAX_DENOM = 3037000499;//sqrt(LLONG_MAX);
+
 static Fraction_value_type fraction_gcd(Fraction_value_type a, Fraction_value_type b)
 {
     while (b != 0)
@@ -75,24 +75,24 @@ static Fraction_type fraction_construct_from_double(double x)
     Fraction_type result;
     double value = x;
 
-    Assert(!std::isnan(value));
+    // Assert(!std::isnan(value));
     // ASSERT(fabs(value) < 1e30);
 
-    value_type sign = 1;
+    Fraction_value_type sign = 1;
     if (x < 0) {
         sign = -sign;
         x = -x;
     }
 
-    value_type m00 = 1, m11 = 1, m01 = 0, m10 = 0;
-    value_type a = x;
-    value_type t2 = m10 * a + m11;
+    Fraction_value_type m00 = 1, m11 = 1, m01 = 0, m10 = 0;
+    Fraction_value_type a = x;
+    Fraction_value_type t2 = m10 * a + m11;
 
     size_t cnt = 0;
 
     while (t2 <= MAX_DENOM) {
 
-        value_type t1  = m00 * a + m01;
+        Fraction_value_type t1  = m00 * a + m01;
         m01 = m00;
         m00 = t1;
 
@@ -105,7 +105,7 @@ static Fraction_type fraction_construct_from_double(double x)
 
         x = 1.0 / (x - a);
 
-        if (x > std::numeric_limits<Fraction::value_type>::max()) {
+        if (x > LLONG_MAX) {
             break;
         }
 
@@ -113,9 +113,10 @@ static Fraction_type fraction_construct_from_double(double x)
         t2 = m10 * a + m11;
 
         if (cnt++ > 10000) {
-            std::ostringstream oss;
-            oss << "Cannot compute fraction from " << value << std::endl;
-            throw std::runtime_error(oss.str()); //eckit::BadValue(oss.str());
+            //std::ostringstream oss;
+            //oss << "Cannot compute fraction from " << value << std::endl;
+            //throw std::runtime_error(oss.str()); //eckit::BadValue(oss.str());
+            fprintf(stderr, "Cannot compute fraction from %g\n", value);
         }
     }
 
@@ -124,10 +125,10 @@ static Fraction_type fraction_construct_from_double(double x)
         m10 >>= 1;
     }
 
-    value_type top = m00;
-    value_type bottom = m10;
+    Fraction_value_type top = m00;
+    Fraction_value_type bottom = m10;
 
-    value_type g = gcd(top, bottom);
+    Fraction_value_type g = fraction_gcd(top, bottom);
     top =  top / g;
     bottom = bottom / g;
 
@@ -136,19 +137,20 @@ static Fraction_type fraction_construct_from_double(double x)
     return result;
 }
 
-Fraction_value_type fraction_integralPart(const Fraction_type& frac)
+Fraction_value_type fraction_integralPart(const Fraction_type frac)
 {
     return frac.top_ / frac.bottom_;
 }
 
-static int fraction_operator_equality(Fraction_type self, Fraction_type other)
+/*static int fraction_operator_equality(Fraction_type self, Fraction_type other)
 {
     // Assumes canonical form
     return self.top_ == other.top_ && self.bottom_ == other.bottom_;
-}
+}*/
+
 static double fraction_operator_double(Fraction_type self)
 {
-    return double(self.top_) / double(self.bottom_);
+    return (double)self.top_ / (double)self.bottom_;
 }
 
 static Fraction_value_type fraction_mul(int* overflow, Fraction_value_type a, Fraction_value_type b)
@@ -156,7 +158,7 @@ static Fraction_value_type fraction_mul(int* overflow, Fraction_value_type a, Fr
     if(*overflow) { return 0; }
 
     if (b != 0) {
-        overflow = llabs(a) > ULLONG_MAX / llabs(b);
+        *overflow = llabs(a) > (ULLONG_MAX / llabs(b));
     }
 
     return a * b;
@@ -165,18 +167,82 @@ static Fraction_value_type fraction_mul(int* overflow, Fraction_value_type a, Fr
 static Fraction_type fraction_operator_divide(Fraction_type self, Fraction_type other)
 {
     int overflow = 0; //boolean
+    Fraction_type result = fraction_construct(0,0);
 
-    Fraction_value_type top    = fraction_mul(overflow, self.top_, other.bottom_);
+    Fraction_value_type top    = fraction_mul(&overflow, self.top_, other.bottom_);
 
-    Fraction_value_type bottom = fraction_mul(overflow, self.bottom_, other.top_);
+    Fraction_value_type bottom = fraction_mul(&overflow, self.bottom_, other.top_);
 
     if (!overflow) {
         return fraction_construct(top, bottom);
     }
+    Assert(0);
+    return result;
+    //return Fraction(double(*this) / double(other)); //??
+}
+//Fraction Fraction::operator*(const Fraction& other) const {
+static Fraction_type fraction_operator_multiply(Fraction_type self, Fraction_type other)
+{
+    int overflow = 0; //boolean
+    Fraction_type result = fraction_construct(0,0);
 
-    return Fraction(double(*this) / double(other)); //??
+    Fraction_value_type top    = fraction_mul(&overflow, self.top_, other.top_);
+
+    Fraction_value_type bottom = fraction_mul(&overflow, self.bottom_, other.bottom_);
+
+    if (!overflow) {
+        return fraction_construct(top, bottom);
+    }
+    Assert(0);
+    return result;
+    //return Fraction(double(*this) * double(other));
 }
 
+//bool Fraction::operator<(const Fraction& other) const {
+static int fraction_operator_less_than(Fraction_type self, Fraction_type other) {
+    int overflow = 0;
+    int result = fraction_mul(&overflow, self.top_, other.bottom_) < fraction_mul(&overflow, other.top_, self.bottom_);
+    if (overflow) {
+        Assert(0);
+        return 0;
+        //return double(*this) < double(other);//??
+    }
+    return result;
+}
+//bool Fraction::operator>(const Fraction& other) const {
+static int fraction_operator_greater_than(Fraction_type self, Fraction_type other) {
+    int overflow = 0;
+    int result = fraction_mul(&overflow, self.top_, other.bottom_) > fraction_mul(&overflow, other.top_, self.bottom_);
+    if (overflow) {
+        Assert(0);
+        return 0;
+        //return double(*this) > double(other); //??
+    }
+    return result;
+}
+
+
+//explicit Fraction(long long n): top_(n), bottom_(1) {}
+static Fraction_type fraction_construct_from_long_long(long long n)
+{
+    Fraction_type result;
+    result.top_    = n;
+    result.bottom_ = 1;
+    return result;
+}
+//template<class T>Fraction operator*(T n, const Fraction& f){    return Fraction(n) * f;  }
+static Fraction_type fraction_operator_multiply_n_Frac(Fraction_value_type n, Fraction_type f)
+{
+    Fraction_type ft = fraction_construct_from_long_long(n);
+    Fraction_type result = fraction_operator_multiply(ft, f);
+    return result;
+    //return Fraction(n) * f;
+}
+
+static Fraction_value_type get_min(Fraction_value_type a, Fraction_value_type b)
+{
+    return ((a < b) ? a : b);
+}
 
 static void GaussianIteratorResetToRow(
         long long Ni_globe,   // plj
@@ -186,27 +252,41 @@ static void GaussianIteratorResetToRow(
         double* pLon1,
         double* pLon2)
 {
-    assert(Ni_globe > 1);
+    Assert(Ni_globe > 1);
     Fraction_type inc = fraction_construct(360ll, Ni_globe);
     //eckit::Fraction inc(360ll, Ni_globe);
 
     //auto Nw = (w / inc).integralPart();
     Fraction_value_type Nw = fraction_integralPart( fraction_operator_divide(w, inc) );
-    if (Nw * inc < w) { //??
+    Fraction_type Nw_inc = fraction_operator_multiply_n_Frac(Nw, inc);
+    //if (Nw * inc < w) { //??
+    if (fraction_operator_less_than(Nw_inc, w)) {
         Nw += 1;
     }
 
-    auto Ne = (e / inc).integralPart();
-    if (Ne * inc > e && Ne > Nw) {
+    //auto Ne = (e / inc).integralPart();
+    Fraction_value_type Ne = fraction_integralPart( fraction_operator_divide(e, inc) );
+    Fraction_type Ne_inc = fraction_operator_multiply_n_Frac(Ne, inc);
+    //if (Ne * inc > e && Ne > Nw) {
+    if (fraction_operator_greater_than(Ne_inc, e) && Ne > Nw) {
         Ne -= 1;
     }
-    assert(Ne >= Nw);
+    Assert(Ne >= Nw);
 
-    Ni = std::min(Ni_globe, Ne - Nw + 1);
-    lon1 = Nw * inc;
-    lon2 = Ne * inc;
+    *pNi = get_min(Ni_globe, Ne - Nw + 1);
+    Nw_inc = fraction_operator_multiply_n_Frac(Nw, inc); //??
+    *pLon1 = fraction_operator_double(Nw_inc);
+    //*pLon1 = Nw * inc;
+    Ne_inc = fraction_operator_multiply_n_Frac(Ne, inc);
+    //*pLon2 = Ne * inc;
+    *pLon2 = fraction_operator_double(Ne_inc);
+    
+    {
+        Fraction_type f = fraction_construct_from_double(8.0);
+        printf("%lld\n", f.top_);
+    }
 }
-*/
+
 
 /* --------------------------------------------------------------------------------------------------- */
 void grib_get_reduced_row_wrapper(grib_handle* h, long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last)
@@ -315,6 +395,21 @@ void grib_get_reduced_row2(long pl, double lon_first, double lon_last, long* npo
 {
     double range=0,dlon_first=0,dlon_last=0;
     long irange;
+    
+    {
+        long long Ni_globe = pl;
+        Fraction_type w;
+        Fraction_type e;
+        long the_count;
+        double the_lon1, the_lon2;
+        GaussianIteratorResetToRow(
+            Ni_globe,   // plj
+            w,// lon_first
+            e,// lon_last
+            &the_count,
+            &the_lon1,
+            &the_lon2);
+    }
 
     range=lon_last-lon_first;
     if (range<0) {range+=360;lon_first-=360;}
