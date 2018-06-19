@@ -43,30 +43,54 @@ Reduced::Reduced(const param::MIRParametrisation& parametrisation) :
     k_(0),
     Nj_(N_ * 2) {
 
-    std::vector<long> p;
-    ASSERT(parametrisation.get("pl", p));
-    pls(p);
-
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox_.north();
     Latitude s = bbox_.south();
     correctSouthNorth(s, n, true);
+
+    std::vector<long> pl;
+    ASSERT(parametrisation.get("pl", pl));
+
+    // if pl isn't global (from file!) insert leading/trailing 0's
+    const auto& lats = latitudes();
+    if (n < lats.front() || s > lats.back()) {
+
+        size_t k = 0;
+        size_t nj = 0;
+        for (Latitude lat : lats) {
+            if (n < lat) {
+                ++k;
+            } else if (s <= lat) {
+                ASSERT(pl[nj] >= 2);
+                ++nj;
+            } else {
+                break;
+            }
+        }
+        ASSERT(k + nj <= N_ * 2);
+
+        if (k > 0) {
+            pl.reserve(N_ * 2);
+            pl.insert(pl.begin(), k, 0);
+        }
+        pl.resize(N_ * 2, 0);
+    }
+
+    setNj(pl, s, n);
 
     Longitude w = bbox_.west();
     Longitude e = bbox_.east();
     correctWestEast(w, e, true);
 
     bbox_ = util::BoundingBox(n, w, s, e);
-    setNj();
 }
 
 
 Reduced::Reduced(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox) :
     Gaussian(N, bbox),
     k_(0),
-    Nj_(N * 2),
-    pl_(pl) {
-    setNj();
+    Nj_(N_ * 2) {
+    setNj(pl, bbox.south(), bbox.north());
 }
 
 
@@ -74,6 +98,7 @@ Reduced::Reduced(size_t N, const util::BoundingBox& bbox) :
     Gaussian(N, bbox),
     k_(0),
     Nj_(N * 2) {
+    // derived classes must set k_, Nj_ using this constructor
 }
 
 
@@ -208,42 +233,35 @@ const std::vector<long>& Reduced::pls() const {
 }
 
 
-void Reduced::pls(std::vector<long>& pl) {
-    ASSERT(*std::min_element(pl.begin() + k_, pl.begin() + k_ + Nj_) >= 2);
-
-    pl_.swap(pl);
-    pls();
-}
-
-
-void Reduced::setNj() {
+void Reduced::setNj(const std::vector<long>& pl, const Latitude& s, const Latitude& n) {
     ASSERT(N_ > 0);
-
-    const std::vector<long>& pl = pls();
-    const std::vector<double>& lats = latitudes();
+    ASSERT(N_ * 2 == pl.size());
 
 
     // position to first latitude and first/last longitude
-    // NOTE: latitudes_ span the globe, sorted from North-to-South, k_ positions the North
-    // NOTE: pl is global
+    // NOTE: latitudes() spans the globe, sorted from North-to-South, k_ positions the North
+    // NOTE: pl spans the globe
     k_ = 0;
-    Nj_  = N_ * 2;
+    Nj_ = N_ * 2;
 
-    if (!includesNorthPole() || !includesSouthPole()) {
+    const auto& lats = latitudes();
+    if (n < lats.front() || s > lats.back()) {
         Nj_ = 0;
         for (auto& lat : lats) {
             Latitude ll(lat);
-            if (bbox_.north() < ll) {
+            if (n < ll) {
                 ++k_;
-            } else if (bbox_.south() <= ll) {
+            } else if (s <= ll) {
+                ASSERT(pl[k_ + Nj_] >= 2);
                 ++Nj_;
             } else {
                 break;
             }
         }
-        ASSERT(Nj_ > 0);
-        ASSERT(Nj_ + k_ <= pl.size());
     }
+
+    pl_ = pl;
+    pls();  // check internal assumptions
 }
 
 
@@ -460,6 +478,12 @@ util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) co
     ASSERT(extended.contains(bbox));
 
     return extended;
+}
+
+
+bool Reduced::isPeriodicWestEast() const {
+    eckit::Fraction inc = getSmallestIncrement();
+    return bbox_.east() - bbox_.west() + inc >= Longitude::GLOBE;
 }
 
 

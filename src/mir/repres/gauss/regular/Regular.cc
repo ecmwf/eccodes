@@ -35,7 +35,9 @@ namespace regular {
 
 
 Regular::Regular(const param::MIRParametrisation& parametrisation) :
-    Gaussian(parametrisation) {
+    Gaussian(parametrisation),
+    Ni_(0),
+    Nj_(0) {
 
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox_.north();
@@ -52,7 +54,9 @@ Regular::Regular(const param::MIRParametrisation& parametrisation) :
 
 
 Regular::Regular(size_t N, const util::BoundingBox& bbox) :
-    Gaussian(N, bbox) {
+    Gaussian(N, bbox),
+    Ni_(0),
+    Nj_(0) {
 
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox.north();
@@ -165,7 +169,7 @@ bool Regular::sameAs(const Representation& other) const {
 
 eckit::Fraction Regular::getSmallestIncrement() const {
     ASSERT(N_);
-    return eckit::Fraction(90, N_);
+    return {90, eckit::Fraction::value_type(N_)};
 }
 
 
@@ -233,6 +237,12 @@ util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) co
 }
 
 
+bool Regular::isPeriodicWestEast() const {
+    eckit::Fraction inc = getSmallestIncrement();
+    return bbox_.east() - bbox_.west() + inc >= Longitude::GLOBE;
+}
+
+
 atlas::Grid Regular::atlasGrid() const {
     return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), domain());
 }
@@ -240,20 +250,26 @@ atlas::Grid Regular::atlasGrid() const {
 
 void Regular::setNiNj() {
     ASSERT(N_);
-    const util::Domain dom = domain();
+
+    const eckit::Fraction inc = getSmallestIncrement();
+    const auto& lats = latitudes();
+
+    const Longitude& west = bbox_.west();
+    const Longitude& east = bbox_.east();
+    const Latitude& south = bbox_.south();
+    const Latitude& north = bbox_.north();
 
     Ni_ = N_ * 4;
-    if (!dom.isPeriodicEastWest()) {
-        eckit::Fraction inc = getSmallestIncrement();
+    if (east - west + inc < Longitude::GLOBE) {
 
-        eckit::Fraction w = bbox_.west().fraction();
-        eckit::Fraction::value_type Nw = (w / inc).integralPart();
+        eckit::Fraction w = west.fraction();
+        auto Nw = (w / inc).integralPart();
         if (Nw * inc < w) {
             Nw += 1;
         }
 
-        eckit::Fraction e = bbox_.east().fraction();
-        eckit::Fraction::value_type Ne = (e / inc).integralPart();
+        eckit::Fraction e = east.fraction();
+        auto Ne = (e / inc).integralPart();
         if (Ne * inc > e) {
             Ne -= 1;
         }
@@ -265,12 +281,10 @@ void Regular::setNiNj() {
     }
 
     Nj_ = N_ * 2;
-    if (!dom.includesPoleNorth() || !dom.includesPoleSouth()) {
-        const Longitude lon_middle = (dom.west() + dom.east()) / 2.;
-
+    if (north < lats.front() || south > lats.back()) {
         Nj_ = 0;
-        for (const double& lat : latitudes()) {
-            if (dom.contains(lat, lon_middle)) {
+        for (Latitude lat : lats) {
+            if (south <= lat && lat <= north) {
                 ++Nj_;
             }
         }

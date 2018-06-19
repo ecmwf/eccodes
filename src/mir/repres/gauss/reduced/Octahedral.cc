@@ -30,25 +30,25 @@ namespace reduced {
 Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox) :
     Reduced(N, bbox) {
 
-    atlas::util::Config config;
-    config.set("name", "O" + std::to_string(N_));
-    atlas::grid::ReducedGaussianGrid grid(config);
-    ASSERT(grid);
-
-    std::vector<long> pl(grid.nx());
-    pls(pl);
-
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox.north();
     Latitude s = bbox.south();
     correctSouthNorth(s, n);
+
+    {
+        atlas::util::Config config;
+        config.set("name", "O" + std::to_string(N_));
+        atlas::grid::ReducedGaussianGrid grid(config);
+        ASSERT(grid);
+
+        setNj(grid.nx(), Latitude::SOUTH_POLE, Latitude::NORTH_POLE);
+    }
 
     Longitude w = bbox.west();
     Longitude e = bbox.east();
     correctWestEast(w, e);
 
     bbox_ = util::BoundingBox(n, w, s, e);
-    setNj();
 }
 
 
