@@ -68,8 +68,7 @@ Regular::Regular(size_t N, const util::BoundingBox& bbox) :
 }
 
 
-Regular::~Regular() {
-}
+Regular::~Regular() = default;
 
 
 void Regular::fill(grib_info& info) const  {
@@ -159,7 +158,7 @@ void Regular::correctWestEast(Longitude& w, Longitude& e, bool grib1) const {
 
 
 bool Regular::sameAs(const Representation& other) const {
-    const Regular* o = dynamic_cast<const Regular*>(&other);
+    auto o = dynamic_cast<const Regular*>(&other);
     return o && (N_ == o->N_) && (bbox_ == o->bbox_);
 }
 

@@ -65,8 +65,7 @@ IrregularLatlon::IrregularLatlon() {
 }
 
 
-IrregularLatlon::~IrregularLatlon() {
-}
+IrregularLatlon::~IrregularLatlon() = default;
 
 
 size_t IrregularLatlon::numberOfPoints() const {
@@ -126,7 +125,7 @@ void IrregularLatlon::makeName(std::ostream& out) const {
 
 
 bool IrregularLatlon::sameAs(const Representation& other) const {
-    const IrregularLatlon* o = dynamic_cast<const IrregularLatlon*>(&other);
+    auto o = dynamic_cast<const IrregularLatlon*>(&other);
     return o && (latitudes_ == o->latitudes_) && (longitudes_ == o->longitudes_) ;
 }
 

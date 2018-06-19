@@ -64,8 +64,7 @@ UnstructuredGrid::UnstructuredGrid(const std::vector<double>& latitudes,
 }
 
 
-UnstructuredGrid::~UnstructuredGrid() {
-}
+UnstructuredGrid::~UnstructuredGrid() = default;
 
 
 void UnstructuredGrid::print(std::ostream &out) const {
@@ -86,7 +85,7 @@ void UnstructuredGrid::makeName(std::ostream& out) const {
 
 
 bool UnstructuredGrid::sameAs(const Representation& other) const {
-    const UnstructuredGrid* o = dynamic_cast<const UnstructuredGrid*>(&other);
+    auto o = dynamic_cast<const UnstructuredGrid*>(&other);
     return o && (latitudes_ == o->latitudes_) && (longitudes_ == o->longitudes_);
 }
 

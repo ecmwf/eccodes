@@ -39,8 +39,7 @@ RegularLL::RegularLL(const util::BoundingBox& bbox,
 }
 
 
-RegularLL::~RegularLL() {
-}
+RegularLL::~RegularLL() = default;
 
 
 Iterator* RegularLL::iterator() const {
@@ -109,7 +108,7 @@ void RegularLL::makeName(std::ostream& out) const {
 
 
 bool RegularLL::sameAs(const Representation& other) const {
-    const RegularLL* o = dynamic_cast<const RegularLL*>(&other);
+    auto o = dynamic_cast<const RegularLL*>(&other);
     return o && LatLon::sameAs(other);
 }
 

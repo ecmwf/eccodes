@@ -37,8 +37,7 @@ Representation::Representation() {
 }
 
 
-Representation::~Representation() {
-}
+Representation::~Representation() = default;
 
 RepresentationHandle::RepresentationHandle(const Representation *representation):
     representation_(representation) {

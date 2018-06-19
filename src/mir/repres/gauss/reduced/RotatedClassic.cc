@@ -33,8 +33,7 @@ RotatedClassic::RotatedClassic(size_t N, const util::Rotation& rotation, const u
 }
 
 
-RotatedClassic::~RotatedClassic() {
-}
+RotatedClassic::~RotatedClassic() = default;
 
 
 void RotatedClassic::print(std::ostream &out) const {

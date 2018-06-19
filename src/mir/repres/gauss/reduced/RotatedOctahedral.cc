@@ -33,8 +33,7 @@ RotatedOctahedral::RotatedOctahedral(size_t N, const util::Rotation& rotation, c
 }
 
 
-RotatedOctahedral::~RotatedOctahedral() {
-}
+RotatedOctahedral::~RotatedOctahedral() = default;
 
 
 void RotatedOctahedral::print(std::ostream& out) const {

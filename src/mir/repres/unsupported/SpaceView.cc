@@ -34,8 +34,7 @@ SpaceView::SpaceView() {
 }
 
 
-SpaceView::~SpaceView() {
-}
+SpaceView::~SpaceView() = default;
 
 
 void SpaceView::print(std::ostream &out) const {

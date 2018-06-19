@@ -38,8 +38,7 @@ RotatedGG::RotatedGG(size_t N, const util::Rotation& rotation, const util::Bound
 }
 
 
-RotatedGG::~RotatedGG() {
-}
+RotatedGG::~RotatedGG() = default;
 
 
 const Gridded* RotatedGG::croppedRepresentation(const util::BoundingBox& bbox) const {
@@ -63,7 +62,7 @@ void RotatedGG::makeName(std::ostream& out) const {
 
 
 bool RotatedGG::sameAs(const Representation& other) const {
-    const RotatedGG* o = dynamic_cast<const RotatedGG*>(&other);
+    auto o = dynamic_cast<const RotatedGG*>(&other);
     return o && (rotation_ == o->rotation_) && RotatedGG::sameAs(other);
 }
 

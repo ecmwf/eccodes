@@ -68,8 +68,7 @@ GribOutput::GribOutput() {
 }
 
 
-GribOutput::~GribOutput() {
-}
+GribOutput::~GribOutput() = default;
 
 
 size_t GribOutput::copy(const param::MIRParametrisation &param, context::Context& ctx) { // No interpolation performed

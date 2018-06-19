@@ -50,8 +50,7 @@ ReducedLL::ReducedLL(const param::MIRParametrisation& parametrisation) :
 }
 
 
-ReducedLL::~ReducedLL() {
-}
+ReducedLL::~ReducedLL() = default;
 
 
 void ReducedLL::print(std::ostream& out) const {
@@ -123,7 +122,7 @@ bool ReducedLL::getLongestElementDiagonal(double& d) const {
 
 
 bool ReducedLL::sameAs(const Representation& other) const {
-    const ReducedLL* o = dynamic_cast<const ReducedLL*>(&other);
+    auto o = dynamic_cast<const ReducedLL*>(&other);
     return o && (bbox_ == o->bbox_) && (pl_ == o->pl_);
 }
 

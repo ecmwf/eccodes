@@ -34,8 +34,7 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea() {
 }
 
 
-LambertAzimuthalEqualArea::~LambertAzimuthalEqualArea() {
-}
+LambertAzimuthalEqualArea::~LambertAzimuthalEqualArea() = default;
 
 
 void LambertAzimuthalEqualArea::print(std::ostream &out) const {

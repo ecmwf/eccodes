@@ -77,8 +77,7 @@ Reduced::Reduced(size_t N, const util::BoundingBox& bbox) :
 }
 
 
-Reduced::~Reduced() {
-}
+Reduced::~Reduced() = default;
 
 
 void Reduced::correctWestEast(Longitude& w, Longitude& e, bool grib1) {
@@ -157,7 +156,7 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e, bool grib1) {
 
 
 bool Reduced::sameAs(const Representation& other) const {
-    const Reduced* o = dynamic_cast<const Reduced*>(&other);
+    auto o = dynamic_cast<const Reduced*>(&other);
     return o && Gaussian::sameAs(other);
 }
 

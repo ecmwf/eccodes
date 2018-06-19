@@ -34,8 +34,7 @@ Lambert::Lambert() {
 }
 
 
-Lambert::~Lambert() {
-}
+Lambert::~Lambert() = default;
 
 
 void Lambert::print(std::ostream &out) const {

@@ -34,8 +34,7 @@ Mercator::Mercator() {
 }
 
 
-Mercator::~Mercator() {
-}
+Mercator::~Mercator() = default;
 
 
 void Mercator::print(std::ostream &out) const {

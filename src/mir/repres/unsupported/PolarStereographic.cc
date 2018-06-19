@@ -49,8 +49,7 @@ PolarStereographic::PolarStereographic() {
 }
 
 
-PolarStereographic::~PolarStereographic() {
-}
+PolarStereographic::~PolarStereographic() = default;
 
 
 void PolarStereographic::print(std::ostream &out) const {

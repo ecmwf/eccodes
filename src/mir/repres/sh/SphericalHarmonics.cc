@@ -37,8 +37,7 @@ SphericalHarmonics::SphericalHarmonics(size_t truncation) :
 }
 
 
-SphericalHarmonics::~SphericalHarmonics() {
-}
+SphericalHarmonics::~SphericalHarmonics() = default;
 
 
 void SphericalHarmonics::print(std::ostream &out) const {

@@ -38,8 +38,7 @@ FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& b
 }
 
 
-FromPL::~FromPL() {
-}
+FromPL::~FromPL() = default;
 
 
 void FromPL::makeName(std::ostream& out) const {
@@ -56,7 +55,7 @@ void FromPL::makeName(std::ostream& out) const {
 
 
 bool FromPL::sameAs(const Representation& other) const {
-    const FromPL* o = dynamic_cast<const FromPL*>(&other);
+    auto o = dynamic_cast<const FromPL*>(&other);
     return o && (pls() == o->pls()) && Reduced::sameAs(other);
 }
 

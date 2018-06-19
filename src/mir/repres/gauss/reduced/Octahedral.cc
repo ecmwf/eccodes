@@ -52,8 +52,7 @@ Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox) :
 }
 
 
-Octahedral::~Octahedral() {
-}
+Octahedral::~Octahedral() = default;
 
 
 void Octahedral::fill(grib_info& info) const  {
@@ -76,7 +75,7 @@ void Octahedral::makeName(std::ostream& out) const {
 
 
 bool Octahedral::sameAs(const Representation& other) const {
-    const Octahedral* o = dynamic_cast<const Octahedral*>(&other);
+    auto o = dynamic_cast<const Octahedral*>(&other);
     return o && Reduced::sameAs(other);
 }
 

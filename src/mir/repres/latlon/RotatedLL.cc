@@ -43,8 +43,7 @@ RotatedLL::RotatedLL(
 }
 
 
-RotatedLL::~RotatedLL() {
-}
+RotatedLL::~RotatedLL() = default;
 
 
 Iterator *RotatedLL::iterator() const {
@@ -116,7 +115,7 @@ void RotatedLL::makeName(std::ostream& out) const {
 
 bool RotatedLL::sameAs(const Representation& other) const {
 
-    const RotatedLL* o = dynamic_cast<const RotatedLL*>(&other);
+    auto o = dynamic_cast<const RotatedLL*>(&other);
     return o && (rotation_ == o->rotation_) && LatLon::sameAs(other);
 }
 

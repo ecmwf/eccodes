@@ -73,8 +73,7 @@ LatLon::LatLon(const util::BoundingBox& bbox, const util::Increments& increments
 }
 
 
-LatLon::~LatLon() {
-}
+LatLon::~LatLon() = default;
 
 
 void LatLon::reorder(long scanningMode, MIRValuesVector& values) const {
@@ -165,7 +164,7 @@ void LatLon::makeName(std::ostream& out) const {
 
 
 bool LatLon::sameAs(const Representation& other) const {
-    const LatLon* o = dynamic_cast<const LatLon*>(&other);
+    auto o = dynamic_cast<const LatLon*>(&other);
     return o && (bbox_ == o->bbox_) && (increments_ == o->increments_);
 }
 

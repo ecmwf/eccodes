@@ -37,8 +37,7 @@ RotatedFromPL::RotatedFromPL(size_t N, const std::vector<long>& pl, const util::
 }
 
 
-RotatedFromPL::~RotatedFromPL() {
-}
+RotatedFromPL::~RotatedFromPL() = default;
 
 
 void RotatedFromPL::print(std::ostream &out) const {
@@ -57,7 +56,7 @@ void RotatedFromPL::makeName(std::ostream& out) const {
 
 
 bool RotatedFromPL::sameAs(const Representation& other) const {
-    const RotatedFromPL* o = dynamic_cast<const RotatedFromPL*>(&other);
+    auto o = dynamic_cast<const RotatedFromPL*>(&other);
     return o && (rotation_ == o->rotation_) && FromPL::sameAs(other);
 }
 

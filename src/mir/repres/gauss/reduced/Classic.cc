@@ -51,8 +51,7 @@ Classic::Classic(size_t N, const util::BoundingBox& bbox):
 }
 
 
-Classic::~Classic() {
-}
+Classic::~Classic() = default;
 
 
 void Classic::fill(grib_info& info) const  {
@@ -75,7 +74,7 @@ void Classic::makeName(std::ostream& out) const {
 
 
 bool Classic::sameAs(const Representation& other) const {
-    const Classic* o = dynamic_cast<const Classic*>(&other);
+    auto o = dynamic_cast<const Classic*>(&other);
     return o && Reduced::sameAs(other);
 }
 
