@@ -151,6 +151,7 @@ static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
     for (j=0;j<plsize;j++) {
         row_count=0;
         get_reduced_row(pl[j],lon_first,lon_last, &row_count,&ilon_first,&ilon_last);
+        //printf("./mir-gaussianiterator-resettorow %ld %g %g (Expect %ld)\n",pl[j],lon_first,lon_last, row_count);
         if (ilon_first>ilon_last) ilon_first-=pl[j];
         for (i=ilon_first;i<=ilon_last;i++) {
 

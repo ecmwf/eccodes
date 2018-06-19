@@ -265,6 +265,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
                 printf("--  %d ",j);
 #endif
                 grib_get_reduced_row_wrapper(h, pl[j],lon_first,lon_last,&row_count,&ilon_first,&ilon_last);
+                //printf("./mir-gaussianiterator-resettorow %ld %g %g %ld\n", pl[j],lon_first,lon_last, row_count);
                 lon_first_row=((ilon_first)*360.0)/pl[j];
                 lon_last_row=((ilon_last)*360.0)/pl[j];
                 *val+=row_count;
