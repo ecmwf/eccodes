@@ -192,7 +192,7 @@ util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) co
     using eckit::Fraction;
 
 
-    // adjust West/East to include bbox's West/East (reference own West)
+    // adjust West/East to include bbox's West/East
     Longitude w = bbox.west();
     Longitude e = bbox.east();
     {
@@ -207,7 +207,7 @@ util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) co
         }
 
         Fraction::value_type Ne = (east / inc).integralPart();
-        if (Ne * inc < east) {
+        if (Ne * inc < east || Ne == Nw) {
             if (Ne < (Longitude::GLOBE.fraction() / inc).integralPart()) {
                 Ne += 1;
             }

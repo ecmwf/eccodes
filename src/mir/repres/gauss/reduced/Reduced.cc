@@ -426,7 +426,7 @@ util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) co
                 }
 
                 Fraction::value_type Ne = (bbox.east().fraction() / inc).integralPart();
-                if (Ne * inc < bbox.east().fraction()) {
+                if (Ne * inc < bbox.east().fraction() || Ne == Nw) {
                     if (Ne < (Longitude::GLOBE.fraction() / inc).integralPart()) {
                         Ne += 1;
                     }
