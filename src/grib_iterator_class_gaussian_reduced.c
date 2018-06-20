@@ -179,6 +179,27 @@ static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
     return err;
 }
 
+static int iterate_reduced_gaussian_subarea_wrapper(grib_iterator* iter, grib_handle* h,
+        double lat_first, double lon_first,
+        double lat_last, double lon_last,
+        double* lats, long* pl, size_t plsize)
+{
+    int err = 0;
+    long expandedBoundingBox = 0;
+    err = grib_get_long(h, "expandedBoundingBox", &expandedBoundingBox);
+    if (!err && expandedBoundingBox == 1) {
+        return iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 1);
+    }
+
+    /* Try legacy approach, if that fails try the next algorithm */
+    err = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 0);
+    if (err == GRIB_WRONG_GRID) {
+        /* ECC-445: First attempt failed. Try again with a different algorithm */
+        err = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 1);
+    }
+    return err;
+}
+
 static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 {
     int ret=GRIB_SUCCESS, j, is_global=0;
@@ -251,11 +272,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     is_global = is_gaussian_global(lat_first, lat_last, lon_first, lon_last, max_pl, lats, angular_precision);
     if ( !is_global ) {
         /*sub area*/
-        ret = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 0);
-        if (ret == GRIB_WRONG_GRID) {
-            /* ECC-445: First attempt failed. Try again with a different algorithm */
-            ret = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 1);
-        }
+        ret = iterate_reduced_gaussian_subarea_wrapper(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
     } else {
         /*global*/
         iter->e=0;
