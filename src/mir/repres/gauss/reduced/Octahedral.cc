@@ -41,7 +41,7 @@ Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox) :
         atlas::grid::ReducedGaussianGrid grid(config);
         ASSERT(grid);
 
-        setNj(grid.nx(), Latitude::SOUTH_POLE, Latitude::NORTH_POLE);
+        setNj(grid.nx(), s, n);
     }
 
     Longitude w = bbox.west();
