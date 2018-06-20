@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 #include "grib_api_internal.h"
+#include <float.h>
 
 /*
  * C Implementation: gaussian_reduced
@@ -45,10 +46,11 @@ static Fraction_type fraction_construct(Fraction_value_type top, Fraction_value_
     Fraction_type result;
     Assert(bottom != 0);
 
-    /// @note in theory we also assume that numerator and denominator are both representable in
-    ///       double without loss
-    //    ASSERT(top == Fraction_value_type(double(top)));
-    //    ASSERT(bottom == Fraction_value_type(double(bottom)));
+    /* @note in theory we also assume that numerator and denominator are both representable in
+     * double without loss
+     *   ASSERT(top == Fraction_value_type(double(top)));
+     *   ASSERT(bottom == Fraction_value_type(double(bottom)));
+     */
 
     Fraction_value_type sign = 1;
     if (top < 0) {
@@ -75,8 +77,8 @@ static Fraction_type fraction_construct_from_double(double x)
     Fraction_type result;
     double value = x;
 
-    // Assert(!std::isnan(value));
-    // ASSERT(fabs(value) < 1e30);
+    Assert(x != NAN);
+    Assert(fabs(x) < 1e30);
 
     Fraction_value_type sign = 1;
     if (x < 0) {
@@ -113,9 +115,6 @@ static Fraction_type fraction_construct_from_double(double x)
         t2 = m10 * a + m11;
 
         if (cnt++ > 10000) {
-            //std::ostringstream oss;
-            //oss << "Cannot compute fraction from " << value << std::endl;
-            //throw std::runtime_error(oss.str()); //eckit::BadValue(oss.str());
             fprintf(stderr, "Cannot compute fraction from %g\n", value);
         }
     }
@@ -160,41 +159,47 @@ static Fraction_value_type fraction_mul(int* overflow, Fraction_value_type a, Fr
     if (b != 0) {
         *overflow = llabs(a) > (ULLONG_MAX / llabs(b));
     }
-
     return a * b;
 }
 
+//Fraction Fraction::operator/(const Fraction& other) const {
 static Fraction_type fraction_operator_divide(Fraction_type self, Fraction_type other)
 {
     int overflow = 0; //boolean
-    Fraction_type result = fraction_construct(0,0);
 
     Fraction_value_type top    = fraction_mul(&overflow, self.top_, other.bottom_);
-
     Fraction_value_type bottom = fraction_mul(&overflow, self.bottom_, other.top_);
 
     if (!overflow) {
         return fraction_construct(top, bottom);
+    } else {
+        // Fallback option
+        double d1 = fraction_operator_double(self);//??
+        double d2 = fraction_operator_double(other);//??
+        Fraction_type f1 = fraction_construct_from_double(d1/d2);
+        Assert( 0 );
+        return f1;
     }
-    Assert(0);
-    return result;
     //return Fraction(double(*this) / double(other)); //??
 }
 //Fraction Fraction::operator*(const Fraction& other) const {
 static Fraction_type fraction_operator_multiply(Fraction_type self, Fraction_type other)
 {
     int overflow = 0; //boolean
-    Fraction_type result = fraction_construct(0,0);
 
     Fraction_value_type top    = fraction_mul(&overflow, self.top_, other.top_);
-
     Fraction_value_type bottom = fraction_mul(&overflow, self.bottom_, other.bottom_);
 
     if (!overflow) {
         return fraction_construct(top, bottom);
+    } else {
+        Assert(0);
+        //Fallback option
+        double d1 = fraction_operator_double(self);//??
+        double d2 = fraction_operator_double(other);//??
+        Fraction_type f1 = fraction_construct_from_double(d1*d2);
+        return f1;
     }
-    Assert(0);
-    return result;
     //return Fraction(double(*this) * double(other));
 }
 
@@ -221,7 +226,6 @@ static int fraction_operator_greater_than(Fraction_type self, Fraction_type othe
     return result;
 }
 
-
 //explicit Fraction(long long n): top_(n), bottom_(1) {}
 static Fraction_type fraction_construct_from_long_long(long long n)
 {
@@ -244,17 +248,16 @@ static Fraction_value_type get_min(Fraction_value_type a, Fraction_value_type b)
     return ((a < b) ? a : b);
 }
 
-static void GaussianIteratorResetToRow(
-        long long Ni_globe,   // plj
-        const Fraction_type w,// lon_first
-        const Fraction_type e,// lon_last
-        long*   pNi, // npoints
-        double* pLon1,
-        double* pLon2)
+static void gaussian_reduced_row(
+        long long           Ni_globe, // plj
+        const Fraction_type w,        // lon_first
+        const Fraction_type e,        // lon_last
+        long long*          pNi,      // npoints
+        double*             pLon1,
+        double*             pLon2)
 {
     Assert(Ni_globe > 1);
     Fraction_type inc = fraction_construct(360ll, Ni_globe);
-    //eckit::Fraction inc(360ll, Ni_globe);
 
     //auto Nw = (w / inc).integralPart();
     Fraction_value_type Nw = fraction_integralPart( fraction_operator_divide(w, inc) );
@@ -271,20 +274,13 @@ static void GaussianIteratorResetToRow(
     if (fraction_operator_greater_than(Ne_inc, e) && Ne > Nw) {
         Ne -= 1;
     }
-    Assert(Ne >= Nw);
+    //Assert(Ne >= Nw);
 
-    *pNi = get_min(Ni_globe, Ne - Nw + 1);
-    Nw_inc = fraction_operator_multiply_n_Frac(Nw, inc); //??
+    *pNi   = get_min(Ni_globe, Ne - Nw + 1);
+    Nw_inc = fraction_operator_multiply_n_Frac(Nw, inc);
     *pLon1 = fraction_operator_double(Nw_inc);
-    //*pLon1 = Nw * inc;
     Ne_inc = fraction_operator_multiply_n_Frac(Ne, inc);
-    //*pLon2 = Ne * inc;
     *pLon2 = fraction_operator_double(Ne_inc);
-    
-    {
-        Fraction_type f = fraction_construct_from_double(8.0);
-        printf("%lld\n", f.top_);
-    }
 }
 
 
@@ -305,7 +301,7 @@ void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoi
 {
   double range=0,dlon_first=0,dlon_last=0;
   long irange;
-
+  /*printf("Using grib_get_reduced_row...\n");*/
   range=lon_last-lon_first;
   if (range<0) {range+=360;lon_first-=360;}
 
@@ -391,113 +387,23 @@ void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoi
   return;
 }
 
+/* New method based on eckit Fractions and matching MIR count */
 void grib_get_reduced_row2(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )
 {
-    double range=0,dlon_first=0,dlon_last=0;
-    long irange;
-    
-    {
-        long long Ni_globe = pl;
-        Fraction_type w;
-        Fraction_type e;
-        long the_count;
-        double the_lon1, the_lon2;
-        GaussianIteratorResetToRow(
-            Ni_globe,   // plj
-            w,// lon_first
-            e,// lon_last
-            &the_count,
-            &the_lon1,
-            &the_lon2);
-    }
-
-    range=lon_last-lon_first;
-    if (range<0) {range+=360;lon_first-=360;}
-
-    /* computing integer number of points and coordinates without using floating point resolution*/
-    *npoints=(range*pl)/360.0+1;
-    *ilon_first=(lon_first*pl)/360.0;
-    *ilon_last=(lon_last*pl)/360.0;
-
-    irange=*ilon_last-*ilon_first+1;
-
-#if EFDEBUG
-    printf("  pl=%ld npoints=%ld range=%.10e ilon_first=%ld ilon_last=%ld irange=%ld\n",
-            pl,*npoints,range,*ilon_first,*ilon_last,irange);
-#endif
-
-    if (irange != *npoints) {
-#if EFDEBUG
-        printf("       ---> (irange=%ld) != (npoints=%ld) ",irange,*npoints);
-#endif
-        if (irange > *npoints) {
-            /* checking if the first point is out of range*/
-            dlon_first=((*ilon_first)*360.0)/pl;
-            if (dlon_first < lon_first) {(*ilon_first)++;irange--;
-#if EFDEBUG
-            printf(" dlon_first=%.10e < lon_first=%.10e\n",dlon_first,lon_first );
-#endif
-            }
-
-            /* checking if the last point is out of range*/
-            dlon_last=((*ilon_last)*360.0)/pl;
-            if (dlon_last > lon_last) {(*ilon_last)--;irange--;
-#if EFDEBUG
-            printf(" dlon_last=%.10e < lon_last=%.10e\n",dlon_last,lon_last );
-#endif
-            }
-        } else {
-            int ok=0;
-            /* checking if the point before the first is in the range*/
-            dlon_first=((*ilon_first-1)*360.0)/pl;
-            if (dlon_first > lon_first) {(*ilon_first)--;irange++;ok=1;
-#if EFDEBUG
-            printf(" dlon_first1=%.10e > lon_first=%.10e\n",dlon_first,lon_first );
-#endif
-            }
-
-            /* checking if the point after the last is in the range*/
-            dlon_last=((*ilon_last+1)*360.0)/pl;
-            if (dlon_last < lon_last) {(*ilon_last)++;irange++;ok=1;
-#if EFDEBUG
-            printf(" dlon_last1=%.10e > lon_last=%.10e\n",dlon_last,lon_first );
-#endif
-            }
-
-            /* if neither of the two are triggered then npoints is too large */
-            if (!ok) {(*npoints)--;
-#if EFDEBUG
-            printf(" (*npoints)--=%ld\n",*npoints);
-#endif
-            }
-        }
-
-        Assert(*npoints==irange);
-#if EFDEBUG
-        printf("--  pl=%ld npoints=%ld range=%.10e ilon_first=%ld ilon_last=%ld irange=%ld\n",
-                pl,*npoints,range,*ilon_first,*ilon_last,irange);
-#endif
-    } else {
-        /* checking if the first point is out of range*/
-        dlon_first=((*ilon_first)*360.0)/pl;
-        if (dlon_first < lon_first) {
-            (*ilon_first)++;(*ilon_last)++;
-#if EFDEBUG
-            printf("       ---> dlon_first=%.10e < lon_first=%.10e\n",dlon_first,lon_first );
-            printf("--  pl=%ld npoints=%ld range=%.10e ilon_first=%ld ilon_last=%ld irange=%ld\n",
-                    pl,*npoints,range,*ilon_first,*ilon_last,irange);
-#endif
-        }
-        /* checking if the last point is out of range*/
-        dlon_last=((*ilon_last)*360.0)/pl;
-        if (dlon_last > lon_last) {(*ilon_last)--;(*npoints)--;
-#if EFDEBUG
-        printf(" dlon_last=%.10e < lon_last=%.10e\n",dlon_last,lon_last );
-#endif
-        }
-    }
-
-    if (*ilon_first<0) *ilon_first+=pl;
-
-    return;
+    long long Ni_globe = pl;
+    Fraction_type west = fraction_construct_from_double(lon_first);
+    Fraction_type east = fraction_construct_from_double(lon_last);
+    long long the_count;
+    double the_lon1, the_lon2;
+    /*printf("Using gaussian_reduced_row...\n");*/
+    gaussian_reduced_row(
+        Ni_globe,   // plj
+        west,       // lon_first
+        east,       // lon_last
+        &the_count,
+        &the_lon1,
+        &the_lon2);
+    *npoints    = (long)the_count;
+    *ilon_first = (the_lon1*pl)/360.0;
+    *ilon_last  = (the_lon2*pl)/360.0;
 }

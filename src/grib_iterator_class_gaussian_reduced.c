@@ -149,9 +149,10 @@ static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
 
     iter->e=0;
     for (j=0;j<plsize;j++) {
+        long k = 0;
         row_count=0;
         get_reduced_row(pl[j],lon_first,lon_last, &row_count,&ilon_first,&ilon_last);
-        //printf("./mir-gaussianiterator-resettorow %ld %g %g (Expect %ld)\n",pl[j],lon_first,lon_last, row_count);
+        /*printf("iterate_reduced_gaussian_subarea %ld %g %g count=%ld, (i1=%ld, i2=%ld)\n",pl[j],lon_first,lon_last, row_count, ilon_first,ilon_last);*/
         if (ilon_first>ilon_last) ilon_first-=pl[j];
         for (i=ilon_first;i<=ilon_last;i++) {
 
@@ -168,6 +169,11 @@ static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
             self->los[iter->e]=((i)*360.0)/pl[j];
             self->las[iter->e]=lats[j+l];
             iter->e++;
+            k++;
+            if (k >= row_count) {
+                /* Ensure we exit the loop and only process 'row_count' points */
+                break;
+            }
         }
     }
     return err;
