@@ -270,19 +270,22 @@ static void gaussian_reduced_row(
     //auto Ne = (e / inc).integralPart();
     Fraction_value_type Ne = fraction_integralPart( fraction_operator_divide(e, inc) );
     Fraction_type Ne_inc = fraction_operator_multiply_n_Frac(Ne, inc);
-    //if (Ne * inc > e && Ne > Nw) {
-    if (fraction_operator_greater_than(Ne_inc, e) && Ne > Nw) {
+    //if (Ne * inc > e) {
+    if (fraction_operator_greater_than(Ne_inc, e)) {
         Ne -= 1;
     }
-    //Assert(Ne >= Nw);
+    if (Nw > Ne) {
+        *pNi = 0; /* no points on this latitude */
+        *pLon1 = *pLon2 = 0; /* dummy - unused */
+    } else {
+        *pNi   = get_min(Ni_globe, Ne - Nw + 1);
 
-    *pNi   = get_min(Ni_globe, Ne - Nw + 1);
-    Nw_inc = fraction_operator_multiply_n_Frac(Nw, inc);
-    *pLon1 = fraction_operator_double(Nw_inc);
-    Ne_inc = fraction_operator_multiply_n_Frac(Ne, inc);
-    *pLon2 = fraction_operator_double(Ne_inc);
+        Nw_inc = fraction_operator_multiply_n_Frac(Nw, inc);
+        *pLon1 = fraction_operator_double(Nw_inc);
+        Ne_inc = fraction_operator_multiply_n_Frac(Ne, inc);
+        *pLon2 = fraction_operator_double(Ne_inc);
+    }
 }
-
 
 /* --------------------------------------------------------------------------------------------------- */
 void grib_get_reduced_row_wrapper(grib_handle* h, long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last)
