@@ -299,92 +299,92 @@ void grib_get_reduced_row_wrapper(grib_handle* h, long pl, double lon_first, dou
 
 void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )
 {
-  double range=0,dlon_first=0,dlon_last=0;
-  long irange;
-  /*printf("Using grib_get_reduced_row...\n");*/
-  range=lon_last-lon_first;
-  if (range<0) {range+=360;lon_first-=360;}
+    double range=0,dlon_first=0,dlon_last=0;
+    long irange;
+    /*printf("Using grib_get_reduced_row...\n");*/
+    range=lon_last-lon_first;
+    if (range<0) {range+=360;lon_first-=360;}
 
-  /* computing integer number of points and coordinates without using floating point resolution*/
-  *npoints=(range*pl)/360.0+1;
-  *ilon_first=(lon_first*pl)/360.0;
-  *ilon_last=(lon_last*pl)/360.0;
+    /* computing integer number of points and coordinates without using floating point resolution*/
+    *npoints=(range*pl)/360.0+1;
+    *ilon_first=(lon_first*pl)/360.0;
+    *ilon_last=(lon_last*pl)/360.0;
 
-  irange=*ilon_last-*ilon_first+1;
+    irange=*ilon_last-*ilon_first+1;
 
 #if EFDEBUG
-  printf("  pl=%ld npoints=%ld range=%.10e ilon_first=%ld ilon_last=%ld irange=%ld\n",
-    pl,*npoints,range,*ilon_first,*ilon_last,irange);
+    printf("  pl=%ld npoints=%ld range=%.10e ilon_first=%ld ilon_last=%ld irange=%ld\n",
+            pl,*npoints,range,*ilon_first,*ilon_last,irange);
 #endif
 
-  if (irange != *npoints) {
+    if (irange != *npoints) {
 #if EFDEBUG
-    printf("       ---> (irange=%ld) != (npoints=%ld) ",irange,*npoints);
+        printf("       ---> (irange=%ld) != (npoints=%ld) ",irange,*npoints);
 #endif
-    if (irange > *npoints) {
-      /* checking if the first point is out of range*/
-      dlon_first=((*ilon_first)*360.0)/pl;
-      if (dlon_first < lon_first) {(*ilon_first)++;irange--;
+        if (irange > *npoints) {
+            /* checking if the first point is out of range*/
+            dlon_first=((*ilon_first)*360.0)/pl;
+            if (dlon_first < lon_first) {(*ilon_first)++;irange--;
 #if EFDEBUG
-        printf(" dlon_first=%.10e < lon_first=%.10e\n",dlon_first,lon_first );
+            printf(" dlon_first=%.10e < lon_first=%.10e\n",dlon_first,lon_first );
 #endif
-      }
+            }
 
-      /* checking if the last point is out of range*/
-      dlon_last=((*ilon_last)*360.0)/pl;
-      if (dlon_last > lon_last) {(*ilon_last)--;irange--;
+            /* checking if the last point is out of range*/
+            dlon_last=((*ilon_last)*360.0)/pl;
+            if (dlon_last > lon_last) {(*ilon_last)--;irange--;
 #if EFDEBUG
-        printf(" dlon_last=%.10e < lon_last=%.10e\n",dlon_last,lon_last );
+            printf(" dlon_last=%.10e < lon_last=%.10e\n",dlon_last,lon_last );
 #endif
-      }
+            }
+        } else {
+            int ok=0;
+            /* checking if the point before the first is in the range*/
+            dlon_first=((*ilon_first-1)*360.0)/pl;
+            if (dlon_first > lon_first) {(*ilon_first)--;irange++;ok=1;
+#if EFDEBUG
+            printf(" dlon_first1=%.10e > lon_first=%.10e\n",dlon_first,lon_first );
+#endif
+            }
+
+            /* checking if the point after the last is in the range*/
+            dlon_last=((*ilon_last+1)*360.0)/pl;
+            if (dlon_last < lon_last) {(*ilon_last)++;irange++;ok=1;
+#if EFDEBUG
+            printf(" dlon_last1=%.10e > lon_last=%.10e\n",dlon_last,lon_first );
+#endif
+            }
+
+            /* if neither of the two are triggered then npoints is too large */
+            if (!ok) {(*npoints)--;
+#if EFDEBUG
+            printf(" (*npoints)--=%ld\n",*npoints);
+#endif
+            }
+        }
+
+        /*Assert(*npoints==irange);*/
+#if EFDEBUG
+        printf("--  pl=%ld npoints=%ld range=%.10e ilon_first=%ld ilon_last=%ld irange=%ld\n",
+                pl,*npoints,range,*ilon_first,*ilon_last,irange);
+#endif
     } else {
-      int ok=0;
-      /* checking if the point before the first is in the range*/
-      dlon_first=((*ilon_first-1)*360.0)/pl;
-      if (dlon_first > lon_first) {(*ilon_first)--;irange++;ok=1;
+        /* checking if the first point is out of range*/
+        dlon_first=((*ilon_first)*360.0)/pl;
+        if (dlon_first < lon_first) {
+            (*ilon_first)++;(*ilon_last)++;
 #if EFDEBUG
-        printf(" dlon_first1=%.10e > lon_first=%.10e\n",dlon_first,lon_first );
+            printf("       ---> dlon_first=%.10e < lon_first=%.10e\n",dlon_first,lon_first );
+            printf("--  pl=%ld npoints=%ld range=%.10e ilon_first=%ld ilon_last=%ld irange=%ld\n",
+                    pl,*npoints,range,*ilon_first,*ilon_last,irange);
 #endif
-      }
+        }
 
-      /* checking if the point after the last is in the range*/
-      dlon_last=((*ilon_last+1)*360.0)/pl;
-      if (dlon_last < lon_last) {(*ilon_last)++;irange++;ok=1;
-#if EFDEBUG
-        printf(" dlon_last1=%.10e > lon_last=%.10e\n",dlon_last,lon_first );
-#endif
-      }
-
-      /* if neither of the two are triggered then npoints is too large */
-      if (!ok) {(*npoints)--;
-#if EFDEBUG
-        printf(" (*npoints)--=%ld\n",*npoints);
-#endif
-      }
     }
 
-    Assert(*npoints==irange);
-#if EFDEBUG
-	printf("--  pl=%ld npoints=%ld range=%.10e ilon_first=%ld ilon_last=%ld irange=%ld\n",
-		   pl,*npoints,range,*ilon_first,*ilon_last,irange);
-#endif
-  } else {
-	  /* checking if the first point is out of range*/
-	  dlon_first=((*ilon_first)*360.0)/pl;
-	  if (dlon_first < lon_first) {
-		  (*ilon_first)++;(*ilon_last)++;
-#if EFDEBUG
-		  printf("       ---> dlon_first=%.10e < lon_first=%.10e\n",dlon_first,lon_first );
-		  printf("--  pl=%ld npoints=%ld range=%.10e ilon_first=%ld ilon_last=%ld irange=%ld\n",
-				 pl,*npoints,range,*ilon_first,*ilon_last,irange);
-#endif
-	  }
+    if (*ilon_first<0) *ilon_first+=pl;
 
-  }
-
-  if (*ilon_first<0) *ilon_first+=pl;
-
-  return;
+    return;
 }
 
 /* New method based on eckit Fractions and matching MIR count */
@@ -397,12 +397,12 @@ void grib_get_reduced_row2(long pl, double lon_first, double lon_last, long* npo
     double the_lon1, the_lon2;
     /*printf("Using gaussian_reduced_row...\n");*/
     gaussian_reduced_row(
-        Ni_globe,   // plj
-        west,       // lon_first
-        east,       // lon_last
-        &the_count,
-        &the_lon1,
-        &the_lon2);
+            Ni_globe,   // plj
+            west,       // lon_first
+            east,       // lon_last
+            &the_count,
+            &the_lon1,
+            &the_lon2);
     *npoints    = (long)the_count;
     *ilon_first = (the_lon1*pl)/360.0;
     *ilon_last  = (the_lon2*pl)/360.0;
