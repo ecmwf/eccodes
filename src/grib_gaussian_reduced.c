@@ -262,7 +262,7 @@ static void gaussian_reduced_row(
     //auto Nw = (w / inc).integralPart();
     Fraction_value_type Nw = fraction_integralPart( fraction_operator_divide(w, inc) );
     Fraction_type Nw_inc = fraction_operator_multiply_n_Frac(Nw, inc);
-    //if (Nw * inc < w) { //??
+    //if (Nw * inc < w) {
     if (fraction_operator_less_than(Nw_inc, w)) {
         Nw += 1;
     }
@@ -394,11 +394,15 @@ void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoi
 void grib_get_reduced_row2(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )
 {
     long long Ni_globe = pl;
-    Fraction_type west = fraction_construct_from_double(lon_first);
-    Fraction_type east = fraction_construct_from_double(lon_last);
+    Fraction_type west;
+    Fraction_type east;
     long long the_count;
     double the_lon1, the_lon2;
     /*printf("Using gaussian_reduced_row...\n");*/
+    while (lon_last < lon_first) lon_last += 360;
+    west = fraction_construct_from_double(lon_first);
+    east = fraction_construct_from_double(lon_last);
+
     gaussian_reduced_row(
             Ni_globe,   // plj
             west,       // lon_first
