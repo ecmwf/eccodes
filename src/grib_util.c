@@ -1848,3 +1848,13 @@ char* codes_getenv(const char* name)
     }
     return result;
 }
+
+int expandedBoundingBox(grib_handle* h)
+{
+    long expandedBoundingBox = 0;
+    int err = grib_get_long(h, "expandedBoundingBox", &expandedBoundingBox);
+    if (!err && expandedBoundingBox == 1) {
+        return 1;
+    }
+    return 0;
+}

@@ -185,9 +185,7 @@ static int iterate_reduced_gaussian_subarea_wrapper(grib_iterator* iter, grib_ha
         double* lats, long* pl, size_t plsize)
 {
     int err = 0;
-    long expandedBoundingBox = 0;
-    err = grib_get_long(h, "expandedBoundingBox", &expandedBoundingBox);
-    if (!err && expandedBoundingBox == 1) {
+    if (expandedBoundingBox(h)) {
         return iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 1);
     }
 
