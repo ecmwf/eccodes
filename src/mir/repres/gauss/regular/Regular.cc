@@ -42,11 +42,11 @@ Regular::Regular(const param::MIRParametrisation& parametrisation) :
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox_.north();
     Latitude s = bbox_.south();
-    correctSouthNorth(s, n, true);
+    correctSouthNorth(s, n);
 
     Longitude e = bbox_.east();
     Longitude w = bbox_.west();
-    correctWestEast(w, e, true);
+    correctWestEast(w, e);
 
     bbox_ = util::BoundingBox(n, w, s, e);
     setNiNj();
@@ -120,7 +120,7 @@ void Regular::makeName(std::ostream& out) const {
 }
 
 
-void Regular::correctWestEast(Longitude& w, Longitude& e, bool grib1) const {
+void Regular::correctWestEast(Longitude& w, Longitude& e) const {
     using eckit::Fraction;
     ASSERT(w <= e);
 
@@ -133,8 +133,8 @@ void Regular::correctWestEast(Longitude& w, Longitude& e, bool grib1) const {
         // if periodic West/East, adjust East only
         e = w + Longitude::GLOBE - inc;
 
-    } else if (grib1 ? same_with_grib1_accuracy(we + inc, Longitude::GLOBE) || we + inc > Longitude::GLOBE
-                     : we + inc >= Longitude::GLOBE) {
+    } else if (angularPrecision_ > 0 ? eckit::types::is_approximately_greater_or_equal((we + inc).value(), Longitude::GLOBE.value(), angularPrecision_)
+                                     : we + inc >= Longitude::GLOBE) {
 
         // if periodic West/East, adjust East only
         e = w + Longitude::GLOBE - inc;
@@ -226,7 +226,7 @@ util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) co
     // adjust South/North to include bbox's South/North ('outwards')
     Latitude s = bbox.south();
     Latitude n = bbox.north();
-    correctSouthNorth(s, n, false, false);
+    correctSouthNorth(s, n, false);
 
 
     // set bounding box

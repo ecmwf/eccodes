@@ -23,6 +23,7 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
 #include "eckit/memory/ScopedPtr.h"
+#include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
@@ -46,7 +47,7 @@ Reduced::Reduced(const param::MIRParametrisation& parametrisation) :
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox_.north();
     Latitude s = bbox_.south();
-    correctSouthNorth(s, n, true);
+    correctSouthNorth(s, n);
 
     std::vector<long> pl;
     ASSERT(parametrisation.get("pl", pl));
@@ -80,7 +81,7 @@ Reduced::Reduced(const param::MIRParametrisation& parametrisation) :
 
     Longitude w = bbox_.west();
     Longitude e = bbox_.east();
-    correctWestEast(w, e, true);
+    correctWestEast(w, e);
 
     bbox_ = util::BoundingBox(n, w, s, e);
 }
@@ -105,7 +106,7 @@ Reduced::Reduced(size_t N, const util::BoundingBox& bbox) :
 Reduced::~Reduced() = default;
 
 
-void Reduced::correctWestEast(Longitude& w, Longitude& e, bool grib1) {
+void Reduced::correctWestEast(Longitude& w, Longitude& e) {
     using eckit::Fraction;
     ASSERT(w <= e);
 
@@ -122,8 +123,8 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e, bool grib1) {
         // if periodic West/East, adjust East only
         e = w + Longitude::GLOBE - inc;
 
-    } else if (grib1 ? same_with_grib1_accuracy(we + inc, Longitude::GLOBE) || we + inc > Longitude::GLOBE
-                     : we + inc >= Longitude::GLOBE) {
+    } else if (angularPrecision_ > 0 ? eckit::types::is_approximately_greater_or_equal((we + inc).value(), Longitude::GLOBE.value(), angularPrecision_)
+                                     : we + inc >= Longitude::GLOBE) {
 
         // if periodic West/East, adjust East only
         e = w + Longitude::GLOBE - inc;
@@ -470,7 +471,7 @@ util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) co
     // adjust South/North to include bbox's South/North ('outwards')
     Latitude s = bbox.south();
     Latitude n = bbox.north();
-    correctSouthNorth(s, n, false, false);
+    correctSouthNorth(s, n, false);
 
 
     // set bounding box
