@@ -292,8 +292,12 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
             for (i=0;i<row_count;i++) {
 
                 if(iter->e >= iter->nv){
-                    grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (global)");
-                    return GRIB_WRONG_GRID;
+                    //grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (global)");
+                    //return GRIB_WRONG_GRID;
+                    //Try now as NON-global
+                    ret = iterate_reduced_gaussian_subarea_wrapper(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
+                    if (ret !=GRIB_SUCCESS) grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (global)");
+                    goto finalise;
                 }
 
                 self->los[iter->e]=(i*360.0)/row_count;
@@ -303,6 +307,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         }
     }
 
+finalise:
     iter->e = -1;
     grib_context_free(h->context,lats);
     grib_context_free(h->context,pl);
