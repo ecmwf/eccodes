@@ -176,7 +176,6 @@ static Fraction_type fraction_operator_divide(Fraction_type self, Fraction_type 
         double d1 = fraction_operator_double(self);
         double d2 = fraction_operator_double(other);
         Fraction_type f1 = fraction_construct_from_double(d1/d2);
-        Assert( 0 );
         return f1;
     }
 }
@@ -192,8 +191,7 @@ static Fraction_type fraction_operator_multiply(Fraction_type self, Fraction_typ
     if (!overflow) {
         return fraction_construct(top, bottom);
     } else {
-        Assert(0);
-        /*Fallback option*/
+        /* Fallback option */
         /*return Fraction(double(*this) * double(other));*/
         double d1 = fraction_operator_double(self);
         double d2 = fraction_operator_double(other);
@@ -207,9 +205,10 @@ static int fraction_operator_less_than(Fraction_type self, Fraction_type other) 
     int overflow = 0;
     int result = fraction_mul(&overflow, self.top_, other.bottom_) < fraction_mul(&overflow, other.top_, self.bottom_);
     if (overflow) {
-        Assert(0);
-        return 0;
-        /* TODO: return double(*this) < double(other); */
+        double d1 = fraction_operator_double(self);
+        double d2 = fraction_operator_double(other);
+        return (d1<d2);
+        /* return double(*this) < double(other); */
     }
     return result;
 }
@@ -219,9 +218,10 @@ static int fraction_operator_greater_than(Fraction_type self, Fraction_type othe
     int overflow = 0;
     int result = fraction_mul(&overflow, self.top_, other.bottom_) > fraction_mul(&overflow, other.top_, self.bottom_);
     if (overflow) {
-        Assert(0);
-        return 0;
-        /*TODO: return double(*this) > double(other);*/
+        double d1 = fraction_operator_double(self);
+        double d2 = fraction_operator_double(other);
+        return (d1>d2);
+        /* return double(*this) > double(other);*/
     }
     return result;
 }
