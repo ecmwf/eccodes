@@ -104,6 +104,14 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val)
 
 typedef void (*get_reduced_row_proc)(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last);
 
+static size_t count_global_points(long* pl, size_t plsize)
+{
+    long i, count=0;
+    for (i=0;i<plsize;i++) {
+        count += pl[i];
+    }
+    return count;
+}
 static size_t count_subarea_points(grib_handle* h, get_reduced_row_proc get_reduced_row,
                                    long* pl, size_t plsize, double lon_first, double lon_last)
 {
@@ -140,7 +148,7 @@ static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
 
     if (h->context->debug) {
         const size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
-        printf("ECCODES DEBUG iterate_reduced_gaussian_subarea: num points=%ld\n", np);
+        printf("ECCODES DEBUG grib_iterator_class_gaussian_reduced: sub-area num points=%ld\n", np);
     }
 
     /*find starting latitude */
@@ -274,6 +282,11 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     } else {
         /*global*/
         iter->e=0;
+        if (h->context->debug) {
+            const size_t np = count_global_points(pl, plsize);
+            printf("ECCODES DEBUG grib_iterator_class_gaussian_reduced: global num points=%ld\n", np);
+        }
+
         for (j=0;j<plsize;j++) {
             row_count=pl[j];
             for (i=0;i<row_count;i++) {
