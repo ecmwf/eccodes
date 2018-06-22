@@ -559,7 +559,7 @@ static int integrity_check(grib_handle* handle, const grib_util_grid_spec2* spec
     for (i=0; i<data_values_count; i++) {
         double val = data_values[i];
         if ( !(val < DBL_MAX && val > -DBL_MAX && val != NAN) ) {
-            printf("invalid data value: i=%ld, val=%g\n",i, val);
+            fprintf(stderr,"GRIB_UTIL_SET_SPEC: Invalid data value: i=%lu, val=%g\n",i, val);
             return GRIB_ENCODING_ERROR;
         }
     }
@@ -568,19 +568,20 @@ static int integrity_check(grib_handle* handle, const grib_util_grid_spec2* spec
         (spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG))
     {
         long deduced_as_global = 0;
-        size_t sum = 0;
         /* Do we think it's global? */
         if ((err = grib_get_long(handle,"global",&deduced_as_global)) != 0) return err;
-        /* If specified_as_global==1, it means the client passed in the key "global" and wants the output to be global
-         * If deduced_as_global==1,   it means we inspected the resulting message and deduced from its geometry that it's global
+        /* specified_as_global==1 means the client passed in the key "global" and wants the output to be global
+         * deduced_as_global==1   means we inspected the resulting message and deduced from its geometry that it's global
          */
         if (deduced_as_global || specified_as_global) {
             char msg[100] = {0,};
+            size_t sum = 0;
             if (deduced_as_global)   strcpy(msg, "Deduced to be global from geometry");
             if (specified_as_global) strcpy(msg, "Specified to be global (in spec)");
             sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (sum != data_values_count) {
-                printf("invalid reduced gaussian grid: %s, data_values_count != sum_of_pl_array (%ld!=%ld)\n",msg, data_values_count,sum);
+                fprintf(stderr, "GRIB_UTIL_SET_SPEC: Invalid reduced gaussian grid: %s but data_values_count != sum_of_pl_array (%lu!=%lu)\n",
+                        msg, data_values_count, sum);
                 return GRIB_WRONG_GRID;
             }
         }
@@ -1384,11 +1385,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot set pl  %s\n",grib_get_error_message(*err));
             goto cleanup;
         }
-        // Check global??
         if (global_grid) {
             size_t sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (data_values_count != sum) {
-                printf("invalid reduced gaussian grid: specified as global, data_values_count=%ld but sum of pl array=%ld\n",data_values_count,sum);
+                printf("invalid reduced gaussian grid: specified as global, data_values_count=%lu but sum of pl array=%lu\n",data_values_count,sum);
                 *err = GRIB_WRONG_GRID;
                 goto cleanup;
             }
@@ -1406,6 +1406,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         if ((*err=expand_bounding_box(outh, values, count)) != 0)
         {
             fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot expand bounding box: %s\n",grib_get_error_message(*err));
+            if (h->context->write_on_fail) grib_write_message(outh,"error.grib","w");
             goto cleanup;
         }
     }
@@ -1515,6 +1516,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         if (*err != GRIB_SUCCESS) {
             fprintf(stderr,"GRIB_UTIL_SET_SPEC: Failed to change edition to %ld: %s\n",
                     packing_spec->editionNumber, grib_get_error_message(*err));
+            if (h->context->write_on_fail) grib_write_message(outh,"error.grib","w");
             goto cleanup;
         }
     }
@@ -1544,9 +1546,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     if ( (*err = integrity_check(outh, spec, data_values, data_values_count, global_grid)) != GRIB_SUCCESS)
     {
-        grib_context* c=grib_context_get_default();
         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Integrity check failed! %s\n", grib_get_error_message(*err));
-        if (c->write_on_fail)
+        if (h->context->write_on_fail)
             grib_write_message(outh,"error.grib","w");
         goto cleanup;
     }
