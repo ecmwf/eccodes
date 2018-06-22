@@ -104,13 +104,11 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val)
 
 typedef void (*get_reduced_row_proc)(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last);
 
+/* For a reduced Gaussian grid which is GLOBAL, the number of points is the sum of the 'pl' array */
+/* i.e. the total number of points on all latitudes */
 static size_t count_global_points(long* pl, size_t plsize)
 {
-    long i, count=0;
-    for (i=0;i<plsize;i++) {
-        count += pl[i];
-    }
-    return count;
+    return sum_of_pl_array(pl, plsize);
 }
 static size_t count_subarea_points(grib_handle* h, get_reduced_row_proc get_reduced_row,
                                    long* pl, size_t plsize, double lon_first, double lon_last)
@@ -292,9 +290,9 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
             for (i=0;i<row_count;i++) {
 
                 if(iter->e >= iter->nv){
-                    //grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (global)");
-                    //return GRIB_WRONG_GRID;
-                    //Try now as NON-global
+                    /*grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (global)");*/
+                    /*return GRIB_WRONG_GRID;*/
+                    /*Try now as NON-global*/
                     ret = iterate_reduced_gaussian_subarea_wrapper(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
                     if (ret !=GRIB_SUCCESS) grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (global)");
                     goto finalise;

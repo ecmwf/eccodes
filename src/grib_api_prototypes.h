@@ -1463,6 +1463,7 @@ int is_index_file(const char *filename);
 char get_dir_separator_char(void);
 char *codes_getenv(const char *name);
 int expandedBoundingBox(grib_handle* h);
+size_t sum_of_pl_array(const long* pl, size_t plsize);
 
 /* bufr_util.c */
 int compute_bufr_key_rank(grib_handle *h, grib_string_list *keys, const char *key);

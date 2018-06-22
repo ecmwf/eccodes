@@ -547,6 +547,47 @@ static double normalise_angle(double angle)
     return angle;
 }*/
 
+static int integrity_check(grib_handle* handle, const grib_util_grid_spec2* spec,
+        const double*  data_values,
+        size_t         data_values_count,
+        int            specified_as_global)
+{
+    int err = 0;
+    size_t i = 0;
+
+    /* Data values check */
+    for (i=0; i<data_values_count; i++) {
+        double val = data_values[i];
+        if ( !(val < DBL_MAX && val > -DBL_MAX && val != NAN) ) {
+            printf("invalid data value: i=%ld, val=%g\n",i, val);
+            return GRIB_ENCODING_ERROR;
+        }
+    }
+
+    if (spec->pl && spec->pl_size!=0 &&
+        (spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG))
+    {
+        long deduced_as_global = 0;
+        size_t sum = 0;
+        /* Do we think it's global? */
+        if ((err = grib_get_long(handle,"global",&deduced_as_global)) != 0) return err;
+        /* If specified_as_global==1, it means the client passed in the key "global" and wants the output to be global
+         * If deduced_as_global==1,   it means we inspected the resulting message and deduced from its geometry that it's global
+         */
+        if (deduced_as_global || specified_as_global) {
+            char msg[100] = {0,};
+            if (deduced_as_global)   strcpy(msg, "Deduced to be global from geometry");
+            if (specified_as_global) strcpy(msg, "Specified to be global (in spec)");
+            sum = sum_of_pl_array(spec->pl, spec->pl_size);
+            if (sum != data_values_count) {
+                printf("invalid reduced gaussian grid: %s, data_values_count != sum_of_pl_array (%ld!=%ld)\n",msg, data_values_count,sum);
+                return GRIB_WRONG_GRID;
+            }
+        }
+    }
+    return err;
+}
+
 #if 0
 /* Check what is coded in the handle is what is requested by the spec. */
 /* Return GRIB_SUCCESS if the geometry matches, otherwise the error code */
@@ -1343,6 +1384,15 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot set pl  %s\n",grib_get_error_message(*err));
             goto cleanup;
         }
+        // Check global??
+        if (global_grid) {
+            size_t sum = sum_of_pl_array(spec->pl, spec->pl_size);
+            if (data_values_count != sum) {
+                printf("invalid reduced gaussian grid: specified as global, data_values_count=%ld but sum of pl array=%ld\n",data_values_count,sum);
+                *err = GRIB_WRONG_GRID;
+                goto cleanup;
+            }
+        }
     }
 
     if (h->context->debug==-1) {
@@ -1490,6 +1540,15 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     if (expandBoundingBox) {
         int e = grib_set_long(outh, "expandedBoundingBox", 1);
         Assert(e == 0);
+    }
+
+    if ( (*err = integrity_check(outh, spec, data_values, data_values_count, global_grid)) != GRIB_SUCCESS)
+    {
+        grib_context* c=grib_context_get_default();
+        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Integrity check failed! %s\n", grib_get_error_message(*err));
+        if (c->write_on_fail)
+            grib_write_message(outh,"error.grib","w");
+        goto cleanup;
     }
 
     /* Disable check: need to re-examine GRIB-864 */
@@ -1857,4 +1916,13 @@ int expandedBoundingBox(grib_handle* h)
         return 1;
     }
     return 0;
+}
+
+size_t sum_of_pl_array(const long* pl, size_t plsize)
+{
+    long i, count=0;
+    for (i=0;i<plsize;i++) {
+        count += pl[i];
+    }
+    return count;
 }
