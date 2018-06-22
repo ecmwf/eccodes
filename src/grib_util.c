@@ -557,8 +557,9 @@ static int integrity_check(grib_handle* handle, const grib_util_grid_spec2* spec
 
     /* Data values check */
     for (i=0; i<data_values_count; i++) {
-        double val = data_values[i];
-        if ( !(val < DBL_MAX && val > -DBL_MAX && val != NAN) ) {
+        const double val = data_values[i];
+        /*const int isnan = (val != val);  does not work in release mode ! */
+        if ( !(val < DBL_MAX && val > -DBL_MAX) ) {
             fprintf(stderr,"GRIB_UTIL_SET_SPEC: Invalid data value: i=%lu, val=%g\n",i, val);
             return GRIB_ENCODING_ERROR;
         }
