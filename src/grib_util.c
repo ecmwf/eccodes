@@ -574,10 +574,11 @@ static int integrity_check(grib_handle* handle, const grib_util_grid_spec2* spec
         /* specified_as_global==1 means the client passed in the key "global" and wants the output to be global
          * deduced_as_global==1   means we inspected the resulting message and deduced from its geometry that it's global
          */
-        if (deduced_as_global || specified_as_global) {
+        /*if (deduced_as_global || specified_as_global) {*/
+        if (specified_as_global) {
             char msg[100] = {0,};
             size_t sum = 0;
-            if (deduced_as_global)   strcpy(msg, "Deduced to be global from geometry");
+            /*if (deduced_as_global)   strcpy(msg, "Deduced to be global from geometry");*/
             if (specified_as_global) strcpy(msg, "Specified to be global (in spec)");
             sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (sum != data_values_count) {
