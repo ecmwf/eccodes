@@ -247,6 +247,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
         is_global=is_gaussian_global(lat_first,lat_last,lon_first,lon_last,max_pl,lats,angular_precision);
         d=fabs(lats[0]-lats[1]);
+        if (expandedBoundingBox(h)) {
+            is_global = 0; /* ECC-445 */
+        }
         if ( !is_global ) {
             /*sub area*/
             (void)d;
