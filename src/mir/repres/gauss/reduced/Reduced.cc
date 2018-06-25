@@ -83,7 +83,12 @@ Reduced::Reduced(const param::MIRParametrisation& parametrisation) :
     Longitude e = bbox_.east();
     correctWestEast(w, e);
 
+    auto old(bbox_);
     bbox_ = util::BoundingBox(n, w, s, e);
+    eckit::Log::debug<LibMir>() << "Reduced BoundingBox:"
+                                << "\n\t   " << old
+                                << "\n\t > " << bbox_
+                                << std::endl;
 }
 
 

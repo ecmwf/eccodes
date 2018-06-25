@@ -16,6 +16,7 @@
 #include "mir/repres/gauss/reduced/Octahedral.h"
 
 #include "mir/api/MIRJob.h"
+#include "mir/config/LibMir.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
@@ -48,7 +49,12 @@ Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox) :
     Longitude e = bbox.east();
     correctWestEast(w, e);
 
+    auto old(bbox_);
     bbox_ = util::BoundingBox(n, w, s, e);
+    eckit::Log::debug<LibMir>() << "Octahedral BoundingBox:"
+                                << "\n\t   " << old
+                                << "\n\t > " << bbox_
+                                << std::endl;
 }
 
 
