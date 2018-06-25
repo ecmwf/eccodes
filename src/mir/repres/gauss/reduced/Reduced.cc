@@ -115,11 +115,7 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e) {
     using eckit::Fraction;
     ASSERT(w <= e);
 
-    const std::vector<long>& pl = pls();
-    const long maxpl = *std::max_element(pl.begin(), pl.end());
-    ASSERT(maxpl);
-
-    Fraction inc = Longitude::GLOBE.fraction() / maxpl;
+    const Fraction inc = getSmallestIncrement();
     ASSERT(inc > 0);
 
     const Longitude we = e - w;
@@ -144,6 +140,7 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e) {
         bool first = true;
         std::set<long> NiTried;
 
+        const std::vector<long>& pl = pls();
         for (size_t j = k_; j < k_ + Nj_; ++j) {
 
             // crop longitude-wise, track distinct attempts
@@ -194,8 +191,12 @@ bool Reduced::sameAs(const Representation& other) const {
 
 eckit::Fraction Reduced::getSmallestIncrement() const {
     ASSERT(N_);
+    using distance_t = std::make_signed<size_t>::type;
+
     const std::vector<long>& pl = pls();
-    const long maxpl = *std::max_element(pl.begin(), pl.end());
+    const long maxpl = *std::max_element(
+                pl.begin() + distance_t(k_),
+                pl.begin() + distance_t(k_ + Nj_));
     ASSERT(maxpl);
 
     return Longitude::GLOBE.fraction() / maxpl;
