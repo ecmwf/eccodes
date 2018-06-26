@@ -545,13 +545,12 @@ static double normalise_angle(double angle)
     while (angle<0)   angle += 360;
     while (angle>360) angle -= 360;
     return angle;
-}*/
+}
 static int check_values(const double* data_values, size_t data_values_count)
 {
     size_t i = 0;
     for (i=0; i<data_values_count; i++) {
         const double val = data_values[i];
-        //if ( !(val < DBL_MAX && val > -DBL_MAX && !isnan(val)) ) {
         if ( val >= DBL_MAX   ||
              val <= -DBL_MAX  ||
              isnan(val) )
@@ -561,7 +560,7 @@ static int check_values(const double* data_values, size_t data_values_count)
         }
     }
     return GRIB_SUCCESS;
-}
+}*/
 
 static int check_geometry(grib_handle* handle, const grib_util_grid_spec2* spec,
                           size_t data_values_count, int specified_as_global)
@@ -886,10 +885,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         printf("ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n",input_decimal_scale_factor);
     }
 
-    if ( (*err=check_values(data_values, data_values_count))!=GRIB_SUCCESS ) {
+    /*if ( (*err=check_values(data_values, data_values_count))!=GRIB_SUCCESS ) {
         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Data values check failed! %s\n", grib_get_error_message(*err));
         goto cleanup;
-    }
+    }*/
 
     if (flags & GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING) {
         if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED &&
