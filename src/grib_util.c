@@ -546,39 +546,34 @@ static double normalise_angle(double angle)
     while (angle>360) angle -= 360;
     return angle;
 }*/
-
-static int integrity_check(grib_handle* handle, const grib_util_grid_spec2* spec,
-        const double*  data_values,
-        size_t         data_values_count,
-        int            specified_as_global)
+static int check_values(const double* data_values, size_t data_values_count)
 {
-    int err = 0;
     size_t i = 0;
-
-    /* Data values check */
     for (i=0; i<data_values_count; i++) {
         const double val = data_values[i];
-        /*const int isnan = (val != val);  does not work in release mode ! */
-        if ( !(val < DBL_MAX && val > -DBL_MAX) ) {
+        //if ( !(val < DBL_MAX && val > -DBL_MAX && !isnan(val)) ) {
+        if ( val >= DBL_MAX   ||
+             val <= -DBL_MAX  ||
+             isnan(val) )
+        {
             fprintf(stderr,"GRIB_UTIL_SET_SPEC: Invalid data value: i=%lu, val=%g\n",i, val);
             return GRIB_ENCODING_ERROR;
         }
     }
+    return GRIB_SUCCESS;
+}
 
-    if (spec->pl && spec->pl_size!=0 &&
+static int check_geometry(grib_handle* handle, const grib_util_grid_spec2* spec,
+                          size_t data_values_count, int specified_as_global)
+{
+    int err = 0;
+
+    if (spec->pl && spec->pl_size != 0 &&
         (spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG))
     {
-        long deduced_as_global = 0;
-        /* Do we think it's global? */
-        if ((err = grib_get_long(handle,"global",&deduced_as_global)) != 0) return err;
-        /* specified_as_global==1 means the client passed in the key "global" and wants the output to be global
-         * deduced_as_global==1   means we inspected the resulting message and deduced from its geometry that it's global
-         */
-        /*if (deduced_as_global || specified_as_global) {*/
         if (specified_as_global) {
             char msg[100] = {0,};
             size_t sum = 0;
-            /*if (deduced_as_global)   strcpy(msg, "Deduced to be global from geometry");*/
             if (specified_as_global) strcpy(msg, "Specified to be global (in spec)");
             sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (sum != data_values_count) {
@@ -889,6 +884,11 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         printf("ECCODES DEBUG grib_util: input_packing_type = %s\n",input_packing_type);
         printf("ECCODES DEBUG grib_util: input_bits_per_value = %ld\n",input_bits_per_value);
         printf("ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n",input_decimal_scale_factor);
+    }
+
+    if ( (*err=check_values(data_values, data_values_count))!=GRIB_SUCCESS ) {
+        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Data values check failed! %s\n", grib_get_error_message(*err));
+        goto cleanup;
     }
 
     if (flags & GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING) {
@@ -1546,9 +1546,9 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         Assert(e == 0);
     }
 
-    if ( (*err = integrity_check(outh, spec, data_values, data_values_count, global_grid)) != GRIB_SUCCESS)
+    if ( (*err = check_geometry(outh, spec, data_values_count, global_grid)) != GRIB_SUCCESS)
     {
-        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Integrity check failed! %s\n", grib_get_error_message(*err));
+        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed! %s\n", grib_get_error_message(*err));
         if (h->context->write_on_fail)
             grib_write_message(outh,"error.grib","w");
         goto cleanup;
