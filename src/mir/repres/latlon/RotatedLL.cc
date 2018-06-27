@@ -35,10 +35,10 @@ RotatedLL::RotatedLL(const param::MIRParametrisation& parametrisation) :
 
 
 RotatedLL::RotatedLL(
-        const util::BoundingBox& bbox,
         const util::Increments& increments,
-        const util::Rotation& rotation ) :
-    LatLon(bbox, increments),
+        const util::Rotation& rotation,
+        const util::BoundingBox& bbox) :
+    LatLon(increments, bbox),
     rotation_(rotation) {
 }
 
@@ -122,7 +122,7 @@ bool RotatedLL::sameAs(const Representation& other) const {
 
 const RotatedLL* RotatedLL::croppedRepresentation(const util::BoundingBox& bbox) const {
     // Called by AreaCropper::execute and MethodWeighted::adjustOutputRepresentation
-    return new RotatedLL(bbox, increments_, rotation_);
+    return new RotatedLL(increments_, rotation_, bbox);
 }
 
 

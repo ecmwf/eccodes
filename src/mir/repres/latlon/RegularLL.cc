@@ -33,9 +33,9 @@ RegularLL::RegularLL(const param::MIRParametrisation& parametrisation) :
 }
 
 
-RegularLL::RegularLL(const util::BoundingBox& bbox,
-                     const util::Increments& increments) :
-    LatLon(bbox, increments) {
+RegularLL::RegularLL(const util::Increments& increments,
+                     const util::BoundingBox& bbox) :
+    LatLon(increments, bbox) {
 }
 
 
@@ -115,7 +115,7 @@ bool RegularLL::sameAs(const Representation& other) const {
 
 const RegularLL* RegularLL::croppedRepresentation(const util::BoundingBox& bbox) const {
     // Called by AreaCropper::execute and MethodWeighted::adjustOutputRepresentation
-    return new RegularLL(bbox, increments_);
+    return new RegularLL(increments_, bbox);
 }
 
 

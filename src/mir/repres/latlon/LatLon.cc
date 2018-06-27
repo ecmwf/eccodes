@@ -61,7 +61,7 @@ LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
 }
 
 
-LatLon::LatLon(const util::BoundingBox& bbox, const util::Increments& increments) :
+LatLon::LatLon(const util::Increments& increments, const util::BoundingBox& bbox) :
     Gridded(bbox),
     increments_(increments) {
     correctBoundingBox();
