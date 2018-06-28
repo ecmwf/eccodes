@@ -135,7 +135,7 @@ static Fraction_type fraction_construct_from_double(double x)
     return result;
 }
 
-Fraction_value_type fraction_integralPart(const Fraction_type frac)
+static Fraction_value_type fraction_integralPart(const Fraction_type frac)
 {
     return frac.top_ / frac.bottom_;
 }
