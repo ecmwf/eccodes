@@ -774,8 +774,10 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
     {
     case GRIB_TYPE_STRING:
         if (verbose) printf(" as string\n");
-        grib_get_string_length(handle1,name,&len1);
-        grib_get_string_length(handle2,name,&len2);
+        /* See ECC-710: It is very slow getting the key length this way */
+        /*grib_get_string_length(handle1,name,&len1);*/
+        /*grib_get_string_length(handle2,name,&len2);*/
+        len1 = len2 = 4096; /* Significantly faster to use an upper bound */
         sval1 = (char*)grib_context_malloc(handle1->context,len1*sizeof(char));
         sval2 = (char*)grib_context_malloc(handle2->context,len2*sizeof(char));
 
