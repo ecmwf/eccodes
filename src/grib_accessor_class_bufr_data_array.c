@@ -2289,9 +2289,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 /* forceGroupClosure=1; */
                 /* reset_qualifiers(significanceQualifierGroup); */
             } else if (descriptor->X==33 && !qualityPresent) {
-                if (c->bufr_quality_without_bitmap == 1) {
-                    dump=1;  /* ECC-690: percentConfidence WITHOUT a bitmap! e.g. NOAA GOES16 BUFR */
-                }
+                dump=1;  /* ECC-690: percentConfidence WITHOUT a bitmap! e.g. NOAA GOES16 BUFR */
             }
 
             if (ide==0 && !self->compressedData) {
@@ -2358,12 +2356,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     if(descriptor->code==33007) {
                         add_key = 0; /* Standard behaviour */
                         if (!qualityPresent) {
-                            if (c->bufr_quality_without_bitmap) {
-                                add_key = 1;
-                            } else {
-                                grib_context_log(c, GRIB_LOG_WARNING,
-                                                 "create_keys: descriptor=%6.6ld: Class 33 quality information without a bitmap!",descriptor->code);
-                            }
+                            add_key = 1;
                         }
                     }
                     if (add_key) {
