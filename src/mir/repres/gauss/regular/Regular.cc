@@ -74,13 +74,7 @@ Regular::Regular(size_t N, const util::BoundingBox& bbox) :
     Longitude e = bbox.east();
     correctWestEast(w, e);
 
-    auto old(bbox_);
     bbox_ = util::BoundingBox(n, w, s, e);
-
-    eckit::Log::debug<LibMir>() << "Regular::Regular: BoundingBox:"
-                                << "\n\t   " << old
-                                << "\n\t > " << bbox_
-                                << std::endl;
 
     setNiNj();
 }
