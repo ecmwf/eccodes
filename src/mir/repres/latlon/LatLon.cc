@@ -57,7 +57,7 @@ static eckit::Fraction::value_type computeN(const eckit::Fraction& value, const 
 LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
     Gridded(parametrisation),
     increments_(parametrisation) {
-    correctBoundingBox();
+    bbox_ = correctBoundingBox(bbox_, increments_);
 
     ASSERT(parametrisation.get("Ni", ni_));
     ASSERT(parametrisation.get("Nj", nj_));
@@ -69,7 +69,7 @@ LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
 LatLon::LatLon(const util::Increments& increments, const util::BoundingBox& bbox) :
     Gridded(bbox),
     increments_(increments) {
-    correctBoundingBox();
+    bbox_ = correctBoundingBox(bbox_, increments_);
 
     ni_ = increments_.computeNi(bbox_);
     nj_ = increments_.computeNj(bbox_);
@@ -266,18 +266,18 @@ const LatLon* LatLon::croppedRepresentation(const util::BoundingBox&) const {
 }
 
 
-void LatLon::correctBoundingBox() {
+util::BoundingBox LatLon::correctBoundingBox(const util::BoundingBox& bbox, const util::Increments& increments) {
     using eckit::Fraction;
 
 
     // adjust East to a maximum of E = W + Ni * inc < W + 360
     // (shifted grids can have 360 - inc < E - W < 360)
-    Longitude e = bbox_.east();
-    Longitude w = bbox_.west();
+    Longitude e = bbox.east();
+    Longitude w = bbox.west();
 
     Fraction range_we = (e - w).fraction();
     if (range_we > 0) {
-        Fraction we = increments_.west_east().longitude().fraction();
+        Fraction we = increments.west_east().longitude().fraction();
         Fraction Ni = range_we / we;
         if (range_we + we >= Longitude::GLOBE.fraction()) {
             Ni = Longitude::GLOBE.fraction() / we;
@@ -291,8 +291,8 @@ void LatLon::correctBoundingBox() {
 
 
     // adjust North to a maximum of N = S + Nj * inc <= 90
-    Latitude n = bbox_.north();
-    Latitude s = bbox_.south();
+    Latitude n = bbox.north();
+    Latitude s = bbox.south();
 
     if (same_with_grib1_accuracy(n, Latitude::NORTH_POLE)) {
         n = Latitude::NORTH_POLE;
@@ -304,7 +304,7 @@ void LatLon::correctBoundingBox() {
 
     Fraction range_sn = (n - s).fraction();
     if (range_sn > 0) {
-        Fraction sn = increments_.south_north().latitude().fraction();
+        Fraction sn = increments.south_north().latitude().fraction();
         Fraction Nj = range_sn / sn;
         range_sn = Nj.integralPart() * sn;
     }
@@ -313,14 +313,20 @@ void LatLon::correctBoundingBox() {
 
     // set bounding box
     const util::BoundingBox newBox(n, w, s, e);
-    if (newBox != bbox_) {
-        eckit::Channel& log = eckit::Log::debug<LibMir>();
-        std::streamsize old = log.precision(12);
-        log << "Correcting bounding box from " << bbox_ << " to " << newBox << "." << std::endl;
-        log.precision(old);
+    if (newBox != bbox) {
+        auto& log = eckit::Log::debug<LibMir>();
+        auto old = log.precision(12);
 
-        bbox_ = newBox;
+        log << "LatLon::correctBoundingBox:"
+            << "\n\t" "   " << bbox
+            << "\n\t" " > " << newBox
+            << std::endl;
+
+        log.precision(old);
+        return newBox;
     }
+
+    return bbox;
 }
 
 
