@@ -491,13 +491,17 @@ util::BoundingBox LatLon::extendedBoundingBox(const util::BoundingBox& bbox) con
 
         auto Ns = computeN(south - ref, inc);
         if (Ns * inc + ref > south) {
-            Ns -= 1;
+            if (Ns > computeN(Latitude::SOUTH_POLE.fraction() - ref, inc)) {
+                Ns -= 1;
+            }
         }
         south = Ns * inc + ref;
 
         auto Nn = computeN(north - ref, inc);
         if (Nn * inc + ref < north) {
-            Nn += 1;
+            if (Nn < computeN(Latitude::NORTH_POLE.fraction() - ref, inc)) {
+                Nn += 1;
+            }
         }
         north = Nn * inc + ref;
 
