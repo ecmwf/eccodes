@@ -759,10 +759,17 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
             grib_set_bits_on(buff->data,pos,modifiedWidth);
         } else {
             if (*v > maxAllowed || *v < minAllowed) {
-                return GRIB_OUT_OF_RANGE; /* ECC-611 */
+                if (dont_fail_if_out_of_range) {
+                    grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
+                                                    "Setting it to missing value\n", bd->shortName, *v, minAllowed, maxAllowed);
+                    grib_set_bits_on(buff->data,pos,modifiedWidth);
+                } else {
+                    return GRIB_OUT_OF_RANGE; /* ECC-611 */
+                }
+            } else {
+                lval=round(*v * inverseFactor)-modifiedReference;
+                grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
             }
-            lval=round(*v * inverseFactor)-modifiedReference;
-            grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
         }
         grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
         grib_encode_unsigned_longb(buff->data,localWidth,pos,6);
