@@ -1503,9 +1503,11 @@ static int build_bitmap_new_data(grib_accessor_bufr_data_array *self,unsigned ch
             iDelayedReplication=iBitmapOperator+2;
             switch (descriptors[iDelayedReplication]->code) {
             case 31001:
+                if(!self->inputReplications) {grib_context_log(c,GRIB_LOG_ERROR,"build_bitmap_new_data: No inputReplications"); return GRIB_ENCODING_ERROR;}
                 bitmapSize=self->inputReplications[self->iInputReplications];
                 break;
             case 31002:
+                if(!self->inputExtendedReplications) {grib_context_log(c,GRIB_LOG_ERROR,"build_bitmap_new_data: No inputExtendedReplications");return GRIB_ENCODING_ERROR;}
                 bitmapSize=self->inputExtendedReplications[self->iInputExtendedReplications];
                 break;
             default :
