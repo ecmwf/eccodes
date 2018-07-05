@@ -46,6 +46,11 @@ static void check(const util::BoundingBox& bbox, const util::Increments& inc, si
 }
 
 
+static eckit::Fraction::value_type computeN(const eckit::Fraction& value, const eckit::Fraction& increment) {
+    return (value / increment).integralPart();
+}
+
+
 }  // (anonymous namespace)
 
 
@@ -437,25 +442,28 @@ util::BoundingBox LatLon::extendedBoundingBox(const util::BoundingBox& bbox) con
     Longitude w = bbox.west();
     Longitude e = bbox.east();
     {
-        Fraction west = bbox.west().fraction();
-        Fraction east = bbox.east().fraction();
+        Fraction west = w.fraction();
+        Fraction east = e.fraction();
 
         Fraction inc = increments_.west_east().longitude().fraction();
         Fraction ref = bbox_.west().fraction();
 
-        Fraction::value_type Nw = ((west - ref) / inc).integralPart();
+        auto Nw = computeN(west - ref, inc);
         if (Nw * inc + ref > west) {
             Nw -= 1;
         }
         west = Nw * inc + ref;
 
-        Fraction::value_type Ni = ((east - west) / inc).integralPart();
-        if (Ni * inc + west < east) {
-            if (Ni < (Longitude::GLOBE.fraction() / inc).integralPart()) {
-                Ni += 1;
+        // Adjusted West is the reference for adjusted East
+        ref = west;
+
+        auto Ne = computeN(east - ref, inc);
+        if (Ne * inc + ref < east) {
+            if (Ne < computeN(Longitude::GLOBE.fraction(), inc)) {
+                Ne += 1;
             }
         }
-        east = Ni * inc + west;
+        east = Ne * inc + ref;
 
         w = west;
         e = east;
@@ -467,21 +475,28 @@ util::BoundingBox LatLon::extendedBoundingBox(const util::BoundingBox& bbox) con
     Latitude s = bbox.south();
     Latitude n = bbox.north();
     {
+        Fraction south = s.fraction();
+        Fraction north = n.fraction();
+
         const Fraction inc = increments_.south_north().latitude().fraction();
         const Fraction ref = bbox_.south().fraction();
 
-        Fraction::value_type Ns = ((s.fraction() - ref) / inc).integralPart();
-        if (Ns * inc + ref > s.fraction()) {
+        auto Ns = computeN(south - ref, inc);
+        if (Ns * inc + ref > south) {
             Ns -= 1;
         }
-        s = Ns * inc + ref;
-        ASSERT(s >= Latitude::SOUTH_POLE);
+        south = Ns * inc + ref;
 
-        Fraction::value_type Nn = ((n.fraction() - ref) / inc).integralPart();
-        if (Nn * inc + ref < n.fraction()) {
+        auto Nn = computeN(north - ref, inc);
+        if (Nn * inc + ref < north) {
             Nn += 1;
         }
-        n = Nn * inc + ref;
+        north = Nn * inc + ref;
+
+        s = south;
+        n = north;
+        ASSERT(s <= n);
+        ASSERT(s >= Latitude::SOUTH_POLE);
         ASSERT(n <= Latitude::NORTH_POLE);
     }
 
