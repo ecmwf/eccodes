@@ -199,7 +199,6 @@ void encode_double_array_unrolled(int numBits, long packStart, long datasize,
 {
     U_BYTEORDER;
     long i, j, z = *gz;
-    double tmp;
 #ifdef _ARCH_PWR6
 #define __UNROLL_DEPTH_2 8
 #else
