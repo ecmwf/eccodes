@@ -340,7 +340,7 @@ static grib_trie* init_list(const char* name)
 /* For debugging purposes */
 static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
         const double* data_values, const size_t data_values_count,  /* the data pay load */
-        const grib_values *values, const size_t count)  /* keys and their values */
+        const grib_values *keyval_pairs, const size_t count)  /* keys and their values */
 {
     size_t i=0;
     int isConstant = 1;
@@ -349,14 +349,14 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
 
     for(i=0; i<count; i++)
     {
-        switch(values[i].type)
+        switch(keyval_pairs[i].type)
         {
         case GRIB_TYPE_LONG: printf("ECCODES DEBUG  grib_util: => %s =  %ld;\n"
-                ,values[i].name,(long)values[i].long_value); break;
+                ,keyval_pairs[i].name,(long)keyval_pairs[i].long_value); break;
         case GRIB_TYPE_DOUBLE: printf("ECCODES DEBUG  grib_util: => %s = %.16e;\n"
-                ,values[i].name,values[i].double_value); break;
+                ,keyval_pairs[i].name,keyval_pairs[i].double_value); break;
         case GRIB_TYPE_STRING: printf("ECCODES DEBUG  grib_util: => %s = \"%s\";\n"
-                ,values[i].name,values[i].string_value); break;
+                ,keyval_pairs[i].name,keyval_pairs[i].string_value); break;
         }
     }
 
