@@ -470,14 +470,14 @@ util::BoundingBox LatLon::extendedBoundingBox(const util::BoundingBox& bbox) con
         const Fraction inc = increments_.south_north().latitude().fraction();
         const Fraction ref = bbox_.south().fraction();
 
-        Fraction::value_type Ns = (s.fraction() - ref / inc).integralPart();
+        Fraction::value_type Ns = ((s.fraction() - ref) / inc).integralPart();
         if (Ns * inc + ref > s.fraction()) {
             Ns -= 1;
         }
         s = Ns * inc + ref;
         ASSERT(s >= Latitude::SOUTH_POLE);
 
-        Fraction::value_type Nn = (n.fraction() - ref / inc).integralPart();
+        Fraction::value_type Nn = ((n.fraction() - ref) / inc).integralPart();
         if (Nn * inc + ref < n.fraction()) {
             Nn += 1;
         }
