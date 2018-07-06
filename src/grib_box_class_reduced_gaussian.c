@@ -143,7 +143,7 @@ static int init(grib_box* box,grib_handle* h,grib_arguments* args)
 		/* sub area (longitudes) */
 		for (j=0;j<self->nlats;j++) {
 			row_count=0;
-			grib_get_reduced_row(pl[j],lon_first,lon_last,
+			grib_get_reduced_row_wrapper(h, pl[j],lon_first,lon_last,
                   &row_count,&ilon_first,&ilon_last);
 			self->size+=row_count;
 			if (ilon_first>ilon_last) ilon_first-=pl[j];
