@@ -15,13 +15,11 @@ grib1_sample=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 temp=temp.${label}.grib
 types_table=$ECCODES_DEFINITION_PATH/mars/type.table
 
-for t in `cat $types_table | awk '{print $1}'`; do
-    # Exclude type=34 (go, Gridded observations) as it loads definitions/mars/grib.oper.go.def
-    # which requires the key 'N' to exist
-    if [ $t -eq 34 ]; then
-        #echo Skipping $t
-        continue
-    fi
+# Exclude type=34 (go, Gridded observations) as it loads definitions/mars/grib.oper.go.def
+# which requires the key 'N' to exist
+mars_types=`awk '$1 !~ /34/ {print $1}' < $types_table`
+
+for t in $mars_types; do
     #echo "Doing MARS type |$t|"
     ${tools_dir}/grib_set -s marsType=$t,edition=2 $grib1_sample $temp
     grib_check_key_equals $temp "mars.type:i" $t
