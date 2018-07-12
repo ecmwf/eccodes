@@ -74,6 +74,7 @@ int main(int argc, char** argv) {
   fint = fopen(fintname,"r");
   if(!fint) {
     printf("ERROR: unable to open file %s\n",fintname);
+    fclose(fdir);
     return 1;
   }
 
@@ -162,7 +163,7 @@ int main(int argc, char** argv) {
 
     if (!values_dir) values_dir=grib_context_malloc(c,sizeof(double)*values_count);
     if (!values_dir) {
-      printf("ERROR  %s: memory allocation problem\n");
+      printf("ERROR: memory allocation problem\n");
       exit(1);
     }
     size=values_count;
@@ -174,12 +175,12 @@ int main(int argc, char** argv) {
 
     if (!values_int) values_int=grib_context_malloc(c,sizeof(double)*values_count);
     if (!values_int) {
-      printf("ERROR  %s: memory allocation problem\n");
+      printf("ERROR: memory allocation problem\n");
       exit(1);
     }
     GRIB_CHECK(grib_get_double_array(hint,"values",values_int,&size),0);
     if (values_count != size) {
-      printf("ERROR  %s: wrong values count %d %d\n",argv[0],values_count,size);
+      printf("ERROR %s: wrong values count %d %d\n",argv[0],values_count,size);
       exit(1);
     }
 
@@ -188,7 +189,7 @@ int main(int argc, char** argv) {
       for (j=0;j<sea_state_count;j++) {
         if (!values[k]) values[k]=grib_context_malloc(c,sizeof(double)*values_count);
         if (!values[k]) {
-          printf("ERROR  %s: memory allocation problem\n");
+          printf("ERROR: memory allocation problem\n");
           exit(1);
         }
         for (n=0;n<values_count;n++) values[k]=0;
