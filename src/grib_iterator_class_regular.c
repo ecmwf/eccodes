@@ -97,7 +97,8 @@ static void init_class(grib_iterator_class* c)
 /* END_CLASS_IMP */
 
 
-static int next(grib_iterator* i, double *lat, double *lon, double *val){
+static int next(grib_iterator* i, double *lat, double *lon, double *val)
+{
     grib_iterator_regular* self = (grib_iterator_regular*)i;
 
     if((long)i->e >= (long)(i->nv-1))  return 0;
@@ -111,7 +112,8 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val){
     return 1;
 }
 
-static int previous(grib_iterator* i, double *lat, double *lon, double *val){
+static int previous(grib_iterator* i, double *lat, double *lon, double *val)
+{
     grib_iterator_regular* self = (grib_iterator_regular*)i;
 
     if(i->e < 0)      return 0;
@@ -178,12 +180,11 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
     if (self->iScansNegatively) {
         idir=-idir;
     } else {
-        const double epsilon = 1e-6;
         if (lon1+(Ni-2)*idir>360) lon1-=360;
-        else if ( (lon1+(Ni-1)*idir)-360 > epsilon ){
-            /*See GRIB-396*/
+        /*See ECC-704, GRIB-396*/
+        /*else if ( (lon1+(Ni-1)*idir)-360 > epsilon ){
             idir=360.0/(float)Ni;
-        }
+        }*/
     }
 
     self->nap = Ni;
