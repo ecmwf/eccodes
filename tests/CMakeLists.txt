@@ -55,6 +55,7 @@ list( APPEND tests_no_data_reqd
     bufr_ecc-517
     bufr_subTypes
     grib_efas
+    grib_mars_types
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
