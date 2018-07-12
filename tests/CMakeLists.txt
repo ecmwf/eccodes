@@ -20,7 +20,7 @@ list( APPEND test_bins
       bufr_keys_iter
       gauss_sub
       grib_util_set_spec
-      local_MeteoFrance
+      grib_local_MeteoFrance
       grib_2nd_order_numValues
       optimize_scaling
       optimize_scaling_sh
@@ -137,7 +137,7 @@ list( APPEND tests_data_reqd
     read_any
     grib_dump
     grib_dump_debug
-    local_MeteoFrance
+    grib_local_MeteoFrance
     grib_neg_fctime
     codes_split_file
 )
