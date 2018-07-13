@@ -126,12 +126,6 @@ const RotatedLL* RotatedLL::croppedRepresentation(const util::BoundingBox& bbox)
 }
 
 
-util::BoundingBox RotatedLL::extendedBoundingBox(const util::BoundingBox& bbox) const {
-    util::BoundingBox rotated = bbox.rotate(rotation_);
-    return LatLon::extendedBoundingBox(rotated);
-}
-
-
 namespace {
 static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll");  // Name is what is returned by grib_api
 }

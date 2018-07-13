@@ -67,12 +67,6 @@ bool RotatedGG::sameAs(const Representation& other) const {
 }
 
 
-util::BoundingBox RotatedGG::extendedBoundingBox(const util::BoundingBox& bbox) const {
-    util::BoundingBox rotated = bbox.rotate(rotation_);
-    return Regular::extendedBoundingBox(rotated);
-}
-
-
 void RotatedGG::fill(grib_info& info) const  {
     Regular::fill(info);
     rotation_.fill(info);

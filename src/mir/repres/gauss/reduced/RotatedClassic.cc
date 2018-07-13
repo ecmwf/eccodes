@@ -56,12 +56,6 @@ bool RotatedClassic::sameAs(const Representation&) const {
 }
 
 
-util::BoundingBox RotatedClassic::extendedBoundingBox(const util::BoundingBox& bbox) const {
-    util::BoundingBox rotated = bbox.rotate(rotation_);
-    return Reduced::extendedBoundingBox(rotated);
-}
-
-
 Iterator* RotatedClassic::iterator() const {
     return rotatedIterator(rotation_);
 }

@@ -61,12 +61,6 @@ bool RotatedFromPL::sameAs(const Representation& other) const {
 }
 
 
-util::BoundingBox RotatedFromPL::extendedBoundingBox(const util::BoundingBox& bbox) const {
-    util::BoundingBox rotated = bbox.rotate(rotation_);
-    return Reduced::extendedBoundingBox(rotated);
-}
-
-
 Iterator* RotatedFromPL::iterator() const {
     return rotatedIterator(rotation_);
 }
