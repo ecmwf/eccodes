@@ -1,4 +1,5 @@
-# EFAS Gridded observations
+# Simulation forced with observations (EFAS)
+# Water Balance
 
 # ECC-701
 alias mars.step = endStep;
@@ -10,6 +11,7 @@ alias mars.time = timeOfForecast;
 #alias mars.date = valDate;
 #alias mars.time = valTime;
 
+#meta efas_suite_name sprintf("%s_%s_%s", inputOriginatingCentre, efas_forecast, efas_post_proc) : no_copy;
 alias mars.origin = inputOriginatingCentre;
 
 alias mars.anoffset=anoffset;

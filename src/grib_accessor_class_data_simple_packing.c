@@ -181,7 +181,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
     self->dirty=1;
 }
 
-static unsigned long nbits[32]={
+static const unsigned long nbits[32]={
         0x1, 0x2, 0x4, 0x8, 0x10, 0x20,
         0x40, 0x80, 0x100, 0x200, 0x400, 0x800,
         0x1000, 0x2000, 0x4000, 0x8000, 0x10000, 0x20000,
@@ -193,7 +193,7 @@ static unsigned long nbits[32]={
 static int number_of_bits(unsigned long x, long* result)
 {
     const int count = sizeof(nbits)/sizeof(nbits[0]);
-    unsigned long *n=nbits;
+    const unsigned long *n=nbits;
     *result=0;
     while (x >= *n) {
         n++;

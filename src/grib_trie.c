@@ -11,7 +11,7 @@
 #include "grib_api_internal.h"
 
 /* Note: all non-alpha are mapped to 0 */
-static int mapping[] = {
+static const int mapping[] = {
 0, /* 00 */
 0, /* 01 */
 0, /* 02 */
