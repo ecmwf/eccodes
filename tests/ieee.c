@@ -78,7 +78,7 @@ static int test_doubles(ieee_to_long_proc ieee_to_long, long_to_ieee_proc long_t
                 printf("Error: %.10f (diff=%.10f)\n", start, reldiff);
                 num_errors ++;
             } else {
-                //printf("Success: %.10f (diff=%.10f)\n", start, reldiff);
+                /*printf("Success: %.10f (diff=%.10f)\n", start, reldiff);*/
             }
             if (reldiff > max_reldiff) max_reldiff = reldiff;
         }
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
 	assert( test_doubles(grib_ieee64_to_long, grib_long_to_ieee64)==1 );
 
     printf("Test integers...\n");
-	// test(3242539564, grib_ieee_to_long, grib_long_to_ieee); // This fails!
+	/* test(3242539564, grib_ieee_to_long, grib_long_to_ieee); This fails! */
 	assert(grib_ieee_to_long(grib_long_to_ieee(i)) == i);
 
 	/* The minimum value for which we can convert a long to ieee and back is 0x800000 */
