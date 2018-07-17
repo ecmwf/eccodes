@@ -663,8 +663,8 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
     double packingError1=0,packingError2=0;
     double value_tolerance=0;
     grib_context* c=handle1->context;
-    char* first_str = (handles_swapped==0? "1st" : "2nd");
-    char* second_str = (handles_swapped==0? "2nd" : "1st");
+    const char* first_str = (handles_swapped==0? "1st" : "2nd");
+    const char* second_str = (handles_swapped==0? "2nd" : "1st");
 
     type1=type;
     type2=type;

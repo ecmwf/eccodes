@@ -313,7 +313,7 @@ int grib_encode_unsigned_longb(unsigned char* p, unsigned long val ,long *bitp, 
     {
         unsigned long maxV = grib_power(nb,2);
         if (val > maxV) {
-            fprintf(stderr, "grib_encode_unsigned_longb: Value=%ld, but number of bits=%ld!\n", val, nb);
+            fprintf(stderr, "grib_encode_unsigned_longb: Value=%lu, but number of bits=%ld!\n", val, nb);
             Assert(0);
         }
     }
