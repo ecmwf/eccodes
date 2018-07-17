@@ -241,6 +241,13 @@ void Representation::reorder(long, MIRValuesVector&) const {
 }
 
 
+void Representation::crop(const param::MIRParametrisation&, context::Context&) const {
+    std::ostringstream os;
+    os << "Representation::crop() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
 Iterator *Representation::iterator() const {
     std::ostringstream os;
     os << "Representation::iterator() not implemented for " << *this;
