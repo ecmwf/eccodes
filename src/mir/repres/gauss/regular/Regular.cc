@@ -328,12 +328,6 @@ size_t Regular::frame(MIRValuesVector& values, size_t size, double missingValue)
 }
 
 
-void Regular::shape(size_t& ni, size_t& nj) const {
-    ni = Ni_;
-    nj = Nj_;
-}
-
-
 }  // namespace regular
 }  // namespace gauss
 }  // namespace repres

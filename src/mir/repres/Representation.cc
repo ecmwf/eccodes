@@ -134,13 +134,6 @@ void Representation::fill(util::MeshGeneratorParameters&) const {
 }
 
 
-void Representation::shape(size_t&, size_t&) const {
-    std::ostringstream os;
-    os << "Representation::shape() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
-}
-
-
 const Representation *Representation::croppedRepresentation(const util::BoundingBox&) const {
     std::ostringstream os;
     os << "Representation::croppedRepresentation() not implemented for " << *this;
@@ -244,13 +237,6 @@ size_t Representation::frame(MIRValuesVector&, size_t, double) const {
 void Representation::reorder(long, MIRValuesVector&) const {
     std::ostringstream os;
     os << "Representation::reorder() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
-}
-
-
-void Representation::crop(const param::MIRParametrisation&, context::Context&) const {
-    std::ostringstream os;
-    os << "Representation::crop() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 

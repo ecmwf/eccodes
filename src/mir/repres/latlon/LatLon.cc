@@ -46,11 +46,6 @@ static void check(const util::BoundingBox& bbox, const util::Increments& inc, si
 }
 
 
-static eckit::Fraction::value_type computeN(const eckit::Fraction& value, const eckit::Fraction& increment) {
-    return (value / increment).integralPart();
-}
-
-
 }  // (anonymous namespace)
 
 
@@ -371,12 +366,6 @@ void LatLon::validate(const MIRValuesVector& values) const {
 
     eckit::Log::debug<LibMir>() << "LatLon::validate checked " << eckit::Plural(values.size(), "value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
     ASSERT(values.size() == count);
-}
-
-
-void LatLon::shape(size_t& ni, size_t& nj) const {
-    ni = ni_;
-    nj = nj_;
 }
 
 
