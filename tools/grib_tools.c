@@ -813,6 +813,17 @@ void grib_skip_check(grib_runtime_options* options,grib_handle* h)
     }
 }
 
+/* See ECC-707 */
+static int fix_for_lsdate_needed(grib_handle* h)
+{
+    long lsdate_bug = 0;
+    int err = grib_get_long(h, "lsdate_bug", &lsdate_bug);
+    if (!err && lsdate_bug == 1) {
+        return 1;
+    }
+    return 0;
+}
+
 void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
 {
     int i=0;
@@ -864,15 +875,22 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             }
         } else {
             /* Other products e.g. GRIB */
+            const int fix_lsdate = (fix_for_lsdate_needed(h) && options->name_space && strcmp(options->name_space,"ls")==0);
+
             if (grib_is_missing(h,options->print_keys[i].name,&ret) && ret==GRIB_SUCCESS) {
                 sprintf(value,"MISSING");
             }
             else if ( ret == GRIB_SUCCESS ) {
+                const char* pName = NULL;
                 if (options->print_keys[i].type == GRIB_TYPE_UNDEFINED)
                     grib_get_native_type(h,options->print_keys[i].name,&(options->print_keys[i].type));
                 switch (options->print_keys[i].type) {
                 case GRIB_TYPE_STRING:
-                    ret=grib_get_string( h,options->print_keys[i].name,value,&len);
+                    pName = options->print_keys[i].name;
+                    if (fix_lsdate && strcmp(pName, "date")==0) { /* ECC-707 */
+                        pName = "ls.date";
+                    }
+                    ret=grib_get_string( h,pName,value,&len);
                     break;
                 case GRIB_TYPE_DOUBLE:
                     ret=grib_get_double( h,options->print_keys[i].name,&dvalue);
