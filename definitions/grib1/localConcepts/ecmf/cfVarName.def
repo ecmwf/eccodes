@@ -13930,7 +13930,7 @@
 	 indicatorOfParameter = 169 ;
 	}
 #Soil temperature anomaly level 2
-'slal2' = {
+'stal2' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 170 ;
 	}

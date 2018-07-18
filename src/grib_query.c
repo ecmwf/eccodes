@@ -409,7 +409,7 @@ static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name)
     char* p = NULL;
     DebugAssert(name);
 
-    p = strchr(name, '.');
+    p = strchr((char*)name, '.');
     if ( p ) {
         int i=0,len=0;
         char name_space[MAX_NAMESPACE_LEN];
@@ -439,7 +439,7 @@ char* grib_split_name_attribute(grib_context* c,const char* name,char* attribute
     /*returns accessor name and attribute*/
     size_t size=0;
     char* accessor_name=NULL;
-    char* p = strstr(name, "->");
+    char* p = strstr((char*)name, "->");
     if (!p) {
         *attribute_name=0;
         return (char*)name;
@@ -502,7 +502,7 @@ grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)
     char* p = NULL;
     DebugAssert(name);
 
-    p = strchr(name, '.');
+    p = strchr((char*)name, '.');
     if ( p ) {
         int i=0,len=0;
         char name_space[MAX_NAMESPACE_LEN];

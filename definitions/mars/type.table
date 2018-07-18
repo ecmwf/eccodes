@@ -55,7 +55,8 @@
 65 cv Calibration/Validation forecast
 70 or Ocean reanalysis
 71 fx Flux forcing
-72 fu EFAS Fillup
+72 fu Fill-up
+73 sfo Simulation forced with observations
 80 fcmean Forecast mean
 81 fcmax Forecast maximum
 82 fcmin Forecast minimum

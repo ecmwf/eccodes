@@ -13924,7 +13924,7 @@
 	 parameterNumber = 169 ;
 	}
 #Soil temperature anomaly level 2
-'slal2' = {
+'stal2' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 170 ;

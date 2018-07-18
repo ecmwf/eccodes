@@ -185,7 +185,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
   self->numberOfDataPoints = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
 }
 
-static int used[] ={ 0,1,3,7,15,31,63,127,255};
+static const int used[] ={ 0,1,3,7,15,31,63,127,255};
 
 static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 {

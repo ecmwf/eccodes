@@ -12,7 +12,7 @@
  *  Enrico Fucile
  **************************************/
 
-static int mapping[] = {
+static const int mapping[] = {
 0, /* 00 */
 0, /* 01 */
 0, /* 02 */

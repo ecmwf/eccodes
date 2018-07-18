@@ -51,9 +51,7 @@ struct grib_keys_hash { char* name; int id;};
 #endif
 #endif
 static unsigned int
-hash_keys (str, len)
-     register const char *str;
-     register unsigned int len;
+hash_keys (const char *str, unsigned int len)
 {
   static const unsigned short asso_values[] =
     {
@@ -10673,7 +10671,7 @@ grib_keys_hash_get (const char *str, unsigned int len)
  *  Enrico Fucile
  **************************************/
 
-static int mapping[] = {
+static const int mapping[] = {
 0, /* 00 */
 0, /* 01 */
 0, /* 02 */

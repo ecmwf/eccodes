@@ -243,11 +243,11 @@ static int find(grib_nearest* nearest, grib_handle* h,
             nlon=0;
             for (jj=0;jj<self->j[0];jj++) {
                 row_count=0;ilon_first=0;ilon_last=0;
-                grib_get_reduced_row(pl[jj],self->lon_first,self->lon_last,&row_count,&ilon_first,&ilon_last);
+                grib_get_reduced_row_wrapper(h, pl[jj],self->lon_first,self->lon_last,&row_count,&ilon_first,&ilon_last);
                 nlon+=row_count;
             }
             row_count=0;ilon_first=0;ilon_last=0;
-            grib_get_reduced_row(pl[self->j[0]],self->lon_first,self->lon_last,&row_count,&ilon_first,&ilon_last);
+            grib_get_reduced_row_wrapper(h, pl[self->j[0]],self->lon_first,self->lon_last,&row_count,&ilon_first,&ilon_last);
             nplm1=row_count-1;
         }
         lons=self->lons+nlon;
@@ -276,7 +276,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         if (!nearest_lons_found) {
             if (!self->global) {
                 row_count=0;ilon_first=0;ilon_last=0;
-                grib_get_reduced_row(pl[self->j[0]],self->lon_first,self->lon_last,&row_count,&ilon_first,&ilon_last);
+                grib_get_reduced_row_wrapper(h, pl[self->j[0]],self->lon_first,self->lon_last,&row_count,&ilon_first,&ilon_last);
             } else {
                 row_count=pl[self->j[0]];
             }
@@ -294,11 +294,11 @@ static int find(grib_nearest* nearest, grib_handle* h,
         } else {
             for (jj=0;jj<self->j[1];jj++) {
                 row_count=0;ilon_first=0;ilon_last=0;
-                grib_get_reduced_row(pl[jj],self->lon_first,self->lon_last,&row_count,&ilon_first,&ilon_last);
+                grib_get_reduced_row_wrapper(h, pl[jj],self->lon_first,self->lon_last,&row_count,&ilon_first,&ilon_last);
                 nlon+=row_count;
             }
             row_count=0;ilon_first=0;ilon_last=0;
-            grib_get_reduced_row(pl[self->j[1]],self->lon_first,self->lon_last,&nplm1,&ilon_first,&ilon_last);
+            grib_get_reduced_row_wrapper(h, pl[self->j[1]],self->lon_first,self->lon_last,&nplm1,&ilon_first,&ilon_last);
             nplm1--;
         }
         lons=self->lons+nlon;
@@ -327,7 +327,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         if (!nearest_lons_found) {
             if (!self->global) {
                 row_count=0;ilon_first=0;ilon_last=0;
-                grib_get_reduced_row(pl[self->j[1]],self->lon_first,self->lon_last,&row_count,&ilon_first,&ilon_last);
+                grib_get_reduced_row_wrapper(h, pl[self->j[1]],self->lon_first,self->lon_last,&row_count,&ilon_first,&ilon_last);
             } else {
                 row_count=pl[self->j[1]];
             }

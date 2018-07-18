@@ -186,6 +186,10 @@ static int init(grib_iterator* iter, grib_handle *h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
     iter->nv = dli;
+    if (iter->nv==0) {
+        grib_context_log(h->context,GRIB_LOG_ERROR,"size(%s) is %ld", s_rawData, dli);
+        return GRIB_WRONG_GRID;
+    }
     iter->data = (double*)grib_context_malloc(h->context,(iter->nv)*sizeof(double));
 
     if( (err = grib_get_double_array_internal(h,s_rawData,iter->data ,&(iter->nv))))

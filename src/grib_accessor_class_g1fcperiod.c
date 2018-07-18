@@ -48,6 +48,7 @@ typedef struct grib_accessor_g1fcperiod {
 	const char *step_unit;
 	const char *stepType;
 	const char *patch_fp_precip;
+	int error_on_units;
 /* Members defined in g1fcperiod */
 } grib_accessor_g1fcperiod;
 

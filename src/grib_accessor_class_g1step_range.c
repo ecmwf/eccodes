@@ -30,6 +30,7 @@
    MEMBERS    = const char *step_unit
    MEMBERS    = const char *stepType
    MEMBERS    = const char *patch_fp_precip
+   MEMBERS    = int error_on_units
    END_CLASS_DEF
 
  */
@@ -71,6 +72,7 @@ typedef struct grib_accessor_g1step_range {
 	const char *step_unit;
 	const char *stepType;
 	const char *patch_fp_precip;
+	int error_on_units;
 } grib_accessor_g1step_range;
 
 extern grib_accessor_class* grib_accessor_class_abstract_long_vector;
@@ -164,6 +166,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     self->step_unit           = grib_arguments_get_name(h,c,n++);
     self->stepType            = grib_arguments_get_name(h,c,n++);
     self->patch_fp_precip     = grib_arguments_get_name(h,c,n++);
+    self->error_on_units = 1;
 
     self->number_of_elements=2;
     self->v=(long*)grib_context_malloc_clear(h->context,
@@ -177,12 +180,9 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
     grib_dump_string(dumper,a,NULL);
-
 }
 
-static int error_on_units=1;
-
-static int u2s1[] =  {
+static const int u2s1[] =  {
         60,      /* (0) minutes */
         3600,    /* (1) hour    */
         86400,   /* (2) day     */
@@ -201,11 +201,11 @@ static int u2s1[] =  {
         1        /* (15) seconds  */   /* See ECC-316 */
 };
 
-static int units_index[] = {
+static const int units_index[] = {
         1,0,10,11,12,2,0,13,14,15
 };
 
-static int u2s[] =  {
+static const int u2s[] =  {
         60,      /* (0) minutes */
         3600,    /* (1) hour    */
         86400,   /* (2) day     */
@@ -324,7 +324,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
         else
             sprintf(step_unit_string,"h");
 
-        if (error_on_units) {
+        if (self->error_on_units) {
             grib_get_long_internal(hand,self->unit,&unit);
             if (unit==254) {
                 unit=15; /* See ECC-316 */
@@ -640,9 +640,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         return pack_string( a,buff,&bufflen);
     case  0 :
         self->pack_index=-1;
-        error_on_units=0;
+        self->error_on_units=0;
         unpack_string(a,sval,&svallen);
-        error_on_units=1;
+        self->error_on_units=1;
         while (*p != '-' && *p != '\0' ) p++;
         if (*p=='-') {
             sprintf(buff,"%ld-%s",*val,++p);
@@ -656,9 +656,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         return pack_string( a,buff,&bufflen);
     case  1 :
         self->pack_index=-1;
-        error_on_units=0;
+        self->error_on_units=0;
         unpack_string(a,sval,&svallen);
-        error_on_units=1;
+        self->error_on_units=1;
         while (*p != '-' && *p != '\0' ) p++;
         if (*p=='-') {
             *p='\0';

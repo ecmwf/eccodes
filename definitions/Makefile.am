@@ -16306,12 +16306,12 @@ dist_definitionsmars_DATA = \
 	mars/grib.edmo.cl.def\
 	mars/grib.edmo.fc.def\
 	mars/grib.edmo.ssd.def\
-	mars/grib.efas.an.def\
 	mars/grib.efas.cf.def\
 	mars/grib.efas.fc.def\
 	mars/grib.efas.fu.def\
 	mars/grib.efas.go.def\
 	mars/grib.efas.pf.def\
+	mars/grib.efas.sfo.def\
 	mars/grib.efhc.cf.def\
 	mars/grib.efhc.icp.def\
 	mars/grib.efhc.pf.def\
