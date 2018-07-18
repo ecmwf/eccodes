@@ -281,7 +281,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 } else {
                     fprintf(stdout,"\"ERROR: unable to unpack data section\"");
                     options->error=err;
-                    return err;
+                    /*return err; See ECC-723*/
                 }
             }
             a=grib_find_accessor(h,"numericValues");
@@ -299,7 +299,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 } else {
                     fprintf(stdout,"\"ERROR: unable to unpack data section\"");
                     options->error=err;
-                    return err;
+                    /*return err; See ECC-723*/
                 }
             }
             grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
@@ -314,7 +314,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 } else {
                     fprintf(stdout,"\"ERROR: unable to unpack data section\"");
                     options->error=err;
-                    return err;
+                    /*return err; See ECC-723*/
                 }
             }
             options->dump_flags=GRIB_DUMP_FLAG_ALL_ATTRIBUTES;
@@ -338,9 +338,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 fprintf(stderr, "ERROR: unable to unpack data section: %s\n",grib_get_error_message(err));
                 exit(err);
             } else {
-                fprintf(stdout,"\"ERROR: unable to unpack data section\"");
+                fprintf(stdout,"ERROR: unable to unpack data section\n");
                 options->error=err;
-                return err;
+                /*return err; See ECC-723*/
             }
         }
         grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
@@ -354,7 +354,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             } else {
                 fprintf(stdout,"\"ERROR: unable to unpack data section\"");
                 options->error=err;
-                return err;
+                /*return err; See ECC-723*/
             }
         }
         print_header(options);
