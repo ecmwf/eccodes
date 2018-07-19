@@ -802,7 +802,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     }
 
     ii=0;
-    while (*v==GRIB_MISSING_DOUBLE && ii<nvals) {
+    while (ii<nvals && *v==GRIB_MISSING_DOUBLE) {
         thereIsAMissing=1;
         v++;
         ii++;
