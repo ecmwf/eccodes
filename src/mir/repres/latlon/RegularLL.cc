@@ -78,13 +78,17 @@ atlas::Grid RegularLL::atlasGrid() const {
     // NOTE: for non-shifted/shifted grid, yspace uses bounding box
     // (this works together with the Atlas RectangularDomain cropping)
     const util::Domain dom = domain();
+    double n = bbox_.north().value();
+    double s = bbox_.south().value();
+    double w = dom.west().value();
+    double e = dom.east().value();
 
     using atlas::grid::StructuredGrid;
     using atlas::grid::LinearSpacing;
-    StructuredGrid::XSpace xspace( LinearSpacing( dom.west().value(),  dom.east().value(),  long(ni_), !dom.isPeriodicEastWest() ));
-    StructuredGrid::YSpace yspace( LinearSpacing( bbox_.north().value(), bbox_.south().value(), long(nj_) ));
+    StructuredGrid::XSpace xspace(LinearSpacing(w, e, long(ni_), !dom.isPeriodicEastWest()));
+    StructuredGrid::YSpace yspace(LinearSpacing(n, s, long(nj_)));
 
-    return StructuredGrid(xspace, yspace, StructuredGrid::Projection(), domain());
+    return StructuredGrid(xspace, yspace, StructuredGrid::Projection(), dom);
 }
 
 
