@@ -67,7 +67,12 @@ tigge_cf_ecmwf.grib2
 # Check if JPEG is enabled
 if [ $HAVE_JPEG -eq 1 ]; then
     # Include files which have messages with grid_jpeg packing
-    files="jpeg.grib2  multi.grib2  reduced_gaussian_surface_jpeg.grib2  v.grib2 "$files
+    echo "Add extra files (HAVE_JPEG=1)"
+    files="jpeg.grib2  reduced_gaussian_surface_jpeg.grib2 "$files
+    if [ $HAVE_EXTRA_TESTS -eq 1 ]; then
+        echo "Add extra files (HAVE_EXTRA_TESTS=1)"
+        files=" v.grib2 multi.grib2 "$files  # much slower
+    fi
 fi
 
 for file in $files; do
