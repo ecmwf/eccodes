@@ -69,12 +69,9 @@ GRIB2_INPUTS="
   ${data_dir}/test_file.grib2
   ${data_dir}/sample.grib2"
 
-# Check HAVE_JPEG is defined and is equal to 1
-if [ "x$HAVE_JPEG" != x ]; then
-    if [ $HAVE_JPEG -eq 1 ]; then
-        # Include files which have messages with grid_jpeg packing
-        GRIB2_INPUTS="${data_dir}/jpeg.grib2 ${data_dir}/reduced_gaussian_surface_jpeg.grib2 "$GRIB2_INPUTS
-    fi
+if [ $HAVE_JPEG -eq 1 ]; then
+    echo "Adding extra files (HAVE_JPEG=1)"
+    GRIB2_INPUTS="${data_dir}/jpeg.grib2 ${data_dir}/reduced_gaussian_surface_jpeg.grib2 "$GRIB2_INPUTS
 fi
 #GRIB2_INPUTS=$GRIB2_INPUTS" ${data_dir}/ccsds.grib2 "
 
