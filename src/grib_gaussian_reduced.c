@@ -43,15 +43,15 @@ static Fraction_value_type fraction_gcd(Fraction_value_type a, Fraction_value_ty
 static Fraction_type fraction_construct(Fraction_value_type top, Fraction_value_type bottom)
 {
     Fraction_type result;
-    Assert(bottom != 0);
 
     /* @note in theory we also assume that numerator and denominator are both representable in
      * double without loss
      *   ASSERT(top == Fraction_value_type(double(top)));
      *   ASSERT(bottom == Fraction_value_type(double(bottom)));
      */
-
+    Fraction_value_type g;
     Fraction_value_type sign = 1;
+    Assert(bottom != 0);
     if (top < 0) {
         top = -top;
         sign = -sign;
@@ -62,7 +62,7 @@ static Fraction_type fraction_construct(Fraction_value_type top, Fraction_value_
         sign = -sign;
     }
 
-    Fraction_value_type g = fraction_gcd(top, bottom);
+    g = fraction_gcd(top, bottom);
     top =  top / g;
     bottom = bottom / g;
 
@@ -75,24 +75,23 @@ static Fraction_type fraction_construct_from_double(double x)
 {
     Fraction_type result;
     double value = x;
+    Fraction_value_type sign = 1;
+    Fraction_value_type m00 = 1, m11 = 1, m01 = 0, m10 = 0;
+    Fraction_value_type a = x;
+    Fraction_value_type t2, top, bottom, g;
+    size_t cnt = 0;
 
-    Assert(x != NAN);
+    /*Assert(x != NAN);*/
     Assert(fabs(x) < 1e30);
 
-    Fraction_value_type sign = 1;
     if (x < 0) {
         sign = -sign;
         x = -x;
     }
 
-    Fraction_value_type m00 = 1, m11 = 1, m01 = 0, m10 = 0;
-    Fraction_value_type a = x;
-    Fraction_value_type t2 = m10 * a + m11;
-
-    size_t cnt = 0;
+    t2 = m10 * a + m11;
 
     while (t2 <= MAX_DENOM) {
-
         Fraction_value_type t1  = m00 * a + m01;
         m01 = m00;
         m00 = t1;
@@ -123,10 +122,10 @@ static Fraction_type fraction_construct_from_double(double x)
         m10 >>= 1;
     }
 
-    Fraction_value_type top = m00;
-    Fraction_value_type bottom = m10;
+    top = m00;
+    bottom = m10;
 
-    Fraction_value_type g = fraction_gcd(top, bottom);
+    g = fraction_gcd(top, bottom);
     top =  top / g;
     bottom = bottom / g;
 
@@ -257,20 +256,23 @@ static void gaussian_reduced_row(
         double*             pLon1,
         double*             pLon2)
 {
-    Assert(Ni_globe > 1);
-    Fraction_type inc = fraction_construct(360ll, Ni_globe);
+    Fraction_value_type Nw, Ne;
+    Fraction_type inc, Nw_inc, Ne_inc;
+    inc = fraction_construct(360ll, Ni_globe);
 
     /* auto Nw = (w / inc).integralPart(); */
-    Fraction_value_type Nw = fraction_integralPart( fraction_operator_divide(w, inc) );
-    Fraction_type Nw_inc = fraction_operator_multiply_n_Frac(Nw, inc);
+    Nw = fraction_integralPart( fraction_operator_divide(w, inc) );
+    Nw_inc = fraction_operator_multiply_n_Frac(Nw, inc);
+
+    Assert(Ni_globe > 1);
     /*if (Nw * inc < w) {*/
     if (fraction_operator_less_than(Nw_inc, w)) {
         Nw += 1;
     }
 
     /*auto Ne = (e / inc).integralPart();*/
-    Fraction_value_type Ne = fraction_integralPart( fraction_operator_divide(e, inc) );
-    Fraction_type Ne_inc = fraction_operator_multiply_n_Frac(Ne, inc);
+    Ne = fraction_integralPart( fraction_operator_divide(e, inc) );
+    Ne_inc = fraction_operator_multiply_n_Frac(Ne, inc);
     /* if (Ne * inc > e) */
     if (fraction_operator_greater_than(Ne_inc, e)) {
         Ne -= 1;
