@@ -108,25 +108,27 @@ int main(int argc, char **argv)
         printf("Running sequentially in %ld runs. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
     }
 
-    pthread_t workers[NUM_THREADS];
-    for (i = 0; i < NUM_THREADS; i++) {
-        struct v *data = (struct v *) malloc(sizeof(struct v));
-        data->number = i;
-        data->data = NULL;
+    {
+        pthread_t workers[NUM_THREADS];
+        for (i = 0; i < NUM_THREADS; i++) {
+            struct v *data = (struct v *) malloc(sizeof(struct v));
+            data->number = i;
+            data->data = NULL;
+
+            if (parallel) {
+                /* Now we will create the thread passing it data as an argument */
+                pthread_create(&workers[thread_counter], NULL, runner, data);
+                /*pthread_join(workers[thread_counter], NULL);*/
+                thread_counter++;
+            } else {
+                do_stuff(data);
+            }
+        }
 
         if (parallel) {
-            /* Now we will create the thread passing it data as an argument */
-            pthread_create(&workers[thread_counter], NULL, runner, data);
-            /*pthread_join(workers[thread_counter], NULL);*/
-            thread_counter++;
-        } else {
-            do_stuff(data);
-        }
-    }
-
-    if (parallel) {
-        for (i = 0; i < NUM_THREADS; i++)  {
-            pthread_join(workers[i], NULL);
+            for (i = 0; i < NUM_THREADS; i++)  {
+                pthread_join(workers[i], NULL);
+            }
         }
     }
 
@@ -145,15 +147,14 @@ void do_stuff(void *ptr)
     struct v *data = ptr;
     size_t i;
     char output_file[50];
+    time_t ltime;
+    struct tm result;
+    char stime[32];
 
     for (i=0; i<FILES_PER_ITERATION;i++) {
         sprintf(output_file,"output/output_file_%ld-%ld.grib", data->number, i);
         encode_file(INPUT_FILE,output_file);
     }
-
-    time_t ltime;
-    struct tm result;
-    char stime[32];
 
     ltime = time(NULL);
     localtime_r(&ltime, &result);

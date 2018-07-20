@@ -230,6 +230,7 @@ int main (int argc, char * argv[])
     size_t len;
     grib_handle * h;
     double zval[ILCHAM];
+    int m, n, k;
 
     GRIB_CHECK (((h = grib_handle_new_from_samples (NULL, "sh_ml_grib2")) == NULL), 0);
 
@@ -258,7 +259,6 @@ int main (int argc, char * argv[])
     len = ILCHAM;
     GRIB_CHECK (grib_get_double_array (h, "values", zval, &len), 0);
 
-    int m, n, k;
     for (m = 0, k = 0; m < MTRONC+1; m++)
         for (n = m; n < MTRONC+1; k++, n++)
         {
