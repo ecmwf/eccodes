@@ -159,8 +159,7 @@ grib_option grib_options[]={
         {"c:",0,0,0,1,0},
         {"S:","start","First field to be processed.\n",0,1,0},
         {"E:","end","Last field to be processed.\n",0,1,0},
-        {"a",0,"-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n"
-                ,0,1,0},
+        {"a",0,"-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n",0,1,0},
         {"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
         {"R:",0,0,0,1,0},
         {"A:",0,0,0,1,0},
