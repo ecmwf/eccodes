@@ -1,11 +1,10 @@
 /*
- * Test for ECC-604: Each thread creates a new GRIB handle and writes it out.
- *                   It does not clone the handle.
+ * Test for ECC-604: Each thread creates a new GRIB handle, clones it and writes it out
  */
-
 #include <time.h>
 #include <pthread.h>
 #include <assert.h>
+#include <unistd.h>
 
 #include "grib_api.h"
 
@@ -13,6 +12,8 @@
 static size_t NUM_THREADS         = 0;
 static size_t FILES_PER_ITERATION = 0;
 static char*  INPUT_FILE          = NULL;
+int opt_clone = 0; /* If 1 then clone source handle */
+int opt_write = 0; /* If 1 write handle to file */
 
 static int encode_file(char *template_file, char *output_file)
 {
@@ -24,46 +25,56 @@ static int encode_file(char *template_file, char *output_file)
     double *values;
 
     in = fopen(template_file,"r"); assert(in);
-    out = fopen(output_file,"w");  assert(out);
+    if (output_file) {
+        out = fopen(output_file,"w");  assert(out);
+    }
 
-    /* loop over the messages in the source GRIB */
+    /* loop over the messages in the source GRIB and clone them */
     while ((source_handle = grib_handle_new_from_file(0, in, &err))!=NULL) {
         int i;
         size_t values_len = 0;
         size_t str_len = 20;
+        grib_handle *h = source_handle;
+        
+        if (opt_clone) {
+            h = grib_handle_clone(source_handle); assert(h);
+        }
 
-        /*GRIB_CHECK(grib_set_long(source_handle, "centre", 250),0);*/
-        GRIB_CHECK(grib_get_size(source_handle, "values", &values_len),0);
+        GRIB_CHECK(grib_get_size(h, "values", &values_len),0);
 
         values = (double*)malloc(values_len*sizeof(double));
-        GRIB_CHECK(grib_get_double_array(source_handle, "values", values, &values_len),0);
+        GRIB_CHECK(grib_get_double_array(h, "values", values, &values_len),0);
 
         for (i=0;i<values_len;i++) {
             values[i] *= 0.9;
         }
 
-        GRIB_CHECK(grib_set_string(source_handle,"stepUnits", "s", &str_len),0);
-        GRIB_CHECK(grib_set_long(source_handle, "startStep", 43200), 0);
-        GRIB_CHECK(grib_set_long(source_handle, "endStep", 86400), 0);
-        GRIB_CHECK(grib_set_long(source_handle, "bitsPerValue", 16),0);
+        GRIB_CHECK(grib_set_string(h,"stepUnits", "s", &str_len),0);
+        GRIB_CHECK(grib_set_long(h, "startStep", 43200), 0);
+        GRIB_CHECK(grib_set_long(h, "endStep", 86400), 0);
+        GRIB_CHECK(grib_set_long(h, "bitsPerValue", 16),0);
 
         /* set data values */
-        GRIB_CHECK(grib_set_double_array(source_handle,"values",values,values_len),0);
+        GRIB_CHECK(grib_set_double_array(h,"values",values,values_len),0);
 
-        GRIB_CHECK(grib_get_message(source_handle,&buffer,&size),0);
-        if(fwrite(buffer,1,size,out) != size) {
-            perror(output_file);
-            return 1;
+        GRIB_CHECK(grib_get_message(h,&buffer,&size),0);
+        if (output_file) {
+            if(fwrite(buffer,1,size,out) != size) {
+                perror(output_file);
+                return 1;
+            }
         }
         {
             FILE *devnull = fopen("/dev/null", "w");
-            grib_dump_content(source_handle,devnull,"debug",0,NULL);
+            grib_dump_content(source_handle,devnull, "debug", 0, NULL);
         }
+
         grib_handle_delete(source_handle);
+        if(opt_clone) grib_handle_delete(h);
         free(values);
     }
 
-    fclose(out);
+    if (output_file) fclose(out);
     fclose(in);
 
     return 0;
@@ -83,24 +94,32 @@ int main(int argc, char **argv)
 {
     size_t i;
     int thread_counter = 0;
-    int parallel = 1;
+    int parallel=1, index=0, c=0;
     const char* prog = argv[0];
     char* mode;
-    if (argc!=5) {
-        fprintf(stderr, "Usage:\n\t%s seq file numRuns numIter\nOr\n\t%s par file numThreads numIter\n", prog, prog);
+    if (argc<5 || argc>7) {
+        fprintf(stderr, "Usage:\n\t%s [options] seq file numRuns numIter\nOr\n\t%s [options] par file numThreads numIter\n", prog, prog);
         return 1;
     }
-    mode = argv[1];
-    INPUT_FILE= argv[2];
-    NUM_THREADS = atol(argv[3]);
-    FILES_PER_ITERATION = atol(argv[4]);
+    
+    while ((c = getopt (argc, argv, "cw")) != -1) {
+        switch (c) {
+            case 'c': opt_clone=1; break;
+            case 'w': opt_write=1; break;
+        }
+    }
+    index = optind;
+    mode = argv[index];
+    INPUT_FILE = argv[index+1];
+    NUM_THREADS = atol(argv[index+2]);
+    FILES_PER_ITERATION = atol(argv[index+3]);
 
     if (strcmp(mode,"seq")==0) {
         parallel = 0;
     }
     if (parallel) {
         printf("Running parallel in %ld threads. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
-        printf("Each thread creates a new GRIB handle and writes it out. No cloning the handle\n");
+        printf("Options: clone=%d, write=%d\n", opt_clone, opt_write);
     } else {
         printf("Running sequentially in %ld runs. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
     }
@@ -149,8 +168,12 @@ void do_stuff(void *ptr)
     char stime[32];
 
     for (i=0; i<FILES_PER_ITERATION;i++) {
-        sprintf(output_file,"output/output_file_%ld-%ld.grib", data->number, i);
-        encode_file(INPUT_FILE,output_file);
+        if (opt_write) {
+            sprintf(output_file,"output/output_file_%ld-%ld.grib", data->number, i);
+            encode_file(INPUT_FILE,output_file);
+        } else {
+            encode_file(INPUT_FILE,NULL);
+        }
     }
 
     ltime = time(NULL);
