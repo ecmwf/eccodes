@@ -3219,6 +3219,30 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
     return e;
 }
 
+static size_t string_to_unique_number(const char* axis, const char* str)
+{
+    size_t result = 0;
+    if(strcmp(axis, "type")==0) {
+        /* TODO: not ideal but capture the most common MARS types */
+        if     (strcmp(str,"an")==0) return 2;
+        else if(strcmp(str,"fc")==0) return 9;
+        else if(strcmp(str,"cf")==0) return 10;
+        else if(strcmp(str,"pf")==0) return 11;
+        else if(strcmp(str,"em")==0) return 17;
+        else if(strcmp(str,"es")==0) return 18;
+        else if(strcmp(str,"ep")==0) return 30;
+        else if(strcmp(str,"4i")==0) return 33;
+        else if(strcmp(str,"4g")==0) return 8;
+        else if(strcmp(str,"ia")==0) return 3;
+        else if(strcmp(str,"efi")==0) return 27;
+    }
+    /* Fallback general case: Use hashing */
+    result = 5381;
+    while (*str) {
+        result = 33 * result ^ (unsigned char) *str++;
+    }
+    return result;
+}
 static int fill_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid)
 {
     const request *cube = h->cube;
@@ -3258,8 +3282,18 @@ static int fill_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid)
         }
         else
         {
-            for(j = 0; j < n; ++j)
-                values[j] = atol(get_value(cube, axis, j));
+            for(j = 0; j < n; ++j) {
+                long lv = 0;
+                const char* sv = get_value(cube, axis, j);
+                if (is_number(sv)) {
+                    lv = atol(sv); /* Detect error? */
+                } else {
+                    /* ECC-725: Convert string-valued dimension to integer
+                     * e.g. mars type or stream */
+                    lv = string_to_unique_number(axis, sv);
+                }
+                values[j] = lv;
+            }
         }
 
         stat = nc_inq_varid(ncid, (lowaxis), &var_id);
