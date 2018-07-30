@@ -56,9 +56,11 @@ rm -fr $temp_dir
 mkdir -p $temp_dir
 cd $temp_dir
 
-for bf in $data_dir/bufr/*.bufr; do
-    echo "Doing $bf"
-    process $bf
+bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
+for bf in ${bufr_files}; do
+    b=${data_dir}/bufr/$bf
+    echo "Doing $b"
+    process $b
 done
 
 # Clean up
