@@ -49,14 +49,14 @@ static int encode_file(char *template_file, char *output_file)
             }
         }
         {
-            /* JSON dump with all attributes */
             FILE *devnull = fopen("/dev/null", "w");
             grib_dumper* dumper = NULL;
             const char* dumper_name = "bufr_simple";
-            unsigned long dump_flags = 512;
-            //codes_dump_content(source_handle,devnull, "json", 1024, NULL);
-            dumper=grib_dump_content_with_dumper(source_handle, dumper, devnull, dumper_name, dump_flags,0);
+            unsigned long dump_flags = CODES_DUMP_FLAG_ALL_DATA;
+            //codes_dump_content(source_handle,devnull, "json", 1024, NULL); /* JSON dump with all attributes */
+            dumper=grib_dump_content_with_dumper(source_handle, dumper, devnull, dumper_name, dump_flags, NULL);
             assert(dumper);
+            fclose(devnull);
         }
 
         codes_handle_delete(source_handle);
