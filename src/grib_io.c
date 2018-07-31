@@ -495,7 +495,7 @@ static int read_HDF5_offset(reader *r, int length, unsigned long* v, unsigned ch
 static int read_HDF5(reader *r)
 {
     /* See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock */
-    unsigned char tmp[36]; /* Should be enough */
+    unsigned char tmp[49]; /* Should be enough */
     unsigned char buf[4];
 
     unsigned char version_of_superblock,  size_of_offsets, size_of_lengths, consistency_flags;
@@ -530,48 +530,97 @@ static int read_HDF5(reader *r)
 
     tmp[i++] = version_of_superblock;
 
-    if(version_of_superblock != 2) {
-        grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid version_of_superblock: %ld, only version 2 is supported", (long)version_of_superblock);
+    if (version_of_superblock == 2 || version_of_superblock == 3) {
+        if( (r->read(r->read_data, &size_of_offsets, 1, &err) != 1) || err) {
+            return err;
+        }
+
+        tmp[i++] = size_of_offsets;
+
+        if(size_of_offsets > 8) {
+            grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid size_of_offsets: %ld, only <= 8 is supported", (long)size_of_offsets);
+            return GRIB_NOT_IMPLEMENTED;
+        }
+
+        if( (r->read(r->read_data, &size_of_lengths, 1, &err) != 1) || err) {
+            return err;
+        }
+
+        tmp[i++] = size_of_lengths;
+
+        if( (r->read(r->read_data, &consistency_flags, 1, &err) != 1) || err) {
+            return err;
+        }
+
+        tmp[i++] = consistency_flags;
+
+        err = read_HDF5_offset(r, size_of_offsets, &base_address, tmp, &i);
+        if(err) {
+            return err;
+        }
+
+        err = read_HDF5_offset(r, size_of_offsets, &superblock_extension_address, tmp, &i);
+        if(err) {
+            return err;
+        }
+
+        err = read_HDF5_offset(r, size_of_offsets, &end_of_file_address, tmp, &i);
+        if(err) {
+            return err;
+        }
+    } else if (version_of_superblock == 0 || version_of_superblock == 1) {
+        char skip[4];
+        unsigned long file_free_space_info;
+        unsigned char version_of_file_free_space, version_of_root_group_symbol_table, version_number_shared_header, ch;
+
+        if( (r->read(r->read_data, &version_of_file_free_space, 1, &err) != 1) || err) return err;
+        tmp[i++] = version_of_file_free_space;
+
+        if( (r->read(r->read_data, &version_of_root_group_symbol_table, 1, &err) != 1) || err) return err;
+        tmp[i++] = version_of_root_group_symbol_table;
+
+        if( (r->read(r->read_data, &ch, 1, &err) != 1) || err) return err; /* reserved */
+        tmp[i++] = ch;
+
+        if( (r->read(r->read_data, &version_number_shared_header, 1, &err) != 1) || err) return err;
+        tmp[i++] = version_number_shared_header;
+
+        if( (r->read(r->read_data, &size_of_offsets, 1, &err) != 1) || err) return err;
+        tmp[i++] = size_of_offsets;
+        if (size_of_offsets > 8) {
+            grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid size_of_offsets: %ld, only <= 8 is supported", (long)size_of_offsets);
+            return GRIB_NOT_IMPLEMENTED;
+        }
+
+        if( (r->read(r->read_data, &size_of_lengths, 1, &err) != 1) || err) return err;
+        tmp[i++] = size_of_lengths;
+
+        if( (r->read(r->read_data, &ch, 1, &err) != 1) || err) return err; /*reserved*/
+        tmp[i++] = ch;
+
+        if( (r->read(r->read_data, &skip, 4, &err) != 4) || err) return err; /* Group Leaf/Internal Node K: 4 bytes */
+        tmp[i++] = skip[0]; tmp[i++] = skip[1]; tmp[i++] = skip[2]; tmp[i++] = skip[3];
+
+        if( (r->read(r->read_data, &skip, 4, &err) != 4) || err) return err; /* consistency_flags: 4 bytes */
+        tmp[i++] = skip[0]; tmp[i++] = skip[1]; tmp[i++] = skip[2]; tmp[i++] = skip[3];
+
+        if (version_of_superblock == 1) {
+            /* Indexed storage internal node K and reserved: only in version 1 of superblock */
+            if( (r->read(r->read_data, &skip, 4, &err) != 4) || err) return err;
+            tmp[i++] = skip[0]; tmp[i++] = skip[1]; tmp[i++] = skip[2]; tmp[i++] = skip[3];
+        }
+
+        err = read_HDF5_offset(r, size_of_offsets, &base_address, tmp, &i);
+        if (err) return err;
+
+        err = read_HDF5_offset(r, size_of_offsets, &file_free_space_info, tmp, &i);
+        if (err) return err;
+
+        err = read_HDF5_offset(r, size_of_offsets, &end_of_file_address, tmp, &i);
+        if (err) return err;
+    } else {
+        grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid version of superblock: %ld", (long)version_of_superblock);
         return GRIB_NOT_IMPLEMENTED;
-    }
-
-    if( (r->read(r->read_data, &size_of_offsets, 1, &err) != 1) || err) {
-        return err;
-    }
-
-    tmp[i++] = size_of_offsets;
-
-
-    if(size_of_offsets > 8) {
-        grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid size_of_offsets: %ld, only <= 8 is supported", (long)size_of_offsets);
-        return GRIB_NOT_IMPLEMENTED;
-    }
-
-    if( (r->read(r->read_data, &size_of_lengths, 1, &err) != 1) || err) {
-        return err;
-    }
-
-    tmp[i++] = size_of_lengths;
-
-    if( (r->read(r->read_data, &consistency_flags, 1, &err) != 1) || err) {
-        return err;
-    }
-
-    tmp[i++] = consistency_flags;
-
-    err = read_HDF5_offset(r, size_of_offsets, &base_address, tmp, &i);
-    if(err) {
-        return err;
-    }
-
-    err = read_HDF5_offset(r, size_of_offsets, &superblock_extension_address, tmp, &i);
-    if(err) {
-        return err;
-    }
-
-    err = read_HDF5_offset(r, size_of_offsets, &end_of_file_address, tmp, &i);
-    if(err) {
-        return err;
     }
 
     Assert(i <= sizeof(tmp));
