@@ -491,7 +491,11 @@ static int read_HDF5_offset(reader *r, int length, unsigned long* v, unsigned ch
 
     return 0;
 }
-
+static int check_hdf5_superblock_version(unsigned char version)
+{
+    if (version==0 || version==1 || version==2 || version==3) return GRIB_SUCCESS;
+    return GRIB_INVALID_MESSAGE;
+}
 static int read_HDF5(reader *r)
 {
     /* See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock */
@@ -529,9 +533,9 @@ static int read_HDF5(reader *r)
     }
 
     tmp[i++] = version_of_superblock;
-
-    if(version_of_superblock != 2) {
-        grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid version_of_superblock: %ld, only version 2 is supported", (long)version_of_superblock);
+    err = check_hdf5_superblock_version(version_of_superblock);
+    if(err) {
+        grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid version of superblock: %ld", (long)version_of_superblock);
         return GRIB_NOT_IMPLEMENTED;
     }
 
