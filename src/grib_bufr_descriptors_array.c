@@ -10,6 +10,9 @@
 
 #include "grib_api_internal.h"
 
+#define DYN_ARRAY_SIZE_INIT 200 /* Initial size for grib_bufr_descriptors_array_new */
+#define DYN_ARRAY_SIZE_INCR 400 /* Increment size for the above */
+
 bufr_descriptors_array* grib_bufr_descriptors_array_new(grib_context* c,size_t size,size_t incsize)
 {
     bufr_descriptors_array* v=NULL;
@@ -94,8 +97,8 @@ bufr_descriptors_array* grib_bufr_descriptors_array_resize(bufr_descriptors_arra
 bufr_descriptors_array* grib_bufr_descriptors_array_push(bufr_descriptors_array* v,bufr_descriptor* val)
 {
     if (!v) {
-        size_t start_size=100;
-        size_t start_incsize=100;
+        size_t start_size=DYN_ARRAY_SIZE_INIT;
+        size_t start_incsize=DYN_ARRAY_SIZE_INCR;
         v=grib_bufr_descriptors_array_new(0,start_size,start_incsize);
     }
 
@@ -113,8 +116,8 @@ bufr_descriptors_array* grib_bufr_descriptors_array_append(bufr_descriptors_arra
     bufr_descriptor* vv=0;
 
     if (!v) {
-        size_t start_size=100;
-        size_t start_incsize=100;
+        size_t start_size=DYN_ARRAY_SIZE_INIT;
+        size_t start_incsize=DYN_ARRAY_SIZE_INCR;
         v=grib_bufr_descriptors_array_new(0,start_size,start_incsize);
     }
 
@@ -133,8 +136,8 @@ bufr_descriptors_array* grib_bufr_descriptors_array_push_front(bufr_descriptors_
 {
     int i;
     if (!v) {
-        size_t start_size=100;
-        size_t start_incsize=100;
+        size_t start_size=DYN_ARRAY_SIZE_INIT;
+        size_t start_incsize=DYN_ARRAY_SIZE_INCR;
         v=grib_bufr_descriptors_array_new(0,start_size,start_incsize);
     }
 
