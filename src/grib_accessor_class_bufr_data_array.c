@@ -2153,7 +2153,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
         grib_sarray_delete        (c, self->tempStrings);
         self->tempStrings=NULL;
     }
-    self->tempStrings = grib_sarray_new(c, self->numberOfSubsets, 10);
+    self->tempStrings = grib_sarray_new(c, self->numberOfSubsets, 500);
 
     end= self->compressedData ? 1 : self->numberOfSubsets;
     groupNumber=1;
