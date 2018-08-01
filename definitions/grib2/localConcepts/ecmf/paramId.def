@@ -16255,31 +16255,31 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 128 ;
 	}
-#Ocean potential temperature
+#Sea water potential temperature
 '151129' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 129 ;
 	}
-#Salinity
+#Sea water practical salinity
 '151130' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 130 ;
 	}
-#Ocean current zonal component
+#Eastward sea water velocity
 '151131' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 131 ;
 	}
-#Ocean current meridional component
+#Northward sea water velocity
 '151132' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 132 ;
 	}
-#Ocean current vertical component
+#Upward sea water velocity
 '151133' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
@@ -16309,7 +16309,7 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 137 ;
 	}
-#Sigma-theta
+#Sea water sigma theta
 '151138' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
@@ -16351,7 +16351,7 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 144 ;
 	}
-#Sea level
+#Sea surface height
 '151145' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
@@ -16363,7 +16363,7 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 146 ;
 	}
-#Barotropic stream function
+#Ocean barotropic stream function
 '151147' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
@@ -16399,13 +16399,13 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 152 ;
 	}
-#U stress
+#Surface downward eastward stress
 '151153' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 153 ;
 	}
-#V stress
+#Surface downward northward stress
 '151154' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
@@ -16459,7 +16459,7 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 162 ;
 	}
-#20 degrees isotherm depth
+#Depth of 20C isotherm
 '151163' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;

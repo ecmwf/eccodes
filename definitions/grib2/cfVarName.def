@@ -17,8 +17,8 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 45 ;
 	}
-#Sea-ice cover
-'ci' = {
+#Sea ice area fraction
+'siconc' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
