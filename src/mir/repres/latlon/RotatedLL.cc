@@ -125,7 +125,7 @@ bool RotatedLL::sameAs(const Representation& other) const {
 
 
 const RotatedLL* RotatedLL::croppedRepresentation(const util::BoundingBox& bbox) const {
-    // Called by AreaCropper::execute and MethodWeighted::adjustOutputRepresentation
+    // Called by AreaCropper::execute and Gridded2GriddedInterpolation::execute
     return new RotatedLL(increments_, rotation_, bbox);
 }
 
