@@ -95,23 +95,6 @@ void Regular::fill(grib_info& info) const  {
     info.grid.Nj = long(Nj_);
 
     bbox_.fill(info);
-
-    /*
-        Comment in libemos is:
-
-        "grib_api to set global area in full precision for gaussian grid"
-
-        TODO: check and document
-
-    */
-
-    // for GRIB, a global field is also aligned with Greenwich
-    bool westAtGreenwich = bbox_.west() == Longitude::GREENWICH;
-
-    long j = info.packing.extra_settings_count++;
-    info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
-    info.packing.extra_settings[j].name = "global";
-    info.packing.extra_settings[j].long_value = isGlobal() && westAtGreenwich ? 1 : 0;
 }
 
 
