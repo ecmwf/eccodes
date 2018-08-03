@@ -18,7 +18,7 @@
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/FloatCompare.h"
 
-#include <grib_api.h>
+#include <eccodes.h>
 
 template< typename T >
 bool same_with_grib1_accuracy(const T& a, const T& b) {
@@ -57,6 +57,25 @@ public:
     HandleDeleter(grib_handle *h) : h_(h) {}
     ~HandleDeleter() {
         grib_handle_delete(h_);
+    }
+};
+
+class GKeyIteratorDeleter {
+    grib_keys_iterator *h_;
+public:
+    GKeyIteratorDeleter(grib_keys_iterator *h) : h_(h) {}
+    ~GKeyIteratorDeleter() {
+        grib_keys_iterator_delete(h_);
+    }
+};
+
+
+class BKeyIteratorDeleter {
+    bufr_keys_iterator *h_;
+public:
+    BKeyIteratorDeleter(bufr_keys_iterator *h) : h_(h) {}
+    ~BKeyIteratorDeleter() {
+        codes_bufr_keys_iterator_delete(h_);
     }
 };
 
