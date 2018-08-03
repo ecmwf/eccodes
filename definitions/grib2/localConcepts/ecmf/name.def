@@ -2975,6 +2975,12 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 79 ;
 	}
+#Wildfire Flux of Ethane (C2H6)
+'Wildfire Flux of Ethane (C2H6)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 118 ;
+	}
 #Mean altitude of maximum injection
 'Mean altitude of maximum injection' = {
 	 discipline = 192 ;
@@ -3166,6 +3172,72 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 230 ;
+	}
+#Wildfire Flux of Toluene (C7H8)
+'Wildfire Flux of Toluene (C7H8)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 231 ;
+	}
+#Wildfire Flux of Benzene (C6H6)
+'Wildfire Flux of Benzene (C6H6)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 232 ;
+	}
+#Wildfire Flux of Xylene (C8H10)
+'Wildfire Flux of Xylene (C8H10)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 233 ;
+	}
+#Wildfire Flux of Butenes (C4H8)
+'Wildfire Flux of Butenes (C4H8)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 234 ;
+	}
+#Wildfire Flux of Pentenes (C5H10)
+'Wildfire Flux of Pentenes (C5H10)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 235 ;
+	}
+#Wildfire Flux of Hexene (C6H12)
+'Wildfire Flux of Hexene (C6H12)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 236 ;
+	}
+#Wildfire Flux of Octene (C8H16)
+'Wildfire Flux of Octene (C8H16)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 237 ;
+	}
+#Wildfire Flux of Butanes (C4H10)
+'Wildfire Flux of Butanes (C4H10)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 238 ;
+	}
+#Wildfire Flux of Pentanes (C5H12)
+'Wildfire Flux of Pentanes (C5H12)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 239 ;
+	}
+#Wildfire Flux of Hexanes (C6H14)
+'Wildfire Flux of Hexanes (C6H14)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 240 ;
+	}
+#Wildfire Flux of Heptane (C7H16)
+'Wildfire Flux of Heptane (C7H16)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 241 ;
 	}
 #Altitude of plume bottom
 'Altitude of plume bottom' = {
@@ -16255,32 +16327,32 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 128 ;
 	}
-#Ocean potential temperature
-'Ocean potential temperature' = {
+#Sea water potential temperature
+'Sea water potential temperature' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 129 ;
 	}
-#Salinity
-'Salinity' = {
+#Sea water practical salinity
+'Sea water practical salinity' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 130 ;
 	}
-#Ocean current zonal component
-'Ocean current zonal component' = {
+#Eastward sea water velocity
+'Eastward sea water velocity' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 131 ;
 	}
-#Ocean current meridional component
-'Ocean current meridional component' = {
+#Northward sea water velocity
+'Northward sea water velocity' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 132 ;
 	}
-#Ocean current vertical component
-'Ocean current vertical component' = {
+#Upward sea water velocity
+'Upward sea water velocity' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 133 ;
@@ -16309,8 +16381,8 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 137 ;
 	}
-#Sigma-theta
-'Sigma-theta' = {
+#Sea water sigma theta
+'Sea water sigma theta' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 138 ;
@@ -16351,8 +16423,8 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 144 ;
 	}
-#Sea level
-'Sea level' = {
+#Sea surface height
+'Sea surface height' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 145 ;
@@ -16363,8 +16435,8 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 146 ;
 	}
-#Barotropic stream function
-'Barotropic stream function' = {
+#Ocean barotropic stream function
+'Ocean barotropic stream function' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 147 ;
@@ -16399,14 +16471,14 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 152 ;
 	}
-#U stress
-'U stress' = {
+#Surface downward eastward stress
+'Surface downward eastward stress' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 153 ;
 	}
-#V stress
-'V stress' = {
+#Surface downward northward stress
+'Surface downward northward stress' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 154 ;
@@ -16459,8 +16531,8 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 162 ;
 	}
-#20 degrees isotherm depth
-'20 degrees isotherm depth' = {
+#Depth of 20C isotherm
+'Depth of 20C isotherm' = {
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 163 ;
@@ -20281,6 +20353,78 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 71 ;
 	}
+#Wildfire flux of Carbon Dioxide
+'Wildfire flux of Carbon Dioxide' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 80 ;
+	}
+#Wildfire flux of Carbon Monoxide
+'Wildfire flux of Carbon Monoxide' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 81 ;
+	}
+#Wildfire flux of Methane
+'Wildfire flux of Methane' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 82 ;
+	}
+#Wildfire flux of Non-Methane Hydro-Carbons
+'Wildfire flux of Non-Methane Hydro-Carbons' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 83 ;
+	}
+#Wildfire flux of Hydrogen
+'Wildfire flux of Hydrogen' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 84 ;
+	}
+#Wildfire flux of Nitrogen Oxides NOx
+'Wildfire flux of Nitrogen Oxides NOx' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 85 ;
+	}
+#Wildfire flux of Nitrous Oxide
+'Wildfire flux of Nitrous Oxide' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 86 ;
+	}
+#Wildfire flux of Particulate Matter PM2.5
+'Wildfire flux of Particulate Matter PM2.5' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 87 ;
+	}
+#Wildfire flux of Total Particulate Matter
+'Wildfire flux of Total Particulate Matter' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 88 ;
+	}
+#Wildfire flux of Total Carbon in Aerosols
+'Wildfire flux of Total Carbon in Aerosols' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 89 ;
+	}
+#Wildfire flux of Organic Carbon
+'Wildfire flux of Organic Carbon' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 90 ;
+	}
+#Wildfire flux of Black Carbon
+'Wildfire flux of Black Carbon' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 91 ;
+	}
 #Wildfire overall flux of burnt Carbon
 'Wildfire overall flux of burnt Carbon' = {
 	 discipline = 192 ;
@@ -21642,6 +21786,102 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 101 ;
+	}
+#Wildfire flux of Sulfur Dioxide
+'Wildfire flux of Sulfur Dioxide' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 102 ;
+	}
+#Wildfire Flux of Methanol (CH3OH)
+'Wildfire Flux of Methanol (CH3OH)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 103 ;
+	}
+#Wildfire Flux of Ethanol (C2H5OH)
+'Wildfire Flux of Ethanol (C2H5OH)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 104 ;
+	}
+#Wildfire Flux of Propane (C3H8)
+'Wildfire Flux of Propane (C3H8)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 105 ;
+	}
+#Wildfire Flux of Ethene (C2H4)
+'Wildfire Flux of Ethene (C2H4)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 106 ;
+	}
+#Wildfire Flux of Propene (C3H6)
+'Wildfire Flux of Propene (C3H6)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 107 ;
+	}
+#Wildfire Flux of Isoprene (C5H8)
+'Wildfire Flux of Isoprene (C5H8)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 108 ;
+	}
+#Wildfire Flux of Terpenes (C5H8)n
+'Wildfire Flux of Terpenes (C5H8)n' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 109 ;
+	}
+#Wildfire Flux of Toluene_lump (C7H8+ C6H6 + C8H10)
+'Wildfire Flux of Toluene_lump (C7H8+ C6H6 + C8H10)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 110 ;
+	}
+#Wildfire Flux of Higher Alkenes (CnH2n, C>=4)
+'Wildfire Flux of Higher Alkenes (CnH2n, C>=4)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 111 ;
+	}
+#Wildfire Flux of Higher Alkanes (CnH2n+2, C>=4)
+'Wildfire Flux of Higher Alkanes (CnH2n+2, C>=4)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 112 ;
+	}
+#Wildfire Flux of Formaldehyde (CH2O)
+'Wildfire Flux of Formaldehyde (CH2O)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 113 ;
+	}
+#Wildfire Flux of Acetaldehyde (C2H4O)
+'Wildfire Flux of Acetaldehyde (C2H4O)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 114 ;
+	}
+#Wildfire Flux of Acetone (C3H6O)
+'Wildfire Flux of Acetone (C3H6O)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 115 ;
+	}
+#Wildfire Flux of Ammonia (NH3)
+'Wildfire Flux of Ammonia (NH3)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 116 ;
+	}
+#Wildfire Flux of Dimethyl Sulfide (DMS) (C2H6S)
+'Wildfire Flux of Dimethyl Sulfide (DMS) (C2H6S)' = {
+	 discipline = 192 ;
+	 parameterCategory = 210 ;
+	 parameterNumber = 117 ;
 	}
 #Wildfire radiative power maximum
 'Wildfire radiative power maximum' = {

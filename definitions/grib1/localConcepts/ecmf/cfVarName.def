@@ -204,8 +204,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 30 ;
 	}
-#Sea-ice cover
-'ci' = {
+#Sea ice area fraction
+'siconc' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 31 ;
 	}
@@ -3774,8 +3774,8 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 96 ;
 	}
-#Sea-ice Snow Thickness
-'sist' = {
+#Sea ice snow thickness
+'sisnthick' = {
 	 table2Version = 174 ;
 	 indicatorOfParameter = 97 ;
 	}
@@ -12389,28 +12389,28 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 128 ;
 	}
-#Ocean potential temperature
-'ocpt' = {
+#Sea water potential temperature
+'thetao' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 129 ;
 	}
-#Salinity
-'s' = {
+#Sea water practical salinity
+'so' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 130 ;
 	}
-#Ocean current zonal component
-'ocu' = {
+#Eastward sea water velocity
+'uoe' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 131 ;
 	}
-#Ocean current meridional component
-'ocv' = {
+#Northward sea water velocity
+'von' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 132 ;
 	}
-#Ocean current vertical component
-'ocw' = {
+#Upward sea water velocity
+'wo' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 133 ;
 	}
@@ -12434,8 +12434,8 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 137 ;
 	}
-#Sigma-theta
-'sth' = {
+#Sea water sigma theta
+'sigmat' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 138 ;
 	}
@@ -12469,8 +12469,8 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 144 ;
 	}
-#Sea level
-'sl' = {
+#Sea surface height
+'zos' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 145 ;
 	}
@@ -12479,8 +12479,8 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Barotropic stream function
-'bsf' = {
+#Ocean barotropic stream function
+'stfbarot' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 147 ;
 	}
@@ -12509,13 +12509,13 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 152 ;
 	}
-#U stress
-'tax' = {
+#Surface downward eastward stress
+'taueo' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 153 ;
 	}
-#V stress
-'tay' = {
+#Surface downward northward stress
+'tauno' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 154 ;
 	}
@@ -12559,8 +12559,8 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 162 ;
 	}
-#20 degrees isotherm depth
-'d20' = {
+#Depth of 20C isotherm
+'t20d' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 163 ;
 	}
@@ -14810,7 +14810,7 @@
 	 indicatorOfParameter = 95 ;
 	}
 #Sea-ice thickness
-'p98.174' = {
+'sithick' = {
 	 table2Version = 174 ;
 	 indicatorOfParameter = 98 ;
 	}

@@ -204,8 +204,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 30 ;
 	}
-#Sea-ice cover
-'Sea-ice cover' = {
+#Sea ice area fraction
+'Sea ice area fraction' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 31 ;
 	}
@@ -3774,8 +3774,8 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 96 ;
 	}
-#Sea-ice Snow Thickness
-'Sea-ice Snow Thickness' = {
+#Sea ice snow thickness
+'Sea ice snow thickness' = {
 	 table2Version = 174 ;
 	 indicatorOfParameter = 97 ;
 	}
@@ -12389,28 +12389,28 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 128 ;
 	}
-#Ocean potential temperature
-'Ocean potential temperature' = {
+#Sea water potential temperature
+'Sea water potential temperature' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 129 ;
 	}
-#Salinity
-'Salinity' = {
+#Sea water practical salinity
+'Sea water practical salinity' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 130 ;
 	}
-#Ocean current zonal component
-'Ocean current zonal component' = {
+#Eastward sea water velocity
+'Eastward sea water velocity' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 131 ;
 	}
-#Ocean current meridional component
-'Ocean current meridional component' = {
+#Northward sea water velocity
+'Northward sea water velocity' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 132 ;
 	}
-#Ocean current vertical component
-'Ocean current vertical component' = {
+#Upward sea water velocity
+'Upward sea water velocity' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 133 ;
 	}
@@ -12434,8 +12434,8 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 137 ;
 	}
-#Sigma-theta
-'Sigma-theta' = {
+#Sea water sigma theta
+'Sea water sigma theta' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 138 ;
 	}
@@ -12469,8 +12469,8 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 144 ;
 	}
-#Sea level
-'Sea level' = {
+#Sea surface height
+'Sea surface height' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 145 ;
 	}
@@ -12479,8 +12479,8 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Barotropic stream function
-'Barotropic stream function' = {
+#Ocean barotropic stream function
+'Ocean barotropic stream function' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 147 ;
 	}
@@ -12509,13 +12509,13 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 152 ;
 	}
-#U stress
-'U stress' = {
+#Surface downward eastward stress
+'Surface downward eastward stress' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 153 ;
 	}
-#V stress
-'V stress' = {
+#Surface downward northward stress
+'Surface downward northward stress' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 154 ;
 	}
@@ -12559,8 +12559,8 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 162 ;
 	}
-#20 degrees isotherm depth
-'20 degrees isotherm depth' = {
+#Depth of 20C isotherm
+'Depth of 20C isotherm' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 163 ;
 	}
