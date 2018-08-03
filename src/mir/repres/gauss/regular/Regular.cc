@@ -118,17 +118,13 @@ void Regular::correctWestEast(Longitude& w, Longitude& e) const {
     Fraction inc = getSmallestIncrement();
     ASSERT(inc > 0);
 
-    const Longitude we = e - w;
-    if (e != w && e.normalise(w) == w) {
+    if (angleApproximatelyEqual(Longitude::GREENWICH, w) && (
+        angleApproximatelyEqual(Longitude::GLOBE - inc, e - w) ||
+        Longitude::GLOBE - inc < e - w ||
+        (e != w && e.normalise(w) == w))) {
 
-        // if periodic West/East, adjust East only
-        e = w + Longitude::GLOBE - inc;
-
-    } else if (angularPrecision_ > 0 ? eckit::types::is_approximately_greater_or_equal((we + inc).value(), Longitude::GLOBE.value(), angularPrecision_)
-                                     : we + inc >= Longitude::GLOBE) {
-
-        // if periodic West/East, adjust East only
-        e = w + Longitude::GLOBE - inc;
+        w = Longitude::GREENWICH;
+        e = Longitude::GLOBE - inc;
 
     } else {
 
