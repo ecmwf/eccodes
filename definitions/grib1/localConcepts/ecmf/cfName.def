@@ -90,7 +90,7 @@
 	 table2Version = 128 ;
 	}
 #Mean sea level pressure
-'air_pressure_at_sea_level' = {
+'air_pressure_at_mean_sea_level' = {
 	 indicatorOfParameter = 151 ;
 	 table2Version = 128 ;
 	}
