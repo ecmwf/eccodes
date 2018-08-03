@@ -1543,6 +1543,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     if (expandBoundingBox) {
         int e = grib_set_long(outh, "expandedBoundingBox", 1);
         Assert(e == 0);
+        Assert(!global_grid); /* ECC-576: "global" should not be set */
     }
 
     if ( (*err = check_geometry(outh, spec, data_values_count, global_grid)) != GRIB_SUCCESS)
