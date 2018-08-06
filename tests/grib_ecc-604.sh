@@ -45,10 +45,10 @@ process()
     time ${test_dir}/grib_ecc-604 -w par $input $NUM_THREADS $NUM_ITER
     validate
 
-    # Test 03: Clone + no output
-    # ---------------------------
+    # Test 03: Clone + dump + no output
+    # ---------------------------------
     rm -fr $OUTPUT
-    time ${test_dir}/grib_ecc-604 -c par $input $NUM_THREADS $NUM_ITER
+    time ${test_dir}/grib_ecc-604 -c -d par $input $NUM_THREADS $NUM_ITER
     # Nothing to validate as there is no output
 }
 ###################################################

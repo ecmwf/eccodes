@@ -12,6 +12,7 @@
 static size_t NUM_THREADS         = 0;
 static size_t FILES_PER_ITERATION = 0;
 static char*  INPUT_FILE          = NULL;
+int opt_dump  = 0; /* If 1 then dump handle to /dev/null */
 int opt_clone = 0; /* If 1 then clone source handle */
 int opt_write = 0; /* If 1 write handle to file */
 
@@ -25,7 +26,7 @@ static int encode_file(char *template_file, char *output_file)
     double *values;
 
     in = fopen(template_file,"r"); assert(in);
-    if (output_file) {
+    if (opt_write) {
         out = fopen(output_file,"w");  assert(out);
     }
 
@@ -58,13 +59,13 @@ static int encode_file(char *template_file, char *output_file)
         GRIB_CHECK(grib_set_double_array(h,"values",values,values_len),0);
 
         GRIB_CHECK(grib_get_message(h,&buffer,&size),0);
-        if (output_file) {
+        if (opt_write) {
             if(fwrite(buffer,1,size,out) != size) {
                 perror(output_file);
                 return 1;
             }
         }
-        {
+        if (opt_dump) {
             FILE *devnull = fopen("/dev/null", "w");
             grib_dump_content(source_handle,devnull, "debug", 0, NULL);
         }
@@ -74,7 +75,7 @@ static int encode_file(char *template_file, char *output_file)
         free(values);
     }
 
-    if (output_file) fclose(out);
+    if (opt_write) fclose(out);
     fclose(in);
 
     return 0;
@@ -102,8 +103,9 @@ int main(int argc, char **argv)
         return 1;
     }
     
-    while ((c = getopt (argc, argv, "cw")) != -1) {
+    while ((c = getopt (argc, argv, "dcw")) != -1) {
         switch (c) {
+            case 'd': opt_dump=1; break;
             case 'c': opt_clone=1; break;
             case 'w': opt_write=1; break;
         }
@@ -119,7 +121,7 @@ int main(int argc, char **argv)
     }
     if (parallel) {
         printf("Running parallel in %ld threads. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
-        printf("Options: clone=%d, write=%d\n", opt_clone, opt_write);
+        printf("Options: dump=%d, clone=%d, write=%d\n", opt_dump, opt_clone, opt_write);
     } else {
         printf("Running sequentially in %ld runs. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
     }

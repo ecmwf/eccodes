@@ -27,7 +27,7 @@ static int encode_file(char *template_file, char *output_file)
     long numSubsets = 0;
 
     in = fopen(template_file,"r"); assert(in);
-    if (output_file) {
+    if (opt_write) {
         out = fopen(output_file,"w");  assert(out);
     }
 
@@ -43,7 +43,7 @@ static int encode_file(char *template_file, char *output_file)
         CODES_CHECK(codes_set_long(h, "unpack", 1),0);
 
         CODES_CHECK(codes_get_message(h,&buffer,&size),0);
-        if (output_file) {
+        if (opt_write) {
             if(fwrite(buffer,1,size,out) != size) {
                 perror(output_file);
                 return 1;
@@ -64,7 +64,7 @@ static int encode_file(char *template_file, char *output_file)
         if(opt_clone) codes_handle_delete(h);
     }
 
-    if (output_file) fclose(out);
+    if (opt_write) fclose(out);
     fclose(in);
 
     return 0;
