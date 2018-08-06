@@ -160,3 +160,9 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 37 ;
 }
+#Sea ice area fraction
+'sea_ice_area_fraction' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+}
