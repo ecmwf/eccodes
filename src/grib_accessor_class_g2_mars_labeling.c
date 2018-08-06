@@ -328,7 +328,7 @@ static int extra_set(grib_accessor* a,long val)
             typeOfProcessedData=8;
             typeOfGeneratingProcess=5;
             break;
-        case 31:	/* Bias-corrected Forecast      (bf) */
+        case 31:	/* Bias-corrected forecast      (bf) */
             typeOfProcessedData=1;
             typeOfGeneratingProcess=3;
             break;
