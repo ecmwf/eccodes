@@ -79,7 +79,7 @@ static void write_message(grib_handle* h,const char* str)
 {
     const void *m; size_t s;
     char fname[1024]={0,};
-    FILE* fh=NULL;
+    FILE* fh;
 
     grib_get_message(h,&m,&s);
     sprintf(fname,"%s_%d.metar",str,write_count);
@@ -979,8 +979,7 @@ static int compare_all_dump_keys(grib_handle* h1,grib_handle* h2,grib_runtime_op
 {
     int ret=0;
     const char* name=NULL;
-    grib_keys_iterator* iter  = NULL;
-    iter=grib_keys_iterator_new(h1,0,NULL);
+    grib_keys_iterator* iter = grib_keys_iterator_new(h1,0,NULL);
 
     if (!iter) {
         printf("ERROR: unable to get iterator\n");

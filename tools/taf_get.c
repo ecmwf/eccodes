@@ -52,13 +52,6 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    char  *end = NULL, *end1=NULL;
-    size_t size=4;
-    int ret=0;
-    double min=0,max=0;
-    int i=0;
-    char* p=NULL;
-
     options->print_header=0;
     options->print_statistics=0;
     options->default_print_width=-1;
@@ -78,7 +71,6 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
 
 int grib_tool_new_handle_action(grib_runtime_options* options,grib_handle* h)
 {
-    size_t size=4;
     int err = 0;
 
     if (!options->skip) {

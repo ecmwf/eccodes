@@ -53,21 +53,11 @@ int main(int argc, char *argv[])
     return grib_tool(argc,argv);
 }
 
-/*
-This is executed before processing the options with
-getopt and therefore it is the right place for hacking
-the arguments if needed
- */
 int grib_tool_before_getopt(grib_runtime_options* options)
 {
     return 0;
 }
 
-/*
-The options have been parsed and the structure 
-grib_runtime_options* options has been loaded. 
-Initialisation and startup can be done here
- */
 int grib_tool_init(grib_runtime_options* options)
 {
     if (grib_options_on("j")) {
@@ -79,10 +69,6 @@ int grib_tool_init(grib_runtime_options* options)
     return 0;
 }
 
-/*
-A new file is being parsed. The file name is file. This function is called every time
-a new input file name is processed, before opening the file.
- */
 int grib_tool_new_filename_action(grib_runtime_options* options,const char* file)
 {
     return 0;
@@ -135,16 +121,9 @@ static void print_key_values(grib_runtime_options* options,grib_handle* h)
     printf("}");
 }
 
-/* A new handle is available from the current input file and can be processed here.
-The handle available in this function is in the set of messages satisfying the constraint of the
--w option. They are not to be skipped.
- */
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
-    size_t size=4;
-    double v=0;
     int err=0;
-    int i;
 
     if (!options->skip) {
 
@@ -157,21 +136,17 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     return 0;
 }
 
-/* A new handle to skip is available. At this point something can be done
-with the message to be skipped before deleting the handle. */
 int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
 }
 
-/* key values can be printed in this function. Headers are already printed if requested.*/
 void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
 {
     grib_print_key_values(options,h);
 }
 
-/* this is executed after the last message in the last file is processed */
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
     if (json) printf("\n]\n");
