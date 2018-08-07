@@ -94,7 +94,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if( err != GRIB_SUCCESS && options->fail) exit(err);
     }
 
-    /*new_handle="\n,";*/
     return 0;
 }
 
