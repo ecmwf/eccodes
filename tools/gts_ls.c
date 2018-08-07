@@ -36,7 +36,6 @@ const char* grib_tool_description="List content of GTS files printing values of 
         "some keys.\n\tIt does not fail when a key is not found.";
 const char* grib_tool_name="gts_ls";
 const char* grib_tool_usage="[options] file file ...";
-/*static char* new_handle="";*/
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 int mode=0;
