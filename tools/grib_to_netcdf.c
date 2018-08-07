@@ -24,9 +24,9 @@
 
 #include "grib_tools.h"
 
-char* grib_tool_description = "Convert a GRIB file to netCDF format.";
-char* grib_tool_name = "grib_to_netcdf";
-char* grib_tool_usage = "[options] grib_file grib_file ... ";
+const char* grib_tool_description = "Convert a GRIB file to netCDF format.";
+const char* grib_tool_name = "grib_to_netcdf";
+const char* grib_tool_usage = "[options] grib_file grib_file ... ";
 static char argvString[2048];
 
 /*=====================================================================*/

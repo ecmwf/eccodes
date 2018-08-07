@@ -1750,7 +1750,7 @@ static void set_value(grib_values* value,char* str,int equal)
  'values'           The array we populate and return
  'count'            The number of elements
  */
-int parse_keyval_string(char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count)
+int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count)
 {
     char* p;
     int i=0;

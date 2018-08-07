@@ -44,11 +44,10 @@ grib_option grib_options[]={
         /*{"x",0,0,0,1,0}*/
 };
 
-char* grib_tool_description="List content of METAR files printing values of "
+const char* grib_tool_description="List content of METAR files printing values of "
         "some keys.\n\tIt does not fail when a key is not found.";
-char* grib_tool_name="metar_ls";
-char* grib_tool_usage="[options] file file ...";
-static char* new_handle="";
+const char* grib_tool_name="metar_ls";
+const char* grib_tool_usage="[options] file file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 double lat=0;
@@ -116,7 +115,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if( err != GRIB_SUCCESS && options->fail) exit(err);
     }
 
-    new_handle="\n,";
     return 0;
 }
 

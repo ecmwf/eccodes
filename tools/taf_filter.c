@@ -26,10 +26,10 @@ grib_option grib_options[]={
         {"7",0,0,0,1,0},
         {"v",0,0,0,1,0}
 };
-char* grib_tool_description="Apply the rules defined in rules_file to each TAF "
+const char* grib_tool_description="Apply the rules defined in rules_file to each TAF "
         "message\n\tin the files provided as arguments.";
-char* grib_tool_name="taf_filter";
-char* grib_tool_usage="[options] rules_file "
+const char* grib_tool_name="taf_filter";
+const char* grib_tool_usage="[options] rules_file "
         "file file ...";
 int fail=0;
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);

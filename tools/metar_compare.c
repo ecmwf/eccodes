@@ -180,14 +180,14 @@ int counter=0;
 int start=-1;
 int end=-1;
 
-char* grib_tool_description=
+const char* grib_tool_description=
         "Compare METAR messages contained in two files."
         "\n\tIf some differences are found it fails returning an error code."
         "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
         "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
-char* grib_tool_name="metar_compare";
-char* grib_tool_usage="[options] "
+const char* grib_tool_name="metar_compare";
+const char* grib_tool_usage="[options] "
         "file file";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
