@@ -176,6 +176,7 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
     return ret;
 
   if ( bpv != 0 ) {
+     DebugAssert( offsetAfterData > offsetBeforeData );
      *val=((offsetAfterData-offsetBeforeData)*8-unusedBits)/bpv;
   } else {
     if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfValues,&numberOfValues)) != GRIB_SUCCESS)

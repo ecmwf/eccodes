@@ -143,9 +143,9 @@ typedef struct grib_accessor_bufr_data_array {
 	grib_trie_with_rank* dataAccessorsTrie;
 	grib_sarray* tempStrings;
 	int change_ref_value_operand;
-    size_t refValListSize;
-    long* refValList;
-    long refValIndex;
+	size_t refValListSize;
+	long* refValList;
+	long refValIndex;
 	bufr_tableb_override* tableb_override;
 } grib_accessor_bufr_data_array;
 
@@ -759,10 +759,17 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
             grib_set_bits_on(buff->data,pos,modifiedWidth);
         } else {
             if (*v > maxAllowed || *v < minAllowed) {
-                return GRIB_OUT_OF_RANGE; /* ECC-611 */
+                if (dont_fail_if_out_of_range) {
+                    grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
+                                                    "Setting it to missing value\n", bd->shortName, *v, minAllowed, maxAllowed);
+                    grib_set_bits_on(buff->data,pos,modifiedWidth);
+                } else {
+                    return GRIB_OUT_OF_RANGE; /* ECC-611 */
+                }
+            } else {
+                lval=round(*v * inverseFactor)-modifiedReference;
+                grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
             }
-            lval=round(*v * inverseFactor)-modifiedReference;
-            grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
         }
         grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
         grib_encode_unsigned_longb(buff->data,localWidth,pos,6);
@@ -795,7 +802,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     }
 
     ii=0;
-    while (*v==GRIB_MISSING_DOUBLE && ii<nvals) {
+    while (ii<nvals && *v==GRIB_MISSING_DOUBLE) {
         thereIsAMissing=1;
         v++;
         ii++;
@@ -1013,8 +1020,9 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         err=check_end_data(c, self, number_of_bits); /*advance bitsToEnd*/
         return err;
     }
-    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -%ld- \tcode=%6.6ld width=%ld pos=%ld -> %ld",
-            i,bd->code,bd->width,(long)*pos,(long)(*pos-a->offset*8));
+    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -%ld- \tcode=%6.6ld width=%ld scale=%ld ref=%ld (pos=%ld -> %ld)",
+            i, bd->code, bd->width, bd->scale, bd->reference,
+            (long)*pos, (long)(*pos-a->offset*8));
     if (bd->type==BUFR_DESCRIPTOR_TYPE_STRING) {
         /* string */
         if (self->compressedData) {
@@ -1321,7 +1329,7 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         if (self->compressedData) {
             err=encode_double_array(c,buff,pos,bd,self,self->numericValues->v[elementIndex]);
             if (err) {
-                grib_context_log(c,GRIB_LOG_ERROR,"encoding %s ( code=%6.6ld width=%ld scale=%g reference=%ld )",
+                grib_context_log(c,GRIB_LOG_ERROR,"encoding %s ( code=%6.6ld width=%ld scale=%ld reference=%ld )",
                         bd->shortName, bd->code, bd->width,
                         bd->scale, bd->reference);
                 for (j=0;j<grib_darray_used_size(self->numericValues->v[elementIndex]);j++)
@@ -1502,9 +1510,11 @@ static int build_bitmap_new_data(grib_accessor_bufr_data_array *self,unsigned ch
             iDelayedReplication=iBitmapOperator+2;
             switch (descriptors[iDelayedReplication]->code) {
             case 31001:
+                if(!self->inputReplications) {grib_context_log(c,GRIB_LOG_ERROR,"build_bitmap_new_data: No inputReplications"); return GRIB_ENCODING_ERROR;}
                 bitmapSize=self->inputReplications[self->iInputReplications];
                 break;
             case 31002:
+                if(!self->inputExtendedReplications) {grib_context_log(c,GRIB_LOG_ERROR,"build_bitmap_new_data: No inputExtendedReplications");return GRIB_ENCODING_ERROR;}
                 bitmapSize=self->inputExtendedReplications[self->iInputExtendedReplications];
                 break;
             default :
@@ -2143,7 +2153,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
         grib_sarray_delete        (c, self->tempStrings);
         self->tempStrings=NULL;
     }
-    self->tempStrings = grib_sarray_new(c, self->numberOfSubsets, 10);
+    self->tempStrings = grib_sarray_new(c, self->numberOfSubsets, 500);
 
     end= self->compressedData ? 1 : self->numberOfSubsets;
     groupNumber=1;
@@ -2287,6 +2297,8 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 /* } else if ( descriptor->Y==1 && IS_QUALIFIER(self->expanded->v[idx-1]->X)==0) { */
                 /* forceGroupClosure=1; */
                 /* reset_qualifiers(significanceQualifierGroup); */
+            } else if (descriptor->X==33 && !qualityPresent) {
+                dump=1;  /* ECC-690: percentConfidence WITHOUT a bitmap! e.g. NOAA GOES16 BUFR */
             }
 
             if (ide==0 && !self->compressedData) {
@@ -2327,7 +2339,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
 
                 err=grib_accessor_add_attribute(accessor_or_attribute_with_same_name(elementFromBitmap,elementAccessor->name),elementAccessor,1);
             } else if (elementAccessor) {
-
+                int add_key = 1;
                 switch (descriptor->code) {
                 case 999999:
                     associatedFieldAccessor=elementAccessor;
@@ -2344,13 +2356,24 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 case 31021:
                     associatedFieldSignificanceAccessor=elementAccessor;
                     break;
-                case 33007:
-                    break;
+                /*case 33007:*/
+                    /* ECC-690: See later */
+                    /* break; */
                 default:
-                    grib_push_accessor(elementAccessor,section->block);
-                    rank=grib_data_accessors_trie_push(self->dataAccessorsTrie,elementAccessor);
-                    grib_accessors_list_push(self->dataAccessors,elementAccessor,rank);
-                    lastAccessorInList=grib_accessors_list_last(self->dataAccessors);
+                    add_key = 1;
+                    /* ECC-690: percentConfidence WITHOUT a bitmap! e.g. NOAA GOES16 BUFR */
+                    if(descriptor->code==33007) {
+                        add_key = 0; /* Standard behaviour */
+                        if (!qualityPresent) {
+                            add_key = 1;
+                        }
+                    }
+                    if (add_key) {
+                        grib_push_accessor(elementAccessor,section->block);
+                        rank=grib_data_accessors_trie_push(self->dataAccessorsTrie,elementAccessor);
+                        grib_accessors_list_push(self->dataAccessors,elementAccessor,rank);
+                        lastAccessorInList=grib_accessors_list_last(self->dataAccessors);
+                    }
                 }
             }
         }

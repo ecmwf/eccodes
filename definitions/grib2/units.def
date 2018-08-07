@@ -17,7 +17,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 45 ;
 	}
-#Sea-ice cover
+#Sea ice area fraction
 '(0 - 1)' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
@@ -220,7 +220,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 37 ;
 	}
-#maximum CAPE in the last 6 hours
+#Maximum CAPE in the last 6 hours
 'J kg**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
@@ -231,7 +231,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	}
-#maximum CAPES in the last 6 hours
+#Maximum CAPES in the last 6 hours
 'm**2 s**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
@@ -265,7 +265,7 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
-#Averaged total lightning flash density over the past hour
+#Averaged total lightning flash density in the last hour
 'km**-2 day**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
@@ -284,7 +284,7 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
-#Averaged cloud-to-ground lightning flash density over the past hour
+#Averaged cloud-to-ground lightning flash density in the last hour
 'km**-2 day**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
@@ -313,7 +313,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 120 ;
 	}
-#Averaged total lightning flash density over the past 3 hours
+#Averaged total lightning flash density in the last 3 hours
 'km**-2 day**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
@@ -324,7 +324,7 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 lengthOfTimeRange = 3 ;
 	}
-#Averaged total lightning flash density over the past 6 hours
+#Averaged total lightning flash density in the last 6 hours
 'km**-2 day**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
@@ -335,7 +335,7 @@
 	 lengthOfTimeRange = 6 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Averaged cloud-to-ground lightning flash density over the past 3 hours
+#Averaged cloud-to-ground lightning flash density in the last 3 hours
 'km**-2 day**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
@@ -346,7 +346,7 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Averaged cloud-to-ground lightning flash density over the past 6 hours
+#Averaged cloud-to-ground lightning flash density in the last 6 hours
 'km**-2 day**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -65,16 +65,17 @@ ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=41,yearOfFor
 grib_check_key_equals $temp1 anoffset 25
 grib_check_key_equals $temp1 anoffsetFirst,anoffsetLast,anoffsetFrequency "MISSING MISSING MISSING"
 
-# ECC-663: MARS step
-types="an fu"
+# MARS step
+types="sfo fu go"
 for t in $types; do
   ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=41,type=$t,stepType=accum,stepRange=12-36,paramId=260268 \
   $sample $temp1
-  grib_check_key_equals $temp1 mars.step 12 # start step
+  grib_check_key_equals $temp1 mars.step 36 # end step (ECC-701)
+  grib_check_key_exists $temp1 mars.anoffset
   #${tools_dir}/grib_dump -Da $temp1 | grep mars.step
 done
 
-types="go fc pf cf"
+types="fc pf cf"
 for t in $types; do
   ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=41,type=$t,stepType=accum,stepRange=12-36,paramId=260268 \
   $sample $temp1

@@ -375,7 +375,7 @@ end subroutine codes_index_release
   !>
   !> @param ifile       id of the opened file to be used in all the file functions.
   !> @param filename    name of the file to be open
-  !> @param mode        open mode can be 'r' (read) or 'w' (write)
+  !> @param mode        open mode can be 'r' (read), 'w' (write) or 'a' (append)
   !> @param status      CODES_SUCCESS if OK, integer value on error
 subroutine codes_open_file ( ifile, filename, mode, status )
     integer(kind=kindOfInt),intent(out)               :: ifile

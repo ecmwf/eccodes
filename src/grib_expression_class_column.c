@@ -119,7 +119,7 @@ static string evaluate_string(grib_expression* g,grib_handle* h,char* buf,size_t
 {
   grib_expression_column* e = (grib_expression_column*)g;
   Assert(buf);
-  if((err=grib_get_string_internal(h,e->name,buf,size)) != GRIB_SUCCESS)
+  if((*err=grib_get_string_internal(h,e->name,buf,size)) != GRIB_SUCCESS)
   {
     grib_context_log(h->context, GRIB_LOG_DEBUG,
     "Error in evaluate_string %s : %s", e->name,grib_get_error_message(err));

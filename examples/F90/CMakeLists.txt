@@ -30,6 +30,7 @@ list( APPEND tests
       grib_count_messages
       grib_count_messages_multi
       grib_copy_namespace
+      grib_ecc-671
       read_message
       read_from_file
       get_set_uuid

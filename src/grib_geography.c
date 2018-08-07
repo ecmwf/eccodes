@@ -126,10 +126,19 @@ int is_gaussian_global(
 {
     int global = 1;
     const double d = fabs(latitudes[0] - latitudes[1]);
+    const double delta = 360.0/num_points_equator;
     /* Compute the expected last longitude for a global field */
-    const double lon2_global = 360.0 - 360.0/num_points_equator;
+    const double lon2_global = 360.0 - delta;
     /* Compute difference between expected longitude and actual one */
-    const double lon2_diff = fabs( lon2  - lon2_global ) - 360.0/num_points_equator;
+    const double lon2_diff = fabs( lon2  - lon2_global ) - delta;
+
+    {
+        grib_context* c=grib_context_get_default();
+        if (c->debug) {
+            printf("ECCODES DEBUG is_gaussian_global: lat1=%f, lat2=%f, glat0=%f, d=%f\n", lat1, lat2, latitudes[0], d);
+            printf("ECCODES DEBUG is_gaussian_global: lon1=%f, lon2=%f, glon2=%f, delta=%f\n", lon1, lon2, lon2_global, delta);
+        }
+    }
 
     /* Note: final gaussian latitude = -first latitude */
     if ( (fabs(lat1 - latitudes[0]) >= d ) ||

@@ -64,12 +64,14 @@ tigge_af_ecmwf.grib2
 tigge_cf_ecmwf.grib2
 "
 
-set +u
-# Check HAVE_JPEG is defined and is equal to 1
-if [ "x$HAVE_JPEG" != x ]; then
-    if [ $HAVE_JPEG -eq 1 ]; then
-        # Include files which have messages with grid_jpeg packing
-        files="jpeg.grib2  multi.grib2  reduced_gaussian_surface_jpeg.grib2  v.grib2 "$files
+# Check if JPEG is enabled
+if [ $HAVE_JPEG -eq 1 ]; then
+    # Include files which have messages with grid_jpeg packing
+    echo "Add extra files (HAVE_JPEG=1)"
+    files="jpeg.grib2  reduced_gaussian_surface_jpeg.grib2 "$files
+    if [ $HAVE_EXTRA_TESTS -eq 1 ]; then
+        echo "Add extra files (HAVE_EXTRA_TESTS=1)"
+        files=" v.grib2 multi.grib2 "$files  # much slower
     fi
 fi
 
@@ -86,4 +88,5 @@ for file in $files; do
       set -e
    fi
 done
+
 rm -f $temp

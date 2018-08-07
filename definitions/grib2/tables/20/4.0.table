@@ -35,7 +35,7 @@
 47 47 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for aerosol 
 48 48 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for optical properties of aerosol 
 49 49 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for optical properties of aerosol 
-# 50 Reserved 
+# 50 Reserved
 51 51 Categorical forecasts at a horizontal level or in a horizontal layer at a point in time 
 # 52 Reserved
 53 53 Partitioned parameters at a horizontal level or in a horizontal layer at a point in time 

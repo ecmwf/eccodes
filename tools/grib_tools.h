@@ -64,9 +64,9 @@ typedef struct grib_constraints {
 */
 
 typedef struct grib_options_help {
-  char* id;
-  char* args;
-  char* help;
+  const char* id;
+  const char* args;
+  const char* help;
 } grib_options_help;
 
 
@@ -167,9 +167,9 @@ typedef struct grib_runtime_options {
 
 extern grib_option grib_options[];
 extern int grib_options_count;
-extern char* grib_tool_name;
-extern char* grib_tool_description;
-extern char* grib_tool_usage;
+extern const char* grib_tool_name;
+extern const char* grib_tool_description;
+extern const char* grib_tool_usage;
 
 extern FILE* dump_file;
 

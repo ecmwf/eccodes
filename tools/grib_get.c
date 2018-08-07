@@ -39,11 +39,11 @@ grib_option grib_options[]={
         {"i:",0,0,0,1,0}
 };
 
-char* grib_tool_description="Get values of some keys from a GRIB file."
+const char* grib_tool_description="Get values of some keys from a GRIB file."
         "\n\tIt is similar to grib_ls, but fails returning an error code "
         "\n\twhen an error occurs (e.g. key not found).";
-char* grib_tool_name="grib_get";
-char* grib_tool_usage="[options] grib_file grib_file ...";
+const char* grib_tool_name="grib_get";
+const char* grib_tool_usage="[options] grib_file grib_file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 double lat=0;

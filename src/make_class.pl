@@ -2,13 +2,13 @@
 use strict;
 use Data::Dumper;
 
-
 my $name;
+my $verbose = 0;
 
 foreach $name ( @ARGV )
 {
     next unless($name =~ /\.c$/);
-	print "$name\n";
+    print "$name\n" if ($verbose);
 
     open(IN,"<$name") or die "$name: $!";
     open(OUT,">$name.tmp") or die "$name.tmp: $!";
@@ -78,7 +78,7 @@ foreach $name ( @ARGV )
     }
     else
     {
-        print "IGNORING file $name\n";
+        print "IGNORING file $name\n" if ($verbose);
     }
 
     unlink("$name.tmp");
@@ -111,7 +111,7 @@ sub output {
     my ($file,$args) = @_;
     local $_;
 
-	my %delegates;
+    my %delegates;
 
     my $class = cleanup($args->{CLASS});
 
@@ -153,11 +153,11 @@ EOF
     {
         if(/^(static\s+\w+\s*\*?\s*(\w+)\s*\(.*);/)
         {
-			if(exists $args->{DELEGATE})
-			{
-				$delegates{$2}  = $1  unless($implements{$2});
-				$implements{$2} = 1;
-			}
+            if(exists $args->{DELEGATE})
+            {
+                $delegates{$2}  = $1  unless($implements{$2});
+                $implements{$2} = 1;
+            }
             next unless($implements{$2});
         }
 
@@ -252,87 +252,87 @@ EOF
   # disabled for the moment
   # the problem with this is that for pointers we need proper clone, not an assignement
   if (0) {
-	foreach my $proc ( grep { /clone/ } @procs ) { 
-		my $done=0;
-		print OUT "static grib_$class* clone(grib_$class* s) {\n";
-		print OUT "\tgrib_${class}_$name* c=grib_context_alloc_clear(a->parent->h,sizeof(grib_${class}_$name));\n";
-		foreach my $m ( @members ) {
-			if ( $m =~ /\/\*/ ) {next;}
-			print OUT "\n\tgrib_${class}_$name* self=(grib_${class}_$name*)s;\n\n" unless ($done);
-			$done=1;
-			my $is_pointer=0;
-			my @ma=split(/ /,$m);
-			my $mname=pop @ma;
-			if ($mname=~ /\*/) { $is_pointer=1; $mname =~ s/\*//; }
-			my $mtype=pop @ma;
-			if ($mtype=~ /\*/) { $is_pointer=1; $mtype =~ s/\*//; }
+    foreach my $proc ( grep { /clone/ } @procs ) { 
+        my $done=0;
+        print OUT "static grib_$class* clone(grib_$class* s) {\n";
+        print OUT "\tgrib_${class}_$name* c=grib_context_alloc_clear(a->parent->h,sizeof(grib_${class}_$name));\n";
+        foreach my $m ( @members ) {
+            if ( $m =~ /\/\*/ ) {next;}
+            print OUT "\n\tgrib_${class}_$name* self=(grib_${class}_$name*)s;\n\n" unless ($done);
+            $done=1;
+            my $is_pointer=0;
+            my @ma=split(/ /,$m);
+            my $mname=pop @ma;
+            if ($mname=~ /\*/) { $is_pointer=1; $mname =~ s/\*//; }
+            my $mtype=pop @ma;
+            if ($mtype=~ /\*/) { $is_pointer=1; $mtype =~ s/\*//; }
 
-			if ($is_pointer) { 
-				if ($mtype =~ "\bchar\b") {
-						print OUT "\tif (self->$mname) \n\t\tc->$mname=grib_context_strdup(a->parent->h,self->$mname);\n\n";
+            if ($is_pointer) { 
+                if ($mtype =~ "\bchar\b") {
+                        print OUT "\tif (self->$mname) \n\t\tc->$mname=grib_context_strdup(a->parent->h,self->$mname);\n\n";
                 }
                 if ($mtype =~ "\b(double|long|int|float)\b") {
-						print OUT "\tif (self->".$mname."_size) {\n";
-						print OUT "\tint i=0;\n";
-						print OUT "\tc->$mname=grib_context_alloc_clear(a->parent->h,self->".$mname."_size*sizeof($mtype));";
-						print OUT "\tfor (i=0;i<self->${mname}_size;i++) c->".$mname."[i]=self->".$mname."[i];";
-						print OUT "}\n";
-				}
-			} else { print OUT "\tc->$mname=self->$mname;\n\n"; }
-		}
-		print OUT "\treturn (grib_$class*)c;\n}\n\n"
-	}
+                        print OUT "\tif (self->".$mname."_size) {\n";
+                        print OUT "\tint i=0;\n";
+                        print OUT "\tc->$mname=grib_context_alloc_clear(a->parent->h,self->".$mname."_size*sizeof($mtype));";
+                        print OUT "\tfor (i=0;i<self->${mname}_size;i++) c->".$mname."[i]=self->".$mname."[i];";
+                        print OUT "}\n";
+                }
+            } else { print OUT "\tc->$mname=self->$mname;\n\n"; }
+        }
+        print OUT "\treturn (grib_$class*)c;\n}\n\n"
+    }
   }
 
-	delete $delegates{init};
-	delete $delegates{post_init};
-	delete $delegates{destroy};
+    delete $delegates{init};
+    delete $delegates{post_init};
+    delete $delegates{destroy};
 
-	if(%delegates)
-	{
-		print OUT  "\n/* Start delegate methods */ \n";
+    if(%delegates)
+    {
+        print OUT  "\n/* Start delegate methods */ \n";
 
-		print OUT "\nstatic grib_accessor_class* $args->{DELEGATE}(accessor*);\n\n";
+        print OUT "\nstatic grib_accessor_class* $args->{DELEGATE}(accessor*);\n\n";
 
-		foreach my $d ( sort keys %delegates )
-		{
-			$delegates{$d} =~ /static\s+(.*)\s+(\w+)\s*\((.*)\)/;
-			my $return = $1 eq "void" ? "" : "return ";
-			my $ret = $1;
+        foreach my $d ( sort keys %delegates )
+        {
+            $delegates{$d} =~ /static\s+(.*)\s+(\w+)\s*\((.*)\)/;
+            my $return = $1 eq "void" ? "" : "return ";
+            my $ret = $1;
 
-			my @args = map { s/^ +//; s/ +$//; $_; } split(",",$3);
+            my @args = map { s/^ +//; s/ +$//; $_; } split(",",$3);
 
-			my $i = 0;
-			my @types;
-			local $" = " ";
+            my $i = 0;
+            my @types;
+            local $" = " ";
 
-			foreach my $a ( @args )
-			{
-				my @x = split(" ",$a);
+            foreach my $a ( @args )
+            {
+                my @x = split(" ",$a);
 
-				$a = $x[-1];
-				if(@x == 1 || $a =~ /\*$/)
-				{
-					$a = "arg" . $i++ ;
-					push @x,$a;
-				}
-				push @types, join(" ",@x);
-				$a =~ s/^\*//;
-			}
+                $a = $x[-1];
+                if(@x == 1 || $a =~ /\*$/)
+                {
+                    $a = "arg" . $i++ ;
+                    push @x,$a;
+                }
+                push @types, join(" ",@x);
+                $a =~ s/^\*//;
+            }
 
-			local $" = ",";
+            local $" = ",";
 
-			print OUT <<"EOF";
+            print OUT <<"EOF";
 
 static $ret $d(@types)
 {
-	${return}target($args[0])->$d(@args);
+    ${return}target($args[0])->$d(@args);
 }
 EOF
-		}
+        }
 
-		print OUT  "\n/* End delegate methods */ \n";
-	}
+        print OUT  "\n/* End delegate methods */ \n";
+    }
 
     close(CLASS);
 }

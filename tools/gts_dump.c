@@ -33,9 +33,9 @@ grib_option grib_options[]={
     {"x",0,0,0,1,0}
 };
 
-char* grib_tool_description="Dump the content of a GTS file in different formats.";
-char* grib_tool_name="gts_dump";
-char* grib_tool_usage="[options] file file ...";
+const char* grib_tool_description="Dump the content of a GTS file in different formats.";
+const char* grib_tool_name="gts_dump";
+const char* grib_tool_usage="[options] file file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 

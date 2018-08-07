@@ -11,6 +11,11 @@ try:
 except AttributeError:
     numpy_include = numpy.get_numpy_include()
 
+# See ECC-644
+extra_compile_args = []
+cmake_c_compiler_id='@CMAKE_C_COMPILER_ID@'
+if cmake_c_compiler_id == 'PGI':
+    extra_compile_args.append('-noswitcherror')
 
 attdict = dict(sources=['@CMAKE_CURRENT_SOURCE_DIR@/swig_wrap_numpy.c',
                         '@CMAKE_CURRENT_SOURCE_DIR@/grib_interface.c'],
@@ -21,6 +26,7 @@ attdict = dict(sources=['@CMAKE_CURRENT_SOURCE_DIR@/swig_wrap_numpy.c',
                library_dirs=['@CMAKE_BINARY_DIR@/lib'],
                runtime_library_dirs=[],
                libraries=['eccodes'],
+               extra_compile_args=extra_compile_args,
                extra_objects=[])
 
 shared_libs='@BUILD_SHARED_LIBS@'

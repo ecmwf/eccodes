@@ -76,7 +76,7 @@ for directory in dirs:
 
 print("""
 #include "eccodes_config.h"
-#ifdef EC_HAVE_FMEMOPEN
+#ifdef ECCODES_HAVE_FMEMOPEN
 #define _GNU_SOURCE
 #endif
 
@@ -99,7 +99,7 @@ for k, v in sorted(items):
 
 print("""};
 
-#if defined(EC_HAVE_FUNOPEN) && !defined(EC_HAVE_FMEMOPEN)
+#if defined(ECCODES_HAVE_FUNOPEN) && !defined(ECCODES_HAVE_FMEMOPEN)
 
 typedef struct mem_file {
     const char* buffer;

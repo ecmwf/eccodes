@@ -34,7 +34,7 @@ static int find_next_group(const unsigned long* vals, size_t len, unsigned long 
     long lmax = 0;
 
     size_t i = 0;
-    if  (len <=0 ) return GRIB_ARRAY_TOO_SMALL;
+    if  (len == 0 ) return GRIB_ARRAY_TOO_SMALL;
     lmin = vals[0];
     lmax = lmin;
 

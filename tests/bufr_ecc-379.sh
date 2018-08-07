@@ -22,7 +22,9 @@ tempOut=temp.${label}.bufr
 tempText=temp.${label}.text
 tempRef=temp.${label}.ref
 
-# Test 1 --------------------------------------------------------
+# --------------------------------------------------------
+# Test 1
+# --------------------------------------------------------
 BufrFile=airs_57.bufr
 cat > $tempRules <<EOF
  set unpack=1;
@@ -51,7 +53,30 @@ unset ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE
 #EOF
 #diff $tempText $tempRef
 
-# Test 2 --------------------------------------------------------
+# --------------------------------------------------------
+# Test 2
+# --------------------------------------------------------
+cat > $tempRules <<EOF
+ set unpack=1;
+ # All longitude values are out-of-range. This is a constant array
+ set longitude={500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500};
+ set pack=1;
+ write;
+EOF
+# Expect this to fail as all values are out-of-range
+set +e
+${tools_dir}/codes_bufr_filter -o $tempOut $tempRules $BufrFile 2>/dev/null
+status=$?
+set -e
+[ $status -ne 0 ]
+# Now set environment variable to turn out-of-range values into 'missing'
+export ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE=1
+${tools_dir}/codes_bufr_filter -o $tempOut $tempRules $BufrFile
+unset ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE
+
+# --------------------------------------------------------
+# Test 3
+# --------------------------------------------------------
 BufrFile=airc_144.bufr
 cat > $tempRules <<EOF
  set unpack=1;

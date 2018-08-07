@@ -328,7 +328,7 @@ static int extra_set(grib_accessor* a,long val)
             typeOfProcessedData=8;
             typeOfGeneratingProcess=5;
             break;
-        case 31:	/* Bias-corrected Forecast      (bf) */
+        case 31:	/* Bias-corrected forecast      (bf) */
             typeOfProcessedData=1;
             typeOfGeneratingProcess=3;
             break;
@@ -369,11 +369,13 @@ static int extra_set(grib_accessor* a,long val)
             break;
         case 70:    /* Ocean reanalysis     (or) */
         case 71:    /* Flux forcing         (fx) */
-        case 72:    /* EFAS Fillup          (fu) */
+        case 72:    /* Fill-up              (fu) */
+        case 73:    /* Simulation forced with observations (sfo) */
         case 80:    /* Forecast mean        (fcmean) */
         case 81:    /* Forecast maximum     (fcmax) */
         case 82:    /* Forecast minimum     (fcmin) */
         case 83:    /* Forecast standard deviation  (fcstdev) */
+        case 86:    /* Hindcast climate mean (hcmean) */
         case 87:    /* Simulated satellite data */
         case 88:    /* Gridded satellite data */
         case 89:    /* GFAS analysis */

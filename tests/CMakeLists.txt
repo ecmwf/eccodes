@@ -20,7 +20,7 @@ list( APPEND test_bins
       bufr_keys_iter
       gauss_sub
       grib_util_set_spec
-      local_MeteoFrance
+      grib_local_MeteoFrance
       grib_2nd_order_numValues
       optimize_scaling
       optimize_scaling_sh
@@ -53,7 +53,9 @@ list( APPEND tests_no_data_reqd
     julian
     bufr_ecc-359
     bufr_ecc-517
+    bufr_subTypes
     grib_efas
+    grib_mars_types
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
@@ -81,6 +83,8 @@ list( APPEND tests_data_reqd
     bufr_ecc-288
     bufr_ecc-313
     bufr_ecc-616
+    bufr_ecc-686
+    bufr_ecc-690
     bufr_ecc-379
     bufr_ecc-393
     bufr_ecc-433
@@ -130,12 +134,10 @@ list( APPEND tests_data_reqd
     grib_change_scanning
     grib_statistics
     tigge
-    tigge_conversions
     read_any
     grib_dump
     grib_dump_debug
-    grib_util_set_spec
-    local_MeteoFrance
+    grib_local_MeteoFrance
     grib_neg_fctime
     codes_split_file
 )
@@ -144,7 +146,9 @@ if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
     list(APPEND tests_data_reqd bufr_dump_decode_fortran)
 endif()
 if( ENABLE_EXTRA_TESTS )
+    list(APPEND tests_data_reqd grib_util_set_spec)
     list(APPEND tests_data_reqd grib_padding)
+    list(APPEND tests_data_reqd tigge_conversions)
     list(APPEND tests_data_reqd bufr_dump_encode_C)
     list(APPEND tests_data_reqd bufr_dump_decode_C)
 endif()

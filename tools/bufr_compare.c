@@ -223,14 +223,14 @@ int counter=0;
 int start=-1;
 int end=-1;
 
-char* grib_tool_description=
+const char* grib_tool_description=
     "Compare BUFR messages contained in two files."
     "\n\tIf some differences are found it fails returning an error code."
     "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
-char* grib_tool_name="bufr_compare";
-char* grib_tool_usage="[options] bufr_file1 bufr_file2";
+const char* grib_tool_name="bufr_compare";
+const char* grib_tool_usage="[options] bufr_file1 bufr_file2";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
@@ -663,8 +663,8 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
     double packingError1=0,packingError2=0;
     double value_tolerance=0;
     grib_context* c=handle1->context;
-    char* first_str = (handles_swapped==0? "1st" : "2nd");
-    char* second_str = (handles_swapped==0? "2nd" : "1st");
+    const char* first_str = (handles_swapped==0? "1st" : "2nd");
+    const char* second_str = (handles_swapped==0? "2nd" : "1st");
 
     type1=type;
     type2=type;
@@ -774,8 +774,10 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
     {
     case GRIB_TYPE_STRING:
         if (verbose) printf(" as string\n");
-        grib_get_string_length(handle1,name,&len1);
-        grib_get_string_length(handle2,name,&len2);
+        /* See ECC-710: It is very slow getting the key length this way */
+        /*grib_get_string_length(handle1,name,&len1);*/
+        /*grib_get_string_length(handle2,name,&len2);*/
+        len1 = len2 = 4096; /* Significantly faster to use an upper bound */
         sval1 = (char*)grib_context_malloc(handle1->context,len1*sizeof(char));
         sval2 = (char*)grib_context_malloc(handle2->context,len2*sizeof(char));
 

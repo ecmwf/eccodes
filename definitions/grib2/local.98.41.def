@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -43,6 +43,7 @@ unsigned[2] anoffsetFrequency = missing(): dump, can_be_missing;
 
 # Boolean
 transient is_efas = 1;
+transient lsdate_bug = 1: hidden; # See ECC-707
 
 # Note: the key typeOfPostProcessing is in the PDTNs 70, 71, 72 and 73
 concept efas_post_proc {

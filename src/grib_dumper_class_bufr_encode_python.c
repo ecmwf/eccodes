@@ -146,7 +146,7 @@ static int destroy(grib_dumper* d)
 
 static char* lval_to_string(grib_context* c, long v)
 {
-    char* sval=grib_context_malloc_clear(c,sizeof(char)*40);
+    char* sval=(char*)grib_context_malloc_clear(c,sizeof(char)*40);
     if (v == GRIB_MISSING_LONG) sprintf(sval,"CODES_MISSING_LONG");
     else                        sprintf(sval,"%ld",v);
     return sval;

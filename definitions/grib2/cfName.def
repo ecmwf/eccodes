@@ -71,7 +71,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Mean sea level pressure
-'air_pressure_at_sea_level' = {
+'air_pressure_at_mean_sea_level' = {
 	 discipline = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
@@ -159,4 +159,10 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 37 ;
+}
+#Sea ice area fraction
+'sea_ice_area_fraction' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
 }

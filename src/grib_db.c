@@ -35,7 +35,6 @@ static void grib_db_delete_columns(grib_db* db);
 static int grib_db_columns_resize(grib_db* db,size_t newsize);
 static int grib_db_column_copy_from_handle(grib_handle* h,grib_db* db,int i);
 static grib_db* grib_db_create_from_keys(grib_context* c,char** keys,int nkeys,int* err);
-static grib_db* grib_db_create_from_keys(grib_context* c,char** keys,int nkeys,int* err);
 static void grib_fieldset* grib_db_fieldset_create(grib_db* db, int* err);
 static int grib_fieldset_compare(grib_fieldset* set,int* i,int* j);
 static void grib_db_sort(grib_set* set, int beg, int theEnd);
@@ -286,7 +285,6 @@ static grib_db* grib_db_create_from_keys(grib_context* c,char** keys,int nkeys,i
    size_t msize=0,size=0;
    int i=0;
    int type=0;
-   grib_context* c=NULL;
    int default_type=GRIB_TYPE_DOUBLE;
 
    if (!c) c=grib_context_get_default( );

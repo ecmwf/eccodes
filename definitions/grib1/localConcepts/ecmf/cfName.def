@@ -90,7 +90,7 @@
 	 table2Version = 128 ;
 	}
 #Mean sea level pressure
-'air_pressure_at_sea_level' = {
+'air_pressure_at_mean_sea_level' = {
 	 indicatorOfParameter = 151 ;
 	 table2Version = 128 ;
 	}
@@ -193,4 +193,74 @@
 'temperature_in_surface_snow' = {
 	 indicatorOfParameter = 238 ;
 	 table2Version = 128 ;
+}
+#Sea-ice thickness
+'sea_ice_thickness' = {
+	 table2Version = 174 ;
+	 indicatorOfParameter = 98 ;
+}
+#Sea ice area fraction
+'sea_ice_area_fraction' = {
+	 table2Version = 128 ;
+	 indicatorOfParameter = 31 ;
+}
+#Sea ice snow thickness
+'surface_snow_thickness' = {
+	 table2Version = 174 ;
+	 indicatorOfParameter = 97 ;
+}
+#Depth of 20C isotherm
+'depth_of_isosurface_of_sea_water_potential_temperature' = {
+	 table2Version = 151 ;
+	 indicatorOfParameter = 163 ;
+}
+#Ocean barotropic stream function
+'ocean_barotropic_streamfunction' = {
+	 table2Version = 151 ;
+	 indicatorOfParameter = 147 ;
+}
+#Surface downward northward stress
+'surface_downward_northward_stress' = {
+	 table2Version = 151 ;
+	 indicatorOfParameter = 154 ;
+}
+#Surface downward eastward stress
+'surface_downward_eastward_stress' = {
+	 table2Version = 151 ;
+	 indicatorOfParameter = 153 ;
+}
+#Sea surface height
+'sea_surface_height_above_geoid' = {
+	 table2Version = 151 ;
+	 indicatorOfParameter = 145 ;
+}
+#Sea water practical salinity
+'sea_water_practical_salinity' = {
+	 table2Version = 151 ;
+	 indicatorOfParameter = 130 ;
+}
+#Sea water potential temperature
+'sea_water_potential_temperature' = {
+	 table2Version = 151 ;
+	 indicatorOfParameter = 129 ;
+}
+#Sea water sigma theta
+'sea_water_sigma_theta' = {
+	 table2Version = 151 ;
+	 indicatorOfParameter = 138 ;
+}
+#Northward sea water velocity
+'northward_sea_water_velocity' = {
+	 table2Version = 151 ;
+	 indicatorOfParameter = 132 ;
+}
+#Eastward sea water velocity
+'eastward_sea_water_velocity' = {
+	 table2Version = 151 ;
+	 indicatorOfParameter = 131 ;
+}
+#Upward sea water velocity
+'upward_sea_water_velocity' = {
+	 table2Version = 151 ;
+	 indicatorOfParameter = 133 ;
 }

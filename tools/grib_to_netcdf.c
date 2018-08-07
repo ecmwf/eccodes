@@ -24,10 +24,10 @@
 
 #include "grib_tools.h"
 
-char* grib_tool_description = "Convert a GRIB file to netCDF format.";
-char* grib_tool_name = "grib_to_netcdf";
-char* grib_tool_usage = "[options] grib_file grib_file ... ";
-static char argvString[2048];
+const char* grib_tool_description = "Convert a GRIB file to netCDF format.";
+const char* grib_tool_name = "grib_to_netcdf";
+const char* grib_tool_usage = "[options] grib_file grib_file ... ";
+static char argvString[2048] = {0,};
 
 /*=====================================================================*/
 
@@ -2398,6 +2398,12 @@ static int compute_scale(dataset_t *subset)
     scaled_min = rint((min - ao) / sf);
     scaled_median = rint((median - ao) / sf);
 
+    if (scaled_max > nc_type_values[idx].nc_type_max) {
+        grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: scaled_max (=%lld) > nc_type_max (=%lf). Set sf to 1.0",
+                         scaled_max, nc_type_values[idx].nc_type_max);
+        sf = 1.0;  /* ECC-685 */
+    }
+
     test_scaled_max = (char) scaled_max;
     test_scaled_min = (char) scaled_min;
     test_scaled_median = (char) scaled_median;
@@ -3052,12 +3058,16 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
 
         if (setup.deflate > -1)
         {
+#ifdef NC_NETCDF4
             stat = nc_def_var_chunking(ncid, var_id, NC_CHUNKED, chunks);
             check_err(stat, __LINE__, __FILE__);
 
             /* Set compression settings for a variable */
             stat = nc_def_var_deflate(ncid, var_id, setup.shuffle, 1, setup.deflate);
             check_err(stat, __LINE__, __FILE__);
+#else
+            grib_context_log(ctx, GRIB_LOG_ERROR, "Deflate option only supported in NetCDF4");
+#endif
         }
         if(subsets[i].scale)
         {
@@ -3209,6 +3219,30 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
     return e;
 }
 
+static size_t string_to_unique_number(const char* axis, const char* str)
+{
+    size_t result = 0;
+    if(strcmp(axis, "type")==0) {
+        /* TODO: not ideal but capture the most common MARS types */
+        if     (strcmp(str,"an")==0) return 2;
+        else if(strcmp(str,"fc")==0) return 9;
+        else if(strcmp(str,"cf")==0) return 10;
+        else if(strcmp(str,"pf")==0) return 11;
+        else if(strcmp(str,"em")==0) return 17;
+        else if(strcmp(str,"es")==0) return 18;
+        else if(strcmp(str,"ep")==0) return 30;
+        else if(strcmp(str,"4i")==0) return 33;
+        else if(strcmp(str,"4g")==0) return 8;
+        else if(strcmp(str,"ia")==0) return 3;
+        else if(strcmp(str,"efi")==0) return 27;
+    }
+    /* Fallback general case: Use hashing */
+    result = 5381;
+    while (*str) {
+        result = 33 * result ^ (unsigned char) *str++;
+    }
+    return result;
+}
 static int fill_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid)
 {
     const request *cube = h->cube;
@@ -3248,8 +3282,18 @@ static int fill_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid)
         }
         else
         {
-            for(j = 0; j < n; ++j)
-                values[j] = atol(get_value(cube, axis, j));
+            for(j = 0; j < n; ++j) {
+                long lv = 0;
+                const char* sv = get_value(cube, axis, j);
+                if (is_number(sv)) {
+                    lv = atol(sv); /* Detect error? */
+                } else {
+                    /* ECC-725: Convert string-valued dimension to integer
+                     * e.g. mars type or stream */
+                    lv = string_to_unique_number(axis, sv);
+                }
+                values[j] = lv;
+            }
         }
 
         stat = nc_inq_varid(ncid, (lowaxis), &var_id);
@@ -3854,7 +3898,7 @@ static int get_creation_mode(int option_kind)
 #else
     case NC_FORMAT_NETCDF4:
     case NC_FORMAT_NETCDF4_CLASSIC:
-        fprintf(stderr,"%s not built with netcdf4, cannot create netCDF-4 files.\n", grib_tool_name);
+        grib_context_log(ctx, GRIB_LOG_ERROR, "%s not built with netcdf4, cannot create netCDF-4 files.", grib_tool_name);
         exit(1);
         break;
 #endif
@@ -3934,7 +3978,11 @@ int main(int argc, char *argv[])
     int i, ret = 0;
 
     /* GRIB-413: Collect all program arguments into a string */
+    const size_t maxLen = sizeof(argvString);
+    size_t currLen = 0;
     for (i=0; i<argc; ++i) {
+        currLen += strlen(argv[i]);
+        if ( currLen >= maxLen-1 ) break;
         strcat(argvString, argv[i]);
         if (i != argc-1) strcat(argvString, " ");
     }
@@ -4269,10 +4317,10 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     printf("%s: Found %d GRIB field%s in %d file%s.\n", grib_tool_name, fs->count, fs->count>1?"s":"", files, files > 1 ? "s" : "");
 
-    /*
-     grib_context_log(ctx, GRIB_LOG_INFO, "Request representing %d fields ", fs->count);
-     print_all_requests(data_r);
-     */
+    if (ctx->debug) {
+        grib_context_log(ctx, GRIB_LOG_INFO, "Request representing %d fields ", fs->count);
+        print_all_requests(data_r);
+    }
 
     /* Split the SOURCE from request into as many datasets as specified */
     count = split_fieldset(fs, data_r, &subsets, user_r, config_r);
@@ -4281,6 +4329,10 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     print_ignored_keys(stdout, user_r);
 
     dims = new_simple_hypercube_from_mars_request(data_r);
+    if (ctx->debug) {
+        grib_context_log(ctx, GRIB_LOG_INFO, "Hypercube");
+        print_hypercube(dims);
+    }
 
     /* In case there is only 1 DATE+TIME+STEP, set at least 1 time as axis */
     set_always_a_time(dims, data_r);

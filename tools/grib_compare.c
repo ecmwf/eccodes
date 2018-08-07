@@ -155,14 +155,14 @@ int global_counter=0;
 int theStart=-1;
 int theEnd=-1;
 
-char* grib_tool_description=
+const char* grib_tool_description=
   "Compare GRIB messages contained in two files."
   "\n\tIf some differences are found it fails returning an error code."
   "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
   "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
-char* grib_tool_name="grib_compare";
-char* grib_tool_usage="[options] grib_file1 grib_file2";
+const char* grib_tool_name="grib_compare";
+const char* grib_tool_usage="[options] grib_file1 grib_file2";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
@@ -591,8 +591,8 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
     double packingError1=0,packingError2=0;
     double value_tolerance=0;
     grib_context* c=h1->context;
-    char* first_str = (handles_swapped==0? "1st" : "2nd");
-    char* second_str = (handles_swapped==0? "2nd" : "1st");
+    const char* first_str = (handles_swapped==0? "1st" : "2nd");
+    const char* second_str = (handles_swapped==0? "2nd" : "1st");
 
     type1=type;
     type2=type;

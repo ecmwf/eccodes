@@ -15,11 +15,11 @@
 
 #include "grib_tools.h"
 
-char* grib_tool_description="Copies the content of GRIB files printing"
+const char* grib_tool_description="Copies the content of GRIB files printing"
         " values of some keys."
         "\n\tIf the name of the output_grib_file contains a key enclosed in square brackets, its value will be used.";
-char* grib_tool_name="grib_copy";
-char* grib_tool_usage="[options] grib_file grib_file ... output_grib_file";
+const char* grib_tool_name="grib_copy";
+const char* grib_tool_usage="[options] grib_file grib_file ... output_grib_file";
 
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value */

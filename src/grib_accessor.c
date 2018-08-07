@@ -16,6 +16,14 @@
 
 #include "grib_api_internal.h"
 
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
+GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
+    if (*a != *b) return 1;
+    while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
+    return (*a==0 && *b==0) ? 0 : 1;
+}
+
 void  grib_accessor_dump(grib_accessor* a, grib_dumper* f)
 {
     grib_accessor_class *c = a->cclass;
@@ -606,7 +614,7 @@ int grib_compare_accessors(grib_accessor* a1,grib_accessor* a2,int compare_flags
     int type_mismatch=0;
     grib_accessor_class *c1=NULL;
 
-    if ((compare_flags & GRIB_COMPARE_NAMES) && strcmp(a1->name,a2->name))
+    if ((compare_flags & GRIB_COMPARE_NAMES) && grib_inline_strcmp(a1->name,a2->name))
         return GRIB_NAME_MISMATCH;
 
     if ( compare_flags & GRIB_COMPARE_TYPES ) {
@@ -732,7 +740,7 @@ grib_accessor* _grib_accessor_get_attribute(grib_accessor* a,const char* name,in
 {
     int i=0;
     while (i<MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
-        if (!strcmp(a->attributes[i]->name,name)) {
+        if (!grib_inline_strcmp(a->attributes[i]->name,name)) {
             *index=i;
             return a->attributes[i];
         }

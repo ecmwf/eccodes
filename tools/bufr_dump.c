@@ -53,13 +53,14 @@ grib_option grib_options[]={
         {"T:",0,0,1,0,"B"},
         {"7",0,0,0,1,0},
         {"V",0,0,0,1,0},
-        {"q",0,0,1,0,0}
+        {"q",0,0,1,0,0},
+        {"X:",0,0,0,1,0}
         /* {"x",0,0,0,1,0} */
 };
 
-char* grib_tool_description="Dump the content of a BUFR file in different formats.";
-char* grib_tool_name="bufr_dump";
-char* grib_tool_usage="[options] bufr_file bufr_file ...";
+const char* grib_tool_description="Dump the content of a BUFR file in different formats.";
+const char* grib_tool_name="bufr_dump";
+const char* grib_tool_usage="[options] bufr_file bufr_file ...";
 static int json=0;
 static char* json_option=0;
 static int first_handle=1;
@@ -280,7 +281,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 } else {
                     fprintf(stdout,"\"ERROR: unable to unpack data section\"");
                     options->error=err;
-                    return err;
+                    /*return err; See ECC-723*/
                 }
             }
             a=grib_find_accessor(h,"numericValues");
@@ -298,7 +299,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 } else {
                     fprintf(stdout,"\"ERROR: unable to unpack data section\"");
                     options->error=err;
-                    return err;
+                    /*return err; See ECC-723*/
                 }
             }
             grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
@@ -313,7 +314,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 } else {
                     fprintf(stdout,"\"ERROR: unable to unpack data section\"");
                     options->error=err;
-                    return err;
+                    /*return err; See ECC-723*/
                 }
             }
             options->dump_flags=GRIB_DUMP_FLAG_ALL_ATTRIBUTES;
@@ -337,9 +338,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 fprintf(stderr, "ERROR: unable to unpack data section: %s\n",grib_get_error_message(err));
                 exit(err);
             } else {
-                fprintf(stdout,"\"ERROR: unable to unpack data section\"");
+                fprintf(stdout,"ERROR: unable to unpack data section\n");
                 options->error=err;
-                return err;
+                /*return err; See ECC-723*/
             }
         }
         grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
@@ -353,7 +354,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             } else {
                 fprintf(stdout,"\"ERROR: unable to unpack data section\"");
                 options->error=err;
-                return err;
+                /*return err; See ECC-723*/
             }
         }
         print_header(options);

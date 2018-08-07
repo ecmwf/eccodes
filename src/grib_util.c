@@ -340,7 +340,7 @@ static grib_trie* init_list(const char* name)
 /* For debugging purposes */
 static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
         const double* data_values, const size_t data_values_count,  /* the data pay load */
-        const grib_values *values, const size_t count)  /* keys and their values */
+        const grib_values *keyval_pairs, const size_t count)  /* keys and their values */
 {
     size_t i=0;
     int isConstant = 1;
@@ -349,14 +349,14 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
 
     for(i=0; i<count; i++)
     {
-        switch(values[i].type)
+        switch(keyval_pairs[i].type)
         {
         case GRIB_TYPE_LONG: printf("ECCODES DEBUG  grib_util: => %s =  %ld;\n"
-                ,values[i].name,(long)values[i].long_value); break;
+                ,keyval_pairs[i].name,(long)keyval_pairs[i].long_value); break;
         case GRIB_TYPE_DOUBLE: printf("ECCODES DEBUG  grib_util: => %s = %.16e;\n"
-                ,values[i].name,values[i].double_value); break;
+                ,keyval_pairs[i].name,keyval_pairs[i].double_value); break;
         case GRIB_TYPE_STRING: printf("ECCODES DEBUG  grib_util: => %s = \"%s\";\n"
-                ,values[i].name,values[i].string_value); break;
+                ,keyval_pairs[i].name,keyval_pairs[i].string_value); break;
         }
     }
 
@@ -545,7 +545,45 @@ static double normalise_angle(double angle)
     while (angle<0)   angle += 360;
     while (angle>360) angle -= 360;
     return angle;
+}
+static int check_values(const double* data_values, size_t data_values_count)
+{
+    size_t i = 0;
+    for (i=0; i<data_values_count; i++) {
+        const double val = data_values[i];
+        if ( val >= DBL_MAX   ||
+             val <= -DBL_MAX  ||
+             isnan(val) )
+        {
+            fprintf(stderr,"GRIB_UTIL_SET_SPEC: Invalid data value: i=%lu, val=%g\n",i, val);
+            return GRIB_ENCODING_ERROR;
+        }
+    }
+    return GRIB_SUCCESS;
 }*/
+
+static int check_geometry(grib_handle* handle, const grib_util_grid_spec2* spec,
+                          size_t data_values_count, int specified_as_global)
+{
+    int err = 0;
+
+    if (spec->pl && spec->pl_size != 0 &&
+        (spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type==GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG))
+    {
+        if (specified_as_global) {
+            char msg[100] = {0,};
+            size_t sum = 0;
+            if (specified_as_global) strcpy(msg, "Specified to be global (in spec)");
+            sum = sum_of_pl_array(spec->pl, spec->pl_size);
+            if (sum != data_values_count) {
+                fprintf(stderr, "GRIB_UTIL_SET_SPEC: Invalid reduced gaussian grid: %s but data_values_count != sum_of_pl_array (%ld!=%ld)\n",
+                        msg, (long)data_values_count, (long)sum);
+                return GRIB_WRONG_GRID;
+            }
+        }
+    }
+    return err;
+}
 
 #if 0
 /* Check what is coded in the handle is what is requested by the spec. */
@@ -847,6 +885,11 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         printf("ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n",input_decimal_scale_factor);
     }
 
+    /*if ( (*err=check_values(data_values, data_values_count))!=GRIB_SUCCESS ) {
+        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Data values check failed! %s\n", grib_get_error_message(*err));
+        goto cleanup;
+    }*/
+
     if (flags & GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING) {
         if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED &&
                 strcmp(input_packing_type,"grid_simple_matrix")) {
@@ -881,7 +924,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 break;
             default :
                 printf("invalid packing_spec->packing_type = %ld\n",(long)packing_spec->packing_type);
-                abort();
+                *err = GRIB_INTERNAL_ERROR;
+                goto cleanup;
                 break;
             }
             packingTypeIsSet=1;
@@ -906,7 +950,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         default:
             printf("invalid packing_spec->accuracy = %ld\n",(long)packing_spec->accuracy);
-            abort();
+            *err = GRIB_INTERNAL_ERROR;
+            goto cleanup;
             break;
         }
 
@@ -1229,7 +1274,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             break;
         default :
             printf("invalid packing_spec->packing_type = %ld\n",(long)packing_spec->packing_type);
-            abort();
+            *err = GRIB_INTERNAL_ERROR;
+            goto cleanup;
             break;
         }
     }
@@ -1281,7 +1327,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     default:
         printf("invalid packing_spec->accuracy = %ld\n",(long)packing_spec->accuracy);
-        abort();
+        *err = GRIB_INTERNAL_ERROR;
+        goto cleanup;
         break;
     }
 
@@ -1339,6 +1386,15 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot set pl  %s\n",grib_get_error_message(*err));
             goto cleanup;
         }
+        if (global_grid) {
+            size_t sum = sum_of_pl_array(spec->pl, spec->pl_size);
+            if (data_values_count != sum) {
+                printf("invalid reduced gaussian grid: specified as global, data_values_count=%ld but sum of pl array=%ld\n",
+                        (long)data_values_count, (long)sum);
+                *err = GRIB_WRONG_GRID;
+                goto cleanup;
+            }
+        }
     }
 
     if (h->context->debug==-1) {
@@ -1352,6 +1408,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         if ((*err=expand_bounding_box(outh, values, count)) != 0)
         {
             fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot expand bounding box: %s\n",grib_get_error_message(*err));
+            if (h->context->write_on_fail) grib_write_message(outh,"error.grib","w");
             goto cleanup;
         }
     }
@@ -1461,6 +1518,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         if (*err != GRIB_SUCCESS) {
             fprintf(stderr,"GRIB_UTIL_SET_SPEC: Failed to change edition to %ld: %s\n",
                     packing_spec->editionNumber, grib_get_error_message(*err));
+            if (h->context->write_on_fail) grib_write_message(outh,"error.grib","w");
             goto cleanup;
         }
     }
@@ -1480,6 +1538,21 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     if (packing_spec->deleteLocalDefinition) {
         grib_set_long(outh,"deleteLocalDefinition", 1);
+    }
+
+    /* ECC-445 */
+    if (expandBoundingBox) {
+        int e = grib_set_long(outh, "expandedBoundingBox", 1);
+        Assert(e == 0);
+        Assert(!global_grid); /* ECC-576: "global" should not be set */
+    }
+
+    if ( (*err = check_geometry(outh, spec, data_values_count, global_grid)) != GRIB_SUCCESS)
+    {
+        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed! %s\n", grib_get_error_message(*err));
+        if (h->context->write_on_fail)
+            grib_write_message(outh,"error.grib","w");
+        goto cleanup;
     }
 
     /* Disable check: need to re-examine GRIB-864 */
@@ -1678,7 +1751,7 @@ static void set_value(grib_values* value,char* str,int equal)
  'values'           The array we populate and return
  'count'            The number of elements
  */
-int parse_keyval_string(char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count)
+int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count)
 {
     char* p;
     int i=0;
@@ -1837,4 +1910,23 @@ char* codes_getenv(const char* name)
         result = getenv(old_name);
     }
     return result;
+}
+
+int expandedBoundingBox(grib_handle* h)
+{
+    long expandedBoundingBox = 0;
+    int err = grib_get_long(h, "expandedBoundingBox", &expandedBoundingBox);
+    if (!err && expandedBoundingBox == 1) {
+        return 1;
+    }
+    return 0;
+}
+
+size_t sum_of_pl_array(const long* pl, size_t plsize)
+{
+    long i, count=0;
+    for (i=0;i<plsize;i++) {
+        count += pl[i];
+    }
+    return count;
 }

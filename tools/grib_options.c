@@ -19,7 +19,7 @@
 #include "wingetopt.h"
 #endif
 
-char* names[]={"parameter","vertical","geography","data","mars","local"};
+const char* names[]={"parameter","vertical","geography","data","mars","local"};
 int names_count=6;
 
 /* id,args,help */
@@ -57,7 +57,7 @@ grib_options_help grib_options_help_list[] ={
   {"o:","output_file",
    "\n\t\tOutput is written to output_file."
    "\n\t\tIf an output file is required and -o is not used, the"
-   " output is written to filter.out\n"},
+   " output is written to 'filter.out'\n"},
   {"p:","key[:{s|d|i}],key[:{s|d|i}],...",
    "\n\t\tDeclaration of keys to print."
    "\n\t\tFor each key a string (key:s), a double (key:d) or an integer (key:i)"
@@ -373,7 +373,7 @@ char* grib_options_get_help(char* id)
     }
     for (i=0; i<grib_options_help_count;i++) {
         if (!strcmp(id,grib_options_help_list[i].id)) {
-            return grib_options_help_list[i].help != NULL ? grib_options_help_list[i].help : err;
+            return grib_options_help_list[i].help != NULL ? (char*)grib_options_help_list[i].help : err;
         }
     }
     return err;
@@ -396,7 +396,7 @@ char* grib_options_get_args(char* id)
     }
     for (i=0; i<grib_options_help_count;i++) {
         if (!strcmp(id,grib_options_help_list[i].id)) {
-            return grib_options_help_list[i].args != NULL ? grib_options_help_list[i].args : err;
+            return grib_options_help_list[i].args != NULL ? (char*)grib_options_help_list[i].args : err;
         }
     }
     return err;

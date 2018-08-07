@@ -829,7 +829,7 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
    },
 
 /*
-   2013-??-??: maximum changed to <0,133> because of cosmo-de boundary effects when coupled with IFS ..
+   2013-xx-yy: maximum changed to <0,133> because of cosmo-de boundary effects when coupled with IFS ..
    glameps: warning: tigge_lam.20160814_00+006.mem026.grib2, field 6 [total_precipitation_sfc.lam]: total_precipitation_sfc.lam maximum value 361.151 is not in [0,350]
 */
 

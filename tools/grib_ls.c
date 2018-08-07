@@ -42,10 +42,10 @@ grib_option grib_options[]={
     {"x",0,0,0,1,0}
 };
 
-char* grib_tool_description="List content of GRIB files printing values of "
+const char* grib_tool_description="List content of GRIB files printing values of "
         "some keys.\n\tIt does not fail when a key is not found.";
-char* grib_tool_name="grib_ls";
-char* grib_tool_usage="[options] grib_file grib_file ...";
+const char* grib_tool_name="grib_ls";
+const char* grib_tool_usage="[options] grib_file grib_file ...";
 static char* new_handle="";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);

@@ -204,7 +204,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 30 ;
 	}
-#Sea-ice cover
+#Sea ice area fraction
 '(0 - 1)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 31 ;
@@ -3774,7 +3774,7 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 96 ;
 	}
-#Sea-ice Snow Thickness
+#Sea ice snow thickness
 'm' = {
 	 table2Version = 174 ;
 	 indicatorOfParameter = 97 ;
@@ -6774,92 +6774,92 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 149 ;
 	}
-#Assimetry factor at 340 nm
+#Asymmetry factor at 340 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 150 ;
 	}
-#Assimetry factor at 355 nm
+#Asymmetry factor at 355 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 151 ;
 	}
-#Assimetry factor at 380 nm
+#Asymmetry factor at 380 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 152 ;
 	}
-#Assimetry factor at 400 nm
+#Asymmetry factor at 400 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 153 ;
 	}
-#Assimetry factor at 440 nm
+#Asymmetry factor at 440 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Assimetry factor at 469 nm
+#Asymmetry factor at 469 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 155 ;
 	}
-#Assimetry factor at 500 nm
+#Asymmetry factor at 500 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 156 ;
 	}
-#Assimetry factor at 532 nm
+#Asymmetry factor at 532 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 157 ;
 	}
-#Assimetry factor at 550 nm
+#Asymmetry factor at 550 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 158 ;
 	}
-#Assimetry factor at 645 nm
+#Asymmetry factor at 645 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 159 ;
 	}
-#Assimetry factor at 670 nm
+#Asymmetry factor at 670 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 160 ;
 	}
-#Assimetry factor at 800 nm
+#Asymmetry factor at 800 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 161 ;
 	}
-#Assimetry factor at 858 nm
+#Asymmetry factor at 858 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 162 ;
 	}
-#Assimetry factor at 865 nm
+#Asymmetry factor at 865 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 163 ;
 	}
-#Assimetry factor at 1020 nm
+#Asymmetry factor at 1020 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 164 ;
 	}
-#Assimetry factor at 1064 nm
+#Asymmetry factor at 1064 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 165 ;
 	}
-#Assimetry factor at 1240 nm
+#Asymmetry factor at 1240 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 166 ;
 	}
-#Assimetry factor at 1640 nm
+#Asymmetry factor at 1640 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 167 ;
@@ -6919,7 +6919,7 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Assimetry factor at 2130 nm
+#Asymmetry factor at 2130 nm
 '~' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 179 ;
@@ -9389,7 +9389,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Averaged total lightning flash density over the past hour
+#Averaged total lightning flash density in the last hour
 'km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 51 ;
@@ -9399,7 +9399,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 52 ;
 	}
-#Averaged cloud-to-ground lightning flash density over the past hour
+#Averaged cloud-to-ground lightning flash density in the last hour
 'km**-2 day**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 53 ;
@@ -12389,27 +12389,27 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 128 ;
 	}
-#Ocean potential temperature
+#Sea water potential temperature
 'deg C' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 129 ;
 	}
-#Salinity
+#Sea water practical salinity
 'psu' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 130 ;
 	}
-#Ocean current zonal component
+#Eastward sea water velocity
 'm s**-1' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 131 ;
 	}
-#Ocean current meridional component
+#Northward sea water velocity
 'm s**-1' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 132 ;
 	}
-#Ocean current vertical component
+#Upward sea water velocity
 'm s**-1' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 133 ;
@@ -12434,7 +12434,7 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 137 ;
 	}
-#Sigma-theta
+#Sea water sigma theta
 'kg m**-3' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 138 ;
@@ -12469,7 +12469,7 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 144 ;
 	}
-#Sea level
+#Sea surface height
 'm' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 145 ;
@@ -12479,7 +12479,7 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Barotropic stream function
+#Ocean barotropic stream function
 'm**3 s**-1' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 147 ;
@@ -12509,12 +12509,12 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 152 ;
 	}
-#U stress
+#Surface downward eastward stress
 'N m**-2' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 153 ;
 	}
-#V stress
+#Surface downward northward stress
 'N m**-2' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 154 ;
@@ -12559,7 +12559,7 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 162 ;
 	}
-#20 degrees isotherm depth
+#Depth of 20C isotherm
 'm' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 163 ;
