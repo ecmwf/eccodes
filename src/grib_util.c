@@ -576,8 +576,8 @@ static int check_geometry(grib_handle* handle, const grib_util_grid_spec2* spec,
             if (specified_as_global) strcpy(msg, "Specified to be global (in spec)");
             sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (sum != data_values_count) {
-                fprintf(stderr, "GRIB_UTIL_SET_SPEC: Invalid reduced gaussian grid: %s but data_values_count != sum_of_pl_array (%lu!=%lu)\n",
-                        msg, data_values_count, sum);
+                fprintf(stderr, "GRIB_UTIL_SET_SPEC: Invalid reduced gaussian grid: %s but data_values_count != sum_of_pl_array (%ld!=%ld)\n",
+                        msg, (long)data_values_count, (long)sum);
                 return GRIB_WRONG_GRID;
             }
         }
@@ -1389,7 +1389,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         if (global_grid) {
             size_t sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (data_values_count != sum) {
-                printf("invalid reduced gaussian grid: specified as global, data_values_count=%lu but sum of pl array=%lu\n",data_values_count,sum);
+                printf("invalid reduced gaussian grid: specified as global, data_values_count=%ld but sum of pl array=%ld\n",
+                        (long)data_values_count, (long)sum);
                 *err = GRIB_WRONG_GRID;
                 goto cleanup;
             }
