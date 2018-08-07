@@ -11172,7 +11172,6 @@ dist_definitionsgrib1_localConcepts_efkl_DATA = \
 
 definitionsgrib1_localConcepts_eidbdir = @ECCODES_DEFINITION_PATH@/grib1/localConcepts/eidb
 dist_definitionsgrib1_localConcepts_eidb_DATA = \
-	grib1/localConcepts/eidb/cfName.def\
 	grib1/localConcepts/eidb/name.def\
 	grib1/localConcepts/eidb/paramId.def\
 	grib1/localConcepts/eidb/shortName.def\
@@ -11197,7 +11196,6 @@ definitionsgrib1_localConcepts_eswidir = @ECCODES_DEFINITION_PATH@/grib1/localCo
 dist_definitionsgrib1_localConcepts_eswi_DATA = \
 	grib1/localConcepts/eswi/aerosolConcept.def\
 	grib1/localConcepts/eswi/aerosolbinnumber.table\
-	grib1/localConcepts/eswi/cfName.def\
 	grib1/localConcepts/eswi/landTypeConcept.def\
 	grib1/localConcepts/eswi/landtype.table\
 	grib1/localConcepts/eswi/name.def\
