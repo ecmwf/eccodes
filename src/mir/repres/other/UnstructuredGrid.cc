@@ -44,8 +44,8 @@ UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation& parametrisat
     ASSERT(longitudes_.size() > 0);
 
     check("UnstructuredGrid from MIRParametrisation",
-     latitudes_, 
-     longitudes_);
+          latitudes_,
+          longitudes_);
 
 }
 
@@ -57,6 +57,10 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName& path) {
     }
 
     if (!::isprint(in.peek())) {
+
+        eckit::Log::info() << "UnstructuredGrid::load  " << path << std::endl;
+
+
         eckit::IfstreamStream s(in);
         size_t version;
         s >> version;
@@ -71,6 +75,8 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName& path) {
         for (size_t i = 0; i < count; ++i) {
             s >> latitudes_[i];
             s >> longitudes_[i];
+            eckit::Log::info() << latitudes_[i] << " " << longitudes_[i] << std::endl;
+
         }
     }
     else {
@@ -82,9 +88,9 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName& path) {
         }
     }
 
-    check(std::string("UnstructuredGrid from ") + path, 
-        latitudes_,
-     longitudes_);
+    check(std::string("UnstructuredGrid from ") + path,
+          latitudes_,
+          longitudes_);
 
 }
 
@@ -96,6 +102,8 @@ void UnstructuredGrid::save(const eckit::PathName& path,
 
     check(std::string("UnstructuredGrid save to ") + path, latitudes, longitudes);
 
+    eckit::Log::info() << "UnstructuredGrid::save " << path << std::endl;
+
     ASSERT(latitudes.size() == longitudes.size());
     if (binary) {
         eckit::FileStream s(path, "w");
@@ -106,6 +114,8 @@ void UnstructuredGrid::save(const eckit::PathName& path,
         for (size_t i = 0; i < count; ++i) {
             s << latitudes[i];
             s << longitudes[i];
+
+            eckit::Log::info() << latitudes[i] << " " << longitudes[i] << std::endl;
         }
         s.close();
     }
@@ -266,8 +276,8 @@ bool UnstructuredGrid::includesSouthPole() const {
 
 
 void UnstructuredGrid::check( const std::string& title,
-                                     const std::vector<double>& latitudes,
-                                     const std::vector<double>& longitudes) {
+                              const std::vector<double>& latitudes,
+                              const std::vector<double>& longitudes) {
 
     ASSERT(latitudes.size() == longitudes.size());
     ASSERT(longitudes.size() > 0);
