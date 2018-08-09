@@ -27,7 +27,9 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/MeshGeneratorParameters.h"
+#include "eckit/serialisation/IfstreamStream.h"
 
+#include "eckit/serialisation/FileStream.h"
 
 namespace mir {
 namespace repres {
@@ -47,13 +49,57 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName& path) {
     if (!in) {
         throw eckit::CantOpenFile(path);
     }
-    double lat;
-    double lon;
-    while (in >> lat >> lon) {
-        latitudes_.push_back(lat);
-        longitudes_.push_back(lon);
+
+    if (!::isprint(in.peek())) {
+        eckit::IfstreamStream s(in);
+        size_t version;
+        s >> version;
+        ASSERT(version == 1);
+
+        size_t count;
+        s >> count;
+
+        latitudes_.resize(count);
+        longitudes_.resize(count);
+
+        for (size_t i = 0; i < count; ++i) {
+            s >> latitudes_[i];
+            s >> longitudes_[i];
+        }
+    }
+    else {
+        double lat;
+        double lon;
+        while (in >> lat >> lon) {
+            latitudes_.push_back(lat);
+            longitudes_.push_back(lon);
+        }
+    }
+
+}
+
+
+void UnstructuredGrid::save(const eckit::PathName& path,
+                            const std::vector<double>& latitudes,
+                            const std::vector<double>& longitudes,
+                            bool binary) {
+    ASSERT(latitudes.size() == longitudes.size());
+    if (binary) {
+        eckit::FileStream s(path, "w");
+        size_t version = 1;
+        size_t count = latitudes.size();
+        s << version;
+        s << count;
+        for (size_t i = 0; i < count; ++i) {
+            s << latitudes[i];
+            s << longitudes[i];
+        }
+    }
+    else {
+        NOTIMP;
     }
 }
+
 
 
 UnstructuredGrid::UnstructuredGrid(const std::vector<double>& latitudes,
