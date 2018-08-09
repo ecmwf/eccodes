@@ -94,6 +94,7 @@ void UnstructuredGrid::save(const eckit::PathName& path,
             s << latitudes[i];
             s << longitudes[i];
         }
+        s.close();
     }
     else {
         NOTIMP;
