@@ -1,11 +1,6 @@
 # examples/F90 include file for CMake
 
-set -ea
-# If this environment variable is set, then become verbose
-# so one can see why and how a test failed
-if test "x$ECCODES_TEST_VERBOSE_OUTPUT" != "x"; then
-   set -x
-fi
+set -eax
 
 proj_dir=@PROJECT_SOURCE_DIR@
 data_dir=@PROJECT_BINARY_DIR@/data
