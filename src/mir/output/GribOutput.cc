@@ -278,10 +278,9 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
 #endif
         }
 
-        // bool remove;
-        // if (parametrisation.get("remove-local-extension", remove)) {
-        //      remove ? 1 : 0;
-        // }
+        bool remove = false;
+        parametrisation.get("delete-local-definition", remove);
+        info.packing.deleteLocalDefinition = remove ? 1 : 0;
 
         // Give a chance to a sub-class to modify info
         fill(h, info);
