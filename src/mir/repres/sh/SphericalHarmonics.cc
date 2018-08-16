@@ -151,6 +151,31 @@ void SphericalHarmonics::truncate(
 }
 
 
+void SphericalHarmonics::interlace_spectra(
+        data::MIRValuesVector& interlaced,
+        const data::MIRValuesVector& spectra,
+        size_t truncation,
+        size_t numberOfComplexCoefficients,
+        size_t index,
+        size_t indexTotal) {
+    ASSERT(0 <= index && index < indexTotal);
+    ASSERT(numberOfComplexCoefficients * 2 * indexTotal == interlaced.size());
+
+    if (spectra.size() != numberOfComplexCoefficients * 2) {
+        const std::string msg = "MIRSpectralTransform: expected field values size " +
+                std::to_string(numberOfComplexCoefficients * 2) +
+                " (T=" + std::to_string(truncation) + "), " +
+                " got " + std::to_string(spectra.size());
+        eckit::Log::error() << msg << std::endl;
+        throw eckit::UserError(msg);
+    }
+
+    for (size_t j = 0; j < numberOfComplexCoefficients * 2; ++j) {
+        interlaced[ j * indexTotal + index ] = spectra[j];
+    }
+}
+
+
 const Representation *SphericalHarmonics::truncate(
         size_t truncation,
         const MIRValuesVector& in,
