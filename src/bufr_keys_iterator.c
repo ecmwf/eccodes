@@ -21,7 +21,7 @@ bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long f
                          "Invalid keys iterator for message: please use codes_keys_iterator_new");
         return NULL;
     }
-    
+
     ki= (bufr_keys_iterator*)grib_context_malloc_clear(h->context,sizeof(bufr_keys_iterator));
     if (!ki) return NULL;
 
@@ -132,7 +132,10 @@ static int next_attribute(bufr_keys_iterator* kiter)
             return 0;
         }
         prefix=(char*)grib_context_malloc_clear(kiter->current->context,strlen(kiter->prefix)+strlen(kiter->attributes[i_curr_attribute]->name)+3);
-        sprintf(prefix,"%s->%s",kiter->prefix,kiter->attributes[i_curr_attribute]->name);
+        /*sprintf(prefix,"%s->%s",kiter->prefix,kiter->attributes[i_curr_attribute]->name);*/
+        strcpy(prefix, kiter->prefix);  /* strcpy and strcat here are much faster than sprintf */
+        strcat(prefix, "->");
+        strcat(prefix, kiter->attributes[i_curr_attribute]->name);
         grib_context_free(kiter->current->context,kiter->prefix);
         kiter->prefix=prefix;
         kiter->attributes=kiter->attributes[i_curr_attribute]->attributes;
@@ -143,6 +146,10 @@ static int next_attribute(bufr_keys_iterator* kiter)
 
 int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter)
 {
+    /* ECC-734: de-allocate last key name stored */
+    grib_context_free(kiter->handle->context, kiter->key_name);
+    kiter->key_name = NULL;
+
     if(kiter->at_start)
     {
         kiter->current  = kiter->handle->root->block->first;
@@ -154,7 +161,7 @@ int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter)
     else
     {
         if (next_attribute(kiter)) {
-            return 1; 
+            return 1;
         } else {
             kiter->current = grib_next_accessor(kiter->current);
             kiter->attributes=0;
@@ -168,9 +175,6 @@ int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter)
 
     while(kiter->current && skip(kiter))
         kiter->current = grib_next_accessor(kiter->current);
-
-    /* ECC-734: de-allocate last name created */
-    if(kiter->key_name) grib_context_free(kiter->handle->context, kiter->key_name);
 
     return kiter->current != NULL;
 }
@@ -187,7 +191,10 @@ char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter)
     if (kiter->prefix) {
         int iattribute=kiter->i_curr_attribute-1;
         ret=(char*)grib_context_malloc_clear(c,strlen(kiter->prefix)+strlen(kiter->attributes[iattribute]->name)+10);
-        sprintf(ret,"%s->%s",kiter->prefix,kiter->attributes[iattribute]->name);
+        /*sprintf(ret,"%s->%s",kiter->prefix,kiter->attributes[iattribute]->name);*/
+        strcpy(ret, kiter->prefix); /* strcpy and strcat here are much faster than sprintf */
+        strcat(ret, "->");
+        strcat(ret, kiter->attributes[iattribute]->name);
     } else {
         ret=(char*)grib_context_malloc_clear(c,strlen(kiter->current->name)+10);
 
@@ -195,7 +202,7 @@ char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter)
             r=(int*)grib_trie_get(kiter->seen,kiter->current->name);
             sprintf(ret,"#%d#%s",*r,kiter->current->name);
         } else {
-            sprintf(ret,"%s",kiter->current->name);
+            strcpy(ret,kiter->current->name);
         }
     }
 
