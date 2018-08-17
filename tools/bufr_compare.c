@@ -226,7 +226,7 @@ int end=-1;
 const char* grib_tool_description=
     "Compare BUFR messages contained in two files."
     "\n\tIf some differences are found it fails returning an error code."
-    "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
+    "\n\tFloating-point values are compared exactly by default, different tolerance can be defined see -P -A -R."
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
 const char* grib_tool_name="bufr_compare";

@@ -13,7 +13,7 @@
 		For each key a string (key:s), a double (key:d) or an integer (key:i)
 		type can be requested. Default type is string.
  \n \n -F format \n 
-		C style format for floating point values.
+		C style format for floating-point values.
  \n \n -P key[:{s/d/i}],key[:{s/d/i}],... \n 
 		As -p adding the declared keys to the default list.
  \n \n -w key[:{s/d/i}]{=/!=}value,key[:{s/d/i}]{=/!=}value,... \n 
