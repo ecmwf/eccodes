@@ -675,7 +675,9 @@ int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr,int nest_if
     grib_accessor* same=NULL;
     grib_accessor* aloc=a;
 
-    same=_grib_accessor_get_attribute(a,attr->name,&id);
+    if(grib_accessor_has_attributes(a)) {
+        same=_grib_accessor_get_attribute(a,attr->name,&id);
+    }
 
     if (same) {
         if (nest_if_clash==0) return GRIB_ATTRIBUTE_CLASH;
