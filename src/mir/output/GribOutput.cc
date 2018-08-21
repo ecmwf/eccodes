@@ -35,6 +35,7 @@
 #include "mir/util/BoundingBox.h"
 #include "mir/input/GribMemoryInput.h"
 #include "mir/compat/GribCompatibility.h"
+#include "mir/util/MIRStatistics.h"
 
 
 namespace mir {
@@ -196,6 +197,10 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
 
     size_t total = 0;
 
+    eckit::Timing saveTimer;
+
+    eckit::AutoTiming timing(ctx.statistics().timer_, ctx.statistics().gribEncodingTiming_);
+
     for (size_t i = 0; i < field.dimensions(); i++) {
 
         // Protect grib_api
@@ -203,22 +208,6 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
 
         grib_handle *h = input.gribHandle(i); // Base class will throw an exception is input cannot provide a grib_handle
 
-#if 0
-
-        static const char *dump = getenv("MIR_DUMP_GRIB_HANDLES");
-        if (dump) {
-
-            static int n = 0;
-            char fname[1024];
-            sprintf(fname, "grib-dump-%04d.txt", n++);
-            FILE *f = fopen(fname, "w");
-            if (f) {
-                grib_dump_content(h, f, NULL, 0, NULL);
-                fclose(f);
-            }
-        }
-
-#endif
 
         grib_info info = {{0},};
 
@@ -257,9 +246,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
         std::string packing;
         if (parametrisation.userParametrisation().get("packing", packing)) {
             const packing::Packer &packer = packing::Packer::lookup(packing);
-#if 0
-            packer.fill(info, *field.representation());
-#else
+
             if (field.values(i).size() < 4) {
 
                 // There is a bug in grib_api if the user ask 1 value and select second-order
@@ -275,7 +262,6 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
                 packer.fill(info, *field.representation());
             }
 
-#endif
         }
 
         bool remove = false;
@@ -383,9 +369,6 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
             throw eckit::SeriousBug(oss.str());
         }
 
-
-
-
         GRIB_CALL(err);
 
         const void *message;
@@ -398,7 +381,11 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
         ASSERT(bytes[0] == 'G' && bytes[1] == 'R' && bytes[2] == 'I' && bytes[3] == 'B');
         ASSERT(bytes[size - 4] == '7' && bytes[size - 3] == '7' && bytes[size - 2] == '7' && bytes[size - 1] == '7');
 
-        out(message, size, true);
+        {   // Remove
+            eckit::AutoTiming timing(ctx.statistics().timer_, saveTimer);
+            out(message, size, true);
+        }
+
         total += size;
 
 
@@ -431,6 +418,9 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
 
 
     }
+
+    ctx.statistics().gribEncodingTiming_ -= saveTimer;
+
 
     return total;
 }
