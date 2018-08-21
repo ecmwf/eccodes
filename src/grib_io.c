@@ -694,6 +694,10 @@ static int read_BUFR(reader *r)
         i++;
     }
 
+    if(length==0) {
+        return GRIB_INVALID_MESSAGE;
+    }
+
     /* Edition number */
     if(r->read(r->read_data,&tmp[i],1,&err) != 1 || err)
         return err;
