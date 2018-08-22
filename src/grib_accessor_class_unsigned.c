@@ -290,6 +290,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     long count=0;
     int err = 0;
     long pos = a->offset*8;
+    grib_handle* hand=grib_handle_of_accessor(a);
 
     err=grib_value_count(a,&count);
     if (err) return err;
@@ -315,7 +316,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     }
 
     for(i=0; i< rlen;i++){
-        val[i] = (long)grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data , &pos, self->nbytes*8);
+        val[i] = (long)grib_decode_unsigned_long(hand->buffer->data , &pos, self->nbytes*8);
         if(missing)
             if(val[i] == missing)
                 val[i] = GRIB_MISSING_LONG;
@@ -363,6 +364,7 @@ static int is_missing(grib_accessor* a)
     int i=0;
     unsigned char ff=0xff;
     unsigned long offset=a->offset;
+    grib_handle* hand=grib_handle_of_accessor(a);
 
     if (a->length==0) {
         Assert(a->vvalue!=NULL);
@@ -370,7 +372,7 @@ static int is_missing(grib_accessor* a)
     }
 
     for (i=0;i<a->length;i++) {
-        if (grib_handle_of_accessor(a)->buffer->data[offset] != ff) {
+        if (hand->buffer->data[offset] != ff) {
             return 0;
         }
         offset++;
