@@ -125,6 +125,7 @@ list( APPEND tests_data_reqd
     grib_set
     grib_iterator
     grib_compare
+    grib_copy
     grib_level
     index
     grib_bitmap

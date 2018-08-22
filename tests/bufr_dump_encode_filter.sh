@@ -41,10 +41,11 @@ files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 # ias1_240.bufr: Too large. The filter rules file generated is too big for the parser!
 # tropical_cyclone.bufr: multi-message
 # syno_multi.bufr: multi-message
+# aeolus_wmo_26:   multi-message
 # israel_observations_2017041010.bufr: Suffers from a bug. In filter cannot do:
 #    set #1#3HourPressureChange=-1.6;
 # The hash cannot be followed by a number!
-exclude="ias1_240.bufr syno_multi.bufr tropical_cyclone.bufr israel_observations_2017041010.bufr"
+exclude="ias1_240.bufr syno_multi.bufr tropical_cyclone.bufr aeolus_wmo_26.bufr israel_observations_2017041010.bufr "
 
 for f in $files
 do

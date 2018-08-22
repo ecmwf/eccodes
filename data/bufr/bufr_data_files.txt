@@ -145,3 +145,4 @@ eum_iasi_twt.bufr
 delayed_repl_01.bufr
 israel_observations_2017041010.bufr
 goes16_nm.bufr
+aeolus_wmo_26.bufr

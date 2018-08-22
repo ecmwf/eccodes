@@ -31,9 +31,8 @@ fBufrTmp=${label}".bufr.tmp"
 cat syno_multi.bufr temp_101.bufr > $fBufrInput 
 
 #----------------------------------------------------
-# Test: copy synop messages 
+# Test: copy synop messages
 #----------------------------------------------------
-
 rm -f $fBufrTmp
 
 echo "Test: copy synop messages " >> $fLog
@@ -45,9 +44,8 @@ for i in 1 2 3 ;do
 done
 
 #----------------------------------------------------
-# Test: copy non-synop messages 
+# Test: copy non-synop messages
 #----------------------------------------------------
-
 rm -f $fBufrTmp
 
 echo "Test: copy non-synop messages " >> $fLog
@@ -55,11 +53,9 @@ ${tools_dir}/bufr_copy -w dataCategory!=0 $fBufrInput $fBufrTmp >> $fLog
 
 [ `${tools_dir}/bufr_get -p dataCategory:l $fBufrTmp`  = "2" ]
 
-
 #-------------------------------------------------------------------
 # Test: use the square brackets to insert the value of a key
 #-------------------------------------------------------------------
-
 rm -f ${fBufrTmp}
 rm -f ${fBufrTmp}_*.bufr
 
@@ -70,8 +66,28 @@ ${tools_dir}/bufr_copy $fBufrInput ${fBufrTmp}_[dataCategory].bufr >> $fLog
 [ -s ${fBufrTmp}_2.bufr ]
 
 rm -f ${fBufrTmp}_*.bufr
+rm -f $fBufrInput
 
-#Clean up
+#-------------------------------------------------------------------
+# Test: The -X option
+#-------------------------------------------------------------------
+echo "Test: use of -X option" >> $fLog
+fBufrInput=aeolus_wmo_26.bufr
+${tools_dir}/bufr_copy -w count=1 -X 0 $fBufrInput $fBufrTmp #First msg
+r1=`${tools_dir}/bufr_get -w count=1 -n ls $fBufrInput`
+r2=`${tools_dir}/bufr_get -n ls $fBufrTmp`
+[ "$r1" = "$r2" ]
+
+${tools_dir}/bufr_copy -w count=1 -X 19449 $fBufrInput $fBufrTmp #Last msg
+r1=`${tools_dir}/bufr_get -w count=11 -n ls $fBufrInput`
+r2=`${tools_dir}/bufr_get -n ls $fBufrTmp`
+[ "$r1" = "$r2" ]
+
+${tools_dir}/bufr_copy -w count=1 -X 10972 $fBufrInput $fBufrTmp
+r=`${tools_dir}/bufr_get -p typicalTime,numberOfSubsets $fBufrTmp`
+[ "$r" = "000013 41" ]
+
+# Clean up
+#-----------
 rm -f $fLog 
 rm -f $fBufrTmp
-rm -f $fBufrInput
