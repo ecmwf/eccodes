@@ -34,6 +34,7 @@ list( APPEND grib_tools_bins_EXTRA
              grib_repair
              grib_to_json
              grib_check_gaussian_grid
+             bufr_split_by_subtype
              )
 
 # Install generic tools
