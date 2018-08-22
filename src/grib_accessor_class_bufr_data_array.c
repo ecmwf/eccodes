@@ -764,6 +764,8 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
                                                     "Setting it to missing value\n", bd->shortName, *v, minAllowed, maxAllowed);
                     grib_set_bits_on(buff->data,pos,modifiedWidth);
                 } else {
+                    grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
+                                                    bd->shortName, *v, minAllowed, maxAllowed);
                     return GRIB_OUT_OF_RANGE; /* ECC-611 */
                 }
             } else {
@@ -839,10 +841,16 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
         ii++;
         v++;
     }
-    if (max>maxAllowed && max!=GRIB_MISSING_DOUBLE)
+    if (max>maxAllowed && max!=GRIB_MISSING_DOUBLE) {
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Maximum value (%g) out of range (maxAllowed=%g).",
+                                            bd->shortName, max, maxAllowed);
         return GRIB_OUT_OF_RANGE;
-    if (min<minAllowed && min!=GRIB_MISSING_DOUBLE)
+    }
+    if (min<minAllowed && min!=GRIB_MISSING_DOUBLE) {
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Minimum value (%g) out of range (minAllowed=%g).",
+                                            bd->shortName, min, minAllowed);
         return GRIB_OUT_OF_RANGE;
+    }
 
     reference=round(min*inverseFactor);
     localReference=reference-modifiedReference;
@@ -920,7 +928,7 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
             value = GRIB_MISSING_DOUBLE;  /* Ignore the bad value and instead use 'missing' */
             grib_set_bits_on(buff->data,pos,modifiedWidth);
         } else {
-            grib_context_log(c, GRIB_LOG_DEBUG, "encode_double_value: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
+            grib_context_log(c, GRIB_LOG_ERROR, "encode_double_value: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
                              bd->shortName, value, minAllowed, maxAllowed);
             return GRIB_OUT_OF_RANGE;
         }
