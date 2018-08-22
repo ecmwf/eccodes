@@ -29,20 +29,20 @@ r1=`${tools_dir}/grib_get -w count=1 -n ls $input`
 r2=`${tools_dir}/grib_get -n ls $temp`
 [ "$r1" = "$r2" ]
 
-${tools_dir}/grib_copy -w count=1 -X 57143 $input $temp #Last msg
-r1=`${tools_dir}/grib_get -w count=37 -n ls $input`
-r2=`${tools_dir}/grib_get -n ls $temp`
-[ "$r1" = "$r2" ]
+#${tools_dir}/grib_copy -w count=1 -X 57143 $input $temp #Last msg
+#r1=`${tools_dir}/grib_get -w count=37 -n ls $input`
+#r2=`${tools_dir}/grib_get -n ls $temp`
+#[ "$r1" = "$r2" ]
 
 # Get two messages
-${tools_dir}/grib_copy -w count=1/2 -X 25071 $input $temp
-count=`${tools_dir}/grib_count $temp`
-[ $count -eq 2 ]
+#${tools_dir}/grib_copy -w count=1/2 -X 25071 $input $temp
+#count=`${tools_dir}/grib_count $temp`
+#[ $count -eq 2 ]
 
-r=`${tools_dir}/grib_get -w count=1 -p typeOfLevel,level,shortName $temp`
-[ "$r" = "heightAboveGround 2 mx2t6" ]
-r=`${tools_dir}/grib_get -w count=2 -p typeOfLevel,level,shortName $temp`
-[ "$r" = "heightAboveGround 2 mn2t6" ]
+#r=`${tools_dir}/grib_get -w count=1 -p typeOfLevel,level,shortName $temp`
+#[ "$r" = "heightAboveGround 2 mx2t6" ]
+#r=`${tools_dir}/grib_get -w count=2 -p typeOfLevel,level,shortName $temp`
+#[ "$r" = "heightAboveGround 2 mn2t6" ]
 
 # Clean up
 #-----------

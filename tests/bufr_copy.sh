@@ -78,14 +78,14 @@ r1=`${tools_dir}/bufr_get -w count=1 -n ls $fBufrInput`
 r2=`${tools_dir}/bufr_get -n ls $fBufrTmp`
 [ "$r1" = "$r2" ]
 
-${tools_dir}/bufr_copy -w count=1 -X 19449 $fBufrInput $fBufrTmp #Last msg
-r1=`${tools_dir}/bufr_get -w count=11 -n ls $fBufrInput`
-r2=`${tools_dir}/bufr_get -n ls $fBufrTmp`
-[ "$r1" = "$r2" ]
+#${tools_dir}/bufr_copy -w count=1 -X 19449 $fBufrInput $fBufrTmp #Last msg
+#r1=`${tools_dir}/bufr_get -w count=11 -n ls $fBufrInput`
+#r2=`${tools_dir}/bufr_get -n ls $fBufrTmp`
+#[ "$r1" = "$r2" ]
 
-${tools_dir}/bufr_copy -w count=1 -X 10972 $fBufrInput $fBufrTmp
-r=`${tools_dir}/bufr_get -p typicalTime,numberOfSubsets $fBufrTmp`
-[ "$r" = "000013 41" ]
+#${tools_dir}/bufr_copy -w count=1 -X 10972 $fBufrInput $fBufrTmp
+#r=`${tools_dir}/bufr_get -p typicalTime,numberOfSubsets $fBufrTmp`
+#[ "$r" = "000013 41" ]
 
 # Clean up
 #-----------
