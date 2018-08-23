@@ -776,6 +776,7 @@ static void header(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out, "#  Using ecCodes version: ");
         grib_print_api_version(self->dumper.out);
         fprintf(self->dumper.out, "\n\n");
+        fprintf(self->dumper.out,"from __future__ import print_function\n");
         fprintf(self->dumper.out,"import traceback\n");
         fprintf(self->dumper.out,"import sys\n");
         fprintf(self->dumper.out,"from eccodes import *\n\n\n");
@@ -795,7 +796,7 @@ static void footer(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out,"    outfile = open('outfile.bufr', 'a')\n");
 
     fprintf(self->dumper.out,"    codes_write(ibufr, outfile)\n");
-    fprintf(self->dumper.out,"    print \"Created output BUFR file 'outfile.bufr'.\"\n");
+    fprintf(self->dumper.out,"    print (\"Created output BUFR file 'outfile.bufr'\")\n");
     /*fprintf(self->dumper.out,"    codes_close_file(outfile)\n");*/
     fprintf(self->dumper.out,"    codes_release(ibufr)\n");
 }

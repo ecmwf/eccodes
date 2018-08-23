@@ -430,7 +430,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
             fprintf(stdout,"    f.close()\n\n");
             fprintf(stdout,"def main():\n");
             fprintf(stdout,"    if len(sys.argv) < 2:\n");
-            fprintf(stdout,"        print >>sys.stderr, 'Usage: ', sys.argv[0], ' BUFR_file'\n");
+            fprintf(stdout,"        print('Usage: ', sys.argv[0], ' BUFR_file', file=sys.stderr)\n");
             fprintf(stdout,"        sys.exit(1)\n\n");
             fprintf(stdout,"    try:\n");
             fprintf(stdout,"        bufr_decode(sys.argv[1])\n");

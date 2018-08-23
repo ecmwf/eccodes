@@ -626,6 +626,7 @@ static void header(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out, "#  Using ecCodes version: ");
         grib_print_api_version(self->dumper.out);
         fprintf(self->dumper.out, "\n\n");
+        fprintf(self->dumper.out,"from __future__ import print_function\n");
         fprintf(self->dumper.out,"import traceback\n");
         fprintf(self->dumper.out,"import sys\n");
         fprintf(self->dumper.out,"from eccodes import *\n\n\n");
@@ -633,7 +634,7 @@ static void header(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out,"    f = open(input_file)\n");
     }
     fprintf(self->dumper.out,"    # Message number %ld\n    # -----------------\n", d->count);
-    fprintf(self->dumper.out,"    print 'Decoding message number %ld'\n", d->count);
+    fprintf(self->dumper.out,"    print ('Decoding message number %ld')\n", d->count);
     fprintf(self->dumper.out,"    ibufr = codes_bufr_new_from_file(f)\n");
     fprintf(self->dumper.out,"    codes_set(ibufr, 'unpack', 1)\n");
 
