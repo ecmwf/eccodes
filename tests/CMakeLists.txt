@@ -257,6 +257,14 @@ ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
                   CONDITION ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh
 )
+
+ecbuild_add_test( TARGET eccodes_t_bufr_split_by_subtype
+                  TYPE SCRIPT
+                  CONDITION ENABLE_EXTRA_TESTS AND ECCODES_INSTALL_EXTRA_TOOLS
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_split_by_subtype.sh
+                  TEST_DEPENDS eccodes_download_bufrs
+)
+
 # Performance test. Must have -DENABLE_GRIB_TIMER=ON
 ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
                   TYPE SCRIPT
