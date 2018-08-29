@@ -291,8 +291,6 @@ size_t grib_viarray_used_size(grib_viarray *v);
 /* grib_accessor_class_bufr_clear_tables.c */
 
 /* grib_accessor_class_bufr_data_array.c */
-int accessor_bufr_data_array_create_keys(grib_accessor *a, long onlySubset, long startSubset, long endSubset);
-int accessor_bufr_data_array_process_elements(grib_accessor *a, int flag, long onlySubset, long startSubset, long endSubset);
 grib_vsarray *accessor_bufr_data_array_get_stringValues(grib_accessor *a);
 grib_accessors_list *accessor_bufr_data_array_get_dataAccessors(grib_accessor *a);
 grib_trie_with_rank *accessor_bufr_data_array_get_dataAccessorsTrie(grib_accessor *a);
