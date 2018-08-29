@@ -267,16 +267,6 @@ static int is_bitmap_start_defined(grib_accessor_bufr_data_array *self)
     return self->bitmapStart==-1 ? 0 : 1;
 }
 
-int accessor_bufr_data_array_create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset)
-{
-    return create_keys(a,onlySubset,startSubset,endSubset);
-}
-
-int accessor_bufr_data_array_process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset)
-{
-    return process_elements(a,flag,onlySubset,startSubset,endSubset);
-}
-
 static size_t get_length(grib_accessor* a)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
@@ -1748,12 +1738,23 @@ static void set_creator_name(grib_action* creator,int code)
     }
 }
 
+/* See ECC-741 */
+static int adding_extra_key_attributes(grib_handle* h)
+{
+    long skip = 0; /* default is to add */
+    int err = 0;
+    err = grib_get_long(h,"skipExtraKeyAttributes",&skip);
+    if (err) return 1;
+    return (!skip);
+}
+
 static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_accessor* attribute,grib_section* section,long ide,long subset,int dump,int count)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     char code[10]={0,};
     char* temp_str = NULL;
     int idx=0;
+    int add_extra_attributes = 1;
     unsigned long flags=GRIB_ACCESSOR_FLAG_READ_ONLY;
     grib_action operatorCreator = {0, };
     grib_accessor* elementAccessor=NULL;
@@ -1767,6 +1768,8 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
     operatorCreator.flags     = GRIB_ACCESSOR_FLAG_READ_ONLY;
     operatorCreator.set        = 0;
     operatorCreator.name="operator";
+
+    add_extra_attributes = adding_extra_key_attributes(grib_handle_of_accessor(a));
 
     if(attribute) { DebugAssert(attribute->parent==NULL); }
 
@@ -1821,21 +1824,23 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
         grib_sarray_push(a->context, self->tempStrings, temp_str);/* ECC-325: store alloc'd string (due to strdup) for clean up later */
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP | flags);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+        if (add_extra_attributes) {
+            attribute=create_attribute_variable("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP | flags);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("scale",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->scale,flags);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+            attribute=create_attribute_variable("scale",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->scale,flags);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("reference",section,GRIB_TYPE_DOUBLE,0,self->expanded->v[idx]->reference,0,flags);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+            attribute=create_attribute_variable("reference",section,GRIB_TYPE_DOUBLE,0,self->expanded->v[idx]->reference,0,flags);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("width",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->width,flags);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+            attribute=create_attribute_variable("width",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->width,flags);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
+        }
         break;
     case 2:
         set_creator_name(&creator,self->expanded->v[idx]->code);
@@ -1893,21 +1898,23 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
         if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+        if (add_extra_attributes) {
+            attribute=create_attribute_variable("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("scale",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->scale,flags);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+            attribute=create_attribute_variable("scale",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->scale,flags);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("reference",section,GRIB_TYPE_DOUBLE,0,self->expanded->v[idx]->reference,0,flags);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+            attribute=create_attribute_variable("reference",section,GRIB_TYPE_DOUBLE,0,self->expanded->v[idx]->reference,0,flags);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("width",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->width,flags);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+            attribute=create_attribute_variable("width",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->width,flags);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
+        }
         break;
     }
 
