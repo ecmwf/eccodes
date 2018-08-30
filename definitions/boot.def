@@ -77,8 +77,8 @@ if(kindOfProduct == `TIDE`){
 
 if(kindOfProduct == `BUFR`){
  template      BUFR "bufr/boot.def" ;
- constant  BUFRstr="BUFR";
- alias identifier=BUFRstr;
+ #constant  BUFRstr="BUFR"; #ECC-742
+ #alias identifier=BUFRstr;
 }
 
 if(kindOfProduct == `CDFX`){
