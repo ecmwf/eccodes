@@ -507,7 +507,7 @@ double laplam (bif_trunc_t * bt, const double val[])
   free (znorm);
   free (zw);
 
-//zp = ((long)(zp * 1000.)) / 1000.; FAPULA rounds Laplacian power to 1/1000th
+/*zp = ((long)(zp * 1000.)) / 1000.; FAPULA rounds Laplacian power to 1/1000th*/
 
   return zp;
 }
