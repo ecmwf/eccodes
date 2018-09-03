@@ -18,7 +18,6 @@ transient computeLaplacianOperator=1 : hidden;
 codetable[1] biFourierSubTruncationType ('3.99.table',masterDir,localDir) : dump;
 unsigned[1] biFourierDoNotPackAxes = 0 : dump;
 
-
 constant laplacianScalingFactorUnset  = -2147483647;
 signed[4] laplacianScalingFactor : edition_specific ;
 

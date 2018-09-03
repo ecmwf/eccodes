@@ -10,8 +10,28 @@
 
 . ./include.sh
 
+label="grib_lam_gp"
+temp=temp.$label.txt
+
+dump_and_check()
+{
+    input=$1
+    ${tools_dir}/grib_dump -O $input >$temp 2>&1
+    set +e
+    # Look for the word ERROR in output. We should not find any
+    grep -q 'ERROR ' $temp
+    if [ $? -eq 0 ]; then
+        echo "File $input: found string ERROR in grib_dump output!"
+        exit 1
+    fi
+    set -e
+}
+
+
 ${test_dir}/lam_gp
 
-${tools_dir}/grib_dump -O lam_gp_lambert_lam.grib
-${tools_dir}/grib_dump -O lam_gp_mercator_lam.grib
-${tools_dir}/grib_dump -O lam_gp_polar_stereographic_lam.grib
+dump_and_check lam_gp_lambert_lam.grib
+dump_and_check lam_gp_mercator_lam.grib
+dump_and_check lam_gp_polar_stereographic_lam.grib
+
+rm -f $temp
