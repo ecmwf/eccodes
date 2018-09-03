@@ -16,8 +16,9 @@ temp=temp.$label.txt
 dump_and_check()
 {
     input=$1
+    numberOfValues=$2
 
-    grib_check_key_equals $input numberOfValues 3128
+    grib_check_key_equals $input numberOfValues $numberOfValues
 
     ${tools_dir}/grib_dump -O $input >$temp 2>&1
     set +e
@@ -32,8 +33,12 @@ dump_and_check()
 
 ${test_dir}/lam_bf
 
-dump_and_check lam_bf_lambert_bf.grib
-dump_and_check lam_bf_mercator_bf.grib
-dump_and_check lam_bf_polar_stereographic_bf.grib
+dump_and_check lam_bf_lambert_bf_ellipse_diamond.grib                  3128
+dump_and_check lam_bf_mercator_bf_ellipse_diamond.grib                 3128
+dump_and_check lam_bf_polar_stereographic_bf_ellipse_diamond.grib      3128
+
+dump_and_check lam_bf_lambert_bf_rectangle_rectangle.grib              4096
+dump_and_check lam_bf_mercator_bf_rectangle_rectangle.grib             4096
+dump_and_check lam_bf_polar_stereographic_bf_rectangle_rectangle.grib  4096
 
 rm -f $temp

@@ -644,13 +644,67 @@ static double values[] = {
 #define NSMAX    31
 #define NMSMAX   31
 
+static void rectfromellipse (double * vr, const double * ve, int nsmax, int nmsmax)
+{
+  int i, j, kr = 0, ke = 0;
+  for (i = 0; i <= nsmax; i++)
+  for (j = 0; j <= nmsmax; j++)
+    {
+      double xi = (double)i / (double)nsmax;
+      double xj = (double)j / (double)nmsmax;
+      if (xi * xi + xj * xj < 1)
+        {
+          vr[kr+0] = ve[ke+0];
+          vr[kr+1] = ve[ke+1];
+          vr[kr+2] = ve[ke+2];
+          vr[kr+3] = ve[ke+3];
+	  ke += 4;
+        }
+      else
+        {
+          vr[kr+0] = 0.;
+          vr[kr+1] = 0.;
+          vr[kr+2] = 0.;
+          vr[kr+3] = 0.;
+        }
+      kr += 4;
+    }
+}
+
+typedef struct
+{
+  int trunc;     /* 77, 88, 99 = truncation type */
+  int subtrunc;  /* 77, 88, 99 = subtruncation type */
+  double * values;
+  int len;
+  const char * name;
+} trunc_t;
+
 int main (int argc, char * argv[])
 {
   grib_handle * h;
   size_t len;
   const char * grids[] = {"lambert_bf", "mercator_bf", "polar_stereographic_bf"};
-  int igrid;
+  int igrid, itrunc;
+  trunc_t trunc[2];
 
+  /* Elliptic truncation with diamond subtruncation */
+  trunc[0].trunc    = 99;
+  trunc[0].subtrunc = 77;
+  trunc[0].len      = ILCHAM;
+  trunc[0].values   = (double *)values;
+  trunc[0].name     = "ellipse_diamond";
+
+  /* Rectangle truncation with rectangle subtruncation */
+  trunc[1].trunc    = 88;
+  trunc[1].subtrunc = 88;
+  trunc[1].len      = 4 * (NSMAX + 1) * (NMSMAX + 1);
+  trunc[1].values   = (double *)malloc (sizeof (double) * trunc[1].len);
+  trunc[1].name     = "rectangle_rectangle";
+
+  rectfromellipse (trunc[1].values, trunc[0].values, NSMAX, NMSMAX);
+
+  for (itrunc = 0; itrunc < 2; itrunc++)
   for (igrid = 0; igrid < 3; igrid++)
     {
       GRIB_CHECK (((h = grib_handle_new_from_samples (NULL, "lambert_bf_grib2")) == NULL), 0);
@@ -659,7 +713,7 @@ int main (int argc, char * argv[])
       GRIB_CHECK (grib_set_string (h, "gridType", grids[igrid], &len), 0);
       GRIB_CHECK (grib_set_long (h, "biFourierResolutionParameterN", NSMAX), 0);
       GRIB_CHECK (grib_set_long (h, "biFourierResolutionParameterM", NMSMAX), 0);
-      GRIB_CHECK (grib_set_long (h, "biFourierTruncationType", 99) , 0);
+      GRIB_CHECK (grib_set_long (h, "biFourierTruncationType", trunc[itrunc].trunc) , 0);
 
 
       GRIB_CHECK (grib_set_long (h, "LxInMetres", 2000), 0);
@@ -705,12 +759,12 @@ int main (int argc, char * argv[])
       GRIB_CHECK (grib_set_string (h, "packingType", "bifourier_complex", &len), 0);
       GRIB_CHECK (grib_set_long (h, "biFourierResolutionSubSetParameterN", NSTRON), 0);
       GRIB_CHECK (grib_set_long (h, "biFourierResolutionSubSetParameterM", NSTRON), 0);
-      GRIB_CHECK (grib_set_long (h, "biFourierSubTruncationType", 77) , 0);
+      GRIB_CHECK (grib_set_long (h, "biFourierSubTruncationType", trunc[itrunc].subtrunc) , 0);
       GRIB_CHECK (grib_set_long (h, "biFourierDoNotPackAxes", 1), 0);
       GRIB_CHECK (grib_set_long (h, "unpackedSubsetPrecision", 2), 0);
 
-      len = ILCHAM;
-      GRIB_CHECK (grib_set_double_array (h, "values", values, len), 0);
+      len = trunc[itrunc].len;
+      GRIB_CHECK (grib_set_double_array (h, "values", trunc[itrunc].values, len), 0);
      
       if (1)
         {
@@ -718,7 +772,7 @@ int main (int argc, char * argv[])
           FILE * fp;
           size_t size;
           const void * buffer = NULL;
-          sprintf (f, "lam_bf_%s.grib", grids[igrid]);
+          sprintf (f, "lam_bf_%s_%s.grib", grids[igrid], trunc[itrunc].name);
           fp = fopen (f, "w");
           GRIB_CHECK (grib_get_message (h, &buffer, &size), 0);
           if (fwrite (buffer, 1, size, fp) != size) {
@@ -743,15 +797,15 @@ int main (int argc, char * argv[])
         char geometry[128];
 
 
-        sprintf (f, "lam_bf_%s.grib", grids[igrid]);
+        sprintf (f, "lam_bf_%s_%s.grib", grids[igrid], trunc[itrunc].name);
         fp = fopen (f, "r");
         h = grib_handle_new_from_file (0, fp, &err);
-        vals = (double *)malloc (sizeof (double) * ILCHAM);
-        values_len = ILCHAM;
+        vals = (double *)malloc (sizeof (double) * trunc[itrunc].len);
+        values_len = trunc[itrunc].len;
         GRIB_CHECK (grib_get_double_array (h, "values", vals, &values_len), 0);
-        for (i = 0; i < ILCHAM; i++)
-          norm += (values[i] - vals[i]) * (values[i] - vals[i]);
-        norm = sqrt (norm / ILCHAM);
+        for (i = 0; i < trunc[itrunc].len; i++)
+          norm += (trunc[itrunc].values[i] - vals[i]) * (trunc[itrunc].values[i] - vals[i]);
+        norm = sqrt (norm / trunc[itrunc].len);
         free (vals);
 
         if (norm > 0.0001)
