@@ -16,6 +16,9 @@ temp=temp.$label.txt
 dump_and_check()
 {
     input=$1
+
+    grib_check_key_equals $input numberOfValues 4096
+
     ${tools_dir}/grib_dump -O $input >$temp 2>&1
     set +e
     # Look for the word ERROR in output. We should not find any
