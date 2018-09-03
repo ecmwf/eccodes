@@ -932,6 +932,61 @@ int main (int argc, char * argv[])
          }
 
        GRIB_CHECK (grib_handle_delete (h), 0);
+
+       /* Check message correctness */
+       {
+         char f[128];
+         FILE * fp;
+	 double * vals;
+	 double norm = 0.;
+	 int i, err;
+	 size_t values_len, geometry_len;
+         long int Nux, Nuy, Ncx, Ncy;
+	 char geometry[128];
+
+         sprintf (f, "lam_gp_%s.grib", grids[igrid]);
+	 fp = fopen (f, "r");
+         h = grib_handle_new_from_file (0, fp, &err);
+         vals = (double *)malloc (sizeof (double) * 4096);
+	 values_len = 4096;
+	 GRIB_CHECK (grib_get_double_array (h, "values", vals, &values_len), 0);
+         for (i = 0; i < 4096; i++)
+           norm += (values[i] - vals[i]) * (values[i] - vals[i]);
+	 norm = sqrt (norm / 4096);
+	 free (vals);
+	 printf ("%s : %lf\n", grids[igrid], norm);
+	 if (norm > 0.0001)
+           {
+             printf ("Error too large !\n");
+	     abort ();
+	   }
+	 fclose (fp);
+
+
+         GRIB_CHECK (grib_get_long (h, "Nux", &Nux), 0);
+         GRIB_CHECK (grib_get_long (h, "Nuy", &Nuy), 0);
+         GRIB_CHECK (grib_get_long (h, "Ncx", &Ncx), 0);
+         GRIB_CHECK (grib_get_long (h, "Ncy", &Ncy), 0);
+
+	 if (Nux != 53 || Nuy != 53 || Ncx != 8 || Ncy != 8)
+           {
+             printf ("Geometry is incorrect\n");
+	     abort ();
+	   }
+
+	 geometry_len = 128;
+         GRIB_CHECK (grib_get_string (h, "gridType", geometry, &geometry_len), 0);
+	 if (strcmp (geometry, grids[igrid]))
+           {
+             printf ("Geometry is incorrect\n");
+	     abort ();
+	   }
+
+
+         GRIB_CHECK (grib_handle_delete (h), 0);
+
+       }
+
     }
   return 0;
 }

@@ -302,7 +302,11 @@ static void diamond (long ni, long nj, long itrunc[], long jtrunc[])
 do {                                                                             \
       insub = (i <= bt->sub_i) && (j <= bt->sub_j);                              \
       if (insub)                                                                 \
-        insub = (i <= bt->itruncation_sub[j]) && (j <= bt->jtruncation_sub[i]);  \
+	{                                                                        \
+          int insubi = (i <= bt->itruncation_sub[j]);                            \
+	  int insubj = (j <= bt->jtruncation_sub[i]);                            \
+          insub = insubi && insubj;                                              \
+	}                                                                        \
       if (bt->keepaxes)                                                          \
         insub = insub || (i == 0) || (j == 0);                                   \
 } while (0)

@@ -729,6 +729,71 @@ int main (int argc, char * argv[])
         }
      
       GRIB_CHECK (grib_handle_delete (h), 0);
+
+      /* Check message correctness */
+      {
+        char f[128];
+        FILE * fp;
+        double * vals;
+        double norm = 0.;
+        int i, err;
+        size_t values_len, geometry_len;
+        long int LxInMetres, LyInMetres, LuxInMetres, LuyInMetres, LcxInMetres, LcyInMetres;
+	long int nsmax, nmsmax;
+        char geometry[128];
+
+
+        sprintf (f, "lam_bf_%s.grib", grids[igrid]);
+        fp = fopen (f, "r");
+        h = grib_handle_new_from_file (0, fp, &err);
+        vals = (double *)malloc (sizeof (double) * ILCHAM);
+        values_len = ILCHAM;
+        GRIB_CHECK (grib_get_double_array (h, "values", vals, &values_len), 0);
+        for (i = 0; i < ILCHAM; i++)
+          norm += (values[i] - vals[i]) * (values[i] - vals[i]);
+        norm = sqrt (norm / ILCHAM);
+        free (vals);
+
+        if (norm > 0.0001)
+          {
+            printf ("Error too large !\n");
+            abort ();
+          }
+        fclose (fp);
+
+        GRIB_CHECK (grib_get_long (h, "biFourierResolutionParameterN", &nsmax), 0);
+        GRIB_CHECK (grib_get_long (h, "biFourierResolutionParameterM", &nmsmax), 0);
+
+        GRIB_CHECK (grib_get_long (h, "LxInMetres", &LxInMetres), 0);
+        GRIB_CHECK (grib_get_long (h, "LyInMetres", &LyInMetres), 0);
+
+        GRIB_CHECK (grib_get_long (h, "LuxInMetres", &LuxInMetres), 0);
+        GRIB_CHECK (grib_get_long (h, "LuyInMetres", &LuyInMetres), 0);
+
+        GRIB_CHECK (grib_get_long (h, "LcxInMetres", &LcxInMetres), 0);
+        GRIB_CHECK (grib_get_long (h, "LcyInMetres", &LcyInMetres), 0);
+
+        if (LxInMetres != 2000 || LyInMetres != 2000 || LuxInMetres != 1800 || 
+            LuyInMetres != 1800 || LcxInMetres != 100 || LcyInMetres != 100 ||
+	    NSMAX != nsmax || NMSMAX != nmsmax)
+          {
+            printf ("Geometry is incorrect\n");
+            abort ();
+          }
+
+        geometry_len = 128;
+        GRIB_CHECK (grib_get_string (h, "gridType", geometry, &geometry_len), 0);
+        if (strcmp (geometry, grids[igrid]))
+          {
+            printf ("Geometry is incorrect\n");
+            abort ();
+          }
+
+
+        GRIB_CHECK (grib_handle_delete (h), 0);
+
+      }
+
     }
 
   return 0;
