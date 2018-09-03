@@ -5,11 +5,14 @@
 3 3 Stretched and rotated latitude/longitude
 # 4-9 Reserved
 10 10 Mercator
+13 13 Mercator projection with LAM extension
 # 11-19 Reserved
 20 20 Polar stereographic (can be south or north)
+23 23 Polar stereographic projection with LAM extension
 # 21-29 Reserved
 30 30 Lambert Conformal (can be secant or tangent, conical or bipolar)
 31 31 Albers equal-area
+33 33 Lambert Conformal projection with LAM extension
 # 32-39 Reserved
 40 40 Gaussian latitude/longitude
 41 41 Rotated Gaussian latitude/longitude
@@ -20,6 +23,9 @@
 51 51 Rotated spherical harmonic coefficients
 52 52 Stretched spherical harmonic coefficients
 53 53 Stretched and rotated spherical harmonic coefficients
+61 61 Bi-Fourier coefficients on Mercator projection (LAM models)
+62 62 Bi-Fourier coefficients on Polar stereographic projection (LAM models)
+63 63 Bi-Fourier coefficient on Lambert Conformal projection (LAM models)
 # 54-89 Reserved
 90 90 Space view perspective orthographic
 # 91-99 Reserved
