@@ -396,7 +396,6 @@ list( APPEND grib_api_srcs
     grib_accessor_class_blob.c
     grib_optimize_decimal_factor.c
     grib_accessor_class_data_g2bifourier_packing.c
-    grib_accessor_class_bifourier_truncation.c
     eccodes_windef.h
     # We ship our own generated lex/yacc C files
     grib_yacc.c  grib_lex.c

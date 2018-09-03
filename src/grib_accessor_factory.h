@@ -46,7 +46,6 @@
 { "data_ccsds_packing", &grib_accessor_class_data_ccsds_packing, },
 { "data_complex_packing", &grib_accessor_class_data_complex_packing, },
 { "data_g2bifourier_packing", &grib_accessor_class_data_g2bifourier_packing, },
-{ "bifourier_truncation", &grib_accessor_class_bifourier_truncation, },
 { "data_constant_field", &grib_accessor_class_data_constant_field, },
 { "data_dummy_field", &grib_accessor_class_data_dummy_field, },
 { "data_g1complex_packing", &grib_accessor_class_data_g1complex_packing, },
