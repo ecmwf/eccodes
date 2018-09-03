@@ -849,6 +849,6 @@ int main (int argc, char * argv[])
       }
 
     }
-
+  free(trunc[1].values);
   return 0;
 }

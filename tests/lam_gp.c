@@ -844,7 +844,7 @@ int main (int argc, char * argv[])
 
   for (igrid = 0; igrid < 3; igrid++)
     {
-       GRIB_CHECK (((h = grib_handle_new_from_samples (NULL, "reduced_gg_ml_grib2")) == NULL), 0);
+       GRIB_CHECK (((h = grib_handle_new_from_samples (NULL, "regular_ll_pl_grib2")) == NULL), 0);
        len = strlen ("lambert_lam");
        GRIB_CHECK (grib_set_string (h, "gridType", "lambert_lam", &len), 0);
        GRIB_CHECK (grib_set_long (h, "centre", 85), 0);
