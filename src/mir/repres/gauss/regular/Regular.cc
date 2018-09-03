@@ -206,6 +206,11 @@ util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) co
 
         w = Nw * inc;
         e = Ne * inc;
+
+        if (e - w + inc > Longitude::GLOBE) {
+            e = w + Longitude::GLOBE;
+        }
+
         ASSERT(w < e);
     }
 

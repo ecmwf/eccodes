@@ -403,8 +403,8 @@ util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) co
     Longitude w = bbox.west();
     Longitude e = bbox.east();
     {
-        Fraction west = bbox.west().fraction();
-        Fraction east = bbox.east().fraction();
+        const Fraction west = bbox.west().fraction();
+        const Fraction east = bbox.east().fraction();
 
         bool first = true;
         std::set<long> NiTried;
@@ -419,31 +419,33 @@ util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) co
                 ASSERT(Ni >= 2);
                 Fraction inc = Longitude::GLOBE.fraction() / Ni;
 
-                Fraction::value_type Nw = (bbox.west().fraction() / inc).integralPart();
-                if (Nw * inc > bbox.west().fraction()) {
+                Fraction::value_type Nw = (west / inc).integralPart();
+                if (Nw * inc > west) {
                     Nw -= 1;
                 }
 
-                Fraction::value_type Ne = (bbox.east().fraction() / inc).integralPart();
-                if (Ne * inc < bbox.east().fraction() || Ne == Nw) {
+                Fraction::value_type Ne = (east / inc).integralPart();
+                if (Ne * inc < east || Ne == Nw) {
                     if (Ne < (Longitude::GLOBE.fraction() / inc).integralPart()) {
                         Ne += 1;
                     }
                 }
 
-                if (west > Nw * inc || first) {
-                    west = Nw * inc;
+                if (w > Nw * inc || first) {
+                    w = Nw * inc;
                 }
-                if (east < Ne * inc || first) {
-                    east = Ne * inc;
+                if (e < Ne * inc || first) {
+                    e = Ne * inc;
                 }
                 first = false;
             }
         }
-        ASSERT(!first);
 
-        w = west;
-        e = east;
+        if (e - w > Longitude::GLOBE) {
+            e = w + Longitude::GLOBE;
+        }
+
+        ASSERT(!first);
         ASSERT(w < e);
     }
 
