@@ -30,11 +30,16 @@ dump_and_check()
     set -e
 }
 
-
+# Grid-point LAM fields
+# Run the test which generates the GRIB files
 ${test_dir}/lam_gp
 
 dump_and_check lam_gp_lambert_lam.grib
 dump_and_check lam_gp_mercator_lam.grib
 dump_and_check lam_gp_polar_stereographic_lam.grib
 
+# Clean up test outputs
 rm -f $temp
+rm -f lam_gp_lambert_lam.grib
+rm -f dump_and_check lam_gp_mercator_lam.grib
+rm -f dump_and_check lam_gp_polar_stereographic_lam.grib

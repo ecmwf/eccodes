@@ -31,6 +31,8 @@ dump_and_check()
     set -e
 }
 
+# Spectral LAM fields
+# Run the test which generates the GRIB files
 ${test_dir}/lam_bf
 
 dump_and_check lam_bf_lambert_bf_ellipse_diamond.grib                  3128
@@ -41,4 +43,11 @@ dump_and_check lam_bf_lambert_bf_rectangle_rectangle.grib              4096
 dump_and_check lam_bf_mercator_bf_rectangle_rectangle.grib             4096
 dump_and_check lam_bf_polar_stereographic_bf_rectangle_rectangle.grib  4096
 
+# Clean up test outputs
 rm -f $temp
+rm -f lam_bf_lambert_bf_ellipse_diamond.grib
+rm -f lam_bf_mercator_bf_ellipse_diamond.grib
+rm -f lam_bf_polar_stereographic_bf_ellipse_diamond.grib
+rm -f lam_bf_lambert_bf_rectangle_rectangle.grib
+rm -f lam_bf_mercator_bf_rectangle_rectangle.grib
+rm -f lam_bf_polar_stereographic_bf_rectangle_rectangle.grib
