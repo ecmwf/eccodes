@@ -207,7 +207,7 @@ util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) co
         w = Nw * inc;
         e = Ne * inc;
 
-        if (e - w + inc > Longitude::GLOBE) {
+        if (e - w > Longitude::GLOBE) {
             e = w + Longitude::GLOBE;
         }
 
