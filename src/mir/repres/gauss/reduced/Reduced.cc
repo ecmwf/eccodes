@@ -441,11 +441,17 @@ util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) co
             }
         }
 
-        if (e - w > Longitude::GLOBE) {
-            e = w + Longitude::GLOBE;
+        ASSERT(!first);
+
+        long NiMax = *std::max_element(NiTried.begin(), NiTried.end());
+        ASSERT(NiMax > 0);
+        Fraction inc = Longitude::GLOBE.fraction() / NiMax;
+
+        if (e - w + inc >= Longitude::GLOBE) {
+            w = 0;
+            e = Longitude::GLOBE;
         }
 
-        ASSERT(!first);
         ASSERT(w < e);
     }
 
