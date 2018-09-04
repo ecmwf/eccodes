@@ -38,10 +38,25 @@ namespace latlon {
 namespace {
 
 
+template<class T>
+static size_t computeN(const T& first, const T& last, const T& inc) {
+    ASSERT(first <= last);
+    ASSERT(inc > 0);
+
+    eckit::Fraction l = last.fraction();
+    eckit::Fraction f = first.fraction();
+    eckit::Fraction i = inc.fraction();
+    eckit::Fraction r = (l - f) / i;
+
+    auto n = r.integralPart();
+    return size_t(n + 1);
+}
+
+
 static void check(const util::BoundingBox& bbox, const util::Increments& inc, size_t ni, size_t nj) {
     eckit::Fraction we = inc.west_east().longitude().fraction();
     eckit::Fraction sn = inc.south_north().latitude().fraction();
-    ASSERT(bbox.west()  + (ni - 1) * we == bbox.east());
+    ASSERT(bbox.west()  + (ni - 1) * we == bbox.east() || bbox.east() - bbox.west() + we == Longitude::GLOBE);
     ASSERT(bbox.south() + (nj - 1) * sn == bbox.north());
 }
 
@@ -66,8 +81,8 @@ LatLon::LatLon(const util::Increments& increments, const util::BoundingBox& bbox
     increments_(increments) {
     bbox_ = correctBoundingBox(bbox_, increments_);
 
-    ni_ = increments_.computeNi(bbox_);
-    nj_ = increments_.computeNj(bbox_);
+    ni_ = computeN(bbox_.west(), bbox_.east(), increments_.west_east().longitude());
+    nj_ = computeN(bbox_.south(), bbox_.north(), increments_.south_north().latitude());
 
     check(bbox_, increments_, ni_, nj_);
 }
@@ -363,6 +378,8 @@ size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue) 
 
 void LatLon::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
+
+    eckit::Log::debug<LibMir>() << domain() << std::endl;
 
     eckit::Log::debug<LibMir>() << "LatLon::validate checked " << eckit::Plural(values.size(), "value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
     ASSERT(values.size() == count);
