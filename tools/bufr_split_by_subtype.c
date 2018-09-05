@@ -116,7 +116,7 @@ static int split_file_by_subtype(FILE* in, const char* filename, unsigned long *
     grib_context* c=grib_context_get_default();
 
     if (!in) return 1;
-    sprintf(ofilename, OUTPUT_FILENAME_DEFAULT); /*default name*/
+    sprintf(ofilename, "%s", OUTPUT_FILENAME_DEFAULT); /*default name*/
 
     while ( err!=GRIB_END_OF_FILE ) {
         mesg=wmo_read_bufr_from_file_malloc(in, 0, &size, &offset, &err);
@@ -129,7 +129,7 @@ static int split_file_by_subtype(FILE* in, const char* filename, unsigned long *
                 return status;
             }
 
-            sprintf(ofilename, OUTPUT_FILENAME_DEFAULT);
+            sprintf(ofilename, "%s", OUTPUT_FILENAME_DEFAULT);
             if (rdbSubtype != -1) sprintf(ofilename, OUTPUT_FILENAME_SUBTYPE, rdbSubtype);
 
             if (verbose) {
