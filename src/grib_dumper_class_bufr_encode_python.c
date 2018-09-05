@@ -796,7 +796,8 @@ static void footer(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out,"    outfile = open('outfile.bufr', 'a')\n");
 
     fprintf(self->dumper.out,"    codes_write(ibufr, outfile)\n");
-    fprintf(self->dumper.out,"    print (\"Created output BUFR file 'outfile.bufr'\")\n");
+    if (d->count==1)
+        fprintf(self->dumper.out,"    print (\"Created output BUFR file 'outfile.bufr'\")\n");
     /*fprintf(self->dumper.out,"    codes_close_file(outfile)\n");*/
     fprintf(self->dumper.out,"    codes_release(ibufr)\n");
 }

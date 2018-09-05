@@ -818,7 +818,7 @@ static void footer(grib_dumper* d, grib_handle* h)
 
     /*fprintf(self->dumper.out,"  fout = fopen(\"outfile.bufr\", \"w\");");*/
     fprintf(self->dumper.out,"  if (!fout) {\n");
-    fprintf(self->dumper.out,"    fprintf(stderr, \"Failed to open (create) output file.\\n\");\n");
+    fprintf(self->dumper.out,"    fprintf(stderr, \"Failed to open (%s) output file.\\n\");\n", (d->count==1?"create":"append"));
     fprintf(self->dumper.out,"    return 1;\n");
     fprintf(self->dumper.out,"  }\n");
     fprintf(self->dumper.out,"  CODES_CHECK(codes_get_message(h,&buffer,&size),0);\n");
@@ -832,7 +832,8 @@ static void footer(grib_dumper* d, grib_handle* h)
     fprintf(self->dumper.out,"  }\n");
     fprintf(self->dumper.out,"  \n");
     fprintf(self->dumper.out,"  codes_handle_delete(h);\n");
-    fprintf(self->dumper.out,"  printf(\"Created output BUFR file 'outfile.bufr'.\\n\");\n");
+    if (d->count==1)
+        fprintf(self->dumper.out,"  printf(\"Created output BUFR file 'outfile.bufr'.\\n\");\n");
     fprintf(self->dumper.out,"  free(ivalues); ivalues = NULL;\n");
     fprintf(self->dumper.out,"  free(rvalues); rvalues = NULL;\n");
     fprintf(self->dumper.out,"  free(svalues); svalues = NULL;\n\n");

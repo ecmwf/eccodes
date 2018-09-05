@@ -874,7 +874,8 @@ static void footer(grib_dumper* d, grib_handle* h)
     fprintf(self->dumper.out,"  call codes_write(ibufr,outfile)\n");
     fprintf(self->dumper.out,"  call codes_close_file(outfile)\n");
     fprintf(self->dumper.out,"  call codes_release(ibufr)\n");
-    fprintf(self->dumper.out,"  print *, \"Created output BUFR file 'outfile.bufr'\"\n");
+    if (d->count==1)
+        fprintf(self->dumper.out,"  print *, \"Created output BUFR file 'outfile.bufr'\"\n");
     fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
     fprintf(self->dumper.out,"  if(allocated(rvalues)) deallocate(rvalues)\n");
     fprintf(self->dumper.out,"  if(allocated(svalues)) deallocate(svalues)\n");
