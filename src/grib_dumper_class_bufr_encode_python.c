@@ -323,9 +323,11 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     char* sval = NULL;
     grib_context* c=a->context;
     grib_handle* h=grib_handle_of_accessor(a);
+    int doing_unexpandedDescriptors=0;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0  ) return;
 
+    doing_unexpandedDescriptors = (strcmp(a->name, "unexpandedDescriptors")==0);
     grib_value_count(a,&count);
     size=count;
 
@@ -373,20 +375,22 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out,",)\n");
         grib_context_free(a->context,values);
 
-        if ((r=compute_bufr_key_rank(h,self->keys,a->name))!=0)
+        if ((r=compute_bufr_key_rank(h,self->keys,a->name))!=0) {
             fprintf(self->dumper.out,"    codes_set_array(ibufr, '#%d#%s', ivalues)\n",r,a->name);
-        else
+        } else {
+            if (doing_unexpandedDescriptors) {
+                fprintf(self->dumper.out,"\n    # Create the structure of the data section\n");
+            }
             fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s', ivalues)\n",a->name);
-
+            if (doing_unexpandedDescriptors) fprintf(self->dumper.out,"\n");
+        }
     } else {
-        int doing_unexpandedDescriptors=0;
         r=compute_bufr_key_rank(h,self->keys,a->name);
         sval=lval_to_string(c,value);
         if (r!=0) {
             fprintf(self->dumper.out,"    codes_set(ibufr, '#%d#%s', ",r,a->name);
         } else {
-            if (strcmp(a->name, "unexpandedDescriptors")==0) {
-                doing_unexpandedDescriptors=1;
+            if (doing_unexpandedDescriptors) {
                 fprintf(self->dumper.out,"\n    # Create the structure of the data section\n");
             }
             fprintf(self->dumper.out,"    codes_set(ibufr, '%s', ",a->name);
@@ -394,8 +398,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
         fprintf(self->dumper.out,"%s)\n",sval);
         grib_context_free(c,sval);
-        if (doing_unexpandedDescriptors)
-            fprintf(self->dumper.out,"\n");
+        if (doing_unexpandedDescriptors) fprintf(self->dumper.out,"\n");
     }
 
     if (self->isLeaf==0) {
@@ -445,11 +448,11 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         fprintf(self->dumper.out,"    ivalues = (");
         icount=0;
         for (i=0;i<size-1;i++) {
-            if (icount>cols || i==0) {fprintf(self->dumper.out,"  \n      ");icount=0;}
+            if (icount>cols || i==0) {fprintf(self->dumper.out,"  \n        ");icount=0;}
             fprintf(self->dumper.out,"%ld, ",values[i]);
             icount++;
         }
-        if (icount>cols || i==0) {fprintf(self->dumper.out,"  \n      ");icount=0;}
+        if (icount>cols || i==0) {fprintf(self->dumper.out,"  \n        ");icount=0;}
         fprintf(self->dumper.out,"%ld ",values[i]);
 
         depth-=2;
@@ -457,11 +460,11 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         fprintf(self->dumper.out,",)\n");
         grib_context_free(a->context,values);
 
-        fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s->%s' \n,ivalues)\n",prefix,a->name);
+        fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s->%s', ivalues)\n",prefix,a->name);
 
     } else {
         char* sval=lval_to_string(c,value);
-        fprintf(self->dumper.out,"    codes_set(ibufr, '%s->%s'\n,",prefix,a->name);
+        fprintf(self->dumper.out,"    codes_set(ibufr, '%s->%s', ",prefix,a->name);
         fprintf(self->dumper.out,"%s)\n",sval);
         grib_context_free(c,sval);
     }
@@ -529,13 +532,11 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
     grib_dumper_bufr_encode_python *self = (grib_dumper_bufr_encode_python*)d;
     char **values;
     size_t size = 0,i=0;
-    grib_context* c=NULL;
+    grib_context* c=a->context;
     int err = 0;
     long count=0;
     int r=0;
     grib_handle* h=grib_handle_of_accessor(a);
-
-    c=a->context;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0 )
         return;
@@ -596,12 +597,11 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     char *value=NULL;
     char *p = NULL;
     size_t size = 0;
-    grib_context* c=NULL;
+    grib_context* c=a->context;
     int r;
     int err = _grib_get_string_length(a,&size);
     grib_handle* h=grib_handle_of_accessor(a);
 
-    c=a->context;
     if (size==0) return;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -675,11 +675,11 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
     val=(long*)grib_context_malloc_clear(h->context,sizeof(long)*size);
     grib_get_long_array(h,key,val,&size);
     for (i=0;i<size-1;i++) {
-        if (icount>cols || i==0) {fprintf(f,"  \n      ");icount=0;}
+        if (icount>cols || i==0) {fprintf(f,"  \n        ");icount=0;}
         fprintf(f,"%ld, ",val[i]);
         icount++;
     }
-    if (icount>cols) {fprintf(f,"  \n      ");}
+    if (icount>cols) {fprintf(f,"  \n        ");}
     /* Note: In python to make a tuple with one element, you need the trailing comma */
     fprintf(f,"%ld ,)\n",val[size-1]);
 
