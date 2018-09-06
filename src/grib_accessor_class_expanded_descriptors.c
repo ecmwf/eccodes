@@ -181,16 +181,17 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
     int n=0;
-    self->tablesAccessorName=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-    self->expandedName=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-    self->rank=grib_arguments_get_long(grib_handle_of_accessor(a),args,n++);
+    grib_handle* hand=grib_handle_of_accessor(a);
+    self->tablesAccessorName=grib_arguments_get_name(hand,args,n++);
+    self->expandedName=grib_arguments_get_name(hand,args,n++);
+    self->rank=grib_arguments_get_long(hand,args,n++);
     if (self->rank!=0) {
-        self->expandedAccessor=grib_find_accessor(grib_handle_of_accessor(a),self->expandedName);
+        self->expandedAccessor=grib_find_accessor(hand,self->expandedName);
     } else {
         self->expandedAccessor=0;
     }
-    self->unexpandedDescriptors=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-    self->sequence=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->unexpandedDescriptors=grib_arguments_get_name(hand,args,n++);
+    self->sequence=grib_arguments_get_name(hand,args,n++);
     self->do_expand=1;
     self->expanded=0;
     a->length = 0;
