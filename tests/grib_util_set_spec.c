@@ -127,6 +127,7 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     grib_handle_delete(finalh);
     fclose(in);
     fclose(out);
+    free(values);
     /*printf("ALL OK: %s\n", __func__);*/
 }
 

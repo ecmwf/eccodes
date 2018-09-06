@@ -22,4 +22,4 @@ infile=${data_dir}/grid_ieee.grib
 #   exit 1
 # fi
 
-${test_dir}/grib_double_cmp ${infile}
+$EXEC ${test_dir}/grib_double_cmp ${infile}

@@ -11,7 +11,7 @@
 . ./include.sh
 
 TEMP=output.grib_local_MeteoFrance.grib
-${test_dir}/grib_local_MeteoFrance $TEMP
+$EXEC ${test_dir}/grib_local_MeteoFrance $TEMP
 
 grib_check_key_equals $TEMP "CLNOMA,INGRIB,INBITS" "SURFTEMPERATURE 120 16"
 
