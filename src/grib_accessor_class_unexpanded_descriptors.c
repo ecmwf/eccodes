@@ -141,8 +141,9 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
     grib_accessor_unexpanded_descriptors* self = (grib_accessor_unexpanded_descriptors*)a;
     int n=0;
-    self->unexpandedDescriptorsEncoded=grib_find_accessor(grib_handle_of_accessor(a),grib_arguments_get_name(grib_handle_of_accessor(a),args,n++));
-    self->createNewData=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    grib_handle* hand=grib_handle_of_accessor(a);
+    self->unexpandedDescriptorsEncoded=grib_find_accessor(hand,grib_arguments_get_name(hand,args,n++));
+    self->createNewData=grib_arguments_get_name(hand,args,n++);
     a->length = 0;
 }
 
@@ -159,7 +160,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     long rlen =0;
     long f,x,y;
     long *v=val;
-    int i;
+    long i;
+    grib_handle* hand=grib_handle_of_accessor(a);
 
     pos=accessor_raw_get_offset(self->unexpandedDescriptorsEncoded)*8;
 
@@ -181,9 +183,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     }
 
     for (i=0;i<rlen;i++) {
-        f=grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data,&pos,2);
-        x=grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data,&pos,6);
-        y=grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data,&pos,8);
+        f=grib_decode_unsigned_long(hand->buffer->data,&pos,2);
+        x=grib_decode_unsigned_long(hand->buffer->data,&pos,6);
+        y=grib_decode_unsigned_long(hand->buffer->data,&pos,8);
         *v++=f*100000+x*1000+y;
     }
     *len = rlen;
@@ -193,41 +195,44 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     grib_accessor_unexpanded_descriptors* self = (grib_accessor_unexpanded_descriptors*)a;
-    int ret=0,i;
+    int ret=0;
     long pos = 0;
     unsigned long f,x,y;
     unsigned char* buf = NULL;
     grib_accessor* expanded=NULL;
     size_t buflen=*len*2;
+    size_t i = 0, length = *len;
     long createNewData=1;
+    grib_handle* hand=grib_handle_of_accessor(a);
 
-    grib_get_long(grib_handle_of_accessor(a),self->createNewData,&createNewData);
+    grib_get_long(hand,self->createNewData,&createNewData);
 
     buf=(unsigned char*)grib_context_malloc_clear(a->context,buflen);
 
-    for (i=0;i<*len;i++) {
+    for (i=0;i<length;i++) {
+        const long tmp = val[i]%100000;
         f=val[i]/100000;
-        x=(val[i]%100000)/1000;
-        y=(val[i]%100000)%1000;
+        x=tmp/1000;
+        y=tmp%1000;
         grib_encode_unsigned_longb(buf,f,&pos,2);
         grib_encode_unsigned_longb(buf,x,&pos,6);
         grib_encode_unsigned_longb(buf,y,&pos,8);
     }
 
     grib_pack_bytes(self->unexpandedDescriptorsEncoded,buf,&buflen);
-    grib_context_free(grib_handle_of_accessor(a)->context,buf);
+    grib_context_free(hand->context,buf);
 
     if (createNewData==0) return ret;
 
-    expanded=grib_find_accessor(grib_handle_of_accessor(a),"expandedCodes");
+    expanded=grib_find_accessor(hand,"expandedCodes");
     Assert(expanded!=NULL);
     ret = grib_accessor_class_expanded_descriptors_set_do_expand(expanded,1);
     if (ret != GRIB_SUCCESS) return ret;
 
-    ret = grib_set_long(grib_handle_of_accessor(a),"unpack",3);
+    ret = grib_set_long(hand,"unpack",3); /* BUFR new data */
     if (ret != GRIB_SUCCESS) return ret;
 
-    ret = grib_set_long(grib_handle_of_accessor(a),"unpack",1);
+    ret = grib_set_long(hand,"unpack",1); /* Unpack structure */
 
     return ret;
 }
