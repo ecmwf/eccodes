@@ -1112,13 +1112,13 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
 #endif
 
 }
-int exit_if_input_is_directory(const char* filename)
+int exit_if_input_is_directory(const char* tool_name, const char* filename)
 {
     struct stat s;
     int stat_val = stat(filename, &s);
     if ( stat_val == 0 ) {
         if (S_ISDIR(s.st_mode)) {
-            fprintf(stderr, "ERROR: \"%s\": Is a directory\n", filename);
+            fprintf(stderr, "%s: ERROR: \"%s\": Is a directory\n", tool_name, filename);
             exit(1);
         }
     }

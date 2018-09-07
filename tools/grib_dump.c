@@ -125,7 +125,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
     if (!options->current_infile->name) return 0;
     if (json) return 0;
 
-    exit_if_input_is_directory(file->name);
+    exit_if_input_is_directory(grib_tool_name, file->name);
 
     sprintf(tmp,"FILE: %s ",options->current_infile->name);
     if (!grib_options_on("C"))

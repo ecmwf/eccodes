@@ -71,7 +71,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {
-    exit_if_input_is_directory(file->name);
+    exit_if_input_is_directory(grib_tool_name, file->name);
     return 0;
 }
 
