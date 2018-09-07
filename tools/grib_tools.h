@@ -199,6 +199,7 @@ int grib_process_runtime_options(grib_context* c,int argc,char** argv,grib_runti
 void grib_tools_write_message(grib_runtime_options* options, grib_handle* h);
 int grib_tool_new_filename_action(grib_runtime_options* options,const char* file); 
 int grib_no_handle_action(grib_runtime_options* options,int err);
+int exit_if_input_is_directory(const char* filename);
 
 #endif
 
