@@ -360,6 +360,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
     } else {
         const char* dumper_name = get_dumper_name(options);
+        if (strcmp(dumper_name, "bufr_simple")==0) {
+            /* This speeds up the unpack by skipping attribute keys not used in the dump */
+            grib_set_long(h, "skipExtraKeyAttributes", 1);
+        }
         err=grib_set_long(h,"unpack",1);
         if (err) {
             if (options->fail) {
