@@ -208,6 +208,8 @@ static bufr_descriptors_array* do_expand(grib_accessor* a,bufr_descriptors_array
 static int global_depth=-1;
 #endif
 
+#define BUFR_DESCRIPTORS_ARRAY_USED_SIZE(v) ((v)->n)
+
 static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded,
         change_coding_params* ccp, int* err)
 {
@@ -229,7 +231,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
     int idepth;
 #endif
 
-    if (grib_bufr_descriptors_array_used_size(unexpanded)==0) return 0;
+    if (BUFR_DESCRIPTORS_ARRAY_USED_SIZE(unexpanded)==0) return 0;
 
     us=grib_bufr_descriptor_clone(grib_bufr_descriptors_array_get(unexpanded,0));
 
@@ -254,6 +256,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
         v=(long*)grib_context_malloc_clear(c,sizeof(long)*size);
         *err=grib_get_long_array(grib_handle_of_accessor(a),self->sequence,v,&size);
         if (*err) return 0;
+
         inner_unexpanded=grib_bufr_descriptors_array_new(c,DESC_SIZE_INIT,DESC_SIZE_INCR);
         for (i=0;i<size;i++) {
             vv=grib_bufr_descriptor_new(self->tablesAccessor,v[i],err);
@@ -268,7 +271,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             printf("+++ push %06ld\n",inner_expanded->v[i]->code);
         }
 #endif
-        size=grib_bufr_descriptors_array_used_size(inner_expanded);
+        size=BUFR_DESCRIPTORS_ARRAY_USED_SIZE(inner_expanded);
         expanded=grib_bufr_descriptors_array_append(expanded,inner_expanded);
         break;
 
@@ -298,7 +301,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             }
             inner_expanded=do_expand(a,inner_unexpanded,ccp,err);
             grib_bufr_descriptors_array_delete(inner_unexpanded);
-            size=grib_bufr_descriptors_array_used_size(inner_expanded);
+            size=BUFR_DESCRIPTORS_ARRAY_USED_SIZE(inner_expanded);
 #if MYDEBUG
             for (i=0;i<inner_expanded->n;i++) {
                 for (idepth=0;idepth<global_depth;idepth++) printf("\t");
@@ -346,7 +349,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
                 printf("+++ push %06ld\n",inner_expanded->v[i]->code);
             }
 #endif
-            size=grib_bufr_descriptors_array_used_size(inner_expanded);
+            size=BUFR_DESCRIPTORS_ARRAY_USED_SIZE(inner_expanded);
             expanded=grib_bufr_descriptors_array_append(expanded,inner_expanded);
         }
         break;
@@ -657,7 +660,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
         ret=expand(a);
         if (ret) return ret;
 
-        expandedSize=grib_bufr_descriptors_array_used_size(self->expanded);
+        expandedSize=BUFR_DESCRIPTORS_ARRAY_USED_SIZE(self->expanded);
         if(*len < expandedSize)
         {
             grib_context_log(a->context, GRIB_LOG_ERROR,
@@ -679,7 +682,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     size_t i;
 
     ret=expand(a);
-    rlen=grib_bufr_descriptors_array_used_size(self->expanded);
+    rlen=BUFR_DESCRIPTORS_ARRAY_USED_SIZE(self->expanded);
     if (ret) return ret;
 
     if(*len < rlen)
@@ -727,7 +730,7 @@ static int value_count(grib_accessor* a,long* rlen)
     *rlen=0;
 
     ret=expand(a);
-    *rlen=grib_bufr_descriptors_array_used_size(self->expanded);
+    *rlen=BUFR_DESCRIPTORS_ARRAY_USED_SIZE(self->expanded);
     if (ret) {
         grib_context_log(c,GRIB_LOG_ERROR,"%s unable to compute size",a->name);
         return ret;
