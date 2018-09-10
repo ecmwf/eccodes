@@ -711,7 +711,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     long localReference=0,localWidth=0,modifiedWidth,modifiedReference;
     long reference,allone;
     double localRange,modifiedFactor,inverseFactor;
-    size_t ii;
+    size_t ii, index_of_min, index_of_max;
     int nvals = 0;
     double min=0,max=0,maxAllowed,minAllowed;
     double* v=NULL;
@@ -822,23 +822,23 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
             break;
         }
     }
-    ii=0;
+    ii=0; index_of_min=index_of_max=0;
     v=values;
     while (ii<nvals) {
-        if (*v<min && *v!=GRIB_MISSING_DOUBLE) min=*v;
-        if (*v>max && *v!=GRIB_MISSING_DOUBLE) max=*v;
+        if (*v<min && *v!=GRIB_MISSING_DOUBLE) { min=*v; index_of_min=ii; }
+        if (*v>max && *v!=GRIB_MISSING_DOUBLE) { max=*v; index_of_max=ii; }
         if (*v == GRIB_MISSING_DOUBLE) thereIsAMissing=1;
         ii++;
         v++;
     }
     if (max>maxAllowed && max!=GRIB_MISSING_DOUBLE) {
-        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Maximum value (%g) out of range (maxAllowed=%g).",
-                                            bd->shortName, max, maxAllowed);
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Maximum value (value[%lu]=%g) out of range (maxAllowed=%g).",
+                                            bd->shortName, index_of_max, max, maxAllowed, index_of_max);
         return GRIB_OUT_OF_RANGE;
     }
     if (min<minAllowed && min!=GRIB_MISSING_DOUBLE) {
-        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Minimum value (%g) out of range (minAllowed=%g).",
-                                            bd->shortName, min, minAllowed);
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Minimum value (value[%lu]=%g) out of range (minAllowed=%g).",
+                                            bd->shortName, index_of_min, min, minAllowed);
         return GRIB_OUT_OF_RANGE;
     }
 
