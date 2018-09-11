@@ -414,3 +414,27 @@ void grib_get_reduced_row2(long pl, double lon_first, double lon_last, long* npo
     *ilon_first = (the_lon1*pl)/360.0;
     *ilon_last  = (the_lon2*pl)/360.0;
 }
+
+void grib_get_reduced_row3(long pl, double lon_first, double lon_last, long *npoints, double *olon_first, double *olon_last)
+{
+    long long Ni_globe = pl;
+    Fraction_type west;
+    Fraction_type east;
+    long long the_count;
+    double the_lon1, the_lon2;
+
+    while (lon_last < lon_first) lon_last += 360;
+    west = fraction_construct_from_double(lon_first);
+    east = fraction_construct_from_double(lon_last);
+
+    gaussian_reduced_row(
+            Ni_globe,   /*plj*/
+            west,       /*lon_first*/
+            east,       /*lon_last*/
+            &the_count,
+            &the_lon1,
+            &the_lon2);
+    *npoints    = (long)the_count;
+    *olon_first = the_lon1;
+    *olon_last  = the_lon2;
+}
