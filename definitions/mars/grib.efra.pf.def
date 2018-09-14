@@ -7,3 +7,7 @@ alias mars.number = perturbationNumber;
 # We need this because 'efas_post_proc' is defined later
 meta efas_model sprintf("%s", efas_post_proc) : no_copy;
 alias mars.model = efas_model;
+
+alias mars.date  = dateOfReanalysis;
+alias mars.time  = timeOfReanalysis;
+alias mars.hdate = dataDate;
