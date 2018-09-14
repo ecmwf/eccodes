@@ -1337,10 +1337,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_accessor_classes_hash.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\grib_api_version.c"
 				>
 			</File>
