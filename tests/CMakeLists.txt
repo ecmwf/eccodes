@@ -88,6 +88,7 @@ list( APPEND tests_data_reqd
     bufr_ecc-379
     bufr_ecc-393
     bufr_ecc-433
+    bufr_ecc-750
     grib_ecc-490
     bufr_ecc-556
     gts_get
