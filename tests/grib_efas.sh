@@ -86,9 +86,9 @@ for t in $types; do
 done
 
 # ---------------------------
-# Stream EFRA
+# Stream EFCL (Climatology)
 # ---------------------------
-${tools_dir}/grib_set -s tablesVersion=19,setLocalDefinition=1,stream=efra,type=fc $ECCODES_SAMPLES_PATH/GRIB2.tmpl $sample
+${tools_dir}/grib_set -s tablesVersion=19,setLocalDefinition=1,stream=efcl,type=fc $ECCODES_SAMPLES_PATH/GRIB2.tmpl $sample
 
 # Test a non-ensemble, instantaneous field
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=70,typeOfPostProcessing=1 $sample $temp1
@@ -97,7 +97,7 @@ ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=41,yearOfRea
 grib_check_key_equals $temp2 mars.hdate,mars.date '20070323 20191213'
 # This stream does not have the 'anoffset' key
 anoffset=`${tools_dir}/grib_get -f -p mars.anoffset $temp2`
-[ "anoffset" = "not_found" ]
+[ "$anoffset" = "not_found" ]
 
 
 # Clean up

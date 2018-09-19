@@ -1,4 +1,4 @@
-# EFRA control forecast
+# EFAS climatology forecast
 alias mars.origin = inputOriginatingCentre;
 
 # We need this because 'efas_post_proc' is defined later
