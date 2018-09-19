@@ -32,7 +32,7 @@ int DBL_EQUAL(double d1, double d2, double tolerance)
 
 void usage(const char* prog)
 {
-    printf("usage: %s [-f] grib_file grib_file ...\n\n",prog);
+    printf("Usage: %s [-f] grib_file grib_file ...\n\n",prog);
     printf("Check geometry of GRIB fields with a Gaussian Grid.\n");
     printf("(The grid is assumed to be GLOBAL)\n\n");
     printf("Options:\n");

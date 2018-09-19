@@ -22,7 +22,7 @@ static int verbose = 0;
 static const char* OUTPUT_FILENAME_FORMAT = "%s_%02d"; /* x_01, x_02 etc */
 static void usage(const char* prog)
 {
-    printf("usage: %s [-v] nchunks infile\n",prog);
+    printf("Usage: %s [-v] nchunks infile\n",prog);
     exit(1);
 }
 
