@@ -53,7 +53,7 @@ list( APPEND tests_no_data_reqd
     julian
     bufr_ecc-359
     bufr_ecc-517
-    bufr_subTypes
+    bufr_rdbSubTypes
     grib_efas
     grib_mars_types
 )
@@ -259,10 +259,10 @@ ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh
 )
 
-ecbuild_add_test( TARGET eccodes_t_bufr_split_by_subtype
+ecbuild_add_test( TARGET eccodes_t_bufr_split_by_rdbSubtype
                   TYPE SCRIPT
                   CONDITION ENABLE_EXTRA_TESTS AND ECCODES_INSTALL_EXTRA_TOOLS
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_split_by_subtype.sh
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_split_by_rdbSubtype.sh
                   TEST_DEPENDS eccodes_download_bufrs
 )
 
