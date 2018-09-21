@@ -4,8 +4,8 @@
 # ECC-701
 alias mars.step = endStep;
 
-alias mars.date  = dateOfReanalysis;
-alias mars.time  = timeOfReanalysis;
+alias mars.date  = dateOfModelVersion;
+alias mars.time  = timeOfModelVersion;
 alias mars.hdate = dataDate;
 
 alias mars.origin = inputOriginatingCentre;

@@ -92,7 +92,7 @@ ${tools_dir}/grib_set -s tablesVersion=19,setLocalDefinition=1,stream=efcl,type=
 
 # Test a non-ensemble, instantaneous field
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=70,typeOfPostProcessing=1 $sample $temp1
-${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=41,yearOfReanalysis=2019,monthOfReanalysis=12,dayOfReanalysis=13 $temp1 $temp2
+${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=41,yearOfModelVersion=2019,monthOfModelVersion=12,dayOfModelVersion=13 $temp1 $temp2
 # ${tools_dir}/grib_ls -m $temp2
 grib_check_key_equals $temp2 mars.hdate,mars.date '20070323 20191213'
 # This stream does not have the 'anoffset' key

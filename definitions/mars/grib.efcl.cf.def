@@ -5,6 +5,6 @@ alias mars.origin = inputOriginatingCentre;
 meta efas_model sprintf("%s", efas_post_proc) : no_copy;
 alias mars.model = efas_model;
 
-alias mars.date  = dateOfReanalysis;
-alias mars.time  = timeOfReanalysis;
+alias mars.date  = dateOfModelVersion;
+alias mars.time  = timeOfModelVersion;
 alias mars.hdate = dataDate;
