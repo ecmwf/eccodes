@@ -27,8 +27,8 @@ namespace gauss {
 namespace reduced {
 
 
-RotatedOctahedral::RotatedOctahedral(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox):
-    Octahedral(N, bbox),
+RotatedOctahedral::RotatedOctahedral(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox, double angularPrecision) :
+    Octahedral(N, bbox, angularPrecision),
     rotation_(rotation) {
 }
 
@@ -79,7 +79,7 @@ atlas::Grid RotatedOctahedral::atlasGrid() const {
 
 
 const Gridded* RotatedOctahedral::croppedRepresentation(const util::BoundingBox& bbox) const {
-    return new RotatedOctahedral(N_, rotation_, bbox);
+    return new RotatedOctahedral(N_, rotation_, bbox, angularPrecision_);
 }
 
 

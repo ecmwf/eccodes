@@ -28,8 +28,8 @@ namespace gauss {
 namespace reduced {
 
 
-Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox) :
-    Reduced(N, bbox) {
+Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox, double angularPrecision) :
+    Reduced(N, bbox, angularPrecision) {
 
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox.north();

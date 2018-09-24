@@ -60,8 +60,8 @@ Regular::Regular(const param::MIRParametrisation& parametrisation) :
 }
 
 
-Regular::Regular(size_t N, const util::BoundingBox& bbox) :
-    Gaussian(N, bbox),
+Regular::Regular(size_t N, const util::BoundingBox& bbox, double angularPrecision) :
+    Gaussian(N, bbox, angularPrecision),
     Ni_(0),
     Nj_(0) {
 

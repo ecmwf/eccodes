@@ -27,8 +27,8 @@ namespace gauss {
 namespace reduced {
 
 
-Classic::Classic(size_t N, const util::BoundingBox& bbox):
-    Reduced(N, bbox) {
+Classic::Classic(size_t N, const util::BoundingBox& bbox, double angularPrecision):
+    Reduced(N, bbox, angularPrecision) {
 
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox.north();

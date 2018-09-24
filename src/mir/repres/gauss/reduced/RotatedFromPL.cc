@@ -31,8 +31,8 @@ RotatedFromPL::RotatedFromPL(const param::MIRParametrisation &parametrisation):
 }
 
 
-RotatedFromPL::RotatedFromPL(size_t N, const std::vector<long>& pl, const util::Rotation& rotation, const util::BoundingBox& bbox) :
-    FromPL(N, pl, bbox),
+RotatedFromPL::RotatedFromPL(size_t N, const std::vector<long>& pl, const util::Rotation& rotation, const util::BoundingBox& bbox, double angularPrecision) :
+    FromPL(N, pl, bbox, angularPrecision),
     rotation_(rotation) {
 }
 
@@ -84,7 +84,7 @@ atlas::Grid RotatedFromPL::atlasGrid() const {
 
 
 const Gridded* RotatedFromPL::croppedRepresentation(const util::BoundingBox& bbox) const {
-    return new RotatedFromPL(N_, pls(), rotation_, bbox);
+    return new RotatedFromPL(N_, pls(), rotation_, bbox, angularPrecision_);
 }
 
 

@@ -27,8 +27,8 @@ namespace gauss {
 namespace reduced {
 
 
-RotatedClassic::RotatedClassic(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox):
-    Classic(N, bbox),
+RotatedClassic::RotatedClassic(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox, double angularPrecision):
+    Classic(N, bbox, angularPrecision),
     rotation_(rotation) {
 }
 
@@ -79,7 +79,7 @@ atlas::Grid RotatedClassic::atlasGrid() const {
 
 
 const Gridded* RotatedClassic::croppedRepresentation(const util::BoundingBox& bbox) const {
-    return new RotatedClassic(N_, rotation_, bbox);
+    return new RotatedClassic(N_, rotation_, bbox, angularPrecision_);
 }
 
 

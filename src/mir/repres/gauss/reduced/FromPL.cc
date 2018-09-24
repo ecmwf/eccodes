@@ -33,8 +33,8 @@ FromPL::FromPL(const param::MIRParametrisation& parametrisation) :
 }
 
 
-FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox) :
-    Reduced(N, pl, bbox) {
+FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox, double angularPrecision) :
+    Reduced(N, pl, bbox, angularPrecision) {
 }
 
 
