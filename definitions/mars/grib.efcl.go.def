@@ -4,7 +4,7 @@
 alias mars.step = endStep;
 
 alias mars.date  = dateOfModelVersion;
-alias mars.time  = timeOfModelVersion;
+alias mars.time  = dataTime;
 alias mars.hdate = dataDate;
 
 alias mars.origin = inputOriginatingCentre;

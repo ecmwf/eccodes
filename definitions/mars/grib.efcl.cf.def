@@ -6,5 +6,5 @@ meta efas_model sprintf("%s", efas_post_proc) : no_copy;
 alias mars.model = efas_model;
 
 alias mars.date  = dateOfModelVersion;
-alias mars.time  = timeOfModelVersion;
+alias mars.time  = dataTime;
 alias mars.hdate = dataDate;
