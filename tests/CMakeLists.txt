@@ -90,6 +90,7 @@ list( APPEND tests_data_reqd
     bufr_ecc-433
     bufr_ecc-750
     grib_ecc-490
+    grib_ecc-756
     bufr_ecc-556
     gts_get
     gts_ls
