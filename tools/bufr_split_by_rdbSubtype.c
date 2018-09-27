@@ -26,7 +26,7 @@ static const char* OUTPUT_FILENAME_SUBTYPE = "split_rdbSubtype.%ld.bufr";
 
 static void usage(const char* prog)
 {
-    printf("usage: %s [-v] infile\n",prog);
+    printf("Usage: %s [-v] infile\n",prog);
     exit(1);
 }
 static int file_exists(const char* path)

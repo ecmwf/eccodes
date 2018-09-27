@@ -10,7 +10,7 @@
 
 . ./include.sh
 
-label="bufr_subTypes"
+label="bufr_rdbSubTypes"
 fBufr3Input=$ECCODES_SAMPLES_PATH/BUFR3_local.tmpl
 fBufr4Input=$ECCODES_SAMPLES_PATH/BUFR4_local.tmpl
 fBufrOutput=${label}".bufr.tmp"

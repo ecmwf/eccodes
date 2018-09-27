@@ -12,7 +12,7 @@
 set -u
 
 #Define a common label for all the tmp files
-label="bufr_split_by_subtype"
+label="bufr_split_by_rdbSubtype"
 temp=$label.temp
 fRules=${label}.filter
 
@@ -22,26 +22,26 @@ mkdir -p $temp_dir
 cd $temp_dir
 
 cat > $fRules <<EOF
-  write "out.filter_by_subtype.[rdbSubtype].bufr";
+  write "out.filter_by_rdbSubtype.[rdbSubtype].bufr";
 EOF
 
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 for f in ${bufr_files}; do
     fpath=${data_dir}/bufr/$f
 
-    # This will create output files like out.filter_by_subtype.*
+    # This will create output files like out.filter_by_rdbSubtype.*
     ${tools_dir}/codes_bufr_filter $fRules $fpath
 
     # This will create output files like split_rdbSubtype*.bufr
-    ${tools_dir}/bufr_split_by_subtype -v $fpath
+    ${tools_dir}/bufr_split_by_rdbSubtype -v $fpath
 
-    for sp in out.filter_by_subtype.*; do
+    for sp in out.filter_by_rdbSubtype.*; do
         st=`echo $sp | awk -F. '{print $3}'`
         ${tools_dir}/bufr_compare $sp split_rdbSubtype.$st.bufr
     done
 
     rm -f split_rdbSubtype*.bufr
-    rm -f out.filter_by_subtype.*
+    rm -f out.filter_by_rdbSubtype.*
 done
 
 # Clean up

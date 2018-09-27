@@ -2968,11 +2968,11 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         if(strcmp(axis, "time") == 0)
         {
             boolean onedtime = (count_values(cube, "date") == 0 && count_values(cube, "step") == 0);
-            sprintf(u, "hours since 0000-00-00 00:00:0.0");
+            sprintf(u, "hours since 0000-00-00 00:00:00.0");
             longname = "reference_time";
             if(setup.usevalidtime || onedtime)
             {
-                sprintf(u, "hours since %ld-%02ld-%02ld 00:00:0.0", setup.refdate / 10000, (setup.refdate % 10000) / 100, (setup.refdate % 100));
+                sprintf(u, "hours since %ld-%02ld-%02ld 00:00:00.0", setup.refdate / 10000, (setup.refdate % 10000) / 100, (setup.refdate % 100));
                 longname = "time";
             }
             if(setup.climatology)
@@ -2994,7 +2994,7 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
                 long date = d ? atol(d) : 0;
                 long hour = t ? atol(t) : 0;
                 long min = t ? 60 * (atof(t) - hour) : 0;
-                sprintf(u, "hours since %ld-%02ld-%02ld %02ld:%02ld:0.0", date / 10000, (date % 10000) / 100, (date % 100), hour, min);
+                sprintf(u, "hours since %ld-%02ld-%02ld %02ld:%02ld:00.0", date / 10000, (date % 10000) / 100, (date % 100), hour, min);
                 units = u;
             }
         }

@@ -12,7 +12,7 @@
 #include "math.h"
 
 static void usage(char* prog) {
-	printf("usage: %s file1.grib file2.grib\n",prog);
+	printf("Usage: %s file1.grib file2.grib\n",prog);
 	printf("Input files must be gaussian reduced global and sub-area.\n");
 	printf("Performs consistency check between global and sub-area.\n");
 

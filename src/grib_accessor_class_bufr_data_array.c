@@ -702,6 +702,19 @@ static void set_missing_long_to_double(grib_darray* dvalues)
     }
 }
 
+/* ECC-750: The 'factor' argument is 10^-scale */
+static int descriptor_get_min_max(bufr_descriptor* bd, long width, long reference, double factor,
+                                  double* minAllowed, double* maxAllowed)
+{
+    /* Maximum value is allowed to be the largest number (all bits 1) which means it's MISSING */
+    unsigned long max1 = (1UL << width) - 1; /* Highest value for number with 'width' bits */
+    DebugAssert(width > 0 && width <= 32);
+
+    *maxAllowed = (max1 + reference) * factor;
+    *minAllowed = reference * factor;
+    return GRIB_SUCCESS;
+}
+
 static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr_descriptor* bd,
         grib_accessor_bufr_data_array* self,grib_darray* dvalues)
 {
@@ -731,8 +744,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     inverseFactor= grib_power(bd->scale,10);
     modifiedWidth= bd->width;
 
-    maxAllowed=(grib_power(modifiedWidth,2)+modifiedReference)*modifiedFactor;
-    minAllowed=modifiedReference*modifiedFactor;
+    descriptor_get_min_max(bd, modifiedWidth, modifiedReference, modifiedFactor, &minAllowed, &maxAllowed);
 
     nvals=grib_iarray_used_size(self->iss_list);
     if (nvals<=0) return GRIB_NO_VALUES;
@@ -903,8 +915,8 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
     modifiedReference= bd->reference;
     modifiedFactor= bd->factor;
     modifiedWidth= bd->width;
-    maxAllowed=(grib_power(modifiedWidth,2)+modifiedReference)*modifiedFactor;
-    minAllowed=modifiedReference*modifiedFactor;
+
+    descriptor_get_min_max(bd, modifiedWidth, modifiedReference, modifiedFactor, &minAllowed, &maxAllowed);
 
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
     if (value==GRIB_MISSING_DOUBLE) {
