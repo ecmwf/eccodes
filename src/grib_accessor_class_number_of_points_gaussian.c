@@ -405,5 +405,21 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 #endif
     if (lats) grib_context_free(c,lats);
     if (plsave) grib_context_free(c,plsave);
+
+    // ECC-756: Now decide whether this is legacy GRIB1 message.
+    // Query data values to see if there is a mismatch
+    {
+        long bpv=0;
+        size_t numDataValues=0;
+        if (grib_get_long(h, "bitsPerValue", &bpv) == GRIB_SUCCESS /*&& bpv != 0*/) {
+            if (grib_get_size(h, "values", &numDataValues)==GRIB_SUCCESS) {
+                if (*val != numDataValues) {
+                    if (h->context->debug) printf("ECCODES DEBUG number_of_points_gaussian: LEGACY MODE activated. Count(=%ld) changed to size(values)\n",*val);
+                    *val = numDataValues;
+                }
+            }
+        }
+    }
+
     return ret;
 }
