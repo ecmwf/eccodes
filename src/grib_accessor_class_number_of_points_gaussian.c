@@ -280,6 +280,33 @@ static void correctWestEast(long max_pl, double angular_precision, double* pWest
     }
 }
 
+static int get_number_of_data_values(grib_handle* h, size_t* numDataValues)
+{
+    int err = 0;
+    long bpv=0, bitmapPresent=0;
+    size_t bitmapLength = 0;
+
+    if ( (err = grib_get_long(h, "bitsPerValue", &bpv)) ) return err;
+
+    if (bpv != 0) {
+        if (grib_get_size(h, "values", numDataValues)==GRIB_SUCCESS) {
+            return GRIB_SUCCESS;
+        }
+    } else {
+        // Constant field (with or without bitmap)
+        if ( (err = grib_get_long(h,"bitmapPresent", &bitmapPresent)) ) return err;
+        if (bitmapPresent) {
+            if ( (err = grib_get_size(h,"bitmap", &bitmapLength)) ) return err;
+            *numDataValues = bitmapLength;
+            return GRIB_SUCCESS;
+        } else {
+            err = GRIB_NO_VALUES; // Cannot determine number of values
+        }
+    }
+
+    return err;
+}
+
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     int ret=GRIB_SUCCESS;
@@ -295,6 +322,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     double angular_precision = 1.0/1000000.0;
     long editionNumber = 0;
     grib_handle* h = grib_handle_of_accessor(a);
+    size_t numDataValues=0;
 
     grib_accessor_number_of_points_gaussian* self = (grib_accessor_number_of_points_gaussian*)a;
     grib_context* c=a->context;
@@ -408,16 +436,11 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     // ECC-756: Now decide whether this is legacy GRIB1 message.
     // Query data values to see if there is a mismatch
-    {
-        long bpv=0;
-        size_t numDataValues=0;
-        if (grib_get_long(h, "bitsPerValue", &bpv) == GRIB_SUCCESS /*&& bpv != 0*/) {
-            if (grib_get_size(h, "values", &numDataValues)==GRIB_SUCCESS) {
-                if (*val != numDataValues) {
-                    if (h->context->debug) printf("ECCODES DEBUG number_of_points_gaussian: LEGACY MODE activated. Count(=%ld) changed to size(values)\n",*val);
-                    *val = numDataValues;
-                }
-            }
+    if (get_number_of_data_values(h, &numDataValues) == GRIB_SUCCESS) {
+        if (*val != numDataValues) {
+            if (h->context->debug)
+                printf("ECCODES DEBUG number_of_points_gaussian: LEGACY MODE activated. Count(=%ld) changed to size(values)\n",*val);
+            *val = numDataValues;
         }
     }
 
