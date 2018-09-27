@@ -177,8 +177,9 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
     return ret;
 
   if ( bpv != 0 ) {
-    grib_context_log(a->context,GRIB_LOG_DEBUG,"grib_accessor_number_of_coded_values: offsetAfterData=%ld offsetBeforeData=%ld unusedBits=%ld bpv=%ld\n",
-    offsetAfterData,offsetBeforeData,unusedBits,bpv);
+     grib_context_log(a->context,GRIB_LOG_DEBUG,"grib_accessor_number_of_coded_values: offsetAfterData=%ld offsetBeforeData=%ld unusedBits=%ld bpv=%ld\n",
+               offsetAfterData,offsetBeforeData,unusedBits,bpv);
+     DebugAssert( offsetAfterData > offsetBeforeData );
      *val=((offsetAfterData-offsetBeforeData)*8-unusedBits)/bpv;
   } else {
     if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfValues,&numberOfValues)) != GRIB_SUCCESS)

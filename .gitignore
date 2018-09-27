@@ -9,7 +9,6 @@ config.h.in
 lex.yy.c
 stamp-h1
 src/config.h
-src/eccodes_version.h
 src/grib_api.h.new
 src/grib_api_constants.h.new
 src/eccodes_constants.h.new

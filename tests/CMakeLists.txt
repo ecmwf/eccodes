@@ -20,7 +20,7 @@ list( APPEND test_bins
       bufr_keys_iter
       gauss_sub
       grib_util_set_spec
-      local_MeteoFrance
+      grib_local_MeteoFrance
       grib_2nd_order_numValues
       optimize_scaling
       optimize_scaling_sh
@@ -53,8 +53,9 @@ list( APPEND tests_no_data_reqd
     julian
     bufr_ecc-359
     bufr_ecc-517
-    bufr_subTypes
+    bufr_rdbSubTypes
     grib_efas
+    grib_mars_types
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
@@ -87,6 +88,7 @@ list( APPEND tests_data_reqd
     bufr_ecc-379
     bufr_ecc-393
     bufr_ecc-433
+    bufr_ecc-750
     grib_ecc-490
     bufr_ecc-556
     gts_get
@@ -124,6 +126,7 @@ list( APPEND tests_data_reqd
     grib_set
     grib_iterator
     grib_compare
+    grib_copy
     grib_level
     index
     grib_bitmap
@@ -136,7 +139,7 @@ list( APPEND tests_data_reqd
     read_any
     grib_dump
     grib_dump_debug
-    local_MeteoFrance
+    grib_local_MeteoFrance
     grib_neg_fctime
     codes_split_file
 )
@@ -255,6 +258,14 @@ ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
                   CONDITION ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh
 )
+
+ecbuild_add_test( TARGET eccodes_t_bufr_split_by_rdbSubtype
+                  TYPE SCRIPT
+                  CONDITION ENABLE_EXTRA_TESTS AND ECCODES_INSTALL_EXTRA_TOOLS
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_split_by_rdbSubtype.sh
+                  TEST_DEPENDS eccodes_download_bufrs
+)
+
 # Performance test. Must have -DENABLE_GRIB_TIMER=ON
 ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
                   TYPE SCRIPT

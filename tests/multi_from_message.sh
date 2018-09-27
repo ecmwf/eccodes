@@ -22,11 +22,11 @@ do
   #  exit 0
   #fi
 
-  ${test_dir}/multi_from_message -m $infile > $out1
+  $EXEC ${test_dir}/multi_from_message -m $infile > $out1
   ${tools_dir}/grib_get -p count,shortName,level $infile > $out2
   diff $out1 $out2
 
-  ${test_dir}/multi_from_message $infile > $out1
+  $EXEC ${test_dir}/multi_from_message $infile > $out1
   ${tools_dir}/grib_get -M -p count,shortName,level $infile > $out2
   diff $out1 $out2
 

@@ -19,7 +19,7 @@
 #include "wingetopt.h"
 #endif
 
-char* names[]={"parameter","vertical","geography","data","mars","local"};
+const char* names[]={"parameter","vertical","geography","data","mars","local"};
 int names_count=6;
 
 /* id,args,help */
@@ -38,7 +38,7 @@ grib_options_help grib_options_help_list[] ={
    "\n\t\tSet all the data values to \"value\".\n"},
   {"e:","tolerance","\n\t\tOnly values whose difference is more than tolerance are considered different.\n"},
   {"f",0,"Force. Force the execution not to fail on error.\n"},
-  {"F:","format","\n\t\tC style format for floating point values.\n"},
+  {"F:","format","\n\t\tC style format for floating-point values.\n"},
   {"g",0,"Copy GTS header. \n"},
   {"G",0,"GRIBEX compatibility mode.\n"},
   {"i:","index",
@@ -84,7 +84,7 @@ grib_options_help grib_options_help_list[] ={
   {"v",0,"Verbose.\n"},
   {"7",0,"Does not fail when the message has wrong length\n"},
   {"A:","absolute error\n",
-  "\tCompare floating point values using the absolute error as tolerance.\n\t\tDefault is absolute error=0\n"},
+  "\tCompare floating-point values using the absolute error as tolerance.\n\t\tDefault is absolute error=0\n"},
   {"C",0,"C code mode. A C code program generating the message is dumped.\n"},
   {"D",0,"Debug mode.\n"},
   {"H",0,"Print octet content in hexadecimal format.\n"},
@@ -93,9 +93,9 @@ grib_options_help grib_options_help_list[] ={
   {"P:","key[:{s|d|i}],key[:{s|d|i}],...",
    "\n\t\tAs -p adding the declared keys to the default list.\n"},
   {"R:","key1=relative_error1,key2=relative_error2,...\n",
-        "\tCompare floating point values using the relative error as tolerance."
+        "\tCompare floating-point values using the relative error as tolerance."
         "\n\t\tkey1=relative_error1 will compare key1 using relative_error1."
-        "\n\t\tall=relative_error will compare all the floating point keys using relative_error. Default all=0.\n"},
+        "\n\t\tall=relative_error will compare all the floating-point keys using relative_error. Default all=0.\n"},
   {"S",0,"Strict. Only messages matching all the constraints are copied to"
    "\n\t\tthe output file\n"},
   {"T:","T | B | M | A","Message type. T->GTS, B->BUFR, M->METAR (Experimental),A->Any (Experimental).\n\t\t\tThe input file is interpreted according to the message type.\n"},
@@ -373,7 +373,7 @@ char* grib_options_get_help(char* id)
     }
     for (i=0; i<grib_options_help_count;i++) {
         if (!strcmp(id,grib_options_help_list[i].id)) {
-            return grib_options_help_list[i].help != NULL ? grib_options_help_list[i].help : err;
+            return grib_options_help_list[i].help != NULL ? (char*)grib_options_help_list[i].help : err;
         }
     }
     return err;
@@ -396,7 +396,7 @@ char* grib_options_get_args(char* id)
     }
     for (i=0; i<grib_options_help_count;i++) {
         if (!strcmp(id,grib_options_help_list[i].id)) {
-            return grib_options_help_list[i].args != NULL ? grib_options_help_list[i].args : err;
+            return grib_options_help_list[i].args != NULL ? (char*)grib_options_help_list[i].args : err;
         }
     }
     return err;

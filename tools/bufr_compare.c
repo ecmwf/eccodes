@@ -223,14 +223,14 @@ int counter=0;
 int start=-1;
 int end=-1;
 
-char* grib_tool_description=
+const char* grib_tool_description=
     "Compare BUFR messages contained in two files."
     "\n\tIf some differences are found it fails returning an error code."
-    "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
+    "\n\tFloating-point values are compared exactly by default, different tolerance can be defined see -P -A -R."
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
-char* grib_tool_name="bufr_compare";
-char* grib_tool_usage="[options] bufr_file1 bufr_file2";
+const char* grib_tool_name="bufr_compare";
+const char* grib_tool_usage="[options] bufr_file1 bufr_file2";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
@@ -400,6 +400,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {
+    exit_if_input_is_directory(grib_tool_name, file->name);
     return 0;
 }
 
@@ -774,8 +775,10 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
     {
     case GRIB_TYPE_STRING:
         if (verbose) printf(" as string\n");
-        grib_get_string_length(handle1,name,&len1);
-        grib_get_string_length(handle2,name,&len2);
+        /* See ECC-710: It is very slow getting the key length this way */
+        /*grib_get_string_length(handle1,name,&len1);*/
+        /*grib_get_string_length(handle2,name,&len2);*/
+        len1 = len2 = 4096; /* Significantly faster to use an upper bound */
         sval1 = (char*)grib_context_malloc(handle1->context,len1*sizeof(char));
         sval2 = (char*)grib_context_malloc(handle2->context,len2*sizeof(char));
 
@@ -1132,9 +1135,14 @@ static int compare_attributes(grib_handle* handle1, grib_handle* handle2, grib_r
         /*long native_type = 0;*/
         grib_accessor* aa = NULL;
         if ( (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)== 0 ) {
-            ++i; /* next attribute */
+            ++i; /* next attribute if accessor is not for dumping */
             continue;
         }
+        if ( (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)!= 0 ) {
+            ++i; /* next attribute if accessor is read-only */
+            continue;
+        }
+
         aa = a->attributes[i];
         /*native_type = grib_accessor_get_native_type(aa);   TODO: read only check? */
 
@@ -1184,11 +1192,13 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
     if (!headerMode) {
         /* See ECC-333: By setting unpack we get ALL the bufr keys. */
         /*              In headerMode we want just the header ones */
+        grib_set_long(handle1,"skipExtraKeyAttributes",1); /* See ECC-745 */
         ret = grib_set_long(handle1,"unpack",1);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(context, GRIB_LOG_ERROR, "Failed to unpack 1st message: %s", grib_get_error_message(ret));
             exit(1);
         }
+        grib_set_long(handle2,"skipExtraKeyAttributes",1); /* See ECC-745 */
         ret = grib_set_long(handle2,"unpack",1);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(context, GRIB_LOG_ERROR, "Failed to unpack 2nd message: %s", grib_get_error_message(ret));

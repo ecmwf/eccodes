@@ -24,10 +24,10 @@
 
 #include "grib_tools.h"
 
-char* grib_tool_description = "Convert a GRIB file to netCDF format.";
-char* grib_tool_name = "grib_to_netcdf";
-char* grib_tool_usage = "[options] grib_file grib_file ... ";
-static char argvString[2048];
+const char* grib_tool_description = "Convert a GRIB file to netCDF format.";
+const char* grib_tool_name = "grib_to_netcdf";
+const char* grib_tool_usage = "[options] grib_file grib_file ... ";
+static char argvString[2048] = {0,};
 
 /*=====================================================================*/
 
@@ -2968,11 +2968,11 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         if(strcmp(axis, "time") == 0)
         {
             boolean onedtime = (count_values(cube, "date") == 0 && count_values(cube, "step") == 0);
-            sprintf(u, "hours since 0000-00-00 00:00:0.0");
+            sprintf(u, "hours since 0000-00-00 00:00:00.0");
             longname = "reference_time";
             if(setup.usevalidtime || onedtime)
             {
-                sprintf(u, "hours since %ld-%02ld-%02ld 00:00:0.0", setup.refdate / 10000, (setup.refdate % 10000) / 100, (setup.refdate % 100));
+                sprintf(u, "hours since %ld-%02ld-%02ld 00:00:00.0", setup.refdate / 10000, (setup.refdate % 10000) / 100, (setup.refdate % 100));
                 longname = "time";
             }
             if(setup.climatology)
@@ -2994,7 +2994,7 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
                 long date = d ? atol(d) : 0;
                 long hour = t ? atol(t) : 0;
                 long min = t ? 60 * (atof(t) - hour) : 0;
-                sprintf(u, "hours since %ld-%02ld-%02ld %02ld:%02ld:0.0", date / 10000, (date % 10000) / 100, (date % 100), hour, min);
+                sprintf(u, "hours since %ld-%02ld-%02ld %02ld:%02ld:00.0", date / 10000, (date % 10000) / 100, (date % 100), hour, min);
                 units = u;
             }
         }
@@ -3219,6 +3219,30 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
     return e;
 }
 
+static size_t string_to_unique_number(const char* axis, const char* str)
+{
+    size_t result = 0;
+    if(strcmp(axis, "type")==0) {
+        /* TODO: not ideal but capture the most common MARS types */
+        if     (strcmp(str,"an")==0) return 2;
+        else if(strcmp(str,"fc")==0) return 9;
+        else if(strcmp(str,"cf")==0) return 10;
+        else if(strcmp(str,"pf")==0) return 11;
+        else if(strcmp(str,"em")==0) return 17;
+        else if(strcmp(str,"es")==0) return 18;
+        else if(strcmp(str,"ep")==0) return 30;
+        else if(strcmp(str,"4i")==0) return 33;
+        else if(strcmp(str,"4g")==0) return 8;
+        else if(strcmp(str,"ia")==0) return 3;
+        else if(strcmp(str,"efi")==0) return 27;
+    }
+    /* Fallback general case: Use hashing */
+    result = 5381;
+    while (*str) {
+        result = 33 * result ^ (unsigned char) *str++;
+    }
+    return result;
+}
 static int fill_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid)
 {
     const request *cube = h->cube;
@@ -3258,8 +3282,18 @@ static int fill_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid)
         }
         else
         {
-            for(j = 0; j < n; ++j)
-                values[j] = atol(get_value(cube, axis, j));
+            for(j = 0; j < n; ++j) {
+                long lv = 0;
+                const char* sv = get_value(cube, axis, j);
+                if (is_number(sv)) {
+                    lv = atol(sv); /* Detect error? */
+                } else {
+                    /* ECC-725: Convert string-valued dimension to integer
+                     * e.g. mars type or stream */
+                    lv = string_to_unique_number(axis, sv);
+                }
+                values[j] = lv;
+            }
         }
 
         stat = nc_inq_varid(ncid, (lowaxis), &var_id);
@@ -3944,7 +3978,11 @@ int main(int argc, char *argv[])
     int i, ret = 0;
 
     /* GRIB-413: Collect all program arguments into a string */
+    const size_t maxLen = sizeof(argvString);
+    size_t currLen = 0;
     for (i=0; i<argc; ++i) {
+        currLen += strlen(argv[i]);
+        if ( currLen >= maxLen-1 ) break;
         strcat(argvString, argv[i]);
         if (i != argc-1) strcat(argvString, " ");
     }

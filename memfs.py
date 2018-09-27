@@ -34,7 +34,7 @@ for directory in dirs:
     dname = os.path.basename(directory)
     NAMES.append(dname)
 
-    for dirpath, dirnames, files in os.walk(directory):
+    for dirpath, dirnames, files in os.walk(directory, followlinks=True):
         if EXCLUDED in dirnames:
             print('Note: %s/%s will not be included.' % (dirpath,EXCLUDED))
 

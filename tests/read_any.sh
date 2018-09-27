@@ -19,7 +19,7 @@ outfile=${data_dir}/read_any.out
 #  exit 0
 #fi
 
-$test_dir/read_any $infile > ${outfile}
+$EXEC $test_dir/read_any $infile > ${outfile}
 
 diff ${outfile} ${data_dir}/read_any.ok
 

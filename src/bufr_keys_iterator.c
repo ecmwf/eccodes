@@ -21,14 +21,14 @@ bufr_keys_iterator* codes_bufr_keys_iterator_new(grib_handle* h, unsigned long f
                          "Invalid keys iterator for message: please use codes_keys_iterator_new");
         return NULL;
     }
-    
+
     ki= (bufr_keys_iterator*)grib_context_malloc_clear(h->context,sizeof(bufr_keys_iterator));
     if (!ki) return NULL;
 
     ki->filter_flags = filter_flags;
     ki->handle       = h;
     DebugAssert(h->product_kind == PRODUCT_BUFR);
-    ki->names        = NULL;
+    ki->key_name = NULL;
     ki->i_curr_attribute=0;
     ki->accessor_flags_only= GRIB_ACCESSOR_FLAG_DUMP;
     ki->accessor_flags_skip= GRIB_ACCESSOR_FLAG_HIDDEN; /*ECC-568*/
@@ -132,7 +132,10 @@ static int next_attribute(bufr_keys_iterator* kiter)
             return 0;
         }
         prefix=(char*)grib_context_malloc_clear(kiter->current->context,strlen(kiter->prefix)+strlen(kiter->attributes[i_curr_attribute]->name)+3);
-        sprintf(prefix,"%s->%s",kiter->prefix,kiter->attributes[i_curr_attribute]->name);
+        /*sprintf(prefix,"%s->%s",kiter->prefix,kiter->attributes[i_curr_attribute]->name);*/
+        strcpy(prefix, kiter->prefix);  /* strcpy and strcat here are much faster than sprintf */
+        strcat(prefix, "->");
+        strcat(prefix, kiter->attributes[i_curr_attribute]->name);
         grib_context_free(kiter->current->context,kiter->prefix);
         kiter->prefix=prefix;
         kiter->attributes=kiter->attributes[i_curr_attribute]->attributes;
@@ -143,6 +146,10 @@ static int next_attribute(bufr_keys_iterator* kiter)
 
 int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter)
 {
+    /* ECC-734: de-allocate last key name stored */
+    grib_context_free(kiter->handle->context, kiter->key_name);
+    kiter->key_name = NULL;
+
     if(kiter->at_start)
     {
         kiter->current  = kiter->handle->root->block->first;
@@ -179,35 +186,28 @@ char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter)
     int *r=0;
     char* ret=0;
     grib_context* c = kiter->handle->context;
-    grib_string_list* sl = NULL;
     DebugAssert(kiter->current);
 
     if (kiter->prefix) {
         int iattribute=kiter->i_curr_attribute-1;
-        ret=(char*)grib_context_malloc_clear(kiter->handle->context,strlen(kiter->prefix)+strlen(kiter->attributes[iattribute]->name)+10);
-        sprintf(ret,"%s->%s",kiter->prefix,kiter->attributes[iattribute]->name);
+        ret=(char*)grib_context_malloc_clear(c,strlen(kiter->prefix)+strlen(kiter->attributes[iattribute]->name)+10);
+        /*sprintf(ret,"%s->%s",kiter->prefix,kiter->attributes[iattribute]->name);*/
+        strcpy(ret, kiter->prefix); /* strcpy and strcat here are much faster than sprintf */
+        strcat(ret, "->");
+        strcat(ret, kiter->attributes[iattribute]->name);
     } else {
-        ret=(char*)grib_context_malloc_clear(kiter->handle->context,strlen(kiter->current->name)+10);
+        ret=(char*)grib_context_malloc_clear(c,strlen(kiter->current->name)+10);
 
         if (kiter->current->flags & GRIB_ACCESSOR_FLAG_BUFR_DATA) {
             r=(int*)grib_trie_get(kiter->seen,kiter->current->name);
             sprintf(ret,"#%d#%s",*r,kiter->current->name);
         } else {
-            sprintf(ret,"%s",kiter->current->name);
+            strcpy(ret,kiter->current->name);
         }
     }
 
-    /* Store in list of names to be deleted later */
-    sl=(grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
-    sl->value = ret;
-    if (!kiter->names) {
-        kiter->names = sl;
-    } else {
-        /* Add to beginning of list for speed. Order doesn't matter */
-        grib_string_list* tmp = kiter->names;
-        kiter->names = sl;
-        sl->next = tmp;
-    }
+    kiter->key_name = ret; /*store reference to last key name*/
+
     return ret;
 }
 
@@ -220,14 +220,7 @@ int codes_bufr_keys_iterator_delete(bufr_keys_iterator* kiter)
 {
     if (kiter) {
         grib_context* c = kiter->handle->context;
-        grib_string_list* sl = kiter->names;
-        while(sl) {
-            grib_string_list* n = sl->next;
-            grib_context_free(c, sl->value);
-            grib_context_free(c, sl);
-            sl = n;
-        }
-        kiter->names=NULL;
+        kiter->key_name = NULL;
         if(kiter->seen)
             grib_trie_delete(kiter->seen);
         grib_context_free(c,kiter);

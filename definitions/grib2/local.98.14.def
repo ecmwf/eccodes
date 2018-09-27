@@ -1,6 +1,4 @@
-# Copyright 2005-2018 ECMWF.
-
-# Definition 14, Brightness temperature
+# Local definition 14: Brightness temperature
 
 unsigned[4] channelNumber : dump ;
 alias mars.channel = channelNumber;

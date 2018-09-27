@@ -79,7 +79,7 @@ static void write_message(grib_handle* h,const char* str)
 {
     const void *m; size_t s;
     char fname[1024]={0,};
-    FILE* fh=NULL;
+    FILE* fh;
 
     grib_get_message(h,&m,&s);
     sprintf(fname,"%s_%d.metar",str,write_count);
@@ -159,8 +159,7 @@ grib_option grib_options[]={
         {"c:",0,0,0,1,0},
         {"S:","start","First field to be processed.\n",0,1,0},
         {"E:","end","Last field to be processed.\n",0,1,0},
-        {"a",0,"-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n"
-                ,0,1,0},
+        {"a",0,"-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n",0,1,0},
         {"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
         {"R:",0,0,0,1,0},
         {"A:",0,0,0,1,0},
@@ -181,14 +180,14 @@ int counter=0;
 int start=-1;
 int end=-1;
 
-char* grib_tool_description=
+const char* grib_tool_description=
         "Compare METAR messages contained in two files."
         "\n\tIf some differences are found it fails returning an error code."
-        "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
+        "\n\tFloating-point values are compared exactly by default, different tolerance can be defined see -P -A -R."
         "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
-char* grib_tool_name="metar_compare";
-char* grib_tool_usage="[options] "
+const char* grib_tool_name="metar_compare";
+const char* grib_tool_usage="[options] "
         "file file";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
@@ -980,8 +979,7 @@ static int compare_all_dump_keys(grib_handle* h1,grib_handle* h2,grib_runtime_op
 {
     int ret=0;
     const char* name=NULL;
-    grib_keys_iterator* iter  = NULL;
-    iter=grib_keys_iterator_new(h1,0,NULL);
+    grib_keys_iterator* iter = grib_keys_iterator_new(h1,0,NULL);
 
     if (!iter) {
         printf("ERROR: unable to get iterator\n");

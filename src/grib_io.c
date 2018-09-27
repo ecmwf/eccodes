@@ -694,6 +694,10 @@ static int read_BUFR(reader *r)
         i++;
     }
 
+    if(length==0) {
+        return GRIB_INVALID_MESSAGE;
+    }
+
     /* Edition number */
     if(r->read(r->read_data,&tmp[i],1,&err) != 1 || err)
         return err;
@@ -899,7 +903,7 @@ static int read_any_gts(reader *r)
     unsigned long magic = 0;
     unsigned long start = 0x010d0d0a;
     unsigned long theEnd = 0x0d0d0a03;
-    unsigned char tmp[32]={0,}; /* Should be enough */
+    unsigned char tmp[128]={0,}; /* See ECC-735 */
     size_t message_size=0;
     size_t already_read=0;
     int i=0;

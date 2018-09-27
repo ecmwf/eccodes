@@ -10,8 +10,6 @@
 
 . ./include.sh
 
-#set -x
-
 #Enter data dir
 cd ${data_dir}/bufr
 
@@ -31,6 +29,13 @@ rm -f $fTmp
 res_get=${label}".get.test"
 rm -f $res_get
 
+# Check identidier. Edition 3 and 4
+id=`${tools_dir}/bufr_get -p edition,identifier avhn_87.bufr`
+[ "$id" = "3 BUFR" ]
+id=`${tools_dir}/bufr_get -p edition,identifier aaen_55.bufr`
+[ "$id" = "4 BUFR" ]
+
+
 #-------------------------------------------
 # Test "-p" switch
 #-------------------------------------------
@@ -46,7 +51,6 @@ ${tools_dir}/bufr_get -p totalLength,bufrHeaderCentre,bufrHeaderSubCentre,master
 #Write the values into a file and compare with ref
 cat $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_get
 diff $ref_get $res_get
-
 
 #-------------------------------------------
 # ECC-236

@@ -110,8 +110,6 @@ struct string_count {
     string_count* next;
 };
 
-static int depth=0;
-
 static void init_class      (grib_dumper_class* c){}
 
 static int init(grib_dumper* d)
@@ -188,7 +186,6 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
         fprintf(self->dumper.out, "%g",values[i]);
 
-        depth-=2;
         fprintf(self->dumper.out,"}\n");
         grib_context_free(c,values);
     } else {
@@ -217,7 +214,6 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
         dump_attributes(d,a,prefix);
         if (dofree) grib_context_free(c,prefix);
-        depth-=2;
     }
 
     (void)err; /* TODO */
@@ -260,7 +256,6 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* p
         if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
         fprintf(self->dumper.out,"%g", values[i]);
 
-        depth-=2;
         fprintf(self->dumper.out,"}\n");
         grib_context_free(c,values);
     } else {
@@ -281,7 +276,6 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* p
         dump_attributes(d,a,prefix1);
 
         grib_context_free(c,prefix1);
-        depth-=2;
     }
 
     (void)err; /* TODO */
@@ -319,7 +313,6 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             
             dump_attributes(d,a,prefix);
             if (dofree) grib_context_free(c,prefix);
-            depth-=2;
         }
         return;
     }
@@ -360,7 +353,6 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         else
             fprintf(self->dumper.out,"%ld ",values[i]);
 
-        depth-=2;
         fprintf(self->dumper.out,"}\n");
         grib_context_free(a->context,values);
     } else {
@@ -389,7 +381,6 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
         dump_attributes(d,a,prefix);
         if (dofree) grib_context_free(c,prefix);
-        depth-=2;
     }
     (void)err; /* TODO */
 }
@@ -430,7 +421,6 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         }
         if (icount>cols || i==0) {fprintf(self->dumper.out,"\n      ");icount=0;}
         fprintf(self->dumper.out,"%ld ",values[i]);
-        depth-=2;
         fprintf(self->dumper.out,"}\n");
         grib_context_free(a->context,values);
 
@@ -453,7 +443,6 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         dump_attributes(d,a,prefix1);
 
         grib_context_free(c,prefix1);
-        depth-=2;
     }
     (void)err; /* TODO */
 }
@@ -502,7 +491,6 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
 
         dump_attributes(d,a,prefix);
         if (dofree) grib_context_free(c,prefix);
-        depth-=2;
     }
 }
 
@@ -530,7 +518,6 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     self->begin=0;
 
     if (self->isLeaf==0) {
-        depth+=2;
         if ((r=compute_bufr_key_rank(h,self->keys,a->name))!=0)
             fprintf(self->dumper.out,"#%d#%s=",r,a->name);
         else
@@ -548,13 +535,10 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     err = grib_unpack_string_array(a,values,&size);
 
     fprintf(self->dumper.out, "{");
-    depth+=2;
     for  (i=0;i<size-1;i++) {
         fprintf(self->dumper.out,"    \"%s\",\n",values[i]);
     }
     fprintf(self->dumper.out,"    \"%s\"\n",values[i]);
-
-    depth-=2;
 
     fprintf(self->dumper.out, "}\n");
 
@@ -570,7 +554,6 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 
         dump_attributes(d,a,prefix);
         if (dofree) grib_context_free(c,prefix);
-        depth-=2;
     }
 
     grib_context_free(c,values);
@@ -615,7 +598,6 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 
     if (self->isLeaf==0) {
-        depth+=2;
         if (r!=0)
             fprintf(self->dumper.out,"#%d#%s=",r,a->name);
         else
@@ -636,7 +618,6 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
         dump_attributes(d,a,prefix);
         if (dofree) grib_context_free(c,prefix);
-        depth-=2;
     }
 
     grib_context_free(c,value);
@@ -682,10 +663,8 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
             !grib_inline_strcmp(a->name,"META")
     ) {
         grib_handle* h=grib_handle_of_accessor(a);
-        depth=2;
         self->begin=1;
         self->empty=1;
-        depth+=2;
         _dump_long_array(h,self->dumper.out,"dataPresentIndicator");
         _dump_long_array(h,self->dumper.out,"delayedDescriptorReplicationFactor");
         _dump_long_array(h,self->dumper.out,"shortDelayedDescriptorReplicationFactor");
@@ -693,15 +672,12 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         /* Do not show the inputOverriddenReferenceValues array. That's more for ENCODING */
         /*_dump_long_array(h,self->dumper.out,"inputOverriddenReferenceValues","inputOverriddenReferenceValues");*/
         grib_dump_accessors_block(d,block);
-        depth-=2;
     } else if (!grib_inline_strcmp(a->name,"groupNumber")) {
         if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
             return;
         self->begin=1;
         self->empty=1;
-        depth+=2;
         grib_dump_accessors_block(d,block);
-        depth-=2;
     } else {
         grib_dump_accessors_block(d,block);
     }

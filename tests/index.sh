@@ -19,11 +19,11 @@ infile=${data_dir}/index.grib
 #  exit 0
 #fi
 
-${test_dir}/index ${infile} > index.out
+$EXEC ${test_dir}/index ${infile} > index.out
 
 diff index.out ${data_dir}/index.ok
 
-${test_dir}/read_index ${infile} > index.out
+$EXEC ${test_dir}/read_index ${infile} > index.out
 
 diff index.out ${data_dir}/index.ok
 

@@ -115,7 +115,7 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
            identical and we want to copy what can be copied and skip what
            cannot be copied because is not in the output handle
          */
-        err=codes_copy_key(hin, hout, name, 0);
+        err=codes_copy_key(hin, hout, name, GRIB_TYPE_UNDEFINED);
         if (err==0) nkeys++;
     }
 

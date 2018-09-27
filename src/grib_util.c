@@ -340,7 +340,7 @@ static grib_trie* init_list(const char* name)
 /* For debugging purposes */
 static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
         const double* data_values, const size_t data_values_count,  /* the data pay load */
-        const grib_values *values, const size_t count)  /* keys and their values */
+        const grib_values *keyval_pairs, const size_t count)  /* keys and their values */
 {
     size_t i=0;
     int isConstant = 1;
@@ -349,14 +349,14 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
 
     for(i=0; i<count; i++)
     {
-        switch(values[i].type)
+        switch(keyval_pairs[i].type)
         {
         case GRIB_TYPE_LONG: printf("ECCODES DEBUG  grib_util: => %s =  %ld;\n"
-                ,values[i].name,(long)values[i].long_value); break;
+                ,keyval_pairs[i].name,(long)keyval_pairs[i].long_value); break;
         case GRIB_TYPE_DOUBLE: printf("ECCODES DEBUG  grib_util: => %s = %.16e;\n"
-                ,values[i].name,values[i].double_value); break;
+                ,keyval_pairs[i].name,keyval_pairs[i].double_value); break;
         case GRIB_TYPE_STRING: printf("ECCODES DEBUG  grib_util: => %s = \"%s\";\n"
-                ,values[i].name,values[i].string_value); break;
+                ,keyval_pairs[i].name,keyval_pairs[i].string_value); break;
         }
     }
 
@@ -576,8 +576,8 @@ static int check_geometry(grib_handle* handle, const grib_util_grid_spec2* spec,
             if (specified_as_global) strcpy(msg, "Specified to be global (in spec)");
             sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (sum != data_values_count) {
-                fprintf(stderr, "GRIB_UTIL_SET_SPEC: Invalid reduced gaussian grid: %s but data_values_count != sum_of_pl_array (%lu!=%lu)\n",
-                        msg, data_values_count, sum);
+                fprintf(stderr, "GRIB_UTIL_SET_SPEC: Invalid reduced gaussian grid: %s but data_values_count != sum_of_pl_array (%ld!=%ld)\n",
+                        msg, (long)data_values_count, (long)sum);
                 return GRIB_WRONG_GRID;
             }
         }
@@ -1389,7 +1389,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         if (global_grid) {
             size_t sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (data_values_count != sum) {
-                printf("invalid reduced gaussian grid: specified as global, data_values_count=%lu but sum of pl array=%lu\n",data_values_count,sum);
+                printf("invalid reduced gaussian grid: specified as global, data_values_count=%ld but sum of pl array=%ld\n",
+                        (long)data_values_count, (long)sum);
                 *err = GRIB_WRONG_GRID;
                 goto cleanup;
             }
@@ -1543,6 +1544,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     if (expandBoundingBox) {
         int e = grib_set_long(outh, "expandedBoundingBox", 1);
         Assert(e == 0);
+        Assert(!global_grid); /* ECC-576: "global" should not be set */
     }
 
     if ( (*err = check_geometry(outh, spec, data_values_count, global_grid)) != GRIB_SUCCESS)
@@ -1749,7 +1751,7 @@ static void set_value(grib_values* value,char* str,int equal)
  'values'           The array we populate and return
  'count'            The number of elements
  */
-int parse_keyval_string(char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count)
+int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count)
 {
     char* p;
     int i=0;

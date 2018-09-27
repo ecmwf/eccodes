@@ -598,8 +598,6 @@ static grib_index_key* grib_read_index_keys(grib_context* c,FILE* fh,int *err)
     if (*err) return NULL;
 
     keys->values_count=values_count;
-    if (*err) return NULL;
-
 
     keys->next=grib_read_index_keys(c,fh,err);
     if (*err) return NULL;

@@ -10,4 +10,4 @@
 
 . ./include.sh
 
-${test_dir}/bufr_get_element
+$EXEC ${test_dir}/bufr_get_element

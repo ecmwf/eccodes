@@ -36,10 +36,10 @@ grib_option grib_options[]={
     {"V",0,0,0,1,0}
 };
 
-char* grib_tool_description="Print a latitude, longitude, data values list.\n"
+const char* grib_tool_description="Print a latitude, longitude, data values list.\n"
                             "\tNote: Rotated grids are first unrotated";
-char* grib_tool_name="grib_get_data";
-char* grib_tool_usage="[options] grib_file grib_file ...";
+const char* grib_tool_name="grib_get_data";
+const char* grib_tool_usage="[options] grib_file grib_file ...";
 
 extern FILE* dump_file;
 
@@ -67,6 +67,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {
+    exit_if_input_is_directory(grib_tool_name, file->name);
     return 0;
 }
 

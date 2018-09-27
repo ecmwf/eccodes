@@ -36,6 +36,9 @@ do
 
   # Generate Python code from BUFR file
   ${tools_dir}/bufr_dump -Epython $inputBufr > $tempSrc
+
+  #pylint --disable=E0602,R,C,W $tempSrc
+
   # The python code always creates an output file called outfile.bufr
   $PYTHON $tempSrc
 

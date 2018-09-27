@@ -11,6 +11,12 @@
 . ./include.sh
 
 REDIRECT=/dev/null
+cd ${data_dir}/bufr
+
+if [ $HAVE_MEMFS -eq 1 ]; then
+    unset ECCODES_DEFINITION_PATH
+    unset ECCODES_SAMPLES_PATH
+fi
 
 # Decide if we have the JSON verifier commandline utility
 JSON_VERIF="json_xs"
@@ -18,8 +24,6 @@ JSON_CHECK=""
 if command -v $JSON_VERIF >/dev/null 2>&1; then
   JSON_CHECK=$JSON_VERIF
 fi
-
-cd ${data_dir}/bufr
 
 bufr_files=`cat bufr_data_files.txt`
 for file in ${bufr_files}

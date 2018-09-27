@@ -28,11 +28,11 @@ grib_option grib_options[]={
         {"v",0,0,1,0,0}
 };
 
-char* grib_tool_description="Get values of some keys from a GTS file."
+const char* grib_tool_description="Get values of some keys from a GTS file."
         "\n\tIt is similar to gts_ls, but fails returning an error code "
         "\n\twhen an error occurs (e.g. key not found).";
-char* grib_tool_name="gts_get";
-char* grib_tool_usage="[options] file file ...";
+const char* grib_tool_name="gts_get";
+const char* grib_tool_usage="[options] file file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 int mode=0;

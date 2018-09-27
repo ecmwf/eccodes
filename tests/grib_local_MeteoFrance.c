@@ -9,7 +9,7 @@
  */
 
 #include "grib_api.h"
-
+#include <assert.h>
 /*
  * Test FA conversion to grib_api
  * philippe.marguinaud@meteo.fr 02/2016
@@ -847,6 +847,10 @@ int main (int argc, char * argv[])
 {
     grib_handle* h = NULL;
     size_t len = 0;
+    const char* outfile;
+
+    assert(argc==2);
+    outfile = argv[1];
 
     GRIB_CHECK (((h = grib_handle_new_from_samples (NULL, "regular_ll_pl_grib2")) == NULL), 0);
     /*GRIB_CHECK (((h = grib_handle_new_from_samples (NULL, "reduced_gg_ml_grib2")) == NULL), 0);*/
@@ -905,7 +909,7 @@ int main (int argc, char * argv[])
     GRIB_CHECK (grib_set_long (h, "LLCOSP", 0), 0);
     GRIB_CHECK (grib_set_long (h, "INBITS", 16), 0);
 
-    GRIB_CHECK(grib_write_message(h, "output.local_MeteoFrance.grib", "w"), 0);
+    GRIB_CHECK(grib_write_message(h, outfile, "w"), 0);
 
     GRIB_CHECK (grib_handle_delete (h), 0);
 

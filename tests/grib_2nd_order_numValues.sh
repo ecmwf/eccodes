@@ -10,4 +10,4 @@
 
 . ./include.sh
 
-exec $test_dir/grib_2nd_order_numValues
+$EXEC $test_dir/grib_2nd_order_numValues

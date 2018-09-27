@@ -267,16 +267,6 @@ static int is_bitmap_start_defined(grib_accessor_bufr_data_array *self)
     return self->bitmapStart==-1 ? 0 : 1;
 }
 
-int accessor_bufr_data_array_create_keys(grib_accessor* a,long onlySubset,long startSubset,long endSubset)
-{
-    return create_keys(a,onlySubset,startSubset,endSubset);
-}
-
-int accessor_bufr_data_array_process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset)
-{
-    return process_elements(a,flag,onlySubset,startSubset,endSubset);
-}
-
 static size_t get_length(grib_accessor* a)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
@@ -712,6 +702,19 @@ static void set_missing_long_to_double(grib_darray* dvalues)
     }
 }
 
+/* ECC-750: The 'factor' argument is 10^-scale */
+static int descriptor_get_min_max(bufr_descriptor* bd, long width, long reference, double factor,
+                                  double* minAllowed, double* maxAllowed)
+{
+    /* Maximum value is allowed to be the largest number (all bits 1) which means it's MISSING */
+    unsigned long max1 = (1UL << width) - 1; /* Highest value for number with 'width' bits */
+    DebugAssert(width > 0 && width <= 32);
+
+    *maxAllowed = (max1 + reference) * factor;
+    *minAllowed = reference * factor;
+    return GRIB_SUCCESS;
+}
+
 static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr_descriptor* bd,
         grib_accessor_bufr_data_array* self,grib_darray* dvalues)
 {
@@ -721,7 +724,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     long localReference=0,localWidth=0,modifiedWidth,modifiedReference;
     long reference,allone;
     double localRange,modifiedFactor,inverseFactor;
-    size_t ii;
+    size_t ii, index_of_min, index_of_max;
     int nvals = 0;
     double min=0,max=0,maxAllowed,minAllowed;
     double* v=NULL;
@@ -741,8 +744,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     inverseFactor= grib_power(bd->scale,10);
     modifiedWidth= bd->width;
 
-    maxAllowed=(grib_power(modifiedWidth,2)+modifiedReference)*modifiedFactor;
-    minAllowed=modifiedReference*modifiedFactor;
+    descriptor_get_min_max(bd, modifiedWidth, modifiedReference, modifiedFactor, &minAllowed, &maxAllowed);
 
     nvals=grib_iarray_used_size(self->iss_list);
     if (nvals<=0) return GRIB_NO_VALUES;
@@ -759,10 +761,19 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
             grib_set_bits_on(buff->data,pos,modifiedWidth);
         } else {
             if (*v > maxAllowed || *v < minAllowed) {
-                return GRIB_OUT_OF_RANGE; /* ECC-611 */
+                if (dont_fail_if_out_of_range) {
+                    grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
+                                                    "Setting it to missing value\n", bd->shortName, *v, minAllowed, maxAllowed);
+                    grib_set_bits_on(buff->data,pos,modifiedWidth);
+                } else {
+                    grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
+                                                    bd->shortName, *v, minAllowed, maxAllowed);
+                    return GRIB_OUT_OF_RANGE; /* ECC-611 */
+                }
+            } else {
+                lval=round(*v * inverseFactor)-modifiedReference;
+                grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
             }
-            lval=round(*v * inverseFactor)-modifiedReference;
-            grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
         }
         grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
         grib_encode_unsigned_longb(buff->data,localWidth,pos,6);
@@ -795,7 +806,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     }
 
     ii=0;
-    while (*v==GRIB_MISSING_DOUBLE && ii<nvals) {
+    while (ii<nvals && *v==GRIB_MISSING_DOUBLE) {
         thereIsAMissing=1;
         v++;
         ii++;
@@ -823,19 +834,25 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
             break;
         }
     }
-    ii=0;
+    ii=0; index_of_min=index_of_max=0;
     v=values;
     while (ii<nvals) {
-        if (*v<min && *v!=GRIB_MISSING_DOUBLE) min=*v;
-        if (*v>max && *v!=GRIB_MISSING_DOUBLE) max=*v;
+        if (*v<min && *v!=GRIB_MISSING_DOUBLE) { min=*v; index_of_min=ii; }
+        if (*v>max && *v!=GRIB_MISSING_DOUBLE) { max=*v; index_of_max=ii; }
         if (*v == GRIB_MISSING_DOUBLE) thereIsAMissing=1;
         ii++;
         v++;
     }
-    if (max>maxAllowed && max!=GRIB_MISSING_DOUBLE)
+    if (max>maxAllowed && max!=GRIB_MISSING_DOUBLE) {
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Maximum value (value[%lu]=%g) out of range (maxAllowed=%g).",
+                                            bd->shortName, index_of_max, max, maxAllowed, index_of_max);
         return GRIB_OUT_OF_RANGE;
-    if (min<minAllowed && min!=GRIB_MISSING_DOUBLE)
+    }
+    if (min<minAllowed && min!=GRIB_MISSING_DOUBLE) {
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Minimum value (value[%lu]=%g) out of range (minAllowed=%g).",
+                                            bd->shortName, index_of_min, min, minAllowed);
         return GRIB_OUT_OF_RANGE;
+    }
 
     reference=round(min*inverseFactor);
     localReference=reference-modifiedReference;
@@ -898,8 +915,8 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
     modifiedReference= bd->reference;
     modifiedFactor= bd->factor;
     modifiedWidth= bd->width;
-    maxAllowed=(grib_power(modifiedWidth,2)+modifiedReference)*modifiedFactor;
-    minAllowed=modifiedReference*modifiedFactor;
+
+    descriptor_get_min_max(bd, modifiedWidth, modifiedReference, modifiedFactor, &minAllowed, &maxAllowed);
 
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+modifiedWidth);
     if (value==GRIB_MISSING_DOUBLE) {
@@ -913,7 +930,7 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
             value = GRIB_MISSING_DOUBLE;  /* Ignore the bad value and instead use 'missing' */
             grib_set_bits_on(buff->data,pos,modifiedWidth);
         } else {
-            grib_context_log(c, GRIB_LOG_DEBUG, "encode_double_value: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
+            grib_context_log(c, GRIB_LOG_ERROR, "encode_double_value: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
                              bd->shortName, value, minAllowed, maxAllowed);
             return GRIB_OUT_OF_RANGE;
         }
@@ -1503,9 +1520,11 @@ static int build_bitmap_new_data(grib_accessor_bufr_data_array *self,unsigned ch
             iDelayedReplication=iBitmapOperator+2;
             switch (descriptors[iDelayedReplication]->code) {
             case 31001:
+                if(!self->inputReplications) {grib_context_log(c,GRIB_LOG_ERROR,"build_bitmap_new_data: No inputReplications"); return GRIB_ENCODING_ERROR;}
                 bitmapSize=self->inputReplications[self->iInputReplications];
                 break;
             case 31002:
+                if(!self->inputExtendedReplications) {grib_context_log(c,GRIB_LOG_ERROR,"build_bitmap_new_data: No inputExtendedReplications");return GRIB_ENCODING_ERROR;}
                 bitmapSize=self->inputExtendedReplications[self->iInputExtendedReplications];
                 break;
             default :
@@ -1731,12 +1750,23 @@ static void set_creator_name(grib_action* creator,int code)
     }
 }
 
+/* See ECC-741 */
+static int adding_extra_key_attributes(grib_handle* h)
+{
+    long skip = 0; /* default is to add */
+    int err = 0;
+    err = grib_get_long(h,"skipExtraKeyAttributes",&skip);
+    if (err) return 1;
+    return (!skip);
+}
+
 static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_accessor* attribute,grib_section* section,long ide,long subset,int dump,int count)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     char code[10]={0,};
     char* temp_str = NULL;
     int idx=0;
+    int add_extra_attributes = 1;
     unsigned long flags=GRIB_ACCESSOR_FLAG_READ_ONLY;
     grib_action operatorCreator = {0, };
     grib_accessor* elementAccessor=NULL;
@@ -1750,6 +1780,8 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
     operatorCreator.flags     = GRIB_ACCESSOR_FLAG_READ_ONLY;
     operatorCreator.set        = 0;
     operatorCreator.name="operator";
+
+    add_extra_attributes = adding_extra_key_attributes(grib_handle_of_accessor(a));
 
     if(attribute) { DebugAssert(attribute->parent==NULL); }
 
@@ -1804,21 +1836,23 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
         grib_sarray_push(a->context, self->tempStrings, temp_str);/* ECC-325: store alloc'd string (due to strdup) for clean up later */
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP | flags);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+        if (add_extra_attributes) {
+            attribute=create_attribute_variable("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP | flags);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("scale",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->scale,flags);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+            attribute=create_attribute_variable("scale",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->scale,flags);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("reference",section,GRIB_TYPE_DOUBLE,0,self->expanded->v[idx]->reference,0,flags);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+            attribute=create_attribute_variable("reference",section,GRIB_TYPE_DOUBLE,0,self->expanded->v[idx]->reference,0,flags);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("width",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->width,flags);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+            attribute=create_attribute_variable("width",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->width,flags);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
+        }
         break;
     case 2:
         set_creator_name(&creator,self->expanded->v[idx]->code);
@@ -1876,21 +1910,23 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
         if (!attribute) return NULL;
         grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+        if (add_extra_attributes) {
+            attribute=create_attribute_variable("units",section,GRIB_TYPE_STRING,self->expanded->v[idx]->units,0,0,GRIB_ACCESSOR_FLAG_DUMP);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("scale",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->scale,flags);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+            attribute=create_attribute_variable("scale",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->scale,flags);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("reference",section,GRIB_TYPE_DOUBLE,0,self->expanded->v[idx]->reference,0,flags);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+            attribute=create_attribute_variable("reference",section,GRIB_TYPE_DOUBLE,0,self->expanded->v[idx]->reference,0,flags);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
 
-        attribute=create_attribute_variable("width",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->width,flags);
-        if (!attribute) return NULL;
-        grib_accessor_add_attribute(elementAccessor,attribute,0);
+            attribute=create_attribute_variable("width",section,GRIB_TYPE_LONG,0,0,self->expanded->v[idx]->width,flags);
+            if (!attribute) return NULL;
+            grib_accessor_add_attribute(elementAccessor,attribute,0);
+        }
         break;
     }
 
@@ -2144,7 +2180,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
         grib_sarray_delete        (c, self->tempStrings);
         self->tempStrings=NULL;
     }
-    self->tempStrings = grib_sarray_new(c, self->numberOfSubsets, 10);
+    self->tempStrings = grib_sarray_new(c, self->numberOfSubsets, 500);
 
     end= self->compressedData ? 1 : self->numberOfSubsets;
     groupNumber=1;
@@ -2289,9 +2325,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 /* forceGroupClosure=1; */
                 /* reset_qualifiers(significanceQualifierGroup); */
             } else if (descriptor->X==33 && !qualityPresent) {
-                if (c->bufr_quality_without_bitmap == 1) {
-                    dump=1;  /* ECC-690: percentConfidence WITHOUT a bitmap! e.g. NOAA GOES16 BUFR */
-                }
+                dump=1;  /* ECC-690: percentConfidence WITHOUT a bitmap! e.g. NOAA GOES16 BUFR */
             }
 
             if (ide==0 && !self->compressedData) {
@@ -2358,12 +2392,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     if(descriptor->code==33007) {
                         add_key = 0; /* Standard behaviour */
                         if (!qualityPresent) {
-                            if (c->bufr_quality_without_bitmap) {
-                                add_key = 1;
-                            } else {
-                                grib_context_log(c, GRIB_LOG_WARNING,
-                                                 "create_keys: descriptor=%6.6ld: Class 33 quality information without a bitmap!",descriptor->code);
-                            }
+                            add_key = 1;
                         }
                     }
                     if (add_key) {

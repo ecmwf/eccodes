@@ -31,7 +31,6 @@ cat > $tempRules <<EOF
   print "#4#percentConfidence=[#4#percentConfidence!30]";
 EOF
 
-export ECCODES_BUFR_QUALITY_WITHOUT_BITMAP=1
 ${tools_dir}/codes_bufr_filter $tempRules $input > $tempOut
 
 cat > $tempRef << EOF
@@ -78,13 +77,5 @@ diff $tempRef $tempOut
 echo 'set unpack=1;set extractSubset=4;set doExtractSubsets=1;write;' | ${tools_dir}/codes_bufr_filter -o $tempBufr - $input
 echo 'set unpack=1; assert(#2#percentConfidence==62); assert(#4#percentConfidence==63);' | ${tools_dir}/codes_bufr_filter - $tempBufr
 
-
-# Unset environment variable and those percentConfidence keys should disappear
-unset ECCODES_BUFR_QUALITY_WITHOUT_BITMAP
-set +e
-${tools_dir}/codes_bufr_filter $tempRules $input
-status=$?
-set -e
-[ $status -ne 0 ]
 
 rm -f $tempRules $tempRef $tempOut $tempBufr

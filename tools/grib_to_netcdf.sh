@@ -18,7 +18,7 @@ echo "\\verbatim"
 echo ">grib_to_netcdf -T -o output.nc input.grib"
 echo "\\endverbatim"
 
-echo "-# Produce NetCDF with data type of FLOAT (32bit floating point, for higher precision)."
+echo "-# Produce NetCDF with data type of FLOAT (32bit floating-point, for higher precision)."
 echo "Note these types were chosen to provide a reasonably wide range of trade-offs between data precision and number of bits required for each value"
 echo "\\verbatim"
 echo ">grib_to_netcdf -D NC_FLOAT -o output.nc input.grib"

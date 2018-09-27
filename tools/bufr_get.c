@@ -35,11 +35,11 @@ grib_option grib_options[]={
         {"v",0,0,1,0,0}
 };
 
-char* grib_tool_description="Get values of some header keys from a BUFR file."
+const char* grib_tool_description="Get values of some header keys from a BUFR file."
         "\n\tIt is similar to bufr_ls, but fails returning an error code "
         "\n\twhen an error occurs (e.g. key not found).";
-char* grib_tool_name="bufr_get";
-char* grib_tool_usage="[options] file file ...";
+const char* grib_tool_name="bufr_get";
+const char* grib_tool_usage="[options] file file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 grib_nearest* n=NULL;
@@ -71,6 +71,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {
+    exit_if_input_is_directory(grib_tool_name, file->name);
     return 0;
 }
 

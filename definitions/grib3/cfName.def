@@ -49,7 +49,7 @@
 	 parameterCategory = 2 ;
 	}
 #Boundary layer dissipation
-'dissipation_in_atmosphere_boundary_layer' = {
+'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 discipline = 0 ;
 	 parameterNumber = 20 ;
 	 parameterCategory = 2 ;
@@ -71,7 +71,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Mean sea level pressure
-'air_pressure_at_sea_level' = {
+'air_pressure_at_mean_sea_level' = {
 	 discipline = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;

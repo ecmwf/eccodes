@@ -124,13 +124,13 @@ int counter=0;
 int start=-1;
 int end=-1;
 
-char* grib_tool_description=
+const char* grib_tool_description=
         "Compare GTS messages contained in two files."
         "\n\tIf some differences are found it fails returning an error code."
         "\n\tDefault behaviour: bit-by-bit compare, same order in files.";
 
-char* grib_tool_name="gts_compare";
-char* grib_tool_usage="[options] "
+const char* grib_tool_name="gts_compare";
+const char* grib_tool_usage="[options] "
         "file file";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);

@@ -174,12 +174,11 @@ static char* dval_to_string(grib_context* c, double v)
 static char* break_line(grib_context* c, const char* input)
 {
     /* Break a long line using Fortran continuation characters */
-    char* result=NULL;
     char* a_token = NULL;
     int first = 1;
     const size_t len = strlen(input);
     /* Add a bit more for inserted newlines and continuation characters */
-    result = (char*)grib_context_malloc_clear(c,sizeof(char)*len+100);
+    char* result = (char*)grib_context_malloc_clear(c,sizeof(char)*len+100);
 
     /* No need to alter input which is already too short or has newlines */
     if (len < 70 || strchr(input, '\n')) {
@@ -376,9 +375,11 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
     char* sval = NULL;
     grib_context* c=a->context;
     grib_handle* h=grib_handle_of_accessor(a);
+    int doing_unexpandedDescriptors=0;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0  ) return;
 
+    doing_unexpandedDescriptors = (strcmp(a->name, "unexpandedDescriptors")==0);
     grib_value_count(a,&count);
     size=count;
 
@@ -428,20 +429,23 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
         fprintf(self->dumper.out,"/)\n");
         grib_context_free(a->context,values);
 
-        if ((r=compute_bufr_key_rank(h,self->keys,a->name))!=0)
+        if ((r=compute_bufr_key_rank(h,self->keys,a->name))!=0) {
             fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',ivalues)\n",r,a->name);
-        else
+        } else {
+            if (doing_unexpandedDescriptors) {
+                fprintf(self->dumper.out,"\n  ! Create the structure of the data section\n");
+            }
             fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',ivalues)\n",a->name);
+            if (doing_unexpandedDescriptors) fprintf(self->dumper.out,"\n");
+        }
 
     } else {
-        int doing_unexpandedDescriptors=0;
         r=compute_bufr_key_rank(h,self->keys,a->name);
         sval=lval_to_string(c,value);
         if (r!=0) {
             fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',",r,a->name);
         } else {
-            if (strcmp(a->name, "unexpandedDescriptors")==0) {
-                doing_unexpandedDescriptors=1;
+            if (doing_unexpandedDescriptors) {
                 fprintf(self->dumper.out,"\n  ! Create the structure of the data section\n");
             }
             fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',",a->name);
@@ -449,8 +453,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
 
         fprintf(self->dumper.out,"%s)\n",sval);
         grib_context_free(c,sval);
-        if (doing_unexpandedDescriptors)
-            fprintf(self->dumper.out,"\n");
+        if (doing_unexpandedDescriptors) fprintf(self->dumper.out,"\n");
     }
 
     if (self->isLeaf==0) {
@@ -592,13 +595,11 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     grib_dumper_bufr_encode_fortran *self = (grib_dumper_bufr_encode_fortran*)d;
     char **values;
     size_t size = 0,i=0;
-    grib_context* c=NULL;
+    grib_context* c=a->context;
     int err = 0;
     long count=0;
     int r = 0;
     grib_handle* h=grib_handle_of_accessor(a);
-
-    c=a->context;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
@@ -662,12 +663,11 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     char *value=NULL;
     char *p = NULL;
     size_t size = 0;
-    grib_context* c=NULL;
+    grib_context* c=a->context;
     int r;
     int err = _grib_get_string_length(a,&size);
     grib_handle* h=grib_handle_of_accessor(a);
 
-    c=a->context;
     if (size==0) return;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -874,7 +874,8 @@ static void footer(grib_dumper* d, grib_handle* h)
     fprintf(self->dumper.out,"  call codes_write(ibufr,outfile)\n");
     fprintf(self->dumper.out,"  call codes_close_file(outfile)\n");
     fprintf(self->dumper.out,"  call codes_release(ibufr)\n");
-    fprintf(self->dumper.out,"  print *, \"Created output BUFR file 'outfile.bufr'\"\n");
+    if (d->count==1)
+        fprintf(self->dumper.out,"  print *, \"Created output BUFR file 'outfile.bufr'\"\n");
     fprintf(self->dumper.out,"  if(allocated(ivalues)) deallocate(ivalues)\n");
     fprintf(self->dumper.out,"  if(allocated(rvalues)) deallocate(rvalues)\n");
     fprintf(self->dumper.out,"  if(allocated(svalues)) deallocate(svalues)\n");

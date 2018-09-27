@@ -34,7 +34,7 @@ fRules=${label}.filter
 #-----------------------------------------------------------
 files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
-exclude="ias1_240.bufr syno_multi.bufr tropical_cyclone.bufr"
+exclude="ias1_240.bufr syno_multi.bufr tropical_cyclone.bufr aeolus_wmo_26.bufr"
 
 for f in $files
 do
