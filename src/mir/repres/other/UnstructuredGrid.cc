@@ -20,8 +20,10 @@
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/filesystem/PathName.h"
+#include "eckit/log/Plural.h"
 #include "eckit/utils/MD5.h"
 
+#include "mir/action/misc/AreaCropper.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
@@ -218,6 +220,38 @@ void UnstructuredGrid::validate(const MIRValuesVector& values) const {
 
 size_t UnstructuredGrid::numberOfPoints() const {
     return latitudes_.size();
+}
+
+
+const Gridded* UnstructuredGrid::croppedRepresentation(const util::BoundingBox& bbox) const {
+
+    std::vector<size_t> mapping;
+    util::BoundingBox small(bbox);
+    action::AreaCropper::crop(*this, small, mapping);
+    ASSERT(bbox.contains(small));
+
+    eckit::Log::debug<LibMir>() << "UnstructuredGrid::croppedRepresentation: cropped "
+                                << eckit::BigNum(numberOfPoints()) << " to " << eckit::Plural(mapping.size(), "point")
+//                                << "\n\t" "   " << bbox
+//                                << "\n\t" " > " << small
+                                << std::endl;
+
+    if (mapping.size() < numberOfPoints()) {
+        ASSERT(!mapping.empty());
+
+        std::vector<double> lat;
+        std::vector<double> lon;
+
+        for (const auto& j : mapping) {
+            lat.push_back(latitudes_[j]);
+            lon.push_back(longitudes_[j]);
+        }
+
+        return new UnstructuredGrid(lat, lon);
+    }
+
+    eckit::Log::debug<LibMir>() << "UnstructuredGrid::croppedRepresentation: no cropping" << std::endl;
+    return this;
 }
 
 
