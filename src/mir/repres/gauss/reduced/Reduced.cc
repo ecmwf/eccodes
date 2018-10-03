@@ -396,15 +396,13 @@ bool Reduced::getLongestElementDiagonal(double& d) const {
 
 
 util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) const {
-    using eckit::Fraction;
-
 
     // adjust West/East to include bbox's West/East
     Longitude w = bbox.west();
     Longitude e = bbox.east();
     {
-        const Fraction west = bbox.west().fraction();
-        const Fraction east = bbox.east().fraction();
+        const auto west = bbox.west().fraction();
+        const auto east = bbox.east().fraction();
 
         bool first = true;
         std::set<long> NiTried;
@@ -417,19 +415,10 @@ util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) co
             if (NiTried.insert(Ni).second) {
 
                 ASSERT(Ni >= 2);
-                Fraction inc = Longitude::GLOBE.fraction() / Ni;
+                auto inc = Longitude::GLOBE.fraction() / Ni;
 
-                Fraction::value_type Nw = (west / inc).integralPart();
-                if (Nw * inc > west) {
-                    Nw -= 1;
-                }
-
-                Fraction::value_type Ne = (east / inc).integralPart();
-                if (Ne * inc < east || Ne == Nw) {
-                    if (Ne < (Longitude::GLOBE.fraction() / inc).integralPart()) {
-                        Ne += 1;
-                    }
-                }
+                auto Nw = (west / inc).integralPart() - 1;
+                auto Ne = (east / inc).integralPart() + 1;
 
                 if (w > Nw * inc || first) {
                     w = Nw * inc;
@@ -445,7 +434,7 @@ util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) co
 
         long NiMax = *std::max_element(NiTried.begin(), NiTried.end());
         ASSERT(NiMax > 0);
-        Fraction inc = Longitude::GLOBE.fraction() / NiMax;
+        auto inc = Longitude::GLOBE.fraction() / NiMax;
 
         if (e - w + inc >= Longitude::GLOBE) {
             w = 0;

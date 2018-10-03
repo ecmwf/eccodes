@@ -180,39 +180,24 @@ bool Regular::getLongestElementDiagonal(double& d) const {
 
 
 util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) const {
-    using eckit::Fraction;
-
 
     // adjust West/East to include bbox's West/East
     Longitude w = bbox.west();
     Longitude e = bbox.east();
     {
-        const Fraction west = bbox.west().fraction();
-        const Fraction east = bbox.east().fraction();
+        auto inc = getSmallestIncrement();
 
-        Fraction inc = getSmallestIncrement();
+        auto Nmax = (Longitude::GLOBE.fraction() / inc).integralPart();
+        auto Nw = (bbox.west().fraction() / inc).integralPart() - 1;
+        auto Ne = (bbox.east().fraction() / inc).integralPart() + 1;
 
-        Fraction::value_type Nw = (west / inc).integralPart();
-        if (Nw * inc > west) {
-            Nw -= 1;
-        }
-
-        Fraction::value_type Ne = (east / inc).integralPart();
-        if (Ne * inc < east || Ne == Nw) {
-            if (Ne < (Longitude::GLOBE.fraction() / inc).integralPart()) {
-                Ne += 1;
-            }
-        }
-
-        w = Nw * inc;
-        e = Ne * inc;
-
-        if (e - w + inc >= Longitude::GLOBE) {
+        if (Ne - Nw < Nmax) {
+            w = Nw * inc;
+            e = Ne * inc;
+        } else {
             w = 0;
             e = Longitude::GLOBE;
         }
-
-        ASSERT(w < e);
     }
 
 
