@@ -230,8 +230,8 @@ const std::vector<long>& Reduced::pls() const {
     return pl_;
 }
 
-
-void Reduced::setNj(const std::vector<long>& pl, const Latitude& s, const Latitude& n) {
+template< typename PlVector >
+void Reduced::setNj(const PlVector& pl, const Latitude& s, const Latitude& n) {
     ASSERT(N_ > 0);
     ASSERT(N_ * 2 == pl.size());
 
@@ -258,9 +258,17 @@ void Reduced::setNj(const std::vector<long>& pl, const Latitude& s, const Latitu
         }
     }
 
-    pl_ = pl;
+    pl_ = std::vector<long>( pl.begin(), pl.end() );
     pls();  // check internal assumptions
 }
+
+// Explicit template instantiations of above implemenation for different PlVector types
+
+// PlVector = std::vector<int>
+template void Reduced::setNj(const std::vector<int>& pl, const Latitude& s, const Latitude& n);
+
+// PlVector = std::vector<long>
+template void Reduced::setNj(const std::vector<long>& pl, const Latitude& s, const Latitude& n);
 
 
 void Reduced::fill(grib_info& info) const  {
