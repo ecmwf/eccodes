@@ -17,6 +17,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <utility>
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/filesystem/PathName.h"
@@ -132,7 +133,9 @@ void UnstructuredGrid::save(const eckit::PathName& path,
 
 
 UnstructuredGrid::UnstructuredGrid(const std::vector<double>& latitudes,
-                                   const std::vector<double>& longitudes) :
+                                   const std::vector<double>& longitudes,
+                                   const util::BoundingBox& bbox) :
+    Gridded(bbox),
     latitudes_(latitudes),
     longitudes_(longitudes) {
     ASSERT(latitudes_.size() == longitudes_.size());
@@ -185,29 +188,21 @@ void UnstructuredGrid::fill(util::MeshGeneratorParameters& params) const {
 
 
 util::Domain UnstructuredGrid::domain() const {
-    eckit::Log::warning() << "UnstructuredGrid::domain(): assuming global" << std::endl;
-    return util::Domain();
+    return util::Domain(bbox_);
 }
 
 
 atlas::Grid UnstructuredGrid::atlasGrid() const {
     ASSERT(numberOfPoints());
 
-    std::vector<atlas::PointXY>* pts = new std::vector<atlas::PointXY>();
-    pts->reserve(numberOfPoints());
+    std::vector<atlas::PointXY> pts;
+    pts.reserve(numberOfPoints());
 
-    for (size_t i = 0; i < numberOfPoints(); i++) {
-        pts->push_back(atlas::PointXY(longitudes_[i], latitudes_[i]));
-        if (i < 10) {
-            eckit::Log::debug<LibMir>() << "UnstructuredGrid::atlasGrid lon="
-                                        << longitudes_[i]
-                                        << ", lat="
-                                        << latitudes_[i]
-                                        << std::endl;
-        }
+    for (size_t i = 0; i < numberOfPoints(); ++i) {
+        pts.emplace_back(atlas::PointXY(longitudes_[i], latitudes_[i]));
     }
 
-    return atlas::grid::UnstructuredGrid(pts);
+    return atlas::grid::UnstructuredGrid(std::move(pts));
 }
 
 
@@ -240,13 +235,15 @@ const Gridded* UnstructuredGrid::croppedRepresentation(const util::BoundingBox& 
 
         std::vector<double> lat;
         std::vector<double> lon;
+        lat.reserve(mapping.size());
+        lon.reserve(mapping.size());
 
         for (const auto& j : mapping) {
-            lat.push_back(latitudes_[j]);
-            lon.push_back(longitudes_[j]);
+            lat.emplace_back(latitudes_[j]);
+            lon.emplace_back(longitudes_[j]);
         }
 
-        return new UnstructuredGrid(lat, lon);
+        return new UnstructuredGrid(lat, lon, bbox);
     }
 
     eckit::Log::debug<LibMir>() << "UnstructuredGrid::croppedRepresentation: no cropping" << std::endl;
