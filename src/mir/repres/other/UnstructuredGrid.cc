@@ -187,7 +187,8 @@ void UnstructuredGrid::fill(util::MeshGeneratorParameters& params) const {
 
 
 util::Domain UnstructuredGrid::domain() const {
-    return util::Domain(bbox_);
+    return util::Domain(bbox_.north(), bbox_.west(),
+                        bbox_.south(), bbox_.east());
 }
 
 
@@ -287,20 +288,17 @@ Iterator* UnstructuredGrid::iterator() const {
 
 
 bool UnstructuredGrid::isPeriodicWestEast() const {
-    // TODO:
-    return true;
+    return bbox_.east() - bbox_.west() == Longitude::GLOBE;
 }
 
 
 bool UnstructuredGrid::includesNorthPole() const {
-    // TODO:
-    return true;
+    return bbox_.north() == Latitude::NORTH_POLE;
 }
 
 
 bool UnstructuredGrid::includesSouthPole() const {
-    // TODO:
-    return true;
+    return bbox_.south() == Latitude::SOUTH_POLE;
 }
 
 
