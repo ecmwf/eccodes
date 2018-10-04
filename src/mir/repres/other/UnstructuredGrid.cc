@@ -26,7 +26,6 @@
 #include "eckit/serialisation/IfstreamStream.h"
 #include "eckit/utils/MD5.h"
 
-#include "mir/action/misc/AreaCropper.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
@@ -219,30 +218,27 @@ size_t UnstructuredGrid::numberOfPoints() const {
 
 const Gridded* UnstructuredGrid::croppedRepresentation(const util::BoundingBox& bbox) const {
 
-    std::vector<size_t> mapping;
-    util::BoundingBox small(bbox);
-    action::AreaCropper::crop(*this, small, mapping);
-    ASSERT(bbox.contains(small));
+    std::vector<double> lat;
+    std::vector<double> lon;
 
-    eckit::Log::debug<LibMir>() << "UnstructuredGrid::croppedRepresentation: cropped "
-                                << eckit::BigNum(numberOfPoints()) << " to " << eckit::Plural(mapping.size(), "point")
-//                                << "\n\t" "   " << bbox
-//                                << "\n\t" " > " << small
-                                << std::endl;
+    size_t i = 0;
+    size_t j = 0;
 
-    if (mapping.size() < numberOfPoints()) {
-        ASSERT(!mapping.empty());
-
-        std::vector<double> lat;
-        std::vector<double> lon;
-        lat.reserve(mapping.size());
-        lon.reserve(mapping.size());
-
-        for (const auto& j : mapping) {
-            lat.emplace_back(latitudes_[j]);
-            lon.emplace_back(longitudes_[j]);
+    eckit::ScopedPtr<repres::Iterator> iter(iterator());
+    while (iter->next()) {
+        if (bbox.contains(iter->pointUnrotated())) {
+            lat.emplace_back(latitudes_[i]);
+            lon.emplace_back(longitudes_[i]);
+            ++j;
         }
+        ++i;
+    }
 
+    if (j < i) {
+        eckit::Log::debug<LibMir>() << "UnstructuredGrid::croppedRepresentation: cropped "
+                                    << eckit::BigNum(i) << " to " << eckit::Plural(j, "point")
+                                    << std::endl;
+        ASSERT(j);
         return new UnstructuredGrid(lat, lon, bbox);
     }
 
