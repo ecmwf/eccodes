@@ -34,20 +34,20 @@ def test():
     infile = sys.argv[1]
     index_keys = ["shortName","level","number","step"]
 
-    print "indexing..."
+    print ("indexing...")
     iid = grib_index_new_from_file(infile,index_keys)
-    print "end indexing..."
+    print ("end indexing...")
 
     index_vals = []
 
     for key in index_keys:
-        print "%sSize=%d" % (
+        print ("%sSize=%d" % (
             key,
             grib_index_get_size(iid,key)
-        )
+        ))
 
         key_vals = grib_index_get_string(iid,key)
-        print " ".join(key_vals)
+        print (" ".join(key_vals))
 
         index_vals.append(key_vals)
 
@@ -58,7 +58,7 @@ def test():
         while 1:
             gid = grib_new_from_index(iid)
             if gid is None: break
-            print " ".join(["%s=%s" % (key,grib_get_string(gid,key)) for key in index_keys])
+            print (" ".join(["%s=%s" % (key,grib_get_string(gid,key)) for key in index_keys]))
             grib_release(gid)
 
     grib_index_release(iid)
@@ -71,13 +71,13 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr,err.msg
+            print (err.msg, file=sys.stderr)
 
         return 1
     except Usage:
-        print "Usage: %s infile" % sys.argv[0]
+        print ("Usage: %s infile" % sys.argv[0])
         sys.exit(2)
 
 if __name__ == "__main__":
     main()
-    #print "------------------------------------"
+    #print ("------------------------------------")
