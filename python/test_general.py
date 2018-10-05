@@ -151,7 +151,7 @@ def test():
 def main():
     try:
         test()
-    except GribInternalError,err:
+    except GribInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
