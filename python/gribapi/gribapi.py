@@ -22,8 +22,8 @@ When this is enabed, then the system Python will be used to build the interface.
     - NumPy
 
 """
-import gribapi_swig as _internal
 # from gribapi import gribapi_swig as _internal
+from . import gribapi_swig as _internal
 import types
 import sys
 import os
