@@ -1,6 +1,0 @@
-swig : gribapi_swig.i
-	swig -python -module gribapi_swig -o swig_wrap_numpy.c gribapi_swig.i
-	cp gribapi_swig.py swig_wrap_numpy.py
-
-#	swig -python -module gribapi_swig -o swig_wrap_array.c gribapi_swig.i
-#	cp gribapi_swig.py swig_wrap_array.py
