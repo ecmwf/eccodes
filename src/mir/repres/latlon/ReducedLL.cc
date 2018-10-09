@@ -87,7 +87,7 @@ bool ReducedLL::getLongestElementDiagonal(double& d) const {
     // Greenwich
 
     const util::Domain dom = domain();
-    const bool periodic = dom.isPeriodicEastWest();
+    const bool periodic = dom.isPeriodicWestEast();
 
     ASSERT(pl_.size() >= 2);
     const size_t Dj(pl_.size() - 1);
@@ -143,7 +143,7 @@ void ReducedLL::fill(api::MIRJob& job) const  {
 atlas::Grid ReducedLL::atlasGrid() const {
     const util::Domain dom = domain();
 
-    atlas::grid::StructuredGrid::XSpace xspace({ {dom.west().value(), dom.east().value()} }, pl_, !dom.isPeriodicEastWest() );
+    atlas::grid::StructuredGrid::XSpace xspace({ {dom.west().value(), dom.east().value()} }, pl_, !dom.isPeriodicWestEast() );
     atlas::grid::StructuredGrid::YSpace yspace( atlas::grid::LinearSpacing( { {dom.north().value(), dom.south().value()} }, pl_.size()));
 
     return atlas::grid::StructuredGrid(xspace, yspace);
@@ -286,7 +286,7 @@ public:
         j_(0),
         p_(0),
         count_(0),
-        periodic_(dom.isPeriodicEastWest()) {
+        periodic_(dom.isPeriodicWestEast()) {
 
         ASSERT(nj_ > 1);
 

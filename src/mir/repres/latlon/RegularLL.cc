@@ -85,7 +85,7 @@ atlas::Grid RegularLL::atlasGrid() const {
 
     using atlas::grid::StructuredGrid;
     using atlas::grid::LinearSpacing;
-    StructuredGrid::XSpace xspace(LinearSpacing(w, e, long(ni_), !dom.isPeriodicEastWest()));
+    StructuredGrid::XSpace xspace(LinearSpacing(w, e, long(ni_), !dom.isPeriodicWestEast()));
     StructuredGrid::YSpace yspace(LinearSpacing(n, s, long(nj_)));
 
     return StructuredGrid(xspace, yspace, StructuredGrid::Projection(), dom);
