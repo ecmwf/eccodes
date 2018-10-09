@@ -30,7 +30,7 @@ import os
 from functools import wraps
 # import inspect
 from . import errors
-from errors import *  # noqa
+from .errors import *  # noqa
 
 KEYTYPES = {
     1: int,
