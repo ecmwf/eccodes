@@ -17,6 +17,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/MD5.h"
 #include "mir/api/Atlas.h"
@@ -167,8 +168,14 @@ bool ReducedLL::isPeriodicWestEast() const {
     ASSERT(pl_.size());
     const long maxpl = *std::max_element(pl_.begin(), pl_.end());
 
+    auto same_with_grib1_accuracy = [&](const Longitude& a, const Longitude& b) {
+        static const double GRIB1EPSILON = 0.001;
+        return eckit::types::is_approximately_equal(a.value(), b.value(), GRIB1EPSILON);
+    };
+
     const Longitude we = bbox_.east() - bbox_.west();
     const Longitude inc = Longitude::GLOBE - we;
+
     return same_with_grib1_accuracy(inc * maxpl, Longitude::GLOBE);
 }
 

@@ -304,14 +304,6 @@ util::BoundingBox LatLon::correctBoundingBox(const util::BoundingBox& bbox, cons
     Latitude n = bbox.north();
     Latitude s = bbox.south();
 
-    if (same_with_grib1_accuracy(n, Latitude::NORTH_POLE)) {
-        n = Latitude::NORTH_POLE;
-    }
-
-    if (same_with_grib1_accuracy(s, Latitude::SOUTH_POLE)) {
-        s = Latitude::SOUTH_POLE;
-    }
-
     Fraction range_sn = (n - s).fraction();
     if (range_sn > 0) {
         Fraction sn = increments.south_north().latitude().fraction();
