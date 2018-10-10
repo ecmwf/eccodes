@@ -18,7 +18,6 @@
 #include <iostream>
 
 #include "mir/config/LibMir.h"
-#include "mir/param/MIRParametrisation.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 
@@ -34,11 +33,12 @@ RotatedLL::RotatedLL(const param::MIRParametrisation& parametrisation) :
 }
 
 
-RotatedLL::RotatedLL(
-        const util::Increments& increments,
-        const util::Rotation& rotation,
-        const util::BoundingBox& bbox) :
-    LatLon(increments, bbox),
+RotatedLL::RotatedLL(const util::Increments& increments,
+                     const util::Rotation& rotation,
+                     const util::BoundingBox& bbox,
+                     bool allowLatitudeShift,
+                     bool allowLongitudeShift) :
+    LatLon(increments, bbox, allowLatitudeShift, allowLongitudeShift),
     rotation_(rotation) {
 }
 
@@ -126,6 +126,15 @@ bool RotatedLL::sameAs(const Representation& other) const {
 
 const RotatedLL* RotatedLL::croppedRepresentation(const util::BoundingBox& bbox) const {
     // Called by AreaCropper::execute and Gridded2GriddedInterpolation::execute
+
+    // NOTE: if this representation isn't shifted the cropped rep. won't be
+    // FIXME: if this representation is shifted it might not contain the same points
+    util::BoundingBox corrected(bbox);
+    LatLon::correctBoundingBox(corrected,
+                               increments_,
+                               increments_.isLatitudeShifted(bbox_),
+                               increments_.isLongitudeShifted(bbox_));
+
     return new RotatedLL(increments_, rotation_, bbox);
 }
 
