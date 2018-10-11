@@ -265,17 +265,17 @@ const Representation* Representation::globalise(data::MIRField& field) const {
 
     eckit::ScopedPtr<repres::Iterator> it(octahedral->iterator());
     while (it->next()) {
-        const Iterator::point_ll_t& p = it->pointUnrotated();
-        latitudes.push_back(p.lat.value());
-        longitudes.push_back(p.lon.value());
+        const auto& p = it->pointUnrotated();
+        latitudes.push_back(p.lat().value());
+        longitudes.push_back(p.lon().value());
     }
 
     size_t extra = 0;
     while (it->next()) {
-        const Iterator::point_ll_t& p = it->pointUnrotated();
-        if (!dom.contains(p.lat, p.lon)) {
-            latitudes.push_back(p.lat.value());
-            longitudes.push_back(p.lon.value());
+        const auto& p = it->pointUnrotated();
+        if (!dom.contains(p)) {
+            latitudes.push_back(p.lat().value());
+            longitudes.push_back(p.lon().value());
             extra++;
         }
     }

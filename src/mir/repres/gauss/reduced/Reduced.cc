@@ -324,19 +324,19 @@ size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue)
     // Iterator is 'unrotated'
     eckit::ScopedPtr<Iterator> it(iterator());
     while (it->next()) {
-        const Iterator::point_ll_t& p = it->pointUnrotated();
+        const auto& p = it->pointUnrotated();
 
-        if (p.lat != prev_lat ) {
-            ASSERT(p.lat < prev_lat); // Assumes scanning mode
-            prev_lat = p.lat;
+        if (p.lat() != prev_lat ) {
+            ASSERT(p.lat() < prev_lat); // Assumes scanning mode
+            prev_lat = p.lat();
             prev_lon = -std::numeric_limits<double>::max();
 
             col = &shape[rows++];
             (*col) = 0;
         }
 
-        ASSERT(p.lon > prev_lon); // Assumes scanning mode
-        prev_lon = p.lon;
+        ASSERT(p.lon() > prev_lon); // Assumes scanning mode
+        prev_lon = p.lon();
         (*col) ++;
     }
 

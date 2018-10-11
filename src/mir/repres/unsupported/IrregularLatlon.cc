@@ -170,7 +170,9 @@ class IrregularLatlonIterator: public Iterator {
     const std::vector<double> &longitudes_;
 
     virtual void print(std::ostream &out) const {
-        out << "IrregularLatlonIterator[]";
+        out << "IrregularLatlonIterator[";
+        Iterator::print(out);
+        out << "]";
     }
 
     virtual bool next(Latitude &lat, Longitude &lon) {

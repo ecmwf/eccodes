@@ -226,8 +226,9 @@ class ReducedLLIterator: public Iterator {
     bool periodic_;
 
     virtual void print(std::ostream& out) const {
-        out << "ReducedLLIterator["
-            <<  "domain=" << domain_
+        out << "ReducedLLIterator[";
+        Iterator::print(out);
+        out << ",domain=" << domain_
             << ",ni="     << ni_
             << ",nj="     << nj_
             << ",i="      << i_

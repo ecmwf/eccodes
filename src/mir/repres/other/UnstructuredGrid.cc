@@ -256,7 +256,9 @@ class UnstructuredGridIterator : public Iterator {
     const std::vector<double>& longitudes_;
 
     void print(std::ostream& out) const {
-        out << "UnstructuredGridIterator[]";
+        out << "UnstructuredGridIterator[";
+        Iterator::print(out);
+        out << "]";
     }
 
     bool next(Latitude& lat, Longitude& lon) {
