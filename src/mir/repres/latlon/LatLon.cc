@@ -71,8 +71,12 @@ static void check(const util::BoundingBox& bbox, const util::Increments& inc, si
 LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
     Gridded(parametrisation),
     increments_(parametrisation) {
-    correctBoundingBox(bbox_, increments_, true, true);
 
+    PointLatLon reference(bbox_.south(), bbox_.west());
+    increments_.correctBoundingBox(bbox_, reference);
+
+    ni_ = 0;
+    nj_ = 0;
     ASSERT(parametrisation.get("Ni", ni_));
     ASSERT(parametrisation.get("Nj", nj_));
 
@@ -80,10 +84,10 @@ LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
 }
 
 
-LatLon::LatLon(const util::Increments& increments, const util::BoundingBox& bbox, bool allowLatitudeShift, bool allowLongitudeShift) :
+LatLon::LatLon(const util::Increments& increments, const util::BoundingBox& bbox, const PointLatLon& reference) :
     Gridded(bbox),
     increments_(increments) {
-    correctBoundingBox(bbox_, increments_, allowLatitudeShift, allowLongitudeShift);
+    increments_.correctBoundingBox(bbox_, reference);
 
     ni_ = computeN(bbox_.west(), bbox_.east(), increments_.west_east().longitude());
     nj_ = computeN(bbox_.south(), bbox_.north(), increments_.south_north().latitude());
@@ -277,95 +281,6 @@ const LatLon* LatLon::croppedRepresentation(const util::BoundingBox&) const {
     std::ostringstream os;
     os << "LatLon::croppedRepresentation() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
-}
-
-
-void LatLon::correctBoundingBox(util::BoundingBox& bbox,
-                                const util::Increments& increments,
-                                bool allowLatitudeShift,
-                                bool allowLongitudeShift) {
-    using eckit::Fraction;
-
-
-    // adjust East to a maximum of E = W + Ni * inc < W + 360
-    // (shifted grids can have 360 - inc < E - W < 360)
-    Longitude e = bbox.east();
-    Longitude w = bbox.west();
-    ASSERT(e - w >= 0);
-    ASSERT(e - w <= Longitude::GLOBE);
-
-    Fraction range_we(0);
-    Fraction we = increments.west_east().longitude().fraction();
-    if (we > 0) {
-        if (!allowLongitudeShift) {
-            Fraction shift = (w.fraction() / we).decimalPart() *  we;
-            if (e == w) {
-                e = e.fraction() - shift;
-            }
-            w = w.fraction() - shift;
-            ASSERT((w.fraction() / we).integer());
-
-        }
-
-        range_we = (e - w).fraction();
-        if (range_we > 0) {
-            Fraction Ni = range_we / we;
-            if (range_we + we >= Longitude::GLOBE.fraction()) {
-                Ni = Longitude::GLOBE.fraction() / we;
-                if (Ni.integer()) {
-                    Ni -= 1;
-                }
-            }
-            range_we = Ni.integralPart() * we;
-        }
-    }
-    e = w + range_we;
-
-
-    // adjust North to a maximum of N = S + Nj * inc <= 90
-    Latitude n = bbox.north();
-    Latitude s = bbox.south();
-    ASSERT(n - s >= 0);
-    ASSERT(Latitude::SOUTH_POLE <= s && n <= Latitude::NORTH_POLE);
-
-    Fraction range_sn(0);
-    Fraction sn = increments.south_north().latitude().fraction();
-    if (sn > 0) {
-        if (!allowLatitudeShift && sn > 0) {
-            Fraction shift = (s.fraction() / sn).decimalPart() *  sn;
-            if (n == s) {
-                n = n.fraction() - shift;
-            }
-            s = s.fraction() - shift;
-            ASSERT((s.fraction() / sn).integer());
-        }
-
-        range_sn = (n - s).fraction();
-        if (range_sn > 0) {
-            Fraction Nj = range_sn / sn;
-            range_sn = Nj.integralPart() * sn;
-        }
-    }
-    n = s + range_sn;
-
-
-    // set bounding box
-    const util::BoundingBox corrected(n, w, s, e);
-    if (corrected != bbox) {
-        auto& log = eckit::Log::debug<LibMir>();
-        auto old = log.precision(12);
-
-        log << "LatLon::correctBoundingBox:"
-            << "\n\t" "   " << bbox
-            << "\n\t" " > " << corrected
-            << std::endl;
-
-        ASSERT(allowLatitudeShift || !increments.isLatitudeShifted(corrected));
-        ASSERT(allowLongitudeShift || !increments.isLongitudeShifted(corrected));
-
-        log.precision(old);
-        bbox = corrected;
-    }
 }
 
 

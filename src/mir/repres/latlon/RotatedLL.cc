@@ -36,9 +36,8 @@ RotatedLL::RotatedLL(const param::MIRParametrisation& parametrisation) :
 RotatedLL::RotatedLL(const util::Increments& increments,
                      const util::Rotation& rotation,
                      const util::BoundingBox& bbox,
-                     bool allowLatitudeShift,
-                     bool allowLongitudeShift) :
-    LatLon(increments, bbox, allowLatitudeShift, allowLongitudeShift),
+                     const PointLatLon& reference) :
+    LatLon(increments, bbox, reference),
     rotation_(rotation) {
 }
 
@@ -127,13 +126,10 @@ bool RotatedLL::sameAs(const Representation& other) const {
 const RotatedLL* RotatedLL::croppedRepresentation(const util::BoundingBox& bbox) const {
     // Called by AreaCropper::execute and Gridded2GriddedInterpolation::execute
 
-    // NOTE: if this representation isn't shifted the cropped rep. won't be
-    // FIXME: if this representation is shifted it might not contain the same points
+    const PointLatLon reference(bbox_.south(), bbox_.west());
     util::BoundingBox corrected(bbox);
-    LatLon::correctBoundingBox(corrected,
-                               increments_,
-                               increments_.isLatitudeShifted(bbox_),
-                               increments_.isLongitudeShifted(bbox_));
+
+    increments_.correctBoundingBox(corrected, reference);
 
     return new RotatedLL(increments_, rotation_, bbox);
 }

@@ -34,9 +34,8 @@ RegularLL::RegularLL(const param::MIRParametrisation& parametrisation) :
 
 RegularLL::RegularLL(const util::Increments& increments,
                      const util::BoundingBox& bbox,
-                     bool allowLatitudeShift,
-                     bool allowLongitudeShift) :
-    LatLon(increments, bbox, allowLatitudeShift, allowLongitudeShift) {
+                     const PointLatLon& reference) :
+    LatLon(increments, bbox, reference) {
 }
 
 
@@ -121,13 +120,10 @@ bool RegularLL::sameAs(const Representation& other) const {
 const RegularLL* RegularLL::croppedRepresentation(const util::BoundingBox& bbox) const {
     // Called by AreaCropper::execute and Gridded2GriddedInterpolation::execute
 
-    // NOTE: if this representation isn't shifted the cropped rep. won't be,
-    // FIXME: if this representation is shifted it might not contain the same points
+    const PointLatLon reference(bbox_.south(), bbox_.west());
     util::BoundingBox corrected(bbox);
-    LatLon::correctBoundingBox(corrected,
-                               increments_,
-                               increments_.isLatitudeShifted(bbox_),
-                               increments_.isLongitudeShifted(bbox_));
+
+    increments_.correctBoundingBox(corrected, reference);
 
     return new RegularLL(increments_, corrected);
 }
