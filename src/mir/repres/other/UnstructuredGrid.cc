@@ -77,12 +77,12 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName& path) {
         latitudes_.resize(count);
         longitudes_.resize(count);
 
-        for (size_t i = 0; i < count; ++i) {
-            s >> latitudes_[i];
-            s >> longitudes_[i];
-            eckit::Log::info() << latitudes_[i] << " " << longitudes_[i] << std::endl;
+        // for (size_t i = 0; i < count; ++i) {
+        //     s >> latitudes_[i];
+        //     s >> longitudes_[i];
+        //     eckit::Log::info() << latitudes_[i] << " " << longitudes_[i] << std::endl;
 
-        }
+        // }
     }
     else {
         double lat;
