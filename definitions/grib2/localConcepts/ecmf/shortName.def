@@ -31,6 +31,18 @@
 	}
 #Total precipitation of at least 100 mm
 'tpg100' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 productDefinitionTemplateNumber = 9 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 100 ;
+	 probabilityType = 3 ;
+	}
+#Total precipitation of at least 100 mm
+'tpg100' = {
 	 discipline = 192 ;
 	 parameterCategory = 131 ;
 	 parameterNumber = 85 ;
