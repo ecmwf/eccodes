@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# Definition 41 - The European Flood Awareness System
+# Local definition 41 - The European Flood Awareness System
 
 # isFillup can be 0, 1 or missing
 # When it is 0, it means "Water Balance"
@@ -68,16 +68,16 @@ concept efas_post_proc {
 #  "global"  = { efas_domain = 1; }
 #} : hidden;
 
-# Reanalysis Date and Time
-# This date is the date of the new official implementation of the EFAS cycle.
-unsigned[2] yearOfReanalysis    = year   : dump;
-unsigned[1] monthOfReanalysis   = month  : dump;
-unsigned[1] dayOfReanalysis     = day    : dump;
-unsigned[1] hourOfReanalysis    = hour   : dump;
-unsigned[1] minuteOfReanalysis  = minute : dump;
-constant    secondOfReanalysis = 0;
-meta dateOfReanalysis  g2date(yearOfReanalysis,monthOfReanalysis, dayOfReanalysis) : dump;
-meta timeOfReanalysis  time  (hourOfReanalysis,minuteOfReanalysis,secondOfReanalysis) : dump;
+# Model Cycle Date/Time
+# This is the date of the new official implementation of the EFAS cycle.
+unsigned[2] yearOfModelVersion    = 0 : dump;
+unsigned[1] monthOfModelVersion   = 0 : dump;
+unsigned[1] dayOfModelVersion     = 0 : dump;
+unsigned[1] hourOfModelVersion    = 0 : dump;
+unsigned[1] minuteOfModelVersion  = 0 : dump;
+constant    secondOfModelVersion  = 0;
+meta dateOfModelVersion  g2date(yearOfModelVersion, monthOfModelVersion, dayOfModelVersion) : dump;
+meta timeOfModelVersion  time  (hourOfModelVersion, minuteOfModelVersion, secondOfModelVersion) : dump;
 
 # Note: the key inputOriginatingCentre is in the PDTNs 70, 71, 72 and 73
 #concept efas_forecast {
