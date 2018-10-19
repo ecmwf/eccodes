@@ -189,6 +189,44 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 5 ;
 	}
+#Total precipitation of at least 25 mm
+'tpg25' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 productDefinitionTemplateNumber = 9 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 25 ;
+	 probabilityType = 3 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Total precipitation of at least 50 mm
+'tpg50' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 probabilityType = 3 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 productDefinitionTemplateNumber = 9 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 50 ;
+	}
+#10 metre wind gust of at least 10 m/s
+'10fgg10' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 productDefinitionTemplateNumber = 9 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 scaledValueOfLowerLimit = 10 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 probabilityType = 3 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
 #10 metre wind gust in the last 3 hours
 '10fg3' = {
 	 discipline = 0 ;
