@@ -140,6 +140,7 @@ list( APPEND tests_data_reqd
     read_any
     grib_dump
     grib_dump_debug
+    grib_dump_json
     grib_local_MeteoFrance
     grib_neg_fctime
     codes_split_file
