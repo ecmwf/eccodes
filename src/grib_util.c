@@ -1542,8 +1542,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     /* ECC-445 */
     if (expandBoundingBox) {
-        //int e = grib_set_long(outh, "expandedBoundingBox", 1);
-        //Assert(e == 0);
         Assert(!global_grid); /* ECC-576: "global" should not be set */
     }
 
@@ -1910,35 +1908,6 @@ char* codes_getenv(const char* name)
         result = getenv(old_name);
     }
     return result;
-}
-
-// Return 1 if using the new algorithm (DEFAULT)
-// Return 0 if using the old algorithm
-int expandedBoundingBox(grib_handle* h)
-{
-    return 1;
-/*
-    long edition = 0;
-    grib_get_long(h, "edition", &edition);
-    if (edition == 1) {
-        // Check grid type
-        long dataRepresentationType=0;
-        grib_get_long(h, "dataRepresentationType", &dataRepresentationType);
-        if (dataRepresentationType==4 || dataRepresentationType==14 ||
-            dataRepresentationType==24 || dataRepresentationType==34)
-        {
-            // GRIB edition 1 Gaussian Grid
-            long numberOfDataPoints=0, numberOfValues=0;
-            grib_get_long(h, "numberOfDataPoints", &numberOfDataPoints); //computed with new algorithm
-            grib_get_long(h, "numberOfValues", &numberOfValues);//includes missing ones
-            if (numberOfDataPoints != numberOfValues) {
-                return 0;
-            }
-        }
-        return 1;
-    }
-    return 0;
-*/
 }
 
 size_t sum_of_pl_array(const long* pl, size_t plsize)

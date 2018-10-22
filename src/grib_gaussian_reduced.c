@@ -293,11 +293,11 @@ static void gaussian_reduced_row(
 /* --------------------------------------------------------------------------------------------------- */
 void grib_get_reduced_row_wrapper(grib_handle* h, long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last)
 {
-    if (expandedBoundingBox(h)) {
-        grib_get_reduced_row2(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
-    } else {
-        grib_get_reduced_row(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
-    }
+    grib_get_reduced_row2(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
+#if 0
+    /* The legacy way */
+    grib_get_reduced_row(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
+#endif
 }
 
 void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )

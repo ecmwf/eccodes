@@ -1461,7 +1461,6 @@ int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNum
 int is_index_file(const char *filename);
 char get_dir_separator_char(void);
 char *codes_getenv(const char *name);
-int expandedBoundingBox(grib_handle* h);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
 
 /* bufr_util.c */

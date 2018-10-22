@@ -172,7 +172,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     a->length=0;
 }
 #if 0
-//Legacy mode
+/*Legacy mode*/
 static long num_points_reduced_gauss_old(grib_handle* h, long nj, long pl[],
                                          long max_pl, double lats[],
                                          double angular_precision,
@@ -223,7 +223,7 @@ static long num_points_reduced_gauss_old(grib_handle* h, long nj, long pl[],
     return result;
 }
 
-// New MIR compatible way
+/* New MIR compatible way */
 static long num_points_reduced_gauss_new(grib_handle* h, long nj, long pl[], double lon_first, double lon_last)
 {
     long result = 0;
@@ -233,11 +233,7 @@ static long num_points_reduced_gauss_new(grib_handle* h, long nj, long pl[], dou
         long row_count=0;
         long ilon_first=0,ilon_last=0;
         grib_get_reduced_row2(pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
-        //lon_first_row=((ilon_first)*360.0)/pl[j];
-        //lon_last_row=((ilon_last)*360.0)/pl[j];
         result += row_count;
-        //(void)lon_last_row;
-        //(void)lon_first_row;
     }
     return result;
 }
@@ -262,7 +258,7 @@ static double longitude_normalise(double lon, double minimum)
 static void correctWestEast(long max_pl, double angular_precision, double* pWest, double* pEast)
 {
     double w, e;
-    const double inc = 360.0/max_pl; //smallest increment
+    const double inc = 360.0/max_pl; /*smallest increment*/
     if (*pWest > *pEast) *pEast += 360;
 
     w = *pWest;
@@ -272,7 +268,7 @@ static void correctWestEast(long max_pl, double angular_precision, double* pWest
         const int cond1 = angleApproximatelyEqual(360 - inc, e - w, angular_precision);
         const int cond2 = (360 - inc < e - w);
         const int cond3 = (e != w);
-        const int cond4 = longitude_normalise(e,w)==w;    //e.normalise(w) == w;
+        const int cond4 = longitude_normalise(e,w)==w;    /* e.normalise(w) == w */
         if ( cond1 || cond2 || (cond3 && cond4) ) {
             *pWest = 0;
             *pEast = 360 - inc;
@@ -293,14 +289,14 @@ static int get_number_of_data_values(grib_handle* h, size_t* numDataValues)
             return GRIB_SUCCESS;
         }
     } else {
-        // Constant field (with or without bitmap)
+        /* Constant field (with or without bitmap) */
         if ( (err = grib_get_long(h,"bitmapPresent", &bitmapPresent)) ) return err;
         if (bitmapPresent) {
             if ( (err = grib_get_size(h,"bitmap", &bitmapLength)) ) return err;
             *numDataValues = bitmapLength;
             return GRIB_SUCCESS;
         } else {
-            err = GRIB_NO_VALUES; // Cannot determine number of values
+            err = GRIB_NO_VALUES; /* Cannot determine number of values */
         }
     }
 
@@ -405,9 +401,11 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
                 printf("--  %d ",j);
 #endif
                 grib_get_reduced_row_wrapper(h, pl[j],lon_first,lon_last,&row_count,&ilon_first,&ilon_last);
-                //if ( row_count != pl[j] ) {
-                //    printf("oops...... rc=%ld but pl[%d]=%ld\n", row_count, j,pl[j]);
-                //}
+#if 0
+                if ( row_count != pl[j] ) {
+                    printf("oops...... rc=%ld but pl[%d]=%ld\n", row_count, j,pl[j]);
+                }
+#endif
                 lon_first_row=((ilon_first)*360.0)/pl[j];
                 lon_last_row=((ilon_last)*360.0)/pl[j];
                 *val+=row_count;
@@ -434,8 +432,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     if (lats) grib_context_free(c,lats);
     if (plsave) grib_context_free(c,plsave);
 
-    // ECC-756: Now decide whether this is legacy GRIB1 message.
-    // Query data values to see if there is a mismatch
+    /* ECC-756: Now decide whether this is legacy GRIB1 message. */
+    /* Query data values to see if there is a mismatch */
     if (get_number_of_data_values(h, &numDataValues) == GRIB_SUCCESS) {
         if (*val != numDataValues) {
             if (h->context->debug)
