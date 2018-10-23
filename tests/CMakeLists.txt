@@ -51,6 +51,8 @@ list( APPEND tests_no_data_reqd
     uerra
     grib_2nd_order_numValues
     julian
+    bufr_dump
+    bufr_json
     bufr_ecc-359
     bufr_ecc-517
     bufr_rdbSubTypes
@@ -60,7 +62,6 @@ list( APPEND tests_no_data_reqd
 # These tests do require data downloads
 list( APPEND tests_data_reqd
     grib_double_cmp
-    bufr_dump
     bufr_dump_decode_filter
     bufr_dump_encode_filter
     bufrdc_desc_ref
@@ -72,7 +73,6 @@ list( APPEND tests_data_reqd
     bufr_filter
     bufr_filter_extract_datetime
     bufr_filter_extract_area
-    bufr_json
     bufr_ls
     bufr_change_edition
     bufr_keys_iter

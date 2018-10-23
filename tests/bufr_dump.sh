@@ -13,11 +13,6 @@
 #Define a common label for all the tmp files
 label="bufr_dump_test"
 
-if [ $HAVE_MEMFS -eq 1 ]; then
-    unset ECCODES_DEFINITION_PATH
-    unset ECCODES_SAMPLES_PATH
-fi
-
 #Create log file
 fLog=${label}".log"
 rm -f $fLog
@@ -26,39 +21,53 @@ touch $fLog
 #Define tmp bufr files
 fJsonTmp=${label}".json.tmp"
 
+# Test sample BUFR files
+for file in $ECCODES_SAMPLES_PATH/BUFR*.tmpl; do
+  ${tools_dir}/bufr_dump -O $file >/dev/null
+done
+
+if [ $HAVE_MEMFS -eq 1 ]; then
+    unset ECCODES_DEFINITION_PATH
+    unset ECCODES_SAMPLES_PATH
+fi
+
 #==============================================
-# Testing bufr_dump -O
+# Test downloaded data files
 #==============================================
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 REDIRECT=/dev/null
 
 for file in ${bufr_files}
 do
-  ${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file >/dev/null
+  if [ -f ${data_dir}/bufr/$file ]; then
+    ${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file >/dev/null
+  fi
 done
+
 
 #==============================================
 # Testing output when ECCODES_DEBUG is enabled
 #==============================================
 file="aaen_55.bufr"
-export ECCODES_DEBUG=1
+if [ -f "$file" ]; then
+  export ECCODES_DEBUG=1
 
-# By default debug output goes to stderr
-${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file 2>&1 | grep -q "BUFR data .*ing"
+  # By default debug output goes to stderr
+  ${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file 2>&1 | grep -q "BUFR data .*ing"
 
-# Redirect it to stdout
-export ECCODES_LOG_STREAM=stdout
-${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file | grep -q "BUFR data .*ing"
+  # Redirect it to stdout
+  export ECCODES_LOG_STREAM=stdout
+  ${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file | grep -q "BUFR data .*ing"
 
-unset ECCODES_DEBUG
-unset ECCODES_LOG_STREAM
+  unset ECCODES_DEBUG
+  unset ECCODES_LOG_STREAM
+fi
 
 #==============================================
 # Testing a malformed bufr file (see ECC-110)
 #==============================================
 # find another way to test malformed bufr 
 #echo "Test: malformed bufr file " >> $fLog
-
 
 #rm -f $fJsonTmp
 
