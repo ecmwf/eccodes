@@ -121,11 +121,8 @@ const RegularLL* RegularLL::croppedRepresentation(const util::BoundingBox& bbox)
     // Called by AreaCropper::execute and Gridded2GriddedInterpolation::execute
 
     const PointLatLon reference(bbox_.south(), bbox_.west());
-    util::BoundingBox corrected(bbox);
 
-    increments_.correctBoundingBox(corrected, reference);
-
-    return new RegularLL(increments_, corrected);
+    return new RegularLL(increments_, bbox, reference);
 }
 
 

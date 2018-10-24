@@ -127,11 +127,8 @@ const RotatedLL* RotatedLL::croppedRepresentation(const util::BoundingBox& bbox)
     // Called by AreaCropper::execute and Gridded2GriddedInterpolation::execute
 
     const PointLatLon reference(bbox_.south(), bbox_.west());
-    util::BoundingBox corrected(bbox);
 
-    increments_.correctBoundingBox(corrected, reference);
-
-    return new RotatedLL(increments_, rotation_, bbox);
+    return new RotatedLL(increments_, rotation_, bbox, reference);
 }
 
 
