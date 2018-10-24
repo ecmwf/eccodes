@@ -12,13 +12,6 @@
 
 REDIRECT=/dev/null
 
-# Test sample BUFR files
-# -------------------------
-for file in $ECCODES_SAMPLES_PATH/BUFR*.tmpl; do
-  ${tools_dir}/bufr_dump -js $file >/dev/null
-  ${tools_dir}/bufr_dump -ja $file >/dev/null
-done
-
 cd ${data_dir}/bufr
 
 if [ $HAVE_MEMFS -eq 1 ]; then
@@ -37,33 +30,28 @@ fi
 # -------------------------
 bufr_files=`cat bufr_data_files.txt`
 for file in ${bufr_files}; do
-  if [ -f "$file" ]; then
-    # Test the various JSON dump modes: 'structure', 'all' and 'flat'
-    for mode in s a f; do
-      rm -f ${file}.json
-      ${tools_dir}/bufr_dump -j$mode $file 2> $REDIRECT > ${file}.json
-      if test "x$JSON_CHECK" != "x"; then
-        json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
-      fi
-    done
-
+  # Test the various JSON dump modes: 'structure', 'all' and 'flat'
+  for mode in s a f; do
     rm -f ${file}.json
-  fi
-done
-
-# ECC-233: Test JSON dump when selecting messages with '-w' switch
-file=tropical_cyclone.bufr
-if [ -f "$file" ]; then
-  for c in 1 3 1/3; do
-    ${tools_dir}/bufr_dump -w count=$c $file 2> $REDIRECT > ${file}.json
+    ${tools_dir}/bufr_dump -j$mode $file 2> $REDIRECT > ${file}.json
     if test "x$JSON_CHECK" != "x"; then
       json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
     fi
   done
-fi
+
+  rm -f ${file}.json
+done
+
+# ECC-233: Test JSON dump when selecting messages with '-w' switch
+file=tropical_cyclone.bufr
+for c in 1 3 1/3; do
+  ${tools_dir}/bufr_dump -w count=$c $file 2> $REDIRECT > ${file}.json
+  if test "x$JSON_CHECK" != "x"; then
+    json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
+  fi
+done
+
 
 # ECC-272
 file=aaen_55.bufr
-if [ -f "$file" ]; then
-  ${tools_dir}/bufr_dump -jf $file | grep -q -w channelRadiance
-fi
+${tools_dir}/bufr_dump -jf $file | grep -q -w channelRadiance

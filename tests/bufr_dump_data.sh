@@ -11,7 +11,7 @@
 . ./include.sh
 
 #Define a common label for all the tmp files
-label="bufr_dump_test"
+label="bufr_dump_data_test"
 
 #Create log file
 fLog=${label}".log"
@@ -20,11 +20,6 @@ touch $fLog
 
 #Define tmp bufr files
 fJsonTmp=${label}".json.tmp"
-
-# Test sample BUFR files
-for file in $ECCODES_SAMPLES_PATH/BUFR*.tmpl; do
-  ${tools_dir}/bufr_dump -O $file >/dev/null
-done
 
 if [ $HAVE_MEMFS -eq 1 ]; then
     unset ECCODES_DEFINITION_PATH
@@ -39,9 +34,7 @@ REDIRECT=/dev/null
 
 for file in ${bufr_files}
 do
-  if [ -f ${data_dir}/bufr/$file ]; then
-    ${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file >/dev/null
-  fi
+  ${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file >/dev/null
 done
 
 
@@ -49,19 +42,17 @@ done
 # Testing output when ECCODES_DEBUG is enabled
 #==============================================
 file="aaen_55.bufr"
-if [ -f "$file" ]; then
-  export ECCODES_DEBUG=1
+export ECCODES_DEBUG=1
 
-  # By default debug output goes to stderr
-  ${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file 2>&1 | grep -q "BUFR data .*ing"
+# By default debug output goes to stderr
+${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file 2>&1 | grep -q "BUFR data .*ing"
 
-  # Redirect it to stdout
-  export ECCODES_LOG_STREAM=stdout
-  ${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file | grep -q "BUFR data .*ing"
+# Redirect it to stdout
+export ECCODES_LOG_STREAM=stdout
+${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file | grep -q "BUFR data .*ing"
 
-  unset ECCODES_DEBUG
-  unset ECCODES_LOG_STREAM
-fi
+unset ECCODES_DEBUG
+unset ECCODES_LOG_STREAM
 
 #==============================================
 # Testing a malformed bufr file (see ECC-110)
