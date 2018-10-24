@@ -10,6 +10,9 @@
 
 . ./include.sh
 
+label="grib_dump_json"
+temp=${label}".temp.json"
+
 REDIRECT=/dev/null
 
 if [ $HAVE_MEMFS -eq 1 ]; then
@@ -72,7 +75,24 @@ v.grib2
 "
 
 for file in $files; do
-   if [ -f ${data_dir}/$file ]; then
-      ${tools_dir}/grib_dump -j ${data_dir}/$file 2> $REDIRECT > $REDIRECT
-   fi
+    if [ -f ${data_dir}/$file ]; then
+        ${tools_dir}/grib_dump -j ${data_dir}/$file 2> $REDIRECT > $REDIRECT
+    fi
 done
+
+# Decide if we have the JSON verifier commandline utility
+JSON_VERIF="json_xs"
+JSON_CHECK=""
+if command -v $JSON_VERIF >/dev/null 2>&1; then
+    JSON_CHECK=$JSON_VERIF
+fi
+
+# Check the JSON output on single-message and multi-message files
+if test "x$JSON_CHECK" != "x"; then
+    ${tools_dir}/grib_dump -j ${data_dir}/sample.grib2 > $temp
+    json_xs < $temp >$REDIRECT 2> $REDIRECT
+    ${tools_dir}/grib_dump -j ${data_dir}/tigge_af_ecmwf.grib2 > $temp
+    json_xs < $temp >$REDIRECT 2> $REDIRECT
+fi
+
+rm -f $temp
