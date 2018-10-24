@@ -11,12 +11,7 @@
 . ./include.sh
 
 #Define a common label for all the tmp files
-label="bufr_dump_test"
-
-if [ $HAVE_MEMFS -eq 1 ]; then
-    unset ECCODES_DEFINITION_PATH
-    unset ECCODES_SAMPLES_PATH
-fi
+label="bufr_dump_data_test"
 
 #Create log file
 fLog=${label}".log"
@@ -26,8 +21,13 @@ touch $fLog
 #Define tmp bufr files
 fJsonTmp=${label}".json.tmp"
 
+if [ $HAVE_MEMFS -eq 1 ]; then
+    unset ECCODES_DEFINITION_PATH
+    unset ECCODES_SAMPLES_PATH
+fi
+
 #==============================================
-# Testing bufr_dump -O
+# Test downloaded data files
 #==============================================
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 REDIRECT=/dev/null
@@ -36,6 +36,7 @@ for file in ${bufr_files}
 do
   ${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file >/dev/null
 done
+
 
 #==============================================
 # Testing output when ECCODES_DEBUG is enabled
@@ -58,7 +59,6 @@ unset ECCODES_LOG_STREAM
 #==============================================
 # find another way to test malformed bufr 
 #echo "Test: malformed bufr file " >> $fLog
-
 
 #rm -f $fJsonTmp
 
