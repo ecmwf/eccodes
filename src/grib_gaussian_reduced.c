@@ -304,7 +304,6 @@ void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoi
 {
     double range=0,dlon_first=0,dlon_last=0;
     long irange;
-    /*printf("Using grib_get_reduced_row...\n");*/
     range=lon_last-lon_first;
     if (range<0) {range+=360;lon_first-=360;}
 
