@@ -377,7 +377,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
             if (pl[j] > max_pl) max_pl = pl[j];
         }
 
-        is_global=is_gaussian_global(lat_first,lat_last,lon_first,lon_last,max_pl,lats,angular_precision);
+        /*is_global=is_gaussian_global(lat_first,lat_last,lon_first,lon_last,max_pl,lats,angular_precision);*/
         d=fabs(lats[0]-lats[1]);
         is_global = 0; /* ECC-445 */
 
