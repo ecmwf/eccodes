@@ -154,7 +154,7 @@ static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib
     for (j=0;j<plsize;j++) {
         const double delta = 360.0/pl[j];
         row_count=0;
-        grib_get_reduced_row3(pl[j],lon_first,lon_last, &row_count,&olon_first,&olon_last);
+        grib_get_reduced_row_p(pl[j],lon_first,lon_last, &row_count,&olon_first,&olon_last);
         for(i=0; i<row_count; ++i) {
             double lon2 = olon_first + i * delta;
             if(iter->e >= iter->nv){
