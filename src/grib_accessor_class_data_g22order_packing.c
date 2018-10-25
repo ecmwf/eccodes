@@ -341,6 +341,7 @@ static int post_process(grib_context *c, long* vals, long  len, long order, long
     unsigned long last, penultimate, j=0;
     Assert(order > 0);
     Assert(order <= 3);
+    if(!vals) return GRIB_INTERNAL_ERROR;
 
     if (order == 1) {
         last = extras[0];
@@ -511,7 +512,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     self->dirty=0;
 
     sec_val = (long*)grib_context_malloc(a->context,(n_vals)*sizeof(long));
-    if (sec_val) memset(sec_val, 0, (n_vals)*sizeof(long)); /* See SUP-718 */
+    if(!sec_val) return GRIB_OUT_OF_MEMORY;
+    memset(sec_val, 0, (n_vals)*sizeof(long)); /* See SUP-718 */
 
     buf_ref     =   buf + a->offset ;
 
@@ -559,7 +561,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
         else if (missingValueManagementUsed == 1)
         {
             /* Primary missing values included within data values */
-            long maxn = (1 << bits_per_value) - 1;
+            long maxn = 0;  /* (1 << bits_per_value) - 1; */
             for (j=0; j < nvals_per_group;j++) {
                 if (nbits_per_group_val == 0) {
                     maxn = (1 << bits_per_value) - 1;
@@ -585,7 +587,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
         {
             /* Primary and secondary missing values included within data values */
             long maxn = (1 << bits_per_value) - 1;
-            long maxn2 = maxn - 1;
+            long maxn2 = 0;  /* maxn - 1; */
             for (j=0; j < nvals_per_group;j++) {
                 if (nbits_per_group_val == 0) {
                     maxn2 = maxn - 1;
