@@ -1365,6 +1365,7 @@ void *wmo_read_taf_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t 
 
     u.buffer       = NULL;
 
+    r.message_size    = 0;
     r.read_data       = f;
     r.read            = &stdio_read;
     r.seek            = &stdio_seek;

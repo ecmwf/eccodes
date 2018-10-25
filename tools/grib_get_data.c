@@ -228,6 +228,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if (bitmap) free(bitmap);
 
     free(data_values);
+    free(missing_string);
     if (iter) {
         free(lats);
         free(lons);
