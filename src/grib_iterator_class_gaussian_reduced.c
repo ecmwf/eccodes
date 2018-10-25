@@ -139,7 +139,7 @@ static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib
     double d=0;
     double olon_first, olon_last;
     grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
-    get_reduced_row_proc get_reduced_row = &grib_get_reduced_row2;
+    get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;
 
     if (h->context->debug) {
         const size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
