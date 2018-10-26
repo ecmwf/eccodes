@@ -182,11 +182,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     if((err = grib_get_long(grib_handle_of_accessor(a),self->expand_by,&expand_by)) != GRIB_SUCCESS)
         return err;
+    if(expand_by <=0)
+        return GRIB_ENCODING_ERROR;
 
     if((err = grib_get_double_internal(grib_handle_of_accessor(a),self->missing_value,&missing_value)) != GRIB_SUCCESS)
         return err;
-
-    Assert(expand_by);
 
     if(*len % expand_by)
     {

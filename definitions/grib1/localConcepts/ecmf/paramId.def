@@ -3674,17 +3674,17 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 141 ;
 	}
-#Standardised precipitation index valid for 3 months
+#Standardised precipitation index valid in the last 3 months
 '170001' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 1 ;
 	}
-#Standardised precipitation index valid for 6 months
+#Standardised precipitation index valid in the last 6 months
 '170002' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 2 ;
 	}
-#Standardised precipitation index valid for 12 months
+#Standardised precipitation index valid in the last 12 months
 '170003' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 3 ;

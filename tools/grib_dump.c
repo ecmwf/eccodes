@@ -41,6 +41,7 @@ const char* grib_tool_description="Dump the content of a GRIB file in different 
 const char* grib_tool_name="grib_dump";
 const char* grib_tool_usage="[options] grib_file grib_file ...";
 static int json=0;
+static int first_handle=1;
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
@@ -176,6 +177,13 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         grib_set_flag(h,options->print_keys[i].name,GRIB_ACCESSOR_FLAG_DUMP);
 
     if(json) {
+        if (!first_handle && options->handle_count>1) {
+            fprintf(stdout,",\n");
+        }
+        if (json && first_handle) {
+            fprintf(stdout,"{ \"messages\" : [\n");
+            first_handle=0;
+        }
     }
     else {
         char tmp[1024];
@@ -210,11 +218,21 @@ void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
 
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
+    if (json) fprintf(stdout,"\n]}\n");
     return 0;
 }
 
 int grib_no_handle_action(grib_runtime_options* options, int err)
 {
+    if (json ){
+        if (first_handle) {
+            fprintf(dump_file,"{ \"messages\" : [ \n");
+            first_handle=0;
+        } else {
+            fprintf(dump_file,",\n");
+        }
+    }
+
     fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
     return 0;
 }

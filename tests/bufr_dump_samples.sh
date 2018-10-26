@@ -1,3 +1,4 @@
+#!/bin/sh
 # Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
@@ -6,17 +7,23 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
-# Package name and versioning information
-#
-#
-# Package base name
-PACKAGE_NAME='eccodes'
 
-# Package version
-ECCODES_MAJOR_VERSION=2
-ECCODES_MINOR_VERSION=10
-ECCODES_REVISION_VERSION=0
+. ./include.sh
 
-ECCODES_CURRENT=1
-ECCODES_REVISION=0
-ECCODES_AGE=0
+#Define a common label for all the tmp files
+label="bufr_dump_samples_test"
+
+#Create log file
+fLog=${label}".log"
+rm -f $fLog
+touch $fLog
+
+#Define tmp bufr files
+fJsonTmp=${label}".json.tmp"
+
+# Test sample BUFR files
+for file in $ECCODES_SAMPLES_PATH/BUFR*.tmpl; do
+  ${tools_dir}/bufr_dump -O $file >/dev/null
+done
+
+rm -f $fLog

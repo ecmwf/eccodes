@@ -11,6 +11,7 @@
 . ./include.sh
 
 REDIRECT=/dev/null
+
 cd ${data_dir}/bufr
 
 if [ $HAVE_MEMFS -eq 1 ]; then
@@ -25,9 +26,10 @@ if command -v $JSON_VERIF >/dev/null 2>&1; then
   JSON_CHECK=$JSON_VERIF
 fi
 
+# Test downloaded BUFR files
+# -------------------------
 bufr_files=`cat bufr_data_files.txt`
-for file in ${bufr_files}
-do
+for file in ${bufr_files}; do
   # Test the various JSON dump modes: 'structure', 'all' and 'flat'
   for mode in s a f; do
     rm -f ${file}.json
@@ -49,5 +51,7 @@ for c in 1 3 1/3; do
   fi
 done
 
+
 # ECC-272
-${tools_dir}/bufr_dump -jf aaen_55.bufr | grep -q -w channelRadiance
+file=aaen_55.bufr
+${tools_dir}/bufr_dump -jf $file | grep -q -w channelRadiance

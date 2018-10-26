@@ -21,11 +21,10 @@ import sys
 
 from eccodes import *
 
-INPUT = '../../data/bufr/syno_multi.bufr'
 VERBOSE = 1  # verbose error reporting
 
 
-def example():
+def example(INPUT):
     # open bufr file
     f = open(INPUT)
 
@@ -70,7 +69,7 @@ def example():
 
 def main():
     try:
-        example()
+        example(sys.argv[1])
     except CodesInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)

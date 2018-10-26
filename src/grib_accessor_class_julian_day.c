@@ -176,6 +176,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
   long year,month,day;
   
   ret=grib_julian_to_datetime(*val,&year,&month,&day,&hour,&minute,&second);
+  if (ret!=0) return ret;
 
   date=year * 10000 + month * 100 + day;
 
