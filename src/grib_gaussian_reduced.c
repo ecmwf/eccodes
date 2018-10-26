@@ -63,8 +63,10 @@ static Fraction_type fraction_construct(Fraction_value_type top, Fraction_value_
     }
 
     g = fraction_gcd(top, bottom);
-    top =  top / g;
-    bottom = bottom / g;
+    if (g != 0) {
+        top =  top / g;
+        bottom = bottom / g;
+    }
 
     result.top_ = sign * top;
     result.bottom_ = bottom;

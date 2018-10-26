@@ -275,8 +275,10 @@ void grib_file_pool_delete_file(grib_file* file) {
             if (prev->next==file) break;
             prev=prev->next;
         }
-        Assert(prev);
-        prev->next=file->next;
+        DebugAssert(prev);
+        if (prev) {
+            prev->next=file->next;
+        }
     }
 
     if (file->handle) {
