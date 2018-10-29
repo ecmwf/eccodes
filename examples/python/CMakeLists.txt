@@ -29,6 +29,7 @@ endforeach()
 #################################################
 list( APPEND tests_basic
    grib_set_pv
+   bufr_read_sample
 )
 list( APPEND tests_extra
    grib_clone
@@ -54,7 +55,7 @@ list( APPEND tests_extra
    bufr_read_header
    bufr_read_scatterometer
    bufr_read_tropical_cyclone
-   bufr_read_synop 
+   bufr_read_synop
    bufr_read_temp
    bufr_set_keys
    bufr_subset
