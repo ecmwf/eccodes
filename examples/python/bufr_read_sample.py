@@ -28,6 +28,7 @@ def example(INPUT):
 
     # These keys should be in the sample files
     keys = [
+        'unexpandedDescriptors',
         'blockNumber',
         'stationNumber',
         'latitude',
