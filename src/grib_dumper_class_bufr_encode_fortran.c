@@ -667,11 +667,21 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     int r;
     int err = _grib_get_string_length(a,&size);
     grib_handle* h=grib_handle_of_accessor(a);
+    const char* acc_name = a->name;
 
     if (size==0) return;
 
-    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
-        return;
+    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
+        /* ECC-356: Solution for the special local section key 'keyMore' and its alias 'ident' */
+        int skip = 1;
+        if ( (a->flags & GRIB_ACCESSOR_FLAG_HIDDEN)!=0 ) {
+            if ( strcmp(a->name, "keyMore")==0 && grib_is_defined(h, "ls.ident") ) {
+                skip = 0;
+                acc_name = "ident";
+            }
+        }
+        if (skip) return;
+    }
 
     value=(char*)grib_context_malloc_clear(c,size);
     if (!value) {
@@ -683,7 +693,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     err = grib_unpack_string(a,value,&size);
     p=value;
-    r=compute_bufr_key_rank(h,self->keys,a->name);
+    r=compute_bufr_key_rank(h,self->keys,acc_name);
     if (grib_is_missing_string(a,(unsigned char *)value,size)) {
         strcpy(value, ""); /* Empty string means MISSING string */
     }
@@ -693,9 +703,9 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     if (self->isLeaf==0) {
         depth+=2;
         if (r!=0)
-            fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',",r,a->name);
+            fprintf(self->dumper.out,"  call codes_set(ibufr,'#%d#%s',",r,acc_name);
         else
-            fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',",a->name);
+            fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',",acc_name);
     }
     fprintf(self->dumper.out,"\'%s\')\n",value);
 
@@ -705,10 +715,10 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         int dofree=0;
 
         if (r!=0) {
-            prefix=(char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
+            prefix=(char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(acc_name)+10));
             dofree=1;
-            sprintf(prefix,"#%d#%s",r,a->name);
-        } else prefix=(char*)a->name;
+            sprintf(prefix,"#%d#%s",r,acc_name);
+        } else prefix=(char*)acc_name;
 
         dump_attributes(d,a,prefix);
         if (dofree) grib_context_free(c,prefix);

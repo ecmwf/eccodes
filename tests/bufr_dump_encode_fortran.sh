@@ -77,7 +77,9 @@ do
     TEMP_OUT2=${label}.$tempBufr.dump.out
     ${tools_dir}/bufr_dump -p ${data_dir}/bufr/$file > $TEMP_OUT1
     ${tools_dir}/bufr_dump -p $tempBufr              > $TEMP_OUT2
-    diff $TEMP_OUT1 $TEMP_OUT2
+    # Using the '-w' (--ignore-all-space option) for diff because of the 'ident' key
+    # See ECC-356
+    diff -w $TEMP_OUT1 $TEMP_OUT2
     rm -f $TEMP_OUT1 $TEMP_OUT2
   fi
 
