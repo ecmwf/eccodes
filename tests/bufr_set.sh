@@ -140,7 +140,6 @@ ${tools_dir}/bufr_set -f -s bufrHeaderCentre=1024 -f $f $fBufrTmp 2>>$fLog 1>>$f
 #-----------------------------------------------------------
 # Test: key values out of range
 #-----------------------------------------------------------
-
 f=aaen_55.bufr
 
 # The correction1 key is of type "bits" and only 6 bits wide
@@ -160,6 +159,18 @@ if [ $? -eq 0 ]; then
 fi
 set -e
 
+#-----------------------------------------------------------
+# Test: Local ECMWF section. The 'ident' key
+#-----------------------------------------------------------
+f=temp_101.bufr
+${tools_dir}/bufr_set -s ident=ABCD $f $fBufrTmp
+result=`${tools_dir}/bufr_get -p ident $fBufrTmp`
+[ "$result" = "ABCD" ]
+${tools_dir}/bufr_set -s keyMore=ABCD $f $fBufrTmp
+result=`${tools_dir}/bufr_get -p keyMore,ident $fBufrTmp`
+[ "$result" = "ABCD ABCD" ]
+
+# ${tools_dir}/bufr_compare $f $fBufrTmp
 
 #Clean up
 rm -f $fLog 
