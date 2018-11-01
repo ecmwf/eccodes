@@ -1542,8 +1542,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     /* ECC-445 */
     if (expandBoundingBox) {
-        int e = grib_set_long(outh, "expandedBoundingBox", 1);
-        Assert(e == 0);
         Assert(!global_grid); /* ECC-576: "global" should not be set */
     }
 
@@ -1910,16 +1908,6 @@ char* codes_getenv(const char* name)
         result = getenv(old_name);
     }
     return result;
-}
-
-int expandedBoundingBox(grib_handle* h)
-{
-    long expandedBoundingBox = 0;
-    int err = grib_get_long(h, "expandedBoundingBox", &expandedBoundingBox);
-    if (!err && expandedBoundingBox == 1) {
-        return 1;
-    }
-    return 0;
 }
 
 size_t sum_of_pl_array(const long* pl, size_t plsize)
