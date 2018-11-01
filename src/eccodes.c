@@ -515,6 +515,11 @@ void codes_get_reduced_row(long pl,double lon_first,double lon_last,long* npoint
 {
     grib_get_reduced_row(pl,lon_first,lon_last,npoints,ilon_first,ilon_last);
 }
+void codes_get_reduced_row_p(long pl, double lon_first, double lon_last, long *npoints, double *olon_first, double *olon_last)
+{
+    grib_get_reduced_row_p(pl, lon_first, lon_last, npoints, olon_first, olon_last);
+}
+
 grib_box* codes_box_new(grib_handle* h,int* error)
 {
     return grib_box_new(h,error);
