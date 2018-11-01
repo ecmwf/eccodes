@@ -71,7 +71,9 @@ do
     # The executable always creates a file called outfile.bufr
     # valgrind --error-exitcode=1  ./$tempExe
     ./$tempExe
-    ${tools_dir}/bufr_compare ${data_dir}/bufr/$file $tempBufr
+
+    # ECC-356: have to blacklist 'ident' because of the spaces
+    ${tools_dir}/bufr_compare -b ident ${data_dir}/bufr/$file $tempBufr
 
     TEMP_OUT1=${label}.$file.dump.out
     TEMP_OUT2=${label}.$tempBufr.dump.out
