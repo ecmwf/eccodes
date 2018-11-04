@@ -44,7 +44,6 @@ grib_nearest* grib_nearest_factory( grib_handle* h, grib_arguments* args)
       grib_nearest_class* c = *(table[i].cclass);
       grib_nearest*       it = (grib_nearest*) grib_context_malloc_clear(h->context,c->size);
       it->cclass              = c;
-      ret = GRIB_SUCCESS;
       ret = grib_nearest_init(it,h,args);
       if(ret ==  GRIB_SUCCESS) return it;
       grib_context_log(h->context,GRIB_LOG_ERROR,"grib_nearest_factory: error %d instantiating nearest %s", ret, table[i].type);

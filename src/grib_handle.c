@@ -1511,8 +1511,8 @@ static grib_multi_support* grib_get_multi_support ( grib_context* c, FILE* f )
     if ( !gm )
     {
         gm=grib_multi_support_new ( c );
-        if ( !c->multi_support ) c->multi_support=gm;
-        else prev->next=gm;
+        if ( !c->multi_support ) { c->multi_support=gm; }
+        else { if (prev) prev->next=gm; }
     }
 
     gm->next=0;

@@ -1,0 +1,11 @@
+0 0 No significant weather
+1 1 Smoke, haze or volcanic ashes
+2 2 Hail or shower with hail
+3 3 Sandstorm, dust storm or blowing snow
+4 4 Fog
+5 5 Drizzle
+6 6 Rain
+7 7 Snow, or rain and snow mixed
+8 8 Shower
+9 9 Thunderstorm
+15 15 Missing value
