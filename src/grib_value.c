@@ -286,7 +286,8 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
             key_err=key_err->next;
         }
     }
-    error_code = *err; /* copy the error code before cleanup */
+    if (err)
+        error_code = *err; /* copy the error code before cleanup */
     grib_keys_iterator_delete(iter);
     key_err=first;
     while (key_err) {
@@ -689,7 +690,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
 
 static int __grib_set_double_array(grib_handle* h, const char* name, const double* val, size_t length, int check)
 {
-    double v=val[0];
+    double v=0;
     int constant,i;
 
     if (h->context->debug)
@@ -733,7 +734,6 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
                     !strcmp(packingType,"grid_second_order_SPD2") ||
                     !strcmp(packingType,"grid_second_order_SPD3")
             ) {
-                ret = 0;
                 slen=11; /*length of 'grid_simple' */
                 if (h->context->debug) {
                     printf("ECCODES DEBUG __grib_set_double_array: Cannot use second order packing for constant fields. Using simple packing\n");
@@ -1397,7 +1397,9 @@ static int grib_get_key_value(grib_handle* h,grib_key_value_list* kv)
         {
             list->name=grib_keys_iterator_get_name(iter);
             err=grib_get_native_type(h,list->name,&(list->type));
+            if (err) return err;
             err=grib_get_key_value(h,list);
+            if (err) return err;
             list->next=(grib_key_value_list*)grib_context_malloc_clear(h->context,sizeof(grib_key_value_list));
             list=list->next;
         }
@@ -1406,6 +1408,7 @@ static int grib_get_key_value(grib_handle* h,grib_key_value_list* kv)
 
     default:
         err=grib_get_native_type(h,kv->name,&(kv->type));
+        if (err) return err;
         err=grib_get_key_value(h,kv);
         break;
     }
@@ -1662,8 +1665,8 @@ int grib_values_check(grib_handle* h, grib_values* values, int count)
 
 int grib_key_equal(grib_handle* h1,grib_handle* h2,const char* key,int type,int *err)
 {
-    double d1,d2;
-    long l1,l2;
+    double d1=0,d2=0;
+    long l1=0,l2=0;
     char s1[500]={0,};
     char s2[500]={0,};
     size_t len1,len2;
@@ -1703,7 +1706,7 @@ int codes_copy_key(grib_handle* h1,grib_handle* h2,const char* key,int type)
     long* al;
     char* s=0;
     char** as=0;
-    size_t len1,len;
+    size_t len1=0,len=0;
     int err=0;
 
     if ( type != GRIB_TYPE_DOUBLE &&
@@ -1752,6 +1755,7 @@ int codes_copy_key(grib_handle* h1,grib_handle* h2,const char* key,int type)
         break;
     case GRIB_TYPE_STRING:
         err=grib_get_string_length(h1,key,&len);
+        if (err) return err;
         if (len1==1) {
             s=(char*)grib_context_malloc_clear(h1->context,len);
             err=grib_get_string(h1,key,s,&len);

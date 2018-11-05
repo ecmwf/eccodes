@@ -49,7 +49,6 @@ meta GDSPresent gds_is_present(gridDescriptionSectionPresent,gridDefinition,bitm
 #alias GDSPresent = gridDescriptionSectionPresent;
 
 flagbit bitmapPresent(section1Flags,6) :dump;
-flagbit expandedBoundingBox(section1Flags,5) :dump;
 alias bitmapSectionPresent=bitmapPresent;
 alias geography.bitmapPresent=bitmapPresent;
 alias missingValuesPresent=bitmapPresent : read_only;

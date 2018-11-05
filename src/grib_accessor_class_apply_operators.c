@@ -211,6 +211,7 @@ static void self_clear(grib_context* c,grib_accessor_apply_operators* self)
 
 static void init(grib_accessor* a, const long len , grib_arguments* args )
 {
+#if 0
     grib_accessor_apply_operators* self = (grib_accessor_apply_operators*)a;
     int n=0;
     self->expandedDescriptors=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
@@ -226,6 +227,8 @@ static void init(grib_accessor* a, const long len , grib_arguments* args )
     a->length = 0;
     self->scaleAO=0;
     self->expandedAOSize=0;
+#endif
+    Assert(0); /* This accessor is not currently used */
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -307,7 +310,7 @@ static int apply_operators(grib_accessor* a)
     grib_accessor_apply_operators* self = (grib_accessor_apply_operators*)a;
     grib_context* c=a->context;
     grib_handle* h=grib_handle_of_accessor(a);
-    int useDefinedBitmap;
+    int useDefinedBitmap=0;
     long* descriptors=0;
     long* scale=0;
     long* width=0;

@@ -1,0 +1,12 @@
+0 0 No significant weather phenomena
+3 3 Blowing snow, sand storm, dust storm
+4 4 Fog, ice fog, thick haze (visibility < 4 km)
+5 5 Drizzle
+6 6 Rain
+7 7 Snow
+8 8 Showers of snow, rain, rain and snow mixed, hail
+9 9 Thunderstorm with or without precipitation
+10 10 Top of inversion layer < 800 m
+11 11 Top of inversion layer < 800 m (typo?)
+12 12 Top of inversion layer < 800 m (typo?)
+15 15 Missing value

@@ -420,9 +420,19 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     size_t size = MAX_STRING_SIZE;
     int is_missing = 0;
     int err = 0;
+    const char* acc_name = a->name;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
-        return;
+        /* ECC-356: Solution for the special local section key 'keyMore' and its alias 'ident' */
+        int skip = 1;
+        if ( (a->flags & GRIB_ACCESSOR_FLAG_HIDDEN)!=0 ) {
+            grib_handle* h = grib_handle_of_accessor(a);
+            if ( strcmp(a->name, "keyMore")==0 && grib_is_defined(h, "ls.ident") ) {
+                skip = 0;
+                acc_name = "ident";
+            }
+        }
+        if (skip) return;
     }
 
     /* ECC-710: It is MUCH slower determining the string length here
@@ -454,7 +464,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
         fprintf(self->dumper.out,"\n%-*s{",depth," ");
         depth+=2;
         fprintf(self->dumper.out,"\n%-*s",depth," ");
-        fprintf(self->dumper.out,"\"key\" : \"%s\",",a->name);
+        fprintf(self->dumper.out,"\"key\" : \"%s\",",acc_name);
         fprintf(self->dumper.out,"\n%-*s",depth," ");
         fprintf(self->dumper.out,"\"value\" : ");
     }

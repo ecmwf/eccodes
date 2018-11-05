@@ -43,10 +43,10 @@ if command -v pkg-config >/dev/null 2>&1; then
     FLAGS_COMPILER=`echo $FLAGS_COMPILER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
 
     # TODO: For now only support when shared libs enabled
-    SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`
-    if [ "$SHARED_LIBS" = "ON" ]; then
-      COMPILE_AND_RUN=1
-    fi
+    #SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`
+    #if [ "$SHARED_LIBS" = "ON" ]; then
+    #  COMPILE_AND_RUN=1
+    #fi
   fi
 fi
 
@@ -71,13 +71,17 @@ do
     # The executable always creates a file called outfile.bufr
     # valgrind --error-exitcode=1  ./$tempExe
     ./$tempExe
-    ${tools_dir}/bufr_compare ${data_dir}/bufr/$file $tempBufr
+
+    # ECC-356: have to blacklist 'ident' because of the spaces
+    ${tools_dir}/bufr_compare -b ident ${data_dir}/bufr/$file $tempBufr
 
     TEMP_OUT1=${label}.$file.dump.out
     TEMP_OUT2=${label}.$tempBufr.dump.out
     ${tools_dir}/bufr_dump -p ${data_dir}/bufr/$file > $TEMP_OUT1
     ${tools_dir}/bufr_dump -p $tempBufr              > $TEMP_OUT2
-    diff $TEMP_OUT1 $TEMP_OUT2
+    # Using the '-w' (--ignore-all-space option) for diff because of the 'ident' key
+    # See ECC-356
+    diff -w $TEMP_OUT1 $TEMP_OUT2
     rm -f $TEMP_OUT1 $TEMP_OUT2
   fi
 

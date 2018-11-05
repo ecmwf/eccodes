@@ -1351,6 +1351,7 @@ long grib_julian_to_date(long jdate);
 long grib_date_to_julian(long ddate);
 
 void grib_get_reduced_row(long pl,double lon_first,double lon_last,long* npoints,long* ilon_first, long* ilon_last);
+void grib_get_reduced_row_p(long pl, double lon_first, double lon_last, long *npoints, double *olon_first, double *olon_last);
 
 /* read products */
 int wmo_read_any_from_file(FILE *f, void *buffer, size_t *len);

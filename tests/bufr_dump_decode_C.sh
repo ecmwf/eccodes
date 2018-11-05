@@ -44,16 +44,16 @@ if command -v pkg-config >/dev/null 2>&1; then
     #FLAGS_COMPILER="$FLAGS_COMPILER  -fsanitize=memory"
 
     # The pkgconfig variables refer to the install directory. Change to build dir
-    BUILD_DIR=`grep -w eccodes_BINARY_DIR $CACHE_FILE | cut -d'=' -f2`
-    INSTALL_DIR=`grep -w CMAKE_INSTALL_PREFIX $CACHE_FILE | cut -d'=' -f2`
-    FLAGS_LINKER=`echo $FLAGS_LINKER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
-    FLAGS_COMPILER=`echo $FLAGS_COMPILER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
+    #BUILD_DIR=`grep -w eccodes_BINARY_DIR $CACHE_FILE | cut -d'=' -f2`
+    #INSTALL_DIR=`grep -w CMAKE_INSTALL_PREFIX $CACHE_FILE | cut -d'=' -f2`
+    #FLAGS_LINKER=`echo $FLAGS_LINKER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
+    #FLAGS_COMPILER=`echo $FLAGS_COMPILER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
 
     # TODO: For now only support when shared libs enabled
-    SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`
-    if [ "$SHARED_LIBS" = "ON" ]; then
-      COMPILE_AND_RUN=1
-    fi
+    #SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`
+    #if [ "$SHARED_LIBS" = "ON" ]; then
+    #  COMPILE_AND_RUN=1
+    #fi
   fi
 fi
 

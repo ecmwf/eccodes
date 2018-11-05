@@ -25,6 +25,10 @@ else
   save=`pwd`
 
   set -x
+  EXEC=""
+  HAVE_MEMFS=0
+  HAVE_EXTRA_TESTS=0
+  HAVE_JPEG=0
 
   if [ -z "${data_dir}" ]
   then
