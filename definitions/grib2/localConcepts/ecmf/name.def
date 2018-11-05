@@ -31,6 +31,18 @@
 	}
 #Total precipitation of at least 100 mm
 'Total precipitation of at least 100 mm' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 probabilityType = 3 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 scaledValueOfLowerLimit = 100 ;
+	 productDefinitionTemplateNumber = 9 ;
+	}
+#Total precipitation of at least 100 mm
+'Total precipitation of at least 100 mm' = {
 	 discipline = 192 ;
 	 parameterCategory = 131 ;
 	 parameterNumber = 85 ;
