@@ -120,7 +120,7 @@ static void write_message(grib_handle* h,const char* str)
 {
     const void *m; size_t s;
     char fname[1024]={0,};
-    FILE* fh=NULL;
+    FILE* fh;
 
     grib_get_message(h,&m,&s);
     sprintf(fname,"%s_%d.bufr",str,write_count);
@@ -1149,7 +1149,7 @@ static int compare_attributes(grib_handle* handle1, grib_handle* handle2, grib_r
         isLeafKey = aa->attributes[0]==NULL ? 1 : 0; /* update global variable */
 
         if (compare_attribute(handle1, handle2, options, aa, prefix, err)) {
-            err++;
+            (*err)++;
             write_messages(handle1, handle2);
             ret = 1;
         }
@@ -1168,7 +1168,7 @@ static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_ru
     char* fullname = (char*)grib_context_malloc_clear( c, sizeof(char)*(strlen(a->name)+strlen(prefix)+5) );
     sprintf(fullname, "%s->%s", prefix, a->name);
     if (compare_values(options, handle1, handle2, fullname, GRIB_TYPE_UNDEFINED)) {
-        err++;
+        (*err)++;
         write_messages(handle1, handle2);
         ret=1;
     }
@@ -1182,7 +1182,7 @@ static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_ru
     return ret;
 }
 
-static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options, int *err)
+static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options, int *pErr)
 {
     int ret=0;
     const char* name=NULL;
@@ -1241,13 +1241,13 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
 
         /* Compare the key itself */
         if (compare_values(options, handle1, handle2, prefix, GRIB_TYPE_UNDEFINED)) {
-            err++;
+            (*pErr)++;
             write_messages(handle1, handle2);
             ret=1;
         }
         /* Now compare the key attributes (if any) */
-        if (compare_attributes(handle1, handle2, options, xa, prefix, err)) {
-            err++;
+        if (compare_attributes(handle1, handle2, options, xa, prefix, pErr)) {
+            (*pErr)++;
             write_messages(handle1, handle2);
             ret=1;
         }
@@ -1255,6 +1255,17 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
     }
 
     grib_keys_iterator_delete(iter);
+
+    /* ECC-356: Handling special case of 'ident' key */
+    name = "ls.ident";
+    if (!blacklisted("ident") && grib_is_defined(handle1, name) && grib_is_defined(handle2, name)) {
+        if (compare_values(options, handle1, handle2, "ident", GRIB_TYPE_STRING)) {
+            (*pErr)++;
+            write_messages(handle1, handle2);
+            ret=1;
+        }
+    }
+
     return ret;
 }
 

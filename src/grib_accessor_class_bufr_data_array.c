@@ -2075,11 +2075,13 @@ static int bitmap_init(grib_context* c, bitmap_s* bitmap,
     }
     bitmap->referredElement=bitmapStart;
     while (bitmap_ref_skip(bitmap->referredElement,&ret)) bitmap->referredElement=bitmap->referredElement->prev;
+    /*printf("bitmap_init: bitmapSize=%d\n", bitmapSize);*/
     for (i=1;i<bitmapSize;i++) {
         if (bitmap->referredElement==NULL) {
             grib_context_log(c, GRIB_LOG_ERROR,"bitmap_init: bitmap->referredElement==NULL");
             return GRIB_INTERNAL_ERROR;
         }
+        /*printf("  bitmap_init: i=%d  |%s|\n", i,bitmap->referredElement->accessor->name);*/
         bitmap->referredElement=bitmap->referredElement->prev;
     }
     bitmap->referredElementStart=bitmap->referredElement;

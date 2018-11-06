@@ -295,18 +295,19 @@ static void gaussian_reduced_row(
 /* --------------------------------------------------------------------------------------------------- */
 void grib_get_reduced_row_wrapper(grib_handle* h, long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last)
 {
-    if (expandedBoundingBox(h)) {
-        grib_get_reduced_row2(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
-    } else {
-        grib_get_reduced_row(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
-    }
+    grib_get_reduced_row(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
+
+    /* Legacy 
+     * grib_get_reduced_row1(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
+     */
 }
 
-void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )
+#if 0
+/* This was the legacy way of counting the points. Now deprecated */
+static void grib_get_reduced_row1(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )
 {
     double range=0,dlon_first=0,dlon_last=0;
     long irange;
-    /*printf("Using grib_get_reduced_row...\n");*/
     range=lon_last-lon_first;
     if (range<0) {range+=360;lon_first-=360;}
 
@@ -391,16 +392,17 @@ void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoi
 
     return;
 }
+#endif
 
 /* New method based on eckit Fractions and matching MIR count */
-void grib_get_reduced_row2(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )
+void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )
 {
     long long Ni_globe = pl;
     Fraction_type west;
     Fraction_type east;
     long long the_count;
     double the_lon1, the_lon2;
-    /*printf("Using gaussian_reduced_row...\n");*/
+
     while (lon_last < lon_first) lon_last += 360;
     west = fraction_construct_from_double(lon_first);
     east = fraction_construct_from_double(lon_last);
@@ -417,7 +419,8 @@ void grib_get_reduced_row2(long pl, double lon_first, double lon_last, long* npo
     *ilon_last  = (the_lon2*pl)/360.0;
 }
 
-void grib_get_reduced_row3(long pl, double lon_first, double lon_last, long *npoints, double *olon_first, double *olon_last)
+/* This version returns the actual first and last longitudes rather than indexes */
+void grib_get_reduced_row_p(long pl, double lon_first, double lon_last, long *npoints, double *olon_first, double *olon_last)
 {
     long long Ni_globe = pl;
     Fraction_type west;
