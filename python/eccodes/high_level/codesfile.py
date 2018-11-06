@@ -6,9 +6,9 @@ Author: Daniel Lee, DWD, 2016
 """
 
 from .. import eccodes
+import io
 
-
-class CodesFile(file):
+class CodesFile(io.IOBase):
 
     """
     An abstract class to specify and/or implement common behaviour that files

@@ -32,6 +32,13 @@ from functools import wraps
 from . import errors
 from .errors import *  # noqa
 
+try:
+   type(file)
+except NameError:
+   import io
+   file=io.IOBase
+   long=int
+
 KEYTYPES = {
     1: int,
     2: float,
@@ -76,12 +83,12 @@ def require(**_params_):
         @wraps(_func_)
         # The wrapper function. Replaces the target function and receives its args
         def modified(*args, **kw):
-            arg_names = _func_.func_code.co_varnames
+            arg_names = _func_.__code__.co_varnames
             # argnames, varargs, kwargs, defaults = inspect.getargspec(_func_)
             kw.update(zip(arg_names, args))
-            for name, allowed_types in _params_.iteritems():
+            for name, allowed_types in _params_.items():
                 param = kw[name]
-                if isinstance(allowed_types, types.TypeType):
+                if isinstance(allowed_types, type):
                     allowed_types = (allowed_types,)
                 assert any([isinstance(param, type1) for type1 in allowed_types]), \
                     "Parameter '%s' should be of type %s" % (name, " or ".join([t.__name__ for t in allowed_types]))
@@ -816,7 +823,7 @@ def grib_set_long(msgid, key, value):
     except (ValueError, TypeError):
         raise TypeError("Invalid type")
 
-    if value > sys.maxint:
+    if value > sys.maxsize:
         raise TypeError("Invalid type")
 
     GRIB_CHECK(_internal.grib_c_set_long(msgid, key, value))
