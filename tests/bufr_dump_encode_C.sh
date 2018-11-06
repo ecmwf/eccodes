@@ -24,18 +24,23 @@ rm -f $fLog
 
 tempBufr=outfile.bufr
 tempDir=${label}.dir
+rm -rf $tempDir
 mkdir -p $tempDir
 
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
 # pkgconfig should be one level above the test dir
-PKGCONFIG_FILE=../eccodes.pc
-CACHE_FILE=../CMakeCache.txt
+PKGCONFIG_FILE=../../eccodes.pc
+CACHE_FILE=../../CMakeCache.txt
 
 COMPILE_AND_RUN=0
 
+cd $tempDir
+
 if command -v pkg-config >/dev/null 2>&1; then
   if [ -f "$PKGCONFIG_FILE" ]; then
+    sed -e "s#^prefix=.*#prefix=$build_dir#" < $PKGCONFIG_FILE > temp.pc
+    PKGCONFIG_FILE=temp.pc
     # Work out the C compiler and flags from pkgconfig
     COMPILER=`pkg-config --variable=CC $PKGCONFIG_FILE`
     FLAGS_COMPILER=`pkg-config --cflags $PKGCONFIG_FILE`
@@ -44,20 +49,18 @@ if command -v pkg-config >/dev/null 2>&1; then
     #FLAGS_COMPILER="$FLAGS_COMPILER  -fsanitize=memory"
 
     # The pkgconfig variables refer to the install directory. Change to build dir
-    BUILD_DIR=`grep -w eccodes_BINARY_DIR $CACHE_FILE | cut -d'=' -f2`
-    INSTALL_DIR=`grep -w CMAKE_INSTALL_PREFIX $CACHE_FILE | cut -d'=' -f2`
-    FLAGS_LINKER=`echo $FLAGS_LINKER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
-    FLAGS_COMPILER=`echo $FLAGS_COMPILER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
+    #BUILD_DIR=`grep -w eccodes_BINARY_DIR $CACHE_FILE | cut -d'=' -f2`
+    #INSTALL_DIR=`grep -w CMAKE_INSTALL_PREFIX $CACHE_FILE | cut -d'=' -f2`
+    #FLAGS_LINKER=`echo $FLAGS_LINKER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
+    #FLAGS_COMPILER=`echo $FLAGS_COMPILER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
 
     # TODO: For now only support when shared libs enabled
-    #SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`
-    #if [ "$SHARED_LIBS" = "ON" ]; then
-    #  COMPILE_AND_RUN=1
-    #fi
+    SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`
+    if [ "$SHARED_LIBS" = "ON" ]; then
+      COMPILE_AND_RUN=1
+    fi
   fi
 fi
-
-cd $tempDir
 
 for file in ${bufr_files}
 do
