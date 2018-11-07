@@ -87,5 +87,9 @@ iterator polar_stereographic(numberOfPoints,missingValue,values,
 
 nearest polar_stereographic(values,radius,Nx,Ny);
 
+meta latLonValues latlonvalues(values);
+alias latitudeLongitudeValues=latLonValues;
+meta latitudes latitudes(values,0);
+meta longitudes longitudes(values,0);
 
 # END   2/template.3.20 ----------------------------------------------------------------------
