@@ -824,6 +824,54 @@ static int fix_for_lsdate_needed(grib_handle* h)
     return 0;
 }
 
+static int get_initial_element_of_array(grib_handle* h, const char* keyName, size_t num_vals, char* value)
+{
+    int err = 0, type = 0;
+    size_t len = num_vals;
+    char* sval = NULL;
+    unsigned char *uval = NULL;
+    long *lval = NULL;
+    double* dval = NULL;
+    grib_context* c = h->context;
+
+    Assert(num_vals > 1); /* This is for array keys */
+    if ((err = grib_get_native_type(h,keyName,&type))!=GRIB_SUCCESS) return err;
+    switch(type) {
+        case GRIB_TYPE_STRING:
+            grib_get_string_length(h,keyName,&len);
+            sval = (char*)grib_context_malloc(c,len*sizeof(char));
+            if (!sval) return GRIB_OUT_OF_MEMORY;
+            if((err = grib_get_string(h,keyName,sval,&len)) != GRIB_SUCCESS) return err;
+            sprintf(value, "%s", sval);
+            free(sval);
+            break;
+        case GRIB_TYPE_LONG:
+            lval = (long*)grib_context_malloc(c,num_vals*sizeof(long));
+            if (!lval) return GRIB_OUT_OF_MEMORY;
+            if((err = grib_get_long_array(h,keyName,lval,&len)) != GRIB_SUCCESS) return err;
+            sprintf(value, "%ld...", lval[0]);
+            free(lval);
+            break;
+        case GRIB_TYPE_DOUBLE:
+            dval = (double*)grib_context_malloc(c,num_vals*sizeof(double));
+            if (!dval) return GRIB_OUT_OF_MEMORY;
+            if((err = grib_get_double_array(h,keyName,dval,&len)) != GRIB_SUCCESS) return err;
+            sprintf(value, "%g...", dval[0]);
+            free(dval);
+            break;
+        case GRIB_TYPE_BYTES:
+            uval = (unsigned char*)grib_context_malloc(c,num_vals*sizeof(unsigned char));
+            if (!uval) return GRIB_OUT_OF_MEMORY;
+            if((err = grib_get_bytes(h,keyName,uval,&len)) != GRIB_SUCCESS) return err;
+            sprintf(value, "%d...", (short)uval[0]);
+            free(uval);
+            break;
+        default:
+            sprintf(value, "%s...", "");
+    }
+    return GRIB_SUCCESS;
+}
+
 void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
 {
     int i=0;
@@ -835,6 +883,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     const char* notfound="not_found";
     int written_to_dump = 0; /* boolean */
     grib_accessor* acc = NULL;
+    size_t num_vals = 0;
 
     if (!options->verbose) return;
 
@@ -890,7 +939,12 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                     if (fix_lsdate && strcmp(pName, "date")==0) { /* ECC-707 */
                         pName = "ls.date";
                     }
-                    ret=grib_get_string( h,pName,value,&len);
+                    ret = grib_get_size(h, pName, &num_vals);
+                    if(ret==GRIB_SUCCESS && num_vals>1) { /* See ECC-278 */
+                        ret = get_initial_element_of_array(h, pName, num_vals, value);
+                    } else {
+                        ret=grib_get_string( h,pName,value,&len);
+                    }
                     break;
                 case GRIB_TYPE_DOUBLE:
                     ret=grib_get_double( h,options->print_keys[i].name,&dvalue);
