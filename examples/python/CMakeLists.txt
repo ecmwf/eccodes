@@ -29,6 +29,7 @@ endforeach()
 #################################################
 list( APPEND tests_basic
    grib_set_pv
+   grib_read_sample
    bufr_read_sample
 )
 list( APPEND tests_extra
