@@ -8,9 +8,9 @@
 # nor does it submit to any jurisdiction.
 
 #
-# Python implementation: bufr_read_sample
+# Python implementation: grib_read_sample
 #
-# Description: read key values from a BUFR sample message.
+# Description: read key values from a GRIB sample message.
 #
 
 from __future__ import print_function
@@ -21,53 +21,40 @@ from eccodes import *
 
 VERBOSE = 1  # verbose error reporting
 
-def get_key_value(msgid, key):
-    v = codes_get(msgid, key)
-    if v == CODES_MISSING_DOUBLE or v == CODES_MISSING_LONG:
-        v = 'MISSING'
-    return v
-
 
 def example(INPUT):
-    # open BUFR file
+    # open GRIB file
     f = open(INPUT)
 
     # These keys should be in the sample files
     keys = [
+        'identifier',
         'editionNumber',
-        'unexpandedDescriptors',
-        'blockNumber',
-        'stationNumber',
-        'verticalSignificanceSurfaceObservations',
-        'latitude',
-        'longitude',
-        '24HourPressureChange',
-        'horizontalVisibility',
-        '#1#cloudAmount',  # cloud amount (low and mid level)
-        '#1#heightOfBaseOfCloud',
-        '#1#cloudType',  # cloud type (low clouds)
-        '#2#cloudType',  # cloud type (middle clouds)
-        '#3#cloudType'  # cloud type (highclouds)
+        'year',
+        'month',
+        'latitudeOfFirstGridPointInDegrees',
+        'longitudeOfFirstGridPointInDegrees',
+        'bitsPerValue',
+        'stepType',
+        'packingType'
     ]
 
     cnt = 0
 
     # Loop for the messages in the file
     while 1:
-        bufr = codes_bufr_new_from_file(f)
-        if bufr is None:
+        gid = codes_grib_new_from_file(f)
+        if gid is None:
             break
 
         print("message: %s" % cnt)
 
-        codes_set(bufr, 'unpack', 1)
-
         for key in keys:
-            print('  %s=%s' % (key, get_key_value(bufr, key)))
+            print('  %s=%s' % (key, codes_get(gid, key)))
 
         cnt += 1
 
-        codes_release(bufr)
+        codes_release(gid)
 
     f.close()
 

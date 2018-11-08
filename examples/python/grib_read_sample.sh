@@ -10,23 +10,22 @@
 
 . ./include.sh
 
-
 # Define a common label for all the tmp files
-label="bufr_read_sample_test_p"
+label="grib_read_sample_test_p"
 
 # Define tmp files
 temp1=${label}".tmp1.txt"
 temp2=${label}".tmp2.txt"
 
-$PYTHON $examples_src/bufr_read_sample.py ${ECCODES_SAMPLES_PATH}/BUFR3.tmpl > $temp1
-$PYTHON $examples_src/bufr_read_sample.py ${ECCODES_SAMPLES_PATH}/BUFR4.tmpl > $temp2
+$PYTHON $examples_src/grib_read_sample.py ${ECCODES_SAMPLES_PATH}/GRIB1.tmpl > $temp1
+$PYTHON $examples_src/grib_read_sample.py ${ECCODES_SAMPLES_PATH}/GRIB2.tmpl > $temp2
 
 # Check output
 kvpairs='
-   unexpandedDescriptors=307080
-   blockNumber=MISSING
-   horizontalVisibility=MISSING
-   #3#cloudType=MISSING'
+   bitsPerValue=0
+   identifier=GRIB
+   stepType=instant
+   packingType=grid_simple'
 
 for kv in $kvpairs; do
     grep -q $kv $temp1
