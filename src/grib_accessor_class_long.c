@@ -152,6 +152,7 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len)
     /* TODO: We should catch all errors but in this case the test ERA_Gen.sh will fail
      * as the output from grib_ls will be different */
     /* if (err) return err; */
+    (void)err;
 
     if ((val == GRIB_MISSING_LONG) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) )
         sprintf(repres,"MISSING");
