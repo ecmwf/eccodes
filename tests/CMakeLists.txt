@@ -29,6 +29,7 @@ list( APPEND test_bins
       bufr_get_element
       sh_ieee64
       ieee
+      sh_imag
 )
 
 foreach( tool ${test_bins} )
@@ -58,6 +59,7 @@ list( APPEND tests_no_data_reqd
     bufr_rdbSubTypes
     grib_efas
     grib_mars_types
+    sh_imag
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
