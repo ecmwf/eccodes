@@ -22,7 +22,7 @@ from eccodes import *
 VERBOSE = 1  # verbose error reporting
 
 def example(input_filename, output_filename):
-    f = open(input_filename)
+    f = open(input_filename, 'rb')
     ibufrin = codes_bufr_new_from_file(f)
     f.close()
 
@@ -42,7 +42,7 @@ def example(input_filename, output_filename):
 
     codes_bufr_copy_data ( ibufrin,ibufrout)
 
-    outfile=open(output_filename,'wb')
+    outfile=open(output_filename, 'wb')
     codes_write(ibufrout,outfile)
     outfile.close()
 

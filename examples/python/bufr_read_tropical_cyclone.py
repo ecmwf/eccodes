@@ -26,7 +26,7 @@ data = collections.defaultdict(dict)
 
 def example():
     # open BUFR file
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     cnt = 0
 

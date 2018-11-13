@@ -20,7 +20,7 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
     gid = codes_grib_new_from_file(f)
 
     values = codes_get_values(gid)

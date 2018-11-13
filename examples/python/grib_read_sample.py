@@ -24,7 +24,7 @@ VERBOSE = 1  # verbose error reporting
 
 def example(INPUT):
     # open GRIB file
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     # These keys should be in the sample files
     keys = [

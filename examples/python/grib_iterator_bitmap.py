@@ -22,7 +22,7 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example(INPUT):
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     while 1:
         gid = codes_grib_new_from_file(f)

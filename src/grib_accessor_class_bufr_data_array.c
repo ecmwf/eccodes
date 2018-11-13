@@ -1760,13 +1760,12 @@ static int adding_extra_key_attributes(grib_handle* h)
     return (!skip);
 }
 
-static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_accessor* attribute,grib_section* section,long ide,long subset,int dump,int count)
+static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_accessor* attribute,grib_section* section,long ide,long subset,int dump,int count,int add_extra_attributes)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     char code[10]={0,};
     char* temp_str = NULL;
     int idx=0;
-    int add_extra_attributes = 1;
     unsigned long flags=GRIB_ACCESSOR_FLAG_READ_ONLY;
     grib_action operatorCreator = {0, };
     grib_accessor* elementAccessor=NULL;
@@ -1780,8 +1779,6 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
     operatorCreator.flags     = GRIB_ACCESSOR_FLAG_READ_ONLY;
     operatorCreator.set        = 0;
     operatorCreator.name="operator";
-
-    add_extra_attributes = adding_extra_key_attributes(grib_handle_of_accessor(a));
 
     if(attribute) { DebugAssert(attribute->parent==NULL); }
 
@@ -2143,6 +2140,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     int qualityPresent=0;
     bitmap_s bitmap={0,};
     int extraElement=0;
+    int add_extra_attributes = 1;
 
     grib_accessor* gaGroup=0;
     grib_action creatorGroup = {0, };
@@ -2202,6 +2200,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     /*indexOfGroupNumber=0;*/
     depth=0;
     extraElement=0;
+    add_extra_attributes = adding_extra_key_attributes(grib_handle_of_accessor(a));
 
     for (iss=0;iss<end;iss++) {
         qualityPresent=0;
@@ -2350,7 +2349,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 grib_accessors_list_push(self->dataAccessors,asn,rank);
             }
             count++;
-            elementAccessor=create_accessor_from_descriptor(a,associatedFieldAccessor,section,ide,iss,dump,count);
+            elementAccessor=create_accessor_from_descriptor(a,associatedFieldAccessor,section,ide,iss,dump,count,add_extra_attributes);
             if (!elementAccessor) {
                 err = GRIB_DECODING_ERROR;
                 return err;

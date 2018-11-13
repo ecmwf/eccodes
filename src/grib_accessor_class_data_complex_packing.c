@@ -294,7 +294,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
             != GRIB_SUCCESS)
         return ret;
 
-    if((ret = grib_get_long_internal(gh,self->ieee_floats,&ieee_floats)) != GRIB_SUCCESS)
+    /* ECC-774: don't use grib_get_long_internal */
+    if((ret = grib_get_long(gh,self->ieee_floats,&ieee_floats)) != GRIB_SUCCESS)
         return ret;
 
     if((ret = grib_get_double_internal(gh,self->laplacianOperator,&laplacianOperator))

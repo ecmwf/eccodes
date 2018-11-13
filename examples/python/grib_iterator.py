@@ -19,7 +19,7 @@ missingValue = 1e+20  # A value out of range
 
 
 def example(INPUT):
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     while 1:
         gid = codes_grib_new_from_file(f)
