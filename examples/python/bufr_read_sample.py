@@ -30,7 +30,7 @@ def get_key_value(msgid, key):
 
 def example(INPUT):
     # open BUFR file
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     # These keys should be in the sample files
     keys = [

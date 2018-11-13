@@ -23,7 +23,7 @@ default_namespace = 'ls'
 
 
 def do_print(namespace, INPUT):
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
     first_time = True
 
     print('{')
