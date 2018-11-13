@@ -234,6 +234,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
     if (BUFR_DESCRIPTORS_ARRAY_USED_SIZE(unexpanded)==0) return 0;
 
     us=grib_bufr_descriptor_clone(grib_bufr_descriptors_array_get(unexpanded,0));
+    us->context = c;
 
     *err=0;
 #if MYDEBUG
