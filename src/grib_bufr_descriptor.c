@@ -21,13 +21,13 @@ bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor,int cod
 
 bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d)
 {
-
     bufr_descriptor* cd;
 
     if (!d) return NULL;
 
     cd=(bufr_descriptor*)grib_context_malloc_clear(d->context,sizeof(bufr_descriptor));
 
+    cd->context=d->context;
     cd->code=d->code;
     cd->F=d->F;
     cd->X=d->X;

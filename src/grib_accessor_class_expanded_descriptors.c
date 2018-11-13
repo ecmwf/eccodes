@@ -321,7 +321,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
 #endif
             grib_bufr_descriptor_delete(u);
             size=us->X*us->Y;
-            ur=(bufr_descriptor**)grib_context_malloc_clear(c,us->X*sizeof(bufr_descriptor));
+            ur=(bufr_descriptor**)grib_context_malloc_clear(c,us->X*sizeof(bufr_descriptor*));
             for (j=0;j<us->X;j++) {
                 DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded,ur[j]);
 #if MYDEBUG
