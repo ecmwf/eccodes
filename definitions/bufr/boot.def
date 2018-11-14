@@ -12,7 +12,7 @@ transient missingValue=999999 : hidden;
 
 # This gets updated twice a year by WMO.
 # See http://www.wmo.int/pages/prog/www/WMOCodes/WMO306_vI2/LatestVERSION/LatestVERSION.html
-constant masterTablesVersionNumberLatest = 30;
+constant masterTablesVersionNumberLatest = 31;
 
 #negative value=not used
 transient inputDelayedDescriptorReplicationFactor={-1} : hidden;
