@@ -57,7 +57,6 @@ list( APPEND tests_no_data_reqd
     bufr_ecc-517
     bufr_rdbSubTypes
     grib_efas
-    grib_mars_types
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
@@ -147,6 +146,7 @@ list( APPEND tests_data_reqd
     grib_local_MeteoFrance
     grib_neg_fctime
     codes_split_file
+    grib_mars_types
 )
 if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
     list(APPEND tests_data_reqd bufr_dump_encode_fortran)
