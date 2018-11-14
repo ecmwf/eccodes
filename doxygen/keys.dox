@@ -118,9 +118,7 @@ jDirectionIncrement -> jDirectionIncrementInDegrees
   - grid_simple_matrix_bitmap
   - grid_second_order
   - spectral_complex
-  - spectral_simple
-  - grid_unknown
-  - spectral_unknown\n
+  - spectral_simple\n
  - For GRIB edition 2:
   - grid_simple
   - grid_simple_matrix
@@ -128,6 +126,7 @@ jDirectionIncrement -> jDirectionIncrementInDegrees
   - grid_complex
   - grid_complex_spatial_differencing
   - grid_jpeg
+  - grid_ccsds
   - grid_second_order
   - grid_png
   - grid_ieee
