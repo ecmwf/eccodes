@@ -24,7 +24,7 @@ import_array();
   int fileDescriptor = PyObject_AsFileDescriptor($input);
   if(fileDescriptor >= 0) {
     /* Convert file descriptor to a FILE pointer */
-    $1 = fdopen(fileDescriptor,"r+"); 
+    $1 = fdopen(fileDescriptor,"rb+");
   }
   else {
     PyErr_SetString(PyExc_TypeError, "$1_name must be a file type.");
