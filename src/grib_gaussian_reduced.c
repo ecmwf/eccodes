@@ -21,6 +21,14 @@
  */
 #define EFDEBUG 0
 
+#ifndef LLONG_MAX
+#define LLONG_MAX LONG_MAX
+#endif
+#ifndef ULLONG_MAX
+#define ULLONG_MAX ULONG_MAX
+#endif
+
+
 typedef long long Fraction_value_type;
 
 typedef struct Fraction_type {
