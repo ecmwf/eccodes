@@ -13,6 +13,9 @@
 #include <assert.h>
 #include <float.h>
 
+extern char *optarg;
+extern int optind;
+
 #define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 
 static int get_packing_type_code(const char* packingType)

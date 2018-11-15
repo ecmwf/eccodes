@@ -14,6 +14,9 @@
  */
 #include "grib_tools.h"
 
+extern char *optarg;
+extern int optind;
+
 #ifdef ECCODES_ON_WINDOWS
 /* Microsoft Windows Visual Studio support */
 #include "wingetopt.h"

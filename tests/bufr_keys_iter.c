@@ -11,6 +11,9 @@
 #include "eccodes.h"
 #include <assert.h>
 
+extern char *optarg;
+extern int optind;
+
 static void usage(const char* prog)
 {
     printf("usage: %s [-a|-d] infile\n",prog);
