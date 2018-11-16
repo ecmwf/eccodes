@@ -2061,6 +2061,21 @@ static int bitmap_ref_skip(grib_accessors_list* al,int* err)
     return 0;
 }
 
+static void print_bitmap_debug_info(grib_context* c, bitmap_s* bitmap, grib_accessors_list* bitmapStart, int bitmapSize)
+{
+    int i = 0, ret = 0;
+    printf("ECCODES DEBUG: bitmap_init: bitmapSize=%d\n", bitmapSize);
+    bitmap->cursor=bitmapStart->next;
+    bitmap->referredElement=bitmapStart;
+    while (bitmap_ref_skip(bitmap->referredElement,&ret))
+        bitmap->referredElement=bitmap->referredElement->prev;
+    for (i=1;i<bitmapSize;i++) {
+        if (bitmap->referredElement) {
+            printf("ECCODES DEBUG:\t bitmap_init: i=%d |%s|\n", i,bitmap->referredElement->accessor->name);
+            bitmap->referredElement=bitmap->referredElement->prev;
+        }
+    }
+}
 static int bitmap_init(grib_context* c, bitmap_s* bitmap,
                        grib_accessors_list* bitmapStart, int bitmapSize, grib_accessors_list* lastAccessorInList)
 {
@@ -2076,6 +2091,7 @@ static int bitmap_init(grib_context* c, bitmap_s* bitmap,
     for (i=1;i<bitmapSize;i++) {
         if (bitmap->referredElement==NULL) {
             grib_context_log(c, GRIB_LOG_ERROR,"bitmap_init: bitmap->referredElement==NULL");
+            if (c->debug) print_bitmap_debug_info(c, bitmap, bitmapStart, bitmapSize);
             return GRIB_INTERNAL_ERROR;
         }
         /*printf("  bitmap_init: i=%d  |%s|\n", i,bitmap->referredElement->accessor->name);*/
