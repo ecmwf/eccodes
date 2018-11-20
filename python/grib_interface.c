@@ -1325,13 +1325,55 @@ int grib_c_new_bufr_from_file(FILE* f,int headers_only,int* gid)
     return GRIB_INVALID_FILE;
 }
 
-int grib_c_new_from_file(FILE* f, int* gid, int headers_only)
+typedef struct file_info_cache_t file_info_cache_t;
+struct file_info_cache_t {
+  file_info_cache_t* next;
+  int              file_descriptor;
+  FILE*            file_pointer;
+};
+static file_info_cache_t* file_info_cache=0;
+static void store_file_info(int fd, FILE* fp)
+{
+    file_info_cache_t* tb=(file_info_cache_t*)malloc(sizeof(file_info_cache_t));
+    tb->file_descriptor = fd;
+    tb->file_pointer = fp;
+    if (!file_info_cache) {
+        file_info_cache = tb;
+    } else {
+        /*Add to end of linked list*/
+        file_info_cache_t* q = file_info_cache;
+        while(q->next) q=q->next;
+        q->next = tb;
+    }
+}
+static FILE* retrieve_file_info(int fd)
+{
+    file_info_cache_t* p = file_info_cache;
+    while (p) {
+        if (p->file_descriptor == fd) {
+            return p->file_pointer;
+        }
+        p = p->next;
+    }
+    return NULL;
+}
+
+int grib_c_new_from_file(FILE* f, int fd, char* fname, int* gid, int headers_only)
 {
     grib_handle *h = NULL;
     int err = 0;
 
+    /*printf("C grib_c_new_from_file: FILE*=%p\n", f);*/
+    /*printf("C grib_c_new_from_file: f->fileno=%d (fd=%d)\n", f->_fileno, fd);*/
+    /*printf("C grib_c_new_from_file: fn=%s\n", fname);*/
     if(f){
-        h=grib_new_from_file(0,f,headers_only,&err);
+        FILE* p = retrieve_file_info(fd);
+        if (p) {
+            h=grib_new_from_file(0,p,headers_only,&err);//use cached value
+        } else {
+            h=grib_new_from_file(0,f,headers_only,&err);//get new FILE*
+            store_file_info(fd, f);
+        }
 
         if(h){
             push_handle(h,gid);
@@ -1339,6 +1381,7 @@ int grib_c_new_from_file(FILE* f, int* gid, int headers_only)
         } else {
             *gid=-1;
             if (err == GRIB_SUCCESS) {
+                /*printf("C grib_c_new_from_file: GRIB_END_OF_FILE\n");*/
                 return GRIB_END_OF_FILE;
             } else {
                 /* A real error occurred */

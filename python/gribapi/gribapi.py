@@ -291,7 +291,10 @@ def grib_new_from_file(fileobj, headers_only=False):
     @return               id of the grib loaded in memory
     @exception GribInternalError
     """
-    err, gribid = _internal.grib_c_new_from_file(fileobj, 0, headers_only)
+    fd = fileobj.fileno()
+    fn = fileobj.name
+    #print('Python grib_new_from_file: ', fd,'  ', fn)
+    err, gribid = _internal.grib_c_new_from_file(fileobj, fd, fn, 0, headers_only)
     if err:
         if err == _internal.GRIB_END_OF_FILE:
             return None

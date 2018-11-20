@@ -22,9 +22,10 @@ import_array();
 /* OLD: FIXME: Can we make this ro/rw ? */
 %typemap(in) FILE* {
   int fileDescriptor = PyObject_AsFileDescriptor($input);
+  /*printf("swig.i fileDescriptor=%d\n", fileDescriptor);*/
   if(fileDescriptor >= 0) {
     /* Convert file descriptor to a FILE pointer */
-    $1 = fdopen(fileDescriptor,"rb+");
+    $1 = fdopen(fileDescriptor,"rb"); // needs to be rb+ (or wb) for write
   }
   else {
     PyErr_SetString(PyExc_TypeError, "$1_name must be a file type.");
@@ -42,7 +43,7 @@ import_array();
 %array_functions(char*, stringArray);
 
 // creation
-int grib_c_new_from_file(FILE* f, int* INOUT, int headers_only);
+int grib_c_new_from_file(FILE* f, int fd, char* fname, int* INOUT, int headers_only);
 int grib_c_new_any_from_file(FILE* f, int headers_only, int* INOUT);
 int grib_c_new_bufr_from_file(FILE* f, int headers_only, int* INOUT);
 int grib_c_new_gts_from_file(FILE* f, int headers_only, int* INOUT);

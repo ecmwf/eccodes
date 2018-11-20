@@ -5260,54 +5260,76 @@ fail:
 SWIGINTERN PyObject *_wrap_grib_c_new_from_file(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   FILE *arg1 = (FILE *) 0 ;
-  int *arg2 = (int *) 0 ;
-  int arg3 ;
-  int temp2 ;
-  int res2 = 0 ;
-  int val3 ;
-  int ecode3 = 0 ;
+  int arg2 ;
+  char *arg3 = (char *) 0 ;
+  int *arg4 = (int *) 0 ;
+  int arg5 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int res3 ;
+  char *buf3 = 0 ;
+  int alloc3 = 0 ;
+  int temp4 ;
+  int res4 = 0 ;
+  int val5 ;
+  int ecode5 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
   int result;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOO:grib_c_new_from_file",&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:grib_c_new_from_file",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
   {
     int fileDescriptor = PyObject_AsFileDescriptor(obj0);
+    /*printf("swig.i fileDescriptor=%d\n", fileDescriptor);*/
     if(fileDescriptor >= 0) {
       /* Convert file descriptor to a FILE pointer */
-      arg1 = fdopen(fileDescriptor,"rb+");
+      arg1 = fdopen(fileDescriptor,"rb"); // needs to be rb+ (or wb) for write
     }
     else {
       PyErr_SetString(PyExc_TypeError, "f must be a file type.");
       return NULL;
     }
   }
-  if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(obj1,SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_int,0))))) {
-    int val; 
-    int ecode = SWIG_AsVal_int(obj1, &val);
-    if (!SWIG_IsOK(ecode)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "grib_c_new_from_file" "', argument " "2"" of type '" "int""'");
-    }
-    temp2 = (int)(val);
-    arg2 = &temp2;
-    res2 = SWIG_AddTmpMask(ecode);
-  }
-  ecode3 = SWIG_AsVal_int(obj2, &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "grib_c_new_from_file" "', argument " "3"" of type '" "int""'");
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "grib_c_new_from_file" "', argument " "2"" of type '" "int""'");
   } 
-  arg3 = (int)(val3);
-  result = (int)grib_c_new_from_file(arg1,arg2,arg3);
-  resultobj = SWIG_From_int((int)(result));
-  if (SWIG_IsTmpObj(res2)) {
-    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg2)));
-  } else {
-    int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
-    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_int, new_flags));
+  arg2 = (int)(val2);
+  res3 = SWIG_AsCharPtrAndSize(obj2, &buf3, NULL, &alloc3);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "grib_c_new_from_file" "', argument " "3"" of type '" "char *""'");
   }
+  arg3 = (char *)(buf3);
+  if (!(SWIG_IsOK((res4 = SWIG_ConvertPtr(obj3,SWIG_as_voidptrptr(&arg4),SWIGTYPE_p_int,0))))) {
+    int val; 
+    int ecode = SWIG_AsVal_int(obj3, &val);
+    if (!SWIG_IsOK(ecode)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "grib_c_new_from_file" "', argument " "4"" of type '" "int""'");
+    }
+    temp4 = (int)(val);
+    arg4 = &temp4;
+    res4 = SWIG_AddTmpMask(ecode);
+  }
+  ecode5 = SWIG_AsVal_int(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "grib_c_new_from_file" "', argument " "5"" of type '" "int""'");
+  } 
+  arg5 = (int)(val5);
+  result = (int)grib_c_new_from_file(arg1,arg2,arg3,arg4,arg5);
+  resultobj = SWIG_From_int((int)(result));
+  if (SWIG_IsTmpObj(res4)) {
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_int((*arg4)));
+  } else {
+    int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
+    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_int, new_flags));
+  }
+  if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
   return resultobj;
 fail:
+  if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
   return NULL;
 }
 
@@ -5329,9 +5351,10 @@ SWIGINTERN PyObject *_wrap_grib_c_new_any_from_file(PyObject *SWIGUNUSEDPARM(sel
   if (!PyArg_ParseTuple(args,(char *)"OOO:grib_c_new_any_from_file",&obj0,&obj1,&obj2)) SWIG_fail;
   {
     int fileDescriptor = PyObject_AsFileDescriptor(obj0);
+    /*printf("swig.i fileDescriptor=%d\n", fileDescriptor);*/
     if(fileDescriptor >= 0) {
       /* Convert file descriptor to a FILE pointer */
-      arg1 = fdopen(fileDescriptor,"rb+");
+      arg1 = fdopen(fileDescriptor,"rb"); // needs to be rb+ (or wb) for write
     }
     else {
       PyErr_SetString(PyExc_TypeError, "f must be a file type.");
@@ -5384,9 +5407,10 @@ SWIGINTERN PyObject *_wrap_grib_c_new_bufr_from_file(PyObject *SWIGUNUSEDPARM(se
   if (!PyArg_ParseTuple(args,(char *)"OOO:grib_c_new_bufr_from_file",&obj0,&obj1,&obj2)) SWIG_fail;
   {
     int fileDescriptor = PyObject_AsFileDescriptor(obj0);
+    /*printf("swig.i fileDescriptor=%d\n", fileDescriptor);*/
     if(fileDescriptor >= 0) {
       /* Convert file descriptor to a FILE pointer */
-      arg1 = fdopen(fileDescriptor,"rb+");
+      arg1 = fdopen(fileDescriptor,"rb"); // needs to be rb+ (or wb) for write
     }
     else {
       PyErr_SetString(PyExc_TypeError, "f must be a file type.");
@@ -5439,9 +5463,10 @@ SWIGINTERN PyObject *_wrap_grib_c_new_gts_from_file(PyObject *SWIGUNUSEDPARM(sel
   if (!PyArg_ParseTuple(args,(char *)"OOO:grib_c_new_gts_from_file",&obj0,&obj1,&obj2)) SWIG_fail;
   {
     int fileDescriptor = PyObject_AsFileDescriptor(obj0);
+    /*printf("swig.i fileDescriptor=%d\n", fileDescriptor);*/
     if(fileDescriptor >= 0) {
       /* Convert file descriptor to a FILE pointer */
-      arg1 = fdopen(fileDescriptor,"rb+");
+      arg1 = fdopen(fileDescriptor,"rb"); // needs to be rb+ (or wb) for write
     }
     else {
       PyErr_SetString(PyExc_TypeError, "f must be a file type.");
@@ -5494,9 +5519,10 @@ SWIGINTERN PyObject *_wrap_grib_c_new_metar_from_file(PyObject *SWIGUNUSEDPARM(s
   if (!PyArg_ParseTuple(args,(char *)"OOO:grib_c_new_metar_from_file",&obj0,&obj1,&obj2)) SWIG_fail;
   {
     int fileDescriptor = PyObject_AsFileDescriptor(obj0);
+    /*printf("swig.i fileDescriptor=%d\n", fileDescriptor);*/
     if(fileDescriptor >= 0) {
       /* Convert file descriptor to a FILE pointer */
-      arg1 = fdopen(fileDescriptor,"rb+");
+      arg1 = fdopen(fileDescriptor,"rb"); // needs to be rb+ (or wb) for write
     }
     else {
       PyErr_SetString(PyExc_TypeError, "f must be a file type.");
@@ -6054,9 +6080,10 @@ SWIGINTERN PyObject *_wrap_grib_c_count_in_file(PyObject *SWIGUNUSEDPARM(self), 
   if (!PyArg_ParseTuple(args,(char *)"O:grib_c_count_in_file",&obj0)) SWIG_fail;
   {
     int fileDescriptor = PyObject_AsFileDescriptor(obj0);
+    /*printf("swig.i fileDescriptor=%d\n", fileDescriptor);*/
     if(fileDescriptor >= 0) {
       /* Convert file descriptor to a FILE pointer */
-      arg1 = fdopen(fileDescriptor,"rb+");
+      arg1 = fdopen(fileDescriptor,"rb"); // needs to be rb+ (or wb) for write
     }
     else {
       PyErr_SetString(PyExc_TypeError, "f must be a file type.");
@@ -6129,9 +6156,10 @@ SWIGINTERN PyObject *_wrap_grib_c_write(PyObject *SWIGUNUSEDPARM(self), PyObject
   }
   {
     int fileDescriptor = PyObject_AsFileDescriptor(obj1);
+    /*printf("swig.i fileDescriptor=%d\n", fileDescriptor);*/
     if(fileDescriptor >= 0) {
       /* Convert file descriptor to a FILE pointer */
-      arg2 = fdopen(fileDescriptor,"rb+");
+      arg2 = fdopen(fileDescriptor,"rb"); // needs to be rb+ (or wb) for write
     }
     else {
       PyErr_SetString(PyExc_TypeError, "f must be a file type.");
@@ -6544,9 +6572,10 @@ SWIGINTERN PyObject *_wrap_grib_c_multi_write(PyObject *SWIGUNUSEDPARM(self), Py
   }
   {
     int fileDescriptor = PyObject_AsFileDescriptor(obj1);
+    /*printf("swig.i fileDescriptor=%d\n", fileDescriptor);*/
     if(fileDescriptor >= 0) {
       /* Convert file descriptor to a FILE pointer */
-      arg2 = fdopen(fileDescriptor,"rb+");
+      arg2 = fdopen(fileDescriptor,"rb"); // needs to be rb+ (or wb) for write
     }
     else {
       PyErr_SetString(PyExc_TypeError, "f must be a file type.");

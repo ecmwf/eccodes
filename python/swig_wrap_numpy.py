@@ -375,8 +375,8 @@ def stringArray_setitem(ary: 'char **', index: 'size_t', value: 'char *') -> "vo
     return _gribapi_swig.stringArray_setitem(ary, index, value)
 stringArray_setitem = _gribapi_swig.stringArray_setitem
 
-def grib_c_new_from_file(f: 'FILE *', INOUT: 'int *', headers_only: 'int') -> "int *":
-    return _gribapi_swig.grib_c_new_from_file(f, INOUT, headers_only)
+def grib_c_new_from_file(f: 'FILE *', fd: 'int', fname: 'char *', INOUT: 'int *', headers_only: 'int') -> "int *":
+    return _gribapi_swig.grib_c_new_from_file(f, fd, fname, INOUT, headers_only)
 grib_c_new_from_file = _gribapi_swig.grib_c_new_from_file
 
 def grib_c_new_any_from_file(f: 'FILE *', headers_only: 'int', INOUT: 'int *') -> "int *":
