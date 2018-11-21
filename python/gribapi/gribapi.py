@@ -261,7 +261,7 @@ def bufr_new_from_file(fileobj, headers_only=False):
     """
     fd = fileobj.fileno()
     fn = fileobj.name
-    err, bufrid = _internal.grib_c_new_bufr_from_file(fileobj, headers_only, 0)
+    err, bufrid = _internal.grib_c_new_bufr_from_file(fileobj, fd, fn, headers_only, 0)
     if err:
         if err == _internal.GRIB_END_OF_FILE:
             return None
@@ -1491,7 +1491,7 @@ def grib_set_key_vals(gribid, key_vals):
             key_vals_str += kv
     elif isinstance(key_vals, dict):
         # A dictionary mapping keys to values
-        for key in key_vals.iterkeys():
+        for key in key_vals.keys():
             if len(key_vals_str) > 0:
                 key_vals_str += ','
             key_vals_str += key + '=' + str(key_vals[key])
@@ -1767,12 +1767,15 @@ def grib_set_array(msgid, key, value):
 
     if isinstance(val0, float):
         grib_set_double_array(msgid, key, value)
-    elif isinstance(val0, int):
-        grib_set_long_array(msgid, key, value)
     elif isinstance(val0, str):
         grib_set_string_array(msgid, key, value)
     else:
-        raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
+        # Note: Cannot do isinstance(val0,int) for numpy.int64
+        try:
+            n = int(val0)
+        except (ValueError, TypeError):
+            raise errors.GribInternalError("Invalid type of value when setting key '%s'." % key)
+        grib_set_long_array(msgid, key, value)
 
 
 @require(indexid=int, key=str)
