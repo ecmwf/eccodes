@@ -43,6 +43,7 @@ class CodesFile(io.IOBase):
         self.message = 0
         #: Open messages
         self.open_messages = []
+        self.name = filename
 
     def __exit__(self, exception_type, exception_value, traceback):
         """Close all open messages, release file handle and close file."""

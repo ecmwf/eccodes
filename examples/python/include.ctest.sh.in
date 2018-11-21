@@ -20,3 +20,5 @@ export ECCODES_SAMPLES_PATH
 
 PYTHONPATH=@PROJECT_BINARY_DIR@/python:$PYTHONPATH
 export PYTHONPATH
+
+echo "Current directory: `pwd`"
