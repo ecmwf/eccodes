@@ -10,7 +10,7 @@
 
 # Description: how to encode flight dataset into BUFR
 
-from __future__ import print_function
+
 from datetime import datetime
 import traceback
 import numpy as np
@@ -29,8 +29,8 @@ def example(csvfile, input_filename, output_filename):
 
     # The first line in the CSV has the column names
     print('Reading input CSV file: ', csvfile)
-    parse_date = lambda x: datetime.strptime(x, '%Y%m%d')
-    parse_time = lambda x: datetime.strptime(x, '%H:%M:%S')
+    parse_date = lambda x: datetime.strptime(x.decode('ascii'), '%Y%m%d')
+    parse_time = lambda x: datetime.strptime(x.decode('ascii'), '%H:%M:%S')
     data = np.genfromtxt(csvfile, delimiter=',', dtype=None, names=True,
                          converters={0: parse_date, 1: parse_time})
 
