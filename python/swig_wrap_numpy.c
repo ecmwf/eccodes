@@ -6156,10 +6156,9 @@ SWIGINTERN PyObject *_wrap_grib_c_write(PyObject *SWIGUNUSEDPARM(self), PyObject
   }
   {
     int fileDescriptor = PyObject_AsFileDescriptor(obj1);
-    /*printf("swig.i fileDescriptor=%d\n", fileDescriptor);*/
     if(fileDescriptor >= 0) {
       /* Convert file descriptor to a FILE pointer */
-      arg2 = fdopen(fileDescriptor,"rb"); // needs to be rb+ (or wb) for write
+      arg2 = fdopen(fileDescriptor,"wb");
     }
     else {
       PyErr_SetString(PyExc_TypeError, "f must be a file type.");
@@ -6572,10 +6571,9 @@ SWIGINTERN PyObject *_wrap_grib_c_multi_write(PyObject *SWIGUNUSEDPARM(self), Py
   }
   {
     int fileDescriptor = PyObject_AsFileDescriptor(obj1);
-    /*printf("swig.i fileDescriptor=%d\n", fileDescriptor);*/
     if(fileDescriptor >= 0) {
       /* Convert file descriptor to a FILE pointer */
-      arg2 = fdopen(fileDescriptor,"rb"); // needs to be rb+ (or wb) for write
+      arg2 = fdopen(fileDescriptor,"wb");
     }
     else {
       PyErr_SetString(PyExc_TypeError, "f must be a file type.");

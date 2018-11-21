@@ -259,6 +259,8 @@ def bufr_new_from_file(fileobj, headers_only=False):
     @return               id of the BUFR loaded in memory
     @exception GribInternalError
     """
+    fd = fileobj.fileno()
+    fn = fileobj.name
     err, bufrid = _internal.grib_c_new_bufr_from_file(fileobj, headers_only, 0)
     if err:
         if err == _internal.GRIB_END_OF_FILE:

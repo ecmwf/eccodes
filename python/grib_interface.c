@@ -1371,8 +1371,8 @@ int grib_c_new_from_file(FILE* f, int fd, char* fname, int* gid, int headers_onl
         if (p) {
             h=grib_new_from_file(0,p,headers_only,&err);//use cached value
         } else {
-            h=grib_new_from_file(0,f,headers_only,&err);//get new FILE*
-            store_file_info(fd, f);
+            h=grib_new_from_file(0,f,headers_only,&err);//use FILE pointer passed in
+            store_file_info(fd, f); //store it for next time
         }
 
         if(h){
@@ -1382,7 +1382,7 @@ int grib_c_new_from_file(FILE* f, int fd, char* fname, int* gid, int headers_onl
             *gid=-1;
             if (err == GRIB_SUCCESS) {
                 /*printf("C grib_c_new_from_file: GRIB_END_OF_FILE\n");*/
-                return GRIB_END_OF_FILE;
+                return GRIB_END_OF_FILE; //TODO: remove element from cache
             } else {
                 /* A real error occurred */
                 return err;
@@ -2250,6 +2250,7 @@ void grib_c_check(int* err,char* call,char* str)
 
 int grib_c_write(int* gid, FILE* f)
 {
+    int err = 0;
     grib_handle *h = get_handle(*gid);
     const void* mess = NULL;
     size_t mess_len = 0;
@@ -2257,12 +2258,17 @@ int grib_c_write(int* gid, FILE* f)
     if(!f) return GRIB_INVALID_FILE;
     if (!h) return GRIB_INVALID_GRIB;
 
-    grib_get_message(h,&mess,&mess_len);
+    err = grib_get_message(h,&mess,&mess_len);
+    if (err) return err;
     if(fwrite(mess,1, mess_len,f) != mess_len) {
         perror("grib_write");
         return GRIB_IO_PROBLEM;
     }
-
+    err = fflush(f);
+    if(err) {
+        perror("write flush");
+        return GRIB_IO_PROBLEM;
+    }
     return GRIB_SUCCESS;
 }
 

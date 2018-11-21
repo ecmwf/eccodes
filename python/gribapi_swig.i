@@ -17,9 +17,7 @@
 import_array();
 %}
 
-/* OLD: Converts a PyFile instance to a stdio FILE* */
-
-/* OLD: FIXME: Can we make this ro/rw ? */
+/* Converts a PyFile instance to a stdio FILE* for reading binary files */
 %typemap(in) FILE* {
   int fileDescriptor = PyObject_AsFileDescriptor($input);
   /*printf("swig.i fileDescriptor=%d\n", fileDescriptor);*/
@@ -69,6 +67,19 @@ int grib_c_new_from_message(int *INOUT, char *binmsg, size_t *INPUT);
 // file operations
 int grib_c_count_in_file(FILE* f,int* OUTPUT);
 // ---
+
+/* Converts a PyFile instance to a stdio FILE* for writing binary files */
+%typemap(in) FILE* {
+  int fileDescriptor = PyObject_AsFileDescriptor($input);
+  if(fileDescriptor >= 0) {
+    /* Convert file descriptor to a FILE pointer */
+    $1 = fdopen(fileDescriptor,"wb");
+  }
+  else {
+    PyErr_SetString(PyExc_TypeError, "$1_name must be a file type.");
+    return NULL;
+  }
+}
 
 // grib handle operations
 int grib_c_release(int* gid);
