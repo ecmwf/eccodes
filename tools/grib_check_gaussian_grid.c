@@ -18,11 +18,13 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdarg.h>
+#include <sys/stat.h>
 #include "eccodes.h"
 
 #define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 
 int exit_on_error = 1; /* By default exit if any check fails */
+int verbose = 0; /* By default quiet unless errors */
 int error_count = 0;
 
 int DBL_EQUAL(double d1, double d2, double tolerance)
@@ -32,22 +34,26 @@ int DBL_EQUAL(double d1, double d2, double tolerance)
 
 void usage(const char* prog)
 {
-    printf("Usage: %s [-f] grib_file grib_file ...\n\n",prog);
+    printf("Usage: %s [-f] [-v] grib_file grib_file ...\n\n",prog);
     printf("Check geometry of GRIB fields with a Gaussian Grid.\n");
     printf("(The grid is assumed to be GLOBAL)\n\n");
     printf("Options:\n");
-    printf("-f  Do not exit on first error\n");
+    printf("  -f  Do not exit on first error\n");
+    printf("  -v  Verbose\n");
     printf("\n");
     exit(1);
 }
 
-/* Print an error message and die */
-void error(const char* fmt, ...)
+/* Print an error message and optionally die */
+void error(const char* filename, int msg_num, const char* fmt, ...)
 {
     char buf[1024] = {0,};
     va_list list;
     va_start(list,fmt);
-    sprintf(buf, "  %s", fmt); /* indent a bit */
+    if(verbose)
+        sprintf(buf, " Error: %s", fmt); /* indent a bit */
+    else
+        sprintf(buf, "Error: %s #%d: %s", filename, msg_num, fmt);
     vfprintf(stderr, buf, list);
     va_end(list);
 
@@ -65,17 +71,32 @@ double get_precision(long edition)
     return 0.0;
 }
 
+static int is_regular_file(const char* path)
+{
+    struct stat s;
+    int stat_val = stat(path,&s);
+    if (stat_val != 0) return 0; /*error doing stat*/
+    return S_ISREG( s.st_mode );
+}
+
 int process_file(const char* filename)
 {
     int err = 0, msg_num = 0;
     codes_handle *h = NULL;
-
-    FILE* in = fopen(filename, "r");
-    if(!in) {
-        error("ERROR: unable to open input file %s\n",filename);
+    FILE* in = NULL;
+    
+    if (!is_regular_file(filename)) {
+        if(verbose) printf(" WARNING: '%s' not a regular file! Ignoring\n", filename);
+        return GRIB_IO_PROBLEM;
     }
 
-    printf("Checking file %s\n", filename);
+    in = fopen(filename, "r");
+    if(!in) {
+        fprintf(stderr, "ERROR: unable to open input file %s\n",filename);
+        exit(1);
+    }
+
+    if(verbose) printf("Checking file %s\n", filename);
 
     while ((h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err)) != NULL )
     {
@@ -91,7 +112,7 @@ int process_file(const char* filename)
         if (err != CODES_SUCCESS) CODES_CHECK(err,0);
         ++msg_num;
         CODES_CHECK(codes_get_long(h,"edition",&edition),0);
-        printf(" Processing GRIB message #%d (edition=%ld)\n", msg_num, edition);
+        if(verbose) printf(" Processing GRIB message #%d (edition=%ld)\n", msg_num, edition);
 
         len = 32;
         CODES_CHECK(codes_get_string(h,"gridType",gridType,&len),0);
@@ -100,7 +121,7 @@ int process_file(const char* filename)
         grid_ok = is_regular || is_reduced;
         if( !grid_ok ) {
             /*error("ERROR: gridType should be Reduced or Regular Gaussian Grid!\n");*/
-            printf(" WARNING: gridType should be Reduced or Regular Gaussian Grid! Ignoring\n");
+            if(verbose) printf(" WARNING: gridType should be Reduced or Regular Gaussian Grid! Ignoring\n");
             codes_handle_delete(h);
             continue;
         }
@@ -117,20 +138,20 @@ int process_file(const char* filename)
         angular_tolerance = get_precision(edition);
 
         if (N <= 0) {
-            error("ERROR: N should be > 0\n", N);
+            error(filename, msg_num, "N should be > 0\n", N);
         }
         if ( Nj != 2*N ) {
-            error("ERROR: Nj is %ld but should be 2*N (%ld)\n", Nj, 2*N);
+            error(filename, msg_num, "Nj is %ld but should be 2*N (%ld)\n", Nj, 2*N);
         }
 
         if (lon1 != 0) {
-            error("ERROR: latitudeOfFirstGridPointInDegrees=%f but should be 0\n", lon1);
+            error(filename, msg_num, "latitudeOfFirstGridPointInDegrees=%f but should be 0\n", lon1);
         }
         expected_lon2 = 360.0 - 360.0/(4*N);
 
         /* Check first and last latitudes */
         if (lat1 != -lat2) {
-            error("ERROR: First latitude must be = last latitude but opposite in sign: lat1=%f, lat2=%f\n",
+            error(filename, msg_num, "First latitude must be = last latitude but opposite in sign: lat1=%f, lat2=%f\n",
                     lat1, lat2);
         }
         /* Note: grib_get_gaussian_latitudes() assumes the 'lats' array has 2N elements! */
@@ -139,10 +160,10 @@ int process_file(const char* filename)
         CODES_CHECK(codes_get_gaussian_latitudes(N,lats), 0);
 
         if (!DBL_EQUAL(lats[0], lat1, angular_tolerance)) {
-            error("ERROR: latitudeOfFirstGridPointInDegrees=%f but should be %f\n", lat1, lats[0]);
+            error(filename, msg_num, "latitudeOfFirstGridPointInDegrees=%f but should be %f\n", lat1, lats[0]);
         }
         if (!DBL_EQUAL(lats[Nj-1], lat2, angular_tolerance)) {
-            error("ERROR: latitudeOfLastGridPointInDegrees=%f but should be %f\n", lat2, lats[Nj-1]);
+            error(filename, msg_num, "latitudeOfLastGridPointInDegrees=%f but should be %f\n", lat2, lats[Nj-1]);
         }
 
         if (is_reduced) {
@@ -154,16 +175,16 @@ int process_file(const char* filename)
             is_missing_Di = codes_is_missing(h, "iDirectionIncrement", &err);
             assert(err == CODES_SUCCESS);
             if (!is_missing_Ni) {
-                error("ERROR: For a reduced gaussian grid Ni should be missing\n");
+                error(filename, msg_num, "For a reduced gaussian grid Ni should be missing\n");
             }
             if (!is_missing_Di) {
-                error("ERROR: For a reduced gaussian grid iDirectionIncrement should be missing\n");
+                error(filename, msg_num, "For a reduced gaussian grid iDirectionIncrement should be missing\n");
             }
 
             CODES_CHECK(codes_get_size(h, "pl", &pl_len),0);
             assert(pl_len>0);
             if (pl_len != 2*N) {
-                error("ERROR: Length of pl array is %ld but should be 2*N (%ld)\n", pl_len, 2*N);
+                error(filename, msg_num, "Length of pl array is %ld but should be 2*N (%ld)\n", pl_len, 2*N);
             }
             pl = (long*)malloc(pl_len*sizeof(long));
             assert(pl);
@@ -175,8 +196,8 @@ int process_file(const char* filename)
                 const long pl_start = pl[i];
                 const long pl_end = pl[pl_len-1-i];
                 if ( pl_start != pl_end ) {
-                    error("ERROR: pl array is not symmetric: pl[%ld]=%ld, pl[%ld]=%ld\n",
-                            i, pl_start,  pl_len-1-i, pl_end);
+                    error(filename, msg_num, "pl array is not symmetric: pl[%ld]=%ld, pl[%ld]=%ld\n",
+                          i, pl_start,  pl_len-1-i, pl_end);
                 }
             }
 
@@ -186,23 +207,23 @@ int process_file(const char* filename)
                 if (pl[i] > max_pl) max_pl = pl[i];
             }
             if (pl_sum != numberOfDataPoints) {
-                error("ERROR: Sum of pl array %ld does not match numberOfDataPoints %ld\n", pl_sum, numberOfDataPoints);
+                error(filename, msg_num, "Sum of pl array %ld does not match numberOfDataPoints %ld\n", pl_sum, numberOfDataPoints);
             }
             CODES_CHECK(codes_get_long(h,"isOctahedral",&is_octahedral),0);
             if (is_octahedral) {
-                printf("  This is an Octahedral Gaussian grid\n");
+                if(verbose) printf("  This is an Octahedral Gaussian grid\n");
                 expected_lon2 = 360.0 - 360.0/max_pl;
             }
             free(pl);
         }
 
         if (fabs(lon2 - expected_lon2) > angular_tolerance) {
-            error("ERROR: longitudeOfLastGridPointInDegrees=%f but should be %f\n", lon2, expected_lon2);
+            error(filename, msg_num, "longitudeOfLastGridPointInDegrees=%f but should be %f\n", lon2, expected_lon2);
         }
 
         CODES_CHECK(codes_get_size(h, "values", &sizeOfValuesArray),0);
         if (sizeOfValuesArray != numberOfDataPoints) {
-            error("ERROR: Number of data points %d different from size of values array %d\n",
+            error(filename, msg_num, "Number of data points %d different from size of values array %d\n",
                   numberOfDataPoints, sizeOfValuesArray);
         }
 
@@ -210,8 +231,8 @@ int process_file(const char* filename)
         codes_handle_delete(h);
     }
     fclose(in);
-    printf("\n");
-    return 0;
+    if(verbose) printf("\n");
+    return GRIB_SUCCESS;
 }
 
 int main(int argc, char** argv)
@@ -233,20 +254,27 @@ int main(int argc, char** argv)
                 usage(argv[0]);
                 return 1;
             }
-            /* Process switches */
             exit_on_error = 0;
+        }
+        else if (STR_EQUAL(arg, "-v"))
+        {
+            if (argc < 3) {
+                usage(argv[0]);
+                return 1;
+            }
+            verbose = 1;
         }
         else
         {
-            /* We have a grib file */
+            /* We have a GRIB file */
             process_file(arg);
         }
     }
 
-    printf("###############\n");
+    if(verbose) printf("###############\n");
     if (error_count == 0)
     {
-        printf("ALL OK\n");
+        if(verbose) printf("ALL OK\n");
     }
     else
     {
