@@ -1411,7 +1411,8 @@ int grib_c_new_bufr_from_file(FILE* f, int fd, char* fname, int headers_only,int
             return GRIB_SUCCESS;
         } else {
             *gid=-1;
-            return GRIB_END_OF_FILE;//TODO: remove element from cache
+            clear_file_info(fd);
+            return GRIB_END_OF_FILE;
         }
     }
 
