@@ -11,6 +11,6 @@
 . ./include.sh
 
 TEMP=output.grib_sh_imag.grib
-$EXEC ${test_dir}/sh_imag $TEMP
+$EXEC ${test_dir}/grib_sh_imag $TEMP
 
 rm -f $TEMP
