@@ -2,8 +2,8 @@
 #define GRIB_INTERFACE_H
 
 int grib_c_read_any_from_file(int *fid, char *buffer, int *nbytes);
-int grib_c_write_file(int *fid, char *buffer, int *nbytes);
-int grib_c_read_file(int *fid, char *buffer, int *nbytes);
+int grib_c_write_file(int *fid, char *buffer, size_t *nbytes);
+int grib_c_read_file(int *fid, char *buffer, size_t *nbytes);
 int grib_c_open_file(int *fid, char *name, char *op);
 int grib_c_close_file(int *fid);
 int grib_c_multi_support_on(void);
@@ -37,9 +37,13 @@ int grib_c_bufr_new_from_samples(int *gid, char *name);
 int grib_c_clone(int *gidsrc, int *giddest);
 int grib_c_copy_namespace(int *gidsrc, char *name, int *giddest);
 int grib_c_count_in_file(FILE *f, int *n);
-int grib_c_new_from_file(FILE *f, int *gid, int headers_only);
+
+int grib_c_new_from_file(FILE *f, int fd, char* fname, int *gid, int headers_only);
+
 int grib_c_new_any_from_file(FILE *f, int headers_only,int *gid);
-int grib_c_new_bufr_from_file(FILE *f, int headers_only,int *gid);
+
+int grib_c_new_bufr_from_file(FILE *f, int fd, char* fname, int headers_only,int *gid);
+
 int grib_c_new_gts_from_file(FILE *f,int headers_only, int *gid);
 int grib_c_new_metar_from_file(FILE* f,int headers_only, int* gid);
 int grib_c_new_from_index(int *iid, int *gid);
@@ -58,13 +62,13 @@ int grib_c_index_get_size_long(int *gid, char *key, long *val);
 int grib_c_get_int(int *gid, char *key, int *val);
 int grib_c_get_long(int *gid, char *key, long *val);
 int grib_c_get_double(int *gid, char *key, double *val);
-int grib_c_get_int_array(int *gid, char *key, int *val, int *size);
+int grib_c_get_int_array(int *gid, char *key, int *val, size_t *size);
 int grib_c_get_long_array(int *gid, char *key, long *val, int *size);
 int grib_c_index_get_string(int *gid, char *key, char *val, int *eachsize, int *size);
 int grib_c_index_get_long(int *gid, char *key, long *val, int *size);
 int grib_c_index_get_int(int *gid, char *key, int *val, int *size);
 int grib_c_index_get_real8(int *gid, char *key, double *val, int *size);
-int grib_c_set_int_array(int *gid, char *key, int *val, int *size);
+int grib_c_set_int_array(int *gid, char *key, int *val, size_t *size);
 int grib_c_set_long_array(int *gid, char *key, long *val, int *size);
 int grib_c_set_int(int *gid, char *key, int *val);
 int grib_c_set_long(int *gid, char *key, long *val);
@@ -76,7 +80,7 @@ int grib_c_set_real4(int *gid, char *key, float *val);
 int grib_c_get_real4_element(int *gid, char *key, int *index, float *val);
 int grib_c_get_real4_elements(int *gid, char *key, int *index, float *val, int *size);
 int grib_c_get_real4(int *gid, char *key, float *val);
-int grib_c_get_real4_array(int *gid, char *key, float *val, int *size);
+int grib_c_get_real4_array(int *gid, char *key, float *val, size_t *size);
 int grib_c_set_real4_array(int *gid, char *key, float *val, int *size);
 int grib_c_index_select_real8(int *gid, char *key, double *val);
 int grib_c_index_select_string(int *gid, char *key, char *val);

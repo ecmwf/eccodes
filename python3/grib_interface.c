@@ -831,7 +831,7 @@ int grib_c_read_any_from_file(int* fid, char* buffer, int* nbytes)
     }
 }
 
-int grib_c_write_file(int* fid, char* buffer, int* nbytes)
+int grib_c_write_file(int* fid, char* buffer, size_t* nbytes)
 {
     grib_context* c;
     FILE* f=get_file(*fid);
@@ -839,7 +839,7 @@ int grib_c_write_file(int* fid, char* buffer, int* nbytes)
     if (f) {
         int ioerr;
         c=grib_context_get_default( );
-        if( fwrite(buffer, 1, *nbytes, f)  != *nbytes) {
+        if( fwrite(buffer, 1, *nbytes, f) != *nbytes) {
             ioerr=errno;
             grib_context_log(c,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),"IO ERROR: %s",strerror(ioerr));
             return GRIB_IO_PROBLEM;
@@ -850,7 +850,7 @@ int grib_c_write_file(int* fid, char* buffer, int* nbytes)
     }
 }
 
-int grib_c_read_file(int* fid, char* buffer, int* nbytes)
+int grib_c_read_file(int* fid, char* buffer, size_t* nbytes)
 {
     grib_context* c;
     FILE* f=get_file(*fid);
@@ -1004,7 +1004,7 @@ int grib_c_keys_iterator_get_name(int* iterid,char* name,int len)
     sprintf(buf,"%s",grib_keys_iterator_get_name(kiter));
     lsize=strlen(buf);
 
-    if (len < lsize) return GRIB_ARRAY_TOO_SMALL;
+    if ((size_t)len < lsize) return GRIB_ARRAY_TOO_SMALL;
 
     memcpy(name,buf,lsize);
     name[lsize] = '\0';
@@ -1073,7 +1073,7 @@ int codes_c_bufr_keys_iterator_get_name(int* iterid,char* name,int len)
     sprintf(buf,"%s",codes_bufr_keys_iterator_get_name(kiter));
     lsize=strlen(buf);
 
-    if (len < lsize) return GRIB_ARRAY_TOO_SMALL;
+    if ((size_t)len < lsize) return GRIB_ARRAY_TOO_SMALL;
 
     memcpy(name,buf,lsize);
     name[lsize] = '\0';
@@ -1235,6 +1235,95 @@ int grib_c_copy_namespace(int* gidsrc,char* name,int* giddest)
     return GRIB_INVALID_GRIB;
 }
 
+/* ------------------------------------------------- */
+typedef struct file_info_cache_t file_info_cache_t;
+struct file_info_cache_t {
+  file_info_cache_t* next;
+  int                file_descriptor;
+  FILE*              file_pointer;
+};
+static file_info_cache_t* file_info_cache=0;
+static void store_file_info(int fd, FILE* fp)
+{
+    file_info_cache_t* tb=(file_info_cache_t*)malloc(sizeof(file_info_cache_t));
+    tb->file_descriptor = fd;
+    tb->file_pointer = fp;
+    tb->next = NULL;
+    /*printf("store_file_info: fd=%d  fp=%p\n",fd,fp);*/
+    if (!file_info_cache) {
+        file_info_cache = tb;
+    } else {
+        /*Add to end of linked list*/
+        file_info_cache_t* q = file_info_cache;
+        while(q->next) q=q->next;
+        q->next = tb;
+    }
+}
+static FILE* retrieve_file_info(int fd)
+{
+    file_info_cache_t* p = file_info_cache;
+    /*printf("retrieve_file_info: fd=%d\n",fd);*/
+    while (p) {
+        if (p->file_descriptor == fd) {
+            /*printf("\t result=%p\n",p->file_pointer);*/
+            return p->file_pointer;
+        }
+        p = p->next;
+    }
+    /*printf("\t result=NULL\n");*/
+    return NULL;
+}
+#if 0
+static int clear_file_info(int fd)
+{
+    printf("clear_file_info: fd=%d\n",fd);
+    file_info_cache_t* curr = file_info_cache;
+    while(curr) {
+        if (curr->file_descriptor==fd) {
+            curr->file_descriptor=-1;
+            curr->file_pointer=NULL;
+            /*TODO: Should delete this node */
+            return GRIB_SUCCESS;
+        }
+        curr=curr->next;
+    }
+    return GRIB_INVALID_FILE;
+}
+#endif
+static int clear_file_info(int fd)
+{
+    /*printf("clear_file_info: fd=%d\n",fd);*/
+    file_info_cache_t *curr, *prev=NULL;
+    for(curr=file_info_cache; curr!=NULL; prev=curr, curr=curr->next) {
+        if (curr->file_descriptor==fd) {//found it
+            if(prev==NULL) {//fix head
+                file_info_cache = curr->next;
+            } else {
+                //Fix previous node's 'next' to skip over the removed node
+                prev->next = curr->next;
+            }
+            /*printf("\t Deleting entry curr (%d,%p)\n", curr->file_descriptor,curr->file_pointer);*/
+            free(curr);
+            return GRIB_SUCCESS;
+        }
+    }
+    return GRIB_INVALID_FILE;
+}
+#if DEBUG
+static void dump_file_info()
+{
+    int i=1;
+    file_info_cache_t* curr = file_info_cache;
+    if(!curr) printf("dump_file_info: EMPTY\n");
+    else      printf("dump_file_info:\n");
+    while(curr) {
+        printf("\t %d:  fd=%d fp=%p\n", i++,curr->file_descriptor,curr->file_pointer);
+        curr=curr->next;
+    }
+}
+#endif
+/* ------------------------------------------------- */
+
 int grib_c_count_in_file(FILE* f,int* n)
 {
     int err = 0;
@@ -1303,21 +1392,26 @@ int grib_c_new_any_from_file(FILE* f,int headers_only,int* gid)
     return GRIB_INVALID_FILE;
 }
 
-int grib_c_new_bufr_from_file(FILE* f,int headers_only,int* gid)
+int grib_c_new_bufr_from_file(FILE* f, int fd, char* fname, int headers_only,int* gid)
 {
     grib_handle *h = NULL;
     int err = 0;
 
     if(f){
-        /* h = bufr_new_from_file(0,f,headers_only,&err); */
-        h = codes_handle_new_from_file(0,f,PRODUCT_BUFR, &err);
+        FILE* p = retrieve_file_info(fd);
+        if (p) {
+            h = codes_handle_new_from_file(0,p,PRODUCT_BUFR, &err); //use cached value
+        } else {
+            h = codes_handle_new_from_file(0,f,PRODUCT_BUFR, &err); //use FILE pointer passed in
+            store_file_info(fd, f); //store it for next time
+        }
 
         if(h){
             push_handle(h,gid);
             return GRIB_SUCCESS;
         } else {
             *gid=-1;
-            return GRIB_END_OF_FILE;
+            return GRIB_END_OF_FILE;//TODO: remove element from cache
         }
     }
 
@@ -1325,13 +1419,27 @@ int grib_c_new_bufr_from_file(FILE* f,int headers_only,int* gid)
     return GRIB_INVALID_FILE;
 }
 
-int grib_c_new_from_file(FILE* f, int* gid, int headers_only)
+int grib_c_new_from_file(FILE* f, int fd, char* fname, int* gid, int headers_only)
 {
     grib_handle *h = NULL;
     int err = 0;
-
+#if 0
+    printf("C grib_c_new_from_file: FILE*=%p\n", f);
+    printf("C grib_c_new_from_file: f->fileno=%d (fd=%d)\n", f->_fileno, fd);
+    printf("C grib_c_new_from_file: fn=%s\n", fname);
+#endif
+    /*dump_file_info();*/
     if(f){
-        h=grib_new_from_file(0,f,headers_only,&err);
+        FILE* p = retrieve_file_info(fd);
+        if (p) {
+            /*printf("C.  using CACHED value from store...%p\n",p);*/
+            h=grib_new_from_file(0,p,headers_only,&err);//use cached value
+        } else {
+            /*printf("C.  using value from ARGS...%p\n",f);*/
+            h=grib_new_from_file(0,f,headers_only,&err);//use FILE pointer passed in
+            store_file_info(fd, f); //store it for next time
+            /*dump_file_info();*/
+        }
 
         if(h){
             push_handle(h,gid);
@@ -1339,7 +1447,10 @@ int grib_c_new_from_file(FILE* f, int* gid, int headers_only)
         } else {
             *gid=-1;
             if (err == GRIB_SUCCESS) {
-                return GRIB_END_OF_FILE;
+                /*printf("C grib_c_new_from_file: GRIB_END_OF_FILE\n");*/
+                clear_file_info(fd);
+                /*dump_file_info();*/
+                return GRIB_END_OF_FILE; //TODO: remove element from cache
             } else {
                 /* A real error occurred */
                 return err;
@@ -1444,7 +1555,7 @@ int grib_c_print(int* gid, char* key){
 int grib_c_get_error_string(int* err, char* buf,  int len){
     const char* err_msg = grib_get_error_message(*err);
     size_t erlen = strlen(err_msg);
-    if( len < erlen) return GRIB_ARRAY_TOO_SMALL;
+    if( (size_t)len < erlen) return GRIB_ARRAY_TOO_SMALL;
 
     strncpy(buf, err_msg,(size_t)erlen);
     buf[erlen] = '\0';
@@ -1570,7 +1681,7 @@ int grib_c_get_double(int* gid, char* key, double* val){
     return err;
 }
 
-int grib_c_get_int_array(int* gid, char* key, int *val, int* size){
+int grib_c_get_int_array(int* gid, char* key, int *val, size_t* size){
 
     grib_handle *h = get_handle(*gid);
     long* long_val = NULL;
@@ -1618,7 +1729,7 @@ int grib_c_index_get_string(int* gid, char* key, char* val, int *eachsize,int* s
 
     grib_index *h = get_index(*gid);
     int err = GRIB_SUCCESS;
-    int i;
+    size_t i;
     size_t lsize = *size;
     char** bufval;
     char* p=val;
@@ -1637,7 +1748,7 @@ int grib_c_index_get_string(int* gid, char* key, char* val, int *eachsize,int* s
         int j;
         if (*eachsize < l ) {
             grib_context_free(h->context,bufval);
-            printf("eachsize=%d strlen(bufval[i])=%d\n",*eachsize,(unsigned int)strlen(bufval[i]));
+            printf("eachsize=%d strlen(bufval[i])=%d\n",*eachsize,(int)strlen(bufval[i]));
             return GRIB_ARRAY_TOO_SMALL;
         }
         memcpy(p,bufval[i],l);
@@ -1667,7 +1778,7 @@ int grib_c_index_get_int(int* gid, char* key, int *val, int* size){
     int err = GRIB_SUCCESS;
     size_t lsize = *size;
     long* lval=0;
-    int i;
+    size_t i;
 
     if(!h)  return GRIB_INVALID_GRIB;
 
@@ -1693,7 +1804,7 @@ int grib_c_index_get_real8(int* gid, char* key, double *val, int* size){
     return  err;
 }
 
-int grib_c_set_int_array(int* gid, char* key, int* val, int* size){
+int grib_c_set_int_array(int* gid, char* key, int* val, size_t* size){
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
     long* long_val = NULL;
@@ -1824,7 +1935,7 @@ int grib_c_get_real4_elements(int* gid, char* key,int* index, float *val,int* si
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
     size_t lsize = *size;
-    long i=0;
+    size_t i=0;
     double* val8 = NULL;
 
     if(!h) return GRIB_INVALID_GRIB;
@@ -1839,7 +1950,7 @@ int grib_c_get_real4_elements(int* gid, char* key,int* index, float *val,int* si
 
     err = grib_get_double_elements(h, key, index,(long)lsize,val8);
 
-    for(i=0;i<lsize;(i)++)
+    for(i=0; i<lsize; i++)
         val[i] = val8[i];
 
     grib_context_free(h->context,val8);
@@ -1860,7 +1971,7 @@ int grib_c_get_real4(int* gid, char* key, float* val)
     return err;
 }
 
-int grib_c_get_real4_array(int* gid, char* key, float *val, int* size)
+int grib_c_get_real4_array(int* gid, char* key, float *val, size_t* size)
 {
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
@@ -1902,7 +2013,7 @@ int grib_c_set_real4_array(int* gid, char* key, float*val, int* size)
 
     if(!val8) return GRIB_OUT_OF_MEMORY;
 
-    for(lsize=0;lsize<*size;lsize++)
+    for(lsize=0; lsize<(size_t)*size; lsize++)
         val8[lsize] = val[lsize];
 
     err = grib_set_double_array(h, key, val8, lsize);
@@ -2207,6 +2318,7 @@ void grib_c_check(int* err,char* call,char* str)
 
 int grib_c_write(int* gid, FILE* f)
 {
+    int err = 0;
     grib_handle *h = get_handle(*gid);
     const void* mess = NULL;
     size_t mess_len = 0;
@@ -2214,12 +2326,17 @@ int grib_c_write(int* gid, FILE* f)
     if(!f) return GRIB_INVALID_FILE;
     if (!h) return GRIB_INVALID_GRIB;
 
-    grib_get_message(h,&mess,&mess_len);
+    err = grib_get_message(h,&mess,&mess_len);
+    if (err) return err;
     if(fwrite(mess,1, mess_len,f) != mess_len) {
         perror("grib_write");
         return GRIB_IO_PROBLEM;
     }
-
+    err = fflush(f);
+    if(err) {
+        perror("write flush");
+        return GRIB_IO_PROBLEM;
+    }
     return GRIB_SUCCESS;
 }
 

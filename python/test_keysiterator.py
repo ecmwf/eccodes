@@ -22,7 +22,7 @@ for i in range(count):
         keyname = grib_keys_iterator_get_name(iterid)
         keyval = grib_get_string(iterid,keyname)
         keytype = grib_get_native_type(gid,keyname)
-        print ("%s = %s (%s)" % (keyname,keyval,str(keytype)))
+        print "%s = %s (%s)" % (keyname,keyval,str(keytype))
 
     grib_keys_iterator_delete(iterid)
     grib_release(gid)

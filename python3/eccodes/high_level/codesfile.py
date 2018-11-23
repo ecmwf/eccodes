@@ -6,9 +6,9 @@ Author: Daniel Lee, DWD, 2016
 """
 
 from .. import eccodes
+import io
 
-
-class CodesFile(file):
+class CodesFile(io.IOBase):
 
     """
     An abstract class to specify and/or implement common behaviour that files
@@ -43,6 +43,7 @@ class CodesFile(file):
         self.message = 0
         #: Open messages
         self.open_messages = []
+        self.name = filename
 
     def __exit__(self, exception_type, exception_value, traceback):
         """Close all open messages, release file handle and close file."""

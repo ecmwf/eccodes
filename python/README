@@ -1,0 +1,24 @@
+GRIB API Python bindings
+
+In order to enable the Python bindings in the build,
+use the --enable-python configure flag.
+
+./configure --enable-python
+
+This will enable the build of the Python bindings with 
+NumPy support enabled. Python needs to be in the path
+and, of course, the NumPy package installed.
+
+To build the Python bindings without NumPy support, use 
+the --disable-numpy configure flag. This will result in
+Python array objects being used for data handling.
+
+On 'make install', the Python bindings will be installed under
+'${GRIBAPI_install_dir}/lib/pythonX.X/site-packages/grib_api',
+where X.X is the version of python used to build the bindings.
+Add this folder to your PYTHONPATH and you are ready to go.
+
+For more information on the Python bindings, please visit our
+website at:
+
+http://www.ecmwf.int/publications/manuals/grib_api/

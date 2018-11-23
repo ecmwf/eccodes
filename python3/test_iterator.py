@@ -26,12 +26,12 @@ def main():
             sys.stdout.write("- %d - lat=%.6f lon=%.6f value=" % (i,lat,lon))
 
             if value == missingValue:
-                print "missing"
+                print("missing")
             else:
-                print "%.6f" % value
+                print("%.6f" % value)
 
             i += 1
-            
+
         grib_iterator_delete(iterid)
         grib_release(gid)
 
