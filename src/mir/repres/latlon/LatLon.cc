@@ -38,20 +38,15 @@ namespace latlon {
 namespace {
 
 
-template<class T>
-static size_t computeN(const T& first, const T& last, const T& inc) {
+static size_t computeN(const eckit::Fraction& first, const eckit::Fraction& last, const eckit::Fraction& inc) {
     ASSERT(first <= last);
+    ASSERT(inc > 0);
 
     if (inc == 0) {
         return 1;
     }
 
-    ASSERT(inc > 0);
-    eckit::Fraction l = last.fraction();
-    eckit::Fraction f = first.fraction();
-    eckit::Fraction i = inc.fraction();
-    eckit::Fraction r = (l - f) / i;
-
+    auto r = (last - first) / inc;
     auto n = r.integralPart();
     return size_t(n + 1);
 }
@@ -89,8 +84,8 @@ LatLon::LatLon(const util::Increments& increments, const util::BoundingBox& bbox
     increments_(increments) {
     increments_.correctBoundingBox(bbox_, reference);
 
-    ni_ = computeN(bbox_.west(), bbox_.east(), increments_.west_east().longitude());
-    nj_ = computeN(bbox_.south(), bbox_.north(), increments_.south_north().latitude());
+    ni_ = computeN(bbox_.west().fraction(), bbox_.east().fraction(), increments_.west_east().longitude().fraction());
+    nj_ = computeN(bbox_.south().fraction(), bbox_.north().fraction(), increments_.south_north().latitude().fraction());
 
     check(bbox_, increments_, ni_, nj_);
 }
