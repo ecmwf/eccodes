@@ -52,6 +52,20 @@ static size_t computeN(const eckit::Fraction& first, const eckit::Fraction& last
 }
 
 
+static eckit::Fraction adjust(bool up, const eckit::Fraction target, const eckit::Fraction& inc) {
+    ASSERT(inc > 0);
+
+    auto r = target / inc;
+    auto n = r.integralPart();
+
+    if (!r.integer() && (r > 0) == up) {
+        n += (up ? 1 : -1);
+    }
+
+    return (n * inc);
+}
+
+
 static void check(const util::BoundingBox& bbox, const util::Increments& inc, size_t ni, size_t nj) {
     eckit::Fraction we = inc.west_east().longitude().fraction();
     eckit::Fraction sn = inc.south_north().latitude().fraction();
@@ -68,7 +82,7 @@ LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
     increments_(parametrisation) {
 
     PointLatLon reference(bbox_.south(), bbox_.west());
-    increments_.correctBoundingBox(bbox_, reference);
+    correctBoundingBox(bbox_, increments_, reference);
 
     ni_ = 0;
     nj_ = 0;
@@ -82,7 +96,7 @@ LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
 LatLon::LatLon(const util::Increments& increments, const util::BoundingBox& bbox, const PointLatLon& reference) :
     Gridded(bbox),
     increments_(increments) {
-    increments_.correctBoundingBox(bbox_, reference);
+    correctBoundingBox(bbox_, increments_, reference);
 
     ni_ = computeN(bbox_.west().fraction(), bbox_.east().fraction(), increments_.west_east().longitude().fraction());
     nj_ = computeN(bbox_.south().fraction(), bbox_.north().fraction(), increments_.south_north().latitude().fraction());
@@ -382,6 +396,107 @@ bool LatLon::LatLonIterator::next(Latitude& lat, Longitude& lon) {
         }
     }
     return false;
+}
+
+
+void LatLon::globaliseBoundingBox(util::BoundingBox& bbox, const util::Increments& inc, const PointLatLon& reference) {
+    using eckit::Fraction;
+
+    Fraction sn = inc.south_north().latitude().fraction();
+    Fraction we = inc.west_east().longitude().fraction();
+    ASSERT(sn > 0);
+    ASSERT(we > 0);
+
+    Fraction shift_sn = (reference.lat().fraction() / sn).decimalPart() * sn;
+    Fraction shift_we = (reference.lon().fraction() / we).decimalPart() * we;
+
+
+    // Latitude limits
+
+    Latitude n = adjust(false, Latitude::NORTH_POLE.fraction() - shift_sn, sn) + shift_sn;
+    Latitude s = adjust(true,  Latitude::SOUTH_POLE.fraction() - shift_sn, sn) + shift_sn;
+
+
+    // Longitude limits
+    // - West for non-periodic grids is not corrected!
+    // - East for periodic grids is W + 360 - increment
+
+    Longitude w = bbox.west();
+    if (inc.isPeriodic()) {
+        w = adjust(true, Longitude::GREENWICH.fraction() - shift_we, we) + shift_we;
+    }
+
+    Longitude e = adjust(false, w.fraction() + Longitude::GLOBE.fraction() - shift_we, we) + shift_we;
+    if (e - w == Longitude::GLOBE) {
+        e -= we;
+    }
+
+
+    // set bounding box
+    bbox = {n, w, s, e};
+}
+
+
+void LatLon::correctBoundingBox(util::BoundingBox& bbox, const util::Increments& inc, const PointLatLon& reference) {
+    using eckit::Fraction;
+
+    Fraction sn = inc.south_north().latitude().fraction();
+    Fraction we = inc.west_east().longitude().fraction();
+    ASSERT(sn >= 0);
+    ASSERT(we >= 0);
+
+
+    // Latitude limits
+    // - North adjusted to N = S + Nj * inc <= 90
+
+    Latitude s = bbox.south();
+    Latitude n = sn == 0 ? s : bbox.north();
+
+    if (sn > 0) {
+        Fraction shift = (reference.lat().fraction() / sn).decimalPart() * sn;
+
+        s = adjust(true,  bbox.south().fraction() - shift, sn) + shift;
+
+        if (bbox.south() == bbox.north()) {
+            n = s;
+        } else {
+            ASSERT(n - s <= Latitude::GLOBE);
+            n = s + ((n - s).fraction() / sn).integralPart() * sn;
+        }
+    }
+
+    // Longitude limits
+    // - East adjusted to E = W + Ni * inc < W + 360
+    // (non-periodic grids can have 360 - inc < E - W < 360)
+
+    Longitude w = bbox.west();
+    Longitude e = we == 0 ? w : bbox.east();
+
+    if (we > 0) {
+        Fraction shift = (reference.lon().fraction() / we).decimalPart() * we;
+
+        w = adjust(true,  bbox.west().fraction() - shift, we) + shift;
+        ASSERT(bbox.west() <= w);
+
+        if (bbox.west() == bbox.east()) {
+            e = w;
+        } else {
+            e = adjust(false, bbox.east().fraction() - shift, we) + shift;
+            ASSERT(e <= bbox.east());
+
+            if (e < w) {
+                e = w;
+            } else if (e - w >= Longitude::GLOBE) {
+                e -= we;
+            }
+        }
+
+    }
+
+    // set bounding box
+    ASSERT(s <= n);
+    ASSERT(w <= e);
+    bbox = {n, w, s, e};
 }
 
 
