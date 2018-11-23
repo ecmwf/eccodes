@@ -424,6 +424,10 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
                     bits_per_value)*s)+reference_value)*scals[lup];
             val[i++] =  d * (double) ((grib_decode_unsigned_long(lres, &lpos,
                     bits_per_value)*s)+reference_value)*scals[lup];
+            /* These values should always be zero, but as they are packed,
+               it is necessary to force them back to zero */
+            if (mmax == 0)
+                val[i-1] = 0;
             lup++;
         }
 #endif
