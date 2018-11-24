@@ -169,10 +169,10 @@ foreach( test ${tests_no_data_reqd} )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
     )
 endforeach()
-ecbuild_add_test( TARGET eccodes_t_check_gaussian_grids
+ecbuild_add_test( TARGET eccodes_t_grib_check_gaussian_grids
                   TYPE SCRIPT
                   CONDITION ECCODES_INSTALL_EXTRA_TOOLS
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/check_gaussian_grids.sh
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_gaussian_grids.sh
 )
 
 
