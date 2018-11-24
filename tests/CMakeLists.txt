@@ -27,7 +27,7 @@ list( APPEND test_bins
       grib_ecc-386
       bufr_ecc-517
       bufr_get_element
-      sh_ieee64
+      grib_sh_ieee64
       ieee
       grib_sh_imag
 )
@@ -105,7 +105,7 @@ list( APPEND tests_data_reqd
     metar_compare
     bufr_set
     ieee
-    sh_ieee64
+    grib_sh_ieee64
     optimize_scaling
     optimize_scaling_sh
     grib1to2
