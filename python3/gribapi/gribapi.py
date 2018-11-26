@@ -1,12 +1,12 @@
 """
 @package gribapi
-@brief This package is the \b Python interface to ecCodes. It offers almost one to one bindings to the C API functions.
+@brief This package is the \b Python 3 interface to ecCodes. It offers almost one to one bindings to the C API functions.
 
-The Python interface to ecCodes uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package
+The Python 3 interface to ecCodes uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package
 as the container of choice for the possible arrays of values that can be encoded/decoded in and from a message.
 Numpy is a package used for scientific computing in Python and an efficient container for generic data.
 
-The Python interface can be enabled/disabled from CMake by using the following flag:\n
+The Python 3 interface can be enabled/disabled from CMake by using the following flag:\n
 
 @code{.unparsed}
     -DENABLE_PYTHON=ON
@@ -18,7 +18,7 @@ When this is enabed, then the system Python will be used to build the interface.
 
 @em Requirements:
 
-    - Python 2.6 or higher
+    - Python 3.5 or higher
     - NumPy
 
 """
