@@ -8,7 +8,7 @@ Author: Daniel Lee, DWD, 2016
 from .. import eccodes
 import io
 
-class CodesFile(io.IOBase):
+class CodesFile(io.FileIO):
 
     """
     An abstract class to specify and/or implement common behaviour that files
@@ -33,7 +33,7 @@ class CodesFile(io.IOBase):
     #: Type of messages belonging to this file
     MessageClass = None
 
-    def __init__(self, filename, mode="r"):
+    def __init__(self, filename, mode="rb"):
         """Open file and receive codes file handle."""
         #: File handle for working with actual file on disc
         #: The class holds the file it works with because ecCodes'
