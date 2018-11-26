@@ -379,8 +379,8 @@ def grib_c_new_from_file(f: 'FILE *', fd: 'int', fname: 'char *', INOUT: 'int *'
     return _gribapi_swig.grib_c_new_from_file(f, fd, fname, INOUT, headers_only)
 grib_c_new_from_file = _gribapi_swig.grib_c_new_from_file
 
-def grib_c_new_any_from_file(f: 'FILE *', headers_only: 'int', INOUT: 'int *') -> "int *":
-    return _gribapi_swig.grib_c_new_any_from_file(f, headers_only, INOUT)
+def grib_c_new_any_from_file(f: 'FILE *', fd: 'int', fname: 'char *', headers_only: 'int', INOUT: 'int *') -> "int *":
+    return _gribapi_swig.grib_c_new_any_from_file(f, fd, fname, headers_only, INOUT)
 grib_c_new_any_from_file = _gribapi_swig.grib_c_new_any_from_file
 
 def grib_c_new_bufr_from_file(f: 'FILE *', fd: 'int', fname: 'char *', headers_only: 'int', INOUT: 'int *') -> "int *":

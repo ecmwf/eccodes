@@ -234,7 +234,9 @@ def any_new_from_file(fileobj, headers_only=False):
     @return               id of the message loaded in memory
     @exception GribInternalError
     """
-    err, msgid = _internal.grib_c_new_any_from_file(fileobj, headers_only, 0)
+    fd = fileobj.fileno()
+    fn = fileobj.name
+    err, msgid = _internal.grib_c_new_any_from_file(fileobj, fd, fn, headers_only, 0)
     if err:
         if err == _internal.GRIB_END_OF_FILE:
             return None
