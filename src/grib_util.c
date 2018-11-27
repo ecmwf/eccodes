@@ -72,8 +72,8 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* 
     long section_offset[MAX_NUM_SECTIONS]={0,};
     long off=0;
     grib_handle* h;
-    char section_length_str[]="section0Length";
-    char section_offset_str[]="offsetSection0";
+    char section_length_str[64]="section0Length";
+    char section_offset_str[64]="offsetSection0";
     long length,offset;
 
     *err=grib_get_long(hfrom,"edition",&edition);
