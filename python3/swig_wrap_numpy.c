@@ -6109,6 +6109,40 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_codes_c_close_file(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  char *arg2 = (char *) 0 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  int res2 ;
+  char *buf2 = 0 ;
+  int alloc2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:codes_c_close_file",&obj0,&obj1)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "codes_c_close_file" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = (int)(val1);
+  res2 = SWIG_AsCharPtrAndSize(obj1, &buf2, NULL, &alloc2);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "codes_c_close_file" "', argument " "2"" of type '" "char *""'");
+  }
+  arg2 = (char *)(buf2);
+  result = (int)codes_c_close_file(arg1,arg2);
+  resultobj = SWIG_From_int((int)(result));
+  if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+  return resultobj;
+fail:
+  if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_grib_c_count_in_file(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   FILE *arg1 = (FILE *) 0 ;
@@ -9662,6 +9696,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"grib_c_index_write", _wrap_grib_c_index_write, METH_VARARGS, NULL},
 	 { (char *)"grib_c_index_read", _wrap_grib_c_index_read, METH_VARARGS, NULL},
 	 { (char *)"grib_c_new_from_message", _wrap_grib_c_new_from_message, METH_VARARGS, NULL},
+	 { (char *)"codes_c_close_file", _wrap_codes_c_close_file, METH_VARARGS, NULL},
 	 { (char *)"grib_c_count_in_file", _wrap_grib_c_count_in_file, METH_VARARGS, NULL},
 	 { (char *)"grib_c_release", _wrap_grib_c_release, METH_VARARGS, NULL},
 	 { (char *)"grib_c_write", _wrap_grib_c_write, METH_VARARGS, NULL},

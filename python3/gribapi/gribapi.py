@@ -308,6 +308,12 @@ def grib_new_from_file(fileobj, headers_only=False):
         return gribid
 
 
+@require(fd=int, fname=str)
+def codes_close_file(fd, fname):
+    err = _internal.codes_c_close_file(fd, fname)
+    GRIB_CHECK(err)
+
+
 @require(fileobj=file)
 def grib_count_in_file(fileobj):
     """

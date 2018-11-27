@@ -65,6 +65,7 @@ int grib_c_new_from_message(int *INOUT, char *binmsg, size_t *INPUT);
 %apply int* INPUT { int* iid };
 
 // file operations
+int codes_c_close_file(int fd, char* fname);
 int grib_c_count_in_file(FILE* f,int* OUTPUT);
 // ---
 
