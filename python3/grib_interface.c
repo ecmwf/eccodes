@@ -1323,6 +1323,14 @@ static void dump_file_info()
 }
 #endif
 /* ------------------------------------------------- */
+int codes_c_close_file(int fd, char* fname)
+{
+    FILE* fp = retrieve_file_info(fd);
+    if (fp) {
+        clear_file_info(fd);
+    }
+    return GRIB_SUCCESS;
+}
 
 int grib_c_count_in_file(FILE* f,int* n)
 {

@@ -439,6 +439,10 @@ def grib_c_new_from_message(INOUT: 'int *', binmsg: 'char *', INPUT: 'size_t *')
     return _gribapi_swig.grib_c_new_from_message(INOUT, binmsg, INPUT)
 grib_c_new_from_message = _gribapi_swig.grib_c_new_from_message
 
+def codes_c_close_file(fd: 'int', fname: 'char *') -> "int":
+    return _gribapi_swig.codes_c_close_file(fd, fname)
+codes_c_close_file = _gribapi_swig.codes_c_close_file
+
 def grib_c_count_in_file(f: 'FILE *') -> "int *":
     return _gribapi_swig.grib_c_count_in_file(f)
 grib_c_count_in_file = _gribapi_swig.grib_c_count_in_file
