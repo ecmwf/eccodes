@@ -1851,12 +1851,15 @@ int is_index_file(const char* filename)
     char buf[8]={0,};
     const char* str="GRBIDX";
     int ret=0;
+    size_t size = 0;
 
     fh=fopen(filename,"r");
     if (!fh) return 0;
 
-    fread(buf,1,1,fh);
-    fread(buf,6,1,fh);
+    size=fread(buf,1,1,fh);
+    if (size != 1) return 0;
+    size=fread(buf,6,1,fh);
+    if (size != 1) return 0;
 
     ret=!strcmp(buf,str);
 
