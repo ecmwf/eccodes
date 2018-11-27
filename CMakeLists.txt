@@ -210,6 +210,8 @@ if( ENABLE_JPG )
         set( HAVE_LIBOPENJPEG 1 )
     endif()
 
+    ecbuild_info(" HAVE_JPEG=${HAVE_JPEG}")
+
 endif()
 
 
