@@ -28,7 +28,7 @@ rm -f $temp
 # --- test changing the packing
 # arg 1    : input grib file
 # arg 2-n  : packing types to test
-function test_packing() {
+test_packing() {
     grib=$1
 
     if [ ! -f $grib ]; then
