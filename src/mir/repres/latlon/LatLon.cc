@@ -23,6 +23,7 @@
 #include "mir/api/Atlas.h"
 #include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
+#include "mir/iterator/detail/RegularIterator.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
@@ -33,75 +34,6 @@
 namespace mir {
 namespace repres {
 namespace latlon {
-
-
-namespace {
-
-
-static eckit::Fraction adjust(const eckit::Fraction target, const eckit::Fraction& inc, bool up) {
-    ASSERT(inc > 0);
-
-    auto r = target / inc;
-    auto n = r.integralPart();
-
-    if (!r.integer() && (r > 0) == up) {
-        n += (up ? 1 : -1);
-    }
-
-    return (n * inc);
-}
-
-
-struct FractionRange {
-
-    FractionRange(eckit::Fraction&& a, eckit::Fraction&& b, eckit::Fraction&& inc, eckit::Fraction&& ref) :
-        inc_(inc), ref_(ref) {
-        ASSERT(a <= b);
-        ASSERT(inc >= 0);
-
-        if (inc_ == 0) {
-            b_ = a_ = a;
-            return;
-        }
-
-        auto shift = (ref_ / inc_).decimalPart() * inc;
-        a_ = shift + adjust(a - shift, inc_, true);
-
-        if (b == a) {
-            b_ = a_;
-            return;
-        }
-
-        auto c = shift + adjust(b - shift, inc_, false);
-        c = a_ + ((b - a_) / inc_).integralPart() * inc_;
-
-        b_ = c < a_ ? a_ : c;
-        ASSERT(a_ <= b_);
-    }
-
-    size_t n() const {
-        return inc_ == 0 ? 1 : size_t(((b_ - a_) / inc_).integralPart() + 1);
-    }
-
-    size_t n(const eckit::Fraction& period) const {
-        size_t ni = n();
-        if ((ni - 1) * inc() >= period) {
-            ni -= 1;
-            ASSERT(ni * inc() <= period);
-        }
-        return ni;
-    }
-
-    const eckit::Fraction& a() const { return a_; }
-    const eckit::Fraction& b() const { return b_; }
-    const eckit::Fraction& inc() const { return inc_; }
-
-private:
-    eckit::Fraction a_, b_, inc_, ref_;
-};
-
-
-}  // (anonymous namespace)
 
 
 LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
@@ -433,6 +365,7 @@ bool LatLon::LatLonIterator::next(Latitude& lat, Longitude& lon) {
 
 
 void LatLon::globaliseBoundingBox(util::BoundingBox& bbox, const util::Increments& inc, const PointLatLon& reference) {
+    using iterator::detail::RegularIterator;
     using eckit::Fraction;
 
     Fraction sn = inc.south_north().latitude().fraction();
@@ -446,8 +379,8 @@ void LatLon::globaliseBoundingBox(util::BoundingBox& bbox, const util::Increment
 
     // Latitude limits
 
-    Latitude n = shift_sn + adjust(Latitude::NORTH_POLE.fraction() - shift_sn, sn, false);
-    Latitude s = shift_sn + adjust(Latitude::SOUTH_POLE.fraction() - shift_sn, sn, true);
+    Latitude n = shift_sn + RegularIterator::adjust(Latitude::NORTH_POLE.fraction() - shift_sn, sn, false);
+    Latitude s = shift_sn + RegularIterator::adjust(Latitude::SOUTH_POLE.fraction() - shift_sn, sn, true);
 
 
     // Longitude limits
@@ -456,10 +389,10 @@ void LatLon::globaliseBoundingBox(util::BoundingBox& bbox, const util::Increment
 
     Longitude w = bbox.west();
     if (inc.isPeriodic()) {
-        w = shift_we + adjust(Longitude::GREENWICH.fraction() - shift_we, we, true);
+        w = shift_we + RegularIterator::adjust(Longitude::GREENWICH.fraction() - shift_we, we, true);
     }
 
-    Longitude e = shift_we + adjust(w.fraction() + Longitude::GLOBE.fraction() - shift_we, we, false);
+    Longitude e = shift_we + RegularIterator::adjust(w.fraction() + Longitude::GLOBE.fraction() - shift_we, we, false);
     if (e - w == Longitude::GLOBE) {
         e -= we;
     }
@@ -471,20 +404,21 @@ void LatLon::globaliseBoundingBox(util::BoundingBox& bbox, const util::Increment
 
 
 void LatLon::correctBoundingBox(util::BoundingBox& bbox, size_t& ni, size_t& nj, const util::Increments& inc, const PointLatLon& reference) {
+    using iterator::detail::RegularIterator;
 
     // Latitude/longitude ranges
-    FractionRange lat{ bbox.south().fraction(), bbox.north().fraction(), inc.south_north().latitude().fraction(), reference.lat().fraction() };
+    RegularIterator lat{ bbox.south().fraction(), bbox.north().fraction(), inc.south_north().latitude().fraction(), reference.lat().fraction() };
     auto n = lat.b();
     auto s = lat.a();
 
     nj = lat.n();
     ASSERT(nj > 0);
 
-    FractionRange lon{ bbox.west().fraction(), bbox.east().fraction(), inc.west_east().longitude().fraction(), reference.lon().fraction() };
+    RegularIterator lon{ bbox.west().fraction(), bbox.east().fraction(), inc.west_east().longitude().fraction(), reference.lon().fraction(), Longitude::GLOBE.fraction() };
     auto w = lon.a();
     auto e = lon.b();
 
-    ni = lon.n(Longitude::GLOBE.fraction());
+    ni = lon.n();
     ASSERT(ni > 0);
 
     // checks
