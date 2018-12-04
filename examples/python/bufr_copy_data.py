@@ -23,7 +23,7 @@ VERBOSE = 1  # verbose error reporting
 
 def example(input_filename, output_filename):
     ibufr = codes_new_from_samples('BUFR3', CODES_PRODUCT_BUFR)
-    f = open(input_filename)
+    f = open(input_filename, 'rb')
     ibufrin = codes_bufr_new_from_file(f)
     ivalues = (
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -61,7 +61,7 @@ def example(input_filename, output_filename):
     codes_set(ibufrin, 'unpack', 1)
     codes_bufr_copy_data(ibufrin, ibufr)  # Copy data across
 
-    with open(output_filename, 'w') as outfile:
+    with open(output_filename, 'wb') as outfile:
         codes_write(ibufr, outfile)
     codes_release(ibufr)
     codes_release(ibufrin)

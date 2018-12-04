@@ -358,7 +358,8 @@ void grib_trie_with_rank_delete_container(grib_trie_with_rank *t)
 {
     GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex);
-    if(t)  {
+    DebugAssert(t);
+    {
         int i;
         for(i = t->first; i <= t->last; i++)
             if (t->next[i]) {

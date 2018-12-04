@@ -354,10 +354,6 @@ grib_context* grib_context_get_default()
     GRIB_MUTEX_INIT_ONCE(&once,&init);
     GRIB_MUTEX_LOCK(&mutex_c);
 
-#ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
-    feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
-#endif
-
     if(!default_grib_context.inited)
     {
         const char* write_on_fail = NULL;
@@ -374,6 +370,10 @@ grib_context* grib_context_get_default()
         const char* bufrdc_mode = NULL;
         const char* bufr_set_to_missing_if_out_of_range = NULL;
         const char* file_pool_max_opened_files = NULL;
+
+#ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
+        feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
+#endif
 
         write_on_fail = codes_getenv("ECCODES_GRIB_WRITE_ON_FAIL");
         bufrdc_mode = codes_getenv("ECCODES_BUFRDC_MODE_ON");

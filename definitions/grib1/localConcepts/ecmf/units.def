@@ -14379,7 +14379,7 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 143 ;
 	}
-#Snowfall (convective + stratiform)
+#Mean total snowfall rate
 'm of water equivalent s**-1' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 144 ;
@@ -14459,8 +14459,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 182 ;
 	}
-#Sunshine duration
-'~' = {
+#Mean sunshine duration rate
+'s s**-1' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 189 ;
 	}

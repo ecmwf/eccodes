@@ -2,9 +2,9 @@ TESTS = definitions.sh \
         grib_calendar.sh \
         bufrdc_desc_ref.sh \
         bufrdc_ref.sh \
-        bufr_dump.sh \
+        bufr_dump_data.sh \
         bufr_filter.sh \
-        bufr_json.sh \
+        bufr_json_data.sh \
         bufr_compare.sh \
         bufr_copy.sh \
         bufr_count.sh \

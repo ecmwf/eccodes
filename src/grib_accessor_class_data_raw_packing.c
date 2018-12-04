@@ -271,8 +271,10 @@ clean_up:
 
     grib_context_buffer_free(a->context,buffer);
 
-    code = grib_set_long(grib_handle_of_accessor(a),self->number_of_values, inlen);
-    if(code==GRIB_READ_ONLY) code=0;
+    if (code == GRIB_SUCCESS) {
+        code = grib_set_long(grib_handle_of_accessor(a),self->number_of_values, inlen);
+        if(code==GRIB_READ_ONLY) code=0;
+    }
 
     return code;
 }

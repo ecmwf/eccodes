@@ -29,6 +29,7 @@
    MEMBERS    = double southPoleLat
    MEMBERS    = double southPoleLon
    MEMBERS    = long jPointsAreConsecutive
+   MEMBERS    = long disableUnrotate
    END_CLASS_DEF
 
  */
@@ -68,6 +69,7 @@ typedef struct grib_iterator_regular{
 	double southPoleLat;
 	double southPoleLon;
 	long jPointsAreConsecutive;
+    long disableUnrotate;
 } grib_iterator_regular;
 
 extern grib_iterator_class* grib_iterator_class_gen;

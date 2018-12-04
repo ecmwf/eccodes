@@ -321,7 +321,7 @@ class TestBufrFile(unittest.TestCase):
                 self.assertEqual(msg["bufrHeaderCentre"], 98)
                 self.assertEqual(msg['count'], i + 1)
             self.assertEqual(len(bufr_file.open_messages), 3)
-        self.assertEquals(len(bufr_file.open_messages), 0)
+        self.assertEqual(len(bufr_file.open_messages), 0)
 
     def test_message_counting_works(self):
         """The BufrFile is aware of its messages."""

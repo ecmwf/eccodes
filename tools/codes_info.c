@@ -10,6 +10,9 @@
 
 #include "grib_tools.h"
 
+extern char *optarg;
+extern int optind;
+
 static void usage_and_exit(const char* progname) {
     printf("\nUsage: %s [-v] [-d] [-s]\n",progname);
     exit(1);

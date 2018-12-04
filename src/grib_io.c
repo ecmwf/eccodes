@@ -1365,6 +1365,8 @@ void *wmo_read_taf_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t 
 
     u.buffer       = NULL;
 
+    r.offset          = 0;
+    r.message_size    = 0;
     r.read_data       = f;
     r.read            = &stdio_read;
     r.seek            = &stdio_seek;
@@ -1388,7 +1390,9 @@ void *wmo_read_metar_from_file_malloc(FILE* f,int headers_only,size_t *size,off_
 
     u.buffer       = NULL;
 
+    r.message_size    = 0;
     r.read_data       = f;
+    r.offset          = 0;
     r.read            = &stdio_read;
     r.seek            = &stdio_seek;
     r.seek_from_start = &stdio_seek_from_start;

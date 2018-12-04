@@ -4,6 +4,7 @@ set -ea
 set -x
 
 proj_dir=@PROJECT_SOURCE_DIR@
+build_dir=@PROJECT_BINARY_DIR@
 data_dir=@PROJECT_BINARY_DIR@/data
 
 # use definitions from binary dir to test if installation will be correct

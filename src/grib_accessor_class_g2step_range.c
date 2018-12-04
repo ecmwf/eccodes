@@ -210,6 +210,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len){
 
   if(self->endStep!=NULL) {
     ret=grib_set_long_internal(h,self->endStep,theEnd);
+    if (ret) return ret;
   }
 
   return 0;

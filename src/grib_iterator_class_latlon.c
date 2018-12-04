@@ -54,6 +54,7 @@ typedef struct grib_iterator_latlon{
 	double southPoleLat;
 	double southPoleLon;
 	long jPointsAreConsecutive;
+    long disableUnrotate;
 /* Members defined in latlon */
 } grib_iterator_latlon;
 
@@ -168,7 +169,8 @@ static int next(grib_iterator* iter, double *lat, double *lon, double *val)
         ret_val = iter->data[iter->e];
     }
 
-    if (self->isRotated)
+    /* See ECC-808: Some users want to disable the unrotate */
+    if (self->isRotated && !self->disableUnrotate)
     {
         double new_lat = 0, new_lon = 0;
         unrotate(iter->h, ret_lat, ret_lon,
@@ -201,6 +203,7 @@ static int init(grib_iterator* iter, grib_handle* h,grib_arguments* args)
     self->isRotated = 0;
     self->southPoleLat = 0;
     self->southPoleLon = 0;
+    self->disableUnrotate = 0; /* unrotate enabled by default */
 
     if ((err = grib_get_long(h, "is_rotated_grid", &self->isRotated))) return err;
     if (self->isRotated) {
@@ -213,6 +216,7 @@ static int init(grib_iterator* iter, grib_handle* h,grib_arguments* args)
     if((err = grib_get_double_internal(h, s_jdir,  &jdir))) return err;
     if((err = grib_get_long_internal(h, s_jScansPos,  &jScansPositively))) return err;
     if((err = grib_get_long_internal(h, s_jPtsConsec, &self->jPointsAreConsecutive))) return err;
+    if((err = grib_get_long(h, "iteratorDisableUnrotate", &self->disableUnrotate))) return err;
 
     if (jScansPositively) jdir=-jdir;
 

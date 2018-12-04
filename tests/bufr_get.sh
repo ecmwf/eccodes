@@ -72,5 +72,19 @@ result=`${tools_dir}/bufr_get -m aaen_55.bufr`
 result=`${tools_dir}/bufr_get -m syno_1.bufr`
 [ "$result" = "1 1 2012 10 30 0 0 0 7.45 151.83" ]
 
-#Clean up
+#-------------------------------------------
+# Local ECMWF section: 'ident' key
+#-------------------------------------------
+result=`${tools_dir}/bufr_get -p isSatellite,ident syno_1.bufr`
+[ "$result" = "0 91334   " ]
+result=`${tools_dir}/bufr_get -p isSatellite,ident temp_102.bufr`
+[ "$result" = "0 ASDE3   " ]
+result=`${tools_dir}/bufr_get -p isSatellite,ident b004_145.bufr`
+[ "$result" = "0 FAVRTLZA" ]
+
+result=`${tools_dir}/bufr_get -f -p isSatellite,ident b003_56.bufr`
+[ "$result" = "1 not_found" ]
+
+
+# Clean up
 rm -f $fLog $fTmp $res_get

@@ -21,8 +21,8 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    fin = open(INPUT)
-    fout = open(OUTPUT, 'w')
+    fin = open(INPUT, 'rb')
+    fout = open(OUTPUT, 'wb')
 
     gid = codes_grib_new_from_file(fin)
 

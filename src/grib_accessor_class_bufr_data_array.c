@@ -1760,13 +1760,12 @@ static int adding_extra_key_attributes(grib_handle* h)
     return (!skip);
 }
 
-static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_accessor* attribute,grib_section* section,long ide,long subset,int dump,int count)
+static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_accessor* attribute,grib_section* section,long ide,long subset,int dump,int count,int add_extra_attributes)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     char code[10]={0,};
     char* temp_str = NULL;
     int idx=0;
-    int add_extra_attributes = 1;
     unsigned long flags=GRIB_ACCESSOR_FLAG_READ_ONLY;
     grib_action operatorCreator = {0, };
     grib_accessor* elementAccessor=NULL;
@@ -1780,8 +1779,6 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_acce
     operatorCreator.flags     = GRIB_ACCESSOR_FLAG_READ_ONLY;
     operatorCreator.set        = 0;
     operatorCreator.name="operator";
-
-    add_extra_attributes = adding_extra_key_attributes(grib_handle_of_accessor(a));
 
     if(attribute) { DebugAssert(attribute->parent==NULL); }
 
@@ -2064,6 +2061,21 @@ static int bitmap_ref_skip(grib_accessors_list* al,int* err)
     return 0;
 }
 
+static void print_bitmap_debug_info(grib_context* c, bitmap_s* bitmap, grib_accessors_list* bitmapStart, int bitmapSize)
+{
+    int i = 0, ret = 0;
+    printf("ECCODES DEBUG: bitmap_init: bitmapSize=%d\n", bitmapSize);
+    bitmap->cursor=bitmapStart->next;
+    bitmap->referredElement=bitmapStart;
+    while (bitmap_ref_skip(bitmap->referredElement,&ret))
+        bitmap->referredElement=bitmap->referredElement->prev;
+    for (i=1;i<bitmapSize;i++) {
+        if (bitmap->referredElement) {
+            printf("ECCODES DEBUG:\t bitmap_init: i=%d |%s|\n", i,bitmap->referredElement->accessor->name);
+            bitmap->referredElement=bitmap->referredElement->prev;
+        }
+    }
+}
 static int bitmap_init(grib_context* c, bitmap_s* bitmap,
                        grib_accessors_list* bitmapStart, int bitmapSize, grib_accessors_list* lastAccessorInList)
 {
@@ -2075,11 +2087,14 @@ static int bitmap_init(grib_context* c, bitmap_s* bitmap,
     }
     bitmap->referredElement=bitmapStart;
     while (bitmap_ref_skip(bitmap->referredElement,&ret)) bitmap->referredElement=bitmap->referredElement->prev;
+    /*printf("bitmap_init: bitmapSize=%d\n", bitmapSize);*/
     for (i=1;i<bitmapSize;i++) {
         if (bitmap->referredElement==NULL) {
             grib_context_log(c, GRIB_LOG_ERROR,"bitmap_init: bitmap->referredElement==NULL");
+            if (c->debug) print_bitmap_debug_info(c, bitmap, bitmapStart, bitmapSize);
             return GRIB_INTERNAL_ERROR;
         }
+        /*printf("  bitmap_init: i=%d  |%s|\n", i,bitmap->referredElement->accessor->name);*/
         bitmap->referredElement=bitmap->referredElement->prev;
     }
     bitmap->referredElementStart=bitmap->referredElement;
@@ -2141,6 +2156,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     int qualityPresent=0;
     bitmap_s bitmap={0,};
     int extraElement=0;
+    int add_extra_attributes = 1;
 
     grib_accessor* gaGroup=0;
     grib_action creatorGroup = {0, };
@@ -2200,6 +2216,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     /*indexOfGroupNumber=0;*/
     depth=0;
     extraElement=0;
+    add_extra_attributes = adding_extra_key_attributes(grib_handle_of_accessor(a));
 
     for (iss=0;iss<end;iss++) {
         qualityPresent=0;
@@ -2348,7 +2365,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 grib_accessors_list_push(self->dataAccessors,asn,rank);
             }
             count++;
-            elementAccessor=create_accessor_from_descriptor(a,associatedFieldAccessor,section,ide,iss,dump,count);
+            elementAccessor=create_accessor_from_descriptor(a,associatedFieldAccessor,section,ide,iss,dump,count,add_extra_attributes);
             if (!elementAccessor) {
                 err = GRIB_DECODING_ERROR;
                 return err;

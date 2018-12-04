@@ -86,5 +86,9 @@ grep -q 'Point chosen #3 index=21 .* distance=11\.' $temp_ls
 ${tools_dir}/grib_ls -l 53,2,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$temp_ls
 grep -q 'Point chosen #2 index=749 .* distance=204\.' $temp_ls
 
-rm -f $temp_ls
 
+# ECC-278: grib_ls -n namespace
+${tools_dir}/grib_ls -n geography $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl
+${tools_dir}/grib_ls -n data      $ECCODES_SAMPLES_PATH/GRIB1.tmpl
+
+rm -f $temp_ls

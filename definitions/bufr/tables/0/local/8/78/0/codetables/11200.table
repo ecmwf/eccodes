@@ -1,0 +1,11 @@
+0 0 None
+1 1 Light turbulence
+2 2 Moderate turbulence in clear air, infrequent
+3 3 Moderate turbulence in clear air, frequent
+4 4 Moderate turbulence in cloud, infrequent
+5 5 Moderate turbulence in cloud, frequent
+6 6 Severe turbulence in clear air, infrequent
+7 7 Severe turbulence in clear air, frequent
+8 8 Severe turbulence in cloud, infrequent
+9 9 Severe turbulence in cloud, frequent
+15 15 Missing value

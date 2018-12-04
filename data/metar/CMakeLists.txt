@@ -12,11 +12,13 @@ FILE(READ "metar_ref_files.txt" metar_refs_to_download)
 STRING(REGEX REPLACE "\n" ";" metar_refs_to_download "${metar_refs_to_download}")
 
 
-ecbuild_get_test_multidata(
-     TARGET eccodes_download_metars
-     NOCHECK
-     NAMES ${metar_files_to_download} ${metar_refs_to_download}
-)
+if( ENABLE_EXTRA_TESTS )
+    ecbuild_get_test_multidata(
+         TARGET eccodes_download_metars
+         NOCHECK
+        NAMES ${metar_files_to_download} ${metar_refs_to_download}
+    )
+endif()
 
 # Copy other files - e.g. text files etc from the source data/metar dir
 LIST(APPEND other_files

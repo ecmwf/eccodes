@@ -1,0 +1,11 @@
+0 0 Equal in all directions
+1 1 NE
+2 2 E
+3 3 SE
+4 4 S
+5 5 SW
+6 6 W
+7 7 NW
+8 8 N
+9 9 Direction not observalbe or phemomena unequally distributed
+15 15 Missing value

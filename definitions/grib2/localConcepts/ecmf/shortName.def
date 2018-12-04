@@ -18727,8 +18727,8 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 143 ;
 	}
-#Snowfall (convective + stratiform)
-'~' = {
+#Mean total snowfall rate
+'mtsfr' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 144 ;
@@ -18823,8 +18823,8 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 182 ;
 	}
-#Sunshine duration
-'~' = {
+#Mean sunshine duration rate
+'msdr' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 189 ;
