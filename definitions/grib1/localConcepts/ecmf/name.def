@@ -14379,8 +14379,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 143 ;
 	}
-#Snowfall (convective + stratiform)
-'Snowfall (convective + stratiform)' = {
+#Mean total snowfall rate
+'Mean total snowfall rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 144 ;
 	}
@@ -14459,8 +14459,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 182 ;
 	}
-#Sunshine duration
-'Sunshine duration' = {
+#Mean sunshine duration rate
+'Mean sunshine duration rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 189 ;
 	}

@@ -18727,8 +18727,8 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 143 ;
 	}
-#Snowfall (convective + stratiform)
-'Snowfall (convective + stratiform)' = {
+#Mean total snowfall rate
+'Mean total snowfall rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 144 ;
@@ -18823,8 +18823,8 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 182 ;
 	}
-#Sunshine duration
-'Sunshine duration' = {
+#Mean sunshine duration rate
+'Mean sunshine duration rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 189 ;
