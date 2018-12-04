@@ -13,10 +13,12 @@
 /// @date Apr 2015
 
 
-#ifndef LambertAzimuthalEqualArea_H
-#define LambertAzimuthalEqualArea_H
+#ifndef mir_repres_LambertAzimuthalEqualArea_h
+#define mir_repres_LambertAzimuthalEqualArea_h
 
 #include "mir/repres/Gridded.h"
+#include "mir/repres/Iterator.h"
+#include "mir/util/BoundingBox.h"
 
 
 namespace mir {
@@ -24,89 +26,105 @@ namespace repres {
 
 
 class LambertAzimuthalEqualArea : public Gridded {
-  public:
+public:
 
-// -- Exceptions
+    // -- Exceptions
     // None
 
-// -- Contructors
+    // -- Contructors
 
     LambertAzimuthalEqualArea(const param::MIRParametrisation&);
+    LambertAzimuthalEqualArea(const LambertAzimuthalEqualArea&) = delete;
+    LambertAzimuthalEqualArea& operator=(const LambertAzimuthalEqualArea&) = delete;
 
-// -- Destructor
+    // -- Destructor
 
-    virtual ~LambertAzimuthalEqualArea(); // Change to virtual if base class
+    ~LambertAzimuthalEqualArea();
 
-// -- Convertors
+    // -- Convertors
     // None
 
-// -- Operators
+    // -- Operators
     // None
 
-// -- Methods
-
-// -- Overridden methods
+    // -- Methods
     // None
 
-// -- Class members
+    // -- Overridden methods
     // None
 
-// -- Class methods
+    // -- Class members
     // None
 
-  protected:
-
-// -- Members
+    // -- Class methods
     // None
 
-// -- Methods
+protected:
 
-    void print(std::ostream&) const; // Change to virtual if base class
-
-// -- Overridden methods
+    // -- Members
     // None
 
-// -- Class members
+    // -- Methods
+
+    void print(std::ostream&) const;
+
+    // -- Overridden methods
     // None
 
-// -- Class methods
+    // -- Class members
     // None
 
-  private:
-
-    LambertAzimuthalEqualArea();
-
-// No copy allowed
-
-    LambertAzimuthalEqualArea(const LambertAzimuthalEqualArea&);
-    LambertAzimuthalEqualArea& operator=(const LambertAzimuthalEqualArea&);
-
-// -- Members
-
-
-// -- Methods
+    // -- Class methods
     // None
 
+private:
 
-// -- Overridden methods
+    // -- Members
+
+    PointLatLon reference_;
+    PointLatLon firstLL_;
+    Point2 firstXY_;
+    double radius_;
+    double Dx_;
+    double Dy_;
+    size_t nx_;
+    size_t ny_;
+
+    // -- Methods
+    // None
+
+    // -- Overridden methods
+
+    virtual size_t numberOfPoints() const;
+    virtual atlas::Grid atlasGrid() const;
+
+    virtual bool isPeriodicWestEast() const;
+    virtual bool includesNorthPole() const;
+    virtual bool includesSouthPole() const;
 
     virtual void fill(grib_info&) const;
+    void validate(const MIRValuesVector& values) const;
+    Iterator* iterator() const;
 
-// -- Class members
+    virtual void makeName(std::ostream&) const;
+    virtual bool sameAs(const Representation&) const;
+    virtual void fill(util::MeshGeneratorParameters&) const;
+
+    // -- Class members
     // None
 
-// -- Class methods
+    // -- Class methods
     // None
 
-// -- Friends
-
-    //friend ostream& operator<<(ostream& s,const LambertAzimuthalEqualArea& p)
-    //	{ p.print(s); return s; }
+    // -- Friends
+    // None
 
 };
 
 
 }  // namespace repres
 }  // namespace mir
+
+
 #endif
 
