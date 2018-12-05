@@ -254,7 +254,6 @@ ifs_samples/*/*.tmpl
 *.iso
 *.jar
 *.rar
-*.tar
 *.zip
 
 # Logs and databases #
