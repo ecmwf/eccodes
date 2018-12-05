@@ -69,6 +69,7 @@
    MEMBERS    = long* refValList
    MEMBERS    = long refValIndex
    MEMBERS    = bufr_tableb_override* tableb_override
+   MEMBERS    = int set_to_missing_if_out_of_range
 
    END_CLASS_DEF
 
@@ -147,6 +148,7 @@ typedef struct grib_accessor_bufr_data_array {
 	long* refValList;
 	long refValIndex;
 	bufr_tableb_override* tableb_override;
+	int set_to_missing_if_out_of_range;
 } grib_accessor_bufr_data_array;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -401,6 +403,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
     self->refValList=NULL;            /* Operator 203YYY: overridden reference values array */
     self->refValIndex=0;              /* Operator 203YYY: index into overridden reference values array */
     self->tableb_override = NULL;     /* Operator 203YYY: Table B lookup linked list */
+    self->set_to_missing_if_out_of_range = 0; /* By default fail if out of range */
 
     a->length=0;
     self->bitsToEndData=get_length(a)*8;
@@ -449,6 +452,7 @@ static void self_clear(grib_context* c,grib_accessor_bufr_data_array* self)
     if (self->refValList) grib_context_free(c, self->refValList);
     self->refValIndex=0;
     tableB_override_clear(c, self);
+    self->set_to_missing_if_out_of_range = 0;
 }
 
 static int  get_native_type(grib_accessor* a)
@@ -732,7 +736,8 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     int thereIsAMissing=0;
     int is_constant;
     double val0;
-    const int dont_fail_if_out_of_range = c->bufr_set_to_missing_if_out_of_range;/* ECC-379 */
+    /* ECC-379, ECC-830 */
+    const int dont_fail_if_out_of_range = self->set_to_missing_if_out_of_range;
 
     if (self->iss_list==NULL) {
         grib_context_log(c, GRIB_LOG_ERROR,"encode_double_array: self->iss_list==NULL");
@@ -763,7 +768,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
             if (*v > maxAllowed || *v < minAllowed) {
                 if (dont_fail_if_out_of_range) {
                     grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
-                                                    "Setting it to missing value\n", bd->shortName, *v, minAllowed, maxAllowed);
+                                                    " Setting it to missing value\n", bd->shortName, *v, minAllowed, maxAllowed);
                     grib_set_bits_on(buff->data,pos,modifiedWidth);
                 } else {
                     grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
@@ -817,7 +822,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
             /* Turn out-of-range values into 'missing' */
             if (*v!=GRIB_MISSING_DOUBLE && (*v < minAllowed || *v > maxAllowed)) {
                 grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value at index %ld (%g) out of range (minAllowed=%g, maxAllowed=%g)."
-                                                    "Setting it to missing value\n",
+                                                    " Setting it to missing value\n",
                                                     bd->shortName, (long)ii, *v, minAllowed, maxAllowed);
                 *v = GRIB_MISSING_DOUBLE;
             }
@@ -910,7 +915,8 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
     int err=0;
     int modifiedWidth,modifiedReference;
     double modifiedFactor;
-    const int dont_fail_if_out_of_range = c->bufr_set_to_missing_if_out_of_range; /* ECC-379 */
+    /* ECC-379, ECC-830 */
+    const int dont_fail_if_out_of_range = self->set_to_missing_if_out_of_range;
 
     modifiedReference= bd->reference;
     modifiedFactor= bd->factor;
@@ -925,7 +931,7 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
     else if (value>maxAllowed || value<minAllowed) {
         if (dont_fail_if_out_of_range) {
             grib_context_log(c, GRIB_LOG_ERROR, "encode_double_value: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
-                                                "Setting it to missing value\n",
+                                                " Setting it to missing value\n",
                                                 bd->shortName, value, minAllowed, maxAllowed);
             value = GRIB_MISSING_DOUBLE;  /* Ignore the bad value and instead use 'missing' */
             grib_set_bits_on(buff->data,pos,modifiedWidth);
@@ -2478,6 +2484,19 @@ static void set_input_bitmap(grib_handle* h,grib_accessor_bufr_data_array *self)
     }
 }
 
+static int set_to_missing_if_out_of_range(grib_handle* h)
+{
+    /* First check if the transient key is set */
+    long setToMissingIfOutOfRange=0;
+    if (grib_get_long(h, "setToMissingIfOutOfRange", &setToMissingIfOutOfRange)==GRIB_SUCCESS &&
+        setToMissingIfOutOfRange != 0)
+    {
+        return 1;
+    }
+    /* Then check the environment variable via the context */
+    return h->context->bufr_set_to_missing_if_out_of_range;
+}
+
 static int process_elements(grib_accessor* a,int flag,long onlySubset,long startSubset,long endSubset)
 {
     int err=0;
@@ -2535,6 +2554,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         decoding=0;
         do_clean=1;
         self->do_decode=1;
+        self->set_to_missing_if_out_of_range = set_to_missing_if_out_of_range(h);
         pos=0;
         codec_element=&encode_new_element;
         codec_replication=&encode_new_replication;
@@ -2548,6 +2568,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
         decoding=0;
         do_clean=0;
         self->do_decode=0;
+        self->set_to_missing_if_out_of_range = set_to_missing_if_out_of_range(h);
         pos=0;
         codec_element=&encode_element;
         grib_get_long(grib_handle_of_accessor(a),"extractSubset",&onlySubset);
