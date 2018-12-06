@@ -227,7 +227,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	 scaledValueOfLowerLimit = 10 ;
 	}
-#Probability of Temperature standardized anomaly greater than 1 standard deviation
+#Probability of temperature standardized anomaly greater than 1 standard deviation
 '133093' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -238,7 +238,7 @@
 	 scaleFactorOfLowerLimit = 0 ;
 	 productDefinitionTemplateNumber = 9 ;
 	}
-#Probability of Temperature standardized anomaly greater than 1.5 standard deviation
+#Probability of temperature standardized anomaly greater than 1.5 standard deviation
 '133094' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -249,7 +249,7 @@
 	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 1 ;
 	}
-#Probability of Temperature standardized anomaly greater than 2 standard deviation
+#Probability of temperature standardized anomaly greater than 2 standard deviation
 '133095' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -260,7 +260,7 @@
 	 scaleFactorOfLowerLimit = 0 ;
 	 productDefinitionTemplateNumber = 9 ;
 	}
-#Probability of Temperature standardized anomalies less than -1 standard deviation
+#Probability of temperature standardized anomaly less than -1 standard deviation
 '133096' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -271,7 +271,7 @@
 	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -1 ;
 	}
-#Probability of Temperature standardized anomaly less than -1.5 standard deviation
+#Probability of temperature standardized anomaly less than -1.5 standard deviation
 '133097' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -282,7 +282,7 @@
 	 probabilityType = 0 ;
 	 scaleFactorOfLowerLimit = 1 ;
 	}
-#Probability of Temperature standardized anomaly less than -2 standard deviation
+#Probability of temperature standardized anomaly less than -2 standard deviation
 '133098' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;

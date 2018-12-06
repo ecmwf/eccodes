@@ -227,7 +227,7 @@
 	 probabilityType = 3 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
-#Probability of Temperature standardized anomaly greater than 1 standard deviation
+#Probability of temperature standardized anomaly greater than 1 standard deviation
 'ptsa_gt_1stdev' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -238,7 +238,7 @@
 	 scaledValueOfLowerLimit = 1 ;
 	 probabilityType = 3 ;
 	}
-#Probability of Temperature standardized anomaly greater than 1.5 standard deviation
+#Probability of temperature standardized anomaly greater than 1.5 standard deviation
 'ptsa_gt_1p5stdev' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -249,7 +249,7 @@
 	 scaleFactorOfLowerLimit = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
 	}
-#Probability of Temperature standardized anomaly greater than 2 standard deviation
+#Probability of temperature standardized anomaly greater than 2 standard deviation
 'ptsa_gt_2stdev' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -260,7 +260,7 @@
 	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	}
-#Probability of Temperature standardized anomalies less than -1 standard deviation
+#Probability of temperature standardized anomaly less than -1 standard deviation
 'ptsa_lt_1stdev' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -271,7 +271,7 @@
 	 scaledValueOfLowerLimit = -1 ;
 	 probabilityType = 0 ;
 	}
-#Probability of Temperature standardized anomaly less than -1.5 standard deviation
+#Probability of temperature standardized anomaly less than -1.5 standard deviation
 'ptsa_lt_1p5stdev' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
@@ -282,7 +282,7 @@
 	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -15 ;
 	}
-#Probability of Temperature standardized anomaly less than -2 standard deviation
+#Probability of temperature standardized anomaly less than -2 standard deviation
 'ptsa_lt_2stdev' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
