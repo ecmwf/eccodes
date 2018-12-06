@@ -27,7 +27,12 @@ endforeach()
 
 # Now add each test
 #################################################
-list( APPEND tests
+list( APPEND tests_basic
+   grib_set_pv
+   grib_read_sample
+   bufr_read_sample
+)
+list( APPEND tests_extra
    grib_clone
    grib_count_messages
    grib_get_message_offset
@@ -39,7 +44,6 @@ list( APPEND tests
    grib_nearest
    grib_print_data
    grib_samples
-   grib_set_pv
    grib_set_missing
    binary_message
    grib_set_bitmap
@@ -52,7 +56,7 @@ list( APPEND tests
    bufr_read_header
    bufr_read_scatterometer
    bufr_read_tropical_cyclone
-   bufr_read_synop 
+   bufr_read_synop
    bufr_read_temp
    bufr_set_keys
    bufr_subset
@@ -66,16 +70,25 @@ list( APPEND tests
 # which are only there for python 2.7 onwards
 if( HAVE_PYTHON AND PYTHON_VERSION_STRING VERSION_GREATER "2.7" )
     ecbuild_info("Python examples: Adding test for High-level Pythonic Interface")
-    list( APPEND tests high_level_api )
-    list( APPEND tests grib_set_keys ) # Uses OrderedDict
+    list( APPEND tests_extra high_level_api )
+    list( APPEND tests_extra grib_set_keys ) # Uses OrderedDict
 endif()
 
-foreach( test ${tests} )
+foreach( test ${tests_basic} )
     ecbuild_add_test( TARGET eccodes_p_${test}_test
                       TYPE       SCRIPT
                       DEPENDS    ${ptools}
                       COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                       CONDITION  HAVE_PYTHON
+                      ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
+    )
+endforeach()
+foreach( test ${tests_extra} )
+    ecbuild_add_test( TARGET eccodes_p_${test}_test
+                      TYPE       SCRIPT
+                      DEPENDS    ${ptools}
+                      COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                      CONDITION  HAVE_PYTHON AND ENABLE_EXTRA_TESTS
                       ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
                       TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs eccodes_download_bufrs
     )
@@ -86,7 +99,7 @@ ecbuild_add_test( TARGET eccodes_p_bufr_encode_flight_test
                   TYPE       SCRIPT
                   DEPENDS    ${ptools}
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_flight.sh
-                  CONDITION  HAVE_PYTHON
+                  CONDITION  HAVE_PYTHON AND ENABLE_EXTRA_TESTS
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
                   RESOURCES   flight_data.csv
                   TEST_DEPENDS eccodes_download_bufrs
@@ -97,7 +110,7 @@ ecbuild_add_test( TARGET eccodes_p_grib_ccsds_test
                   TYPE       SCRIPT
                   DEPENDS    ${ptools}
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
-                  CONDITION  HAVE_PYTHON AND HAVE_AEC
+                  CONDITION  HAVE_PYTHON AND HAVE_AEC AND ENABLE_EXTRA_TESTS
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
                   TEST_DEPENDS eccodes_download_gribs
 )

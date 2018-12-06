@@ -186,6 +186,10 @@ static int find(grib_nearest* nearest, grib_handle* h,
                 self->lats[ilat++]=lat;
                 olat=lat;
             }
+            while(lon>360) lon-=360;
+            if(!self->global) {  /* ECC-756 */
+                if (lon>180 && lon<360) lon-=360;
+            }
             self->lons[ilon++]=lon;
         }
         self->lats_count=ilat;
@@ -253,10 +257,14 @@ static int find(grib_nearest* nearest, grib_handle* h,
         lons=self->lons+nlon;
 
         nearest_lons_found=0;
+        /* ECC-756: The comparisons of longitudes here depends on the longitude values
+         * from the point iterator. The old values could be -ve but the new algorithm
+         * generates +ve values which break this test:
+         *    lons[nplm1]>lons[0]
+         */
         if (lons[nplm1]>lons[0]) {
             if (inlon< lons[0] || inlon > lons[nplm1]) {
-                if (lons[nplm1]-lons[0]-360 <=
-                        lons[nplm1]-lons[nplm1-1]) {
+                if (lons[nplm1]-lons[0]-360 <= lons[nplm1]-lons[nplm1-1]) {
                     self->k[0]=0;
                     self->k[1]=nplm1;
                     nearest_lons_found=1;
@@ -264,8 +272,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
             }
         } else {
             if (inlon >lons[0] || inlon< lons[nplm1]) {
-                if (lons[0]-lons[nplm1]-360 <=
-                        lons[0]-lons[1]) {
+                if (lons[0]-lons[nplm1]-360 <= lons[0]-lons[1]) {
                     self->k[0]=0;
                     self->k[1]=nplm1;
                     nearest_lons_found=1;

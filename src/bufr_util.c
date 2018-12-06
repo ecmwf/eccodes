@@ -26,6 +26,7 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
         next=next->next;
     }
     if (!next) {
+        DebugAssert(prev);
         prev->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
         next=prev->next;
     }
@@ -115,7 +116,7 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
            identical and we want to copy what can be copied and skip what
            cannot be copied because is not in the output handle
          */
-        err=codes_copy_key(hin, hout, name, 0);
+        err=codes_copy_key(hin, hout, name, GRIB_TYPE_UNDEFINED);
         if (err==0) nkeys++;
     }
 

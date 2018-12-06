@@ -57,6 +57,7 @@ if(missing(Ni)){
       Nj,DjInDegrees,pl);
    nearest latlon_reduced(values,radius,Nj,pl,longitudeFirstInDegrees,longitudeLastInDegrees);
 } else {
+   transient iteratorDisableUnrotate = 0 : hidden; # ECC-808
    iterator latlon(numberOfPoints,missingValue,values,longitudeFirstInDegrees,
                    DiInDegrees ,Ni,Nj,iScansNegatively ,
                    latitudeFirstInDegrees,DjInDegrees,jScansPositively,jPointsAreConsecutive);

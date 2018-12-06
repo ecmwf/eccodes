@@ -132,6 +132,7 @@ int is_gaussian_global(
     /* Compute difference between expected longitude and actual one */
     const double lon2_diff = fabs( lon2  - lon2_global ) - delta;
 
+    /*
     {
         grib_context* c=grib_context_get_default();
         if (c->debug) {
@@ -139,6 +140,7 @@ int is_gaussian_global(
             printf("ECCODES DEBUG is_gaussian_global: lon1=%f, lon2=%f, glon2=%f, delta=%f\n", lon1, lon2, lon2_global, delta);
         }
     }
+    */
 
     /* Note: final gaussian latitude = -first latitude */
     if ( (fabs(lat1 - latitudes[0]) >= d ) ||

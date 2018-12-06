@@ -134,7 +134,7 @@ static grib_accessor* _search_and_cache(grib_handle* h, const char* name,const c
     }
 }
 
-static char* get_rank(const char* name,int *rank) {
+static char* get_rank(grib_context* c, const char* name,int *rank) {
     char* p=(char*)name;
     char* end=p;
     char* ret=NULL;
@@ -146,7 +146,7 @@ static char* get_rank(const char* name,int *rank) {
         if ( *end != '#') {
             *rank=-1;
         } else {
-            grib_context* c=grib_context_get_default();
+            DebugAssert(c);
             end++;
             ret=grib_context_strdup(c,end);
         }
@@ -235,7 +235,7 @@ static grib_accessor* search_by_rank(grib_handle* h, const char* name,int rank,c
     } else {
         grib_accessor* ret=NULL;
         int rank2;
-        char* str=get_rank(name,&rank2);
+        char* str=get_rank(h->context, name, &rank2);
         ret=_search_and_cache(h,str,the_namespace);
         grib_context_free(h->context,str);
         return ret;
@@ -372,7 +372,7 @@ grib_accessors_list* grib_find_accessors_list(grib_handle* h,const char* name)
             char* str2;
             int r;
             al=(grib_accessors_list*)grib_context_malloc_clear(h->context,sizeof(grib_accessors_list));
-            str2=get_rank(name,&r);
+            str2=get_rank(h->context, name, &r);
             grib_accessors_list_push(al,a,r);
             grib_context_free(h->context,str2);
         }
@@ -393,7 +393,7 @@ static grib_accessor* search_and_cache(grib_handle* h, const char* name,const ch
 
     if (name[0]=='#') {
         int rank=-1;
-        char* basename=get_rank(name,&rank);
+        char* basename=get_rank(h->context, name, &rank);
         a=search_by_rank(h,basename,rank,the_namespace);
         grib_context_free(h->context,basename);
     } else {

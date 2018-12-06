@@ -29,8 +29,8 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    # open bufr file
-    f = open(INPUT)
+    # open BUFR file
+    f = open(INPUT, 'rb')
     cnt = 0
     # loop over the messages in the file
     while 1:

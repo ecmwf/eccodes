@@ -1385,7 +1385,7 @@ struct bufr_keys_iterator{
   unsigned long     accessor_flags_skip;
   unsigned long     accessor_flags_only;
   grib_accessor*    current;
-  grib_string_list* names;
+  char*             key_name;
   int               at_start;
   int               match;
   int               i_curr_attribute;

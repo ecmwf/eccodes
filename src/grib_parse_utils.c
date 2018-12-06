@@ -599,6 +599,7 @@ void grib_parser_include(const char* included_fname)
     /* int i; */
     Assert(top < MAXINCLUDE);
     Assert(included_fname);
+    if (!included_fname) return;
 
     if(parse_file == 0)
     {

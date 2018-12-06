@@ -126,6 +126,53 @@ static size_t count_subarea_points(grib_handle* h, get_reduced_row_proc get_redu
     return result;
 }
 
+/* ECC-747 */
+static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib_handle* h,
+        double lat_first, double lon_first,
+        double lat_last, double lon_last,
+        double* lats, long* pl, size_t plsize)
+{
+    int err = 0;
+    int l = 0;
+    size_t j = 0;
+    long row_count=0, i=0;
+    double d=0;
+    double olon_first, olon_last;
+    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
+    get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;
+
+    if (h->context->debug) {
+        const size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
+        printf("ECCODES DEBUG grib_iterator_class_gaussian_reduced: sub-area num points=%ld\n", (long)np);
+    }
+
+    /*find starting latitude */
+    d = fabs(lats[0] - lats[1]);
+    while (fabs(lat_first-lats[l]) > d ) {l++;}
+
+    iter->e=0;
+    for (j=0;j<plsize;j++) {
+        const double delta = 360.0/pl[j];
+        row_count=0;
+        grib_get_reduced_row_p(pl[j],lon_first,lon_last, &row_count,&olon_first,&olon_last);
+        for(i=0; i<row_count; ++i) {
+            double lon2 = olon_first + i * delta;
+            if(iter->e >= iter->nv){
+                /* Only print error message on the second pass */
+                size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
+                grib_context_log(h->context,GRIB_LOG_ERROR,
+                                 "Reduced Gaussian iterator (sub-area). Num points=%ld, size(values)=%ld", np, iter->nv);
+                return GRIB_WRONG_GRID;
+            }
+            self->los[iter->e]=lon2;
+            self->las[iter->e]=lats[j+l];
+            iter->e++;
+        }
+    }
+    return err;
+}
+
+#if 0
 /* ECC-445: Try to compute the iterator latitude/longitude values. If algorithm2 is set, try a different point count */
 static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
         double lat_first, double lon_first,
@@ -184,24 +231,24 @@ static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
     }
     return err;
 }
+#endif
 
 static int iterate_reduced_gaussian_subarea_wrapper(grib_iterator* iter, grib_handle* h,
         double lat_first, double lon_first,
         double lat_last, double lon_last,
         double* lats, long* pl, size_t plsize)
 {
-    int err = 0;
-    if (expandedBoundingBox(h)) {
-        return iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 1);
-    }
+    return iterate_reduced_gaussian_subarea_algorithm2(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
 
+#if 0
     /* Try legacy approach, if that fails try the next algorithm */
-    err = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 0);
+    int err = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 0);
     if (err == GRIB_WRONG_GRID) {
         /* ECC-445: First attempt failed. Try again with a different algorithm */
-        err = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 1);
+        err = iterate_reduced_gaussian_subarea_algorithm2(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
     }
     return err;
+#endif
 }
 
 static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)

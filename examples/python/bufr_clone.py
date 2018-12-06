@@ -28,10 +28,10 @@ VERBOSE = 1  # verbose error reporting
 
 def example():
     # open BUFR file
-    fin = open(INPUT)
+    fin = open(INPUT, 'rb')
 
     # open output BUFR file
-    fout = open(OUTPUT, 'w')
+    fout = open(OUTPUT, 'wb')
 
     # get handle for message
     bufr = codes_bufr_new_from_file(fin)

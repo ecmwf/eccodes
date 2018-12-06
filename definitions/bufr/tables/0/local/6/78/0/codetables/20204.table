@@ -1,0 +1,7 @@
+0 0 No fallen precipitation
+1 1 Rain
+2 2 Rain (freezing)
+4 4 Snow
+8 8 Graupel
+16 16 Hail
+63 63 Missing value

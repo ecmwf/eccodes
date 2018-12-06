@@ -361,7 +361,7 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a,in
     if (!a) return NULL;
 
     c=a->context;
-
+    DebugAssert(c);
     v=(bufr_descriptor*)grib_context_malloc_clear(c,sizeof(bufr_descriptor));
     if (!v) {
         grib_context_log(c,GRIB_LOG_ERROR,

@@ -29,6 +29,7 @@ grib_option grib_options[]={
     {"p:",0,0,0,1,0},
     {"F:","format","\n\t\tC style format for values. Default is \"%.10e\"\n",0,1,0},
     {"w:",0,0,0,1,0},
+    {"s:",0,0,0,1,0},
     {"f",0,0,0,1,0},
     {"G",0,0,0,1,0},
     {"7",0,0,0,1,0},
@@ -67,6 +68,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {
+    exit_if_input_is_directory(grib_tool_name, file->name);
     return 0;
 }
 
@@ -91,6 +93,12 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     int n = 0;
     size_t size=0, num_bytes=0;
     long hasMissingValues = 0;
+
+    if (!options->skip) {
+        if (options->set_values_count != 0)
+            err=grib_set_values(h,options->set_values,options->set_values_count);
+        if( err != GRIB_SUCCESS && options->fail) exit(err);
+    }
 
     if (grib_options_on("m:")) {
         /* User wants to see missing values */
@@ -227,6 +235,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if (bitmap) free(bitmap);
 
     free(data_values);
+    free(missing_string);
     if (iter) {
         free(lats);
         free(lons);

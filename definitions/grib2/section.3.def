@@ -13,7 +13,6 @@
 
 # For grib2 -> 1
 constant gridDescriptionSectionPresent = 1;
-transient expandedBoundingBox = 0;
 position offsetSection3;
 
 section_length[4] section3Length ;

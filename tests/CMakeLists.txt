@@ -27,8 +27,9 @@ list( APPEND test_bins
       grib_ecc-386
       bufr_ecc-517
       bufr_get_element
-      sh_ieee64
+      grib_sh_ieee64
       ieee
+      grib_sh_imag
 )
 
 foreach( tool ${test_bins} )
@@ -51,16 +52,19 @@ list( APPEND tests_no_data_reqd
     uerra
     grib_2nd_order_numValues
     julian
+    bufr_dump_samples
+    bufr_json_samples
     bufr_ecc-359
     bufr_ecc-517
-    bufr_subTypes
+    bufr_rdbSubTypes
     grib_efas
-    grib_mars_types
+    grib_sh_imag
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
     grib_double_cmp
-    bufr_dump
+    grib_change_packing
+    bufr_dump_data
     bufr_dump_decode_filter
     bufr_dump_encode_filter
     bufrdc_desc_ref
@@ -72,7 +76,7 @@ list( APPEND tests_data_reqd
     bufr_filter
     bufr_filter_extract_datetime
     bufr_filter_extract_area
-    bufr_json
+    bufr_json_data
     bufr_ls
     bufr_change_edition
     bufr_keys_iter
@@ -88,7 +92,9 @@ list( APPEND tests_data_reqd
     bufr_ecc-379
     bufr_ecc-393
     bufr_ecc-433
+    bufr_ecc-750
     grib_ecc-490
+    grib_ecc-756
     bufr_ecc-556
     gts_get
     gts_ls
@@ -99,7 +105,7 @@ list( APPEND tests_data_reqd
     metar_compare
     bufr_set
     ieee
-    sh_ieee64
+    grib_sh_ieee64
     optimize_scaling
     optimize_scaling_sh
     grib1to2
@@ -125,6 +131,7 @@ list( APPEND tests_data_reqd
     grib_set
     grib_iterator
     grib_compare
+    grib_copy
     grib_level
     index
     grib_bitmap
@@ -137,9 +144,11 @@ list( APPEND tests_data_reqd
     read_any
     grib_dump
     grib_dump_debug
+    grib_dump_json
     grib_local_MeteoFrance
     grib_neg_fctime
     codes_split_file
+    grib_mars_types
 )
 if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
     list(APPEND tests_data_reqd bufr_dump_encode_fortran)
@@ -160,10 +169,10 @@ foreach( test ${tests_no_data_reqd} )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
     )
 endforeach()
-ecbuild_add_test( TARGET eccodes_t_check_gaussian_grids
+ecbuild_add_test( TARGET eccodes_t_grib_check_gaussian_grids
                   TYPE SCRIPT
-                  CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/check_gaussian_grids.sh
+                  CONDITION ECCODES_INSTALL_EXTRA_TOOLS
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_gaussian_grids.sh
 )
 
 
@@ -173,6 +182,7 @@ ecbuild_add_test( TARGET eccodes_t_check_gaussian_grids
 foreach( test ${tests_data_reqd} )
     ecbuild_add_test( TARGET eccodes_t_${test}
                   TYPE SCRIPT
+                  CONDITION ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                   RESOURCES asca_139.t1.ref
                   TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs
@@ -194,7 +204,7 @@ if( HAVE_PYTHON AND ENABLE_EXTRA_TESTS )
         ecbuild_add_test( TARGET eccodes_t_${test}
                           TYPE SCRIPT
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                          ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} PYTHONPATH=${PROJECT_BINARY_DIR}/python
+                          ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} PYTHONPATH=${PROJECT_BINARY_DIR}/${ECCODES_PYTHON_DIR}
                           TEST_DEPENDS eccodes_download_bufrs
         )
     endforeach()
@@ -204,6 +214,7 @@ endif()
 # Note: the reference file is in the tests dir not data dir!
 ecbuild_add_test( TARGET eccodes_t_lamb_az_eq_area
                   TYPE SCRIPT
+                  CONDITION ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lamb_az_eq_area.sh
                   RESOURCES lamb_az_eq_area.ref
                   TEST_DEPENDS eccodes_download_gribs
@@ -243,28 +254,28 @@ endif()
 
 ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
                   TYPE SCRIPT
-                  CONDITION HAVE_NETCDF
+                  CONDITION HAVE_NETCDF AND ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
 
 ecbuild_add_test( TARGET eccodes_t_grib_jpeg
                   TYPE SCRIPT
-                  CONDITION HAVE_JPEG
+                  CONDITION HAVE_JPEG AND ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_jpeg.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
 
 ecbuild_add_test( TARGET eccodes_t_grib_png
                   TYPE SCRIPT
-                  CONDITION HAVE_PNG
+                  CONDITION HAVE_PNG AND ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_png.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
 
 ecbuild_add_test( TARGET eccodes_t_grib_ccsds
                   TYPE SCRIPT
-                  CONDITION HAVE_AEC
+                  CONDITION HAVE_AEC AND ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
@@ -274,6 +285,14 @@ ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
                   CONDITION ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh
 )
+
+ecbuild_add_test( TARGET eccodes_t_bufr_split_by_rdbSubtype
+                  TYPE SCRIPT
+                  CONDITION ENABLE_EXTRA_TESTS AND ECCODES_INSTALL_EXTRA_TOOLS
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_split_by_rdbSubtype.sh
+                  TEST_DEPENDS eccodes_download_bufrs
+)
+
 # Performance test. Must have -DENABLE_GRIB_TIMER=ON
 ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
                   TYPE SCRIPT

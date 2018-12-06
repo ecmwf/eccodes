@@ -18,8 +18,8 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    f = open(sys.argv[1])
-    fout = open(sys.argv[2], 'w')
+    f = open(sys.argv[1], 'rb')
+    fout = open(sys.argv[2], 'wb')
 
     while 1:
         gid = codes_grib_new_from_file(f)

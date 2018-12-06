@@ -31,6 +31,18 @@
 	}
 #Total precipitation of at least 100 mm
 'tpg100' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 productDefinitionTemplateNumber = 9 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 100 ;
+	 probabilityType = 3 ;
+	}
+#Total precipitation of at least 100 mm
+'tpg100' = {
 	 discipline = 192 ;
 	 parameterCategory = 131 ;
 	 parameterNumber = 85 ;
@@ -18715,8 +18727,8 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 143 ;
 	}
-#Snowfall (convective + stratiform)
-'~' = {
+#Mean total snowfall rate
+'mtsfr' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 144 ;
@@ -18811,8 +18823,8 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 182 ;
 	}
-#Sunshine duration
-'~' = {
+#Mean sunshine duration rate
+'msdr' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 189 ;

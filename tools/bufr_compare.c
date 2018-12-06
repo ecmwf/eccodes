@@ -120,7 +120,7 @@ static void write_message(grib_handle* h,const char* str)
 {
     const void *m; size_t s;
     char fname[1024]={0,};
-    FILE* fh=NULL;
+    FILE* fh;
 
     grib_get_message(h,&m,&s);
     sprintf(fname,"%s_%d.bufr",str,write_count);
@@ -226,7 +226,7 @@ int end=-1;
 const char* grib_tool_description=
     "Compare BUFR messages contained in two files."
     "\n\tIf some differences are found it fails returning an error code."
-    "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
+    "\n\tFloating-point values are compared exactly by default, different tolerance can be defined see -P -A -R."
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
 const char* grib_tool_name="bufr_compare";
@@ -400,6 +400,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {
+    exit_if_input_is_directory(grib_tool_name, file->name);
     return 0;
 }
 
@@ -1134,16 +1135,21 @@ static int compare_attributes(grib_handle* handle1, grib_handle* handle2, grib_r
         /*long native_type = 0;*/
         grib_accessor* aa = NULL;
         if ( (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)== 0 ) {
-            ++i; /* next attribute */
+            ++i; /* next attribute if accessor is not for dumping */
             continue;
         }
+        if ( (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)!= 0 ) {
+            ++i; /* next attribute if accessor is read-only */
+            continue;
+        }
+
         aa = a->attributes[i];
         /*native_type = grib_accessor_get_native_type(aa);   TODO: read only check? */
 
         isLeafKey = aa->attributes[0]==NULL ? 1 : 0; /* update global variable */
 
         if (compare_attribute(handle1, handle2, options, aa, prefix, err)) {
-            err++;
+            (*err)++;
             write_messages(handle1, handle2);
             ret = 1;
         }
@@ -1162,7 +1168,7 @@ static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_ru
     char* fullname = (char*)grib_context_malloc_clear( c, sizeof(char)*(strlen(a->name)+strlen(prefix)+5) );
     sprintf(fullname, "%s->%s", prefix, a->name);
     if (compare_values(options, handle1, handle2, fullname, GRIB_TYPE_UNDEFINED)) {
-        err++;
+        (*err)++;
         write_messages(handle1, handle2);
         ret=1;
     }
@@ -1176,7 +1182,7 @@ static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_ru
     return ret;
 }
 
-static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options, int *err)
+static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options, int *pErr)
 {
     int ret=0;
     const char* name=NULL;
@@ -1186,11 +1192,13 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
     if (!headerMode) {
         /* See ECC-333: By setting unpack we get ALL the bufr keys. */
         /*              In headerMode we want just the header ones */
+        grib_set_long(handle1,"skipExtraKeyAttributes",1); /* See ECC-745 */
         ret = grib_set_long(handle1,"unpack",1);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(context, GRIB_LOG_ERROR, "Failed to unpack 1st message: %s", grib_get_error_message(ret));
             exit(1);
         }
+        grib_set_long(handle2,"skipExtraKeyAttributes",1); /* See ECC-745 */
         ret = grib_set_long(handle2,"unpack",1);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(context, GRIB_LOG_ERROR, "Failed to unpack 2nd message: %s", grib_get_error_message(ret));
@@ -1233,13 +1241,13 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
 
         /* Compare the key itself */
         if (compare_values(options, handle1, handle2, prefix, GRIB_TYPE_UNDEFINED)) {
-            err++;
+            (*pErr)++;
             write_messages(handle1, handle2);
             ret=1;
         }
         /* Now compare the key attributes (if any) */
-        if (compare_attributes(handle1, handle2, options, xa, prefix, err)) {
-            err++;
+        if (compare_attributes(handle1, handle2, options, xa, prefix, pErr)) {
+            (*pErr)++;
             write_messages(handle1, handle2);
             ret=1;
         }
@@ -1247,6 +1255,17 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
     }
 
     grib_keys_iterator_delete(iter);
+
+    /* ECC-356: Handling special case of 'ident' key */
+    name = "ls.ident";
+    if (!blacklisted("ident") && grib_is_defined(handle1, name) && grib_is_defined(handle2, name)) {
+        if (compare_values(options, handle1, handle2, "ident", GRIB_TYPE_STRING)) {
+            (*pErr)++;
+            write_messages(handle1, handle2);
+            ret=1;
+        }
+    }
+
     return ret;
 }
 

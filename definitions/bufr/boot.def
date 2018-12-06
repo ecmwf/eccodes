@@ -9,10 +9,11 @@
 
 lookup[1] ed       (7,editionNumber);
 transient missingValue=999999 : hidden;
+transient setToMissingIfOutOfRange=0 : hidden;
 
 # This gets updated twice a year by WMO.
 # See http://www.wmo.int/pages/prog/www/WMOCodes/WMO306_vI2/LatestVERSION/LatestVERSION.html
-constant masterTablesVersionNumberLatest = 30;
+constant masterTablesVersionNumberLatest = 31;
 
 #negative value=not used
 transient inputDelayedDescriptorReplicationFactor={-1} : hidden;
@@ -92,6 +93,9 @@ meta userDateTimeStart julian_date(userDateStart,userTimeStart) : hidden;
 transient userDateEnd = 0 : hidden;
 transient userTimeEnd = 0 : hidden;
 meta userDateTimeEnd julian_date(userDateEnd,userTimeEnd) : hidden;
+
+# See ECC-741
+transient skipExtraKeyAttributes=0 : hidden;
 
 template boot_edition "bufr/boot_edition_[ed:l].def";
 

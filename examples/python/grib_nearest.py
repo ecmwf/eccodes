@@ -22,7 +22,7 @@ VERBOSE = 1  # verbose error reporting
 def example():
     points = ((30, -20), (13, 234))
 
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
     gid = codes_grib_new_from_file(f)
 
     for lat, lon in points:

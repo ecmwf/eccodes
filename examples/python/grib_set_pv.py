@@ -30,7 +30,7 @@ def example():
     numberOfCoefficients = 2 * (numberOfLevels + 1)
     assert (len(pv) == numberOfCoefficients)
 
-    fout = open('grib_set_pv.py.temp.grib', 'w')
+    fout = open('grib_set_pv.py.temp.grib', 'wb')
     gid = codes_grib_new_from_samples('reduced_gg_sfc_grib1')
 
     codes_set(gid, 'typeOfLevel', 'hybrid')

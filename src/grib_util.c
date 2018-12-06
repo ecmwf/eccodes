@@ -72,8 +72,8 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* 
     long section_offset[MAX_NUM_SECTIONS]={0,};
     long off=0;
     grib_handle* h;
-    char section_length_str[]="section0Length";
-    char section_offset_str[]="offsetSection0";
+    char section_length_str[64]="section0Length";
+    char section_offset_str[64]="offsetSection0";
     long length,offset;
 
     *err=grib_get_long(hfrom,"edition",&edition);
@@ -1542,8 +1542,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     /* ECC-445 */
     if (expandBoundingBox) {
-        int e = grib_set_long(outh, "expandedBoundingBox", 1);
-        Assert(e == 0);
         Assert(!global_grid); /* ECC-576: "global" should not be set */
     }
 
@@ -1853,12 +1851,15 @@ int is_index_file(const char* filename)
     char buf[8]={0,};
     const char* str="GRBIDX";
     int ret=0;
+    size_t size = 0;
 
     fh=fopen(filename,"r");
     if (!fh) return 0;
 
-    fread(buf,1,1,fh);
-    fread(buf,6,1,fh);
+    size=fread(buf,1,1,fh);
+    if (size != 1) return 0;
+    size=fread(buf,6,1,fh);
+    if (size != 1) return 0;
 
     ret=!strcmp(buf,str);
 
@@ -1910,16 +1911,6 @@ char* codes_getenv(const char* name)
         result = getenv(old_name);
     }
     return result;
-}
-
-int expandedBoundingBox(grib_handle* h)
-{
-    long expandedBoundingBox = 0;
-    int err = grib_get_long(h, "expandedBoundingBox", &expandedBoundingBox);
-    if (!err && expandedBoundingBox == 1) {
-        return 1;
-    }
-    return 0;
 }
 
 size_t sum_of_pl_array(const long* pl, size_t plsize)

@@ -3674,18 +3674,18 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 141 ;
 	}
-#Standardised precipitation index valid for 3 months
-'Standardised precipitation index valid for 3 months' = {
+#Standardised precipitation index valid in the last 3 months
+'Standardised precipitation index valid in the last 3 months' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 1 ;
 	}
-#Standardised precipitation index valid for 6 months
-'Standardised precipitation index valid for 6 months' = {
+#Standardised precipitation index valid in the last 6 months
+'Standardised precipitation index valid in the last 6 months' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 2 ;
 	}
-#Standardised precipitation index valid for 12 months
-'Standardised precipitation index valid for 12 months' = {
+#Standardised precipitation index valid in the last 12 months
+'Standardised precipitation index valid in the last 12 months' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 3 ;
 	}
@@ -14379,8 +14379,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 143 ;
 	}
-#Snowfall (convective + stratiform)
-'Snowfall (convective + stratiform)' = {
+#Mean total snowfall rate
+'Mean total snowfall rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 144 ;
 	}
@@ -14459,8 +14459,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 182 ;
 	}
-#Sunshine duration
-'Sunshine duration' = {
+#Mean sunshine duration rate
+'Mean sunshine duration rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 189 ;
 	}

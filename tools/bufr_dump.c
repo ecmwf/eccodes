@@ -83,6 +83,18 @@ int grib_tool_before_getopt(grib_runtime_options* options)
     return 0;
 }
 
+static void check_code_gen_dump_mode(const char* language)
+{
+    grib_context *c = grib_context_get_default();
+    const int ok = (strcmp(language, "C")==0       ||
+                    strcmp(language, "fortran")==0 ||
+                    strcmp(language, "python")==0  ||
+                    strcmp(language, "filter")==0);
+    if (!ok) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Invalid language specified. Select one of: filter, fortran, python or C");
+    }
+}
+
 int grib_tool_init(grib_runtime_options* options)
 {
     int opt=grib_options_on("C")+grib_options_on("O");
@@ -120,10 +132,12 @@ int grib_tool_init(grib_runtime_options* options)
 
     if (grib_options_on("D:")) {
         options->dump_mode = grib_options_get_option("D:");
+        check_code_gen_dump_mode(options->dump_mode);
         json=0;
     }
     if (grib_options_on("E:")) {
         options->dump_mode = grib_options_get_option("E:");
+        check_code_gen_dump_mode(options->dump_mode);
         json=0;
     }
 
@@ -346,6 +360,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
     } else {
         const char* dumper_name = get_dumper_name(options);
+        if (strcmp(dumper_name, "bufr_simple")==0) {
+            /* This speeds up the unpack by skipping attribute keys not used in the dump */
+            grib_set_long(h, "skipExtraKeyAttributes", 1);
+        }
         err=grib_set_long(h,"unpack",1);
         if (err) {
             if (options->fail) {
@@ -430,7 +448,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
             fprintf(stdout,"    f.close()\n\n");
             fprintf(stdout,"def main():\n");
             fprintf(stdout,"    if len(sys.argv) < 2:\n");
-            fprintf(stdout,"        print >>sys.stderr, 'Usage: ', sys.argv[0], ' BUFR_file'\n");
+            fprintf(stdout,"        print('Usage: ', sys.argv[0], ' BUFR_file', file=sys.stderr)\n");
             fprintf(stdout,"        sys.exit(1)\n\n");
             fprintf(stdout,"    try:\n");
             fprintf(stdout,"        bufr_decode(sys.argv[1])\n");

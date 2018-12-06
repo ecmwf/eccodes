@@ -212,7 +212,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
     err=grib_get_string(grib_handle_of_accessor(a),self->key,buff,&size);
     if (err) return err;
     if (length > size) {
-        err=GRIB_STRING_TOO_SMALL;
+        /*err=GRIB_STRING_TOO_SMALL;*/
         length=size;
     }
 
@@ -258,7 +258,7 @@ static int  unpack_long   (grib_accessor* a, long*  v, size_t *len)
 static int unpack_double (grib_accessor* a, double *v, size_t *len)
 {
     size_t l=1;
-    long val;
+    long val=0;
     int err = unpack_long (a , &val, &l);
 
     *v = (double)val;

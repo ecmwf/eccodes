@@ -18,7 +18,7 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     keys = [
         'Ni',

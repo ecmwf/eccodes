@@ -12,6 +12,11 @@
 
 REDIRECT=/dev/null
 
+if [ $HAVE_MEMFS -eq 1 ]; then
+    unset ECCODES_DEFINITION_PATH
+    unset ECCODES_SAMPLES_PATH
+fi
+
 files="
 constant_field.grib1
 lfpw.grib1

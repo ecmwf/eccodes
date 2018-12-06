@@ -21,6 +21,14 @@
  */
 #define EFDEBUG 0
 
+#ifndef LLONG_MAX
+#define LLONG_MAX LONG_MAX
+#endif
+#ifndef ULLONG_MAX
+#define ULLONG_MAX ULONG_MAX
+#endif
+
+
 typedef long long Fraction_value_type;
 
 typedef struct Fraction_type {
@@ -63,8 +71,10 @@ static Fraction_type fraction_construct(Fraction_value_type top, Fraction_value_
     }
 
     g = fraction_gcd(top, bottom);
-    top =  top / g;
-    bottom = bottom / g;
+    if (g != 0) {
+        top =  top / g;
+        bottom = bottom / g;
+    }
 
     result.top_ = sign * top;
     result.bottom_ = bottom;
@@ -293,18 +303,19 @@ static void gaussian_reduced_row(
 /* --------------------------------------------------------------------------------------------------- */
 void grib_get_reduced_row_wrapper(grib_handle* h, long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last)
 {
-    if (expandedBoundingBox(h)) {
-        grib_get_reduced_row2(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
-    } else {
-        grib_get_reduced_row(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
-    }
+    grib_get_reduced_row(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
+
+    /* Legacy 
+     * grib_get_reduced_row1(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
+     */
 }
 
-void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )
+#if 0
+/* This was the legacy way of counting the points. Now deprecated */
+static void grib_get_reduced_row1(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )
 {
     double range=0,dlon_first=0,dlon_last=0;
     long irange;
-    /*printf("Using grib_get_reduced_row...\n");*/
     range=lon_last-lon_first;
     if (range<0) {range+=360;lon_first-=360;}
 
@@ -389,16 +400,17 @@ void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoi
 
     return;
 }
+#endif
 
 /* New method based on eckit Fractions and matching MIR count */
-void grib_get_reduced_row2(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )
+void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )
 {
     long long Ni_globe = pl;
     Fraction_type west;
     Fraction_type east;
     long long the_count;
     double the_lon1, the_lon2;
-    /*printf("Using gaussian_reduced_row...\n");*/
+
     while (lon_last < lon_first) lon_last += 360;
     west = fraction_construct_from_double(lon_first);
     east = fraction_construct_from_double(lon_last);
@@ -413,4 +425,29 @@ void grib_get_reduced_row2(long pl, double lon_first, double lon_last, long* npo
     *npoints    = (long)the_count;
     *ilon_first = (the_lon1*pl)/360.0;
     *ilon_last  = (the_lon2*pl)/360.0;
+}
+
+/* This version returns the actual first and last longitudes rather than indexes */
+void grib_get_reduced_row_p(long pl, double lon_first, double lon_last, long *npoints, double *olon_first, double *olon_last)
+{
+    long long Ni_globe = pl;
+    Fraction_type west;
+    Fraction_type east;
+    long long the_count;
+    double the_lon1, the_lon2;
+
+    while (lon_last < lon_first) lon_last += 360;
+    west = fraction_construct_from_double(lon_first);
+    east = fraction_construct_from_double(lon_last);
+
+    gaussian_reduced_row(
+            Ni_globe,   /*plj*/
+            west,       /*lon_first*/
+            east,       /*lon_last*/
+            &the_count,
+            &the_lon1,
+            &the_lon2);
+    *npoints    = (long)the_count;
+    *olon_first = the_lon1;
+    *olon_last  = the_lon2;
 }

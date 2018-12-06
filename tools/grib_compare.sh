@@ -73,7 +73,7 @@ $toolsDir/grib_compare -ve reduced_gaussian_model_level.grib1 reduced_gaussian_m
 set -e
 
 echo "\\endverbatim
-For each key the type used in the comparison is reported and for the floating point keys also the tolerance used
+For each key the type used in the comparison is reported and for the floating-point keys also the tolerance used
 is printed.
 \n\n"
 
@@ -84,7 +84,7 @@ compare a set of keys or namespaces. The letter after the colon is optional and 
 type used in the comparison which is otherwise assumed to be the native type of the key. 
 The possible types are:
  - :i ->  integer
- - :d ->  floating point  (C type double)
+ - :d ->  floating-point  (C type double)
  - :s ->  string
  - :n ->  namespace.
  .

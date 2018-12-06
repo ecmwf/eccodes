@@ -27,7 +27,7 @@ def example():
         print('Usage: ', sys.argv[0], ' file', file=sys.stderr)
         sys.exit(1)
 
-    f = open(sys.argv[1])
+    f = open(sys.argv[1], 'rb')
     while 1:
         ident = codes_grib_new_from_file(f)
         if ident is None:

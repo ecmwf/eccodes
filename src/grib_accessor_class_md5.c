@@ -195,7 +195,7 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len)
     unsigned mess_len;
     unsigned char* mess;
     unsigned char* p;
-    long offset,length;
+    long offset=0, length=0;
     grib_string_list* blacklist=NULL;
     grib_accessor* b=NULL;
     int ret=0;
@@ -213,7 +213,6 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len)
     if((ret = grib_expression_evaluate_long(grib_handle_of_accessor(a),self->length,&length))
             != GRIB_SUCCESS)
         return ret;
-
     mess=(unsigned char*)grib_context_malloc(a->context,length);
     memcpy(mess,grib_handle_of_accessor(a)->buffer->data+offset,length);
     mess_len=length;

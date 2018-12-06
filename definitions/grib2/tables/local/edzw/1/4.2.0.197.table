@@ -5,5 +5,5 @@
 72 72 number concentration of dust (minimum mode)(m-3)
 73 73 number concentration of dust (medium mode)(m-3)
 74 74 number concentration of dust (maximum mode)(m-3)
-251 251 mass concentration of dust (sum of all modes)
-252 252 number concentration of dust (sum of all modes)
+251 251 mass concentration of dust (sum of all modes)(kg m-3)
+252 252 number concentration of dust (sum of all modes)(m-3)
