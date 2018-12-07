@@ -19,7 +19,7 @@
 
 #include "grib_api_internal.h"
 
-void usage(char* prog) {
+static void usage(char* prog) {
   printf("Usage: %s latlon_file grib_orography grib_file grib_file ...\n",prog);
   exit(1);
 }
