@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
-
 # TEMPLATE 5.51, Spherical harmonics data - complex packing
 
 include "grib2/template.5.packing.def";

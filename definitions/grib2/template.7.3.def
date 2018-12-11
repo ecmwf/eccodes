@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
-# START 2/template.7.3 ----------------------------------------------------------------------
 # TEMPLATE 7.3, Grid point data - complex packing and spatial differencing
 # Octets 6-ww : First value(s) of original
 # (undifferenced)
@@ -56,4 +54,3 @@ meta values data_apply_bitmap(codedValues,
 alias data.packedValues=codedValues;
 
 template statistics "common/statistics_grid.def";
-

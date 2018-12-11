@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
-# START 2/template.5.2 ----------------------------------------------------------------------
 # TEMPLATE 5.2, Grid point data - complex packing
 
 include "grib2/template.5.packing.def";
@@ -54,6 +52,3 @@ unsigned[4] trueLengthOfLastGroup ;
 # by the length increment given in octet 42)                           
 unsigned[1] numberOfBitsForScaledGroupLengths ;
 alias numberOfBitsUsedForTheScaledGroupLengths=numberOfBitsForScaledGroupLengths;
-
-
-# END   2/template.5.2 ----------------------------------------------------------------------

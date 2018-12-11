@@ -7,7 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 ieeefloat   referenceValue  : no_copy;
 meta referenceValueError reference_value_error(referenceValue,ieee);
 

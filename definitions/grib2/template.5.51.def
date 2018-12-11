@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
-
 # TEMPLATE 5.51, Spherical harmonics data - complex packing
 
 include "grib2/template.5.packing.def";
@@ -18,7 +16,6 @@ if (gribex_mode_on()) {
 } else {
     transient computeLaplacianOperator=1 : hidden;
 }
-
 
 meta _numberOfValues spectral_truncation(J,K,M,numberOfValues): read_only;
 

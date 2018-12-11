@@ -21,5 +21,3 @@ codetable[1] typeOfCompressionUsed  ('5.40.table',masterDir,localDir) ;
 # when octet 22 indicates Lossy Compression.   Otherwise, set to missing. (see Note 3)
 
 unsigned[1] targetCompressionRatio = 255;
-
-# END   2/template.5.40-------------------------------
