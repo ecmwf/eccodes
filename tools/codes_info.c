@@ -13,6 +13,11 @@
 extern char *optarg;
 extern int optind;
 
+#ifdef ECCODES_ON_WINDOWS
+/* Microsoft Windows Visual Studio support */
+#include "wingetopt.h"
+#endif
+
 static void usage_and_exit(const char* progname) {
     printf("\nUsage: %s [-v] [-d] [-s]\n",progname);
     exit(1);
