@@ -13,14 +13,23 @@
  */
 
 #include "tigge_tools.h"
+#include "eccodes_windef.h"
 
 #include <stdlib.h>
 #include <sys/types.h>
-#include <dirent.h>
+
+#ifndef ECCODES_ON_WINDOWS
+  #include <dirent.h>
+#else
+  #include <direct.h>
+  #include <io.h>
+#endif
+
 #include <stdio.h>
 
 extern void validate(const char* path);
 
+#ifndef ECCODES_ON_WINDOWS
 void scan(const char* name)
 {
     DIR *dir;
@@ -41,3 +50,32 @@ void scan(const char* name)
         validate(name);
     }
 }
+#else
+// based on similar code in grib_tools.c
+static int isWinDir(const struct _finddata_t *fileinfo)
+{
+    if((fileinfo->attrib & 16) == 16)
+        return 1;
+    return 0;
+}
+void scan(const char* name)
+{
+    struct _finddata_t fileinfo;
+    intptr_t handle;
+    if((handle = _findfirst(name, &fileinfo)) != -1)
+    {
+        char tmp[1024];
+        do {
+            if(isWinDir(&fileinfo))
+            {
+                if(fileinfo.name[0] != '.') {
+                    sprintf(tmp, "%s/%s", name, fileinfo.name);
+                    scan(tmp);
+                }
+            }
+        } while(!_findnext(handle, &fileinfo));
+    }
+    else
+        validate(name);
+}
+#endif
