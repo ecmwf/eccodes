@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
         {
             const char* name = codes_keys_iterator_get_name(kiter);
             vlen=MAX_VAL_LEN;
-            bzero(value,vlen);
+            memset(value, 0, vlen);
             CODES_CHECK(codes_get_string(h,name,value,&vlen),name);
             printf("%s = %s\n",name,value);
 
