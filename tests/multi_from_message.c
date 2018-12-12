@@ -15,7 +15,10 @@
 #include "grib_api.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#ifndef ECCODES_ON_WINDOWS
 #include <unistd.h>
+#endif
 
 static void usage(const char* prog) {
     printf("usage: %s [-m] file.grib\n",prog);

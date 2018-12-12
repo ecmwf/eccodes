@@ -16,7 +16,10 @@
 /* #include <errno.h> */
 /* #include <string.h> */
 #include "grib_api_internal.h"
+
+#ifndef ECCODES_ON_WINDOWS
 #include <unistd.h>
+#endif
 
 void usage(char* prog) {
   printf("usage: %s filename\n",prog);
