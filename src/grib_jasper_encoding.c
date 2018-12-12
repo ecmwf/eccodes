@@ -164,7 +164,6 @@ int grib_jasper_encode(grib_context *c, j2k_encode_helper *helper)
 #ifndef ECCODES_ON_WINDOWS
         snprintf (opts, MAXOPTSSIZE, "mode=real\nrate=%f", 1.0/helper->compression);
 #else
-        /* Microsoft Windows Visual Studio support */
         _snprintf(opts, MAXOPTSSIZE, "mode=real\nrate=%f", 1.0/helper->compression);
 #endif
     }
