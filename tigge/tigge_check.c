@@ -25,7 +25,18 @@
 #include <string.h>
 #include <math.h>
 #include <sys/types.h>
-#include <dirent.h>
+
+#ifndef ECCODES_ON_WINDOWS
+  #include <dirent.h>
+#else
+  #include <direct.h>
+  #include <io.h>
+
+  #ifdef _MSC_VER
+  #   define strcasecmp _stricmp
+  #endif
+#endif
+
 #include <assert.h>
 #include "tigge_tools.h"
 

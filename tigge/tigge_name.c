@@ -25,8 +25,14 @@
 #include <string.h>
 #include <math.h>
 #include <sys/types.h>
-#include <dirent.h>
 #include "tigge_tools.h"
+
+#ifndef ECCODES_ON_WINDOWS
+  #include <dirent.h>
+#else
+  #include <direct.h>
+  #include <io.h>
+#endif
 
 /* #define CHECK(a) check(#a,a) */
 #define NUMBER(a) (sizeof(a)/sizeof(a[0]))
