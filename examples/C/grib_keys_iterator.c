@@ -21,8 +21,11 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
+
+#if !(defined(_WIN32) && defined(_MSC_VER))
+#include <unistd.h>
+#endif
 
 #include "eccodes.h"
 
