@@ -88,7 +88,7 @@ int main(int argc,char* argv[])
             {
                 /* not array */
                 vlen=MAX_VAL_LEN;
-                bzero(value,vlen);
+                memset(value, 0, vlen);
                 codes_get_string(h,name,value,&vlen);
                 printf("%s\n",value);
             }
