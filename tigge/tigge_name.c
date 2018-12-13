@@ -26,6 +26,7 @@
 #include <math.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include "tigge_tools.h"
 
 /* #define CHECK(a) check(#a,a) */
 #define NUMBER(a) (sizeof(a)/sizeof(a[0]))
@@ -152,7 +153,7 @@ static void verify(grib_handle *h,const char* full,const char* base)
     }
 }
 
-static void validate(const char* path)
+void validate(const char* path)
 {
     FILE *f = fopen(path,"r");
     grib_handle *h = 0;
@@ -202,26 +203,6 @@ static void usage()
 {
     printf("tigge_name [-l] [-c] files ....\n");
     exit(1);
-}
-
-static void scan(const char* name)
-{
-    DIR *dir;
-    if((dir = opendir(name)) != NULL)
-    {
-        struct dirent* e;
-        char tmp[1024];
-        while( (e = readdir(dir)) != NULL)
-        {
-            if(e->d_name[0] == '.') continue;
-            sprintf(tmp,"%s/%s",name,e->d_name);
-            scan(tmp);
-        }
-
-        closedir(dir);
-    }
-    else
-        validate(name);
 }
 
 int main(int argc, char** argv)
