@@ -340,6 +340,8 @@ int main(int argc, char *argv[])
     const char* prog = argv[0];
     char* infile_name = NULL;
     char* outfile_name = NULL;
+    
+    if (argc==1 || argc >8) usage(prog);
 
     for (i = 1; i < argc; i++) {
         if (strcmp(argv[i],"-p")==0) {
