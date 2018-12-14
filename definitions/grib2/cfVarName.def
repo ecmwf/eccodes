@@ -3200,7 +3200,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 19 ;
 	}
-#10 metre Wind gust of at least 15 m/s
+#10 metre wind gust of at least 15 m/s
 'fg10g15' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -3214,7 +3214,7 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
-#10 metre Wind gust of at least 20 m/s
+#10 metre wind gust of at least 20 m/s
 'fg10g20' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;

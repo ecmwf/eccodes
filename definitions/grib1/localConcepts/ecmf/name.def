@@ -11399,18 +11399,18 @@
 	 table2Version = 131 ;
 	 indicatorOfParameter = 69 ;
 	}
-#10 metre Wind gust of at least 15 m/s
-'10 metre Wind gust of at least 15 m/s' = {
+#10 metre wind gust of at least 15 m/s
+'10 metre wind gust of at least 15 m/s' = {
 	 table2Version = 131 ;
 	 indicatorOfParameter = 70 ;
 	}
-#10 metre Wind gust of at least 20 m/s
-'10 metre Wind gust of at least 20 m/s' = {
+#10 metre wind gust of at least 20 m/s
+'10 metre wind gust of at least 20 m/s' = {
 	 table2Version = 131 ;
 	 indicatorOfParameter = 71 ;
 	}
-#10 metre Wind gust of at least 25 m/s
-'10 metre Wind gust of at least 25 m/s' = {
+#10 metre wind gust of at least 25 m/s
+'10 metre wind gust of at least 25 m/s' = {
 	 table2Version = 131 ;
 	 indicatorOfParameter = 72 ;
 	}

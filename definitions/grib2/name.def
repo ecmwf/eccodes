@@ -3200,8 +3200,8 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 19 ;
 	}
-#10 metre Wind gust of at least 15 m/s
-'10 metre Wind gust of at least 15 m/s' = {
+#10 metre wind gust of at least 15 m/s
+'10 metre wind gust of at least 15 m/s' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
@@ -3214,8 +3214,8 @@
 	 scaledValueOfLowerLimit = 15 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	}
-#10 metre Wind gust of at least 20 m/s
-'10 metre Wind gust of at least 20 m/s' = {
+#10 metre wind gust of at least 20 m/s
+'10 metre wind gust of at least 20 m/s' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;

@@ -15183,8 +15183,8 @@
 	 parameterCategory = 131 ;
 	 parameterNumber = 69 ;
 	}
-#10 metre Wind gust of at least 25 m/s
-'10 metre Wind gust of at least 25 m/s' = {
+#10 metre wind gust of at least 25 m/s
+'10 metre wind gust of at least 25 m/s' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
@@ -20034,7 +20034,7 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 1 ;
-}
+	}
 #Sea Salt Aerosol (0.5 - 5 um) Mixing Ratio
 'Sea Salt Aerosol (0.5 - 5 um) Mixing Ratio' = {
 	 discipline = 192 ;
@@ -20058,7 +20058,7 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 5 ;
-	 }
+	}
 #Dust Aerosol (0.9 - 20 um) Mixing Ratio
 'Dust Aerosol (0.9 - 20 um) Mixing Ratio' = {
 	 discipline = 192 ;
