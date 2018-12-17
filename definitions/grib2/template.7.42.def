@@ -33,6 +33,10 @@ meta values data_apply_bitmap(codedValues,
                                 numberOfDataPoints,
                                 numberOfValues) : dump;
 
+# See ECC-711
+meta packingError simple_packing_error(bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;
+meta unpackedError simple_packing_error(zero,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;
+
 alias data.packedValues = codedValues;
 
 template statistics "common/statistics_grid.def";
