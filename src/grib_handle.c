@@ -375,7 +375,7 @@ static int determine_product_kind(grib_handle* h, ProductKind* prod_kind)
         err = grib_get_string(h, "kindOfProduct", prod_kind_str, &len);
         if      (grib_inline_strcmp(prod_kind_str, "GRIB")==0)  *prod_kind = PRODUCT_GRIB;
         else if (grib_inline_strcmp(prod_kind_str, "BUFR")==0)  *prod_kind = PRODUCT_BUFR;
-        else if (grib_inline_strcmp(prod_kind_str, "METAR")==0) *prod_kind = PRODUCT_METAR;
+        else if (grib_inline_strcmp(prod_kind_str, "META")==0)  *prod_kind = PRODUCT_METAR;
         else if (grib_inline_strcmp(prod_kind_str, "GTS")==0)   *prod_kind = PRODUCT_GTS;
         else if (grib_inline_strcmp(prod_kind_str, "TAF")==0)   *prod_kind = PRODUCT_TAF;
         else *prod_kind = PRODUCT_ANY;
