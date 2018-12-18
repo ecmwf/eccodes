@@ -16,6 +16,7 @@
  */
 
 #include "eccodes.h"
+#include <assert.h>
 
 int main(int argc,char* argv[])
 {
@@ -65,22 +66,27 @@ int main(int argc,char* argv[])
 
             printf("  subsetNumber=%d",i);
             /* read and print some data values */
-            CODES_CHECK(codes_get_long(h,key,&longVal),0);
+            CODES_CHECK(codes_get_long(h,key,&longVal), 0);
             printf("  blockNumber=%ld",longVal);
 
             sprintf(key,"/subsetNumber=%d/stationNumber",i);
-            CODES_CHECK(codes_get_long(h,key,&longVal),0);
+            CODES_CHECK(codes_get_long(h,key,&longVal), 0);
             printf("  stationNumber=%ld",longVal);
 
+            sprintf(key,"/subsetNumber=%d/stationOrSiteName->units",i);
+            CODES_CHECK(codes_get_length(h,key,&stringLen), 0);
+            assert(stringLen == 10); /* should be "CCITT IA5" */
+
             sprintf(key,"/subsetNumber=%d/stationOrSiteName",i);
-            stringLen=100;
-            CODES_CHECK(codes_get_string(h,key,stringVal,&stringLen),0);
+            CODES_CHECK(codes_get_length(h,key,&stringLen), 0);
+            CODES_CHECK(codes_get_string(h,key,stringVal,&stringLen), 0);
+            assert(stringLen > 0 && stringLen < 17);
             printf("  stationOrSiteName=\"%s\"",stringVal);
 
             sprintf(key,"/subsetNumber=%d/airTemperature",i);
             CODES_CHECK(codes_get_double(h,key,&doubleVal),0);
             printf("  airTemperature=%g\n",doubleVal);
-
+            assert(doubleVal > 265 && doubleVal < 278);
         }
 
         /* delete handle */
