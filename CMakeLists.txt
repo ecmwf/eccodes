@@ -302,10 +302,15 @@ if( NOT DEFINED ECCODES_IFS_SAMPLES_SUFF )
   set( ECCODES_IFS_SAMPLES_SUFF ${INSTALL_DATA_DIR}/ifs_samples )
 endif()
 
-set( ECCODES_DEFINITION_PATH  ${the_default_data_prefix}/${ECCODES_DEFINITION_SUFF} )
-set( ECCODES_SAMPLES_PATH     ${the_default_data_prefix}/${ECCODES_SAMPLES_SUFF} )
-set( ECCODES_IFS_SAMPLES_PATH ${the_default_data_prefix}/${ECCODES_IFS_SAMPLES_SUFF} )
-
+if( NOT DEFINED ECCODES_DEFINITION_PATH )
+  set( ECCODES_DEFINITION_PATH  ${the_default_data_prefix}/${ECCODES_DEFINITION_SUFF} )
+endif()
+if( NOT DEFINED ECCODES_SAMPLES_PATH )
+  set( ECCODES_SAMPLES_PATH     ${the_default_data_prefix}/${ECCODES_SAMPLES_SUFF} )
+endif()
+if( NOT DEFINED ECCODES_IFS_SAMPLES_PATH )
+  set( ECCODES_IFS_SAMPLES_PATH ${the_default_data_prefix}/${ECCODES_IFS_SAMPLES_SUFF} )
+endif()
 ###############################################################################
 ### config header
 
