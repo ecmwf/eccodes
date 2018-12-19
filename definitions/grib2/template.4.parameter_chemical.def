@@ -45,6 +45,4 @@ template_nofail default_step_units "grib2/localConcepts/[centre:s]/default_step_
 codetable[1] stepUnits 'stepUnits.table' = defaultStepUnits : transient,dump,no_copy;
 
 #  Forecast time in units defined by indicatorOfUnitOfTimeRange
-signed[4] startStep : dump;
-
-alias forecastTime=startStep;
+signed[4] forecastTime  : dump;
