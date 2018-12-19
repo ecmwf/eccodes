@@ -68,10 +68,11 @@ if (numberOfTimeRange == 1 || numberOfTimeRange == 2) {
     "accum"   = {typeOfStatisticalProcessing=1;typeOfTimeIncrement=2;}
     "max"     = {typeOfStatisticalProcessing=2;}
     "min"     = {typeOfStatisticalProcessing=3;}
-    "diff"    = {typeOfStatisticalProcessing=4;}
+    "diff"    = {typeOfStatisticalProcessing=4;} # end-start
     "rms"     = {typeOfStatisticalProcessing=5;}
     "sd"      = {typeOfStatisticalProcessing=6;}
     "cov"     = {typeOfStatisticalProcessing=7;}
+    "sdiff"   = {typeOfStatisticalProcessing=8;} # start-end
     "ratio"   = {typeOfStatisticalProcessing=9;}
     "stdanom"   = {typeOfStatisticalProcessing=10;}
     "summation" = {typeOfStatisticalProcessing=11;}

@@ -105,6 +105,7 @@ concept stepType {
     "max"     = {selectStepTemplateInterval=1; stepTypeInternal="max";}
     "min"     = {selectStepTemplateInterval=1; stepTypeInternal="min";}
     "diff"    = {selectStepTemplateInterval=1; stepTypeInternal="diff";}
+    "sdiff"   = {selectStepTemplateInterval=1; stepTypeInternal="sdiff";}
     "rms"     = {selectStepTemplateInterval=1; stepTypeInternal="rms";}
     "sd"      = {selectStepTemplateInterval=1; stepTypeInternal="sd";}
     "cov"     = {selectStepTemplateInterval=1; stepTypeInternal="cov";}
@@ -112,6 +113,8 @@ concept stepType {
     "stdanom" = {selectStepTemplateInterval=1; stepTypeInternal="stdanom";}
     "summation" = {selectStepTemplateInterval=1; stepTypeInternal="summation";}
 }
+
+#meta is_chemical g2_chemical(productDefinitionTemplateNumber, stepType);
 
 transient setCalendarId = 0 ;
 transient deleteCalendarId = 0 ;
