@@ -74,8 +74,8 @@ if (numberOfTimeRange == 1 || numberOfTimeRange == 2) {
     "cov"     = {typeOfStatisticalProcessing=7;}
     "sdiff"   = {typeOfStatisticalProcessing=8;} # start-end
     "ratio"   = {typeOfStatisticalProcessing=9;}
-    "stdanom"   = {typeOfStatisticalProcessing=10;}
-    "summation" = {typeOfStatisticalProcessing=11;}
+    "stdanom" = {typeOfStatisticalProcessing=10;}
+    "sum"     = {typeOfStatisticalProcessing=11;}
   }
   meta startStep step_in_units(forecastTime,indicatorOfUnitOfTimeRange,stepUnits,
     indicatorOfUnitForTimeRange,lengthOfTimeRange) : no_copy;
