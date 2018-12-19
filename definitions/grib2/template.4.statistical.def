@@ -73,6 +73,8 @@ if (numberOfTimeRange == 1 || numberOfTimeRange == 2) {
     "sd"      = {typeOfStatisticalProcessing=6;}
     "cov"     = {typeOfStatisticalProcessing=7;}
     "ratio"   = {typeOfStatisticalProcessing=9;}
+    "stdanom"   = {typeOfStatisticalProcessing=10;}
+    "summation" = {typeOfStatisticalProcessing=11;}
   }
   meta startStep step_in_units(forecastTime,indicatorOfUnitOfTimeRange,stepUnits,
     indicatorOfUnitForTimeRange,lengthOfTimeRange) : no_copy;
