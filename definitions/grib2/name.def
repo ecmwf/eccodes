@@ -227,6 +227,72 @@
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfFirstFixedSurface = 103 ;
 	}
+#Probability of temperature standardized anomaly greater than 1 standard deviation
+'Probability of temperature standardized anomaly greater than 1 standard deviation' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 scaledValueOfLowerLimit = 1 ;
+	 productDefinitionTemplateNumber = 9 ;
+	 probabilityType = 3 ;
+	 typeOfStatisticalProcessing = 10 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	}
+#Probability of temperature standardized anomaly greater than 1.5 standard deviation
+'Probability of temperature standardized anomaly greater than 1.5 standard deviation' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 scaleFactorOfLowerLimit = 1 ;
+	 scaledValueOfLowerLimit = 15 ;
+	 productDefinitionTemplateNumber = 9 ;
+	 probabilityType = 3 ;
+	 typeOfStatisticalProcessing = 10 ;
+	}
+#Probability of temperature standardized anomaly greater than 2 standard deviation
+'Probability of temperature standardized anomaly greater than 2 standard deviation' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 productDefinitionTemplateNumber = 9 ;
+	 probabilityType = 3 ;
+	 typeOfStatisticalProcessing = 10 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 scaledValueOfLowerLimit = 2 ;
+	}
+#Probability of temperature standardized anomaly less than -1 standard deviation
+'Probability of temperature standardized anomaly less than -1 standard deviation' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 probabilityType = 0 ;
+	 typeOfStatisticalProcessing = 10 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 scaledValueOfLowerLimit = -1 ;
+	 productDefinitionTemplateNumber = 9 ;
+	}
+#Probability of temperature standardized anomaly less than -1.5 standard deviation
+'Probability of temperature standardized anomaly less than -1.5 standard deviation' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 10 ;
+	 scaleFactorOfLowerLimit = 1 ;
+	 scaledValueOfLowerLimit = -15 ;
+	 productDefinitionTemplateNumber = 9 ;
+	 probabilityType = 0 ;
+	}
+#Probability of temperature standardized anomaly less than -2 standard deviation
+'Probability of temperature standardized anomaly less than -2 standard deviation' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 scaledValueOfLowerLimit = -2 ;
+	 productDefinitionTemplateNumber = 9 ;
+	 probabilityType = 0 ;
+	 typeOfStatisticalProcessing = 10 ;
+	}
 #10 metre wind gust in the last 3 hours
 '10 metre wind gust in the last 3 hours' = {
 	 discipline = 0 ;
