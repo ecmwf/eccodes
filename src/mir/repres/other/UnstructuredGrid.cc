@@ -25,6 +25,7 @@
 #include "eckit/serialisation/FileStream.h"
 #include "eckit/serialisation/IfstreamStream.h"
 #include "eckit/utils/MD5.h"
+#include "eckit/memory/ScopedPtr.h"
 
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"

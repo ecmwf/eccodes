@@ -16,6 +16,7 @@
 #include "mir/repres/Representation.h"
 
 #include "eckit/exception/Exceptions.h"
+#include "eckit/memory/ScopedPtr.h"
 #include "eckit/thread/AutoLock.h"
 #include "eckit/thread/Mutex.h"
 #include "eckit/thread/Once.h"
