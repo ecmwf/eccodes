@@ -12,7 +12,6 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-
 #include "mir/repres/gauss/reduced/Octahedral.h"
 
 #include "mir/api/MIRJob.h"
@@ -21,15 +20,13 @@
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
 
-
 namespace mir {
 namespace repres {
 namespace gauss {
 namespace reduced {
 
-
-Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox, double angularPrecision) :
-    Reduced(N, bbox, angularPrecision) {
+Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox, double angularPrecision)
+    : Reduced(N, bbox, angularPrecision) {
 
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox.north();
@@ -39,7 +36,7 @@ Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox, double angularPr
     {
         atlas::util::Config config;
         config.set("name", "O" + std::to_string(N_));
-        atlas::grid::ReducedGaussianGrid grid(config);
+        atlas::ReducedGaussianGrid grid(config);
         ASSERT(grid);
 
         setNj(grid.nx(), s, n);
@@ -52,53 +49,42 @@ Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox, double angularPr
     auto old(bbox_);
     bbox_ = util::BoundingBox(n, w, s, e);
     eckit::Log::debug<LibMir>() << "Octahedral BoundingBox:"
-                                << "\n\t   " << old
-                                << "\n\t > " << bbox_
-                                << std::endl;
+                                << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
 }
-
 
 Octahedral::~Octahedral() = default;
 
-
-void Octahedral::fill(grib_info& info) const  {
+void Octahedral::fill(grib_info& info) const {
     Reduced::fill(info);
 }
 
-
-void Octahedral::fill(api::MIRJob& job) const  {
+void Octahedral::fill(api::MIRJob& job) const {
     Reduced::fill(job);
     std::stringstream os;
     os << "O" << N_;
     job.set("gridname", os.str());
 }
 
-
 void Octahedral::makeName(std::ostream& out) const {
     out << "O" << N_;
     bbox_.makeName(out);
 }
-
 
 bool Octahedral::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const Octahedral*>(&other);
     return o && Reduced::sameAs(other);
 }
 
-
 atlas::Grid Octahedral::atlasGrid() const {
-    return atlas::grid::ReducedGaussianGrid("O" + std::to_string(N_), domain());
+    return atlas::ReducedGaussianGrid("O" + std::to_string(N_), domain());
 }
-
 
 void Octahedral::fill(util::MeshGeneratorParameters& params) const {
     Gaussian::fill(params);
     params.set("triangulate", true);
 }
 
-
-}  // namespace reduced
-}  // namespace gauss
-}  // namespace repres
-}  // namespace mir
-
+} // namespace reduced
+} // namespace gauss
+} // namespace repres
+} // namespace mir
