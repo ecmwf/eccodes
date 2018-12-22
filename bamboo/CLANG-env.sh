@@ -6,6 +6,4 @@ if [[ ! $(command -v module > /dev/null 2>&1) ]]; then
 fi
 module unload grib_api
 module unload eccodes
-#module switch gnu clang/3.6.2
-#module switch gnu clang/3.9.1
 module switch gnu clang
