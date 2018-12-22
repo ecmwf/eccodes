@@ -6,4 +6,6 @@ if [[ ! $(command -v module > /dev/null 2>&1) ]]; then
 fi
 module unload grib_api
 module unload eccodes
+module unload metview
+
 module switch gnu clang
