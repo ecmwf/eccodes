@@ -114,7 +114,7 @@ concept stepType {
     "sum"     = {selectStepTemplateInterval=1; stepTypeInternal="sum";}
 }
 
-#meta is_chemical g2_chemical(productDefinitionTemplateNumber, stepType);
+meta is_chemical g2_chemical(productDefinitionTemplateNumber, stepType);
 
 transient setCalendarId = 0 ;
 transient deleteCalendarId = 0 ;

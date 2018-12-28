@@ -160,7 +160,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     grib_accessor_select_step_template* self = (grib_accessor_select_step_template*)a;
     long productDefinitionTemplateNumber=0;
     long productDefinitionTemplateNumberNew=0;
-/*TODO chemicals*/
+
     grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
 
     if (self->instant) {
