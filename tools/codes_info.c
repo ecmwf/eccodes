@@ -85,7 +85,7 @@ int main( int argc,char* argv[])
                    "It is recommended you use ECCODES_DEFINITION_PATH instead!)\n");
         } else {
             printf("Default definition files path is used: %s\n",ECCODES_DEFINITION_PATH);
-            printf("Definition files path can be changed setting ECCODES_DEFINITION_PATH environment variable\n");
+            printf("Definition files path can be changed by setting ECCODES_DEFINITION_PATH environment variable\n");
         }
         printf("\n");
 
@@ -99,7 +99,7 @@ int main( int argc,char* argv[])
                    "It is recommended you use ECCODES_SAMPLES_PATH instead!)\n");
         } else {
             printf("Default SAMPLES path is used: %s\n",ECCODES_SAMPLES_PATH);
-            printf("SAMPLES path can be changed setting ECCODES_SAMPLES_PATH environment variable\n");
+            printf("SAMPLES path can be changed by setting ECCODES_SAMPLES_PATH environment variable\n");
         }
         printf("\n");
         return 0;
