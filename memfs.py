@@ -173,7 +173,7 @@ static FILE* fmemopen(const char* buffer, size_t size, const char* mode){
     return funopen(f, &read_mem, &write_mem, &seek_mem, &close_mem);
 }
 
-#elif defined(ECCODES_ON_WINDOWS)
+#elif defined(_WIN32)
 
 #include <io.h>
 #include <fcntl.h>
