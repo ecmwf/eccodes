@@ -46,6 +46,7 @@ for directory in dirs:
             if ext not in ['.def', '.table', '.tmpl']:
                 continue
 
+            full = full.replace("\\","/")
             fname = full[full.find("/%s/" % (dname,)):]
             #print("MEMFS add", fname)
             name = re.sub(r'\W', '_', fname)
@@ -169,6 +170,49 @@ static FILE* fmemopen(const char* buffer, size_t size, const char* mode){
     f->size = size;
 
     return funopen(f, &read_mem, &write_mem, &seek_mem, &close_mem);
+}
+
+#elif defined(_WIN32)
+
+#include <io.h>
+#include <fcntl.h>
+#include <windows.h>
+
+static FILE *fmemopen(void* buffer, size_t size, const char* mode) {
+    char path[MAX_PATH - 13];
+    if (!GetTempPath(sizeof(path), path))
+        return NULL;
+    
+    char filename[MAX_PATH + 1];
+    if (!GetTempFileName(path, "ecc", 0, filename))
+        return NULL;
+    
+    HANDLE h = CreateFile(filename,
+                          GENERIC_READ | GENERIC_WRITE,
+                          0,
+                          NULL,
+                          OPEN_ALWAYS,
+                          FILE_ATTRIBUTE_TEMPORARY | FILE_FLAG_DELETE_ON_CLOSE,
+                          NULL);
+    
+    if (h == INVALID_HANDLE_VALUE)
+        return NULL;
+    
+    int fd = _open_osfhandle((intptr_t)h, _O_RDWR);
+    if (fd < 0) {
+        CloseHandle(h);
+        return NULL;
+    }
+    
+    FILE* f = _fdopen(fd, "w+");
+    if (!f) {
+        _close(fd);
+        return NULL;
+    }
+    
+    fwrite(buffer, size, 1, f);
+    rewind(f);
+    return f;
 }
 
 #endif
