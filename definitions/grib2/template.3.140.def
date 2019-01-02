@@ -34,9 +34,11 @@ meta  geography.longitudeOfFirstGridPointInDegrees   scale(longitudeOfFirstGridP
 
 signed[4] standardParallelInMicrodegrees  : dump;
 alias standardParallel=standardParallelInMicrodegrees;
+meta geography.standardParallelInDegrees scale(standardParallelInMicrodegrees,one,grib2divider,truncateDegrees) : dump;
 
 signed[4] centralLongitudeInMicrodegrees  : dump;
 alias centralLongitude=centralLongitudeInMicrodegrees;
+meta geography.centralLongitudeInDegrees scale(centralLongitudeInMicrodegrees,one,grib2divider,truncateDegrees) : dump;
 
 #  Resolution and component flag
 flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : dump ;
@@ -44,10 +46,12 @@ flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : 
 #  Dx - X-direction grid length in millimetres
 unsigned[4] xDirectionGridLengthInMillimetres  : dump ;
 alias Dx  = xDirectionGridLengthInMillimetres ;
+meta geography.xDirectionGridLengthInMetres scale(xDirectionGridLengthInMillimetres,one,thousand,truncateDegrees): dump;
 
 #  Dy - Y-direction grid length in millimetres
 unsigned[4] yDirectionGridLengthInMillimetres  : dump ;
 alias Dy  = yDirectionGridLengthInMillimetres ;
+meta geography.yDirectionGridLengthInMetres scale(yDirectionGridLengthInMillimetres,one,thousand,truncateDegrees): dump;
 
 include "grib2/template.3.scanning_mode.def";
 
