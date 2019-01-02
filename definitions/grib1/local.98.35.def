@@ -37,4 +37,3 @@ meta timeOfReference  time(hourOfReference,minuteOfReference,secondsOfReference)
 if (indicatorOfTypeOfLevel==160) {
 	alias mars.levelist = level;
 }
-

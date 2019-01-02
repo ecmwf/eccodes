@@ -58,8 +58,4 @@ unsigned[2]  Extra_Data_FreeFormat_0_none  : dump ;
 position offsetFreeFormData;
 unsigned[1] freeFormData[Extra_Data_FreeFormat_0_none] : dump ;
 
-#
 padtomultiple padding_loc245_2(offsetSection1,80);
-#
-
-# END   1/local.98.245 ----------------------------------------------------------------------
