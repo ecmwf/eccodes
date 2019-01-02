@@ -52,6 +52,8 @@ ${tools_dir}/grib_get_data $GRIB_OUTFILE > $DATA_OUTFILE
 # Compare output with reference. If the diff fails, script will immediately exit with status 1
 diff $DATA_OUTFILE $REF_FILE
 
+grib_check_key_equals $GRIB_OUTFILE standardParallelInDegrees,centralLongitudeInDegrees '48 9'
+grib_check_key_equals $GRIB_OUTFILE xDirectionGridLengthInMetres,yDirectionGridLengthInMetres '5000 5000'
+
 # Clean up
 rm -f $FILTER_FILE $GRIB_OUTFILE $DATA_OUTFILE
-
