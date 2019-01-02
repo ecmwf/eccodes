@@ -283,6 +283,11 @@ if( IEEE_LE )
     set( IEEE_BE 0 )
 endif()
 
+# Symbols need to be explicitly exported on Windows so we can link to dlls.
+if( EC_OS_NAME MATCHES "windows" )
+    set( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE )
+endif()
+
 ###############################################################################
 # contents
 
