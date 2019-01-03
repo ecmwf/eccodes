@@ -8365,9 +8365,13 @@
 	}
 #PAR budget corrector
 '217037' = {
-	 discipline = 192 ;
-	 parameterCategory = 217 ;
-	 parameterNumber = 37 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 localTablesVersion = 1 ;
+	 tablesVersion = 255 ;
+	 constituentType = 63000 ;
+	 is_chemical = 1;
 	}
 #NO to NO2 operator
 '217038' = {
