@@ -69,6 +69,8 @@ concept_nofail vertical.typeOfLevel (unknown) {
   'pressureFromGroundLayer' = {typeOfFirstFixedSurface=108;typeOfSecondFixedSurface=108;}
   'potentialVorticity' = {typeOfFirstFixedSurface=109; typeOfSecondFixedSurface=255;}
   'eta' = {typeOfFirstFixedSurface=111;  typeOfSecondFixedSurface=255;}
+  'soil' = {typeOfFirstFixedSurface=151;  typeOfSecondFixedSurface=255;}
+  'soilLayer' = {typeOfFirstFixedSurface=151;  typeOfSecondFixedSurface=151;}
 
 # In the case of Generalized vertical height coordinates, NV must be 6
   'generalVertical' = {genVertHeightCoords=1; typeOfFirstFixedSurface=150; NV=6;}
@@ -102,6 +104,7 @@ if (typeOfSecondFixedSurface == 255) {
     scaledValueOfSecondFixedSurface,
     pressureUnits)  :dump;
     alias level=topLevel;  # (see GRIB-725)
+    
 }
 alias ls.level=level;
 alias vertical.level=level;
@@ -134,4 +137,10 @@ if (extraDim) {
         unalias mars.levelist;
     }
 }
+
+# See ECC-854
+if(typeOfFirstFixedSurface == 151 && typeOfSecondFixedSurface == 151) {
+    alias mars.levelist = bottomLevel;
+}
+
 alias ls.typeOfLevel=typeOfLevel;

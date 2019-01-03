@@ -35,9 +35,10 @@ if(typeOfFirstFixedSurface == 118) {
     alias mars.levtype = levTypeName;
 }
 
+# See GRIB-871 and ECC-854
 if(typeOfFirstFixedSurface == 151 && typeOfSecondFixedSurface == 151) {
     alias level = bottomLevel;
-    alias mars.levelist = level;
+    #alias mars.levelist = level;
 }
 
 alias mars.expver = marsExpver;
