@@ -31,7 +31,7 @@ TEST_STEPRANGE = ('0', '12', '18', '24', '6')
 KNOWN_GRIB_KEYS = ['7777', 'GRIBEditionNumber', 'N', 'NV',
                    'Ni', 'Nj', 'PLPresent', 'PVPresent', 'addEmptySection2',
                    'addExtraLocalSection', 'alternativeRowScanning',
-                   'angleDivisor', 'angleMultiplier',
+                   'angleDivisor', 'angleSubdivisions',
                    'average', 'backgroundProcess', 'basicAngleOfTheInitialProductionDomain',
                    'binaryScaleFactor', 'bitMapIndicator', 'bitmapPresent',
                    'bitsPerValue', 'bottomLevel', 'centre',
