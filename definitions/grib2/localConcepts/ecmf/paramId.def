@@ -8489,9 +8489,11 @@
 	}
 #Carbon dioxide (chemistry)
 '217057' = {
-	 discipline = 192 ;
-	 parameterCategory = 217 ;
-	 parameterNumber = 57 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 3 ;
+	 is_chemical = 1 ;
 	}
 #Nitrous oxide (chemistry)
 '217058' = {
