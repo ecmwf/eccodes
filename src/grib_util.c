@@ -443,13 +443,13 @@ static int angle_can_be_encoded(grib_handle* h, const double angle)
     int retval = 1;
     grib_handle* h2 = NULL;
     char sample_name[16] = {0,};
-    long angular_precision = 0; /* e.g. 1e3 for grib1 and 1e6 for grib2 */
+    long angle_subdivisions = 0; /* e.g. 1e3 for grib1 and 1e6 for grib2 */
     long edition = 0, coded = 0;
     double expanded, diff;
 
     if((ret = grib_get_long(h,"edition",&edition)) != 0) return ret;
-    if((ret = grib_get_long(h, "angularPrecision", &angular_precision)) != 0) return ret;
-    Assert(angular_precision > 0);
+    if((ret = grib_get_long(h, "angleSubdivisions", &angle_subdivisions)) != 0) return ret;
+    Assert(angle_subdivisions > 0);
 
     sprintf(sample_name, "GRIB%ld", edition);
     h2 = grib_handle_new_from_samples(0, sample_name);
@@ -457,9 +457,9 @@ static int angle_can_be_encoded(grib_handle* h, const double angle)
     if((ret = grib_get_long(h2,   "latitudeOfFirstGridPoint", &coded)) != 0) return ret;
     grib_handle_delete(h2);
 
-    expanded = angle*angular_precision;
+    expanded = angle*angle_subdivisions;
     diff = fabs(expanded - coded);
-    if (diff < 1.0/angular_precision)
+    if (diff < 1.0/angle_subdivisions)
         retval = 1;
     else
         retval = 0;
@@ -470,16 +470,16 @@ static int angle_can_be_encoded(grib_handle* h, const double angle)
 #ifdef ECCODES_ON_WINDOWS
 #define round(a) ( (a) >=0 ? ((a)+0.5) : ((a)-0.5) )
 #endif
-static double adjust_angle(const double angle, const RoundingPolicy policy, const double angular_precision)
+static double adjust_angle(const double angle, const RoundingPolicy policy, const double angle_subdivisions)
 {
     double result = 0;
-    Assert(angular_precision > 0);
-    result = angle * angular_precision;
+    Assert(angle_subdivisions > 0);
+    result = angle * angle_subdivisions;
     if (policy == eROUND_ANGLE_UP)
         result = round(result+0.5);
     else
         result = round(result-0.5);
-    result = result / angular_precision;
+    result = result / angle_subdivisions;
     return result;
 }
 
@@ -496,8 +496,8 @@ static int expand_bounding_box(grib_handle* h, grib_values *values, const size_t
     size_t i=0;
     double new_angle = 0;
     RoundingPolicy roundingPolicy = eROUND_ANGLE_UP;
-    long angular_precision = 0; /* e.g. 1e3 for grib1 and 1e6 for grib2 */
-    if((ret = grib_get_long(h, "angularPrecision", &angular_precision)) != 0)
+    long angle_subdivisions = 0; /* e.g. 1e3 for grib1 and 1e6 for grib2 */
+    if((ret = grib_get_long(h, "angleSubdivisions", &angle_subdivisions)) != 0)
         return ret;
 
     for(i=0; i<count; i++) {
@@ -520,7 +520,7 @@ static int expand_bounding_box(grib_handle* h, grib_values *values, const size_t
         }
 
         if (is_angle && !angle_can_be_encoded(h, values[i].double_value)) {
-            new_angle = adjust_angle(values[i].double_value, roundingPolicy, angular_precision);
+            new_angle = adjust_angle(values[i].double_value, roundingPolicy, angle_subdivisions);
             if (h->context->debug) {
                 printf("ECCODES DEBUG  grib_util EXPAND_BOUNDING_BOX %s: old=%.15e new=%.15e (%s)\n",
                        values[i].name, values[i].double_value, new_angle,
