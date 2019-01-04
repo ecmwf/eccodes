@@ -8369,7 +8369,6 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 localTablesVersion = 1 ;
-	 tablesVersion = 255 ;
 	 constituentType = 63000 ;
 	 is_chemical = 1;
 	}
