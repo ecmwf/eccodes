@@ -188,6 +188,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     long the_class=-1;
     long eps=-1;
     long chemical=-1;
+    long aerosol=-1;
     char stepType[15]={0,};
     size_t slen=15;
     int localDefinitionNumber=*val;
@@ -211,6 +212,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     if (!strcmp(stepType,"instant")) isInstant=1;
     grib_get_long(grib_handle_of_accessor(a), self->grib2LocalSectionNumber,&grib2LocalSectionNumber);
     grib_get_long(grib_handle_of_accessor(a), "is_chemical",&chemical);
+    grib_get_long(grib_handle_of_accessor(a), "is_aerosol",&aerosol);
 
     if (is_productDefinitionTemplateNumber_EPS(productDefinitionTemplateNumber))
         eps=1;
@@ -322,6 +324,23 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
                 productDefinitionTemplateNumberNew=40;
             } else {
                 productDefinitionTemplateNumberNew=42;
+            }
+        }
+    }
+
+    /* Adjust for aerosols */
+    if (aerosol==1) {
+        if ( eps == 1 ) {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=45;
+            } else {
+                productDefinitionTemplateNumberNew=47;
+            }
+        } else {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=44;
+            } else {
+                productDefinitionTemplateNumberNew=46;
             }
         }
     }

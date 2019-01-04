@@ -111,6 +111,7 @@ concept stepType {
 }
 
 meta is_chemical g2_chemical(productDefinitionTemplateNumber, stepType);
+meta is_aerosol  g2_aerosol(productDefinitionTemplateNumber, stepType);
 
 transient setCalendarId = 0 ;
 transient deleteCalendarId = 0 ;
