@@ -127,7 +127,7 @@ endif()
 ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
-    CONDITION ECCODES_HAVE_FMEMOPEN OR ECCODES_HAVE_FUNOPEN
+    CONDITION ECCODES_HAVE_FMEMOPEN OR ECCODES_HAVE_FUNOPEN OR (EC_OS_NAME MATCHES "windows")
     REQUIRED_PACKAGES PythonInterp
 )
 
@@ -281,6 +281,11 @@ endif()
 
 if( IEEE_LE )
     set( IEEE_BE 0 )
+endif()
+
+# Symbols need to be explicitly exported on Windows so we can link to dlls.
+if( EC_OS_NAME MATCHES "windows" )
+    set( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE )
 endif()
 
 ###############################################################################

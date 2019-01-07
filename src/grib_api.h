@@ -21,7 +21,6 @@
 #include <string.h>
 #include <sys/types.h>
 
-/* Microsoft Windows Visual Studio support */
 #include "eccodes_windef.h"
 
 #ifndef ECCODES_ON_WINDOWS
