@@ -213,6 +213,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     grib_get_long(grib_handle_of_accessor(a), self->grib2LocalSectionNumber,&grib2LocalSectionNumber);
     grib_get_long(grib_handle_of_accessor(a), "is_chemical",&chemical);
     grib_get_long(grib_handle_of_accessor(a), "is_aerosol",&aerosol);
+    if (chemical && aerosol) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,"Parameter cannot be both chemical and aerosol!");
+        return GRIB_ENCODING_ERROR;
+    }
 
     if (is_productDefinitionTemplateNumber_EPS(productDefinitionTemplateNumber))
         eps=1;

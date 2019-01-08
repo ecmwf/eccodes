@@ -196,6 +196,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     if (!strcmp(stepType,"instant")) isInstant=1;
     grib_get_long(grib_handle_of_accessor(a), "is_chemical",&chemical);
     grib_get_long(grib_handle_of_accessor(a), "is_aerosol",&aerosol);
+    if (chemical && aerosol) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,"Parameter cannot be both chemical and aerosol!");
+        return GRIB_ENCODING_ERROR;
+    }
 
     /* eps or stream=(enda or elda or ewla) */
     if ( eps || stream==1030 || stream==1249 || stream==1250 ) {
