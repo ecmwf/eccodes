@@ -34,7 +34,6 @@
   #include <io.h>
 #endif
 
-/* #define CHECK(a) check(#a,a) */
 #define NUMBER(a) (sizeof(a)/sizeof(a[0]))
 
 int error = 0;
@@ -44,48 +43,6 @@ const char* param = "unknown";
 int list_mode = 0;
 int compare_mode = 0;
 
-#if 0
-static void check(const char* name,int a)
-{
-    if(!a) {
-        printf("%s, field %d [%s]: %s failed\n",file,field,param,name);
-        error++;
-    }
-}
-
-static double dget(grib_handle *h,const char* what)
-{
-    int e; double val;
-    if((e = grib_get_double(h,what,&val)) != GRIB_SUCCESS)
-    {
-        printf("%s, field %d [%s]: cannot get %s: %s\n",file,field,param,what,grib_get_error_message(e));
-        error++;
-        val = -1;
-    }
-    return val;
-}
-
-static int missing(grib_handle *h,const char* what)
-{
-    int err=0;
-    return grib_is_missing(h,what,&err);
-}
-
-static int eq(grib_handle *h,const char* what,long value)
-{
-    return get(h,what) == value;
-}
-
-static int ne(grib_handle *h,const char* what,long value)
-{
-    return get(h,what) != value;
-}
-
-static int ge(grib_handle *h,const char* what,long value)
-{
-    return get(h,what) >= value;
-}
-#endif
 static long get(grib_handle *h,const char* what)
 {
     int e; long val;
