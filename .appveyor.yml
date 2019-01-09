@@ -40,9 +40,6 @@ install:
     # TODO: switch from the dtip-windows branch once the windows changes are merged
     - cmd: git clone --depth 1 -b dtip-windows https://github.com/ecmwf/ecbuild.git %ECBUILD_SRC%
 
-    # debug
-    - cmd: conda --version
-
     # install linux utils
     - cmd: conda install -c msys2 m2-bash ^
                                   m2-findutils ^
