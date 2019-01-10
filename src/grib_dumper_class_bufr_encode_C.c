@@ -646,7 +646,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 
-    fprintf(self->dumper.out,"  size = %ld;\n", size);
+    fprintf(self->dumper.out,"  size = %lu;\n", (unsigned long)size);
     if (self->isLeaf==0) {
         depth+=2;
         if (r!=0)
