@@ -549,6 +549,8 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
                 process(c, options, buf);
             }
         } while(!_findnext(handle, &fileinfo));
+
+        _findclose(handle);
     }
     else
     {
