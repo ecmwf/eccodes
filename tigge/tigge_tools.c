@@ -51,7 +51,6 @@ void scan(const char* name)
     }
 }
 #else
-// based on similar code in grib_tools.c
 void scan(const char* name)
 {
     struct _finddata_t fileinfo;
