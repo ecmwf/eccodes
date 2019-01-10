@@ -74,6 +74,8 @@ void scan(const char* name)
                 }
             }
         } while(!_findnext(handle, &fileinfo));
+
+        _findclose(handle);
     }
     else
         validate(name);
