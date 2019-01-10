@@ -42,8 +42,8 @@ int codes_c_close_file(int fd, char* fname);
 int grib_c_new_from_file(FILE *f, int fd, char* fname, int *gid, int headers_only);
 int grib_c_new_any_from_file(FILE *f, int fd, char* fname, int headers_only,int *gid);
 int grib_c_new_bufr_from_file(FILE *f, int fd, char* fname, int headers_only,int *gid);
+int grib_c_new_gts_from_file(FILE *f, int fd, char* fname, int headers_only, int *gid);
 
-int grib_c_new_gts_from_file(FILE *f,int headers_only, int *gid);
 int grib_c_new_metar_from_file(FILE* f,int headers_only, int* gid);
 int grib_c_new_from_index(int *iid, int *gid);
 int grib_c_index_new_from_file(char *file, char *keys, int *gid);

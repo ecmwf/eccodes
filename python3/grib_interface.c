@@ -1327,19 +1327,26 @@ int grib_c_count_in_file(FILE* f,int* n)
     return err;
 }
 
-int grib_c_new_gts_from_file(FILE* f,int headers_only, int* gid)
+int grib_c_new_gts_from_file(FILE* f, int fd, char* fname, int headers_only, int* gid)
 {
     grib_handle *h = NULL;
     int err = 0;
 
     if(f){
-        h = gts_new_from_file(0,f,&err);
+        FILE* p = retrieve_file_info(fd);
+        if (p) {
+            h = gts_new_from_file(0,p,&err);  //use cached value
+        } else {
+            h = gts_new_from_file(0,f,&err);  //use FILE pointer passed in
+            store_file_info(fd, f); //store it for next time
+        }
 
         if(h){
             push_handle(h,gid);
             return GRIB_SUCCESS;
         } else {
             *gid=-1;
+            clear_file_info(fd);
             return GRIB_END_OF_FILE;
         }
     }
