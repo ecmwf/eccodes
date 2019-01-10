@@ -261,7 +261,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
             }
         } else {
             if (isInstant) {
-                productDefinitionTemplateNumberNew=44;
+                productDefinitionTemplateNumberNew=48;/*44 is deprecated*/
             } else {
                 productDefinitionTemplateNumberNew=46;
             }
