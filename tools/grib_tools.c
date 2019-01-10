@@ -532,6 +532,7 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir)
             process(c,options,buf);
         }
     }
+    closedir(d);
     return 0;
 }
 #else
