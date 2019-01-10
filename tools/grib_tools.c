@@ -535,21 +535,12 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir)
     return 0;
 }
 #else
-static int isWinDir(const struct _finddata_t *fileinfo)
-{
-    if((fileinfo->attrib & 16) == 16)
-        return 1;
-    return 0;
-}
 static void doProcessing(grib_context* c,grib_runtime_options* options,const char* dir, const struct _finddata_t *fileinfo)
 {
-    if(isWinDir(fileinfo))
-    {
-        if(strcmp(fileinfo->name, ".") != 0 && strcmp(fileinfo->name,"..") != 0) {
-            char buf[1024];
-            sprintf(buf,"%s/%s",dir,fileinfo->name);
-            process(c,options,buf);
-        }
+    if(strcmp(fileinfo->name, ".") != 0 && strcmp(fileinfo->name,"..") != 0) {
+        char buf[1024];
+        sprintf(buf,"%s/%s",dir,fileinfo->name);
+        process(c,options,buf);
     }
 }
 static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
