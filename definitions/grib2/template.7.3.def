@@ -10,7 +10,6 @@
 # TEMPLATE 7.3, Grid point data - complex packing and spatial differencing
 # Octets 6-ww : First value(s) of original
 # (undifferenced)
-# NOTE 1 NOT FOUND
 # ????          first_value_s_of_original
 
 position offsetBeforeData;

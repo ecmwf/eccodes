@@ -29,19 +29,16 @@ unsigned[4] numberOfGroupsOfDataValues ;
 
 alias NG =  numberOfGroupsOfDataValues;
 #  Reference for group widths
-# NOTE 12 NOT FOUND                                                    
 unsigned[1] referenceForGroupWidths ;
 
 #  Number of bits used for the group widths
-# (after the reference value in octet 36 has been removed)             
+# (after the reference value in octet 36 has been removed)
 unsigned[1] numberOfBitsUsedForTheGroupWidths ;
 
 #  Reference for group lengths
-# NOTE 13 NOT FOUND                                                    
 unsigned[4] referenceForGroupLengths ;
 
 #  Length increment for the group lengths
-# NOTE 14 NOT FOUND                                                    
 unsigned[1] lengthIncrementForTheGroupLengths ;
 
 #  True length of last group
@@ -49,7 +46,7 @@ unsigned[4] trueLengthOfLastGroup ;
 
 #  Number of bits used for the scaled group lengths
 # (after subtraction of the reference value given in octets 38-41 and division
-# by the length increment given in octet 42)                           
+# by the length increment given in octet 42)
 unsigned[1] numberOfBitsForScaledGroupLengths ;
 alias numberOfBitsUsedForTheScaledGroupLengths=numberOfBitsForScaledGroupLengths;
 
@@ -57,5 +54,5 @@ alias numberOfBitsUsedForTheScaledGroupLengths=numberOfBitsForScaledGroupLengths
 codetable[1] orderOfSpatialDifferencing ('5.6.table',masterDir,localDir);
 
 #  Number of octets required in the Data Section to specify extra descriptors needed for spatial differencing
-# (octets 6-ww in Data Template 7.3)                                   
+# (octets 6-ww in Data Template 7.3)
 unsigned[1] numberOfOctetsExtraDescriptors ;
