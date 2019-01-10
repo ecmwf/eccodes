@@ -555,7 +555,9 @@ static void doProcessing(grib_context* c,grib_runtime_options* options,const cha
 static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
     struct _finddata_t fileinfo;
     intptr_t handle;
-    if((handle = _findfirst(dir, &fileinfo)) != -1)
+    char buffer[1024];
+    sprintf(buffer,  "%s/*", dir);
+    if((handle = _findfirst(buffer, &fileinfo)) != -1)
         doProcessing(c, options, dir, &fileinfo);
     else
     {
