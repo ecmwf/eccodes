@@ -535,28 +535,26 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir)
     return 0;
 }
 #else
-static void doProcessing(grib_context* c,grib_runtime_options* options,const char* dir, const struct _finddata_t *fileinfo)
-{
-    if(strcmp(fileinfo->name, ".") != 0 && strcmp(fileinfo->name,"..") != 0) {
-        char buf[1024];
-        sprintf(buf,"%s/%s",dir,fileinfo->name);
-        process(c,options,buf);
-    }
-}
 static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
     struct _finddata_t fileinfo;
     intptr_t handle;
     char buffer[1024];
     sprintf(buffer,  "%s/*", dir);
     if((handle = _findfirst(buffer, &fileinfo)) != -1)
-        doProcessing(c, options, dir, &fileinfo);
+    {
+        do {
+            if(strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name,"..") != 0) {
+                char buf[1024];
+                sprintf(buf, "%s/%s", dir, fileinfo.name);
+                process(c, options, buf);
+            }
+        } while(!_findnext(handle, &fileinfo));
+    }
     else
     {
         grib_context_log(c,(GRIB_LOG_ERROR) | (GRIB_LOG_PERROR) , "opendir %s",dir);
         return GRIB_IO_PROBLEM;
     }
-    while(!_findnext(handle, &fileinfo))
-        doProcessing(c, options, dir, &fileinfo);
     return 0;
 }
 #endif
