@@ -56,9 +56,10 @@ void scan(const char* name)
 {
     struct _finddata_t fileinfo;
     intptr_t handle;
-    if((handle = _findfirst(name, &fileinfo)) != -1)
+    char tmp[1024];
+    sprintf(tmp, "%s/*", name);
+    if((handle = _findfirst(tmp, &fileinfo)) != -1)
     {
-        char tmp[1024];
         do {
             if(fileinfo.name[0] != '.') {
                 sprintf(tmp, "%s/%s", name, fileinfo.name);
