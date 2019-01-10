@@ -52,12 +52,6 @@ void scan(const char* name)
 }
 #else
 // based on similar code in grib_tools.c
-static int isWinDir(const struct _finddata_t *fileinfo)
-{
-    if((fileinfo->attrib & 16) == 16)
-        return 1;
-    return 0;
-}
 void scan(const char* name)
 {
     struct _finddata_t fileinfo;
@@ -66,12 +60,9 @@ void scan(const char* name)
     {
         char tmp[1024];
         do {
-            if(isWinDir(&fileinfo))
-            {
-                if(fileinfo.name[0] != '.') {
-                    sprintf(tmp, "%s/%s", name, fileinfo.name);
-                    scan(tmp);
-                }
+            if(fileinfo.name[0] != '.') {
+                sprintf(tmp, "%s/%s", name, fileinfo.name);
+                scan(tmp);
             }
         } while(!_findnext(handle, &fileinfo));
 
