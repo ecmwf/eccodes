@@ -1200,9 +1200,9 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         if(packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX)
         {
+            const long JS = spec->truncation < 20 ? spec->truncation : 20;
             SET_STRING_VALUE("packingType", "spectral_complex");
             packingTypeIsSet=1;
-            long JS = spec->truncation < 20 ? spec->truncation : 20;
             SET_LONG_VALUE("JS", JS);
             SET_LONG_VALUE("KS", JS);
             SET_LONG_VALUE("MS", JS);
@@ -1858,9 +1858,9 @@ int is_index_file(const char* filename)
     if (!fh) return 0;
 
     size=fread(buf,1,1,fh);
-    if (size != 1) return 0;
+    if (size != 1) {fclose(fh); return 0;}
     size=fread(buf,6,1,fh);
-    if (size != 1) return 0;
+    if (size != 1) {fclose(fh); return 0;}
 
     ret=!strcmp(buf,str);
 
