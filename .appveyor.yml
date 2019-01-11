@@ -50,8 +50,8 @@ install:
                                   m2-diffutils ^
                                   m2-perl
 
-    # get the latest version of cmake & jom
-    - cmd: conda install -c conda-forge cmake jom
+    # get the latest version of cmake
+    - cmd: conda install -c conda-forge cmake
 
 #---------------------------------#
 #       build configuration       #
@@ -67,7 +67,7 @@ before_build:
 build_script:
     - cmd: cd %ECCODES_SRC%
     - cmd: mkdir build && cd build
-    - cmd: cmake -G "NMake Makefiles JOM" ^
+    - cmd: cmake -G "NMake Makefiles" ^
                  -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
                  -D CMAKE_BUILD_TYPE=Release ^
                  -D ENABLE_FORTRAN=0 ^
@@ -76,9 +76,9 @@ build_script:
                  -D ENABLE_MEMFS=0 ^
                  -D ENABLE_EXTRA_TESTS=OFF ^
                  ..
-    - cmd: jom -j2
+    - cmd: nmake
     - cmd: ctest
-    - cmd: jom install
+    - cmd: nmake install
 
 #---------------------------------#
 #       tests configuration       #
