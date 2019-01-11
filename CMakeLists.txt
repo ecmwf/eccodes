@@ -283,9 +283,18 @@ if( IEEE_LE )
     set( IEEE_BE 0 )
 endif()
 
-# Symbols need to be explicitly exported on Windows so we can link to dlls.
 if( EC_OS_NAME MATCHES "windows" )
+    # Symbols need to be explicitly exported on Windows so we can link to dlls.
     set( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE )
+
+    # Suppress compliler warnings - see ECC-850
+    # Suppress warnings about using 'insecure' functions. Fixing this would require changes all over
+    # the codebase which would damage portability.
+    ecbuild_add_c_flags("/D_CRT_SECURE_NO_WARNINGS")
+    # Suppress warnings about using well-known C functions.
+    ecbuild_add_c_flags("/D_CRT_NONSTDC_NO_DEPRECATE")
+    # Suppress C4267: warns about possible loss of data when converting 'size_t' to 'int'.
+    ecbuild_add_c_flags("/wd4267")
 endif()
 
 ###############################################################################

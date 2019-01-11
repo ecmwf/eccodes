@@ -9,12 +9,6 @@
  */
 
 #include "config.h"
-/* #include <sys/types.h> */
-/* #include <inttypes.h> */
-/* #include <stdio.h> */
-/* #include <stdlib.h> */
-/* #include <errno.h> */
-/* #include <string.h> */
 #include "grib_api_internal.h"
 
 #ifndef ECCODES_ON_WINDOWS
