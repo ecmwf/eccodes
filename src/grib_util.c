@@ -1815,7 +1815,7 @@ int parse_keyval_string(const char* grib_tool, char* arg, int values_required, i
     return GRIB_SUCCESS;
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (grib edition 2) is related to EPS */
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to EPS */
 int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber)
 {
     return (
@@ -1826,7 +1826,7 @@ int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber)
     );
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (grib edition 2) is related to atmospheric chemical constituents */
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to atmospheric chemical constituents */
 int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNumber)
 {
     return (
@@ -1836,7 +1836,18 @@ int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNu
             productDefinitionTemplateNumber == 43);
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (grib edition 2) is related to aerosols */
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to
+ * atmospheric chemical constituents based on a distribution function */
+int is_productDefinitionTemplateNumber_Chemical_Dist(long productDefinitionTemplateNumber)
+{
+    return (
+            productDefinitionTemplateNumber == 57 ||
+            productDefinitionTemplateNumber == 58 ||
+            productDefinitionTemplateNumber == 67 ||
+            productDefinitionTemplateNumber == 68);
+}
+
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to aerosols */
 int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber)
 {
     return (

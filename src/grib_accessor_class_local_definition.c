@@ -187,6 +187,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     long stream=-1;
     long the_class=-1;
     long eps=-1;
+    long chemical=-1;
+    long aerosol=-1;
     char stepType[15]={0,};
     size_t slen=15;
     int localDefinitionNumber=*val;
@@ -196,7 +198,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     long editionNumber = 0;
 
     if (grib_get_long(grib_handle_of_accessor(a), "editionNumber", &editionNumber)==GRIB_SUCCESS) {
-        Assert(editionNumber == 2);
+        Assert(editionNumber != 1);
     }
 
     if (grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
@@ -209,10 +211,16 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     grib_get_string(grib_handle_of_accessor(a), self->stepType,stepType,&slen);
     if (!strcmp(stepType,"instant")) isInstant=1;
     grib_get_long(grib_handle_of_accessor(a), self->grib2LocalSectionNumber,&grib2LocalSectionNumber);
+    grib_get_long(grib_handle_of_accessor(a), "is_chemical",&chemical);
+    grib_get_long(grib_handle_of_accessor(a), "is_aerosol",&aerosol);
+    if (chemical && aerosol) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,"Parameter cannot be both chemical and aerosol!");
+        return GRIB_ENCODING_ERROR;
+    }
 
     if (is_productDefinitionTemplateNumber_EPS(productDefinitionTemplateNumber))
         eps=1;
-/*TODO chemicals*/
+
     switch (localDefinitionNumber) {
     case 0:
     case 300:
@@ -305,6 +313,40 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         grib_context_log(a->context,GRIB_LOG_ERROR,"Invalid localDefinitionNumber %d",localDefinitionNumber);
         return GRIB_ENCODING_ERROR;
         break;
+    }
+
+    /* Adjust for chemical species */
+    if (chemical==1) {
+        if ( eps == 1 ) {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=41;
+            } else {
+                productDefinitionTemplateNumberNew=43;
+            }
+        } else {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=40;
+            } else {
+                productDefinitionTemplateNumberNew=42;
+            }
+        }
+    }
+
+    /* Adjust for aerosols */
+    if (aerosol==1) {
+        if ( eps == 1 ) {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=45;
+            } else {
+                productDefinitionTemplateNumberNew=47;
+            }
+        } else {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=48;/*44 is deprecated*/
+            } else {
+                productDefinitionTemplateNumberNew=46;
+            }
+        }
     }
 
     if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {

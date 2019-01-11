@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -23,10 +18,7 @@
    IMPLEMENTS = unpack_long;pack_long; value_count
    IMPLEMENTS = init
    MEMBERS=const char* productDefinitionTemplateNumber
-   MEMBERS=const char* stream
-   MEMBERS=const char* type
    MEMBERS=const char* stepType
-   MEMBERS=const char* derivedForecast
    END_CLASS_DEF
 
  */
@@ -47,27 +39,24 @@ static int value_count(grib_accessor*,long*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
-typedef struct grib_accessor_g2_eps {
+typedef struct grib_accessor_g2_aerosol {
     grib_accessor          att;
 /* Members defined in gen */
 /* Members defined in long */
 /* Members defined in unsigned */
 	long nbytes;
 	grib_arguments* arg;
-/* Members defined in g2_eps */
+/* Members defined in g2_aerosol */
 	const char* productDefinitionTemplateNumber;
-	const char* stream;
-	const char* type;
 	const char* stepType;
-	const char* derivedForecast;
-} grib_accessor_g2_eps;
+} grib_accessor_g2_aerosol;
 
 extern grib_accessor_class* grib_accessor_class_unsigned;
 
-static grib_accessor_class _grib_accessor_class_g2_eps = {
+static grib_accessor_class _grib_accessor_class_g2_aerosol = {
     &grib_accessor_class_unsigned,                      /* super                     */
-    "g2_eps",                      /* name                      */
-    sizeof(grib_accessor_g2_eps),  /* size                      */
+    "g2_aerosol",                      /* name                      */
+    sizeof(grib_accessor_g2_aerosol),  /* size                      */
     0,                           /* inited */
     &init_class,                 /* init_class */
     &init,                       /* init                      */
@@ -108,7 +97,7 @@ static grib_accessor_class _grib_accessor_class_g2_eps = {
 };
 
 
-grib_accessor_class* grib_accessor_class_g2_eps = &_grib_accessor_class_g2_eps;
+grib_accessor_class* grib_accessor_class_g2_aerosol = &_grib_accessor_class_g2_aerosol;
 
 
 static void init_class(grib_accessor_class* c)
@@ -148,130 +137,70 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-    grib_accessor_g2_eps* self = (grib_accessor_g2_eps*)a;
+    grib_accessor_g2_aerosol* self = (grib_accessor_g2_aerosol*)a;
     int n = 0;
 
     self->productDefinitionTemplateNumber = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->type = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->stream = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
     self->stepType = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->derivedForecast = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-    grib_accessor_g2_eps* self = (grib_accessor_g2_eps*)a;
+    grib_accessor_g2_aerosol* self = (grib_accessor_g2_aerosol*)a;
     long productDefinitionTemplateNumber=0;
-
     grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
 
-    *val=0;
-    if (is_productDefinitionTemplateNumber_EPS(productDefinitionTemplateNumber))
-        *val=1;
+    *val=is_productDefinitionTemplateNumber_Aerosol(productDefinitionTemplateNumber);
 
     return GRIB_SUCCESS;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-    grib_accessor_g2_eps* self = (grib_accessor_g2_eps*)a;
+    grib_accessor_g2_aerosol* self = (grib_accessor_g2_aerosol*)a;
     long productDefinitionTemplateNumber=-1;
     long productDefinitionTemplateNumberNew=-1;
-    long type=-1;
-    long stream=-1;
-    long chemical=-1;
-    long aerosol=-1;
+    /*long type=-1;
+    long stream=-1;*/
+    long eps=-1;
     char stepType[15]={0,};
     size_t slen=15;
-    int eps=*val;
+    /*int aerosol = *val;*/
     int isInstant=0;
-    long derivedForecast=-1;
+    /*long derivedForecast=-1;*/
+    int ret = 0;
 
     if (grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
         return GRIB_SUCCESS;
 
-    grib_get_long(grib_handle_of_accessor(a), self->type,&type);
-    grib_get_long(grib_handle_of_accessor(a), self->stream,&stream);
-    grib_get_string(grib_handle_of_accessor(a), self->stepType,stepType,&slen);
-    if (!strcmp(stepType,"instant")) isInstant=1;
-    grib_get_long(grib_handle_of_accessor(a), "is_chemical",&chemical);
-    grib_get_long(grib_handle_of_accessor(a), "is_aerosol",&aerosol);
-    if (chemical && aerosol) {
-        grib_context_log(a->context,GRIB_LOG_ERROR,"Parameter cannot be both chemical and aerosol!");
-        return GRIB_ENCODING_ERROR;
-    }
+    /*
+     grib_get_long(grib_handle_of_accessor(a), self->type,&type);
+     grib_get_long(grib_handle_of_accessor(a), self->stream,&stream);
+     */
+    ret = grib_get_string(grib_handle_of_accessor(a), self->stepType, stepType, &slen);
+    Assert(ret == GRIB_SUCCESS);
 
-    /* eps or stream=(enda or elda or ewla) */
-    if ( eps || stream==1030 || stream==1249 || stream==1250 ) {
+    eps = is_productDefinitionTemplateNumber_EPS(productDefinitionTemplateNumber);
+
+    if (!strcmp(stepType,"instant")) isInstant=1;
+
+    if ( eps == 1 ) {
         if (isInstant) {
-            /* type=em || type=es  */
-            if (type==17) {
-                productDefinitionTemplateNumberNew=2;
-                derivedForecast=0;
-            } else if (type==18) {
-                productDefinitionTemplateNumberNew=2;
-                derivedForecast=4;
-            } else {
-                productDefinitionTemplateNumberNew=1;
-            }
+            productDefinitionTemplateNumberNew=45;
         } else {
-            /* type=em || type=es */
-            if (type==17) {
-                productDefinitionTemplateNumberNew=12;
-                derivedForecast=0;
-            } else if (type==18) {
-                productDefinitionTemplateNumberNew=12;
-                derivedForecast=4;
-            } else  {
-                productDefinitionTemplateNumberNew=11;
-            }
+            productDefinitionTemplateNumberNew=47;
         }
     } else {
         if (isInstant) {
-            productDefinitionTemplateNumberNew=0;
+            productDefinitionTemplateNumberNew=48;/*44 is deprecated*/
         } else {
-            productDefinitionTemplateNumberNew=8;
-        }
-    }
-
-    /* Adjust for chemical species */
-    if (chemical==1) {
-        if ( eps == 1 ) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew=41;
-            } else {
-                productDefinitionTemplateNumberNew=43;
-            }
-        } else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew=40;
-            } else {
-                productDefinitionTemplateNumberNew=42;
-            }
-        }
-    }
-
-    /* Adjust for aerosols */
-    if (aerosol==1) {
-        if ( eps == 1 ) {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew=45;
-            } else {
-                productDefinitionTemplateNumberNew=47;
-            }
-        } else {
-            if (isInstant) {
-                productDefinitionTemplateNumberNew=48;/*44 is deprecated*/
-            } else {
-                productDefinitionTemplateNumberNew=46;
-            }
+            productDefinitionTemplateNumberNew=46;
         }
     }
 
     if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
         grib_set_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
-        if (derivedForecast>=0)
-            grib_set_long(grib_handle_of_accessor(a), self->derivedForecast,derivedForecast);
+        /*if (derivedForecast>=0) grib_set_long(grib_handle_of_accessor(a), self->derivedForecast,derivedForecast);*/
     }
 
     return 0;

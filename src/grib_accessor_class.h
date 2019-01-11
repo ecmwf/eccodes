@@ -97,6 +97,7 @@ extern grib_accessor_class* grib_accessor_class_g1p1p2;
 extern grib_accessor_class* grib_accessor_class_g1param;
 extern grib_accessor_class* grib_accessor_class_g1step_range;
 extern grib_accessor_class* grib_accessor_class_g1verificationdate;
+extern grib_accessor_class* grib_accessor_class_g2_aerosol;
 extern grib_accessor_class* grib_accessor_class_g2_chemical;
 extern grib_accessor_class* grib_accessor_class_g2_eps;
 extern grib_accessor_class* grib_accessor_class_g2_mars_labeling;

@@ -231,6 +231,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_select_step_template.c
     grib_accessor_class_local_definition.c
     grib_accessor_class_g2_eps.c
+    grib_accessor_class_g2_aerosol.c
     grib_accessor_class_g2_chemical.c
     grib_accessor_class_g2_mars_labeling.c
     grib_accessor_class_md5.c

@@ -160,7 +160,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     grib_accessor_select_step_template* self = (grib_accessor_select_step_template*)a;
     long productDefinitionTemplateNumber=0;
     long productDefinitionTemplateNumberNew=0;
-/*TODO chemicals*/
+
     grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
 
     if (self->instant) {
@@ -194,7 +194,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             productDefinitionTemplateNumberNew=41;
             break;
         case 46: /* non-EPS aerosol */
-            productDefinitionTemplateNumberNew=44;
+            productDefinitionTemplateNumberNew=48;/*44 is deprecated*/
             break;
         case 47: /* EPS aerosol */
             productDefinitionTemplateNumberNew=45;
@@ -250,7 +250,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         case 41: /* EPS chemical */
             productDefinitionTemplateNumberNew=43;
             break;
-        case 44: /* non-EPS aerosol */
+        case 48: /* non-EPS aerosol. Note template 44 is deprecated */
             productDefinitionTemplateNumberNew=46;
             break;
         case 45: /* EPS aerosol */
