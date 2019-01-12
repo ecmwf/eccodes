@@ -53,6 +53,9 @@ install:
     # get the latest version of cmake
     - cmd: conda install -c conda-forge cmake
 
+    # other deps
+    - cmd: conda install netcdf4
+
 #---------------------------------#
 #       build configuration       #
 #---------------------------------#
@@ -72,6 +75,7 @@ build_script:
                  -D CMAKE_BUILD_TYPE=Release ^
                  -D ENABLE_FORTRAN=0 ^
                  -D ENABLE_PYTHON=0 ^
+                 -D ENABLE_NETCDF=1 ^
                  -D IEEE_LE=1 ^
                  -D ENABLE_MEMFS=0 ^
                  -D ENABLE_EXTRA_TESTS=OFF ^
