@@ -27,8 +27,8 @@ environment:
 init:
     # make sure git clones symlinks as symlinks
     - cmd: git config --global core.symlinks true
-    # add conda bins to path so tests can find linux utils
-    - cmd: set PATH=%CONDA%\Library\usr\bin;%CONDA%\Library\bin;%CONDA%\Scripts;%CONDA%\bin;%PATH%
+    # activate conda environment so the tests can find linux utils
+    - cmd: call %CONDA%\Scripts\activate.bat
     # add eccodes\build\bin to path so tests can find eccodes.dll
     - cmd: set PATH=%PATH%;%ECCODES_SRC%\build\bin
     # auto-yes for conda
