@@ -6,10 +6,10 @@
 # granted to it by virtue of its status as an intergovernmental organisation nor
 # does it submit to any jurisdiction.
 
-function( eccodes_find_linux_util )
-    find_program( FOUND_PROGRAM ${_FIRST_ARG} )
+function( eccodes_find_linux_util _p_UTIL )
+    find_program( FOUND_PROGRAM ${_p_UTIL} )
     if( NOT FOUND_PROGRAM )
-        ecbuild_critical( "Failed to find linux util: ${_FIRST_ARG}" )
+        ecbuild_critical( "Failed to find linux util: ${_p_UTIL}" )
     endif()
 endfunction( eccodes_find_linux_util )
 
@@ -21,6 +21,6 @@ if( ENABLE_TESTS )
     set( REQUIRED_UTILS bash find grep sed gawk diff )
 
     foreach( UTIL ${REQUIRED_UTILS} )
-        eccodes_find_linux_utils( ${UTIL} )
+        eccodes_find_linux_util( ${UTIL} )
     endforeach()
 endif()
