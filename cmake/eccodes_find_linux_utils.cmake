@@ -13,12 +13,14 @@ function( eccodes_find_linux_util )
     endif()
 endfunction( eccodes_find_linux_util )
 
-# These utils are required for the tests to run.
-# To install them on Windows, install the appropriate m2-* conda package.
-# e.g. for bash: `conda install -msys2 m2-bash`
-# Make sure to activate the conda environment so the utils are in the system path.
-set( REQUIRED_UTILS bash find grep sed gawk diff )
+if( ENABLE_TESTS )
+    # These utils are required for the tests to run.
+    # To install them on Windows, install the appropriate m2-* conda package.
+    # e.g. for bash: `conda install -msys2 m2-bash`
+    # Make sure to activate the conda environment so the utils are in the system path.
+    set( REQUIRED_UTILS bash find grep sed gawk diff )
 
-foreach( UTIL ${REQUIRED_UTILS} )
-    eccodes_find_linux_utils( ${UTIL} )
-endforeach()
+    foreach( UTIL ${REQUIRED_UTILS} )
+        eccodes_find_linux_utils( ${UTIL} )
+    endforeach()
+endif()

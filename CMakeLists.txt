@@ -58,6 +58,7 @@ check_c_source_compiles(
       " ECCODES_HAVE_C_INLINE )
 
 include(eccodes_test_endiness)
+include(eccodes_find_linux_utils)
 
 ecbuild_debug("ECCODES_BIG_ENDIAN=${ECCODES_BIG_ENDIAN}")
 ecbuild_debug("ECCODES_LITTLE_ENDIAN=${ECCODES_LITTLE_ENDIAN}")
