@@ -9,11 +9,21 @@
 # nor does it submit to any jurisdiction.
 #
 
+list( APPEND grib_tools_sources
+             grib_tools.c
+             grib_options.c
+             grib_tools.h
+             )
+
+if( EC_OS_NAME MATCHES "windows" )
+  list( APPEND grib_tools_sources wingetopt.c )
+endif()
+
 # tools library
 ecbuild_add_library( TARGET    grib_tools
                      TYPE      STATIC
                      NOINSTALL
-                     SOURCES   grib_tools.c grib_options.c grib_tools.h
+                     SOURCES   ${grib_tools_sources}
                      LIBS      eccodes )
 
 # tools binaries

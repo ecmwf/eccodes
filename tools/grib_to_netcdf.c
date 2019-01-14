@@ -23,6 +23,11 @@
 #include <netcdf.h>
 
 #include "grib_tools.h"
+#include "eccodes_windef.h"
+
+#ifdef ECCODES_ON_WINDOWS
+#include <stdint.h>
+#endif
 
 const char* grib_tool_description = "Convert a GRIB file to netCDF format.";
 const char* grib_tool_name = "grib_to_netcdf";

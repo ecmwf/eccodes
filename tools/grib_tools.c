@@ -532,38 +532,32 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir)
             process(c,options,buf);
         }
     }
+    closedir(d);
     return 0;
 }
 #else
-static int isWinDir(const struct _finddata_t *fileinfo)
-{
-    if((fileinfo->attrib & 16) == 16)
-        return 1;
-    return 0;
-}
-static void doProcessing(grib_context* c,grib_runtime_options* options,const char* dir, const struct _finddata_t *fileinfo)
-{
-    if(isWinDir(fileinfo))
-    {
-        if(strcmp(fileinfo->name, ".") != 0 && strcmp(fileinfo->name,"..") != 0) {
-            char buf[1024];
-            sprintf(buf,"%s/%s",dir,fileinfo->name);
-            process(c,options,buf);
-        }
-    }
-}
 static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
     struct _finddata_t fileinfo;
     intptr_t handle;
-    if((handle = _findfirst(dir, &fileinfo)) != -1)
-        doProcessing(c, options, dir, &fileinfo);
+    char buffer[1024];
+    sprintf(buffer,  "%s/*", dir);
+    if((handle = _findfirst(buffer, &fileinfo)) != -1)
+    {
+        do {
+            if(strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name,"..") != 0) {
+                char buf[1024];
+                sprintf(buf, "%s/%s", dir, fileinfo.name);
+                process(c, options, buf);
+            }
+        } while(!_findnext(handle, &fileinfo));
+
+        _findclose(handle);
+    }
     else
     {
         grib_context_log(c,(GRIB_LOG_ERROR) | (GRIB_LOG_PERROR) , "opendir %s",dir);
         return GRIB_IO_PROBLEM;
     }
-    while(!_findnext(handle, &fileinfo))
-        doProcessing(c, options, dir, &fileinfo);
     return 0;
 }
 #endif
@@ -1140,32 +1134,8 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     }
 
     options->outfile->file = NULL;
-
-#if 0
-    if (!options->outfile->file)  {
-        options->outfile->file = fopen(options->outfile->name,"w");
-        if(!options->outfile->file) {
-            perror(options->outfile->name);
-            exit(1);
-        }
-    }
-    GRIB_CHECK_NOLINE(grib_get_message(h,&buffer,&size),0);
-    if (options->gts && h->gts_header)
-        fwrite(h->gts_header,1,h->gts_header_len,options->outfile->file);
-
-    if(fwrite(buffer,1,size,options->outfile->file) != size)
-    {
-        perror(options->outfile->name);
-        exit(1);
-    }
-
-    if (options->gts && h->gts_header) {
-        char gts_trailer[4]={'\x0D','\x0D','\x0A','\x03'};
-        fwrite(gts_trailer,1,4,options->outfile->file);
-    }
-#endif
-
 }
+
 int exit_if_input_is_directory(const char* tool_name, const char* filename)
 {
     struct stat s;

@@ -86,6 +86,7 @@ print("""
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include "eccodes_windef.h"
 
 struct entry {
     const char* path;
@@ -173,7 +174,7 @@ static FILE* fmemopen(const char* buffer, size_t size, const char* mode){
     return funopen(f, &read_mem, &write_mem, &seek_mem, &close_mem);
 }
 
-#elif defined(_WIN32)
+#elif defined(ECCODES_ON_WINDOWS)
 
 #include <io.h>
 #include <fcntl.h>

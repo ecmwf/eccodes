@@ -13,14 +13,23 @@
  */
 
 #include "tigge_tools.h"
+#include "eccodes_windef.h"
 
 #include <stdlib.h>
 #include <sys/types.h>
-#include <dirent.h>
+
+#ifndef ECCODES_ON_WINDOWS
+  #include <dirent.h>
+#else
+  #include <direct.h>
+  #include <io.h>
+#endif
+
 #include <stdio.h>
 
 extern void validate(const char* path);
 
+#ifndef ECCODES_ON_WINDOWS
 void scan(const char* name)
 {
     DIR *dir;
@@ -41,3 +50,25 @@ void scan(const char* name)
         validate(name);
     }
 }
+#else
+void scan(const char* name)
+{
+    struct _finddata_t fileinfo;
+    intptr_t handle;
+    char tmp[1024];
+    sprintf(tmp, "%s/*", name);
+    if((handle = _findfirst(tmp, &fileinfo)) != -1)
+    {
+        do {
+            if(fileinfo.name[0] != '.') {
+                sprintf(tmp, "%s/%s", name, fileinfo.name);
+                scan(tmp);
+            }
+        } while(!_findnext(handle, &fileinfo));
+
+        _findclose(handle);
+    }
+    else
+        validate(name);
+}
+#endif

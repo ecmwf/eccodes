@@ -58,7 +58,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-/* Microsoft Windows Visual Studio support */
 #include "eccodes_windef.h"
 
 #ifndef ECCODES_ON_WINDOWS

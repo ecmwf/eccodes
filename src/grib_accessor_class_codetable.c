@@ -656,7 +656,6 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t *len)
 #ifndef ECCODES_ON_WINDOWS
     cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? strcmp_nocase : strcmp;
 #else
-    /* Microsoft Windows Visual Studio support */
     cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? stricmp : strcmp;
 #endif
 
