@@ -19,10 +19,6 @@ environment:
     ECCODES_SRC: $(GIT_CLONE_DIR)\eccodes
     ECBUILD_SRC: $(GIT_CLONE_DIR)\ecbuild
 
-    matrix:
-        - ENABLE_MEMFS: 0
-        - ENABLE_MEMFS: 1
-
 # scripts that are called at very beginning, before repo cloning
 init:
     # make sure git clones symlinks as symlinks
@@ -82,7 +78,7 @@ build_script:
                  -D ENABLE_NETCDF=1 ^
                  -D ENABLE_JPG=1 ^
                  -D IEEE_LE=1 ^
-                 -D ENABLE_MEMFS=%ENABLE_MEMFS% ^
+                 -D ENABLE_MEMFS=0 ^
                  -D ENABLE_EXTRA_TESTS=OFF ^
                  ..
     - cmd: nmake
