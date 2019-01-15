@@ -19,6 +19,7 @@
    IMPLEMENTS = init
    MEMBERS=const char* productDefinitionTemplateNumber
    MEMBERS=const char* stepType
+   MEMBERS=int optical
    END_CLASS_DEF
 
  */
@@ -49,6 +50,7 @@ typedef struct grib_accessor_g2_aerosol {
 /* Members defined in g2_aerosol */
 	const char* productDefinitionTemplateNumber;
 	const char* stepType;
+	int optical;
 } grib_accessor_g2_aerosol;
 
 extern grib_accessor_class* grib_accessor_class_unsigned;
@@ -138,10 +140,12 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
     grib_accessor_g2_aerosol* self = (grib_accessor_g2_aerosol*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
     int n = 0;
 
-    self->productDefinitionTemplateNumber = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->stepType = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->productDefinitionTemplateNumber = grib_arguments_get_name(hand,c,n++);
+    self->stepType = grib_arguments_get_name(hand,c,n++);
+    self->optical = grib_arguments_get_long(hand,c,n++);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
@@ -150,7 +154,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     long productDefinitionTemplateNumber=0;
     grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
 
-    *val=is_productDefinitionTemplateNumber_Aerosol(productDefinitionTemplateNumber);
+    if (self->optical)
+        *val=is_productDefinitionTemplateNumber_AerosolOptical(productDefinitionTemplateNumber);
+    else
+        *val=is_productDefinitionTemplateNumber_Aerosol(productDefinitionTemplateNumber);
 
     return GRIB_SUCCESS;
 }
@@ -158,6 +165,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     grib_accessor_g2_aerosol* self = (grib_accessor_g2_aerosol*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
     long productDefinitionTemplateNumber=-1;
     long productDefinitionTemplateNumberNew=-1;
     /*long type=-1;
@@ -170,14 +178,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     /*long derivedForecast=-1;*/
     int ret = 0;
 
-    if (grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
+    if (grib_get_long(hand, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
         return GRIB_SUCCESS;
 
     /*
-     grib_get_long(grib_handle_of_accessor(a), self->type,&type);
-     grib_get_long(grib_handle_of_accessor(a), self->stream,&stream);
+     grib_get_long(hand, self->type,&type);
+     grib_get_long(hand, self->stream,&stream);
      */
-    ret = grib_get_string(grib_handle_of_accessor(a), self->stepType, stepType, &slen);
+    ret = grib_get_string(hand, self->stepType, stepType, &slen);
     Assert(ret == GRIB_SUCCESS);
 
     eps = is_productDefinitionTemplateNumber_EPS(productDefinitionTemplateNumber);
@@ -197,10 +205,20 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
             productDefinitionTemplateNumberNew=46;
         }
     }
+    
+    if (self->optical) {
+        /* Note: There is no interval based template for optical properties of aerosol! */
+        if (eps) productDefinitionTemplateNumberNew = 49;
+        else     productDefinitionTemplateNumberNew = 48;
+        if (!isInstant) {
+            grib_context_log(hand->context, GRIB_LOG_ERROR,
+                             "The product definition templates for optical properties of aerosol are for a point-in-time only");
+        }
+    }
 
     if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
-        grib_set_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
-        /*if (derivedForecast>=0) grib_set_long(grib_handle_of_accessor(a), self->derivedForecast,derivedForecast);*/
+        grib_set_long(hand, self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
+        /*if (derivedForecast>=0) grib_set_long(hand, self->derivedForecast,derivedForecast);*/
     }
 
     return 0;

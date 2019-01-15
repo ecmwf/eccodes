@@ -1458,8 +1458,9 @@ int grib_moments(grib_handle *h, double east, double north, double west, double 
 int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
 int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber);
 int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNumber);
-int is_productDefinitionTemplateNumber_Chemical_Dist(long productDefinitionTemplateNumber);
+int is_productDefinitionTemplateNumber_ChemicalDistFunc(long productDefinitionTemplateNumber);
 int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber);
+int is_productDefinitionTemplateNumber_AerosolOptical(long productDefinitionTemplateNumber);
 int is_index_file(const char *filename);
 char get_dir_separator_char(void);
 char *codes_getenv(const char *name);

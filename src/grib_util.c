@@ -1838,7 +1838,7 @@ int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNu
 
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to
  * atmospheric chemical constituents based on a distribution function */
-int is_productDefinitionTemplateNumber_Chemical_Dist(long productDefinitionTemplateNumber)
+int is_productDefinitionTemplateNumber_ChemicalDistFunc(long productDefinitionTemplateNumber)
 {
     return (
             productDefinitionTemplateNumber == 57 ||
@@ -1850,11 +1850,25 @@ int is_productDefinitionTemplateNumber_Chemical_Dist(long productDefinitionTempl
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to aerosols */
 int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber)
 {
+    /* Note: PDT 44 is deprecated. Use 48 instead */
     return (
-            productDefinitionTemplateNumber == 44 ||
+            productDefinitionTemplateNumber == 44 || productDefinitionTemplateNumber == 48 ||
             productDefinitionTemplateNumber == 45 ||
             productDefinitionTemplateNumber == 46 ||
             productDefinitionTemplateNumber == 47);
+}
+
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to 
+ * optical properties of aerosol
+ */
+int is_productDefinitionTemplateNumber_AerosolOptical(long productDefinitionTemplateNumber)
+{
+    /* Note: PDT 48 can be used for both plain aerosols as well as optical properties of aerosol.
+     * For the former user must set the optical wavelength range to missing.
+     */
+    return (
+            productDefinitionTemplateNumber == 48 ||
+            productDefinitionTemplateNumber == 49);
 }
 
 int is_index_file(const char* filename)
