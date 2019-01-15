@@ -39,6 +39,7 @@
 
 #include <assert.h>
 #include "tigge_tools.h"
+void validate(const char* path);
 
 #define CHECK(a)  check(#a,a)
 #define WARN(a)   warn(#a,a)
