@@ -2390,7 +2390,7 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 21 ;
 	}
-#Clear air turbulence (CAT)
+#Relative clear air turbulence (RCAT)
 '260165' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
