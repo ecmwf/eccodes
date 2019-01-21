@@ -29,8 +29,8 @@ int main()
     }
 
     for (i=0; i<ni*nj; i++) {
-        double rand = random();
-        values[i] = 10*rand;
+        double r = rand();
+        values[i] = 10*r;
     }
 
     h = codes_grib_handle_new_from_samples(0, "GRIB1");

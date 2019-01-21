@@ -10,7 +10,10 @@
 
 #include <assert.h>
 #include <stdio.h>
+
+#ifndef ECCODES_ON_WINDOWS
 #include <unistd.h>
+#endif
 
 #include "grib_api.h"
 

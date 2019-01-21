@@ -25,9 +25,22 @@
 #include <string.h>
 #include <math.h>
 #include <sys/types.h>
-#include <dirent.h>
-#include <unistd.h>
 
+#ifndef ECCODES_ON_WINDOWS
+  #include <dirent.h>
+  #include <unistd.h>
+#else
+  #include <direct.h>
+  #include <io.h>
+
+  #ifndef F_OK
+  #  define F_OK 0
+  #endif
+
+  #ifdef _MSC_VER
+  #  define access(path,mode) _access(path,mode)
+  #endif
+#endif
 
 #define CHECK(a) check(#a,a)
 

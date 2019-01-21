@@ -26,7 +26,7 @@ However it requires that cmake be installed on your system.
 4. Run cmake pointing to the source and specify the installation location:
    > cmake  ../eccodes-x.y.z-Source -DCMAKE_INSTALL_PREFIX=/path/to/where/you/install/eccodes
 
-   It is recommended that you install into a clean directory
+   It is recommended that you always build in a clean directory and also install into a clean directory.
 
 5. Compile, test and install:
    > make
@@ -35,12 +35,21 @@ However it requires that cmake be installed on your system.
 
 You can also pass options to the cmake command above. Some typical examples are:
 
+ -DENABLE_EXTRA_TESTS=ON         Enable extended regression testing
  -DENABLE_NETCDF=ON              Enable GRIB to netCDF conversion
  -DENABLE_ECCODES_THREADS=ON     Enable POSIX threads
  -DENABLE_JPG=ON                 Enable JPEG encoding/decoding (for GRIB packing)
  -DCMAKE_Fortran_COMPILER=pgf90  Set Fortran compiler to Portland Group F90 compiler
  -DCMAKE_C_FLAGS="-O2 -Wall"     Prepend the specified flags at the front
                                  of the compilation command for C source files
+
+By default the ctest step above does NOT require any data to be downloaded and only runs basic sanity tests.
+However if you wish to exercise more of the functionality of ecCodes, you are advised to configure the build with:
+
+  > cmake  ...  -DENABLE_EXTRA_TESTS=ON
+
+In this mode the tests will take longer and you need to be connected to the internet so data files can be downloaded
+for the tests.
 
 For more details, please see:
 https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation

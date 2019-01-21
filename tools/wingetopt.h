@@ -11,11 +11,9 @@
 #ifndef WINGETOPT_H
 #define WINGETOPT_H
 
-/* Microsoft Windows Visual Studio support */
 #include "eccodes_windef.h"
 
 #ifdef ECCODES_ON_WINDOWS
-/* Microsoft Windows Visual Studio support */
 extern int optind, opterr;
 extern char *optarg;
 int getopt(int argc, char *argv[], const char *optstring);
