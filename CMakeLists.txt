@@ -58,6 +58,9 @@ check_c_source_compiles(
       " ECCODES_HAVE_C_INLINE )
 
 include(eccodes_test_endiness)
+if( EC_OS_NAME MATCHES "windows" )
+    include(eccodes_find_linux_utils)
+endif()
 
 ecbuild_debug("ECCODES_BIG_ENDIAN=${ECCODES_BIG_ENDIAN}")
 ecbuild_debug("ECCODES_LITTLE_ENDIAN=${ECCODES_LITTLE_ENDIAN}")
