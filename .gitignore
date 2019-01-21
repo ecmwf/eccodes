@@ -54,9 +54,6 @@ python/setup.py
 tests/.libs/
 tigge/.libs/
 
-# IFS samples
-ifs_samples/*/*.tmpl
-
 # compiled source #
 ###################
 *.com
