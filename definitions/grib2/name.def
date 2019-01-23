@@ -857,6 +857,18 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 121 ;
 	}
+#Clear air turbulence (CAT)
+'Clear air turbulence (CAT)' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 29 ;
+	}
+#Mountain wave turbulence (eddy dissipation rate)
+'Mountain wave turbulence (eddy dissipation rate)' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 28 ;
+	}
 #Soil temperature
 'Soil temperature' = {
 	 discipline = 2 ;
@@ -2378,8 +2390,8 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 21 ;
 	}
-#Clear air turbulence (CAT)
-'Clear air turbulence (CAT)' = {
+#Relative clear air turbulence (RCAT)
+'Relative clear air turbulence (RCAT)' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 22 ;

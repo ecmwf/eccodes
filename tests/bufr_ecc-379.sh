@@ -11,7 +11,7 @@
 . ./include.sh
 
 # ---------------------------------------------------------
-# This is the test for the JIRA issue ECC-379
+# This is the test for the JIRA issue ECC-379 (Also ECC-830)
 # BUFR encoding failing when value out of range
 # ---------------------------------------------------------
 cd ${data_dir}/bufr
@@ -95,6 +95,47 @@ set -e
 export ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE=1
 ${tools_dir}/codes_bufr_filter -o $tempOut $tempRules $BufrFile
 unset ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE
+
+
+# --------------------------------------------------------
+# Test 4: use the key setToMissingIfOutOfRange
+# --------------------------------------------------------
+BufrFile=airc_144.bufr
+cat > $tempRules <<EOF
+ set unpack=1;
+ set setToMissingIfOutOfRange=1;
+ set latitude=9999;
+ set pack=1;
+ write;
+EOF
+# Will pass now
+${tools_dir}/codes_bufr_filter -o $tempOut $tempRules $BufrFile
+echo 'set unpack=1; print "lat is now=[latitude]";' | ${tools_dir}/codes_bufr_filter - $tempOut
+
+# --------------------------------------------------------
+# Test 5: set setToMissingIfOutOfRange for one message only
+# --------------------------------------------------------
+BufrFile=syno_multi.bufr
+cat > $tempRules <<EOF
+ set unpack=1;
+ if (count==2) {set setToMissingIfOutOfRange=1;}
+ set latitude=5000;
+ set pack=1;
+ write;
+EOF
+
+# syno_multi has 3 messages but only one will get written out
+# and its latitude will be missing
+rm -f $tempOut
+${tools_dir}/codes_bufr_filter -f -o $tempOut $tempRules $BufrFile
+
+count=`${tools_dir}/bufr_count $BufrFile`
+[ $count -eq 3 ]
+count=`${tools_dir}/bufr_count $tempOut`
+[ $count -eq 1 ]
+lat=`${tools_dir}/bufr_get -s unpack=1 -p latitude $tempOut`
+[ "$lat" = "MISSING" ]
+
 
 # ------------------------
 rm -rf $tempOut $tempRules $tempText

@@ -1200,11 +1200,12 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         if(packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX)
         {
+            const long JS = spec->truncation < 20 ? spec->truncation : 20;
             SET_STRING_VALUE("packingType", "spectral_complex");
             packingTypeIsSet=1;
-            SET_LONG_VALUE("JS", 20);
-            SET_LONG_VALUE("KS", 20);
-            SET_LONG_VALUE("MS", 20);
+            SET_LONG_VALUE("JS", JS);
+            SET_LONG_VALUE("KS", JS);
+            SET_LONG_VALUE("MS", JS);
             if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED && editionNumber==2 ) {
                 SET_LONG_VALUE("computeLaplacianOperator", 1);
             } else if ((!(*err) && strcmp(input_grid_type,"sh")) || packing_spec->computeLaplacianOperator ) {

@@ -53,8 +53,8 @@ transient unitsBias=0 : hidden;
 constant globalDomain = "g";
 transient timeRangeIndicatorFromStepRange=-1 : hidden;
 
-# GRIB-802
-transient override_large_constant_fields = 0 : hidden;
+# ECC-868
+transient produceLargeConstantFields = 0 : hidden;
 
 meta libraryVersion library_version() : hidden;
 

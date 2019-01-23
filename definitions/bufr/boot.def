@@ -9,6 +9,7 @@
 
 lookup[1] ed       (7,editionNumber);
 transient missingValue=999999 : hidden;
+transient setToMissingIfOutOfRange=0 : hidden;
 
 # This gets updated twice a year by WMO.
 # See http://www.wmo.int/pages/prog/www/WMOCodes/WMO306_vI2/LatestVERSION/LatestVERSION.html
