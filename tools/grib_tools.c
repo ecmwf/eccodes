@@ -219,9 +219,13 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
     }
 
     options->handle_count=0;
+    grib_context_set_handle_file_count(c, 0); /* ECC-873 */
+    grib_context_set_handle_total_count(c, 0); /* ECC-873 */
     while(!options->skip_all && ((h = grib_fieldset_next_handle(set,&err))
             != NULL || err != GRIB_SUCCESS )) {
         options->handle_count++;
+        grib_context_set_handle_file_count(c, options->handle_count);/* ECC-873 */
+        grib_context_set_handle_total_count(c, options->handle_count);/* ECC-873 */
         options->error=err;
 
         if (!h) {
