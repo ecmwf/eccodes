@@ -467,8 +467,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     if(!p) {
         grib_handle* h = grib_handle_of_accessor(a);
-        long pid = get_ECMWF_local_paramId(a, h);
+        const long pid = get_ECMWF_local_paramId(a, h);
         if (pid != -1) {
+            grib_context_log(h->context,GRIB_LOG_DEBUG,"ECMWF local grib2: paramId guessed to be %ld",pid);
             *val = pid;
             *len = 1;
             return GRIB_SUCCESS;
@@ -558,6 +559,7 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len)
 
             return GRIB_NOT_FOUND;
         }
+        grib_context_log(h->context,GRIB_LOG_DEBUG,"ECMWF local grib2 parameter: %s=%s", a->name,p);
     }
 
     slen = strlen(p) +1;
