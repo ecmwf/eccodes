@@ -171,7 +171,7 @@ atlas::Grid UnstructuredGrid::atlasGrid() const {
         pts.emplace_back(atlas::PointXY(longitudes_[i], latitudes_[i]));
     }
 
-    return atlas::UnstructuredGrid(std::move(pts));
+    return atlas::grid::UnstructuredGrid(std::move(pts));
 }
 
 void UnstructuredGrid::validate(const MIRValuesVector& values) const {

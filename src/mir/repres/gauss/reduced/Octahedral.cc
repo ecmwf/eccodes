@@ -36,7 +36,7 @@ Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox, double angularPr
     {
         atlas::util::Config config;
         config.set("name", "O" + std::to_string(N_));
-        atlas::ReducedGaussianGrid grid(config);
+        atlas::grid::ReducedGaussianGrid grid(config);
         ASSERT(grid);
 
         setNj(grid.nx(), s, n);
@@ -76,7 +76,7 @@ bool Octahedral::sameAs(const Representation& other) const {
 }
 
 atlas::Grid Octahedral::atlasGrid() const {
-    return atlas::ReducedGaussianGrid("O" + std::to_string(N_), domain());
+    return atlas::grid::ReducedGaussianGrid("O" + std::to_string(N_), domain());
 }
 
 void Octahedral::fill(util::MeshGeneratorParameters& params) const {

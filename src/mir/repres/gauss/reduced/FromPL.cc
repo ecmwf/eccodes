@@ -58,7 +58,7 @@ void FromPL::fill(api::MIRJob& job) const {
 }
 
 atlas::Grid FromPL::atlasGrid() const {
-    return atlas::ReducedGaussianGrid(pls(), domain());
+    return atlas::grid::ReducedGaussianGrid(pls(), domain());
 }
 
 } // namespace reduced
