@@ -208,7 +208,7 @@ atlas::Grid IrregularLatlon::atlasGrid() const {
         }
     }
 
-    return atlas::grid::UnstructuredGrid(pts);
+    return atlas::UnstructuredGrid(pts);
 }
 
 namespace {

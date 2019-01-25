@@ -127,7 +127,7 @@ size_t LambertAzimuthalEqualArea::numberOfPoints() const {
 }
 
 atlas::Grid LambertAzimuthalEqualArea::atlasGrid() const {
-    using atlas::grid::StructuredGrid;
+    using atlas::StructuredGrid;
     using atlas::grid::LinearSpacing;
 
     Point2 lastXY = Point2::add(firstXY_, Point2((nx_ - 1) * Dx_, (ny_ - 1) * Dy_));
