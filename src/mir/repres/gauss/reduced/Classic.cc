@@ -35,7 +35,7 @@ Classic::Classic(size_t N, const util::BoundingBox& bbox, double angularPrecisio
     {
         atlas::util::Config config;
         config.set("name", "N" + std::to_string(N_));
-        atlas::ReducedGaussianGrid grid(config);
+        atlas::grid::ReducedGaussianGrid grid(config);
         ASSERT(grid);
 
         setNj(grid.nx(), s, n);
@@ -75,7 +75,7 @@ bool Classic::sameAs(const Representation& other) const {
 }
 
 atlas::Grid Classic::atlasGrid() const {
-    return atlas::ReducedGaussianGrid("N" + std::to_string(N_), domain());
+    return atlas::grid::ReducedGaussianGrid("N" + std::to_string(N_), domain());
 }
 
 } // namespace reduced

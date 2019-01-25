@@ -128,11 +128,11 @@ void ReducedLL::fill(api::MIRJob& job) const {
 atlas::Grid ReducedLL::atlasGrid() const {
     const util::Domain dom = domain();
 
-    atlas::StructuredGrid::XSpace xspace({{dom.west().value(), dom.east().value()}}, pl_, !dom.isPeriodicWestEast());
-    atlas::StructuredGrid::YSpace yspace(
+    atlas::grid::StructuredGrid::XSpace xspace({{dom.west().value(), dom.east().value()}}, pl_, !dom.isPeriodicWestEast());
+    atlas::grid::StructuredGrid::YSpace yspace(
         atlas::grid::LinearSpacing({{dom.north().value(), dom.south().value()}}, pl_.size()));
 
-    return atlas::StructuredGrid(xspace, yspace);
+    return atlas::grid::StructuredGrid(xspace, yspace);
 }
 
 void ReducedLL::fill(util::MeshGeneratorParameters& params) const {

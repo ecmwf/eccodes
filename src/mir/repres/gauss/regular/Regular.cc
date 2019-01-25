@@ -194,7 +194,7 @@ bool Regular::isPeriodicWestEast() const {
 }
 
 atlas::Grid Regular::atlasGrid() const {
-    return atlas::RegularGaussianGrid("F" + std::to_string(N_), domain());
+    return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), domain());
 }
 
 void Regular::setNiNj() {
