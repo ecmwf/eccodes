@@ -12,10 +12,8 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-
 #include "mir/repres/gauss/regular/Regular.h"
 
-#include <cmath>
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
 #include "eckit/memory/ScopedPtr.h"
@@ -26,18 +24,14 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
-
+#include <cmath>
 
 namespace mir {
 namespace repres {
 namespace gauss {
 namespace regular {
 
-
-Regular::Regular(const param::MIRParametrisation& parametrisation) :
-    Gaussian(parametrisation),
-    Ni_(0),
-    Nj_(0) {
+Regular::Regular(const param::MIRParametrisation& parametrisation) : Gaussian(parametrisation), Ni_(0), Nj_(0) {
 
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox_.north();
@@ -52,18 +46,13 @@ Regular::Regular(const param::MIRParametrisation& parametrisation) :
     bbox_ = util::BoundingBox(n, w, s, e);
 
     eckit::Log::debug<LibMir>() << "Regular::Regular: BoundingBox:"
-                                << "\n\t   " << old
-                                << "\n\t > " << bbox_
-                                << std::endl;
+                                << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
 
     setNiNj();
 }
 
-
-Regular::Regular(size_t N, const util::BoundingBox& bbox, double angularPrecision) :
-    Gaussian(N, bbox, angularPrecision),
-    Ni_(0),
-    Nj_(0) {
+Regular::Regular(size_t N, const util::BoundingBox& bbox, double angularPrecision)
+    : Gaussian(N, bbox, angularPrecision), Ni_(0), Nj_(0) {
 
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox.north();
@@ -79,11 +68,9 @@ Regular::Regular(size_t N, const util::BoundingBox& bbox, double angularPrecisio
     setNiNj();
 }
 
-
 Regular::~Regular() = default;
 
-
-void Regular::fill(grib_info& info) const  {
+void Regular::fill(grib_info& info) const {
 
     // See copy_spec_from_ksec.c in libemos for info
 
@@ -97,19 +84,16 @@ void Regular::fill(grib_info& info) const  {
     bbox_.fill(info);
 }
 
-
-void Regular::fill(api::MIRJob& job) const  {
+void Regular::fill(api::MIRJob& job) const {
     std::stringstream os;
     os << "F" << N_;
     job.set("gridname", os.str());
 }
 
-
 void Regular::makeName(std::ostream& out) const {
     out << "F" << N_;
     bbox_.makeName(out);
 }
-
 
 void Regular::correctWestEast(Longitude& w, Longitude& e) const {
     using eckit::Fraction;
@@ -118,10 +102,9 @@ void Regular::correctWestEast(Longitude& w, Longitude& e) const {
     Fraction inc = getSmallestIncrement();
     ASSERT(inc > 0);
 
-    if (angleApproximatelyEqual(Longitude::GREENWICH, w) && (
-        angleApproximatelyEqual(Longitude::GLOBE - inc, e - w) ||
-        Longitude::GLOBE - inc < e - w ||
-        (e != w && e.normalise(w) == w))) {
+    if (angleApproximatelyEqual(Longitude::GREENWICH, w) &&
+        (angleApproximatelyEqual(Longitude::GLOBE - inc, e - w) || Longitude::GLOBE - inc < e - w ||
+         (e != w && e.normalise(w) == w))) {
 
         w = Longitude::GREENWICH;
         e = Longitude::GLOBE - inc;
@@ -147,18 +130,15 @@ void Regular::correctWestEast(Longitude& w, Longitude& e) const {
     }
 }
 
-
 bool Regular::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const Regular*>(&other);
     return o && (N_ == o->N_) && (bbox_ == o->bbox_);
 }
 
-
 eckit::Fraction Regular::getSmallestIncrement() const {
     ASSERT(N_);
     return {90, eckit::Fraction::value_type(N_)};
 }
-
 
 size_t Regular::numberOfPoints() const {
     ASSERT(Ni_);
@@ -166,18 +146,14 @@ size_t Regular::numberOfPoints() const {
     return Ni_ * Nj_;
 }
 
-
 bool Regular::getLongestElementDiagonal(double& d) const {
     eckit::Fraction inc = getSmallestIncrement();
 
     double l = inc / 2;
-    d = atlas::util::Earth::distance(
-                atlas::PointLonLat(-l, -l),
-                atlas::PointLonLat( l,  l) );
+    d = atlas::util::Earth::distance(atlas::PointLonLat(-l, -l), atlas::PointLonLat(l, l));
 
     return true;
 }
-
 
 util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) const {
 
@@ -200,12 +176,10 @@ util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) co
         }
     }
 
-
     // adjust South/North to include bbox's South/North ('outwards')
     Latitude s = bbox.south();
     Latitude n = bbox.north();
     correctSouthNorth(s, n, false);
-
 
     // set bounding box
     const util::BoundingBox extended(n, w, s, e);
@@ -214,17 +188,14 @@ util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) co
     return extended;
 }
 
-
 bool Regular::isPeriodicWestEast() const {
     eckit::Fraction inc = getSmallestIncrement();
     return bbox_.east() - bbox_.west() + inc >= Longitude::GLOBE;
 }
 
-
 atlas::Grid Regular::atlasGrid() const {
     return atlas::grid::RegularGaussianGrid("F" + std::to_string(N_), domain());
 }
-
 
 void Regular::setNiNj() {
     ASSERT(N_);
@@ -269,11 +240,9 @@ void Regular::setNiNj() {
         ASSERT(Nj_ > 0);
     }
 
-    eckit::Log::debug<LibMir>()
-            << "Regular::setNiNj: Ni*Nj = " << Ni_ << " * " << Nj_ << " = " << (Ni_ * Nj_)
-            << std::endl;
+    eckit::Log::debug<LibMir>() << "Regular::setNiNj: Ni*Nj = " << Ni_ << " * " << Nj_ << " = " << (Ni_ * Nj_)
+                                << std::endl;
 }
-
 
 size_t Regular::frame(MIRValuesVector& values, size_t size, double missingValue) const {
 
@@ -297,9 +266,7 @@ size_t Regular::frame(MIRValuesVector& values, size_t size, double missingValue)
     return count;
 }
 
-
-}  // namespace regular
-}  // namespace gauss
-}  // namespace repres
-}  // namespace mir
-
+} // namespace regular
+} // namespace gauss
+} // namespace repres
+} // namespace mir

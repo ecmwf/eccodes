@@ -12,7 +12,6 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
-
 #include "mir/repres/latlon/RotatedLL.h"
 
 #include <iostream>
@@ -21,31 +20,20 @@
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 
-
 namespace mir {
 namespace repres {
 namespace latlon {
 
+RotatedLL::RotatedLL(const param::MIRParametrisation& parametrisation)
+    : LatLon(parametrisation), rotation_(parametrisation) {}
 
-RotatedLL::RotatedLL(const param::MIRParametrisation& parametrisation) :
-    LatLon(parametrisation),
-    rotation_(parametrisation) {
-}
-
-
-RotatedLL::RotatedLL(const util::Increments& increments,
-                     const util::Rotation& rotation,
-                     const util::BoundingBox& bbox,
-                     const PointLatLon& reference) :
-    LatLon(increments, bbox, reference),
-    rotation_(rotation) {
-}
-
+RotatedLL::RotatedLL(const util::Increments& increments, const util::Rotation& rotation, const util::BoundingBox& bbox,
+                     const PointLatLon& reference)
+    : LatLon(increments, bbox, reference), rotation_(rotation) {}
 
 RotatedLL::~RotatedLL() = default;
 
-
-Iterator *RotatedLL::iterator() const {
+Iterator* RotatedLL::iterator() const {
 
     class RotatedLLIterator : protected LatLonIterator, public Iterator {
         void print(std::ostream& out) const {
@@ -55,27 +43,22 @@ Iterator *RotatedLL::iterator() const {
             LatLonIterator::print(out);
             out << "]";
         }
-        bool next(Latitude& lat, Longitude& lon) {
-            return LatLonIterator::next(lat, lon);
-        }
+        bool next(Latitude& lat, Longitude& lon) { return LatLonIterator::next(lat, lon); }
+
     public:
-        RotatedLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, const util::Increments& increments, const util::Rotation& rotation) :
-            LatLonIterator(ni, nj, north, west, increments),
-            Iterator(rotation) {
-        }
+        RotatedLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, const util::Increments& increments,
+                          const util::Rotation& rotation)
+            : LatLonIterator(ni, nj, north, west, increments), Iterator(rotation) {}
     };
 
     return new RotatedLLIterator(ni_, nj_, bbox_.north(), bbox_.west(), increments_, rotation_);
 }
 
-
 void RotatedLL::print(std::ostream& out) const {
     out << "RotatedLL[";
     LatLon::print(out);
-    out << ",rotation=" << rotation_
-        << "]";
+    out << ",rotation=" << rotation_ << "]";
 }
-
 
 atlas::Grid RotatedLL::atlasGrid() const {
 
@@ -96,20 +79,17 @@ atlas::Grid RotatedLL::atlasGrid() const {
     return rotation_.rotate(unrotatedGrid);
 }
 
-
-void RotatedLL::fill(grib_info& info) const  {
+void RotatedLL::fill(grib_info& info) const {
     LatLon::fill(info);
 
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_LL;
     rotation_.fill(info);
 }
 
-
-void RotatedLL::fill(api::MIRJob& job) const  {
+void RotatedLL::fill(api::MIRJob& job) const {
     LatLon::fill(job);
     rotation_.fill(job);
 }
-
 
 void RotatedLL::makeName(std::ostream& out) const {
     LatLon::makeName(out);
@@ -122,7 +102,6 @@ bool RotatedLL::sameAs(const Representation& other) const {
     return o && (rotation_ == o->rotation_) && LatLon::sameAs(other);
 }
 
-
 const RotatedLL* RotatedLL::croppedRepresentation(const util::BoundingBox& bbox) const {
     // Called by AreaCropper::execute and Gridded2GriddedInterpolation::execute
 
@@ -131,13 +110,10 @@ const RotatedLL* RotatedLL::croppedRepresentation(const util::BoundingBox& bbox)
     return new RotatedLL(increments_, rotation_, bbox, reference);
 }
 
-
 namespace {
-static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll");  // Name is what is returned by grib_api
+static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll"); // Name is what is returned by grib_api
 }
 
-
-}  // namespace latlon
-}  // namespace repres
-}  // namespace mir
-
+} // namespace latlon
+} // namespace repres
+} // namespace mir

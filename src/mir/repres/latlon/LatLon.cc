@@ -17,9 +17,12 @@
 
 #include <algorithm>
 #include <iostream>
+
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
 #include "eckit/types/Fraction.h"
+#include "eckit/memory/ScopedPtr.h"
+
 #include "mir/api/Atlas.h"
 #include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
