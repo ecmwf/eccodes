@@ -14,7 +14,7 @@ Installation using CMake
 This is the recommended method of installation.
 However it requires that cmake be installed on your system.
 
-1. Download ecCodes from https://software.ecmwf.int/wiki/display/ECC/Releases
+1. Download ecCodes from https://confluence.ecmwf.int/display/ECC/Releases
 
 2. Unpack distribution:
    > tar -xzf eccodes-x.y.z-Source.tar.gz
@@ -52,5 +52,5 @@ In this mode the tests will take longer and you need to be connected to the inte
 for the tests.
 
 For more details, please see:
-https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
+https://confluence.ecmwf.int/display/ECC/ecCodes+installation
 

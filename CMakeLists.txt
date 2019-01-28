@@ -419,7 +419,7 @@ endif()
 # pkg-config
 ecbuild_pkgconfig(
   NAME           eccodes
-  URL            "https://software.ecmwf.int/wiki/display/ECC/"
+  URL            "https://confluence.ecmwf.int/display/ECC/"
   DESCRIPTION    "The ecCodes library"
   LIBRARIES      eccodes
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
@@ -430,7 +430,7 @@ ecbuild_pkgconfig(
 if( HAVE_FORTRAN )
   ecbuild_pkgconfig(
     NAME                eccodes_f90
-    URL                 "https://software.ecmwf.int/wiki/display/ECC/"
+    URL                 "https://confluence.ecmwf.int/display/ECC/"
     LIBRARIES           eccodes_f90 eccodes
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran

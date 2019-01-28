@@ -19,12 +19,12 @@ It is designed to provide the user with a simple set of functions to access data
 several formats with a key/value approach.
 
 Documentation can be found here:
-   https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home
+   https://confluence.ecmwf.int/display/ECC/ecCodes+Home
 
 INSTALLATION
 ------------
 
-1. Download ecCodes from https://software.ecmwf.int/wiki/display/ECC/Releases
+1. Download ecCodes from https://confluence.ecmwf.int/display/ECC/Releases
 
 2. Unpack distribution:
    > tar -xzf eccodes-x.y.z-Source.tar.gz
@@ -45,7 +45,7 @@ INSTALLATION
 
 
 For more details, please see:
-https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
+https://confluence.ecmwf.int/display/ECC/ecCodes+installation
 
 If you encounter any problems please send an e-mail with your problem to:
 
