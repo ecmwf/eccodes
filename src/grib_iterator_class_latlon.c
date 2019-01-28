@@ -88,16 +88,6 @@ static void init_class(grib_iterator_class* c)
 #define RAD2DEG   57.29577951308232087684  /* 180 over pi */
 #define DEG2RAD    0.01745329251994329576  /* pi over 180 */
 
-/* Note: roundf implementation missing on MSVC! */
-static float round_float(float x)
-{
-#ifdef ECCODES_ON_WINDOWS
-    return x >= 0.0f ? floorf(x + 0.5f) : ceilf(x - 0.5f);
-#else
-    return roundf(x);
-#endif
-}
-
 void unrotate(grib_handle* h,
         const double inlat, const double inlon,
         const double angleOfRot, const double southPoleLat, const double southPoleLon,
@@ -137,8 +127,8 @@ void unrotate(grib_handle* h,
     ret_lon = atan2(y, x) * RAD2DEG;
 
     /* Still get a very small rounding error, round to 6 decimal places */
-    ret_lat = round_float( ret_lat * 1000000.0 )/1000000.0;
-    ret_lon = round_float( ret_lon * 1000000.0 )/1000000.0;
+    ret_lat = roundf( ret_lat * 1000000.0 )/1000000.0;
+    ret_lon = roundf( ret_lon * 1000000.0 )/1000000.0;
 
     ret_lon -= angleOfRot;
 
