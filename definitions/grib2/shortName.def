@@ -535,6 +535,15 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
 	}
+#100 metre wind speed
+'100si' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 scaledValueOfFirstFixedSurface = 100 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
 #Mean temperature tendency due to short-wave radiation
 'mttswr' = {
 	 discipline = 0 ;
@@ -1116,6 +1125,24 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 34 ;
+	}
+#100 metre U wind component
+'100u' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 scaledValueOfFirstFixedSurface = 100 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#100 metre V wind component
+'100v' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 100 ;
 	}
 #Total precipitation of at least 10 mm
 'tpg10' = {
