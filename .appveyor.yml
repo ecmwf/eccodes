@@ -81,7 +81,7 @@ build_script:
                  -D ENABLE_EXTRA_TESTS=OFF ^
                  ..
     - cmd: nmake
-    - cmd: ctest
+    - cmd: ctest --output-on-failure
     - cmd: nmake install
 
 #---------------------------------#
