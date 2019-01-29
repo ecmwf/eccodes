@@ -535,6 +535,33 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
 	}
+#200 metre U wind component
+'200u' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
+	 typeOfFirstFixedSurface = 103 ;
+	}
+#200 metre V wind component
+'200v' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
+	}
+#200 metre wind speed
+'200si' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
+	}
 #100 metre wind speed
 '100si' = {
 	 discipline = 0 ;
