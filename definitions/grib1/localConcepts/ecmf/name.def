@@ -3359,6 +3359,76 @@
 	 table2Version = 140 ;
 	 indicatorOfParameter = 84 ;
 	}
+#Wave induced mean sea level correction
+'Wave induced mean sea level correction' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 98 ;
+	}
+#Ratio of wave angular and frequency width
+'Ratio of wave angular and frequency width' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 99 ;
+	}
+#Number of events in freak waves statistics
+'Number of events in freak waves statistics' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 100 ;
+	}
+#U-component of atmospheric surface momentum flux
+'U-component of atmospheric surface momentum flux' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 101 ;
+	}
+#V-component of atmospheric surface momentum flux
+'V-component of atmospheric surface momentum flux' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 102 ;
+	}
+#U-component of surface momentum flux into ocean
+'U-component of surface momentum flux into ocean' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 103 ;
+	}
+#V-component of surface momentum flux into ocean
+'V-component of surface momentum flux into ocean' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 104 ;
+	}
+#Wave turbulent energy flux into ocean
+'Wave turbulent energy flux into ocean' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 105 ;
+	}
+#Wave directional width of first swell partition
+'Wave directional width of first swell partition' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 106 ;
+	}
+#Wave frequency width of first swell partition
+'Wave frequency width of first swell partition' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 107 ;
+	}
+#Wave directional width of second swell partition
+'Wave directional width of second swell partition' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 108 ;
+	}
+#Wave frequency width of second swell partition
+'Wave frequency width of second swell partition' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 109 ;
+	}
+#Wave directional width of third swell partition
+'Wave directional width of third swell partition' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 110 ;
+	}
+#Wave frequency width of third swell partition
+'Wave frequency width of third swell partition' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 111 ;
+	}
 #Wave energy flux magnitude
 'Wave energy flux magnitude' = {
 	 table2Version = 140 ;
