@@ -46,10 +46,10 @@ if command -v pkg-config >/dev/null 2>&1; then
     FLAGS_LINKER=`pkg-config --libs $PKGCONFIG_FILE`
 
     # TODO: For now only support when shared libs enabled
-    SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`
-    if [ "$SHARED_LIBS" = "ON" ]; then
-      COMPILE_AND_RUN=1
-    fi
+    #SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`
+    #if [ "$SHARED_LIBS" = "ON" ]; then
+    #  COMPILE_AND_RUN=1
+    #fi
   fi
 fi
 
