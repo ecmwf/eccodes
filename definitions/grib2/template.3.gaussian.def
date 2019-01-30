@@ -66,8 +66,8 @@ if(missing(Ni) && PLPresent == 1){
       N,pl,Nj);
   nearest reduced(values,radius,Nj,pl);
 
-  meta sumPlArray sum(pl);
-  meta dataGlobal evaluate( sumPlArray == (numberOfValues+numberOfMissing) );
+  #meta sumPlArray sum(pl);
+  #meta dataGlobal evaluate( sumPlArray == (numberOfValues+numberOfMissing) );
 } else {
     iterator gaussian(numberOfPoints,missingValue,values,
               longitudeFirstInDegrees,DiInDegrees  ,

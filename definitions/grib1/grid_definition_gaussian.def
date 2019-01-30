@@ -72,8 +72,8 @@ if(missing(Ni)){
           latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
           N,pl);
 
-   meta sumPlArray sum(pl);
-   meta dataGlobal evaluate( sumPlArray == (numberOfValues+numberOfMissing) );
+   #meta sumPlArray sum(pl);
+   #meta dataGlobal evaluate( sumPlArray == (numberOfValues+numberOfMissing) );
 } else {
    iterator   gaussian(numberOfPoints,missingValue,values,longitudeFirstInDegrees,
             DiInDegrees  ,Ni,Nj,iScansNegatively ,
