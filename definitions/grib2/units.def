@@ -293,6 +293,18 @@
 	 probabilityType = 0 ;
 	 typeOfStatisticalProcessing = 10 ;
 	}
+#Mean sea water temperature in the upper 300 m
+'K' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 15 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 160 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 300 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
+	}
 #10 metre wind gust in the last 3 hours
 'm s**-1' = {
 	 discipline = 0 ;
