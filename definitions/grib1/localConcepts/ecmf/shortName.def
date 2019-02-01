@@ -9559,6 +9559,21 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 230 ;
 	}
+#200 metre U wind component
+'200u' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 239 ;
+	}
+#200 metre V wind component
+'200v' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 240 ;
+	}
+#200 metre wind speed
+'200si' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 241 ;
+	}
 #Surface solar radiation diffuse total sky
 'fdif' = {
 	 table2Version = 228 ;
