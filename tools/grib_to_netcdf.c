@@ -1936,6 +1936,18 @@ static long monthnumber(const char *m)
     return -1;
 }
 
+int check_stepUnits(const char* step_units_str)
+{
+    /* Only hours, minutes and seconds supported */
+    if (strcmp(step_units_str, "h")==0 ||
+        strcmp(step_units_str, "m")==0 ||
+        strcmp(step_units_str, "s")==0)
+    {
+        return GRIB_SUCCESS;
+    }
+    return GRIB_WRONG_STEP_UNIT;
+}
+
 /* The argument represents 1 field */
 static void validation_time(request *r)
 {
@@ -2024,8 +2036,14 @@ static void validation_time(request *r)
     julian = grib_date_to_julian(date);
     step_units = get_value(r, "stepUnits", 0);
     if (step_units){
-        if(strcmp("m", step_units)==0) {
+        if(check_stepUnits(step_units)!=GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR,
+                "Cannot convert stepUnits of '%s'. Only hours, minutes and seconds supported.", step_units);
+        }
+        if (strcmp("m", step_units)==0) {
             step /= 60;
+        } else if (strcmp("s", step_units)==0) {
+            step /= 3600;
         }
     }
     v = julian * 24.0 + fcmonthdays * 24.0 + time / 100.0 + step * 1.0;
