@@ -597,7 +597,6 @@ static err handle_to_request(request *r, grib_handle* g)
 
     while(grib_keys_iterator_next(ks))
     {
-
         strcpy(name, grib_keys_iterator_get_name(ks));
 
         if((e = grib_keys_iterator_get_string(ks, value, &len)) != GRIB_SUCCESS)
@@ -605,6 +604,11 @@ static err handle_to_request(request *r, grib_handle* g)
 
         set_value(r, name, "%s", value);
         len = sizeof(value);
+    }
+
+    strcpy(name, "stepUnits");
+    if((e = grib_get_string(g, name, value, &len)) == GRIB_SUCCESS) {
+        set_value(r, name, "%s", value);
     }
 
     /*
@@ -1937,11 +1941,12 @@ static void validation_time(request *r)
 {
     long date = 0;
     long time = 0;
-    long step = 0;
+    double step = 0;
     long fcmonthdays = 0;
     long fcmonth = 0;
     double v;
     long julian = 0;
+    const char* step_units = NULL;
 
     long nstep = count_values(r, "step");
     long ndate = count_values(r, "date");
@@ -1965,7 +1970,7 @@ static void validation_time(request *r)
     }
 
     if(nstep)
-        step = atol(get_value(r, "step", 0));
+        step = atof(get_value(r, "step", 0));
 
     if(ndate)
     {
@@ -2017,8 +2022,14 @@ static void validation_time(request *r)
     }
 
     julian = grib_date_to_julian(date);
+    step_units = get_value(r, "stepUnits", 0);
+    if (step_units){
+        if(strcmp("m", step_units)==0) {
+            step /= 60;
+        }
+    }
     v = julian * 24.0 + fcmonthdays * 24.0 + time / 100.0 + step * 1.0;
-    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: date=%ld, julian=%ld, fcmonthdays=%ld, time=%ld, step=%ld, validation=%ld", date, julian, fcmonthdays, time, step, v);
+    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: date=%ld, julian=%ld, fcmonthdays=%ld, time=%ld, step=%g, validation=%ld", date, julian, fcmonthdays, time, step, v);
     set_value(r, "_validation", "%lf", v);
     set_value(r, "_juliandate", "%ld", julian);
 
@@ -2929,6 +2940,12 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         if(count_values(data_r,"levtype") > 1)
         {
             grib_context_log(ctx, GRIB_LOG_ERROR, "Cannot handle fields for different levtypes.\n");
+            grib_context_log(ctx, GRIB_LOG_ERROR, "Please split input data into different files. Exiting!\n");
+            exit(1);
+        }
+        if(count_values(data_r,"stepUnits") > 1)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "Cannot handle fields for different stepUnits.\n");
             grib_context_log(ctx, GRIB_LOG_ERROR, "Please split input data into different files. Exiting!\n");
             exit(1);
         }
