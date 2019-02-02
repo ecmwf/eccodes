@@ -133,24 +133,42 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
 
 void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionPlan& plan, input::MIRInput& input, output::MIROutput& output) const {
     ASSERT(!plan.ended());
+
     bool save = false;
+    auto& user = param.userParametrisation();
+    auto& field = param.fieldParametrisation();
 
-    long bits = 0;
-    if (param.userParametrisation().get("accuracy", bits)) {
-        ASSERT(bits > 0);
-        save = true;
+    long bits1 = -1;
+    long bits2 = -1;
+
+    if (user.get("accuracy", bits1)) {
+        ASSERT(bits1 > 0);
+        save = field.get("accuracy", bits2) ? bits2 != bits1 : true;
     }
 
-    std::string packing;
-    if (param.userParametrisation().get("packing", packing)) {
-        ASSERT(!packing.empty());
-        save = true;
+    if (!save) {
+        std::string packing1;
+        std::string packing2;
+
+        if (user.get("packing", packing1)) {
+            ASSERT(!packing1.empty());
+            save = field.get("packing", packing2) ? packing2 != packing1 : true;
+        }
     }
 
-    long edition = 0;
-    if (param.userParametrisation().get("edition", edition)) {
-        ASSERT(edition > 0);
-        save = true;
+    if (!save) {
+        long edition1 = 0;
+        long edition2 = 0;
+
+        if (user.get("edition", edition1)) {
+            ASSERT(edition1 > 0);
+            save = field.get("edition", edition2) ? edition2 != edition1 : true;
+        }
+    }
+
+    if (!save) {
+        std::string compatibility;
+        save = user.get("compatibility", compatibility) && !compatibility.empty();
     }
 
     if (save) {
