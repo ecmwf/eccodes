@@ -27,7 +27,7 @@
 		Order by. The output will be ordered according to the order by directive.
 		Order by example: "step:i asc, centre desc" (step numeric ascending and centre descending)
  \n \n -l Latitude,Longitude[,MODE,file] \n 
-		Value close to the point of a Latitude/Longitude.
+		Value close to the point of a Latitude,Longitude.
 		Allowed values for MODE are:
 		4 (4 values in the nearest points are printed) Default
 		1 (the value at the nearest point is printed)

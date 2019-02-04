@@ -47,10 +47,10 @@ grib_options_help grib_options_help_list[] ={
     "\n\t\tData value corresponding to the given index is printed.\n"},
   {"j",0,"JSON mode (JavaScript Object Notation).\n"},
   {"l:","Latitude,Longitude[,MODE,file]",
-   "\n\t\tValue close to the point of a Latitude/Longitude."
+   "\n\t\tValue close to the point of a Latitude,Longitude."
    "\n\t\tAllowed values for MODE are:"
-   "\n\t\t4 (4 values in the nearest points are printed) Default"
-   "\n\t\t1 (the value at the nearest point is printed)"
+   "\n\t\t  4 (4 values in the nearest points are printed) Default"
+   "\n\t\t  1 (the value at the nearest point is printed)"
    "\n\t\tfile (file is used as mask. The closer point with mask value>=0.5 is printed)\n"
        },
   {"n:","namespace",
