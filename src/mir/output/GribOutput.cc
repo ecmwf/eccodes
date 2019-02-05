@@ -18,7 +18,6 @@
 #include <istream>
 
 #include "eckit/config/Resource.h"
-//#include "eckit/io/DataHandle.h"
 #include "eckit/log/Plural.h"
 #include "eckit/log/ResourceUsage.h"
 #include "eckit/thread/AutoLock.h"
@@ -55,7 +54,9 @@ class HandleFree {
 public:
     HandleFree(grib_handle *h): h_(h) {}
     ~HandleFree() {
-        if (h_) grib_handle_delete(h_);
+        if (h_) {
+            grib_handle_delete(h_);
+        }
     }
 };
 
@@ -65,7 +66,8 @@ void eccodes_assertion(const char* message) {
 }
 
 
-GribOutput::GribOutput() = default;
+GribOutput::GribOutput() : total_(0) {
+}
 
 
 GribOutput::~GribOutput() = default;
