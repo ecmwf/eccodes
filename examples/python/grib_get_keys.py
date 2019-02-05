@@ -37,6 +37,8 @@ def example():
         for key in keys:
             try:
                 print('  %s: %s' % (key, codes_get(gid, key)))
+            except KeyValueNotFoundError as err:
+                print('  Key="%s" was not found: %s' % (key, err.msg))
             except CodesInternalError as err:
                 print('Error with key="%s" : %s' % (key, err.msg))
 
