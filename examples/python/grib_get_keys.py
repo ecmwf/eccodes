@@ -7,10 +7,14 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+# Python implementation: grib_get_keys
+#
+# Description: how to get values using keys from GRIB messages
+#
+
 from __future__ import print_function
 import traceback
 import sys
-
 from eccodes import *
 
 INPUT = '../../data/reduced_latlon_surface.grib1'

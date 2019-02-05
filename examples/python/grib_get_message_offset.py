@@ -9,7 +9,7 @@
 # nor does it submit to any jurisdiction.
 #
 
-# Python implementation: get_message_offset
+# Python implementation: grib_get_message_offset
 #
 # Description: how to get the message offset
 #
