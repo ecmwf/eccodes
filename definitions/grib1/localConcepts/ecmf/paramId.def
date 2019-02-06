@@ -3359,6 +3359,76 @@
 	 table2Version = 140 ;
 	 indicatorOfParameter = 84 ;
 	}
+#Wave induced mean sea level correction
+'140098' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 98 ;
+	}
+#Ratio of wave angular and frequency width
+'140099' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 99 ;
+	}
+#Number of events in freak waves statistics
+'140100' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 100 ;
+	}
+#U-component of atmospheric surface momentum flux
+'140101' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 101 ;
+	}
+#V-component of atmospheric surface momentum flux
+'140102' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 102 ;
+	}
+#U-component of surface momentum flux into ocean
+'140103' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 103 ;
+	}
+#V-component of surface momentum flux into ocean
+'140104' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 104 ;
+	}
+#Wave turbulent energy flux into ocean
+'140105' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 105 ;
+	}
+#Wave directional width of first swell partition
+'140106' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 106 ;
+	}
+#Wave frequency width of first swell partition
+'140107' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 107 ;
+	}
+#Wave directional width of second swell partition
+'140108' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 108 ;
+	}
+#Wave frequency width of second swell partition
+'140109' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 109 ;
+	}
+#Wave directional width of third swell partition
+'140110' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 110 ;
+	}
+#Wave frequency width of third swell partition
+'140111' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 111 ;
+	}
 #Wave energy flux magnitude
 '140112' = {
 	 table2Version = 140 ;
@@ -9558,6 +9628,21 @@
 '228230' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 230 ;
+	}
+#200 metre U wind component
+'228239' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 239 ;
+	}
+#200 metre V wind component
+'228240' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 240 ;
+	}
+#200 metre wind speed
+'228241' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 241 ;
 	}
 #Surface solar radiation diffuse total sky
 '228242' = {
