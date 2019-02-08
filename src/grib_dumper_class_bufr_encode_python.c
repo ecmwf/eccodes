@@ -801,9 +801,9 @@ static void footer(grib_dumper* d, grib_handle* h)
     fprintf(self->dumper.out,"\n    # Encode the keys back in the data section\n");
     fprintf(self->dumper.out,"    codes_set(ibufr, 'pack', 1)\n\n");
     if (d->count==1)
-        fprintf(self->dumper.out,"    outfile = open('outfile.bufr', 'w')\n");
+        fprintf(self->dumper.out,"    outfile = open('outfile.bufr', 'wb')\n");
     else
-        fprintf(self->dumper.out,"    outfile = open('outfile.bufr', 'a')\n");
+        fprintf(self->dumper.out,"    outfile = open('outfile.bufr', 'ab')\n");
 
     fprintf(self->dumper.out,"    codes_write(ibufr, outfile)\n");
     if (d->count==1)
