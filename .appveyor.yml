@@ -53,7 +53,7 @@ install:
   - cmd: conda install -c conda-forge cmake
 
     # other deps
-  - cmd: conda install netcdf4
+  - cmd: conda install libnetcdf
 
 #---------------------------------#
 #       build configuration       #
