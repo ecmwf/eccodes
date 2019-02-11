@@ -695,6 +695,7 @@ static int read_BUFR(reader *r)
     }
 
     if(length==0) {
+        grib_buffer_delete(c,buf);
         return GRIB_INVALID_MESSAGE;
     }
 
@@ -800,9 +801,9 @@ static int read_BUFR(reader *r)
         break;
       default :
         r->seek_from_start(r->read_data,r->offset+4);
+        grib_buffer_delete(c,buf);
         return GRIB_UNSUPPORTED_EDITION;
     }
-
 
     /* Assert(i <= sizeof(tmp)); */
     err=read_the_rest(r, length, tmp, i, 1);
