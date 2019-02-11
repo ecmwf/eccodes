@@ -1,8 +1,10 @@
 ecCodes
 =======
 
-[![Windows: master](https://img.shields.io/appveyor/ci/ecmwf/eccodes/master.svg?label=windows-master)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/master)
-[![Windows: develop](https://img.shields.io/appveyor/ci/ecmwf/eccodes/develop.svg?label=windows-dev)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/develop)
+[![macOS: master](https://img.shields.io/travis/ecmwf/eccodes/master.svg?label=macOS-master)](https://travis-ci.org/ecmwf/eccodes/branches)
+[![macOS: develop](https://img.shields.io/travis/ecmwf/eccodes/develop.svg?label=macOS-dev)](https://travis-ci.org/ecmwf/eccodes/branches)
+[![Windows: master](https://img.shields.io/appveyor/ci/ecmwf/eccodes/master.svg?label=Windows-master)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/master)
+[![Windows: develop](https://img.shields.io/appveyor/ci/ecmwf/eccodes/develop.svg?label=Windows-dev)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/develop)
 
 ecCodes is a package developed by ECMWF which provides an application programming interface
 and a set of tools for decoding and encoding messages in the following formats:
