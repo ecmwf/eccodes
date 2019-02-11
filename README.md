@@ -1,6 +1,8 @@
 ecCodes
 =======
 
+[![macOS: master](https://img.shields.io/travis/ecmwf/eccodes/master.svg?label=macos-master)](https://travis-ci.org/ecmwf/eccodes/branches/master)
+[![macOS: develop](https://img.shields.io/travis/ecmwf/eccodes/develop.svg?label=macos-dev)](https://travis-ci.org/ecmwf/eccodes/branches/develop)
 [![Windows: master](https://img.shields.io/appveyor/ci/ecmwf/eccodes/master.svg?label=windows-master)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/master)
 [![Windows: develop](https://img.shields.io/appveyor/ci/ecmwf/eccodes/develop.svg?label=windows-dev)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/develop)
 
