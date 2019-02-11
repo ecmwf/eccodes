@@ -2215,10 +2215,11 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     /*sectionUp=self->dataKeys;*/
     accessor_constant_set_type(gaGroup,GRIB_TYPE_LONG);
     accessor_constant_set_dval(gaGroup,groupNumber);
-    /* ECC-765: Don't empty out the section_4 keys otherwise there will be memory leaks */
+    /* ECC-765: Don't empty out the section_4 keys otherwise there will be memory leaks. */
+    /* Setting first and last to zero effectively masks out those section 4 keys! */
     /* self->dataKeys->block->first=0; */
     /* self->dataKeys->block->last=0;  */
-    grib_push_accessor(gaGroup,self->dataKeys->block);
+    grib_push_accessor(gaGroup,self->dataKeys->block);/* Add group accessors to section 4 */
 
     /*indexOfGroupNumber=0;*/
     depth=0;
