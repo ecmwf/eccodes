@@ -1,8 +1,10 @@
 ecCodes
 =======
 
-[![Windows: master](https://img.shields.io/appveyor/ci/ecmwf/eccodes/master.svg?label=windows-master)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/master)
-[![Windows: develop](https://img.shields.io/appveyor/ci/ecmwf/eccodes/develop.svg?label=windows-dev)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/develop)
+[![macOS: master](https://img.shields.io/travis/ecmwf/eccodes/master.svg?label=macOS-master)](https://travis-ci.org/ecmwf/eccodes/branches)
+[![macOS: develop](https://img.shields.io/travis/ecmwf/eccodes/develop.svg?label=macOS-dev)](https://travis-ci.org/ecmwf/eccodes/branches)
+[![Windows: master](https://img.shields.io/appveyor/ci/ecmwf/eccodes/master.svg?label=Windows-master)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/master)
+[![Windows: develop](https://img.shields.io/appveyor/ci/ecmwf/eccodes/develop.svg?label=Windows-dev)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/develop)
 
 ecCodes is a package developed by ECMWF which provides an application programming interface
 and a set of tools for decoding and encoding messages in the following formats:
@@ -19,12 +21,12 @@ It is designed to provide the user with a simple set of functions to access data
 several formats with a key/value approach.
 
 Documentation can be found here:
-   https://confluence.ecmwf.int/display/ECC/ecCodes+Home
+   https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home
 
 INSTALLATION
 ------------
 
-1. Download ecCodes from https://confluence.ecmwf.int/display/ECC/Releases
+1. Download ecCodes from https://software.ecmwf.int/wiki/display/ECC/Releases
 
 2. Unpack distribution:
    > tar -xzf eccodes-x.y.z-Source.tar.gz
@@ -45,7 +47,7 @@ INSTALLATION
 
 
 For more details, please see:
-https://confluence.ecmwf.int/display/ECC/ecCodes+installation
+https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
 
 If you encounter any problems please send an e-mail with your problem to:
 
