@@ -1,0 +1,59 @@
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+sudo: false
+
+branches:
+  only:
+    - develop
+    - master
+
+language: c
+
+os: osx
+osx_image: xcode10.1
+
+env:
+  global:
+    - ECCODES_SRC=${TRAVIS_BUILD_DIR}
+    - ECBUILD_SRC=${ECCODES_SRC}/../ecbuild
+    - BUILD_DIR=${ECCODES_SRC}/build
+
+git:
+  depth: 1
+
+install:
+  # install ecbuild
+  - git clone --depth 1 https://github.com/ecmwf/ecbuild.git ${ECBUILD_SRC}
+
+  # install netcdf
+  - brew install netcdf
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+script:
+  # env vars
+  - echo ${ECCODES_SRC}
+  - echo ${ECBUILD_SRC}
+  - echo ${BUILD_DIR}
+
+  # build ecCodes
+  - mkdir -p ${BUILD_DIR} && cd ${BUILD_DIR}
+  - cmake -D ENABLE_FORTRAN=0
+          -D ENABLE_PYTHON=0
+          -D ENABLE_NETCDF=1
+          -D ENABLE_JPG=1
+          -D ENABLE_MEMFS=0
+          -D ENABLE_EXTRA_TESTS=ON
+          ${ECCODES_SRC}
+  - make -j4
+  - ctest -j4 --output-on-failure
+  - make install --silent
+
+  # extra sanity tests
+  - codes_info
+  - ls $(codes_info -s)
+  - ls $(codes_info -d)
