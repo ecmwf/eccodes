@@ -11,7 +11,6 @@
 # See http://www.wmo.int/pages/prog/www/WMOCodes/WMO306_vI2/LatestVERSION/LatestVERSION.html
 constant tablesVersionLatest = 21 : edition_specific;
 
-constant one = 1 : hidden ;
 constant million = 1000000 : hidden;
 constant grib2divider   = 1000000;
 alias extraDimensionPresent=zero;
