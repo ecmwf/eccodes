@@ -94,6 +94,7 @@ list( APPEND tests_data_reqd
     bufr_ecc-433
     bufr_ecc-750
     bufr_ecc-875
+    bufr_ecc-887
     grib_ecc-490
     grib_ecc-756
     grib_ecc-873
