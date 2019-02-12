@@ -22,8 +22,6 @@ GRIBEX_boustrophedonic = getenv("ECCODES_GRIBEX_BOUSTROPHEDONIC","0")  :hidden;
 
 constant zero=0 : hidden;
 constant one=1 : hidden;
-constant two=1 : hidden;
-constant three=1 : hidden;
 constant hundred=100 : hidden;
 constant true="true" :hidden;
 constant false="false" : hidden;
