@@ -11,8 +11,21 @@ branches:
 
 language: c
 
-os: osx
-osx_image: xcode10.1
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          packages:
+            - libnetcdf-dev
+
+    - os: osx
+      osx_image: xcode10.1
+      addons:
+        homebrew:
+          packages:
+            - netcdf
 
 env:
   global:
@@ -26,9 +39,6 @@ git:
 install:
   # install ecbuild
   - git clone --depth 1 https://github.com/ecmwf/ecbuild.git ${ECBUILD_SRC}
-
-  # install netcdf
-  - brew install netcdf
 
 #---------------------------------#
 #       build configuration       #
