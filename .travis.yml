@@ -39,7 +39,7 @@ git:
 
 before_install:
   - mkdir ${INSTALL_DIR}
-  - export PATH=$PATH:${INSTALL_DIR}
+  - export PATH=${PATH}:${INSTALL_DIR}/bin
 
 install:
   # install ecbuild
