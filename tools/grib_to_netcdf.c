@@ -2185,35 +2185,37 @@ static int check_grid(field *f)
 
     if (strcmp(grid_type, "regular_ll") != 0 && (strcmp(grid_type, "regular_gg") != 0))
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
-        return GRIB_GEOCALCULUS_PROBLEM;
+        if(strcmp(grid_type,"lambert_azimuthal_equal_area")==0) {
+            fprintf(stderr, "grib_to_netcdf:  WARNING: Support for gridType of lambert_azimuthal_equal_area is currently experimental.\n");
+        } else {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
+            return GRIB_GEOCALCULUS_PROBLEM;
+        }
     }
     return e;
 }
 static int def_latlon(int ncid, fieldset *fs)
 {
     int n = 0;
-    size_t l = 0;
+    long l = 0;
     int var_id = 0;
     err e = 0;
 
     field *g = get_field(fs, 0, expand_mem);
 
     Assert( check_grid(g)==GRIB_SUCCESS );
-
-    /* Define longitude */
-    if((e = grib_get_size(g->handle, "distinctLongitudes", &l)) != GRIB_SUCCESS)
+    
+    if((e = grib_get_long(g->handle, "Ni", &l)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni %s", grib_get_error_message(e));
         return e;
     }
     n = l;
     var_id = set_dimension(ncid, "longitude", n, NC_FLOAT, "degrees_east", "longitude");
 
-    /* Define latitude */
-    if((e = grib_get_size(g->handle, "distinctLatitudes", &l)) != GRIB_SUCCESS)
+    if((e = grib_get_long(g->handle, "Nj", &l)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj %s", grib_get_error_message(e));
         return e;
     }
     n = l;
