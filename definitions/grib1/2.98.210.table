@@ -220,3 +220,8 @@
 244 244 VASHAOD550 Volcanic ash optical depth at 550 nm (~)
 245 245 TAEDEC550 Profile of total aerosol dry extinction coefficient (m**-1)
 246 246 TAEDAB550 Profile of total aerosol dry absorption coefficient (m**-1)
+247 247 AERMR16 Nitrate fine mode aerosol mass mixing ratio (kg kg**-1)
+248 248 AERMR17 Nitrate coarse mode aerosol mass mixing ratio (kg kg**-1)
+249 249 AERMR18 Ammonium aerosol mass mixing ratio (kg kg**-1)
+250 250 NIAOD550 Nitrate aerosol optical depth at 550 nm (dimensionless)
+251 251 AMAOD550 Ammonium aerosol optical depth at 550 nm (dimensionless)
