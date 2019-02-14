@@ -67,7 +67,7 @@ atlas::Grid RegularLL::atlasGrid() const {
     double w = dom.west().value();
     double e = dom.east().value();
 
-    using atlas::grid::StructuredGrid;
+    using atlas::StructuredGrid;
     using atlas::grid::LinearSpacing;
     StructuredGrid::XSpace xspace(LinearSpacing(w, e, long(ni_), !dom.isPeriodicWestEast()));
     StructuredGrid::YSpace yspace(LinearSpacing(n, s, long(nj_)));

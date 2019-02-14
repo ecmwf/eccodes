@@ -17,31 +17,30 @@
 
 #include <istream>
 
-#include "eckit/io/DataHandle.h"
+#include "eckit/config/Resource.h"
 #include "eckit/log/Plural.h"
+#include "eckit/log/ResourceUsage.h"
 #include "eckit/thread/AutoLock.h"
 #include "eckit/thread/Mutex.h"
-#include "eckit/config/Resource.h"
-#include "eckit/log/ResourceUsage.h"
 
 #include "mir/action/context/Context.h"
+#include "mir/action/io/Save.h"
+#include "mir/action/plan/ActionPlan.h"
+#include "mir/compat/GribCompatibility.h"
 #include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
 #include "mir/input/MIRInput.h"
 #include "mir/packing/Packer.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Representation.h"
-#include "mir/util/Grib.h"
 #include "mir/util/BoundingBox.h"
-#include "mir/input/GribMemoryInput.h"
-#include "mir/compat/GribCompatibility.h"
+#include "mir/util/Grib.h"
 #include "mir/util/MIRStatistics.h"
 
 
 namespace mir {
 namespace output {
 
-//----------------------------------------------------------------------------------------------------------------------
 
 static eckit::Mutex local_mutex;
 
@@ -55,7 +54,9 @@ class HandleFree {
 public:
     HandleFree(grib_handle *h): h_(h) {}
     ~HandleFree() {
-        if (h_) grib_handle_delete(h_);
+        if (h_) {
+            grib_handle_delete(h_);
+        }
     }
 };
 
@@ -65,14 +66,14 @@ void eccodes_assertion(const char* message) {
 }
 
 
-GribOutput::GribOutput() {
+GribOutput::GribOutput() : total_(0) {
 }
 
 
 GribOutput::~GribOutput() = default;
 
 
-size_t GribOutput::copy(const param::MIRParametrisation &param, context::Context& ctx) { // No interpolation performed
+size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx) { // No interpolation performed
 
     input::MIRInput& input = ctx.input();
 
@@ -94,10 +95,11 @@ size_t GribOutput::copy(const param::MIRParametrisation &param, context::Context
     return total;
 }
 
+
 bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParametrisation &param) const {
     bool ok = false;
 
-    long bits;
+    long bits = 0;
     if (param.userParametrisation().get("accuracy", bits)) {
         out << "accuracy=" << bits;
         ok = true;
@@ -110,7 +112,7 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
         ok = true;
     }
 
-    long edition;
+    long edition = 0;
     if (param.userParametrisation().get("edition", edition)) {
         if (ok) { out << ","; }
         out << "edition=" << edition;
@@ -130,8 +132,55 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
     return ok;
 }
 
-bool GribOutput::sameParametrisation(const param::MIRParametrisation &param1,
-                                     const param::MIRParametrisation & param2) const {
+
+void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionPlan& plan, input::MIRInput& input) {
+    ASSERT(!plan.ended());
+
+    bool save = false;
+    auto& user = param.userParametrisation();
+    auto& field = param.fieldParametrisation();
+
+    long bits1 = -1;
+    long bits2 = -1;
+
+    if (user.get("accuracy", bits1)) {
+        ASSERT(bits1 > 0);
+        save = field.get("accuracy", bits2) ? bits2 != bits1 : true;
+    }
+
+    if (!save) {
+        std::string packing1;
+        std::string packing2;
+
+        if (user.get("packing", packing1)) {
+            ASSERT(!packing1.empty());
+            save = field.get("packing", packing2) ? packing2 != packing1 : true;
+        }
+    }
+
+    if (!save) {
+        long edition1 = 0;
+        long edition2 = 0;
+
+        if (user.get("edition", edition1)) {
+            ASSERT(edition1 > 0);
+            save = field.get("edition", edition2) ? edition2 != edition1 : true;
+        }
+    }
+
+    if (!save) {
+        std::string compatibility;
+        save = user.get("compatibility", compatibility) && !compatibility.empty();
+    }
+
+    if (save) {
+        plan.add(new action::io::Save(param, input, *this));
+    }
+}
+
+
+bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
+                                     const param::MIRParametrisation& param2) const {
     long bits1 = -1;
     long bits2 = -1;
 
@@ -425,14 +474,14 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
     return total;
 }
 
-void GribOutput::fill(grib_handle * handle, grib_info & info) const {
 
+void GribOutput::fill(grib_handle * handle, grib_info & info) const {
 }
+
 
 #undef Y
 #undef X
 
-//----------------------------------------------------------------------------------------------------------------------
 
 }  // namespace output
 }  // namespace mir
