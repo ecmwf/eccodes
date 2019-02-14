@@ -13,9 +13,6 @@
 #include <assert.h>
 #include <float.h>
 
-extern char *optarg;
-extern int optind;
-
 #define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 
 static int get_packing_type_code(const char* packingType)
@@ -53,6 +50,7 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     grib_util_grid_spec spec={0,};
     grib_util_packing_spec packing_spec={0,};
 
+    assert(input_filename);
     in = fopen(input_filename,"r");     assert(in);
     handle = grib_handle_new_from_file(0,in,&err);    assert(handle);
 
@@ -61,6 +59,7 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
         grib_handle_delete(handle);
         return;
     }
+    assert(output_filename);
     out = fopen(output_filename,"w");   assert(out);
 
     CODES_CHECK(grib_get_size(handle,"values",&inlen), 0);
@@ -155,6 +154,7 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     grib_util_grid_spec spec={0,};
     grib_util_packing_spec packing_spec={0,};
 
+    assert(input_filename);
     in = fopen(input_filename,"r");     assert(in);
     handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);    assert(handle);
     
@@ -165,6 +165,7 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
         grib_handle_delete(handle);
         return;
     }
+    assert(output_filename);
     out = fopen(output_filename,"w");   assert(out);
 
     CODES_CHECK(codes_get_size(handle,"values",&inlen), 0);
@@ -333,40 +334,38 @@ static void usage(const char *prog)
 
 int main(int argc, char *argv[])
 {
-    int opt = 0, remove_local_def = 0;
+    int i = 0, remove_local_def = 0;
     int edition = 0;
     char* packingType = NULL;
     const char* prog = argv[0];
     char* infile_name = NULL;
     char* outfile_name = NULL;
     
-    while ((opt = getopt(argc, argv, "re:p:")) != -1) {
-        switch (opt) {
-            case 'r':
-                remove_local_def=1;
-                break;
-            case 'p':
-                packingType = optarg;
-                break;
-            case 'e':
-                edition = atoi(optarg);
-                break;
-            default:
-                usage(prog);
-                break;
+    if (argc==1 || argc >8) usage(prog);
+
+    for (i = 1; i < argc; i++) {
+        if (strcmp(argv[i],"-p")==0) {
+            packingType = argv[i+1];
+            ++i;
+        } else if (strcmp(argv[i],"-e")==0) {
+            edition = atoi( argv[i+1] );
+            ++i;
+        } else if (strcmp(argv[i],"-r")==0) {
+            remove_local_def = 1;
+        } else {
+            /* Expect 2 filenames */
+            infile_name = argv[i];
+            outfile_name = argv[i+1];
+            break;
         }
     }
-
-    /* After option processing expect just two files */
-    if (argc-optind != 2) usage(prog);
-
-    /*for (i = optind; i < argc; i++) {
-        printf ("File argument %s\n", argv[i]);
-    }*/
-
-    infile_name = argv[argc-2];
-    outfile_name = argv[argc-1];
-
+#if 0
+    printf("DEBUG remove_local_def = %d\n", remove_local_def);
+    printf("DEBUG edition          = %d\n", edition);
+    printf("DEBUG packingType      = %s\n", packingType);
+    printf("DEBUG infile_name      = %s\n", infile_name);
+    printf("DEBUG outfile_name     = %s\n", outfile_name);
+#endif
     test_regular_ll(remove_local_def, edition, packingType, infile_name, outfile_name);
     test_reduced_gg(remove_local_def, edition, packingType, infile_name, outfile_name);
     /*test_grid_complex_spatial_differencing(remove_local_def, edition, packingType, infile_name, outfile_name);*/

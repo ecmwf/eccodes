@@ -7,6 +7,11 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+# Python Implementation: grib_set_keys
+#
+# Description: how to set key values in GRIB messages
+#
+
 from __future__ import print_function
 import traceback
 import sys

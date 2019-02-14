@@ -97,6 +97,7 @@
 { "g1param", &grib_accessor_class_g1param, },
 { "g1step_range", &grib_accessor_class_g1step_range, },
 { "g1verificationdate", &grib_accessor_class_g1verificationdate, },
+{ "g2_aerosol", &grib_accessor_class_g2_aerosol, },
 { "g2_chemical", &grib_accessor_class_g2_chemical, },
 { "g2_eps", &grib_accessor_class_g2_eps, },
 { "g2_mars_labeling", &grib_accessor_class_g2_mars_labeling, },

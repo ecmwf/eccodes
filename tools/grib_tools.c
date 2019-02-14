@@ -219,9 +219,13 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
     }
 
     options->handle_count=0;
+    grib_context_set_handle_file_count(c, 0); /* ECC-873 */
+    grib_context_set_handle_total_count(c, 0); /* ECC-873 */
     while(!options->skip_all && ((h = grib_fieldset_next_handle(set,&err))
             != NULL || err != GRIB_SUCCESS )) {
         options->handle_count++;
+        grib_context_set_handle_file_count(c, options->handle_count);/* ECC-873 */
+        grib_context_set_handle_total_count(c, options->handle_count);/* ECC-873 */
         options->error=err;
 
         if (!h) {
@@ -532,38 +536,32 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir)
             process(c,options,buf);
         }
     }
+    closedir(d);
     return 0;
 }
 #else
-static int isWinDir(const struct _finddata_t *fileinfo)
-{
-    if((fileinfo->attrib & 16) == 16)
-        return 1;
-    return 0;
-}
-static void doProcessing(grib_context* c,grib_runtime_options* options,const char* dir, const struct _finddata_t *fileinfo)
-{
-    if(isWinDir(fileinfo))
-    {
-        if(strcmp(fileinfo->name, ".") != 0 && strcmp(fileinfo->name,"..") != 0) {
-            char buf[1024];
-            sprintf(buf,"%s/%s",dir,fileinfo->name);
-            process(c,options,buf);
-        }
-    }
-}
 static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
     struct _finddata_t fileinfo;
     intptr_t handle;
-    if((handle = _findfirst(dir, &fileinfo)) != -1)
-        doProcessing(c, options, dir, &fileinfo);
+    char buffer[1024];
+    sprintf(buffer,  "%s/*", dir);
+    if((handle = _findfirst(buffer, &fileinfo)) != -1)
+{
+        do {
+            if(strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name,"..") != 0) {
+            char buf[1024];
+                sprintf(buf, "%s/%s", dir, fileinfo.name);
+            process(c,options,buf);
+        }
+        } while(!_findnext(handle, &fileinfo));
+
+        _findclose(handle);
+    }
     else
     {
         grib_context_log(c,(GRIB_LOG_ERROR) | (GRIB_LOG_PERROR) , "opendir %s",dir);
         return GRIB_IO_PROBLEM;
     }
-    while(!_findnext(handle, &fileinfo))
-        doProcessing(c, options, dir, &fileinfo);
     return 0;
 }
 #endif

@@ -38,12 +38,10 @@ alias latitudeWhereDxAndDyAreSpecified=LaD ;
 unsigned[4] LoV  : dump;
 
 #  Dx - X-direction grid length
-# NOTE 1 NOT FOUND
 unsigned[4] xDirectionGridLength  : dump;
 alias Dx  = xDirectionGridLength;
 
 #  Dy - Y-direction grid length
-# NOTE 1 NOT FOUND
 unsigned[4] yDirectionGridLength  : dump;
 alias Dy =  yDirectionGridLength;
 

@@ -52,7 +52,6 @@ statisticalProcessesList list(numberOfTimeRange)
  codetable[1]  indicatorOfUnitForTimeIncrement ('4.4.table',masterDir,localDir)=255 ;
 
  #  Time increment between successive fields, in units defined by the previous octet
- # NOTE 3 NOT FOUND
  unsigned[4] timeIncrement=0 ;
  alias timeIncrementBetweenSuccessiveFields=timeIncrement;
 

@@ -127,11 +127,8 @@ void unrotate(grib_handle* h,
     ret_lon = atan2(y, x) * RAD2DEG;
 
     /* Still get a very small rounding error, round to 6 decimal places */
-    /* TODO: roundf implementation missing on MSVC! */
-#ifndef ECCODES_ON_WINDOWS
     ret_lat = roundf( ret_lat * 1000000.0 )/1000000.0;
     ret_lon = roundf( ret_lon * 1000000.0 )/1000000.0;
-#endif
 
     ret_lon -= angleOfRot;
 

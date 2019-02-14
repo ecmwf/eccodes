@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
-# START 2/template.4.20 ----------------------------------------------------------------------
 # TEMPLATE 4.20, Radar product
 #  Parameter category
 codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) : dump;
@@ -82,6 +80,3 @@ unsigned[3] rangeBinSpacing  : dump;
 #  Radial angular spacing
 # (tenths of degree true)
 unsigned[2] radialAngularSpacing  : dump;
-
-
-# END   2/template.4.20 ----------------------------------------------------------------------

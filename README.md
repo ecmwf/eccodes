@@ -1,3 +1,11 @@
+ecCodes
+=======
+
+[![macOS: master](https://img.shields.io/travis/ecmwf/eccodes/master.svg?label=macOS-master)](https://travis-ci.org/ecmwf/eccodes/branches)
+[![macOS: develop](https://img.shields.io/travis/ecmwf/eccodes/develop.svg?label=macOS-dev)](https://travis-ci.org/ecmwf/eccodes/branches)
+[![Windows: master](https://img.shields.io/appveyor/ci/ecmwf/eccodes/master.svg?label=Windows-master)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/master)
+[![Windows: develop](https://img.shields.io/appveyor/ci/ecmwf/eccodes/develop.svg?label=Windows-dev)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/develop)
+
 ecCodes is a package developed by ECMWF which provides an application programming interface
 and a set of tools for decoding and encoding messages in the following formats:
 
@@ -30,7 +38,7 @@ INSTALLATION
 4. Run cmake pointing to the source and specify the installation location:
    > cmake  ../eccodes-x.y.z-Source -DCMAKE_INSTALL_PREFIX=/path/to/where/you/install/eccodes
    
-   It is recommended that you install into a clean directory
+   It is strongly recommended that you install into a clean directory
 
 5. Compile, test and install:
    > make

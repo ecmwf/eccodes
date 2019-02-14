@@ -48,14 +48,12 @@ unsigned[4] LoV  : edition_specific;
 meta  geography.LoVInDegrees scale(LoV,one,grib2divider,truncateDegrees) : dump;
 
 #  Dx - X-direction grid length
-# NOTE 1 NOT FOUND
 unsigned[4] Dx : edition_specific ;
 alias xDirectionGridLength=Dx;
 alias Di =  Dx;
 meta  geography.DxInMetres scale(Dx,one,thousand) : dump;
 
 #  Dy - Y-direction grid length
-# NOTE 1 NOT FOUND
 unsigned[4] Dy : edition_specific ;
 alias yDirectionGridLength=Dy ;
 alias Dj =  Dy;

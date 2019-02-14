@@ -631,7 +631,7 @@ static void header(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out,"import sys\n");
         fprintf(self->dumper.out,"from eccodes import *\n\n\n");
         fprintf(self->dumper.out,"def bufr_decode(input_file):\n");
-        fprintf(self->dumper.out,"    f = open(input_file)\n");
+        fprintf(self->dumper.out,"    f = open(input_file, 'rb')\n");
     }
     fprintf(self->dumper.out,"    # Message number %ld\n    # -----------------\n", d->count);
     fprintf(self->dumper.out,"    print ('Decoding message number %ld')\n", d->count);

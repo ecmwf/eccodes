@@ -72,8 +72,8 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom,grib_handle* 
     long section_offset[MAX_NUM_SECTIONS]={0,};
     long off=0;
     grib_handle* h;
-    char section_length_str[]="section0Length";
-    char section_offset_str[]="offsetSection0";
+    char section_length_str[64]="section0Length";
+    char section_offset_str[64]="offsetSection0";
     long length,offset;
 
     *err=grib_get_long(hfrom,"edition",&edition);
@@ -443,13 +443,13 @@ static int angle_can_be_encoded(grib_handle* h, const double angle)
     int retval = 1;
     grib_handle* h2 = NULL;
     char sample_name[16] = {0,};
-    long angular_precision = 0; /* e.g. 1e3 for grib1 and 1e6 for grib2 */
+    long angle_subdivisions = 0; /* e.g. 1e3 for grib1 and 1e6 for grib2 */
     long edition = 0, coded = 0;
     double expanded, diff;
 
     if((ret = grib_get_long(h,"edition",&edition)) != 0) return ret;
-    if((ret = grib_get_long(h, "angularPrecision", &angular_precision)) != 0) return ret;
-    Assert(angular_precision > 0);
+    if((ret = grib_get_long(h, "angleSubdivisions", &angle_subdivisions)) != 0) return ret;
+    Assert(angle_subdivisions > 0);
 
     sprintf(sample_name, "GRIB%ld", edition);
     h2 = grib_handle_new_from_samples(0, sample_name);
@@ -457,9 +457,9 @@ static int angle_can_be_encoded(grib_handle* h, const double angle)
     if((ret = grib_get_long(h2,   "latitudeOfFirstGridPoint", &coded)) != 0) return ret;
     grib_handle_delete(h2);
 
-    expanded = angle*angular_precision;
+    expanded = angle*angle_subdivisions;
     diff = fabs(expanded - coded);
-    if (diff < 1.0/angular_precision)
+    if (diff < 1.0/angle_subdivisions)
         retval = 1;
     else
         retval = 0;
@@ -470,16 +470,16 @@ static int angle_can_be_encoded(grib_handle* h, const double angle)
 #ifdef ECCODES_ON_WINDOWS
 #define round(a) ( (a) >=0 ? ((a)+0.5) : ((a)-0.5) )
 #endif
-static double adjust_angle(const double angle, const RoundingPolicy policy, const double angular_precision)
+static double adjust_angle(const double angle, const RoundingPolicy policy, const double angle_subdivisions)
 {
     double result = 0;
-    Assert(angular_precision > 0);
-    result = angle * angular_precision;
+    Assert(angle_subdivisions > 0);
+    result = angle * angle_subdivisions;
     if (policy == eROUND_ANGLE_UP)
         result = round(result+0.5);
     else
         result = round(result-0.5);
-    result = result / angular_precision;
+    result = result / angle_subdivisions;
     return result;
 }
 
@@ -496,8 +496,8 @@ static int expand_bounding_box(grib_handle* h, grib_values *values, const size_t
     size_t i=0;
     double new_angle = 0;
     RoundingPolicy roundingPolicy = eROUND_ANGLE_UP;
-    long angular_precision = 0; /* e.g. 1e3 for grib1 and 1e6 for grib2 */
-    if((ret = grib_get_long(h, "angularPrecision", &angular_precision)) != 0)
+    long angle_subdivisions = 0; /* e.g. 1e3 for grib1 and 1e6 for grib2 */
+    if((ret = grib_get_long(h, "angleSubdivisions", &angle_subdivisions)) != 0)
         return ret;
 
     for(i=0; i<count; i++) {
@@ -520,7 +520,7 @@ static int expand_bounding_box(grib_handle* h, grib_values *values, const size_t
         }
 
         if (is_angle && !angle_can_be_encoded(h, values[i].double_value)) {
-            new_angle = adjust_angle(values[i].double_value, roundingPolicy, angular_precision);
+            new_angle = adjust_angle(values[i].double_value, roundingPolicy, angle_subdivisions);
             if (h->context->debug) {
                 printf("ECCODES DEBUG  grib_util EXPAND_BOUNDING_BOX %s: old=%.15e new=%.15e (%s)\n",
                        values[i].name, values[i].double_value, new_angle,
@@ -1815,7 +1815,7 @@ int parse_keyval_string(const char* grib_tool, char* arg, int values_required, i
     return GRIB_SUCCESS;
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (grib edition 2) is related to EPS */
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to EPS */
 int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber)
 {
     return (
@@ -1826,7 +1826,7 @@ int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber)
     );
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (grib edition 2) is related to atmospheric chemical constituents */
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to atmospheric chemical constituents */
 int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNumber)
 {
     return (
@@ -1836,14 +1836,39 @@ int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNu
             productDefinitionTemplateNumber == 43);
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (grib edition 2) is related to aerosols */
-int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber)
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to
+ * atmospheric chemical constituents based on a distribution function */
+int is_productDefinitionTemplateNumber_ChemicalDistFunc(long productDefinitionTemplateNumber)
 {
     return (
-            productDefinitionTemplateNumber == 44 ||
+            productDefinitionTemplateNumber == 57 ||
+            productDefinitionTemplateNumber == 58 ||
+            productDefinitionTemplateNumber == 67 ||
+            productDefinitionTemplateNumber == 68);
+}
+
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to aerosols */
+int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber)
+{
+    /* Note: PDT 44 is deprecated. Use 48 instead */
+    return (
+            productDefinitionTemplateNumber == 44 || productDefinitionTemplateNumber == 48 ||
             productDefinitionTemplateNumber == 45 ||
             productDefinitionTemplateNumber == 46 ||
             productDefinitionTemplateNumber == 47);
+}
+
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to 
+ * optical properties of aerosol
+ */
+int is_productDefinitionTemplateNumber_AerosolOptical(long productDefinitionTemplateNumber)
+{
+    /* Note: PDT 48 can be used for both plain aerosols as well as optical properties of aerosol.
+     * For the former user must set the optical wavelength range to missing.
+     */
+    return (
+            productDefinitionTemplateNumber == 48 ||
+            productDefinitionTemplateNumber == 49);
 }
 
 int is_index_file(const char* filename)
@@ -1852,12 +1877,15 @@ int is_index_file(const char* filename)
     char buf[8]={0,};
     const char* str="GRBIDX";
     int ret=0;
+    size_t size = 0;
 
     fh=fopen(filename,"r");
     if (!fh) return 0;
 
-    fread(buf,1,1,fh);
-    fread(buf,6,1,fh);
+    size=fread(buf,1,1,fh);
+    if (size != 1) {fclose(fh); return 0;}
+    size=fread(buf,6,1,fh);
+    if (size != 1) {fclose(fh); return 0;}
 
     ret=!strcmp(buf,str);
 

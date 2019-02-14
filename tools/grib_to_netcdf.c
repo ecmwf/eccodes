@@ -23,6 +23,11 @@
 #include <netcdf.h>
 
 #include "grib_tools.h"
+#include "eccodes_windef.h"
+
+#ifdef ECCODES_ON_WINDOWS
+#include <stdint.h>
+#endif
 
 const char* grib_tool_description = "Convert a GRIB file to netCDF format.";
 const char* grib_tool_name = "grib_to_netcdf";
@@ -592,7 +597,6 @@ static err handle_to_request(request *r, grib_handle* g)
 
     while(grib_keys_iterator_next(ks))
     {
-
         strcpy(name, grib_keys_iterator_get_name(ks));
 
         if((e = grib_keys_iterator_get_string(ks, value, &len)) != GRIB_SUCCESS)
@@ -600,6 +604,11 @@ static err handle_to_request(request *r, grib_handle* g)
 
         set_value(r, name, "%s", value);
         len = sizeof(value);
+    }
+
+    strcpy(name, "stepUnits");
+    if((e = grib_get_string(g, name, value, &len)) == GRIB_SUCCESS) {
+        set_value(r, name, "%s", value);
     }
 
     /*
@@ -1927,16 +1936,29 @@ static long monthnumber(const char *m)
     return -1;
 }
 
+int check_stepUnits(const char* step_units_str)
+{
+    /* Only hours, minutes and seconds supported */
+    if (strcmp(step_units_str, "h")==0 ||
+        strcmp(step_units_str, "m")==0 ||
+        strcmp(step_units_str, "s")==0)
+    {
+        return GRIB_SUCCESS;
+    }
+    return GRIB_WRONG_STEP_UNIT;
+}
+
 /* The argument represents 1 field */
 static void validation_time(request *r)
 {
     long date = 0;
     long time = 0;
-    long step = 0;
+    double step = 0;
     long fcmonthdays = 0;
     long fcmonth = 0;
     double v;
     long julian = 0;
+    const char* step_units = NULL;
 
     long nstep = count_values(r, "step");
     long ndate = count_values(r, "date");
@@ -1960,7 +1982,7 @@ static void validation_time(request *r)
     }
 
     if(nstep)
-        step = atol(get_value(r, "step", 0));
+        step = atof(get_value(r, "step", 0));
 
     if(ndate)
     {
@@ -2012,8 +2034,20 @@ static void validation_time(request *r)
     }
 
     julian = grib_date_to_julian(date);
+    step_units = get_value(r, "stepUnits", 0);
+    if (step_units){
+        if(check_stepUnits(step_units)!=GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR,
+                "Cannot convert stepUnits of '%s'. Only hours, minutes and seconds supported.", step_units);
+        }
+        if (strcmp("m", step_units)==0) {
+            step /= 60;
+        } else if (strcmp("s", step_units)==0) {
+            step /= 3600;
+        }
+    }
     v = julian * 24.0 + fcmonthdays * 24.0 + time / 100.0 + step * 1.0;
-    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: date=%ld, julian=%ld, fcmonthdays=%ld, time=%ld, step=%ld, validation=%ld", date, julian, fcmonthdays, time, step, v);
+    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: date=%ld, julian=%ld, fcmonthdays=%ld, time=%ld, step=%g, validation=%ld", date, julian, fcmonthdays, time, step, v);
     set_value(r, "_validation", "%lf", v);
     set_value(r, "_juliandate", "%ld", julian);
 
@@ -2924,6 +2958,12 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         if(count_values(data_r,"levtype") > 1)
         {
             grib_context_log(ctx, GRIB_LOG_ERROR, "Cannot handle fields for different levtypes.\n");
+            grib_context_log(ctx, GRIB_LOG_ERROR, "Please split input data into different files. Exiting!\n");
+            exit(1);
+        }
+        if(count_values(data_r,"stepUnits") > 1)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "Cannot handle fields for different stepUnits.\n");
             grib_context_log(ctx, GRIB_LOG_ERROR, "Please split input data into different files. Exiting!\n");
             exit(1);
         }

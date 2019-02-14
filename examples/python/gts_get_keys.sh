@@ -11,19 +11,20 @@
 . ./include.sh
 
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="gts_get_keys_test_p"
 
-#Define tmp file
+# Define tmp file
 fTmp=${label}.tmp.txt
-rm -f $fTmp | true
+rm -f $fTmp
 
-REDIRECT=/dev/null
+# Write the key values into a file
+$PYTHON $examples_src/gts_get_keys.py > $fTmp
 
-#Write the key values into a file
-$PYTHON $examples_src/gts_get_keys.py  2> $REDIRECT > $fTmp
-
-#TODO: check the results
+# Check the results
+grep -q "message: 300" $fTmp
+c=`grep -c "CCCC: KWBC" $fTmp`
+[ $c -eq 211 ]
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp

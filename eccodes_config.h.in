@@ -15,7 +15,7 @@
 
 #define ECCODES_VERSION_STR      "@ECCODES_VERSION_STR@"
 
-/* ECCODES_VERSION is defined in grib_api.h from the 3 version components below */
+/* ECCODES_VERSION is defined in eccodes_version.h from the 3 version components below */
 
 #define ECCODES_MAJOR_VERSION    @ECCODES_MAJOR_VERSION@
 #define ECCODES_MINOR_VERSION    @ECCODES_MINOR_VERSION@

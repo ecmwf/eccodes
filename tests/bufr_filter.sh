@@ -654,7 +654,7 @@ write;
 EOF
 
 ${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f 2>> $fLog 1>> $fLog
-${tools_dir}/bufr_compare ${f}.out $f 2>> $fLog 1>> $fLog
+${tools_dir}/bufr_compare ${f}.out $f #2>> $fLog 1>> $fLog
 
 rm -f  ${f}.out 
 
@@ -673,7 +673,7 @@ cat >$fRules <<EOF
 EOF
 
 ${tools_dir}/codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
-${tools_dir}/bufr_compare $fOut $fRef 2>> $fLog 1>> $fLog
+${tools_dir}/bufr_compare $fOut $fRef #2>> $fLog 1>> $fLog
 
 rm -f $fOut 
 
@@ -686,7 +686,7 @@ cat >$fRules <<EOF
 EOF
 
 ${tools_dir}/codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
-${tools_dir}/bufr_compare $fOut $fRef 2>> $fLog 1>> $fLog
+${tools_dir}/bufr_compare $fOut $fRef #2>> $fLog 1>> $fLog
 
 rm -f $fOut 
 
@@ -714,7 +714,7 @@ cat >$fRules <<EOF
 EOF
 
 ${tools_dir}/codes_bufr_filter -o ${fout} $fRules $f 2>> $fLog 1>> $fLog
-${tools_dir}/bufr_compare $fout ${fout}.ref 2>> $fLog 1>> $fLog
+${tools_dir}/bufr_compare $fout ${fout}.ref #2>> $fLog 1>> $fLog
 
 #-----------------------------------------------------------
 # ECC-147

@@ -7,7 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 #  Reference value (R)
 # The copy_ok means that the value is copied when changing the representation
 # e.g. from jpeg to simple packing.
@@ -29,4 +28,3 @@ transient optimizeScaleFactor = 0;
 unsigned[1] bitsPerValue;
 alias numberOfBits = bitsPerValue;
 alias numberOfBitsContainingEachPackedValue = bitsPerValue;
-

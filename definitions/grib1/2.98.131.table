@@ -29,11 +29,11 @@
 65 tprl1  Total precipitation rate less than 1 mm/day %
 66 tprg3  Total precipitation rate of at least 3 mm/day %
 67 tprg5  Total precipitation rate of at least 5 mm/day %
-68 10spg10 10 metre Wind speed of at least 10 m/s %
-69 10spg15 10 metre Wind speed of at least 15 m/s %
-70 10fgg15 10 metre Wind gust of at least 15 m/s %
-71 10fgg20 10 metre Wind gust of at least 20 m/s %
-72 10fgg25 10 metre Wind gust of at least 25 m/s %
+68 10spg10 10 metre wind speed of at least 10 m/s %
+69 10spg15 10 metre wind speed of at least 15 m/s %
+70 10fgg15 10 metre wind gust of at least 15 m/s %
+71 10fgg20 10 metre wind gust of at least 20 m/s %
+72 10fgg25 10 metre wind gust of at least 25 m/s %
 73 2tl273  2 metre temperature less than 273.15 K %
 74 swhg2  Significant wave height of at least 2 m %
 75 swhg4  Significant wave height of at least 4 m %

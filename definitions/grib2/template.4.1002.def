@@ -31,6 +31,3 @@ unsigned[4] endOfRange  : dump;
 
 #  Number of values
 unsigned[2] numberOfDataValues : read_only,dump;
-
-
-# END   2/template.4.1002 ----------------------------------------------------------------------

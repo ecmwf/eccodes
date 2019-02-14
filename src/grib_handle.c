@@ -369,15 +369,15 @@ static int determine_product_kind(grib_handle* h, ProductKind* prod_kind)
 {
     int err = 0;
     size_t len = 0;
-    char prod_kind_str[256]={0,};
-    err = grib_get_length(h, "kindOfProduct", &len);
+    err = grib_get_length(h, "identifier", &len);
     if (!err) {
-        err = grib_get_string(h, "kindOfProduct", prod_kind_str, &len);
-        if      (grib_inline_strcmp(prod_kind_str, "GRIB")==0)  *prod_kind = PRODUCT_GRIB;
-        else if (grib_inline_strcmp(prod_kind_str, "BUFR")==0)  *prod_kind = PRODUCT_BUFR;
-        else if (grib_inline_strcmp(prod_kind_str, "METAR")==0) *prod_kind = PRODUCT_METAR;
-        else if (grib_inline_strcmp(prod_kind_str, "GTS")==0)   *prod_kind = PRODUCT_GTS;
-        else if (grib_inline_strcmp(prod_kind_str, "TAF")==0)   *prod_kind = PRODUCT_TAF;
+        char id_str[64]={0,};
+        err = grib_get_string(h, "identifier", id_str, &len);
+        if      (grib_inline_strcmp(id_str, "GRIB")==0)  *prod_kind = PRODUCT_GRIB;
+        else if (grib_inline_strcmp(id_str, "BUFR")==0)  *prod_kind = PRODUCT_BUFR;
+        else if (grib_inline_strcmp(id_str, "METAR")==0) *prod_kind = PRODUCT_METAR;
+        else if (grib_inline_strcmp(id_str, "GTS")==0)   *prod_kind = PRODUCT_GTS;
+        else if (grib_inline_strcmp(id_str, "TAF")==0)   *prod_kind = PRODUCT_TAF;
         else *prod_kind = PRODUCT_ANY;
     }
     return err;
@@ -782,7 +782,9 @@ static grib_handle* grib_handle_new_from_file_multi ( grib_context* c, FILE* f,i
         gl->gts_header_len=gtslen;
         grib_context_free ( c,save_gts_header );
         gtslen=0;
-    } else gl->gts_header=NULL;
+    } else {
+        gl->gts_header=NULL;
+    }
 
     return gl;
 }
@@ -934,11 +936,16 @@ grib_handle* bufr_new_from_file( grib_context* c, FILE* f,int *error )
     void *data = NULL;
     size_t olen = 0;
     grib_handle  *gl = NULL;
-    off_t offset=0;
+    off_t gts_header_offset=0;
+    off_t offset=0, end_msg_offset=0;
+    char *gts_header=0,*save_gts_header=0;
+    int gtslen=0;
 
     if ( c == NULL ) c = grib_context_get_default();
 
+    gts_header_offset=grib_context_tell( c,f);
     data = wmo_read_bufr_from_file_malloc ( f, 0,&olen,&offset,error );
+    end_msg_offset=grib_context_tell ( c,f );
 
     if ( *error != GRIB_SUCCESS )
     {
@@ -946,6 +953,26 @@ grib_handle* bufr_new_from_file( grib_context* c, FILE* f,int *error )
 
         if ( *error == GRIB_END_OF_FILE ) *error = GRIB_SUCCESS;
         return NULL;
+    }
+
+    if ( c->gts_header_on )
+    {
+        int g=0;
+        grib_context_seek ( c,gts_header_offset,SEEK_SET,f );
+        gtslen=offset-gts_header_offset;
+        gts_header=(char*)grib_context_malloc ( c,sizeof ( unsigned char ) *gtslen );
+        save_gts_header=gts_header;
+        grib_context_read ( c,gts_header,gtslen,f );
+        g=gtslen;
+        while ( gts_header!=NULL && g != 0 && *gts_header != '\03' )
+        {
+            /*printf("--------%d %X \n",gtslen,*gts_header);*/
+            gts_header++;
+            g--;
+        }
+        if ( g>8 ) {gts_header++;gtslen=g-1;}
+        else gts_header=save_gts_header;
+        grib_context_seek ( c,end_msg_offset,SEEK_SET,f );
     }
 
     gl = grib_handle_new_from_message ( c, data, olen );
@@ -964,6 +991,17 @@ grib_handle* bufr_new_from_file( grib_context* c, FILE* f,int *error )
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
     if (gl->offset == 0) grib_context_set_handle_file_count(c,1);
+
+    if ( c->gts_header_on && gtslen >=8 )
+    {
+        gl->gts_header=(char*)grib_context_malloc ( c,sizeof ( unsigned char ) *gtslen );
+        memcpy ( gl->gts_header,gts_header,gtslen );
+        gl->gts_header_len=gtslen;
+        grib_context_free ( c,save_gts_header );
+        gtslen=0;
+    } else {
+        gl->gts_header=NULL;
+    }
 
     return gl;
 }
@@ -1018,8 +1056,10 @@ static grib_handle* grib_handle_new_from_file_no_multi ( grib_context* c,FILE* f
     int gtslen=0;
 
     if ( c == NULL ) c = grib_context_get_default();
+
+    gts_header_offset=grib_context_tell( c,f);
     data = wmo_read_grib_from_file_malloc ( f, headers_only,&olen,&offset,error );
-    end_msg_offset=offset+olen;
+    end_msg_offset=grib_context_tell ( c,f );
 
     if ( *error != GRIB_SUCCESS )
     {
@@ -1076,6 +1116,8 @@ static grib_handle* grib_handle_new_from_file_no_multi ( grib_context* c,FILE* f
         gl->gts_header_len=gtslen;
         grib_context_free ( c,save_gts_header );
         gtslen=0;
+    } else {
+        gl->gts_header=NULL;
     }
 
     return gl;

@@ -12,7 +12,6 @@
 #
 # Description: how to read values of different type of keys from GTS messages.
 #
-#
 
 from __future__ import print_function
 import traceback
@@ -37,6 +36,7 @@ def example():
         if gid is None:
             break
 
+        cnt += 1
         print("message: %s" % cnt)
 
         # ---------------------------------------------
@@ -49,8 +49,6 @@ def example():
                 print('  %s: %s' % (key, codes_get(gid, key)))
             except CodesInternalError as err:
                 print('Error with key="%s" : %s' % (key, err.msg))
-
-        cnt += 1
 
         # delete handle
         codes_release(gid)

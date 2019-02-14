@@ -215,7 +215,7 @@ static void grib_md5_flush(grib_md5_state* s)
 
 void grib_md5_init(grib_md5_state* s)
 {
-    Assert( sizeof(UnsignedInt64) == 8 );
+    Assert( sizeof(uint64_t) == 8 );
     memset(s,0,sizeof(grib_md5_state));
     s->h0 = 0x67452301;
     s->h1 = 0xefcdab89;
@@ -243,8 +243,8 @@ void grib_md5_add(grib_md5_state* s,const void* data,size_t len)
 
 void grib_md5_end(grib_md5_state* s, char *digest)
 {
-    UnsignedInt64 h = 8;
-    UnsignedInt64 bits, leng = s->size * h;
+    uint64_t h = 8;
+    uint64_t bits, leng = s->size * h;
     unsigned char c = 0x80;
     int i;
 

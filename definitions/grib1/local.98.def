@@ -2,4 +2,3 @@
 
 unsigned[1] localDefinitionNumber = 1 : dump,edition_specific,no_copy;
 template  localDefinition  "grib1/local.[centre:l].[localDefinitionNumber:l].def";
-

@@ -7,13 +7,12 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# START 2/template.7.1 ----------------------------------------------------------------------
 # TEMPLATE 7.1, Matrix values at grid point -simple packing
 # Octets 6-nn : Binary data values - binary string, with each
 # (scaled)
 # ????          data_values__binary_string_with_each
 
-  meta codedValues data_g2simple_packing(
+meta codedValues data_g2simple_packing(
         section7Length,
         offsetBeforeData,
         offsetSection7,
@@ -28,7 +27,7 @@
         optimizeScaleFactor
   ): read_only;
 
-  meta values data_apply_bitmap(codedValues,
+meta values data_apply_bitmap(codedValues,
                                 bitmap,
                                 missingValue,
                                 binaryScaleFactor,

@@ -58,6 +58,9 @@ check_c_source_compiles(
       " ECCODES_HAVE_C_INLINE )
 
 include(eccodes_test_endiness)
+if( EC_OS_NAME MATCHES "windows" )
+    include(eccodes_find_linux_utils)
+endif()
 
 ecbuild_debug("ECCODES_BIG_ENDIAN=${ECCODES_BIG_ENDIAN}")
 ecbuild_debug("ECCODES_LITTLE_ENDIAN=${ECCODES_LITTLE_ENDIAN}")
@@ -127,7 +130,7 @@ endif()
 ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
-    CONDITION ECCODES_HAVE_FMEMOPEN OR ECCODES_HAVE_FUNOPEN
+    CONDITION ECCODES_HAVE_FMEMOPEN OR ECCODES_HAVE_FUNOPEN OR (EC_OS_NAME MATCHES "windows")
     REQUIRED_PACKAGES PythonInterp
 )
 
@@ -283,6 +286,20 @@ if( IEEE_LE )
     set( IEEE_BE 0 )
 endif()
 
+if( EC_OS_NAME MATCHES "windows" )
+    # Symbols need to be explicitly exported on Windows so we can link to dlls.
+    set( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE )
+
+    # Suppress compliler warnings - see ECC-850
+    # Suppress warnings about using 'insecure' functions. Fixing this would require changes all over
+    # the codebase which would damage portability.
+    ecbuild_add_c_flags("/D_CRT_SECURE_NO_WARNINGS")
+    # Suppress warnings about using well-known C functions.
+    ecbuild_add_c_flags("/D_CRT_NONSTDC_NO_DEPRECATE")
+    # Suppress C4267: warns about possible loss of data when converting 'size_t' to 'int'.
+    ecbuild_add_c_flags("/wd4267")
+endif()
+
 ###############################################################################
 # contents
 
@@ -402,7 +419,7 @@ endif()
 # pkg-config
 ecbuild_pkgconfig(
   NAME           eccodes
-  URL            "https://software.ecmwf.int/wiki/display/ECC/"
+  URL            "https://confluence.ecmwf.int/display/ECC/"
   DESCRIPTION    "The ecCodes library"
   LIBRARIES      eccodes
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
@@ -413,7 +430,7 @@ ecbuild_pkgconfig(
 if( HAVE_FORTRAN )
   ecbuild_pkgconfig(
     NAME                eccodes_f90
-    URL                 "https://software.ecmwf.int/wiki/display/ECC/"
+    URL                 "https://confluence.ecmwf.int/display/ECC/"
     LIBRARIES           eccodes_f90 eccodes
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran

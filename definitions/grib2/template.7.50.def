@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
-# START 2/template.7.50 ----------------------------------------------------------------------
 # TEMPLATE 7.50, Spectral data - simple packing
 # Octets 6-nn : Binary data values - binary string, with each
 # (scaled)

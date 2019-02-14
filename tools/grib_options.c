@@ -18,7 +18,6 @@ extern char *optarg;
 extern int optind;
 
 #ifdef ECCODES_ON_WINDOWS
-/* Microsoft Windows Visual Studio support */
 #include "wingetopt.h"
 #endif
 
@@ -48,10 +47,10 @@ grib_options_help grib_options_help_list[] ={
     "\n\t\tData value corresponding to the given index is printed.\n"},
   {"j",0,"JSON mode (JavaScript Object Notation).\n"},
   {"l:","Latitude,Longitude[,MODE,file]",
-   "\n\t\tValue close to the point of a Latitude/Longitude."
+   "\n\t\tValue close to the point of a Latitude,Longitude."
    "\n\t\tAllowed values for MODE are:"
-   "\n\t\t4 (4 values in the nearest points are printed) Default"
-   "\n\t\t1 (the value at the nearest point is printed)"
+   "\n\t\t  4 (4 values in the nearest points are printed) Default"
+   "\n\t\t  1 (the value at the nearest point is printed)"
    "\n\t\tfile (file is used as mask. The closer point with mask value>=0.5 is printed)\n"
        },
   {"n:","namespace",
@@ -101,7 +100,7 @@ grib_options_help grib_options_help_list[] ={
         "\n\t\tall=relative_error will compare all the floating-point keys using relative_error. Default all=0.\n"},
   {"S",0,"Strict. Only messages matching all the constraints are copied to"
    "\n\t\tthe output file\n"},
-  {"T:","T | B | M | A","Message type. T->GTS, B->BUFR, M->METAR (Experimental),A->Any (Experimental).\n\t\t\tThe input file is interpreted according to the message type.\n"},
+  {"T:","T | B | M | A","Message type. T->GTS, B->BUFR, M->METAR (Experimental), A->Any (Experimental).\n\t\t\t\tThe input file is interpreted according to the message type.\n"},
   {"V",0,"Version.\n"},
   {"W:","width","\n\t\tMinimum width of each column in output. Default is 10.\n"},
   {"X:","offset","\n\t\tInput file offset in bytes. Processing of the input file will start from \"offset\".\n"},
@@ -241,7 +240,13 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
     options->gts=grib_options_on("g");
 
     if (grib_options_on("d:")) {
-        options->constant=atof(grib_options_get_option("d:"));
+        char* endPtr = NULL; /* for error handling */
+        const char* optionStr = grib_options_get_option("d:");
+        options->constant=strtod(optionStr, &endPtr);
+        if(*endPtr) {
+            fprintf(stderr, "Invalid number for -d option: '%s'\n", optionStr);
+            exit(1);
+        }
         options->repack=1;
     }
 
