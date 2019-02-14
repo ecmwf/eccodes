@@ -4219,6 +4219,31 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 246 ;
 	}
+#Nitrate fine mode aerosol mass mixing ratio
+'210247' = {
+	 table2Version = 210 ;
+	 indicatorOfParameter = 247 ;
+	}
+#Nitrate coarse mode aerosol mass mixing ratio
+'210248' = {
+	 table2Version = 210 ;
+	 indicatorOfParameter = 248 ;
+	}
+#Ammonium aerosol mass mixing ratio
+'210249' = {
+	 table2Version = 210 ;
+	 indicatorOfParameter = 249 ;
+	}
+#Nitrate aerosol optical depth at 550 nm
+'210250' = {
+	 table2Version = 210 ;
+	 indicatorOfParameter = 250 ;
+	}
+#Ammonium aerosol optical depth at 550 nm
+'210251' = {
+	 table2Version = 210 ;
+	 indicatorOfParameter = 251 ;
+	}
 #Aerosol type 13 mass mixing ratio
 '211013' = {
 	 table2Version = 211 ;
@@ -7038,6 +7063,121 @@
 '215188' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 188 ;
+	}
+#Source/gain of fine-mode nitrate aerosol
+'215189' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 189 ;
+	}
+#Source/gain of coarse-mode nitrate aerosol
+'215190' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 190 ;
+	}
+#Dry deposition of fine-mode nitrate aerosol
+'215191' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 191 ;
+	}
+#Dry deposition of coarse-mode nitrate aerosol
+'215192' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 192 ;
+	}
+#Sedimentation of fine-mode nitrate aerosol
+'215193' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 193 ;
+	}
+#Sedimentation of coarse-mode nitrate aerosol
+'215194' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 194 ;
+	}
+#Wet deposition of fine-mode nitrate aerosol by large-scale precipitation
+'215195' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 195 ;
+	}
+#Wet deposition of coarse-mode nitrate aerosol by large-scale precipitation
+'215196' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 196 ;
+	}
+#Wet deposition of fine-mode nitrate aerosol by convective precipitation
+'215197' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 197 ;
+	}
+#Wet deposition of coarse-mode nitrate aerosol by convective precipitation
+'215198' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 198 ;
+	}
+#Negative fixer of fine-mode nitrate aerosol
+'215199' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 199 ;
+	}
+#Negative fixer of coarse-mode nitrate aerosol
+'215200' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 200 ;
+	}
+#Vertically integrated mass of fine-mode nitrate aerosol
+'215201' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 201 ;
+	}
+#Vertically integrated mass of coarse-mode nitrate aerosol
+'215202' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 202 ;
+	}
+#Fine-mode nitrate aerosol optical depth at 550mn
+'215203' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 203 ;
+	}
+#Coarse-mode nitrate aerosol optical depth at 550nm
+'215204' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 204 ;
+	}
+#Source/gain of ammonium aerosol
+'215205' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 205 ;
+	}
+#Dry deposition of ammonium aerosol
+'215206' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 206 ;
+	}
+#Sedimentation of ammonium aerosol
+'215207' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 207 ;
+	}
+#Wet deposition of ammonium aerosol by large-scale precipitation
+'215208' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 208 ;
+	}
+#Wet deposition of ammonium aerosol by convective precipitation
+'215209' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 209 ;
+	}
+#Negative fixer of ammonium aerosol
+'215210' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 210 ;
+	}
+#Vertically integrated mass of ammonium aerosol
+'215211' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 211 ;
 	}
 #Experimental product
 '216001' = {
