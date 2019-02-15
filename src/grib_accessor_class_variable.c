@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -143,47 +143,49 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a, const long length , grib_arguments* args )
 {
     grib_accessor_variable* self = (grib_accessor_variable*)a;
-    grib_expression *expression = grib_arguments_get_expression(grib_handle_of_accessor(a),args,0);
+    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_expression *expression = grib_arguments_get_expression(hand,args,0);
     const char* p = 0;
     size_t len = 1;
     long l;
     int ret=0;
     double d;
-    char tmp[1024];
 
     a->length = 0;
     if (self->type==GRIB_TYPE_UNDEFINED && expression) {
-    self->type = grib_expression_native_type(grib_handle_of_accessor(a),expression);
+        self->type = grib_expression_native_type(hand,expression);
 
-    switch(self->type)
-    {
-    case GRIB_TYPE_DOUBLE:
-        grib_expression_evaluate_double(grib_handle_of_accessor(a),expression,&d);
-        pack_double(a,&d,&len);
-        break;
+        switch(self->type)
+        {
+            case GRIB_TYPE_DOUBLE:
+                grib_expression_evaluate_double(hand,expression,&d);
+                pack_double(a,&d,&len);
+                break;
 
-    case GRIB_TYPE_LONG:
-        grib_expression_evaluate_long(grib_handle_of_accessor(a),expression,&l);
-        pack_long(a,&l,&len);
-        break;
+            case GRIB_TYPE_LONG:
+                grib_expression_evaluate_long(hand,expression,&l);
+                pack_long(a,&l,&len);
+                break;
 
-    default:
-        len = sizeof(tmp);
-        p = grib_expression_evaluate_string(grib_handle_of_accessor(a),expression,tmp,&len,&ret);
-        if (ret != GRIB_SUCCESS) {
-            grib_context_log(a->context,GRIB_LOG_ERROR,"unable to evaluate %s as string",a->name);
-            Assert(0);
+            default: {
+                char tmp[1024];
+                len = sizeof(tmp);
+                p = grib_expression_evaluate_string(hand,expression,tmp,&len,&ret);
+                if (ret != GRIB_SUCCESS) {
+                    grib_context_log(a->context,GRIB_LOG_ERROR,"unable to evaluate %s as string",a->name);
+                    Assert(0);
+                }
+                len = strlen(p)+1;
+                pack_string(a,p,&len);
+                break;
+            }
         }
-        len = strlen(p)+1;
-        pack_string(a,p,&len);
-        break;
     }
-  }
 }
 
 void accessor_variable_set_type(grib_accessor* a,int type) {
     grib_accessor_variable *self = (grib_accessor_variable*)a;
-	self->type=type;
+    self->type=type;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -209,8 +211,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
     grib_accessor_variable *self = (grib_accessor_variable*)a;
 
-    if(*len != 1)
-    {
+    if(*len != 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
         *len = 1;
         return GRIB_ARRAY_TOO_SMALL;
@@ -229,8 +230,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     grib_accessor_variable *self = (grib_accessor_variable*)a;
 
-    if(*len != 1)
-    {
+    if(*len != 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
         *len = 1;
         return GRIB_ARRAY_TOO_SMALL;
@@ -246,8 +246,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_accessor_variable *ac = (grib_accessor_variable*)a;
 
-    if(*len < 1)
-    {
+    if(*len < 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
@@ -261,8 +260,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_variable *ac = (grib_accessor_variable*)a;
 
-    if(*len < 1)
-    {
+    if(*len < 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
@@ -311,7 +309,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len){
     return GRIB_SUCCESS;
 }
 
-
 static int pack_string(grib_accessor* a, const char* val, size_t *len)
 {
     grib_accessor_variable *self = (grib_accessor_variable*)a;
@@ -339,7 +336,8 @@ static size_t string_length(grib_accessor* a)
         return MAX_VARIABLE_STRING_LENGTH;
 }
 
-static long byte_count(grib_accessor* a) {
+static long byte_count(grib_accessor* a)
+{
     return a->length;
 }
 
@@ -358,7 +356,8 @@ static long byte_count(grib_accessor* a) {
 }
  */
 
-static int compare(grib_accessor* a, grib_accessor* b) {
+static int compare(grib_accessor* a, grib_accessor* b)
+{
     int retval=0;
     double *aval=0;
     double *bval=0;
@@ -398,29 +397,28 @@ static int compare(grib_accessor* a, grib_accessor* b) {
 
 static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err)
 {
-  grib_accessor* the_clone=NULL;
-  grib_accessor_variable *self = (grib_accessor_variable*)a;
-  grib_accessor_variable* variableAccessor=NULL;
-  grib_action creator = {0, };
-  creator.op         = "variable";
-  creator.name_space = "";
-  creator.set        = 0;
+    grib_accessor* the_clone=NULL;
+    grib_accessor_variable *self = (grib_accessor_variable*)a;
+    grib_accessor_variable* variableAccessor=NULL;
+    grib_action creator = {0, };
+    creator.op         = "variable";
+    creator.name_space = "";
+    creator.set        = 0;
 
-  creator.name=grib_context_strdup(a->context,a->name);
-  the_clone=grib_accessor_factory(s, &creator, 0, NULL);
-  the_clone->parent=NULL;
-  the_clone->h=s->h;
-  the_clone->flags=a->flags;
-  variableAccessor=(grib_accessor_variable*)the_clone;
+    creator.name=grib_context_strdup(a->context,a->name);
+    the_clone=grib_accessor_factory(s, &creator, 0, NULL);
+    the_clone->parent=NULL;
+    the_clone->h=s->h;
+    the_clone->flags=a->flags;
+    variableAccessor=(grib_accessor_variable*)the_clone;
 
-  *err=0;
-  variableAccessor->type=self->type;
-  if(self->type == GRIB_TYPE_STRING && self->cval!=NULL) {
-    variableAccessor->cval=grib_context_strdup(a->context,self->cval);
-  } else {
-    variableAccessor->dval=self->dval;
-  }
+    *err=0;
+    variableAccessor->type=self->type;
+    if(self->type == GRIB_TYPE_STRING && self->cval!=NULL) {
+        variableAccessor->cval=grib_context_strdup(a->context,self->cval);
+    } else {
+        variableAccessor->dval=self->dval;
+    }
 
-  return the_clone;
+    return the_clone;
 }
-

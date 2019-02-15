@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,6 +14,8 @@
 #
 #
 
+from __future__ import absolute_import
+from __future__ import print_function
 import traceback
 import sys
 
@@ -24,9 +26,8 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-
     # open bufr file
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     cnt = 0
 
@@ -37,7 +38,7 @@ def example():
         if bufr is None:
             break
 
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
@@ -50,12 +51,12 @@ def example():
 
         # get size
         num = codes_get_size(bufr, key)
-        print '  size of %s is: %s' % (key, num)
+        print('  size of %s is: %s' % (key, num))
 
         # get values
         values = codes_get_array(bufr, key)
-        for i in xrange(len(values)):
-            print "   %d %.10e" % (i + 1, values[i])
+        for i in range(len(values)):
+            print("   %d %.10e" % (i + 1, values[i]))
 
         cnt += 1
 
@@ -76,6 +77,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

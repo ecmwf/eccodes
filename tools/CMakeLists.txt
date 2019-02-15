@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,16 +9,26 @@
 # nor does it submit to any jurisdiction.
 #
 
+list( APPEND grib_tools_sources
+             grib_tools.c
+             grib_options.c
+             grib_tools.h
+             )
+
+if( EC_OS_NAME MATCHES "windows" )
+  list( APPEND grib_tools_sources wingetopt.c )
+endif()
+
 # tools library
 ecbuild_add_library( TARGET    grib_tools
                      TYPE      STATIC
                      NOINSTALL
-                     SOURCES   grib_tools.c grib_options.c grib_tools.h
+                     SOURCES   ${grib_tools_sources}
                      LIBS      eccodes )
 
 # tools binaries
 list( APPEND grib_tools_bins
-             codes_info codes_count
+             codes_info codes_count codes_split_file
              grib_histogram grib_filter grib_ls grib_dump grib_merge
              grib2ppm grib_set grib_get grib_get_data grib_copy
              grib_compare codes_parser grib_index_build
@@ -34,6 +44,7 @@ list( APPEND grib_tools_bins_EXTRA
              grib_repair
              grib_to_json
              grib_check_gaussian_grid
+             bufr_split_by_rdbSubtype
              )
 
 # Install generic tools

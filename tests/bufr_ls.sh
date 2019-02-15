@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -47,6 +47,15 @@ ${tools_dir}/bufr_ls -p totalLength,bufrHeaderCentre,bufrHeaderSubCentre,masterT
 #Write the values into a file and compare with ref
 awk NR==3 $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_ls
 diff $ref_ls $res_ls
+
+#-------------------------------------------
+# Test reading from stdin
+#-------------------------------------------
+f="aaen_55.bufr"
+cat $f | ${tools_dir}/bufr_ls -
+result1=`${tools_dir}/bufr_get -p numberOfSubsets $f`
+result2=`cat $f | ${tools_dir}/bufr_get -p numberOfSubsets -`
+[ "$result1" = "$result2" ]
 
 rm -f $fLog $res_ls 
 rm -f $fTmp

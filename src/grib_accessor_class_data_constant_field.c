@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -144,61 +144,61 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
-	grib_accessor_data_constant_field* self =  (grib_accessor_data_constant_field*)a;
+    grib_accessor_data_constant_field* self =  (grib_accessor_data_constant_field*)a;
 
-	self->ni = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-	self->nj = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-	self->reference_value = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-
+    self->ni = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+    self->nj = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+    self->reference_value = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
 }
-static int value_count(grib_accessor* a,long* count){
-	grib_accessor_data_constant_field* self =  (grib_accessor_data_constant_field*)a;
-	long ni;
-	long nj;
-	int err = 0;
-	if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->ni,&ni)) != GRIB_SUCCESS)
-		return err;
-	if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->nj, &nj)) != GRIB_SUCCESS)
-		return err;
-	*count=ni*nj;
+
+static int value_count(grib_accessor* a,long* count)
+{
+    grib_accessor_data_constant_field* self =  (grib_accessor_data_constant_field*)a;
+    long ni;
+    long nj;
+    int err = 0;
+    if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->ni,&ni)) != GRIB_SUCCESS)
+        return err;
+    if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->nj, &nj)) != GRIB_SUCCESS)
+        return err;
+    *count=ni*nj;
 
     return err;
 }
 
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-	grib_accessor_data_constant_field* self =  (grib_accessor_data_constant_field*)a;
-	size_t i = 0;
-	long n_vals = 0;
-	int err=0;
-	double reference_value = 0;
+    grib_accessor_data_constant_field* self =  (grib_accessor_data_constant_field*)a;
+    size_t i = 0;
+    long n_vals = 0;
+    int err=0;
+    double reference_value = 0;
 
-	err=grib_value_count(a,&n_vals);
-	if (err) return err;
+    err=grib_value_count(a,&n_vals);
+    if (err) return err;
 
-	if(*len < n_vals){
-		*len = n_vals;
-		return GRIB_ARRAY_TOO_SMALL;
-	}
+    if(*len < n_vals){
+        *len = n_vals;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
 
-	if((err = grib_get_double_internal(grib_handle_of_accessor(a),self->reference_value, &reference_value)) != GRIB_SUCCESS)
-		return err;
+    if((err = grib_get_double_internal(grib_handle_of_accessor(a),self->reference_value, &reference_value)) != GRIB_SUCCESS)
+        return err;
 
-	for(i=0;i < n_vals;i++)
-		val[i] = reference_value;
+    for(i=0;i < n_vals;i++)
+        val[i] = reference_value;
 
-	*len = (long) n_vals;
-	return err;
+    *len = (long) n_vals;
+    return err;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 { 
-	/* This should keep GRIBEX happy  */
-	 unsigned char zero =0;
-        if(a->offset%2) 
-          grib_buffer_replace(a, &zero, 1,1,1);
-        else 
-	grib_buffer_replace(a, NULL, 0,1,1);
-	return GRIB_SUCCESS;
+    /* This should keep GRIBEX happy  */
+    unsigned char zero =0;
+    if(a->offset%2)
+        grib_buffer_replace(a, &zero, 1,1,1);
+    else
+        grib_buffer_replace(a, NULL, 0,1,1);
+    return GRIB_SUCCESS;
 }
-

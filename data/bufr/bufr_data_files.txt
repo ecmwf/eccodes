@@ -137,3 +137,13 @@ profiler_european.bufr
 metar_with_2_bias.bufr
 temp-land-with-substituted-values.bufr
 imssnow.bufr
+sentinel1.bufr
+srals3_ecmwf4.bufr
+srals3_eumetsat.bufr
+eumetsat_iasi_co.bufr
+eum_iasi_twt.bufr
+delayed_repl_01.bufr
+israel_observations_2017041010.bufr
+goes16_nm.bufr
+aeolus_wmo_26.bufr
+ecc738.msg2.bufr

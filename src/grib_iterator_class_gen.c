@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -74,59 +74,147 @@ static void init_class(grib_iterator_class* c)
 }
 /* END_CLASS_IMP */
 
-static int init(grib_iterator* i,grib_handle *h, grib_arguments* args)
+/*
+ * Return pointer to data at (i,j) (Fortran convention)
+ */
+static double* pointer_to_data(unsigned int i, unsigned int j,
+        long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning,
+        unsigned int nx, unsigned int ny, double *data)
 {
-    grib_iterator_gen* self = (grib_iterator_gen*) i;
+    /* Regular grid */
+    if (nx > 0 && ny > 0) {
+        if (i >= nx || j >= ny) return NULL;
+        j = (jScansPositively) ? j : ny - 1 - j;
+        i = ((alternativeRowScanning) && (j % 2 == 1)) ?  nx - 1 - i : i;
+        i = (iScansNegatively) ? nx - 1 - i : i;
+
+        return (jPointsAreConsecutive) ?  data + j + i*ny : data + i + nx*j;
+    }
+
+    /* Reduced or other data not on a grid */
+    return NULL;
+}
+
+/* Apply the scanning mode flags which may require data array to be transformed */
+/* to standard west-to-east south-to-north mode */
+int transform_iterator_data(grib_handle* h, double* data,
+        long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning,
+        size_t numPoints, long nx, long ny)
+{
+    double* data2;
+    double *pData0, *pData1, *pData2;
+    unsigned long ix, iy;
+
+    if ( !iScansNegatively && jScansPositively && !jPointsAreConsecutive && !alternativeRowScanning )
+    {
+        /* Already +i and +j. No need to change */
+        return GRIB_SUCCESS;
+    }
+
+    if ( !iScansNegatively && !jScansPositively && !jPointsAreConsecutive && !alternativeRowScanning &&
+         nx > 0 && ny > 0)
+    {
+        /* regular grid +i -j: convert from we:ns to we:sn */
+        size_t row_size = ((size_t) nx) * sizeof(double);
+        data2 = (double*)grib_context_malloc(h->context, row_size);
+        if (!data2) {
+            grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to allocate %ld bytes", row_size);
+            return GRIB_OUT_OF_MEMORY;
+        }
+        for (iy = 0; iy < ny/2; iy++) {
+            memcpy(data2, data + ((size_t) iy) * nx, row_size);
+            memcpy(data + iy*nx, data + (ny-1-iy) * ((size_t) nx), row_size);
+            memcpy(data + (ny-1-iy) * ((size_t) nx), data2, row_size);
+        }
+        grib_context_free(h->context, data2);
+        return GRIB_SUCCESS;
+    }
+
+    if (nx < 1 || ny < 1) {
+        grib_context_log(h->context,GRIB_LOG_ERROR, "Invalid values for Nx and/or Ny");
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+    data2 = (double*)grib_context_malloc(h->context, numPoints*sizeof(double));
+    if (!data2) {
+        grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to allocate %ld bytes",numPoints*sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
+    pData0 = data2;
+    for (iy = 0; iy < ny; iy++) {
+        long deltaX = 0;
+        pData1 = pointer_to_data(0, iy, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning, nx,ny, data);
+        if (!pData1) return GRIB_GEOCALCULUS_PROBLEM;
+        pData2 = pointer_to_data(1, iy, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning, nx,ny, data);
+        if (!pData2) return GRIB_GEOCALCULUS_PROBLEM;
+        deltaX = pData2 - pData1;
+        for (ix = 0; ix < nx; ix++) {
+            *pData0++ = *pData1;
+            pData1 += deltaX;
+        }
+    }
+    memcpy(data, data2, ((size_t)numPoints) * sizeof(double));
+    grib_context_free(h->context, data2);
+
+    return GRIB_SUCCESS;
+}
+
+static int init(grib_iterator* iter, grib_handle *h, grib_arguments* args)
+{
+    grib_iterator_gen* self = (grib_iterator_gen*) iter;
     size_t dli=0;
-    int ret = GRIB_SUCCESS;
-    const char* rawdat  = NULL;
-    const char* snumberOfPoints=NULL;
+    int err = GRIB_SUCCESS;
+    const char* s_rawData  = NULL;
+    const char* s_numPoints=NULL;
     long numberOfPoints=0;
     self->carg = 1;
 
-    snumberOfPoints = grib_arguments_get_name(h,args,self->carg++);
+    s_numPoints = grib_arguments_get_name(h,args,self->carg++);
     self->missingValue  = grib_arguments_get_name(h,args,self->carg++);
-    rawdat      = grib_arguments_get_name(h,args,self->carg++);
+    s_rawData      = grib_arguments_get_name(h,args,self->carg++);
 
-    i->h    = h; /* We may not need to keep them */
-    i->args = args;
-    if( (ret =  grib_get_size(h,rawdat,&dli))!= GRIB_SUCCESS) return ret;
+    iter->h    = h; /* We may not need to keep them */
+    iter->args = args;
+    if( (err =  grib_get_size(h,s_rawData,&dli))!= GRIB_SUCCESS) return err;
 
-    if( (ret =  grib_get_long_internal(h,snumberOfPoints,&numberOfPoints))
+    if( (err =  grib_get_long_internal(h,s_numPoints,&numberOfPoints))
             != GRIB_SUCCESS)
-        return ret;
+        return err;
 
     if (numberOfPoints!=dli) {
         grib_context_log(h->context,GRIB_LOG_ERROR,"%s != size(%s) (%ld!=%ld)",
-                snumberOfPoints,rawdat,numberOfPoints,dli);
+                s_numPoints,s_rawData,numberOfPoints,dli);
         return GRIB_WRONG_GRID;
     }
-    i->nv = dli;
-    i->data = (double*)grib_context_malloc(h->context,(i->nv)*sizeof(double));
+    iter->nv = dli;
+    if (iter->nv==0) {
+        grib_context_log(h->context,GRIB_LOG_ERROR,"size(%s) is %ld", s_rawData, dli);
+        return GRIB_WRONG_GRID;
+    }
+    iter->data = (double*)grib_context_malloc(h->context,(iter->nv)*sizeof(double));
 
-    if( (ret = grib_get_double_array_internal(h,rawdat,i->data ,&(i->nv))))
-        return ret;
+    if( (err = grib_get_double_array_internal(h,s_rawData,iter->data ,&(iter->nv))))
+        return err;
 
-    i->e = -1;
+    iter->e = -1;
 
-    return ret;
+    return err;
 }
 
-static int reset(grib_iterator* i)
+static int reset(grib_iterator* iter)
 {
-    i->e = -1;
+    iter->e = -1;
     return 0;
 }
 
-static int destroy(grib_iterator* ei)
+static int destroy(grib_iterator* iter)
 {
-    const grib_context *c = ei->h->context;
-    grib_context_free(c,ei->data);
+    const grib_context *c = iter->h->context;
+    grib_context_free(c, iter->data);
     return 1;
 }
 
-static long has_next(grib_iterator* i)
+static long has_next(grib_iterator* iter)
 {
-    if(i->data == NULL) return 0;
-    return   i->nv - i->e;
+    if(iter->data == NULL) return 0;
+    return   iter->nv - iter->e;
 }

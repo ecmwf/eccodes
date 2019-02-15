@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,9 +9,8 @@
  */
 
 #include "grib_api_internal.h"
-#include <assert.h>
 
-/* 
+/*
    This is used by make_class.pl
 
    START_CLASS_DEF
@@ -143,7 +142,7 @@ static void init_class(grib_accessor_class* c)
 /* END_CLASS_IMP */
 
 /* Table of multipliers to convert step units to minutes */
-static double u2m[] =  {
+static const double u2m[] =  {
         1,         /* index 0:  minutes  */
         60,        /* index 1:  hour     */
         24*60,     /* index 2:  day      */
@@ -195,7 +194,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
-{   
+{
     grib_accessor_validity_time* self = (grib_accessor_validity_time*)a;
     int ret=0;
     long date = 0;

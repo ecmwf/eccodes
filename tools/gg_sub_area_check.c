@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,7 +12,7 @@
 #include "math.h"
 
 static void usage(char* prog) {
-	printf("usage: %s file1.grib file2.grib\n",prog);
+	printf("Usage: %s file1.grib file2.grib\n",prog);
 	printf("Input files must be gaussian reduced global and sub-area.\n");
 	printf("Performs consistency check between global and sub-area.\n");
 

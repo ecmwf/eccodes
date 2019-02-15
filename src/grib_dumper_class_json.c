@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -92,6 +92,8 @@ grib_dumper_class* grib_dumper_class_json = &_grib_dumper_class_json;
 /* END_CLASS_IMP */
 static void dump_attributes(grib_dumper* d,grib_accessor* a);
 
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
 GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
 {
     if (*a != *b) return 1;
@@ -122,20 +124,21 @@ static int destroy(grib_dumper* d)
 static void dump_values(grib_dumper* d,grib_accessor* a)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
-    double value; size_t size = 1;
-    double *values=NULL;
+    double value=0; size_t size = 1;
+    double *values = NULL;
     int err = 0;
     int i;
-    int cols=9;
-    long count=0;
+    int cols = 9;
+    long count = 0;
     double missing_value = GRIB_MISSING_DOUBLE;
-    grib_handle* h=grib_handle_of_accessor(a);
-
-    grib_value_count(a,&count);
-    size=count;
+    grib_handle* h = NULL;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 )
         return;
+
+    h = grib_handle_of_accessor(a);
+    grib_value_count(a,&count);
+    size=count;
 
     if (size>1) {
         values=(double*)grib_context_malloc_clear(a->context,sizeof(double)*size);
@@ -206,18 +209,19 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
-    long value; size_t size = 1;
-    long *values=NULL;
+    long value = 0;
+    size_t size = 1;
+    long *values = NULL;
     int err = 0;
     int i;
-    int cols=9;
-    long count=0;
-
-    grib_value_count(a,&count);
-    size=count;
+    int cols = 9;
+    long count = 0;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 )
         return;
+
+    grib_value_count(a,&count);
+    size=count;
 
     if (size>1) {
         values=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
@@ -239,24 +243,36 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
     }
 
     if (size>1) {
+        int doing_unexpandedDescriptors=0;
         int icount=0;
         if (self->isLeaf==0) {
             fprintf(self->dumper.out,"%-*s",depth," ");
             fprintf(self->dumper.out,"\"value\" :\n");
         }
         fprintf(self->dumper.out,"%-*s[",depth," ");
+        /* See ECC-637: unfortunately json_xs says:
+         *  malformed number (leading zero must not be followed by another digit
+          if (strcmp(a->name, "unexpandedDescriptors")==0)
+            doing_unexpandedDescriptors = 1;
+          */
         depth+=2;
         for (i=0;i<size-1;i++) {
             if (icount>cols || i==0) {fprintf(self->dumper.out,"\n%-*s",depth," ");icount=0;}
             if (grib_is_missing_long(a,values[i])) {
                 fprintf(self->dumper.out,"null, ");
             } else {
-                fprintf(self->dumper.out,"%ld, ",values[i]);
+                if (doing_unexpandedDescriptors)
+                    fprintf(self->dumper.out,"%06ld, ",values[i]);
+                else
+                    fprintf(self->dumper.out,"%ld, ",values[i]);
             }
             icount++;
         }
         if (icount>cols) fprintf(self->dumper.out,"\n%-*s",depth," ");
-        fprintf(self->dumper.out,"%ld ",values[i]);
+        if (doing_unexpandedDescriptors)
+            fprintf(self->dumper.out,"%06ld ",values[i]);
+        else
+            fprintf(self->dumper.out,"%ld ",values[i]);
 
         depth-=2;
         fprintf(self->dumper.out,"\n%-*s]",depth," ");
@@ -289,11 +305,13 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
-    double value; size_t size = 1;
+    double value = 0;
+    size_t size = 1;
 
-    grib_unpack_double(a,&value,&size);
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
+
+    grib_unpack_double(a,&value,&size);
 
     if (self->begin==0 && self->empty==0 && self->isAttribute==0) fprintf(self->dumper.out,",\n");
     else self->begin=0;
@@ -327,12 +345,11 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
-    char **values;
-    size_t size = 0,i=0;
-    grib_context* c=NULL;
+    char **values = NULL;
+    size_t size = 0, i = 0;
+    grib_context* c = NULL;
     int err = 0;
-    long count=0;
-
+    long count = 0;
     c=a->context;
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 )
@@ -371,7 +388,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
     }
     fprintf(self->dumper.out,"\n%-*s[",depth," ");
     depth+=2;
-    for  (i=0;i<size-1;i++) {
+    for (i=0;i<size-1;i++) {
         fprintf(self->dumper.out,"%-*s\"%s\",\n",depth," ",values[i]);
     }
     fprintf(self->dumper.out,"%-*s\"%s\"\n",depth," ",values[i]);
@@ -387,30 +404,47 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
         fprintf(self->dumper.out,"\n%-*s}",depth," ");
     }
 
+    for (i=0;i<size;i++) {
+        grib_context_free(c, values[i]);
+    }
     grib_context_free(c,values);
     (void)err; /* TODO */
 }
 
+# define MAX_STRING_SIZE 4096
 static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_json *self = (grib_dumper_json*)d;
-    char *value=NULL;
+    char value[MAX_STRING_SIZE] = {0,};  /* See ECC-710 */
     char *p = NULL;
-    size_t size = 0;
-    grib_context* c=NULL;
-    int err = _grib_get_string_length(a,&size);
+    size_t size = MAX_STRING_SIZE;
+    int is_missing = 0;
+    int err = 0;
+    const char* acc_name = a->name;
 
-    c=a->context;
-    if (size==0) return;
-
-    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
-        return;
-
-    value=(char*)grib_context_malloc_clear(c,size);
-    if (!value) {
-        grib_context_log(c,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
-        return;
+    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
+        /* ECC-356: Solution for the special local section key 'keyMore' and its alias 'ident' */
+        int skip = 1;
+        if ( (a->flags & GRIB_ACCESSOR_FLAG_HIDDEN)!=0 ) {
+            grib_handle* h = grib_handle_of_accessor(a);
+            if ( strcmp(a->name, "keyMore")==0 && grib_is_defined(h, "ls.ident") ) {
+                skip = 0;
+                acc_name = "ident";
+            }
+        }
+        if (skip) return;
     }
+
+    /* ECC-710: It is MUCH slower determining the string length here
+     * than using a maximum size (and no need for malloc).
+     * Specially for BUFR elements */
+    /*err = _grib_get_string_length(a,&size);
+    if (size==0) return;
+    value=(char*)grib_context_malloc_clear(a->context,size);
+    if (!value) {
+        grib_context_log(a->context,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
+        return;
+    }*/
 
     if (self->begin==0 && self->empty==0 && self->isAttribute==0) fprintf(self->dumper.out,",");
     else self->begin=0;
@@ -418,7 +452,11 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     self->empty=0;
 
     err = grib_unpack_string(a,value,&size);
+    Assert(size < MAX_STRING_SIZE);
     p=value;
+    if (grib_is_missing_string(a,(unsigned char *)value,size)) {
+        is_missing = 1;
+    }
 
     while(*p) { if(!isprint(*p)) *p = '.'; p++; }
 
@@ -426,11 +464,12 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
         fprintf(self->dumper.out,"\n%-*s{",depth," ");
         depth+=2;
         fprintf(self->dumper.out,"\n%-*s",depth," ");
-        fprintf(self->dumper.out,"\"key\" : \"%s\",",a->name);
+        fprintf(self->dumper.out,"\"key\" : \"%s\",",acc_name);
         fprintf(self->dumper.out,"\n%-*s",depth," ");
         fprintf(self->dumper.out,"\"value\" : ");
     }
-    fprintf(self->dumper.out,"\"%s\"",value);
+    if (is_missing) fprintf(self->dumper.out,"%s", "null");
+    else            fprintf(self->dumper.out,"\"%s\"",value);
 
     /* if (a->attributes[0]) fprintf(self->dumper.out,","); */
 
@@ -440,7 +479,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
         fprintf(self->dumper.out,"\n%-*s}",depth," ");
     }
 
-    grib_context_free(c,value);
+    /*grib_context_free(a->context,value);*/
     (void)err; /* TODO */
 }
 
@@ -497,7 +536,7 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a)
     grib_dumper_json *self = (grib_dumper_json*)d;
     FILE* out=self->dumper.out;
     unsigned long flags;
-    while (a->attributes[i] && i < MAX_ACCESSOR_ATTRIBUTES) {
+    while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
         self->isAttribute=1;
         if (  (d->option_flags & GRIB_DUMP_FLAG_ALL_ATTRIBUTES ) == 0
                 && (a->attributes[i]->flags & GRIB_ACCESSOR_FLAG_DUMP)== 0 )

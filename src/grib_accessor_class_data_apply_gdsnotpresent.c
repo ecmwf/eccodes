@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -153,161 +153,158 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
-  int n=0;
-  grib_accessor_data_apply_gdsnotpresent *self =(grib_accessor_data_apply_gdsnotpresent*)a;
+    int n=0;
+    grib_accessor_data_apply_gdsnotpresent *self =(grib_accessor_data_apply_gdsnotpresent*)a;
 
-  self->coded_values  = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  self->number_of_values        = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  self->number_of_points = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  self->latitude_of_first_point = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  self->ni = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  self->missing_value = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  self->bitmap_present = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  self->bitmap = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->coded_values  = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->number_of_values        = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->number_of_points = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->latitude_of_first_point = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->ni = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->missing_value = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->bitmap_present = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->bitmap = grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
 
-  a->length = 0;
+    a->length = 0;
 }
+
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_values(dumper,a);
+    grib_dump_values(dumper,a);
 }
-
 
 static int value_count(grib_accessor* a,long* number_of_points)
 {
-  int ret=0;
+    int ret=0;
 
-  grib_accessor_data_apply_gdsnotpresent *self =(grib_accessor_data_apply_gdsnotpresent*)a;
+    grib_accessor_data_apply_gdsnotpresent *self =(grib_accessor_data_apply_gdsnotpresent*)a;
 
-  *number_of_points=0;
-  if((ret = grib_get_long(grib_handle_of_accessor(a),self->number_of_points,number_of_points))
-       !=  GRIB_SUCCESS) {
-    grib_context_log(a->context, GRIB_LOG_ERROR,
-      "grib_accessor_data_apply_gdsnotpresent: value_count: unable to get number of points");
-  }
+    *number_of_points=0;
+    if((ret = grib_get_long(grib_handle_of_accessor(a),self->number_of_points,number_of_points))
+            !=  GRIB_SUCCESS) {
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                "grib_accessor_data_apply_gdsnotpresent: value_count: unable to get number of points");
+    }
 
-  return ret;
+    return ret;
 }
 
-
-static int  unpack_double(grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  grib_accessor_data_apply_gdsnotpresent* self =  (grib_accessor_data_apply_gdsnotpresent*)a;
+    grib_accessor_data_apply_gdsnotpresent* self =  (grib_accessor_data_apply_gdsnotpresent*)a;
 
-  long number_of_points=0,number_of_values=0,ni=0;
-  long latitude_of_first_point=0;
-  size_t i = 0;
-  size_t  n_vals = 0;
-  long nn=0;
-  int err=0;
-  size_t size=0;
-  long missing_value;
+    long number_of_points=0,number_of_values=0,ni=0;
+    long latitude_of_first_point=0;
+    size_t i = 0;
+    size_t  n_vals = 0;
+    long nn=0;
+    int err=0;
+    size_t size=0;
+    long missing_value;
 
-  double* coded_vals = NULL;
+    double* coded_vals = NULL;
 
-  err=grib_value_count(a,&nn);
-  n_vals=nn;
-  if (err) return err;
+    err=grib_value_count(a,&nn);
+    n_vals=nn;
+    if (err) return err;
 
-  if((err = grib_get_long(grib_handle_of_accessor(a),self->number_of_points,&number_of_points))
-       !=  GRIB_SUCCESS) return err;
+    if((err = grib_get_long(grib_handle_of_accessor(a),self->number_of_points,&number_of_points))
+            !=  GRIB_SUCCESS) return err;
 
-  if((err = grib_get_long(grib_handle_of_accessor(a),self->number_of_values,&number_of_values))
-       !=  GRIB_SUCCESS) return err;
+    if((err = grib_get_long(grib_handle_of_accessor(a),self->number_of_values,&number_of_values))
+            !=  GRIB_SUCCESS) return err;
 
-  if((err = grib_get_long(grib_handle_of_accessor(a),self->latitude_of_first_point,&latitude_of_first_point))
-       !=  GRIB_SUCCESS) return err;
+    if((err = grib_get_long(grib_handle_of_accessor(a),self->latitude_of_first_point,&latitude_of_first_point))
+            !=  GRIB_SUCCESS) return err;
 
-  if((err = grib_get_long(grib_handle_of_accessor(a),self->missing_value,&missing_value))
-       !=  GRIB_SUCCESS) return err;
+    if((err = grib_get_long(grib_handle_of_accessor(a),self->missing_value,&missing_value))
+            !=  GRIB_SUCCESS) return err;
 
-  if((err = grib_get_long(grib_handle_of_accessor(a),self->ni,&ni))
-       !=  GRIB_SUCCESS) return err;
+    if((err = grib_get_long(grib_handle_of_accessor(a),self->ni,&ni))
+            !=  GRIB_SUCCESS) return err;
 
-  if(*len < number_of_points)
-  {
-    *len = n_vals;
-    return GRIB_ARRAY_TOO_SMALL;
-  }
+    if(*len < number_of_points)
+    {
+        *len = n_vals;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
 
-  if(number_of_values > 0){
-    coded_vals = (double*)grib_context_malloc(a->context,number_of_values*sizeof(double));
+    if(number_of_values > 0){
+        coded_vals = (double*)grib_context_malloc(a->context,number_of_values*sizeof(double));
 
-    if(coded_vals == NULL)
-      return GRIB_OUT_OF_MEMORY;
-  }
+        if(coded_vals == NULL)
+            return GRIB_OUT_OF_MEMORY;
+    }
 
-  size=number_of_values;
-  if((err=grib_get_double_array_internal(grib_handle_of_accessor(a),self->coded_values,coded_vals,&size))
-    != GRIB_SUCCESS)  {
+    size=number_of_values;
+    if((err=grib_get_double_array_internal(grib_handle_of_accessor(a),self->coded_values,coded_vals,&size))
+            != GRIB_SUCCESS)  {
+        grib_context_free(a->context,coded_vals);
+        return err;
+    }
+    if (number_of_values!=size) {
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                "grib_accessor_data_apply_gdsnotpresent : wrong numberOfValues %ld != %ld",
+                number_of_values,size);
+    }
+
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
+            "grib_accessor_data_apply_gdsnotpresent : unpack_double : creating %s, %d values",
+            a->name, number_of_points);
+
+    if (latitude_of_first_point == 0) {
+        for (i=0;i < number_of_values;i++) val[i]=coded_vals[i];
+        for (i=number_of_values;i<number_of_points;i++)
+            val[i]=coded_vals[number_of_values-1];
+    } else {
+        for(i=0;i<ni-1;i++) val[i]=coded_vals[0];
+        for(i=ni-1;i<number_of_points;i++) val[i]=coded_vals[i-ni+1];
+    }
+
+    *len =  number_of_points;
+
     grib_context_free(a->context,coded_vals);
     return err;
-  }
-  if (number_of_values!=size) {
-    grib_context_log(a->context, GRIB_LOG_ERROR,
-      "grib_accessor_data_apply_gdsnotpresent : wrong numberOfValues %ld != %ld",
-      number_of_values,size);
-  }
-
-  grib_context_log(a->context, GRIB_LOG_DEBUG,
-      "grib_accessor_data_apply_gdsnotpresent : unpack_double : creating %s, %d values",
-      a->name, number_of_points);
-
-  if (latitude_of_first_point == 0) {
-    for (i=0;i < number_of_values;i++) val[i]=coded_vals[i];
-    for (i=number_of_values;i<number_of_points;i++)
-      val[i]=coded_vals[number_of_values-1];
-  } else {
-    for(i=0;i<ni-1;i++) val[i]=coded_vals[0];
-    for(i=ni-1;i<number_of_points;i++) val[i]=coded_vals[i-ni+1];
-  }
-
-  *len =  number_of_points;
-
-  grib_context_free(a->context,coded_vals);
-  return err;
 }
-
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-  int ret=GRIB_SUCCESS;
-  long bitmap_present=0;
+    int ret=GRIB_SUCCESS;
+    long bitmap_present=0;
 
-  grib_accessor_data_apply_gdsnotpresent* self =  (grib_accessor_data_apply_gdsnotpresent*)a;
+    grib_accessor_data_apply_gdsnotpresent* self =  (grib_accessor_data_apply_gdsnotpresent*)a;
 
-  if (*len ==0) return GRIB_NO_VALUES;
+    if (*len ==0) return GRIB_NO_VALUES;
 
-  ret=grib_set_long(grib_handle_of_accessor(a),self->bitmap_present,bitmap_present);
-  if(ret) {
-    grib_context_log(a->context, GRIB_LOG_ERROR,
-       "Accessor %s cannont pack value for %s error %d \n", a->name, self->bitmap_present, ret);
-    return ret;
-  }
+    ret=grib_set_long(grib_handle_of_accessor(a),self->bitmap_present,bitmap_present);
+    if(ret) {
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                "Accessor %s cannont pack value for %s error %d \n", a->name, self->bitmap_present, ret);
+        return ret;
+    }
 
 #if 0
-  if(!grib_find_accessor(grib_handle_of_accessor(a),self->bitmap)){
-    grib_context_log(a->context, GRIB_LOG_ERROR,
-       "Accessor %s cannont access bitmap \n", a->name, self->bitmap_present, ret);
-    return ret;
-  }
+    if(!grib_find_accessor(grib_handle_of_accessor(a),self->bitmap)){
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                "Accessor %s cannont access bitmap \n", a->name, self->bitmap_present, ret);
+        return ret;
+    }
 #endif
 
+    ret = grib_set_double_array_internal(grib_handle_of_accessor(a),self->coded_values,val,*len);
+    if(ret) {
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                "Accessor %s cannont pack value for %s error %d \n", a->name, self->coded_values, ret);
+        return ret;
+    }
 
-  ret = grib_set_double_array_internal(grib_handle_of_accessor(a),self->coded_values,val,*len);
-  if(ret) {
-    grib_context_log(a->context, GRIB_LOG_ERROR,
-       "Accessor %s cannont pack value for %s error %d \n", a->name, self->coded_values, ret);
     return ret;
-  }
-
-  return ret;
 }
 
-static int  get_native_type(grib_accessor* a)
+static int get_native_type(grib_accessor* a)
 {
-/*  grib_accessor_data_apply_gdsnotpresent* self =  (grib_accessor_data_apply_gdsnotpresent*)a;
+    /*  grib_accessor_data_apply_gdsnotpresent* self =  (grib_accessor_data_apply_gdsnotpresent*)a;
     return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));*/
 
-   return GRIB_TYPE_DOUBLE;
+    return GRIB_TYPE_DOUBLE;
 }

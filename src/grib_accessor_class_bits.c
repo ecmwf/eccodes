@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,7 +14,7 @@
 
 
 #include "grib_api_internal.h"
-#include <assert.h>
+
 
 /*
    This is used by make_class.pl
@@ -170,14 +170,14 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     } else {
         self->referenceValuePresent=0;
     }
+    self->scale = 1;
     if (self->referenceValuePresent) {
         self->scale=grib_arguments_get_double(grib_handle_of_accessor(a),c,n++);
     }
 
-    assert(self->len <= sizeof(long)*8);
+    Assert(self->len <= sizeof(long)*8);
 
     a->length=0;
-
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
@@ -252,7 +252,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     lval= round(*val * self->scale) - self->referenceValue;
     return grib_encode_unsigned_longb(p,lval,&start,length);
-
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
@@ -264,6 +263,12 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     long start,length, maxval;
 
     if(*len != 1) return GRIB_WRONG_ARRAY_SIZE;
+
+    if (get_native_type(a) == GRIB_TYPE_DOUBLE) {
+        /* ECC-402 */
+        const double dVal = (double)(*val);
+        return pack_double(a, &dVal, len);
+    }
 
     start  = self->start;
     length = self->len;
@@ -288,27 +293,30 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     return grib_encode_unsigned_longb(p,*val,&start,length);
 }
 
-static int  get_native_type(grib_accessor* a){
+static int get_native_type(grib_accessor* a)
+{
     int type=GRIB_TYPE_BYTES;
     grib_accessor_bits* self = (grib_accessor_bits*)a;
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)  
+    if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)
         type=GRIB_TYPE_STRING;
 
     if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE)
         type=GRIB_TYPE_LONG;
 
-    if (self->referenceValuePresent) 
+    if (self->referenceValuePresent)
         type=GRIB_TYPE_DOUBLE;
 
     return type;
 }
 
-static int unpack_string(grib_accessor*a , char*  v, size_t *len){
+static int unpack_string(grib_accessor*a , char*  v, size_t *len)
+{
     int ret=0;
     double dval=0;
     long lval=0;
     size_t llen=1;
+    grib_accessor_class* super = NULL;
 
     switch (get_native_type(a)) {
     case GRIB_TYPE_LONG:
@@ -324,26 +332,27 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len){
         break;
 
     default:
-        Assert(0);
+        super = *(a->cclass->super);
+        ret = super->unpack_string(a,v,len);
     }
     return ret;
 }
 
-static long byte_count(grib_accessor* a){
-  grib_context_log(a->context,GRIB_LOG_DEBUG,"byte_count of %s = %ld",a->name,a->length);
-  return a->length;
-
+static long byte_count(grib_accessor* a)
+{
+    grib_context_log(a->context,GRIB_LOG_DEBUG,"byte_count of %s = %ld",a->name,a->length);
+    return a->length;
 }
 
-static int unpack_bytes (grib_accessor* a,unsigned char* buffer, size_t *len) {
-  if (*len < a->length) {
+static int unpack_bytes (grib_accessor* a,unsigned char* buffer, size_t *len)
+{
+    if (*len < a->length) {
+        *len = a->length;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
     *len = a->length;
-    return GRIB_ARRAY_TOO_SMALL;
-  }
-  *len = a->length;
 
-  memcpy(buffer, grib_handle_of_accessor(a)->buffer->data + a->offset, *len);
+    memcpy(buffer, grib_handle_of_accessor(a)->buffer->data + a->offset, *len);
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
-

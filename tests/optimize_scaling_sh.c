@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -229,7 +229,7 @@ int main (int argc, char * argv[])
     grib_handle * h;
     double zval[ILCHAM];
     int ioptimizeScaleFactor;
-    double zerr[2];
+    double zerr[2] = {0,0};
     int i, m, n, k;
 
     for (ioptimizeScaleFactor = 0; ioptimizeScaleFactor < 2; ioptimizeScaleFactor++)

@@ -1,8 +1,8 @@
-! Copyright 2013 ECMWF.
+! Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-! 
+!
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
@@ -33,44 +33,44 @@ program get_set_uuid
   uuid_string_expected = '08b1e836bc6911e1951fb51b5624ad8d'
   count1 = 0
   do while (iret/=CODES_END_OF_FILE)
-     count1 = count1 + 1
-     print *, "### Record:", count1
-     call codes_get(igrib,'typeOfFirstFixedSurface',ffs)
-     print *, 'typeOfFirstFixedSurface =', ffs
-     if (ffs /= 150) then
-        print *, "Unexpected typeOfFirstFixedSurface (must be 150)."
-        stop
-     end if
+    count1 = count1 + 1
+    print *, "### Record:", count1
+    call codes_get(igrib,'typeOfFirstFixedSurface',ffs)
+    print *, 'typeOfFirstFixedSurface =', ffs
+    if (ffs /= 150) then
+      print *, "Unexpected typeOfFirstFixedSurface (must be 150)."
+      stop
+    end if
 
-     call codes_get (igrib,'numberOfVGridUsed',nvg)
-     print *, 'numberOfVGridUsed       =',nvg
+    call codes_get (igrib,'numberOfVGridUsed',nvg)
+    print *, 'numberOfVGridUsed       =',nvg
 
-!    call codes_get (igrib,'uuidOfVGrid',uuid_in)  ! Assuming length is ok.
-     call codes_get (igrib,'uuidOfVGrid',uuid_in,length=length)
-     if (length /= 16) then
-        print *, "Sorry, bad length of byte_array:", length, ". Expected: 16"
-        stop
-     end if
+    ! call codes_get (igrib,'uuidOfVGrid',uuid_in)  ! Assuming length is ok.
+    call codes_get (igrib,'uuidOfVGrid',uuid_in,length=length)
+    if (length /= 16) then
+      print *, "Sorry, bad length of byte_array:", length, ". Expected: 16"
+      stop
+    end if
 
-     ! Convert byte array to hexadecimal string for printing
-     do i = 1, size (uuid_in)
-        uuid_string(2*i-1:2*i) = byte2hex(uuid_in(i))
-     end do
-     print *, "uuidOfVGrid  (on input) = ", uuid_string
-     if (uuid_string .ne. uuid_string_expected) then
-        print *, "Sorry, bad value of byte_array. Expected: ", uuid_string_expected
-        stop
-     end if
+    ! Convert byte array to hexadecimal string for printing
+    do i = 1, size (uuid_in)
+      uuid_string(2*i-1:2*i) = byte2hex(uuid_in(i))
+    end do
+    print *, "uuidOfVGrid  (on input) = ", uuid_string
+    if (uuid_string .ne. uuid_string_expected) then
+      print *, "Sorry, bad value of byte_array. Expected: ", uuid_string_expected
+      stop
+    end if
 
-     call codes_clone (igrib,ogrib)
-     ! On output we write a modified uuid (here the input is simply reversed)
-     uuid_out(1:16) = uuid_in(16:1:-1)
-     call codes_set   (ogrib,'uuidOfVGrid',uuid_out)
-     call codes_write (ogrib,outfile)
+    call codes_clone (igrib,ogrib)
+    ! On output we write a modified uuid (here the input is simply reversed)
+    uuid_out(1:16) = uuid_in(16:1:-1)
+    call codes_set   (ogrib,'uuidOfVGrid',uuid_out)
+    call codes_write (ogrib,outfile)
 
-     call codes_release (igrib)
-     call codes_release (ogrib)
-     call codes_grib_new_from_file (infile, igrib, iret)
+    call codes_release (igrib)
+    call codes_release (ogrib)
+    call codes_grib_new_from_file (infile, igrib, iret)
   end do
 
   call codes_close_file (infile)

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -23,23 +23,19 @@ temp2="temp.grib2_"
 # --- Do I want to exclude any file pattern from the comparison ?
 exclusion_pattern="tcw|ssr|str|skt|cap|ci|ttr|st|sm|sd|slhf|sshf"
 
-for file in ${dir}/tigge_*.grib
-do
+for file in ${dir}/tigge_*.grib; do
+  exclude=`echo $file | awk " /$exclusion_pattern/ {print \"found\";} "`
+  if [ -z "$exclude" ]; then
+    rm -f ${temp1} ${temp2}
 
-exclude=`echo $file | awk " /$exclusion_pattern/ {print \"found\";} "`
+    # 2 to 1 conversion check
+    ${tools_dir}/grib_set -s editionNumber=1 ${file} ${temp1} 2> $REDIRECT > $REDIRECT
+    ${tools_dir}/grib_compare -P -c data:n,geography:n ${temp1} ${file} 2> $REDIRECT > $REDIRECT
 
-if [ -z "$exclude" ]; then
-
-   rm -f ${temp1} ${temp2} || true
-
-   # 2 to 1 conversion check
-   ${tools_dir}grib_set -s editionNumber=1 ${file} ${temp1} 2> $REDIRECT > $REDIRECT
-   ${tools_dir}grib_compare -P -c data:n,geography:n ${temp1} ${file} 2> $REDIRECT > $REDIRECT
-
-   # 1 to 2 conversion check
-   ${tools_dir}grib_set -s editionNumber=2 ${temp1} ${temp2} 2> $REDIRECT > $REDIRECT
-   ${tools_dir}grib_compare -P -c shortName,data:n,geography:n ${temp2} ${file} 2> $REDIRECT > $REDIRECT
-fi
+    # 1 to 2 conversion check
+    ${tools_dir}/grib_set -s editionNumber=2 ${temp1} ${temp2} 2> $REDIRECT > $REDIRECT
+    ${tools_dir}/grib_compare -P -c shortName,data:n,geography:n ${temp2} ${file} 2> $REDIRECT > $REDIRECT
+  fi
 done
 
-rm -f ${temp1} ${temp2} || true
+rm -f ${temp1} ${temp2}

@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,9 +14,9 @@
 #
 #
 
+from __future__ import print_function
 import traceback
 import sys
-
 from eccodes import *
 
 INPUT = '../../data/bufr/syno_multi.bufr'
@@ -24,9 +24,8 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-
     # open bufr file
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     cnt = 0
 
@@ -46,7 +45,7 @@ def example():
         if bufr is None:
             break
 
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
@@ -59,9 +58,9 @@ def example():
         # get the value
         key = 'airTemperatureAt2M'
         try:
-            print '  %s: %s' % (key, codes_get(bufr, key))
+            print('  %s: %s' % (key, codes_get(bufr, key)))
         except CodesInternalError as err:
-            print 'Error with key="%s" : %s' % (key, err.msg)
+            print('Error with key="%s" : %s' % (key, err.msg))
 
         # print the values of the attributes of the key. Attributes themselves
         # are keys as well. Their name is constructed like:
@@ -69,9 +68,9 @@ def example():
         for attr in attrs:
             key = 'airTemperatureAt2M' + "->" + attr
             try:
-                print '  %s: %s' % (key, codes_get(bufr, key))
+                print('  %s: %s' % (key, codes_get(bufr, key)))
             except CodesInternalError as err:
-                print 'Error with key="%s" : %s' % (key, err.msg)
+                print('Error with key="%s" : %s' % (key, err.msg))
 
         # ------------------------------------------------------------------
         # The 2m temperature data element in this message has an associated
@@ -82,17 +81,17 @@ def example():
         # get the value
         key = 'airTemperatureAt2M->percentConfidence'
         try:
-            print '  %s: %s' % (key, codes_get(bufr, key))
+            print('  %s: %s' % (key, codes_get(bufr, key)))
         except CodesInternalError as err:
-            print 'Error with key="%s" : %s' % (key, err.msg)
+            print('Error with key="%s" : %s' % (key, err.msg))
 
         # print the values of the attributes of the key.
         for attr in attrs:
             key = 'airTemperatureAt2M->percentConfidence' + "->" + attr
             try:
-                print '  %s: %s' % (key, codes_get(bufr, key))
+                print('  %s: %s' % (key, codes_get(bufr, key)))
             except CodesInternalError as err:
-                print 'Error with key="%s" : %s' % (key, err.msg)
+                print('Error with key="%s" : %s' % (key, err.msg))
 
         cnt += 1
 
@@ -113,6 +112,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

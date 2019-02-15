@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -24,9 +24,9 @@ int main(int argc, char** argv)
     int err = 0, is_missing = 0;
 
     FILE* in = NULL;
-    char* infile = "../../data/reduced_gaussian_pressure_level.grib2";
+    const char* infile = "../../data/reduced_gaussian_pressure_level.grib2";
     FILE* out = NULL;
-    char* outfile = "out_surface_level.grib2";
+    const char* outfile = "out_surface_level.grib2";
     codes_handle *h = NULL;
     const void* buffer = NULL;
     size_t size=0;

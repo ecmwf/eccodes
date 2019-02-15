@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -140,16 +140,17 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
     long sectionLength;
     grib_accessor_raw *self =(grib_accessor_raw*)a;
     grib_expression* e;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     a->length=0;
-    self->totalLength = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-    self->sectionLength = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->totalLength = grib_arguments_get_name(hand,arg,n++);
+    self->sectionLength = grib_arguments_get_name(hand,arg,n++);
 
-    e=grib_arguments_get_expression(grib_handle_of_accessor(a), arg,n++);
-    grib_expression_evaluate_long(grib_handle_of_accessor(a),e,&(self->relativeOffset));
-    if (err) grib_context_log(grib_handle_of_accessor(a)->context,GRIB_LOG_FATAL,"unable to evaluate relativeOffset");
+    e=grib_arguments_get_expression(hand, arg,n++);
+    err = grib_expression_evaluate_long(hand,e,&(self->relativeOffset));
+    if (err) grib_context_log(hand->context,GRIB_LOG_ERROR,"unable to evaluate relativeOffset");
 
-    grib_get_long(grib_handle_of_accessor(a),self->sectionLength,&sectionLength);
+    grib_get_long(hand,self->sectionLength,&sectionLength);
 
     a->length=sectionLength-self->relativeOffset;
     if (a->length<0) a->length=0;

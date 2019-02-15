@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,9 +14,9 @@ out=out.readmsg.grib
 
 rm -f $out | true
 
-${examples_dir}eccodes_f_read_message > /dev/null
+${examples_dir}/eccodes_f_read_message > /dev/null
 
-${tools_dir}grib_compare $in $out
+${tools_dir}/grib_compare $in $out
 
 rm -f $out
 

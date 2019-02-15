@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -22,7 +22,7 @@ int main(int argc, char * argv[])
     int ret;
     int i, j;
     int count=0;
-    size_t paramIdSize, numberSize, values_len;
+    size_t paramIdSize, numberSize, values_len=0;
     char** paramId;
     long* number;
     double* values;
@@ -30,7 +30,7 @@ int main(int argc, char * argv[])
     double min=1e13,max=-1e13,avg=0;
     codes_index* index;
     codes_handle* h=NULL;
-    
+
     if (argc<2) return 1;
 
     /* create index of file contents for paramId and number */
@@ -39,7 +39,7 @@ int main(int argc, char * argv[])
 
     /* get size of "paramId" list */
     CODES_CHECK(codes_index_get_size(index, "paramId", &paramIdSize),0);
-    printf("grib contains %ld different parameters\n",paramIdSize);
+    printf("grib contains %lu different parameters\n",paramIdSize);
     /* allocate memory for "paramId" list */
     paramId = (char**) malloc(paramIdSize * sizeof(char*));
     /* get list of "paramId" */
@@ -47,7 +47,7 @@ int main(int argc, char * argv[])
 
     /* get size of ensemble number list */
     CODES_CHECK(codes_index_get_size(index, "number", &numberSize),0);
-    printf("GRIB contains %ld different ensemble members\n",numberSize);
+    printf("GRIB contains %lu different ensemble members\n",numberSize);
     /* allocate memory for ensemble number list */
     number = (long*) malloc(numberSize * sizeof(long));
     /* get list of ensemble numbers */

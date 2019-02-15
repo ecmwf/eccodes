@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -71,6 +71,7 @@ typedef struct grib_accessor_data_g2simple_packing_with_preprocessing {
 	const char*  reference_value;
 	const char*  binary_scale_factor;
 	const char*  decimal_scale_factor;
+	const char*  optimize_scaling_factor;
 /* Members defined in data_g2simple_packing */
 /* Members defined in data_g2simple_packing_with_preprocessing */
 	const char*  pre_processing;
@@ -163,149 +164,143 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
-  grib_accessor_data_g2simple_packing_with_preprocessing *self =(grib_accessor_data_g2simple_packing_with_preprocessing*)a;
-  self->pre_processing = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->pre_processing_parameter = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  a->flags |= GRIB_ACCESSOR_FLAG_DATA;
+    grib_accessor_data_g2simple_packing_with_preprocessing *self =(grib_accessor_data_g2simple_packing_with_preprocessing*)a;
+    self->pre_processing = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+    self->pre_processing_parameter = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+    a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
 static int value_count(grib_accessor* a,long* n_vals)
 {
-  grib_accessor_data_g2simple_packing_with_preprocessing *self =(grib_accessor_data_g2simple_packing_with_preprocessing*)a;
-  *n_vals= 0;
+    grib_accessor_data_g2simple_packing_with_preprocessing *self =(grib_accessor_data_g2simple_packing_with_preprocessing*)a;
+    *n_vals= 0;
 
-  return grib_get_long_internal(grib_handle_of_accessor(a),self->number_of_values,n_vals);
+    return grib_get_long_internal(grib_handle_of_accessor(a),self->number_of_values,n_vals);
 }
 
-static int  unpack_double(grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  grib_accessor_data_g2simple_packing_with_preprocessing* self =  (grib_accessor_data_g2simple_packing_with_preprocessing*)a;
-  grib_accessor_class* super = *(a->cclass->super);
+    grib_accessor_data_g2simple_packing_with_preprocessing* self =  (grib_accessor_data_g2simple_packing_with_preprocessing*)a;
+    grib_accessor_class* super = *(a->cclass->super);
 
-  size_t n_vals = 0;
-  long nn=0;
-  int err = 0;
+    size_t n_vals = 0;
+    long nn=0;
+    int err = 0;
 
-  long    pre_processing;
-  double    pre_processing_parameter;
+    long    pre_processing;
+    double    pre_processing_parameter;
 
-  err=grib_value_count(a,&nn);
-  n_vals=nn;
-  if (err) return err;
+    err=grib_value_count(a,&nn);
+    n_vals=nn;
+    if (err) return err;
 
-  if(n_vals==0){
-    *len = 0;
-    return GRIB_SUCCESS;
-  }
+    if(n_vals==0){
+        *len = 0;
+        return GRIB_SUCCESS;
+    }
 
-  self->dirty=0;
+    self->dirty=0;
 
+    if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->pre_processing, &pre_processing)) != GRIB_SUCCESS){
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->pre_processing, err);
+        return err;
+    }
 
-  if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->pre_processing, &pre_processing)) != GRIB_SUCCESS){
-    grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->pre_processing, err);
+    if((err = grib_get_double_internal(grib_handle_of_accessor(a),self->pre_processing_parameter, &pre_processing_parameter)) != GRIB_SUCCESS){
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->pre_processing_parameter, err);
+        return err;
+    }
+
+    err =   super->unpack_double(a,val,&n_vals);
+    if (err!=GRIB_SUCCESS) return err;
+
+    err=pre_processing_func(val,n_vals,pre_processing,&pre_processing_parameter,INVERSE);
+    if (err != GRIB_SUCCESS) return err;
+
+    *len = (long) n_vals;
+
     return err;
-  }
-
-  if((err = grib_get_double_internal(grib_handle_of_accessor(a),self->pre_processing_parameter, &pre_processing_parameter)) != GRIB_SUCCESS){
-    grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->pre_processing_parameter, err);
-    return err;
-  }
-
-  err =   super->unpack_double(a,val,&n_vals);
-  if (err!=GRIB_SUCCESS) return err;
-
-  err=pre_processing_func(val,n_vals,pre_processing,&pre_processing_parameter,INVERSE);
-  if (err != GRIB_SUCCESS) return err;
-
-  *len = (long) n_vals;
-
-  return err;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-  grib_accessor_data_g2simple_packing_with_preprocessing* self =  (grib_accessor_data_g2simple_packing_with_preprocessing*)a;
-  grib_accessor_class* super = *(a->cclass->super);
+    grib_accessor_data_g2simple_packing_with_preprocessing* self =  (grib_accessor_data_g2simple_packing_with_preprocessing*)a;
+    grib_accessor_class* super = *(a->cclass->super);
 
-  size_t n_vals = *len;
-  int err = 0;
+    size_t n_vals = *len;
+    int err = 0;
 
-  long pre_processing=0;
-  double pre_processing_parameter=0;
+    long pre_processing=0;
+    double pre_processing_parameter=0;
 
-  self->dirty=1;
+    self->dirty=1;
 
-  if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->pre_processing, &pre_processing)) != GRIB_SUCCESS)
-    return err;
+    if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->pre_processing, &pre_processing)) != GRIB_SUCCESS)
+        return err;
 
-  err=pre_processing_func((double*)val,n_vals,pre_processing,&pre_processing_parameter,DIRECT);
-  if (err != GRIB_SUCCESS) return err;
+    err=pre_processing_func((double*)val,n_vals,pre_processing,&pre_processing_parameter,DIRECT);
+    if (err != GRIB_SUCCESS) return err;
 
-  err =   super->pack_double(a,val,len);
-  if (err!=GRIB_SUCCESS) return err;
+    err =   super->pack_double(a,val,len);
+    if (err!=GRIB_SUCCESS) return err;
 
-  if((err = grib_set_double_internal(grib_handle_of_accessor(a),self->pre_processing_parameter, pre_processing_parameter)) != GRIB_SUCCESS)
-    return err;
+    if((err = grib_set_double_internal(grib_handle_of_accessor(a),self->pre_processing_parameter, pre_processing_parameter)) != GRIB_SUCCESS)
+        return err;
 
+    if((err = grib_set_long_internal(grib_handle_of_accessor(a),self->number_of_values, n_vals)) != GRIB_SUCCESS)
+        return err;
 
-  if((err = grib_set_long_internal(grib_handle_of_accessor(a),self->number_of_values, n_vals)) != GRIB_SUCCESS)
-    return err;
-
-
-  return GRIB_SUCCESS;
-
+    return GRIB_SUCCESS;
 }
-
 
 static int pre_processing_func(double* values,long length, long pre_processing,
-                               double *pre_processing_parameter,int mode) {
-  int i;
-  int ret=0;
-  double min=values[0];
-  double next_min=values[0];
+        double *pre_processing_parameter,int mode) {
+    int i;
+    int ret=0;
+    double min=values[0];
+    double next_min=values[0];
 
-  switch (pre_processing) {
+    switch (pre_processing) {
     /* NONE */
     case 0:
-      break;
+        break;
     /* LOGARITHM */
     case 1:
-      if (mode == DIRECT) {
-        for (i=0;i<length;i++) {
-          if (values[i] < min)
-            min=values[i];
-          if (values[i] > next_min)
-            next_min=values[i];
-        }
-        for (i=0;i<length;i++) {
-          if (values[i] > min && values[i] < next_min )
-            next_min=values[i];
-        }
-        if ( min > 0 ) {
-          *pre_processing_parameter=0;
-          for (i=0;i<length;i++)
-            values[i]=log(values[i]);
+        if (mode == DIRECT) {
+            for (i=0;i<length;i++) {
+                if (values[i] < min)
+                    min=values[i];
+                if (values[i] > next_min)
+                    next_min=values[i];
+            }
+            for (i=0;i<length;i++) {
+                if (values[i] > min && values[i] < next_min )
+                    next_min=values[i];
+            }
+            if ( min > 0 ) {
+                *pre_processing_parameter=0;
+                for (i=0;i<length;i++)
+                    values[i]=log(values[i]);
+            } else {
+                *pre_processing_parameter=next_min-2*min;
+                if (next_min == min) return ret;
+                for (i=0;i<length;i++)
+                    values[i]=log(values[i]+*pre_processing_parameter);
+            }
         } else {
-          *pre_processing_parameter=next_min-2*min;
-          if (next_min == min) return ret;
-          for (i=0;i<length;i++)
-            values[i]=log(values[i]+*pre_processing_parameter);
+            if ( *pre_processing_parameter == 0 ) {
+                for (i=0;i<length;i++)
+                    values[i]=exp(values[i]);
+            } else {
+                for (i=0;i<length;i++)
+                    values[i]=exp(values[i])-*pre_processing_parameter;
+            }
         }
-      } else {
-        if ( *pre_processing_parameter == 0 ) {
-          for (i=0;i<length;i++)
-            values[i]=exp(values[i]);
-        } else {
-          for (i=0;i<length;i++)
-            values[i]=exp(values[i])-*pre_processing_parameter;
-        }
-      }
-      break;
+        break;
     default:
-      ret=GRIB_NOT_IMPLEMENTED;
-      break;
-  }
+        ret=GRIB_NOT_IMPLEMENTED;
+        break;
+    }
 
-  return ret;
+    return ret;
 }
-

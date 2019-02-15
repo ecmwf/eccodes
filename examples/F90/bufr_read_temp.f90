@@ -1,4 +1,4 @@
-! Copyright 2005-2016 ECMWF.
+! Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -30,7 +30,7 @@ program bufr_read_temp
 
   call codes_open_file(ifile,'../../data/bufr/PraticaTemp.bufr','r')
 
-  ! the first bufr message is loaded from file
+  ! The first bufr message is loaded from file,
   ! ibufr is the bufr id to be used in subsequent calls
   call codes_bufr_new_from_file(ifile,ibufr,iret)
   do while (iret/=CODES_END_OF_FILE)
@@ -56,7 +56,7 @@ program bufr_read_temp
           &geopotentialHeight(i),latitudeDisplacement(i),&
           &longitudeDisplacement(i),airTemperature(i),windDirection(i),windSpeed(i),extendedVerticalSoundingSignificance(i)
     enddo
-    ! free arrays
+    ! Free arrays
     deallocate(timePeriod)
     deallocate(pressure)
     deallocate(geopotentialHeight)
@@ -67,13 +67,13 @@ program bufr_read_temp
     deallocate(windDirection)
     deallocate(windSpeed)
     deallocate(extendedVerticalSoundingSignificance)
-    ! release the bufr message
+    ! Release the bufr message
     call codes_release(ibufr)
-    ! load the next bufr message
+    ! Load the next bufr message
     call codes_bufr_new_from_file(ifile,ibufr,iret)
     count=count+1
   end do
-  ! close file
+  ! Close file
   call codes_close_file(ifile)
 
 end program bufr_read_temp

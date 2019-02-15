@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,7 +16,6 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_ascii
    IMPLEMENTS = unpack_string;value_count;string_length
-   IMPLEMENTS = init
    END_CLASS_DEF
 
  */
@@ -34,7 +33,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int unpack_string (grib_accessor*, char*, size_t *len);
 static size_t string_length(grib_accessor*);
 static int value_count(grib_accessor*,long*);
-static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_library_version {
@@ -52,7 +50,7 @@ static grib_accessor_class _grib_accessor_class_library_version = {
     sizeof(grib_accessor_library_version),  /* size                      */
     0,                           /* inited */
     &init_class,                 /* init_class */
-    &init,                       /* init                      */
+    0,                       /* init                      */
     0,                  /* post_init                      */
     0,                    /* free mem                       */
     0,                       /* describes himself         */
@@ -127,10 +125,6 @@ static void init_class(grib_accessor_class* c)
 }
 
 /* END_CLASS_IMP */
-
-static void init(grib_accessor* a,const long l, grib_arguments* c)
-{
-}
 
 static int    unpack_string(grib_accessor* a, char* val, size_t *len)
 {   

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -31,9 +31,9 @@ int main(int argc, char** argv)
     size_t size=0;
 
     FILE* in = NULL;
-    char* infile = "../../data/regular_latlon_surface.grib1";
+    const char* infile = "../../data/regular_latlon_surface.grib1";
     FILE* out = NULL;
-    char* outfile = "out.precision.grib1";
+    const char* outfile = "out.precision.grib1";
     codes_handle *h = NULL;
     const void* buffer = NULL;
     double* values1=NULL;

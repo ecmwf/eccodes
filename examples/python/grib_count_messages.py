@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,6 +9,7 @@
 # nor does it submit to any jurisdiction.
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -19,7 +20,7 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     mcount = codes_count_in_file(f)
     gid_list = [codes_grib_new_from_file(f) for i in range(mcount)]
@@ -40,19 +41,19 @@ def example():
     for i in range(mcount):
         gid = gid_list[i]
 
-        print "processing message number", i + 1
+        print("processing message number", i + 1)
 
         for key in keys:
-            print '%s=%g' % (key, codes_get(gid, key))
+            print('%s=%g' % (key, codes_get(gid, key)))
 
-        print 'There are %d, average is %g, min is %g, max is %g' % (
+        print('There are %d, average is %g, min is %g, max is %g' % (
             codes_get_size(gid, 'values'),
             codes_get(gid, 'average'),
             codes_get(gid, 'min'),
             codes_get(gid, 'max')
-        )
+        ))
 
-        print '-' * 100
+        print('-' * 100)
 
         codes_release(gid)
 
@@ -67,6 +68,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

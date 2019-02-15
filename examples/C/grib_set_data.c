@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,7 +21,7 @@
 
 #include "eccodes.h"
 
-void usage(const char* prog)
+static void usage(const char* prog)
 {
     printf("usage: %s out.grib\n",prog);
     exit(1);
@@ -58,7 +58,7 @@ int main(int argc, char** argv)
     /* But if your data array has a different size, then specify the grid geometry */
     /* (e.g. keys Ni, Nj etc) and set the correct number of data values */
     CODES_CHECK(codes_get_size(h, "values", &values_len),0);
-    
+
     values = (double*)malloc(values_len*sizeof(double));
     d=10e-8;
     e=d;

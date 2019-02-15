@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -96,8 +96,6 @@ parameter parameters[] = {
       1,
       100,
       {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
-
          {"paramId", GRIB_TYPE_LONG, 166},
 
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -107,30 +105,6 @@ parameter parameters[] = {
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 103},
          {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
          {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 10},
-         {NULL, },
-      },
-      {&point_in_time, &given_level},
-   },
-
-   {
-      "10_meter_v_velocity_sfc.lam",
-      -100,
-      -1,
-      1,
-      100,
-      {
-         {"model", GRIB_TYPE_STRING, 0, "lam"},
-
-         {"paramId", GRIB_TYPE_LONG, 166},
-
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 2},
-         {"parameterNumber", GRIB_TYPE_LONG, 3},
-
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 103},
-         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
-         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 10},
-
          {NULL, },
       },
       {&point_in_time, &given_level},
@@ -312,29 +286,6 @@ parameter parameters[] = {
       1,
       1,
       {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
-
-         {"paramId", GRIB_TYPE_LONG, 172},
-
-         {"discipline", GRIB_TYPE_LONG, 2},
-         {"parameterCategory", GRIB_TYPE_LONG, 0},
-         {"parameterNumber", GRIB_TYPE_LONG, 0},
-
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
-         {NULL, },
-      },
-      {&point_in_time, &predefined_level},
-   },
-
-   {
-      "land_sea_mask_sfc.lam",
-      0,
-      0,
-      1,
-      1,
-      {
-         {"model", GRIB_TYPE_STRING, 0, "lam"},
-
          {"paramId", GRIB_TYPE_LONG, 172},
 
          {"discipline", GRIB_TYPE_LONG, 2},
@@ -555,63 +506,10 @@ parameter parameters[] = {
       270,
       350,
       {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 0},
          {"parameterNumber", GRIB_TYPE_LONG, 0},
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 103},
-         {NULL, },
-      },
-      {&point_in_time, &given_level},
-   },
-
-/* 
-warning: tigge_lam.20141019_00+045.mem009.grib2: surface_air_temperature_sfc.lam minimum value 219.508 is not in [220,290]
-mogreps in the past -> min <180, 290>
-*/
-
-   {
-      "surface_air_temperature_sfc.lam",
-      180,
-      290,
-      270,
-      350,
-      {
-         {"model", GRIB_TYPE_STRING, 0, "lam"},
-
-         {"paramId", GRIB_TYPE_LONG, 167},
-
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 0},
-         {"parameterNumber", GRIB_TYPE_LONG, 0},
-
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 103},
-         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
-         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 2},
-         {NULL, },
-      },
-      {&point_in_time, &given_level},
-   },
-
-   {
-      "surface_air_temperature_sfc.lam",
-      180,
-      290,
-      270,
-      350,
-      {
-         {"model", GRIB_TYPE_STRING, 0, "lam"},
-         {"suiteName", GRIB_TYPE_STRING, 1, "mogreps-mo-eua"},
-
-         {"paramId", GRIB_TYPE_LONG, 167},
-
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 0},
-         {"parameterNumber", GRIB_TYPE_LONG, 0},
-
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 103},
-         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
-         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 15},
          {NULL, },
       },
       {&point_in_time, &given_level},
@@ -931,7 +829,7 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
    },
 
 /*
-   2013-??-??: maximum changed to <0,133> because of cosmo-de boundary effects when coupled with IFS ..
+   2013-xx-yy: maximum changed to <0,133> because of cosmo-de boundary effects when coupled with IFS ..
    glameps: warning: tigge_lam.20160814_00+006.mem026.grib2, field 6 [total_precipitation_sfc.lam]: total_precipitation_sfc.lam maximum value 361.151 is not in [0,350]
 */
 
@@ -1130,13 +1028,14 @@ s2s/lfpw: warning: s2s.lfpw_msl_0.grib2, field 1 [mean_sea_level_pressure_sfc]: 
 s2s/rjtd: warning: s2s.z_tigge_c_rjtd_201605101200_glob_prod_pf_sl_0636_009_0000_msl.grib2, field 1 [mean_sea_level_pressure_sfc]: mean_sea_level_pressure_sfc maximum value 109411 is not in [98000,109000]
 s2s/ammc: warning: s2s.z_s2s_c_cwao_20010602000000_glob_prod_sl_000.grib2, field 833 [mean_sea_level_pressure_sfc]: mean_sea_level_pressure_sfc maximum value 109994
 s2s/enfh/cwao: warning: s2s.z_s2s_c_cwao_20070721000000_glob_prod_sl_001.grib2, field 298 [mean_sea_level_pressure_sfc]: mean_sea_level_pressure_sfc maximum value 110320 is not in [98000,110000]
+s2s/enfo/rjtd:2s.2017011812.prod.046.sl.grib2, field 373 [mean_sea_level_pressure_sfc]: mean_sea_level_pressure_sfc maximum value 113559 is not in [98000,113000]
 */
    {
       "mean_sea_level_pressure_sfc",
       88000,
       104000,
       98000,
-      111000,
+      115000,
       {
          {"paramId", GRIB_TYPE_LONG, 151},
 
@@ -1182,16 +1081,74 @@ s2s/egrr: s2s.z_s2s_c_ukmo_20160102000000_glob_prod_pf_1440_002.rt.pl.grib2, fie
 */
    {
       "geopotential_height_pl",
-      -1300,
+      -5000,
       30600,
       200,
       35000,
       {
-/*       {"model", GRIB_TYPE_STRING, 0, "glob"}, */
+         {"model", GRIB_TYPE_STRING, 0, "glob"},
 
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 3},
          {"parameterNumber", GRIB_TYPE_LONG, 5},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &pressure_level},
+   },
+   {
+      "geopotential_height_pl.uerra",
+      -5000,
+      30600,
+      200,
+      35000,
+      {
+         {"paramId", GRIB_TYPE_LONG, 156},
+         {"class", GRIB_TYPE_STRING, 0, "ur"}, 
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 5},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &pressure_level},
+   },
+
+   {
+      "geopotential_pl",
+      -5000,
+      306000,
+      2000,
+      350000,
+      {
+         {"model", GRIB_TYPE_STRING, 0, "glob"},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 4},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &pressure_level},
+   },
+
+   {
+      "geopotential_pl.uerra",
+      -5000,
+      306000,
+      2000,
+      350000,
+      {
+         {"paramId", GRIB_TYPE_LONG, 129},
+         {"class", GRIB_TYPE_STRING, 0, "ur"},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 4},
 
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
          {NULL, },
@@ -1261,16 +1218,15 @@ warning: s2s.z_tigge_c_kwbc_20020817000000_ncep_prod_pf_pl_0000_003_0010_u.grib2
    s2s/ammc: warning: s2s.u_20150913_31.grib2, field 550 [u_velocity_pl]: u_velocity_pl minimum value 0.352796 is not in [-150,-0.001]
    s2s/ammc: warning: s2s.u_20151101_13.grib2, field 401 [u_velocity_pl]: u_velocity_pl minimum value -195.645 is not in [-180,1]
    uerra/edzw-an: warning: /tmp/marm/uerra/cosmo/sample2/grib2/an.200812020800.u.pl.grib2, field 1 [u_velocity_pl]: u_velocity_pl minimum value 1.41138 is not in [-200,1]
+   s2s, ammc-enfo: s2s.u_20161222_4.pl.grib2, field 261 [u_velocity_pl]: u_velocity_pl minimum value -223.937 is not in [-200,-1]
 */
    {
       "u_velocity_pl",
-      -200,
-      -1,
+      -250,
+      5,
       1,
-      200,
+      250,
       {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
-
          {"paramId", GRIB_TYPE_LONG, 131},
 
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -1282,6 +1238,8 @@ warning: s2s.z_tigge_c_kwbc_20020817000000_ncep_prod_pf_pl_0000_003_0010_u.grib2
       },
       {&point_in_time, &given_level, &pressure_level},
    },
+
+
 /* 
    S2S/CAWCR: v_velocity_pl maximum value 8.54936 is not in [10,150]
    S2S/CAWCR: v_velocity_pl minimum value -128.209 is not in [-120,-10]
@@ -1289,7 +1247,6 @@ warning: s2s.z_tigge_c_kwbc_20020817000000_ncep_prod_pf_pl_0000_003_0010_u.grib2
    ammc-s2s-enfo: warning: s2s.v_20160324_7.grib2, field 160 [v_velocity_pl]: v_velocity_pl maximum value 3.79724 is not in [4,190]
    ammc-s2s-enfo: warning: s2s.v_20160526_0.grib2, field 611 [v_velocity_pl]: v_velocity_pl minimum value -194.691 is not in [-190,-2]
 */
-
    {
       "v_velocity_pl",
       -200,
@@ -1349,17 +1306,16 @@ warning: s2s.z_tigge_c_kwbc_20020817000000_ncep_prod_pf_pl_0000_003_0010_u.grib2
 warning: s2s.z_tigge_c_kwbc_20150817000000_ncep_prod_pf_pl_0000_015_0500_w.grib2, field 3 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -7.25731 is not in [-6,0]
   s2s/kwbc/enfo: warning: s2s.z_tigge_c_kwbc_20151114000000_ncep_prod_pf_pl_0000_011_0500_w.grib2, field 7 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -10.202 is not in [-10,0]
   s2s/cwao/enfo: warning: s2s.z_s2s_c_cwao_20160512000000_glob_prod_??_pl_00_384_003.grib2, field 28 [w_vertical_velocity_pl]: w_vertical_velocity_pl minimum value -19.8681 is not in [-12,0]
+  s2s/rksl/enfh: warning: s2s.002.pl.grib2, field 2489 [w_vertical_velocity_pl]: w_vertical_velocity_pl maximum value -1.23174 is not in [-1,25]
 
 */
    {
       "w_vertical_velocity_pl",
       -25,
-      0,
-      0,
-      25,
+        0,
+       -2,
+       25,
       {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
-
          {"paramId", GRIB_TYPE_LONG, 135},
 
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -1391,7 +1347,7 @@ warning: s2s.z_tigge_c_kwbc_20150817000000_ncep_prod_pf_pl_0000_015_0500_w.grib2
 
          {NULL, },
       },
-      {&point_in_time, &predefined_level},
+      {&point_in_time, &predefined_level, &has_bitmap},
    },
 /*
 s2s_devel, ecmf, 20141229, 00UTC, test, enfh, real:  s2s.2014122900.test.768.10.pf.19941229.sl.168.grib2, field 21 [surface_pressure_sfc]: surface_pressure_sfc maximum value 102851 is not in [102900,110000]
@@ -1471,7 +1427,7 @@ uerra, eswi-an: an.sp.sfc.grib2, field 1 [surface_pressure_sfc]: surface_pressur
       "water_runoff_sfc",
       -0.001,
        5,
-       0.5,
+       0.3,
        30,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
@@ -1487,7 +1443,7 @@ uerra, eswi-an: an.sp.sfc.grib2, field 1 [surface_pressure_sfc]: surface_pressur
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&from_start, &predefined_level},
+      {&from_start, &predefined_level, &has_bitmap},
    },
 
    {
@@ -1508,7 +1464,7 @@ uerra, eswi-an: an.sp.sfc.grib2, field 1 [surface_pressure_sfc]: surface_pressur
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&point_in_time, &predefined_level},
+      {&point_in_time, &predefined_level, &has_bitmap},
    },
 
    {
@@ -1529,15 +1485,15 @@ uerra, eswi-an: an.sp.sfc.grib2, field 1 [surface_pressure_sfc]: surface_pressur
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&point_in_time, &predefined_level},
+      {&point_in_time, &predefined_level, &has_bitmap},
    },
 
    {
       "sea_surface_temperature_sfc.glob",
-      -1.5e+6,
-       1.5e+6,
-      -1.5e+6,
-       1.5e+6,
+       200,
+       290,
+       260,
+       320,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
 
@@ -1550,8 +1506,37 @@ uerra, eswi-an: an.sp.sfc.grib2, field 1 [surface_pressure_sfc]: surface_pressur
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&point_in_time, &predefined_level},
+      {&point_in_time, &predefined_level, &has_bitmap},
    },
+
+/* 
+  s2s/rums/enfo: warning: s2s.z_s2s_c_rhmc_20170301000000_glob_prod_00.sl.grib2, field 141 [sea_surface_temperature_sfc.glob.s2]: sea_surface_temperature_sfc.glob.s2 minimum value 0 is not in [200,290]
+
+  SHOULD be fixed now!
+
+   {
+      "sea_surface_temperature_sfc.glob.s2s.rums",
+       0,
+       290,
+       260,
+       320,
+      {
+         {"model", GRIB_TYPE_STRING, 0, "glob"},
+         {"class", GRIB_TYPE_STRING, 0, "s2"},
+         {"centre", GRIB_TYPE_STRING, 1, "rums"},
+
+         {"paramId", GRIB_TYPE_LONG, 34},
+
+         {"discipline", GRIB_TYPE_LONG, 10},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 0},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {NULL, },
+      },
+      {&daily_average, &predefined_level, &has_bitmap},
+   },
+*/
 
    {
       "convective_available_potential_energy_sfc.glob.s2",
@@ -1753,8 +1738,7 @@ warning: s2s.z_s2s_c_babj_20150817000000_glob_prod_cf_1440_000.sl.grib2, field 1
          {"scaledValueOfSecondFixedSurface", GRIB_TYPE_LONG, 2},
          {NULL, },
       },
-/*    {&daily_average, &given_thickness, &has_bitmap},  todo bitmap?? */
-      {&daily_average, &given_thickness},
+      {&daily_average, &given_thickness, &has_bitmap},
    },
 
 /*
@@ -1767,7 +1751,7 @@ s2s/rums warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_1464_001.sl.grib2, f
       "soil_moisture_top_100_cm_sfc.glob",
       -1e-15,
       70,
-      400,
+      380,
       1400,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
@@ -1789,8 +1773,7 @@ s2s/rums warning: s2s.z_s2s_c_rhmc_20150819000000_glob_prod_1464_001.sl.grib2, f
          {"scaledValueOfSecondFixedSurface", GRIB_TYPE_LONG, 10},
          {NULL, },
       },
-/*    {&daily_average, &given_thickness, &has_bitmap},  todo bitmap?? */
-      {&daily_average, &given_thickness},
+      {&daily_average, &given_thickness, &has_bitmap},
    },
 /*
 s2s_devel/ecmf/enfh/rea: warning: s2s.2015011200.test.768.10.cf.20100112.sl.24.grib2, field 25 [soil_temperature_top_20_cm_sfc.glob]: soil_temperature_top_20_cm_sfc.glob minimum value 199.519 is not in [200,230]
@@ -1822,7 +1805,7 @@ s2s_prod/ammc/enfo:warning: s2s.st20_20151004_4.grib2, field 61 [soil_temperatur
          {"scaledValueOfSecondFixedSurface", GRIB_TYPE_LONG, 2},
          {NULL, },
       },
-      {&daily_average, &given_thickness},
+      {&daily_average, &given_thickness, &has_bitmap},
    },
 
 /*
@@ -1856,7 +1839,7 @@ s2s_prod/ammc/enfo:warning: s2s.st20_20151004_4.grib2, field 61 [soil_temperatur
          {"scaledValueOfSecondFixedSurface", GRIB_TYPE_LONG, 2},
          {NULL, },
       },
-      {&daily_average, &given_thickness},
+      {&daily_average, &given_thickness, &has_bitmap},
    },
 
 
@@ -1889,7 +1872,7 @@ s2s_prod/ammc/enfo:warning: s2s.st20_20151004_4.grib2, field 61 [soil_temperatur
          {"scaledValueOfSecondFixedSurface", GRIB_TYPE_LONG, 10},
          {NULL, },
       },
-      {&daily_average, &given_thickness},
+      {&daily_average, &given_thickness, &has_bitmap},
    },
 
 /* 
@@ -1924,7 +1907,7 @@ s2s_prod/ammc/enfo:warning: s2s.st20_20151004_4.grib2, field 61 [soil_temperatur
          {"scaledValueOfSecondFixedSurface", GRIB_TYPE_LONG, 10},
          {NULL, },
       },
-      {&daily_average, &given_thickness},
+      {&daily_average, &given_thickness, &has_bitmap},
    },
 /* 
    S2S/CAWCR: snow_depth_water_equivalent_sfc.glob maximum value 9066.25 is not in [10000,15000]
@@ -1933,7 +1916,7 @@ warning: s2s.z_tigge_c_kwbc_19990817000000_ncep_prod_cf_sl_0024_000_0000_sd.grib
 */
    {
       "snow_depth_water_equivalent_sfc.glob.s2",
-      0,
+      -0.00001,
       0,
       100,
       15000,
@@ -1984,6 +1967,7 @@ warning: s2s.z_tigge_c_kwbc_20150817000000_ncep_prod_cf_sl_0024_000_0000_tcc.gri
 warning: s2s.z_s2s_c_babj_20150817000000_glob_prod_cf_1440_000.sl.grib2, field 2582 [total_cloud_cover_sfc.glob]: total_cloud_cover_sfc.glob maximum value 94.4214 is not in [99.99,100.01]
 warning: s2s.z_tigge_c_kwbc_20150817000000_ncep_prod_pf_sl_0024_009_0000_tcc.grib2, field 1 [total_cloud_cover_sfc.glob]: total_cloud_cover_sfc.glob maximum value 100.503 is not in [90,100.1]
 s2s/lfpw: warning: s2s.lfpw_tcc_0.grib2, field 60 [total_cloud_cover_sfc.glob]: total_cloud_cover_sfc.glob minimum value -0.0300206 is not in [0,5]
+s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: total_cloud_cover_sfc.glob maximum value 128 is not in [90,101]
  */
    {
       "total_cloud_cover_sfc.glob.s2",
@@ -1994,35 +1978,6 @@ s2s/lfpw: warning: s2s.lfpw_tcc_0.grib2, field 60 [total_cloud_cover_sfc.glob]: 
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"class", GRIB_TYPE_STRING, 0, "s2"},
-
-         {"paramId", GRIB_TYPE_LONG, 228164},
-
-         {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 0},
-
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 6},
-         {"parameterNumber", GRIB_TYPE_LONG, 1},
-
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
-         {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 8},
-         {NULL, },
-      },
-      {&daily_average, &predefined_thickness},
-   },
-
- /*
-s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: total_cloud_cover_sfc.glob maximum value 128 is not in [90,101]
- */
-   {
-      "total_cloud_cover_sfc.glob.s2.ammc",
-      -0.1,
-      5,
-      90.,
-      150.,
-      {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
-         {"class", GRIB_TYPE_STRING, 0, "s2"},
-         {"centre", GRIB_TYPE_STRING, 1, "ammc"},
 
          {"paramId", GRIB_TYPE_LONG, 228164},
 
@@ -2113,7 +2068,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&daily_average, &predefined_level},
+      {&daily_average, &predefined_level, &has_bitmap},
    },
 
    {
@@ -2140,12 +2095,16 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       {&daily_average, &predefined_level},
    },
 
+/*
+  s2s/ammc/enfo: warning: s2s.sst_20170223_4.sl.grib2, field 59 [sea_surface_temperature_sfc.glob.s2]: sea_surface_temperature_sfc.glob.s2 minimum value 194.496 is not in [200,290]
+*/
+
    {
       "sea_surface_temperature_sfc.glob.s2",
-      -1.5e+6,
-       1.5e+6,
-      -1.5e+6,
-       1.5e+6,
+       180,
+       290,
+       260,
+       320,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"class", GRIB_TYPE_STRING, 0, "s2"},
@@ -2161,7 +2120,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&daily_average, &predefined_level},
+      {&daily_average, &predefined_level, &has_bitmap},
    },
 
    {
@@ -2184,7 +2143,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&daily_average, &predefined_level},
+      {&daily_average, &predefined_level, &has_bitmap},
    },
 
 /* UERRA */
@@ -2195,23 +2154,6 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       0.9999,
       100.00001,
       {
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 6},
-         {"parameterNumber", GRIB_TYPE_LONG, 5},
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
-         {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 8},
-         {NULL, },
-      },
-      {&point_in_time, &predefined_thickness},
-   },
-   {
-      "medium_cloud_cover_sfc",
-      0,
-      1e-10,
-      0.9999,
-      100.00001,
-      {
-         {"discipline", GRIB_TYPE_LONG, 0},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 6},
          {"parameterNumber", GRIB_TYPE_LONG, 5},
@@ -2253,6 +2195,28 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       },
       {&point_in_time, &predefined_thickness},
    },
+/* 
+
+uerra/egrr (something like ad hoc 1 grid-point issue (similarly grid-point storms..)): warning: enda.2009-01-20.sfc.grib2, field 831 [low_cloud_cover_sfc]: low_cloud_cover_sfc maximum value 317.188 is not in [0.9999,100]
+*/
+   {
+      "low_cloud_cover_sfc.egrr",
+      0,
+      1e-10,
+      0.9999,
+      400.00001,
+      {
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 6},
+         {"parameterNumber", GRIB_TYPE_LONG, 3},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 8},
+         {NULL, },
+      },
+      {&point_in_time, &predefined_thickness},
+   },
+
+
    /* uerra model levels */
    {
       "pressure_ml",
@@ -2261,6 +2225,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       100,
       108000,
       {
+         {"paramId", GRIB_TYPE_LONG, 54},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 3},
          {"parameterNumber", GRIB_TYPE_LONG, 0},
@@ -2270,6 +2235,26 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       },
       {&point_in_time, &given_level}, /* check model levels?? */
    },
+   {
+      "pressure_ml.edzw",
+      100,
+      100000,
+      100,
+      108000,
+      {
+         {"paramId", GRIB_TYPE_LONG, 54},
+         {"origin", GRIB_TYPE_STRING, 0, "edzw"},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 0},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 118},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level}, /* check model levels?? */
+   },
+
    {
       "specific_humidity_ml",
       -0.1,
@@ -2287,6 +2272,26 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       {&point_in_time, &given_level}, /* check model levels?? */
    },
    {
+      "specific_humidity_ml.edzw",
+      -0.1,
+      0.01,
+         0,
+       0.1,
+      {
+         {"paramId", GRIB_TYPE_LONG, 133},
+         {"origin", GRIB_TYPE_STRING, 0, "edzw"},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 0},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 118},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level}, /* check model levels?? */
+   },
+
+   {
       "temperature_ml",
       150,
       300,
@@ -2303,6 +2308,25 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       },
       {&point_in_time, &given_level}, /* check model levels?? */
    },
+   {
+      "temperature_ml.edzw",
+      150,
+      300,
+      200,
+      330,
+      {
+         {"paramId", GRIB_TYPE_LONG, 130},
+         {"origin", GRIB_TYPE_STRING, 0, "edzw"},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 0},
+         {"parameterNumber", GRIB_TYPE_LONG, 0},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 118},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level}, /* check model levels?? */
+   },
 
 /*
   uerra, eswi-an: an.200812020000+0.ml.grib2, field 3 [u_velocity_ml]: u_velocity_ml minimum value 1.55574 is not in [-200,1]
@@ -2311,7 +2335,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
    {
       "u_velocity_ml",
       -200,
-         5,
+        10,
        0.1,
        200,
       {
@@ -2325,6 +2349,26 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       },
       {&point_in_time, &given_level}, /* check model levels?? */
    },
+   {
+      "u_velocity_ml.edzw",
+      -200,
+        10,
+       0.1,
+       200,
+      {
+         {"paramId", GRIB_TYPE_LONG, 131},
+         {"origin", GRIB_TYPE_STRING, 0, "edzw"},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 2},
+         {"parameterNumber", GRIB_TYPE_LONG, 2},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 118},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level}, /* check model levels?? */
+   },
+
    {
       "v_velocity_ml",
       -200,
@@ -2343,6 +2387,26 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       {&point_in_time, &given_level}, /* check model levels?? */
    },
    {
+      "v_velocity_ml.edzw",
+      -200,
+      -1,
+      1,
+      200,
+      {
+         {"paramId", GRIB_TYPE_LONG, 132},
+         {"origin", GRIB_TYPE_STRING, 0, "edzw"},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 2},
+         {"parameterNumber", GRIB_TYPE_LONG, 3},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 118},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level}, /* check model levels?? */
+   },
+
+   {
       "cloud_cover_ml",
       0,
       1e-10,
@@ -2358,12 +2422,54 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
       },
       {&point_in_time, &given_level}, /* check model levels?? */
    },
+   {
+      "cloud_cover_ml.edzw",
+      0,
+      1e-10,
+      0,
+      100.00001,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260257},
+         {"origin", GRIB_TYPE_STRING, 0, "edzw"},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 6},
+         {"parameterNumber", GRIB_TYPE_LONG, 22},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 118},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level}, /* check model levels?? */
+   },
+
+/*
+  uerra/egrr warning: oper.2010-03-13.ml.grib2, field 16 [cloud_cover_ml]: cloud_cover_ml minimum value -0.906414 is not in [0,1e-10]
+   {
+      "cloud_cover_ml.uerra.egrr",
+      -10,
+      1e-10,
+      0,
+      100.00001,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "ur"},
+         {"centre", GRIB_TYPE_STRING, 1, "egrr"},
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 6},
+         {"parameterNumber", GRIB_TYPE_LONG, 22},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 105},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level},
+   },
+*/
 
    /* pressure level */
 
 /* 
 uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl.grib2, field 76 [geopotential_height_pl.ur]: geopotential_height_pl.ur minimum value -2938.29 is not in [-1300,300000]
-*/
+
+??? xxx TBD to be deleted and the global one used only!
 
    {
       "geopotential_height_pl.ur",
@@ -2383,6 +2489,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       },
       {&point_in_time, &given_level, &pressure_level},
    },
+*/
 
    {
       "specific_cloud_ice_water_content_pl",
@@ -2434,6 +2541,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       },
       {&point_in_time, &given_level, &pressure_level},
    },
+
    {
       "specific_cloud_ice_water_content_ml",
        0,
@@ -2441,6 +2549,8 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
        0,
        0.01,
       {
+         {"paramId", GRIB_TYPE_LONG, 247},
+
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 1},
          {"parameterNumber", GRIB_TYPE_LONG, 84},
@@ -2451,12 +2561,34 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       {&point_in_time, &given_level}, /* check model levels?? */
    },
    {
+      "specific_cloud_ice_water_content_ml.edzw",
+       0,
+       0.001,
+       0,
+       0.01,
+      {
+         {"paramId", GRIB_TYPE_LONG, 247},
+         {"origin", GRIB_TYPE_STRING, 0, "edzw"},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 84},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 118},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level}, /* check model levels?? */
+   },
+
+   {
       "specific_cloud_liquid_water_content_ml",
        0,
        1e+5,
        0,
        1e+6,
       {
+         {"paramId", GRIB_TYPE_LONG, 246},
+
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 1},
          {"parameterNumber", GRIB_TYPE_LONG, 83},
@@ -2467,13 +2599,39 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       {&point_in_time, &given_level}, /* check model levels?? */
    },
    {
-      "relative_humidity_pl",
+      "specific_cloud_liquid_water_content_ml.edzw",
        0,
-       20,
+       1e+5,
        0,
-       100.01,
+       1e+6,
+      {
+         {"paramId", GRIB_TYPE_LONG, 246},
+         {"origin", GRIB_TYPE_STRING, 0, "edzw"},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 83},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 118},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level}, /* check model levels?? */
+   },
+
+/*
+  uerra/eggr  warning: oper.2010-03-13.pl.grib2, field 69 [relative_humidity_pl]: relative_humidity_pl maximum value 169 is not in [0,160]
+
+*/
+   {
+      "relative_humidity_pl.ur",
+       0,
+       30,
+       0,
+       180,
       {
          {"paramId", GRIB_TYPE_LONG, 157},
+         {"class", GRIB_TYPE_STRING, 0, "ur"},
+
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 1},
          {"parameterNumber", GRIB_TYPE_LONG, 1},
@@ -2553,9 +2711,9 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
    {
       "relative_humidity_hl",
       0,
-      20,
+      40,
       1,
-      100.01,
+      160,
       {
          {"paramId", GRIB_TYPE_LONG, 157},
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -2646,7 +2804,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       0,
       25,
       90,
-      100.1,
+      160,
       {
          {"paramId", GRIB_TYPE_LONG, 260242},
          {"discipline", GRIB_TYPE_LONG, 0},
@@ -2676,7 +2834,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
          {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&from_start, &predefined_level},
+      {&from_start, &predefined_level, &has_bitmap},
    },
 
 /*
@@ -2696,7 +2854,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&point_in_time, &predefined_level},
+      {&point_in_time, &predefined_level, &has_bitmap},
    },
 /*
   uerra, egrr:  The albedo is 0 at night because it is dependent on solar radiation
@@ -2717,7 +2875,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&point_in_time, &predefined_level},
+      {&point_in_time, &predefined_level, &has_bitmap},
    },
    {
       "time_integrated_surface_clear-sky_solar_radiation_downwards",
@@ -3099,7 +3257,7 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       "soil_temperature_layer",
       200,
       280,
-      300,
+      285,
       350,
       {
          {"paramId", GRIB_TYPE_LONG, 260360},
@@ -3116,30 +3274,13 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
    },
 
    {
-      "w_vertical_velocity_pl",
-      -20,
-      0,
-      0,
-      20,
-      {
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
-         {"paramId", GRIB_TYPE_LONG, 135},
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 2},
-         {"parameterNumber", GRIB_TYPE_LONG, 8},
-
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
-         {NULL, },
-      },
-      {&point_in_time, &given_level, &pressure_level},
-   },
-   {
       "cloud_cover_pl.ur",
       0,
       1e-10,
       0,
       100,
       {
+         {"paramId", GRIB_TYPE_LONG, 260257},
          {"class", GRIB_TYPE_STRING, 0, "ur"},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 6},
@@ -3202,7 +3343,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
    {
       "total_cloud_cover_sfc.ur.eswi",
       0,
-      1e-10,
+      2e-10,
       90.,
       100.,
       {
@@ -3218,30 +3359,6 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {NULL, },
       },
       {&point_in_time, &predefined_thickness},
-   },
-
-/*
- uerra, cosmo-det-an: u_velocity_pl minimum value 1.40681 is not in [-200,-1]
-*/
-   {
-      "u_velocity_pl",
-      -200,
-      5,
-      1,
-      200,
-      {
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
-
-         {"paramId", GRIB_TYPE_LONG, 131},
-
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 2},
-         {"parameterNumber", GRIB_TYPE_LONG, 2},
-
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
-         {NULL, },
-      },
-      {&point_in_time, &given_level, &pressure_level},
    },
    {
       "soil_depth",
@@ -3260,6 +3377,39 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
       },
       {&point_in_time, &given_level, &has_bitmap, &has_soil_level},
    },
+
+   {
+      "volumetric_field_capacity",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260211},
+         {"discipline", GRIB_TYPE_LONG, 2},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 11},
+         {NULL, },
+      },
+      {&point_in_time, &has_bitmap},
+   },
+
+   {
+      "volumetric_wilting_point",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260200},
+         {"discipline", GRIB_TYPE_LONG, 2},
+         {"parameterCategory", GRIB_TYPE_LONG, 0},
+         {"parameterNumber", GRIB_TYPE_LONG, 27},
+         {NULL, },
+      },
+      {&point_in_time, &has_bitmap},
+   },
+
 
 };
 

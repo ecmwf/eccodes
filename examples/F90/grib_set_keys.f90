@@ -1,8 +1,8 @@
-! Copyright 2005-2016 ECMWF.
+! Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-! 
+!
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
@@ -53,27 +53,27 @@ integer, intent(out) :: date1
 integer              :: val_date(8)
 call date_and_time ( values = val_date)
 
-date1 = val_date(1)* 10000 + val_date(2)*100 + val_date(3) 
+date1 = val_date(1)* 10000 + val_date(2)*100 + val_date(3)
 end subroutine current_date
 !======================================
 subroutine check_settings(gribid)
   implicit none
   integer, intent(in) :: gribid
-  
+
   integer(kind = 4)    :: int_value
   character(len = 10)  :: string_value
 
   !     get centre as a integer
   call codes_get(gribid,'centre',int_value)
   write(*,*) "get centre as a integer - centre = ",int_value
-  
+
   !     get centre as a string
   call codes_get(gribid,'centre',string_value)
   write(*,*) "get centre as a string  - centre = ",string_value
-  
+
   !     get date as a string
   call codes_get(gribid,'dataDate',string_value)
   write(*,*) "get date as a string    - date = ",string_value
-  
+
 end subroutine check_settings
 end program set

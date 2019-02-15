@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,6 +7,10 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
+
+#ifdef __gnu_hurd__
+ #define _FILE_OFFSET_BITS 64 /* 64-bit offsets off_t not the default on Hurd/i386 */
+#endif
 
 #include "grib_api_internal.h"
 #include <stdio.h>
@@ -60,9 +64,9 @@ typedef struct grib_constraints {
 */
 
 typedef struct grib_options_help {
-  char* id;
-  char* args;
-  char* help;
+  const char* id;
+  const char* args;
+  const char* help;
 } grib_options_help;
 
 
@@ -164,9 +168,9 @@ typedef struct grib_runtime_options {
 
 extern grib_option grib_options[];
 extern int grib_options_count;
-extern char* grib_tool_name;
-extern char* grib_tool_description;
-extern char* grib_tool_usage;
+extern const char* grib_tool_name;
+extern const char* grib_tool_description;
+extern const char* grib_tool_usage;
 
 extern FILE* dump_file;
 
@@ -178,8 +182,8 @@ int grib_tool(int argc, char **argv);
 char* grib_options_get_help(char* id);
 char* grib_options_get_args(char* id);
 int grib_options_command_line(const char* id);
-void usage();
-void usage_doxygen();
+void usage(void);
+void usage_doxygen(void);
 int grib_tool_before_getopt(grib_runtime_options* options);
 int grib_tool_init(grib_runtime_options* options);
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file);
@@ -196,6 +200,7 @@ int grib_process_runtime_options(grib_context* c,int argc,char** argv,grib_runti
 void grib_tools_write_message(grib_runtime_options* options, grib_handle* h);
 int grib_tool_new_filename_action(grib_runtime_options* options,const char* file); 
 int grib_no_handle_action(grib_runtime_options* options,int err);
+int exit_if_input_is_directory(const char* tool_name, const char* filename);
 
 #endif
 

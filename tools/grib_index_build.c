@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,9 +15,9 @@
 
 #include "grib_tools.h"
 
-char* grib_tool_description="Build an index file for a set of input GRIB files.";
-char* grib_tool_name="grib_index_build";
-char* grib_tool_usage="[options] grib_file grib_file ... ";
+const char* grib_tool_description="Build an index file for a set of input GRIB files.";
+const char* grib_tool_name="grib_index_build";
+const char* grib_tool_usage="[options] grib_file grib_file ... ";
 grib_index* idx=NULL;
 char* keys;
 char* default_keys = "mars";
@@ -28,14 +28,15 @@ grib_option grib_options[]={
         {"o:","output_index_file",
               "\n\t\tOutput is written to output_index_file."
               "\n\t\tIf an output index file is required and -o is not used, the"
-              " output index is written to gribidx\n",
+              " output index is written to 'gribidx'\n",
               1,1,"gribidx"},
         {"k:",0,0,0,1,0},
         {"V",0,0,0,1,0},
         {"T:",0,0,0,1,0},
         {"M",0,0,0,1,0},
         {"N",0,"Do not compress index."
-             "\n\t\tBy default the index is compressed to remove keys with only one value.\n",0,1,0}
+               "\n\t\tBy default the index is compressed to remove keys with only one value.\n",0,1,0
+        }
 };
 
 int compress_index;

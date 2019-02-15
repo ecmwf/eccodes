@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,12 +14,14 @@
  */
 #include "grib_tools.h"
 
+extern char *optarg;
+extern int optind;
+
 #ifdef ECCODES_ON_WINDOWS
-/* Microsoft Windows Visual Studio support */
 #include "wingetopt.h"
 #endif
 
-char* names[]={"parameter","vertical","geography","data","mars","local"};
+const char* names[]={"parameter","vertical","geography","data","mars","local"};
 int names_count=6;
 
 /* id,args,help */
@@ -29,8 +31,8 @@ grib_options_help grib_options_help_list[] ={
      "\n\t\tAll the keys in this list are skipped in the comparison. Bit-by-bit compare on.\n"},
   {"B:","order by directive",
      "\n\t\tOrder by. The output will be ordered according to the order by directive."
-     "\n\t\tOrder by example: \"step asc, centre desc\" (step ascending and centre descending)\n"},
-  {"c:","key[:i/d/s/n],key[:i/d/s/n],...",
+     "\n\t\tOrder by example: \"step:i asc, centre desc\" (step numeric ascending and centre descending)\n"},
+     {"c:","key[:i|d|s|n],key[:i|d|s|n],...",
    "\n\t\tOnly the listed keys or namespaces (:n) are compared. The optional letter after the colon is used "
    "\n\t\tto force the type in the comparison: i->integer, d->float, s->string, n->namespace."
    "\n\t\tSee -a option. Incompatible with -H option.\n"},
@@ -38,17 +40,17 @@ grib_options_help grib_options_help_list[] ={
    "\n\t\tSet all the data values to \"value\".\n"},
   {"e:","tolerance","\n\t\tOnly values whose difference is more than tolerance are considered different.\n"},
   {"f",0,"Force. Force the execution not to fail on error.\n"},
-  {"F:","format","\n\t\tC style format for floating point values.\n"},
+  {"F:","format","\n\t\tC style format for floating-point values.\n"},
   {"g",0,"Copy GTS header. \n"},
   {"G",0,"GRIBEX compatibility mode.\n"},
   {"i:","index",
     "\n\t\tData value corresponding to the given index is printed.\n"},
   {"j",0,"JSON mode (JavaScript Object Notation).\n"},
   {"l:","Latitude,Longitude[,MODE,file]",
-   "\n\t\tValue close to the point of a Latitude/Longitude."
+   "\n\t\tValue close to the point of a Latitude,Longitude."
    "\n\t\tAllowed values for MODE are:"
-   "\n\t\t4 (4 values in the nearest points are printed) Default"
-   "\n\t\t1 (the value at the nearest point is printed)"
+   "\n\t\t  4 (4 values in the nearest points are printed) Default"
+   "\n\t\t  1 (the value at the nearest point is printed)"
    "\n\t\tfile (file is used as mask. The closer point with mask value>=0.5 is printed)\n"
        },
   {"n:","namespace",
@@ -57,8 +59,8 @@ grib_options_help grib_options_help_list[] ={
   {"o:","output_file",
    "\n\t\tOutput is written to output_file."
    "\n\t\tIf an output file is required and -o is not used, the"
-   " output is written to filter.out\n"},
-  {"p:","key[:{s/d/i}],key[:{s/d/i}],...",
+   " output is written to 'filter.out'\n"},
+  {"p:","key[:{s|d|i}],key[:{s|d|i}],...",
    "\n\t\tDeclaration of keys to print."
    "\n\t\tFor each key a string (key:s), a double (key:d) or an integer (key:i)"
    "\n\t\ttype can be requested. Default type is string.\n"},
@@ -66,38 +68,39 @@ grib_options_help grib_options_help_list[] ={
   {"r",0,"Repack data. Sometimes after setting some keys involving properties"
          "\n\t\tof the packing algorithm a repacking of data is needed."
          "\n\t\tThis repacking is performed setting this -r option.\n"},
-  {"s:","key[:{s/d/i}]=value,key[:{s/d/i}]=value,...",
+  {"s:","key[:{s|d|i}]=value,key[:{s|d|i}]=value,...",
    "\n\t\tKey/values to set."
    "\n\t\tFor each key a string (key:s), a double (key:d) or an integer (key:i)"
    "\n\t\ttype can be defined. By default the native type is set.\n"},
   {"t",0,"Print type information.\n"},
-  {"w:","key[:{s/d/i}]{=/!=}value,key[:{s/d/i}]{=/!=}value,...",
+  {"w:","key[:{s|d|i}]{=|!=}value,key[:{s|d|i}]{=|!=}value,...",
    "\n\t\tWhere clause."
    "\n\t\tMessages are processed only if they match all the"
    " key/value constraints."
    "\n\t\tA valid constraint is of type key=value or key!=value."
    "\n\t\tFor each key a string (key:s), a double (key:d) or"
    " an integer (key:i)\n\t\ttype can be specified. Default type is string."
-   "\n\t\tIn the value you can also use the forward-slash character '/' to specify an OR condition (i.e. a logical disjunction)\n"
+   "\n\t\tIn the value you can also use the forward-slash character '/' to specify an OR condition (i.e. a logical disjunction)"
+   "\n\t\tNote: only one -w clause is allowed.\n"
   },
   {"v",0,"Verbose.\n"},
   {"7",0,"Does not fail when the message has wrong length\n"},
   {"A:","absolute error\n",
-  "\tCompare floating point values using the absolute error as tolerance.\n\t\tDefault is absolute error=0\n"},
+  "\tCompare floating-point values using the absolute error as tolerance.\n\t\tDefault is absolute error=0\n"},
   {"C",0,"C code mode. A C code program generating the message is dumped.\n"},
   {"D",0,"Debug mode.\n"},
   {"H",0,"Print octet content in hexadecimal format.\n"},
-  {"M",0,"Multi-field support off. Turn off support for multiple fields in single grib message.\n"},
+  {"M",0,"Multi-field support off. Turn off support for multiple fields in single GRIB message.\n"},
   {"O",0,"Octet mode. WMO documentation style dump.\n"},
-  {"P:","key[:{s/d/i}],key[:{s/d/i}],...",
+  {"P:","key[:{s|d|i}],key[:{s|d|i}],...",
    "\n\t\tAs -p adding the declared keys to the default list.\n"},
   {"R:","key1=relative_error1,key2=relative_error2,...\n",
-   "\tCompare floating point values using the relative error as tolerance."
-"\n\t\tkey1=relative_error will compare key1 using relative_error1."
-"\n\t\tall=relative_error will compare all the floating point keys using relative_error. Default all=0.\n"},
-  {"S",0,"Strict. Only grib messages matching all the constraints are copied to"
+        "\tCompare floating-point values using the relative error as tolerance."
+        "\n\t\tkey1=relative_error1 will compare key1 using relative_error1."
+        "\n\t\tall=relative_error will compare all the floating-point keys using relative_error. Default all=0.\n"},
+  {"S",0,"Strict. Only messages matching all the constraints are copied to"
    "\n\t\tthe output file\n"},
-  {"T:","T | B | M | A","Message type. T->GTS, B->BUFR, M->METAR (Experimental),A->Any (Experimental).\n\t\t\tThe input file is interpreted according to the message type.\n"},
+  {"T:","T | B | M | A","Message type. T->GTS, B->BUFR, M->METAR (Experimental), A->Any (Experimental).\n\t\t\t\tThe input file is interpreted according to the message type.\n"},
   {"V",0,"Version.\n"},
   {"W:","width","\n\t\tMinimum width of each column in output. Default is 10.\n"},
   {"X:","offset","\n\t\tInput file offset in bytes. Processing of the input file will start from \"offset\".\n"},
@@ -111,7 +114,7 @@ grib_options_help grib_options_help_list[] ={
 int grib_options_help_count=sizeof(grib_options_help_list)/sizeof(grib_options_help);
 
 
-void usage()
+void usage(void)
 {
     int i=0;
     printf("\nNAME \t%s\n\n",grib_tool_name);
@@ -240,7 +243,13 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
     options->gts=grib_options_on("g");
 
     if (grib_options_on("d:")) {
-        options->constant=atof(grib_options_get_option("d:"));
+        char* endPtr = NULL; /* for error handling */
+        const char* optionStr = grib_options_get_option("d:");
+        options->constant=strtod(optionStr, &endPtr);
+        if(*endPtr) {
+            fprintf(stderr, "Invalid number for -d option: '%s'\n", optionStr);
+            exit(1);
+        }
         options->repack=1;
     }
 
@@ -375,7 +384,7 @@ char* grib_options_get_help(char* id)
     }
     for (i=0; i<grib_options_help_count;i++) {
         if (!strcmp(id,grib_options_help_list[i].id)) {
-            return grib_options_help_list[i].help != NULL ? grib_options_help_list[i].help : err;
+            return grib_options_help_list[i].help != NULL ? (char*)grib_options_help_list[i].help : err;
         }
     }
     return err;
@@ -398,13 +407,13 @@ char* grib_options_get_args(char* id)
     }
     for (i=0; i<grib_options_help_count;i++) {
         if (!strcmp(id,grib_options_help_list[i].id)) {
-            return grib_options_help_list[i].args != NULL ? grib_options_help_list[i].args : err;
+            return grib_options_help_list[i].args != NULL ? (char*)grib_options_help_list[i].args : err;
         }
     }
     return err;
 }
 
-void usage_doxygen()
+void usage_doxygen(void)
 {
     int i=0;
     printf("/*!  \\page %s %s\n",grib_tool_name,grib_tool_name);
@@ -424,7 +433,7 @@ void usage_doxygen()
 }
 
 #if 0
-void usage_doxygen() {
+void usage_doxygen(void) {
     int i=0;
     printf("/*!  \\page %s %s\n",grib_tool_name,grib_tool_name);
     printf("\\section DESCRIPTION \n%s\n\n",grib_tool_description);

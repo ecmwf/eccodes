@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -32,7 +32,7 @@ metar_file=metar.txt
 export METAR_YEAR=2015
 export METAR_MONTH=4
 
-${tools_dir}metar_get -n ls $metar_file >/dev/null
-${tools_dir}metar_get -w count=1/2/3 -p CCCC,latitude,longitude,dateTime,elevation,temperature,dewPointTemperature,qnh $metar_file
+${tools_dir}/metar_get -n ls $metar_file >/dev/null
+${tools_dir}/metar_get -w count=1/2/3 -p CCCC,latitude,longitude,dateTime,elevation,temperature,dewPointTemperature,qnh $metar_file
 
 rm -f $fLog

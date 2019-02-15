@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -22,11 +22,11 @@ f=${data_dir}/bufr/syno_1.bufr
 REDIRECT=/dev/null
 
 #Clone the bufr messages
-${examples_dir}c_bufr_clone $f $fBufrTmp >$REDIRECT 2> $REDIRECT 
+${examples_dir}/c_bufr_clone $f $fBufrTmp >$REDIRECT 2> $REDIRECT
 
 #Compare clone to the original
 set +e
-${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT 
+${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT
 
 #Check if clone is different
 if [ $? -eq 0 ]; then

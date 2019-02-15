@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -174,8 +174,8 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
     {
     case GRIB_TYPE_STRING:
 
-        /* len = len > 1024 ? len : 1024; */
-        _grib_get_string_length(ga,&len);
+        /*_grib_get_string_length(ga,&len);  See ECC-490 */
+        grib_get_string_length(h,name,&len);
         sval = (char*)grib_context_malloc(h->context,len);
         ret = grib_get_string_internal(h,name,sval,&len);
         if(ret == GRIB_SUCCESS)

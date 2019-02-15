@@ -8,4 +8,4 @@ USAGE
 
 OPTIONS
         -v  Verbose mode. The number of messages is given for each file.
-         
+        -f  Force. Force the execution not to fail on error.

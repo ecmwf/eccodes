@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -199,6 +199,7 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
   NS=(MS+1)*(MS+2);
 
   if ( bpv != 0 ) {
+    DebugAssert( offsetAfterData > offsetBeforeData );
 	*val =((offsetAfterData-offsetBeforeData)*8-unusedBits+NS*(bpv-32))/bpv; 
   } else {
     if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfValues,&numberOfValues)) != GRIB_SUCCESS)

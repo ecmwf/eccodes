@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -27,7 +27,7 @@ int main(int argc, char** argv)
     int err = 0;
     long parameterCategory=0,parameterNumber=0,discipline=0;
     FILE* in = NULL;
-    char* filename = "../../data/multi.grib2";
+    const char* filename = "../../data/multi.grib2";
     codes_handle *h = NULL;
 
     /* turn on support for multi fields messages */

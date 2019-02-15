@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -48,6 +48,7 @@ typedef struct grib_accessor_g1fcperiod {
 	const char *step_unit;
 	const char *stepType;
 	const char *patch_fp_precip;
+	int error_on_units;
 /* Members defined in g1fcperiod */
 } grib_accessor_g1fcperiod;
 

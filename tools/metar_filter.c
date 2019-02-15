@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -24,10 +24,10 @@ grib_option grib_options[]={
         {"7",0,0,0,1,0},
         {"v",0,0,0,1,0}
 };
-char* grib_tool_description="Apply the rules defined in rules_file to each METAR "
+const char* grib_tool_description="Apply the rules defined in rules_file to each METAR "
         "message\n\tin the files provided as arguments.";
-char* grib_tool_name="metar_filter";
-char* grib_tool_usage="[options] rules_file "
+const char* grib_tool_name="metar_filter";
+const char* grib_tool_usage="[options] rules_file "
         "file file ...";
 int fail=0;
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);

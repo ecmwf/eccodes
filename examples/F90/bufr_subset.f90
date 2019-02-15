@@ -1,5 +1,5 @@
 !
-!Copyright 2005-2016 ECMWF.
+!Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 !which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,60 +21,59 @@ integer            :: iret
 integer            :: ibufr
 integer            :: i, count=0
 integer(kind=4)    :: numberOfSubsets
-integer(kind=4)    :: blockNumber,stationNumber 
+integer(kind=4)    :: blockNumber,stationNumber
 character(100)     :: key
 !real(kind=8)       :: t2m
 
   call codes_open_file(ifile,'../../data/bufr/synop_multi_subset.bufr','r')
 
-! the first bufr message is loaded from file
-! ibufr is the bufr id to be used in subsequent calls
+  ! The first bufr message is loaded from file,
+  ! ibufr is the bufr id to be used in subsequent calls
   call codes_bufr_new_from_file(ifile,ibufr,iret)
 
   do while (iret/=CODES_END_OF_FILE)
-    
-    ! get and print some keys form the BUFR header 
+
+    ! Get and print some keys form the BUFR header
     write(*,*) 'message: ',count
 
-    ! we need to instruct ecCodes to expand all the descriptors 
+    ! We need to instruct ecCodes to expand all the descriptors
     ! i.e. unpack the data values
-    call codes_set(ibufr,'unpack',1);   
-    
-    ! find out the number of subsets
+    call codes_set(ibufr,'unpack',1);
+
+    ! Find out the number of subsets
     call codes_get(ibufr,'numberOfSubsets',numberOfSubsets)
     write(*,*) '  numberOfSubsets:',numberOfSubsets
-    
-    ! loop over the subsets
+
+    ! Loop over the subsets
     do i=1,numberOfSubsets
-            
- 100    format('/subsetNumber=',I5.5,'/blockNumber')       
-        write(key,100) I       
+
+ 100    format('/subsetNumber=',I5.5,'/blockNumber')
+        write(key,100) I
         write(*,*) key
-                
+
         write(*,*) ' subsetNumber:',i
         ! read and print some data values
-         
+
         call codes_get(ibufr,key,blockNumber);
         write(*,*) '  blockNumber:',blockNumber
-        
-        write(key,*) '/subsetNumber=',I,'/stationNumber'       
+
+        write(key,*) '/subsetNumber=',I,'/stationNumber'
         call codes_get(ibufr,'stationNumber',stationNumber);
         write(*,*) '  stationNumber:',stationNumber
-    
+
     end do
-    
-    ! release the bufr message
+
+    ! Release the bufr message
     call codes_release(ibufr)
 
-    ! load the next bufr message
+    ! Load the next bufr message
     call codes_bufr_new_from_file(ifile,ibufr,iret)
-    
-    count=count+1
-    
-  end do  
 
-! close file  
+    count=count+1
+
+  end do
+
+  ! Close file
   call codes_close_file(ifile)
- 
 
 end program bufr_subset

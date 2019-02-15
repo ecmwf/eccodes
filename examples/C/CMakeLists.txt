@@ -40,6 +40,7 @@ list( APPEND test_bins
       bufr_clone
       bufr_expanded
       bufr_get_keys
+      bufr_get_string_array
       bufr_keys_iterator
       bufr_missing
       bufr_read_header
@@ -59,31 +60,34 @@ endforeach()
 
 # Now add each test (shell scripts)
 ########################################################################
-list( APPEND tests
+list( APPEND tests_basic
+   grib_multi
+   grib_set_data
+   large_grib1
+   sections_copy
+)
+list( APPEND tests_extra
    grib_iterator
    grib_get_keys
    grib_print_data
    grib_set_keys
    grib_keys_iterator
-   grib_multi
    grib_multi_write
    grib_precision
    grib_clone
    grib_copy_message
    grib_ensemble_index
    grib_set_pv
-   grib_set_data
    grib_set_bitmap
    grib_list
    grib_get_data
-   large_grib1
    set_missing
-   sections_copy
    bufr_attributes
    bufr_copy_data
    bufr_clone
    bufr_expanded
    bufr_get_keys
+   bufr_get_string_array
    bufr_keys_iterator
    bufr_missing
    bufr_read_header
@@ -94,10 +98,18 @@ list( APPEND tests
    bufr_subset
    get_product_kind
 )
-foreach( test ${tests} )
-    ecbuild_add_test( TARGET eccodes_c_${test}
-                      TYPE       SCRIPT
-                      COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+
+foreach( test ${tests_basic} )
+    ecbuild_add_test( TARGET       eccodes_c_${test}
+                      TYPE         SCRIPT
+                      COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+    )
+endforeach()
+foreach( test ${tests_extra} )
+    ecbuild_add_test( TARGET       eccodes_c_${test}
+                      TYPE         SCRIPT
+                      CONDITION    ENABLE_EXTRA_TESTS
+                      COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                       TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs
     )
 endforeach()

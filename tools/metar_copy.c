@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,10 +10,10 @@
 
 #include "grib_tools.h"
 
-char* grib_tool_description="Copies the content of METAR files printing"
+const char* grib_tool_description="Copies the content of METAR files printing"
         " values of some keys.";
-char* grib_tool_name="metar_copy";
-char* grib_tool_usage="[options] file file ... output_file";
+const char* grib_tool_name="metar_copy";
+const char* grib_tool_usage="[options] file file ... output_file";
 
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value */
@@ -22,8 +22,8 @@ grib_option grib_options[]={
         {"q",0,0,1,0,0},
         {"p:",0,0,1,1,0},
         {"P:",0,0,0,1,0},
-        {"w:","key[:{s/d/i}]=value,key[:{s/d/i}]=value,...","\n\t\tWhere clause."
-                "\n\t\tOnly grib messages matching the key/value constraints are "
+        {"w:","key[:{s|d|i}]=value,key[:{s|d|i}]=value,...","\n\t\tWhere clause."
+                "\n\t\tOnly messages matching the key/value constraints are "
                 "copied to the\n\t\toutput_grib_file.\n\t\tFor each key a string (key:s), a "
                 "double (key:d) or an integer (key:i)\n\t\ttype can be defined. Default type "
                 "is string.\n",0,1,0},

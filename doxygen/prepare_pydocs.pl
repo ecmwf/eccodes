@@ -29,6 +29,8 @@ my @exclude = qw(
     grib_get_double_array
     grib_set_long_array
     grib_get_long_array
+    grib_get_string_array
+    grib_set_string_array
     grib_index_get_long
     grib_index_get_string
     grib_index_get_double

@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-label "grib 2 Section 5 template 5.4";
-# START 2/template.5.4 ----------------------------------------------------------------------
 # TEMPLATE 5.4, Grid point data - IEEE packing
 # added for conversion from other packing
 transient bitsPerValue=0 : hidden;
@@ -18,7 +16,4 @@ transient decimalScaleFactor=0 : hidden;
 alias numberOfBits = bitsPerValue;
 alias numberOfBitsContainingEachPackedValue = bitsPerValue;
 
-
 codetable[1] precision  ('5.7.table',masterDir,localDir)  = 1 : edition_specific;
-
-# END   2/template.5.4 ----------------------------------------------------------------------

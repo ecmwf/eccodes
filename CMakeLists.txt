@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -24,12 +24,46 @@ set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} 
 
 include( ecbuild_system NO_POLICY_SCOPE )
 
-ecbuild_requires_macro_version( 2.4 )
+ecbuild_requires_macro_version( 2.7.2 )
 
 ###############################################################################
 # local project
 
 ecbuild_declare_project()
+
+###############################################################################
+# system checks needed for eccodes_config.h and some options like MEMFS
+
+check_type_size( int            ECCODES_SIZEOF_INT    )
+check_type_size( long           ECCODES_SIZEOF_LONG   )
+check_type_size( size_t         ECCODES_SIZEOF_SIZE_T )
+
+check_include_files( assert.h         ECCODES_HAVE_ASSERT_H      )
+check_include_files( string.h         ECCODES_HAVE_STRING_H      )
+check_include_files( sys/types.h      ECCODES_HAVE_SYS_TYPES_H   )
+check_include_files( sys/stat.h       ECCODES_HAVE_SYS_STAT_H    )
+check_include_files( fcntl.h          ECCODES_HAVE_FCNTL_H      )
+check_include_files( unistd.h         ECCODES_HAVE_UNISTD_H      )
+
+check_symbol_exists( fseeko           "stdio.h"    ECCODES_HAVE_FSEEKO )
+check_symbol_exists( posix_memalign   "stdlib.h"   ECCODES_HAVE_POSIX_MEMALIGN )
+check_symbol_exists( fmemopen         "stdio.h"    ECCODES_HAVE_FMEMOPEN )
+check_symbol_exists( funopen          "stdio.h"    ECCODES_HAVE_FUNOPEN )
+
+check_c_source_compiles(
+      " typedef int foo_t;
+      static inline foo_t static_foo(){return 0;}
+      foo_t foo(){return 0;}
+      int main(int argc, char *argv[]){return 0;}
+      " ECCODES_HAVE_C_INLINE )
+
+include(eccodes_test_endiness)
+if( EC_OS_NAME MATCHES "windows" )
+    include(eccodes_find_linux_utils)
+endif()
+
+ecbuild_debug("ECCODES_BIG_ENDIAN=${ECCODES_BIG_ENDIAN}")
+ecbuild_debug("ECCODES_LITTLE_ENDIAN=${ECCODES_LITTLE_ENDIAN}")
 
 ###############################################################################
 # some variables/options of this project
@@ -40,12 +74,12 @@ ecbuild_add_option( FEATURE EXAMPLES
 )
 
 ecbuild_add_option( FEATURE JPG
-    DESCRIPTION "support for JPG decoding/encoding"
+    DESCRIPTION "Support for JPG decoding/encoding"
     DEFAULT ON
 )
 
 ecbuild_add_option( FEATURE PNG
-    DESCRIPTION "support for PNG decoding/encoding"
+    DESCRIPTION "Support for PNG decoding/encoding"
     DEFAULT OFF
     REQUIRED_PACKAGES PNG
 )
@@ -58,26 +92,26 @@ else()
 endif()
 
 ecbuild_add_option( FEATURE NETCDF
-    DESCRIPTION "support for GRIB to NetCDF conversion"
+    DESCRIPTION "Support for GRIB to NetCDF conversion"
     DEFAULT ON
     REQUIRED_PACKAGES NetCDF
     NO_TPL
 )
 
 ecbuild_add_option( FEATURE AEC
-    DESCRIPTION "support for Adaptive Entropy Coding"
+    DESCRIPTION "Support for Adaptive Entropy Coding"
     DEFAULT OFF
     REQUIRED_PACKAGES AEC
 )
 
 ecbuild_add_option( FEATURE PYTHON
-    DESCRIPTION "build the ecCodes Python interface"
+    DESCRIPTION "Build the ecCodes Python interface"
     DEFAULT ON
     REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy
 )
 
 ecbuild_add_option( FEATURE FORTRAN
-    DESCRIPTION "build the ecCodes Fortran interface"
+    DESCRIPTION "Build the ecCodes Fortran interface"
     DEFAULT ON
     # REQUIRED_LANGUAGES Fortran # TODO
 )
@@ -85,6 +119,7 @@ ecbuild_add_option( FEATURE FORTRAN
 # TODO Remove this after REQUIRED_LANGUAGES
 if( ENABLE_FORTRAN )
     # will set EC_HAVE_FORTRAN with the result
+    set( EC_HAVE_FORTRAN 0 )
     ecbuild_enable_fortran( MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
     set( HAVE_FORTRAN ${EC_HAVE_FORTRAN} )
 else()
@@ -95,8 +130,8 @@ endif()
 ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
-    CONDITION EC_HAVE_FMEMOPEN OR EC_HAVE_FUNOPEN
-    REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS"
+    CONDITION ECCODES_HAVE_FMEMOPEN OR ECCODES_HAVE_FUNOPEN OR (EC_OS_NAME MATCHES "windows")
+    REQUIRED_PACKAGES PythonInterp
 )
 
 #if( HAVE_MEMFS AND "${CMAKE_C_COMPILER_ID}" STREQUAL "Cray")
@@ -104,14 +139,34 @@ ecbuild_add_option( FEATURE MEMFS
 #  ecbuild_warn("MEMFS not supported with Cray C compiler")
 #endif()
 
+if(HAVE_MEMFS)
+  set( _will_install_defs_samples OFF )
+else()
+  set( _will_install_defs_samples ON )
+endif()
+
+# controls installation of files in definitions/ -- note that it still creates the symlinks in the build dir
+# by default, if memfs is available, then we don't need to install definitions
+ecbuild_add_option( FEATURE INSTALL_ECCODES_DEFINITIONS
+    DESCRIPTION "Install the ecCodes definitions"
+    DEFAULT ${_will_install_defs_samples}
+)
+
+# controls installation of files in samples/ and ifs_samples/ -- note that it still creates the symlinks in the build dir
+# by default, if memfs is available, then we don't need to install samples
+ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
+    DESCRIPTION "Install the ecCodes samples, including IFS samples"
+    DEFAULT ${_will_install_defs_samples}
+)
+
 # advanced options (not visible in cmake-gui )
 
-ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "enable memory management" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "enable memory alignment"  DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE GRIB_TIMER          DESCRIPTION "enable timer" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "enable POSIX threads" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "enable OMP threads" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "enable extended regression testing" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "Enable memory management" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "Enable memory alignment"  DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE GRIB_TIMER          DESCRIPTION "Enable timer" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable POSIX threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable OMP threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "Enable extended regression testing" DEFAULT OFF ADVANCED )
 
 ###############################################################################
 # macro processing
@@ -158,6 +213,8 @@ if( ENABLE_JPG )
         set( HAVE_LIBOPENJPEG 1 )
     endif()
 
+    ecbuild_info(" HAVE_JPEG=${HAVE_JPEG}")
+
 endif()
 
 
@@ -171,7 +228,7 @@ else()
 endif()
 
 set( IS_BIG_ENDIAN 0 )
-if( EC_BIG_ENDIAN )
+if( ECCODES_BIG_ENDIAN )
     set( IS_BIG_ENDIAN 1 )
 endif()
 
@@ -229,6 +286,20 @@ if( IEEE_LE )
     set( IEEE_BE 0 )
 endif()
 
+if( EC_OS_NAME MATCHES "windows" )
+    # Symbols need to be explicitly exported on Windows so we can link to dlls.
+    set( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE )
+
+    # Suppress compliler warnings - see ECC-850
+    # Suppress warnings about using 'insecure' functions. Fixing this would require changes all over
+    # the codebase which would damage portability.
+    ecbuild_add_c_flags("/D_CRT_SECURE_NO_WARNINGS")
+    # Suppress warnings about using well-known C functions.
+    ecbuild_add_c_flags("/D_CRT_NONSTDC_NO_DEPRECATE")
+    # Suppress C4267: warns about possible loss of data when converting 'size_t' to 'int'.
+    ecbuild_add_c_flags("/wd4267")
+endif()
+
 ###############################################################################
 # contents
 
@@ -239,19 +310,20 @@ else()
 endif()
 
 if( NOT DEFINED ECCODES_DEFINITION_SUFF )
-  set( ECCODES_DEFINITION_SUFF  share/eccodes/definitions )
+  set( ECCODES_DEFINITION_SUFF  ${INSTALL_DATA_DIR}/definitions )
 endif()
 if( NOT DEFINED ECCODES_SAMPLES_SUFF )
-  set( ECCODES_SAMPLES_SUFF     share/eccodes/samples )
+  set( ECCODES_SAMPLES_SUFF     ${INSTALL_DATA_DIR}/samples )
 endif()
 if( NOT DEFINED ECCODES_IFS_SAMPLES_SUFF )
-  set( ECCODES_IFS_SAMPLES_SUFF share/eccodes/ifs_samples )
+  set( ECCODES_IFS_SAMPLES_SUFF ${INSTALL_DATA_DIR}/ifs_samples )
 endif()
 
 set( ECCODES_DEFINITION_PATH  ${the_default_data_prefix}/${ECCODES_DEFINITION_SUFF} )
 set( ECCODES_SAMPLES_PATH     ${the_default_data_prefix}/${ECCODES_SAMPLES_SUFF} )
 set( ECCODES_IFS_SAMPLES_PATH ${the_default_data_prefix}/${ECCODES_IFS_SAMPLES_SUFF} )
 
+###############################################################################
 ### config header
 
 ecbuild_generate_config_headers()
@@ -294,7 +366,14 @@ add_subdirectory( memfs )
 add_subdirectory( src )
 add_subdirectory( tools )
 add_subdirectory( fortran )
-add_subdirectory( python )
+if (PYTHON_VERSION_MAJOR GREATER 2)
+    ecbuild_warn("Please note: Support for Python3 is currently experimental.")
+    add_subdirectory( python3 )
+    set( ECCODES_PYTHON_DIR "python3" )
+else()
+    add_subdirectory( python )
+    set( ECCODES_PYTHON_DIR "python" )
+endif()
 add_subdirectory( tests )
 add_subdirectory( tigge )
 add_subdirectory( examples )
@@ -320,7 +399,7 @@ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 # temporary -- add support for ecbuild 1.0.x sub-project inclusion
 # to remove once mars server & client use eckit & ecbuild >= 1.1
 
-if( EC_HAVE_FORTRAN )
+if( HAVE_FORTRAN )
     list( APPEND ECCODES_INCLUDE_DIRS  ${CMAKE_Fortran_MODULE_DIRECTORY} )
     list( APPEND ECCODES_LIBRARIES eccodes_f90 )
 endif()
@@ -330,7 +409,7 @@ if( NOT PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME )
   set( ECCODES_FOUND            TRUE PARENT_SCOPE )
   set( ECCODES_DEFINITIONS      ${ECCODES_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
   set( ECCODES_INCLUDE_DIRS     ${ECCODES_INCLUDE_DIRS} ${ECCODES_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
-  set( ECCODES_LIBRARIES        ${ECCODES_LIBRARIES}    ${ECCODES_EXTRA_LIBRARIES} ${CMATH_LIBRARIES} PARENT_SCOPE )
+  set( ECCODES_LIBRARIES        ${ECCODES_LIBRARIES}    ${ECCODES_EXTRA_LIBRARIES} PARENT_SCOPE )
   set( ECCODES_INSTALL_EXTRA_TOOLS  ${ECCODES_INSTALL_EXTRA_TOOLS} PARENT_SCOPE )
   set( ECCODES_DEFINITION_PATH  ${CMAKE_BINARY_DIR}/${ECCODES_DEFINITION_SUFF}  PARENT_SCOPE )
   set( ECCODES_SAMPLES_PATH     ${CMAKE_BINARY_DIR}/${ECCODES_SAMPLES_SUFF}     PARENT_SCOPE )
@@ -340,23 +419,23 @@ endif()
 # pkg-config
 ecbuild_pkgconfig(
   NAME           eccodes
-  URL            "https://software.ecmwf.int/wiki/display/ECC/"
+  URL            "https://confluence.ecmwf.int/display/ECC/"
   DESCRIPTION    "The ecCodes library"
   LIBRARIES      eccodes
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
-  VARIABLES      HAVE_JPG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+  VARIABLES      HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
                  HAVE_NETCDF HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
-if( EC_HAVE_FORTRAN )
+if( HAVE_FORTRAN )
   ecbuild_pkgconfig(
     NAME                eccodes_f90
-    URL                 "https://software.ecmwf.int/wiki/display/ECC/"
+    URL                 "https://confluence.ecmwf.int/display/ECC/"
     LIBRARIES           eccodes_f90 eccodes
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
                         ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
-    VARIABLES           HAVE_JPG HAVE_LIBJASPER HAVE_LIBOPENJPEG
+    VARIABLES           HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                         HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
                         HAVE_NETCDF HAVE_PYTHON HAVE_PNG HAVE_AEC
   )
@@ -370,11 +449,7 @@ ecbuild_install_project( NAME ${CMAKE_PROJECT_NAME} )
 ecbuild_print_summary()
 
 ecbuild_info("")
-ecbuild_info("   +---------------------------+")
-ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}    |")
-ecbuild_info("   |  Configuration completed  |")
-ecbuild_info("   +---------------------------+")
-ecbuild_info("")
-ecbuild_info("   You can now do 'make' to compile the package, 'ctest' to test it and 'make install' to install it afterwards.")
-ecbuild_info("")
+ecbuild_info("   +--------------------------+")
+ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}  |")
+ecbuild_info("   +--------------------------+")
 ecbuild_info("")

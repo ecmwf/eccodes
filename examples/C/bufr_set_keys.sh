@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -25,11 +25,11 @@ f=${data_dir}/bufr/syno_multi.bufr
 REDIRECT=/dev/null
 
 #
-${examples_dir}c_bufr_set_keys $fBufrTmp  2> $REDIRECT > $REDIRECT
+${examples_dir}/c_bufr_set_keys $fBufrTmp  2> $REDIRECT > $REDIRECT
 
 #Compare modified to the original
 set +e
-${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT 
+${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT
 
 #Check if modified is different
 if [ $? -eq 0 ]; then
@@ -40,7 +40,7 @@ fi
 set -e
 
 #Check if modified has the same number of messages
-[ `${tools_dir}bufr_count $f` -eq `${tools_dir}/bufr_count ${fBufrTmp}` ]
+[ `${tools_dir}/bufr_count $f` -eq `${tools_dir}/bufr_count ${fBufrTmp}` ]
 
 #Clean up
 rm -f $fBufrTmp | true

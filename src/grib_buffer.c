@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -97,22 +97,26 @@ static void grib_grow_buffer_to(const grib_context *c, grib_buffer *b, size_t ns
 
 void grib_grow_buffer(const grib_context *c, grib_buffer *b, size_t new_size)
 {
-    size_t len = ((new_size + 1023)/1024)*1024;
-    grib_grow_buffer_to(c,b,len);
+    if (new_size > b->length) {
+        size_t len = 0;
+        size_t inc= b->length > 2048 ? b->length : 2048;
+        len = ((new_size + 2*inc)/1024) * 1024;
+        grib_grow_buffer_to(c,b,len);
+    }
 }
 
 void grib_buffer_set_ulength_bits(const grib_context *c, grib_buffer *b, size_t length_bits)
 {
     size_t length=length_bits/8;
     if (length_bits%8) length++;
-    grib_grow_buffer_to(c,b,length);
+    grib_grow_buffer(c,b,length);
     b->ulength_bits = length_bits;
     b->ulength = length;
 }
 
 void grib_buffer_set_ulength(const grib_context *c, grib_buffer *b, size_t length)
 {
-    grib_grow_buffer_to(c,b,length);
+    grib_grow_buffer(c,b,length);
     b->ulength = length;
     b->ulength_bits = length*8;
 }

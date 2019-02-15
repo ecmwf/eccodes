@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -132,14 +132,14 @@ int main(int argc, char** argv)
 
     {
         /* Example of getting bytes */
-        char* name = "reservedNeedNotBePresent";
+        const char* name = "reservedNeedNotBePresent";
         unsigned char* byte_val = NULL ;
         size_t keySize = 0;
-        CODES_CHECK(grib_get_size(h, name, &keySize), 0);
-        byte_val = malloc(keySize*sizeof(char));
-        GRIB_CHECK(grib_get_bytes(h, name, byte_val, &keySize), name);
+        CODES_CHECK(codes_get_size(h, name, &keySize), 0);
+        byte_val = (unsigned char*)malloc(keySize*sizeof(char));
+        GRIB_CHECK(codes_get_bytes(h, name, byte_val, &keySize), name);
     }
-    
+
     codes_handle_delete(h);
 
     return 0;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -141,100 +141,109 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_g2latlon* self = (grib_accessor_g2latlon*)a;
-  int n = 0;
+    grib_accessor_g2latlon* self = (grib_accessor_g2latlon*)a;
+    int n = 0;
 
-  self->grid     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->index    = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
-  self->given    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->grid     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->index    = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
+    self->given    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
-static int unpack_double   (grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  grib_accessor_g2latlon* self = (grib_accessor_g2latlon*)a;
-  int ret = 0;
+    grib_accessor_g2latlon* self = (grib_accessor_g2latlon*)a;
+    int ret = 0;
 
-  long given        = 1;
-  double grid[6];
-  size_t size = 6;
+    long given        = 1;
+    double grid[6];
+    size_t size = 6;
 
-  if(*len < 1){
-    ret = GRIB_ARRAY_TOO_SMALL;
-    return ret;
-  }
+    if(*len < 1){
+        ret = GRIB_ARRAY_TOO_SMALL;
+        return ret;
+    }
 
-  if(self->given)
-    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->given,&given)) != GRIB_SUCCESS)
-      return ret;
+    if(self->given)
+        if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->given,&given)) != GRIB_SUCCESS)
+            return ret;
 
-  if(!given)
-  {
-    *val =  GRIB_MISSING_DOUBLE;
+    if(!given)
+    {
+        *val =  GRIB_MISSING_DOUBLE;
+        return GRIB_SUCCESS;
+    }
+
+    if((ret = grib_get_double_array_internal(grib_handle_of_accessor(a), self->grid,grid,&size)) != GRIB_SUCCESS)
+        return ret;
+
+    *val = grid[self->index];
+
     return GRIB_SUCCESS;
-  }
-
-
-  if((ret = grib_get_double_array_internal(grib_handle_of_accessor(a), self->grid,grid,&size)) != GRIB_SUCCESS)
-    return ret;
-
-  *val = grid[self->index];
-
-  return GRIB_SUCCESS;
 }
 
+static double normalise_longitude(double a_lon)
+{
+    /* WMO regulation: The longitude values shall be limited to the range 0 to 360 degrees inclusive */
+    while (a_lon<0)   a_lon += 360;
+    while (a_lon>360) a_lon -= 360;
+    return a_lon;
+}
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-  grib_accessor_g2latlon* self = (grib_accessor_g2latlon*)a;
-  int ret = 0;
+    grib_accessor_g2latlon* self = (grib_accessor_g2latlon*)a;
+    int ret = 0;
 
-  double grid[6];
-  size_t size = 6;
+    double grid[6];
+    size_t size = 6;
+    double new_val = *val;
 
-  if(*len < 1){
-    ret = GRIB_ARRAY_TOO_SMALL;
-    return ret;
-  }
+    if(*len < 1){
+        ret = GRIB_ARRAY_TOO_SMALL;
+        return ret;
+    }
 
-  if(self->given)
-  {
-    long given        = *val != GRIB_MISSING_DOUBLE;
-    if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->given,given)) != GRIB_SUCCESS)
-      return ret;
-  }
+    if(self->given)
+    {
+        long given = *val != GRIB_MISSING_DOUBLE;
+        if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->given,given)) != GRIB_SUCCESS)
+            return ret;
+    }
 
+    if((ret = grib_get_double_array_internal(grib_handle_of_accessor(a), self->grid,grid,&size)) != GRIB_SUCCESS)
+        return ret;
 
-  if((ret = grib_get_double_array_internal(grib_handle_of_accessor(a), self->grid,grid,&size)) != GRIB_SUCCESS)
-    return ret;
+    /* index 1 is longitudeOfFirstGridPointInDegrees
+     * index 3 is longitudeOfLastGridPointInDegrees
+     */
+    if ( (self->index == 1 || self->index == 3) ) {
+        new_val = normalise_longitude(*val);
+    }
+    grid[self->index] = new_val;
 
-  if ( (self->index == 1 || self->index == 3) && *val < 0 ) grid[self->index] = 360+*val;
-  else grid[self->index] = *val;
-
-  return grib_set_double_array_internal(grib_handle_of_accessor(a), self->grid,grid,size);
+    return grib_set_double_array_internal(grib_handle_of_accessor(a), self->grid,grid,size);
 }
 
 static int pack_missing(grib_accessor* a)
 {
-  grib_accessor_g2latlon* self = (grib_accessor_g2latlon*)a;
-  double missing = GRIB_MISSING_DOUBLE;
-  size_t size = 1;
+    grib_accessor_g2latlon* self = (grib_accessor_g2latlon*)a;
+    double missing = GRIB_MISSING_DOUBLE;
+    size_t size = 1;
 
-  if(!self->given)
-    return GRIB_NOT_IMPLEMENTED;
+    if(!self->given)
+        return GRIB_NOT_IMPLEMENTED;
 
-  return pack_double(a,&missing,&size);
+    return pack_double(a,&missing,&size);
 }
 
 static int is_missing(grib_accessor* a)
 {
-  grib_accessor_g2latlon* self = (grib_accessor_g2latlon*)a;
-  long given        = 1;
+    grib_accessor_g2latlon* self = (grib_accessor_g2latlon*)a;
+    long given        = 1;
 
 
-  if(self->given) grib_get_long_internal(grib_handle_of_accessor(a), self->given,&given);
+    if(self->given) grib_get_long_internal(grib_handle_of_accessor(a), self->given,&given);
 
 
-  return !given;
+    return !given;
 }
-
-

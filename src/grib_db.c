@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -22,6 +22,8 @@
 #define GRIB_ORDER_BY_ASC    1
 #define GRIB_ORDER_BY_DESC   -1
 
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
 GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
   if (*a != *b) return 1;
   while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
@@ -32,7 +34,6 @@ static int grib_db_new_column(grib_db* db,int id,char* key,int type);
 static void grib_db_delete_columns(grib_db* db);
 static int grib_db_columns_resize(grib_db* db,size_t newsize);
 static int grib_db_column_copy_from_handle(grib_handle* h,grib_db* db,int i);
-static grib_db* grib_db_create_from_keys(grib_context* c,char** keys,int nkeys,int* err);
 static grib_db* grib_db_create_from_keys(grib_context* c,char** keys,int nkeys,int* err);
 static void grib_fieldset* grib_db_fieldset_create(grib_db* db, int* err);
 static int grib_fieldset_compare(grib_fieldset* set,int* i,int* j);
@@ -284,7 +285,6 @@ static grib_db* grib_db_create_from_keys(grib_context* c,char** keys,int nkeys,i
    size_t msize=0,size=0;
    int i=0;
    int type=0;
-   grib_context* c=NULL;
    int default_type=GRIB_TYPE_DOUBLE;
 
    if (!c) c=grib_context_get_default( );

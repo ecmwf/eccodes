@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -32,7 +32,7 @@ int main(int argc,char* argv[])
     size_t len=0;
     int err=0;
     int cnt=0;
-    char* infile = "../../data/bufr/syno_multi.bufr";
+    const char* infile = "../../data/bufr/syno_multi.bufr";
 
     in=fopen(infile,"r");
     if (!in) {
@@ -51,14 +51,14 @@ int main(int argc,char* argv[])
 
         printf("message: %d\n",cnt);
 
-        /* we need to instruct ecCodes to expand the descriptors 
+        /* we need to instruct ecCodes to expand the descriptors
           i.e. unpack the data values */
         CODES_CHECK(codes_set_long(h, "unpack", 1),0);
 
         /* ----------------------------------------------------------------
            We will read the value and all the attributes available for
            the 2m temperature.
-        -------------------------------------------------------------------*/ 
+        -------------------------------------------------------------------*/
 
         /* get the value as double */
         CODES_CHECK(codes_get_double(h, "airTemperatureAt2M", &doubleVal),0);
@@ -90,11 +90,11 @@ int main(int argc,char* argv[])
         CODES_CHECK(codes_get_long(h, "airTemperatureAt2M->width", &longVal),0);
         printf("  airTemperatureAt2M->width: %ld\n",longVal);
 
-        /* --------------------------------------------------------------------
-           The 2m temperature data element in this message has an associated 
-           field: percentConfidence. Its value and attributes can be accessed 
-           in a similar manner as was shown above for 2m temperature. 
-        -------------------------------------------------------------------*/ 
+        /* -----------------------------------------------------------------
+           The 2m temperature data element in this message has an associated
+           field: percentConfidence. Its value and attributes can be accessed
+           in a similar manner as was shown above for 2m temperature.
+           ----------------------------------------------------------------- */
 
         /* get the value as long */
         CODES_CHECK(codes_get_long(h, "airTemperatureAt2M->percentConfidence", &longVal),0);
@@ -126,7 +126,7 @@ int main(int argc,char* argv[])
         CODES_CHECK(codes_get_long(h, "airTemperatureAt2M->percentConfidence->width", &longVal),0);
         printf("  airTemperatureAt2M->percentConfidence->width: %ld\n",longVal);
 
-        /* free allocated arrays */      
+        /* free allocated arrays */
         free(units);
         free(unitsPercent);
 

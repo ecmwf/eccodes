@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -82,40 +82,36 @@ static void init_class(grib_action_class* c)
 /* END_CLASS_IMP */
 
 grib_action* grib_action_create_meta( grib_context* context, const char* name, const char* op, 
-		grib_arguments*   params,  grib_arguments*   default_value,unsigned long flags,const char* name_space)
+        grib_arguments*   params,  grib_arguments*   default_value,unsigned long flags,const char* name_space)
 {
-	grib_action_meta*  a   =  (grib_action_meta*)grib_context_malloc_clear_persistent(context,sizeof(grib_action_meta));
-	grib_action* act       =  (grib_action*)a;
-	act->next              =  NULL;
-	act->name              =  grib_context_strdup_persistent(context, name);
-	act->op                =  grib_context_strdup_persistent(context, op);
-	if(name_space)
-	act->name_space                =  grib_context_strdup_persistent(context, name_space);
-	act->cclass            =  grib_action_class_meta;
-	act->context           = context;
-	act->flags             = flags;
-	a->params              =  params;
-	act->default_value                = default_value;
-	a->len                 = 0;
-	
+    grib_action_meta*  a   =  (grib_action_meta*)grib_context_malloc_clear_persistent(context,sizeof(grib_action_meta));
+    grib_action* act       =  (grib_action*)a;
+    act->next              =  NULL;
+    act->name              =  grib_context_strdup_persistent(context, name);
+    act->op                =  grib_context_strdup_persistent(context, op);
+    if(name_space)
+        act->name_space                =  grib_context_strdup_persistent(context, name_space);
+    act->cclass            =  grib_action_class_meta;
+    act->context           = context;
+    act->flags             = flags;
+    a->params              =  params;
+    act->default_value                = default_value;
+    a->len                 = 0;
 
-	/* grib_arguments_print(context,a->params,0); printf("\n"); */
+    /* grib_arguments_print(context,a->params,0); printf("\n"); */
 
-
-	return act;
+    return act;
 }
-
 
 static void dump( grib_action* act, FILE* f, int lvl)
 {
-
-	int i =0;
-	for (i=0;i<lvl;i++)
-		grib_context_print(act->context,f,"     ");
-	grib_context_print(act->context,f," meta %s \n", act->name );
+    int i =0;
+    for (i=0;i<lvl;i++)
+        grib_context_print(act->context,f,"     ");
+    grib_context_print(act->context,f," meta %s \n", act->name );
 }
 
 static int execute(grib_action* act, grib_handle *h) {
-	grib_action_class* super=*(act->cclass)->super; 
-	return super->create_accessor(h->root,act,NULL); 
+    grib_action_class* super=*(act->cclass)->super;
+    return super->create_accessor(h->root,act,NULL);
 }

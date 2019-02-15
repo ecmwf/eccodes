@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -17,13 +17,13 @@ dir="${data_dir}/tigge/"
 # check tigge global
 for file in ${dir}tigge_*.grib
 do
-   ${tigge_dir}tigge_check ${file} 2> $REDIRECT > $REDIRECT
+   ${tigge_dir}/tigge_check ${file} 2> $REDIRECT > $REDIRECT
 done
 
 # check tigge-lam
 for file in ${dir}tiggelam_*.grib
 do
-   ${tigge_dir}tigge_check -l ${file} 2> $REDIRECT > $REDIRECT
+   ${tigge_dir}/tigge_check -l ${file} 2> $REDIRECT > $REDIRECT
 done
 
 
@@ -31,7 +31,7 @@ done
 # All the GRIB files in the samples are non-TIGGE
 for file in ${ECCODES_SAMPLES_PATH}/regular_*.tmpl; do
    set +e
-   ${tigge_dir}tigge_check ${file} 2> $REDIRECT > $REDIRECT
+   ${tigge_dir}/tigge_check ${file} 2> $REDIRECT > $REDIRECT
    status=$?
    set -e
    if [ $status -eq 0 ]; then
@@ -42,14 +42,14 @@ done
 
 # GRIB-531
 TEMP=temp.$$.tigge
-${tools_dir}grib_get -nparameter ${data_dir}/tigge_pf_ecmwf.grib2 > $TEMP
+${tools_dir}/grib_get -nparameter ${data_dir}/tigge_pf_ecmwf.grib2 > $TEMP
 diff ${data_dir}/tigge_pf_ecmwf.grib2.ref $TEMP
 
 # GRIB-205. Changing productionStatusOfProcessedData should not change
 # anything else
 input=${dir}/tigge_ecmf_sfc_sd.grib
-${tools_dir}grib_set -s productionStatusOfProcessedData=5 $input $TEMP
-${tools_dir}grib_compare -bproductionStatusOfProcessedData $input $TEMP
+${tools_dir}/grib_set -s productionStatusOfProcessedData=5 $input $TEMP
+${tools_dir}/grib_compare -bproductionStatusOfProcessedData $input $TEMP
 
 rm -f $TEMP
 
@@ -64,7 +64,7 @@ tigge_bad_validity="
 "
 for file in $tigge_bad_validity; do
    set +e
-   ${tigge_dir}tigge_check -w ${dir}${file} > $TEMP
+   ${tigge_dir}/tigge_check -w ${dir}${file} > $TEMP
    status=$?
    set -e
    [ $status -eq 1 ]

@@ -1,11 +1,12 @@
-/**
-* Copyright 2005-2016 ECMWF
-*
-* Licensed under the GNU Lesser General Public License which
-* incorporates the terms and conditions of version 3 of the GNU
-* General Public License.
-* See LICENSE and gpl-3.0.txt for details.
-*/
+/*
+ * Copyright 2005-2018 ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
 
 /*****************************************
  *  Enrico Fucile
@@ -22,6 +23,7 @@
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = init;dump
    IMPLEMENTS = unpack_string;unpack_string_array;unpack_long; unpack_double
+   IMPLEMENTS = unpack_double_element
    IMPLEMENTS = pack_long; pack_double ; pack_string_array; pack_string
    IMPLEMENTS = value_count; get_native_type; make_clone; destroy
    MEMBERS    = long index
@@ -62,6 +64,7 @@ static void destroy(grib_context*,grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
+static int unpack_double_element(grib_accessor*,size_t i, double* val);
 static grib_accessor* make_clone(grib_accessor*,grib_section*,int*);
 
 typedef struct grib_accessor_bufr_data_element {
@@ -118,7 +121,7 @@ static grib_accessor_class _grib_accessor_class_bufr_data_element = {
     0,      /* nearest_smaller_value */
     0,                       /* next accessor    */
     0,                    /* compare vs. another accessor   */
-    0,     /* unpack only ith value          */
+    &unpack_double_element,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
     0,              		/* clear          */
     &make_clone,               		/* clone accessor          */
@@ -147,7 +150,6 @@ static void init_class(grib_accessor_class* c)
 	c->nearest_smaller_value	=	(*(c->super))->nearest_smaller_value;
 	c->next	=	(*(c->super))->next;
 	c->compare	=	(*(c->super))->compare;
-	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
 	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
 	c->clear	=	(*(c->super))->clear;
 }
@@ -287,13 +289,17 @@ static int unpack_string_array (grib_accessor* a, char** val, size_t *len)
     grib_context* c=a->context;
 
     if (self->compressedData) {
+        DebugAssert(self->index < self->numericValues->n);
         idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
+        DebugAssert(idx < self->stringValues->n);
         count=grib_sarray_used_size(self->stringValues->v[idx]);
         for (i=0;i<count;i++) {
             val[i]=grib_context_strdup(c,self->stringValues->v[idx]->v[i]);
         }
         *len=count;
     } else {
+        DebugAssert(self->subsetNumber < self->numericValues->n);
+        DebugAssert(self->index < self->numericValues->v[self->subsetNumber]->n);
         idx=(int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000-1;
         val[0]=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
         *len=1;
@@ -353,10 +359,15 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len)
     }
 
     if (self->compressedData) {
+        DebugAssert(self->index < self->numericValues->n);
         idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
+        if (idx < 0) return GRIB_INTERNAL_ERROR;
         str=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
     } else {
+        DebugAssert(self->subsetNumber < self->numericValues->n);
         idx=(int)self->numericValues->v[self->subsetNumber]->v[self->index]/1000-1;
+        if (idx < 0) return GRIB_INTERNAL_ERROR;
+        DebugAssert(idx < self->stringValues->n);
         str=grib_context_strdup(c,self->stringValues->v[idx]->v[0]);
     }
 
@@ -417,11 +428,15 @@ static int unpack_long (grib_accessor* a, long* val, size_t *len)
 
     if (self->compressedData) {
         for (i=0;i<count;i++) {
+            DebugAssert(self->index < self->numericValues->n);
+            DebugAssert(i < self->numericValues->v[self->index]->n);
             val[i]= self->numericValues->v[self->index]->v[i] == GRIB_MISSING_DOUBLE ?
                     GRIB_MISSING_LONG : (long)self->numericValues->v[self->index]->v[i];
         }
         *len=count;
     } else {
+        DebugAssert(self->subsetNumber < self->numericValues->n);
+        DebugAssert(self->index < self->numericValues->v[self->subsetNumber]->n);
         val[0]= self->numericValues->v[self->subsetNumber]->v[self->index] == GRIB_MISSING_DOUBLE ?
                 GRIB_MISSING_LONG : (long)self->numericValues->v[self->subsetNumber]->v[self->index];
         *len=1;
@@ -442,10 +457,14 @@ static int unpack_double (grib_accessor* a, double* val, size_t *len)
 
     if (self->compressedData) {
         for (i=0;i<count;i++) {
+            DebugAssert(self->index < self->numericValues->n);
+            DebugAssert(i < self->numericValues->v[self->index]->n);
             val[i]=self->numericValues->v[self->index]->v[i];
         }
         *len=count;
     } else {
+        DebugAssert(self->subsetNumber < self->numericValues->n);
+        DebugAssert(self->index < self->numericValues->v[self->subsetNumber]->n);
         val[0]=self->numericValues->v[self->subsetNumber]->v[self->index];
         *len=1;
     }
@@ -523,14 +542,36 @@ static int value_count(grib_accessor* a,long* count)
     type=get_native_type(a);
 
     if (type==GRIB_TYPE_STRING) {
+        DebugAssert(self->index < self->numericValues->n);
         idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
         size=grib_sarray_used_size(self->stringValues->v[idx]);
     } else {
+        DebugAssert(self->index < self->numericValues->n);
         size=grib_darray_used_size(self->numericValues->v[self->index]);
     }
 
     *count = size == 1 ? 1 : self->numberOfSubsets;
 
+    return ret;
+}
+
+static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
+    /* ECC-415 */
+    grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
+    int ret = GRIB_SUCCESS;
+    long count = 0;
+
+    value_count(a, &count);
+    if (idx >= count) {
+        return GRIB_INTERNAL_ERROR;
+    }
+
+    if (self->compressedData) {
+        *val = self->numericValues->v[self->index]->v[idx];
+    } else {
+        ret = GRIB_NOT_IMPLEMENTED;
+    }
     return ret;
 }
 
@@ -564,7 +605,7 @@ static void destroy(grib_context* ct, grib_accessor* a)
 {
     int i=0;
     while (i<MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
-        grib_context_log(ct,GRIB_LOG_DEBUG,"deleting attribute %s->%s",a->name,a->attributes[i]->name);
+        /*grib_context_log(ct,GRIB_LOG_DEBUG,"deleting attribute %s->%s",a->name,a->attributes[i]->name);*/
         /* printf("+++++ %s\n",a->attributes[i]->name); */
         grib_accessor_delete(ct,a->attributes[i]);
         a->attributes[i]=NULL;

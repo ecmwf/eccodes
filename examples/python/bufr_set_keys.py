@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,6 +14,7 @@
 #
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -25,12 +26,11 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-
     # open BUFR file
-    fin = open(INPUT)
+    fin = open(INPUT, 'rb')
 
     # open output BUFR file
-    fout = open(OUTPUT, 'w')
+    fout = open(OUTPUT, 'wb')
 
     cnt = 0
 
@@ -42,7 +42,7 @@ def example():
         if bufr is None:
             break
 
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
@@ -53,16 +53,16 @@ def example():
 
         # set centre
         val = 222
-        print '  set bufrHeaderCentre to: %d' % val
+        print('  set bufrHeaderCentre to: %d' % val)
 
         key = 'bufrHeaderCentre'
         try:
-            print '  %s: %s' % (key, codes_set(bufr, key, val))
+            print('  %s: %s' % (key, codes_set(bufr, key, val)))
         except CodesInternalError as err:
-            print 'Error with key="%s" : %s' % (key, err.msg)
+            print('Error with key="%s" : %s' % (key, err.msg))
 
         # check bufrHeaderCentre's value
-        print '  %s''s new value is: %d' % (key, codes_get(bufr, key))
+        print('  %s''s new value is: %d' % (key, codes_get(bufr, key)))
 
         # write modified message to output
         codes_write(bufr, fout)
@@ -86,6 +86,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

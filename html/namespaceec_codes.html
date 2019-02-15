@@ -81,7 +81,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">ecCodes Namespace Reference</div>  </div>
@@ -91,12 +90,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>This package is the <b>Python</b> interface to <a class="el" href="namespaceec_codes.html" title="This package is the Python interface to ecCodes. ">ecCodes</a>.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classec_codes_1_1_codes_internal_error.html">CodesInternalError</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrap errors coming from the C API in a Python exception object.  <a href="classec_codes_1_1_codes_internal_error.html#details">More...</a><br/></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ab06cc33b116103a54fadb4e2735e579a"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceec_codes.html#ab06cc33b116103a54fadb4e2735e579a">codes_gts_new_from_file</a></td></tr>
@@ -211,11 +204,17 @@ Functions</h2></td></tr>
 <tr class="memdesc:aa619f32357c9107b5b6f96ad1fee4232"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the double value for a key in a grib message.  <a href="#aa619f32357c9107b5b6f96ad1fee4232">More...</a><br/></td></tr>
 <tr class="separator:aa619f32357c9107b5b6f96ad1fee4232"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a643c58a9acad239c081794c74a5b86d9"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceec_codes.html#a643c58a9acad239c081794c74a5b86d9">codes_new_from_samples</a></td></tr>
-<tr class="memdesc:a643c58a9acad239c081794c74a5b86d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new valid GRIB message from a sample.  <a href="#a643c58a9acad239c081794c74a5b86d9">More...</a><br/></td></tr>
+<tr class="memdesc:a643c58a9acad239c081794c74a5b86d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new valid message from a sample for a given product.  <a href="#a643c58a9acad239c081794c74a5b86d9">More...</a><br/></td></tr>
 <tr class="separator:a643c58a9acad239c081794c74a5b86d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c476c5e2dfefa3693df1065e9bf1665"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceec_codes.html#a1c476c5e2dfefa3693df1065e9bf1665">codes_grib_new_from_samples</a></td></tr>
+<tr class="memdesc:a1c476c5e2dfefa3693df1065e9bf1665"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new valid GRIB message from a sample.  <a href="#a1c476c5e2dfefa3693df1065e9bf1665">More...</a><br/></td></tr>
+<tr class="separator:a1c476c5e2dfefa3693df1065e9bf1665"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae042f8fe1cc86718ce658f3b992c87a2"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceec_codes.html#ae042f8fe1cc86718ce658f3b992c87a2">codes_bufr_new_from_samples</a></td></tr>
 <tr class="memdesc:ae042f8fe1cc86718ce658f3b992c87a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new valid BUFR message from a sample.  <a href="#ae042f8fe1cc86718ce658f3b992c87a2">More...</a><br/></td></tr>
 <tr class="separator:ae042f8fe1cc86718ce658f3b992c87a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ba2700ed57b0a155f7dd76f6b1d8ab9"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceec_codes.html#a3ba2700ed57b0a155f7dd76f6b1d8ab9">codes_bufr_copy_data</a></td></tr>
+<tr class="memdesc:a3ba2700ed57b0a155f7dd76f6b1d8ab9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy data values from a BUFR message msgid_src to another message msgid_dst.  <a href="#a3ba2700ed57b0a155f7dd76f6b1d8ab9">More...</a><br/></td></tr>
+<tr class="separator:a3ba2700ed57b0a155f7dd76f6b1d8ab9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab49cb36625cd87b9d898844b1df32516"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceec_codes.html#ab49cb36625cd87b9d898844b1df32516">codes_clone</a></td></tr>
 <tr class="memdesc:ab49cb36625cd87b9d898844b1df32516"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a copy of a message.  <a href="#ab49cb36625cd87b9d898844b1df32516">More...</a><br/></td></tr>
 <tr class="separator:ab49cb36625cd87b9d898844b1df32516"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -225,12 +224,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a441ff456dc9990951bf242f4d542713a"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceec_codes.html#a441ff456dc9990951bf242f4d542713a">codes_get_double_array</a></td></tr>
 <tr class="memdesc:a441ff456dc9990951bf242f4d542713a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of the key as a NumPy array of doubles.  <a href="#a441ff456dc9990951bf242f4d542713a">More...</a><br/></td></tr>
 <tr class="separator:a441ff456dc9990951bf242f4d542713a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86388748f15624cd8fd2ec89d066295a"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceec_codes.html#a86388748f15624cd8fd2ec89d066295a">grib_get_string_array</a></td></tr>
-<tr class="memdesc:a86388748f15624cd8fd2ec89d066295a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of the key as a list of strings.  <a href="#a86388748f15624cd8fd2ec89d066295a">More...</a><br/></td></tr>
-<tr class="separator:a86388748f15624cd8fd2ec89d066295a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2353707d7e586ce4255e3a93bc0f39d4"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceec_codes.html#a2353707d7e586ce4255e3a93bc0f39d4">grib_set_string_array</a></td></tr>
-<tr class="memdesc:a2353707d7e586ce4255e3a93bc0f39d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the value of the key to a string array.  <a href="#a2353707d7e586ce4255e3a93bc0f39d4">More...</a><br/></td></tr>
-<tr class="separator:a2353707d7e586ce4255e3a93bc0f39d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c08a280c84117684dfe5705dfad29f5"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceec_codes.html#a5c08a280c84117684dfe5705dfad29f5">codes_get_string_array</a></td></tr>
+<tr class="memdesc:a5c08a280c84117684dfe5705dfad29f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of the key as a list of strings.  <a href="#a5c08a280c84117684dfe5705dfad29f5">More...</a><br/></td></tr>
+<tr class="separator:a5c08a280c84117684dfe5705dfad29f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54b35eededa62b2cb3a32b90060c0f2c"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceec_codes.html#a54b35eededa62b2cb3a32b90060c0f2c">codes_set_string_array</a></td></tr>
+<tr class="memdesc:a54b35eededa62b2cb3a32b90060c0f2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the value of the key to a string array.  <a href="#a54b35eededa62b2cb3a32b90060c0f2c">More...</a><br/></td></tr>
+<tr class="separator:a54b35eededa62b2cb3a32b90060c0f2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59e415f83b7f26b4575a5700ece65c14"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceec_codes.html#a59e415f83b7f26b4575a5700ece65c14">codes_set_long_array</a></td></tr>
 <tr class="memdesc:a59e415f83b7f26b4575a5700ece65c14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the value of the key to an integer array.  <a href="#a59e415f83b7f26b4575a5700ece65c14">More...</a><br/></td></tr>
 <tr class="separator:a59e415f83b7f26b4575a5700ece65c14"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -319,7 +318,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a648bae4beadb6a82698da40e08323be9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the contents of an array key.  <a href="#a648bae4beadb6a82698da40e08323be9">More...</a><br/></td></tr>
 <tr class="separator:a648bae4beadb6a82698da40e08323be9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0af74e12fba25379db678363f5bdafb3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceec_codes.html#a0af74e12fba25379db678363f5bdafb3">codes_get_values</a></td></tr>
-<tr class="memdesc:a0af74e12fba25379db678363f5bdafb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the contents of the 'values' key.  <a href="#a0af74e12fba25379db678363f5bdafb3">More...</a><br/></td></tr>
+<tr class="memdesc:a0af74e12fba25379db678363f5bdafb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the contents of the 'values' key for a GRIB message. <a href="#a0af74e12fba25379db678363f5bdafb3">More...</a><br/></td></tr>
 <tr class="separator:a0af74e12fba25379db678363f5bdafb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc699d0bb7a7dded968ee0111342ffd0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceec_codes.html#abc699d0bb7a7dded968ee0111342ffd0">codes_set_values</a></td></tr>
 <tr class="memdesc:abc699d0bb7a7dded968ee0111342ffd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the contents of the 'values' key.  <a href="#abc699d0bb7a7dded968ee0111342ffd0">More...</a><br/></td></tr>
@@ -415,7 +414,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>id of the message loaded in memory </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -423,6 +422,53 @@ Functions</h2></td></tr>
 <p>References <a class="el" href="namespaceec_codes.html#a44c10386781390c16f1a567590b33c11">codes_bufr_new_from_file()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#ab1788f3653df85dd90ac99f40daf98c4">codes_new_from_file()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3ba2700ed57b0a155f7dd76f6b1d8ab9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def ecCodes.codes_bufr_copy_data </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>msgid_src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>msgid_dst</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copy data values from a BUFR message msgid_src to another message msgid_dst. </p>
+<p>Copies all the values in the data section that are present in the same position in the data tree and with the same number of values to the output handle.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">msgid_src</td><td>id of the message from which the data are copied </td></tr>
+    <tr><td class="paramname">msgid_dst</td><td>id of the message to which the data are copied </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>id of new message </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="namespaceec_codes.html#a441ff456dc9990951bf242f4d542713a">codes_get_double_array()</a>, <a class="el" href="namespaceec_codes.html#ab07293de06d6ef6c5810ea3f01723884">codes_get_size()</a>, and <a class="el" href="namespaceec_codes.html#a5c08a280c84117684dfe5705dfad29f5">codes_get_string_array()</a>.</p>
+
+<p>Referenced by <a class="el" href="namespaceec_codes.html#a643c58a9acad239c081794c74a5b86d9">codes_new_from_samples()</a>.</p>
 
 </div>
 </div>
@@ -464,7 +510,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>id of the BUFR loaded in memory </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -491,7 +537,7 @@ Functions</h2></td></tr>
 
 <p>Create a new valid BUFR message from a sample. </p>
 <p>The available samples are picked up from the directory pointed to by the environment variable ECCODES_SAMPLES_PATH. To know where the samples directory is run the codes_info tool.<br/>
- <b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_samples" target="_blank">grib_samples.py</a></p>
+ <b>Examples:</b> bufr_copy_data.py</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">samplename</td><td>name of the BUFR sample to be used </td></tr>
@@ -501,14 +547,14 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>id of the message loaded in memory </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="namespaceec_codes.html#a441ff456dc9990951bf242f4d542713a">codes_get_double_array()</a>, and <a class="el" href="namespaceec_codes.html#ab07293de06d6ef6c5810ea3f01723884">codes_get_size()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#ac18c28cc7bd146dad986e03511fb7340">codes_set_double_array()</a>.</p>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#ae623fa09d65a3f699026a86d0e4864da">codes_set_long()</a>.</p>
+<p>Referenced by <a class="el" href="namespaceec_codes.html#aa619f32357c9107b5b6f96ad1fee4232">codes_set_double()</a>, and <a class="el" href="namespaceec_codes.html#ae623fa09d65a3f699026a86d0e4864da">codes_set_long()</a>.</p>
 
 </div>
 </div>
@@ -538,14 +584,14 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>id of clone </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="namespaceec_codes.html#ab07293de06d6ef6c5810ea3f01723884">codes_get_size()</a>, and <a class="el" href="namespaceec_codes.html#a86388748f15624cd8fd2ec89d066295a">grib_get_string_array()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#ab07293de06d6ef6c5810ea3f01723884">codes_get_size()</a>.</p>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#aa619f32357c9107b5b6f96ad1fee4232">codes_set_double()</a>.</p>
+<p>Referenced by <a class="el" href="namespaceec_codes.html#a1c476c5e2dfefa3693df1065e9bf1665">codes_grib_new_from_samples()</a>.</p>
 
 </div>
 </div>
@@ -590,12 +636,14 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#a2353707d7e586ce4255e3a93bc0f39d4">grib_set_string_array()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#aeaf2ac58b4a90bd09595986d49228d7c">codes_index_get_long()</a>.</p>
+
+<p>Referenced by <a class="el" href="namespaceec_codes.html#a54b35eededa62b2cb3a32b90060c0f2c">codes_set_string_array()</a>.</p>
 
 </div>
 </div>
@@ -624,7 +672,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>number of messages in the file </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -681,7 +729,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>scalar value of key as int, float or str </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -710,7 +758,7 @@ Functions</h2></td></tr>
 <p>Get the API version.</p>
 <p>Returns the version of the api as a string in the format "major.minor.revision". </p>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#a267636dba6361f74b330275a1f8e1ed7">codes_index_get()</a>, and <a class="el" href="namespaceec_codes.html#a92041c59bf04e6db88395077802dfe74">codes_index_select()</a>.</p>
+<p>Referenced by <a class="el" href="namespaceec_codes.html#a267636dba6361f74b330275a1f8e1ed7">codes_index_get()</a>.</p>
 
 </div>
 </div>
@@ -757,7 +805,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>numpy.ndarray </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -803,7 +851,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>value of key as float </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -849,14 +897,14 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>numpy.ndarray </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
 <p>References <a class="el" href="namespaceec_codes.html#a59e415f83b7f26b4575a5700ece65c14">codes_set_long_array()</a>.</p>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#ae042f8fe1cc86718ce658f3b992c87a2">codes_bufr_new_from_samples()</a>, <a class="el" href="namespaceec_codes.html#a1250285cb0770393bf6078f3ee3340a2">codes_get_native_type()</a>, and <a class="el" href="namespaceec_codes.html#a134bac0edaf47f29051ad905a30fb63e">codes_grib_find_nearest()</a>.</p>
+<p>Referenced by <a class="el" href="namespaceec_codes.html#a3ba2700ed57b0a155f7dd76f6b1d8ab9">codes_bufr_copy_data()</a>, <a class="el" href="namespaceec_codes.html#a1250285cb0770393bf6078f3ee3340a2">codes_get_native_type()</a>, and <a class="el" href="namespaceec_codes.html#a134bac0edaf47f29051ad905a30fb63e">codes_grib_find_nearest()</a>.</p>
 
 </div>
 </div>
@@ -902,7 +950,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>value </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -953,10 +1001,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>numpy.ndarray </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
+
+<p>References <a class="el" href="namespaceec_codes.html#a2dd162c68a1326619a34b45e56fdb46c">codes_is_missing()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#af9fa4123658007a2362baa9afd055063">codes_index_select_string()</a>.</p>
 
@@ -1004,12 +1054,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>numpy.ndarray containing the values of key for the given indexes </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="namespaceec_codes.html#adbc403f07e0bcc151d8b0fb1365492ff">codes_is_defined()</a>, and <a class="el" href="namespaceec_codes.html#a2dd162c68a1326619a34b45e56fdb46c">codes_is_missing()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#adbc403f07e0bcc151d8b0fb1365492ff">codes_is_defined()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#a6fc3995f61a5f34933afd0aeb6427bf6">codes_new_from_index()</a>.</p>
 
@@ -1050,7 +1100,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>value of key as int </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -1096,12 +1146,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>numpy.ndarray </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#a134bac0edaf47f29051ad905a30fb63e">codes_grib_find_nearest()</a>, and <a class="el" href="namespaceec_codes.html#a86388748f15624cd8fd2ec89d066295a">grib_get_string_array()</a>.</p>
+<p>Referenced by <a class="el" href="namespaceec_codes.html#a5c08a280c84117684dfe5705dfad29f5">codes_get_string_array()</a>, and <a class="el" href="namespaceec_codes.html#a134bac0edaf47f29051ad905a30fb63e">codes_grib_find_nearest()</a>.</p>
 
 </div>
 </div>
@@ -1131,7 +1181,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>binary string message associated with msgid </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -1164,7 +1214,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>offset in bytes of the message </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -1199,7 +1249,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>size in bytes of the message </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -1246,12 +1296,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>type of key given as input or None if not determined </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="namespaceec_codes.html#a441ff456dc9990951bf242f4d542713a">codes_get_double_array()</a>, <a class="el" href="namespaceec_codes.html#a0af74e12fba25379db678363f5bdafb3">codes_get_values()</a>, and <a class="el" href="namespaceec_codes.html#abc699d0bb7a7dded968ee0111342ffd0">codes_set_values()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#a441ff456dc9990951bf242f4d542713a">codes_get_double_array()</a>, and <a class="el" href="namespaceec_codes.html#abc699d0bb7a7dded968ee0111342ffd0">codes_set_values()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#a134bac0edaf47f29051ad905a30fb63e">codes_grib_find_nearest()</a>, and <a class="el" href="namespaceec_codes.html#a997587cb4079552273d224fd3434463b">codes_set_key_vals()</a>.</p>
 
@@ -1292,12 +1342,14 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#ae042f8fe1cc86718ce658f3b992c87a2">codes_bufr_new_from_samples()</a>, <a class="el" href="namespaceec_codes.html#ab49cb36625cd87b9d898844b1df32516">codes_clone()</a>, <a class="el" href="namespaceec_codes.html#ac70e34af931428ba9a4874e0ebf75928">codes_grib_multi_write()</a>, and <a class="el" href="namespaceec_codes.html#a86388748f15624cd8fd2ec89d066295a">grib_get_string_array()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#a587af29aac21a816f8ffd327a1fce779">codes_skip_computed()</a>.</p>
+
+<p>Referenced by <a class="el" href="namespaceec_codes.html#a3ba2700ed57b0a155f7dd76f6b1d8ab9">codes_bufr_copy_data()</a>, <a class="el" href="namespaceec_codes.html#ab49cb36625cd87b9d898844b1df32516">codes_clone()</a>, <a class="el" href="namespaceec_codes.html#a5c08a280c84117684dfe5705dfad29f5">codes_get_string_array()</a>, and <a class="el" href="namespaceec_codes.html#ac70e34af931428ba9a4874e0ebf75928">codes_grib_multi_write()</a>.</p>
 
 </div>
 </div>
@@ -1336,7 +1388,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>string value of key </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -1344,6 +1396,52 @@ Functions</h2></td></tr>
 <p>References <a class="el" href="namespaceec_codes.html#a4c5256c7e609cf3eedf7d695a4b58a45">codes_gribex_mode_off()</a>, and <a class="el" href="namespaceec_codes.html#aec0c4f83da942b94d51a3d8b93ecb6c4">codes_gribex_mode_on()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#a134bac0edaf47f29051ad905a30fb63e">codes_grib_find_nearest()</a>, and <a class="el" href="namespaceec_codes.html#aaec2118b6fca48e59ded7d2099e81009">codes_grib_multi_support_off()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5c08a280c84117684dfe5705dfad29f5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def ecCodes.codes_get_string_array </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>msgid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>key</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the value of the key as a list of strings. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">msgid</td><td>id of the message loaded in memory </td></tr>
+    <tr><td class="paramname">key</td><td>key name </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>list </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="namespaceec_codes.html#a680c8ecbf2104d69083c68ea6184192d">codes_get_long_array()</a>, <a class="el" href="namespaceec_codes.html#ab07293de06d6ef6c5810ea3f01723884">codes_get_size()</a>, and <a class="el" href="namespaceec_codes.html#a0b1fb93a9f550c971a7e08ca16bb5100">codes_grib_multi_new()</a>.</p>
+
+<p>Referenced by <a class="el" href="namespaceec_codes.html#a3ba2700ed57b0a155f7dd76f6b1d8ab9">codes_bufr_copy_data()</a>, and <a class="el" href="namespaceec_codes.html#a134bac0edaf47f29051ad905a30fb63e">codes_grib_find_nearest()</a>.</p>
 
 </div>
 </div>
@@ -1381,7 +1479,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -1406,26 +1504,26 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retrieve the contents of the 'values' key. </p>
+<p>Retrieve the contents of the 'values' key for a GRIB message. </p>
 <p>A NumPy ndarray containing the values in the message is returned.</p>
 <p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_print_data" target="_blank">grib_print_data.py</a>, <a href="https://software.ecmwf.int/wiki/display/ECC/grib_samples" target="_blank">grib_samples.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">gribid</td><td>id of the grib loaded in memory </td></tr>
+    <tr><td class="paramname">gribid</td><td>id of the GRIB loaded in memory </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>numpy.ndarray </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="namespaceec_codes.html#a267636dba6361f74b330275a1f8e1ed7">codes_index_get()</a>, <a class="el" href="namespaceec_codes.html#ac18c28cc7bd146dad986e03511fb7340">codes_set_double_array()</a>, <a class="el" href="namespaceec_codes.html#a59e415f83b7f26b4575a5700ece65c14">codes_set_long_array()</a>, and <a class="el" href="namespaceec_codes.html#a2353707d7e586ce4255e3a93bc0f39d4">grib_set_string_array()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#a267636dba6361f74b330275a1f8e1ed7">codes_index_get()</a>, <a class="el" href="namespaceec_codes.html#ac18c28cc7bd146dad986e03511fb7340">codes_set_double_array()</a>, <a class="el" href="namespaceec_codes.html#a59e415f83b7f26b4575a5700ece65c14">codes_set_long_array()</a>, and <a class="el" href="namespaceec_codes.html#a54b35eededa62b2cb3a32b90060c0f2c">codes_set_string_array()</a>.</p>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#a1250285cb0770393bf6078f3ee3340a2">codes_get_native_type()</a>.</p>
+<p>Referenced by <a class="el" href="namespaceec_codes.html#a134bac0edaf47f29051ad905a30fb63e">codes_grib_find_nearest()</a>.</p>
 
 </div>
 </div>
@@ -1487,12 +1585,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>(npoints*(outlat,outlon,value,dist,index)) </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="namespaceec_codes.html#a648bae4beadb6a82698da40e08323be9">codes_get_array()</a>, <a class="el" href="namespaceec_codes.html#a22a427ff4355e63b2c16c491572ea6b5">codes_get_double()</a>, <a class="el" href="namespaceec_codes.html#a441ff456dc9990951bf242f4d542713a">codes_get_double_array()</a>, <a class="el" href="namespaceec_codes.html#a88f2a86c370e490dae8e684c957022fd">codes_get_long()</a>, <a class="el" href="namespaceec_codes.html#a680c8ecbf2104d69083c68ea6184192d">codes_get_long_array()</a>, <a class="el" href="namespaceec_codes.html#a1250285cb0770393bf6078f3ee3340a2">codes_get_native_type()</a>, <a class="el" href="namespaceec_codes.html#a37ff4cf406f9b0b0cd6ede563c1d5ab1">codes_get_string()</a>, and <a class="el" href="namespaceec_codes.html#a86388748f15624cd8fd2ec89d066295a">grib_get_string_array()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#a648bae4beadb6a82698da40e08323be9">codes_get_array()</a>, <a class="el" href="namespaceec_codes.html#a22a427ff4355e63b2c16c491572ea6b5">codes_get_double()</a>, <a class="el" href="namespaceec_codes.html#a441ff456dc9990951bf242f4d542713a">codes_get_double_array()</a>, <a class="el" href="namespaceec_codes.html#a88f2a86c370e490dae8e684c957022fd">codes_get_long()</a>, <a class="el" href="namespaceec_codes.html#a680c8ecbf2104d69083c68ea6184192d">codes_get_long_array()</a>, <a class="el" href="namespaceec_codes.html#a1250285cb0770393bf6078f3ee3340a2">codes_get_native_type()</a>, <a class="el" href="namespaceec_codes.html#a37ff4cf406f9b0b0cd6ede563c1d5ab1">codes_get_string()</a>, <a class="el" href="namespaceec_codes.html#a5c08a280c84117684dfe5705dfad29f5">codes_get_string_array()</a>, and <a class="el" href="namespaceec_codes.html#a0af74e12fba25379db678363f5bdafb3">codes_get_values()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#affddd8311b1127306fa02ce26023d89e">codes_set_missing()</a>.</p>
 
@@ -1522,7 +1620,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -1598,7 +1696,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>tuple with the latitude, longitude and value </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -1652,12 +1750,12 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="namespaceec_codes.html#adc7361072916fe6ec52e9cf53f066839">codes_get_string_length()</a>, and <a class="el" href="namespaceec_codes.html#a587af29aac21a816f8ffd327a1fce779">codes_skip_computed()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#adc7361072916fe6ec52e9cf53f066839">codes_get_string_length()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#af13b3e69c2b5ad0ea6b7fd07ac37e367">codes_write()</a>.</p>
 
@@ -1681,14 +1779,14 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>id of the multi field </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
 <p>References <a class="el" href="namespaceec_codes.html#a1c18ea67e5ce00500824676691b4bc4a">codes_index_add_file()</a>.</p>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#a86388748f15624cd8fd2ec89d066295a">grib_get_string_array()</a>.</p>
+<p>Referenced by <a class="el" href="namespaceec_codes.html#a5c08a280c84117684dfe5705dfad29f5">codes_get_string_array()</a>.</p>
 
 </div>
 </div>
@@ -1716,14 +1814,14 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
 <p>References <a class="el" href="namespaceec_codes.html#ab9369968f436ad85084ec1d48e9324c7">codes_index_get_size()</a>, and <a class="el" href="namespaceec_codes.html#ae5a40e31f81dd4cdddf8ddc71e833395">codes_index_release()</a>.</p>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#a2353707d7e586ce4255e3a93bc0f39d4">grib_set_string_array()</a>.</p>
+<p>Referenced by <a class="el" href="namespaceec_codes.html#a54b35eededa62b2cb3a32b90060c0f2c">codes_set_string_array()</a>.</p>
 
 </div>
 </div>
@@ -1743,7 +1841,7 @@ Functions</h2></td></tr>
 <p>Turn off the support for multiple fields in a single message. </p>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -1770,7 +1868,7 @@ Functions</h2></td></tr>
 <p>Turn on the support for multiple fields in a single message. </p>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -1816,7 +1914,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -1866,7 +1964,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>id of the grib loaded in memory </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -1874,6 +1972,43 @@ Functions</h2></td></tr>
 <p>References <a class="el" href="namespaceec_codes.html#a5c7a1d8a2c7802edd327a35cb35984e7">codes_count_in_file()</a>, and <a class="el" href="namespaceec_codes.html#aed3ce5487d6bdd24e1127e638c9cfd54">codes_grib_multi_support_on()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#a44c10386781390c16f1a567590b33c11">codes_bufr_new_from_file()</a>, and <a class="el" href="namespaceec_codes.html#aabd87fd89cfac4d21ec014b838174e3c">codes_metar_new_from_file()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1c476c5e2dfefa3693df1065e9bf1665"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def ecCodes.codes_grib_new_from_samples </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>samplename</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create a new valid GRIB message from a sample. </p>
+<p>The available samples are picked up from the directory pointed to by the environment variable ECCODES_SAMPLES_PATH. To know where the samples directory is run the codes_info tool.<br/>
+ <b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_samples" target="_blank">grib_samples.py</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">samplename</td><td>name of the sample to be used </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>id of the message loaded in memory </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="namespaceec_codes.html#ab49cb36625cd87b9d898844b1df32516">codes_clone()</a>.</p>
+
+<p>Referenced by <a class="el" href="namespaceec_codes.html#ae623fa09d65a3f699026a86d0e4864da">codes_set_long()</a>.</p>
 
 </div>
 </div>
@@ -1893,7 +2028,7 @@ Functions</h2></td></tr>
 <p>Turn off the compatibility mode with gribex. </p>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -1920,7 +2055,7 @@ Functions</h2></td></tr>
 <p>Turn on the compatibility mode with gribex. </p>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -1993,7 +2128,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>id of the GTS loaded in memory </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2039,7 +2174,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2094,7 +2229,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>array of values </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2143,7 +2278,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>tuple with values of key in index </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2192,14 +2327,14 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>tuple with values of key in index </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
 <p>References <a class="el" href="namespaceec_codes.html#ab9369968f436ad85084ec1d48e9324c7">codes_index_get_size()</a>, and <a class="el" href="namespaceec_codes.html#ada63dc27281c249035da5b54e6ec0966">codes_index_select_long()</a>.</p>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#ae89dc44888bfbba102e6c9332839fc51">codes_index_new_from_file()</a>, and <a class="el" href="namespaceec_codes.html#abc699d0bb7a7dded968ee0111342ffd0">codes_set_values()</a>.</p>
+<p>Referenced by <a class="el" href="namespaceec_codes.html#a6c83d2b9572083c7a83c9c5d39010b14">codes_copy_namespace()</a>, and <a class="el" href="namespaceec_codes.html#abc699d0bb7a7dded968ee0111342ffd0">codes_set_values()</a>.</p>
 
 </div>
 </div>
@@ -2240,7 +2375,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>number of distinct values for key in index </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2289,7 +2424,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>tuple with values of key in index </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2336,12 +2471,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>index id </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="namespaceec_codes.html#aeaf2ac58b4a90bd09595986d49228d7c">codes_index_get_long()</a>, and <a class="el" href="namespaceec_codes.html#ab9369968f436ad85084ec1d48e9324c7">codes_index_get_size()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#ab9369968f436ad85084ec1d48e9324c7">codes_index_get_size()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#a59e415f83b7f26b4575a5700ece65c14">codes_set_long_array()</a>.</p>
 
@@ -2372,7 +2507,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>id of the loaded index </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2407,7 +2542,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2460,12 +2595,12 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="namespaceec_codes.html#add6a557c085ea401fc9529ed140025ef">codes_get_api_version()</a>, <a class="el" href="namespaceec_codes.html#a0f446397a9956ed5518ff6461fcc17f0">codes_get_message()</a>, and <a class="el" href="namespaceec_codes.html#a8b42a0c20ab81efa5a214dacc0b75d58">codes_new_from_message()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#a0f446397a9956ed5518ff6461fcc17f0">codes_get_message()</a>, and <a class="el" href="namespaceec_codes.html#a8b42a0c20ab81efa5a214dacc0b75d58">codes_new_from_message()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#abb5cff8e4911614c8b04032fb014ea07">codes_set()</a>.</p>
 
@@ -2515,7 +2650,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2570,7 +2705,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2625,7 +2760,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2672,7 +2807,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2716,7 +2851,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>0-&gt;not defined, 1-&gt;defined </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2763,12 +2898,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>0-&gt;not missing, 1-&gt;missing </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#a8558de4f563b57fe8104d024eb90e7d2">codes_get_elements()</a>.</p>
+<p>Referenced by <a class="el" href="namespaceec_codes.html#af0708f169680a9b753789a3d61f7f9ef">codes_get_double_elements()</a>.</p>
 
 </div>
 </div>
@@ -2796,7 +2931,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2832,7 +2967,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>key name to be retrieved </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2880,7 +3015,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>keys iterator id to be used in the keys iterator functions </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2915,7 +3050,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2949,7 +3084,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -2996,14 +3131,14 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>id of the METAR loaded in memory </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
 <p>References <a class="el" href="namespaceec_codes.html#a44c10386781390c16f1a567590b33c11">codes_bufr_new_from_file()</a>, <a class="el" href="namespaceec_codes.html#a80246f356012448955e2e75572a8d210">codes_grib_new_from_file()</a>, and <a class="el" href="namespaceec_codes.html#ab1788f3653df85dd90ac99f40daf98c4">codes_new_from_file()</a>.</p>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#ab06cc33b116103a54fadb4e2735e579a">codes_gts_new_from_file()</a>.</p>
+<p>Referenced by <a class="el" href="namespaceec_codes.html#ab06cc33b116103a54fadb4e2735e579a">codes_gts_new_from_file()</a>, and <a class="el" href="namespaceec_codes.html#ab1788f3653df85dd90ac99f40daf98c4">codes_new_from_file()</a>.</p>
 
 </div>
 </div>
@@ -3052,12 +3187,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>id of the message loaded in memory </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="namespaceec_codes.html#af4a4c95465d2026ad549920b07150bab">codes_any_new_from_file()</a>, and <a class="el" href="namespaceec_codes.html#ab06cc33b116103a54fadb4e2735e579a">codes_gts_new_from_file()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#af4a4c95465d2026ad549920b07150bab">codes_any_new_from_file()</a>, <a class="el" href="namespaceec_codes.html#ab06cc33b116103a54fadb4e2735e579a">codes_gts_new_from_file()</a>, and <a class="el" href="namespaceec_codes.html#aabd87fd89cfac4d21ec014b838174e3c">codes_metar_new_from_file()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#aabd87fd89cfac4d21ec014b838174e3c">codes_metar_new_from_file()</a>.</p>
 
@@ -3090,7 +3225,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>id of the message loaded in memory or None if end of index </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -3127,7 +3262,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>msgid of the newly created grib message </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -3144,30 +3279,41 @@ Functions</h2></td></tr>
           <td class="memname">def ecCodes.codes_new_from_samples </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>samplename</em></td><td>)</td>
+          <td class="paramname"><em>samplename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>product_kind</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a new valid GRIB message from a sample. </p>
+<p>Create a new valid message from a sample for a given product. </p>
 <p>The available samples are picked up from the directory pointed to by the environment variable ECCODES_SAMPLES_PATH. To know where the samples directory is run the codes_info tool.<br/>
  <b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_samples" target="_blank">grib_samples.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">samplename</td><td>name of the sample to be used </td></tr>
+    <tr><td class="paramname">product_kind</td><td>CODES_PRODUCT_GRIB or CODES_PRODUCT_BUFR </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>id of the message loaded in memory </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="namespaceec_codes.html#ac18c28cc7bd146dad986e03511fb7340">codes_set_double_array()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#a3ba2700ed57b0a155f7dd76f6b1d8ab9">codes_bufr_copy_data()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#a22a427ff4355e63b2c16c491572ea6b5">codes_get_double()</a>.</p>
 
@@ -3223,7 +3369,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -3278,7 +3424,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -3333,7 +3479,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -3412,12 +3558,12 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a>,TypeError</td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError,TypeError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="namespaceec_codes.html#ab49cb36625cd87b9d898844b1df32516">codes_clone()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#ae042f8fe1cc86718ce658f3b992c87a2">codes_bufr_new_from_samples()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#a1ba4d3b6473499af0581cf52eb4cad0b">codes_get()</a>, and <a class="el" href="namespaceec_codes.html#a88f2a86c370e490dae8e684c957022fd">codes_get_long()</a>.</p>
 
@@ -3467,14 +3613,14 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="namespaceec_codes.html#a2353707d7e586ce4255e3a93bc0f39d4">grib_set_string_array()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#a54b35eededa62b2cb3a32b90060c0f2c">codes_set_string_array()</a>.</p>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#a1ba4d3b6473499af0581cf52eb4cad0b">codes_get()</a>, <a class="el" href="namespaceec_codes.html#a0af74e12fba25379db678363f5bdafb3">codes_get_values()</a>, and <a class="el" href="namespaceec_codes.html#a643c58a9acad239c081794c74a5b86d9">codes_new_from_samples()</a>.</p>
+<p>Referenced by <a class="el" href="namespaceec_codes.html#ae042f8fe1cc86718ce658f3b992c87a2">codes_bufr_new_from_samples()</a>, <a class="el" href="namespaceec_codes.html#a1ba4d3b6473499af0581cf52eb4cad0b">codes_get()</a>, and <a class="el" href="namespaceec_codes.html#a0af74e12fba25379db678363f5bdafb3">codes_get_values()</a>.</p>
 
 </div>
 </div>
@@ -3512,7 +3658,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -3565,12 +3711,12 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a>,TypeError</td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError,TypeError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="namespaceec_codes.html#ae042f8fe1cc86718ce658f3b992c87a2">codes_bufr_new_from_samples()</a>.</p>
+<p>References <a class="el" href="namespaceec_codes.html#ae042f8fe1cc86718ce658f3b992c87a2">codes_bufr_new_from_samples()</a>, and <a class="el" href="namespaceec_codes.html#a1c476c5e2dfefa3693df1065e9bf1665">codes_grib_new_from_samples()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#a1ba4d3b6473499af0581cf52eb4cad0b">codes_get()</a>, and <a class="el" href="namespaceec_codes.html#aec91e405c936c335c00267eb221c9f91">codes_keys_iterator_get_name()</a>.</p>
 
@@ -3620,7 +3766,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -3667,7 +3813,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -3745,7 +3891,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -3753,6 +3899,61 @@ Functions</h2></td></tr>
 <p>References <a class="el" href="namespaceec_codes.html#af13b3e69c2b5ad0ea6b7fd07ac37e367">codes_write()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#a1ba4d3b6473499af0581cf52eb4cad0b">codes_get()</a>, and <a class="el" href="namespaceec_codes.html#a23859e3fb8802982fe865789d61b181f">codes_release()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a54b35eededa62b2cb3a32b90060c0f2c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def ecCodes.codes_set_string_array </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>msgid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>inarray</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the value of the key to a string array. </p>
+<p>The input array can be a python sequence like tuple, list, array, ...</p>
+<p>The wrapper will internally try to convert the input to a NumPy array before extracting its data and length. This is possible as NumPy allows the construction of arrays from arbitrary python sequences.</p>
+<p>The elements of the input sequence need to be convertible to a double.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">msgid</td><td>id of the message loaded in memory </td></tr>
+    <tr><td class="paramname">key</td><td>key name </td></tr>
+    <tr><td class="paramname">inarray</td><td>tuple,list,array </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="namespaceec_codes.html#a6c83d2b9572083c7a83c9c5d39010b14">codes_copy_namespace()</a>, and <a class="el" href="namespaceec_codes.html#a1e9477394be21ac60be3d6841660c137">codes_grib_multi_release()</a>.</p>
+
+<p>Referenced by <a class="el" href="namespaceec_codes.html#a0af74e12fba25379db678363f5bdafb3">codes_get_values()</a>, and <a class="el" href="namespaceec_codes.html#ac18c28cc7bd146dad986e03511fb7340">codes_set_double_array()</a>.</p>
 
 </div>
 </div>
@@ -3824,7 +4025,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -3860,14 +4061,14 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
 <p>References <a class="el" href="namespaceec_codes.html#a57f7a5a0f6975e1357e5aa1dc4715e0c">codes_skip_duplicates()</a>.</p>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#a956a6f84f7b418551cd6c4976c970140">codes_grib_multi_append()</a>.</p>
+<p>Referenced by <a class="el" href="namespaceec_codes.html#ab07293de06d6ef6c5810ea3f01723884">codes_get_size()</a>.</p>
 
 </div>
 </div>
@@ -3895,7 +4096,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -3930,7 +4131,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -3965,7 +4166,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -4001,7 +4202,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -4047,7 +4248,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
+    <tr><td class="paramname">CodesInternalError</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -4055,107 +4256,6 @@ Functions</h2></td></tr>
 <p>References <a class="el" href="namespaceec_codes.html#a956a6f84f7b418551cd6c4976c970140">codes_grib_multi_append()</a>.</p>
 
 <p>Referenced by <a class="el" href="namespaceec_codes.html#acbb0d241a917a3e726792157c1f5d973">codes_set_string()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a86388748f15624cd8fd2ec89d066295a"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">def ecCodes.grib_get_string_array </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>msgid</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>key</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the value of the key as a list of strings. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">msgid</td><td>id of the message loaded in memory </td></tr>
-    <tr><td class="paramname">key</td><td>key name </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>list </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>References <a class="el" href="namespaceec_codes.html#a680c8ecbf2104d69083c68ea6184192d">codes_get_long_array()</a>, <a class="el" href="namespaceec_codes.html#ab07293de06d6ef6c5810ea3f01723884">codes_get_size()</a>, and <a class="el" href="namespaceec_codes.html#a0b1fb93a9f550c971a7e08ca16bb5100">codes_grib_multi_new()</a>.</p>
-
-<p>Referenced by <a class="el" href="namespaceec_codes.html#ab49cb36625cd87b9d898844b1df32516">codes_clone()</a>, and <a class="el" href="namespaceec_codes.html#a134bac0edaf47f29051ad905a30fb63e">codes_grib_find_nearest()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a2353707d7e586ce4255e3a93bc0f39d4"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">def ecCodes.grib_set_string_array </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>msgid</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>key</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>inarray</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Set the value of the key to a string array. </p>
-<p>The input array can be a python sequence like tuple, list, array, ...</p>
-<p>The wrapper will internally try to convert the input to a NumPy array before extracting its data and length. This is possible as NumPy allows the construction of arrays from arbitrary python sequences.</p>
-<p>The elements of the input sequence need to be convertible to a double.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">msgid</td><td>id of the message loaded in memory </td></tr>
-    <tr><td class="paramname">key</td><td>key name </td></tr>
-    <tr><td class="paramname">inarray</td><td>tuple,list,array </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classec_codes_1_1_codes_internal_error.html" title="Wrap errors coming from the C API in a Python exception object. ">CodesInternalError</a></td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>References <a class="el" href="namespaceec_codes.html#a6c83d2b9572083c7a83c9c5d39010b14">codes_copy_namespace()</a>, and <a class="el" href="namespaceec_codes.html#a1e9477394be21ac60be3d6841660c137">codes_grib_multi_release()</a>.</p>
-
-<p>Referenced by <a class="el" href="namespaceec_codes.html#a0af74e12fba25379db678363f5bdafb3">codes_get_values()</a>, and <a class="el" href="namespaceec_codes.html#ac18c28cc7bd146dad986e03511fb7340">codes_set_double_array()</a>.</p>
 
 </div>
 </div>

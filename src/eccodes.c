@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,7 +9,6 @@
  */
 
 #include "eccodes.h"
-#include <assert.h>
 
 /* Generic functions */
 /******************************************************************************/
@@ -41,6 +40,11 @@ int codes_count_in_file(grib_context* c, FILE* f,int* n)
 {
     return grib_count_in_file(c,f,n);
 }
+int codes_count_in_filename(grib_context* c, const char* filename, int* n)
+{
+    return grib_count_in_filename(c, filename, n);
+}
+
 grib_context* codes_context_get_default(void)
 {
     return grib_context_get_default();
@@ -65,7 +69,7 @@ void codes_check(const char* call,const char*  file,int line,int e,const char* m
 
 /* Fieldsets */
 /******************************************************************************/
-grib_fieldset *codes_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, char *where_string, char *order_by_string, int *err)
+grib_fieldset *codes_fieldset_new_from_files(grib_context *c, char *filenames[], int nfiles, char **keys, int nkeys, const char *where_string, const char *order_by_string, int *err)
 {
     return grib_fieldset_new_from_files(c, filenames, nfiles, keys, nkeys, where_string, order_by_string, err);
 }
@@ -155,7 +159,7 @@ int codes_write_message(grib_handle* h,const char* file,const char* mode)
 {
     return grib_write_message(h,file,mode);
 }
-grib_handle* codes_handle_new_from_message(grib_context* c, void* data, size_t data_len)
+grib_handle* codes_handle_new_from_message(grib_context* c, const void* data, size_t data_len)
 {
     return grib_handle_new_from_message(c,data,data_len);
 }
@@ -163,9 +167,9 @@ grib_handle* codes_handle_new_from_message_copy(grib_context* c, const void* dat
 {
     return grib_handle_new_from_message_copy(c,data,data_len);
 }
-grib_handle* codes_grib_handle_new_from_samples (grib_context* c, const char* res_name)
+grib_handle* codes_grib_handle_new_from_samples(grib_context* c, const char* sample_name)
 {
-    return grib_handle_new_from_samples(c, res_name);
+    return grib_handle_new_from_samples(c, sample_name);
 }
 grib_handle* codes_handle_clone(grib_handle* h)
 {
@@ -179,7 +183,7 @@ grib_handle* codes_handle_new_from_partial_message_copy(grib_context* c, const v
 {
     return grib_handle_new_from_partial_message_copy(c,data,size);
 }
-grib_handle* codes_handle_new_from_partial_message(grib_context* c,void* data, size_t buflen)
+grib_handle* codes_handle_new_from_partial_message(grib_context* c, const void* data, size_t buflen)
 {
     return grib_handle_new_from_partial_message(c,data,buflen);
 }
@@ -345,9 +349,9 @@ int codes_get_string(grib_handle* h, const char* key, char* mesg, size_t *length
 {
     return grib_get_string(h,key,mesg,length);
 }
-int codes_get_string_array(grib_handle* h, const char* name, char** val, size_t *length)
+int codes_get_string_array(grib_handle* h, const char* key, char** vals, size_t *length)
 {
-    return grib_get_string_array(h,name,val,length);
+    return grib_get_string_array(h,key,vals,length);
 }
 int codes_get_bytes(grib_handle* h, const char* key, unsigned char* bytes, size_t *length)
 {
@@ -511,6 +515,11 @@ void codes_get_reduced_row(long pl,double lon_first,double lon_last,long* npoint
 {
     grib_get_reduced_row(pl,lon_first,lon_last,npoints,ilon_first,ilon_last);
 }
+void codes_get_reduced_row_p(long pl, double lon_first, double lon_last, long *npoints, double *olon_first, double *olon_last)
+{
+    grib_get_reduced_row_p(pl, lon_first, lon_last, npoints, olon_first, olon_last);
+}
+
 grib_box* codes_box_new(grib_handle* h,int* error)
 {
     return grib_box_new(h,error);

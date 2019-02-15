@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,5 +9,5 @@
 
 . ./include.sh
 
-${examples_dir}eccodes_f_grib_print_data | grep '99200 *values found'
-${examples_dir}eccodes_f_grib_print_data_static | grep '99200 *values found'
+${examples_dir}/eccodes_f_grib_print_data | grep '99200 *values found'
+${examples_dir}/eccodes_f_grib_print_data_static | grep '99200 *values found'

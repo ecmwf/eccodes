@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -13,8 +13,8 @@ section_length[3] section1Length ;
 
 unsigned[1]  masterTableNumber :dump;
 
-codetable[1] bufrHeaderSubCentre 'grib1/0.table' : dump;
-unsigned[1] bufrHeaderCentre            : dump;
+codetable[1] bufrHeaderSubCentre 'common/c-1.table' : dump;
+codetable[1] bufrHeaderCentre    'common/c-1.table' : dump;
 
 unsigned[1]  updateSequenceNumber :dump;
 
@@ -39,6 +39,8 @@ transient typicalSecond=0;
 
 meta ls.typicalDate sprintf("%.4d%.2d%.2d",typicalYear,typicalMonth,typicalDay) : dump,no_copy,read_only;
 meta ls.typicalTime sprintf("%.2d%.2d%.2d",typicalHour,typicalMinute,typicalSecond) :dump,no_copy,read_only;
+
+meta typicalDateTime julian_date(typicalYear,typicalMonth,typicalDay,typicalHour,typicalMinute,typicalSecond) ;
 
 
 alias ls.centre=bufrHeaderCentre;

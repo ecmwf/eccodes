@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,6 +9,14 @@
 
 constant ieeeFloats   = 0 : hidden, edition_specific;
 transient eps=0;
+constant two=1 : hidden;
+constant three=1 : hidden;
+constant eight=8 : hidden;
+constant eleven=11 : hidden;
+constant epsPoint=1 : hidden;
+constant epsContinous=11 : hidden;
+constant epsStatisticsPoint=2 : hidden;
+constant epsStatisticsContinous=12 : hidden;
 
 meta headersOnly headers_only();
 
@@ -26,7 +34,7 @@ constant section0Length=8 ;
 meta section0Pointer section_pointer(offsetSection0,section0Length,0);
 
 # Due to a trick done by GRIBEX to support large GRIBs, we need a special treatment
-# of the message length and of the section4 lenth, so instead of
+# of the message length and of the section4 length, so instead of
 # section_length[3] totalLength                     ;
 # we get:
 g1_message_length[3] totalLength(section4Length) ;
@@ -37,7 +45,7 @@ template      section_1 "grib1/section.1.def"   ;
 
 alias ls.edition = editionNumber;
 
-# Not flagbit numbers 7 to 0, while wmo is 1 to 8
+# Note flagbit numbers 7 to 0, while wmo is 1 to 8
 flagbit gridDescriptionSectionPresent(section1Flags,7) = 1;
 meta GDSPresent gds_is_present(gridDescriptionSectionPresent,gridDefinition,bitmapPresent,values): dump ;
 #alias GDSPresent = gridDescriptionSectionPresent;
@@ -45,7 +53,9 @@ meta GDSPresent gds_is_present(gridDescriptionSectionPresent,gridDefinition,bitm
 flagbit bitmapPresent(section1Flags,6) :dump;
 alias bitmapSectionPresent=bitmapPresent;
 alias geography.bitmapPresent=bitmapPresent;
-transient angularPrecision=1000;  # milli degrees
+alias missingValuesPresent=bitmapPresent : read_only;
+transient angleSubdivisions=1000;  # milli degrees
+alias angularPrecision=angleSubdivisions : hidden;
 
 if(gridDescriptionSectionPresent){
   template section_2 "grib1/section.2.def"     ;

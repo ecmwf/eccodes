@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -27,12 +27,13 @@ do
   ref_num=$file.num.ref
   diff_num=$file.num.diff
 
-  rm -f $res_num | true
+  rm -f $res_num
 
-  ${tools_dir}codes_bufr_filter bufrdc_num_ref.filter $file 2> $REDIRECT > $res_num
+  ${tools_dir}/codes_bufr_filter bufrdc_num_ref.filter $file 2> $REDIRECT > $res_num
 
   # Exclude the BUFR file uegabe.bufr because its reference file is incorrect
   if [ "$bf" = "uegabe.bufr" ]; then
+    rm -f $res_num
     continue
   fi
 
@@ -42,6 +43,7 @@ do
     #numdiff               $ref_num $res_num >$REDIRECT 2> $REDIRECT
   fi
 
+  rm -f $res_num
 done
 
 rm -f bufrdc_num_ref.filter

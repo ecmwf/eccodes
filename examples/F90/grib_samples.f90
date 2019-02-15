@@ -1,25 +1,25 @@
-! Copyright 2005-2016 ECMWF.
+! Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-! 
+!
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
 !  Description: how to create a new GRIB message from a sample.
-!               
+!
 !
 program sample
   use eccodes
-  implicit none  
+  implicit none
   integer  :: err
   integer  :: outfile, datafile
   integer  :: igribsample,igribclone,igribdata, size1
   integer  :: date1, startStep, endStep, table2Version, indicatorOfParameter
   integer  :: decimalPrecision
   character(len=10) stepType
-  real(kind=8), dimension(:), allocatable   :: v1,v2,v 
+  real(kind=8), dimension(:), allocatable   :: v1,v2,v
 
   date1 = 20080104
   startStep = 0
@@ -50,8 +50,8 @@ program sample
   v=v*1000.0 ! different units for the output grib
   v1=v
 
-  do while (err/=CODES_END_OF_FILE) 
- 
+  do while (err/=CODES_END_OF_FILE)
+
     call codes_clone(igribsample,igribclone) ! clone sample before modifying it
 
     call codes_set(igribclone,'dataDate',date1)
@@ -67,7 +67,7 @@ program sample
     call codes_set(igribclone,'values',v)
 
     call codes_write(igribclone,outfile)
-    
+
     call codes_grib_new_from_file(datafile,igribdata,err)
 
     if (err==0) then

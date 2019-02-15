@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -57,9 +57,10 @@ if(missing(Ni)){
       Nj,DjInDegrees,pl);
    nearest latlon_reduced(values,radius,Nj,pl,longitudeFirstInDegrees,longitudeLastInDegrees);
 } else {
+   transient iteratorDisableUnrotate = 0 : hidden; # ECC-808
    iterator latlon(numberOfPoints,missingValue,values,longitudeFirstInDegrees,
                    DiInDegrees ,Ni,Nj,iScansNegatively ,
-                   latitudeFirstInDegrees,DjInDegrees,jScansPositively );
+                   latitudeFirstInDegrees,DjInDegrees,jScansPositively,jPointsAreConsecutive);
    nearest regular(values,radius,Ni,Nj);
 }
 

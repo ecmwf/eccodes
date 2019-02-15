@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -128,32 +128,67 @@ static void aliases(grib_dumper* d,grib_accessor* a)
 static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_debug *self = (grib_dumper_debug*)d;
-    long value=0; size_t size = 1;
-    int err = grib_unpack_long(a,&value,&size);
-    int i;
+    long value=0; size_t size = 0;
+    long *values=NULL; /* array of long */
+    long count = 0;
+    int err = 0, i = 0, more = 0;
 
-    if( a->length == 0  &&
-            (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
+    grib_value_count(a,&count);size=count;
+
+    if (a->length == 0 && (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
         return;
 
-    if( (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0 &&
+    if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0 &&
             (d->option_flags & GRIB_DUMP_FLAG_READ_ONLY) == 0)
         return;
+
+    if (size>1) {
+        values=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
+        err=grib_unpack_long(a,values,&size);
+    } else {
+        err=grib_unpack_long(a,&value,&size);
+    }
 
     set_begin_end(d,a);
 
     for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
 
-    if( ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && grib_is_missing_internal(a))
-        fprintf(self->dumper.out,"%ld-%ld %s %s = MISSING",self->begin,self->theEnd,a->creator->op, a->name);
-    else
-        fprintf(self->dumper.out,"%ld-%ld %s %s = %ld",self->begin,self->theEnd,a->creator->op, a->name,value);
-    if(comment) fprintf(self->dumper.out," [%s]",comment);
+    if (size>1) {
+        fprintf(self->dumper.out,"%ld-%ld %s %s = {\n",self->begin,self->theEnd,a->creator->op,a->name);
+        if (values) {
+            int k = 0;
+            if(size > 100) {
+                more = size - 100;
+                size = 100;
+            }
+            while(k < size) {
+                int j;
+                for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
+                for(j = 0; j < 8 && k < size; j++, k++) {
+                    fprintf(self->dumper.out,"%ld",values[k]);
+                    if(k != size-1) fprintf(self->dumper.out,", ");
+                }
+                fprintf(self->dumper.out,"\n");
+            }
+            if(more) {
+                for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
+                fprintf(self->dumper.out,"... %d more values\n",more);
+            }
+            for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
+            fprintf(self->dumper.out,"} # %s %s \n",a->creator->op, a->name);
+            grib_context_free(a->context,values);
+        }
+    } else {
+        if( ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && grib_is_missing_internal(a))
+            fprintf(self->dumper.out,"%ld-%ld %s %s = MISSING",self->begin,self->theEnd,a->creator->op, a->name);
+        else
+            fprintf(self->dumper.out,"%ld-%ld %s %s = %ld",self->begin,self->theEnd,a->creator->op, a->name,value);
+        if(comment) fprintf(self->dumper.out," [%s]",comment);
+    }
     if(err)
         fprintf(self->dumper.out," *** ERR=%d (%s) [grib_dumper_debug::dump_long]",err,grib_get_error_message(err));
 
     aliases(d,a);
-
 
     fprintf(self->dumper.out,"\n");
 }
@@ -260,7 +295,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
     aliases(d,a);
     fprintf(self->dumper.out,"\n");
 
-    if (value) grib_context_free(a->context,value);
+    grib_context_free(a->context,value);
 }
 
 static void dump_bytes(grib_dumper* d,grib_accessor* a,const char* comment)

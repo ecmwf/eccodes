@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -26,7 +26,7 @@ int main(int argc,char* argv[])
 
     long *descriptors=NULL;
     double *values = NULL;
-    char* typicalDate= NULL; 
+    char* typicalDate= NULL;
     long longVal;
     double doubleVal;
     size_t values_len=0, desc_len=0, len=0;
@@ -51,11 +51,11 @@ int main(int argc,char* argv[])
 
         printf("message: %d\n",cnt);
 
-        /* we need to instruct ecCodes to expand the descriptors 
+        /* we need to instruct ecCodes to expand the descriptors
           i.e. unpack the data values */
         CODES_CHECK(codes_set_long(h, "unpack", 1),0);
 
-        /* read and print some data values */ 
+        /* read and print some data values */
 
         /* long value */
         CODES_CHECK(codes_get_long(h, "blockNumber", &longVal),0);

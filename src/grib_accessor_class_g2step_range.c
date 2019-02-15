@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -210,6 +210,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len){
 
   if(self->endStep!=NULL) {
     ret=grib_set_long_internal(h,self->endStep,theEnd);
+    if (ret) return ret;
   }
 
   return 0;

@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,8 +14,8 @@
 # Description: how to create a new BUFR message by cloning
 # an existing message.
 #
-#
 
+from __future__ import absolute_import
 import traceback
 import sys
 
@@ -27,21 +27,18 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-
     # open BUFR file
-    fin = open(INPUT)
+    fin = open(INPUT, 'rb')
 
     # open output BUFR file
-    fout = open(OUTPUT, 'w')
+    fout = open(OUTPUT, 'wb')
 
     # get handle for message
     bufr = codes_bufr_new_from_file(fin)
 
     # create several clones of this message and alter them
     # in different ways
-
     for centre in range(0, 3):
-
         # clone the message
         clone_id = codes_clone(bufr)
 
@@ -71,6 +68,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

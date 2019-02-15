@@ -109,7 +109,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a4b20fe82de5ba6f8355ff8a5d2725b3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the real(8) value for a key in a message.  <a href="#a4b20fe82de5ba6f8355ff8a5d2725b3d">More...</a><br/></td></tr>
 <tr class="separator:a4b20fe82de5ba6f8355ff8a5d2725b3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50acfd20f8dff8b4e547135057ef119a"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceeccodes_1_1codes__set.html#a50acfd20f8dff8b4e547135057ef119a">codes_set_string</a> (msgid, key, value, status)</td></tr>
-<tr class="memdesc:a50acfd20f8dff8b4e547135057ef119a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the character value for a string key in a message.<a href="#a50acfd20f8dff8b4e547135057ef119a">More...</a><br/></td></tr>
+<tr class="memdesc:a50acfd20f8dff8b4e547135057ef119a"><td class="mdescLeft">&#160;</td><td class="mdescRight">*/  <a href="#a50acfd20f8dff8b4e547135057ef119a">More...</a><br/></td></tr>
 <tr class="separator:a50acfd20f8dff8b4e547135057ef119a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18b5890c85f15d5fefeefc2b99a09ce5"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceeccodes_1_1codes__set.html#a18b5890c85f15d5fefeefc2b99a09ce5">codes_set_int_array</a> (msgid, key, value, status)</td></tr>
 <tr class="memdesc:a18b5890c85f15d5fefeefc2b99a09ce5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the integers values for an array key in a message.  <a href="#a18b5890c85f15d5fefeefc2b99a09ce5">More...</a><br/></td></tr>
@@ -137,7 +137,7 @@ Public Member Functions</h2></td></tr>
 <dl class="section see"><dt>See Also</dt><dd><a class="el" href="classeccodes.html#a5533c6fb8bd7d8f622c89484b7bbdfb6" title="Load in memory a message from a file. ">codes_new_from_file</a>, <a class="el" href="classeccodes.html#a1c0ab28b0ae33f04d267d794a8bdd4b7" title="Free the memory for the message referred as msgid. ">codes_release</a>, <a class="el" href="interfaceeccodes_1_1codes__get.html" title="Get the value for a key from a grib message. ">codes_get</a></dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">gribid</td><td>id of the grib loaded in memory </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">gribid</td><td>id of the message loaded in memory </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">key</td><td>key name </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">value</td><td>value can be a scalar or array of integer(4),real(4),real(8) </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">status</td><td>CODES_SUCCESS if OK, integer value on error </td></tr>
@@ -647,6 +647,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>*/ </p>
 <p>Set the character value for a string key in a message.</p>
 <p>In case of error, if the status parameter (optional) is not given, the program will exit with an error message.<br/>
  Otherwise the error message can be gathered with <a class="el" href="classeccodes.html#a835de867b8ad79cc43f127e7048712f3">codes_get_error_string</a>.</p>

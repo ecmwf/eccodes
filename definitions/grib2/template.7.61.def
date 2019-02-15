@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,13 +7,11 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# START 2/template.7.6 ----------------------------------------------------------------------
 # TEMPLATE 7.6, Grid point data - simple packing with preprocessing
 # Octets 6-nn : Binary data values - binary string, with each
 # (scaled)
-# ????          data_values__binary_string_with_each
 
-  meta codedValues data_g2simple_packing_with_preprocessing(
+meta codedValues data_g2simple_packing_with_preprocessing(
         section7Length,
         offsetBeforeData,
         offsetSection7,

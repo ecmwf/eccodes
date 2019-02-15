@@ -113,11 +113,3 @@ void grib_check(const char* call,const char*  file,int line,int e,const char* ms
         exit(e);
     }
 }
-
-
-void grib_fail(const char* expr,const char* file,int line,int silent) {
-	 if (!silent)
-   fprintf(stderr,"%s at line %d: assertion failure Assert(%s)\n",file,line,expr);
-   abort();
-}
-

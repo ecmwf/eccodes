@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -13,10 +13,10 @@
 
 REDIRECT=/dev/null
 
-[ -z "$ECCODES_DEFINITION_PATH" ] | ECCODES_DEFINITION_PATH=`${tools_dir}codes_info -d`
+[ -z "$ECCODES_DEFINITION_PATH" ] | ECCODES_DEFINITION_PATH=`${tools_dir}/codes_info -d`
 
-for file in `find $ECCODES_DEFINITION_PATH -name '*.def' -print`
+for file in `find ${ECCODES_DEFINITION_PATH}/ -name '*.def' -print | grep -v grib3/`
 do
-  ${tools_dir}codes_parser $file > $REDIRECT
+  ${tools_dir}/codes_parser $file > $REDIRECT
 done
 

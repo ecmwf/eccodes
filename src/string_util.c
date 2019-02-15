@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -87,7 +87,45 @@ char** string_split(char* inputString, const char* delimiter)
         aToken = strtok(NULL, delimiter);
     }
     Assert(index == numTokens - 1);
-    *(result + index) = '\0';
+    *(result + index) = NULL;
 
     return result;
+}
+
+/* Return GRIB_SUCCESS if can convert input to an integer, GRIB_INVALID_ARGUMENT otherwise */
+int string_to_long(const char* input, long* output)
+{
+    const int base = 10;
+    char *endptr;
+    long val = 0;
+
+    if (!input) return GRIB_INVALID_ARGUMENT;
+
+    errno = 0;
+    val = strtol(input, &endptr, base);
+    if ( (errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) ||
+         (errno != 0 && val == 0) )
+    {
+        /*perror("strtol");*/
+        return GRIB_INVALID_ARGUMENT;
+    }
+    if (endptr == input) {
+        /*fprintf(stderr, "No digits were found. EXIT_FAILURE\n");*/
+        return GRIB_INVALID_ARGUMENT;
+    }
+    *output = val;
+    return GRIB_SUCCESS;
+}
+
+/* Return 1 if str1 ends with str2, 0 otherwise */
+int string_ends_with(const char* str1, const char* str2)
+{
+    const size_t len1 = strlen(str1);
+    const size_t len2 = strlen(str2);
+    if (len2 > len1)
+        return 0;
+
+    if (strcmp(&str1[len1-len2], str2) == 0)
+        return 1;
+    return 0;
 }

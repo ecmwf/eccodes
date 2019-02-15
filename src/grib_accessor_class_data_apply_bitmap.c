@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -195,7 +195,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     if (err) return err;
 
     if(!grib_find_accessor(grib_handle_of_accessor(a),self->bitmap))
-        return grib_get_double_array_internal(grib_handle_of_accessor(a),self->coded_values,val,len);
+        return grib_get_double_array(grib_handle_of_accessor(a),self->coded_values,val,len);
 
     if((err = grib_get_size(grib_handle_of_accessor(a),self->coded_values,&coded_n_vals)) != GRIB_SUCCESS)
         return err;
@@ -223,7 +223,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     coded_vals = (double*)grib_context_malloc(a->context,coded_n_vals*sizeof(double));
     if(coded_vals == NULL) return GRIB_OUT_OF_MEMORY;
 
-    if((err = grib_get_double_array_internal(grib_handle_of_accessor(a),self->coded_values,coded_vals,&coded_n_vals))
+    if((err = grib_get_double_array(grib_handle_of_accessor(a),self->coded_values,coded_vals,&coded_n_vals))
             != GRIB_SUCCESS)
     {
         grib_context_free(a->context,coded_vals);

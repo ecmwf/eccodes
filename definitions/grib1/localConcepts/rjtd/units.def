@@ -19,7 +19,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 32 ;
 	}
-#Sea-ice cover
+#Sea ice area fraction
 '(0 - 1)' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 91 ;
@@ -38,6 +38,16 @@
 'K m**2 kg**-1 s**-1' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 4 ;
+	}
+#Total column cloud liquid water
+'kg m**-2' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 227 ;
+	}
+#Total column cloud ice water
+'kg m**-2' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 58 ;
 	}
 #Geopotential
 'm**2 s**-2' = {
@@ -228,11 +238,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 212 ;
 	}
-#Cloud Ice
-'kg m**-2' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 58 ;
-	}
 #Cloud water
 'kg m**-2' = {
 	 table2Version = 200 ;
@@ -285,32 +290,32 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 84 ;
 	}
-#Evaporation
+#Mean evaporation
 'mm per day' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Total precipitation
+#Mean total precipitation
 'mm per day' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 61 ;
 	}
-#Large scale precipitation
+#Mean large scale precipitation
 'mm per day' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Convective precipitation
+#Mean convective precipitation
 'mm per day' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 63 ;
 	}
-#Snowfall rate water equivalent
+#Mean snowfall rate water equivalent
 'mm per day' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 64 ;
 	}
-#Water run-off
+#Mean surface water runoff
 'mm per day' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 90 ;
@@ -330,17 +335,17 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 165 ;
 	}
-#Frequency of deep convection
+#Mean frequency of deep convection
 '%' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 170 ;
 	}
-#Frequency of shallow convection
+#Mean frequency of shallow convection
 '%' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 171 ;
 	}
-#Frequency of stratocumulus parameterisation
+#Mean frequency of stratocumulus parameterisation
 '%' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 172 ;
@@ -355,7 +360,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Evapotranspiration
+#Mean evapotranspiration
 'W m**-2' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 202 ;
@@ -379,11 +384,6 @@
 'kg m**-3' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 226 ;
-	}
-#Cloud liquid water
-'kg m**-2' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 227 ;
 	}
 #Upward mass flux at cloud base
 'kg m**-2 s**-1' = {
@@ -410,22 +410,22 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 239 ;
 	}
-#Zonal momentum flux by long gravity wave
+#Mean zonal momentum flux by long gravity wave
 'N m**-2' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Meridional momentum flux by long gravity wave
+#Mean meridional momentum flux by long gravity wave
 'N m**-2' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 148 ;
 	}
-#Meridional momentum flux by short gravity wave
+#Mean meridional momentum flux by short gravity wave
 'N m**-2' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Zonal momentum flux by short gravity wave
+#Mean zonal momentum flux by short gravity wave
 'N m**-2' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 159 ;
@@ -950,7 +950,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 85 ;
 	}
-#Snow Fall water equivalent
+#Snow depth water equivalent
 'kg m**-2' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 65 ;

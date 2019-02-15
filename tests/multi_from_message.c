@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,17 +10,20 @@
 
 /*
  * test: reading multi fields messages from memory
- *
- *
- *
  */
 
 #include "grib_api.h"
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
 
-void usage(char* prog) {printf("usage: %s [-m] file.grib\n",prog);exit(1);}
+#ifndef ECCODES_ON_WINDOWS
+#include <unistd.h>
+#endif
+
+static void usage(const char* prog) {
+    printf("usage: %s [-m] file.grib\n",prog);
+    exit(1);
+}
 
 int main(int argc,char* argv[]) {
     struct stat finfo;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -174,7 +174,6 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
     self->ccsds_rsi  = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
-
 }
 
 static int value_count(grib_accessor* a, long* count)
@@ -188,8 +187,7 @@ static int value_count(grib_accessor* a, long* count)
 
 #include <libaec.h>
 
-
-static int  unpack_double(grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_accessor_data_ccsds_packing *self =(grib_accessor_data_ccsds_packing*)a;
 
@@ -232,8 +230,10 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->ccsds_flags,&ccsds_flags)) != GRIB_SUCCESS)
+    /* ECC-477: Don't call grib_get_long_internal to suppress error message being output */
+    if((err = grib_get_long(grib_handle_of_accessor(a),self->ccsds_flags,&ccsds_flags)) != GRIB_SUCCESS)
         return err;
+
     if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->ccsds_block_size, &ccsds_block_size)) != GRIB_SUCCESS)
         return err;
     if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
@@ -247,7 +247,6 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
         return GRIB_ARRAY_TOO_SMALL;
 
     /* Special case */
-
     if(bits_per_value == 0)
     {
         for(i = 0; i < n_vals; i++)
@@ -268,10 +267,10 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     strm.avail_in = buflen;
 
 /*
-    printf("sz_options.options_mask %d\n", sz_options.options_mask);
-    printf("sz_options.bits_per_pixel %d\n", sz_options.bits_per_pixel);
-    printf("sz_options.pixels_per_block %d\n", sz_options.pixels_per_block);
-    printf("sz_options.pixels_per_scanline %d\n", sz_options.pixels_per_scanline);
+    printf("aec_options.options_mask %d\n", aec_options.options_mask);
+    printf("aec_options.bits_per_pixel %d\n", aec_options.bits_per_pixel);
+    printf("aec_options.pixels_per_block %d\n", aec_options.pixels_per_block);
+    printf("aec_options.pixels_per_scanline %d\n", aec_options.pixels_per_scanline);
     */
 
     bits8 = ((bits_per_value + 7)/8)*8;
@@ -292,8 +291,6 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     }
 
     /* printf("bscale=%g dscale=%g reference_value=%g\n",bscale,dscale,reference_value); */
-
-
     pos = 0;
     p = decoded;
     for(i = 0; i < n_vals; i++)
@@ -302,7 +299,6 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     }
     /*-------------------------------------------*/
     *len = n_vals;
-
 
 cleanup:
     grib_context_buffer_free(a->context,decoded);
@@ -358,7 +354,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-
     if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->ccsds_flags,&ccsds_flags)) != GRIB_SUCCESS)
         return err;
     if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->ccsds_block_size, &ccsds_block_size)) != GRIB_SUCCESS)
@@ -366,9 +361,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     if((err = grib_get_long_internal(grib_handle_of_accessor(a),self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-
     /* Special case */
-
     if(*len == 0) {
         grib_buffer_replace(a, NULL, 0,1,1);
         return GRIB_SUCCESS;
@@ -479,7 +472,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     if((err = grib_set_long_internal(grib_handle_of_accessor(a),self->decimal_scale_factor, decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-
     strm.flags = ccsds_flags;
     strm.bits_per_sample = bits_per_value;
     strm.block_size = ccsds_block_size;
@@ -491,16 +483,15 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     strm.avail_in = bits8/8*n_vals;
 
     /*
-
         This does not support spherical harmonics, and treats 24 differently than:
         see http://cdo.sourcearchive.com/documentation/1.5.1.dfsg.1-1/cgribexlib_8c_source.html
     */
 
     /*
-    printf("sz_options.options_mask %d\n", sz_options.options_mask);
-    printf("sz_options.bits_per_pixel %d\n", sz_options.bits_per_pixel);
-    printf("sz_options.pixels_per_block %d\n", sz_options.pixels_per_block);
-    printf("sz_options.pixels_per_scanline %d\n", sz_options.pixels_per_scanline);
+    printf("aec_options.options_mask %d\n", aec_options.options_mask);
+    printf("aec_options.bits_per_pixel %d\n", aec_options.bits_per_pixel);
+    printf("aec_options.pixels_per_block %d\n", aec_options.pixels_per_block);
+    printf("aec_options.pixels_per_scanline %d\n", aec_options.pixels_per_scanline);
     */
 
     if((err = aec_buffer_encode(&strm)) != AEC_OK)
@@ -511,7 +502,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     }
 
     /*
-
     printf("n_vals = %ld, bits8 = %ld\n", (long)n_vals, (long)bits8);
     printf("in %ld out => %ld\n", (long)bits8/8*n_vals,(long) buflen);
     */
@@ -532,7 +522,7 @@ cleanup:
 }
 #else
 
-static int  unpack_double(grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR,
                      "grib_accessor_data_ccsds_packing: ccsds support not enabled.");

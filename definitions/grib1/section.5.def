@@ -1,21 +1,8 @@
-# Copyright 2005-2016 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# Copyright 2005-2018 ECMWF.
 
 position offsetSection5;
 constant section5Length=4;
 
 meta section5Pointer section_pointer(offsetSection5,section5Length,5);
 
-# START grib1::section
-# SECTION 5, End section
-#  7777
-
 ascii[4] '7777' = "7777" : read_only;
-
-# END   grib1::section

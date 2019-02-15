@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,6 +16,6 @@ fTmp=${label}.tmp
 # Create a file containing both GRIB and BUFR messages
 cat ${data_dir}/sample.grib2 ${data_dir}/bufr/syno_multi.bufr >$fTmp
 
-${examples_dir}c_get_product_kind $fTmp
+${examples_dir}/c_get_product_kind $fTmp
 
 rm -f $fTmp

@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,8 +10,8 @@
 #
 # Python implementation:  bufr_read_scatterometer
 #
-# Description: how to read data for a given beam from scatterometer BUFR
-# messages.
+# Description: How to read data for a given beam from scatterometer BUFR
+#              messages.
 #
 # Please note that scatterometer data can be encoded in various ways in BUFR.
 # Therefore the code below might not work directly for other types of messages
@@ -19,7 +19,7 @@
 # understand the structure of these messages.
 #
 
-
+from __future__ import print_function
 import traceback
 import sys
 
@@ -30,9 +30,8 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-
     # open bufr file
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     cnt = 0
 
@@ -43,9 +42,9 @@ def example():
         if bufr is None:
             break
 
-        print "message: %s" % cnt
+        print("message: %s" % cnt)
 
-        # we need to instruct ecCodes to expand all the descriptors
+        # We need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
         codes_set(bufr, 'unpack', 1)
 
@@ -60,7 +59,7 @@ def example():
         # Get the total number of subsets.
         numObs = codes_get(bufr, "numberOfSubsets")
 
-        print '  Number of values: %ld' % (numObs)
+        print('  Number of values: %ld' % numObs)
 
         # Get latitude (for all the subsets)
         lat = codes_get_array(bufr, "latitude")
@@ -74,22 +73,22 @@ def example():
 
         # Check that all arrays are same size
         if len(lat) != numObs or len(lon) != numObs or len(bscat) != numObs:
-            print 'inconsistent array dimension'
+            print('inconsistent array dimension')
             return 1
 
         # Print the values
-        print "pixel  lat    lon    backscatter"
-        print "-------------------------------"
+        print("pixel  lat    lon    backscatter")
+        print("-------------------------------")
 
-        for i in xrange(numObs):
-            print "%3d %.2f %.2f %.2f" % (i + 1, lat[i], lon[i], bscat[i])
+        for i in range(numObs):
+            print("%3d %.2f %.2f %.2f" % (i + 1, lat[i], lon[i], bscat[i]))
 
         cnt += 1
 
-        # delete handle
+        # Release handle
         codes_release(bufr)
 
-    # close the file
+    # Close the file
     f.close()
 
 
@@ -103,6 +102,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

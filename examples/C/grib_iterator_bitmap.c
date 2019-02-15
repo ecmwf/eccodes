@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -20,7 +20,7 @@
 #include <assert.h>
 #include "eccodes.h"
 
-void usage(char* prog)
+static void usage(const char* prog)
 {
     printf("Usage: %s grib_file\n",prog);
     exit(1);
@@ -58,7 +58,7 @@ int main(int argc, char** argv)
             CODES_CHECK(codes_get_size(h,"bitmap",&bmp_len),0);
             bitmap = (long*)malloc(bmp_len*sizeof(long));
             CODES_CHECK(codes_get_long_array(h,"bitmap",bitmap,&bmp_len),0);
-            printf("Bitmap is present. Num = %ld\n", bmp_len);
+            printf("Bitmap is present. Num = %lu\n", bmp_len);
         }
         /* Sanity check. Number of values must match number in bitmap */
         CODES_CHECK(codes_get_size(h,"values",&values_len),0);

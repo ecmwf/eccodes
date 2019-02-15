@@ -1,4 +1,4 @@
-! Copyright 2005-2016 ECMWF.
+! Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -60,11 +60,11 @@ module grib_api
   !>
   !> @see grib_new_from_file, grib_release, grib_get
   !>
-  !> @param[in] gribid      id of the grib loaded in memory
-  !> @param[in] key         key name
-  !> @param[in] index       index can be a scalar or array of integer(4)
-  !> @param[out] value      value can be a scalar or array of integer(4),real(4),real(8)
-  !> @param[out] status     GRIB_SUCCESS if OK, integer value on error
+  !> @param[in] gribid    id of the GRIB loaded in memory
+  !> @param[in] key       key name
+  !> @param[in] index     index can be a scalar or array of integer(4)
+  !> @param[out] value    value can be a scalar or array of integer(4),real(4),real(8)
+  !> @param[out] status   GRIB_SUCCESS if OK, integer value on error
   interface grib_get_element
     module procedure grib_get_real4_element, &
                      grib_get_real8_element, &

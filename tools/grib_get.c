@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -39,11 +39,11 @@ grib_option grib_options[]={
         {"i:",0,0,0,1,0}
 };
 
-char* grib_tool_description="Get values of some keys from a grib file."
+const char* grib_tool_description="Get values of some keys from a GRIB file."
         "\n\tIt is similar to grib_ls, but fails returning an error code "
         "\n\twhen an error occurs (e.g. key not found).";
-char* grib_tool_name="grib_get";
-char* grib_tool_usage="[options] grib_file grib_file ...";
+const char* grib_tool_name="grib_get";
+const char* grib_tool_usage="[options] grib_file grib_file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 double lat=0;
@@ -160,6 +160,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {
+    exit_if_input_is_directory(grib_tool_name, file->name);
     return 0;
 }
 
@@ -177,9 +178,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options,grib_handle* h)
     }
 
     if (options->latlon) {
-        int err=0;
-        double min;
         int i;
+        double min;
+        err=0;
         if (!n) n=grib_nearest_new(h,&err);
         GRIB_CHECK_NOLINE(err,0);
         GRIB_CHECK_NOLINE(grib_nearest_find(n,h,lat,lon,0,

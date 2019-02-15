@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,6 +9,36 @@
  */
 
 #include "grib_api_internal.h"
+
+#if GRIB_PTHREADS
+ static pthread_once_t once  = PTHREAD_ONCE_INIT;
+ static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+ static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
+ static void init() {
+  pthread_mutexattr_t attr;
+  pthread_mutexattr_init(&attr);
+  pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+  pthread_mutex_init(&mutex1,&attr);
+  pthread_mutex_init(&mutex2,&attr);
+  pthread_mutexattr_destroy(&attr);
+ }
+#elif GRIB_OMP_THREADS
+ static int once = 0;
+ static omp_nest_lock_t mutex1;
+ static omp_nest_lock_t mutex2;
+ static void init()
+ {
+    GRIB_OMP_CRITICAL(lock_grib_io_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex1);
+            omp_init_nest_lock(&mutex2);
+            once = 1;
+        }
+    }
+ }
+#endif
 
 
 #define  GRIB 0x47524942
@@ -54,15 +84,17 @@ typedef struct reader {
 
 static int read_the_rest(reader* r,size_t message_length,unsigned char* tmp, int already_read, int check7777)
 {
-    int err            = 0;
+    int err = GRIB_SUCCESS;
     size_t buffer_size;
     size_t rest;
     unsigned char* buffer;
 
+    if (message_length==0)
+        return GRIB_BUFFER_TOO_SMALL;
+
     buffer_size = message_length;
     rest=message_length-already_read;
     r->message_size=message_length;
-
     buffer = (unsigned char*)r->alloc(r->alloc_data,&buffer_size,&err);
     if(err) return err;
 
@@ -105,14 +137,15 @@ static int read_GRIB(reader* r)
     size_t sec3len = 0;
     size_t sec4len = 0;
     unsigned long flags;
-    size_t buflen=16368;
+    size_t buflen = 32768;   /* See ECC-515: was 16368 */
     grib_context* c;
     grib_buffer* buf;
 
     /*TODO proper context*/
     c=grib_context_get_default();
     tmp=(unsigned char*)malloc(buflen);
-    Assert(tmp);
+    if (!tmp)
+        return GRIB_OUT_OF_MEMORY;
     buf=grib_new_buffer(c,tmp,buflen);
     buf->property = GRIB_MY_BUFFER;
 
@@ -265,6 +298,7 @@ static int read_GRIB(reader* r)
                     i++;
                 }
                 /* Read section 2 */
+                GROW_BUF_IF_REQUIRED(i+sec2len);
                 if((r->read(r->read_data,tmp+i,sec2len-3,&err) != sec2len-3) || err)
                     return err;
                 i += sec2len-3;
@@ -324,6 +358,7 @@ static int read_GRIB(reader* r)
         break;
 
     case 2:
+    case 3:
         length = 0;
 
         if(sizeof(long) >= 8) {
@@ -460,7 +495,7 @@ static int read_HDF5_offset(reader *r, int length, unsigned long* v, unsigned ch
 static int read_HDF5(reader *r)
 {
     /* See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock */
-    unsigned char tmp[36]; /* Should be enough */
+    unsigned char tmp[49]; /* Should be enough */
     unsigned char buf[4];
 
     unsigned char version_of_superblock,  size_of_offsets, size_of_lengths, consistency_flags;
@@ -495,48 +530,97 @@ static int read_HDF5(reader *r)
 
     tmp[i++] = version_of_superblock;
 
-    if(version_of_superblock != 2) {
-        grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid version_of_superblock: %ld, only version 2 is supported", (long)version_of_superblock);
+    if (version_of_superblock == 2 || version_of_superblock == 3) {
+        if( (r->read(r->read_data, &size_of_offsets, 1, &err) != 1) || err) {
+            return err;
+        }
+
+        tmp[i++] = size_of_offsets;
+
+        if(size_of_offsets > 8) {
+            grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid size_of_offsets: %ld, only <= 8 is supported", (long)size_of_offsets);
+            return GRIB_NOT_IMPLEMENTED;
+        }
+
+        if( (r->read(r->read_data, &size_of_lengths, 1, &err) != 1) || err) {
+            return err;
+        }
+
+        tmp[i++] = size_of_lengths;
+
+        if( (r->read(r->read_data, &consistency_flags, 1, &err) != 1) || err) {
+            return err;
+        }
+
+        tmp[i++] = consistency_flags;
+
+        err = read_HDF5_offset(r, size_of_offsets, &base_address, tmp, &i);
+        if(err) {
+            return err;
+        }
+
+        err = read_HDF5_offset(r, size_of_offsets, &superblock_extension_address, tmp, &i);
+        if(err) {
+            return err;
+        }
+
+        err = read_HDF5_offset(r, size_of_offsets, &end_of_file_address, tmp, &i);
+        if(err) {
+            return err;
+        }
+    } else if (version_of_superblock == 0 || version_of_superblock == 1) {
+        char skip[4];
+        unsigned long file_free_space_info;
+        unsigned char version_of_file_free_space, version_of_root_group_symbol_table, version_number_shared_header, ch;
+
+        if( (r->read(r->read_data, &version_of_file_free_space, 1, &err) != 1) || err) return err;
+        tmp[i++] = version_of_file_free_space;
+
+        if( (r->read(r->read_data, &version_of_root_group_symbol_table, 1, &err) != 1) || err) return err;
+        tmp[i++] = version_of_root_group_symbol_table;
+
+        if( (r->read(r->read_data, &ch, 1, &err) != 1) || err) return err; /* reserved */
+        tmp[i++] = ch;
+
+        if( (r->read(r->read_data, &version_number_shared_header, 1, &err) != 1) || err) return err;
+        tmp[i++] = version_number_shared_header;
+
+        if( (r->read(r->read_data, &size_of_offsets, 1, &err) != 1) || err) return err;
+        tmp[i++] = size_of_offsets;
+        if (size_of_offsets > 8) {
+            grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid size_of_offsets: %ld, only <= 8 is supported", (long)size_of_offsets);
+            return GRIB_NOT_IMPLEMENTED;
+        }
+
+        if( (r->read(r->read_data, &size_of_lengths, 1, &err) != 1) || err) return err;
+        tmp[i++] = size_of_lengths;
+
+        if( (r->read(r->read_data, &ch, 1, &err) != 1) || err) return err; /*reserved*/
+        tmp[i++] = ch;
+
+        if( (r->read(r->read_data, &skip, 4, &err) != 4) || err) return err; /* Group Leaf/Internal Node K: 4 bytes */
+        tmp[i++] = skip[0]; tmp[i++] = skip[1]; tmp[i++] = skip[2]; tmp[i++] = skip[3];
+
+        if( (r->read(r->read_data, &skip, 4, &err) != 4) || err) return err; /* consistency_flags: 4 bytes */
+        tmp[i++] = skip[0]; tmp[i++] = skip[1]; tmp[i++] = skip[2]; tmp[i++] = skip[3];
+
+        if (version_of_superblock == 1) {
+            /* Indexed storage internal node K and reserved: only in version 1 of superblock */
+            if( (r->read(r->read_data, &skip, 4, &err) != 4) || err) return err;
+            tmp[i++] = skip[0]; tmp[i++] = skip[1]; tmp[i++] = skip[2]; tmp[i++] = skip[3];
+        }
+
+        err = read_HDF5_offset(r, size_of_offsets, &base_address, tmp, &i);
+        if (err) return err;
+
+        err = read_HDF5_offset(r, size_of_offsets, &file_free_space_info, tmp, &i);
+        if (err) return err;
+
+        err = read_HDF5_offset(r, size_of_offsets, &end_of_file_address, tmp, &i);
+        if (err) return err;
+    } else {
+        grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid version of superblock: %ld", (long)version_of_superblock);
         return GRIB_NOT_IMPLEMENTED;
-    }
-
-    if( (r->read(r->read_data, &size_of_offsets, 1, &err) != 1) || err) {
-        return err;
-    }
-
-    tmp[i++] = size_of_offsets;
-
-
-    if(size_of_offsets > 8) {
-        grib_context_log(c, GRIB_LOG_ERROR,"read_HDF5: invalid size_of_offsets: %ld, only <= 8 is supported", (long)size_of_offsets);
-        return GRIB_NOT_IMPLEMENTED;
-    }
-
-    if( (r->read(r->read_data, &size_of_lengths, 1, &err) != 1) || err) {
-        return err;
-    }
-
-    tmp[i++] = size_of_lengths;
-
-    if( (r->read(r->read_data, &consistency_flags, 1, &err) != 1) || err) {
-        return err;
-    }
-
-    tmp[i++] = consistency_flags;
-
-    err = read_HDF5_offset(r, size_of_offsets, &base_address, tmp, &i);
-    if(err) {
-        return err;
-    }
-
-    err = read_HDF5_offset(r, size_of_offsets, &superblock_extension_address, tmp, &i);
-    if(err) {
-        return err;
-    }
-
-    err = read_HDF5_offset(r, size_of_offsets, &end_of_file_address, tmp, &i);
-    if(err) {
-        return err;
     }
 
     Assert(i <= sizeof(tmp));
@@ -589,7 +673,8 @@ static int read_BUFR(reader *r)
     /*TODO proper context*/
     c=grib_context_get_default();
     tmp=(unsigned char*)malloc(buflen);
-    Assert(tmp);
+    if (!tmp)
+        return GRIB_OUT_OF_MEMORY;
     buf=grib_new_buffer(c,tmp,buflen);
     buf->property = GRIB_MY_BUFFER;
     r->offset=r->tell(r->read_data)-4;
@@ -609,13 +694,18 @@ static int read_BUFR(reader *r)
         i++;
     }
 
+    if(length==0) {
+        grib_buffer_delete(c,buf);
+        return GRIB_INVALID_MESSAGE;
+    }
+
     /* Edition number */
     if(r->read(r->read_data,&tmp[i],1,&err) != 1 || err)
         return err;
 
     edition = tmp[i++];
 
-    /* assert(edition != 1); */
+    /* Assert(edition != 1); */
 
     switch (edition) {
       case 0:
@@ -711,9 +801,9 @@ static int read_BUFR(reader *r)
         break;
       default :
         r->seek_from_start(r->read_data,r->offset+4);
+        grib_buffer_delete(c,buf);
         return GRIB_UNSUPPORTED_EDITION;
     }
-
 
     /* Assert(i <= sizeof(tmp)); */
     err=read_the_rest(r, length, tmp, i, 1);
@@ -725,7 +815,7 @@ static int read_BUFR(reader *r)
     return err;
 }
 
-static int read_any(reader *r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
+static int _read_any(reader *r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
 {
     unsigned char c;
     int err = 0;
@@ -796,6 +886,15 @@ static int read_any(reader *r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_o
 
     return err;
 }
+static int read_any(reader *r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
+{
+    int result = 0;
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&mutex1);
+    result = _read_any(r, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
+    GRIB_MUTEX_UNLOCK(&mutex1);
+    return result;
+}
 
 static int read_any_gts(reader *r)
 {
@@ -805,7 +904,7 @@ static int read_any_gts(reader *r)
     unsigned long magic = 0;
     unsigned long start = 0x010d0d0a;
     unsigned long theEnd = 0x0d0d0a03;
-    unsigned char tmp[32]={0,}; /* Should be enough */
+    unsigned char tmp[128]={0,}; /* See ECC-735 */
     size_t message_size=0;
     size_t already_read=0;
     int i=0;
@@ -1161,6 +1260,19 @@ static size_t stream_read(void* data,void* buffer,size_t len,int* err)
     return n;
 }
 
+/*================== */
+
+
+static void* allocate_buffer(void *data,size_t* length,int *err)
+{
+    alloc_buffer *u  = (alloc_buffer*)data;
+    u->buffer = malloc(*length);
+    u->size=*length;
+    if(u->buffer == NULL)
+        *err = GRIB_OUT_OF_MEMORY; /* Cannot allocate buffer */
+    return u->buffer;
+}
+
 int wmo_read_any_from_stream(void* stream_data,long (*stream_proc)(void*,void* buffer,long len) ,void* buffer,size_t* len)
 {
     int           err;
@@ -1175,6 +1287,7 @@ int wmo_read_any_from_stream(void* stream_data,long (*stream_proc)(void*,void* b
     u.buffer_size  = *len;
 
     r.message_size    = 0;
+    r.offset          = 0;
     r.read_data       = &s;
     r.read            = &stream_read;
     r.seek            = &stream_seek;
@@ -1190,17 +1303,36 @@ int wmo_read_any_from_stream(void* stream_data,long (*stream_proc)(void*,void* b
     return err;
 }
 
+void* wmo_read_any_from_stream_malloc(void* stream_data,long (*stream_proc)(void*,void* buffer,long len) ,size_t *size, int* err)
+{
+    alloc_buffer  u;
+    stream_struct s;
+    reader        r;
+
+    u.buffer = NULL;
+
+    s.stream_data = stream_data;
+    s.stream_proc = stream_proc;
+
+    r.message_size    = 0;
+    r.offset          = 0;
+    r.read_data       = &s;
+    r.read            = &stream_read;
+    r.seek            = &stream_seek;
+    r.seek_from_start = &stream_seek;
+    r.tell            = &stream_tell;
+    r.alloc_data      = &u;
+    r.alloc           = &allocate_buffer;
+    r.headers_only    = 0;
+
+    *err           = read_any(&r, 1, 1, 1, 1);
+    *size          = r.message_size;
+
+    return u.buffer;
+}
+
 /*================== */
 
-static void* allocate_buffer(void *data,size_t* length,int *err)
-{
-    alloc_buffer *u  = (alloc_buffer*)data;
-    u->buffer = malloc(*length);
-    u->size=*length;
-    if(u->buffer == NULL)
-        *err = GRIB_OUT_OF_MEMORY; /* Cannot allocate buffer */
-    return u->buffer;
-}
 
 void *wmo_read_gts_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err)
 {
@@ -1234,6 +1366,8 @@ void *wmo_read_taf_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t 
 
     u.buffer       = NULL;
 
+    r.offset          = 0;
+    r.message_size    = 0;
     r.read_data       = f;
     r.read            = &stdio_read;
     r.seek            = &stdio_seek;
@@ -1257,7 +1391,9 @@ void *wmo_read_metar_from_file_malloc(FILE* f,int headers_only,size_t *size,off_
 
     u.buffer       = NULL;
 
+    r.message_size    = 0;
     r.read_data       = f;
+    r.offset          = 0;
     r.read            = &stdio_read;
     r.seek            = &stdio_seek;
     r.seek_from_start = &stdio_seek_from_start;
@@ -1294,6 +1430,7 @@ static void *_wmo_read_any_from_file_malloc(FILE* f,int* err,size_t *size,off_t 
     r.offset          = 0;
 
     *err           = read_any(&r, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
+
     *size          = r.message_size;
     *offset        = r.offset;
 
@@ -1525,5 +1662,20 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n)
     rewind(f);
 
     return err==GRIB_END_OF_FILE ? 0 : err;
+}
 
+int grib_count_in_filename(grib_context* c, const char* filename, int* n)
+{
+    int err=0;
+    FILE* fp = NULL;
+    if (!c) c=grib_context_get_default();
+    fp = fopen(filename, "r");
+    if (!fp) {
+        grib_context_log(c, GRIB_LOG_ERROR,"grib_count_in_filename: Unable to read file \"%s\"", filename);
+        perror(filename);
+        return GRIB_IO_PROBLEM;
+    }
+    err = grib_count_in_file(c, fp, n);
+    fclose(fp);
+    return err;
 }

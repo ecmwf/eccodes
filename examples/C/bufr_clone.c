@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include "eccodes.h"
 
-void usage(char *app)
+static void usage(const char *app)
 {
     fprintf(stderr,"Usage is: %s input_file ouput_file\n", app);
 }

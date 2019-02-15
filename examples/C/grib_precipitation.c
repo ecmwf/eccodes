@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -11,9 +11,9 @@
 /*
  * C Implementation: grib_precipitation
  *
- * Description: convert fields accumulated from 0 step in  
- *              fields accumulated in the interval between 
- *			    a field and another. In the input file the fields 
+ * Description: convert fields accumulated from 0 step in
+ *              fields accumulated in the interval between
+ *			    a field and another. In the input file the fields
  *              must be in ascending order in the step.
  *              step must be the most external loop (slower varying index)
  *

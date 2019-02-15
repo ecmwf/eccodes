@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -181,7 +181,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
     self->dirty=1;
 }
 
-static unsigned long nbits[32]={
+static const unsigned long nbits[32]={
         0x1, 0x2, 0x4, 0x8, 0x10, 0x20,
         0x40, 0x80, 0x100, 0x200, 0x400, 0x800,
         0x1000, 0x2000, 0x4000, 0x8000, 0x10000, 0x20000,
@@ -193,7 +193,7 @@ static unsigned long nbits[32]={
 static int number_of_bits(unsigned long x, long* result)
 {
     const int count = sizeof(nbits)/sizeof(nbits[0]);
-    unsigned long *n=nbits;
+    const unsigned long *n=nbits;
     *result=0;
     while (x >= *n) {
         n++;
@@ -291,9 +291,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
         pos=idx*l;
         buf+=pos;
-        lvalue  = 0;
-        lvalue  <<= 8;
-        lvalue |= buf[octet++] ;
+        lvalue |= buf[octet++];
 
         for ( bc=1; bc<l; bc++ ) {
             lvalue <<= 8;
@@ -449,6 +447,26 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 #endif
 
 /* Return true(1) if large constant fields are to be created, otherwise false(0) */
+static int producing_large_constant_fields(grib_handle* h, int edition)
+{
+    /* First check if the transient key is set */
+    grib_context* c = h->context;
+    long produceLargeConstantFields=0;
+    if (grib_get_long(h, "produceLargeConstantFields", &produceLargeConstantFields)==GRIB_SUCCESS &&
+        produceLargeConstantFields != 0)
+    {
+        return 1;
+    }
+
+    if (c->gribex_mode_on==1 && edition==1) {
+        return 1;
+    }
+
+    /* Finally check the environment variable via the context */
+    return c->large_constant_fields;
+}
+
+#if 0
 static int producing_large_constant_fields(const grib_context* c, grib_handle* h, int edition)
 {
     /* GRIB-802: If override key is set, ignore env. var and produce compressed fields */
@@ -468,6 +486,7 @@ static int producing_large_constant_fields(const grib_context* c, grib_handle* h
 
     return 0;
 }
+#endif
 
 static int check_range(const double val)
 {
@@ -482,7 +501,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     grib_accessor_data_simple_packing* self =  (grib_accessor_data_simple_packing*)a;
     grib_handle* gh = grib_handle_of_accessor(a);
 
-    size_t i = 0;
+    size_t i;
     size_t n_vals = *len;
     int err = 0;
     int last;
@@ -537,8 +556,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     minmax_val(val+1, n_vals-1, &min, &max);
 #else
     for(i=1;i< n_vals;i++) {
-        if (val[i] > max ) max = val[i];
-        if (val[i] < min ) min = val[i];
+        if      (val[i] > max ) max = val[i];
+        else if (val[i] < min ) min = val[i];
     }
 #endif
     if ((err = check_range(max)) != GRIB_SUCCESS) {
@@ -572,7 +591,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
             Assert(ref == reference_value);
         }
 
-        large_constant_fields = producing_large_constant_fields(c, gh, self->edition);
+        large_constant_fields = producing_large_constant_fields(gh, self->edition);
         if (large_constant_fields) {
             if((err = grib_set_long_internal(gh,self->binary_scale_factor, 0)) !=
                     GRIB_SUCCESS)

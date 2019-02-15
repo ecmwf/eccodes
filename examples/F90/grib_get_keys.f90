@@ -1,8 +1,8 @@
-! Copyright 2005-2016 ECMWF.
+! Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-! 
+!
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
@@ -13,7 +13,7 @@
 program grib_get_keys
   use eccodes
   implicit none
-  
+
   integer                            ::  ifile
   integer                            ::  iret
   integer                            ::  igrib
@@ -28,59 +28,56 @@ program grib_get_keys
   real                               ::  average,min_val, max_val
   integer                            ::  is_missing
   character(len=10)                  ::  open_mode='r'
-  
+
   call codes_open_file(ifile, &
        '../../data/reduced_latlon_surface.grib1', open_mode)
-  
+
   ! Loop on all the messages in a file.
 
   ! A new GRIB message is loaded from file
   ! igrib is the grib id to be used in subsequent calls
-  call  codes_grib_new_from_file(ifile,igrib, iret) 
+  call  codes_grib_new_from_file(ifile,igrib, iret)
 
   LOOP: DO WHILE (iret /= CODES_END_OF_FILE)
-
-    ! For debugging
-    call grib_dump(igrib)
 
     ! Check if the value of the key is MISSING
     is_missing=0;
     call codes_is_missing(igrib,'Ni',is_missing);
     if ( is_missing /= 1 ) then
         ! Key value is not missing so get as an integer
-        call codes_get(igrib,'Ni',numberOfPointsAlongAParallel) 
+        call codes_get(igrib,'Ni',numberOfPointsAlongAParallel)
         write(*,*) 'numberOfPointsAlongAParallel=', &
              numberOfPointsAlongAParallel
     else
         write(*,*) 'numberOfPointsAlongAParallel is missing'
-    endif     
+    endif
 
     ! Get as an integer
-    call codes_get(igrib,'Nj',numberOfPointsAlongAMeridian) 
+    call codes_get(igrib,'Nj',numberOfPointsAlongAMeridian)
     write(*,*) 'numberOfPointsAlongAMeridian=', &
          numberOfPointsAlongAMeridian
 
     ! Get as a real
     call codes_get(igrib, 'latitudeOfFirstGridPointInDegrees', &
-          latitudeOfFirstPointInDegrees) 
+          latitudeOfFirstPointInDegrees)
     write(*,*) 'latitudeOfFirstGridPointInDegrees=', &
           latitudeOfFirstPointInDegrees
 
     ! Get as a real
     call codes_get(igrib, 'longitudeOfFirstGridPointInDegrees', &
-          longitudeOfFirstPointInDegrees) 
+          longitudeOfFirstPointInDegrees)
     write(*,*) 'longitudeOfFirstGridPointInDegrees=', &
           longitudeOfFirstPointInDegrees
 
     ! Get as a real
     call codes_get(igrib, 'latitudeOfLastGridPointInDegrees', &
-          latitudeOfLastPointInDegrees) 
+          latitudeOfLastPointInDegrees)
     write(*,*) 'latitudeOfLastGridPointInDegrees=', &
           latitudeOfLastPointInDegrees
 
     ! Get as a real
     call codes_get(igrib, 'longitudeOfLastGridPointInDegrees', &
-          longitudeOfLastPointInDegrees) 
+          longitudeOfLastPointInDegrees)
     write(*,*) 'longitudeOfLastGridPointInDegrees=', &
           longitudeOfLastPointInDegrees
 

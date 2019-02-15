@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,6 +15,18 @@
  ***************************************************************************/
 
 #include "grib_api_internal.h"
+
+/* For debugging purposes */
+void grib_darray_print(const char* title, const grib_darray* darray)
+{
+    size_t i;
+    Assert(darray);
+    printf("%s: darray.n=%lu  \t", title, (unsigned long)darray->n);
+    for (i=0; i<darray->n; i++) {
+        printf("darray[%lu]=%g\t", (unsigned long)i, darray->v[i]);
+    }
+    printf("\n");
+}
 
 grib_darray* grib_darray_new_from_array(grib_context* c,double* a,size_t size)
 {

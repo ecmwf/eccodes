@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -127,7 +127,7 @@ typedef struct PointStore {
 } PointStore ;
 
 /* Comparison function to sort points by distance */
-int compare_points(const void* a, const void* b)
+static int compare_points(const void* a, const void* b)
 {
     PointStore *pA = (PointStore*)a;
     PointStore *pB = (PointStore*)b;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -22,14 +22,16 @@ grib_option grib_options[]={
         /*{"n:","noise percentage","\n\t\tAdd noise to the data values. The noise added is the given percentage of the data value.\n",0,1,0},*/
         {"p:",0,0,1,1,0},
         {"P:",0,0,0,1,0},
-        {"w:","key[:{s/d/i}]{=/!=}value,key[:{s/d/i}]=value,...",
-              "\n\t\tWhere clause.\n\t\tSet is only executed for grib messages matching all the "
-              "key/value constraints.\n\t\tIf a grib message does not match the constraints it is"
+        {"w:","key[:{s|d|i}]{=|!=}value,key[:{s|d|i}]=value,...",
+              "\n\t\tWhere clause.\n\t\tSet is only executed for GRIB messages matching all the "
+              "key/value constraints.\n\t\tIf a GRIB message does not match the constraints it is"
               " copied unchanged\n\t\tto the output_grib_file. This behaviour can be changed "
               "setting the option -S."
               "\n\t\tA valid constraint is of type key=value or key!=value."
               "\n\t\tFor each key a string (key:s), a double (key:d) or"
-              " an integer (key:i)\n\t\ttype can be defined. Default type is string.\n",0,1,0},
+              " an integer (key:i)\n\t\ttype can be defined. Default type is string."
+              "\n\t\tIn the value you can also use the forward-slash character '/' to specify an OR condition (i.e. a logical disjunction)"
+              "\n\t\tNote: only one -w clause is allowed.\n",0,1,0},
         {"q",0,0,1,0,0},
         {"7",0,0,0,1,0},
         {"S",0,0,0,1,0},
@@ -43,11 +45,11 @@ grib_option grib_options[]={
         {"v",0,0,0,1,0}
 };
 
-char* grib_tool_description="Sets key/value pairs in the input grib file and writes"
+const char* grib_tool_description="Sets key/value pairs in the input GRIB file and writes"
         "\n\teach message to the output_grib_file."
         "\n\tIt fails when an error occurs (e.g. key not found).";
-char* grib_tool_name="grib_set";
-char* grib_tool_usage="[options] grib_file grib_file ... output_grib_file";
+const char* grib_tool_name="grib_set";
+const char* grib_tool_usage="[options] grib_file grib_file ... output_grib_file";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 

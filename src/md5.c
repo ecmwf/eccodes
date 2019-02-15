@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,23 +9,23 @@
  */
 
 #include "md5.h"
+#include "grib_api_internal.h"
 
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
 
 /* On CRAY, disable all automatic optimisations for this module */
 #if _CRAYC
     #pragma _CRI noopt
 #endif
 
-static unsigned long r[] = {
+static const unsigned long r[] = {
     7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
     5,  9, 14, 20, 5,  9, 14, 20, 5,  9, 14, 20, 5,  9, 14, 20,
     4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
     6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21};
 
-static unsigned long k[] = {
+static const unsigned long k[] = {
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee, 0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
     0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be, 0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821,
     0xf61e2562, 0xc040b340, 0x265e5a51, 0xe9b6c7aa, 0xd62f105d, 0x02441453, 0xd8a1e681, 0xe7d3fbc8,
@@ -215,97 +215,93 @@ static void grib_md5_flush(grib_md5_state* s)
 
 void grib_md5_init(grib_md5_state* s)
 {
-	assert( sizeof(UnsignedInt64) == 8 );
-	memset(s,0,sizeof(grib_md5_state));
-	s->h0 = 0x67452301;
-	s->h1 = 0xefcdab89;
-	s->h2 = 0x98badcfe;
-	s->h3 = 0x10325476;
-
+    Assert( sizeof(uint64_t) == 8 );
+    memset(s,0,sizeof(grib_md5_state));
+    s->h0 = 0x67452301;
+    s->h1 = 0xefcdab89;
+    s->h2 = 0x98badcfe;
+    s->h3 = 0x10325476;
 }
 
-void grib_md5_add(grib_md5_state* s,const void* data,size_t len) {
+void grib_md5_add(grib_md5_state* s,const void* data,size_t len)
+{
+    unsigned char* p = (unsigned char*)data;
+    s->size += len;
 
-	unsigned char* p = (unsigned char*)data;
-	s->size += len;
+    while(len-- > 0) {
+        s->bytes[s->byte_count++] = *p++;
 
-	while(len-- > 0) {
-		s->bytes[s->byte_count++] = *p++;
+        if(s->byte_count == 4) {
+            s->words[s->word_count++] = (s->bytes[3]<<24)|(s->bytes[2]<<16)|(s->bytes[1]<<8)|(s->bytes[0]);
+            s->byte_count = 0;
 
-		if(s->byte_count == 4) {
-			s->words[s->word_count++] = (s->bytes[3]<<24)|(s->bytes[2]<<16)|(s->bytes[1]<<8)|(s->bytes[0]);
-			s->byte_count = 0;
-
-			if(s->word_count == 16)
-				grib_md5_flush(s);
-		}
-
-	}
+            if(s->word_count == 16)
+                grib_md5_flush(s);
+        }
+    }
 }
 
 void grib_md5_end(grib_md5_state* s, char *digest)
 {
-	UnsignedInt64 h = 8;
-	UnsignedInt64 bits, leng = s->size * h;
-	unsigned char c = 0x80;
-	int i;
+    uint64_t h = 8;
+    uint64_t bits, leng = s->size * h;
+    unsigned char c = 0x80;
+    int i;
 
+    grib_md5_add(s,&c,1);
 
-	grib_md5_add(s,&c,1);
+    bits = s->size * h;
+    c = 0;
+    while( (bits % 512) != 448)
+    {
+        grib_md5_add(s,&c,1);
+        bits = s->size * h;
+    }
 
-	bits = s->size * h;
-	c = 0;
-	while( (bits % 512) != 448)
-	{
-		grib_md5_add(s,&c,1);
-		bits = s->size * h;
-	}
-
-
-	for(i = 0; i < 8 ; i++) {
-		c =  leng & 0xff;
-		leng >>= 8;
-		grib_md5_add(s,&c,1);
-	}
+    for(i = 0; i < 8 ; i++) {
+        c =  leng & 0xff;
+        leng >>= 8;
+        grib_md5_add(s,&c,1);
+    }
 
 #define U(x) ((unsigned int)(x))
 
-	sprintf(digest, "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
-    				U(s->h0 & 0xff), U((s->h0 >> 8) & 0xff), U((s->h0 >> 16) & 0xff), U((s->h0 >> 24) & 0xff),
-    				U(s->h1 & 0xff), U((s->h1 >> 8) & 0xff), U((s->h1 >> 16) & 0xff), U((s->h1 >> 24) & 0xff),
-    				U(s->h2 & 0xff), U((s->h2 >> 8) & 0xff), U((s->h2 >> 16) & 0xff), U((s->h2 >> 24) & 0xff),
-    				U(s->h3 & 0xff), U((s->h3 >> 8) & 0xff), U((s->h3 >> 16) & 0xff), U((s->h3 >> 24) & 0xff));
+    sprintf(digest, "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+            U(s->h0 & 0xff), U((s->h0 >> 8) & 0xff), U((s->h0 >> 16) & 0xff), U((s->h0 >> 24) & 0xff),
+            U(s->h1 & 0xff), U((s->h1 >> 8) & 0xff), U((s->h1 >> 16) & 0xff), U((s->h1 >> 24) & 0xff),
+            U(s->h2 & 0xff), U((s->h2 >> 8) & 0xff), U((s->h2 >> 16) & 0xff), U((s->h2 >> 24) & 0xff),
+            U(s->h3 & 0xff), U((s->h3 >> 8) & 0xff), U((s->h3 >> 16) & 0xff), U((s->h3 >> 24) & 0xff));
 }
 
 #if 0
 
 main(int argc, char **argv)
 {
-	char digest[1024];
+    char digest[1024];
 
-	const char* p = "The quick brown fox jumps over the lazy dog";
-	grib_md5_state s;
-	grib_md5_init(&s);
-	if(argc>1) {
-		char buffer[10240];
-		long len = 0;
-		FILE* f = fopen64(argv[1],"r");
-		if(!f) {
-			perror(argv[1]);
-			return 1;
-		}
-		while((len = fread(buffer, 1, sizeof(buffer), f)) > 0) {
-			grib_md5_add(&s,buffer,len);
-		}
-		fclose(f);
-	}
-	else
-	{
-		grib_md5_add(&s,p,strlen(p));
-	}
-	grib_md5_end(&s, digest);
+    const char* p = "The quick brown fox jumps over the lazy dog";
+    grib_md5_state s;
+    grib_md5_init(&s);
+    if(argc>1) {
+        char buffer[10240];
+        long len = 0;
+        FILE* f = fopen64(argv[1],"r");
+        if(!f) {
+            perror(argv[1]);
+            return 1;
+        }
+        while((len = fread(buffer, 1, sizeof(buffer), f)) > 0) {
+            grib_md5_add(&s,buffer,len);
+        }
+        fclose(f);
+    }
+    else
+    {
+        grib_md5_add(&s,p,strlen(p));
+    }
+    grib_md5_end(&s, digest);
 
-	printf("%s\n",digest);
+    printf("%s\n",digest);
 }
 
 #endif

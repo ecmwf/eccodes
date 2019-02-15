@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -176,6 +176,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
   long year,month,day;
   
   ret=grib_julian_to_datetime(*val,&year,&month,&day,&hour,&minute,&second);
+  if (ret!=0) return ret;
 
   date=year * 10000 + month * 100 + day;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -164,11 +164,13 @@ typedef struct grib_points            codes_points;
     \struct codes_keys_iterator
 */
 typedef struct grib_keys_iterator     codes_keys_iterator;
+typedef struct bufr_keys_iterator     codes_bufr_keys_iterator;
 
 typedef struct grib_fieldset          codes_fieldset;
 typedef struct grib_order_by          codes_order_by;
 typedef struct grib_where             codes_where;
 typedef struct grib_sarray            codes_sarray;
+typedef struct grib_oarray            codes_oarray;
 typedef struct grib_darray            codes_darray;
 typedef struct grib_iarray            codes_iarray;
 typedef struct grib_vdarray           codes_vdarray;
@@ -179,7 +181,7 @@ typedef struct grib_util_packing_spec codes_util_packing_spec;
 typedef struct grib_util_grid_spec    codes_util_grid_spec;
 
 
-codes_fieldset *codes_fieldset_new_from_files(codes_context *c, char *filenames[], int nfiles, char **keys, int nkeys, char *where_string, char *order_by_string, int *err);
+codes_fieldset *codes_fieldset_new_from_files(codes_context *c, char *filenames[], int nfiles, char **keys, int nkeys, const char *where_string, const char *order_by_string, int *err);
 
 void codes_fieldset_delete(codes_fieldset* set);
 void codes_fieldset_rewind(codes_fieldset* set);
@@ -354,6 +356,15 @@ The codes_handle is the structure giving access to parsed message values by keys
 */
 int codes_count_in_file(codes_context* c, FILE* f,int* n);
 
+/**
+*  Counts the messages contained in a file.
+*
+* @param c           : the context from which the handle will be created (NULL for default context)
+* @param filename    : the path to the file
+* @param n           : the number of messages in the file
+* @return            0 if OK, integer value on error
+*/
+int codes_count_in_filename(codes_context* c, const char* filename, int* n);
 
 /**
 *  Create a handle from a file resource.
@@ -419,7 +430,7 @@ codes_string_list* codes_grib_util_get_mars_param(const char* param_id);
 * @param data_len    : the length of the message in number of bytes
 * @return            the new handle, NULL if the message is invalid or a problem is encountered
 */
-codes_handle* codes_handle_new_from_message(codes_context* c, void* data, size_t data_len);
+codes_handle* codes_handle_new_from_message(codes_context* c, const void* data, size_t data_len);
 
 /**
 *  Create a handle from a user message in memory. The message will not be freed at the end.
@@ -447,24 +458,24 @@ codes_handle* codes_handle_new_from_message_copy(codes_context* c, const void* d
 
 
 /**
- *  Create a handle from a GRIB message contained in a samples directory.
+ *  Create a handle from a GRIB message contained in the samples directory.
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param res_name    : the resource name
+ * @param sample_name : the name of the sample file (without the .tmpl extension)
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
-codes_handle* codes_grib_handle_new_from_samples (codes_context* c, const char* res_name)  ;
+codes_handle* codes_grib_handle_new_from_samples (codes_context* c, const char* sample_name);
 
 /**
  *  Create a handle from a BUFR message contained in a samples directory.
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param res_name    : the resource name
+ * @param sample_name : the name of the sample file (without the .tmpl extension)
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
-codes_handle* codes_bufr_handle_new_from_samples (codes_context* c, const char* res_name)  ;
+codes_handle* codes_bufr_handle_new_from_samples (codes_context* c, const char* sample_name);
 
 
 /**
@@ -757,7 +768,7 @@ int codes_get_double(codes_handle* h, const char* key, double* value            
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param i           : zero based index
+* @param i           : zero-based index
 * @param value       : the address of a double where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
@@ -768,26 +779,36 @@ int codes_get_double_element(codes_handle* h, const char* key, int i, double* va
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param i           : zero based array of indexes
+* @param i           : zero-based array of indexes
 * @param size        : size of the i and value arrays
-* @param value       : the address of a double where the data will be retrieved
+* @param value       : the double array for the data values
 * @return            0 if OK, integer value on error
 */
-int codes_get_double_elements(codes_handle* h, const char* key, int* i, long size,double* value);
+int codes_get_double_elements(codes_handle* h, const char* key, int* i, long size, double* value);
 
 /**
 *  Get a string value from a key, if several keys of the same name are present, the last one is returned
 * @see  codes_set_string
 *
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param mesg       : the address of a string where the data will be retrieved
-* @param length      : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
-* @return            0 if OK, integer value on error
+* @param h         : the handle to get the data from
+* @param key       : the key to be searched
+* @param mesg      : the address of a string where the data will be retrieved
+* @param length    : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
+* @return          0 if OK, integer value on error
 */
 int codes_get_string(codes_handle* h, const char* key, char* mesg, size_t *length  );
 
-int codes_get_string_array(codes_handle* h, const char* name, char** val, size_t *length);
+/**
+*  Get string array values from a key. If several keys of the same name are present, the last one is returned
+* @see  codes_set_string_array
+*
+* @param h       : the handle to get the data from
+* @param key     : the key to be searched
+* @param vals    : the address of a string array where the data will be retrieved
+* @param length  : the address of a size_t that contains allocated length of the array on input, and that contains the actual length of the array on output
+* @return        0 if OK, integer value on error
+*/
+int codes_get_string_array(codes_handle* h, const char* key, char** vals, size_t *length);
 
 /**
 *  Get raw bytes values from a key. If several keys of the same name are present, the last one is returned
@@ -805,11 +826,11 @@ int codes_get_bytes(codes_handle* h, const char* key, unsigned char* bytes, size
 *  Get double array values from a key. If several keys of the same name are present, the last one is returned
 * @see  codes_set_double_array
 *
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param vals       : the address of a double array where the data will be retrieved
-* @param length      : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
-* @return            0 if OK, integer value on error
+* @param h        : the handle to get the data from
+* @param key      : the key to be searched
+* @param vals     : the address of a double array where the data will be retrieved
+* @param length   : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
+* @return         0 if OK, integer value on error
 */
 int codes_get_double_array(codes_handle* h, const char* key, double* vals, size_t *length);
 
@@ -1098,14 +1119,12 @@ attributes or by the namespace they belong to.
 /*! Create a new iterator from a valid and initialised handle.
 *  @param h             : the handle whose keys you want to iterate
 *  @param filter_flags  : flags to filter out some of the keys through their attributes
-*  @param name_space     : if not null the iteration is carried out only on
+*  @param name_space    : if not null the iteration is carried out only on
 *                         keys belonging to the namespace passed. (NULL for all the keys)
 *  @return              keys iterator ready to iterate through keys according to filter_flags
-*                         and namespace
+*                       and namespace
 */
 codes_keys_iterator* codes_keys_iterator_new(codes_handle* h,unsigned long filter_flags, const char* name_space);
-codes_keys_iterator* codes_bufr_keys_iterator_new(codes_handle* h);
-codes_keys_iterator* codes_bufr_data_section_keys_iterator_new(codes_handle* h);
 
 /* codes_bufr_copy_data copies all the values in the data section that are present in the same position in the data tree
  * and with the same number of values to the output handle. Should not exit with error if the output handle has a different
@@ -1116,37 +1135,33 @@ char **codes_bufr_copy_data_return_copied_keys(grib_handle *hin, grib_handle *ho
 int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout);
 
 
-/*! Step to the next iterator.
+/*! Step to the next item from the keys iterator.
 *  @param kiter         : valid codes_keys_iterator
 *  @return              1 if next iterator exists, 0 if no more elements to iterate on
 */
 int codes_keys_iterator_next(codes_keys_iterator *kiter);
-int codes_bufr_keys_iterator_next(codes_keys_iterator *kiter);
 
 
-/*! get the key name from the iterator
+/*! get the key name from the keys iterator
 *  @param kiter         : valid codes_keys_iterator
 *  @return              key name
 */
 const char* codes_keys_iterator_get_name(codes_keys_iterator *kiter);
 
-/*! Delete the iterator.
+/*! Delete the keys iterator.
 *  @param kiter         : valid codes_keys_iterator
 *  @return              0 if OK, integer value on error
 */
 int codes_keys_iterator_delete( codes_keys_iterator* kiter);
 
-/*! Rewind the iterator.
+/*! Rewind the keys iterator.
 *  @param kiter         : valid codes_keys_iterator
 *  @return              0 if OK, integer value on error
 */
 int codes_keys_iterator_rewind(codes_keys_iterator* kiter);
 
-char* codes_bufr_keys_iterator_get_name(codes_keys_iterator* kiter);
-char* codes_bufr_keys_iterator_get_next_attribute_name(grib_keys_iterator* kiter);
 
 int codes_keys_iterator_set_flags(codes_keys_iterator *kiter,unsigned long flags);
-
 int codes_keys_iterator_get_long(codes_keys_iterator *kiter, long *v, size_t *len);
 int codes_keys_iterator_get_double(codes_keys_iterator *kiter, double *v, size_t *len);
 int codes_keys_iterator_get_string(codes_keys_iterator *kiter, char *v, size_t *len);
@@ -1174,7 +1189,7 @@ void codes_check(const char* call,const char*  file,int line,int e,const char* m
 
 int codes_set_values(codes_handle* h, codes_values* codes_values, size_t arg_count);
 codes_handle* codes_handle_new_from_partial_message_copy(codes_context* c, const void* data, size_t size);
-codes_handle* codes_handle_new_from_partial_message(codes_context* c,void* data, size_t buflen);
+codes_handle* codes_handle_new_from_partial_message(codes_context* c, const void* data, size_t buflen);
 int codes_is_missing(codes_handle* h, const char* key, int* err);
 int codes_is_defined(codes_handle* h, const char* key);
 int codes_set_missing(codes_handle* h, const char* key);
@@ -1187,6 +1202,8 @@ long codes_julian_to_date(long jdate);
 long codes_date_to_julian(long ddate);
 
 void codes_get_reduced_row(long pl,double lon_first,double lon_last,long* npoints,long* ilon_first, long* ilon_last );
+void codes_get_reduced_row_p(long pl, double lon_first, double lon_last, long *npoints, double *olon_first, double *olon_last);
+
 
 /* read products */
 int codes_get_message_offset(codes_handle* h,off_t* offset);

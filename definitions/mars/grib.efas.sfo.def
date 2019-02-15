@@ -1,0 +1,21 @@
+# Simulation forced with observations (EFAS)
+# Water Balance
+
+# ECC-701
+alias mars.step = endStep;
+
+alias mars.date = dateOfForecast;
+alias mars.time = timeOfForecast;
+#meta valDate validity_date(dataDate,dataTime,endStep,stepUnits): no_copy;
+#meta valTime validity_time(dataDate,dataTime,endStep,stepUnits): no_copy;
+#alias mars.date = valDate;
+#alias mars.time = valTime;
+
+#meta efas_suite_name sprintf("%s_%s_%s", inputOriginatingCentre, efas_forecast, efas_post_proc) : no_copy;
+alias mars.origin = inputOriginatingCentre;
+
+alias mars.anoffset=anoffset;
+
+# We need this because 'efas_post_proc' is defined later
+meta efas_model sprintf("%s", efas_post_proc) : no_copy;
+alias mars.model = efas_model;

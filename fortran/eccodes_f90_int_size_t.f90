@@ -1,4 +1,4 @@
-! Copyright 2005-2016 ECMWF.
+! Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -11,7 +11,6 @@
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
-  !>
   !>
   !> @param ifile       id of the opened file to be used in all the file functions.
   !> @param buffer      buffer to be read
@@ -27,7 +26,6 @@
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
-  !>
   !>
   !> @param ifile       id of the opened file to be used in all the file functions.
   !> @param buffer      buffer to be read
@@ -46,7 +44,6 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
   !>
-  !>
   !> @param ifile       id of the opened file to be used in all the file functions.
   !> @param buffer      buffer to be written
   !> @param nbytes      number of bytes to be written
@@ -64,7 +61,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param msgid       id of the message loaded in memory
   !> @param nbytes      size in bytes of the message
   !> @param status      CODES_SUCCESS if OK, integer value on error
   interface codes_get_message_size

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -22,7 +22,7 @@ files="
  regular_latlon_surface_constant.grib2
 "
 
-if [ $HAVE_JPG -eq 1 ]; then
+if [ $HAVE_JPEG -eq 1 ]; then
  files="multi.grib2 v.grib2"$files
 fi
 
@@ -34,10 +34,10 @@ fi
 
 for file in $files; do
   infile=${data_dir}/$file
-  ${tools_dir}grib_set -r -s packingType=grid_png $infile $temp >/dev/null
+  ${tools_dir}/grib_set -r -s packingType=grid_png $infile $temp >/dev/null
 
-  ${tools_dir}grib_get '-F%.2f' -p min,max,avg $infile > $temp1
-  ${tools_dir}grib_get '-F%.2f' -p min,max,avg $temp   > $temp2
+  ${tools_dir}/grib_get '-F%.2f' -p min,max,avg $infile > $temp1
+  ${tools_dir}/grib_get '-F%.2f' -p min,max,avg $temp   > $temp2
   diff $temp1 $temp2
 
   rm -f $temp $temp1 $temp2

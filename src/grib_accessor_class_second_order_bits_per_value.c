@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -140,7 +140,8 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-static unsigned long nbits[32]={
+/*
+static const unsigned long nbits[32]={
         0x1, 0x2, 0x4, 0x8, 0x10, 0x20,
         0x40, 0x80, 0x100, 0x200, 0x400, 0x800,
         0x1000, 0x2000, 0x4000, 0x8000, 0x10000, 0x20000,
@@ -148,10 +149,29 @@ static unsigned long nbits[32]={
         0x1000000, 0x2000000, 0x4000000, 0x8000000, 0x10000000, 0x20000000,
         0x40000000, 0x80000000
 };
+*/
+static const unsigned long nbits[64]={
+        0x1,                 0x2,                 0x4,                 0x8,
+        0x10,                0x20,                0x40,                0x80,
+        0x100,               0x200,               0x400,               0x800,
+        0x1000,              0x2000,              0x4000,              0x8000,
+        0x10000,             0x20000,             0x40000,             0x80000,
+        0x100000,            0x200000,            0x400000,            0x800000,
+        0x1000000,           0x2000000,           0x4000000,           0x8000000,
+        0x10000000,          0x20000000,          0x40000000,          0x80000000,
+        0x100000000,         0x200000000,         0x400000000,         0x800000000,
+        0x1000000000,        0x2000000000,        0x4000000000,        0x8000000000,
+        0x10000000000,       0x20000000000,       0x40000000000,       0x80000000000,
+        0x100000000000,      0x200000000000,      0x400000000000,      0x800000000000,
+        0x1000000000000,     0x2000000000000,     0x4000000000000,     0x8000000000000,
+        0x10000000000000,    0x20000000000000,    0x40000000000000,    0x80000000000000,
+        0x100000000000000,   0x200000000000000,   0x400000000000000,   0x800000000000000,
+        0x1000000000000000,  0x2000000000000000,  0x4000000000000000,  0x8000000000000000
+};
 
 static int number_of_bits(unsigned long x, long* result)
 {
-    unsigned long *n=nbits;
+    const unsigned long *n=nbits;
     const int count = sizeof(nbits)/sizeof(nbits[0]);
     *result=0;
     while (x>=*n) {
@@ -159,7 +179,7 @@ static int number_of_bits(unsigned long x, long* result)
         (*result)++;
         if (*result >= count) {
             return GRIB_ENCODING_ERROR;
-    }
+        }
     }
     return GRIB_SUCCESS;
 }
@@ -185,7 +205,7 @@ static int pack_long(grib_accessor* a, const long* val,size_t *len)
     return 0;
 }
 
-static int  unpack_long(grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     int ret=GRIB_SUCCESS;
     size_t size=0;
@@ -223,8 +243,8 @@ static int  unpack_long(grib_accessor* a, long* val, size_t *len)
     max=values[0];
     min=max;
     for (i=1;i<size;i++) {
-        if (max<values[i]) max=values[i];
-        if (min>values[i]) min=values[i];
+        if      (max<values[i]) max=values[i];
+        else if (min>values[i]) min=values[i];
     }
 
     d=grib_power(decimalScaleFactor,10);

@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
-# START 2/template.3.90 ----------------------------------------------------------------------
 # TEMPLATE 3.90, Space view perspective or orthographic
 include "grib2/template.3.shape_of_the_earth.def";
 

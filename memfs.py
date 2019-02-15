@@ -3,17 +3,30 @@ from __future__ import print_function
 import os
 import re
 import sys
+import binascii
 
 assert len(sys.argv) > 2
 
+# For now exclude GRIB3 as it is still experimental
+EXCLUDED = ['grib3']
+
 dirs = [os.path.realpath(x) for x in sys.argv[1:-1]]
 print(dirs)
-# exit(1)
 
 FILES = {}
 NAMES = []
 
-g = open(sys.argv[-1], "w")
+# Binary to ASCII function. Different in Python 2 and 3
+try:
+    str(b'\x23\x20','ascii')
+    ascii = lambda x: str(x, 'ascii')  # Python 3
+except:
+    ascii = lambda x: str(x)           # Python 2
+
+
+# The last argument is the path of the generated C file
+output_file_path = sys.argv[-1]
+g = open(output_file_path, "w")
 
 for directory in dirs:
 
@@ -21,13 +34,20 @@ for directory in dirs:
     dname = os.path.basename(directory)
     NAMES.append(dname)
 
-    for dirname, _, files in os.walk(directory):
+    for dirpath, dirnames, files in os.walk(directory, followlinks=True):
+        for ex in EXCLUDED:
+            if ex in dirnames:
+                print('Note: %s/%s will not be included.' % (dirpath,ex))
+
+        # Prune the walk by modifying the dirnames in-place
+        dirnames[:] = [dirname for dirname in dirnames if dirname not in EXCLUDED]
         for name in files:
-            full = '%s/%s' % (dirname, name)
+            full = '%s/%s' % (dirpath, name)
             _, ext = os.path.splitext(full)
             if ext not in ['.def', '.table', '.tmpl']:
                 continue
 
+            full = full.replace("\\","/")
             fname = full[full.find("/%s/" % (dname,)):]
             #print("MEMFS add", fname)
             name = re.sub(r'\W', '_', fname)
@@ -37,10 +57,19 @@ for directory in dirs:
 
             print('static const unsigned char %s[] = {' % (name,), file=g)
 
-            with open(full) as f:
+            with open(full, 'rb') as f:
                 i = 0
-                for n in re.findall('..', f.read().encode("hex")):
-                    print("0x%s," % (n,), end="", file=g)
+                #Python 2
+                #fcont = f.read().encode("hex")
+
+                #Python 2 and 3
+                fcont = binascii.hexlify(f.read())
+
+                # Read two characters at a time and convert to C hex
+                # e.g. 23 -> 0x23
+                for n in range(0, len(fcont), 2):
+                    twoChars = ascii(fcont[n:n+2])
+                    print("0x%s," % (twoChars,), end="", file=g)
                     i += 1
                     if (i % 20) == 0:
                         print("", file=g)
@@ -49,7 +78,7 @@ for directory in dirs:
 
 print("""
 #include "eccodes_config.h"
-#ifdef EC_HAVE_FMEMOPEN
+#ifdef ECCODES_HAVE_FMEMOPEN
 #define _GNU_SOURCE
 #endif
 
@@ -57,6 +86,7 @@ print("""
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include "eccodes_windef.h"
 
 struct entry {
     const char* path;
@@ -72,7 +102,7 @@ for k, v in sorted(items):
 
 print("""};
 
-#ifdef EC_HAVE_FUNOPEN
+#if defined(ECCODES_HAVE_FUNOPEN) && !defined(ECCODES_HAVE_FMEMOPEN)
 
 typedef struct mem_file {
     const char* buffer;
@@ -101,11 +131,9 @@ static int write_mem(void* data, const char* buf, int len) {
 
 static fpos_t seek_mem(void *data, fpos_t pos, int whence) {
     mem_file* f = (mem_file*)data;
-
     long newpos = 0;
 
     switch (whence) {
-
     case SEEK_SET:
         newpos = (long)pos;
         break;
@@ -128,7 +156,6 @@ static fpos_t seek_mem(void *data, fpos_t pos, int whence) {
 
   f->pos = newpos;
   return newpos;
-
 }
 
 static int close_mem(void *data) {
@@ -145,7 +172,49 @@ static FILE* fmemopen(const char* buffer, size_t size, const char* mode){
     f->size = size;
 
     return funopen(f, &read_mem, &write_mem, &seek_mem, &close_mem);
+}
 
+#elif defined(ECCODES_ON_WINDOWS)
+
+#include <io.h>
+#include <fcntl.h>
+#include <windows.h>
+
+static FILE *fmemopen(void* buffer, size_t size, const char* mode) {
+    char path[MAX_PATH - 13];
+    if (!GetTempPath(sizeof(path), path))
+        return NULL;
+
+    char filename[MAX_PATH + 1];
+    if (!GetTempFileName(path, "eccodes", 0, filename))
+        return NULL;
+
+    HANDLE h = CreateFile(filename,
+                          GENERIC_READ | GENERIC_WRITE,
+                          0,
+                          NULL,
+                          OPEN_ALWAYS,
+                          FILE_ATTRIBUTE_TEMPORARY | FILE_FLAG_DELETE_ON_CLOSE,
+                          NULL);
+
+    if (h == INVALID_HANDLE_VALUE)
+        return NULL;
+
+    int fd = _open_osfhandle((intptr_t)h, _O_RDWR);
+    if (fd < 0) {
+        CloseHandle(h);
+        return NULL;
+    }
+
+    FILE* f = _fdopen(fd, "w+");
+    if (!f) {
+        _close(fd);
+        return NULL;
+    }
+
+    fwrite(buffer, size, 1, f);
+    rewind(f);
+    return f;
 }
 
 #endif
@@ -155,9 +224,7 @@ static size_t entries_count = sizeof(entries)/sizeof(entries[0]);
 static const unsigned char* find(const char* path, size_t* length) {
     size_t i;
 
-
     for(i = 0; i < entries_count; i++) {
-
         if(strcmp(path, entries[i].path) == 0) {
             /*printf("Found in MEMFS %s\\n", path);*/
             *length = entries[i].length;
@@ -166,7 +233,6 @@ static const unsigned char* find(const char* path, size_t* length) {
     }
 
     return NULL;
-
 }
 
 int codes_memfs_exists(const char* path) {
@@ -184,3 +250,4 @@ FILE* codes_memfs_open(const char* path) {
 }
 
 """, file=g)
+print ('Created ',output_file_path)

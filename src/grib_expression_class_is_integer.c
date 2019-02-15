@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,7 +15,6 @@
 
    START_CLASS_DEF
    CLASS      = expression
-   IMPLEMENTS = init_class
    IMPLEMENTS = destroy
    IMPLEMENTS = native_type
    IMPLEMENTS = get_name
@@ -140,9 +139,18 @@ static int evaluate_double(grib_expression *g,grib_handle *h,double* result)
 static string evaluate_string(grib_expression* g,grib_handle* h,char* buf,size_t* size,int* err)
 {
   long lresult=0;
+  double dresult=0.0;
 
-  *err=evaluate_long(g,h,&lresult);
-  sprintf(buf,"%ld",lresult);
+  switch (grib_expression_native_type(h, g)) {
+    case GRIB_TYPE_LONG:
+      *err=evaluate_long(g,h,&lresult);
+      sprintf(buf,"%ld",lresult);
+      break;
+    case GRIB_TYPE_DOUBLE:
+      *err=evaluate_double(g,h,&dresult);
+      sprintf(buf,"%g",dresult);
+      break;
+  }
   return buf;
 }
 
@@ -193,12 +201,6 @@ grib_expression* new_is_integer_expression(grib_context* c,const char *name,int 
 
 static int native_type(grib_expression* g,grib_handle *h)
 {
-  grib_expression_is_integer* e = (grib_expression_is_integer*)g;
-  int type = 0;
-  int err;
-  if((err=grib_get_native_type(h,e->name,&type)) != GRIB_SUCCESS)
-    grib_context_log(h->context, GRIB_LOG_ERROR,
-    "Error in native_type %s : %s", e->name,grib_get_error_message(err));
-  return type;
+  return GRIB_TYPE_LONG;
 }
 

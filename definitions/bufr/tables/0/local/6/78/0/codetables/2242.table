@@ -1,0 +1,9 @@
+0 0 Fast lane between the wheel tracks
+1 1 Fast lane between the wheel tracks in the opposite direction
+2 2 Fast lane in the wheel tracks
+3 3 Fast lane in the wheel tracks in the opposite direction
+4 4 Slow lane between the wheel tracks
+5 5 Slow lane between the wheel tracks in the opposite direction
+6 6 Slow lane in the wheel tracks
+7 7 Slow lane in the wheel tracks in the opposite direction
+15 15 Missing value

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -139,7 +139,7 @@ static void aliases(grib_dumper* d,grib_accessor* a)
 static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_default *self = (grib_dumper_default*)d;
-    long value; size_t size = 1;
+    long value=0; size_t size = 1;
     long *values=NULL;
     int err = 0;
     int i;
@@ -209,8 +209,8 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_default *self = (grib_dumper_default*)d;
     int i;
-    long lvalue;
-    double dvalue;
+    long lvalue = 0;
+    double dvalue = 0;
     size_t size = 1;
     int err = 0;
     int isDouble=0;
@@ -280,9 +280,8 @@ static void dump_bits(grib_dumper* d,grib_accessor* a,const char* comment)
 static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 {
     grib_dumper_default *self = (grib_dumper_default*)d;
-    double value; size_t size = 1;
+    double value=0; size_t size = 1;
     int err = grib_unpack_double(a,&value,&size);
-
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
@@ -311,7 +310,6 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
         fprintf(self->dumper.out,"%s = MISSING;",a->name);
     else
         fprintf(self->dumper.out,"%s = %g;",a->name,value);
-
 
     if(err) {
         fprintf(self->dumper.out,"  ");
@@ -350,7 +348,6 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
 
     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
-
 
     print_offset(self->dumper.out,d,a);
 
@@ -531,7 +528,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     grib_dumper_default *self = (grib_dumper_default*)d;
     int k,err =0;
     int more = 0;
-    double*  buf = NULL;
+    double* buf = NULL;
     size_t size=0;
     long count=0;
 
@@ -649,9 +646,7 @@ static void dump_section(grib_dumper* d,grib_accessor* a,grib_block_of_accessors
         *q='\0';
 
         sprintf(tmp,"%s ( length=%ld, padding=%ld )",upper,(long)s->length,(long)s->padding);
-        /*
-    fprintf(self->dumper.out,"#==============   %-38s   ==============\n",tmp);
-         */
+        /* fprintf(self->dumper.out,"#==============   %-38s   ==============\n",tmp); */
         free(upper);
         self->section_offset=a->offset;
     }

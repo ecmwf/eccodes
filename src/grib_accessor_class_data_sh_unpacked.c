@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -259,6 +259,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   long   pen_m= 0;
 
   double operat= 0;
+  int bytes;
   int err=0;
 
   decode_float_proc decode_float = NULL;
@@ -300,12 +301,15 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   switch (ieee_floats) {
     case 0:
       decode_float=grib_long_to_ibm;
+      bytes=4;
       break;
     case 1:
       decode_float=grib_long_to_ieee;
+      bytes=4;
       break;
     case 2:
       decode_float=grib_long_to_ieee64;
+      bytes=8;
       break;
     default:
       return GRIB_NOT_IMPLEMENTED;
@@ -324,7 +328,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   hres = buf;
   lres = buf;
 
-  packed_offset = offsetdata +  4*(sub_k+1)*(sub_k+2);
+  packed_offset = offsetdata +  bytes*(sub_k+1)*(sub_k+2);
 
   lpos = 8*(packed_offset-offsetdata);
 
@@ -357,8 +361,8 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     {
       for(hcount=0;hcount<sub_k+1;hcount++)
       {
-        val[i++] =  decode_float(grib_decode_unsigned_long(hres,&hpos,32))*d;
-        val[i++] =  decode_float(grib_decode_unsigned_long(hres,&hpos,32))*d;
+        val[i++] =  decode_float(grib_decode_unsigned_long(hres,&hpos,8*bytes));
+        val[i++] =  decode_float(grib_decode_unsigned_long(hres,&hpos,8*bytes));
 
         if (GRIBEX_sh_bug_present && hcount==sub_k){
           /*  bug in ecmwf data, last row (K+1)is scaled but should not */
@@ -373,9 +377,9 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     /* pscals=scals+lup; */
     for(lcount=hcount; lcount < maxv ; lcount++)
     {
-      dummy =  (double) ((grib_decode_unsigned_long(lres, &lpos,
+      dummy =  d * (double) ((grib_decode_unsigned_long(lres, &lpos,
                    bits_per_value)*s)+reference_value);
-      dummy =  (double) ((grib_decode_unsigned_long(lres, &lpos,
+      dummy =  d * (double) ((grib_decode_unsigned_long(lres, &lpos,
                    bits_per_value)*s)+reference_value);
       lup++;
     }
@@ -388,10 +392,6 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
   Assert(*len >= i);
   *len = n_vals;
 
-  if(d != 1) {
-    for(i=0;i<*len;i++)
-      val[i++] *= d;
-  }
 
   (void)dummy; /* suppress gcc warning */
   grib_context_free(a->context,scals);

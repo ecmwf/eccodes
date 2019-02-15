@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -82,7 +82,8 @@ static void init_class(grib_action_class* c)
 /* END_CLASS_IMP */
 
 
-grib_action* grib_action_create_gen( grib_context* context, const char* name, const char* op, const long len,  grib_arguments* params,  grib_arguments* default_value,int flags,const char* name_space,const char* set)
+grib_action* grib_action_create_gen(grib_context* context, const char* name, const char* op, const long len,
+        grib_arguments* params,  grib_arguments* default_value,int flags,const char* name_space,const char* set)
 {
     grib_action_gen* a     =  NULL;
     grib_action_class* c   =  grib_action_class_gen;
@@ -103,7 +104,6 @@ grib_action* grib_action_create_gen( grib_context* context, const char* name, co
     if (set)
         act->set				=	grib_context_strdup_persistent(context, set);
     act->default_value       =  default_value;
-
 
     return act;
 }
@@ -127,11 +127,9 @@ static void xref( grib_action* act, FILE* f,const char *path)
 
     fprintf(f,"bless({path=>'%s',size => %ld, name=> '%s', position=> %d, ",path,  (long)a->len , act->name,position);
 
-
     fprintf(f," params=> [");
     grib_arguments_print(act->context,a->params,NULL);
     fprintf(f,"], flags=> {");
-
 
     F(GRIB_ACCESSOR_FLAG_READ_ONLY);
     F(GRIB_ACCESSOR_FLAG_DUMP);
@@ -149,14 +147,12 @@ static void xref( grib_action* act, FILE* f,const char *path)
     F(GRIB_ACCESSOR_FLAG_LONG_TYPE);
     F(GRIB_ACCESSOR_FLAG_DOUBLE_TYPE);
 
-
     /* make sure all flags are processed */
     if(flg) { printf("FLG = %ld\n",(long)flg); }
     Assert(flg == 0);
 
     fprintf(f,"}, defaults=> [");
     grib_arguments_print(act->context,act->default_value,NULL);
-
 
     fprintf(f,"]}, 'xref::%s'),\n",act->op);
 }
@@ -178,7 +174,6 @@ static int create_accessor( grib_section* p, grib_action* act, grib_loader *load
         return GRIB_SUCCESS;
     else
         return loader->init_accessor(loader,ga,act->default_value);
-
 }
 
 static int notify_change(grib_action* act, grib_accessor * notified, grib_accessor* changed)
@@ -187,7 +182,6 @@ static int notify_change(grib_action* act, grib_accessor * notified, grib_access
         return grib_pack_expression(notified,grib_arguments_get_expression(grib_handle_of_accessor(notified),act->default_value,0));
     return GRIB_SUCCESS;
 }
-
 
 static void destroy(grib_context* context,grib_action* act)
 {
@@ -202,5 +196,4 @@ static void destroy(grib_context* context,grib_action* act)
     grib_context_free_persistent(context, act->name_space);
     if (act->set)
         grib_context_free_persistent(context, act->set);
-
 }

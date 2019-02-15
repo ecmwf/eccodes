@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,7 +10,7 @@
 section_length[3] section1Length ;
 
 unsigned[1] gribTablesVersionNo ;
-codetable[1] centre 'grib1/0.table' : string_type;
+codetable[1] centre 'common/c-1.table' : string_type;
 
 alias ls.centre=centre;
 alias identificationOfOriginatingGeneratingCentre=centre;

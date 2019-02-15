@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -25,8 +25,21 @@
 #include <string.h>
 #include <math.h>
 #include <sys/types.h>
-#include <dirent.h>
+
+#ifndef ECCODES_ON_WINDOWS
+  #include <dirent.h>
+#else
+  #include <direct.h>
+  #include <io.h>
+
+  #ifdef _MSC_VER
+  #   define strcasecmp _stricmp
+  #endif
+#endif
+
 #include <assert.h>
+#include "tigge_tools.h"
+void validate(const char* path);
 
 #define CHECK(a)  check(#a,a)
 #define WARN(a)   warn(#a,a)
@@ -382,26 +395,34 @@ static void check_validity_datetime(grib_handle* h)
 
 static void check_range(grib_handle* h,const parameter* p,double min,double max)
 {
+    double missing = 0;
     if(!valueflg)
         return;
 
-    if(min < p->min1 || min > p->min2)
-    {
-        printf("warning: %s, field %d [%s]: %s minimum value %g is not in [%g,%g]\n",file,field,param,
-                p->name,
-                min,p->min1,p->min2);
-        printf("  => [%g,%g]\n",min < p->min1 ? min : p->min1, min > p->min2 ? min : p->min2);
+    missing = dget(h,"missingValue");
 
-        warning++;
-    }
+    /* See ECC-437 */
+    if(!(get(h,"bitMapIndicator") == 0 && min == missing && max == missing)){
 
-    if(max < p->max1 || max > p->max2 )
-    {
-        printf("warning: %s, field %d [%s]: %s maximum value %g is not in [%g,%g]\n",file,field,param,
-                p->name,
-                max,p->max1,p->max2);
-        printf("  => [%g,%g]\n",max < p->max1 ? max : p->max1, max > p->max2 ? max : p->max2);
-        warning++;
+        if(min < p->min1 || min > p->min2)
+        {
+            printf("warning: %s, field %d [%s]: %s minimum value %g is not in [%g,%g]\n",file,field,param,
+                    p->name,
+                    min,p->min1,p->min2);
+            printf("  => [%g,%g]\n",min < p->min1 ? min : p->min1, min > p->min2 ? min : p->min2);
+
+            warning++;
+        }
+
+        if(max < p->max1 || max > p->max2 )
+        {
+            printf("warning: %s, field %d [%s]: %s maximum value %g is not in [%g,%g]\n",file,field,param,
+                    p->name,
+                    max,p->max1,p->max2);
+            printf("  => [%g,%g]\n",max < p->max1 ? max : p->max1, max > p->max2 ? max : p->max2);
+            warning++;
+        }
+
     }
 }
 
@@ -766,13 +787,13 @@ static void has_bitmap(grib_handle* h,const parameter* p,double min,double max)
 static void has_soil_level(grib_handle* h,const parameter* p,double min,double max)
 {
     CHECK(get(h,"topLevel") == get(h,"bottomLevel"));
-    CHECK(le(h,"level",8)); /* max in UERRA */
+    CHECK(le(h,"level",14)); /* max in UERRA */
 }
 
 static void has_soil_layer(grib_handle* h,const parameter* p,double min,double max)
 {
     CHECK(get(h,"topLevel") == get(h,"bottomLevel") - 1);
-    CHECK(le(h,"level",8)); /* max in UERRA */
+    CHECK(le(h,"level",14)); /* max in UERRA */
 }
 
 static void six_hourly(grib_handle* h,const parameter* p,double min,double max)
@@ -1124,7 +1145,7 @@ static void verify(grib_handle* h)
         values = (double*)malloc(sizeof(double)*(count));
         if(!values)
         {
-            printf("%s, field %d [%s]: failed to allocate %ld bytes\n",file,field,param,(long)sizeof(double)*(count));
+            printf("%s, field %d [%s]: failed to allocate %ld bytes\n",file,field,param,(long)(sizeof(double)*count));
             error++;
             return;
         }
@@ -1300,7 +1321,7 @@ static void verify(grib_handle* h)
 
 }
 
-static void validate(const char* path)
+void validate(const char* path)
 {
     FILE *f = fopen(path,"r");
     grib_handle *h = 0;
@@ -1347,26 +1368,6 @@ static void validate(const char* path)
         error++;
         return;
     }
-}
-
-static void scan(const char* name)
-{
-    DIR *dir;
-    if((dir = opendir(name)) != NULL)
-    {
-        struct dirent* e;
-        char tmp[1024];
-        while( (e = readdir(dir)) != NULL)
-        {
-            if(e->d_name[0] == '.') continue;
-            sprintf(tmp,"%s/%s",name,e->d_name);
-            scan(tmp);
-        }
-
-        closedir(dir);
-    }
-    else
-        validate(name);
 }
 
 static void usage()

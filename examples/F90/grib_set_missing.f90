@@ -1,8 +1,8 @@
-! Copyright 2005-2016 ECMWF.
+! Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-! 
+!
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
@@ -34,7 +34,7 @@ program set
   call codes_set(igrib,'typeOfFirstFixedSurface','sfc')
   call codes_set_missing(igrib,'scaleFactorOfFirstFixedSurface')
   call codes_set_missing(igrib,'scaledValueOfFirstFixedSurface')
-  
+
   ! See GRIB-490
   call codes_get(igrib, 'Ni', Ni)
   call codes_is_missing(igrib,'Ni',is_missing)

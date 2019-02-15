@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,7 +12,7 @@
 OUT_TMP=out.set_bitmap_f.grib
 
 # The input and output files are hardcoded in the example
-${examples_dir}eccodes_f_grib_set_bitmap
+${examples_dir}/eccodes_f_grib_set_bitmap
 
 x=`${tools_dir}/grib_get -p numberOfDataPoints,numberOfCodedValues,numberOfMissing $OUT_TMP`
 [ "$x" = "496 486 10" ]

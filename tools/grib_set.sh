@@ -24,12 +24,12 @@ echo "-# To set scaleFactorOfSecondFixedSurface to missing only for the fields f
 >grib_set -s scaleFactorOfSecondFixedSurface=missing -w scaleFactorOfSecondFixedSurface!=missing tigge_pf_ecmwf.grib2 out.grib2
 \\endverbatim\\n"
 
-echo "-# It's possible to produce a grib edition 2 file from a grib edition 1 just changing the edition number with grib_set.
-At this stage of development all the geography parameters, level and time information is correctly translated, for the product
-definition extra set calls must be done. To do this properly, \ref grib_filter is suggested. \\n
+echo "-# It is possible to produce a GRIB edition 2 file from a GRIB edition 1 by just changing the edition number with grib_set.
+However it is important that you carefully inspect the output and check the information is correctly translated.
 \\verbatim 
-grib_set -s edition=2 ../data/reduced_gaussian_pressure_level.grib1
-\\endverbatim\\n"
+grib_set -s edition=2 ../data/reduced_gaussian_pressure_level.grib1 out.grib2
+\\endverbatim\\n
+For more details please see: https://software.ecmwf.int/wiki/display/ECC/GRIB%3A+Converting+edition+1+to+2\\n"
 
 echo "-# With grib edition 2 is possible to compress data using the jpeg algorithm. 
 To change packing algorithm from grid_simple (simple packing) to grid_jpeg (jpeg2000 packing):\\n

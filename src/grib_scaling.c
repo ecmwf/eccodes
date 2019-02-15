@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -18,6 +18,8 @@
 double grib_power(long s,long n)
 {
     double divisor = 1.0;
+    if (s==0) return 1.0;
+    if (s==1) return n;
     while(s < 0)
     {
         divisor /= n;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,8 +21,11 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
+
+#if !(defined(_WIN32) && defined(_MSC_VER))
+#include <unistd.h>
+#endif
 
 #include "eccodes.h"
 
@@ -40,7 +43,7 @@ int main(int argc, char *argv[])
                                               CODES_KEYS_ITERATOR_SKIP_DUPLICATES;
 
     /* Choose a namespace. E.g. "ls", "time", "parameter", "geography", "statistics" */
-    char* name_space="ls";
+    const char* name_space="ls";
 
     /* name_space=NULL to get all the keys */
     /* char* name_space=0; */
@@ -82,7 +85,7 @@ int main(int argc, char *argv[])
         {
             const char* name = codes_keys_iterator_get_name(kiter);
             vlen=MAX_VAL_LEN;
-            bzero(value,vlen);
+            memset(value, 0, vlen);
             CODES_CHECK(codes_get_string(h,name,value,&vlen),name);
             printf("%s = %s\n",name,value);
 

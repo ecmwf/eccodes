@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -172,28 +172,29 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
     int n = 0;
+    grib_handle* h = grib_handle_of_accessor(a);
 
-    self->start_step = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->unit  = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->start_step = grib_arguments_get_name(h,c,n++);
+    self->unit  = grib_arguments_get_name(h,c,n++);
 
-    self->year = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->month = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->day = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->hour  = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->minute  = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->second  = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->year = grib_arguments_get_name(h,c,n++);
+    self->month = grib_arguments_get_name(h,c,n++);
+    self->day = grib_arguments_get_name(h,c,n++);
+    self->hour  = grib_arguments_get_name(h,c,n++);
+    self->minute  = grib_arguments_get_name(h,c,n++);
+    self->second  = grib_arguments_get_name(h,c,n++);
 
-    self->year_of_end_of_interval = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->month_of_end_of_interval  = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->day_of_end_of_interval  = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->hour_of_end_of_interval = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->minute_of_end_of_interval = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->second_of_end_of_interval = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->year_of_end_of_interval = grib_arguments_get_name(h,c,n++);
+    self->month_of_end_of_interval  = grib_arguments_get_name(h,c,n++);
+    self->day_of_end_of_interval  = grib_arguments_get_name(h,c,n++);
+    self->hour_of_end_of_interval = grib_arguments_get_name(h,c,n++);
+    self->minute_of_end_of_interval = grib_arguments_get_name(h,c,n++);
+    self->second_of_end_of_interval = grib_arguments_get_name(h,c,n++);
 
-    self->coded_unit  = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->coded_time_range  = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->typeOfTimeIncrement = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->numberOfTimeRange = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->coded_unit  = grib_arguments_get_name(h,c,n++);
+    self->coded_time_range  = grib_arguments_get_name(h,c,n++);
+    self->typeOfTimeIncrement = grib_arguments_get_name(h,c,n++);
+    self->numberOfTimeRange = grib_arguments_get_name(h,c,n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -201,7 +202,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     grib_dump_double(dumper,a,NULL);
 }
 
-static int u2s2[] =  {
+static const int u2s2[] =  {
         60,      /* (0) minutes */
         3600,    /* (1) hour    */
         86400,   /* (2) day     */
@@ -218,7 +219,7 @@ static int u2s2[] =  {
         1        /* (13) seconds  */
 };
 
-static int u2s[] =  {
+static const int u2s[] =  {
         60,      /* (0) minutes */
         3600,    /* (1) hour    */
         86400,   /* (2) day     */
@@ -536,16 +537,16 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
             &minute_of_end_of_interval,&second_of_end_of_interval);
     if (err!=GRIB_SUCCESS) return err;
 
-    if((err = grib_set_long_internal(grib_handle_of_accessor(a),self->year_of_end_of_interval,  year_of_end_of_interval))) return err;
-    if((err = grib_set_long_internal(grib_handle_of_accessor(a),self->month_of_end_of_interval, month_of_end_of_interval))) return err;
-    if((err = grib_set_long_internal(grib_handle_of_accessor(a),self->day_of_end_of_interval,   day_of_end_of_interval))) return err;
-    if((err = grib_set_long_internal(grib_handle_of_accessor(a),self->hour_of_end_of_interval,  hour_of_end_of_interval))) return err;
-    if((err = grib_set_long_internal(grib_handle_of_accessor(a),self->minute_of_end_of_interval, minute_of_end_of_interval))) return err;
-    if((err = grib_set_long_internal(grib_handle_of_accessor(a),self->second_of_end_of_interval, second_of_end_of_interval))) return err;
+    if((err = grib_set_long_internal(h,self->year_of_end_of_interval,  year_of_end_of_interval))) return err;
+    if((err = grib_set_long_internal(h,self->month_of_end_of_interval, month_of_end_of_interval))) return err;
+    if((err = grib_set_long_internal(h,self->day_of_end_of_interval,   day_of_end_of_interval))) return err;
+    if((err = grib_set_long_internal(h,self->hour_of_end_of_interval,  hour_of_end_of_interval))) return err;
+    if((err = grib_set_long_internal(h,self->minute_of_end_of_interval, minute_of_end_of_interval))) return err;
+    if((err = grib_set_long_internal(h,self->second_of_end_of_interval, second_of_end_of_interval))) return err;
 
     if (time_range*u2s[unit]%u2s2[coded_unit]) {
         coded_unit=unit;
-        if((err = grib_set_long_internal(grib_handle_of_accessor(a),self->coded_unit, coded_unit))) return err;
+        if((err = grib_set_long_internal(h,self->coded_unit, coded_unit))) return err;
         coded_time_range=time_range;
     } else
         coded_time_range=(time_range*u2s[unit])/u2s2[coded_unit];
@@ -553,7 +554,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     if (typeOfTimeIncrement != 1) {
         /* 1 means "Successive times processed have same forecast time, start time of forecast is incremented" */
         /* Note: For this case, length of timeRange is not related to step and so should NOT be used to calculate step */
-        if((err = grib_set_long_internal(grib_handle_of_accessor(a),self->coded_time_range, coded_time_range))) return err;
+        if((err = grib_set_long_internal(h,self->coded_time_range, coded_time_range))) return err;
     }
 
     return GRIB_SUCCESS;

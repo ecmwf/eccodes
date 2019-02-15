@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -43,7 +43,7 @@ static void init()
     pthread_mutex_init(&mutex_file,&attr);
     pthread_mutex_init(&mutex_rules,&attr);
     pthread_mutex_init(&mutex_concept,&attr);
-	pthread_mutex_init(&mutex_hash_array,&attr);
+    pthread_mutex_init(&mutex_hash_array,&attr);
     pthread_mutex_init(&mutex_stream,&attr);
     pthread_mutex_init(&mutex_parse,&attr);
     pthread_mutexattr_destroy(&attr);
@@ -87,11 +87,14 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
     long lval=0;
     int type=GRIB_TYPE_STRING;
     size_t replen = 0;
-    const size_t uname_len = strlen(uname);
+    char* ptrEnd_fname = NULL; /* Maintain ptr to end of fname string */
 
     loc[0] = 0 ;
     fname[0] = 0 ;
-    for(i=0; i<uname_len; i++)
+    ptrEnd_fname = fname;
+
+    /* uname is a string like "grib[GRIBEditionNumber:l]/boot.def". The result fname will be grib2/boot.def */
+    while (uname[i]!='\0')
     {
         if(mode > -1)
         {
@@ -143,11 +146,10 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
                     char* pc=fname;
                     while (*pc != '\0') pc++;
                     strcpy(pc,val);
+                    ptrEnd_fname = pc + strlen(val); /* Update ptr to end of fname */
                 }
-                /* sprintf(fname,"%s%s",fname,val); */
 
                 loc[0] = 0 ;
-
             }
             else
                 loc[mode++]=uname[i];
@@ -155,19 +157,25 @@ int grib_recompose_name(grib_handle* h, grib_accessor *observer, const char* una
         else if(uname[i]=='[')
             mode = 0;
         else {
-            int llen=strlen(fname);
+#if 0
+            int llen=strlen(fname);  /* The strlen cost is too high */
             fname[llen]=uname[i];
             fname[llen+1]='\0';
-            /* sprintf(fname,"%s%c",fname, uname[i]); */
+#else
+            /* Performance: faster to avoid call to strlen. Append to end */
+            *ptrEnd_fname++ = uname[i];
+            *ptrEnd_fname = '\0';
+#endif
             type=GRIB_TYPE_STRING;
         }
-
+        i++;
     }
     /*fprintf(stdout,"parsed > %s\n",fname);*/
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_print(grib_accessor* a,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
+int grib_accessor_print(grib_accessor* a,const char* name,int type,const char* format,
+                        const char* separator,int maxcols,int* newline,FILE* out)
 {
     size_t size=0;
     char* sval=NULL;
@@ -278,7 +286,8 @@ int grib_accessor_print(grib_accessor* a,const char* name,int type,const char* f
     return ret;
 }
 
-int grib_accessors_list_print(grib_handle* h,grib_accessors_list* al,const char* name,int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
+int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const char* name,
+                              int type,const char* format,const char* separator,int maxcols,int* newline,FILE* out)
 {
     size_t size=0,len=0,replen=0;
     char* sval=NULL;
@@ -294,6 +303,9 @@ int grib_accessors_list_print(grib_handle* h,grib_accessors_list* al,const char*
     char default_separator[]=" ";
     grib_accessor* a=al->accessor;
 
+    /* Number of columns specified as 0 means print on ONE line i.e. num cols = infinity */
+    if (maxcols == 0) maxcols = INT_MAX;
+
     if (type==-1) type=grib_accessor_get_native_type(al->accessor);
     grib_accessors_list_value_count(al,&size);
     switch (type) {
@@ -303,7 +315,11 @@ int grib_accessors_list_print(grib_handle* h,grib_accessors_list* al,const char*
             char sbuf[1024]={0,};
             len = sizeof(sbuf);
             ret = grib_unpack_string(al->accessor,sbuf,&len);
-            fprintf(out,"%s",sbuf);
+            if (grib_is_missing_string(al->accessor,(unsigned char *)sbuf,len)) {
+                fprintf(out,"%s","MISSING");
+            } else {
+                fprintf(out,"%s",sbuf);
+            }
         } else {
             int i=0;
             int cols=0;
@@ -379,7 +395,8 @@ int grib_accessors_list_print(grib_handle* h,grib_accessors_list* al,const char*
         *newline=0;
         break;
     default:
-        grib_context_log(h->context, GRIB_LOG_WARNING,"grib_accessor_print: Problem to print \"%s\", invalid type %d", a->name,type);
+        grib_context_log(h->context, GRIB_LOG_WARNING,
+                         "grib_accessor_print: Problem printing \"%s\", invalid type %d", a->name, grib_get_type_name(type));
     }
     return ret;
 }
@@ -400,6 +417,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
     char buff1[1024]={0,};
     int maxcolsd=8;
     int maxcols;
+    long numcols = 0;
     int newline=1;
     const size_t uname_len = strlen(uname);
 
@@ -430,8 +448,13 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
                 break;
             case '!':
                 pp=(char*)uname;
-                maxcols=strtol(uname+i+1,&pp,10);
-                if (maxcols==0) maxcols=maxcolsd;
+                if (string_to_long(uname+i+1, &numcols)==GRIB_SUCCESS) {
+                    maxcols=(int)numcols;
+                } else {
+                    /* Columns specification is invalid integer */
+                    maxcols=maxcolsd;
+                }
+                strtol(uname+i+1,&pp,10);
                 while(pp && *pp!='%' && *pp!='!' && *pp!=']' && *pp!=':' && *pp!='\'' ) pp++;
                 i+=pp-uname-i-1;
                 break;
@@ -452,9 +475,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
 
                     if(ret != GRIB_SUCCESS)
                     {
-                        /*
-                 grib_context_log(h->context, GRIB_LOG_ERROR,"grib_recompose_print: Could not recompose print : %s", uname);
-                         */
+                        /* grib_context_log(h->context, GRIB_LOG_ERROR,"grib_recompose_print: Could not recompose print : %s", uname); */
                         return ret;
                     }
                 }
@@ -470,11 +491,18 @@ int grib_recompose_print(grib_handle* h, grib_accessor *observer, const char* un
             fprintf(out,"%c",uname[i]);
             type=-1;
         }
-
     }
     if (newline) fprintf(out,"\n");
 
     return ret;
+}
+
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
+GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
+    if (*a != *b) return 1;
+    while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
+    return (*a==0 && *b==0) ? 0 : 1;
 }
 
 grib_action_file* grib_find_action_file(const char* fname , grib_action_file_list* afl)
@@ -482,7 +510,7 @@ grib_action_file* grib_find_action_file(const char* fname , grib_action_file_lis
     grib_action_file* act = afl->first;
     while(act)
     {
-        if(strcmp(act->filename,fname)==0)
+        if(grib_inline_strcmp(act->filename,fname)==0)
             return act;
         act = act->next;
     }
@@ -571,6 +599,7 @@ void grib_parser_include(const char* included_fname)
     /* int i; */
     Assert(top < MAXINCLUDE);
     Assert(included_fname);
+    if (!included_fname) return;
 
     if(parse_file == 0)
     {
@@ -717,16 +746,16 @@ grib_concept_value* grib_parse_concept_file( grib_context* gc,const char* filena
 grib_hash_array_value* grib_parse_hash_array_file( grib_context* gc,const char* filename)
 {
     GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&mutex_hash_array);
+    GRIB_MUTEX_LOCK(&mutex_file);
 
     gc = gc ? gc : grib_context_get_default();
     grib_parser_context = gc;
 
     if(parse(gc,filename) == 0) {
-        GRIB_MUTEX_UNLOCK(&mutex_hash_array);
+        GRIB_MUTEX_UNLOCK(&mutex_file);
         return grib_parser_hash_array;
     } else {
-        GRIB_MUTEX_UNLOCK(&mutex_hash_array);
+        GRIB_MUTEX_UNLOCK(&mutex_file);
         return NULL;
     }
 }

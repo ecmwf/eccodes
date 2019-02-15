@@ -29,7 +29,7 @@
 28 efic Extreme forecast index control
 29 pb Probability boundaries
 30 ep Event probability
-31 bf Bias-corrected Forecast
+31 bf Bias-corrected forecast
 32 cd Climate distribution
 33 4i 4D analysis increments
 34 go Gridded observations
@@ -55,6 +55,8 @@
 65 cv Calibration/Validation forecast
 70 or Ocean reanalysis
 71 fx Flux forcing
+72 fu Fill-up
+73 sfo Simulation forced with observations
 80 fcmean Forecast mean
 81 fcmax Forecast maximum
 82 fcmin Forecast minimum

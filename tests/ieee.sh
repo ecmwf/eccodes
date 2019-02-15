@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -34,51 +34,51 @@ cat > r.filter <<EOF
 print "[values%g]";
 EOF
 
-${tools_dir}grib_filter -o $outsimple w.filter $infile 
+${tools_dir}/grib_filter -o $outsimple w.filter $infile 
 
-${tools_dir}grib_filter r.filter $outsimple > $outsimple.txt
+${tools_dir}/grib_filter r.filter $outsimple > $outsimple.txt
 diff $outsimple.txt ${data_dir}/ieee_test.good
 
-${tools_dir}grib_set -r -s packingType=grid_ieee $outsimple $out32
-${tools_dir}grib_filter r.filter $out32 > $out32.txt 
+${tools_dir}/grib_set -r -s packingType=grid_ieee $outsimple $out32
+${tools_dir}/grib_filter r.filter $out32 > $out32.txt 
 diff $out32.txt ${data_dir}/ieee_test.good
 
 # Disabled for now. See GRIB-2 and GRIB-80
 #GRIB_IEEE_PACKING=32
 #export GRIB_IEEE_PACKING
-#${tools_dir}grib_filter -o $out32 w.filter $infile 
-#${tools_dir}grib_filter r.filter $out32 > $out32.txt 
+#${tools_dir}/grib_filter -o $out32 w.filter $infile 
+#${tools_dir}/grib_filter r.filter $out32 > $out32.txt 
 #diff $out32.txt ${data_dir}/ieee_test.good
 
 #GRIB_IEEE_PACKING=64
 #export GRIB_IEEE_PACKING
-#${tools_dir}grib_filter -o $out64 w.filter $infile 
-#${tools_dir}grib_filter r.filter $out64 > $out64.txt 
+#${tools_dir}/grib_filter -o $out64 w.filter $infile 
+#${tools_dir}/grib_filter r.filter $out64 > $out64.txt 
 #diff $out64.txt ${data_dir}/ieee_test.good
 
 rm -f $outsimple $out32 $out64 $out32.txt $out64.txt
 rm -f ${data_dir}/$outsimple.txt ${data_dir}/$out32.txt ${data_dir}/$out64.txt 
 rm -f w.filter $outsimple.txt
 
-${tools_dir}grib_filter r.filter $shdata > $shdata.txt
+${tools_dir}/grib_filter r.filter $shdata > $shdata.txt
 diff $shdata.txt $shdata.good
 
-${tools_dir}grib_set -r -s packingType=grid_ieee $shdata ${shdata}_ieee
-${tools_dir}grib_filter r.filter ${shdata}_ieee > $shdata.txt
+${tools_dir}/grib_set -r -s packingType=grid_ieee $shdata ${shdata}_ieee
+${tools_dir}/grib_filter r.filter ${shdata}_ieee > $shdata.txt
 diff $shdata.txt $shdata.good
 rm -f ${shdata}_ieee
 
 ##########################
 #GRIB_IEEE_PACKING=32
 #export GRIB_IEEE_PACKING
-#${tools_dir}grib_copy -r $shdata ${shdata}_32
-#${tools_dir}grib_filter r.filter ${shdata}_32 > ${shdata}_32.txt
+#${tools_dir}/grib_copy -r $shdata ${shdata}_32
+#${tools_dir}/grib_filter r.filter ${shdata}_32 > ${shdata}_32.txt
 #diff ${shdata}_32.txt ${shdata}_32.good
 
 #GRIB_IEEE_PACKING=64
 #export GRIB_IEEE_PACKING
-#${tools_dir}grib_copy -r $shdata ${shdata}_64
-#${tools_dir}grib_filter r.filter ${shdata}_64 > ${shdata}_64.txt
+#${tools_dir}/grib_copy -r $shdata ${shdata}_64
+#${tools_dir}/grib_filter r.filter ${shdata}_64 > ${shdata}_64.txt
 #diff ${shdata}_64.txt ${shdata}.good
 
 rm -f r.filter ${shdata}_64.txt ${shdata}_32.txt $shdata.txt

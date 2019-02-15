@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -11,30 +11,32 @@
 # Description: how to read data of the ECMWF EPS tropical cyclone tracks encoded in BUFR format.
 #
 
+from __future__ import print_function
 import traceback
 import sys
 import os
 import getopt
 from eccodes import *
 
-VERBOSE=1 # verbose error reporting
-default_namespace='ls'
+VERBOSE = 1  # verbose error reporting
+default_namespace = 'ls'
+
 
 def do_print(namespace, INPUT):
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
     first_time = True
 
-    print '{'
-    print '   "messages" : ['
+    print('{')
+    print('   "messages" : [')
     while 1:
         gid = codes_grib_new_from_file(f)
         if gid is None:
             break
 
         if not first_time:
-            print '      ,{'
+            print('      ,{')
         else:
-            print '      {'
+            print('      {')
             first_time = False
 
         iterid = codes_keys_iterator_new(gid, namespace)
@@ -42,31 +44,33 @@ def do_print(namespace, INPUT):
         f1 = True
         while codes_keys_iterator_next(iterid):
             keyname = codes_keys_iterator_get_name(iterid)
-            keyval = codes_get_string(iterid,keyname)
+            keyval = codes_get_string(iterid, keyname)
             if not f1:
-                print ','
+                print(',')
             else:
-                print ''
+                print('')
                 f1 = False
-            print "         \"%s\" : \"%s\"" % (keyname,keyval),
+            print("         \"%s\" : \"%s\"" % (keyname, keyval), end=' ')
 
-        print ''
-        print '      }'
+        print('')
+        print('      }')
         codes_keys_iterator_delete(iterid)
         codes_release(gid)
 
-    print '   ]'
-    print '}'
+    print('   ]')
+    print('}')
     f.close()
+
 
 def usage():
     progname = os.path.basename(sys.argv[0])
-    print "Usage: ", progname, "[options] grib_file1 grib_file2 ..."
-    print 'Options:'
-    print '\t-n namespace'
-    print '\t\tAll the keys belonging to namespace are printed.'
-    print '\t-m Mars keys are printed.'
-    print ''
+    print("Usage: ", progname, "[options] grib_file1 grib_file2 ...")
+    print('Options:')
+    print('\t-n namespace')
+    print('\t\tAll the keys belonging to namespace are printed.')
+    print('\t-m Mars keys are printed.')
+    print('')
+
 
 def main():
     if len(sys.argv) < 2:
@@ -91,16 +95,17 @@ def main():
         for arg in args:
             do_print(namespace, arg)
     except getopt.GetoptError as err:
-        print 'Error: ',err
+        print('Error: ', err)
         usage()
         return 1
     except GribInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >>sys.stderr,err.msg
+            print(err.msg, file=sys.stderr)
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

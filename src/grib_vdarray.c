@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,6 +15,20 @@
  ***************************************************************************/
 
 #include "grib_api_internal.h"
+
+/* For debugging purposes */
+void grib_vdarray_print(const char* title, const grib_vdarray* vdarray)
+{
+    size_t i;
+    char text[100]={0,};
+    Assert(vdarray);
+    printf("%s: vdarray.n=%lu\n", title, (unsigned long)vdarray->n);
+    for (i=0; i<vdarray->n; i++) {
+        sprintf(text, " vdarray->v[%lu]", (unsigned long)i);
+        grib_darray_print(text, vdarray->v[i]);
+    }
+    printf("\n");
+}
 
 grib_vdarray* grib_vdarray_new(grib_context* c,size_t size,size_t incsize)
 {

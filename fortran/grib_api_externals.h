@@ -4,6 +4,13 @@ integer, external :: grib_f_multi_support_on, grib_f_multi_support_off
 integer, external :: grib_f_keys_iterator_new, &
                      grib_f_keys_iterator_next, &
                      grib_f_keys_iterator_delete
+
+integer, external :: codes_f_bufr_keys_iterator_new, &
+                     codes_f_bufr_keys_iterator_next, &
+                     codes_f_bufr_keys_iterator_get_name, &
+                     codes_f_bufr_keys_iterator_rewind, &
+                     codes_f_bufr_keys_iterator_delete
+
 integer, external :: grib_f_skip_computed, &
                      grib_f_skip_coded, &
                      grib_f_skip_edition_specific, &
@@ -18,6 +25,11 @@ integer, external :: grib_f_new_from_message, &
                      codes_bufr_f_new_from_samples, &
                      grib_f_read_any_from_file, &
                      any_f_new_from_file, &
+                     any_f_load_all_from_file, &
+                     any_f_new_from_loaded, &
+                     any_f_scan_file, &
+                     any_f_new_from_scanned_file, &
+                     codes_f_clear_loaded_from_file, &
                      grib_f_new_from_file, &
                      bufr_f_new_from_file, &
                      grib_f_headers_only_new_from_file

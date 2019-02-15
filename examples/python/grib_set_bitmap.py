@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -6,6 +6,7 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
+from __future__ import print_function
 import traceback
 import sys
 from eccodes import *
@@ -17,8 +18,8 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    fin = open(INPUT)
-    fout = open(OUTPUT, 'w')
+    fin = open(INPUT, 'rb')
+    fout = open(OUTPUT, 'wb')
     gid = codes_grib_new_from_file(fin)
 
     # The missingValue is not coded in the message.
@@ -61,9 +62,10 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >> sys.stderr, err.msg
+            print(err.msg, file=sys.stderr)
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

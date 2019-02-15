@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -34,7 +34,7 @@ static int find_next_group(const unsigned long* vals, size_t len, unsigned long 
     long lmax = 0;
 
     size_t i = 0;
-    if  (len <=0 ) return GRIB_ARRAY_TOO_SMALL;
+    if  (len == 0 ) return GRIB_ARRAY_TOO_SMALL;
     lmin = vals[0];
     lmax = lmin;
 

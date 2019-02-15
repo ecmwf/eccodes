@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,10 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# START grib1::section
 # SECTION 3, Bit-map section
-#  Length of section
-# (octets)
 position offsetSection3;
 transient section3Length=1;
 meta section3Pointer section_pointer(offsetSection3,section3Length,3);
@@ -28,8 +25,6 @@ meta bitmap gds_not_present_bitmap( missingValue,numberOfValues,
                                     Ni,numberOfUnusedBitsAtEndOfSection3) : read_only;
 
 #position offsetAfterBitmap;
-
-# END   grib1::section
 
 #padtoeven padding_sec3_1(offsetSection3,section3Length);
 #section_padding section3Padding;

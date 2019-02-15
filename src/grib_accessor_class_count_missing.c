@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -185,7 +185,7 @@ static void init(grib_accessor* a, const long len , grib_arguments* arg )
   self->numberOfDataPoints = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
 }
 
-static int used[] ={ 0,1,3,7,15,31,63,127,255};
+static const int used[] ={ 0,1,3,7,15,31,63,127,255};
 
 static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
 {

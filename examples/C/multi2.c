@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,27 +21,11 @@
 #include <stdlib.h>
 #include <assert.h>
 
-void read_data(int num_msgs);
-
 const int NUM_FIELDS = 4;
 const int COUNT = 20;
 const char* file_path = "../../data/multi_created.grib2";
 
-int main(int argc, char** argv)
-{
-    int i;
-
-    /* turn on support for multi fields messages */
-    codes_grib_multi_support_on(0);
-
-    for(i=1; i<COUNT; ++i) {
-        printf("Pass %d: \n",i);
-        read_data(NUM_FIELDS);
-    }
-    return 0;
-}
-
-void read_data(int num_msgs)
+static void read_data(int num_msgs)
 {
     int err = 0,i;
     FILE* fp = NULL;
@@ -71,4 +55,18 @@ void read_data(int num_msgs)
     /* Must reset this file pointer for the next round */
     codes_grib_multi_support_reset_file(codes_context_get_default(), fp);
     fclose(fp);
+}
+
+int main(int argc, char** argv)
+{
+    int i;
+
+    /* turn on support for multi fields messages */
+    codes_grib_multi_support_on(0);
+
+    for(i=1; i<COUNT; ++i) {
+        printf("Pass %d: \n",i);
+        read_data(NUM_FIELDS);
+    }
+    return 0;
 }

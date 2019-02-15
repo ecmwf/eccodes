@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -116,23 +116,23 @@ grib_runtime_options global_options={
 
 static grib_handle* grib_handle_new_from_file_x(grib_context* c,FILE* f,int mode,int headers_only,int *err)
 {
+    if (mode==MODE_GRIB)
+        return grib_new_from_file(c,f,headers_only,err);
+
+    if (mode==MODE_BUFR)
+        return bufr_new_from_file(c,f,err);
+
     if (mode==MODE_ANY)
         return any_new_from_file(c,f,err);
 
     if (mode==MODE_GTS)
         return gts_new_from_file(c,f,err);
 
-    if (mode==MODE_BUFR)
-        return bufr_new_from_file(c,f,err);
-
     if (mode==MODE_METAR)
         return metar_new_from_file(c,f,err);
 
     if (mode==MODE_TAF)
         return taf_new_from_file(c,f,err);
-
-    if (mode==MODE_GRIB)
-        return grib_new_from_file(c,f,headers_only,err);
 
     Assert(!"grib_handle_new_from_file_x: unknown mode");
     return NULL;
@@ -192,15 +192,13 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
     int err=0;
     grib_failed *failed=NULL,*p=NULL;
     grib_handle* h=NULL;
-    grib_context* c=NULL;
-    grib_tools_file* infile=NULL;
+    grib_tools_file* infile=options->infile;
     char** filenames;
     size_t files_count=0;
     grib_fieldset* set=NULL;
     int i=0;
-    c=grib_context_get_default();
+    grib_context* c=grib_context_get_default();
 
-    infile=options->infile;
     if(infile) infile->failed=NULL;
 
     files_count=0;
@@ -215,15 +213,19 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
 
     set=grib_fieldset_new_from_files(0,filenames,files_count,0,0,0,options->orderby,&err);
     if (err) {
-        grib_context_log(c,GRIB_LOG_FATAL,"unable to create index for input file %s (%s)",
-                filenames[0],grib_get_error_message(err));
+        grib_context_log(c,GRIB_LOG_ERROR,"unable to create index for input file %s (%s)",
+                         filenames[0],grib_get_error_message(err));
         exit(err);
     }
 
     options->handle_count=0;
+    grib_context_set_handle_file_count(c, 0); /* ECC-873 */
+    grib_context_set_handle_total_count(c, 0); /* ECC-873 */
     while(!options->skip_all && ((h = grib_fieldset_next_handle(set,&err))
             != NULL || err != GRIB_SUCCESS )) {
         options->handle_count++;
+        grib_context_set_handle_file_count(c, options->handle_count);/* ECC-873 */
+        grib_context_set_handle_total_count(c, options->handle_count);/* ECC-873 */
         options->error=err;
 
         if (!h) {
@@ -274,15 +276,13 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
     /*int nofail=0;*/
     grib_failed *failed=NULL,*p=NULL;
     grib_handle* h=NULL;
-    grib_context* c=NULL;
-    grib_tools_file* infile=NULL;
+    grib_tools_file* infile=options->infile;
 
-    c=grib_context_get_default();
+    grib_context* c=grib_context_get_default();
     options->file_count=0;
     options->handle_count=0;
     options->filter_handle_count=0;
     options->current_infile=options->infile;
-    infile=options->infile;
     infile->failed=NULL;
 
     if (grib_options_on("7")) c->no_fail_on_wrong_length=1;
@@ -290,7 +290,10 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
     while (infile!=NULL && infile->name!=NULL) {
 
         if (options->print_statistics && options->verbose) fprintf(dump_file,"%s\n",infile->name);
-        infile->file = fopen(infile->name,"r");
+        if (strcmp(infile->name,"-")==0)
+            infile->file = stdin;
+        else
+            infile->file = fopen(infile->name,"r");
         if(!infile->file) {
             perror(infile->name);
             exit(1);
@@ -427,13 +430,12 @@ static int navigate(grib_field_tree* fields,grib_runtime_options* options)
 static int grib_tool_index(grib_runtime_options* options)
 {
     int err=0;
-    grib_context* c=NULL;
     char* f1=options->infile->name;
     char* f2=options->infile_extra->name;
     grib_index_key *k1,*k2;
     int found=0;
 
-    c=grib_context_get_default();
+    grib_context* c=grib_context_get_default();
 
     options->index1=grib_index_read(c,f1,&err);
     if (err)
@@ -537,38 +539,32 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir)
             process(c,options,buf);
         }
     }
+    closedir(d);
     return 0;
 }
 #else
-static int isWinDir(const struct _finddata_t *fileinfo)
-{
-    if((fileinfo->attrib & 16) == 16)
-        return 1;
-    return 0;
-}
-static void doProcessing(grib_context* c,grib_runtime_options* options,const char* dir, const struct _finddata_t *fileinfo)
-{
-    if(isWinDir(fileinfo))
-    {
-        if(strcmp(fileinfo->name, ".") != 0 && strcmp(fileinfo->name,"..") != 0) {
-            char buf[1024];
-            sprintf(buf,"%s/%s",dir,fileinfo->name);
-            process(c,options,buf);
-        }
-    }
-}
 static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
     struct _finddata_t fileinfo;
     intptr_t handle;
-    if((handle = _findfirst(dir, &fileinfo)) != -1)
-        doProcessing(c, options, dir, &fileinfo);
+    char buffer[1024];
+    sprintf(buffer,  "%s/*", dir);
+    if((handle = _findfirst(buffer, &fileinfo)) != -1)
+{
+        do {
+            if(strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name,"..") != 0) {
+            char buf[1024];
+                sprintf(buf, "%s/%s", dir, fileinfo.name);
+            process(c,options,buf);
+        }
+        } while(!_findnext(handle, &fileinfo));
+
+        _findclose(handle);
+    }
     else
     {
         grib_context_log(c,(GRIB_LOG_ERROR) | (GRIB_LOG_PERROR) , "opendir %s",dir);
         return GRIB_IO_PROBLEM;
     }
-    while(!_findnext(handle, &fileinfo))
-        doProcessing(c, options, dir, &fileinfo);
     return 0;
 }
 #endif
@@ -599,11 +595,8 @@ static int process(grib_context* c,grib_runtime_options* options,const char* pat
 
 static int grib_tool_onlyfiles(grib_runtime_options* options)
 {
-    grib_context* c=NULL;
-    grib_tools_file* infile=NULL;
-
-    c=grib_context_get_default();
-    infile=options->infile;
+    grib_context* c=grib_context_get_default();
+    grib_tools_file* infile=options->infile;
 
     while (infile!=NULL && infile->name!=NULL) {
 
@@ -662,6 +655,14 @@ static void grib_print_header(grib_runtime_options* options,grib_handle* h)
     }
 }
 
+static int cmpstringp(const void *p1, const void *p2)
+{
+    /* The actual arguments to this function are "pointers to
+       pointers to char", but strcmp(3) arguments are "pointers
+       to char", hence the following cast plus dereference */
+    return strcmp(* (char * const *) p1, * (char * const *) p2);
+}
+
 static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle* h, const char* ns)
 {
     int i=0;
@@ -678,7 +679,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
     }
 
     if (ns) {
-        kiter=grib_keys_iterator_new(h,0,(char*)ns);
+        kiter=grib_keys_iterator_new(h,0,ns);
         if (!kiter) {
             fprintf(dump_file,"ERROR: Unable to create keys iterator\n");
             exit(1);
@@ -702,7 +703,32 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
 
         grib_keys_iterator_delete(kiter);
         if (options->print_keys_count==0 && options->latlon == 0 ) {
-            printf("ERROR: namespace \"%s\" does not contain any key\n",ns);
+            int j=0,k=0,ns_count=0;
+            char* all_namespace_vals[1024] = {NULL,}; /* sorted array containing all namespaces */
+            printf("ERROR: namespace \"%s\" does not contain any key.\n",ns);
+            printf("Here are the available namespaces in this message:\n");
+            for (i=0; i<ACCESSORS_ARRAY_SIZE; i++) {
+                grib_accessor* anAccessor = h->accessors[i];
+                if (anAccessor) {
+                    for (j=0; j<MAX_ACCESSOR_NAMES; j++) {
+                        char* a_namespace = (char*)anAccessor->all_name_spaces[j];
+                        if (a_namespace) {
+                            all_namespace_vals[k++] = a_namespace;
+                            ns_count++;
+                        }
+                    }
+                }
+            }
+            qsort(&all_namespace_vals, ns_count, sizeof(char*), cmpstringp);
+            for(i=0; i<ns_count; ++i) {
+                if (all_namespace_vals[i]) {
+                    int print_it = 1;
+                    if (i>0 && strcmp(all_namespace_vals[i], all_namespace_vals[i-1]) == 0) {
+                        print_it = 0;  /* skip duplicate entries */
+                    }
+                    if (print_it) printf("\t%s\n", all_namespace_vals[i]);
+                }
+            }
             exit(1);
         }
     }
@@ -825,6 +851,64 @@ static void get_key_value(grib_handle* h, const char* key_name, char* value_str,
         exit(1);
     }
 }
+/* See ECC-707 */
+static int fix_for_lsdate_needed(grib_handle* h)
+{
+    long lsdate_bug = 0;
+    int err = grib_get_long(h, "lsdate_bug", &lsdate_bug);
+    if (!err && lsdate_bug == 1) {
+        return 1;
+    }
+    return 0;
+}
+
+static int get_initial_element_of_array(grib_handle* h, const char* keyName, size_t num_vals, char* value)
+{
+    int err = 0, type = 0;
+    size_t len = num_vals;
+    char* sval = NULL;
+    unsigned char *uval = NULL;
+    long *lval = NULL;
+    double* dval = NULL;
+    grib_context* c = h->context;
+
+    Assert(num_vals > 1); /* This is for array keys */
+    if ((err = grib_get_native_type(h,keyName,&type))!=GRIB_SUCCESS) return err;
+    switch(type) {
+        case GRIB_TYPE_STRING:
+            grib_get_string_length(h,keyName,&len);
+            sval = (char*)grib_context_malloc(c,len*sizeof(char));
+            if (!sval) return GRIB_OUT_OF_MEMORY;
+            if((err = grib_get_string(h,keyName,sval,&len)) != GRIB_SUCCESS) return err;
+            sprintf(value, "%s", sval);
+            free(sval);
+            break;
+        case GRIB_TYPE_LONG:
+            lval = (long*)grib_context_malloc(c,num_vals*sizeof(long));
+            if (!lval) return GRIB_OUT_OF_MEMORY;
+            if((err = grib_get_long_array(h,keyName,lval,&len)) != GRIB_SUCCESS) return err;
+            sprintf(value, "%ld...", lval[0]);
+            free(lval);
+            break;
+        case GRIB_TYPE_DOUBLE:
+            dval = (double*)grib_context_malloc(c,num_vals*sizeof(double));
+            if (!dval) return GRIB_OUT_OF_MEMORY;
+            if((err = grib_get_double_array(h,keyName,dval,&len)) != GRIB_SUCCESS) return err;
+            sprintf(value, "%g...", dval[0]);
+            free(dval);
+            break;
+        case GRIB_TYPE_BYTES:
+            uval = (unsigned char*)grib_context_malloc(c,num_vals*sizeof(unsigned char));
+            if (!uval) return GRIB_OUT_OF_MEMORY;
+            if((err = grib_get_bytes(h,keyName,uval,&len)) != GRIB_SUCCESS) return err;
+            sprintf(value, "%d...", (short)uval[0]);
+            free(uval);
+            break;
+        default:
+            sprintf(value, "%s...", "");
+    }
+    return GRIB_SUCCESS;
+}
 
 void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
 {
@@ -834,9 +918,10 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     double dvalue=0;
     long lvalue=0;
     char value[MAX_STRING_LEN];
-    char* notfound="not_found";
+    const char* notfound="not_found";
     int written_to_dump = 0; /* boolean */
     grib_accessor* acc = NULL;
+    size_t num_vals = 0;
 
     if (!options->verbose) return;
 
@@ -892,15 +977,27 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             }
         } else {
             /* Other products e.g. GRIB */
+            const int fix_lsdate = (fix_for_lsdate_needed(h) && options->name_space && strcmp(options->name_space,"ls")==0);
+
             if (grib_is_missing(h,options->print_keys[i].name,&ret) && ret==GRIB_SUCCESS) {
                 sprintf(value,"MISSING");
             }
             else if ( ret == GRIB_SUCCESS ) {
+                const char* pName = NULL;
                 if (options->print_keys[i].type == GRIB_TYPE_UNDEFINED)
                     grib_get_native_type(h,options->print_keys[i].name,&(options->print_keys[i].type));
                 switch (options->print_keys[i].type) {
                 case GRIB_TYPE_STRING:
-                    ret=grib_get_string( h,options->print_keys[i].name,value,&len);
+                    pName = options->print_keys[i].name;
+                    if (fix_lsdate && strcmp(pName, "date")==0) { /* ECC-707 */
+                        pName = "ls.date";
+                    }
+                    ret = grib_get_size(h, pName, &num_vals);
+                    if(ret==GRIB_SUCCESS && num_vals>1) { /* See ECC-278 */
+                        ret = get_initial_element_of_array(h, pName, num_vals, value);
+                    } else {
+                        ret=grib_get_string( h,pName,value,&len);
+                    }
                     break;
                 case GRIB_TYPE_DOUBLE:
                     ret=grib_get_double( h,options->print_keys[i].name,&dvalue);
@@ -946,9 +1043,9 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     if (options->latlon) {
 
         if (options->latlon_mode==4){
-            int i=0;
-            for (i=0;i<4;i++) {
-                fprintf(dump_file,options->format,options->values[i]);
+            int ii=0;
+            for (ii=0;ii<4;ii++) {
+                fprintf(dump_file,options->format,options->values[ii]);
                 fprintf(dump_file," ");
             }
             written_to_dump=1;
@@ -1124,4 +1221,16 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     }
 #endif
 
+}
+int exit_if_input_is_directory(const char* tool_name, const char* filename)
+{
+    struct stat s;
+    int stat_val = stat(filename, &s);
+    if ( stat_val == 0 ) {
+        if (S_ISDIR(s.st_mode)) {
+            fprintf(stderr, "%s: ERROR: \"%s\": Is a directory\n", tool_name, filename);
+            exit(1);
+        }
+    }
+    return 0;
 }

@@ -1,16 +1,16 @@
-! Copyright 2005-2016 ECMWF.
+! Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-! 
+!
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !  Description: how to copy a BUFR key from a message to another.
-!               
+!
 program bufr_copy_keys
   use eccodes
-  implicit none  
+  implicit none
   integer  :: file1, file2, file3
   integer  :: ibufr1,ibufr2,ibufr3
 

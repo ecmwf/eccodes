@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -18,7 +18,7 @@
 #define TRUE  1
 #define FALSE 0
 
-BOOL Check(
+static BOOL Check(
         const long year1, const long month1, const long day1, const long hour1, const long min1, const long sec1,
         const long year2, const long month2, const long day2, const long hour2, const long min2, const long sec2)
 {
@@ -28,7 +28,7 @@ BOOL Check(
     return TRUE;
 }
 
-void TestDateTime(const long year, const long month, const long day, const long hour, const long min, const long sec)
+static void TestDateTime(const long year, const long month, const long day, const long hour, const long min, const long sec)
 {
     double jd = 0.0;
     long year1, month1, day1, hour1, min1, sec1; /*generated ones*/
@@ -59,7 +59,7 @@ void TestDateTime(const long year, const long month, const long day, const long 
     }
 }
 
-void Test0()
+static void Test0()
 {
     long year, month, day, hour, min, sec;
     double jd;
@@ -87,7 +87,7 @@ void Test0()
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n",year,month,day,hour,min,sec,jd);
 }
 
-void Test1()
+static void Test1()
 {
     long year, month, day, hour, min, sec;
     double jd;
@@ -115,7 +115,7 @@ void Test1()
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n",year,month,day,hour,min,sec,jd);
 }
 
-void Test2()
+static void Test2()
 {
     long year, month, day, hour, minute, second;
     int i,last;
@@ -160,7 +160,7 @@ void Test2()
     }
 }
 
-void Test3()
+static void Test3()
 {
     long iyear, imnth, iday, ihr, imin, isec;
     printf("Test3...\n");

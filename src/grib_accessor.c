@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,6 +15,14 @@
  ***************************************************************************/
 
 #include "grib_api_internal.h"
+
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
+GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
+    if (*a != *b) return 1;
+    while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
+    return (*a==0 && *b==0) ? 0 : 1;
+}
 
 void  grib_accessor_dump(grib_accessor* a, grib_dumper* f)
 {
@@ -463,11 +471,6 @@ static void init_accessor(grib_accessor_class* c,grib_accessor* a, const long le
 {
     if(c) {
         grib_accessor_class *s = c->super ? *(c->super) : NULL;
-        if(!c->inited)
-        {
-            if(c->init_class) c->init_class(c);
-            c->inited = 1;
-        }
         init_accessor(s,a,len,args);
         if(c->init) c->init(a,len, args);
     }
@@ -503,6 +506,7 @@ void grib_accessor_delete(grib_context *ct, grib_accessor* a)
         }
         c = s;
     }
+    /*printf("Debug: grib_accessor_delete a=%p (%s)\n", (void*)a, a->name);*/
     grib_context_free(ct,a);
 }
 
@@ -610,7 +614,7 @@ int grib_compare_accessors(grib_accessor* a1,grib_accessor* a2,int compare_flags
     int type_mismatch=0;
     grib_accessor_class *c1=NULL;
 
-    if ((compare_flags & GRIB_COMPARE_NAMES) && strcmp(a1->name,a2->name))
+    if ((compare_flags & GRIB_COMPARE_NAMES) && grib_inline_strcmp(a1->name,a2->name))
         return GRIB_NAME_MISMATCH;
 
     if ( compare_flags & GRIB_COMPARE_TYPES ) {
@@ -643,14 +647,13 @@ const char* grib_get_type_name(int type)
 {
     switch(type)
     {
-    case GRIB_TYPE_LONG:    return "long"; break;
-    case GRIB_TYPE_STRING:  return "string"; break;
-    case GRIB_TYPE_BYTES:   return "bytes"; break;
-    case GRIB_TYPE_DOUBLE:  return "double"; break;
-    case GRIB_TYPE_LABEL:   return "label"; break;
-    case GRIB_TYPE_SECTION: return "section"; break;
+        case GRIB_TYPE_LONG:    return "long"; break;
+        case GRIB_TYPE_STRING:  return "string"; break;
+        case GRIB_TYPE_BYTES:   return "bytes"; break;
+        case GRIB_TYPE_DOUBLE:  return "double"; break;
+        case GRIB_TYPE_LABEL:   return "label"; break;
+        case GRIB_TYPE_SECTION: return "section"; break;
     }
-
     return "unknown";
 }
 
@@ -672,7 +675,9 @@ int grib_accessor_add_attribute(grib_accessor* a,grib_accessor* attr,int nest_if
     grib_accessor* same=NULL;
     grib_accessor* aloc=a;
 
-    same=_grib_accessor_get_attribute(a,attr->name,&id);
+    if(grib_accessor_has_attributes(a)) {
+        same=_grib_accessor_get_attribute(a,attr->name,&id);
+    }
 
     if (same) {
         if (nest_if_clash==0) return GRIB_ATTRIBUTE_CLASH;
@@ -736,8 +741,8 @@ const char* grib_accessor_get_name(grib_accessor* a) {
 grib_accessor* _grib_accessor_get_attribute(grib_accessor* a,const char* name,int* index)
 {
     int i=0;
-    while (a->attributes[i] && i<MAX_ACCESSOR_ATTRIBUTES) {
-        if (!strcmp(a->attributes[i]->name,name)) {
+    while (i<MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
+        if (!grib_inline_strcmp(a->attributes[i]->name,name)) {
             *index=i;
             return a->attributes[i];
         }
@@ -837,3 +842,18 @@ void grib_accessors_list_delete(grib_context* c,grib_accessors_list* al)
         al=tmp;
     }
 }
+
+
+#if 0
+void grib_print_accessor_flags(const grib_accessor* acc)
+{
+    const unsigned long f = acc->flags;
+    if (f & GRIB_ACCESSOR_FLAG_READ_ONLY)        printf("READ_ONLY ");
+    if (f & GRIB_ACCESSOR_FLAG_DUMP)             printf("DUMP ");
+    if (f & GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC) printf("EDITION_SPECIFIC ");
+    if (f & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)   printf("CAN_BE_MISSING ");
+    if (f & GRIB_ACCESSOR_FLAG_LOWERCASE)        printf("LOWERCASE ");
+    if (f & GRIB_ACCESSOR_FLAG_HIDDEN)           printf("HIDDEN ");
+    /* TODO: the rest */
+}
+#endif

@@ -20,6 +20,5 @@ var searchData=
   ['codes_5fread_5fbytes',['codes_read_bytes',['../interfaceeccodes_1_1codes__read__bytes.html',1,'eccodes']]],
   ['codes_5fread_5ffrom_5ffile',['codes_read_from_file',['../interfaceeccodes_1_1codes__read__from__file.html',1,'eccodes']]],
   ['codes_5fset',['codes_set',['../interfaceeccodes_1_1codes__set.html',1,'eccodes']]],
-  ['codes_5fwrite_5fbytes',['codes_write_bytes',['../interfaceeccodes_1_1codes__write__bytes.html',1,'eccodes']]],
-  ['codesinternalerror',['CodesInternalError',['../classec_codes_1_1_codes_internal_error.html',1,'ecCodes']]]
+  ['codes_5fwrite_5fbytes',['codes_write_bytes',['../interfaceeccodes_1_1codes__write__bytes.html',1,'eccodes']]]
 ];

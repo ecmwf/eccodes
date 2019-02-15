@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,7 +15,7 @@
  *
  */
 
-/* 
+/*
  * Please note that scatterometer data can be encoded in various ways in BUFR. Therefore the code
  * below might not work directly for other types of messages than the one used in the
  * example. It is advised to use bufr_dump to understand the structure of the messages.
@@ -58,35 +58,32 @@ int main(int argc,char* argv[])
         /* We need to instruct ecCodes to expand the descriptors
          * i.e. unpack the data values */
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
-        
+
         /* The BUFR file contains a single message with 2016 subsets in a compressed form.
          * It means each subset has exactly the same structure: they store one location with
-         * several beams and one backscatter value in each beam. 
-         * 
-         * To print the backScatter values for beamIdentifier=2 from all the subsets 
+         * several beams and one backscatter value in each beam.
+         *
+         * To print the backScatter values for beamIdentifier=2 from all the subsets
          * we will simply access the key by condition (see below) */
-        
+
         /* Get the total number of subsets. */
         CODES_CHECK(codes_get_long(h,"numberOfSubsets",&numObs),0);
 
         printf("Number of values: %ld\n",numObs);
-        
-        /* Allocate memory for the values to be read. Each
-         * parameter must have the same number of values. */
-        lat = (double*)malloc(numObs*sizeof(double));
-        lon = (double*)malloc(numObs*sizeof(double));
-        bscatter = (double*)malloc(numObs*sizeof(double));
 
         /* Get latitude */
         sprintf(key_name,"latitude");
 
         /* Check the size (including all the subsets) */
         CODES_CHECK(codes_get_size(h,key_name,&len),0);
-        if(len != numObs)
-        {
+        if(len != numObs) {
             printf("inconsistent number of %s values found!\n",key_name);
             return 1;
         }
+
+        /* Allocate memory for the values to be read. Each
+         * parameter must have the same number of values. */
+        lat = (double*)malloc(numObs*sizeof(double));
 
         /* Get the values (from all the subsets) */
         CODES_CHECK(codes_get_double_array(h,key_name,lat,&len),0);
@@ -96,13 +93,13 @@ int main(int argc,char* argv[])
 
         /* Check the size (including all the subsets) */
         CODES_CHECK(codes_get_size(h,key_name,&len),0);
-        if(len != numObs)
-        {
+        if(len != numObs) {
             printf("inconsistent number of %s values found!\n",key_name);
             return 1;
         }
 
         /* Get the values (from all the subsets) */
+        lon = (double*)malloc(numObs*sizeof(double));
         CODES_CHECK(codes_get_double_array(h,key_name,lon,&len),0);
 
         /* Get backScatter for beam two. We use an access by condition for this key. */
@@ -110,23 +107,20 @@ int main(int argc,char* argv[])
 
         /* Check the size (including all the subsets) */
         CODES_CHECK(codes_get_size(h,key_name,&len),0);
-        if(len != numObs)
-        {
+        if(len != numObs) {
             printf("inconsistent number of %s values found!\n",key_name);
             return 1;
         }
 
         /* Get the values (from all the subsets) */
+        bscatter = (double*)malloc(numObs*sizeof(double));
         CODES_CHECK(codes_get_double_array(h,key_name,bscatter,&len),0);
 
         /* Print the values */
         printf("pixel   lat    lon     backscatter    \n");
         printf("-------------------------------\n");
-
-        for(i=0; i < numObs; i++)
-        {
-            printf("%4d %.3f %.3f %.3f \n",
-                    i+1,lat[i],lon[i],bscatter[i]);
+        for(i=0; i < numObs; i++) {
+            printf("%4d %.3f %.3f %.3f \n", i+1,lat[i],lon[i],bscatter[i]);
         }
 
         /* Delete handle */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,7 +15,6 @@
 
    START_CLASS_DEF
    CLASS      = expression
-   IMPLEMENTS = init_class
    IMPLEMENTS = destroy
    IMPLEMENTS = native_type
    IMPLEMENTS = evaluate_long
@@ -87,6 +86,8 @@ static void init_class(grib_expression_class* c)
 }
 /* END_CLASS_IMP */
 
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
 GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
 {
     if (*a != *b) return 1;

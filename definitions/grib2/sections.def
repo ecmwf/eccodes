@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -19,11 +19,13 @@
    transient grib2LocalSectionPresent=0;
    alias section2Used=zero;
    alias setLocalDefinition=grib2LocalSectionPresent;
+   transient deleteLocalDefinition=0;
 
-   if( sectionNumber == 2 or grib2LocalSectionPresent>0 ){
+   if( (sectionNumber == 2 or grib2LocalSectionPresent>0) and deleteLocalDefinition == 0 ){
       position     sectionPosition;
       template     section_2 "grib2/section.2.def";
-   } 
+   }
+   alias localUsePresent=section2Used;
    
    lookup[1]    sectionNumber(4) ;
 

@@ -19,8 +19,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 32 ;
 	}
-#Sea-ice cover
-'Sea-ice cover' = {
+#Sea ice area fraction
+'Sea ice area fraction' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 91 ;
 	}
@@ -38,6 +38,16 @@
 'Potential vorticity' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 4 ;
+	}
+#Total column cloud liquid water
+'Total column cloud liquid water' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 227 ;
+	}
+#Total column cloud ice water
+'Total column cloud ice water' = {
+	 table2Version = 200 ;
+	 indicatorOfParameter = 58 ;
 	}
 #Geopotential
 'Geopotential' = {
@@ -228,11 +238,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 212 ;
 	}
-#Cloud Ice
-'Cloud Ice' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 58 ;
-	}
 #Cloud water
 'Cloud water' = {
 	 table2Version = 200 ;
@@ -285,33 +290,33 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 84 ;
 	}
-#Evaporation
-'Evaporation' = {
+#Mean evaporation
+'Mean evaporation' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 57 ;
 	}
-#Total precipitation
-'Total precipitation' = {
+#Mean total precipitation
+'Mean total precipitation' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 61 ;
 	}
-#Large scale precipitation
-'Large scale precipitation' = {
+#Mean large scale precipitation
+'Mean large scale precipitation' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Convective precipitation
-'Convective precipitation' = {
+#Mean convective precipitation
+'Mean convective precipitation' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 63 ;
 	}
-#Snowfall rate water equivalent
-'Snowfall rate water equivalent' = {
+#Mean snowfall rate water equivalent
+'Mean snowfall rate water equivalent' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 64 ;
 	}
-#Water run-off
-'Water run-off' = {
+#Mean surface water runoff
+'Mean surface water runoff' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 90 ;
 	}
@@ -330,18 +335,18 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 165 ;
 	}
-#Frequency of deep convection
-'Frequency of deep convection' = {
+#Mean frequency of deep convection
+'Mean frequency of deep convection' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 170 ;
 	}
-#Frequency of shallow convection
-'Frequency of shallow convection' = {
+#Mean frequency of shallow convection
+'Mean frequency of shallow convection' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 171 ;
 	}
-#Frequency of stratocumulus parameterisation
-'Frequency of stratocumulus parameterisation' = {
+#Mean frequency of stratocumulus parameterisation
+'Mean frequency of stratocumulus parameterisation' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 172 ;
 	}
@@ -355,8 +360,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Evapotranspiration
-'Evapotranspiration' = {
+#Mean evapotranspiration
+'Mean evapotranspiration' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 202 ;
 	}
@@ -379,11 +384,6 @@
 'Mass concentration of condensed water in soil' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 226 ;
-	}
-#Cloud liquid water
-'Cloud liquid water' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 227 ;
 	}
 #Upward mass flux at cloud base
 'Upward mass flux at cloud base' = {
@@ -410,23 +410,23 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 239 ;
 	}
-#Zonal momentum flux by long gravity wave
-'Zonal momentum flux by long gravity wave' = {
+#Mean zonal momentum flux by long gravity wave
+'Mean zonal momentum flux by long gravity wave' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Meridional momentum flux by long gravity wave
-'Meridional momentum flux by long gravity wave' = {
+#Mean meridional momentum flux by long gravity wave
+'Mean meridional momentum flux by long gravity wave' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 148 ;
 	}
-#Meridional momentum flux by short gravity wave
-'Meridional momentum flux by short gravity wave' = {
+#Mean meridional momentum flux by short gravity wave
+'Mean meridional momentum flux by short gravity wave' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Zonal momentum flux by short gravity wave
-'Zonal momentum flux by short gravity wave' = {
+#Mean zonal momentum flux by short gravity wave
+'Mean zonal momentum flux by short gravity wave' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 159 ;
 	}
@@ -950,8 +950,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 85 ;
 	}
-#Snow Fall water equivalent
-'Snow Fall water equivalent' = {
+#Snow depth water equivalent
+'Snow depth water equivalent' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 65 ;
 	}

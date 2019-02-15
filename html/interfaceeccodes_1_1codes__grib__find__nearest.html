@@ -96,12 +96,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a036ae036cc766718ad224851d47d99a2"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceeccodes_1_1codes__grib__find__nearest.html#a036ae036cc766718ad224851d47d99a2">codes_grib_find_nearest_single</a> (gribid, is_lsm, inlat, inlon, outlat, outlon, value, distance, index, status)</td></tr>
-<tr class="memdesc:a036ae036cc766718ad224851d47d99a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the nearest point of a given latitude/longitude point.  <a href="#a036ae036cc766718ad224851d47d99a2">More...</a><br/></td></tr>
-<tr class="separator:a036ae036cc766718ad224851d47d99a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4b53c47aecc5fa5ae43c95357d2d690"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceeccodes_1_1codes__grib__find__nearest.html#ad4b53c47aecc5fa5ae43c95357d2d690">codes_grib_find_nearest_four_single</a> (gribid, is_lsm, inlat, inlon, outlat, outlon, value, distance, index, status)</td></tr>
-<tr class="memdesc:ad4b53c47aecc5fa5ae43c95357d2d690"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the 4 nearest points of a latitude longitude point.  <a href="#ad4b53c47aecc5fa5ae43c95357d2d690">More...</a><br/></td></tr>
-<tr class="separator:ad4b53c47aecc5fa5ae43c95357d2d690"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96fb4afe88914ad24ac796fbecc453c4"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceeccodes_1_1codes__grib__find__nearest.html#a96fb4afe88914ad24ac796fbecc453c4">codes_grib_find_nearest_single</a> (gribid, is_lsm, inlat, inlon, outlat, outlon, value, distance, kindex, status)</td></tr>
+<tr class="memdesc:a96fb4afe88914ad24ac796fbecc453c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the nearest point of a given latitude/longitude point.  <a href="#a96fb4afe88914ad24ac796fbecc453c4">More...</a><br/></td></tr>
+<tr class="separator:a96fb4afe88914ad24ac796fbecc453c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b677451802af47da342addf6624870a"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceeccodes_1_1codes__grib__find__nearest.html#a2b677451802af47da342addf6624870a">codes_grib_find_nearest_four_single</a> (gribid, is_lsm, inlat, inlon, outlat, outlon, value, distance, kindex, status)</td></tr>
+<tr class="memdesc:a2b677451802af47da342addf6624870a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the 4 nearest points of a latitude longitude point.  <a href="#a2b677451802af47da342addf6624870a">More...</a><br/></td></tr>
+<tr class="separator:a2b677451802af47da342addf6624870a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb92b7a78966c0b2f53ee6e288bff673"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceeccodes_1_1codes__grib__find__nearest.html#acb92b7a78966c0b2f53ee6e288bff673">codes_grib_find_nearest_multiple</a> (gribid, is_lsm, inlats, inlons, outlats, outlons, values, distances, indexes, status)</td></tr>
 <tr class="memdesc:acb92b7a78966c0b2f53ee6e288bff673"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the nearest point of a set of points whose latitudes and longitudes are given in the inlats, inlons arrays respectively.  <a href="#acb92b7a78966c0b2f53ee6e288bff673">More...</a><br/></td></tr>
 <tr class="separator:acb92b7a78966c0b2f53ee6e288bff673"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -136,7 +136,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 </div><h2 class="groupheader">Member Function/Subroutine Documentation</h2>
-<a class="anchor" id="ad4b53c47aecc5fa5ae43c95357d2d690"></a>
+<a class="anchor" id="a2b677451802af47da342addf6624870a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -192,7 +192,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">integer(kind = kindofint), dimension(4), intent(out)&#160;</td>
-          <td class="paramname"><em>index</em>, </td>
+          <td class="paramname"><em>kindex</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -220,7 +220,7 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramname">outlat</td><td>latitude of the nearest point </td></tr>
     <tr><td class="paramname">outlon</td><td>longitude of the nearest point </td></tr>
     <tr><td class="paramname">distance</td><td>distance between the given point and its nearest </td></tr>
-    <tr><td class="paramname">index</td><td>zero based index </td></tr>
+    <tr><td class="paramname">kindex</td><td>zero based index </td></tr>
     <tr><td class="paramname">value</td><td>value of the field in the nearest point </td></tr>
     <tr><td class="paramname">status</td><td>CODES_SUCCESS if OK, integer value on error </td></tr>
   </table>
@@ -322,7 +322,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a036ae036cc766718ad224851d47d99a2"></a>
+<a class="anchor" id="a96fb4afe88914ad24ac796fbecc453c4"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -378,7 +378,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">integer(kind = kindofint), intent(out)&#160;</td>
-          <td class="paramname"><em>index</em>, </td>
+          <td class="paramname"><em>kindex</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -406,7 +406,7 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramname">outlat</td><td>latitude of the nearest point </td></tr>
     <tr><td class="paramname">outlon</td><td>longitude of the nearest point </td></tr>
     <tr><td class="paramname">distance</td><td>distance between the given point and its nearest </td></tr>
-    <tr><td class="paramname">index</td><td>zero based index </td></tr>
+    <tr><td class="paramname">kindex</td><td>zero based index </td></tr>
     <tr><td class="paramname">value</td><td>value of the field in the nearest point </td></tr>
     <tr><td class="paramname">status</td><td>CODES_SUCCESS if OK, integer value on error </td></tr>
   </table>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -19,15 +19,17 @@
    SUPER      = grib_iterator_class_gen
    IMPLEMENTS = previous;next
    IMPLEMENTS = init;destroy
-   MEMBERS    =  double   *las
-   MEMBERS    =  double   *los
-   MEMBERS    =  long      nap
-   MEMBERS    =  long      nam
-   MEMBERS    =  long iScansNegatively
+   MEMBERS    = double   *las
+   MEMBERS    = double   *los
+   MEMBERS    = long      nap
+   MEMBERS    = long      nam
+   MEMBERS    = long iScansNegatively
    MEMBERS    = long isRotated
    MEMBERS    = double angleOfRotation
    MEMBERS    = double southPoleLat
    MEMBERS    = double southPoleLon
+   MEMBERS    = long jPointsAreConsecutive
+   MEMBERS    = long disableUnrotate
    END_CLASS_DEF
 
  */
@@ -66,6 +68,8 @@ typedef struct grib_iterator_regular{
 	double angleOfRotation;
 	double southPoleLat;
 	double southPoleLon;
+	long jPointsAreConsecutive;
+    long disableUnrotate;
 } grib_iterator_regular;
 
 extern grib_iterator_class* grib_iterator_class_gen;
@@ -95,7 +99,8 @@ static void init_class(grib_iterator_class* c)
 /* END_CLASS_IMP */
 
 
-static int next(grib_iterator* i, double *lat, double *lon, double *val){
+static int next(grib_iterator* i, double *lat, double *lon, double *val)
+{
     grib_iterator_regular* self = (grib_iterator_regular*)i;
 
     if((long)i->e >= (long)(i->nv-1))  return 0;
@@ -109,7 +114,8 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val){
     return 1;
 }
 
-static int previous(grib_iterator* i, double *lat, double *lon, double *val){
+static int previous(grib_iterator* i, double *lat, double *lon, double *val)
+{
     grib_iterator_regular* self = (grib_iterator_regular*)i;
 
     if(i->e < 0)      return 0;
@@ -134,65 +140,64 @@ static int init(grib_iterator* i,grib_handle* h,grib_arguments* args)
     grib_iterator_regular* self = (grib_iterator_regular*)i;
     int ret = GRIB_SUCCESS;
 
-    long nap; /* Number of points along a parallel = Ni */
-    long nam; /* Number of points along a meridian = Nj */
-    double idir, lof,lol;
+    long Ni; /* Number of points along a parallel = Nx */
+    long Nj; /* Number of points along a meridian = Ny */
+    double idir, lon1,lon2;
     long loi;
 
-    const char* longoffirst = grib_arguments_get_name(h,args,self->carg++);
-    const char* idirec      = grib_arguments_get_name(h,args,self->carg++);
-    const char* nalpar      = grib_arguments_get_name(h,args,self->carg++);
-    const char* nalmer      = grib_arguments_get_name(h,args,self->carg++);
-    const char* iScansNegatively  = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_lon1 = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_idir = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_Ni   = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_Nj   = grib_arguments_get_name(h,args,self->carg++);
+    const char* s_iScansNeg = grib_arguments_get_name(h,args,self->carg++);
 
-    if((ret = grib_get_double_internal(h,longoffirst,   &lof))) return ret;
-    if((ret = grib_get_double_internal(h,"longitudeOfLastGridPointInDegrees", &lol))) return ret;
-    if((ret = grib_get_double_internal(h,idirec,        &idir))) return ret;
-    if((ret = grib_get_long_internal(h,nalpar,          &nap))) return ret;
-    if((ret = grib_get_long_internal(h,nalmer,          &nam))) return ret;
-    if((ret = grib_get_long_internal(h,iScansNegatively,&self->iScansNegatively)))
+    if((ret = grib_get_double_internal(h, s_lon1, &lon1))) return ret;
+    if((ret = grib_get_double_internal(h, "longitudeOfLastGridPointInDegrees", &lon2))) return ret;
+    if((ret = grib_get_double_internal(h, s_idir, &idir))) return ret;
+    if((ret = grib_get_long_internal(h, s_Ni, &Ni))) return ret;
+    if((ret = grib_get_long_internal(h, s_Nj, &Nj))) return ret;
+    if((ret = grib_get_long_internal(h, s_iScansNeg, &self->iScansNegatively)))
         return ret;
 
     /* GRIB-801: Careful of case with a single point! nap==1 */
-    if (nap > 1) {
+    if (Ni > 1) {
         /* Note: If first and last longitudes are equal I assume you wanna go round the globe */
         if (self->iScansNegatively) {
-            if (lof > lol){
-                idir=(lof-lol)/(nap-1);
+            if (lon1 > lon2){
+                idir=(lon1-lon2)/(Ni-1);
             }
             else {
-                idir=(lof+360.0-lol)/(nap-1);
+                idir=(lon1+360.0-lon2)/(Ni-1);
             }
         }
         else {
-            if (lol > lof){
-                idir=(lol-lof)/(nap-1);
+            if (lon2 > lon1){
+                idir=(lon2-lon1)/(Ni-1);
             }
             else {
-                idir=(lol+360.0-lof)/(nap-1);
+                idir=(lon2+360.0-lon1)/(Ni-1);
             }
         }
     }
     if (self->iScansNegatively) {
         idir=-idir;
     } else {
-        const double epsilon = 1e-6;
-        if (lof+(nap-2)*idir>360) lof-=360;
-        else if ( (lof+(nap-1)*idir)-360 > epsilon ){
-            /*See GRIB-396*/
-            idir=360.0/(float)nap;
-        }
+        if (lon1+(Ni-2)*idir>360) lon1-=360;
+        /*See ECC-704, GRIB-396*/
+        /*else if ( (lon1+(Ni-1)*idir)-360 > epsilon ){
+            idir=360.0/(float)Ni;
+        }*/
     }
 
-    self->nap = nap;
-    self->nam = nam;
+    self->nap = Ni;
+    self->nam = Nj;
 
-    self->las = (double*)grib_context_malloc(h->context,nam*sizeof(double));
-    self->los = (double*)grib_context_malloc(h->context,nap*sizeof(double));
+    self->las = (double*)grib_context_malloc(h->context,Nj*sizeof(double));
+    self->los = (double*)grib_context_malloc(h->context,Ni*sizeof(double));
 
-    for( loi = 0; loi < nap; loi++ )  {
-        self->los[loi] = lof;
-        lof += idir ;
+    for( loi = 0; loi < Ni; loi++ )  {
+        self->los[loi] = lon1;
+        lon1 += idir ;
     }
 
     return ret;

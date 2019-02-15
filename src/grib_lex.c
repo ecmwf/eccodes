@@ -197,12 +197,12 @@ struct grib_yy_buffer_state
 	/* Size of input buffer in bytes, not including room for EOB
 	 * characters.
 	 */
-	grib_yy_size_t grib_yy_buf_size;
+	int grib_yy_buf_size;
 
 	/* Number of characters read into grib_yy_ch_buf, not including EOB
 	 * characters.
 	 */
-	grib_yy_size_t grib_yy_n_chars;
+	int grib_yy_n_chars;
 
 	/* Whether we "own" the buffer - i.e., we know we created it,
 	 * and can realloc() it to grow it, and should free() it to
@@ -272,7 +272,7 @@ static YY_BUFFER_STATE * grib_yy_buffer_stack = 0; /**< Stack as an array. */
 
 /* grib_yy_hold_char holds the character lost when grib_yytext is formed. */
 static char grib_yy_hold_char;
-static grib_yy_size_t grib_yy_n_chars;		/* number of characters read into grib_yy_ch_buf */
+static int grib_yy_n_chars;		/* number of characters read into grib_yy_ch_buf */
 grib_yy_size_t grib_yyleng;
 
 /* Points to current character in buffer. */
@@ -356,7 +356,7 @@ static void grib_yy_fatal_error (grib_yyconst char msg[]  );
  */
 #define YY_DO_BEFORE_ACTION \
 	(grib_yytext_ptr) = grib_yy_bp; \
-	grib_yyleng = (size_t) (grib_yy_cp - grib_yy_bp); \
+	grib_yyleng = (int) (grib_yy_cp - grib_yy_bp); \
 	(grib_yy_hold_char) = *grib_yy_cp; \
 	*grib_yy_cp = '\0'; \
 	(grib_yy_c_buf_p) = grib_yy_cp;
@@ -1160,7 +1160,7 @@ int grib_yy_flex_debug = 0;
 char *grib_yytext;
 #line 1 "gribl.l"
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -1320,7 +1320,7 @@ static int input (void );
 	else \
 		{ \
 		errno=0; \
-		while ( (result = fread(buf, 1, max_size, grib_yyin))==0 && ferror(grib_yyin)) \
+		while ( (result = (int) fread(buf, 1, max_size, grib_yyin))==0 && ferror(grib_yyin)) \
 			{ \
 			if( errno != EINTR) \
 				{ \
@@ -1449,7 +1449,7 @@ grib_yy_match:
 				if ( grib_yy_current_state >= 798 )
 					grib_yy_c = grib_yy_meta[(unsigned int) grib_yy_c];
 				}
-			grib_yy_current_state = grib_yy_nxt[grib_yy_base[grib_yy_current_state] + (unsigned int) grib_yy_c];
+			grib_yy_current_state = grib_yy_nxt[grib_yy_base[grib_yy_current_state] + (flex_int16_t) grib_yy_c];
 			++grib_yy_cp;
 			}
 		while ( grib_yy_base[grib_yy_current_state] != 1945 );
@@ -2401,7 +2401,7 @@ static int grib_yy_get_next_buffer (void)
 
 	else
 		{
-			grib_yy_size_t num_to_read =
+			int num_to_read =
 			YY_CURRENT_BUFFER_LVALUE->grib_yy_buf_size - number_to_move - 1;
 
 		while ( num_to_read <= 0 )
@@ -2436,7 +2436,7 @@ static int grib_yy_get_next_buffer (void)
 
 			(grib_yy_c_buf_p) = &b->grib_yy_ch_buf[grib_yy_c_buf_p_offset];
 
-			num_to_read = YY_CURRENT_BUFFER_LVALUE->grib_yy_buf_size -
+			num_to_read = (int) YY_CURRENT_BUFFER_LVALUE->grib_yy_buf_size -
 						number_to_move - 1;
 
 			}
@@ -2470,9 +2470,9 @@ static int grib_yy_get_next_buffer (void)
 	else
 		ret_val = EOB_ACT_CONTINUE_SCAN;
 
-	if ((grib_yy_size_t) ((grib_yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->grib_yy_buf_size) {
+	if ((int) ((grib_yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->grib_yy_buf_size) {
 		/* Extend the array by 50%, plus the number we really need. */
-		grib_yy_size_t new_size = (grib_yy_n_chars) + number_to_move + ((grib_yy_n_chars) >> 1);
+		int new_size = (grib_yy_n_chars) + number_to_move + ((grib_yy_n_chars) >> 1);
 		YY_CURRENT_BUFFER_LVALUE->grib_yy_ch_buf = (char *) grib_yyrealloc((void *) YY_CURRENT_BUFFER_LVALUE->grib_yy_ch_buf,new_size  );
 		if ( ! YY_CURRENT_BUFFER_LVALUE->grib_yy_ch_buf )
 			YY_FATAL_ERROR( "out of dynamic memory in grib_yy_get_next_buffer()" );
@@ -2510,7 +2510,7 @@ static int grib_yy_get_next_buffer (void)
 			if ( grib_yy_current_state >= 798 )
 				grib_yy_c = grib_yy_meta[(unsigned int) grib_yy_c];
 			}
-		grib_yy_current_state = grib_yy_nxt[grib_yy_base[grib_yy_current_state] + (unsigned int) grib_yy_c];
+		grib_yy_current_state = grib_yy_nxt[grib_yy_base[grib_yy_current_state] + (flex_int16_t) grib_yy_c];
 		}
 
 	return grib_yy_current_state;
@@ -2538,7 +2538,7 @@ static int grib_yy_get_next_buffer (void)
 		if ( grib_yy_current_state >= 798 )
 			grib_yy_c = grib_yy_meta[(unsigned int) grib_yy_c];
 		}
-	grib_yy_current_state = grib_yy_nxt[grib_yy_base[grib_yy_current_state] + (unsigned int) grib_yy_c];
+	grib_yy_current_state = grib_yy_nxt[grib_yy_base[grib_yy_current_state] + (flex_int16_t) grib_yy_c];
 	grib_yy_is_jam = (grib_yy_current_state == 797);
 
 		return grib_yy_is_jam ? 0 : grib_yy_current_state;
@@ -2556,7 +2556,7 @@ static int grib_yy_get_next_buffer (void)
 	if ( grib_yy_cp < YY_CURRENT_BUFFER_LVALUE->grib_yy_ch_buf + 2 )
 		{ /* need to shift things up to make room */
 		/* +2 for EOB chars. */
-		register grib_yy_size_t number_to_move = (grib_yy_n_chars) + 2;
+		register int number_to_move = (grib_yy_n_chars) + 2;
 		register char *dest = &YY_CURRENT_BUFFER_LVALUE->grib_yy_ch_buf[
 					YY_CURRENT_BUFFER_LVALUE->grib_yy_buf_size + 2];
 		register char *source =
@@ -2568,7 +2568,7 @@ static int grib_yy_get_next_buffer (void)
 		grib_yy_cp += (int) (dest - source);
 		grib_yy_bp += (int) (dest - source);
 		YY_CURRENT_BUFFER_LVALUE->grib_yy_n_chars =
-			(grib_yy_n_chars) = YY_CURRENT_BUFFER_LVALUE->grib_yy_buf_size;
+			(grib_yy_n_chars) = (int) YY_CURRENT_BUFFER_LVALUE->grib_yy_buf_size;
 
 		if ( grib_yy_cp < YY_CURRENT_BUFFER_LVALUE->grib_yy_ch_buf + 2 )
 			YY_FATAL_ERROR( "flex scanner push-back overflow" );
@@ -2964,7 +2964,7 @@ YY_BUFFER_STATE grib_yy_scan_buffer  (char * base, grib_yy_size_t  size )
 YY_BUFFER_STATE grib_yy_scan_string (grib_yyconst char * grib_yystr )
 {
     
-	return grib_yy_scan_bytes(grib_yystr,strlen(grib_yystr) );
+	return grib_yy_scan_bytes(grib_yystr,(int) strlen(grib_yystr) );
 }
 
 /** Setup the input buffer state to scan the given bytes. The next call to grib_yylex() will
@@ -2982,7 +2982,7 @@ YY_BUFFER_STATE grib_yy_scan_bytes  (grib_yyconst char * grib_yybytes, grib_yy_s
 	int i;
     
 	/* Get memory for full buffer, including space for trailing EOB's. */
-	n = _grib_yybytes_len + 2;
+	n = (grib_yy_size_t) _grib_yybytes_len + 2;
 	buf = (char *) grib_yyalloc(n  );
 	if ( ! buf )
 		YY_FATAL_ERROR( "out of dynamic memory in grib_yy_scan_bytes()" );

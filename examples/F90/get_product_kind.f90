@@ -1,5 +1,5 @@
 !
-!Copyright 2005-2016 ECMWF.
+!Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 !which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -44,12 +44,12 @@ program get_product_kind
 
     ! load the next message
     call codes_new_from_file(ifile,ihandle,CODES_PRODUCT_ANY,iret)
-    
-    count=count+1
-    
-  end do  
 
-  ! close file  
+    count=count+1
+
+  end do
+
+  ! close file
   call codes_close_file(ifile)
 
 end program get_product_kind

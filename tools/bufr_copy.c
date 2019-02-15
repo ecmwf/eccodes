@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,10 +15,11 @@
 
 #include "grib_tools.h"
 
-char* grib_tool_description="Copies the content of BUFR files printing"
-        " values of some keys.";
-char* grib_tool_name="bufr_copy";
-char* grib_tool_usage="[options] file file ... output_file";
+const char* grib_tool_description="Copies the content of BUFR files printing"
+        " values of some keys."
+        "\n\tIf the name of the output_bufr_file contains a key enclosed in square brackets, its value will be used.";
+const char* grib_tool_name="bufr_copy";
+const char* grib_tool_usage="[options] bufr_file bufr_file ... output_bufr_file";
 
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value */
@@ -29,12 +30,12 @@ grib_option grib_options[]={
         {"p:",0,0,1,1,0},
         {"s:",0,0,0,1,0},
         {"P:",0,0,0,1,0},
-        {"w:","key[:{s/d/i}]=value,key[:{s/d/i}]=value,...","\n\t\tWhere clause."
+        {"w:","key[:{s|d|i}]=value,key[:{s|d|i}]=value,...","\n\t\tWhere clause."
                 "\n\t\tOnly BUFR messages matching the key/value constraints are "
-                "copied to the\n\t\toutput_bufr_file.\n\t\tFor each key a string (key:s), a "
-                "double (key:d) or an integer (key:i)\n\t\ttype can be defined. Default type "
-                "is string.\n",0,1,0},
-        {"B:",0,0,0,1,0},
+                "copied to the output_bufr_file.\n\t\tFor each key a string (key:s), a "
+                "double (key:d) or an integer (key:i)\n\t\ttype can be defined. Default type is string."
+                "\n\t\tNote: only one -w clause is allowed.\n", 0,1,0},
+/*      {"B:",0,0,0,1,0},      */
         {"V",0,0,0,1,0},
         {"W:",0,0,0,1,0},
         {"U",0,0,1,0,0},
@@ -43,6 +44,7 @@ grib_option grib_options[]={
         {"S",0,0,1,0,0},
         {"g",0,0,0,1,0},
         {"7",0,0,0,1,0},
+        {"X:",0,0,0,1,0},
         {"v",0,0,0,1,0}
 };
 
@@ -70,6 +72,12 @@ int grib_tool_init(grib_runtime_options* options)
         }
     }
 #endif
+    /* ECC-657: If user supplied -p to print some keys, turn on verbose */
+    if (grib_options_on("p:")) {
+        if (grib_options_get_option("p:")) {
+            options->verbose = 1;
+        }
+    }
     return 0;
 }
 
@@ -80,6 +88,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {
+    exit_if_input_is_directory(grib_tool_name, file->name);
     return 0;
 }
 

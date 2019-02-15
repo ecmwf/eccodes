@@ -1,14 +1,18 @@
+! Copyright 2005-2018 ECMWF.
+!
+! This software is licensed under the terms of the Apache Licence Version 2.0
+! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+!
+! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !  Description: how to get values using keys.
-!
-!
-!  Copyright: See COPYING file that comes with this distribution
 !
 !
 program get
 use eccodes
 implicit none
- 
+
   integer                                         ::  ifile
   integer                                         ::  iret
   integer                                         ::  igrib
@@ -27,74 +31,73 @@ implicit none
 
   call codes_open_file(ifile, &
        '../../data/reduced_latlon_surface.grib1','r')
- 
-!     a new grib message is loaded from file
-!     igrib is the grib id to be used in subsequent calls
-  call  codes_grib_new_from_file(ifile,igrib) 
 
-!     get as a integer
+  ! A new grib message is loaded from file
+  ! igrib is the grib id to be used in subsequent calls
+  call  codes_grib_new_from_file(ifile,igrib)
+
+  ! get as a integer
   call codes_get(igrib,'numberOfPointsAlongAParallel', &
-                               numberOfPointsAlongAParallel) 
+                               numberOfPointsAlongAParallel)
   write(*,*) 'numberOfPointsAlongAParallel=', &
               numberOfPointsAlongAParallel
 
-!     get as a integer
+  ! get as a integer
   call codes_get(igrib,'numberOfPointsAlongAMeridian', &
-                                       numberOfPointsAlongAMeridian) 
+                                       numberOfPointsAlongAMeridian)
   write(*,*) 'numberOfPointsAlongAMeridian=', &
               numberOfPointsAlongAMeridian
 
-!     get as a real8
-call codes_get(igrib, &
+  ! get as a real8
+  call codes_get(igrib, &
                       'latitudeOfFirstGridPointInDegrees', &
-                       latitudeOfFirstPointInDegrees) 
-write(*,*) 'latitudeOfFirstGridPointInDegrees=', &
+                       latitudeOfFirstPointInDegrees)
+  write(*,*) 'latitudeOfFirstGridPointInDegrees=', &
             latitudeOfFirstPointInDegrees
 
-!     get as a real8
+  !     get as a real8
   call codes_get(igrib, &
                'longitudeOfFirstGridPointInDegrees', &
-                longitudeOfFirstPointInDegrees) 
+                longitudeOfFirstPointInDegrees)
   write(*,*) 'longitudeOfFirstGridPointInDegrees=', &
-     longitudeOfFirstPointInDegrees
+      longitudeOfFirstPointInDegrees
 
-!     get as a real8
+  ! get as a real8
   call codes_get(igrib, &
-     'latitudeOfLastGridPointInDegrees', &
-     latitudeOfLastPointInDegrees) 
+      'latitudeOfLastGridPointInDegrees', &
+      latitudeOfLastPointInDegrees)
   write(*,*) 'latitudeOfLastGridPointInDegrees=', &
-     latitudeOfLastPointInDegrees
+      latitudeOfLastPointInDegrees
 
-!     get as a real8
+  ! get as a real8
   call codes_get(igrib, &
-     'longitudeOfLastGridPointInDegrees', &
-      longitudeOfLastPointInDegrees) 
+      'longitudeOfLastGridPointInDegrees', &
+      longitudeOfLastPointInDegrees)
   write(*,*) 'longitudeOfLastGridPointInDegrees=', &
               longitudeOfLastPointInDegrees
 
-!     get as a real8
+  ! get as a real8
   call codes_get(igrib, &
                    'jDirectionIncrementInDegrees', &
-                    jDirectionIncrementInDegrees) 
+                    jDirectionIncrementInDegrees)
   write(*,*) 'jDirectionIncrementInDegrees=', &
               jDirectionIncrementInDegrees
 
-!     get as a real8
+  ! get as a real8
   call codes_get(igrib, &
        'iDirectionIncrementInDegrees', &
-        iDirectionIncrementInDegrees) 
+        iDirectionIncrementInDegrees)
   write(*,*) 'iDirectionIncrementInDegrees=', &
               iDirectionIncrementInDegrees
 
-!     get the size of the values array
+  ! get the size of the values array
   call codes_get_size(igrib,'values',numberOfValues)
   write(*,*) 'numberOfValues=',numberOfValues
 
   allocate(values(2*numberOfValues), stat=iret)
-!     get data values
+  ! get data values
   print*, size(values)
   call codes_get(igrib,'values',values)
-
 
   average = 0
   do i=1,numberOfValues

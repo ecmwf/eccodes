@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -40,14 +40,14 @@ grib_dumper* grib_dumper_factory(const char* op, grib_handle* h, FILE* out, unsi
             d->depth             = 0;
             d->handle            = h;
             d->cclass            = c;
-            d->option_flags           = option_flags;
+            d->option_flags      = option_flags;
             d->arg               = arg;
             d->out               = out;
             grib_init_dumper(d);
             grib_context_log(h->context,GRIB_LOG_DEBUG,"Creating dumper of type : %s ", op);
             return d;
         }
-    grib_context_log(h->context,GRIB_LOG_ERROR,"Unknown type : %s for dumper", op);
+    grib_context_log(h->context,GRIB_LOG_ERROR,"Unknown type : '%s' for dumper", op);
     return NULL;
 }
 

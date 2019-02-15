@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,11 +16,7 @@
  */
 
 #include "eccodes.h"
-
-void usage(char* prog) {
-    printf("usage: %s infile\n",prog);
-    exit(1);
-}
+#include <assert.h>
 
 int main(int argc,char* argv[])
 {
@@ -37,7 +33,7 @@ int main(int argc,char* argv[])
     char stringVal[100]={0,};
     int i,err=0;
     int cnt=0;
-    char* infile = "../../data/bufr/synop_multi_subset.bufr";
+    const char* infile = "../../data/bufr/synop_multi_subset.bufr";
 
     in=fopen(infile,"r");
     if (!in) {
@@ -70,22 +66,27 @@ int main(int argc,char* argv[])
 
             printf("  subsetNumber=%d",i);
             /* read and print some data values */
-            CODES_CHECK(codes_get_long(h,key,&longVal),0);
+            CODES_CHECK(codes_get_long(h,key,&longVal), 0);
             printf("  blockNumber=%ld",longVal);
 
             sprintf(key,"/subsetNumber=%d/stationNumber",i);
-            CODES_CHECK(codes_get_long(h,key,&longVal),0);
+            CODES_CHECK(codes_get_long(h,key,&longVal), 0);
             printf("  stationNumber=%ld",longVal);
 
+            sprintf(key,"/subsetNumber=%d/stationOrSiteName->units",i);
+            CODES_CHECK(codes_get_length(h,key,&stringLen), 0);
+            assert(stringLen == 10); /* should be "CCITT IA5" */
+
             sprintf(key,"/subsetNumber=%d/stationOrSiteName",i);
-            stringLen=100;
-            CODES_CHECK(codes_get_string(h,key,stringVal,&stringLen),0);
+            CODES_CHECK(codes_get_length(h,key,&stringLen), 0);
+            CODES_CHECK(codes_get_string(h,key,stringVal,&stringLen), 0);
+            assert(stringLen > 0 && stringLen < 17);
             printf("  stationOrSiteName=\"%s\"",stringVal);
 
             sprintf(key,"/subsetNumber=%d/airTemperature",i);
             CODES_CHECK(codes_get_double(h,key,&doubleVal),0);
             printf("  airTemperature=%g\n",doubleVal);
-
+            assert(doubleVal > 265 && doubleVal < 278);
         }
 
         /* delete handle */

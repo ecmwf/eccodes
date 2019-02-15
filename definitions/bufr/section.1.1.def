@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-codetable[2] bufrHeaderCentre            'grib1/0.table' : dump;
+codetable[2] bufrHeaderCentre 'common/c-1.table' : dump;
 unsigned[1]  updateSequenceNumber;
 
 flags[1]     section1Flags 'bufr/section1_flags.table' = 128 : hidden ; # = section 2 present

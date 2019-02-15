@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -18,7 +18,7 @@
 #include "omp.h"
 #endif
 
-#define mask1(i)    (1u << i)
+#define mask1(i)    (1UL << i)
 #define test(n,i)    !!((n) & mask1(i))
 
 long GRIB_MASK = -1;       /* Mask of sword bits */
@@ -30,9 +30,9 @@ long GRIB_MASK = -1;       /* Mask of sword bits */
  ((b)==max_nbits ? GRIB_MASK : (~(GRIB_MASK<<(b))<<(max_nbits-((q)+(b)))))
 
 
-static unsigned long dmasks[] = { 0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE0, 0xC0, 0x80, 0x00, };
+static const unsigned long dmasks[] = { 0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE0, 0xC0, 0x80, 0x00, };
 
-static int max_nbits = sizeof(unsigned long)*8;
+static const int max_nbits = sizeof(unsigned long)*8;
 
 unsigned long grib_decode_unsigned_byte_long(const unsigned char* p, long o, int l)
 {
@@ -101,34 +101,36 @@ int grib_encode_signed_long(unsigned char* p, long val , long o, int l)
     return GRIB_SUCCESS;
 }
 
-static void grib_set_bit_on( unsigned char* p, long* bitp){
-
+static void grib_set_bit_on( unsigned char* p, long* bitp)
+{
     p +=  *bitp/8;
     *p |=  (1u << (7-((*bitp)%8)));
     (*bitp)++;
 }
 
-void grib_set_bits_on( unsigned char* p, long* bitp,long nbits){
+void grib_set_bits_on( unsigned char* p, long* bitp,long nbits)
+{
     int i;
     for (i=0;i<nbits;i++) {
       grib_set_bit_on(p,bitp);
     }
 }
 
-static void grib_set_bit_off( unsigned char* p, long* bitp){
-
+static void grib_set_bit_off( unsigned char* p, long* bitp)
+{
     p +=  *bitp/8;
     *p &= ~(1u << (7-((*bitp)%8)));
     (*bitp)++;
 }
 
-int grib_get_bit(const unsigned char* p, long bitp){
+int grib_get_bit(const unsigned char* p, long bitp)
+{
     p += (bitp >> 3);
     return (*p&(1<<(7-(bitp%8))));
 }
 
-void grib_set_bit( unsigned char* p, long bitp, int val){
-
+void grib_set_bit( unsigned char* p, long bitp, int val)
+{
     if(val == 0) grib_set_bit_off(p,&bitp);
     else grib_set_bit_on(p,&bitp);
 }
@@ -166,18 +168,11 @@ int grib_encode_signed_longb(unsigned char* p,  long val ,long *bitp, long nb)
 }
 
 #if GRIB_IBMPOWER67_OPT
-
-#include "grib_bits_ibmpow.c"
-
+ #include "grib_bits_ibmpow.c"
 #else
-#if FAST_BIG_ENDIAN
-
-#include "grib_bits_fast_big_endian.c"
-
-#else
-
-#include "grib_bits_any_endian.c"
-
-#endif
-
+ #if FAST_BIG_ENDIAN
+  #include "grib_bits_fast_big_endian.c"
+ #else
+  #include "grib_bits_any_endian.c"
+ #endif
 #endif

@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -13,8 +13,8 @@ section_length[3] section1Length ;
 
 unsigned[1]  masterTableNumber : dump ;
 
-codetable[2] bufrHeaderCentre 							'grib1/0.table' : dump;
-unsigned[2] bufrHeaderSubCentre            : dump;
+codetable[2] bufrHeaderCentre   'common/c-11.table' : dump;
+unsigned[2]  bufrHeaderSubCentre : dump;
 alias ls.centre=bufrHeaderCentre;
 
 unsigned[1]  updateSequenceNumber : dump;
@@ -28,8 +28,14 @@ unsigned[1] masterTablesVersionNumber : dump;
 unsigned[1] localTablesVersionNumber : dump;
 
 unsigned[2] typicalYear : dump;
-transient typicalYearOfCentury = typicalYear % 100;
-transient typicalCentury =  ( typicalYear - typicalYearOfCentury ) / 100 + 1 ;
+transient typicalYear2 = typicalYear : hidden, no_copy;
+if (typicalYear<100) {
+  # ECC-556: invalid year corrected. Assume 21st century!
+  transient typicalYear2 = (2000 + typicalYear) : hidden, no_copy;
+}
+
+transient typicalYearOfCentury = typicalYear2 % 100;
+transient typicalCentury =  ( typicalYear2 - typicalYearOfCentury ) / 100 + 1 ;
 
 unsigned[1] typicalMonth : dump;
 unsigned[1] typicalDay : dump;
@@ -37,8 +43,10 @@ unsigned[1] typicalHour : dump;
 unsigned[1] typicalMinute : dump;
 unsigned[1] typicalSecond : dump;
 
-meta ls.typicalDate sprintf("%.4d%.2d%.2d",typicalYear,typicalMonth,typicalDay) : dump,no_copy,read_only;
+meta ls.typicalDate sprintf("%.4d%.2d%.2d",typicalYear2,typicalMonth,typicalDay) : dump,no_copy,read_only;
 meta ls.typicalTime sprintf("%.2d%.2d%.2d",typicalHour,typicalMinute,typicalSecond) :dump,no_copy,read_only;
+
+meta typicalDateTime julian_date(typicalYear2,typicalMonth,typicalDay,typicalHour,typicalMinute,typicalSecond) ;
 
 alias ls.masterTablesVersionNumber=masterTablesVersionNumber;
 alias ls.localTablesVersionNumber=localTablesVersionNumber;

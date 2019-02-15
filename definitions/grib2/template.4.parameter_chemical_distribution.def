@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -6,8 +6,6 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
-
-label "Parameter information";
 
 #  Parameter category
 codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir): dump;
@@ -59,7 +57,9 @@ alias minutesAfterReferenceTimeOfDataCutoff=minutesAfterDataCutoff;
 
 #  Indicator of unit of time range
 codetable[1] indicatorOfUnitOfTimeRange ('4.4.table',masterDir,localDir) : dump;
-codetable[1] stepUnits 'stepUnits.table' = 1 : transient,dump,no_copy;
+alias defaultStepUnits = one; # 1 means Hour. See code table 4.4
+template_nofail default_step_units "grib2/localConcepts/[centre:s]/default_step_units.def";
+codetable[1] stepUnits 'stepUnits.table' = defaultStepUnits : transient,dump,no_copy;
 
 #  Forecast time in units defined by previous octet (GRIB-29: supports negative forecast time)
 signed[4] forecastTime  : dump;

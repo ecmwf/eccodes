@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -55,6 +55,7 @@ static void thread_init()
    MEMBERS    =  const char* masterDir
    MEMBERS    =  const char* localDir
    MEMBERS    =  grib_codetable* table
+   MEMBERS    =  int table_loaded
    END_CLASS_DEF
 
  */
@@ -92,6 +93,7 @@ typedef struct grib_accessor_codetable {
 	const char* masterDir;
 	const char* localDir;
 	grib_codetable* table;
+	int table_loaded;
 } grib_accessor_codetable;
 
 extern grib_accessor_class* grib_accessor_class_unsigned;
@@ -180,12 +182,30 @@ static int grib_load_codetable(grib_context* c,const char* filename,
 static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
     int n=0;
+    long new_len = len;
+    grib_handle* hand = grib_handle_of_accessor(a);
     grib_accessor_codetable* self  = (grib_accessor_codetable*)a;
     grib_action* act=(grib_action*)(a->creator);
+    DebugAssert(len == self->nbytes);
 
-    self->tablename = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
-    self->masterDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-    self->localDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    if (new_len == 0) {
+        /* ECC-485: When the codetable length is 0, it means we are passing
+         * its length as an identifier not an integer. This identifier is
+         * added to the argument list (at the beginning)
+         */
+        new_len = grib_arguments_get_long(hand,params,n++);
+        if ( new_len <= 0 ) {
+            grib_context_log(a->context,GRIB_LOG_FATAL,"%s: codetable length must be a positive integer",a->name);
+        }
+        self->nbytes = new_len;
+    }
+
+    self->tablename = grib_arguments_get_string(hand,params,n++);
+    if (self->tablename == NULL) {
+        grib_context_log(a->context,GRIB_LOG_FATAL,"%s: codetable table is invalid",a->name);
+    }
+    self->masterDir = grib_arguments_get_name(hand,params,n++); /* can be NULL */
+    self->localDir  = grib_arguments_get_name(hand,params,n++); /* can be NULL */
 
     /*if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)
     printf("-------- %s type string (%ld)\n",a->name,a->flags);*/
@@ -195,7 +215,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
         if (!a->vvalue)
             a->vvalue = (grib_virtual_value*)grib_context_malloc_clear(a->context,sizeof(grib_virtual_value));
         a->vvalue->type=grib_accessor_get_native_type(a);
-        a->vvalue->length=len;
+        a->vvalue->length = new_len;
         if (act->default_value!=NULL) {
             const char* p = 0;
             size_t s_len = 1;
@@ -203,11 +223,11 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
             int ret=0;
             double d;
             char tmp[1024];
-            grib_expression* expression=grib_arguments_get_expression(grib_handle_of_accessor(a),act->default_value,0);
-            int type = grib_expression_native_type(grib_handle_of_accessor(a),expression);
+            grib_expression* expression=grib_arguments_get_expression(hand,act->default_value,0);
+            int type = grib_expression_native_type(hand,expression);
             switch(type) {
             case GRIB_TYPE_DOUBLE:
-                grib_expression_evaluate_double(grib_handle_of_accessor(a),expression,&d);
+                grib_expression_evaluate_double(hand,expression,&d);
                 grib_pack_double(a,&d,&s_len);
                 break;
 
@@ -229,13 +249,21 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
             }
         }
     } else {
-        a->length = len;
+        a->length = new_len;
     }
+}
+
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
+GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b) {
+    if (*a != *b) return 1;
+    while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
+    return (*a==0 && *b==0) ? 0 : 1;
 }
 
 static int str_eq(const char* a, const char* b)
 {
-    if ( a && b && (strcmp(a,b)==0) )
+    if ( a && b && (grib_inline_strcmp(a,b)==0) )
         return 1;
     return 0;
 }
@@ -297,13 +325,17 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
     GRIB_MUTEX_INIT_ONCE(&once,&thread_init);
     GRIB_MUTEX_LOCK(&mutex1); /* GRIB-930 */
 
-    /*printf("%s: Looking in cache: f=%s lf=%s\n", self->att.name, filename, localFilename);*/
+    /*printf("DBG %s: Look in cache: f=%s lf=%s (recomposed=%s)\n", self->att.name, filename, localFilename,recomposed);*/
+    if (filename == NULL && localFilename == NULL) {
+        t = NULL;
+        goto the_end;
+    }
     next=c->codetable;
     while(next) {
-        if ((filename && next->filename[0] && strcmp(filename,next->filename[0]) == 0) &&
+        if ((filename && next->filename[0] && grib_inline_strcmp(filename,next->filename[0]) == 0) &&
                 ((localFilename==0 && next->filename[1]==NULL) ||
                         ((localFilename!=0 && next->filename[1]!=NULL)
-                                && strcmp(localFilename,next->filename[1]) ==0)) )
+                                && grib_inline_strcmp(localFilename,next->filename[1]) ==0)) )
         {
             t = next;
             goto the_end;
@@ -502,7 +534,10 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     size_t llen = 1;
     long value;
 
-    if(!self->table) self->table = load_table(self);
+    if (!self->table_loaded) {
+        self->table = load_table(self); /* may return NULL */
+        self->table_loaded = 1;
+    }
     table=self->table;
 
     grib_unpack_long(a, &value,&llen);
@@ -525,7 +560,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
             else
                 sprintf(comment,"%s", table->entries[value].title);
 
-            if (table->entries[value].units!=NULL && strcmp(table->entries[value].units,"unknown")) {
+            if (table->entries[value].units!=NULL && grib_inline_strcmp(table->entries[value].units,"unknown")) {
                 strcat(comment," (");
                 strcat(comment,table->entries[value].units);
                 strcat(comment,") ");
@@ -569,7 +604,10 @@ static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
     if( (err = grib_unpack_long(a,&value,&size)) != GRIB_SUCCESS)
         return err;
 
-    if(!self->table) self->table = load_table(self);
+    if (!self->table_loaded) {
+        self->table = load_table(self); /* may return NULL */
+        self->table_loaded=1;
+    }
     table=self->table;
 
     if(table && (value >= 0) && (value < table->size) && table->entries[value].abbreviation)
@@ -618,11 +656,13 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t *len)
 #ifndef ECCODES_ON_WINDOWS
     cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? strcmp_nocase : strcmp;
 #else
-    /* Microsoft Windows Visual Studio support */
     cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? stricmp : strcmp;
 #endif
 
-    if(!self->table) self->table = load_table(self);
+    if (!self->table_loaded) {
+        self->table = load_table(self); /* may return NULL */
+        self->table_loaded=1;
+    }
     table=self->table;
 
     if(!table)
@@ -731,14 +771,24 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
     long rlen = 0;
-    int err=0;
+
     unsigned long i = 0;
     long pos = a->offset*8;
+    grib_handle* hand = NULL;
 
-    err=grib_value_count(a,&rlen);
-    if (err) return err;
+#ifdef DEBUG
+    {
+        int err = grib_value_count(a,&rlen);
+        Assert(!err);
+        Assert(rlen == 1);
+    }
+#endif
+    rlen = 1; /* ECC-480 Performance: avoid func call overhead of grib_value_count */
 
-    if(!self->table) self->table = load_table(self);
+    if (!self->table_loaded) {
+        self->table = load_table(self); /* may return NULL */
+        self->table_loaded=1;
+    }
 
     if(*len < rlen)
     {
@@ -753,8 +803,12 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
         return GRIB_SUCCESS;
     }
 
+    /* ECC-480 Performance: inline the grib_handle_of_accessor here to reduce func call overhead */
+    if (a->parent==NULL) hand = a->h;
+    else                 hand = a->parent->h;
+
     for(i=0; i< rlen;i++){
-        val[i] = (long)grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data , &pos, self->nbytes*8);
+        val[i] = (long)grib_decode_unsigned_long(hand->buffer->data , &pos, self->nbytes*8);
     }
 
     *len = rlen;

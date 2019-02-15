@@ -8,6 +8,6 @@ then
   exit
 fi
 
-${examples_dir}multi_fortran > /dev/null
+${examples_dir}/multi_fortran > /dev/null
 
 

@@ -1,5 +1,5 @@
 set -ea
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,12 +16,7 @@ else
   # This is for autotools
   echo
   echo "TEST: $0"
-
-  # If this environment variable is set, then become verbose
-  # so one can see why and how a test failed
-  if test "x$ECCODES_TEST_VERBOSE_OUTPUT" != "x"; then
-     set -x
-  fi
+  set -x
 
   if [ -z "${data_dir}" ]
   then
@@ -32,11 +27,13 @@ else
     export ECCODES_DEFINITION_PATH
     ECCODES_SAMPLES_PATH=$cpath/samples
     export ECCODES_SAMPLES_PATH
-    tools_dir=$cpath/tools/
-    examples_dir=$cpath/examples/C/
+    tools_dir=$cpath/tools
+    examples_dir=$cpath/examples/C
 
-#tools_dir="valgrind --error-exitcode=1 -q $cpath/tools/"
-#examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/C/"
+    if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
+      tools_dir="valgrind --error-exitcode=1 -q $cpath/tools"
+      examples_dir="valgrind --error-exitcode=1 -q $cpath/examples/C"
+    fi
 
     data_dir=$cpath/data
   else
@@ -59,6 +56,6 @@ else
   # Download the data needed for tests
   ${data_dir}/download.sh "${data_dir}"
 
-  #${tools_dir}codes_info
+  #${tools_dir}/codes_info
   set -u
 fi

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -48,9 +48,9 @@ double grib_op_gt_d(double a, double b)     {return a >  b;}
 double grib_op_ge_d(double a, double b)     {return a >= b;}
 double grib_op_le_d(double a, double b)     {return a <= b;}
 
-
 #define LOOKUP(a) if(proc == a) {return "&"#a;}
-const char* grib_binop_long_proc_name(grib_binop_long_proc proc) {
+const char* grib_binop_long_proc_name(grib_binop_long_proc proc)
+{
     if(!proc) return "NULL";
     LOOKUP(grib_op_eq);
     LOOKUP(grib_op_ne);
@@ -70,10 +70,11 @@ const char* grib_binop_long_proc_name(grib_binop_long_proc proc) {
     LOOKUP(grib_op_modulo);
     fprintf(stderr,"Cannot find grib_binop_long_proc\n");
     Assert(0);
-	return NULL;
+    return NULL;
 }
 
-const char* grib_binop_double_proc_name(grib_binop_double_proc proc) {
+const char* grib_binop_double_proc_name(grib_binop_double_proc proc)
+{
     if(!proc) return "NULL";
     LOOKUP(grib_op_mul_d);
     LOOKUP(grib_op_div_d);
@@ -87,22 +88,24 @@ const char* grib_binop_double_proc_name(grib_binop_double_proc proc) {
     LOOKUP(grib_op_le_d);
     fprintf(stderr,"Cannot find grib_binop_double_proc_name\n");
     Assert(0);
-	return NULL;
+    return NULL;
 }
 
-const char* grib_unop_long_proc_name(grib_unop_long_proc proc) {
+const char* grib_unop_long_proc_name(grib_unop_long_proc proc)
+{
     if(!proc) return "NULL";
     LOOKUP(grib_op_not);
     LOOKUP(grib_op_neg);
     fprintf(stderr,"Cannot find grib_unop_long_proc_name\n");
     Assert(0);
-	return NULL;
+    return NULL;
 }
 
-const char* grib_unop_double_proc_name(grib_unop_double_proc proc) {
+const char* grib_unop_double_proc_name(grib_unop_double_proc proc)
+{
     if(!proc) return "NULL";
     LOOKUP(grib_op_neg_d);
     fprintf(stderr,"Cannot find grib_unop_double_proc_name\n");
     Assert(0);
-	return NULL;
+    return NULL;
 }

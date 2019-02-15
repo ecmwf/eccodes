@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -151,46 +151,41 @@ typedef struct grib_accessor_abstract_vector {
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_vector* self = (grib_accessor_vector*)a;
-  int n = 0;
+    grib_accessor_vector* self = (grib_accessor_vector*)a;
+    int n = 0;
 
-  self->vector = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->index = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
-  a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-  a->length=0;
+    self->vector = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->index = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
+    a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    a->length=0;
 }
 
 static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 {
-  size_t size=0;
-  double* stat;
-  grib_accessor_vector* self = (grib_accessor_vector*)a;
-  grib_accessor* va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
-  grib_accessor_abstract_vector* v = (grib_accessor_abstract_vector*)va;
+    int err = 0;
+    size_t size=0;
+    double* stat;
+    grib_accessor_vector* self = (grib_accessor_vector*)a;
+    grib_accessor* va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
+    grib_accessor_abstract_vector* v = (grib_accessor_abstract_vector*)va;
 
-  Assert(self->index>=0);
+    Assert(self->index>=0);
 
-  if (self->index>=v->number_of_elements) {
-    grib_context_log(a->context,GRIB_LOG_FATAL,"index=%d number_of_elements=%d for %s",self->index,v->number_of_elements,a->name);
-    Assert(self->index < v->number_of_elements);
-  }
+    if (self->index>=v->number_of_elements) {
+        grib_context_log(a->context,GRIB_LOG_FATAL,"index=%d number_of_elements=%d for %s",self->index,v->number_of_elements,a->name);
+        Assert(self->index < v->number_of_elements);
+    }
 
-  if (va->dirty) {
-    grib_get_size(grib_handle_of_accessor(a),self->vector,&size);
-    stat=(double*)grib_context_malloc_clear(a->context,sizeof(double)*size);
-    grib_unpack_double(va,stat,&size);
-    grib_context_free(a->context,stat);
-  }
+    if (va->dirty) {
+        grib_get_size(grib_handle_of_accessor(a),self->vector,&size);
+        stat=(double*)grib_context_malloc_clear(a->context,sizeof(double)*size);
+        err = grib_unpack_double(va,stat,&size);
+        grib_context_free(a->context,stat);
+        if (err) return err;
+    }
 
-  
-  *val = v->v[self->index];
-  
+    *val = v->v[self->index];
 
-
-  return GRIB_SUCCESS;
+    return err;
 }
-
-
-
-

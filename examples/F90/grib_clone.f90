@@ -1,15 +1,15 @@
-! Copyright 2005-2016 ECMWF.
+! Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-! 
+!
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
 !  FORTRAN 90 Implementation: grib_clone
 !
-!  Description: how to create a new GRIB message by cloning 
+!  Description: how to create a new GRIB message by cloning
 !               an existing message.
 !
 !
@@ -23,7 +23,7 @@ program clone
   integer                                       :: igrib_out
   character(len=2)                              :: step
   real(kind=8), dimension(:,:), allocatable     :: field2D
-  
+
   call codes_open_file(infile,'../../data/constant_field.grib1','r')
   call codes_open_file(outfile,'out.clone.grib1','w')
 
@@ -52,7 +52,7 @@ program clone
 
     ! use pack to create 1D values
     call codes_set(igrib_out,'values',pack(field2D, mask=.true.))
- 
+
     ! write cloned messages to a file
     call codes_write(igrib_out,outfile)
     call codes_release(igrib_out)

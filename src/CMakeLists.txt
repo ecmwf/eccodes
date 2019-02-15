@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -51,6 +51,7 @@ list( APPEND grib_api_srcs
     grib_bufr_descriptors_array.c
     grib_darray.c
     grib_sarray.c
+    grib_oarray.c
     grib_vdarray.c
     grib_vsarray.c
     grib_iarray.c
@@ -63,6 +64,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_bitmap.c
     grib_accessor_class_bits.c
     grib_accessor_class_bits_per_value.c
+    grib_accessor_class_bufr_clear_tables.c
     grib_accessor_class_bufr_data.c
     grib_accessor_class_bufr_elements_table.c
     grib_accessor_class_bufr_data_array.c
@@ -131,6 +133,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_gts_header.c
     grib_accessor_class_ifs_param.c
     grib_accessor_class_julian_day.c
+    grib_accessor_class_julian_date.c
     grib_accessor_class_latlonvalues.c
     grib_accessor_class_latitudes.c
     grib_accessor_class_longitudes.c
@@ -172,6 +175,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_g1_message_length.c
     grib_accessor_class_g1_section4_length.c
     grib_accessor_class_size.c
+    grib_accessor_class_rdbtime_guess_date.c
     grib_accessor_class_scale_values.c
     grib_accessor_class_offset_values.c
     grib_accessor_class_sprintf.c
@@ -227,6 +231,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_select_step_template.c
     grib_accessor_class_local_definition.c
     grib_accessor_class_g2_eps.c
+    grib_accessor_class_g2_aerosol.c
     grib_accessor_class_g2_chemical.c
     grib_accessor_class_g2_mars_labeling.c
     grib_accessor_class_md5.c
@@ -283,6 +288,7 @@ list( APPEND grib_api_srcs
     grib_dumper_class_bufr_decode_filter.c
     grib_dumper_class_bufr_decode_fortran.c
     grib_dumper_class_bufr_decode_python.c
+    grib_dumper_class_bufr_simple.c
     grib_dumper_class_json.c
     grib_dumper_class_grib_encode_C.c
     grib_dumper_class_wmo.c
@@ -297,6 +303,7 @@ list( APPEND grib_api_srcs
     grib_hash_keys.c
     grib_io.c
     grib_trie.c
+    grib_trie_with_rank.c
     grib_itrie.c
     grib_rules.c
     grib_keys_iterator.c
@@ -309,6 +316,8 @@ list( APPEND grib_api_srcs
     grib_value.c
     grib_errors.c
     grib_expression_class_binop.c
+    grib_expression_class_logical_and.c
+    grib_expression_class_logical_or.c
     grib_expression_class_is_in_dict.c
     grib_expression_class_true.c
     grib_expression_class_string_compare.c
@@ -335,6 +344,7 @@ list( APPEND grib_api_srcs
     grib_nearest_class_latlon_reduced.c
     grib_nearest_class_sh.c
     grib_nearest_class_lambert_conformal.c
+    grib_nearest_class_polar_stereographic.c
     grib_iterator_class_polar_stereographic.c
     grib_iterator_class_lambert_azimuthal_equal_area.c
     grib_iterator_class_lambert_conformal.c
@@ -425,11 +435,12 @@ ecbuild_add_library(TARGET    eccodes
                               # griby.c gribl.c
                              ${grib_api_srcs}
                     GENERATED grib_api_version.c
-                    LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}
-                    TEMPLATES ${grib_api_extra_srcs}
-                    ${CMATH_LIBRARIES}  )
+                    LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
+                    TEMPLATES ${grib_api_extra_srcs})
 
 
 install( FILES grib_api.h eccodes.h eccodes_windef.h DESTINATION ${INSTALL_INCLUDE_DIR} )
 install( FILES ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h DESTINATION ${INSTALL_INCLUDE_DIR} )
+
+
 

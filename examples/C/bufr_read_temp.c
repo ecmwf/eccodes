@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,8 +14,8 @@
  * Description: how to read temperature significant levels from TEMP BUFR messages.
  *
  */
- 
-/* 
+
+/*
  * Please note that TEMP reports can be encoded in various ways in BUFR. Therefore the code
  * below might not work directly for other types of TEMP messages than the one used in the
  * example. It is advised to use bufr_dump to understand the structure of the messages.
@@ -65,7 +65,7 @@ int main(int argc,char* argv[])
          *
          * In our BUFR message verticalSoundingSignificance is always followed by
          *    geopotential, airTemperature, dewpointTemperature,
-         *    windDirection, windSpeed and pressure. 
+         *    windDirection, windSpeed and pressure.
          * So in order to access any of these keys we need to use the
          * condition: verticalSoundingSignificance=4.
          */
@@ -78,7 +78,7 @@ int main(int argc,char* argv[])
         sprintf(key_name,"/verticalSoundingSignificance=4/pressure");
         CODES_CHECK(codes_get_size(h,key_name,&sigt_len),0);
 
-        printf("Number of T significant levels: %ld\n",sigt_len);
+        printf("Number of T significant levels: %lu\n",sigt_len);
 
         /* Allocate memory for the values to be read. Each
          * parameter must have the same number of values. */
@@ -89,15 +89,13 @@ int main(int argc,char* argv[])
 
         /* Get pressure */
         sprintf(key_name,"/verticalSoundingSignificance=4/pressure");
-
-        /* Get the values */
         len=sigt_len;
         CODES_CHECK(codes_get_double_array(h,key_name,sigt_pres,&len),0);
 
         /* Get geopotential */
         sprintf(key_name,"/verticalSoundingSignificance=4/nonCoordinateGeopotential");
 
-        /* Check the size*/
+        /* Check the size */
         CODES_CHECK(codes_get_size(h,key_name,&len),0);
         if(len != sigt_len)
         {
@@ -109,29 +107,25 @@ int main(int argc,char* argv[])
         CODES_CHECK(codes_get_double_array(h,key_name,sigt_geo,&len),0);
 
         /* Get temperature */
-        sprintf(key_name,"/verticalSoundingSignificance=4/airTemperature");
-
-        /* Check the size*/
-        if(len != sigt_len)
+        if(len != sigt_len) /* Check the size */
         {
             printf("inconsistent number of temperature values found!\n");
             return 1;
         }
 
         /* Get the values */
+        sprintf(key_name,"/verticalSoundingSignificance=4/airTemperature");
         CODES_CHECK(codes_get_double_array(h,key_name,sigt_t,&len),0);
 
         /* Get dew point */
-        sprintf(key_name,"/verticalSoundingSignificance=4/dewpointTemperature");
-
-        /* Check the size*/
-        if(len != sigt_len)
+        if(len != sigt_len) /* Check the size */
         {
             printf("inconsistent number of dewpoint temperature values found!\n");
             return 1;
         }
 
         /* Get the values */
+        sprintf(key_name,"/verticalSoundingSignificance=4/dewpointTemperature");
         CODES_CHECK(codes_get_double_array(h,key_name,sigt_td,&len),0);
 
         /* Print the values */
@@ -140,7 +134,7 @@ int main(int argc,char* argv[])
 
         for(i=0; i < sigt_len; i++)
         {
-            printf("%3ld %6.0f %6.0f %.1f %.1f\n",
+            printf("%3lu %6.0f %6.0f %.1f %.1f\n",
                     i+1,sigt_pres[i],sigt_geo[i],sigt_t[i],sigt_td[i]);
         }
 

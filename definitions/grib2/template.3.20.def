@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
-# START 2/template.3.20 ----------------------------------------------------------------------
 # TEMPLATE 3.20, Polar stereographic projection
 include "grib2/template.3.shape_of_the_earth.def";
 transient oneThousand=1000;
@@ -36,7 +34,6 @@ meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoin
 alias Lo1 =  longitudeOfFirstGridPoint;
 
 #  Resolution and component flag
-# NOTE 1 NOT FOUND
 flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : dump;
 
 #  LaD - Latitude where Dx and Dy are specified
@@ -46,19 +43,20 @@ meta geography.LaDInDegrees scale(LaD,oneConstant,grib2divider,truncateDegrees) 
 alias latitudeWhereDxAndDyAreSpecifiedInDegrees=LaDInDegrees;
 
 #  LoV - orientation of the grid
-# NOTE 2 NOT FOUND
+#  LoV is the longitude value of the meridian which is parallel to the y-axis (or columns of the grid)
+#  along which latitude increases as the y-coordinate increases
 signed[4] orientationOfTheGrid  : edition_specific;
 alias LoV =  orientationOfTheGrid ;
 meta geography.orientationOfTheGridInDegrees scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
 
 #  Dx - X-direction grid length
-# NOTE 3: Grid length is in units of 10-3 m at the latitude specified by LaD
+#  Grid length is in units of 10-3 m at the latitude specified by LaD
 unsigned[4] Dx  : edition_specific;
 meta geography.DxInMetres scale(Dx,one,thousand,truncateDegrees) : dump;
 alias xDirectionGridLength=Dx;
 
 #  Dy - Y-direction grid length
-# NOTE 3: Grid length is in units of 10-3 m at the latitude specified by LaD
+#  Grid length is in units of 10-3 m at the latitude specified by LaD
 unsigned[4] Dy  : edition_specific;
 meta geography.DyInMetres scale(Dy,one,thousand,truncateDegrees) : dump;
 alias yDirectionGridLength=Dy;
@@ -78,11 +76,16 @@ iterator polar_stereographic(numberOfPoints,missingValue,values,
           latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
           southPoleOnProjectionPlane,
           orientationOfTheGridInDegrees,
+          LaDInDegrees,
           DxInMetres,DyInMetres,
           iScansNegatively,
           jScansPositively,
           jPointsAreConsecutive,
           alternativeRowScanning);
 
+nearest polar_stereographic(values,radius,Nx,Ny);
 
-# END   2/template.3.20 ----------------------------------------------------------------------
+meta latLonValues latlonvalues(values);
+alias latitudeLongitudeValues=latLonValues;
+meta latitudes latitudes(values,0);
+meta longitudes longitudes(values,0);

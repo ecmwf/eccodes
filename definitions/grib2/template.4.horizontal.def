@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -43,6 +43,10 @@ concept_nofail vertical.typeOfLevel (unknown) {
   'tropopause' = {typeOfFirstFixedSurface=7; typeOfSecondFixedSurface=255;}
   'nominalTop' = {typeOfFirstFixedSurface=8; typeOfSecondFixedSurface=255; }
   'seaBottom' = {typeOfFirstFixedSurface=9;    typeOfSecondFixedSurface=255;}
+
+  # Note: We already had 'entireAtmosphere' mapped before adding this one so had to choose another name
+  'atmosphere' = {typeOfFirstFixedSurface=10;    typeOfSecondFixedSurface=255;}
+
   'isothermal' = {typeOfFirstFixedSurface=20;   typeOfSecondFixedSurface=255;}
   'isobaricInPa' = {typeOfFirstFixedSurface=100; typeOfSecondFixedSurface=255; pressureUnits='Pa'; }
   'isobaricInhPa' = {typeOfFirstFixedSurface=100; pressureUnits='hPa'; typeOfSecondFixedSurface=255;}
@@ -65,6 +69,8 @@ concept_nofail vertical.typeOfLevel (unknown) {
   'pressureFromGroundLayer' = {typeOfFirstFixedSurface=108;typeOfSecondFixedSurface=108;}
   'potentialVorticity' = {typeOfFirstFixedSurface=109; typeOfSecondFixedSurface=255;}
   'eta' = {typeOfFirstFixedSurface=111;  typeOfSecondFixedSurface=255;}
+  'soil' = {typeOfFirstFixedSurface=151;  typeOfSecondFixedSurface=255;}
+  'soilLayer' = {typeOfFirstFixedSurface=151;  typeOfSecondFixedSurface=151;}
 
 # In the case of Generalized vertical height coordinates, NV must be 6
   'generalVertical' = {genVertHeightCoords=1; typeOfFirstFixedSurface=150; NV=6;}
@@ -98,6 +104,7 @@ if (typeOfSecondFixedSurface == 255) {
     scaledValueOfSecondFixedSurface,
     pressureUnits)  :dump;
     alias level=topLevel;  # (see GRIB-725)
+    
 }
 alias ls.level=level;
 alias vertical.level=level;
@@ -130,4 +137,10 @@ if (extraDim) {
         unalias mars.levelist;
     }
 }
+
+# See ECC-854
+if(typeOfFirstFixedSurface == 151 && typeOfSecondFixedSurface == 151) {
+    alias mars.levelist = bottomLevel;
+}
+
 alias ls.typeOfLevel=typeOfLevel;

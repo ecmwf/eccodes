@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\src;..\..\..\tools;..\..\..\jasper-1.900.1\src\libjasper\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;IEEE;JAS_WIN_MSVC_BUILD;HAVE_STRING_H;YY_NO_UNISTD_H"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;IEEE;JAS_WIN_MSVC_BUILD;HAVE_STRING_H"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -113,7 +113,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\src;..\..\..\tools;..\..\..\jasper-1.900.1\src\libjasper\include"
-				PreprocessorDefinitions="WIN32;_WIN64;_DEBUG;_LIB;IEEE;HAVE_STRING_H;YY_NO_UNISTD_H"
+				PreprocessorDefinitions="WIN32;_WIN64;_DEBUG;_LIB;IEEE;HAVE_STRING_H"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -182,7 +182,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\..\..\src;..\..\..\tools;..\..\..\jasper-1.900.1\src\libjasper\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;IEEE;JAS_WIN_MSVC_BUILD;HAVE_STRING_H;YY_NO_UNISTD_H"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;IEEE;JAS_WIN_MSVC_BUILD;HAVE_STRING_H"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -251,7 +251,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\..\..\src;..\..\..\tools;..\..\..\jasper-1.900.1\src\libjasper\include"
-				PreprocessorDefinitions="WIN32;_WIN64;NDEBUG;_LIB;IEEE;HAVE_STRING_H;YY_NO_UNISTD_H"
+				PreprocessorDefinitions="WIN32;_WIN64;NDEBUG;_LIB;IEEE;HAVE_STRING_H"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -502,6 +502,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_accessor_class_budgdate.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_accessor_class_bufr_clear_tables.c"
 				>
 			</File>
 			<File
@@ -841,6 +845,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_g2_aerosol.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_g2_chemical.c"
 				>
 			</File>
@@ -974,6 +982,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_accessor_class_iterator.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_accessor_class_julian_date.c"
 				>
 			</File>
 			<File
@@ -1126,6 +1138,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_accessor_class_raw.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_accessor_class_rdbtime_guess_date.c"
 				>
 			</File>
 			<File
@@ -1325,10 +1341,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_accessor_classes_hash.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\grib_api_version.c"
 				>
 			</File>
@@ -1429,6 +1441,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_dumper_class_bufr_simple.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_dumper_class_debug.c"
 				>
 			</File>
@@ -1494,6 +1510,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_expression_class_length.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_expression_class_logical_and.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_expression_class_logical_or.c"
 				>
 			</File>
 			<File
@@ -1617,6 +1641,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_iterator_class_space_view.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_itrie.c"
 				>
 			</File>
@@ -1661,6 +1689,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_nearest_class_polar_stereographic.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_nearest_class_reduced.c"
 				>
 			</File>
@@ -1670,6 +1702,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_nearest_class_sh.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_oarray.c"
 				>
 			</File>
 			<File
@@ -1718,6 +1754,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_trie.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_trie_with_rank.c"
 				>
 			</File>
 			<File

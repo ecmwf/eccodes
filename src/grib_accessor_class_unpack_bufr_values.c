@@ -1,11 +1,12 @@
-/**
-* Copyright 2005-2016 ECMWF
-*
-* Licensed under the GNU Lesser General Public License which
-* incorporates the terms and conditions of version 3 of the GNU
-* General Public License.
-* See LICENSE and gpl-3.0.txt for details.
-*/
+/*
+ * Copyright 2005-2018 ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
 
 /*****************************************
  *  Enrico Fucile

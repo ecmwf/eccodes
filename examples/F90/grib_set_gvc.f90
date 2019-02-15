@@ -1,8 +1,8 @@
-! Copyright 2005-2016 ECMWF.
+! Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-! 
+!
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
@@ -26,10 +26,10 @@ program set
 
   ! Individual ensemble forecast
   call codes_set(igrib,'productDefinitionTemplateNumber', 11)
-  
+
   ! Select level type as Generalized Vertical Height Coordinate
   call codes_set(igrib,'typeOfLevel', 'generalVertical')
-  
+
   ! Now set keys specific to this level type
   call codes_set(igrib,'nlev', 12.21)
   call codes_set(igrib,'numberOfVGridUsed', 13.55)
@@ -50,7 +50,7 @@ contains
 subroutine check_settings(gribid)
   implicit none
   integer, intent(in) :: gribid
-  
+
   integer(kind = 4) :: NV,typeOfFirstFixedSurface
 
   call codes_get(gribid,'NV', NV)
@@ -62,6 +62,6 @@ subroutine check_settings(gribid)
   if (typeOfFirstFixedSurface /= 150) then
     call codes_check(-2, 'typeOfFirstFixedSurface_should_be_150', '')
   end if
-   
+
 end subroutine check_settings
 end program set

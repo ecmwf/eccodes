@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,6 +9,7 @@
 # nor does it submit to any jurisdiction.
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -19,7 +20,7 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     while 1:
         bid = gts_new_from_file(f)
@@ -36,7 +37,7 @@ def example():
         while codes_keys_iterator_next(iterid):
             keyname = codes_keys_iterator_get_name(iterid)
             keyval = codes_get_string(iterid, keyname)
-            print "%s = %s" % (keyname, keyval)
+            print("%s = %s" % (keyname, keyval))
 
         codes_keys_iterator_delete(iterid)
         codes_release(bid)
@@ -51,9 +52,10 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            print >> sys.stderr, err.msg
+            print(err.msg, file=sys.stderr)
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

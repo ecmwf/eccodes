@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,6 +9,7 @@
 # nor does it submit to any jurisdiction.
 #
 
+from __future__ import print_function
 import traceback
 import sys
 
@@ -19,17 +20,17 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
     gid = codes_grib_new_from_file(f)
 
     values = codes_get_values(gid)
-    for i in xrange(len(values)):
-        print "%d %.10e" % (i + 1, values[i])
+    for i in range(len(values)):
+        print("%d %.10e" % (i + 1, values[i]))
 
-    print '%d values found in %s' % (len(values), INPUT)
+    print('%d values found in %s' % (len(values), INPUT))
 
     for key in ('max', 'min', 'average'):
-        print '%s=%.10e' % (key, codes_get(gid, key))
+        print('%s=%.10e' % (key, codes_get(gid, key)))
 
     codes_release(gid)
     f.close()
@@ -45,6 +46,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

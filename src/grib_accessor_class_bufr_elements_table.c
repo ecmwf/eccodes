@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -204,6 +204,9 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     len=1024;
     if (self->localDir != NULL) grib_get_string(h,self->localDir,localDir,&len);
 
+    GRIB_MUTEX_INIT_ONCE(&once,&thread_init);
+    GRIB_MUTEX_LOCK(&mutex1);
+
     if (*masterDir!=0) {
         char name[1024]={0,};
         char recomposed[1024]={0,};
@@ -228,12 +231,11 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     if (!filename) {
         grib_context_log(c,GRIB_LOG_ERROR,"unable to find def file %s",self->dictionary);
         *err=GRIB_FILE_NOT_FOUND;
-        return NULL;
+        dictionary=NULL;
+        goto the_end;
     } else {
         grib_context_log(c,GRIB_LOG_DEBUG,"found def file %s",filename);
     }
-    GRIB_MUTEX_INIT_ONCE(&once,&thread_init);
-    GRIB_MUTEX_LOCK(&mutex1);
 
     dictionary=(grib_trie*)grib_trie_get(c->lists,dictName);
     if (dictionary) {
@@ -321,7 +323,7 @@ static int bufr_get_from_table(grib_accessor* a,bufr_descriptor* v)
 
     v->shortName=grib_context_strdup(c,list[1]);
     v->type=convert_type(list[2]);
-    v->name=grib_context_strdup(c,list[3]);
+    /* v->name=grib_context_strdup(c,list[3]);  See ECC-489 */
     v->units=grib_context_strdup(c,list[4]);
     str=grib_context_strdup(c,list[5]);
     v->scale=atol(str);
@@ -359,7 +361,7 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a,in
     if (!a) return NULL;
 
     c=a->context;
-
+    DebugAssert(c);
     v=(bufr_descriptor*)grib_context_malloc_clear(c,sizeof(bufr_descriptor));
     if (!v) {
         grib_context_log(c,GRIB_LOG_ERROR,

@@ -1,8 +1,8 @@
-! Copyright 2005-2016 ECMWF.
+! Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-! 
+!
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
@@ -24,7 +24,7 @@ use eccodes
   call read_using_size_t()
   call read_using_integer()
   print *,'Passed'
-  
+
 contains
 !======================================
 subroutine read_using_size_t
@@ -51,7 +51,7 @@ subroutine read_using_size_t
     end if
     len1=size
     call codes_read_from_file(ifile, buffer, len1, iret)
-  end do 
+  end do
 
   if (iret/=CODES_END_OF_FILE) then
     call codes_check(iret,'read_from_file','')
@@ -94,4 +94,4 @@ subroutine read_using_integer
 
 end subroutine read_using_integer
 !======================================
-end program 
+end program

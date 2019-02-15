@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -172,11 +172,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     if((err = grib_get_long(grib_handle_of_accessor(a),self->expand_by,&expand_by)) != GRIB_SUCCESS)
         return err;
+    if (expand_by <= 0)
+        return GRIB_ENCODING_ERROR;
 
     if((err = grib_get_double_internal(grib_handle_of_accessor(a),self->missing_value,&missing_value)) != GRIB_SUCCESS)
         return err;
-
-    Assert(expand_by);
 
     if(*len % expand_by)
     {

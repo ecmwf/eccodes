@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -199,7 +199,6 @@ void encode_double_array_unrolled(int numBits, long packStart, long datasize,
 {
     U_BYTEORDER;
     long i, j, z = *gz;
-    double tmp;
 #ifdef _ARCH_PWR6
 #define __UNROLL_DEPTH_2 8
 #else

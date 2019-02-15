@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -273,14 +273,14 @@ all        : empty        { grib_parser_all_actions = 0;grib_parser_concept=0;
 empty:;
 
 
-dvalues :  FLOAT  { $$=grib_darray_push(0,0,$1);}
-    |  dvalues ',' FLOAT { $$=grib_darray_push(0,$1,$3);}
-    |  INTEGER { $$=grib_darray_push(0,0,$1);}
-    |  dvalues ',' INTEGER { $$=grib_darray_push(0,$1,$3);}
+dvalues :  FLOAT  { $$=grib_darray_push(grib_parser_context,0,$1);}
+    |  dvalues ',' FLOAT { $$=grib_darray_push(grib_parser_context,$1,$3);}
+    |  INTEGER { $$=grib_darray_push(grib_parser_context,0,$1);}
+    |  dvalues ',' INTEGER { $$=grib_darray_push(grib_parser_context,$1,$3);}
    ;
 
-svalues : STRING { $$=grib_sarray_push(0,0,$1);}
-    |  svalues ',' STRING { $$=grib_sarray_push(0,$1,$3);}
+svalues : STRING { $$=grib_sarray_push(grib_parser_context,0,$1);}
+    |  svalues ',' STRING { $$=grib_sarray_push(grib_parser_context,$1,$3);}
     ;
 
 
@@ -381,11 +381,22 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"signed_bits",$3,$7,$9,$10,NULL,NULL);      free($5);  }
 
     | CODETABLE '[' INTEGER ']' IDENT  argument   default flags
-	{ $$ = grib_action_create_gen(grib_parser_context,$5,"codetable",$3, $6,$7,$8,NULL,NULL);    free($5); }
+    { $$ = grib_action_create_gen(grib_parser_context,$5,"codetable",$3, $6,$7,$8,NULL,NULL);    free($5); }
+
+    | CODETABLE '[' IDENT ']' IDENT  argument   default flags
+    {
+      /* ECC-485: Set length to 0 and prepend the new argument */
+      grib_arguments* a = grib_arguments_new(grib_parser_context, new_accessor_expression(grib_parser_context,$3,0,0),NULL);
+      a->next = $6;
+      $$ = grib_action_create_gen(grib_parser_context, $5, "codetable",
+                                  0, a, /* length=0 and additional argument */
+                                  $7, $8, NULL, NULL);
+      free($5);
+    }
 
 	| CODETABLE '[' INTEGER ']' IDENT  argument   default SET '(' IDENT ')' flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"codetable",$3, $6,$7,$12,NULL,$10);
-					free($5);free($10); }
+           free($5);free($10); }
     
     | CODETABLE '[' INTEGER ']' IDENT  '(' argument_list ')'   default flags
 	{ $$ = grib_action_create_gen(grib_parser_context,$5,"codetable",$3, $7,$9,$10,NULL,NULL);    free($5); }
@@ -817,11 +828,11 @@ condition     : condition GT    term { $$ = new_binop_expression(grib_parser_con
             | term
              ;
 
-conjonction : conjonction AND condition { $$ = new_binop_expression(grib_parser_context,&grib_op_and,NULL,$1,$3); }
+conjonction : conjonction AND condition { $$ = new_logical_and_expression(grib_parser_context,$1,$3); }
             | condition
             ;
 
-disjonction    : disjonction OR conjonction { $$ = new_binop_expression(grib_parser_context,&grib_op_or,NULL,$1,$3);}
+disjonction    : disjonction OR conjonction { $$ = new_logical_or_expression(grib_parser_context,$1,$3);}
             | conjonction
             ;
 

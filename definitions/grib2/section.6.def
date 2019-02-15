@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-label "grib 2 Section 6 BIT-MAP SECTION";
+
 # START grib2::section
 # SECTION 6, BIT-MAP SECTION
 #  Length of section in octets
@@ -22,16 +22,15 @@ meta section6 section_pointer(offsetSection6,section6Length,6);
 unsigned[1] numberOfSection = 6:read_only;
 
 #  Bit-map indicator
-# NOTE 1 NOT FOUND
 codetable[1] bitMapIndicator ('6.0.table',masterDir,localDir) = 255 : dump;
 
 #transient bitmapPresent=1;
 meta geography.bitmapPresent g2bitmap_present(bitMapIndicator): dump;
+transient missingValuesPresent = bitmapPresent : hidden, read_only;
 
 # Bitmap...
 if(bitMapIndicator == 0)
 {
-
   if(dataRepresentationTemplateNumber == 1)
   {
     if(matrixBitmapsPresent == 1)
@@ -58,6 +57,14 @@ if(bitMapIndicator == 0)
         offsetBSection6,
         section6Length,
         numberOfDataPoints) : read_only;
+  }
+}
+
+if(bitMapIndicator == 255)
+{
+  # No bitmap is used but some complex packing schemes embed the missing values in the data section
+  if (dataRepresentationTemplateNumber == 2 || dataRepresentationTemplateNumber == 3) {
+    transient missingValuesPresent = (missingValueManagementUsed != 0) : read_only;
   }
 }
 

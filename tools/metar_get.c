@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -29,11 +29,11 @@ grib_option grib_options[]={
         {"v",0,0,1,0,0}
 };
 
-char* grib_tool_description="Get values of some keys from a METAR file."
+const char* grib_tool_description="Get values of some keys from a METAR file."
         "\n\tIt is similar to metar_ls, but fails returning an error code "
         "\n\twhen an error occurs (e.g. key not found).";
-char* grib_tool_name="metar_get";
-char* grib_tool_usage="[options] file file ...";
+const char* grib_tool_name="metar_get";
+const char* grib_tool_usage="[options] file file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 double lat=0;

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -35,7 +35,7 @@ fBufrInput2=${label}".bufr.input2"
 gts_file="EGRR20150317121020_00493212.DAT"
 echo "Test: comparing the same files" >> $fLog
 echo "file: $gts_file" >> $fLog
-${tools_dir}/gts_compare $gts_file $gts_file
+${tools_dir}//gts_compare $gts_file $gts_file
 
 #----------------------------------------------------
 # Test: comparing two different files
@@ -44,9 +44,9 @@ cat > $fRules<<EOF
  if (count == 1) { set GG="01"; }
  write;
 EOF
-${tools_dir}gts_filter -o $fGtsTmp $fRules $gts_file
+${tools_dir}/gts_filter -o $fGtsTmp $fRules $gts_file
 set +e
-${tools_dir}/gts_compare $gts_file $fGtsTmp
+${tools_dir}//gts_compare $gts_file $fGtsTmp
 status=$?
 set -e
 if [ $status -eq 0 ]; then
@@ -57,7 +57,7 @@ fi
 #----------------------------------------------------
 # Test: comparing with and witout the -b switch
 #----------------------------------------------------
-${tools_dir}/gts_compare -b GG $gts_file $fGtsTmp >> $fLog
+${tools_dir}//gts_compare -b GG $gts_file $fGtsTmp >> $fLog
 
 #Clean up
 rm -f $fLog $fGtsTmp $fRules

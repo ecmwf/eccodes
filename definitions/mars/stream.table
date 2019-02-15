@@ -31,6 +31,10 @@
 1054 rjtd Tokyo
 1055 cwao Montreal
 1056 ammc Melbourne
+1057 efas European Flood Awareness System (EFAS)
+1058 efse European Flood Awareness System (EFAS) seasonal forecasts
+1059 efcl European Flood Awareness System (EFAS) climatology
+1060 wfas Global flood awareness system
 1070 msdc Monthly standard deviation and covariance
 1071 moda Monthly means of daily means
 1072 monr Monthly means using G. Boer's step function
@@ -81,8 +85,8 @@
 1231 mmam Multi-model multi-annual forecast means
 1232 mmaw Multi-model multi-annual forecast wave
 1233 mmwm Multi-model multi-annual forecast wave means
-1240 esmm EUROSIP monthly means
-1241 ehmm EUROSIP hindcast monthly means
+1240 esmm Combined multi-model monthly means
+1241 ehmm Combined multi-model hindcast monthly means
 1242 edmm Ensemble data assimilation monthly means
 1243 edmo Ensemble data assimilation monthly means of daily means
 1244 ewmo Ensemble wave data assimilation monthly means of daily means 

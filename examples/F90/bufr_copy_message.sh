@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,7 +12,7 @@
 INPUT="../../data/bufr/syno_1.bufr"
 OUTPUT=out.copy.bufr
 
-${examples_dir}eccodes_f_bufr_copy_message > /dev/null
+${examples_dir}/eccodes_f_bufr_copy_message > /dev/null
 ${tools_dir}/bufr_compare -b bufrHeaderSubCentre $INPUT $OUTPUT
 
 rm -f $OUTPUT

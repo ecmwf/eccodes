@@ -1,5 +1,5 @@
 #!/usr/bin/perl -I../perl/GRIB-API/blib/lib -I../perl/GRIB-API/blib/arch
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,7 +9,7 @@
 
 #!/usr/bin/perl -I/usr/local/lib/metaps/lib/grib_api/current/perl
 
-use lib qw(/home/ma/mab/grib/api/lib);
+use lib qw(/path/to/install/grib/api/lib);
 
 use GRIB::API;
 use strict;

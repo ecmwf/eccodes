@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -20,7 +20,7 @@ grib_check_key_equals()
    a_file=$1
    a_key=$2
    a_expected=$3
-   a_result=`${tools_dir}grib_get -p $a_key $a_file`
+   a_result=`${tools_dir}/grib_get -p $a_key $a_file`
    if [ "$a_result" != "$a_expected" ]; then
       echo "File:     $a_file"
       echo "Key(s):   $a_key"

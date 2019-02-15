@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,9 +10,9 @@
 . ./include.sh
 
 # The executable should produce a GRIB1 file
-${examples_dir}c_large_grib1
+${examples_dir}/c_large_grib1
 
 # Make sure the newly created file can be listed OK
 output=bigfile.grib
-${tools_dir}grib_ls $output > /dev/null
+${tools_dir}/grib_ls $output > /dev/null
 rm -f $output

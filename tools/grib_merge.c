@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,11 +9,17 @@
  */
 
 /*
- * C Implementation: grib_copy
+ * C Implementation: grib_merge
  *
  * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
- *
- *
+ * Description:
+ * In Observations team we need a tool to merge the GRIB messages coming from GTS.
+ * They come with compatible grid (lat/lon) but they are split in different quadrants.
+ * This tool should be able to merge different quadrants in one bigger grid,
+ * automatically recognising when this can be done by checking that the fields have the same
+ * parameter, step, ... and compatible grid.
+ * The current solution is to have a grib_merge working on an input file and writing in output the
+ * merged fields working out automatically what has to be merged.
  */
 
 #include "grib_tools.h"
@@ -24,9 +30,13 @@ grib_handle *hh=0;
 grib_values key_values[MAX_KEY_VALUES];
 int key_values_size=MAX_KEY_VALUES;
 
-char* grib_tool_description="Merge two fields with identical parameters and different geografical area";
-char* grib_tool_name="grib_merge";
-char* grib_tool_usage="[options] file file ... output_file";
+/* This key was added to provide a unique ID for the product description used by the merge
+ * tool to identify the fields to be merged */
+static const char* md5Key = "md5Product";
+
+const char* grib_tool_description="Merge two fields with identical parameters and different geographical area";
+const char* grib_tool_name="grib_merge";
+const char* grib_tool_usage="[options] file file ... output_file";
 
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value */
@@ -78,7 +88,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
     return 0;
 }
 
-int idx(double lat,double lon,double latFirst,double lonFirst,double latLast,double lonLast,
+static int idx(double lat,double lon,double latFirst,double lonFirst,double latLast,double lonLast,
         long Ni,double di,double dj)
 {
     long ilon,ilat;
@@ -96,7 +106,7 @@ int idx(double lat,double lon,double latFirst,double lonFirst,double latLast,dou
     return ilon+ilat*Ni;
 }
 
-grib_handle* merge(grib_handle* h1,grib_handle* h2)
+static grib_handle* merge(grib_handle* h1,grib_handle* h2)
 {
     char s1[100]={0,};
     size_t len1;
@@ -126,7 +136,7 @@ grib_handle* merge(grib_handle* h1,grib_handle* h2)
      */
 
     /* same products? */
-    if (grib_key_equal(h1,h2,"md5Product",GRIB_TYPE_STRING,&err)==0 && err==0) {
+    if (grib_key_equal(h1,h2,md5Key,GRIB_TYPE_STRING,&err)==0 && err==0) {
         return NULL;
     }
 
@@ -297,17 +307,27 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     grib_handle* hm=0;
     char md5[200]={0,};
     char fname[210]={0,};
-    size_t lmd5;
+    size_t lmd5=32;
 
     if (!hh) { hh=grib_handle_clone(h); return 0; }
-    grib_get_string(h,"md5Product",md5,&lmd5);
+    err = grib_get_string(h,md5Key,md5,&lmd5);
+    if (err) {
+        fprintf(stderr, "grib_merge error getting key %s: %s\n", 
+                md5Key, grib_get_error_message(err));
+        exit(err);
+    }
     sprintf(fname,"_%s.orig.grib",md5);
-    grib_write_message(h,fname,"a");
+    err = grib_write_message(h,fname,"a");
 
     if ((hm=merge(h,hh))==NULL ) {
         grib_tools_write_message(options,hh);
         lmd5=sizeof(md5)/sizeof(*md5);
-        grib_get_string(hh,"md5Product",md5,&lmd5);
+        err = grib_get_string(hh,md5Key,md5,&lmd5);
+        if (err) {
+            fprintf(stderr, "grib_merge error getting key %s: %s\n", 
+                    md5Key, grib_get_error_message(err));
+            exit(err);
+        }
         sprintf(fname,"_%s.merge.grib",md5);
         grib_write_message(hh,fname,"a");
     }

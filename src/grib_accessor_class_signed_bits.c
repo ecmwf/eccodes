@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -232,6 +232,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     rlen=count;
     if(*len != rlen) {
         ret=grib_set_long(grib_handle_of_accessor(a),self->numberOfElements,rlen);
+        if (ret) return ret;
     }
 
     ret=grib_get_long(grib_handle_of_accessor(a),self->numberOfBits,&numberOfBits);

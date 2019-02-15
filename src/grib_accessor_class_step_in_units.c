@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -158,7 +158,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 }
 
 /* Conversion of to seconds - Grib edition 2 table 4.4 */
-static int u2s2[] =  {
+static const int u2s2[] =  {
   60,      /* (0)  minutes   */
   3600,    /* (1)  hour      */
   86400,   /* (2)  day       */
@@ -176,7 +176,7 @@ static int u2s2[] =  {
 };
 
 /* Note: 'stepUnits' has a different table with extra entries e.g. 15 and 30 mins */
-static int u2s[] =  {
+static const int u2s[] =  {
   60,      /* (0)  minutes    */
   3600,    /* (1)  hour       */
   86400,   /* (2)  day        */

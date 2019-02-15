@@ -15,8 +15,8 @@ SAMPLES=/vol/dataserv/grib_samples/brute_force
 
 find $SAMPLES -type f \( -name '*.g???' -o -name '*.GB' \) -print > all_gribs
 touch pass.t skip.t
-/home/ma/mab/bin/filediff all_gribs pass.t > tmp
-/home/ma/mab/bin/filediff tmp skip.t > todo
+/path/to/filediff all_gribs pass.t > tmp
+/path/to/filediff tmp skip.t > todo
 
 while true
 do

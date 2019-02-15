@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -31,7 +31,7 @@ int main(int argc,char* argv[])
     const char* infile = "../../data/bufr/syno_1.bufr";
 
     in=fopen(infile,"r");
-    if (!in) 
+    if (!in)
     {
         printf("ERROR: unable to open file %s\n", infile);
         return 1;
@@ -48,7 +48,7 @@ int main(int argc,char* argv[])
 
         printf("message: %d\n",cnt);
 
-        /* we need to instruct ecCodes to expand the descriptors 
+        /* we need to instruct ecCodes to expand the descriptors
           i.e. unpack the data values */
         CODES_CHECK(codes_set_long(h,"unpack",1),0);
 
@@ -62,7 +62,7 @@ int main(int argc,char* argv[])
             printf("   --> value missing\n");
         }
         else
-        {   
+        {
             printf("   --> value present\n");
         }
 

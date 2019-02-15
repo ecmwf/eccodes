@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -19,9 +19,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "eccodes.h"  
+#include "eccodes.h"
 
-void usage(const char* prog) {
+static void usage(const char* prog) {
     printf("Usage: %s grib_file\n",prog);
     exit(1);
 }
@@ -30,11 +30,12 @@ int main(int argc, char** argv)
 {
     FILE* in = NULL;
     int err = 0;
-    double lat,lon,value,missingValue=0;
+    double lat,lon,value;
+    double missingValue = 1e+20; /* A value out of range */
     int n=0;
     char* filename = NULL;
 
-    /* Message handle. Required in all the grib_api calls acting on a message.*/
+    /* Message handle. Required in all the ecCodes calls acting on a message.*/
     codes_handle *h = NULL;
     /* Iterator on lat/lon/values.*/
     codes_iterator* iter=NULL;
@@ -54,8 +55,9 @@ int main(int argc, char** argv)
         /* Check of errors after reading a message. */
         if (err != CODES_SUCCESS) CODES_CHECK(err,0);
 
-        /* Get the double representing the missing value in the field. */
-        CODES_CHECK(codes_get_double(h,"missingValue",&missingValue),0);
+        /* Set the double representing the missing value in the field. */
+        /* Choose a missingValue that does not correspond to any real value in the data array */
+        CODES_CHECK(codes_set_double(h, "missingValue", missingValue),0);
 
         /* A new iterator on lat/lon/values is created from the message handle h. */
         iter=codes_grib_iterator_new(h,0,&err);

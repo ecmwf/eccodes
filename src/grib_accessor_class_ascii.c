@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -161,8 +161,8 @@ static int  get_native_type(grib_accessor* a){
 
 static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {
-
   int i = 0;
+  grib_handle* hand = grib_handle_of_accessor(a);
 
   if(len[0] < (a->length+1))
   {
@@ -172,7 +172,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
   }
 
   for ( i = 0; i < a->length; i++)
-    val[i] = grib_handle_of_accessor(a)->buffer->data[a->offset+i];
+    val[i] = hand->buffer->data[a->offset+i];
   val[i] = 0;
   len[0] = i;
   return GRIB_SUCCESS;
@@ -180,8 +180,8 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len)
 {
-
   int i = 0;
+  grib_handle* hand = grib_handle_of_accessor(a);
   if(len[0] > (a->length)+1)
   {
     grib_context_log(a->context, GRIB_LOG_ERROR, "pack_string: Wrong size (%d) for %s it contains %d values ", len[0], a->name , a->length+1 );
@@ -192,9 +192,9 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len)
   for ( i = 0; i < a->length; i++)
   {
     if( i < len[0] )
-      grib_handle_of_accessor(a)->buffer->data[a->offset+i] = val[i];
+      hand->buffer->data[a->offset+i] = val[i];
     else
-      grib_handle_of_accessor(a)->buffer->data[a->offset+i] = 0;
+      hand->buffer->data[a->offset+i] = 0;
   }
 
   return GRIB_SUCCESS;

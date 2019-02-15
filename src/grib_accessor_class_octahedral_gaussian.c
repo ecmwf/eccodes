@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -146,31 +146,69 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
     grib_accessor_octahedral_gaussian* self = (grib_accessor_octahedral_gaussian*)a;
     int n = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
-    self->N            = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->Ni           = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->plpresent    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->pl           = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->N            = grib_arguments_get_name(hand,c,n++);
+    self->Ni           = grib_arguments_get_name(hand,c,n++);
+    self->plpresent    = grib_arguments_get_name(hand,c,n++);
+    self->pl           = grib_arguments_get_name(hand,c,n++);
 }
 
-/* For an Octahedral grid, this is the number of points on the top-most latitude (near pole) */
-#define NUM_POINTS_ON_LAT_NEAR_POLE 20
+/* Returns 1 (=true) if input pl array is Octahedral, 0 otherwise.
+ * Possible cases for the deltas in an octahedral pl array:
+ *  +4 .. +4        Top part, above equator
+ *  +4 .. 0         Top part, above and including equator
+ *  +4.. 0  -4..    Middle part, above, equator and below
+ *  0 -4..          Equator and below
+ *  -4 ..-4         All below equator
+ * Anything else is considered not octahedral
+ */
+static int is_pl_octahedral(const long pl[], size_t size)
+{
+    long i;
+    long prev_diff = -1;
+    for(i=1; i<size; ++i) {
+        const long diff = pl[i] - pl[i-1];
+        if (diff == 0) {
+            /* prev must be +4 or undef */
+            if (! (prev_diff==+4 || i==1) ) {
+                return 0;
+            }
+        } else {
+            if (labs(diff) != 4) {
+                return 0;
+            }
+            if (diff == +4) {
+                /* prev must be +4 or undef */
+                if (! (prev_diff==+4 || i==1) ) {
+                    return 0;
+                }
+            }
+            if (diff == -4) {
+                /* prev must be 0, -4 or undef */
+                if (! (prev_diff==-4 || prev_diff==0 || i==1) ) {
+                    return 0;
+                }
+            }
+        }
+        prev_diff = diff;
+    }
+    return 1; /* it's octahedral */
+}
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_octahedral_gaussian* self = (grib_accessor_octahedral_gaussian*)a;
     int ret = GRIB_SUCCESS;
-    long N,Ni;
+    long Ni;
     long plpresent=0;
     long* pl=NULL; /* pl array */
-    size_t plsize=0, i=0, mid=0;
+    size_t plsize=0;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     grib_context* c=a->context;
 
-    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->N,&N)) != GRIB_SUCCESS)
-        return ret;
-
-    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->Ni,&Ni)) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(hand, self->Ni,&Ni)) != GRIB_SUCCESS)
         return ret;
 
     /* If Ni is not missing, then this is a plain gaussian grid and not reduced. */
@@ -180,44 +218,28 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
         return GRIB_SUCCESS;
     }
 
-    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->plpresent,&plpresent)) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(hand, self->plpresent,&plpresent)) != GRIB_SUCCESS)
         return ret;
     if (!plpresent) {
         *val = 0; /* Not octahedral */
         return GRIB_SUCCESS;
     }
 
-    if((ret = grib_get_size(grib_handle_of_accessor(a),self->pl,&plsize)) != GRIB_SUCCESS)
+    if((ret = grib_get_size(hand,self->pl,&plsize)) != GRIB_SUCCESS)
         return ret;
-    Assert(plsize);
-    if (plsize != 2*N) {
-        *val=0; /* Not octahedral */
-        return GRIB_SUCCESS;
-    }
+    Assert(plsize); /* pl array must have at least one element */
+
     pl=(long*)grib_context_malloc_clear(c,sizeof(long)*plsize);
     if (!pl) {
         return GRIB_OUT_OF_MEMORY;
     }
-    if ((ret = grib_get_long_array_internal(grib_handle_of_accessor(a),self->pl,pl, &plsize)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_array_internal(hand,self->pl,pl, &plsize)) != GRIB_SUCCESS)
         return ret;
-    if (pl[0] != NUM_POINTS_ON_LAT_NEAR_POLE) {
-        *val=0; /* Not octahedral */
-        grib_context_free(c, pl);
-        return GRIB_SUCCESS;
-    }
-    mid = plsize/2;
-    /* Check pl values and symmetry */
-    for(i=0; i<mid; ++i) {
-        const long expected = 4*(i+1) + 16; /* Octahedral rule */
-        if ( pl[i] != expected || (pl[i] != pl[plsize-1-i]) ) {
-            *val = 0; /* Not octahedral */
-            grib_context_free(c, pl);
-            return GRIB_SUCCESS;
-        }
-    }
+
+    /* pl[0] is guaranteed to exist. Have already asserted previously */
+    *val = is_pl_octahedral(pl, plsize);
     grib_context_free(c, pl);
 
-    *val=1;  /* It is Octahedral */
     return ret;
 }
 

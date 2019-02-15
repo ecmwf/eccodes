@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,7 +16,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_variable
-   IMPLEMENTS = init;dump;next
+   IMPLEMENTS = dump;next
    END_CLASS_DEF
 
  */
@@ -32,7 +32,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static void dump(grib_accessor*, grib_dumper*);
-static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 static grib_accessor* next(grib_accessor*, int);
 
@@ -54,7 +53,7 @@ static grib_accessor_class _grib_accessor_class_bufr_group = {
     sizeof(grib_accessor_bufr_group),  /* size                      */
     0,                           /* inited */
     &init_class,                 /* init_class */
-    &init,                       /* init                      */
+    0,                       /* init                      */
     0,                  /* post_init                      */
     0,                    /* free mem                       */
     &dump,                       /* describes himself         */
@@ -130,10 +129,6 @@ static void init_class(grib_accessor_class* c)
 }
 
 /* END_CLASS_IMP */
-
-static void init(grib_accessor* a, const long length , grib_arguments* args )
-{
-}
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {

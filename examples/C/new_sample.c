@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,8 +12,7 @@
 
 /* This code was generated automatically */
 
-
-int main(int argc,const char** argv)
+int main(int argc, char** argv)
 {
     codes_handle *h     = NULL;
     size_t size        = 0;
@@ -47,7 +46,7 @@ int main(int argc,const char** argv)
 
     CODES_CHECK(codes_set_long(h,"editionNumber",2),0);
 
-    /* 98 = European Center for Medium-Range Weather Forecasts (grib1/0.table)  */
+    /* 98 = European Center for Medium-Range Weather Forecasts */
     CODES_CHECK(codes_set_long(h,"centre",98),0);
 
     CODES_CHECK(codes_set_long(h,"subCentre",0),0);
@@ -361,7 +360,7 @@ int main(int argc,const char** argv)
     vdouble[ 484] =       1; vdouble[ 485] =       1; vdouble[ 486] =       1; vdouble[ 487] =       1;
     vdouble[ 488] =       1; vdouble[ 489] =       1; vdouble[ 490] =       1; vdouble[ 491] =       1;
     vdouble[ 492] =       1; vdouble[ 493] =       1; vdouble[ 494] =       1; vdouble[ 495] =       1;
-   
+
     CODES_CHECK(codes_set_double_array(h,"values",vdouble,size),0);
     free(vdouble);
     CODES_CHECK(codes_set_long(h,"dirty_statistics",1),0);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,7 +15,6 @@
 
    START_CLASS_DEF
    CLASS      = expression
-   IMPLEMENTS = init_class
    IMPLEMENTS = destroy
    IMPLEMENTS = native_type
    IMPLEMENTS = evaluate_long
@@ -107,12 +106,14 @@ static int evaluate_long(grib_expression* g,grib_handle* h,long* lres)
         if(p)
         {
             long val = 0;
-            int ktype = 0;
-            grib_get_long_internal(h,p,&val);
-            if (grib_get_native_type(h, p, &ktype) == GRIB_SUCCESS) {
-                /* Currently only supported for integer keys. Not double or string */
-                Assert( ktype == GRIB_TYPE_LONG);
-            }
+            int err = 0;
+            err = grib_get_long_internal(h,p,&val);
+            if (err) return err;
+            /* Note: This does not cope with keys like typeOfSecondFixedSurface
+             * which are codetable entries with values like 255: this value is
+             * not classed as 'missing'!
+             * (See ECC-594)
+             */
             *lres = (val == GRIB_MISSING_LONG);
             return GRIB_SUCCESS;
         }

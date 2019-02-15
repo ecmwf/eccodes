@@ -1,4 +1,4 @@
-! Copyright 2005-2016 ECMWF.
+! Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -61,22 +61,23 @@
                      grib_index_select_string, &
                      grib_index_select_real8
   end interface grib_index_select
-          
-  !> Get the value for a key from a grib message.
+
+  !> Get the value for a key from a message.
   !>
-  !> Given a \em gribid and \em key as input a \em value for the \em key is returned.
+  !> Given a \em msgid and \em key as input a \em value for the \em key is returned.
   !> In some cases the \em value can be an array rather than a scalar.
-  !> As examples of array keys we have "values","pl", "pv" respectively the data values,
-  !> the list of number of points for each latitude in a reduced grid and the list of
-  !> vertical levels. In these cases the \em value array must be allocated by the caller
+  !> As examples of GRIB array keys we have "values" (the data values),
+  !> "pl" (the list of number of points for each latitude in a reduced grid) and
+  !> "pv" (the list of vertical levels).
+  !> In these cases the \em value array must be allocated by the caller
   !> and their required dimension can be obtained with \ref grib_get_size. \n
   !> The \em value can be integer(4), real(4), real(8), character.
   !> Although each key has its own native type, a key of type integer
-  !> can be retrieved (with \ref grib_get) as real(4), real(8) or character.
+  !> can be retrieved (with \ref codes_get) as real(4), real(8) or character.
   !> Analogous conversions are always provided when possible.
   !> Illegal conversions are real to integer and character to any other type.
   !>
-  !> The \em gribid references to a grib message loaded in memory.
+  !> The \em msgid references to a message loaded in memory.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
@@ -87,10 +88,10 @@
   !> @see grib_new_from_file, grib_release, grib_set
   !>
   !>
-  !> @param[in] gribid      id of the grib loaded in memory
-  !> @param[in] key     key name
-  !> @param[out] value       value can be a scalar or array of integer(4),real(4),real(8),character
-  !> @param[out] status      GRIB_SUCCESS if OK, integer value on error
+  !> @param[in] msgid      id of the message loaded in memory
+  !> @param[in] key        key name
+  !> @param[out] value     value can be a scalar or array of integer(4),real(4),real(8),character
+  !> @param[out] status    GRIB_SUCCESS if OK, integer value on error
   interface grib_get
     module procedure grib_get_int, &
                      grib_get_real4, &
@@ -101,7 +102,7 @@
                      grib_get_real4_array, &
                      grib_get_real8_array
   end interface grib_get
- 
+
 
   !> Get the size of an array key.
   !>
@@ -111,23 +112,24 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key         name of the key
-  !> @param size        size of the array key
-  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  !> @param msgid      id of the message loaded in memory
+  !> @param key        name of the key
+  !> @param size       size of the array key
+  !> @param status     GRIB_SUCCESS if OK, integer value on error
   interface grib_get_size
       module procedure  grib_get_size_int 
   end interface grib_get_size
 
-  !> Set the value for a key in a grib message.
+  !> Set the value for a key in a message.
   !>
-  !> The given \em value is set for the \em key in the \em gribid message.
+  !> The given \em value is set for the \em key in the \em msgid message.
   !> In some cases the \em value can be an array rather than a scalar.
-  !> As examples of array keys we have "values","pl", "pv" respectively the data values,
-  !> the list of number of points for each latitude in a reduced grid and the list of
-  !> vertical levels. In these cases the \em value array must be allocated by the caller
+  !> As examples of GRIB array keys we have "values" (the data values),
+  !> "pl" (the list of number of points for each latitude in a reduced grid) and
+  !> "pv" (the list of vertical levels).
+  !> In these cases the \em value array must be allocated by the caller
   !> and their required dimension can be obtained with \ref grib_get_size. \n
-  !> The gribid references to a grib message loaded in memory.
+  !> The msgid references to a message loaded in memory.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
@@ -137,10 +139,10 @@
   !>
   !> @see grib_new_from_file, grib_release, grib_get
   !>
-  !> @param[in] gribid      id of the grib loaded in memory
-  !> @param[in] key          key name
-  !> @param[out] value       value can be a scalar or array of integer(4),real(4),real(8)
-  !> @param[out] status      GRIB_SUCCESS if OK, integer value on error
+  !> @param[in] msgid       id of the message loaded in memory
+  !> @param[in] key         key name
+  !> @param[out] value      value can be a scalar or array of integer(4),real(4),real(8)
+  !> @param[out] status     GRIB_SUCCESS if OK, integer value on error
   interface grib_set
     module procedure grib_set_int, &
                      grib_set_real4, &

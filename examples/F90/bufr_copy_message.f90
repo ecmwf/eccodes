@@ -1,15 +1,14 @@
-! Copyright 2005-2016 ECMWF.
+! Copyright 2005-2018 ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-! 
+!
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
 !
 !  Description: how to copy a BUFR message in memory
-!
 !
 !
 program copy
@@ -23,11 +22,10 @@ program copy
   character(len=1), dimension(:), allocatable :: message
   character(len=32)                  :: product_kind
 
-
   call codes_open_file(infile,'../../data/bufr/syno_1.bufr', 'r')
   call codes_open_file(outfile,'out.copy.bufr', 'w')
 
-  ! A new BUFR message is loaded from file
+  ! A new BUFR message is loaded from file,
   ! ibufr_in is the BUFR id to be used in subsequent calls
   call codes_bufr_new_from_file(infile, ibufr_in)
 

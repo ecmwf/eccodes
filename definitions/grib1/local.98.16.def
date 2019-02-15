@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,31 +7,8 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-# START 1/local.98.16 ---------------------------------------------------------------------
 # LOCAL 98 16
-#
-# localDefinitionTemplate_016
-# ---------------------------
-#
-# Description            Octet    Code    Ksec1    Count
-# -----------            -----    ----    -----    -----
-#localDefinitionNumber           41      I1      37      -
-#class                           42      I1      38      -
-#type                            43      I1      39      -
-#stream                          44      I2      40      -
-#experimentVersionNumber         46      A4      41      -
-#number                          50      I2      42      -
-#zero                            n/a     PAD     43      1
-#systemNumber                    52      I2      44      -
-#methodNumber                    54      I2      45      -
-#verifyingMonth                  56      I4      46      -
-#averagingPeriod                 60      I1      47      -
-#forecastMonth                   61      I2      48      -
-#spareSetToZero                  63      PAD     n/a     18
-#
-
-# ------------------- From section 1
-# ------------------- End of section 1
+# Seasonal forecast monthly mean data
 
 constant GRIBEXSection1Problem = 80 - section1Length ;
 
@@ -41,8 +18,6 @@ transient localFlag=1 : hidden;
 template mars_labeling "grib1/mars_labeling.def";
 
 unsigned[2] perturbationNumber : dump ;
-
-# zero
 
 unsigned[2] systemNumber : dump ;
 
@@ -85,10 +60,9 @@ alias number = perturbationNumber;
 alias system = systemNumber;
 alias method = methodNumber;
 
-
+# ECC-679
+unsigned[2] numberOfForecastsInEnsemble : dump ;
+alias totalNumber=numberOfForecastsInEnsemble;
 
 # spareSetToZero
-pad padding_loc16_1(18);
-
-# END   1/local.98.16 ----------------------------------------------------------------------
-
+pad padding_loc16_1(16);

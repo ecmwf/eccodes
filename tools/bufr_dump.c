@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -17,26 +17,28 @@
 
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value*/
-        {"j:","s/f/a","\n\t\tJSON mode (JavaScript Object Notation)."
+        {"j:","s|f|a","\n\t\tJSON mode (JavaScript Object Notation)."
                 "\n\t\tOptions: s->structure, f->flat (only data), a->all attributes"
                 "\n\t\tDefault mode is structure.\n",
                 1,1,"s"},
-        {"D:","filter/fortran/python/C","\n\t\tDecoding dump. Provides instructions to decode the input message."
+        {"D:","filter|fortran|python|C","\n\t\tDecoding dump. Provides instructions to decode the input message."
                 "\n\t\tOptions: filter  -> filter instructions file to decode input BUFR"
                 "\n\t\t         fortran -> fortran program to decode the input BUFR"
                 "\n\t\t         python  -> python script to decode the input BUFR"
                 "\n\t\t         C       -> C program to decode the input BUFR"
                 "\n\t\tDefault mode is filter.\n",
                 0,1,"filter"},
-        {"E:","filter/fortran/python/C","\n\t\tEncoding dump. Provides instructions to create the input message."
+        {"E:","filter|fortran|python|C","\n\t\tEncoding dump. Provides instructions to create the input message."
                 "\n\t\tOptions: filter  -> filter instructions file to encode input BUFR"
                 "\n\t\t         fortran -> fortran program to encode the input BUFR"
                 "\n\t\t         python  -> python script to encode the input BUFR"
                 "\n\t\t         C       -> C program to encode the input BUFR"
                 "\n\t\tDefault mode is filter.\n",
                 0,1,"filter"},
+
         {"S",0,0,1,0,0},
         {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
+        {"p",0,"Plain dump.\n",0,1,0},
         /* {"D",0,0,0,1,0},  */  /* See ECC-215 */
         {"d",0,"Print all data values.\n",1,1,0},
         {"u",0,"Print only some values.\n",0,1,0},
@@ -51,13 +53,14 @@ grib_option grib_options[]={
         {"T:",0,0,1,0,"B"},
         {"7",0,0,0,1,0},
         {"V",0,0,0,1,0},
-        {"q",0,0,1,0,0}
+        {"q",0,0,1,0,0},
+        {"X:",0,0,0,1,0}
         /* {"x",0,0,0,1,0} */
 };
 
-char* grib_tool_description="Dump the content of a BUFR file in different formats.";
-char* grib_tool_name="bufr_dump";
-char* grib_tool_usage="[options] file file ...";
+const char* grib_tool_description="Dump the content of a BUFR file in different formats.";
+const char* grib_tool_name="bufr_dump";
+const char* grib_tool_usage="[options] bufr_file bufr_file ...";
 static int json=0;
 static char* json_option=0;
 static int first_handle=1;
@@ -78,6 +81,18 @@ int main(int argc, char *argv[])
 int grib_tool_before_getopt(grib_runtime_options* options)
 {
     return 0;
+}
+
+static void check_code_gen_dump_mode(const char* language)
+{
+    grib_context *c = grib_context_get_default();
+    const int ok = (strcmp(language, "C")==0       ||
+                    strcmp(language, "fortran")==0 ||
+                    strcmp(language, "python")==0  ||
+                    strcmp(language, "filter")==0);
+    if (!ok) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Invalid language specified. Select one of: filter, fortran, python or C");
+    }
 }
 
 int grib_tool_init(grib_runtime_options* options)
@@ -110,12 +125,19 @@ int grib_tool_init(grib_runtime_options* options)
                 | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
+    if  (grib_options_on("p")) {
+        options->dump_mode = "bufr_simple";
+        json=0;
+    }
+
     if (grib_options_on("D:")) {
         options->dump_mode = grib_options_get_option("D:");
+        check_code_gen_dump_mode(options->dump_mode);
         json=0;
     }
     if (grib_options_on("E:")) {
         options->dump_mode = grib_options_get_option("E:");
+        check_code_gen_dump_mode(options->dump_mode);
         json=0;
     }
 
@@ -171,7 +193,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
     else {
         char tmp[1024];
         sprintf(tmp,"FILE: %s ",options->current_infile->name);
-        if (!grib_options_on("C"))
+        if (!grib_options_on("p"))
             fprintf(stdout,"***** %s\n",tmp);
     }
 
@@ -273,7 +295,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 } else {
                     fprintf(stdout,"\"ERROR: unable to unpack data section\"");
                     options->error=err;
-                    return err;
+                    /*return err; See ECC-723*/
                 }
             }
             a=grib_find_accessor(h,"numericValues");
@@ -291,7 +313,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 } else {
                     fprintf(stdout,"\"ERROR: unable to unpack data section\"");
                     options->error=err;
-                    return err;
+                    /*return err; See ECC-723*/
                 }
             }
             grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
@@ -306,7 +328,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 } else {
                     fprintf(stdout,"\"ERROR: unable to unpack data section\"");
                     options->error=err;
-                    return err;
+                    /*return err; See ECC-723*/
                 }
             }
             options->dump_flags=GRIB_DUMP_FLAG_ALL_ATTRIBUTES;
@@ -330,14 +352,18 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 fprintf(stderr, "ERROR: unable to unpack data section: %s\n",grib_get_error_message(err));
                 exit(err);
             } else {
-                fprintf(stdout,"\"ERROR: unable to unpack data section\"");
+                fprintf(stdout,"ERROR: unable to unpack data section\n");
                 options->error=err;
-                return err;
+                /*return err; See ECC-723*/
             }
         }
         grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
     } else {
         const char* dumper_name = get_dumper_name(options);
+        if (strcmp(dumper_name, "bufr_simple")==0) {
+            /* This speeds up the unpack by skipping attribute keys not used in the dump */
+            grib_set_long(h, "skipExtraKeyAttributes", 1);
+        }
         err=grib_set_long(h,"unpack",1);
         if (err) {
             if (options->fail) {
@@ -346,12 +372,15 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             } else {
                 fprintf(stdout,"\"ERROR: unable to unpack data section\"");
                 options->error=err;
-                return err;
+                /*return err; See ECC-723*/
             }
         }
         print_header(options);
         dumper=grib_dump_content_with_dumper(h,dumper,stdout,dumper_name,options->dump_flags,0);
         if (!dumper) exit(1);
+        if (grib_options_on("p")) {
+            printf("\n"); /* One blank line to separate the messages */
+        }
     }
 
     return 0;
@@ -419,7 +448,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
             fprintf(stdout,"    f.close()\n\n");
             fprintf(stdout,"def main():\n");
             fprintf(stdout,"    if len(sys.argv) < 2:\n");
-            fprintf(stdout,"        print >>sys.stderr, 'Usage: ', sys.argv[0], ' BUFR_file'\n");
+            fprintf(stdout,"        print('Usage: ', sys.argv[0], ' BUFR_file', file=sys.stderr)\n");
             fprintf(stdout,"        sys.exit(1)\n\n");
             fprintf(stdout,"    try:\n");
             fprintf(stdout,"        bufr_decode(sys.argv[1])\n");

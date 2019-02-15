@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,9 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#define fortint long
-#define fortfloat double
-#define C2FORT(x) (x)
+
 /*
    This is used by make_class.pl
 
@@ -649,7 +647,7 @@ static int  unpack_double(grib_accessor* a, double* val, size_t *len)
     {
         if ( val[i] > max )
             max = val[i];
-        if ( val[i] < min )
+        else if ( val[i] < min )
             min = val[i];
     }
     min *= d;
@@ -770,8 +768,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     min = max;
     for(i=0;i< n_vals;i++)
     {
-        if ( val[i] > max ) max = val[i];
-        if ( val[i] < min ) min = val[i];
+        if      ( val[i] > max ) max = val[i];
+        else if ( val[i] < min ) min = val[i];
     }
     min *= d;
     max *= d;

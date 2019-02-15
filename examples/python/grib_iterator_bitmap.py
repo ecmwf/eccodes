@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,6 +12,7 @@
 #              for missing values
 #              (rather than compare each value with the missingValue key)
 #
+from __future__ import print_function
 import traceback
 import sys
 
@@ -21,7 +22,7 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example(INPUT):
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     while 1:
         gid = codes_grib_new_from_file(f)
@@ -50,9 +51,9 @@ def example(INPUT):
 
             # Consult bitmap to see if the i'th value is missing
             if bitmapPresent and bitmap[i] == 0:
-                print "missing"
+                print("missing")
             else:
-                print "%.6f" % value
+                print("%.6f" % value)
 
             i += 1
 
@@ -72,6 +73,7 @@ def main():
             sys.stderr.write(err.msg + '\n')
 
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

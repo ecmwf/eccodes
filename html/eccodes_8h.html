@@ -109,6 +109,8 @@ Macros</h2></td></tr>
 <tr class="separator:ga532be495f6cd54a852288a88bd0a439f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga441c09493c38e1ab2fc7f296eb12516f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__keys__iterator.html#ga441c09493c38e1ab2fc7f296eb12516f">CODES_KEYS_ITERATOR_SKIP_FUNCTION</a>&#160;&#160;&#160;(1&lt;&lt;6)</td></tr>
 <tr class="separator:ga441c09493c38e1ab2fc7f296eb12516f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabbc4e63f0a52df1a3dab96610fca4f18"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__keys__iterator.html#gabbc4e63f0a52df1a3dab96610fca4f18">CODES_KEYS_ITERATOR_DUMP_ONLY</a>&#160;&#160;&#160;(1&lt;&lt;7)</td></tr>
+<tr class="separator:gabbc4e63f0a52df1a3dab96610fca4f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga62529e45321708e65678dfc155f1c842"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__errors.html#ga62529e45321708e65678dfc155f1c842">CODES_SUCCESS</a>&#160;&#160;&#160;0</td></tr>
 <tr class="memdesc:ga62529e45321708e65678dfc155f1c842"><td class="mdescLeft">&#160;</td><td class="mdescRight">No error.  <a href="group__errors.html#ga62529e45321708e65678dfc155f1c842">More...</a><br/></td></tr>
 <tr class="separator:ga62529e45321708e65678dfc155f1c842"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -161,7 +163,7 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga6bcc67f9220042cb4781bad71fd59f35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Problem with calculation of geographic attributes.  <a href="group__errors.html#ga6bcc67f9220042cb4781bad71fd59f35">More...</a><br/></td></tr>
 <tr class="separator:ga6bcc67f9220042cb4781bad71fd59f35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaca540f40b9e09270265636b3689d8c2e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__errors.html#gaca540f40b9e09270265636b3689d8c2e">CODES_OUT_OF_MEMORY</a>&#160;&#160;&#160;-17</td></tr>
-<tr class="memdesc:gaca540f40b9e09270265636b3689d8c2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Out of memory.  <a href="group__errors.html#gaca540f40b9e09270265636b3689d8c2e">More...</a><br/></td></tr>
+<tr class="memdesc:gaca540f40b9e09270265636b3689d8c2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Memory allocation error.  <a href="group__errors.html#gaca540f40b9e09270265636b3689d8c2e">More...</a><br/></td></tr>
 <tr class="separator:gaca540f40b9e09270265636b3689d8c2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab1809244c05808791f318e1e060592d3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__errors.html#gab1809244c05808791f318e1e060592d3">CODES_READ_ONLY</a>&#160;&#160;&#160;-18</td></tr>
 <tr class="memdesc:gab1809244c05808791f318e1e060592d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value is read only.  <a href="group__errors.html#gab1809244c05808791f318e1e060592d3">More...</a><br/></td></tr>
@@ -364,19 +366,19 @@ Functions</h2></td></tr>
 <tr class="memitem:gac82dbaba240ebf6e76cdbcf2007a6bee"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__codes__handle.html#gac82dbaba240ebf6e76cdbcf2007a6bee">codes_write_message</a> (<a class="el" href="structcodes__handle.html">codes_handle</a> *h, const char *file, const char *mode)</td></tr>
 <tr class="memdesc:gac82dbaba240ebf6e76cdbcf2007a6bee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a coded message to a file.  <a href="group__codes__handle.html#gac82dbaba240ebf6e76cdbcf2007a6bee">More...</a><br/></td></tr>
 <tr class="separator:gac82dbaba240ebf6e76cdbcf2007a6bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaece49330c864391261cd6a0c10a18dc2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcodes__handle.html">codes_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__codes__handle.html#gaece49330c864391261cd6a0c10a18dc2">codes_handle_new_from_message</a> (<a class="el" href="structcodes__context.html">codes_context</a> *c, void *data, size_t data_len)</td></tr>
-<tr class="memdesc:gaece49330c864391261cd6a0c10a18dc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a handle from a user message in memory.  <a href="group__codes__handle.html#gaece49330c864391261cd6a0c10a18dc2">More...</a><br/></td></tr>
-<tr class="separator:gaece49330c864391261cd6a0c10a18dc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga095447ed85ff2142dbda2867ee3b4c8d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcodes__handle.html">codes_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__codes__handle.html#ga095447ed85ff2142dbda2867ee3b4c8d">codes_handle_new_from_message</a> (<a class="el" href="structcodes__context.html">codes_context</a> *c, const void *data, size_t data_len)</td></tr>
+<tr class="memdesc:ga095447ed85ff2142dbda2867ee3b4c8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a handle from a user message in memory.  <a href="group__codes__handle.html#ga095447ed85ff2142dbda2867ee3b4c8d">More...</a><br/></td></tr>
+<tr class="separator:ga095447ed85ff2142dbda2867ee3b4c8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga385864d5f06e1de0e8ee13388ca4117c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcodes__handle.html">codes_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__codes__handle.html#ga385864d5f06e1de0e8ee13388ca4117c">codes_grib_handle_new_from_multi_message</a> (<a class="el" href="structcodes__context.html">codes_context</a> *c, void **data, size_t *data_len, int *error)</td></tr>
 <tr class="memdesc:ga385864d5f06e1de0e8ee13388ca4117c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a handle from a user message in memory.  <a href="group__codes__handle.html#ga385864d5f06e1de0e8ee13388ca4117c">More...</a><br/></td></tr>
 <tr class="separator:ga385864d5f06e1de0e8ee13388ca4117c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga079df0c709e381812ae13af08c354032"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcodes__handle.html">codes_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__codes__handle.html#ga079df0c709e381812ae13af08c354032">codes_handle_new_from_message_copy</a> (<a class="el" href="structcodes__context.html">codes_context</a> *c, const void *data, size_t data_len)</td></tr>
 <tr class="memdesc:ga079df0c709e381812ae13af08c354032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a handle from a user message.  <a href="group__codes__handle.html#ga079df0c709e381812ae13af08c354032">More...</a><br/></td></tr>
 <tr class="separator:ga079df0c709e381812ae13af08c354032"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3b281a237e311c6b8fa4bd7096d7e025"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcodes__handle.html">codes_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__codes__handle.html#ga3b281a237e311c6b8fa4bd7096d7e025">codes_grib_handle_new_from_samples</a> (<a class="el" href="structcodes__context.html">codes_context</a> *c, const char *res_name)</td></tr>
+<tr class="memitem:ga3b281a237e311c6b8fa4bd7096d7e025"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcodes__handle.html">codes_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__codes__handle.html#ga3b281a237e311c6b8fa4bd7096d7e025">codes_grib_handle_new_from_samples</a> (<a class="el" href="structcodes__context.html">codes_context</a> *c, const char *sample_name)</td></tr>
 <tr class="memdesc:ga3b281a237e311c6b8fa4bd7096d7e025"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a handle from a GRIB message contained in a samples directory.  <a href="group__codes__handle.html#ga3b281a237e311c6b8fa4bd7096d7e025">More...</a><br/></td></tr>
 <tr class="separator:ga3b281a237e311c6b8fa4bd7096d7e025"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga56d0f831e520ec7bc4a0ca334c63f557"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcodes__handle.html">codes_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__codes__handle.html#ga56d0f831e520ec7bc4a0ca334c63f557">codes_bufr_handle_new_from_samples</a> (<a class="el" href="structcodes__context.html">codes_context</a> *c, const char *res_name)</td></tr>
+<tr class="memitem:ga56d0f831e520ec7bc4a0ca334c63f557"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcodes__handle.html">codes_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__codes__handle.html#ga56d0f831e520ec7bc4a0ca334c63f557">codes_bufr_handle_new_from_samples</a> (<a class="el" href="structcodes__context.html">codes_context</a> *c, const char *sample_name)</td></tr>
 <tr class="memdesc:ga56d0f831e520ec7bc4a0ca334c63f557"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a handle from a BUFR message contained in a samples directory.  <a href="group__codes__handle.html#ga56d0f831e520ec7bc4a0ca334c63f557">More...</a><br/></td></tr>
 <tr class="separator:ga56d0f831e520ec7bc4a0ca334c63f557"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7b226527aa98d90f2bdb470105732878"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcodes__handle.html">codes_handle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__codes__handle.html#ga7b226527aa98d90f2bdb470105732878">codes_handle_clone</a> (<a class="el" href="structcodes__handle.html">codes_handle</a> *h)</td></tr>
@@ -544,6 +546,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a82249b16ee12f2e574397f8cccaafb7a"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccodes_8h.html#a82249b16ee12f2e574397f8cccaafb7a">codes_get_git_sha1</a> (void)</td></tr>
 <tr class="memdesc:a82249b16ee12f2e574397f8cccaafb7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the Git version control SHA1 identifier.  <a href="#a82249b16ee12f2e574397f8cccaafb7a">More...</a><br/></td></tr>
 <tr class="separator:a82249b16ee12f2e574397f8cccaafb7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac263f88377b19e546fd259dbd2e92fa8"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccodes_8h.html#ac263f88377b19e546fd259dbd2e92fa8">codes_get_package_name</a> (void)</td></tr>
+<tr class="memdesc:ac263f88377b19e546fd259dbd2e92fa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the package name.  <a href="#ac263f88377b19e546fd259dbd2e92fa8">More...</a><br/></td></tr>
+<tr class="separator:ac263f88377b19e546fd259dbd2e92fa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8be52d40a8fb51642720d0b8adf6cdce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="eccodes_8h.html#a8be52d40a8fb51642720d0b8adf6cdce">codes_print_api_version</a> (FILE *out)</td></tr>
 <tr class="memdesc:a8be52d40a8fb51642720d0b8adf6cdce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the API version.  <a href="#a8be52d40a8fb51642720d0b8adf6cdce">More...</a><br/></td></tr>
 <tr class="separator:a8be52d40a8fb51642720d0b8adf6cdce"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -675,7 +680,7 @@ Functions</h2></td></tr>
 <p>Get the API version.</p>
 <p>Returns the version of the api as a string in the format "major.minor.revision". </p>
 
-<p>Referenced by <a class="el" href="namespaceec_codes.html#a267636dba6361f74b330275a1f8e1ed7">ecCodes::codes_index_get()</a>, and <a class="el" href="namespaceec_codes.html#a92041c59bf04e6db88395077802dfe74">ecCodes::codes_index_select()</a>.</p>
+<p>Referenced by <a class="el" href="namespaceec_codes.html#a267636dba6361f74b330275a1f8e1ed7">ecCodes::codes_index_get()</a>.</p>
 
 </div>
 </div>
@@ -720,6 +725,25 @@ Functions</h2></td></tr>
 
 <p>Get the Git version control SHA1 identifier. </p>
 <dl class="section return"><dt>Returns</dt><dd>character string with SHA1 identifier </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac263f88377b19e546fd259dbd2e92fa8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* codes_get_package_name </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the package name. </p>
+<dl class="section return"><dt>Returns</dt><dd>character string with package name </dd></dl>
 
 </div>
 </div>

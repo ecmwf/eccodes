@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -133,6 +133,10 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
+#ifdef ECCODES_ON_WINDOWS
+#define round(a) ( (a) >=0 ? ((a)+0.5) : ((a)-0.5) )
+#endif
+
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
     int n=0;
@@ -152,21 +156,53 @@ static int get_native_type(grib_accessor* a)
 }
 
 /* Convert input date to Julian number. If date is invalid, return -1 */
-static double date_to_julian(long year,long month,long day,long hour,long minute,long second)
+static double date_to_julian(long year,long month,long day,long hour,long minute,double second)
 {
     double result = 0;
-    grib_datetime_to_julian(year,month,day,hour,minute,second, &result);
+    /* For validating the date/time, we specify seconds as an integer */
+    long lSecond = (long)second;
+    grib_datetime_to_julian(year,month,day,hour,minute,lSecond, &result);
 
     {
         /* Check conversion worked by going other way */
-        long year1, month1, day1, hour1, minute1, second1;
-        grib_julian_to_datetime(result, &year1, &month1, &day1, &hour1, &minute1, &second1);
-        if (year1 != year || month1 != month || day1 != day || minute1 != minute || second1 != second)
+        long year1, month1, day1, hour1, minute1, lSecond1;
+        grib_julian_to_datetime(result, &year1, &month1, &day1, &hour1, &minute1, &lSecond1);
+        if (year1 != year || month1 != month || day1 != day || minute1 != minute || lSecond1 != lSecond)
         {
-            result = -1; /* Failed. Invalid date*/
+            return -1; /* Failed. Invalid date*/
         }
     }
+    /* Now get the proper Julian number specifying the seconds in double precision */
+    grib_datetime_to_julian_d(year,month,day,hour,minute,second, &result);
     return result;
+}
+
+/* Helper function to construct the array of long for year, month, day etc. */
+/* The boolean zero_on_error flag is for the case where codes_get fails and we fill with zeros */
+static int build_long_array(grib_context* c, grib_handle* h, int compressed,
+                       long** array, const char* key, long numberOfSubsets, int zero_on_error)
+{
+    int err = 0;
+    size_t n=numberOfSubsets;
+    *array=(long*)grib_context_malloc_clear(c, sizeof(long)*numberOfSubsets);
+    err = grib_get_long_array(h, key, *array, &n);
+    if (zero_on_error) {
+        if (err) {
+            err = 0;
+            (*array)[0] = 0;
+            n = 1;
+        }
+    }
+    if (err) return err;
+    if (n!=numberOfSubsets) {
+        if (n==1) {
+            long i;
+            for (i=1;i<numberOfSubsets;i++) (*array)[i]=(*array)[0];
+        } else {
+            return GRIB_INTERNAL_ERROR;
+        }
+    }
+    return err;
 }
 
 static int select_datetime(grib_accessor* a)
@@ -232,62 +268,29 @@ static int select_datetime(grib_accessor* a)
         if (ret) return ret;
         sprintf(secondstr,"#%ld#second",secondRank);
 
-        n=numberOfSubsets;
-        year=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-        ret=grib_get_long_array(h,yearstr,year,&n);
+        /* YEAR */
+        ret = build_long_array(c, h, compressed, &year, yearstr, numberOfSubsets, 0);
         if (ret) return ret;
-        if (n!=numberOfSubsets) {
-            if (n==1) {
-                for (i=1;i<numberOfSubsets;i++) year[i]=year[0];
-            } else return GRIB_INTERNAL_ERROR;
-        }
 
-        n=numberOfSubsets;
-        month=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-        ret=grib_get_long_array(h,monthstr,month,&n);
+        /* MONTH */
+        ret = build_long_array(c, h, compressed, &month, monthstr, numberOfSubsets, 0);
         if (ret) return ret;
-        if (n!=numberOfSubsets) {
-            if (n==1) {
-                for (i=1;i<numberOfSubsets;i++) month[i]=month[0];
-            } else return GRIB_INTERNAL_ERROR;
-        }
 
-        n=numberOfSubsets;
-        day=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-        ret=grib_get_long_array(h,daystr,day,&n);
+        /* DAY */
+        ret = build_long_array(c, h, compressed, &day, daystr, numberOfSubsets, 0);
         if (ret) return ret;
-        if (n!=numberOfSubsets) {
-            if (n==1) {
-                for (i=1;i<numberOfSubsets;i++) day[i]=day[0];
-            } else return GRIB_INTERNAL_ERROR;
-        }
 
-        n=numberOfSubsets;
-        hour=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-        ret=grib_get_long_array(h,hourstr,hour,&n);
+        /* HOUR */
+        ret = build_long_array(c, h, compressed, &hour, hourstr, numberOfSubsets, 0);
         if (ret) return ret;
-        if (n!=numberOfSubsets) {
-            if (n==1) {
-                for (i=1;i<numberOfSubsets;i++) hour[i]=hour[0];
-            } else return GRIB_INTERNAL_ERROR;
-        }
 
-        n=numberOfSubsets;
-        minute=grib_context_malloc_clear(c,sizeof(long)*numberOfSubsets);
-        ret=grib_get_long_array(h,minutestr,minute,&n);
-        if (ret) {
-            ret=0;
-            minute[0]=0;
-            n=1;
-        }
-        if (n!=numberOfSubsets) {
-            if (n==1) {
-                for (i=1;i<numberOfSubsets;i++) minute[i]=minute[0];
-            } else return GRIB_INTERNAL_ERROR;
-        }
+        /* MINUTE: Special treatment if error => set all entries to zero */
+        ret = build_long_array(c, h, compressed, &minute, minutestr, numberOfSubsets, 1);
+        if (ret) return ret;
 
+        /* SECOND: Double array */
         n=numberOfSubsets;
-        second=grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
+        second=(double*)grib_context_malloc_clear(c,sizeof(double)*numberOfSubsets);
         ret=grib_get_double_array(h,secondstr,second,&n);
         if (ret) {
             ret=0;
@@ -344,16 +347,19 @@ static int select_datetime(grib_accessor* a)
         }
 
         for (i=0;i<numberOfSubsets;i++) {
-            sprintf( datetime_str, "%04ld/%02ld/%02ld %02ld:%02ld:%02ld",year[i],month[i],day[i],hour[i],minute[i], (long)round(second[i]) );
-            julianDT = date_to_julian( year[i],month[i],day[i],hour[i],minute[i],(long)round(second[i]) );
+            sprintf( datetime_str, "%04ld/%02ld/%02ld %02ld:%02ld:%.3f",year[i],month[i],day[i],hour[i],minute[i],second[i] );
+            julianDT = date_to_julian( year[i],month[i],day[i],hour[i],minute[i],second[i]);
             if (julianDT == -1) {
                 grib_context_log(c,GRIB_LOG_ERROR,"Invalid date/time: %s", datetime_str);
                 return GRIB_INTERNAL_ERROR;
             }
 
+            /*printf("SN: datetime_str=%s j=%.15f\t", datetime_str, julianDT);*/
             if (julianDT>=julianStart && julianEnd>=julianDT) {
+                /*printf(" ....ADDING subset %ld\n",i);*/
                 grib_iarray_push(subsets,i+1);
-                /* printf("++++++++ %ld\n",i+1); */
+            } else {
+                /*printf(" ....Exclude subset %ld\n",i);*/
             }
         }
 
@@ -380,6 +386,7 @@ static int select_datetime(grib_accessor* a)
         subsets=0;
 
     } else {
+        grib_context_log(c, GRIB_LOG_ERROR, "Time interval extraction not implemented for uncompressed BUFR messages");
         return GRIB_NOT_IMPLEMENTED;
     }
 
@@ -389,13 +396,10 @@ static int select_datetime(grib_accessor* a)
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     int err=0;
-    grib_accessor_bufr_extract_datetime_subsets *self =(grib_accessor_bufr_extract_datetime_subsets*)a;
+    /*grib_accessor_bufr_extract_datetime_subsets *self =(grib_accessor_bufr_extract_datetime_subsets*)a;*/
 
     if (*len==0) return GRIB_SUCCESS;
     err=select_datetime(a);
-    if (err) return err;
-
-    err=grib_set_long(a->parent->h,self->doExtractSubsets,1);
     if (err) return err;
 
     return err;

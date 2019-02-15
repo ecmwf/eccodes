@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -23,11 +23,16 @@
 #include <netcdf.h>
 
 #include "grib_tools.h"
+#include "eccodes_windef.h"
 
-char* grib_tool_description = "Convert a GRIB file to netCDF format.";
-char* grib_tool_name = "grib_to_netcdf";
-char* grib_tool_usage = "[options] grib_file grib_file ... ";
-static char argvString[2048];
+#ifdef ECCODES_ON_WINDOWS
+#include <stdint.h>
+#endif
+
+const char* grib_tool_description = "Convert a GRIB file to netCDF format.";
+const char* grib_tool_name = "grib_to_netcdf";
+const char* grib_tool_usage = "[options] grib_file grib_file ... ";
+static char argvString[2048] = {0,};
 
 /*=====================================================================*/
 
@@ -412,7 +417,6 @@ static void add_value(request *r, const char *parname, const char *fmt, ...)
     va_end(list);
 
     put_value(r, parname, buffer, TRUE, FALSE, FALSE);
-    va_end(list);
 }
 
 static void _reqmerge2(request *a, const request *b)
@@ -593,7 +597,6 @@ static err handle_to_request(request *r, grib_handle* g)
 
     while(grib_keys_iterator_next(ks))
     {
-
         strcpy(name, grib_keys_iterator_get_name(ks));
 
         if((e = grib_keys_iterator_get_string(ks, value, &len)) != GRIB_SUCCESS)
@@ -601,6 +604,11 @@ static err handle_to_request(request *r, grib_handle* g)
 
         set_value(r, name, "%s", value);
         len = sizeof(value);
+    }
+
+    strcpy(name, "stepUnits");
+    if((e = grib_get_string(g, name, value, &len)) == GRIB_SUCCESS) {
+        set_value(r, name, "%s", value);
     }
 
     /*
@@ -1074,7 +1082,7 @@ static err to_expand_mem(field *g)
 
         if((e = grib_get_size(g->handle, "values", &g->value_count)))
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get number of values %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get number of values: %s", grib_get_error_message(e));
             return e;
         }
 
@@ -1082,23 +1090,23 @@ static err to_expand_mem(field *g)
 
         if((e = grib_set_double(g->handle, "missingValue", global_missing_value)))
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot set missingValue %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot set missingValue: %s", grib_get_error_message(e));
             return e;
         }
 
         g->values = (double*) grib_context_malloc(ctx, sizeof(double) * g->value_count);
         if((e = grib_get_double_array(g->handle, "values", g->values, &count)))
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get decode values %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot decode values: %s", grib_get_error_message(e));
             return e;
         }
 
         if(count != g->value_count)
             grib_context_log(ctx, GRIB_LOG_FATAL, "ecCodes: value count mismatch %d %d", count, g->value_count);
 
-        if((e = grib_get_long(g->handle, "bitmapPresent", &bitmap)))
+        if((e = grib_get_long(g->handle, "missingValuesPresent", &bitmap)))
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get bitmapPresent %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get missingValuesPresent: %s", grib_get_error_message(e));
             return e;
         }
 
@@ -1641,7 +1649,7 @@ static hypercube *new_hypercube(const request *r)
     int total = 0, count = 0;
     int n = 0;
     const char *val = 0;
-
+    Assert(h);
     h->r = clone_one_request(r);
     h->cube = empty_request("CUBE");
 
@@ -1746,8 +1754,10 @@ static hypercube *new_hypercube_from_mars_request(const request *r)
     }
 
     n = count_values(s.c->cube, "axis");
-    if(n)
+    if(n) {
         s.c->compare = (namecmp*)calloc(sizeof(namecmp), n);
+        Assert(s.c->compare);
+    }
 
     for(i = 0; i < n; i++)
         s.c->compare[i] = comparator(get_value(s.c->cube, "axis", i));
@@ -1771,8 +1781,10 @@ static hypercube *new_simple_hypercube_from_mars_request(const request *r)
 
     free_one_request(s.r);
     n = count_values(s.c->cube, "axis");
-    if(n)
+    if(n) {
         s.c->compare = (namecmp*)calloc(sizeof(namecmp), n);
+        Assert(s.c->compare);
+    }
 
     for(i = 0; i < n; i++)
         s.c->compare[i] = comparator(get_value(s.c->cube, "axis", i));
@@ -1839,6 +1851,8 @@ typedef struct ncoptions {
     request *mars_description;
     boolean mmeans; /* Whether this dataset is Monthly Means */
     boolean climatology; /* Whether this dataset is climatology */
+    boolean shuffle;
+    long deflate;
 } ncoptions_t;
 
 ncoptions_t setup;
@@ -1922,16 +1936,29 @@ static long monthnumber(const char *m)
     return -1;
 }
 
+int check_stepUnits(const char* step_units_str)
+{
+    /* Only hours, minutes and seconds supported */
+    if (strcmp(step_units_str, "h")==0 ||
+        strcmp(step_units_str, "m")==0 ||
+        strcmp(step_units_str, "s")==0)
+    {
+        return GRIB_SUCCESS;
+    }
+    return GRIB_WRONG_STEP_UNIT;
+}
+
 /* The argument represents 1 field */
 static void validation_time(request *r)
 {
     long date = 0;
     long time = 0;
-    long step = 0;
+    double step = 0;
     long fcmonthdays = 0;
     long fcmonth = 0;
     double v;
     long julian = 0;
+    const char* step_units = NULL;
 
     long nstep = count_values(r, "step");
     long ndate = count_values(r, "date");
@@ -1955,7 +1982,7 @@ static void validation_time(request *r)
     }
 
     if(nstep)
-        step = atol(get_value(r, "step", 0));
+        step = atof(get_value(r, "step", 0));
 
     if(ndate)
     {
@@ -2007,8 +2034,20 @@ static void validation_time(request *r)
     }
 
     julian = grib_date_to_julian(date);
+    step_units = get_value(r, "stepUnits", 0);
+    if (step_units){
+        if(check_stepUnits(step_units)!=GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR,
+                "Cannot convert stepUnits of '%s'. Only hours, minutes and seconds supported.", step_units);
+        }
+        if (strcmp("m", step_units)==0) {
+            step /= 60;
+        } else if (strcmp("s", step_units)==0) {
+            step /= 3600;
+        }
+    }
     v = julian * 24.0 + fcmonthdays * 24.0 + time / 100.0 + step * 1.0;
-    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: date=%ld, julian=%ld, fcmonthdays=%ld, time=%ld, step=%ld, validation=%ld", date, julian, fcmonthdays, time, step, v);
+    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: date=%ld, julian=%ld, fcmonthdays=%ld, time=%ld, step=%g, validation=%ld", date, julian, fcmonthdays, time, step, v);
     set_value(r, "_validation", "%lf", v);
     set_value(r, "_juliandate", "%ld", julian);
 
@@ -2040,11 +2079,15 @@ static void get_nc_options(const request *user_r)
     const char *checkvalidtime_env = NULL;
     const char *validtime = get_value(user_r, "usevalidtime", 0);
     const char *refdate = get_value(user_r, "referencedate", 0);
+    const char *shuffle = get_value(user_r, "shuffle", 0);
+    const char *deflate = get_value(user_r, "deflate", 0);
 
     const char *title = get_value(user_r, "title", 0);
     const char *history = get_value(user_r, "history", 0);
     const char *unlimited = get_value(user_r, "unlimited", 0);
 
+    setup.shuffle = shuffle ? (strcmp(shuffle, "true") == 0) : FALSE;
+    setup.deflate = deflate ? ((strcmp(deflate, "none") == 0) ? -1 : atol(deflate)) : -1;
     setup.usevalidtime = validtime ? (strcmp(validtime, "true") == 0) : FALSE;
     setup.refdate = refdate ? atol(refdate) : 19000101;
     setup.auto_refdate = refdate ? (strcmp(get_value(user_r, "referencedate", 0), "AUTOMATIC") == 0) : FALSE;
@@ -2128,6 +2171,25 @@ static int set_dimension(int ncid, const char *name, int n, int xtype, const cha
     return var_id;
 }
 
+static int check_grid(field *f)
+{
+    err e = 0;
+    char grid_type[80];
+    size_t size = sizeof(grid_type);
+
+    if ((e = grib_get_string(f->handle, "typeOfGrid", grid_type, &size)) != GRIB_SUCCESS)
+    {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get typeOfGrid %s", grib_get_error_message(e));
+        return e;
+    }
+
+    if (strcmp(grid_type, "regular_ll") != 0 && (strcmp(grid_type, "regular_gg") != 0))
+    {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+    return e;
+}
 static int def_latlon(int ncid, fieldset *fs)
 {
     int n = 0;
@@ -2137,25 +2199,12 @@ static int def_latlon(int ncid, fieldset *fs)
 
     field *g = get_field(fs, 0, expand_mem);
 
-    char grid_type[80];
-    size_t size;
-    size = sizeof(grid_type);
-    if((e = grib_get_string(g->handle, "typeOfGrid", grid_type, &size)) != GRIB_SUCCESS)
-    {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get typeOfGrid %s", grib_get_error_message(e));
-        return e;
-    }
-
-    if(strcmp(grid_type, "regular_ll") != 0 && (strcmp(grid_type, "regular_gg") != 0) )
-    {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
-        return GRIB_GEOCALCULUS_PROBLEM;
-    }
+    Assert( check_grid(g)==GRIB_SUCCESS );
 
     /* Define longitude */
     if((e = grib_get_size(g->handle, "distinctLongitudes", &l)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
         return e;
     }
     n = l;
@@ -2164,7 +2213,7 @@ static int def_latlon(int ncid, fieldset *fs)
     /* Define latitude */
     if((e = grib_get_size(g->handle, "distinctLatitudes", &l)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
         return e;
     }
     n = l;
@@ -2198,7 +2247,7 @@ static int put_latlon(int ncid, fieldset *fs)
     /* Get info in degrees */
     if((e = grib_get_double(g->handle, "iDirectionIncrementInDegrees", &ew_stride)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get iDirectionIncrementInDegrees %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get iDirectionIncrementInDegrees: %s", grib_get_error_message(e));
         return e;
     }
 
@@ -2225,14 +2274,14 @@ static int put_latlon(int ncid, fieldset *fs)
 
     if((e = grib_get_size(g->handle, "distinctLatitudes", &nj)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
         return e;
 
     }
 
     if((e = grib_get_size(g->handle, "distinctLongitudes", &ni)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
         return e;
 
     }
@@ -2250,7 +2299,7 @@ static int put_latlon(int ncid, fieldset *fs)
     check_err(stat, __LINE__, __FILE__);
     if((e = grib_get_double_array(g->handle, "distinctLongitudes", dvalues, &n)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
         return e;
     }
     Assert(n == ni);
@@ -2266,7 +2315,7 @@ static int put_latlon(int ncid, fieldset *fs)
     check_err(stat, __LINE__, __FILE__);
     if((e = grib_get_double_array(g->handle, "distinctLatitudes", dvalues, &n)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
         return e;
     }
 
@@ -2315,7 +2364,7 @@ static int compute_scale(dataset_t *subset)
 
         if((e = grib_get_size(g->handle, "values", &len)) != GRIB_SUCCESS)
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get size of values %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get size of values: %s", grib_get_error_message(e));
             return e;
         }
 
@@ -2328,7 +2377,7 @@ static int compute_scale(dataset_t *subset)
         }
         if((e = grib_get_double_array(g->handle, "values", vals, &len)) != GRIB_SUCCESS)
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get values %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get values: %s", grib_get_error_message(e));
             return e;
         }
 
@@ -2382,6 +2431,12 @@ static int compute_scale(dataset_t *subset)
     scaled_max = rint((max - ao) / sf);
     scaled_min = rint((min - ao) / sf);
     scaled_median = rint((median - ao) / sf);
+
+    if (scaled_max > nc_type_values[idx].nc_type_max) {
+        grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: scaled_max (=%lld) > nc_type_max (=%lf). Set sf to 1.0",
+                         scaled_max, nc_type_values[idx].nc_type_max);
+        sf = 1.0;  /* ECC-685 */
+    }
 
     test_scaled_max = (char) scaled_max;
     test_scaled_min = (char) scaled_min;
@@ -2698,13 +2753,13 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
     /* Define longitude */
     if((e = grib_get_long(f->handle, "Ni", &ni)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
         return e;
     }
     /* Define latitude */
     if((e = grib_get_long(f->handle, "Nj", &nj)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
         return e;
     }
 
@@ -2744,7 +2799,7 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
 
         if((e = grib_get_size(g->handle, "values", &len)) != GRIB_SUCCESS)
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get size of values %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get size of values: %s", grib_get_error_message(e));
             return e;
         }
 
@@ -2757,7 +2812,7 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
         }
         if((e = grib_get_double_array(g->handle, "values", vals, &len)) != GRIB_SUCCESS)
         {
-            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get values %s", grib_get_error_message(e));
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get values: %s", grib_get_error_message(e));
             return e;
         }
 
@@ -2784,13 +2839,13 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
 
             if((e = grib_get_long(g->handle, "Ni", &ni)) != GRIB_SUCCESS)
             {
-                grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni %s", grib_get_error_message(e));
+                grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
                 return e;
             }
             /* Define latitude */
             if((e = grib_get_long(g->handle, "Nj", &nj)) != GRIB_SUCCESS)
             {
-                grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj %s", grib_get_error_message(e));
+                grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
                 return e;
             }
 
@@ -2852,10 +2907,40 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
     int var_id = 0; /* Variable ID */
     int dims[1024];
 
+    size_t chunks[NC_MAX_DIMS] = {0,}; /* For chunking */
+    err e = 0;
+    
+    long ni;
+    long nj;
+    
+    field *f = get_field(fs, 0, expand_mem);
+
+    if ((e=check_grid(f)) != GRIB_SUCCESS) {
+        release_field(f);
+        return e;
+    }
+
+    if((e = grib_get_long(f->handle, "Ni", &ni)) != GRIB_SUCCESS) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
+        return e;
+    }
+    if ((e = grib_get_long(f->handle, "Nj", &nj)) != GRIB_SUCCESS) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
+        return e;
+    }
+    release_field(f);
+
+    /* Count dimensions per axis */
+    for(i = 0; i < naxis; ++i)
+        chunks[naxis - i - 1] = 1;
+
+    chunks[naxis] = nj; /* latitude */
+    chunks[naxis + 1] = ni; /* longitude */
+
     /* START DEFINITIONS */
 
     /* Define latitude/longitude dimensions */
-    err e = def_latlon(ncid, fs);
+    e = def_latlon(ncid, fs);
     if (e != GRIB_SUCCESS)
         return e;
 
@@ -2873,6 +2958,12 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         if(count_values(data_r,"levtype") > 1)
         {
             grib_context_log(ctx, GRIB_LOG_ERROR, "Cannot handle fields for different levtypes.\n");
+            grib_context_log(ctx, GRIB_LOG_ERROR, "Please split input data into different files. Exiting!\n");
+            exit(1);
+        }
+        if(count_values(data_r,"stepUnits") > 1)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "Cannot handle fields for different stepUnits.\n");
             grib_context_log(ctx, GRIB_LOG_ERROR, "Please split input data into different files. Exiting!\n");
             exit(1);
         }
@@ -2917,11 +3008,11 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         if(strcmp(axis, "time") == 0)
         {
             boolean onedtime = (count_values(cube, "date") == 0 && count_values(cube, "step") == 0);
-            sprintf(u, "hours since 0000-00-00 00:00:0.0");
+            sprintf(u, "hours since 0000-00-00 00:00:00.0");
             longname = "reference_time";
             if(setup.usevalidtime || onedtime)
             {
-                sprintf(u, "hours since %ld-%02ld-%02ld 00:00:0.0", setup.refdate / 10000, (setup.refdate % 10000) / 100, (setup.refdate % 100));
+                sprintf(u, "hours since %ld-%02ld-%02ld 00:00:00.0", setup.refdate / 10000, (setup.refdate % 10000) / 100, (setup.refdate % 100));
                 longname = "time";
             }
             if(setup.climatology)
@@ -2943,7 +3034,7 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
                 long date = d ? atol(d) : 0;
                 long hour = t ? atol(t) : 0;
                 long min = t ? 60 * (atof(t) - hour) : 0;
-                sprintf(u, "hours since %ld-%02ld-%02ld %02ld:%02ld:0.0", date / 10000, (date % 10000) / 100, (date % 100), hour, min);
+                sprintf(u, "hours since %ld-%02ld-%02ld %02ld:%02ld:00.0", date / 10000, (date % 10000) / 100, (date % 100), hour, min);
                 units = u;
             }
         }
@@ -3000,12 +3091,24 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
 
     for(i = 0; i < subsetcnt; ++i)
     {
-
         printf("%s: Defining variable '%s'.\n", grib_tool_name, subsets[i].att.name);
 
         stat = nc_def_var(ncid, subsets[i].att.name, subsets[i].att.nctype, n, dims, &var_id);
         check_err(stat, __LINE__, __FILE__);
 
+        if (setup.deflate > -1)
+        {
+#ifdef NC_NETCDF4
+            stat = nc_def_var_chunking(ncid, var_id, NC_CHUNKED, chunks);
+            check_err(stat, __LINE__, __FILE__);
+
+            /* Set compression settings for a variable */
+            stat = nc_def_var_deflate(ncid, var_id, setup.shuffle, 1, setup.deflate);
+            check_err(stat, __LINE__, __FILE__);
+#else
+            grib_context_log(ctx, GRIB_LOG_ERROR, "Deflate option only supported in NetCDF4");
+#endif
+        }
         if(subsets[i].scale)
         {
             compute_scale(&subsets[i]);
@@ -3156,6 +3259,30 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
     return e;
 }
 
+static size_t string_to_unique_number(const char* axis, const char* str)
+{
+    size_t result = 0;
+    if(strcmp(axis, "type")==0) {
+        /* TODO: not ideal but capture the most common MARS types */
+        if     (strcmp(str,"an")==0) return 2;
+        else if(strcmp(str,"fc")==0) return 9;
+        else if(strcmp(str,"cf")==0) return 10;
+        else if(strcmp(str,"pf")==0) return 11;
+        else if(strcmp(str,"em")==0) return 17;
+        else if(strcmp(str,"es")==0) return 18;
+        else if(strcmp(str,"ep")==0) return 30;
+        else if(strcmp(str,"4i")==0) return 33;
+        else if(strcmp(str,"4g")==0) return 8;
+        else if(strcmp(str,"ia")==0) return 3;
+        else if(strcmp(str,"efi")==0) return 27;
+    }
+    /* Fallback general case: Use hashing */
+    result = 5381;
+    while (*str) {
+        result = 33 * result ^ (unsigned char) *str++;
+    }
+    return result;
+}
 static int fill_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid)
 {
     const request *cube = h->cube;
@@ -3195,8 +3322,18 @@ static int fill_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid)
         }
         else
         {
-            for(j = 0; j < n; ++j)
-                values[j] = atol(get_value(cube, axis, j));
+            for(j = 0; j < n; ++j) {
+                long lv = 0;
+                const char* sv = get_value(cube, axis, j);
+                if (is_number(sv)) {
+                    lv = atol(sv); /* Detect error? */
+                } else {
+                    /* ECC-725: Convert string-valued dimension to integer
+                     * e.g. mars type or stream */
+                    lv = string_to_unique_number(axis, sv);
+                }
+                values[j] = lv;
+            }
         }
 
         stat = nc_inq_varid(ncid, (lowaxis), &var_id);
@@ -3402,7 +3539,7 @@ static void find_nc_attributes(const request *subset_r, const request *user_r, n
     /* NetCDF does not allow variable names to start with a digit */
     if(!isalpha(att->name[0]))
     {
-        char buf[1024];
+        char buf[1048];
         sprintf(buf,"p%s",att->name);
         strcpy(att->name,buf);
     }
@@ -3801,7 +3938,7 @@ static int get_creation_mode(int option_kind)
 #else
     case NC_FORMAT_NETCDF4:
     case NC_FORMAT_NETCDF4_CLASSIC:
-        fprintf(stderr,"%s not built with netcdf4, cannot create netCDF-4 files.\n", grib_tool_name);
+        grib_context_log(ctx, GRIB_LOG_ERROR, "%s not built with netcdf4, cannot create netCDF-4 files.", grib_tool_name);
         exit(1);
         break;
 #endif
@@ -3831,6 +3968,10 @@ grib_option grib_options[] = {
                 "\n\t\t3 -> netCDF-4 file format"
                 "\n\t\t4 -> netCDF-4 classic model file format\n"
                 , 0, 1, "2" },
+        { "d:", "level",          "\n\t\tDeflate data (compression level). Only for netCDF-4 output format."
+                "\n\t\tPossible values [0,9]. Default None." 
+                "\n\t\tChunking strategy based on GRIB message.\n", 0, 1, "6" },
+        { "s", 0, "Shuffle data before deflation compression.\n", 0, 1, 0 },
         { "u:", "dimension",  "\n\t\tSet dimension to be an unlimited dimension.\n", 0, 1, "time" }
 };
 
@@ -3839,6 +3980,7 @@ static fieldset *fs = NULL;
 static request* data_r = NULL;
 request *user_r = NULL;
 static int option_kind = 2; /* By default NetCDF3, 64-bit offset */
+static int deflate_option = 0;
 
 /* Table of formats for legal -k values. Inspired by nccopy */
 struct KindValue {
@@ -3876,7 +4018,11 @@ int main(int argc, char *argv[])
     int i, ret = 0;
 
     /* GRIB-413: Collect all program arguments into a string */
+    const size_t maxLen = sizeof(argvString);
+    size_t currLen = 0;
     for (i=0; i<argc; ++i) {
+        currLen += strlen(argv[i]);
+        if ( currLen >= maxLen-1 ) break;
         strcat(argvString, argv[i]);
         if (i != argc-1) strcat(argvString, " ");
     }
@@ -3973,6 +4119,43 @@ int grib_tool_init(grib_runtime_options* options)
             exit(1);
         }
     }
+
+    if (grib_options_on("d:"))
+    {
+        if (option_kind == 3 || option_kind == 4) { /* netCDF-4 */
+            char* theArg = grib_options_get_option("d:");
+            if (!is_number(theArg) || atol(theArg)<0 || atol(theArg)>9 ) {
+                fprintf(stderr, "Invalid deflate option: %s (must be 0 to 9)\n", theArg);
+                usage();
+                exit(1);
+            }
+            set_value(user_r, "deflate", theArg);
+            deflate_option=1;
+        } else {
+            fprintf(stderr, "Invalid deflate option for non netCDF-4 output formats\n");
+            usage();
+            exit(1);
+        }
+    }
+    else
+    {
+        set_value(user_r, "deflate", "none");
+    }
+
+    if(grib_options_on("s"))
+    {
+        if(deflate_option)
+            set_value(user_r, "shuffle", "true");
+        else
+        {
+            fprintf(stderr, "Invalid shuffle option. Deflate option needed.\n");
+            usage();
+            exit(1);
+        }
+
+    }
+    else
+        set_value(user_r, "shuffle", "false");
 
     if(grib_options_on("R:"))
     {
@@ -4113,8 +4296,12 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
                     grib_context_log(ctx, GRIB_LOG_ERROR, "Internal description");
                     print_all_requests(temp_data_r);
                 }
-                grib_context_log(ctx, GRIB_LOG_ERROR, "Hint: This may be due to several fields having the same validity time.");
-                grib_context_log(ctx, GRIB_LOG_ERROR, "Try using the -T option (Do not use time of validity)");
+                if (grib_options_on("T")) {
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "Hint: This may be due to several fields having the same date, time and step.");
+                } else {
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "Hint: This may be due to several fields having the same validity time.");
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "Try using the -T option (Do not use time of validity)");
+                }
                 exit(1);
             }
         }
@@ -4170,10 +4357,10 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     printf("%s: Found %d GRIB field%s in %d file%s.\n", grib_tool_name, fs->count, fs->count>1?"s":"", files, files > 1 ? "s" : "");
 
-    /*
-     grib_context_log(ctx, GRIB_LOG_INFO, "Request representing %d fields ", fs->count);
-     print_all_requests(data_r);
-     */
+    if (ctx->debug) {
+        grib_context_log(ctx, GRIB_LOG_INFO, "Request representing %d fields ", fs->count);
+        print_all_requests(data_r);
+    }
 
     /* Split the SOURCE from request into as many datasets as specified */
     count = split_fieldset(fs, data_r, &subsets, user_r, config_r);
@@ -4182,6 +4369,10 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     print_ignored_keys(stdout, user_r);
 
     dims = new_simple_hypercube_from_mars_request(data_r);
+    if (ctx->debug) {
+        grib_context_log(ctx, GRIB_LOG_INFO, "Hypercube");
+        print_hypercube(dims);
+    }
 
     /* In case there is only 1 DATE+TIME+STEP, set at least 1 time as axis */
     set_always_a_time(dims, data_r);

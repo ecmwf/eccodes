@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -38,12 +38,10 @@ alias latitudeWhereDxAndDyAreSpecified=LaD ;
 unsigned[4] LoV  : dump;
 
 #  Dx - X-direction grid length
-# NOTE 1 NOT FOUND
 unsigned[4] xDirectionGridLength  : dump;
 alias Dx  = xDirectionGridLength;
 
 #  Dy - Y-direction grid length
-# NOTE 1 NOT FOUND
 unsigned[4] yDirectionGridLength  : dump;
 alias Dy =  yDirectionGridLength;
 

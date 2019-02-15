@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -231,10 +231,16 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     dlonfirst=((double)lonfirst)/factor;
     dlonlast=((double)lonlast)/factor;
 
+    if (N == 0) {
+        grib_context_log(c,GRIB_LOG_ERROR,"global_gaussian unpack_long: N cannot be 0!");
+        return GRIB_WRONG_GRID;
+    }
+
     lats=(double*)grib_context_malloc(c,sizeof(double)*N*2);
     if (!lats) {
-        grib_context_log(c,GRIB_LOG_FATAL,
-                "global_gaussian: unable to allocate %d bytes",sizeof(double)*N*2);
+        grib_context_log(c, GRIB_LOG_ERROR,
+                "global_gaussian unpack_long: Memory allocation error: %d bytes",sizeof(double)*N*2);
+        return GRIB_OUT_OF_MEMORY;
     }
     if((ret = grib_get_gaussian_latitudes(N, lats)) != GRIB_SUCCESS)
         return ret;
@@ -310,7 +316,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     lats=(double*)grib_context_malloc(c,sizeof(double)*N*2);
     if (!lats) {
         grib_context_log(c,GRIB_LOG_FATAL,
-                "global_gaussian: unable to allocate %d bytes",sizeof(double)*N*2);
+                "global_gaussian pack_long: Memory allocation error: %d bytes",sizeof(double)*N*2);
+        return GRIB_OUT_OF_MEMORY;
     }
     if((ret = grib_get_gaussian_latitudes(N, lats)) != GRIB_SUCCESS)
         return ret;

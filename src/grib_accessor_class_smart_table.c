@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -189,26 +189,26 @@ static void thread_init()
 #endif
 
 static int grib_load_smart_table(grib_context* c,const char* filename,
-           const char* recomposed_name,size_t size,grib_smart_table* t);
+        const char* recomposed_name,size_t size,grib_smart_table* t);
 
-static void init(grib_accessor* a, const long len, grib_arguments* params) {
-  int n=0;
-  grib_accessor_smart_table* self  = (grib_accessor_smart_table*)a;
+static void init(grib_accessor* a, const long len, grib_arguments* params)
+{
+    int n=0;
+    grib_accessor_smart_table* self  = (grib_accessor_smart_table*)a;
 
-  self->values = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-  self->tablename = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
-  self->masterDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-  self->localDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-  self->widthOfCode = grib_arguments_get_long(grib_handle_of_accessor(a),params,n++);
-  self->extraDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-  self->extraTable = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
+    self->values = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->tablename = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
+    self->masterDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->localDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->widthOfCode = grib_arguments_get_long(grib_handle_of_accessor(a),params,n++);
+    self->extraDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->extraTable = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
 
-  a->length = 0;
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  self->dirty=1;
-  self->tableCodesSize=0;
-  self->tableCodes=0;
-
+    a->length = 0;
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    self->dirty=1;
+    self->tableCodesSize=0;
+    self->tableCodes=0;
 }
 
 static grib_smart_table* load_table(grib_accessor_smart_table* self)
@@ -271,11 +271,11 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
     while(next) {
         if((filename && next->filename[0] && strcmp(filename,next->filename[0]) == 0) &&
                 ((localFilename==0 && next->filename[1]==NULL) ||
-                 ((localFilename!=0 && next->filename[1]!=NULL)
-                  && strcmp(localFilename,next->filename[1]) ==0)) &&
-                ((extraFilename==0 && next->filename[2]==NULL) ||
-                 ((extraFilename!=0 && next->filename[2]!=NULL)
-                  && strcmp(extraFilename,next->filename[2]) ==0)) )
+                        ((localFilename!=0 && next->filename[1]!=NULL)
+                                && strcmp(localFilename,next->filename[1]) ==0)) &&
+                                ((extraFilename==0 && next->filename[2]==NULL) ||
+                                        ((extraFilename!=0 && next->filename[2]!=NULL)
+                                                && strcmp(extraFilename,next->filename[2]) ==0)) )
             return next;
         next = next->next;
     }
@@ -298,216 +298,213 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
     }
 
     return t;
-
 }
 
 static int grib_load_smart_table(grib_context* c,const char* filename,
-           const char* recomposed_name,size_t size,grib_smart_table* t) {
-  char line[1024]={0,};
-  FILE *f = NULL;
-  int lineNumber;
-  int numberOfColumns;
-  int code;
+        const char* recomposed_name,size_t size,grib_smart_table* t)
+{
+    char line[1024]={0,};
+    FILE *f = NULL;
+    int lineNumber;
+    int numberOfColumns;
+    int code;
 
-  grib_context_log(c,GRIB_LOG_DEBUG,"Loading code table form %s",filename);
+    grib_context_log(c,GRIB_LOG_DEBUG,"Loading code table form %s",filename);
 
-  f=codes_fopen(filename, "r");
-  if (!f) return GRIB_IO_PROBLEM;
+    f=codes_fopen(filename, "r");
+    if (!f) return GRIB_IO_PROBLEM;
 
-  Assert(t!=NULL);
+    Assert(t!=NULL);
 
-  if (t->filename[0] == NULL ){
-    t->filename[0]  = grib_context_strdup_persistent(c,filename);
-    t->recomposed_name[0]  = grib_context_strdup_persistent(c,recomposed_name);
-    t->next      = c->smart_table;
-    t->numberOfEntries      = size;
-    GRIB_MUTEX_INIT_ONCE(&once,&thread_init)
-    GRIB_MUTEX_LOCK(&mutex)
-    c->smart_table = t;
-    GRIB_MUTEX_UNLOCK(&mutex)
-  } else if (t->filename[1] == NULL ){
-    t->filename[1]  = grib_context_strdup_persistent(c,filename);
-    t->recomposed_name[1]  = grib_context_strdup_persistent(c,recomposed_name);
-  } else {
-    t->filename[2]  = grib_context_strdup_persistent(c,filename);
-    t->recomposed_name[2]  = grib_context_strdup_persistent(c,recomposed_name);
-  }
-
-  lineNumber = 0;
-  while(fgets(line,sizeof(line)-1,f))
-  {
-    char* s=line;
-    char* p=line;
-
-    line[strlen(line)-1]=0;
-
-    ++lineNumber;
-    while(*s != '\0' && isspace(*s)) s++;
-
-    if(*s == '#') continue;
-
-    p=s;
-    while(*p != '\0' && *p!='|' ) p++;
-
-    if (!p) {
-       grib_context_log(c,GRIB_LOG_ERROR, "Invalid entry in file %s: line %d", filename, lineNumber);
-       continue; /* skip this line */
+    if (t->filename[0] == NULL ){
+        t->filename[0]  = grib_context_strdup_persistent(c,filename);
+        t->recomposed_name[0]  = grib_context_strdup_persistent(c,recomposed_name);
+        t->next      = c->smart_table;
+        t->numberOfEntries      = size;
+        GRIB_MUTEX_INIT_ONCE(&once,&thread_init)
+        GRIB_MUTEX_LOCK(&mutex)
+        c->smart_table = t;
+        GRIB_MUTEX_UNLOCK(&mutex)
+    } else if (t->filename[1] == NULL ){
+        t->filename[1]  = grib_context_strdup_persistent(c,filename);
+        t->recomposed_name[1]  = grib_context_strdup_persistent(c,recomposed_name);
+    } else {
+        t->filename[2]  = grib_context_strdup_persistent(c,filename);
+        t->recomposed_name[2]  = grib_context_strdup_persistent(c,recomposed_name);
     }
 
-    *p=0;
+    lineNumber = 0;
+    while(fgets(line,sizeof(line)-1,f))
+    {
+        char* s=line;
+        char* p=line;
 
-    code=atol(s);
+        line[strlen(line)-1]=0;
 
-    p++; s=p;
-    while(*p != '\0' && *p!='|' ) p++;
+        ++lineNumber;
+        while(*s != '\0' && isspace(*s)) s++;
 
-    if (!p) {
-       grib_context_log(c,GRIB_LOG_ERROR, "Invalid entry in file %s: line %d", filename, lineNumber);
-       continue; /* skip this line */
-    }
-    *p=0;
+        if(*s == '#') continue;
 
-    numberOfColumns=0;
-    while (*s) {
+        p=s;
+        while(*p != '\0' && *p!='|' ) p++;
 
-        t->entries[code].column[numberOfColumns]=grib_context_strdup_persistent(c,s);
-        numberOfColumns++;
-        Assert(numberOfColumns<MAX_SMART_TABLE_COLUMNS);
+        if (!p) {
+            grib_context_log(c,GRIB_LOG_ERROR, "Invalid entry in file %s: line %d", filename, lineNumber);
+            continue; /* skip this line */
+        }
+
+        *p=0;
+
+        code=atol(s);
 
         p++; s=p;
         while(*p != '\0' && *p!='|' ) p++;
+
+        if (!p) {
+            grib_context_log(c,GRIB_LOG_ERROR, "Invalid entry in file %s: line %d", filename, lineNumber);
+            continue; /* skip this line */
+        }
         *p=0;
+
+        numberOfColumns=0;
+        while (*s) {
+
+            t->entries[code].column[numberOfColumns]=grib_context_strdup_persistent(c,s);
+            numberOfColumns++;
+            Assert(numberOfColumns<MAX_SMART_TABLE_COLUMNS);
+
+            p++; s=p;
+            while(*p != '\0' && *p!='|' ) p++;
+            *p=0;
+        }
     }
-  }
 
-  fclose(f);
-
-  return 0;
-
+    fclose(f);
+    return 0;
 }
 
-void grib_smart_table_delete(grib_context* c) {
-  grib_smart_table* t = c->smart_table;
-
-  while(t)
-  {
-    grib_smart_table* s = t->next;
-    int i;
-    int k;
-
-    for(i = 0; i < t->numberOfEntries; i++)
+void grib_smart_table_delete(grib_context* c)
+{
+    grib_smart_table* t = c->smart_table;
+    while(t)
     {
-      grib_context_free_persistent(c,t->entries[i].abbreviation);
-      for (k=0;k<MAX_SMART_TABLE_COLUMNS;k++) {
-          if (t->entries[i].column[k])
-            grib_context_free_persistent(c,t->entries[i].column[k]);
-      }
-      grib_context_free_persistent(c,&(t->entries[i]));
-    }
-    grib_context_free_persistent(c,t->filename[0]);
-    if(t->filename[1])
-      grib_context_free_persistent(c,t->filename[1]);
-    grib_context_free_persistent(c,t->recomposed_name[0]);
-    if (t->recomposed_name[1])
-      grib_context_free_persistent(c,t->recomposed_name[1]);
-    grib_context_free_persistent(c,t);
-    t = s;
-  }
+        grib_smart_table* s = t->next;
+        int i;
+        int k;
 
+        for(i = 0; i < t->numberOfEntries; i++)
+        {
+            grib_context_free_persistent(c,t->entries[i].abbreviation);
+            for (k=0;k<MAX_SMART_TABLE_COLUMNS;k++) {
+                if (t->entries[i].column[k])
+                    grib_context_free_persistent(c,t->entries[i].column[k]);
+            }
+            grib_context_free_persistent(c,&(t->entries[i]));
+        }
+        grib_context_free_persistent(c,t->filename[0]);
+        if(t->filename[1])
+            grib_context_free_persistent(c,t->filename[1]);
+        grib_context_free_persistent(c,t->recomposed_name[0]);
+        if (t->recomposed_name[1])
+            grib_context_free_persistent(c,t->recomposed_name[1]);
+        grib_context_free_persistent(c,t);
+        t = s;
+    }
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_long(dumper,a,NULL);
+    grib_dump_long(dumper,a,NULL);
 }
 
 static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
 {
-  grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
-  grib_smart_table*          table = NULL;
+    grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
+    grib_smart_table*          table = NULL;
 
-  size_t size = 1;
-  long   value;
-  int err = GRIB_SUCCESS;
-  char tmp[1024];
-  size_t l = 0;
+    size_t size = 1;
+    long   value;
+    int err = GRIB_SUCCESS;
+    char tmp[1024];
+    size_t l = 0;
 
-  if( (err = grib_unpack_long(a,&value,&size)) != GRIB_SUCCESS)
-    return err;
+    if( (err = grib_unpack_long(a,&value,&size)) != GRIB_SUCCESS)
+        return err;
 
-  if(!self->table) self->table = load_table(self);
-  table=self->table;
+    if(!self->table) self->table = load_table(self);
+    table=self->table;
 
-  if(table && (value >= 0) && (value < table->numberOfEntries) && table->entries[value].abbreviation)
-  {
-    strcpy(tmp,table->entries[value].abbreviation);
-  }
-  else
-  {
-    sprintf(tmp,"%d",(int)value);
-  }
+    if(table && (value >= 0) && (value < table->numberOfEntries) && table->entries[value].abbreviation)
+    {
+        strcpy(tmp,table->entries[value].abbreviation);
+    }
+    else
+    {
+        sprintf(tmp,"%d",(int)value);
+    }
 
-  l = strlen(tmp) + 1;
+    l = strlen(tmp) + 1;
 
-  if(*len < l)
-  {
+    if(*len < l)
+    {
+        *len = l;
+        return GRIB_BUFFER_TOO_SMALL;
+    }
+
+    strcpy(buffer,tmp);
     *len = l;
-    return GRIB_BUFFER_TOO_SMALL;
-  }
+    self->dirty=0;
 
-  strcpy(buffer,tmp);
-  *len = l;
-  self->dirty=0;
-
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 static int get_table_codes(grib_accessor* a)
 {
-  grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
-  size_t size=0;
-  long *v=0;
-  int err=0;
-  int count,j;
-  size_t i;
+    grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
+    size_t size=0;
+    long *v=0;
+    int err=0;
+    int count,j;
+    size_t i;
 
-  int table_size;
+    int table_size;
 
-  if (!self->dirty) return 0;
+    if (!self->dirty) return 0;
 
-  table_size = grib_power(self->widthOfCode,2);
+    table_size = grib_power(self->widthOfCode,2);
 
-  if(!self->table)
-    self->table = load_table(self);
+    if(!self->table)
+        self->table = load_table(self);
 
-  err=grib_get_size(grib_handle_of_accessor(a),self->values,&size);
-  if (err) {
-    grib_context_log(a->context,GRIB_LOG_ERROR,
-        "unable to get size of %s",a->name);
-    return err;
-  }
+    err=grib_get_size(grib_handle_of_accessor(a),self->values,&size);
+    if (err) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,
+                "unable to get size of %s",a->name);
+        return err;
+    }
 
-  v=(long*)grib_context_malloc_clear(a->context,size*sizeof(long));
+    v=(long*)grib_context_malloc_clear(a->context,size*sizeof(long));
 
-  grib_get_long_array(grib_handle_of_accessor(a),self->values,v,&size);
+    grib_get_long_array(grib_handle_of_accessor(a),self->values,v,&size);
 
-  count=0;
-  for (i=0;i<size;i++) {
-    if (v[i] < table_size) count++;
-  }
-  if (self->tableCodes) grib_context_free(a->context,self->tableCodes);
-  self->tableCodes=(long*)grib_context_malloc_clear(a->context,count*sizeof(long));
-  j=0;
-  for (i=0;i<size;i++) {
-    if (v[i] < table_size) self->tableCodes[j++]=v[i];
-  }
+    count=0;
+    for (i=0;i<size;i++) {
+        if (v[i] < table_size) count++;
+    }
+    if (self->tableCodes) grib_context_free(a->context,self->tableCodes);
+    self->tableCodes=(long*)grib_context_malloc_clear(a->context,count*sizeof(long));
+    j=0;
+    for (i=0;i<size;i++) {
+        if (v[i] < table_size) self->tableCodes[j++]=v[i];
+    }
 
-  grib_context_free(a->context,v);
+    grib_context_free(a->context,v);
 
-  self->tableCodesSize=count;
-  self->dirty=0;
+    self->tableCodesSize=count;
+    self->dirty=0;
 
-  return 0;
+    return 0;
 }
 
 static int value_count(grib_accessor* a,long* count)
@@ -528,23 +525,24 @@ static void destroy(grib_context* context,grib_accessor* a)
 {
     grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
     if (a->vvalue != NULL) {
-	grib_context_free(context, a->vvalue);
-	a->vvalue=NULL;
+        grib_context_free(context, a->vvalue);
+        a->vvalue=NULL;
     }
     if (self->tableCodes) grib_context_free(a->context,self->tableCodes);
 
 }
 
-static int  get_native_type(grib_accessor* a){
-  int type=GRIB_TYPE_LONG;
-  /*printf("---------- %s flags=%ld GRIB_ACCESSOR_FLAG_STRING_TYPE=%d\n",
+static int  get_native_type(grib_accessor* a)
+{
+    int type=GRIB_TYPE_LONG;
+    /*printf("---------- %s flags=%ld GRIB_ACCESSOR_FLAG_STRING_TYPE=%d\n",
          a->name,a->flags,GRIB_ACCESSOR_FLAG_STRING_TYPE);*/
-  if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)
-    type=GRIB_TYPE_STRING;
-  return type;
+    if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)
+        type=GRIB_TYPE_STRING;
+    return type;
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long   (grib_accessor* a, long* val, size_t *len)
 {
     int err=0;
     grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;

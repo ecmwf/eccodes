@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -30,6 +30,7 @@
    MEMBERS    = const char *step_unit
    MEMBERS    = const char *stepType
    MEMBERS    = const char *patch_fp_precip
+   MEMBERS    = int error_on_units
    END_CLASS_DEF
 
  */
@@ -71,6 +72,7 @@ typedef struct grib_accessor_g1step_range {
 	const char *step_unit;
 	const char *stepType;
 	const char *patch_fp_precip;
+	int error_on_units;
 } grib_accessor_g1step_range;
 
 extern grib_accessor_class* grib_accessor_class_abstract_long_vector;
@@ -164,6 +166,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     self->step_unit           = grib_arguments_get_name(h,c,n++);
     self->stepType            = grib_arguments_get_name(h,c,n++);
     self->patch_fp_precip     = grib_arguments_get_name(h,c,n++);
+    self->error_on_units = 1;
 
     self->number_of_elements=2;
     self->v=(long*)grib_context_malloc_clear(h->context,
@@ -177,12 +180,9 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
     grib_dump_string(dumper,a,NULL);
-
 }
 
-static int error_on_units=1;
-
-static int u2s1[] =  {
+static const int u2s1[] =  {
         60,      /* (0) minutes */
         3600,    /* (1) hour    */
         86400,   /* (2) day     */
@@ -201,11 +201,11 @@ static int u2s1[] =  {
         1        /* (15) seconds  */   /* See ECC-316 */
 };
 
-static int units_index[] = {
+static const int units_index[] = {
         1,0,10,11,12,2,0,13,14,15
 };
 
-static int u2s[] =  {
+static const int u2s[] =  {
         60,      /* (0) minutes */
         3600,    /* (1) hour    */
         86400,   /* (2) day     */
@@ -236,34 +236,35 @@ int grib_g1_step_get_steps(grib_accessor* a,long* start,long* theEnd)
     long newstart,newend;
     int factor=1;
     long u2sf,u2sf_step_unit;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     if (self->step_unit != NULL)
-        grib_get_long_internal(grib_handle_of_accessor(a),self->step_unit,&step_unit);
+        grib_get_long_internal(hand,self->step_unit,&step_unit);
 
     if (err!=GRIB_SUCCESS) return err;
 
-    err = grib_get_long_internal(grib_handle_of_accessor(a),self->unit,&unit);
+    err = grib_get_long_internal(hand,self->unit,&unit);
     if(err)           return err;
     if (unit == 254) {
         unit = 15; /* See ECC-316: WMO says 254 is for 'seconds' but we use 15! */
     }
 
-    err = grib_get_long_internal(grib_handle_of_accessor(a),self->p1,&p1);
+    err = grib_get_long_internal(hand,self->p1,&p1);
     if(err)               return err;
 
-    err = grib_get_long_internal(grib_handle_of_accessor(a),self->p2,&p2);
+    err = grib_get_long_internal(hand,self->p2,&p2);
     if(err)               return err;
 
-    err = grib_get_long_internal(grib_handle_of_accessor(a),self->timeRangeIndicator,&timeRangeIndicator);
+    err = grib_get_long_internal(hand,self->timeRangeIndicator,&timeRangeIndicator);
     if(err)  return err;
 
     /* TODO move to the def file */
-    err = grib_get_long(grib_handle_of_accessor(a),"timeRangeIndicatorFromStepRange",&timeRangeIndicatorFromStepRange);
+    err = grib_get_long(hand,"timeRangeIndicatorFromStepRange",&timeRangeIndicatorFromStepRange);
 
     if (timeRangeIndicatorFromStepRange==10) timeRangeIndicator=timeRangeIndicatorFromStepRange;
 
     if (self->stepType) {
-        err = grib_get_string_internal(grib_handle_of_accessor(a),self->stepType,stepType,&stepTypeLen);
+        err = grib_get_string_internal(hand,self->stepType,stepType,&stepTypeLen);
         if(err)  return err;
     } else sprintf(stepType,"unknown");
 
@@ -312,22 +313,23 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
     int err=0;
     char stepType[20]={0,};
     size_t stepTypeLen=20;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     if ((err=grib_g1_step_get_steps(a,&start,&theEnd))!=GRIB_SUCCESS) {
         size_t step_unit_string_len=10;
         char step_unit_string[10];
 
         if (self->step_unit != NULL)
-            grib_get_string(grib_handle_of_accessor(a),self->step_unit,step_unit_string,&step_unit_string_len);
+            grib_get_string(hand,self->step_unit,step_unit_string,&step_unit_string_len);
         else
             sprintf(step_unit_string,"h");
 
-        if (error_on_units) {
-            grib_get_long_internal(grib_handle_of_accessor(a),self->unit,&unit);
+        if (self->error_on_units) {
+            grib_get_long_internal(hand,self->unit,&unit);
             if (unit==254) {
                 unit=15; /* See ECC-316 */
             }
-            grib_set_long_internal(grib_handle_of_accessor(a),self->step_unit,unit);
+            grib_set_long_internal(hand,self->step_unit,unit);
             grib_context_log(a->context,GRIB_LOG_ERROR,
                     "unable to represent the step in %s\n                    Hint: try changing the step units",
                     step_unit_string);
@@ -335,11 +337,11 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
         return err;
     }
 
-    err = grib_get_long_internal(grib_handle_of_accessor(a),self->timeRangeIndicator,&timeRangeIndicator);
+    err = grib_get_long_internal(hand,self->timeRangeIndicator,&timeRangeIndicator);
     if(err)  return err;
 
     if (self->stepType) {
-        err = grib_get_string_internal(grib_handle_of_accessor(a),self->stepType,stepType,&stepTypeLen);
+        err = grib_get_string_internal(hand,self->stepType,stepType,&stepTypeLen);
         if(err)  return err;
     } else sprintf(stepType,"unknown");
 
@@ -614,7 +616,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     char buff[100];
     size_t bufflen=100;
-    char sval[100];
+    char sval[100] = {0};
     char* p=sval;
     size_t svallen=100;
     grib_accessor_g1step_range* self = (grib_accessor_g1step_range*)a;
@@ -638,9 +640,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         return pack_string( a,buff,&bufflen);
     case  0 :
         self->pack_index=-1;
-        error_on_units=0;
+        self->error_on_units=0;
         unpack_string(a,sval,&svallen);
-        error_on_units=1;
+        self->error_on_units=1;
         while (*p != '-' && *p != '\0' ) p++;
         if (*p=='-') {
             sprintf(buff,"%ld-%s",*val,++p);
@@ -654,9 +656,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         return pack_string( a,buff,&bufflen);
     case  1 :
         self->pack_index=-1;
-        error_on_units=0;
+        self->error_on_units=0;
         unpack_string(a,sval,&svallen);
-        error_on_units=1;
+        self->error_on_units=1;
         while (*p != '-' && *p != '\0' ) p++;
         if (*p=='-') {
             *p='\0';

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -170,6 +170,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     size_t size=0, real_size=0;
     double max,min,avg,sd,value,skew,kurt, m2=0,m3=0,m4=0;
     double missing=0;
+    long missingValuesPresent = 0;
     size_t number_of_missing=0;
     grib_context* c=a->context;
     grib_handle* h=grib_handle_of_accessor(a);
@@ -181,32 +182,48 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     grib_context_log(a->context,GRIB_LOG_DEBUG,
             "grib_accessor_statistics: computing statistics for %d values",size);
 
-    if((ret=grib_get_double(grib_handle_of_accessor(a),self->missing_value,&missing))
-            != GRIB_SUCCESS) return ret;
+    if((ret=grib_get_double(h,self->missing_value,&missing)) != GRIB_SUCCESS) return ret;
+    if((ret=grib_get_long_internal(h,"missingValuesPresent",&missingValuesPresent)) != GRIB_SUCCESS) return ret;
 
     values=(double*)grib_context_malloc_clear(c,size*sizeof(double));
     if (!values) return GRIB_OUT_OF_MEMORY;
 
-    if((ret = grib_get_double_array_internal(h,self->values,values,&size))
-            != GRIB_SUCCESS) {
+    if((ret = grib_get_double_array_internal(h,self->values,values,&size)) != GRIB_SUCCESS) {
         grib_context_free(c,values);
         return ret;
     }
 
     number_of_missing=0;
-    i=0;
-    while (i<size && values[i] == missing ) {i++;number_of_missing++;}
-    max=values[i];
-    min=values[i];
-    avg=values[i];
-    for (i=number_of_missing+1;i<size;i++) {
-        value=values[i];
-        if (value > max && value != missing) max=value;
-        if (value < min && value != missing) min=value;
-        if (value != missing) avg+=value;
-        else number_of_missing++;
+    if (missingValuesPresent) {
+        i=0;
+        while (i<size && values[i] == missing) {i++;number_of_missing++;}
+        if (number_of_missing == size) {
+            /* ECC-649: All values are missing */
+            min = max = avg = missing;
+        } else {
+            max=values[i];
+            min=values[i];
+            avg=values[i];
+            for (i=number_of_missing+1;i<size;i++) {
+                value=values[i];
+                if (value > max && value != missing) max=value;
+                if (value < min && value != missing) min=value;
+                if (value != missing) avg+=value;
+                else number_of_missing++;
+            }
+        }
+    } else {
+        max=values[0];
+        min=values[0];
+        avg=values[0];
+        for (i=1; i<size; i++) {
+            value = values[i];
+            if (value > max) max=value;
+            if (value < min) min=value;
+            avg += value;
+        }
     }
-
+    /*printf("stats.......... number_of_missing=%ld\n", number_of_missing);*/
     /* Don't divide by zero if all values are missing! */
     if (size != number_of_missing) {
         avg/=(size-number_of_missing);
@@ -214,7 +231,11 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     sd=0; skew=0; kurt=0;
     for (i=0;i<size;i++) {
-        if (values[i] != missing) {
+        int valueNotMissing = 1;
+        if (missingValuesPresent) {
+            valueNotMissing = (values[i] != missing);
+        }
+        if (valueNotMissing) {
             double v = values[i] - avg;
             double tmp = v*v;
             m2 += tmp;

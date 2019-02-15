@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -26,7 +26,8 @@ grib_handle* grib_handle_of_accessor(grib_accessor* a)
 
 static grib_handle* handle_of(grib_accessor* observed)
 {
-    grib_handle *h=NULL ;
+    grib_handle *h=NULL;
+    DebugAssert(observed);
     /* printf("+++++ %s->parent = %p\n",observed->name,observed->parent); */
     /* printf("+++++ %s = %p\n",observed->name,observed); */
     /* printf("+++++       h=%p\n",observed->h); */
@@ -34,7 +35,7 @@ static grib_handle* handle_of(grib_accessor* observed)
     if (observed->parent==NULL) {
         return observed->h;
     }
-    h = grib_handle_of_accessor(observed);
+    h = observed->parent->h;
     while(h->main) h = h->main;
     return h;
 }

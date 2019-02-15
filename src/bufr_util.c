@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -19,13 +19,14 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
     int theRank=0;
     size_t size=0;
     grib_context* c=h->context;
-    Assert(h->product_kind == PRODUCT_BUFR);
+    DebugAssert(h->product_kind == PRODUCT_BUFR);
 
     while (next && next->value && strcmp(next->value,key)) {
         prev=next;
         next=next->next;
     }
     if (!next) {
+        DebugAssert(prev);
         prev->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
         next=prev->next;
     }
@@ -42,7 +43,7 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
         /*   This is the first and only instance of the key */
         /* So we check if there is a second one of this key, */
         /* If not, then rank is zero i.e. this is the only instance */
-        char* s=grib_context_malloc_clear(c,strlen(key)+5);
+        char* s=(char*)grib_context_malloc_clear(c,strlen(key)+5);
         sprintf(s,"#2#%s",key);
         if (grib_get_size(h,s,&size)==GRIB_NOT_FOUND) theRank=0;
         grib_context_free(c, s);
@@ -53,7 +54,7 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
 
 char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin,grib_handle* hout, size_t* nkeys, int* err)
 {
-    grib_keys_iterator* kiter=NULL;
+    bufr_keys_iterator* kiter=NULL;
     char* name=0;
     char** keys=NULL;
     grib_sarray* k=0;
@@ -76,7 +77,11 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin,grib_handle* hou
            cannot be copied because is not in the output handle
          */
         *err=codes_copy_key(hin, hout, name, 0);
-        if (*err==0) k=grib_sarray_push(hin->context, k, name);
+        if (*err==0) {
+            /* 'name' will be freed when we call codes_bufr_keys_iterator_delete so copy */
+            char* copied_name = strdup(name);
+            k=grib_sarray_push(hin->context, k, copied_name);
+        }
     }
     *nkeys=grib_sarray_used_size(k);
     keys=grib_sarray_get_array(hin->context, k);
@@ -85,13 +90,13 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin,grib_handle* hou
         /* Do the pack if something was copied */
         *err=grib_set_long(hout, "pack", 1);
     }
-    grib_keys_iterator_delete(kiter);
+    codes_bufr_keys_iterator_delete(kiter);
     return keys;
 }
 
 int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
 {
-    grib_keys_iterator* kiter=NULL;
+    bufr_keys_iterator* kiter=NULL;
     char* name=0;
     int err=0;
     int nkeys=0;
@@ -111,9 +116,8 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
            identical and we want to copy what can be copied and skip what
            cannot be copied because is not in the output handle
          */
-        err=codes_copy_key(hin, hout, name, 0);
+        err=codes_copy_key(hin, hout, name, GRIB_TYPE_UNDEFINED);
         if (err==0) nkeys++;
-        grib_context_free(hin->context,name);
     }
 
     if (nkeys > 0) {
@@ -121,6 +125,6 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
         err=grib_set_long(hout, "pack", 1);
     }
 
-    grib_keys_iterator_delete(kiter);
+    codes_bufr_keys_iterator_delete(kiter);
     return err;
 }

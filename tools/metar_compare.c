@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -79,7 +79,7 @@ static void write_message(grib_handle* h,const char* str)
 {
     const void *m; size_t s;
     char fname[1024]={0,};
-    FILE* fh=NULL;
+    FILE* fh;
 
     grib_get_message(h,&m,&s);
     sprintf(fname,"%s_%d.metar",str,write_count);
@@ -138,7 +138,6 @@ static int blacklisted(const char* name)
 static double relative_error(double a,double b,double err)
 {
     double relativeError;
-    double maxAbsoluteError = 1e-19;
 
     if(fabs(a) <= maxAbsoluteError || fabs(b) <= maxAbsoluteError)
         relativeError = fabs(a-b);
@@ -159,8 +158,7 @@ grib_option grib_options[]={
         {"c:",0,0,0,1,0},
         {"S:","start","First field to be processed.\n",0,1,0},
         {"E:","end","Last field to be processed.\n",0,1,0},
-        {"a",0,"-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n"
-                ,0,1,0},
+        {"a",0,"-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n",0,1,0},
         {"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},
         {"R:",0,0,0,1,0},
         {"A:",0,0,0,1,0},
@@ -177,18 +175,18 @@ grib_option grib_options[]={
 };
 
 grib_handle* global_handle=NULL;
-int counter=0;
+int global_counter=0;
 int start=-1;
 int end=-1;
 
-char* grib_tool_description=
+const char* grib_tool_description=
         "Compare METAR messages contained in two files."
         "\n\tIf some differences are found it fails returning an error code."
-        "\n\tFloating point values are compared exactly by default, different tolerance can be defined see -P -A -R."
+        "\n\tFloating-point values are compared exactly by default, different tolerance can be defined see -P -A -R."
         "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
-char* grib_tool_name="metar_compare";
-char* grib_tool_usage="[options] "
+const char* grib_tool_name="metar_compare";
+const char* grib_tool_usage="[options] "
         "file file";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
@@ -246,7 +244,6 @@ int grib_tool_init(grib_runtime_options* options)
 
     if (grib_options_on("b:")) {
         grib_string_list *next=0;
-        int i=0;
         blacklist=(grib_string_list*)grib_context_malloc_clear(context,sizeof(grib_string_list));
         blacklist->value=grib_context_strdup(context,options->set_values[0].name);
         next=blacklist;
@@ -377,10 +374,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if (options->through_index) {
         grib_index* idx1=options->index1;
         verbose=0;
-        counter++;
+        global_counter++;
 
-        if ( start>0 && counter < start ) return 0;
-        if ( end>0 && counter > end ) {
+        if ( start>0 && global_counter < start ) return 0;
+        if ( end>0 && global_counter > end ) {
             options->stop=1;
             return 0;
         }
@@ -393,12 +390,12 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             printf("file1=\"%s\" ",filename);
             filename=grib_get_field_file(options->index1,&offset);
             printf("file2=\"%s\" \n",filename);
-            print_index_key_values(options->index1,counter,NULL);
+            print_index_key_values(options->index1,global_counter,NULL);
         }
 
         if (!global_handle) {
             if (!options->verbose)
-                print_index_key_values(idx1,counter,"NOT FOUND ");
+                print_index_key_values(idx1,global_counter,"NOT FOUND ");
         }
 
         if (!global_handle || err!= GRIB_SUCCESS ) {
@@ -743,7 +740,6 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         }
         if(err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1==len2)
         {
-            int i;
             countdiff=0;
             for(i = 0; i < len1; i++)
                 if(lval1[i] != lval2[i])  countdiff++;
@@ -837,7 +833,7 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         }
         if(err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1==len2)
         {
-            int i,imaxdiff;
+            int imaxdiff;
             double diff;
             double *pv1,*pv2,dnew1,dnew2;
             maxdiff=0;
@@ -933,7 +929,6 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         {
             if(memcmp(uval1,uval2,len1) != 0)
             {
-                int i;
                 for(i = 0; i < len1; i++)
                     if(uval1[i] != uval2[i])
                     {
@@ -980,8 +975,7 @@ static int compare_all_dump_keys(grib_handle* h1,grib_handle* h2,grib_runtime_op
 {
     int ret=0;
     const char* name=NULL;
-    grib_keys_iterator* iter  = NULL;
-    iter=grib_keys_iterator_new(h1,0,NULL);
+    grib_keys_iterator* iter = grib_keys_iterator_new(h1,0,NULL);
 
     if (!iter) {
         printf("ERROR: unable to get iterator\n");
@@ -1034,8 +1028,8 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
             return 0;
 
         err=0;
-        h11=grib_handle_new_from_partial_message(h1->context,(void*)msg1,size1);
-        h22=grib_handle_new_from_partial_message(h1->context,(void*)msg2,size2);
+        h11=grib_handle_new_from_partial_message(h1->context,msg1,size1);
+        h22=grib_handle_new_from_partial_message(h1->context,msg2,size2);
 
         iter=grib_keys_iterator_new(h11,
                 GRIB_KEYS_ITERATOR_SKIP_COMPUTED,NULL);
@@ -1067,7 +1061,7 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
         for (i=0; i< options->compare_count; i++) {
             if (blacklisted((char*)options->compare[i].name)) continue;
             if (options->compare[i].type == GRIB_NAMESPACE) {
-                iter=grib_keys_iterator_new(h1,0,(char*)options->compare[i].name);
+                iter=grib_keys_iterator_new(h1,0,options->compare[i].name);
                 if (!iter) {
                     printf("ERROR: unable to get iterator\n");
                     exit(1);
@@ -1127,7 +1121,7 @@ static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options*
             for (i=0; i< options->compare_count; i++) {
                 if (blacklisted(name)) continue;
                 if (options->compare[i].type == GRIB_NAMESPACE) {
-                    iter=grib_keys_iterator_new(h1,0,(char*)options->compare[i].name);
+                    iter=grib_keys_iterator_new(h1,0,options->compare[i].name);
                     if (!iter) {
                         printf("ERROR: unable to get iterator for %s\n",options->compare[i].name );
                         exit(1);

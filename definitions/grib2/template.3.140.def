@@ -1,4 +1,4 @@
-# Copyright 2005-2016 ECMWF.
+# Copyright 2005-2018 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,8 +7,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
-# START 2/template.3.140 ----------------------------------------------------------------------
 # TEMPLATE 3.140, Lambert azimuthal equal area projection
 include "grib2/template.3.shape_of_the_earth.def";
 
@@ -36,9 +34,11 @@ meta  geography.longitudeOfFirstGridPointInDegrees   scale(longitudeOfFirstGridP
 
 signed[4] standardParallelInMicrodegrees  : dump;
 alias standardParallel=standardParallelInMicrodegrees;
+meta geography.standardParallelInDegrees scale(standardParallelInMicrodegrees,one,grib2divider,truncateDegrees) : dump;
 
 signed[4] centralLongitudeInMicrodegrees  : dump;
 alias centralLongitude=centralLongitudeInMicrodegrees;
+meta geography.centralLongitudeInDegrees scale(centralLongitudeInMicrodegrees,one,grib2divider,truncateDegrees) : dump;
 
 #  Resolution and component flag
 flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : dump ;
@@ -46,10 +46,12 @@ flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : 
 #  Dx - X-direction grid length in millimetres
 unsigned[4] xDirectionGridLengthInMillimetres  : dump ;
 alias Dx  = xDirectionGridLengthInMillimetres ;
+meta geography.xDirectionGridLengthInMetres scale(xDirectionGridLengthInMillimetres,one,thousand,truncateDegrees): dump;
 
 #  Dy - Y-direction grid length in millimetres
 unsigned[4] yDirectionGridLengthInMillimetres  : dump ;
 alias Dy  = yDirectionGridLengthInMillimetres ;
+meta geography.yDirectionGridLengthInMetres scale(yDirectionGridLengthInMillimetres,one,thousand,truncateDegrees): dump;
 
 include "grib2/template.3.scanning_mode.def";
 
@@ -67,5 +69,3 @@ meta latLonValues latlonvalues(values);
 alias latitudeLongitudeValues=latLonValues;
 meta latitudes latitudes(values,0);
 meta longitudes longitudes(values,0);
-
-# END   2/template.3.140 ----------------------------------------------------------------------

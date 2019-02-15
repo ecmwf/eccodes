@@ -130,17 +130,17 @@ echo "\\endverbatim\\n"
 
 echo "-# The <b>switch</b> statement is an enhanced version of the if statement. Its syntax is the following:"
 echo "\\verbatim"
-echo "switch (key1,key2,...,keyn) {"
-echo "    case val11,val12,...,val1n:"
-echo "        # block of rules;"
-echo "    case val21,val22,...,val2n:"
-echo "        # block of rules;"
+echo "switch (key1) {"
+echo "    case val1:"
+echo "        # statements"
+echo "    case val2:"
+echo "        # statements"
 echo "    default:"
-echo "        # [ block of rules ]"
+echo "        # statements"
 echo "}"
 echo "\\endverbatim\\n"
-echo "Each value of each key given as argument to the switch statement is matched against the values specified in the case statements.\\n"
-echo "If there is a match, then the block or rules corresponding to the matching case statement is executed.\\n"
+echo "The value of the key given as argument to the switch statement is matched against the values specified in the case statements.\\n"
+echo "If there is a match, then the statements corresponding to the matching case are executed.\\n"
 echo "Otherwise, the default case is executed. The default case is mandatory if the case statements do not cover all the possibilities.\\n"
 echo "The \"~\" operator can be used to match \"anything\".\\n\\n"
 
@@ -301,7 +301,5 @@ head tmp_file
 
 echo "\\endverbatim\\n"
 
-rm -f rules_file || true
-rm -f tmp_file || true
-
-
+rm -f rules_file
+rm -f tmp_file

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,6 +10,8 @@
 
 #include "grib_api_internal.h"
 
+/* Note: A fast cut-down version of strcmp which does NOT return -1 */
+/* 0 means input strings are equal and 1 means not equal */
 GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
 {
     if (*a != *b) return 1;
@@ -22,6 +24,12 @@ grib_keys_iterator* grib_keys_iterator_new(grib_handle* h,unsigned long filter_f
     grib_keys_iterator* ki=NULL;
 
     if (!h) return NULL;
+
+    /*if (h->product_kind == PRODUCT_BUFR) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "Invalid keys iterator for BUFR message: please use codes_bufr_keys_iterator_new");
+        return NULL;
+    }*/
 
     ki= (grib_keys_iterator*)grib_context_malloc_clear(h->context,sizeof(grib_keys_iterator));
     if (!ki) return NULL;

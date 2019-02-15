@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2016 ECMWF.
+ * Copyright 2005-2018 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -11,7 +11,7 @@
 #include "grib_api_internal.h"
 
 /* Note: all non-alpha are mapped to 0 */
-static int mapping[] = {
+static const int mapping[] = {
 0, /* 00 */
 0, /* 01 */
 0, /* 02 */
@@ -270,10 +270,10 @@ static int mapping[] = {
 0, /* ff */
 };
 
-static const size_t NUM_MAPPINGS = sizeof(mapping)/sizeof(mapping[0]);
-
 /* ECC-388 */
 #ifdef DEBUG
+ static const size_t NUM_MAPPINGS = sizeof(mapping)/sizeof(mapping[0]);
+
  #define DebugCheckBounds(index, value) \
    do { \
     if (!((index) >= 0 && (index) < NUM_MAPPINGS) ) {printf("ERROR: string='%s' index=%ld @ %s +%d \n", value, (long)index, __FILE__, __LINE__); abort();} \
