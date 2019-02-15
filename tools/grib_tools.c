@@ -289,7 +289,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
 
     while (infile!=NULL && infile->name!=NULL) {
 
-        if (options->print_statistics && options->verbose) fprintf(dump_file,"%s\n",infile->name);
+        if (options->print_statistics && options->verbose && !options->json_output) fprintf(dump_file,"%s\n",infile->name);
         if (strcmp(infile->name,"-")==0)
             infile->file = stdin;
         else
@@ -926,7 +926,8 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     if (!options->verbose) return;
 
     if (options->json_output) {
-        fprintf(dump_file, "\"message %d\" : {\n", options->handle_count);
+        //fprintf(dump_file, "\"message %d\" : {\n", options->handle_count); //JSON TODO
+        fprintf(dump_file, "{\n");
         for (i=0;i<options->print_keys_count;i++) {
             fprintf(dump_file,"\t\"%s\": ", options->print_keys[i].name);
             get_key_value(h, options->print_keys[i].name, value, options->format);
@@ -936,7 +937,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             else
                 fprintf(dump_file,"\n");
         }
-        fprintf(dump_file, "},\n");
+        fprintf(dump_file, "}\n"); //JSON TODO
         return;
     }
 

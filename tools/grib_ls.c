@@ -53,6 +53,7 @@ double lat=0;
 double lon=0;
 int mode=0;
 static int json_latlon=0;
+static int first_handle=1;
 
 grib_nearest* n=NULL;
 
@@ -333,6 +334,16 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             printf("\n}");
         }
     }
+
+    if (options->json_output) {//JSON TODO
+        if (!first_handle && options->handle_count>1) {
+            fprintf(stdout,",\n");
+        }
+        if (options->json_output && first_handle) {
+            fprintf(stdout,"{ \"messages\" : [ \n");
+            first_handle=0;
+        }
+    }
     new_handle="\n,";
     return 0;
 }
@@ -382,6 +393,8 @@ int grib_tool_finalise_action(grib_runtime_options* options)
             }
         }
     }
+    
+    if (options->json_output) fprintf(stdout,"\n]}\n");
 
     if (n) grib_nearest_delete(n);
     if (json_latlon) printf("\n]\n");
@@ -391,6 +404,14 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
 int grib_no_handle_action(grib_runtime_options* options, int err)
 {
-  fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
-  return 0;
+    if (options->json_output){
+        if (first_handle) {
+            fprintf(dump_file,"{ \"messages\" : [ \n");
+            first_handle=0;
+        } else {
+            fprintf(dump_file,",\n");
+        }
+    }
+    fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+    return 0;
 }
