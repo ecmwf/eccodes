@@ -2202,11 +2202,13 @@ static int get_num_latitudes_longitudes(grib_handle* h, size_t* nlats, size_t* n
     {
         /* Special shortcut for regular lat/on grids */
         long n;
+        Assert( !grib_is_missing(h, "Ni", &e) );
         if ((e = grib_get_long(h, "Ni", &n)) != GRIB_SUCCESS) {
             grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
             return e;
         }
         *nlons = n;
+
         if ((e = grib_get_long(h, "Nj", &n)) != GRIB_SUCCESS)
         {
             grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
@@ -2233,7 +2235,6 @@ static int get_num_latitudes_longitudes(grib_handle* h, size_t* nlats, size_t* n
 static int def_latlon(int ncid, fieldset *fs)
 {
     int n = 0;
-    long l = 0;
     size_t nlats=0, nlons=0;
     int var_id = 0;
     err e = 0;
