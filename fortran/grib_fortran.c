@@ -2390,6 +2390,9 @@ int grib_f_index_get_string_(int* gid, char* key, char* val, int *eachsize,int* 
         p+=l;
         for (j=0;j<*eachsize-l;j++) *(p++)=' ';
     }
+    for (i=0;i<lsize;i++) {
+        grib_context_free(h->context, bufval[i]);
+    }
     grib_context_free(h->context,bufval);
 
     return  err;
@@ -2440,6 +2443,7 @@ int grib_f_index_get_int_(int* gid, char* key, int *val, int* size,  int len){
     for (i=0;i<lsize;i++) val[i]=lval[i];
 
     *size = lsize;
+    grib_context_free(h->context, lval);
     return  err;
 }
 int grib_f_index_get_int__(int* gid, char* key, int *val, int* size,  int len){

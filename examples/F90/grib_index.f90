@@ -108,5 +108,10 @@ program index
   call codes_index_write(idx,index_file)
 
   call codes_index_release(idx)
+  
+  deallocate(level)
+  deallocate(shortName)
+  deallocate(step)
+  deallocate(number)
 
 end program index
