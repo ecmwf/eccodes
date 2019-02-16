@@ -2190,33 +2190,69 @@ static int check_grid(field *f)
     }
     return e;
 }
+
+static int get_num_latitudes_longitudes(grib_handle* h, size_t* nlats, size_t* nlons)
+{
+    err e=0;
+    char grid_type[80];
+    size_t size = sizeof(grid_type);
+
+    if (grib_get_string(h, "typeOfGrid", grid_type, &size) == GRIB_SUCCESS &&
+        strcmp(grid_type, "regular_ll") == 0)
+    {
+        /* Special shortcut for regular lat/on grids */
+        long n;
+        if ((e = grib_get_long(h, "Ni", &n)) != GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
+            return e;
+        }
+        *nlons = n;
+        if ((e = grib_get_long(h, "Nj", &n)) != GRIB_SUCCESS)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
+            return e;
+        }
+        *nlats = n;
+    }
+    else
+    {
+        if((e = grib_get_size(h, "distinctLatitudes", nlats)) != GRIB_SUCCESS)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
+            return e;
+        }
+        if((e = grib_get_size(h, "distinctLongitudes", nlons)) != GRIB_SUCCESS)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
+            return e;
+        }
+    }
+    return e;
+}
+
 static int def_latlon(int ncid, fieldset *fs)
 {
     int n = 0;
-    size_t l = 0;
+    long l = 0;
+    size_t nlats=0, nlons=0;
     int var_id = 0;
     err e = 0;
 
     field *g = get_field(fs, 0, expand_mem);
 
-    Assert( check_grid(g)==GRIB_SUCCESS );
-
-    /* Define longitude */
-    if((e = grib_get_size(g->handle, "distinctLongitudes", &l)) != GRIB_SUCCESS)
-    {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
+    DebugAssert( check_grid(g)==GRIB_SUCCESS );
+    
+    if((e = get_num_latitudes_longitudes(g->handle, &nlats, &nlons)) != GRIB_SUCCESS) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get lat/lon info: %s", grib_get_error_message(e));
         return e;
     }
-    n = l;
+
+    /* Define longitude */
+    n = (int)nlons;
     var_id = set_dimension(ncid, "longitude", n, NC_FLOAT, "degrees_east", "longitude");
 
     /* Define latitude */
-    if((e = grib_get_size(g->handle, "distinctLatitudes", &l)) != GRIB_SUCCESS)
-    {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
-        return e;
-    }
-    n = l;
+    n = nlats;
     var_id = set_dimension(ncid, "latitude", n, NC_FLOAT, "degrees_north", "latitude");
 
     /* g->purge_header = TRUE; */
@@ -2272,19 +2308,11 @@ static int put_latlon(int ncid, fieldset *fs)
 
 #endif
 
-    if((e = grib_get_size(g->handle, "distinctLatitudes", &nj)) != GRIB_SUCCESS)
-    {
+    if((e = get_num_latitudes_longitudes(g->handle, &nj, &ni)) != GRIB_SUCCESS) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
         return e;
-
     }
 
-    if((e = grib_get_size(g->handle, "distinctLongitudes", &ni)) != GRIB_SUCCESS)
-    {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
-        return e;
-
-    }
     /* Compute max. # values and allocate */
     nv = ni;
     if(nv < nj)
