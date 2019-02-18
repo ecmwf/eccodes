@@ -6683,8 +6683,53 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Dry deposition of fine-mode nitrate aerosol
+'215191' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Sedimentation of fine-mode nitrate aerosol
+'215193' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
 	 is_aerosol = 1 ;
 	 aerosolType = 65534 ;
+	}
+#Wet deposition of fine-mode nitrate aerosol by large-scale precipitation
+'215195' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of fine-mode nitrate aerosol by convective precipitation
+'215197' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of fine-mode nitrate aerosol
+'215199' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
 	}
 #Experimental product
 '216001' = {
