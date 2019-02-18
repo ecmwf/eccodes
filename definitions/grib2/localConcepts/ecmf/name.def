@@ -3287,7 +3287,16 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
+	 is_aerosol = 1 ;
 	 aerosolType = 65534 ;
+	}
+#Nitrate coarse mode aerosol mass mixing ratio
+'Nitrate coarse mode aerosol mass mixing ratio' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 65533 ;
 	 is_aerosol = 1 ;
 	}
 #Aerosol type 13 mass mixing ratio

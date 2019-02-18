@@ -3290,6 +3290,15 @@
 	 aerosolType = 65534 ;
 	 is_aerosol = 1 ;
 	}
+#Nitrate coarse mode aerosol mass mixing ratio
+'kg kg**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65533 ;
+	}
 #Aerosol type 13 mass mixing ratio
 'kg kg**-1' = {
 	 discipline = 192 ;
