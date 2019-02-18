@@ -6677,6 +6677,15 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 188 ;
 	}
+#Source/gain of fine-mode nitrate aerosol
+'Source/gain of fine-mode nitrate aerosol' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65534 ;
+	}
 #Experimental product
 'Experimental product' = {
 	 discipline = 192 ;
