@@ -122,7 +122,7 @@ echo "set unpack=1;"
 echo "transient statid=1000*blockNumber+stationNumber;"
 echo ""
 echo "if (dataCategory ==0 && statid == 1003) {"
-echo "  write out.bufr;"
+echo "  write \"out.bufr\";"
 echo "}"        
 echo "\\endverbatim\\n"
 
