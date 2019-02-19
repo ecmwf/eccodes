@@ -6802,10 +6802,36 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
+	 aerosolType = 65533 ;
 	 is_aerosol = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfFirstFixedSurface = 1 ;
+	}
+#Fine-mode nitrate aerosol optical depth at 550 nm
+'Fine-mode nitrate aerosol optical depth at 550 nm' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 scaleFactorOfFirstWavelength = 8 ;
+	 is_aerosol_optical = 1 ;
+	 typeOfSizeInterval = 255 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	 typeOfWavelengthInterval = 11 ;
+	 aerosolType = 65534 ;
+	}
+#Coarse-mode nitrate aerosol optical depth at 550 nm
+'Coarse-mode nitrate aerosol optical depth at 550 nm' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfWavelengthInterval = 11 ;
 	 aerosolType = 65533 ;
+	 scaleFactorOfFirstWavelength = 8 ;
+	 is_aerosol_optical = 1 ;
+	 typeOfSizeInterval = 255 ;
+	 scaledValueOfFirstWavelength = 55 ;
 	}
 #Source/gain of ammonium aerosol
 'Source/gain of ammonium aerosol' = {
