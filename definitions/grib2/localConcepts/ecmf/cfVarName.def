@@ -6686,6 +6686,15 @@
 	 aerosolType = 65534 ;
 	 is_aerosol = 1 ;
 	}
+#Source/gain of coarse-mode nitrate aerosol
+'aersrcnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65533 ;
+	}
 #Dry deposition of fine-mode nitrate aerosol
 'aerddpnif' = {
 	 localTablesVersion = 1 ;
@@ -6695,6 +6704,15 @@
 	 aerosolType = 65534 ;
 	 is_aerosol = 1 ;
 	}
+#Dry deposition of coarse-mode nitrate aerosol
+'aerddpnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65533 ;
+	}
 #Sedimentation of fine-mode nitrate aerosol
 'aersdmnif' = {
 	 localTablesVersion = 1 ;
@@ -6702,6 +6720,15 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 11 ;
 	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Sedimentation of coarse-mode nitrate aerosol
+'aersdmnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 aerosolType = 65533 ;
 	 is_aerosol = 1 ;
 	}
 #Wet deposition of fine-mode nitrate aerosol by large-scale precipitation
@@ -6713,6 +6740,15 @@
 	 aerosolType = 65534 ;
 	 is_aerosol = 1 ;
 	}
+#Wet deposition of coarse-mode nitrate aerosol by large-scale precipitation
+'aerwdlnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
 #Wet deposition of fine-mode nitrate aerosol by convective precipitation
 'aerwdcnif' = {
 	 localTablesVersion = 1 ;
@@ -6722,6 +6758,15 @@
 	 aerosolType = 65534 ;
 	 is_aerosol = 1 ;
 	}
+#Wet deposition of coarse-mode nitrate aerosol by convective precipitation
+'aerwdcnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
 #Negative fixer of fine-mode nitrate aerosol
 'aerngtnif' = {
 	 localTablesVersion = 1 ;
@@ -6729,6 +6774,15 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 193 ;
 	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of coarse-mode nitrate aerosol
+'aerngtnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 65533 ;
 	 is_aerosol = 1 ;
 	}
 #Experimental product

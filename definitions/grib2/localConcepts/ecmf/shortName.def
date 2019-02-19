@@ -34,12 +34,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 scaledValueOfLowerLimit = 100 ;
 	 probabilityType = 3 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Total precipitation of at least 100 mm
 'tpg100' = {
@@ -317,23 +317,23 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 lengthOfTimeRange = 24 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	}
 #Minimum temperature at 2 metres in the last 24 hours
 'mn2t24' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
 	 lengthOfTimeRange = 24 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
-	 typeOfFirstFixedSurface = 103 ;
 	}
 #Montgomery potential
 'mont' = {
@@ -3296,8 +3296,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
-	 is_aerosol = 1 ;
 	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
 	}
 #Aerosol type 13 mass mixing ratio
 'aermr13diff' = {
@@ -6686,6 +6686,15 @@
 	 aerosolType = 65534 ;
 	 is_aerosol = 1 ;
 	}
+#Source/gain of coarse-mode nitrate aerosol
+'aersrcnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65533 ;
+	}
 #Dry deposition of fine-mode nitrate aerosol
 'aerddpnif' = {
 	 localTablesVersion = 1 ;
@@ -6695,6 +6704,15 @@
 	 aerosolType = 65534 ;
 	 is_aerosol = 1 ;
 	}
+#Dry deposition of coarse-mode nitrate aerosol
+'aerddpnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65533 ;
+	}
 #Sedimentation of fine-mode nitrate aerosol
 'aersdmnif' = {
 	 localTablesVersion = 1 ;
@@ -6702,6 +6720,15 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 11 ;
 	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Sedimentation of coarse-mode nitrate aerosol
+'aersdmnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 aerosolType = 65533 ;
 	 is_aerosol = 1 ;
 	}
 #Wet deposition of fine-mode nitrate aerosol by large-scale precipitation
@@ -6713,6 +6740,15 @@
 	 aerosolType = 65534 ;
 	 is_aerosol = 1 ;
 	}
+#Wet deposition of coarse-mode nitrate aerosol by large-scale precipitation
+'aerwdlnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
 #Wet deposition of fine-mode nitrate aerosol by convective precipitation
 'aerwdcnif' = {
 	 localTablesVersion = 1 ;
@@ -6722,6 +6758,15 @@
 	 aerosolType = 65534 ;
 	 is_aerosol = 1 ;
 	}
+#Wet deposition of coarse-mode nitrate aerosol by convective precipitation
+'aerwdcnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
 #Negative fixer of fine-mode nitrate aerosol
 'aerngtnif' = {
 	 localTablesVersion = 1 ;
@@ -6729,6 +6774,15 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 193 ;
 	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of coarse-mode nitrate aerosol
+'aerngtnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 65533 ;
 	 is_aerosol = 1 ;
 	}
 #Experimental product
@@ -13242,9 +13296,9 @@
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 lengthOfTimeRange = 3 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	}
 #Minimum temperature at 2 metres in the last 3 hours
@@ -13252,12 +13306,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
 	}
 #10 metre wind gust in the last 3 hours
 '10fg3' = {
@@ -13320,11 +13374,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 1 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 1 ;
 	}
 #Averaged total lightning flash density in the last hour
 'litota1' = {
@@ -13351,11 +13405,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
+	 lengthOfTimeRange = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
-	 lengthOfTimeRange = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
 	}
 #Averaged cloud-to-ground lightning flash density in the last hour
 'licga1' = {
@@ -13368,11 +13422,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 3 ;
 	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 lengthOfTimeRange = 3 ;
 	}
 #Averaged total lightning flash density in the last 3 hours
 'litota3' = {
@@ -13402,11 +13456,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 3 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
 	}
 #Averaged cloud-to-ground lightning flash density in the last 3 hours
 'licga3' = {
@@ -15254,14 +15308,14 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 productDefinitionTemplateNumber = 9 ;
-	 scaleFactorOfLowerLimit = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 scaledValueOfLowerLimit = 25 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 probabilityType = 3 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 productDefinitionTemplateNumber = 9 ;
+	 scaleFactorOfLowerLimit = 0 ;
 	}
 #2 metre temperature less than 273.15 K
 '2tl273' = {
@@ -15274,22 +15328,22 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
-	 scaledValueOfLowerLimit = 2 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 productDefinitionTemplateNumber = 5 ;
 	 probabilityType = 3 ;
+	 scaledValueOfLowerLimit = 2 ;
 	}
 #Significant wave height of at least 4 m
 'swhg4' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
-	 productDefinitionTemplateNumber = 5 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	 scaledValueOfLowerLimit = 4 ;
+	 productDefinitionTemplateNumber = 5 ;
+	 typeOfFirstFixedSurface = 101 ;
 	}
 #Significant wave height of at least 6 m
 'swhg6' = {
