@@ -6782,8 +6782,26 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 193 ;
-	 aerosolType = 65533 ;
 	 is_aerosol = 1 ;
+	 aerosolType = 65533 ;
+	}
+#Source/gain of ammonium aerosol
+'Source/gain of ammonium aerosol' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62003 ;
+	}
+#Negative fixer of ammonium aerosol
+'Negative fixer of ammonium aerosol' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62003 ;
 	}
 #Experimental product
 'Experimental product' = {

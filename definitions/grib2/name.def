@@ -310,8 +310,50 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Dry deposition of ammonium aerosol
+'Dry deposition of ammonium aerosol' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Sedimentation of ammonium aerosol
+'Sedimentation of ammonium aerosol' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of ammonium aerosol by large-scale precipitation
+'Wet deposition of ammonium aerosol by large-scale precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
 	 is_aerosol = 1 ;
 	 aerosolType = 62003 ;
+	}
+#Wet deposition of ammonium aerosol by convective precipitation
+'Wet deposition of ammonium aerosol by convective precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Vertically integrated mass of ammonium aerosol
+'Vertically integrated mass of ammonium aerosol' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #10 metre wind gust in the last 3 hours
 '10 metre wind gust in the last 3 hours' = {
