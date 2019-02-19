@@ -313,6 +313,30 @@
 	 aerosolType = 62003 ;
 	 is_aerosol = 1 ;
 	}
+#Nitrate aerosol optical depth at 550 nm
+'niaod550' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 is_aerosol_optical = 1 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 8 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	 typeOfSizeInterval = 255 ;
+	 aerosolType = 62004 ;
+	}
+#Ammonium aerosol optical depth at 550 nm
+'amaod550' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 8 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	 typeOfSizeInterval = 255 ;
+	 aerosolType = 62003 ;
+	 is_aerosol_optical = 1 ;
+	}
 #Dry deposition of ammonium aerosol
 'aerddpam' = {
 	 discipline = 0 ;
