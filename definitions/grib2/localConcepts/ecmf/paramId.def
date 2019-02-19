@@ -6785,6 +6785,28 @@
 	 aerosolType = 65533 ;
 	 is_aerosol = 1 ;
 	}
+#Vertically integrated mass of fine-mode nitrate aerosol
+'215201' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Vertically integrated mass of coarse-mode nitrate aerosol
+'215202' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Source/gain of ammonium aerosol
 '215205' = {
 	 localTablesVersion = 1 ;
