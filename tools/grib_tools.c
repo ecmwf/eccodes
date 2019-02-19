@@ -546,13 +546,13 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
     char buffer[1024];
     sprintf(buffer,  "%s/*", dir);
     if((handle = _findfirst(buffer, &fileinfo)) != -1)
-{
+    {
         do {
             if(strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name,"..") != 0) {
-            char buf[1024];
+                char buf[1024];
                 sprintf(buf, "%s/%s", dir, fileinfo.name);
-            process(c,options,buf);
-        }
+                process(c, options, buf);
+            }
         } while(!_findnext(handle, &fileinfo));
 
         _findclose(handle);
@@ -1138,32 +1138,8 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     }
 
     options->outfile->file = NULL;
-
-#if 0
-    if (!options->outfile->file)  {
-        options->outfile->file = fopen(options->outfile->name,"w");
-        if(!options->outfile->file) {
-            perror(options->outfile->name);
-            exit(1);
-        }
-    }
-    GRIB_CHECK_NOLINE(grib_get_message(h,&buffer,&size),0);
-    if (options->gts && h->gts_header)
-        fwrite(h->gts_header,1,h->gts_header_len,options->outfile->file);
-
-    if(fwrite(buffer,1,size,options->outfile->file) != size)
-    {
-        perror(options->outfile->name);
-        exit(1);
-    }
-
-    if (options->gts && h->gts_header) {
-        char gts_trailer[4]={'\x0D','\x0D','\x0A','\x03'};
-        fwrite(gts_trailer,1,4,options->outfile->file);
-    }
-#endif
-
 }
+
 int exit_if_input_is_directory(const char* tool_name, const char* filename)
 {
     struct stat s;
