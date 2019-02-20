@@ -415,9 +415,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
             outlons[kk]=self->lons[self->i[ii]];
             if (is_rotated) {
                 /* Unrotate resulting lat/lon */
-                double inlat = outlats[kk], inlon = outlons[kk];
                 double new_lat = 0, new_lon = 0;
-                unrotate(inlat, inlon, angleOfRotation, southPoleLat, southPoleLon, &new_lat, &new_lon);
+                unrotate(outlats[kk], outlons[kk], angleOfRotation, southPoleLat, southPoleLon, &new_lat, &new_lon);
                 outlats[kk] = new_lat;
                 outlons[kk] = new_lon;
             }
