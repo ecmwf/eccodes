@@ -12,16 +12,16 @@
 set -u
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-600.
-# Nearest neighbour for rotated grids
+# Nearest neighbour for rotated lat/lon grids.
 # ---------------------------------------------------------
 label="grib_ecc-600-test"
 tempOut=temp.${label}.out
 tempGrib=temp.${label}.grib
 
-tigge=${data_dir}/tiggelam_cnmc_sfc.grib
+input=${data_dir}/tigge/tiggelam_cnmc_sfc.grib
 ${tools_dir}/grib_copy -w count=4 $input $tempGrib
 
-${tools_dir}/grib_ls -l 40,0,1 $tempGrib > $tempOut
+${tools_dir}/grib_ls -l 40,0,1   $tempGrib > $tempOut
 grep -q "Grid Point chosen #3 index=54294 latitude=39.98 longitude=0.00 distance=2.03 (Km)" $tempOut
 
 ${tools_dir}/grib_ls -l 50,-10,1 $tempGrib > $tempOut
