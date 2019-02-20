@@ -98,6 +98,7 @@ list( APPEND tests_data_reqd
     grib_ecc-490
     grib_ecc-756
     grib_ecc-873
+    grib_ecc-600
     bufr_ecc-556
     gts_get
     gts_ls

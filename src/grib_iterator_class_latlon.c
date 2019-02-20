@@ -88,7 +88,7 @@ static void init_class(grib_iterator_class* c)
 #define RAD2DEG   57.29577951308232087684  /* 180 over pi */
 #define DEG2RAD    0.01745329251994329576  /* pi over 180 */
 
-void unrotate(grib_handle* h,
+void unrotate(
         const double inlat, const double inlon,
         const double angleOfRot, const double southPoleLat, const double southPoleLon,
         double* outlat, double* outlon)
@@ -170,7 +170,7 @@ static int next(grib_iterator* iter, double *lat, double *lon, double *val)
     if (self->isRotated && !self->disableUnrotate)
     {
         double new_lat = 0, new_lon = 0;
-        unrotate(iter->h, ret_lat, ret_lon,
+        unrotate(ret_lat, ret_lon,
                 self->angleOfRotation, self->southPoleLat, self->southPoleLon,
                 &new_lat, &new_lon);
         ret_lat = new_lat;

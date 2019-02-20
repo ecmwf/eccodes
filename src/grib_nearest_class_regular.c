@@ -89,6 +89,49 @@ static void init_class(grib_nearest_class* c)
 }
 /* END_CLASS_IMP */
 
+#ifndef MAX
+#define MAX(a,b) (((a)>(b))?(a):(b))
+#endif
+#ifndef MIN
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#endif
+#define RAD2DEG   57.29577951308232087684  /* 180 over pi */
+#define DEG2RAD    0.01745329251994329576  /* pi over 180 */
+
+/* Inspired by Magics GribRotatedInterpretor::rotate */
+static int rotate(const double inlat, const double inlon,
+           const double angleOfRot, const double southPoleLat, const double southPoleLon,
+           double* outlat, double* outlon)
+{
+    double PYROT, PXROT, ZCYROT, ZCXROT, ZSXROT;
+    const double ZSYCEN = sin(DEG2RAD * (southPoleLat + 90.));
+    const double ZCYCEN = cos(DEG2RAD * (southPoleLat + 90.));
+    const double ZXMXC  = DEG2RAD * (inlon - southPoleLon);
+    const double ZSXMXC = sin(ZXMXC);
+    const double ZCXMXC = cos(ZXMXC);
+    const double ZSYREG = sin(DEG2RAD * inlat);
+    const double ZCYREG = cos(DEG2RAD * inlat);
+    double ZSYROT = ZCYCEN * ZSYREG - ZSYCEN * ZCYREG * ZCXMXC;
+
+    ZSYROT = MAX(MIN(ZSYROT, +1.0), -1.0);
+
+    PYROT = asin(ZSYROT) * RAD2DEG;
+
+    ZCYROT = cos(PYROT * DEG2RAD);
+    ZCXROT = (ZCYCEN * ZCYREG * ZCXMXC + ZSYCEN * ZSYREG) / ZCYROT;
+    ZCXROT = MAX(MIN(ZCXROT, +1.0), -1.0);
+    ZSXROT = ZCYREG * ZSXMXC / ZCYROT;
+
+    PXROT = acos(ZCXROT) * RAD2DEG;
+
+    if (ZSXROT < 0.0)
+        PXROT = -PXROT;
+
+    *outlat = PYROT;
+    *outlon = PXROT;
+
+    return GRIB_SUCCESS;
+}
 
 static int init(grib_nearest* nearest,grib_handle* h,grib_arguments* args)
 {
@@ -236,6 +279,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
 
     grib_iterator* iter=NULL;
     double lat=0,lon=0;
+    const int is_rotated = is_rotated_grid(h);
+    double angleOfRotation=0, southPoleLat=0, southPoleLon=0;
 
     while (inlon<0) inlon+=360;
     while (inlon>360) inlon-=360;
@@ -270,10 +315,23 @@ static int find(grib_nearest* nearest, grib_handle* h,
         }
 
         /* Support for rotated grids not yet implemented */
-        if (is_rotated_grid(h)) {
-            grib_context_log(h->context,GRIB_LOG_ERROR,
+        if (is_rotated) {
+            int err = 0;
+            double new_lat = 0, new_lon = 0;
+            ret = grib_get_double(h,"angleOfRotation", &angleOfRotation);               if (ret) err=1;
+            ret = grib_get_double(h,"latitudeOfSouthernPoleInDegrees", &southPoleLat);  if (ret) err=1;
+            ret = grib_get_double(h,"longitudeOfSouthernPoleInDegrees", &southPoleLon); if (ret) err=1;
+            if (err) {
+                grib_context_log(h->context,GRIB_LOG_ERROR,
                     "Nearest neighbour functionality is not supported for rotated grids.");
-            return GRIB_NOT_IMPLEMENTED;
+                return GRIB_NOT_IMPLEMENTED;
+            }
+            ret = grib_set_long(h, "iteratorDisableUnrotate", 1);
+            // Rotate the inlat, inlon
+            rotate(inlat, inlon, angleOfRotation, southPoleLat, southPoleLon, &new_lat, &new_lon);
+            inlat = new_lat;
+            inlon = new_lon;
+            if(h->context->debug) printf("nearest find: rotated grid: new point=(%g,%g)\n",new_lat,new_lon);
         }
 
         if ((ret =  grib_get_long(h,self->Ni,&n))!= GRIB_SUCCESS)
@@ -401,6 +459,14 @@ static int find(grib_nearest* nearest, grib_handle* h,
             distances[kk]=self->distances[kk];
             outlats[kk]=self->lats[self->j[jj]];
             outlons[kk]=self->lons[self->i[ii]];
+            if (is_rotated) {
+                // Unrotate resulting lat/lon
+                double inlat = outlats[kk], inlon = outlons[kk];
+                double new_lat = 0, new_lon = 0;
+                unrotate(inlat, inlon, angleOfRotation, southPoleLat, southPoleLon, &new_lat, &new_lon);
+                outlats[kk] = new_lat;
+                outlons[kk] = new_lon;
+            }
             grib_get_double_element_internal(h,self->values_key,self->k[kk],&(values[kk]));
             /* Using the brute force approach described above */
             /* Assert(self->k[kk] < nvalues); */

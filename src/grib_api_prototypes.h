@@ -1423,7 +1423,7 @@ grib_iterator *grib_iterator_factory(grib_handle *h, grib_arguments *args, unsig
 int transform_iterator_data(grib_handle *h, double *data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);
 
 /* grib_iterator_class_latlon.c */
-void unrotate(grib_handle *h, const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double *outlat, double *outlon);
+void unrotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double *outlat, double *outlon);
 
 /* grib_iterator_class_regular.c */
 
