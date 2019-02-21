@@ -448,6 +448,15 @@ grib_handle* grib_handle_new_from_message ( grib_context* c, const void* data, s
     if (determine_product_kind(h, &product_kind) == GRIB_SUCCESS) {
         h->product_kind = product_kind;
     }
+
+    if (h->product_kind == PRODUCT_GRIB) {
+        if (!grib_is_defined(h,"7777")) {
+            grib_context_log (c,GRIB_LOG_ERROR,"grib_handle_new_from_message: No final 7777 in message!");
+            /* TODO: Return NULL. An incomplete message is no use to anyone.
+             * But first check the MARS Client and other applications
+             */
+        }
+    }
     return h;
 }
 
