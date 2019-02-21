@@ -9614,6 +9614,31 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 53 ;
 	}
+#SMOS observed soil moisture retrieved using neural network
+'SMOS observed soil moisture retrieved using neural network' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 70 ;
+	}
+#SMOS observed soil moisture uncertainty retrieved using neural network
+'SMOS observed soil moisture uncertainty retrieved using neural network' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 71 ;
+	}
+#SMOS radio frequency interference probability
+'SMOS radio frequency interference probability' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 72 ;
+	}
+#SMOS number of observations per grid point
+'SMOS number of observations per grid point' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 73 ;
+	}
+#SMOS observation time for the satellite soil moisture data
+'SMOS observation time for the satellite soil moisture data' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 74 ;
+	}
 #GPP coefficient from Biogenic Flux Adjustment System
 'GPP coefficient from Biogenic Flux Adjustment System' = {
 	 table2Version = 228 ;
