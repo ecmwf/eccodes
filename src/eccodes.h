@@ -548,7 +548,7 @@ int codes_grib_multi_handle_write(codes_multi_handle* mh,FILE* f);
 * @param message_length : On exit, the message size in number of bytes
 * @return            0 if OK, integer value on error
 */
-int codes_get_message(codes_handle* h ,const void** message, size_t *message_length  );
+int codes_get_message(codes_handle* h ,const void** message, size_t *message_length);
 
 
 /**
@@ -560,7 +560,7 @@ int codes_get_message(codes_handle* h ,const void** message, size_t *message_len
 *                         On exit, the actual message length in number of bytes
 * @return            0 if OK, integer value on error
 */
-int codes_get_message_copy(codes_handle* h,  void* message,size_t *message_length );
+int codes_get_message_copy(codes_handle* h, void* message,size_t *message_length);
 /*! @} */
 
 /*! \defgroup iterators Iterating on latitude/longitude/values */
@@ -750,7 +750,7 @@ int codes_get_length(codes_handle* h, const char* key,size_t *length);
 * @param value       : the address of a long where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
-int codes_get_long(codes_handle* h, const char* key, long*   value  );
+int codes_get_long(codes_handle* h, const char* key, long* value);
 
 /**
 *  Get a double value from a key, if several keys of the same name are present, the last one is returned
@@ -761,7 +761,7 @@ int codes_get_long(codes_handle* h, const char* key, long*   value  );
 * @param value       : the address of a double where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
-int codes_get_double(codes_handle* h, const char* key, double* value                             );
+int codes_get_double(codes_handle* h, const char* key, double* value);
 
 /**
 *  Get as double the i-th element of the "key" array
@@ -796,7 +796,7 @@ int codes_get_double_elements(codes_handle* h, const char* key, int* i, long siz
 * @param length    : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
 * @return          0 if OK, integer value on error
 */
-int codes_get_string(codes_handle* h, const char* key, char* mesg, size_t *length  );
+int codes_get_string(codes_handle* h, const char* key, char* mesg, size_t *length);
 
 /**
 *  Get string array values from a key. If several keys of the same name are present, the last one is returned
@@ -1086,7 +1086,7 @@ char* codes_definition_path(const codes_context *c);
 /**
 *  Get the API version
 *
-*  @return        API version
+*  @return API version
 */
 long codes_get_api_version(void);
 
@@ -1201,7 +1201,7 @@ int codes_datetime_to_julian(long year, long month, long day, long hour, long mi
 long codes_julian_to_date(long jdate);
 long codes_date_to_julian(long ddate);
 
-void codes_get_reduced_row(long pl,double lon_first,double lon_last,long* npoints,long* ilon_first, long* ilon_last );
+void codes_get_reduced_row(long pl,double lon_first,double lon_last,long* npoints,long* ilon_first, long* ilon_last);
 void codes_get_reduced_row_p(long pl, double lon_first, double lon_last, long *npoints, double *olon_first, double *olon_last);
 
 
