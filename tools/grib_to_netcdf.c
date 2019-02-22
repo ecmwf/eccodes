@@ -2203,7 +2203,7 @@ static int def_latlon(int ncid, fieldset *fs)
 
     field *g = get_field(fs, 0, expand_mem);
 
-    Assert( check_grid(g)==GRIB_SUCCESS );
+    DebugAssert( check_grid(g)==GRIB_SUCCESS );
     
     if((e = grib_get_long(g->handle, "Ni", &l)) != GRIB_SUCCESS)
     {
