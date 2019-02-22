@@ -162,7 +162,7 @@ static void dump(grib_accessor* a,grib_dumper* dumper)
     grib_accessor_lookup* self = (grib_accessor_lookup*)a;
     unsigned char bytes[1024] = {0,};
     char msg[1024]= {0,};
-    char buf[1024];
+    char buf[2048];
     int i;
     unsigned long v = 0;
 

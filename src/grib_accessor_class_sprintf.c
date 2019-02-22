@@ -145,7 +145,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {
     grib_accessor_sprintf* self = (grib_accessor_sprintf*)a;
     char result[1024]  ;
-    char tempBuffer[1024];
+    char tempBuffer[2048];
     char sres[1024]  ;
     long ires = 0;
     double dres= 0;

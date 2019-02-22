@@ -614,7 +614,7 @@ static size_t string_length(grib_accessor* a)
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-    char buff[100];
+    char buff[256];
     size_t bufflen=100;
     char sval[100] = {0};
     char* p=sval;
