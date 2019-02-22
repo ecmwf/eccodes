@@ -382,6 +382,7 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
     }
     printf("ECCODES DEBUG  grib_util: data_values are CONSTANT? %d\t(min=%.16e, max=%.16e)\n",
            isConstant, minVal, maxVal);
+    if (c->gribex_mode_on) printf("ECCODES DEBUG  grib_util: GRIBEX mode is turned on!\n");
 
 #if 0
         if (spec->bitmapPresent) {
