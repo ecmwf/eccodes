@@ -23,7 +23,8 @@ tempBufr=temp.${label}.bufr
 # --------------------------------
 input=${data_dir}/gts/EGRR20150317121020_00493212.DAT
 ${tools_dir}/bufr_copy -g -w numberOfSubsets=9 $input $tempBufr
-${tools_dir}/gts_ls $tempBufr | sed 1d | head -n -3 > $tempOut
+# Remove the first line and the last three
+${tools_dir}/gts_ls $tempBufr | sed 1d | sed 9,11d > $tempOut
 
 cat > $tempRef <<EOF
 TT          AA          II          CCCC        YY          GG          gg          BBB         identifier  
