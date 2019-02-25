@@ -216,7 +216,11 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     }
     if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->date,&date))!=GRIB_SUCCESS) return ret;
     if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->time,&time))!=GRIB_SUCCESS) return ret;
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->step,&step))!=GRIB_SUCCESS) return ret;
+    if ((ret=grib_get_long(grib_handle_of_accessor(a), self->step,&step))!=GRIB_SUCCESS) {
+        if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), "endStep",&step))!=GRIB_SUCCESS) {
+            return ret; /* See ECC-817 */
+        }
+    }
 
     if (self->stepUnits) {
         if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->stepUnits,&stepUnits))!=GRIB_SUCCESS) return ret;
