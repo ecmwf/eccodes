@@ -65,6 +65,7 @@ list( APPEND tests_basic
    grib_set_data
    large_grib1
    sections_copy
+   get_product_kind_samples
 )
 list( APPEND tests_extra
    grib_iterator
