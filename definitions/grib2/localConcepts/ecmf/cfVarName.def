@@ -3281,6 +3281,24 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 246 ;
 	}
+#Nitrate fine mode aerosol mass mixing ratio
+'aermr16' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Nitrate coarse mode aerosol mass mixing ratio
+'aermr17' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65533 ;
+	}
 #Aerosol type 13 mass mixing ratio
 'aermr13diff' = {
 	 discipline = 192 ;
@@ -6658,6 +6676,180 @@
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 188 ;
+	}
+#Source/gain of fine-mode nitrate aerosol
+'aersrcnif' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Source/gain of coarse-mode nitrate aerosol
+'aersrcnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65533 ;
+	}
+#Dry deposition of fine-mode nitrate aerosol
+'aerddpnif' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Dry deposition of coarse-mode nitrate aerosol
+'aerddpnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65533 ;
+	}
+#Sedimentation of fine-mode nitrate aerosol
+'aersdmnif' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Sedimentation of coarse-mode nitrate aerosol
+'aersdmnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of fine-mode nitrate aerosol by large-scale precipitation
+'aerwdlnif' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of coarse-mode nitrate aerosol by large-scale precipitation
+'aerwdlnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of fine-mode nitrate aerosol by convective precipitation
+'aerwdcnif' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of coarse-mode nitrate aerosol by convective precipitation
+'aerwdcnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of fine-mode nitrate aerosol
+'aerngtnif' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of coarse-mode nitrate aerosol
+'aerngtnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
+#Vertically integrated mass of fine-mode nitrate aerosol
+'aermssnif' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Vertically integrated mass of coarse-mode nitrate aerosol
+'aermssnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
+#Fine-mode nitrate aerosol optical depth at 550 nm
+'aerodnif' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 is_aerosol_optical = 1 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 8 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	 typeOfSizeInterval = 255 ;
+	 aerosolType = 65534 ;
+	}
+#Coarse-mode nitrate aerosol optical depth at 550 nm
+'aerodnic' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfSizeInterval = 255 ;
+	 aerosolType = 65533 ;
+	 is_aerosol_optical = 1 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 8 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	}
+#Source/gain of ammonium aerosol
+'aersrcam' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of ammonium aerosol
+'aerngtam' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
 	}
 #Experimental product
 'p1.216' = {

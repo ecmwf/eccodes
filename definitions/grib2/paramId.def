@@ -305,6 +305,80 @@
 	 scaledValueOfSecondFixedSurface = 300 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
+#Ammonium aerosol mass mixing ratio
+'210249' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Nitrate aerosol optical depth at 550 nm
+'210250' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfSizeInterval = 255 ;
+	 aerosolType = 62004 ;
+	 is_aerosol_optical = 1 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 8 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	}
+#Ammonium aerosol optical depth at 550 nm
+'210251' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 8 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	 typeOfSizeInterval = 255 ;
+	 aerosolType = 62003 ;
+	 is_aerosol_optical = 1 ;
+	}
+#Dry deposition of ammonium aerosol
+'215206' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Sedimentation of ammonium aerosol
+'215207' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of ammonium aerosol by large-scale precipitation
+'215208' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of ammonium aerosol by convective precipitation
+'215209' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Vertically integrated mass of ammonium aerosol
+'215211' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
 #10 metre wind gust in the last 3 hours
 '228028' = {
 	 discipline = 0 ;

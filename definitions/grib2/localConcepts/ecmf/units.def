@@ -316,24 +316,24 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 lengthOfTimeRange = 24 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 typeOfStatisticalProcessing = 2 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 lengthOfTimeRange = 24 ;
 	}
 #Minimum temperature at 2 metres in the last 24 hours
 'K' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 24 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	}
 #Montgomery potential
 'm**2 s**-2' = {
@@ -1129,8 +1129,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
-	 typeOfStatisticalProcessing = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	 unitsFactor = 1000 ;
 	}
 #Instantaneous eastward turbulent surface stress
@@ -3280,6 +3280,24 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 246 ;
+	}
+#Nitrate fine mode aerosol mass mixing ratio
+'kg kg**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65534 ;
+	}
+#Nitrate coarse mode aerosol mass mixing ratio
+'kg kg**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
 	}
 #Aerosol type 13 mass mixing ratio
 'kg kg**-1' = {
@@ -6658,6 +6676,180 @@
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 188 ;
+	}
+#Source/gain of fine-mode nitrate aerosol
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Source/gain of coarse-mode nitrate aerosol
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
+#Dry deposition of fine-mode nitrate aerosol
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Dry deposition of coarse-mode nitrate aerosol
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
+#Sedimentation of fine-mode nitrate aerosol
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Sedimentation of coarse-mode nitrate aerosol
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65533 ;
+	}
+#Wet deposition of fine-mode nitrate aerosol by large-scale precipitation
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65534 ;
+	}
+#Wet deposition of coarse-mode nitrate aerosol by large-scale precipitation
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65533 ;
+	}
+#Wet deposition of fine-mode nitrate aerosol by convective precipitation
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65534 ;
+	}
+#Wet deposition of coarse-mode nitrate aerosol by convective precipitation
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65533 ;
+	}
+#Negative fixer of fine-mode nitrate aerosol
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of coarse-mode nitrate aerosol
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65533 ;
+	}
+#Vertically integrated mass of fine-mode nitrate aerosol
+'kg m**-2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 is_aerosol = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 aerosolType = 65534 ;
+	}
+#Vertically integrated mass of coarse-mode nitrate aerosol
+'kg m**-2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Fine-mode nitrate aerosol optical depth at 550 nm
+'dimensionless' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 scaleFactorOfFirstWavelength = 8 ;
+	 is_aerosol_optical = 1 ;
+	 typeOfSizeInterval = 255 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	 typeOfWavelengthInterval = 11 ;
+	 aerosolType = 65534 ;
+	}
+#Coarse-mode nitrate aerosol optical depth at 550 nm
+'dimensionless' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfWavelengthInterval = 11 ;
+	 aerosolType = 65533 ;
+	 scaleFactorOfFirstWavelength = 8 ;
+	 is_aerosol_optical = 1 ;
+	 typeOfSizeInterval = 255 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	}
+#Source/gain of ammonium aerosol
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62003 ;
+	}
+#Negative fixer of ammonium aerosol
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62003 ;
 	}
 #Experimental product
 '~' = {
@@ -13168,21 +13360,21 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 lengthOfTimeRange = 3 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 typeOfFirstFixedSurface = 103 ;
+	 lengthOfTimeRange = 3 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	}
 #Minimum temperature at 2 metres in the last 3 hours
 'K' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 typeOfFirstFixedSurface = 103 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 3 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -15241,14 +15433,14 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
-	 scaledValueOfLowerLimit = 25 ;
-	 productDefinitionTemplateNumber = 9 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfLowerLimit = 25 ;
+	 productDefinitionTemplateNumber = 9 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 probabilityType = 3 ;
 	}
 #2 metre temperature less than 273.15 K
 '%' = {
@@ -15261,44 +15453,44 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
-	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 productDefinitionTemplateNumber = 5 ;
 	 scaledValueOfLowerLimit = 2 ;
+	 typeOfFirstFixedSurface = 101 ;
+	 probabilityType = 3 ;
 	}
 #Significant wave height of at least 4 m
 '%' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
+	 probabilityType = 3 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 productDefinitionTemplateNumber = 5 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 scaledValueOfLowerLimit = 4 ;
-	 probabilityType = 3 ;
 	}
 #Significant wave height of at least 6 m
 '%' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 scaledValueOfLowerLimit = 6 ;
 	 productDefinitionTemplateNumber = 5 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 probabilityType = 3 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 scaledValueOfLowerLimit = 6 ;
 	}
 #Significant wave height of at least 8 m
 '%' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 8 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 productDefinitionTemplateNumber = 5 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
-	 scaledValueOfLowerLimit = 8 ;
 	}
 #Mean wave period of at least 8 s
 '%' = {
