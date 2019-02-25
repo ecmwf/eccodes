@@ -118,7 +118,6 @@ data/bufr/*decode
 data/bufr/*test
 
 *.sublime-workspace
-*.old
 .idea
 
 build/
