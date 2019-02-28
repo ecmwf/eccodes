@@ -46,7 +46,7 @@ int main(int argc,char* argv[])
     }
 
     assert(input_filename);
-    f = fopen(input_filename, "r");
+    f = fopen(input_filename, "rb");
     assert(f);
     h = codes_handle_new_from_file(NULL, f, PRODUCT_BUFR, &err);
     assert(h);

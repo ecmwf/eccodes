@@ -90,7 +90,7 @@ int main(int argc, char** argv)
   /* Encode the keys back in the data section */
   CODES_CHECK(codes_set_long(h, "pack", 1), 0);
 
-  fout = fopen(outfilename, "w");
+  fout = fopen(outfilename, "wb");
   if (!fout) {
     fprintf(stderr, "Failed to open (create) output file.\n");
     return 1;

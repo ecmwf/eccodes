@@ -29,7 +29,7 @@ int main(int argc,char* argv[])
     const char* key_name = "#5#brightnessTemperature";
     const double tolerance = 1e-6;
 
-    in=fopen(infile,"r");
+    in=fopen(infile,"rb");
     assert(in);
 
     while ((h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err)) != NULL || err != CODES_SUCCESS)
