@@ -180,7 +180,7 @@ int grib_tool_init(grib_runtime_options* options)
 {
     int ret=0,i=0;
     int nfiles=1;
-    char orderby[]="md5Headers";
+    const char orderby[]="md5Headers";
     grib_context* context=grib_context_get_default();
 
     options->strict=1;
@@ -238,7 +238,7 @@ int grib_tool_init(grib_runtime_options* options)
         options->idx=grib_fieldset_new_from_files(context,filename,
                 nfiles,0,0,0,orderby,&ret);
         if (ret) {
-            printf("unable to create index for input file %s (%s)",
+            fprintf(stderr, "Unable to create index for input file %s (%s)",
                     options->infile_extra->name,grib_get_error_message(ret));
             exit(ret);
         }
