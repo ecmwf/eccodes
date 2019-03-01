@@ -11,6 +11,32 @@
 	 probabilityType = 3 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Wind speed
+'Wind speed' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	}
+#Wind speed
+'Wind speed' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 100 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 is_uerra = 1 ;
+	}
+#Wind speed
+'Wind speed' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 is_uerra = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
 #Unbalanced component of temperature
 'Unbalanced component of temperature' = {
 	 discipline = 0 ;
@@ -304,6 +330,80 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 300 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
+	}
+#Ammonium aerosol mass mixing ratio
+'Ammonium aerosol mass mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62003 ;
+	}
+#Nitrate aerosol optical depth at 550 nm
+'Nitrate aerosol optical depth at 550 nm' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfWavelengthInterval = 11 ;
+	 aerosolType = 62004 ;
+	 typeOfSizeInterval = 255 ;
+	 scaleFactorOfFirstWavelength = 8 ;
+	 is_aerosol_optical = 1 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	}
+#Ammonium aerosol optical depth at 550 nm
+'Ammonium aerosol optical depth at 550 nm' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	 typeOfWavelengthInterval = 11 ;
+	 aerosolType = 62003 ;
+	 scaleFactorOfFirstWavelength = 8 ;
+	 is_aerosol_optical = 1 ;
+	 typeOfSizeInterval = 255 ;
+	}
+#Dry deposition of ammonium aerosol
+'Dry deposition of ammonium aerosol' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Sedimentation of ammonium aerosol
+'Sedimentation of ammonium aerosol' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of ammonium aerosol by large-scale precipitation
+'Wet deposition of ammonium aerosol by large-scale precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62003 ;
+	}
+#Wet deposition of ammonium aerosol by convective precipitation
+'Wet deposition of ammonium aerosol by convective precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Vertically integrated mass of ammonium aerosol
+'Vertically integrated mass of ammonium aerosol' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #10 metre wind gust in the last 3 hours
 '10 metre wind gust in the last 3 hours' = {
@@ -1224,12 +1324,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
-	}
-#Wind speed
-'Wind speed' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
 	}
 #Pressure
 'Pressure' = {

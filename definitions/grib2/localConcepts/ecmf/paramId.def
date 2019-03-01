@@ -34,12 +34,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
-	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 scaledValueOfLowerLimit = 100 ;
 	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 productDefinitionTemplateNumber = 9 ;
 	}
 #Total precipitation of at least 100 mm
 '131085' = {
@@ -316,12 +316,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfFirstFixedSurface = 103 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 lengthOfTimeRange = 24 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
 	}
 #Minimum temperature at 2 metres in the last 24 hours
 '52' = {
@@ -3280,6 +3280,24 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 246 ;
+	}
+#Nitrate fine mode aerosol mass mixing ratio
+'210247' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Nitrate coarse mode aerosol mass mixing ratio
+'210248' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
 	}
 #Aerosol type 13 mass mixing ratio
 '211013' = {
@@ -6658,6 +6676,180 @@
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 188 ;
+	}
+#Source/gain of fine-mode nitrate aerosol
+'215189' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Source/gain of coarse-mode nitrate aerosol
+'215190' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
+#Dry deposition of fine-mode nitrate aerosol
+'215191' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Dry deposition of coarse-mode nitrate aerosol
+'215192' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
+#Sedimentation of fine-mode nitrate aerosol
+'215193' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 65534 ;
+	}
+#Sedimentation of coarse-mode nitrate aerosol
+'215194' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of fine-mode nitrate aerosol by large-scale precipitation
+'215195' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of coarse-mode nitrate aerosol by large-scale precipitation
+'215196' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of fine-mode nitrate aerosol by convective precipitation
+'215197' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of coarse-mode nitrate aerosol by convective precipitation
+'215198' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of fine-mode nitrate aerosol
+'215199' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of coarse-mode nitrate aerosol
+'215200' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
+#Vertically integrated mass of fine-mode nitrate aerosol
+'215201' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	}
+#Vertically integrated mass of coarse-mode nitrate aerosol
+'215202' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
+#Fine-mode nitrate aerosol optical depth at 550 nm
+'215203' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 typeOfSizeInterval = 255 ;
+	 aerosolType = 65534 ;
+	 is_aerosol_optical = 1 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 8 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	}
+#Coarse-mode nitrate aerosol optical depth at 550 nm
+'215204' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 aerosolType = 65533 ;
+	 is_aerosol_optical = 1 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 8 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	 typeOfSizeInterval = 255 ;
+	}
+#Source/gain of ammonium aerosol
+'215205' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of ammonium aerosol
+'215210' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
 	}
 #Experimental product
 '216001' = {
@@ -13168,24 +13360,24 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 lengthOfTimeRange = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	}
 #Minimum temperature at 2 metres in the last 3 hours
 '228027' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #10 metre wind gust in the last 3 hours
 '228028' = {
@@ -13265,8 +13457,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
-	 typeOfSecondFixedSurface = 8 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Instantaneous cloud-to-ground lightning flash density
 '228052' = {
@@ -13279,11 +13471,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 1 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	}
 #Averaged cloud-to-ground lightning flash density in the last hour
 '228053' = {
@@ -13296,11 +13488,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 lengthOfTimeRange = 3 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Averaged total lightning flash density in the last 3 hours
 '228057' = {
@@ -13313,11 +13505,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 6 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
-	 typeOfStatisticalProcessing = 0 ;
 	}
 #Averaged total lightning flash density in the last 6 hours
 '228058' = {
@@ -13347,17 +13539,76 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 6 ;
 	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
 	}
 #Averaged cloud-to-ground lightning flash density in the last 6 hours
 '228060' = {
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 60 ;
+	}
+#GPP coefficient from Biogenic Flux Adjustment System
+'228078' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 198 ;
+	}
+#Rec coefficient from Biogenic Flux Adjustment System
+'228079' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 199 ;
+	}
+#Accumulated Carbon Dioxide Net Ecosystem Exchange
+'228080' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 192 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated Carbon Dioxide Gross Primary Production
+'228081' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 193 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated Carbon Dioxide Ecosystem Respiration
+'228082' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 194 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Flux of Carbon Dioxide Net Ecosystem Exchange
+'228083' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 195 ;
+	}
+#Flux of Carbon Dioxide Gross Primary Production
+'228084' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 197 ;
+	}
+#Flux of Carbon Dioxide Ecosystem Respiration
+'228085' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 196 ;
 	}
 #Total column rain water
 '228089' = {
@@ -15182,14 +15433,14 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
+	 probabilityType = 3 ;
+	 scaleFactorOfLowerLimit = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 scaledValueOfLowerLimit = 25 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 probabilityType = 3 ;
 	}
 #2 metre temperature less than 273.15 K
 '131073' = {
@@ -15224,11 +15475,11 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
+	 scaledValueOfLowerLimit = 6 ;
 	 productDefinitionTemplateNumber = 5 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
-	 scaledValueOfLowerLimit = 6 ;
 	}
 #Significant wave height of at least 8 m
 '131077' = {
