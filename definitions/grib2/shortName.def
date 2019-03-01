@@ -11,6 +11,32 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
 	}
+#Wind speed
+'ws' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	}
+#Wind speed
+'ws' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 is_uerra = 1 ;
+	 scaledValueOfFirstFixedSurface = 100 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	}
+#Wind speed
+'ws' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
+	 is_uerra = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
 #Unbalanced component of temperature
 'uctp' = {
 	 discipline = 0 ;
@@ -1298,12 +1324,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
-	}
-#Wind speed
-'ws' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
 	}
 #Pressure
 'pres' = {
