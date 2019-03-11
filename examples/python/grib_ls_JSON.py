@@ -44,7 +44,7 @@ def do_print(namespace, INPUT):
         f1 = True
         while codes_keys_iterator_next(iterid):
             keyname = codes_keys_iterator_get_name(iterid)
-            keyval = codes_get_string(iterid, keyname)
+            keyval = codes_get_string(gid, keyname)
             if not f1:
                 print(',')
             else:

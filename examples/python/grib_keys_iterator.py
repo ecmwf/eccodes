@@ -39,7 +39,7 @@ def example():
 
         while codes_keys_iterator_next(iterid):
             keyname = codes_keys_iterator_get_name(iterid)
-            keyval = codes_get_string(iterid, keyname)
+            keyval = codes_get_string(gid, keyname)
             print("%s = %s" % (keyname, keyval))
 
         codes_keys_iterator_delete(iterid)
