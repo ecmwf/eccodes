@@ -27,7 +27,7 @@ int main(int argc,char* argv[])
     char** strArray = NULL; /* array of strings */
     const char* infile = "../../data/bufr/pgps_110.bufr";
 
-    FILE* in = fopen(infile,"r");
+    FILE* in = fopen(infile,"rb");
     if (!in) {
         printf("ERROR: unable to open file %s\n", infile);
         return 1;

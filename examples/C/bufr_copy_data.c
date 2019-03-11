@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 
     outfile=argv[2];
 
-    f = fopen(argv[1],"r");
+    f = fopen(argv[1],"rb");
     if(!f) {
         perror(argv[1]);
         exit(1);

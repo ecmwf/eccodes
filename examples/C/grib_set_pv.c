@@ -43,13 +43,13 @@ int main(int argc, char** argv)
     infile = argv[1];
     outfile= argv[2];
 
-    in = fopen(infile, "r");
+    in = fopen(infile, "rb");
     if(!in) {
         fprintf(stderr, "ERROR: unable to open input file %s\n",infile);
         return 1;
     }
 
-    out = fopen(outfile, "w");
+    out = fopen(outfile, "wb");
     if(!out) {
         fprintf(stderr, "ERROR: unable to open output file %s\n",outfile);
         fclose(in);

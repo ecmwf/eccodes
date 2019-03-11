@@ -369,7 +369,7 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_set_long(h,"setBitsPerValue",0),0);
 /* Save the message */
 
-    f = fopen(argv[1],"w");
+    f = fopen(argv[1],"wb");
     if(!f) {
         perror(argv[1]);
         exit(1);

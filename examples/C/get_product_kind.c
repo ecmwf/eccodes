@@ -34,7 +34,7 @@ int main(int argc,char* argv[])
         return 1;
     }
     infile = argv[1];
-    in=fopen(infile,"r");
+    in=fopen(infile,"rb");
     if (!in) {
         printf("ERROR: unable to open file %s\n", infile);
         return 1;

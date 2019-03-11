@@ -33,7 +33,7 @@ int main ( int argc, char* argv[])
     what_str=argv[3];
     out_name=argv[4];
 
-    in=fopen(in_name1,"r");
+    in=fopen(in_name1,"rb");
     if (!in) {
         perror(in_name1);
         exit(1);
@@ -43,7 +43,7 @@ int main ( int argc, char* argv[])
     CODES_CHECK(err,0);
     fclose(in);
 
-    in=fopen(in_name2,"r");
+    in=fopen(in_name2,"rb");
     if (!in) {
         perror(in_name2);
         exit(1);

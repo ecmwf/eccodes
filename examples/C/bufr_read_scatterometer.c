@@ -38,7 +38,7 @@ int main(int argc,char* argv[])
     const char* infile = "../../data/bufr/asca_139.bufr";
     char key_name[128];
 
-    in=fopen(infile,"r");
+    in=fopen(infile,"rb");
     if (!in) {
         printf("ERROR: unable to open file %s\n", infile);
         return 1;

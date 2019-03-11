@@ -84,7 +84,7 @@ int main(int argc, char** argv)
     fclose(fin);
 
     fname=argv[2];
-    fin=fopen(fname,"r");
+    fin=fopen(fname,"rb");
     if(!fin) { perror(fname); exit(1); }
     h=codes_handle_new_from_file(0,fin,PRODUCT_GRIB, &ret);
     if (!h || ret!=CODES_SUCCESS) {printf(" unable to create handle\n");exit(1);}

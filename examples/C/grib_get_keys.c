@@ -44,7 +44,7 @@ int main(int argc, char** argv)
     const char* filename = "../../data/regular_latlon_surface.grib1";
     codes_handle *h = NULL;
 
-    in = fopen(filename,"r");
+    in = fopen(filename,"rb");
     if(!in) {
         printf("ERROR: unable to open file %s\n",filename);
         return 1;

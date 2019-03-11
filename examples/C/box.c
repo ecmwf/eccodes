@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     west=-10;
     east=30;
 
-    f=fopen(infile,"r");
+    f=fopen(infile,"rb");
     if (!f) {
         perror(infile);
         exit(1);

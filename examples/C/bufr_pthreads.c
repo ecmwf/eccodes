@@ -66,7 +66,7 @@ int main(int argc, char** argv)
     FILE* fin = 0;
     codes_handle* h1 = 0;
     codes_handle* h2 = 0;
-    fin = fopen("../../data/bufr/syno_multi.bufr", "r");
+    fin = fopen("../../data/bufr/syno_multi.bufr", "rb");
     assert(fin);
 
     err = pthread_create(&thread1, NULL, process_bufr, (void *)fin);

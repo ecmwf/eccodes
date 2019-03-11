@@ -35,7 +35,7 @@ int main(int argc,char* argv[])
     int cnt=0;
     const char* infile = "../../data/bufr/synop_multi_subset.bufr";
 
-    in=fopen(infile,"r");
+    in=fopen(infile,"rb");
     if (!in) {
         printf("ERROR: unable to open file %s\n", infile);
         return 1;

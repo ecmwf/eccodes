@@ -12,7 +12,6 @@
  * C Implementation: bufr_missing
  *
  * Description: how to handle missing values in BUFR messages.
- *
  */
 
 #include "eccodes.h"
@@ -30,7 +29,7 @@ int main(int argc,char* argv[])
     int cnt=0;
     const char* infile = "../../data/bufr/syno_1.bufr";
 
-    in=fopen(infile,"r");
+    in=fopen(infile,"rb");
     if (!in)
     {
         printf("ERROR: unable to open file %s\n", infile);

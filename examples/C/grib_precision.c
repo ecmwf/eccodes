@@ -45,13 +45,13 @@ int main(int argc, char** argv)
     long bitsPerValue1=0, bitsPerValue2=0;
     int i=0;
 
-    in = fopen(infile,"r");
+    in = fopen(infile,"rb");
     if(!in) {
         printf("ERROR: unable to open input file %s\n",infile);
         return 1;
     }
 
-    out = fopen(outfile,"w");
+    out = fopen(outfile,"wb");
     if(!out) {
         printf("ERROR: unable to open output file %s\n",outfile);
         fclose(in);

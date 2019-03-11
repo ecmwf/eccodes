@@ -36,7 +36,7 @@ int main(int argc, char** argv)
     /* turn off support for multi fields messages */
     /* codes_multi_support_off(0); */
 
-    in = fopen(filename,"r");
+    in = fopen(filename,"rb");
     if(!in) {
         printf("ERROR: unable to open file %s\n",filename);
         return 1;

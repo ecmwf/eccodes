@@ -36,13 +36,13 @@ int main(int argc, char** argv)
     const void* buffer = NULL;
     size_t str_len = 0; /* See the call to codes_set_string later */
 
-    in = fopen(infile,"r");
+    in = fopen(infile,"rb");
     if(!in) {
         printf("ERROR: unable to open file %s\n",infile);
         return 1;
     }
 
-    out = fopen(outfile,"w");
+    out = fopen(outfile,"wb");
     if(!out) {
         printf("ERROR: unable to open file %s\n",outfile);
         fclose(in);

@@ -43,8 +43,8 @@ int main(int argc,char* argv[])
         return 1;
     }
 
-    in = fopen(infile,"r");
-    out = fopen(argv[1],"w");
+    in = fopen(infile,"rb");
+    out = fopen(argv[1],"wb");
 
     if (!in || !out) {
         perror("ERROR: unable to open files");

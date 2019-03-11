@@ -37,7 +37,7 @@ int main(int argc,char* argv[])
     int cnt=0;
     const char* infile = "../../data/bufr/syno_multi.bufr";
 
-    in=fopen(infile,"r");
+    in=fopen(infile,"rb");
     if (!in) {
         printf("ERROR: unable to open file %s\n", infile);
         return 1;

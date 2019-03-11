@@ -42,7 +42,7 @@ int main(int argc, char** argv)
 
     if (argc != 2) usage(argv[0]);
     filename=argv[1];
-    in = fopen(filename,"r");
+    in = fopen(filename,"rb");
     if(!in) {
         fprintf(stderr, "ERROR: unable to open file %s\n",filename);
         return 1;

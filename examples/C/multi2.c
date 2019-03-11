@@ -32,7 +32,7 @@ static void read_data(int num_msgs)
     long stepRange = 0;
     codes_handle *h = NULL;
 
-    fp = fopen(file_path, "r");
+    fp = fopen(file_path, "rb");
     if(!fp) {
         fprintf(stderr, "ERROR: unable to open grib file %s\n", file_path);
         exit(1);

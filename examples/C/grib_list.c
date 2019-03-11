@@ -36,7 +36,7 @@ int main(int argc, char** argv)
     const char* filename = "../../data/satellite.grib";
     codes_handle *h = NULL;
 
-    in = fopen(filename,"r");
+    in = fopen(filename,"rb");
     if(!in) {
         printf("ERROR: unable to open input file %s\n",filename);
         return 1;

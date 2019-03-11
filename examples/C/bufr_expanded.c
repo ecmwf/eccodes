@@ -40,7 +40,7 @@ int main(int argc,char* argv[])
     filename=argv[1];
 
     /* open bufr file */
-    in=fopen(filename,"r");
+    in=fopen(filename,"rb");
     if (!in) {
         printf("ERROR: unable to open file %s\n", filename);
         return 1;

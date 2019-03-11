@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 	int i;
 	char* name = NULL;
 
-	f=fopen(infile,"r");
+	f=fopen(infile,"rb");
 	if (!f) {
 		perror(infile);
 		exit(1);

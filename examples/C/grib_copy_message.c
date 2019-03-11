@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    in = fopen(argv[1],"r");
+    in = fopen(argv[1],"rb");
 
     if (!in) {
         perror("ERROR: unable to input file");
