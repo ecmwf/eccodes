@@ -127,6 +127,28 @@ static size_t count_subarea_points(grib_handle* h, get_reduced_row_proc get_redu
     return result;
 }
 
+/* Search for 'x' in the array 'xx' (the index of last element being 'n') and return index in 'j' */
+static void binary_search(double xx[], const unsigned long n, double x, long *j)
+{
+    /*This routine works only on descending ordered arrays*/
+#define EPSILON 1e-3
+
+    unsigned long ju,jm,jl;
+    jl=0;
+    ju=n;
+    while (ju-jl > 1) {
+        jm=(ju+jl) >> 1;
+        if (fabs(x-xx[jm]) < EPSILON) {
+            /* found something close enough. We're done */
+            *j=jm;
+            return;
+        }
+        if (x < xx[jm]) jl=jm;
+        else ju=jm;
+    }
+    *j=jl;
+}
+
 /* ECC-747 */
 static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib_handle* h,
         double lat_first, double lon_first,
@@ -134,10 +156,8 @@ static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib
         double* lats, long* pl, size_t plsize, size_t numlats)
 {
     int err = 0;
-    size_t l = 0;
-    size_t j = 0, il = 0;
-    size_t min_i = 0;
-    double min_d = DBL_MAX;
+    long l = 0;
+    size_t j = 0;
     long row_count=0, i=0;
     double olon_first, olon_last;
     grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
@@ -149,6 +169,10 @@ static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib
     }
 
     /* Find starting latitude */
+    binary_search(lats, numlats-1, lat_first, &l);
+    Assert(l < numlats);
+
+#if 0
     for(il=0; il<numlats; ++il) {
         const double diff = fabs(lat_first-lats[il]);
         if (diff < min_d) {
@@ -156,6 +180,7 @@ static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib
             l = il; /* index of the latitude */
         }
     }
+#endif
 
     iter->e=0;
     for (j=0;j<plsize;j++) {
@@ -172,7 +197,7 @@ static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib
                 return GRIB_WRONG_GRID;
             }
             self->los[iter->e]=lon2;
-            DebugAssertAccess(lats, j+l, numlats);
+            DebugAssert(j+l < numlats);
             self->las[iter->e]=lats[j+l];
             iter->e++;
         }
