@@ -91,7 +91,7 @@ int main(int argc,char* argv[])
         if (strcmp(filename,"-")==0)
             infh=stdin;
         else
-            infh=fopen(filename,"r");
+            infh=fopen(filename,"rb");
         if (!infh) {
             perror(filename);
             exit(1);

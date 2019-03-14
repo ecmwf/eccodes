@@ -127,7 +127,7 @@ int main(int argc,char* argv[])
             return 1;
         }
     }
-    infh=fopen(filename,"r");
+    infh=fopen(filename,"rb");
     if (!infh) {
         perror(filename);
         return 1;
