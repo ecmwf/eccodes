@@ -2067,7 +2067,8 @@ static int bitmap_ref_skip(grib_accessors_list* al,int* err)
     return 0;
 }
 
-static int accessor_descriptor_is_bitmap(grib_accessors_list* al, int* err)
+/* Return 1 if the descriptor is an operator marking the start of a bitmap */
+static int is_bitmap_start_descriptor(grib_accessors_list* al, int* err)
 {
     grib_accessor* acode=NULL;
     long code[1];
@@ -2129,7 +2130,7 @@ static int bitmap_init(grib_context* c, bitmap_s* bitmap,
      */
     while (bitmap_ref_skip(bitmap->referredElement,&ret)) {
         int is_bmp = 0;
-        if (accessor_descriptor_is_bitmap(bitmap->referredElement,&ret)) {
+        if (is_bitmap_start_descriptor(bitmap->referredElement,&ret)) {
             is_bmp = 1;
         }
         bitmap->referredElement=bitmap->referredElement->prev;
