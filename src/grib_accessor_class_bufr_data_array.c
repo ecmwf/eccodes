@@ -2089,9 +2089,11 @@ static int is_bitmap_start_descriptor(grib_accessors_list* al, int* err)
     case 237000:
     /*case 243000:*/
         {
-            //long index[1];
-            //grib_accessor* anindex=grib_accessor_get_attribute(al->accessor,"index");
-            //grib_unpack_long(anindex,index,&l);
+#if 0
+            long index[1];
+            grib_accessor* anindex=grib_accessor_get_attribute(al->accessor,"index");
+            grib_unpack_long(anindex,index,&l);
+#endif
             return 1;
         }
     }
@@ -2104,8 +2106,18 @@ static void print_bitmap_debug_info(grib_context* c, bitmap_s* bitmap, grib_acce
     printf("ECCODES DEBUG: bitmap_init: bitmapSize=%d\n", bitmapSize);
     bitmap->cursor=bitmapStart->next;
     bitmap->referredElement=bitmapStart;
-    while (bitmap_ref_skip(bitmap->referredElement,&ret))
+
+    while (bitmap_ref_skip(bitmap->referredElement,&ret)) {
+        int is_bmp = 0;
+        if (is_bitmap_start_descriptor(bitmap->referredElement,&ret)) {
+            is_bmp = 1;
+        }
         bitmap->referredElement=bitmap->referredElement->prev;
+        if (is_bmp) {
+            break;
+        }
+    }
+
     for (i=1;i<bitmapSize;i++) {
         if (bitmap->referredElement) {
             printf("ECCODES DEBUG:\t bitmap_init: i=%d |%s|\n", i,bitmap->referredElement->accessor->name);
