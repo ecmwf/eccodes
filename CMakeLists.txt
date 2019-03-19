@@ -351,6 +351,21 @@ get_directory_property( COMPILE_DEFINITIONS ECCODES_DEFINITIONS )
 foreach( _tpl ${ECCODES_TPLS} )
     string( TOUPPER ${_tpl} TPL )
     if( ${TPL}_FOUND )
+        if( REPLACE_TPL_ABSOLUTE_PATHS )
+            # replace TPL absolute paths with their library names
+            # this helps make ecCodes relocatable
+            set( _TMP "" )
+
+            foreach( _lib ${${TPL}_LIBRARIES} )
+                get_filename_component( _lib_name ${_lib} NAME_WE )
+                string( REGEX REPLACE "^lib" "" _name ${_lib_name} )
+                list( APPEND _TMP "-l${_name}" )
+            endforeach()
+
+            set( ${TPL}_LIBRARIES ${_TMP} )
+            set( _TMP "" )
+        endif()
+
         list( APPEND ECCODES_EXTRA_DEFINITIONS   ${${TPL}_DEFINITIONS} )
         list( APPEND ECCODES_EXTRA_INCLUDE_DIRS  ${${TPL}_INCLUDE_DIRS} ${${TPL}_INCLUDE_DIR} )
         list( APPEND ECCODES_EXTRA_LIBRARIES     ${${TPL}_LIBRARIES} )
