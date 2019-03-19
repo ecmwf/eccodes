@@ -203,7 +203,7 @@ def codes_new_from_file(fileobj, product_kind, headers_only=False):
     \b Examples: \ref get_product_kind.py "get_product_kind.py"
 
     @param fileobj        python file object
-    @param product_kind   one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_METAR or CODES_PRODUCT_GTS
+    @param product_kind   one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_GTS or CODES_PRODUCT_ANY
     @param headers_only   whether or not to load the message with the headers only
     @return               id of the message loaded in memory
     @exception GribInternalError
