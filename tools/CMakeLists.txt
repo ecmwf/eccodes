@@ -64,11 +64,14 @@ foreach( tool ${grib_tools_bins_EXTRA} )
                             LIBS       grib_tools )
 endforeach()
 
-# grib_count/bufr_count tools. Same source code, different executable names
+# grib_count/bufr_count etc. Same source code, different executable names
 ecbuild_add_executable( TARGET     grib_count
                         SOURCES    codes_count.c
                         LIBS       grib_tools  )
 ecbuild_add_executable( TARGET     bufr_count
+                        SOURCES    codes_count.c
+                        LIBS       grib_tools  )
+ecbuild_add_executable( TARGET     gts_count
                         SOURCES    codes_count.c
                         LIBS       grib_tools  )
 

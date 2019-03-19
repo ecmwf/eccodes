@@ -22,6 +22,10 @@ tempBufr=temp.${label}.bufr
 # Case 1:
 # --------------------------------
 input=${data_dir}/gts/EGRR20150317121020_00493212.DAT
+
+numBufrs=`${tools_dir}/bufr_count $input`
+[ $numBufrs -eq 94 ]
+
 ${tools_dir}/bufr_copy -g -w numberOfSubsets=9 $input $tempBufr
 # Remove the first line and the last three
 ${tools_dir}/gts_ls $tempBufr | sed 1d | sed 9,11d > $tempOut

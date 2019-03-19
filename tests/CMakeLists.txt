@@ -102,6 +102,7 @@ list( APPEND tests_data_reqd
     bufr_ecc-556
     gts_get
     gts_ls
+    gts_count
     gts_compare
     metar_ls
     metar_get
