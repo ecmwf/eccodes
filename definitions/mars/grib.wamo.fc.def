@@ -9,8 +9,6 @@ meta verificationMonth         evaluate( (verificationDate/100)%100 );
 meta monthlyVerificationMonth  evaluate( (monthlyVerificationDate/100)%100 );
 
 alias monthlyVerificationTime = validityTime;
-alias CDSmmTime = monthlyVerificationTime;
-alias CDSmmDate = monthlyVerificationDate;
 
 #
 # See GRIB-497, GRIB-766, GRIB-833

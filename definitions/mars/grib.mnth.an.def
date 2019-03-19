@@ -2,5 +2,4 @@
 alias mars.step = startStep;
 
 alias monthlyVerificationTime = validityTime;
-alias CDSmmTime = monthlyVerificationTime;
-alias CDSmmDate = dataDate;
+alias monthlyVerificationDate = dataDate;

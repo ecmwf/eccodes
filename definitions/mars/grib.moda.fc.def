@@ -5,8 +5,6 @@ meta monthlyVerificationDate g1monthlydate(verificationDate) : dump,no_copy;
 alias mars.date            = monthlyVerificationDate;
 
 alias monthlyVerificationTime = zero;
-alias CDSmmTime = monthlyVerificationTime;
-alias CDSmmDate = monthlyVerificationDate;
 
 meta verificationYear          evaluate(verificationDate/10000);
 meta monthlyVerificationYear   evaluate(monthlyVerificationDate/10000);
