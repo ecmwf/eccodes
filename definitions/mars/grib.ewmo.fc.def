@@ -9,6 +9,8 @@ meta monthlyVerificationYear   evaluate(monthlyVerificationDate/10000);
 meta verificationMonth         evaluate( (verificationDate/100)%100 );
 meta monthlyVerificationMonth  evaluate( (monthlyVerificationDate/100)%100 );
 
+alias monthlyVerificationTime = zero;
+
 # class 3 is "er" which is 15 year re-analysis (ERA15)
 # Only ERA15 has time and step
 if(class != 3) {
