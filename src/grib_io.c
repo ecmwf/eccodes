@@ -902,8 +902,8 @@ static int read_any_gts(reader *r)
     int err = 0;
     unsigned char* buffer=NULL;
     unsigned long magic = 0;
-    unsigned long start = 0x010d0d0a;
-    unsigned long theEnd = 0x0d0d0a03;
+    unsigned long start = 0x010d0d0a;  /* SOH CR CR LF */
+    unsigned long theEnd = 0x0d0d0a03; /* CR CR LF ETX */
     unsigned char tmp[128]={0,}; /* See ECC-735 */
     size_t message_size=0;
     size_t already_read=0;
