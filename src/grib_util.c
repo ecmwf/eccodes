@@ -1281,9 +1281,13 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             break;
         }
     }
-    if (!strcmp(input_packing_type,"grid_simple_matrix")) {
+    if (strcmp(input_packing_type,"grid_simple_matrix")==0) {
         long numberOfDirections,numberOfFrequencies;
-        if (h->context->keep_matrix) {
+        int keep_matrix = h->context->keep_matrix;
+        if (packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE) {
+            keep_matrix = 0; /* ECC-911 */
+        }
+        if (keep_matrix) {
             int ret;
             SET_STRING_VALUE("packingType","grid_simple_matrix");
             ret=grib_get_long(h,"numberOfDirections",&numberOfDirections);
