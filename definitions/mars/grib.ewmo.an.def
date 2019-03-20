@@ -1,7 +1,7 @@
 # NOTE: step is startStep
 alias mars.step = startStep;
 
-alias monthlyVerificationTime = validityTime;
+alias monthlyVerificationTime = zero;
 alias monthlyVerificationDate = dataDate;
 
 # class 3 is "er" which is 15 year re-analysis (ERA15)
