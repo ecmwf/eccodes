@@ -437,7 +437,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     if (get_number_of_data_values(h, &numDataValues) == GRIB_SUCCESS) {
         if (*val != numDataValues) {
             if (h->context->debug)
-                printf("ECCODES DEBUG number_of_points_gaussian: LEGACY MODE activated. Count(=%ld) changed to size(values)\n",*val);
+                printf("ECCODES DEBUG number_of_points_gaussian: LEGACY MODE activated. "
+                       "Count(=%ld) changed to num values(=%ld)\n",*val,(long)numDataValues);
             *val = numDataValues;
         }
     }
