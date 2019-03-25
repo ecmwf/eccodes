@@ -163,11 +163,11 @@ static int iterate_reduced_gaussian_subarea_legacy(grib_iterator* iter, grib_han
     long ilon_first, ilon_last, i;
     grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
     get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;
-    get_reduced_row = &grib_get_reduced_row_legacy; /* switch to legacy algorithm */
+    get_reduced_row = &grib_get_reduced_row_legacy; /* legacy algorithm */
 
     if (h->context->debug) {
         const size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
-        printf("ECCODES DEBUG grib_iterator_class_gaussian_reduced: sub-area num points=%ld\n", (long)np);
+        printf("ECCODES DEBUG grib_iterator_class_gaussian_reduced: Legacy sub-area num points=%ld\n", (long)np);
     }
 
     /*find starting latitude */
@@ -186,7 +186,7 @@ static int iterate_reduced_gaussian_subarea_legacy(grib_iterator* iter, grib_han
             if(iter->e >= iter->nv){
                 size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
                 grib_context_log(h->context,GRIB_LOG_ERROR,
-                                 "Reduced Gaussian iterator (sub-area). Num points=%ld, size(values)=%ld", np, iter->nv);
+                                 "Reduced Gaussian iterator (sub-area legacy). Num points=%ld, size(values)=%ld", np, iter->nv);
                 return GRIB_WRONG_GRID;
             }
 
@@ -258,9 +258,14 @@ static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib
     }
 
     if (iter->e != iter->nv) {
-        // Fewer counted points in the sub-area than the number of data values.
-        // Either inconsistent GRIB or Legacy (produced by PRODGEN/LIBEMOS)
-        return iterate_reduced_gaussian_subarea_legacy(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
+        /* Fewer counted points in the sub-area than the number of data values */
+        const size_t legacy_count = count_subarea_points(h, grib_get_reduced_row_legacy, pl, plsize, lon_first, lon_last);
+        if (iter->nv == legacy_count) {
+            /* Legacy (produced by PRODGEN/LIBEMOS) */
+            return iterate_reduced_gaussian_subarea_legacy(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
+        } else {
+            /* TODO: A gap exists! Not all values can be mapped. Inconsistent grid or error in calculating num. points! */
+        }
     }
     return err;
 }
