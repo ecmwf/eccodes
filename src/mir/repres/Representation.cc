@@ -15,8 +15,9 @@
 
 #include "mir/repres/Representation.h"
 
+#include <memory>
+
 #include "eckit/exception/Exceptions.h"
-#include "eckit/memory/ScopedPtr.h"
 #include "eckit/thread/AutoLock.h"
 #include "eckit/thread/Mutex.h"
 #include "eckit/thread/Once.h"
@@ -264,7 +265,7 @@ const Representation* Representation::globalise(data::MIRField& field) const {
     std::vector<double> latitudes;  latitudes.resize(size);
     std::vector<double> longitudes; longitudes.resize(size);
 
-    eckit::ScopedPtr<repres::Iterator> it(octahedral->iterator());
+    std::unique_ptr<repres::Iterator> it(octahedral->iterator());
     while (it->next()) {
         const auto& p = it->pointUnrotated();
         latitudes.push_back(p.lat().value());

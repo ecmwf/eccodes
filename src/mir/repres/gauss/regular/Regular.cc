@@ -12,11 +12,13 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+
 #include "mir/repres/gauss/regular/Regular.h"
+
+#include <memory>
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
-#include "eckit/memory/ScopedPtr.h"
 #include "eckit/utils/MD5.h"
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"

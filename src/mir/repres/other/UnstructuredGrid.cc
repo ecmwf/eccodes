@@ -16,12 +16,12 @@
 
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <utility>
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/filesystem/PathName.h"
 #include "eckit/log/Plural.h"
-#include "eckit/memory/ScopedPtr.h"
 #include "eckit/serialisation/FileStream.h"
 #include "eckit/serialisation/IfstreamStream.h"
 #include "eckit/utils/MD5.h"
@@ -191,7 +191,7 @@ const Gridded* UnstructuredGrid::croppedRepresentation(const util::BoundingBox& 
     size_t i = 0;
     size_t j = 0;
 
-    eckit::ScopedPtr<repres::Iterator> iter(iterator());
+    std::unique_ptr<repres::Iterator> iter(iterator());
     while (iter->next()) {
         if (bbox.contains(iter->pointUnrotated())) {
             lat.emplace_back(latitudes_[i]);

@@ -18,13 +18,13 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <memory>
 #include <numeric>
 #include <set>
 #include <sstream>
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
-#include "eckit/memory/ScopedPtr.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 
@@ -325,7 +325,7 @@ size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue)
     // and even be cached (md5 of iterators)
 
     // Iterator is 'unrotated'
-    eckit::ScopedPtr<Iterator> it(iterator());
+    std::unique_ptr<Iterator> it(iterator());
     while (it->next()) {
         const auto& p = it->pointUnrotated();
 
@@ -367,7 +367,7 @@ size_t Reduced::numberOfPoints() const {
         const std::vector<long>& pl = pls();
         total = size_t(std::accumulate(pl.begin(), pl.end(), 0));
     } else {
-        eckit::ScopedPtr<repres::Iterator> iter(iterator());
+        std::unique_ptr<repres::Iterator> iter(iterator());
         while (iter->next()) {
             total++;
         }

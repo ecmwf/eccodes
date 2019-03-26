@@ -17,11 +17,11 @@
 
 #include <algorithm>
 #include <iostream>
+#include <memory>
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
 #include "eckit/types/Fraction.h"
-#include "eckit/memory/ScopedPtr.h"
 
 #include "mir/api/Atlas.h"
 #include "mir/config/LibMir.h"
@@ -227,7 +227,7 @@ Representation* LatLon::globalise(data::MIRField& field) const {
 
     util::BoundingBox newbbox(bbox_.north(), bbox_.west(), Latitude::SOUTH_POLE, bbox_.east());
 
-    eckit::ScopedPtr<LatLon> newll(const_cast<LatLon*>(croppedRepresentation(newbbox)));
+    std::unique_ptr<LatLon> newll(const_cast<LatLon*>(croppedRepresentation(newbbox)));
 
     ASSERT(newll->nj_ > nj_);
     ASSERT(newll->ni_ == ni_);
