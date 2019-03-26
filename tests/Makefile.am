@@ -51,7 +51,7 @@ TESTS = definitions.sh \
         julian.sh \
         grib_statistics.sh \
         tigge.sh \
-        uerra.sh \
+        grib_uerra.sh \
         tigge_conversions.sh \
         read_any.sh \
         grib_padding.sh \

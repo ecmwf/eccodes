@@ -49,7 +49,7 @@ list( APPEND tests_no_data_reqd
     grib_calendar
     unit_tests
     md5
-    uerra
+    grib_uerra
     grib_2nd_order_numValues
     julian
     bufr_dump_samples
