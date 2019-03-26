@@ -55,7 +55,7 @@ TESTS = definitions.sh \
         tigge_conversions.sh \
         read_any.sh \
         grib_padding.sh \
-        lamb_az_eq_area.sh \
+        grib_lamb_az_eq_area.sh \
         grib_to_netcdf.sh \
         grib_dump_debug.sh \
         grib_jpeg.sh \
@@ -102,5 +102,5 @@ LDADD = $(top_builddir)/src/libeccodes.la $(EMOS_LIB)
 INCLUDES   = -I$(top_builddir)/src
 
 EXTRA_DIST = $(TESTS) mf.rules filter_rules include.sh include.ctest.sh.in utils.sh \
-             lamb_az_eq_area.ref CMakeLists.txt number_compare.pl
+             grib_lamb_az_eq_area.ref CMakeLists.txt number_compare.pl
 

@@ -217,11 +217,11 @@ endif()
 
 ###########################################
 # Note: the reference file is in the tests dir not data dir!
-ecbuild_add_test( TARGET eccodes_t_lamb_az_eq_area
+ecbuild_add_test( TARGET eccodes_t_grib_lamb_az_eq_area
                   TYPE SCRIPT
                   CONDITION ENABLE_EXTRA_TESTS
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lamb_az_eq_area.sh
-                  RESOURCES lamb_az_eq_area.ref
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_lamb_az_eq_area.sh
+                  RESOURCES grib_lamb_az_eq_area.ref
                   TEST_DEPENDS eccodes_download_gribs
 )
 
