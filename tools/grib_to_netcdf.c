@@ -2185,10 +2185,27 @@ static int check_grid(field *f)
 
     if (strcmp(grid_type, "regular_ll") != 0 && (strcmp(grid_type, "regular_gg") != 0))
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
-        return GRIB_GEOCALCULUS_PROBLEM;
+        if(strcmp(grid_type,"lambert_azimuthal_equal_area")==0) {
+            fprintf(stderr, "grib_to_netcdf:  WARNING: Support for gridType of lambert_azimuthal_equal_area is currently experimental.\n");
+        } else {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "Grid type = %s", grid_type);
+            grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
+            return GRIB_GEOCALCULUS_PROBLEM;
+        }
     }
     return e;
+}
+
+static int grid_is_lambert_azimuthal(grib_handle* h)
+{
+    char grid_type[80];
+    size_t size = sizeof(grid_type);
+    if (grib_get_string(h, "typeOfGrid", grid_type, &size) == GRIB_SUCCESS &&
+        strcmp(grid_type, "lambert_azimuthal_equal_area")==0)
+    {
+        return 1;
+    }
+    return 0;
 }
 
 static int get_num_latitudes_longitudes(grib_handle* h, size_t* nlats, size_t* nlons)
@@ -2198,9 +2215,9 @@ static int get_num_latitudes_longitudes(grib_handle* h, size_t* nlats, size_t* n
     size_t size = sizeof(grid_type);
 
     if (grib_get_string(h, "typeOfGrid", grid_type, &size) == GRIB_SUCCESS &&
-        strcmp(grid_type, "regular_ll") == 0)
+        (strcmp(grid_type, "regular_ll")==0 || strcmp(grid_type, "lambert_azimuthal_equal_area")==0))
     {
-        /* Special shortcut for regular lat/on grids */
+        /* Special shortcut for regular lat/on and lambert azimuthal grids */
         long n;
         Assert( !grib_is_missing(h, "Ni", &e) );
         if ((e = grib_get_long(h, "Ni", &n)) != GRIB_SUCCESS) {
@@ -2308,10 +2325,22 @@ static int put_latlon(int ncid, fieldset *fs)
     }
 
 #endif
-
-    if((e = get_num_latitudes_longitudes(g->handle, &nj, &ni)) != GRIB_SUCCESS) {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
-        return e;
+    if (grid_is_lambert_azimuthal(g->handle)) {
+        /* ECC-886: For Lambert we need the actual number of distinct lat/lons which will be higher than Ni/Nj */
+        if((e = grib_get_size(g->handle, "distinctLatitudes", &nj)) != GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
+            return e;
+        }
+        if((e = grib_get_size(g->handle, "distinctLongitudes", &ni)) != GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
+            return e;
+        }
+    }
+    else {
+        if((e = get_num_latitudes_longitudes(g->handle, &nj, &ni)) != GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLatitudes: %s", grib_get_error_message(e));
+            return e;
+        }
     }
 
     /* Compute max. # values and allocate */
@@ -2328,7 +2357,7 @@ static int put_latlon(int ncid, fieldset *fs)
     check_err(stat, __LINE__, __FILE__);
     if((e = grib_get_double_array(g->handle, "distinctLongitudes", dvalues, &n)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLongitudes: %s", grib_get_error_message(e));
         return e;
     }
     Assert(n == ni);
@@ -2344,7 +2373,7 @@ static int put_latlon(int ncid, fieldset *fs)
     check_err(stat, __LINE__, __FILE__);
     if((e = grib_get_double_array(g->handle, "distinctLatitudes", dvalues, &n)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLatitudes: %s", grib_get_error_message(e));
         return e;
     }
 
