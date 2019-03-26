@@ -50,9 +50,9 @@ TESTS = definitions.sh \
         grib_change_scanning.sh \
         julian.sh \
         grib_statistics.sh \
-        tigge.sh \
+        grib_tigge.sh \
         grib_uerra.sh \
-        tigge_conversions.sh \
+        grib_tigge_conversions.sh \
         read_any.sh \
         grib_padding.sh \
         grib_lamb_az_eq_area.sh \

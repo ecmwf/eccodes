@@ -145,7 +145,7 @@ list( APPEND tests_data_reqd
     multi_from_message
     grib_change_scanning
     grib_statistics
-    tigge
+    grib_tigge
     read_any
     grib_dump
     grib_dump_debug
@@ -162,7 +162,7 @@ endif()
 if( ENABLE_EXTRA_TESTS )
     list(APPEND tests_data_reqd grib_util_set_spec)
     list(APPEND tests_data_reqd grib_padding)
-    list(APPEND tests_data_reqd tigge_conversions)
+    list(APPEND tests_data_reqd grib_tigge_conversions)
     list(APPEND tests_data_reqd bufr_dump_encode_C)
     list(APPEND tests_data_reqd bufr_dump_decode_C)
 endif()
