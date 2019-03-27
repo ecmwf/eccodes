@@ -12,11 +12,16 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+
 #include "mir/repres/latlon/ReducedLL.h"
+
+#include <algorithm>
+#include <iostream>
 
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/MD5.h"
+
 #include "mir/api/Atlas.h"
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
@@ -24,8 +29,7 @@
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
-#include <algorithm>
-#include <iostream>
+
 
 namespace mir {
 namespace repres {
@@ -55,8 +59,8 @@ void ReducedLL::makeName(std::ostream& out) const {
     out << "RLL" << pl_.size() << "-";
 
     eckit::MD5 md5;
-    for (auto j = pl_.begin(); j != pl_.end(); ++j) {
-        md5 << *j;
+    for (auto& j : pl_) {
+        md5 << j;
     }
 
     out << std::string(md5);
@@ -65,7 +69,7 @@ void ReducedLL::makeName(std::ostream& out) const {
 
 size_t ReducedLL::numberOfPoints() const {
     size_t total = 0;
-    for (const auto& j : pl_) {
+    for (auto& j : pl_) {
         total += size_t(j);
     }
     return total;
@@ -114,7 +118,7 @@ bool ReducedLL::sameAs(const Representation& other) const {
     return o && (bbox_ == o->bbox_) && (pl_ == o->pl_);
 }
 
-void ReducedLL::fill(grib_info& info) const {
+void ReducedLL::fill(grib_info&) const {
     NOTIMP;
 }
 
@@ -171,11 +175,7 @@ bool ReducedLL::includesSouthPole() const {
 }
 
 void ReducedLL::validate(const MIRValuesVector& values) const {
-    size_t count = 0;
-    for (size_t i = 0; i < pl_.size(); i++) {
-        count += pl_[i];
-    }
-    ASSERT(values.size() == count);
+    ASSERT(values.size() == numberOfPoints());
 }
 
 class ReducedLLIterator : public Iterator {
