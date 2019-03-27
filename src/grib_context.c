@@ -246,11 +246,10 @@ void grib_print_api_version(FILE* out)
             ECCODES_MAJOR_VERSION,
             ECCODES_MINOR_VERSION,
             ECCODES_REVISION_VERSION);
-#ifdef ECCODES_PRE_RELEASE
+
     if (ECCODES_MAJOR_VERSION < 1) {
         fprintf(out, "%s", " PRE-RELEASE");
     }
-#endif
 }
 
 const char* grib_get_package_name()
