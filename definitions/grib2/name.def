@@ -3400,6 +3400,18 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 probabilityType = 3 ;
 	}
+#Eastward sea water velocity
+'Eastward sea water velocity' = {
+	 discipline = 10 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 2 ;
+	}
+#Northward sea water velocity
+'Northward sea water velocity' = {
+	 discipline = 10 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 3 ;
+	}
 #Convective inhibition
 'Convective inhibition' = {
 	 discipline = 0 ;
