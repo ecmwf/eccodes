@@ -310,7 +310,8 @@ void grib_get_reduced_row_wrapper(grib_handle* h, long pl, double lon_first, dou
      */
 }
 
-/* This was the legacy way of counting the points. Now deprecated */
+/* This was the legacy way of counting the points within a subarea of a Gaussian grid.
+   In the days of Prodgen/libemos */
 void grib_get_reduced_row_legacy(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last)
 {
     double range=0,dlon_first=0,dlon_last=0;
