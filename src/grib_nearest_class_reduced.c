@@ -224,6 +224,10 @@ static int find(grib_nearest* nearest, grib_handle* h,
         if (self->global) {
             while (inlon<0) inlon+=360;
             while (inlon>360) inlon-=360;
+        } else {
+            //TODO: Experimental
+            if (!is_legacy_grib)
+                if (inlon>180 && inlon<360) inlon-=360;
         }
 
         ilat=self->lats_count;
