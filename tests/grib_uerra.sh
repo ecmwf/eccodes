@@ -12,12 +12,11 @@
 
 REDIRECT=/dev/null
 
-#set -eax
 grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-this_test=ecCodes-uerra
-tempSample=tempSample.${this_test}.grib2
-temp1=temp1.${this_test}.grib2
-temp2=temp2.${this_test}.grib2
+label=grib_uerra_test
+tempSample=tempSample.${label}.grib2
+temp1=temp1.${label}.grib2
+temp2=temp2.${label}.grib2
 
 test_stream_and_type()
 {

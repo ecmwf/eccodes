@@ -135,7 +135,7 @@ static int split_file_by_subtype(FILE* in, const char* filename, unsigned long *
             if (verbose) {
                 if (!file_exists(ofilename)) printf("Writing output to %s\n", ofilename);
             }
-            out=fopen(ofilename,"a");
+            out=fopen(ofilename,"ab");
             if (!out) {
                 fprintf(stderr,"ERROR: Failed to open output file '%s'\n", ofilename);
                 perror(ofilename);
@@ -183,7 +183,7 @@ int main(int argc,char* argv[])
             return 1;
         }
     }
-    infh=fopen(filename,"r");
+    infh=fopen(filename,"rb");
     if (!infh) {
         perror(filename);
         return 1;

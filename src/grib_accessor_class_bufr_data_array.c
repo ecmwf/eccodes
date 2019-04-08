@@ -2067,14 +2067,57 @@ static int bitmap_ref_skip(grib_accessors_list* al,int* err)
     return 0;
 }
 
+/* Return 1 if the descriptor is an operator marking the start of a bitmap */
+static int is_bitmap_start_descriptor(grib_accessors_list* al, int* err)
+{
+    grib_accessor* acode=NULL;
+    long code[1];
+    size_t l=1;
+    if (!al || !al->accessor) return 0;
+
+    acode=grib_accessor_get_attribute(al->accessor,"code");
+    if (acode) *err=grib_unpack_long(acode,code,&l);
+    else return 1;
+
+    switch (code[0]) {
+    case 222000:
+    case 223000:
+    case 224000:
+    case 225000:
+    case 232000:
+    /*case 236000:*/
+    case 237000:
+    /*case 243000:*/
+        {
+#if 0
+            long index[1];
+            grib_accessor* anindex=grib_accessor_get_attribute(al->accessor,"index");
+            grib_unpack_long(anindex,index,&l);
+#endif
+            return 1;
+        }
+    }
+    return 0;
+}
+
 static void print_bitmap_debug_info(grib_context* c, bitmap_s* bitmap, grib_accessors_list* bitmapStart, int bitmapSize)
 {
     int i = 0, ret = 0;
     printf("ECCODES DEBUG: bitmap_init: bitmapSize=%d\n", bitmapSize);
     bitmap->cursor=bitmapStart->next;
     bitmap->referredElement=bitmapStart;
-    while (bitmap_ref_skip(bitmap->referredElement,&ret))
+
+    while (bitmap_ref_skip(bitmap->referredElement,&ret)) {
+        int is_bmp = 0;
+        if (is_bitmap_start_descriptor(bitmap->referredElement,&ret)) {
+            is_bmp = 1;
+        }
         bitmap->referredElement=bitmap->referredElement->prev;
+        if (is_bmp) {
+            break;
+        }
+    }
+
     for (i=1;i<bitmapSize;i++) {
         if (bitmap->referredElement) {
             printf("ECCODES DEBUG:\t bitmap_init: i=%d |%s|\n", i,bitmap->referredElement->accessor->name);
@@ -2082,6 +2125,7 @@ static void print_bitmap_debug_info(grib_context* c, bitmap_s* bitmap, grib_acce
         }
     }
 }
+
 static int bitmap_init(grib_context* c, bitmap_s* bitmap,
                        grib_accessors_list* bitmapStart, int bitmapSize, grib_accessors_list* lastAccessorInList)
 {
@@ -2092,7 +2136,20 @@ static int bitmap_init(grib_context* c, bitmap_s* bitmap,
         return ret;
     }
     bitmap->referredElement=bitmapStart;
-    while (bitmap_ref_skip(bitmap->referredElement,&ret)) bitmap->referredElement=bitmap->referredElement->prev;
+    /*while (bitmap_ref_skip(bitmap->referredElement,&ret)) bitmap->referredElement=bitmap->referredElement->prev;*/
+    /* See ECC-869
+     * We have to INCLUDE the replication factors that come after the bitmap operators
+     */
+    while (bitmap_ref_skip(bitmap->referredElement,&ret)) {
+        int is_bmp = 0;
+        if (is_bitmap_start_descriptor(bitmap->referredElement,&ret)) {
+            is_bmp = 1;
+        }
+        bitmap->referredElement=bitmap->referredElement->prev;
+        if (is_bmp) {
+            break;
+        }
+    }
     /*printf("bitmap_init: bitmapSize=%d\n", bitmapSize);*/
     for (i=1;i<bitmapSize;i++) {
         if (bitmap->referredElement==NULL) {

@@ -11,7 +11,7 @@
 #set -x
 
 GRIB_INFILE=${data_dir}/regular_gaussian_pressure_level_constant.grib2
-REF_FILE=lamb_az_eq_area.ref
+REF_FILE=grib_lamb_az_eq_area.ref
 
 # Temporary files created for this test
 FILTER_FILE=lamb_az_eq_area.filter

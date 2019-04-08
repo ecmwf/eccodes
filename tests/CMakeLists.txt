@@ -49,7 +49,7 @@ list( APPEND tests_no_data_reqd
     grib_calendar
     unit_tests
     md5
-    uerra
+    grib_uerra
     grib_2nd_order_numValues
     julian
     bufr_dump_samples
@@ -102,6 +102,7 @@ list( APPEND tests_data_reqd
     bufr_ecc-556
     gts_get
     gts_ls
+    gts_count
     gts_compare
     metar_ls
     metar_get
@@ -144,7 +145,7 @@ list( APPEND tests_data_reqd
     multi_from_message
     grib_change_scanning
     grib_statistics
-    tigge
+    grib_tigge
     read_any
     grib_dump
     grib_dump_debug
@@ -161,7 +162,7 @@ endif()
 if( ENABLE_EXTRA_TESTS )
     list(APPEND tests_data_reqd grib_util_set_spec)
     list(APPEND tests_data_reqd grib_padding)
-    list(APPEND tests_data_reqd tigge_conversions)
+    list(APPEND tests_data_reqd grib_tigge_conversions)
     list(APPEND tests_data_reqd bufr_dump_encode_C)
     list(APPEND tests_data_reqd bufr_dump_decode_C)
 endif()
@@ -216,11 +217,11 @@ endif()
 
 ###########################################
 # Note: the reference file is in the tests dir not data dir!
-ecbuild_add_test( TARGET eccodes_t_lamb_az_eq_area
+ecbuild_add_test( TARGET eccodes_t_grib_lamb_az_eq_area
                   TYPE SCRIPT
                   CONDITION ENABLE_EXTRA_TESTS
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lamb_az_eq_area.sh
-                  RESOURCES lamb_az_eq_area.ref
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_lamb_az_eq_area.sh
+                  RESOURCES grib_lamb_az_eq_area.ref
                   TEST_DEPENDS eccodes_download_gribs
 )
 

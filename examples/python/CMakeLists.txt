@@ -31,6 +31,7 @@ list( APPEND tests_basic
    grib_set_pv
    grib_read_sample
    bufr_read_sample
+   bufr_ecc-869
 )
 list( APPEND tests_extra
    grib_clone

@@ -31,6 +31,7 @@ static int count_messages(FILE* in, int message_type, unsigned long *count)
     /* printf("message_type=%d\n", message_type); */
     if (message_type == CODES_GRIB)        wmo_read=wmo_read_grib_from_file_malloc;
     else if (message_type == CODES_BUFR)   wmo_read=wmo_read_bufr_from_file_malloc;
+    else if (message_type == CODES_GTS)    wmo_read=wmo_read_gts_from_file_malloc;
     else                                   wmo_read=wmo_read_any_from_file_malloc;
     
     if (fail_on_error)
@@ -76,6 +77,7 @@ int main(int argc,char* argv[])
     
     if (strstr(argv[0], "grib_count")) message_type = CODES_GRIB;
     if (strstr(argv[0], "bufr_count")) message_type = CODES_BUFR;
+    if (strstr(argv[0], "gts_count"))  message_type = CODES_GTS;
 
     count_total=0;
     for (i=1;i<argc;i++) {
@@ -91,7 +93,7 @@ int main(int argc,char* argv[])
         if (strcmp(filename,"-")==0)
             infh=stdin;
         else
-            infh=fopen(filename,"r");
+            infh=fopen(filename,"rb");
         if (!infh) {
             perror(filename);
             exit(1);
