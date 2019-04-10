@@ -434,15 +434,15 @@ void LatLon::correctBoundingBox(util::BoundingBox& bbox, size_t& ni, size_t& nj,
 
 
 bool LatLon::samePoints(const param::MIRParametrisation& user, const param::MIRParametrisation& field) {
-    std::unique_ptr<const param::MIRParametrisation> same(new param::SameParametrisation(user, field, false));
+    std::unique_ptr<const param::MIRParametrisation> same(new param::SameParametrisation(user, field, true));
 
     std::vector<double> rotation;
-    if (!same->get("rotation", rotation) && user.has("rotation")) {
+    if (user.has("rotation") && !same->get("rotation", rotation)) {
         return false;
     }
 
     std::vector<double> grid;
-    if (!same->get("grid", grid) && user.has("grid")) {
+    if (user.has("grid") && !same->get("grid", grid)) {
         return false;
     }
 
@@ -450,7 +450,7 @@ bool LatLon::samePoints(const param::MIRParametrisation& user, const param::MIRP
     if (user.get("area", area)) {
         ASSERT(area.size() == 4);
 
-        util::Increments inc(grid[0], grid[1]);
+        util::Increments inc(field);
         size_t ni = 0;
         size_t nj = 0;
 
@@ -460,7 +460,7 @@ bool LatLon::samePoints(const param::MIRParametrisation& user, const param::MIRP
         util::BoundingBox bboxField(field);
         correctBoundingBox(bboxField, ni, nj, inc, {bboxField.south(), bboxField.west()});
 
-        PointLatLon ref{bboxField.south(), bboxField.east()};
+        PointLatLon ref{bboxField.south(), bboxField.west()};
 
         for (auto& lat : {bboxUser.south(), bboxUser.north()}) {
             for (auto& lon : {bboxUser.east(), bboxUser.west()}) {
