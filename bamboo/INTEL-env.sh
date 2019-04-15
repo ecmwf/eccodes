@@ -12,6 +12,8 @@ module unload fftw
 module unload libemos
 module unload metview
 
+module list
+
 module load cmake/3.10.2
 
 module switch gnu intel/17.0.3
