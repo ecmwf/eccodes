@@ -89,9 +89,10 @@ meta gaussianGridName gaussian_grid_name(N, Ni, isOctahedral);
 alias gridName=gaussianGridName;
 
 
-# Useful for sub-areas
-# meta numberOfExpectedPoints number_of_points_gaussian(Ni,Nj,PLPresent,pl,
-#    N,
-#    latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
-#    latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees) : dump;
+# For sub-areas
+# Uses new algorithm for counting. No support for legacy mode
+meta numberOfDataPointsExpected number_of_points_gaussian(Ni,Nj,PLPresent,pl,N,
+  latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+  latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,zero) : dump;
 
+meta legacyGaussSubarea evaluate(numberOfDataPoints != numberOfDataPointsExpected);
