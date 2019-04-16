@@ -383,6 +383,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         } else {
             if (doing_unexpandedDescriptors) {
                 fprintf(self->dumper.out,"\n    # Create the structure of the data section\n");
+                /* fprintf(self->dumper.out,"    codes_set(ibufr, 'skipExtraKeyAttributes', 1)\n"); */
             }
             fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s', ivalues)\n",a->name);
             if (doing_unexpandedDescriptors) fprintf(self->dumper.out,"\n");
@@ -395,6 +396,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         } else {
             if (doing_unexpandedDescriptors) {
                 fprintf(self->dumper.out,"\n    # Create the structure of the data section\n");
+                /* fprintf(self->dumper.out,"    codes_set(ibufr, 'skipExtraKeyAttributes', 1)\n"); */
             }
             fprintf(self->dumper.out,"    codes_set(ibufr, '%s', ",a->name);
         }
