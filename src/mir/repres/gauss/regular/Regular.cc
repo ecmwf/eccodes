@@ -33,7 +33,10 @@ namespace repres {
 namespace gauss {
 namespace regular {
 
-Regular::Regular(const param::MIRParametrisation& parametrisation) : Gaussian(parametrisation), Ni_(0), Nj_(0) {
+Regular::Regular(const param::MIRParametrisation& parametrisation) :
+    Gaussian(parametrisation),
+    Ni_(0),
+    Nj_(0) {
 
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox_.north();
@@ -48,8 +51,9 @@ Regular::Regular(const param::MIRParametrisation& parametrisation) : Gaussian(pa
     bbox_ = util::BoundingBox(n, w, s, e);
 
     eckit::Log::debug<LibMir>() << "Regular::Regular: BoundingBox:"
-                                << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
-
+                                << "\n\t   " << old
+                                << "\n\t > " << bbox_
+                                << std::endl;
     setNiNj();
 }
 

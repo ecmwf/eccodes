@@ -45,6 +45,8 @@ RotatedGG::~RotatedGG() = default;
 void RotatedGG::print(std::ostream& out) const {
     out << "RotatedGG["
             "N=" << N_
+        << ",Ni=" << Ni_
+        << ",Nj=" << Nj_
         << ",bbox=" << bbox_
         << ",rotation=" << rotation_
         << "]";
@@ -58,7 +60,7 @@ bool RotatedGG::sameAs(const Representation& other) const {
 
 
 Iterator* RotatedGG::iterator() const {
-    auto Ni = [=](size_t){ return long(4 * N_); };
+    auto Ni = [=](size_t){ return long(Ni_); };
     return Gaussian::rotatedIterator(Ni, rotation_);
 }
 
