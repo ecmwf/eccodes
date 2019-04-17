@@ -34,11 +34,11 @@ int main(int argc, char** argv)
     codes_handle* h;
     double *outlats,*outlons,*values,*lsm_values,*distances;
     int* indexes;
-    long step=0;
+    /*long step=0;
     char time[10]={0,};
     char date[10]={0,};
     long parameter=0;
-    size_t len=0;
+    size_t len=0;*/
     long iid=0;
     long *id=NULL;
     const int is_lsm = 1;
@@ -107,19 +107,20 @@ int main(int argc, char** argv)
         while ((h=codes_handle_new_from_file(0,fin,PRODUCT_GRIB,&ret))!=NULL) {
             codes_get_double_elements(h,"values",indexes,npoints,values);
 
+            /*
             CODES_CHECK(codes_get_length(h, "date", &len),0);
             codes_get_string(h,"date",date,&len);
             CODES_CHECK(codes_get_length(h, "time", &len),0);
             codes_get_string(h,"time",time,&len);
             codes_get_long(h,"step",&step);
             codes_get_long(h,"parameter",&parameter);
-
             printf("# %s %s %ld %ld\n",date,time,step,parameter);
+            */
             codes_handle_delete(h);
             for (i=0;i<npoints;i++)
-                printf("%ld %g %g %g %g\n",
+                printf("%ld %.2f %.2f %.2f %.2f %d\n",
                         id[i],outlats[i],outlons[i],
-                        lsm_values[i],values[i]);
+                        lsm_values[i],values[i], indexes[i]);
         }
 
         fclose(fin);
