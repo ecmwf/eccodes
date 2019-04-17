@@ -21,7 +21,7 @@ list( APPEND test_bins
       mars_param
       values_check
       box
-      points
+      grib_nearest_multiple
       grib_multi
       multi2
       grib_multi_write
@@ -83,7 +83,7 @@ list( APPEND tests_extra
    grib_set_bitmap
    grib_list
    grib_get_data
-   grib_points
+   grib_nearest_multiple
    set_missing
    bufr_attributes
    bufr_copy_data
