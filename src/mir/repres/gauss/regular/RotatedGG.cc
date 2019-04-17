@@ -16,6 +16,7 @@
 #include "mir/repres/gauss/regular/RotatedGG.h"
 
 #include <iostream>
+
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 
@@ -26,7 +27,7 @@ namespace gauss {
 namespace regular {
 
 
-RotatedGG::RotatedGG(const param::MIRParametrisation& parametrisation):
+RotatedGG::RotatedGG(const param::MIRParametrisation& parametrisation) :
     Regular(parametrisation),
     rotation_(parametrisation) {
 }
@@ -41,29 +42,35 @@ RotatedGG::RotatedGG(size_t N, const util::Rotation& rotation, const util::Bound
 RotatedGG::~RotatedGG() = default;
 
 
-const Gridded* RotatedGG::croppedRepresentation(const util::BoundingBox& bbox) const {
-    return new RotatedGG(N_, rotation_, bbox, angularPrecision_);
-}
-
-
 void RotatedGG::print(std::ostream& out) const {
     out << "RotatedGG["
-        <<  "N=" << N_
+            "N=" << N_
         << ",bbox=" << bbox_
         << ",rotation=" << rotation_
         << "]";
 }
 
 
-void RotatedGG::makeName(std::ostream& out) const {
-    Regular::makeName(out);
-    rotation_.makeName(out);
+bool RotatedGG::sameAs(const Representation& other) const {
+    auto o = dynamic_cast<const RotatedGG*>(&other);
+    return o && (rotation_ == o->rotation_) && Regular::sameAs(other);
 }
 
 
-bool RotatedGG::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const RotatedGG*>(&other);
-    return o && (rotation_ == o->rotation_) && RotatedGG::sameAs(other);
+Iterator* RotatedGG::iterator() const {
+    auto Ni = [=](size_t){ return long(4 * N_); };
+    return Gaussian::rotatedIterator(Ni, rotation_);
+}
+
+
+const Gridded* RotatedGG::croppedRepresentation(const util::BoundingBox& bbox) const {
+    return new RotatedGG(N_, rotation_, bbox, angularPrecision_);
+}
+
+
+void RotatedGG::makeName(std::ostream& out) const {
+    Regular::makeName(out);
+    rotation_.makeName(out);
 }
 
 
@@ -80,12 +87,6 @@ void RotatedGG::fill(api::MIRJob& job) const  {
 }
 
 
-Iterator* RotatedGG::iterator() const {
-    auto Ni = [=](size_t){ return long(4 * N_); };
-    return Gaussian::unrotatedIterator(Ni);
-}
-
-
 atlas::Grid RotatedGG::atlasGrid() const {
     return rotation_.rotate(Regular::atlasGrid());
 }
@@ -96,7 +97,7 @@ static RepresentationBuilder<RotatedGG> rotatedGG("rotated_gg"); // Name is what
 }
 
 
-}  // namespace reduced
+}  // namespace regular
 }  // namespace gauss
 }  // namespace repres
 }  // namespace mir
