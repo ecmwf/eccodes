@@ -943,6 +943,7 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
     }
     else {
         lval=round(value/modifiedFactor)-modifiedReference;
+        if (c->debug) grib_context_log(c, GRIB_LOG_DEBUG, "encode_double_value %s: value=%.15f lval=%lu\n", bd->shortName,value,lval);
         grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
     }
 
