@@ -21,6 +21,7 @@ list( APPEND test_bins
       mars_param
       values_check
       box
+      points
       grib_multi
       multi2
       grib_multi_write
