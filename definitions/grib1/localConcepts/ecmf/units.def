@@ -3324,6 +3324,11 @@
 	 table2Version = 131 ;
 	 indicatorOfParameter = 99 ;
 	}
+#10 metre wind gust of at least 10 m/s
+'%' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 100 ;
+	}
 #Convective available potential energy shear index
 '(-1 to 1)' = {
 	 table2Version = 132 ;
