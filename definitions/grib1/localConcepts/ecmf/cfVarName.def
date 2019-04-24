@@ -3314,6 +3314,21 @@
 	 table2Version = 131 ;
 	 indicatorOfParameter = 97 ;
 	}
+#Total precipitation of at least 25 mm
+'tpg25' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 98 ;
+	}
+#Total precipitation of at least 50 mm
+'tpg50' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 99 ;
+	}
+#10 metre wind gust of at least 10 m/s
+'fgg1010' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 100 ;
+	}
 #Convective available potential energy shear index
 'capesi' = {
 	 table2Version = 132 ;
