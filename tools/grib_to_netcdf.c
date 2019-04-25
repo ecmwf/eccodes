@@ -29,7 +29,9 @@
 #include <stdint.h>
 #endif
 
-const char* grib_tool_description = "Convert a GRIB file to netCDF format.";
+const char* grib_tool_description = "Convert a GRIB file to netCDF format."
+        "\n\tNote: The GRIB geometry should be a regular lat/lon grid or a regular Gaussian grid"
+        "\n\t(the key \"typeOfGrid\" should be \"regular_ll\" or \"regular_gg\")";
 const char* grib_tool_name = "grib_to_netcdf";
 const char* grib_tool_usage = "[options] grib_file grib_file ... ";
 static char argvString[2048] = {0,};
