@@ -1,21 +1,11 @@
-# Copyright 2005-2019 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
 # START grib1::section
 # SECTION 4, Binary data section
 #  Length of section
-# (octets)
 position offsetSection4;
 
 # Due to a trick done by GRIBEX to support large GRIBs, we need a special treatment
 # of the message length and of the section4 lenth, so instead of
-# section_length[3] section4Length                     ;
+# section_length[3] section4Length;
 # we get:
 g1_section4_length[3] section4Length(totalLength);
 
@@ -252,4 +242,3 @@ if (complexPacking==0 || sphericalHarmonics==1) {
 
 meta md5Section4 md5(offsetSection4,section4Length);
 alias md5DataSection = md5Section4;
-

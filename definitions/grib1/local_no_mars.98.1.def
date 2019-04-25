@@ -1,12 +1,3 @@
-# Copyright 2005-2019 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
 # START 1/local.98.1 ----------------------------------------------------------------------
 # LOCAL 98 1
 #
@@ -73,6 +64,3 @@ if (stepType is "instant" ) {
 # monthly mean
 #if (timeRangeIndicator==113) {
 #}
-
-
-# END   1/local.98.1 ----------------------------------------------------------------------
