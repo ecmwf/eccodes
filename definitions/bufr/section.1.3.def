@@ -1,12 +1,4 @@
 # Copyright 2005-2019 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
 
 position offsetSection1;
 section_length[3] section1Length ;
@@ -18,7 +10,7 @@ codetable[1] bufrHeaderCentre    'common/c-1.table' : dump;
 
 unsigned[1]  updateSequenceNumber :dump;
 
-flags[1]     section1Flags 'bufr/section1_flags.table' = 128 : hidden ; # = section 2 present
+flags[1] section1Flags 'bufr/section1_flags.table' = 128 : hidden ; # = section 2 present
 
 unsigned[1] dataCategory : dump;
 unsigned[1] dataSubCategory : dump;
@@ -42,11 +34,8 @@ meta ls.typicalTime sprintf("%.2d%.2d%.2d",typicalHour,typicalMinute,typicalSeco
 
 meta typicalDateTime julian_date(typicalYear,typicalMonth,typicalDay,typicalHour,typicalMinute,typicalSecond) ;
 
-
 alias ls.centre=bufrHeaderCentre;
 alias ls.masterTablesVersionNumber=masterTablesVersionNumber;
 alias ls.localTablesVersionNumber=localTablesVersionNumber;
 
-
 section_padding section1Padding;
-
