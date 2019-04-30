@@ -14,6 +14,7 @@
 
 
 #include "grib_api_internal.h"
+#include <float.h>
 #include <math.h>
 
 /*
@@ -126,58 +127,33 @@ static size_t count_subarea_points(grib_handle* h, get_reduced_row_proc get_redu
     return result;
 }
 
-/* ECC-747 */
-static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib_handle* h,
+/* Search for 'x' in the array 'xx' (the index of last element being 'n') and return index in 'j' */
+static void binary_search(double xx[], const unsigned long n, double x, long *j)
+{
+    /*This routine works only on descending ordered arrays*/
+#define EPSILON 1e-3
+
+    unsigned long ju,jm,jl;
+    jl=0;
+    ju=n;
+    while (ju-jl > 1) {
+        jm=(ju+jl) >> 1;
+        if (fabs(x-xx[jm]) < EPSILON) {
+            /* found something close enough. We're done */
+            *j=jm;
+            return;
+        }
+        if (x < xx[jm]) jl=jm;
+        else ju=jm;
+    }
+    *j=jl;
+}
+
+/* Use legacy way to compute the iterator latitude/longitude values */
+static int iterate_reduced_gaussian_subarea_legacy(grib_iterator* iter, grib_handle* h,
         double lat_first, double lon_first,
         double lat_last, double lon_last,
         double* lats, long* pl, size_t plsize)
-{
-    int err = 0;
-    int l = 0;
-    size_t j = 0;
-    long row_count=0, i=0;
-    double d=0;
-    double olon_first, olon_last;
-    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
-    get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;
-
-    if (h->context->debug) {
-        const size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
-        printf("ECCODES DEBUG grib_iterator_class_gaussian_reduced: sub-area num points=%ld\n", (long)np);
-    }
-
-    /*find starting latitude */
-    d = fabs(lats[0] - lats[1]);
-    while (fabs(lat_first-lats[l]) > d ) {l++;}
-
-    iter->e=0;
-    for (j=0;j<plsize;j++) {
-        const double delta = 360.0/pl[j];
-        row_count=0;
-        grib_get_reduced_row_p(pl[j],lon_first,lon_last, &row_count,&olon_first,&olon_last);
-        for(i=0; i<row_count; ++i) {
-            double lon2 = olon_first + i * delta;
-            if(iter->e >= iter->nv){
-                /* Only print error message on the second pass */
-                size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
-                grib_context_log(h->context,GRIB_LOG_ERROR,
-                                 "Reduced Gaussian iterator (sub-area). Num points=%ld, size(values)=%ld", np, iter->nv);
-                return GRIB_WRONG_GRID;
-            }
-            self->los[iter->e]=lon2;
-            self->las[iter->e]=lats[j+l];
-            iter->e++;
-        }
-    }
-    return err;
-}
-
-#if 0
-/* ECC-445: Try to compute the iterator latitude/longitude values. If algorithm2 is set, try a different point count */
-static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
-        double lat_first, double lon_first,
-        double lat_last, double lon_last,
-        double* lats, long* pl, size_t plsize, int algorithm2)
 {
     int err = 0;
     int l = 0;
@@ -187,13 +163,11 @@ static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
     long ilon_first, ilon_last, i;
     grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
     get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;
-    if (algorithm2) {
-        get_reduced_row = &grib_get_reduced_row2; /* switch to 2nd algorithm */
-    }
+    get_reduced_row = &grib_get_reduced_row_legacy; /* legacy algorithm */
 
     if (h->context->debug) {
         const size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
-        printf("ECCODES DEBUG grib_iterator_class_gaussian_reduced: sub-area num points=%ld\n", (long)np);
+        printf("ECCODES DEBUG grib_iterator_class_gaussian_reduced: Legacy sub-area num points=%ld\n", (long)np);
     }
 
     /*find starting latitude */
@@ -210,12 +184,9 @@ static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
         for (i=ilon_first;i<=ilon_last;i++) {
 
             if(iter->e >= iter->nv){
-                if (algorithm2) {
-                    /* Only print error message on the second pass */
-                    size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
-                    grib_context_log(h->context,GRIB_LOG_ERROR,
-                                     "Reduced Gaussian iterator (sub-area). Num points=%ld, size(values)=%ld", np, iter->nv);
-                }
+                size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
+                grib_context_log(h->context,GRIB_LOG_ERROR,
+                                 "Reduced Gaussian iterator (sub-area legacy). Num points=%ld, size(values)=%ld", np, iter->nv);
                 return GRIB_WRONG_GRID;
             }
 
@@ -231,14 +202,80 @@ static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
     }
     return err;
 }
+
+/* ECC-747 */
+static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib_handle* h,
+        double lat_first, double lon_first,
+        double lat_last, double lon_last,
+        double* lats, long* pl, size_t plsize, size_t numlats)
+{
+    int err = 0;
+    long l = 0;
+    size_t j = 0;
+    long row_count=0, i=0;
+    double olon_first, olon_last;
+    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
+    get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;
+
+    if (h->context->debug) {
+        const size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
+        printf("ECCODES DEBUG grib_iterator_class_gaussian_reduced: sub-area num points=%ld\n", (long)np);
+    }
+
+    /* Find starting latitude */
+    binary_search(lats, numlats-1, lat_first, &l);
+    Assert(l < numlats);
+
+#if 0
+    for(il=0; il<numlats; ++il) {
+        const double diff = fabs(lat_first-lats[il]);
+        if (diff < min_d) {
+            min_d = diff;
+            l = il; /* index of the latitude */
+        }
+    }
 #endif
+
+    iter->e=0;
+    for (j=0;j<plsize;j++) {
+        const double delta = 360.0/pl[j];
+        row_count=0;
+        grib_get_reduced_row_p(pl[j],lon_first,lon_last, &row_count,&olon_first,&olon_last);
+        for(i=0; i<row_count; ++i) {
+            double lon2 = olon_first + i * delta;
+            if(iter->e >= iter->nv){
+                /* Only print error message on the second pass */
+                size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
+                grib_context_log(h->context,GRIB_LOG_ERROR,
+                                 "Reduced Gaussian iterator (sub-area). Num points=%ld, size(values)=%ld", np, iter->nv);
+                return GRIB_WRONG_GRID;
+            }
+            self->los[iter->e]=lon2;
+            DebugAssert(j+l < numlats);
+            self->las[iter->e]=lats[j+l];
+            iter->e++;
+        }
+    }
+
+    if (iter->e != iter->nv) {
+        /* Fewer counted points in the sub-area than the number of data values */
+        const size_t legacy_count = count_subarea_points(h, grib_get_reduced_row_legacy, pl, plsize, lon_first, lon_last);
+        if (iter->nv == legacy_count) {
+            /* Legacy (produced by PRODGEN/LIBEMOS) */
+            return iterate_reduced_gaussian_subarea_legacy(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
+        } else {
+            /* TODO: A gap exists! Not all values can be mapped. Inconsistent grid or error in calculating num. points! */
+        }
+    }
+    return err;
+}
 
 static int iterate_reduced_gaussian_subarea_wrapper(grib_iterator* iter, grib_handle* h,
         double lat_first, double lon_first,
         double lat_last, double lon_last,
-        double* lats, long* pl, size_t plsize)
+        double* lats, long* pl, size_t plsize, size_t numlats)
 {
-    return iterate_reduced_gaussian_subarea_algorithm2(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
+    return iterate_reduced_gaussian_subarea_algorithm2(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
 
 #if 0
     /* Try legacy approach, if that fails try the next algorithm */
@@ -258,6 +295,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     double angular_precision = 1.0/1000000.0;
     double* lats;
     size_t plsize=0;
+    size_t numlats=0;
     long* pl;
     long max_pl=0;
     long nj=0,order=0,i;
@@ -291,7 +329,8 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         if (editionNumber == 1) angular_precision = 1.0/1000;
     }
 
-    lats=(double*)grib_context_malloc(h->context,sizeof(double)*order*2);
+    numlats = order*2;
+    lats=(double*)grib_context_malloc(h->context,sizeof(double)*numlats);
     if (!lats) return GRIB_OUT_OF_MEMORY;
     if((ret = grib_get_gaussian_latitudes(order, lats)) != GRIB_SUCCESS)
         return ret;
@@ -323,7 +362,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     is_global = is_gaussian_global(lat_first, lat_last, lon_first, lon_last, max_pl, lats, angular_precision);
     if ( !is_global ) {
         /*sub area*/
-        ret = iterate_reduced_gaussian_subarea_wrapper(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
+        ret = iterate_reduced_gaussian_subarea_wrapper(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
     } else {
         /*global*/
         iter->e=0;
@@ -340,7 +379,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
                     /*grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (global)");*/
                     /*return GRIB_WRONG_GRID;*/
                     /*Try now as NON-global*/
-                    ret = iterate_reduced_gaussian_subarea_wrapper(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
+                    ret = iterate_reduced_gaussian_subarea_wrapper(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
                     if (ret !=GRIB_SUCCESS) grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (global)");
                     goto finalise;
                 }

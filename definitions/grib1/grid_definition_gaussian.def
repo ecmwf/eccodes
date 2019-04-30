@@ -52,10 +52,17 @@ meta global global_gaussian(N,Ni,iDirectionIncrement,
                             longitudeOfLastGridPoint,
                             PLPresent,pl) = 0 : dump;
 
-meta numberOfDataPoints number_of_points_gaussian(Ni,Nj,PLPresent,pl,
-  N,
+# With legacy mode support
+meta numberOfDataPoints number_of_points_gaussian(Ni,Nj,PLPresent,pl,N,
   latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
-  latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees) : dump;
+  latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,one) : dump;
+
+# Use the new algorithm for counting. No support for legacy mode
+meta numberOfDataPointsExpected number_of_points_gaussian(Ni,Nj,PLPresent,pl,N,
+  latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+  latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,zero) : dump;
+
+meta legacyGaussSubarea evaluate(numberOfDataPoints != numberOfDataPointsExpected);
 
 alias numberOfPoints=numberOfDataPoints;
 # alias numberOfExpectedPoints=numberOfDataPoints;
@@ -96,4 +103,3 @@ meta isOctahedral octahedral_gaussian(N, Ni, PLPresent, pl) = 0 : no_copy,dump;
 
 meta gaussianGridName gaussian_grid_name(N, Ni, isOctahedral);
 alias gridName=gaussianGridName;
-
