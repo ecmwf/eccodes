@@ -8,7 +8,8 @@ import binascii
 assert len(sys.argv) > 2
 
 # For now exclude GRIB3 as it is still experimental
-EXCLUDED = ['grib3']
+# The BUFR codetables is not used in the engine
+EXCLUDED = ['grib3', 'codetables']
 
 dirs = [os.path.realpath(x) for x in sys.argv[1:-1]]
 print(dirs)
