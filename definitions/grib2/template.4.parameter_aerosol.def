@@ -1,11 +1,4 @@
 # Copyright 2005-2019 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
 
 #  Parameter category
 codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) : dump;
@@ -54,4 +47,3 @@ codetable[1] stepUnits 'stepUnits.table' = defaultStepUnits : transient,dump,no_
 
 #  Forecast time in units defined by octet 18 (GRIB-29: supports negative forecast time)
 signed[4] forecastTime  : dump;
-

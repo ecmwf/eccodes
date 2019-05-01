@@ -1,11 +1,4 @@
 # Copyright 2005-2019 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
 
 # TEMPLATE 3.12, Transverse Mercator
 
@@ -76,4 +69,3 @@ meta geography.X2InGridLengths scale(X2,one,hundred) : dump;
 # y2 - j-direction coordinate of the last grid point in units of 10-2 m
 signed[4] Y2 : no_copy;
 meta geography.Y2InGridLengths scale(Y2,one,hundred) : dump;
-

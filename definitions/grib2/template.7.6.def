@@ -1,15 +1,7 @@
 # Copyright 2005-2019 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
 
 # TEMPLATE 7.6, Grid point data - simple packing with preprocessing
-# Octets 6-nn : Binary data values - binary string, with each
-# (scaled)
+# Octets 6-nn : Binary data values - binary string, with each (scaled)
 
 meta codedValues data_g2simple_packing_with_preprocessing(
         section7Length,
@@ -29,11 +21,11 @@ meta codedValues data_g2simple_packing_with_preprocessing(
   ): read_only;
 
 meta values data_apply_bitmap(codedValues,
-                                bitmap,
-                                missingValue,
-                                binaryScaleFactor,
-                                numberOfDataPoints,
-                                numberOfValues) : dump;
+                              bitmap,
+                              missingValue,
+                              binaryScaleFactor,
+                              numberOfDataPoints,
+                              numberOfValues) : dump;
 
 alias data.packedValues = codedValues;
 
