@@ -60,7 +60,7 @@ bool RotatedGG::sameAs(const Representation& other) const {
 
 
 Iterator* RotatedGG::iterator() const {
-    auto Ni = [=](size_t){ return long(Ni_); };
+    auto Ni = [=](size_t){ return long(4 * N_); };
     return Gaussian::rotatedIterator(Ni, rotation_);
 }
 
