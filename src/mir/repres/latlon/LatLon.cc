@@ -21,6 +21,7 @@
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
+#include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 
 #include "mir/api/Atlas.h"
@@ -202,12 +203,13 @@ size_t LatLon::numberOfPoints() const {
 
 
 bool LatLon::getLongestElementDiagonal(double& d) const {
-    const Latitude& sn = increments_.south_north().latitude();
-    const Longitude& we = increments_.west_east().longitude();
+    auto snHalf = increments_.south_north().latitude().value() / 2.;
+    ASSERT(!eckit::types::is_approximately_equal(snHalf, 0.));
 
-    d = atlas::util::Earth::distance(
-                atlas::PointLonLat(0., 0.),
-                atlas::PointLonLat(we.value(), sn.value()) );
+    auto weHalf = increments_.west_east().longitude().value() / 2.;
+    ASSERT(!eckit::types::is_approximately_equal(weHalf, 0.));
+
+    d = 2. * atlas::util::Earth::distance({0., 0.}, {weHalf, snHalf});
     return true;
 }
 

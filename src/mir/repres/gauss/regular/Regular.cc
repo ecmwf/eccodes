@@ -15,18 +15,21 @@
 
 #include "mir/repres/gauss/regular/Regular.h"
 
+#include <cmath>
 #include <memory>
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
+#include "eckit/types/FloatCompare.h"
 #include "eckit/utils/MD5.h"
+
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
-#include <cmath>
+
 
 namespace mir {
 namespace repres {
@@ -153,11 +156,16 @@ size_t Regular::numberOfPoints() const {
 }
 
 bool Regular::getLongestElementDiagonal(double& d) const {
-    eckit::Fraction inc = getSmallestIncrement();
+    ASSERT(N_);
 
-    double l = inc / 2;
-    d = atlas::util::Earth::distance(atlas::PointLonLat(-l, -l), atlas::PointLonLat(l, l));
+    auto& lats = latitudes();
+    auto snHalf = 0.5 * (lats[N_ - 1] - lats[N_]);
+    ASSERT(!eckit::types::is_approximately_equal(snHalf, 0.));
 
+    auto weHalf = double(getSmallestIncrement() / 2);
+    ASSERT(!eckit::types::is_approximately_equal(weHalf, 0.));
+
+    d = 2. * atlas::util::Earth::distance({0., 0.}, {weHalf, snHalf});
     return true;
 }
 

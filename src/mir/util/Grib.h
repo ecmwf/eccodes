@@ -9,16 +9,16 @@
  */
 
 /// @author Baudouin Raoult
-/// @date Apr 2015
+/// @author Pedro Maciel
 
 
-#ifndef Grib_H
-#define Grib_H
-
-#include "eckit/exception/Exceptions.h"
-#include "eckit/types/FloatCompare.h"
+#ifndef mir_util_Grib_h
+#define mir_util_Grib_h
 
 #include <eccodes.h>
+
+#include "eckit/exception/Exceptions.h"
+
 
 inline bool grib_call(int e, const char *call, bool missingOK = false) {
     if (e) {
@@ -39,6 +39,7 @@ inline bool grib_call(int e, const char *call, bool missingOK = false) {
 
 #define GRIB_GET(a) grib_call(a, #a, true)
 
+
 struct grib_info {
     grib_util_grid_spec grid;
     grib_util_packing_spec packing;
@@ -53,6 +54,7 @@ public:
         grib_handle_delete(h_);
     }
 };
+
 
 class GKeyIteratorDeleter {
     grib_keys_iterator *h_;
@@ -72,6 +74,7 @@ public:
         codes_bufr_keys_iterator_delete(h_);
     }
 };
+
 
 #endif
 
