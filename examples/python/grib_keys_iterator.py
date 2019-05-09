@@ -38,7 +38,7 @@ def example():
         # codes_skip_function(iterid)
 
         while codes_keys_iterator_next(iterid):
-            keyname = codes_keys_iterator_get_name(iterid)
+            keyname = codes_keys_iterator_get_name(gid)
             keyval = codes_get_string(gid, keyname)
             print("%s = %s" % (keyname, keyval))
 
