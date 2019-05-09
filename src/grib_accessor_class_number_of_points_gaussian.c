@@ -32,6 +32,7 @@
    MEMBERS = const char* lon_first
    MEMBERS = const char* lat_last
    MEMBERS = const char* lon_last
+   MEMBERS = const char* support_legacy
    END_CLASS_DEF
  */
 
@@ -63,6 +64,7 @@ typedef struct grib_accessor_number_of_points_gaussian {
 	const char* lon_first;
 	const char* lat_last;
 	const char* lon_last;
+	const char* support_legacy;
 } grib_accessor_number_of_points_gaussian;
 
 extern grib_accessor_class* grib_accessor_class_long;
@@ -167,6 +169,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     self->lon_first = grib_arguments_get_name(h,c,n++);
     self->lat_last = grib_arguments_get_name(h,c,n++);
     self->lon_last = grib_arguments_get_name(h,c,n++);
+    self->support_legacy = grib_arguments_get_name(h,c,n++);
     a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
     a->length=0;
@@ -303,7 +306,132 @@ static int get_number_of_data_values(grib_handle* h, size_t* numDataValues)
     return err;
 }
 
+static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t *len);
+static int unpack_long_new(grib_accessor* a, long* val, size_t *len);
+
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
+{
+    int ret=GRIB_SUCCESS;
+    long support_legacy=1;
+    grib_accessor_number_of_points_gaussian* self = (grib_accessor_number_of_points_gaussian*)a;
+    grib_handle* h = grib_handle_of_accessor(a);
+
+    if((ret = grib_get_long_internal(h, self->support_legacy,&support_legacy)) != GRIB_SUCCESS)
+        return ret;
+    if (support_legacy==1) return unpack_long_with_legacy_support(a, val, len);
+    else                   return unpack_long_new(a, val, len);
+}
+
+/* New algorithm */
+static int unpack_long_new(grib_accessor* a, long* val, size_t *len)
+{
+    int ret=GRIB_SUCCESS;
+    int is_global = 0;
+    long ni=0,nj=0,plpresent=0,order=0;
+    size_t plsize=0;
+    double* lats={0,};
+    double lat_first,lat_last,lon_first,lon_last;
+    long* pl=NULL;
+    long* plsave=NULL;
+    long row_count;
+    long ilon_first=0,ilon_last=0;
+    double angular_precision = 1.0/1000000.0;
+    long editionNumber = 0;
+    grib_handle* h = grib_handle_of_accessor(a);
+
+    grib_accessor_number_of_points_gaussian* self = (grib_accessor_number_of_points_gaussian*)a;
+    grib_context* c=a->context;
+
+    if((ret = grib_get_long_internal(h, self->ni,&ni)) != GRIB_SUCCESS)
+        return ret;
+
+    if((ret = grib_get_long_internal(h, self->nj,&nj)) != GRIB_SUCCESS)
+        return ret;
+
+    if((ret = grib_get_long_internal(h, self->plpresent,&plpresent)) != GRIB_SUCCESS)
+        return ret;
+
+    if (nj == 0) return GRIB_GEOCALCULUS_PROBLEM;
+
+    if (grib_get_long(h, "editionNumber", &editionNumber)==GRIB_SUCCESS) {
+        if (editionNumber == 1) angular_precision = 1.0/1000;
+    }
+
+    if (plpresent) {
+        long max_pl=0;
+        float d = 0;
+        int j=0;
+        double lon_first_row=0,lon_last_row=0;
+
+        /*reduced*/
+        if((ret = grib_get_long_internal(h, self->order,&order)) != GRIB_SUCCESS)
+            return ret;
+        if((ret = grib_get_double_internal(h, self->lat_first,&lat_first)) != GRIB_SUCCESS)
+            return ret;
+        if((ret = grib_get_double_internal(h, self->lon_first,&lon_first)) != GRIB_SUCCESS)
+            return ret;
+        if((ret = grib_get_double_internal(h, self->lat_last,&lat_last)) != GRIB_SUCCESS)
+            return ret;
+        if((ret = grib_get_double_internal(h, self->lon_last,&lon_last)) != GRIB_SUCCESS)
+            return ret;
+
+        lats=(double*)grib_context_malloc(a->context,sizeof(double)*order*2);
+        if((ret = grib_get_gaussian_latitudes(order, lats)) != GRIB_SUCCESS)
+            return ret;
+
+        if((ret = grib_get_size(h,self->pl,&plsize)) != GRIB_SUCCESS)
+            return ret;
+
+        pl=(long*)grib_context_malloc_clear(c,sizeof(long)*plsize);
+        plsave=pl;
+        grib_get_long_array_internal(h,self->pl,pl, &plsize);
+
+        if (lon_last<0) lon_last+=360;
+        if (lon_first<0) lon_first+=360;
+
+        /* Find the maximum element of "pl" array, do not assume it's 4*N! */
+        /* This could be an Octahedral Gaussian Grid */
+        max_pl = pl[0];
+        for (j=1; j<plsize; j++) {
+            if (pl[j] > max_pl) max_pl = pl[j];
+        }
+
+        d=fabs(lats[0]-lats[1]);
+        is_global = 0; /* ECC-445 */
+
+        correctWestEast(max_pl, angular_precision, &lon_first, &lon_last);
+
+        if ( !is_global ) {
+            /*sub area*/
+            (void)d;
+            *val=0;
+            for (j=0;j<nj;j++) {
+                row_count=0;
+                grib_get_reduced_row_wrapper(h, pl[j],lon_first,lon_last,&row_count,&ilon_first,&ilon_last);
+                lon_first_row=((ilon_first)*360.0)/pl[j];
+                lon_last_row=((ilon_last)*360.0)/pl[j];
+                *val+=row_count;
+                (void)lon_last_row;
+                (void)lon_first_row;
+            }
+        } else {
+            int i = 0;
+            *val=0;
+            for (i=0;i<plsize;i++) *val+=pl[i];
+        }
+    } else {
+        /*regular*/
+        *val=ni*nj;
+    }
+    if (lats) grib_context_free(c,lats);
+    if (plsave) grib_context_free(c,plsave);
+
+    return ret;
+}
+
+
+/* With Legacy support */
+static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t *len)
 {
     int ret=GRIB_SUCCESS;
     int is_global = 0;
@@ -437,7 +565,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     if (get_number_of_data_values(h, &numDataValues) == GRIB_SUCCESS) {
         if (*val != numDataValues) {
             if (h->context->debug)
-                printf("ECCODES DEBUG number_of_points_gaussian: LEGACY MODE activated. Count(=%ld) changed to size(values)\n",*val);
+                printf("ECCODES DEBUG number_of_points_gaussian: LEGACY MODE activated. "
+                       "Count(=%ld) changed to num values(=%ld)\n",*val,(long)numDataValues);
             *val = numDataValues;
         }
     }
