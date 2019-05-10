@@ -496,17 +496,19 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     grib_error* e=error_summary;
     int err=0;
     grib_context* c=grib_context_get_default();
-    error+=morein1+morein2;
 
     /*if (grib_options_on("w:")) return 0;*/
 
-    if (error) {
-        printf("\n## ERRORS SUMMARY #######\n");
-    }
     while ((global_handle=grib_handle_new_from_file(c,options->infile_extra->file,&err))) {
         morein1++;
         if (global_handle) grib_handle_delete(global_handle);
     }
+
+    error+=morein1+morein2;
+    if (error) {
+        printf("\n## ERRORS SUMMARY #######\n");
+    }
+
     if (morein1>0) {
         printf("##\n## Different number of messages \n");
         printf("## %d more messages in %s than in %s\n",morein1,
@@ -532,7 +534,6 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         grib_index_delete(options->index1);
         grib_index_delete(options->index2);
     }
-
 
     if (error !=0) exit(1);
     return 0;
