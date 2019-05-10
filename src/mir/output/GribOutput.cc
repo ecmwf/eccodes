@@ -49,18 +49,6 @@ static eckit::Mutex local_mutex;
 #define Y(a) oss << " " << #a << "=" << a
 
 
-class HandleFree {
-    grib_handle *h_;
-public:
-    HandleFree(grib_handle *h): h_(h) {}
-    ~HandleFree() {
-        if (h_) {
-            grib_handle_delete(h_);
-        }
-    }
-};
-
-
 void eccodes_assertion(const char* message) {
     throw eckit::SeriousBug(message);
 }
@@ -397,7 +385,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
         codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
         grib_handle *result = grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
-        HandleFree hf(result); // Make sure handle deleted even in case of exception
+        HandleDeleter hf(result); // Make sure handle deleted even in case of exception
 
 
         if (err == GRIB_WRONG_GRID) {

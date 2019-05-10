@@ -50,29 +50,29 @@ class HandleDeleter {
     grib_handle *h_;
 public:
     HandleDeleter(grib_handle *h) : h_(h) {}
-    ~HandleDeleter() {
-        grib_handle_delete(h_);
-    }
+    HandleDeleter(const HandleDeleter&) = delete;
+    void operator=(const HandleDeleter&) = delete;
+    ~HandleDeleter() { grib_handle_delete(h_); }
 };
 
 
 class GKeyIteratorDeleter {
     grib_keys_iterator *h_;
 public:
-    GKeyIteratorDeleter(grib_keys_iterator *h) : h_(h) {}
-    ~GKeyIteratorDeleter() {
-        grib_keys_iterator_delete(h_);
-    }
+    GKeyIteratorDeleter(grib_keys_iterator* h) : h_(h) {}
+    GKeyIteratorDeleter(const GKeyIteratorDeleter&) = delete;
+    void operator=(const GKeyIteratorDeleter&) = delete;
+    ~GKeyIteratorDeleter() { grib_keys_iterator_delete(h_); }
 };
 
 
 class BKeyIteratorDeleter {
     bufr_keys_iterator *h_;
 public:
-    BKeyIteratorDeleter(bufr_keys_iterator *h) : h_(h) {}
-    ~BKeyIteratorDeleter() {
-        codes_bufr_keys_iterator_delete(h_);
-    }
+    BKeyIteratorDeleter(bufr_keys_iterator* h) : h_(h) {}
+    BKeyIteratorDeleter(const BKeyIteratorDeleter&) = delete;
+    void operator=(const BKeyIteratorDeleter&) = delete;
+    ~BKeyIteratorDeleter() { codes_bufr_keys_iterator_delete(h_); }
 };
 
 
