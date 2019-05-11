@@ -59,6 +59,12 @@ LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
     ASSERT(parametrisation.get("Ni", ni));
     ASSERT(parametrisation.get("Nj", nj));
 
+    eckit::Log::debug<LibMir>()
+        << "LatLon:"
+            "\n\t" "(Ni, Nj) = (" << ni_ << ", " << nj_ << ") calculated"
+            "\n\t" "(Ni, Nj) = (" << ni << ", " << nj << ") from parametrisation"
+        << std::endl;
+
     ASSERT(ni == ni_);
     ASSERT(nj == nj_);
 }
