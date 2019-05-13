@@ -39,7 +39,7 @@ meta codedValues data_g2bifourier_packing(
           biFourierResolutionParameterN,
           biFourierResolutionParameterM,
           biFourierSubTruncationType,
-          biFourierDoNotPackAxes,
+          biFourierPackingModeForAxes,
           biFourierMakeTemplate,
 
           numberOfValues

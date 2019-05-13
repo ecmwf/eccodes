@@ -7,16 +7,15 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
-
 # TEMPLATE 5.53, BiFourier coefficients data - complex packing
 
 include "grib2/template.5.packing.def";
 
 transient computeLaplacianOperator=1 : hidden;
 
-codetable[1] biFourierSubTruncationType ('3.99.table',masterDir,localDir) : dump;
-unsigned[1] biFourierDoNotPackAxes = 0 : dump;
+codetable[1] biFourierSubTruncationType ('5.25.table',masterDir,localDir) : dump;
+codetable[1] biFourierPackingModeForAxes ('5.26.table',masterDir,localDir) = 0 : dump;
+# biFourierDoNotPackAxes
 
 constant laplacianScalingFactorUnset  = -2147483647;
 signed[4] laplacianScalingFactor : edition_specific ;
@@ -27,8 +26,10 @@ meta  laplacianOperatorIsSet    evaluate(laplacianScalingFactor != laplacianScal
 unsigned[2] biFourierResolutionSubSetParameterN ;
 unsigned[2] biFourierResolutionSubSetParameterM ;
 
+# TODO. Need to fix up the sample file samples/lambert_bf_grib2.tmpl
+#unsigned[4] totalNumberOfValuesInUnpackedSubset = 0 : dump;
+
 # This is read_only until we support other values
 codetable[1] unpackedSubsetPrecision ('5.7.table',masterDir,localDir) = 1 : dump;
 
 alias precisionOfTheUnpackedSubset=unpackedSubsetPrecision;
-

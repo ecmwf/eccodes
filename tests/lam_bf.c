@@ -652,21 +652,19 @@ static void rectfromellipse (double * vr, const double * ve, int nsmax, int nmsm
     {
       double xi = (double)i / (double)nsmax;
       double xj = (double)j / (double)nmsmax;
-      if (xi * xi + xj * xj < 1)
-        {
+      if (xi * xi + xj * xj < 1) {
           vr[kr+0] = ve[ke+0];
           vr[kr+1] = ve[ke+1];
           vr[kr+2] = ve[ke+2];
           vr[kr+3] = ve[ke+3];
-	  ke += 4;
-        }
-      else
-        {
+          ke += 4;
+      }
+      else {
           vr[kr+0] = 0.;
           vr[kr+1] = 0.;
           vr[kr+2] = 0.;
           vr[kr+3] = 0.;
-        }
+      }
       kr += 4;
     }
 }
@@ -708,7 +706,9 @@ int main (int argc, char * argv[])
   for (igrid = 0; igrid < 3; igrid++)
     {
       GRIB_CHECK (((h = grib_handle_new_from_samples (NULL, "lambert_bf_grib2")) == NULL), 0);
+      //GRIB_CHECK (((h = grib_handle_new_from_samples (NULL, "sh_ml_grib2")) == NULL), 0);
       GRIB_CHECK (grib_set_long (h, "centre", 85), 0);
+      GRIB_CHECK (grib_set_long (h, "tablesVersion", 23), 0);
       len = strlen (grids[igrid]);
       GRIB_CHECK (grib_set_string (h, "gridType", grids[igrid], &len), 0);
       GRIB_CHECK (grib_set_long (h, "biFourierResolutionParameterN", NSMAX), 0);
@@ -760,7 +760,7 @@ int main (int argc, char * argv[])
       GRIB_CHECK (grib_set_long (h, "biFourierResolutionSubSetParameterN", NSTRON), 0);
       GRIB_CHECK (grib_set_long (h, "biFourierResolutionSubSetParameterM", NSTRON), 0);
       GRIB_CHECK (grib_set_long (h, "biFourierSubTruncationType", trunc[itrunc].subtrunc) , 0);
-      GRIB_CHECK (grib_set_long (h, "biFourierDoNotPackAxes", 1), 0);
+      GRIB_CHECK (grib_set_long (h, "biFourierPackingModeForAxes", 1), 0);
       GRIB_CHECK (grib_set_long (h, "unpackedSubsetPrecision", 2), 0);
 
       len = trunc[itrunc].len;
@@ -793,7 +793,7 @@ int main (int argc, char * argv[])
         int i, err;
         size_t values_len, geometry_len;
         long int LxInMetres, LyInMetres, LuxInMetres, LuyInMetres, LcxInMetres, LcyInMetres;
-	long int nsmax, nmsmax;
+        long int nsmax, nmsmax;
         char geometry[128];
 
 
@@ -829,7 +829,7 @@ int main (int argc, char * argv[])
 
         if (LxInMetres != 2000 || LyInMetres != 2000 || LuxInMetres != 1800 || 
             LuyInMetres != 1800 || LcxInMetres != 100 || LcyInMetres != 100 ||
-	    NSMAX != nsmax || NMSMAX != nmsmax)
+            NSMAX != nsmax || NMSMAX != nmsmax)
           {
             printf ("Geometry is incorrect\n");
             abort ();
