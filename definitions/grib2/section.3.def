@@ -103,6 +103,12 @@ concept gridType {
  "cross_section"         = { gridDefinitionTemplateNumber=1000;PLPresent=0; }
  "Hovmoller"             = { gridDefinitionTemplateNumber=1100;PLPresent=0; }
  "time_section"          = { gridDefinitionTemplateNumber=1200;PLPresent=0; }
+ "lambert_lam"             = { gridDefinitionTemplateNumber=33; PLPresent=0;  }
+ "mercator_lam"            = { gridDefinitionTemplateNumber=13; PLPresent=0;  }
+ "polar_stereographic_lam" = { gridDefinitionTemplateNumber=23; PLPresent=0;  }
+ "lambert_bf"              = { gridDefinitionTemplateNumber=63; PLPresent=0;  }
+ "mercator_bf"             = { gridDefinitionTemplateNumber=61; PLPresent=0;  }
+ "polar_stereographic_bf"  = { gridDefinitionTemplateNumber=62; PLPresent=0;  }
  "unknown"               = {PLPresent=0;}
  "unknown_PLPresent"     = {PLPresent=1;}
 } : dump;

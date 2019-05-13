@@ -8,6 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+
+#define ACCESSOR_FACTORY_USE_TRIE // TODO: sort out the hash of accessor classes
+
 #include "grib_api_internal.h"
 #include "grib_accessor_classes_hash.c"
 /*     grib level     */

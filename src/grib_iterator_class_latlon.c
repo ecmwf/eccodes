@@ -54,7 +54,7 @@ typedef struct grib_iterator_latlon{
 	double southPoleLat;
 	double southPoleLon;
 	long jPointsAreConsecutive;
-    long disableUnrotate;
+	long disableUnrotate;
 /* Members defined in latlon */
 } grib_iterator_latlon;
 
