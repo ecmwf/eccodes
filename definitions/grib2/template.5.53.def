@@ -27,7 +27,7 @@ unsigned[2] biFourierResolutionSubSetParameterN ;
 unsigned[2] biFourierResolutionSubSetParameterM ;
 
 # TODO. Need to fix up the sample file samples/lambert_bf_grib2.tmpl
-#unsigned[4] totalNumberOfValuesInUnpackedSubset = 0 : dump;
+unsigned[4] totalNumberOfValuesInUnpackedSubset = 0 : dump;
 
 # This is read_only until we support other values
 codetable[1] unpackedSubsetPrecision ('5.7.table',masterDir,localDir) = 1 : dump;
