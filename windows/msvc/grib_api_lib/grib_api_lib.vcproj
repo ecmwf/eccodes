@@ -681,6 +681,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_data_g2bifourier_packing.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_data_g2complex_packing.c"
 				>
 			</File>
