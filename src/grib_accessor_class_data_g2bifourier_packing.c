@@ -41,6 +41,7 @@
    MEMBERS= const char*  biFourierSubTruncationType
    MEMBERS= const char*  biFourierDoNotPackAxes
    MEMBERS= const char*  biFourierMakeTemplate
+   MEMBERS= const char*  totalNumberOfValuesInUnpackedSubset
    MEMBERS=const char*  numberOfValues
    END_CLASS_DEF
 
@@ -94,6 +95,7 @@ typedef struct grib_accessor_data_g2bifourier_packing {
 	const char*  biFourierSubTruncationType;
 	const char*  biFourierDoNotPackAxes;
 	const char*  biFourierMakeTemplate;
+	const char*  totalNumberOfValuesInUnpackedSubset;
 	const char*  numberOfValues;
 } grib_accessor_data_g2bifourier_packing;
 
@@ -191,6 +193,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
     self->biFourierSubTruncationType = grib_arguments_get_name(gh,args,self->carg++);
     self->biFourierDoNotPackAxes     = grib_arguments_get_name(gh,args,self->carg++);
     self->biFourierMakeTemplate      = grib_arguments_get_name(gh,args,self->carg++);
+    self->totalNumberOfValuesInUnpackedSubset = grib_arguments_get_name(gh,args,self->carg++);
     /*self->numberOfValues             = grib_arguments_get_name(gh,args,self->carg++);*/
 
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
@@ -930,6 +933,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
        goto cleanup;
 
     grib_buffer_replace (a, buf, buflen, 1, 1);
+
+    if ((ret = grib_set_long_internal (gh, self->totalNumberOfValuesInUnpackedSubset, bt->n_vals_sub)) != GRIB_SUCCESS)
+      goto cleanup;
 
     if ((ret = grib_set_long_internal (gh, self->number_of_values, bt->n_vals_bif)) != GRIB_SUCCESS)
       goto cleanup;

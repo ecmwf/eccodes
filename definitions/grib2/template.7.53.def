@@ -41,6 +41,7 @@ meta codedValues data_g2bifourier_packing(
           biFourierSubTruncationType,
           biFourierPackingModeForAxes,
           biFourierMakeTemplate,
+          totalNumberOfValuesInUnpackedSubset,
 
           numberOfValues
       ): read_only;
