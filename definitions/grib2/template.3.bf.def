@@ -12,20 +12,20 @@ codetable[1] biFourierTruncationType ('3.25.table',masterDir,localDir) : dump;
 
 #  Lx - Full domain length in X-direction. Size in metres of the domain along x-axis
 unsigned[8] Lx;
-meta  geography.LxInMetres scale(Lx,one,thousand) : dump;
+alias geography.LxInMetres = Lx;
 # Lux - Useful domain length in X-direction. Size in metres of model forecast subdomain along x-axis
 unsigned[8] Lux;
-meta  geography.LuxInMetres scale(Lux,one,thousand) : dump;
-# Lcx - Coupling domain width in X-direction
+alias geography.LuxInMetres=Lux;
+# Lcx - Coupling domain width in X-direction. Width in metres of coupling area within forecast domain along x-axis
 unsigned[8] Lcx;
-meta  geography.LcxInMetres scale(Lcx,one,thousand) : dump;
+alias geography.LcxInMetres=Lcx;
 
 #  Ly - Full domain length in Y-direction
 unsigned[8] Ly;
-meta  geography.LyInMetres scale(Ly,one,thousand) : dump;
+alias geography.LyInMetres=Ly;
 # Luy - Useful domain length in Y-direction
 unsigned[8] Luy;
-meta  geography.LuyInMetres scale(Luy,one,thousand) : dump;
+alias geography.LuyInMetres=Luy;
 # Lcy - Coupling domain width in Y-direction
 unsigned[8] Lcy;
-meta  geography.LcyInMetres scale(Lcy,one,thousand) : dump;
+alias geography.LcyInMetres=Lcy;
