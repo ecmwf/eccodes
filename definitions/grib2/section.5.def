@@ -52,7 +52,7 @@ concept packingType (unknown) {
   "grid_second_order_SPD3"                = { dataRepresentationTemplateNumber = 50001;orderOfSPD=3;     }
   "spectral_ieee"                         = { dataRepresentationTemplateNumber=50000; }
   "grid_simple_log_preprocessing"         = { dataRepresentationTemplateNumber = 61;    }
-  "bifourier_complex"                     = { dataRepresentationTemplateNumber = 53; spectralType=99; }
+  "bifourier_complex"                     = { dataRepresentationTemplateNumber = 53; spectralType=2; }
 }  : dump;
 
 template dataRepresentation "grib2/template.5.[dataRepresentationTemplateNumber:l].def";
