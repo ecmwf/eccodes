@@ -13,7 +13,7 @@
 REDIRECT=/dev/null
 
 infile="${data_dir}/missing.grib2"
-outfile="${data_dir}/missing_new.grib2"
+outfile="${data_dir}/temp.missing_new.grib2"
 
 scaleFactorOfSecondFixedSurface=`${tools_dir}/grib_get -w count=1 -p scaleFactorOfSecondFixedSurface $infile`
 [ "$scaleFactorOfSecondFixedSurface" = "0" ]

@@ -1,14 +1,7 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
+# Copyright 2005-2019 ECMWF.
 
 # TEMPLATE 3.62, Bi-Fourier coefficients on polar stereographic projection
+# Spectral polar stereographic with modelling subdomains definition
 
 transient biFourierMakeTemplate = 0;
 
@@ -18,7 +11,6 @@ include "grib2/template.3.shape_of_the_earth.def";
 
 transient oneThousand=1000;
 
-#include "grib2/template.3.20.part1.def"
 #  La1 - latitude of first grid point
 signed[4] latitudeOfFirstGridPoint : edition_specific ;
 meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
@@ -45,14 +37,9 @@ signed[4] orientationOfTheGrid  : edition_specific;
 alias LoV =  orientationOfTheGrid ;
 meta geography.orientationOfTheGridInDegrees scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
 
-
-#include "grib2/template.3.20.part2.def"
 #  Projection centre flag
 flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' : dump;
 # Note our flagbit numbers go from 7 to 0, while WMO convention is from 1 to 8
 # If bit 1 is 0, then the North Pole is on the projection plane
 # If bit 1 is 1, then the South Pole is on the projection plane
 flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump;   # WMO bit 1
-
-
-# END   2/template.3.62 ----------------------------------------------------------------------
