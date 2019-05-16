@@ -29,21 +29,29 @@ INSTALLATION
 1. Download ecCodes from https://software.ecmwf.int/wiki/display/ECC/Releases
 
 2. Unpack distribution:
-   > tar -xzf eccodes-x.y.z-Source.tar.gz
+   ```
+   tar -xzf eccodes-x.y.z-Source.tar.gz
+   ```
 
 3. Create a separate directory where to build ecCodes:
-   > mkdir build
-   > cd build
+   ```
+   mkdir build
+   cd build
+   ```
 
 4. Run cmake pointing to the source and specify the installation location:
-   > cmake  ../eccodes-x.y.z-Source -DCMAKE_INSTALL_PREFIX=/path/to/where/you/install/eccodes
+   ```
+   cmake  ../eccodes-x.y.z-Source -DCMAKE_INSTALL_PREFIX=/path/to/where/you/install/eccodes
+   ```
    
    It is strongly recommended that you install into a clean directory
 
 5. Compile, test and install:
-   > make
-   > ctest
-   > make install
+   ```
+   make
+   ctest
+   make install
+   ```
 
 
 For more details, please see:
