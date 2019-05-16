@@ -30,7 +30,7 @@ list( APPEND test_bins
       grib_sh_ieee64
       ieee
       grib_sh_imag
-      lam_bf
+      grib_lam_bf
       lam_gp
 )
 
@@ -116,8 +116,8 @@ list( APPEND tests_data_reqd
     grib_sh_ieee64
     optimize_scaling
     optimize_scaling_sh
-    lam_bf 
-    lam_gp 
+    grib_lam_bf
+    lam_gp
     grib1to2
     grib2to1
     grib1to3
