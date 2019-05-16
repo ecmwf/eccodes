@@ -43,9 +43,9 @@ typedef struct grib_accessor_bufr_extract_datetime_subsets {
     grib_accessor          att;
 /* Members defined in gen */
 /* Members defined in bufr_extract_datetime_subsets */
-    const char* doExtractSubsets;
-    const char* numberOfSubsets;
-    const char* extractSubsetList;
+	const char* doExtractSubsets;
+	const char* numberOfSubsets;
+	const char* extractSubsetList;
 } grib_accessor_bufr_extract_datetime_subsets;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -89,8 +89,8 @@ static grib_accessor_class _grib_accessor_class_bufr_extract_datetime_subsets = 
     0,                    /* compare vs. another accessor   */
     0,     /* unpack only ith value          */
     0,     /* unpack a subarray         */
-    0,                      /* clear          */
-    0,                       /* clone accessor          */
+    0,              		/* clear          */
+    0,               		/* clone accessor          */
 };
 
 
@@ -99,36 +99,36 @@ grib_accessor_class* grib_accessor_class_bufr_extract_datetime_subsets = &_grib_
 
 static void init_class(grib_accessor_class* c)
 {
-    c->dump    =    (*(c->super))->dump;
-    c->next_offset    =    (*(c->super))->next_offset;
-    c->string_length    =    (*(c->super))->string_length;
-    c->value_count    =    (*(c->super))->value_count;
-    c->byte_count    =    (*(c->super))->byte_count;
-    c->byte_offset    =    (*(c->super))->byte_offset;
-    c->sub_section    =    (*(c->super))->sub_section;
-    c->pack_missing    =    (*(c->super))->pack_missing;
-    c->is_missing    =    (*(c->super))->is_missing;
-    c->unpack_long    =    (*(c->super))->unpack_long;
-    c->pack_double    =    (*(c->super))->pack_double;
-    c->unpack_double    =    (*(c->super))->unpack_double;
-    c->pack_string    =    (*(c->super))->pack_string;
-    c->unpack_string    =    (*(c->super))->unpack_string;
-    c->pack_string_array    =    (*(c->super))->pack_string_array;
-    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
-    c->pack_bytes    =    (*(c->super))->pack_bytes;
-    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
-    c->pack_expression    =    (*(c->super))->pack_expression;
-    c->notify_change    =    (*(c->super))->notify_change;
-    c->update_size    =    (*(c->super))->update_size;
-    c->preferred_size    =    (*(c->super))->preferred_size;
-    c->resize    =    (*(c->super))->resize;
-    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
-    c->next    =    (*(c->super))->next;
-    c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element    =    (*(c->super))->unpack_double_element;
-    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
-    c->clear    =    (*(c->super))->clear;
-    c->make_clone    =    (*(c->super))->make_clone;
+	c->dump	=	(*(c->super))->dump;
+	c->next_offset	=	(*(c->super))->next_offset;
+	c->string_length	=	(*(c->super))->string_length;
+	c->value_count	=	(*(c->super))->value_count;
+	c->byte_count	=	(*(c->super))->byte_count;
+	c->byte_offset	=	(*(c->super))->byte_offset;
+	c->sub_section	=	(*(c->super))->sub_section;
+	c->pack_missing	=	(*(c->super))->pack_missing;
+	c->is_missing	=	(*(c->super))->is_missing;
+	c->unpack_long	=	(*(c->super))->unpack_long;
+	c->pack_double	=	(*(c->super))->pack_double;
+	c->unpack_double	=	(*(c->super))->unpack_double;
+	c->pack_string	=	(*(c->super))->pack_string;
+	c->unpack_string	=	(*(c->super))->unpack_string;
+	c->pack_string_array	=	(*(c->super))->pack_string_array;
+	c->unpack_string_array	=	(*(c->super))->unpack_string_array;
+	c->pack_bytes	=	(*(c->super))->pack_bytes;
+	c->unpack_bytes	=	(*(c->super))->unpack_bytes;
+	c->pack_expression	=	(*(c->super))->pack_expression;
+	c->notify_change	=	(*(c->super))->notify_change;
+	c->update_size	=	(*(c->super))->update_size;
+	c->preferred_size	=	(*(c->super))->preferred_size;
+	c->resize	=	(*(c->super))->resize;
+	c->nearest_smaller_value	=	(*(c->super))->nearest_smaller_value;
+	c->next	=	(*(c->super))->next;
+	c->compare	=	(*(c->super))->compare;
+	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
+	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
+	c->clear	=	(*(c->super))->clear;
+	c->make_clone	=	(*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */

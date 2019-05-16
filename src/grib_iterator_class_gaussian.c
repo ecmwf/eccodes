@@ -58,6 +58,7 @@ typedef struct grib_iterator_gaussian{
 	double southPoleLat;
 	double southPoleLon;
 	long jPointsAreConsecutive;
+	long disableUnrotate;
 /* Members defined in gaussian */
 } grib_iterator_gaussian;
 
