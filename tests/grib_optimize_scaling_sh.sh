@@ -10,4 +10,5 @@
 
 . ./include.sh
 
-exec $test_dir/optimize_scaling_sh
+# Spherical harmonics version
+exec $test_dir/grib_optimize_scaling_sh

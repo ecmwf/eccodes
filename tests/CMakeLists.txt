@@ -22,8 +22,8 @@ list( APPEND test_bins
       grib_util_set_spec
       grib_local_MeteoFrance
       grib_2nd_order_numValues
-      optimize_scaling
-      optimize_scaling_sh
+      grib_optimize_scaling
+      grib_optimize_scaling_sh
       grib_ecc-386
       bufr_ecc-517
       bufr_get_element
@@ -114,8 +114,8 @@ list( APPEND tests_data_reqd
     bufr_set
     ieee
     grib_sh_ieee64
-    optimize_scaling
-    optimize_scaling_sh
+    grib_optimize_scaling
+    grib_optimize_scaling_sh
     grib_lam_bf
     grib_lam_gp
     grib1to2

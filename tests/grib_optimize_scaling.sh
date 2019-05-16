@@ -10,4 +10,4 @@
 
 . ./include.sh
 
-exec $test_dir/optimize_scaling
+exec $test_dir/grib_optimize_scaling
