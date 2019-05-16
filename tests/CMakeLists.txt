@@ -31,7 +31,7 @@ list( APPEND test_bins
       ieee
       grib_sh_imag
       grib_lam_bf
-      lam_gp
+      grib_lam_gp
 )
 
 foreach( tool ${test_bins} )
@@ -117,7 +117,7 @@ list( APPEND tests_data_reqd
     optimize_scaling
     optimize_scaling_sh
     grib_lam_bf
-    lam_gp
+    grib_lam_gp
     grib1to2
     grib2to1
     grib1to3
