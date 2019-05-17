@@ -104,3 +104,10 @@ if (isHindcast == 1) {
    alias mars.date  = modelVersionDate;
    alias mars.time  = modelVersionTime;
 }
+
+ if(paramId == 151219 || paramId == 151163 ||paramId == 151127 ||paramId == 151175 ||paramId == 151131 ||paramId == 151132 ||paramId == 151145 ||paramId == 151225 ||paramId == 174098 ) {
+     constant oceanLevName = 'o2d';
+     alias mars.levtype = oceanLevName;
+     unalias mars.levelist;
+ }
+
