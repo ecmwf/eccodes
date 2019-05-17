@@ -1286,6 +1286,15 @@ int grib_get_message_offset ( grib_handle* h,off_t* offset )
     return 0;
 }
 
+int codes_get_product_kind(grib_handle* h, ProductKind* product_kind)
+{
+    if (h) {
+        *product_kind = h->product_kind;
+        return GRIB_SUCCESS;
+    }
+    return GRIB_NULL_HANDLE;
+}
+
 int grib_get_message_size ( grib_handle* h,size_t* size )
 {
     long totalLength=0;
