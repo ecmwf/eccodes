@@ -244,25 +244,26 @@ static int extra_set(grib_accessor* a,long val)
     case 1:
         /* type */
         switch (val) {
-        case 0:		/* Unknown       (0) */
+        case 0:  /* Unknown       (0) */
             typeOfProcessedData=255;
             typeOfGeneratingProcess=255;
             break;
-        case 1:		/* First guess          (fg) */
-        case 3:		/* Initialised analysis (ia) */
+        case 1:  /* First guess          (fg) */
+        case 3:  /* Initialised analysis (ia) */
             typeOfProcessedData=0;
             typeOfGeneratingProcess=1;
             break;
-        case 2:		/* Analysis                    (an) */
-        case 4:		/* Oi analysis                 (oi) */
-        case 5:		/* 3d variational analysis     (3v) */
-        case 6:		/* 4d variational analysis     (4v) */
-        case 7:		/* 3d variational gradients    (3g) */
-        case 8:		/* 4d variational gradients    (4g) */
+        case 2:  /* Analysis                    (an) */
+        case 4:  /* Oi analysis                 (oi) */
+        case 5:  /* 3d variational analysis     (3v) */
+        case 6:  /* 4d variational analysis     (4v) */
+        case 7:  /* 3d variational gradients    (3g) */
+        case 8:  /* 4d variational gradients    (4g) */
+        case 90: /* Gridded analysis input     (gai) */
             typeOfProcessedData=0;
             typeOfGeneratingProcess=0;
             break;
-        case 9:		/* Forecast  (fc) */
+        case 9:  /* Forecast  (fc) */
             typeOfProcessedData=1;
             typeOfGeneratingProcess=2;
             break;
