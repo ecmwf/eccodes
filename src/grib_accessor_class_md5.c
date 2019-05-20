@@ -239,6 +239,7 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len)
     grib_md5_add(&md5c,mess,mess_len);
     grib_md5_end(&md5c,v);
     grib_context_free(a->context,mess);
+    *len = strlen(v)+1;
 
     return ret;
 }
