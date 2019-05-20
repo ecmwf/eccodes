@@ -259,6 +259,7 @@ static int extra_set(grib_accessor* a,long val)
 		case 6:		/* 4d variational analysis     (4v) */
 		case 7:		/* 3d variational gradients    (3g) */
 		case 8:		/* 4d variational gradients    (4g) */
+        case 90:    /* Gridded analysis input     (gai) */
 			typeOfProcessedData=0;
 			typeOfGeneratingProcess=0;
 			break;
