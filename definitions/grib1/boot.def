@@ -73,7 +73,7 @@ if (!headersOnly) {
   transient  missingValue   = 9999 : dump;
 
   if(bitmapPresent) {
-    template   section3 "grib1/section.3.def";
+    template   section_3 "grib1/section.3.def";
   } else {
     constant   tableReference = 0;
   }
