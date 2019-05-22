@@ -1361,6 +1361,7 @@ void *wmo_read_any_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t 
 void *wmo_read_gts_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
 void *wmo_read_bufr_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
 void *wmo_read_grib_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
+int grib_read_any_from_file(grib_context *ctx, FILE *f, void *buffer, size_t *len);
 int grib_get_message_offset ( grib_handle* h,off_t* offset);
 int grib_get_message_size ( grib_handle* h,size_t* size);
 
@@ -1552,6 +1553,7 @@ grib_handle *grib_util_set_spec2(grib_handle *h,
     size_t data_values_count,
     int *err);
 
+int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
 /* --------------------------------------- */
 
 typedef void (*codes_assertion_failed_proc)(const char* message);
