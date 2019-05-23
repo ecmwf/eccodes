@@ -35,7 +35,7 @@ def example():
 
     # Example of accessing specific elements from data values
     # Get first, middle and last elements
-    indexes = [0, num_vals/2, num_vals-1]
+    indexes = [0, int(num_vals/2), num_vals-1]
     elems = codes_get_double_elements(gid, 'values', indexes)
 
     codes_release(gid)
