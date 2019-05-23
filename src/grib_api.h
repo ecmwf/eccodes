@@ -1554,6 +1554,7 @@ grib_handle *grib_util_set_spec2(grib_handle *h,
     int *err);
 
 int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
+grib_handle *grib_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 /* --------------------------------------- */
 
 typedef void (*codes_assertion_failed_proc)(const char* message);
