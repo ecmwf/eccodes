@@ -292,11 +292,17 @@ static void diamond (long ni, long nj, long itrunc[], long jtrunc[])
 {
   int i, j;
 
-  for (j = 0; j <= nj; j++)
-    itrunc[j] = ni - (j * ni) / nj;
+  if (nj == 0)
+    itrunc[0] = -1;
+  else
+    for (j = 0; j <= nj; j++)
+      itrunc[j] = ni - (j * ni) / nj;
 
-  for (i = 0; i <= ni; i++)
-    jtrunc[i] = nj - (i * nj) / ni;
+  if (ni == 0)
+    jtrunc[0] = -1;
+  else
+    for (i = 0; i <= ni; i++)
+      jtrunc[i] = nj - (i * nj) / ni;
 
 }
 
@@ -601,20 +607,24 @@ static bif_trunc_t * new_bif_trunc (grib_accessor * a, grib_accessor_data_g2bifo
   bt->itruncation_bif = (long *)grib_context_malloc(gh->context, sizeof(long)*(1+bt->bif_j));
   bt->jtruncation_bif = (long *)grib_context_malloc(gh->context, sizeof(long)*(1+bt->bif_i));
 
+#define RECTANGLE 77
+#define ELLIPSE   88
+#define DIAMOND   99
+
   switch (bt->biFourierTruncationType) 
     {
-      case 77: diamond   (bt->bif_i, bt->bif_j, bt->itruncation_bif, bt->jtruncation_bif); break;
-      case 88: rectangle (bt->bif_i, bt->bif_j, bt->itruncation_bif, bt->jtruncation_bif); break;
-      case 99: ellipse   (bt->bif_i, bt->bif_j, bt->itruncation_bif, bt->jtruncation_bif); break;
+      case RECTANGLE: rectangle (bt->bif_i, bt->bif_j, bt->itruncation_bif, bt->jtruncation_bif); break;
+      case ELLIPSE  : ellipse   (bt->bif_i, bt->bif_j, bt->itruncation_bif, bt->jtruncation_bif); break;
+      case DIAMOND  : diamond   (bt->bif_i, bt->bif_j, bt->itruncation_bif, bt->jtruncation_bif); break;
       default:
         ret = GRIB_INVALID_KEY_VALUE;
         goto cleanup;
     }
   switch (bt->biFourierSubTruncationType) 
     {
-      case 77: diamond   (bt->sub_i, bt->sub_j, bt->itruncation_sub, bt->jtruncation_sub); break;
-      case 88: rectangle (bt->sub_i, bt->sub_j, bt->itruncation_sub, bt->jtruncation_sub); break;
-      case 99: ellipse   (bt->sub_i, bt->sub_j, bt->itruncation_sub, bt->jtruncation_sub); break;
+      case RECTANGLE: rectangle (bt->sub_i, bt->sub_j, bt->itruncation_sub, bt->jtruncation_sub); break;
+      case ELLIPSE  : ellipse   (bt->sub_i, bt->sub_j, bt->itruncation_sub, bt->jtruncation_sub); break;
+      case DIAMOND  : diamond   (bt->sub_i, bt->sub_j, bt->itruncation_sub, bt->jtruncation_sub); break;
       default:
         ret = GRIB_INVALID_KEY_VALUE;
         goto cleanup;

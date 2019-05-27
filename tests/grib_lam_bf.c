@@ -689,15 +689,15 @@ int main (int argc, char *argv[])
     trunc_t trunc[2];
 
     /* Elliptic truncation with diamond subtruncation */
-    trunc[0].trunc = 99;
-    trunc[0].subtrunc = 77;
+    trunc[0].trunc = 88;
+    trunc[0].subtrunc = 99;
     trunc[0].len = ILCHAM;
     trunc[0].values = (double *) values;
     trunc[0].name = "ellipse_diamond";
 
     /* Rectangle truncation with rectangle subtruncation */
-    trunc[1].trunc = 88;
-    trunc[1].subtrunc = 88;
+    trunc[1].trunc = 77;
+    trunc[1].subtrunc = 77;
     trunc[1].len = 4 * (NSMAX + 1) * (NMSMAX + 1);
     trunc[1].values = (double *) malloc (sizeof (double) * trunc[1].len);
     trunc[1].name = "rectangle_rectangle";
