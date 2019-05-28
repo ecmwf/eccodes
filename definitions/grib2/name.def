@@ -1355,6 +1355,27 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 15 ;
 	}
+#Depth of 20C isotherm
+'Depth of 20C isotherm' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 29315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	}
+#Average salinity in the upper 300m
+'Average salinity in the upper 300m' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 21 ;
+	 typeOfSecondFixedSurface = 160 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 scaledValueOfSecondFixedSurface = 300 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
+	}
 #Surface runoff
 'Surface runoff' = {
 	 discipline = 2 ;
