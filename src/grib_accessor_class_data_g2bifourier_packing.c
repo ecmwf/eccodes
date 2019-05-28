@@ -220,89 +220,87 @@ static int value_count(grib_accessor* a,long* numberOfValues)
 
 static void ellipse (long ni, long nj, long itrunc[], long jtrunc[])
 {
-  const double zeps = 1.E-10;
-  const double zauxil=0.;
-  int i, j;
-  double zi, zj;
+    const double zeps = 1.E-10;
+    const double zauxil=0.;
+    int i, j;
+    double zi, zj;
 
-/*
- * 1. Computing meridional limit wavenumbers along zonal wavenumbers
- */
+    /*
+     * 1. Computing meridional limit wavenumbers along zonal wavenumbers
+     */
 
-  for (j = 1; j < nj; j++)
+    for (j = 1; j < nj; j++)
     {
-      zi = (double)ni / (double)nj * sqrt (MAX (zauxil, (double)(nj * nj - j * j)));
-      itrunc[j] = (int)(zi + zeps);
-    }
-  
-  if (nj == 0)
-    {
-     itrunc[0] = ni;
-    }
-  else
-    {
-     itrunc[0] = ni;
-     itrunc[nj] = 0;
+        zi = (double)ni / (double)nj * sqrt (MAX (zauxil, (double)(nj * nj - j * j)));
+        itrunc[j] = (int)(zi + zeps);
     }
 
-/*
- * 2. Computing zonal limit wavenumbers along meridional wavenumbers
- */
-
-  for (i = 1; i < ni; i++)
+    if (nj == 0)
     {
-      zj = (double)nj / (double)ni * sqrt (MAX (zauxil, (double)(ni * ni - i * i)));
-      jtrunc[i] = (int)(zj + zeps);
+        itrunc[0] = ni;
     }
-  
-  if (ni == 0)
+    else
     {
-     jtrunc[0] = nj;
-    }
-  else
-    {
-     jtrunc[0] = nj;
-     jtrunc[ni] = 0;
+        itrunc[0] = ni;
+        itrunc[nj] = 0;
     }
 
+    /*
+     * 2. Computing zonal limit wavenumbers along meridional wavenumbers
+     */
 
+    for (i = 1; i < ni; i++)
+    {
+        zj = (double)nj / (double)ni * sqrt (MAX (zauxil, (double)(ni * ni - i * i)));
+        jtrunc[i] = (int)(zj + zeps);
+    }
+
+    if (ni == 0)
+    {
+        jtrunc[0] = nj;
+    }
+    else
+    {
+        jtrunc[0] = nj;
+        jtrunc[ni] = 0;
+    }
 }
 
 static void rectangle (long ni, long nj, long itrunc[], long jtrunc[])
 {
-  int i, j;
+    int i, j;
 
-/*
- * 1. Computing meridional limit wavenumbers along zonal wavenumbers
- */
+    /*
+     * 1. Computing meridional limit wavenumbers along zonal wavenumbers
+     */
 
-  for (j = 0; j <= nj; j++)
-    itrunc[j] = ni;
+    for (j = 0; j <= nj; j++)
+        itrunc[j] = ni;
 
-/*
- * 2. Computing zonal limit wavenumbers along meridional wavenumbers
- */
+    /*
+     * 2. Computing zonal limit wavenumbers along meridional wavenumbers
+     */
 
-  for (i = 0; i <= ni; i++)
-    jtrunc[i] = nj;
+    for (i = 0; i <= ni; i++)
+        jtrunc[i] = nj;
 
 }
 
 static void diamond (long ni, long nj, long itrunc[], long jtrunc[])
 {
-  int i, j;
+    int i, j;
 
-  if (nj == 0)
-    itrunc[0] = -1;
-  else
-    for (j = 0; j <= nj; j++)
-      itrunc[j] = ni - (j * ni) / nj;
+    if (nj == 0)
+        itrunc[0] = -1;
+    else
+        for (j = 0; j <= nj; j++)
+            itrunc[j] = ni - (j * ni) / nj;
 
-  if (ni == 0)
-    jtrunc[0] = -1;
-  else
-    for (i = 0; i <= ni; i++)
-      jtrunc[i] = nj - (i * nj) / ni;
+    if (ni == 0)
+        jtrunc[0] = -1;
+    else
+        for (i = 0; i <= ni; i++)
+            jtrunc[i] = nj - (i * nj) / ni;
 
 }
 
@@ -310,44 +308,44 @@ static void diamond (long ni, long nj, long itrunc[], long jtrunc[])
 
 
 #define for_ij() \
-  for (j = 0; j <= bt->bif_j; j++) \
-  for (i = 0; i <= bt->itruncation_bif[j]; i++)
+        for (j = 0; j <= bt->bif_j; j++) \
+        for (i = 0; i <= bt->itruncation_bif[j]; i++)
 
 #define calc_insub() \
-do {                                                                             \
-      insub = (i <= bt->sub_i) && (j <= bt->sub_j);                              \
-      if (insub)                                                                 \
-	{                                                                        \
-          int insubi = (i <= bt->itruncation_sub[j]);                            \
-	  int insubj = (j <= bt->jtruncation_sub[i]);                            \
-          insub = insubi && insubj;                                              \
-	}                                                                        \
-      if (bt->keepaxes)                                                          \
-        insub = insub || (i == 0) || (j == 0);                                   \
-} while (0)
+        do {                                                                         \
+            insub = (i <= bt->sub_i) && (j <= bt->sub_j);                            \
+            if (insub)                                                               \
+            {                                                                        \
+                int insubi = (i <= bt->itruncation_sub[j]);                          \
+                int insubj = (j <= bt->jtruncation_sub[i]);                          \
+                insub = insubi && insubj;                                            \
+            }                                                                        \
+            if (bt->keepaxes)                                                        \
+            insub = insub || (i == 0) || (j == 0);                                   \
+        } while (0)
 
 typedef struct bif_trunc_t
 {
-  long bits_per_value;
-  long decimal_scale_factor;
-  long binary_scale_factor;
-  long ieee_floats;
-  long laplacianOperatorIsSet;
-  double laplacianOperator;
-  double reference_value;
-  long sub_i, sub_j, bif_i, bif_j;
-  long biFourierTruncationType;
-  long biFourierSubTruncationType;
-  long keepaxes;
-  long maketemplate;
-  decode_float_proc decode_float;
-  encode_float_proc encode_float;
-  int bytes;
-  long * itruncation_bif;
-  long * jtruncation_bif;
-  long * itruncation_sub;
-  long * jtruncation_sub;
-  size_t n_vals_bif, n_vals_sub;
+    long bits_per_value;
+    long decimal_scale_factor;
+    long binary_scale_factor;
+    long ieee_floats;
+    long laplacianOperatorIsSet;
+    double laplacianOperator;
+    double reference_value;
+    long sub_i, sub_j, bif_i, bif_j;
+    long biFourierTruncationType;
+    long biFourierSubTruncationType;
+    long keepaxes;
+    long maketemplate;
+    decode_float_proc decode_float;
+    encode_float_proc encode_float;
+    int bytes;
+    long * itruncation_bif;
+    long * jtruncation_bif;
+    long * itruncation_sub;
+    long * jtruncation_sub;
+    size_t n_vals_bif, n_vals_sub;
 } bif_trunc_t;
 
 /*
@@ -355,291 +353,283 @@ typedef struct bif_trunc_t
  */
 static size_t size_bif (bif_trunc_t * bt)
 {
-  size_t n_vals = 0;
-  int j;
-  for (j = 0; j <= bt->bif_j; j++)
-    n_vals += 4 * (bt->itruncation_bif[j] + 1);
-  return n_vals;
+    size_t n_vals = 0;
+    int j;
+    for (j = 0; j <= bt->bif_j; j++)
+        n_vals += 4 * (bt->itruncation_bif[j] + 1);
+    return n_vals;
 }
-
 
 /*
  * Number of unpacked coefficients
  */
 static size_t size_sub (bif_trunc_t * bt)
 {
-  size_t n_vals = 0;
-  int i, j;
-  for_ij ()
+    size_t n_vals = 0;
+    int i, j;
+    for_ij ()
     {
-      int insub;
-  
-      calc_insub ();
+        int insub;
 
-      if (insub)
-        n_vals += 4;
+        calc_insub ();
+
+        if (insub)
+            n_vals += 4;
     }
-  return n_vals;
+    return n_vals;
 }
 
-static
-double laplam (bif_trunc_t * bt, const double val[])
+static double laplam (bif_trunc_t * bt, const double val[])
 {
-/*
- * For bi-Fourier spectral fields, the Laplacian operator is a multiplication by (i*i+j*j)
- */
+    /*
+     * For bi-Fourier spectral fields, the Laplacian operator is a multiplication by (i*i+j*j)
+     */
 
-  const double zeps = 1E-15;
-  double * znorm = NULL, * zw = NULL;
-  int kmax = 1 + bt->bif_i * bt->bif_i + bt->bif_j * bt->bif_j, lmax;
-  int * itab1 = NULL, * itab2 = NULL;
-  int i, j, k, l, isp;
-  double zxmw, zymw, zwsum, zx, zy, zsum1, zsum2, zbeta1, zp;
+    const double zeps = 1E-15;
+    double * znorm = NULL, * zw = NULL;
+    int kmax = 1 + bt->bif_i * bt->bif_i + bt->bif_j * bt->bif_j, lmax;
+    int * itab1 = NULL, * itab2 = NULL;
+    int i, j, k, l, isp;
+    double zxmw, zymw, zwsum, zx, zy, zsum1, zsum2, zbeta1, zp;
 
-  itab1 = (int *)malloc (sizeof (int) * kmax);
-  itab2 = (int *)malloc (sizeof (int) * ((1 + bt->bif_i) * (1 + bt->bif_j)));
+    itab1 = (int *)malloc (sizeof (int) * kmax);
+    itab2 = (int *)malloc (sizeof (int) * ((1 + bt->bif_i) * (1 + bt->bif_j)));
 
-  for (k = 0; k < kmax; k++)
-    itab1[k] = 0;
+    for (k = 0; k < kmax; k++)
+        itab1[k] = 0;
 
-/*
- * Keep record of the possible values of i**2+j**2 outside the non-packed truncation
- */
-  for_ij ()
-    {   
-      int insub;
-
-      calc_insub ();
-
-      if (! insub)
-        {
-          int k = i*i+j*j;
-          itab1[k] = 1;
-        }
-    }   
-
-  l = 0;
-  for (k = 0; k < kmax; k++)
-    if (itab1[k])
-      {
-        itab2[l] = k;
-        itab1[k] = l;
-        l++;
-      }
-  lmax = l;
-
-
-/*
- * Now, itab2 contains all possible values of i*i+j*j, and itab1 contains 
- * the rank of all i*i+j*j
- */
-
-  znorm = (double *)malloc (sizeof (double) * lmax);
-  zw    = (double *)malloc (sizeof (double) * lmax);
-
-/*
- * Compute norms of input field, gathered by values of i**2+j**2; we have to 
- * go through the unpacked truncation again
- */
-
-  for (l = 0; l < lmax; l++)
-    znorm[l] = 0.;
-
-  isp = 0;
-  for_ij ()
-    {   
-      int insub;
-
-      calc_insub ();
-
-      if (insub)
-        {
-          isp += 4;
-        }
-      else
-        {
-          int m, l = itab1[i*i+j*j];
-          for (m = 0; m < 4; m++, isp++)
-            znorm[l] = MAX (znorm[l], fabs (val[isp]));
-        }
-    }   
-
-/*
- * Compute weights, fix very small norms to avoid problems with log function
- */
-
-  for (l = 0; l < lmax; l++)
+    /*
+     * Keep record of the possible values of i**2+j**2 outside the non-packed truncation
+     */
+    for_ij ()
     {
-      zw[l] = (double)lmax / (double)(l + 1);
-      if (znorm[l] < zeps)
+        int insub;
+
+        calc_insub ();
+
+        if (! insub)
         {
-          znorm[l] = zeps;
-          zw[l] = 100. * zeps;
+            int k = i*i+j*j;
+            itab1[k] = 1;
         }
     }
 
-/*
- * Sum weights
- */
+    l = 0;
+    for (k = 0; k < kmax; k++)
+        if (itab1[k])
+        {
+            itab2[l] = k;
+            itab1[k] = l;
+            l++;
+        }
+    lmax = l;
 
-  zxmw = 0.;
-  zymw = 0.;
-  zwsum = 0.;
- 
-  for (l = 0; l < lmax; l++)
+    /*
+     * Now, itab2 contains all possible values of i*i+j*j, and itab1 contains
+     * the rank of all i*i+j*j
+     */
+    znorm = (double *)malloc (sizeof (double) * lmax);
+    zw    = (double *)malloc (sizeof (double) * lmax);
+
+    /*
+     * Compute norms of input field, gathered by values of i**2+j**2; we have to
+     * go through the unpacked truncation again
+     */
+    for (l = 0; l < lmax; l++)
+        znorm[l] = 0.;
+
+    isp = 0;
+    for_ij ()
     {
-      zx = log (itab2[l]);
-      zy = log (znorm[l]);
-      zxmw += zx * zw[l];
-      zymw += zy * zw[l];
-      zwsum += zw[l];
+        int insub;
+
+        calc_insub ();
+
+        if (insub)
+        {
+            isp += 4;
+        }
+        else
+        {
+            int m, l = itab1[i*i+j*j];
+            for (m = 0; m < 4; m++, isp++)
+                znorm[l] = MAX (znorm[l], fabs (val[isp]));
+        }
     }
 
-/*
- * Least square regression
- */
-
-  zxmw = zxmw / zwsum;
-  zymw = zymw / zwsum;
-  zsum1 = 0.;
-  zsum2 = 0.;
-
-  for (l = 0; l < lmax; l++)
+    /*
+     * Compute weights, fix very small norms to avoid problems with log function
+     */
+    for (l = 0; l < lmax; l++)
     {
-      zx = log (itab2[l]);
-      zy = log (znorm[l]);
-      zsum1 += zw[l] * (zy - zymw) * (zx - zxmw);
-      zsum2 += zw[l] * (zx - zxmw) * (zx - zxmw);
+        zw[l] = (double)lmax / (double)(l + 1);
+        if (znorm[l] < zeps)
+        {
+            znorm[l] = zeps;
+            zw[l] = 100. * zeps;
+        }
     }
 
-  zbeta1 = zsum1 / zsum2;
-  zp = -zbeta1;
-  zp = MAX (-9.999, MIN (9.999, zp));
+    /*
+     * Sum weights
+     */
+    zxmw = 0.;
+    zymw = 0.;
+    zwsum = 0.;
 
-  free (itab1);
-  free (itab2);
+    for (l = 0; l < lmax; l++)
+    {
+        zx = log (itab2[l]);
+        zy = log (znorm[l]);
+        zxmw += zx * zw[l];
+        zymw += zy * zw[l];
+        zwsum += zw[l];
+    }
 
-  free (znorm);
-  free (zw);
+    /*
+     * Least square regression
+     */
+    zxmw = zxmw / zwsum;
+    zymw = zymw / zwsum;
+    zsum1 = 0.;
+    zsum2 = 0.;
 
-/*zp = ((long)(zp * 1000.)) / 1000.; FAPULA rounds Laplacian power to 1/1000th*/
+    for (l = 0; l < lmax; l++)
+    {
+        zx = log (itab2[l]);
+        zy = log (znorm[l]);
+        zsum1 += zw[l] * (zy - zymw) * (zx - zxmw);
+        zsum2 += zw[l] * (zx - zxmw) * (zx - zxmw);
+    }
 
-  return zp;
+    zbeta1 = zsum1 / zsum2;
+    zp = -zbeta1;
+    zp = MAX (-9.999, MIN (9.999, zp));
+
+    free (itab1);
+    free (itab2);
+
+    free (znorm);
+    free (zw);
+
+    /*zp = ((long)(zp * 1000.)) / 1000.; FAPULA rounds Laplacian power to 1/1000th*/
+
+    return zp;
 }
 
 static void free_bif_trunc (bif_trunc_t * bt, grib_accessor * a)
 {
-  grib_handle* gh = grib_handle_of_accessor(a);
-  if (bt == NULL)
-    return;
-  if (bt->itruncation_bif != NULL) free (bt->itruncation_bif);
-  if (bt->jtruncation_bif != NULL) free (bt->jtruncation_bif);
-  if (bt->itruncation_sub != NULL) free (bt->itruncation_sub);
-  if (bt->jtruncation_sub != NULL) free (bt->jtruncation_sub);
-  memset (bt, 0, sizeof (bif_trunc_t));
-  grib_context_free (gh->context, bt);
+    grib_handle* gh = grib_handle_of_accessor(a);
+    if (bt == NULL)
+        return;
+    if (bt->itruncation_bif != NULL) free (bt->itruncation_bif);
+    if (bt->jtruncation_bif != NULL) free (bt->jtruncation_bif);
+    if (bt->itruncation_sub != NULL) free (bt->itruncation_sub);
+    if (bt->jtruncation_sub != NULL) free (bt->jtruncation_sub);
+    memset (bt, 0, sizeof (bif_trunc_t));
+    grib_context_free (gh->context, bt);
 }
 
 static bif_trunc_t * new_bif_trunc (grib_accessor * a, grib_accessor_data_g2bifourier_packing * self)
 {
-  int ret;
-  grib_handle* gh = grib_handle_of_accessor(a);
-  bif_trunc_t * bt = (bif_trunc_t *)grib_context_malloc (gh->context, sizeof (bif_trunc_t));
+    int ret;
+    grib_handle* gh = grib_handle_of_accessor(a);
+    bif_trunc_t * bt = (bif_trunc_t *)grib_context_malloc (gh->context, sizeof (bif_trunc_t));
 
-  memset (bt, 0, sizeof (bif_trunc_t));
+    memset (bt, 0, sizeof (bif_trunc_t));
 
-  if ((ret = grib_get_double_internal (gh, self->reference_value, &bt->reference_value)) != GRIB_SUCCESS)   
-    goto cleanup;
-  if ((ret = grib_get_long_internal (gh, self->bits_per_value, &bt->bits_per_value)) != GRIB_SUCCESS)
-      goto cleanup;
-  if ((ret = grib_get_long_internal (gh, self->binary_scale_factor, &bt->binary_scale_factor)) != GRIB_SUCCESS)
-      goto cleanup;
-  if ((ret = grib_get_long_internal (gh, self->decimal_scale_factor, &bt->decimal_scale_factor)) != GRIB_SUCCESS)
-      goto cleanup;
-  if ((ret = grib_get_long_internal (gh, self->ieee_floats, &bt->ieee_floats)) != GRIB_SUCCESS)
-      goto cleanup;
-  if ((ret = grib_get_long_internal (gh, self->laplacianOperatorIsSet, &bt->laplacianOperatorIsSet)) != GRIB_SUCCESS)
-      goto cleanup;
-  if ((ret = grib_get_double_internal (gh, self->laplacianOperator, &bt->laplacianOperator)) != GRIB_SUCCESS)
-      goto cleanup;
-  if ((ret = grib_get_long_internal (gh, self->sub_i, &bt->sub_i)) != GRIB_SUCCESS)
-      goto cleanup;
-  if ((ret = grib_get_long_internal (gh, self->sub_j, &bt->sub_j)) != GRIB_SUCCESS)
-      goto cleanup;
-  if ((ret = grib_get_long_internal (gh, self->bif_i, &bt->bif_i)) != GRIB_SUCCESS)
-      goto cleanup;
-  if ((ret = grib_get_long_internal (gh, self->bif_j, &bt->bif_j)) != GRIB_SUCCESS)
-      goto cleanup;
-  if ((ret = grib_get_long_internal (gh, self->biFourierTruncationType, &bt->biFourierTruncationType)) != GRIB_SUCCESS)
-      goto cleanup;
-  if ((ret = grib_get_long_internal (gh, self->biFourierSubTruncationType, &bt->biFourierSubTruncationType)) != GRIB_SUCCESS)
-    goto cleanup;
-  if ((ret = grib_get_long_internal (gh, self->biFourierDoNotPackAxes, &bt->keepaxes)) != GRIB_SUCCESS)
-    goto cleanup;
-  if ((ret = grib_get_long_internal (gh, self->biFourierMakeTemplate, &bt->maketemplate)) != GRIB_SUCCESS)
-    goto cleanup;
+    if ((ret = grib_get_double_internal (gh, self->reference_value, &bt->reference_value)) != GRIB_SUCCESS)
+        goto cleanup;
+    if ((ret = grib_get_long_internal (gh, self->bits_per_value, &bt->bits_per_value)) != GRIB_SUCCESS)
+        goto cleanup;
+    if ((ret = grib_get_long_internal (gh, self->binary_scale_factor, &bt->binary_scale_factor)) != GRIB_SUCCESS)
+        goto cleanup;
+    if ((ret = grib_get_long_internal (gh, self->decimal_scale_factor, &bt->decimal_scale_factor)) != GRIB_SUCCESS)
+        goto cleanup;
+    if ((ret = grib_get_long_internal (gh, self->ieee_floats, &bt->ieee_floats)) != GRIB_SUCCESS)
+        goto cleanup;
+    if ((ret = grib_get_long_internal (gh, self->laplacianOperatorIsSet, &bt->laplacianOperatorIsSet)) != GRIB_SUCCESS)
+        goto cleanup;
+    if ((ret = grib_get_double_internal (gh, self->laplacianOperator, &bt->laplacianOperator)) != GRIB_SUCCESS)
+        goto cleanup;
+    if ((ret = grib_get_long_internal (gh, self->sub_i, &bt->sub_i)) != GRIB_SUCCESS)
+        goto cleanup;
+    if ((ret = grib_get_long_internal (gh, self->sub_j, &bt->sub_j)) != GRIB_SUCCESS)
+        goto cleanup;
+    if ((ret = grib_get_long_internal (gh, self->bif_i, &bt->bif_i)) != GRIB_SUCCESS)
+        goto cleanup;
+    if ((ret = grib_get_long_internal (gh, self->bif_j, &bt->bif_j)) != GRIB_SUCCESS)
+        goto cleanup;
+    if ((ret = grib_get_long_internal (gh, self->biFourierTruncationType, &bt->biFourierTruncationType)) != GRIB_SUCCESS)
+        goto cleanup;
+    if ((ret = grib_get_long_internal (gh, self->biFourierSubTruncationType, &bt->biFourierSubTruncationType)) != GRIB_SUCCESS)
+        goto cleanup;
+    if ((ret = grib_get_long_internal (gh, self->biFourierDoNotPackAxes, &bt->keepaxes)) != GRIB_SUCCESS)
+        goto cleanup;
+    if ((ret = grib_get_long_internal (gh, self->biFourierMakeTemplate, &bt->maketemplate)) != GRIB_SUCCESS)
+        goto cleanup;
 
 
-  switch (bt->ieee_floats) 
+    switch (bt->ieee_floats)
     {
-      case 0:
+    case 0:
         bt->decode_float = grib_long_to_ibm;
         bt->encode_float = grib_ibm_to_long;
         bt->bytes        = 4;
-       break;
-      case 1:
+        break;
+    case 1:
         bt->decode_float = grib_long_to_ieee;
         bt->encode_float = grib_ieee_to_long;
         bt->bytes        = 4;
-      break;
-      case 2:
+        break;
+    case 2:
         bt->decode_float = grib_long_to_ieee64;
         bt->encode_float = grib_ieee64_to_long;
         bt->bytes        = 8;
-       break;
-      default:
+        break;
+    default:
         ret = GRIB_NOT_IMPLEMENTED;
         goto cleanup;
-  }
+    }
 
-  bt->itruncation_sub = (long *)grib_context_malloc(gh->context, sizeof(long)*(1+bt->sub_j));
-  bt->jtruncation_sub = (long *)grib_context_malloc(gh->context, sizeof(long)*(1+bt->sub_i));
-  bt->itruncation_bif = (long *)grib_context_malloc(gh->context, sizeof(long)*(1+bt->bif_j));
-  bt->jtruncation_bif = (long *)grib_context_malloc(gh->context, sizeof(long)*(1+bt->bif_i));
+    bt->itruncation_sub = (long *)grib_context_malloc(gh->context, sizeof(long)*(1+bt->sub_j));
+    bt->jtruncation_sub = (long *)grib_context_malloc(gh->context, sizeof(long)*(1+bt->sub_i));
+    bt->itruncation_bif = (long *)grib_context_malloc(gh->context, sizeof(long)*(1+bt->bif_j));
+    bt->jtruncation_bif = (long *)grib_context_malloc(gh->context, sizeof(long)*(1+bt->bif_i));
 
 #define RECTANGLE 77
 #define ELLIPSE   88
 #define DIAMOND   99
 
-  switch (bt->biFourierTruncationType) 
+    switch (bt->biFourierTruncationType)
     {
-      case RECTANGLE: rectangle (bt->bif_i, bt->bif_j, bt->itruncation_bif, bt->jtruncation_bif); break;
-      case ELLIPSE  : ellipse   (bt->bif_i, bt->bif_j, bt->itruncation_bif, bt->jtruncation_bif); break;
-      case DIAMOND  : diamond   (bt->bif_i, bt->bif_j, bt->itruncation_bif, bt->jtruncation_bif); break;
-      default:
+    case RECTANGLE: rectangle (bt->bif_i, bt->bif_j, bt->itruncation_bif, bt->jtruncation_bif); break;
+    case ELLIPSE  : ellipse   (bt->bif_i, bt->bif_j, bt->itruncation_bif, bt->jtruncation_bif); break;
+    case DIAMOND  : diamond   (bt->bif_i, bt->bif_j, bt->itruncation_bif, bt->jtruncation_bif); break;
+    default:
         ret = GRIB_INVALID_KEY_VALUE;
         goto cleanup;
     }
-  switch (bt->biFourierSubTruncationType) 
+    switch (bt->biFourierSubTruncationType)
     {
-      case RECTANGLE: rectangle (bt->sub_i, bt->sub_j, bt->itruncation_sub, bt->jtruncation_sub); break;
-      case ELLIPSE  : ellipse   (bt->sub_i, bt->sub_j, bt->itruncation_sub, bt->jtruncation_sub); break;
-      case DIAMOND  : diamond   (bt->sub_i, bt->sub_j, bt->itruncation_sub, bt->jtruncation_sub); break;
-      default:
+    case RECTANGLE: rectangle (bt->sub_i, bt->sub_j, bt->itruncation_sub, bt->jtruncation_sub); break;
+    case ELLIPSE  : ellipse   (bt->sub_i, bt->sub_j, bt->itruncation_sub, bt->jtruncation_sub); break;
+    case DIAMOND  : diamond   (bt->sub_i, bt->sub_j, bt->itruncation_sub, bt->jtruncation_sub); break;
+    default:
         ret = GRIB_INVALID_KEY_VALUE;
         goto cleanup;
     }
 
-  bt->n_vals_bif = size_bif (bt);
-  bt->n_vals_sub = size_sub (bt);
+    bt->n_vals_bif = size_bif (bt);
+    bt->n_vals_sub = size_sub (bt);
 
-  return bt;
+    return bt;
 
 cleanup:
 
-  free_bif_trunc (bt, a);
+    free_bif_trunc (bt, a);
 
-  return NULL;
+    return NULL;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t *len)
@@ -669,30 +659,30 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     int i, j, k;
 
     if ((ret = grib_value_count (a, &count)) != GRIB_SUCCESS)
-      goto cleanup;
+        goto cleanup;
 
     bt = new_bif_trunc (a, self);
 
     if (bt == NULL)
-      {
+    {
         ret = GRIB_INTERNAL_ERROR;
         goto cleanup;
-      }
+    }
 
     if (bt->n_vals_bif != count)
-      {
+    {
         ret = GRIB_INTERNAL_ERROR;
         goto cleanup;
-      }
+    }
 
     if ((ret = grib_get_long_internal (gh, self->offsetdata, &offsetdata)) != GRIB_SUCCESS)
-      goto cleanup;
+        goto cleanup;
     if (*len < bt->n_vals_bif)
-      {
+    {
         *len = (long)bt->n_vals_bif;
         ret = GRIB_ARRAY_TOO_SMALL;
         goto cleanup;
-      }
+    }
 
     self->dirty = 0;
 
@@ -702,13 +692,11 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     s = grib_power (bt->binary_scale_factor, 2);
     d = grib_power (-bt->decimal_scale_factor, 10);
 
-/*
- * Decode data
- */
-
+    /*
+     * Decode data
+     */
     hres = buf;
     lres = buf;
-
 
     packed_offset = grib_byte_offset (a) +  bt->bytes * bt->n_vals_sub;
 
@@ -717,28 +705,27 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     isp = 0;
     for_ij ()
-      {
+    {
         int insub;
 
         calc_insub ();
 
         if (insub)
-          for (k = 0; k < 4; k++)
+            for (k = 0; k < 4; k++)
             {
-              val[isp+k] = bt->decode_float (grib_decode_unsigned_long (hres, &hpos, 8 * bt->bytes));
+                val[isp+k] = bt->decode_float (grib_decode_unsigned_long (hres, &hpos, 8 * bt->bytes));
             }
         else
-          for (k = 0; k < 4; k++)
+            for (k = 0; k < 4; k++)
             {
-              double S = scals (i, j);
-              long dec_val = grib_decode_unsigned_long (lres, &lpos, bt->bits_per_value);
-              val[isp+k] = (double)(((dec_val * s) + bt->reference_value) * d)/ S;
+                double S = scals (i, j);
+                long dec_val = grib_decode_unsigned_long (lres, &lpos, bt->bits_per_value);
+                val[isp+k] = (double)(((dec_val * s) + bt->reference_value) * d)/ S;
             }
 
         isp += 4;
-      }
+    }
 
-   
     Assert (*len >= isp);
     *len = isp;
 
@@ -773,109 +760,105 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     int minmax_set;
     double d = 0., s = 0.;
 
-    if (*len == 0) 
-      {
+    if (*len == 0)
+    {
         ret = GRIB_NO_VALUES;
         goto cleanup;
-      }
+    }
 
     bt = new_bif_trunc (a, self);
 
     if (bt == NULL)
-      {
+    {
         long makeTemplate = 0;
         if ((ret = grib_get_long_internal (gh, self->biFourierMakeTemplate, &makeTemplate)) != GRIB_SUCCESS)
-          goto cleanup;
+            goto cleanup;
         if (! makeTemplate)
-          {
+        {
             ret = GRIB_INTERNAL_ERROR;
             goto cleanup;
-          }
+        }
         else
-          {
+        {
             printf ("Assuming we are creating a template\n");
             ret = GRIB_SUCCESS;
             goto cleanup;
-          }
-      }
+        }
+    }
 
     self->dirty = 1;
 
     if (*len != bt->n_vals_bif)
-      {
+    {
         grib_context_log(gh->context,GRIB_LOG_ERROR,"BIFOURIER_PACKING : wrong number of values, expected %d - got %d", bt->n_vals_bif, *len);
         ret = GRIB_INTERNAL_ERROR;
         goto cleanup;
-      }
-    
+    }
 
-    if (! bt->laplacianOperatorIsSet) 
-      {
+    if (! bt->laplacianOperatorIsSet)
+    {
         bt->laplacianOperator = laplam (bt, val);
 
-        if ((ret = grib_set_double_internal (gh, self->laplacianOperator, bt->laplacianOperator)) != GRIB_SUCCESS) 
-          goto cleanup;
+        if ((ret = grib_set_double_internal (gh, self->laplacianOperator, bt->laplacianOperator)) != GRIB_SUCCESS)
+            goto cleanup;
 
         grib_get_double_internal (gh, self->laplacianOperator, &bt->laplacianOperator);
+    }
 
-      }   
-
-/*
- * Scan all values that will be truncated and find their minimum and maximum
- */
-
+    /*
+     * Scan all values that will be truncated and find their minimum and maximum
+     */
     minmax_set = 0;
 
     isp = 0;
     for_ij ()
-      {
+    {
         int insub;
-   
+
         calc_insub ();
 
         if (! insub)
-          {
+        {
             for (k = 0; k < 4; k++)
-              {
+            {
                 double current_val = val[isp+k] * scals (i, j);
                 if (! minmax_set)
-                  {
+                {
                     min = current_val;
                     max = current_val;
                     minmax_set++;
-                  }
+                }
                 if (current_val < min) min = current_val;
                 if (current_val > max) max = current_val;
-              }
-          }
+            }
+        }
 
         isp += 4;
-      }
+    }
 
     if (bt->n_vals_bif != bt->n_vals_sub)
-      {
+    {
         ret = grib_optimize_decimal_factor (a, self->reference_value,
-                                            max, min, bt->bits_per_value, 0, 1,
-                                            &bt->decimal_scale_factor, 
-                                            &bt->binary_scale_factor, 
-                                            &bt->reference_value);
+                max, min, bt->bits_per_value, 0, 1,
+                &bt->decimal_scale_factor,
+                &bt->binary_scale_factor,
+                &bt->reference_value);
         if (ret != GRIB_SUCCESS)
-          goto cleanup;
-     
+            goto cleanup;
+
         s = grib_power (-bt->binary_scale_factor,   2);
         d = grib_power (+bt->decimal_scale_factor, 10);
-     }
-   else
-     {
-       bt->decimal_scale_factor = 0;
-       bt->binary_scale_factor  = 0;
-       bt->reference_value      = 0.;
-     }
+    }
+    else
+    {
+        bt->decimal_scale_factor = 0;
+        bt->binary_scale_factor  = 0;
+        bt->reference_value      = 0.;
+    }
 
-/*
- * Encode values
- */
-
+    /*
+     * Encode values
+     */
     hsize = bt->bytes * bt->n_vals_sub;
     lsize = ((bt->n_vals_bif - bt->n_vals_sub) * bt->bits_per_value) / 8;
 
@@ -892,76 +875,74 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     isp = 0;
 
     for_ij ()
-      {
+    {
         double current_val;
         int insub;
 
         calc_insub ();
 
-
         if (insub)
-          for (k = 0; k < 4; k++)
+            for (k = 0; k < 4; k++)
             {
-              current_val = val[isp+k];
-              grib_encode_unsigned_long (hres, bt->encode_float (current_val) , &hpos, 8 * bt->bytes);
+                current_val = val[isp+k];
+                grib_encode_unsigned_long (hres, bt->encode_float (current_val) , &hpos, 8 * bt->bytes);
             }
         else
-          for (k = 0; k < 4; k++)
+            for (k = 0; k < 4; k++)
             {
-              double S = scals (i, j);
-              current_val = (((((val[isp+k] * d) * S) - bt->reference_value) * s) + 0.5);
+                double S = scals (i, j);
+                current_val = (((((val[isp+k] * d) * S) - bt->reference_value) * s) + 0.5);
 
-              if (current_val < 0)
-                grib_context_log (gh->context, GRIB_LOG_ERROR, "BIFOURIER_PACKING : negative coput before packing (%g)", current_val);
+                if (current_val < 0)
+                    grib_context_log (gh->context, GRIB_LOG_ERROR, "BIFOURIER_PACKING : negative coput before packing (%g)", current_val);
 
-              if (bt->bits_per_value % 8)
-                grib_encode_unsigned_longb (lres, current_val, &lpos, bt->bits_per_value);
-              else
-                grib_encode_unsigned_long (lres, current_val, &lpos, bt->bits_per_value);
+                if (bt->bits_per_value % 8)
+                    grib_encode_unsigned_longb (lres, current_val, &lpos, bt->bits_per_value);
+                else
+                    grib_encode_unsigned_long (lres, current_val, &lpos, bt->bits_per_value);
             }
 
         isp += 4;
-
-      }
+    }
 
     if (((hpos / 8) != hsize) && ((lpos / 8) != lsize))
-      {
+    {
         grib_context_log (gh->context, GRIB_LOG_ERROR, "BIFOURIER_PACKING : Mismatch in packing between high resolution and low resolution part");
         ret = GRIB_INTERNAL_ERROR;
         goto cleanup;
-      }
+    }
 
     buflen = ((hpos + lpos)/8);
 
     if ((ret = grib_set_double_internal (gh, self->reference_value, bt->reference_value)) != GRIB_SUCCESS)
-      goto cleanup;
+        goto cleanup;
 
     {
-      /* Make sure we can decode it again */
-      double ref = 1e-100;
-      grib_get_double_internal (gh,self->reference_value,&ref);
-      Assert (ref == bt->reference_value);
+        /* Make sure we can decode it again */
+        double ref = 1e-100;
+        grib_get_double_internal (gh,self->reference_value,&ref);
+        Assert (ref == bt->reference_value);
     }
 
     if ((ret = grib_set_long_internal (gh, self->binary_scale_factor, bt->binary_scale_factor)) != GRIB_SUCCESS)
-       goto cleanup;
+        goto cleanup;
     if ((ret = grib_set_long_internal (gh, self->decimal_scale_factor, bt->decimal_scale_factor)) != GRIB_SUCCESS)
-       goto cleanup;
+        goto cleanup;
 
     grib_buffer_replace (a, buf, buflen, 1, 1);
 
     if ((ret = grib_set_long_internal (gh, self->totalNumberOfValuesInUnpackedSubset, bt->n_vals_sub)) != GRIB_SUCCESS)
-      goto cleanup;
+        goto cleanup;
 
     if ((ret = grib_set_long_internal (gh, self->number_of_values, bt->n_vals_bif)) != GRIB_SUCCESS)
-      goto cleanup;
+        goto cleanup;
 
 cleanup:
 
     free_bif_trunc (bt, a);
 
     if (buf != NULL)
-      grib_context_free (gh->context, buf);
+        grib_context_free (gh->context, buf);
 
     return ret;
 }
