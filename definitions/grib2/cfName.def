@@ -172,6 +172,17 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
 	 typeOfFirstFixedSurface = 20 ;
+	 typeOfSecondFixedSurface = 255 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	 scaledValueOfFirstFixedSurface = 29315 ;
+}
+#Ocean mixed layer thickness defined by sigma theta 0.01 kg/m3
+'ocean_mixed_layer_thickness_defined_by_sigma_theta' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfFirstFixedSurface = 169 ;
+	 scaledValueOfFirstFixedSurface = 1 ;
 }
