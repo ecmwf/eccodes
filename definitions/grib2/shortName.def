@@ -427,6 +427,16 @@
 	 scaledValueOfSecondFixedSurface = 300 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
+#Ocean mixed layer thickness defined by sigma theta 0.01 kg/m3
+'mlotst010' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 1 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfFirstFixedSurface = 169 ;
+	}
 #Ammonium aerosol mass mixing ratio
 'aermr18' = {
 	 discipline = 0 ;
@@ -1360,6 +1370,7 @@
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
+	 typeOfSecondFixedSurface = 255 ;
 	 typeOfFirstFixedSurface = 20 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	 scaledValueOfFirstFixedSurface = 29315 ;
