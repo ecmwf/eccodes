@@ -62,6 +62,7 @@ const char* grib_tool_description="Dump the content of a BUFR file in different 
 const char* grib_tool_name="bufr_dump";
 const char* grib_tool_usage="[options] bufr_file bufr_file ...";
 static int json=0;
+static int dump_descriptors=0;
 static char* json_option=0;
 static int first_handle=1;
 static grib_dumper* dumper=0;
@@ -157,8 +158,11 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("H"))
         options->dump_flags |= GRIB_DUMP_FLAG_HEXADECIMAL;
 
-    if (grib_options_on("d") && !grib_options_on("u"))
+    if (grib_options_on("d") && !grib_options_on("u")) {
         options->dump_flags |= GRIB_DUMP_FLAG_ALL_DATA;
+        dump_descriptors = 1;
+        json=0;
+    }
 
     /* Turn off GRIB multi-field support mode. Not relevant for BUFR */
     grib_multi_support_off(grib_context_get_default());
@@ -358,6 +362,60 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             }
         }
         grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
+    } else if (dump_descriptors) {
+        size_t size_desc=0, size_names=0, size_abbrevs=0, i=0;
+        size_t size_proper=0;
+        long*  array_descriptors = NULL;
+        char** array_names = NULL;
+        char** array_abbrevs = NULL;
+        char* the_key = "expandedDescriptors";
+
+        GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_desc), 0);
+        array_descriptors = (long*)malloc(size_desc*sizeof(long));
+        if (!array_descriptors) {
+            fprintf(stderr, "%s: Memory allocation error", the_key);
+            exit(GRIB_OUT_OF_MEMORY);
+        }
+        GRIB_CHECK_NOLINE( grib_get_long_array(h, the_key, array_descriptors, &size_desc), 0);
+        size_proper = size_desc;
+        for(i=0; i<size_desc; ++i) {
+            if(array_descriptors[i]==999999) size_proper--;
+        }
+
+        the_key = "expandedAbbreviations";
+        GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_abbrevs), 0);
+        array_abbrevs = (char**)malloc(size_abbrevs * sizeof(char*));
+        if (!array_abbrevs) {
+            fprintf(stderr, "%s: Memory allocation error", the_key);
+            exit(GRIB_OUT_OF_MEMORY);
+        }
+        GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_abbrevs, &size_abbrevs), 0);
+        DebugAssert(size_proper==size_abbrevs);
+
+        the_key = "expandedNames";
+        GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_names), 0);
+        array_names = (char**)malloc(size_names * sizeof(char*));
+        if (!array_names) {
+            fprintf(stderr, "%s: Memory allocation error", the_key);
+            exit(GRIB_OUT_OF_MEMORY);
+        }
+        GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_names, &size_names), 0);
+        DebugAssert(size_proper==size_names);
+
+        for(i=0; i<size_desc; ++i) {
+            long  desc = array_descriptors[i];
+            char* abbr = array_abbrevs[i];
+            char* name = array_names[i];
+            if (desc != 999999) {
+                printf("%06ld\t%s\t%s\n", desc, abbr, name);
+            }
+            free(abbr);
+            free(name);
+        }
+        free(array_descriptors);
+        free(array_abbrevs);
+        free(array_names);
+
     } else {
         const char* dumper_name = get_dumper_name(options);
         if (strcmp(dumper_name, "bufr_simple")==0) {
