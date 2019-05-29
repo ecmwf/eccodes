@@ -363,7 +363,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
         grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
     } else if (dump_descriptors) {
-        size_t size_desc=0, size_names=0, size_abbrevs=0, i=0;
+        size_t size_desc=0, size_names=0, size_abbrevs=0, i=0, j=0;
         size_t size_proper=0;
         long*  array_descriptors = NULL;
         char** array_names = NULL;
@@ -378,6 +378,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
         GRIB_CHECK_NOLINE( grib_get_long_array(h, the_key, array_descriptors, &size_desc), 0);
         size_proper = size_desc;
+        /* Unfortunately we have to exclude the pesky 999999 descriptors as they don't
+         * equivalents in the name and abbreviation arrays!
+         */
         for(i=0; i<size_desc; ++i) {
             if(array_descriptors[i]==999999) size_proper--;
         }
@@ -402,16 +405,23 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_names, &size_names), 0);
         DebugAssert(size_proper==size_names);
 
-        for(i=0; i<size_desc; ++i) {
-            long  desc = array_descriptors[i];
-            char* abbr = array_abbrevs[i];
-            char* name = array_names[i];
-            if (desc != 999999) {
+        i=0;
+        j=0;
+        while(i<size_desc) {
+            const long desc = array_descriptors[i];
+            if (desc == 999999) {
+                /*ignore this one*/
+            } else {
+                char* abbr = array_abbrevs[j];
+                char* name = array_names[j];
                 printf("%06ld\t%s\t%s\n", desc, abbr, name);
+                ++j;
+                free(abbr);
+                free(name);
             }
-            free(abbr);
-            free(name);
+            ++i;
         }
+
         free(array_descriptors);
         free(array_abbrevs);
         free(array_names);
