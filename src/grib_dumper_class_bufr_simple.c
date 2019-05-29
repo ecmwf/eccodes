@@ -26,6 +26,7 @@
    MEMBERS = long end
    MEMBERS = long isLeaf
    MEMBERS = long isAttribute
+   MEMBERS = long numberOfSubsets
    MEMBERS = grib_string_list* keys
    END_CLASS_DEF
 
@@ -64,6 +65,7 @@ typedef struct grib_dumper_bufr_simple {
 	long end;
 	long isLeaf;
 	long isAttribute;
+    long numberOfSubsets;
 	grib_string_list* keys;
 } grib_dumper_bufr_simple;
 
@@ -120,6 +122,7 @@ static int init(grib_dumper* d)
     self->empty=1;
     self->isLeaf=0;
     self->isAttribute=0;
+    self->numberOfSubsets=0;
     self->keys=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
 
     return GRIB_SUCCESS;
@@ -303,7 +306,16 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         if (self->isLeaf==0) {
             char* prefix;
             int dofree=0;
-            
+
+            /* Note: the "subsetNumber" key is only there for UNCOMPRESSED BUFR messages */
+            if (self->numberOfSubsets > 1 && strcmp(a->name,"subsetNumber")==0) {
+                err = grib_unpack_long(a,&value,&size);
+                DebugAssert(!err);
+                fprintf(self->dumper.out,"%s=%ld\n",a->name,value);
+                DebugAssert( !grib_is_missing_long(a,value) );
+                return;
+            }
+
             r=compute_bufr_key_rank(h,self->keys,a->name);
             if (r!=0) {
                 prefix=(char*)grib_context_malloc_clear(c,sizeof(char)*(strlen(a->name)+10));
@@ -672,9 +684,13 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
             !grib_inline_strcmp(a->name,"GRIB") ||
             !grib_inline_strcmp(a->name,"META")
     ) {
+        int err = 0;
         grib_handle* h=grib_handle_of_accessor(a);
         self->begin=1;
         self->empty=1;
+
+        err = grib_get_long(h, "numberOfSubsets", &(self->numberOfSubsets));
+        DebugAssert(!err);
         _dump_long_array(h,self->dumper.out,"dataPresentIndicator");
         _dump_long_array(h,self->dumper.out,"delayedDescriptorReplicationFactor");
         _dump_long_array(h,self->dumper.out,"shortDelayedDescriptorReplicationFactor");
