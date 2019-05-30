@@ -24,47 +24,49 @@
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/unsupported/LambertAzimuthalEqualArea.h"
-#include "mir/util/Angles.h"
-#include "mir/util/Domain.h"
+#include "mir/util/BoundingBox.h"
+#include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
 
 namespace mir {
 namespace repres {
 
-LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const param::MIRParametrisation& parametrisation)
-    : Dx_(0.), Dy_(0.), nx_(0), ny_(0) {
+LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(
+    const param::MIRParametrisation& parametrisation) :
+    Dx_(0.),
+    Dy_(0.),
+    nx_(0),
+    ny_(0) {
+
+    // set projection
+    double standardParallel;
+    double centralLongitude;
+    double radius;
+    parametrisation.get("standardParallelInDegrees", standardParallel);
+    parametrisation.get("centralLongitudeInDegrees", centralLongitude);
+    parametrisation.get("radius", radius);
+    ASSERT(radius > 0.);
+
+    atlas::util::Config config;
+    config.set("type", "lambert_azimuthal_equal_area");
+    config.set("standard_parallel", standardParallel);
+    config.set("central_longitude", centralLongitude);
+    config.set("radius", radius);
+
+    projection_ = atlas::Projection(config);
+
+
+    //FIXME:
     eckit::Log::warning() << "WARNING: scanningMode is completelly ignored!" << std::endl;
 
-    // reference parallel/meridian ([degree])
+
+    // first point [m]
     double value[2];
-    parametrisation.get("standardParallelInDegrees", value[0]);
-    parametrisation.get("centralLongitudeInDegrees", value[1]);
-    reference_ = PointLatLon(value[0], value[1]);
+    parametrisation.get("longitudeOfFirstGridPointInDegrees", value[0]);
+    parametrisation.get("latitudeOfFirstGridPointInDegrees", value[1]);
+    firstXY_ = {value[0], value[1]};
+    projection_.lonlat2xy(firstXY_.data());
 
-    // first point (in [degree] and [m])
-    parametrisation.get("latitudeOfFirstGridPointInDegrees", value[0]);
-    parametrisation.get("longitudeOfFirstGridPointInDegrees", value[1]);
-    firstLL_ = PointLatLon(value[0], value[1]);
-
-    radius_ = 0.;
-    parametrisation.get("radius", radius_);
-    ASSERT(radius_ > 0.);
-
-    double phi1 = util::degree_to_radian(reference_.lat().value());
-    double sin_phi1 = std::sin(phi1);
-    double cos_phi1 = std::cos(phi1);
-
-    double phi = util::degree_to_radian(firstLL_.lat().value());
-    double sin_phi = std::sin(phi);
-    double cos_phi = std::cos(phi);
-
-    double dlambda = util::degree_to_radian((firstLL_.lon() - reference_.lon()).value());
-    double cos_dlambda = std::cos(dlambda);
-    double sin_dlambda = std::sin(dlambda);
-
-    double kp = radius_ * std::sqrt(2. / (1. + sin_phi1 * sin_phi + cos_phi1 * cos_phi * cos_dlambda));
-
-    firstXY_ = Point2(kp * cos_phi * sin_dlambda, kp * (cos_phi1 * sin_phi - sin_phi1 * cos_phi * cos_dlambda));
 
     // increments [m]
     parametrisation.get("xDirectionGridLengthInMetres", Dx_);
@@ -78,48 +80,14 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const param::MIRParametrisa
     ASSERT(parametrisation.get("numberOfPointsAlongYAxis", ny_));
     ASSERT(nx_ > 0);
     ASSERT(ny_ > 0);
-
-    // calculate "contained" bounding box (internal to the Lambert Az. Eq. Area limits)
-    // FIXME: This isn't working well really!!!
-    double lambda0 = util::degree_to_radian(reference_.lon().value());
-
-    auto f = [=](double x, double y) -> Point2 {
-        double sin_phi1 = std::sin(phi1);
-        double cos_phi1 = std::cos(phi1);
-
-        double rho = std::sqrt(x * x + y * y);
-        double c = 2. * std::asin(rho / (2. * radius_));
-        double cos_c = std::cos(c);
-        double sin_c = std::sin(c);
-
-        return Point2{lambda0 + std::atan2(x * sin_c, rho * cos_phi1 * cos_c - y * sin_phi1 * sin_c),
-                      std::asin(cos_c * sin_phi1 + y * sin_c * cos_phi1 / rho)};
-    };
-
-    Point2 lastXY = Point2::add(firstXY_, Point2((nx_ - 1) * Dx_, (ny_ - 1) * Dy_));
-    Point2 min = Point2::componentsMin(firstXY_, lastXY);
-    Point2 max = Point2::componentsMax(firstXY_, lastXY);
-
-    Point2 corners[] = {f(min[0], max[1]), f(max[0], max[1]), f(min[0], min[1]), f(max[0], min[1])};
-
-    double w = util::radian_to_degree(std::max(corners[0][0], corners[2][0]));
-    double e = util::radian_to_degree(std::min(corners[1][0], corners[3][0]));
-
-    double n = std::min(corners[0][1], corners[1][1]);
-    double s = std::max(corners[2][1], corners[3][1]);
-    n = util::radian_to_degree(min[0] * max[0] < 0 ? std::min(n, f(0, max[1])[1]) : n);
-    s = util::radian_to_degree(min[0] * max[0] < 0 ? std::max(s, f(0, min[1])[1]) : s);
-
-    bbox_ = util::BoundingBox(n, w, s, e);
 }
 
 LambertAzimuthalEqualArea::~LambertAzimuthalEqualArea() = default;
 
 void LambertAzimuthalEqualArea::print(std::ostream& out) const {
     out << "LambertAzimuthalEqualArea["
-           "reference_="
-        << reference_ << ",firstLL=" << firstLL_ << ",Dx=" << Dx_ << ",Dy=" << Dy_ << ",nx=" << nx_ << ",ny=" << ny_
-        << "]";
+           "projection="
+        << projection_ << ",Dx=" << Dx_ << ",Dy=" << Dy_ << ",nx=" << nx_ << ",ny=" << ny_ << "]";
 }
 
 size_t LambertAzimuthalEqualArea::numberOfPoints() const {
@@ -134,12 +102,7 @@ atlas::Grid LambertAzimuthalEqualArea::atlasGrid() const {
     StructuredGrid::XSpace xspace(LinearSpacing(firstXY_[0], lastXY[0], long(nx_)));
     StructuredGrid::YSpace yspace(LinearSpacing(firstXY_[1], lastXY[1], long(ny_)));
 
-    atlas::util::Config projection;
-    projection.set("type", "lambert_azimuthal_equal_area");
-    projection.set("standard_parallel", reference_.lat().value());
-    projection.set("central_longitude", reference_.lon().value());
-
-    return StructuredGrid(xspace, yspace, projection);
+    return StructuredGrid(xspace, yspace, projection_);
 }
 
 bool LambertAzimuthalEqualArea::isPeriodicWestEast() const {
@@ -155,7 +118,41 @@ bool LambertAzimuthalEqualArea::includesSouthPole() const {
 }
 
 void LambertAzimuthalEqualArea::fill(grib_info& info) const {
-    NOTIMP;
+
+    info.packing.editionNumber = 2;
+
+    ASSERT(Dx_ > 0.);
+    ASSERT(Dy_ < 0.);
+
+    Point2 reference{0., 0.};
+    projection_.xy2lonlat(reference.data());
+
+    Point2 firstLL(firstXY_);
+    projection_.xy2lonlat(firstLL.data());
+
+    info.grid.latitudeOfFirstGridPointInDegrees  = firstLL[1];
+    info.grid.longitudeOfFirstGridPointInDegrees = firstLL[0];
+
+    struct key_t {
+        std::string name;
+        long value;
+    };
+
+    for (auto& key : {
+             key_t{"gridDefinitionTemplateNumber", 140L},  // grib2/tables/4/3.1.table
+             key_t{"xDirectionGridLengthInMillimetres", std::lround(Dx_ * 1.e3)},
+             key_t{"yDirectionGridLengthInMillimetres", std::lround(-Dy_ * 1.e3)},
+             key_t{"numberOfPointsAlongXAxis", long(nx_)},
+             key_t{"numberOfPointsAlongYAxis", long(ny_)},
+             key_t{"standardParallelInMicrodegrees", std::lround(reference[1] * 1.e6)},
+             key_t{"centralLongitudeInMicrodegrees", std::lround(reference[0] * 1.e6)},
+         }) {
+        auto& set = info.packing.extra_settings[info.packing.extra_settings_count++];
+
+        set.name       = key.name.c_str();
+        set.long_value = key.value;
+        set.type       = GRIB_TYPE_LONG;
+    }
 }
 
 void LambertAzimuthalEqualArea::validate(const MIRValuesVector& values) const {
@@ -168,6 +165,8 @@ void LambertAzimuthalEqualArea::validate(const MIRValuesVector& values) const {
 Iterator* LambertAzimuthalEqualArea::iterator() const {
 
     class LAEAIterator : public Iterator {
+        atlas::Projection projection_;
+
         double Dx_;
         double Dy_;
         size_t nx_;
@@ -176,16 +175,9 @@ Iterator* LambertAzimuthalEqualArea::iterator() const {
         size_t j_;
         size_t count_;
 
-        double radius_;
-        double lambda0_;
-        double phi1_;
-
         double x_;
         double y_;
-        double sin_phi1_;
-        double cos_phi1_;
         double x0_;
-        double y2_;
 
         void print(std::ostream& out) const {
             out << "LAEAIterator[";
@@ -197,21 +189,11 @@ Iterator* LambertAzimuthalEqualArea::iterator() const {
         bool next(Latitude& _lat, Longitude& _lon) {
 
             if (j_ < ny_ && i_ < nx_) {
-                double rho = std::sqrt(x_ * x_ + y2_);
-                if (eckit::types::is_approximately_equal(rho, 0.)) {
 
-                    _lat = lat(util::radian_to_degree(phi1_));
-                    _lon = lon(util::radian_to_degree(lambda0_));
-
-                } else {
-                    double c = 2. * std::asin(rho / (2. * radius_));
-                    double cos_c = std::cos(c);
-                    double sin_c = std::sin(c);
-
-                    _lat = lat(util::radian_to_degree(std::asin(cos_c * sin_phi1_ + y_ * sin_c * cos_phi1_ / rho)));
-                    _lon = lon(util::radian_to_degree(
-                        lambda0_ + std::atan2(x_ * sin_c, rho * cos_phi1_ * cos_c - y_ * sin_phi1_ * sin_c)));
-                }
+                Point2 ll{x_, y_};
+                projection_.xy2lonlat(ll.data());
+                _lat = lat(ll[1]);
+                _lon = lon(ll[0]);
 
                 x_ += Dx_;
                 if (++i_ == nx_) {
@@ -219,7 +201,6 @@ Iterator* LambertAzimuthalEqualArea::iterator() const {
                     x_ = x0_;
                     j_++;
                     y_ += Dy_;
-                    y2_ = y_ * y_;
                 }
 
                 count_++;
@@ -229,49 +210,50 @@ Iterator* LambertAzimuthalEqualArea::iterator() const {
         }
 
     public:
-        LAEAIterator(double radius, const PointLatLon& reference, const Point2& firstXY, size_t nx, size_t ny,
-                     double Dx, double Dy)
-            : Dx_(Dx)
-            , Dy_(Dy)
-            , nx_(nx)
-            , ny_(ny)
-            , i_(0)
-            , j_(0)
-            , count_(0)
-            , radius_(radius)
-            , lambda0_(util::degree_to_radian(reference.lon().value()))
-            , phi1_(util::degree_to_radian(reference.lat().value())) {
+        LAEAIterator(const atlas::Projection& projection, const Point2& firstXY, size_t nx,
+                     size_t ny, double Dx, double Dy) :
+            projection_(projection),
+            Dx_(Dx),
+            Dy_(Dy),
+            nx_(nx),
+            ny_(ny),
+            i_(0),
+            j_(0),
+            count_(0) {
             ASSERT(Dx_ > 0);
             ASSERT(Dy_ < 0);
 
             x_ = firstXY[0];
             y_ = firstXY[1];
-
-            sin_phi1_ = std::sin(phi1_);
-            cos_phi1_ = std::cos(phi1_);
             x0_ = x_;
-            y2_ = y_ * y_;
         }
         LAEAIterator(const LAEAIterator&) = delete;
         LAEAIterator& operator=(const LAEAIterator&) = delete;
     };
 
-    return new LAEAIterator(radius_, reference_, firstXY_, nx_, ny_, Dx_, Dy_);
+    return new LAEAIterator(projection_, firstXY_, nx_, ny_, Dx_, Dy_);
 }
 
 void LambertAzimuthalEqualArea::makeName(std::ostream& out) const {
     eckit::MD5 h;
-    h << reference_.lat() << reference_.lon() << firstLL_.lat() << firstLL_.lon() << radius_;
+    h << projection_.spec();
+    h << bbox_;
 
     out << "LAEA-" << nx_ << "x" << ny_ << "-" << h.digest();
 }
 
 bool LambertAzimuthalEqualArea::sameAs(const Representation& other) const {
+    auto spec = [](const LambertAzimuthalEqualArea& repres) {
+        std::stringstream str;
+        repres.makeName(str);
+        return str.str();
+    };
+
     auto o = dynamic_cast<const LambertAzimuthalEqualArea*>(&other);
-    return o && nx_ == o->nx_ && ny_ == o->ny_ && eckit::types::is_approximately_equal(radius_, o->radius_) &&
-           eckit::types::is_approximately_equal(Dx_, o->Dx_) && eckit::types::is_approximately_equal(Dy_, o->Dy_) &&
-           reference_.lon() == o->reference_.lon() && reference_.lat() == o->reference_.lat() &&
-           firstLL_.lon() == o->firstLL_.lon() && firstLL_.lat() == o->firstLL_.lat();
+    return o &&
+           eckit::types::is_approximately_equal(Dx_, o->Dx_) &&
+           eckit::types::is_approximately_equal(Dy_, o->Dy_) &&
+           spec(*this) == spec(*o);
 }
 
 void LambertAzimuthalEqualArea::fill(util::MeshGeneratorParameters& params) const {

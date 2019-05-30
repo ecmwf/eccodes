@@ -16,9 +16,10 @@
 #ifndef mir_repres_LambertAzimuthalEqualArea_h
 #define mir_repres_LambertAzimuthalEqualArea_h
 
+#include "mir/api/Atlas.h"
+
 #include "mir/repres/Gridded.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/BoundingBox.h"
 
 
 namespace mir {
@@ -81,14 +82,12 @@ private:
 
     // -- Members
 
-    PointLatLon reference_;
-    PointLatLon firstLL_;
     Point2 firstXY_;
-    double radius_;
     double Dx_;
     double Dy_;
     size_t nx_;
     size_t ny_;
+    atlas::Projection projection_;
 
     // -- Methods
     // None
