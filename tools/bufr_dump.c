@@ -261,6 +261,87 @@ static void print_header(grib_runtime_options* options)
     }
 }
 
+static void bufr_dump_descriptors(grib_handle* h)
+{
+    size_t size_desc=0, size_names=0, size_abbrevs=0, size_units=0;
+    size_t i=0, j=0, size_proper=0;
+    long*  array_descriptors = NULL;
+    char** array_names = NULL;
+    char** array_abbrevs = NULL;
+    char** array_units = NULL;
+    char* the_key = "expandedDescriptors";
+
+    GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_desc), 0);
+    array_descriptors = (long*)malloc(size_desc*sizeof(long));
+    if (!array_descriptors) {
+        fprintf(stderr, "%s: Memory allocation error", the_key);
+        exit(GRIB_OUT_OF_MEMORY);
+    }
+    GRIB_CHECK_NOLINE( grib_get_long_array(h, the_key, array_descriptors, &size_desc), 0);
+    size_proper = size_desc;
+    /* Exclude the pesky 999999 descriptors as they don't
+     * have equivalents in the name, abbreviation and units arrays!
+     */
+    for(i=0; i<size_desc; ++i) {
+        if(array_descriptors[i]==999999) size_proper--;
+    }
+
+    /* The string arrays for keys, names and units should have the same length*/
+    the_key = "expandedAbbreviations";
+    GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_abbrevs), 0);
+    array_abbrevs = (char**)malloc(size_abbrevs * sizeof(char*));
+    if (!array_abbrevs) {
+        fprintf(stderr, "%s: Memory allocation error", the_key);
+        exit(GRIB_OUT_OF_MEMORY);
+    }
+    GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_abbrevs, &size_abbrevs), 0);
+    Assert(size_proper==size_abbrevs);
+
+    the_key = "expandedNames";
+    GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_names), 0);
+    array_names = (char**)malloc(size_names * sizeof(char*));
+    if (!array_names) {
+        fprintf(stderr, "%s: Memory allocation error", the_key);
+        exit(GRIB_OUT_OF_MEMORY);
+    }
+    GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_names, &size_names), 0);
+    Assert(size_proper==size_names);
+
+    the_key = "expandedUnits";
+    GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_units), 0);
+    array_units = (char**)malloc(size_units * sizeof(char*));
+    if (!array_units) {
+        fprintf(stderr, "%s: Memory allocation error", the_key);
+        exit(GRIB_OUT_OF_MEMORY);
+    }
+    GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_units, &size_units), 0);
+    Assert(size_proper==size_units);
+
+    i=0;
+    j=0;
+    while(i<size_desc) {
+        const long desc = array_descriptors[i];
+        if (desc == 999999) {
+            printf("%06ld\t\t\n", desc);
+        } else {
+            char* abbr = array_abbrevs[j];
+            char* name = array_names[j];
+            char* units= array_units[j];
+            printf("%06ld\t%s\t%s [%s]\n", desc, abbr, name, units);
+            ++j;
+            free(abbr);
+            free(name);
+            free(units);
+        }
+        ++i;
+    }
+
+    free(array_descriptors);
+    free(array_abbrevs);
+    free(array_names);
+    free(array_units);
+}
+
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     long length=0;
@@ -268,7 +349,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     grib_accessor* a=NULL;
     grib_accessors_list* al=NULL;
     if (grib_get_long(h,"totalLength",&length) != GRIB_SUCCESS)
-        length=-9999;
+        length = -9999;
 
     if (!options->skip) {
         if (options->set_values_count != 0)
@@ -279,7 +360,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     for (i=0;i<options->print_keys_count;i++)
         grib_set_flag(h,options->print_keys[i].name,GRIB_ACCESSOR_FLAG_DUMP);
 
-    if (json) {
+    if (json)
+    {
         /* ECC-233: print comma as separator between messages */
         if (!first_handle && options->handle_count>1) {
             fprintf(stdout,",\n");
@@ -345,7 +427,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if (!strcmp(options->dump_mode,"default")) {
             printf("}\n");
         }
-    } else if (grib_options_on("O")) {
+    }
+    else if (grib_options_on("O"))
+    {
         char tmp[1024];
         sprintf(tmp,"MESSAGE %d ( length=%ld )",options->handle_count,length);
         if (!grib_options_on("C"))
@@ -362,86 +446,14 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             }
         }
         grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
-    } else if (dump_descriptors) {
-        size_t size_desc=0, size_names=0, size_abbrevs=0, size_units=0;
-        size_t i=0, j=0, size_proper=0;
-        long*  array_descriptors = NULL;
-        char** array_names = NULL;
-        char** array_abbrevs = NULL;
-        char** array_units = NULL;
-        char* the_key = "expandedDescriptors";
-
-        GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_desc), 0);
-        array_descriptors = (long*)malloc(size_desc*sizeof(long));
-        if (!array_descriptors) {
-            fprintf(stderr, "%s: Memory allocation error", the_key);
-            exit(GRIB_OUT_OF_MEMORY);
-        }
-        GRIB_CHECK_NOLINE( grib_get_long_array(h, the_key, array_descriptors, &size_desc), 0);
-        size_proper = size_desc;
-        /* Unfortunately we have to exclude the pesky 999999 descriptors as they don't
-         * equivalents in the name and abbreviation arrays!
-         */
-        for(i=0; i<size_desc; ++i) {
-            if(array_descriptors[i]==999999) size_proper--;
-        }
-
-        /* The string arrays for keys, names and units should have the same length*/
-        the_key = "expandedAbbreviations";
-        GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_abbrevs), 0);
-        array_abbrevs = (char**)malloc(size_abbrevs * sizeof(char*));
-        if (!array_abbrevs) {
-            fprintf(stderr, "%s: Memory allocation error", the_key);
-            exit(GRIB_OUT_OF_MEMORY);
-        }
-        GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_abbrevs, &size_abbrevs), 0);
-        Assert(size_proper==size_abbrevs);
-
-        the_key = "expandedNames";
-        GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_names), 0);
-        array_names = (char**)malloc(size_names * sizeof(char*));
-        if (!array_names) {
-            fprintf(stderr, "%s: Memory allocation error", the_key);
-            exit(GRIB_OUT_OF_MEMORY);
-        }
-        GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_names, &size_names), 0);
-        Assert(size_proper==size_names);
-
-        the_key = "expandedUnits";
-        GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_units), 0);
-        array_units = (char**)malloc(size_units * sizeof(char*));
-        if (!array_units) {
-            fprintf(stderr, "%s: Memory allocation error", the_key);
-            exit(GRIB_OUT_OF_MEMORY);
-        }
-        GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_units, &size_units), 0);
-        Assert(size_proper==size_units);
-
-        i=0;
-        j=0;
-        while(i<size_desc) {
-            const long desc = array_descriptors[i];
-            if (desc == 999999) {
-                printf("%06ld\t\t\n", desc);
-            } else {
-                char* abbr = array_abbrevs[j];
-                char* name = array_names[j];
-                char* units= array_units[j];
-                printf("%06ld\t%s\t%s [%s]\n", desc, abbr, name, units);
-                ++j;
-                free(abbr);
-                free(name);
-                free(units);
-            }
-            ++i;
-        }
-
-        free(array_descriptors);
-        free(array_abbrevs);
-        free(array_names);
-        free(array_units);
-
-    } else {
+    }
+    else if (dump_descriptors)
+    {
+        /* Dump out the section 3 descriptors, their keys/units etc */
+        bufr_dump_descriptors(h);
+    }
+    else
+    {
         const char* dumper_name = get_dumper_name(options);
         if (strcmp(dumper_name, "bufr_simple")==0) {
             /* This speeds up the unpack by skipping attribute keys not used in the dump */
