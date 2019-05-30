@@ -38,7 +38,7 @@ grib_option grib_options[]={
 
         {"S",0,0,1,0,0},
         {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
-        {"p",0,"Plain dump.\n",0,1,0},
+        {"p",0,"Plain dump (key=value format).\n",0,1,0},
         /* {"D",0,0,0,1,0},  */  /* See ECC-215 */
         {"d",0,"Dump the descriptors.\n",1,1,0},
         /*{"u",0,"Print only some values.\n",0,1,0},*/
@@ -363,8 +363,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
         grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
     } else if (dump_descriptors) {
-        size_t size_desc=0, size_names=0, size_abbrevs=0, i=0, j=0;
-        size_t size_proper=0;
+        size_t size_desc=0, size_names=0, size_abbrevs=0, size_units=0;
+        size_t i=0, j=0, size_proper=0;
         long*  array_descriptors = NULL;
         char** array_names = NULL;
         char** array_abbrevs = NULL;
@@ -386,7 +386,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             if(array_descriptors[i]==999999) size_proper--;
         }
 
-        /* The string arrays for keys and names should be in sync */
+        /* The string arrays for keys, names and units should have the same length*/
         the_key = "expandedAbbreviations";
         GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_abbrevs), 0);
         array_abbrevs = (char**)malloc(size_abbrevs * sizeof(char*));
@@ -407,19 +407,31 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_names, &size_names), 0);
         Assert(size_proper==size_names);
 
+        the_key = "expandedUnits";
+        GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_units), 0);
+        array_units = (char**)malloc(size_units * sizeof(char*));
+        if (!array_units) {
+            fprintf(stderr, "%s: Memory allocation error", the_key);
+            exit(GRIB_OUT_OF_MEMORY);
+        }
+        GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_units, &size_units), 0);
+        Assert(size_proper==size_units);
+
         i=0;
         j=0;
         while(i<size_desc) {
             const long desc = array_descriptors[i];
             if (desc == 999999) {
-                /*ignore this one*/
+                printf("%06ld\t\t\n", desc);
             } else {
                 char* abbr = array_abbrevs[j];
                 char* name = array_names[j];
-                printf("%06ld\t%s\t%s\n", desc, abbr, name);
+                char* units= array_units[j];
+                printf("%06ld\t%s\t%s [%s]\n", desc, abbr, name, units);
                 ++j;
                 free(abbr);
                 free(name);
+                free(units);
             }
             ++i;
         }
@@ -427,6 +439,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         free(array_descriptors);
         free(array_abbrevs);
         free(array_names);
+        free(array_units);
 
     } else {
         const char* dumper_name = get_dumper_name(options);
