@@ -40,8 +40,8 @@ grib_option grib_options[]={
         {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
         {"p",0,"Plain dump.\n",0,1,0},
         /* {"D",0,0,0,1,0},  */  /* See ECC-215 */
-        {"d",0,"Print all data values.\n",1,1,0},
-        {"u",0,"Print only some values.\n",0,1,0},
+        {"d",0,"Dump the descriptors.\n",1,1,0},
+        /*{"u",0,"Print only some values.\n",0,1,0},*/
         /* {"C",0,0,0,1,0}, */
         {"t",0,0,0,1,0},
         {"f",0,0,0,1,0},
@@ -368,6 +368,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         long*  array_descriptors = NULL;
         char** array_names = NULL;
         char** array_abbrevs = NULL;
+        char** array_units = NULL;
         char* the_key = "expandedDescriptors";
 
         GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_desc), 0);
@@ -385,6 +386,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             if(array_descriptors[i]==999999) size_proper--;
         }
 
+        /* The string arrays for keys and names should be in sync */
         the_key = "expandedAbbreviations";
         GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_abbrevs), 0);
         array_abbrevs = (char**)malloc(size_abbrevs * sizeof(char*));
@@ -393,7 +395,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             exit(GRIB_OUT_OF_MEMORY);
         }
         GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_abbrevs, &size_abbrevs), 0);
-        DebugAssert(size_proper==size_abbrevs);
+        Assert(size_proper==size_abbrevs);
 
         the_key = "expandedNames";
         GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_names), 0);
@@ -403,7 +405,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             exit(GRIB_OUT_OF_MEMORY);
         }
         GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_names, &size_names), 0);
-        DebugAssert(size_proper==size_names);
+        Assert(size_proper==size_names);
 
         i=0;
         j=0;
