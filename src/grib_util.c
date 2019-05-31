@@ -743,6 +743,12 @@ static const char* get_grid_type_name(const int spec_grid_type)
     if (spec_grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)
         return "reduced_rotated_gg";
 
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA)
+        return "lambert_azimuthal_equal_area";
+
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL)
+        return "lambert";
+
     return NULL;
 }
 
@@ -1057,6 +1063,13 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
             }
             break;
+        case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
+            if (editionNumber==1) {
+                fprintf(stderr,"GRIB_UTIL_SET_SPEC: grid type='%s' not available in GRIB edition 1.\n", grid_type);
+                goto cleanup;
+            }
+            sprintf(name, "GRIB%ld", editionNumber);
+            break;
         default :
             sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
         }
@@ -1172,6 +1185,23 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         COPY_SPEC_LONG(DxInMetres);
         COPY_SPEC_LONG(DyInMetres);
 
+        break;
+
+    case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
+        COPY_SPEC_LONG  (bitmapPresent);
+        if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+
+        COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+        COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+        COPY_SPEC_LONG(Ni); /* same as Nx */
+        COPY_SPEC_LONG(Nj); /* same as Ny */
+        /* TODO
+         * pass in extra keys e.g. Dx, Dy, standardParallel and centralLongitude
+         */
+        break;
+    case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
+        *err = GRIB_NOT_IMPLEMENTED;
+        goto cleanup;
         break;
 
     case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
