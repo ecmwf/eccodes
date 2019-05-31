@@ -14634,12 +14634,12 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Stratiform precipitation (Large-scale precipitation)
+#Mean large-scale precipitation rate
 '172142' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 142 ;
 	}
-#Convective precipitation
+#Mean convective precipitation rate
 '172143' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 143 ;
@@ -14774,7 +14774,7 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 212 ;
 	}
-#Total precipitation
+#Mean total precipitation rate
 '172228' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 228 ;

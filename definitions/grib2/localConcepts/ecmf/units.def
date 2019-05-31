@@ -18900,13 +18900,13 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 50 ;
 	}
-#Stratiform precipitation (Large-scale precipitation)
+#Mean large-scale precipitation rate
 'm s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 142 ;
 	}
-#Convective precipitation
+#Mean convective precipitation rate
 'm s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
@@ -19068,7 +19068,7 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 212 ;
 	}
-#Total precipitation
+#Mean total precipitation rate
 'm s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
