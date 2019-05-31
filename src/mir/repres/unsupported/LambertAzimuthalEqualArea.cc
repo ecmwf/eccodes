@@ -119,6 +119,7 @@ bool LambertAzimuthalEqualArea::includesSouthPole() const {
 
 void LambertAzimuthalEqualArea::fill(grib_info& info) const {
 
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
     info.packing.editionNumber = 2;
 
     ASSERT(Dx_ > 0.);
@@ -134,12 +135,11 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
     info.grid.longitudeOfFirstGridPointInDegrees = firstLL[0];
 
     struct key_t {
-        std::string name;
+        const char* name;
         long value;
     };
 
     for (auto& key : {
-             key_t{"gridDefinitionTemplateNumber", 140L},  // grib2/tables/4/3.1.table
              key_t{"xDirectionGridLengthInMillimetres", std::lround(Dx_ * 1.e3)},
              key_t{"yDirectionGridLengthInMillimetres", std::lround(-Dy_ * 1.e3)},
              key_t{"numberOfPointsAlongXAxis", long(nx_)},
@@ -149,7 +149,7 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
          }) {
         auto& set = info.packing.extra_settings[info.packing.extra_settings_count++];
 
-        set.name       = key.name.c_str();
+        set.name       = key.name;
         set.long_value = key.value;
         set.type       = GRIB_TYPE_LONG;
     }
