@@ -68,6 +68,7 @@ list( APPEND tests_data_reqd
     grib_change_packing
     bufr_dump_data
     bufr_dump_descriptors
+    bufr_dump_subset
     bufr_dump_decode_filter
     bufr_dump_encode_filter
     bufrdc_desc_ref
