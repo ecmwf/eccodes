@@ -392,24 +392,26 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
 
         if (check_subset_number(str, numberOfSubsets, &subsetNumber) == GRIB_SUCCESS) {
-            grib_handle* new_handle = 0;
-            grib_handle *h2;
-            size_t size = 0;
-            const void *buffer = NULL;
+            if (numberOfSubsets > 1) {
+                grib_handle* new_handle = 0;
+                grib_handle *h2;
+                size_t size = 0;
+                const void *buffer = NULL;
 
-            /* Clone, unpack and extract that particular subset */
-            h2 = grib_handle_clone(h);
-            Assert(h2);
-            GRIB_CHECK_NOLINE(grib_set_long(h2,"unpack", 1), 0);
-            GRIB_CHECK_NOLINE(grib_set_long(h2,"extractSubset", subsetNumber), 0);
-            GRIB_CHECK_NOLINE(grib_set_long(h2,"doExtractSubsets",1), 0);
+                /* Clone, unpack and extract that particular subset */
+                h2 = grib_handle_clone(h);
+                Assert(h2);
+                GRIB_CHECK_NOLINE(grib_set_long(h2,"unpack", 1), 0);
+                GRIB_CHECK_NOLINE(grib_set_long(h2,"extractSubset", subsetNumber), 0);
+                GRIB_CHECK_NOLINE(grib_set_long(h2,"doExtractSubsets",1), 0);
 
-            /* Put result into buffer then form new handle from it */
-            GRIB_CHECK_NOLINE(grib_get_message(h2, &buffer, &size),0);
-            new_handle = grib_handle_new_from_message(0, buffer, size);
-            Assert(new_handle);
-            /* Replace handle with the new one which has only one subset */
-            h = new_handle; /*TODO: possible leak!*/
+                /* Put result into buffer then form new handle from it */
+                GRIB_CHECK_NOLINE(grib_get_message(h2, &buffer, &size),0);
+                new_handle = grib_handle_new_from_message(0, buffer, size);
+                Assert(new_handle);
+                /* Replace handle with the new one which has only one subset */
+                h = new_handle; /*TODO: possible leak!*/
+            }
         } else {
             fprintf(stderr, "ERROR: -S option: Please specify a subset number > 0 and < %ld\n", numberOfSubsets+1);
             exit(1);
