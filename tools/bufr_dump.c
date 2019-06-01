@@ -36,11 +36,11 @@ grib_option grib_options[]={
                 "\n\t\tDefault mode is filter.\n",
                 0,1,"filter"},
 
-        {"S",0,0,1,0,0},
+        /*{"S",0,0,1,0,0},*/
         {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
         {"p",0,"Plain dump (key=value format).\n",0,1,0},
         /* {"D",0,0,0,1,0},  */  /* See ECC-215 */
-        {"d",0,"Dump the descriptors.\n",0,1,0},
+        {"d",0,"Dump the expanded descriptors.\n",0,1,0},
         /*{"u",0,"Print only some values.\n",0,1,0},*/
         /* {"C",0,0,0,1,0}, */
         {"t",0,0,0,1,0},
@@ -54,6 +54,7 @@ grib_option grib_options[]={
         {"7",0,0,0,1,0},
         {"V",0,0,0,1,0},
         {"q",0,0,1,0,0},
+        {"S:","subset_number","\n\t\tDump the given subset\n",0,1,0},
         {"X:",0,0,0,1,0}
         /* {"x",0,0,0,1,0} */
 };
@@ -342,10 +343,32 @@ static void bufr_dump_descriptors(grib_handle* h)
     free(array_units);
 }
 
+/*static*/ int check_subset_number(const char* user_input, long numberOfSubsets, long* subsetNumber)
+{
+    long val=0;
+    char *endptr;
+    errno = 0;    /* To distinguish success/failure after call */
+    val = strtol(user_input, &endptr, 10);
+    if ((errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) || (errno != 0 && val == 0)) {
+        perror("strtol");
+        return GRIB_INVALID_ARGUMENT;
+    }
+    if (endptr == user_input) {
+        return GRIB_INVALID_ARGUMENT;
+    }
+
+    if (val < 1 || val > numberOfSubsets) {
+        return GRIB_INVALID_ARGUMENT;
+    }
+    *subsetNumber = val;
+    return GRIB_SUCCESS;
+}
+        
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     long length=0;
     int i,err=0;
+    long subsetNumber=0;
     grib_accessor* a=NULL;
     grib_accessors_list* al=NULL;
     if (grib_get_long(h,"totalLength",&length) != GRIB_SUCCESS)
@@ -359,6 +382,53 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     for (i=0;i<options->print_keys_count;i++)
         grib_set_flag(h,options->print_keys[i].name,GRIB_ACCESSOR_FLAG_DUMP);
+
+    if (grib_options_on("S:")) {
+        long val=0, numberOfSubsets=0;
+        char *endptr, *str;
+        errno = 0;    /* To distinguish success/failure after call */
+        str = grib_options_get_option("S:");
+        val = strtol(str, &endptr, 10);
+        if ((errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) || (errno != 0 && val == 0)) {
+            perror("strtol");
+            exit(1);
+        }
+        if (endptr == str) {
+            fprintf(stderr, "ERROR: -S option: No digits were found. Please specify a positive integer.\n");
+            exit(1);
+        }
+        subsetNumber = val;
+        err = grib_get_long(h,"numberOfSubsets",&numberOfSubsets);
+        if (err) {
+            fprintf(stderr, "ERROR: Failed to get numberOfSubsets\n");
+            exit(1);
+        }
+        if (subsetNumber < 1 || subsetNumber > numberOfSubsets) {
+            fprintf(stderr, "ERROR: -S option: Please specify a subset number > 0 and < %ld\n", numberOfSubsets+1);
+            exit(1);
+        }
+
+        if (subsetNumber) {
+            grib_handle* new_handle = 0;
+            grib_handle *h2;
+            size_t size = 0;
+            const void *buffer = NULL;
+
+            /*Clone, unpack and extract that particular subset*/
+            h2 = grib_handle_clone(h);
+            Assert(h2);
+            GRIB_CHECK_NOLINE(grib_set_long(h2,"unpack", 1), 0);
+            GRIB_CHECK_NOLINE(grib_set_long(h2,"extractSubset", subsetNumber), 0);
+            GRIB_CHECK_NOLINE(grib_set_long(h2,"doExtractSubsets",1), 0);
+
+            /*Put result into buffer then form new handle from it*/
+            GRIB_CHECK_NOLINE(grib_get_message(h2, &buffer, &size),0);
+            new_handle = grib_handle_new_from_message(0, buffer, size);
+            Assert(new_handle);
+            /*TODO: possible leak!*/
+            h = new_handle;
+        }
+    }
 
     if (json)
     {
