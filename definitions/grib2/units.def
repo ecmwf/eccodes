@@ -2030,7 +2030,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 59 ;
 	}
-#Water equivalent of accumulated snow depth
+#Water equivalent of accumulated snow depth (deprecated)
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;

@@ -17022,12 +17022,6 @@
 	 parameterCategory = 160 ;
 	 parameterNumber = 140 ;
 	}
-#Snow depth
-'160141' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 141 ;
-	}
 #Large-scale precipitation
 '160142' = {
 	 discipline = 192 ;
@@ -19715,12 +19709,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 180 ;
 	 parameterNumber = 179 ;
-	}
-#Snow depth
-'190141' = {
-	 discipline = 192 ;
-	 parameterCategory = 190 ;
-	 parameterNumber = 141 ;
 	}
 #Field capacity
 '190170' = {
