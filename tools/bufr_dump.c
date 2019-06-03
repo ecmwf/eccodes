@@ -343,7 +343,7 @@ static void bufr_dump_descriptors(grib_handle* h)
     free(array_units);
 }
 
-/*static*/ int check_subset_number(const char* user_input, long numberOfSubsets, long* subsetNumber)
+static int check_subset_number(const char* user_input, long numberOfSubsets, long* subsetNumber)
 {
     long val=0;
     char *endptr;
