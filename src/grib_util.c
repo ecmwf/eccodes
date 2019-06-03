@@ -1198,6 +1198,17 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         /* TODO
          * pass in extra keys e.g. Dx, Dy, standardParallel and centralLongitude
          */
+
+        /*
+        COPY_SPEC_LONG(DxInMetres);
+        COPY_SPEC_LONG(DyInMetres);
+
+        COPY_SPEC_LONG(xDirectionGridLengthInMillimetres);
+        COPY_SPEC_LONG(yDirectionGridLengthInMillimetres);
+        COPY_SPEC_LONG(standardParallelInMicrodegrees);
+        COPY_SPEC_LONG(centralLongitudeInMicrodegrees);
+        */
+
         break;
     case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
         *err = GRIB_NOT_IMPLEMENTED;
