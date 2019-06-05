@@ -35,15 +35,14 @@ meta geography.LoVInDegrees
 alias orientationOfTheGrid = LoV;
 alias orientationOfTheGridInDegrees = LoVInDegrees;
 
-#  Dx - X-direction grid length
+#  Dx - X-direction grid length (in units of metres)
 unsigned[3] DxInMetres  : dump;
 alias xDirectionGridLength=DxInMetres;
 alias geography.DxInMetres=DxInMetres ;
 alias Dx = DxInMetres;
 alias Di = DxInMetres;
 
-
-#  Dy - Y-direction grid length
+#  Dy - Y-direction grid length (in units of metres)
 unsigned[3] DyInMetres  : dump;
 alias yDirectionGridLength=DyInMetres;
 alias geography.DyInMetres=DyInMetres;

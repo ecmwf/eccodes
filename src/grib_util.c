@@ -1054,24 +1054,27 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         size_t n = sizeof(levtype);
         Assert(grib_get_string(h,"levelType",levtype,&n) == 0);
         switch (spec->grid_type) {
-        case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
-        case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
-            /* Choose a sample with the right Gaussian number and edition */
-            sprintf(name, "%s_pl_%ld_grib%ld", grid_type,spec->N, editionNumber);
-            if (spec->pl && spec->pl_size) {
-                /* GRIB-834: pl is given so can use any of the reduced_gg_pl samples */
+            case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
+            case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
+                /* Choose a sample with the right Gaussian number and edition */
+                sprintf(name, "%s_pl_%ld_grib%ld", grid_type,spec->N, editionNumber);
+                if (spec->pl && spec->pl_size) {
+                    /* GRIB-834: pl is given so can use any of the reduced_gg_pl samples */
+                    sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
+                }
+                break;
+            case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
+                if (editionNumber==1) {
+                    fprintf(stderr,"GRIB_UTIL_SET_SPEC: grid type='%s' not available in GRIB edition 1.\n", grid_type);
+                    goto cleanup;
+                }
+                sprintf(name, "GRIB%ld", editionNumber);
+                break;
+            case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
+                sprintf(name, "GRIB%ld", editionNumber);
+                break;
+            default :
                 sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
-            }
-            break;
-        case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
-            if (editionNumber==1) {
-                fprintf(stderr,"GRIB_UTIL_SET_SPEC: grid type='%s' not available in GRIB edition 1.\n", grid_type);
-                goto cleanup;
-            }
-            sprintf(name, "GRIB%ld", editionNumber);
-            break;
-        default :
-            sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
         }
 
         if (spec->pl && spec->grid_name) {
@@ -1211,8 +1214,22 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         break;
     case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
-        *err = GRIB_NOT_IMPLEMENTED;
-        goto cleanup;
+        COPY_SPEC_LONG  (bitmapPresent);
+        if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+        COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+        COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+        COPY_SPEC_LONG(Ni); /* same as Nx */
+        COPY_SPEC_LONG(Nj); /* same as Ny */
+
+        /*
+         * Note: DxInMetres and DyInMetres
+         * should be 'double' and not integer. WMO GRIB2 uses millimetres!
+         * TODO:
+         * Add other keys like Latin1, LoV etc
+
+         *err = GRIB_NOT_IMPLEMENTED;
+         goto cleanup;
+        */
         break;
 
     case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
