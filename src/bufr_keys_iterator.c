@@ -146,6 +146,7 @@ static int next_attribute(bufr_keys_iterator* kiter)
         char* prefix=0;
         if (!kiter->prefix) return 0;
         if (!kiter->attributes[i_curr_attribute]) {
+            grib_context_free(kiter->current->context,kiter->prefix);
             kiter->prefix=0;
             return 0;
         }
@@ -167,10 +168,6 @@ int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter)
     /* ECC-734: de-allocate last key name stored */
     grib_context_free(kiter->handle->context, kiter->key_name);
     kiter->key_name = NULL;
-    /* See ECC-937
-    grib_context_free(kiter->handle->context, kiter->prefix);
-    kiter->prefix = NULL;
-    */
 
     if(kiter->at_start)
     {
