@@ -149,8 +149,10 @@ int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter)
     /* ECC-734: de-allocate last key name stored */
     grib_context_free(kiter->handle->context, kiter->key_name);
     kiter->key_name = NULL;
+    /* See ECC-937
     grib_context_free(kiter->handle->context, kiter->prefix);
     kiter->prefix = NULL;
+    */
 
     if(kiter->at_start)
     {
