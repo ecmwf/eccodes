@@ -12,23 +12,22 @@ set -x
 . ./include.sh
 
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_keys_iterator_test_c"
 
-#Define tmp file
+# Define tmp file
 fTmp=${label}".tmp.txt"
 rm -f $fTmp
 
 REDIRECT=/dev/null
 
 f=${data_dir}/bufr/syno_1.bufr
-
-#Dump the keys
 ${examples_dir}/c_bufr_keys_iterator $f 2> $REDIRECT > $fTmp
 
-#TODO: check the output
+# Check the output
+grep -q 'ident=91334'  $fTmp
 grep -q '#5#cloudAmount->percentConfidence=70' $fTmp
 grep -q 'unexpandedDescriptors=(array of 10)'  $fTmp
 
-#Clean up
+# Clean up
 rm -f $fTmp

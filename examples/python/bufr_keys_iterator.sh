@@ -24,6 +24,7 @@ f=${data_dir}/bufr/syno_1.bufr
 $PYTHON $examples_src/bufr_keys_iterator.py $f 2> $REDIRECT > $fTmp
 
 # Check the output
+grep -q 'ident' $fTmp
 grep -q '#6#cloudType->percentConfidence' $fTmp
 grep -q '#2#verticalSignificanceSurfaceObservations->percentConfidence' $fTmp
 
