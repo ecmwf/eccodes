@@ -1037,8 +1037,8 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         err=check_end_data(c, self, number_of_bits); /*advance bitsToEnd*/
         return err;
     }
-    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -%ld- \tcode=%6.6ld width=%ld scale=%ld ref=%ld (pos=%ld -> %ld)",
-            i, bd->code, bd->width, bd->scale, bd->reference,
+    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -%ld- \tcode=%6.6ld width=%ld scale=%ld ref=%ld type=%ld (pos=%ld -> %ld)",
+            i, bd->code, bd->width, bd->scale, bd->reference, bd->type,
             (long)*pos, (long)(*pos-a->offset*8));
     if (bd->type==BUFR_DESCRIPTOR_TYPE_STRING) {
         /* string */
@@ -1073,6 +1073,10 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
             grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: For code %6.6ld, changed ref val: %ld", bd->code, bd->reference);
         }
 
+        if (bd->width > 64) {
+            grib_context_log(c, GRIB_LOG_ERROR,"Descriptor %6.6ld has bit width %ld!", bd->code,bd->width);
+            return GRIB_DECODING_ERROR;
+        }
         if (self->compressedData) {
             dar=decode_double_array(c,data,pos,bd,self->canBeMissing[i],self,&err);
             grib_vdarray_push(c,self->numericValues,dar);
