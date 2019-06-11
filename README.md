@@ -52,6 +52,11 @@ INSTALLATION
    make install
    ```
 
+To add the Python3 bindings, use pip install from PyPI as follows:
+   ```
+   pip install --install-option="--prefix=/path/to/where/you/install/eccodes" eccodes-python
+   ```
+
 
 For more details, please see:
 https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
