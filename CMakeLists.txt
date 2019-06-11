@@ -109,6 +109,11 @@ ecbuild_add_option( FEATURE PYTHON
     DEFAULT ON
     REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy
 )
+# For Python2 we build our own bindings (using SWIG) in the build directory
+# but for Python3 one has to add the eccodes-python from pip AFTER the install
+if( PYTHON_VERSION_MAJOR EQUAL 3 )
+    set( HAVE_PYTHON 0 )
+endif()
 
 ecbuild_add_option( FEATURE FORTRAN
     DESCRIPTION "Build the ecCodes Fortran interface"
