@@ -28,7 +28,8 @@ def print_keys(msg_id):
                 'elevation', 'temperature', 'dewPointTemperature', 'qnh']
     for key in keys:
         try:
-            print('  %s: %s' % (key, codes_get(msg_id, key)))
+            if codes_is_defined(msg_id, key):
+                print('  %s: %s' % (key, codes_get(msg_id, key)))
         except CodesInternalError as err:
             print('Error with key="%s" : %s' % (key, err.msg))
 

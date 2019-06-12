@@ -16,14 +16,20 @@ label="metar_get_keys_test_p"
 
 #Define tmp file
 fTmp=${label}.tmp.txt
-rm -f $fTmp | true
+rm -f $fTmp
 
 REDIRECT=/dev/null
 
-#Write the key values into a file
-$PYTHON $examples_src/metar_get_keys.py  2> $REDIRECT > $fTmp
+# Write the key values into a file
+$PYTHON $examples_src/metar_get_keys.py 2> $REDIRECT > $fTmp
 
-#TODO: check the results
+# Check the results
+grep -q "message: 157" $fTmp
+count=`grep -c latitude $fTmp`
+[ $count -eq 126 ]
+count=`grep -c dewPointTemperature $fTmp`
+[ $count -eq 133 ]
 
-#Clean up
-rm -f $fTmp | true
+
+# Clean up
+rm -f $fTmp
