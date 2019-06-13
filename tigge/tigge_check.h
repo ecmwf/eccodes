@@ -9,6 +9,7 @@
  */
 
 /*todo limits for all radiative fluxes*/
+/*test ONLY!*/
 
 parameter parameters[] = {
    {
