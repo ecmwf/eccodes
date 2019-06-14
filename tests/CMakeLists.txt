@@ -53,6 +53,7 @@ list( APPEND tests_no_data_reqd
     md5
     grib_uerra
     grib_2nd_order_numValues
+    grib_ecc-136
     julian
     bufr_dump_samples
     bufr_json_samples
