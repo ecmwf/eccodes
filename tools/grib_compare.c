@@ -738,6 +738,25 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
                 err1 = GRIB_VALUE_MISMATCH;
                 save_error(c,name);
             }
+            else
+            {
+                /* ECC-136: string reps are the same, but integer values may not be */
+                /* Note: Do not do this during edition-independent compare! */
+                if (!listFromCommandLine) {
+                    long v1, v2;
+                    if (grib_get_long(h1,name,&v1) == GRIB_SUCCESS &&
+                        grib_get_long(h2,name,&v2) == GRIB_SUCCESS)
+                    {
+                        if (v1 != v2)
+                        {
+                            printInfo(h1);
+                            save_error(c,name);
+                            err1 = GRIB_VALUE_MISMATCH;
+                            printf("long [%s]: [%ld] != [%ld]\n", name,v1,v2);
+                        }
+                    }
+                }
+            }
         }
 
         grib_context_free(h1->context,sval1);
