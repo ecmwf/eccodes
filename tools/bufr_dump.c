@@ -102,6 +102,7 @@ int grib_tool_init(grib_runtime_options* options)
     int opt=grib_options_on("C")+grib_options_on("O");
 
     options->dump_mode = "default";
+    options->strict=1; /* Must set here as bufr_dump has its own -S option */
 
     if (opt > 1) {
         printf("%s: simultaneous j/C/O options not allowed\n",grib_tool_name);
