@@ -64,5 +64,10 @@ do
   ${tools_dir}/bufr_dump -S1 ${data_dir}/bufr/$file >/dev/null
 done
 
+# Check strict option with 'where' clause
+input=${data_dir}/bufr/tropical_cyclone.bufr
+ce=`${tools_dir}/bufr_dump -p -w count=3 $input | grep -c 'edition='`
+[ $ce -eq 1 ]
 
+# Clean up
 rm -f $temp1 $temp2
