@@ -388,6 +388,8 @@ add_subdirectory( tools )
 add_subdirectory( fortran )
 
 if (PYTHON_VERSION_MAJOR GREATER 2)
+    # Python3 is no longer built with SWIG but is a separate
+    # package. User should do: pip install eccodes-python
     #add_subdirectory( python3 )
     set( ECCODES_PYTHON_DIR "python3" )
 else()
@@ -406,7 +408,7 @@ ecbuild_dont_pack( DIRS
      concepts tests.ecmwf doxygen confluence examples.dev templates parameters java
      perl config m4 rpms gaussian_experimental gribex examples/F77
      examples/extra examples/deprecated bamboo fortran/fortranCtypes tigge/tools
-     share/eccodes  .settings
+     share/eccodes  .settings python3
 )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
