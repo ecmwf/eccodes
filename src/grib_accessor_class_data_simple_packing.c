@@ -387,7 +387,19 @@ static int  _unpack_double(grib_accessor* a, double* val, size_t *len,unsigned c
     buf += grib_byte_offset(a);
 
     /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/    /* See GRIB-787 */
-
+    {
+        long dataSectionLength = 0;
+        err = grib_get_long(gh,self->seclen, &dataSectionLength);
+        if (!err) {
+            const long valuesSize = (bits_per_value*n_vals)/8; /*in bytes*/
+            if (valuesSize > dataSectionLength) {
+                grib_context_log(a->context, GRIB_LOG_ERROR,
+                                 "Data section size mismatch: expected=%ld, section length=%ld (num values=%ld, bits per value=%ld)",
+                                 valuesSize, dataSectionLength, n_vals, bits_per_value);
+                return GRIB_DECODING_ERROR;
+            }
+        }
+    }
     grib_context_log(a->context, GRIB_LOG_DEBUG,
             "unpack_double: calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
             bits_per_value,reference_value,binary_scale_factor, decimal_scale_factor);
