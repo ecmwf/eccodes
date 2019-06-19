@@ -30,7 +30,8 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
 {
     void* mesg=NULL;
     FILE* out;
-    size_t size=0,read_size=0,insize=0,chunk_size;
+    off_t insize=0;
+    size_t size=0,read_size=0,chunk_size;
     off_t offset=0;
     int err=GRIB_SUCCESS;
     int i;
@@ -44,6 +45,8 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
 
     fseeko(in, 0, SEEK_END);
     insize = ftello(in);
+    if (insize==-1)
+        return 1;
     fseeko(in, 0, SEEK_SET);
     assert(nchunks > 0);
     chunk_size=insize/nchunks;
