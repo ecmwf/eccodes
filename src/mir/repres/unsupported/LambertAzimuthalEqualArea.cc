@@ -20,6 +20,7 @@
 #include "eckit/log/Plural.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/utils/MD5.h"
+#include "atlas/util/Earth.h"
 
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
@@ -64,8 +65,6 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(
     double value[2];
     parametrisation.get("longitudeOfFirstGridPointInDegrees", value[0]);
     parametrisation.get("latitudeOfFirstGridPointInDegrees", value[1]);
-    firstXY_ = {value[0], value[1]};
-    projection_.lonlat2xy(firstXY_.data());
 
 
     // increments [m]
@@ -80,14 +79,55 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(
     ASSERT(parametrisation.get("numberOfPointsAlongYAxis", ny_));
     ASSERT(nx_ > 0);
     ASSERT(ny_ > 0);
+
+    firstXY_ = {value[0], value[1]};
+    projection_.lonlat2xy(firstXY_.data());
+    lastXY_ = Point2::add(firstXY_, Point2((nx_ - 1) * Dx_, (ny_ - 1) * Dy_));
+
+    Point2 min{firstXY_[0], lastXY_[1]};
+    Point2 max{lastXY_[0], firstXY_[1]};
+
+    bbox_ = {min, max, projection_};
+}
+
+LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(double standardParallel,
+                                                     double centralLongitude, double firstLatitude,
+                                                     double firstLongitude, double Dx, double Dy,
+                                                     size_t nx, size_t ny) :
+    Dx_(Dx),
+    Dy_(Dy),
+    nx_(nx),
+    ny_(ny) {
+    atlas::util::Config config;
+    config.set("type", "lambert_azimuthal_equal_area");
+    config.set("standard_parallel", standardParallel);
+    config.set("central_longitude", centralLongitude);
+    config.set("radius", atlas::util::Earth::radius());
+
+    projection_ = atlas::Projection(config);
+
+    Dy_ = -Dy_; // FIXME: more intelligence here please!
+    ASSERT(Dx_ > 0.);
+    ASSERT(Dy_ < 0.);
+
+    ASSERT(nx_ > 0);
+    ASSERT(ny_ > 0);
+
+    firstXY_ = {firstLongitude, firstLatitude};
+    projection_.lonlat2xy(firstXY_.data());
+    lastXY_ = Point2::add(firstXY_, Point2((nx_ - 1) * Dx_, (ny_ - 1) * Dy_));
+
+    Point2 min{firstXY_[0], lastXY_[1]};
+    Point2 max{lastXY_[0], firstXY_[1]};
+
+    bbox_ = {min, max, projection_};
 }
 
 LambertAzimuthalEqualArea::~LambertAzimuthalEqualArea() = default;
 
 void LambertAzimuthalEqualArea::print(std::ostream& out) const {
-    out << "LambertAzimuthalEqualArea["
-           "projection="
-        << projection_ << ",Dx=" << Dx_ << ",Dy=" << Dy_ << ",nx=" << nx_ << ",ny=" << ny_ << "]";
+    out << "LambertAzimuthalEqualArea[" << bbox_ << ",projection=" << projection_.spec() << ",Dx=" << Dx_
+        << ",Dy=" << Dy_ << ",nx=" << nx_ << ",ny=" << ny_ << "]";
 }
 
 size_t LambertAzimuthalEqualArea::numberOfPoints() const {
@@ -98,9 +138,8 @@ atlas::Grid LambertAzimuthalEqualArea::atlasGrid() const {
     using atlas::StructuredGrid;
     using atlas::grid::LinearSpacing;
 
-    Point2 lastXY = Point2::add(firstXY_, Point2((nx_ - 1) * Dx_, (ny_ - 1) * Dy_));
-    StructuredGrid::XSpace xspace(LinearSpacing(firstXY_[0], lastXY[0], long(nx_)));
-    StructuredGrid::YSpace yspace(LinearSpacing(firstXY_[1], lastXY[1], long(ny_)));
+    StructuredGrid::XSpace xspace(LinearSpacing(firstXY_[0], lastXY_[0], long(nx_)));
+    StructuredGrid::YSpace yspace(LinearSpacing(firstXY_[1], lastXY_[1], long(ny_)));
 
     return StructuredGrid(xspace, yspace, projection_);
 }

@@ -35,6 +35,11 @@ public:
     // -- Contructors
 
     LambertAzimuthalEqualArea(const param::MIRParametrisation&);
+    LambertAzimuthalEqualArea(double standardParallel, double centralLongitude,
+                              double firstLatitude, double firstLongitude,
+                              double Dx, double Dy,
+                              size_t nx, size_t ny);
+
     LambertAzimuthalEqualArea(const LambertAzimuthalEqualArea&) = delete;
     LambertAzimuthalEqualArea& operator=(const LambertAzimuthalEqualArea&) = delete;
 
@@ -83,6 +88,7 @@ private:
     // -- Members
 
     Point2 firstXY_;
+    Point2 lastXY_;
     double Dx_;
     double Dy_;
     size_t nx_;
