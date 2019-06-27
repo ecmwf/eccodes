@@ -93,7 +93,7 @@ private:
     double Dy_;
     size_t nx_;
     size_t ny_;
-    atlas::Projection projection_;
+    atlas::Grid grid_;
 
     // -- Methods
     // None

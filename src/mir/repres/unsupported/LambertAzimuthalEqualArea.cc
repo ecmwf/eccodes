@@ -48,14 +48,11 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(
     parametrisation.get("radius", radius);
     ASSERT(radius > 0.);
 
-    atlas::util::Config config;
-    config.set("type", "lambert_azimuthal_equal_area");
-    config.set("standard_parallel", standardParallel);
-    config.set("central_longitude", centralLongitude);
-    config.set("radius", radius);
-
-    projection_ = atlas::Projection(config);
-
+    auto projection = atlas::Projection(atlas::Projection::Spec()
+                                            .set("type", "lambert_azimuthal_equal_area")
+                                            .set("standard_parallel", standardParallel)
+                                            .set("central_longitude", centralLongitude)
+                                            .set("radius", radius));
 
     //FIXME:
     eckit::Log::warning() << "WARNING: scanningMode is completelly ignored!" << std::endl;
@@ -80,14 +77,17 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(
     ASSERT(nx_ > 0);
     ASSERT(ny_ > 0);
 
-    firstXY_ = {value[0], value[1]};
-    projection_.lonlat2xy(firstXY_.data());
+    firstXY_ = projection.xy({value[0], value[1]});
     lastXY_ = Point2::add(firstXY_, Point2((nx_ - 1) * Dx_, (ny_ - 1) * Dy_));
 
-    Point2 min{firstXY_[0], lastXY_[1]};
-    Point2 max{lastXY_[0], firstXY_[1]};
+    atlas::RectangularDomain xy({firstXY_[0], lastXY_[0]}, {firstXY_[1], lastXY_[1]}, "meters");
+    atlas::RectangularDomain bbox = projection.boundingBox(xy);
+    ASSERT(bbox);
 
-    bbox_ = {min, max, projection_};
+    bbox_ = {bbox.ymax(), bbox.xmin(), bbox.ymin(), bbox.xmax()};
+
+    grid_ = atlas::StructuredGrid(atlas::grid::LinearSpacing(firstXY_[0], lastXY_[0], long(nx_)),
+                                  atlas::grid::LinearSpacing(firstXY_[1], lastXY_[1], long(ny_)), projection);
 }
 
 LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(double standardParallel,
@@ -98,13 +98,12 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(double standardParallel,
     Dy_(Dy),
     nx_(nx),
     ny_(ny) {
-    atlas::util::Config config;
-    config.set("type", "lambert_azimuthal_equal_area");
-    config.set("standard_parallel", standardParallel);
-    config.set("central_longitude", centralLongitude);
-    config.set("radius", atlas::util::Earth::radius());
 
-    projection_ = atlas::Projection(config);
+    auto projection = atlas::Projection(atlas::Projection::Spec()
+                                            .set("type", "lambert_azimuthal_equal_area")
+                                            .set("standard_parallel", standardParallel)
+                                            .set("central_longitude", centralLongitude)
+                                            .set("radius", atlas::util::Earth::radius()));
 
     Dy_ = -Dy_; // FIXME: more intelligence here please!
     ASSERT(Dx_ > 0.);
@@ -113,20 +112,23 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(double standardParallel,
     ASSERT(nx_ > 0);
     ASSERT(ny_ > 0);
 
-    firstXY_ = {firstLongitude, firstLatitude};
-    projection_.lonlat2xy(firstXY_.data());
+    firstXY_ = projection.xy({firstLongitude, firstLatitude});
     lastXY_ = Point2::add(firstXY_, Point2((nx_ - 1) * Dx_, (ny_ - 1) * Dy_));
 
-    Point2 min{firstXY_[0], lastXY_[1]};
-    Point2 max{lastXY_[0], firstXY_[1]};
+    atlas::RectangularDomain xy({firstXY_[0], lastXY_[0]}, {firstXY_[1], lastXY_[1]}, "meters");
+    atlas::RectangularDomain bbox = projection.boundingBox(xy);
+    ASSERT(bbox);
 
-    bbox_ = {min, max, projection_};
+    bbox_ = {bbox.ymax(), bbox.xmin(), bbox.ymin(), bbox.xmax()};
+
+    grid_ = atlas::StructuredGrid(atlas::grid::LinearSpacing(firstXY_[0], lastXY_[0], long(nx_)),
+                                  atlas::grid::LinearSpacing(firstXY_[1], lastXY_[1], long(ny_)), projection);
 }
 
 LambertAzimuthalEqualArea::~LambertAzimuthalEqualArea() = default;
 
 void LambertAzimuthalEqualArea::print(std::ostream& out) const {
-    out << "LambertAzimuthalEqualArea[" << bbox_ << ",projection=" << projection_.spec() << ",Dx=" << Dx_
+    out << "LambertAzimuthalEqualArea[" << bbox_ << ",projection=" << grid_.projection().spec() << ",Dx=" << Dx_
         << ",Dy=" << Dy_ << ",nx=" << nx_ << ",ny=" << ny_ << "]";
 }
 
@@ -135,13 +137,7 @@ size_t LambertAzimuthalEqualArea::numberOfPoints() const {
 }
 
 atlas::Grid LambertAzimuthalEqualArea::atlasGrid() const {
-    using atlas::StructuredGrid;
-    using atlas::grid::LinearSpacing;
-
-    StructuredGrid::XSpace xspace(LinearSpacing(firstXY_[0], lastXY_[0], long(nx_)));
-    StructuredGrid::YSpace yspace(LinearSpacing(firstXY_[1], lastXY_[1], long(ny_)));
-
-    return StructuredGrid(xspace, yspace, projection_);
+    return grid_;
 }
 
 bool LambertAzimuthalEqualArea::isPeriodicWestEast() const {
@@ -164,11 +160,8 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
     ASSERT(Dx_ > 0.);
     ASSERT(Dy_ < 0.);
 
-    Point2 reference{0., 0.};
-    projection_.xy2lonlat(reference.data());
-
-    Point2 firstLL(firstXY_);
-    projection_.xy2lonlat(firstLL.data());
+    Point2 reference = grid_.projection().lonlat({0., 0.});
+    Point2 firstLL = grid_.projection().lonlat(firstXY_);
 
     info.grid.latitudeOfFirstGridPointInDegrees  = firstLL[1];
     info.grid.longitudeOfFirstGridPointInDegrees = firstLL[0];
@@ -229,10 +222,9 @@ Iterator* LambertAzimuthalEqualArea::iterator() const {
 
             if (j_ < ny_ && i_ < nx_) {
 
-                Point2 ll{x_, y_};
-                projection_.xy2lonlat(ll.data());
-                _lat = lat(ll[1]);
-                _lon = lon(ll[0]);
+                auto ll = projection_.lonlat({x_, y_});
+                _lat = lat(ll.lat());
+                _lon = lon(ll.lon());
 
                 x_ += Dx_;
                 if (++i_ == nx_) {
@@ -270,12 +262,12 @@ Iterator* LambertAzimuthalEqualArea::iterator() const {
         LAEAIterator& operator=(const LAEAIterator&) = delete;
     };
 
-    return new LAEAIterator(projection_, firstXY_, nx_, ny_, Dx_, Dy_);
+    return new LAEAIterator(grid_.projection(), firstXY_, nx_, ny_, Dx_, Dy_);
 }
 
 void LambertAzimuthalEqualArea::makeName(std::ostream& out) const {
     eckit::MD5 h;
-    h << projection_.spec();
+    h << grid_.projection().spec();
     h << bbox_;
 
     out << "LAEA-" << nx_ << "x" << ny_ << "-" << h.digest();
