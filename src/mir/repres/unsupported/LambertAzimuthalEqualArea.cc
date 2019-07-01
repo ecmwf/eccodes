@@ -14,6 +14,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <utility>
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Log.h"
@@ -54,28 +55,23 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(
                                             .set("central_longitude", centralLongitude)
                                             .set("radius", radius));
 
-    //FIXME:
-    eckit::Log::warning() << "WARNING: scanningMode is completelly ignored!" << std::endl;
-
-
-    // first point [m]
-    double value[2];
-    parametrisation.get("longitudeOfFirstGridPointInDegrees", value[0]);
-    parametrisation.get("latitudeOfFirstGridPointInDegrees", value[1]);
-
-
     // increments [m]
     parametrisation.get("xDirectionGridLengthInMetres", Dx_);
     parametrisation.get("yDirectionGridLengthInMetres", Dy_);
 
-    Dy_ = -Dy_; // FIXME: more intelligence here please!
     ASSERT(Dx_ > 0.);
-    ASSERT(Dy_ < 0.);
+    ASSERT(Dy_ > 0.);
+    Dy_ = -Dy_;  // for "canonical" scanningMode (iScansPositively, jScansNegatively)
 
     ASSERT(parametrisation.get("numberOfPointsAlongXAxis", nx_));
     ASSERT(parametrisation.get("numberOfPointsAlongYAxis", ny_));
     ASSERT(nx_ > 0);
     ASSERT(ny_ > 0);
+
+    // first and last points [m]
+    double value[2];
+    parametrisation.get("longitudeOfFirstGridPointInDegrees", value[0]);
+    parametrisation.get("latitudeOfFirstGridPointInDegrees", value[1]);
 
     firstXY_ = projection.xy({value[0], value[1]});
     lastXY_ = Point2::add(firstXY_, Point2((nx_ - 1) * Dx_, (ny_ - 1) * Dy_));
@@ -105,9 +101,9 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(double standardParallel,
                                             .set("central_longitude", centralLongitude)
                                             .set("radius", atlas::util::Earth::radius()));
 
-    Dy_ = -Dy_; // FIXME: more intelligence here please!
     ASSERT(Dx_ > 0.);
-    ASSERT(Dy_ < 0.);
+    ASSERT(Dy_ > 0.);
+    Dy_ = -Dy_;  // for "canonical" scanningMode (iScansPositively, jScansNegatively)
 
     ASSERT(nx_ > 0);
     ASSERT(ny_ > 0);
@@ -166,25 +162,26 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
     info.grid.latitudeOfFirstGridPointInDegrees  = firstLL[1];
     info.grid.longitudeOfFirstGridPointInDegrees = firstLL[0];
 
-    struct key_t {
-        const char* name;
-        long value;
-    };
+    using key_t = std::pair<const char*, long>;
 
     for (auto& key : {
              key_t{"xDirectionGridLengthInMillimetres", std::lround(Dx_ * 1.e3)},
              key_t{"yDirectionGridLengthInMillimetres", std::lround(-Dy_ * 1.e3)},
-             key_t{"numberOfPointsAlongXAxis", long(nx_)},
-             key_t{"numberOfPointsAlongYAxis", long(ny_)},
+             key_t{"numberOfPointsAlongXAxis", nx_},
+             key_t{"numberOfPointsAlongYAxis", ny_},
              key_t{"standardParallelInMicrodegrees", std::lround(reference[1] * 1.e6)},
              key_t{"centralLongitudeInMicrodegrees", std::lround(reference[0] * 1.e6)},
          }) {
         auto& set = info.packing.extra_settings[info.packing.extra_settings_count++];
 
-        set.name       = key.name;
-        set.long_value = key.value;
+        set.name       = key.first;
+        set.long_value = key.second;
         set.type       = GRIB_TYPE_LONG;
     }
+}
+
+void LambertAzimuthalEqualArea::reorder(long scanningMode, mir::data::MIRValuesVector& values) const {
+    GribReorder::reorder(values, scanningMode, nx_, ny_);
 }
 
 void LambertAzimuthalEqualArea::validate(const MIRValuesVector& values) const {

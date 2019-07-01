@@ -108,7 +108,8 @@ private:
     virtual bool includesSouthPole() const;
 
     virtual void fill(grib_info&) const;
-    void validate(const MIRValuesVector& values) const;
+    virtual void reorder(long scanningMode, MIRValuesVector&) const;
+    virtual void validate(const MIRValuesVector&) const;
     Iterator* iterator() const;
 
     virtual void makeName(std::ostream&) const;
