@@ -427,8 +427,8 @@
 	 scaledValueOfSecondFixedSurface = 300 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
-#Sea surface salinity
-'Sea surface salinity' = {
+#Sea surface practical salinity
+'Sea surface practical salinity' = {
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 3 ;
