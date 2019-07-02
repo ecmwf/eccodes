@@ -415,8 +415,8 @@
 	 scaleFactorOfLowerLimit = 0 ;
 	 productDefinitionTemplateNumber = 9 ;
 	}
-#Mean sea water temperature in the upper 300 m
-'mswt300m' = {
+#Mean sea water potential temperature in the upper 300 m
+'mswpt300m' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 15 ;

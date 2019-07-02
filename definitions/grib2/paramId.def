@@ -415,7 +415,7 @@
 	 probabilityType = 0 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	}
-#Mean sea water temperature in the upper 300 m
+#Mean sea water potential temperature in the upper 300 m
 '151127' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
