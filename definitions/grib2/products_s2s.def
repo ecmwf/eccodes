@@ -97,3 +97,22 @@ if (isHindcast == 1) {
    alias mars.date  = modelVersionDate;
    alias mars.time  = modelVersionTime;
 }
+
+# ECC-839
+concept is_ocean_param(zero) {
+    '1' = { paramId = 151219; }
+    '1' = { paramId = 151163; }
+    '1' = { paramId = 151127; }
+    '1' = { paramId = 151175; }
+    '1' = { paramId = 151131; }
+    '1' = { paramId = 151132; }
+    '1' = { paramId = 151145; }
+    '1' = { paramId = 151225; }
+    '1' = { paramId = 174098; }
+    '0' = { dummy=1; }
+}
+if (is_ocean_param) {
+    constant oceanLevName = 'o2d';
+    alias mars.levtype = oceanLevName;
+    unalias mars.levelist;
+}

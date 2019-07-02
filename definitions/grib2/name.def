@@ -427,6 +427,16 @@
 	 scaledValueOfSecondFixedSurface = 300 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
+#Sea surface salinity
+'Sea surface salinity' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
 #Ocean mixed layer thickness defined by sigma theta 0.01 kg/m3
 'Ocean mixed layer thickness defined by sigma theta 0.01 kg/m3' = {
 	 discipline = 10 ;
