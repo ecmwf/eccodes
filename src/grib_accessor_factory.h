@@ -56,6 +56,7 @@
 { "data_g1shsimple_packing", &grib_accessor_class_data_g1shsimple_packing, },
 { "data_g1simple_packing", &grib_accessor_class_data_g1simple_packing, },
 { "data_g22order_packing", &grib_accessor_class_data_g22order_packing, },
+{ "data_g2bifourier_packing", &grib_accessor_class_data_g2bifourier_packing, },
 { "data_g2complex_packing", &grib_accessor_class_data_g2complex_packing, },
 { "data_g2secondary_bitmap", &grib_accessor_class_data_g2secondary_bitmap, },
 { "data_g2shsimple_packing", &grib_accessor_class_data_g2shsimple_packing, },

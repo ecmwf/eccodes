@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -306,7 +306,7 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
         grib_get_string(h,self->localDir,localDir,&len);
 
     if (*masterDir!=0) {
-        char name[1024]={0,};
+        char name[2048]={0,};
         sprintf(name,"%s/%s",masterDir,self->tablename);
         grib_recompose_name(h, NULL,name, recomposed,0);
         filename=grib_context_full_defs_path(c,recomposed);
@@ -316,7 +316,7 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
     }
 
     if (*localDir!=0) {
-        char localName[1024]={0,};
+        char localName[2048]={0,};
         sprintf(localName,"%s/%s",localDir,self->tablename);
         grib_recompose_name(h, NULL,localName, localRecomposed,0);
         localFilename=grib_context_full_defs_path(c,localRecomposed);

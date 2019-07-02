@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -20,11 +20,13 @@ if [ ! -x $GRIB_LIST_KEYS ]; then
   GRIB_LIST_KEYS=$GRIB_LIST_KEYS_EXE
 fi
 
+set +x
 touch tmp$$
 for file in `find $ECCODES_DEFINITION_PATH -name '*.def' -print`
 do
   ${GRIB_LIST_KEYS} $file >> tmp$$  
 done
+set -x
 
 cat >keys <<EOF
 %{

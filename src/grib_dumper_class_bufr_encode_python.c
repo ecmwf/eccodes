@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -205,7 +205,8 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 
         depth-=2;
         /* Note: In Python to make a tuple with one element, you need the trailing comma */
-        fprintf(self->dumper.out,",)\n");
+        if (size > 4) fprintf(self->dumper.out,",) # %ld values\n", size);
+        else          fprintf(self->dumper.out,",)\n");
         grib_context_free(c,values);
 
         if ((r=compute_bufr_key_rank(h,self->keys,a->name))!=0)
@@ -286,7 +287,8 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* p
 
         depth-=2;
         /* Note: In python to make a tuple with one element, you need the trailing comma */
-        fprintf(self->dumper.out,",)\n");
+        if (size > 4) fprintf(self->dumper.out,",) # %ld values\n", size);
+        else          fprintf(self->dumper.out,",)\n");
         grib_context_free(c,values);
 
         fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s->%s' \n, rvalues)\n",prefix,a->name);
@@ -372,7 +374,8 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
         depth-=2;
         /* Note: In python to make a tuple with one element, you need the trailing comma */
-        fprintf(self->dumper.out,",)\n");
+        if (size > 4) fprintf(self->dumper.out,",) # %ld values\n", size);
+        else          fprintf(self->dumper.out,",)\n");
         grib_context_free(a->context,values);
 
         if ((r=compute_bufr_key_rank(h,self->keys,a->name))!=0) {
@@ -380,6 +383,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         } else {
             if (doing_unexpandedDescriptors) {
                 fprintf(self->dumper.out,"\n    # Create the structure of the data section\n");
+                /* fprintf(self->dumper.out,"    codes_set(ibufr, 'skipExtraKeyAttributes', 1)\n"); */
             }
             fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s', ivalues)\n",a->name);
             if (doing_unexpandedDescriptors) fprintf(self->dumper.out,"\n");
@@ -392,6 +396,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         } else {
             if (doing_unexpandedDescriptors) {
                 fprintf(self->dumper.out,"\n    # Create the structure of the data section\n");
+                /* fprintf(self->dumper.out,"    codes_set(ibufr, 'skipExtraKeyAttributes', 1)\n"); */
             }
             fprintf(self->dumper.out,"    codes_set(ibufr, '%s', ",a->name);
         }
@@ -457,7 +462,8 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
 
         depth-=2;
         /* Note: In python to make a tuple with one element, you need the trailing comma */
-        fprintf(self->dumper.out,",)\n");
+        if (size > 4) fprintf(self->dumper.out,",) # %ld values\n", size);
+        else          fprintf(self->dumper.out,",)\n");
         grib_context_free(a->context,values);
 
         fprintf(self->dumper.out,"    codes_set_array(ibufr, '%s->%s', ivalues)\n",prefix,a->name);
@@ -691,7 +697,8 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
     }
     if (icount>cols) {fprintf(f,"  \n        ");}
     /* Note: In python to make a tuple with one element, you need the trailing comma */
-    fprintf(f,"%ld ,)\n",val[size-1]);
+    if (size > 4) fprintf(f,"%ld ,) # %ld values\n",val[size-1], size);
+    else          fprintf(f,"%ld ,)\n",val[size-1]);
 
     grib_context_free(h->context,val);
     fprintf(f,"    codes_set_array(ibufr, '%s', ivalues)\n",print_key);

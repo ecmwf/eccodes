@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -28,13 +28,16 @@ int main(int argc,char* argv[])
     const char* infile = "../data/bufr/mhen_55.bufr";
     const char* key_name = "#5#brightnessTemperature";
     const double tolerance = 1e-6;
+    ProductKind prod_kind = 0;
 
-    in=fopen(infile,"r");
+    in=fopen(infile,"rb");
     assert(in);
 
     while ((h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err)) != NULL || err != CODES_SUCCESS)
     {
-        assert(h);
+        CODES_CHECK(codes_get_product_kind(h, &prod_kind), 0);
+        assert(prod_kind == PRODUCT_BUFR);
+        
         CODES_CHECK(codes_get_long(h, "compressedData", &compressed), 0);
         assert(compressed == 1);
 

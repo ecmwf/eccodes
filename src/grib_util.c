@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -382,6 +382,7 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
     }
     printf("ECCODES DEBUG  grib_util: data_values are CONSTANT? %d\t(min=%.16e, max=%.16e)\n",
            isConstant, minVal, maxVal);
+    if (c->gribex_mode_on) printf("ECCODES DEBUG  grib_util: GRIBEX mode is turned on!\n");
 
 #if 0
         if (spec->bitmapPresent) {
@@ -742,6 +743,12 @@ static const char* get_grid_type_name(const int spec_grid_type)
     if (spec_grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)
         return "reduced_rotated_gg";
 
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA)
+        return "lambert_azimuthal_equal_area";
+
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL)
+        return "lambert";
+
     return NULL;
 }
 
@@ -1047,17 +1054,27 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         size_t n = sizeof(levtype);
         Assert(grib_get_string(h,"levelType",levtype,&n) == 0);
         switch (spec->grid_type) {
-        case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
-        case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
-            /* Choose a sample with the right Gaussian number and edition */
-            sprintf(name, "%s_pl_%ld_grib%ld", grid_type,spec->N, editionNumber);
-            if (spec->pl && spec->pl_size) {
-                /* GRIB-834: pl is given so can use any of the reduced_gg_pl samples */
+            case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
+            case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
+                /* Choose a sample with the right Gaussian number and edition */
+                sprintf(name, "%s_pl_%ld_grib%ld", grid_type,spec->N, editionNumber);
+                if (spec->pl && spec->pl_size) {
+                    /* GRIB-834: pl is given so can use any of the reduced_gg_pl samples */
+                    sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
+                }
+                break;
+            case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
+                if (editionNumber==1) {
+                    fprintf(stderr,"GRIB_UTIL_SET_SPEC: grid type='%s' not available in GRIB edition 1.\n", grid_type);
+                    goto cleanup;
+                }
+                sprintf(name, "GRIB%ld", editionNumber);
+                break;
+            case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
+                sprintf(name, "GRIB%ld", editionNumber);
+                break;
+            default :
                 sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
-            }
-            break;
-        default :
-            sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
         }
 
         if (spec->pl && spec->grid_name) {
@@ -1171,6 +1188,48 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         COPY_SPEC_LONG(DxInMetres);
         COPY_SPEC_LONG(DyInMetres);
 
+        break;
+
+    case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
+        COPY_SPEC_LONG  (bitmapPresent);
+        if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+
+        COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+        COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+        COPY_SPEC_LONG(Ni); /* same as Nx */
+        COPY_SPEC_LONG(Nj); /* same as Ny */
+        /* TODO
+         * pass in extra keys e.g. Dx, Dy, standardParallel and centralLongitude
+         */
+
+        /*
+        COPY_SPEC_LONG(DxInMetres);
+        COPY_SPEC_LONG(DyInMetres);
+
+        COPY_SPEC_LONG(xDirectionGridLengthInMillimetres);
+        COPY_SPEC_LONG(yDirectionGridLengthInMillimetres);
+        COPY_SPEC_LONG(standardParallelInMicrodegrees);
+        COPY_SPEC_LONG(centralLongitudeInMicrodegrees);
+        */
+
+        break;
+    case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
+        COPY_SPEC_LONG  (bitmapPresent);
+        if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+        COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+        COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
+        COPY_SPEC_LONG(Ni); /* same as Nx */
+        COPY_SPEC_LONG(Nj); /* same as Ny */
+
+        /*
+         * Note: DxInMetres and DyInMetres
+         * should be 'double' and not integer. WMO GRIB2 uses millimetres!
+         * TODO:
+         * Add other keys like Latin1, LoV etc
+
+         *err = GRIB_NOT_IMPLEMENTED;
+         goto cleanup;
+        */
         break;
 
     case GRIB_UTIL_GRID_SPEC_REDUCED_GG:

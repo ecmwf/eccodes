@@ -16740,12 +16740,6 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 162 ;
 	}
-#Depth of 20C isotherm
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 163 ;
-	}
 #Average potential temperature in the upper 300m
 'degrees C' = {
 	 discipline = 192 ;
@@ -16811,12 +16805,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 174 ;
-	}
-#Average salinity in the upper 300m
-'psu' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 175 ;
 	}
 #Layer Thickness at scalar points
 'm' = {
@@ -17033,12 +17021,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 140 ;
-	}
-#Snow depth
-'kg m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 141 ;
 	}
 #Large-scale precipitation
 'kg m**-2 s**-1' = {
@@ -18912,13 +18894,13 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 50 ;
 	}
-#Stratiform precipitation (Large-scale precipitation)
+#Mean large-scale precipitation rate
 'm s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 142 ;
 	}
-#Convective precipitation
+#Mean convective precipitation rate
 'm s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
@@ -19080,7 +19062,7 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 212 ;
 	}
-#Total precipitation
+#Mean total precipitation rate
 'm s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
@@ -19727,12 +19709,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 180 ;
 	 parameterNumber = 179 ;
-	}
-#Snow depth
-'kg m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 190 ;
-	 parameterNumber = 141 ;
 	}
 #Field capacity
 '(0 - 1)' = {

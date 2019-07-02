@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -65,7 +65,9 @@ int main( int argc,char* argv[])
         printf("\n");
         printf("%s Version %d.%d.%d",
                 grib_get_package_name(), major,minor,revision);
-        /* if (ECCODES_MAJOR_VERSION < 1) printf(" PRE-RELEASE"); */
+
+        if (ECCODES_MAJOR_VERSION < 1) printf(" PRE-RELEASE");
+
         printf("\n");
         printf("\n");
         if(context->debug) {

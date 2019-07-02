@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -239,6 +239,7 @@ static int unpack_string(grib_accessor*a , char*  v, size_t *len)
     grib_md5_add(&md5c,mess,mess_len);
     grib_md5_end(&md5c,v);
     grib_context_free(a->context,mess);
+    *len = strlen(v)+1;
 
     return ret;
 }

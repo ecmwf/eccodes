@@ -1137,6 +1137,9 @@
     <ClCompile Include="..\..\..\tools\wingetopt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g2bifourier_packing.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\grib_accessor_class.h">

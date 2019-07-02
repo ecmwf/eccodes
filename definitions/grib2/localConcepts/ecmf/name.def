@@ -16740,12 +16740,6 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 162 ;
 	}
-#Depth of 20C isotherm
-'Depth of 20C isotherm' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 163 ;
-	}
 #Average potential temperature in the upper 300m
 'Average potential temperature in the upper 300m' = {
 	 discipline = 192 ;
@@ -16811,12 +16805,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 174 ;
-	}
-#Average salinity in the upper 300m
-'Average salinity in the upper 300m' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 175 ;
 	}
 #Layer Thickness at scalar points
 'Layer Thickness at scalar points' = {
@@ -17033,12 +17021,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 160 ;
 	 parameterNumber = 140 ;
-	}
-#Snow depth
-'Snow depth' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 141 ;
 	}
 #Large-scale precipitation
 'Large-scale precipitation' = {
@@ -18912,14 +18894,14 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 50 ;
 	}
-#Stratiform precipitation (Large-scale precipitation)
-'Stratiform precipitation (Large-scale precipitation)' = {
+#Mean large-scale precipitation rate
+'Mean large-scale precipitation rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 142 ;
 	}
-#Convective precipitation
-'Convective precipitation' = {
+#Mean convective precipitation rate
+'Mean convective precipitation rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 143 ;
@@ -19080,8 +19062,8 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 212 ;
 	}
-#Total precipitation
-'Total precipitation' = {
+#Mean total precipitation rate
+'Mean total precipitation rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 228 ;
@@ -19727,12 +19709,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 180 ;
 	 parameterNumber = 179 ;
-	}
-#Snow depth
-'Snow depth' = {
-	 discipline = 192 ;
-	 parameterCategory = 190 ;
-	 parameterNumber = 141 ;
 	}
 #Field capacity
 'Field capacity' = {

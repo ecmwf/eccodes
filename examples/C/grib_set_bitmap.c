@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -37,13 +37,13 @@ int main(int argc, char** argv)
     double missing=9999;
     int i=0;
 
-    in = fopen(infile, "r");
+    in = fopen(infile, "rb");
     if(!in) {
         printf("ERROR: unable to open input file %s\n",infile);
         return 1;
     }
 
-    out = fopen(outfile, "w");
+    out = fopen(outfile, "wb");
     if(!out) {
         printf("ERROR: unable to open output file %s\n",outfile);
         fclose(in);

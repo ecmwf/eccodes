@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,7 +16,7 @@
 #
 #       -DCMAKE_MODULE_PATH=/path/to/ecbuild/cmake
 
-cmake_minimum_required( VERSION 2.8.11 FATAL_ERROR )
+cmake_minimum_required( VERSION 3.6 FATAL_ERROR )
 
 project( eccodes C )
 
@@ -109,6 +109,11 @@ ecbuild_add_option( FEATURE PYTHON
     DEFAULT ON
     REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy
 )
+# For Python2 we build our own bindings (using SWIG) in the build directory
+# but for Python3 one has to add the eccodes-python from pip AFTER the install
+if( PYTHON_VERSION_MAJOR EQUAL 3 )
+    set( HAVE_PYTHON 0 )
+endif()
 
 ecbuild_add_option( FEATURE FORTRAN
     DESCRIPTION "Build the ecCodes Fortran interface"
@@ -381,9 +386,11 @@ add_subdirectory( memfs )
 add_subdirectory( src )
 add_subdirectory( tools )
 add_subdirectory( fortran )
+
 if (PYTHON_VERSION_MAJOR GREATER 2)
-    ecbuild_warn("Please note: Support for Python3 is currently experimental.")
-    add_subdirectory( python3 )
+    # Python3 is no longer built with SWIG but is a separate
+    # package. User should do: pip install eccodes-python
+    #add_subdirectory( python3 )
     set( ECCODES_PYTHON_DIR "python3" )
 else()
     add_subdirectory( python )
@@ -401,7 +408,7 @@ ecbuild_dont_pack( DIRS
      concepts tests.ecmwf doxygen confluence examples.dev templates parameters java
      perl config m4 rpms gaussian_experimental gribex examples/F77
      examples/extra examples/deprecated bamboo fortran/fortranCtypes tigge/tools
-     share/eccodes  .settings
+     share/eccodes  .settings python3
 )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
@@ -467,4 +474,13 @@ ecbuild_info("")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}  |")
 ecbuild_info("   +--------------------------+")
+ecbuild_info("")
+
+ecbuild_info("   +--------------------------------------+")
+ecbuild_info("   | Please note:                         |")
+ecbuild_info("   | For Python3 support, first install   |")
+ecbuild_info("   | ecCodes and then install the Python  |")
+ecbuild_info("   | bindings from PyPI with:             |")
+ecbuild_info("   |   $ pip install eccodes-python       |")
+ecbuild_info("   +--------------------------------------+")
 ecbuild_info("")

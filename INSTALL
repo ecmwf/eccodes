@@ -33,6 +33,11 @@ However it requires that cmake be installed on your system.
    > ctest
    > make install
 
+To add the Python3 bindings, use pip install from PyPI as follows:
+   > pip install eccodes-python
+   or
+   > pip install --install-option="--prefix=/path/to/where/you/install/eccodes" eccodes-python
+
 You can also pass options to the cmake command above. Some typical examples are:
 
  -DENABLE_EXTRA_TESTS=ON         Enable extended regression testing

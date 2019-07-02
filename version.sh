@@ -1,4 +1,4 @@
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,8 +14,8 @@ PACKAGE_NAME='eccodes'
 
 # Package version
 ECCODES_MAJOR_VERSION=2
-ECCODES_MINOR_VERSION=12
-ECCODES_REVISION_VERSION=6
+ECCODES_MINOR_VERSION=13
+ECCODES_REVISION_VERSION=0
 
 ECCODES_CURRENT=1
 ECCODES_REVISION=0

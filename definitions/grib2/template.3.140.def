@@ -1,11 +1,4 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# Copyright 2005-2019 ECMWF.
 
 # TEMPLATE 3.140, Lambert azimuthal equal area projection
 include "grib2/template.3.shape_of_the_earth.def";
@@ -13,10 +6,12 @@ include "grib2/template.3.shape_of_the_earth.def";
 #  Nx - number of points along X-axis
 unsigned[4] numberOfPointsAlongXAxis : dump  ;
 alias Nx  = numberOfPointsAlongXAxis;
+alias Ni  = Nx;
 
 #  Ny - number of points along Y-axis
 unsigned[4] numberOfPointsAlongYAxis : dump  ;
 alias Ny =  numberOfPointsAlongYAxis;
+alias Nj  = Ny;
 
 #  La1 - latitude of first grid point
 signed[4] latitudeOfFirstGridPoint: edition_specific ;
@@ -69,3 +64,5 @@ meta latLonValues latlonvalues(values);
 alias latitudeLongitudeValues=latLonValues;
 meta latitudes latitudes(values,0);
 meta longitudes longitudes(values,0);
+meta distinctLatitudes latitudes(values,1);
+meta distinctLongitudes longitudes(values,1);

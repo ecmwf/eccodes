@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -447,6 +447,15 @@ grib_handle* grib_handle_new_from_message ( grib_context* c, const void* data, s
     /* See ECC-448 */
     if (determine_product_kind(h, &product_kind) == GRIB_SUCCESS) {
         h->product_kind = product_kind;
+    }
+
+    if (h->product_kind == PRODUCT_GRIB) {
+        if (!grib_is_defined(h,"7777")) {
+            grib_context_log (c,GRIB_LOG_ERROR,"grib_handle_new_from_message: No final 7777 in message!");
+            /* TODO: Return NULL. An incomplete message is no use to anyone.
+             * But first check the MARS Client and other applications
+             */
+        }
     }
     return h;
 }
@@ -1275,6 +1284,15 @@ int grib_get_message_offset ( grib_handle* h,off_t* offset )
     else return GRIB_INTERNAL_ERROR;
 
     return 0;
+}
+
+int codes_get_product_kind(grib_handle* h, ProductKind* product_kind)
+{
+    if (h) {
+        *product_kind = h->product_kind;
+        return GRIB_SUCCESS;
+    }
+    return GRIB_NULL_HANDLE;
 }
 
 int grib_get_message_size ( grib_handle* h,size_t* size )

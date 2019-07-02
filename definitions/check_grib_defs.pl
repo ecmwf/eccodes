@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 #
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -194,7 +194,8 @@ sub process {
                      exists($map2{'scaleFactorOfSecondFixedSurface'}) ||
                      exists($map2{'scaledValueOfSecondFixedSurface'})) )
                 {
-                    print "File: $filename, line: $lineNum: TypeOfSurface problem (GRIB-229): Please check: $desc\n";
+                    print "File: $filename, line: $lineNum: TypeOfSurface issue: Please check: \"$desc\" ($concept)\n";
+                    print "      Make sure the 'typeOfSecondFixedSurface' key comes BEFORE all the scale keys\n";
                     #print "DUMP,\t", Data::Dumper->Dump([\%map2], [" "]);
                     $error = 1;
                 }

@@ -1,4 +1,4 @@
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,9 +9,8 @@
 
 # This gets updated twice a year by WMO.
 # See http://www.wmo.int/pages/prog/www/WMOCodes/WMO306_vI2/LatestVERSION/LatestVERSION.html
-constant tablesVersionLatest = 21 : edition_specific;
+constant tablesVersionLatest = 23 : edition_specific;
 
-constant one = 1 : hidden ;
 constant million = 1000000 : hidden;
 constant grib2divider   = 1000000;
 alias extraDimensionPresent=zero;

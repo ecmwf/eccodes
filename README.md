@@ -1,8 +1,8 @@
 ecCodes
 =======
 
-[![macOS: master](https://img.shields.io/travis/ecmwf/eccodes/master.svg?label=macOS-master)](https://travis-ci.org/ecmwf/eccodes/branches)
-[![macOS: develop](https://img.shields.io/travis/ecmwf/eccodes/develop.svg?label=macOS-dev)](https://travis-ci.org/ecmwf/eccodes/branches)
+[![Linux & macOS: master](https://img.shields.io/travis/ecmwf/eccodes/master.svg?label=Linux-and-macOS-master)](https://travis-ci.org/ecmwf/eccodes/branches)
+[![Linux & macOS: develop](https://img.shields.io/travis/ecmwf/eccodes/develop.svg?label=Linux-and-macOS-dev)](https://travis-ci.org/ecmwf/eccodes/branches)
 [![Windows: master](https://img.shields.io/appveyor/ci/ecmwf/eccodes/master.svg?label=Windows-master)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/master)
 [![Windows: develop](https://img.shields.io/appveyor/ci/ecmwf/eccodes/develop.svg?label=Windows-dev)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/develop)
 
@@ -29,21 +29,37 @@ INSTALLATION
 1. Download ecCodes from https://software.ecmwf.int/wiki/display/ECC/Releases
 
 2. Unpack distribution:
-   > tar -xzf eccodes-x.y.z-Source.tar.gz
+   ```
+   tar -xzf eccodes-x.y.z-Source.tar.gz
+   ```
 
 3. Create a separate directory where to build ecCodes:
-   > mkdir build
-   > cd build
+   ```
+   mkdir build
+   cd build
+   ```
 
 4. Run cmake pointing to the source and specify the installation location:
-   > cmake  ../eccodes-x.y.z-Source -DCMAKE_INSTALL_PREFIX=/path/to/where/you/install/eccodes
-   
+   ```
+   cmake  ../eccodes-x.y.z-Source -DCMAKE_INSTALL_PREFIX=/path/to/where/you/install/eccodes
+   ```
    It is strongly recommended that you install into a clean directory
 
 5. Compile, test and install:
-   > make
-   > ctest
-   > make install
+   ```
+   make
+   ctest
+   make install
+   ```
+
+To add the Python3 bindings, use pip install from PyPI as follows:
+   ```
+   pip install eccodes-python
+   ```
+   or
+   ```
+   pip install --install-option="--prefix=/path/to/where/you/install/eccodes" eccodes-python
+   ```
 
 
 For more details, please see:
@@ -58,7 +74,7 @@ If you encounter any problems please send an e-mail with your problem to:
 COPYRIGHT AND LICENSE
 ----------------------
 
-Copyright 2005-2018 ECMWF.
+Copyright 2005-2019 ECMWF.
 
 This software is licensed under the terms of the Apache Licence Version 2.0
 which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.

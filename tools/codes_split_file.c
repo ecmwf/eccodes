@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -127,7 +127,7 @@ int main(int argc,char* argv[])
             return 1;
         }
     }
-    infh=fopen(filename,"r");
+    infh=fopen(filename,"rb");
     if (!infh) {
         perror(filename);
         return 1;

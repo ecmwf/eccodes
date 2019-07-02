@@ -57,7 +57,7 @@ noinst_PROGRAMS  = c_grib_nearest \
                    c_grib_clone \
                    c_new_sample \
                    c_grib_ensemble_index \
-                   c_points \
+                   c_grib_nearest_multiple \
                    c_bufr_attributes \
                    c_bufr_clone \
                    c_bufr_expanded \
@@ -73,7 +73,7 @@ noinst_PROGRAMS  = c_grib_nearest \
                    c_bufr_read_temp \
                    c_get_product_kind
 
-#bin_PROGRAMS            = points
+#bin_PROGRAMS            = grib_nearest_multiple
 
 c_box_SOURCES                  = box.c
 c_grib_set_data_SOURCES        = grib_set_data.c
@@ -93,7 +93,7 @@ c_grib_keys_iterator_SOURCES   = grib_keys_iterator.c
 c_grib_iterator_SOURCES        = grib_iterator.c
 c_grib_iterator_bitmap_SOURCES = grib_iterator_bitmap.c
 c_grib_set_pv_SOURCES          = grib_set_pv.c
-c_points_SOURCES               = points.c
+c_grib_nearest_multiple_SOURCES = grib_nearest_multiple.c
 c_grib_list_SOURCES            = grib_list.c
 c_sections_copy_SOURCES        = sections_copy.c
 c_large_grib1_SOURCES          = large_grib1.c

@@ -9,7 +9,7 @@
 7 7 Formaldehyde HCHO
 8 8 Sulphur dioxide SO2
 9 9 Ammonia NH3
-10 10 Ammonium NH4+
+10 10 Ammonium NH4
 11 11 Nitrogen monoxide NO
 12 12 Atomic oxygen O
 13 13 Nitrate radical NO3
@@ -19,7 +19,7 @@
 17 17 Nitric acid HNO3
 18 18 Peroxynitric acid HO2NO2
 19 19 Hydrogen peroxide H2O2
-20 20 Molecular hydrogen H
+20 20 Molecular hydrogen H2
 21 21 Atomic nitrogen N
 22 22 Sulphate SO42-
 23 23 Radon Rn

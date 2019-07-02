@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -26,6 +26,52 @@ fBufrTmp=${label}".bufr.tmp"
 
 #Define filter rules file
 fRules=${label}.filter
+
+generate_filter()
+{
+    start_date=$1
+    end_date=$2
+    num_subsets_expected=$3
+
+    year1=`echo $start_date  | cut -c 1-4`
+    year2=`echo $end_date    | cut -c 1-4`
+    month1=`echo $start_date | cut -c 5-6`
+    month2=`echo $end_date   | cut -c 5-6`
+    day1=`echo $start_date   | cut -c 7-8`
+    day2=`echo $end_date     | cut -c 7-8`
+    hour1=`echo $start_date   | cut -c 9-10`
+    hour2=`echo $end_date     | cut -c 9-10`
+    minute1=`echo $start_date | cut -c 11-12`
+    minute2=`echo $end_date   | cut -c 11-12`
+    second1=`echo $start_date | cut -c 13-14`
+    second2=`echo $end_date   | cut -c 13-14`
+
+    cat > $fRules <<EOF
+     transient originalNumberOfSubsets = numberOfSubsets;
+     set unpack=1;
+
+     transient extractDateTimeYearStart=$year1;
+     transient extractDateTimeMonthStart=$month1;
+     transient extractDateTimeDayStart=$day1;
+     transient extractDateTimeHourStart=$hour1;
+     transient extractDateTimeMinuteStart=$minute1;
+     transient extractDateTimeSecondStart=$second1;
+
+     transient extractDateTimeYearEnd=$year2;
+     transient extractDateTimeMonthEnd=$month2;
+     transient extractDateTimeDayEnd=$day2;
+     transient extractDateTimeHourEnd=$hour2;
+     transient extractDateTimeMinuteEnd=$minute2;
+     transient extractDateTimeSecondEnd=$second2;
+
+     set doExtractDateTime=1;
+     if (extractedDateTimeNumberOfSubsets!=0) {
+       write;
+     }
+     print "extracted [extractedDateTimeNumberOfSubsets] of [originalNumberOfSubsets] subsets";
+     assert($num_subsets_expected == extractedDateTimeNumberOfSubsets);
+EOF
+}
 
 #-----------------------------------------------------------
 # Test: Datetime extraction
@@ -220,6 +266,26 @@ EOF
 inputBufr="amsa_55.bufr"
 outputBufr=${label}.${inputBufr}.out
 ${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
+rm -f $outputBufr
+
+#-----------------------------------------------------------
+# Test: uncompressed BUFR
+#-----------------------------------------------------------
+inputBufr="delayed_repl_01.bufr"
+outputBufr=${label}.${inputBufr}.out
+
+# The generate_filter function creates $fRules
+# Arguments: start_date end_date num_subsets_expected
+
+generate_filter 20171102112500 20171102125959 14
+${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
+
+generate_filter 20171102114000 20171102125959 12
+${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
+
+generate_filter 20171102120000 20171102125959 8
+${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
 
 
+# Clean up
 rm -f $outputRef $outputFilt $outputBufr $fLog $fRules

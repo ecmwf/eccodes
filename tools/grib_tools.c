@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -167,7 +167,9 @@ int grib_tool(int argc, char **argv)
         dump_file=stdout;
     }
 
-    if (is_index_file(global_options.infile->name) &&
+    /* ECC-926: Currently only GRIB indexing works. Disable the through_index if BUFR, GTS etc */
+    if (global_options.mode == MODE_GRIB &&
+        is_index_file(global_options.infile->name) &&
             ( global_options.infile_extra && is_index_file(global_options.infile_extra->name))) {
         global_options.through_index=1;
         return grib_tool_index(&global_options);
@@ -293,7 +295,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
         if (strcmp(infile->name,"-")==0)
             infile->file = stdin;
         else
-            infile->file = fopen(infile->name,"r");
+            infile->file = fopen(infile->name,"rb");
         if(!infile->file) {
             perror(infile->name);
             exit(1);
@@ -546,13 +548,13 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
     char buffer[1024];
     sprintf(buffer,  "%s/*", dir);
     if((handle = _findfirst(buffer, &fileinfo)) != -1)
-{
+    {
         do {
             if(strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name,"..") != 0) {
-            char buf[1024];
+                char buf[1024];
                 sprintf(buf, "%s/%s", dir, fileinfo.name);
-            process(c,options,buf);
-        }
+                process(c, options, buf);
+            }
         } while(!_findnext(handle, &fileinfo));
 
         _findclose(handle);

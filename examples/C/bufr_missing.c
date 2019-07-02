@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,7 +12,6 @@
  * C Implementation: bufr_missing
  *
  * Description: how to handle missing values in BUFR messages.
- *
  */
 
 #include "eccodes.h"
@@ -30,7 +29,7 @@ int main(int argc,char* argv[])
     int cnt=0;
     const char* infile = "../../data/bufr/syno_1.bufr";
 
-    in=fopen(infile,"r");
+    in=fopen(infile,"rb");
     if (!in)
     {
         printf("ERROR: unable to open file %s\n", infile);

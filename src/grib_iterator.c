@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -114,17 +114,20 @@ int grib_iterator_init(grib_iterator* i, grib_handle *h, grib_arguments* args)
 }
 
 /* For this one, ALL destroy are called */
-
 int grib_iterator_delete(grib_iterator *i)
 {
-    grib_iterator_class *c = i->cclass;
-    while(c)
-    {
-        grib_iterator_class *s = c->super ? *(c->super) : NULL;
-        if(c->destroy) c->destroy(i);
-        c = s;
+    if (i) {
+        grib_iterator_class *c = i->cclass;
+        while(c)
+        {
+            grib_iterator_class *s = c->super ? *(c->super) : NULL;
+            if(c->destroy) c->destroy(i);
+            c = s;
+        }
+        /* This should go in a top class */
+        grib_context_free(i->h->context,i);
+    } else {
+        return GRIB_INVALID_ARGUMENT;
     }
-    /* This should go in a top class */
-    grib_context_free(i->h->context,i);
     return 0;
 }

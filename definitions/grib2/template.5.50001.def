@@ -1,11 +1,4 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# Copyright 2005-2019 ECMWF.
 
 ieeefloat   referenceValue  : no_copy;
 meta referenceValueError reference_value_error(referenceValue,ieee);
@@ -28,7 +21,7 @@ if (bitsPerValue) {
 	unsigned [1] orderOfSPD = 2 : no_copy ;
 
 	if (orderOfSPD) {
-		 unsigned[1] widthOfSPD ;
-		 meta SPD spd(widthOfSPD,orderOfSPD) : read_only;
+		unsigned[1] widthOfSPD ;
+		meta SPD spd(widthOfSPD,orderOfSPD) : read_only;
 	}
 }

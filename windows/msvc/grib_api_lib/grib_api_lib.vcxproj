@@ -256,6 +256,7 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_g1shsimple_packing.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_g1simple_packing.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_g22order_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g2bifourier_packing.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_g2complex_packing.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_g2secondary_bitmap.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_g2shsimple_packing.c" />

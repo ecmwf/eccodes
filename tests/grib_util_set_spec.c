@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -51,7 +51,7 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     grib_util_packing_spec packing_spec={0,};
 
     assert(input_filename);
-    in = fopen(input_filename,"r");     assert(in);
+    in = fopen(input_filename,"rb");     assert(in);
     handle = grib_handle_new_from_file(0,in,&err);    assert(handle);
 
     CODES_CHECK(grib_get_string(handle, "gridType", gridType, &slen),0);
@@ -60,7 +60,7 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
         return;
     }
     assert(output_filename);
-    out = fopen(output_filename,"w");   assert(out);
+    out = fopen(output_filename,"wb");   assert(out);
 
     CODES_CHECK(grib_get_size(handle,"values",&inlen), 0);
     values = (double*)malloc(sizeof(double)*inlen);
@@ -155,7 +155,7 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     grib_util_packing_spec packing_spec={0,};
 
     assert(input_filename);
-    in = fopen(input_filename,"r");     assert(in);
+    in = fopen(input_filename,"rb");     assert(in);
     handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);    assert(handle);
     
     CODES_CHECK(codes_get_long(handle, "edition", &input_edition), 0);
@@ -166,7 +166,7 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
         return;
     }
     assert(output_filename);
-    out = fopen(output_filename,"w");   assert(out);
+    out = fopen(output_filename,"wb");   assert(out);
 
     CODES_CHECK(codes_get_size(handle,"values",&inlen), 0);
     values = (double*)malloc(sizeof(double)*inlen);
@@ -255,7 +255,7 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
     grib_util_grid_spec spec={0,};
     grib_util_packing_spec packing_spec={0,};
 
-    in = fopen(input_filename,"r");     assert(in);
+    in = fopen(input_filename,"rb");     assert(in);
     handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);    assert(handle);
 
     CODES_CHECK(grib_get_string(handle, "packingType", gridType, &slen),0);
@@ -263,7 +263,7 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
         grib_handle_delete(handle);
         return;
     }
-    out = fopen(output_filename,"w");   assert(out);
+    out = fopen(output_filename,"wb");   assert(out);
 
     CODES_CHECK(codes_get_size(handle,"values",&inlen), 0);
     values = (double*)malloc(sizeof(double)*inlen);
