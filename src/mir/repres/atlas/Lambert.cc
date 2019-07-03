@@ -23,29 +23,33 @@ namespace repres {
 namespace atlas {
 
 namespace {
-AtlasRegularGrid::Projection make_projection(double latitude1, double latitude2, double longitude0,
+AtlasRegularGrid::Projection make_projection(double latitude1, double latitude2, double latitudeD, double longitude0,
                                              double radius = ::atlas::util::Earth::radius()) {
     ASSERT(radius > 0.);
 
     return AtlasRegularGrid::Projection::Spec()
-        .set("type", "lambert")
+        .set("type", "lambert_conformal")
         .set("latitude1", latitude1)
         .set("latitude2", latitude2)
+        .set("latitudeD", latitudeD)
         .set("longitude0", longitude0)
         .set("radius", radius);
 }
 
 AtlasRegularGrid::Projection make_projection(const param::MIRParametrisation& param) {
-    double latitude1;
-    double latitude2;
-    double longitude0;
+    double LaDInDegrees;
+    double LoVInDegrees;
+    double Latin1InDegrees;
+    double Latin2InDegrees;
     double radius;
-    param.get("Latin1InDegrees", latitude1);
-    param.get("Latin2InDegrees", latitude2);
-    param.get("LoVInDegrees", longitude0);
-    param.get("radius", radius);
 
-    return make_projection(latitude1, latitude2, longitude0, radius);
+    ASSERT(param.get("LaDInDegrees", LaDInDegrees));
+    ASSERT(param.get("LoVInDegrees", LoVInDegrees));
+    ASSERT(param.get("Latin1InDegrees", Latin1InDegrees));
+    ASSERT(param.get("Latin2InDegrees", Latin2InDegrees));
+    ASSERT(param.get("radius", radius));
+
+    return make_projection(Latin1InDegrees, Latin2InDegrees, LaDInDegrees, LoVInDegrees, radius);
 }
 
 }  // (anonymous namespace)
