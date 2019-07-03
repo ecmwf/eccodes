@@ -186,3 +186,13 @@
 	 typeOfFirstFixedSurface = 169 ;
 	 scaledValueOfFirstFixedSurface = 1 ;
 }
+#Sea surface practical salinity
+'sea_surface_salinity' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+}
