@@ -58,12 +58,11 @@ AtlasRegularGrid::Projection make_projection(const param::MIRParametrisation& pa
 }  // (anonymous namespace)
 
 LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const param::MIRParametrisation& param) :
-    AtlasRegularGrid(BoundXY(param, make_projection(param)), make_projection(param)) {}
+    AtlasRegularGrid(param, make_projection(param)) {}
 
 LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(double x0, double x1, size_t nx, double y0, double y1, size_t ny,
                                                      double standardParallel, double centralLongitude) :
-    AtlasRegularGrid(BoundXY(LinearSpacing(x0, x1, long(nx)), LinearSpacing(y0, y1, long(ny))),
-                     make_projection(standardParallel, centralLongitude)) {}
+    AtlasRegularGrid({x0, x1, long(nx)}, {y0, y1, long(ny)}, make_projection(standardParallel, centralLongitude)) {}
 
 LambertAzimuthalEqualArea::~LambertAzimuthalEqualArea() = default;
 

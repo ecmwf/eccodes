@@ -32,19 +32,13 @@ public:
     using Projection        = ::atlas::Projection;
     using RectangularDomain = ::atlas::RectangularDomain;
 
-    struct BoundXY {
-        BoundXY(const param::MIRParametrisation&, Projection);
-        BoundXY(LinearSpacing x, LinearSpacing y);
-        LinearSpacing x_;
-        LinearSpacing y_;
-    };
-
     // -- Exceptions
     // None
 
     // -- Contructors
 
-    AtlasRegularGrid(const BoundXY&, Projection);
+    AtlasRegularGrid(const param::MIRParametrisation&, Projection);
+    AtlasRegularGrid(LinearSpacing x, LinearSpacing y, Projection);
     AtlasRegularGrid(const AtlasRegularGrid&) = delete;
     AtlasRegularGrid& operator=(const AtlasRegularGrid&) = delete;
 

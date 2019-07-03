@@ -29,7 +29,8 @@ namespace mir {
 namespace repres {
 namespace atlas {
 
-AtlasRegularGrid::BoundXY::BoundXY(const param::MIRParametrisation& param, Projection projection) {
+void make_linear_spacing_xy(const param::MIRParametrisation& param, AtlasRegularGrid::Projection projection,
+                            AtlasRegularGrid::LinearSpacing& x, AtlasRegularGrid::LinearSpacing& y) {
     using namespace eckit::geometry;
     ASSERT(projection);
 
@@ -38,10 +39,12 @@ AtlasRegularGrid::BoundXY::BoundXY(const param::MIRParametrisation& param, Proje
     ASSERT(param.get("numberOfPointsAlongXAxis", nx) && nx > 0);
     ASSERT(param.get("numberOfPointsAlongYAxis", ny) && ny > 0);
 
-    double dx = 0;
-    double dy = 0;
-    ASSERT(param.get("xDirectionGridLengthInMetres", dx) && dx > 0);
-    ASSERT(param.get("yDirectionGridLengthInMetres", dy) && dy > 0);
+    std::vector<double> grid;
+    ASSERT(param.get("grid", grid) && grid.size() == 2);
+    double dx = grid[0];
+    double dy = grid[1];
+    ASSERT(dx > 0);
+    ASSERT(dy > 0);
 
     // y[0] > y[1], for the "canonical" scanningMode (iScansPositively, jScansNegatively)
     Point2 firstLL;
@@ -49,26 +52,33 @@ AtlasRegularGrid::BoundXY::BoundXY(const param::MIRParametrisation& param, Proje
     ASSERT(param.get("longitudeOfFirstGridPointInDegrees", firstLL[LON]));
 
     Point2 first = projection.xy(firstLL);
-    Point2 last = first + Point2{(nx - 1) * dx, (1 - int(ny)) * dy};
+    Point2 last  = first + Point2{(nx - 1) * dx, (1 - int(ny)) * dy};
 
-    x_ = LinearSpacing(first[XX], last[XX], long(nx));
-    y_ = LinearSpacing(first[YY], last[YY], long(ny));
+    x = {first[XX], last[XX], long(nx)};
+    y = {first[YY], last[YY], long(ny)};
 
-    ASSERT(x_.front() < x_.back());
-    ASSERT(y_.front() > y_.back());
+    ASSERT(x.front() < x.back());
+    ASSERT(y.front() > y.back());
 }
 
-AtlasRegularGrid::BoundXY::BoundXY(AtlasRegularGrid::LinearSpacing x, AtlasRegularGrid::LinearSpacing y) :
-    x_(x),
-    y_(y) {
-    ASSERT(x_.front() < x_.back());
-    ASSERT(y_.front() > y_.back());
-}
-
-AtlasRegularGrid::AtlasRegularGrid(const BoundXY& xy, AtlasRegularGrid::Projection projection) :
-    x_(xy.x_),
-    y_(xy.y_),
+AtlasRegularGrid::AtlasRegularGrid(const param::MIRParametrisation& param, AtlasRegularGrid::Projection projection) :
     projection_(projection) {
+    make_linear_spacing_xy(param, projection, x_, y_);
+
+    RectangularDomain range({x_.front(), x_.back()}, {y_.front(), y_.back()}, "meters");
+    RectangularDomain bbox = projection.boundingBox(range);
+    ASSERT(bbox);
+
+    bbox_ = {bbox.ymax(), bbox.xmin(), bbox.ymin(), bbox.xmax()};
+    grid_ = ::atlas::StructuredGrid(x_, y_, projection);
+}
+
+AtlasRegularGrid::AtlasRegularGrid(AtlasRegularGrid::LinearSpacing x, AtlasRegularGrid::LinearSpacing y,
+                                   AtlasRegularGrid::Projection projection) {
+    ASSERT(x.front() < x.back());
+    ASSERT(y.front() > y.back());
+    x_ = x;
+    y_ = y;
 
     RectangularDomain range({x_.front(), x_.back()}, {y_.front(), y_.back()}, "meters");
     RectangularDomain bbox = projection.boundingBox(range);

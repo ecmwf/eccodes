@@ -12,7 +12,7 @@
 #ifndef mir_repres_atlas_Lambert_h
 #define mir_repres_atlas_Lambert_h
 
-#include "mir/repres/Gridded.h"
+#include "mir/repres/atlas/AtlasRegularGrid.h"
 
 
 namespace mir {
@@ -20,7 +20,7 @@ namespace repres {
 namespace atlas {
 
 
-class Lambert : public Gridded {
+class Lambert : public AtlasRegularGrid {
 public:
     // -- Exceptions
     // None
@@ -34,7 +34,7 @@ public:
 
     // -- Destructor
 
-    virtual ~Lambert() = default;
+    virtual ~Lambert();
 
     // -- Convertors
     // None

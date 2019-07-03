@@ -22,25 +22,44 @@ namespace mir {
 namespace repres {
 namespace atlas {
 
+namespace {
+AtlasRegularGrid::Projection make_projection(double latitude1, double latitude2, double longitude0,
+                                             double radius = ::atlas::util::Earth::radius()) {
+    ASSERT(radius > 0.);
 
-Lambert::Lambert(const param::MIRParametrisation &parametrisation) {
+    return AtlasRegularGrid::Projection::Spec()
+        .set("type", "lambert")
+        .set("latitude1", latitude1)
+        .set("latitude2", latitude2)
+        .set("longitude0", longitude0)
+        .set("radius", radius);
 }
 
+AtlasRegularGrid::Projection make_projection(const param::MIRParametrisation& param) {
+    double latitude1;
+    double latitude2;
+    double longitude0;
+    double radius;
+    param.get("Latin1InDegrees", latitude1);
+    param.get("Latin2InDegrees", latitude2);
+    param.get("LoVInDegrees", longitude0);
+    param.get("radius", radius);
 
-Lambert::Lambert() {
+    return make_projection(latitude1, latitude2, longitude0, radius);
+}
+
+}  // (anonymous namespace)
+
+Lambert::Lambert(const param::MIRParametrisation& param) :
+    AtlasRegularGrid(param, make_projection(param)) {
+    ASSERT(!param.has("rotation"));
 }
 
 
 Lambert::~Lambert() = default;
 
 
-void Lambert::print(std::ostream &out) const {
-    out << "Lambert["
-        << "]";
-}
-
-
-void Lambert::fill(grib_info &info) const  {
+void Lambert::fill(grib_info&) const {
     NOTIMP;
 }
 
