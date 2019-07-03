@@ -80,62 +80,7 @@ LatLon::~LatLon() = default;
 
 
 void LatLon::reorder(long scanningMode, MIRValuesVector& values) const {
-    auto scanningModeAsString = [](long mode) {
-        std::ostringstream os;
-        os << "scanningMode=" << mode << " (0x" << std::hex << mode << std::dec << ")";
-        return os.str();
-    };
-
-    auto current(scanningModeAsString(scanningMode));
-    auto canonical(scanningModeAsString(0));
-
-    ASSERT(values.size() == ni_ * nj_);
-
-    MIRValuesVector out(values.size());
-
-    if (scanningMode == jScansPositively) {
-        eckit::Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
-        size_t count = 0;
-        for (int j = nj_ - 1 ; j >= 0; --j) {
-            for (size_t i = 0 ; i <  ni_; ++i) {
-                out[count++] = values[j * ni_ + i];
-            }
-        }
-        ASSERT(count == out.size());
-        std::swap(values, out);
-        return;
-    }
-
-    if (scanningMode == iScansNegatively) {
-        eckit::Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
-        size_t count = 0;
-        for (size_t j = 0  ; j < nj_; ++j) {
-            for (int i = ni_ - 1 ; i >= 0; --i) {
-                out[count++] = values[j * ni_ + i];
-            }
-        }
-        ASSERT(count == out.size());
-        std::swap(values, out);
-        return;
-    }
-
-    if (scanningMode == (iScansNegatively | jScansPositively)) {
-        eckit::Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
-        size_t count = 0;
-        for (int j = nj_ - 1  ; j >= 0; --j) {
-            for (int i = ni_ - 1 ; i >= 0; --i) {
-                out[count++] = values[j * ni_ + i];
-            }
-        }
-        ASSERT(count == out.size());
-        std::swap(values, out);
-        return;
-    }
-
-    std::ostringstream os;
-    os << "LatLon::reorder " << current << " not supported";
-    eckit::Log::error() << os.str() << std::endl;
-    throw eckit::SeriousBug(os.str());
+    GribReorder::reorder(values, scanningMode, ni_, nj_);
 }
 
 

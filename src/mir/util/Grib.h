@@ -17,6 +17,8 @@
 
 #include <eccodes.h>
 
+#include <vector>
+
 #include "eckit/exception/Exceptions.h"
 
 
@@ -76,5 +78,17 @@ public:
 };
 
 
-#endif
+struct GribReorder {
+    enum
+    {
+        iScansNegatively      = 1 << 7,
+        jScansPositively      = 1 << 6,
+        jPointsAreConsecutive = 1 << 5,
+        alternateRowScanning  = 1 << 4
+    };
 
+    static void reorder(std::vector<double>& values, long scanningMode, size_t Ni, size_t Nj);
+};
+
+
+#endif
