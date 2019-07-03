@@ -8,10 +8,8 @@
  * does it submit to any jurisdiction.
  */
 
-/// @author Baudouin Raoult
-/// @author Pedro Maciel
-/// @date Apr 2015
 
+#include "mir/repres/atlas/Lambert.h"
 
 #include <iostream>
 
@@ -19,11 +17,10 @@
 
 #include "mir/param/MIRParametrisation.h"
 
-#include "mir/repres/unsupported/Lambert.h"
-
 
 namespace mir {
 namespace repres {
+namespace atlas {
 
 
 Lambert::Lambert(const param::MIRParametrisation &parametrisation) {
@@ -53,6 +50,7 @@ static RepresentationBuilder<Lambert> lambert("lambert"); // Name is what is ret
 }
 
 
+}  // namespace atlas
 }  // namespace repres
 }  // namespace mir
 

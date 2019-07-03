@@ -75,3 +75,19 @@ void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t
     eckit::Log::error() << os.str() << std::endl;
     throw eckit::SeriousBug(os.str());
 }
+
+
+void GribExtraSetting::set(grib_info& info, const char* key, long value) {
+    auto& set = info.packing.extra_settings[info.packing.extra_settings_count++];
+    set.name       = key;
+    set.long_value = value;
+    set.type       = GRIB_TYPE_LONG;
+}
+
+
+void GribExtraSetting::set(grib_info& info, const char* key, double value) {
+    auto& set        = info.packing.extra_settings[info.packing.extra_settings_count++];
+    set.name         = key;
+    set.double_value = value;
+    set.type         = GRIB_TYPE_DOUBLE;
+}

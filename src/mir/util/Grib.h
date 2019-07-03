@@ -91,4 +91,10 @@ struct GribReorder {
 };
 
 
+struct GribExtraSetting {
+    static void set(grib_info&, const char* key, long);
+    static void set(grib_info&, const char* key, double);
+};
+
+
 #endif
