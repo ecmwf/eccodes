@@ -18,6 +18,7 @@
 #include "eckit/log/Plural.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/utils/MD5.h"
+
 #include "atlas/util/Earth.h"
 
 #include "mir/config/LibMir.h"
@@ -55,7 +56,7 @@ AtlasRegularGrid::Projection make_projection(const param::MIRParametrisation& pa
     return make_projection(standardParallel, centralLongitude, radius);
 }
 
-}  // (anonymous namespace)
+}  // namespace
 
 LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const param::MIRParametrisation& param) :
     AtlasRegularGrid(param, make_projection(param)) {}
@@ -68,7 +69,7 @@ LambertAzimuthalEqualArea::~LambertAzimuthalEqualArea() = default;
 
 void LambertAzimuthalEqualArea::fill(grib_info& info) const {
 
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
+    info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
     info.packing.editionNumber = 2;
 
     ASSERT(x_.size() > 1);
@@ -95,8 +96,8 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
 }
 
 namespace {
-static RepresentationBuilder<LambertAzimuthalEqualArea>
-    lambertAzimuthalEqualArea("lambert_azimuthal_equal_area"); // Name is what is returned by grib_api
+static RepresentationBuilder<LambertAzimuthalEqualArea> lambertAzimuthalEqualArea(
+    "lambert_azimuthal_equal_area");  // Name is what is returned by grib_api
 }
 
 }  // namespace atlas
