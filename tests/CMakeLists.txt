@@ -246,7 +246,7 @@ if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh
     )
 
-    foreach( test grib_ecc-604 bufr_ecc-604 )
+    foreach( test grib_ecc-604 grib_ecc-604-encode bufr_ecc-604 )
         ecbuild_add_executable( TARGET    ${test}
                                 NOINSTALL
                                 SOURCES   ${test}.c

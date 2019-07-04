@@ -16,72 +16,24 @@ int opt_dump  = 0; /* If 1 then dump handle to /dev/null */
 int opt_clone = 0; /* If 1 then clone source handle */
 int opt_write = 0; /* If 1 write handle to file */
 
-static int encode_file(char *template_file, char *output_file)
+static int encode_values(grib_handle* h, char *output_file)
 {
-    FILE *in, *out;
-    grib_handle *source_handle = NULL;
-    const void *buffer = NULL;
-    size_t size = 0;
-    int err = 0;
     double *values;
-
-    in = fopen(template_file,"r"); assert(in);
-    if (opt_write) {
-        out = fopen(output_file,"w");  assert(out);
+    size_t size = 1000 * 1000;
+    size_t i = 0;
+    values = (double*)malloc(size*sizeof(double));
+    for (i=0; i<size; ++i) {
+        double v = i;
+        if (i % 1000 == 0) v = 0;
+        values[i] = v;
     }
-
-    /* loop over the messages in the source GRIB and clone them */
-    while ((source_handle = grib_handle_new_from_file(0, in, &err))!=NULL) {
-        int i;
-        size_t values_len = 0;
-        size_t str_len = 20;
-        grib_handle *h = source_handle;
-        
-        if (opt_clone) {
-            h = grib_handle_clone(source_handle); assert(h);
-        }
-
-        GRIB_CHECK(grib_get_size(h, "values", &values_len),0);
-
-        values = (double*)malloc(values_len*sizeof(double));
-        GRIB_CHECK(grib_get_double_array(h, "values", values, &values_len),0);
-
-        for (i=0;i<values_len;i++) {
-            values[i] *= 0.9;
-        }
-
-        GRIB_CHECK(grib_set_string(h,"stepUnits", "s", &str_len),0);
-        GRIB_CHECK(grib_set_long(h, "startStep", 43200), 0);
-        GRIB_CHECK(grib_set_long(h, "endStep", 86400), 0);
-        GRIB_CHECK(grib_set_long(h, "bitsPerValue", 16),0);
-
-        /* set data values */
-        GRIB_CHECK(grib_set_double_array(h,"values",values,values_len),0);
-
-        GRIB_CHECK(grib_get_message(h,&buffer,&size),0);
-        if (opt_write) {
-            if(fwrite(buffer,1,size,out) != size) {
-                perror(output_file);
-                return 1;
-            }
-        }
-        if (opt_dump) {
-            FILE *devnull = fopen("/dev/null", "w");
-            grib_dump_content(source_handle,devnull, "debug", 0, NULL);
-        }
-
-        grib_handle_delete(source_handle);
-        if(opt_clone) grib_handle_delete(h);
-        free(values);
-    }
-
-    if (opt_write) fclose(out);
-    fclose(in);
-
-    return 0;
+    GRIB_CHECK(grib_set_long(h,"bitsPerValue",16),0);
+    GRIB_CHECK(grib_set_double_array(h,"values",values,size), 0);
+    free(values);
+    return GRIB_SUCCESS;
 }
 
-void do_stuff(void *data);
+void do_encode(void *data);
 
 /* Structure for passing data to threads */
 struct v {
@@ -99,7 +51,7 @@ int main(int argc, char **argv)
     const char* prog = argv[0];
     char* mode;
     if (argc<5 || argc>7) {
-        fprintf(stderr, "Usage:\n\t%s [options] seq file numRuns numIter\nOr\n\t%s [options] par file numThreads numIter\n", prog, prog);
+        fprintf(stderr, "Usage:\n\t%s [options] seq sample numRuns numIter\nOr\n\t%s [options] par sample numThreads numIter\n", prog, prog);
         return 1;
     }
     
@@ -112,7 +64,7 @@ int main(int argc, char **argv)
     }
     index = optind;
     mode = argv[index];
-    INPUT_FILE = argv[index+1];
+    INPUT_FILE = argv[index+1]; /* Has to be the name of a sample file (without tmpl extension) */
     NUM_THREADS = atol(argv[index+2]);
     FILES_PER_ITERATION = atol(argv[index+3]);
 
@@ -139,7 +91,7 @@ int main(int argc, char **argv)
                 /*pthread_join(workers[thread_counter], NULL);*/
                 thread_counter++;
             } else {
-                do_stuff(data);
+                do_encode(data);
             }
         }
 
@@ -155,11 +107,11 @@ int main(int argc, char **argv)
 
 void *runner(void *ptr)
 {
-    do_stuff(ptr);
+    do_encode(ptr);
     pthread_exit(0);
 }
 
-void do_stuff(void *ptr)
+void do_encode(void *ptr)
 {
     /* Cast argument to struct v pointer */
     struct v *data = ptr;
@@ -168,14 +120,19 @@ void do_stuff(void *ptr)
     time_t ltime;
     struct tm result;
     char stime[32];
+    grib_handle *hs = NULL;
+
+    hs = grib_handle_new_from_samples(0, INPUT_FILE);
 
     for (i=0; i<FILES_PER_ITERATION;i++) {
+        grib_handle *h = grib_handle_clone(hs);
         if (opt_write) {
             sprintf(output_file,"output/output_file_%ld-%ld.grib", data->number, i);
-            encode_file(INPUT_FILE,output_file);
+            encode_values(h,output_file);
         } else {
-            encode_file(INPUT_FILE,NULL);
+            encode_values(h,NULL);
         }
+        grib_handle_delete(h);
     }
 
     ltime = time(NULL);
@@ -184,4 +141,5 @@ void do_stuff(void *ptr)
     /* asctime_r(&result, stime); */
 
     printf("%s: Worker %ld finished.\n", stime, data->number);
+    grib_handle_delete(hs);
 }
