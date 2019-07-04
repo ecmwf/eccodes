@@ -1,29 +1,4 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# START 1/local.98.20 ----------------------------------------------------------------------
-# LOCAL 98 20
-#
-# localDefinitionTemplate_020
-# ---------------------------
-#
-# Description            Octet    Code    Ksec1    Count
-# -----------            -----    ----    -----    -----
-#localDefinitionNumber       41  I1  37  -
-#class                       42  I1  38  -
-#type                        43  I1  39  -
-#stream                      44  I2  40  -
-#experimentVersionNumber     46  A4  41  -
-#iteration                   50  I1  42  -
-#totalNumberOfIterations     51  I1  43  -
-#spareSetToZero              52  PAD n/a 1
-#
+# Copyright 2005-2019 ECMWF.
 
 constant GRIBEXSection1Problem = 52 - section1Length ;
 
@@ -42,5 +17,3 @@ alias local.totalNumberOfIterations=totalNumberOfIterations;
 
 # spareSetToZero
 pad padding_loc20_1(1);
-
-# END   1/local.98.20 ----------------------------------------------------------------------

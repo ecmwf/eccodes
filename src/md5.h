@@ -2,7 +2,7 @@
 #define md5_H
 
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,17 +12,10 @@
  */
 
 #include <stdlib.h>
-#include "eccodes_windef.h"
-
-#ifdef ECCODES_ON_WINDOWS
-	typedef unsigned __int64 UnsignedInt64;
-#else
-#   include <stdint.h>
-	typedef uint64_t          UnsignedInt64;
-#endif
+#include <stdint.h>
 
 typedef struct grib_md5_state {
-	UnsignedInt64  size;
+	uint64_t size;
 
 	unsigned long words[64];
 	unsigned long word_count;

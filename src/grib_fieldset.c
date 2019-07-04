@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -546,8 +546,9 @@ static grib_order_by* grib_fieldset_new_order_by(grib_context* c, const char* ob
             while ( *p == ' ' && *p != '\0' ) p++;
             if (*p != '\0') {
                 *(p-1)='\0';
-                if (!grib_inline_strcmp(p,"asc")) mode=GRIB_ORDER_BY_ASC;
-                if (!grib_inline_strcmp(p,"desc")) mode=GRIB_ORDER_BY_DESC;
+                if      (strncmp(p,"asc",3)==0)  mode=GRIB_ORDER_BY_ASC;
+                else if (strncmp(p,"desc",4)==0) mode=GRIB_ORDER_BY_DESC;
+                else grib_context_log(c, GRIB_LOG_ERROR,"Invalid sort specifier: %s", p);
             }
             grib_trim(&p);
         }

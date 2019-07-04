@@ -1,41 +1,4 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# START 1/local.98.2 ----------------------------------------------------------------------
-# LOCAL 98 2
-#
-# localDefinitionTemplate_002
-# ---------------------------
-#
-# Description            Octet    Code    Ksec1    Count
-# -----------            -----    ----    -----    -----
-#localDefinitionNumber       41  I1  37  -
-#class                       42  I1  38  -
-#type                        43  I1  39  -
-#stream                      44  I2  40  -
-#experimentVersionNumber     46  A4  41  -
-#number                      50  I1  42  -
-#totalNumberOfClusters       51  I1  43  -
-#spareSetToZero              52  PAD n/a 1
-#clusteringMethod            53  I1  44  -
-#startTimeStep               54  I2  45  -
-#endTimeStep                 56  I2  46  -
-#northernLatititudeOfDomain  58  S3  47  -
-#westernLongititudeOfDomain  61  S3  48  -
-#southernLatititudeOfDomain  64  S3  49  -
-#easternLongititudeOfDomain  67  S3  50  -
-#operationalForecastCluster  70  I1  51  -
-#controlForecastCluster      71  I1  52  -
-#numberOfForecastsInCluster  72  I1  53  -
-#ensembleForecastNumbers     73  LP_I1   54  numberOfForecastsInCluster
-#spareToEnsureFixedLength    -   PADTO   n/a 328
-#
+# Copyright 2005-2019 ECMWF.
 
 constant GRIBEXSection1Problem = 328 - section1Length ;
 

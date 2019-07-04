@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -160,17 +160,10 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static int concept_condition_expression_true(grib_handle* h,grib_concept_condition* c) {
     long lval;
-    double dval;
     long lres=0;
-    double dres=0.0;
-    const char *cval;
-    char buf[80];
-    char tmp[80];
-    size_t len = sizeof(buf);
-    size_t size=sizeof(tmp);
     int ok = 0;
     int err=0;
-    int type       = grib_expression_native_type(h,c->expression);
+    const int type = grib_expression_native_type(h,c->expression);
 
     switch(type)
     {
@@ -180,17 +173,27 @@ static int concept_condition_expression_true(grib_handle* h,grib_concept_conditi
                 (lval == lres);
         break;
 
-    case GRIB_TYPE_DOUBLE:
+    case GRIB_TYPE_DOUBLE: {
+        double dval;
+        double dres=0.0;
         grib_expression_evaluate_double(h,c->expression,&dres);
         ok = (grib_get_double(h,c->name,&dval) == GRIB_SUCCESS) &&
                 (dval == dres);
         break;
+    }
 
-    case GRIB_TYPE_STRING:
+    case GRIB_TYPE_STRING: {
+        const char *cval;
+        char buf[80];
+        char tmp[80];
+        size_t len = sizeof(buf);
+        size_t size=sizeof(tmp);
+
         ok = (grib_get_string(h,c->name,buf,&len) == GRIB_SUCCESS) &&
         ((cval = grib_expression_evaluate_string(h,c->expression,tmp,&size,&err)) != NULL) &&
         (err==0) && (grib_inline_strcmp(buf,cval) == 0);
         break;
+    }
 
     default:
         /* TODO: */
@@ -425,14 +428,54 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     return ret;
 }
 
+static long guess_paramId(grib_handle* h)
+{
+    int err = 0;
+    long discipline, category, number;
+    err=grib_get_long(h,"discipline",&discipline);
+    if (err || discipline != 192)
+        return -1;
+    err=grib_get_long(h,"parameterCategory",&category);
+    if (err) return -1;
+    err=grib_get_long(h,"parameterNumber",&number);
+    if (err) return -1;
+
+    if (category==128) return number;
+    else               return (category * 1000 + number);
+}
+
+/* Return -1 if cannot match */
+static long get_ECMWF_local_paramId(grib_accessor* a, grib_handle* h)
+{
+    int err = 0;
+    long edition, centre;
+    if (h->product_kind != PRODUCT_GRIB)
+        return -1;
+    err=grib_get_long(h,"centre",&centre);
+    if (err) return -1;
+    err=grib_get_long(h,"edition",&edition);
+    if (err) return -1;
+    if (edition==2 && centre==98 && strncmp(a->name,"paramId",7)==0) {
+        return guess_paramId(h);
+    }
+    return -1;
+}
+
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-    /* TODO properly calling concept_evaluate_long ! */
     const char *p = concept_evaluate(a);
 
     if(!p) {
+        grib_handle* h = grib_handle_of_accessor(a);
+        const long pid = get_ECMWF_local_paramId(a, h);
+        if (pid != -1) {
+            grib_context_log(h->context,GRIB_LOG_DEBUG,"ECMWF local grib2: paramId guessed to be %ld",pid);
+            *val = pid;
+            *len = 1;
+            return GRIB_SUCCESS;
+        }
         if (a->creator->defaultkey)
-            return grib_get_long_internal(grib_handle_of_accessor(a),a->creator->defaultkey,val);
+            return grib_get_long_internal(h,a->creator->defaultkey,val);
 
         return GRIB_NOT_FOUND;
     }
@@ -460,16 +503,63 @@ static void destroy(grib_context* c,grib_accessor* a)
      */
 }
 
+static int is_local_ecmwf_grib2_param_key(grib_accessor* a, long edition, long centre)
+{
+    if (edition==2 && centre==98) {
+        if (a->parent->owner && a->parent->owner->name && strcmp(a->parent->owner->name,"parameters")==0)
+            return 1;
+    }
+    return 0;
+}
+
+/* Try to get the name, shortName, units etc for a GRIB2 message with
+ * local ECMWF coding i.e. discipline=192 etc
+ */
+static const char* get_ECMWF_local_parameter(grib_accessor* a, grib_handle* h)
+{
+    int err = 0;
+    const char* key_name = a->name; /*this is the key whose value we want*/
+    long edition, centre;
+    if (h->product_kind != PRODUCT_GRIB)
+        return NULL;
+    err=grib_get_long(h,"centre",&centre);
+    if (err) return NULL;
+    err=grib_get_long(h,"edition",&edition);
+    if (err) return NULL;
+    if (is_local_ecmwf_grib2_param_key(a,edition,centre)) {
+        /* Must be one of: 'name', 'shortName', 'units', 'cfName' etc */
+        grib_accessor* a2 = NULL;
+        long pid_guess = guess_paramId(h);
+        if (pid_guess == -1) return NULL;
+
+        /* Change the paramId so we can get the other string key*/
+        err = grib_set_long(h, "paramId", pid_guess);
+        if (err) return NULL;
+        /* Get the string value of key. Do not call grib_get_string() to avoid
+         * dangers of infinite recursion as that calls unpack_string()!
+         */
+        a2 = grib_find_accessor(h, key_name);
+        if (!a2) return NULL;
+        return concept_evaluate(a2);
+    }
+    return NULL;
+
+}
 static int unpack_string (grib_accessor* a, char* val, size_t *len)
 {
     size_t slen ;
     const char *p = concept_evaluate(a);
 
     if(!p) {
-        if (a->creator->defaultkey)
-            return grib_get_string_internal(grib_handle_of_accessor(a),a->creator->defaultkey,val,len);
+        grib_handle* h = grib_handle_of_accessor(a);
+        p = get_ECMWF_local_parameter(a, h);
+        if (!p) {
+            if (a->creator->defaultkey)
+                return grib_get_string_internal(h,a->creator->defaultkey,val,len);
 
-        return GRIB_NOT_FOUND;
+            return GRIB_NOT_FOUND;
+        }
+        grib_context_log(h->context,GRIB_LOG_DEBUG,"ECMWF local grib2 parameter: %s=%s", a->name,p);
     }
 
     slen = strlen(p) +1;

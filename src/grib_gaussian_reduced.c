@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -310,9 +310,9 @@ void grib_get_reduced_row_wrapper(grib_handle* h, long pl, double lon_first, dou
      */
 }
 
-#if 0
-/* This was the legacy way of counting the points. Now deprecated */
-static void grib_get_reduced_row1(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )
+/* This was the legacy way of counting the points within a subarea of a Gaussian grid.
+   In the days of Prodgen/libemos */
+void grib_get_reduced_row_legacy(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last)
 {
     double range=0,dlon_first=0,dlon_last=0;
     long irange;
@@ -393,14 +393,12 @@ static void grib_get_reduced_row1(long pl, double lon_first, double lon_last, lo
                     pl,*npoints,range,*ilon_first,*ilon_last,irange);
 #endif
         }
-
     }
 
     if (*ilon_first<0) *ilon_first+=pl;
 
     return;
 }
-#endif
 
 /* New method based on eckit Fractions and matching MIR count */
 void grib_get_reduced_row(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last )

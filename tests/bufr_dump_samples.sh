@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -24,6 +24,7 @@ fJsonTmp=${label}".json.tmp"
 # Test sample BUFR files
 for file in $ECCODES_SAMPLES_PATH/BUFR*.tmpl; do
   ${tools_dir}/bufr_dump -O $file >/dev/null
+  ${tools_dir}/bufr_dump -d $file >/dev/null
 done
 
 rm -f $fLog

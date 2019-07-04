@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -943,6 +943,7 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
     }
     else {
         lval=round(value/modifiedFactor)-modifiedReference;
+        if (c->debug) grib_context_log(c, GRIB_LOG_DEBUG, "encode_double_value %s: value=%.15f lval=%lu\n", bd->shortName,value,lval);
         grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
     }
 
@@ -1036,8 +1037,8 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         err=check_end_data(c, self, number_of_bits); /*advance bitsToEnd*/
         return err;
     }
-    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -%ld- \tcode=%6.6ld width=%ld scale=%ld ref=%ld (pos=%ld -> %ld)",
-            i, bd->code, bd->width, bd->scale, bd->reference,
+    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: -%ld- \tcode=%6.6ld width=%ld scale=%ld ref=%ld type=%ld (pos=%ld -> %ld)",
+            i, bd->code, bd->width, bd->scale, bd->reference, bd->type,
             (long)*pos, (long)(*pos-a->offset*8));
     if (bd->type==BUFR_DESCRIPTOR_TYPE_STRING) {
         /* string */
@@ -1072,6 +1073,10 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
             grib_context_log(c, GRIB_LOG_DEBUG,"Operator 203YYY: For code %6.6ld, changed ref val: %ld", bd->code, bd->reference);
         }
 
+        if (bd->width > 64) {
+            grib_context_log(c, GRIB_LOG_ERROR,"Descriptor %6.6ld has bit width %ld!", bd->code,bd->width);
+            return GRIB_DECODING_ERROR;
+        }
         if (self->compressedData) {
             dar=decode_double_array(c,data,pos,bd,self->canBeMissing[i],self,&err);
             grib_vdarray_push(c,self->numericValues,dar);
@@ -2067,14 +2072,57 @@ static int bitmap_ref_skip(grib_accessors_list* al,int* err)
     return 0;
 }
 
+/* Return 1 if the descriptor is an operator marking the start of a bitmap */
+static int is_bitmap_start_descriptor(grib_accessors_list* al, int* err)
+{
+    grib_accessor* acode=NULL;
+    long code[1];
+    size_t l=1;
+    if (!al || !al->accessor) return 0;
+
+    acode=grib_accessor_get_attribute(al->accessor,"code");
+    if (acode) *err=grib_unpack_long(acode,code,&l);
+    else return 1;
+
+    switch (code[0]) {
+    case 222000:
+    case 223000:
+    case 224000:
+    case 225000:
+    case 232000:
+    /*case 236000:*/
+    case 237000:
+    /*case 243000:*/
+        {
+#if 0
+            long index[1];
+            grib_accessor* anindex=grib_accessor_get_attribute(al->accessor,"index");
+            grib_unpack_long(anindex,index,&l);
+#endif
+            return 1;
+        }
+    }
+    return 0;
+}
+
 static void print_bitmap_debug_info(grib_context* c, bitmap_s* bitmap, grib_accessors_list* bitmapStart, int bitmapSize)
 {
     int i = 0, ret = 0;
     printf("ECCODES DEBUG: bitmap_init: bitmapSize=%d\n", bitmapSize);
     bitmap->cursor=bitmapStart->next;
     bitmap->referredElement=bitmapStart;
-    while (bitmap_ref_skip(bitmap->referredElement,&ret))
+
+    while (bitmap_ref_skip(bitmap->referredElement,&ret)) {
+        int is_bmp = 0;
+        if (is_bitmap_start_descriptor(bitmap->referredElement,&ret)) {
+            is_bmp = 1;
+        }
         bitmap->referredElement=bitmap->referredElement->prev;
+        if (is_bmp) {
+            break;
+        }
+    }
+
     for (i=1;i<bitmapSize;i++) {
         if (bitmap->referredElement) {
             printf("ECCODES DEBUG:\t bitmap_init: i=%d |%s|\n", i,bitmap->referredElement->accessor->name);
@@ -2082,6 +2130,7 @@ static void print_bitmap_debug_info(grib_context* c, bitmap_s* bitmap, grib_acce
         }
     }
 }
+
 static int bitmap_init(grib_context* c, bitmap_s* bitmap,
                        grib_accessors_list* bitmapStart, int bitmapSize, grib_accessors_list* lastAccessorInList)
 {
@@ -2092,7 +2141,20 @@ static int bitmap_init(grib_context* c, bitmap_s* bitmap,
         return ret;
     }
     bitmap->referredElement=bitmapStart;
-    while (bitmap_ref_skip(bitmap->referredElement,&ret)) bitmap->referredElement=bitmap->referredElement->prev;
+    /*while (bitmap_ref_skip(bitmap->referredElement,&ret)) bitmap->referredElement=bitmap->referredElement->prev;*/
+    /* See ECC-869
+     * We have to INCLUDE the replication factors that come after the bitmap operators
+     */
+    while (bitmap_ref_skip(bitmap->referredElement,&ret)) {
+        int is_bmp = 0;
+        if (is_bitmap_start_descriptor(bitmap->referredElement,&ret)) {
+            is_bmp = 1;
+        }
+        bitmap->referredElement=bitmap->referredElement->prev;
+        if (is_bmp) {
+            break;
+        }
+    }
     /*printf("bitmap_init: bitmapSize=%d\n", bitmapSize);*/
     for (i=1;i<bitmapSize;i++) {
         if (bitmap->referredElement==NULL) {
@@ -2215,9 +2277,11 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
     /*sectionUp=self->dataKeys;*/
     accessor_constant_set_type(gaGroup,GRIB_TYPE_LONG);
     accessor_constant_set_dval(gaGroup,groupNumber);
-    self->dataKeys->block->first=0;
-    self->dataKeys->block->last=0;
-    grib_push_accessor(gaGroup,self->dataKeys->block);
+    /* ECC-765: Don't empty out the section_4 keys otherwise there will be memory leaks. */
+    /* Setting first and last to zero effectively masks out those section 4 keys! */
+    /* self->dataKeys->block->first=0; */
+    /* self->dataKeys->block->last=0;  */
+    grib_push_accessor(gaGroup,self->dataKeys->block);/* Add group accessors to section 4 */
 
     /*indexOfGroupNumber=0;*/
     depth=0;

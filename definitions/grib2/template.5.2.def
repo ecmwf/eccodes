@@ -1,14 +1,5 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# Copyright 2005-2019 ECMWF.
 
-
-# START 2/template.5.2 ----------------------------------------------------------------------
 # TEMPLATE 5.2, Grid point data - complex packing
 
 include "grib2/template.5.packing.def";
@@ -31,19 +22,16 @@ unsigned[4] numberOfGroupsOfDataValues ;
 
 alias NG  = numberOfGroupsOfDataValues;
 #  Reference for group widths
-# NOTE 12 NOT FOUND                                                    
 unsigned[1] referenceForGroupWidths ;
 
 #  Number of bits used for the group widths
-# (after the reference value in octet 36 has been removed)             
+# (after the reference value in octet 36 has been removed)
 unsigned[1] numberOfBitsUsedForTheGroupWidths ;
 
 #  Reference for group lengths
-# NOTE 13 NOT FOUND                                                    
 unsigned[4] referenceForGroupLengths ;
 
 #  Length increment for the group lengths
-# NOTE 14 NOT FOUND                                                    
 unsigned[1] lengthIncrementForTheGroupLengths ;
 
 #  True length of last group
@@ -51,9 +39,6 @@ unsigned[4] trueLengthOfLastGroup ;
 
 #  Number of bits used for the scaled group lengths
 # (after subtraction of the reference value given in octets 38-41 and division
-# by the length increment given in octet 42)                           
+# by the length increment given in octet 42)
 unsigned[1] numberOfBitsForScaledGroupLengths ;
 alias numberOfBitsUsedForTheScaledGroupLengths=numberOfBitsForScaledGroupLengths;
-
-
-# END   2/template.5.2 ----------------------------------------------------------------------

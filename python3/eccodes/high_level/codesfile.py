@@ -49,8 +49,8 @@ class CodesFile(io.FileIO):
         """Close all open messages, release file handle and close file."""
         while self.open_messages:
             self.open_messages.pop().close()
-        eccodes.codes_close_file(self.file_handle.fileno(), self.name)
-        self.file_handle.close()
+        eccodes.codes_close_file(self.file_handle)
+        #self.file_handle.close()
 
     def __len__(self):
         """Return total number of messages in file."""

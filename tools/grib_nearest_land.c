@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -19,7 +19,7 @@
 
 #include "grib_api_internal.h"
 
-void usage(char* prog) {
+static void usage(char* prog) {
   printf("Usage: %s latlon_file grib_orography grib_file grib_file ...\n",prog);
   exit(1);
 }

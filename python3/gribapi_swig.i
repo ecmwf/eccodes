@@ -44,7 +44,7 @@ import_array();
 int grib_c_new_from_file(FILE* f, int fd, char* fname, int* INOUT, int headers_only);
 int grib_c_new_any_from_file(FILE* f, int fd, char* fname, int headers_only, int* INOUT);
 int grib_c_new_bufr_from_file(FILE* f, int fd, char* fname, int headers_only, int* INOUT);
-int grib_c_new_gts_from_file(FILE* f, int headers_only, int* INOUT);
+int grib_c_new_gts_from_file(FILE* f, int fd, char* fname, int headers_only, int* INOUT);
 int grib_c_new_metar_from_file(FILE* f, int headers_only, int* INOUT);
 int grib_c_iterator_new(int* INPUT, int* OUTPUT, int* INPUT);
 int grib_c_keys_iterator_new(int* INPUT, int* OUTPUT, char* name_space);

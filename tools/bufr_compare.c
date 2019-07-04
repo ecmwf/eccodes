@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -422,7 +422,7 @@ static void print_index_key_values(grib_index* index,int icounter,const char* er
     printf("\n");
 }
 
-static grib_handle* grib_handle_new_from_file_x(
+static grib_handle* bufr_handle_new_from_file_x(
         grib_context* c,FILE* f,int mode,int headers_only,int *err)
 {
     return codes_handle_new_from_file(c,f,PRODUCT_BUFR,err);
@@ -478,7 +478,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     } else if (options->random)
         global_handle = grib_fieldset_next_handle(options->idx,&err);
     else
-        global_handle=grib_handle_new_from_file_x(h->context,options->infile_extra->file,options->mode,0,&err);
+        global_handle=bufr_handle_new_from_file_x(h->context,options->infile_extra->file,options->mode,0,&err);
 
     if (!global_handle || err!= GRIB_SUCCESS ) {
         morein2++;
@@ -517,7 +517,7 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     int err=0;
     if (!options->through_index && !options->random)  {
-        global_handle=grib_handle_new_from_file(h->context,options->infile_extra->file,&err);
+        global_handle=codes_bufr_handle_new_from_file(h->context,options->infile_extra->file,&err);
 
         if (!global_handle || err!= GRIB_SUCCESS)
             morein2++;
@@ -541,17 +541,19 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     grib_error* e = error_summary;
     int err=0;
     grib_context* c=grib_context_get_default();
-    error += morein1+morein2;
 
     /*if (grib_options_on("w:")) return 0;*/
 
-    if (error) {
-        printf("\n## ERRORS SUMMARY #######\n");
-    }
-    while ((global_handle=grib_handle_new_from_file(c,options->infile_extra->file,&err))) {
+    while ((global_handle=codes_bufr_handle_new_from_file(c,options->infile_extra->file,&err))) {
         morein1++;
         if (global_handle) grib_handle_delete(global_handle);
     }
+
+    error += morein1+morein2;
+    if (error) {
+        printf("\n## ERRORS SUMMARY #######\n");
+    }
+
     if (morein1>0) {
         printf("##\n## Different number of messages \n");
         printf("## %d more messages in %s than in %s\n",morein1,
@@ -627,18 +629,18 @@ static char* double_as_string(grib_context* c, double v)
 static char* get_keyname_without_rank(const char* name)
 {
     char* p=(char*)name;
-    char* end=p;
+    char* pEnd=p;
     char* ret=NULL;
 
     if (*p=='#') {
-        strtol(++p,&end,10);
-        if ( *end != '#') {
+        strtol(++p,&pEnd,10);
+        if ( *pEnd != '#') {
             DebugAssert(!"Badly formed rank in key");
         } else {
             /* Take everything after 2nd '#' */
             grib_context* c=grib_context_get_default();
-            end++;
-            ret=grib_context_strdup(c,end);
+            pEnd++;
+            ret=grib_context_strdup(c,pEnd);
         }
     }
     return ret;

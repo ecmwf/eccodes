@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -187,6 +187,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     long stream=-1;
     long the_class=-1;
     long eps=-1;
+    long chemical=-1;
+    long aerosol=-1;
+    long chemical_distfn=-1;
+    long aerosol_optical=-1;
     char stepType[15]={0,};
     size_t slen=15;
     int localDefinitionNumber=*val;
@@ -196,7 +200,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     long editionNumber = 0;
 
     if (grib_get_long(grib_handle_of_accessor(a), "editionNumber", &editionNumber)==GRIB_SUCCESS) {
-        Assert(editionNumber == 2);
+        Assert(editionNumber != 1);
     }
 
     if (grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
@@ -209,10 +213,18 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     grib_get_string(grib_handle_of_accessor(a), self->stepType,stepType,&slen);
     if (!strcmp(stepType,"instant")) isInstant=1;
     grib_get_long(grib_handle_of_accessor(a), self->grib2LocalSectionNumber,&grib2LocalSectionNumber);
+    grib_get_long(grib_handle_of_accessor(a), "is_chemical",&chemical);
+    grib_get_long(grib_handle_of_accessor(a), "is_chemical_distfn",&chemical_distfn);
+    grib_get_long(grib_handle_of_accessor(a), "is_aerosol",&aerosol);
+    grib_get_long(grib_handle_of_accessor(a), "is_aerosol_optical",&aerosol_optical);
+    if (chemical && aerosol) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,"Parameter cannot be both chemical and aerosol!");
+        return GRIB_ENCODING_ERROR;
+    }
 
     if (is_productDefinitionTemplateNumber_EPS(productDefinitionTemplateNumber))
         eps=1;
-/*TODO chemicals*/
+
     switch (localDefinitionNumber) {
     case 0:
     case 300:
@@ -305,6 +317,68 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         grib_context_log(a->context,GRIB_LOG_ERROR,"Invalid localDefinitionNumber %d",localDefinitionNumber);
         return GRIB_ENCODING_ERROR;
         break;
+    }
+
+    /* Adjust for atmospheric chemical constituents */
+    if (chemical==1) {
+        if ( eps == 1 ) {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=41;
+            } else {
+                productDefinitionTemplateNumberNew=43;
+            }
+        } else {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=40;
+            } else {
+                productDefinitionTemplateNumberNew=42;
+            }
+        }
+    }
+    /* Adjust for atmospheric chemical constituents based on a distribution function */
+    if (chemical_distfn==1) {
+        if ( eps == 1 ) {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=58;
+            } else {
+                productDefinitionTemplateNumberNew=68;
+            }
+        } else {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=57;
+            } else {
+                productDefinitionTemplateNumberNew=67;
+            }
+        }
+    }
+
+    /* Adjust for aerosols */
+    if (aerosol==1) {
+        if ( eps == 1 ) {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=45;
+            } else {
+                productDefinitionTemplateNumberNew=47;
+            }
+        } else {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=48;/*44 is deprecated*/
+            } else {
+                productDefinitionTemplateNumberNew=46;
+            }
+        }
+    }
+    /* Adjust for optical properties of aerosol */
+    if (aerosol_optical==1) {
+        if ( eps == 1 ) {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=49;
+            }
+        } else {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=48;
+            }
+        }
     }
 
     if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {

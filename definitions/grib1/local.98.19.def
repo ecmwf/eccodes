@@ -1,36 +1,5 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# Copyright 2005-2019 ECMWF.
 
-# START 1/local.98.19 ----------------------------------------------------------------------
-# LOCAL 98 19
-#
-# localDefinitionTemplate_019
-# ---------------------------
-#
-# Description                Octet    Code    Ksec1    Count
-# -----------                -----    ----    -----    -----
-#localDefinitionNumber               41  I1  37  -
-#class                               42  I1  38  -
-#type                                43  I1  39  -
-#stream                              44  I2  40  -
-#experimentVersionNumber             46  A4  41  -
-#zeroForMarsCompatibility            50  PAD 42  1
-#ensembleSize                        51  I1  43  -
-#powerOfTenUsedToScaleClimateWeight  52  I1  44  -
-#weightAppliedToClimateMonth1        53  I4  45  -
-#firstMonthUsedToBuildClimateMonth1  57  I3  46  -
-#lastMonthUsedToBuildClimateMonth1   60  I3  47  -
-#firstMonthUsedToBuildClimateMonth2  63  I3  48  -
-#lastMonthUsedToBuildClimateMonth2   66  I3  49  -
-#efiOrder                            69  I1  50  -
-#spareSetToZero                      70  PAD n/a 11
-#
 template mars_labeling "grib1/mars_labeling.def";
 
 constant GRIBEXSection1Problem = 80 - section1Length ;
@@ -69,5 +38,3 @@ unsigned[1] efiOrder : dump;
 
 # spareSetToZero
 pad padding_loc19_2(11);
-
-# END   1/local.98.19 ----------------------------------------------------------------------

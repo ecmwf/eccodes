@@ -1,4 +1,4 @@
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -11,7 +11,6 @@
 # Python implementation: gts_get_keys
 #
 # Description: how to read values of different type of keys from GTS messages.
-#
 #
 
 from __future__ import print_function
@@ -37,6 +36,7 @@ def example():
         if gid is None:
             break
 
+        cnt += 1
         print("message: %s" % cnt)
 
         # ---------------------------------------------
@@ -49,8 +49,6 @@ def example():
                 print('  %s: %s' % (key, codes_get(gid, key)))
             except CodesInternalError as err:
                 print('Error with key="%s" : %s' % (key, err.msg))
-
-        cnt += 1
 
         # delete handle
         codes_release(gid)

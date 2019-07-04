@@ -4,6 +4,7 @@ from gribapi import GRIB_CHECK as CODES_CHECK
 
 from gribapi import CODES_PRODUCT_GRIB
 from gribapi import CODES_PRODUCT_BUFR
+from gribapi import CODES_PRODUCT_GTS
 from gribapi import CODES_PRODUCT_ANY
 from gribapi import GRIB_MISSING_DOUBLE as CODES_MISSING_DOUBLE
 from gribapi import GRIB_MISSING_LONG as CODES_MISSING_LONG

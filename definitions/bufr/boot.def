@@ -1,4 +1,4 @@
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -13,7 +13,7 @@ transient setToMissingIfOutOfRange=0 : hidden;
 
 # This gets updated twice a year by WMO.
 # See http://www.wmo.int/pages/prog/www/WMOCodes/WMO306_vI2/LatestVERSION/LatestVERSION.html
-constant masterTablesVersionNumberLatest = 31;
+constant masterTablesVersionNumberLatest = 32;
 
 #negative value=not used
 transient inputDelayedDescriptorReplicationFactor={-1} : hidden;

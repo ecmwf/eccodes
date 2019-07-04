@@ -1,4 +1,4 @@
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,6 +9,8 @@
 
 constant ieeeFloats   = 0 : hidden, edition_specific;
 transient eps=0;
+constant two=1 : hidden;
+constant three=1 : hidden;
 constant eight=8 : hidden;
 constant eleven=11 : hidden;
 constant epsPoint=1 : hidden;
@@ -52,7 +54,8 @@ flagbit bitmapPresent(section1Flags,6) :dump;
 alias bitmapSectionPresent=bitmapPresent;
 alias geography.bitmapPresent=bitmapPresent;
 alias missingValuesPresent=bitmapPresent : read_only;
-transient angularPrecision=1000;  # milli degrees
+transient angleSubdivisions=1000;  # milli degrees
+alias angularPrecision=angleSubdivisions : hidden;
 
 if(gridDescriptionSectionPresent){
   template section_2 "grib1/section.2.def"     ;
@@ -70,7 +73,7 @@ if (!headersOnly) {
   transient  missingValue   = 9999 : dump;
 
   if(bitmapPresent) {
-    template   section3 "grib1/section.3.def";
+    template   section_3 "grib1/section.3.def";
   } else {
     constant   tableReference = 0;
   }

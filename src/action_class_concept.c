@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -218,12 +218,12 @@ static void destroy(grib_context* context,grib_action* act)
 
 static grib_concept_value* get_concept_impl(grib_handle* h,grib_action_concept* self)
 {
-    char buf[1024]={0,};
+    char buf[4096]={0,};
     char master[1024]={0,};
     char local[1024]={0,};
     char masterDir[1024]={0,};
     size_t lenMasterDir=1024;
-    char key[1024]={0,};
+    char key[4096]={0,};
     char* full=0;
     int id;
 

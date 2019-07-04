@@ -53,7 +53,7 @@ if( NOT DEFINED IEEE_BE )
 endif()
 
 if( ECCODES_BIG_ENDIAN AND NOT IEEE_BE )
-    ecbuild_critical("Failed to sanity check on endiness: OS should be Big-Endian but compiled code runs differently -- to ignore this pass -DIEEE_BE=0 to CMake/ecBuild")
+    ecbuild_critical("Failed to sanity check on endiness: OS should be Big-Endian but compiled code runs differently -- to ignore this pass -DIEEE_BE=1 to CMake/ecBuild")
 endif()
 
 if( NOT DEFINED IEEE_LE )
@@ -89,5 +89,5 @@ if( NOT DEFINED IEEE_LE )
 endif()
 
 if( ECCODES_LITTLE_ENDIAN AND NOT IEEE_LE )
-    ecbuild_critical("Failed to sanity check on endiness: OS should be Little-Endian but compiled code runs differently -- to ignore this pass -DIEEE_LE=0 to CMake/ecBuild")
+    ecbuild_critical("Failed to sanity check on endiness: OS should be Little-Endian but compiled code runs differently -- to ignore this pass -DIEEE_LE=1 to CMake/ecBuild")
 endif()

@@ -31,6 +31,7 @@ list( APPEND tests_basic
    grib_set_pv
    grib_read_sample
    bufr_read_sample
+   bufr_ecc-869
 )
 list( APPEND tests_extra
    grib_clone
@@ -69,7 +70,7 @@ list( APPEND tests_extra
 # The high level python test requires new features in the unittest
 # which are only there for python 2.7 onwards
 if( HAVE_PYTHON AND PYTHON_VERSION_STRING VERSION_GREATER "2.7" )
-    ecbuild_info("Python examples: Adding test for High-level Pythonic Interface")
+    #ecbuild_info("Python examples: Adding test for High-level Pythonic Interface")
     list( APPEND tests_extra high_level_api )
     list( APPEND tests_extra grib_set_keys ) # Uses OrderedDict
 endif()

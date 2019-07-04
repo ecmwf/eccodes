@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -219,17 +219,17 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
     grib_smart_table* t = NULL;
     grib_smart_table* next=NULL ;
     char *filename=0;
-    char name[1024]={0,};
+    char name[2048]={0,};
     char recomposed[1024]={0,};
     char localRecomposed[1024]={0,};
     char *localFilename=0;
     char extraRecomposed[1024]={0,};
     char *extraFilename=0;
-    char localName[1024]={0,};
+    char localName[2048]={0,};
     char masterDir[1024]={0,};
     char localDir[1024]={0,};
     char extraDir[1024]={0,};
-    char extraTable[1024]={0,};
+    char extraTable[2048]={0,};
     size_t len=1024;
 
     if (self->masterDir != NULL) {

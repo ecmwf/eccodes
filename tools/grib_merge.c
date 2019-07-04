@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -306,7 +306,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     int err=0;
     grib_handle* hm=0;
     char md5[200]={0,};
-    char fname[210]={0,};
+    char fname[256]={0,};
     size_t lmd5=32;
 
     if (!hh) { hh=grib_handle_clone(h); return 0; }

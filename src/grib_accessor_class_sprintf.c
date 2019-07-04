@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -145,7 +145,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {
     grib_accessor_sprintf* self = (grib_accessor_sprintf*)a;
     char result[1024]  ;
-    char tempBuffer[1024];
+    char tempBuffer[2048];
     char sres[1024]  ;
     long ires = 0;
     double dres= 0;

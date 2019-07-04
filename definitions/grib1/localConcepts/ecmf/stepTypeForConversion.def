@@ -5,6 +5,7 @@
 # ECC-457: ECMWF Total Precipitation
 "accum" = {timeRangeIndicator=0;indicatorOfParameter=228;gribTablesVersionNo=128;centre=98;}
 "accum" = {timeRangeIndicator=1;indicatorOfParameter=228;gribTablesVersionNo=128;centre=98;}
+"accum" = {timeRangeIndicator=10;indicatorOfParameter=228;gribTablesVersionNo=128;centre=98;}
 
 # sshf
 "accum" = {indicatorOfParameter=146;gribTablesVersionNo=128;centre=98;}

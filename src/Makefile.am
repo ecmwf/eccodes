@@ -247,6 +247,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_select_step_template.c \
 	grib_accessor_class_local_definition.c \
 	grib_accessor_class_g2_eps.c \
+	grib_accessor_class_g2_aerosol.c \
 	grib_accessor_class_g2_chemical.c \
 	grib_accessor_class_g2_mars_labeling.c \
 	grib_accessor_class_transient_darray.c \
@@ -377,6 +378,7 @@ libeccodes_la_prototypes= \
 	string_util.c \
 	functions.c \
 	codes_memfs.c \
+	grib_accessor_class_data_g2bifourier_packing.c \
 	grib_optimize_decimal_factor.c \
 	grib_api_version.c
 

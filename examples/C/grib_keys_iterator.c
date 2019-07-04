@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,8 +21,11 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
+
+#if !(defined(_WIN32) && defined(_MSC_VER))
+#include <unistd.h>
+#endif
 
 #include "eccodes.h"
 
@@ -56,7 +59,7 @@ int main(int argc, char *argv[])
 
     if (argc != 2) usage(argv[0]);
 
-    f = fopen(argv[1],"r");
+    f = fopen(argv[1],"rb");
     if(!f) {
         perror(argv[1]);
         exit(1);
@@ -82,7 +85,7 @@ int main(int argc, char *argv[])
         {
             const char* name = codes_keys_iterator_get_name(kiter);
             vlen=MAX_VAL_LEN;
-            bzero(value,vlen);
+            memset(value, 0, vlen);
             CODES_CHECK(codes_get_string(h,name,value,&vlen),name);
             printf("%s = %s\n",name,value);
 

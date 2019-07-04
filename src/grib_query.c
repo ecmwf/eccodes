@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -179,10 +179,10 @@ static char* get_condition(const char* name,codes_condition* condition)
 
     end=NULL;
     lval=strtol(str,&end,10);
-    if (*end != 0) {
+    if (*end != 0) { /* strtol failed. Not an integer */
         double dval;
         dval=strtod(str,&end);
-        if (*end != 0) {
+        if (*end == 0) { /* strtod passed. So a double */
             condition->rightType=GRIB_TYPE_DOUBLE;
             condition->rightDouble=dval;
         }

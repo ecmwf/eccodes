@@ -1,33 +1,4 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-
-# START 1/local.98.192 ----------------------------------------------------------------------
-# LOCAL 98 192
-#
-# localDefinitionTemplate_192
-# ---------------------------
-#
-# Description            Octet    Code    Ksec1    Count
-# -----------            -----    ----    -----    -----
-#localDefinitionNumber           41  I1  37  -
-#class                           42  I1  38  -
-#type                            43  I1  39  -
-#stream                          44  I2  40  -
-#experimentVersionNumber         46  A4  41  -
-#zeroForCompatibilityWithMars    50  PAD 42  2
-#numberOfLocalDefinitions        52  I1  44  -
-#listOfLocalDefinitions          -   LIST    -   numberOfLocalDefinitions
-#localDefinitionLength           -   I2  -   -
-#localDefinition                 -   LOCAL   -   -
-#endListOfLocalDefinitions       -   ENDLIST -   listOfLocalDefinitions
-#
+# Copyright 2005-2019 ECMWF.
 
 # The mars labeling must be inline
 # template mars_labeling "grib1/mars_labeling.def";
@@ -66,5 +37,3 @@ if (numberOfLocalDefinitions == 2 ) {
 	ksec1expver[4] experimentVersionNumber2 = "0001" : dump;
 	template  subDefinitions2  "grib1/local_no_mars.98.[subLocalDefinitionNumber2].def";
 }
-
-

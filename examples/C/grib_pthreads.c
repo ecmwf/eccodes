@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -26,9 +26,12 @@ static void* process_grib(void* threadID)
     double min=0,max=0;
     double pv[4]={1,2,3,4};
     const size_t pvsize=4;
+    ProductKind prod_kind = 0;
 
     codes_handle* h = codes_grib_handle_new_from_samples(0, "regular_ll_pl_grib2");
     assert(h);
+    CODES_CHECK(codes_get_product_kind(h, &prod_kind), 0);
+    assert(prod_kind == PRODUCT_GRIB);
     printf("Thread %ld running\n", tid);
 
     CODES_CHECK(codes_set_long(h,"indicatorOfUnitOfTimeRange", indicatorOfUnitOfTimeRange),0);

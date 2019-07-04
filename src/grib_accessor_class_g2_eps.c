@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -179,6 +179,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     long productDefinitionTemplateNumberNew=-1;
     long type=-1;
     long stream=-1;
+    long chemical=-1;
+    long aerosol=-1;
     char stepType[15]={0,};
     size_t slen=15;
     int eps=*val;
@@ -192,7 +194,13 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     grib_get_long(grib_handle_of_accessor(a), self->stream,&stream);
     grib_get_string(grib_handle_of_accessor(a), self->stepType,stepType,&slen);
     if (!strcmp(stepType,"instant")) isInstant=1;
-/*TODO chemicals*/
+    grib_get_long(grib_handle_of_accessor(a), "is_chemical",&chemical);
+    grib_get_long(grib_handle_of_accessor(a), "is_aerosol",&aerosol);
+    if (chemical && aerosol) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,"Parameter cannot be both chemical and aerosol!");
+        return GRIB_ENCODING_ERROR;
+    }
+
     /* eps or stream=(enda or elda or ewla) */
     if ( eps || stream==1030 || stream==1249 || stream==1250 ) {
         if (isInstant) {
@@ -223,6 +231,40 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
             productDefinitionTemplateNumberNew=0;
         } else {
             productDefinitionTemplateNumberNew=8;
+        }
+    }
+
+    /* Adjust for chemical species */
+    if (chemical==1) {
+        if ( eps == 1 ) {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=41;
+            } else {
+                productDefinitionTemplateNumberNew=43;
+            }
+        } else {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=40;
+            } else {
+                productDefinitionTemplateNumberNew=42;
+            }
+        }
+    }
+
+    /* Adjust for aerosols */
+    if (aerosol==1) {
+        if ( eps == 1 ) {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=45;
+            } else {
+                productDefinitionTemplateNumberNew=47;
+            }
+        } else {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew=48;/*44 is deprecated*/
+            } else {
+                productDefinitionTemplateNumberNew=46;
+            }
         }
     }
 

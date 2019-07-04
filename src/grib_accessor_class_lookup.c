@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -162,7 +162,7 @@ static void dump(grib_accessor* a,grib_dumper* dumper)
     grib_accessor_lookup* self = (grib_accessor_lookup*)a;
     unsigned char bytes[1024] = {0,};
     char msg[1024]= {0,};
-    char buf[1024];
+    char buf[2048];
     int i;
     unsigned long v = 0;
 

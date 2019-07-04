@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,6 +12,10 @@
 
 extern char *optarg;
 extern int optind;
+
+#ifdef ECCODES_ON_WINDOWS
+#include "wingetopt.h"
+#endif
 
 static void usage_and_exit(const char* progname) {
     printf("\nUsage: %s [-v] [-d] [-s]\n",progname);
@@ -61,7 +65,9 @@ int main( int argc,char* argv[])
         printf("\n");
         printf("%s Version %d.%d.%d",
                 grib_get_package_name(), major,minor,revision);
-        /* if (ECCODES_MAJOR_VERSION < 1) printf(" PRE-RELEASE"); */
+
+        if (ECCODES_MAJOR_VERSION < 1) printf(" PRE-RELEASE");
+
         printf("\n");
         printf("\n");
         if(context->debug) {
@@ -85,7 +91,7 @@ int main( int argc,char* argv[])
                    "It is recommended you use ECCODES_DEFINITION_PATH instead!)\n");
         } else {
             printf("Default definition files path is used: %s\n",ECCODES_DEFINITION_PATH);
-            printf("Definition files path can be changed setting ECCODES_DEFINITION_PATH environment variable\n");
+            printf("Definition files path can be changed by setting ECCODES_DEFINITION_PATH environment variable\n");
         }
         printf("\n");
 
@@ -99,7 +105,7 @@ int main( int argc,char* argv[])
                    "It is recommended you use ECCODES_SAMPLES_PATH instead!)\n");
         } else {
             printf("Default SAMPLES path is used: %s\n",ECCODES_SAMPLES_PATH);
-            printf("SAMPLES path can be changed setting ECCODES_SAMPLES_PATH environment variable\n");
+            printf("SAMPLES path can be changed by setting ECCODES_SAMPLES_PATH environment variable\n");
         }
         printf("\n");
         return 0;

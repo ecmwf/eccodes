@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -1157,10 +1157,21 @@ int _grib_get_string_length(grib_accessor* a, size_t* size)
 
 int grib_get_string_length(grib_handle* h, const char* name,size_t* size)
 {
-    grib_accessor* a = grib_find_accessor(h, name);
-    if(!a) return GRIB_NOT_FOUND;
+    grib_accessor* a = NULL;
+    grib_accessors_list* al=NULL;
+    int ret=0;
 
-    return _grib_get_string_length(a,size);
+    if (name[0] == '/' ) {
+        al=grib_find_accessors_list(h,name);
+        if (!al) return GRIB_NOT_FOUND;
+        ret=_grib_get_string_length(al->accessor,size);
+        grib_context_free(h->context,al);
+        return ret;
+    } else {
+        a = grib_find_accessor(h, name);
+        if(!a) return GRIB_NOT_FOUND;
+        return _grib_get_string_length(a,size);
+    }
 }
 
 int _grib_get_size(grib_handle* h, grib_accessor* a,size_t* size)

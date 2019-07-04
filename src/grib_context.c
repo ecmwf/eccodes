@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -246,11 +246,10 @@ void grib_print_api_version(FILE* out)
             ECCODES_MAJOR_VERSION,
             ECCODES_MINOR_VERSION,
             ECCODES_REVISION_VERSION);
-    /*
-    * if (ECCODES_MAJOR_VERSION < 1) {
-    *    fprintf(out, "%s", " PRE-RELEASE");
-    * }
-    */
+
+    if (ECCODES_MAJOR_VERSION < 1) {
+        fprintf(out, "%s", " PRE-RELEASE");
+    }
 }
 
 const char* grib_get_package_name()

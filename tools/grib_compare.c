@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -180,7 +180,7 @@ int grib_tool_init(grib_runtime_options* options)
 {
     int ret=0,i=0;
     int nfiles=1;
-    char orderby[]="md5Headers";
+    const char orderby[]="md5Headers";
     grib_context* context=grib_context_get_default();
 
     options->strict=1;
@@ -238,7 +238,7 @@ int grib_tool_init(grib_runtime_options* options)
         options->idx=grib_fieldset_new_from_files(context,filename,
                 nfiles,0,0,0,orderby,&ret);
         if (ret) {
-            printf("unable to create index for input file %s (%s)",
+            fprintf(stderr, "Unable to create index for input file %s (%s)",
                     options->infile_extra->name,grib_get_error_message(ret));
             exit(ret);
         }
@@ -496,17 +496,19 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     grib_error* e=error_summary;
     int err=0;
     grib_context* c=grib_context_get_default();
-    error+=morein1+morein2;
 
     /*if (grib_options_on("w:")) return 0;*/
 
-    if (error) {
-        printf("\n## ERRORS SUMMARY #######\n");
-    }
     while ((global_handle=grib_handle_new_from_file(c,options->infile_extra->file,&err))) {
         morein1++;
         if (global_handle) grib_handle_delete(global_handle);
     }
+
+    error+=morein1+morein2;
+    if (error) {
+        printf("\n## ERRORS SUMMARY #######\n");
+    }
+
     if (morein1>0) {
         printf("##\n## Different number of messages \n");
         printf("## %d more messages in %s than in %s\n",morein1,
@@ -532,7 +534,6 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         grib_index_delete(options->index1);
         grib_index_delete(options->index2);
     }
-
 
     if (error !=0) exit(1);
     return 0;
@@ -736,6 +737,25 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
                         name,sval1,sval2);
                 err1 = GRIB_VALUE_MISMATCH;
                 save_error(c,name);
+            }
+            else
+            {
+                /* ECC-136: string reps are the same, but integer values may not be */
+                /* Note: Do not do this during edition-independent compare! */
+                if (!listFromCommandLine) {
+                    long v1, v2;
+                    if (grib_get_long(h1,name,&v1) == GRIB_SUCCESS &&
+                        grib_get_long(h2,name,&v2) == GRIB_SUCCESS)
+                    {
+                        if (v1 != v2)
+                        {
+                            printInfo(h1);
+                            save_error(c,name);
+                            err1 = GRIB_VALUE_MISMATCH;
+                            printf("long [%s]: [%ld] != [%ld]\n", name,v1,v2);
+                        }
+                    }
+                }
             }
         }
 

@@ -1,12 +1,3 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
 # GRID DEFINITION Space view, perspective or orthographic
 # grib 1 -> 2
 constant gridDefinitionTemplateNumber     = 90;
@@ -73,4 +64,3 @@ meta numberOfDataPoints number_of_points(Ni,Nj,PLPresent,pl) : dump;
 alias numberOfPoints=numberOfDataPoints;
 meta numberOfValues number_of_values(values,bitsPerValue,numberOfDataPoints,bitmapPresent,bitmap,numberOfCodedValues) : dump;
 #alias ls.valuesCount=numberOfValues;
-

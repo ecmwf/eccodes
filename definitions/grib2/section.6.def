@@ -1,12 +1,4 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
+# Copyright 2005-2019 ECMWF.
 
 # START grib2::section
 # SECTION 6, BIT-MAP SECTION
@@ -22,7 +14,6 @@ meta section6 section_pointer(offsetSection6,section6Length,6);
 unsigned[1] numberOfSection = 6:read_only;
 
 #  Bit-map indicator
-# NOTE 1 NOT FOUND
 codetable[1] bitMapIndicator ('6.0.table',masterDir,localDir) = 255 : dump;
 
 #transient bitmapPresent=1;

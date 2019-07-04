@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -25,8 +25,21 @@
 #include <string.h>
 #include <math.h>
 #include <sys/types.h>
-#include <dirent.h>
+
+#ifndef ECCODES_ON_WINDOWS
+  #include <dirent.h>
+#else
+  #include <direct.h>
+  #include <io.h>
+
+  #ifdef _MSC_VER
+  #   define strcasecmp _stricmp
+  #endif
+#endif
+
 #include <assert.h>
+#include "tigge_tools.h"
+void validate(const char* path);
 
 #define CHECK(a)  check(#a,a)
 #define WARN(a)   warn(#a,a)
@@ -1308,7 +1321,7 @@ static void verify(grib_handle* h)
 
 }
 
-static void validate(const char* path)
+void validate(const char* path)
 {
     FILE *f = fopen(path,"r");
     grib_handle *h = 0;
@@ -1355,26 +1368,6 @@ static void validate(const char* path)
         error++;
         return;
     }
-}
-
-static void scan(const char* name)
-{
-    DIR *dir;
-    if((dir = opendir(name)) != NULL)
-    {
-        struct dirent* e;
-        char tmp[1024];
-        while( (e = readdir(dir)) != NULL)
-        {
-            if(e->d_name[0] == '.') continue;
-            sprintf(tmp,"%s/%s",name,e->d_name);
-            scan(tmp);
-        }
-
-        closedir(dir);
-    }
-    else
-        validate(name);
 }
 
 static void usage()

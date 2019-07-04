@@ -1,4 +1,4 @@
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,10 +7,14 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
+# Python implementation: grib_get_keys
+#
+# Description: how to get values using keys from GRIB messages
+#
+
 from __future__ import print_function
 import traceback
 import sys
-
 from eccodes import *
 
 INPUT = '../../data/reduced_latlon_surface.grib1'
@@ -37,6 +41,10 @@ def example():
         for key in keys:
             try:
                 print('  %s: %s' % (key, codes_get(gid, key)))
+            except KeyValueNotFoundError as err:
+                # Full list of exceptions here:
+                #   https://confluence.ecmwf.int/display/ECC/Python+exception+classes
+                print('  Key="%s" was not found: %s' % (key, err.msg))
             except CodesInternalError as err:
                 print('Error with key="%s" : %s' % (key, err.msg))
 

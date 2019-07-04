@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -90,5 +90,9 @@ grep -q 'Point chosen #2 index=749 .* distance=204\.' $temp_ls
 # ECC-278: grib_ls -n namespace
 ${tools_dir}/grib_ls -n geography $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl
 ${tools_dir}/grib_ls -n data      $ECCODES_SAMPLES_PATH/GRIB1.tmpl
+
+# Angle subdivisions
+grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB1.tmpl angleSubdivisions 1000
+grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB2.tmpl angleSubdivisions 1000000
 
 rm -f $temp_ls

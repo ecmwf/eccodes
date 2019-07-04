@@ -1,39 +1,4 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# START 1/local.98.50 ----------------------------------------------------------------------
-# LOCAL 98 50
-#
-# localDefinitionTemplate_050
-# ---------------------------
-#
-# Description                Octet    Code    Ksec1    Count
-# -----------                -----    ----    -----    -----
-#localDefinitionNumber               41  I1  37  -
-#class                               42  I1  38  -
-#type                                43  I1  39  -
-#stream                              44  I2  40  -
-#experimentVersionNumber             46  A4  41  -
-#number                              50  I1  42  -
-#total                               51  I1  43  -
-#modelIdentifier                     52  I1  44  -
-#latitudeOfNorthWestCornerOfArea     53  S4  45  -
-#longitudeOfNorthWestCornerOfArea    57  S4  46  -
-#latitudeOfSouthEastCornerOfArea     61  S4  47  -
-#longitudeOfSouthEastCornerOfArea    65  S4  48  -
-#!reservedForECMWFAdditions
-#originalParameterNumber             69  I1  49  -
-#originalParameterNumber             70  I1  50  -
-#spareSetToZeroOctets                71  PAD n/a 46
-#spareSetToZeroKsec1                 n/a PAD 51  10
-#optionalData                        117 BYTES   61  184
-#
+# Copyright 2005-2019 ECMWF.
 
 constant GRIBEXSection1Problem = 300 - section1Length ;
 
@@ -63,6 +28,3 @@ unsigned[1] originalParameterTableNumber : dump ;
 pad padding_loc50_1(46);
 
 ascii[184] optionalData : dump ;
-
-
-# END   1/local.98.50 ----------------------------------------------------------------------

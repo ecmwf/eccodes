@@ -1,48 +1,4 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-
-# START 1/local.98.10 ----------------------------------------------------------------------
-# LOCAL 98 10
-#
-# localDefinitionTemplate_010
-# ---------------------------
-#
-# Description            Octet    Code    Ksec1    Count
-# -----------            -----    ----    -----    -----
-#localDefinitionNumber           41      I1      37      -
-#class                           42      I1      38      -
-#type                            43      I1      39      -
-#stream                          44      I2      40      -
-#experimentVersionNumber         46      A4      41      -
-#
-#number                          50      I1      42      -
-#total                           51      I1      43      -
-#centralClusterDefinition        52      I1      44      -
-#parameterIndicator              53      I1      45      -
-#levelIndicator                  54      I1      46      -
-#northLatitudeOfDomainOfTubing   55      S3      47      -
-#westLongitudeOfDomainOfTubing   58      S3      48      -
-#southLatitudeOfDomainOfTubing   61      S3      49      -
-#eastLongitudeOfDomainOfTubing   64      S3      50      -
-#numberOfOperationalForecastTube 67      I1      51      -
-#numberOfControlForecastTube     68      I1      52      -
-#heightOrPressureOfLevel         69      I2      53      -
-#referenceStep                   71      I2      54      -
-#radiusOfCentralCluster          73      I2      55      -
-#ensembleStandardDeviation       75      I2      56      -
-#distanceFromTubeToEnsembleMean  77      I2      57      -
-#numberOfForecastsInTube         79      I1      58      -
-#ensembleForecastNumbers         80      LP_I1   59      numberOfForecastsInTube
-#spareToEnsureFixedLength        -       PADTO   n/a     334
-#
-
+# Copyright 2005-2019 ECMWF.
 constant GRIBEXSection1Problem = 334 - section1Length ;
 
 template mars_labeling "grib1/mars_labeling.def";
@@ -92,6 +48,3 @@ alias number = tubeNumber;
 alias totalNumber = totalNumberOfTubes;
 alias reference = referenceStep;
 alias domain = tubeDomain;
-
-
-

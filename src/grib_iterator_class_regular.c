@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -69,7 +69,7 @@ typedef struct grib_iterator_regular{
 	double southPoleLat;
 	double southPoleLon;
 	long jPointsAreConsecutive;
-    long disableUnrotate;
+	long disableUnrotate;
 } grib_iterator_regular;
 
 extern grib_iterator_class* grib_iterator_class_gen;

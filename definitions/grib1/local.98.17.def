@@ -1,36 +1,4 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# START 1/local.98.17 ----------------------------------------------------------------------
-# LOCAL 98 17
-#
-# localDefinitionTemplate_017
-# ---------------------------
-#
-# Description            Octet    Code    Ksec1    Count
-# -----------            -----    ----    -----    -----
-#localDefinitionNumber           41      I1      37      -
-#class                           42      I1      38      -
-#type                            43      I1      39      -
-#stream                          44      I2      40      -
-#experimentVersionNumber         46      A4      41      -
-#zeroes                          50      PAD     42      2
-#dateOfSSTFieldUsed              52      D3      44      -
-#typeOfSSTFieldUsed              55      I1      45      -
-#countOfICEFieldsUsed            56      I1      46      -
-#iceFieldDate+Satellite          57      LIST    47      countOfICEFieldsUsed
-#dateOfIceFieldUsed              -       D3      -       -
-#satelliteNumber                 -       I1      -       -
-#ENDLIST                         -       ENDLIST -       iceFieldDate+Satellite
-#paddingToMultipleOf40Bytes      57      PADMULT -       40
-#
-
+# Copyright 2005-2019 ECMWF.
 
 template mars_labeling "grib1/mars_labeling.def";
 
@@ -62,5 +30,3 @@ padtomultiple padding_loc17_2(offsetICEFieldsUsed,40);
 position offsetAfterPadding;
 
 constant GRIBEXSection1Problem = ( offsetAfterPadding - offsetICEFieldsUsed ) % 40;
-
-# END   1/local.98.17 ----------------------------------------------------------------------

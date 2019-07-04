@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -172,7 +172,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
     v[0]=1;
     err=grib_pack_long(self->packAccessor,v,&l);
-    if (err) return err;
+    if (err) {
+        if (err == GRIB_ENCODING_ERROR)
+            grib_context_log(a->context,GRIB_LOG_ERROR,"Could not extract subset(s).\n\tHint: Did you forget to set unpack=1?");
+        return err;
+    }
 
     return err;
 }

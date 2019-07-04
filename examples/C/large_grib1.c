@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -29,8 +29,8 @@ int main()
     }
 
     for (i=0; i<ni*nj; i++) {
-        double rand = random();
-        values[i] = 10*rand;
+        double r = rand();
+        values[i] = 10*r;
     }
 
     h = codes_grib_handle_new_from_samples(0, "GRIB1");

@@ -1,37 +1,8 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# Copyright 2005-2019 ECMWF.
 
-# START 1/local.98.21 ----------------------------------------------------------------------
-# LOCAL 98 21
+# information about probabilities (they have already probabilities)
+# information about clustering    (they save it as ASCII, at the moment...)
 #
-# localDefinitionTemplate_028
-# ---------------------------
-#
-# Description                Octet    Code    Ksec1    Count
-# -----------                -----    ----    -----    -----
-#localDefinitionNumber           41      I1      37      -
-#class                           42      I1      38      -
-#type                            43      I1      39      -
-#stream                          44      I2      40      -
-#experimentVersionNumber         46      A4      41      -
-#number                          50      I1      42      -
-#total                           51      I1      43      -
-#baseDateEPS                     52      I4      44      -
-#baseTimeEPS                     56      I2      45      -
-#numberOfRepresentativeMember    58      I1      46      -
-#numberOfMembersInCluster        59      I1      47      -
-#totalInitialConditions          60      I1      48      -
-#spareSetToZero                  61      PAD     n/a     19
-#!    + information about probabilities (they have already probabilities)
-#!   + information about clustering    (they save it as ASCII, at the moment...)
-#
-
 constant GRIBEXSection1Problem = 79 - section1Length ;
 
 template mars_labeling "grib1/mars_labeling.def";
@@ -48,7 +19,3 @@ unsigned[1] numberOfMembersInCluster  : dump;
 unsigned[1] totalInitialConditions  : dump;
 
 pad padding_loc28_1(19);
-
-
-#!    + information about probabilities (they have already probabilities)
-#!    + information about clustering    (they save it as ASCII, at the moment...)

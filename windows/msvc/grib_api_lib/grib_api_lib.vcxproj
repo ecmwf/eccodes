@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3DE8B13F-7DFE-48ED-9158-B34D774500EC}</ProjectGuid>
+    <RootNamespace>grib_api_lib</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>15.0.27625.0</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\tools;..\..\..\jasper-1.900.1\src\libjasper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;IEEE;JAS_WIN_MSVC_BUILD;HAVE_STRING_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformationFile>$(IntDir)</BrowseInformationFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;4273;4018;4244;4101;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\tools;..\..\..\jasper-1.900.1\src\libjasper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN64;_DEBUG;_LIB;IEEE;HAVE_STRING_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformationFile>$(IntDir)</BrowseInformationFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;4273;4018;4244;4101;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\tools;..\..\..\jasper-1.900.1\src\libjasper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;IEEE;JAS_WIN_MSVC_BUILD;HAVE_STRING_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BrowseInformationFile>$(IntDir)</BrowseInformationFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;4273;4018;4244;4101;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\tools;..\..\..\jasper-1.900.1\src\libjasper\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN64;NDEBUG;_LIB;IEEE;HAVE_STRING_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BrowseInformationFile>$(IntDir)</BrowseInformationFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;4273;4018;4244;4101;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\action.c" />
+    <ClCompile Include="..\..\..\src\action_class_alias.c" />
+    <ClCompile Include="..\..\..\src\action_class_assert.c" />
+    <ClCompile Include="..\..\..\src\action_class_close.c" />
+    <ClCompile Include="..\..\..\src\action_class_concept.c" />
+    <ClCompile Include="..\..\..\src\action_class_gen.c" />
+    <ClCompile Include="..\..\..\src\action_class_hash_array.c" />
+    <ClCompile Include="..\..\..\src\action_class_if.c" />
+    <ClCompile Include="..\..\..\src\action_class_list.c" />
+    <ClCompile Include="..\..\..\src\action_class_meta.c" />
+    <ClCompile Include="..\..\..\src\action_class_modify.c" />
+    <ClCompile Include="..\..\..\src\action_class_noop.c" />
+    <ClCompile Include="..\..\..\src\action_class_print.c" />
+    <ClCompile Include="..\..\..\src\action_class_put.c" />
+    <ClCompile Include="..\..\..\src\action_class_remove.c" />
+    <ClCompile Include="..\..\..\src\action_class_rename.c" />
+    <ClCompile Include="..\..\..\src\action_class_section.c" />
+    <ClCompile Include="..\..\..\src\action_class_set.c" />
+    <ClCompile Include="..\..\..\src\action_class_set_darray.c" />
+    <ClCompile Include="..\..\..\src\action_class_set_iarray.c" />
+    <ClCompile Include="..\..\..\src\action_class_set_missing.c" />
+    <ClCompile Include="..\..\..\src\action_class_set_sarray.c" />
+    <ClCompile Include="..\..\..\src\action_class_switch.c" />
+    <ClCompile Include="..\..\..\src\action_class_template.c" />
+    <ClCompile Include="..\..\..\src\action_class_transient_darray.c" />
+    <ClCompile Include="..\..\..\src\action_class_trigger.c" />
+    <ClCompile Include="..\..\..\src\action_class_variable.c" />
+    <ClCompile Include="..\..\..\src\action_class_when.c" />
+    <ClCompile Include="..\..\..\src\action_class_while.c" />
+    <ClCompile Include="..\..\..\src\action_class_write.c" />
+    <ClCompile Include="..\..\..\src\bufr_keys_iterator.c" />
+    <ClCompile Include="..\..\..\src\bufr_util.c" />
+    <ClCompile Include="..\..\..\src\codes_memfs.c" />
+    <ClCompile Include="..\..\..\src\eccodes.c" />
+    <ClCompile Include="..\..\..\src\functions.c" />
+    <ClCompile Include="..\..\..\src\grib_2order_packer_simple.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_abstract_long_vector.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_abstract_vector.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_apply_operators.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_array.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_ascii.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_assert.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bit.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bitmap.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bits.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bits_per_value.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_blob.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_box.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_budgdate.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bufrdc_expanded_descriptors.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_clear_tables.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_data.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_data_array.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_data_element.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_elements_table.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_extract_area_subsets.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_extract_datetime_subsets.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_extract_subsets.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_group.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_has_delayed_replication.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_simple_thinning.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_string_values.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_bytes.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_change_scanning_direction.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_check_internal_version.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_codeflag.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_codetable.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_codetable_title.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_codetable_units.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_concept.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_constant.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_count_file.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_count_missing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_count_total.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_2order_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_2order_packing_count.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_apply_bitmap.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_apply_boustrophedonic.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_apply_boustrophedonic_bitmap.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_apply_gdsnotpresent.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_ccsds_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_complex_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_constant_field.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_dummy_field.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g1complex_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g1secondary_bitmap.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g1second_order_constant_width_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g1second_order_general_extended_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g1second_order_general_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g1second_order_row_by_row_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g1shsimple_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g1simple_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g22order_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g2bifourier_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g2complex_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g2secondary_bitmap.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g2shsimple_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g2simple_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_g2simple_packing_with_preprocessing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_jpeg2000_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_png_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_raw_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_secondary_bitmap.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_shsimple_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_sh_packed.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_sh_unpacked.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_data_simple_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_decimal_precision.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_dictionary.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_dirty.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_divdouble.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_double.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_element.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_evaluate.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_expanded_descriptors.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_forward.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_from_scale_factor_scaled_value.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1area.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1bitmap.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1date.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1day_of_the_year_date.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1end_of_interval_monthly.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1fcperiod.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1forecastmonth.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1monthlydate.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1number_of_coded_values_sh_complex.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1number_of_coded_values_sh_simple.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1p1p2.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1param.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1step_range.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1verificationdate.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1_half_byte_codeflag.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1_increment.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1_message_length.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g1_section4_length.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g2bitmap.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g2bitmap_present.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g2date.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g2end_step.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g2grid.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g2latlon.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g2level.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g2lon.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g2step.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g2step_range.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g2_aerosol.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g2_chemical.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g2_eps.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_g2_mars_labeling.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_gaussian_grid_name.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_gds_is_present.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_gds_not_present_bitmap.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_gen.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_getenv.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_global_gaussian.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_group.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_gts_header.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_hash_array.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_headers_only.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_ibmfloat.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_ieeefloat.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_ifs_param.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_int16.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_int16_little_endian.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_int32.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_int32_little_endian.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_int64.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_int64_little_endian.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_int8.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_iterator.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_julian_date.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_julian_day.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_ksec1expver.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_label.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_laplacian.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_latitudes.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_latlonvalues.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_latlon_increment.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_library_version.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_local_definition.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_long.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_longitudes.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_long_vector.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_lookup.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_mars_param.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_mars_step.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_md5.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_message.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_message_copy.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_missing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_nearest.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_non_alpha.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_number_of_coded_values.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_number_of_points.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_number_of_points_gaussian.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_number_of_values.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_number_of_values_data_raw_packing.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_octahedral_gaussian.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_octect_number.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_offset_file.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_offset_values.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_pack_bufr_values.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_pad.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_padding.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_padto.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_padtoeven.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_padtomultiple.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_position.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_raw.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_rdbtime_guess_date.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_reference_value_error.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_round.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_scale.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_scale_values.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_second_order_bits_per_value.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_section.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_section_length.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_section_padding.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_section_pointer.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_select_step_template.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_sexagesimal2decimal.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_signed.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_signed_bits.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_simple_packing_error.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_size.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_smart_table.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_smart_table_column.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_spd.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_spectral_truncation.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_sprintf.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_statistics.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_statistics_spectral.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_step_in_units.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_sum.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_suppressed.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_time.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_times.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_to_double.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_to_integer.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_to_string.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_transient.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_transient_darray.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_uint16.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_uint16_little_endian.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_uint32.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_uint32_little_endian.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_uint64.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_uint64_little_endian.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_uint8.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_unexpanded_descriptors.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_unpack_bufr_values.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_unsigned.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_unsigned_bits.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_validity_date.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_validity_time.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_values.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_variable.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_vector.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_when.c" />
+    <ClCompile Include="..\..\..\src\grib_api_version.c" />
+    <ClCompile Include="..\..\..\src\grib_bits.c" />
+    <ClCompile Include="..\..\..\src\grib_box.c" />
+    <ClCompile Include="..\..\..\src\grib_box_class.c" />
+    <ClCompile Include="..\..\..\src\grib_box_class_gen.c" />
+    <ClCompile Include="..\..\..\src\grib_box_class_reduced_gaussian.c" />
+    <ClCompile Include="..\..\..\src\grib_box_class_regular_gaussian.c" />
+    <ClCompile Include="..\..\..\src\grib_buffer.c" />
+    <ClCompile Include="..\..\..\src\grib_bufr_descriptor.c" />
+    <ClCompile Include="..\..\..\src\grib_bufr_descriptors_array.c" />
+    <ClCompile Include="..\..\..\src\grib_concept.c" />
+    <ClCompile Include="..\..\..\src\grib_context.c" />
+    <ClCompile Include="..\..\..\src\grib_darray.c" />
+    <ClCompile Include="..\..\..\src\grib_date.c" />
+    <ClCompile Include="..\..\..\src\grib_dependency.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_bufr_decode_C.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_bufr_decode_filter.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_bufr_decode_fortran.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_bufr_decode_python.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_bufr_encode_C.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_bufr_encode_filter.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_bufr_encode_fortran.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_bufr_encode_python.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_bufr_simple.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_debug.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_default.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_grib_encode_C.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_json.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_keys.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_serialize.c" />
+    <ClCompile Include="..\..\..\src\grib_dumper_class_wmo.c" />
+    <ClCompile Include="..\..\..\src\grib_errors.c" />
+    <ClCompile Include="..\..\..\src\grib_expression.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_accessor.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_binop.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_double.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_functor.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_is_integer.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_is_in_dict.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_is_in_list.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_length.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_logical_and.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_logical_or.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_long.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_string.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_string_compare.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_sub_string.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_true.c" />
+    <ClCompile Include="..\..\..\src\grib_expression_class_unop.c" />
+    <ClCompile Include="..\..\..\src\grib_fieldset.c" />
+    <ClCompile Include="..\..\..\src\grib_filepool.c" />
+    <ClCompile Include="..\..\..\src\grib_gaussian_reduced.c" />
+    <ClCompile Include="..\..\..\src\grib_geography.c" />
+    <ClCompile Include="..\..\..\src\grib_handle.c" />
+    <ClCompile Include="..\..\..\src\grib_hash_array.c" />
+    <ClCompile Include="..\..\..\src\grib_hash_keys.c" />
+    <ClCompile Include="..\..\..\src\grib_header_compute.c" />
+    <ClCompile Include="..\..\..\src\grib_iarray.c" />
+    <ClCompile Include="..\..\..\src\grib_ibmfloat.c" />
+    <ClCompile Include="..\..\..\src\grib_ieeefloat.c" />
+    <ClCompile Include="..\..\..\src\grib_index.c" />
+    <ClCompile Include="..\..\..\src\grib_io.c" />
+    <ClCompile Include="..\..\..\src\grib_iterator.c" />
+    <ClCompile Include="..\..\..\src\grib_iterator_class.c" />
+    <ClCompile Include="..\..\..\src\grib_iterator_class_gaussian.c" />
+    <ClCompile Include="..\..\..\src\grib_iterator_class_gaussian_reduced.c" />
+    <ClCompile Include="..\..\..\src\grib_iterator_class_gen.c" />
+    <ClCompile Include="..\..\..\src\grib_iterator_class_lambert_azimuthal_equal_area.c" />
+    <ClCompile Include="..\..\..\src\grib_iterator_class_lambert_conformal.c" />
+    <ClCompile Include="..\..\..\src\grib_iterator_class_latlon.c" />
+    <ClCompile Include="..\..\..\src\grib_iterator_class_latlon_reduced.c" />
+    <ClCompile Include="..\..\..\src\grib_iterator_class_polar_stereographic.c" />
+    <ClCompile Include="..\..\..\src\grib_iterator_class_regular.c" />
+    <ClCompile Include="..\..\..\src\grib_iterator_class_space_view.c" />
+    <ClCompile Include="..\..\..\src\grib_itrie.c" />
+    <ClCompile Include="..\..\..\src\grib_jasper_encoding.c" />
+    <ClCompile Include="..\..\..\src\grib_keys_iterator.c" />
+    <ClCompile Include="..\..\..\src\grib_lex.c" />
+    <ClCompile Include="..\..\..\src\grib_loader_from_handle.c" />
+    <ClCompile Include="..\..\..\src\grib_memory.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest_class.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest_class_gen.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest_class_lambert_conformal.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest_class_latlon_reduced.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest_class_polar_stereographic.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest_class_reduced.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest_class_regular.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest_class_sh.c" />
+    <ClCompile Include="..\..\..\src\grib_oarray.c" />
+    <ClCompile Include="..\..\..\src\grib_openjpeg_encoding.c" />
+    <ClCompile Include="..\..\..\src\grib_optimize_decimal_factor.c" />
+    <ClCompile Include="..\..\..\src\grib_parse_utils.c" />
+    <ClCompile Include="..\..\..\src\grib_query.c" />
+    <ClCompile Include="..\..\..\src\grib_rules.c" />
+    <ClCompile Include="..\..\..\src\grib_sarray.c" />
+    <ClCompile Include="..\..\..\src\grib_scaling.c" />
+    <ClCompile Include="..\..\..\src\grib_templates.c" />
+    <ClCompile Include="..\..\..\src\grib_timer.c" />
+    <ClCompile Include="..\..\..\src\grib_trie.c" />
+    <ClCompile Include="..\..\..\src\grib_trie_with_rank.c" />
+    <ClCompile Include="..\..\..\src\grib_util.c" />
+    <ClCompile Include="..\..\..\src\grib_value.c" />
+    <ClCompile Include="..\..\..\src\grib_vdarray.c" />
+    <ClCompile Include="..\..\..\src\grib_viarray.c" />
+    <ClCompile Include="..\..\..\src\grib_vsarray.c" />
+    <ClCompile Include="..\..\..\src\grib_yacc.c" />
+    <ClCompile Include="..\..\..\src\md5.c" />
+    <ClCompile Include="..\..\..\src\string_util.c" />
+    <ClCompile Include="..\..\..\tools\grib_options.c" />
+    <ClCompile Include="..\..\..\tools\grib_tools.c" />
+    <ClCompile Include="..\..\..\tools\wingetopt.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\eccodes_windef.h" />
+    <ClInclude Include="..\..\..\src\grib_accessor_class.h" />
+    <ClInclude Include="..\..\..\src\grib_accessor_factory.h" />
+    <ClInclude Include="..\..\..\src\grib_api.h" />
+    <ClInclude Include="..\..\..\src\grib_api_internal.h" />
+    <ClInclude Include="..\..\..\src\grib_api_prototypes.h" />
+    <ClInclude Include="..\..\..\src\grib_dumper_class.h" />
+    <ClInclude Include="..\..\..\src\grib_dumper_factory.h" />
+    <ClInclude Include="..\..\..\src\grib_emoslib.h" />
+    <ClInclude Include="..\..\..\src\grib_expression.h" />
+    <ClInclude Include="..\..\..\src\grib_iterator_class.h" />
+    <ClInclude Include="..\..\..\src\grib_iterator_factory.h" />
+    <ClInclude Include="..\..\..\src\grib_nearest_class.h" />
+    <ClInclude Include="..\..\..\src\grib_nearest_factory.h" />
+    <ClInclude Include="..\..\..\src\grib_templates.h" />
+    <ClInclude Include="..\..\..\src\grib_yacc.h" />
+    <ClInclude Include="..\..\..\src\md5.h" />
+    <ClInclude Include="..\..\..\tools\grib_msg_types.h" />
+    <ClInclude Include="..\..\..\tools\grib_tools.h" />
+    <ClInclude Include="..\..\..\tools\wingetopt.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

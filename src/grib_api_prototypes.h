@@ -691,6 +691,8 @@ bufr_descriptors_array *grib_accessor_class_expanded_descriptors_get_expanded(gr
 
 /* grib_accessor_class_g2_eps.c */
 
+/* grib_accessor_class_g2_aerosol.c */
+
 /* grib_accessor_class_g2_chemical.c */
 
 /* grib_accessor_class_g2_mars_labeling.c */
@@ -807,6 +809,7 @@ long accessor_raw_get_offset(grib_accessor *a);
 /* grib_gaussian_reduced.c */
 void grib_get_reduced_row_wrapper(grib_handle *h, long pl, double lon_first, double lon_last, long *npoints, long *ilon_first, long *ilon_last);
 void grib_get_reduced_row(long pl, double lon_first, double lon_last, long *npoints, long *ilon_first, long *ilon_last);
+void grib_get_reduced_row_legacy(long pl, double lon_first, double lon_last, long *npoints, long *ilon_first, long *ilon_last);
 void grib_get_reduced_row_p(long pl, double lon_first, double lon_last, long *npoints, double *olon_first, double *olon_last);
 
 /* grib_accessor_class_abstract_vector.c */
@@ -1043,6 +1046,8 @@ void grib_file_delete(grib_file *file);
 /* grib_geography.c */
 int grib_get_gaussian_latitudes(long trunc, double *lats);
 int is_gaussian_global(double lat1, double lat2, double lon1, double lon2, long num_points_equator, const double *latitudes, double angular_precision);
+void rotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double* outlat, double* outlon);
+void unrotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double *outlat, double *outlon);
 
 /* grib_handle.c */
 grib_section *grib_section_create(grib_handle *h, grib_accessor *owner);
@@ -1423,7 +1428,6 @@ grib_iterator *grib_iterator_factory(grib_handle *h, grib_arguments *args, unsig
 int transform_iterator_data(grib_handle *h, double *data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);
 
 /* grib_iterator_class_latlon.c */
-void unrotate(grib_handle *h, const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double *outlat, double *outlon);
 
 /* grib_iterator_class_regular.c */
 
@@ -1458,7 +1462,9 @@ int grib_moments(grib_handle *h, double east, double north, double west, double 
 int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
 int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber);
 int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNumber);
+int is_productDefinitionTemplateNumber_ChemicalDistFunc(long productDefinitionTemplateNumber);
 int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber);
+int is_productDefinitionTemplateNumber_AerosolOptical(long productDefinitionTemplateNumber);
 int is_index_file(const char *filename);
 char get_dir_separator_char(void);
 char *codes_getenv(const char *name);

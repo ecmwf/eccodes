@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -285,7 +285,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     if((err = aec_buffer_decode(&strm)) != AEC_OK)
     {
-        printf("aec_buffer_decode Error %d\n", err);
+        fprintf(stderr, "aec_buffer_decode Error %d\n", err);
         err = GRIB_ENCODING_ERROR;
         goto cleanup;
     }
@@ -496,7 +496,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     if((err = aec_buffer_encode(&strm)) != AEC_OK)
     {
-        printf("aec_buffer_encode Error %d\n", err);
+        fprintf(stderr,"aec_buffer_encode Error %d\n", err);
         err = GRIB_ENCODING_ERROR;
         goto cleanup;
     }

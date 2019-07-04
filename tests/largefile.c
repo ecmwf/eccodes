@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,14 +9,11 @@
  */
 
 #include "config.h"
-/* #include <sys/types.h> */
-/* #include <inttypes.h> */
-/* #include <stdio.h> */
-/* #include <stdlib.h> */
-/* #include <errno.h> */
-/* #include <string.h> */
 #include "grib_api_internal.h"
+
+#ifndef ECCODES_ON_WINDOWS
 #include <unistd.h>
+#endif
 
 void usage(char* prog) {
   printf("usage: %s filename\n",prog);

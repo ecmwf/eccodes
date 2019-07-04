@@ -1,41 +1,4 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# START 1/local.98.23 ----------------------------------------------------------------------
-# LOCAL 98 23
-#
-# localDefinitionTemplate_023
-# ---------------------------
-#
-# Description            Octet    Code    Ksec1    Count
-# -----------            -----    ----    -----    -----
-#localDefinitionNumber       41  I1  37  -
-#class                       42  I1  38  -
-#type                        43  I1  39  -
-#stream                      44  I2  40  -
-#experimentVersionNumber     46  A4  41  -
-#ensembleNumber              50  I2  42  -
-#totalNumber                 81  I2  43  -
-#systemNumber                52  I2  44  -
-#methodNumber                54  I2  45  -
-#verifyingMonth              56  I4  46  -
-#averagingPeriod             60  I1  47  -
-#forecastMonth               61  I2  48  -
-#referenceDate               63  I4  49  -
-#climateDateFrom             67  I4  50  -
-#climateDateTo               71  I4  51  -
-#unitsDecimalScaleFactor     75  S1  52  -
-#thresholdIndicator          76  I1  53  -
-#lowerThresholdValue         77  I2  54  -
-#upperThresholdValue         79  I2  55  -
-#spareSetToZero              83  PAD 56  2
-#
+# Copyright 2005-2019 ECMWF.
 
 constant GRIBEXSection1Problem = 84 - section1Length ;
 
@@ -91,7 +54,3 @@ alias number = perturbationNumber;
 alias system = systemNumber;
 alias method = methodNumber;
 alias refdate = referenceDate;
-
-
-# END   1/local.98.23 ----------------------------------------------------------------------
-

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -38,13 +38,13 @@ int main(int argc, char* argv[]) {
 	infile1=argv[1];
 	infile2=argv[2];
 
-	f1=fopen(infile1,"r");
+	f1=fopen(infile1,"rb");
 	if (!f1) {
 		perror(infile1);
 		exit(1);
 	}
 
-	f2=fopen(infile2,"r");
+	f2=fopen(infile2,"rb");
 	if (!f2) {
 		perror(infile2);
 		exit(1);

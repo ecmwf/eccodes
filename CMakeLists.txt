@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,7 +16,7 @@
 #
 #       -DCMAKE_MODULE_PATH=/path/to/ecbuild/cmake
 
-cmake_minimum_required( VERSION 2.8.11 FATAL_ERROR )
+cmake_minimum_required( VERSION 3.6 FATAL_ERROR )
 
 project( eccodes C )
 
@@ -58,6 +58,9 @@ check_c_source_compiles(
       " ECCODES_HAVE_C_INLINE )
 
 include(eccodes_test_endiness)
+if( EC_OS_NAME MATCHES "windows" )
+    include(eccodes_find_linux_utils)
+endif()
 
 ecbuild_debug("ECCODES_BIG_ENDIAN=${ECCODES_BIG_ENDIAN}")
 ecbuild_debug("ECCODES_LITTLE_ENDIAN=${ECCODES_LITTLE_ENDIAN}")
@@ -106,6 +109,11 @@ ecbuild_add_option( FEATURE PYTHON
     DEFAULT ON
     REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy
 )
+# For Python2 we build our own bindings (using SWIG) in the build directory
+# but for Python3 one has to add the eccodes-python from pip AFTER the install
+if( PYTHON_VERSION_MAJOR EQUAL 3 )
+    set( HAVE_PYTHON 0 )
+endif()
 
 ecbuild_add_option( FEATURE FORTRAN
     DESCRIPTION "Build the ecCodes Fortran interface"
@@ -127,7 +135,7 @@ endif()
 ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
-    CONDITION ECCODES_HAVE_FMEMOPEN OR ECCODES_HAVE_FUNOPEN
+    CONDITION ECCODES_HAVE_FMEMOPEN OR ECCODES_HAVE_FUNOPEN OR (EC_OS_NAME MATCHES "windows")
     REQUIRED_PACKAGES PythonInterp
 )
 
@@ -283,6 +291,20 @@ if( IEEE_LE )
     set( IEEE_BE 0 )
 endif()
 
+if( EC_OS_NAME MATCHES "windows" )
+    # Symbols need to be explicitly exported on Windows so we can link to dlls.
+    set( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE )
+
+    # Suppress compliler warnings - see ECC-850
+    # Suppress warnings about using 'insecure' functions. Fixing this would require changes all over
+    # the codebase which would damage portability.
+    ecbuild_add_c_flags("/D_CRT_SECURE_NO_WARNINGS")
+    # Suppress warnings about using well-known C functions.
+    ecbuild_add_c_flags("/D_CRT_NONSTDC_NO_DEPRECATE")
+    # Suppress C4267: warns about possible loss of data when converting 'size_t' to 'int'.
+    ecbuild_add_c_flags("/wd4267")
+endif()
+
 ###############################################################################
 # contents
 
@@ -334,6 +356,21 @@ get_directory_property( COMPILE_DEFINITIONS ECCODES_DEFINITIONS )
 foreach( _tpl ${ECCODES_TPLS} )
     string( TOUPPER ${_tpl} TPL )
     if( ${TPL}_FOUND )
+        if( REPLACE_TPL_ABSOLUTE_PATHS )
+            # replace TPL absolute paths with their library names
+            # this helps make ecCodes relocatable
+            set( _TMP "" )
+
+            foreach( _lib ${${TPL}_LIBRARIES} )
+                get_filename_component( _lib_name ${_lib} NAME_WE )
+                string( REGEX REPLACE "^lib" "" _name ${_lib_name} )
+                list( APPEND _TMP "-l${_name}" )
+            endforeach()
+
+            set( ${TPL}_LIBRARIES ${_TMP} )
+            set( _TMP "" )
+        endif()
+
         list( APPEND ECCODES_EXTRA_DEFINITIONS   ${${TPL}_DEFINITIONS} )
         list( APPEND ECCODES_EXTRA_INCLUDE_DIRS  ${${TPL}_INCLUDE_DIRS} ${${TPL}_INCLUDE_DIR} )
         list( APPEND ECCODES_EXTRA_LIBRARIES     ${${TPL}_LIBRARIES} )
@@ -349,9 +386,11 @@ add_subdirectory( memfs )
 add_subdirectory( src )
 add_subdirectory( tools )
 add_subdirectory( fortran )
+
 if (PYTHON_VERSION_MAJOR GREATER 2)
-    ecbuild_warn("Please note: Support for Python3 is currently experimental.")
-    add_subdirectory( python3 )
+    # Python3 is no longer built with SWIG but is a separate
+    # package. User should do: pip install eccodes-python
+    #add_subdirectory( python3 )
     set( ECCODES_PYTHON_DIR "python3" )
 else()
     add_subdirectory( python )
@@ -369,7 +408,7 @@ ecbuild_dont_pack( DIRS
      concepts tests.ecmwf doxygen confluence examples.dev templates parameters java
      perl config m4 rpms gaussian_experimental gribex examples/F77
      examples/extra examples/deprecated bamboo fortran/fortranCtypes tigge/tools
-     share/eccodes  .settings
+     share/eccodes  .settings python3
 )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
@@ -402,7 +441,7 @@ endif()
 # pkg-config
 ecbuild_pkgconfig(
   NAME           eccodes
-  URL            "https://software.ecmwf.int/wiki/display/ECC/"
+  URL            "https://confluence.ecmwf.int/display/ECC/"
   DESCRIPTION    "The ecCodes library"
   LIBRARIES      eccodes
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
@@ -413,7 +452,7 @@ ecbuild_pkgconfig(
 if( HAVE_FORTRAN )
   ecbuild_pkgconfig(
     NAME                eccodes_f90
-    URL                 "https://software.ecmwf.int/wiki/display/ECC/"
+    URL                 "https://confluence.ecmwf.int/display/ECC/"
     LIBRARIES           eccodes_f90 eccodes
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
@@ -435,4 +474,13 @@ ecbuild_info("")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}  |")
 ecbuild_info("   +--------------------------+")
+ecbuild_info("")
+
+ecbuild_info("   +--------------------------------------+")
+ecbuild_info("   | Please note:                         |")
+ecbuild_info("   | For Python3 support, first install   |")
+ecbuild_info("   | ecCodes and then install the Python  |")
+ecbuild_info("   | bindings from PyPI with:             |")
+ecbuild_info("   |   $ pip install eccodes-python       |")
+ecbuild_info("   +--------------------------------------+")
 ecbuild_info("")

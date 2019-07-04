@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -66,7 +66,7 @@ int main(int argc, char** argv)
     FILE* fin = 0;
     codes_handle* h1 = 0;
     codes_handle* h2 = 0;
-    fin = fopen("../../data/bufr/syno_multi.bufr", "r");
+    fin = fopen("../../data/bufr/syno_multi.bufr", "rb");
     assert(fin);
 
     err = pthread_create(&thread1, NULL, process_bufr, (void *)fin);

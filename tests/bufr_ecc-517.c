@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
   /* Encode the keys back in the data section */
   CODES_CHECK(codes_set_long(h, "pack", 1), 0);
 
-  fout = fopen(outfilename, "w");
+  fout = fopen(outfilename, "wb");
   if (!fout) {
     fprintf(stderr, "Failed to open (create) output file.\n");
     return 1;

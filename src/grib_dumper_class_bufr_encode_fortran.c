@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -434,6 +434,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
         } else {
             if (doing_unexpandedDescriptors) {
                 fprintf(self->dumper.out,"\n  ! Create the structure of the data section\n");
+                /* fprintf(self->dumper.out,"  call codes_set(ibufr,'skipExtraKeyAttributes',1)\n"); */
             }
             fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',ivalues)\n",a->name);
             if (doing_unexpandedDescriptors) fprintf(self->dumper.out,"\n");
@@ -447,6 +448,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a, const char* comment)
         } else {
             if (doing_unexpandedDescriptors) {
                 fprintf(self->dumper.out,"\n  ! Create the structure of the data section\n");
+                /* fprintf(self->dumper.out,"  call codes_set(ibufr,'skipExtraKeyAttributes',1)\n"); */
             }
             fprintf(self->dumper.out,"  call codes_set(ibufr,'%s',",a->name);
         }

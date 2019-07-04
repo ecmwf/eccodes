@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,6 +9,7 @@
  */
 
 #include "grib_api.h"
+#include <assert.h>
 
 #define CMAP_MAX 20480
 
@@ -69,7 +70,7 @@ int main(int argc, char *argv[])
     int centred = 0;
     unsigned r, g, b;
     int cmap_entries = 0;
-    double min, max;
+    double min0, max0;
     int j;
     char buf[1024];
     double lcap = -1e+100, ucap = 1e+100;
@@ -104,9 +105,9 @@ int main(int argc, char *argv[])
                 }
                 while (next(f, buf))
                 {
-                    min = atof(buf);
+                    min0 = atof(buf);
                     next(f, buf);
-                    max = atof(buf);
+                    max0 = atof(buf);
                     next(f, buf);
                     r = atol(buf);
                     next(f, buf);
@@ -118,8 +119,8 @@ int main(int argc, char *argv[])
                         fprintf(stderr, "%s\n", "colour map is too large");
                         exit(1);
                     }
-                    cmap[cmap_entries].min = min;
-                    cmap[cmap_entries].max = max;
+                    cmap[cmap_entries].min = min0;
+                    cmap[cmap_entries].max = max0;
                     cmap[cmap_entries].r = r;
                     cmap[cmap_entries].g = g;
                     cmap[cmap_entries].b = b;
@@ -150,8 +151,14 @@ int main(int argc, char *argv[])
 
             GRIB_CHECK(grib_get_size(h, "values", &count), 0);
             values = (double *)malloc(sizeof(double) * count);
+            if (!values) { fprintf(stderr, "Failed to allocate memory for values\n"); exit(1); }
             indices = (unsigned long *)malloc(sizeof(unsigned long) * count);
+            if (!indices) { fprintf(stderr, "Failed to allocate memory for indices\n"); exit(1); }
 
+            if (grib_is_missing(h, "Ni", &err)) {
+                fprintf(stderr, "Key Ni cannot be missing. Reduced grids are not supported\n");
+                exit(1);
+            }
             GRIB_CHECK(grib_get_long(h, "Ni", &width), 0);
             GRIB_CHECK(grib_get_long(h, "Nj", &height), 0);
             GRIB_CHECK(grib_get_double_array(h, "values", values, &count), 0);
@@ -185,12 +192,13 @@ int main(int argc, char *argv[])
                 /* assume first column in Greenwich meridian
                 assume scanning mode
                  */
-                int k = 0, j;
-                for (j = 0; j < height; j++)
+                int k = 0, jj;
+                for (jj = 0; jj < height; jj++)
                 {
                     for (i = 0; i < width; i++)
                     {
-                        int m = (i + width / 2) % width + j * width;
+                        int m = (i + width / 2) % width + jj * width;
+                        assert(k<count);
                         indices[k++] = m;
                     }
                 }
@@ -231,7 +239,7 @@ int main(int argc, char *argv[])
                 for (i = 0; i < count; ++i)
                 {
                     unsigned long c;
-                    unsigned char h, l;
+                    unsigned char hh, l;
                     double v = values[indices[i]];
                     if (v < lcap)
                     {
@@ -242,9 +250,9 @@ int main(int argc, char *argv[])
                         v = ucap;
                     }
                     c = ( v - min) * 65535 / (max - min);
-                    h = c >> 8;
+                    hh = c >> 8;
                     l = c & 0xff;
-                    printf("%c", h);
+                    printf("%c", hh);
                     printf("%c", l);
                 }
             }

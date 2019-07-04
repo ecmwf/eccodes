@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -32,7 +32,7 @@ int DBL_EQUAL(double d1, double d2, double tolerance)
     return fabs(d1-d2) <= tolerance;
 }
 
-void usage(const char* prog)
+static void usage(const char* prog)
 {
     printf("Usage: %s [-f] [-v] grib_file grib_file ...\n\n",prog);
     printf("Check geometry of GRIB fields with a Gaussian Grid.\n");

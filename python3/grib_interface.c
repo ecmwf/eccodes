@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -1273,23 +1273,7 @@ static FILE* retrieve_file_info(int fd)
     //printf("\t result=NULL\n");
     return NULL;
 }
-#if 0
-static int clear_file_info(int fd)
-{
-    //printf("clear_file_info: fd=%d\n",fd);
-    file_info_cache_t* curr = file_info_cache;
-    while(curr) {
-        if (curr->file_descriptor==fd) {
-            curr->file_descriptor=-1;
-            curr->file_pointer=NULL;
-            /*TODO: Should delete this node */
-            return GRIB_SUCCESS;
-        }
-        curr=curr->next;
-    }
-    return GRIB_INVALID_FILE;
-}
-#endif
+
 static int clear_file_info(int fd)
 {
     //printf("clear_file_info: fd=%d\n",fd);
@@ -1302,7 +1286,7 @@ static int clear_file_info(int fd)
                 //Fix previous node's 'next' to skip over the removed node
                 prev->next = curr->next;
             }
-            //printf("\t Deleting entry curr (%d,%p)\n", curr->file_descriptor,curr->file_pointer);
+            //printf("clear_file_info:\t Deleting entry curr (%d,%p)\n", curr->file_descriptor,curr->file_pointer);
             free(curr);
             return GRIB_SUCCESS;
         }
@@ -1310,14 +1294,14 @@ static int clear_file_info(int fd)
     return GRIB_INVALID_FILE;
 }
 #if DEBUG
-static void dump_file_info()
+static void dump_file_info(const char* title)
 {
     int i=1;
     file_info_cache_t* curr = file_info_cache;
-    if(!curr) printf("dump_file_info: EMPTY\n");
-    else      printf("dump_file_info:\n");
+    if(!curr) printf("%s: dump_file_info: EMPTY\n", title);
+    else      printf("%s: dump_file_info:\n", title);
     while(curr) {
-        printf("\t %d:  fd=%d fp=%p\n", i++,curr->file_descriptor,curr->file_pointer);
+        printf("%s:\t %d:  fd=%d fp=%p\n", title, i++,curr->file_descriptor,curr->file_pointer);
         curr=curr->next;
     }
 }
@@ -1326,8 +1310,12 @@ static void dump_file_info()
 int codes_c_close_file(int fd, char* fname)
 {
     FILE* fp = retrieve_file_info(fd);
+    //printf("codes_c_close_file: looking for %d\n", fd);
     if (fp) {
         clear_file_info(fd);
+        //dump_file_info("codes_c_close_file: clearing cache");
+    //} else {
+        //printf("codes_c_close_file: %d NOT IN CACHE\n", fd);
     }
     return GRIB_SUCCESS;
 }
@@ -1339,19 +1327,26 @@ int grib_c_count_in_file(FILE* f,int* n)
     return err;
 }
 
-int grib_c_new_gts_from_file(FILE* f,int headers_only, int* gid)
+int grib_c_new_gts_from_file(FILE* f, int fd, char* fname, int headers_only, int* gid)
 {
     grib_handle *h = NULL;
     int err = 0;
 
     if(f){
-        h = gts_new_from_file(0,f,&err);
+        FILE* p = retrieve_file_info(fd);
+        if (p) {
+            h = gts_new_from_file(0,p,&err);  //use cached value
+        } else {
+            h = gts_new_from_file(0,f,&err);  //use FILE pointer passed in
+            store_file_info(fd, f); //store it for next time
+        }
 
         if(h){
             push_handle(h,gid);
             return GRIB_SUCCESS;
         } else {
             *gid=-1;
+            clear_file_info(fd);
             return GRIB_END_OF_FILE;
         }
     }
@@ -1444,17 +1439,17 @@ int grib_c_new_from_file(FILE* f, int fd, char* fname, int* gid, int headers_onl
     printf("C grib_c_new_from_file: f->fileno=%d (fd=%d)\n", f->_fileno, fd);
     printf("C grib_c_new_from_file: fn=%s\n", fname);
 #endif
-    /*dump_file_info();*/
+    //dump_file_info("grib_c_new_from_file start");
     if(f){
         FILE* p = retrieve_file_info(fd);
         if (p) {
-            /*printf("C.  using CACHED value from store...%p\n",p);*/
+            //printf("C.  using CACHED value from store...%p\n",p);
             h=grib_new_from_file(0,p,headers_only,&err);//use cached value
         } else {
-            /*printf("C.  using value from ARGS...%p\n",f);*/
+            //printf("C.  using value from ARGS...%p\n",f);
             h=grib_new_from_file(0,f,headers_only,&err);//use FILE pointer passed in
             store_file_info(fd, f); //store it for next time
-            /*dump_file_info();*/
+            //dump_file_info("grib_c_new_from_file First time called");
         }
 
         if(h){
@@ -1463,9 +1458,9 @@ int grib_c_new_from_file(FILE* f, int fd, char* fname, int* gid, int headers_onl
         } else {
             *gid=-1;
             if (err == GRIB_SUCCESS) {
-                /*printf("C grib_c_new_from_file: GRIB_END_OF_FILE\n");*/
+                //printf("C grib_c_new_from_file: GRIB_END_OF_FILE\n");
                 clear_file_info(fd);
-                /*dump_file_info();*/
+                //dump_file_info("grib_c_new_from_file EOF");
                 return GRIB_END_OF_FILE; //TODO: remove element from cache
             } else {
                 /* A real error occurred */

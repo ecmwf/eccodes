@@ -157,7 +157,9 @@ def gts_new_from_file(fileobj, headers_only=False):
     @return               id of the GTS loaded in memory
     @exception GribInternalError
     """
-    err, gtsid = _internal.grib_c_new_gts_from_file(fileobj, headers_only, 0)
+    fd = fileobj.fileno()
+    fn = fileobj.name
+    err, gtsid = _internal.grib_c_new_gts_from_file(fileobj, fd, fn, headers_only, 0)
     if err:
         if err == _internal.GRIB_END_OF_FILE:
             return None
@@ -201,7 +203,7 @@ def codes_new_from_file(fileobj, product_kind, headers_only=False):
     \b Examples: \ref get_product_kind.py "get_product_kind.py"
 
     @param fileobj        python file object
-    @param product_kind   one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_METAR or CODES_PRODUCT_GTS
+    @param product_kind   one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_GTS or CODES_PRODUCT_ANY
     @param headers_only   whether or not to load the message with the headers only
     @return               id of the message loaded in memory
     @exception GribInternalError
@@ -297,7 +299,7 @@ def grib_new_from_file(fileobj, headers_only=False):
     """
     fd = fileobj.fileno()
     fn = fileobj.name
-    #print('Python grib_new_from_file: ', fd,'  ', fn)
+    #print('Python gribapi.py  grib_new_from_file: ', fd,'  ', fn)
     err, gribid = _internal.grib_c_new_from_file(fileobj, fd, fn, 0, headers_only)
     if err:
         if err == _internal.GRIB_END_OF_FILE:
@@ -308,9 +310,13 @@ def grib_new_from_file(fileobj, headers_only=False):
         return gribid
 
 
-@require(fd=int, fname=str)
-def codes_close_file(fd, fname):
-    err = _internal.codes_c_close_file(fd, fname)
+@require(fileobj=file)
+def codes_close_file(fileobj):
+    # The client must call this BEFORE calling close() on the file object
+    # so we can remove the entry in our cache
+    err = _internal.codes_c_close_file(fileobj.fileno(), fileobj.name)
+    # Note: it is safe calling close() here as subsequent calls will have no effect
+    fileobj.close()
     GRIB_CHECK(err)
 
 

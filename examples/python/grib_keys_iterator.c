@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
     {
       const char* name = codes_keys_iterator_get_name(kiter);
       vlen=MAX_VAL_LEN;
-      bzero(value,vlen);
+      memset(value, 0, vlen);
       CODES_CHECK(codes_get_string(h,name,value,&vlen),name);
       printf("%s = %s\n",name,value);
     }

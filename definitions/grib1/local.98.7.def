@@ -1,32 +1,5 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# Copyright 2005-2019 ECMWF.
 
-
-# START 1/local.98.7 ----------------------------------------------------------------------
-# LOCAL 98 7
-#
-# localDefinitionTemplate_007
-# ---------------------------
-#
-# Description            Octet    Code    Ksec1    Count
-# -----------            -----    ----    -----    -----
-#localDefinitionNumber       41  I1  37  -
-#class                       42  I1  38  -
-#type                        43  I1  39  -
-#stream                      44  I2  40  -
-#experimentVersionNumber     46  A4  41  -
-#number                      50  I1  42  -
-#total                       51  I1  43  -
-#domain                      52  I1  44  -
-#diagnosticNumber            53  I1  45  -
-#spareSetToZero              54  PAD n/a 1
-#
 # 1-> 2
 alias grib2LocalSectionPresent=present;
 constant grib2LocalSectionNumber=7;
@@ -54,9 +27,5 @@ alias local.numberOfForecastsInEnsemble=numberOfForecastsInEnsemble;
 alias local.sensitiveAreaDomain=sensitiveAreaDomain;
 alias local.diagnosticNumber=diagnosticNumber;
 
-
 # spareSetToZero
 pad padding_loc7_1(1);
-
-
-# END   1/local.98.7 ----------------------------------------------------------------------

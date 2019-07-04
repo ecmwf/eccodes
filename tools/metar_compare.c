@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -138,7 +138,6 @@ static int blacklisted(const char* name)
 static double relative_error(double a,double b,double err)
 {
     double relativeError;
-    double maxAbsoluteError = 1e-19;
 
     if(fabs(a) <= maxAbsoluteError || fabs(b) <= maxAbsoluteError)
         relativeError = fabs(a-b);
@@ -176,7 +175,7 @@ grib_option grib_options[]={
 };
 
 grib_handle* global_handle=NULL;
-int counter=0;
+int global_counter=0;
 int start=-1;
 int end=-1;
 
@@ -245,7 +244,6 @@ int grib_tool_init(grib_runtime_options* options)
 
     if (grib_options_on("b:")) {
         grib_string_list *next=0;
-        int i=0;
         blacklist=(grib_string_list*)grib_context_malloc_clear(context,sizeof(grib_string_list));
         blacklist->value=grib_context_strdup(context,options->set_values[0].name);
         next=blacklist;
@@ -362,7 +360,7 @@ static void print_index_key_values(grib_index* index,int counter,const char* err
     printf("\n");
 }
 
-static grib_handle* grib_handle_new_from_file_x(
+static grib_handle* metar_handle_new_from_file_x(
         grib_context* c,FILE* f,int mode,int headers_only,int *err)
 {
     return codes_handle_new_from_file(c,f,PRODUCT_METAR,err);
@@ -376,10 +374,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if (options->through_index) {
         grib_index* idx1=options->index1;
         verbose=0;
-        counter++;
+        global_counter++;
 
-        if ( start>0 && counter < start ) return 0;
-        if ( end>0 && counter > end ) {
+        if ( start>0 && global_counter < start ) return 0;
+        if ( end>0 && global_counter > end ) {
             options->stop=1;
             return 0;
         }
@@ -392,12 +390,12 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             printf("file1=\"%s\" ",filename);
             filename=grib_get_field_file(options->index1,&offset);
             printf("file2=\"%s\" \n",filename);
-            print_index_key_values(options->index1,counter,NULL);
+            print_index_key_values(options->index1,global_counter,NULL);
         }
 
         if (!global_handle) {
             if (!options->verbose)
-                print_index_key_values(idx1,counter,"NOT FOUND ");
+                print_index_key_values(idx1,global_counter,"NOT FOUND ");
         }
 
         if (!global_handle || err!= GRIB_SUCCESS ) {
@@ -418,7 +416,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     } else if (options->random)
         global_handle = grib_fieldset_next_handle(options->idx,&err);
     else
-        global_handle=grib_handle_new_from_file_x(h->context,options->infile_extra->file,options->mode,0,&err);
+        global_handle=metar_handle_new_from_file_x(h->context,options->infile_extra->file,options->mode,0,&err);
 
     if (!global_handle || err!= GRIB_SUCCESS ) {
         morein2++;
@@ -440,7 +438,7 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     int err=0;
     if (!options->through_index && !options->random)  {
-        global_handle=grib_handle_new_from_file(h->context,options->infile_extra->file,&err);
+        global_handle=metar_new_from_file(h->context,options->infile_extra->file,&err);
 
         if (!global_handle || err!= GRIB_SUCCESS)
             morein2++;
@@ -464,17 +462,17 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     grib_error* e=error_summary;
     int err=0;
     grib_context* c=grib_context_get_default();
-    error+=morein1+morein2;
 
-    /*if (grib_options_on("w:")) return 0;*/
-
-    if (error) {
-        printf("\n## ERRORS SUMMARY #######\n");
-    }
-    while ((global_handle=grib_handle_new_from_file(c,options->infile_extra->file,&err))) {
+    while ((global_handle=metar_new_from_file(c,options->infile_extra->file,&err))) {
         morein1++;
         if (global_handle) grib_handle_delete(global_handle);
     }
+
+    error+=morein1+morein2;
+    if (error) {
+        printf("\n## ERRORS SUMMARY #######\n");
+    }
+
     if (morein1>0) {
         printf("##\n## Different number of messages \n");
         printf("## %d more messages in %s than in %s\n",morein1,
@@ -742,7 +740,6 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         }
         if(err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1==len2)
         {
-            int i;
             countdiff=0;
             for(i = 0; i < len1; i++)
                 if(lval1[i] != lval2[i])  countdiff++;
@@ -836,7 +833,7 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         }
         if(err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1==len2)
         {
-            int i,imaxdiff;
+            int imaxdiff;
             double diff;
             double *pv1,*pv2,dnew1,dnew2;
             maxdiff=0;
@@ -932,7 +929,6 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         {
             if(memcmp(uval1,uval2,len1) != 0)
             {
-                int i;
                 for(i = 0; i < len1; i++)
                     if(uval1[i] != uval2[i])
                     {

@@ -1,4 +1,4 @@
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -28,7 +28,8 @@ def print_keys(msg_id):
                 'elevation', 'temperature', 'dewPointTemperature', 'qnh']
     for key in keys:
         try:
-            print('  %s: %s' % (key, codes_get(msg_id, key)))
+            if codes_is_defined(msg_id, key):
+                print('  %s: %s' % (key, codes_get(msg_id, key)))
         except CodesInternalError as err:
             print('Error with key="%s" : %s' % (key, err.msg))
 

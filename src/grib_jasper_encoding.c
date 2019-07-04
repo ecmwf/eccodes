@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -164,7 +164,6 @@ int grib_jasper_encode(grib_context *c, j2k_encode_helper *helper)
 #ifndef ECCODES_ON_WINDOWS
         snprintf (opts, MAXOPTSSIZE, "mode=real\nrate=%f", 1.0/helper->compression);
 #else
-        /* Microsoft Windows Visual Studio support */
         _snprintf(opts, MAXOPTSSIZE, "mode=real\nrate=%f", 1.0/helper->compression);
 #endif
     }

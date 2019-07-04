@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -13,7 +13,10 @@
 
 /* Microsoft Windows Visual Studio support */
 #if defined(_WIN32) && defined(_MSC_VER)
-# define ECCODES_ON_WINDOWS
+  #define ECCODES_ON_WINDOWS
+  #ifndef YY_NO_UNISTD_H
+    #define YY_NO_UNISTD_H
+  #endif
 #endif
 
 #endif

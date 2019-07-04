@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -160,7 +160,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     grib_accessor_select_step_template* self = (grib_accessor_select_step_template*)a;
     long productDefinitionTemplateNumber=0;
     long productDefinitionTemplateNumberNew=0;
-/*TODO chemicals*/
+
     grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
 
     if (self->instant) {
@@ -194,10 +194,16 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             productDefinitionTemplateNumberNew=41;
             break;
         case 46: /* non-EPS aerosol */
-            productDefinitionTemplateNumberNew=44;
+            productDefinitionTemplateNumberNew=48;/*44 is deprecated*/
             break;
         case 47: /* EPS aerosol */
             productDefinitionTemplateNumberNew=45;
+            break;
+        case 67: /* non-EPS chemical distrib func */
+            productDefinitionTemplateNumberNew=57;
+            break;
+        case 68: /* EPS chemical distrib func */
+            productDefinitionTemplateNumberNew=58;
             break;
         case 72: /* non-EPS post-processing */
             productDefinitionTemplateNumberNew=70;
@@ -250,11 +256,17 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         case 41: /* EPS chemical */
             productDefinitionTemplateNumberNew=43;
             break;
-        case 44: /* non-EPS aerosol */
+        case 48: /* non-EPS aerosol. Note template 44 is deprecated */
             productDefinitionTemplateNumberNew=46;
             break;
         case 45: /* EPS aerosol */
             productDefinitionTemplateNumberNew=47;
+            break;
+        case 57: /* non-EPS chemical distrib func */
+            productDefinitionTemplateNumberNew=67;
+            break;
+        case 58: /* EPS chemical distrib func */
+            productDefinitionTemplateNumberNew=68;
             break;
         case 70: /* non-EPS post-processing */
             productDefinitionTemplateNumberNew=72;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -25,9 +25,15 @@
 #include <string.h>
 #include <math.h>
 #include <sys/types.h>
-#include <dirent.h>
+#include "tigge_tools.h"
 
-/* #define CHECK(a) check(#a,a) */
+#ifndef ECCODES_ON_WINDOWS
+  #include <dirent.h>
+#else
+  #include <direct.h>
+  #include <io.h>
+#endif
+
 #define NUMBER(a) (sizeof(a)/sizeof(a[0]))
 
 int error = 0;
@@ -37,48 +43,6 @@ const char* param = "unknown";
 int list_mode = 0;
 int compare_mode = 0;
 
-#if 0
-static void check(const char* name,int a)
-{
-    if(!a) {
-        printf("%s, field %d [%s]: %s failed\n",file,field,param,name);
-        error++;
-    }
-}
-
-static double dget(grib_handle *h,const char* what)
-{
-    int e; double val;
-    if((e = grib_get_double(h,what,&val)) != GRIB_SUCCESS)
-    {
-        printf("%s, field %d [%s]: cannot get %s: %s\n",file,field,param,what,grib_get_error_message(e));
-        error++;
-        val = -1;
-    }
-    return val;
-}
-
-static int missing(grib_handle *h,const char* what)
-{
-    int err=0;
-    return grib_is_missing(h,what,&err);
-}
-
-static int eq(grib_handle *h,const char* what,long value)
-{
-    return get(h,what) == value;
-}
-
-static int ne(grib_handle *h,const char* what,long value)
-{
-    return get(h,what) != value;
-}
-
-static int ge(grib_handle *h,const char* what,long value)
-{
-    return get(h,what) >= value;
-}
-#endif
 static long get(grib_handle *h,const char* what)
 {
     int e; long val;
@@ -152,7 +116,7 @@ static void verify(grib_handle *h,const char* full,const char* base)
     }
 }
 
-static void validate(const char* path)
+void validate(const char* path)
 {
     FILE *f = fopen(path,"r");
     grib_handle *h = 0;
@@ -202,26 +166,6 @@ static void usage()
 {
     printf("tigge_name [-l] [-c] files ....\n");
     exit(1);
-}
-
-static void scan(const char* name)
-{
-    DIR *dir;
-    if((dir = opendir(name)) != NULL)
-    {
-        struct dirent* e;
-        char tmp[1024];
-        while( (e = readdir(dir)) != NULL)
-        {
-            if(e->d_name[0] == '.') continue;
-            sprintf(tmp,"%s/%s",name,e->d_name);
-            scan(tmp);
-        }
-
-        closedir(dir);
-    }
-    else
-        validate(name);
 }
 
 int main(int argc, char** argv)

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -55,10 +55,10 @@ if command -v pkg-config >/dev/null 2>&1; then
     #FLAGS_COMPILER=`echo $FLAGS_COMPILER | sed -e "s:$INSTALL_DIR:$BUILD_DIR:g"`
 
     # TODO: For now only support when shared libs enabled
-    SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`
-    if [ "$SHARED_LIBS" = "ON" ]; then
-      COMPILE_AND_RUN=1
-    fi
+    #SHARED_LIBS=`grep -w BUILD_SHARED_LIBS $CACHE_FILE | cut -d'=' -f2`
+    #if [ "$SHARED_LIBS" = "ON" ]; then
+    #  COMPILE_AND_RUN=1
+    #fi
   fi
 fi
 

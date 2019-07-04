@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -231,6 +231,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_select_step_template.c
     grib_accessor_class_local_definition.c
     grib_accessor_class_g2_eps.c
+    grib_accessor_class_g2_aerosol.c
     grib_accessor_class_g2_chemical.c
     grib_accessor_class_g2_mars_labeling.c
     grib_accessor_class_md5.c
@@ -395,6 +396,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_uint8.c
     grib_accessor_class_blob.c
     grib_optimize_decimal_factor.c
+    grib_accessor_class_data_g2bifourier_packing.c
     eccodes_windef.h
     # We ship our own generated lex/yacc C files
     grib_yacc.c  grib_lex.c

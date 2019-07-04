@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,7 +14,7 @@
 
 #include "grib_api.h"
 
-void usage(const char *prog)
+static void usage(const char *prog)
 {
 	fprintf(stderr,"%s: N\n",prog);
 	exit(1);

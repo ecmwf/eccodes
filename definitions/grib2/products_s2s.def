@@ -1,11 +1,4 @@
-# Copyright 2005-2018 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# Copyright 2005-2019 ECMWF.
 
 # S2S
 constant marsClass  = 's2';
@@ -103,4 +96,23 @@ if (isHindcast == 1) {
    alias mars.hdate = dataDate;
    alias mars.date  = modelVersionDate;
    alias mars.time  = modelVersionTime;
+}
+
+# ECC-839
+concept is_ocean_param(zero) {
+    '1' = { paramId = 151219; }
+    '1' = { paramId = 151163; }
+    '1' = { paramId = 151127; }
+    '1' = { paramId = 151175; }
+    '1' = { paramId = 151131; }
+    '1' = { paramId = 151132; }
+    '1' = { paramId = 151145; }
+    '1' = { paramId = 151225; }
+    '1' = { paramId = 174098; }
+    '0' = { dummy=1; }
+}
+if (is_ocean_param) {
+    constant oceanLevName = 'o2d';
+    alias mars.levtype = oceanLevName;
+    unalias mars.levelist;
 }

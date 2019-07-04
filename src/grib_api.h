@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,7 +21,6 @@
 #include <string.h>
 #include <sys/types.h>
 
-/* Microsoft Windows Visual Studio support */
 #include "eccodes_windef.h"
 
 #ifndef ECCODES_ON_WINDOWS
@@ -503,7 +502,7 @@ grib_handle* grib_handle_new_from_samples (grib_context* c, const char* sample_n
 * @param h           : The handle to be cloned
 * @return            the new handle, NULL if the message is invalid or a problem is encountered
 */
-grib_handle* grib_handle_clone             (grib_handle* h)                 ;
+grib_handle* grib_handle_clone(grib_handle* h)                 ;
 
 /**
 *  Frees a handle, also frees the message if it is not a user message
@@ -511,7 +510,7 @@ grib_handle* grib_handle_clone             (grib_handle* h)                 ;
 * @param h           : The handle to be deleted
 * @return            0 if OK, integer value on error
 */
-int   grib_handle_delete   (grib_handle* h);
+int grib_handle_delete(grib_handle* h);
 
 /**
  *  Create an empty multi field handle.
@@ -592,7 +591,7 @@ int grib_get_message_copy(grib_handle* h ,  void* message,size_t *message_length
 * \param error       : error code
 * \return            the new iterator, NULL if no iterator can be created
 */
-grib_iterator*      grib_iterator_new      (grib_handle*   h, unsigned long flags,int* error);
+grib_iterator* grib_iterator_new(grib_handle*   h, unsigned long flags,int* error);
 
 /**
 * Get latitude/longitude and data values.
@@ -616,7 +615,7 @@ int grib_get_data(grib_handle *h, double *lats, double *lons, double *values);
 * @param value       : on output value of the point
 * @return            positive value if successful, 0 if no more data are available
 */
-int                 grib_iterator_next     (grib_iterator *i, double* lat,double* lon,double* value);
+int grib_iterator_next(grib_iterator *i, double* lat,double* lon,double* value);
 
 /**
 * Get the previous value from an iterator.
@@ -627,7 +626,7 @@ int                 grib_iterator_next     (grib_iterator *i, double* lat,double
 * @param value       : on output value of the point*
 * @return            positive value if successful, 0 if no more data are available
 */
-int                 grib_iterator_previous (grib_iterator *i, double* lat,double* lon,double* value);
+int grib_iterator_previous(grib_iterator *i, double* lat,double* lon,double* value);
 
 /**
 * Test procedure for values in an iterator.
@@ -635,7 +634,7 @@ int                 grib_iterator_previous (grib_iterator *i, double* lat,double
 * @param i           : the iterator
 * @return            boolean, 1 if the iterator still nave next values, 0 otherwise
 */
-int                 grib_iterator_has_next (grib_iterator *i);
+int grib_iterator_has_next(grib_iterator *i);
 
 /**
 * Test procedure for values in an iterator.
@@ -643,7 +642,7 @@ int                 grib_iterator_has_next (grib_iterator *i);
 * @param i           : the iterator
 * @return            0 if OK, integer value on error
 */
-int                 grib_iterator_reset    (grib_iterator *i);
+int grib_iterator_reset(grib_iterator *i);
 
 /**
 *  Frees an iterator from memory
@@ -651,7 +650,7 @@ int                 grib_iterator_reset    (grib_iterator *i);
 * @param i           : the iterator
 * @return            0 if OK, integer value on error
 */
-int                 grib_iterator_delete   (grib_iterator *i);
+int grib_iterator_delete(grib_iterator *i);
 
 /*!
 * \brief Create a new nearest from a handle, using current geometry .
@@ -660,7 +659,7 @@ int                 grib_iterator_delete   (grib_iterator *i);
 * \param error       : error code
 * \return            the new nearest, NULL if no nearest can be created
 */
-grib_nearest*      grib_nearest_new      (grib_handle*   h, int* error);
+grib_nearest* grib_nearest_new(grib_handle*   h, int* error);
 
 /**
 * Find the 4 nearest points of a latitude longitude point.
@@ -684,8 +683,8 @@ grib_nearest*      grib_nearest_new      (grib_handle*   h, int* error);
 * @return            0 if OK, integer value on error
 */
 int grib_nearest_find(grib_nearest *nearest,grib_handle* h,double inlat,double inlon,
-    unsigned long flags,double* outlats,double* outlons,
-    double* values,double* distances,int* indexes,size_t *len);
+                      unsigned long flags,double* outlats,double* outlons,
+                      double* values,double* distances,int* indexes,size_t *len);
 
 /**
 *  Frees an nearest from memory
@@ -693,7 +692,7 @@ int grib_nearest_find(grib_nearest *nearest,grib_handle* h,double inlat,double i
 * @param nearest           : the nearest
 * @return            0 if OK, integer value on error
 */
-int                 grib_nearest_delete   (grib_nearest *nearest);
+int grib_nearest_delete(grib_nearest *nearest);
 
 /**
 * Find the nearest point of a set of points whose latitudes and longitudes
@@ -737,7 +736,7 @@ int grib_nearest_find_multiple(grib_handle* h,int is_lsm,
 * @param offset      : the address of a size_t where the offset will be set
 * @return            0 if OK, integer value on error
 */
-int                  grib_get_offset(grib_handle* h, const char* key, size_t* offset);
+int grib_get_offset(grib_handle* h, const char* key, size_t* offset);
 
 /**
 *  Get the number of coded value from a key, if several keys of the same name are present, the total sum is returned
@@ -747,7 +746,7 @@ int                  grib_get_offset(grib_handle* h, const char* key, size_t* of
 * @param size        : the address of a size_t where the size will be set
 * @return            0 if OK, integer value on error
 */
-int         grib_get_size(grib_handle* h, const char* key,size_t *size);
+int grib_get_size(grib_handle* h, const char* key,size_t *size);
 
 /**
 *  Get the length of the string representation of the key, if several keys of the same name are present, the maximum length is returned
@@ -757,7 +756,7 @@ int         grib_get_size(grib_handle* h, const char* key,size_t *size);
 * @param length        : the address of a size_t where the length will be set
 * @return            0 if OK, integer value on error
 */
-int         grib_get_length(grib_handle* h, const char* key,size_t *length);
+int grib_get_length(grib_handle* h, const char* key,size_t *length);
 
 /**
 *  Get a long value from a key, if several keys of the same name are present, the last one is returned
@@ -768,7 +767,7 @@ int         grib_get_length(grib_handle* h, const char* key,size_t *length);
 * @param value       : the address of a long where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
-int          grib_get_long         (grib_handle* h, const char* key, long*   value);
+int grib_get_long(grib_handle* h, const char* key, long* value);
 
 /**
 *  Get a double value from a key, if several keys of the same name are present, the last one is returned
@@ -779,7 +778,7 @@ int          grib_get_long         (grib_handle* h, const char* key, long*   val
 * @param value       : the address of a double where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
-int grib_get_double       (grib_handle* h, const char* key, double* value);
+int grib_get_double(grib_handle* h, const char* key, double* value);
 
 /**
 *  Get as double the i-th element of the "key" array
@@ -838,7 +837,7 @@ int grib_get_string_array(grib_handle* h, const char* key, char** vals, size_t *
 * @param length      : the address of a size_t that contains allocated length of the byte array on input, and that contains the actual length of the byte array on output
 * @return            0 if OK, integer value on error
 */
-int grib_get_bytes        (grib_handle* h, const char* key, unsigned char*  bytes, size_t *length);
+int grib_get_bytes(grib_handle* h, const char* key, unsigned char*  bytes, size_t *length);
 /**
 *  Get double array values from a key. If several keys of the same name are present, the last one is returned
 * @see  grib_set_double_array
@@ -849,7 +848,7 @@ int grib_get_bytes        (grib_handle* h, const char* key, unsigned char*  byte
 * @param length      : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
 * @return            0 if OK, integer value on error
 */
-int grib_get_double_array (grib_handle* h, const char* key, double* vals, size_t *length);
+int grib_get_double_array(grib_handle* h, const char* key, double* vals, size_t *length);
 
 /**
 *  Get long array values from a key. If several keys of the same name are present, the last one is returned
@@ -885,7 +884,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src);
 * @param val         : a long where the data will be read
 * @return            0 if OK, integer value on error
 */
-int grib_set_long         (grib_handle* h, const char*  key , long val);
+int grib_set_long(grib_handle* h, const char* key, long val);
 
 /**
 *  Set a double value from a key. If several keys of the same name are present, the last one is set
@@ -896,7 +895,7 @@ int grib_set_long         (grib_handle* h, const char*  key , long val);
 * @param val       : a double where the data will be read
 * @return            0 if OK, integer value on error
 */
-int grib_set_double       (grib_handle* h, const char*  key , double   val);
+int grib_set_double(grib_handle* h, const char* key, double val);
 
 /**
 *  Set a string value from a key. If several keys of the same name are present, the last one is set
@@ -908,7 +907,7 @@ int grib_set_double       (grib_handle* h, const char*  key , double   val);
 * @param length      : the address of a size_t that contains the length of the string on input, and that contains the actual packed length of the string on output
 * @return            0 if OK, integer value on error
 */
-int grib_set_string       (grib_handle* h, const char*  key , const char* mesg, size_t *length);
+int grib_set_string(grib_handle* h, const char* key, const char* mesg, size_t *length);
 
 /**
 *  Set a bytes array from a key. If several keys of the same name are present, the last one is set
@@ -920,7 +919,7 @@ int grib_set_string       (grib_handle* h, const char*  key , const char* mesg, 
 * @param length      : the address of a size_t that contains the length of the byte array on input, and that contains the actual packed length of the byte array  on output
 * @return            0 if OK, integer value on error
 */
-int grib_set_bytes        (grib_handle* h, const char*  key, const unsigned char* bytes, size_t *length);
+int grib_set_bytes(grib_handle* h, const char* key, const unsigned char* bytes, size_t *length);
 
 /**
 *  Set a double array from a key. If several keys of the same name are present, the last one is set
@@ -932,7 +931,7 @@ int grib_set_bytes        (grib_handle* h, const char*  key, const unsigned char
 * @param length      : a size_t that contains the length of the byte array on input
 * @return            0 if OK, integer value on error
 */
-int grib_set_double_array (grib_handle* h, const char*  key , const double*        vals   , size_t length);
+int grib_set_double_array(grib_handle* h, const char*  key , const double*        vals   , size_t length);
 
 /**
 * Same as grib_set_double_array but allows setting of READ-ONLY keys like codedValues.
@@ -951,7 +950,7 @@ int grib_set_force_double_array(grib_handle* h, const char* key, const double* v
 * @param length      : a size_t that contains the length of the long array on input
 * @return            0 if OK, integer value on error
 */
-int grib_set_long_array   (grib_handle* h, const char*  key , const long*          vals   , size_t length);
+int grib_set_long_array(grib_handle* h, const char*  key , const long* vals, size_t length);
 
 /**
 *  Set a string array from a key. If several keys of the same name are present, the last one is set
@@ -976,7 +975,7 @@ int grib_set_string_array(grib_handle* h, const char *key, const char **vals, si
 * @param option_flags : all the GRIB_DUMP_FLAG_x flags can be used
 * @param arg          : used to provide a format to output data (experimental)
 */
-void   grib_dump_content(grib_handle* h,FILE* out,const char* mode, unsigned long option_flags,void* arg);
+void grib_dump_content(grib_handle* h,FILE* out,const char* mode, unsigned long option_flags,void* arg);
 
 /**
 *  Print all keys from the parsed definition files available in a context
@@ -984,7 +983,7 @@ void   grib_dump_content(grib_handle* h,FILE* out,const char* mode, unsigned lon
 * @param f           : the File used to print the keys on
 * @param c           : the context that contains the cached definition files to be printed
 */
-void     grib_dump_action_tree(grib_context* c,  FILE* f) ;
+void grib_dump_action_tree(grib_context* c,  FILE* f) ;
 
 /*! \defgroup context The context object
  The context is a long life configuration object of the grib_api.
@@ -999,7 +998,7 @@ void     grib_dump_action_tree(grib_context* c,  FILE* f) ;
 * @param data        : pointer to the data to be freed
 * must match @see grib_malloc_proc
 */
-typedef void  (*grib_free_proc)     (const grib_context* c, void* data);
+typedef void  (*grib_free_proc)(const grib_context* c, void* data);
 
 /**
 * Grib malloc procedure, format of a procedure referenced in the context that is used to allocate memory
@@ -1008,7 +1007,7 @@ typedef void  (*grib_free_proc)     (const grib_context* c, void* data);
 * @return              a pointer to the allocated memory, NULL if no memory can be allocated
 * must match @see grib_free_proc
 */
-typedef void* (*grib_malloc_proc)   (const grib_context* c, size_t length);
+typedef void* (*grib_malloc_proc)(const grib_context* c, size_t length);
 
 /**
 * Grib realloc procedure, format of a procedure referenced in the context that is used to reallocate memory
@@ -1017,7 +1016,7 @@ typedef void* (*grib_malloc_proc)   (const grib_context* c, size_t length);
 * @param length        : length to be allocated in number of bytes
 * @return              a pointer to the allocated memory
 */
-typedef void* (*grib_realloc_proc)   (const grib_context* c, void* data, size_t length);
+typedef void* (*grib_realloc_proc)(const grib_context* c, void* data, size_t length);
 
 /**
 * Grib loc proc, format of a procedure referenced in the context that is used to log internal messages
@@ -1026,7 +1025,7 @@ typedef void* (*grib_realloc_proc)   (const grib_context* c, void* data, size_t 
 * @param level         : the log level, as defined in log modes
 * @param mesg          : the message to be logged
 */
-typedef void  (*grib_log_proc)      (const grib_context* c, int level, const char* mesg);
+typedef void  (*grib_log_proc)(const grib_context* c, int level, const char* mesg);
 
 /**
 * Grib print proc, format of a procedure referenced in the context that is used to print external messages
@@ -1035,7 +1034,7 @@ typedef void  (*grib_log_proc)      (const grib_context* c, int level, const cha
 * @param descriptor    : the structure to be printed on, must match the implementation
 * @param mesg          : the message to be printed
 */
-typedef void  (*grib_print_proc)    (const grib_context* c, void* descriptor, const char* mesg);
+typedef void  (*grib_print_proc)(const grib_context* c, void* descriptor, const char* mesg);
 
 
 /**
@@ -1047,7 +1046,7 @@ typedef void  (*grib_print_proc)    (const grib_context* c, void* descriptor, co
 * @param stream       : the stream
 * @return              size read
 */
-typedef size_t  (*grib_data_read_proc) (const grib_context* c,void *ptr, size_t size, void *stream);
+typedef size_t (*grib_data_read_proc)(const grib_context* c,void *ptr, size_t size, void *stream);
 
 /**
 * Grib data read write, format of a procedure referenced in the context that is used to write to a stream from a resource
@@ -1058,7 +1057,7 @@ typedef size_t  (*grib_data_read_proc) (const grib_context* c,void *ptr, size_t 
 * @param stream       : the stream
 * @return              size written
 */
-typedef size_t  (*grib_data_write_proc)(const grib_context* c,const void *ptr, size_t size,  void *stream);
+typedef size_t (*grib_data_write_proc)(const grib_context* c,const void *ptr, size_t size,  void *stream);
 
 /**
 * Grib data tell, format of a procedure referenced in the context that is used to tell the current position in a stream
@@ -1067,7 +1066,7 @@ typedef size_t  (*grib_data_write_proc)(const grib_context* c,const void *ptr, s
 * @param stream       : the stream
 * @return              the position in the stream
 */
-typedef off_t    (*grib_data_tell_proc) (const grib_context* c, void *stream);
+typedef off_t  (*grib_data_tell_proc) (const grib_context* c, void *stream);
 
 /**
 * Grib data seek, format of a procedure referenced in the context that is used to seek the current position in a stream
@@ -1080,7 +1079,7 @@ typedef off_t    (*grib_data_tell_proc) (const grib_context* c, void *stream);
 * @param stream       : the stream
 * @return            0 if OK, integer value on error
 */
-typedef off_t    (*grib_data_seek_proc) (const grib_context* c, off_t offset, int whence, void *stream);
+typedef off_t  (*grib_data_seek_proc)(const grib_context* c, off_t offset, int whence, void *stream);
 
 /**
 * Grib data eof, format of a procedure referenced in the context that is used to test end of file
@@ -1089,21 +1088,21 @@ typedef off_t    (*grib_data_seek_proc) (const grib_context* c, off_t offset, in
 * @param stream       : the stream
 * @return              the position in the stream
 */
-typedef int    (*grib_data_eof_proc) (const grib_context* c, void *stream);
+typedef int (*grib_data_eof_proc) (const grib_context* c, void *stream);
 
 /**
 *  Get the static default context
 *
 * @return            the default context, NULL it the context is not available
 */
-grib_context*    grib_context_get_default(void);
+grib_context* grib_context_get_default(void);
 
 /**
 *  Frees the cached definition files of the context
 *
 * @param c           : the context to be deleted
 */
-void             grib_context_delete(grib_context* c);
+void grib_context_delete(grib_context* c);
 
 /**
 *  Set the GTS header mode on.
@@ -1134,7 +1133,7 @@ void grib_gribex_mode_on(grib_context* c);
 *
 * @param c           : the context
 */
-int grib_get_gribex_mode ( grib_context* c);
+int grib_get_gribex_mode(grib_context* c);
 
 /**
 *  Set the GRIBEX mode off.
@@ -1179,7 +1178,7 @@ void grib_context_set_memory_proc(grib_context* c, grib_malloc_proc griballoc,
 * @param gribfree    : the memory freeing procedure to be set @see grib_free_proc
 */
 void  grib_context_set_persistent_memory_proc(grib_context* c, grib_malloc_proc griballoc,
-  grib_free_proc gribfree);
+                    grib_free_proc gribfree);
 
 /**
 *  Sets memory procedures of the context for large buffers
@@ -1188,9 +1187,9 @@ void  grib_context_set_persistent_memory_proc(grib_context* c, grib_malloc_proc 
 * @param griballoc   : the memory allocation procedure to be set @see grib_malloc_proc
 * @param gribfree    : the memory freeing procedure to be set @see grib_free_proc
 */
-void  grib_context_set_buffer_memory_proc(grib_context* c, grib_malloc_proc griballoc,
-       grib_free_proc gribfree,
-       grib_realloc_proc gribrealloc);
+void grib_context_set_buffer_memory_proc(grib_context* c, grib_malloc_proc griballoc,
+                                         grib_free_proc gribfree,
+                                         grib_realloc_proc gribrealloc);
 
 /**
 *  Sets the context printing procedure used for user interaction
@@ -1198,7 +1197,7 @@ void  grib_context_set_buffer_memory_proc(grib_context* c, grib_malloc_proc grib
 * @param c            : the context to be modified
 * @param printp       : the printing procedure to be set @see grib_print_proc
 */
-void   grib_context_set_print_proc(grib_context* c, grib_print_proc printp);
+void grib_context_set_print_proc(grib_context* c, grib_print_proc printp);
 
 /**
 *  Sets the context logging procedure used for system (warning, errors, infos ...) messages
@@ -1206,7 +1205,7 @@ void   grib_context_set_print_proc(grib_context* c, grib_print_proc printp);
 * @param c            : the context to be modified
 * @param logp         : the logging procedure to be set @see grib_log_proc
 */
-void    grib_context_set_logging_proc(grib_context* c, grib_log_proc logp);
+void grib_context_set_logging_proc(grib_context* c, grib_log_proc logp);
 
 /**
 *  Turn on support for multiple fields in single grib messages
@@ -1257,8 +1256,6 @@ const char* grib_get_package_name(void);
 
 /**
 *  Prints the API version
-*
-*
 */
 void grib_print_api_version(FILE* out);
 
@@ -1364,6 +1361,7 @@ void *wmo_read_any_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t 
 void *wmo_read_gts_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
 void *wmo_read_bufr_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
 void *wmo_read_grib_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err);
+int grib_read_any_from_file(grib_context *ctx, FILE *f, void *buffer, size_t *len);
 int grib_get_message_offset ( grib_handle* h,off_t* offset);
 int grib_get_message_size ( grib_handle* h,size_t* size);
 
@@ -1385,10 +1383,6 @@ int grib_points_get_values(grib_handle* h, grib_points* points, double* val);
 
 
 /* --------------------------------------- */
-
-
-
-
 #define GRIB_UTIL_GRID_SPEC_REGULAR_LL 1
 #define GRIB_UTIL_GRID_SPEC_ROTATED_LL 2
 
@@ -1398,9 +1392,10 @@ int grib_points_get_values(grib_handle* h, grib_points* points, double* val);
 
 #define GRIB_UTIL_GRID_SPEC_SH         6
 #define GRIB_UTIL_GRID_SPEC_REDUCED_LL 7
-#define GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC 8
-
-#define GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG 9
+#define GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC          8
+#define GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG           9
+#define GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA 10
+#define GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL            11
 
 
 typedef struct grib_util_grid_spec {
@@ -1559,8 +1554,9 @@ grib_handle *grib_util_set_spec2(grib_handle *h,
     size_t data_values_count,
     int *err);
 
+int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
+grib_handle *grib_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 /* --------------------------------------- */
-
 
 typedef void (*codes_assertion_failed_proc)(const char* message);
 void codes_set_codes_assertion_failed_proc(codes_assertion_failed_proc proc);

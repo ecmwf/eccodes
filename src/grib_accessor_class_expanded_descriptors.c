@@ -1,5 +1,5 @@
 /*
-* Copyright 2005-2018 ECMWF.
+* Copyright 2005-2019 ECMWF.
 *
 * This software is licensed under the terms of the Apache Licence Version 2.0
 * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -292,6 +292,12 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             size=0;
             inner_unexpanded=grib_bufr_descriptors_array_new(c,DESC_SIZE_INIT,DESC_SIZE_INCR);
 
+            /* Number of descriptors to replicate cannot be more than what's left */
+            if (us->X+1 > unexpanded->n) {
+                grib_context_log(c, GRIB_LOG_ERROR,
+                                 "Delayed replication: %06ld: expected %d but only found %lu elements",
+                                 u->code, us->X, unexpanded->n - 1);
+            }
             for (j=0;j<us->X+1;j++) {
                 DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded, u0);
                 grib_bufr_descriptors_array_push(inner_unexpanded,u0);
