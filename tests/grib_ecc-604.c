@@ -120,7 +120,7 @@ int main(int argc, char **argv)
         parallel = 0;
     }
     if (parallel) {
-        printf("Running parallel in %ld threads. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
+        printf("Running parallel in %ld threads. %ld iterations (prod=%ld)\n", NUM_THREADS, FILES_PER_ITERATION, NUM_THREADS*FILES_PER_ITERATION);
         printf("Options: dump=%d, clone=%d, write=%d\n", opt_dump, opt_clone, opt_write);
     } else {
         printf("Running sequentially in %ld runs. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
