@@ -19,12 +19,13 @@ int opt_write = 0; /* If 1 write handle to file */
 static int encode_values(grib_handle* h, char *output_file)
 {
     double *values;
-    size_t size = 1000 * 1000;
+    const size_t DIM = 1000;
+    size_t size = DIM * DIM;
     size_t i = 0;
     values = (double*)malloc(size*sizeof(double));
     for (i=0; i<size; ++i) {
         double v = i;
-        if (i % 1000 == 0) v = 0;
+        if (i % DIM == 0) v = 0;
         values[i] = v;
     }
     GRIB_CHECK(grib_set_long(h,"bitsPerValue",16),0);
@@ -88,7 +89,6 @@ int main(int argc, char **argv)
             if (parallel) {
                 /* Now we will create the thread passing it data as an argument */
                 pthread_create(&workers[thread_counter], NULL, runner, data);
-                /*pthread_join(workers[thread_counter], NULL);*/
                 thread_counter++;
             } else {
                 do_encode(data);
