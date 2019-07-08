@@ -415,7 +415,7 @@
 	 probabilityType = 0 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	}
-#Mean sea water temperature in the upper 300 m
+#Mean sea water potential temperature in the upper 300 m
 '151127' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -426,6 +426,16 @@
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 300 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
+	}
+#Sea surface practical salinity
+'151219' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Ocean mixed layer thickness defined by sigma theta 0.01 kg/m3
 '151225' = {
