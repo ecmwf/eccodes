@@ -112,11 +112,11 @@ bool AtlasRegularGrid::isPeriodicWestEast() const {
 }
 
 bool AtlasRegularGrid::includesNorthPole() const {
-    return false;
+    return bbox_.north() == Latitude::NORTH_POLE;
 }
 
 bool AtlasRegularGrid::includesSouthPole() const {
-    return false;
+    return bbox_.south() == Latitude::SOUTH_POLE;
 }
 
 void AtlasRegularGrid::reorder(long scanningMode, mir::data::MIRValuesVector& values) const {
