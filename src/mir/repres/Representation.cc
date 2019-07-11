@@ -203,6 +203,13 @@ util::BoundingBox Representation::extendedBoundingBox(const util::BoundingBox&) 
 }
 
 
+bool Representation::extendBoundingBoxOnIntersect() const {
+    std::ostringstream os;
+    os << "Representation::extendBoundingBoxOnIntersect() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
 size_t Representation::truncation() const {
     std::ostringstream os;
     os << "Representation::truncation() not implemented for " << *this;

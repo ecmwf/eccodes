@@ -81,6 +81,10 @@ void AtlasRegularGrid::print(std::ostream& out) const {
         << "]";
 }
 
+bool AtlasRegularGrid::extendBoundingBoxOnIntersect() const {
+    return true;
+}
+
 size_t AtlasRegularGrid::numberOfPoints() const {
     return x_.size() * y_.size();
 }

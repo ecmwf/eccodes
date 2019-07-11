@@ -224,6 +224,11 @@ const LatLon* LatLon::croppedRepresentation(const util::BoundingBox&) const {
 }
 
 
+bool LatLon::extendBoundingBoxOnIntersect() const {
+    return false;
+}
+
+
 void LatLon::fill(util::MeshGeneratorParameters& params) const {
     params.meshGenerator_ = "structured";
 

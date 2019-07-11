@@ -87,6 +87,7 @@ protected:
     virtual void validate(const MIRValuesVector&) const;
     virtual void makeName(std::ostream&) const;
     virtual void print(std::ostream&) const;
+    virtual bool extendBoundingBoxOnIntersect() const;
 
     virtual ::atlas::Grid atlasGrid() const;
     virtual Iterator* iterator() const;
