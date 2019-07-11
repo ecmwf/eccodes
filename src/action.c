@@ -62,6 +62,31 @@ static void init(grib_action_class *c)
     GRIB_MUTEX_UNLOCK(&mutex1);
 }
 
+#if 0
+/* A non-recursive version */
+static void init(grib_action_class *c)
+{
+    if (!c) return;
+
+    GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
+    GRIB_MUTEX_LOCK(&mutex1);
+    if(!c->inited)
+    {
+        if(c->super) {
+            grib_action_class *g = *(c->super);
+            if (g && !g->inited) {
+                Assert(g->super == NULL);
+                g->init_class(g);
+                g->inited = 1;
+            }
+        }
+        c->init_class(c);
+        c->inited = 1;
+    }
+    GRIB_MUTEX_UNLOCK(&mutex1);
+}
+#endif
+
 void grib_dump(grib_action* a, FILE* f, int l)
 {
     grib_action_class *c = a->cclass;
