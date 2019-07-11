@@ -24,8 +24,9 @@ namespace atlas {
 
 static RepresentationBuilder<Lambert> __builder("lambert");
 
-namespace {
-AtlasRegularGrid::Projection make_projection(const param::MIRParametrisation& param) {
+Lambert::Lambert(const param::MIRParametrisation& param) : AtlasRegularGrid(param, make_projection(param)) {}
+
+AtlasRegularGrid::Projection Lambert::make_projection(const param::MIRParametrisation& param) {
     double LaDInDegrees;
     double LoVInDegrees;
     double Latin1InDegrees;
@@ -46,9 +47,6 @@ AtlasRegularGrid::Projection make_projection(const param::MIRParametrisation& pa
         .set("longitude0", LoVInDegrees)
         .set("radius", radius);
 }
-}  // namespace
-
-Lambert::Lambert(const param::MIRParametrisation& param) : AtlasRegularGrid(param, make_projection(param)) {}
 
 void Lambert::fill(grib_info&) const {
     NOTIMP;

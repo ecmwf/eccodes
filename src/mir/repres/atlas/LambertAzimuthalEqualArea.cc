@@ -28,8 +28,10 @@ namespace atlas {
 
 static RepresentationBuilder<LambertAzimuthalEqualArea> __builder("lambert_azimuthal_equal_area");
 
-namespace {
-AtlasRegularGrid::Projection make_projection(const param::MIRParametrisation& param) {
+LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const param::MIRParametrisation& param) :
+    AtlasRegularGrid(param, make_projection(param)) {}
+
+AtlasRegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::MIRParametrisation& param) {
     double standardParallel;
     double centralLongitude;
     double radius;
@@ -44,10 +46,6 @@ AtlasRegularGrid::Projection make_projection(const param::MIRParametrisation& pa
         .set("central_longitude", centralLongitude)
         .set("radius", radius);
 }
-}  // namespace
-
-LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const param::MIRParametrisation& param) :
-    AtlasRegularGrid(param, make_projection(param)) {}
 
 void LambertAzimuthalEqualArea::fill(grib_info& info) const {
     using eckit::geometry::LLCOORDS::LAT;
@@ -69,11 +67,11 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
 
     info.grid.latitudeOfFirstGridPointInDegrees  = firstLL[LAT];
     info.grid.longitudeOfFirstGridPointInDegrees = firstLL[LON];
+    info.grid.Ni                                 = long(x_.size());
+    info.grid.Nj                                 = long(y_.size());
 
     GribExtraSetting::set(info, "xDirectionGridLengthInMillimetres", std::lround(Dx * 1.e3));
     GribExtraSetting::set(info, "yDirectionGridLengthInMillimetres", std::lround(Dy * 1.e3));
-    GribExtraSetting::set(info, "numberOfPointsAlongXAxis", long(x_.size()));
-    GribExtraSetting::set(info, "numberOfPointsAlongYAxis", long(y_.size()));
     GribExtraSetting::set(info, "standardParallelInMicrodegrees", std::lround(reference[LAT] * 1.e6));
     GribExtraSetting::set(info, "centralLongitudeInMicrodegrees", std::lround(reference[LON] * 1.e6));
 }

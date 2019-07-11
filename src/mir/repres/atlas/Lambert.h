@@ -57,7 +57,8 @@ protected:
     // None
 
     // -- Methods
-    // None
+
+    static Projection make_projection(const param::MIRParametrisation&);
 
     // -- Overridden methods
 
