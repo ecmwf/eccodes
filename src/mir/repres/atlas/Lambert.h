@@ -28,13 +28,11 @@ public:
     // -- Contructors
 
     Lambert(const param::MIRParametrisation&);
-
     Lambert(const Lambert&) = delete;
     Lambert& operator=(const Lambert&) = delete;
 
     // -- Destructor
-
-    virtual ~Lambert();
+    // None
 
     // -- Convertors
     // None
@@ -43,6 +41,7 @@ public:
     // None
 
     // -- Methods
+    // None
 
     // -- Overridden methods
     // None
@@ -71,8 +70,6 @@ protected:
     // None
 
     // -- Friends
-
-    // friend ostream& operator<<(ostream& s,const Lambert& p)
     // None
 };
 

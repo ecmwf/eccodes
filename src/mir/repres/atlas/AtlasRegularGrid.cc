@@ -29,9 +29,11 @@ namespace mir {
 namespace repres {
 namespace atlas {
 
-void make_linear_spacing_xy(const param::MIRParametrisation& param, AtlasRegularGrid::Projection projection,
-                            AtlasRegularGrid::LinearSpacing& x, AtlasRegularGrid::LinearSpacing& y) {
-    using namespace eckit::geometry;
+AtlasRegularGrid::AtlasRegularGrid(const param::MIRParametrisation& param, AtlasRegularGrid::Projection projection) {
+    using eckit::geometry::LLCOORDS::LAT;
+    using eckit::geometry::LLCOORDS::LON;
+    using eckit::geometry::XYZCOORDS::XX;
+    using eckit::geometry::XYZCOORDS::YY;
     ASSERT(projection);
 
     size_t nx = 0;
@@ -54,38 +56,18 @@ void make_linear_spacing_xy(const param::MIRParametrisation& param, AtlasRegular
     Point2 first = projection.xy(firstLL);
     Point2 last  = first + Point2{(nx - 1) * dx, (1 - int(ny)) * dy};
 
-    x = {first[XX], last[XX], long(nx)};
-    y = {first[YY], last[YY], long(ny)};
+    x_ = {first[XX], last[XX], long(nx)};
+    y_ = {first[YY], last[YY], long(ny)};
+    ASSERT(x_.front() < x_.back());
+    ASSERT(y_.front() > y_.back());
 
-    ASSERT(x.front() < x.back());
-    ASSERT(y.front() > y.back());
-}
+    grid_ = ::atlas::RegularGrid(x_, y_, projection);
 
-AtlasRegularGrid::AtlasRegularGrid(const param::MIRParametrisation& param, AtlasRegularGrid::Projection projection) :
-    projection_(projection) {
-    make_linear_spacing_xy(param, projection, x_, y_);
-
-    RectangularDomain range({x_.front(), x_.back()}, {y_.front(), y_.back()}, "meters");
-    RectangularDomain bbox = projection.boundingBox(range);
+    ::atlas::RectangularDomain range({x_.front(), x_.back()}, {y_.front(), y_.back()}, "meters");
+    ::atlas::RectangularDomain bbox = projection.boundingBox(range);
     ASSERT(bbox);
 
     bbox_ = {bbox.ymax(), bbox.xmin(), bbox.ymin(), bbox.xmax()};
-    grid_ = ::atlas::StructuredGrid(x_, y_, projection);
-}
-
-AtlasRegularGrid::AtlasRegularGrid(AtlasRegularGrid::LinearSpacing x, AtlasRegularGrid::LinearSpacing y,
-                                   AtlasRegularGrid::Projection projection) {
-    ASSERT(x.front() < x.back());
-    ASSERT(y.front() > y.back());
-    x_ = x;
-    y_ = y;
-
-    RectangularDomain range({x_.front(), x_.back()}, {y_.front(), y_.back()}, "meters");
-    RectangularDomain bbox = projection.boundingBox(range);
-    ASSERT(bbox);
-
-    bbox_ = {bbox.ymax(), bbox.xmin(), bbox.ymin(), bbox.xmax()};
-    grid_ = ::atlas::StructuredGrid(x_, y_, projection);
 }
 
 AtlasRegularGrid::~AtlasRegularGrid() = default;
@@ -103,12 +85,17 @@ size_t AtlasRegularGrid::numberOfPoints() const {
     return x_.size() * y_.size();
 }
 
-AtlasRegularGrid::Grid AtlasRegularGrid::atlasGrid() const {
+::atlas::Grid AtlasRegularGrid::atlasGrid() const {
     return grid_;
 }
 
 bool AtlasRegularGrid::isPeriodicWestEast() const {
     return false;
+}
+
+void AtlasRegularGrid::fill(grib_info&) const {
+    // derived classes are supposed to implement this, for output
+    NOTIMP;
 }
 
 bool AtlasRegularGrid::includesNorthPole() const {
@@ -167,8 +154,8 @@ Iterator* AtlasRegularGrid::iterator() const {
         }
 
     public:
-        AtlasRegularIterator(const Projection& projection, const LinearSpacing& x, const LinearSpacing& y) :
-            projection_(projection),
+        AtlasRegularIterator(Projection projection, const LinearSpacing& x, const LinearSpacing& y) :
+            projection_(std::move(projection)),
             x_(x),
             y_(y),
             ni_(x.size()),
@@ -184,13 +171,14 @@ Iterator* AtlasRegularGrid::iterator() const {
         AtlasRegularIterator& operator=(const AtlasRegularIterator&) = delete;
     };
 
-    return new AtlasRegularIterator(atlasGrid().projection(), x_, y_);
+    return new AtlasRegularIterator(grid_.projection(), x_, y_);
 }
 
 void AtlasRegularGrid::makeName(std::ostream& out) const {
     eckit::MD5 h;
-    h << grid_.projection().spec();
-    h << bbox_;
+    h << grid_.projection();
+    h << x_.spec();
+    h << y_.spec();
     out << "AtlasRegularGrid-" << h.digest();
 }
 

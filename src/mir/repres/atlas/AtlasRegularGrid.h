@@ -27,10 +27,9 @@ class AtlasRegularGrid : public Gridded {
 public:
     // -- Types
 
-    using Grid              = ::atlas::Grid;
-    using LinearSpacing     = ::atlas::grid::LinearSpacing;
-    using Projection        = ::atlas::Projection;
-    using RectangularDomain = ::atlas::RectangularDomain;
+    using RegularGrid   = ::atlas::RegularGrid;
+    using LinearSpacing = ::atlas::grid::LinearSpacing;
+    using Projection    = ::atlas::Projection;
 
     // -- Exceptions
     // None
@@ -38,13 +37,12 @@ public:
     // -- Contructors
 
     AtlasRegularGrid(const param::MIRParametrisation&, Projection);
-    AtlasRegularGrid(LinearSpacing x, LinearSpacing y, Projection);
     AtlasRegularGrid(const AtlasRegularGrid&) = delete;
     AtlasRegularGrid& operator=(const AtlasRegularGrid&) = delete;
 
     // -- Destructor
 
-    ~AtlasRegularGrid();
+    virtual ~AtlasRegularGrid();
 
     // -- Convertors
     // None
@@ -67,10 +65,9 @@ public:
 protected:
     // -- Members
 
+    RegularGrid grid_;
     LinearSpacing x_;
     LinearSpacing y_;
-    Projection projection_;
-    Grid grid_;
 
     // -- Methods
     // None
@@ -84,13 +81,14 @@ protected:
     virtual bool includesSouthPole() const;
     virtual bool isPeriodicWestEast() const;
 
+    virtual void fill(grib_info&) const;
     virtual void fill(util::MeshGeneratorParameters&) const;
     virtual void reorder(long scanningMode, MIRValuesVector&) const;
     virtual void validate(const MIRValuesVector&) const;
     virtual void makeName(std::ostream&) const;
     virtual void print(std::ostream&) const;
 
-    virtual Grid atlasGrid() const;
+    virtual ::atlas::Grid atlasGrid() const;
     virtual Iterator* iterator() const;
     virtual size_t numberOfPoints() const;
 

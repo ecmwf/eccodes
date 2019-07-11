@@ -31,15 +31,11 @@ public:
     // -- Contructors
 
     LambertAzimuthalEqualArea(const param::MIRParametrisation&);
-    LambertAzimuthalEqualArea(double x0, double x1, size_t nx, double y0, double y1, size_t ny, double standardParallel,
-                              double centralLongitude);
-
     LambertAzimuthalEqualArea(const LambertAzimuthalEqualArea&) = delete;
     LambertAzimuthalEqualArea& operator=(const LambertAzimuthalEqualArea&) = delete;
 
     // -- Destructor
-
-    virtual ~LambertAzimuthalEqualArea();
+    // None
 
     // -- Convertors
     // None
