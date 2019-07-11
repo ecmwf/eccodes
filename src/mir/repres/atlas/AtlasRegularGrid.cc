@@ -179,7 +179,8 @@ void AtlasRegularGrid::makeName(std::ostream& out) const {
     h << grid_.projection();
     h << x_.spec();
     h << y_.spec();
-    out << "AtlasRegularGrid-" << h.digest();
+    auto type = grid_.projection().spec().getString("type");
+    out << "AtlasRegularGrid-" << (type.empty() ? "" : type + "-") << h.digest();
 }
 
 bool AtlasRegularGrid::sameAs(const Representation& other) const {
