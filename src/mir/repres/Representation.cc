@@ -196,9 +196,9 @@ const util::BoundingBox& Representation::boundingBox() const {
 }
 
 
-util::BoundingBox Representation::extendedBoundingBox(const util::BoundingBox&) const {
+util::BoundingBox Representation::extendBoundingBox(const util::BoundingBox&) const {
     std::ostringstream os;
-    os << "Representation::extendedBoundingBox() not implemented for " << *this;
+    os << "Representation::extendBoundingBox() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 

@@ -169,7 +169,7 @@ bool Regular::getLongestElementDiagonal(double& d) const {
     return true;
 }
 
-util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) const {
+util::BoundingBox Regular::extendBoundingBox(const util::BoundingBox& bbox) const {
 
     // adjust West/East to include bbox's West/East
     Longitude w = bbox.west();

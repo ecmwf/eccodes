@@ -406,7 +406,7 @@ bool Reduced::getLongestElementDiagonal(double& d) const {
 }
 
 
-util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) const {
+util::BoundingBox Reduced::extendBoundingBox(const util::BoundingBox& bbox) const {
 
     // adjust West/East to include bbox's West/East
     Longitude w = bbox.west();

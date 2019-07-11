@@ -105,7 +105,7 @@ const RegularLL* RegularLL::croppedRepresentation(const util::BoundingBox& bbox)
     return new RegularLL(increments_, bbox, reference);
 }
 
-util::BoundingBox RegularLL::extendedBoundingBox(const util::BoundingBox& bbox) const {
+util::BoundingBox RegularLL::extendBoundingBox(const util::BoundingBox& bbox) const {
     using iterator::detail::RegularIterator;
 
     const PointLatLon reference(bbox_.south(), bbox_.west());
