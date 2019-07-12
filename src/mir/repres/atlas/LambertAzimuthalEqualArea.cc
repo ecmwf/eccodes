@@ -41,7 +41,7 @@ AtlasRegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const pa
 
     ASSERT(radius > 0.);
 
-    return AtlasRegularGrid::Projection::Spec("type", "lambert_azimuthal_equal_area")
+    return Projection::Spec("type", "lambert_azimuthal_equal_area")
         .set("standard_parallel", standardParallel)
         .set("central_longitude", centralLongitude)
         .set("radius", radius);

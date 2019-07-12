@@ -40,7 +40,7 @@ AtlasRegularGrid::Projection Lambert::make_projection(const param::MIRParametris
 
     ASSERT(radius > 0.);
 
-    return AtlasRegularGrid::Projection::Spec("type", "lambert_conformal")
+    return Projection::Spec("type", "lambert_conformal")
         .set("latitude1", Latin1InDegrees)
         .set("latitude2", Latin2InDegrees)
         .set("latitudeD", LaDInDegrees)
