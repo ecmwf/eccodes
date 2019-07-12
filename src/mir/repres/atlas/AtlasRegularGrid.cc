@@ -64,10 +64,10 @@ AtlasRegularGrid::AtlasRegularGrid(const param::MIRParametrisation& param, Atlas
     grid_ = ::atlas::RegularGrid(x_, y_, projection);
 
     ::atlas::RectangularDomain range({x_.front(), x_.back()}, {y_.front(), y_.back()}, "meters");
-    ::atlas::RectangularDomain bbox = projection.boundingBox(range);
+    ::atlas::RectangularLonLatDomain bbox = projection.lonlatBoundingBox(range);
     ASSERT(bbox);
 
-    bbox_ = {bbox.ymax(), bbox.xmin(), bbox.ymin(), bbox.xmax()};
+    bbox_ = {bbox.north(), bbox.west(), bbox.south(), bbox.east()};
 }
 
 AtlasRegularGrid::~AtlasRegularGrid() = default;
