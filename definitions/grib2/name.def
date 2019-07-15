@@ -1279,6 +1279,48 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
+#Forest fire weather index
+'Forest fire weather index' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 5 ;
+	}
+#Fine fuel moisture code
+'Fine fuel moisture code' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 6 ;
+	}
+#Duff moisture code
+'Duff moisture code' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 7 ;
+	}
+#Drought code
+'Drought code' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 8 ;
+	}
+#Initial fire spread index
+'Initial fire spread index' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 9 ;
+	}
+#Fire buildup index
+'Fire buildup index' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 10 ;
+	}
+#Fire daily severity rating
+'Fire daily severity rating' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 11 ;
+	}
 #Cloudy radiance (with respect to wave number)
 'Cloudy radiance (with respect to wave number)' = {
 	 discipline = 3 ;
