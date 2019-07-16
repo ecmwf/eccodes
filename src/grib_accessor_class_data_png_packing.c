@@ -663,14 +663,16 @@ cleanup:
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR,
-            "grib_accessor_data_png_packing: PNG support not enabled.");
+            "grib_accessor_data_png_packing: PNG support not enabled. "
+            "Please rebuild with -DENABLE_PNG=ON");
     return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR,
-            "grib_accessor_data_png_packing: PNG support not enabled.");
+            "grib_accessor_data_png_packing: PNG support not enabled. "
+            "Please rebuild with -DENABLE_PNG=ON");
     return GRIB_NOT_IMPLEMENTED;
 }
 
