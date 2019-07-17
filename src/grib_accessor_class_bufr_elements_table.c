@@ -239,7 +239,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
 
     dictionary=(grib_trie*)grib_trie_get(c->lists,dictName);
     if (dictionary) {
-        grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from cache",self->dictionary);
+        /*grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from cache",self->dictionary);*/
         goto the_end;
     } else {
         grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from file %s",self->dictionary,filename);
