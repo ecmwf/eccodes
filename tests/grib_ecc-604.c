@@ -98,7 +98,7 @@ int main(int argc, char **argv)
     int parallel=1, index=0, c=0;
     const char* prog = argv[0];
     char* mode;
-    if (argc<5 || argc>7) {
+    if (argc<5 || argc>8) {
         fprintf(stderr, "Usage:\n\t%s [options] seq file numRuns numIter\nOr\n\t%s [options] par file numThreads numIter\n", prog, prog);
         return 1;
     }
