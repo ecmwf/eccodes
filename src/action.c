@@ -51,7 +51,7 @@ static void init(grib_action_class *c)
 
     GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
     GRIB_MUTEX_LOCK(&mutex1);
-    if(c && !c->inited)
+    if(!c->inited)
     {
         if (c->super) {
             init( *(c->super) );
