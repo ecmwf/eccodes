@@ -315,6 +315,7 @@ static int  _unpack_double(grib_accessor* a, double* val, size_t *len,unsigned c
     long   binary_scale_factor;
     long   bits_per_value;
     long   decimal_scale_factor;
+    long   offsetBeforeData;
     double s = 0;
     double d = 0;
     double units_factor=1.0;
@@ -384,25 +385,26 @@ static int  _unpack_double(grib_accessor* a, double* val, size_t *len,unsigned c
             "grib_accessor_data_simple_packing: unpack_double : creating %s, %d values",
             a->name, n_vals);
 
-    buf += grib_byte_offset(a);
+    offsetBeforeData = grib_byte_offset(a);
+    buf += offsetBeforeData;
 
     /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/    /* See GRIB-787 */
-#if 0
-    /* See ECC-941: This is not the right place to do this. Fails ctest eccodes_t_grib_2nd_order_numValues */
+
+    /* ECC-941 */
     {
-        long dataSectionLength = 0;
-        err = grib_get_long(gh,self->seclen, &dataSectionLength);
-        if (!err) {
+        long offsetAfterData = 0;
+        err = grib_get_long(gh, "offsetAfterData", &offsetAfterData);
+        if (!err && offsetAfterData > offsetBeforeData) {
             const long valuesSize = (bits_per_value*n_vals)/8; /*in bytes*/
-            if (valuesSize > dataSectionLength) {
+            if (offsetBeforeData + valuesSize > offsetAfterData) {
                 grib_context_log(a->context, GRIB_LOG_ERROR,
-                                 "Data section size mismatch: expected=%ld, section length=%ld (num values=%ld, bits per value=%ld)",
-                                 valuesSize, dataSectionLength, n_vals, bits_per_value);
+                                 "Data section size mismatch: offset before data=%ld, offset after data=%ld (num values=%ld, bits per value=%ld)",
+                                 offsetBeforeData, offsetAfterData, n_vals, bits_per_value);
                 return GRIB_DECODING_ERROR;
             }
         }
     }
-#endif
+
     grib_context_log(a->context, GRIB_LOG_DEBUG,
             "unpack_double: calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
             bits_per_value,reference_value,binary_scale_factor, decimal_scale_factor);
