@@ -29,7 +29,7 @@ list( APPEND test_bins
       grib_set_pv
       grib_list
       grib_get_data
-      sections_copy
+      grib_sections_copy
       grib_iterator_bitmap
       large_grib1
       grib_clone
@@ -65,7 +65,7 @@ list( APPEND tests_basic
    grib_multi
    grib_set_data
    large_grib1
-   sections_copy
+   grib_sections_copy
    get_product_kind_samples
 )
 list( APPEND tests_extra
