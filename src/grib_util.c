@@ -1066,6 +1066,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
                 if (editionNumber==1) {
                     fprintf(stderr,"GRIB_UTIL_SET_SPEC: grid type='%s' not available in GRIB edition 1.\n", grid_type);
+                    *err = GRIB_WRONG_GRID;
                     goto cleanup;
                 }
                 sprintf(name, "GRIB%ld", editionNumber);

@@ -98,7 +98,7 @@ if (isHindcast == 1) {
    alias mars.time  = modelVersionTime;
 }
 
-# ECC-839
+# ECC-891
 concept is_ocean_param(zero) {
     '1' = { paramId = 151219; }
     '1' = { paramId = 151163; }

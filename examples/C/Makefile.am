@@ -12,7 +12,7 @@ TESTS = grib_iterator.sh \
         grib_list.sh \
         large_grib1.sh \
         grib_get_data.sh \
-        sections_copy.sh \
+        grib_sections_copy.sh \
         set_missing.sh \
         grib_clone.sh \
         grib_set_pv.sh \
@@ -50,7 +50,7 @@ noinst_PROGRAMS  = c_grib_nearest \
                    c_grib_precision \
                    c_grib_set_pv \
                    c_grib_list \
-                   c_sections_copy \
+                   c_grib_sections_copy \
                    c_large_grib1 \
                    c_grib_get_data \
                    c_grib_iterator_bitmap \
@@ -95,7 +95,7 @@ c_grib_iterator_bitmap_SOURCES = grib_iterator_bitmap.c
 c_grib_set_pv_SOURCES          = grib_set_pv.c
 c_grib_nearest_multiple_SOURCES = grib_nearest_multiple.c
 c_grib_list_SOURCES            = grib_list.c
-c_sections_copy_SOURCES        = sections_copy.c
+c_grib_sections_copy_SOURCES        = grib_sections_copy.c
 c_large_grib1_SOURCES          = large_grib1.c
 c_grib_precision_SOURCES       = grib_precision.c
 c_grib_get_data_SOURCES        = grib_get_data.c

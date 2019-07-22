@@ -22,6 +22,7 @@ fi
 
 set +x
 touch tmp$$
+echo "Go through all files in $ECCODES_DEFINITION_PATH ..."
 for file in `find $ECCODES_DEFINITION_PATH -name '*.def' -print`
 do
   ${GRIB_LIST_KEYS} $file >> tmp$$  
