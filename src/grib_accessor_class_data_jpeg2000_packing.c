@@ -215,11 +215,11 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
     }
 
     self->dump_jpg = codes_getenv("ECCODES_GRIB_DUMP_JPG_FILE");
-
-    if(first) {
-        if(self->dump_jpg)
+    if(self->dump_jpg) {
+        if (first) {
             printf("GRIB JPEG dumping to %s\n",self->dump_jpg);
-        first = 0;
+            first = 0;
+        }
     }
 }
 

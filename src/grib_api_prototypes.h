@@ -997,6 +997,8 @@ void grib_context_set_buffer_memory_proc(grib_context *c, grib_malloc_proc m, gr
 void grib_context_set_data_accessing_proc(grib_context *c, grib_data_read_proc read, grib_data_write_proc write, grib_data_tell_proc tell);
 void grib_context_log(const grib_context *c, int level, const char *fmt, ...);
 void grib_context_print(const grib_context *c, void *descriptor, const char *fmt, ...);
+int grib_context_get_handle_file_count(grib_context *c);
+int grib_context_get_handle_total_count(grib_context *c);
 void grib_context_set_handle_file_count(grib_context *c, int new_count);
 void grib_context_set_handle_total_count(grib_context *c, int new_count);
 void grib_context_increment_handle_file_count(grib_context *c);
