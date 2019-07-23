@@ -162,20 +162,20 @@ int grib_action_notify_change( grib_action* a, grib_accessor *observer, grib_acc
 {
     grib_action_class *c = a->cclass;
 
-    GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
-    GRIB_MUTEX_LOCK(&mutex1);
+    /*GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);*/
+    /*GRIB_MUTEX_LOCK(&mutex1);*/
 
     init(c);
     while(c)
     {
         if(c->notify_change) {
             int result = c->notify_change(a,observer,observed);
-            GRIB_MUTEX_UNLOCK(&mutex1);
+            /*GRIB_MUTEX_UNLOCK(&mutex1);*/
             return result;
         }
         c = c->super ? *(c->super) : NULL;
     }
-    GRIB_MUTEX_UNLOCK(&mutex1);
+    /*GRIB_MUTEX_UNLOCK(&mutex1);*/
     Assert(0);
     return 0;
 }
