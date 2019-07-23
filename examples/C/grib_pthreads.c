@@ -38,7 +38,7 @@ static void* process_grib(void* threadID)
     CODES_CHECK(codes_set_string(h,"indicatorOfUnitOfTimeRange", "s", &str_len),0);
     CODES_CHECK(codes_set_string(h,"stepUnits", "s", &str_len),0);
     CODES_CHECK(codes_set_long(h, "endStep", 86400), 0);
-    //CODES_CHECK(codes_set_long(h,"centre", 80),0);
+    /* CODES_CHECK(codes_set_long(h,"centre", 80),0); */
 
     CODES_CHECK(codes_get_long(h,"endStep", &step),0);
     CODES_CHECK(codes_get_string(h, "indicatorOfUnitOfTimeRange", mystring, &str_len),0);
