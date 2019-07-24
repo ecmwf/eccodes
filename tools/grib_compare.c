@@ -572,6 +572,24 @@ static void save_error(grib_context* c,const char* key)
     }
 }
 
+static int test_bit(long a, long b) {return a&(1<<b);}
+
+/* If the accessor represents a codeflag key, then return its binary rep in 'result' */
+static int codeflag_to_bitstr(grib_accessor* a, long val, char* result)
+{
+    if (a && grib_inline_strcmp(a->cclass->name, "codeflag")==0) {
+        long i;
+        const long bytelen = a->length*8;
+        for(i=0; i<bytelen; i++) {
+            if (test_bit(val, bytelen-i-1)) *result='1';
+            else *result='0';
+            result++;
+        }
+        return GRIB_SUCCESS;
+    }
+    return GRIB_INVALID_TYPE;
+}
+
 static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_handle *h2,const char *name,int type)
 {
     size_t len1 = 0;
@@ -805,15 +823,22 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
                 printInfo(h1);
                 save_error(c,name);
                 err1 = GRIB_VALUE_MISMATCH;
-                if(len1 == 1)
-                    printf("long [%s]: [%ld] != [%ld]\n",
-                            name,*lval1,*lval2);
-                else
-                    printf("long [%s] %d out of %ld different\n",
-                            name,countdiff,(long)len1);
+                if(len1 == 1) {
+                    char buf1[128]={0,}; /* buffers to store the binary representation of codeflags */
+                    char buf2[128]={0,};
+                    grib_accessor* acc1=grib_find_accessor(h1, name);
+                    grib_accessor* acc2=grib_find_accessor(h2, name);
+                    printf("long [%s]: [%ld] != [%ld]", name,*lval1,*lval2);
+                    if (codeflag_to_bitstr(acc1, *lval1, buf1)==GRIB_SUCCESS && codeflag_to_bitstr(acc2, *lval2, buf2)==GRIB_SUCCESS) {
+                        printf("    ([%s] != [%s])", buf1, buf2);
+                    }
+                    printf("\n");
+                }
+                else {
+                    printf("long [%s] %d out of %ld different\n", name,countdiff,(long)len1);
+                }
             }
         }
-
 
         grib_context_free(h1->context,lval1);
         grib_context_free(h2->context,lval2);
