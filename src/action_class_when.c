@@ -82,37 +82,10 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
-#ifdef DEBUG_LOOP
-  #include <syscall.h>
-  #if GRIB_PTHREADS
-    static pthread_once_t once  = PTHREAD_ONCE_INIT;
-    static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-    static void init() {
-        pthread_mutexattr_t attr;
-        pthread_mutexattr_init(&attr);
-        pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-        pthread_mutex_init(&mutex,&attr);
-        pthread_mutexattr_destroy(&attr);
-    }
-  #elif GRIB_OMP_THREADS
-    static int once = 0;
-    static omp_nest_lock_t mutex;
-
-    static void init()
-    {
-        GRIB_OMP_CRITICAL(lock_action_class_when_c)
-        {
-            if (once == 0)
-            {
-                omp_init_nest_lock(&mutex);
-                once = 1;
-            }
-        }
-    }
-  #endif /*GRIB_PTHREADS*/
-#endif /*DEBUG_LOOP*/
-
+/* The check on self->loop can only be done in non-threaded mode */
+#if defined(DEBUG) && GRIB_PTHREADS == 0 && GRIB_OMP_THREADS == 0
+  #define CHECK_LOOP 1
+#endif
 
 grib_action* grib_action_create_when( grib_context* context,
         grib_expression* expression,
@@ -132,7 +105,6 @@ grib_action* grib_action_create_when( grib_context* context,
     a->expression  = expression;
     a->block_true       = block_true;
     a->block_false      = block_false;
-
 
     sprintf(name,"_when%p",(void*)expression);
 
@@ -184,29 +156,11 @@ static void dump(grib_action* act, FILE* f, int lvl)
     printf("\n");
 }
 
-#ifdef DEBUG_LOOP
-  #define SET_LOOP(s,v) set_self_loop(s,v);
-  static int get_self_loop(grib_action_when* self) {
-    int result = 0;
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&mutex);
-    /*printf("    get_self_loop::  tid = %ld\n", syscall(SYS_gettid));*/
-    result = self->loop;
-    GRIB_MUTEX_UNLOCK(&mutex);
-    return result;
-  }
-  static void set_self_loop(grib_action_when* self, int loop_value) {
-    pthread_t tid = pthread_self();
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&mutex);
-    /*if(loop_value==1)printf("set_self_loop::  tid = %ld\n", syscall(SYS_gettid));*/
-    self->loop = loop_value;
-    GRIB_MUTEX_UNLOCK(&mutex);
-  }
+#ifdef CHECK_LOOP
+  #define SET_LOOP(self,v)  self->loop=v;
 #else
-  #define SET_LOOP(s,v)
+  #define SET_LOOP(self,v)
 #endif
-
 
 static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed)
 {
@@ -218,9 +172,10 @@ static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* 
 
     if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(observed), self->expression,&lres))
             != GRIB_SUCCESS) return ret;
-#ifdef DEBUG_LOOP
-    if (get_self_loop(self)==1) {
-        printf("LOOP detected... tid=%ld\n", syscall(SYS_gettid));
+#ifdef CHECK_LOOP
+    if(self->loop)
+    {
+        printf("LOOP detected...\n");
         printf("WHEN triggered by %s %ld\n",observed->name,lres);
         grib_expression_print(observed->context,self->expression,0);
         printf("\n");
@@ -242,6 +197,7 @@ static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* 
         }
         b = b->next;
     }
+
     SET_LOOP(self, 0);
 
     return GRIB_SUCCESS;
