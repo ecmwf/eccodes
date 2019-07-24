@@ -690,7 +690,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         self->empty=1;
 
         err = grib_get_long(h, "numberOfSubsets", &(self->numberOfSubsets));
-        DebugAssert(!err);
+        Assert(!err);
         _dump_long_array(h,self->dumper.out,"dataPresentIndicator");
         _dump_long_array(h,self->dumper.out,"delayedDescriptorReplicationFactor");
         _dump_long_array(h,self->dumper.out,"shortDelayedDescriptorReplicationFactor");
