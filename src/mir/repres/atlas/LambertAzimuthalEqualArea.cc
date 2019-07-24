@@ -48,8 +48,7 @@ AtlasRegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const pa
 }
 
 void LambertAzimuthalEqualArea::fill(grib_info& info) const {
-    using eckit::geometry::LLCOORDS::LAT;
-    using eckit::geometry::LLCOORDS::LON;
+    using namespace eckit::geometry;
 
     info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
     info.packing.editionNumber = 2;

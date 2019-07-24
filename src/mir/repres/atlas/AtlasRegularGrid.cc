@@ -30,10 +30,8 @@ namespace repres {
 namespace atlas {
 
 AtlasRegularGrid::AtlasRegularGrid(const param::MIRParametrisation& param, AtlasRegularGrid::Projection projection) {
-    using eckit::geometry::LLCOORDS::LAT;
-    using eckit::geometry::LLCOORDS::LON;
-    using eckit::geometry::XYZCOORDS::XX;
-    using eckit::geometry::XYZCOORDS::YY;
+    using namespace eckit::geometry;
+
     ASSERT(projection);
 
     size_t nx = 0;
