@@ -221,8 +221,7 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
 }
 
 
-size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
-                        context::Context& ctx) {
+size_t GribOutput::save(const param::MIRParametrisation& parametrisation, context::Context& ctx) {
 
     eckit::TraceResourceUsage<LibMir> usage("GribOutput::save");
 
@@ -242,6 +241,32 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
 
         // Protect grib_api
         eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+
+        // Special case where only values are changing; handle is cloned, and new values are set
+        if (parametrisation.userParametrisation().has("filter")) {
+
+            // Make sure handle deleted even in case of exception
+            grib_handle* h = codes_handle_clone(input.gribHandle(i));
+            HandleDeleter hf(h);
+
+            GRIB_CALL(codes_set_double(h, "missingValue", field.missingValue()));
+            GRIB_CALL(codes_set_long(h, "bitmapPresent", field.hasMissing() ? 1L : 0L));
+            GRIB_CALL(codes_set_double_array(h, "values", field.values(i).data(), field.values(i).size()));
+
+            const void* message;
+            size_t size;
+            GRIB_CALL(grib_get_message(h, &message, &size));
+
+            const char* bytes = reinterpret_cast<const char*>(message);
+            ASSERT(bytes[0] == 'G' && bytes[1] == 'R' && bytes[2] == 'I' && bytes[3] == 'B');
+            ASSERT(bytes[size - 4] == '7' && bytes[size - 3] == '7' && bytes[size - 2] == '7' &&
+                   bytes[size - 1] == '7');
+
+            out(message, size, true);
+            total += size;
+
+            continue;
+        }
 
         grib_handle *h = input.gribHandle(i); // Base class will throw an exception is input cannot provide a grib_handle
 
