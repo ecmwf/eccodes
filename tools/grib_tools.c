@@ -884,8 +884,11 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     int written_to_dump = 0; /* boolean */
     grib_accessor* acc = NULL;
     size_t num_vals = 0;
+    int fix_lsdate = 0;
 
     if (!options->verbose) return;
+
+    fix_lsdate = (fix_for_lsdate_needed(h) && options->name_space && strcmp(options->name_space,"ls")==0);
 
     for (i=0;i<options->print_keys_count;i++) {
         size_t len=MAX_STRING_LEN;
@@ -924,8 +927,6 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             }
         } else {
             /* Other products e.g. GRIB */
-            const int fix_lsdate = (fix_for_lsdate_needed(h) && options->name_space && strcmp(options->name_space,"ls")==0);
-
             if (grib_is_missing(h,options->print_keys[i].name,&ret) && ret==GRIB_SUCCESS) {
                 sprintf(value,"MISSING");
             }
