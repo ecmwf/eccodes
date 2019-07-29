@@ -39,7 +39,7 @@ do
 
   if [ -f "$ref_num" ]; then
     # Cannot use plain diff. We need to compare FLOAT NUMBERS with a tolerance
-    perl number_compare.pl $ref_num $res_num >$REDIRECT 2> $REDIRECT
+    perl number_compare.pl $ref_num $res_num # >$REDIRECT 2> $REDIRECT
     #numdiff               $ref_num $res_num >$REDIRECT 2> $REDIRECT
   fi
 
