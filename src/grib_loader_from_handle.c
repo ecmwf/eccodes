@@ -151,7 +151,6 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
 #ifdef DEBUG
         if(missing)
         {
-            Assert(0);
             fprintf(stdout,"REPARSE: no value for %s",name);
             if(default_value)
                 fprintf(stdout," (default value)");
