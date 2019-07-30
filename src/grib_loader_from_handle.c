@@ -73,8 +73,10 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
     unsigned char*   uval = NULL;
     long*   lval = NULL;
     double* dval = NULL;
+#ifdef DEBUG
     static int first  = 1;
     static const char* missing = 0;
+#endif
     const char* name = NULL;
     int k = 0;
     grib_handle *g;
@@ -137,24 +139,25 @@ int grib_init_accessor_from_handle(grib_loader* loader,grib_accessor* ga,grib_ar
     if(ret != GRIB_SUCCESS)
     {
         name = ga->name;
-
+#ifdef DEBUG
         if(first)
         {
             missing = codes_getenv("ECCODES_PRINT_MISSING");
             first = 0;
         }
-
+#endif
         grib_context_log(h->context,GRIB_LOG_DEBUG, "Copying [%s] failed: %s",
                 name,grib_get_error_message(ret));
-
+#ifdef DEBUG
         if(missing)
         {
+            Assert(0);
             fprintf(stdout,"REPARSE: no value for %s",name);
             if(default_value)
                 fprintf(stdout," (default value)");
             fprintf(stdout,"\n");
         }
-
+#endif
         return GRIB_SUCCESS;
     }
 
