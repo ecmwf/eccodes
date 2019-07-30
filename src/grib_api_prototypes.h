@@ -954,9 +954,10 @@ grib_dumper *grib_dumper_factory(const char *op, grib_handle *h, FILE *out, unsi
 void grib_dump_accessors_block(grib_dumper *dumper, grib_block_of_accessors *block);
 void grib_dump_accessors_list(grib_dumper *dumper, grib_accessors_list *al);
 int grib_print(grib_handle *h, const char *name, grib_dumper *d);
-void grib_dump_content(grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
-grib_dumper *grib_dump_content_with_dumper(grib_handle *h, grib_dumper *dumper, FILE *f, const char *mode, unsigned long option_flags, void *data);
-void codes_dump_bufr_flat(grib_accessors_list *al, grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
+void grib_dump_content(grib_handle *h, FILE *f, const char *mode, unsigned long flags, void *data);
+void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long flags, void *data, const char **keys, size_t num_keys);
+grib_dumper *grib_dump_content_with_dumper(grib_handle *h, grib_dumper *dumper, FILE *f, const char *mode, unsigned long flags, void *data);
+void codes_dump_bufr_flat(grib_accessors_list *al, grib_handle *h, FILE *f, const char *mode, unsigned long flags, void *data);
 
 /* grib_context.c */
 size_t grib_context_read(const grib_context *c, void *ptr, size_t size, void *stream);
