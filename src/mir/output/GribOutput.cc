@@ -263,11 +263,8 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             const void* message;
             size_t size;
             GRIB_CALL(grib_get_message(h, &message, &size));
-
-            const char* bytes = reinterpret_cast<const char*>(message);
-            ASSERT(bytes[0] == 'G' && bytes[1] == 'R' && bytes[2] == 'I' && bytes[3] == 'B');
-            ASSERT(bytes[size - 4] == '7' && bytes[size - 3] == '7' && bytes[size - 2] == '7' &&
-                   bytes[size - 1] == '7');
+            GRIB_CALL(codes_check_message_header_footer(reinterpret_cast<const unsigned char*>(message), size,
+                                                        PRODUCT_GRIB) == GRIB_SUCCESS);
 
             out(message, size, true);
             total += size;
@@ -440,15 +437,11 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
         GRIB_CALL(err);
 
-        const void *message;
+        const void* message;
         size_t size;
-
         GRIB_CALL(grib_get_message(result, &message, &size));
-
-
-        const char* bytes = reinterpret_cast<const char*>(message);
-        ASSERT(bytes[0] == 'G' && bytes[1] == 'R' && bytes[2] == 'I' && bytes[3] == 'B');
-        ASSERT(bytes[size - 4] == '7' && bytes[size - 3] == '7' && bytes[size - 2] == '7' && bytes[size - 1] == '7');
+        GRIB_CALL(codes_check_message_header_footer(reinterpret_cast<const unsigned char*>(message), size,
+                                                    PRODUCT_GRIB) == GRIB_SUCCESS);
 
         {   // Remove
             eckit::AutoTiming timing(ctx.statistics().timer_, saveTimer);
