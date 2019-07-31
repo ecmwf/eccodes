@@ -263,8 +263,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             const void* message;
             size_t size;
             GRIB_CALL(grib_get_message(h, &message, &size));
-            GRIB_CALL(codes_check_message_header_footer(reinterpret_cast<const unsigned char*>(message), size,
-                                                        PRODUCT_GRIB) == GRIB_SUCCESS);
+            GRIB_CALL(codes_check_message_header_footer(reinterpret_cast<const unsigned char*>(message), size, PRODUCT_GRIB));
 
             out(message, size, true);
             total += size;
@@ -440,8 +439,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
         const void* message;
         size_t size;
         GRIB_CALL(grib_get_message(result, &message, &size));
-        GRIB_CALL(codes_check_message_header_footer(reinterpret_cast<const unsigned char*>(message), size,
-                                                    PRODUCT_GRIB) == GRIB_SUCCESS);
+        GRIB_CALL(codes_check_message_header_footer(reinterpret_cast<const unsigned char*>(message), size, PRODUCT_GRIB));
 
         {   // Remove
             eckit::AutoTiming timing(ctx.statistics().timer_, saveTimer);
