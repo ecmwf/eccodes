@@ -51,6 +51,20 @@ ${tools_dir}/codes_bufr_filter $tempRules $bufrFile > $tempText
 diff $tempRef1 $tempText
 
 
+# --------------------------------------------------------
+# Test 2
+# --------------------------------------------------------
+bufrFile=asca_139.bufr
+cat > $tempRules <<EOF
+ set unpack=1;
+ print "[/beamIdentifier=2/backscatter]";
+EOF
 
-# ------------------------
+${tools_dir}/codes_bufr_filter $tempRules $bufrFile >/dev/null
+
+export ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS=1
+${tools_dir}/codes_bufr_filter $tempRules $bufrFile
+
+
+# Clean up
 rm -rf $tempRules $tempText $tempRef1 $tempRef2
