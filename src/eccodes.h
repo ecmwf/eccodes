@@ -1209,6 +1209,7 @@ void codes_get_reduced_row_p(long pl, double lon_first, double lon_last, long *n
 int codes_get_message_offset(codes_handle* h,off_t* offset);
 int codes_get_message_size(codes_handle* h,size_t* size);
 int codes_get_product_kind(codes_handle* h, ProductKind* product_kind);
+int codes_check_message_header_footer(const unsigned char* bytes, size_t length, ProductKind product);
 
 codes_box* codes_box_new(codes_handle* h,int* error);
 codes_points* codes_box_get_points(codes_box *box,double north, double west,double south,double east, int *err);

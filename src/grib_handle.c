@@ -1295,6 +1295,28 @@ int codes_get_product_kind(grib_handle* h, ProductKind* product_kind)
     return GRIB_NULL_HANDLE;
 }
 
+int codes_check_message_header_footer(const unsigned char* bytes, size_t length, ProductKind product)
+{
+    Assert(bytes);
+    Assert(product == PRODUCT_GRIB || product == PRODUCT_BUFR); /* Others not yet implemented */
+    if (product == PRODUCT_GRIB) {
+        if (bytes[0] != 'G' || bytes[1] != 'R' || bytes[2] != 'I' || bytes[3] != 'B')
+            return GRIB_INVALID_MESSAGE;
+    }
+    else if (product == PRODUCT_BUFR) {
+        if (bytes[0] != 'B' || bytes[1] != 'U' || bytes[2] != 'F' || bytes[3] != 'R')
+            return GRIB_INVALID_MESSAGE;
+    }
+    else {
+        return GRIB_NOT_IMPLEMENTED;
+    }
+
+    if (bytes[length-4] != '7' || bytes[length-3] != '7' || bytes[length-2] != '7' || bytes[length-1] != '7') {
+        return GRIB_7777_NOT_FOUND;
+    }
+    return GRIB_SUCCESS;
+}
+
 int grib_get_message_size ( grib_handle* h,size_t* size )
 {
     long totalLength=0;
