@@ -247,10 +247,8 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
             // Make sure handle deleted even in case of exception
             grib_handle* h = codes_handle_clone(input.gribHandle(i));
+            ASSERT(h);
             HandleDeleter hf(h);
-
-            GRIB_CALL(codes_set_double(h, "missingValue", field.missingValue()));
-            GRIB_CALL(codes_set_long(h, "bitmapPresent", field.hasMissing()));
 
             long numberOfValues;
             GRIB_CALL(codes_get_long(h, "numberOfValues", &numberOfValues));
@@ -258,6 +256,8 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
                 throw eckit::UserError("Using 'filter' requires preserving the number of points from input");
             }
 
+            GRIB_CALL(codes_set_double(h, "missingValue", field.missingValue()));
+            GRIB_CALL(codes_set_long(h, "bitmapPresent", field.hasMissing()));
             GRIB_CALL(codes_set_double_array(h, "values", field.values(i).data(), field.values(i).size()));
 
             const void* message;
