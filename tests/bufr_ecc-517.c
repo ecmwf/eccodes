@@ -105,7 +105,8 @@ int main (int argc, char **argv)
         return 1;
     }
     CODES_CHECK (codes_get_message (h, &buffer, &size), 0);
-    CODES_CHECK (codes_check_message_header_footer (buffer, size, PRODUCT_BUFR), 0);
+    CODES_CHECK (codes_check_message_header(buffer, size, PRODUCT_BUFR), 0);
+    CODES_CHECK (codes_check_message_footer(buffer, size, PRODUCT_BUFR), 0);
     if (fwrite (buffer, 1, size, fout) != size) {
         fprintf (stderr, "Failed to write data.\n");
         return 1;

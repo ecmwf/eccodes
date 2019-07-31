@@ -1295,11 +1295,12 @@ int codes_get_product_kind(grib_handle* h, ProductKind* product_kind)
     return GRIB_NULL_HANDLE;
 }
 
-int codes_check_message_header_footer(const void* bytes, size_t length, ProductKind product)
+int codes_check_message_header(const void* bytes, size_t length, ProductKind product)
 {
     const char *p = ((const char*)bytes);
     Assert(p);
     Assert(product == PRODUCT_GRIB || product == PRODUCT_BUFR); /* Others not yet implemented */
+    Assert(length > 4);
     if (product == PRODUCT_GRIB) {
         if (p[0] != 'G' || p[1] != 'R' || p[2] != 'I' || p[3] != 'B')
             return GRIB_INVALID_MESSAGE;
@@ -1311,6 +1312,14 @@ int codes_check_message_header_footer(const void* bytes, size_t length, ProductK
     else {
         return GRIB_NOT_IMPLEMENTED;
     }
+
+    return GRIB_SUCCESS;
+}
+int codes_check_message_footer(const void* bytes, size_t length, ProductKind product)
+{
+    const char *p = ((const char*)bytes);
+    Assert(p);
+    Assert(product == PRODUCT_GRIB || product == PRODUCT_BUFR); /* Others not yet implemented */
 
     if (p[length-4] != '7' || p[length-3] != '7' || p[length-2] != '7' || p[length-1] != '7') {
         return GRIB_7777_NOT_FOUND;
