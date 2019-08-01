@@ -368,7 +368,7 @@ static void tableB_override_dump(grib_accessor_bufr_data_array *self)
         ++i;
     }
 }
-*/
+ */
 
 #define DYN_ARRAY_SIZE_INIT 1000 /* Initial size for grib_iarray_new and grib_darray_new */
 #define DYN_ARRAY_SIZE_INCR 1000 /* Increment size for grib_iarray_new and grib_darray_new */
@@ -559,33 +559,33 @@ static int decode_string_array(grib_context* c, unsigned char* data, long* pos, 
     sval=(char*)grib_context_malloc_clear(c,modifiedWidth/8+1);
     CHECK_END_DATA_RETURN(c, self, modifiedWidth, *err);
     if (*err) {
-      grib_sarray_push(c,sa,sval);
-      grib_vsarray_push(c,self->stringValues,sa);
-      return ret;
+        grib_sarray_push(c,sa,sval);
+        grib_vsarray_push(c,self->stringValues,sa);
+        return ret;
     }
     grib_decode_string(data,pos,modifiedWidth/8,sval);
     CHECK_END_DATA_RETURN(c, self, 6, *err);
     if (*err) {
-      grib_sarray_push(c,sa,sval);
-      grib_vsarray_push(c,self->stringValues,sa);
-      return ret;
+        grib_sarray_push(c,sa,sval);
+        grib_vsarray_push(c,self->stringValues,sa);
+        return ret;
     }
     width=grib_decode_unsigned_long(data,pos,6);
     if (width) {
         CHECK_END_DATA_RETURN(c, self, width*8*self->numberOfSubsets, *err);
-      if (*err) {
-        grib_sarray_push(c,sa,sval);
-        grib_vsarray_push(c,self->stringValues,sa);
-        return ret;
-      }
-      grib_context_free(c,sval);
-      for (j=0;j<self->numberOfSubsets;j++) {
-        sval=(char*)grib_context_malloc_clear(c,width+1);
-        grib_decode_string(data,pos,width,sval);
-        grib_sarray_push(c,sa,sval);
-      }
+        if (*err) {
+            grib_sarray_push(c,sa,sval);
+            grib_vsarray_push(c,self->stringValues,sa);
+            return ret;
+        }
+        grib_context_free(c,sval);
+        for (j=0;j<self->numberOfSubsets;j++) {
+            sval=(char*)grib_context_malloc_clear(c,width+1);
+            grib_decode_string(data,pos,width,sval);
+            grib_sarray_push(c,sa,sval);
+        }
     } else {
-      grib_sarray_push(c,sa,sval);
+        grib_sarray_push(c,sa,sval);
     }
     grib_vsarray_push(c,self->stringValues,sa);
     return ret;
@@ -609,13 +609,13 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
 
     CHECK_END_DATA_RETURN(c, self, modifiedWidth+6, NULL);
     if (*err) {
-      dval=GRIB_MISSING_DOUBLE;
-      lval=0;
-      grib_context_log(c, GRIB_LOG_DEBUG," modifiedWidth=%ld lval=%ld dval=%g", modifiedWidth,lval,dval);
-      ret=grib_darray_new(c,DYN_ARRAY_SIZE_INIT,DYN_ARRAY_SIZE_INCR);
-      grib_darray_push(c,ret,dval);
-      *err=0;
-      return ret;
+        dval=GRIB_MISSING_DOUBLE;
+        lval=0;
+        grib_context_log(c, GRIB_LOG_DEBUG," modifiedWidth=%ld lval=%ld dval=%g", modifiedWidth,lval,dval);
+        ret=grib_darray_new(c,DYN_ARRAY_SIZE_INIT,DYN_ARRAY_SIZE_INCR);
+        grib_darray_push(c,ret,dval);
+        *err=0;
+        return ret;
     }
     lval=grib_decode_unsigned_long(data,pos,modifiedWidth);
     localReference=(long)lval+modifiedReference;
@@ -625,13 +625,13 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
     if (localWidth) {
         CHECK_END_DATA_RETURN(c, self, localWidth*self->numberOfSubsets, NULL);
         if (*err) {
-          dval=GRIB_MISSING_DOUBLE;
-          lval=0;
-          grib_context_log(c, GRIB_LOG_DEBUG," modifiedWidth=%ld lval=%ld dval=%g", modifiedWidth,lval,dval);
-          ret=grib_darray_new(c,DYN_ARRAY_SIZE_INIT,DYN_ARRAY_SIZE_INCR);
-          grib_darray_push(c,ret,dval);
-          *err=0;
-          return ret;
+            dval=GRIB_MISSING_DOUBLE;
+            lval=0;
+            grib_context_log(c, GRIB_LOG_DEBUG," modifiedWidth=%ld lval=%ld dval=%g", modifiedWidth,lval,dval);
+            ret=grib_darray_new(c,DYN_ARRAY_SIZE_INIT,DYN_ARRAY_SIZE_INCR);
+            grib_darray_push(c,ret,dval);
+            *err=0;
+            return ret;
         }
         for (j=0;j<self->numberOfSubsets;j++) {
             lval=grib_decode_unsigned_long(data,pos,localWidth);
@@ -671,10 +671,10 @@ static int encode_string_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     if (n<=0) return GRIB_NO_VALUES;
 
     if (grib_sarray_used_size(stringValues)==1) {
-      n=1;
-      ival=0;
+        n=1;
+        ival=0;
     } else {
-      ival=self->iss_list->v[0];
+        ival=self->iss_list->v[0];
     }
 
     if (n>grib_sarray_used_size(stringValues))
@@ -708,7 +708,7 @@ static void set_missing_long_to_double(grib_darray* dvalues)
 
 /* ECC-750: The 'factor' argument is 10^-scale */
 static int descriptor_get_min_max(bufr_descriptor* bd, long width, long reference, double factor,
-                                  double* minAllowed, double* maxAllowed)
+        double* minAllowed, double* maxAllowed)
 {
     /* Maximum value is allowed to be the largest number (all bits 1) which means it's MISSING */
     unsigned long max1 = (1UL << width) - 1; /* Highest value for number with 'width' bits */
@@ -768,11 +768,11 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
             if (*v > maxAllowed || *v < minAllowed) {
                 if (dont_fail_if_out_of_range) {
                     grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
-                                                    " Setting it to missing value\n", bd->shortName, *v, minAllowed, maxAllowed);
+                            " Setting it to missing value\n", bd->shortName, *v, minAllowed, maxAllowed);
                     grib_set_bits_on(buff->data,pos,modifiedWidth);
                 } else {
                     grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
-                                                    bd->shortName, *v, minAllowed, maxAllowed);
+                            bd->shortName, *v, minAllowed, maxAllowed);
                     return GRIB_OUT_OF_RANGE; /* ECC-611 */
                 }
             } else {
@@ -790,8 +790,8 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     val0=dvalues->v[self->iss_list->v[0]];
     is_constant=1;
     for (i=0;i<nvals;i++) {
-      values[i]=dvalues->v[self->iss_list->v[i]];
-      if (val0 != values[i]) is_constant=0;
+        values[i]=dvalues->v[self->iss_list->v[i]];
+        if (val0 != values[i]) is_constant=0;
     }
     v=values;
 
@@ -822,8 +822,8 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
             /* Turn out-of-range values into 'missing' */
             if (*v!=GRIB_MISSING_DOUBLE && (*v < minAllowed || *v > maxAllowed)) {
                 grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value at index %ld (%g) out of range (minAllowed=%g, maxAllowed=%g)."
-                                                    " Setting it to missing value\n",
-                                                    bd->shortName, (long)ii, *v, minAllowed, maxAllowed);
+                        " Setting it to missing value\n",
+                        bd->shortName, (long)ii, *v, minAllowed, maxAllowed);
                 *v = GRIB_MISSING_DOUBLE;
             }
             ii++;
@@ -850,12 +850,12 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
     }
     if (max>maxAllowed && max!=GRIB_MISSING_DOUBLE) {
         grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Maximum value (value[%lu]=%g) out of range (maxAllowed=%g).",
-                                            bd->shortName, index_of_max, max, maxAllowed, index_of_max);
+                bd->shortName, index_of_max, max, maxAllowed, index_of_max);
         return GRIB_OUT_OF_RANGE;
     }
     if (min<minAllowed && min!=GRIB_MISSING_DOUBLE) {
         grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Minimum value (value[%lu]=%g) out of range (minAllowed=%g).",
-                                            bd->shortName, index_of_min, min, minAllowed);
+                bd->shortName, index_of_min, min, minAllowed);
         return GRIB_OUT_OF_RANGE;
     }
 
@@ -931,13 +931,13 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
     else if (value>maxAllowed || value<minAllowed) {
         if (dont_fail_if_out_of_range) {
             grib_context_log(c, GRIB_LOG_ERROR, "encode_double_value: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
-                                                " Setting it to missing value\n",
-                                                bd->shortName, value, minAllowed, maxAllowed);
+                    " Setting it to missing value\n",
+                    bd->shortName, value, minAllowed, maxAllowed);
             value = GRIB_MISSING_DOUBLE;  /* Ignore the bad value and instead use 'missing' */
             grib_set_bits_on(buff->data,pos,modifiedWidth);
         } else {
             grib_context_log(c, GRIB_LOG_ERROR, "encode_double_value: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
-                             bd->shortName, value, minAllowed, maxAllowed);
+                    bd->shortName, value, minAllowed, maxAllowed);
             return GRIB_OUT_OF_RANGE;
         }
     }
@@ -1109,28 +1109,28 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
         grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication localReference width=%ld", descriptors[i]->width);
         CHECK_END_DATA_RETURN(c, self, descriptors[i]->width+6, *err);
         if (*err) {
-          *numberOfRepetitions=0;
+            *numberOfRepetitions=0;
         } else {
-          localReference=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+descriptors[i]->reference;
-          grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication localWidth width=6");
-          width=grib_decode_unsigned_long(data,pos,6);
-          if (width) {
-              grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication is NOT constant for compressed data!");
-            /* delayed replication number is not constant. NOT IMPLEMENTED */
-            return GRIB_NOT_IMPLEMENTED;
-          } else {
-            *numberOfRepetitions=localReference*descriptors[i]->factor;
-            grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication value=%ld",*numberOfRepetitions);
-          }
+            localReference=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+descriptors[i]->reference;
+            grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication localWidth width=6");
+            width=grib_decode_unsigned_long(data,pos,6);
+            if (width) {
+                grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication is NOT constant for compressed data!");
+                /* delayed replication number is not constant. NOT IMPLEMENTED */
+                return GRIB_NOT_IMPLEMENTED;
+            } else {
+                *numberOfRepetitions=localReference*descriptors[i]->factor;
+                grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication value=%ld",*numberOfRepetitions);
+            }
         }
     } else {
         CHECK_END_DATA_RETURN(c, self, descriptors[i]->width, *err);
         if (*err) { 
-          *numberOfRepetitions=0;
+            *numberOfRepetitions=0;
         } else {
-          *numberOfRepetitions=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+
-            descriptors[i]->reference*descriptors[i]->factor;
-          grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication value=%ld",*numberOfRepetitions);
+            *numberOfRepetitions=grib_decode_unsigned_long(data,pos,descriptors[i]->width)+
+                    descriptors[i]->reference*descriptors[i]->factor;
+            grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tdelayed replication value=%ld",*numberOfRepetitions);
         }
     }
     if (self->compressedData) {
@@ -1364,7 +1364,7 @@ static int encode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
             err=encode_double_value(c,buff,pos,bd,self,self->numericValues->v[subsetIndex]->v[elementIndex]);
             if (err) {
                 grib_context_log(c,GRIB_LOG_ERROR,"Cannot encode %s=%g (subset=%d)", /*subsetIndex starts from 0*/
-                                 bd->shortName, self->numericValues->v[subsetIndex]->v[elementIndex], subsetIndex+1);
+                        bd->shortName, self->numericValues->v[subsetIndex]->v[elementIndex], subsetIndex+1);
             }
         }
     }
@@ -1957,9 +1957,9 @@ static GRIB_INLINE int significanceQualifierIndex(int X,int Y)
 }
 
 static GRIB_INLINE void reset_deeper_qualifiers(
-    grib_accessor* significanceQualifierGroup[],
-    const int* const significanceQualifierDepth,
-    int numElements, int depth)
+        grib_accessor* significanceQualifierGroup[],
+        const int* const significanceQualifierDepth,
+        int numElements, int depth)
 {
     int i;
     for (i=0;i<numElements;i++) {
@@ -2003,7 +2003,7 @@ static GRIB_INLINE void reset_qualifiers(grib_accessor* significanceQualifierGro
     for (i=0;i<number_of_qualifiers;i++)
         significanceQualifierGroup[i]=0;
 }
-*/
+ */
 
 static void grib_convert_to_attribute(grib_accessor* a)
 {
@@ -2090,17 +2090,17 @@ static int is_bitmap_start_descriptor(grib_accessors_list* al, int* err)
     case 224000:
     case 225000:
     case 232000:
-    /*case 236000:*/
+        /*case 236000:*/
     case 237000:
-    /*case 243000:*/
-        {
+        /*case 243000:*/
+    {
 #if 0
-            long index[1];
-            grib_accessor* anindex=grib_accessor_get_attribute(al->accessor,"index");
-            grib_unpack_long(anindex,index,&l);
+        long index[1];
+        grib_accessor* anindex=grib_accessor_get_attribute(al->accessor,"index");
+        grib_unpack_long(anindex,index,&l);
 #endif
-            return 1;
-        }
+        return 1;
+    }
     }
     return 0;
 }
@@ -2132,7 +2132,7 @@ static void print_bitmap_debug_info(grib_context* c, bitmap_s* bitmap, grib_acce
 }
 
 static int bitmap_init(grib_context* c, bitmap_s* bitmap,
-                       grib_accessors_list* bitmapStart, int bitmapSize, grib_accessors_list* lastAccessorInList)
+        grib_accessors_list* bitmapStart, int bitmapSize, grib_accessors_list* lastAccessorInList)
 {
     int ret=0,i;
     bitmap->cursor=bitmapStart->next;
@@ -2305,7 +2305,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
             }
             elementFromBitmap=NULL;
             if (descriptor->F==0 && IS_QUALIFIER(descriptor->X) &&
-                self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
+                    self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
                 int sidx=significanceQualifierIndex(descriptor->X,descriptor->Y);
                 groupNumber++;
 
@@ -2315,7 +2315,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     if (depth < max_depth) {
                         /* If depth >= max_depth, then no entry will be deeper so no need for call */
                         reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,
-                                                number_of_qualifiers,depth);
+                                number_of_qualifiers,depth);
                     }
                 } else {
                     /* if (forceGroupClosure) { */
@@ -2362,7 +2362,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     groupSection=bitmapGroup[bitmapIndex]->parent;
                     depth=bitmapDepth[bitmapIndex];
                     reset_deeper_qualifiers(significanceQualifierGroup,significanceQualifierDepth,
-                                            number_of_qualifiers,depth);
+                            number_of_qualifiers,depth);
                     /* TODO: This branch is not reached in our tests! */
                     reset_deeper_qualifiers(bitmapGroup,bitmapDepth,MAX_NUMBER_OF_BITMAPS,depth);
                 } else {
@@ -2470,7 +2470,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 case 31021:
                     associatedFieldSignificanceAccessor=elementAccessor;
                     break;
-                /*case 33007:*/
+                    /*case 33007:*/
                     /* ECC-690: See later */
                     /* break; */
                 default:
@@ -2553,7 +2553,7 @@ static int set_to_missing_if_out_of_range(grib_handle* h)
     /* First check if the transient key is set */
     long setToMissingIfOutOfRange=0;
     if (grib_get_long(h, "setToMissingIfOutOfRange", &setToMissingIfOutOfRange)==GRIB_SUCCESS &&
-        setToMissingIfOutOfRange != 0)
+            setToMissingIfOutOfRange != 0)
     {
         return 1;
     }
@@ -2767,10 +2767,10 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
                         while (ip>=0 && n[ip]==0) {
                             nn[ip]--;
                             if (nn[ip]<=0) {
-                              numberOfNestedRepetitions--;
+                                numberOfNestedRepetitions--;
                             } else {
-                              n[ip]=numberOfElementsToRepeat[ip];
-                              i=startRepetition[ip];
+                                n[ip]=numberOfElementsToRepeat[ip];
+                                i=startRepetition[ip];
                             }
                             ip--;
                         }
