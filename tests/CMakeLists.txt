@@ -135,7 +135,7 @@ list( APPEND tests_data_reqd
     grib_octahedral
     grib_global
     grib_concept
-    decimalPrecision
+    grib_decimalPrecision
     grib_bitsPerValue
     get_fail
     grib_missing
