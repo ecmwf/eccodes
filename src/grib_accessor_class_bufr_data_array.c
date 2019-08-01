@@ -436,9 +436,7 @@ static int check_end_data(grib_context* c,grib_accessor_bufr_data_array* self,in
 static void self_clear(grib_context* c,grib_accessor_bufr_data_array* self)
 {
     grib_context_free(c,self->canBeMissing);
-    //printf("zzzz grib_vdarray_delete_content self->numericValues...start\n");
     grib_vdarray_delete_content(c,self->numericValues);
-    //printf("zzzz grib_vdarray_delete_content self->numericValues...end\n");
     grib_vdarray_delete(c,self->numericValues);
     if(self->stringValues) {
         grib_vsarray_delete_content(c,self->stringValues);
@@ -1081,7 +1079,6 @@ static int decode_element(grib_context* c,grib_accessor_bufr_data_array* self,in
         }
         if (self->compressedData) {
             dar=decode_double_array(c,data,pos,bd,self->canBeMissing[i],self,&err);
-            //printf("zzzz placing dar=%p into numericValues\n", (void*)dar);
             grib_vdarray_push(c,self->numericValues,dar);
         } else {
             /* Uncompressed */
@@ -2661,9 +2658,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
     descriptors=self->expanded->v;
 
     if (do_clean==1 && self->numericValues) {
-        //printf("zzzz grib_vdarray_delete_content self->numericValues...start\n");
         grib_vdarray_delete_content(c,self->numericValues);
-        //printf("zzzz grib_vdarray_delete_content self->numericValues...end\n");
         grib_vdarray_delete(c,self->numericValues);
         grib_vsarray_delete_content(c,self->stringValues);
         grib_vsarray_delete(c,self->stringValues);
@@ -2671,7 +2666,6 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
 
     if (flag!=PROCESS_ENCODE) {
         self->numericValues=grib_vdarray_new(c,1000,1000);
-        //printf("xxxx self->numericValues=%p\n", (void*)self->numericValues);
         self->stringValues=grib_vsarray_new(c,10,10);
 
         if (self->elementsDescriptorsIndex) grib_viarray_delete(c,self->elementsDescriptorsIndex);
