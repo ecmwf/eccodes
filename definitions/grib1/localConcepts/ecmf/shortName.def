@@ -14629,8 +14629,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 48 ;
 	}
-#Large-scale precipitation fraction
-'~' = {
+#Mean large-scale precipitation fraction
+'mlspfr' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 50 ;
 	}
@@ -14654,58 +14654,58 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Surface sensible heat flux
-'~' = {
+#Mean surface sensible heat flux
+'msshfl' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface latent heat flux
-'~' = {
+#Mean surface latent heat flux
+'mslhfl' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface net radiation
-'~' = {
+#Mean surface net radiation flux
+'msnrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 149 ;
 	}
-#Short-wave heating rate
-'~' = {
+#Mean short-wave heating rate
+'mswhr' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 153 ;
 	}
-#Long-wave heating rate
-'~' = {
+#Mean long-wave heating rate
+'mlwhr' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Surface solar radiation downwards
-'~' = {
+#Mean surface downward solar radiation flux
+'msdsrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 169 ;
 	}
-#Surface thermal radiation downwards
-'~' = {
+#Mean surface downward thermal radiation flux
+'msdtrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 175 ;
 	}
-#Surface solar radiation
-'~' = {
+#Mean surface net solar radiation flux
+'msnsrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Surface thermal radiation
-'~' = {
+#Mean surface net thermal radiation flux
+'msntrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Top solar radiation
-'~' = {
+#Mean top net solar radiation flux
+'mtnsrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Top thermal radiation
-'~' = {
+#Mean top net thermal radiation flux
+'mtntrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 179 ;
 	}
@@ -14744,8 +14744,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 197 ;
 	}
-#Runoff
-'~' = {
+#Mean runoff rate
+'mrort' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 205 ;
 	}
@@ -14819,8 +14819,8 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 142 ;
 	}
-#Convective precipitation anomaly
-'~' = {
+#Mean convective precipitation rate anomaly
+'mcpra' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 143 ;
 	}
