@@ -621,7 +621,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
     localReference=(long)lval+modifiedReference;
     localWidth=grib_decode_unsigned_long(data,pos,6);
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tlocalWidth=%ld",localWidth);
-    ret=grib_darray_new(c,DYN_ARRAY_SIZE_INIT,DYN_ARRAY_SIZE_INCR);
+    ret=grib_darray_new(c,self->numberOfSubsets,50);
     if (localWidth) {
         CHECK_END_DATA_RETURN(c, self, localWidth*self->numberOfSubsets, NULL);
         if (*err) {
@@ -2665,7 +2665,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
     }
 
     if (flag!=PROCESS_ENCODE) {
-        self->numericValues=grib_vdarray_new(c,100,100);
+        self->numericValues=grib_vdarray_new(c,1000,1000);
         self->stringValues=grib_vsarray_new(c,10,10);
 
         if (self->elementsDescriptorsIndex) grib_viarray_delete(c,self->elementsDescriptorsIndex);
