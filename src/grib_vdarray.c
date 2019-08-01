@@ -74,7 +74,10 @@ grib_vdarray* grib_vdarray_push(grib_context* c,grib_vdarray* v,grib_darray* val
     size_t start_incsize=100;
     if (!v) v=grib_vdarray_new(c,start_size,start_incsize);
 
-    if (v->n >= v->size) v=grib_vdarray_resize(c,v);
+    if (v->n >= v->size) {
+        //printf("yyyy  resize array %p (v->n=%ld v->size=%ld)\n", (void*)v,  v->n, v->size);
+        v=grib_vdarray_resize(c,v);
+    }
     v->v[v->n]=val;
     v->n++;
     return v;
@@ -94,6 +97,7 @@ void grib_vdarray_delete_content(grib_context* c,grib_vdarray* v)
     if (!v || !v->v) return;
     if (!c) grib_context_get_default();
     for (i=0;i<v->n;i++) {
+        //printf("zzzz grib_darray_delete %p\n", (void*)v->v[i]);
         grib_darray_delete(c,v->v[i]);
         v->v[i]=0;
     }
