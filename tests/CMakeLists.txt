@@ -148,7 +148,7 @@ list( APPEND tests_data_reqd
     grib_level
     index
     grib_bitmap
-    list
+    grib_list
     grib_second_order
     multi_from_message
     grib_change_scanning

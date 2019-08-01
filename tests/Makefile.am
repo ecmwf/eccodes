@@ -44,7 +44,7 @@ TESTS = definitions.sh \
         grib_level.sh \
         index.sh \
         grib_bitmap.sh \
-        list.sh \
+        grib_list.sh \
         grib_second_order.sh \
         multi_from_message.sh \
         grib_change_scanning.sh \
