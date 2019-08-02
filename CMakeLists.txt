@@ -337,8 +337,6 @@ configure_file( eccodes_config.h.in eccodes_config.h )
 
 add_definitions( -DHAVE_ECCODES_CONFIG_H )
 
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/eccodes_config.h DESTINATION ${INSTALL_INCLUDE_DIR} )
-
 if( CMAKE_COMPILER_IS_GNUCC )
     ecbuild_add_c_flags("-pedantic")
 endif()

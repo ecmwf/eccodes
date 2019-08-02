@@ -434,14 +434,13 @@ endif()
 ecbuild_add_library(TARGET    eccodes
                     SOURCES   grib_api_version.c
                               # griby.c gribl.c
-                             ${grib_api_srcs}
+                              ${grib_api_srcs}
                     GENERATED grib_api_version.c
                     LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
-                    TEMPLATES ${grib_api_extra_srcs})
-
-
-install( FILES grib_api.h eccodes.h eccodes_windef.h DESTINATION ${INSTALL_INCLUDE_DIR} )
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h DESTINATION ${INSTALL_INCLUDE_DIR} )
-
-
-
+                    TEMPLATES ${grib_api_extra_srcs}
+                    INSTALL_HEADERS_LIST
+                              grib_api.h
+                              eccodes.h
+                              eccodes_windef.h
+                              ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h
+                              ${PROJECT_BINARY_DIR}/eccodes_config.h )
