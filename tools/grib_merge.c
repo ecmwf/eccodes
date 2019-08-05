@@ -145,24 +145,24 @@ static grib_handle* merge(grib_handle* h1,grib_handle* h2)
     len2=sizeof(s2)/sizeof(*s2);
     err=grib_get_string(h2,"gridType",s2,&len2);
     if (strcmp(s2,"regular_ll")) {
-        grib_context_log(h1->context,GRIB_LOG_WARNING,"gridType=%s not supported",s2);
+        grib_context_log(h1->context,GRIB_LOG_ERROR,"gridType=%s not supported",s2);
         return NULL;
     }
 
     len1=sizeof(s1)/sizeof(*s1);
     err=grib_get_string(h1,"gridType",s1,&len1);
     if (strcmp(s1,"regular_ll")) {
-        grib_context_log(h1->context,GRIB_LOG_WARNING,"gridType=%s not supported",s1);
+        grib_context_log(h1->context,GRIB_LOG_ERROR,"gridType=%s not supported",s1);
         return NULL;
     }
 
     if (!grib_key_equal(h1,h2,"iDirectionIncrementInDegrees",GRIB_TYPE_DOUBLE,&err) ) {
-        grib_context_log(h1->context,GRIB_LOG_WARNING,
+        grib_context_log(h1->context,GRIB_LOG_ERROR,
                 "unable to merge: different iDirectionIncrementInDegrees");
         return NULL;
     }
     if (!grib_key_equal(h1,h2,"jDirectionIncrementInDegrees",GRIB_TYPE_DOUBLE,&err) ) {
-        grib_context_log(h1->context,GRIB_LOG_WARNING,
+        grib_context_log(h1->context,GRIB_LOG_ERROR,
                 "unable to merge: different jDirectionIncrementInDegrees");
         return NULL;
     }
@@ -171,7 +171,7 @@ static grib_handle* merge(grib_handle* h1,grib_handle* h2)
     grib_get_long(h2,"latitudeOfFirstGridPoint",&l2);
     grib_get_long(h2,"jDirectionIncrement",&idj);
     if ( (l1-l2) % idj ) {
-        grib_context_log(h1->context,GRIB_LOG_WARNING, "unable to merge: incompatible grid");
+        grib_context_log(h1->context,GRIB_LOG_ERROR, "unable to merge: incompatible grid");
         return NULL;
     }
 
@@ -179,7 +179,7 @@ static grib_handle* merge(grib_handle* h1,grib_handle* h2)
     grib_get_long(h2,"longitudeOfFirstGridPoint",&l2);
     grib_get_long(h2,"iDirectionIncrement",&idi);
     if ( (l1-l2) % idi ) {
-        grib_context_log(h1->context,GRIB_LOG_WARNING, "unable to merge: incompatible grid");
+        grib_context_log(h1->context,GRIB_LOG_ERROR, "unable to merge: incompatible grid");
         return NULL;
     }
 
@@ -214,13 +214,21 @@ static grib_handle* merge(grib_handle* h1,grib_handle* h2)
     grib_get_double(h1,"longitudeOfFirstGridPointInDegrees",&lonFirst1);
     grib_get_double(h2,"longitudeOfFirstGridPointInDegrees",&lonFirst2);
 
-    latFirst = latFirst1>latFirst2 ? latFirst1 : latFirst2;
-    lonFirst = lonFirst1<lonFirst2 ? lonFirst1 : lonFirst2;
-
     grib_get_double(h1,"latitudeOfLastGridPointInDegrees",&latLast1);
     grib_get_double(h2,"latitudeOfLastGridPointInDegrees",&latLast2);
     grib_get_double(h1,"longitudeOfLastGridPointInDegrees",&lonLast1);
     grib_get_double(h2,"longitudeOfLastGridPointInDegrees",&lonLast2);
+
+    /* ECC-949 */
+    if (lonFirst1 == 180 && lonLast1 == 180) {
+        lonFirst1 = -180;
+    }
+    if (lonFirst2 == 180 && lonLast2 == 180) {
+        lonFirst2 = -180;
+    }
+
+    latFirst = latFirst1>latFirst2 ? latFirst1 : latFirst2;
+    lonFirst = lonFirst1<lonFirst2 ? lonFirst1 : lonFirst2;
 
     latLast = latLast1<latLast2 ? latLast1 : latLast2;
     lonLast = lonLast1>lonLast2 ? lonLast1 : lonLast2;
