@@ -2108,7 +2108,7 @@ static int is_bitmap_start_descriptor(grib_accessors_list* al, int* err)
 static void print_bitmap_debug_info(grib_context* c, bitmap_s* bitmap, grib_accessors_list* bitmapStart, int bitmapSize)
 {
     int i = 0, ret = 0;
-    printf("ECCODES DEBUG: bitmap_init: bitmapSize=%d\n", bitmapSize);
+    fprintf(stderr, "ECCODES DEBUG: bitmap_init: bitmapSize=%d\n", bitmapSize);
     bitmap->cursor=bitmapStart->next;
     bitmap->referredElement=bitmapStart;
 
@@ -2125,7 +2125,7 @@ static void print_bitmap_debug_info(grib_context* c, bitmap_s* bitmap, grib_acce
 
     for (i=1;i<bitmapSize;i++) {
         if (bitmap->referredElement) {
-            printf("ECCODES DEBUG:\t bitmap_init: i=%d |%s|\n", i,bitmap->referredElement->accessor->name);
+            fprintf(stderr, "ECCODES DEBUG:\t bitmap_init: i=%d |%s|\n", i,bitmap->referredElement->accessor->name);
             bitmap->referredElement=bitmap->referredElement->prev;
         }
     }

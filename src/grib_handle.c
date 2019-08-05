@@ -261,7 +261,7 @@ grib_handle* grib_handle_new_from_samples( grib_context* c, const char* name )
        if(g) return g;
      */
     if (c->debug) {
-        printf("ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
+        fprintf(stderr, "ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
     }
 
     g = grib_external_template( c,name );
@@ -284,7 +284,7 @@ grib_handle* codes_bufr_handle_new_from_samples ( grib_context* c, const char* n
        if(g) return g;
      */
     if (c->debug) {
-        printf("ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
+        fprintf(stderr, "ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
     }
 
     g=bufr_external_template ( c,name );
