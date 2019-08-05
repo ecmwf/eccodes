@@ -21,6 +21,7 @@ label="bufr_ecc_428_test"
 
 tempRules=temp.${label}.filter
 tempText=temp.${label}.text
+tempErrs=temp.${label}.errs
 tempRef1=temp.${label}.ref1
 tempRef2=temp.${label}.ref2
 
@@ -33,6 +34,7 @@ cat > $tempRules <<EOF
  print "[satelliteIdentifier!0]";
 EOF
 
+cat $tempRules
 ${tools_dir}/codes_bufr_filter $tempRules $bufrFile > $tempText
 echo "784" > $tempRef1
 diff $tempRef1 $tempText
@@ -54,17 +56,34 @@ diff $tempRef1 $tempText
 # --------------------------------------------------------
 # Test 2
 # --------------------------------------------------------
+bufrFile=amv2_87.bufr
+cat > $tempRules <<EOF
+ set unpack=1;
+ print "[#1#windDirection->percentConfidence!0]";
+EOF
+cat $tempRules
+
+export ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS=1
+${tools_dir}/codes_bufr_filter $tempRules $bufrFile > $tempText 2>$tempErrs
+grep -q '^48 54 59.*91 97' $tempText
+
+
+# --------------------------------------------------------
+# Test 3
+# --------------------------------------------------------
 bufrFile=asca_139.bufr
 cat > $tempRules <<EOF
  set unpack=1;
  print "[/beamIdentifier=2/backscatter]";
 EOF
 
+cat $tempRules
 ${tools_dir}/codes_bufr_filter $tempRules $bufrFile >/dev/null
 
+echo "TODO: Searching for backscatter ... currently failing"
 export ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS=1
-${tools_dir}/codes_bufr_filter $tempRules $bufrFile
-
+${tools_dir}/codes_bufr_filter $tempRules $bufrFile 2>$tempErrs
+cat $tempErrs
 
 # Clean up
-rm -rf $tempRules $tempText $tempRef1 $tempRef2
+rm -rf $tempRules $tempText $tempRef1 $tempRef2 $tempErrs

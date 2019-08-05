@@ -600,6 +600,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
     unsigned long lval;
     int localReference,localWidth,modifiedWidth,modifiedReference;
     double modifiedFactor,dval;
+    int bufr_multi_element_constant_arrays = c->bufr_multi_element_constant_arrays;
 
     *err=0;
 
@@ -649,7 +650,13 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
         } else {
             dval=localReference*modifiedFactor;
         }
-        if(c->bufr_multi_element_constant_arrays) {
+
+        /* dataPresentIndicator is special and has to have SINGLE VALUE if constant array */
+        if (bufr_multi_element_constant_arrays == 1 && bd->code == 31031) {
+            bufr_multi_element_constant_arrays=0;
+        }
+
+        if(bufr_multi_element_constant_arrays) {
             grib_context_log(c, GRIB_LOG_DEBUG," modifiedWidth=%ld lval=%ld dval=%g (const array multi values)", modifiedWidth,lval,dval,bd->code);
             for (j=0;j<self->numberOfSubsets;j++) {
                 grib_darray_push(c,ret,dval);
