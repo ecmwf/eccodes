@@ -1050,9 +1050,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     /* The "pl" is given from the template, but "section_copy" will take care of setting the right headers */
 
     {
-        char levtype[80];
-        size_t n = sizeof(levtype);
-        Assert(grib_get_string(h,"levelType",levtype,&n) == 0);
         switch (spec->grid_type) {
             case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
             case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
