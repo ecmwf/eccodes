@@ -15,7 +15,7 @@ list( APPEND test_bins
       read_any
       julian
       index
-      multi_from_message
+      grib_multi_from_message
       read_index
       unit_tests
       bufr_keys_iter
@@ -152,7 +152,7 @@ list( APPEND tests_data_reqd
     grib_bitmap
     grib_list
     grib_second_order
-    multi_from_message
+    grib_multi_from_message
     grib_change_scanning
     grib_statistics
     grib_tigge
