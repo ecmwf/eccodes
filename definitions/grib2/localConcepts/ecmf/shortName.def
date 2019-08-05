@@ -18583,7 +18583,7 @@
 	 parameterNumber = 206 ;
 	}
 #10 metre wind speed anomaly
-'10ua' = {
+'10sia' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 207 ;
