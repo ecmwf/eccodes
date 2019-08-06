@@ -5,7 +5,7 @@ codetable[1] shapeOfTheEarth ('3.2.table',masterDir,localDir) : dump;
 #  Scale factor of radius of spherical earth
 unsigned[1] scaleFactorOfRadiusOfSphericalEarth = missing() : can_be_missing, edition_specific;
 
-#  Scaled value of radius of spherical earth
+#  Scaled value of radius of spherical earth (in metres)
 unsigned[4] scaledValueOfRadiusOfSphericalEarth = missing(): can_be_missing, edition_specific;
 
 #  Scale factor of major axis of oblate spheroid earth
