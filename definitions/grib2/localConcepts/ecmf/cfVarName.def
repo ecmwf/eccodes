@@ -18583,7 +18583,7 @@
 	 parameterNumber = 206 ;
 	}
 #10 metre wind speed anomaly
-'ua10' = {
+'sia10' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 207 ;
@@ -18888,8 +18888,8 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 48 ;
 	}
-#Large-scale precipitation fraction
-'p50.172' = {
+#Mean large-scale precipitation fraction
+'mlspfr' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 50 ;
@@ -18918,68 +18918,68 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 145 ;
 	}
-#Surface sensible heat flux
-'p146.172' = {
+#Mean surface sensible heat flux
+'msshfl' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 146 ;
 	}
-#Surface latent heat flux
-'p147.172' = {
+#Mean surface latent heat flux
+'mslhfl' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 147 ;
 	}
-#Surface net radiation
-'p149.172' = {
+#Mean surface net radiation flux
+'msnrf' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 149 ;
 	}
-#Short-wave heating rate
-'p153.172' = {
+#Mean short-wave heating rate
+'mswhr' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 153 ;
 	}
-#Long-wave heating rate
-'p154.172' = {
+#Mean long-wave heating rate
+'mlwhr' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 154 ;
 	}
-#Surface solar radiation downwards
-'p169.172' = {
+#Mean surface downward solar radiation flux
+'msdsrf' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 169 ;
 	}
-#Surface thermal radiation downwards
-'p175.172' = {
+#Mean surface downward thermal radiation flux
+'msdtrf' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 175 ;
 	}
-#Surface solar radiation
-'p176.172' = {
+#Mean surface net solar radiation flux
+'msnsrf' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 176 ;
 	}
-#Surface thermal radiation
-'p177.172' = {
+#Mean surface net thermal radiation flux
+'msntrf' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 177 ;
 	}
-#Top solar radiation
-'p178.172' = {
+#Mean top net solar radiation flux
+'mtnsrf' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 178 ;
 	}
-#Top thermal radiation
-'p179.172' = {
+#Mean top net thermal radiation flux
+'mtntrf' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 179 ;
@@ -19026,8 +19026,8 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 197 ;
 	}
-#Runoff
-'p205.172' = {
+#Mean runoff rate
+'mrort' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 205 ;
@@ -19116,8 +19116,8 @@
 	 parameterCategory = 173 ;
 	 parameterNumber = 142 ;
 	}
-#Convective precipitation anomaly
-'p143.173' = {
+#Mean convective precipitation rate anomaly
+'mcpra' = {
 	 discipline = 192 ;
 	 parameterCategory = 173 ;
 	 parameterNumber = 143 ;
