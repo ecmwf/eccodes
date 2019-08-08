@@ -54,7 +54,7 @@ diff $tempRef1 $tempText
 
 
 # --------------------------------------------------------
-# Test 2
+# Test 2: percentConfidence
 # --------------------------------------------------------
 bufrFile=amv2_87.bufr
 cat > $tempRules <<EOF
@@ -69,7 +69,36 @@ grep -q '^48 54 59.*91 97' $tempText
 
 
 # --------------------------------------------------------
-# Test 3
+# Test 3: string arrays
+# --------------------------------------------------------
+bufrFile=sentinel1.bufr
+cat > $tempRules <<EOF
+ set unpack=1;
+ print "[stationAcquisition!0]";
+EOF
+cat $tempRules
+
+export ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS=1
+${tools_dir}/codes_bufr_filter $tempRules $bufrFile > $tempText 2>$tempErrs
+grep -q '^LBG LBG LBG LBG.*LBG$' $tempText
+
+
+# --------------------------------------------------------
+# Test 4: replication factors
+# --------------------------------------------------------
+bufrFile=sbu8_206.bufr
+cat > $tempRules <<EOF
+ set unpack=1;
+ print "[delayedDescriptorReplicationFactor!0]";
+EOF
+cat $tempRules
+
+export ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS=1
+${tools_dir}/codes_bufr_filter $tempRules $bufrFile > $tempText 2>$tempErrs
+grep -q '^6 6 6.*24 24.*6 6' $tempText
+
+# --------------------------------------------------------
+# Test XX: Currently failing
 # --------------------------------------------------------
 bufrFile=asca_139.bufr
 cat > $tempRules <<EOF
