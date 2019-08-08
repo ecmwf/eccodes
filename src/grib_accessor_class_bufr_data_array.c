@@ -553,6 +553,7 @@ static int decode_string_array(grib_context* c, unsigned char* data, long* pos, 
     char* sval=0;
     int j,modifiedWidth,width;
     grib_sarray* sa=grib_sarray_new(c,self->numberOfSubsets,10);
+    int bufr_multi_element_constant_arrays = c->bufr_multi_element_constant_arrays;
 
     modifiedWidth= bd->width;
 
@@ -585,7 +586,15 @@ static int decode_string_array(grib_context* c, unsigned char* data, long* pos, 
             grib_sarray_push(c,sa,sval);
         }
     } else {
-        grib_sarray_push(c,sa,sval);
+        if (bufr_multi_element_constant_arrays) {
+            for (j=0;j<self->numberOfSubsets;j++) {
+                char* pStr = sval;
+                if (j>0) pStr = strdup(sval);
+                grib_sarray_push(c,sa,pStr);
+            }
+        } else {
+            grib_sarray_push(c,sa,sval);
+        }
     }
     grib_vsarray_push(c,self->stringValues,sa);
     return ret;
@@ -1150,7 +1159,14 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
     }
     if (self->compressedData) {
         dval=grib_darray_new(c,1,100);
-        grib_darray_push(c,dval,(double)(*numberOfRepetitions));
+        if(c->bufr_multi_element_constant_arrays) {
+            long j;
+            for (j=0;j<self->numberOfSubsets;j++) {
+                grib_darray_push(c,dval,(double)(*numberOfRepetitions));
+            }
+        } else {
+            grib_darray_push(c,dval,(double)(*numberOfRepetitions));
+        }
         grib_vdarray_push(c,self->numericValues,dval);
     } else {
         grib_darray_push(c,dval,(double)(*numberOfRepetitions));
