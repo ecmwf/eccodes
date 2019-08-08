@@ -13,8 +13,6 @@
 
 #include "eckit/exception/Exceptions.h"
 
-#include "atlas/util/Earth.h"
-
 #include "mir/param/MIRParametrisation.h"
 
 
@@ -31,21 +29,16 @@ AtlasRegularGrid::Projection Lambert::make_projection(const param::MIRParametris
     double LoVInDegrees;
     double Latin1InDegrees;
     double Latin2InDegrees;
-    double radius;
     ASSERT(param.get("LaDInDegrees", LaDInDegrees));
     ASSERT(param.get("LoVInDegrees", LoVInDegrees));
     ASSERT(param.get("Latin1InDegrees", Latin1InDegrees));
     ASSERT(param.get("Latin2InDegrees", Latin2InDegrees));
-    param.get("radius", radius = ::atlas::util::Earth::radius());
-
-    ASSERT(radius > 0.);
 
     return Projection::Spec("type", "lambert_conformal")
         .set("latitude1", Latin1InDegrees)
         .set("latitude2", Latin2InDegrees)
         .set("latitudeD", LaDInDegrees)
-        .set("longitude0", LoVInDegrees)
-        .set("radius", radius);
+        .set("longitude0", LoVInDegrees);
 }
 
 void Lambert::fill(grib_info&) const {

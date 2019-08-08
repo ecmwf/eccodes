@@ -13,11 +13,6 @@
 
 #include <cmath>
 
-#include "eckit/exception/Exceptions.h"
-#include "eckit/geometry/Point2.h"
-
-#include "atlas/util/Earth.h"
-
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
 
@@ -34,21 +29,15 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const param::MIRParametrisa
 AtlasRegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::MIRParametrisation& param) {
     double standardParallel;
     double centralLongitude;
-    double radius;
     ASSERT(param.get("standardParallelInDegrees", standardParallel));
     ASSERT(param.get("centralLongitudeInDegrees", centralLongitude));
-    param.get("radius", radius = ::atlas::util::Earth::radius());
-
-    ASSERT(radius > 0.);
 
     return Projection::Spec("type", "lambert_azimuthal_equal_area")
         .set("standard_parallel", standardParallel)
-        .set("central_longitude", centralLongitude)
-        .set("radius", radius);
+        .set("central_longitude", centralLongitude);
 }
 
 void LambertAzimuthalEqualArea::fill(grib_info& info) const {
-    using namespace eckit::geometry;
 
     info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
     info.packing.editionNumber = 2;
@@ -64,15 +53,18 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
     Point2 reference = grid_.projection().lonlat({0., 0.});
     Point2 firstLL   = grid_.projection().lonlat({x_.front(), y_.front()});
 
-    info.grid.latitudeOfFirstGridPointInDegrees  = firstLL[LAT];
-    info.grid.longitudeOfFirstGridPointInDegrees = firstLL[LON];
+    info.grid.latitudeOfFirstGridPointInDegrees  = firstLL[LLCOORDS::LAT];
+    info.grid.longitudeOfFirstGridPointInDegrees = firstLL[LLCOORDS::LON];
     info.grid.Ni                                 = long(x_.size());
     info.grid.Nj                                 = long(y_.size());
 
     GribExtraSetting::set(info, "xDirectionGridLengthInMillimetres", std::lround(Dx * 1.e3));
     GribExtraSetting::set(info, "yDirectionGridLengthInMillimetres", std::lround(Dy * 1.e3));
-    GribExtraSetting::set(info, "standardParallelInMicrodegrees", std::lround(reference[LAT] * 1.e6));
-    GribExtraSetting::set(info, "centralLongitudeInMicrodegrees", std::lround(reference[LON] * 1.e6));
+    GribExtraSetting::set(info, "standardParallelInMicrodegrees", std::lround(reference[LLCOORDS::LAT] * 1.e6));
+    GribExtraSetting::set(info, "centralLongitudeInMicrodegrees", std::lround(reference[LLCOORDS::LON] * 1.e6));
+
+    // some extra keys are edition-specific, so parent call is here
+    AtlasRegularGrid::fill(info);
 }
 
 }  // namespace atlas

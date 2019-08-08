@@ -21,8 +21,6 @@ namespace mir {
 namespace repres {
 namespace atlas {
 
-using eckit::geometry::XYZCOORDS;
-
 class AtlasRegularGrid : public Gridded {
 public:
     // -- Types
@@ -63,6 +61,11 @@ public:
     // None
 
 protected:
+    // -- Types
+
+    using XYZCOORDS = eckit::geometry::XYZCOORDS;
+    using LLCOORDS  = eckit::geometry::LLCOORDS;
+
     // -- Members
 
     RegularGrid grid_;
@@ -101,6 +104,12 @@ protected:
 
     // -- Friends
     // None
+
+private:
+    // -- Members
+
+    double radius_;
+    bool radiusProvided_;
 };
 
 
