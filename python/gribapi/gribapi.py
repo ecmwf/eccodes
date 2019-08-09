@@ -1946,3 +1946,26 @@ def grib_set_samples_path(samples_path):
     @param samples_path   samples path
     """
     _internal.grib_c_set_samples_path(samples_path)
+
+
+
+def codes_bufr_multi_element_constant_arrays_on():
+    """
+    @brief BUFR: Turn on the mode where you get multiple elements
+    in constant arrays
+
+    @exception GribInternalError
+    """
+    _internal.codes_c_bufr_multi_element_constant_arrays_on()
+
+
+def codes_bufr_multi_element_constant_arrays_off():
+    """
+    @brief BUFR: Turn off the mode where you get multiple elements
+    in constant arrays i.e. you get a single element
+
+    @exception GribInternalError
+    """
+    _internal.codes_c_bufr_multi_element_constant_arrays_off()
+
+
