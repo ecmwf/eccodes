@@ -1041,6 +1041,11 @@ int codes_get_gribex_mode(codes_context* c);
 */
 void codes_gribex_mode_off(codes_context* c);
 
+
+void codes_bufr_multi_element_constant_arrays_on(codes_context* c);
+void codes_bufr_multi_element_constant_arrays_off(codes_context* c);
+/*int  codes_get_bufr_multi_element_constant_arrays(codes_context* c);*/
+
 /**
  * Sets the search path for definition files.
  *

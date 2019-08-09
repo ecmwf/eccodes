@@ -742,6 +742,19 @@ void grib_context_delete( grib_context* c)
         grib_context_free_persistent(&default_grib_context,c);
 }
 
+void codes_bufr_multi_element_constant_arrays_on(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    c->bufr_multi_element_constant_arrays = 1;
+}
+void codes_bufr_multi_element_constant_arrays_off(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    c->bufr_multi_element_constant_arrays = 0;
+}
+/*int  codes_get_bufr_multi_element_constant_arrays(grib_context* c);*/
+
+
 void grib_context_set_definitions_path(grib_context* c, const char* path)
 {
     if (!c) c=grib_context_get_default();
