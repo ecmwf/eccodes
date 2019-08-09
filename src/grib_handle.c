@@ -1531,18 +1531,6 @@ static void grib2_build_message ( grib_context* context,unsigned char* sections[
     *len=msglen;
 }
 
-void grib_multi_support_on ( grib_context* c )
-{
-    if ( !c ) c=grib_context_get_default();
-    c->multi_support_on=1;
-}
-
-void grib_multi_support_off ( grib_context* c )
-{
-    if ( !c ) c=grib_context_get_default();
-    c->multi_support_on=0;
-}
-
 /* For multi support mode: Reset all file handles equal to f. See GRIB-249 */
 void grib_multi_support_reset_file(grib_context* c, FILE* f)
 {
@@ -1555,36 +1543,6 @@ void grib_multi_support_reset_file(grib_context* c, FILE* f)
         }
         gm=gm->next;
     }
-}
-
-void grib_gts_header_on ( grib_context* c )
-{
-    if ( !c ) c=grib_context_get_default();
-    c->gts_header_on=1;
-}
-
-void grib_gts_header_off ( grib_context* c )
-{
-    if ( !c ) c=grib_context_get_default();
-    c->gts_header_on=0;
-}
-
-int grib_get_gribex_mode ( grib_context* c)
-{
-    if ( !c ) c=grib_context_get_default();
-    return c->gribex_mode_on;
-}
-
-void grib_gribex_mode_on ( grib_context* c )
-{
-    if ( !c ) c=grib_context_get_default();
-    c->gribex_mode_on=1;
-}
-
-void grib_gribex_mode_off ( grib_context* c )
-{
-    if ( !c ) c=grib_context_get_default();
-    c->gribex_mode_on=0;
 }
 
 static grib_multi_support* grib_get_multi_support ( grib_context* c, FILE* f )

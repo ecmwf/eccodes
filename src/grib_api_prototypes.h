@@ -1008,6 +1008,13 @@ bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context*
 void grib_context_expanded_descriptors_list_push(grib_context* c,const char* key,bufr_descriptors_array* expanded,bufr_descriptors_array* unexpanded);
 void codes_set_codes_assertion_failed_proc(codes_assertion_failed_proc proc);
 void codes_assertion_failed(const char *message, const char *file, int line);
+int grib_get_gribex_mode(grib_context* c);
+void grib_gribex_mode_on(grib_context* c);
+void grib_gribex_mode_off(grib_context* c);
+void grib_gts_header_on(grib_context* c);
+void grib_gts_header_off(grib_context* c);
+void grib_multi_support_on(grib_context* c);
+void grib_multi_support_off(grib_context* c);
 
 /* grib_date.c */
 int grib_julian_to_datetime(double jd, long *year, long *month, long *day, long *hour, long *minute, long *second);
@@ -1093,14 +1100,7 @@ grib_handle *grib_handle_new(grib_context *c);
 grib_action *grib_action_from_filter(const char *filter);
 int grib_handle_apply_action(grib_handle *h, grib_action *a);
 int grib_handle_prepare_action(grib_handle *h, grib_action *a);
-void grib_multi_support_on(grib_context *c);
-void grib_multi_support_off(grib_context *c);
 void grib_multi_support_reset_file(grib_context *c, FILE *f);
-void grib_gts_header_on(grib_context *c);
-void grib_gts_header_off(grib_context *c);
-int grib_get_gribex_mode(grib_context *c);
-void grib_gribex_mode_on(grib_context *c);
-void grib_gribex_mode_off(grib_context *c);
 void grib_multi_support_reset(grib_context *c);
 
 /* grib_header_compute.c */
