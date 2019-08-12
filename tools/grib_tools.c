@@ -46,7 +46,7 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir);
 
 FILE* dump_file;
 
-grib_runtime_options global_options={
+static grib_runtime_options global_options={
         0,         /* verbose       */
         0,         /* fail          */
         0,         /* skip          */
@@ -196,7 +196,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
     grib_handle* h=NULL;
     grib_tools_file* infile=options->infile;
     char** filenames;
-    size_t files_count=0;
+    int files_count=0;
     grib_fieldset* set=NULL;
     int i=0;
     grib_context* c=grib_context_get_default();
@@ -270,7 +270,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
     return 0;
 }
 
-char iobuf[1024*1024];
+static char iobuf[1024*1024];
 
 static int grib_tool_without_orderby(grib_runtime_options* options)
 {
@@ -669,8 +669,8 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
 
     for (i=0;i<options->requested_print_keys_count;i++) {
         options->print_keys[options->print_keys_count].name=options->requested_print_keys[i].name;
-        if (strlen(options->requested_print_keys[i].name)>options->default_print_width)
-            options->default_print_width=strlen(options->requested_print_keys[i].name);
+        if (strlen(options->requested_print_keys[i].name) > options->default_print_width)
+            options->default_print_width = (int)strlen(options->requested_print_keys[i].name);
         options->print_keys[options->print_keys_count].type=options->requested_print_keys[i].type;
         options->print_keys_count++;
     }
@@ -693,7 +693,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
             }
             options->print_keys[options->print_keys_count].name=strdup(name);
             if (strlen(name)>options->default_print_width)
-                options->default_print_width=strlen(name);
+                options->default_print_width=(int)strlen(name);
             options->print_keys[options->print_keys_count].type=GRIB_TYPE_STRING;
             options->print_keys_count++;
         }
@@ -701,14 +701,14 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
         grib_keys_iterator_delete(kiter);
         if (options->print_keys_count==0 && options->latlon == 0 ) {
             int j=0,k=0,ns_count=0;
-            char* all_namespace_vals[1024] = {NULL,}; /* sorted array containing all namespaces */
+            const char* all_namespace_vals[1024] = {NULL,}; /* sorted array containing all namespaces */
             printf("ERROR: namespace \"%s\" does not contain any key.\n",ns);
             printf("Here are the available namespaces in this message:\n");
             for (i=0; i<ACCESSORS_ARRAY_SIZE; i++) {
                 grib_accessor* anAccessor = h->accessors[i];
                 if (anAccessor) {
                     for (j=0; j<MAX_ACCESSOR_NAMES; j++) {
-                        char* a_namespace = (char*)anAccessor->all_name_spaces[j];
+                        const char* a_namespace = anAccessor->all_name_spaces[j];
                         if (a_namespace) {
                             all_namespace_vals[k++] = a_namespace;
                             ns_count++;
@@ -974,7 +974,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             }
         }
 
-        strlenvalue = strlen(value);
+        strlenvalue = (int)strlen(value);
 
         width = strlenvalue < options->default_print_width ?
                 options->default_print_width + 2 :
@@ -999,7 +999,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             written_to_dump=1;
         } else if (options->latlon_mode==1) {
             sprintf(value,options->format,options->values[options->latlon_idx]);
-            strlenvalue = strlen(value);
+            strlenvalue = (int)strlen(value);
             width = strlenvalue < options->default_print_width ?
                     options->default_print_width + 2 :
                     strlenvalue + 2;
@@ -1035,7 +1035,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         }
 
         sprintf(value,options->format,v);
-        strlenvalue = strlen(value);
+        strlenvalue = (int)strlen(value);
         width = strlenvalue < options->default_print_width ?
                 options->default_print_width + 2 :
                 strlenvalue + 2;

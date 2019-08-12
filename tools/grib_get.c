@@ -46,10 +46,10 @@ const char* grib_tool_name="grib_get";
 const char* grib_tool_usage="[options] grib_file grib_file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
-double lat=0;
-double lon=0;
-int mode=0;
-grib_nearest* nearest=NULL;
+static double lat=0;
+static double lon=0;
+static int mode=0;
+static grib_nearest* nearest=NULL;
 
 int main(int argc, char *argv[])
 {
