@@ -368,7 +368,7 @@ static void tableB_override_dump(grib_accessor_bufr_data_array *self)
         ++i;
     }
 }
-*/
+ */
 
 #define DYN_ARRAY_SIZE_INIT 1000 /* Initial size for grib_iarray_new and grib_darray_new */
 #define DYN_ARRAY_SIZE_INCR 1000 /* Increment size for grib_iarray_new and grib_darray_new */
@@ -631,7 +631,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
     localReference=(long)lval+modifiedReference;
     localWidth=grib_decode_unsigned_long(data,pos,6);
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tlocalWidth=%ld",localWidth);
-    ret=grib_darray_new(c,DYN_ARRAY_SIZE_INIT,DYN_ARRAY_SIZE_INCR);
+    ret=grib_darray_new(c,self->numberOfSubsets,50);
     if (localWidth) {
         CHECK_END_DATA_RETURN(c, self, localWidth*self->numberOfSubsets, NULL);
         if (*err) {
@@ -2139,7 +2139,7 @@ static int is_bitmap_start_descriptor(grib_accessors_list* al, int* err)
 static void print_bitmap_debug_info(grib_context* c, bitmap_s* bitmap, grib_accessors_list* bitmapStart, int bitmapSize)
 {
     int i = 0, ret = 0;
-    printf("ECCODES DEBUG: bitmap_init: bitmapSize=%d\n", bitmapSize);
+    fprintf(stderr, "ECCODES DEBUG: bitmap_init: bitmapSize=%d\n", bitmapSize);
     bitmap->cursor=bitmapStart->next;
     bitmap->referredElement=bitmapStart;
 
@@ -2156,7 +2156,7 @@ static void print_bitmap_debug_info(grib_context* c, bitmap_s* bitmap, grib_acce
 
     for (i=1;i<bitmapSize;i++) {
         if (bitmap->referredElement) {
-            printf("ECCODES DEBUG:\t bitmap_init: i=%d |%s|\n", i,bitmap->referredElement->accessor->name);
+            fprintf(stderr, "ECCODES DEBUG:\t bitmap_init: i=%d |%s|\n", i,bitmap->referredElement->accessor->name);
             bitmap->referredElement=bitmap->referredElement->prev;
         }
     }
@@ -2696,7 +2696,7 @@ static int process_elements(grib_accessor* a,int flag,long onlySubset,long start
     }
 
     if (flag!=PROCESS_ENCODE) {
-        self->numericValues=grib_vdarray_new(c,100,100);
+        self->numericValues=grib_vdarray_new(c,1000,1000);
         self->stringValues=grib_vsarray_new(c,10,10);
 
         if (self->elementsDescriptorsIndex) grib_viarray_delete(c,self->elementsDescriptorsIndex);

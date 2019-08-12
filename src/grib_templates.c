@@ -49,7 +49,7 @@ static grib_handle* try_template(grib_context* c,const char* dir,const char* nam
     sprintf(path,"%s/%s.tmpl",dir,name);
 
     if (c->debug==-1) {
-        printf("ECCODES DEBUG: try_template path='%s'\n", path);
+        fprintf(stderr, "ECCODES DEBUG: try_template path='%s'\n", path);
     }
 
     if(codes_access(path,F_OK) == 0)
@@ -79,7 +79,7 @@ static grib_handle* try_bufr_template(grib_context* c,const char* dir,const char
     sprintf(path,"%s/%s.tmpl",dir,name);
 
     if (c->debug==-1) {
-        printf("ECCODES DEBUG: try_template path='%s'\n", path);
+        fprintf(stderr, "ECCODES DEBUG: try_template path='%s'\n", path);
     }
 
     if(codes_access(path,F_OK) == 0)

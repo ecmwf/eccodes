@@ -647,12 +647,12 @@ const char* grib_get_type_name(int type)
 {
     switch(type)
     {
-        case GRIB_TYPE_LONG:    return "long"; break;
-        case GRIB_TYPE_STRING:  return "string"; break;
-        case GRIB_TYPE_BYTES:   return "bytes"; break;
-        case GRIB_TYPE_DOUBLE:  return "double"; break;
-        case GRIB_TYPE_LABEL:   return "label"; break;
-        case GRIB_TYPE_SECTION: return "section"; break;
+        case GRIB_TYPE_LONG:    return "long";
+        case GRIB_TYPE_STRING:  return "string";
+        case GRIB_TYPE_BYTES:   return "bytes";
+        case GRIB_TYPE_DOUBLE:  return "double";
+        case GRIB_TYPE_LABEL:   return "label";
+        case GRIB_TYPE_SECTION: return "section";
     }
     return "unknown";
 }
@@ -756,14 +756,14 @@ int grib_accessor_has_attributes(grib_accessor* a)
     return a->attributes[0] ? 1 : 0 ;
 }
 
-grib_accessor* grib_accessor_get_attribute(grib_accessor* a,const char* name)
+grib_accessor* grib_accessor_get_attribute(grib_accessor* a, const char* name)
 {
     int index=0;
-    char* p=0;
+    const char* p=0;
     char* basename=NULL;
-    char* attribute_name=NULL;
+    const char* attribute_name=NULL;
     grib_accessor* acc=NULL;
-    p=(char*)name;
+    p=name;
     while ( *(p+1) != '\0' && ( *p != '-' || *(p+1)!= '>' ) ) p++;
     if (*(p+1) == '\0') {
         return _grib_accessor_get_attribute(a,name,&index);

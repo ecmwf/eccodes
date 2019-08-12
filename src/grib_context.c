@@ -1107,3 +1107,41 @@ void codes_assertion_failed(const char* message, const char* file, int line)
         assertion(buffer);
     }
 }
+
+int grib_get_gribex_mode(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    return c->gribex_mode_on;
+}
+void grib_gribex_mode_on(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    c->gribex_mode_on=1;
+}
+void grib_gribex_mode_off(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    c->gribex_mode_on=0;
+}
+
+void grib_gts_header_on(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    c->gts_header_on=1;
+}
+void grib_gts_header_off(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    c->gts_header_on=0;
+}
+
+void grib_multi_support_on(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    c->multi_support_on=1;
+}
+void grib_multi_support_off(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    c->multi_support_on=0;
+}

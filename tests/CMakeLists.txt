@@ -10,11 +10,12 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 # Build the executables used by test scripts
 ################################################
 list( APPEND test_bins
+      bpv_limit
       grib_double_cmp
       read_any
       julian
       index
-      multi_from_message
+      grib_multi_from_message
       read_index
       unit_tests
       bufr_keys_iter
@@ -65,6 +66,7 @@ list( APPEND tests_no_data_reqd
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
+    bpv_limit
     grib_double_cmp
     grib_change_packing
     bufr_dump_data
@@ -136,7 +138,7 @@ list( APPEND tests_data_reqd
     grib_octahedral
     grib_global
     grib_concept
-    decimalPrecision
+    grib_decimalPrecision
     grib_bitsPerValue
     get_fail
     grib_missing
@@ -149,9 +151,9 @@ list( APPEND tests_data_reqd
     grib_level
     index
     grib_bitmap
-    list
+    grib_list
     grib_second_order
-    multi_from_message
+    grib_multi_from_message
     grib_change_scanning
     grib_statistics
     grib_tigge

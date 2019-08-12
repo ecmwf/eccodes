@@ -66,7 +66,7 @@ int grib_set_long_internal(grib_handle* h, const char* name, long val)
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        printf("ECCODES DEBUG grib_set_long_internal %s=%ld\n",name,(long)val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_long_internal %s=%ld\n",name,(long)val);
 
     if(a){
         ret = grib_pack_long(a, &val, &l);
@@ -92,7 +92,7 @@ int grib_set_long(grib_handle* h, const char* name, long val)
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        printf("ECCODES DEBUG grib_set_long %s=%ld\n",name,(long)val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld\n",name,(long)val);
 
     if(a){
         if(a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
@@ -116,7 +116,7 @@ int grib_set_double_internal(grib_handle* h, const char* name, double val)
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        printf("ECCODES DEBUG grib_set_double_internal %s=%g\n",name,val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_double_internal %s=%g\n",name,val);
 
     if(a){
         ret = grib_pack_double(a, &val, &l);
@@ -309,7 +309,7 @@ int grib_set_double(grib_handle* h, const char* name, double val)
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        printf("ECCODES DEBUG grib_set_double %s=%g\n",name,val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%g\n",name,val);
 
     if(a){
 
@@ -334,7 +334,7 @@ int grib_set_string_internal(grib_handle* h, const char* name,
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        printf("ECCODES DEBUG grib_set_string_internal %s=%s\n",name,val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_string_internal %s=%s\n",name,val);
 
     if(a){
         ret = grib_pack_string(a, val, length);
@@ -366,7 +366,7 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t *l
         grib_get_long(h,"bitsPerValue",&bitsPerValue);
         if (bitsPerValue==0) {
             if (h->context->debug) {
-                printf("ECCODES DEBUG grib_set_string packingType: Constant field cannot be encoded in second order. Packing not changed\n");
+                fprintf(stderr, "ECCODES DEBUG grib_set_string packingType: Constant field cannot be encoded in second order. Packing not changed\n");
             }
             return 0;
         }
@@ -375,7 +375,7 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t *l
         ret = grib_get_size(h, "codedValues", &numCodedVals);
         if (ret == GRIB_SUCCESS && numCodedVals < 3) {
             if (h->context->debug) {
-                printf("ECCODES DEBUG grib_set_string packingType: not enough coded values for second order. Packing not changed\n");
+                fprintf(stderr, "ECCODES DEBUG grib_set_string packingType: not enough coded values for second order. Packing not changed\n");
             }
             return 0;
         }
@@ -384,7 +384,7 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t *l
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        printf("ECCODES DEBUG grib_set_string %s=|%s|\n",name,val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_string %s=|%s|\n",name,val);
 
     if(a)
     {
@@ -408,7 +408,7 @@ int grib_set_string_array(grib_handle* h, const char* name, const char** val, si
     a = grib_find_accessor(h, name);
 
     if (h->context->debug) {
-        printf("ECCODES DEBUG grib_set_string_array key=%s %ld values\n",name,(long)length);
+        fprintf(stderr, "ECCODES DEBUG grib_set_string_array key=%s %ld values\n",name,(long)length);
     }
 
     if(a)
@@ -521,7 +521,7 @@ int grib_set_missing(grib_handle* h, const char* name)
             return GRIB_READ_ONLY;
 
         if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
-            if (h->context->debug) printf("ECCODES DEBUG grib_set_missing %s\n",name);
+            if (h->context->debug) fprintf(stderr, "ECCODES DEBUG grib_set_missing %s\n",name);
 
             ret=grib_pack_missing(a);
             if(ret == GRIB_SUCCESS)
@@ -672,7 +672,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     int ret=0;
 
     if (h->context->debug)
-        printf("ECCODES DEBUG grib_set_double_array_internal key=%s %ld values\n",name,(long)length);
+        fprintf(stderr, "ECCODES DEBUG grib_set_double_array_internal key=%s %ld values\n",name,(long)length);
 
     if (length==0) {
         grib_accessor* a = grib_find_accessor(h, name);
@@ -684,7 +684,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     if (ret!=GRIB_SUCCESS)
         grib_context_log(h->context,GRIB_LOG_ERROR,"unable to set double array %s (%s)",
                 name,grib_get_error_message(ret));
-    /*if (h->context->debug) printf("ECCODES DEBUG grib_set_double_array_internal key=%s --DONE\n",name);*/
+    /*if (h->context->debug) fprintf(stderr,"ECCODES DEBUG grib_set_double_array_internal key=%s --DONE\n",name);*/
     return ret;
 }
 
@@ -694,7 +694,7 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
     int constant,i;
 
     if (h->context->debug)
-        printf("ECCODES DEBUG grib_set_double_array key=%s %ld values\n",name,(long)length);
+        fprintf(stderr, "ECCODES DEBUG grib_set_double_array key=%s %ld values\n",name,(long)length);
 
     if (length==0) {
         grib_accessor* a = grib_find_accessor(h, name);
@@ -736,12 +736,12 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
             ) {
                 slen=11; /*length of 'grid_simple' */
                 if (h->context->debug) {
-                    printf("ECCODES DEBUG __grib_set_double_array: Cannot use second order packing for constant fields. Using simple packing\n");
+                    fprintf(stderr, "ECCODES DEBUG __grib_set_double_array: Cannot use second order packing for constant fields. Using simple packing\n");
                 }
                 ret = grib_set_string(h,"packingType","grid_simple",&slen);
                 if (ret != GRIB_SUCCESS) {
                     if (h->context->debug) {
-                        printf("ECCODES DEBUG __grib_set_double_array: could not switch to simple packing!\n");
+                        fprintf(stderr, "ECCODES DEBUG __grib_set_double_array: could not switch to simple packing!\n");
                     }
                 }
             }
@@ -801,7 +801,7 @@ static int _grib_set_long_array(grib_handle* h, const char* name, const long* va
     if (!a) return GRIB_NOT_FOUND ;
 
     if (h->context->debug) {
-        printf("ECCODES DEBUG _grib_set_long_array key=%s %ld values\n",name,(long)length);
+        fprintf(stderr, "ECCODES DEBUG _grib_set_long_array key=%s %ld values\n",name,(long)length);
     }
 
     if (name[0]=='/' || name[0]=='#' ) {

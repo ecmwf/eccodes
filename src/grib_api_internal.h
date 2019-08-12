@@ -1446,7 +1446,7 @@ struct grib_codetable {
 };
 
 typedef struct grib_smart_table_entry {
-  int   code;
+  /*int   code;*/
   char* abbreviation;
   char* column[MAX_SMART_TABLE_COLUMNS];
 } grib_smart_table_entry;

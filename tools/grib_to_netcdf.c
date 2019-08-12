@@ -1798,8 +1798,7 @@ static hypercube *new_simple_hypercube_from_mars_request(const request *r)
 
 /*===========================================================================================*/
 
-/* Todo:
- - BUILD A TEST SUITE !!
+/* TODO:
  - Print usage in log file
  - consider FCMONTH and Climatology
  - Build logic to create validationtime when only one of DATE or TIME or STEP have multiple values:
@@ -2046,7 +2045,7 @@ static void validation_time(request *r)
         }
     }
     v = julian * 24.0 + fcmonthdays * 24.0 + time / 100.0 + step * 1.0;
-    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: date=%ld, julian=%ld, fcmonthdays=%ld, time=%ld, step=%g, validation=%ld", date, julian, fcmonthdays, time, step, v);
+    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: date=%ld, julian=%ld, fcmonthdays=%ld, time=%ld, step=%g, validation=%.3f", date, julian, fcmonthdays, time, step, v);
     set_value(r, "_validation", "%lf", v);
     set_value(r, "_juliandate", "%ld", julian);
 
