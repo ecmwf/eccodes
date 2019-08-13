@@ -242,19 +242,94 @@ static grib_accessor* search_by_rank(grib_handle* h, const char* name,int rank,c
     }
 }
 
-static int condition_true(grib_accessor* a,codes_condition* condition) {
+static int get_single_long_val(grib_accessor* a, long* result)
+{
+    grib_context* c = a->context;
+    int err = 0;
+    size_t size = 1;
+    if (c->bufr_multi_element_constant_arrays) {
+        long count=0;
+        grib_value_count(a,&count);
+        if(count>1) {
+            size_t i = 0;
+            long val0 = 0;
+            int is_constant=1;
+            long* values=(long*)grib_context_malloc_clear(c,sizeof(long)*count);
+            size = count;
+            err=grib_unpack_long(a,values,&size);
+            val0 = values[0];
+            for (i=0;i<size;i++) {
+                if (val0 != values[i]) {is_constant=0;break;}
+            }
+            if (is_constant) {
+                *result = val0;
+                grib_context_free(c, values);
+            } else {
+                return GRIB_ARRAY_TOO_SMALL;
+            }
+        } else {
+            err = grib_unpack_long(a,result,&size);
+        }
+    } else {
+        err = grib_unpack_long(a,result,&size);
+    }
+    return err;
+}
+static int get_single_double_val(grib_accessor* a, double* result)
+{
+    grib_context* c = a->context;
+    int err = 0;
+    size_t size = 1;
+    if (c->bufr_multi_element_constant_arrays) {
+        long count=0;
+        grib_value_count(a,&count);
+        if(count>1) {
+            size_t i = 0;
+            double val0 = 0;
+            int is_constant=1;
+            double* values=(double*)grib_context_malloc_clear(c,sizeof(double)*count);
+            size = count;
+            err=grib_unpack_double(a,values,&size);
+            val0 = values[0];
+            for (i=0;i<size;i++) {
+                if (val0 != values[i]) {is_constant=0;break;}
+            }
+            if (is_constant) {
+                *result = val0;
+                grib_context_free(c, values);
+            } else {
+                return GRIB_ARRAY_TOO_SMALL;
+            }
+        } else {
+            err = grib_unpack_double(a,result,&size);
+        }
+    } else {
+        err = grib_unpack_double(a,result,&size);
+    }
+    return err;
+}
+
+static int condition_true(grib_accessor* a,codes_condition* condition)
+{
     int ret=0, err=0;
-    size_t size=1;
     long lval=0;
     double dval=0;
+    
+    /* The condition has to be of the form:
+     *   key=value
+     * and the value has to be a single scalar (integer or double).
+     * If the key is an array of different values, then the condition is false.
+     * But if the key is a constant array and the value matches then it's true.
+     */
+
     switch (condition->rightType) {
     case GRIB_TYPE_LONG:
-        err = grib_unpack_long(a,&lval,&size);
+        err = get_single_long_val(a, &lval);
         if (err) ret = 0;
         else     ret = lval==condition->rightLong ? 1 : 0;
         break;
     case GRIB_TYPE_DOUBLE:
-        err = grib_unpack_double(a,&dval,&size);
+        err = get_single_double_val(a,&dval);
         if (err) ret = 0;
         else     ret = dval==condition->rightDouble ? 1 : 0;
         break;
