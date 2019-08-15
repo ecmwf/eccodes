@@ -139,6 +139,11 @@ int grib_tool_init(grib_runtime_options* options)
         json=0;
     }
     if (grib_options_on("E:")) {
+        grib_context *c = grib_context_get_default();
+        if (c->bufr_multi_element_constant_arrays) {
+            grib_context_log(c, GRIB_LOG_ERROR, "Code generation for encoding is not implemented when ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS is enabled");
+            exit(1);
+        }
         options->dump_mode = grib_options_get_option("E:");
         check_code_gen_dump_mode(options->dump_mode);
         json=0;
