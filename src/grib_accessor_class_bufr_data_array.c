@@ -1264,7 +1264,9 @@ static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array*
     case 31000:
         if (self->nInputShortReplications>=0) {
             if (self->iInputShortReplications>=self->nInputShortReplications) {
-                grib_context_log(c,GRIB_LOG_FATAL,"array inputShortDelayedDescriptorReplicationFactor dimension too small");
+                grib_context_log(c,GRIB_LOG_ERROR,"array inputShortDelayedDescriptorReplicationFactor: dimension mismatch (nInputShortReplications=%d)",
+                    self->nInputShortReplications);
+                return GRIB_ARRAY_TOO_SMALL;
             }
             repetitions=self->inputShortReplications[self->iInputShortReplications];
             self->iInputShortReplications++;
@@ -1273,7 +1275,9 @@ static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array*
     case 31001:
         if (self->nInputReplications>=0) {
             if (self->iInputReplications>=self->nInputReplications) {
-                grib_context_log(c,GRIB_LOG_FATAL,"array inputDelayedDescriptorReplicationFactor dimension too small");
+                grib_context_log(c,GRIB_LOG_ERROR,"array inputDelayedDescriptorReplicationFactor: dimension mismatch (nInputReplications=%d)",
+                    self->nInputReplications);
+                return GRIB_ARRAY_TOO_SMALL;
             }
             repetitions=self->inputReplications[self->iInputReplications];
             self->iInputReplications++;
@@ -1282,7 +1286,9 @@ static int encode_new_replication(grib_context* c,grib_accessor_bufr_data_array*
     case 31002:
         if (self->nInputExtendedReplications>=0) {
             if (self->iInputExtendedReplications>=self->nInputExtendedReplications) {
-                grib_context_log(c,GRIB_LOG_FATAL,"array inputExtendedDelayedDescriptorReplicationFactor dimension too small");
+                grib_context_log(c,GRIB_LOG_ERROR,"array inputExtendedDelayedDescriptorReplicationFactor: dimension mismatch (nInputExtendedReplications=%d)",
+                                 self->nInputExtendedReplications);
+                return GRIB_ARRAY_TOO_SMALL;
             }
             repetitions=self->inputExtendedReplications[self->iInputExtendedReplications];
             self->iInputExtendedReplications++;

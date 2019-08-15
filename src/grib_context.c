@@ -375,8 +375,8 @@ grib_context* grib_context_get_default()
 #endif
 
         write_on_fail = codes_getenv("ECCODES_GRIB_WRITE_ON_FAIL");
-        bufrdc_mode = codes_getenv("ECCODES_BUFRDC_MODE_ON");
-        bufr_set_to_missing_if_out_of_range = codes_getenv("ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE");
+        bufrdc_mode = getenv("ECCODES_BUFRDC_MODE_ON");
+        bufr_set_to_missing_if_out_of_range = getenv("ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE");
         large_constant_fields = codes_getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
         no_abort = codes_getenv("ECCODES_NO_ABORT");
         debug = codes_getenv("ECCODES_DEBUG");
@@ -1088,4 +1088,42 @@ void codes_assertion_failed(const char* message, const char* file, int line)
         sprintf(buffer, "ecCodes assertion failed: `%s' in %s:%d", message, file, line);
         assertion(buffer);
     }
+}
+
+int grib_get_gribex_mode(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    return c->gribex_mode_on;
+}
+void grib_gribex_mode_on(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    c->gribex_mode_on=1;
+}
+void grib_gribex_mode_off(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    c->gribex_mode_on=0;
+}
+
+void grib_gts_header_on(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    c->gts_header_on=1;
+}
+void grib_gts_header_off(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    c->gts_header_on=0;
+}
+
+void grib_multi_support_on(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    c->multi_support_on=1;
+}
+void grib_multi_support_off(grib_context* c)
+{
+    if ( !c ) c=grib_context_get_default();
+    c->multi_support_on=0;
 }

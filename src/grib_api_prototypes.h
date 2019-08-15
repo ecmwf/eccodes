@@ -808,8 +808,8 @@ long accessor_raw_get_offset(grib_accessor *a);
 
 /* grib_gaussian_reduced.c */
 void grib_get_reduced_row_wrapper(grib_handle *h, long pl, double lon_first, double lon_last, long *npoints, long *ilon_first, long *ilon_last);
-void grib_get_reduced_row(long pl, double lon_first, double lon_last, long *npoints, long *ilon_first, long *ilon_last);
 void grib_get_reduced_row_legacy(long pl, double lon_first, double lon_last, long *npoints, long *ilon_first, long *ilon_last);
+void grib_get_reduced_row(long pl, double lon_first, double lon_last, long *npoints, long *ilon_first, long *ilon_last);
 void grib_get_reduced_row_p(long pl, double lon_first, double lon_last, long *npoints, double *olon_first, double *olon_last);
 
 /* grib_accessor_class_abstract_vector.c */
@@ -943,6 +943,8 @@ void grib_dump_footer(grib_dumper *d, grib_handle *h);
 
 /* grib_dumper_class_bufr_decode_python.c */
 
+/* grib_dumper_class_bufr_simple.c */
+
 /* grib_dumper_class_json.c */
 
 /* grib_dumper_class_grib_encode_C.c */
@@ -1008,6 +1010,13 @@ bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context*
 void grib_context_expanded_descriptors_list_push(grib_context* c,const char* key,bufr_descriptors_array* expanded,bufr_descriptors_array* unexpanded);
 void codes_set_codes_assertion_failed_proc(codes_assertion_failed_proc proc);
 void codes_assertion_failed(const char *message, const char *file, int line);
+int grib_get_gribex_mode(grib_context* c);
+void grib_gribex_mode_on(grib_context* c);
+void grib_gribex_mode_off(grib_context* c);
+void grib_gts_header_on(grib_context* c);
+void grib_gts_header_off(grib_context* c);
+void grib_multi_support_on(grib_context* c);
+void grib_multi_support_off(grib_context* c);
 
 /* grib_date.c */
 int grib_julian_to_datetime(double jd, long *year, long *month, long *day, long *hour, long *minute, long *second);
@@ -1086,6 +1095,9 @@ int grib_get_partial_message(grib_handle *h, const void **msg, size_t *len, int 
 int grib_get_partial_message_copy(grib_handle *h, void *message, size_t *len, int start_section);
 int grib_get_message_copy(grib_handle *h, void *message, size_t *len);
 int grib_get_message_offset(grib_handle *h, off_t *offset);
+int codes_get_product_kind(grib_handle *h, ProductKind *product_kind);
+int codes_check_message_header(const void *bytes, size_t length, ProductKind product);
+int codes_check_message_footer(const void *bytes, size_t length, ProductKind product);
 int grib_get_message_size(grib_handle *h, size_t *size);
 int grib_get_message(grib_handle *h, const void **msg, size_t *size);
 int grib_get_message_headers(grib_handle *h, const void **msg, size_t *size);
@@ -1093,14 +1105,7 @@ grib_handle *grib_handle_new(grib_context *c);
 grib_action *grib_action_from_filter(const char *filter);
 int grib_handle_apply_action(grib_handle *h, grib_action *a);
 int grib_handle_prepare_action(grib_handle *h, grib_action *a);
-void grib_multi_support_on(grib_context *c);
-void grib_multi_support_off(grib_context *c);
 void grib_multi_support_reset_file(grib_context *c, FILE *f);
-void grib_gts_header_on(grib_context *c);
-void grib_gts_header_off(grib_context *c);
-int grib_get_gribex_mode(grib_context *c);
-void grib_gribex_mode_on(grib_context *c);
-void grib_gribex_mode_off(grib_context *c);
 void grib_multi_support_reset(grib_context *c);
 
 /* grib_header_compute.c */
@@ -1401,6 +1406,8 @@ grib_nearest *grib_nearest_factory(grib_handle *h, grib_arguments *args);
 
 /* grib_nearest_class_lambert_conformal.c */
 
+/* grib_nearest_class_polar_stereographic.c */
+
 /* grib_iterator_class_polar_stereographic.c */
 
 /* grib_iterator_class_lambert_azimuthal_equal_area.c */
@@ -1522,6 +1529,8 @@ const char *grib_unop_double_proc_name(grib_unop_double_proc proc);
 /* codes_memfs.c */
 FILE *codes_fopen(const char *name, const char *mode);
 int codes_access(const char *name, int mode);
+
+/* grib_accessor_class_data_g2bifourier_packing.c */
 
 /* grib_optimize_decimal_factor.c */
 int grib_optimize_decimal_factor(grib_accessor *a, const char *reference_value, const double pmax, const double pmin, const int knbit, const int compat_gribex, const int compat_32bit, long *kdec, long *kbin, double *ref);
