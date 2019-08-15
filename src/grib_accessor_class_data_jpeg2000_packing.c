@@ -556,13 +556,13 @@ cleanup:
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR, "JPEG support not enabled.");
-    return GRIB_NOT_IMPLEMENTED;
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR, "JPEG support not enabled.");
-    return GRIB_NOT_IMPLEMENTED;
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 #endif

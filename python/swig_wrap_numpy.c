@@ -9873,6 +9873,7 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "GRIB_UNSUPPORTED_EDITION",SWIG_From_int((int)(-64)));
   SWIG_Python_SetConstant(d, "GRIB_OUT_OF_RANGE",SWIG_From_int((int)(-65)));
   SWIG_Python_SetConstant(d, "GRIB_WRONG_BITMAP_SIZE",SWIG_From_int((int)(-66)));
+  SWIG_Python_SetConstant(d, "GRIB_FUNCTIONALITY_NOT_ENABLED",SWIG_From_int((int)(-67)));
   
   import_array();
   

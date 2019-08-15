@@ -1402,5 +1402,7 @@ Error codes returned by the eccodes functions.
 #define CODES_OUT_OF_RANGE		GRIB_OUT_OF_RANGE
 /** Size of bitmap is incorrect */
 #define CODES_WRONG_BITMAP_SIZE		GRIB_WRONG_BITMAP_SIZE
+/** Functionality not enabled */
+#define CODES_FUNCTIONALITY_NOT_ENABLED		GRIB_FUNCTIONALITY_NOT_ENABLED
 /*! @}*/
 #endif

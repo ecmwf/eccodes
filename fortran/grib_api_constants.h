@@ -1,3 +1,4 @@
+  integer, parameter,public :: GRIB_FUNCTIONALITY_NOT_ENABLED                     = -67
   integer, parameter,public :: GRIB_WRONG_BITMAP_SIZE                             = -66
   integer, parameter,public :: GRIB_OUT_OF_RANGE                                  = -65
   integer, parameter,public :: GRIB_UNSUPPORTED_EDITION                           = -64

@@ -70,6 +70,7 @@ static const char *errors[] = {
 "Edition not supported.",		/* -64 GRIB_UNSUPPORTED_EDITION */
 "Value out of coding range",		/* -65 GRIB_OUT_OF_RANGE */
 "Size of bitmap is incorrect",		/* -66 GRIB_WRONG_BITMAP_SIZE */
+"Functionality not enabled",		/* -67 GRIB_FUNCTIONALITY_NOT_ENABLED */
 "Value mismatch",		/* 1 GRIB_VALUE_MISMATCH */
 "double values are different",		/* 2 GRIB_DOUBLE_VALUE_MISMATCH */
 "long values are different",		/* 3 GRIB_LONG_VALUE_MISMATCH */
@@ -89,27 +90,27 @@ static const char *errors[] = {
 
 const char* grib_get_error_message(int code)
 {
-	code = -code;
-	if (code < 0 || code >= NUMBER(errors)) {
-		static char mess[64];
-		sprintf(mess,"Unknown error %d",code);
-		return mess;
-	}
-	return errors[code];
+    code = -code;
+    if (code < 0 || code >= NUMBER(errors)) {
+        static char mess[64];
+        sprintf(mess,"Unknown error %d",code);
+        return mess;
+    }
+    return errors[code];
 }
 
 void grib_check(const char* call, const char* file, int line, int e, const char* msg)
 {
-	grib_context* c=grib_context_get_default();
-	if (e) {
-		if (file) {
-			fprintf(stderr,"%s at line %d: %s failed: %s",
-					file,line, call,grib_get_error_message(e));
-			if (msg) fprintf(stderr," (%s)",msg);
-			printf("\n");
-		} else {
-			grib_context_log(c,GRIB_LOG_ERROR,"%s",grib_get_error_message(e));
-		}
-		exit(e);
-	}
+    grib_context* c=grib_context_get_default();
+    if (e) {
+        if (file) {
+            fprintf(stderr,"%s at line %d: %s failed: %s",
+                file,line, call,grib_get_error_message(e));
+            if (msg) fprintf(stderr," (%s)",msg);
+            printf("\n");
+        } else {
+            grib_context_log(c,GRIB_LOG_ERROR,"%s",grib_get_error_message(e));
+        }
+        exit(e);
+    }
 }
