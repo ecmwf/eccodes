@@ -319,7 +319,7 @@ static int pack_string_array(grib_accessor*a , const char**  v, size_t *len)
     if (self->compressedData) {
         idx=((int)self->numericValues->v[self->index]->v[0]/1000-1)/self->numberOfSubsets;
         if (*len!=1 && *len!=self->numberOfSubsets) {
-            grib_context_log(c,GRIB_LOG_ERROR,"Number of values mismatch for %s: are %ld should be %ld",
+            grib_context_log(c,GRIB_LOG_ERROR,"Number of values mismatch for '%s': %ld strings provided but expected %ld (=number of subsets)",
                     self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[idx]]->shortName,*len,self->numberOfSubsets);
             return GRIB_ARRAY_TOO_SMALL;
         }
@@ -482,7 +482,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     if (self->compressedData) {
         count=*len;
         if (count!=1 && count!=self->numberOfSubsets) {
-            grib_context_log(c,GRIB_LOG_ERROR,"Number of values mismatch for %s: are %ld should be %ld",
+            grib_context_log(c,GRIB_LOG_ERROR,"Number of values mismatch for '%s': %ld doubles provided but expected %ld (=number of subsets)",
                     self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[self->index]]->shortName,count,self->numberOfSubsets);
             return GRIB_ARRAY_TOO_SMALL;
         }
@@ -511,7 +511,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     if (self->compressedData) {
         count=*len;
         if (count!=1 && count!=self->numberOfSubsets) {
-            grib_context_log(c,GRIB_LOG_ERROR,"Number of values mismatch for %s: are %ld should be %ld",
+            grib_context_log(c,GRIB_LOG_ERROR,"Number of values mismatch for '%s': %ld integers provided but expected %ld (=number of subsets)",
                     self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[self->index]]->shortName,count,self->numberOfSubsets);
             return GRIB_ARRAY_TOO_SMALL;
         }
