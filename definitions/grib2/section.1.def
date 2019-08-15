@@ -26,6 +26,9 @@ codetable[1] tablesVersion 'grib2/tables/1.0.table' = tablesVersionLatest : edit
 alias gribMasterTablesVersionNumber=tablesVersion;
 
 transient masterDir="grib2/tables/[tablesVersion]";
+if (tablesVersion > tablesVersionLatest) {
+  transient masterDir="grib2/tables/[tablesVersionLatest]";
+}
 when (tablesVersion!=255) {
   set masterDir="grib2/tables/[tablesVersion]";
 } else {
