@@ -172,21 +172,22 @@ typedef double        (*decode_float_proc)(unsigned long);
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
-  grib_accessor_data_sh_unpacked *self =(grib_accessor_data_sh_unpacked*)a;
+    grib_accessor_data_sh_unpacked *self =(grib_accessor_data_sh_unpacked*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
-  self->GRIBEX_sh_bug_present     = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->ieee_floats               = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->laplacianOperatorIsSet    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->laplacianOperator         = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->sub_j                     = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->sub_k                     = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->sub_m                     = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->pen_j                     = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->pen_k                     = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->pen_m                     = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+    self->GRIBEX_sh_bug_present     = grib_arguments_get_name(hand,args,self->carg++);
+    self->ieee_floats               = grib_arguments_get_name(hand,args,self->carg++);
+    self->laplacianOperatorIsSet    = grib_arguments_get_name(hand,args,self->carg++);
+    self->laplacianOperator         = grib_arguments_get_name(hand,args,self->carg++);
+    self->sub_j                     = grib_arguments_get_name(hand,args,self->carg++);
+    self->sub_k                     = grib_arguments_get_name(hand,args,self->carg++);
+    self->sub_m                     = grib_arguments_get_name(hand,args,self->carg++);
+    self->pen_j                     = grib_arguments_get_name(hand,args,self->carg++);
+    self->pen_k                     = grib_arguments_get_name(hand,args,self->carg++);
+    self->pen_m                     = grib_arguments_get_name(hand,args,self->carg++);
 
-  a->flags |= GRIB_ACCESSOR_FLAG_DATA;
-  a->length=0;
+    a->flags |= GRIB_ACCESSOR_FLAG_DATA;
+    a->length=0;
 }
 
 

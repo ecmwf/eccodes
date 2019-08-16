@@ -144,12 +144,13 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
     grib_accessor_g1date* self = (grib_accessor_g1date*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
     int n = 0;
 
-    self->century = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->year    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->month   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->day     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->century = grib_arguments_get_name(hand,c,n++);
+    self->year    = grib_arguments_get_name(hand,c,n++);
+    self->month   = grib_arguments_get_name(hand,c,n++);
+    self->day     = grib_arguments_get_name(hand,c,n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -161,19 +162,20 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {   
     int ret=0;
     grib_accessor_g1date* self = (grib_accessor_g1date*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     long year = 0;
     long century = 0;
     long month = 0;
     long day = 0;
 
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->century,&century))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(hand, self->century,&century))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->day,&day))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(hand, self->day,&day))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->month,&month))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(hand, self->month,&month))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->year,&year))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(hand, self->year,&year))!=GRIB_SUCCESS)
         return ret;
 
     if(*len < 1)
@@ -199,6 +201,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     int ret=0;
     long v = val[0];
     grib_accessor_g1date* self = (grib_accessor_g1date*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     long year    = 0;
     long century = 0;
@@ -227,13 +230,13 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     else
         century++;
 
-    if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->century,century))!=GRIB_SUCCESS)
+    if ((ret=grib_set_long_internal(hand,self->century,century))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->day,day))!=GRIB_SUCCESS)
+    if ((ret=grib_set_long_internal(hand,self->day,day))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->month,month))!=GRIB_SUCCESS)
+    if ((ret=grib_set_long_internal(hand,self->month,month))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->year,year))!=GRIB_SUCCESS)
+    if ((ret=grib_set_long_internal(hand,self->year,year))!=GRIB_SUCCESS)
         return ret;
 
     return GRIB_SUCCESS;
@@ -250,19 +253,20 @@ static int unpack_string(grib_accessor* a, char* val, size_t *len)
     int ret=0;
     char tmp[1024];
     grib_accessor_g1date* self = (grib_accessor_g1date*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
     long year = 0;
     long century = 0;
     long month = 0;
     long day = 0;
     size_t l;
 
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->century,&century))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(hand, self->century,&century))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->day,&day))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(hand, self->day,&day))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->month,&month))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(hand, self->month,&month))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->year,&year))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(hand, self->year,&year))!=GRIB_SUCCESS)
         return ret;
 
     if(*len < 1)
