@@ -1231,7 +1231,6 @@ long grib_get_decimal_scale_fact(double max, double min, long bpval, long binary
 
 /* grib_templates.c */
 grib_handle *grib_internal_template(grib_context *c, const char *name);
-grib_handle *grib_internal_template(grib_context *c, const char *name);
 grib_handle *grib_external_template(grib_context *c, const char *name);
 grib_handle *bufr_external_template(grib_context *c, const char *name);
 char *grib_external_template_path(grib_context *c, const char *name);
@@ -1240,6 +1239,7 @@ char *grib_external_template_path(grib_context *c, const char *name);
 grib_handle *grib_handle_of_accessor(grib_accessor *a);
 void grib_dependency_add(grib_accessor *observer, grib_accessor *observed);
 void grib_dependency_remove_observed(grib_accessor *observed);
+int _grib_dependency_notify_change(grib_handle* h, grib_accessor* observed);
 int grib_dependency_notify_change(grib_accessor *observed);
 void grib_dependency_remove_observer(grib_accessor *observer);
 void grib_dependency_observe_expression(grib_accessor *observer, grib_expression *e);
