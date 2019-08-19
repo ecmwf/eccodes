@@ -257,8 +257,8 @@ grib_handle* grib_handle_new_from_samples( grib_context* c, const char* name )
     grib_context_set_handle_total_count(c,0);
 
     /*
-       g = grib_internal_template(c,name);
-       if(g) return g;
+     * g = grib_internal_sample(c,name);
+     * if(g) return g;
      */
     if (c->debug) {
         fprintf(stderr, "ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
@@ -280,8 +280,8 @@ grib_handle* codes_bufr_handle_new_from_samples ( grib_context* c, const char* n
     grib_context_set_handle_total_count(c,0);
 
     /*
-       g = grib_internal_template(c,name);
-       if(g) return g;
+     *  g = grib_internal_sample(c,name);
+     *  if(g) return g;
      */
     if (c->debug) {
         fprintf(stderr, "ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
