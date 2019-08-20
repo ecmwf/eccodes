@@ -36,6 +36,7 @@
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MIRStatistics.h"
+#include "mir/api/MIREstimation.h"
 
 
 namespace mir {
@@ -81,6 +82,26 @@ size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx)
     }
 
     return total;
+}
+
+void GribOutput::estimate(const param::MIRParametrisation& param,
+                          api::MIREstimation& estimator) const {
+
+    long bits = 0;
+    if (param.get("accuracy", bits)) {
+        estimator.accuracy(bits);
+    }
+
+    std::string packing;
+    if (param.get("packing", packing)) {
+        estimator.packing(packing);
+    }
+
+    long edition;
+    if (param.get("edition", edition)) {
+        estimator.edition(edition);
+    }
+
 }
 
 
