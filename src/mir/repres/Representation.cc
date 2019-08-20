@@ -77,6 +77,13 @@ void Representation::setGivenPacking(grib_info&) const {
 }
 
 
+void Representation::estimate(api::MIREstimation&) const {
+    std::ostringstream os;
+    os << "Representation::estimate() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
 bool Representation::isGlobal() const {
     bool global = isPeriodicWestEast() &&
                   includesNorthPole() &&

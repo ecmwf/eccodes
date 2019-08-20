@@ -97,7 +97,13 @@ size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx)
 }
 
 void GribOutput::estimate(const param::MIRParametrisation& param,
-                          api::MIREstimation& estimator) const {
+                          api::MIREstimation& estimator,
+                          context::Context& ctx) const {
+
+    const data::MIRField& field = ctx.field();
+    ASSERT(field.dimensions() == 1);
+
+    field.representation()->estimate(estimator);
 
     long bits = 0;
     if (param.get("accuracy", bits)) {
@@ -105,8 +111,12 @@ void GribOutput::estimate(const param::MIRParametrisation& param,
     }
 
     std::string packing;
-    if (param.get("packing", packing)) {
+    if (param.userParametrisation().get("packing", packing)) {
+
         estimator.packing(packing);
+        // const packing::Packer &packer = packing::Packer::lookup(packing);
+        // packer.estimate(estimator, *field.representation());
+
     }
 
     long edition;
