@@ -104,9 +104,50 @@ const RegularLL* RegularLL::croppedRepresentation(const util::BoundingBox& bbox)
     return new RegularLL(increments_, bbox, reference);
 }
 
-namespace {
-static RepresentationBuilder<RegularLL> regularLL("regular_ll"); // Name is what is returned by grib_api
+util::BoundingBox RegularLL::extendBoundingBox(const util::BoundingBox& bbox) const {
+    using iterator::detail::RegularIterator;
+
+    const PointLatLon reference(bbox_.south(), bbox_.west());
+
+    auto sn = increments_.south_north().latitude().fraction();
+    auto we = increments_.west_east().longitude().fraction();
+    ASSERT(sn > 0);
+    ASSERT(we > 0);
+
+    auto shift_sn = (reference.lat().fraction() / sn).decimalPart() * sn;
+    auto shift_we = (reference.lon().fraction() / we).decimalPart() * we;
+
+    // adjust West/East to include bbox's West/East ('outwards')
+    Longitude w = bbox.west();
+    if (increments_.isPeriodic()) {
+        w = shift_we + RegularIterator::adjust(bbox.west().fraction() - shift_we, we, false);
+    }
+    Longitude e = shift_we + RegularIterator::adjust(bbox.east().fraction() - shift_we, we, true);
+
+
+    // adjust South/North to include bbox's South/North ('outwards')
+    auto s = shift_sn + RegularIterator::adjust(bbox.south().fraction() - shift_sn, sn, false);
+    if (s < Latitude::SOUTH_POLE.fraction()) {
+        s = shift_sn + RegularIterator::adjust(Latitude::SOUTH_POLE.fraction() - shift_sn, sn, true);
+    }
+    auto n = shift_sn + RegularIterator::adjust(bbox.north().fraction() - shift_sn, sn, true);
+    if (n > Latitude::NORTH_POLE.fraction()) {
+        n = shift_sn + RegularIterator::adjust(Latitude::NORTH_POLE.fraction() - shift_sn, sn, false);
+    }
+
+    // set bounding box
+    const util::BoundingBox extended(n, w, s, e);
+    ASSERT(extended.contains(bbox));
+
+    return extended;
 }
+
+std::string RegularLL::factory() const {
+    return "regular_ll";
+}
+
+
+static RepresentationBuilder<RegularLL> regularLL("regular_ll"); // Name is what is returned by grib_api
 
 } // namespace latlon
 } // namespace repres
