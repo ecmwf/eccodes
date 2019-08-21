@@ -208,9 +208,13 @@ void SphericalHarmonics::setSimplePacking(grib_info& info) const {
 }
 
 void SphericalHarmonics::estimate(api::MIREstimation& estimation) const {
-    estimation.packing("spectral_complex"); // Will be overriden
+    estimation.packing("spectral_complex");  // Will be overriden
+    estimation.representation(factory());
 }
 
+std::string SphericalHarmonics::factory() const {
+    return "sh";
+}
 
 namespace {
 static RepresentationBuilder<SphericalHarmonics> sphericalHarmonics("sh"); // Name is what is returned by grib_api

@@ -249,6 +249,11 @@ size_t Representation::frame(MIRValuesVector&, size_t, double) const {
     throw eckit::SeriousBug(os.str());
 }
 
+std::string Representation::factory() const {
+    std::ostringstream os;
+    os << "Representation::factory() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
 
 void Representation::reorder(long, MIRValuesVector&) const {
     std::ostringstream os;

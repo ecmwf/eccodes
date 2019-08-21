@@ -143,9 +143,12 @@ util::BoundingBox RegularLL::extendBoundingBox(const util::BoundingBox& bbox) co
     return extended;
 }
 
-namespace {
-static RepresentationBuilder<RegularLL> regularLL("regular_ll"); // Name is what is returned by grib_api
+std::string RegularLL::factory() const {
+    return "regular_ll";
 }
+
+
+static RepresentationBuilder<RegularLL> regularLL("regular_ll"); // Name is what is returned by grib_api
 
 } // namespace latlon
 } // namespace repres
