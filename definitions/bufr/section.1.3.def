@@ -26,7 +26,7 @@ unsigned[1] typicalMonth : dump;
 unsigned[1] typicalDay : dump;
 unsigned[1] typicalHour : dump;
 unsigned[1] typicalMinute : dump;
-unsigned[1] spare; # ???
+# unsigned[1] spare; # See ECC-978
 transient typicalSecond=0;
 
 meta ls.typicalDate sprintf("%.4d%.2d%.2d",typicalYear,typicalMonth,typicalDay) : dump,no_copy,read_only;
