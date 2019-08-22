@@ -48,11 +48,11 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
     fseeko(in, 0, SEEK_END);
     insize = ftello(in);
     fseeko(in, 0, SEEK_SET);
-    if(nchunks == -1){
-      chunk_size = size;
-    }else{
-      assert(nchunks > 0);
-      chunk_size=insize/nchunks;
+    if (nchunks == -1) {
+        chunk_size = size;
+    } else {
+        assert(nchunks > 0);
+        chunk_size=insize/nchunks;
     }
 
     i=1;
