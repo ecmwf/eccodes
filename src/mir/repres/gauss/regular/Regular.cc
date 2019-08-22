@@ -268,6 +268,26 @@ size_t Regular::frame(MIRValuesVector& values, size_t size, double missingValue)
     return count;
 }
 
+
+size_t Regular::frame(size_t size) const {
+
+    // TODO: Check if that logic cannot also be used for other grid, and therefore move it to a higher class
+
+    size_t count = 0;
+
+    size_t k = 0;
+    for (size_t j = 0; j < Nj_; j++) {
+        for (size_t i = 0; i < Ni_; i++) {
+            if (!((i < size) || (j < size) || (i >= Ni_ - size) || (j >= Nj_ - size))) { // Check me, may be buggy
+                count++;
+            }
+            k++;
+        }
+    }
+
+    return count;
+}
+
 } // namespace regular
 } // namespace gauss
 } // namespace repres
