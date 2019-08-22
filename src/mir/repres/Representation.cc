@@ -249,6 +249,12 @@ size_t Representation::frame(MIRValuesVector&, size_t, double) const {
     throw eckit::SeriousBug(os.str());
 }
 
+size_t Representation::frame(size_t) const {
+    std::ostringstream os;
+    os << "Representation::frame() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
 std::string Representation::factory() const {
     std::ostringstream os;
     os << "Representation::factory() not implemented for " << *this;
