@@ -25,7 +25,7 @@ static const char* OUTPUT_FILENAME_FORMAT = "%s_%03d"; /* x_001, x_002 etc */
 static void usage(const char* prog)
 {
     printf("Usage: %s [-v] nchunks infile\n",prog);
-    printf("nchunks=-1, split infile into individual grib/bufr message\n");
+    printf("Setting nchunks=-1 splits infile into individual messages\n");
     exit(1);
 }
 
@@ -79,7 +79,7 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
             read_size+=size;
             msg_size+=size;
             if (read_size>chunk_size && msg_size < insize) {
-                if (verbose) printf("Wrote output file %s (%d msgs)\n", ofilename, num_msg);
+                if (verbose) printf("Wrote output file %s (%lu msgs)\n", ofilename, (unsigned long)num_msg);
                 fclose(out);
                 i++;
                 /* Start writing to the next file */
@@ -97,7 +97,7 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
             (*count)++;
         }
     }
-    if (verbose) printf("Wrote output file %s (%d msgs)\n", ofilename,num_msg-1);
+    if (verbose) printf("Wrote output file %s (%lu msgs)\n", ofilename, (unsigned long)num_msg-1);
     fclose(out);
     free(ofilename);
 
@@ -127,7 +127,7 @@ int main(int argc,char* argv[])
     /* add some error checking */
     nchunks=atoi(argv[i]);
     if (nchunks<1 && nchunks!=-1) {
-        fprintf(stderr,"ERROR: Invalid number %d. Please specify a positive integer. or -1 for spliting each message\n", nchunks);
+        fprintf(stderr,"ERROR: Invalid number %d. Please specify a positive integer or -1\n", nchunks);
         return 1;
     }
 
