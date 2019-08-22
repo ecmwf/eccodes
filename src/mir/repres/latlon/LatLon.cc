@@ -18,9 +18,11 @@
 #include <algorithm>
 #include <iostream>
 #include <memory>
+#include <sstream>
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/log/Plural.h"
+#include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 
 #include "mir/api/Atlas.h"
@@ -57,6 +59,12 @@ LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
     ASSERT(parametrisation.get("Ni", ni));
     ASSERT(parametrisation.get("Nj", nj));
 
+    eckit::Log::debug<LibMir>()
+            << "LatLon:"
+            "\n\t" "(Ni, Nj) = (" << ni_ << ", " << nj_ << ") calculated"
+            "\n\t" "(Ni, Nj) = (" << ni << ", " << nj << ") from parametrisation"
+            << std::endl;
+
     ASSERT(ni == ni_);
     ASSERT(nj == nj_);
 }
@@ -78,54 +86,7 @@ LatLon::~LatLon() = default;
 
 
 void LatLon::reorder(long scanningMode, MIRValuesVector& values) const {
-    // Code from ecRegrid, UNTESTED!!!
-
-    eckit::Log::debug<LibMir>() << "WARNING: UNTESTED!!! ";
-    eckit::Log::debug<LibMir>() << "LatLon::reorder scanning mode 0x" << std::hex << scanningMode << std::dec << std::endl;
-
-    ASSERT(values.size() == ni_ * nj_);
-
-    MIRValuesVector out(values.size());
-
-    if (scanningMode == jScansPositively) {
-        size_t count = 0;
-        for (int j = nj_ - 1 ; j >= 0; --j) {
-            for (size_t i = 0 ; i <  ni_; ++i) {
-                out[count++] = values[j * ni_ + i];
-            }
-        }
-        ASSERT(count == out.size());
-        std::swap(values, out);
-        return;
-    }
-
-    if (scanningMode == iScansNegatively) {
-        size_t count = 0;
-        for (size_t j = 0  ; j < nj_; ++j) {
-            for (int i = ni_ - 1 ; i >= 0; --i) {
-                out[count++] = values[j * ni_ + i];
-            }
-        }
-        ASSERT(count == out.size());
-        std::swap(values, out);
-        return;
-    }
-
-    if (scanningMode == (iScansNegatively | jScansPositively)) {
-        size_t count = 0;
-        for (int j = nj_ - 1  ; j >= 0; --j) {
-            for (int i = ni_ - 1 ; i >= 0; --i) {
-                out[count++] = values[j * ni_ + i];
-            }
-        }
-        ASSERT(count == out.size());
-        std::swap(values, out);
-        return;
-    }
-
-    std::ostringstream os;
-    os << "LatLon::reorder: unsupported scanning mode 0x" << std::hex << scanningMode;
-    throw eckit::SeriousBug(os.str());
+    GribReorder::reorder(values, scanningMode, ni_, nj_);
 }
 
 
@@ -202,12 +163,13 @@ size_t LatLon::numberOfPoints() const {
 
 
 bool LatLon::getLongestElementDiagonal(double& d) const {
-    const Latitude& sn = increments_.south_north().latitude();
-    const Longitude& we = increments_.west_east().longitude();
+    auto snHalf = increments_.south_north().latitude().value() / 2.;
+    ASSERT(!eckit::types::is_approximately_equal(snHalf, 0.));
 
-    d = atlas::util::Earth::distance(
-                atlas::PointLonLat(0., 0.),
-                atlas::PointLonLat(we.value(), sn.value()) );
+    auto weHalf = increments_.west_east().longitude().value() / 2.;
+    ASSERT(!eckit::types::is_approximately_equal(weHalf, 0.));
+
+    d = 2. * atlas::util::Earth::distance({0., 0.}, {weHalf, snHalf});
     return true;
 }
 
@@ -262,6 +224,11 @@ const LatLon* LatLon::croppedRepresentation(const util::BoundingBox&) const {
 }
 
 
+bool LatLon::extendBoundingBoxOnIntersect() const {
+    return false;
+}
+
+
 void LatLon::fill(util::MeshGeneratorParameters& params) const {
     params.meshGenerator_ = "structured";
 
@@ -292,7 +259,7 @@ size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue) 
         }
     }
 
-        eckit::Log::info() << "LatLon::frame(" << size << ") " << count << " " << k <<std::endl;
+    // eckit::Log::info() << "LatLon::frame(" << size << ") " << count << " " << k << std::endl;
 
 
     ASSERT(k == values.size());
@@ -317,7 +284,7 @@ size_t LatLon::frame(size_t size) const {
         }
     }
 
-    eckit::Log::info() << "LatLon::frame(" << size << ") " << count << " " << k <<std::endl;
+    // eckit::Log::info() << "LatLon::frame(" << size << ") " << count << " " << k << std::endl;
 
     return count;
 
