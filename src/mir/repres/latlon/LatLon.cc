@@ -60,10 +60,10 @@ LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
     ASSERT(parametrisation.get("Nj", nj));
 
     eckit::Log::debug<LibMir>()
-        << "LatLon:"
+            << "LatLon:"
             "\n\t" "(Ni, Nj) = (" << ni_ << ", " << nj_ << ") calculated"
             "\n\t" "(Ni, Nj) = (" << ni << ", " << nj << ") from parametrisation"
-        << std::endl;
+            << std::endl;
 
     ASSERT(ni == ni_);
     ASSERT(nj == nj_);
@@ -259,7 +259,7 @@ size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue) 
         }
     }
 
-        eckit::Log::info() << "LatLon::frame(" << size << ") " << count << " " << k <<std::endl;
+    // eckit::Log::info() << "LatLon::frame(" << size << ") " << count << " " << k << std::endl;
 
 
     ASSERT(k == values.size());
@@ -284,7 +284,7 @@ size_t LatLon::frame(size_t size) const {
         }
     }
 
-    eckit::Log::info() << "LatLon::frame(" << size << ") " << count << " " << k <<std::endl;
+    // eckit::Log::info() << "LatLon::frame(" << size << ") " << count << " " << k << std::endl;
 
     return count;
 
