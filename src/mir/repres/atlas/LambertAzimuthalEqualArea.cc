@@ -27,14 +27,36 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const param::MIRParametrisa
     AtlasRegularGrid(param, make_projection(param)) {}
 
 AtlasRegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::MIRParametrisation& param) {
+
+    std::string proj;
+    if (param.get("proj", proj) && !proj.empty()) {
+        Projection::Spec spec("type", "proj");
+        spec.set("proj", proj);
+
+        std::string projSource;
+        if (param.get("projSource", projSource) && !projSource.empty()) {
+            spec.set("proj_source", projSource);
+        }
+
+        std::string projGeocentric;
+        if (param.get("projGeocentric", projGeocentric) && !projGeocentric.empty()) {
+            spec.set("proj_geocentric", projGeocentric);
+        }
+
+        return spec;
+    }
+
     double standardParallel;
     double centralLongitude;
+    double radius;
     ASSERT(param.get("standardParallelInDegrees", standardParallel));
     ASSERT(param.get("centralLongitudeInDegrees", centralLongitude));
+    param.get("radius", radius = ::atlas::util::Earth::radius());
 
     return Projection::Spec("type", "lambert_azimuthal_equal_area")
         .set("standard_parallel", standardParallel)
-        .set("central_longitude", centralLongitude);
+        .set("central_longitude", centralLongitude)
+        .set("radius", radius);
 }
 
 void LambertAzimuthalEqualArea::fill(grib_info& info) const {

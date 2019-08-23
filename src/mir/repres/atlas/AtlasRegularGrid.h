@@ -25,9 +25,10 @@ class AtlasRegularGrid : public Gridded {
 public:
     // -- Types
 
-    using RegularGrid   = ::atlas::RegularGrid;
     using LinearSpacing = ::atlas::grid::LinearSpacing;
+    using PointLonLat   = ::atlas::PointLonLat;
     using Projection    = ::atlas::Projection;
+    using RegularGrid   = ::atlas::RegularGrid;
 
     // -- Exceptions
     // None
@@ -108,8 +109,11 @@ protected:
 private:
     // -- Members
 
+    long shapeOfTheEarth_;
     double radius_;
-    bool radiusProvided_;
+    double earthMajorAxis_;
+    double earthMinorAxis_;
+    bool shapeOfTheEarthProvided_;
 };
 
 

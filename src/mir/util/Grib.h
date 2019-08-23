@@ -94,6 +94,7 @@ struct GribReorder {
 struct GribExtraSetting {
     static void set(grib_info&, const char* key, long);
     static void set(grib_info&, const char* key, double);
+    static void setScaledValueFactor(grib_info&, const char* valueKey, const char* factorKey, double);
 };
 
 

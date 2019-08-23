@@ -13,11 +13,9 @@
 
 #include <cmath>
 #include <ostream>
-#include <utility>
 
 #include "eckit/log/Log.h"
 #include "eckit/log/Plural.h"
-#include "eckit/types/FloatCompare.h"
 #include "eckit/utils/MD5.h"
 
 #include "mir/config/LibMir.h"
@@ -33,11 +31,11 @@ namespace atlas {
 AtlasRegularGrid::AtlasRegularGrid(const param::MIRParametrisation& param, AtlasRegularGrid::Projection projection) {
 
     ASSERT(projection);
-    auto R = ::atlas::util::Earth::radius();
-    radiusProvided_ = param.get("radius", radius_ = R) && !eckit::types::is_approximately_equal(radius_, R);
-    if (radiusProvided_) {
-        projection = {projection.spec().set("radius", radius_)};
-    }
+
+    shapeOfTheEarthProvided_ = param.get("shapeOfTheEarth", shapeOfTheEarth_ = 6);
+    param.get("radius", radius_ = ::atlas::util::Earth::radius());
+    param.get("earthMajorAxis", earthMajorAxis_ = radius_);
+    param.get("earthMinorAxis", earthMinorAxis_ = radius_);
 
     size_t nx = 0;
     size_t ny = 0;
@@ -64,7 +62,7 @@ AtlasRegularGrid::AtlasRegularGrid(const param::MIRParametrisation& param, Atlas
     ASSERT(x_.front() < x_.back());
     ASSERT(y_.front() > y_.back());
 
-    grid_ = ::atlas::RegularGrid(x_, y_, projection);
+    grid_ = RegularGrid(x_, y_, projection);
 
     ::atlas::RectangularDomain range({x_.front(), x_.back()}, {y_.front(), y_.back()}, "meters");
     ::atlas::RectangularLonLatDomain bbox = projection.lonlatBoundingBox(range);
@@ -102,27 +100,42 @@ bool AtlasRegularGrid::isPeriodicWestEast() const {
 
 void AtlasRegularGrid::fill(grib_info& info) const {
 
-    // GRIB2 encoding of user-provided radius
-    if (info.packing.editionNumber == 2 && radiusProvided_) {
+    // GRIB2 encoding of user-provided radius or semi-major/minor axis
+    if (info.packing.editionNumber == 2) {
 
-        long factor = 0;
-        long value  = long(radius_);
-        auto eval   = [&]() { return double(value) * std::pow(10., -factor); };
-        bool approx;
+        static const char* a[] = {"scaledValueOfEarthMajorAxis", "scaleFactorOfEarthMajorAxis"};
+        static const char* b[] = {"scaledValueOfEarthMinorAxis", "scaleFactorOfEarthMinorAxis"};
+        static const char* r[] = {"scaledValueOfRadiusOfSphericalEarth", "scaleFactorOfRadiusOfSphericalEarth"};
 
-        // approximated up to ten digits (arbitrary choice)
-        while ((approx = !eckit::types::is_approximately_equal(radius_, eval())) && factor < 10) {
-            value = long(radius_ * std::pow(10., ++factor));
+        auto spec = grid_.projection().spec();
+
+        if (shapeOfTheEarthProvided_) {
+            GribExtraSetting::set(info, "shapeOfTheEarth", shapeOfTheEarth_);
+            switch (shapeOfTheEarth_) {
+                case 1:
+                    GribExtraSetting::setScaledValueFactor(info, r[0], r[1], spec.getDouble("radius", radius_));
+                    break;
+                case 3:
+                    GribExtraSetting::setScaledValueFactor(info, a[0], a[1], spec.getDouble("semi_major_axis", earthMajorAxis_) / 1000.);
+                    GribExtraSetting::setScaledValueFactor(info, b[0], b[1], spec.getDouble("semi_minor_axis", earthMajorAxis_) / 1000.);
+                    break;
+                case 7:
+                    GribExtraSetting::setScaledValueFactor(info, a[0], a[1], spec.getDouble("semi_major_axis", earthMajorAxis_));
+                    GribExtraSetting::setScaledValueFactor(info, b[0], b[1], spec.getDouble("semi_minor_axis", earthMajorAxis_));
+                    break;
+                default:
+                    break;
+            }
         }
-
-        if (approx) {
-            eckit::Log::warning() << "LambertAzimuthalEqualArea: radius = " << radius_ << " approximated to " << eval()
-                                  << std::endl;
+        else if (spec.has("radius")) {
+            GribExtraSetting::set(info, "shapeOfTheEarth", 1L);
+            GribExtraSetting::setScaledValueFactor(info, r[0], r[1], spec.getDouble("radius"));
         }
-
-        GribExtraSetting::set(info, "shapeOfTheEarth", 1L);
-        GribExtraSetting::set(info, "scaleFactorOfRadiusOfSphericalEarth", factor);
-        GribExtraSetting::set(info, "scaledValueOfRadiusOfSphericalEarth", value);
+        else if (spec.has("semi_major_axis") && spec.has("semi_minor_axis")) {
+            GribExtraSetting::set(info, "shapeOfTheEarth", 7L);
+            GribExtraSetting::setScaledValueFactor(info, a[0], a[1], spec.getDouble("semi_major_axis"));
+            GribExtraSetting::setScaledValueFactor(info, b[0], b[1], spec.getDouble("semi_minor_axis"));
+        }
     }
 }
 
@@ -151,6 +164,7 @@ Iterator* AtlasRegularGrid::iterator() const {
         Projection projection_;
         const LinearSpacing& x_;
         const LinearSpacing& y_;
+        PointLonLat pLonLat_;
 
         size_t ni_;
         size_t nj_;
@@ -166,9 +180,9 @@ Iterator* AtlasRegularGrid::iterator() const {
 
         bool next(Latitude& _lat, Longitude& _lon) {
             if (j_ < nj_ && i_ < ni_) {
-                auto ll = projection_.lonlat({x_[i_], y_[j_]});
-                _lat = lat(ll.lat());
-                _lon = lon(ll.lon());
+                pLonLat_ = projection_.lonlat({x_[i_], y_[j_]});
+                _lat = lat(pLonLat_.lat());
+                _lon = lon(pLonLat_.lon());
 
                 if (++i_ == ni_) {
                     i_ = 0;
@@ -207,6 +221,12 @@ void AtlasRegularGrid::makeName(std::ostream& out) const {
     h << grid_.projection().spec();
     h << x_.spec();
     h << y_.spec();
+    if (shapeOfTheEarthProvided_) {
+        h << shapeOfTheEarth_;
+        h << radius_;
+        h << earthMajorAxis_;
+        h << earthMinorAxis_;
+    }
     auto type = grid_.projection().spec().getString("type");
     out << "AtlasRegularGrid-" << (type.empty() ? "" : type + "-") << h.digest();
 }
