@@ -34,6 +34,7 @@
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "mir/api/MIREstimation.h"
 
 
 namespace mir {
@@ -117,9 +118,9 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e) const {
     ASSERT(inc > 0);
 
     if (angleApproximatelyEqual(Longitude::GREENWICH, w) && (
-        angleApproximatelyEqual(Longitude::GLOBE - inc, e - w) ||
-        Longitude::GLOBE - inc < e - w ||
-        (e != w && e.normalise(w) == w))) {
+                angleApproximatelyEqual(Longitude::GLOBE - inc, e - w) ||
+                Longitude::GLOBE - inc < e - w ||
+                (e != w && e.normalise(w) == w))) {
 
         w = Longitude::GREENWICH;
         e = Longitude::GLOBE - inc;
@@ -189,8 +190,8 @@ eckit::Fraction Reduced::getSmallestIncrement() const {
 
     const std::vector<long>& pl = pls();
     const long maxpl = *std::max_element(
-                pl.begin() + distance_t(k_),
-                pl.begin() + distance_t(k_ + Nj_));
+                           pl.begin() + distance_t(k_),
+                           pl.begin() + distance_t(k_ + Nj_));
     ASSERT(maxpl);
 
     return Longitude::GLOBE.fraction() / maxpl;
@@ -295,6 +296,11 @@ void Reduced::fill(grib_info& info) const  {
     bbox_.fill(info);
 }
 
+void Reduced::estimate(api::MIREstimation& estimation) const {
+    Gaussian::estimate(estimation);
+    const std::vector<long>& pl = pls();
+    estimation.pl(pl.size());
+}
 
 void Reduced::fill(api::MIRJob& job) const  {
     ASSERT(isGlobal());
@@ -393,8 +399,8 @@ bool Reduced::getLongestElementDiagonal(double& d) const {
 
         const eckit::Fraction we = Longitude::GLOBE.fraction() / (std::min(pl[j - 1], pl[j]));
         const Latitude&
-                latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value())? l1 : l2),
-                latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value())? l2 : l1);
+        latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l1 : l2),
+                           latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l2 : l1);
 
         d = std::max(d, atlas::util::Earth::distance(
                          atlas::PointLonLat(0., latCloserToEquator.value()),
@@ -475,6 +481,9 @@ bool Reduced::isPeriodicWestEast() const {
     return bbox_.east() - bbox_.west() + inc >= Longitude::GLOBE;
 }
 
+std::string Reduced::factory() const {
+    return "reduced_gg";
+}
 
 }  // namespace reduced
 }  // namespace gauss
