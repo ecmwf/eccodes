@@ -65,7 +65,7 @@ typedef struct grib_dumper_bufr_simple {
 	long end;
 	long isLeaf;
 	long isAttribute;
-    long numberOfSubsets;
+	long numberOfSubsets;
 	grib_string_list* keys;
 } grib_dumper_bufr_simple;
 

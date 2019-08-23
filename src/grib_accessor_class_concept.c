@@ -463,7 +463,6 @@ static long get_ECMWF_local_paramId(grib_accessor* a, grib_handle* h)
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-    char *endptr;
     const char *p = concept_evaluate(a);
 
     if(!p) {
@@ -481,17 +480,26 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
         return GRIB_NOT_FOUND;
     }
 
+    *val = atol(p);
     *len = 1;
-    *val = strtol(p, &endptr, 10);
-    if (endptr == p) {
-        int type = GRIB_TYPE_UNDEFINED;
-        grib_context_log(a->context,GRIB_LOG_ERROR,"Cannot unpack %s as long",a->name);
-        if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
-            grib_context_log(a->context,GRIB_LOG_ERROR,"Hint: Try unpacking as %s", grib_get_type_name(type));
+#if 0
+    /* ECC-980: Changes reverted because of side-effects!
+     * e.g. marsType being a codetable and concept! see ifsParam
+     */
+    {
+        char *endptr;
+        *val = strtol(p, &endptr, 10);
+        if (endptr == p || *endptr != '\0') {
+            /* Failed to convert string into integer */
+            int type = GRIB_TYPE_UNDEFINED;
+            grib_context_log(a->context,GRIB_LOG_ERROR,"Cannot unpack %s as long",a->name);
+            if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
+                grib_context_log(a->context,GRIB_LOG_ERROR,"Hint: Try unpacking as %s", grib_get_type_name(type));
+            }
+            return GRIB_DECODING_ERROR;
         }
-        return GRIB_DECODING_ERROR;
     }
-
+#endif
     return GRIB_SUCCESS;
 }
 
