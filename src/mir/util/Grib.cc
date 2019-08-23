@@ -14,6 +14,7 @@
 
 #include <iomanip>
 #include <ios>
+#include <cmath>
 
 #include "eckit/types/FloatCompare.h"
 
