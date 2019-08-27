@@ -97,32 +97,3 @@ void GribExtraSetting::set(grib_info& info, const char* key, double value) {
     set.double_value = value;
     set.type         = GRIB_TYPE_DOUBLE;
 }
-
-void GribExtraSetting::setScaledValueFactor(grib_info& info, const char* valueKey, const char* factorKey, double exact)
-{
-    long factor;
-    long value;
-    auto eval = [&value, &factor] { return double(value) * std::pow(10., -factor); };
-
-    ASSERT(exact > 0);
-
-    // approximated to 2 digits (keep below 4 byte unsigned limit)
-    // TODO should check when maximum approximation is reached instead
-    for (factor = 0, value = std::lround(exact); factor < 2 && !eckit::types::is_approximately_equal(exact, eval());) {
-        value = std::lround(exact * std::pow(10., ++factor));
-    }
-
-    if (!eckit::types::is_approximately_equal(exact, eval())) {
-        auto& log = eckit::Log::warning();
-        auto oldf = log.setf(std::ios::fixed);
-        auto oldp = log.precision();
-        log << "GribExtraSetting::setScaledValueFactor: (" << factorKey << ", " << valueKey
-            << ")=" << std::setprecision(int(factor)) << eval() << " approximated from " << std::setprecision(20)
-            << exact << std::endl;
-        log.setf(oldf);
-        log.precision(oldp);
-    }
-
-    GribExtraSetting::set(info, factorKey, factor);
-    GribExtraSetting::set(info, valueKey, value);
-}
