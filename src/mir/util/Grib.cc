@@ -12,10 +12,10 @@
 /// @author Pedro Maciel
 
 
-#include <iomanip>
-#include <ios>
-#include <cmath>
+#include <sstream>
+#include <utility>
 
+#include "eckit/log/Log.h"
 #include "eckit/types/FloatCompare.h"
 
 #include "mir/util/Grib.h"
@@ -84,7 +84,7 @@ void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t
 
 
 void GribExtraSetting::set(grib_info& info, const char* key, long value) {
-    auto& set = info.packing.extra_settings[info.packing.extra_settings_count++];
+    auto& set      = info.packing.extra_settings[info.packing.extra_settings_count++];
     set.name       = key;
     set.long_value = value;
     set.type       = GRIB_TYPE_LONG;
