@@ -857,6 +857,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     int packingTypeIsSet=0;
     int setSecondOrder=0;
     int setJpegPacking=0;
+    int convertEditionEarlier=0;/* For cases when we cannot set some keys without converting */
     size_t slen=17;
     int grib1_high_resolution_fix = 0; /* boolean: See GRIB-863 */
     int global_grid = 0; /* boolean */
@@ -1061,10 +1062,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 }
                 break;
             case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
-                if (editionNumber==1) {
-                    fprintf(stderr,"GRIB_UTIL_SET_SPEC: grid type='%s' not available in GRIB edition 1.\n", grid_type);
-                    *err = GRIB_WRONG_GRID;
-                    goto cleanup;
+                if (editionNumber==1) {   /* This grid type is not available in edition 1 */
+                    if (h->context->debug==-1)
+                        fprintf(stderr,"lambert_azimuthal_equal_area specified but input is GRIB1. Output must be a higher edition!\n");
+                    convertEditionEarlier=1;
                 }
                 sprintf(name, "GRIB%ld", editionNumber);
                 break;
@@ -1471,6 +1472,14 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         {
             fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot expand bounding box: %s\n",grib_get_error_message(*err));
             if (h->context->write_on_fail) grib_write_message(outh,"error.grib","w");
+            goto cleanup;
+        }
+    }
+
+    if (convertEditionEarlier && packing_spec->editionNumber>1) {
+        *err = grib_set_long(outh,"edition", packing_spec->editionNumber);
+        if(*err) {
+            fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot convert to edition %ld.\n",packing_spec->editionNumber);
             goto cleanup;
         }
     }
