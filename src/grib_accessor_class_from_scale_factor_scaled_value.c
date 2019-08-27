@@ -174,6 +174,7 @@ static double eval_value_factor(long value, long factor)
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
+    /* See ECC-979 */
     /* Evaluate self->scaleFactor and self->scaledValue from input double '*val' */
     grib_accessor_from_scale_factor_scaled_value* self = (grib_accessor_from_scale_factor_scaled_value*)a;
     grib_handle* hand = grib_handle_of_accessor(a);

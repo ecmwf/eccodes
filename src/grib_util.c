@@ -1064,7 +1064,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
                 if (editionNumber==1) {   /* This grid type is not available in edition 1 */
                     if (h->context->debug==-1)
-                        fprintf(stderr,"lambert_azimuthal_equal_area specified but input is GRIB1. Output must be a higher edition!\n");
+                        fprintf(stderr,"ECCODES DEBUG grib_util: lambert_azimuthal_equal_area specified "
+                                       "but input is GRIB1. Output must be a higher edition!\n");
                     convertEditionEarlier=1;
                 }
                 sprintf(name, "GRIB%ld", editionNumber);

@@ -70,9 +70,11 @@ _if (shapeOfTheEarth == 3){
   meta earthMinorAxis from_scale_factor_scaled_value(
        scaleFactorOfEarthMinorAxis, scaledValueOfEarthMinorAxis);
 
+  # ECC-979
   # The 'scale' accessor works with integers so rounds its first argument
   # which is not what we want because the inputs are doubles with decimal
   # expansions. So use the trick of dividing by 0.001 to multiply by 1000
+  #
   # meta earthMajorAxisInMetres scale(earthMajorAxis, thousand, one, zero);
   # meta earthMinorAxisInMetres scale(earthMinorAxis, thousand, one, zero);
   meta earthMajorAxisInMetres divdouble(earthMajorAxis, 0.001);
