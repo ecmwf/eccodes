@@ -89,11 +89,17 @@ int grib_tool_init(grib_runtime_options* options)
         json_latlon=1;
     }
 
+    /* TODO: sort when JSON is on */
+    if (grib_options_on("j") && grib_options_on("B:")) {
+        fprintf(stderr, "Error: -j and -B options are incompatible\n");
+        exit(1);
+    }
+
     if (options->latlon) {
 
         lat = strtod(options->latlon,&theEnd);
         if (*theEnd != ',') {
-            printf("ERROR: wrong latitude value\n");
+            fprintf(stderr, "Error: wrong latitude value\n");
             exit(1);
         }
         lon= strtod(++theEnd,&end1);
@@ -110,7 +116,7 @@ int grib_tool_init(grib_runtime_options* options)
                 } else if (*end1 == '1') {
                     options->latlon_mode=1;
                 } else {
-                    printf("ERROR %s: wrong mode given in option -l\n",grib_tool_name);
+                    fprintf(stderr, "Error %s: wrong mode given in option -l\n",grib_tool_name);
                     exit(1);
                 }
             }
