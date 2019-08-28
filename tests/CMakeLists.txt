@@ -87,6 +87,7 @@ list( APPEND tests_data_reqd
     bufr_filter_extract_area
     bufr_json_data
     bufr_ls
+    bufr_ls_json
     bufr_change_edition
     bufr_keys_iter
     bufr_get_element

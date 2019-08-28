@@ -10,7 +10,7 @@
 
 . ./include.sh
 
-tempLog=temp.ls.json.log
+tempLog=temp.grib_ls_json.log
 rm -f $tempLog
 
 cd ${data_dir}
@@ -19,15 +19,25 @@ cd ${data_dir}
 # --------------------
 input=sample.grib2
 ${tools_dir}/grib_ls -j -p scaledValueOfEarthMajorAxis $input > $tempLog
-grep -q "scaledValueOfEarthMajorAxis.*MISSING" $tempLog
+grep -q '"scaledValueOfEarthMajorAxis": "MISSING"' $tempLog
 
 
-# Test decoding a given key in different ways
+# Test decoding a given key as string and integer
 # ---------------------------------------------
 input=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 ${tools_dir}/grib_ls -j -p levelType,levelType:i  $input > $tempLog
-grep -q "levelType.*pl" $tempLog
-grep -q "levelType.*100" $tempLog
+grep -q '"levelType": "pl"' $tempLog
+grep -q '"levelType": 100'  $tempLog
+
+
+# Test decoding floating point key with format
+# ---------------------------------------------
+input=$ECCODES_SAMPLES_PATH/reduced_gg_pl_128_grib2.tmpl
+${tools_dir}/grib_ls -j -p latitudeOfLastGridPointInDegrees $input > $tempLog
+grep -q '"latitudeOfLastGridPointInDegrees": -89.4628' $tempLog
+
+${tools_dir}/grib_ls -F%.3f -j -p latitudeOfLastGridPointInDegrees $input > $tempLog
+grep -q '"latitudeOfLastGridPointInDegrees": -89.463' $tempLog
 
 
 # Check JSON validity

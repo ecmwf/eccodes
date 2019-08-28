@@ -818,6 +818,19 @@ void grib_skip_check(grib_runtime_options* options,grib_handle* h)
     }
 }
 
+/* TODO: Does not work for 2.7e+01 */
+static int is_value_a_number(const char* input)
+{
+    const char *p = input;
+    if (p == 0 || *p == 0) return 0;
+    if (*p == '-') p++;
+
+    while (*p) {
+        if( *p != '.' && !isdigit(*p)) return 0;
+        p++;
+    }
+    return 1;
+}
 static void get_value_for_key(grib_handle* h, const char* key_name, int key_type, char* value_str, const char* format)
 {
     int ret = 0, type = key_type;
@@ -935,18 +948,21 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     if (!options->verbose) return;
 
     if (options->json_output) {
-        //fprintf(dump_file, "\"message %d\" : {\n", options->handle_count); //JSON TODO
+        /* fprintf(dump_file, "\"message %d\" : {\n", options->handle_count); */
         fprintf(dump_file, "{\n");
         for (i=0;i<options->print_keys_count;i++) {
             fprintf(dump_file,"\t\"%s\": ", options->print_keys[i].name);
             get_value_for_key(h, options->print_keys[i].name, options->print_keys[i].type, value, options->format);
-            fprintf(dump_file,"\"%s\"", value);
+            if (is_value_a_number(value))
+                fprintf(dump_file,"%s", value);
+            else
+                fprintf(dump_file,"\"%s\"", value);
             if (i != options->print_keys_count-1)
                 fprintf(dump_file,",\n");
             else
                 fprintf(dump_file,"\n");
         }
-        fprintf(dump_file, "}\n"); //JSON TODO
+        fprintf(dump_file, "}\n");
         return;
     }
 
