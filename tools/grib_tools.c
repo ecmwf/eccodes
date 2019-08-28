@@ -837,14 +837,22 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
     double dvalue = 0;
     long lvalue = 0;
     size_t len=MAX_STRING_LEN;
-    
+
     if (grib_is_missing(h, key_name, &ret) && ret==GRIB_SUCCESS) {
         sprintf(value_str,"MISSING");
         return;
     }
+    if (ret == GRIB_NOT_FOUND) {
+        sprintf(value_str,"not_found");
+        return;
+    }
 
     if (type == GRIB_TYPE_UNDEFINED) {
-        grib_get_native_type(h, key_name, &type);
+        ret=grib_get_native_type(h, key_name, &type);
+        if(ret!=GRIB_SUCCESS) {
+            fprintf(dump_file,"Could not determine type for %s\n", key_name);
+            exit(1);
+        }
     }
 
     if (type == GRIB_TYPE_STRING) {
@@ -949,7 +957,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
 
     if (options->json_output) {
         /* fprintf(dump_file, "\"message %d\" : {\n", options->handle_count); */
-        fprintf(dump_file, "{\n");
+        fprintf(dump_file, "  {\n");
         for (i=0;i<options->print_keys_count;i++) {
             fprintf(dump_file,"\t\"%s\": ", options->print_keys[i].name);
             get_value_for_key(h, options->print_keys[i].name, options->print_keys[i].type, value, options->format);
@@ -962,7 +970,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             else
                 fprintf(dump_file,"\n");
         }
-        fprintf(dump_file, "}\n");
+        fprintf(dump_file, "  }");
         return;
     }
 
