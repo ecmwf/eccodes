@@ -139,81 +139,82 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
+    grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
 
-  int n = 0;
+    int n = 0;
 
-  self->startStep   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->endStep     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  
-  a->length=0;
+    self->startStep   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->endStep     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+
+    a->length=0;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_string(dumper,a,NULL);
-
+    grib_dump_string(dumper,a,NULL);
 }
 
-static int unpack_string(grib_accessor* a, char* val, size_t *len) {
-  grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
-  grib_handle* h=grib_handle_of_accessor(a);
-  char buf[100];
-  int ret=0;
-  size_t size=0;
-  long start=0,theEnd=0;
+static int unpack_string(grib_accessor* a, char* val, size_t *len)
+{
+    grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
+    grib_handle* h=grib_handle_of_accessor(a);
+    char buf[100];
+    int ret=0;
+    size_t size=0;
+    long start=0,theEnd=0;
 
-  ret = grib_get_long_internal(h,self->startStep,&start);
-  if (ret) return ret;
-  
-  if (self->endStep==NULL) {
-    sprintf(buf,"%ld",start);
-  } else {
-    ret = grib_get_long_internal(h,self->endStep,&theEnd);
+    ret = grib_get_long_internal(h,self->startStep,&start);
     if (ret) return ret;
 
-	if(start == theEnd)
-	{
-		sprintf(buf,"%ld",theEnd);
-	}
-	else
-	{
-		sprintf(buf,"%ld-%ld",start,theEnd);
-	}
-  }
+    if (self->endStep==NULL) {
+        sprintf(buf,"%ld",start);
+    } else {
+        ret = grib_get_long_internal(h,self->endStep,&theEnd);
+        if (ret) return ret;
 
-  size=strlen(buf)+1;
+        if(start == theEnd)
+        {
+            sprintf(buf,"%ld",theEnd);
+        }
+        else
+        {
+            sprintf(buf,"%ld-%ld",start,theEnd);
+        }
+    }
 
-  if (*len<size) return GRIB_ARRAY_TOO_SMALL;
+    size=strlen(buf)+1;
 
-  *len=size;
+    if (*len<size) return GRIB_ARRAY_TOO_SMALL;
 
-  memcpy(val,buf,size);
+    *len=size;
 
-  return GRIB_SUCCESS;
+    memcpy(val,buf,size);
+
+    return GRIB_SUCCESS;
 }
 
-static int pack_string(grib_accessor* a, const char* val, size_t *len){
-  grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
-  grib_handle* h=grib_handle_of_accessor(a);
+static int pack_string(grib_accessor* a, const char* val, size_t *len)
+{
+    grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
+    grib_handle* h=grib_handle_of_accessor(a);
 
-  long start=0,theEnd=-1;
-  int ret=0;
-  char *p=NULL,*q=NULL;
+    long start=0,theEnd=-1;
+    int ret=0;
+    char *p=NULL,*q=NULL;
 
-  start=strtol(val, &p,10);
-  theEnd=start;
-  
-  if ( *p!=0 ) theEnd=strtol(++p, &q,10);
-  ret=grib_set_long_internal(h,self->startStep,start);
-  if (ret) return ret;
+    start=strtol(val, &p,10);
+    theEnd=start;
 
-  if(self->endStep!=NULL) {
-    ret=grib_set_long_internal(h,self->endStep,theEnd);
+    if ( *p!=0 ) theEnd=strtol(++p, &q,10);
+    ret=grib_set_long_internal(h,self->startStep,start);
     if (ret) return ret;
-  }
 
-  return 0;
+    if(self->endStep!=NULL) {
+        ret=grib_set_long_internal(h,self->endStep,theEnd);
+        if (ret) return ret;
+    }
+
+    return 0;
 }
 
 static int value_count(grib_accessor* a,long* count)
@@ -224,40 +225,41 @@ static int value_count(grib_accessor* a,long* count)
 
 static size_t string_length(grib_accessor* a)
 {
-  return 255;
+    return 255;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  char buff[100];
-  size_t bufflen=100;
+    char buff[100];
+    size_t bufflen=100;
 
-  sprintf(buff,"%ld",*val);
-  return pack_string( a,buff,&bufflen);
+    sprintf(buff,"%ld",*val);
+    return pack_string( a,buff,&bufflen);
 }
 
-static int unpack_long(grib_accessor* a, long* val, size_t *len) {
-  char buff[100];
-  size_t bufflen=100;
-  long start,theEnd;
-  char* p=buff;
-  char* q=NULL;
-  int err=0;
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
+{
+    char buff[100];
+    size_t bufflen=100;
+    long start,theEnd;
+    char* p=buff;
+    char* q=NULL;
+    int err=0;
 
-  
-  if ((err=unpack_string( a,buff,&bufflen))!=GRIB_SUCCESS)
-    return err;
-  
-  start=strtol(buff, &p,10);
-  theEnd=start;
-  if ( *p!=0 ) theEnd=strtol(++p, &q,10);
 
-  *val=theEnd;
+    if ((err=unpack_string( a,buff,&bufflen))!=GRIB_SUCCESS)
+        return err;
 
-  return 0;
+    start=strtol(buff, &p,10);
+    theEnd=start;
+    if ( *p!=0 ) theEnd=strtol(++p, &q,10);
+
+    *val=theEnd;
+
+    return 0;
 }
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_STRING;
+static int  get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_STRING;
 }
-

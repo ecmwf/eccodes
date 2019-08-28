@@ -143,52 +143,50 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  int n=0;
-  grib_accessor_number_of_coded_values* self = (grib_accessor_number_of_coded_values*)a;
-  self->bitsPerValue = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->offsetBeforeData = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->offsetAfterData = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->unusedBits = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->numberOfValues = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-  a->length=0;
+    int n=0;
+    grib_accessor_number_of_coded_values* self = (grib_accessor_number_of_coded_values*)a;
+    self->bitsPerValue = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->offsetBeforeData = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->offsetAfterData = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->unusedBits = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->numberOfValues = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    a->length=0;
 }
 
-static int  unpack_long(grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  int ret=GRIB_SUCCESS;
-  long bpv=0;
-  long offsetBeforeData=0,offsetAfterData=0,unusedBits=0,numberOfValues;
+    int ret=GRIB_SUCCESS;
+    long bpv=0;
+    long offsetBeforeData=0,offsetAfterData=0,unusedBits=0,numberOfValues;
 
-  grib_accessor_number_of_coded_values* self = (grib_accessor_number_of_coded_values*)a;
+    grib_accessor_number_of_coded_values* self = (grib_accessor_number_of_coded_values*)a;
 
-  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->bitsPerValue,&bpv)) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->bitsPerValue,&bpv)) != GRIB_SUCCESS)
+        return ret;
+
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetBeforeData,&offsetBeforeData)) != GRIB_SUCCESS)
+        return ret;
+
+
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetAfterData,&offsetAfterData)) != GRIB_SUCCESS)
+        return ret;
+
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->unusedBits,&unusedBits)) != GRIB_SUCCESS)
+        return ret;
+
+    if ( bpv != 0 ) {
+        grib_context_log(a->context,GRIB_LOG_DEBUG,"grib_accessor_number_of_coded_values: offsetAfterData=%ld offsetBeforeData=%ld unusedBits=%ld bpv=%ld\n",
+                offsetAfterData,offsetBeforeData,unusedBits,bpv);
+        DebugAssert( offsetAfterData > offsetBeforeData );
+        *val=((offsetAfterData-offsetBeforeData)*8-unusedBits)/bpv;
+    } else {
+        if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfValues,&numberOfValues)) != GRIB_SUCCESS)
+            return ret;
+
+        *val=numberOfValues;
+    }
+
     return ret;
-
-  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetBeforeData,&offsetBeforeData)) != GRIB_SUCCESS)
-    return ret;
-
-
-  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetAfterData,&offsetAfterData)) != GRIB_SUCCESS)
-    return ret;
-
-  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->unusedBits,&unusedBits)) != GRIB_SUCCESS)
-    return ret;
-
-  if ( bpv != 0 ) {
-     grib_context_log(a->context,GRIB_LOG_DEBUG,"grib_accessor_number_of_coded_values: offsetAfterData=%ld offsetBeforeData=%ld unusedBits=%ld bpv=%ld\n",
-               offsetAfterData,offsetBeforeData,unusedBits,bpv);
-     DebugAssert( offsetAfterData > offsetBeforeData );
-     *val=((offsetAfterData-offsetBeforeData)*8-unusedBits)/bpv;
-  } else {
-    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfValues,&numberOfValues)) != GRIB_SUCCESS)
-      return ret;
-
-    *val=numberOfValues;
-  }
-
-
-  return ret;
 }
-

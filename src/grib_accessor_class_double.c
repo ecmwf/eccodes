@@ -132,100 +132,96 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-
-
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_DOUBLE;
+static int  get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_DOUBLE;
 }
 
+static int unpack_string(grib_accessor*a , char*  v, size_t *len)
+{
+    double val = 0;
+    size_t l = 1;
+    char repres[1024];
 
-static int unpack_string(grib_accessor*a , char*  v, size_t *len){
-
-  double val = 0;
-  size_t l = 1;
-  char repres[1024];
-
-  grib_unpack_double (a , &val, &l);
+    grib_unpack_double (a , &val, &l);
 
     if ((val == GRIB_MISSING_DOUBLE) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) )
-    sprintf(repres,"MISSING");
+        sprintf(repres,"MISSING");
     else
-    sprintf(repres,"%g", val);
+        sprintf(repres,"%g", val);
 
-  l = strlen(repres)+1;
+    l = strlen(repres)+1;
 
-  if(l >*len ){
-    grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s ", a->name );
+    if(l >*len ){
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s ", a->name );
+
+        *len = l;
+        return GRIB_BUFFER_TOO_SMALL;
+    }
+    grib_context_log(a->context,GRIB_LOG_DEBUG, "grib_accessor_long: Casting double %s to string  ", a->name);
 
     *len = l;
-    return GRIB_BUFFER_TOO_SMALL;
-  }
-  grib_context_log(a->context,GRIB_LOG_DEBUG, "grib_accessor_long: Casting double %s to string  ", a->name);
 
-  *len = l;
-
-  strcpy(v,repres);
-  return GRIB_SUCCESS;
-
-
+    strcpy(v,repres);
+    return GRIB_SUCCESS;
 }
+
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_values(dumper,a);
+    grib_dump_values(dumper,a);
 }
 
-static int compare(grib_accessor* a, grib_accessor* b) {
-  int retval=0;
-  double *aval=0;
-  double *bval=0;
+static int compare(grib_accessor* a, grib_accessor* b)
+{
+    int retval=0;
+    double *aval=0;
+    double *bval=0;
 
-  size_t alen = 0;
-  size_t blen = 0;
-  long count = 0;
-  int err=0;
+    size_t alen = 0;
+    size_t blen = 0;
+    long count = 0;
+    int err=0;
 
-  err=grib_value_count(a,&count);
-  if (err) return err;
-  alen=count;
+    err=grib_value_count(a,&count);
+    if (err) return err;
+    alen=count;
 
-  err=grib_value_count(b,&count);
-  if (err) return err;
-  blen=count;
+    err=grib_value_count(b,&count);
+    if (err) return err;
+    blen=count;
 
-  if (alen != blen) return GRIB_COUNT_MISMATCH;
+    if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-  aval=(double*)grib_context_malloc(a->context,alen*sizeof(double));
-  bval=(double*)grib_context_malloc(b->context,blen*sizeof(double));
+    aval=(double*)grib_context_malloc(a->context,alen*sizeof(double));
+    bval=(double*)grib_context_malloc(b->context,blen*sizeof(double));
 
-  grib_unpack_double(a,aval,&alen);
-  grib_unpack_double(b,bval,&blen);
+    grib_unpack_double(a,aval,&alen);
+    grib_unpack_double(b,bval,&blen);
 
-  retval = GRIB_SUCCESS;
-  while (alen != 0) {
-    if (*bval != *aval) retval = GRIB_DOUBLE_VALUE_MISMATCH;
-    alen--;
-  }
+    retval = GRIB_SUCCESS;
+    while (alen != 0) {
+        if (*bval != *aval) retval = GRIB_DOUBLE_VALUE_MISMATCH;
+        alen--;
+    }
 
-  grib_context_free(a->context,aval);
-  grib_context_free(b->context,bval);
+    grib_context_free(a->context,aval);
+    grib_context_free(b->context,bval);
 
-  return retval;
-
+    return retval;
 }
 
-static int pack_missing(grib_accessor* a){
+static int pack_missing(grib_accessor* a)
+{
+    size_t one = 1;
+    double value = GRIB_MISSING_DOUBLE;
 
-  size_t one = 1;
-  double value = GRIB_MISSING_DOUBLE;
-
-  if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
-    return grib_pack_double(a,&value,&one);
-  return GRIB_VALUE_CANNOT_BE_MISSING;
+    if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
+        return grib_pack_double(a,&value,&one);
+    return GRIB_VALUE_CANNOT_BE_MISSING;
 }
 
 /*
 static int is_missing(grib_accessor* a){
-
   size_t one = 1;
   double value = GRIB_MISSING_DOUBLE;
 
