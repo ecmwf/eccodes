@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,7 +21,7 @@ grib_option grib_options[]={
     {"F:",0,0,1,1,"%g"},
     {"P:",0,0,0,1,0},
     {"w:",0,0,0,1,0},
-    {"j",0,"json output\n",0,1,0},
+    {"j",0,"JSON output\n",0,1,0},
     {"B:",0,0,0,1,0},
     {"l:",0,0,0,1,0},
     {"s:",0,0,0,1,0},
@@ -49,13 +49,12 @@ const char* grib_tool_usage="[options] grib_file grib_file ...";
 static char* new_handle="";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
-double lat=0;
-double lon=0;
-int mode=0;
+static double lat=0;
+static double lon=0;
+static int mode=0;
 static int json_latlon=0;
 static int first_handle=1;
-
-grib_nearest* n=NULL;
+static grib_nearest* nearest=NULL;
 
 int main(int argc, char *argv[])
 {
@@ -123,12 +122,11 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (options->latlon && options->latlon_mask) {
-        FILE* f=NULL;
         grib_handle* hh;
         int idx=0, land_found=0;
         double min_overall = 0.0;
         int idx_overall = -1;
-        f=fopen(options->latlon_mask,"r");
+        FILE* f=fopen(options->latlon_mask,"r");
         if(!f) {
             perror(options->latlon_mask);
             exit(1);
@@ -136,13 +134,13 @@ int grib_tool_init(grib_runtime_options* options)
         hh=grib_handle_new_from_file(0,f,&ret);
         fclose(f);
         GRIB_CHECK_NOLINE(ret,0);
-        n=grib_nearest_new(hh,&ret);
+        nearest=grib_nearest_new(hh,&ret);
         GRIB_CHECK_NOLINE(ret,0);
-        GRIB_CHECK_NOLINE(grib_nearest_find(n,hh,lat,lon,mode,
+        GRIB_CHECK_NOLINE(grib_nearest_find(nearest,hh,lat,lon,mode,
                 options->lats,options->lons,options->mask_values,options->distances,options->indexes,&size),0);
-        grib_nearest_delete(n);
-        n=NULL;
-        grib_handle_delete( hh);
+        grib_nearest_delete(nearest);
+        nearest=NULL;
+        grib_handle_delete(hh);
 
         options->latlon_idx=-1;
         max=options->distances[0];
@@ -264,7 +262,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if (options->latlon) {
         double min;
         err=0;
-        if (!n) n=grib_nearest_new(h,&err);
+        if (!nearest) nearest=grib_nearest_new(h,&err);
         if (err == GRIB_NOT_IMPLEMENTED) {
             char grid_type[100];
             size_t grid_type_len=100;
@@ -279,9 +277,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             if (options->latlon_mask) {
                 nn_flag = mode; /* ECC-638 */
             }
-            GRIB_CHECK_NOLINE(grib_nearest_find(n,h,lat,lon,nn_flag,
-                options->lats,options->lons,options->values,
-                options->distances,options->indexes,&size),0);
+            GRIB_CHECK_NOLINE(grib_nearest_find(nearest,h,lat,lon,nn_flag,
+                              options->lats,options->lons,options->values,
+                              options->distances,options->indexes,&size),0);
         }
 
         if (!options->latlon_mask) {
@@ -396,7 +394,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     
     if (options->json_output) fprintf(stdout,"\n]}\n");
 
-    if (n) grib_nearest_delete(n);
+    if (nearest) grib_nearest_delete(nearest);
     if (json_latlon) printf("\n]\n");
 
     return 0;

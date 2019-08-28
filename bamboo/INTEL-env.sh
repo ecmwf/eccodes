@@ -11,6 +11,9 @@ module unload emos
 module unload fftw
 module unload libemos
 module unload metview
+module unload netcdf4
+
+module list
 
 module load cmake/3.10.2
 

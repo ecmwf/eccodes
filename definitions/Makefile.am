@@ -13859,13 +13859,16 @@ dist_definitionsgrib2_DATA = \
 	grib2/template.3.12.def\
 	grib2/template.3.120.def\
 	grib2/template.3.1200.def\
+	grib2/template.3.13.def\
 	grib2/template.3.130.def\
 	grib2/template.3.140.def\
 	grib2/template.3.2.def\
 	grib2/template.3.20.def\
+	grib2/template.3.23.def\
 	grib2/template.3.3.def\
 	grib2/template.3.30.def\
 	grib2/template.3.31.def\
+	grib2/template.3.33.def\
 	grib2/template.3.4.def\
 	grib2/template.3.40.def\
 	grib2/template.3.41.def\
@@ -13876,9 +13879,14 @@ dist_definitionsgrib2_DATA = \
 	grib2/template.3.51.def\
 	grib2/template.3.52.def\
 	grib2/template.3.53.def\
+	grib2/template.3.61.def\
+	grib2/template.3.62.def\
+	grib2/template.3.63.def\
 	grib2/template.3.90.def\
+	grib2/template.3.bf.def\
 	grib2/template.3.gaussian.def\
 	grib2/template.3.grid.def\
+	grib2/template.3.lam.def\
 	grib2/template.3.latlon.def\
 	grib2/template.3.latlon_vares.def\
 	grib2/template.3.resolution_flags.def\
@@ -13982,6 +13990,7 @@ dist_definitionsgrib2_DATA = \
 	grib2/template.5.50001.def\
 	grib2/template.5.50002.def\
 	grib2/template.5.51.def\
+	grib2/template.5.53.def\
 	grib2/template.5.6.def\
 	grib2/template.5.61.def\
 	grib2/template.5.original_values.def\
@@ -14002,6 +14011,7 @@ dist_definitionsgrib2_DATA = \
 	grib2/template.7.50001.def\
 	grib2/template.7.50002.def\
 	grib2/template.7.51.def\
+	grib2/template.7.53.def\
 	grib2/template.7.6.def\
 	grib2/template.7.61.def\
 	grib2/template.7.second_order.def\

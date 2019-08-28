@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -147,12 +147,14 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
     int n=0;
     grib_accessor_number_of_values* self = (grib_accessor_number_of_values*)a;
-    self->values = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->bitsPerValue = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->numberOfPoints = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->bitmapPresent = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->bitmap = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->numberOfCodedValues = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    grib_handle* hand = grib_handle_of_accessor(a);
+
+    self->values = grib_arguments_get_name(hand,c,n++);
+    self->bitsPerValue = grib_arguments_get_name(hand,c,n++);
+    self->numberOfPoints = grib_arguments_get_name(hand,c,n++);
+    self->bitmapPresent = grib_arguments_get_name(hand,c,n++);
+    self->bitmap = grib_arguments_get_name(hand,c,n++);
+    self->numberOfCodedValues = grib_arguments_get_name(hand,c,n++);
     a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 
     a->length=0;

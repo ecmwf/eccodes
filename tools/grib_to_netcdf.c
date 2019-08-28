@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -29,7 +29,9 @@
 #include <stdint.h>
 #endif
 
-const char* grib_tool_description = "Convert a GRIB file to netCDF format.";
+const char* grib_tool_description = "Convert a GRIB file to netCDF format."
+        "\n\tNote: The GRIB geometry should be a regular lat/lon grid or a regular Gaussian grid"
+        "\n\t(the key \"typeOfGrid\" should be \"regular_ll\" or \"regular_gg\")";
 const char* grib_tool_name = "grib_to_netcdf";
 const char* grib_tool_usage = "[options] grib_file grib_file ... ";
 static char argvString[2048] = {0,};
@@ -1796,8 +1798,7 @@ static hypercube *new_simple_hypercube_from_mars_request(const request *r)
 
 /*===========================================================================================*/
 
-/* Todo:
- - BUILD A TEST SUITE !!
+/* TODO:
  - Print usage in log file
  - consider FCMONTH and Climatology
  - Build logic to create validationtime when only one of DATE or TIME or STEP have multiple values:
@@ -1987,14 +1988,11 @@ static void validation_time(request *r)
     if(ndate)
     {
         const char* p = get_value(r, "date", 0);
-        const char* marsClass = get_value(r, "class", 0);
-        if (eq_string(marsClass, "s2")) {
-            /* S2S Data. See GRIB-699 and GRIB-762 */
-            const char* hdate = get_value(r, "hdate", 0);
-            grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: S2S Data");
-            if (hdate) {
-                p = hdate; /* This is a hindcast */
-            }
+        const char* hdate = get_value(r, "hdate", 0);
+        /* All hindcast Data. See GRIB-699, GRIB-762 and ECC-962 */
+        if (hdate) {
+            grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: Hindcast data hdate=%s", hdate);
+            p = hdate; /* Don't use 'date'. Use the hindcast date instead */
         }
         if(is_number(p))
             date = atol(p);
@@ -2047,7 +2045,7 @@ static void validation_time(request *r)
         }
     }
     v = julian * 24.0 + fcmonthdays * 24.0 + time / 100.0 + step * 1.0;
-    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: date=%ld, julian=%ld, fcmonthdays=%ld, time=%ld, step=%g, validation=%ld", date, julian, fcmonthdays, time, step, v);
+    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: date=%ld, julian=%ld, fcmonthdays=%ld, time=%ld, step=%g, validation=%.3f", date, julian, fcmonthdays, time, step, v);
     set_value(r, "_validation", "%lf", v);
     set_value(r, "_juliandate", "%ld", julian);
 
@@ -2185,38 +2183,92 @@ static int check_grid(field *f)
 
     if (strcmp(grid_type, "regular_ll") != 0 && (strcmp(grid_type, "regular_gg") != 0))
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
-        return GRIB_GEOCALCULUS_PROBLEM;
+        if(strcmp(grid_type,"lambert_azimuthal_equal_area")==0) {
+            fprintf(stderr, "grib_to_netcdf:  WARNING: Support for gridType of lambert_azimuthal_equal_area is currently experimental.\n");
+        } else {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "Grid type = %s", grid_type);
+            grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
+            return GRIB_GEOCALCULUS_PROBLEM;
+        }
     }
     return e;
 }
+
+static int grid_is_lambert_azimuthal(grib_handle* h)
+{
+    char grid_type[80];
+    size_t size = sizeof(grid_type);
+    if (grib_get_string(h, "typeOfGrid", grid_type, &size) == GRIB_SUCCESS &&
+        strcmp(grid_type, "lambert_azimuthal_equal_area")==0)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+static int get_num_latitudes_longitudes(grib_handle* h, size_t* nlats, size_t* nlons)
+{
+    err e=0;
+    char grid_type[80];
+    size_t size = sizeof(grid_type);
+
+    if (grib_get_string(h, "typeOfGrid", grid_type, &size) == GRIB_SUCCESS &&
+        (strcmp(grid_type, "regular_ll")==0 || strcmp(grid_type, "lambert_azimuthal_equal_area")==0))
+    {
+        /* Special shortcut for regular lat/on and lambert azimuthal grids */
+        long n;
+        Assert( !grib_is_missing(h, "Ni", &e) );
+        if ((e = grib_get_long(h, "Ni", &n)) != GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
+            return e;
+        }
+        *nlons = n;
+
+        if ((e = grib_get_long(h, "Nj", &n)) != GRIB_SUCCESS)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
+            return e;
+        }
+        *nlats = n;
+    }
+    else
+    {
+        if((e = grib_get_size(h, "distinctLatitudes", nlats)) != GRIB_SUCCESS)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
+            return e;
+        }
+        if((e = grib_get_size(h, "distinctLongitudes", nlons)) != GRIB_SUCCESS)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
+            return e;
+        }
+    }
+    return e;
+}
+
 static int def_latlon(int ncid, fieldset *fs)
 {
     int n = 0;
-    size_t l = 0;
+    size_t nlats=0, nlons=0;
     int var_id = 0;
     err e = 0;
 
     field *g = get_field(fs, 0, expand_mem);
 
-    Assert( check_grid(g)==GRIB_SUCCESS );
-
-    /* Define longitude */
-    if((e = grib_get_size(g->handle, "distinctLongitudes", &l)) != GRIB_SUCCESS)
-    {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
+    DebugAssert( check_grid(g)==GRIB_SUCCESS );
+    
+    if((e = get_num_latitudes_longitudes(g->handle, &nlats, &nlons)) != GRIB_SUCCESS) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get lat/lon info: %s", grib_get_error_message(e));
         return e;
     }
-    n = l;
+
+    /* Define longitude */
+    n = (int)nlons;
     var_id = set_dimension(ncid, "longitude", n, NC_FLOAT, "degrees_east", "longitude");
 
     /* Define latitude */
-    if((e = grib_get_size(g->handle, "distinctLatitudes", &l)) != GRIB_SUCCESS)
-    {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
-        return e;
-    }
-    n = l;
+    n = nlats;
     var_id = set_dimension(ncid, "latitude", n, NC_FLOAT, "degrees_north", "latitude");
 
     /* g->purge_header = TRUE; */
@@ -2271,20 +2323,24 @@ static int put_latlon(int ncid, fieldset *fs)
     }
 
 #endif
-
-    if((e = grib_get_size(g->handle, "distinctLatitudes", &nj)) != GRIB_SUCCESS)
-    {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
-        return e;
-
+    if (grid_is_lambert_azimuthal(g->handle)) {
+        /* ECC-886: For Lambert we need the actual number of distinct lat/lons which will be higher than Ni/Nj */
+        if((e = grib_get_size(g->handle, "distinctLatitudes", &nj)) != GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
+            return e;
+        }
+        if((e = grib_get_size(g->handle, "distinctLongitudes", &ni)) != GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
+            return e;
+        }
+    }
+    else {
+        if((e = get_num_latitudes_longitudes(g->handle, &nj, &ni)) != GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLatitudes: %s", grib_get_error_message(e));
+            return e;
+        }
     }
 
-    if((e = grib_get_size(g->handle, "distinctLongitudes", &ni)) != GRIB_SUCCESS)
-    {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
-        return e;
-
-    }
     /* Compute max. # values and allocate */
     nv = ni;
     if(nv < nj)
@@ -2299,7 +2355,7 @@ static int put_latlon(int ncid, fieldset *fs)
     check_err(stat, __LINE__, __FILE__);
     if((e = grib_get_double_array(g->handle, "distinctLongitudes", dvalues, &n)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLongitudes: %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLongitudes: %s", grib_get_error_message(e));
         return e;
     }
     Assert(n == ni);
@@ -2315,7 +2371,7 @@ static int put_latlon(int ncid, fieldset *fs)
     check_err(stat, __LINE__, __FILE__);
     if((e = grib_get_double_array(g->handle, "distinctLatitudes", dvalues, &n)) != GRIB_SUCCESS)
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get distinctLatitudes: %s", grib_get_error_message(e));
+        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLatitudes: %s", grib_get_error_message(e));
         return e;
     }
 

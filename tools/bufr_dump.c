@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -22,26 +22,26 @@ grib_option grib_options[]={
                 "\n\t\tDefault mode is structure.\n",
                 1,1,"s"},
         {"D:","filter|fortran|python|C","\n\t\tDecoding dump. Provides instructions to decode the input message."
-                "\n\t\tOptions: filter  -> filter instructions file to decode input BUFR"
+                "\n\t\tOptions: filter  -> filter instructions file to decode input BUFR (for bufr_filter)"
                 "\n\t\t         fortran -> fortran program to decode the input BUFR"
                 "\n\t\t         python  -> python script to decode the input BUFR"
                 "\n\t\t         C       -> C program to decode the input BUFR"
                 "\n\t\tDefault mode is filter.\n",
                 0,1,"filter"},
         {"E:","filter|fortran|python|C","\n\t\tEncoding dump. Provides instructions to create the input message."
-                "\n\t\tOptions: filter  -> filter instructions file to encode input BUFR"
+                "\n\t\tOptions: filter  -> filter instructions file to encode input BUFR (for bufr_filter)"
                 "\n\t\t         fortran -> fortran program to encode the input BUFR"
                 "\n\t\t         python  -> python script to encode the input BUFR"
                 "\n\t\t         C       -> C program to encode the input BUFR"
                 "\n\t\tDefault mode is filter.\n",
                 0,1,"filter"},
 
-        {"S",0,0,1,0,0},
+        /*{"S",0,0,1,0,0},*/
         {"O",0,"Octet mode. WMO documentation style dump.\n",0,1,0},
-        {"p",0,"Plain dump.\n",0,1,0},
+        {"p",0,"Plain dump (key=value format).\n",0,1,0},
         /* {"D",0,0,0,1,0},  */  /* See ECC-215 */
-        {"d",0,"Print all data values.\n",1,1,0},
-        {"u",0,"Print only some values.\n",0,1,0},
+        {"d",0,"Dump the expanded descriptors.\n",0,1,0},
+        /*{"u",0,"Print only some values.\n",0,1,0},*/
         /* {"C",0,0,0,1,0}, */
         {"t",0,0,0,1,0},
         {"f",0,0,0,1,0},
@@ -54,6 +54,7 @@ grib_option grib_options[]={
         {"7",0,0,0,1,0},
         {"V",0,0,0,1,0},
         {"q",0,0,1,0,0},
+        {"S:","subset_number","\n\t\tDump the given subset\n",0,1,0},
         {"X:",0,0,0,1,0}
         /* {"x",0,0,0,1,0} */
 };
@@ -62,6 +63,7 @@ const char* grib_tool_description="Dump the content of a BUFR file in different 
 const char* grib_tool_name="bufr_dump";
 const char* grib_tool_usage="[options] bufr_file bufr_file ...";
 static int json=0;
+static int dump_descriptors=0;
 static char* json_option=0;
 static int first_handle=1;
 static grib_dumper* dumper=0;
@@ -100,6 +102,7 @@ int grib_tool_init(grib_runtime_options* options)
     int opt=grib_options_on("C")+grib_options_on("O");
 
     options->dump_mode = "default";
+    options->strict=1; /* Must set here as bufr_dump has its own -S option */
 
     if (opt > 1) {
         printf("%s: simultaneous j/C/O options not allowed\n",grib_tool_name);
@@ -157,8 +160,11 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("H"))
         options->dump_flags |= GRIB_DUMP_FLAG_HEXADECIMAL;
 
-    if (grib_options_on("d") && !grib_options_on("u"))
+    if (grib_options_on("d") && !grib_options_on("u")) {
         options->dump_flags |= GRIB_DUMP_FLAG_ALL_DATA;
+        dump_descriptors = 1;
+        json=0;
+    }
 
     /* Turn off GRIB multi-field support mode. Not relevant for BUFR */
     grib_multi_support_off(grib_context_get_default());
@@ -257,6 +263,108 @@ static void print_header(grib_runtime_options* options)
     }
 }
 
+static void bufr_dump_descriptors(grib_handle* h)
+{
+    size_t size_desc=0, size_names=0, size_abbrevs=0, size_units=0;
+    size_t i=0, j=0, size_proper=0;
+    long*  array_descriptors = NULL;
+    char** array_names = NULL;
+    char** array_abbrevs = NULL;
+    char** array_units = NULL;
+    char* the_key = "expandedDescriptors";
+
+    GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_desc), 0);
+    array_descriptors = (long*)malloc(size_desc*sizeof(long));
+    if (!array_descriptors) {
+        fprintf(stderr, "%s: Memory allocation error", the_key);
+        exit(GRIB_OUT_OF_MEMORY);
+    }
+    GRIB_CHECK_NOLINE( grib_get_long_array(h, the_key, array_descriptors, &size_desc), 0);
+    size_proper = size_desc;
+    /* Exclude the pesky 999999 descriptors as they don't
+     * have equivalents in the name, abbreviation and units arrays!
+     */
+    for(i=0; i<size_desc; ++i) {
+        if(array_descriptors[i]==999999) size_proper--;
+    }
+
+    /* The string arrays for keys, names and units should have the same length*/
+    the_key = "expandedAbbreviations";
+    GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_abbrevs), 0);
+    array_abbrevs = (char**)malloc(size_abbrevs * sizeof(char*));
+    if (!array_abbrevs) {
+        fprintf(stderr, "%s: Memory allocation error", the_key);
+        exit(GRIB_OUT_OF_MEMORY);
+    }
+    GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_abbrevs, &size_abbrevs), 0);
+    Assert(size_proper==size_abbrevs);
+
+    the_key = "expandedNames";
+    GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_names), 0);
+    array_names = (char**)malloc(size_names * sizeof(char*));
+    if (!array_names) {
+        fprintf(stderr, "%s: Memory allocation error", the_key);
+        exit(GRIB_OUT_OF_MEMORY);
+    }
+    GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_names, &size_names), 0);
+    Assert(size_proper==size_names);
+
+    the_key = "expandedUnits";
+    GRIB_CHECK_NOLINE( grib_get_size(h, the_key, &size_units), 0);
+    array_units = (char**)malloc(size_units * sizeof(char*));
+    if (!array_units) {
+        fprintf(stderr, "%s: Memory allocation error", the_key);
+        exit(GRIB_OUT_OF_MEMORY);
+    }
+    GRIB_CHECK_NOLINE( grib_get_string_array(h, the_key, array_units, &size_units), 0);
+    Assert(size_proper==size_units);
+
+    i=0;
+    j=0;
+    while(i<size_desc) {
+        const long desc = array_descriptors[i];
+        if (desc == 999999) {
+            printf("%06ld\t\t\n", desc);
+        } else {
+            char* abbr = array_abbrevs[j];
+            char* name = array_names[j];
+            char* units= array_units[j];
+            printf("%06ld\t%s\t%s [%s]\n", desc, abbr, name, units);
+            ++j;
+            free(abbr);
+            free(name);
+            free(units);
+        }
+        ++i;
+    }
+
+    free(array_descriptors);
+    free(array_abbrevs);
+    free(array_names);
+    free(array_units);
+}
+
+static int check_subset_number(const char* user_input, long numberOfSubsets, long* subsetNumber)
+{
+    long val=0;
+    char *endptr;
+    errno = 0;    /* To distinguish success/failure after call */
+    val = strtol(user_input, &endptr, 10);
+    if ((errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) || (errno != 0 && val == 0)) {
+        perror("strtol");
+        return GRIB_INVALID_ARGUMENT;
+    }
+    if (endptr == user_input) {
+        return GRIB_INVALID_ARGUMENT;
+    }
+
+    if (val < 1 || val > numberOfSubsets) {
+        return GRIB_INVALID_ARGUMENT;
+    }
+    *subsetNumber = val;
+    return GRIB_SUCCESS;
+}
+        
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     long length=0;
@@ -264,7 +372,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     grib_accessor* a=NULL;
     grib_accessors_list* al=NULL;
     if (grib_get_long(h,"totalLength",&length) != GRIB_SUCCESS)
-        length=-9999;
+        length = -9999;
 
     if (!options->skip) {
         if (options->set_values_count != 0)
@@ -275,7 +383,44 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     for (i=0;i<options->print_keys_count;i++)
         grib_set_flag(h,options->print_keys[i].name,GRIB_ACCESSOR_FLAG_DUMP);
 
-    if (json) {
+    if (grib_options_on("S:")) {
+        long numberOfSubsets=0, subsetNumber=0;
+        char *str = grib_options_get_option("S:");
+        err = grib_get_long(h,"numberOfSubsets",&numberOfSubsets);
+        if (err) {
+            fprintf(stderr, "ERROR: Failed to get numberOfSubsets.\n");
+            exit(1);
+        }
+
+        if (check_subset_number(str, numberOfSubsets, &subsetNumber) == GRIB_SUCCESS) {
+            if (numberOfSubsets > 1) {
+                grib_handle* new_handle = 0;
+                grib_handle *h2;
+                size_t size = 0;
+                const void *buffer = NULL;
+
+                /* Clone, unpack and extract that particular subset */
+                h2 = grib_handle_clone(h);
+                Assert(h2);
+                GRIB_CHECK_NOLINE(grib_set_long(h2,"unpack", 1), 0);
+                GRIB_CHECK_NOLINE(grib_set_long(h2,"extractSubset", subsetNumber), 0);
+                GRIB_CHECK_NOLINE(grib_set_long(h2,"doExtractSubsets",1), 0);
+
+                /* Put result into buffer then form new handle from it */
+                GRIB_CHECK_NOLINE(grib_get_message(h2, &buffer, &size),0);
+                new_handle = grib_handle_new_from_message(0, buffer, size);
+                Assert(new_handle);
+                /* Replace handle with the new one which has only one subset */
+                h = new_handle; /*TODO: possible leak!*/
+            }
+        } else {
+            fprintf(stderr, "ERROR: -S option: Please specify a subset number > 0 and < %ld\n", numberOfSubsets+1);
+            exit(1);
+        }
+    }
+
+    if (json)
+    {
         /* ECC-233: print comma as separator between messages */
         if (!first_handle && options->handle_count>1) {
             fprintf(stdout,",\n");
@@ -341,7 +486,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if (!strcmp(options->dump_mode,"default")) {
             printf("}\n");
         }
-    } else if (grib_options_on("O")) {
+    }
+    else if (grib_options_on("O"))
+    {
         char tmp[1024];
         sprintf(tmp,"MESSAGE %d ( length=%ld )",options->handle_count,length);
         if (!grib_options_on("C"))
@@ -358,7 +505,14 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             }
         }
         grib_dump_content(h,stdout,options->dump_mode,options->dump_flags,0);
-    } else {
+    }
+    else if (dump_descriptors)
+    {
+        /* Dump out the section 3 descriptors, their keys/units etc */
+        bufr_dump_descriptors(h);
+    }
+    else
+    {
         const char* dumper_name = get_dumper_name(options);
         if (strcmp(dumper_name, "bufr_simple")==0) {
             /* This speeds up the unpack by skipping attribute keys not used in the dump */

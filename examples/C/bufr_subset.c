@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -35,7 +35,7 @@ int main(int argc,char* argv[])
     int cnt=0;
     const char* infile = "../../data/bufr/synop_multi_subset.bufr";
 
-    in=fopen(infile,"r");
+    in=fopen(infile,"rb");
     if (!in) {
         printf("ERROR: unable to open file %s\n", infile);
         return 1;

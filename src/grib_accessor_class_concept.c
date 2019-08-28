@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -482,7 +482,24 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     *val = atol(p);
     *len = 1;
-
+#if 0
+    /* ECC-980: Changes reverted because of side-effects!
+     * e.g. marsType being a codetable and concept! see ifsParam
+     */
+    {
+        char *endptr;
+        *val = strtol(p, &endptr, 10);
+        if (endptr == p || *endptr != '\0') {
+            /* Failed to convert string into integer */
+            int type = GRIB_TYPE_UNDEFINED;
+            grib_context_log(a->context,GRIB_LOG_ERROR,"Cannot unpack %s as long",a->name);
+            if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
+                grib_context_log(a->context,GRIB_LOG_ERROR,"Hint: Try unpacking as %s", grib_get_type_name(type));
+            }
+            return GRIB_DECODING_ERROR;
+        }
+    }
+#endif
     return GRIB_SUCCESS;
 }
 

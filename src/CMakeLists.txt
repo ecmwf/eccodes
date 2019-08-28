@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -396,6 +396,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_uint8.c
     grib_accessor_class_blob.c
     grib_optimize_decimal_factor.c
+    grib_accessor_class_data_g2bifourier_packing.c
     eccodes_windef.h
     # We ship our own generated lex/yacc C files
     grib_yacc.c  grib_lex.c
@@ -433,14 +434,13 @@ endif()
 ecbuild_add_library(TARGET    eccodes
                     SOURCES   grib_api_version.c
                               # griby.c gribl.c
-                             ${grib_api_srcs}
+                              ${grib_api_srcs}
                     GENERATED grib_api_version.c
                     LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
-                    TEMPLATES ${grib_api_extra_srcs})
-
-
-install( FILES grib_api.h eccodes.h eccodes_windef.h DESTINATION ${INSTALL_INCLUDE_DIR} )
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h DESTINATION ${INSTALL_INCLUDE_DIR} )
-
-
-
+                    TEMPLATES ${grib_api_extra_srcs}
+                    INSTALL_HEADERS_LIST
+                              grib_api.h
+                              eccodes.h
+                              eccodes_windef.h
+                              ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h
+                              ${PROJECT_BINARY_DIR}/eccodes_config.h )

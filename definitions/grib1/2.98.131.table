@@ -58,6 +58,9 @@
 95 pats Probability anomaly of a tropical storm %
 96 pah Probability anomaly of a hurricane %
 97 patd Probability anomaly of a tropical depression %
+98 tpg25 Total precipitation of at least 25 mm %
+99 tpg50 Total precipitation of at least 50 mm %
+100 10fgg10 10 metre wind gust of at least 10 m/s %
 129 zp  Geopotential probability zp %
 130 tap Temperature anomaly probability percentage
 139 2tp 2 metre temperature probability %

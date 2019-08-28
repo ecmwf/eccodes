@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -1445,7 +1445,7 @@ struct grib_codetable {
 };
 
 typedef struct grib_smart_table_entry {
-  int   code;
+  /*int   code;*/
   char* abbreviation;
   char* column[MAX_SMART_TABLE_COLUMNS];
 } grib_smart_table_entry;

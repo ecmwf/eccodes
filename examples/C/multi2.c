@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -32,7 +32,7 @@ static void read_data(int num_msgs)
     long stepRange = 0;
     codes_handle *h = NULL;
 
-    fp = fopen(file_path, "r");
+    fp = fopen(file_path, "rb");
     if(!fp) {
         fprintf(stderr, "ERROR: unable to open grib file %s\n", file_path);
         exit(1);

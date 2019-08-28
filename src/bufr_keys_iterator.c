@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -82,13 +82,31 @@ int codes_bufr_keys_iterator_rewind(bufr_keys_iterator* ki)
     return GRIB_SUCCESS;
 }
 
+static int is_ident_key(bufr_keys_iterator* kiter)
+{
+    if (kiter->current->sub_section)
+        return 0;
+
+    if (GRIB_ACCESSOR_FLAG_HIDDEN == kiter->current->flags &&
+        strcmp(kiter->current->name, "keyMore")==0         &&
+        grib_is_defined(kiter->handle, "ls.ident"))
+    {
+        return 1;
+    }
+    return 0;
+}
+
 static int skip(bufr_keys_iterator* kiter)
 {
     if(kiter->current->sub_section)
         return 1;
 
-    if(kiter->current->flags & kiter->accessor_flags_skip)
+    if(kiter->current->flags & kiter->accessor_flags_skip) {
+        /* The "ident" key deserves special treatment */
+        if (is_ident_key(kiter))
+            return 0;
         return 1;
+    }
 
     if(kiter->accessor_flags_only == (kiter->current->flags & kiter->accessor_flags_only))  {
         mark_seen(kiter,kiter->current->name);
@@ -128,6 +146,7 @@ static int next_attribute(bufr_keys_iterator* kiter)
         char* prefix=0;
         if (!kiter->prefix) return 0;
         if (!kiter->attributes[i_curr_attribute]) {
+            grib_context_free(kiter->current->context,kiter->prefix);
             kiter->prefix=0;
             return 0;
         }
@@ -202,7 +221,11 @@ char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter)
             r=(int*)grib_trie_get(kiter->seen,kiter->current->name);
             sprintf(ret,"#%d#%s",*r,kiter->current->name);
         } else {
-            strcpy(ret,kiter->current->name);
+            if (is_ident_key(kiter)) {
+                strcpy(ret, "ident");
+            } else {
+                strcpy(ret,kiter->current->name);
+            }
         }
     }
 

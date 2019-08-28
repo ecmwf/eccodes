@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -19,8 +19,8 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
 
 GRIB_INLINE static int grib_inline_rstrcmp(const char* a,const char* b)
 {
-    char* p=(char*)a;
-    char* q=(char*)b;
+    const char* p=a;
+    const char* q=b;
     while (*p != 0) p++;
     while (*q != 0) q++;
     q--;p--;
@@ -38,15 +38,14 @@ struct grib_error {
     grib_error* next;
 };
 
-grib_error* error_summary;
-
-compare_double_proc compare_double;
-double global_tolerance=0;
-int packingCompare=0;
-grib_string_list* blacklist=0;
-grib_string_list* keys_list = NULL; /* Used to determine rank of key */
-int isLeafKey = 0; /* 0 if key is top-level, 1 if key has no children attributes */
-int compareAbsolute=1;
+static grib_error* error_summary;
+static compare_double_proc compare_double;
+static double global_tolerance=0;
+static int packingCompare=0;
+static grib_string_list* blacklist=0;
+static grib_string_list* keys_list = NULL; /* Used to determine rank of key */
+static int isLeafKey = 0; /* 0 if key is top-level, 1 if key has no children attributes */
+static int compareAbsolute=1;
 
 static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options);
 static int compare_values(grib_runtime_options* options, grib_handle* handle1, grib_handle *handle2, const char *name, int type);
@@ -55,27 +54,27 @@ static int compare_attributes(grib_handle* handle1, grib_handle* handle2, grib_r
 static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_runtime_options* options,
         grib_accessor* a, const char* prefix, int* err);
 
-int error=0;
-int count=0;
-int lastPrint=0;
-int force=0;
+static int error=0;
+static int count=0;
+static int lastPrint=0;
+static int force=0;
 
 /* ECC-651: Boolean 'two_way' set to 1 when '-2' option used */
-int two_way=0;
+static int two_way=0;
 /* Boolean 'handles_swapped' relevant in 'two_way' mode:
  *  0 means: h1 is first file,  h2 is second file
  *  1 means: h1 is second file, h2 is first file
  */
-int handles_swapped=0;
+static int handles_swapped=0;
 
-double maxAbsoluteError = 1e-19;
-int onlyListed=1;
-int headerMode=0;
-int morein1=0;
-int morein2=0;
-int listFromCommandLine;
-int verbose=0;
-int tolerance_factor=1;
+static double maxAbsoluteError = 1e-19;
+static int onlyListed=1;
+static int headerMode=0;
+static int morein1=0;
+static int morein2=0;
+static int listFromCommandLine;
+static int verbose=0;
+static int tolerance_factor=1;
 static int write_error=0;
 
 /* Create the list of keys (global variable keys_list) */
@@ -218,10 +217,10 @@ grib_option grib_options[]={
     {"v",0,0,0,1,0}
 };
 
-grib_handle* global_handle=NULL;
-int counter=0;
-int start=-1;
-int end=-1;
+static grib_handle* global_handle=NULL;
+static int counter=0;
+static int start=-1;
+static int end=-1;
 
 const char* grib_tool_description=
     "Compare BUFR messages contained in two files."
@@ -422,7 +421,7 @@ static void print_index_key_values(grib_index* index,int icounter,const char* er
     printf("\n");
 }
 
-static grib_handle* grib_handle_new_from_file_x(
+static grib_handle* bufr_handle_new_from_file_x(
         grib_context* c,FILE* f,int mode,int headers_only,int *err)
 {
     return codes_handle_new_from_file(c,f,PRODUCT_BUFR,err);
@@ -478,7 +477,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     } else if (options->random)
         global_handle = grib_fieldset_next_handle(options->idx,&err);
     else
-        global_handle=grib_handle_new_from_file_x(h->context,options->infile_extra->file,options->mode,0,&err);
+        global_handle=bufr_handle_new_from_file_x(h->context,options->infile_extra->file,options->mode,0,&err);
 
     if (!global_handle || err!= GRIB_SUCCESS ) {
         morein2++;
@@ -517,7 +516,7 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     int err=0;
     if (!options->through_index && !options->random)  {
-        global_handle=grib_handle_new_from_file(h->context,options->infile_extra->file,&err);
+        global_handle=codes_bufr_handle_new_from_file(h->context,options->infile_extra->file,&err);
 
         if (!global_handle || err!= GRIB_SUCCESS)
             morein2++;
@@ -541,17 +540,19 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     grib_error* e = error_summary;
     int err=0;
     grib_context* c=grib_context_get_default();
-    error += morein1+morein2;
 
     /*if (grib_options_on("w:")) return 0;*/
 
-    if (error) {
-        printf("\n## ERRORS SUMMARY #######\n");
-    }
-    while ((global_handle=grib_handle_new_from_file(c,options->infile_extra->file,&err))) {
+    while ((global_handle=codes_bufr_handle_new_from_file(c,options->infile_extra->file,&err))) {
         morein1++;
         if (global_handle) grib_handle_delete(global_handle);
     }
+
+    error += morein1+morein2;
+    if (error) {
+        printf("\n## ERRORS SUMMARY #######\n");
+    }
+
     if (morein1>0) {
         printf("##\n## Different number of messages \n");
         printf("## %d more messages in %s than in %s\n",morein1,
@@ -626,8 +627,8 @@ static char* double_as_string(grib_context* c, double v)
 /* Return the part of the key name without the '#rank#' part */
 static char* get_keyname_without_rank(const char* name)
 {
-    char* p=(char*)name;
-    char* pEnd=p;
+    const char* p=name;
+    char* pEnd;
     char* ret=NULL;
 
     if (*p=='#') {
@@ -1120,7 +1121,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
         save_error(c,name);
         printf("Cannot compare [%s], unsupported type %d\n",name,type1);
         return GRIB_UNABLE_TO_COMPARE_ACCESSORS;
-        break;
     }
 
     return GRIB_SUCCESS;
@@ -1290,7 +1290,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
 
     if ( listFromCommandLine && onlyListed ) {
         for (i=0; i< options->compare_count; i++) {
-            if (blacklisted((char*)options->compare[i].name)) continue;
+            if (blacklisted(options->compare[i].name)) continue;
             if (options->compare[i].type == GRIB_NAMESPACE) {
                 iter=grib_keys_iterator_new(handle1,0,options->compare[i].name);
                 if (!iter) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -88,7 +88,6 @@ static void init_class(grib_nearest_class* c)
 {
 }
 /* END_CLASS_IMP */
-
 
 static int init(grib_nearest* nearest,grib_handle* h,grib_arguments* args)
 {
@@ -236,6 +235,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
 
     grib_iterator* iter=NULL;
     double lat=0,lon=0;
+    const int is_rotated = is_rotated_grid(h);
+    double angleOfRotation=0, southPoleLat=0, southPoleLon=0;
 
     while (inlon<0) inlon+=360;
     while (inlon>360) inlon-=360;
@@ -269,11 +270,22 @@ static int find(grib_nearest* nearest, grib_handle* h,
             return ret ? ret : GRIB_GEOCALCULUS_PROBLEM;
         }
 
-        /* Support for rotated grids not yet implemented */
-        if (is_rotated_grid(h)) {
-            grib_context_log(h->context,GRIB_LOG_ERROR,
-                    "Nearest neighbour functionality is not supported for rotated grids.");
-            return GRIB_NOT_IMPLEMENTED;
+        /* ECC-600: Support for rotated grids
+         * First:   rotate the input point
+         * Then:    run the lat/lon iterator over the rotated grid (disableUnrotate)
+         * Finally: unrotate the resulting point
+         */
+        if (is_rotated) {
+            double new_lat = 0, new_lon = 0;
+            ret = grib_get_double_internal(h,"angleOfRotation", &angleOfRotation);               if (ret) return ret;
+            ret = grib_get_double_internal(h,"latitudeOfSouthernPoleInDegrees", &southPoleLat);  if (ret) return ret;
+            ret = grib_get_double_internal(h,"longitudeOfSouthernPoleInDegrees", &southPoleLon); if (ret) return ret;
+            ret = grib_set_long(h, "iteratorDisableUnrotate", 1);                                if (ret) return ret;
+            /* Rotate the inlat, inlon */
+            rotate(inlat, inlon, angleOfRotation, southPoleLat, southPoleLon, &new_lat, &new_lon);
+            inlat = new_lat;
+            inlon = new_lon;
+            /*if(h->context->debug) printf("nearest find: rotated grid: new point=(%g,%g)\n",new_lat,new_lon);*/
         }
 
         if ((ret =  grib_get_long(h,self->Ni,&n))!= GRIB_SUCCESS)
@@ -401,6 +413,13 @@ static int find(grib_nearest* nearest, grib_handle* h,
             distances[kk]=self->distances[kk];
             outlats[kk]=self->lats[self->j[jj]];
             outlons[kk]=self->lons[self->i[ii]];
+            if (is_rotated) {
+                /* Unrotate resulting lat/lon */
+                double new_lat = 0, new_lon = 0;
+                unrotate(outlats[kk], outlons[kk], angleOfRotation, southPoleLat, southPoleLon, &new_lat, &new_lon);
+                outlats[kk] = new_lat;
+                outlons[kk] = new_lon;
+            }
             grib_get_double_element_internal(h,self->values_key,self->k[kk],&(values[kk]));
             /* Using the brute force approach described above */
             /* Assert(self->k[kk] < nvalues); */

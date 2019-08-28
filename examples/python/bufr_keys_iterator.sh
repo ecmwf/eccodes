@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,24 +10,23 @@
 
 . ./include.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_keys_iterator_test_p"
 
-#Define tmp file
+# Define tmp file
 fTmp=${label}".tmp.txt"
 rm -f $fTmp
 
 REDIRECT=/dev/null
 
-#The bufr file to use 
+# The bufr file to use
 f=${data_dir}/bufr/syno_1.bufr
+$PYTHON $examples_src/bufr_keys_iterator.py $f 2> $REDIRECT > $fTmp
 
-#The input ($f) is hardcoded in the example!!!
-$PYTHON $examples_src/bufr_keys_iterator.py 2> $REDIRECT > $fTmp
-
-#TODO: check the output
+# Check the output
+grep -q 'ident' $fTmp
 grep -q '#6#cloudType->percentConfidence' $fTmp
 grep -q '#2#verticalSignificanceSurfaceObservations->percentConfidence' $fTmp
 
-#Clean up
+# Clean up
 rm -f $fTmp

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -134,65 +134,63 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_g2step* self = (grib_accessor_g2step*)a;
-  int n = 0;
-  self->forecast_time   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->unit            = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-
+    grib_accessor_g2step* self = (grib_accessor_g2step*)a;
+    int n = 0;
+    self->forecast_time   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->unit            = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_double(dumper,a,NULL);
-
+    grib_dump_double(dumper,a,NULL);
 }
+
 static const int units[] =  {
-  0,      /* (0) minutes */
-  1,      /* (1) hour    */
-  24,     /* (2) day */
+        0,      /* (0) minutes */
+        1,      /* (1) hour    */
+        24,     /* (2) day */
 
-  0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
 
-  3,     /* (10) 3 hours */
-  6,     /* (11) 6 hours */
-  12,    /* (12) 12 hours */
+        3,     /* (10) 3 hours */
+        6,     /* (11) 6 hours */
+        12,    /* (12) 12 hours */
 };
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  grib_accessor_g2step* self = (grib_accessor_g2step*)a;
-  int err = 0;
-  long forecast_time = 0,unit = 0;
+    grib_accessor_g2step* self = (grib_accessor_g2step*)a;
+    int err = 0;
+    long forecast_time = 0,unit = 0;
 
-  err = grib_get_long_internal(grib_handle_of_accessor(a),self->unit,&unit);
-  if(err)           return err;
+    err = grib_get_long_internal(grib_handle_of_accessor(a),self->unit,&unit);
+    if(err)           return err;
 
-  err = grib_get_long_internal(grib_handle_of_accessor(a),self->forecast_time,&forecast_time);
-  if(err)               return err;
+    err = grib_get_long_internal(grib_handle_of_accessor(a),self->forecast_time,&forecast_time);
+    if(err)               return err;
 
-  if(!units[unit])
-    return GRIB_NOT_IMPLEMENTED;
+    if(!units[unit])
+        return GRIB_NOT_IMPLEMENTED;
 
-  *val = forecast_time * units[unit];
+    *val = forecast_time * units[unit];
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  grib_accessor_g2step* self = (grib_accessor_g2step*)a;
-  int err = 0;
-  long  forecast_time = *val;
-  long  unit          = 1;
+    grib_accessor_g2step* self = (grib_accessor_g2step*)a;
+    int err = 0;
+    long  forecast_time = *val;
+    long  unit          = 1;
 
-  Assert(forecast_time >= 0);
+    Assert(forecast_time >= 0);
 
-  err = grib_set_long_internal(grib_handle_of_accessor(a),self->unit,unit);
-  if(err)           return err;
+    err = grib_set_long_internal(grib_handle_of_accessor(a),self->unit,unit);
+    if(err)           return err;
 
-  err = grib_set_long_internal(grib_handle_of_accessor(a),self->forecast_time,forecast_time);
-  if(err)               return err;
+    err = grib_set_long_internal(grib_handle_of_accessor(a),self->forecast_time,forecast_time);
+    if(err)               return err;
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
-

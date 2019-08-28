@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -136,42 +136,41 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  int n=0;
-  grib_accessor_g2bitmap_present* self = (grib_accessor_g2bitmap_present*)a;
-  self->bitmapIndicator = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    int n=0;
+    grib_accessor_g2bitmap_present* self = (grib_accessor_g2bitmap_present*)a;
+    self->bitmapIndicator = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 
-  a->length=0;
+    a->length=0;
 }
 
-static int  unpack_long(grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  int ret=GRIB_SUCCESS;
-  long bitmapIndicator=0;
+    int ret=GRIB_SUCCESS;
+    long bitmapIndicator=0;
 
-  grib_accessor_g2bitmap_present* self = (grib_accessor_g2bitmap_present*)a;
+    grib_accessor_g2bitmap_present* self = (grib_accessor_g2bitmap_present*)a;
 
-  ret = grib_get_long_internal(grib_handle_of_accessor(a), self->bitmapIndicator,&bitmapIndicator);
-  if (ret) {
-  	if (ret==GRIB_NOT_FOUND) {
-		*val=0;
-		return 0;
-	} else return ret;
-  }
+    ret = grib_get_long_internal(grib_handle_of_accessor(a), self->bitmapIndicator,&bitmapIndicator);
+    if (ret) {
+        if (ret==GRIB_NOT_FOUND) {
+            *val=0;
+            return 0;
+        } else return ret;
+    }
 
-  *val=1;
-  if (bitmapIndicator==255) *val=0;
+    *val=1;
+    if (bitmapIndicator==255) *val=0;
 
-  *len=1;
-  return ret;
+    *len=1;
+    return ret;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  grib_accessor_g2bitmap_present* self = (grib_accessor_g2bitmap_present*)a;
-  long bitmapIndicator=0;
+    grib_accessor_g2bitmap_present* self = (grib_accessor_g2bitmap_present*)a;
+    long bitmapIndicator=0;
 
-  if (*val==0) bitmapIndicator=255;
-   
-  
-  return grib_set_long(grib_handle_of_accessor(a),self->bitmapIndicator,bitmapIndicator);
+    if (*val==0) bitmapIndicator=255;
+
+    return grib_set_long(grib_handle_of_accessor(a),self->bitmapIndicator,bitmapIndicator);
 }

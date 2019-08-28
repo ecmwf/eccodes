@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -46,7 +46,7 @@ int main(int argc,char* argv[])
     }
 
     assert(input_filename);
-    f = fopen(input_filename, "r");
+    f = fopen(input_filename, "rb");
     assert(f);
     h = codes_handle_new_from_file(NULL, f, PRODUCT_BUFR, &err);
     assert(h);

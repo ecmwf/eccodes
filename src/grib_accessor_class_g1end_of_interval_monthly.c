@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -137,114 +137,115 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_g1end_of_interval_monthly* self = (grib_accessor_g1end_of_interval_monthly*)a;
-  int n = 0;
+    grib_accessor_g1end_of_interval_monthly* self = (grib_accessor_g1end_of_interval_monthly*)a;
+    int n = 0;
 
-  self->verifyingMonth = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-  a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
+    self->verifyingMonth = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
 
-  self->number_of_elements=6;
-  self->v=(double*)grib_context_malloc(a->context,
-                  sizeof(double)*self->number_of_elements);
+    self->number_of_elements=6;
+    self->v=(double*)grib_context_malloc(a->context,
+            sizeof(double)*self->number_of_elements);
 
-  a->length=0;
-  a->dirty=1;
+    a->length=0;
+    a->dirty=1;
 }
 
 static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
 {
-  grib_accessor_g1end_of_interval_monthly* self = (grib_accessor_g1end_of_interval_monthly*)a;
-  int ret = 0;
-  char verifyingMonth[7]={0,};
-  size_t slen=7;
-  long year=0,month=0,date=0;
-  long mdays[]={31,28,31,30,31,30,31,31,30,31,30,31};
-  long days=0;
+    grib_accessor_g1end_of_interval_monthly* self = (grib_accessor_g1end_of_interval_monthly*)a;
+    int ret = 0;
+    char verifyingMonth[7]={0,};
+    size_t slen=7;
+    long year=0,month=0,date=0;
+    long mdays[]={31,28,31,30,31,30,31,31,30,31,30,31};
+    long days=0;
 
-  if (!a->dirty) return GRIB_SUCCESS;
+    if (!a->dirty) return GRIB_SUCCESS;
 
-  if((ret=grib_get_string(grib_handle_of_accessor(a),self->verifyingMonth,verifyingMonth,&slen))
-       != GRIB_SUCCESS) return ret;
+    if((ret=grib_get_string(grib_handle_of_accessor(a),self->verifyingMonth,verifyingMonth,&slen))
+            != GRIB_SUCCESS) return ret;
 
-  date=atoi(verifyingMonth);
-  year=date/100;
-  month=date-year*100;
-  if ( month == 2 ) {
-    days=28;
-    if (year%400 == 0 || ( year%4 == 0 && year%100 != 0) ) days=29;
-  } else days=mdays[month-1];
+    date=atoi(verifyingMonth);
+    year=date/100;
+    month=date-year*100;
+    if ( month == 2 ) {
+        days=28;
+        if (year%400 == 0 || ( year%4 == 0 && year%100 != 0) ) days=29;
+    } else days=mdays[month-1];
 
-  self->v[0]=year;
-  self->v[1]=month;
-  
-  self->v[2]=days;
-  self->v[3]=24;
-  self->v[4]=00;
-  self->v[5]=00;
+    self->v[0]=year;
+    self->v[1]=month;
 
-  a->dirty=0;
+    self->v[2]=days;
+    self->v[3]=24;
+    self->v[4]=00;
+    self->v[5]=00;
 
-  val[0]=self->v[0];
-  val[1]=self->v[1];
-  val[2]=self->v[2];
-  val[3]=self->v[3];
-  val[4]=self->v[4];
-  val[5]=self->v[5];
+    a->dirty=0;
 
-  return ret;
+    val[0]=self->v[0];
+    val[1]=self->v[1];
+    val[2]=self->v[2];
+    val[3]=self->v[3];
+    val[4]=self->v[4];
+    val[5]=self->v[5];
+
+    return ret;
 }
 
 static int value_count(grib_accessor* a,long *count)
 {
-  grib_accessor_g1end_of_interval_monthly* self = (grib_accessor_g1end_of_interval_monthly*)a;
-  *count=self->number_of_elements;
-  return 0;
+    grib_accessor_g1end_of_interval_monthly* self = (grib_accessor_g1end_of_interval_monthly*)a;
+    *count=self->number_of_elements;
+    return 0;
 }
 
 static void destroy(grib_context* c,grib_accessor* a)
 {
-  grib_accessor_g1end_of_interval_monthly* self = (grib_accessor_g1end_of_interval_monthly*)a;
-  grib_context_free(c,self->v);
+    grib_accessor_g1end_of_interval_monthly* self = (grib_accessor_g1end_of_interval_monthly*)a;
+    grib_context_free(c,self->v);
 }
 
-static int compare(grib_accessor* a, grib_accessor* b) {
-  int retval = GRIB_SUCCESS;
-  double *aval=0;
-  double *bval=0;
+static int compare(grib_accessor* a, grib_accessor* b)
+{
+    int retval = GRIB_SUCCESS;
+    double *aval=0;
+    double *bval=0;
 
-  long count=0;
-  size_t alen = 0;
-  size_t blen = 0;
-  int err=0;
+    long count=0;
+    size_t alen = 0;
+    size_t blen = 0;
+    int err=0;
 
-  err=grib_value_count(a,&count);
-  if (err) return err;
-  alen=count;
+    err=grib_value_count(a,&count);
+    if (err) return err;
+    alen=count;
 
-  err=grib_value_count(b,&count);
-  if (err) return err;
-  blen=count;
+    err=grib_value_count(b,&count);
+    if (err) return err;
+    blen=count;
 
-  if (alen != blen) return GRIB_COUNT_MISMATCH;
+    if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-  aval=(double*)grib_context_malloc(a->context,alen*sizeof(double));
-  bval=(double*)grib_context_malloc(b->context,blen*sizeof(double));
+    aval=(double*)grib_context_malloc(a->context,alen*sizeof(double));
+    bval=(double*)grib_context_malloc(b->context,blen*sizeof(double));
 
-  b->dirty=1;
-  a->dirty=1;
+    b->dirty=1;
+    a->dirty=1;
 
-  grib_unpack_double(a,aval,&alen);
-  grib_unpack_double(b,bval,&blen);
+    grib_unpack_double(a,aval,&alen);
+    grib_unpack_double(b,bval,&blen);
 
-  while (alen != 0) {
-    if (*bval != *aval) retval = GRIB_DOUBLE_VALUE_MISMATCH;
-    alen--;
-  }
+    while (alen != 0) {
+        if (*bval != *aval) retval = GRIB_DOUBLE_VALUE_MISMATCH;
+        alen--;
+    }
 
-  grib_context_free(a->context,aval);
-  grib_context_free(b->context,bval);
+    grib_context_free(a->context,aval);
+    grib_context_free(b->context,bval);
 
-  return retval;
+    return retval;
 }

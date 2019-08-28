@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -174,7 +174,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     int code = GRIB_SUCCESS;
 
-    if((code = grib_get_long_internal(grib_handle_of_accessor(a),self->precision,&precision))
+    if((code = grib_get_long(grib_handle_of_accessor(a),self->precision,&precision))
             != GRIB_SUCCESS)
         return code;
 

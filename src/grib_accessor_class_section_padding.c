@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -130,63 +130,61 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-
 static size_t preferred_size(grib_accessor* a, int from_handle)
 {
-  grib_accessor_section_padding* self = (grib_accessor_section_padding*)a;
-  grib_accessor *b = a;
-  grib_accessor* section_length = 0;
-  long length = 0;
-  size_t size = 1;
+    grib_accessor_section_padding* self = (grib_accessor_section_padding*)a;
+    grib_accessor *b = a;
+    grib_accessor* section_length = 0;
+    long length = 0;
+    size_t size = 1;
 
-  long alength = 0;
+    long alength = 0;
 
-  if(!from_handle)
-  {
-    if(self->preserve)
-      return a->length;
+    if(!from_handle)
+    {
+        if(self->preserve)
+            return a->length;
+        else
+            return 0;
+    }
+
+    /* The section length should be a parameter */
+    while(section_length == NULL && b != NULL)
+    {
+        section_length = b->parent->aclength;
+        b = b->parent->owner;
+    }
+
+    if(!section_length)
+    {
+        /* printf("PADDING is no !section_length\n"); */
+        return 0;
+    }
+
+    if(grib_unpack_long(section_length,&length,&size) == GRIB_SUCCESS)
+    {
+        if(length)
+            alength = length - a->offset + section_length->parent->owner->offset;
+        else
+            alength = 0;
+
+        /*Assert(a->length>=0);*/
+
+        if (alength<0) alength=0;
+
+        /* printf("PADDING is %ld\n",a->length); */
+    }
     else
-      return 0;
-  }
+    {
+        /* printf("PADDING unpack fails\n"); */
+    }
 
-  /* The section length should be a parameter */
-  while(section_length == NULL && b != NULL)
-  {
-    section_length = b->parent->aclength;
-    b = b->parent->owner;
-  }
-
-  if(!section_length)
-  {
-    /* printf("PADDING is no !section_length\n"); */
-    return 0;
-  }
-
-  if(grib_unpack_long(section_length,&length,&size) == GRIB_SUCCESS)
-  {
-    if(length)
-      alength = length - a->offset + section_length->parent->owner->offset;
-    else
-      alength = 0;
-
-    /*Assert(a->length>=0);*/
-
-   if (alength<0) alength=0;
-
-    /* printf("PADDING is %ld\n",a->length); */
-  }
-  else
-  {
-    /* printf("PADDING unpack fails\n"); */
-  }
-
-  return alength;
+    return alength;
 }
 
 static void init(grib_accessor* a, const long len, grib_arguments*arg )
 {
-  grib_accessor_section_padding* self = (grib_accessor_section_padding*)a;
-  self->preserve = 1; /* This should be a parameter */
-  a->length         = preferred_size(a,1);
-
+    grib_accessor_section_padding* self = (grib_accessor_section_padding*)a;
+    self->preserve = 1; /* This should be a parameter */
+    a->length         = preferred_size(a,1);
 }

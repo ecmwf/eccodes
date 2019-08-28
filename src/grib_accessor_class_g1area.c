@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -141,94 +141,91 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-	grib_accessor_g1area* self = (grib_accessor_g1area*)a; 
-	int n = 0;
+    grib_accessor_g1area* self = (grib_accessor_g1area*)a;
+    int n = 0;
 
-	self->laf = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-	self->lof = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-	self->lal = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-	self->lol = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-
+    self->laf = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->lof = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->lal = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->lol = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
-
-static int    pack_double   (grib_accessor* a, const double* val, size_t *len)
+static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-	grib_accessor_g1area* self = (grib_accessor_g1area*)a;
-	int ret = 0;
+    grib_accessor_g1area* self = (grib_accessor_g1area*)a;
+    int ret = 0;
 
-	ret = grib_set_double_internal(grib_handle_of_accessor(a), self->laf,val[0]);
-	if(ret ) return ret;
-	ret = grib_set_double_internal(grib_handle_of_accessor(a), self->lof,val[1]);
-  if(ret ) return ret;
-	ret = grib_set_double_internal(grib_handle_of_accessor(a), self->lal,val[2]);
-  if(ret) return ret;
+    ret = grib_set_double_internal(grib_handle_of_accessor(a), self->laf,val[0]);
+    if(ret ) return ret;
+    ret = grib_set_double_internal(grib_handle_of_accessor(a), self->lof,val[1]);
+    if(ret ) return ret;
+    ret = grib_set_double_internal(grib_handle_of_accessor(a), self->lal,val[2]);
+    if(ret) return ret;
 
-	ret = grib_set_double_internal(grib_handle_of_accessor(a), self->lol,val[3]);
-  if(ret ) return ret;
+    ret = grib_set_double_internal(grib_handle_of_accessor(a), self->lol,val[3]);
+    if(ret ) return ret;
 
-	if (ret == GRIB_SUCCESS) *len = 4;
+    if (ret == GRIB_SUCCESS) *len = 4;
 
-	return ret;
+    return ret;
 }
-static int    unpack_double   (grib_accessor* a,  double* val, size_t *len)
+
+static int unpack_double(grib_accessor* a,  double* val, size_t *len)
 {
-	grib_accessor_g1area* self = (grib_accessor_g1area*)a;
-	int ret = 0;
+    grib_accessor_g1area* self = (grib_accessor_g1area*)a;
+    int ret = 0;
 
-	if(*len < 4){
-		*len = 4;
-		return GRIB_BUFFER_TOO_SMALL;
-	}
+    if(*len < 4){
+        *len = 4;
+        return GRIB_BUFFER_TOO_SMALL;
+    }
 
-	ret = grib_get_double_internal(grib_handle_of_accessor(a), self->laf,val++);
-  if(ret) return ret;
+    ret = grib_get_double_internal(grib_handle_of_accessor(a), self->laf,val++);
+    if(ret) return ret;
 
-	ret = grib_get_double_internal(grib_handle_of_accessor(a), self->lof,val++);
-  if(ret) return ret;
+    ret = grib_get_double_internal(grib_handle_of_accessor(a), self->lof,val++);
+    if(ret) return ret;
 
-	ret = grib_get_double_internal(grib_handle_of_accessor(a), self->lal,val++);
-  if(ret) return ret;
+    ret = grib_get_double_internal(grib_handle_of_accessor(a), self->lal,val++);
+    if(ret) return ret;
 
-	ret = grib_get_double_internal(grib_handle_of_accessor(a), self->lol,val);
-  if(ret ) return ret;
+    ret = grib_get_double_internal(grib_handle_of_accessor(a), self->lol,val);
+    if(ret ) return ret;
 
-	if (ret == GRIB_SUCCESS) *len = 4;
+    if (ret == GRIB_SUCCESS) *len = 4;
 
-	return ret;
+    return ret;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-	grib_dump_string(dumper,a,NULL);
+    grib_dump_string(dumper,a,NULL);
 }
 
-static int    unpack_string(grib_accessor* a, char* val, size_t *len)
+static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {   
-	grib_accessor_g1area* self = (grib_accessor_g1area*)a;
-	int ret = 0;
+    grib_accessor_g1area* self = (grib_accessor_g1area*)a;
+    int ret = 0;
 
-	double laf,lof,lal,lol;
+    double laf,lof,lal,lol;
 
-	ret = grib_get_double_internal(grib_handle_of_accessor(a), self->laf,&laf);
-  if(ret) return ret;
-	ret = grib_get_double_internal(grib_handle_of_accessor(a), self->lof,&lof);
-  if(ret) return ret;
-	ret = grib_get_double_internal(grib_handle_of_accessor(a), self->lal,&lal);
-  if(ret) return ret;
-	ret = grib_get_double_internal(grib_handle_of_accessor(a), self->lol,&lol);
-  if(ret) return ret;
-	if(*len < 60)
-	{
-		grib_context_log(a->context, GRIB_LOG_ERROR, " Buffer too smalle for %s (%d) ", a->name ,*len);
-		len = 0;
-		return GRIB_BUFFER_TOO_SMALL;
-	}
+    ret = grib_get_double_internal(grib_handle_of_accessor(a), self->laf,&laf);
+    if(ret) return ret;
+    ret = grib_get_double_internal(grib_handle_of_accessor(a), self->lof,&lof);
+    if(ret) return ret;
+    ret = grib_get_double_internal(grib_handle_of_accessor(a), self->lal,&lal);
+    if(ret) return ret;
+    ret = grib_get_double_internal(grib_handle_of_accessor(a), self->lol,&lol);
+    if(ret) return ret;
+    if(*len < 60)
+    {
+        grib_context_log(a->context, GRIB_LOG_ERROR, " Buffer too small for %s (%d) ", a->name ,*len);
+        len = 0;
+        return GRIB_BUFFER_TOO_SMALL;
+    }
 
+    sprintf(val,"N:%3.5f W:%3.5f S:%3.5f E:%3.5f",((float)laf),((float)lof),((float)lal),((float)lol));
 
-	sprintf(val,"N:%3.5f W:%3.5f S:%3.5f E:%3.5f",((float)laf),((float)lof),((float)lal),((float)lol));
-
-	len[0] = strlen(val);
-	return GRIB_SUCCESS;
+    len[0] = strlen(val);
+    return GRIB_SUCCESS;
 }
-

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -159,174 +159,171 @@ typedef struct grib_accessor_smart_table {
         int dirty;
 } grib_accessor_smart_table;
 
-static void init(grib_accessor* a, const long len, grib_arguments* params) {
-  int n=0;
-  grib_accessor_smart_table_column* self  = (grib_accessor_smart_table_column*)a;
+static void init(grib_accessor* a, const long len, grib_arguments* params)
+{
+    int n=0;
+    grib_accessor_smart_table_column* self  = (grib_accessor_smart_table_column*)a;
 
-  self->smartTable = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-  self->index = grib_arguments_get_long(grib_handle_of_accessor(a),params,n++);
+    self->smartTable = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
+    self->index = grib_arguments_get_long(grib_handle_of_accessor(a),params,n++);
 
-  a->length = 0;
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-
+    a->length = 0;
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  int type=get_native_type(a);
+    int type=get_native_type(a);
 
-  switch (type) {
+    switch (type) {
     case GRIB_TYPE_LONG: 
-      grib_dump_long(dumper,a,NULL);
-      break;
+        grib_dump_long(dumper,a,NULL);
+        break;
     case GRIB_TYPE_STRING: 
-      grib_dump_string_array(dumper,a,NULL);
-      break;
-  }
+        grib_dump_string_array(dumper,a,NULL);
+        break;
+    }
 }
 
 static int unpack_string_array (grib_accessor* a, char** buffer, size_t *len)
 {
-  grib_accessor_smart_table_column* self = (grib_accessor_smart_table_column*)a;
-  grib_accessor_smart_table* tableAccessor = NULL;
-  grib_smart_table*          table = NULL;
+    grib_accessor_smart_table_column* self = (grib_accessor_smart_table_column*)a;
+    grib_accessor_smart_table* tableAccessor = NULL;
+    grib_smart_table*          table = NULL;
 
-  size_t size = 1;
-  long   *code;
-  int err = GRIB_SUCCESS;
-  char tmp[1024]={0,};
-  int i=0;
+    size_t size = 1;
+    long   *code;
+    int err = GRIB_SUCCESS;
+    char tmp[1024]={0,};
+    int i=0;
 
-  tableAccessor=(grib_accessor_smart_table*)grib_find_accessor(grib_handle_of_accessor(a),self->smartTable);
-  if (!tableAccessor) {
-  	grib_context_log(a->context,GRIB_LOG_ERROR,
-		"unable to find accessor %s",self->smartTable);
-	return GRIB_NOT_FOUND;
-  }
+    tableAccessor=(grib_accessor_smart_table*)grib_find_accessor(grib_handle_of_accessor(a),self->smartTable);
+    if (!tableAccessor) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,
+                "unable to find accessor %s",self->smartTable);
+        return GRIB_NOT_FOUND;
+    }
 
-  err=_grib_get_size(grib_handle_of_accessor(a),(grib_accessor*)tableAccessor,&size);
-  if (err) return err;
-  if (*len<size) {
-    return GRIB_BUFFER_TOO_SMALL;
-  }
+    err=_grib_get_size(grib_handle_of_accessor(a),(grib_accessor*)tableAccessor,&size);
+    if (err) return err;
+    if (*len<size) {
+        return GRIB_BUFFER_TOO_SMALL;
+    }
 
-  code=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
-  if (!code) {
-    grib_context_log(a->context,GRIB_LOG_FATAL,
-        "unable to allocate %ld bytes",(long)size);
-    return GRIB_OUT_OF_MEMORY;
-  }
+    code=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
+    if (!code) {
+        grib_context_log(a->context,GRIB_LOG_FATAL,
+                "unable to allocate %ld bytes",(long)size);
+        return GRIB_OUT_OF_MEMORY;
+    }
 
-  if( (err = grib_unpack_long((grib_accessor*)tableAccessor,code,&size)) != GRIB_SUCCESS)
-    return err;
+    if( (err = grib_unpack_long((grib_accessor*)tableAccessor,code,&size)) != GRIB_SUCCESS)
+        return err;
 
-  table=tableAccessor->table;
+    table=tableAccessor->table;
 
-  for (i=0;i<size;i++) {
+    for (i=0;i<size;i++) {
 
-      if(table && (code[i] >= 0) &&
-         (code[i] < table->numberOfEntries) &&
-         table->entries[code[i]].column[self->index])
-      {
-        strcpy(tmp,table->entries[code[i]].column[self->index]);
-      }
-      else
-      {
-        sprintf(tmp,"%d",(int)code[i]);
-      }
+        if(table && (code[i] >= 0) &&
+                (code[i] < table->numberOfEntries) &&
+                table->entries[code[i]].column[self->index])
+        {
+            strcpy(tmp,table->entries[code[i]].column[self->index]);
+        }
+        else
+        {
+            sprintf(tmp,"%d",(int)code[i]);
+        }
 
-      buffer[i]=grib_context_strdup(a->context,tmp);
+        buffer[i]=grib_context_strdup(a->context,tmp);
 
-  }
-  *len = size;
-  grib_context_free(a->context,code);
+    }
+    *len = size;
+    grib_context_free(a->context,code);
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 static int unpack_long (grib_accessor* a, long* val, size_t *len)
 {
-  grib_accessor_smart_table_column* self = (grib_accessor_smart_table_column*)a;
-  grib_accessor_smart_table* tableAccessor = NULL;
-  grib_smart_table*          table = NULL;
+    grib_accessor_smart_table_column* self = (grib_accessor_smart_table_column*)a;
+    grib_accessor_smart_table* tableAccessor = NULL;
+    grib_smart_table*          table = NULL;
 
-  size_t size = 1;
-  long   *code;
-  int err = GRIB_SUCCESS;
-  int i=0;
+    size_t size = 1;
+    long   *code;
+    int err = GRIB_SUCCESS;
+    int i=0;
 
-  for (i=0;i<*len;i++) val[i]=GRIB_MISSING_LONG;
+    for (i=0;i<*len;i++) val[i]=GRIB_MISSING_LONG;
 
-  tableAccessor=(grib_accessor_smart_table*)grib_find_accessor(grib_handle_of_accessor(a),self->smartTable);
-  if (!tableAccessor) {
-  	grib_context_log(a->context,GRIB_LOG_ERROR,
-		"unable to find accessor %s",self->smartTable);
-	return GRIB_NOT_FOUND;
-  }
+    tableAccessor=(grib_accessor_smart_table*)grib_find_accessor(grib_handle_of_accessor(a),self->smartTable);
+    if (!tableAccessor) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,
+                "unable to find accessor %s",self->smartTable);
+        return GRIB_NOT_FOUND;
+    }
 
-  err=_grib_get_size(grib_handle_of_accessor(a),(grib_accessor*)tableAccessor,&size);
-  if (err) return err;
-  if (*len<size) {
-    return GRIB_BUFFER_TOO_SMALL;
-  }
+    err=_grib_get_size(grib_handle_of_accessor(a),(grib_accessor*)tableAccessor,&size);
+    if (err) return err;
+    if (*len<size) {
+        return GRIB_BUFFER_TOO_SMALL;
+    }
 
-  code=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
-  if (!code) {
-    grib_context_log(a->context,GRIB_LOG_FATAL,
-        "unable to allocate %ld bytes",(long)size);
-    return GRIB_OUT_OF_MEMORY;
-  }
+    code=(long*)grib_context_malloc_clear(a->context,sizeof(long)*size);
+    if (!code) {
+        grib_context_log(a->context,GRIB_LOG_FATAL,
+                "unable to allocate %ld bytes",(long)size);
+        return GRIB_OUT_OF_MEMORY;
+    }
 
-  if( (err = grib_unpack_long((grib_accessor*)tableAccessor,code,&size)) != GRIB_SUCCESS)
-    return err;
+    if( (err = grib_unpack_long((grib_accessor*)tableAccessor,code,&size)) != GRIB_SUCCESS)
+        return err;
 
-  table=tableAccessor->table;
+    table=tableAccessor->table;
 
-  for (i=0;i<size;i++) {
-      if(table && (code[i] >= 0) &&
-         (code[i] < table->numberOfEntries) &&
-         table->entries[code[i]].column[self->index])
-      {
-        val[i]=atol(table->entries[code[i]].column[self->index]);
-      }
-  }
-  *len = size;
-  grib_context_free(a->context,code);
+    for (i=0;i<size;i++) {
+        if(table && (code[i] >= 0) &&
+                (code[i] < table->numberOfEntries) &&
+                table->entries[code[i]].column[self->index])
+        {
+            val[i]=atol(table->entries[code[i]].column[self->index]);
+        }
+    }
+    *len = size;
+    grib_context_free(a->context,code);
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 static int value_count(grib_accessor* a,long* count)
 {
-  grib_accessor_smart_table_column* self = (grib_accessor_smart_table_column*)a;
-  size_t size=0;
-  int err=0;
-  *count=0;
+    grib_accessor_smart_table_column* self = (grib_accessor_smart_table_column*)a;
+    size_t size=0;
+    int err=0;
+    *count=0;
 
-  if (!self->smartTable) return 0; 
+    if (!self->smartTable) return 0;
 
-  err=grib_get_size(grib_handle_of_accessor(a),self->smartTable,&size);
-  *count=size;
-  return err;
+    err=grib_get_size(grib_handle_of_accessor(a),self->smartTable,&size);
+    *count=size;
+    return err;
 }
 
 static void destroy(grib_context* context,grib_accessor* a)
 {
-	if (a->vvalue != NULL) {
-		grib_context_free(context, a->vvalue);
-		a->vvalue=NULL;
-	}
-
+    if (a->vvalue != NULL) {
+        grib_context_free(context, a->vvalue);
+        a->vvalue=NULL;
+    }
 }
 
-static int  get_native_type(grib_accessor* a){
-  int type=GRIB_TYPE_LONG;
-  /*printf("---------- %s flags=%ld GRIB_ACCESSOR_FLAG_STRING_TYPE=%d\n",
+static int  get_native_type(grib_accessor* a)
+{
+    int type=GRIB_TYPE_LONG;
+    /*printf("---------- %s flags=%ld GRIB_ACCESSOR_FLAG_STRING_TYPE=%d\n",
          a->name,a->flags,GRIB_ACCESSOR_FLAG_STRING_TYPE);*/
-  if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)
-    type=GRIB_TYPE_STRING;
-  return type;
+    if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)
+        type=GRIB_TYPE_STRING;
+    return type;
 }
-
-
-

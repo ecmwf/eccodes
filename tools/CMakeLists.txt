@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -33,7 +33,7 @@ list( APPEND grib_tools_bins
              grib2ppm grib_set grib_get grib_get_data grib_copy
              grib_compare codes_parser grib_index_build
              bufr_ls bufr_dump bufr_set bufr_get
-             bufr_copy bufr_compare bufr_index_build
+             bufr_copy bufr_compare
              gts_get gts_compare gts_copy gts_dump gts_filter gts_ls
              metar_dump metar_ls metar_compare metar_get metar_filter metar_copy
              )
@@ -64,11 +64,14 @@ foreach( tool ${grib_tools_bins_EXTRA} )
                             LIBS       grib_tools )
 endforeach()
 
-# grib_count/bufr_count tools. Same source code, different executable names
+# grib_count/bufr_count etc. Same source code, different executable names
 ecbuild_add_executable( TARGET     grib_count
                         SOURCES    codes_count.c
                         LIBS       grib_tools  )
 ecbuild_add_executable( TARGET     bufr_count
+                        SOURCES    codes_count.c
+                        LIBS       grib_tools  )
+ecbuild_add_executable( TARGET     gts_count
                         SOURCES    codes_count.c
                         LIBS       grib_tools  )
 

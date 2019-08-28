@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -18,9 +18,9 @@
 const char* grib_tool_description="Build an index file for a set of input GRIB files.";
 const char* grib_tool_name="grib_index_build";
 const char* grib_tool_usage="[options] grib_file grib_file ... ";
-grib_index* idx=NULL;
-char* keys;
-char* default_keys = "mars";
+static grib_index* idx=NULL;
+static char* keys;
+static char* default_keys = "mars";
 
 grib_option grib_options[]={
         /*  {id, args, help}, on, command_line, value */
@@ -39,7 +39,7 @@ grib_option grib_options[]={
         }
 };
 
-int compress_index;
+static int compress_index;
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 

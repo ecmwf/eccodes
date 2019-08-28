@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -175,6 +175,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     grib_accessor_g2_eps* self = (grib_accessor_g2_eps*)a;
+    grib_handle* hand=grib_handle_of_accessor(a);
     long productDefinitionTemplateNumber=-1;
     long productDefinitionTemplateNumberNew=-1;
     long type=-1;
@@ -187,16 +188,16 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     int isInstant=0;
     long derivedForecast=-1;
 
-    if (grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
+    if (grib_get_long(hand, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
         return GRIB_SUCCESS;
 
-    grib_get_long(grib_handle_of_accessor(a), self->type,&type);
-    grib_get_long(grib_handle_of_accessor(a), self->stream,&stream);
-    grib_get_string(grib_handle_of_accessor(a), self->stepType,stepType,&slen);
+    grib_get_long(hand, self->type,&type);
+    grib_get_long(hand, self->stream,&stream);
+    grib_get_string(hand, self->stepType,stepType,&slen);
     if (!strcmp(stepType,"instant")) isInstant=1;
-    grib_get_long(grib_handle_of_accessor(a), "is_chemical",&chemical);
-    grib_get_long(grib_handle_of_accessor(a), "is_aerosol",&aerosol);
-    if (chemical && aerosol) {
+    grib_get_long(hand, "is_chemical",&chemical);
+    grib_get_long(hand, "is_aerosol",&aerosol);
+    if (chemical==1 && aerosol==1) {
         grib_context_log(a->context,GRIB_LOG_ERROR,"Parameter cannot be both chemical and aerosol!");
         return GRIB_ENCODING_ERROR;
     }
@@ -269,9 +270,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     }
 
     if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
-        grib_set_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
+        grib_set_long(hand, self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
         if (derivedForecast>=0)
-            grib_set_long(grib_handle_of_accessor(a), self->derivedForecast,derivedForecast);
+            grib_set_long(hand, self->derivedForecast,derivedForecast);
     }
 
     return 0;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -257,11 +257,11 @@ grib_handle* grib_handle_new_from_samples( grib_context* c, const char* name )
     grib_context_set_handle_total_count(c,0);
 
     /*
-       g = grib_internal_template(c,name);
-       if(g) return g;
+     * g = grib_internal_sample(c,name);
+     * if(g) return g;
      */
     if (c->debug) {
-        printf("ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
+        fprintf(stderr, "ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
     }
 
     g = grib_external_template( c,name );
@@ -280,11 +280,11 @@ grib_handle* codes_bufr_handle_new_from_samples ( grib_context* c, const char* n
     grib_context_set_handle_total_count(c,0);
 
     /*
-       g = grib_internal_template(c,name);
-       if(g) return g;
+     *  g = grib_internal_sample(c,name);
+     *  if(g) return g;
      */
     if (c->debug) {
-        printf("ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
+        fprintf(stderr, "ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
     }
 
     g=bufr_external_template ( c,name );
@@ -447,6 +447,15 @@ grib_handle* grib_handle_new_from_message ( grib_context* c, const void* data, s
     /* See ECC-448 */
     if (determine_product_kind(h, &product_kind) == GRIB_SUCCESS) {
         h->product_kind = product_kind;
+    }
+
+    if (h->product_kind == PRODUCT_GRIB) {
+        if (!grib_is_defined(h,"7777")) {
+            grib_context_log (c,GRIB_LOG_ERROR,"grib_handle_new_from_message: No final 7777 in message!");
+            /* TODO: Return NULL. An incomplete message is no use to anyone.
+             * But first check the MARS Client and other applications
+             */
+        }
     }
     return h;
 }
@@ -1277,6 +1286,47 @@ int grib_get_message_offset ( grib_handle* h,off_t* offset )
     return 0;
 }
 
+int codes_get_product_kind(grib_handle* h, ProductKind* product_kind)
+{
+    if (h) {
+        *product_kind = h->product_kind;
+        return GRIB_SUCCESS;
+    }
+    return GRIB_NULL_HANDLE;
+}
+
+int codes_check_message_header(const void* bytes, size_t length, ProductKind product)
+{
+    const char *p = ((const char*)bytes);
+    Assert(p);
+    Assert(product == PRODUCT_GRIB || product == PRODUCT_BUFR); /* Others not yet implemented */
+    Assert(length > 4);
+    if (product == PRODUCT_GRIB) {
+        if (p[0] != 'G' || p[1] != 'R' || p[2] != 'I' || p[3] != 'B')
+            return GRIB_INVALID_MESSAGE;
+    }
+    else if (product == PRODUCT_BUFR) {
+        if (p[0] != 'B' || p[1] != 'U' || p[2] != 'F' || p[3] != 'R')
+            return GRIB_INVALID_MESSAGE;
+    }
+    else {
+        return GRIB_NOT_IMPLEMENTED;
+    }
+
+    return GRIB_SUCCESS;
+}
+int codes_check_message_footer(const void* bytes, size_t length, ProductKind product)
+{
+    const char *p = ((const char*)bytes);
+    Assert(p);
+    Assert(product == PRODUCT_GRIB || product == PRODUCT_BUFR); /* Others not yet implemented */
+
+    if (p[length-4] != '7' || p[length-3] != '7' || p[length-2] != '7' || p[length-1] != '7') {
+        return GRIB_7777_NOT_FOUND;
+    }
+    return GRIB_SUCCESS;
+}
+
 int grib_get_message_size ( grib_handle* h,size_t* size )
 {
     long totalLength=0;
@@ -1481,18 +1531,6 @@ static void grib2_build_message ( grib_context* context,unsigned char* sections[
     *len=msglen;
 }
 
-void grib_multi_support_on ( grib_context* c )
-{
-    if ( !c ) c=grib_context_get_default();
-    c->multi_support_on=1;
-}
-
-void grib_multi_support_off ( grib_context* c )
-{
-    if ( !c ) c=grib_context_get_default();
-    c->multi_support_on=0;
-}
-
 /* For multi support mode: Reset all file handles equal to f. See GRIB-249 */
 void grib_multi_support_reset_file(grib_context* c, FILE* f)
 {
@@ -1505,36 +1543,6 @@ void grib_multi_support_reset_file(grib_context* c, FILE* f)
         }
         gm=gm->next;
     }
-}
-
-void grib_gts_header_on ( grib_context* c )
-{
-    if ( !c ) c=grib_context_get_default();
-    c->gts_header_on=1;
-}
-
-void grib_gts_header_off ( grib_context* c )
-{
-    if ( !c ) c=grib_context_get_default();
-    c->gts_header_on=0;
-}
-
-int grib_get_gribex_mode ( grib_context* c)
-{
-    if ( !c ) c=grib_context_get_default();
-    return c->gribex_mode_on;
-}
-
-void grib_gribex_mode_on ( grib_context* c )
-{
-    if ( !c ) c=grib_context_get_default();
-    c->gribex_mode_on=1;
-}
-
-void grib_gribex_mode_off ( grib_context* c )
-{
-    if ( !c ) c=grib_context_get_default();
-    c->gribex_mode_on=0;
 }
 
 static grib_multi_support* grib_get_multi_support ( grib_context* c, FILE* f )

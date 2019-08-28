@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -47,11 +47,15 @@ static void init_mutex()
 
 static void init(grib_action_class *c)
 {
+    if (!c) return;
+
     GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
     GRIB_MUTEX_LOCK(&mutex1);
-    if(c && !c->inited)
+    if(!c->inited)
     {
-        init(c->super ? *(c->super) : NULL);
+        if (c->super) {
+            init( *(c->super) );
+        }
         c->init_class(c);
         c->inited = 1;
     }

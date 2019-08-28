@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -139,11 +139,12 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
     grib_accessor_time* self = (grib_accessor_time*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
     int n = 0;
 
-    self->hour = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->minute    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->second   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->hour   = grib_arguments_get_name(hand,c,n++);
+    self->minute = grib_arguments_get_name(hand,c,n++);
+    self->second = grib_arguments_get_name(hand,c,n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -155,16 +156,16 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     int ret=0;
     grib_accessor_time* self = (grib_accessor_time*)a;
-
     long hour = 0;
     long minute = 0;
     long second = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->hour,&hour))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(hand, self->hour,&hour))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->minute,&minute))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(hand, self->minute,&minute))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->second,&second))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(hand, self->second,&second))!=GRIB_SUCCESS)
         return ret;
 
     /* We ignore the 'seconds' in our time calculation! */
@@ -194,7 +195,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     int ret=0;
     long v = val[0];
     grib_accessor_time* self = (grib_accessor_time*)a;
-
+    grib_handle* hand = grib_handle_of_accessor(a);
     long hour = 0;
     long minute = 0;
     long second = 0;
@@ -206,11 +207,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     minute  =  v % 100;
     second  =  0; /* We ignore the 'seconds' in our time calculation! */
 
-    if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->hour,hour))!=GRIB_SUCCESS)
+    if ((ret=grib_set_long_internal(hand,self->hour,hour))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->minute,minute))!=GRIB_SUCCESS)
+    if ((ret=grib_set_long_internal(hand,self->minute,minute))!=GRIB_SUCCESS)
         return ret;
-    if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->second,second))!=GRIB_SUCCESS)
+    if ((ret=grib_set_long_internal(hand,self->second,second))!=GRIB_SUCCESS)
         return ret;
 
     return GRIB_SUCCESS;

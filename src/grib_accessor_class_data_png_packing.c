@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -663,15 +663,17 @@ cleanup:
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR,
-            "grib_accessor_data_png_packing: PNG support not enabled.");
-    return GRIB_NOT_IMPLEMENTED;
+            "grib_accessor_data_png_packing: PNG support not enabled. "
+            "Please rebuild with -DENABLE_PNG=ON");
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR,
-            "grib_accessor_data_png_packing: PNG support not enabled.");
-    return GRIB_NOT_IMPLEMENTED;
+            "grib_accessor_data_png_packing: PNG support not enabled. "
+            "Please rebuild with -DENABLE_PNG=ON");
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 #endif

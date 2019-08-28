@@ -11,24 +11,39 @@ branches:
 
 language: c
 
-os: osx
-osx_image: xcode10.1
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          packages:
+            - libnetcdf-dev
+
+    - os: osx
+      osx_image: xcode10.2
+      addons:
+        homebrew:
+          packages:
+            - netcdf
 
 env:
   global:
     - ECCODES_SRC=${TRAVIS_BUILD_DIR}
     - ECBUILD_SRC=${ECCODES_SRC}/../ecbuild
     - BUILD_DIR=${ECCODES_SRC}/build
+    - INSTALL_DIR=/tmp/install
 
 git:
   depth: 1
 
+before_install:
+  - mkdir ${INSTALL_DIR}
+  - export PATH=${PATH}:${INSTALL_DIR}/bin
+
 install:
   # install ecbuild
   - git clone --depth 1 https://github.com/ecmwf/ecbuild.git ${ECBUILD_SRC}
-
-  # install netcdf
-  - brew install netcdf
 
 #---------------------------------#
 #       build configuration       #
@@ -42,7 +57,8 @@ script:
 
   # build ecCodes
   - mkdir -p ${BUILD_DIR} && cd ${BUILD_DIR}
-  - cmake -D ENABLE_FORTRAN=0
+  - cmake -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR}
+          -D ENABLE_FORTRAN=0
           -D ENABLE_PYTHON=0
           -D ENABLE_NETCDF=1
           -D ENABLE_JPG=1
@@ -51,7 +67,7 @@ script:
           ${ECCODES_SRC}
   - make -j4
   - ctest -j4 --output-on-failure
-  - make install --silent
+  - make install > /dev/null
 
   # extra sanity tests
   - codes_info

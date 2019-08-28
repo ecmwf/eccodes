@@ -808,6 +808,7 @@ long accessor_raw_get_offset(grib_accessor *a);
 
 /* grib_gaussian_reduced.c */
 void grib_get_reduced_row_wrapper(grib_handle *h, long pl, double lon_first, double lon_last, long *npoints, long *ilon_first, long *ilon_last);
+void grib_get_reduced_row_legacy(long pl, double lon_first, double lon_last, long *npoints, long *ilon_first, long *ilon_last);
 void grib_get_reduced_row(long pl, double lon_first, double lon_last, long *npoints, long *ilon_first, long *ilon_last);
 void grib_get_reduced_row_p(long pl, double lon_first, double lon_last, long *npoints, double *olon_first, double *olon_last);
 
@@ -942,6 +943,8 @@ void grib_dump_footer(grib_dumper *d, grib_handle *h);
 
 /* grib_dumper_class_bufr_decode_python.c */
 
+/* grib_dumper_class_bufr_simple.c */
+
 /* grib_dumper_class_json.c */
 
 /* grib_dumper_class_grib_encode_C.c */
@@ -953,9 +956,10 @@ grib_dumper *grib_dumper_factory(const char *op, grib_handle *h, FILE *out, unsi
 void grib_dump_accessors_block(grib_dumper *dumper, grib_block_of_accessors *block);
 void grib_dump_accessors_list(grib_dumper *dumper, grib_accessors_list *al);
 int grib_print(grib_handle *h, const char *name, grib_dumper *d);
-void grib_dump_content(grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
-grib_dumper *grib_dump_content_with_dumper(grib_handle *h, grib_dumper *dumper, FILE *f, const char *mode, unsigned long option_flags, void *data);
-void codes_dump_bufr_flat(grib_accessors_list *al, grib_handle *h, FILE *f, const char *mode, unsigned long option_flags, void *data);
+void grib_dump_content(grib_handle *h, FILE *f, const char *mode, unsigned long flags, void *data);
+void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long flags, void *data, const char **keys, size_t num_keys);
+grib_dumper *grib_dump_content_with_dumper(grib_handle *h, grib_dumper *dumper, FILE *f, const char *mode, unsigned long flags, void *data);
+void codes_dump_bufr_flat(grib_accessors_list *al, grib_handle *h, FILE *f, const char *mode, unsigned long flags, void *data);
 
 /* grib_context.c */
 size_t grib_context_read(const grib_context *c, void *ptr, size_t size, void *stream);
@@ -996,6 +1000,8 @@ void grib_context_set_buffer_memory_proc(grib_context *c, grib_malloc_proc m, gr
 void grib_context_set_data_accessing_proc(grib_context *c, grib_data_read_proc read, grib_data_write_proc write, grib_data_tell_proc tell);
 void grib_context_log(const grib_context *c, int level, const char *fmt, ...);
 void grib_context_print(const grib_context *c, void *descriptor, const char *fmt, ...);
+int grib_context_get_handle_file_count(grib_context *c);
+int grib_context_get_handle_total_count(grib_context *c);
 void grib_context_set_handle_file_count(grib_context *c, int new_count);
 void grib_context_set_handle_total_count(grib_context *c, int new_count);
 void grib_context_increment_handle_file_count(grib_context *c);
@@ -1004,6 +1010,13 @@ bufr_descriptors_array* grib_context_expanded_descriptors_list_get(grib_context*
 void grib_context_expanded_descriptors_list_push(grib_context* c,const char* key,bufr_descriptors_array* expanded,bufr_descriptors_array* unexpanded);
 void codes_set_codes_assertion_failed_proc(codes_assertion_failed_proc proc);
 void codes_assertion_failed(const char *message, const char *file, int line);
+int grib_get_gribex_mode(grib_context* c);
+void grib_gribex_mode_on(grib_context* c);
+void grib_gribex_mode_off(grib_context* c);
+void grib_gts_header_on(grib_context* c);
+void grib_gts_header_off(grib_context* c);
+void grib_multi_support_on(grib_context* c);
+void grib_multi_support_off(grib_context* c);
 
 /* grib_date.c */
 int grib_julian_to_datetime(double jd, long *year, long *month, long *day, long *hour, long *minute, long *second);
@@ -1043,6 +1056,8 @@ void grib_file_delete(grib_file *file);
 /* grib_geography.c */
 int grib_get_gaussian_latitudes(long trunc, double *lats);
 int is_gaussian_global(double lat1, double lat2, double lon1, double lon2, long num_points_equator, const double *latitudes, double angular_precision);
+void rotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double* outlat, double* outlon);
+void unrotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double *outlat, double *outlon);
 
 /* grib_handle.c */
 grib_section *grib_section_create(grib_handle *h, grib_accessor *owner);
@@ -1080,6 +1095,9 @@ int grib_get_partial_message(grib_handle *h, const void **msg, size_t *len, int 
 int grib_get_partial_message_copy(grib_handle *h, void *message, size_t *len, int start_section);
 int grib_get_message_copy(grib_handle *h, void *message, size_t *len);
 int grib_get_message_offset(grib_handle *h, off_t *offset);
+int codes_get_product_kind(grib_handle *h, ProductKind *product_kind);
+int codes_check_message_header(const void *bytes, size_t length, ProductKind product);
+int codes_check_message_footer(const void *bytes, size_t length, ProductKind product);
 int grib_get_message_size(grib_handle *h, size_t *size);
 int grib_get_message(grib_handle *h, const void **msg, size_t *size);
 int grib_get_message_headers(grib_handle *h, const void **msg, size_t *size);
@@ -1087,14 +1105,7 @@ grib_handle *grib_handle_new(grib_context *c);
 grib_action *grib_action_from_filter(const char *filter);
 int grib_handle_apply_action(grib_handle *h, grib_action *a);
 int grib_handle_prepare_action(grib_handle *h, grib_action *a);
-void grib_multi_support_on(grib_context *c);
-void grib_multi_support_off(grib_context *c);
 void grib_multi_support_reset_file(grib_context *c, FILE *f);
-void grib_gts_header_on(grib_context *c);
-void grib_gts_header_off(grib_context *c);
-int grib_get_gribex_mode(grib_context *c);
-void grib_gribex_mode_on(grib_context *c);
-void grib_gribex_mode_off(grib_context *c);
 void grib_multi_support_reset(grib_context *c);
 
 /* grib_header_compute.c */
@@ -1219,8 +1230,7 @@ long grib_get_bits_per_value(double max, double min, long binary_scale_factor);
 long grib_get_decimal_scale_fact(double max, double min, long bpval, long binary_scale);
 
 /* grib_templates.c */
-grib_handle *grib_internal_template(grib_context *c, const char *name);
-grib_handle *grib_internal_template(grib_context *c, const char *name);
+/*grib_handle *grib_internal_sample(grib_context *c, const char *name);*/
 grib_handle *grib_external_template(grib_context *c, const char *name);
 grib_handle *bufr_external_template(grib_context *c, const char *name);
 char *grib_external_template_path(grib_context *c, const char *name);
@@ -1229,6 +1239,7 @@ char *grib_external_template_path(grib_context *c, const char *name);
 grib_handle *grib_handle_of_accessor(grib_accessor *a);
 void grib_dependency_add(grib_accessor *observer, grib_accessor *observed);
 void grib_dependency_remove_observed(grib_accessor *observed);
+int _grib_dependency_notify_change(grib_handle* h, grib_accessor* observed);
 int grib_dependency_notify_change(grib_accessor *observed);
 void grib_dependency_remove_observer(grib_accessor *observer);
 void grib_dependency_observe_expression(grib_accessor *observer, grib_expression *e);
@@ -1395,6 +1406,8 @@ grib_nearest *grib_nearest_factory(grib_handle *h, grib_arguments *args);
 
 /* grib_nearest_class_lambert_conformal.c */
 
+/* grib_nearest_class_polar_stereographic.c */
+
 /* grib_iterator_class_polar_stereographic.c */
 
 /* grib_iterator_class_lambert_azimuthal_equal_area.c */
@@ -1423,7 +1436,6 @@ grib_iterator *grib_iterator_factory(grib_handle *h, grib_arguments *args, unsig
 int transform_iterator_data(grib_handle *h, double *data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);
 
 /* grib_iterator_class_latlon.c */
-void unrotate(grib_handle *h, const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double *outlat, double *outlon);
 
 /* grib_iterator_class_regular.c */
 
@@ -1517,6 +1529,8 @@ const char *grib_unop_double_proc_name(grib_unop_double_proc proc);
 /* codes_memfs.c */
 FILE *codes_fopen(const char *name, const char *mode);
 int codes_access(const char *name, int mode);
+
+/* grib_accessor_class_data_g2bifourier_packing.c */
 
 /* grib_optimize_decimal_factor.c */
 int grib_optimize_decimal_factor(grib_accessor *a, const char *reference_value, const double pmax, const double pmin, const int knbit, const int compat_gribex, const int compat_32bit, long *kdec, long *kbin, double *ref);

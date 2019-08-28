@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -134,42 +134,39 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
-  a->length = 0;
-  a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->flags  |= GRIB_ACCESSOR_FLAG_HIDDEN;
-  a->flags  |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
+    a->length = 0;
+    a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags  |= GRIB_ACCESSOR_FLAG_HIDDEN;
+    a->flags  |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_LONG;
+static int get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_LONG;
 }
 
 static void dump(grib_accessor* a,grib_dumper* dumper)
 {
-  grib_dump_long(dumper,a,NULL);
+    grib_dump_long(dumper,a,NULL);
 }
-
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-
-  if(*len < 1)
-  {
-    grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
-    *len = 0;
-    return GRIB_ARRAY_TOO_SMALL;
-  }
-  *val = a->offset;
-  *len = 1;
-  return GRIB_SUCCESS;
-
+    if(*len < 1)
+    {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name , 1 );
+        *len = 0;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
+    *val = a->offset;
+    *len = 1;
+    return GRIB_SUCCESS;
 }
 
-static int compare(grib_accessor* a, grib_accessor* b) {
-  if (a->offset != b->offset) return GRIB_OFFSET_MISMATCH;
-  return GRIB_SUCCESS;
+static int compare(grib_accessor* a, grib_accessor* b)
+{
+    if (a->offset != b->offset) return GRIB_OFFSET_MISMATCH;
+    return GRIB_SUCCESS;
 }
-

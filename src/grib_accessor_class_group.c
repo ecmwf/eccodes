@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -141,172 +141,173 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
-  grib_buffer* buffer=grib_handle_of_accessor(a)->buffer;
-  grib_accessor_group* self=(grib_accessor_group*)a;
+    grib_buffer* buffer=grib_handle_of_accessor(a)->buffer;
+    grib_accessor_group* self=(grib_accessor_group*)a;
 
-  size_t i=0;
-  unsigned char* v;
-  const char *s=grib_arguments_get_string(grib_handle_of_accessor(a),arg,0);
+    size_t i=0;
+    unsigned char* v;
+    const char *s=grib_arguments_get_string(grib_handle_of_accessor(a),arg,0);
 
-  if (s && strlen(s) > 1) {
-  	grib_context_log(a->context,GRIB_LOG_WARNING,
-	"Using only first character as group end of %s not the string %s",a->name,s);
-  }
+    if (s && strlen(s) > 1) {
+        grib_context_log(a->context,GRIB_LOG_WARNING,
+                "Using only first character as group end of %s not the string %s",a->name,s);
+    }
 
-  self->endCharacter= s ? s[0] : 0;
+    self->endCharacter= s ? s[0] : 0;
 
-  v=buffer->data+a->offset;
-  i=0;
-  if (s) {
-      while (*v!=self->endCharacter && i<=buffer->ulength) { if(*v>126) *v=32; v++; i++; }
-  } else {
-      while (*v>32 && *v!=61 && *v<127 && i<=buffer->ulength) { v++; i++; }
-  }
-  a->length=i;
+    v=buffer->data+a->offset;
+    i=0;
+    if (s) {
+        while (*v!=self->endCharacter && i<=buffer->ulength) { if(*v>126) *v=32; v++; i++; }
+    } else {
+        while (*v>32 && *v!=61 && *v<127 && i<=buffer->ulength) { v++; i++; }
+    }
+    a->length=i;
 
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 static void post_init(grib_accessor* a )
 {
-  return;
 }
 
-static int value_count(grib_accessor* a,long* count){
-  *count=1;
-  return 0;
+static int value_count(grib_accessor* a,long* count)
+{
+    *count=1;
+    return 0;
 }
 
-static size_t string_length(grib_accessor* a){
-  return a->length;
+static size_t string_length(grib_accessor* a)
+{
+    return a->length;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_string(dumper,a,NULL);
+    grib_dump_string(dumper,a,NULL);
 }
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_STRING;
+static int  get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_STRING;
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {
+    int i = 0;
 
-  int i = 0;
+    if(len[0] < (a->length+1))
+    {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%d) for %s it contains %d values ", len[0], a->name , a->length+1 );
+        len[0] = 0;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
 
-  if(len[0] < (a->length+1))
-  {
-    grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%d) for %s it contains %d values ", len[0], a->name , a->length+1 );
-    len[0] = 0;
-    return GRIB_ARRAY_TOO_SMALL;
-  }
-
-  for ( i = 0; i < a->length; i++)
-    val[i] = grib_handle_of_accessor(a)->buffer->data[a->offset+i];
-  val[i] = 0;
-  len[0] = i;
-  return GRIB_SUCCESS;
+    for ( i = 0; i < a->length; i++)
+        val[i] = grib_handle_of_accessor(a)->buffer->data[a->offset+i];
+    val[i] = 0;
+    len[0] = i;
+    return GRIB_SUCCESS;
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len)
 {
-
-  return GRIB_NOT_IMPLEMENTED;
+    return GRIB_NOT_IMPLEMENTED;
 }
 
-static int pack_long(grib_accessor* a, const long*  v, size_t *len){
-  grib_context_log(a->context,GRIB_LOG_ERROR, " Should not pack %s as long", a->name);
-  return GRIB_NOT_IMPLEMENTED;
+static int pack_long(grib_accessor* a, const long*  v, size_t *len)
+{
+    grib_context_log(a->context,GRIB_LOG_ERROR, " Should not pack %s as long", a->name);
+    return GRIB_NOT_IMPLEMENTED;
 }
 
-static int pack_double(grib_accessor* a, const double*v, size_t *len){
-  grib_context_log(a->context,GRIB_LOG_ERROR, " Should not pack %s  as double", a->name);
-  return GRIB_NOT_IMPLEMENTED;
+static int pack_double(grib_accessor* a, const double*v, size_t *len)
+{
+    grib_context_log(a->context,GRIB_LOG_ERROR, " Should not pack %s  as double", a->name);
+    return GRIB_NOT_IMPLEMENTED;
 }
 
+static int unpack_long(grib_accessor* a, long*  v, size_t *len)
+{
 
-static int  unpack_long   (grib_accessor* a, long*  v, size_t *len){
+    char val[1024]={0,};
+    size_t l = sizeof(val);
+    size_t i =0;
+    char  *last = NULL;
+    int err=grib_unpack_string (a , val, &l);
 
-  char val[1024]={0,};
-  size_t l = sizeof(val);
-  size_t i =0;
-  char  *last = NULL;
-  int err=grib_unpack_string (a , val, &l);
+    if (err) return err;
 
-  if (err) return err;
+    i=0;
+    while ( val[i]==' ' && val[i]!=0  && i<l-1) i++;
 
-  i=0;
-  while ( val[i]==' ' && val[i]!=0  && i<l-1) i++;
+    if (val[i]==0) {
+        *v=0;
+        return 0;
+    }
+    if (val[i+1]==' ' && i<l-2)  val[i+1]=0;
 
-  if (val[i]==0) {
-     *v=0;
-     return 0;
-  }
-  if (val[i+1]==' ' && i<l-2)  val[i+1]=0;
+    *v = strtol(val,&last,10);
 
-  *v = strtol(val,&last,10);
-
-  grib_context_log(a->context,GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
-  return GRIB_SUCCESS;
-
-}
-
-static int unpack_double (grib_accessor* a, double*v, size_t *len){
-  char val[1024];
-  size_t l = sizeof(val);
-  char  *last = NULL;
-  grib_unpack_string (a , val, &l);
-
-  *v = strtod(val,&last);
-
-  if(*last == 0)
-  {
     grib_context_log(a->context,GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
     return GRIB_SUCCESS;
-  }
-
-  return GRIB_NOT_IMPLEMENTED;
 }
 
+static int unpack_double(grib_accessor* a, double*v, size_t *len)
+{
+    char val[1024];
+    size_t l = sizeof(val);
+    char  *last = NULL;
+    grib_unpack_string (a , val, &l);
 
-static int compare(grib_accessor* a,grib_accessor* b) {
-  int retval=0;
-  char *aval=0;
-  char *bval=0;
-  int err=0;
+    *v = strtod(val,&last);
 
-  size_t alen = 0;
-  size_t blen = 0;
-  long count=0;
+    if(*last == 0)
+    {
+        grib_context_log(a->context,GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
+        return GRIB_SUCCESS;
+    }
 
-  err=grib_value_count(a,&count);
-  if (err) return err;
-  alen=count;
+    return GRIB_NOT_IMPLEMENTED;
+}
 
-  err=grib_value_count(b,&count);
-  if (err) return err;
-  blen=count;
+static int compare(grib_accessor* a,grib_accessor* b)
+{
+    int retval=0;
+    char *aval=0;
+    char *bval=0;
+    int err=0;
 
-  if (alen != blen) return GRIB_COUNT_MISMATCH;
+    size_t alen = 0;
+    size_t blen = 0;
+    long count=0;
 
-  aval=(char*)grib_context_malloc(a->context,alen*sizeof(char));
-  bval=(char*)grib_context_malloc(b->context,blen*sizeof(char));
+    err=grib_value_count(a,&count);
+    if (err) return err;
+    alen=count;
 
-  grib_unpack_string(a,aval,&alen);
-  grib_unpack_string(b,bval,&blen);
+    err=grib_value_count(b,&count);
+    if (err) return err;
+    blen=count;
 
-  retval = GRIB_SUCCESS;
-  if (strcmp(aval,bval)) retval = GRIB_STRING_VALUE_MISMATCH;
+    if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-  grib_context_free(a->context,aval);
-  grib_context_free(b->context,bval);
+    aval=(char*)grib_context_malloc(a->context,alen*sizeof(char));
+    bval=(char*)grib_context_malloc(b->context,blen*sizeof(char));
 
-  return retval;
+    grib_unpack_string(a,aval,&alen);
+    grib_unpack_string(b,bval,&blen);
+
+    retval = GRIB_SUCCESS;
+    if (strcmp(aval,bval)) retval = GRIB_STRING_VALUE_MISMATCH;
+
+    grib_context_free(a->context,aval);
+    grib_context_free(b->context,bval);
+
+    return retval;
 }
 
 static long next_offset(grib_accessor* a)
 {
-  return a->offset+a->length;
+    return a->offset+a->length;
 }
-

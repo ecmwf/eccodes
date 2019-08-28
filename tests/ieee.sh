@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -43,18 +43,17 @@ ${tools_dir}/grib_set -r -s packingType=grid_ieee $outsimple $out32
 ${tools_dir}/grib_filter r.filter $out32 > $out32.txt 
 diff $out32.txt ${data_dir}/ieee_test.good
 
-# Disabled for now. See GRIB-2 and GRIB-80
-#GRIB_IEEE_PACKING=32
-#export GRIB_IEEE_PACKING
-#${tools_dir}/grib_filter -o $out32 w.filter $infile 
-#${tools_dir}/grib_filter r.filter $out32 > $out32.txt 
-#diff $out32.txt ${data_dir}/ieee_test.good
+GRIB_IEEE_PACKING=32
+export GRIB_IEEE_PACKING
+${tools_dir}/grib_filter -o $out32 w.filter $infile 
+${tools_dir}/grib_filter r.filter $out32 > $out32.txt 
+diff $out32.txt ${data_dir}/ieee_test.good
 
-#GRIB_IEEE_PACKING=64
-#export GRIB_IEEE_PACKING
-#${tools_dir}/grib_filter -o $out64 w.filter $infile 
-#${tools_dir}/grib_filter r.filter $out64 > $out64.txt 
-#diff $out64.txt ${data_dir}/ieee_test.good
+GRIB_IEEE_PACKING=64
+export GRIB_IEEE_PACKING
+${tools_dir}/grib_filter -o $out64 w.filter $infile 
+${tools_dir}/grib_filter r.filter $out64 > $out64.txt 
+diff $out64.txt ${data_dir}/ieee_test.good
 
 rm -f $outsimple $out32 $out64 $out32.txt $out64.txt
 rm -f ${data_dir}/$outsimple.txt ${data_dir}/$out32.txt ${data_dir}/$out64.txt 
@@ -68,7 +67,8 @@ ${tools_dir}/grib_filter r.filter ${shdata}_ieee > $shdata.txt
 diff $shdata.txt $shdata.good
 rm -f ${shdata}_ieee
 
-##########################
+##################################
+# Disabled for now. Infinite loop
 #GRIB_IEEE_PACKING=32
 #export GRIB_IEEE_PACKING
 #${tools_dir}/grib_copy -r $shdata ${shdata}_32

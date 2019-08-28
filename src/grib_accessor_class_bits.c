@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -157,22 +157,23 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
     grib_accessor_bits* self = (grib_accessor_bits*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
     grib_expression* e=NULL;
     int n = 0;
 
-    self->argument = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->start    = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
-    self->len    = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
-    e=grib_arguments_get_expression(grib_handle_of_accessor(a),c,n++);
+    self->argument = grib_arguments_get_name(hand,c,n++);
+    self->start    = grib_arguments_get_long(hand,c,n++);
+    self->len    = grib_arguments_get_long(hand,c,n++);
+    e=grib_arguments_get_expression(hand,c,n++);
     if (e) {
-        grib_expression_evaluate_double(grib_handle_of_accessor(a),e,&(self->referenceValue));
+        grib_expression_evaluate_double(hand,e,&(self->referenceValue));
         self->referenceValuePresent=1;
     } else {
         self->referenceValuePresent=0;
     }
     self->scale = 1;
     if (self->referenceValuePresent) {
-        self->scale=grib_arguments_get_double(grib_handle_of_accessor(a),c,n++);
+        self->scale=grib_arguments_get_double(hand,c,n++);
     }
 
     Assert(self->len <= sizeof(long)*8);

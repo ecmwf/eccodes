@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -178,15 +178,16 @@ static long convert_to_minutes(long step, long stepUnits)
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
     grib_accessor_validity_date* self = (grib_accessor_validity_date*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
     int n = 0;
 
-    self->date = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->time = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->step = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->stepUnits = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->year = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->month = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->day = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->date = grib_arguments_get_name(hand,c,n++);
+    self->time = grib_arguments_get_name(hand,c,n++);
+    self->step = grib_arguments_get_name(hand,c,n++);
+    self->stepUnits = grib_arguments_get_name(hand,c,n++);
+    self->year = grib_arguments_get_name(hand,c,n++);
+    self->month = grib_arguments_get_name(hand,c,n++);
+    self->day = grib_arguments_get_name(hand,c,n++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -199,6 +200,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
     grib_accessor_validity_date* self = (grib_accessor_validity_date*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
     int ret=0;
     long date = 0;
     long time = 0;
@@ -208,18 +210,22 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     if (self->year) {
         long year,month,day;
-        if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->year,&year))!=GRIB_SUCCESS) return ret;
-        if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->month,&month))!=GRIB_SUCCESS) return ret;
-        if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->day,&day))!=GRIB_SUCCESS) return ret;
+        if ((ret=grib_get_long_internal(hand, self->year,&year))!=GRIB_SUCCESS) return ret;
+        if ((ret=grib_get_long_internal(hand, self->month,&month))!=GRIB_SUCCESS) return ret;
+        if ((ret=grib_get_long_internal(hand, self->day,&day))!=GRIB_SUCCESS) return ret;
         *val=year*10000+month*100+day;
         return GRIB_SUCCESS;
     }
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->date,&date))!=GRIB_SUCCESS) return ret;
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->time,&time))!=GRIB_SUCCESS) return ret;
-    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->step,&step))!=GRIB_SUCCESS) return ret;
+    if ((ret=grib_get_long_internal(hand, self->date,&date))!=GRIB_SUCCESS) return ret;
+    if ((ret=grib_get_long_internal(hand, self->time,&time))!=GRIB_SUCCESS) return ret;
+    if ((ret=grib_get_long(hand, self->step,&step))!=GRIB_SUCCESS) {
+        if ((ret=grib_get_long_internal(hand, "endStep",&step))!=GRIB_SUCCESS) {
+            return ret; /* See ECC-817 */
+        }
+    }
 
     if (self->stepUnits) {
-        if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->stepUnits,&stepUnits))!=GRIB_SUCCESS) return ret;
+        if ((ret=grib_get_long_internal(hand, self->stepUnits,&stepUnits))!=GRIB_SUCCESS) return ret;
         step_mins = convert_to_minutes(step, stepUnits);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -202,11 +202,10 @@ static char* get_condition(const char* name,codes_condition* condition)
     return str;
 }
 
-static grib_accessor* _search_by_rank(grib_accessor* a,const char* name,int rank) {
-    grib_accessor* ret=NULL;
+static grib_accessor* _search_by_rank(grib_accessor* a,const char* name,int rank)
+{
     grib_trie_with_rank* t=accessor_bufr_data_array_get_dataAccessorsTrie(a);
-
-    ret=(grib_accessor*)grib_trie_with_rank_get(t,name,rank);
+    grib_accessor* ret=(grib_accessor*)grib_trie_with_rank_get(t,name,rank);
     return ret;
 }
 
@@ -233,10 +232,9 @@ static grib_accessor* search_by_rank(grib_handle* h, const char* name,int rank,c
     if (data) {
         return _search_by_rank(data,name,rank);
     } else {
-        grib_accessor* ret=NULL;
         int rank2;
         char* str=get_rank(h->context, name, &rank2);
-        ret=_search_and_cache(h,str,the_namespace);
+        grib_accessor* ret=_search_and_cache(h,str,the_namespace);
         grib_context_free(h->context,str);
         return ret;
     }
@@ -267,11 +265,10 @@ static int condition_true(grib_accessor* a,codes_condition* condition) {
 
 static void search_from_accessors_list(grib_accessors_list* al,grib_accessors_list* end,const char* name,grib_accessors_list* result)
 {
-    char* accessor_name=NULL;
     char attribute_name[200]={0,};
     grib_accessor* accessor_result=0;
 
-    accessor_name=grib_split_name_attribute(al->accessor->context,name,attribute_name);
+    char* accessor_name=grib_split_name_attribute(al->accessor->context,name,attribute_name);
 
     while (al && al!=end && al->accessor) {
         if (grib_inline_strcmp(al->accessor->name,accessor_name)==0) {
@@ -413,8 +410,7 @@ static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name)
     if ( p ) {
         int i=0,len=0;
         char name_space[MAX_NAMESPACE_LEN];
-        char* basename=NULL;
-        basename=p+1;
+        char* basename=p+1;
         p--;
         i=0;
         len=p-name+1;
@@ -460,11 +456,10 @@ grib_accessor* grib_find_accessor(grib_handle* h, const char* name)
         aret = _grib_find_accessor(h, name); /* ECC-144: Performance */
     }
     else {
-        char* accessor_name=NULL;
         char attribute_name[512]={0,};
         grib_accessor* a=NULL;
 
-        accessor_name=grib_split_name_attribute(h->context,name,attribute_name);
+        char* accessor_name=grib_split_name_attribute(h->context,name,attribute_name);
 
         a=_grib_find_accessor(h,accessor_name);
 

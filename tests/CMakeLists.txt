@@ -10,11 +10,12 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 # Build the executables used by test scripts
 ################################################
 list( APPEND test_bins
+      bpv_limit
       grib_double_cmp
       read_any
       julian
       index
-      multi_from_message
+      grib_multi_from_message
       read_index
       unit_tests
       bufr_keys_iter
@@ -22,14 +23,16 @@ list( APPEND test_bins
       grib_util_set_spec
       grib_local_MeteoFrance
       grib_2nd_order_numValues
-      optimize_scaling
-      optimize_scaling_sh
+      grib_optimize_scaling
+      grib_optimize_scaling_sh
       grib_ecc-386
       bufr_ecc-517
       bufr_get_element
       grib_sh_ieee64
       ieee
       grib_sh_imag
+      grib_lam_bf
+      grib_lam_gp
 )
 
 foreach( tool ${test_bins} )
@@ -49,8 +52,11 @@ list( APPEND tests_no_data_reqd
     grib_calendar
     unit_tests
     md5
-    uerra
+    grib_uerra
     grib_2nd_order_numValues
+    grib_ecc-136
+    grib_ecc-967
+    grib_ecc-979
     julian
     bufr_dump_samples
     bufr_json_samples
@@ -62,9 +68,12 @@ list( APPEND tests_no_data_reqd
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
+    bpv_limit
     grib_double_cmp
     grib_change_packing
     bufr_dump_data
+    bufr_dump_descriptors
+    bufr_dump_subset
     bufr_dump_decode_filter
     bufr_dump_encode_filter
     bufrdc_desc_ref
@@ -98,9 +107,12 @@ list( APPEND tests_data_reqd
     grib_ecc-490
     grib_ecc-756
     grib_ecc-873
+    grib_ecc-600
+    grib_ecc-923
     bufr_ecc-556
     gts_get
     gts_ls
+    gts_count
     gts_compare
     metar_ls
     metar_get
@@ -109,8 +121,10 @@ list( APPEND tests_data_reqd
     bufr_set
     ieee
     grib_sh_ieee64
-    optimize_scaling
-    optimize_scaling_sh
+    grib_optimize_scaling
+    grib_optimize_scaling_sh
+    grib_lam_bf
+    grib_lam_gp
     grib1to2
     grib2to1
     grib1to3
@@ -118,6 +132,7 @@ list( APPEND tests_data_reqd
     grib3_templates
     badgrib
     grib_ls
+    grib_ls_json
     grib_filter
     grib_multi
     budg
@@ -125,10 +140,10 @@ list( APPEND tests_data_reqd
     grib_octahedral
     grib_global
     grib_concept
-    decimalPrecision
+    grib_decimalPrecision
     grib_bitsPerValue
     get_fail
-    missing
+    grib_missing
     grib_local
     grib_step
     grib_set
@@ -138,12 +153,12 @@ list( APPEND tests_data_reqd
     grib_level
     index
     grib_bitmap
-    list
+    grib_list
     grib_second_order
-    multi_from_message
+    grib_multi_from_message
     grib_change_scanning
     grib_statistics
-    tigge
+    grib_tigge
     read_any
     grib_dump
     grib_dump_debug
@@ -160,7 +175,7 @@ endif()
 if( ENABLE_EXTRA_TESTS )
     list(APPEND tests_data_reqd grib_util_set_spec)
     list(APPEND tests_data_reqd grib_padding)
-    list(APPEND tests_data_reqd tigge_conversions)
+    list(APPEND tests_data_reqd grib_tigge_conversions)
     list(APPEND tests_data_reqd bufr_dump_encode_C)
     list(APPEND tests_data_reqd bufr_dump_decode_C)
 endif()
@@ -215,11 +230,11 @@ endif()
 
 ###########################################
 # Note: the reference file is in the tests dir not data dir!
-ecbuild_add_test( TARGET eccodes_t_lamb_az_eq_area
+ecbuild_add_test( TARGET eccodes_t_grib_lamb_az_eq_area
                   TYPE SCRIPT
                   CONDITION ENABLE_EXTRA_TESTS
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lamb_az_eq_area.sh
-                  RESOURCES lamb_az_eq_area.ref
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_lamb_az_eq_area.sh
+                  RESOURCES grib_lamb_az_eq_area.ref
                   TEST_DEPENDS eccodes_download_gribs
 )
 
@@ -285,3 +300,4 @@ ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
+

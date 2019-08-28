@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -3408,6 +3408,467 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {NULL, },
       },
       {&point_in_time, &has_bitmap},
+   },
+/*
+  carra / cerra
+*/
+   {
+      "specific_rain_water_content_ml",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 75},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 85},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 105},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level}, /* check model levels?? */
+   },
+
+   {
+      "specific_snow_water_content_ml",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 76},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 86},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 105},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level}, /* check model levels?? */
+   },
+
+   {
+      "graupel_ml",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260028},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 32},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 105},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level}, /* check model levels?? */
+   },
+
+   {
+      "turbulent_kinetic_energy_ml",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260155},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 19},
+         {"parameterNumber", GRIB_TYPE_LONG, 11},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 105},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level}, /* check model levels?? */
+   },
+
+   {
+      "specific_rain_water_content_pl",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 75},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 85},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &pressure_level},
+   },
+
+   {
+      "specific_snow_water_content_pl",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 76},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 86},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &pressure_level},
+   },
+
+   {
+      "graupel_pl",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260028},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 32},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &pressure_level},
+   },
+
+   {
+      "pseudo-adiabatic_potential_temperature_pl",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 3014},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 0},
+         {"parameterNumber", GRIB_TYPE_LONG, 3},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &pressure_level},
+   },
+
+   {
+      "geometric_vertical_velocity_pl",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260238},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 2},
+         {"parameterNumber", GRIB_TYPE_LONG, 9},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &pressure_level},
+   },
+
+   {
+      "potential_vorticity_pl",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 60},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 2},
+         {"parameterNumber", GRIB_TYPE_LONG, 14},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &pressure_level},
+   },
+
+   {
+      "visibility_sfc",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 3020},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 19},
+         {"parameterNumber", GRIB_TYPE_LONG, 0},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {NULL, },
+      },
+      {&point_in_time, &predefined_level},
+   },
+
+   {
+      "cloud_base_sfc",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260107},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 6},
+         {"parameterNumber", GRIB_TYPE_LONG, 11},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {NULL, },
+      },
+      {&point_in_time, &predefined_level},
+   },
+
+   {
+      "cloud_top_sfc",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260108},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 6},
+         {"parameterNumber", GRIB_TYPE_LONG, 12},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {NULL, },
+      },
+      {&point_in_time, &predefined_level},
+   },
+
+   {
+      "sea_ice_cover_sfc",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 31},
+
+         {"discipline", GRIB_TYPE_LONG, 10},
+         {"parameterCategory", GRIB_TYPE_LONG, 2},
+         {"parameterNumber", GRIB_TYPE_LONG, 0},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {NULL, },
+      },
+      {&point_in_time, &predefined_level, &has_bitmap},
+   },
+
+   {
+      "sea_surface_temperature_sfc",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 34},
+
+         {"discipline", GRIB_TYPE_LONG, 10},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 0},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {NULL, },
+      },
+      {&point_in_time, &predefined_level, &has_bitmap},
+   },
+
+  {
+      "precipitation_type_sfc",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260015},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 19},
+
+         {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 1},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {NULL, },
+      },
+      {&point_in_time, &predefined_level},
+   },
+
+   {
+      "specific_rain_water_content_hl",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 75},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 85},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 103},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &height_level},
+   },
+
+   {
+      "specific_snow_water_content_hl",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 76},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 86},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 103},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &height_level},
+   },
+
+   {
+      "turbulent_kinetic_energy_hl",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260155},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 19},
+         {"parameterNumber", GRIB_TYPE_LONG, 11},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 103},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &height_level},
+   },
+/*
+  cerra
+*/
+
+  {
+      "momentum_flux_u_component_sfc",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260062},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 2},
+         {"parameterNumber", GRIB_TYPE_LONG, 17},
+
+         {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 1},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {NULL, },
+      },
+      {&from_start, &predefined_level},
+   },
+
+  {
+      "momentum_flux_v_component_sfc",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260063},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 2},
+         {"parameterNumber", GRIB_TYPE_LONG, 18},
+
+         {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 1},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {NULL, },
+      },
+      {&from_start, &predefined_level},
+   },
+
+  {
+      "time_integrated_surface_clear-sky_net_solar_radiation",
+      -0.1,
+      1e+08,
+      0,
+      1e+09,
+      {
+         {"paramId", GRIB_TYPE_LONG, 210},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 4},
+         {"parameterNumber", GRIB_TYPE_LONG, 11},
+
+         {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 1},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {NULL, },
+      },
+      {&from_start, &predefined_level},
+   },
+
+  {
+      "time_integrated_surface_clear-sky_net_thermal_radiation",
+      -0.1,
+      1e+08,
+      0,
+      1e+09,
+      {
+         {"paramId", GRIB_TYPE_LONG, 211},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 5},
+         {"parameterNumber", GRIB_TYPE_LONG, 6},
+
+         {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 1},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {NULL, },
+      },
+      {&from_start, &predefined_level},
+   },
+
+   {
+      "turbulent_kinetic_energy_pl",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 260155},
+
+         {"discipline", GRIB_TYPE_LONG, 0},
+         {"parameterCategory", GRIB_TYPE_LONG, 19},
+         {"parameterNumber", GRIB_TYPE_LONG, 11},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
+         {NULL, },
+      },
+      {&point_in_time, &given_level, &pressure_level},
    },
 
 

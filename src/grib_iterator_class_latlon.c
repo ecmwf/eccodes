@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -54,7 +54,7 @@ typedef struct grib_iterator_latlon{
 	double southPoleLat;
 	double southPoleLon;
 	long jPointsAreConsecutive;
-    long disableUnrotate;
+	long disableUnrotate;
 /* Members defined in latlon */
 } grib_iterator_latlon;
 
@@ -85,62 +85,6 @@ static void init_class(grib_iterator_class* c)
 }
 /* END_CLASS_IMP */
 
-#define RAD2DEG   57.29577951308232087684  /* 180 over pi */
-#define DEG2RAD    0.01745329251994329576  /* pi over 180 */
-
-void unrotate(grib_handle* h,
-        const double inlat, const double inlon,
-        const double angleOfRot, const double southPoleLat, const double southPoleLon,
-        double* outlat, double* outlon)
-{
-    /* Algorithm taken from ecKit */
-    const double lon_x = inlon;
-    const double lat_y = inlat;
-    /* First convert the data point from spherical lat lon to (x',y',z') */
-    double latr = lat_y * DEG2RAD;
-    double lonr = lon_x * DEG2RAD;
-    double xd = cos(lonr)*cos(latr);
-    double yd = sin(lonr)*cos(latr);
-    double zd = sin(latr);
-
-    double t = -(90.0 + southPoleLat);
-    double o = -southPoleLon;
-
-    double sin_t = sin(DEG2RAD * t);
-    double cos_t = cos(DEG2RAD * t);
-    double sin_o = sin(DEG2RAD * o);
-    double cos_o = cos(DEG2RAD * o);
-
-    double x = cos_t*cos_o*xd + sin_o*yd + sin_t*cos_o*zd;
-    double y = -cos_t*sin_o*xd + cos_o*yd - sin_t*sin_o*zd;
-    double z = -sin_t*xd + cos_t*zd;
-
-    double ret_lat=0, ret_lon=0;
-
-    /* Then convert back to 'normal' (lat,lon)
-     * Uses arcsin, to convert back to degrees, put in range -1 to 1 in case of slight rounding error
-     * avoid error on calculating e.g. asin(1.00000001) */
-    if (z > 1.0)  z = 1.0;
-    if (z < -1.0) z = -1.0;
-
-    ret_lat = asin(z) * RAD2DEG;
-    ret_lon = atan2(y, x) * RAD2DEG;
-
-    /* Still get a very small rounding error, round to 6 decimal places */
-    ret_lat = roundf( ret_lat * 1000000.0 )/1000000.0;
-    ret_lon = roundf( ret_lon * 1000000.0 )/1000000.0;
-
-    ret_lon -= angleOfRot;
-
-    /* Make sure ret_lon is in range*/
-    /*
-    while (ret_lon < lonmin_) ret_lon += 360.0;
-    while (ret_lon >= lonmax_) ret_lon -= 360.0;
-     */
-    *outlat = ret_lat;
-    *outlon = ret_lon;
-}
-
 static int next(grib_iterator* iter, double *lat, double *lon, double *val)
 {
     /* GRIB-238: Support rotated lat/lon grids */
@@ -170,7 +114,7 @@ static int next(grib_iterator* iter, double *lat, double *lon, double *val)
     if (self->isRotated && !self->disableUnrotate)
     {
         double new_lat = 0, new_lon = 0;
-        unrotate(iter->h, ret_lat, ret_lon,
+        unrotate(ret_lat, ret_lon,
                 self->angleOfRotation, self->southPoleLat, self->southPoleLon,
                 &new_lat, &new_lon);
         ret_lat = new_lat;

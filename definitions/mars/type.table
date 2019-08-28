@@ -56,7 +56,7 @@
 70 or Ocean reanalysis
 71 fx Flux forcing
 72 fu Fill-up
-73 sfo Simulation forced with observations
+73 sfo Simulations with forcing
 80 fcmean Forecast mean
 81 fcmax Forecast maximum
 82 fcmin Forecast minimum
@@ -67,3 +67,4 @@
 87 ssd Simulated satellite data
 88 gsd Gridded satellite data
 89 ga GFAS analysis
+90 gai Gridded analysis input

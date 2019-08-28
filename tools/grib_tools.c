@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -46,7 +46,7 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir);
 
 FILE* dump_file;
 
-grib_runtime_options global_options={
+static grib_runtime_options global_options={
         0,         /* verbose       */
         0,         /* fail          */
         0,         /* skip          */
@@ -167,7 +167,9 @@ int grib_tool(int argc, char **argv)
         dump_file=stdout;
     }
 
-    if (is_index_file(global_options.infile->name) &&
+    /* ECC-926: Currently only GRIB indexing works. Disable the through_index if BUFR, GTS etc */
+    if (global_options.mode == MODE_GRIB &&
+        is_index_file(global_options.infile->name) &&
             ( global_options.infile_extra && is_index_file(global_options.infile_extra->name))) {
         global_options.through_index=1;
         return grib_tool_index(&global_options);
@@ -194,7 +196,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
     grib_handle* h=NULL;
     grib_tools_file* infile=options->infile;
     char** filenames;
-    size_t files_count=0;
+    int files_count=0;
     grib_fieldset* set=NULL;
     int i=0;
     grib_context* c=grib_context_get_default();
@@ -268,7 +270,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
     return 0;
 }
 
-char iobuf[1024*1024];
+static char iobuf[1024*1024];
 
 static int grib_tool_without_orderby(grib_runtime_options* options)
 {
@@ -293,7 +295,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
         if (strcmp(infile->name,"-")==0)
             infile->file = stdin;
         else
-            infile->file = fopen(infile->name,"r");
+            infile->file = fopen(infile->name,"rb");
         if(!infile->file) {
             perror(infile->name);
             exit(1);
@@ -549,13 +551,13 @@ static int scan(grib_context* c,grib_runtime_options* options,const char* dir) {
     char buffer[1024];
     sprintf(buffer,  "%s/*", dir);
     if((handle = _findfirst(buffer, &fileinfo)) != -1)
-{
+    {
         do {
             if(strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name,"..") != 0) {
-            char buf[1024];
+                char buf[1024];
                 sprintf(buf, "%s/%s", dir, fileinfo.name);
-            process(c,options,buf);
-        }
+                process(c, options, buf);
+            }
         } while(!_findnext(handle, &fileinfo));
 
         _findclose(handle);
@@ -672,8 +674,8 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
 
     for (i=0;i<options->requested_print_keys_count;i++) {
         options->print_keys[options->print_keys_count].name=options->requested_print_keys[i].name;
-        if (strlen(options->requested_print_keys[i].name)>options->default_print_width)
-            options->default_print_width=strlen(options->requested_print_keys[i].name);
+        if (strlen(options->requested_print_keys[i].name) > options->default_print_width)
+            options->default_print_width = (int)strlen(options->requested_print_keys[i].name);
         options->print_keys[options->print_keys_count].type=options->requested_print_keys[i].type;
         options->print_keys_count++;
     }
@@ -696,7 +698,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
             }
             options->print_keys[options->print_keys_count].name=strdup(name);
             if (strlen(name)>options->default_print_width)
-                options->default_print_width=strlen(name);
+                options->default_print_width=(int)strlen(name);
             options->print_keys[options->print_keys_count].type=GRIB_TYPE_STRING;
             options->print_keys_count++;
         }
@@ -704,14 +706,14 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
         grib_keys_iterator_delete(kiter);
         if (options->print_keys_count==0 && options->latlon == 0 ) {
             int j=0,k=0,ns_count=0;
-            char* all_namespace_vals[1024] = {NULL,}; /* sorted array containing all namespaces */
+            const char* all_namespace_vals[1024] = {NULL,}; /* sorted array containing all namespaces */
             printf("ERROR: namespace \"%s\" does not contain any key.\n",ns);
             printf("Here are the available namespaces in this message:\n");
             for (i=0; i<ACCESSORS_ARRAY_SIZE; i++) {
                 grib_accessor* anAccessor = h->accessors[i];
                 if (anAccessor) {
                     for (j=0; j<MAX_ACCESSOR_NAMES; j++) {
-                        char* a_namespace = (char*)anAccessor->all_name_spaces[j];
+                        const char* a_namespace = anAccessor->all_name_spaces[j];
                         if (a_namespace) {
                             all_namespace_vals[k++] = a_namespace;
                             ns_count++;
@@ -816,41 +818,47 @@ void grib_skip_check(grib_runtime_options* options,grib_handle* h)
     }
 }
 
-static void get_key_value(grib_handle* h, const char* key_name, char* value_str, const char* format)
+static void get_value_for_key(grib_handle* h, const char* key_name, int key_type, char* value_str, const char* format)
 {
-    int ret = 0, type = 0;
+    int ret = 0, type = key_type;
     double dvalue = 0;
     long lvalue = 0;
     size_t len=MAX_STRING_LEN;
-    grib_get_native_type(h, key_name, &type);
-    if (type == GRIB_TYPE_STRING)
-    {
+    
+    if (grib_is_missing(h, key_name, &ret) && ret==GRIB_SUCCESS) {
+        sprintf(value_str,"MISSING");
+        return;
+    }
+
+    if (type == GRIB_TYPE_UNDEFINED) {
+        grib_get_native_type(h, key_name, &type);
+    }
+
+    if (type == GRIB_TYPE_STRING) {
         ret=grib_get_string(h, key_name, value_str, &len);
     }
-    else if (type == GRIB_TYPE_DOUBLE)
-    {
+    else if (type == GRIB_TYPE_DOUBLE) {
         ret=grib_get_double( h, key_name, &dvalue);
         sprintf(value_str, format, dvalue);
     }
-    else if (type == GRIB_TYPE_LONG)
-    {
+    else if (type == GRIB_TYPE_LONG) {
         ret=grib_get_long( h, key_name, &lvalue);
         sprintf(value_str,"%ld", lvalue);
     }
-    else if (type == GRIB_TYPE_BYTES)
-    {
+    else if (type == GRIB_TYPE_BYTES) {
         ret=grib_get_string(h, key_name, value_str, &len);
     }
-    else
-    {
+    else {
         fprintf(dump_file,"invalid format option for %s\n", key_name);
         exit(1);
     }
+
     if (ret != GRIB_SUCCESS) {
         fprintf(dump_file,"Failed to get value for key %s\n", key_name);
         exit(1);
     }
 }
+
 /* See ECC-707 */
 static int fix_for_lsdate_needed(grib_handle* h)
 {
@@ -922,6 +930,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     int written_to_dump = 0; /* boolean */
     grib_accessor* acc = NULL;
     size_t num_vals = 0;
+    int fix_lsdate = 0;
 
     if (!options->verbose) return;
 
@@ -930,7 +939,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         fprintf(dump_file, "{\n");
         for (i=0;i<options->print_keys_count;i++) {
             fprintf(dump_file,"\t\"%s\": ", options->print_keys[i].name);
-            get_key_value(h, options->print_keys[i].name, value, options->format);
+            get_value_for_key(h, options->print_keys[i].name, options->print_keys[i].type, value, options->format);
             fprintf(dump_file,"\"%s\"", value);
             if (i != options->print_keys_count-1)
                 fprintf(dump_file,",\n");
@@ -940,6 +949,8 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         fprintf(dump_file, "}\n"); //JSON TODO
         return;
     }
+
+    fix_lsdate = (fix_for_lsdate_needed(h) && options->name_space && strcmp(options->name_space,"ls")==0);
 
     for (i=0;i<options->print_keys_count;i++) {
         size_t len=MAX_STRING_LEN;
@@ -978,8 +989,6 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             }
         } else {
             /* Other products e.g. GRIB */
-            const int fix_lsdate = (fix_for_lsdate_needed(h) && options->name_space && strcmp(options->name_space,"ls")==0);
-
             if (grib_is_missing(h,options->print_keys[i].name,&ret) && ret==GRIB_SUCCESS) {
                 sprintf(value,"MISSING");
             }
@@ -1027,7 +1036,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             }
         }
 
-        strlenvalue = strlen(value);
+        strlenvalue = (int)strlen(value);
 
         width = strlenvalue < options->default_print_width ?
                 options->default_print_width + 2 :
@@ -1052,7 +1061,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             written_to_dump=1;
         } else if (options->latlon_mode==1) {
             sprintf(value,options->format,options->values[options->latlon_idx]);
-            strlenvalue = strlen(value);
+            strlenvalue = (int)strlen(value);
             width = strlenvalue < options->default_print_width ?
                     options->default_print_width + 2 :
                     strlenvalue + 2;
@@ -1088,7 +1097,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         }
 
         sprintf(value,options->format,v);
-        strlenvalue = strlen(value);
+        strlenvalue = (int)strlen(value);
         width = strlenvalue < options->default_print_width ?
                 options->default_print_width + 2 :
                 strlenvalue + 2;

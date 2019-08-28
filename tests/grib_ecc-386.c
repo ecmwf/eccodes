@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -36,13 +36,13 @@ int main(int argc, char** argv)
 
     if (argc<2) usage(argv[0]);
 
-    in = fopen(argv[1],"r");
+    in = fopen(argv[1],"rb");
     if(!in) {
         printf("ERROR: unable to open file %s\n",argv[1]);
         return 1;
     }
 
-    /* create new handle from a message in a file*/
+    /* create new handle */
     err = 0;
     h = grib_handle_new_from_file(0,in,&err);
     if (h == NULL) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -146,139 +146,139 @@ static void init_class(grib_accessor_class* c)
 /* END_CLASS_IMP */
 static long init_length(grib_accessor* a)
 {
-  grib_accessor_values* self = (grib_accessor_values*)a;
-  int ret = 0;
+    grib_accessor_values* self = (grib_accessor_values*)a;
+    int ret = 0;
 
-  long seclen        = 0;
-  long offsetsection = 0;
-  long offsetdata    = 0;
+    long seclen        = 0;
+    long offsetsection = 0;
+    long offsetdata    = 0;
 
-  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->seclen,&seclen)))
-    return ret;
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->seclen,&seclen)))
+        return ret;
 
-  if(seclen == 0)
-  {
-    /* printf("init_length seclen=0\n"); */
-    return 0;
-  }
+    if(seclen == 0)
+    {
+        /* printf("init_length seclen=0\n"); */
+        return 0;
+    }
 
-  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetsection,&offsetsection)))
-    return ret;
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetsection,&offsetsection)))
+        return ret;
 
-  if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetdata,&offsetdata)))
-    return ret;
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetdata,&offsetdata)))
+        return ret;
 
-  /* When reparsing */
-  if(offsetdata < offsetsection)
-  {
-    /* printf("init_length offsetdata < offsetsection=0\n"); */
-    Assert(grib_handle_of_accessor(a)->loader);
-    return 0;
-  }
-  
-  return seclen-(offsetdata-offsetsection);
+    /* When reparsing */
+    if(offsetdata < offsetsection)
+    {
+        /* printf("init_length offsetdata < offsetsection=0\n"); */
+        Assert(grib_handle_of_accessor(a)->loader);
+        return 0;
+    }
 
+    return seclen-(offsetdata-offsetsection);
 }
+
 static void init(grib_accessor* a,const long v, grib_arguments* params)
 {
-  grib_accessor_values *self =(grib_accessor_values*)a;
-  self->carg = 0;
+    grib_accessor_values *self =(grib_accessor_values*)a;
+    self->carg = 0;
 
-  self->seclen        = grib_arguments_get_name(grib_handle_of_accessor(a),params,self->carg++);
-  self->offsetdata    = grib_arguments_get_name(grib_handle_of_accessor(a),params,self->carg++);
-  self->offsetsection = grib_arguments_get_name(grib_handle_of_accessor(a),params,self->carg++);
-  self->dirty =1;
+    self->seclen        = grib_arguments_get_name(grib_handle_of_accessor(a),params,self->carg++);
+    self->offsetdata    = grib_arguments_get_name(grib_handle_of_accessor(a),params,self->carg++);
+    self->offsetsection = grib_arguments_get_name(grib_handle_of_accessor(a),params,self->carg++);
+    self->dirty =1;
 
-  a->length = init_length(a);
-  
-  /* Assert(a->length>=0); */
+    a->length = init_length(a);
+    /* Assert(a->length>=0); */
 }
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_DOUBLE;
+static int  get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_DOUBLE;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_values(dumper,a);
+    grib_dump_values(dumper,a);
 }
 
-
-static long byte_count(grib_accessor* a){
+static long byte_count(grib_accessor* a)
+{
     grib_context_log(a->context,GRIB_LOG_DEBUG,"byte_count of %s = %ld",a->name,a->length);
-  return a->length;
+    return a->length;
 
 }
 
-static long byte_offset(grib_accessor* a){
-  return a->offset;
+static long byte_offset(grib_accessor* a)
+{
+    return a->offset;
 }
 
-static long next_offset(grib_accessor* a){
-  return a->offset+a->length;
+static long next_offset(grib_accessor* a)
+{
+    return a->offset+a->length;
 }
 
 static void update_size(grib_accessor* a,size_t s)
 {
     grib_context_log(a->context,GRIB_LOG_DEBUG,"updating size of %s old %ld new %ld",a->name,a->length,s);
-  a->length = s;
-  Assert(a->length>=0);
+    a->length = s;
+    Assert(a->length>=0);
 }
 
 static int compare(grib_accessor* a, grib_accessor* b) {
-  int retval=0;
-  double *aval=0;
-  double *bval=0;
+    int retval=0;
+    double *aval=0;
+    double *bval=0;
 
-  size_t alen = 0;
-  size_t blen = 0;
-  int err=0;
-  long count=0;
+    size_t alen = 0;
+    size_t blen = 0;
+    int err=0;
+    long count=0;
 
-  err=grib_value_count(a,&count);
-  if (err) return err;
-  alen=count;
+    err=grib_value_count(a,&count);
+    if (err) return err;
+    alen=count;
 
-  err=grib_value_count(b,&count);
-  if (err) return err;
-  blen=count;
+    err=grib_value_count(b,&count);
+    if (err) return err;
+    blen=count;
 
-  if (alen != blen) return GRIB_COUNT_MISMATCH;
+    if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-  aval=(double*)grib_context_malloc(a->context,alen*sizeof(double));
-  bval=(double*)grib_context_malloc(b->context,blen*sizeof(double));
+    aval=(double*)grib_context_malloc(a->context,alen*sizeof(double));
+    bval=(double*)grib_context_malloc(b->context,blen*sizeof(double));
 
-  grib_unpack_double(a,aval,&alen);
-  grib_unpack_double(b,bval,&blen);
+    grib_unpack_double(a,aval,&alen);
+    grib_unpack_double(b,bval,&blen);
 
-  retval = GRIB_SUCCESS;
-  while (alen != 0) {
-    if (*bval != *aval) retval = GRIB_DOUBLE_VALUE_MISMATCH;
-    alen--;
-  }
+    retval = GRIB_SUCCESS;
+    while (alen != 0) {
+        if (*bval != *aval) retval = GRIB_DOUBLE_VALUE_MISMATCH;
+        alen--;
+    }
 
-  grib_context_free(a->context,aval);
-  grib_context_free(b->context,bval);
+    grib_context_free(a->context,aval);
+    grib_context_free(b->context,bval);
 
-  return retval;
+    return retval;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  int ret=0;
-  grib_accessor_values *self =(grib_accessor_values*)a;
-  int i;
-  double* dval=(double*)grib_context_malloc(a->context,*len*sizeof(double));
+    int ret=0;
+    grib_accessor_values *self =(grib_accessor_values*)a;
+    int i;
+    double* dval=(double*)grib_context_malloc(a->context,*len*sizeof(double));
 
-  for (i=0;i<*len;i++) dval[i]=(double)val[i];
+    for (i=0;i<*len;i++) dval[i]=(double)val[i];
 
-  ret=grib_pack_double(a,dval,len);
+    ret=grib_pack_double(a,dval,len);
 
-  grib_context_free(a->context,dval);
+    grib_context_free(a->context,dval);
 
-  self->dirty=1;
+    self->dirty=1;
 
-  return ret;
+    return ret;
 }
-
-

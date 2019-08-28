@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -663,8 +663,13 @@ static void grib_field_tree_delete(grib_context* c,grib_field_tree* tree)
 
 static void grib_field_list_delete(grib_context* c, grib_field_list* field_list)
 {
+    grib_field_list* p = field_list;
     if (!field_list) return;
-    grib_context_free(c,field_list);
+    while (p) {
+        grib_field_list* q=p;
+        p = p->next;
+        grib_context_free(c,q);
+    }
 }
 
 void grib_index_delete(grib_index* index)
@@ -1597,10 +1602,8 @@ int grib_index_dump_file(FILE* fout, const char* filename)
     fh=fopen(filename,"r");
     if (fh) {
         grib_file *file,*f;
-        char* identifier=NULL;
         unsigned char marker=0;
-
-        identifier = grib_read_string(c,fh,&err);
+        char* identifier = grib_read_string(c,fh,&err);
         if (err) return err;
         grib_context_free(c,identifier);
         err = grib_read_uchar(fh,&marker);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -135,88 +135,88 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg)
 {
-  int n=0;
-  grib_accessor_section_pointer* self=(grib_accessor_section_pointer*)a;
-  
-  self->sectionOffset = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-  self->sectionLength = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-  self->sectionNumber = grib_arguments_get_long(grib_handle_of_accessor(a),arg,n++);
+    int n=0;
+    grib_accessor_section_pointer* self=(grib_accessor_section_pointer*)a;
 
-  Assert (self->sectionNumber < MAX_NUM_SECTIONS );
-  
-  grib_handle_of_accessor(a)->section_offset[self->sectionNumber]=(char*)self->sectionOffset;
-  grib_handle_of_accessor(a)->section_length[self->sectionNumber]=(char*)self->sectionLength;
+    self->sectionOffset = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->sectionLength = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->sectionNumber = grib_arguments_get_long(grib_handle_of_accessor(a),arg,n++);
 
-  /* printf("++++++++++++++ GRIB_API:  creating section_pointer%d %s %s\n", */
-	  /* self->sectionNumber,self->sectionLength,self->sectionLength); */
+    Assert (self->sectionNumber < MAX_NUM_SECTIONS );
 
-  if( grib_handle_of_accessor(a)->sections_count < self->sectionNumber)
-  	grib_handle_of_accessor(a)->sections_count=self->sectionNumber;
-  
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
-  a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-  a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
-  a->length = 0;
+    grib_handle_of_accessor(a)->section_offset[self->sectionNumber]=(char*)self->sectionOffset;
+    grib_handle_of_accessor(a)->section_length[self->sectionNumber]=(char*)self->sectionLength;
+
+    /* printf("++++++++++++++ GRIB_API:  creating section_pointer%d %s %s\n", */
+    /* self->sectionNumber,self->sectionLength,self->sectionLength); */
+
+    if( grib_handle_of_accessor(a)->sections_count < self->sectionNumber)
+        grib_handle_of_accessor(a)->sections_count=self->sectionNumber;
+
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
+    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
+    a->length = 0;
 }
 
 static int get_native_type(grib_accessor* a)
 {
-  return GRIB_TYPE_BYTES;
+    return GRIB_TYPE_BYTES;
 }
 
+static int unpack_string(grib_accessor *a , char*  v, size_t *len)
+{
+    /*
+      unsigned char* p=NULL;
+      char* s=v;
+      int i;
+      long length=grib_byte_count(a);
 
-static int unpack_string(grib_accessor *a , char*  v, size_t *len){
-  /*
-  unsigned char* p=NULL;
-  char* s=v;
-  int i;
-  long length=grib_byte_count(a);
+      if (*len < length) return GRIB_ARRAY_TOO_SMALL;
 
-  if (*len < length) return GRIB_ARRAY_TOO_SMALL;
-  
-  p  = grib_handle_of_accessor(a)->buffer->data + grib_byte_offset(a);
-  
-  for (i = 0; i < length; i++)  {
-    sprintf (s,"%02x", *(p++));
-    s+=2;
-  }
-  
-  *len=length;
-  */
-  sprintf(v,"%ld_%ld",grib_byte_offset(a),grib_byte_count(a));
-  return GRIB_SUCCESS;
+      p  = grib_handle_of_accessor(a)->buffer->data + grib_byte_offset(a);
+
+      for (i = 0; i < length; i++)  {
+        sprintf (s,"%02x", *(p++));
+        s+=2;
+      }
+      *len=length;
+    */
+    sprintf(v,"%ld_%ld",grib_byte_offset(a),grib_byte_count(a));
+    return GRIB_SUCCESS;
 }
 
-static long byte_count(grib_accessor* a){
-  grib_accessor_section_pointer* self=(grib_accessor_section_pointer*)a;
-  long sectionLength=0;
-  int ret=0;
-  
-  ret=grib_get_long(grib_handle_of_accessor(a),self->sectionLength,&sectionLength);
-  if (ret) {
-    grib_context_log(a->context,GRIB_LOG_ERROR,
-                     "unable to get %s %s",
-                     self->sectionLength,grib_get_error_message(ret));
-    return -1;
-  }
-  
-  return sectionLength;
+static long byte_count(grib_accessor* a)
+{
+    grib_accessor_section_pointer* self=(grib_accessor_section_pointer*)a;
+    long sectionLength=0;
+    int ret=0;
+
+    ret=grib_get_long(grib_handle_of_accessor(a),self->sectionLength,&sectionLength);
+    if (ret) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,
+                "unable to get %s %s",
+                self->sectionLength,grib_get_error_message(ret));
+        return -1;
+    }
+
+    return sectionLength;
 }
 
-static long byte_offset(grib_accessor* a){
-  grib_accessor_section_pointer* self=(grib_accessor_section_pointer*)a;
-  long sectionOffset=0;
-  int ret=0;
-  
-  ret=grib_get_long(grib_handle_of_accessor(a),self->sectionOffset,&sectionOffset);
-  if (ret) {
-    grib_context_log(a->context,GRIB_LOG_ERROR,
-                     "unable to get %s %s",
-                     self->sectionOffset,grib_get_error_message(ret));
-    return -1;
-  }
-  
-  return sectionOffset;
-}
+static long byte_offset(grib_accessor* a)
+{
+    grib_accessor_section_pointer* self=(grib_accessor_section_pointer*)a;
+    long sectionOffset=0;
+    int ret=0;
 
+    ret=grib_get_long(grib_handle_of_accessor(a),self->sectionOffset,&sectionOffset);
+    if (ret) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,
+                "unable to get %s %s",
+                self->sectionOffset,grib_get_error_message(ret));
+        return -1;
+    }
+
+    return sectionOffset;
+}

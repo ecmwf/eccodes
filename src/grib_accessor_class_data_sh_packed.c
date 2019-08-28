@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -173,17 +173,18 @@ typedef double        (*decode_float_proc)(unsigned long);
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
     grib_accessor_data_sh_packed *self =(grib_accessor_data_sh_packed*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
-    self->GRIBEX_sh_bug_present     = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->ieee_floats               = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->laplacianOperatorIsSet    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->laplacianOperator         = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->sub_j                     = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->sub_k                     = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->sub_m                     = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->pen_j                     = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->pen_k                     = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-    self->pen_m                     = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+    self->GRIBEX_sh_bug_present     = grib_arguments_get_name(hand,args,self->carg++);
+    self->ieee_floats               = grib_arguments_get_name(hand,args,self->carg++);
+    self->laplacianOperatorIsSet    = grib_arguments_get_name(hand,args,self->carg++);
+    self->laplacianOperator         = grib_arguments_get_name(hand,args,self->carg++);
+    self->sub_j                     = grib_arguments_get_name(hand,args,self->carg++);
+    self->sub_k                     = grib_arguments_get_name(hand,args,self->carg++);
+    self->sub_m                     = grib_arguments_get_name(hand,args,self->carg++);
+    self->pen_j                     = grib_arguments_get_name(hand,args,self->carg++);
+    self->pen_k                     = grib_arguments_get_name(hand,args,self->carg++);
+    self->pen_m                     = grib_arguments_get_name(hand,args,self->carg++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
     a->length=0;
@@ -192,6 +193,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
 static int value_count(grib_accessor* a,long* count)
 {
     grib_accessor_data_sh_packed *self =(grib_accessor_data_sh_packed*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
     int ret = 0;
 
     long   sub_j= 0;
@@ -201,18 +203,18 @@ static int value_count(grib_accessor* a,long* count)
     long   pen_k= 0;
     long   pen_m= 0;
 
-    if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->sub_j,&sub_j)) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(hand,self->sub_j,&sub_j)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->sub_k,&sub_k)) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(hand,self->sub_k,&sub_k)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->sub_m,&sub_m)) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(hand,self->sub_m,&sub_m)) != GRIB_SUCCESS)
         return ret;
 
-    if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->pen_j,&pen_j)) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(hand,self->pen_j,&pen_j)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->pen_k,&pen_k)) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(hand,self->pen_k,&pen_k)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->pen_m,&pen_m)) != GRIB_SUCCESS)
+    if((ret = grib_get_long_internal(hand,self->pen_m,&pen_m)) != GRIB_SUCCESS)
         return ret;
 
     if (pen_j != pen_k || pen_j!=pen_m ) {

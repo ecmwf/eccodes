@@ -378,6 +378,7 @@ libeccodes_la_prototypes= \
 	string_util.c \
 	functions.c \
 	codes_memfs.c \
+	grib_accessor_class_data_g2bifourier_packing.c \
 	grib_optimize_decimal_factor.c \
 	grib_api_version.c
 

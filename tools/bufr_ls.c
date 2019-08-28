@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,7 +21,7 @@ grib_option grib_options[]={
         {"F:",0,0,1,1,"%g"},
         {"P:",0,0,0,1,0},
         {"w:",0,0,0,1,0},
-        {"j",0,"json output\n",0,1,0},
+        {"j",0,"JSON output\n",0,1,0},
 /*      {"B:",0,0,0,1,0},              */
         {"s:",0,0,0,1,0},
         {"n:",0,0,1,1,"ls"},

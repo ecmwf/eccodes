@@ -4,56 +4,56 @@
 	 discipline = 0 ;
 	 parameterNumber = 4 ;
 	 parameterCategory = 3 ;
-	}
+}
 #Temperature
 'air_temperature' = {
 	 discipline = 0 ;
 	 parameterNumber = 0 ;
 	 parameterCategory = 0 ;
-	}
+}
 #u-component of wind
 'eastward_wind' = {
 	 discipline = 0 ;
 	 parameterNumber = 2 ;
 	 parameterCategory = 2 ;
-	}
+}
 #v-component of wind
 'northward_wind' = {
 	 discipline = 0 ;
 	 parameterNumber = 3 ;
 	 parameterCategory = 2 ;
-	}
+}
 #Specific humidity
 'specific_humidity' = {
 	 discipline = 0 ;
 	 parameterNumber = 0 ;
 	 parameterCategory = 1 ;
-	}
+}
 #Surface pressure
 'surface_air_pressure' = {
 	 discipline = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 parameterCategory = 3 ;
-	}
+}
 #Vertical velocity (geometric)
 'lagrangian_tendency_of_air_pressure' = {
 	 discipline = 0 ;
 	 parameterNumber = 8 ;
 	 parameterCategory = 2 ;
-	}
+}
 #Relative vorticity
 'atmosphere_relative_vorticity' = {
 	 discipline = 0 ;
 	 parameterNumber = 12 ;
 	 parameterCategory = 2 ;
-	}
+}
 #Boundary layer dissipation
 'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 discipline = 0 ;
 	 parameterNumber = 20 ;
 	 parameterCategory = 2 ;
-	}
+}
 #Surface sensible heat flux
 'surface_upward_sensible_heat_flux' = {
 	 discipline = 0 ;
@@ -61,7 +61,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 parameterCategory = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
+}
 #Surface latent heat flux
 'surface_upward_latent_heat_flux' = {
 	 discipline = 0 ;
@@ -69,45 +69,45 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 parameterCategory = 0 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
+}
 #Mean sea level pressure
 'air_pressure_at_mean_sea_level' = {
 	 discipline = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 parameterCategory = 3 ;
-	}
+}
 #Relative divergence
 'divergence_of_wind' = {
 	 discipline = 0 ;
 	 parameterNumber = 13 ;
 	 parameterCategory = 2 ;
-	}
+}
 #Geopotential height
 'geopotential_height' = {
 	 discipline = 0 ;
 	 parameterNumber = 5 ;
 	 parameterCategory = 3 ;
-	}
+}
 #Relative humidity
 'relative_humidity' = {
 	 discipline = 0 ;
 	 parameterNumber = 1 ;
 	 parameterCategory = 1 ;
-	}
+}
 #Land-sea mask
 'land_binary_mask' = {
 	 discipline = 2 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 parameterCategory = 0 ;
-	}
+}
 #Surface roughness
 'surface_roughness_length' = {
 	 discipline = 2 ;
 	 parameterNumber = 1 ;
 	 parameterCategory = 0 ;
-	}
+}
 #Surface solar radiation
 'surface_net_upward_longwave_flux' = {
 	 discipline = 0 ;
@@ -115,7 +115,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 parameterCategory = 4 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
+}
 #Surface net thermal radiation
 'surface_net_upward_longwave_flux' = {
 	 discipline = 0 ;
@@ -123,7 +123,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 parameterCategory = 5 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
+}
 #Top net thermal radiation
 'toa_outgoing_longwave_flux' = {
 	 discipline = 0 ;
@@ -139,7 +139,7 @@
 	 parameterNumber = 7 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
-	}
+}
 #Surface net solar radiation
 'surface_net_downward_shortwave_flux' = {
 	 discipline = 0 ;
@@ -147,13 +147,13 @@
 	 parameterNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
-	}
+}
 #Eastward turbulent surface stress
 'surface_downward_eastward_stress' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 38 ;
-	}
+}
 #Northward turbulent surface stress
 'surface_downward_northward_stress' = {
 	 discipline = 0 ;
@@ -165,4 +165,34 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
+}
+#Depth of 20C isotherm
+'depth_of_isosurface_of_sea_water_potential_temperature' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 scaledValueOfFirstFixedSurface = 29315 ;
+}
+#Ocean mixed layer thickness defined by sigma theta 0.01 kg/m3
+'ocean_mixed_layer_thickness_defined_by_sigma_theta' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 typeOfFirstFixedSurface = 169 ;
+	 scaledValueOfFirstFixedSurface = 1 ;
+}
+#Sea surface practical salinity
+'sea_surface_salinity' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 }

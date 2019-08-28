@@ -3314,6 +3314,21 @@
 	 table2Version = 131 ;
 	 indicatorOfParameter = 97 ;
 	}
+#Total precipitation of at least 25 mm
+'Total precipitation of at least 25 mm' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 98 ;
+	}
+#Total precipitation of at least 50 mm
+'Total precipitation of at least 50 mm' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 99 ;
+	}
+#10 metre wind gust of at least 10 m/s
+'10 metre wind gust of at least 10 m/s' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 100 ;
+	}
 #Convective available potential energy shear index
 'Convective available potential energy shear index' = {
 	 table2Version = 132 ;
@@ -7134,13 +7149,13 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 202 ;
 	}
-#Fine-mode nitrate aerosol optical depth at 550mn
-'Fine-mode nitrate aerosol optical depth at 550mn' = {
+#Fine-mode nitrate aerosol optical depth at 550 nm
+'Fine-mode nitrate aerosol optical depth at 550 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 203 ;
 	}
-#Coarse-mode nitrate aerosol optical depth at 550nm
-'Coarse-mode nitrate aerosol optical depth at 550nm' = {
+#Coarse-mode nitrate aerosol optical depth at 550 nm
+'Coarse-mode nitrate aerosol optical depth at 550 nm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 204 ;
 	}
@@ -9613,6 +9628,31 @@
 'Averaged cloud-to-ground lightning flash density in the last hour' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 53 ;
+	}
+#SMOS observed soil moisture retrieved using neural network
+'SMOS observed soil moisture retrieved using neural network' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 70 ;
+	}
+#SMOS observed soil moisture uncertainty retrieved using neural network
+'SMOS observed soil moisture uncertainty retrieved using neural network' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 71 ;
+	}
+#SMOS radio frequency interference probability
+'SMOS radio frequency interference probability' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 72 ;
+	}
+#SMOS number of observations per grid point
+'SMOS number of observations per grid point' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 73 ;
+	}
+#SMOS observation time for the satellite soil moisture data
+'SMOS observation time for the satellite soil moisture data' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 74 ;
 	}
 #GPP coefficient from Biogenic Flux Adjustment System
 'GPP coefficient from Biogenic Flux Adjustment System' = {
@@ -14589,18 +14629,18 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 48 ;
 	}
-#Large-scale precipitation fraction
-'Large-scale precipitation fraction' = {
+#Mean large-scale precipitation fraction
+'Mean large-scale precipitation fraction' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Stratiform precipitation (Large-scale precipitation)
-'Stratiform precipitation (Large-scale precipitation)' = {
+#Mean large-scale precipitation rate
+'Mean large-scale precipitation rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 142 ;
 	}
-#Convective precipitation
-'Convective precipitation' = {
+#Mean convective precipitation rate
+'Mean convective precipitation rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 143 ;
 	}
@@ -14614,58 +14654,58 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Surface sensible heat flux
-'Surface sensible heat flux' = {
+#Mean surface sensible heat flux
+'Mean surface sensible heat flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface latent heat flux
-'Surface latent heat flux' = {
+#Mean surface latent heat flux
+'Mean surface latent heat flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface net radiation
-'Surface net radiation' = {
+#Mean surface net radiation flux
+'Mean surface net radiation flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 149 ;
 	}
-#Short-wave heating rate
-'Short-wave heating rate' = {
+#Mean short-wave heating rate
+'Mean short-wave heating rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 153 ;
 	}
-#Long-wave heating rate
-'Long-wave heating rate' = {
+#Mean long-wave heating rate
+'Mean long-wave heating rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Surface solar radiation downwards
-'Surface solar radiation downwards' = {
+#Mean surface downward solar radiation flux
+'Mean surface downward solar radiation flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 169 ;
 	}
-#Surface thermal radiation downwards
-'Surface thermal radiation downwards' = {
+#Mean surface downward thermal radiation flux
+'Mean surface downward thermal radiation flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 175 ;
 	}
-#Surface solar radiation
-'Surface solar radiation' = {
+#Mean surface net solar radiation flux
+'Mean surface net solar radiation flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Surface thermal radiation
-'Surface thermal radiation' = {
+#Mean surface net thermal radiation flux
+'Mean surface net thermal radiation flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Top solar radiation
-'Top solar radiation' = {
+#Mean top net solar radiation flux
+'Mean top net solar radiation flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Top thermal radiation
-'Top thermal radiation' = {
+#Mean top net thermal radiation flux
+'Mean top net thermal radiation flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 179 ;
 	}
@@ -14704,8 +14744,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 197 ;
 	}
-#Runoff
-'Runoff' = {
+#Mean runoff rate
+'Mean runoff rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 205 ;
 	}
@@ -14734,8 +14774,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 212 ;
 	}
-#Total precipitation
-'Total precipitation' = {
+#Mean total precipitation rate
+'Mean total precipitation rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 228 ;
 	}
@@ -14779,8 +14819,8 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 142 ;
 	}
-#Convective precipitation anomaly
-'Convective precipitation anomaly' = {
+#Mean convective precipitation rate anomaly
+'Mean convective precipitation rate anomaly' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 143 ;
 	}

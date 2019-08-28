@@ -264,7 +264,7 @@ class TestGribMessage(unittest.TestCase):
         """Message can be serialized to file."""
         with GribFile(TESTGRIB) as grib_file:
             msg = GribMessage(grib_file)
-            with open(TEST_OUTPUT, "w") as test:
+            with open(TEST_OUTPUT, "wb") as test:
                 msg.write(test)
         os.unlink(TEST_OUTPUT)
 
@@ -360,7 +360,7 @@ class TestBufrMessage(unittest.TestCase):
             msg = BufrMessage(bufr_file)
             msg.unpack()
             msg_keys = list(msg.keys())
-            self.assertEqual(len(msg_keys), 200)
+            self.assertEqual(len(msg_keys), 201)
             for key in KNOWN_BUFR_KEYS:
                 assert key in msg_keys
             # Size of message in bytes
@@ -388,7 +388,7 @@ class TestBufrMessage(unittest.TestCase):
         """Message can be serialized to file."""
         with BufrFile(TESTBUFR) as bufr_file:
             msg = BufrMessage(bufr_file)
-            with open(TEST_OUTPUT, "w") as test:
+            with open(TEST_OUTPUT, "wb") as test:
                 msg.write(test)
         os.unlink(TEST_OUTPUT)
 
@@ -439,7 +439,7 @@ class TestBufrMessage(unittest.TestCase):
             bufr['unexpandedDescriptors'] = ivalues
             bufrin.unpack()
             bufrin.copy_data(bufr)
-            with open(TEST_OUTPUT, 'w') as test:
+            with open(TEST_OUTPUT, 'wb') as test:
                 bufr.write(test)
             os.unlink(TEST_OUTPUT)
 

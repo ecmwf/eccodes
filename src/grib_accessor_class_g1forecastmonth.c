@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -141,79 +141,77 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_g1forecastmonth* self = (grib_accessor_g1forecastmonth*)a;
-  int n = 0;
+    grib_accessor_g1forecastmonth* self = (grib_accessor_g1forecastmonth*)a;
+    int n = 0;
 
-  self->verification_yearmonth   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->base_date                = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->day                      = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->hour                     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->fcmonth                  = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->verification_yearmonth   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->base_date                = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->day                      = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->hour                     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->fcmonth                  = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_long(dumper,a,NULL);
+    grib_dump_long(dumper,a,NULL);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  int ret=0;
-  grib_accessor_g1forecastmonth* self = (grib_accessor_g1forecastmonth*)a;
+    int ret=0;
+    grib_accessor_g1forecastmonth* self = (grib_accessor_g1forecastmonth*)a;
 
-  long verification_yearmonth = 0;
-  long base_yearmonth         = 0;
-  long base_date              = 0;
-  long day                    = 0;
-  long hour                   = 0;
+    long verification_yearmonth = 0;
+    long base_yearmonth         = 0;
+    long base_date              = 0;
+    long day                    = 0;
+    long hour                   = 0;
 
-  long vyear  = 0;
-  long vmonth = 0;
-  long byear  = 0;
-  long bmonth = 0;
+    long vyear  = 0;
+    long vmonth = 0;
+    long byear  = 0;
+    long bmonth = 0;
 
-  long fcmonth = 0;
-  long gribForecastMonth = 0;
+    long fcmonth = 0;
+    long gribForecastMonth = 0;
 
-  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a),
-       self->verification_yearmonth,&verification_yearmonth))!=GRIB_SUCCESS)
-    return ret;
-  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->base_date,&base_date))!=GRIB_SUCCESS)
-    return ret;
-  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->day,&day))!=GRIB_SUCCESS)
-    return ret;
-  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->hour,&hour))!=GRIB_SUCCESS)
-    return ret;
-  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->fcmonth,&gribForecastMonth))!=GRIB_SUCCESS)
-    return ret;
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a),
+            self->verification_yearmonth,&verification_yearmonth))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->base_date,&base_date))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->day,&day))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->hour,&hour))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->fcmonth,&gribForecastMonth))!=GRIB_SUCCESS)
+        return ret;
 
-  base_yearmonth = base_date / 100;
+    base_yearmonth = base_date / 100;
 
-  vyear  = verification_yearmonth / 100;
-  vmonth = verification_yearmonth % 100;
-  byear  = base_yearmonth / 100;
-  bmonth = base_yearmonth % 100;
+    vyear  = verification_yearmonth / 100;
+    vmonth = verification_yearmonth % 100;
+    byear  = base_yearmonth / 100;
+    bmonth = base_yearmonth % 100;
 
-  fcmonth = (vyear - byear) * 12 + (vmonth - bmonth);
-  if(day == 1 && hour == 0)
-    fcmonth++;
+    fcmonth = (vyear - byear) * 12 + (vmonth - bmonth);
+    if(day == 1 && hour == 0)
+        fcmonth++;
 
-  if(gribForecastMonth != 0 && gribForecastMonth!=fcmonth) {
-	  grib_context_log(a->context,GRIB_LOG_FATAL,"%s=%ld (%s-%s)=%ld",self->fcmonth,
-					   gribForecastMonth,self->base_date,self->verification_yearmonth,fcmonth);
-	  Assert(gribForecastMonth == fcmonth);
-  }
+    if(gribForecastMonth != 0 && gribForecastMonth!=fcmonth) {
+        grib_context_log(a->context,GRIB_LOG_FATAL,"%s=%ld (%s-%s)=%ld",self->fcmonth,
+                gribForecastMonth,self->base_date,self->verification_yearmonth,fcmonth);
+        Assert(gribForecastMonth == fcmonth);
+    }
 
-  *val = fcmonth;
+    *val = fcmonth;
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 /* TODO: Check for a valid date */
-
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  grib_accessor_g1forecastmonth* self = (grib_accessor_g1forecastmonth*)a;
-  return grib_set_long_internal(grib_handle_of_accessor(a),self->fcmonth, *val);
-
+    grib_accessor_g1forecastmonth* self = (grib_accessor_g1forecastmonth*)a;
+    return grib_set_long_internal(grib_handle_of_accessor(a),self->fcmonth, *val);
 }

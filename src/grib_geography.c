@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -18,6 +18,16 @@
 
 #define NUMBER(x) (sizeof(x)/sizeof(x[0]))
 #define MAXITER  10
+
+#define RAD2DEG   57.29577951308232087684  /* 180 over pi */
+#define DEG2RAD    0.01745329251994329576  /* pi over 180 */
+
+#ifndef MAX
+#define MAX(a,b) (((a)>(b))?(a):(b))
+#endif
+#ifndef MIN
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#endif
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -136,8 +146,8 @@ int is_gaussian_global(
     {
         grib_context* c=grib_context_get_default();
         if (c->debug) {
-            printf("ECCODES DEBUG is_gaussian_global: lat1=%f, lat2=%f, glat0=%f, d=%f\n", lat1, lat2, latitudes[0], d);
-            printf("ECCODES DEBUG is_gaussian_global: lon1=%f, lon2=%f, glon2=%f, delta=%f\n", lon1, lon2, lon2_global, delta);
+            fprintf(stderr,"ECCODES DEBUG is_gaussian_global: lat1=%f, lat2=%f, glat0=%f, d=%f\n", lat1, lat2, latitudes[0], d);
+            fprintf(stderr,"ECCODES DEBUG is_gaussian_global: lon1=%f, lon2=%f, glon2=%f, delta=%f\n", lon1, lon2, lon2_global, delta);
         }
     }
     */
@@ -152,4 +162,89 @@ int is_gaussian_global(
         global = 0; /* sub area */
     }
     return global;
+}
+
+/* From Magics GribRotatedInterpretor::rotate */
+void rotate(const double inlat, const double inlon,
+            const double angleOfRot, const double southPoleLat, const double southPoleLon,
+            double* outlat, double* outlon)
+{
+    double PYROT, PXROT, ZCYROT, ZCXROT, ZSXROT;
+    const double ZSYCEN = sin(DEG2RAD * (southPoleLat + 90.));
+    const double ZCYCEN = cos(DEG2RAD * (southPoleLat + 90.));
+    const double ZXMXC  = DEG2RAD * (inlon - southPoleLon);
+    const double ZSXMXC = sin(ZXMXC);
+    const double ZCXMXC = cos(ZXMXC);
+    const double ZSYREG = sin(DEG2RAD * inlat);
+    const double ZCYREG = cos(DEG2RAD * inlat);
+    double ZSYROT = ZCYCEN * ZSYREG - ZSYCEN * ZCYREG * ZCXMXC;
+
+    ZSYROT = MAX(MIN(ZSYROT, +1.0), -1.0);
+
+    PYROT = asin(ZSYROT) * RAD2DEG;
+
+    ZCYROT = cos(PYROT * DEG2RAD);
+    ZCXROT = (ZCYCEN * ZCYREG * ZCXMXC + ZSYCEN * ZSYREG) / ZCYROT;
+    ZCXROT = MAX(MIN(ZCXROT, +1.0), -1.0);
+    ZSXROT = ZCYREG * ZSXMXC / ZCYROT;
+
+    PXROT = acos(ZCXROT) * RAD2DEG;
+
+    if (ZSXROT < 0.0)
+        PXROT = -PXROT;
+
+    *outlat = PYROT;
+    *outlon = PXROT;
+}
+
+/* From old ecKit RotateGrid::unrotate (Tag 2015.11.0) */
+void unrotate(const double inlat, const double inlon,
+              const double angleOfRot, const double southPoleLat, const double southPoleLon,
+              double* outlat, double* outlon)
+{
+    const double lon_x = inlon;
+    const double lat_y = inlat;
+    /* First convert the data point from spherical lat lon to (x',y',z') */
+    double latr = lat_y * DEG2RAD;
+    double lonr = lon_x * DEG2RAD;
+    double xd = cos(lonr)*cos(latr);
+    double yd = sin(lonr)*cos(latr);
+    double zd = sin(latr);
+
+    double t = -(90.0 + southPoleLat);
+    double o = -southPoleLon;
+
+    double sin_t = sin(DEG2RAD * t);
+    double cos_t = cos(DEG2RAD * t);
+    double sin_o = sin(DEG2RAD * o);
+    double cos_o = cos(DEG2RAD * o);
+
+    double x = cos_t*cos_o*xd + sin_o*yd + sin_t*cos_o*zd;
+    double y = -cos_t*sin_o*xd + cos_o*yd - sin_t*sin_o*zd;
+    double z = -sin_t*xd + cos_t*zd;
+
+    double ret_lat=0, ret_lon=0;
+
+    /* Then convert back to 'normal' (lat,lon)
+     * Uses arcsin, to convert back to degrees, put in range -1 to 1 in case of slight rounding error
+     * avoid error on calculating e.g. asin(1.00000001) */
+    if (z > 1.0)  z = 1.0;
+    if (z < -1.0) z = -1.0;
+
+    ret_lat = asin(z) * RAD2DEG;
+    ret_lon = atan2(y, x) * RAD2DEG;
+
+    /* Still get a very small rounding error, round to 6 decimal places */
+    ret_lat = roundf( ret_lat * 1000000.0 )/1000000.0;
+    ret_lon = roundf( ret_lon * 1000000.0 )/1000000.0;
+
+    ret_lon -= angleOfRot;
+
+    /* Make sure ret_lon is in range*/
+    /*
+    while (ret_lon < lonmin_) ret_lon += 360.0;
+    while (ret_lon >= lonmax_) ret_lon -= 360.0;
+     */
+    *outlat = ret_lat;
+    *outlon = ret_lon;
 }

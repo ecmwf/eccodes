@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -176,54 +176,54 @@ static const unsigned char bitson[]={
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
-  int n=0;
-  grib_accessor_count_missing* self = (grib_accessor_count_missing*)a;
-  a->length=0;
-  a->flags|=GRIB_ACCESSOR_FLAG_READ_ONLY;
-  self->bitmap = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-  self->unusedBitsInBitmap = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
-  self->numberOfDataPoints = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    int n=0;
+    grib_accessor_count_missing* self = (grib_accessor_count_missing*)a;
+    a->length=0;
+    a->flags|=GRIB_ACCESSOR_FLAG_READ_ONLY;
+    self->bitmap = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->unusedBitsInBitmap = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
+    self->numberOfDataPoints = grib_arguments_get_name(grib_handle_of_accessor(a),arg,n++);
 }
 
 static const int used[] ={ 0,1,3,7,15,31,63,127,255};
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  grib_accessor_count_missing* self = (grib_accessor_count_missing*)a;
-  unsigned char* p;
-  int i;
-  long size=0;
-  long offset=0;
-  long unusedBitsInBitmap=0;
-  long numberOfDataPoints=0;
-  grib_handle* h=grib_handle_of_accessor(a);
-  grib_accessor* bitmap=grib_find_accessor(grib_handle_of_accessor(a),self->bitmap);
+    grib_accessor_count_missing* self = (grib_accessor_count_missing*)a;
+    unsigned char* p;
+    int i;
+    long size=0;
+    long offset=0;
+    long unusedBitsInBitmap=0;
+    long numberOfDataPoints=0;
+    grib_handle* h=grib_handle_of_accessor(a);
+    grib_accessor* bitmap=grib_find_accessor(grib_handle_of_accessor(a),self->bitmap);
 
-  *val=0;
-  *len=1;
-  if (!bitmap) return GRIB_SUCCESS;
+    *val=0;
+    *len=1;
+    if (!bitmap) return GRIB_SUCCESS;
 
-  size=grib_byte_count(bitmap);
-  offset=grib_byte_offset(bitmap);
+    size=grib_byte_count(bitmap);
+    offset=grib_byte_offset(bitmap);
 
-  if (grib_get_long(h,self->unusedBitsInBitmap,&unusedBitsInBitmap) != GRIB_SUCCESS) { 
-    if (grib_get_long(h,self->numberOfDataPoints,&numberOfDataPoints) != GRIB_SUCCESS) {
-		grib_context_log(a->context,GRIB_LOG_ERROR,"unable to count missing values");
-		return GRIB_INTERNAL_ERROR;
-	} 
-	unusedBitsInBitmap=size*8-numberOfDataPoints;
-  }
+    if (grib_get_long(h,self->unusedBitsInBitmap,&unusedBitsInBitmap) != GRIB_SUCCESS) {
+        if (grib_get_long(h,self->numberOfDataPoints,&numberOfDataPoints) != GRIB_SUCCESS) {
+            grib_context_log(a->context,GRIB_LOG_ERROR,"unable to count missing values");
+            return GRIB_INTERNAL_ERROR;
+        }
+        unusedBitsInBitmap=size*8-numberOfDataPoints;
+    }
 
-  p=grib_handle_of_accessor(a)->buffer->data+offset;
+    p=grib_handle_of_accessor(a)->buffer->data+offset;
 
-  size-=unusedBitsInBitmap/8;
-  unusedBitsInBitmap= unusedBitsInBitmap % 8;
+    size-=unusedBitsInBitmap/8;
+    unusedBitsInBitmap= unusedBitsInBitmap % 8;
 
-  for (i=0;i<size-1;i++) *val += bitsoff[*(p++)];
+    for (i=0;i<size-1;i++) *val += bitsoff[*(p++)];
 
-  *val += bitsoff[(*p) | used[unusedBitsInBitmap]];
+    *val += bitsoff[(*p) | used[unusedBitsInBitmap]];
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 static int value_count(grib_accessor* a,long* count)
@@ -231,4 +231,3 @@ static int value_count(grib_accessor* a,long* count)
     *count=1;
     return 0;
 }
-

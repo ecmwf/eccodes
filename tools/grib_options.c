@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,11 +21,11 @@ extern int optind;
 #include "wingetopt.h"
 #endif
 
-const char* names[]={"parameter","vertical","geography","data","mars","local"};
-int names_count=6;
+static const char* names[]={"parameter","vertical","geography","data","mars","local"};
+static int names_count=6;
 
 /* id,args,help */
-grib_options_help grib_options_help_list[] ={
+static grib_options_help grib_options_help_list[] ={
   {"a",0,"Dump aliases.\n"},
   {"b:","key,key,...",
      "\n\t\tAll the keys in this list are skipped in the comparison. Bit-by-bit compare on.\n"},
@@ -111,7 +111,7 @@ grib_options_help grib_options_help_list[] ={
 
 };
 
-int grib_options_help_count=sizeof(grib_options_help_list)/sizeof(grib_options_help);
+static int grib_options_help_count=sizeof(grib_options_help_list)/sizeof(grib_options_help);
 
 
 void usage(void)
@@ -206,9 +206,10 @@ int grib_process_runtime_options(grib_context* context,int argc,char** argv,grib
 
     if (grib_options_on("T:")) {
         char* x=grib_options_get_option("T:");
-        if ( *x == 'T' ) options->mode=MODE_GTS;
+        if      ( *x == 'T' ) options->mode=MODE_GTS;
         else if ( *x == 'B' ) options->mode=MODE_BUFR;
         else if ( *x == 'M' ) options->mode=MODE_METAR;
+        else if ( *x == 'F' ) options->mode=MODE_TAF;
         else if ( *x == 'A' ) options->mode=MODE_ANY;
         else options->mode=MODE_GRIB;
     }

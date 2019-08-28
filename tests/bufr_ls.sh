@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -56,6 +56,7 @@ cat $f | ${tools_dir}/bufr_ls -
 result1=`${tools_dir}/bufr_get -p numberOfSubsets $f`
 result2=`cat $f | ${tools_dir}/bufr_get -p numberOfSubsets -`
 [ "$result1" = "$result2" ]
+
 
 rm -f $fLog $res_ls 
 rm -f $fTmp

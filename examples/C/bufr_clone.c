@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -40,8 +40,8 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    in = fopen(argv[1],"r");
-    out = fopen(argv[2],"w");
+    in = fopen(argv[1],"rb");
+    out = fopen(argv[2],"wb");
 
     /* open input and output */
     if (!in || !out) {
@@ -75,9 +75,9 @@ int main(int argc, char *argv[])
         }
 
         /* This is the place where you may wish to modify the clone
-           E.g. we change the bufrHeaderCentre */
+           E.g. we change the typicalDay key */
 
-        CODES_CHECK(codes_set_long(clone_handle, "bufrHeaderCentre", 222),0);
+        CODES_CHECK(codes_set_long(clone_handle, "typicalDay", 20+i),0);
 
         /* get the coded message in a buffer */
         CODES_CHECK(codes_get_message(clone_handle, &buffer, &size),0);

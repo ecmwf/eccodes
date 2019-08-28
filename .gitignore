@@ -11,48 +11,13 @@ src/eccodes_constants.h.new
 src/grib_errors.c.new
 src/grib_errors.h.new
 src/errors.py.new
-config/test-driver
-autom4te.cache/
-config.log
-config.status
 configure
 grib_api.spec
 grib_api.pc
 grib_api_f90.pc
-perl/GRIB-API/Makefile.PL
 rpms/eccodes.pc
 rpms/eccodes.spec
 rpms/eccodes_f90.pc
-aclocal.m4
-src/config.h.in~
-
-python/eccodes.py
-python/eccodes/__init__.pyc
-python/eccodes/eccodes.pyc
-python/gribapi.py
-python/gribapi/__init__.pyc
-python/gribapi/gribapi.pyc
-python/gribapi_swig.pyc
-
-# Generated stuff from builds
-src/.libs/
-tools/.libs/
-fortran/.libs/
-fortran/*.mod
-fortran/grib_f90.f90
-fortran/eccodes_f90.f90
-fortran/grib_kinds.h
-fortran/grib_types
-fortran/same_int_long
-fortran/same_int_size_t
-python/.libs/
-python/gribapi_swig.py
-python/gribapi_swig_wrap.c
-python/eccode_swig.py
-python/eccode_swig_wrap.c
-python/setup.py
-tests/.libs/
-tigge/.libs/
 
 # compiled source #
 ###################
@@ -91,21 +56,6 @@ Thumbs.db
 
 src/tags
 
-data/bufr/*.ref
-data/bufr/*.test
-data/bufr/*.json
-data/bufr/*.no
-data/bufr/*.bufr
-data/gts/*.DAT
-data/gts/*.ref
-data/metar/*.txt
-data/metar/*.ref
-data/.downloaded
-data/budg
-data/*.grib
-data/*.grib2
-data/*.grib1
-data/tigge/tigge*.grib
 data/exp/
 
 CMakeLists.txt.user*
@@ -118,7 +68,6 @@ data/bufr/*decode
 data/bufr/*test
 
 *.sublime-workspace
-*.old
 .idea
 
 build/

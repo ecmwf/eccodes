@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -138,38 +138,34 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-	grib_accessor_divdouble* self = (grib_accessor_divdouble*)a; 
-	int n = 0;
+    grib_accessor_divdouble* self = (grib_accessor_divdouble*)a; 
+    int n = 0;
 
-	self->val = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-	self->divisor = grib_arguments_get_double(grib_handle_of_accessor(a),c,n++);
+    self->val = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->divisor = grib_arguments_get_double(grib_handle_of_accessor(a),c,n++);
 }
 
-static int unpack_double   (grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-	grib_accessor_divdouble* self = (grib_accessor_divdouble*)a; 
-	int ret = GRIB_SUCCESS;
-	long ivalue = 0;
-	double value = 0;
+    grib_accessor_divdouble* self = (grib_accessor_divdouble*)a; 
+    int ret = GRIB_SUCCESS;
+    double value = 0;
 
-	if(*len < 1)
-	{
-		*len = 1;
-		return GRIB_ARRAY_TOO_SMALL;
-	}
+    if(*len < 1)
+    {
+        *len = 1;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
 
+    ret = grib_get_double_internal(grib_handle_of_accessor(a), self->val, &value);
 
-	ret = grib_get_long_internal(grib_handle_of_accessor(a), self->val, &ivalue);
+    if(ret != GRIB_SUCCESS )
+        return ret;
 
-	value = ivalue;
+    /*  fprintf(stdout,"\nname %s %s %g/%g\n",a->name ,self->val,value,divisor);*/
+    Assert(self->divisor!=0);
+    *val = value/self->divisor;
 
-	if(ret != GRIB_SUCCESS )
-		return ret;
-
-	/*  fprintf(stdout,"\nname %s %s %g/%g\n",a->name ,self->val,value,divisor);*/
-	*val = value/self->divisor;
-
-	*len = 1;
-	return GRIB_SUCCESS;
+    *len = 1;
+    return GRIB_SUCCESS;
 }
-

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -36,13 +36,13 @@ int main(int argc, char** argv)
     const void* buffer = NULL;
     size_t str_len = 0; /* See the call to codes_set_string later */
 
-    in = fopen(infile,"r");
+    in = fopen(infile,"rb");
     if(!in) {
         printf("ERROR: unable to open file %s\n",infile);
         return 1;
     }
 
-    out = fopen(outfile,"w");
+    out = fopen(outfile,"wb");
     if(!out) {
         printf("ERROR: unable to open file %s\n",outfile);
         fclose(in);

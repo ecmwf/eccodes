@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -268,7 +268,7 @@ static int clear(grib_accessor* a)
 
 static int  unpack_long   (grib_accessor* a, long*  v, size_t *len)
 {
-
+    int type = GRIB_TYPE_UNDEFINED;
     if(a->cclass->unpack_double && a->cclass->unpack_double != &unpack_double)
     {
         double val = 0.0;
@@ -295,12 +295,16 @@ static int  unpack_long   (grib_accessor* a, long*  v, size_t *len)
         }
     }
 
+    grib_context_log(a->context,GRIB_LOG_ERROR,"Cannot unpack %s as long",a->name);
+    if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,"Hint: Try unpacking as %s", grib_get_type_name(type));
+    }
     return GRIB_NOT_IMPLEMENTED;
 }
 
 static int unpack_double (grib_accessor* a, double*v, size_t *len)
 {
-
+    int type = GRIB_TYPE_UNDEFINED;
     if(a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long)
     {
         long val = 0;
@@ -327,12 +331,16 @@ static int unpack_double (grib_accessor* a, double*v, size_t *len)
         }
     }
 
+    grib_context_log(a->context,GRIB_LOG_ERROR,"Cannot unpack %s as double",a->name);
+    if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,"Hint: Try unpacking as %s", grib_get_type_name(type));
+    }
+
     return GRIB_NOT_IMPLEMENTED;
 }
 
 static int unpack_string(grib_accessor*a , char*  v, size_t *len)
 {
-
     if(a->cclass->unpack_double && a->cclass->unpack_double != &unpack_double)
     {
         double val = 0.0;

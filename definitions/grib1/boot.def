@@ -1,4 +1,4 @@
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -73,7 +73,7 @@ if (!headersOnly) {
   transient  missingValue   = 9999 : dump;
 
   if(bitmapPresent) {
-    template   section3 "grib1/section.3.def";
+    template   section_3 "grib1/section.3.def";
   } else {
     constant   tableReference = 0;
   }

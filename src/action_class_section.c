@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2018 ECMWF.
+ * Copyright 2005-2019 ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -79,14 +79,14 @@ static void init_class(grib_action_class* c)
 /* new GCC compiler v4.5.0 complains function is defined but not used*/
 static void check_sections(grib_section *s,grib_handle* h)
 {
-  grib_accessor *a = s?s->block->first:NULL;
-  if(s) Assert(s->h == h);
-  while(a)
-  {
-    Assert(grib_handle_of_accessor(a) == h);
-    check_sections(a->sub_section,h);
-    a = a->next;
-  }
+    grib_accessor *a = s?s->block->first:NULL;
+    if(s) Assert(s->h == h);
+    while(a)
+    {
+      Assert(grib_handle_of_accessor(a) == h);
+      check_sections(a->sub_section,h);
+      a = a->next;
+    }
 }
 #endif
 

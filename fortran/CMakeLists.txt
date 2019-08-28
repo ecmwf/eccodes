@@ -44,6 +44,15 @@ if( HAVE_FORTRAN )
                          SOURCES    grib_fortran.c grib_f90.f90 eccodes_f90.f90 grib_kinds.h
                          GENERATED  grib_f90.f90 eccodes_f90.f90
                          LIBS       eccodes )
+    if( DEFINED ecbuild_VERSION AND NOT ${ecbuild_VERSION} VERSION_LESS 3.1 )
+        # Installed module directory is not in the PUBLIC INCLUDES!
+        target_include_directories( eccodes_f90 PUBLIC $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}> )
+
+        # NOTE: When eccodes accepts ecbuild 3.0 as minimum requirement,
+        # this should instead be written inside the ecbuild_add_library macro with:
+        #    PUBLIC_INCLUDES $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>
+    endif()
+
     add_custom_command( TARGET     eccodes_f90 POST_BUILD
                         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/include
                         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}/eccodes.mod ${CMAKE_BINARY_DIR}/include

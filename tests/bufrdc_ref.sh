@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005-2019 ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -39,7 +39,7 @@ do
 
   if [ -f "$ref_num" ]; then
     # Cannot use plain diff. We need to compare FLOAT NUMBERS with a tolerance
-    perl number_compare.pl $ref_num $res_num >$REDIRECT 2> $REDIRECT
+    perl number_compare.pl $ref_num $res_num # >$REDIRECT 2> $REDIRECT
     #numdiff               $ref_num $res_num >$REDIRECT 2> $REDIRECT
   fi
 
