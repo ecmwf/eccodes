@@ -29,10 +29,7 @@ for file in ${bufr_files}
 do
   ${tools_dir}/bufr_ls -j $file > $tempLog
   if test "x$JSON_CHECK" != "x"; then
-    # TODO: Keys like typicalDate/rdbtimeDate can have
-    #       values like 00121102 or 000000.
-    # JSON check will fail: malformed number (leading zero must not be followed by another digit)
-    cat $tempLog | sed '/: 0[0-9]/d' | json_xs -t none
+    cat $tempLog | json_xs -t none
   fi
 done
 

@@ -819,18 +819,30 @@ void grib_skip_check(grib_runtime_options* options,grib_handle* h)
 }
 
 /* TODO: Does not work for 2.7e+01 */
-static int is_value_a_number(const char* input)
+static int is_valid_JSON_number(const char* input)
 {
     const char *p = input;
-    if (p == 0 || *p == 0) return 0;
+    size_t len = 0;
+    int is_float = 0;
+    if (p == 0 || *p == '\0') return 0;
     if (*p == '-') p++;
 
     while (*p) {
-        if( *p != '.' && !isdigit(*p)) return 0;
+        if (*p == '.') is_float=1;
+        if (*p != '.' && !isdigit(*p)) return 0;
         p++;
+        len++;
     }
+    /*
+     * Note: BUFR keys like typicalTime/rdbtimetime can have values
+     * like 000000 or 013329 which are invalid JSON numbers.
+     * In JSON a leading zero must not be followed by another digit
+     */
+    if (!is_float && len > 2 && input[0]=='0' && isdigit(input[1]))
+        return 0;  /* Not a valid JSON number */
     return 1;
 }
+
 static void get_value_for_key(grib_handle* h, const char* key_name, int key_type, char* value_str, const char* format)
 {
     int ret = 0, type = key_type;
@@ -961,7 +973,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         for (i=0;i<options->print_keys_count;i++) {
             fprintf(dump_file,"\t\"%s\": ", options->print_keys[i].name);
             get_value_for_key(h, options->print_keys[i].name, options->print_keys[i].type, value, options->format);
-            if (is_value_a_number(value))
+            if (is_valid_JSON_number(value))
                 fprintf(dump_file,"%s", value);
             else
                 fprintf(dump_file,"\"%s\"", value);
