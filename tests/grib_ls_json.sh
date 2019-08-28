@@ -15,6 +15,22 @@ rm -f $tempLog
 
 cd ${data_dir}
 
+# Check there is no "not_found" for a mixed GRIB file
+# ----------------------------------------------------
+input=mixed.grib
+# Normally dataType will not exist for the kwbc messages so we should
+# get several 'not_found' strings
+${tools_dir}/grib_ls $input > $tempLog
+grep -q 'not_found' $tempLog
+
+# With the JSON option grib_ls will not use the first message's keys
+# so there should not be any instances of 'not_found'
+${tools_dir}/grib_ls -j $input > $tempLog
+if grep -q 'not_found' $tempLog; then
+  echo "grib_ls: JSON output should not have contained 'not_found'"
+  exit 1
+fi
+
 # Test a MISSING key
 # --------------------
 input=sample.grib2
