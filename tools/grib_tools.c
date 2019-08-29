@@ -186,7 +186,6 @@ int grib_tool(int argc, char **argv)
 
     if (global_options.dump_filename) fclose(dump_file);
     return ret;
-
 }
 
 static int grib_tool_with_orderby(grib_runtime_options* options)
@@ -249,7 +248,10 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
             continue;
         }
 
-        grib_print_header(options,h);
+        if (options->json_output == 0)
+            grib_print_header(options,h);
+        else
+            grib_tools_set_print_keys(options,h,options->name_space);
 
         grib_skip_check(options,h);
 

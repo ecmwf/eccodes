@@ -89,12 +89,6 @@ int grib_tool_init(grib_runtime_options* options)
         json_latlon=1;
     }
 
-    /* TODO: sort when JSON is on */
-    if (grib_options_on("j") && grib_options_on("B:")) {
-        fprintf(stderr, "Error: -j and -B options are incompatible\n");
-        exit(1);
-    }
-
     if (options->latlon) {
 
         lat = strtod(options->latlon,&theEnd);
