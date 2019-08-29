@@ -1777,7 +1777,8 @@ static int adding_extra_key_attributes(grib_handle* h)
     return (!skip);
 }
 
-static grib_accessor* create_accessor_from_descriptor(grib_accessor* a,grib_accessor* attribute,grib_section* section,long ide,long subset,int dump,int count,int add_extra_attributes)
+static grib_accessor* create_accessor_from_descriptor(grib_accessor* a, grib_accessor* attribute, grib_section* section,
+                                                      long ide,long subset,int dump,int count,int add_extra_attributes)
 {
     grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
     char code[10]={0,};
@@ -2299,8 +2300,12 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
         /*forceGroupClosure=0;*/
         elementsInSubset= self->compressedData ? grib_iarray_used_size(self->elementsDescriptorsIndex->v[0]) :
                 grib_iarray_used_size(self->elementsDescriptorsIndex->v[iss]);
+        /*if (associatedFieldAccessor) grib_accessor_delete(c, associatedFieldAccessor);*/
         associatedFieldAccessor=NULL;
-        associatedFieldSignificanceAccessor=NULL;
+        if(associatedFieldSignificanceAccessor) {
+            grib_accessor_delete(c, associatedFieldSignificanceAccessor);
+            associatedFieldSignificanceAccessor=NULL;
+        }
         for (ide=0;ide<elementsInSubset;ide++) {
             idx = self->compressedData ? self->elementsDescriptorsIndex->v[0]->v[ide] :
                     self->elementsDescriptorsIndex->v[iss]->v[ide] ;
@@ -2446,6 +2451,8 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 err = GRIB_DECODING_ERROR;
                 return err;
             }
+
+            /*if (associatedFieldAccessor) grib_accessor_delete(c, associatedFieldAccessor);*/
             associatedFieldAccessor=NULL;
             if (elementFromBitmap && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
                 if (descriptor->code != 33007 && descriptor->code != 223255 ) {
@@ -2462,6 +2469,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                 int add_key = 1;
                 switch (descriptor->code) {
                 case 999999:
+                    /*if (associatedFieldAccessor) grib_accessor_delete(c, associatedFieldAccessor);*/
                     associatedFieldAccessor=elementAccessor;
                     grib_convert_to_attribute(associatedFieldAccessor);
                     if (associatedFieldSignificanceAccessor) {
@@ -2474,6 +2482,7 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
                     }
                     break;
                 case 31021:
+                    if(associatedFieldSignificanceAccessor) grib_accessor_delete(c, associatedFieldSignificanceAccessor);
                     associatedFieldSignificanceAccessor=elementAccessor;
                     break;
                     /*case 33007:*/
