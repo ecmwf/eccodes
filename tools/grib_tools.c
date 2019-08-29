@@ -973,7 +973,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         /* fprintf(dump_file, "\"message %d\" : {\n", options->handle_count); */
         fprintf(dump_file, "  {\n");
         for (i=0;i<options->print_keys_count;i++) {
-            fprintf(dump_file,"\t\"%s\": ", options->print_keys[i].name);
+            fprintf(dump_file,"    \"%s\": ", options->print_keys[i].name);
             get_value_for_key(h, options->print_keys[i].name, options->print_keys[i].type, value, options->format);
             if (is_valid_JSON_number(value))
                 fprintf(dump_file,"%s", value);
