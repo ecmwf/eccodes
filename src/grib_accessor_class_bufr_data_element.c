@@ -35,6 +35,7 @@
    MEMBERS    = grib_vdarray* numericValues
    MEMBERS    = grib_vsarray* stringValues
    MEMBERS    = grib_viarray* elementsDescriptorsIndex
+   MEMBERS    = char* cname
 
    END_CLASS_DEF
 
@@ -80,6 +81,7 @@ typedef struct grib_accessor_bufr_data_element {
 	grib_vdarray* numericValues;
 	grib_vsarray* stringValues;
 	grib_viarray* elementsDescriptorsIndex;
+	char* cname;
 } grib_accessor_bufr_data_element;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -162,6 +164,7 @@ static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err)
     grib_accessor* attribute=NULL;
     grib_accessor_bufr_data_element* elementAccessor;
     grib_accessor_bufr_data_element* self;
+    char* copied_name = NULL;
     int i;
     grib_action creator = {0, };
     creator.op         = "bufr_data_element";
@@ -174,7 +177,8 @@ static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err)
     *err=0;
 
     the_clone = grib_accessor_factory(s, &creator, 0, NULL);
-    the_clone->name=grib_context_strdup(a->context,a->name);
+    copied_name = grib_context_strdup(a->context,a->name);
+    the_clone->name=copied_name;
     elementAccessor=(grib_accessor_bufr_data_element*)the_clone;
     self=(grib_accessor_bufr_data_element*)a;
     the_clone->flags=a->flags;
@@ -189,6 +193,7 @@ static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err)
     elementAccessor->numericValues=self->numericValues;
     elementAccessor->stringValues=self->stringValues;
     elementAccessor->elementsDescriptorsIndex=self->elementsDescriptorsIndex;
+    elementAccessor->cname = copied_name; /* ECC-765 */
 
     i=0;
     while (a->attributes[i]) {
@@ -257,10 +262,11 @@ void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor* a,gr
 
 static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
-
+    grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
     a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
     /* a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
+    self->cname = NULL;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -603,7 +609,9 @@ static int  get_native_type(grib_accessor* a)
 
 static void destroy(grib_context* ct, grib_accessor* a)
 {
+    grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
     int i=0;
+    if (self->cname) grib_context_free(ct,self->cname); /* ECC-765 */
     while (i<MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
         /*grib_context_log(ct,GRIB_LOG_DEBUG,"deleting attribute %s->%s",a->name,a->attributes[i]->name);*/
         /*printf("bufr_data_element destroy %s %p\n", a->attributes[i]->name, (void*)a->attributes[i]);*/
