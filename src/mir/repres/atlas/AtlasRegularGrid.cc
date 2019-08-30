@@ -238,7 +238,9 @@ bool AtlasRegularGrid::sameAs(const Representation& other) const {
 }
 
 void AtlasRegularGrid::fill(util::MeshGeneratorParameters& params) const {
-    params.meshGenerator_ = "structured";
+    if (params.meshGenerator_.empty()) {
+        params.meshGenerator_ = "structured";
+    }
 }
 
 }  // namespace atlas
