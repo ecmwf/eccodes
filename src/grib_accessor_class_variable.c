@@ -271,7 +271,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     *val = (long)ac->dval;
     *len = 1;
     return GRIB_SUCCESS;
-
 }
 
 static int get_native_type(grib_accessor* a)
@@ -283,8 +282,17 @@ static int get_native_type(grib_accessor* a)
 static void destroy(grib_context* c,grib_accessor* a)
 {
     grib_accessor_variable *self = (grib_accessor_variable*)a;
+    int i=0;
+
     grib_context_free(c,self->cval);
     if (self->cname) grib_context_free(c,self->cname); /* ECC-765 */
+
+    /* Note: BUFR operator descriptors are variables and have attributes so need to free them */
+    while (i<MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
+        grib_accessor_delete(c, a->attributes[i]);
+        a->attributes[i]=NULL;
+        ++i;
+    }
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t *len){
