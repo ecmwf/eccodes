@@ -48,6 +48,7 @@ typedef struct grib_accessor_constant {
 /* Members defined in variable */
 	double dval;
 	char*  cval;
+	char*  cname;
 	int    type;
 /* Members defined in constant */
 } grib_accessor_constant;

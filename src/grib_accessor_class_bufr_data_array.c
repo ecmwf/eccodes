@@ -1833,10 +1833,10 @@ static grib_accessor* create_accessor_from_descriptor(grib_accessor* a, grib_acc
         if (attribute) {
             /* attribute->parent=elementAccessor->parent; */
             /*
-          for (i=0;i<MAX_ACCESSOR_ATTRIBUTES;i++) {
-            if (attribute->attributes[i]) attribute->attributes[i]->parent=elementAccessor->parent;
-          }
-             */
+            for (i=0;i<MAX_ACCESSOR_ATTRIBUTES;i++) {
+                if (attribute->attributes[i]) attribute->attributes[i]->parent=elementAccessor->parent;
+            }
+            */
             grib_accessor_add_attribute(elementAccessor,attribute,0);
         }
 
