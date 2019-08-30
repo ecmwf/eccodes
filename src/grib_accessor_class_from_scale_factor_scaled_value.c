@@ -40,9 +40,9 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int is_missing(grib_accessor*);
-static int pack_double(grib_accessor*, const double* val, size_t *len);
-static int unpack_double(grib_accessor*, double* val, size_t *len);
-static void init(grib_accessor*, const long, grib_arguments*);
+static int pack_double(grib_accessor*, const double* val,size_t *len);
+static int unpack_double(grib_accessor*, double* val,size_t *len);
+static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_from_scale_factor_scaled_value {
