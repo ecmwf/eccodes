@@ -500,13 +500,13 @@ void grib_accessor_delete(grib_context *ct, grib_accessor* a)
     while(c)
     {
         grib_accessor_class *s = c->super ? *(c->super) : NULL;
-        /*grib_context_log(ct,GRIB_LOG_DEBUG,"destroy %s ==> %s",c->name,a->name);*/
+        /*printf("grib_accessor_delete: before destroy a=%p c->name=%s ==> a->name=%s\n", (void*)a, c->name, a->name);*/
         if(c->destroy) {
             c->destroy(ct,a);
         }
         c = s;
     }
-    /*printf("Debug: grib_accessor_delete a=%p (%s)\n", (void*)a, a->name);*/
+    /*printf("grib_accessor_delete before free a=%p\n", (void*)a);*/
     grib_context_free(ct,a);
 }
 
