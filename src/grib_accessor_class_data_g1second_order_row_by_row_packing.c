@@ -325,6 +325,7 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
     }
 
     numbersPerRow=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfRows);
+    if(!numbersPerRow) return GRIB_OUT_OF_MEMORY;
     if (bitmapPresent) {
         long *bitmap,*pbitmap;
         size_t numberOfPoints=Ni*Nj;
@@ -417,6 +418,7 @@ static int unpack_double(grib_accessor* a, double* values, size_t *len)
     grib_context_free(a->context,X);
     grib_context_free(a->context,groupWidths);
     if (plSize) grib_context_free(a->context,pl);
+    if (numbersPerRow) grib_context_free(a->context,numbersPerRow);
 
     return ret;
 }
