@@ -606,7 +606,7 @@ static void destroy(grib_context* ct, grib_accessor* a)
     int i=0;
     while (i<MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
         /*grib_context_log(ct,GRIB_LOG_DEBUG,"deleting attribute %s->%s",a->name,a->attributes[i]->name);*/
-        /* printf("+++++ %s\n",a->attributes[i]->name); */
+        /*printf("bufr_data_element destroy %s %p\n", a->attributes[i]->name, (void*)a->attributes[i]);*/
         grib_accessor_delete(ct,a->attributes[i]);
         a->attributes[i]=NULL;
         i++;
