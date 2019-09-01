@@ -241,10 +241,12 @@ void LatLon::fill(util::MeshGeneratorParameters& params) const {
 }
 
 
-size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue) const {
+size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue, bool estimate) const {
 
     // Could be done better, just a demo
-    validate(values);
+    if (!estimate) {
+        validate(values);
+    }
 
     size_t count = 0;
 
@@ -252,7 +254,9 @@ size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue) 
     for (size_t j = 0; j < nj_; j++) {
         for (size_t i = 0; i < ni_; i++) {
             if ( !((i < size) || (j < size) || (i >= ni_ - size) || (j >= nj_ - size))) { // Check me, may be buggy
-                values[k] = missingValue;
+                if (!estimate) {
+                    values[k] = missingValue;
+                }
                 count++;
             }
             k++;
@@ -262,33 +266,13 @@ size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue) 
     // eckit::Log::info() << "LatLon::frame(" << size << ") " << count << " " << k << std::endl;
 
 
-    ASSERT(k == values.size());
-    return count;
-
-}
-
-
-size_t LatLon::frame(size_t size) const {
-
-    // Could be done better, just a demo
-
-    size_t count = 0;
-
-    size_t k = 0;
-    for (size_t j = 0; j < nj_; j++) {
-        for (size_t i = 0; i < ni_; i++) {
-            if ( !((i < size) || (j < size) || (i >= ni_ - size) || (j >= nj_ - size))) { // Check me, may be buggy
-                count++;
-            }
-            k++;
-        }
+    if (!estimate) {
+        ASSERT(k == values.size());
     }
-
-    // eckit::Log::info() << "LatLon::frame(" << size << ") " << count << " " << k << std::endl;
-
     return count;
 
 }
+
 
 void LatLon::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
