@@ -102,26 +102,21 @@ void AtlasRegularGrid::fill(grib_info& info) const {
 
     // GRIB2 encoding of user-provided radius or semi-major/minor axis
     if (info.packing.editionNumber == 2) {
-
-        static const char* a[] = {"scaledValueOfEarthMajorAxis", "scaleFactorOfEarthMajorAxis"};
-        static const char* b[] = {"scaledValueOfEarthMinorAxis", "scaleFactorOfEarthMinorAxis"};
-        static const char* r[] = {"scaledValueOfRadiusOfSphericalEarth", "scaleFactorOfRadiusOfSphericalEarth"};
-
         auto spec = grid_.projection().spec();
 
         if (shapeOfTheEarthProvided_) {
             GribExtraSetting::set(info, "shapeOfTheEarth", shapeOfTheEarth_);
             switch (shapeOfTheEarth_) {
                 case 1:
-                    GribExtraSetting::setScaledValueFactor(info, r[0], r[1], spec.getDouble("radius", radius_));
+                    GribExtraSetting::set(info, "radius", spec.getDouble("radius", radius_));
                     break;
                 case 3:
-                    GribExtraSetting::setScaledValueFactor(info, a[0], a[1], spec.getDouble("semi_major_axis", earthMajorAxis_) / 1000.);
-                    GribExtraSetting::setScaledValueFactor(info, b[0], b[1], spec.getDouble("semi_minor_axis", earthMajorAxis_) / 1000.);
+                    GribExtraSetting::set(info, "earthMajorAxis", spec.getDouble("semi_major_axis", earthMajorAxis_) / 1000.);
+                    GribExtraSetting::set(info, "earthMinorAxis", spec.getDouble("semi_minor_axis", earthMinorAxis_) / 1000.);
                     break;
                 case 7:
-                    GribExtraSetting::setScaledValueFactor(info, a[0], a[1], spec.getDouble("semi_major_axis", earthMajorAxis_));
-                    GribExtraSetting::setScaledValueFactor(info, b[0], b[1], spec.getDouble("semi_minor_axis", earthMajorAxis_));
+                    GribExtraSetting::set(info, "earthMajorAxis", spec.getDouble("semi_major_axis", earthMajorAxis_));
+                    GribExtraSetting::set(info, "earthMinorAxis", spec.getDouble("semi_minor_axis", earthMinorAxis_));
                     break;
                 default:
                     break;
@@ -129,12 +124,12 @@ void AtlasRegularGrid::fill(grib_info& info) const {
         }
         else if (spec.has("radius")) {
             GribExtraSetting::set(info, "shapeOfTheEarth", 1L);
-            GribExtraSetting::setScaledValueFactor(info, r[0], r[1], spec.getDouble("radius"));
+            GribExtraSetting::set(info, "radius", spec.getDouble("radius"));
         }
         else if (spec.has("semi_major_axis") && spec.has("semi_minor_axis")) {
             GribExtraSetting::set(info, "shapeOfTheEarth", 7L);
-            GribExtraSetting::setScaledValueFactor(info, a[0], a[1], spec.getDouble("semi_major_axis"));
-            GribExtraSetting::setScaledValueFactor(info, b[0], b[1], spec.getDouble("semi_minor_axis"));
+            GribExtraSetting::set(info, "earthMajorAxis", spec.getDouble("semi_major_axis"));
+            GribExtraSetting::set(info, "earthMinorAxis", spec.getDouble("semi_minor_axis"));
         }
     }
 }

@@ -12,10 +12,10 @@
 /// @author Pedro Maciel
 
 
-#include <iomanip>
-#include <ios>
-#include <cmath>
+#include <sstream>
+#include <utility>
 
+#include "eckit/log/Log.h"
 #include "eckit/types/FloatCompare.h"
 
 #include "mir/util/Grib.h"
@@ -84,7 +84,7 @@ void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t
 
 
 void GribExtraSetting::set(grib_info& info, const char* key, long value) {
-    auto& set = info.packing.extra_settings[info.packing.extra_settings_count++];
+    auto& set      = info.packing.extra_settings[info.packing.extra_settings_count++];
     set.name       = key;
     set.long_value = value;
     set.type       = GRIB_TYPE_LONG;
@@ -96,33 +96,4 @@ void GribExtraSetting::set(grib_info& info, const char* key, double value) {
     set.name         = key;
     set.double_value = value;
     set.type         = GRIB_TYPE_DOUBLE;
-}
-
-void GribExtraSetting::setScaledValueFactor(grib_info& info, const char* valueKey, const char* factorKey, double exact)
-{
-    long factor;
-    long value;
-    auto eval = [&value, &factor] { return double(value) * std::pow(10., -factor); };
-
-    ASSERT(exact > 0);
-
-    // approximated to 2 digits (keep below 4 byte unsigned limit)
-    // TODO should check when maximum approximation is reached instead
-    for (factor = 0, value = std::lround(exact); factor < 2 && !eckit::types::is_approximately_equal(exact, eval());) {
-        value = std::lround(exact * std::pow(10., ++factor));
-    }
-
-    if (!eckit::types::is_approximately_equal(exact, eval())) {
-        auto& log = eckit::Log::warning();
-        auto oldf = log.setf(std::ios::fixed);
-        auto oldp = log.precision();
-        log << "GribExtraSetting::setScaledValueFactor: (" << factorKey << ", " << valueKey
-            << ")=" << std::setprecision(int(factor)) << eval() << " approximated from " << std::setprecision(20)
-            << exact << std::endl;
-        log.setf(oldf);
-        log.precision(oldp);
-    }
-
-    GribExtraSetting::set(info, factorKey, factor);
-    GribExtraSetting::set(info, valueKey, value);
 }
