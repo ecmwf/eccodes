@@ -308,9 +308,11 @@ void Reduced::fill(api::MIRJob& job) const  {
 }
 
 
-size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue) const {
+size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue, bool estimate) const {
 
-    validate(values);
+    if (!estimate) {
+        validate(values);
+    }
 
     size_t count = 0;
 
@@ -354,14 +356,19 @@ size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue)
         size_t cols = shape[j];
         for (size_t i = 0; i < cols; i++) {
             if ( !((i < size) || (j < size) || (i >= cols - size) || (j >= rows - size))) {
-                values[k] = missingValue;
+                if (!estimate) {
+                    values[k] = missingValue;
+                }
                 count++;
             }
             k++;
         }
     }
 
-    ASSERT(k == values.size());
+    if (!estimate) {
+        ASSERT(k == values.size());
+    }
+
     return count;
 }
 
