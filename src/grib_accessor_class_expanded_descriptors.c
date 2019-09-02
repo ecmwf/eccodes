@@ -265,6 +265,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
         }
         grib_context_free(c,v);
         inner_expanded=do_expand(a,inner_unexpanded,ccp,err);
+        if (*err) return 0;
         grib_bufr_descriptors_array_delete(inner_unexpanded);
 #if MYDEBUG
         for (i=0;i<inner_expanded->n;i++) {
@@ -297,6 +298,8 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
                 grib_context_log(c, GRIB_LOG_ERROR,
                                  "Delayed replication: %06ld: expected %d but only found %lu elements",
                                  u->code, us->X, unexpanded->n - 1);
+                *err = GRIB_DECODING_ERROR;
+                return 0;
             }
             for (j=0;j<us->X+1;j++) {
                 DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded, u0);
@@ -307,6 +310,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
 #endif
             }
             inner_expanded=do_expand(a,inner_unexpanded,ccp,err);
+            if (*err) return 0;
             grib_bufr_descriptors_array_delete(inner_unexpanded);
             size=BUFR_DESCRIPTORS_ARRAY_USED_SIZE(inner_expanded);
 #if MYDEBUG
@@ -349,6 +353,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             for (i=0;i<us->X;i++) grib_bufr_descriptor_delete(ur[i]);
             grib_context_free(c,ur);
             inner_expanded=do_expand(a,inner_unexpanded,ccp,err);
+            if (*err) return 0;
             grib_bufr_descriptors_array_delete(inner_unexpanded);
 #if MYDEBUG
             for (i=0;i<inner_expanded->n;i++) {
@@ -507,6 +512,7 @@ static bufr_descriptors_array* do_expand(grib_accessor* a,bufr_descriptors_array
 #endif
     while (unexpanded->n) {
         __expand(a,unexpanded,expanded,ccp,err);
+        if (*err) return NULL;
     }
 #if MYDEBUG
     {
@@ -630,6 +636,7 @@ static int expand(grib_accessor* a)
     ccp.associatedFieldWidth=0;
     ccp.newStringWidth=0;
     self->expanded=do_expand(a,unexpanded,&ccp,&err);
+    if (err) return err;
     grib_context_expanded_descriptors_list_push(c,key,self->expanded,unexpanded_copy);
     grib_bufr_descriptors_array_delete(unexpanded);
 
