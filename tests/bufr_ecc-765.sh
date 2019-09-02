@@ -211,7 +211,7 @@ cat > $tempSupp << EOF
    match-leak-kinds: definite
    fun:malloc
    fun:string_split
-   fun:load_bufr_elements_table
+   fun:load_bufr_elements_table*
    fun:bufr_get_from_table
    fun:accessor_bufr_elements_table_get_descriptor
    fun:grib_bufr_descriptor_new
