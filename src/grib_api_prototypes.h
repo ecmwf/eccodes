@@ -981,6 +981,8 @@ void grib_context_free(const grib_context *c, void *p);
 void grib_context_free_persistent(const grib_context *c, void *p);
 void grib_context_reset(grib_context *c);
 void grib_context_delete(grib_context *c);
+void codes_bufr_multi_element_constant_arrays_on(grib_context* c);
+void codes_bufr_multi_element_constant_arrays_off(grib_context* c);
 void grib_context_set_definitions_path(grib_context *c, const char *path);
 void grib_context_set_samples_path(grib_context *c, const char *path);
 void *grib_context_malloc_persistent(const grib_context *c, size_t size);

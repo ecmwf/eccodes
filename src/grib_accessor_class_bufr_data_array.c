@@ -553,6 +553,7 @@ static int decode_string_array(grib_context* c, unsigned char* data, long* pos, 
     char* sval=0;
     int j,modifiedWidth,width;
     grib_sarray* sa=grib_sarray_new(c,self->numberOfSubsets,10);
+    int bufr_multi_element_constant_arrays = c->bufr_multi_element_constant_arrays;
 
     modifiedWidth= bd->width;
 
@@ -585,7 +586,15 @@ static int decode_string_array(grib_context* c, unsigned char* data, long* pos, 
             grib_sarray_push(c,sa,sval);
         }
     } else {
-        grib_sarray_push(c,sa,sval);
+        if (bufr_multi_element_constant_arrays) {
+            for (j=0;j<self->numberOfSubsets;j++) {
+                char* pStr = sval;
+                if (j>0) pStr = strdup(sval);
+                grib_sarray_push(c,sa,pStr);
+            }
+        } else {
+            grib_sarray_push(c,sa,sval);
+        }
     }
     grib_vsarray_push(c,self->stringValues,sa);
     return ret;
@@ -600,6 +609,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
     unsigned long lval;
     int localReference,localWidth,modifiedWidth,modifiedReference;
     double modifiedFactor,dval;
+    int bufr_multi_element_constant_arrays = c->bufr_multi_element_constant_arrays;
 
     *err=0;
 
@@ -643,13 +653,27 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
             grib_darray_push(c,ret,dval);
         }
     } else {
+        // ECC-428
         if (grib_is_all_bits_one(lval,modifiedWidth) && canBeMissing) {
             dval=GRIB_MISSING_DOUBLE;
         } else {
             dval=localReference*modifiedFactor;
         }
-        grib_context_log(c, GRIB_LOG_DEBUG," modifiedWidth=%ld lval=%ld dval=%g", modifiedWidth,lval,dval);
-        grib_darray_push(c,ret,dval);
+
+        /* dataPresentIndicator is special and has to have SINGLE VALUE if constant array */
+        if (bufr_multi_element_constant_arrays == 1 && bd->code == 31031) {
+            bufr_multi_element_constant_arrays=0;
+        }
+
+        if(bufr_multi_element_constant_arrays) {
+            grib_context_log(c, GRIB_LOG_DEBUG," modifiedWidth=%ld lval=%ld dval=%g (const array multi values)", modifiedWidth,lval,dval,bd->code);
+            for (j=0;j<self->numberOfSubsets;j++) {
+                grib_darray_push(c,ret,dval);
+            }
+        } else {
+            grib_context_log(c, GRIB_LOG_DEBUG," modifiedWidth=%ld lval=%ld dval=%g (const array single value)", modifiedWidth,lval,dval,bd->code);
+            grib_darray_push(c,ret,dval);
+        }
     }
 
     return ret;
@@ -1135,7 +1159,14 @@ static int decode_replication(grib_context* c,grib_accessor_bufr_data_array* sel
     }
     if (self->compressedData) {
         dval=grib_darray_new(c,1,100);
-        grib_darray_push(c,dval,(double)(*numberOfRepetitions));
+        if(c->bufr_multi_element_constant_arrays) {
+            long j;
+            for (j=0;j<self->numberOfSubsets;j++) {
+                grib_darray_push(c,dval,(double)(*numberOfRepetitions));
+            }
+        } else {
+            grib_darray_push(c,dval,(double)(*numberOfRepetitions));
+        }
         grib_vdarray_push(c,self->numericValues,dval);
     } else {
         grib_darray_push(c,dval,(double)(*numberOfRepetitions));

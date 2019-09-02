@@ -6167,6 +6167,32 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_codes_c_bufr_multi_element_constant_arrays_on(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)":codes_c_bufr_multi_element_constant_arrays_on")) SWIG_fail;
+  result = (int)codes_c_bufr_multi_element_constant_arrays_on();
+  resultobj = SWIG_From_int((int)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_codes_c_bufr_multi_element_constant_arrays_off(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)":codes_c_bufr_multi_element_constant_arrays_off")) SWIG_fail;
+  result = (int)codes_c_bufr_multi_element_constant_arrays_off();
+  resultobj = SWIG_From_int((int)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_grib_c_keys_iterator_next(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int *arg1 = (int *) 0 ;
@@ -9083,6 +9109,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"grib_c_multi_append", _wrap_grib_c_multi_append, METH_VARARGS, NULL},
 	 { (char *)"grib_c_gribex_mode_on", _wrap_grib_c_gribex_mode_on, METH_VARARGS, NULL},
 	 { (char *)"grib_c_gribex_mode_off", _wrap_grib_c_gribex_mode_off, METH_VARARGS, NULL},
+	 { (char *)"codes_c_bufr_multi_element_constant_arrays_on", _wrap_codes_c_bufr_multi_element_constant_arrays_on, METH_VARARGS, NULL},
+	 { (char *)"codes_c_bufr_multi_element_constant_arrays_off", _wrap_codes_c_bufr_multi_element_constant_arrays_off, METH_VARARGS, NULL},
 	 { (char *)"grib_c_keys_iterator_next", _wrap_grib_c_keys_iterator_next, METH_VARARGS, NULL},
 	 { (char *)"codes_c_bufr_keys_iterator_next", _wrap_codes_c_bufr_keys_iterator_next, METH_VARARGS, NULL},
 	 { (char *)"grib_c_keys_iterator_delete", _wrap_grib_c_keys_iterator_delete, METH_VARARGS, NULL},

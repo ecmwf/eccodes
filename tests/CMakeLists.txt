@@ -92,6 +92,7 @@ list( APPEND tests_data_reqd
     bufr_keys_iter
     bufr_get_element
     bufr_wmo_tables
+    bufr_ecc-428
     bufr_ecc-197
     bufr_ecc-286
     bufr_ecc-288

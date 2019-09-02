@@ -90,6 +90,11 @@ int grib_c_gribex_mode_on(void);
 int grib_c_gribex_mode_off(void);
 // ---
 
+// BUFR bufr_multi_element_constant_arrays mode
+int codes_c_bufr_multi_element_constant_arrays_on(void);
+int codes_c_bufr_multi_element_constant_arrays_off(void);
+// ---
+
 // keys iterator
 int grib_c_keys_iterator_next(int* iterid);
 int codes_c_bufr_keys_iterator_next(int* iterid);
