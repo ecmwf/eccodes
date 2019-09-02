@@ -2456,9 +2456,11 @@ static int create_keys(grib_accessor* a,long onlySubset,long startSubset,long en
             associatedFieldAccessor=NULL;
             if (elementFromBitmap && self->unpackMode==CODES_BUFR_UNPACK_STRUCTURE) {
                 if (descriptor->code != 33007 && descriptor->code != 223255 ) {
+                    char* aname = grib_context_strdup(c,elementFromBitmap->name);
                     grib_accessor* newAccessor=grib_accessor_clone(elementAccessor,section,&err);
                     newAccessor->parent=groupSection;
-                    newAccessor->name=grib_context_strdup(c,elementFromBitmap->name);
+                    newAccessor->name=aname;
+                    grib_sarray_push(a->context, self->tempStrings, aname);
                     grib_push_accessor(newAccessor,groupSection->block);
                     rank=grib_data_accessors_trie_push(self->dataAccessorsTrie,newAccessor);
                     grib_accessors_list_push(self->dataAccessors,newAccessor,rank);
