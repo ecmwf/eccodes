@@ -154,7 +154,9 @@ void UnstructuredGrid::fill(api::MIRJob&) const {
 }
 
 void UnstructuredGrid::fill(util::MeshGeneratorParameters& params) const {
-    params.meshGenerator_ = "delaunay";
+    if (params.meshGenerator_.empty()) {
+        params.meshGenerator_ = "delaunay";
+    }
 }
 
 util::Domain UnstructuredGrid::domain() const {

@@ -140,9 +140,9 @@ atlas::Grid ReducedLL::atlasGrid() const {
 }
 
 void ReducedLL::fill(util::MeshGeneratorParameters& params) const {
-    params.meshGenerator_ = "structured";
-
-    params.meshGenerator_ = "structured";
+    if (params.meshGenerator_.empty()) {
+        params.meshGenerator_ = "structured";
+    }
     if (boundingBox().south() > Latitude::EQUATOR) {
         params.set("force_include_south_pole", true);
     }
