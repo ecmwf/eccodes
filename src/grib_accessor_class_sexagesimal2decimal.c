@@ -138,123 +138,122 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
-
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_double(dumper,a,NULL);
+    grib_dump_double(dumper,a,NULL);
 }
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_DOUBLE;
+static int  get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_DOUBLE;
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {
-  int err=0;
-  grib_accessor_sexagesimal2decimal* self=(grib_accessor_sexagesimal2decimal*)a;
-  char buff[512]={0,};
-  size_t length=0;
-  size_t size=512;
-  char* p;
-  char* q;
-  double dd,mm=0,ss=0;
-  int dd_sign=1;
+    int err=0;
+    grib_accessor_sexagesimal2decimal* self=(grib_accessor_sexagesimal2decimal*)a;
+    char buff[512]={0,};
+    size_t length=0;
+    size_t size=512;
+    char* p;
+    char* q;
+    double dd,mm=0,ss=0;
+    int dd_sign=1;
 
-  err=grib_get_string(grib_handle_of_accessor(a),self->key,buff,&size);
-  if (err) return err;
-  q=buff+self->start;
-  if (self->length) q[length]=0;
-  p=q;
+    err=grib_get_string(grib_handle_of_accessor(a),self->key,buff,&size);
+    if (err) return err;
+    q=buff+self->start;
+    if (self->length) q[length]=0;
+    p=q;
 
-  while ( *p != '-' && *p != ':' && *p != ' ' && *p!=0 ) { p++; }
+    while ( *p != '-' && *p != ':' && *p != ' ' && *p!=0 ) { p++; }
 
-  if (*p==0) { return GRIB_WRONG_CONVERSION;}
-  *p=0;
+    if (*p==0) { return GRIB_WRONG_CONVERSION;}
+    *p=0;
 
-  dd=atoi(q);
-  p++; q=p;
-  while ( *p != '-' && *p != ':' && *p != ' ' && *p != 'N'
-        && *p != 'S' && *p != 'E' && *p != 'W' && *p!=0 ) { p++; }
-  switch (*p) {
+    dd=atoi(q);
+    p++; q=p;
+    while ( *p != '-' && *p != ':' && *p != ' ' && *p != 'N'
+            && *p != 'S' && *p != 'E' && *p != 'W' && *p!=0 ) { p++; }
+    switch (*p) {
+    case ' ':
+    case '-':
+    case ':':
+        *p=0;
+        mm=atoi(q) / 60.0;
+        dd+=mm;
+        p++; q=p;
+        break;
+    case 'N':
+    case 'E':
+        *p=0;
+        dd_sign=1;
+        mm=atoi(q) / 60.0;
+        dd+=mm;
+        p++; q=p;
+        break;
+    case 'S':
+    case 'W':
+        *p=0;
+        mm=atoi(q) / 60.0;
+        dd+=mm;
+        dd_sign=-1;
+        p++; q=p;
+        break;
+    case 0:
+        break;
+    default:
+        return GRIB_WRONG_CONVERSION;
+    }
+    if (*p) {
+        while ( *p != '-' && *p != ':' && *p != ' ' && *p != 'N'
+                && *p != 'S' && *p != 'E' && *p != 'W' && *p!=0 ) { p++; }
+        switch (*p) {
         case ' ':
         case '-':
         case ':':
             *p=0;
-            mm=atoi(q) / 60.0;
-            dd+=mm;
-            p++; q=p;
+            ss=atof(q) / 60.0;
+            dd+=ss;
             break;
         case 'N':
         case 'E':
             *p=0;
+            ss=atof(q) / 60.0;
+            dd+=ss;
             dd_sign=1;
-            mm=atoi(q) / 60.0;
-            dd+=mm;
-            p++; q=p;
             break;
         case 'S':
         case 'W':
             *p=0;
-            mm=atoi(q) / 60.0;
-            dd+=mm;
+            ss=atof(q) / 60.0;
+            dd+=ss;
             dd_sign=-1;
-            p++; q=p;
             break;
         case 0:
             break;
         default:
             return GRIB_WRONG_CONVERSION;
-  }
-  if (*p) {
-      while ( *p != '-' && *p != ':' && *p != ' ' && *p != 'N'
-        && *p != 'S' && *p != 'E' && *p != 'W' && *p!=0 ) { p++; }
-      switch (*p) {
-        case ' ':
-        case '-':
-        case ':':
-            *p=0;
-            ss=atof(q) / 60.0;
-            dd+=ss;
-            break;
-        case 'N':
-        case 'E':
-            *p=0;
-            ss=atof(q) / 60.0;
-            dd+=ss;
-            dd_sign=1;
-            break;
-        case 'S':
-        case 'W':
-            *p=0;
-            ss=atof(q) / 60.0;
-            dd+=ss;
-            dd_sign=-1;
-            break;
-        case 0:
-            break;
-        default:
-            return GRIB_WRONG_CONVERSION;
-      }
-  }
-  dd *= dd_sign ;
+        }
+    }
+    dd *= dd_sign ;
 
-  sprintf(buff,"%.2f",dd);
-  length=strlen(buff);
+    sprintf(buff,"%.2f",dd);
+    length=strlen(buff);
 
-  if( len[0] < length+1 )
-  {
-    grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%d) for %s it contains %d values ", len[0], a->name , a->length+1 );
-    len[0] = 0;
-    return GRIB_ARRAY_TOO_SMALL;
-  }
+    if( len[0] < length+1 )
+    {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%d) for %s it contains %d values ", len[0], a->name , a->length+1 );
+        len[0] = 0;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
 
 
-  strcpy(val,buff);
+    strcpy(val,buff);
 
-  len[0] = length;
-  return GRIB_SUCCESS;
+    len[0] = length;
+    return GRIB_SUCCESS;
 }
-

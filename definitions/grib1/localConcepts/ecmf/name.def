@@ -14629,8 +14629,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 48 ;
 	}
-#Large-scale precipitation fraction
-'Large-scale precipitation fraction' = {
+#Mean large-scale precipitation fraction
+'Mean large-scale precipitation fraction' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 50 ;
 	}
@@ -14654,58 +14654,58 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Surface sensible heat flux
-'Surface sensible heat flux' = {
+#Mean surface sensible heat flux
+'Mean surface sensible heat flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface latent heat flux
-'Surface latent heat flux' = {
+#Mean surface latent heat flux
+'Mean surface latent heat flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface net radiation
-'Surface net radiation' = {
+#Mean surface net radiation flux
+'Mean surface net radiation flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 149 ;
 	}
-#Short-wave heating rate
-'Short-wave heating rate' = {
+#Mean short-wave heating rate
+'Mean short-wave heating rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 153 ;
 	}
-#Long-wave heating rate
-'Long-wave heating rate' = {
+#Mean long-wave heating rate
+'Mean long-wave heating rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Surface solar radiation downwards
-'Surface solar radiation downwards' = {
+#Mean surface downward solar radiation flux
+'Mean surface downward solar radiation flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 169 ;
 	}
-#Surface thermal radiation downwards
-'Surface thermal radiation downwards' = {
+#Mean surface downward thermal radiation flux
+'Mean surface downward thermal radiation flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 175 ;
 	}
-#Surface solar radiation
-'Surface solar radiation' = {
+#Mean surface net solar radiation flux
+'Mean surface net solar radiation flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Surface thermal radiation
-'Surface thermal radiation' = {
+#Mean surface net thermal radiation flux
+'Mean surface net thermal radiation flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Top solar radiation
-'Top solar radiation' = {
+#Mean top net solar radiation flux
+'Mean top net solar radiation flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Top thermal radiation
-'Top thermal radiation' = {
+#Mean top net thermal radiation flux
+'Mean top net thermal radiation flux' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 179 ;
 	}
@@ -14744,8 +14744,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 197 ;
 	}
-#Runoff
-'Runoff' = {
+#Mean runoff rate
+'Mean runoff rate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 205 ;
 	}
@@ -14819,8 +14819,8 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 142 ;
 	}
-#Convective precipitation anomaly
-'Convective precipitation anomaly' = {
+#Mean convective precipitation rate anomaly
+'Mean convective precipitation rate anomaly' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 143 ;
 	}

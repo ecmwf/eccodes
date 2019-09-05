@@ -345,22 +345,22 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
     size_t i=0;
     int isConstant = 1;
     double v = 0, minVal=DBL_MAX, maxVal=-DBL_MAX;
-    printf("ECCODES DEBUG grib_util grib_set_values: setting %lu key/value pairs\n",(unsigned long)count);
+    fprintf(stderr, "ECCODES DEBUG grib_util grib_set_values: setting %lu key/value pairs\n",(unsigned long)count);
 
     for(i=0; i<count; i++)
     {
         switch(keyval_pairs[i].type)
         {
-        case GRIB_TYPE_LONG: printf("ECCODES DEBUG  grib_util: => %s =  %ld;\n"
+        case GRIB_TYPE_LONG: fprintf(stderr, "ECCODES DEBUG  grib_util: => %s =  %ld;\n"
                 ,keyval_pairs[i].name,(long)keyval_pairs[i].long_value); break;
-        case GRIB_TYPE_DOUBLE: printf("ECCODES DEBUG  grib_util: => %s = %.16e;\n"
+        case GRIB_TYPE_DOUBLE: fprintf(stderr, "ECCODES DEBUG  grib_util: => %s = %.16e;\n"
                 ,keyval_pairs[i].name,keyval_pairs[i].double_value); break;
-        case GRIB_TYPE_STRING: printf("ECCODES DEBUG  grib_util: => %s = \"%s\";\n"
+        case GRIB_TYPE_STRING: fprintf(stderr, "ECCODES DEBUG  grib_util: => %s = \"%s\";\n"
                 ,keyval_pairs[i].name,keyval_pairs[i].string_value); break;
         }
     }
 
-    printf("ECCODES DEBUG  grib_util: data_values_count=%lu;\n", (unsigned long)data_values_count);
+    fprintf(stderr, "ECCODES DEBUG  grib_util: data_values_count=%lu;\n", (unsigned long)data_values_count);
     for (i=0; i<data_values_count; i++) {
         if (i==0) v = data_values[i];
         if (data_values[i] != spec->missingValue) {
@@ -380,9 +380,9 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
             if (v > maxVal) maxVal=v;
         }
     }
-    printf("ECCODES DEBUG  grib_util: data_values are CONSTANT? %d\t(min=%.16e, max=%.16e)\n",
+    fprintf(stderr, "ECCODES DEBUG  grib_util: data_values are CONSTANT? %d\t(min=%.16e, max=%.16e)\n",
            isConstant, minVal, maxVal);
-    if (c->gribex_mode_on) printf("ECCODES DEBUG  grib_util: GRIBEX mode is turned on!\n");
+    if (c->gribex_mode_on) fprintf(stderr, "ECCODES DEBUG  grib_util: GRIBEX mode is turned on!\n");
 
 #if 0
         if (spec->bitmapPresent) {
@@ -523,7 +523,7 @@ static int expand_bounding_box(grib_handle* h, grib_values *values, const size_t
         if (is_angle && !angle_can_be_encoded(h, values[i].double_value)) {
             new_angle = adjust_angle(values[i].double_value, roundingPolicy, angle_subdivisions);
             if (h->context->debug) {
-                printf("ECCODES DEBUG  grib_util EXPAND_BOUNDING_BOX %s: old=%.15e new=%.15e (%s)\n",
+                fprintf(stderr, "ECCODES DEBUG  grib_util EXPAND_BOUNDING_BOX %s: old=%.15e new=%.15e (%s)\n",
                        values[i].name, values[i].double_value, new_angle,
                        (roundingPolicy==eROUND_ANGLE_UP?"Up":"Down"));
             }
@@ -857,6 +857,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     int packingTypeIsSet=0;
     int setSecondOrder=0;
     int setJpegPacking=0;
+    int convertEditionEarlier=0;/* For cases when we cannot set some keys without converting */
     size_t slen=17;
     int grib1_high_resolution_fix = 0; /* boolean: See GRIB-863 */
     int global_grid = 0; /* boolean */
@@ -887,9 +888,9 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     grib_get_long(h,"bitsPerValue",&input_bits_per_value);
     grib_get_long(h,"decimalScaleFactor",&input_decimal_scale_factor);
     if (h->context->debug==-1) {
-        printf("ECCODES DEBUG grib_util: input_packing_type = %s\n",input_packing_type);
-        printf("ECCODES DEBUG grib_util: input_bits_per_value = %ld\n",input_bits_per_value);
-        printf("ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n",input_decimal_scale_factor);
+        fprintf(stderr, "ECCODES DEBUG grib_util: input_packing_type = %s\n",input_packing_type);
+        fprintf(stderr, "ECCODES DEBUG grib_util: input_bits_per_value = %ld\n",input_bits_per_value);
+        fprintf(stderr, "ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n",input_decimal_scale_factor);
     }
 
     /*if ( (*err=check_values(data_values, data_values_count))!=GRIB_SUCCESS ) {
@@ -983,9 +984,9 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         }
         if (h->context->debug==-1) {
             int j=0;
-            printf("ECCODES DEBUG grib_util: grib_set_double_array\n");
-            for (j=0;j<20;j++) printf("ECCODES DEBUG grib_util %g\n",data_values[j]);
-            printf("ECCODES DEBUG grib_util: data_values_count=%d \n",(int)data_values_count);
+            fprintf(stderr, "ECCODES DEBUG grib_util: grib_set_double_array\n");
+            for (j=0;j<20;j++) fprintf(stderr, "ECCODES DEBUG grib_util %g\n",data_values[j]);
+            fprintf(stderr, "ECCODES DEBUG grib_util: data_values_count=%d \n",(int)data_values_count);
         }
 
         if((*err = grib_set_double_array(h,"values",data_values,data_values_count)) != 0)
@@ -993,7 +994,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             goto cleanup;
         }
         if (h->context->debug==-1)
-            printf("ECCODES DEBUG grib_util: done grib_set_double_array \n");
+            fprintf(stderr, "ECCODES DEBUG grib_util: done grib_set_double_array \n");
 
 
         /* convert to second_order if not constant field */
@@ -1050,9 +1051,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     /* The "pl" is given from the template, but "section_copy" will take care of setting the right headers */
 
     {
-        char levtype[80];
-        size_t n = sizeof(levtype);
-        Assert(grib_get_string(h,"levelType",levtype,&n) == 0);
         switch (spec->grid_type) {
             case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
             case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
@@ -1064,10 +1062,11 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 }
                 break;
             case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
-                if (editionNumber==1) {
-                    fprintf(stderr,"GRIB_UTIL_SET_SPEC: grid type='%s' not available in GRIB edition 1.\n", grid_type);
-                    *err = GRIB_WRONG_GRID;
-                    goto cleanup;
+                if (editionNumber==1) {   /* This grid type is not available in edition 1 */
+                    if (h->context->debug==-1)
+                        fprintf(stderr,"ECCODES DEBUG grib_util: lambert_azimuthal_equal_area specified "
+                                       "but input is GRIB1. Output must be a higher edition!\n");
+                    convertEditionEarlier=1;
                 }
                 sprintf(name, "GRIB%ld", editionNumber);
                 break;
@@ -1463,8 +1462,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     }
 
     if (h->context->debug==-1) {
-        printf("ECCODES DEBUG grib_util: global_grid = %d\n", global_grid);
-        printf("ECCODES DEBUG grib_util: expandBoundingBox = %d\n", expandBoundingBox);
+        fprintf(stderr, "ECCODES DEBUG grib_util: global_grid = %d\n", global_grid);
+        fprintf(stderr, "ECCODES DEBUG grib_util: expandBoundingBox = %d\n", expandBoundingBox);
         print_values(h->context,spec,data_values,data_values_count,values,count);
     }
 
@@ -1474,6 +1473,14 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         {
             fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot expand bounding box: %s\n",grib_get_error_message(*err));
             if (h->context->write_on_fail) grib_write_message(outh,"error.grib","w");
+            goto cleanup;
+        }
+    }
+
+    if (convertEditionEarlier && packing_spec->editionNumber>1) {
+        *err = grib_set_long(outh,"edition", packing_spec->editionNumber);
+        if(*err) {
+            fprintf(stderr,"SET_GRID_DATA_DESCRIPTION: Cannot convert to edition %ld.\n",packing_spec->editionNumber);
             goto cleanup;
         }
     }
@@ -1634,7 +1641,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     }
 #endif
     if (h->context->debug==-1)
-        printf("ECCODES DEBUG: grib_util_set_spec end\n");
+        fprintf(stderr, "ECCODES DEBUG: grib_util_set_spec end\n");
 
     return outh;
 

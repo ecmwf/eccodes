@@ -21,7 +21,7 @@ grib_option grib_options[]={
     {"F:",0,0,1,1,"%g"},
     {"P:",0,0,0,1,0},
     {"w:",0,0,0,1,0},
-    {"j",0,"json output\n",0,1,0},
+    {"j",0,"JSON output\n",0,1,0},
     {"B:",0,0,0,1,0},
     {"l:",0,0,0,1,0},
     {"s:",0,0,0,1,0},
@@ -49,12 +49,12 @@ const char* grib_tool_usage="[options] grib_file grib_file ...";
 static char* new_handle="";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
-double lat=0;
-double lon=0;
-int mode=0;
+static double lat=0;
+static double lon=0;
+static int mode=0;
 static int json_latlon=0;
-
-grib_nearest* nearest=NULL;
+static int first_handle=1;
+static grib_nearest* nearest=NULL;
 
 int main(int argc, char *argv[])
 {
@@ -93,7 +93,7 @@ int grib_tool_init(grib_runtime_options* options)
 
         lat = strtod(options->latlon,&theEnd);
         if (*theEnd != ',') {
-            printf("ERROR: wrong latitude value\n");
+            fprintf(stderr, "Error: wrong latitude value\n");
             exit(1);
         }
         lon= strtod(++theEnd,&end1);
@@ -110,7 +110,7 @@ int grib_tool_init(grib_runtime_options* options)
                 } else if (*end1 == '1') {
                     options->latlon_mode=1;
                 } else {
-                    printf("ERROR %s: wrong mode given in option -l\n",grib_tool_name);
+                    fprintf(stderr, "Error %s: wrong mode given in option -l\n",grib_tool_name);
                     exit(1);
                 }
             }
@@ -332,6 +332,16 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             printf("\n}");
         }
     }
+
+    if (options->json_output) {
+        if (!first_handle && options->handle_count>1) {
+            fprintf(stdout,",\n");
+        }
+        if (options->json_output && first_handle) {
+            fprintf(stdout,"{ \"messages\" : [ \n");
+            first_handle=0;
+        }
+    }
     new_handle="\n,";
     return 0;
 }
@@ -381,6 +391,8 @@ int grib_tool_finalise_action(grib_runtime_options* options)
             }
         }
     }
+    
+    if (options->json_output) fprintf(stdout,"\n]}\n");
 
     if (nearest) grib_nearest_delete(nearest);
     if (json_latlon) printf("\n]\n");
@@ -390,6 +402,14 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
 int grib_no_handle_action(grib_runtime_options* options, int err)
 {
-  fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
-  return 0;
+    if (options->json_output){
+        if (first_handle) {
+            fprintf(dump_file,"{ \"messages\" : [ \n");
+            first_handle=0;
+        } else {
+            fprintf(dump_file,",\n");
+        }
+    }
+    fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
+    return 0;
 }

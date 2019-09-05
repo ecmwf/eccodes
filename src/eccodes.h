@@ -1041,6 +1041,11 @@ int codes_get_gribex_mode(codes_context* c);
 */
 void codes_gribex_mode_off(codes_context* c);
 
+
+void codes_bufr_multi_element_constant_arrays_on(codes_context* c);
+void codes_bufr_multi_element_constant_arrays_off(codes_context* c);
+/*int  codes_get_bufr_multi_element_constant_arrays(codes_context* c);*/
+
 /**
  * Sets the search path for definition files.
  *
@@ -1209,6 +1214,8 @@ void codes_get_reduced_row_p(long pl, double lon_first, double lon_last, long *n
 int codes_get_message_offset(codes_handle* h,off_t* offset);
 int codes_get_message_size(codes_handle* h,size_t* size);
 int codes_get_product_kind(codes_handle* h, ProductKind* product_kind);
+int codes_check_message_header(const void* bytes, size_t length, ProductKind product);
+int codes_check_message_footer(const void* bytes, size_t length, ProductKind product);
 
 codes_box* codes_box_new(codes_handle* h,int* error);
 codes_points* codes_box_get_points(codes_box *box,double north, double west,double south,double east, int *err);
@@ -1400,5 +1407,7 @@ Error codes returned by the eccodes functions.
 #define CODES_OUT_OF_RANGE		GRIB_OUT_OF_RANGE
 /** Size of bitmap is incorrect */
 #define CODES_WRONG_BITMAP_SIZE		GRIB_WRONG_BITMAP_SIZE
+/** Functionality not enabled */
+#define CODES_FUNCTIONALITY_NOT_ENABLED		GRIB_FUNCTIONALITY_NOT_ENABLED
 /*! @}*/
 #endif

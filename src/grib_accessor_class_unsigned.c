@@ -242,8 +242,8 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t *len, in
                             "Key \"%s\": Trying to encode a negative value of %ld for key of type unsigned\n", a->name, v);
                     return GRIB_ENCODING_ERROR;
                 }
-                if (nbits < 32) {
-                    unsigned long maxval = (1 << nbits)-1;
+                if (nbits < 33) {
+                    unsigned long maxval = (1UL << nbits)-1;
                     if (v > maxval) {
                         grib_context_log(a->context, GRIB_LOG_ERROR,
                                 "Key \"%s\": Trying to encode value of %ld but the maximum allowable value is %ld (number of bits=%ld)\n",

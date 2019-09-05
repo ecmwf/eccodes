@@ -21,7 +21,7 @@ grib_option grib_options[]={
         {"F:",0,0,1,1,"%g"},
         {"P:",0,0,0,1,0},
         {"w:",0,0,0,1,0},
-/*      {"j",0,"JSON output\n",0,1,0}, */
+        {"j",0,"JSON output\n",0,1,0},
 /*      {"B:",0,0,0,1,0},              */
         {"s:",0,0,0,1,0},
         {"n:",0,0,1,1,"ls"},
@@ -42,6 +42,7 @@ const char* grib_tool_description="List content of BUFR files printing values of
         "\n\tIt does not fail when a key is not found.";
 const char* grib_tool_name="bufr_ls";
 const char* grib_tool_usage="[options] bufr_file bufr_file ...";
+static int first_handle=1;
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
@@ -101,6 +102,15 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
         if( err != GRIB_SUCCESS && options->fail) exit(err);
     }
+    if (options->json_output) {
+        if (!first_handle && options->handle_count>1) {
+            fprintf(stdout,",\n");
+        }
+        if (options->json_output && first_handle) {
+            fprintf(stdout,"{ \"messages\" : [ \n");
+            first_handle=0;
+        }
+    }
 
     return 0;
 }
@@ -124,11 +134,20 @@ void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
 /* This is executed after the last message in the last file is processed */
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
+    if (options->json_output) fprintf(stdout,"\n]}\n");
     return 0;
 }
 
 int grib_no_handle_action(grib_runtime_options* options, int err)
 {
+    if (options->json_output){
+        if (first_handle) {
+            fprintf(dump_file,"{ \"messages\" : [ \n");
+            first_handle=0;
+        } else {
+            fprintf(dump_file,",\n");
+        }
+    }
     fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n");
     return 0;
 }

@@ -155,7 +155,7 @@ static void dump_long(grib_dumper* d,grib_accessor* a,const char* comment)
 
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0){
         fprintf(self->dumper.out,"  ");
-        fprintf(self->dumper.out,"# type %s \n",a->creator->op);
+        fprintf(self->dumper.out,"# type %s (int)\n",a->creator->op);
     }
 
     if (size>1) {
@@ -290,7 +290,7 @@ static void dump_double(grib_dumper* d,grib_accessor* a,const char* comment)
 
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(self->dumper.out,"  ");
-        fprintf(self->dumper.out,"# type %s \n",a->creator->op);
+        fprintf(self->dumper.out,"# type %s (double)\n",a->creator->op);
     }
 
     aliases(d,a);
@@ -353,7 +353,7 @@ static void dump_string_array(grib_dumper* d,grib_accessor* a,const char* commen
 
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(self->dumper.out,"  ");
-        fprintf(self->dumper.out,"# type %s \n",a->creator->op);
+        fprintf(self->dumper.out,"# type %s (str)\n",a->creator->op);
     }
 
     aliases(d,a);
@@ -417,7 +417,7 @@ static void dump_string(grib_dumper* d,grib_accessor* a,const char* comment)
 
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {
         fprintf(self->dumper.out,"  ");
-        fprintf(self->dumper.out,"# type %s \n",a->creator->op);
+        fprintf(self->dumper.out,"# type %s (str)\n",a->creator->op);
     }
 
     aliases(d,a);
@@ -541,13 +541,19 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         dump_double(d,a,NULL);
         return ;
     }
+
     buf = (double*)grib_context_malloc(d->handle->context,size * sizeof(double));
 
     print_offset(self->dumper.out,d,a);
 
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {
+        char type_name[32]="";
+        const long native_type = grib_accessor_get_native_type(a);
+        if      (native_type == GRIB_TYPE_LONG)   strcpy(type_name, "(int)");
+        else if (native_type == GRIB_TYPE_DOUBLE) strcpy(type_name, "(double)");
+        else if (native_type == GRIB_TYPE_STRING) strcpy(type_name, "(str)");
         fprintf(self->dumper.out,"  ");
-        fprintf(self->dumper.out,"# type %s \n",a->creator->op);
+        fprintf(self->dumper.out,"# type %s %s\n",a->creator->op, type_name);
     }
 
     aliases(d,a);

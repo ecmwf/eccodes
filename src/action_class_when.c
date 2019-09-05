@@ -168,9 +168,14 @@ static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* 
     grib_action *b = NULL;
     int ret = GRIB_SUCCESS;
     long lres;
-    grib_handle* hand = grib_handle_of_accessor(observed);
 
-    if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(observed), self->expression,&lres))
+    /* ECC-974: observed->parent will change as a result of the execute
+     * so must store the handle once here (in 'hand') rather than call
+     * grib_handle_of_accessor(observed) later
+     */
+    grib_handle* hand=grib_handle_of_accessor(observed);
+
+    if ((ret = grib_expression_evaluate_long(hand, self->expression,&lres))
             != GRIB_SUCCESS) return ret;
 #ifdef CHECK_LOOP
     if(self->loop)

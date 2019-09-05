@@ -22,14 +22,14 @@ grib_option grib_options[]={
                 "\n\t\tDefault mode is structure.\n",
                 1,1,"s"},
         {"D:","filter|fortran|python|C","\n\t\tDecoding dump. Provides instructions to decode the input message."
-                "\n\t\tOptions: filter  -> filter instructions file to decode input BUFR"
+                "\n\t\tOptions: filter  -> filter instructions file to decode input BUFR (for bufr_filter)"
                 "\n\t\t         fortran -> fortran program to decode the input BUFR"
                 "\n\t\t         python  -> python script to decode the input BUFR"
                 "\n\t\t         C       -> C program to decode the input BUFR"
                 "\n\t\tDefault mode is filter.\n",
                 0,1,"filter"},
         {"E:","filter|fortran|python|C","\n\t\tEncoding dump. Provides instructions to create the input message."
-                "\n\t\tOptions: filter  -> filter instructions file to encode input BUFR"
+                "\n\t\tOptions: filter  -> filter instructions file to encode input BUFR (for bufr_filter)"
                 "\n\t\t         fortran -> fortran program to encode the input BUFR"
                 "\n\t\t         python  -> python script to encode the input BUFR"
                 "\n\t\t         C       -> C program to encode the input BUFR"
@@ -139,6 +139,11 @@ int grib_tool_init(grib_runtime_options* options)
         json=0;
     }
     if (grib_options_on("E:")) {
+        grib_context *c = grib_context_get_default();
+        if (c->bufr_multi_element_constant_arrays) {
+            grib_context_log(c, GRIB_LOG_ERROR, "Code generation for encoding is not implemented when ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS is enabled");
+            exit(1);
+        }
         options->dump_mode = grib_options_get_option("E:");
         check_code_gen_dump_mode(options->dump_mode);
         json=0;

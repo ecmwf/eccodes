@@ -123,6 +123,8 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
 
     /* Write out the message to the output file */
     CODES_CHECK(grib_get_message(finalh, &buffer, &size),0);
+    CODES_CHECK(codes_check_message_header(buffer,size,PRODUCT_GRIB),0);
+    CODES_CHECK(codes_check_message_footer(buffer,size,PRODUCT_GRIB),0);
     if(fwrite(buffer,1,size,out) != size) {
         assert(0);
     }
@@ -225,6 +227,8 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
 
     /* Write out the message to the output file */
     CODES_CHECK(codes_get_message(finalh, &buffer, &size),0);
+    CODES_CHECK(codes_check_message_header(buffer,size,PRODUCT_GRIB),0);
+    CODES_CHECK(codes_check_message_footer(buffer,size,PRODUCT_GRIB),0);
     if(fwrite(buffer,1,size,out) != size) {
         assert(0);
     }

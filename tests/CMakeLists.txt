@@ -10,11 +10,12 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 # Build the executables used by test scripts
 ################################################
 list( APPEND test_bins
+      bpv_limit
       grib_double_cmp
       read_any
       julian
       index
-      multi_from_message
+      grib_multi_from_message
       read_index
       unit_tests
       bufr_keys_iter
@@ -54,6 +55,8 @@ list( APPEND tests_no_data_reqd
     grib_uerra
     grib_2nd_order_numValues
     grib_ecc-136
+    grib_ecc-967
+    grib_ecc-979
     julian
     bufr_dump_samples
     bufr_json_samples
@@ -65,6 +68,7 @@ list( APPEND tests_no_data_reqd
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
+    bpv_limit
     grib_double_cmp
     grib_change_packing
     bufr_dump_data
@@ -83,10 +87,12 @@ list( APPEND tests_data_reqd
     bufr_filter_extract_area
     bufr_json_data
     bufr_ls
+    bufr_ls_json
     bufr_change_edition
     bufr_keys_iter
     bufr_get_element
     bufr_wmo_tables
+    bufr_ecc-428
     bufr_ecc-197
     bufr_ecc-286
     bufr_ecc-288
@@ -98,6 +104,7 @@ list( APPEND tests_data_reqd
     bufr_ecc-393
     bufr_ecc-433
     bufr_ecc-750
+    bufr_ecc-765
     bufr_ecc-875
     bufr_ecc-887
     grib_ecc-490
@@ -105,6 +112,7 @@ list( APPEND tests_data_reqd
     grib_ecc-873
     grib_ecc-600
     grib_ecc-923
+    grib_ecc-984
     bufr_ecc-556
     gts_get
     gts_ls
@@ -128,6 +136,7 @@ list( APPEND tests_data_reqd
     grib3_templates
     badgrib
     grib_ls
+    grib_ls_json
     grib_filter
     grib_multi
     budg
@@ -135,7 +144,7 @@ list( APPEND tests_data_reqd
     grib_octahedral
     grib_global
     grib_concept
-    decimalPrecision
+    grib_decimalPrecision
     grib_bitsPerValue
     get_fail
     grib_missing
@@ -148,9 +157,9 @@ list( APPEND tests_data_reqd
     grib_level
     index
     grib_bitmap
-    list
+    grib_list
     grib_second_order
-    multi_from_message
+    grib_multi_from_message
     grib_change_scanning
     grib_statistics
     grib_tigge

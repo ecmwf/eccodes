@@ -374,6 +374,13 @@ int codes_f_bufr_copy_data(int* gid1,int* gid2);
 int codes_f_bufr_copy_data_(int* gid1,int* gid2);
 int codes_f_bufr_copy_data__(int* gid1,int* gid2);
 
+int codes_f_bufr_multi_element_constant_arrays_on_(void);
+int codes_f_bufr_multi_element_constant_arrays_on__(void);
+int codes_f_bufr_multi_element_constant_arrays_on(void);
+int codes_f_bufr_multi_element_constant_arrays_off_(void);
+int codes_f_bufr_multi_element_constant_arrays_off__(void);
+int codes_f_bufr_multi_element_constant_arrays_off(void);
+
 int grib_f_set_definitions_path_(char *path, int len);
 int grib_f_set_definitions_path__(char *path, int len);
 int grib_f_set_definitions_path(char *path, int len);

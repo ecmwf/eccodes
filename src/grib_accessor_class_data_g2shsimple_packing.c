@@ -137,84 +137,82 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
-  grib_accessor_data_g2shsimple_packing *self =(grib_accessor_data_g2shsimple_packing*)a;
+    grib_accessor_data_g2shsimple_packing *self =(grib_accessor_data_g2shsimple_packing*)a;
 
-  self->numberOfValues  = grib_arguments_get_name(grib_handle_of_accessor(a),args,2);
-  a->flags |= GRIB_ACCESSOR_FLAG_DATA;
+    self->numberOfValues  = grib_arguments_get_name(grib_handle_of_accessor(a),args,2);
+    a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
 static int value_count(grib_accessor* a,long* len)
 {
-  grib_accessor_data_g2shsimple_packing *self =(grib_accessor_data_g2shsimple_packing*)a;
-  *len = 0;
-  return grib_get_long(grib_handle_of_accessor(a),self->numberOfValues,len);
+    grib_accessor_data_g2shsimple_packing *self =(grib_accessor_data_g2shsimple_packing*)a;
+    *len = 0;
+    return grib_get_long(grib_handle_of_accessor(a),self->numberOfValues,len);
 }
 
-
-static int  unpack_double(grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  grib_accessor_data_g2shsimple_packing* self =  (grib_accessor_data_g2shsimple_packing*)a;
-  int err =  GRIB_SUCCESS;
+    grib_accessor_data_g2shsimple_packing* self =  (grib_accessor_data_g2shsimple_packing*)a;
+    int err =  GRIB_SUCCESS;
 
-  size_t n_vals = 0;
+    size_t n_vals = 0;
 
-  if((err = grib_get_size(grib_handle_of_accessor(a),self->coded_values,&n_vals)) != GRIB_SUCCESS)
-    return err;
+    if((err = grib_get_size(grib_handle_of_accessor(a),self->coded_values,&n_vals)) != GRIB_SUCCESS)
+        return err;
 
-  self->dirty=0;
+    self->dirty=0;
 
     /* n_vals = coded_n_vals+1; */
 
-  if(*len < n_vals)
-  {
-    *len = n_vals;
-    return GRIB_ARRAY_TOO_SMALL;
-  }
+    if(*len < n_vals)
+    {
+        *len = n_vals;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
 
-  if((err = grib_get_double_internal(grib_handle_of_accessor(a),self->real_part,val)) != GRIB_SUCCESS)
+    if((err = grib_get_double_internal(grib_handle_of_accessor(a),self->real_part,val)) != GRIB_SUCCESS)
+        return err;
+
+    val++;
+
+    if((err = grib_get_double_array_internal(grib_handle_of_accessor(a),self->coded_values,val,&n_vals)) != GRIB_SUCCESS)
+        return err;
+
+    *len =  n_vals;
+
     return err;
-
-  val++;
-
-  if((err = grib_get_double_array_internal(grib_handle_of_accessor(a),self->coded_values,val,&n_vals)) != GRIB_SUCCESS)
-    return err;
-
-  *len =  n_vals;
-
-  return err;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-  grib_accessor_data_g2shsimple_packing* self =  (grib_accessor_data_g2shsimple_packing*)a;
-  int err =  GRIB_SUCCESS;
+    grib_accessor_data_g2shsimple_packing* self =  (grib_accessor_data_g2shsimple_packing*)a;
+    int err =  GRIB_SUCCESS;
 
-  size_t coded_n_vals = *len-1;
-  size_t n_vals = *len;
+    size_t coded_n_vals = *len-1;
+    size_t n_vals = *len;
 
-  if (*len ==0) return GRIB_NO_VALUES;
+    if (*len ==0) return GRIB_NO_VALUES;
 
-  self->dirty=1;
+    self->dirty=1;
 
-  if((err = grib_set_double_internal(grib_handle_of_accessor(a),self->real_part,*val)) != GRIB_SUCCESS)
-    return err;
-  {
-    /* Make sure we can decode it again */
-    double ref = 1e-100;
-    grib_get_double_internal(grib_handle_of_accessor(a),self->real_part,&ref);
-    Assert(ref == *val);
-  }
+    if((err = grib_set_double_internal(grib_handle_of_accessor(a),self->real_part,*val)) != GRIB_SUCCESS)
+        return err;
+    {
+        /* Make sure we can decode it again */
+        double ref = 1e-100;
+        grib_get_double_internal(grib_handle_of_accessor(a),self->real_part,&ref);
+        Assert(ref == *val);
+    }
 
-  val++;
+    val++;
 
-  if((err = grib_set_double_array_internal(grib_handle_of_accessor(a),self->coded_values,val,coded_n_vals)) != GRIB_SUCCESS)
-    return err;
+    if((err = grib_set_double_array_internal(grib_handle_of_accessor(a),self->coded_values,val,coded_n_vals)) != GRIB_SUCCESS)
+        return err;
 
-  *len =  n_vals;
+    *len =  n_vals;
 
     if((err = grib_set_long_internal(grib_handle_of_accessor(a),self->numberOfValues,(long)n_vals)) != GRIB_SUCCESS)
+        return err;
+
     return err;
-
-  return err;
 }
-

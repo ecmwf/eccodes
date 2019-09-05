@@ -141,86 +141,83 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len, grib_arguments* params) {
 
-  char* key;
-  grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
-  key = (char*)grib_arguments_get_name(grib_handle_of_accessor(a),params,0);
-  self->data_accessor=grib_find_accessor(grib_handle_of_accessor(a),key);
+    char* key;
+    grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
+    key = (char*)grib_arguments_get_name(grib_handle_of_accessor(a),params,0);
+    self->data_accessor=grib_find_accessor(grib_handle_of_accessor(a),key);
 
-  a->length = 0;
+    a->length = 0;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-    return;
 }
 
 static int unpack_string_array (grib_accessor* a, char** buffer, size_t *len)
 {
-  grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
-  grib_accessor* data=(grib_accessor*)self->data_accessor;
+    grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
+    grib_accessor* data=(grib_accessor*)self->data_accessor;
 
-  return grib_unpack_double(data,0,0);
+    return grib_unpack_double(data,0,0);
 }
 
 static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
 {
-  grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
-  grib_accessor* data=(grib_accessor*)self->data_accessor;
+    grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
+    grib_accessor* data=(grib_accessor*)self->data_accessor;
 
-  return grib_unpack_double(data,0,0);
+    return grib_unpack_double(data,0,0);
 }
 
 static int unpack_long (grib_accessor* a, long* val, size_t *len)
 {
-  grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
-  grib_accessor* data=(grib_accessor*)self->data_accessor;
+    grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
+    grib_accessor* data=(grib_accessor*)self->data_accessor;
 
-  return grib_unpack_double(data,0,0);
+    return grib_unpack_double(data,0,0);
 }
 
 static int unpack_double (grib_accessor* a, double* val, size_t *len)
 {
-  grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
-  grib_accessor* data=(grib_accessor*)self->data_accessor;
+    grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
+    grib_accessor* data=(grib_accessor*)self->data_accessor;
 
-  return grib_unpack_double(data,0,0);
+    return grib_unpack_double(data,0,0);
 }
 
 static int value_count(grib_accessor* a,long* count)
 {
-  *count=1;
-  return 0;
+    *count=1;
+    return 0;
 }
 
 static void destroy(grib_context* context,grib_accessor* a)
 {
-    return;
 }
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_LONG;
-}
-
-static int    pack_long   (grib_accessor* a, const long* val, size_t *len)
+static int  get_native_type(grib_accessor* a)
 {
-  int unpackMode=CODES_BUFR_UNPACK_STRUCTURE;
-  grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
-  grib_accessor* data=(grib_accessor*)self->data_accessor;
-
-  if (*val==2) unpackMode=CODES_BUFR_UNPACK_FLAT;
-  if (*val==3) unpackMode=CODES_BUFR_NEW_DATA;
-
-  accessor_bufr_data_array_set_unpackMode(data,unpackMode);
-
-  return grib_unpack_double(data,0,0);
+    return GRIB_TYPE_LONG;
 }
 
-
-static int    pack_double   (grib_accessor* a, const double* val, size_t *len)
+static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
-  grib_accessor* data=(grib_accessor*)self->data_accessor;
+    int unpackMode=CODES_BUFR_UNPACK_STRUCTURE;
+    grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
+    grib_accessor* data=(grib_accessor*)self->data_accessor;
 
-  return grib_unpack_double(data,0,0);
+    if (*val==2) unpackMode=CODES_BUFR_UNPACK_FLAT;
+    if (*val==3) unpackMode=CODES_BUFR_NEW_DATA;
+
+    accessor_bufr_data_array_set_unpackMode(data,unpackMode);
+
+    return grib_unpack_double(data,0,0);
 }
 
+static int pack_double(grib_accessor* a, const double* val, size_t *len)
+{
+    grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
+    grib_accessor* data=(grib_accessor*)self->data_accessor;
+
+    return grib_unpack_double(data,0,0);
+}

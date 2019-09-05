@@ -139,93 +139,90 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_julian_day* self = (grib_accessor_julian_day*)a;
-  int n=0;
+    grib_accessor_julian_day* self = (grib_accessor_julian_day*)a;
+    int n=0;
 
-  self->date = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->hour = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->minute = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->second = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->date = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->hour = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->minute = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->second = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 
-  a->length=0;
+    a->length=0;
 }
-
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_string(dumper,a,NULL);
+    grib_dump_string(dumper,a,NULL);
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  const double v=*val;
-  return pack_double(a,&v,len);
+    const double v=*val;
+    return pack_double(a,&v,len);
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-  grib_accessor_julian_day* self = (grib_accessor_julian_day*)a;
-  int ret=0;
-  long hour=0;
-  long minute=0;
-  long second=0;
-  long date=0;
-  long year,month,day;
-  
-  ret=grib_julian_to_datetime(*val,&year,&month,&day,&hour,&minute,&second);
-  if (ret!=0) return ret;
+    grib_accessor_julian_day* self = (grib_accessor_julian_day*)a;
+    int ret=0;
+    long hour=0;
+    long minute=0;
+    long second=0;
+    long date=0;
+    long year,month,day;
 
-  date=year * 10000 + month * 100 + day;
+    ret=grib_julian_to_datetime(*val,&year,&month,&day,&hour,&minute,&second);
+    if (ret!=0) return ret;
 
-  ret=grib_set_long_internal(grib_handle_of_accessor(a),self->date,date);
-  if (ret!=0) return ret;
-  ret=grib_set_long_internal(grib_handle_of_accessor(a),self->hour,hour);
-  if (ret!=0) return ret;
-  ret=grib_set_long_internal(grib_handle_of_accessor(a),self->minute,minute);
-  if (ret!=0) return ret;
-  ret=grib_set_long_internal(grib_handle_of_accessor(a),self->second,second);
+    date=year * 10000 + month * 100 + day;
 
-  return ret;
+    ret=grib_set_long_internal(grib_handle_of_accessor(a),self->date,date);
+    if (ret!=0) return ret;
+    ret=grib_set_long_internal(grib_handle_of_accessor(a),self->hour,hour);
+    if (ret!=0) return ret;
+    ret=grib_set_long_internal(grib_handle_of_accessor(a),self->minute,minute);
+    if (ret!=0) return ret;
+    ret=grib_set_long_internal(grib_handle_of_accessor(a),self->second,second);
+
+    return ret;
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  int ret=0;
-  double v=0;
-  
-  ret=unpack_double(a,&v,len);
-  *val=(long)v;
+    int ret=0;
+    double v=0;
 
-  return ret;
+    ret=unpack_double(a,&v,len);
+    *val=(long)v;
+
+    return ret;
 }
 
-static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  int ret=0;
-  long date,hour,minute,second;
-  long year,month,day;
-  grib_accessor_julian_day* self = (grib_accessor_julian_day*)a;
+    int ret=0;
+    long date,hour,minute,second;
+    long year,month,day;
+    grib_accessor_julian_day* self = (grib_accessor_julian_day*)a;
 
-  ret=grib_get_long_internal(grib_handle_of_accessor(a),self->date,&date);
-  if (ret!=GRIB_SUCCESS) return ret;
-  ret=grib_get_long_internal(grib_handle_of_accessor(a),self->hour,&hour);
-  if (ret!=GRIB_SUCCESS) return ret;
-  ret=grib_get_long_internal(grib_handle_of_accessor(a),self->minute,&minute);
-  if (ret!=GRIB_SUCCESS) return ret;
-  ret=grib_get_long_internal(grib_handle_of_accessor(a),self->second,&second);
-  if (ret!=GRIB_SUCCESS) return ret;
+    ret=grib_get_long_internal(grib_handle_of_accessor(a),self->date,&date);
+    if (ret!=GRIB_SUCCESS) return ret;
+    ret=grib_get_long_internal(grib_handle_of_accessor(a),self->hour,&hour);
+    if (ret!=GRIB_SUCCESS) return ret;
+    ret=grib_get_long_internal(grib_handle_of_accessor(a),self->minute,&minute);
+    if (ret!=GRIB_SUCCESS) return ret;
+    ret=grib_get_long_internal(grib_handle_of_accessor(a),self->second,&second);
+    if (ret!=GRIB_SUCCESS) return ret;
 
-  year = date / 10000;
-  date %= 10000;
-  month  = date / 100;
-  date %= 100;
-  day = date;
+    year = date / 10000;
+    date %= 10000;
+    month  = date / 100;
+    date %= 100;
+    day = date;
 
-  ret=grib_datetime_to_julian(year,month,day,hour,minute,second,val);
+    ret=grib_datetime_to_julian(year,month,day,hour,minute,second,val);
 
-  return ret;
+    return ret;
 }
-

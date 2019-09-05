@@ -57,5 +57,6 @@ result1=`${tools_dir}/bufr_get -p numberOfSubsets $f`
 result2=`cat $f | ${tools_dir}/bufr_get -p numberOfSubsets -`
 [ "$result1" = "$result2" ]
 
+
 rm -f $fLog $res_ls 
 rm -f $fTmp

@@ -3472,6 +3472,31 @@ int grib_f_multi_append__(int* ingid, int* sec,int* mgid) {
     return grib_f_multi_append_(ingid, sec, mgid);
 }
 
+
+/*****************************************************************************/
+int codes_f_bufr_multi_element_constant_arrays_on_() {
+    codes_bufr_multi_element_constant_arrays_on(NULL);
+    return GRIB_SUCCESS;
+}
+int codes_f_bufr_multi_element_constant_arrays_on__() {
+    return codes_f_bufr_multi_element_constant_arrays_on_();
+}
+int codes_f_bufr_multi_element_constant_arrays_on() {
+    return codes_f_bufr_multi_element_constant_arrays_on_();
+}
+
+int codes_f_bufr_multi_element_constant_arrays_off_() {
+    codes_bufr_multi_element_constant_arrays_off(NULL);
+    return GRIB_SUCCESS;
+}
+int codes_f_bufr_multi_element_constant_arrays_off__() {
+    return codes_f_bufr_multi_element_constant_arrays_off_();
+}
+int codes_f_bufr_multi_element_constant_arrays_off() {
+    return codes_f_bufr_multi_element_constant_arrays_off_();
+}
+
+
 /*****************************************************************************/
 int grib_f_set_definitions_path_(char* path, int len){
     grib_context* c = grib_context_get_default();

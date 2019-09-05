@@ -138,38 +138,35 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_octect_number* self = (grib_accessor_octect_number*)a;
-  int n = 0;
+    grib_accessor_octect_number* self = (grib_accessor_octect_number*)a;
+    int n = 0;
 
-  self->left    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->right   = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
+    self->left    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->right   = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
 
-  a->length=0;
+    a->length=0;
 }
 
 static int  unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  grib_accessor_octect_number* self = (grib_accessor_octect_number*)a;
-  int ret = 0;
-  long offset;
+    grib_accessor_octect_number* self = (grib_accessor_octect_number*)a;
+    int ret = 0;
+    long offset;
 
-  offset=a->offset+self->right;
+    offset=a->offset+self->right;
 
-  /*printf("-------- setting %s to %ld\n", self->left,offset);*/
+    /*printf("-------- setting %s to %ld\n", self->left,offset);*/
+    if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->left,offset)) != GRIB_SUCCESS)
+        return ret;
 
-  if((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->left,offset)) != GRIB_SUCCESS)
+    *val = offset;
+
+    *len =1;
+
     return ret;
-
-  *val = offset;
-
-  *len =1;
-
-  return ret;
 }
-
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  return 0;
+    return 0;
 }
-

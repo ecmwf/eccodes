@@ -141,6 +141,7 @@ GRIB_ATTRIBUTE_NOT_FOUND = _gribapi_swig.GRIB_ATTRIBUTE_NOT_FOUND
 GRIB_UNSUPPORTED_EDITION = _gribapi_swig.GRIB_UNSUPPORTED_EDITION
 GRIB_OUT_OF_RANGE = _gribapi_swig.GRIB_OUT_OF_RANGE
 GRIB_WRONG_BITMAP_SIZE = _gribapi_swig.GRIB_WRONG_BITMAP_SIZE
+GRIB_FUNCTIONALITY_NOT_ENABLED = _gribapi_swig.GRIB_FUNCTIONALITY_NOT_ENABLED
 class intp(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, intp, name, value)
@@ -437,6 +438,14 @@ grib_c_gribex_mode_on = _gribapi_swig.grib_c_gribex_mode_on
 def grib_c_gribex_mode_off():
   return _gribapi_swig.grib_c_gribex_mode_off()
 grib_c_gribex_mode_off = _gribapi_swig.grib_c_gribex_mode_off
+
+def codes_c_bufr_multi_element_constant_arrays_on():
+  return _gribapi_swig.codes_c_bufr_multi_element_constant_arrays_on()
+codes_c_bufr_multi_element_constant_arrays_on = _gribapi_swig.codes_c_bufr_multi_element_constant_arrays_on
+
+def codes_c_bufr_multi_element_constant_arrays_off():
+  return _gribapi_swig.codes_c_bufr_multi_element_constant_arrays_off()
+codes_c_bufr_multi_element_constant_arrays_off = _gribapi_swig.codes_c_bufr_multi_element_constant_arrays_off
 
 def grib_c_keys_iterator_next(*args):
   return _gribapi_swig.grib_c_keys_iterator_next(*args)

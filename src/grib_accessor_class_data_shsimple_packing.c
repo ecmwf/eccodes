@@ -136,50 +136,46 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
-  grib_accessor_data_shsimple_packing *self =(grib_accessor_data_shsimple_packing*)a;
+    grib_accessor_data_shsimple_packing *self =(grib_accessor_data_shsimple_packing*)a;
 
-  self->coded_values  = grib_arguments_get_name(grib_handle_of_accessor(a),args,0);
-  self->real_part        = grib_arguments_get_name(grib_handle_of_accessor(a),args,1);
-  a->flags |= GRIB_ACCESSOR_FLAG_DATA;
+    self->coded_values  = grib_arguments_get_name(grib_handle_of_accessor(a),args,0);
+    self->real_part        = grib_arguments_get_name(grib_handle_of_accessor(a),args,1);
+    a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 
-  a->length = 0;
+    a->length = 0;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_values(dumper,a);
+    grib_dump_values(dumper,a);
 }
-
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-  grib_accessor_data_shsimple_packing* self =  (grib_accessor_data_shsimple_packing*)a;
-  int err =  GRIB_SUCCESS;
+    grib_accessor_data_shsimple_packing* self =  (grib_accessor_data_shsimple_packing*)a;
+    int err =  GRIB_SUCCESS;
 
-  size_t coded_n_vals = *len-1;
-  size_t n_vals = *len;
+    size_t coded_n_vals = *len-1;
+    size_t n_vals = *len;
 
-  self->dirty=1;
+    self->dirty=1;
 
-  if (*len ==0) return GRIB_NO_VALUES;
+    if (*len ==0) return GRIB_NO_VALUES;
 
-  if((err = grib_set_double_internal(grib_handle_of_accessor(a),self->real_part,*val)) != GRIB_SUCCESS)
+    if((err = grib_set_double_internal(grib_handle_of_accessor(a),self->real_part,*val)) != GRIB_SUCCESS)
+        return err;
+
+    val++;
+
+    if((err = grib_set_double_array_internal(grib_handle_of_accessor(a),self->coded_values,val,coded_n_vals)) != GRIB_SUCCESS)
+        return err;
+
+    *len =  n_vals;
+
     return err;
-
-
-  val++;
-
-  if((err = grib_set_double_array_internal(grib_handle_of_accessor(a),self->coded_values,val,coded_n_vals)) != GRIB_SUCCESS)
-  return err;
-
-
-  *len =  n_vals;
-
-  return err;
-
 }
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_DOUBLE;
+static int  get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_DOUBLE;
 }
-

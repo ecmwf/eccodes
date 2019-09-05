@@ -22,6 +22,9 @@ int codes_c_bufr_keys_iterator_get_name(int *iterid, char *name, int len);
 int codes_c_bufr_keys_iterator_rewind(int *kiter);
 int codes_c_bufr_keys_iterator_delete(int *iterid);
 
+int codes_c_bufr_multi_element_constant_arrays_off(void);
+int codes_c_bufr_multi_element_constant_arrays_on(void);
+
 int grib_c_gribex_mode_on(void);
 int grib_c_gribex_mode_off(void);
 int grib_c_skip_computed(int *iterid);

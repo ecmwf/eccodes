@@ -80,24 +80,36 @@ int grib_print(grib_handle* h, const char* name, grib_dumper *d ){
     return GRIB_NOT_FOUND;
 }
 
-void grib_dump_content(grib_handle* h, FILE* f,const char* mode,unsigned long option_flags,void *data)
+void grib_dump_content(grib_handle* h, FILE* f,const char* mode,unsigned long flags,void *data)
 {
     grib_dumper *dumper;
-    dumper = grib_dumper_factory(mode?mode:"serialize",h,f,option_flags,data);
+    dumper = grib_dumper_factory(mode?mode:"serialize", h, f, flags, data);
     grib_dump_header(dumper,h);
     grib_dump_accessors_block(dumper,h->root->block);
     grib_dump_footer(dumper,h);
     grib_dumper_delete(dumper);
 }
 
-grib_dumper* grib_dump_content_with_dumper(grib_handle* h, grib_dumper* dumper, FILE* f,const char* mode,unsigned long option_flags,void *data)
+void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long flags, void *data, const char **keys, size_t num_keys)
+{
+    size_t i;
+    grib_accessor* acc = NULL;
+    grib_dumper* dumper = grib_dumper_factory(mode?mode:"serialize", h, f, flags, data);
+    for(i=0; i<num_keys;++i) {
+        acc = grib_find_accessor(h, keys[i]);
+        if (acc) grib_accessor_dump(acc, dumper);
+    }
+    grib_dumper_delete(dumper);
+}
+
+grib_dumper* grib_dump_content_with_dumper(grib_handle* h, grib_dumper* dumper, FILE* f,const char* mode,unsigned long flags,void *data)
 {
     long count=1;
     if (dumper!=NULL) {
       count=dumper->count;
       count++;
     }
-    dumper = grib_dumper_factory(mode?mode:"serialize",h,f,option_flags,data);
+    dumper = grib_dumper_factory(mode?mode:"serialize", h, f, flags, data);
     if (!dumper) return NULL;
     dumper->count=count;
 
@@ -107,11 +119,11 @@ grib_dumper* grib_dump_content_with_dumper(grib_handle* h, grib_dumper* dumper, 
     return dumper;
 }
 
-void codes_dump_bufr_flat(grib_accessors_list* al,grib_handle* h, FILE* f,const char* mode,unsigned long option_flags,void *data)
+void codes_dump_bufr_flat(grib_accessors_list* al,grib_handle* h, FILE* f,const char* mode,unsigned long flags,void *data)
 {
     grib_dumper* dumper = NULL;
     Assert(h->product_kind == PRODUCT_BUFR);
-    dumper = grib_dumper_factory(mode?mode:"serialize",h,f,option_flags,data);
+    dumper = grib_dumper_factory(mode?mode:"serialize", h, f, flags, data);
     grib_dump_header(dumper,h);
     grib_dump_accessors_list(dumper,al);
     grib_dump_footer(dumper,h);

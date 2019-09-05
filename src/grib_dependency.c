@@ -141,6 +141,34 @@ int grib_dependency_notify_change(grib_accessor* observed)
     return ret;
 }
 
+/* This version takes in the handle so does not need to work it out from the 'observed' */
+/* See ECC-778 */
+int _grib_dependency_notify_change(grib_handle* h, grib_accessor* observed)
+{
+    grib_dependency *d = h->dependencies;
+    int ret = GRIB_SUCCESS;
+
+    /*Do a two pass mark&sweep, in case some dependencies are added while we notify*/
+    while(d)
+    {
+        d->run = (d->observed == observed && d->observer != 0);
+        d = d->next;
+    }
+
+    d = h->dependencies;
+    while(d)
+    {
+        if(d->run)
+        {
+            /*printf("grib_dependency_notify_change %s %s %p\n",observed->name,d->observer ? d->observer->name : "?", (void*)d->observer);*/
+            if( d->observer && (ret = grib_accessor_notify_change(d->observer,observed))
+                    != GRIB_SUCCESS) return ret;
+        }
+        d = d->next;
+    }
+    return ret;
+}
+
 void grib_dependency_remove_observer(grib_accessor* observer)
 {
     grib_handle     *h = handle_of(observer);

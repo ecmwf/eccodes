@@ -156,17 +156,18 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
     grib_accessor_local_definition* self = (grib_accessor_local_definition*)a;
+    grib_handle* hand=grib_handle_of_accessor(a);
     int n = 0;
 
-    self->grib2LocalSectionNumber = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->productDefinitionTemplateNumber = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->productDefinitionTemplateNumberInternal = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->type = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->stream = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->the_class = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->eps = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->stepType = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-    self->derivedForecast = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->grib2LocalSectionNumber = grib_arguments_get_name(hand,c,n++);
+    self->productDefinitionTemplateNumber = grib_arguments_get_name(hand,c,n++);
+    self->productDefinitionTemplateNumberInternal = grib_arguments_get_name(hand,c,n++);
+    self->type = grib_arguments_get_name(hand,c,n++);
+    self->stream = grib_arguments_get_name(hand,c,n++);
+    self->the_class = grib_arguments_get_name(hand,c,n++);
+    self->eps = grib_arguments_get_name(hand,c,n++);
+    self->stepType = grib_arguments_get_name(hand,c,n++);
+    self->derivedForecast = grib_arguments_get_name(hand,c,n++);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
@@ -179,6 +180,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
     grib_accessor_local_definition* self = (grib_accessor_local_definition*)a;
+    grib_handle* hand=grib_handle_of_accessor(a);
     long productDefinitionTemplateNumber=-1;
     long productDefinitionTemplateNumberInternal=-1;
     long productDefinitionTemplateNumberNew=-1;
@@ -199,25 +201,25 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     long derivedForecast=-1;
     long editionNumber = 0;
 
-    if (grib_get_long(grib_handle_of_accessor(a), "editionNumber", &editionNumber)==GRIB_SUCCESS) {
+    if (grib_get_long(hand, "editionNumber", &editionNumber)==GRIB_SUCCESS) {
         Assert(editionNumber != 1);
     }
 
-    if (grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
+    if (grib_get_long(hand, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
         tooEarly=1;
-    grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumberInternal,&productDefinitionTemplateNumberInternal);
-    grib_get_long(grib_handle_of_accessor(a), self->type,&type);
-    grib_get_long(grib_handle_of_accessor(a), self->stream,&stream);
-    grib_get_long(grib_handle_of_accessor(a), self->the_class,&the_class);
-    grib_get_long(grib_handle_of_accessor(a), self->eps,&eps);
-    grib_get_string(grib_handle_of_accessor(a), self->stepType,stepType,&slen);
+    grib_get_long(hand, self->productDefinitionTemplateNumberInternal,&productDefinitionTemplateNumberInternal);
+    grib_get_long(hand, self->type,&type);
+    grib_get_long(hand, self->stream,&stream);
+    grib_get_long(hand, self->the_class,&the_class);
+    grib_get_long(hand, self->eps,&eps);
+    grib_get_string(hand, self->stepType,stepType,&slen);
     if (!strcmp(stepType,"instant")) isInstant=1;
-    grib_get_long(grib_handle_of_accessor(a), self->grib2LocalSectionNumber,&grib2LocalSectionNumber);
-    grib_get_long(grib_handle_of_accessor(a), "is_chemical",&chemical);
-    grib_get_long(grib_handle_of_accessor(a), "is_chemical_distfn",&chemical_distfn);
-    grib_get_long(grib_handle_of_accessor(a), "is_aerosol",&aerosol);
-    grib_get_long(grib_handle_of_accessor(a), "is_aerosol_optical",&aerosol_optical);
-    if (chemical && aerosol) {
+    grib_get_long(hand, self->grib2LocalSectionNumber,&grib2LocalSectionNumber);
+    grib_get_long(hand, "is_chemical",&chemical);
+    grib_get_long(hand, "is_chemical_distfn",&chemical_distfn);
+    grib_get_long(hand, "is_aerosol",&aerosol);
+    grib_get_long(hand, "is_aerosol_optical",&aerosol_optical);
+    if (chemical==1 && aerosol==1) {
         grib_context_log(a->context,GRIB_LOG_ERROR,"Parameter cannot be both chemical and aerosol!");
         return GRIB_ENCODING_ERROR;
     }
@@ -383,14 +385,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
     if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
         if (tooEarly)
-            grib_set_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumberInternal,productDefinitionTemplateNumberNew);
+            grib_set_long(hand, self->productDefinitionTemplateNumberInternal,productDefinitionTemplateNumberNew);
         else
-            grib_set_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
+            grib_set_long(hand, self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
     }
     if (derivedForecast>=0)
-        grib_set_long(grib_handle_of_accessor(a), self->derivedForecast,derivedForecast);
+        grib_set_long(hand, self->derivedForecast,derivedForecast);
 
-    grib_set_long(grib_handle_of_accessor(a), self->grib2LocalSectionNumber,*val);
+    grib_set_long(hand, self->grib2LocalSectionNumber,*val);
 
   return 0;
 }
