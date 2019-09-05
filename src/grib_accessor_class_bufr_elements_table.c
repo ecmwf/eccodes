@@ -275,7 +275,7 @@ the_end:
     return dictionary;
 }
 
-static int convert_type(char* stype)
+static int convert_type(const char* stype)
 {
     int ret=BUFR_DESCRIPTOR_TYPE_UNKNOWN;
     switch (stype[0]) {
@@ -301,40 +301,37 @@ static int convert_type(char* stype)
     return ret;
 }
 
+static long atol_fast(const char *input)
+{
+    if(strcmp(input,"0")==0)
+        return 0;
+    return atol(input);
+}
 static int bufr_get_from_table(grib_accessor* a,bufr_descriptor* v)
 {
     int ret=0;
     char** list=0;
     char code[7]={0};
-    grib_context* c;
-    char* str=NULL;
 
-    grib_trie* table;
-
-    table=load_bufr_elements_table(a,&ret);
+    grib_trie* table = load_bufr_elements_table(a,&ret);
     if (ret) return ret;
-
-    c=a->context;
 
     sprintf(code,"%06ld",v->code);
 
     list=(char**)grib_trie_get(table,code);
     if (!list) return GRIB_NOT_FOUND;
 
-    v->shortName=grib_context_strdup(c,list[1]);
+    v->shortName=grib_context_strdup(a->context,list[1]);
     v->type=convert_type(list[2]);
     /* v->name=grib_context_strdup(c,list[3]);  See ECC-489 */
-    v->units=grib_context_strdup(c,list[4]);
-    str=grib_context_strdup(c,list[5]);
-    v->scale=atol(str);
-    grib_context_free(c,str);
+    v->units=grib_context_strdup(a->context,list[4]);
+
+    /* ECC-985: Scale and reference are often 0 so we can reduce calls to atol */
+    v->scale=atol_fast(list[5]);
     v->factor=grib_power(-v->scale,10);
-    str=grib_context_strdup(c,list[6]);
-    v->reference=atol(str);
-    grib_context_free(c,str);
-    str=grib_context_strdup(c,list[7]);
-    v->width=atol(str);
-    grib_context_free(c,str);
+
+    v->reference=atol_fast(list[6]);
+    v->width=atol(list[7]);
 
     return ret;
 }
