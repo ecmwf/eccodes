@@ -653,7 +653,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
             grib_darray_push(c,ret,dval);
         }
     } else {
-        // ECC-428
+        /* ECC-428 */
         if (grib_is_all_bits_one(lval,modifiedWidth) && canBeMissing) {
             dval=GRIB_MISSING_DOUBLE;
         } else {
