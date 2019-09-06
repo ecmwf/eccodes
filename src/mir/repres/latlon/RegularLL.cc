@@ -143,6 +143,46 @@ util::BoundingBox RegularLL::extendBoundingBox(const util::BoundingBox& bbox) co
     return extended;
 }
 
+std::vector<double> RegularLL::calculateGridBoxLatitudeEdges() const {
+    eckit::Fraction half(1, 2);
+    auto lat0 = bbox_.north();
+    auto inc  = increments_.south_north().latitude();
+
+    // grid-box latitude edges
+    std::vector<double> edges(nj_ + 1);
+
+    edges[0] = (lat0 + inc / 2).value();
+    for (size_t j = 0; j < nj_; ++j) {
+        edges[j + 1] = (lat0 - (j + half) * inc.fraction()).value();
+    }
+
+    auto dom   = domain();
+    auto north = dom.north().value();
+    auto south = dom.south().value();
+
+    edges.front() = std::min(north, std::max(south, edges.front()));
+    edges.back()  = std::min(north, std::max(south, edges.back()));
+
+    return edges;
+}
+
+std::vector<double> RegularLL::calculateGridBoxLongitudeEdges(size_t j) const {
+    ASSERT(j < nj_);
+
+    eckit::Fraction half(1, 2);
+    auto lon0 = bbox_.west();
+    auto inc  = increments_.west_east().longitude();
+
+    // grid-box longitude edges
+    std::vector<double> edges(ni_ + 1, 0.);
+    edges[0] = (lon0 + inc / 2).value();
+    for (size_t i = 0; i < ni_; ++i) {
+        edges[i + 1] = (lon0 + (i + half) * inc.fraction()).value();
+    }
+
+    return edges;
+}
+
 std::string RegularLL::factory() const {
     return "regular_ll";
 }

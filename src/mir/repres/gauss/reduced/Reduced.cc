@@ -28,14 +28,14 @@
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 
+#include "mir/api/MIREstimation.h"
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
+#include "mir/util/Angles.h"
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
-#include "mir/api/MIREstimation.h"
-
 
 namespace mir {
 namespace repres {
@@ -223,6 +223,38 @@ Iterator* Reduced::rotatedIterator(const util::Rotation& rotation) const {
     };
 
     return Gaussian::rotatedIterator(Ni, rotation);
+}
+
+std::vector<double> Reduced::calculateUnrotatedGridBoxLongitudeEdges(size_t j) const {
+
+    const std::vector<long>& pl = pls();
+    ASSERT(j < pl.size());
+    auto Ni = size_t(pl[j]);
+
+    eckit::Fraction inc(360, pl[j]);
+    eckit::Fraction half(1, 2);
+
+    auto west = bbox_.west().fraction();
+    auto Nw   = (west / inc).integralPart();
+    if (Nw * inc < west) {
+        Nw += 1;
+    }
+    Longitude lon0 = Nw * inc;
+
+    // grid-box edge longitudes
+    std::vector<double> edges(Ni + 1);
+    edges[0] = (lon0 - inc / 2).value();
+    for (size_t i = 0; i < Ni; ++i) {
+        edges[i + 1] = (lon0 + (i + half) * inc).value();
+    }
+
+    if (isPeriodicWestEast()) {
+        Longitude a = edges.front();
+        Longitude b = edges.back();
+        ASSERT(a == b.normalise(a));
+    }
+
+    return edges;
 }
 
 
