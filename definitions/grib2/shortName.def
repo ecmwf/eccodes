@@ -340,12 +340,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 scaledValueOfLowerLimit = 10 ;
-	 typeOfFirstFixedSurface = 103 ;
 	 probabilityType = 3 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
