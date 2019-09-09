@@ -17,7 +17,7 @@
 16 dt Data Targeting System
 17 la ALADIN-LAEF
 18 yt YOTC
-19 mc MACC
+19 mc Copernicus Atmosphere Monitoring Service (CAMS, previously MACC)
 20 pe Permanent experiments
 21 em ERA-CLIM model integration for the 20th-century (ERA-20CM)
 22 e2 ERA-CLIM reanalysis of the 20th-century using surface observations only (ERA-20C)
@@ -35,6 +35,8 @@
 34 lw WMO Lead Centre Wave Forecast Verification
 35 ce Copernicus Emergency Management Service (CEMS)
 36 cr Copernicus Atmosphere Monitoring Service (CAMS) Research
+37 ca Copernicus Arctic Regional ReAnalysis (CARRA)
+38 cu Copernicus European Regional ReAnalysis (CERRA)
 99 te Test
 100 at Austria
 101 be Belgium
