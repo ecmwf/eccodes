@@ -1380,6 +1380,7 @@ static void test_string_splitting()
     if ( strcmp(list[1], "To")  !=0 ) assert(0);
     if ( strcmp(list[2], "Be")  !=0 ) assert(0);
     if ( strcmp(list[3], "Wild")!=0 ) assert(0);
+    assert( list[4] == NULL );
 
     strcpy(input, "12345|a gap|");
     list = string_split(input, "|");
@@ -1387,12 +1388,14 @@ static void test_string_splitting()
     assert(i == 2);
     if ( strcmp(list[0], "12345")!=0 ) assert(0);
     if ( strcmp(list[1], "a gap")!=0 ) assert(0);
+    assert( list[2] == NULL );
 
     strcpy(input, "Steppenwolf");
     list = string_split(input, ",");
     for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 1);
     if ( strcmp(list[0], "Steppenwolf")!=0 ) assert(0);
+    assert( list[1] == NULL );
 
     /* Note: currently cannot cope with */
     /*  input being NULL */

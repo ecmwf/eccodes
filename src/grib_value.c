@@ -1580,7 +1580,8 @@ int grib_set_values(grib_handle* h,grib_values* args,size_t count)
         if(args[i].error != GRIB_SUCCESS)
         {
             grib_context_log(h->context,GRIB_LOG_ERROR,
-                    "grib_set_values[%d] %s (%d) failed: %s",  i, args[i].name, args[i].type,
+                    "grib_set_values[%d] %s (type=%s) failed: %s",
+                    i, args[i].name, grib_get_type_name(args[i].type),
                     grib_get_error_message(args[i].error));
             err= err==GRIB_SUCCESS ? args[i].error : err;
         }
