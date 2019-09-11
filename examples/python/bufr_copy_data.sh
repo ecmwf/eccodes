@@ -56,5 +56,15 @@ rm -f ${TEMP}
 $PYTHON ${examples_src}/bufr_copy_data2.py ${INPUT} ${TEMP}
 ${tools_dir}/bufr_compare -b meanWindDirectionForSurfaceTo1500M,unexpandedDescriptors ${TEMP} ${INPUT}
 
+# WIGOS test
+INPUT=synop_multi_subset.bufr
+rm -f ${TEMP}
+$PYTHON ${examples_src}/bufr_copy_data3.py ${INPUT} ${TEMP}
+val=`${tools_dir}/bufr_get -s unpack=1 -p '#2#wigosIssuerOfIdentifier' ${TEMP}`
+[ "$val" = "6" ]
+val=`${tools_dir}/bufr_get -s unpack=1 -p '#2#stationOrSiteName' ${TEMP}`
+[ "$val" = "PASVIK" ]
 
+
+# Clean up
 rm -f ${TEMP} ${REF} ${MYLOG}
