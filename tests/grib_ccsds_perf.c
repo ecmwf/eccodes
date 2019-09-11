@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
   double perc=0;
   long bitsPerValue=0;
   int iarg=1;
-  char grid[20]={0,};
+  char grid[40]={0,};
   char shortName[20]={0,};
   long level;
   char levelType[20]={0,};
