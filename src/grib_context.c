@@ -10,6 +10,7 @@
 
 #include "grib_api_internal.h"
 #include <errno.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #ifndef ECCODES_ON_WINDOWS
 #include <unistd.h>
