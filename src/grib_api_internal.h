@@ -104,7 +104,6 @@
 
 #include <limits.h>
 #include <errno.h>
-#include <stdarg.h>
 #include <stdlib.h>
 #include <ctype.h>
 

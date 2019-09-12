@@ -32,7 +32,7 @@ TESTS = definitions.sh \
         grib_octahedral.sh \
         grib_global.sh \
         grib_concept.sh \
-        decimalPrecision.sh \
+        grib_decimalPrecision.sh \
         grib_bitsPerValue.sh \
         get_fail.sh \
         grib_missing.sh \
@@ -46,7 +46,6 @@ TESTS = definitions.sh \
         grib_bitmap.sh \
         grib_list.sh \
         grib_second_order.sh \
-        multi_from_message.sh \
         grib_change_scanning.sh \
         julian.sh \
         grib_statistics.sh \
@@ -73,11 +72,10 @@ download_data:
 	@$(top_srcdir)/data/download.sh $(top_srcdir)/data
 
 noinst_PROGRAMS = packing_check gauss_sub read_any grib_double_cmp packing pack_unpack \
-                  multi_from_message julian read_index index gribex_perf\
+                  julian read_index index gribex_perf\
                   jpeg_perf grib_ccsds_perf so_perf png_perf bpv_limit laplacian \
                   unit_tests
 
-multi_from_message_SOURCES = multi_from_message.c
 laplacian_SOURCES = laplacian.c
 packing_SOURCES = packing.c
 packing_check_SOURCES = packing_check.c

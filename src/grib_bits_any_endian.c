@@ -54,18 +54,18 @@ static void init_bits_all_one()
     int size=sizeof(long)*8;
     long* v=0;
     unsigned long cmask=-1;
-    if (!bits_all_one.inited) {
-        bits_all_one.size=size;
-        bits_all_one.inited=1;
-        v=bits_all_one.v+size;
-        /*
-         * The result of a shift operation is undefined if the RHS is negative or
-         * greater than or equal to the number of bits in the (promoted) shift-expression
-         */
-        /* *v= cmask << size; */
-        *v = -1;
-        while (size>0)  *(--v)= ~(cmask << --size);
-    }
+    DebugAssert( !bits_all_one.inited );
+
+    bits_all_one.size=size;
+    bits_all_one.inited=1;
+    v=bits_all_one.v+size;
+    /*
+        * The result of a shift operation is undefined if the RHS is negative or
+        * greater than or equal to the number of bits in the (promoted) shift-expression
+        */
+    /* *v= cmask << size; */
+    *v = -1;
+    while (size>0)  *(--v)= ~(cmask << --size);
 }
 
 static void init_bits_all_one_if_needed()

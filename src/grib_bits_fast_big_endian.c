@@ -30,7 +30,12 @@ static void init_bits_all_one()
     bits_all_one.size=size;
     bits_all_one.inited=1;
     v=bits_all_one.v+size;
-    *v= cmask << size;
+    /*
+     * The result of a shift operation is undefined if the RHS is negative or
+     * greater than or equal to the number of bits in the (promoted) shift-expression
+     */
+    /* *v= cmask << size; */
+    *v = -1;
     while (size>0)  *(--v)= ~(cmask << --size);
 }
 

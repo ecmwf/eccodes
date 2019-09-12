@@ -141,6 +141,7 @@ GRIB_ATTRIBUTE_NOT_FOUND = _gribapi_swig.GRIB_ATTRIBUTE_NOT_FOUND
 GRIB_UNSUPPORTED_EDITION = _gribapi_swig.GRIB_UNSUPPORTED_EDITION
 GRIB_OUT_OF_RANGE = _gribapi_swig.GRIB_OUT_OF_RANGE
 GRIB_WRONG_BITMAP_SIZE = _gribapi_swig.GRIB_WRONG_BITMAP_SIZE
+GRIB_FUNCTIONALITY_NOT_ENABLED = _gribapi_swig.GRIB_FUNCTIONALITY_NOT_ENABLED
 class intp(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, intp, name, value)
