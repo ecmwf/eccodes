@@ -61,6 +61,7 @@ GRIB1_INPUTS="
   ${data_dir}/gen_bitmap.grib
   ${data_dir}/spectral_complex.grib1
   ${data_dir}/gen_ext.grib
+  ${data_dir}/gen.grib
   ${data_dir}/gen_ext_spd_2.grib"
 
 GRIB2_INPUTS="
@@ -73,7 +74,9 @@ if [ $HAVE_JPEG -eq 1 ]; then
     echo "Adding extra files (HAVE_JPEG=1)"
     GRIB2_INPUTS="${data_dir}/jpeg.grib2 ${data_dir}/reduced_gaussian_surface_jpeg.grib2 "$GRIB2_INPUTS
 fi
-#GRIB2_INPUTS=$GRIB2_INPUTS" ${data_dir}/ccsds.grib2 "
+if [ $HAVE_AEC -eq 1 ]; then
+    GRIB2_INPUTS=$GRIB2_INPUTS" ${data_dir}/ccsds.grib2 "
+fi
 
 for gf in $GRIB1_INPUTS $GRIB2_INPUTS; do
     process $gf
