@@ -174,10 +174,17 @@ static int create_accessor( grib_section* p, grib_action* act, grib_loader *h)
     return GRIB_SUCCESS;
 }
 
+static void print_expression_debug_info(grib_context *ctx, grib_expression *exp, grib_handle *h)
+{
+    grib_expression_print(ctx, exp, h);/* writes to stdout without a newline */
+    printf("\n");
+}
+
 static int execute(grib_action* act, grib_handle *h)
 {
     grib_action_if* a = (grib_action_if*)act;
     grib_action* next = NULL;
+    grib_context* ctx = h->context;
     int ret = 0;
     long lres=0;
 
@@ -186,7 +193,10 @@ static int execute(grib_action* act, grib_handle *h)
     if (type != GRIB_TYPE_DOUBLE) {
         if ((ret=grib_expression_evaluate_long(h,a->expression,&lres)) != GRIB_SUCCESS) {
             if (ret == GRIB_NOT_FOUND) lres=0;
-            else return ret;
+            else {
+                if (ctx->debug) print_expression_debug_info(ctx, a->expression, h);
+                return ret;
+            }
         }
     }
     else {
@@ -195,7 +205,10 @@ static int execute(grib_action* act, grib_handle *h)
         lres = (long)dres;
         if ( ret != GRIB_SUCCESS ) {
             if (ret == GRIB_NOT_FOUND) lres=0;
-            else return ret;
+            else {
+                if (ctx->debug) print_expression_debug_info(ctx, a->expression, h);
+                return ret;
+            }
         }
     }
 
