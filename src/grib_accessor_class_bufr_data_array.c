@@ -3138,6 +3138,10 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     if (err) return err;
     if (!val) return err;
 
+    /* When we set unpack=1, then the 'val' argument is NULL and we return
+     * but when client requests a key like 'numericValues', then we end up here
+     */
+
     l=grib_vdarray_used_size(self->numericValues);
     err=grib_get_long(grib_handle_of_accessor(a),self->numberOfSubsetsName,&numberOfSubsets);
     if (err) return err;
