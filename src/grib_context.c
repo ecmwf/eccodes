@@ -623,7 +623,9 @@ char *grib_context_full_defs_path(grib_context* c,const char* basename)
     if(*basename == '/' || *basename ==  '.') {
         return (char*)basename;
     } else {
+        GRIB_MUTEX_LOCK(&mutex_c);  /* See ECC-604 */
         fullpath=(grib_string_list*)grib_trie_get(c->def_files,basename);
+        GRIB_MUTEX_UNLOCK(&mutex_c);
         if (fullpath!=NULL) {
             return fullpath->value;
         }

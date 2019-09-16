@@ -15,6 +15,35 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
+#if GRIB_PTHREADS
+static pthread_once_t once  = PTHREAD_ONCE_INIT;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+static void init_mutex() {
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&mutex,&attr);
+    pthread_mutexattr_destroy(&attr);
+}
+#elif GRIB_OMP_THREADS
+static int once = 0;
+static omp_nest_lock_t mutex;
+
+static void init_mutex()
+{
+    GRIB_OMP_CRITICAL(lock_iterator_c)
+    {
+        if (once == 0)
+        {
+            omp_init_nest_lock(&mutex);
+            once = 1;
+        }
+    }
+}
+#endif
+
+
 int grib_get_data(grib_handle* h,double* lats, double* lons,double* values)
 {
     int err=0;
@@ -71,7 +100,6 @@ int grib_iterator_previous(grib_iterator *i,double* lat,double* lon,double* valu
     return 0;
 }
 
-
 int grib_iterator_reset(grib_iterator *i)
 {
     grib_iterator_class *c = i->cclass;
@@ -85,12 +113,9 @@ int grib_iterator_reset(grib_iterator *i)
     return 0;
 }
 
-
 /* For this one, ALL init are called */
-
 static int init_iterator(grib_iterator_class* c,grib_iterator* i, grib_handle *h, grib_arguments* args)
 {
-
     if(c) {
         int ret = GRIB_SUCCESS;
         grib_iterator_class *s = c->super ? *(c->super) : NULL;
@@ -110,7 +135,12 @@ static int init_iterator(grib_iterator_class* c,grib_iterator* i, grib_handle *h
 
 int grib_iterator_init(grib_iterator* i, grib_handle *h, grib_arguments* args)
 {
-    return init_iterator(i->cclass,i,h,args);
+    int r = 0;
+    GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
+    GRIB_MUTEX_LOCK(&mutex);
+    r = init_iterator(i->cclass,i,h,args);
+    GRIB_MUTEX_UNLOCK(&mutex);
+    return r;
 }
 
 /* For this one, ALL destroy are called */
