@@ -931,7 +931,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 setSecondOrder=1;
                 break;
             default :
-                printf("invalid packing_spec->packing_type = %ld\n",(long)packing_spec->packing_type);
+                fprintf(stderr, "invalid packing_spec->packing_type = %ld\n",(long)packing_spec->packing_type);
                 *err = GRIB_INTERNAL_ERROR;
                 goto cleanup;
                 break;
@@ -957,7 +957,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             break;
 
         default:
-            printf("invalid packing_spec->accuracy = %ld\n",(long)packing_spec->accuracy);
+            fprintf(stderr, "invalid packing_spec->accuracy = %ld\n",(long)packing_spec->accuracy);
             *err = GRIB_INTERNAL_ERROR;
             goto cleanup;
             break;
@@ -1333,7 +1333,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             setSecondOrder=1;
             break;
         default :
-            printf("invalid packing_spec->packing_type = %ld\n",(long)packing_spec->packing_type);
+            fprintf(stderr,"invalid packing_spec->packing_type = %ld\n",(long)packing_spec->packing_type);
             *err = GRIB_INTERNAL_ERROR;
             goto cleanup;
             break;
@@ -1390,7 +1390,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         break;
 
     default:
-        printf("invalid packing_spec->accuracy = %ld\n",(long)packing_spec->accuracy);
+        fprintf(stderr, "invalid packing_spec->accuracy = %ld\n",(long)packing_spec->accuracy);
         *err = GRIB_INTERNAL_ERROR;
         goto cleanup;
         break;
@@ -1453,7 +1453,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         if (global_grid) {
             size_t sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (data_values_count != sum) {
-                printf("invalid reduced gaussian grid: specified as global, data_values_count=%ld but sum of pl array=%ld\n",
+                fprintf(stderr, "invalid reduced gaussian grid: specified as global, data_values_count=%ld but sum of pl array=%ld\n",
                         (long)data_values_count, (long)sum);
                 *err = GRIB_WRONG_GRID;
                 goto cleanup;
