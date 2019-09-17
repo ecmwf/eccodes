@@ -1,5 +1,5 @@
 #!/bin/sh
-
+set -u
 script_dir=`dirname $0`
 EMOSLIB_TOOL=emoslib_bufr_filter
 ECCODES_TOOL=codes_bufr_filter
