@@ -1,7 +1,7 @@
 #!/bin/sh
 set -u
 script_dir=`dirname $0`
-EMOSLIB_TOOL=emoslib_bufr_filter
+EMOSLIB_TOOL=bufrdc_emoslib_bufr_filter
 ECCODES_TOOL=codes_bufr_filter
 result=0 # return code from function
 ERR_TOOL_NOT_FOUND=666
