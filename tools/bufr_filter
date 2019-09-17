@@ -11,9 +11,9 @@ is_emoslib=0
 
 #########################################################
 # Arguments:
-#  the executable name
+#  arguments from the script command line
 # Return Value:
-#  sets the global variable 'result'
+#  the global variable 'result' holds the exit code
 try_tool()
 {
     if [ -f "${script_dir}/$the_tool" ]; then
@@ -49,20 +49,19 @@ for i in "$@" ; do
 done
 
 #########################################################
-# set -x
 if [ $is_emoslib -eq 1 ]; then
-    pkg=emoslib
+    pkg='emoslib/bufrdc'
     the_tool=$EMOSLIB_TOOL
     try_tool "${@}"
 else
-    pkg=ecCodes
+    pkg='ecCodes'
     the_tool=$ECCODES_TOOL
     try_tool "${@}"
 fi
 if [ $result -eq $ERR_TOOL_NOT_FOUND ]; then
-    echo "ERROR: Could not find the executable: $tool. Aborting!"  2>&1
-    echo "       The arguments you passed in are relevant to $pkg" 2>&1
-    echo "       Please make sure you have $pkg installed in your path"  2>&1
+    echo "ERROR: Could not find the executable: $the_tool. Aborting!"  2>&1
+    echo "       The arguments you passed in are relevant to $pkg." 2>&1
+    echo "       Please make sure you have $pkg installed in your path."  2>&1
     exit 1
 fi
 exit $result
