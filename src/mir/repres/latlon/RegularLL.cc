@@ -175,7 +175,7 @@ std::vector<double> RegularLL::calculateGridBoxLongitudeEdges(size_t j) const {
 
     // grid-box longitude edges
     std::vector<double> edges(ni_ + 1, 0.);
-    edges[0] = (lon0 + inc / 2).value();
+    edges[0] = (lon0 - inc / 2).value();
     for (size_t i = 0; i < ni_; ++i) {
         edges[i + 1] = (lon0 + (i + half) * inc.fraction()).value();
     }

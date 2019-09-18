@@ -240,7 +240,7 @@ std::vector<double> Reduced::calculateUnrotatedGridBoxLongitudeEdges(size_t j) c
     }
     Longitude lon0 = Nw * inc;
 
-    // grid-box edge longitudes
+    // grid-box longitude edges
     std::vector<double> edges(Ni + 1);
     edges[0] = (lon0 - inc / 2).value();
     for (size_t i = 0; i < Ni; ++i) {
