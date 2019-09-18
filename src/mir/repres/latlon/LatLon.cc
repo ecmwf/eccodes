@@ -21,7 +21,6 @@
 #include <sstream>
 
 #include "eckit/exception/Exceptions.h"
-#include "eckit/log/Plural.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 
@@ -35,6 +34,7 @@
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
+#include "mir/util/Pretty.h"
 
 
 namespace mir {
@@ -280,7 +280,7 @@ void LatLon::validate(const MIRValuesVector& values) const {
 
     eckit::Log::debug<LibMir>() << domain() << std::endl;
 
-    eckit::Log::debug<LibMir>() << "LatLon::validate checked " << eckit::Plural(values.size(), "value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
+    eckit::Log::debug<LibMir>() << "LatLon::validate checked " << util::Pretty(values.size(), "value") << ", within domain: " << util::Pretty(count) << "." << std::endl;
     ASSERT(values.size() == count);
 }
 

@@ -24,7 +24,6 @@
 #include <sstream>
 
 #include "eckit/exception/Exceptions.h"
-#include "eckit/log/Plural.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 

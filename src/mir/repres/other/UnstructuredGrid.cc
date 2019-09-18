@@ -21,7 +21,6 @@
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/filesystem/PathName.h"
-#include "eckit/log/Plural.h"
 #include "eckit/serialisation/FileStream.h"
 #include "eckit/serialisation/IfstreamStream.h"
 #include "eckit/utils/MD5.h"
@@ -31,6 +30,8 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/MeshGeneratorParameters.h"
+#include "mir/util/Pretty.h"
+
 
 namespace mir {
 namespace repres {
@@ -204,8 +205,8 @@ const Gridded* UnstructuredGrid::croppedRepresentation(const util::BoundingBox& 
     }
 
     if (j < i) {
-        eckit::Log::debug<LibMir>() << "UnstructuredGrid::croppedRepresentation: cropped " << eckit::BigNum(i) << " to "
-                                    << eckit::Plural(j, "point") << std::endl;
+        eckit::Log::debug<LibMir>() << "UnstructuredGrid::croppedRepresentation: cropped " << util::Pretty(i) << " to "
+                                    << util::Pretty(j, "point") << std::endl;
         ASSERT(j);
         return new UnstructuredGrid(lat, lon, bbox);
     }

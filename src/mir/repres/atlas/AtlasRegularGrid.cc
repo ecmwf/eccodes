@@ -15,13 +15,13 @@
 #include <ostream>
 
 #include "eckit/log/Log.h"
-#include "eckit/log/Plural.h"
 #include "eckit/utils/MD5.h"
 
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
+#include "mir/util/Pretty.h"
 
 
 namespace mir {
@@ -148,8 +148,8 @@ void AtlasRegularGrid::reorder(long scanningMode, mir::data::MIRValuesVector& va
 
 void AtlasRegularGrid::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
-    eckit::Log::debug<LibMir>() << "AtlasRegularGrid::validate checked " << eckit::Plural(values.size(), "value")
-                                << ", numberOfPoints: " << eckit::BigNum(count) << "." << std::endl;
+    eckit::Log::debug<LibMir>() << "AtlasRegularGrid::validate checked " << util::Pretty(values.size(), "value")
+                                << ", numberOfPoints: " << util::Pretty(count) << "." << std::endl;
     ASSERT(values.size() == count);
 }
 
