@@ -35,8 +35,7 @@
 34 lw WMO Lead Centre Wave Forecast Verification
 35 ce Copernicus Emergency Management Service (CEMS)
 36 cr Copernicus Atmosphere Monitoring Service (CAMS) Research
-37 ca Copernicus Arctic Regional ReAnalysis (CARRA)
-38 cu Copernicus European Regional ReAnalysis (CERRA)
+37 rr Copernicus Regional ReAnalysis (CARRA/CERRA)
 99 te Test
 100 at Austria
 101 be Belgium
