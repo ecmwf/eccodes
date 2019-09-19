@@ -9,7 +9,7 @@
  */
 
 /***************************************************************************
- *   Jean Baptiste Filippi - 01.11.2005                                                           *
+ *   Jean Baptiste Filippi - 01.11.2005                                    *
  *   Enrico Fucile
  *                                                                         *
  ***************************************************************************/
@@ -729,16 +729,16 @@ static grib_action* grib_parse_stream(grib_context* gc, const char* filename)
 grib_concept_value* grib_parse_concept_file( grib_context* gc,const char* filename)
 {
     GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&mutex_concept);
+    GRIB_MUTEX_LOCK(&mutex_file);
 
     gc = gc ? gc : grib_context_get_default();
     grib_parser_context = gc;
 
     if(parse(gc,filename) == 0) {
-        GRIB_MUTEX_UNLOCK(&mutex_concept);
+        GRIB_MUTEX_UNLOCK(&mutex_file);
         return grib_parser_concept;
     } else {
-        GRIB_MUTEX_UNLOCK(&mutex_concept);
+        GRIB_MUTEX_UNLOCK(&mutex_file);
         return NULL;
     }
 }

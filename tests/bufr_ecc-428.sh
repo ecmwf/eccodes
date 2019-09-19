@@ -35,21 +35,21 @@ cat > $tempRules <<EOF
 EOF
 
 cat $tempRules
-${tools_dir}/codes_bufr_filter $tempRules $bufrFile > $tempText
+${tools_dir}/bufr_filter $tempRules $bufrFile > $tempText
 echo "784" > $tempRef1
 diff $tempRef1 $tempText
 
 export ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS=1
-${tools_dir}/codes_bufr_filter $tempRules $bufrFile > $tempText
+${tools_dir}/bufr_filter $tempRules $bufrFile > $tempText
 echo "784 784 784 784 784 784 784 784 784 784 784 784 784 784 784" > $tempRef2
 diff $tempRef2 $tempText
 
 unset ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS
-${tools_dir}/codes_bufr_filter $tempRules $bufrFile > $tempText
+${tools_dir}/bufr_filter $tempRules $bufrFile > $tempText
 diff $tempRef1 $tempText
 
 export ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS=0
-${tools_dir}/codes_bufr_filter $tempRules $bufrFile > $tempText
+${tools_dir}/bufr_filter $tempRules $bufrFile > $tempText
 diff $tempRef1 $tempText
 
 
@@ -64,7 +64,7 @@ EOF
 cat $tempRules
 
 export ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS=1
-${tools_dir}/codes_bufr_filter $tempRules $bufrFile > $tempText 2>$tempErrs
+${tools_dir}/bufr_filter $tempRules $bufrFile > $tempText 2>$tempErrs
 grep -q '^48 54 59.*91 97' $tempText
 
 
@@ -79,7 +79,7 @@ EOF
 cat $tempRules
 
 export ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS=1
-${tools_dir}/codes_bufr_filter $tempRules $bufrFile > $tempText 2>$tempErrs
+${tools_dir}/bufr_filter $tempRules $bufrFile > $tempText 2>$tempErrs
 grep -q '^LBG LBG LBG LBG.*LBG$' $tempText
 
 
@@ -94,7 +94,7 @@ EOF
 cat $tempRules
 
 export ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS=1
-${tools_dir}/codes_bufr_filter $tempRules $bufrFile > $tempText 2>$tempErrs
+${tools_dir}/bufr_filter $tempRules $bufrFile > $tempText 2>$tempErrs
 grep -q '^6 6 6.*24 24.*6 6' $tempText
 
 # --------------------------------------------------------
@@ -107,11 +107,11 @@ cat > $tempRules <<EOF
 EOF
 
 cat $tempRules
-${tools_dir}/codes_bufr_filter $tempRules $bufrFile >/dev/null
+${tools_dir}/bufr_filter $tempRules $bufrFile >/dev/null
 
 echo "TODO: Searching for backscatter ... currently failing"
 export ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS=1
-${tools_dir}/codes_bufr_filter $tempRules $bufrFile 2>$tempErrs
+${tools_dir}/bufr_filter $tempRules $bufrFile 2>$tempErrs
 cat $tempErrs
 
 # Clean up
