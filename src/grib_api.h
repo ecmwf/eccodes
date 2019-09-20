@@ -1559,6 +1559,60 @@ grib_handle *grib_util_set_spec2(grib_handle *h,
 
 int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
 grib_handle *grib_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
+
+typedef struct codes_bufr_header {
+    off_t   message_offset;
+    size_t  message_size;
+    long edition;
+    unsigned long totalLength;
+    unsigned long section1Length;
+    long masterTableNumber;
+    long bufrHeaderSubCentre;
+    long bufrHeaderCentre;
+    long updateSequenceNumber;
+    long section1Flags;
+    long dataCategory;
+    long dataSubCategory;
+    long masterTablesVersionNumber;
+    long localTablesVersionNumber;
+    long typicalYearOfCentury;
+    long typicalMonth;
+    long typicalDay;
+    long typicalHour;
+    long typicalMinute;
+
+    /* Extra BUFR4 keys */
+    long internationalDataSubCategory;
+    long typicalYear;
+    long typicalSecond;
+
+    long localSectionPresent;
+
+    /* ECMWF local section keys */
+    long rdbType;
+    long oldSubtype;
+    long localYear;
+    long localMonth;
+    long localDay;
+    long localHour;
+    long localMinute;
+    long localSecond;
+
+    long rdbtimeDay;
+    long rdbtimeHour;
+    long rdbtimeMinute;
+    long rdbtimeSecond;
+
+    long rectimeDay;
+    long rectimeHour;
+    long rectimeMinute;
+    long rectimeSecond;
+
+    long qualityControl;
+    long newSubtype;
+    long daLoop;
+} codes_bufr_header;
+
 /* --------------------------------------- */
 
 typedef void (*codes_assertion_failed_proc)(const char* message);
