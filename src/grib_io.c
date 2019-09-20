@@ -1948,7 +1948,6 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
     void* mesg = NULL;
     size_t size = 0;
     off_t offset = 0;
-    codes_bufr_header* headers = *result;
 
     if (!c) c=grib_context_get_default();
     fp = fopen(filename, "rb");
@@ -1958,21 +1957,30 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
         return GRIB_IO_PROBLEM;
     }
     err = grib_count_in_file(c, fp, num_messages);
-    if (err) return err;
+    if (err) {
+        fclose(fp);
+        return err;
+    }
 
-    headers = (codes_bufr_header*)calloc((size_t)num_messages, sizeof(codes_bufr_header));
-    if (!headers) {
+    size = *num_messages;
+    *result = (codes_bufr_header*)calloc(size, sizeof(codes_bufr_header));
+    if (!*result) {
+        fclose(fp);
         return GRIB_OUT_OF_MEMORY;
     }
     i = 0;
     while (err != GRIB_END_OF_FILE) {
         mesg = wmo_read_bufr_from_file_malloc(fp, 0, &size, &offset, &err);
         if (mesg != NULL && err == 0) {
-            int err2 = bufr_decode_header(mesg, offset, size, &headers[i++]);
-            if (err2) return err2;
+            int err2 = bufr_decode_header(mesg, offset, size, &(*result)[i++]);
+            if (err2) {
+                fclose(fp);
+                return err2;
+            }
             grib_context_free(c, mesg);
         }
     }
 
+    fclose(fp);
     return GRIB_SUCCESS;
 }
