@@ -1303,6 +1303,7 @@ int wmo_read_any_from_stream(void* stream_data,long (*stream_proc)(void*,void* b
     return err;
 }
 
+/* This function allocates memory for the result so the user is responsible for freeing it */
 void* wmo_read_any_from_stream_malloc(void* stream_data,long (*stream_proc)(void*,void* buffer,long len) ,size_t *size, int* err)
 {
     alloc_buffer  u;
@@ -1333,7 +1334,7 @@ void* wmo_read_any_from_stream_malloc(void* stream_data,long (*stream_proc)(void
 
 /*================== */
 
-
+/* This function allocates memory for the result so the user is responsible for freeing it */
 void *wmo_read_gts_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err)
 {
     alloc_buffer u;
@@ -1359,6 +1360,7 @@ void *wmo_read_gts_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t 
     return u.buffer;
 }
 
+/* This function allocates memory for the result so the user is responsible for freeing it */
 void *wmo_read_taf_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err)
 {
     alloc_buffer u;
@@ -1384,6 +1386,7 @@ void *wmo_read_taf_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t 
     return u.buffer;
 }
 
+/* This function allocates memory for the result so the user is responsible for freeing it */
 void *wmo_read_metar_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err)
 {
     alloc_buffer u;
@@ -1409,6 +1412,7 @@ void *wmo_read_metar_from_file_malloc(FILE* f,int headers_only,size_t *size,off_
     return u.buffer;
 }
 
+/* This function allocates memory for the result so the user is responsible for freeing it */
 static void *_wmo_read_any_from_file_malloc(FILE* f,int* err,size_t *size,off_t *offset,
         int grib_ok,int bufr_ok, int hdf5_ok, int wrap_ok, int headers_only)
 {
@@ -1436,21 +1440,22 @@ static void *_wmo_read_any_from_file_malloc(FILE* f,int* err,size_t *size,off_t 
 
     return u.buffer;
 }
+
+/* This function allocates memory for the result so the user is responsible for freeing it */
 void *wmo_read_any_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err)
 {
     return _wmo_read_any_from_file_malloc(f,err,size,offset, 1, 1, 1, 1, headers_only);
 }
-
+/* This function allocates memory for the result so the user is responsible for freeing it */
 void *wmo_read_grib_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err)
 {
     return _wmo_read_any_from_file_malloc(f,err,size,offset, 1, 0, 0, 0, headers_only);
 }
-
+/* This function allocates memory for the result so the user is responsible for freeing it */
 void *wmo_read_bufr_from_file_malloc(FILE* f,int headers_only,size_t *size,off_t *offset,int* err)
 {
     return _wmo_read_any_from_file_malloc(f,err,size,offset, 0, 1, 0, 0, headers_only);
 }
-
 
 /* ======================================= */
 
@@ -1470,7 +1475,6 @@ static void* context_allocate_buffer(void *data,size_t* length,int *err)
         *err = GRIB_OUT_OF_MEMORY; /* Cannot allocate buffer */
     return u->buffer;
 }
-
 
 int grib_read_any_headers_only_from_file(grib_context* ctx,FILE* f,void* buffer,size_t* len)
 {
@@ -1533,7 +1537,6 @@ int grib_read_any_from_file(grib_context* ctx,FILE* f,void* buffer,size_t* len)
 }
 
 /* ======================================= */
-
 typedef struct memory_read_data {
     unsigned char  *data;
     size_t          data_len;
