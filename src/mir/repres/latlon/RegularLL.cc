@@ -20,6 +20,7 @@
 #include "mir/iterator/detail/RegularIterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "mir/util/GridBox.h"
 
 namespace mir {
 namespace repres {
@@ -143,44 +144,64 @@ util::BoundingBox RegularLL::extendBoundingBox(const util::BoundingBox& bbox) co
     return extended;
 }
 
-std::vector<double> RegularLL::calculateGridBoxLatitudeEdges() const {
-    eckit::Fraction half(1, 2);
-    auto lat0 = bbox_.north();
-    auto inc  = increments_.south_north().latitude();
-
-    // grid-box latitude edges
-    std::vector<double> edges(nj_ + 1);
-
-    edges[0] = (lat0 + inc / 2).value();
-    for (size_t j = 0; j < nj_; ++j) {
-        edges[j + 1] = (lat0 - (j + half) * inc.fraction()).value();
-    }
+std::vector<util::GridBox> RegularLL::gridBoxes() const {
+    using util::GridBox;
 
     auto dom   = domain();
     auto north = dom.north().value();
     auto south = dom.south().value();
 
-    edges.front() = std::min(north, std::max(south, edges.front()));
-    edges.back()  = std::min(north, std::max(south, edges.back()));
-
-    return edges;
-}
-
-std::vector<double> RegularLL::calculateGridBoxLongitudeEdges(size_t j) const {
-    ASSERT(j < nj_);
+    auto lat0 = bbox_.north();
+    auto lon0 = bbox_.west();
+    auto sn   = increments_.south_north().latitude();
+    auto we   = increments_.west_east().longitude();
 
     eckit::Fraction half(1, 2);
-    auto lon0 = bbox_.west();
-    auto inc  = increments_.west_east().longitude();
 
-    // grid-box longitude edges
-    std::vector<double> edges(ni_ + 1, 0.);
-    edges[0] = (lon0 - inc / 2).value();
-    for (size_t i = 0; i < ni_; ++i) {
-        edges[i + 1] = (lon0 + (i + half) * inc.fraction()).value();
+
+    // latitude edges
+    std::vector<double> latEdges(nj_ + 1);
+
+    latEdges[0] = (lat0 + sn / 2).value();
+    for (size_t j = 0; j < nj_; ++j) {
+        latEdges[j + 1] = (lat0 - (j + half) * sn.fraction()).value();
     }
 
-    return edges;
+    latEdges.front() = std::min(north, std::max(south, latEdges.front()));
+    latEdges.back()  = std::min(north, std::max(south, latEdges.back()));
+
+
+    // longitude edges
+    std::vector<double> lonEdges(ni_ + 1);
+    lonEdges[0] = (lon0 - we / 2).value();
+    for (size_t i = 0; i < ni_; ++i) {
+        lonEdges[i + 1] = (lon0 + (i + half) * we.fraction()).value();
+    }
+
+
+    // grid boxes
+    std::vector<util::GridBox> r;
+    r.reserve(ni_ * nj_);
+
+    bool periodic = isPeriodicWestEast();
+    for (size_t j = 0; j < nj_; ++j) {
+        Longitude lon1 = lon0;
+
+        for (size_t i = 0; i < ni_; ++i) {
+            auto l = lon1;
+            lon1   = l + we * (i + half);
+
+            GridBox::LatitudeRange lat(latEdges[j + 1], latEdges[j]);
+            GridBox::LongitudeRange lon(l.value(), lon1.value());
+
+            r.emplace_back(GridBox(lat, lon));
+        }
+
+        ASSERT(!periodic || lon0 == lon1.normalise(lon0));
+    }
+
+    ASSERT(r.size() == numberOfPoints());
+    return r;
 }
 
 std::string RegularLL::factory() const {

@@ -77,16 +77,9 @@ void Representation::setGivenPacking(grib_info&) const {
 }
 
 
-std::vector<double> Representation::calculateGridBoxLatitudeEdges() const {
+std::vector<util::GridBox> Representation::gridBoxes() const {
     std::ostringstream os;
-    os << "Representation::calculateGridBoxLatitudeEdges() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
-}
-
-
-std::vector<double> Representation::calculateGridBoxLongitudeEdges(size_t) const {
-    std::ostringstream os;
-    os << "Representation::calculateGridBoxLongitudeEdges() not implemented for " << *this;
+    os << "Representation::gridBoxes() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 

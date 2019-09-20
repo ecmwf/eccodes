@@ -35,6 +35,7 @@
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "mir/util/GridBox.h"
 
 namespace mir {
 namespace repres {
@@ -224,38 +225,6 @@ Iterator* Reduced::rotatedIterator(const util::Rotation& rotation) const {
     return Gaussian::rotatedIterator(Ni, rotation);
 }
 
-std::vector<double> Reduced::calculateUnrotatedGridBoxLongitudeEdges(size_t j) const {
-
-    const std::vector<long>& pl = pls();
-    ASSERT(j < pl.size());
-    auto Ni = size_t(pl[j]);
-
-    eckit::Fraction inc(360, pl[j]);
-    eckit::Fraction half(1, 2);
-
-    auto west = bbox_.west().fraction();
-    auto Nw   = (west / inc).integralPart();
-    if (Nw * inc < west) {
-        Nw += 1;
-    }
-    Longitude lon0 = Nw * inc;
-
-    // grid-box longitude edges
-    std::vector<double> edges(Ni + 1);
-    edges[0] = (lon0 - inc / 2).value();
-    for (size_t i = 0; i < Ni; ++i) {
-        edges[i + 1] = (lon0 + (i + half) * inc).value();
-    }
-
-    if (isPeriodicWestEast()) {
-        Longitude a = edges.front();
-        Longitude b = edges.back();
-        ASSERT(a == b.normalise(a));
-    }
-
-    return edges;
-}
-
 
 const std::vector<long>& Reduced::pls() const {
     ASSERT(pl_.size() == N_ * 2);
@@ -297,7 +266,7 @@ void Reduced::setNj(const PlVector& pl, const Latitude& s, const Latitude& n) {
     pls();  // check internal assumptions
 }
 
-// Explicit template instantiations of above implemenation for different PlVector types
+// Explicit template instantiations of above implementation for different PlVector types
 
 // PlVector = std::vector<int>
 template void Reduced::setNj(const std::vector<int>& pl, const Latitude& s, const Latitude& n);
@@ -316,10 +285,10 @@ void Reduced::fill(grib_info& info) const  {
     info.grid.Nj = long(Nj_);
     info.grid.N = long(N_);
 
+    ASSERT(k_ + Nj_ <= pl.size());
     info.grid.pl = &pl[k_];
     info.grid.pl_size = long(Nj_);
 
-    ASSERT(k_ + Nj_ <= pl.size());
     for (size_t i = k_; i < k_ + Nj_; i++) {
         ASSERT(pl[i] > 0);
     }
@@ -327,11 +296,65 @@ void Reduced::fill(grib_info& info) const  {
     bbox_.fill(info);
 }
 
+
 void Reduced::estimate(api::MIREstimation& estimation) const {
     Gaussian::estimate(estimation);
     const std::vector<long>& pl = pls();
     estimation.pl(pl.size());
 }
+
+
+std::vector<util::GridBox> Reduced::gridBoxes() const {
+    using util::GridBox;
+    ASSERT(1 < Nj_);
+
+
+    // latitude edges
+    std::vector<double> latEdges = calculateUnrotatedGridBoxLatitudeEdges();
+
+
+    // grid boxes
+    std::vector<GridBox> r;
+    r.reserve(numberOfPoints());
+
+    bool periodic = isPeriodicWestEast();
+    eckit::Fraction half(1, 2);
+
+    auto& pl = pls();
+    ASSERT(k_ + Nj_ <= pl.size());
+
+    for (size_t j = k_; j < k_ + Nj_; ++j) {
+        ASSERT(pl[j] > 0);
+        eckit::Fraction inc(360, pl[j]);
+
+        auto Ni = size_t(pl[j]);
+
+        // longitude edges
+        auto west = bbox_.west().fraction();
+        auto Nw   = (west / inc).integralPart();
+        if (Nw * inc < west) {
+            Nw += 1;
+        }
+        Longitude lon0 = (Nw * inc) - (inc / 2);
+        Longitude lon1 = lon0;
+
+        for (size_t i = 0; i < Ni; ++i) {
+            auto l = lon1;
+            lon1   = l + Longitude((i + half) * inc);
+
+            GridBox::LatitudeRange lat(latEdges[j + 1], latEdges[j]);
+            GridBox::LongitudeRange lon(l.value(), lon1.value());
+
+            r.emplace_back(GridBox(lat, lon));
+        }
+
+        ASSERT(!periodic || lon0 == lon1.normalise(lon0));
+    }
+
+    ASSERT(r.size() == numberOfPoints());
+    return r;
+}
+
 
 void Reduced::fill(api::MIRJob& job) const  {
     ASSERT(isGlobal());
