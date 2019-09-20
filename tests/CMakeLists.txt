@@ -28,6 +28,7 @@ list( APPEND test_bins
       grib_ecc-386
       bufr_ecc-517
       bufr_get_element
+      bufr_extract_headers
       grib_sh_ieee64
       ieee
       grib_sh_imag
