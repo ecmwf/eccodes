@@ -145,7 +145,6 @@ util::BoundingBox RegularLL::extendBoundingBox(const util::BoundingBox& bbox) co
 }
 
 std::vector<util::GridBox> RegularLL::gridBoxes() const {
-    using util::GridBox;
 
     auto dom   = domain();
     auto north = dom.north().value();
@@ -190,14 +189,10 @@ std::vector<util::GridBox> RegularLL::gridBoxes() const {
         for (size_t i = 0; i < ni_; ++i) {
             auto l = lon1;
             lon1   = l + we * (i + half);
-
-            GridBox::LatitudeRange lat(latEdges[j + 1], latEdges[j]);
-            GridBox::LongitudeRange lon(l.value(), lon1.value());
-
-            r.emplace_back(GridBox(lat, lon));
+            r.emplace_back(util::GridBox(latEdges[j], lonEdges[i], latEdges[j + 1], lonEdges[i + 1]));
         }
 
-        ASSERT(!periodic || lon0 == lon1.normalise(lon0));
+        ASSERT(periodic ? lon0 == lon1.normalise(lon0) : lon0 < lon1.normalise(lon0));
     }
 
     ASSERT(r.size() == numberOfPoints());
