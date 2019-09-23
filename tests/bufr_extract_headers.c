@@ -34,11 +34,11 @@ int main(int argc,char* argv[])
         const int has_ecmwf_local = (bh.localSectionPresent == 1 && bh.bufrHeaderCentre == 98);
         char rdbTypeStr[32] = "not_found";
         if (has_ecmwf_local) sprintf(rdbTypeStr, "%ld", bh.rdbType);
-        printf("%ld %lu %ld %ld %ld %ld %s %lu\n",
+        printf("%ld %lu %ld %ld %ld %ld %s %lu %ld\n",
                bh.edition, bh.totalLength, bh.dataCategory,
                bh.masterTablesVersionNumber,
                bh.typicalMonth, bh.typicalDay,
-               rdbTypeStr, bh.numberOfSubsets);
+               rdbTypeStr, bh.numberOfSubsets, bh.compressedData);
     }
 
     free(headers);

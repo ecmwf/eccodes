@@ -1563,9 +1563,12 @@ grib_handle *grib_new_from_file(grib_context *c, FILE *f, int headers_only, int 
 typedef struct codes_bufr_header {
     off_t   message_offset;
     size_t  message_size;
+
+    /* Section 0 keys */
     long edition;
     unsigned long totalLength;
-    unsigned long section1Length;
+
+    /* Section 1 keys */
     long masterTableNumber;
     long bufrHeaderSubCentre;
     long bufrHeaderCentre;
@@ -1581,7 +1584,7 @@ typedef struct codes_bufr_header {
     long typicalHour;
     long typicalMinute;
 
-    /* Extra BUFR4 keys */
+    /* Section 1 keys: BUFR4-specific */
     long internationalDataSubCategory;
     long typicalYear;
     long typicalSecond;
@@ -1613,9 +1616,10 @@ typedef struct codes_bufr_header {
     long newSubtype;
     long daLoop;
 
-    /* Section 3 */
+    /* Section 3 keys */
     unsigned long numberOfSubsets;
-    long section3Flags;
+    long observedData;
+    long compressedData;
 
 } codes_bufr_header;
 

@@ -18,7 +18,7 @@ temp2="temp.${label}.2"
 
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
-KEYS='edition,totalLength,dataCategory,masterTablesVersionNumber,typicalMonth,typicalDay,rdbType,numberOfSubsets'
+KEYS='edition,totalLength,dataCategory,masterTablesVersionNumber,typicalMonth,typicalDay,rdbType,numberOfSubsets,compressedData'
 
 for bf in ${bufr_files}; do
     input=${data_dir}/bufr/$bf
