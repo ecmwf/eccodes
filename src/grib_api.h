@@ -1589,6 +1589,7 @@ typedef struct codes_bufr_header {
     long localSectionPresent;
 
     /* ECMWF local section keys */
+    unsigned long section2Length;
     long rdbType;
     long oldSubtype;
     long localYear;
@@ -1611,6 +1612,11 @@ typedef struct codes_bufr_header {
     long qualityControl;
     long newSubtype;
     long daLoop;
+
+    /* Section 3 */
+    unsigned long numberOfSubsets;
+    long section3Flags;
+
 } codes_bufr_header;
 
 /* --------------------------------------- */

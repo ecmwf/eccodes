@@ -1695,6 +1695,9 @@ static int bufr_extract_edition(const void* message, long* edition)
 /* The ECMWF BUFR local use section */
 static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes_bufr_header* hdr)
 {
+    const long nbits_section2Length = 3*8;
+    long pos_section2Length = offset_section2*8;
+
     long nbits_rdbType    = 1*8;
     long pos_rdbType      = (offset_section2+4)*8;
     long nbits_oldSubtype = 1*8;
@@ -1715,6 +1718,7 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
     unsigned char* p  = (unsigned char*)message + offset_keyData;
     DebugAssert(hdr->localSectionPresent);
 
+    hdr->section2Length = grib_decode_unsigned_long(message, &pos_section2Length, nbits_section2Length);
     hdr->rdbType = (long)grib_decode_unsigned_long(message, &pos_rdbType, nbits_rdbType);
     hdr->oldSubtype = (long)grib_decode_unsigned_long(message, &pos_oldSubtype, nbits_oldSubtype);
 
@@ -1800,8 +1804,12 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
 
     long nbits_typicalMinute = 1*8;
     long pos_typicalMinute = 24*8;
-
-    int ecmwfLocalSectionPresent = 0;
+    
+    long offset_section3 = 0;
+    long nbits_numberOfSubsets  = 2*8;
+    long pos_numberOfSubsets = 0;  /*depends on offset_section3*/
+    long nbits_section3Flags = 1*8;
+    long pos_section3Flags   = 0;  /*depends on offset_section3*/
 
     hdr->totalLength         = grib_decode_unsigned_long(message, &pos_totalLength, nbits_totalLength);
     hdr->section1Length      = grib_decode_unsigned_long(message, &pos_section1Length, nbits_section1Length);
@@ -1821,12 +1829,27 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     hdr->typicalHour   = (long)grib_decode_unsigned_long(message, &pos_typicalHour, nbits_typicalHour);
     hdr->typicalMinute = (long)grib_decode_unsigned_long(message, &pos_typicalMinute, nbits_typicalMinute);
 
+    hdr->section2Length = 0;
     hdr->localSectionPresent = (hdr->section1Flags != 0);
-    ecmwfLocalSectionPresent = (hdr->bufrHeaderCentre == 98 && hdr->localSectionPresent);
-    if (ecmwfLocalSectionPresent) {
-        const long offset_section2 = hdr->section1Length + BUFR_SECTION0_LEN;  /*bytes*/
-        err = bufr_decode_rdb_keys(message, offset_section2, hdr);
+    if (hdr->localSectionPresent) {
+        long pos_section2Length;
+        const long nbits_section2Length = 3*8;
+        long offset_section2 = BUFR_SECTION0_LEN + hdr->section1Length;  /*bytes*/
+        pos_section2Length = offset_section2*8;
+
+        hdr->section2Length = grib_decode_unsigned_long(message, &pos_section2Length, nbits_section2Length);
+
+        if (hdr->bufrHeaderCentre == 98) {
+            err = bufr_decode_rdb_keys(message, offset_section2, hdr);
+        }
     }
+
+    offset_section3 = BUFR_SECTION0_LEN + hdr->section1Length + hdr->section2Length;  /*bytes*/
+    nbits_numberOfSubsets = 2*8;
+    pos_numberOfSubsets   = (offset_section3+4)*8;
+    hdr->numberOfSubsets  = grib_decode_unsigned_long(message, &pos_numberOfSubsets, nbits_numberOfSubsets);
+    pos_section3Flags     = (offset_section3+6)*8;
+    hdr->section3Flags    = (long)grib_decode_unsigned_long(message, &pos_section3Flags, nbits_section3Flags);
 
     return err;
 }
@@ -1889,7 +1912,12 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     long nbits_typicalSecond = 1*8;
     long pos_typicalSecond   = 29*8;
 
-    int ecmwfLocalSectionPresent = 0;
+    //int ecmwfLocalSectionPresent = 0;
+    long offset_section3 = 0;
+    long nbits_numberOfSubsets  = 2*8;
+    long pos_numberOfSubsets = 0; /*depends on offset_section3*/
+    long nbits_section3Flags = 1*8;
+    long pos_section3Flags   = 0;  /*depends on offset_section3*/
 
     hdr->totalLength         = grib_decode_unsigned_long(message, &pos_totalLength, nbits_totalLength);
     hdr->section1Length      = grib_decode_unsigned_long(message, &pos_section1Length, nbits_section1Length);
@@ -1909,13 +1937,28 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     hdr->typicalHour   = (long)grib_decode_unsigned_long(message, &pos_typicalHour, nbits_typicalHour);
     hdr->typicalMinute = (long)grib_decode_unsigned_long(message, &pos_typicalMinute, nbits_typicalMinute);
     hdr->typicalSecond = (long)grib_decode_unsigned_long(message, &pos_typicalSecond, nbits_typicalSecond);
-
+    
+    hdr->section2Length = 0;
     hdr->localSectionPresent = (hdr->section1Flags != 0);
-    ecmwfLocalSectionPresent = (hdr->bufrHeaderCentre == 98 && hdr->localSectionPresent);
-    if (ecmwfLocalSectionPresent) {
-        const long offset_section2 = hdr->section1Length + BUFR_SECTION0_LEN;  /*bytes*/
-        err = bufr_decode_rdb_keys(message, offset_section2, hdr);
+    if (hdr->localSectionPresent) {
+        long pos_section2Length;
+        const long nbits_section2Length = 3*8;
+        long offset_section2 = BUFR_SECTION0_LEN + hdr->section1Length;  /*bytes*/
+        pos_section2Length = offset_section2*8;
+
+        hdr->section2Length = grib_decode_unsigned_long(message, &pos_section2Length, nbits_section2Length);
+
+        if (hdr->bufrHeaderCentre == 98) {
+            err = bufr_decode_rdb_keys(message, offset_section2, hdr);
+        }
     }
+
+    offset_section3 = BUFR_SECTION0_LEN + hdr->section1Length + hdr->section2Length;  /*bytes*/
+    nbits_numberOfSubsets = 2*8;
+    pos_numberOfSubsets   = (offset_section3+4)*8;
+    hdr->numberOfSubsets  = grib_decode_unsigned_long(message, &pos_numberOfSubsets, nbits_numberOfSubsets);
+    pos_section3Flags     = (offset_section3+6)*8;
+    hdr->section3Flags    = (long)grib_decode_unsigned_long(message, &pos_section3Flags, nbits_section3Flags);
 
     return err;
 }
