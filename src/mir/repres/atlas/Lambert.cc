@@ -34,10 +34,10 @@ AtlasRegularGrid::Projection Lambert::make_projection(const param::MIRParametris
     ASSERT(param.get("Latin1InDegrees", Latin1InDegrees));
     ASSERT(param.get("Latin2InDegrees", Latin2InDegrees));
 
-    return Projection::Spec("type", "lambert_conformal")
+    return Projection::Spec("type", "lambert_conformal_conic")
         .set("latitude1", Latin1InDegrees)
         .set("latitude2", Latin2InDegrees)
-        .set("latitudeD", LaDInDegrees)
+        .set("latitude0", LaDInDegrees)
         .set("longitude0", LoVInDegrees);
 }
 
