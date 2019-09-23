@@ -21,15 +21,24 @@ int main(int argc,char* argv[])
 
     assert(argc == 2);
 
-    filename=argv[1];
+    filename = argv[1];
     err = codes_bufr_extract_headers_malloc(c, filename, &headers, &num_messages);
     assert(!err);
 
     for (i=0; i<num_messages; ++i) {
         codes_bufr_header bh = headers[i];
-        printf("%ld %lu %ld %ld %ld\n",
+        /*
+         * Mimic the behaviour of bufr_get -f -p keys
+         * for testing
+         */
+        const int has_ecmwf_local = (bh.localSectionPresent == 1 && bh.bufrHeaderCentre == 98);
+        char rdbTypeStr[32] = "not_found";
+        if (has_ecmwf_local) sprintf(rdbTypeStr, "%ld", bh.rdbType);
+        printf("%ld %lu %ld %ld %ld %ld %s\n",
                bh.edition, bh.totalLength, bh.dataCategory,
-               bh.masterTablesVersionNumber, bh.rdbType);
+               bh.masterTablesVersionNumber,
+               bh.typicalMonth, bh.typicalDay,
+               rdbTypeStr);
     }
 
     free(headers);
