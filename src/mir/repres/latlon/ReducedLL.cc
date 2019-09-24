@@ -28,6 +28,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "mir/util/GridBox.h"
 #include "mir/util/MeshGeneratorParameters.h"
 
 
@@ -270,6 +271,57 @@ public:
 
 Iterator* ReducedLL::iterator() const {
     return new ReducedLLIterator(pl_, domain());
+}
+
+std::vector<util::GridBox> ReducedLL::gridBoxes() const {
+
+    auto dom      = domain();
+    bool periodic = isPeriodicWestEast();
+
+    auto Nj                  = pl_.size();
+    const eckit::Fraction sn = (dom.north() - dom.south()).fraction() / eckit::Fraction(Nj - 1);
+    eckit::Fraction half(1, 2);
+
+
+    // grid boxes
+    std::vector<util::GridBox> r;
+    r.reserve(numberOfPoints());
+
+
+    // latitude edges
+    std::vector<double> latEdges(Nj + 1);
+
+    auto lat0   = bbox_.north();
+    latEdges[0] = (lat0 + sn / 2).value();
+    for (size_t j = 0; j < Nj; ++j) {
+        latEdges[j + 1] = (lat0 - (j + half) * sn).value();
+    }
+
+    latEdges.front() = std::min(dom.north().value(), std::max(dom.south().value(), latEdges.front()));
+    latEdges.back()  = std::min(dom.north().value(), std::max(dom.south().value(), latEdges.back()));
+
+
+    for (size_t j = 0; j < Nj; ++j) {
+
+        // longitude edges
+        auto Ni = pl_[j];
+        ASSERT(Ni > 1);
+        const eckit::Fraction we = (dom.east() - dom.west()).fraction() / (Ni - (periodic ? 0 : 1));
+
+        auto lon0 = bbox_.west();
+        auto lon1 = lon0;
+
+        for (long i = 0; i < Ni; ++i) {
+            auto l = lon1;
+            lon1 += we;
+            r.emplace_back(util::GridBox(latEdges[j], l.value(), latEdges[j + 1], lon1.value()));
+        }
+
+        ASSERT(periodic ? lon0 == lon1.normalise(lon0) : lon0 < lon1.normalise(lon0));
+    }
+
+    ASSERT(r.size() == numberOfPoints());
+    return r;
 }
 
 namespace {
