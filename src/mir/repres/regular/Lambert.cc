@@ -9,7 +9,7 @@
  */
 
 
-#include "mir/repres/atlas/Lambert.h"
+#include "mir/repres/regular/Lambert.h"
 
 #include "eckit/exception/Exceptions.h"
 
@@ -18,13 +18,13 @@
 
 namespace mir {
 namespace repres {
-namespace atlas {
+namespace regular {
 
 static RepresentationBuilder<Lambert> __builder("lambert");
 
-Lambert::Lambert(const param::MIRParametrisation& param) : AtlasRegularGrid(param, make_projection(param)) {}
+Lambert::Lambert(const param::MIRParametrisation& param) : RegularGrid(param, make_projection(param)) {}
 
-AtlasRegularGrid::Projection Lambert::make_projection(const param::MIRParametrisation& param) {
+RegularGrid::Projection Lambert::make_projection(const param::MIRParametrisation& param) {
     double LaDInDegrees;
     double LoVInDegrees;
     double Latin1InDegrees;
@@ -45,6 +45,6 @@ void Lambert::fill(grib_info&) const {
     NOTIMP;
 }
 
-}  // namespace atlas
+}  // namespace regular
 }  // namespace repres
 }  // namespace mir

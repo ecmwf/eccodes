@@ -9,7 +9,7 @@
  */
 
 
-#include "mir/repres/atlas/AtlasRegularGrid.h"
+#include "mir/repres/regular/RegularGrid.h"
 
 #include <cmath>
 #include <ostream>
@@ -26,9 +26,9 @@
 
 namespace mir {
 namespace repres {
-namespace atlas {
+namespace regular {
 
-AtlasRegularGrid::AtlasRegularGrid(const param::MIRParametrisation& param, AtlasRegularGrid::Projection projection) {
+RegularGrid::RegularGrid(const param::MIRParametrisation& param, RegularGrid::Projection projection) {
 
     ASSERT(projection);
 
@@ -62,7 +62,7 @@ AtlasRegularGrid::AtlasRegularGrid(const param::MIRParametrisation& param, Atlas
     ASSERT(x_.front() < x_.back());
     ASSERT(y_.front() > y_.back());
 
-    grid_ = RegularGrid(x_, y_, projection);
+    grid_ = {x_, y_, projection};
 
     ::atlas::RectangularDomain range({x_.front(), x_.back()}, {y_.front(), y_.back()}, "meters");
     ::atlas::RectangularLonLatDomain bbox = projection.lonlatBoundingBox(range);
@@ -71,10 +71,10 @@ AtlasRegularGrid::AtlasRegularGrid(const param::MIRParametrisation& param, Atlas
     bbox_ = {bbox.north(), bbox.west(), bbox.south(), bbox.east()};
 }
 
-AtlasRegularGrid::~AtlasRegularGrid() = default;
+RegularGrid::~RegularGrid() = default;
 
-void AtlasRegularGrid::print(std::ostream& out) const {
-    out << "AtlasRegularGrid["
+void RegularGrid::print(std::ostream& out) const {
+    out << "RegularGrid["
             "x=" << x_.spec()
         << ",y=" << y_.spec()
         << ",projection=" << grid_.projection().spec()
@@ -82,23 +82,23 @@ void AtlasRegularGrid::print(std::ostream& out) const {
         << "]";
 }
 
-bool AtlasRegularGrid::extendBoundingBoxOnIntersect() const {
+bool RegularGrid::extendBoundingBoxOnIntersect() const {
     return true;
 }
 
-size_t AtlasRegularGrid::numberOfPoints() const {
+size_t RegularGrid::numberOfPoints() const {
     return x_.size() * y_.size();
 }
 
-::atlas::Grid AtlasRegularGrid::atlasGrid() const {
+::atlas::Grid RegularGrid::atlasGrid() const {
     return grid_;
 }
 
-bool AtlasRegularGrid::isPeriodicWestEast() const {
+bool RegularGrid::isPeriodicWestEast() const {
     return false;
 }
 
-void AtlasRegularGrid::fill(grib_info& info) const {
+void RegularGrid::fill(grib_info& info) const {
 
     // GRIB2 encoding of user-provided radius or semi-major/minor axis
     if (info.packing.editionNumber == 2) {
@@ -134,26 +134,26 @@ void AtlasRegularGrid::fill(grib_info& info) const {
     }
 }
 
-bool AtlasRegularGrid::includesNorthPole() const {
+bool RegularGrid::includesNorthPole() const {
     return bbox_.north() == Latitude::NORTH_POLE;
 }
 
-bool AtlasRegularGrid::includesSouthPole() const {
+bool RegularGrid::includesSouthPole() const {
     return bbox_.south() == Latitude::SOUTH_POLE;
 }
 
-void AtlasRegularGrid::reorder(long scanningMode, mir::data::MIRValuesVector& values) const {
+void RegularGrid::reorder(long scanningMode, mir::data::MIRValuesVector& values) const {
     GribReorder::reorder(values, scanningMode, x_.size(), y_.size());
 }
 
-void AtlasRegularGrid::validate(const MIRValuesVector& values) const {
+void RegularGrid::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
-    eckit::Log::debug<LibMir>() << "AtlasRegularGrid::validate checked " << util::Pretty(values.size(), "value")
+    eckit::Log::debug<LibMir>() << "RegularGrid::validate checked " << util::Pretty(values.size(), "value")
                                 << ", numberOfPoints: " << util::Pretty(count) << "." << std::endl;
     ASSERT(values.size() == count);
 }
 
-Iterator* AtlasRegularGrid::iterator() const {
+Iterator* RegularGrid::iterator() const {
 
     class AtlasRegularIterator : public Iterator {
         Projection projection_;
@@ -211,7 +211,7 @@ Iterator* AtlasRegularGrid::iterator() const {
     return new AtlasRegularIterator(grid_.projection(), x_, y_);
 }
 
-void AtlasRegularGrid::makeName(std::ostream& out) const {
+void RegularGrid::makeName(std::ostream& out) const {
     eckit::MD5 h;
     h << grid_.projection().spec();
     h << x_.spec();
@@ -223,26 +223,26 @@ void AtlasRegularGrid::makeName(std::ostream& out) const {
         h << earthMinorAxis_;
     }
     auto type = grid_.projection().spec().getString("type");
-    out << "AtlasRegularGrid-" << (type.empty() ? "" : type + "-") << h.digest();
+    out << "RegularGrid-" << (type.empty() ? "" : type + "-") << h.digest();
 }
 
-bool AtlasRegularGrid::sameAs(const Representation& other) const {
-    auto name = [](const AtlasRegularGrid& repres) {
+bool RegularGrid::sameAs(const Representation& other) const {
+    auto name = [](const RegularGrid& repres) {
         std::stringstream str;
         repres.makeName(str);
         return str.str();
     };
 
-    auto o = dynamic_cast<const AtlasRegularGrid*>(&other);
+    auto o = dynamic_cast<const RegularGrid*>(&other);
     return o && name(*this) == name(*o);
 }
 
-void AtlasRegularGrid::fill(util::MeshGeneratorParameters& params) const {
+void RegularGrid::fill(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
         params.meshGenerator_ = "structured";
     }
 }
 
-}  // namespace atlas
+}  // namespace regular
 }  // namespace repres
 }  // namespace mir

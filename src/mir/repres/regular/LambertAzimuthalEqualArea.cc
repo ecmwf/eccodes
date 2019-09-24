@@ -9,7 +9,7 @@
  */
 
 
-#include "mir/repres/atlas/LambertAzimuthalEqualArea.h"
+#include "mir/repres/regular/LambertAzimuthalEqualArea.h"
 
 #include <cmath>
 
@@ -19,14 +19,14 @@
 
 namespace mir {
 namespace repres {
-namespace atlas {
+namespace regular {
 
 static RepresentationBuilder<LambertAzimuthalEqualArea> __builder("lambert_azimuthal_equal_area");
 
 LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const param::MIRParametrisation& param) :
-    AtlasRegularGrid(param, make_projection(param)) {}
+    RegularGrid(param, make_projection(param)) {}
 
-AtlasRegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::MIRParametrisation& param) {
+RegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::MIRParametrisation& param) {
 
     std::string proj;
     if (param.get("proj", proj) && !proj.empty()) {
@@ -86,9 +86,9 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
     GribExtraSetting::set(info, "centralLongitudeInMicrodegrees", std::lround(reference[LLCOORDS::LON] * 1.e6));
 
     // some extra keys are edition-specific, so parent call is here
-    AtlasRegularGrid::fill(info);
+    RegularGrid::fill(info);
 }
 
-}  // namespace atlas
+}  // namespace regular
 }  // namespace repres
 }  // namespace mir
