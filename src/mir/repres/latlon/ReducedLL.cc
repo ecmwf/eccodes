@@ -131,10 +131,11 @@ void ReducedLL::fill(api::MIRJob& job) const {
 
 atlas::Grid ReducedLL::atlasGrid() const {
     const util::Domain dom = domain();
+    auto N                 = long(pl_.size());
 
     atlas::StructuredGrid::XSpace xspace({{dom.west().value(), dom.east().value()}}, pl_, !dom.isPeriodicWestEast());
     atlas::StructuredGrid::YSpace yspace(
-        atlas::grid::LinearSpacing({{dom.north().value(), dom.south().value()}}, pl_.size()));
+        atlas::grid::LinearSpacing({{dom.north().value(), dom.south().value()}}, N));
 
     return atlas::StructuredGrid(xspace, yspace);
 }
@@ -185,17 +186,13 @@ class ReducedLLIterator : public Iterator {
     size_t ni_;
 
     const util::Domain domain_;
-
     const eckit::Fraction west_;
-
     const eckit::Fraction ew_;
-
     eckit::Fraction inc_west_east_;
-
     const eckit::Fraction inc_north_south_;
 
-    eckit::Fraction lat_;
-    eckit::Fraction lon_;
+    eckit::Fraction latitude_;
+    eckit::Fraction longitude_;
 
     size_t i_;
     size_t j_;
@@ -215,23 +212,23 @@ class ReducedLLIterator : public Iterator {
 
         while (j_ < nj_ && i_ < ni_) {
 
-            lat = lat_;
-            lon = lon_;
+            lat = latitude_;
+            lon = longitude_;
 
             i_++;
-            lon_ += inc_west_east_;
+            longitude_ += inc_west_east_;
 
             if (i_ == ni_) {
 
                 j_++;
-                lat_ -= inc_north_south_;
-                lon_ = west_;
+                latitude_ -= inc_north_south_;
+                longitude_ = west_;
 
                 i_ = 0;
 
                 if (j_ < nj_) {
                     ASSERT(p_ < pl_.size());
-                    ni_ = pl_[p_++];
+                    ni_ = size_t(pl_[p_++]);
                     ASSERT(ni_ > 1);
                     inc_west_east_ = ew_ / (ni_ - (periodic_ ? 0 : 1));
                 }
@@ -246,32 +243,24 @@ class ReducedLLIterator : public Iterator {
     }
 
 public:
-    ReducedLLIterator(const std::vector<long>& pl, const util::Domain& dom)
-        : pl_(pl)
-        , nj_(pl.size())
-        , domain_(dom)
-        ,
-
-        west_(domain_.west().fraction())
-        ,
-
-        ew_((domain_.east() - domain_.west()).fraction())
-        ,
-
-        inc_north_south_((domain_.north() - domain_.south()).fraction() / eckit::Fraction(nj_ - 1))
-        ,
-
-        lat_(domain_.north().fraction())
-        , lon_(west_)
-        , i_(0)
-        , j_(0)
-        , p_(0)
-        , count_(0)
-        , periodic_(dom.isPeriodicWestEast()) {
+    ReducedLLIterator(const std::vector<long>& pl, const util::Domain& dom) :
+        pl_(pl),
+        nj_(pl.size()),
+        domain_(dom),
+        west_(domain_.west().fraction()),
+        ew_((domain_.east() - domain_.west()).fraction()),
+        inc_north_south_((domain_.north() - domain_.south()).fraction() / eckit::Fraction(nj_ - 1)),
+        latitude_(domain_.north().fraction()),
+        longitude_(west_),
+        i_(0),
+        j_(0),
+        p_(0),
+        count_(0),
+        periodic_(dom.isPeriodicWestEast()) {
 
         ASSERT(nj_ > 1);
 
-        ni_ = pl_[p_++];
+        ni_ = size_t(pl_[p_++]);
         ASSERT(ni_ > 1);
         inc_west_east_ = ew_ / (ni_ - (periodic_ ? 0 : 1));
 
