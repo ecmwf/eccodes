@@ -141,11 +141,6 @@ static int bufr_extract_edition(const void* message, long* edition)
 /* The ECMWF BUFR local use section */
 static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes_bufr_header* hdr)
 {
-    size_t i = 0;
-
-    int isSatelliteType = 0;
-    int isSatellite = 0;
-
     const long nbits_section2Length = 3*8;
     long pos_section2Length = offset_section2*8;
 
@@ -163,12 +158,10 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
 
     long start = 0;
     const long offset_keyData = offset_section2 + 6;
-    const long offset_keyMore = offset_section2 + 19;
     const long offset_rdbtime = offset_section2 + 38;
     const long offset_rectime = offset_section2 + 41;
 
     unsigned char* p = (unsigned char*)message + offset_keyData;
-    char* q = (char*)message + offset_keyMore;
 
     DebugAssert(hdr->localSectionPresent);
 
@@ -204,25 +197,41 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
     hdr->newSubtype     = (long)grib_decode_unsigned_long(message, &pos_newSubtype, nbits_newSubtype);
     hdr->daLoop         = (long)grib_decode_unsigned_long(message, &pos_daLoop, nbits_daLoop);
 
+    return GRIB_SUCCESS;
+}
+
+/* The ECMWF BUFR local use section */
+static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2, codes_bufr_header* hdr)
+{
+    size_t i = 0;
+
+    int isSatelliteType = 0;
+    int isSatellite = 0;
+
+    /*const long offset_keyData = offset_section2 + 6;*/
+    const long offset_keyMore = offset_section2 + 19;
+    /*const long offset_keySat  = offset_section2 + 27;*/
+
+    /*unsigned char* p = (unsigned char*)message + offset_keyData;*/
+    char* q = (char*)message + offset_keyMore;
+
+    DebugAssert(hdr->localSectionPresent);
+
     if ( hdr->rdbType == 2 || hdr->rdbType == 3 || hdr->rdbType == 8 || hdr->rdbType == 12 ) {
         isSatelliteType = 1;
     }
-    if (isSatelliteType) { /*  || numberOfSubsets>1) { */
+    if (isSatelliteType || hdr->numberOfSubsets > 1) {
         isSatellite = 1;
     } else {
         isSatellite = 0;
     }
+
     if (!isSatellite) {
         /* interpret keyMore as a string */
-        hdr->ident[i++] = *q++;
-        hdr->ident[i++] = *q++;
-        hdr->ident[i++] = *q++;
-        hdr->ident[i++] = *q++;
-        hdr->ident[i++] = *q++;
-        hdr->ident[i++] = *q++;
-        hdr->ident[i++] = *q++;
-        hdr->ident[i++] = *q++;
-        hdr->ident[i]   = '\0';
+        for (i=0; i<8; ++i) {
+            hdr->ident[i] = *q++;
+        }
+        hdr->ident[i] = '\0';
     }
 
     return GRIB_SUCCESS;
@@ -281,6 +290,7 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     long nbits_typicalMinute = 1*8;
     long pos_typicalMinute = 24*8;
 
+    long offset_section2 = 0;
     long offset_section3 = 0;
     long nbits_numberOfSubsets  = 2*8;
     long pos_numberOfSubsets = 0;  /*depends on offset_section3*/
@@ -307,12 +317,12 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     hdr->typicalHour   = (long)grib_decode_unsigned_long(message, &pos_typicalHour, nbits_typicalHour);
     hdr->typicalMinute = (long)grib_decode_unsigned_long(message, &pos_typicalMinute, nbits_typicalMinute);
 
+    offset_section2 = BUFR_SECTION0_LEN + section1Length;  /*bytes*/
     hdr->section2Length = 0;
     hdr->localSectionPresent = (hdr->section1Flags != 0);
     if (hdr->localSectionPresent) {
         long pos_section2Length;
         const long nbits_section2Length = 3*8;
-        long offset_section2 = BUFR_SECTION0_LEN + section1Length;  /*bytes*/
         pos_section2Length = offset_section2*8;
 
         hdr->section2Length = grib_decode_unsigned_long(message, &pos_section2Length, nbits_section2Length);
@@ -331,6 +341,10 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     section3Flags       = (long)grib_decode_unsigned_long(message, &pos_section3Flags, nbits_section3Flags);
     hdr->observedData   = (section3Flags & 1<<7) ? 1 : 0;
     hdr->compressedData = (section3Flags & 1<<6) ? 1 : 0;
+
+    if (hdr->localSectionPresent && hdr->bufrHeaderCentre == 98 && hdr->section2Length == 52) {
+        err = bufr_decode_extra_rdb_keys(message, offset_section2, hdr);
+    }
 
     return err;
 }
@@ -394,6 +408,7 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     long nbits_typicalSecond = 1*8;
     long pos_typicalSecond   = 29*8;
 
+    long offset_section2 = 0;
     long offset_section3 = 0;
     long nbits_numberOfSubsets  = 2*8;
     long pos_numberOfSubsets = 0; /*depends on offset_section3*/
@@ -421,12 +436,12 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     hdr->typicalMinute = (long)grib_decode_unsigned_long(message, &pos_typicalMinute, nbits_typicalMinute);
     hdr->typicalSecond = (long)grib_decode_unsigned_long(message, &pos_typicalSecond, nbits_typicalSecond);
 
+    offset_section2 = BUFR_SECTION0_LEN + section1Length;  /*bytes*/
     hdr->section2Length = 0;
     hdr->localSectionPresent = (hdr->section1Flags != 0);
     if (hdr->localSectionPresent) {
         long pos_section2Length;
         const long nbits_section2Length = 3*8;
-        long offset_section2 = BUFR_SECTION0_LEN + section1Length;  /*bytes*/
         pos_section2Length = offset_section2*8;
 
         hdr->section2Length = grib_decode_unsigned_long(message, &pos_section2Length, nbits_section2Length);
@@ -445,6 +460,10 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     section3Flags       = (long)grib_decode_unsigned_long(message, &pos_section3Flags, nbits_section3Flags);
     hdr->observedData   = (section3Flags & 1<<7) ? 1 : 0;
     hdr->compressedData = (section3Flags & 1<<6) ? 1 : 0;
+
+    if (hdr->localSectionPresent && hdr->bufrHeaderCentre == 98 && hdr->section2Length == 52) {
+        err = bufr_decode_extra_rdb_keys(message, offset_section2, hdr);
+    }
 
     return err;
 }

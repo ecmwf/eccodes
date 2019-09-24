@@ -18,23 +18,13 @@ temp2="temp.${label}.2"
 
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
-KEYS='edition,totalLength,bufrHeaderCentre,dataCategory,masterTablesVersionNumber,typicalMonth,typicalDay,rdbType,numberOfSubsets,compressedData'
+KEYS='edition,totalLength,bufrHeaderCentre,dataCategory,masterTablesVersionNumber,typicalMonth,typicalDay,rdbType,localYear,qualityControl,numberOfSubsets,compressedData,ident'
 
 for bf in ${bufr_files}; do
     input=${data_dir}/bufr/$bf
     $EXEC ${test_dir}/bufr_extract_headers $KEYS $input > $temp1
     ${tools_dir}/bufr_get            -f -p $KEYS $input > $temp2
     diff -w $temp1 $temp2
-done
-
-# Check for ident
-files_with_ident="airc_142.bufr amda_144.bufr b004_145.bufr bssh_180.bufr temp_106.bufr profiler_european.bufr soil_7.bufr temp-land-with-substituted-values.bufr"
-for bf in ${files_with_ident}; do
-    input=${data_dir}/bufr/$bf
-    # Have to remove the extra space at the end
-    $EXEC ${test_dir}/bufr_extract_headers ident $input |sed -e 's/ $//' > $temp1
-    ${tools_dir}/bufr_get            -f -p ident $input > $temp2
-    diff $temp1 $temp2
 done
 
 

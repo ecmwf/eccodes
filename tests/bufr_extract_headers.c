@@ -79,7 +79,6 @@ int main(int argc, char* argv[])
 
         if (strstr(keys, "rdbType"))        print_rdb_key(has_ecmwf_local, bh.rdbType);
         if (strstr(keys, "oldSubtype"))     print_rdb_key(has_ecmwf_local, bh.oldSubtype);
-        if (strstr(keys, "ident"))          print_rdb_ident(has_ecmwf_local, bh.ident);
         if (strstr(keys, "localYear"))      print_rdb_key(has_ecmwf_local, bh.localYear);
         if (strstr(keys, "localMonth"))     print_rdb_key(has_ecmwf_local, bh.localMonth);
         if (strstr(keys, "localDay"))       print_rdb_key(has_ecmwf_local, bh.localDay);
@@ -101,6 +100,8 @@ int main(int argc, char* argv[])
         if (strstr(keys, "numberOfSubsets"))    printf("%ld ", bh.numberOfSubsets);
         if (strstr(keys, "observedData"))       printf("%ld ", bh.observedData);
         if (strstr(keys, "compressedData"))     printf("%ld ", bh.compressedData);
+
+        if (strstr(keys, "ident"))          print_rdb_ident(has_ecmwf_local, bh.ident);
         printf("\n");
     }
 
