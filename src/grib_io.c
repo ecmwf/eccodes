@@ -1695,6 +1695,11 @@ static int bufr_extract_edition(const void* message, long* edition)
 /* The ECMWF BUFR local use section */
 static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes_bufr_header* hdr)
 {
+    size_t i = 0;
+
+    int isSatelliteType = 0;
+    int isSatellite = 0;
+
     const long nbits_section2Length = 3*8;
     long pos_section2Length = offset_section2*8;
 
@@ -1712,10 +1717,13 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
 
     long start = 0;
     const long offset_keyData = offset_section2 + 6;
+    const long offset_keyMore = offset_section2 + 19;
     const long offset_rdbtime = offset_section2 + 38;
     const long offset_rectime = offset_section2 + 41;
 
-    unsigned char* p  = (unsigned char*)message + offset_keyData;
+    unsigned char* p = (unsigned char*)message + offset_keyData;
+    char* q = (char*)message + offset_keyMore;
+
     DebugAssert(hdr->localSectionPresent);
 
     hdr->section2Length = grib_decode_unsigned_long(message, &pos_section2Length, nbits_section2Length);
@@ -1749,6 +1757,27 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
     hdr->qualityControl = (long)grib_decode_unsigned_long(message, &pos_qualityControl, nbits_qualityControl);
     hdr->newSubtype     = (long)grib_decode_unsigned_long(message, &pos_newSubtype, nbits_newSubtype);
     hdr->daLoop         = (long)grib_decode_unsigned_long(message, &pos_daLoop, nbits_daLoop);
+
+    if ( hdr->rdbType == 2 || hdr->rdbType == 3 || hdr->rdbType == 8 || hdr->rdbType == 12 ) {
+        isSatelliteType = 1;
+    }
+    if (isSatelliteType) { /*  || numberOfSubsets>1) { */
+        isSatellite = 1;
+    } else {
+        isSatellite = 0;
+    }
+    if (!isSatellite) {
+        /* interpret keyMore as a string */
+        hdr->ident[i++] = *q++;
+        hdr->ident[i++] = *q++;
+        hdr->ident[i++] = *q++;
+        hdr->ident[i++] = *q++;
+        hdr->ident[i++] = *q++;
+        hdr->ident[i++] = *q++;
+        hdr->ident[i++] = *q++;
+        hdr->ident[i++] = *q++;
+        hdr->ident[i]   = '\0';
+    }
 
     return GRIB_SUCCESS;
 }

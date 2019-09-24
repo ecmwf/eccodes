@@ -39,6 +39,7 @@ int main(int argc,char* argv[])
                bh.masterTablesVersionNumber,
                bh.typicalMonth, bh.typicalDay,
                rdbTypeStr, bh.numberOfSubsets, bh.compressedData);
+        /*printf("ident=|%s|\n", bh.ident);*/
     }
 
     free(headers);

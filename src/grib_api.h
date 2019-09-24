@@ -1595,6 +1595,7 @@ typedef struct codes_bufr_header {
     unsigned long section2Length;
     long rdbType;
     long oldSubtype;
+    char ident[9];
     long localYear;
     long localMonth;
     long localDay;
