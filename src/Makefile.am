@@ -406,7 +406,6 @@ noinst_HEADERS = grib_api_internal.h \
                  grib_dumper_factory.h \
                  grib_accessor_class.h \
                  grib_accessor_factory.h \
-                 grib_expression.h \
                  grib_nearest_class.h \
                  grib_nearest_factory.h \
                  grib_box_class.h \
