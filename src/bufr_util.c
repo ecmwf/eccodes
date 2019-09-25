@@ -21,13 +21,13 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
     grib_context* c=h->context;
     DebugAssert(h->product_kind == PRODUCT_BUFR);
 
-    while (next && next->value && strcmp(next->value,key)) {
+    while (next && next->value && strcmp(next->value, key)) {
         prev=next;
         next=next->next;
     }
     if (!next) {
         DebugAssert(prev);
-        prev->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
+        prev->next = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
         next=prev->next;
     }
     if (!next->value) {
@@ -43,16 +43,16 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
         /*   This is the first and only instance of the key */
         /* So we check if there is a second one of this key, */
         /* If not, then rank is zero i.e. this is the only instance */
-        char* s=(char*)grib_context_malloc_clear(c,strlen(key)+5);
-        sprintf(s,"#2#%s",key);
-        if (grib_get_size(h,s,&size)==GRIB_NOT_FOUND) theRank=0;
+        char* s = (char*)grib_context_malloc_clear(c, strlen(key)+5);
+        sprintf(s, "#2#%s", key);
+        if (grib_get_size(h, s, &size) == GRIB_NOT_FOUND) theRank=0;
         grib_context_free(c, s);
     }
 
     return theRank;
 }
 
-char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin,grib_handle* hout, size_t* nkeys, int* err)
+char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin, grib_handle* hout, size_t* nkeys, int* err)
 {
     bufr_keys_iterator* kiter=NULL;
     char* name=0;
@@ -68,7 +68,7 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin,grib_handle* hou
     if (!kiter) return NULL;
     k=grib_sarray_new(hin->context, 50, 10);
 
-    while(codes_bufr_keys_iterator_next(kiter))
+    while (codes_bufr_keys_iterator_next(kiter))
     {
         name = codes_bufr_keys_iterator_get_name(kiter);
         /* if the copy fails we want to keep copying without any errors.
@@ -108,7 +108,7 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
     kiter=codes_bufr_data_section_keys_iterator_new(hin);
     if (!kiter) return GRIB_INTERNAL_ERROR;
 
-    while(codes_bufr_keys_iterator_next(kiter))
+    while (codes_bufr_keys_iterator_next(kiter))
     {
         name = codes_bufr_keys_iterator_get_name(kiter);
         /* if the copy fails we want to keep copying without any error messages.
@@ -127,4 +127,408 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
 
     codes_bufr_keys_iterator_delete(kiter);
     return err;
+}
+
+#define BUFR_SECTION0_LEN 8 /* BUFR section 0 is always 8 bytes long */
+static int bufr_extract_edition(const void* message, long* edition)
+{
+    const long nbits_edition = 8;
+    long pos_edition = 7*8;
+
+    *edition = (long)grib_decode_unsigned_long(message, &pos_edition, nbits_edition);
+    return GRIB_SUCCESS;
+}
+/* The ECMWF BUFR local use section */
+static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes_bufr_header* hdr)
+{
+    const long nbits_section2Length = 3*8;
+    long pos_section2Length = offset_section2*8;
+
+    long nbits_rdbType    = 1*8;
+    long pos_rdbType      = (offset_section2+4)*8;
+    long nbits_oldSubtype = 1*8;
+    long pos_oldSubtype   = (offset_section2+5)*8;
+
+    long nbits_qualityControl = 1*8;
+    long pos_qualityControl   = (offset_section2+48)*8;
+    long nbits_newSubtype     = 2*8;
+    long pos_newSubtype       = (offset_section2+49)*8;
+    long nbits_daLoop         = 1*8;
+    long pos_daLoop           = (offset_section2+51)*8;
+
+    long start = 0;
+    const long offset_keyData = offset_section2 + 6;
+    const long offset_rdbtime = offset_section2 + 38;
+    const long offset_rectime = offset_section2 + 41;
+
+    unsigned char* p = (unsigned char*)message + offset_keyData;
+
+    DebugAssert(hdr->localSectionPresent);
+
+    hdr->section2Length = grib_decode_unsigned_long(message, &pos_section2Length, nbits_section2Length);
+    hdr->rdbType = (long)grib_decode_unsigned_long(message, &pos_rdbType, nbits_rdbType);
+    hdr->oldSubtype = (long)grib_decode_unsigned_long(message, &pos_oldSubtype, nbits_oldSubtype);
+
+    start = 0;
+    hdr->localYear   = (long)grib_decode_unsigned_long(p, &start, 12);
+    hdr->localMonth  = (long)grib_decode_unsigned_long(p, &start, 4);
+    hdr->localDay    = (long)grib_decode_unsigned_long(p, &start, 6);
+    hdr->localHour   = (long)grib_decode_unsigned_long(p, &start, 5);
+    hdr->localMinute = (long)grib_decode_unsigned_long(p, &start, 6);
+    hdr->localSecond = (long)grib_decode_unsigned_long(p, &start, 6);
+
+    /* rdbtime */
+    p  = (unsigned char*)message + offset_rdbtime;
+    start = 0;
+    hdr->rdbtimeDay    = (long)grib_decode_unsigned_long(p, &start, 6);
+    hdr->rdbtimeHour   = (long)grib_decode_unsigned_long(p, &start, 5);
+    hdr->rdbtimeMinute = (long)grib_decode_unsigned_long(p, &start, 6);
+    hdr->rdbtimeSecond = (long)grib_decode_unsigned_long(p, &start, 6);
+
+    /* rectime */
+    p  = (unsigned char*)message + offset_rectime;
+    start = 0;
+    hdr->rectimeDay    = (long)grib_decode_unsigned_long(p, &start, 6);
+    hdr->rectimeHour   = (long)grib_decode_unsigned_long(p, &start, 5);
+    hdr->rectimeMinute = (long)grib_decode_unsigned_long(p, &start, 6);
+    hdr->rectimeSecond = (long)grib_decode_unsigned_long(p, &start, 6);
+
+    hdr->qualityControl = (long)grib_decode_unsigned_long(message, &pos_qualityControl, nbits_qualityControl);
+    hdr->newSubtype     = (long)grib_decode_unsigned_long(message, &pos_newSubtype, nbits_newSubtype);
+    hdr->daLoop         = (long)grib_decode_unsigned_long(message, &pos_daLoop, nbits_daLoop);
+
+    return GRIB_SUCCESS;
+}
+
+/* The ECMWF BUFR local use section */
+static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2, codes_bufr_header* hdr)
+{
+    size_t i = 0;
+
+    int isSatelliteType = 0;
+    int isSatellite = 0;
+
+    /*const long offset_keyData = offset_section2 + 6;*/
+    const long offset_keyMore = offset_section2 + 19;
+    /*const long offset_keySat  = offset_section2 + 27;*/
+
+    /*unsigned char* p = (unsigned char*)message + offset_keyData;*/
+    char* q = (char*)message + offset_keyMore;
+
+    DebugAssert(hdr->localSectionPresent);
+
+    if ( hdr->rdbType == 2 || hdr->rdbType == 3 || hdr->rdbType == 8 || hdr->rdbType == 12 ) {
+        isSatelliteType = 1;
+    }
+    if (isSatelliteType || hdr->numberOfSubsets > 1) {
+        isSatellite = 1;
+    } else {
+        isSatellite = 0;
+    }
+
+    if (!isSatellite) {
+        /* interpret keyMore as a string */
+        for (i=0; i<8; ++i) {
+            hdr->ident[i] = *q++;
+        }
+        hdr->ident[i] = '\0';
+    }
+
+    return GRIB_SUCCESS;
+}
+
+static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
+{
+    int err = GRIB_SUCCESS;
+
+    const long nbits_totalLength = 3*8;
+    long pos_totalLength = 4*8;
+
+    unsigned long section1Length = 0;
+    const long nbits_section1Length = 3*8;
+    long pos_section1Length = 8*8;
+
+    long nbits_masterTableNumber = 1*8;
+    long pos_masterTableNumber   = 11*8;
+
+    long nbits_bufrHeaderSubCentre = 1*8;
+    long pos_bufrHeaderSubCentre   = 12*8;
+
+    long nbits_bufrHeaderCentre = 1*8;
+    long pos_bufrHeaderCentre   = 13*8;
+
+    long nbits_updateSequenceNumber = 1*8;
+    long pos_updateSequenceNumber   = 14*8;
+
+    long nbits_section1Flags = 1*8;
+    long pos_section1Flags   = 15*8;
+
+    long nbits_dataCategory = 1*8;
+    long pos_dataCategory   = 16*8;
+
+    long nbits_dataSubCategory = 1*8;
+    long pos_dataSubCategory   = 17*8;
+
+    long nbits_masterTablesVersionNumber = 1*8;
+    long pos_masterTablesVersionNumber   = 18*8;
+
+    long nbits_localTablesVersionNumber = 1*8;
+    long pos_localTablesVersionNumber   = 19*8;
+
+    long nbits_typicalYearOfCentury = 1*8;
+    long pos_typicalYearOfCentury   = 20*8;
+
+    long nbits_typicalMonth = 1*8;
+    long pos_typicalMonth = 21*8;
+
+    long nbits_typicalDay = 1*8;
+    long pos_typicalDay = 22*8;
+
+    long nbits_typicalHour = 1*8;
+    long pos_typicalHour = 23*8;
+
+    long nbits_typicalMinute = 1*8;
+    long pos_typicalMinute = 24*8;
+
+    long offset_section2 = 0;
+    long offset_section3 = 0;
+    long nbits_numberOfSubsets  = 2*8;
+    long pos_numberOfSubsets = 0;  /*depends on offset_section3*/
+
+    long section3Flags;
+    long nbits_section3Flags = 1*8;
+    long pos_section3Flags   = 0;  /*depends on offset_section3*/
+
+    hdr->totalLength    = grib_decode_unsigned_long(message, &pos_totalLength, nbits_totalLength);
+    section1Length      = grib_decode_unsigned_long(message, &pos_section1Length, nbits_section1Length);
+    hdr->masterTableNumber   = (long)grib_decode_unsigned_long(message, &pos_masterTableNumber, nbits_masterTableNumber);
+    hdr->bufrHeaderSubCentre = (long)grib_decode_unsigned_long(message, &pos_bufrHeaderSubCentre, nbits_bufrHeaderSubCentre);
+    hdr->bufrHeaderCentre    = (long)grib_decode_unsigned_long(message, &pos_bufrHeaderCentre, nbits_bufrHeaderCentre);
+    hdr->updateSequenceNumber = (long)grib_decode_unsigned_long(message, &pos_updateSequenceNumber, nbits_updateSequenceNumber);
+    hdr->section1Flags       = (long)grib_decode_unsigned_long(message, &pos_section1Flags, nbits_section1Flags);
+    hdr->dataCategory        = (long)grib_decode_unsigned_long(message, &pos_dataCategory, nbits_dataCategory);
+    hdr->dataSubCategory     = (long)grib_decode_unsigned_long(message, &pos_dataSubCategory, nbits_dataSubCategory);
+    hdr->masterTablesVersionNumber = (long)grib_decode_unsigned_long(
+        message, &pos_masterTablesVersionNumber, nbits_masterTablesVersionNumber);
+    hdr->localTablesVersionNumber = (long)grib_decode_unsigned_long(message, &pos_localTablesVersionNumber, nbits_localTablesVersionNumber);
+    hdr->typicalYearOfCentury = (long)grib_decode_unsigned_long(message, &pos_typicalYearOfCentury, nbits_typicalYearOfCentury);
+    hdr->typicalMonth  = (long)grib_decode_unsigned_long(message, &pos_typicalMonth, nbits_typicalMonth);
+    hdr->typicalDay    = (long)grib_decode_unsigned_long(message, &pos_typicalDay, nbits_typicalDay);
+    hdr->typicalHour   = (long)grib_decode_unsigned_long(message, &pos_typicalHour, nbits_typicalHour);
+    hdr->typicalMinute = (long)grib_decode_unsigned_long(message, &pos_typicalMinute, nbits_typicalMinute);
+
+    offset_section2 = BUFR_SECTION0_LEN + section1Length;  /*bytes*/
+    hdr->section2Length = 0;
+    hdr->localSectionPresent = (hdr->section1Flags != 0);
+    if (hdr->localSectionPresent) {
+        long pos_section2Length;
+        const long nbits_section2Length = 3*8;
+        pos_section2Length = offset_section2*8;
+
+        hdr->section2Length = grib_decode_unsigned_long(message, &pos_section2Length, nbits_section2Length);
+
+        if (hdr->bufrHeaderCentre == 98) {
+            err = bufr_decode_rdb_keys(message, offset_section2, hdr);
+        }
+    }
+
+    offset_section3 = BUFR_SECTION0_LEN + section1Length + hdr->section2Length;  /*bytes*/
+    nbits_numberOfSubsets = 2*8;
+    pos_numberOfSubsets   = (offset_section3+4)*8;
+    hdr->numberOfSubsets  = grib_decode_unsigned_long(message, &pos_numberOfSubsets, nbits_numberOfSubsets);
+
+    pos_section3Flags   = (offset_section3+6)*8;
+    section3Flags       = (long)grib_decode_unsigned_long(message, &pos_section3Flags, nbits_section3Flags);
+    hdr->observedData   = (section3Flags & 1<<7) ? 1 : 0;
+    hdr->compressedData = (section3Flags & 1<<6) ? 1 : 0;
+
+    if (hdr->localSectionPresent && hdr->bufrHeaderCentre == 98 && hdr->section2Length == 52) {
+        err = bufr_decode_extra_rdb_keys(message, offset_section2, hdr);
+    }
+
+    return err;
+}
+
+static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
+{
+    int err = GRIB_SUCCESS;
+
+    const long nbits_totalLength = 3*8;
+    long pos_totalLength = 4*8;
+
+    unsigned long section1Length;
+    const long nbits_section1Length = 3*8;
+    long pos_section1Length = 8*8;
+
+    long nbits_masterTableNumber = 1*8;
+    long pos_masterTableNumber   = 11*8;
+
+    long nbits_bufrHeaderCentre = 2*8;
+    long pos_bufrHeaderCentre   = 12*8;
+
+    long nbits_bufrHeaderSubCentre = 2*8;
+    long pos_bufrHeaderSubCentre   = 14*8;
+
+    long nbits_updateSequenceNumber = 1*8;
+    long pos_updateSequenceNumber   = 16*8;
+
+    long nbits_section1Flags = 1*8;
+    long pos_section1Flags   = 17*8;
+
+    long nbits_dataCategory = 1*8;
+    long pos_dataCategory   = 18*8;
+
+    long nbits_internationalDataSubCategory = 1*8;
+    long pos_internationalDataSubCategory   = 19*8;
+
+    long nbits_dataSubCategory = 1*8;
+    long pos_dataSubCategory   = 20*8;
+
+    long nbits_masterTablesVersionNumber = 1*8;
+    long pos_masterTablesVersionNumber   = 21*8;
+
+    long nbits_localTablesVersionNumber = 1*8;
+    long pos_localTablesVersionNumber   = 22*8;
+
+    long nbits_typicalYear = 2*8;
+    long pos_typicalYear   = 23*8;
+
+    long nbits_typicalMonth = 1*8;
+    long pos_typicalMonth   = 25*8;
+
+    long nbits_typicalDay = 1*8;
+    long pos_typicalDay   = 26*8;
+
+    long nbits_typicalHour = 1*8;
+    long pos_typicalHour   = 27*8;
+
+    long nbits_typicalMinute = 1*8;
+    long pos_typicalMinute   = 28*8;
+
+    long nbits_typicalSecond = 1*8;
+    long pos_typicalSecond   = 29*8;
+
+    long offset_section2 = 0;
+    long offset_section3 = 0;
+    long nbits_numberOfSubsets  = 2*8;
+    long pos_numberOfSubsets = 0; /*depends on offset_section3*/
+
+    long section3Flags;
+    long nbits_section3Flags = 1*8;
+    long pos_section3Flags   = 0;  /*depends on offset_section3*/
+
+    hdr->totalLength    = grib_decode_unsigned_long(message, &pos_totalLength, nbits_totalLength);
+    section1Length      = grib_decode_unsigned_long(message, &pos_section1Length, nbits_section1Length);
+    hdr->masterTableNumber   = (long)grib_decode_unsigned_long(message, &pos_masterTableNumber, nbits_masterTableNumber);
+    hdr->bufrHeaderCentre    = (long)grib_decode_unsigned_long(message, &pos_bufrHeaderCentre, nbits_bufrHeaderCentre);
+    hdr->bufrHeaderSubCentre = (long)grib_decode_unsigned_long(message, &pos_bufrHeaderSubCentre, nbits_bufrHeaderSubCentre);
+    hdr->updateSequenceNumber = (long)grib_decode_unsigned_long(message, &pos_updateSequenceNumber, nbits_updateSequenceNumber);
+    hdr->section1Flags       = (long)grib_decode_unsigned_long(message, &pos_section1Flags, nbits_section1Flags);
+    hdr->dataCategory        = (long)grib_decode_unsigned_long(message, &pos_dataCategory, nbits_dataCategory);
+    hdr->internationalDataSubCategory = (long)grib_decode_unsigned_long(message, &pos_internationalDataSubCategory, nbits_internationalDataSubCategory);
+    hdr->dataSubCategory     = (long)grib_decode_unsigned_long(message, &pos_dataSubCategory, nbits_dataSubCategory);
+    hdr->masterTablesVersionNumber = (long)grib_decode_unsigned_long(message, &pos_masterTablesVersionNumber, nbits_masterTablesVersionNumber);
+    hdr->localTablesVersionNumber = (long)grib_decode_unsigned_long(message, &pos_localTablesVersionNumber, nbits_localTablesVersionNumber);
+    hdr->typicalYear   = (long)grib_decode_unsigned_long(message, &pos_typicalYear, nbits_typicalYear);
+    hdr->typicalMonth  = (long)grib_decode_unsigned_long(message, &pos_typicalMonth, nbits_typicalMonth);
+    hdr->typicalDay    = (long)grib_decode_unsigned_long(message, &pos_typicalDay, nbits_typicalDay);
+    hdr->typicalHour   = (long)grib_decode_unsigned_long(message, &pos_typicalHour, nbits_typicalHour);
+    hdr->typicalMinute = (long)grib_decode_unsigned_long(message, &pos_typicalMinute, nbits_typicalMinute);
+    hdr->typicalSecond = (long)grib_decode_unsigned_long(message, &pos_typicalSecond, nbits_typicalSecond);
+
+    offset_section2 = BUFR_SECTION0_LEN + section1Length;  /*bytes*/
+    hdr->section2Length = 0;
+    hdr->localSectionPresent = (hdr->section1Flags != 0);
+    if (hdr->localSectionPresent) {
+        long pos_section2Length;
+        const long nbits_section2Length = 3*8;
+        pos_section2Length = offset_section2*8;
+
+        hdr->section2Length = grib_decode_unsigned_long(message, &pos_section2Length, nbits_section2Length);
+
+        if (hdr->bufrHeaderCentre == 98) {
+            err = bufr_decode_rdb_keys(message, offset_section2, hdr);
+        }
+    }
+
+    offset_section3 = BUFR_SECTION0_LEN + section1Length + hdr->section2Length;  /*bytes*/
+    nbits_numberOfSubsets = 2*8;
+    pos_numberOfSubsets   = (offset_section3+4)*8;
+    hdr->numberOfSubsets  = grib_decode_unsigned_long(message, &pos_numberOfSubsets, nbits_numberOfSubsets);
+
+    pos_section3Flags   = (offset_section3+6)*8;
+    section3Flags       = (long)grib_decode_unsigned_long(message, &pos_section3Flags, nbits_section3Flags);
+    hdr->observedData   = (section3Flags & 1<<7) ? 1 : 0;
+    hdr->compressedData = (section3Flags & 1<<6) ? 1 : 0;
+
+    if (hdr->localSectionPresent && hdr->bufrHeaderCentre == 98 && hdr->section2Length == 52) {
+        err = bufr_decode_extra_rdb_keys(message, offset_section2, hdr);
+    }
+
+    return err;
+}
+
+static int bufr_decode_header(const void* message, off_t offset, size_t size, codes_bufr_header* hdr)
+{
+    int err = GRIB_SUCCESS;
+
+    hdr->message_offset = offset;
+    hdr->message_size   = size;
+
+    err = bufr_extract_edition(message, &hdr->edition);
+
+    if (hdr->edition == 3) {
+        err = bufr_decode_edition3(message, hdr);
+    } else if (hdr->edition == 4) {
+        err = bufr_decode_edition4(message, hdr);
+    } else {
+        grib_context_log(NULL, GRIB_LOG_ERROR, "Unsupported BUFR edition: %ld", hdr->edition);
+        err = GRIB_DECODING_ERROR;
+    }
+
+    return err;
+}
+
+int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages)
+{
+    int err = 0, i = 0;
+    FILE* fp = NULL;
+    void* mesg = NULL;
+    size_t size = 0;
+    off_t offset = 0;
+
+    if (!c) c=grib_context_get_default();
+    fp = fopen(filename, "rb");
+    if (!fp) {
+        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to read file \"%s\"", filename);
+        perror(filename);
+        return GRIB_IO_PROBLEM;
+    }
+    err = grib_count_in_file(c, fp, num_messages);
+    if (err) {
+        fclose(fp);
+        return err;
+    }
+
+    size = *num_messages;
+    *result = (codes_bufr_header*)calloc(size, sizeof(codes_bufr_header));
+    if (!*result) {
+        fclose(fp);
+        return GRIB_OUT_OF_MEMORY;
+    }
+    i = 0;
+    while (err != GRIB_END_OF_FILE) {
+        mesg = wmo_read_bufr_from_file_malloc(fp, 0, &size, &offset, &err);
+        if (mesg != NULL && err == 0) {
+            int err2 = bufr_decode_header(mesg, offset, size, &(*result)[i++]);
+            if (err2) {
+                fclose(fp);
+                return err2;
+            }
+            grib_context_free(c, mesg);
+        }
+    }
+
+    fclose(fp);
+    return GRIB_SUCCESS;
 }

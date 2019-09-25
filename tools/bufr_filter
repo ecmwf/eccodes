@@ -1,7 +1,8 @@
 #!/bin/sh
 set -u
 script_dir=`dirname $0`
-EMOSLIB_TOOL=bufrdc_emoslib_bufr_filter
+BUFRDC_TOOL=bufrdc_emoslib_bufr_filter
+EMOSLIB_TOOL=emoslib_bufr_filter
 ECCODES_TOOL=codes_bufr_filter
 result=0 # return code from function
 ERR_TOOL_NOT_FOUND=666
@@ -37,7 +38,7 @@ if [ $# -eq 0 ]; then
     the_tool=$ECCODES_TOOL
     try_tool "${@}"
     if [ $result -eq $ERR_TOOL_NOT_FOUND ]; then
-        the_tool=$EMOSLIB_TOOL
+        the_tool=$BUFRDC_TOOL
         try_tool "${@}"
     fi
     exit 0
@@ -53,6 +54,10 @@ if [ $is_emoslib -eq 1 ]; then
     pkg='emoslib/bufrdc'
     the_tool=$EMOSLIB_TOOL
     try_tool "${@}"
+    if [ $result -eq $ERR_TOOL_NOT_FOUND ]; then
+        the_tool=$BUFRDC_TOOL
+        try_tool "${@}"
+    fi
 else
     pkg='ecCodes'
     the_tool=$ECCODES_TOOL

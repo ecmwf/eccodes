@@ -12,6 +12,7 @@ template    section_1 "bufr/section.1.2.def";
 
 flagbit localSectionPresent(section1Flags,7) = 1;
 alias section2Present=localSectionPresent;
+alias localUsePresent=localSectionPresent;
 
 if(localSectionPresent){
    template section_2 "bufr/section.2.def";
