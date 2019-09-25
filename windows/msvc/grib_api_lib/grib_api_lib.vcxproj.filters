@@ -1166,9 +1166,6 @@
     <ClInclude Include="..\..\..\src\grib_emoslib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\grib_expression.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\grib_iterator_class.h">
       <Filter>Header Files</Filter>
     </ClInclude>
