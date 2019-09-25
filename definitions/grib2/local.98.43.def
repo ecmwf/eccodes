@@ -1,4 +1,4 @@
 # Local definition 43: Copernicus Arctic/European Regional ReAnalysis (CARRA/CERRA)
-codetable[2] carraSuiteName "grib2/carra_suiteName.table" : dump;
-alias mars.origin = carraSuiteName;
+codetable[2] suiteName "grib2/regional_reanal_suiteName.table" : dump;
+alias mars.origin = suiteName;
 unalias mars.domain; 

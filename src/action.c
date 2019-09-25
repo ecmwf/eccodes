@@ -62,6 +62,31 @@ static void init(grib_action_class *c)
     GRIB_MUTEX_UNLOCK(&mutex1);
 }
 
+#if 0
+/* A non-recursive version */
+static void init(grib_action_class *c)
+{
+    if (!c) return;
+
+    GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
+    GRIB_MUTEX_LOCK(&mutex1);
+    if(!c->inited)
+    {
+        if(c->super) {
+            grib_action_class *g = *(c->super);
+            if (g && !g->inited) {
+                Assert(g->super == NULL);
+                g->init_class(g);
+                g->inited = 1;
+            }
+        }
+        c->init_class(c);
+        c->inited = 1;
+    }
+    GRIB_MUTEX_UNLOCK(&mutex1);
+}
+#endif
+
 void grib_dump(grib_action* a, FILE* f, int l)
 {
     grib_action_class *c = a->cclass;
@@ -119,10 +144,11 @@ int grib_create_accessor(grib_section* p, grib_action* a,  grib_loader* h)
     {
         if(c->create_accessor) {
             int ret;
-            GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
-            GRIB_MUTEX_LOCK(&mutex1);
+            /* ECC-604: Do not lock excessively */
+            /*GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);*/
+            /*GRIB_MUTEX_LOCK(&mutex1);*/
             ret=c->create_accessor(p, a, h);
-            GRIB_MUTEX_UNLOCK(&mutex1);
+            /*GRIB_MUTEX_UNLOCK(&mutex1);*/
             return ret;
         }
         c = c->super ? *(c->super) : NULL;
@@ -136,20 +162,20 @@ int grib_action_notify_change( grib_action* a, grib_accessor *observer, grib_acc
 {
     grib_action_class *c = a->cclass;
 
-    GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
-    GRIB_MUTEX_LOCK(&mutex1);
+    /*GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);*/
+    /*GRIB_MUTEX_LOCK(&mutex1);*/
 
     init(c);
     while(c)
     {
         if(c->notify_change) {
             int result = c->notify_change(a,observer,observed);
-            GRIB_MUTEX_UNLOCK(&mutex1);
+            /*GRIB_MUTEX_UNLOCK(&mutex1);*/
             return result;
         }
         c = c->super ? *(c->super) : NULL;
     }
-    GRIB_MUTEX_UNLOCK(&mutex1);
+    /*GRIB_MUTEX_UNLOCK(&mutex1);*/
     Assert(0);
     return 0;
 }
