@@ -280,7 +280,7 @@ const Representation* Representation::globalise(data::MIRField& field) const {
     const util::Domain dom = domain();
 
     if (dom.isGlobal()) {
-        return 0;
+        return nullptr;
     }
 
     // TODO: cache me
@@ -309,7 +309,7 @@ const Representation* Representation::globalise(data::MIRField& field) const {
     }
 
     if (extra == 0) {
-        return 0;
+        return nullptr;
     }
 
 
@@ -340,8 +340,8 @@ const Representation* Representation::globalise(data::MIRField& field) const {
 
 namespace {
 static pthread_once_t once = PTHREAD_ONCE_INIT;
-static eckit::Mutex* local_mutex = 0;
-static std::map< std::string, RepresentationFactory* >* m = 0;
+static eckit::Mutex* local_mutex = nullptr;
+static std::map< std::string, RepresentationFactory* >* m = nullptr;
 static void init() {
     local_mutex = new eckit::Mutex();
     m = new std::map< std::string, RepresentationFactory* >();
