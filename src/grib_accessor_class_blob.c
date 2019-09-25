@@ -129,28 +129,29 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
-  grib_get_long_internal(grib_handle_of_accessor(a), grib_arguments_get_name(a->parent->h, arg, 0), &a->length);
-  Assert(a->length>=0);
-
+    grib_get_long_internal(grib_handle_of_accessor(a), grib_arguments_get_name(a->parent->h, arg, 0), &a->length);
+    Assert(a->length>=0);
 }
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_BYTES;
+static int  get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_BYTES;
 }
 
-static int unpack_bytes (grib_accessor* a,unsigned char* buffer, size_t *len) {
-  if (*len < a->length) {
-      *len = a->length;
-      return GRIB_ARRAY_TOO_SMALL;
-  }
-  *len = a->length;
+static int unpack_bytes (grib_accessor* a,unsigned char* buffer, size_t *len)
+{
+    if (*len < a->length) {
+        *len = a->length;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
+    *len = a->length;
 
-  memcpy(buffer, grib_handle_of_accessor(a)->buffer->data + a->offset, *len);
+    memcpy(buffer, grib_handle_of_accessor(a)->buffer->data + a->offset, *len);
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_bytes(dumper,a,NULL);
+    grib_dump_bytes(dumper,a,NULL);
 }

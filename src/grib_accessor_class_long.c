@@ -129,8 +129,6 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-
-
 static int  get_native_type(grib_accessor* a)
 {
     return GRIB_TYPE_LONG;
@@ -216,8 +214,7 @@ static int unpack_double(grib_accessor* a, double* val,size_t *len)
     if (ret) return ret;
     rlen=count;
 
-    if(*len < rlen)
-    {
+    if(*len < rlen) {
         grib_context_log(a->context, GRIB_LOG_ERROR, " wrong size for %s it contains %d values ", a->name , rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
@@ -233,7 +230,6 @@ static int unpack_double(grib_accessor* a, double* val,size_t *len)
 
     values = (long*)grib_context_malloc(a->context,rlen*sizeof(long));
     if(!values) return GRIB_INTERNAL_ERROR;
-
 
     ret = grib_unpack_long(a,values,&rlen);
     if(ret != GRIB_SUCCESS){

@@ -211,7 +211,9 @@ cleanup:
 
 /* OpenJPEG 2.1 version of grib_openjpeg_encoding.c */
 
-/* opj_* Helper code from https://groups.google.com/forum/#!topic/openjpeg/8cebr0u7JgY */
+/* opj_* Helper code from
+ * https://groups.google.com/forum/#!topic/openjpeg/8cebr0u7JgY
+ */
 /* These routines are added to use memory instead of a file for input and output */
 /* struct need to treat memory as a stream */
 typedef struct
