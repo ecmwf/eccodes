@@ -1561,8 +1561,8 @@ int parse_keyval_string(const char *grib_tool, char *arg, int values_required, i
 grib_handle *grib_new_from_file(grib_context *c, FILE *f, int headers_only, int *error);
 
 typedef struct codes_bufr_header {
-    off_t   message_offset;
-    size_t  message_size;
+    unsigned long message_offset;
+    unsigned long message_size;
 
     /* Section 0 keys */
     long edition;

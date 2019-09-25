@@ -472,8 +472,8 @@ static int bufr_decode_header(const void* message, off_t offset, size_t size, co
 {
     int err = GRIB_SUCCESS;
 
-    hdr->message_offset = offset;
-    hdr->message_size   = size;
+    hdr->message_offset = (unsigned long)offset;
+    hdr->message_size   = (unsigned long)size;
 
     err = bufr_extract_edition(message, &hdr->edition);
 
