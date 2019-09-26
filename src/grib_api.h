@@ -1573,7 +1573,6 @@ typedef struct codes_bufr_header {
     long bufrHeaderSubCentre;
     long bufrHeaderCentre;
     long updateSequenceNumber;
-    long section1Flags;
     long dataCategory;
     long dataSubCategory;
     long masterTablesVersionNumber;
@@ -1592,7 +1591,6 @@ typedef struct codes_bufr_header {
     long localSectionPresent;
 
     /* ECMWF local section keys */
-    unsigned long section2Length;
     long rdbType;
     long oldSubtype;
     char ident[9];
@@ -1613,9 +1611,18 @@ typedef struct codes_bufr_header {
     long rectimeMinute;
     long rectimeSecond;
 
-    long qualityControl;
-    long newSubtype;
-    long daLoop;
+    long   isSatellite;
+    double localLongitude1;
+    double localLatitude1;
+    double localLongitude2;
+    double localLatitude2;
+    double localLatitude;
+    double localLongitude;
+    long   localNumberOfObservations;
+    long   satelliteID;
+    long   qualityControl;
+    long   newSubtype;
+    long   daLoop;
 
     /* Section 3 keys */
     unsigned long numberOfSubsets;
