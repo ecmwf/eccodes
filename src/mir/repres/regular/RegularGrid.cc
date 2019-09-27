@@ -148,8 +148,8 @@ void RegularGrid::reorder(long scanningMode, mir::data::MIRValuesVector& values)
 
 void RegularGrid::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
-    eckit::Log::debug<LibMir>() << "RegularGrid::validate checked " << util::Pretty(values.size(), "value")
-                                << ", numberOfPoints: " << util::Pretty(count) << "." << std::endl;
+    eckit::Log::debug<LibMir>() << "RegularGrid::validate checked " << Pretty(values.size(), {"value"})
+                                << ", numberOfPoints: " << Pretty(count) << "." << std::endl;
     ASSERT(values.size() == count);
 }
 

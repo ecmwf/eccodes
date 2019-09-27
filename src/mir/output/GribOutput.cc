@@ -349,13 +349,8 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
                 // There is a bug in grib_api if the user ask 1 value and select second-order
                 // Once this fixed, remove this code
-                eckit::Log::debug<LibMir>() << "Field has "
-                                            << util::Pretty(field.values(i).size(), "value")
-                                            << ", ignoring packer "
-                                            << packer
-                                            << std::endl;
-
-
+                eckit::Log::debug<LibMir>() << "Field has " << Pretty(field.values(i).size(), {"value"})
+                                            << ", ignoring packer " << packer << std::endl;
             } else {
                 packer.fill(info, *field.representation());
             }

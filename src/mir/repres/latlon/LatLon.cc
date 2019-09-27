@@ -280,7 +280,8 @@ void LatLon::validate(const MIRValuesVector& values) const {
 
     eckit::Log::debug<LibMir>() << domain() << std::endl;
 
-    eckit::Log::debug<LibMir>() << "LatLon::validate checked " << util::Pretty(values.size(), "value") << ", within domain: " << util::Pretty(count) << "." << std::endl;
+    eckit::Log::debug<LibMir>() << "LatLon::validate checked " << Pretty(values.size(), {"value"})
+                                << ", within domain: " << Pretty(count) << "." << std::endl;
     ASSERT(values.size() == count);
 }
 

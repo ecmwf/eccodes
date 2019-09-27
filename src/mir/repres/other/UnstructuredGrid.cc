@@ -205,8 +205,8 @@ const Gridded* UnstructuredGrid::croppedRepresentation(const util::BoundingBox& 
     }
 
     if (j < i) {
-        eckit::Log::debug<LibMir>() << "UnstructuredGrid::croppedRepresentation: cropped " << util::Pretty(i) << " to "
-                                    << util::Pretty(j, "point") << std::endl;
+        eckit::Log::debug<LibMir>() << "UnstructuredGrid::croppedRepresentation: cropped " << Pretty(i) << " to "
+                                    << Pretty(j, {"point"}) << std::endl;
         ASSERT(j);
         return new UnstructuredGrid(lat, lon, bbox);
     }
