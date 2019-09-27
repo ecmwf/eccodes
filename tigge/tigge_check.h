@@ -3894,7 +3894,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 29315},
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap},
    },
    {
       "average_salinity_in_the_upper_300_m_o2d.s2",
@@ -3966,7 +3966,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap},
    },
    {
       "eastward_sea_water_velocity_o2d.s2",
@@ -3988,7 +3988,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap},
    },
    {
       "northward_sea_water_velocity_o2d.s2",
@@ -4010,7 +4010,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap},
    },
    {
       "sea-ice_thickness_o2d.s2",
@@ -4032,7 +4032,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap},
    },
    {
       "sea_surface_height_o2d.s2",
@@ -4054,7 +4054,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap},
    },
    {
       "sea_surface_practical_salinity_o2d.s2",
@@ -4076,7 +4076,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap},
    },
 
 };
