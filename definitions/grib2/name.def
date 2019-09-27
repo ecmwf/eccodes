@@ -419,6 +419,18 @@
 'Mean sea water potential temperature in the upper 300 m' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 160 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 300 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
+	}
+#Mean sea water temperature in the upper 300 m
+'Mean sea water temperature in the upper 300 m' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
 	 parameterNumber = 15 ;
 	 typeOfFirstFixedSurface = 160 ;
 	 typeOfSecondFixedSurface = 160 ;
