@@ -529,6 +529,26 @@ static int is_local_ecmwf_grib2_param_key(grib_accessor* a, long edition, long c
     return 0;
 }
 
+static char* get_legacy_param_info(const char* key_name, long paramId)
+{
+    if (paramId == 210) {
+        if (strcmp(key_name, "paramId")==0)   return "210";
+        if (strcmp(key_name, "shortName")==0) return "ssrc";
+        if (strcmp(key_name, "units")==0)     return "J m**-2";
+        if (strcmp(key_name, "name")==0)      return "Surface net solar radiation, clear sky";
+        if (strcmp(key_name, "cfVarName")==0) return "ssrc";
+        if (strcmp(key_name, "cfName")==0)    return "surface_net_downward_shortwave_flux_assuming_clear_sky";
+    } else if (paramId == 211) {
+        if (strcmp(key_name, "paramId")==0)   return "211";
+        if (strcmp(key_name, "shortName")==0) return "strc";
+        if (strcmp(key_name, "units")==0)     return "J m**-2";
+        if (strcmp(key_name, "name")==0)      return "Surface net thermal radiation, clear sky";
+        if (strcmp(key_name, "cfVarName")==0) return "strc";
+        if (strcmp(key_name, "cfName")==0)    return "surface_net_downward_longwave_flux_assuming_clear_sky";
+    }
+    return NULL;
+}
+
 /* Try to get the name, shortName, units etc for a GRIB2 message with
  * local ECMWF coding i.e. discipline=192 etc
  */
@@ -544,10 +564,15 @@ static const char* get_ECMWF_local_parameter(grib_accessor* a, grib_handle* h)
     err=grib_get_long(h,"edition",&edition);
     if (err) return NULL;
     if (is_local_ecmwf_grib2_param_key(a,edition,centre)) {
+        char* pLocalParam = NULL;
         /* Must be one of: 'name', 'shortName', 'units', 'cfName' etc */
         grib_accessor* a2 = NULL;
         long pid_guess = guess_paramId(h);
         if (pid_guess == -1) return NULL;
+
+        /* TODO: Need to revisit */
+        pLocalParam = get_legacy_param_info(key_name, pid_guess);
+        if (pLocalParam) return pLocalParam;
 
         /* Change the paramId so we can get the other string key*/
         err = grib_set_long(h, "paramId", pid_guess);

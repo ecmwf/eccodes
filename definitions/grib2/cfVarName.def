@@ -261,6 +261,22 @@
 	 parameterCategory = 14 ;
 	 parameterNumber = 1 ;
 	}
+#Surface net solar radiation, clear sky
+'ssrc' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Surface net thermal radiation, clear sky
+'strc' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Specific cloud liquid water content
 'clwc' = {
 	 discipline = 0 ;
