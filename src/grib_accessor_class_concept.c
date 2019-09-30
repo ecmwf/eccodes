@@ -567,7 +567,7 @@ static const char* get_ECMWF_local_parameter(grib_accessor* a, grib_handle* h)
         char* pLocalParam = NULL;
         /* Must be one of: 'name', 'shortName', 'units', 'cfName' etc */
         grib_accessor* a2 = NULL;
-        long pid_guess = guess_paramId(h);
+        const long pid_guess = guess_paramId(h);
         if (pid_guess == -1) return NULL;
 
         /* TODO: Need to revisit */
