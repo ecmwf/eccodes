@@ -69,6 +69,9 @@ fi
 # --------------------------------------------------
 # Reduced Gaussian Grid N=32 second order packing
 # --------------------------------------------------
+# The gaussian tests intentionally cause an error so need to stop it failing
+unset ECCODES_FAIL_IF_LOG_MESSAGE
+
 infile=../data/reduced_gaussian_model_level.grib2
 outfile=out.grib_util_set_spec.grib
 rm -f $outfile
