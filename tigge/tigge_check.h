@@ -3922,7 +3922,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
       {&daily_average, &given_thickness, &has_bitmap},
    },
    {
-      "mean_sea_water_potential_temperature_in_the_upper_300_m_o2d.s2",
+      "mean_sea_water_temperature_in_the_upper_300_m_o2d.s2",
       -1e+8,
        1e+8,
       -1e+8,
@@ -3931,6 +3931,31 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"class", GRIB_TYPE_STRING, 0, "s2"},
 
          {"paramId", GRIB_TYPE_LONG, 151127},
+         {"discipline", GRIB_TYPE_LONG, 10},
+         {"parameterCategory", GRIB_TYPE_LONG, 4},
+         {"parameterNumber", GRIB_TYPE_LONG, 15},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+
+         {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfSecondFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfSecondFixedSurface", GRIB_TYPE_LONG, 300},
+         {NULL, },
+      },
+      {&daily_average, &given_thickness, &has_bitmap},
+   },
+   {
+      "mean_sea_water_potential_temperature_in_the_upper_300_m_o2d.s2",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "s2"},
+
+         {"paramId", GRIB_TYPE_LONG, 151126},
          {"discipline", GRIB_TYPE_LONG, 10},
          {"parameterCategory", GRIB_TYPE_LONG, 4},
          {"parameterNumber", GRIB_TYPE_LONG, 18},
