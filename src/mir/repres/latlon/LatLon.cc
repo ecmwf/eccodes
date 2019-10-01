@@ -17,21 +17,24 @@
 
 #include <algorithm>
 #include <iostream>
+#include <memory>
+#include <sstream>
 
 #include "eckit/exception/Exceptions.h"
-#include "eckit/log/Plural.h"
+#include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
-#include "eckit/memory/ScopedPtr.h"
 
 #include "mir/api/Atlas.h"
 #include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
 #include "mir/iterator/detail/RegularIterator.h"
 #include "mir/param/MIRParametrisation.h"
+#include "mir/param/SameParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
+#include "mir/util/Pretty.h"
 
 
 namespace mir {
@@ -56,6 +59,12 @@ LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
     ASSERT(parametrisation.get("Ni", ni));
     ASSERT(parametrisation.get("Nj", nj));
 
+    eckit::Log::debug<LibMir>()
+            << "LatLon:"
+            "\n\t" "(Ni, Nj) = (" << ni_ << ", " << nj_ << ") calculated"
+            "\n\t" "(Ni, Nj) = (" << ni << ", " << nj << ") from parametrisation"
+            << std::endl;
+
     ASSERT(ni == ni_);
     ASSERT(nj == nj_);
 }
@@ -77,54 +86,7 @@ LatLon::~LatLon() = default;
 
 
 void LatLon::reorder(long scanningMode, MIRValuesVector& values) const {
-    // Code from ecRegrid, UNTESTED!!!
-
-    eckit::Log::debug<LibMir>() << "WARNING: UNTESTED!!! ";
-    eckit::Log::debug<LibMir>() << "LatLon::reorder scanning mode 0x" << std::hex << scanningMode << std::dec << std::endl;
-
-    ASSERT(values.size() == ni_ * nj_);
-
-    MIRValuesVector out(values.size());
-
-    if (scanningMode == jScansPositively) {
-        size_t count = 0;
-        for (int j = nj_ - 1 ; j >= 0; --j) {
-            for (size_t i = 0 ; i <  ni_; ++i) {
-                out[count++] = values[j * ni_ + i];
-            }
-        }
-        ASSERT(count == out.size());
-        std::swap(values, out);
-        return;
-    }
-
-    if (scanningMode == iScansNegatively) {
-        size_t count = 0;
-        for (size_t j = 0  ; j < nj_; ++j) {
-            for (int i = ni_ - 1 ; i >= 0; --i) {
-                out[count++] = values[j * ni_ + i];
-            }
-        }
-        ASSERT(count == out.size());
-        std::swap(values, out);
-        return;
-    }
-
-    if (scanningMode == (iScansNegatively | jScansPositively)) {
-        size_t count = 0;
-        for (int j = nj_ - 1  ; j >= 0; --j) {
-            for (int i = ni_ - 1 ; i >= 0; --i) {
-                out[count++] = values[j * ni_ + i];
-            }
-        }
-        ASSERT(count == out.size());
-        std::swap(values, out);
-        return;
-    }
-
-    std::ostringstream os;
-    os << "LatLon::reorder: unsupported scanning mode 0x" << std::hex << scanningMode;
-    throw eckit::SeriousBug(os.str());
+    GribReorder::reorder(values, scanningMode, ni_, nj_);
 }
 
 
@@ -201,12 +163,13 @@ size_t LatLon::numberOfPoints() const {
 
 
 bool LatLon::getLongestElementDiagonal(double& d) const {
-    const Latitude& sn = increments_.south_north().latitude();
-    const Longitude& we = increments_.west_east().longitude();
+    auto snHalf = increments_.south_north().latitude().value() / 2.;
+    ASSERT(!eckit::types::is_approximately_equal(snHalf, 0.));
 
-    d = atlas::util::Earth::distance(
-                atlas::PointLonLat(0., 0.),
-                atlas::PointLonLat(we.value(), sn.value()) );
+    auto weHalf = increments_.west_east().longitude().value() / 2.;
+    ASSERT(!eckit::types::is_approximately_equal(weHalf, 0.));
+
+    d = 2. * atlas::util::Earth::distance({0., 0.}, {weHalf, snHalf});
     return true;
 }
 
@@ -227,7 +190,7 @@ Representation* LatLon::globalise(data::MIRField& field) const {
 
     util::BoundingBox newbbox(bbox_.north(), bbox_.west(), Latitude::SOUTH_POLE, bbox_.east());
 
-    eckit::ScopedPtr<LatLon> newll(const_cast<LatLon*>(croppedRepresentation(newbbox)));
+    std::unique_ptr<LatLon> newll(const_cast<LatLon*>(croppedRepresentation(newbbox)));
 
     ASSERT(newll->nj_ > nj_);
     ASSERT(newll->ni_ == ni_);
@@ -261,9 +224,15 @@ const LatLon* LatLon::croppedRepresentation(const util::BoundingBox&) const {
 }
 
 
-void LatLon::fill(util::MeshGeneratorParameters& params) const {
-    params.meshGenerator_ = "structured";
+bool LatLon::extendBoundingBoxOnIntersect() const {
+    return false;
+}
 
+
+void LatLon::fill(util::MeshGeneratorParameters& params) const {
+    if (params.meshGenerator_.empty()) {
+        params.meshGenerator_ = "structured";
+    }
     if (boundingBox().south() > Latitude::EQUATOR) {
         params.set("force_include_south_pole", true);
     }
@@ -273,10 +242,12 @@ void LatLon::fill(util::MeshGeneratorParameters& params) const {
 }
 
 
-size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue) const {
+size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue, bool estimate) const {
 
     // Could be done better, just a demo
-    validate(values);
+    if (!estimate) {
+        validate(values);
+    }
 
     size_t count = 0;
 
@@ -284,14 +255,21 @@ size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue) 
     for (size_t j = 0; j < nj_; j++) {
         for (size_t i = 0; i < ni_; i++) {
             if ( !((i < size) || (j < size) || (i >= ni_ - size) || (j >= nj_ - size))) { // Check me, may be buggy
-                values[k] = missingValue;
+                if (!estimate) {
+                    values[k] = missingValue;
+                }
                 count++;
             }
             k++;
         }
     }
 
-    ASSERT(k == values.size());
+    // eckit::Log::info() << "LatLon::frame(" << size << ") " << count << " " << k << std::endl;
+
+
+    if (!estimate) {
+        ASSERT(k == values.size());
+    }
     return count;
 
 }
@@ -302,7 +280,8 @@ void LatLon::validate(const MIRValuesVector& values) const {
 
     eckit::Log::debug<LibMir>() << domain() << std::endl;
 
-    eckit::Log::debug<LibMir>() << "LatLon::validate checked " << eckit::Plural(values.size(), "value") << ", within domain: " << eckit::BigNum(count) << "." << std::endl;
+    eckit::Log::debug<LibMir>() << "LatLon::validate checked " << Pretty(values.size(), {"value"})
+                                << ", within domain: " << Pretty(count) << "." << std::endl;
     ASSERT(values.size() == count);
 }
 
@@ -429,6 +408,48 @@ void LatLon::correctBoundingBox(util::BoundingBox& bbox, size_t& ni, size_t& nj,
     ASSERT(s + (nj - 1) * lat.inc() == n);
 
     bbox = {n, w, s, e};
+}
+
+
+bool LatLon::samePoints(const param::MIRParametrisation& user, const param::MIRParametrisation& field) {
+    std::unique_ptr<const param::MIRParametrisation> same(new param::SameParametrisation(user, field, true));
+
+    std::vector<double> rotation;
+    if (user.has("rotation") && !same->get("rotation", rotation)) {
+        return false;
+    }
+
+    std::vector<double> grid;
+    if (user.has("grid") && !same->get("grid", grid)) {
+        return false;
+    }
+
+    std::vector<double> area;
+    if (user.get("area", area)) {
+        ASSERT(area.size() == 4);
+
+        util::Increments inc(field);
+        size_t ni = 0;
+        size_t nj = 0;
+
+        util::BoundingBox bboxUser(area[0], area[1], area[2], area[3]);
+        correctBoundingBox(bboxUser, ni, nj, inc, {bboxUser.south(), bboxUser.west()});
+
+        util::BoundingBox bboxField(field);
+        correctBoundingBox(bboxField, ni, nj, inc, {bboxField.south(), bboxField.west()});
+
+        PointLatLon ref{bboxField.south(), bboxField.west()};
+
+        for (auto& lat : {bboxUser.south(), bboxUser.north()}) {
+            for (auto& lon : {bboxUser.east(), bboxUser.west()}) {
+                if (inc.isShifted({ref.lat() - lat, ref.lon() - lon})) {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
 }
 
 

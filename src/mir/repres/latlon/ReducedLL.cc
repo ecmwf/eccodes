@@ -28,6 +28,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "mir/util/GridBox.h"
 #include "mir/util/MeshGeneratorParameters.h"
 
 
@@ -131,18 +132,19 @@ void ReducedLL::fill(api::MIRJob& job) const {
 
 atlas::Grid ReducedLL::atlasGrid() const {
     const util::Domain dom = domain();
+    auto N                 = long(pl_.size());
 
     atlas::StructuredGrid::XSpace xspace({{dom.west().value(), dom.east().value()}}, pl_, !dom.isPeriodicWestEast());
     atlas::StructuredGrid::YSpace yspace(
-        atlas::grid::LinearSpacing({{dom.north().value(), dom.south().value()}}, pl_.size()));
+        atlas::grid::LinearSpacing({{dom.north().value(), dom.south().value()}}, N));
 
     return atlas::StructuredGrid(xspace, yspace);
 }
 
 void ReducedLL::fill(util::MeshGeneratorParameters& params) const {
-    params.meshGenerator_ = "structured";
-
-    params.meshGenerator_ = "structured";
+    if (params.meshGenerator_.empty()) {
+        params.meshGenerator_ = "structured";
+    }
     if (boundingBox().south() > Latitude::EQUATOR) {
         params.set("force_include_south_pole", true);
     }
@@ -185,17 +187,13 @@ class ReducedLLIterator : public Iterator {
     size_t ni_;
 
     const util::Domain domain_;
-
     const eckit::Fraction west_;
-
     const eckit::Fraction ew_;
-
     eckit::Fraction inc_west_east_;
-
     const eckit::Fraction inc_north_south_;
 
-    eckit::Fraction lat_;
-    eckit::Fraction lon_;
+    eckit::Fraction latitude_;
+    eckit::Fraction longitude_;
 
     size_t i_;
     size_t j_;
@@ -215,23 +213,23 @@ class ReducedLLIterator : public Iterator {
 
         while (j_ < nj_ && i_ < ni_) {
 
-            lat = lat_;
-            lon = lon_;
+            lat = latitude_;
+            lon = longitude_;
 
             i_++;
-            lon_ += inc_west_east_;
+            longitude_ += inc_west_east_;
 
             if (i_ == ni_) {
 
                 j_++;
-                lat_ -= inc_north_south_;
-                lon_ = west_;
+                latitude_ -= inc_north_south_;
+                longitude_ = west_;
 
                 i_ = 0;
 
                 if (j_ < nj_) {
                     ASSERT(p_ < pl_.size());
-                    ni_ = pl_[p_++];
+                    ni_ = size_t(pl_[p_++]);
                     ASSERT(ni_ > 1);
                     inc_west_east_ = ew_ / (ni_ - (periodic_ ? 0 : 1));
                 }
@@ -246,32 +244,24 @@ class ReducedLLIterator : public Iterator {
     }
 
 public:
-    ReducedLLIterator(const std::vector<long>& pl, const util::Domain& dom)
-        : pl_(pl)
-        , nj_(pl.size())
-        , domain_(dom)
-        ,
-
-        west_(domain_.west().fraction())
-        ,
-
-        ew_((domain_.east() - domain_.west()).fraction())
-        ,
-
-        inc_north_south_((domain_.north() - domain_.south()).fraction() / eckit::Fraction(nj_ - 1))
-        ,
-
-        lat_(domain_.north().fraction())
-        , lon_(west_)
-        , i_(0)
-        , j_(0)
-        , p_(0)
-        , count_(0)
-        , periodic_(dom.isPeriodicWestEast()) {
+    ReducedLLIterator(const std::vector<long>& pl, const util::Domain& dom) :
+        pl_(pl),
+        nj_(pl.size()),
+        domain_(dom),
+        west_(domain_.west().fraction()),
+        ew_((domain_.east() - domain_.west()).fraction()),
+        inc_north_south_((domain_.north() - domain_.south()).fraction() / eckit::Fraction(nj_ - 1)),
+        latitude_(domain_.north().fraction()),
+        longitude_(west_),
+        i_(0),
+        j_(0),
+        p_(0),
+        count_(0),
+        periodic_(dom.isPeriodicWestEast()) {
 
         ASSERT(nj_ > 1);
 
-        ni_ = pl_[p_++];
+        ni_ = size_t(pl_[p_++]);
         ASSERT(ni_ > 1);
         inc_west_east_ = ew_ / (ni_ - (periodic_ ? 0 : 1));
 
@@ -281,6 +271,57 @@ public:
 
 Iterator* ReducedLL::iterator() const {
     return new ReducedLLIterator(pl_, domain());
+}
+
+std::vector<util::GridBox> ReducedLL::gridBoxes() const {
+
+    auto dom      = domain();
+    bool periodic = isPeriodicWestEast();
+
+    auto Nj                  = pl_.size();
+    const eckit::Fraction sn = (dom.north() - dom.south()).fraction() / eckit::Fraction(Nj - 1);
+    eckit::Fraction half(1, 2);
+
+
+    // grid boxes
+    std::vector<util::GridBox> r;
+    r.reserve(numberOfPoints());
+
+
+    // latitude edges
+    std::vector<double> latEdges(Nj + 1);
+
+    auto lat0   = bbox_.north();
+    latEdges[0] = (lat0 + sn / 2).value();
+    for (size_t j = 0; j < Nj; ++j) {
+        latEdges[j + 1] = (lat0 - (j + half) * sn).value();
+    }
+
+    latEdges.front() = std::min(dom.north().value(), std::max(dom.south().value(), latEdges.front()));
+    latEdges.back()  = std::min(dom.north().value(), std::max(dom.south().value(), latEdges.back()));
+
+
+    for (size_t j = 0; j < Nj; ++j) {
+
+        // longitude edges
+        auto Ni = pl_[j];
+        ASSERT(Ni > 1);
+        const eckit::Fraction we = (dom.east() - dom.west()).fraction() / (Ni - (periodic ? 0 : 1));
+
+        auto lon0 = bbox_.west();
+        auto lon1 = lon0;
+
+        for (long i = 0; i < Ni; ++i) {
+            auto l = lon1;
+            lon1 += we;
+            r.emplace_back(util::GridBox(latEdges[j], l.value(), latEdges[j + 1], lon1.value()));
+        }
+
+        ASSERT(periodic ? lon0 == lon1.normalise(lon0) : lon0 < lon1.normalise(lon0));
+    }
+
+    ASSERT(r.size() == numberOfPoints());
+    return r;
 }
 
 namespace {

@@ -18,7 +18,6 @@
 #include <istream>
 
 #include "eckit/config/Resource.h"
-#include "eckit/log/Plural.h"
 #include "eckit/log/ResourceUsage.h"
 #include "eckit/thread/AutoLock.h"
 #include "eckit/thread/Mutex.h"
@@ -26,6 +25,7 @@
 #include "mir/action/context/Context.h"
 #include "mir/action/io/Save.h"
 #include "mir/action/plan/ActionPlan.h"
+#include "mir/api/MIREstimation.h"
 #include "mir/compat/GribCompatibility.h"
 #include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
@@ -36,6 +36,7 @@
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MIRStatistics.h"
+#include "mir/util/Pretty.h"
 
 
 namespace mir {
@@ -47,18 +48,6 @@ static eckit::Mutex local_mutex;
 
 #define X(a) eckit::Log::debug<LibMir>() << "  GRIB encoding: " << #a << " = " << a << std::endl
 #define Y(a) oss << " " << #a << "=" << a
-
-
-class HandleFree {
-    grib_handle *h_;
-public:
-    HandleFree(grib_handle *h): h_(h) {}
-    ~HandleFree() {
-        if (h_) {
-            grib_handle_delete(h_);
-        }
-    }
-};
 
 
 void eccodes_assertion(const char* message) {
@@ -93,6 +82,36 @@ size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx)
     }
 
     return total;
+}
+
+void GribOutput::estimate(const param::MIRParametrisation& param,
+                          api::MIREstimation& estimator,
+                          context::Context& ctx) const {
+
+    const data::MIRField& field = ctx.field();
+    ASSERT(field.dimensions() == 1);
+
+    field.representation()->estimate(estimator);
+
+    long bits = 0;
+    if (param.get("accuracy", bits)) {
+        estimator.accuracy(bits);
+    }
+
+    std::string packing;
+    if (param.userParametrisation().get("packing", packing)) {
+
+        estimator.packing(packing);
+        // const packing::Packer &packer = packing::Packer::lookup(packing);
+        // packer.estimate(estimator, *field.representation());
+
+    }
+
+    long edition;
+    if (param.get("edition", edition)) {
+        estimator.edition(edition);
+    }
+
 }
 
 
@@ -233,8 +252,7 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
 }
 
 
-size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
-                        context::Context& ctx) {
+size_t GribOutput::save(const param::MIRParametrisation& parametrisation, context::Context& ctx) {
 
     eckit::TraceResourceUsage<LibMir> usage("GribOutput::save");
 
@@ -254,6 +272,37 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
 
         // Protect grib_api
         eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+
+        // Special case where only values are changing; handle is cloned, and new values are set
+        if (parametrisation.userParametrisation().has("filter")) {
+
+            // Make sure handle deleted even in case of exception
+            grib_handle* h = codes_handle_clone(input.gribHandle(i));
+            ASSERT(h);
+            HandleDeleter hf(h);
+
+            long numberOfValues;
+            GRIB_CALL(codes_get_long(h, "numberOfValues", &numberOfValues));
+            if (size_t(numberOfValues) != field.values(i).size()) {
+                throw eckit::UserError("Using 'filter' requires preserving the number of points from input");
+            }
+
+            GRIB_CALL(codes_set_double(h, "missingValue", field.missingValue()));
+            GRIB_CALL(codes_set_long(h, "bitmapPresent", field.hasMissing()));
+            GRIB_CALL(codes_set_double_array(h, "values", field.values(i).data(), field.values(i).size()));
+
+            const void* message;
+            size_t size;
+            GRIB_CALL(grib_get_message(h, &message, &size));
+
+            GRIB_CALL(codes_check_message_header(message, size, PRODUCT_GRIB));
+            GRIB_CALL(codes_check_message_footer(message, size, PRODUCT_GRIB));
+
+            out(message, size, true);
+            total += size;
+
+            continue;
+        }
 
         grib_handle *h = input.gribHandle(i); // Base class will throw an exception is input cannot provide a grib_handle
 
@@ -300,13 +349,8 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
 
                 // There is a bug in grib_api if the user ask 1 value and select second-order
                 // Once this fixed, remove this code
-                eckit::Log::debug<LibMir>() << "Field has "
-                                            << eckit::Plural(field.values(i).size(), "value")
-                                            << ", ignoring packer "
-                                            << packer
-                                            << std::endl;
-
-
+                eckit::Log::debug<LibMir>() << "Field has " << Pretty(field.values(i).size(), {"value"})
+                                            << ", ignoring packer " << packer << std::endl;
             } else {
                 packer.fill(info, *field.representation());
             }
@@ -397,7 +441,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
         codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
         grib_handle *result = grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
-        HandleFree hf(result); // Make sure handle deleted even in case of exception
+        HandleDeleter hf(result); // Make sure handle deleted even in case of exception
 
 
         if (err == GRIB_WRONG_GRID) {
@@ -420,15 +464,12 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
 
         GRIB_CALL(err);
 
-        const void *message;
+        const void* message;
         size_t size;
-
         GRIB_CALL(grib_get_message(result, &message, &size));
 
-
-        const char* bytes = reinterpret_cast<const char*>(message);
-        ASSERT(bytes[0] == 'G' && bytes[1] == 'R' && bytes[2] == 'I' && bytes[3] == 'B');
-        ASSERT(bytes[size - 4] == '7' && bytes[size - 3] == '7' && bytes[size - 2] == '7' && bytes[size - 1] == '7');
+        GRIB_CALL(codes_check_message_header(message, size, PRODUCT_GRIB));
+        GRIB_CALL(codes_check_message_footer(message, size, PRODUCT_GRIB));
 
         {   // Remove
             eckit::AutoTiming timing(ctx.statistics().timer_, saveTimer);
@@ -475,7 +516,7 @@ size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
 }
 
 
-void GribOutput::fill(grib_handle * handle, grib_info & info) const {
+void GribOutput::fill(grib_handle*, grib_info&) const {
 }
 
 

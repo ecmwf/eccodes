@@ -110,9 +110,12 @@ const RotatedLL* RotatedLL::croppedRepresentation(const util::BoundingBox& bbox)
     return new RotatedLL(increments_, rotation_, bbox, reference);
 }
 
-namespace {
-static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll"); // Name is what is returned by grib_api
+
+std::string RotatedLL::factory() const {
+    return "rotated_ll";
 }
+
+static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll"); // Name is what is returned by grib_api
 
 } // namespace latlon
 } // namespace repres

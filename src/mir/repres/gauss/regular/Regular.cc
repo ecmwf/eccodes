@@ -12,26 +12,33 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+
 #include "mir/repres/gauss/regular/Regular.h"
 
+#include <cmath>
+#include <memory>
+
 #include "eckit/exception/Exceptions.h"
-#include "eckit/log/Plural.h"
-#include "eckit/memory/ScopedPtr.h"
+#include "eckit/types/FloatCompare.h"
 #include "eckit/utils/MD5.h"
+
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
-#include <cmath>
+
 
 namespace mir {
 namespace repres {
 namespace gauss {
 namespace regular {
 
-Regular::Regular(const param::MIRParametrisation& parametrisation) : Gaussian(parametrisation), Ni_(0), Nj_(0) {
+Regular::Regular(const param::MIRParametrisation& parametrisation) :
+    Gaussian(parametrisation),
+    Ni_(0),
+    Nj_(0) {
 
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox_.north();
@@ -46,8 +53,9 @@ Regular::Regular(const param::MIRParametrisation& parametrisation) : Gaussian(pa
     bbox_ = util::BoundingBox(n, w, s, e);
 
     eckit::Log::debug<LibMir>() << "Regular::Regular: BoundingBox:"
-                                << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
-
+                                << "\n\t   " << old
+                                << "\n\t > " << bbox_
+                                << std::endl;
     setNiNj();
 }
 
@@ -103,8 +111,8 @@ void Regular::correctWestEast(Longitude& w, Longitude& e) const {
     ASSERT(inc > 0);
 
     if (angleApproximatelyEqual(Longitude::GREENWICH, w) &&
-        (angleApproximatelyEqual(Longitude::GLOBE - inc, e - w) || Longitude::GLOBE - inc < e - w ||
-         (e != w && e.normalise(w) == w))) {
+            (angleApproximatelyEqual(Longitude::GLOBE - inc, e - w) || Longitude::GLOBE - inc < e - w ||
+             (e != w && e.normalise(w) == w))) {
 
         w = Longitude::GREENWICH;
         e = Longitude::GLOBE - inc;
@@ -147,15 +155,20 @@ size_t Regular::numberOfPoints() const {
 }
 
 bool Regular::getLongestElementDiagonal(double& d) const {
-    eckit::Fraction inc = getSmallestIncrement();
+    ASSERT(N_);
 
-    double l = inc / 2;
-    d = atlas::util::Earth::distance(atlas::PointLonLat(-l, -l), atlas::PointLonLat(l, l));
+    auto& lats = latitudes();
+    auto snHalf = 0.5 * (lats[N_ - 1] - lats[N_]);
+    ASSERT(!eckit::types::is_approximately_equal(snHalf, 0.));
 
+    auto weHalf = double(getSmallestIncrement() / 2);
+    ASSERT(!eckit::types::is_approximately_equal(weHalf, 0.));
+
+    d = 2. * atlas::util::Earth::distance({0., 0.}, {weHalf, snHalf});
     return true;
 }
 
-util::BoundingBox Regular::extendedBoundingBox(const util::BoundingBox& bbox) const {
+util::BoundingBox Regular::extendBoundingBox(const util::BoundingBox& bbox) const {
 
     // adjust West/East to include bbox's West/East
     Longitude w = bbox.west();
@@ -244,10 +257,12 @@ void Regular::setNiNj() {
                                 << std::endl;
 }
 
-size_t Regular::frame(MIRValuesVector& values, size_t size, double missingValue) const {
+size_t Regular::frame(MIRValuesVector& values, size_t size, double missingValue, bool estimate) const {
 
     // TODO: Check if that logic cannot also be used for other grid, and therefore move it to a higher class
-    validate(values);
+    if (!estimate) {
+        validate(values);
+    }
 
     size_t count = 0;
 
@@ -255,16 +270,21 @@ size_t Regular::frame(MIRValuesVector& values, size_t size, double missingValue)
     for (size_t j = 0; j < Nj_; j++) {
         for (size_t i = 0; i < Ni_; i++) {
             if (!((i < size) || (j < size) || (i >= Ni_ - size) || (j >= Nj_ - size))) { // Check me, may be buggy
-                values[k] = missingValue;
+                if (!estimate) {
+                    values[k] = missingValue;
+                }
                 count++;
             }
             k++;
         }
     }
 
-    ASSERT(k == values.size());
+    if (!estimate) {
+        ASSERT(k == values.size());
+    }
     return count;
 }
+
 
 } // namespace regular
 } // namespace gauss

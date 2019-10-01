@@ -18,23 +18,24 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <memory>
 #include <numeric>
 #include <set>
 #include <sstream>
 
 #include "eckit/exception/Exceptions.h"
-#include "eckit/log/Plural.h"
-#include "eckit/memory/ScopedPtr.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 
+#include "mir/api/MIREstimation.h"
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
+#include "mir/util/Angles.h"
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
-
+#include "mir/util/GridBox.h"
 
 namespace mir {
 namespace repres {
@@ -117,9 +118,9 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e) const {
     ASSERT(inc > 0);
 
     if (angleApproximatelyEqual(Longitude::GREENWICH, w) && (
-        angleApproximatelyEqual(Longitude::GLOBE - inc, e - w) ||
-        Longitude::GLOBE - inc < e - w ||
-        (e != w && e.normalise(w) == w))) {
+                angleApproximatelyEqual(Longitude::GLOBE - inc, e - w) ||
+                Longitude::GLOBE - inc < e - w ||
+                (e != w && e.normalise(w) == w))) {
 
         w = Longitude::GREENWICH;
         e = Longitude::GLOBE - inc;
@@ -189,8 +190,8 @@ eckit::Fraction Reduced::getSmallestIncrement() const {
 
     const std::vector<long>& pl = pls();
     const long maxpl = *std::max_element(
-                pl.begin() + distance_t(k_),
-                pl.begin() + distance_t(k_ + Nj_));
+                           pl.begin() + distance_t(k_),
+                           pl.begin() + distance_t(k_ + Nj_));
     ASSERT(maxpl);
 
     return Longitude::GLOBE.fraction() / maxpl;
@@ -265,7 +266,7 @@ void Reduced::setNj(const PlVector& pl, const Latitude& s, const Latitude& n) {
     pls();  // check internal assumptions
 }
 
-// Explicit template instantiations of above implemenation for different PlVector types
+// Explicit template instantiations of above implementation for different PlVector types
 
 // PlVector = std::vector<int>
 template void Reduced::setNj(const std::vector<int>& pl, const Latitude& s, const Latitude& n);
@@ -284,15 +285,67 @@ void Reduced::fill(grib_info& info) const  {
     info.grid.Nj = long(Nj_);
     info.grid.N = long(N_);
 
+    ASSERT(k_ + Nj_ <= pl.size());
     info.grid.pl = &pl[k_];
     info.grid.pl_size = long(Nj_);
 
-    ASSERT(k_ + Nj_ <= pl.size());
     for (size_t i = k_; i < k_ + Nj_; i++) {
         ASSERT(pl[i] > 0);
     }
 
     bbox_.fill(info);
+}
+
+
+void Reduced::estimate(api::MIREstimation& estimation) const {
+    Gaussian::estimate(estimation);
+    const std::vector<long>& pl = pls();
+    estimation.pl(pl.size());
+}
+
+
+std::vector<util::GridBox> Reduced::gridBoxes() const {
+    ASSERT(1 < Nj_);
+
+
+    // latitude edges
+    std::vector<double> latEdges = calculateUnrotatedGridBoxLatitudeEdges();
+
+
+    // grid boxes
+    std::vector<util::GridBox> r;
+    r.reserve(numberOfPoints());
+
+    bool periodic = isPeriodicWestEast();
+    auto& pl = pls();
+    ASSERT(k_ + Nj_ <= pl.size());
+
+    for (size_t j = k_; j < k_ + Nj_; ++j) {
+        ASSERT(pl[j] > 0);
+        eckit::Fraction inc(360, pl[j]);
+
+        auto Ni = size_t(pl[j]);
+
+        // longitude edges
+        auto west = bbox_.west().fraction();
+        auto Nw   = (west / inc).integralPart();
+        if (Nw * inc < west) {
+            Nw += 1;
+        }
+        Longitude lon0 = (Nw * inc) - (inc / 2);
+        Longitude lon1 = lon0;
+
+        for (size_t i = 0; i < Ni; ++i) {
+            auto l = lon1;
+            lon1 += inc;
+            r.emplace_back(util::GridBox(latEdges[j], l.value(), latEdges[j + 1], lon1.value()));
+        }
+
+        ASSERT(periodic ? lon0 == lon1.normalise(lon0) : lon0 < lon1.normalise(lon0));
+    }
+
+    ASSERT(r.size() == numberOfPoints());
+    return r;
 }
 
 
@@ -302,9 +355,11 @@ void Reduced::fill(api::MIRJob& job) const  {
 }
 
 
-size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue) const {
+size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue, bool estimate) const {
 
-    validate(values);
+    if (!estimate) {
+        validate(values);
+    }
 
     size_t count = 0;
 
@@ -325,7 +380,7 @@ size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue)
     // and even be cached (md5 of iterators)
 
     // Iterator is 'unrotated'
-    eckit::ScopedPtr<Iterator> it(iterator());
+    std::unique_ptr<Iterator> it(iterator());
     while (it->next()) {
         const auto& p = it->pointUnrotated();
 
@@ -348,14 +403,19 @@ size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue)
         size_t cols = shape[j];
         for (size_t i = 0; i < cols; i++) {
             if ( !((i < size) || (j < size) || (i >= cols - size) || (j >= rows - size))) {
-                values[k] = missingValue;
+                if (!estimate) {
+                    values[k] = missingValue;
+                }
                 count++;
             }
             k++;
         }
     }
 
-    ASSERT(k == values.size());
+    if (!estimate) {
+        ASSERT(k == values.size());
+    }
+
     return count;
 }
 
@@ -367,7 +427,7 @@ size_t Reduced::numberOfPoints() const {
         const std::vector<long>& pl = pls();
         total = size_t(std::accumulate(pl.begin(), pl.end(), 0));
     } else {
-        eckit::ScopedPtr<repres::Iterator> iter(iterator());
+        std::unique_ptr<repres::Iterator> iter(iterator());
         while (iter->next()) {
             total++;
         }
@@ -393,8 +453,8 @@ bool Reduced::getLongestElementDiagonal(double& d) const {
 
         const eckit::Fraction we = Longitude::GLOBE.fraction() / (std::min(pl[j - 1], pl[j]));
         const Latitude&
-                latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value())? l1 : l2),
-                latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value())? l2 : l1);
+        latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l1 : l2),
+                           latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l2 : l1);
 
         d = std::max(d, atlas::util::Earth::distance(
                          atlas::PointLonLat(0., latCloserToEquator.value()),
@@ -406,7 +466,7 @@ bool Reduced::getLongestElementDiagonal(double& d) const {
 }
 
 
-util::BoundingBox Reduced::extendedBoundingBox(const util::BoundingBox& bbox) const {
+util::BoundingBox Reduced::extendBoundingBox(const util::BoundingBox& bbox) const {
 
     // adjust West/East to include bbox's West/East
     Longitude w = bbox.west();
@@ -475,6 +535,9 @@ bool Reduced::isPeriodicWestEast() const {
     return bbox_.east() - bbox_.west() + inc >= Longitude::GLOBE;
 }
 
+std::string Reduced::factory() const {
+    return "reduced_gg";
+}
 
 }  // namespace reduced
 }  // namespace gauss

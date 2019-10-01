@@ -15,8 +15,9 @@
 
 #include "mir/repres/Representation.h"
 
+#include <memory>
+
 #include "eckit/exception/Exceptions.h"
-#include "eckit/memory/ScopedPtr.h"
 #include "eckit/thread/AutoLock.h"
 #include "eckit/thread/Mutex.h"
 #include "eckit/thread/Once.h"
@@ -72,6 +73,20 @@ void Representation::setSimplePacking(grib_info&) const {
 void Representation::setGivenPacking(grib_info&) const {
     std::ostringstream os;
     os << "Representation::setGivenPacking() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
+std::vector<util::GridBox> Representation::gridBoxes() const {
+    std::ostringstream os;
+    os << "Representation::gridBoxes() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
+void Representation::estimate(api::MIREstimation&) const {
+    std::ostringstream os;
+    os << "Representation::estimate() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
@@ -195,9 +210,16 @@ const util::BoundingBox& Representation::boundingBox() const {
 }
 
 
-util::BoundingBox Representation::extendedBoundingBox(const util::BoundingBox&) const {
+util::BoundingBox Representation::extendBoundingBox(const util::BoundingBox&) const {
     std::ostringstream os;
-    os << "Representation::extendedBoundingBox() not implemented for " << *this;
+    os << "Representation::extendBoundingBox() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
+
+
+bool Representation::extendBoundingBoxOnIntersect() const {
+    std::ostringstream os;
+    os << "Representation::extendBoundingBoxOnIntersect() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
@@ -228,12 +250,17 @@ void Representation::comparison(std::string&) const {
 }
 
 
-size_t Representation::frame(MIRValuesVector&, size_t, double) const {
+size_t Representation::frame(MIRValuesVector&, size_t, double, bool) const {
     std::ostringstream os;
     os << "Representation::frame() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
+std::string Representation::factory() const {
+    std::ostringstream os;
+    os << "Representation::factory() not implemented for " << *this;
+    throw eckit::SeriousBug(os.str());
+}
 
 void Representation::reorder(long, MIRValuesVector&) const {
     std::ostringstream os;
@@ -253,7 +280,7 @@ const Representation* Representation::globalise(data::MIRField& field) const {
     const util::Domain dom = domain();
 
     if (dom.isGlobal()) {
-        return 0;
+        return nullptr;
     }
 
     // TODO: cache me
@@ -264,7 +291,7 @@ const Representation* Representation::globalise(data::MIRField& field) const {
     std::vector<double> latitudes;  latitudes.resize(size);
     std::vector<double> longitudes; longitudes.resize(size);
 
-    eckit::ScopedPtr<repres::Iterator> it(octahedral->iterator());
+    std::unique_ptr<repres::Iterator> it(octahedral->iterator());
     while (it->next()) {
         const auto& p = it->pointUnrotated();
         latitudes.push_back(p.lat().value());
@@ -282,7 +309,7 @@ const Representation* Representation::globalise(data::MIRField& field) const {
     }
 
     if (extra == 0) {
-        return 0;
+        return nullptr;
     }
 
 
@@ -313,8 +340,8 @@ const Representation* Representation::globalise(data::MIRField& field) const {
 
 namespace {
 static pthread_once_t once = PTHREAD_ONCE_INIT;
-static eckit::Mutex* local_mutex = 0;
-static std::map< std::string, RepresentationFactory* >* m = 0;
+static eckit::Mutex* local_mutex = nullptr;
+static std::map< std::string, RepresentationFactory* >* m = nullptr;
 static void init() {
     local_mutex = new eckit::Mutex();
     m = new std::map< std::string, RepresentationFactory* >();

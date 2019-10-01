@@ -16,12 +16,11 @@
 
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <utility>
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/filesystem/PathName.h"
-#include "eckit/log/Plural.h"
-#include "eckit/memory/ScopedPtr.h"
 #include "eckit/serialisation/FileStream.h"
 #include "eckit/serialisation/IfstreamStream.h"
 #include "eckit/utils/MD5.h"
@@ -31,6 +30,8 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/MeshGeneratorParameters.h"
+#include "mir/util/Pretty.h"
+
 
 namespace mir {
 namespace repres {
@@ -154,7 +155,9 @@ void UnstructuredGrid::fill(api::MIRJob&) const {
 }
 
 void UnstructuredGrid::fill(util::MeshGeneratorParameters& params) const {
-    params.meshGenerator_ = "delaunay";
+    if (params.meshGenerator_.empty()) {
+        params.meshGenerator_ = "delaunay";
+    }
 }
 
 util::Domain UnstructuredGrid::domain() const {
@@ -191,7 +194,7 @@ const Gridded* UnstructuredGrid::croppedRepresentation(const util::BoundingBox& 
     size_t i = 0;
     size_t j = 0;
 
-    eckit::ScopedPtr<repres::Iterator> iter(iterator());
+    std::unique_ptr<repres::Iterator> iter(iterator());
     while (iter->next()) {
         if (bbox.contains(iter->pointUnrotated())) {
             lat.emplace_back(latitudes_[i]);
@@ -202,8 +205,8 @@ const Gridded* UnstructuredGrid::croppedRepresentation(const util::BoundingBox& 
     }
 
     if (j < i) {
-        eckit::Log::debug<LibMir>() << "UnstructuredGrid::croppedRepresentation: cropped " << eckit::BigNum(i) << " to "
-                                    << eckit::Plural(j, "point") << std::endl;
+        eckit::Log::debug<LibMir>() << "UnstructuredGrid::croppedRepresentation: cropped " << Pretty(i) << " to "
+                                    << Pretty(j, {"point"}) << std::endl;
         ASSERT(j);
         return new UnstructuredGrid(lat, lon, bbox);
     }

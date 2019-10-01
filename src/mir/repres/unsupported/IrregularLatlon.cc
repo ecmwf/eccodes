@@ -112,18 +112,15 @@ void IrregularLatlon::fill(grib_info&) const {
 }
 
 void IrregularLatlon::fill(util::MeshGeneratorParameters& params) const {
-// FIXME confirm the following works!
-#if 0
-    params.meshGenerator_ = "structured";
+    if (params.meshGenerator_.empty()) {
+        params.meshGenerator_ = "structured";
+    }
     if (boundingBox().south() > Latitude::EQUATOR) {
         params.set("force_include_south_pole", true);
     }
     if (boundingBox().north() < Latitude::EQUATOR) {
         params.set("force_include_north_pole", true);
     }
-#endif
-
-    params.meshGenerator_ = "delaunay";
 }
 
 util::Domain IrregularLatlon::domain() const {

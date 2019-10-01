@@ -17,8 +17,10 @@
 #include <iostream>
 
 #include "mir/config/LibMir.h"
+#include "mir/iterator/detail/RegularIterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
+#include "mir/util/GridBox.h"
 
 namespace mir {
 namespace repres {
@@ -104,9 +106,105 @@ const RegularLL* RegularLL::croppedRepresentation(const util::BoundingBox& bbox)
     return new RegularLL(increments_, bbox, reference);
 }
 
-namespace {
-static RepresentationBuilder<RegularLL> regularLL("regular_ll"); // Name is what is returned by grib_api
+util::BoundingBox RegularLL::extendBoundingBox(const util::BoundingBox& bbox) const {
+    using iterator::detail::RegularIterator;
+
+    const PointLatLon reference(bbox_.south(), bbox_.west());
+
+    auto sn = increments_.south_north().latitude().fraction();
+    auto we = increments_.west_east().longitude().fraction();
+    ASSERT(sn > 0);
+    ASSERT(we > 0);
+
+    auto shift_sn = (reference.lat().fraction() / sn).decimalPart() * sn;
+    auto shift_we = (reference.lon().fraction() / we).decimalPart() * we;
+
+    // adjust West/East to include bbox's West/East ('outwards')
+    Longitude w = bbox.west();
+    if (increments_.isPeriodic()) {
+        w = shift_we + RegularIterator::adjust(bbox.west().fraction() - shift_we, we, false);
+    }
+    Longitude e = shift_we + RegularIterator::adjust(bbox.east().fraction() - shift_we, we, true);
+
+
+    // adjust South/North to include bbox's South/North ('outwards')
+    auto s = shift_sn + RegularIterator::adjust(bbox.south().fraction() - shift_sn, sn, false);
+    if (s < Latitude::SOUTH_POLE.fraction()) {
+        s = shift_sn + RegularIterator::adjust(Latitude::SOUTH_POLE.fraction() - shift_sn, sn, true);
+    }
+    auto n = shift_sn + RegularIterator::adjust(bbox.north().fraction() - shift_sn, sn, true);
+    if (n > Latitude::NORTH_POLE.fraction()) {
+        n = shift_sn + RegularIterator::adjust(Latitude::NORTH_POLE.fraction() - shift_sn, sn, false);
+    }
+
+    // set bounding box
+    const util::BoundingBox extended(n, w, s, e);
+    ASSERT(extended.contains(bbox));
+
+    return extended;
 }
+
+std::vector<util::GridBox> RegularLL::gridBoxes() const {
+
+    auto dom   = domain();
+    auto north = dom.north().value();
+    auto south = dom.south().value();
+
+    auto lat0 = bbox_.north();
+    auto lon0 = bbox_.west();
+    auto sn   = increments_.south_north().latitude();
+    auto we   = increments_.west_east().longitude();
+
+    eckit::Fraction half(1, 2);
+
+
+    // latitude edges
+    std::vector<double> latEdges(nj_ + 1);
+
+    latEdges[0] = (lat0 + sn / 2).value();
+    for (size_t j = 0; j < nj_; ++j) {
+        latEdges[j + 1] = (lat0 - (j + half) * sn.fraction()).value();
+    }
+
+    latEdges.front() = std::min(north, std::max(south, latEdges.front()));
+    latEdges.back()  = std::min(north, std::max(south, latEdges.back()));
+
+
+    // longitude edges
+    std::vector<double> lonEdges(ni_ + 1);
+    lonEdges[0] = (lon0 - we / 2).value();
+    for (size_t i = 0; i < ni_; ++i) {
+        lonEdges[i + 1] = (lon0 + (i + half) * we.fraction()).value();
+    }
+
+
+    // grid boxes
+    std::vector<util::GridBox> r;
+    r.reserve(ni_ * nj_);
+
+    bool periodic = isPeriodicWestEast();
+    for (size_t j = 0; j < nj_; ++j) {
+        Longitude lon1 = lon0;
+
+        for (size_t i = 0; i < ni_; ++i) {
+            auto l = lon1;
+            lon1   = l + we * (i + half);
+            r.emplace_back(util::GridBox(latEdges[j], lonEdges[i], latEdges[j + 1], lonEdges[i + 1]));
+        }
+
+        ASSERT(periodic ? lon0 == lon1.normalise(lon0) : lon0 < lon1.normalise(lon0));
+    }
+
+    ASSERT(r.size() == numberOfPoints());
+    return r;
+}
+
+std::string RegularLL::factory() const {
+    return "regular_ll";
+}
+
+
+static RepresentationBuilder<RegularLL> regularLL("regular_ll"); // Name is what is returned by grib_api
 
 } // namespace latlon
 } // namespace repres
