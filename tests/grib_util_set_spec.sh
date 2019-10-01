@@ -58,6 +58,14 @@ if [ $HAVE_JPEG -eq 1 ]; then
     [ "$res" = "2 1 grid_jpeg" ]
 fi
 
+# Convert to edition2 and use CCSDS for packing
+if [ $HAVE_AEC -eq 1 ]; then
+    infile=../data/latlon.grib
+    $EXEC $grib_util_set_spec -e 2 -p grid_ccsds $infile $outfile > /dev/null
+    res=`${tools_dir}/grib_get -p edition,section2Used,packingType $outfile`
+    [ "$res" = "2 1 grid_ccsds" ]
+fi
+
 # --------------------------------------------------
 # Reduced Gaussian Grid N=32 second order packing
 # --------------------------------------------------
