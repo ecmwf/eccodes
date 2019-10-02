@@ -155,7 +155,7 @@ void codes_index_delete(grib_index* index)
 
 /* Create handle */
 /******************************************************************************/
-int codes_write_message(grib_handle* h,const char* file,const char* mode)
+int codes_write_message(const grib_handle* h,const char* file,const char* mode)
 {
     return grib_write_message(h,file,mode);
 }
@@ -171,7 +171,7 @@ grib_handle* codes_grib_handle_new_from_samples(grib_context* c, const char* sam
 {
     return grib_handle_new_from_samples(c, sample_name);
 }
-grib_handle* codes_handle_clone(grib_handle* h)
+grib_handle* codes_handle_clone(const grib_handle* h)
 {
     return grib_handle_clone(h);
 }
@@ -187,11 +187,11 @@ grib_handle* codes_handle_new_from_partial_message(grib_context* c, const void* 
 {
     return grib_handle_new_from_partial_message(c,data,buflen);
 }
-int codes_get_message(grib_handle* h ,const void** message, size_t *message_length  )
+int codes_get_message(const grib_handle* h ,const void** message, size_t *message_length  )
 {
     return grib_get_message(h,message,message_length);
 }
-int codes_get_message_copy(grib_handle* h, void* message,size_t *message_length )
+int codes_get_message_copy(const grib_handle* h, void* message,size_t *message_length )
 {
     return grib_get_message_copy(h,message,message_length);
 }
@@ -255,11 +255,11 @@ int codes_grib_multi_handle_write(grib_multi_handle* mh,FILE* f)
 
 /* Lat/Lon iterator and nearest (GRIB specific) */
 /******************************************************************************/
-grib_iterator* codes_grib_iterator_new(grib_handle* h, unsigned long flags,int* error)
+grib_iterator* codes_grib_iterator_new(const grib_handle* h, unsigned long flags,int* error)
 {
     return grib_iterator_new(h,flags,error);
 }
-int codes_grib_get_data(grib_handle *h, double *lats, double *lons, double *values)
+int codes_grib_get_data(const grib_handle *h, double *lats, double *lons, double *values)
 {
     return grib_get_data(h,lats,lons,values);
 }
@@ -284,17 +284,17 @@ int codes_grib_iterator_delete(grib_iterator *i)
     return grib_iterator_delete(i);
 }
 
-grib_nearest* codes_grib_nearest_new(grib_handle* h, int* error)
+grib_nearest* codes_grib_nearest_new(const grib_handle* h, int* error)
 {
     return grib_nearest_new(h,error);
 }
-int codes_grib_nearest_find(grib_nearest *nearest,grib_handle* h,double inlat,double inlon,
+int codes_grib_nearest_find(grib_nearest *nearest, const grib_handle* h,double inlat,double inlon,
                        unsigned long flags,double* outlats,double* outlons,
                        double* values,double* distances,int* indexes,size_t *len)
 {
     return grib_nearest_find(nearest, h, inlat, inlon, flags, outlats, outlons, values, distances, indexes, len);
 }
-int codes_grib_nearest_find_multiple(grib_handle* h,int is_lsm,
+int codes_grib_nearest_find_multiple(const grib_handle* h,int is_lsm,
     double* inlats,double* inlons,long npoints,
     double* outlats,double* outlons,
     double* values,double* distances, int* indexes)
@@ -321,11 +321,11 @@ int codes_set_missing(grib_handle* h, const char* key)
 {
     return grib_set_missing(h,key);
 }
-int codes_get_size(grib_handle* h, const char* key,size_t *size)
+int codes_get_size(const grib_handle* h, const char* key,size_t *size)
 {
     return grib_get_size(h,key,size);
 }
-int codes_get_length(grib_handle* h, const char* key,size_t *length)
+int codes_get_length(const grib_handle* h, const char* key,size_t *length)
 {
     return grib_get_length(h,key,length);
 }
@@ -407,15 +407,15 @@ int codes_set_values(grib_handle* h,grib_values*  grib_values , size_t arg_count
 {
     return grib_set_values(h,grib_values,arg_count);
 }
-int codes_get_message_offset ( grib_handle* h,off_t* offset )
+int codes_get_message_offset(const grib_handle* h,off_t* offset)
 {
     return grib_get_message_offset (h,offset);
 }
-int codes_get_message_size ( grib_handle* h,size_t* size )
+int codes_get_message_size(const grib_handle* h,size_t* size)
 {
     return grib_get_message_size (h,size);
 }
-void codes_dump_content(grib_handle* h,FILE* out,const char* mode, unsigned long option_flags,void* arg)
+void codes_dump_content(const grib_handle* h,FILE* out,const char* mode, unsigned long option_flags,void* arg)
 {
     grib_dump_content(h, out, mode, option_flags, arg);
 }

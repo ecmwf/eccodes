@@ -1156,7 +1156,7 @@ int _grib_get_string_length(grib_accessor* a, size_t* size)
     return GRIB_SUCCESS;
 }
 
-int grib_get_string_length(grib_handle* h, const char* name,size_t* size)
+int grib_get_string_length(const grib_handle* h, const char* name,size_t* size)
 {
     grib_accessor* a = NULL;
     grib_accessors_list* al=NULL;
@@ -1175,7 +1175,7 @@ int grib_get_string_length(grib_handle* h, const char* name,size_t* size)
     }
 }
 
-int _grib_get_size(grib_handle* h, grib_accessor* a,size_t* size)
+int _grib_get_size(const grib_handle* h, grib_accessor* a,size_t* size)
 {
     long count=0;
     int err=0;
@@ -1195,8 +1195,9 @@ int _grib_get_size(grib_handle* h, grib_accessor* a,size_t* size)
     return GRIB_SUCCESS;
 }
 
-int grib_get_size(grib_handle* h, const char* name,size_t* size)
+int grib_get_size(const grib_handle* ch, const char* name,size_t* size)
 {
+    grib_handle* h = (grib_handle*)ch;
     grib_accessor* a =NULL;
     grib_accessors_list* al=NULL;
     int ret=0;
@@ -1220,7 +1221,7 @@ int grib_get_size(grib_handle* h, const char* name,size_t* size)
     }
 }
 
-int grib_get_length(grib_handle* h, const char* name, size_t* length)
+int grib_get_length(const grib_handle* h, const char* name, size_t* length)
 {
     return grib_get_string_length(h, name, length);
 }
@@ -1238,8 +1239,9 @@ int grib_get_count(grib_handle* h, const char* name,size_t* size)
     return GRIB_SUCCESS;
 }
 
-int grib_get_offset(grib_handle* h, const char* key,size_t* val)
+int grib_get_offset(const grib_handle* ch, const char* key,size_t* val)
 {
+    grib_handle* h = (grib_handle*)ch;
     grib_accessor* act = grib_find_accessor(h, key);
     if(act) {
         *val = (size_t)grib_byte_offset(act);

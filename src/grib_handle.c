@@ -295,7 +295,7 @@ grib_handle* codes_bufr_handle_new_from_samples ( grib_context* c, const char* n
     return g;
 }
 
-int grib_write_message(grib_handle* h,const char* file,const char* mode)
+int grib_write_message(const grib_handle* h,const char* file,const char* mode)
 {
     FILE* fh=0;
     int err;
@@ -324,9 +324,9 @@ int grib_write_message(grib_handle* h,const char* file,const char* mode)
     return 0;
 }
 
-grib_handle* grib_handle_clone ( grib_handle* h )
+grib_handle* grib_handle_clone(const grib_handle* h)
 {
-    grib_handle* result = grib_handle_new_from_message_copy ( h->context, h->buffer->data, h->buffer->ulength );
+    grib_handle* result = grib_handle_new_from_message_copy(h->context, h->buffer->data, h->buffer->ulength );
     result->product_kind = h->product_kind;
     return result;
 }
@@ -1264,7 +1264,7 @@ int grib_get_partial_message_copy ( grib_handle* h ,  void* message,size_t *len,
     return GRIB_SUCCESS;
 }
 
-int grib_get_message_copy ( grib_handle* h ,  void* message,size_t *len )
+int grib_get_message_copy(const grib_handle* h, void* message,size_t *len)
 {
     if ( !h )
         return GRIB_NOT_FOUND;
@@ -1278,7 +1278,7 @@ int grib_get_message_copy ( grib_handle* h ,  void* message,size_t *len )
     return GRIB_SUCCESS;
 }
 
-int grib_get_message_offset ( grib_handle* h,off_t* offset )
+int grib_get_message_offset(const grib_handle* h,off_t* offset)
 {
     if (h) *offset=h->offset;
     else return GRIB_INTERNAL_ERROR;
@@ -1286,7 +1286,7 @@ int grib_get_message_offset ( grib_handle* h,off_t* offset )
     return 0;
 }
 
-int codes_get_product_kind(grib_handle* h, ProductKind* product_kind)
+int codes_get_product_kind(const grib_handle* h, ProductKind* product_kind)
 {
     if (h) {
         *product_kind = h->product_kind;
@@ -1327,20 +1327,22 @@ int codes_check_message_footer(const void* bytes, size_t length, ProductKind pro
     return GRIB_SUCCESS;
 }
 
-int grib_get_message_size ( grib_handle* h,size_t* size )
+int grib_get_message_size(const grib_handle* ch,size_t* size)
 {
     long totalLength=0;
     int ret=0;
+    grib_handle* h = (grib_handle*)ch;
     *size =  h->buffer->ulength;
     ret=grib_get_long(h,"totalLength",&totalLength);
     if (!ret) *size=totalLength;
     return ret;
 }
 
-int grib_get_message ( grib_handle* h,const void** msg,size_t* size )
+int grib_get_message(const grib_handle* ch, const void** msg, size_t* size)
 {
     long totalLength=0;
     int ret=0;
+    grib_handle* h = (grib_handle*)ch;
     *msg  =  h->buffer->data;
     *size =  h->buffer->ulength;
 
