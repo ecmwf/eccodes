@@ -15,15 +15,27 @@
 #include "eccodes.h"
 #define NUM_THREADS 4
 
+/* Return 0 if numbers considered equal, otherwise 1 */
+static int compare_doubles(double a,double b,double tolerance)
+{
+    int ret=0;
+    double d=fabs(a-b);
+    if (d > tolerance) {
+        ret=1;
+    }
+    return ret;
+}
+
 static void* process_grib(void* threadID)
 {
     const long tid = (long)threadID;
-    size_t str_len = 20;
+    size_t str_len = 20, i = 0;
     long indicatorOfUnitOfTimeRange = 1, step = 0;
     char mystring[100];
     double* values = NULL;
     size_t values_len = 0;
-    double min=0,max=0;
+    double min=0,max=0,avg=0;
+    const double tol = 1e-6;
     double pv[4]={1,2,3,4};
     const size_t pvsize=4;
     ProductKind prod_kind = 0;
@@ -49,10 +61,20 @@ static void* process_grib(void* threadID)
     CODES_CHECK(codes_get_size(h,"values",&values_len),0);
     values = (double*)malloc(values_len*sizeof(double));
     CODES_CHECK(codes_get_double_array(h, "values", values, &values_len),0);
+    for (i=0;i<values_len;i++) {
+        if (i%2) values[i] *= 0.94;
+        else if (i%3) values[i] *= 0.84;
+    }
+    GRIB_CHECK(grib_set_double_array(h,"values",values,values_len),0);
     free(values);
 
     CODES_CHECK(codes_get_double(h, "min", &min),0);
     CODES_CHECK(codes_get_double(h, "max", &max),0);
+    CODES_CHECK(codes_get_double(h, "avg", &avg),0);
+    printf("Thread %ld: min=%g max=%g avg=%g\n", tid, min, max, avg);
+    assert( compare_doubles(min, 0.84, tol)==0 );
+    assert( compare_doubles(max, 1.00, tol)==0 );
+    assert( compare_doubles(avg, 0.916774, tol)==0 );
 
     codes_handle_delete(h);
     pthread_exit(NULL);
@@ -67,6 +89,7 @@ int main(int argc, char** argv)
         printf("Creating thread %ld\n", i);
         error = pthread_create(&threads[i], NULL, process_grib, (void *)i);
         if (error) {
+            assert(0);
             return 1;
         }
     }

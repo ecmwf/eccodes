@@ -2836,4 +2836,30 @@ subroutine codes_copy_key( msgid_src, key, msgid_dest, status )
     endif
 end subroutine codes_copy_key 
 
+subroutine codes_bufr_multi_element_constant_arrays_on (status )
+    integer(kind=kindOfInt),optional, intent(out) :: status
+    integer(kind=kindOfInt)               :: iret
+
+    iret=codes_f_bufr_multi_element_constant_arrays_on()
+    if (present(status)) then
+        status = iret
+    else
+        call grib_check(iret,'codes_bufr_multi_element_constant_arrays_on','')
+    endif
+end subroutine codes_bufr_multi_element_constant_arrays_on
+
+subroutine codes_bufr_multi_element_constant_arrays_off (status )
+    integer(kind=kindOfInt),optional, intent(out) :: status
+    integer(kind=kindOfInt)               :: iret
+
+    iret=codes_f_bufr_multi_element_constant_arrays_off()
+    if (present(status)) then
+        status = iret
+    else
+        call grib_check(iret,'codes_bufr_multi_element_constant_arrays_off','')
+    endif
+
+end subroutine codes_bufr_multi_element_constant_arrays_off
+
+
 end module eccodes

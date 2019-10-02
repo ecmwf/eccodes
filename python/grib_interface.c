@@ -2343,3 +2343,15 @@ void grib_c_set_samples_path(const char* path)
     grib_context *c = grib_context_get_default();
     grib_context_set_samples_path(c, path);
 }
+
+
+int codes_c_bufr_multi_element_constant_arrays_on(void)
+{
+    codes_bufr_multi_element_constant_arrays_on(NULL);
+    return GRIB_SUCCESS;
+}
+int codes_c_bufr_multi_element_constant_arrays_off(void)
+{
+    codes_bufr_multi_element_constant_arrays_off(NULL);
+    return GRIB_SUCCESS;
+}

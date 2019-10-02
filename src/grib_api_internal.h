@@ -104,7 +104,6 @@
 
 #include <limits.h>
 #include <errno.h>
-#include <stdarg.h>
 #include <stdlib.h>
 #include <ctype.h>
 
@@ -1053,6 +1052,7 @@ struct grib_context
     int                             ieee_packing;
     int                             bufrdc_mode;
     int                             bufr_set_to_missing_if_out_of_range;
+    int                             bufr_multi_element_constant_arrays;
     FILE*                           log_stream;
     grib_trie*                      classes;
     grib_trie*                      lists;
@@ -1445,7 +1445,7 @@ struct grib_codetable {
 };
 
 typedef struct grib_smart_table_entry {
-  int   code;
+  /*int   code;*/
   char* abbreviation;
   char* column[MAX_SMART_TABLE_COLUMNS];
 } grib_smart_table_entry;

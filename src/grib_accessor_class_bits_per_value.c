@@ -137,56 +137,54 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* args)
 {
-  int n=0;
-  grib_accessor_bits_per_value* self= (grib_accessor_bits_per_value*)a;
-  self->values=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  self->bits_per_value=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
-  a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-  a->length=0;
+    int n=0;
+    grib_accessor_bits_per_value* self= (grib_accessor_bits_per_value*)a;
+    self->values=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    self->bits_per_value=grib_arguments_get_name(grib_handle_of_accessor(a),args,n++);
+    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    a->length=0;
 }
 
-static int  unpack_long(grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  int ret=0;
-  grib_accessor_bits_per_value* self= (grib_accessor_bits_per_value*)a;
-  grib_handle* h=grib_handle_of_accessor(a);
+    int ret=0;
+    grib_accessor_bits_per_value* self= (grib_accessor_bits_per_value*)a;
+    grib_handle* h=grib_handle_of_accessor(a);
 
-  if((ret = grib_get_long_internal(h,self->bits_per_value,val))
-       != GRIB_SUCCESS) return ret;
+    if((ret = grib_get_long_internal(h,self->bits_per_value,val))
+            != GRIB_SUCCESS) return ret;
 
-  *len =1;
-  return ret;
+    *len =1;
+    return ret;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  double* values=NULL;
-  size_t size=0;
-  int ret=0;
-  grib_accessor_bits_per_value* self= (grib_accessor_bits_per_value*)a;
-  grib_context* c=a->context;
-  grib_handle* h=grib_handle_of_accessor(a);
+    double* values=NULL;
+    size_t size=0;
+    int ret=0;
+    grib_accessor_bits_per_value* self= (grib_accessor_bits_per_value*)a;
+    grib_context* c=a->context;
+    grib_handle* h=grib_handle_of_accessor(a);
 
-  if ( (ret=grib_get_size(h,self->values,&size)) != GRIB_SUCCESS) return ret;
+    if ( (ret=grib_get_size(h,self->values,&size)) != GRIB_SUCCESS) return ret;
 
-  values=(double*)grib_context_malloc(c,size*sizeof(double));
-  if (!values) return GRIB_OUT_OF_MEMORY;
+    values=(double*)grib_context_malloc(c,size*sizeof(double));
+    if (!values) return GRIB_OUT_OF_MEMORY;
 
-  if((ret = grib_get_double_array_internal(h,self->values,values,&size))
-       != GRIB_SUCCESS) {
+    if((ret = grib_get_double_array_internal(h,self->values,values,&size))
+            != GRIB_SUCCESS) {
         grib_context_free(c,values);
         return ret;
-  }
+    }
 
-  if((ret = grib_set_long_internal(h, self->bits_per_value,*val))
-      != GRIB_SUCCESS) return ret;
+    if((ret = grib_set_long_internal(h, self->bits_per_value,*val))
+            != GRIB_SUCCESS) return ret;
 
-  if((ret = grib_set_double_array_internal(h, self->values,values,size))
-      != GRIB_SUCCESS) return ret;
+    if((ret = grib_set_double_array_internal(h, self->values,values,size))
+            != GRIB_SUCCESS) return ret;
 
-  grib_context_free(c,values);
+    grib_context_free(c,values);
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
-
-

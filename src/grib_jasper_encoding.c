@@ -217,14 +217,14 @@ int grib_jasper_decode(grib_context *c, unsigned char *buf, size_t *buflen, doub
 {
     grib_context_log(c, GRIB_LOG_ERROR,
             "grib_accessor_data_jpeg2000_packing: Jasper JPEG support not enabled.");
-    return GRIB_NOT_IMPLEMENTED;
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 int grib_jasper_encode(grib_context *c, j2k_encode_helper *helper)
 {
     grib_context_log(c, GRIB_LOG_ERROR,
             "grib_accessor_data_jpeg2000_packing: Jasper JPEG support not enabled.");
-    return GRIB_NOT_IMPLEMENTED;
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 #endif

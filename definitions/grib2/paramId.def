@@ -261,6 +261,22 @@
 	 parameterCategory = 14 ;
 	 parameterNumber = 1 ;
 	}
+#Surface net solar radiation, clear sky
+'210' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Surface net thermal radiation, clear sky
+'211' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Specific cloud liquid water content
 '246' = {
 	 discipline = 0 ;
@@ -416,6 +432,18 @@
 	 scaleFactorOfLowerLimit = 0 ;
 	}
 #Mean sea water potential temperature in the upper 300 m
+'151126' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 160 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 300 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
+	}
+#Mean sea water temperature in the upper 300 m
 '151127' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;

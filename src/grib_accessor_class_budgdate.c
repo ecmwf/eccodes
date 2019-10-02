@@ -137,69 +137,66 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_budgdate* self = (grib_accessor_budgdate*)a;
-  int n = 0;
+    grib_accessor_budgdate* self = (grib_accessor_budgdate*)a;
+    int n = 0;
 
-  self->year    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->month   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->day     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->year    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->month   = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->day     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
-
 
 static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  int ret=0;
-  grib_accessor_budgdate* self = (grib_accessor_budgdate*)a;
+    int ret=0;
+    grib_accessor_budgdate* self = (grib_accessor_budgdate*)a;
 
-  long year = 0;
-  long month = 0;
-  long day = 0;
+    long year = 0;
+    long month = 0;
+    long day = 0;
 
-  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->day,&day))!=GRIB_SUCCESS)
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->day,&day))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->month,&month))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->year,&year))!=GRIB_SUCCESS)
+        return ret;
+
+    if(*len < 1)
+        return GRIB_WRONG_ARRAY_SIZE;
+
+    val[0] = (1900 + year) * 10000 + month * 100 + day;
+
     return ret;
-  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->month,&month))!=GRIB_SUCCESS)
-    return ret;
-  if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->year,&year))!=GRIB_SUCCESS)
-    return ret;
-
-  if(*len < 1)
-    return GRIB_WRONG_ARRAY_SIZE;
-
-  val[0] = (1900 + year) * 10000 + month * 100 + day;
-
-  return ret;
 }
 
 /* TODO: Check for a valid date */
-
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  int ret=0;
-  long v = val[0];
-  grib_accessor_budgdate* self = (grib_accessor_budgdate*)a;
+    int ret=0;
+    long v = val[0];
+    grib_accessor_budgdate* self = (grib_accessor_budgdate*)a;
 
-  long year    = 0;
-  long month   = 0;
-  long day     = 0;
+    long year    = 0;
+    long month   = 0;
+    long day     = 0;
 
-  if(*len !=  1)
-    return GRIB_WRONG_ARRAY_SIZE;
+    if(*len !=  1)
+        return GRIB_WRONG_ARRAY_SIZE;
 
-  year    =  v / 10000;   v %= 10000;
-  month   =  v / 100;     v %= 100;
-  day     =  v;
+    year    =  v / 10000;   v %= 10000;
+    month   =  v / 100;     v %= 100;
+    day     =  v;
 
-  year -= 1900;
+    year -= 1900;
 
-  Assert(year < 255);
+    Assert(year < 255);
 
-  if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->day,day))!=GRIB_SUCCESS)
+    if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->day,day))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->month,month))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->year,year))!=GRIB_SUCCESS)
+        return ret;
+
     return ret;
-  if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->month,month))!=GRIB_SUCCESS)
-    return ret;
-  if ((ret=grib_set_long_internal(grib_handle_of_accessor(a),self->year,year))!=GRIB_SUCCESS)
-    return ret;
-
-  return ret;
 }
-

@@ -525,15 +525,17 @@ cleanup:
 static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR,
-                     "grib_accessor_data_ccsds_packing: ccsds support not enabled.");
-    return GRIB_NOT_IMPLEMENTED;
+            "grib_accessor_data_ccsds_packing: CCSDS support not enabled. "
+            "Please rebuild with -DENABLE_AEC=ON");
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR,
-                     "grib_accessor_data_ccsds_packing: ccsds support not enabled.");
-    return GRIB_NOT_IMPLEMENTED;
+            "grib_accessor_data_ccsds_packing: CCSDS support not enabled. "
+            "Please rebuild with -DENABLE_AEC=ON");
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 #endif

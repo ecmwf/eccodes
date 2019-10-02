@@ -163,6 +163,7 @@ typedef struct grib_runtime_options {
   int skip_all;
   grib_values tolerance[MAX_KEYS];
   off_t infile_offset;
+  int json_output;
 } grib_runtime_options;
 
 extern grib_option grib_options[];

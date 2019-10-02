@@ -82,6 +82,11 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
+/* The check on self->loop can only be done in non-threaded mode */
+#if defined(DEBUG) && GRIB_PTHREADS == 0 && GRIB_OMP_THREADS == 0
+  #define CHECK_LOOP 1
+#endif
+
 grib_action* grib_action_create_when( grib_context* context,
         grib_expression* expression,
         grib_action* block_true,grib_action* block_false)
@@ -100,7 +105,6 @@ grib_action* grib_action_create_when( grib_context* context,
     a->expression  = expression;
     a->block_true       = block_true;
     a->block_false      = block_false;
-
 
     sprintf(name,"_when%p",(void*)expression);
 
@@ -152,6 +156,12 @@ static void dump(grib_action* act, FILE* f, int lvl)
     printf("\n");
 }
 
+#ifdef CHECK_LOOP
+  #define SET_LOOP(self,v)  self->loop=v;
+#else
+  #define SET_LOOP(self,v)
+#endif
+
 static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed)
 {
     grib_action_when* self = (grib_action_when*) a;
@@ -159,9 +169,15 @@ static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* 
     int ret = GRIB_SUCCESS;
     long lres;
 
-    if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(observed), self->expression,&lres))
+    /* ECC-974: observed->parent will change as a result of the execute
+     * so must store the handle once here (in 'hand') rather than call
+     * grib_handle_of_accessor(observed) later
+     */
+    grib_handle* hand=grib_handle_of_accessor(observed);
+
+    if ((ret = grib_expression_evaluate_long(hand, self->expression,&lres))
             != GRIB_SUCCESS) return ret;
-#ifdef DEBUG
+#ifdef CHECK_LOOP
     if(self->loop)
     {
         printf("LOOP detected...\n");
@@ -171,7 +187,7 @@ static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* 
         return ret;
     }
 #endif
-    self->loop = 1;
+    SET_LOOP(self, 1);
 
     if(lres)
         b=self->block_true;
@@ -179,15 +195,15 @@ static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* 
         b=self->block_false;
 
     while(b) {
-        ret = grib_action_execute(b,grib_handle_of_accessor(observed));
+        ret = grib_action_execute(b,hand);
         if(ret != GRIB_SUCCESS) {
-            self->loop = 0;
+            SET_LOOP(self, 0);
             return ret;
         }
         b = b->next;
     }
 
-    self->loop = 0;
+    SET_LOOP(self, 0);
 
     return GRIB_SUCCESS;
 }

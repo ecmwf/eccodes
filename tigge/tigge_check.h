@@ -3871,6 +3871,237 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
       {&point_in_time, &given_level, &pressure_level},
    },
 
+ /*
+  s2s ocean parameters
+ */
+
+   {
+      "depth_of_20_C_isotherm_o2d.s2",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "s2"},
+
+         {"paramId", GRIB_TYPE_LONG, 151163},
+         {"discipline", GRIB_TYPE_LONG, 10},
+         {"parameterCategory", GRIB_TYPE_LONG, 4},
+         {"parameterNumber", GRIB_TYPE_LONG, 14},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 20},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 2},
+         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 29315},
+         {NULL, },
+      },
+      {&daily_average, &predefined_level, &has_bitmap},
+   },
+   {
+      "average_salinity_in_the_upper_300_m_o2d.s2",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "s2"},
+
+         {"paramId", GRIB_TYPE_LONG, 151175},
+         {"discipline", GRIB_TYPE_LONG, 10},
+         {"parameterCategory", GRIB_TYPE_LONG, 4},
+         {"parameterNumber", GRIB_TYPE_LONG, 21},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+
+         {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfSecondFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfSecondFixedSurface", GRIB_TYPE_LONG, 300},
+         {NULL, },
+      },
+      {&daily_average, &given_thickness, &has_bitmap},
+   },
+   {
+      "mean_sea_water_temperature_in_the_upper_300_m_o2d.s2",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "s2"},
+
+         {"paramId", GRIB_TYPE_LONG, 151127},
+         {"discipline", GRIB_TYPE_LONG, 10},
+         {"parameterCategory", GRIB_TYPE_LONG, 4},
+         {"parameterNumber", GRIB_TYPE_LONG, 15},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+
+         {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfSecondFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfSecondFixedSurface", GRIB_TYPE_LONG, 300},
+         {NULL, },
+      },
+      {&daily_average, &given_thickness, &has_bitmap},
+   },
+   {
+      "mean_sea_water_potential_temperature_in_the_upper_300_m_o2d.s2",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "s2"},
+
+         {"paramId", GRIB_TYPE_LONG, 151126},
+         {"discipline", GRIB_TYPE_LONG, 10},
+         {"parameterCategory", GRIB_TYPE_LONG, 4},
+         {"parameterNumber", GRIB_TYPE_LONG, 18},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+
+         {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfSecondFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfSecondFixedSurface", GRIB_TYPE_LONG, 300},
+         {NULL, },
+      },
+      {&daily_average, &given_thickness, &has_bitmap},
+   },
+   {
+      "ocean_mixed_layer_thickness_defined_by_sigma_theta_0.01_kg/m3_o2d.s2",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "s2"},
+
+         {"paramId", GRIB_TYPE_LONG, 151225},
+         {"discipline", GRIB_TYPE_LONG, 10},
+         {"parameterCategory", GRIB_TYPE_LONG, 4},
+         {"parameterNumber", GRIB_TYPE_LONG, 14},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 169},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 2},
+         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+
+         {NULL, },
+      },
+      {&daily_average, &predefined_level, &has_bitmap},
+   },
+   {
+      "eastward_sea_water_velocity_o2d.s2",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "s2"},
+
+         {"paramId", GRIB_TYPE_LONG, 151131},
+         {"discipline", GRIB_TYPE_LONG, 10},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 2},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+
+         {NULL, },
+      },
+      {&daily_average, &predefined_level, &has_bitmap},
+   },
+   {
+      "northward_sea_water_velocity_o2d.s2",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "s2"},
+
+         {"paramId", GRIB_TYPE_LONG, 151132},
+         {"discipline", GRIB_TYPE_LONG, 10},
+         {"parameterCategory", GRIB_TYPE_LONG, 1},
+         {"parameterNumber", GRIB_TYPE_LONG, 3},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+
+         {NULL, },
+      },
+      {&daily_average, &predefined_level, &has_bitmap},
+   },
+   {
+      "sea-ice_thickness_o2d.s2",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "s2"},
+
+         {"paramId", GRIB_TYPE_LONG, 174098},
+         {"discipline", GRIB_TYPE_LONG, 10},
+         {"parameterCategory", GRIB_TYPE_LONG, 2},
+         {"parameterNumber", GRIB_TYPE_LONG, 1},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+
+         {NULL, },
+      },
+      {&daily_average, &predefined_level, &has_bitmap},
+   },
+   {
+      "sea_surface_height_o2d.s2",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "s2"},
+
+         {"paramId", GRIB_TYPE_LONG, 151145},
+         {"discipline", GRIB_TYPE_LONG, 10},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 1},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+
+         {NULL, },
+      },
+      {&daily_average, &predefined_level, &has_bitmap},
+   },
+   {
+      "sea_surface_practical_salinity_o2d.s2",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"class", GRIB_TYPE_STRING, 0, "s2"},
+
+         {"paramId", GRIB_TYPE_LONG, 151219},
+         {"discipline", GRIB_TYPE_LONG, 10},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 3},
+
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+
+         {NULL, },
+      },
+      {&daily_average, &predefined_level, &has_bitmap},
+   },
 
 };
-

@@ -647,7 +647,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
     int isp;
 
-    bif_trunc_t * bt;
+    bif_trunc_t * bt = NULL;
 
     long count = 0;
 
@@ -749,7 +749,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     long   hpos = 0;
     long   lpos = 0;
     int isp;
-    bif_trunc_t * bt;
+    bif_trunc_t * bt = NULL;
 
     double max = 0;
     double min = 0;

@@ -195,14 +195,15 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
     int n=0;
     grib_accessor_smart_table* self  = (grib_accessor_smart_table*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
-    self->values = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-    self->tablename = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
-    self->masterDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-    self->localDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-    self->widthOfCode = grib_arguments_get_long(grib_handle_of_accessor(a),params,n++);
-    self->extraDir = grib_arguments_get_name(grib_handle_of_accessor(a),params,n++);
-    self->extraTable = grib_arguments_get_string(grib_handle_of_accessor(a),params,n++);
+    self->values = grib_arguments_get_name(hand,params,n++);
+    self->tablename = grib_arguments_get_string(hand,params,n++);
+    self->masterDir = grib_arguments_get_name(hand,params,n++);
+    self->localDir = grib_arguments_get_name(hand,params,n++);
+    self->widthOfCode = grib_arguments_get_long(hand,params,n++);
+    self->extraDir = grib_arguments_get_name(hand,params,n++);
+    self->extraTable = grib_arguments_get_string(hand,params,n++);
 
     a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -557,5 +558,3 @@ static int unpack_long   (grib_accessor* a, long* val, size_t *len)
 
     return err;
 }
-
-

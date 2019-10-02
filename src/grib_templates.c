@@ -14,28 +14,30 @@
 # include <unistd.h>
 #endif
 
+#if 0
+/* This is a mechanism where we generate C code in grib_templates.h
+ * from our GRIB sample files and then include the header so one
+ * can instantiate samples without any disk access.
+ * This is now superseded by MEMFS
+ */
 typedef struct grib_templates {
     const char*           name;
     const unsigned char* data;
     size_t               size;
 } grib_templates;
 
-#if 1
 #include "grib_templates.h"
 
 #define NUMBER(x) (sizeof(x)/sizeof(x[0]))
 
-grib_handle* grib_internal_template(grib_context* c,const char* name)
+grib_handle* grib_internal_sample(grib_context* c,const char* name)
 {
-    int i;
-    for(i = 0; i < NUMBER(templates); i++)
+    size_t i;
+    const size_t num_samples = NUMBER(templates);
+    Assert(0);
+    for(i = 0; i < num_samples; i++)
         if(strcmp(name,templates[i].name) == 0)
             return grib_handle_new_from_message_copy(c,templates[i].data,templates[i].size);
-    return NULL;
-}
-#else
-grib_handle* grib_internal_template(grib_context* c,const char* name)
-{
     return NULL;
 }
 #endif
@@ -49,7 +51,7 @@ static grib_handle* try_template(grib_context* c,const char* dir,const char* nam
     sprintf(path,"%s/%s.tmpl",dir,name);
 
     if (c->debug==-1) {
-        printf("ECCODES DEBUG: try_template path='%s'\n", path);
+        fprintf(stderr, "ECCODES DEBUG: try_template path='%s'\n", path);
     }
 
     if(codes_access(path,F_OK) == 0)
@@ -79,7 +81,7 @@ static grib_handle* try_bufr_template(grib_context* c,const char* dir,const char
     sprintf(path,"%s/%s.tmpl",dir,name);
 
     if (c->debug==-1) {
-        printf("ECCODES DEBUG: try_template path='%s'\n", path);
+        fprintf(stderr, "ECCODES DEBUG: try_template path='%s'\n", path);
     }
 
     if(codes_access(path,F_OK) == 0)

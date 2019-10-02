@@ -146,8 +146,8 @@ int is_gaussian_global(
     {
         grib_context* c=grib_context_get_default();
         if (c->debug) {
-            printf("ECCODES DEBUG is_gaussian_global: lat1=%f, lat2=%f, glat0=%f, d=%f\n", lat1, lat2, latitudes[0], d);
-            printf("ECCODES DEBUG is_gaussian_global: lon1=%f, lon2=%f, glon2=%f, delta=%f\n", lon1, lon2, lon2_global, delta);
+            fprintf(stderr,"ECCODES DEBUG is_gaussian_global: lat1=%f, lat2=%f, glat0=%f, d=%f\n", lat1, lat2, latitudes[0], d);
+            fprintf(stderr,"ECCODES DEBUG is_gaussian_global: lon1=%f, lon2=%f, glon2=%f, delta=%f\n", lon1, lon2, lon2_global, delta);
         }
     }
     */

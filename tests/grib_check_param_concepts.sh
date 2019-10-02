@@ -16,9 +16,15 @@ REDIRECT=/dev/null
 #   name.def paramId.def shortName.def units.def cfVarName.def
 #
 
-# Perhaps we should check whether the Test::More Perl module is available?
-#perl -MTest::More -e 'print $Test::More::VERSION ."\n";'
-
+# Check whether the Test::More Perl module is available
+set +e
+perl -e 'use Test::More;'
+status=$?
+set -e
+if [ $status -ne 0 ]; then
+  echo "Perl Test::More not installed. Test will be skipped"
+  exit 0
+fi
 
 CHECK_DEFS=$ECCODES_DEFINITION_PATH/check_grib_defs.pl
 

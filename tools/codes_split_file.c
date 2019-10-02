@@ -12,6 +12,8 @@
  * Description:
  * Split an input file (GRIB, BUFR etc) into chunks of roughly the same size.
  * The output files are named input_01, input_02 etc. This is much faster than grib_copy/bufr_copy
+ * 
+ * 2019-07-26 W.Qu  Allow an input file to be split into each individual message (if nchunk=-1)
  *
  */
 
@@ -19,10 +21,11 @@
 #include <assert.h>
 
 static int verbose = 0;
-static const char* OUTPUT_FILENAME_FORMAT = "%s_%02d"; /* x_01, x_02 etc */
+static const char* OUTPUT_FILENAME_FORMAT = "%s_%03d"; /* x_001, x_002 etc */
 static void usage(const char* prog)
 {
     printf("Usage: %s [-v] nchunks infile\n",prog);
+    printf("Setting nchunks=-1 splits infile into individual messages\n");
     exit(1);
 }
 
@@ -30,7 +33,7 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
 {
     void* mesg=NULL;
     FILE* out;
-    size_t size=0,read_size=0,insize=0,chunk_size;
+    size_t size=0,read_size=0,insize=0,chunk_size, msg_size=0, num_msg=0;
     off_t offset=0;
     int err=GRIB_SUCCESS;
     int i;
@@ -45,8 +48,12 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
     fseeko(in, 0, SEEK_END);
     insize = ftello(in);
     fseeko(in, 0, SEEK_SET);
-    assert(nchunks > 0);
-    chunk_size=insize/nchunks;
+    if (nchunks == -1) {
+        chunk_size = size;
+    } else {
+        assert(nchunks > 0);
+        chunk_size=insize/nchunks;
+    }
 
     i=1;
     sprintf(ofilename, OUTPUT_FILENAME_FORMAT, filename, i);
@@ -59,8 +66,10 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
 
     while ( err!=GRIB_END_OF_FILE ) {
         mesg=wmo_read_any_from_file_malloc(in, 0, &size, &offset, &err);
-        if (mesg!=NULL && err==0) {
-            if (fwrite(mesg,1,size,out)!=size) {
+        num_msg++;
+        /*printf("=1=%d\t%d\t%d\n",*count,size,insize);*/
+        if ( mesg!=NULL && err==0 ) {
+            if (fwrite(mesg,1,size,out)!=size ) {
                 perror(ofilename);
                 free(ofilename);
                 fclose(out);
@@ -68,11 +77,13 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
             }
             grib_context_free(c,mesg);
             read_size+=size;
-            if (read_size>chunk_size) {
-                if (verbose) printf("Wrote output file %s\n", ofilename);
+            msg_size+=size;
+            if (read_size>chunk_size && msg_size < insize) {
+                if (verbose) printf("Wrote output file %s (%lu msgs)\n", ofilename, (unsigned long)num_msg);
                 fclose(out);
                 i++;
                 /* Start writing to the next file */
+                /*printf("=2=%d\t%d\n",*count,msg_size);*/
                 sprintf(ofilename, OUTPUT_FILENAME_FORMAT, filename, i);
                 out=fopen(ofilename,"w");
                 if (!out) {
@@ -81,11 +92,12 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
                     return GRIB_IO_PROBLEM;
                 }
                 read_size=0;
+                num_msg=0;
             }
             (*count)++;
         }
     }
-    if (verbose) printf("Wrote output file %s\n", ofilename);
+    if (verbose) printf("Wrote output file %s (%lu msgs)\n", ofilename, (unsigned long)num_msg-1);
     fclose(out);
     free(ofilename);
 
@@ -114,8 +126,8 @@ int main(int argc,char* argv[])
 
     /* add some error checking */
     nchunks=atoi(argv[i]);
-    if (nchunks<1) {
-        fprintf(stderr,"ERROR: Invalid number %d. Please specify a positive integer.\n", nchunks);
+    if (nchunks<1 && nchunks!=-1) {
+        fprintf(stderr,"ERROR: Invalid number %d. Please specify a positive integer or -1\n", nchunks);
         return 1;
     }
 

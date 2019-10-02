@@ -136,47 +136,42 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_g2lon* self = (grib_accessor_g2lon*)a;
-  int n = 0;
+    grib_accessor_g2lon* self = (grib_accessor_g2lon*)a;
+    int n = 0;
 
-  self->longitude     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->longitude     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
-static int unpack_double   (grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  grib_accessor_g2lon* self = (grib_accessor_g2lon*)a;
-  int ret = 0;
-  long longitude;
+    grib_accessor_g2lon* self = (grib_accessor_g2lon*)a;
+    int ret = 0;
+    long longitude;
 
-  if((ret = grib_get_long(grib_handle_of_accessor(a), self->longitude,&longitude)) != GRIB_SUCCESS)
-      return ret;
+    if((ret = grib_get_long(grib_handle_of_accessor(a), self->longitude,&longitude)) != GRIB_SUCCESS)
+        return ret;
 
+    if (longitude==GRIB_MISSING_LONG) {
+        *val=GRIB_MISSING_DOUBLE;
+        return GRIB_SUCCESS;
+    }
 
-  if (longitude==GRIB_MISSING_LONG) {
-  	*val=GRIB_MISSING_DOUBLE;
-	return GRIB_SUCCESS;
-  } 
-  
+    *val=((double)longitude) / 1000000.0 ;
 
-  *val=((double)longitude) / 1000000.0 ;
-
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
-
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-  grib_accessor_g2lon* self = (grib_accessor_g2lon*)a;
-  long longitude;
-  double value=*val;
+    grib_accessor_g2lon* self = (grib_accessor_g2lon*)a;
+    long longitude;
+    double value=*val;
 
-  if (value == GRIB_MISSING_DOUBLE) {
-  	longitude=GRIB_MISSING_LONG;
-  } else {
-	if (value<0) value+=360;
-  	longitude=value * 1000000;
-  }
-  return grib_set_long(grib_handle_of_accessor(a), self->longitude,longitude);
+    if (value == GRIB_MISSING_DOUBLE) {
+        longitude=GRIB_MISSING_LONG;
+    } else {
+        if (value<0) value+=360;
+        longitude=value * 1000000;
+    }
+    return grib_set_long(grib_handle_of_accessor(a), self->longitude,longitude);
 }
-
-

@@ -169,98 +169,95 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long v, grib_arguments* args)
 {
-  grib_accessor_data_g1complex_packing *self =(grib_accessor_data_g1complex_packing*)a;
-  self->half_byte    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->N            = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->packingType  = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->ieee_packing = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->precision = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
-  self->edition=1;
-  a->flags |= GRIB_ACCESSOR_FLAG_DATA;
-  }
-
+    grib_accessor_data_g1complex_packing *self =(grib_accessor_data_g1complex_packing*)a;
+    self->half_byte    = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+    self->N            = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+    self->packingType  = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+    self->ieee_packing = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+    self->precision = grib_arguments_get_name(grib_handle_of_accessor(a),args,self->carg++);
+    self->edition=1;
+    a->flags |= GRIB_ACCESSOR_FLAG_DATA;
+}
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
-  grib_accessor_data_g1complex_packing* self =
-      (grib_accessor_data_g1complex_packing*)a;
-  int ret = GRIB_SUCCESS;
-  long seclen=0;
-  long   sub_j= 0;
-  long   sub_k= 0;
-  long   sub_m= 0;
-  long   n= 0;
-  long   half_byte= 0;
-  long  bits_per_value =0;
-  size_t  buflen =0;
-  grib_context* c=a->context;
-  grib_handle* h=grib_handle_of_accessor(a);
-  char* ieee_packing_s=NULL;
-  char* packingType_s=NULL;
-  char* precision_s=NULL;
+    grib_accessor_data_g1complex_packing* self =
+            (grib_accessor_data_g1complex_packing*)a;
+    int ret = GRIB_SUCCESS;
+    long seclen=0;
+    long   sub_j= 0;
+    long   sub_k= 0;
+    long   sub_m= 0;
+    long   n= 0;
+    long   half_byte= 0;
+    long  bits_per_value =0;
+    size_t  buflen =0;
+    grib_context* c=a->context;
+    grib_handle* h=grib_handle_of_accessor(a);
+    char* ieee_packing_s=NULL;
+    char* packingType_s=NULL;
+    char* precision_s=NULL;
 
-  grib_accessor_class* super = *(a->cclass->super);
+    grib_accessor_class* super = *(a->cclass->super);
 
+    if (*len ==0) return GRIB_NO_VALUES;
 
-  if (*len ==0) return GRIB_NO_VALUES;
+    if (c->ieee_packing && self->ieee_packing) {
+        long precision=c->ieee_packing==32 ? 1 : 2;
+        size_t lenstr=strlen(self->ieee_packing);
 
-  if (c->ieee_packing && self->ieee_packing) {
-    long precision=c->ieee_packing==32 ? 1 : 2;
-    size_t lenstr=strlen(self->ieee_packing);
-    
-    packingType_s=grib_context_strdup(c,self->packingType);
-    ieee_packing_s=grib_context_strdup(c,self->ieee_packing);
-    precision_s=grib_context_strdup(c,self->precision);
-    
-    grib_set_string(h,packingType_s,ieee_packing_s,&lenstr);
-    grib_set_long(h,precision_s,precision);
-    
-    grib_context_free(c,packingType_s);
-    grib_context_free(c,ieee_packing_s);
-    grib_context_free(c,precision_s);
-    return grib_set_double_array(h,"values",val,*len);
-  }
+        packingType_s=grib_context_strdup(c,self->packingType);
+        ieee_packing_s=grib_context_strdup(c,self->ieee_packing);
+        precision_s=grib_context_strdup(c,self->precision);
 
-  if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->sub_j,&sub_j)) != GRIB_SUCCESS)
-    return ret;
-  if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->sub_k,&sub_k)) != GRIB_SUCCESS)
-    return ret;
-  if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->sub_m,&sub_m)) != GRIB_SUCCESS)
-    return ret;
+        grib_set_string(h,packingType_s,ieee_packing_s,&lenstr);
+        grib_set_long(h,precision_s,precision);
 
-  self->dirty=1;
+        grib_context_free(c,packingType_s);
+        grib_context_free(c,ieee_packing_s);
+        grib_context_free(c,precision_s);
+        return grib_set_double_array(h,"values",val,*len);
+    }
 
-  Assert ((sub_j== sub_k) && (sub_m== sub_j));
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->sub_j,&sub_j)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->sub_k,&sub_k)) != GRIB_SUCCESS)
+        return ret;
+    if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->sub_m,&sub_m)) != GRIB_SUCCESS)
+        return ret;
 
-  ret = super->pack_double(a,val,len);
+    self->dirty=1;
 
-  if(ret == GRIB_SUCCESS){
+    Assert ((sub_j== sub_k) && (sub_m== sub_j));
+
+    ret = super->pack_double(a,val,len);
+
+    if(ret == GRIB_SUCCESS){
         n = a->offset + 4*((sub_k+1)*(sub_k+2));
 #if 1
-     /*     Octet number starts from beginning of message but shouldn't     */
-    if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->N,n)) != GRIB_SUCCESS)
-      return ret;
+        /*     Octet number starts from beginning of message but shouldn't     */
+        if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->N,n)) != GRIB_SUCCESS)
+            return ret;
 #else
-    ret = grib_get_long_internal(grib_handle_of_accessor(a),self->offsetsection,&offsetsection);
-    if(ret != GRIB_SUCCESS) return ret;
-    if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->N,n-offsetsection))
-        != GRIB_SUCCESS) return ret;
+        ret = grib_get_long_internal(grib_handle_of_accessor(a),self->offsetsection,&offsetsection);
+        if(ret != GRIB_SUCCESS) return ret;
+        if((ret = grib_set_long_internal(grib_handle_of_accessor(a),self->N,n-offsetsection))
+                != GRIB_SUCCESS) return ret;
 #endif
-    ret = grib_get_long_internal(grib_handle_of_accessor(a),self->bits_per_value,&bits_per_value);
-    if(ret != GRIB_SUCCESS) return ret;
+        ret = grib_get_long_internal(grib_handle_of_accessor(a),self->bits_per_value,&bits_per_value);
+        if(ret != GRIB_SUCCESS) return ret;
 
-    ret = grib_get_long_internal(grib_handle_of_accessor(a),self->seclen,&seclen);
-    if(ret != GRIB_SUCCESS) return ret;
+        ret = grib_get_long_internal(grib_handle_of_accessor(a),self->seclen,&seclen);
+        if(ret != GRIB_SUCCESS) return ret;
 
-    buflen = 32*(sub_k+1)*(sub_k+2)+(*len-(sub_k+1)*(sub_k+2))*bits_per_value+18*8;
-    half_byte = seclen*8-buflen;
-	if (a->context->debug==-1) {
-		printf("ECCODES DEBUG: half_byte=%ld\n",half_byte);
-	}
+        buflen = 32*(sub_k+1)*(sub_k+2)+(*len-(sub_k+1)*(sub_k+2))*bits_per_value+18*8;
+        half_byte = seclen*8-buflen;
+        if (a->context->debug==-1) {
+            fprintf(stderr, "ECCODES DEBUG: half_byte=%ld\n",half_byte);
+        }
 
-    ret = grib_set_long_internal(grib_handle_of_accessor(a),self->half_byte, half_byte);
-    if(ret != GRIB_SUCCESS) return ret;
-  }
-  return ret;
+        ret = grib_set_long_internal(grib_handle_of_accessor(a),self->half_byte, half_byte);
+        if(ret != GRIB_SUCCESS) return ret;
+    }
+    return ret;
 }
-

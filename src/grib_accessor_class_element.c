@@ -139,79 +139,76 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_element* self = (grib_accessor_element*)a;
-  int n = 0;
+    grib_accessor_element* self = (grib_accessor_element*)a;
+    int n = 0;
 
-  self->array = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
-  self->element    = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
-
+    self->array = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->element    = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  grib_accessor_element* self = (grib_accessor_element*)a;
-  int ret = 0;
-  size_t size=0;
-  long* ar=NULL;
-  grib_context* c=a->context;
+    grib_accessor_element* self = (grib_accessor_element*)a;
+    int ret = 0;
+    size_t size=0;
+    long* ar=NULL;
+    grib_context* c=a->context;
 
-  if(*len < 1){
-    ret = GRIB_ARRAY_TOO_SMALL;
+    if(*len < 1){
+        ret = GRIB_ARRAY_TOO_SMALL;
+        return ret;
+    }
+
+    if((ret = grib_get_size(grib_handle_of_accessor(a), self->array,&size)) != GRIB_SUCCESS)
+        return ret;
+
+    ar=(long*)grib_context_malloc_clear(c,size*sizeof(long));
+    if (!ar) {
+        grib_context_log(c,GRIB_LOG_ERROR,"unable to allocate %d bytes",size*sizeof(long));
+        return GRIB_OUT_OF_MEMORY;
+    }
+
+    if((ret = grib_get_long_array_internal(grib_handle_of_accessor(a), self->array,ar,&size)) != GRIB_SUCCESS)
+        return ret;
+
+    if (self->element>=size) return GRIB_INTERNAL_ERROR;
+    *val=ar[self->element];
+
+    grib_context_free(c,ar);
     return ret;
-  }
-
-  if((ret = grib_get_size(grib_handle_of_accessor(a), self->array,&size)) != GRIB_SUCCESS)
-    return ret;
-
-  ar=(long*)grib_context_malloc_clear(c,size*sizeof(long));
-  if (!ar) {
-    grib_context_log(c,GRIB_LOG_ERROR,"unable to allocate %d bytes",size*sizeof(long));
-    return GRIB_OUT_OF_MEMORY;
-  }
-  
-  if((ret = grib_get_long_array_internal(grib_handle_of_accessor(a), self->array,ar,&size)) != GRIB_SUCCESS)
-    return ret;
-
-  if (self->element>=size) return GRIB_INTERNAL_ERROR;
-  *val=ar[self->element];
-
-  grib_context_free(c,ar);
-  return ret;
 }
-
 
 static int pack_long(grib_accessor* a, const long* val, size_t *len)
 {
-  grib_accessor_element* self = (grib_accessor_element*)a;
-  int ret = 0;
-  size_t size=0;
-  long* ar=NULL;
-  grib_context* c=a->context;
+    grib_accessor_element* self = (grib_accessor_element*)a;
+    int ret = 0;
+    size_t size=0;
+    long* ar=NULL;
+    grib_context* c=a->context;
 
-  if(*len < 1){
-    ret = GRIB_ARRAY_TOO_SMALL;
+    if(*len < 1){
+        ret = GRIB_ARRAY_TOO_SMALL;
+        return ret;
+    }
+
+    if((ret = grib_get_size(grib_handle_of_accessor(a), self->array,&size)) != GRIB_SUCCESS)
+        return ret;
+
+    ar=(long*)grib_context_malloc_clear(c,size*sizeof(long));
+    if (!ar) {
+        grib_context_log(c,GRIB_LOG_ERROR,"unable to allocate %d bytes",size*sizeof(long));
+        return GRIB_OUT_OF_MEMORY;
+    }
+
+    if((ret = grib_get_long_array_internal(grib_handle_of_accessor(a), self->array,ar,&size)) != GRIB_SUCCESS)
+        return ret;
+
+
+    ar[self->element]=*val;
+
+    if((ret = grib_set_long_array_internal(grib_handle_of_accessor(a), self->array,ar,size)) != GRIB_SUCCESS)
+        return ret;
+
+    grib_context_free(c,ar);
     return ret;
-  }
-
-  if((ret = grib_get_size(grib_handle_of_accessor(a), self->array,&size)) != GRIB_SUCCESS)
-    return ret;
-
-  ar=(long*)grib_context_malloc_clear(c,size*sizeof(long));
-  if (!ar) {
-    grib_context_log(c,GRIB_LOG_ERROR,"unable to allocate %d bytes",size*sizeof(long));
-    return GRIB_OUT_OF_MEMORY;
-  }
-  
-  if((ret = grib_get_long_array_internal(grib_handle_of_accessor(a), self->array,ar,&size)) != GRIB_SUCCESS)
-    return ret;
-
-  
-  ar[self->element]=*val;
-
-  if((ret = grib_set_long_array_internal(grib_handle_of_accessor(a), self->array,ar,size)) != GRIB_SUCCESS)
-    return ret;
-
-  grib_context_free(c,ar);
-  return ret;
 }
-

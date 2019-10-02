@@ -196,3 +196,19 @@
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 }
+#Surface net solar radiation, clear sky
+'surface_net_downward_shortwave_flux_assuming_clear_sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+}
+#Surface net thermal radiation, clear sky
+'surface_net_downward_longwave_flux_assuming_clear_sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+}

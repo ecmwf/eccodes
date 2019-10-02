@@ -33,6 +33,8 @@ grib_option grib_options[]={
         {"7",0,0,0,1,0},
         {"V",0,0,0,1,0},
         {"q",0,0,1,0,0},
+        {"p:","key1,key2,...",
+           "\n\t\tDeclaration of keys to dump. Only those keys are dumped (not the whole message).\n",0,1,0},
         {"X:",0,0,0,1,0},
         {"x",0,0,0,1,0}
 };
@@ -42,6 +44,7 @@ const char* grib_tool_name="grib_dump";
 const char* grib_tool_usage="[options] grib_file grib_file ...";
 static int json=0;
 static int first_handle=1;
+static int dump_keys=0;
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 
@@ -112,6 +115,8 @@ int grib_tool_init(grib_runtime_options* options)
     if ( grib_options_on("d") || grib_options_on("j") )
         options->dump_flags |= GRIB_DUMP_FLAG_ALL_DATA;
 
+    dump_keys=grib_options_on("p:");
+
     return 0;
 }
 
@@ -164,6 +169,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     long length=0;
     int i,err=0;
+    grib_context* c = h->context;
     if (grib_get_long(h,"totalLength",&length) != GRIB_SUCCESS)
         length=-9999;
 
@@ -173,8 +179,27 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if( err != GRIB_SUCCESS && options->fail) exit(err);
     }
 
-    for (i=0;i<options->print_keys_count;i++)
-        grib_set_flag(h,options->print_keys[i].name,GRIB_ACCESSOR_FLAG_DUMP);
+    /* ECC-961 */
+    if (dump_keys && options->print_keys_count > 0) {
+        int errors = 0; /* true if at least one error */
+        const int key_count_total = options->print_keys_count;
+        int key_count_valid = 0; /* Some requested keys may be invalid */
+        const char** key_names=(const char**)grib_context_malloc_clear(c, sizeof(char*)*key_count_total);
+        for (i=0;i<key_count_total;i++) {
+            const char* key_name = options->print_keys[i].name;
+            err = grib_set_flag(h, key_name, GRIB_ACCESSOR_FLAG_DUMP);
+            if (err) {
+                grib_context_log(c,GRIB_LOG_ERROR, "%s: %s", key_name, grib_get_error_message(err));
+                errors = 1;
+            } else {
+                key_names[key_count_valid]=key_name;
+                key_count_valid++;
+            }
+        }
+        grib_dump_keys(h, stdout, options->dump_mode, options->dump_flags, 0, key_names, key_count_valid);
+        grib_context_free(c, key_names);
+        return errors;
+    }
 
     if(json) {
         if (!first_handle && options->handle_count>1) {
@@ -218,7 +243,10 @@ void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
 
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    if (json) fprintf(stdout,"\n]}\n");
+    if (json) {
+        if (!dump_keys) fprintf(stdout,"\n]}\n");
+        else            fprintf(stdout,"\n");
+    }
     return 0;
 }
 

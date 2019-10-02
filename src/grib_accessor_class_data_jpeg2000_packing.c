@@ -204,22 +204,22 @@ static void init(grib_accessor* a,const long v, grib_arguments* args)
     if (a->context->debug==-1) {
         switch (self->jpeg_lib) {
             case 0:
-                printf("ECCODES DEBUG jpeg2000_packing: jpeg_lib not set!\n"); break;
+                fprintf(stderr, "ECCODES DEBUG jpeg2000_packing: jpeg_lib not set!\n"); break;
             case JASPER_LIB:
-                printf("ECCODES DEBUG jpeg2000_packing: using JASPER_LIB\n");   break;
+                fprintf(stderr, "ECCODES DEBUG jpeg2000_packing: using JASPER_LIB\n");   break;
             case OPENJPEG_LIB:
-                printf("ECCODES DEBUG jpeg2000_packing: using OPENJPEG_LIB\n"); break;
+                fprintf(stderr, "ECCODES DEBUG jpeg2000_packing: using OPENJPEG_LIB\n"); break;
             default:
                 Assert(0); break;
         }
     }
 
     self->dump_jpg = codes_getenv("ECCODES_GRIB_DUMP_JPG_FILE");
-
-    if(first) {
-        if(self->dump_jpg)
+    if(self->dump_jpg) {
+        if (first) {
             printf("GRIB JPEG dumping to %s\n",self->dump_jpg);
-        first = 0;
+            first = 0;
+        }
     }
 }
 
@@ -556,13 +556,13 @@ cleanup:
 static int  unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR, "JPEG support not enabled.");
-    return GRIB_NOT_IMPLEMENTED;
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR, "JPEG support not enabled.");
-    return GRIB_NOT_IMPLEMENTED;
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 #endif

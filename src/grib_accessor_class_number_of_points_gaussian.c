@@ -565,7 +565,7 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t *
     if (get_number_of_data_values(h, &numDataValues) == GRIB_SUCCESS) {
         if (*val != numDataValues) {
             if (h->context->debug)
-                printf("ECCODES DEBUG number_of_points_gaussian: LEGACY MODE activated. "
+                fprintf(stderr, "ECCODES DEBUG number_of_points_gaussian: LEGACY MODE activated. "
                        "Count(=%ld) changed to num values(=%ld)\n",*val,(long)numDataValues);
             *val = numDataValues;
         }

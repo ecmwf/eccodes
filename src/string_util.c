@@ -47,7 +47,10 @@ const char* extract_filename(const char* filepath)
     else    return s + 1;
 }
 
-/* Returns an array of strings the last of which is NULL */
+/* Returns an array of strings the last of which is NULL.
+ * Note: The delimiter here is a 'string' but must be ONE character!
+ *       Splitting with several delimiters is not supported.
+ */
 char** string_split(char* inputString, const char* delimiter)
 {
     char** result = NULL;

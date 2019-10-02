@@ -678,7 +678,7 @@ static const struct accessor_class_hash classes[] =
     {"reference_value_error", &grib_accessor_class_reference_value_error}
   };
 
-const struct accessor_class_hash *
+static const struct accessor_class_hash *
 grib_accessor_classes_hash (const char *str, unsigned int len)
 {
     register const int key = grib_accessor_classes_get_id (str, len);

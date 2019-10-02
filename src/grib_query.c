@@ -202,11 +202,10 @@ static char* get_condition(const char* name,codes_condition* condition)
     return str;
 }
 
-static grib_accessor* _search_by_rank(grib_accessor* a,const char* name,int rank) {
-    grib_accessor* ret=NULL;
+static grib_accessor* _search_by_rank(grib_accessor* a,const char* name,int rank)
+{
     grib_trie_with_rank* t=accessor_bufr_data_array_get_dataAccessorsTrie(a);
-
-    ret=(grib_accessor*)grib_trie_with_rank_get(t,name,rank);
+    grib_accessor* ret=(grib_accessor*)grib_trie_with_rank_get(t,name,rank);
     return ret;
 }
 
@@ -233,28 +232,102 @@ static grib_accessor* search_by_rank(grib_handle* h, const char* name,int rank,c
     if (data) {
         return _search_by_rank(data,name,rank);
     } else {
-        grib_accessor* ret=NULL;
         int rank2;
         char* str=get_rank(h->context, name, &rank2);
-        ret=_search_and_cache(h,str,the_namespace);
+        grib_accessor* ret=_search_and_cache(h,str,the_namespace);
         grib_context_free(h->context,str);
         return ret;
     }
 }
 
-static int condition_true(grib_accessor* a,codes_condition* condition) {
+static int get_single_long_val(grib_accessor* a, long* result)
+{
+    grib_context* c = a->context;
+    int err = 0;
+    size_t size = 1;
+    if (c->bufr_multi_element_constant_arrays) {
+        long count=0;
+        grib_value_count(a,&count);
+        if(count>1) {
+            size_t i = 0;
+            long val0 = 0;
+            int is_constant=1;
+            long* values=(long*)grib_context_malloc_clear(c,sizeof(long)*count);
+            size = count;
+            err=grib_unpack_long(a,values,&size);
+            val0 = values[0];
+            for (i=0;i<size;i++) {
+                if (val0 != values[i]) {is_constant=0;break;}
+            }
+            if (is_constant) {
+                *result = val0;
+                grib_context_free(c, values);
+            } else {
+                return GRIB_ARRAY_TOO_SMALL;
+            }
+        } else {
+            err = grib_unpack_long(a,result,&size);
+        }
+    } else {
+        err = grib_unpack_long(a,result,&size);
+    }
+    return err;
+}
+static int get_single_double_val(grib_accessor* a, double* result)
+{
+    grib_context* c = a->context;
+    int err = 0;
+    size_t size = 1;
+    if (c->bufr_multi_element_constant_arrays) {
+        long count=0;
+        grib_value_count(a,&count);
+        if(count>1) {
+            size_t i = 0;
+            double val0 = 0;
+            int is_constant=1;
+            double* values=(double*)grib_context_malloc_clear(c,sizeof(double)*count);
+            size = count;
+            err=grib_unpack_double(a,values,&size);
+            val0 = values[0];
+            for (i=0;i<size;i++) {
+                if (val0 != values[i]) {is_constant=0;break;}
+            }
+            if (is_constant) {
+                *result = val0;
+                grib_context_free(c, values);
+            } else {
+                return GRIB_ARRAY_TOO_SMALL;
+            }
+        } else {
+            err = grib_unpack_double(a,result,&size);
+        }
+    } else {
+        err = grib_unpack_double(a,result,&size);
+    }
+    return err;
+}
+
+static int condition_true(grib_accessor* a,codes_condition* condition)
+{
     int ret=0, err=0;
-    size_t size=1;
     long lval=0;
     double dval=0;
+    
+    /* The condition has to be of the form:
+     *   key=value
+     * and the value has to be a single scalar (integer or double).
+     * If the key is an array of different values, then the condition is false.
+     * But if the key is a constant array and the value matches then it's true.
+     */
+
     switch (condition->rightType) {
     case GRIB_TYPE_LONG:
-        err = grib_unpack_long(a,&lval,&size);
+        err = get_single_long_val(a, &lval);
         if (err) ret = 0;
         else     ret = lval==condition->rightLong ? 1 : 0;
         break;
     case GRIB_TYPE_DOUBLE:
-        err = grib_unpack_double(a,&dval,&size);
+        err = get_single_double_val(a,&dval);
         if (err) ret = 0;
         else     ret = dval==condition->rightDouble ? 1 : 0;
         break;
@@ -267,11 +340,10 @@ static int condition_true(grib_accessor* a,codes_condition* condition) {
 
 static void search_from_accessors_list(grib_accessors_list* al,grib_accessors_list* end,const char* name,grib_accessors_list* result)
 {
-    char* accessor_name=NULL;
     char attribute_name[200]={0,};
     grib_accessor* accessor_result=0;
 
-    accessor_name=grib_split_name_attribute(al->accessor->context,name,attribute_name);
+    char* accessor_name=grib_split_name_attribute(al->accessor->context,name,attribute_name);
 
     while (al && al!=end && al->accessor) {
         if (grib_inline_strcmp(al->accessor->name,accessor_name)==0) {
@@ -413,8 +485,7 @@ static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name)
     if ( p ) {
         int i=0,len=0;
         char name_space[MAX_NAMESPACE_LEN];
-        char* basename=NULL;
-        basename=p+1;
+        char* basename=p+1;
         p--;
         i=0;
         len=p-name+1;
@@ -460,11 +531,10 @@ grib_accessor* grib_find_accessor(grib_handle* h, const char* name)
         aret = _grib_find_accessor(h, name); /* ECC-144: Performance */
     }
     else {
-        char* accessor_name=NULL;
         char attribute_name[512]={0,};
         grib_accessor* a=NULL;
 
-        accessor_name=grib_split_name_attribute(h->context,name,attribute_name);
+        char* accessor_name=grib_split_name_attribute(h->context,name,attribute_name);
 
         a=_grib_find_accessor(h,accessor_name);
 

@@ -20,6 +20,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = pack_long;
+   IMPLEMENTS = unpack_long
    IMPLEMENTS = init;get_native_type
    MEMBERS = const char* values
    MEMBERS = const char* Ni
@@ -45,6 +46,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int  get_native_type(grib_accessor*);
 static int pack_long(grib_accessor*, const long* val,size_t *len);
+static int unpack_long(grib_accessor*, long* val,size_t *len);
 static void init(grib_accessor*,const long, grib_arguments* );
 static void init_class(grib_accessor_class*);
 
@@ -84,7 +86,7 @@ static grib_accessor_class _grib_accessor_class_change_scanning_direction = {
     0,               /* grib_pack procedures long      */
     0,                 /* grib_pack procedures long      */
     &pack_long,                  /* grib_pack procedures long      */
-    0,                /* grib_unpack procedures long    */
+    &unpack_long,                /* grib_unpack procedures long    */
     0,                /* grib_pack procedures double    */
     0,              /* grib_unpack procedures double  */
     0,                /* grib_pack procedures string    */
@@ -122,7 +124,6 @@ static void init_class(grib_accessor_class* c)
 	c->sub_section	=	(*(c->super))->sub_section;
 	c->pack_missing	=	(*(c->super))->pack_missing;
 	c->is_missing	=	(*(c->super))->is_missing;
-	c->unpack_long	=	(*(c->super))->unpack_long;
 	c->pack_double	=	(*(c->super))->pack_double;
 	c->unpack_double	=	(*(c->super))->unpack_double;
 	c->pack_string	=	(*(c->super))->pack_string;
@@ -257,4 +258,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 static int get_native_type(grib_accessor* a)
 {
     return GRIB_TYPE_LONG;
+}
+
+static int unpack_long(grib_accessor* a, long*  v, size_t *len)
+{
+    /* ECC-976: decoding this accessor doesn't make sense so we return a dummy value */
+    *v=-1;
+    return GRIB_SUCCESS;
 }

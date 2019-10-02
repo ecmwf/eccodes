@@ -19,8 +19,8 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a,const char* b)
 
 GRIB_INLINE static int grib_inline_rstrcmp(const char* a,const char* b)
 {
-    char* p=(char*)a;
-    char* q=(char*)b;
+    const char* p=a;
+    const char* q=b;
     while (*p != 0) p++;
     while (*q != 0) q++;
     q--;p--;
@@ -38,37 +38,36 @@ struct grib_error {
     grib_error* next;
 };
 
-grib_error* error_summary;
-
-compare_double_proc compare_double;
-double global_tolerance=0;
-int packingCompare=0;
-grib_string_list* blacklist=0;
-int compareAbsolute=1;
+static grib_error* error_summary;
+static compare_double_proc compare_double;
+static double global_tolerance=0;
+static int packingCompare=0;
+static grib_string_list* blacklist=0;
+static int compareAbsolute=1;
 
 static int compare_handles(grib_handle* h1,grib_handle* h2,grib_runtime_options* options);
 static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_handle *h2,const char *name,int type);
-int error=0;
-int count=0;
-int lastPrint=0;
-int force=0;
+static int error=0;
+static int count=0;
+static int lastPrint=0;
+static int force=0;
 
 /* ECC-651: Boolean 'two_way' set to 1 when '-2' option used */
-int two_way=0;
+static int two_way=0;
 /* Boolean 'handles_swapped' relevant in 'two_way' mode:
  *  0 means: h1 is first file,  h2 is second file
  *  1 means: h1 is second file, h2 is first file
  */
-int handles_swapped=0;
+static int handles_swapped=0;
 
-double maxAbsoluteError = 1e-19;
-int onlyListed=1;
-int headerMode=0;
-int morein1=0;
-int morein2=0;
-int listFromCommandLine;
-int verbose=0;
-double tolerance_factor=1;
+static double maxAbsoluteError = 1e-19;
+static int onlyListed=1;
+static int headerMode=0;
+static int morein1=0;
+static int morein2=0;
+static int listFromCommandLine;
+static int verbose=0;
+static double tolerance_factor=1;
 
 /* Returns 0 when the values are considered the same */
 static double compare_double_absolute(double *a,double *b,double tolerance)
@@ -150,10 +149,10 @@ grib_option grib_options[]={
     {"v",0,0,0,1,0}
 };
 
-grib_handle* global_handle=NULL;
-int global_counter=0;
-int theStart=-1;
-int theEnd=-1;
+static grib_handle* global_handle=NULL;
+static int global_counter=0;
+static int theStart=-1;
+static int theEnd=-1;
 
 const char* grib_tool_description=
   "Compare GRIB messages contained in two files."
@@ -572,6 +571,24 @@ static void save_error(grib_context* c,const char* key)
     }
 }
 
+static int test_bit(long a, long b) {return a&(1<<b);}
+
+/* If the accessor represents a codeflag key, then return its binary rep in 'result' */
+static int codeflag_to_bitstr(grib_accessor* a, long val, char* result)
+{
+    if (a && grib_inline_strcmp(a->cclass->name, "codeflag")==0) {
+        long i;
+        const long bytelen = a->length*8;
+        for(i=0; i<bytelen; i++) {
+            if (test_bit(val, bytelen-i-1)) *result='1';
+            else *result='0';
+            result++;
+        }
+        return GRIB_SUCCESS;
+    }
+    return GRIB_INVALID_TYPE;
+}
+
 static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_handle *h2,const char *name,int type)
 {
     size_t len1 = 0;
@@ -738,6 +755,25 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
                 err1 = GRIB_VALUE_MISMATCH;
                 save_error(c,name);
             }
+            else
+            {
+                /* ECC-136: string reps are the same, but integer values may not be */
+                /* Note: Do not do this during edition-independent compare! */
+                if (!listFromCommandLine) {
+                    long v1, v2;
+                    if (grib_get_long(h1,name,&v1) == GRIB_SUCCESS &&
+                        grib_get_long(h2,name,&v2) == GRIB_SUCCESS)
+                    {
+                        if (v1 != v2)
+                        {
+                            printInfo(h1);
+                            save_error(c,name);
+                            err1 = GRIB_VALUE_MISMATCH;
+                            printf("long [%s]: [%ld] != [%ld]\n", name,v1,v2);
+                        }
+                    }
+                }
+            }
         }
 
         grib_context_free(h1->context,sval1);
@@ -786,15 +822,22 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
                 printInfo(h1);
                 save_error(c,name);
                 err1 = GRIB_VALUE_MISMATCH;
-                if(len1 == 1)
-                    printf("long [%s]: [%ld] != [%ld]\n",
-                            name,*lval1,*lval2);
-                else
-                    printf("long [%s] %d out of %ld different\n",
-                            name,countdiff,(long)len1);
+                if(len1 == 1) {
+                    char buf1[128]={0,}; /* buffers to store the binary representation of codeflags */
+                    char buf2[128]={0,};
+                    grib_accessor* acc1=grib_find_accessor(h1, name);
+                    grib_accessor* acc2=grib_find_accessor(h2, name);
+                    printf("long [%s]: [%ld] != [%ld]", name,*lval1,*lval2);
+                    if (codeflag_to_bitstr(acc1, *lval1, buf1)==GRIB_SUCCESS && codeflag_to_bitstr(acc2, *lval2, buf2)==GRIB_SUCCESS) {
+                        printf("    ([%s] != [%s])", buf1, buf2);
+                    }
+                    printf("\n");
+                }
+                else {
+                    printf("long [%s] %d out of %ld different\n", name,countdiff,(long)len1);
+                }
             }
         }
-
 
         grib_context_free(h1->context,lval1);
         grib_context_free(h2->context,lval2);
@@ -1030,7 +1073,6 @@ static int compare_values(grib_runtime_options* options,grib_handle* h1,grib_han
         save_error(c,name);
         printf("Cannot compare [%s], unsupported type %d\n",name,type1);
         return GRIB_UNABLE_TO_COMPARE_ACCESSORS;
-        break;
     }
 
     return GRIB_SUCCESS;

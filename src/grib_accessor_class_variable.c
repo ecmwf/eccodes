@@ -23,6 +23,7 @@
    IMPLEMENTS = compare; make_clone
    MEMBERS=double dval
    MEMBERS=char*  cval
+   MEMBERS=char*  cname
    MEMBERS=int    type
    END_CLASS_DEF
 
@@ -61,6 +62,7 @@ typedef struct grib_accessor_variable {
 /* Members defined in variable */
 	double dval;
 	char*  cval;
+	char*  cname;
 	int    type;
 } grib_accessor_variable;
 
@@ -150,6 +152,7 @@ static void init(grib_accessor* a, const long length , grib_arguments* args )
     long l;
     int ret=0;
     double d;
+    self->cname = NULL;
 
     a->length = 0;
     if (self->type==GRIB_TYPE_UNDEFINED && expression) {
@@ -268,7 +271,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     *val = (long)ac->dval;
     *len = 1;
     return GRIB_SUCCESS;
-
 }
 
 static int get_native_type(grib_accessor* a)
@@ -280,7 +282,17 @@ static int get_native_type(grib_accessor* a)
 static void destroy(grib_context* c,grib_accessor* a)
 {
     grib_accessor_variable *self = (grib_accessor_variable*)a;
+    int i=0;
+
     grib_context_free(c,self->cval);
+    if (self->cname) grib_context_free(c,self->cname); /* ECC-765 */
+
+    /* Note: BUFR operator descriptors are variables and have attributes so need to free them */
+    while (i<MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
+        grib_accessor_delete(c, a->attributes[i]);
+        a->attributes[i]=NULL;
+        ++i;
+    }
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t *len){
@@ -315,9 +327,10 @@ static int pack_string(grib_accessor* a, const char* val, size_t *len)
     grib_context *c = a->context;
 
     grib_context_free(c,self->cval);
-    self->cval = grib_context_strdup(c,val);
-    self->dval = atof(val);
-    self->type = GRIB_TYPE_STRING;
+    self->cval  = grib_context_strdup(c,val);
+    self->dval  = atof(val);
+    self->type  = GRIB_TYPE_STRING;
+    self->cname = NULL;
     return GRIB_SUCCESS;
 }
 
@@ -411,6 +424,7 @@ static grib_accessor* make_clone(grib_accessor* a,grib_section* s,int* err)
     the_clone->h=s->h;
     the_clone->flags=a->flags;
     variableAccessor=(grib_accessor_variable*)the_clone;
+    variableAccessor->cname=creator.name; /* ECC-765: Store for later freeing memory */
 
     *err=0;
     variableAccessor->type=self->type;

@@ -32,7 +32,7 @@ TESTS = definitions.sh \
         grib_octahedral.sh \
         grib_global.sh \
         grib_concept.sh \
-        decimalPrecision.sh \
+        grib_decimalPrecision.sh \
         grib_bitsPerValue.sh \
         get_fail.sh \
         grib_missing.sh \
@@ -44,9 +44,8 @@ TESTS = definitions.sh \
         grib_level.sh \
         index.sh \
         grib_bitmap.sh \
-        list.sh \
+        grib_list.sh \
         grib_second_order.sh \
-        multi_from_message.sh \
         grib_change_scanning.sh \
         julian.sh \
         grib_statistics.sh \
@@ -61,7 +60,6 @@ TESTS = definitions.sh \
         grib_jpeg.sh \
         grib_ccsds.sh \
         md5.sh \
-        grib_util_set_spec.sh \
         grib_neg_fctime.sh \
         bufr_ecc-197.sh \
         bufr_ecc-286.sh \
@@ -74,11 +72,10 @@ download_data:
 	@$(top_srcdir)/data/download.sh $(top_srcdir)/data
 
 noinst_PROGRAMS = packing_check gauss_sub read_any grib_double_cmp packing pack_unpack \
-                  multi_from_message julian read_index index gribex_perf\
+                  julian read_index index gribex_perf\
                   jpeg_perf grib_ccsds_perf so_perf png_perf bpv_limit laplacian \
-                  unit_tests grib_util_set_spec
+                  unit_tests
 
-multi_from_message_SOURCES = multi_from_message.c
 laplacian_SOURCES = laplacian.c
 packing_SOURCES = packing.c
 packing_check_SOURCES = packing_check.c
@@ -95,7 +92,6 @@ png_perf_SOURCES = png_perf.c
 grib_ccsds_perf_SOURCES  = grib_ccsds_perf.c
 gribex_perf_SOURCES = gribex_perf.c
 gauss_sub_SOURCES = gauss_sub.c
-grib_util_set_spec_SOURCES = grib_util_set_spec.c
 
 LDADD = $(top_builddir)/src/libeccodes.la $(EMOS_LIB)
 
