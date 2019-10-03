@@ -250,7 +250,7 @@ codes_index* codes_index_read(codes_context* c, const char* filename, int *err);
  * @param size        : number of distinct values of the key in the index
  * @return            0 if OK, integer value on error
  */
-int codes_index_get_size(codes_index* index, const char* key, size_t* size);
+int codes_index_get_size(const codes_index* index, const char* key, size_t* size);
 
 /**
  *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as long or when the native type of the key is long.
@@ -262,7 +262,7 @@ int codes_index_get_size(codes_index* index, const char* key, size_t* size);
  * @param size        : size of the values array
  * @return            0 if OK, integer value on error
  */
-int codes_index_get_long(codes_index* index, const char* key, long* values, size_t *size);
+int codes_index_get_long(const codes_index* index, const char* key, long* values, size_t *size);
 
 /**
  *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as double or when the native type of the key is double.
@@ -274,7 +274,7 @@ int codes_index_get_long(codes_index* index, const char* key, long* values, size
  * @param size        : size of the values array
  * @return            0 if OK, integer value on error
  */
-int codes_index_get_double(codes_index* index, const char* key, double* values, size_t *size);
+int codes_index_get_double(const codes_index* index, const char* key, double* values, size_t *size);
 
 /**
  *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as string or when the native type of the key is string.
@@ -286,7 +286,7 @@ int codes_index_get_double(codes_index* index, const char* key, double* values, 
  * @param size        : size of the values array
  * @return            0 if OK, integer value on error
  */
-int codes_index_get_string(codes_index* index, const char* key, char** values, size_t *size);
+int codes_index_get_string(const codes_index* index, const char* key, char** values, size_t *size);
 
 
 /**

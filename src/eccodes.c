@@ -116,19 +116,19 @@ grib_index* codes_index_read(grib_context* c,const char* filename,int *err)
 {
     return grib_index_read(c,filename,err);
 }
-int codes_index_get_size(grib_index* index,const char* key,size_t* size)
+int codes_index_get_size(const grib_index* index,const char* key,size_t* size)
 {
     return grib_index_get_size(index,key,size);
 }
-int codes_index_get_long(grib_index* index,const char* key,long* values,size_t *size)
+int codes_index_get_long(const grib_index* index,const char* key,long* values,size_t *size)
 {
     return grib_index_get_long(index,key,values,size);
 }
-int codes_index_get_double(grib_index* index,const char* key, double* values,size_t *size)
+int codes_index_get_double(const grib_index* index,const char* key, double* values,size_t *size)
 {
     return grib_index_get_double(index,key,values,size);
 }
-int codes_index_get_string(grib_index* index,const char* key,char** values,size_t *size)
+int codes_index_get_string(const grib_index* index,const char* key,char** values,size_t *size)
 {
     return grib_index_get_string(index,key,values,size);
 }

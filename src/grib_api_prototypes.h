@@ -744,10 +744,10 @@ grib_handle *new_message_from_file(int message_type, grib_context *c, FILE *f, i
 int _codes_index_add_file(grib_index *index, const char *filename, int message_type);
 int grib_index_add_file(grib_index *index, const char *filename);
 grib_index *grib_index_new_from_file(grib_context *c, char *filename, const char *keys, int *err);
-int grib_index_get_size(grib_index *index, const char *key, size_t *size);
-int grib_index_get_string(grib_index *index, const char *key, char **values, size_t *size);
-int grib_index_get_long(grib_index *index, const char *key, long *values, size_t *size);
-int grib_index_get_double(grib_index *index, const char *key, double *values, size_t *size);
+int grib_index_get_size(const grib_index *index, const char *key, size_t *size);
+int grib_index_get_string(const grib_index *index, const char *key, char **values, size_t *size);
+int grib_index_get_long(const grib_index *index, const char *key, long *values, size_t *size);
+int grib_index_get_double(const grib_index *index, const char *key, double *values, size_t *size);
 int grib_index_select_long(grib_index *index, const char *skey, long value);
 int grib_index_select_double(grib_index *index, const char *skey, double value);
 int grib_index_select_string(grib_index *index, const char *skey, char *value);

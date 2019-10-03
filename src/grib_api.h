@@ -292,7 +292,7 @@ grib_index* grib_index_read(grib_context* c,const char* filename,int *err);
  * @param size        : number of distinct values of the key in the index
  * @return            0 if OK, integer value on error
  */
-int grib_index_get_size(grib_index* index,const char* key,size_t* size);
+int grib_index_get_size(const grib_index* index,const char* key,size_t* size);
 
 /**
  *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as long or when the native type of the key is long.
@@ -304,7 +304,7 @@ int grib_index_get_size(grib_index* index,const char* key,size_t* size);
  * @param size        : size of the values array
  * @return            0 if OK, integer value on error
  */
-int grib_index_get_long(grib_index* index,const char* key,
+int grib_index_get_long(const grib_index* index,const char* key,
                         long* values,size_t *size);
 
 /**
@@ -317,7 +317,7 @@ int grib_index_get_long(grib_index* index,const char* key,
  * @param size        : size of the values array
  * @return            0 if OK, integer value on error
  */
-int grib_index_get_double(grib_index* index,const char* key,
+int grib_index_get_double(const grib_index* index,const char* key,
                           double* values,size_t *size);
 
 /**
@@ -330,7 +330,7 @@ int grib_index_get_double(grib_index* index,const char* key,
  * @param size        : size of the values array
  * @return            0 if OK, integer value on error
  */
-int grib_index_get_string(grib_index* index,const char* key,
+int grib_index_get_string(const grib_index* index,const char* key,
                           char** values,size_t *size);
 
 
@@ -373,7 +373,7 @@ int grib_index_select_string(grib_index* index,const char* key,char* value);
  * When no more handles are available from the index a NULL pointer is returned and the err variable is set to GRIB_END_OF_INDEX.
  *
  * @param index       : an index created from a file.
- * @param err         :  0 if OK, integer value on error. GRIB_END_OF_INDEX when no more handles are contained in the index.
+ * @param err         : 0 if OK, integer value on error. GRIB_END_OF_INDEX when no more handles are contained in the index.
  * @return            grib handle.
  */
 grib_handle* grib_handle_new_from_index(grib_index* index,int *err);
