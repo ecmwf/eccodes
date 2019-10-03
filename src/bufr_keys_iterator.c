@@ -82,7 +82,7 @@ int codes_bufr_keys_iterator_rewind(bufr_keys_iterator* ki)
     return GRIB_SUCCESS;
 }
 
-static int is_ident_key(bufr_keys_iterator* kiter)
+static int is_ident_key(const bufr_keys_iterator* kiter)
 {
     if (kiter->current->sub_section)
         return 0;
@@ -200,8 +200,9 @@ int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter)
 
 /* The return value is constructed so we allocate memory for it. */
 /* We free in codes_bufr_keys_iterator_delete() */
-char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter)
+char* codes_bufr_keys_iterator_get_name(const bufr_keys_iterator* ckiter)
 {
+    bufr_keys_iterator* kiter = (bufr_keys_iterator*)ckiter;
     int *r=0;
     char* ret=0;
     grib_context* c = kiter->handle->context;

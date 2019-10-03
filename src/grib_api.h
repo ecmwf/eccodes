@@ -767,7 +767,7 @@ int grib_get_length(const grib_handle* h, const char* key,size_t *length);
 * @param value       : the address of a long where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
-int grib_get_long(grib_handle* h, const char* key, long* value);
+int grib_get_long(const grib_handle* h, const char* key, long* value);
 
 /**
 *  Get a double value from a key, if several keys of the same name are present, the last one is returned
@@ -778,7 +778,7 @@ int grib_get_long(grib_handle* h, const char* key, long* value);
 * @param value       : the address of a double where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
-int grib_get_double(grib_handle* h, const char* key, double* value);
+int grib_get_double(const grib_handle* h, const char* key, double* value);
 
 /**
 *  Get as double the i-th element of the "key" array
@@ -789,7 +789,7 @@ int grib_get_double(grib_handle* h, const char* key, double* value);
 * @param value       : the address of a double where the data will be retrieved
 * @return            0 if OK, integer value on error
 */
-int grib_get_double_element(grib_handle* h, const char* key, int i, double* value);
+int grib_get_double_element(const grib_handle* h, const char* key, int i, double* value);
 
 /**
 *  Get as double array the elements of the "key" array whose indexes are listed in the input array i
@@ -801,7 +801,7 @@ int grib_get_double_element(grib_handle* h, const char* key, int i, double* valu
 * @param value       : the double array for the data values
 * @return            0 if OK, integer value on error
 */
-int grib_get_double_elements(grib_handle* h, const char* key, int* i, long size, double* value);
+int grib_get_double_elements(const grib_handle* h, const char* key, int* i, long size, double* value);
 
 /**
 *  Get a string value from a key, if several keys of the same name are present, the last one is returned
@@ -813,7 +813,7 @@ int grib_get_double_elements(grib_handle* h, const char* key, int* i, long size,
 * @param length      : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
 * @return            0 if OK, integer value on error
 */
-int grib_get_string(grib_handle* h, const char* key, char* mesg, size_t *length);
+int grib_get_string(const grib_handle* h, const char* key, char* mesg, size_t *length);
 
 /**
 *  Get string array values from a key. If several keys of the same name are present, the last one is returned
@@ -825,7 +825,7 @@ int grib_get_string(grib_handle* h, const char* key, char* mesg, size_t *length)
 * @param length  : the address of a size_t that contains allocated length of the array on input, and that contains the actual length of the array on output
 * @return        0 if OK, integer value on error
 */
-int grib_get_string_array(grib_handle* h, const char* key, char** vals, size_t *length);
+int grib_get_string_array(const grib_handle* h, const char* key, char** vals, size_t *length);
 
 /**
 *  Get raw bytes values from a key. If several keys of the same name are present, the last one is returned
@@ -837,7 +837,7 @@ int grib_get_string_array(grib_handle* h, const char* key, char** vals, size_t *
 * @param length      : the address of a size_t that contains allocated length of the byte array on input, and that contains the actual length of the byte array on output
 * @return            0 if OK, integer value on error
 */
-int grib_get_bytes(grib_handle* h, const char* key, unsigned char*  bytes, size_t *length);
+int grib_get_bytes(const grib_handle* h, const char* key, unsigned char*  bytes, size_t *length);
 /**
 *  Get double array values from a key. If several keys of the same name are present, the last one is returned
 * @see  grib_set_double_array
@@ -848,7 +848,7 @@ int grib_get_bytes(grib_handle* h, const char* key, unsigned char*  bytes, size_
 * @param length      : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
 * @return            0 if OK, integer value on error
 */
-int grib_get_double_array(grib_handle* h, const char* key, double* vals, size_t *length);
+int grib_get_double_array(const grib_handle* h, const char* key, double* vals, size_t *length);
 
 /**
 *  Get long array values from a key. If several keys of the same name are present, the last one is returned
@@ -860,7 +860,7 @@ int grib_get_double_array(grib_handle* h, const char* key, double* vals, size_t 
 * @param length      : the address of a size_t that contains allocated length of the long array on input, and that contains the actual length of the long array on output
 * @return            0 if OK, integer value on error
 */
-int grib_get_long_array(grib_handle* h, const char* key, long* vals, size_t *length);
+int grib_get_long_array(const grib_handle* h, const char* key, long* vals, size_t *length);
 
 
 /*   setting      data         */
@@ -1288,8 +1288,8 @@ int codes_bufr_keys_iterator_next(bufr_keys_iterator* kiter);
 *  @param kiter         : valid grib_keys_iterator
 *  @return              key name
 */
-const char* grib_keys_iterator_get_name(grib_keys_iterator *kiter);
-char* codes_bufr_keys_iterator_get_name(bufr_keys_iterator* kiter);
+const char* grib_keys_iterator_get_name(const grib_keys_iterator *kiter);
+char* codes_bufr_keys_iterator_get_name(const bufr_keys_iterator* kiter);
 
 /*! Delete the iterator.
 *  @param kiter         : valid grib_keys_iterator
@@ -1307,10 +1307,10 @@ int codes_bufr_keys_iterator_rewind(bufr_keys_iterator* kiter);
 
 int grib_keys_iterator_set_flags(grib_keys_iterator *kiter,unsigned long flags);
 
-int grib_keys_iterator_get_long(grib_keys_iterator *kiter, long *v, size_t *len);
-int grib_keys_iterator_get_double(grib_keys_iterator *kiter, double *v, size_t *len);
-int grib_keys_iterator_get_string(grib_keys_iterator *kiter, char *v, size_t *len);
-int grib_keys_iterator_get_bytes(grib_keys_iterator *kiter, unsigned char *v, size_t *len);
+int grib_keys_iterator_get_long(const grib_keys_iterator *kiter, long *v, size_t *len);
+int grib_keys_iterator_get_double(const grib_keys_iterator *kiter, double *v, size_t *len);
+int grib_keys_iterator_get_string(const grib_keys_iterator *kiter, char *v, size_t *len);
+int grib_keys_iterator_get_bytes(const grib_keys_iterator *kiter, unsigned char *v, size_t *len);
 int codes_copy_key(grib_handle* h1,grib_handle* h2,const char* key,int type);
 
 /* @} */
@@ -1326,7 +1326,7 @@ void grib_update_sections_lengths(grib_handle* h);
 const char* grib_get_error_message(int code);
 const char* grib_get_type_name(int type);
 
-int grib_get_native_type(grib_handle* h, const char* name,int* type);
+int grib_get_native_type(const grib_handle* h, const char* name,int* type);
 
 void grib_check(const char* call,const char*  file,int line,int e,const char* msg);
 #define GRIB_CHECK(a,msg) grib_check(#a,__FILE__,__LINE__,a,msg)
@@ -1336,8 +1336,8 @@ void grib_check(const char* call,const char*  file,int line,int e,const char* ms
 int grib_set_values(grib_handle* h,grib_values*  grib_values , size_t arg_count);
 grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t size);
 grib_handle* grib_handle_new_from_partial_message(grib_context* c, const void* data, size_t buflen);
-int grib_is_missing(grib_handle* h, const char* key, int* err);
-int grib_is_defined(grib_handle* h, const char* key);
+int grib_is_missing(const grib_handle* h, const char* key, int* err);
+int grib_is_defined(const grib_handle* h, const char* key);
 int grib_set_missing(grib_handle* h, const char* key);
 /* The truncation is the Gaussian number (or order) */
 int grib_get_gaussian_latitudes(long truncation,double* latitudes);

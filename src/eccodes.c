@@ -57,7 +57,7 @@ const char* codes_get_type_name(int type)
 {
     return grib_get_type_name(type);
 }
-int codes_get_native_type(grib_handle* h, const char* name,int* type)
+int codes_get_native_type(const grib_handle* h, const char* name,int* type)
 {
     return grib_get_native_type(h,name,type);
 }
@@ -309,11 +309,11 @@ int codes_grib_nearest_delete(grib_nearest *nearest)
 
 /* get/set keys */
 /******************************************************************************/
-int codes_is_missing(grib_handle* h, const char* key, int* err)
+int codes_is_missing(const grib_handle* h, const char* key, int* err)
 {
     return grib_is_missing(h,key,err);
 }
-int codes_is_defined(grib_handle* h, const char* key)
+int codes_is_defined(const grib_handle* h, const char* key)
 {
     return grib_is_defined(h,key);
 }
@@ -329,39 +329,39 @@ int codes_get_length(const grib_handle* h, const char* key,size_t *length)
 {
     return grib_get_length(h,key,length);
 }
-int codes_get_long(grib_handle* h, const char* key, long* value)
+int codes_get_long(const grib_handle* h, const char* key, long* value)
 {
     return grib_get_long(h,key,value);
 }
-int codes_get_double(grib_handle* h, const char* key, double* value)
+int codes_get_double(const grib_handle* h, const char* key, double* value)
 {
     return grib_get_double(h,key,value);
 }
-int codes_get_double_element(grib_handle* h, const char* key, int i, double* value)
+int codes_get_double_element(const grib_handle* h, const char* key, int i, double* value)
 {
     return grib_get_double_element(h,key,i,value);
 }
-int codes_get_double_elements(grib_handle* h, const char* key, int* i, long size,double* value)
+int codes_get_double_elements(const grib_handle* h, const char* key, int* i, long size,double* value)
 {
     return grib_get_double_elements(h,key,i,size,value);
 }
-int codes_get_string(grib_handle* h, const char* key, char* mesg, size_t *length)
+int codes_get_string(const grib_handle* h, const char* key, char* mesg, size_t *length)
 {
     return grib_get_string(h,key,mesg,length);
 }
-int codes_get_string_array(grib_handle* h, const char* key, char** vals, size_t *length)
+int codes_get_string_array(const grib_handle* h, const char* key, char** vals, size_t *length)
 {
     return grib_get_string_array(h,key,vals,length);
 }
-int codes_get_bytes(grib_handle* h, const char* key, unsigned char* bytes, size_t *length)
+int codes_get_bytes(const grib_handle* h, const char* key, unsigned char* bytes, size_t *length)
 {
     return grib_get_bytes(h,key,bytes,length);
 }
-int codes_get_double_array(grib_handle* h, const char* key, double* vals, size_t *length)
+int codes_get_double_array(const grib_handle* h, const char* key, double* vals, size_t *length)
 {
     return grib_get_double_array(h,key,vals,length);
 }
-int codes_get_long_array(grib_handle* h, const char* key, long* vals, size_t *length)
+int codes_get_long_array(const grib_handle* h, const char* key, long* vals, size_t *length)
 {
     return grib_get_long_array(h,key,vals,length);
 }
@@ -448,7 +448,7 @@ int codes_keys_iterator_next(grib_keys_iterator *kiter)
 {
     return grib_keys_iterator_next(kiter);
 }
-const char* codes_keys_iterator_get_name(grib_keys_iterator *kiter)
+const char* codes_keys_iterator_get_name(const grib_keys_iterator *kiter)
 {
     return grib_keys_iterator_get_name(kiter);
 }
@@ -464,19 +464,19 @@ int codes_keys_iterator_set_flags(grib_keys_iterator *kiter,unsigned long flags)
 {
     return grib_keys_iterator_set_flags(kiter,flags);
 }
-int codes_keys_iterator_get_long(grib_keys_iterator *kiter, long *v, size_t *len)
+int codes_keys_iterator_get_long(const grib_keys_iterator *kiter, long *v, size_t *len)
 {
     return grib_keys_iterator_get_long(kiter,v,len);
 }
-int codes_keys_iterator_get_double(grib_keys_iterator *kiter, double *v, size_t *len)
+int codes_keys_iterator_get_double(const grib_keys_iterator *kiter, double *v, size_t *len)
 {
     return grib_keys_iterator_get_double(kiter,v,len);
 }
-int codes_keys_iterator_get_string(grib_keys_iterator *kiter, char *v, size_t *len)
+int codes_keys_iterator_get_string(const grib_keys_iterator *kiter, char *v, size_t *len)
 {
     return grib_keys_iterator_get_string(kiter,v,len);
 }
-int codes_keys_iterator_get_bytes(grib_keys_iterator *kiter, unsigned char *v, size_t *len)
+int codes_keys_iterator_get_bytes(const grib_keys_iterator *kiter, unsigned char *v, size_t *len)
 {
     return grib_keys_iterator_get_bytes(kiter,v,len);
 }
