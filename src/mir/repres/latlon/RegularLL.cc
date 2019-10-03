@@ -17,6 +17,7 @@
 #include <iostream>
 
 #include "mir/config/LibMir.h"
+#include "mir/iterator/detail/RegularIterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 
