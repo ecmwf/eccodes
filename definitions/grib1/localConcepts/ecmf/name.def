@@ -9519,6 +9519,11 @@
 	 table2Version = 221 ;
 	 indicatorOfParameter = 56 ;
 	}
+#-10 degrees C isothermal level (atm)
+'-10 degrees C isothermal level (atm)' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 20 ;
+	}
 #Total sky direct solar radiation at surface
 'Total sky direct solar radiation at surface' = {
 	 table2Version = 228 ;

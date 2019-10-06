@@ -549,6 +549,15 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 aerosolType = 62003 ;
 	}
+#-10 degrees C isothermal level (atm)
+'degm10l' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 26315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	}
 #0 degrees C isothermal level (atm)
 'deg0l' = {
 	 discipline = 0 ;
