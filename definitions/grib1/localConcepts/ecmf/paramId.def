@@ -9534,7 +9534,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 23 ;
 	}
-#Zero degree level
+#0 degrees C isothermal level (atm)
 '228024' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 24 ;

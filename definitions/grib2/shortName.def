@@ -549,6 +549,15 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 aerosolType = 62003 ;
 	}
+#0 degrees C isothermal level (atm)
+'deg0l' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 27315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	}
 #10 metre wind gust in the last 3 hours
 '10fg3' = {
 	 discipline = 0 ;

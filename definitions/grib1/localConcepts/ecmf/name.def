@@ -9534,8 +9534,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 23 ;
 	}
-#Zero degree level
-'Zero degree level' = {
+#0 degrees C isothermal level (atm)
+'0 degrees C isothermal level (atm)' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 24 ;
 	}
