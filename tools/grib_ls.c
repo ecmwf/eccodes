@@ -335,7 +335,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
     }
 
-    if (options->json_output) {
+    if (!json_latlon && options->json_output) {
         if (!first_handle && options->handle_count>1) {
             fprintf(stdout,",\n");
         }
@@ -394,7 +394,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         }
     }
     
-    if (options->json_output) fprintf(stdout,"\n]}\n");
+    if (!json_latlon && options->json_output) fprintf(stdout,"\n]}\n");
 
     if (nearest) grib_nearest_delete(nearest);
     if (json_latlon) printf("\n]\n");

@@ -248,7 +248,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
             continue;
         }
 
-        if (options->json_output == 0)
+        if (options->json_output == 0 || options->latlon)
             grib_print_header(options,h);
         else
             grib_tools_set_print_keys(options,h,options->name_space);
@@ -351,7 +351,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
                 continue;
             }
 
-            if (options->json_output == 0)
+            if (options->json_output == 0 || options->latlon)
                 grib_print_header(options,h);
             else
                 grib_tools_set_print_keys(options,h,options->name_space);
@@ -619,7 +619,7 @@ static void grib_print_header(grib_runtime_options* options,grib_handle* h)
     size_t strlenkey=0;
     int width;
     int written_to_dump = 0; /* boolean */
-    if (options->json_output)
+    if (options->json_output && !options->latlon)
         return; /* For JSON output we do not print a single header for all msgs */
     if (options->handle_count!=1)
         return;
@@ -969,7 +969,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
 
     if (!options->verbose) return;
 
-    if (options->json_output) {
+    if (options->json_output && !options->latlon) {
         /* fprintf(dump_file, "\"message %d\" : {\n", options->handle_count); */
         fprintf(dump_file, "  {\n");
         for (i=0;i<options->print_keys_count;i++) {
@@ -1151,7 +1151,7 @@ void grib_print_file_statistics(grib_runtime_options* options,grib_tools_file* f
 {
     grib_failed* failed=NULL;
     Assert(file);
-    if (options->json_output)
+    if (options->json_output && !options->latlon)
         return;
 
     failed=file->failed;
@@ -1179,7 +1179,7 @@ void grib_print_file_statistics(grib_runtime_options* options,grib_tools_file* f
 
 void grib_print_full_statistics(grib_runtime_options* options)
 {
-    if (options->json_output)
+    if (options->json_output && !options->latlon)
         return;
     if (options->print_statistics && options->verbose)
         fprintf(dump_file,"%d of %d total messages in %d files\n",
