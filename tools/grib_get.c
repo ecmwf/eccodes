@@ -160,6 +160,8 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {
     exit_if_input_is_directory(grib_tool_name, file->name);
+    if (nearest) grib_nearest_delete(nearest);
+    nearest = NULL;
     return 0;
 }
 
@@ -213,7 +215,7 @@ void grib_tool_print_key_values(grib_runtime_options* options,grib_handle* h)
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
     if (nearest) grib_nearest_delete(nearest);
-
+    nearest = NULL;
     return 0;
 }
 
