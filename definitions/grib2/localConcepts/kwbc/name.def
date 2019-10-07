@@ -101,8 +101,8 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 205 ;
 	}
-#Water equivalent of accumulated snow depth
-'Water equivalent of accumulated snow depth' = {
+#Water equivalent of accumulated snow depth (deprecated)
+'Water equivalent of accumulated snow depth (deprecated)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
@@ -1648,4 +1648,4 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 8 ;
-	}
+}

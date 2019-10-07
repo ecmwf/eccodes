@@ -13283,12 +13283,6 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 23 ;
 	}
-#Zero degree level
-'Zero degree level' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 24 ;
-	}
 #Horizontal visibility
 'Horizontal visibility' = {
 	 discipline = 192 ;
