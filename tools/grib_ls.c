@@ -52,6 +52,13 @@ int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 static double lat=0;
 static double lon=0;
 static int mode=0;
+/* Note:
+ * There are two JSON-output modes:
+ *  1. With a provided lat-lon for the nearest neighbour (options->latlon==1)
+ *  2. All other cases (options->json_output==1)
+ * The first is special and has a very different format. They need to be
+ * treated differently
+ */
 static int json_latlon=0;
 static int first_handle=1;
 static grib_nearest* nearest=NULL;
