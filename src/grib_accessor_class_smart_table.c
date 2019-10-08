@@ -281,7 +281,7 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
         next = next->next;
     }
 
-    size = grib_power(self->widthOfCode,2);
+    size = (1UL << self->widthOfCode); /* 2 ^ self->widthOfCode */
 
     t = (grib_smart_table*)grib_context_malloc_clear_persistent(c,sizeof(grib_smart_table));
     t->entries=(grib_smart_table_entry*)grib_context_malloc_clear_persistent(c,size*sizeof(grib_smart_table_entry));
@@ -473,7 +473,7 @@ static int get_table_codes(grib_accessor* a)
 
     if (!self->dirty) return 0;
 
-    table_size = grib_power(self->widthOfCode,2);
+    table_size = (1 << self->widthOfCode); /* 2 ^ self->widthOfCode */
 
     if(!self->table)
         self->table = load_table(self);
