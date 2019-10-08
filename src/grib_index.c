@@ -1278,7 +1278,7 @@ grib_index* grib_index_new_from_file(grib_context* c, char* filename, const char
     return index;
 }
 
-int grib_index_get_size(grib_index* index,const char* key,size_t* size)
+int grib_index_get_size(const grib_index* index,const char* key,size_t* size)
 {
     grib_index_key* k=index->keys;
     while (k && strcmp(k->name,key)) k=k->next;
@@ -1287,7 +1287,7 @@ int grib_index_get_size(grib_index* index,const char* key,size_t* size)
     return 0;
 }
 
-int grib_index_get_string(grib_index* index, const char* key, char** values, size_t *size)
+int grib_index_get_string(const grib_index* index, const char* key, char** values, size_t *size)
 {
     grib_index_key* k=index->keys;
     grib_string_list* kv;
@@ -1308,7 +1308,7 @@ int grib_index_get_string(grib_index* index, const char* key, char** values, siz
     return GRIB_SUCCESS;
 }
 
-int grib_index_get_long(grib_index* index, const char* key, long* values, size_t *size)
+int grib_index_get_long(const grib_index* index, const char* key, long* values, size_t *size)
 {
     grib_index_key* k=index->keys;
     grib_string_list* kv;
@@ -1334,7 +1334,7 @@ int grib_index_get_long(grib_index* index, const char* key, long* values, size_t
     return GRIB_SUCCESS;
 }
 
-int grib_index_get_double(grib_index* index,const char* key, double* values,size_t *size)
+int grib_index_get_double(const grib_index* index,const char* key, double* values,size_t *size)
 {
     grib_index_key* k=index->keys;
     grib_string_list* kv;

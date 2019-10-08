@@ -421,12 +421,13 @@ static void grib_find_same_and_push(grib_accessors_list* al,grib_accessor* a)
     }
 }
 
-grib_accessors_list* grib_find_accessors_list(grib_handle* h,const char* name)
+grib_accessors_list* grib_find_accessors_list(const grib_handle* ch,const char* name)
 {
     char* str=NULL;
     grib_accessors_list* al=NULL;
     codes_condition* condition=NULL;
     grib_accessor* a=NULL;
+    grib_handle* h = (grib_handle*)ch;
 
     if (name[0]=='/') {
         condition=(codes_condition*)grib_context_malloc_clear(h->context,sizeof(codes_condition));
@@ -475,8 +476,9 @@ static grib_accessor* search_and_cache(grib_handle* h, const char* name,const ch
     return a;
 }
 
-static grib_accessor* _grib_find_accessor(grib_handle* h, const char* name)
+static grib_accessor* _grib_find_accessor(const grib_handle* ch, const char* name)
 {
+    grib_handle* h = (grib_handle*)ch;
     grib_accessor* a = NULL;
     char* p = NULL;
     DebugAssert(name);
@@ -523,7 +525,7 @@ char* grib_split_name_attribute(grib_context* c,const char* name,char* attribute
     return accessor_name;
 }
 
-grib_accessor* grib_find_accessor(grib_handle* h, const char* name)
+grib_accessor* grib_find_accessor(const grib_handle* h, const char* name)
 {
     grib_accessor* aret = NULL;
     Assert(h);

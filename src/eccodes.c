@@ -57,7 +57,7 @@ const char* codes_get_type_name(int type)
 {
     return grib_get_type_name(type);
 }
-int codes_get_native_type(grib_handle* h, const char* name,int* type)
+int codes_get_native_type(const grib_handle* h, const char* name,int* type)
 {
     return grib_get_native_type(h,name,type);
 }
@@ -116,19 +116,19 @@ grib_index* codes_index_read(grib_context* c,const char* filename,int *err)
 {
     return grib_index_read(c,filename,err);
 }
-int codes_index_get_size(grib_index* index,const char* key,size_t* size)
+int codes_index_get_size(const grib_index* index,const char* key,size_t* size)
 {
     return grib_index_get_size(index,key,size);
 }
-int codes_index_get_long(grib_index* index,const char* key,long* values,size_t *size)
+int codes_index_get_long(const grib_index* index,const char* key,long* values,size_t *size)
 {
     return grib_index_get_long(index,key,values,size);
 }
-int codes_index_get_double(grib_index* index,const char* key, double* values,size_t *size)
+int codes_index_get_double(const grib_index* index,const char* key, double* values,size_t *size)
 {
     return grib_index_get_double(index,key,values,size);
 }
-int codes_index_get_string(grib_index* index,const char* key,char** values,size_t *size)
+int codes_index_get_string(const grib_index* index,const char* key,char** values,size_t *size)
 {
     return grib_index_get_string(index,key,values,size);
 }
@@ -155,7 +155,7 @@ void codes_index_delete(grib_index* index)
 
 /* Create handle */
 /******************************************************************************/
-int codes_write_message(grib_handle* h,const char* file,const char* mode)
+int codes_write_message(const grib_handle* h,const char* file,const char* mode)
 {
     return grib_write_message(h,file,mode);
 }
@@ -171,7 +171,7 @@ grib_handle* codes_grib_handle_new_from_samples(grib_context* c, const char* sam
 {
     return grib_handle_new_from_samples(c, sample_name);
 }
-grib_handle* codes_handle_clone(grib_handle* h)
+grib_handle* codes_handle_clone(const grib_handle* h)
 {
     return grib_handle_clone(h);
 }
@@ -187,11 +187,11 @@ grib_handle* codes_handle_new_from_partial_message(grib_context* c, const void* 
 {
     return grib_handle_new_from_partial_message(c,data,buflen);
 }
-int codes_get_message(grib_handle* h ,const void** message, size_t *message_length  )
+int codes_get_message(const grib_handle* h ,const void** message, size_t *message_length  )
 {
     return grib_get_message(h,message,message_length);
 }
-int codes_get_message_copy(grib_handle* h, void* message,size_t *message_length )
+int codes_get_message_copy(const grib_handle* h, void* message,size_t *message_length )
 {
     return grib_get_message_copy(h,message,message_length);
 }
@@ -255,11 +255,11 @@ int codes_grib_multi_handle_write(grib_multi_handle* mh,FILE* f)
 
 /* Lat/Lon iterator and nearest (GRIB specific) */
 /******************************************************************************/
-grib_iterator* codes_grib_iterator_new(grib_handle* h, unsigned long flags,int* error)
+grib_iterator* codes_grib_iterator_new(const grib_handle* h, unsigned long flags,int* error)
 {
     return grib_iterator_new(h,flags,error);
 }
-int codes_grib_get_data(grib_handle *h, double *lats, double *lons, double *values)
+int codes_grib_get_data(const grib_handle *h, double *lats, double *lons, double *values)
 {
     return grib_get_data(h,lats,lons,values);
 }
@@ -284,17 +284,17 @@ int codes_grib_iterator_delete(grib_iterator *i)
     return grib_iterator_delete(i);
 }
 
-grib_nearest* codes_grib_nearest_new(grib_handle* h, int* error)
+grib_nearest* codes_grib_nearest_new(const grib_handle* h, int* error)
 {
     return grib_nearest_new(h,error);
 }
-int codes_grib_nearest_find(grib_nearest *nearest,grib_handle* h,double inlat,double inlon,
+int codes_grib_nearest_find(grib_nearest *nearest, const grib_handle* h,double inlat,double inlon,
                        unsigned long flags,double* outlats,double* outlons,
                        double* values,double* distances,int* indexes,size_t *len)
 {
     return grib_nearest_find(nearest, h, inlat, inlon, flags, outlats, outlons, values, distances, indexes, len);
 }
-int codes_grib_nearest_find_multiple(grib_handle* h,int is_lsm,
+int codes_grib_nearest_find_multiple(const grib_handle* h,int is_lsm,
     double* inlats,double* inlons,long npoints,
     double* outlats,double* outlons,
     double* values,double* distances, int* indexes)
@@ -309,11 +309,11 @@ int codes_grib_nearest_delete(grib_nearest *nearest)
 
 /* get/set keys */
 /******************************************************************************/
-int codes_is_missing(grib_handle* h, const char* key, int* err)
+int codes_is_missing(const grib_handle* h, const char* key, int* err)
 {
     return grib_is_missing(h,key,err);
 }
-int codes_is_defined(grib_handle* h, const char* key)
+int codes_is_defined(const grib_handle* h, const char* key)
 {
     return grib_is_defined(h,key);
 }
@@ -321,47 +321,47 @@ int codes_set_missing(grib_handle* h, const char* key)
 {
     return grib_set_missing(h,key);
 }
-int codes_get_size(grib_handle* h, const char* key,size_t *size)
+int codes_get_size(const grib_handle* h, const char* key,size_t *size)
 {
     return grib_get_size(h,key,size);
 }
-int codes_get_length(grib_handle* h, const char* key,size_t *length)
+int codes_get_length(const grib_handle* h, const char* key,size_t *length)
 {
     return grib_get_length(h,key,length);
 }
-int codes_get_long(grib_handle* h, const char* key, long* value)
+int codes_get_long(const grib_handle* h, const char* key, long* value)
 {
     return grib_get_long(h,key,value);
 }
-int codes_get_double(grib_handle* h, const char* key, double* value)
+int codes_get_double(const grib_handle* h, const char* key, double* value)
 {
     return grib_get_double(h,key,value);
 }
-int codes_get_double_element(grib_handle* h, const char* key, int i, double* value)
+int codes_get_double_element(const grib_handle* h, const char* key, int i, double* value)
 {
     return grib_get_double_element(h,key,i,value);
 }
-int codes_get_double_elements(grib_handle* h, const char* key, int* i, long size,double* value)
+int codes_get_double_elements(const grib_handle* h, const char* key, int* i, long size,double* value)
 {
     return grib_get_double_elements(h,key,i,size,value);
 }
-int codes_get_string(grib_handle* h, const char* key, char* mesg, size_t *length)
+int codes_get_string(const grib_handle* h, const char* key, char* mesg, size_t *length)
 {
     return grib_get_string(h,key,mesg,length);
 }
-int codes_get_string_array(grib_handle* h, const char* key, char** vals, size_t *length)
+int codes_get_string_array(const grib_handle* h, const char* key, char** vals, size_t *length)
 {
     return grib_get_string_array(h,key,vals,length);
 }
-int codes_get_bytes(grib_handle* h, const char* key, unsigned char* bytes, size_t *length)
+int codes_get_bytes(const grib_handle* h, const char* key, unsigned char* bytes, size_t *length)
 {
     return grib_get_bytes(h,key,bytes,length);
 }
-int codes_get_double_array(grib_handle* h, const char* key, double* vals, size_t *length)
+int codes_get_double_array(const grib_handle* h, const char* key, double* vals, size_t *length)
 {
     return grib_get_double_array(h,key,vals,length);
 }
-int codes_get_long_array(grib_handle* h, const char* key, long* vals, size_t *length)
+int codes_get_long_array(const grib_handle* h, const char* key, long* vals, size_t *length)
 {
     return grib_get_long_array(h,key,vals,length);
 }
@@ -407,15 +407,15 @@ int codes_set_values(grib_handle* h,grib_values*  grib_values , size_t arg_count
 {
     return grib_set_values(h,grib_values,arg_count);
 }
-int codes_get_message_offset ( grib_handle* h,off_t* offset )
+int codes_get_message_offset(const grib_handle* h,off_t* offset)
 {
     return grib_get_message_offset (h,offset);
 }
-int codes_get_message_size ( grib_handle* h,size_t* size )
+int codes_get_message_size(const grib_handle* h,size_t* size)
 {
     return grib_get_message_size (h,size);
 }
-void codes_dump_content(grib_handle* h,FILE* out,const char* mode, unsigned long option_flags,void* arg)
+void codes_dump_content(const grib_handle* h,FILE* out,const char* mode, unsigned long option_flags,void* arg)
 {
     grib_dump_content(h, out, mode, option_flags, arg);
 }
@@ -448,7 +448,7 @@ int codes_keys_iterator_next(grib_keys_iterator *kiter)
 {
     return grib_keys_iterator_next(kiter);
 }
-const char* codes_keys_iterator_get_name(grib_keys_iterator *kiter)
+const char* codes_keys_iterator_get_name(const grib_keys_iterator *kiter)
 {
     return grib_keys_iterator_get_name(kiter);
 }
@@ -464,19 +464,19 @@ int codes_keys_iterator_set_flags(grib_keys_iterator *kiter,unsigned long flags)
 {
     return grib_keys_iterator_set_flags(kiter,flags);
 }
-int codes_keys_iterator_get_long(grib_keys_iterator *kiter, long *v, size_t *len)
+int codes_keys_iterator_get_long(const grib_keys_iterator *kiter, long *v, size_t *len)
 {
     return grib_keys_iterator_get_long(kiter,v,len);
 }
-int codes_keys_iterator_get_double(grib_keys_iterator *kiter, double *v, size_t *len)
+int codes_keys_iterator_get_double(const grib_keys_iterator *kiter, double *v, size_t *len)
 {
     return grib_keys_iterator_get_double(kiter,v,len);
 }
-int codes_keys_iterator_get_string(grib_keys_iterator *kiter, char *v, size_t *len)
+int codes_keys_iterator_get_string(const grib_keys_iterator *kiter, char *v, size_t *len)
 {
     return grib_keys_iterator_get_string(kiter,v,len);
 }
-int codes_keys_iterator_get_bytes(grib_keys_iterator *kiter, unsigned char *v, size_t *len)
+int codes_keys_iterator_get_bytes(const grib_keys_iterator *kiter, unsigned char *v, size_t *len)
 {
     return grib_keys_iterator_get_bytes(kiter,v,len);
 }

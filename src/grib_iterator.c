@@ -44,7 +44,7 @@ static void init_mutex()
 #endif
 
 
-int grib_get_data(grib_handle* h,double* lats, double* lons,double* values)
+int grib_get_data(const grib_handle* h,double* lats, double* lons,double* values)
 {
     int err=0;
     grib_iterator* iter=NULL;

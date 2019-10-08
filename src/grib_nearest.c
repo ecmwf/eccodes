@@ -17,12 +17,13 @@
 #include "grib_api_internal.h"
 
 int grib_nearest_find(
-        grib_nearest *nearest, grib_handle* h,
+        grib_nearest *nearest, const grib_handle* ch,
         double inlat, double inlon,
         unsigned long flags,
         double* outlats,double* outlons,
         double* values, double* distances, int* indexes, size_t *len)
 {
+    grib_handle* h = (grib_handle*)ch;
     grib_nearest_class *c = NULL;
     if (!nearest) return GRIB_INVALID_ARGUMENT;
     c = nearest->cclass;
@@ -128,7 +129,7 @@ double grib_nearest_distance(double radius,double lon1, double lat1, double lon2
     return radius*acos(a);
 }
 
-int grib_nearest_find_multiple(grib_handle* h,int is_lsm,
+int grib_nearest_find_multiple(const grib_handle* h,int is_lsm,
         double* inlats,double* inlons,long npoints,
         double* outlats,double* outlons,
         double* values,double* distances, int* indexes)

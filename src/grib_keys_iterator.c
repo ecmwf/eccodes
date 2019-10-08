@@ -168,7 +168,7 @@ int grib_keys_iterator_next(grib_keys_iterator* kiter)
     return kiter->current != NULL;
 }
 
-const char* grib_keys_iterator_get_name(grib_keys_iterator* kiter)
+const char* grib_keys_iterator_get_name(const grib_keys_iterator* kiter)
 {
     /* if(kiter->name_space) */
     Assert(kiter->current);
@@ -192,27 +192,27 @@ int grib_keys_iterator_delete( grib_keys_iterator* kiter)
     return 0;
 }
 
-int grib_keys_iterator_get_long(grib_keys_iterator* kiter,long* v,size_t* len)
+int grib_keys_iterator_get_long(const grib_keys_iterator* kiter, long* v, size_t* len)
 {
     return grib_unpack_long( kiter->current,v,len);
 }
 
-int grib_keys_iterator_get_double(grib_keys_iterator* kiter,double* v,size_t* len)
+int grib_keys_iterator_get_double(const grib_keys_iterator* kiter,double* v,size_t* len)
 {
     return grib_unpack_double( kiter->current,v,len);
 }
 
-int grib_keys_iterator_get_string(grib_keys_iterator* kiter,char* v,size_t* len)
+int grib_keys_iterator_get_string(const grib_keys_iterator* kiter,char* v,size_t* len)
 {
     return grib_unpack_string( kiter->current,v,len);
 }
 
-int grib_keys_iterator_get_bytes(grib_keys_iterator* kiter,unsigned char* v,size_t* len)
+int grib_keys_iterator_get_bytes(const grib_keys_iterator* kiter,unsigned char* v,size_t* len)
 {
     return grib_unpack_bytes( kiter->current,v,len);
 }
 
-int grib_keys_iterator_get_native_type(grib_keys_iterator* kiter)
+int grib_keys_iterator_get_native_type(const grib_keys_iterator* kiter)
 {
     return grib_accessor_get_native_type(kiter->current);
 }

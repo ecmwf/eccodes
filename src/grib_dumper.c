@@ -211,8 +211,9 @@ void  grib_dump_values(grib_dumper* d,grib_accessor* a)
     Assert(0);
 }
 
-void  grib_dump_header(grib_dumper* d,grib_handle* h)
+void  grib_dump_header(grib_dumper* d, const grib_handle* ch)
 {
+    grib_handle* h = (grib_handle*)ch;
     grib_dumper_class *c = d->cclass;
     while(c)
     {
@@ -225,8 +226,9 @@ void  grib_dump_header(grib_dumper* d,grib_handle* h)
     }
 }
 
-void  grib_dump_footer(grib_dumper* d,grib_handle* h)
+void  grib_dump_footer(grib_dumper* d, const grib_handle* ch)
 {
+    grib_handle* h = (grib_handle*)ch;
     grib_dumper_class *c = d->cclass;
     while(c)
     {
