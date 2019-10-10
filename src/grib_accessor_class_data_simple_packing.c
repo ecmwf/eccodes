@@ -505,12 +505,22 @@ static int producing_large_constant_fields(const grib_context* c, grib_handle* h
 }
 #endif
 
-static int check_range(const double val)
+static int check_range(grib_handle* h, const double val)
 {
+    int result = GRIB_SUCCESS;
+    grib_context* ctx = h->context;
     if (val < DBL_MAX && val > -DBL_MAX)
-        return GRIB_SUCCESS;
+        result = GRIB_SUCCESS;
     else
-        return GRIB_ENCODING_ERROR;
+        result = GRIB_ENCODING_ERROR;
+
+    /* Data Quality checks */
+    if (ctx->grib_data_quality_checks && result == GRIB_SUCCESS) {
+        /*TODO: get limits for the current parameter*/
+        result = grib_util_grib_data_quality_check(h, val);
+    }
+
+    return result;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t *len)
@@ -577,11 +587,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         else if (val[i] < min ) min = val[i];
     }
 #endif
-    if ((err = check_range(max)) != GRIB_SUCCESS) {
+    if ((err = check_range(gh, max)) != GRIB_SUCCESS) {
         grib_context_log(a->context,GRIB_LOG_ERROR,"Maximum value out of range: %g", max);
         return err;
     }
-    if ((err = check_range(min)) != GRIB_SUCCESS) {
+    if ((err = check_range(gh, min)) != GRIB_SUCCESS) {
         grib_context_log(a->context,GRIB_LOG_ERROR,"Minimum value out of range: %g", min);
         return err;
     }

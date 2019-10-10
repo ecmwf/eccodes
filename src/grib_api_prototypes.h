@@ -1479,6 +1479,7 @@ int is_index_file(const char *filename);
 char get_dir_separator_char(void);
 char *codes_getenv(const char *name);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
+int grib_util_grib_data_quality_check(grib_handle* h, double val);
 
 /* bufr_util.c */
 int compute_bufr_key_rank(grib_handle *h, grib_string_list *keys, const char *key);

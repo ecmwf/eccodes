@@ -2039,3 +2039,25 @@ size_t sum_of_pl_array(const long* pl, size_t plsize)
     }
     return count;
 }
+
+int grib_util_grib_data_quality_check(grib_handle* h, double val)
+{
+    /* TODO: From the paramId of the handle, get its limits. For now hardcoded */
+    long paramId = 0;
+    char shortName[256]={0,};
+    size_t len = sizeof(shortName);
+
+    /*const double MIN_FIELD_VALUE_ALLOWED = -2e7;*/
+    const double MAX_FIELD_VALUE_ALLOWED = +2e7;
+
+    if (val > MAX_FIELD_VALUE_ALLOWED) {
+        if (grib_get_long(h, "paramId", &paramId) == GRIB_SUCCESS &&
+            grib_get_string(h,"shortName",shortName,&len) == GRIB_SUCCESS)
+        {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "Parameter %d (%s): value %g exceeds the maximum limit of %g",
+                             paramId, shortName, val, MAX_FIELD_VALUE_ALLOWED);
+        }
+        return GRIB_OUT_OF_RANGE;
+    }
+    return GRIB_SUCCESS;
+}
