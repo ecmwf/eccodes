@@ -2047,8 +2047,8 @@ int grib_util_grib_data_quality_check(grib_handle* h, double val)
     char shortName[256]={0,};
     size_t len = sizeof(shortName);
 
-    /*const double MIN_FIELD_VALUE_ALLOWED = -2e7;*/
-    const double MAX_FIELD_VALUE_ALLOWED = +2e7;
+    /* const double MIN_FIELD_VALUE_ALLOWED = -1e6; */
+    const double MAX_FIELD_VALUE_ALLOWED = +1e6;
 
     if (val > MAX_FIELD_VALUE_ALLOWED) {
         if (grib_get_long(h, "paramId", &paramId) == GRIB_SUCCESS &&
