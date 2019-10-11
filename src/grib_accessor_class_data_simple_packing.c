@@ -521,7 +521,6 @@ static int check_range(grib_handle* h, const double min_val, const double max_va
 
     /* Data Quality checks */
     if (ctx->grib_data_quality_checks) {
-        /*TODO: get limits for the current parameter*/
         result = grib_util_grib_data_quality_check(h, min_val, max_val);
     }
 

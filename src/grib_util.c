@@ -2040,17 +2040,27 @@ size_t sum_of_pl_array(const long* pl, size_t plsize)
     return count;
 }
 
-int grib_util_grib_data_quality_check(grib_handle* h, const double min_val, const double max_val)
+int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val)
 {
-    /* TODO: The limits should depend on the paramId. For now hardcoded */
-    static const double MIN_FIELD_VALUE_ALLOWED = -1e8;
-    static const double MAX_FIELD_VALUE_ALLOWED = +1e8;
+    int err = 0;
+    long min_field_value_allowed=0, max_field_value_allowed=0;
+    double dmin_allowed=0, dmax_allowed=0;
 
-    if (min_val < MIN_FIELD_VALUE_ALLOWED || max_val > MAX_FIELD_VALUE_ALLOWED) {
+    /* The limit keys must exist if we are here */
+    err = grib_get_long(h, "param_value_min", &min_field_value_allowed);
+    if (err) return err;
+    err = grib_get_long(h, "param_value_max", &max_field_value_allowed);
+    if (err) return err;
+
+    dmin_allowed = (double)min_field_value_allowed;
+    dmax_allowed = (double)max_field_value_allowed;
+
+    if (min_val < dmin_allowed || max_val > dmax_allowed) {
         long paramId = 0;
         if (grib_get_long(h, "paramId", &paramId) == GRIB_SUCCESS) {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "Parameter %ld: min/max (%g, %g) is outside limits (%g, %g)",
-                             paramId, min_val, max_val, MIN_FIELD_VALUE_ALLOWED, MAX_FIELD_VALUE_ALLOWED);
+            grib_context_log(h->context, GRIB_LOG_ERROR,
+                             "Parameter %ld: min/max (%g, %g) is outside allowable limits (%g, %g)",
+                             paramId, min_val, max_val, dmin_allowed, dmax_allowed);
         }
         return GRIB_OUT_OF_RANGE;
     }
