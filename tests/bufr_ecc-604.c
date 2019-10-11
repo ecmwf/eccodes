@@ -19,7 +19,7 @@ int opt_write = 0; /* If 1 write handle to file */
 
 static int encode_file(char *template_file, char *output_file)
 {
-    FILE *in, *out;
+    FILE *in, *out=NULL;
     codes_handle *source_handle = NULL;
     const void *buffer = NULL;
     size_t size = 0;
