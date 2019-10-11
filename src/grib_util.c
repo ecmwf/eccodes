@@ -2040,24 +2040,20 @@ size_t sum_of_pl_array(const long* pl, size_t plsize)
     return count;
 }
 
-int grib_util_grib_data_quality_check(grib_handle* h, double val)
+int grib_util_grib_data_quality_check(grib_handle* h, const double min_val, const double max_val)
 {
-    /* TODO: From the paramId of the handle, get its limits. For now hardcoded */
-    long paramId = 0;
-    char shortName[256]={0,};
-    size_t len = sizeof(shortName);
+    /* TODO: The limits should depend on the paramId. For now hardcoded */
+    static const double MIN_FIELD_VALUE_ALLOWED = -1e8;
+    static const double MAX_FIELD_VALUE_ALLOWED = +1e8;
 
-    /* const double MIN_FIELD_VALUE_ALLOWED = -1e6; */
-    const double MAX_FIELD_VALUE_ALLOWED = +1e6;
-
-    if (val > MAX_FIELD_VALUE_ALLOWED) {
-        if (grib_get_long(h, "paramId", &paramId) == GRIB_SUCCESS &&
-            grib_get_string(h,"shortName",shortName,&len) == GRIB_SUCCESS)
-        {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "Parameter %d (%s): value %g exceeds the maximum limit of %g",
-                             paramId, shortName, val, MAX_FIELD_VALUE_ALLOWED);
+    if (min_val < MIN_FIELD_VALUE_ALLOWED || max_val > MAX_FIELD_VALUE_ALLOWED) {
+        long paramId = 0;
+        if (grib_get_long(h, "paramId", &paramId) == GRIB_SUCCESS) {
+            grib_context_log(h->context, GRIB_LOG_ERROR, "Parameter %ld: min/max (%g, %g) is outside limits (%g, %g)",
+                             paramId, min_val, max_val, MIN_FIELD_VALUE_ALLOWED, MAX_FIELD_VALUE_ALLOWED);
         }
         return GRIB_OUT_OF_RANGE;
     }
+
     return GRIB_SUCCESS;
 }
