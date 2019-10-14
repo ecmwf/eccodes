@@ -129,10 +129,11 @@ double grib_nearest_distance(double radius,double lon1, double lat1, double lon2
     return radius*acos(a);
 }
 
-int grib_nearest_find_multiple(const grib_handle* h,int is_lsm,
-        double* inlats,double* inlons,long npoints,
-        double* outlats,double* outlons,
-        double* values,double* distances, int* indexes)
+int grib_nearest_find_multiple(
+        const grib_handle* h, int is_lsm,
+        const double* inlats, const double* inlons, long npoints,
+        double* outlats, double* outlons,
+        double* values, double* distances, int* indexes)
 {
     grib_nearest* nearest=0;
     double* pdistances=distances;

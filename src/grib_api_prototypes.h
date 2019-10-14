@@ -1391,7 +1391,7 @@ int grib_nearest_init(grib_nearest *i, grib_handle *h, grib_arguments *args);
 int grib_nearest_delete(grib_nearest *i);
 void grib_binary_search(double xx[], const unsigned long n, double x, int *ju, int *jl);
 double grib_nearest_distance(double radius, double lon1, double lat1, double lon2, double lat2);
-int grib_nearest_find_multiple(const grib_handle *h, int is_lsm, double *inlats, double *inlons, long npoints, double *outlats, double *outlons, double *values, double *distances, int *indexes);
+int grib_nearest_find_multiple(const grib_handle *h, int is_lsm, const double *inlats, const double *inlons, long npoints, double *outlats, double *outlons, double *values, double *distances, int *indexes);
 
 /* grib_nearest_class.c */
 grib_nearest *grib_nearest_factory(grib_handle *h, grib_arguments *args);

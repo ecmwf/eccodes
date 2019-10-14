@@ -682,9 +682,9 @@ grib_nearest* grib_nearest_new(const grib_handle* h, int* error);
 * @param len         : size of the arrays
 * @return            0 if OK, integer value on error
 */
-int grib_nearest_find(grib_nearest *nearest, const grib_handle* h,double inlat,double inlon,
-                      unsigned long flags,double* outlats,double* outlons,
-                      double* values,double* distances,int* indexes,size_t *len);
+int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat, double inlon,
+                      unsigned long flags, double* outlats, double* outlons,
+                      double* values, double* distances, int* indexes, size_t* len);
 
 /**
 *  Frees an nearest from memory
@@ -718,10 +718,10 @@ int grib_nearest_delete(grib_nearest *nearest);
 * @param indexes     : returned array of indexes of the nearest points
 * @return            0 if OK, integer value on error
 */
-int grib_nearest_find_multiple(const grib_handle* h,int is_lsm,
-    double* inlats,double* inlons,long npoints,
-    double* outlats,double* outlons,
-    double* values,double* distances, int* indexes);
+int grib_nearest_find_multiple(const grib_handle* h, int is_lsm,
+    const double* inlats, const double* inlons, long npoints,
+    double* outlats, double* outlons,
+    double* values, double* distances, int* indexes);
 
 /* @} */
 

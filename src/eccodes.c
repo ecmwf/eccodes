@@ -294,10 +294,10 @@ int codes_grib_nearest_find(grib_nearest *nearest, const grib_handle* h,double i
 {
     return grib_nearest_find(nearest, h, inlat, inlon, flags, outlats, outlons, values, distances, indexes, len);
 }
-int codes_grib_nearest_find_multiple(const grib_handle* h,int is_lsm,
-    double* inlats,double* inlons,long npoints,
-    double* outlats,double* outlons,
-    double* values,double* distances, int* indexes)
+int codes_grib_nearest_find_multiple(const grib_handle* h, int is_lsm,
+    const double* inlats, const double* inlons, long npoints,
+    double* outlats, double* outlons,
+    double* values, double* distances, int* indexes)
 {
     return grib_nearest_find_multiple(h, is_lsm, inlats, inlons, npoints, outlats, outlons, values, distances, indexes);
 }

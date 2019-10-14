@@ -706,7 +706,7 @@ int codes_grib_nearest_delete(codes_nearest *nearest);
 * @return            0 if OK, integer value on error
 */
 int codes_grib_nearest_find_multiple(const codes_handle* h, int is_lsm,
-    double* inlats, double* inlons, long npoints,
+    const double* inlats, const double* inlons, long npoints,
     double* outlats, double* outlons,
     double* values, double* distances, int* indexes);
 
