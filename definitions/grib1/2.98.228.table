@@ -18,6 +18,7 @@
 17 dctb DCTB Duct base height (m)
 18 tplb TPLB Trapping layer base height (m)
 19 tplt TPLT Trapping layer top height (m)
+20 degm10l -10 degrees C isothermal level (m)
 21 fdir FDIR Total sky direct solar radiation at surface (J m**-2)
 22 cdir CDIR Clear-sky direct solar radiation at surface (J m**-2)
 23 cbh CBH Cloud base height (m)

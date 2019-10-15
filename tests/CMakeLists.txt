@@ -57,7 +57,6 @@ list( APPEND tests_no_data_reqd
     grib_2nd_order_numValues
     grib_ecc-136
     grib_ecc-967
-    grib_ecc-979
     julian
     bufr_dump_samples
     bufr_json_samples
@@ -115,7 +114,10 @@ list( APPEND tests_data_reqd
     grib_ecc-873
     grib_ecc-600
     grib_ecc-923
+    grib_ecc-979
     grib_ecc-984
+    grib_ecc-1000
+    grib_ecc-1001
     bufr_ecc-556
     gts_get
     gts_ls

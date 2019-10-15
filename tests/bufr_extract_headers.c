@@ -13,16 +13,21 @@
 
 static const char* not_found = "not_found";
 
-void print_rdb_key(int has_local, long value)
+static void print_rdb_key(int local, long value)
 {
-    if (has_local)
-        printf("%ld ", value);
-    else
-        printf("%s ", not_found);
+    if (local) printf("%ld ", value);
+    else       printf("%s ", not_found);
 }
-void print_rdb_ident(int has_local, const char* value)
+
+static void print_rdb_key_double(int local, double value)
 {
-    if (value == NULL || strlen(value) == 0)
+    if (local) printf("%g ", value);
+    else       printf("%s ", not_found);
+}
+
+static void print_rdb_ident(int local, const char* value)
+{
+    if (!local || value == NULL || strlen(value) == 0)
         printf("%s ", not_found);
     else
         printf("%s ", value);
@@ -47,8 +52,7 @@ int main(int argc, char* argv[])
     for (i=0; i < num_messages; ++i) {
         codes_bufr_header bh = headers[i];
         /*
-         * Mimic the behaviour of bufr_get -f -p keys
-         * for testing
+         * Mimic the behaviour of bufr_get -f -p keys for testing
          */
         const int has_ecmwf_local = (bh.localSectionPresent == 1 && bh.bufrHeaderCentre == 98);
 
@@ -60,7 +64,6 @@ int main(int argc, char* argv[])
         if (strstr(keys, "bufrHeaderSubCentre")) printf("%ld ", bh.bufrHeaderSubCentre);
         if (strstr(keys, "bufrHeaderCentre")) printf("%ld ", bh.bufrHeaderCentre);
         if (strstr(keys, "updateSequenceNumber")) printf("%ld ", bh.updateSequenceNumber);
-        if (strstr(keys, "section1Flags")) printf("%ld ", bh.section1Flags);
         if (strstr(keys, "dataCategory")) printf("%ld ", bh.dataCategory);
         if (strstr(keys, "dataSubCategory")) printf("%ld ", bh.dataSubCategory);
         if (strstr(keys, "masterTablesVersionNumber")) printf("%ld ", bh.masterTablesVersionNumber);
@@ -74,8 +77,6 @@ int main(int argc, char* argv[])
         if (strstr(keys, "typicalYear")) printf("%ld ", bh.typicalYear);
         if (strstr(keys, "typicalSecond")) printf("%ld ", bh.typicalSecond);
         if (strstr(keys, "localSectionPresent")) printf("%ld ", bh.localSectionPresent);
-
-        if (strstr(keys, "section2Length")) printf("%ld ", bh.section2Length);
 
         if (strstr(keys, "rdbType"))        print_rdb_key(has_ecmwf_local, bh.rdbType);
         if (strstr(keys, "oldSubtype"))     print_rdb_key(has_ecmwf_local, bh.oldSubtype);
@@ -97,9 +98,16 @@ int main(int argc, char* argv[])
         if (strstr(keys, "newSubtype"))     print_rdb_key(has_ecmwf_local, bh.newSubtype);
         if (strstr(keys, "daLoop"))         print_rdb_key(has_ecmwf_local, bh.daLoop);
 
-        if (strstr(keys, "numberOfSubsets"))    printf("%ld ", bh.numberOfSubsets);
-        if (strstr(keys, "observedData"))       printf("%ld ", bh.observedData);
-        if (strstr(keys, "compressedData"))     printf("%ld ", bh.compressedData);
+        if (strstr(keys, "localLongitude1")) print_rdb_key_double(has_ecmwf_local, bh.localLongitude1);
+        if (strstr(keys, "localLatitude1"))  print_rdb_key_double(has_ecmwf_local, bh.localLatitude1);
+        if (strstr(keys, "localLongitude2")) print_rdb_key_double(has_ecmwf_local, bh.localLongitude2);
+        if (strstr(keys, "localLatitude2"))  print_rdb_key_double(has_ecmwf_local, bh.localLatitude2);
+
+        if (strstr(keys, "localNumberOfObservations"))  printf("%ld ", bh.localNumberOfObservations);
+        if (strstr(keys, "satelliteID"))                printf("%ld ", bh.satelliteID);
+        if (strstr(keys, "numberOfSubsets"))            printf("%ld ", bh.numberOfSubsets);
+        if (strstr(keys, "observedData"))               printf("%ld ", bh.observedData);
+        if (strstr(keys, "compressedData"))             printf("%ld ", bh.compressedData);
 
         if (strstr(keys, "ident"))          print_rdb_ident(has_ecmwf_local, bh.ident);
         printf("\n");

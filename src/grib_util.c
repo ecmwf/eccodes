@@ -857,6 +857,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     int packingTypeIsSet=0;
     int setSecondOrder=0;
     int setJpegPacking=0;
+    int setCcsdsPacking=0;
     int convertEditionEarlier=0;/* For cases when we cannot set some keys without converting */
     size_t slen=17;
     int grib1_high_resolution_fix = 0; /* boolean: See GRIB-863 */
@@ -924,6 +925,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             case GRIB_UTIL_PACKING_TYPE_JPEG:
                 if (strcmp(input_packing_type,"grid_jpeg") && !strcmp(input_packing_type,"grid_simple"))
                     SET_STRING_VALUE("packingType","grid_jpeg");
+                break;
+            case GRIB_UTIL_PACKING_TYPE_CCSDS:
+                if (strcmp(input_packing_type,"grid_ccsds") && !strcmp(input_packing_type,"grid_simple"))
+                    SET_STRING_VALUE("packingType","grid_ccsds");
                 break;
             case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
                 /* we delay the set of grid_second_order because we don't want
@@ -1327,6 +1332,14 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             if (strcmp(input_packing_type,"grid_jpeg") && !strcmp(input_packing_type,"grid_simple"))
                 setJpegPacking = 1;
             break;
+        case GRIB_UTIL_PACKING_TYPE_CCSDS:
+            /* Have to delay CCSDS packing:
+             * Reason 1: It is not available in GRIB1 and so we have to wait until we change edition
+             * Reason 2: It has to be done AFTER we set the data values
+             */
+            if (strcmp(input_packing_type,"grid_ccsds") && !strcmp(input_packing_type,"grid_simple"))
+                setCcsdsPacking = 1;
+            break;
         case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
             /* we delay the set of grid_second_order because we don't want
                to do it on a field with bitsPerValue=0 */
@@ -1602,6 +1615,14 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             *err = grib_set_string(outh, "packingType", "grid_jpeg", &slen);
             if (*err != GRIB_SUCCESS) {
                 fprintf(stderr,"GRIB_UTIL_SET_SPEC: Failed to change packingType to JPEG: %s\n",
+                        grib_get_error_message(*err));
+                goto cleanup;
+            }
+        }
+        if (setCcsdsPacking == 1) {
+            *err = grib_set_string(outh, "packingType", "grid_ccsds", &slen);
+            if (*err != GRIB_SUCCESS) {
+                fprintf(stderr,"GRIB_UTIL_SET_SPEC: Failed to change packingType to CCSDS: %s\n",
                         grib_get_error_message(*err));
                 goto cleanup;
             }

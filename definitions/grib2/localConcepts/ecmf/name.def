@@ -968,18 +968,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 209 ;
 	}
-#Surface net solar radiation, clear sky
-'Surface net solar radiation, clear sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 210 ;
-	}
-#Surface net thermal radiation, clear sky
-'Surface net thermal radiation, clear sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 211 ;
-	}
 #TOA incident solar radiation
 'TOA incident solar radiation' = {
 	 discipline = 192 ;
@@ -13294,12 +13282,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 23 ;
-	}
-#Zero degree level
-'Zero degree level' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 24 ;
 	}
 #Horizontal visibility
 'Horizontal visibility' = {

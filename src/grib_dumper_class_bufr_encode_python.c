@@ -205,7 +205,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
 
         depth-=2;
         /* Note: In Python to make a tuple with one element, you need the trailing comma */
-        if (size > 4) fprintf(self->dumper.out,",) # %ld values\n", size);
+        if (size > 4) fprintf(self->dumper.out,",) # %lu values\n", (unsigned long)size);
         else          fprintf(self->dumper.out,",)\n");
         grib_context_free(c,values);
 
@@ -287,7 +287,7 @@ static void dump_values_attribute(grib_dumper* d,grib_accessor* a, const char* p
 
         depth-=2;
         /* Note: In python to make a tuple with one element, you need the trailing comma */
-        if (size > 4) fprintf(self->dumper.out,",) # %ld values\n", size);
+        if (size > 4) fprintf(self->dumper.out,",) # %lu values\n", (unsigned long)size);
         else          fprintf(self->dumper.out,",)\n");
         grib_context_free(c,values);
 
@@ -374,7 +374,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
         depth-=2;
         /* Note: In python to make a tuple with one element, you need the trailing comma */
-        if (size > 4) fprintf(self->dumper.out,",) # %ld values\n", size);
+        if (size > 4) fprintf(self->dumper.out,",) # %lu values\n", (unsigned long)size);
         else          fprintf(self->dumper.out,",)\n");
         grib_context_free(a->context,values);
 
@@ -462,7 +462,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
 
         depth-=2;
         /* Note: In python to make a tuple with one element, you need the trailing comma */
-        if (size > 4) fprintf(self->dumper.out,",) # %ld values\n", size);
+        if (size > 4) fprintf(self->dumper.out,",) # %lu values\n", (unsigned long)size);
         else          fprintf(self->dumper.out,",)\n");
         grib_context_free(a->context,values);
 
@@ -697,7 +697,7 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
     }
     if (icount>cols) {fprintf(f,"  \n        ");}
     /* Note: In python to make a tuple with one element, you need the trailing comma */
-    if (size > 4) fprintf(f,"%ld ,) # %ld values\n",val[size-1], size);
+    if (size > 4) fprintf(f,"%ld ,) # %lu values\n",val[size-1], (unsigned long)size);
     else          fprintf(f,"%ld ,)\n",val[size-1]);
 
     grib_context_free(h->context,val);

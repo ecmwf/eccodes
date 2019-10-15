@@ -160,28 +160,28 @@ static void init(grib_accessor* a, const long length , grib_arguments* args )
 
         switch(self->type)
         {
-            case GRIB_TYPE_DOUBLE:
-                grib_expression_evaluate_double(hand,expression,&d);
-                pack_double(a,&d,&len);
-                break;
+        case GRIB_TYPE_DOUBLE:
+            grib_expression_evaluate_double(hand,expression,&d);
+            pack_double(a,&d,&len);
+            break;
 
-            case GRIB_TYPE_LONG:
-                grib_expression_evaluate_long(hand,expression,&l);
-                pack_long(a,&l,&len);
-                break;
+        case GRIB_TYPE_LONG:
+            grib_expression_evaluate_long(hand,expression,&l);
+            pack_long(a,&l,&len);
+            break;
 
-            default: {
-                char tmp[1024];
-                len = sizeof(tmp);
-                p = grib_expression_evaluate_string(hand,expression,tmp,&len,&ret);
-                if (ret != GRIB_SUCCESS) {
-                    grib_context_log(a->context,GRIB_LOG_ERROR,"unable to evaluate %s as string",a->name);
-                    Assert(0);
-                }
-                len = strlen(p)+1;
-                pack_string(a,p,&len);
-                break;
+        default: {
+            char tmp[1024];
+            len = sizeof(tmp);
+            p = grib_expression_evaluate_string(hand,expression,tmp,&len,&ret);
+            if (ret != GRIB_SUCCESS) {
+                grib_context_log(a->context,GRIB_LOG_ERROR,"unable to evaluate %s as string",a->name);
+                Assert(0);
             }
+            len = strlen(p)+1;
+            pack_string(a,p,&len);
+            break;
+        }
         }
     }
 }
@@ -367,7 +367,7 @@ static long byte_count(grib_accessor* a) {
     return strlen(buf)+1;
   }
 }
- */
+*/
 
 static int compare(grib_accessor* a, grib_accessor* b)
 {

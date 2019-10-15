@@ -129,47 +129,48 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
-  /*grib_accessor_signed* self = (grib_accessor_signed*)a;  */
-  a->length = len;
-  Assert(a->length>=0);
-
+    /*grib_accessor_signed* self = (grib_accessor_signed*)a;  */
+    a->length = len;
+    Assert(a->length>=0);
 }
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_BYTES;
+static int  get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_BYTES;
 }
 
+static int compare(grib_accessor* a, grib_accessor* b)
+{
+    int retval=GRIB_SUCCESS;
 
-static int compare(grib_accessor* a, grib_accessor* b) {
-  int retval=GRIB_SUCCESS;
+    size_t alen = (size_t)grib_byte_count(a);
+    size_t blen = (size_t)grib_byte_count(b);
 
-  size_t alen = (size_t)grib_byte_count(a);
-  size_t blen = (size_t)grib_byte_count(b);
+    if (alen != blen) return GRIB_COUNT_MISMATCH;
 
-  if (alen != blen) return GRIB_COUNT_MISMATCH;
-
-  return retval;
+    return retval;
 }
 
-static int unpack_string(grib_accessor *a , char*  v, size_t *len){
-  unsigned char* p=NULL;
-  char* s=v;
-  int i;
-  long length=grib_byte_count(a);
+static int unpack_string(grib_accessor *a , char*  v, size_t *len)
+{
+    unsigned char* p=NULL;
+    char* s=v;
+    int i;
+    long length=grib_byte_count(a);
 
-  if (*len < 2*length) {
-	  *len=2*length;
-	  return GRIB_ARRAY_TOO_SMALL;
-  }
-  
-  p  = grib_handle_of_accessor(a)->buffer->data + grib_byte_offset(a);
-  
-  for (i = 0; i < length; i++)  {
-    sprintf (s,"%02x", *(p++));
-    s+=2;
-  }
-  
-  *len=length;
+    if (*len < 2*length) {
+        *len=2*length;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
 
-  return GRIB_SUCCESS;
+    p  = grib_handle_of_accessor(a)->buffer->data + grib_byte_offset(a);
+
+    for (i = 0; i < length; i++)  {
+        sprintf (s,"%02x", *(p++));
+        s+=2;
+    }
+
+    *len=length;
+
+    return GRIB_SUCCESS;
 }

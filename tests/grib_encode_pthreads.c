@@ -76,11 +76,11 @@ static int encode_file(char *input_file, char *output_file)
         GRIB_CHECK(grib_get_size(clone_handle, "values", &values_len),0);
         values = (double*)malloc(values_len*sizeof(double));
 
-        d=10e-8;
+        d=10e-10;
         e=d;
         count=1;
         for (i=0;i<values_len;i++) {
-            if (count>100) {e*=10; count=1;}
+            if (count>1000) {e*=2; count=1;}
             values[i]=d;
             d+=e;
             count++;

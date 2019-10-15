@@ -494,7 +494,9 @@ static int read_HDF5_offset(reader *r, int length, unsigned long* v, unsigned ch
 
 static int read_HDF5(reader *r)
 {
-    /* See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock */
+    /* 
+     * See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock
+     */
     unsigned char tmp[49]; /* Should be enough */
     unsigned char buf[4];
 
@@ -629,7 +631,9 @@ static int read_HDF5(reader *r)
 
 static int read_WRAP(reader *r)
 {
-    /* See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock */
+    /*
+     * See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock
+     */
     unsigned char tmp[36]; /* Should be enough */
     unsigned char buf[8];
 

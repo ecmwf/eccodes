@@ -183,7 +183,7 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
                        long** array, const char* key, long numberOfSubsets, int zero_on_error)
 {
     int err = 0;
-    size_t i;
+    long i;
     size_t n=numberOfSubsets;
     *array=(long*)grib_context_malloc_clear(c, sizeof(long)*numberOfSubsets);
     if(compressed) {

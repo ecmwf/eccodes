@@ -224,9 +224,9 @@ static int pack_long(grib_accessor* a, const long* val,size_t *len)
     if((ret = pack_long_unsigned_helper(a,&tlen,len,/*check=*/0)) != GRIB_SUCCESS)
         return ret;
     /*
-  if((ret = super->pack_long(a,&tlen,len)) != GRIB_SUCCESS)
-    return ret;
-     */
+    if((ret = super->pack_long(a,&tlen,len)) != GRIB_SUCCESS)
+      return ret;
+    */
 
     {
         long total_length = -1, sec4_length = -1;

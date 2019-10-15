@@ -371,7 +371,6 @@ list( APPEND grib_api_srcs
     grib_dumper_class.h
     grib_dumper_factory.h
     grib_emoslib.h
-    grib_expression.h
     grib_iterator_class.h
     grib_iterator_factory.h
     grib_nearest_class.h

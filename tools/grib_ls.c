@@ -52,6 +52,13 @@ int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 static double lat=0;
 static double lon=0;
 static int mode=0;
+/* Note:
+ * There are two JSON-output modes:
+ *  1. With a provided lat-lon for the nearest neighbour (options->latlon==1)
+ *  2. All other cases (options->json_output==1)
+ * The first is special and has a very different format. They need to be
+ * treated differently
+ */
 static int json_latlon=0;
 static int first_handle=1;
 static grib_nearest* nearest=NULL;
@@ -193,6 +200,8 @@ int grib_tool_new_filename_action(grib_runtime_options* options,const char* file
 int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* file)
 {
     exit_if_input_is_directory(grib_tool_name, file->name);
+    if (nearest) grib_nearest_delete(nearest);
+    nearest = NULL;
     return 0;
 }
 
@@ -333,7 +342,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
     }
 
-    if (options->json_output) {
+    if (!json_latlon && options->json_output) {
         if (!first_handle && options->handle_count>1) {
             fprintf(stdout,",\n");
         }
@@ -392,7 +401,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         }
     }
     
-    if (options->json_output) fprintf(stdout,"\n]}\n");
+    if (!json_latlon && options->json_output) fprintf(stdout,"\n]}\n");
 
     if (nearest) grib_nearest_delete(nearest);
     if (json_latlon) printf("\n]\n");

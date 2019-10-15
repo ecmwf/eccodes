@@ -127,18 +127,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 185 ;
 	}
-#Surface net solar radiation, clear sky
-'surface_net_downward_shortwave_flux_assuming_clear_sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 210 ;
-	}
-#Surface net thermal radiation, clear sky
-'surface_net_downward_longwave_flux_assuming_clear_sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 211 ;
-	}
 #Temperature of snow layer
 'temperature_in_surface_snow' = {
 	 discipline = 192 ;
