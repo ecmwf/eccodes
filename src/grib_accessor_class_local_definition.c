@@ -241,7 +241,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     case 36: /* MARS labelling for long window 4Dvar system */
     case 40: /* MARS labeling with domain and model (for LAM) */
     case 42: /* LC-WFV: Wave forecast verification */
-    case 43: /* CARRA/CERRA */
         if (isInstant) {
             /* type=em || type=es  */
             if (type==17) {
