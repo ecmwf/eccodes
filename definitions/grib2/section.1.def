@@ -128,5 +128,7 @@ if ( ((section1Length > 21) or setCalendarId > 0) and deleteCalendarId == 0) {
 concept is_uerra(zero) {
    '1' = {productionStatusOfProcessedData=9;}
    '1' = {productionStatusOfProcessedData=8;}
+   '1' = {productionStatusOfProcessedData=10;}
+   '1' = {productionStatusOfProcessedData=11;}
    '0' = {dummy=1;}
 }

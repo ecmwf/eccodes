@@ -1,0 +1,5 @@
+# Copyright 2005-2019 ECMWF.
+
+# Copernicus regional reanalysis (CARRA/CERRA)
+constant marsExpver = 'test';
+include "grib2/products_crra.def"
