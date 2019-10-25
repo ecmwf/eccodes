@@ -114,16 +114,16 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e) const {
     using eckit::Fraction;
     ASSERT(w <= e);
 
-    const Fraction inc = getSmallestIncrement();
-    ASSERT(inc > 0);
+    const Fraction smallestIncrement = getSmallestIncrement();
+    ASSERT(smallestIncrement > 0);
 
     if (angleApproximatelyEqual(Longitude::GREENWICH, w) && (
-                angleApproximatelyEqual(Longitude::GLOBE - inc, e - w) ||
-                Longitude::GLOBE - inc < e - w ||
+                angleApproximatelyEqual(Longitude::GLOBE - smallestIncrement, e - w) ||
+                Longitude::GLOBE - smallestIncrement < e - w ||
                 (e != w && e.normalise(w) == w))) {
 
         w = Longitude::GREENWICH;
-        e = Longitude::GLOBE - inc;
+        e = Longitude::GLOBE - smallestIncrement;
 
     } else {
 
