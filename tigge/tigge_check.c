@@ -1253,7 +1253,7 @@ static void verify(grib_handle* h)
     }
 
     if (is_uerra){
-        if (is_crra){
+        if (is_crra && is_uerra){
             CHECK(eq(h,"productionStatusOfProcessedData",10)||eq(h,"productionStatusOfProcessedData",11)); /*  CRRA prod||test */
         }
         else
@@ -1389,6 +1389,7 @@ static void usage()
     printf("   -s: check s2s fields\n");
     printf("   -r: check s2s reforecast fields\n");
     printf("   -u: check uerra fields\n");
+    printf("   -c: check crra fields (-u must be also used in this case)\n");
     exit(1);
 }
 
