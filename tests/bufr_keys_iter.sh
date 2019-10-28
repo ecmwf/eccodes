@@ -17,7 +17,7 @@ tempRef=temp.bufr_keys_iter.$$.ref
 # -------------------------------------------
 input=${data_dir}/bufr/syno_multi.bufr
 $EXEC ${test_dir}/bufr_keys_iter -a $input > $tempOut
-grep -q 'ident=' $tempOut
+grep -q '^ident$' $tempOut
 
 
 # Test: check full output
