@@ -107,6 +107,7 @@ int is_lam = 0;
 int is_s2s = 0;
 int is_s2s_refcst = 0;
 int is_uerra = 0;
+int is_crra = 0;
 
 const char* good = NULL;
 const char* bad = NULL;
@@ -1121,6 +1122,7 @@ static void check_parameter(grib_handle* h,double min,double max)
     }
 }
 
+#if 0
 static void check_packing(grib_handle* h)
 {
     int err = 0;
@@ -1137,6 +1139,7 @@ static void check_packing(grib_handle* h)
         warning++;
     }
 }
+#endif
 
 static void verify(grib_handle* h)
 {
@@ -1212,7 +1215,7 @@ static void verify(grib_handle* h)
 
     check_parameter(h,min,max);
 
-    //check_packing(h);
+    /*check_packing(h);*/
 
     /* Section 1 */
 
@@ -1271,7 +1274,13 @@ static void verify(grib_handle* h)
     }
 
     if (is_uerra){
-        CHECK(eq(h,"productionStatusOfProcessedData",8)||eq(h,"productionStatusOfProcessedData",9)); /*  UERRA prod||test */
+        if (is_crra){
+            CHECK(eq(h,"productionStatusOfProcessedData",10)||eq(h,"productionStatusOfProcessedData",11)); /*  CRRA prod||test */
+        }
+        else
+        {
+            CHECK(eq(h,"productionStatusOfProcessedData",8)||eq(h,"productionStatusOfProcessedData",9)); /*  UERRA prod||test */
+        }
         CHECK(le(h,"endStep",30));
         /* 0 = analysis , 1 = forecast */
         CHECK(eq(h,"typeOfProcessedData",0)||eq(h,"typeOfProcessedData",1));
@@ -1401,6 +1410,7 @@ static void usage()
     printf("   -s: check s2s fields\n");
     printf("   -r: check s2s reforecast fields\n");
     printf("   -u: check uerra fields\n");
+    printf("   -c: check crra fields (-u must be also used in this case)\n");
     exit(1);
 }
 
@@ -1456,6 +1466,11 @@ int main(int argc, char** argv)
             case 'u':
                 is_uerra=1;
                 break;
+
+            case 'c':
+                is_crra=1;
+                break;
+
 
             default:
                 usage();
