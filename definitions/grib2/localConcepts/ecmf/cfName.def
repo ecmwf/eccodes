@@ -133,12 +133,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 238 ;
 	}
-#Sea-ice thickness
-'sea_ice_thickness' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 98 ;
-}
 #Depth of 20C isotherm
 'depth_of_isosurface_of_sea_water_potential_temperature' = {
 	 discipline = 192 ;
@@ -162,12 +156,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 153 ;
-}
-#Sea surface height
-'sea_surface_height_above_geoid' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 145 ;
 }
 #Sea water practical salinity
 'sea_water_practical_salinity' = {

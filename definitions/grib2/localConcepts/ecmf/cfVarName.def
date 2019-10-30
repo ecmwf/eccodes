@@ -16602,12 +16602,6 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 144 ;
 	}
-#Sea surface height
-'zos' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 145 ;
-	}
 #Sea level previous timestep
 'sl_1' = {
 	 discipline = 192 ;
@@ -19385,12 +19379,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 174 ;
 	 parameterNumber = 95 ;
-	}
-#Sea-ice thickness
-'sithick' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 98 ;
 	}
 #Liquid water potential temperature
 'p99.174' = {

@@ -226,3 +226,23 @@
 	 parameterNumber = 3 ;
 	 typeOfFirstFixedSurface = 160 ;
 }
+#Sea-ice thickness
+'sea_ice_thickness' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+}
+#Sea surface height
+'sea_surface_height_above_geoid' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+}
