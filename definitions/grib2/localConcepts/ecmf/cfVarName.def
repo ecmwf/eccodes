@@ -16530,18 +16530,6 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 130 ;
 	}
-#Eastward sea water velocity
-'uoe' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 131 ;
-	}
-#Northward sea water velocity
-'von' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 132 ;
-	}
 #Upward sea water velocity
 'wo' = {
 	 discipline = 192 ;

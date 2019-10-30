@@ -1463,6 +1463,20 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 15 ;
 	}
+#Eastward sea water velocity
+'uoe' = {
+	 discipline = 10 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 160 ;
+	}
+#Northward sea water velocity
+'von' = {
+	 discipline = 10 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 160 ;
+	}
 #Depth of 20C isotherm
 't20d' = {
 	 discipline = 10 ;
