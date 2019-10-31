@@ -284,6 +284,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
     case 15: /* Seasonal forecast data */
     case 16: /* Seasonal forecast monthly mean data */
+    case 12: /* Seasonal forecast monthly mean data for lagged systems */
     case 18: /* Multianalysis ensemble data */
     case 26: /* MARS labelling or ensemble forecast data */
     case 30: /* Forecasting Systems with Variable Resolution */
