@@ -5,7 +5,7 @@ section_length[3] section1Length ;
 
 unsigned[1]  masterTableNumber :dump;
 
-codetable[1] bufrHeaderSubCentre 'common/c-1.table' : dump;
+codetable[1] bufrHeaderSubCentre 'common/c-12.[bufrHeaderCentre:l].table' : dump;
 codetable[1] bufrHeaderCentre    'common/c-1.table' : dump;
 
 unsigned[1]  updateSequenceNumber :dump;
