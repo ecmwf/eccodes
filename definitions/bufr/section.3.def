@@ -22,7 +22,8 @@ if (masterTablesVersionNumber == 19) {
 
   constant tablesLocalDir="bufr/tables/[masterTableNumber]/local/[masterTablesVersionNumber]-[localTablesVersionNumber]/[bufrHeaderCentre:l]/[bufrHeaderSubCentre]" : hidden;
 } else {
-  constant tablesLocalDir="bufr/tables/[masterTableNumber]/local/[localTablesVersionNumber]/[bufrHeaderCentre:l]/[bufrHeaderSubCentre]" : hidden;
+  # Use numeric value of bufrHeaderSubCentre so that path is predictable. See SUP-2971.
+  constant tablesLocalDir="bufr/tables/[masterTableNumber]/local/[localTablesVersionNumber]/[bufrHeaderCentre:l]/[bufrHeaderSubCentre:l]" : hidden;
 }
 constant rootTablesDir="bufr/tables" : hidden;
 
