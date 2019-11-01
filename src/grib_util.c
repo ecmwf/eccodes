@@ -574,7 +574,7 @@ static int check_geometry(grib_handle* handle, const grib_util_grid_spec2* spec,
         if (specified_as_global) {
             char msg[100] = {0,};
             size_t sum = 0;
-            if (specified_as_global) strcpy(msg, "Specified to be global (in spec)");
+            strcpy(msg, "Specified to be global (in spec)");
             sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (sum != data_values_count) {
                 fprintf(stderr, "GRIB_UTIL_SET_SPEC: Invalid reduced gaussian grid: %s but data_values_count != sum_of_pl_array (%ld!=%ld)\n",
@@ -1004,13 +1004,13 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         /* convert to second_order if not constant field */
         if (setSecondOrder ) {
-            size_t packTypeLen=17;
             int constant=0;
             double missingValue=0;
             grib_get_double(h,"missingValue",&missingValue);
             constant=is_constant_field(missingValue, data_values, data_values_count);
 
             if (!constant) {
+                size_t packTypeLen;
                 if (editionNumber == 1 ) {
                     long numberOfGroups;
                     grib_handle* htmp=grib_handle_clone(h);
@@ -1908,7 +1908,7 @@ int parse_keyval_string(const char* grib_tool, char* arg, int values_required, i
 }
 
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to EPS */
-int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber)
+int grib2_is_PDTN_EPS(long productDefinitionTemplateNumber)
 {
     return (
             productDefinitionTemplateNumber == 1 || productDefinitionTemplateNumber == 11 ||
@@ -1919,7 +1919,7 @@ int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber)
 }
 
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for atmospheric chemical constituents */
-int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNumber)
+int grib2_is_PDTN_Chemical(long productDefinitionTemplateNumber)
 {
     return (
             productDefinitionTemplateNumber == 40 ||
@@ -1930,7 +1930,7 @@ int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNu
 
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for
  * atmospheric chemical constituents based on a distribution function */
-int is_productDefinitionTemplateNumber_ChemicalDistFunc(long productDefinitionTemplateNumber)
+int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber)
 {
     return (
             productDefinitionTemplateNumber == 57 ||
@@ -1940,7 +1940,7 @@ int is_productDefinitionTemplateNumber_ChemicalDistFunc(long productDefinitionTe
 }
 
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for aerosols */
-int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber)
+int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber)
 {
     return (
             productDefinitionTemplateNumber == 44 || /* Note: PDT 44 is deprecated. Use 48 instead */
@@ -1952,7 +1952,7 @@ int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNum
 }
 
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for optical properties of aerosol */
-int is_productDefinitionTemplateNumber_AerosolOptical(long productDefinitionTemplateNumber)
+int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber)
 {
     /* Note: PDT 48 can be used for both plain aerosols as well as optical properties of aerosol.
      * For the former user must set the optical wavelength range to missing.
@@ -1962,11 +1962,17 @@ int is_productDefinitionTemplateNumber_AerosolOptical(long productDefinitionTemp
             productDefinitionTemplateNumber == 49);
 }
 
-int grib2_productDefinitionTemplateNumber(int is_eps, int is_instant,
-                                        int is_chemical,
-                                        int is_chemical_distfn,
-                                        int is_aerosol,
-                                        int is_aerosol_optical)
+/* Given some information about the type of grib2 parameter, return the productDefinitionTemplateNumber to use.
+ * All arguments are booleans (0 or 1)
+ * is_eps:     ensemble or deterministic
+ * is_instant: instantaneous or interval-based
+ * etc
+ */
+int grib2_select_PDTN(int is_eps, int is_instant,
+                      int is_chemical,
+                      int is_chemical_distfn,
+                      int is_aerosol,
+                      int is_aerosol_optical)
 {
     /* At most one has to be set. All could be 0 */
     /* Unfortunately if PDTN=48 then both aerosol and aerosol_optical can be 1! */

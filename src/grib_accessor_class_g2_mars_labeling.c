@@ -412,7 +412,7 @@ static int extra_set(grib_accessor* a,long val)
             is_eps = 1; /* These streams are all for ensembles */
             grib_get_string(hand,self->stepType,stepType,&stepTypelen);
             is_instant = ( strcmp(stepType,"instant")==0 );
-            productDefinitionTemplateNumberNew = grib2_productDefinitionTemplateNumber(
+            productDefinitionTemplateNumberNew = grib2_select_PDTN(
                 is_eps, is_instant,
                 is_chemical,
                 is_chemical_distfn,

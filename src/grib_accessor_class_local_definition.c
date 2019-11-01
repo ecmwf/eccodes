@@ -224,7 +224,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         return GRIB_ENCODING_ERROR;
     }
 
-    if (is_productDefinitionTemplateNumber_EPS(productDefinitionTemplateNumber))
+    if (grib2_is_PDTN_EPS(productDefinitionTemplateNumber))
         eps=1;
 
     switch (localDefinitionNumber) {

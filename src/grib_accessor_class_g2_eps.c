@@ -166,7 +166,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
 
     *val=0;
-    if (is_productDefinitionTemplateNumber_EPS(productDefinitionTemplateNumber))
+    if (grib2_is_PDTN_EPS(productDefinitionTemplateNumber))
         *val=1;
 
     return GRIB_SUCCESS;
