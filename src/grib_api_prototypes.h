@@ -1475,6 +1475,7 @@ int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNu
 int is_productDefinitionTemplateNumber_ChemicalDistFunc(long productDefinitionTemplateNumber);
 int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber);
 int is_productDefinitionTemplateNumber_AerosolOptical(long productDefinitionTemplateNumber);
+int grib2_productDefinitionTemplateNumber(int is_eps, int is_instant, int is_chemical, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
 int is_index_file(const char *filename);
 char get_dir_separator_char(void);
 char *codes_getenv(const char *name);

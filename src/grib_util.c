@@ -1918,7 +1918,7 @@ int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber)
     );
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to atmospheric chemical constituents */
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for atmospheric chemical constituents */
 int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNumber)
 {
     return (
@@ -1928,7 +1928,7 @@ int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNu
             productDefinitionTemplateNumber == 43);
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for
  * atmospheric chemical constituents based on a distribution function */
 int is_productDefinitionTemplateNumber_ChemicalDistFunc(long productDefinitionTemplateNumber)
 {
@@ -1939,20 +1939,19 @@ int is_productDefinitionTemplateNumber_ChemicalDistFunc(long productDefinitionTe
             productDefinitionTemplateNumber == 68);
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to aerosols */
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for aerosols */
 int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber)
 {
-    /* Note: PDT 44 is deprecated. Use 48 instead */
     return (
-            productDefinitionTemplateNumber == 44 || productDefinitionTemplateNumber == 48 ||
+            productDefinitionTemplateNumber == 44 || /* Note: PDT 44 is deprecated. Use 48 instead */
+            productDefinitionTemplateNumber == 48 ||
+            productDefinitionTemplateNumber == 49 ||
             productDefinitionTemplateNumber == 45 ||
             productDefinitionTemplateNumber == 46 ||
             productDefinitionTemplateNumber == 47);
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to 
- * optical properties of aerosol
- */
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for optical properties of aerosol */
 int is_productDefinitionTemplateNumber_AerosolOptical(long productDefinitionTemplateNumber)
 {
     /* Note: PDT 48 can be used for both plain aerosols as well as optical properties of aerosol.
@@ -1961,6 +1960,69 @@ int is_productDefinitionTemplateNumber_AerosolOptical(long productDefinitionTemp
     return (
             productDefinitionTemplateNumber == 48 ||
             productDefinitionTemplateNumber == 49);
+}
+
+int grib2_productDefinitionTemplateNumber(int is_eps, int is_instant,
+                                        int is_chemical,
+                                        int is_chemical_distfn,
+                                        int is_aerosol,
+                                        int is_aerosol_optical)
+{
+    /* At most one has to be set. All could be 0 */
+    /* Unfortunately if PDTN=48 then both aerosol and aerosol_optical can be 1! */
+    const int sum = is_chemical + is_chemical_distfn + is_aerosol + is_aerosol_optical;
+    Assert( sum == 0 || sum == 1 || sum == 2 );
+
+    if (is_chemical) {
+        if (is_eps) {
+            if (is_instant) return 41;
+            else            return 43;
+        } else {
+            if (is_instant) return 40;
+            else            return 42;
+        }
+    }
+
+    if (is_chemical_distfn) {
+        if (is_eps) {
+            if (is_instant) return 58;
+            else            return 68;
+        } else {
+            if (is_instant) return 57;
+            else            return 67;
+        }
+    }
+
+    if (is_aerosol_optical) {
+        if (is_eps) {
+            if (is_instant) return 49;
+            /* WMO does not have a non-instantaneous case here! */
+        } else {
+            if (is_instant) return 48;
+            /* WMO does not have a non-instantaneous case here! */
+        }
+    }
+
+    if (is_aerosol) {
+        if (is_eps) {
+            if (is_instant) return 45;
+            else            return 47;
+        } else {
+            if (is_instant) return 48;/*44 is deprecated*/
+            else            return 46;
+        }
+    }
+
+    /* Fallthru case: default */
+    if (is_eps) {
+        if (is_instant) return 1;
+        else            return 11;
+    } else {
+        if (is_instant) return 0;
+        else            return 8;
+    }
+
+    return -1;
 }
 
 int is_index_file(const char* filename)
