@@ -1,4 +1,4 @@
-# Code table 0: Identification of centres
+# COMMON CODE TABLE C-1: Identification of originating/generating centre (GRIB1, BUFR3)
 0 0 Absent
 1 ammc Melbourne (WMC)
 2 2 Melbourne (WMC)
