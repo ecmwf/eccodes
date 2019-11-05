@@ -2179,10 +2179,11 @@ static int set_dimension_ragged(int ncid, const char *name, int n, int xtype, co
     int dim_vec[DIM_ID];
     const char *dim_name;
 
-    /* NOTES:  The CF conventions to not specifically cover reduced Gaussian grids...
-               I have used a blend of methods described in sections:
-               a) 5.3. Reduced Horizontal Grid
-               b) 9.3.3. Contiguous ragged array representation
+    /* NOTES: The CF conventions do not specifically cover reduced Gaussian grids.
+              This needs to be a topic of discussion.
+              I have initially used a blend of methods described in sections:
+                a) 5.3. Reduced Horizontal Grid
+                b) 9.3.3. Contiguous ragged array representation
     */
     Assert(((strcmp(axis, "cols")==0) || (strcmp(axis, "rows")==0)));
 
@@ -2344,7 +2345,7 @@ static int def_latlon(int ncid, fieldset *fs)
         return e;
     }
 
-    if(grid_is_reduced_gaussian(g->handle)) /* DPZ */
+    if(grid_is_reduced_gaussian(g->handle))
     {
         /* Define rgrid dimension along with variable longitude(rgrid) */
         n = (int)nlons;
@@ -2434,7 +2435,7 @@ static int put_latlon(int ncid, fieldset *fs)
     n = ni;
     stat = nc_inq_varid(ncid, "longitude", &var_id);
     check_err(stat, __LINE__, __FILE__);
-    if(grid_is_reduced_gaussian(g->handle)) /* DPZ */
+    if(grid_is_reduced_gaussian(g->handle))
     {
         if((e = grib_get_double_array(g->handle, "longitudes", dvalues, &n)) != GRIB_SUCCESS)
         {
@@ -2923,7 +2924,7 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
 
     int rgrid = grid_is_reduced_gaussian(f->handle);
 
-    if(rgrid) /* DPZ */
+    if(rgrid)
     {
         /* Define ragged longitude */
         if((e = grib_get_long(f->handle, "numberOfDataPoints", &ni)) != GRIB_SUCCESS)
@@ -3032,7 +3033,7 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
             if(subset->bitmap)
                 scale_bitmap(vals, len, vscaled, subset);
 
-            if(rgrid) /* DPZ */
+            if(rgrid)
             {
                 /* Define ragged longitude */
                 if((e = grib_get_long(g->handle, "numberOfDataPoints", &ni)) != GRIB_SUCCESS)
