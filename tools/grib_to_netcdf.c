@@ -30,8 +30,8 @@
 #endif
 
 const char* grib_tool_description = "Convert a GRIB file to netCDF format."
-        "\n\tNote: The GRIB geometry should be a regular lat/lon grid or a regular Gaussian grid"
-        "\n\t(the key \"typeOfGrid\" should be \"regular_ll\" or \"regular_gg\")";
+        "\n\tNote: The GRIB geometry should be a regular lat/lon grid or a regular/reduced Gaussian grid"
+        "\n\t(the key \"typeOfGrid\" should be \"regular_ll\" or \"regular_gg\" or \"reduced_gg\")";
 const char* grib_tool_name = "grib_to_netcdf";
 const char* grib_tool_usage = "[options] grib_file grib_file ... ";
 static char argvString[2048] = {0,};
@@ -2171,6 +2171,69 @@ static int set_dimension(int ncid, const char *name, int n, int xtype, const cha
     return var_id;
 }
 
+static int set_dimension_ragged(int ncid, const char *name, int n, int xtype, const char *units, const char *long_name, const char *axis)
+{
+    int var_id = 0;
+    int stat = 0;
+    int dim_id = DIM_ID;
+    int dim_vec[DIM_ID];
+    const char *dim_name;
+
+    /* NOTES:  The CF conventions to not specifically cover reduced Gaussian grids...
+               I have used a blend of methods described in sections:
+               a) 5.3. Reduced Horizontal Grid
+               b) 9.3.3. Contiguous ragged array representation
+    */
+    Assert(((strcmp(axis, "cols")==0) || (strcmp(axis, "rows")==0)));
+
+    dim_name = (strcmp(axis, "cols")==0)? "rgrid" : name;
+
+    printf("%s: Defining ragged coordinate variable '%s(%s)'.\n", grib_tool_name, name, dim_name);
+
+    stat = nc_def_dim(ncid, dim_name, n, &dim_id);
+    check_err(stat, __LINE__, __FILE__);
+
+    dim_vec[0] = dim_id;
+    stat = nc_def_var(ncid, name, (nc_type)xtype, 1, dim_vec, &var_id);
+    check_err(stat, __LINE__, __FILE__);
+
+    if(units != NULL)
+    {
+        stat = nc_put_att_text(ncid, var_id, "units", strlen(units), units);
+        check_err(stat, __LINE__, __FILE__);
+    }
+
+    if(long_name != NULL)
+    {
+        stat = nc_put_att_text(ncid, var_id, "long_name", strlen(long_name), long_name);
+        check_err(stat, __LINE__, __FILE__);
+    }
+
+    if(strcmp(axis, "cols")==0)
+    {
+        stat = nc_put_att_text(ncid, var_id, "ragged_rowsize", strlen("rowsize"), "rowsize");
+        check_err(stat, __LINE__, __FILE__);
+    }
+    else
+    {
+        int var2_id;
+        const char *var2_name = "rowsize";
+
+        printf("%s: Defining ragged coordinate variable '%s(%s)'.\n", grib_tool_name, var2_name, dim_name);
+
+        stat = nc_def_var(ncid, var2_name, (nc_type)NC_INT, 1, dim_vec, &var2_id);
+        check_err(stat, __LINE__, __FILE__);
+
+        stat = nc_put_att_text(ncid, var2_id, "units", strlen("1"), "1");
+        check_err(stat, __LINE__, __FILE__);
+
+        stat = nc_put_att_text(ncid, var2_id, "long_name", strlen("ragged row size"), "ragged row size");
+        check_err(stat, __LINE__, __FILE__);
+    }
+
+    return var_id;
+}
+
 static int check_grid(field *f)
 {
     err e = 0;
@@ -2183,13 +2246,25 @@ static int check_grid(field *f)
         return e;
     }
 
-    if (strcmp(grid_type, "regular_ll") != 0 && (strcmp(grid_type, "regular_gg") != 0))
+    if (strcmp(grid_type, "regular_ll") != 0 && (strcmp(grid_type, "regular_gg") != 0) && (strcmp(grid_type, "reduced_gg") != 0))
     {
         grib_context_log(ctx, GRIB_LOG_ERROR, "Grid type = %s", grid_type);
-        grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
+        grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular/reduced Gaussian grid. Exiting.\n");
         return GRIB_GEOCALCULUS_PROBLEM;
     }
     return e;
+}
+
+static int grid_is_reduced_gaussian(grib_handle* h)
+{
+    char grid_type[80];
+    size_t size = sizeof(grid_type);
+    if(grib_get_string(h, "typeOfGrid", grid_type, &size) == GRIB_SUCCESS &&
+       strcmp(grid_type, "reduced_gg")==0)
+    {
+        return 1;
+    }
+    return 0;
 }
 
 static int get_num_latitudes_longitudes(grib_handle* h, size_t* nlats, size_t* nlons)
@@ -2198,8 +2273,10 @@ static int get_num_latitudes_longitudes(grib_handle* h, size_t* nlats, size_t* n
     char grid_type[80];
     size_t size = sizeof(grid_type);
 
-    if (grib_get_string(h, "typeOfGrid", grid_type, &size) == GRIB_SUCCESS &&
-        strcmp(grid_type, "regular_ll") == 0)
+    int got_grid_type = grib_get_string(h, "typeOfGrid", grid_type, &size) == GRIB_SUCCESS;
+    Assert((got_grid_type!=0));
+    
+    if (strcmp(grid_type, "regular_ll") == 0)
     {
         /* Special shortcut for regular lat/on grids */
         long n;
@@ -2211,6 +2288,24 @@ static int get_num_latitudes_longitudes(grib_handle* h, size_t* nlats, size_t* n
         *nlons = n;
 
         if ((e = grib_get_long(h, "Nj", &n)) != GRIB_SUCCESS)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
+            return e;
+        }
+        *nlats = n;
+    }
+    else if (strcmp(grid_type, "reduced_gg")==0)
+    {
+        /* Special handling for reduced Gaussian grids */
+        long n;
+        Assert(grib_is_missing(h, "Ni", &e)); /* Ni should be missing */
+        if((e = grib_get_long(h, "numberOfDataPoints", &n)) != GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get numberOfDataPoints: %s", grib_get_error_message(e));
+            return e;
+        }
+        *nlons = n;
+
+        if((e = grib_get_long(h, "Nj", &n)) != GRIB_SUCCESS)
         {
             grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
             return e;
@@ -2249,13 +2344,26 @@ static int def_latlon(int ncid, fieldset *fs)
         return e;
     }
 
-    /* Define longitude */
-    n = (int)nlons;
-    var_id = set_dimension(ncid, "longitude", n, NC_FLOAT, "degrees_east", "longitude");
+    if(grid_is_reduced_gaussian(g->handle)) /* DPZ */
+    {
+        /* Define rgrid dimension along with variable longitude(rgrid) */
+        n = (int)nlons;
+        var_id = set_dimension_ragged(ncid, "longitude", n, NC_FLOAT, "degrees_east", "longitude", "cols");
 
-    /* Define latitude */
-    n = nlats;
-    var_id = set_dimension(ncid, "latitude", n, NC_FLOAT, "degrees_north", "latitude");
+        /* Define latitude dimension along with variables latitude(latitude) and rowsize(latitude) */
+        n = nlats;
+        var_id = set_dimension_ragged(ncid, "latitude", n, NC_FLOAT, "degrees_north", "latitude", "rows");
+    }
+    else
+    {
+        /* Define longitude */
+        n = (int)nlons;
+        var_id = set_dimension(ncid, "longitude", n, NC_FLOAT, "degrees_east", "longitude");
+
+        /* Define latitude */
+        n = nlats;
+        var_id = set_dimension(ncid, "latitude", n, NC_FLOAT, "degrees_north", "latitude");
+    }
 
     /* g->purge_header = TRUE; */
     release_field(g);
@@ -2326,10 +2434,21 @@ static int put_latlon(int ncid, fieldset *fs)
     n = ni;
     stat = nc_inq_varid(ncid, "longitude", &var_id);
     check_err(stat, __LINE__, __FILE__);
-    if((e = grib_get_double_array(g->handle, "distinctLongitudes", dvalues, &n)) != GRIB_SUCCESS)
+    if(grid_is_reduced_gaussian(g->handle)) /* DPZ */
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLongitudes: %s", grib_get_error_message(e));
-        return e;
+        if((e = grib_get_double_array(g->handle, "longitudes", dvalues, &n)) != GRIB_SUCCESS)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get longitudes: %s", grib_get_error_message(e));
+            return e;
+        }
+    }
+    else
+    {
+        if((e = grib_get_double_array(g->handle, "distinctLongitudes", dvalues, &n)) != GRIB_SUCCESS)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLongitudes: %s", grib_get_error_message(e));
+            return e;
+        }
     }
     Assert(n == ni);
 
@@ -2354,6 +2473,29 @@ static int put_latlon(int ncid, fieldset *fs)
     stat = nc_put_var_float(ncid, var_id, fvalues);
     check_err(stat, __LINE__, __FILE__);
 
+    /* rowsize for reduced Gaussian */
+    if(grid_is_reduced_gaussian(g->handle))
+    {
+        int *lvalues = (long *)grib_context_malloc(ctx, sizeof(long) * nj);
+        int *ivalues = (int *)grib_context_malloc(ctx, sizeof(int) * nj);
+
+        stat = nc_inq_varid(ncid, "rowsize", &var_id);
+        check_err(stat, __LINE__, __FILE__);
+        if((e = grib_get_long_array(g->handle, "pl", lvalues, &n)) != GRIB_SUCCESS)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get pl: %s", grib_get_error_message(e));
+            return e;
+        }
+        Assert(n == nj);
+
+        for(i=0; i< nj; i++) { ivalues[i] = lvalues[i]; }
+        stat = nc_put_var_int(ncid, var_id, ivalues);
+        check_err(stat, __LINE__, __FILE__);
+
+        grib_context_free(ctx, ivalues);
+        grib_context_free(ctx, lvalues);
+    }
+    
     /* g->purge_header = TRUE; */
     release_field(g);
     grib_context_free(ctx, fvalues);
@@ -2779,30 +2921,54 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
     long nj;
     err e = 0;
 
-    /* Define longitude */
-    if((e = grib_get_long(f->handle, "Ni", &ni)) != GRIB_SUCCESS)
+    int rgrid = grid_is_reduced_gaussian(f->handle);
+
+    if(rgrid) /* DPZ */
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
-        return e;
+        /* Define ragged longitude */
+        if((e = grib_get_long(f->handle, "numberOfDataPoints", &ni)) != GRIB_SUCCESS)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get numberOfDataPoints: %s", grib_get_error_message(e));
+            return e;
+        }
+
+        /* Start filling dimensions at first value */
+        for(i = 0; i < 1 + naxis; ++i)
+            start[i] = 0;
+
+        /* Count dimensions per axis */
+        for(i = 0; i < naxis; ++i)
+            count[naxis - i - 1] = 1;
+
+        count[naxis] = ni; /* ragged longitude */
     }
-    /* Define latitude */
-    if((e = grib_get_long(f->handle, "Nj", &nj)) != GRIB_SUCCESS)
+    else
     {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
-        return e;
+        /* Define longitude */
+        if((e = grib_get_long(f->handle, "Ni", &ni)) != GRIB_SUCCESS)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
+            return e;
+        }
+        /* Define latitude */
+        if((e = grib_get_long(f->handle, "Nj", &nj)) != GRIB_SUCCESS)
+        {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
+            return e;
+        }
+
+        /* Start filling dimensions at first value */
+        for(i = 0; i < 2 + naxis; ++i)
+            start[i] = 0;
+
+        /* Count dimensions per axis */
+        for(i = 0; i < naxis; ++i)
+            count[naxis - i - 1] = 1;
+
+        count[naxis] = nj; /* latitude */
+        count[naxis + 1] = ni; /* longitude */
     }
-
-    /* Start filling dimensions at first value */
-    for(i = 0; i < 2 + naxis; ++i)
-        start[i] = 0;
-
-    /* Count dimensions per axis */
-    for(i = 0; i < naxis; ++i)
-        count[naxis - i - 1] = 1;
-
-    count[naxis] = nj; /* latitude */
-    count[naxis + 1] = ni; /* longitude */
-
+    
     /* f->purge_header = TRUE; */
     release_field(f);
 
@@ -2866,25 +3032,45 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
             if(subset->bitmap)
                 scale_bitmap(vals, len, vscaled, subset);
 
-            if((e = grib_get_long(g->handle, "Ni", &ni)) != GRIB_SUCCESS)
+            if(rgrid) /* DPZ */
             {
-                grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
-                return e;
-            }
-            /* Define latitude */
-            if((e = grib_get_long(g->handle, "Nj", &nj)) != GRIB_SUCCESS)
-            {
-                grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
-                return e;
-            }
+                /* Define ragged longitude */
+                if((e = grib_get_long(g->handle, "numberOfDataPoints", &ni)) != GRIB_SUCCESS)
+                {
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get numberOfDataPoints: %s", grib_get_error_message(e));
+                    return e;
+                }
 
-            if(nj != count[naxis] || ni != count[naxis + 1])
-            {
-                grib_context_log(ctx, GRIB_LOG_ERROR, "Grib %d has different resolution\n", i + 1);
-                grib_context_log(ctx, GRIB_LOG_ERROR, "lat=%d, long=%d instead of lat=%d, long=%d\n", nj, ni, count[naxis], count[naxis + 1]);
-                exit(1);
+                if(ni != count[naxis])
+                {
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "Grib %d has different resolution\n", i + 1);
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "rgrid=%d instead of rgrid=%d\n", ni, count[naxis]);
+                    exit(1);
+                }
             }
+            else
+            {
+                /* Define longitude */
+                if((e = grib_get_long(g->handle, "Ni", &ni)) != GRIB_SUCCESS)
+                {
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
+                    return e;
+                }
+                /* Define latitude */
+                if((e = grib_get_long(g->handle, "Nj", &nj)) != GRIB_SUCCESS)
+                {
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
+                    return e;
+                }
 
+                if(nj != count[naxis] || ni != count[naxis + 1])
+                {
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "Grib %d has different resolution\n", i + 1);
+                    grib_context_log(ctx, GRIB_LOG_ERROR, "lat=%d, long=%d instead of lat=%d, long=%d\n", nj, ni, count[naxis], count[naxis + 1]);
+                    exit(1);
+                }
+            }
+            
             cube_indexes(h, r, times_array, times_array_size, idx, idxsize);
             for(j = 0; j < naxis; ++j)
                 start[naxis - j - 1] = idx[j];
@@ -2941,7 +3127,8 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
     
     long ni;
     long nj;
-    
+    long rgrid;
+
     field *f = get_field(fs, 0, expand_mem);
 
     if ((e=check_grid(f)) != GRIB_SUCCESS) {
@@ -2949,10 +3136,23 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         return e;
     }
 
-    if((e = grib_get_long(f->handle, "Ni", &ni)) != GRIB_SUCCESS) {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Ni: %s", grib_get_error_message(e));
-        return e;
+    rgrid = grid_is_reduced_gaussian(f->handle);
+
+    if(rgrid)
+    {
+        if((e = grib_get_long(f->handle, "numberOfDataPoints", &ni)) != GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get numberOfDataPoints: %s", grib_get_error_message(e));
+            return e;
+      }
     }
+    else
+    {
+        if ((e = grib_get_long(f->handle, "Nj", &nj)) != GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
+            return e;
+        }
+    }
+
     if ((e = grib_get_long(f->handle, "Nj", &nj)) != GRIB_SUCCESS) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get Nj: %s", grib_get_error_message(e));
         return e;
@@ -2963,8 +3163,15 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
     for(i = 0; i < naxis; ++i)
         chunks[naxis - i - 1] = 1;
 
-    chunks[naxis] = nj; /* latitude */
-    chunks[naxis + 1] = ni; /* longitude */
+    if(rgrid)
+    {
+        chunks[naxis] = ni; /* ragged longitude */
+    }
+    else
+    {
+        chunks[naxis] = nj; /* latitude */
+        chunks[naxis + 1] = ni; /* longitude */
+    }
 
     /* START DEFINITIONS */
 
@@ -3118,6 +3325,13 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
     for(i = 0; i < n; ++i)
         dims[i] = n - i - 1;
 
+    if(rgrid) 
+    {
+        n = n - 1; /* rgrid + # axis (strip out latitude) */
+        for(i = 1; i < n; ++i)
+            dims[i] = dims[i+1];
+    }
+    
     for(i = 0; i < subsetcnt; ++i)
     {
         printf("%s: Defining variable '%s'.\n", grib_tool_name, subsets[i].att.name);
