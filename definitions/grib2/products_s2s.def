@@ -124,22 +124,3 @@ if (is_ocean3d_param) {
    alias mars.levtype = oceanLevName;
    unalias mars.levelist;
 }
-
-#########old
-#concept is_ocean_param(zero) {
-#    '1' = { paramId = 151219; } 2D
-#    '1' = { paramId = 151163; } 2D
-#    '1' = { paramId = 151127; } 2D exception!!
-#    '1' = { paramId = 151175; } 2D exception!!
-#    '1' = { paramId = 151131; } 2D or 3D
-#    '1' = { paramId = 151132; } 2D or 3D
-#    '1' = { paramId = 151145; } 2D
-#    '1' = { paramId = 151225; } 2D
-#    '1' = { paramId = 174098; } 2D
-#    '0' = { dummy=1; }
-#}
-#if (is_ocean_param) {
-#    constant oceanLevName = 'o2d';
-#    alias mars.levtype = oceanLevName;
-#    unalias mars.levelist;
-#}
