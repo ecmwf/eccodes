@@ -320,6 +320,7 @@ static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
     }
 
     *len=rsize;
+    Assert(buffer);
     memcpy(buffer,start,rsize);
     buffer[rsize]=0;
 

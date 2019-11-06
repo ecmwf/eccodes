@@ -26,8 +26,10 @@ static int encode_file(char *template_file, char *output_file)
     int err = 0;
     long numSubsets = 0;
 
+    assert(template_file);
     in = fopen(template_file,"r"); assert(in);
     if (opt_write) {
+        assert(output_file);
         out = fopen(output_file,"w");  assert(out);
     }
 
