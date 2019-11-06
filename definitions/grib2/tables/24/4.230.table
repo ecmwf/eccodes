@@ -9,22 +9,22 @@
 7 7 Formaldehyde HCHO
 8 8 Sulphur dioxide SO2
 9 9 Ammonia NH3
-10 10 Ammonium NH4
+10 10 Ammonium cation NH4+
 11 11 Nitrogen monoxide NO
 12 12 Atomic oxygen O
 13 13 Nitrate radical NO3
-14 14 Hydroperoxyl radical HO2
+14 14 Hydroperoxyl radical HOO
 15 15 Dinitrogen pentoxide N2O5
 16 16 Nitrous acid HONO
 17 17 Nitric acid HNO3
 18 18 Peroxynitric acid HO2NO2
 19 19 Hydrogen peroxide H2O2
-20 20 Molecular hydrogen H2
+20 20 Dihydrogen H2
 21 21 Atomic nitrogen N
-22 22 Sulphate SO42-
-23 23 Radon Rn
-24 24 Elemental mercury Hg(0)
-25 25 Divalent mercury Hg2+
+22 22 Sulphate anion SO42-
+23 23 Atomic Radon Rn
+24 24 Mercury vapour Hg(0)
+25 25 Mercury(II) cation Hg2+
 26 26 Atomic chlorine Cl
 27 27 Chlorine monoxide ClO
 28 28 Dichlorine peroxide Cl2O2
@@ -37,7 +37,7 @@
 35 35 Hydrogen bromide HBr
 36 36 Hypobromous acid HBrO
 37 37 Bromine nitrate BrONO2
-38 38 Oxygen O2
+38 38 Dioxygen O2
 39 39 Nitryl chloride NO2Cl
 40 40 Sulphuric acid H2SO4
 41 41 Hydrogen sulphide H2S
@@ -47,8 +47,8 @@
 45 45 Sulphur hexafluoride SF6
 46 46 Chlorine Cl2
 # 47-9999 Reserved
-10000 10000 Hydroxyl radical OH
-10001 10001 Methyl peroxy radical CH3O2
+10000 10000 Hydroxyl radical HO
+10001 10001 Methyl peroxy radical CH3OO
 10002 10002 Methyl hydroperoxide CH3O2H
 10004 10004 Methanol CH3OH
 10005 10005 Formic acid CH3OOH
@@ -62,7 +62,7 @@
 10013 10013 Peroxyacetyl nitrate CH3C(O)OONO2
 10014 10014 Propane C3H8
 10015 10015 Propene C3H6
-10016 10016 Butanes C4H10
+10016 10016 Butane (all isomers) C4H10
 10017 10017 Isoprene C5H10
 10018 10018 Alpha pinene C10H16
 10019 10019 Beta pinene C10H16
@@ -101,38 +101,38 @@
 10052 10052 Ethyl hydroperoxide CH3CH2OOH
 10053 10053 3-hydroxypropyl dioxidanyl radical HOCH2CH2CH2OO
 10054 10054 3-hydroxypropyl hydroperoxide HOCH2CH2CH2OOH
-# 10055-10499 Reserved for other simple organic molecules(e.g. higher aldehydes, alcohols, peroxides, ...)
+# 10055-10499 Reserved for other simple organic molecules (e.g. higher aldehydes, alcohols, peroxides, ...) 
 10500 10500 Dimethyl sulphide CH3SCH3 (DMS)
 10501 10501 DMSO (dimethyl sulfoxide) (CH3)2SO
-# 10502-20000 Reserved
-20001 20001 Hydrogen chloride
-20002 20002 CFC-11
-20003 20003 CFC-12
-20004 20004 CFC-113
-20005 20005 CFC-113a
-20006 20006 CFC-114
-20007 20007 CFC-115
-20008 20008 HCFC-22
-20009 20009 HCFC-141b
-20010 20010 HCFC-142b
-20011 20011 Halon-1202
-20012 20012 Halon-1211
-20013 20013 Halon-1301
-20014 20014 Halon-2402
-20015 20015 Methyl chloride (HCC-40)
-20016 20016 Carbon tetrachloride (HCC-10)
-20017 20017 HCC-140a CH3CCl3
-20018 20018 Methyl bromide (HBC-40B1)
-20019 20019 Hexachlorocyclohexane (HCH)
-20020 20020 Alpha hexachlorocyclohexane
-20021 20021 Hexachlorobiphenyl (PCB-153)
-20022 20022 HCFC 141a (1,1-dichloro-2-fluoro-ethane) CH3CClF2
+# 10502-20000 Reserved 
+20001 20001 Hydrogen chloride HCl
+20002 20002 CFC-11 (trichlorofluoromethane) CCl3F
+20003 20003 CFC-12 (dichlorodifluoromethane) CCl2F2
+20004 20004 CFC-113 (1,1,2-trichloro-1,2,2-trifluoroethane) Cl2FC-CClF2
+20005 20005 CFC-113a (1,1,1-trichloro-2,2,2-trifluoroethane) Cl3C-CF3
+20006 20006 CFC-114 (1,2-dichloro-1,1,2,2-tetrafluoroethane) ClF2C-CClF2
+20007 20007 CFC-115 (1-chloro-1,1,2,2,2-pentafluoroethane) ClF2C-CF3
+20008 20008 HCFC-22 (chlorodifluoromethane) CHClF2
+20009 20009 HCFC-141b (1,1-dichloro-1-fluoroethane) Cl2FC-CH3
+20010 20010 HCFC-142b (1-chloro-1,1-difluoroethane) ClF2C-CH3
+20011 20011 Halon-1202 (dibromodifluoromethane) CBr2F2
+20012 20012 Halon-1211 (bromochlorodifluoromethane) CBrClF2
+20013 20013 Halon-1301 (bromotrifluoromethane) CBrF3
+20014 20014 Halon-2402 (1,2-dibromo-1,1,2,2-tetrafluoroethane) BrF2C-CBrF2
+20015 20015 HCC-40 (methyl chloride) CH3Cl
+20016 20016 HCC-10 (carbon tetrachloride) CCl4
+20017 20017 HCC-140a (1,1,1-trichloroethane) Cl3C-CH3
+20018 20018 HBC-40B1 (methyl bromide) CH3Br
+20019 20019 HCH (hexachlorocyclohexane) all isomers C6H6Cl6
+20020 20020 alpha-HCH (alpha-hexachlorocyclohexane) both enantiomers alpha-C6H6Cl6
+20021 20021 PCB-153 (2,2',4,4',5,5'-hexachlorobiphenyl) (C6H2Cl3)2
+20022 20022 HCFC-141a (1,1-dichloro-2-fluoroethane) Cl2HC-CH2F
 # 20023-29999 Reserved
 30000 30000 Radioactive pollutant (tracer, defined by originating centre)
-# 3000-30009 Reserved
-30010 30010 Hydrogen H-3
-30011 30011 Hydrogen organic bounded H-3o
-30012 30012 Hydrogen inorganic H-3a
+# 30001-30009 Reserved
+30010 30010 Tritium (Hydrogen 3) H-3
+30011 30011 Tritium organic bounded H-3o
+30012 30012 Tritium inorganic H-3a
 30013 30013 Beryllium 7 Be-7
 30014 30014 Beryllium 10 Be-10
 30015 30015 Carbon 14 C-14
@@ -420,11 +420,11 @@
 # 30297-39999 Reserved
 40000 40000 Singlet sigma oxygen (dioxygen (sigma singlet)) O2
 40001 40001 Singlet delta oxygen (dioxygen (delta singlet)) O2
-40002 40002 Singlet excited oxygen atom O(D)
-40003 40003 Triplet ground state oxygen atom O(P)
+40002 40002 Singlet excited oxygen atom O(1D)
+40003 40003 Triplet ground state oxygen atom O(3P)
 # 40004-59999 Reserved
-60000 60000 HOx radical (OH+HO2)
-60001 60001 Total inorganic and organic peroxy radicals (HO2 + RO2) RO2
+60000 60000 HOx radical (OH+HO2) HOx
+60001 60001 Total inorganic and organic peroxy radicals (HOO + ROO) ROO
 60002 60002 Passive Ozone
 60003 60003 NOx expressed as nitrogen NOx
 60004 60004 All nitrogen oxides (NOy) expressed as nitrogen NOy
@@ -507,5 +507,6 @@
 62205 62205 Urtica (nettle) pollen
 # 62206-62299 Reserved
 62300 62300 Poaceae (grass family) pollen
-# 6230-65534 Reserved
+# 62301-62999 Reserved 
+# 63000-65534 For experimental use at local level 
 65535 65535 Missing
