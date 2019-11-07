@@ -16,6 +16,7 @@
 #include "mir/repres/gauss/reduced/Reduced.h"
 
 #include <algorithm>
+#include <cmath>
 #include <limits>
 #include <memory>
 #include <numeric>

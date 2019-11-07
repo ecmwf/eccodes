@@ -16,6 +16,7 @@
 #include "mir/repres/latlon/ReducedLL.h"
 
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 
 #include "eckit/exception/Exceptions.h"

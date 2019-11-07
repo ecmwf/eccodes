@@ -14,6 +14,7 @@
 
 #include "mir/repres/unsupported/IrregularLatlon.h"
 
+#include <cmath>
 #include <iostream>
 
 #include "eckit/exception/Exceptions.h"
