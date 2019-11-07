@@ -16,26 +16,21 @@
 #include "mir/repres/gauss/reduced/Reduced.h"
 
 #include <algorithm>
-#include <cmath>
 #include <limits>
 #include <memory>
 #include <numeric>
 #include <set>
-#include <sstream>
 
 #include "eckit/exception/Exceptions.h"
-#include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 
 #include "mir/api/MIREstimation.h"
 #include "mir/api/MIRJob.h"
-#include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
-#include "mir/util/Angles.h"
 #include "mir/util/BoundingBox.h"
-#include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/GridBox.h"
+
 
 namespace mir {
 namespace repres {

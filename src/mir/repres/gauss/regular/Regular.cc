@@ -15,17 +15,11 @@
 
 #include "mir/repres/gauss/regular/Regular.h"
 
-#include <cmath>
-#include <memory>
-
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/FloatCompare.h"
-#include "eckit/utils/MD5.h"
 
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
-#include "mir/param/MIRParametrisation.h"
-#include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 

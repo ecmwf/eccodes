@@ -13,10 +13,8 @@
 
 
 #include <sstream>
-#include <utility>
 
 #include "eckit/log/Log.h"
-#include "eckit/types/FloatCompare.h"
 
 #include "mir/util/Grib.h"
 

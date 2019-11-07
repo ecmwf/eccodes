@@ -17,7 +17,6 @@
 
 #include <iostream>
 
-#include "mir/repres/gauss/reduced/RotatedFromPL.h"
 #include "mir/util/Grib.h"
 
 
