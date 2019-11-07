@@ -188,7 +188,7 @@ typedef struct grib_multi_handle    grib_multi_handle;
 */
 typedef struct grib_context   grib_context;
 
-/*! Grib iterator, structure supporting a geographic iteration of values on a GRIB message.
+/*! Grib geoiterator, structure supporting a geographic iteration of values on a GRIB message.
     \ingroup grib_iterator
 */
 typedef struct grib_iterator  grib_iterator;
@@ -584,12 +584,12 @@ int grib_get_message_copy(const grib_handle* h, void* message,size_t *message_le
 /*! @{ */
 
 /*!
-* \brief Create a new iterator from a handle, using current geometry and values.
+* \brief Create a new geoiterator from a handle, using current geometry and values.
 *
-* \param h           : the handle from which the iterator will be created
+* \param h           : the handle from which the geoiterator will be created
 * \param flags       : flags for future use.
 * \param error       : error code
-* \return            the new iterator, NULL if no iterator can be created
+* \return            the new geoiterator, NULL if no geoiterator can be created
 */
 grib_iterator* grib_iterator_new(const grib_handle* h, unsigned long flags, int* error);
 
@@ -607,9 +607,9 @@ grib_iterator* grib_iterator_new(const grib_handle* h, unsigned long flags, int*
 int grib_get_data(const grib_handle *h, double *lats, double *lons, double *values);
 
 /**
-* Get the next value from an iterator.
+* Get the next value from a geoiterator.
 *
-* @param i           : the iterator
+* @param i           : the geoiterator
 * @param lat         : on output latitude in degree
 * @param lon         : on output longitude in degree
 * @param value       : on output value of the point
@@ -618,9 +618,9 @@ int grib_get_data(const grib_handle *h, double *lats, double *lons, double *valu
 int grib_iterator_next(grib_iterator *i, double* lat,double* lon,double* value);
 
 /**
-* Get the previous value from an iterator.
+* Get the previous value from a geoiterator.
 *
-* @param i           : the iterator
+* @param i           : the geoiterator
 * @param lat         : on output latitude in degree
 * @param lon         : on output longitude in degree
 * @param value       : on output value of the point*
@@ -629,33 +629,33 @@ int grib_iterator_next(grib_iterator *i, double* lat,double* lon,double* value);
 int grib_iterator_previous(grib_iterator *i, double* lat,double* lon,double* value);
 
 /**
-* Test procedure for values in an iterator.
+* Test procedure for values in a geoiterator.
 *
-* @param i           : the iterator
-* @return            boolean, 1 if the iterator still nave next values, 0 otherwise
+* @param i           : the geoiterator
+* @return            boolean, 1 if the geoiterator still nave next values, 0 otherwise
 */
 int grib_iterator_has_next(grib_iterator *i);
 
 /**
-* Test procedure for values in an iterator.
+* Test procedure for values in a geoiterator.
 *
-* @param i           : the iterator
+* @param i           : the geoiterator
 * @return            0 if OK, integer value on error
 */
 int grib_iterator_reset(grib_iterator *i);
 
 /**
-*  Frees an iterator from memory
+*  Frees a geoiterator from memory
 *
-* @param i           : the iterator
+* @param i           : the geoiterator
 * @return            0 if OK, integer value on error
 */
 int grib_iterator_delete(grib_iterator *i);
 
 /*!
-* \brief Create a new nearest from a handle, using current geometry .
+* \brief Create a new nearest neighbour object from a handle, using current geometry.
 *
-* \param h           : the handle from which the iterator will be created
+* \param h           : the handle from which the nearest object will be created
 * \param error       : error code
 * \return            the new nearest, NULL if no nearest can be created
 */
