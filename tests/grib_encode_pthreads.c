@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <pthread.h>
-#include <string.h>
 #include <assert.h>
 #include "grib_api.h"
 

@@ -9,7 +9,6 @@
  */
 
 #include "eccodes.h"
-#include <assert.h>
 
 static const char* not_found = "not_found";
 
@@ -38,7 +37,7 @@ int main(int argc, char* argv[])
     char *filename, *keys;
     int i, err = 0;
     int num_messages = 0;
-    codes_bufr_header* headers = NULL;
+    codes_bufr_header* header_array = NULL;
     codes_context* c = codes_context_get_default();
 
     if (argc != 3) return 1;
@@ -46,11 +45,11 @@ int main(int argc, char* argv[])
     keys = argv[1]; /* comma-separated like bufr_ls/bufr_get */
     filename = argv[2];
 
-    err = codes_bufr_extract_headers_malloc(c, filename, &headers, &num_messages);
+    err = codes_bufr_extract_headers_malloc(c, filename, &header_array, &num_messages);
     if (err) return 1;
 
     for (i=0; i < num_messages; ++i) {
-        codes_bufr_header bh = headers[i];
+        codes_bufr_header bh = header_array[i];
         /*
          * Mimic the behaviour of bufr_get -f -p keys for testing
          */
@@ -113,7 +112,7 @@ int main(int argc, char* argv[])
         printf("\n");
     }
 
-    free(headers);
+    free(header_array);
 
     return 0;
 }
