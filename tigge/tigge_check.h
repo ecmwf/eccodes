@@ -4008,8 +4008,6 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"parameterNumber", GRIB_TYPE_LONG, 2},
 
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
-         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
-         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
 
          {NULL, },
       },
@@ -4030,8 +4028,6 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"parameterNumber", GRIB_TYPE_LONG, 3},
 
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
-         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
-         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
 
          {NULL, },
       },
