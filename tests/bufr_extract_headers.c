@@ -46,7 +46,10 @@ int main(int argc, char* argv[])
     filename = argv[2];
 
     err = codes_bufr_extract_headers_malloc(c, filename, &header_array, &num_messages);
-    if (err) return 1;
+    if (err) {
+        printf("ERROR: %s\n",grib_get_error_message(err));
+        return 1;
+    }
 
     for (i=0; i < num_messages; ++i) {
         codes_bufr_header bh = header_array[i];
