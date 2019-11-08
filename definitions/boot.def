@@ -64,7 +64,7 @@ if(kindOfProduct == `GRIB`){
  template      GRIB "grib[GRIBEditionNumber:l]/boot.def" ;
 }
 
-if(kindOfProduct == `BUDG`){
+if(kindOfProduct == `BUDG` || kindOfProduct == `DIAG`){
  template      BUDG "budg/boot.def" ;
 }
 
