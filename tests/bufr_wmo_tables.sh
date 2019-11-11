@@ -17,7 +17,7 @@ label="bufr_wmo_tables_test"
 fTmp=${label}".tmp.bufr"
 
 #==============================================
-# Testing latest WMO tables 
+# Testing latest WMO tables
 #==============================================
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 REDIRECT=/dev/null
@@ -37,7 +37,7 @@ blacklist=$blacklist",centre,subCentre,generatingApplication"
 for file in ${bufr_files}
 do
   input=${data_dir}/bufr/$file
-  mtv=`${tools_dir}/bufr_get -p masterTablesVersionNumber $input`
+  mtv=`${tools_dir}/bufr_get -wcount=1 -p masterTablesVersionNumber $input`
   # Must exclude old versions (before 14):
   #   1. Sequence 312060 changed content from v15 to v16:
   #      021062 backscatter became 021088 wetBackscatter!
