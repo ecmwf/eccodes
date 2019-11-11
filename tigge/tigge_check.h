@@ -929,30 +929,6 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
       {&point_in_time, &given_thickness, &has_bitmap},
    },
 
-   {
-      "maximum_wind_gust.glob",
-      0,
-      10,
-      0,
-      100,
-      {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
-
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 2},
-         {"parameterNumber", GRIB_TYPE_LONG, 22},
-
-         {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 2},
-
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 103},
-         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
-         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 10},
-
- /*      {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 255}, */
-         {NULL, },
-      },
-      {&three_hourly, &given_level},
-   },
 
 /* 
    cosmoleps-arpasimc-eu 20140323, 12UTC, prod: tigge_lam.vmax_10m.9999.grib2, field 11 [maximum_wind_gust.lam]: maximum_wind_gust.lam maximum value 106.861 is not in [0,100] 
@@ -995,7 +971,7 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
 */
 
    {
-      "maximum_wind_gust.lam",
+      "maximum_wind_gust.lam.mogreps",
       0,
       20,
       0,
@@ -2918,19 +2894,22 @@ uerra/egrr (something like ad hoc 1 grid-point issue (similarly grid-point storm
       {&point_in_time, &given_level},
    },
    {
-      "10_metre_wind_gust",
+      "10_metre_wind_gust_since_pp",
       0.001,
       10,
       10,
       150,
       {
          {"paramId", GRIB_TYPE_LONG, 49},
+
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 2},
          {"parameterNumber", GRIB_TYPE_LONG, 22},
+
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 103},
          {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
          {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 10},
+
          {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 2},
          {NULL, },
       },
