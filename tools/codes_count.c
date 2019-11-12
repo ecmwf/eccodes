@@ -9,7 +9,9 @@
  */
 
 #include "grib_api_internal.h"
+
 static int fail_on_error = 1;
+static const char* tool_name = NULL;
 
 static void usage(const char* prog)
 {
@@ -64,6 +66,18 @@ static int count_messages(FILE* in, int message_type, unsigned long *count)
     return err;
 }
 
+static int is_a_directory(const char* filename)
+{
+    struct stat s;
+    int stat_val = stat(filename, &s);
+    if ( stat_val == 0 ) {
+        if (S_ISDIR(s.st_mode)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int main(int argc,char* argv[])
 {
     FILE* infh = NULL;
@@ -73,11 +87,12 @@ int main(int argc,char* argv[])
     unsigned long count_total=0, count_curr=0;
     int message_type = 0; /* GRIB, BUFR etc */
 
-    if (argc <2) usage(argv[0]);
-    
-    if (strstr(argv[0], "grib_count")) message_type = CODES_GRIB;
-    if (strstr(argv[0], "bufr_count")) message_type = CODES_BUFR;
-    if (strstr(argv[0], "gts_count"))  message_type = CODES_GTS;
+    tool_name = argv[0];
+    if (argc <2) usage(tool_name);
+
+    if (strstr(tool_name, "grib_count")) message_type = CODES_GRIB;
+    if (strstr(tool_name, "bufr_count")) message_type = CODES_BUFR;
+    if (strstr(tool_name, "gts_count"))  message_type = CODES_GTS;
 
     count_total=0;
     for (i=1;i<argc;i++) {
@@ -90,6 +105,11 @@ int main(int argc,char* argv[])
             continue;
         }
         filename=argv[i];
+        if (is_a_directory(filename)) {
+            fprintf(stderr, "%s: ERROR: \"%s\": Is a directory\n", tool_name, filename);
+            continue;
+        }
+
         if (strcmp(filename,"-")==0)
             infh=stdin;
         else
