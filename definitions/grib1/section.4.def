@@ -1,6 +1,5 @@
-# START grib1::section
-# SECTION 4, Binary data section
-#  Length of section
+# GRIB1 SECTION 4, Binary data section
+# Length of section
 position offsetSection4;
 
 # Due to a trick done by GRIBEX to support large GRIBs, we need a special treatment
@@ -125,9 +124,8 @@ alias ls.packingType=packingType;
 alias typeOfPacking=packingType;
 
 if( binaryScaleFactor == -32767) {
-
-unsigned[1] bitsPerValue : dump ;
-alias numberOfBitsContainingEachPackedValue = bitsPerValue;
+  unsigned[1] bitsPerValue : dump ;
+  alias numberOfBitsContainingEachPackedValue = bitsPerValue;
 
   constant dataRepresentationTemplateNumber = 0;
   constant bitMapIndicator = 0;
@@ -148,8 +146,8 @@ alias numberOfBitsContainingEachPackedValue = bitsPerValue;
         decimalScaleFactor,
         optimizeScaleFactor,
         halfByte,
-		packingType,
-		grid_ieee,precision,
+        packingType,
+        grid_ieee,precision,
         missingValue,
         numberOfPoints,
         bitmap
@@ -169,7 +167,7 @@ if (bitmapPresent==1) {
 }
 
 _if (sphericalHarmonics) {
-	alias numberOfEffectiveValues=numberOfValues;
+  alias numberOfEffectiveValues=numberOfValues;
 }
 
 meta changeDecimalPrecision decimal_precision(bitsPerValue,decimalScaleFactor,changingPrecision,values)  : edition_specific;
@@ -220,7 +218,6 @@ concept gridType {
 "regular_stretched_gg"         = { dataRepresentationType = 24; sphericalHarmonics = 0; PLPresent=0; } # = stretched_gg
 "regular_stretched_rotated_gg" = { dataRepresentationType = 34; sphericalHarmonics = 0; PLPresent=0; } # = stretched_rotated_gg
 
-
   "sh"                   = {dataRepresentationType = 50; sphericalHarmonics = 1; PLPresent=0; }
   "rotated_sh"           = {dataRepresentationType = 60; sphericalHarmonics = 1; PLPresent=0; }
   "stretched_sh"         = {dataRepresentationType = 70; sphericalHarmonics = 1; PLPresent=0; }
@@ -237,7 +234,7 @@ alias typeOfGrid=gridType;
 meta getNumberOfValues size(values) : edition_specific,dump ;
 
 if (complexPacking==0 || sphericalHarmonics==1) {
-	padtoeven padding_sec4_1(offsetSection4,section4Length) ;
+  padtoeven padding_sec4_1(offsetSection4,section4Length) ;
 }
 
 meta md5Section4 md5(offsetSection4,section4Length);
