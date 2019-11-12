@@ -1567,7 +1567,6 @@ typedef struct codes_bufr_header {
 
     /* Section 0 keys */
     long edition;
-    unsigned long totalLength;
 
     /* Section 1 keys */
     long masterTableNumber;
@@ -1578,18 +1577,19 @@ typedef struct codes_bufr_header {
     long dataSubCategory;
     long masterTablesVersionNumber;
     long localTablesVersionNumber;
-    long typicalYearOfCentury;
+
+    long typicalYear;
     long typicalMonth;
     long typicalDay;
     long typicalHour;
     long typicalMinute;
-
-    /* Section 1 keys: BUFR4-specific */
-    long internationalDataSubCategory;
-    long typicalYear;
     long typicalSecond;
+    long typicalDate; // computed key
+    long typicalTime; // computed key
 
-    long localSectionPresent;
+    long internationalDataSubCategory; /*BUFR4-specific*/
+
+    long ecmwfLocalSectionPresent;
 
     /* ECMWF local section keys */
     long rdbType;
