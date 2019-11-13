@@ -1122,6 +1122,23 @@ static void check_parameter(grib_handle* h,double min,double max)
     }
 }
 
+static void check_packing(grib_handle* h)
+{
+    /* ECC-1009: Warn if not using simple packing */
+    int err = 0;
+    char packingType[254] = {0,};
+    size_t len = sizeof(packingType);
+    const char* expected_packingType = "grid_simple";
+
+    err = grib_get_string(h, "packingType", packingType, &len);
+    if (err) return;
+    if (strcmp(packingType, expected_packingType)!=0) {
+        printf("warning: %s, field %d [%s]: invalid packingType %s (Should be %s)\n",
+               file, field, param, packingType, expected_packingType);
+        warning++;
+    }
+}
+
 static void verify(grib_handle* h)
 {
     double min = 0,max = 0;
@@ -1195,6 +1212,8 @@ static void verify(grib_handle* h)
     }
 
     check_parameter(h,min,max);
+
+    check_packing(h);
 
     /* Section 1 */
 
@@ -1389,6 +1408,7 @@ static void usage()
     printf("   -s: check s2s fields\n");
     printf("   -r: check s2s reforecast fields\n");
     printf("   -u: check uerra fields\n");
+    printf("   -c: check crra fields (-u must be also used in this case)\n");
     exit(1);
 }
 
