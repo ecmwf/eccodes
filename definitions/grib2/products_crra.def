@@ -39,10 +39,11 @@ alias mars.param = paramId;
 alias mars.origin = centre;
 
 if (section2Used == 1) {
-    constant marsLamModel = 'lam';
-    alias mars.model = marsLamModel;   # model redefined. It is not 'glob'
+#   constant marsLamModel = 'lam';
+#   alias mars.model = marsLamModel;   # model redefined. It is not 'glob'
     alias mars.origin = crraSuiteID;   # origin is the suiteName
     unalias mars.domain;               # No mars domain needed
+    unalias mars.model;                # No mars model needed
 }
 
 
