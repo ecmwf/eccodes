@@ -18,7 +18,6 @@
 #include <ctype.h>
 
 #include <time.h>
-#include <limits.h>
 #include <float.h>
 #include <netcdf.h>
 

@@ -13,8 +13,8 @@
  */
 
 #include "grib_api.h"
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <assert.h>
 
 #ifndef ECCODES_ON_WINDOWS
 #include <unistd.h>
@@ -48,6 +48,7 @@ int main(int argc,char* argv[]) {
     else if (argc==2) filename=argv[1];
     else usage(argv[0]);
 
+    assert(filename);
     f=fopen(filename,"r");
     if (!f) {perror(filename);exit(1);}
 

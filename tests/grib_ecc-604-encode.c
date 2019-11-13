@@ -3,7 +3,6 @@
  */
 #include <time.h>
 #include <pthread.h>
-#include <assert.h>
 #include <unistd.h>
 
 #include "grib_api.h"

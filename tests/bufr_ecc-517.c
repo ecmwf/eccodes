@@ -108,14 +108,12 @@ int main (int argc, char **argv)
     CODES_CHECK (codes_check_message_header(buffer, size, PRODUCT_BUFR), 0);
     CODES_CHECK (codes_check_message_footer(buffer, size, PRODUCT_BUFR), 0);
     if (fwrite (buffer, 1, size, fout) != size) {
+        fclose (fout);
         fprintf (stderr, "Failed to write data.\n");
         return 1;
     }
-    if (fclose (fout) != 0) {
-        fprintf (stderr, "Failed to close file handle.\n");
-        return 1;
-    }
 
+    fclose (fout);
     codes_handle_delete (h);
     free (ivalues);
     free (rvalues);

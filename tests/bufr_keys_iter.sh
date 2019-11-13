@@ -13,10 +13,16 @@
 tempOut=temp.bufr_keys_iter.$$.out
 tempRef=temp.bufr_keys_iter.$$.ref
 
-input=${data_dir}/bufr/aaen_55.bufr
+# Test: check ident key is present
+# -------------------------------------------
+input=${data_dir}/bufr/syno_multi.bufr
+$EXEC ${test_dir}/bufr_keys_iter -a $input > $tempOut
+grep -q '^ident$' $tempOut
 
-## Iterate over ALL keys and skip none
-# ------------------------------------
+
+# Test: check full output
+# -------------------------------------------
+input=${data_dir}/bufr/aaen_55.bufr
 $EXEC ${test_dir}/bufr_keys_iter -a $input > $tempOut
 
 # Check the output of BUFR keys iterator

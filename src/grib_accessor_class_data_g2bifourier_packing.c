@@ -13,7 +13,6 @@
  *******************************/
 
 #include "grib_api_internal.h"
-#include "grib_accessor_class.h"
 #include "grib_optimize_decimal_factor.h"
 #include <math.h>
 

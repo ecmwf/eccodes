@@ -8,12 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*****************************************
- *  Enrico Fucile
- ****************************************/
-
 #include "grib_api_internal.h"
-#include <ctype.h>
 
 /*
    This is used by make_class.pl
@@ -320,6 +315,7 @@ static int unpack_string (grib_accessor* a, char* buffer, size_t *len)
     }
 
     *len=rsize;
+    Assert(buffer);
     memcpy(buffer,start,rsize);
     buffer[rsize]=0;
 

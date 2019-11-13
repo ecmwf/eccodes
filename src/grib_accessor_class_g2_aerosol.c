@@ -155,9 +155,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
 
     if (self->optical)
-        *val=is_productDefinitionTemplateNumber_AerosolOptical(productDefinitionTemplateNumber);
+        *val=grib2_is_PDTN_AerosolOptical(productDefinitionTemplateNumber);
     else
-        *val=is_productDefinitionTemplateNumber_Aerosol(productDefinitionTemplateNumber);
+        *val=grib2_is_PDTN_Aerosol(productDefinitionTemplateNumber);
 
     return GRIB_SUCCESS;
 }
@@ -188,7 +188,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     ret = grib_get_string(hand, self->stepType, stepType, &slen);
     Assert(ret == GRIB_SUCCESS);
 
-    eps = is_productDefinitionTemplateNumber_EPS(productDefinitionTemplateNumber);
+    eps = grib2_is_PDTN_EPS(productDefinitionTemplateNumber);
 
     if (!strcmp(stepType,"instant")) isInstant=1;
 

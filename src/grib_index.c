@@ -255,7 +255,7 @@ static grib_index_key* grib_index_new_key(grib_context* c,grib_index_key* keys,
     return keys;
 }
 
-int grib_read_uchar( FILE* fh,unsigned char *val)
+int grib_read_uchar(FILE* fh,unsigned char *val)
 {
     if (fread(val,sizeof(unsigned char),1,fh) <1) {
         if (feof(fh)) return GRIB_END_OF_FILE;
@@ -393,9 +393,9 @@ static grib_field* grib_read_field(grib_context* c, FILE* fh, grib_file** files,
 {
     grib_field* field=NULL;
     short file_id;
-    unsigned char marker ;
-    unsigned long offset;
-    unsigned long length;
+    unsigned char marker=0;
+    unsigned long offset=0;
+    unsigned long length=0;
 
     *err = grib_read_uchar(fh,&marker);
     if(marker == NULL_MARKER) return NULL;

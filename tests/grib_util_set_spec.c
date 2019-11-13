@@ -11,7 +11,6 @@
 #include "grib_api_internal.h"
 #include "eccodes.h"
 #include <assert.h>
-#include <float.h>
 
 #define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 

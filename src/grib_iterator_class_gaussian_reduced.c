@@ -14,7 +14,6 @@
 
 
 #include "grib_api_internal.h"
-#include <float.h>
 #include <math.h>
 
 /*

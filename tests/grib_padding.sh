@@ -28,6 +28,7 @@ localDefinitions=`find ${def_dir}/grib1/ -name 'local.98.*def' | sed -e 's:.*/::
                 awk 'BEGIN {FS=".";} {print $3;}' |\
                 grep -v def |\
                 sed '/245/d' |\
+                sed '/12/d' |\
                 sed '/244/d' |\
                 sed '/192/d' |\
                 xargs`

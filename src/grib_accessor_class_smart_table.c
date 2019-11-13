@@ -338,7 +338,7 @@ static int grib_load_smart_table(grib_context* c,const char* filename,
     while(fgets(line,sizeof(line)-1,f))
     {
         char* s=line;
-        char* p=line;
+        char* p;
 
         line[strlen(line)-1]=0;
 

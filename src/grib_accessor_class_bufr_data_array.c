@@ -406,7 +406,7 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
     self->set_to_missing_if_out_of_range = 0; /* By default fail if out of range */
 
     a->length=0;
-    self->bitsToEndData=get_length(a)*8;
+    self->bitsToEndData = get_length(a)*8;
     self->unpackMode=CODES_BUFR_UNPACK_STRUCTURE;
 
     /* Assert(a->length>=0); */
@@ -426,7 +426,7 @@ static void clean_string(char* s,int len)
 
 static int check_end_data(grib_context* c,grib_accessor_bufr_data_array* self,int size)
 {
-    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tbitsToEndData=%ld elementSize=%ld", self->bitsToEndData,size);
+    grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tbitsToEndData=%d elementSize=%d", self->bitsToEndData,size);
     self->bitsToEndData-=size;
     if (self->bitsToEndData<0)
         return GRIB_DECODING_ERROR;

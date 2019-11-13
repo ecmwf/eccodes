@@ -16530,18 +16530,6 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 130 ;
 	}
-#Eastward sea water velocity
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 131 ;
-	}
-#Northward sea water velocity
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 132 ;
-	}
 #Upward sea water velocity
 'm s**-1' = {
 	 discipline = 192 ;
@@ -16613,12 +16601,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 144 ;
-	}
-#Sea surface height
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 145 ;
 	}
 #Sea level previous timestep
 'm' = {
@@ -19397,12 +19379,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 174 ;
 	 parameterNumber = 95 ;
-	}
-#Sea-ice thickness
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 98 ;
 	}
 #Liquid water potential temperature
 'K' = {

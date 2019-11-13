@@ -27,7 +27,6 @@
 #include <sys/types.h>
 
 #ifndef ECCODES_ON_WINDOWS
-  #include <dirent.h>
   #include <unistd.h>
 #else
   #include <direct.h>
