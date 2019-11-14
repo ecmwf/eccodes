@@ -313,6 +313,8 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     long nbits_localTablesVersionNumber = 1*8;
     long pos_localTablesVersionNumber   = 19*8;
 
+    const long typicalCentury = 21; /* This century */
+    long typicalYearOfCentury = 0;
     long nbits_typicalYearOfCentury = 1*8;
     long pos_typicalYearOfCentury   = 20*8;
 
@@ -353,11 +355,15 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     hdr->masterTablesVersionNumber = (long)grib_decode_unsigned_long(
         message, &pos_masterTablesVersionNumber, nbits_masterTablesVersionNumber);
     hdr->localTablesVersionNumber = (long)grib_decode_unsigned_long(message, &pos_localTablesVersionNumber, nbits_localTablesVersionNumber);
-    hdr->typicalYearOfCentury = (long)grib_decode_unsigned_long(message, &pos_typicalYearOfCentury, nbits_typicalYearOfCentury);
+    typicalYearOfCentury = (long)grib_decode_unsigned_long(message, &pos_typicalYearOfCentury, nbits_typicalYearOfCentury);
+    hdr->typicalYear = (typicalCentury - 1) * 100  + typicalYearOfCentury;
     hdr->typicalMonth  = (long)grib_decode_unsigned_long(message, &pos_typicalMonth, nbits_typicalMonth);
     hdr->typicalDay    = (long)grib_decode_unsigned_long(message, &pos_typicalDay, nbits_typicalDay);
     hdr->typicalHour   = (long)grib_decode_unsigned_long(message, &pos_typicalHour, nbits_typicalHour);
     hdr->typicalMinute = (long)grib_decode_unsigned_long(message, &pos_typicalMinute, nbits_typicalMinute);
+    hdr->typicalSecond = 0;
+    hdr->typicalDate = hdr->typicalYear * 10000 + hdr->typicalMonth * 100 + hdr->typicalDay;
+    hdr->typicalTime = hdr->typicalHour * 10000 + hdr->typicalMinute * 100 + hdr->typicalSecond;
 
     offset_section2 = BUFR_SECTION0_LEN + section1Length;  /*bytes*/
     section2Length = 0;
@@ -434,6 +440,7 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     long nbits_localTablesVersionNumber = 1*8;
     long pos_localTablesVersionNumber   = 22*8;
 
+    long typicalYear2 = 0; /* corrected */
     long nbits_typicalYear = 2*8;
     long pos_typicalYear   = 23*8;
 
@@ -477,12 +484,16 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     hdr->dataSubCategory     = (long)grib_decode_unsigned_long(message, &pos_dataSubCategory, nbits_dataSubCategory);
     hdr->masterTablesVersionNumber = (long)grib_decode_unsigned_long(message, &pos_masterTablesVersionNumber, nbits_masterTablesVersionNumber);
     hdr->localTablesVersionNumber = (long)grib_decode_unsigned_long(message, &pos_localTablesVersionNumber, nbits_localTablesVersionNumber);
+
     hdr->typicalYear   = (long)grib_decode_unsigned_long(message, &pos_typicalYear, nbits_typicalYear);
+    typicalYear2 = hdr->typicalYear < 100 ? 2000 + hdr->typicalYear : hdr->typicalYear; /*ECC-556*/
     hdr->typicalMonth  = (long)grib_decode_unsigned_long(message, &pos_typicalMonth, nbits_typicalMonth);
     hdr->typicalDay    = (long)grib_decode_unsigned_long(message, &pos_typicalDay, nbits_typicalDay);
     hdr->typicalHour   = (long)grib_decode_unsigned_long(message, &pos_typicalHour, nbits_typicalHour);
     hdr->typicalMinute = (long)grib_decode_unsigned_long(message, &pos_typicalMinute, nbits_typicalMinute);
     hdr->typicalSecond = (long)grib_decode_unsigned_long(message, &pos_typicalSecond, nbits_typicalSecond);
+    hdr->typicalDate = typicalYear2 * 10000 + hdr->typicalMonth * 100 + hdr->typicalDay;
+    hdr->typicalTime = hdr->typicalHour * 10000 + hdr->typicalMinute * 100 + hdr->typicalSecond;
 
     offset_section2 = BUFR_SECTION0_LEN + section1Length;  /*bytes*/
     section2Length = 0;
@@ -537,6 +548,35 @@ static int bufr_decode_header(grib_context* c, const void* message, off_t offset
     return err;
 }
 
+static int count_bufr_messages(grib_context* c, FILE* f, int* n)
+{
+    int err=0;
+    void* mesg=NULL;
+    size_t size=0;
+    off_t offset=0;
+    int done = 0;
+
+    *n = 0;
+    if (!c) c=grib_context_get_default();
+
+    while(!done) {
+        mesg = wmo_read_bufr_from_file_malloc(f, 0, &size, &offset, &err);
+        /*printf("Count so far=%ld, mesg=%x, err=%d (%s)\n", *count, mesg, err, grib_get_error_message(err));*/
+        if (!mesg) {
+            if (err == GRIB_END_OF_FILE || err == GRIB_PREMATURE_END_OF_FILE) {
+                done = 1; /* reached the end */
+            }
+        }
+        if (mesg && !err) {
+            grib_context_free(c,mesg);
+            (*n)++;
+        }
+    }
+    rewind(f);
+    if (err==GRIB_END_OF_FILE) err=GRIB_SUCCESS;
+    return err;
+}
+
 int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages)
 {
     int err = 0, i = 0;
@@ -552,13 +592,18 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
         perror(filename);
         return GRIB_IO_PROBLEM;
     }
-    err = grib_count_in_file(c, fp, num_messages);
+    err = count_bufr_messages(c, fp, num_messages);
     if (err) {
+        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to count BUFR messages in file \"%s\"", filename);
         fclose(fp);
         return err;
     }
 
     size = *num_messages;
+    if (size == 0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: No BUFR messages in file \"%s\"", filename);
+        return GRIB_INVALID_MESSAGE;
+    }
     *result = (codes_bufr_header*)calloc(size, sizeof(codes_bufr_header));
     if (!*result) {
         fclose(fp);
@@ -574,6 +619,12 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
                 return err2;
             }
             grib_context_free(c, mesg);
+        }
+        if (!mesg) {
+            if (err != GRIB_END_OF_FILE && err != GRIB_PREMATURE_END_OF_FILE) {
+                /* An error occurred */
+                grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to read BUFR message");
+            }
         }
     }
 

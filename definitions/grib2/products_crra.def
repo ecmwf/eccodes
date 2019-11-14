@@ -39,12 +39,10 @@ alias mars.param = paramId;
 alias mars.origin = centre;
 
 if (section2Used == 1) {
-    constant marsLamModel = 'lam';
-    alias mars.model = marsLamModel;   # model redefined. It is not 'glob'
-    alias mars.origin = crraSuiteID;   # origin is the suiteName
-    unalias mars.domain;               # No mars domain needed
+    alias mars.origin = crraSuiteID; # origin is the suiteName
+    unalias mars.domain;
+    unalias mars.model;
 }
-
 
 # See GRIB-911 re typeOfProcessedData values in UERRA
 concept marsType {

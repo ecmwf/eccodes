@@ -20,7 +20,7 @@ unsigned[1] localTablesVersionNumber : dump;
 transient typicalCentury=21;
 
 unsigned[1] typicalYearOfCentury : dump;
-transient typicalYear = (typicalCentury - 1 )  *100  + typicalYearOfCentury  : no_copy;
+transient typicalYear = (typicalCentury - 1) * 100 + typicalYearOfCentury : no_copy;
 
 unsigned[1] typicalMonth : dump;
 unsigned[1] typicalDay : dump;
