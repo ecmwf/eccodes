@@ -30,6 +30,8 @@ latest_wmo_version=`${tools_dir}/bufr_get -p masterTablesVersionNumberLatest $sa
 
 # In version 29, some key names changed. So blacklist them
 blacklist=$blacklist",bandwidthCorrectionCoefficient1ForAtovs,bandwidthCorrectionCoefficient2ForAtovs,tovsOrAtovsProductQualifier"
+# In version 33, we changed scanLevelQualityFlags
+blacklist=$blacklist",scanLevelQualityFlags"
 
 # The units for centre also changed
 blacklist=$blacklist",centre,subCentre,generatingApplication"
