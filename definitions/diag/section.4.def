@@ -11,8 +11,6 @@ section_length[3] section4Length ;
 
 unsigned[1] reserved1=0 : hidden;
 
-if (reserved1 == 0) {
-
 flags[1] missingDataFlag 'grib1/1.table';
 
 unsigned[1] numberOfBytesPerInteger ;
@@ -43,13 +41,8 @@ if(numberOfBytesPerInteger == 2) { signed[2] integerValues[numberOfIntegers]; }
 if(numberOfBytesPerInteger == 3) { signed[3] integerValues[numberOfIntegers]; }
 if(numberOfBytesPerInteger == 4) { signed[4] integerValues[numberOfIntegers]; }
 
-charValues list(numberOfChars) {
+charValues list(numberOfCharacters) {
 	ascii[1] char;
 }
 alias charVal=charValues;
-} else {
-#TODO: decode properly these old data
-  section_padding padding;
-
-}
-
+#section_padding padding;

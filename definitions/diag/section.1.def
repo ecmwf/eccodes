@@ -98,3 +98,5 @@ meta endStepInHours   long_vector(stepRangeInHours,1) : dump;
 constant paramId = 0;
 alias parameter = paramId;
 alias ls.parameter=parameter;
+
+section_padding section1Padding : read_only;
