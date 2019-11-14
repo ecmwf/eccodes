@@ -1,0 +1,55 @@
+# Copyright 2005-2019 ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+# 
+# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+#
+
+section_length[3] section4Length ;
+
+unsigned[1] reserved1=0 : hidden;
+
+if (reserved1 == 0) {
+
+flags[1] missingDataFlag 'grib1/1.table';
+
+unsigned[1] numberOfBytesPerInteger ;
+
+unsigned[2] reserved=0 : hidden ;
+
+unsigned[3] numberOfCharacters ;
+alias numberOfChars=numberOfCharacters ;
+
+unsigned[3] numberOfFloats ;
+
+unsigned[3] numberOfIntegers ;
+alias numberOfInts=numberOfIntegers ;
+
+unsigned[3] numberOfLogicals ;
+
+unsigned[3] numberOfReservedBytes ;
+
+unsigned[4] reserved=0 : hidden;
+unsigned[4] reserved=0 : hidden;
+unsigned[1] reserved=0 : hidden;
+
+ibmfloat floatValues[numberOfFloats];
+alias floatVal=floatValues;
+
+if(numberOfBytesPerInteger == 1) { signed[1] integerValues[numberOfIntegers]; }
+if(numberOfBytesPerInteger == 2) { signed[2] integerValues[numberOfIntegers]; }
+if(numberOfBytesPerInteger == 3) { signed[3] integerValues[numberOfIntegers]; }
+if(numberOfBytesPerInteger == 4) { signed[4] integerValues[numberOfIntegers]; }
+
+charValues list(numberOfChars) {
+	ascii[1] char;
+}
+alias charVal=charValues;
+} else {
+#TODO: decode properly these old data
+  section_padding padding;
+
+}
+

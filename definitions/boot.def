@@ -64,8 +64,12 @@ if(kindOfProduct == `GRIB`){
  template      GRIB "grib[GRIBEditionNumber:l]/boot.def" ;
 }
 
-if(kindOfProduct == `BUDG` || kindOfProduct == `DIAG`){
+if(kindOfProduct == `BUDG` ){
  template      BUDG "budg/boot.def" ;
+}
+
+if(kindOfProduct == `DIAG`){
+ template      DIAG "diag/boot.def" ;
 }
 
 if(kindOfProduct == `TIDE`){
