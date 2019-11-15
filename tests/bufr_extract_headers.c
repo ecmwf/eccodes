@@ -70,13 +70,16 @@ int main(int argc, char* argv[])
         if (strstr(keys, "dataSubCategory")) printf("%ld ", bh.dataSubCategory);
         if (strstr(keys, "masterTablesVersionNumber")) printf("%ld ", bh.masterTablesVersionNumber);
         if (strstr(keys, "localTablesVersionNumber")) printf("%ld ", bh.localTablesVersionNumber);
-        if (strstr(keys, "typicalYearOfCentury")) printf("%ld ", bh.typicalYearOfCentury);
+        if (strstr(keys, "typicalYear")) printf("%ld ", bh.typicalYear);
         if (strstr(keys, "typicalMonth")) printf("%ld ", bh.typicalMonth);
         if (strstr(keys, "typicalDay")) printf("%ld ", bh.typicalDay);
         if (strstr(keys, "typicalHour")) printf("%ld ", bh.typicalHour);
         if (strstr(keys, "typicalMinute")) printf("%ld ", bh.typicalMinute);
+
+        if (strstr(keys, "typicalDate")) printf("%ld ", bh.typicalDate);
+        if (strstr(keys, "typicalTime")) printf("%ld ", bh.typicalTime);
+
         if (strstr(keys, "internationalDataSubCategory")) printf("%ld ", bh.internationalDataSubCategory);
-        if (strstr(keys, "typicalYear")) printf("%ld ", bh.typicalYear);
         if (strstr(keys, "typicalSecond")) printf("%ld ", bh.typicalSecond);
         if (strstr(keys, "localSectionPresent")) printf("%ld ", bh.ecmwfLocalSectionPresent);
 

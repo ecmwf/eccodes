@@ -313,6 +313,8 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     long nbits_localTablesVersionNumber = 1*8;
     long pos_localTablesVersionNumber   = 19*8;
 
+    const long typicalCentury = 21; /* This century */
+    long typicalYearOfCentury = 0;
     long nbits_typicalYearOfCentury = 1*8;
     long pos_typicalYearOfCentury   = 20*8;
 
@@ -353,11 +355,15 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     hdr->masterTablesVersionNumber = (long)grib_decode_unsigned_long(
         message, &pos_masterTablesVersionNumber, nbits_masterTablesVersionNumber);
     hdr->localTablesVersionNumber = (long)grib_decode_unsigned_long(message, &pos_localTablesVersionNumber, nbits_localTablesVersionNumber);
-    hdr->typicalYearOfCentury = (long)grib_decode_unsigned_long(message, &pos_typicalYearOfCentury, nbits_typicalYearOfCentury);
+    typicalYearOfCentury = (long)grib_decode_unsigned_long(message, &pos_typicalYearOfCentury, nbits_typicalYearOfCentury);
+    hdr->typicalYear = (typicalCentury - 1) * 100  + typicalYearOfCentury;
     hdr->typicalMonth  = (long)grib_decode_unsigned_long(message, &pos_typicalMonth, nbits_typicalMonth);
     hdr->typicalDay    = (long)grib_decode_unsigned_long(message, &pos_typicalDay, nbits_typicalDay);
     hdr->typicalHour   = (long)grib_decode_unsigned_long(message, &pos_typicalHour, nbits_typicalHour);
     hdr->typicalMinute = (long)grib_decode_unsigned_long(message, &pos_typicalMinute, nbits_typicalMinute);
+    hdr->typicalSecond = 0;
+    hdr->typicalDate = hdr->typicalYear * 10000 + hdr->typicalMonth * 100 + hdr->typicalDay;
+    hdr->typicalTime = hdr->typicalHour * 10000 + hdr->typicalMinute * 100 + hdr->typicalSecond;
 
     offset_section2 = BUFR_SECTION0_LEN + section1Length;  /*bytes*/
     section2Length = 0;
@@ -434,6 +440,7 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     long nbits_localTablesVersionNumber = 1*8;
     long pos_localTablesVersionNumber   = 22*8;
 
+    long typicalYear2 = 0; /* corrected */
     long nbits_typicalYear = 2*8;
     long pos_typicalYear   = 23*8;
 
@@ -477,12 +484,16 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     hdr->dataSubCategory     = (long)grib_decode_unsigned_long(message, &pos_dataSubCategory, nbits_dataSubCategory);
     hdr->masterTablesVersionNumber = (long)grib_decode_unsigned_long(message, &pos_masterTablesVersionNumber, nbits_masterTablesVersionNumber);
     hdr->localTablesVersionNumber = (long)grib_decode_unsigned_long(message, &pos_localTablesVersionNumber, nbits_localTablesVersionNumber);
+
     hdr->typicalYear   = (long)grib_decode_unsigned_long(message, &pos_typicalYear, nbits_typicalYear);
+    typicalYear2 = hdr->typicalYear < 100 ? 2000 + hdr->typicalYear : hdr->typicalYear; /*ECC-556*/
     hdr->typicalMonth  = (long)grib_decode_unsigned_long(message, &pos_typicalMonth, nbits_typicalMonth);
     hdr->typicalDay    = (long)grib_decode_unsigned_long(message, &pos_typicalDay, nbits_typicalDay);
     hdr->typicalHour   = (long)grib_decode_unsigned_long(message, &pos_typicalHour, nbits_typicalHour);
     hdr->typicalMinute = (long)grib_decode_unsigned_long(message, &pos_typicalMinute, nbits_typicalMinute);
     hdr->typicalSecond = (long)grib_decode_unsigned_long(message, &pos_typicalSecond, nbits_typicalSecond);
+    hdr->typicalDate = typicalYear2 * 10000 + hdr->typicalMonth * 100 + hdr->typicalDay;
+    hdr->typicalTime = hdr->typicalHour * 10000 + hdr->typicalMinute * 100 + hdr->typicalSecond;
 
     offset_section2 = BUFR_SECTION0_LEN + section1Length;  /*bytes*/
     section2Length = 0;
