@@ -45,7 +45,7 @@ transient forecastTime=forecastMonth - 1;
 transient typeOfTimeIncrement = 3;
 
 # Old GRIBS do not have forecast forecastMonth set. It is computed from verifyingMonth
-meta marsForecastMonth g1forecastmonth(verifyingMonth,dataDate,day,hour,forecastMonth) : read_only;
+meta marsForecastMonth g1forecastmonth(verifyingMonth,dataDate,day,hour,forecastMonth,one) : read_only;
 
 alias origin = centre;
 alias number = perturbationNumber;
