@@ -1485,7 +1485,7 @@ size_t sum_of_pl_array(const long* pl, size_t plsize);
 int compute_bufr_key_rank(grib_handle *h, grib_string_list *keys, const char *key);
 char **codes_bufr_copy_data_return_copied_keys(grib_handle *hin, grib_handle *hout, size_t *nkeys, int *err);
 int codes_bufr_copy_data(grib_handle *hin, grib_handle *hout);
-int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages);
+int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
 
 
 /* string_util.c */

@@ -39,13 +39,14 @@ int main(int argc, char* argv[])
     int num_messages = 0;
     codes_bufr_header* header_array = NULL;
     codes_context* c = codes_context_get_default();
+    const int strict_mode = 1;
 
     if (argc != 3) return 1;
 
     keys = argv[1]; /* comma-separated like bufr_ls/bufr_get */
     filename = argv[2];
 
-    err = codes_bufr_extract_headers_malloc(c, filename, &header_array, &num_messages);
+    err = codes_bufr_extract_headers_malloc(c, filename, &header_array, &num_messages, strict_mode);
     if (err) {
         printf("ERROR: %s\n",grib_get_error_message(err));
         return 1;

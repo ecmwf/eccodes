@@ -1267,9 +1267,10 @@ codes_handle *codes_grib_util_set_spec(codes_handle *h,
  * result = array of 'codes_bufr_header' structs with 'num_messages' elements.
  *          This array should be freed by the caller.
  * num_messages = number of messages found in the input file.
+ * strict = If 1 means fail if any message is invalid.
  * returns 0 if OK, integer value on error.
  */
-int codes_bufr_extract_headers_malloc(codes_context* c, const char* filename, codes_bufr_header** result, int* num_messages);
+int codes_bufr_extract_headers_malloc(codes_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
 
 /* --------------------------------------- */
 #ifdef __cplusplus

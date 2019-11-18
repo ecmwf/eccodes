@@ -548,7 +548,7 @@ static int bufr_decode_header(grib_context* c, const void* message, off_t offset
     return err;
 }
 
-static int count_bufr_messages(grib_context* c, FILE* f, int* n)
+static int count_bufr_messages(grib_context* c, FILE* f, int* n, int strict_mode)
 {
     int err=0;
     void* mesg=NULL;
@@ -567,6 +567,7 @@ static int count_bufr_messages(grib_context* c, FILE* f, int* n)
                 done = 1; /* reached the end */
                 break;
             }
+            if (strict_mode) return GRIB_DECODING_ERROR;
         }
         if (mesg && !err) {
             grib_context_free(c,mesg);
@@ -578,7 +579,7 @@ static int count_bufr_messages(grib_context* c, FILE* f, int* n)
     return err;
 }
 
-int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages)
+int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode)
 {
     int err = 0, i = 0;
     FILE* fp = NULL;
@@ -593,7 +594,7 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
         perror(filename);
         return GRIB_IO_PROBLEM;
     }
-    err = count_bufr_messages(c, fp, num_messages);
+    err = count_bufr_messages(c, fp, num_messages, strict_mode);
     if (err) {
         grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to count BUFR messages in file \"%s\"", filename);
         fclose(fp);
@@ -622,10 +623,20 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
             }
             grib_context_free(c, mesg);
         }
+        if (mesg && err) {
+            if (strict_mode) {
+                fclose(fp);
+                return GRIB_DECODING_ERROR;
+            }
+        }
         if (!mesg) {
             if (err != GRIB_END_OF_FILE && err != GRIB_PREMATURE_END_OF_FILE) {
                 /* An error occurred */
                 grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to read BUFR message");
+                if (strict_mode) {
+                    fclose(fp);
+                    return GRIB_DECODING_ERROR;
+                }
             }
         }
         ++i;
