@@ -565,12 +565,13 @@ static int count_bufr_messages(grib_context* c, FILE* f, int* n)
         if (!mesg) {
             if (err == GRIB_END_OF_FILE || err == GRIB_PREMATURE_END_OF_FILE) {
                 done = 1; /* reached the end */
+                break;
             }
         }
         if (mesg && !err) {
             grib_context_free(c,mesg);
-            (*n)++;
         }
+        (*n)++;
     }
     rewind(f);
     if (err==GRIB_END_OF_FILE) err=GRIB_SUCCESS;
@@ -611,9 +612,10 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
     }
     i = 0;
     while (err != GRIB_END_OF_FILE) {
+        if (i >= *num_messages) break;
         mesg = wmo_read_bufr_from_file_malloc(fp, 0, &size, &offset, &err);
         if (mesg != NULL && err == 0) {
-            int err2 = bufr_decode_header(c, mesg, offset, size, &(*result)[i++]);
+            int err2 = bufr_decode_header(c, mesg, offset, size, &(*result)[i]);
             if (err2) {
                 fclose(fp);
                 return err2;
@@ -626,6 +628,7 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
                 grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to read BUFR message");
             }
         }
+        ++i;
     }
 
     fclose(fp);
