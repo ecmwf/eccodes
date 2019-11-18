@@ -1585,8 +1585,8 @@ typedef struct codes_bufr_header {
     long typicalHour;
     long typicalMinute;
     long typicalSecond;
-    long typicalDate; // computed key
-    long typicalTime; // computed key
+    long typicalDate; /* computed key */
+    long typicalTime; /* computed key */
 
     long internationalDataSubCategory; /*BUFR4-specific*/
 

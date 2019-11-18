@@ -1271,6 +1271,7 @@ codes_handle *codes_grib_util_set_spec(codes_handle *h,
  * returns 0 if OK, integer value on error.
  */
 int codes_bufr_extract_headers_malloc(codes_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
+int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char *val, size_t *len);
 
 /* --------------------------------------- */
 #ifdef __cplusplus

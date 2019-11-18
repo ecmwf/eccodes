@@ -30,10 +30,17 @@ done
 
 # Multi-message BUFR
 input=${data_dir}/bufr/aeolus_wmo_26.bufr
-$EXEC ${test_dir}/bufr_extract_headers  edition,totalLength,message_offset  $input > $temp1
-${tools_dir}/bufr_get -p offset,edition,totalLength $input > $temp2
+KEYS='offset,edition,totalLength'
+$EXEC ${test_dir}/bufr_extract_headers  $KEYS  $input > $temp1
+${tools_dir}/bufr_get                -p $KEYS  $input > $temp2
 diff -w $temp1 $temp2
 
+# Test local ECMWF keys; should be "not_found"
+input=${data_dir}/bufr/synop.bufr
+KEYS='localSectionPresent,rdbType,ident,isSatellite,satelliteID'
+$EXEC ${test_dir}/bufr_extract_headers $KEYS $input > $temp1
+${tools_dir}/bufr_get            -f -p $KEYS $input > $temp2
+diff -w $temp1 $temp2
 
 # BUFRs with localLatitude1, localLongitude1, localLongitude2 etc
 bufr_files="
