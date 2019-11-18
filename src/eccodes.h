@@ -1262,7 +1262,8 @@ codes_handle *codes_grib_util_set_spec(codes_handle *h,
     size_t data_values_count,
     int *err);
 
-/* Build an array of headers from input BUFR file.
+/* EXPERIMENTAL FEATURE
+ * Build an array of headers from input BUFR file.
  * result = array of 'codes_bufr_header' structs with 'num_messages' elements.
  *          This array should be freed by the caller.
  * num_messages = number of messages found in the input file.
