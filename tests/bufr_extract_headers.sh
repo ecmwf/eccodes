@@ -35,8 +35,8 @@ $EXEC ${test_dir}/bufr_extract_headers  $KEYS  $input > $temp1
 ${tools_dir}/bufr_get                -p $KEYS  $input > $temp2
 diff -w $temp1 $temp2
 
-# Test local ECMWF keys; should be "not_found"
-input=${data_dir}/bufr/synop.bufr
+# Test local ECMWF keys; should be "not_found" for this input
+input=${data_dir}/bufr/PraticaTemp.bufr
 KEYS='localSectionPresent,rdbType,ident,isSatellite,satelliteID'
 $EXEC ${test_dir}/bufr_extract_headers $KEYS $input > $temp1
 ${tools_dir}/bufr_get            -f -p $KEYS $input > $temp2
