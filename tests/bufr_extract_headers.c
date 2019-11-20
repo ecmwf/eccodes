@@ -45,7 +45,8 @@ int main(int argc, char* argv[])
             char value[512]={0,};
             CODES_CHECK( codes_bufr_header_get_string(&header_array[i], requested_print_keys[j].name, value, &vlen), 0);
             assert(vlen > 0);
-            printf("%s ", value);
+            if (j > 0) printf(" ");
+            printf("%s", value);
         }
         printf("\n");
     }

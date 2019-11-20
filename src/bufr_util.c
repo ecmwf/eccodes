@@ -649,6 +649,56 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
     return GRIB_SUCCESS;
 }
 
+static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
+{
+    switch (centre_code) {
+        case 1: return "ammc";
+        case 4: return "rums";
+        case 7: return "kwbc";
+        case 24: return "fapr";
+        case 28: return "vabb";
+        case 29: return "dems";
+        case 34: return "rjtd";
+        case 38: return "babj";
+        case 40: return "rksl";
+        case 41: return "sabm";
+        case 46: return "sbsj";
+        case 54: return "cwao";
+        case 58: return "fnmo";
+        case 69: return "nzkl";
+        case 74: return "egrr";
+        case 78: return "edzw";
+        case 80: return "cnmc";
+        case 82: return "eswi";
+        case 84: return "lfpw";
+        case 85: return "lfpw";
+        case 86: return "efkl";
+        case 88: return "enmi";
+        case 94: return "ekmi";
+        case 98: return "ecmf";
+        case 173: return "nasa";
+        case 195: return "wiix";
+        case 204: return "niwa";
+        case 214: return "lemm";
+        case 215: return "lssw";
+        case 218: return "habp";
+        case 224: return "lowm";
+        case 227: return "ebum";
+        case 233: return "eidb";
+        case 235: return "ingv";
+        case 239: return "crfc";
+        case 244: return "vuwien";
+        case 245: return "knmi";
+        case 246: return "ifmk";
+        case 247: return "hadc";
+        case 250: return "cosmo";
+        case 252: return "mpim";
+        case 254: return "eums";
+        case 255: return "consensus";
+        default: return NULL;
+    }
+}
+
 #if 0
 /* TODO: Not efficient as it opens the code table every time */
 static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
@@ -727,14 +777,13 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char *v
     else if (strcmp(key, "masterTableNumber")==0) *len = sprintf(val, "%ld", bh->masterTableNumber);
     else if (strcmp(key, "bufrHeaderSubCentre")==0) *len = sprintf(val, "%ld", bh->bufrHeaderSubCentre);
     else if (strcmp(key, "bufrHeaderCentre")==0) *len = sprintf(val, "%ld", bh->bufrHeaderCentre);
-    
-    /*
+
     else if (strcmp(key, "centre")==0) {
         char* centre_str = codes_bufr_header_get_centre_name(bh->edition, bh->bufrHeaderCentre);
         if (centre_str) *len = sprintf(val, "%s", centre_str);
         else *len = sprintf(val, "%ld", bh->bufrHeaderCentre);
     }
-    */
+
     else if (strcmp(key, "updateSequenceNumber")==0) *len = sprintf(val, "%ld", bh->updateSequenceNumber);
     else if (strcmp(key, "dataCategory")==0) *len = sprintf(val, "%ld", bh->dataCategory);
     else if (strcmp(key, "dataSubCategory")==0) *len = sprintf(val, "%ld", bh->dataSubCategory);
