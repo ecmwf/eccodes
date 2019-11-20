@@ -23,6 +23,7 @@ int main(int argc, char* argv[])
     int requested_print_keys_count = MAX_KEYS;
     codes_values requested_print_keys[MAX_KEYS];
 
+    /* Usage: prog keys file */
     assert (argc == 3);
 
     keys = argv[1]; /* comma-separated like bufr_ls/bufr_get */
@@ -50,6 +51,9 @@ int main(int argc, char* argv[])
     }
 
     free(header_array);
+    for (i=0; i<requested_print_keys_count; ++i) {
+        free((char*)requested_print_keys[i].name);
+    }
 
     return 0;
 }

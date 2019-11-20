@@ -759,30 +759,30 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char *v
         if (!isEcmwfLocal || bh->ident == NULL || strlen(bh->ident)==0) strcpy(val, NOT_FOUND);
         else *len = sprintf(val, "%s", bh->ident);
     }
-    else if (strcmp(key, "localYear")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localYear); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "localMonth")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localMonth); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "localDay")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localDay); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "localHour")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localHour); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localYear")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localYear); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localMonth")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localMonth); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localDay")==0)    { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localDay); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localHour")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localHour); else strcpy(val, NOT_FOUND); }
     else if (strcmp(key, "localMinute")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localMinute); else strcpy(val, NOT_FOUND); }
     else if (strcmp(key, "localSecond")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localSecond); else strcpy(val, NOT_FOUND); }
     else if (strcmp(key, "rdbtimeDay")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbtimeDay); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "rdbtimeHour")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbtimeHour); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "rdbtimeMinute")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbtimeMinute); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "rdbtimeSecond")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbtimeSecond); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "rectimeDay")==0)    { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rectimeDay); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "rectimeHour")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rectimeHour); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "rectimeMinute")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rectimeMinute); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "rectimeSecond")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rectimeSecond); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "isSatellite")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->isSatellite); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "localLongitude1")==0) { if (isEcmwfLocal) *len = sprintf(val, "%g", bh->localLongitude1); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "localLatitude1")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%g", bh->localLatitude1); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "localLongitude2")==0) { if (isEcmwfLocal) *len = sprintf(val, "%g", bh->localLongitude2); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "localLatitude2")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%g", bh->localLatitude2); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "localLatitude")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%g", bh->localLatitude); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "localLongitude")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%g", bh->localLongitude); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "qualityControl")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->qualityControl); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "newSubtype")==0)     { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->newSubtype); else strcpy(val, NOT_FOUND); }
-    else if (strcmp(key, "daLoop")==0)         { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->daLoop); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rdbtimeHour")==0)     { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbtimeHour); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rdbtimeMinute")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbtimeMinute); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rdbtimeSecond")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbtimeSecond); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rectimeDay")==0)      { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rectimeDay); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rectimeHour")==0)     { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rectimeHour); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rectimeMinute")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rectimeMinute); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rectimeSecond")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rectimeSecond); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "isSatellite")==0)     { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->isSatellite); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localLongitude1")==0) { if (isEcmwfLocal) *len = sprintf(val, "%g",  bh->localLongitude1); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localLatitude1")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%g",  bh->localLatitude1); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localLongitude2")==0) { if (isEcmwfLocal) *len = sprintf(val, "%g",  bh->localLongitude2); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localLatitude2")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%g",  bh->localLatitude2); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localLatitude")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%g",  bh->localLatitude); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localLongitude")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%g",  bh->localLongitude); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "qualityControl")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->qualityControl); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "newSubtype")==0)      { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->newSubtype); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "daLoop")==0)          { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->daLoop); else strcpy(val, NOT_FOUND); }
     else if (strcmp(key, "localNumberOfObservations")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localNumberOfObservations); else strcpy(val, NOT_FOUND); }
     else if (strcmp(key, "satelliteID")==0)    { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->satelliteID); else strcpy(val, NOT_FOUND); }
 
