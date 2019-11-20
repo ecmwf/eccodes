@@ -1,66 +1,70 @@
 # Code table 4.230 - Atmospheric chemical constituent type
-0 0 Ozone
-1 1 Water vapour
-2 2 Methane
-3 3 Carbon dioxide
-4 4 Carbon monoxide
-5 5 Nitrogen dioxide
-6 6 Nitrous oxide
-7 7 Formaldehyde
-8 8 Sulphur dioxide
-9 9 Ammonia
-10 10 Ammonium
-11 11 Nitrogen monoxide
-12 12 Atomic oxygen
-13 13 Nitrate radical
-14 14 Hydroperoxyl radical
-15 15 Dinitrogen pentoxide
-16 16 Nitrous acid
-17 17 Nitric acid
-18 18 Peroxynitric acid
-19 19 Hydrogen peroxide
-20 20 Molecular hydrogen
-21 21 Atomic nitrogen
-22 22 Sulphate
-23 23 Radon
-24 24 Elemental mercury
-25 25 Divalent mercury
-26 26 Atomic chlorine
-27 27 Chlorine monoxide
-28 28 Dichlorine peroxide
-29 29 Hypochlorous acid
-30 30 Chlorine nitrate
-31 31 Chlorine dioxide
-32 32 Atomic bromine
-33 33 Bromine monoxide
-34 34 Bromine chloride
-35 35 Hydrogen bromide
-36 36 Hypobromous acid
-37 37 Bromine nitrate
-10000 10000 Hydroxyl radical
-10001 10001 Methyl peroxy radical
-10002 10002 Methyl hydroperoxide
-10004 10004 Methanol
-10005 10005 Formic acid
-10006 10006 Hydrogen cyanide
-10007 10007 Aceto nitrile
-10008 10008 Ethane
-10009 10009 Ethene (= Ethylene)
-10010 10010 Ethyne (= Acetylene)
-10011 10011 Ethanol
-10012 10012 Acetic acid
-10013 10013 Peroxyacetyl nitrate
-10014 10014 Propane
-10015 10015 Propene
-10016 10016 Butanes
-10017 10017 Isoprene
-10018 10018 Alpha pinene
-10019 10019 Beta pinene
-10020 10020 Limonene
-10021 10021 Benzene
-10022 10022 Toluene
-10023 10023 Xylene
-10500 10500 Dimethyl sulphide
+0 0 Ozone O3
+1 1 Water vapour H2O
+2 2 Methane CH4
+3 3 Carbon dioxide CO2
+4 4 Carbon monoxide CO
+5 5 Nitrogen dioxide NO2
+6 6 Nitrous oxide N2O
+7 7 Formaldehyde HCHO
+8 8 Sulphur dioxide SO2
+9 9 Ammonia NH3
+10 10 Ammonium NH4
+11 11 Nitrogen monoxide NO
+12 12 Atomic oxygen O
+13 13 Nitrate radical NO3
+14 14 Hydroperoxyl radical HO2
+15 15 Dinitrogen pentoxide N2O5
+16 16 Nitrous acid HONO
+17 17 Nitric acid HNO3
+18 18 Peroxynitric acid HO2NO2
+19 19 Hydrogen peroxide H2O2
+20 20 Molecular hydrogen H2
+21 21 Atomic nitrogen N
+22 22 Sulphate SO42-
+23 23 Radon Rn
+24 24 Elemental mercury Hg(0)
+25 25 Divalent mercury Hg2+
+26 26 Atomic chlorine Cl
+27 27 Chlorine monoxide ClO
+28 28 Dichlorine peroxide Cl2O2
+29 29 Hypochlorous acid HClO
+30 30 Chlorine nitrate ClONO2
+31 31 Chlorine dioxide ClO2
+32 32 Atomic bromine Br
+33 33 Bromine monoxide BrO
+34 34 Bromine chloride BrCl
+35 35 Hydrogen bromide HBr
+36 36 Hypobromous acid HBrO
+37 37 Bromine nitrate BrONO2
+38 38 Oxygen O2
+#39-9999 Reserved
+10000 10000 Hydroxyl radical OH
+10001 10001 Methyl peroxy radical CH3O2
+10002 10002 Methyl hydroperoxide CH3O2H
+10004 10004 Methanol CH3OH
+10005 10005 Formic acid CH3OOH
+10006 10006 Hydrogen cyanide HCN
+10007 10007 Aceto nitrile CH3CN
+10008 10008 Ethane C2H6
+10009 10009 Ethene (= Ethylene) C2H4
+10010 10010 Ethyne (= Acetylene) C2H2
+10011 10011 Ethanol C2H5OH
+10012 10012 Acetic acid C2H5OOH
+10013 10013 Peroxyacetyl nitrate CH3C(O)OONO2
+10014 10014 Propane C3H8
+10015 10015 Propene C3H6
+10016 10016 Butanes C4H10
+10017 10017 Isoprene C5H10
+10018 10018 Alpha pinene C10H16
+10019 10019 Beta pinene C10H16
+10020 10020 Limonene C10H16
+10021 10021 Benzene C6H6
+10022 10022 Toluene C7H8
+10023 10023 Xylene C8H10
+#10024-10499 Reserved for other simple organic molecules (e.g. higher aldehydes, alcohols, peroxides...)
+10500 10500 Dimethyl sulphide CH3SCH3 (DMS)
+#10501-20000 Reserved
 20001 20001 Hydrogen chloride
 20002 20002 CFC-11
 20003 20003 CFC-12
@@ -77,12 +81,14 @@
 20014 20014 Halon-2402
 20015 20015 Methyl chloride (HCC-40)
 20016 20016 Carbon tetrachloride (HCC-10)
-20017 20017 HCC-140a
+20017 20017 HCC-140a CH3CCl3
 20018 20018 Methyl bromide (HBC-40B1)
 20019 20019 Hexachlorocyclohexane (HCH)
 20020 20020 Alpha hexachlorocyclohexane
 20021 20021 Hexachlorobiphenyl (PCB-153)
+#20022-29999 Reserved
 30000 30000 Radioactive pollutant (tracer, defined by originating centre)
+#30001-30009 Reserved
 30010 30010 Hydrogen H-3
 30011 30011 Hydrogen organic bounded H-3o
 30012 30012 Hydrogen inorganic H-3a
@@ -97,13 +103,13 @@
 30021 30021 Sodium 22 Na-22
 30022 30022 Phosphate 32 P-32
 30023 30023 Phosphate 33 P-33
-30024 30024 Sulfur 35 S-35
+30024 30024 Sulphur 35 S-35
 30025 30025 Chlorine 36 Cl-36
 30026 30026 Potassium 40 K-40
 30027 30027 Argon 41 Ar-41
 30028 30028 Calcium 41 Ca-41
 30029 30029 Calcium 45 Ca-45
-30030 30030 Titanium 44
+30030 30030 Titanium 44 Ti-44
 30031 30031 Scandium 46 Sc-46
 30032 30032 Vanadium 48 V-48
 30033 30033 Vanadium 49 V-49
@@ -368,6 +374,7 @@
 30292 30292 Sum noble gas SumNG
 30293 30293 Activation gas ActGas
 30294 30294 Cs-137 Equivalent EquCs137
+#30295-59999 Reserved
 60000 60000 HOx radical (OH+HO2)
 60001 60001 Total inorganic and organic peroxy radicals (HO2 + RO2)
 60002 60002 Passive Ozone
@@ -385,6 +392,8 @@
 60014 60014 Anthropogenic non-methane volatile organic compounds expressed as carbon
 60015 60015 Biogenic non-methane volatile organic compounds expressed as carbon
 60016 60016 Lumped oxygenated hydrocarbons
+60017 60017 NOx expressed as nitrogen dioxide (NO2)
+#60018-61999 Reserved
 62000 62000 Total aerosol
 62001 62001 Dust dry
 62002 62002 Water in ambient
@@ -404,4 +413,37 @@
 62016 62016 Particulate organic matter hydrophobic dry
 62017 62017 Nitrate hydrophilic dry
 62018 62018 Nitrate hydrophobic dry
+#62019 Reserved
+62020 62020 Smoke - high absorption
+62021 62021 Smoke - low absorption
+62022 62022 Aerosol - high absorption
+62023 62023 Aerosol - low absorption
+62025 62025 Volcanic ash
+62026 62026 Particulate matter (PM)
+# 62027-62099 Reserved
+62100 62100 Alnus (Alder) pollen
+62101 62101 Betula (Birch) pollen
+62102 62102 Castanea (Chestnut) pollen
+62103 62103 Carpinus (Hornbeam) pollen
+62104 62104 Corylus (Hazel) pollen
+62105 62105 Fagus (Beech) pollen
+62106 62106 Fraxinus (Ash) pollen
+62107 62107 Pinus (Pine) pollen
+62108 62108 Platanus (Plane) pollen
+62109 62109 Populus (Cottonwood, Poplar) pollen
+62110 62110 Quercus (Oak) pollen
+62111 62111 Salix (Willow) pollen
+62112 62112 Taxus (Yew) pollen
+62113 62113 Tilia (Lime, Linden) pollen
+62114 62114 Ulmus (Elm) pollen
+# 62115-62199 Reserved
+62200 62200 Ambrosia (Ragweed, Burr-ragweed ) pollen
+62201 62201 Artemisia (Sagebrush, Wormwood, Mugwort) pollen
+62202 62202 Brassica (Rape, Broccoli, Brussels Sprouts, Cabbage, Cauliflower, Collards, Kale, Kohlrabi, Mustard, Rutabaga) pollen
+62203 62203 Plantago (Plantain) pollen
+62204 62204 Rumex (Dock, Sorrel) pollen
+62205 62205 Urtica (Nettle) pollen
+# 62206-62299 Reserved 
+62300 62300 Poaceae (Grass family) pollen
+# 62301-65534 Reserved
 65535 65535 Missing
