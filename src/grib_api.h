@@ -1596,6 +1596,7 @@ typedef struct codes_bufr_header {
     /* ECMWF local section keys */
     long rdbType;
     long oldSubtype;
+    long rdbSubtype;
     char ident[9];
     long localYear;
     long localMonth;

@@ -60,6 +60,23 @@ r=`${test_dir}/bufr_extract_headers centre ${data_dir}/bufr/PraticaTemp.bufr`
 r=`${test_dir}/bufr_extract_headers centre ${data_dir}/bufr/israel_observations_2017041010.bufr`
 [ "$r" = "234" ]
 
+
+# Test rdbSubtype
+# ---------------
+fBufr3Input=$ECCODES_SAMPLES_PATH/BUFR3_local.tmpl
+fBufr4Input=$ECCODES_SAMPLES_PATH/BUFR4_local.tmpl
+inputs="$fBufr3Input $fBufr4Input"
+for fin in $inputs; do
+  ${tools_dir}/bufr_set -s oldSubtype=2,newSubtype=300 $fin $temp1
+  r=`${test_dir}/bufr_extract_headers rdbSubtype,oldSubtype,newSubtype $temp1`
+  [ "$r" = "2 2 300" ]
+
+  ${tools_dir}/bufr_set -s oldSubtype=255,newSubtype=300 $fin $temp1
+  res=`${test_dir}/bufr_extract_headers rdbSubtype,oldSubtype,newSubtype $temp1`
+  [ "$res" = "300 255 300" ]
+done
+
+
 # Test all BUFR files
 # ---------------------
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`

@@ -192,6 +192,7 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
     hdr->qualityControl = (long)grib_decode_unsigned_long(message, &pos_qualityControl, nbits_qualityControl);
     hdr->newSubtype     = (long)grib_decode_unsigned_long(message, &pos_newSubtype, nbits_newSubtype);
     hdr->daLoop         = (long)grib_decode_unsigned_long(message, &pos_daLoop, nbits_daLoop);
+    hdr->rdbSubtype = (hdr->oldSubtype < 255) ? hdr->oldSubtype : hdr->newSubtype;
 
     return GRIB_SUCCESS;
 }
@@ -219,7 +220,7 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
     } else {
         hdr->isSatellite = 0;
     }
-    
+
     if (hdr->isSatellite) {
         unsigned char* pKeyMoreLong = (unsigned char*)message + offset_keyMore; /* as an integer */
         unsigned char* pKeySat      = (unsigned char*)message + offset_keySat;
@@ -236,7 +237,7 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
         start = 32;
         lValue = (long)grib_decode_unsigned_long(pKeyMoreLong, &start, 25);
         hdr->localLatitude2  = (lValue - 9000000)/100000.0;
-        
+
         if (hdr->oldSubtype == 255 || hdr->numberOfSubsets > 255 ||
             (hdr->oldSubtype >= 121 && hdr->oldSubtype <= 130)   ||
             hdr->oldSubtype==31)
@@ -353,7 +354,7 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     hdr->dataCategory        = (long)grib_decode_unsigned_long(message, &pos_dataCategory, nbits_dataCategory);
     hdr->dataSubCategory     = (long)grib_decode_unsigned_long(message, &pos_dataSubCategory, nbits_dataSubCategory);
     hdr->masterTablesVersionNumber = (long)grib_decode_unsigned_long(
-        message, &pos_masterTablesVersionNumber, nbits_masterTablesVersionNumber);
+            message, &pos_masterTablesVersionNumber, nbits_masterTablesVersionNumber);
     hdr->localTablesVersionNumber = (long)grib_decode_unsigned_long(message, &pos_localTablesVersionNumber, nbits_localTablesVersionNumber);
     typicalYearOfCentury = (long)grib_decode_unsigned_long(message, &pos_typicalYearOfCentury, nbits_typicalYearOfCentury);
     hdr->typicalYear = (typicalCentury - 1) * 100  + typicalYearOfCentury;
@@ -831,6 +832,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char *v
     else if (strcmp(key, "localLongitude")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%g",  bh->localLongitude); else strcpy(val, NOT_FOUND); }
     else if (strcmp(key, "qualityControl")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->qualityControl); else strcpy(val, NOT_FOUND); }
     else if (strcmp(key, "newSubtype")==0)      { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->newSubtype); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rdbSubtype")==0)      { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbSubtype); else strcpy(val, NOT_FOUND); }
     else if (strcmp(key, "daLoop")==0)          { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->daLoop); else strcpy(val, NOT_FOUND); }
     else if (strcmp(key, "localNumberOfObservations")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localNumberOfObservations); else strcpy(val, NOT_FOUND); }
     else if (strcmp(key, "satelliteID")==0)    { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->satelliteID); else strcpy(val, NOT_FOUND); }
