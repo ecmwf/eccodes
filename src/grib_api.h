@@ -1590,6 +1590,7 @@ typedef struct codes_bufr_header {
 
     long internationalDataSubCategory; /*BUFR4-specific*/
 
+    long localSectionPresent;
     long ecmwfLocalSectionPresent;
 
     /* ECMWF local section keys */

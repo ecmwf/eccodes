@@ -367,8 +367,8 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
 
     offset_section2 = BUFR_SECTION0_LEN + section1Length;  /*bytes*/
     section2Length = 0;
-    hdr->ecmwfLocalSectionPresent = (section1Flags != 0);
-    if (hdr->ecmwfLocalSectionPresent) {
+    hdr->localSectionPresent = (section1Flags != 0);
+    if (hdr->localSectionPresent) {
         long pos_section2Length;
         const long nbits_section2Length = 3*8;
         pos_section2Length = offset_section2*8;
@@ -376,6 +376,7 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
         section2Length = grib_decode_unsigned_long(message, &pos_section2Length, nbits_section2Length);
 
         if (hdr->bufrHeaderCentre == 98) {
+            hdr->ecmwfLocalSectionPresent = 1;
             err = bufr_decode_rdb_keys(message, offset_section2, hdr);
         }
     }
@@ -497,8 +498,8 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
 
     offset_section2 = BUFR_SECTION0_LEN + section1Length;  /*bytes*/
     section2Length = 0;
-    hdr->ecmwfLocalSectionPresent = (section1Flags != 0);
-    if (hdr->ecmwfLocalSectionPresent) {
+    hdr->localSectionPresent = (section1Flags != 0);
+    if (hdr->localSectionPresent) {
         long pos_section2Length;
         const long nbits_section2Length = 3*8;
         pos_section2Length = offset_section2*8;
@@ -506,6 +507,7 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
         section2Length = grib_decode_unsigned_long(message, &pos_section2Length, nbits_section2Length);
 
         if (hdr->bufrHeaderCentre == 98) {
+            hdr->ecmwfLocalSectionPresent = 1;
             err = bufr_decode_rdb_keys(message, offset_section2, hdr);
         }
     }
@@ -713,7 +715,9 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char *v
     Assert(key);
     *len = strlen(NOT_FOUND); /*By default*/
 
-    isEcmwfLocal = (bh->ecmwfLocalSectionPresent == 1 && bh->bufrHeaderCentre == 98);
+    isEcmwfLocal = (bh->ecmwfLocalSectionPresent == 1);
+    Assert( !(isEcmwfLocal && bh->bufrHeaderCentre != 98)  );
+    Assert( !(bh->ecmwfLocalSectionPresent && !bh->localSectionPresent)  );
 
     if      (strcmp(key, "message_offset")==0) *len = sprintf(val, "%lu", bh->message_offset);
     else if (strcmp(key, "offset")==0) *len = sprintf(val, "%lu", bh->message_offset);
@@ -745,7 +749,8 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char *v
     else if (strcmp(key, "typicalDate")==0) *len = sprintf(val, "%06ld", bh->typicalDate);
     else if (strcmp(key, "typicalTime")==0) *len = sprintf(val, "%06ld", bh->typicalTime);
     else if (strcmp(key, "internationalDataSubCategory")==0) *len = sprintf(val, "%ld", bh->internationalDataSubCategory);
-    else if (strcmp(key, "localSectionPresent")==0) *len = sprintf(val, "%ld", bh->ecmwfLocalSectionPresent);
+    else if (strcmp(key, "localSectionPresent")==0) *len = sprintf(val, "%ld", bh->localSectionPresent);
+    else if (strcmp(key, "ecmwfLocalSectionPresent")==0) *len = sprintf(val, "%ld", bh->ecmwfLocalSectionPresent);
 
     /* Local ECMWF keys. Can be absent so must return NOT_FOUND */
     else if (strcmp(key, "rdbType")==0)    { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbType); else strcpy(val, NOT_FOUND); }

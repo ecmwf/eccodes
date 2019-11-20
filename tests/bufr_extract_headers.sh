@@ -42,6 +42,21 @@ $EXEC ${test_dir}/bufr_extract_headers $KEYS $input > $temp1
 ${tools_dir}/bufr_get            -f -p $KEYS $input > $temp2
 diff -w $temp1 $temp2
 
+# Local Section keys
+# DWD BUFR with a local section
+input=${data_dir}/bufr/uegabe.bufr
+r=`${test_dir}/bufr_extract_headers localSectionPresent,ecmwfLocalSectionPresent $input`
+[ "$r" = "1 0 " ]
+# ECMWF BUFR but has no local section
+input=${data_dir}/bufr/207003.bufr
+r=`${test_dir}/bufr_extract_headers localSectionPresent,ecmwfLocalSectionPresent $input`
+[ "$r" = "0 0 " ]
+# ECMWF BUFR with a local section
+input=${data_dir}/bufr/aaen_55.bufr
+r=`${test_dir}/bufr_extract_headers localSectionPresent,ecmwfLocalSectionPresent $input`
+[ "$r" = "1 1 " ]
+
+
 # BUFRs with localLatitude1, localLongitude1, localLongitude2 etc
 bufr_files="
 aaen_55.bufr
