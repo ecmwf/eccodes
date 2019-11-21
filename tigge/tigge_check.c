@@ -554,7 +554,7 @@ static void pressure_level(grib_handle* h,const parameter* p,double min,double m
 {
     long level = get(h,"level");
 
-    if (is_uerra){
+    if (is_uerra && !is_crra){
         switch(level)
         {
         case 1000:
@@ -577,10 +577,49 @@ static void pressure_level(grib_handle* h,const parameter* p,double min,double m
         case  150:
         case  100:
         case   70:
-        case  50:
+        case   50:
         case   30:
         case   20:
         case   10:
+            break;
+        default:
+            printf("%s, field %d [%s]: invalid pressure level %ld\n",file,field,param,level);
+            error++;
+            break;
+        }
+    }
+    else if (is_uerra && is_crra){
+        switch(level)
+        {
+        case 1000:
+        case  975:
+        case  950:
+        case  925:
+        case  900:
+        case  875:
+        case  850:
+        case  825:
+        case  800:
+        case  750:
+        case  700:
+        case  600:
+        case  500:
+        case  400:
+        case  300:
+        case  250:
+        case  200:
+        case  150:
+        case  100:
+        case   70:
+        case   50:
+        case   30:
+        case   20:
+        case   10:
+        case    7:
+        case    5:
+        case    3:
+        case    2:
+        case    1:
             break;
         default:
             printf("%s, field %d [%s]: invalid pressure level %ld\n",file,field,param,level);
