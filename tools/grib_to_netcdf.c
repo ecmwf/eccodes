@@ -25,7 +25,10 @@
 #include "eccodes_windef.h"
 
 #ifdef ECCODES_ON_WINDOWS
-#include <stdint.h>
+ #include <stdint.h>
+ #define ecc_snprintf _snprintf
+#else
+ #define ecc_snprintf snprintf
 #endif
 
 const char* grib_tool_description = "Convert a GRIB file to netCDF format."
@@ -2124,14 +2127,16 @@ static nc_type translate_nctype(const char *name)
     return NC_SHORT;
 }
 
-static void check_err(const int stat, const int line, const char *file)
+static void check_err(const char* function, const int stat, const int line)
 {
     if(stat != NC_NOERR)
     {
-        (void) fprintf(stderr, "line %d of %s: %s\n", line, file, nc_strerror(stat));
+        /* (void) fprintf(stderr, "line %d of %s: %s\n", line, grib_tool_name, nc_strerror(stat)); */
+        (void)fprintf(stderr, "\n%s ERROR: line %d, %s: %s\n",
+                      grib_tool_name, line, function, nc_strerror(stat));
         if (stat == NC_EVARSIZE) {
-            (void) fprintf(stderr, "\nCannot create netCDF classic format, dataset is too large!\n"
-                    "Try splitting the input GRIB(s).\n");
+            (void)fprintf(stderr, "\nCannot create netCDF classic format, dataset is too large!\n"
+                                  "Try splitting the input GRIB(s).\n");
         }
         exit(1);
     }
@@ -2149,22 +2154,22 @@ static int set_dimension(int ncid, const char *name, int n, int xtype, const cha
         n = NC_UNLIMITED;
 
     stat = nc_def_dim(ncid, name, n, &dim_id);
-    check_err(stat, __LINE__, __FILE__);
+    check_err("nc_def_dim", stat, __LINE__);
 
     dim_vec[0] = dim_id;
     stat = nc_def_var(ncid, name, (nc_type) xtype, 1, dim_vec, &var_id);
-    check_err(stat, __LINE__, __FILE__);
+    check_err("nc_def_var", stat, __LINE__);
 
     if(units != NULL)
     {
         stat = nc_put_att_text(ncid, var_id, "units", strlen(units), units);
-        check_err(stat, __LINE__, __FILE__);
+        check_err("nc_put_att_text", stat, __LINE__);
     }
 
     if(long_name != NULL)
     {
         stat = nc_put_att_text(ncid, var_id, "long_name", strlen(long_name), long_name);
-        check_err(stat, __LINE__, __FILE__);
+        check_err("nc_put_att_text", stat, __LINE__);
     }
 
     return var_id;
@@ -2324,7 +2329,7 @@ static int put_latlon(int ncid, fieldset *fs)
     /* longitude */
     n = ni;
     stat = nc_inq_varid(ncid, "longitude", &var_id);
-    check_err(stat, __LINE__, __FILE__);
+    check_err("nc_inq_varid", stat, __LINE__);
     if((e = grib_get_double_array(g->handle, "distinctLongitudes", dvalues, &n)) != GRIB_SUCCESS)
     {
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLongitudes: %s", grib_get_error_message(e));
@@ -2335,12 +2340,12 @@ static int put_latlon(int ncid, fieldset *fs)
     for(i=0; i< n; i++) { fvalues[i] = dvalues[i]; }
 
     stat = nc_put_var_float(ncid, var_id, fvalues);
-    check_err(stat, __LINE__, __FILE__);
+    check_err("nc_put_var_float", stat, __LINE__);
 
     /* latitude */
     n = nj;
     stat = nc_inq_varid(ncid, "latitude", &var_id);
-    check_err(stat, __LINE__, __FILE__);
+    check_err("nc_inq_varid", stat, __LINE__);
     if((e = grib_get_double_array(g->handle, "distinctLatitudes", dvalues, &n)) != GRIB_SUCCESS)
     {
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLatitudes: %s", grib_get_error_message(e));
@@ -2351,7 +2356,7 @@ static int put_latlon(int ncid, fieldset *fs)
 
     for(i=0; i< n; i++) { fvalues[i] = dvalues[i]; }
     stat = nc_put_var_float(ncid, var_id, fvalues);
-    check_err(stat, __LINE__, __FILE__);
+    check_err("nc_put_var_float", stat, __LINE__);
 
     /* g->purge_header = TRUE; */
     release_field(g);
@@ -2806,7 +2811,7 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
     release_field(f);
 
     stat = nc_inq_varid(ncid, name, &dataid);
-    check_err(stat, __LINE__, __FILE__);
+    check_err("nc_inq_varid", stat, __LINE__);
 
     /* GRIB-792: Build fast array storing values for the "time" axis. */
     /* This is for performance reasons */
@@ -2891,7 +2896,7 @@ static int put_data(hypercube *h, int ncid, const char *name, dataset_t *subset)
             grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: Put data from field %d", i);
 
             stat = nc_put_vara_type(ncid, dataid, start, count, vscaled, subset->att.nctype);
-            check_err(stat, __LINE__, __FILE__);
+            check_err("nc_put_vara_type", stat, __LINE__);
         }
 
         /* g->purge_header = TRUE; */
@@ -3103,11 +3108,11 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
                 {
                     char *period = "0000-01-00 00:00:00";
                     stat = nc_put_att_text(ncid, var_id, "avg_period", strlen(period), period);
-                    check_err(stat, __LINE__, __FILE__);
+                    check_err("nc_put_att_text", stat, __LINE__);
                 }
 
                 stat = nc_put_att_text(ncid, var_id, "calendar", strlen(cal), cal);
-                check_err(stat, __LINE__, __FILE__);
+                check_err("nc_put_att_text", stat, __LINE__);
             }
         }
     }
@@ -3122,17 +3127,17 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         printf("%s: Defining variable '%s'.\n", grib_tool_name, subsets[i].att.name);
 
         stat = nc_def_var(ncid, subsets[i].att.name, subsets[i].att.nctype, n, dims, &var_id);
-        check_err(stat, __LINE__, __FILE__);
+        check_err("nc_def_var", stat, __LINE__);
 
         if (setup.deflate > -1)
         {
 #ifdef NC_NETCDF4
             stat = nc_def_var_chunking(ncid, var_id, NC_CHUNKED, chunks);
-            check_err(stat, __LINE__, __FILE__);
+            check_err("nc_def_var_chunking", stat, __LINE__);
 
             /* Set compression settings for a variable */
             stat = nc_def_var_deflate(ncid, var_id, setup.shuffle, 1, setup.deflate);
-            check_err(stat, __LINE__, __FILE__);
+            check_err("nc_def_var_deflate", stat, __LINE__);
 #else
             grib_context_log(ctx, GRIB_LOG_ERROR, "Deflate option only supported in NetCDF4");
 #endif
@@ -3141,43 +3146,43 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         {
             compute_scale(&subsets[i]);
             stat = nc_put_att_double(ncid, var_id, "scale_factor", NC_DOUBLE, 1, &subsets[i].scale_factor);
-            check_err(stat, __LINE__, __FILE__);
+            check_err("nc_put_att_double", stat, __LINE__);
 
             stat = nc_put_att_double(ncid, var_id, "add_offset", NC_DOUBLE, 1, &subsets[i].add_offset);
-            check_err(stat, __LINE__, __FILE__);
+            check_err("nc_put_att_double", stat, __LINE__);
         }
 
         stat = nc_put_att_type(ncid, var_id, "_FillValue", subsets[i].att.nctype, 1, nc_type_values[subsets[i].att.nctype].nc_type_missing);
-        check_err(stat, __LINE__, __FILE__);
+        check_err("nc_put_att_type", stat, __LINE__);
         stat = nc_put_att_type(ncid, var_id, "missing_value", subsets[i].att.nctype, 1, nc_type_values[subsets[i].att.nctype].nc_type_missing);
-        check_err(stat, __LINE__, __FILE__);
+        check_err("nc_put_att_type", stat, __LINE__);
 
         if(subsets[i].att.units)
         {
             const char *txt = subsets[i].att.units;
             stat = nc_put_att_text(ncid, var_id, "units", strlen(txt), txt);
-            check_err(stat, __LINE__, __FILE__);
+            check_err("nc_put_att_text", stat, __LINE__);
         }
 
         if(subsets[i].att.long_name)
         {
             const char *txt = subsets[i].att.long_name;
             stat = nc_put_att_text(ncid, var_id, "long_name", strlen(txt), txt);
-            check_err(stat, __LINE__, __FILE__);
+            check_err("nc_put_att_text", stat, __LINE__);
         }
 
         if(subsets[i].att.short_name)
         {
             const char *txt = subsets[i].att.short_name;
             stat = nc_put_att_text(ncid, var_id, "short_name", strlen(txt), txt);
-            check_err(stat, __LINE__, __FILE__);
+            check_err("nc_put_att_text", stat, __LINE__);
         }
 
         if(subsets[i].att.standard_name)
         {
             const char *txt = subsets[i].att.standard_name;
             stat = nc_put_att_text(ncid, var_id, "standard_name", strlen(txt), txt);
-            check_err(stat, __LINE__, __FILE__);
+            check_err("nc_put_att_text", stat, __LINE__);
         }
 
 #if 0
@@ -3185,7 +3190,7 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         {
             const char *txt = subsets[i].att.long_name;
             stat = nc_put_att_text(ncid, var_id, "other",strlen(txt),txt);
-            check_err(stat,__LINE__,__FILE__);
+            check_err("nc_put_att_text", stat,__LINE__,__FILE__);
         }
 #endif
 
@@ -3197,7 +3202,7 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
             {
                 const char *txt = p->values->name;
                 stat = nc_put_att_text(ncid, var_id, p->name, strlen(txt), txt);
-                check_err(stat, __LINE__, __FILE__);
+                check_err("nc_put_att_text", stat, __LINE__);
 
                 p = p->next;
             }
@@ -3211,7 +3216,7 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         /* parameter *p = data_r->params; */
         parameter *p = setup.mars_description->params;
         stat = nc_def_var(ncid, "MARS", NC_CHAR, 0, 0, &var_id);
-        check_err(stat, __LINE__, __FILE__);
+        check_err("nc_def_var", stat, __LINE__);
 
         /* Store request for those parameters with single value */
         while(p)
@@ -3232,7 +3237,7 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
                 {
                     printf("Error setting request for %s = %s\n", par, val);
                 }
-                check_err(stat, __LINE__, __FILE__);
+                check_err("nc_put_att_text", stat, __LINE__);
             }
             p = p->next;
         }
@@ -3249,7 +3254,7 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
 
         /* Convention */
         stat = nc_put_att_text(ncid, NC_GLOBAL, "Conventions", strlen(convention), convention);
-        check_err(stat, __LINE__, __FILE__);
+        check_err("nc_put_att_text", stat, __LINE__);
 
         /* Use history provided or Timestamp */
         if(setup.history)
@@ -3267,7 +3272,7 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
             sprintf(history, "%s by grib_to_netcdf-%d.%d.%d: %s", timestamp, major, minor, revision, argvString);
         }
         stat = nc_put_att_text(ncid, NC_GLOBAL, "history", strlen(history), history);
-        check_err(stat, __LINE__, __FILE__);
+        check_err("nc_put_att_text", stat, __LINE__);
 
 #if 0
         stat = nc_put_att_text(ncid, NC_GLOBAL, "source",strlen(setup.source),setup.source);
@@ -3280,7 +3285,7 @@ static int define_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid, datase
         if(setup.title)
         {
             stat = nc_put_att_text(ncid, NC_GLOBAL, "title", strlen(setup.title), setup.title);
-            check_err(stat, __LINE__, __FILE__);
+            check_err("nc_put_att_text", stat, __LINE__);
         }
 
     }
@@ -3365,7 +3370,7 @@ static int fill_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid)
         }
 
         stat = nc_inq_varid(ncid, (lowaxis), &var_id);
-        check_err(stat, __LINE__, __FILE__);
+        check_err("nc_inq_varid", stat, __LINE__);
 
         /* if ( strcmp("time", axis) == 0 && setup.unlimited != NULL && strcmp(setup.unlimited, "time") == 0 && setup.usevalidtime) */
         /* GRIB-437, GRIB-625 Special treatment of RECORD (unlimited) dimension */
@@ -3381,15 +3386,15 @@ static int fill_netcdf_dimensions(hypercube *h, fieldset *fs, int ncid)
             count[0] = n;
 
             stat = nc_inq_vartype(ncid, var_id, &dim_type); /* get the type of this dimension */
-            check_err(stat, __LINE__, __FILE__);
+            check_err("nc_inq_vartype", stat, __LINE__);
 
             stat = nc_put_vara_type(ncid, var_id, start, count, values, dim_type);
-            check_err(stat, __LINE__, __FILE__);
+            check_err("nc_put_vara_type", stat, __LINE__);
         }
         else
         {
             stat = nc_put_var_int(ncid, var_id, values);
-            check_err(stat, __LINE__, __FILE__);
+            check_err("nc_put_var_int", stat, __LINE__);
         }
 
         grib_context_free(ctx, values);
@@ -4412,22 +4417,26 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     creation_mode = get_creation_mode(option_kind);
     stat = nc_create(options->outfile->name, creation_mode, &ncid);
-    check_err(stat, __LINE__, __FILE__);
+    if (stat != NC_NOERR) {
+        char msg[1024];
+        ecc_snprintf(msg, sizeof(msg), "nc_create: '%s'", options->outfile->name);
+        check_err(msg, stat, __LINE__);
+    }
 
     /* Define netcdf dataset */
     err = define_netcdf_dimensions(dims, fs, ncid, subsets, count, data_r);
     if (err != GRIB_SUCCESS) {
         stat = nc_close(ncid);
-        check_err(stat, __LINE__, __FILE__);
+        check_err("nc_close", stat, __LINE__);
         stat = nc_delete(options->outfile->name);
-        check_err(stat, __LINE__, __FILE__);
+        check_err("nc_delete", stat, __LINE__);
 
         exit(1);
     }
 
     /* End definitions */
     stat = nc_enddef(ncid);
-    check_err(stat, __LINE__, __FILE__);
+    check_err("nc_enddef", stat, __LINE__);
 
     /* Fill dimensions */
     fill_netcdf_dimensions(dims, fs, ncid);
@@ -4438,8 +4447,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         if(subsets[i].fset)
         {
             char dataset[100];
-
-            sprintf(dataset, subsets[i].att.name, i + 1);
+            ecc_snprintf(dataset, sizeof(dataset), subsets[i].att.name, i + 1);
             put_data(dims, ncid, dataset, &subsets[i]);
         }
         else
@@ -4449,7 +4457,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     }
 
     stat = nc_close(ncid);
-    check_err(stat, __LINE__, __FILE__);
+    check_err("nc_close", stat, __LINE__);
 
     free_all_requests(data_r);
     free_hypercube(dims);
