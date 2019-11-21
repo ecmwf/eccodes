@@ -13,11 +13,11 @@
 13 13 Attenuation coefficient of water with respect to solar radiation (/m)
 14 14 Water depth (m)
 15 15 Water temperature (K)
-16 16 Water density (rho) (kg m-3)
-17 17 Water density anomaly (sigma) (kg m-3)
-18 18 Water potential temperature (theta) (K)
-19 19 Water potential density (rho theta) (kg m-3)
-20 20 Water potential density anomaly (sigma theta) (kg m-3)
+16 16 Water density [rho] (kg m-3)
+17 17 Water density anomaly [sigma] (kg m-3)
+18 18 Water potential temperature [theta] (K)
+19 19 Water potential density [rho theta] (kg m-3)
+20 20 Water potential density anomaly [sigma theta] (kg m-3)
 21 21 Practical salinity (Numeric)
 # 22-191 Reserved 
 # 192-254 Reserved for local use 

@@ -21,7 +21,7 @@
 19 19 Snow albedo (%)
 20 20 Icing (%)
 21 21 In-cloud turbulence (%)
-22 22 Clear air turbulence (CAT) (%)
+22 22 Clear air turbulence [CAT] (%)
 23 23 Supercooled large droplet probability (%)
 24 24 Convective turbulent kinetic energy (J/kg)
 25 25 Weather ((Code table 4.225))
