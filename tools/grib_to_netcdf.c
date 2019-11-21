@@ -26,9 +26,6 @@
 
 #ifdef ECCODES_ON_WINDOWS
  #include <stdint.h>
- #define ecc_snprintf _snprintf
-#else
- #define ecc_snprintf snprintf
 #endif
 
 const char* grib_tool_description = "Convert a GRIB file to netCDF format."
