@@ -24,7 +24,7 @@
 22 22 Cloud cover (%)
 23 23 Cloud ice mixing ratio (kg kg-1)
 24 24 Sunshine (Numeric)
-25 25 Horizontal extent of cumulonimbus (CB) (%)
+25 25 Horizontal extent of cumulonimbus [CB] (%)
 26 26 Height of convective cloud base - validation (m)
 #26-31 26-31 Reserved (-)
 27 27 Height of convective cloud top - validation (m)

@@ -21,6 +21,6 @@
 19 19 Snow albedo (%)
 20 20 Icing (%)
 21 21 In-cloud turbulence (%)
-22 22 Clear air turbulence (CAT) (%)
-23 23 Supercooled large droplet probability (see Note 4) (%)
+22 22 Clear air turbulence [CAT] (%)
+23 23 Supercooled large droplet probability [see Note 4] (%)
 255 255 Missing (-)
