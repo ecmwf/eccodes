@@ -1,4 +1,3 @@
-# CODE TABLE 4.4, Indicator of unit of time range
 0 m  Minute
 1 h  Hour
 2 D  Day
@@ -11,6 +10,4 @@
 11 6h  6 hours
 12 12h  12 hours
 13 s  Second
-# 14-191 Reserved
-#192-254  Reserved for local use
 255 255  Missing

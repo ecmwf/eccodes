@@ -1,4 +1,3 @@
-# CODE TABLE 1.4, Type of data
 0 an Analysis products
 1 fc Forecast products
 2 af  Analysis and forecast products
@@ -8,6 +7,4 @@
 6 sa  Processed satellite observations
 7 ra  Processed radar observations
 8 ep  Event Probability
-# 8-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing
