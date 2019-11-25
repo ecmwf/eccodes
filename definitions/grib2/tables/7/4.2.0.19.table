@@ -21,8 +21,8 @@
 19 19 Snow albedo (%)
 20 20 Icing (%)
 21 21 In-cloud turbulence (%)
-22 22 Clear air turbulence [CAT] (%)
-23 23 Supercooled large droplet probability [see Note 4] (%)
+22 22 Clear air turbulence (CAT) (%)
+23 23 Supercooled large droplet probability (see Note 4) (%)
 24 24 Convective turbulent kinetic energy - validation (J kg-1)
 25 25 Weather Interpretation ww (WMO) - validation
 26 26 Convective outlook (code table (4.224))

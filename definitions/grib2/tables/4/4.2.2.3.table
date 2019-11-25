@@ -4,12 +4,12 @@
 2 2 Upper layer soil moisture (kg m-3)
 3 3 Lower layer soil moisture (kg m-3)
 4 4 Bottom layer soil temperature (K)
-5 5 Liquid volumetric soil moisture [non-frozen] (Proportion)
+5 5 Liquid volumetric soil moisture (non-frozen) (Proportion)
 6 6 Number of soil layers in root zone (Numeric)
-7 7 Transpiration stress-onset [soil moisture] (Proportion)
-8 8 Direct evaporation cease [soil moisture] (Proportion)
+7 7 Transpiration stress-onset (soil moisture) (Proportion)
+8 8 Direct evaporation cease (soil moisture) (Proportion)
 9 9 Soil porosity (Proportion)
-12 12 Transpiration stress-onset [soil moisture] (kg m-3)
+12 12 Transpiration stress-onset (soil moisture) (kg m-3)
 # 11-191 Reserved
 #192-254 Reserved for local use
 255 255 Missing

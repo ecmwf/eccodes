@@ -1,7 +1,7 @@
 # Code table 4.2 - Parameter number by product discipline and parameter category
-0 0 Wave spectra [1] (-)
-1 1 Wave spectra [2] (-)
-2 2 Wave spectra [3] (-)
+0 0 Wave spectra (1) (-)
+1 1 Wave spectra (2) (-)
+2 2 Wave spectra (3) (-)
 3 3 Significant height of combined wind waves and swell (m)
 4 4 Direction of wind waves (degree true)
 5 5 Significant height of wind waves (m)
