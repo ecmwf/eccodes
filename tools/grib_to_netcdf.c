@@ -1989,11 +1989,14 @@ static void validation_time(request *r)
     if(ndate)
     {
         const char* p = get_value(r, "date", 0);
-        const char* hdate = get_value(r, "hdate", 0);
-        /* All hindcast Data. See GRIB-699, GRIB-762 and ECC-962 */
-        if (hdate) {
-            grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: Hindcast data hdate=%s", hdate);
-            p = hdate; /* Don't use 'date'. Use the hindcast date instead */
+        const char* marsClass = get_value(r, "class", 0);
+        if (eq_string(marsClass, "s2")) {
+            /* S2S Data. See GRIB-699 and GRIB-762 */
+            const char* hdate = get_value(r, "hdate", 0);
+            grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: S2S Data");
+            if (hdate) {
+                p = hdate; /* This is a hindcast */
+            }
         }
         if(is_number(p))
             date = atol(p);
