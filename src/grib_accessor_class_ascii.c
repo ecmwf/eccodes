@@ -256,7 +256,7 @@ static int unpack_double (grib_accessor* a, double*v, size_t *len)
         return GRIB_SUCCESS;
     }
 
-    grib_context_log(a->context,GRIB_LOG_ERROR,"Cannot unpack %s as double. Hint: Try unpacking as string",a->name);
+    grib_context_log(a->context,GRIB_LOG_WARNING,"Cannot unpack %s as double. Hint: Try unpacking as string",a->name);
 
     return GRIB_NOT_IMPLEMENTED;
 }
