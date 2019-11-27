@@ -5,7 +5,7 @@ section_length[3] section1Length ;
 
 unsigned[1]  masterTableNumber :dump;
 
-codetable[1] bufrHeaderSubCentre 'common/c-1.table' : dump;
+unsigned[1]  bufrHeaderSubCentre : dump;
 codetable[1] bufrHeaderCentre    'common/c-1.table' : dump;
 
 unsigned[1]  updateSequenceNumber :dump;
@@ -20,7 +20,7 @@ unsigned[1] localTablesVersionNumber : dump;
 transient typicalCentury=21;
 
 unsigned[1] typicalYearOfCentury : dump;
-transient typicalYear = (typicalCentury - 1 )  *100  + typicalYearOfCentury  : no_copy;
+transient typicalYear = (typicalCentury - 1) * 100 + typicalYearOfCentury : no_copy;
 
 unsigned[1] typicalMonth : dump;
 unsigned[1] typicalDay : dump;

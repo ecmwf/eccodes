@@ -140,8 +140,9 @@ static void dump(grib_accessor* a,grib_dumper* dumper)
   grib_dump_label(dumper,a,NULL);
 }
 
-grib_nearest* grib_nearest_new(grib_handle* h,int* error)
+grib_nearest* grib_nearest_new(const grib_handle* ch, int* error)
 {
+  grib_handle* h = (grib_handle*)ch;
   grib_accessor* a = NULL;
   grib_accessor_nearest* na =NULL;
   grib_nearest* n =NULL;

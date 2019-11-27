@@ -13,7 +13,6 @@
  ****************************************/
 
 #include "grib_api_internal.h"
-#include <ctype.h>
 
 /*
    This is used by make_class.pl

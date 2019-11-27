@@ -574,7 +574,7 @@ static int check_geometry(grib_handle* handle, const grib_util_grid_spec2* spec,
         if (specified_as_global) {
             char msg[100] = {0,};
             size_t sum = 0;
-            if (specified_as_global) strcpy(msg, "Specified to be global (in spec)");
+            strcpy(msg, "Specified to be global (in spec)");
             sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (sum != data_values_count) {
                 fprintf(stderr, "GRIB_UTIL_SET_SPEC: Invalid reduced gaussian grid: %s but data_values_count != sum_of_pl_array (%ld!=%ld)\n",
@@ -857,6 +857,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     int packingTypeIsSet=0;
     int setSecondOrder=0;
     int setJpegPacking=0;
+    int setCcsdsPacking=0;
     int convertEditionEarlier=0;/* For cases when we cannot set some keys without converting */
     size_t slen=17;
     int grib1_high_resolution_fix = 0; /* boolean: See GRIB-863 */
@@ -924,6 +925,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             case GRIB_UTIL_PACKING_TYPE_JPEG:
                 if (strcmp(input_packing_type,"grid_jpeg") && !strcmp(input_packing_type,"grid_simple"))
                     SET_STRING_VALUE("packingType","grid_jpeg");
+                break;
+            case GRIB_UTIL_PACKING_TYPE_CCSDS:
+                if (strcmp(input_packing_type,"grid_ccsds") && !strcmp(input_packing_type,"grid_simple"))
+                    SET_STRING_VALUE("packingType","grid_ccsds");
                 break;
             case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
                 /* we delay the set of grid_second_order because we don't want
@@ -999,13 +1004,13 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         /* convert to second_order if not constant field */
         if (setSecondOrder ) {
-            size_t packTypeLen=17;
             int constant=0;
             double missingValue=0;
             grib_get_double(h,"missingValue",&missingValue);
             constant=is_constant_field(missingValue, data_values, data_values_count);
 
             if (!constant) {
+                size_t packTypeLen;
                 if (editionNumber == 1 ) {
                     long numberOfGroups;
                     grib_handle* htmp=grib_handle_clone(h);
@@ -1327,6 +1332,14 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             if (strcmp(input_packing_type,"grid_jpeg") && !strcmp(input_packing_type,"grid_simple"))
                 setJpegPacking = 1;
             break;
+        case GRIB_UTIL_PACKING_TYPE_CCSDS:
+            /* Have to delay CCSDS packing:
+             * Reason 1: It is not available in GRIB1 and so we have to wait until we change edition
+             * Reason 2: It has to be done AFTER we set the data values
+             */
+            if (strcmp(input_packing_type,"grid_ccsds") && !strcmp(input_packing_type,"grid_simple"))
+                setCcsdsPacking = 1;
+            break;
         case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
             /* we delay the set of grid_second_order because we don't want
                to do it on a field with bitsPerValue=0 */
@@ -1602,6 +1615,14 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             *err = grib_set_string(outh, "packingType", "grid_jpeg", &slen);
             if (*err != GRIB_SUCCESS) {
                 fprintf(stderr,"GRIB_UTIL_SET_SPEC: Failed to change packingType to JPEG: %s\n",
+                        grib_get_error_message(*err));
+                goto cleanup;
+            }
+        }
+        if (setCcsdsPacking == 1) {
+            *err = grib_set_string(outh, "packingType", "grid_ccsds", &slen);
+            if (*err != GRIB_SUCCESS) {
+                fprintf(stderr,"GRIB_UTIL_SET_SPEC: Failed to change packingType to CCSDS: %s\n",
                         grib_get_error_message(*err));
                 goto cleanup;
             }
@@ -1887,7 +1908,7 @@ int parse_keyval_string(const char* grib_tool, char* arg, int values_required, i
 }
 
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to EPS */
-int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber)
+int grib2_is_PDTN_EPS(long productDefinitionTemplateNumber)
 {
     return (
             productDefinitionTemplateNumber == 1 || productDefinitionTemplateNumber == 11 ||
@@ -1897,8 +1918,8 @@ int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber)
     );
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to atmospheric chemical constituents */
-int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNumber)
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for atmospheric chemical constituents */
+int grib2_is_PDTN_Chemical(long productDefinitionTemplateNumber)
 {
     return (
             productDefinitionTemplateNumber == 40 ||
@@ -1907,9 +1928,9 @@ int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNu
             productDefinitionTemplateNumber == 43);
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for
  * atmospheric chemical constituents based on a distribution function */
-int is_productDefinitionTemplateNumber_ChemicalDistFunc(long productDefinitionTemplateNumber)
+int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber)
 {
     return (
             productDefinitionTemplateNumber == 57 ||
@@ -1918,21 +1939,20 @@ int is_productDefinitionTemplateNumber_ChemicalDistFunc(long productDefinitionTe
             productDefinitionTemplateNumber == 68);
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to aerosols */
-int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber)
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for aerosols */
+int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber)
 {
-    /* Note: PDT 44 is deprecated. Use 48 instead */
     return (
-            productDefinitionTemplateNumber == 44 || productDefinitionTemplateNumber == 48 ||
+            productDefinitionTemplateNumber == 44 || /* Note: PDT 44 is deprecated. Use 48 instead */
+            productDefinitionTemplateNumber == 48 ||
+            productDefinitionTemplateNumber == 49 ||
             productDefinitionTemplateNumber == 45 ||
             productDefinitionTemplateNumber == 46 ||
             productDefinitionTemplateNumber == 47);
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to 
- * optical properties of aerosol
- */
-int is_productDefinitionTemplateNumber_AerosolOptical(long productDefinitionTemplateNumber)
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for optical properties of aerosol */
+int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber)
 {
     /* Note: PDT 48 can be used for both plain aerosols as well as optical properties of aerosol.
      * For the former user must set the optical wavelength range to missing.
@@ -1940,6 +1960,75 @@ int is_productDefinitionTemplateNumber_AerosolOptical(long productDefinitionTemp
     return (
             productDefinitionTemplateNumber == 48 ||
             productDefinitionTemplateNumber == 49);
+}
+
+/* Given some information about the type of grib2 parameter, return the productDefinitionTemplateNumber to use.
+ * All arguments are booleans (0 or 1)
+ * is_eps:     ensemble or deterministic
+ * is_instant: instantaneous or interval-based
+ * etc
+ */
+int grib2_select_PDTN(int is_eps, int is_instant,
+                      int is_chemical,
+                      int is_chemical_distfn,
+                      int is_aerosol,
+                      int is_aerosol_optical)
+{
+    /* At most one has to be set. All could be 0 */
+    /* Unfortunately if PDTN=48 then both aerosol and aerosol_optical can be 1! */
+    const int sum = is_chemical + is_chemical_distfn + is_aerosol + is_aerosol_optical;
+    Assert( sum == 0 || sum == 1 || sum == 2 );
+
+    if (is_chemical) {
+        if (is_eps) {
+            if (is_instant) return 41;
+            else            return 43;
+        } else {
+            if (is_instant) return 40;
+            else            return 42;
+        }
+    }
+
+    if (is_chemical_distfn) {
+        if (is_eps) {
+            if (is_instant) return 58;
+            else            return 68;
+        } else {
+            if (is_instant) return 57;
+            else            return 67;
+        }
+    }
+
+    if (is_aerosol_optical) {
+        if (is_eps) {
+            if (is_instant) return 49;
+            /* WMO does not have a non-instantaneous case here! */
+        } else {
+            if (is_instant) return 48;
+            /* WMO does not have a non-instantaneous case here! */
+        }
+    }
+
+    if (is_aerosol) {
+        if (is_eps) {
+            if (is_instant) return 45;
+            else            return 47;
+        } else {
+            if (is_instant) return 48;/*44 is deprecated*/
+            else            return 46;
+        }
+    }
+
+    /* Fallthru case: default */
+    if (is_eps) {
+        if (is_instant) return 1;
+        else            return 11;
+    } else {
+        if (is_instant) return 0;
+        else            return 8;
+    }
+
+    return -1;
 }
 
 int is_index_file(const char* filename)

@@ -547,7 +547,6 @@
     <ClInclude Include="..\..\..\src\grib_dumper_class.h" />
     <ClInclude Include="..\..\..\src\grib_dumper_factory.h" />
     <ClInclude Include="..\..\..\src\grib_emoslib.h" />
-    <ClInclude Include="..\..\..\src\grib_expression.h" />
     <ClInclude Include="..\..\..\src\grib_iterator_class.h" />
     <ClInclude Include="..\..\..\src\grib_iterator_factory.h" />
     <ClInclude Include="..\..\..\src\grib_nearest_class.h" />

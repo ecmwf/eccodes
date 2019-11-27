@@ -142,9 +142,8 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     grib_dump_long(dumper,a,NULL);
 }
 
-static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-
     unsigned char dat = 0;
     if(*len < 1)
     {
@@ -154,13 +153,12 @@ static int    unpack_long   (grib_accessor* a, long* val, size_t *len)
     }
     dat = grib_handle_of_accessor(a)->buffer->data[a->offset] & 0x0f;
 
-
     *val = dat;
     *len = 1;
     return GRIB_SUCCESS;
 }
 
-static int    pack_long   (grib_accessor* a, const long *val, size_t *len)
+static int pack_long(grib_accessor* a, const long *val, size_t *len)
 {
     int ret = 0;
     if(*len < 1)
@@ -207,4 +205,3 @@ static int compare(grib_accessor* a,grib_accessor* b) {
     if (bval != aval) return GRIB_VALUE_MISMATCH;
     return GRIB_SUCCESS;
 }
-

@@ -28,6 +28,7 @@ list( APPEND test_bins
       grib_ecc-386
       bufr_ecc-517
       bufr_get_element
+      bufr_extract_headers
       grib_sh_ieee64
       ieee
       grib_sh_imag
@@ -91,6 +92,7 @@ list( APPEND tests_data_reqd
     bufr_keys_iter
     bufr_get_element
     bufr_wmo_tables
+    bufr_extract_headers
     bufr_ecc-673
     bufr_ecc-428
     bufr_ecc-197
@@ -114,7 +116,9 @@ list( APPEND tests_data_reqd
     grib_ecc-923
     grib_ecc-979
     grib_ecc-984
+    grib_ecc-1000
     grib_ecc-1001
+    grib_ecc-1030
     bufr_ecc-556
     gts_get
     gts_ls

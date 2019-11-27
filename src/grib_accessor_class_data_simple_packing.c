@@ -331,7 +331,7 @@ static int  _unpack_double(grib_accessor* a, double* val, size_t *len,unsigned c
             GRIB_SUCCESS)
         return err;
 
-    /*/
+    /*
      * check we don't decode bpv > max(ulong) as it is
      * not currently supported by the algorithm
      */
@@ -557,7 +557,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     if((err = grib_get_long_internal(gh,self->optimize_scaling_factor, &optimize_scaling_factor))
             != GRIB_SUCCESS)
         return err;
-    /*/
+    /*
      * check we don't encode bpv > max(ulong)-1 as it is
      * not currently supported by the algorithm
      */

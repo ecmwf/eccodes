@@ -144,8 +144,9 @@ static void dump(grib_accessor* a,grib_dumper* dumper)
 	grib_dump_label(dumper,a,NULL);
 }
 
-grib_iterator* grib_iterator_new(grib_handle* h,unsigned long flags,int* error)
-{   
+grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)
+{
+    grib_handle* h = (grib_handle*)ch;
 	grib_accessor* a = NULL;
 	grib_accessor_iterator* ita =NULL; 
 	grib_iterator* iter =NULL;

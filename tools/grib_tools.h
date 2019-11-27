@@ -17,7 +17,6 @@
 #ifndef ECCODES_ON_WINDOWS
 #  include <unistd.h>
 #endif
-#include <string.h>
 
 #ifndef GRIB_TOOLS_H
 #define GRIB_TOOLS_H

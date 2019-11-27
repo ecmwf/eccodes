@@ -177,7 +177,9 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     if((err = grib_get_long_internal(h, salternativeRowScanning,&alternativeRowScanning)) !=GRIB_SUCCESS)
         return err;
 
-    /* See Wolfram MathWorld: http://mathworld.wolfram.com/LambertConformalConicProjection.html */
+    /*
+     * See Wolfram MathWorld: http://mathworld.wolfram.com/LambertConformalConicProjection.html
+     */
     latFirstInRadians = latFirstInDegrees * DEG2RAD;
     lonFirstInRadians = lonFirstInDegrees * DEG2RAD;
     Latin1InRadians   = Latin1InDegrees * DEG2RAD;

@@ -494,7 +494,9 @@ static int read_HDF5_offset(reader *r, int length, unsigned long* v, unsigned ch
 
 static int read_HDF5(reader *r)
 {
-    /* See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock */
+    /* 
+     * See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock
+     */
     unsigned char tmp[49]; /* Should be enough */
     unsigned char buf[4];
 
@@ -629,7 +631,9 @@ static int read_HDF5(reader *r)
 
 static int read_WRAP(reader *r)
 {
-    /* See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock */
+    /*
+     * See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock
+     */
     unsigned char tmp[36]; /* Should be enough */
     unsigned char buf[8];
 
@@ -1669,12 +1673,12 @@ int grib_count_in_file(grib_context* c, FILE* f,int* n)
 
 int grib_count_in_filename(grib_context* c, const char* filename, int* n)
 {
-    int err=0;
+    int err = 0;
     FILE* fp = NULL;
     if (!c) c=grib_context_get_default();
     fp = fopen(filename, "rb");
     if (!fp) {
-        grib_context_log(c, GRIB_LOG_ERROR,"grib_count_in_filename: Unable to read file \"%s\"", filename);
+        grib_context_log(c, GRIB_LOG_ERROR, "grib_count_in_filename: Unable to read file \"%s\"", filename);
         perror(filename);
         return GRIB_IO_PROBLEM;
     }

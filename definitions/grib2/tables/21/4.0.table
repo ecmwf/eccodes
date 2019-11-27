@@ -56,7 +56,19 @@
 71 71 Post-processing individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time 
 72 72 Post-processing average, accumulation, extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval 
 73 73 Post-processing individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer, in a continuous or non-continuous time interval 
-# 74-90 Reserved 
+
+76 76 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for atmospheric chemical constituents with source/sink
+77 77 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for atmospheric chemical constituents with a source/sink
+78 78 Average, accumulation and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for atmospheric chemical constituents with source/sink
+79 79 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for atmospheric chemical constituents with source/sink
+
+80 80 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for optical properties of aerosol with source/sink
+81 81 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for optical properties of aerosol with source/sink
+82 82 Average, accumulation, and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for aerosol with source/sink
+83 83 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for aerosol with source/sink
+
+# 74-90 Reserved
+
 91 91 Categorical forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval 
 # 92-253 Reserved 
 254 254 CCITT IA5 character string 

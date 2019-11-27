@@ -359,7 +359,8 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
     } else {
         size = grib_byte_count((grib_accessor*)self) * 8;
     }
-    size = grib_power(size,2);
+
+    size = (1UL << size); /* 2^size */
 
     t = (grib_codetable*)grib_context_malloc_clear_persistent(c,sizeof(grib_codetable) +
             (size-1)*sizeof(code_table_entry));

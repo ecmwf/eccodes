@@ -739,18 +739,16 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 static int value_count(grib_accessor* a,long* rlen)
 {
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
-    int ret=0;
-    grib_context* c=a->context;
+    int err=0;
     *rlen=0;
 
-    ret=expand(a);
-    *rlen=BUFR_DESCRIPTORS_ARRAY_USED_SIZE(self->expanded);
-    if (ret) {
-        grib_context_log(c,GRIB_LOG_ERROR,"%s unable to compute size",a->name);
-        return ret;
+    err=expand(a);
+    if (err) {
+        grib_context_log(a->context,GRIB_LOG_ERROR,"%s unable to compute size",a->name);
+        return err;
     }
-
-    return ret;
+    *rlen=BUFR_DESCRIPTORS_ARRAY_USED_SIZE(self->expanded);
+    return err;
 }
 
 static void destroy(grib_context* c,grib_accessor* a)

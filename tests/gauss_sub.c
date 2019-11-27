@@ -9,7 +9,6 @@
  */
 
 #include "grib_api.h"
-#include "math.h"
 
 static void usage(char* prog) {
 	printf("usage: %s file1.grib file2.grib\n",prog);

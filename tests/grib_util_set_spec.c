@@ -11,7 +11,6 @@
 #include "grib_api_internal.h"
 #include "eccodes.h"
 #include <assert.h>
-#include <float.h>
 
 #define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 
@@ -23,6 +22,8 @@ static int get_packing_type_code(const char* packingType)
 
     if (STR_EQUAL(packingType, "grid_jpeg"))
         result = GRIB_UTIL_PACKING_TYPE_JPEG;
+    if (STR_EQUAL(packingType, "grid_ccsds"))
+        result = GRIB_UTIL_PACKING_TYPE_CCSDS;
     else if (STR_EQUAL(packingType, "grid_simple"))
         result = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
     else if (STR_EQUAL(packingType, "grid_second_order"))
@@ -178,6 +179,7 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     spec.Nj = 14;
     spec.Ni = 17;
     outlen = spec.Nj * spec.Ni;
+    /* outlen = inlen; */
     spec.iDirectionIncrementInDegrees = 1.5;
     spec.jDirectionIncrementInDegrees = 1.5;
     spec.latitudeOfFirstGridPointInDegrees  = 60.0001;
@@ -330,7 +332,7 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
 static void usage(const char *prog)
 {
     fprintf(stderr, "%s: [-p packingType] [-r] [-e edition] in.grib out.grib\n", prog);
-    fprintf(stderr, "-p  packingType: one of grid_jpeg, grid_second_order or grid_simple\n");
+    fprintf(stderr, "-p  packingType: one of grid_jpeg, grid_ccsds, grid_second_order or grid_simple\n");
     fprintf(stderr, "-r  remove local definition\n");
     fprintf(stderr, "-e  edition: 1 or 2\n");
     exit(1);

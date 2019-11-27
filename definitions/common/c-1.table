@@ -1,4 +1,4 @@
-# Code table 0: Identification of centres
+# COMMON CODE TABLE C-1: Identification of originating/generating centre (GRIB1, BUFR3)
 0 0 Absent
 1 ammc Melbourne (WMC)
 2 2 Melbourne (WMC)
@@ -65,15 +65,9 @@
 97 97 European Space Agency (ESA)
 98 ecmf European Centre for Medium-Range Weather Forecasts
 99 99 DeBilt, Netherlands
-#100 to 109 Reserved for centres in Region I which are not in the list above
 110 110 Hong-Kong
-#111 to 133 Reserved for centres in Region II which are not in the list above
-#134 to 153 Reserved for centres in Region I which are not listed above
-#154 to 159 Reserved for centres in Region III which are not in the list above
 160 160 US NOAA/NESDIS
-# 161 to 185 Reserved for centres in Region IV which are not in the list above
-# 186 to 198 Reserved for centres in Region I which are not listed above
-# 199 to 209 Reserved for centres in Region V which are not in the list above
+173 nasa US National Aeronautics and Space Administration (NASA)
 195 wiix Indonesia (NMC)
 204 niwa  National Institute of Water and Atmospheric Research (NIWA - New Zealand)
 # 205-209 Reserved

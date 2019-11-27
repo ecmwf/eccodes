@@ -29,7 +29,7 @@ static struct table_entry table[] =
 
 #define NUMBER(x) (sizeof(x)/sizeof(x[0]))
 
-grib_dumper* grib_dumper_factory(const char* op, grib_handle* h, FILE* out, unsigned long option_flags,void* arg)
+grib_dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE* out, unsigned long option_flags,void* arg)
 {
     int i;
     for(i = 0; i < NUMBER(table) ; i++)
@@ -38,7 +38,7 @@ grib_dumper* grib_dumper_factory(const char* op, grib_handle* h, FILE* out, unsi
             grib_dumper_class* c = *(table[i].cclass);
             grib_dumper*       d = (grib_dumper*) grib_context_malloc_clear(h->context,c->size);
             d->depth             = 0;
-            d->handle            = h;
+            d->handle            = (grib_handle*)h;
             d->cclass            = c;
             d->option_flags      = option_flags;
             d->arg               = arg;
@@ -80,7 +80,7 @@ int grib_print(grib_handle* h, const char* name, grib_dumper *d ){
     return GRIB_NOT_FOUND;
 }
 
-void grib_dump_content(grib_handle* h, FILE* f,const char* mode,unsigned long flags,void *data)
+void grib_dump_content(const grib_handle* h, FILE* f,const char* mode,unsigned long flags,void *data)
 {
     grib_dumper *dumper;
     dumper = grib_dumper_factory(mode?mode:"serialize", h, f, flags, data);

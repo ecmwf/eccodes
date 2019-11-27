@@ -17,7 +17,6 @@
  */
 
 #include "grib_api_internal.h"
-#include <assert.h>
 
 static int verbose = 0;
 static const char* OUTPUT_FILENAME_DEFAULT = "split_rdbSubtype.undef.bufr";

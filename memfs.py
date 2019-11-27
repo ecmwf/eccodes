@@ -38,7 +38,7 @@ for directory in dirs:
     for dirpath, dirnames, files in os.walk(directory, followlinks=True):
         for ex in EXCLUDED:
             if ex in dirnames:
-                print('Note: %s/%s will not be included.' % (dirpath,ex))
+                print('Note: eccodes memfs.py script: %s/%s will not be included.' % (dirpath,ex))
 
         # Prune the walk by modifying the dirnames in-place
         dirnames[:] = [dirname for dirname in dirnames if dirname not in EXCLUDED]

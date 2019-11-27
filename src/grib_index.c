@@ -255,7 +255,7 @@ static grib_index_key* grib_index_new_key(grib_context* c,grib_index_key* keys,
     return keys;
 }
 
-int grib_read_uchar( FILE* fh,unsigned char *val)
+int grib_read_uchar(FILE* fh,unsigned char *val)
 {
     if (fread(val,sizeof(unsigned char),1,fh) <1) {
         if (feof(fh)) return GRIB_END_OF_FILE;
@@ -393,9 +393,9 @@ static grib_field* grib_read_field(grib_context* c, FILE* fh, grib_file** files,
 {
     grib_field* field=NULL;
     short file_id;
-    unsigned char marker ;
-    unsigned long offset;
-    unsigned long length;
+    unsigned char marker=0;
+    unsigned long offset=0;
+    unsigned long length=0;
 
     *err = grib_read_uchar(fh,&marker);
     if(marker == NULL_MARKER) return NULL;
@@ -1278,7 +1278,7 @@ grib_index* grib_index_new_from_file(grib_context* c, char* filename, const char
     return index;
 }
 
-int grib_index_get_size(grib_index* index,const char* key,size_t* size)
+int grib_index_get_size(const grib_index* index,const char* key,size_t* size)
 {
     grib_index_key* k=index->keys;
     while (k && strcmp(k->name,key)) k=k->next;
@@ -1287,7 +1287,7 @@ int grib_index_get_size(grib_index* index,const char* key,size_t* size)
     return 0;
 }
 
-int grib_index_get_string(grib_index* index, const char* key, char** values, size_t *size)
+int grib_index_get_string(const grib_index* index, const char* key, char** values, size_t *size)
 {
     grib_index_key* k=index->keys;
     grib_string_list* kv;
@@ -1308,7 +1308,7 @@ int grib_index_get_string(grib_index* index, const char* key, char** values, siz
     return GRIB_SUCCESS;
 }
 
-int grib_index_get_long(grib_index* index, const char* key, long* values, size_t *size)
+int grib_index_get_long(const grib_index* index, const char* key, long* values, size_t *size)
 {
     grib_index_key* k=index->keys;
     grib_string_list* kv;
@@ -1334,7 +1334,7 @@ int grib_index_get_long(grib_index* index, const char* key, long* values, size_t
     return GRIB_SUCCESS;
 }
 
-int grib_index_get_double(grib_index* index,const char* key, double* values,size_t *size)
+int grib_index_get_double(const grib_index* index,const char* key, double* values,size_t *size)
 {
     grib_index_key* k=index->keys;
     grib_string_list* kv;

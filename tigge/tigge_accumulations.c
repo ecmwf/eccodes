@@ -19,7 +19,6 @@
 #endif
 
 #include <stdio.h>
-#include <string.h>
 #include <assert.h>
 
 #include "grib_api.h"

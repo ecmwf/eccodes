@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#include <limits.h>
+
 /*
    This is used by make_class.pl
 

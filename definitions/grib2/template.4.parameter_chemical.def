@@ -19,7 +19,6 @@ unsigned[1] backgroundProcess = 255 : edition_specific;
 alias backgroundGeneratingProcessIdentifier=backgroundProcess;
 
 #  Analysis or forecast generating processes identifier
-# (defined by originating centre)
 unsigned[1] generatingProcessIdentifier : dump;
 
 #  Hours of observational data cut-off after reference time

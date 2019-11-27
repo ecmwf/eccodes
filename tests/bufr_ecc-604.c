@@ -19,15 +19,17 @@ int opt_write = 0; /* If 1 write handle to file */
 
 static int encode_file(char *template_file, char *output_file)
 {
-    FILE *in, *out;
+    FILE *in, *out=NULL;
     codes_handle *source_handle = NULL;
     const void *buffer = NULL;
     size_t size = 0;
     int err = 0;
     long numSubsets = 0;
 
+    assert(template_file);
     in = fopen(template_file,"r"); assert(in);
     if (opt_write) {
+        assert(output_file);
         out = fopen(output_file,"w");  assert(out);
     }
 
