@@ -2048,9 +2048,15 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
 
     /* The limit keys must exist if we are here */
     err = grib_get_long(h, "param_value_min", &min_field_value_allowed);
-    if (err) return err;
+    if (err) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,"grib_util_grib_data_quality_check: Could not get param_value_min");
+        return err;
+    }
     err = grib_get_long(h, "param_value_max", &max_field_value_allowed);
-    if (err) return err;
+    if (err) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,"grib_util_grib_data_quality_check: Could not get param_value_max");
+        return err;
+    }
 
     dmin_allowed = (double)min_field_value_allowed;
     dmax_allowed = (double)max_field_value_allowed;
