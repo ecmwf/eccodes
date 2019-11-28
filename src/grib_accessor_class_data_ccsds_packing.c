@@ -544,7 +544,7 @@ static void print_error_msg(grib_context* c)
 {
     grib_context_log(c, GRIB_LOG_ERROR,
             "grib_accessor_data_ccsds_packing: CCSDS support not enabled. "
-            "Please rebuild with -DENABLE_AEC=ON");
+            "Please rebuild with -DENABLE_AEC=ON (Adaptive Entropy Coding library)");
 }
 static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
