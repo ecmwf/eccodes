@@ -687,13 +687,14 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
  s2s/enfo/ammc: warning: s2s.ssr_20160807_25.grib2, field 62 [time_integrated_surface_net_solar_radiation_sfc]: time_integrated_surface_net_solar_radiation_sfc minimum value 10280.6 is not in [-0.1,10000]
  */
    {
-      "time_integrated_surface_net_solar_radiation_sfc",
+      "time_integrated_surface_net_solar_radiation_sfc.glob",
       -10,
       1e+05,
       1e+05,
       1e+07,
       {
          {"model", GRIB_TYPE_STRING, 0, "glob"},
+         {"paramId", GRIB_TYPE_LONG, 176},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 4},
          {"parameterNumber", GRIB_TYPE_LONG, 9},
@@ -711,7 +712,7 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
       1e+05,
       1e+09,
       {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
+         {"paramId", GRIB_TYPE_LONG, 169},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 4},
          {"parameterNumber", GRIB_TYPE_LONG, 7},
@@ -928,30 +929,6 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
       {&point_in_time, &given_thickness, &has_bitmap},
    },
 
-   {
-      "maximum_wind_gust.glob",
-      0,
-      10,
-      0,
-      100,
-      {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
-
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 2},
-         {"parameterNumber", GRIB_TYPE_LONG, 22},
-
-         {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 2},
-
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 103},
-         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
-         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 10},
-
- /*      {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 255}, */
-         {NULL, },
-      },
-      {&three_hourly, &given_level},
-   },
 
 /* 
    cosmoleps-arpasimc-eu 20140323, 12UTC, prod: tigge_lam.vmax_10m.9999.grib2, field 11 [maximum_wind_gust.lam]: maximum_wind_gust.lam maximum value 106.861 is not in [0,100] 
@@ -994,7 +971,7 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
 */
 
    {
-      "maximum_wind_gust.lam",
+      "maximum_wind_gust.lam.mogreps",
       0,
       20,
       0,
@@ -1086,27 +1063,6 @@ s2s/egrr: s2s.z_s2s_c_ukmo_20160102000000_glob_prod_pf_1440_002.rt.pl.grib2, fie
       200,
       35000,
       {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
-
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 3},
-         {"parameterNumber", GRIB_TYPE_LONG, 5},
-
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
-         {NULL, },
-      },
-      {&point_in_time, &given_level, &pressure_level},
-   },
-   {
-      "geopotential_height_pl.uerra",
-      -5000,
-      30600,
-      200,
-      35000,
-      {
-         {"paramId", GRIB_TYPE_LONG, 156},
-         {"class", GRIB_TYPE_STRING, 0, "ur"}, 
-
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 3},
          {"parameterNumber", GRIB_TYPE_LONG, 5},
@@ -1124,8 +1080,6 @@ s2s/egrr: s2s.z_s2s_c_ukmo_20160102000000_glob_prod_pf_1440_002.rt.pl.grib2, fie
       2000,
       350000,
       {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
-
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 3},
          {"parameterNumber", GRIB_TYPE_LONG, 4},
@@ -1136,25 +1090,6 @@ s2s/egrr: s2s.z_s2s_c_ukmo_20160102000000_glob_prod_pf_1440_002.rt.pl.grib2, fie
       {&point_in_time, &given_level, &pressure_level},
    },
 
-   {
-      "geopotential_pl.uerra",
-      -5000,
-      306000,
-      2000,
-      350000,
-      {
-         {"paramId", GRIB_TYPE_LONG, 129},
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
-
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 3},
-         {"parameterNumber", GRIB_TYPE_LONG, 4},
-
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
-         {NULL, },
-      },
-      {&point_in_time, &given_level, &pressure_level},
-   },
 
 /*
 warning: s2s.lfpw_t_10.grib2, field 61 [temperature_pl]: temperature_pl minimum value 159.934 is not in [160,260]
@@ -2442,55 +2377,6 @@ uerra/egrr (something like ad hoc 1 grid-point issue (similarly grid-point storm
       {&point_in_time, &given_level}, /* check model levels?? */
    },
 
-/*
-  uerra/egrr warning: oper.2010-03-13.ml.grib2, field 16 [cloud_cover_ml]: cloud_cover_ml minimum value -0.906414 is not in [0,1e-10]
-   {
-      "cloud_cover_ml.uerra.egrr",
-      -10,
-      1e-10,
-      0,
-      100.00001,
-      {
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
-         {"centre", GRIB_TYPE_STRING, 1, "egrr"},
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 6},
-         {"parameterNumber", GRIB_TYPE_LONG, 22},
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 105},
-         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
-         {NULL, },
-      },
-      {&point_in_time, &given_level},
-   },
-*/
-
-   /* pressure level */
-
-/* 
-uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl.grib2, field 76 [geopotential_height_pl.ur]: geopotential_height_pl.ur minimum value -2938.29 is not in [-1300,300000]
-
-??? xxx TBD to be deleted and the global one used only!
-
-   {
-      "geopotential_height_pl.ur",
-      -5000,
-      300000,
-      2000,
-      350000,
-      {
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
-
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 3},
-         {"parameterNumber", GRIB_TYPE_LONG, 5},
-
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 100},
-         {NULL, },
-      },
-      {&point_in_time, &given_level, &pressure_level},
-   },
-*/
-
    {
       "specific_cloud_ice_water_content_pl",
        0,
@@ -2510,12 +2396,13 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
    },
 
    {
-      "cloud_cover_pl",
+      "cloud_cover_pl.glob",
       0,
       1e-10,
       100,
       100.00001,
       {
+         {"paramId", GRIB_TYPE_LONG, 260257},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 6},
          {"parameterNumber", GRIB_TYPE_LONG, 22},
@@ -2623,14 +2510,13 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
 
 */
    {
-      "relative_humidity_pl.ur",
+      "relative_humidity_pl",
        0,
        30,
        0,
        180,
       {
          {"paramId", GRIB_TYPE_LONG, 157},
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
 
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 1},
@@ -2933,13 +2819,12 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
   uerra, eswi-fc: fc.tidirswrf.sfc.grib2, field 6 [time_integrated_surface_direct_solar_radiation]: time_integrated_surface_direct_solar_radiation minimum value 58442 is not in [-0.1,20000]
 */
    {
-      "time_integrated_surface_direct_solar_radiation.ur",
+      "time_integrated_surface_direct_solar_radiation",
       -10,
       1e+08,
       0,
       1e+09,
       {
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
          {"paramId", GRIB_TYPE_LONG, 260264},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 4},
@@ -2951,36 +2836,13 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       {&from_start, &predefined_level},
    },
 
-/*
-  s2s, lfpw-enfo:  time_integrated_surface_net_solar_radiation_downwards_sfc minimum value -1.02308 is not in [-1,1e+07]
-*/
-
    {
-      "time_integrated_surface_net_solar_radiation_downwards_sfc.ur",
-      -10,
-      1e+08,
-      0,
-      1e+09,
-      {
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
-         {"paramId", GRIB_TYPE_LONG, 169},
-         {"discipline", GRIB_TYPE_LONG, 0},
-         {"parameterCategory", GRIB_TYPE_LONG, 4},
-         {"parameterNumber", GRIB_TYPE_LONG, 7},
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
-         {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 1},
-         {NULL, },
-      },
-      {&from_start, &predefined_level},
-   },
-   {
-      "time_integrated_surface_net_solar_radiation_sfc.ur",
+      "time_integrated_surface_net_solar_radiation_sfc.lam",
       -0.1,
       1e+08,
       0,
       1e+09,
       {
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
          {"paramId", GRIB_TYPE_LONG, 176},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 4},
@@ -3032,34 +2894,35 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       {&point_in_time, &given_level},
    },
    {
-      "10_metre_wind_gust_uerra",
+      "10_metre_wind_gust_since_pp",
       0.001,
       10,
       10,
       150,
       {
          {"paramId", GRIB_TYPE_LONG, 49},
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
+
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 2},
          {"parameterNumber", GRIB_TYPE_LONG, 22},
+
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 103},
          {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
          {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 10},
+
          {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 2},
          {NULL, },
       },
       {&since_prev_pp, &given_level},
    },
    {
-      "2_metre_maximum_temperature_uerra",
+      "2_metre_maximum_temperature",
       200,
       340,
       200,
       340,
       {
          {"paramId", GRIB_TYPE_LONG, 201},
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 0},
          {"parameterNumber", GRIB_TYPE_LONG, 0},
@@ -3070,14 +2933,13 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
       {&since_prev_pp, &given_level},
    },
    {
-      "2_metre_minimum_temperature_uerra",
+      "2_metre_minimum_temperature",
       200,
       340,
       200,
       340,
       {
          {"paramId", GRIB_TYPE_LONG, 202},
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 0},
          {"parameterNumber", GRIB_TYPE_LONG, 0},
@@ -3274,14 +3136,13 @@ uerra:edzw-an warning: /tmp/marm/uerra/cosmo/sample2/grib2/fc.200812021200+27.pl
    },
 
    {
-      "cloud_cover_pl.ur",
+      "cloud_cover_pl.lam",
       0,
       1e-10,
       0,
       100,
       {
          {"paramId", GRIB_TYPE_LONG, 260257},
-         {"class", GRIB_TYPE_STRING, 0, "ur"},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 6},
          {"parameterNumber", GRIB_TYPE_LONG, 22},
@@ -3894,7 +3755,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 29315},
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap},
    },
    {
       "average_salinity_in_the_upper_300_m_o2d.s2",
@@ -3991,7 +3852,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap},
    },
    {
       "eastward_sea_water_velocity_o2d.s2",
@@ -4008,8 +3869,6 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"parameterNumber", GRIB_TYPE_LONG, 2},
 
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
-         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
-         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
 
          {NULL, },
       },
@@ -4030,8 +3889,6 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"parameterNumber", GRIB_TYPE_LONG, 3},
 
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
-         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
-         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
 
          {NULL, },
       },
@@ -4057,7 +3914,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap},
    },
    {
       "sea_surface_height_o2d.s2",
@@ -4079,7 +3936,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap},
    },
    {
       "sea_surface_practical_salinity_o2d.s2",
@@ -4101,7 +3958,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap},
    },
 
 };

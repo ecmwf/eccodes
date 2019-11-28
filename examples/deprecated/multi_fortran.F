@@ -13,7 +13,7 @@ C
 C  Description: How to decode grib messages containing multiple
 C               fields. Try to turn on and off multi support to
 C               see the difference. Default is OFF.
-C         For all the tools defalut is multi support ON.
+C         For all the tools default is multi support ON.
 C
 C
 C

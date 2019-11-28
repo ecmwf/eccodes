@@ -14,7 +14,7 @@
  * Description: How to decode grib messages containing multiple
  *              fields. Try to turn on and off multi support to
  *              see the difference. Default is OFF.
- *  			For all the tools defalut is multi support ON.
+ *  			For all the tools default is multi support ON.
  *
  *
  *

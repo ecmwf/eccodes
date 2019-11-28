@@ -1,4 +1,3 @@
-# Product Discipline 0: Meteorological products, Parameter Category 7: Thermodynamic Stability Indices
 0 0 Parcel lifted index (to 500 hPa) (K)
 1 1 Best lifted index (to 500 hPa) (K)
 2 2 K index (K)
@@ -12,7 +11,5 @@
 10 10 Surface lifted index (K)
 11 11 Best (4-layer) lifted index (K)
 12 12 Richardson number (Numeric)
-#13-191 Reserved
-#192-254 Reserved for local use
 255 255 Missing
 

@@ -12,10 +12,73 @@
 
 # Define a common label for all the tmp files
 label="bufr_extract_headers_test"
-
 temp1="temp.${label}.1"
 temp2="temp.${label}.2"
 
+# Multi-message BUFR
+# --------------------
+input=${data_dir}/bufr/aeolus_wmo_26.bufr
+KEYS='offset,edition,totalLength'
+$EXEC ${test_dir}/bufr_extract_headers  $KEYS  $input > $temp1
+${tools_dir}/bufr_get                -p $KEYS  $input > $temp2
+diff $temp1 $temp2
+
+# Test local ECMWF keys; should be "not_found" for this input
+# -----------------------------------------------------------
+input=${data_dir}/bufr/PraticaTemp.bufr
+KEYS='localSectionPresent,rdbType,ident,isSatellite,satelliteID'
+$EXEC ${test_dir}/bufr_extract_headers $KEYS $input > $temp1
+${tools_dir}/bufr_get            -f -p $KEYS $input > $temp2
+diff $temp1 $temp2
+
+
+# Local Section keys
+# --------------------
+# DWD BUFR with a local section
+input=${data_dir}/bufr/uegabe.bufr
+r=`${test_dir}/bufr_extract_headers localSectionPresent,ecmwfLocalSectionPresent $input`
+[ "$r" = "1 0" ]
+# ECMWF BUFR but has no local section
+input=${data_dir}/bufr/207003.bufr
+r=`${test_dir}/bufr_extract_headers localSectionPresent,ecmwfLocalSectionPresent $input`
+[ "$r" = "0 0" ]
+# ECMWF BUFR with a local section
+input=${data_dir}/bufr/aaen_55.bufr
+r=`${test_dir}/bufr_extract_headers localSectionPresent,ecmwfLocalSectionPresent $input`
+[ "$r" = "1 1" ]
+
+# Key 'centre' as string
+# -----------------------
+r=`${test_dir}/bufr_extract_headers centre ${data_dir}/bufr/aaen_55.bufr`
+[ "$r" = "ecmf" ]
+r=`${test_dir}/bufr_extract_headers centre ${data_dir}/bufr/uegabe.bufr`
+[ "$r" = "edzw" ]
+r=`${test_dir}/bufr_extract_headers centre ${data_dir}/bufr/synop_multi_subset.bufr`
+[ "$r" = "enmi" ]
+r=`${test_dir}/bufr_extract_headers centre ${data_dir}/bufr/PraticaTemp.bufr`
+[ "$r" = "cnmc" ]
+r=`${test_dir}/bufr_extract_headers centre ${data_dir}/bufr/israel_observations_2017041010.bufr`
+[ "$r" = "234" ]
+
+
+# Test rdbSubtype
+# ---------------
+fBufr3Input=$ECCODES_SAMPLES_PATH/BUFR3_local.tmpl
+fBufr4Input=$ECCODES_SAMPLES_PATH/BUFR4_local.tmpl
+inputs="$fBufr3Input $fBufr4Input"
+for fin in $inputs; do
+  ${tools_dir}/bufr_set -s oldSubtype=2,newSubtype=300 $fin $temp1
+  r=`${test_dir}/bufr_extract_headers rdbSubtype,oldSubtype,newSubtype $temp1`
+  [ "$r" = "2 2 300" ]
+
+  ${tools_dir}/bufr_set -s oldSubtype=255,newSubtype=300 $fin $temp1
+  res=`${test_dir}/bufr_extract_headers rdbSubtype,oldSubtype,newSubtype $temp1`
+  [ "$res" = "300 255 300" ]
+done
+
+
+# Test all BUFR files
+# ---------------------
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
 KEYS='edition,totalLength,bufrHeaderCentre,dataCategory,masterTablesVersionNumber,typicalMonth,typicalDay,rdbType,localYear,qualityControl,numberOfSubsets,compressedData,ident'
@@ -24,10 +87,12 @@ for bf in ${bufr_files}; do
     input=${data_dir}/bufr/$bf
     $EXEC ${test_dir}/bufr_extract_headers $KEYS $input > $temp1
     ${tools_dir}/bufr_get            -f -p $KEYS $input > $temp2
-    diff -w $temp1 $temp2
+    diff $temp1 $temp2
 done
 
-# BUFRs with localLatitude1, localLongitude1, localLongitude2 etc
+
+# BUFRs with localLatitude1, localLongitude2 etc
+# ----------------------------------------------
 bufr_files="
 aaen_55.bufr
 aben_55.bufr
@@ -135,7 +200,7 @@ for bf in ${bufr_files}; do
     input=${data_dir}/bufr/$bf
     $EXEC ${test_dir}/bufr_extract_headers $KEYS $input > $temp1
     ${tools_dir}/bufr_get            -f -p $KEYS $input > $temp2
-    diff -w $temp1 $temp2
+    diff $temp1 $temp2
 done
 
 

@@ -87,7 +87,7 @@ static int is_ident_key(const bufr_keys_iterator* kiter)
     if (kiter->current->sub_section)
         return 0;
 
-    if (GRIB_ACCESSOR_FLAG_HIDDEN == kiter->current->flags &&
+    if ((GRIB_ACCESSOR_FLAG_HIDDEN & kiter->current->flags) != 0 &&
         strcmp(kiter->current->name, "keyMore")==0         &&
         grib_is_defined(kiter->handle, "ls.ident"))
     {

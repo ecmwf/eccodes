@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_get
- *
- */
-
 #include "grib_tools.h"
 
 grib_option grib_options[]={
@@ -20,6 +15,7 @@ grib_option grib_options[]={
         {"f",0,0,0,1,0},
         {"p:",0,0,0,1,0},
         {"F:",0,0,1,1,"%g"},
+        {"B:",0,0,0,1,0},
         {"l:",0,0,0,1,0},
         {"P:",0,0,0,1,0},
         {"w:",0,0,0,1,0},

@@ -1,4 +1,3 @@
-# Product Discipline 2: Land surface products, Parameter Category 0: Vegetation/Biomass
 0 0 Land cover (0=land, 1=sea) (Proportion)
 1 1 Surface roughness (m)
 2 2 Soil temperature (K)
@@ -23,7 +22,5 @@
 21 21 Humidity parameter in canopy conductance (Proportion)
 22 22 Soil moisture (kg m-3)
 26 26 Wilting point (kg m-3)
-# 23-191 Reserved
-#192-254 Reserved for local use
 255 255 Missing
 

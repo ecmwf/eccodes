@@ -1,5 +1,5 @@
 # Code table 4.2 - Parameter number by product discipline and parameter category. Product discipline 0 - Meteorological products, parameter category 2: momentum
-0 0 Wind direction (from which blowing) (degree true) (deg)
+0 0 Wind direction (from which blowing) (degree true)
 1 1 Wind speed (m/s)
 2 2 u-component of wind (m/s)
 3 3 v-component of wind (m/s)

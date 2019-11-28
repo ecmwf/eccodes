@@ -8,7 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 #include <stdlib.h>
-#include <math.h>
 #include <stdio.h>
 #include <string.h>
 

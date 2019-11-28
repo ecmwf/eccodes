@@ -13,7 +13,6 @@
  *
  */
 #include <stdio.h>
-#include <assert.h>
 #include "grib_api_internal.h"
 
 static void usage(const char* prog) {

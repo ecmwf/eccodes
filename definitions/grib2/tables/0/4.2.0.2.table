@@ -1,5 +1,4 @@
-# Product Discipline 0: Meteorological products, Parameter Category 2: Momentum
-0 0 Wind direction [from which blowing] (deg true)
+0 0 Wind direction (from which blowing) (deg true)
 1 1 Wind speed (m s-1)
 2 2 u-component of wind (m s-1)
 3 3 v-component of wind (m s-1)
@@ -7,8 +6,8 @@
 5 5 Velocity potential (m2 s-1)
 6 6 Montgomery stream function (m2 s-2)
 7 7 Sigma coordinate vertical velocity (s-1)
-8 8 Vertical velocity [pressure] (Pa s-1)
-9 9 Vertical velocity [geometric] (m s-1)
+8 8 Vertical velocity (pressure) (Pa s-1)
+9 9 Vertical velocity (geometric) (m s-1)
 10 10 Absolute vorticity (s-1)
 11 11 Absolute divergence (s-1)
 12 12 Relative vorticity (s-1)
@@ -21,7 +20,7 @@
 19 19 Wind mixing energy (J)
 20 20 Boundary layer dissipation (W m-2)
 21 21 Maximum wind speed (m s-1)
-22 22 Wind speed [gust] (m s-1)
+22 22 Wind speed (gust) (m s-1)
 23 23 u-component of wind (gust) (m s-1)
 24 24 v-component of wind (gust) (m s-1)
 25 25 Vertical speed shear (s-1)
@@ -30,6 +29,4 @@
 28 28 V-component storm motion (m s-1)
 29 29 Drag coefficient (Numeric)
 30 30 Frictional velocity (m s-1)
-# 31-191 Reserved
-# 192-254 Reserved for local use
 255 255 Missing

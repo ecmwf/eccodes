@@ -8,7 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include <stdarg.h>
 #include "grib_api_internal.h"
 
 int grib_expression_native_type(grib_handle* h,grib_expression* g)

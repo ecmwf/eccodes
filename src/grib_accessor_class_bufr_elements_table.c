@@ -13,7 +13,6 @@
  ****************************************/
 
 #include "grib_api_internal.h"
-#include <ctype.h>
 
 #if GRIB_PTHREADS
 static pthread_once_t once  = PTHREAD_ONCE_INIT;

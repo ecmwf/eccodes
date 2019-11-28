@@ -107,6 +107,7 @@ int is_lam = 0;
 int is_s2s = 0;
 int is_s2s_refcst = 0;
 int is_uerra = 0;
+int is_crra = 0;
 
 const char* good = NULL;
 const char* bad = NULL;
@@ -553,7 +554,7 @@ static void pressure_level(grib_handle* h,const parameter* p,double min,double m
 {
     long level = get(h,"level");
 
-    if (is_uerra){
+    if (is_uerra && !is_crra){
         switch(level)
         {
         case 1000:
@@ -576,10 +577,49 @@ static void pressure_level(grib_handle* h,const parameter* p,double min,double m
         case  150:
         case  100:
         case   70:
-        case  50:
+        case   50:
         case   30:
         case   20:
         case   10:
+            break;
+        default:
+            printf("%s, field %d [%s]: invalid pressure level %ld\n",file,field,param,level);
+            error++;
+            break;
+        }
+    }
+    else if (is_uerra && is_crra){
+        switch(level)
+        {
+        case 1000:
+        case  975:
+        case  950:
+        case  925:
+        case  900:
+        case  875:
+        case  850:
+        case  825:
+        case  800:
+        case  750:
+        case  700:
+        case  600:
+        case  500:
+        case  400:
+        case  300:
+        case  250:
+        case  200:
+        case  150:
+        case  100:
+        case   70:
+        case   50:
+        case   30:
+        case   20:
+        case   10:
+        case    7:
+        case    5:
+        case    3:
+        case    2:
+        case    1:
             break;
         default:
             printf("%s, field %d [%s]: invalid pressure level %ld\n",file,field,param,level);
@@ -1121,6 +1161,23 @@ static void check_parameter(grib_handle* h,double min,double max)
     }
 }
 
+static void check_packing(grib_handle* h)
+{
+    /* ECC-1009: Warn if not using simple packing */
+    int err = 0;
+    char packingType[254] = {0,};
+    size_t len = sizeof(packingType);
+    const char* expected_packingType = "grid_simple";
+
+    err = grib_get_string(h, "packingType", packingType, &len);
+    if (err) return;
+    if (strcmp(packingType, expected_packingType)!=0) {
+        printf("warning: %s, field %d [%s]: invalid packingType %s (Should be %s)\n",
+               file, field, param, packingType, expected_packingType);
+        warning++;
+    }
+}
+
 static void verify(grib_handle* h)
 {
     double min = 0,max = 0;
@@ -1195,6 +1252,8 @@ static void verify(grib_handle* h)
 
     check_parameter(h,min,max);
 
+    check_packing(h);
+
     /* Section 1 */
 
     CHECK(ge(h,"gribMasterTablesVersionNumber",4));
@@ -1252,7 +1311,13 @@ static void verify(grib_handle* h)
     }
 
     if (is_uerra){
-        CHECK(eq(h,"productionStatusOfProcessedData",8)||eq(h,"productionStatusOfProcessedData",9)); /*  UERRA prod||test */
+        if (is_crra){
+            CHECK(eq(h,"productionStatusOfProcessedData",10)||eq(h,"productionStatusOfProcessedData",11)); /*  CRRA prod||test */
+        }
+        else
+        {
+            CHECK(eq(h,"productionStatusOfProcessedData",8)||eq(h,"productionStatusOfProcessedData",9)); /*  UERRA prod||test */
+        }
         CHECK(le(h,"endStep",30));
         /* 0 = analysis , 1 = forecast */
         CHECK(eq(h,"typeOfProcessedData",0)||eq(h,"typeOfProcessedData",1));
@@ -1382,6 +1447,7 @@ static void usage()
     printf("   -s: check s2s fields\n");
     printf("   -r: check s2s reforecast fields\n");
     printf("   -u: check uerra fields\n");
+    printf("   -c: check crra fields (-u must be also used in this case)\n");
     exit(1);
 }
 
@@ -1437,6 +1503,11 @@ int main(int argc, char** argv)
             case 'u':
                 is_uerra=1;
                 break;
+
+            case 'c':
+                is_crra=1;
+                break;
+
 
             default:
                 usage();

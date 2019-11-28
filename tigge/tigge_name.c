@@ -27,9 +27,7 @@
 #include <sys/types.h>
 #include "tigge_tools.h"
 
-#ifndef ECCODES_ON_WINDOWS
-  #include <dirent.h>
-#else
+#ifdef ECCODES_ON_WINDOWS
   #include <direct.h>
   #include <io.h>
 #endif

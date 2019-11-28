@@ -145,7 +145,7 @@ typedef struct grib_multi_handle      codes_multi_handle;
 */
 typedef struct grib_context           codes_context;
 
-/*! Codes iterator, structure supporting a geographic iteration of values in a GRIB message.
+/*! GRIB geoiterator, structure supporting a geographic iteration of values in a GRIB message.
     \ingroup iterators
     \struct codes_iterator
 */
@@ -571,12 +571,12 @@ int codes_get_message_copy(const codes_handle* h, void* message, size_t *message
 /*! @{ */
 
 /*!
-* \brief Create a new iterator from a GRIB handle, using current geometry and values.
+* \brief Create a new geoiterator from a GRIB handle, using current geometry and values.
 *
-* \param h           : the handle from which the iterator will be created
+* \param h           : the handle from which the geoiterator will be created
 * \param flags       : flags for future use.
 * \param error       : error code
-* \return            the new iterator, NULL if no iterator can be created
+* \return            the new geoiterator, NULL if no geoiterator can be created
 */
 codes_iterator* codes_grib_iterator_new(const codes_handle* h, unsigned long flags, int* error);
 
@@ -594,9 +594,9 @@ codes_iterator* codes_grib_iterator_new(const codes_handle* h, unsigned long fla
 int codes_grib_get_data(const codes_handle *h, double *lats, double *lons, double *values);
 
 /**
-* Get the next value from an iterator.
+* Get the next value from a geoiterator.
 *
-* @param i           : the iterator
+* @param i           : the geoiterator
 * @param lat         : on output latitude in degree
 * @param lon         : on output longitude in degree
 * @param value       : on output value of the point
@@ -605,9 +605,9 @@ int codes_grib_get_data(const codes_handle *h, double *lats, double *lons, doubl
 int codes_grib_iterator_next(codes_iterator *i, double* lat, double* lon, double* value);
 
 /**
-* Get the previous value from an iterator.
+* Get the previous value from a geoiterator.
 *
-* @param i           : the iterator
+* @param i           : the geoiterator
 * @param lat         : on output latitude in degree
 * @param lon         : on output longitude in degree
 * @param value       : on output value of the point*
@@ -616,33 +616,33 @@ int codes_grib_iterator_next(codes_iterator *i, double* lat, double* lon, double
 int codes_grib_iterator_previous(codes_iterator *i, double* lat, double* lon, double* value);
 
 /**
-* Test procedure for values in an iterator.
+* Test procedure for values in a geoiterator.
 *
-* @param i           : the iterator
+* @param i           : the geoiterator
 * @return            boolean, 1 if the iterator still nave next values, 0 otherwise
 */
 int codes_grib_iterator_has_next(codes_iterator *i);
 
 /**
-* Test procedure for values in an iterator.
+* Test procedure for values in a geoiterator.
 *
-* @param i           : the iterator
+* @param i           : the geoiterator
 * @return            0 if OK, integer value on error
 */
 int codes_grib_iterator_reset(codes_iterator *i);
 
 /**
-*  Frees an iterator from memory
+*  Frees the geoiterator from memory.
 *
-* @param i           : the iterator
+* @param i           : the geoiterator
 * @return            0 if OK, integer value on error
 */
 int codes_grib_iterator_delete(codes_iterator *i);
 
 /*!
-* \brief Create a new nearest from a handle, using current geometry .
+* \brief Create a new nearest neighbour object from a handle, using current geometry.
 *
-* \param h           : the handle from which the iterator will be created
+* \param h           : the handle from which the nearest object will be created
 * \param error       : error code
 * \return            the new nearest, NULL if no nearest can be created
 */
@@ -706,7 +706,7 @@ int codes_grib_nearest_delete(codes_nearest *nearest);
 * @return            0 if OK, integer value on error
 */
 int codes_grib_nearest_find_multiple(const codes_handle* h, int is_lsm,
-    double* inlats, double* inlons, long npoints,
+    const double* inlats, const double* inlons, long npoints,
     double* outlats, double* outlons,
     double* values, double* distances, int* indexes);
 
@@ -1262,13 +1262,16 @@ codes_handle *codes_grib_util_set_spec(codes_handle *h,
     size_t data_values_count,
     int *err);
 
-/* Build an array of headers from input BUFR file.
+/* EXPERIMENTAL FEATURE
+ * Build an array of headers from input BUFR file.
  * result = array of 'codes_bufr_header' structs with 'num_messages' elements.
  *          This array should be freed by the caller.
  * num_messages = number of messages found in the input file.
+ * strict = If 1 means fail if any message is invalid.
  * returns 0 if OK, integer value on error.
  */
-int codes_bufr_extract_headers_malloc(codes_context* c, const char* filename, codes_bufr_header** result, int* num_messages);
+int codes_bufr_extract_headers_malloc(codes_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
+int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char *val, size_t *len);
 
 /* --------------------------------------- */
 #ifdef __cplusplus

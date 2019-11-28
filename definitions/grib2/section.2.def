@@ -22,6 +22,12 @@ if ( addEmptySection2 == 0 ) {
             template  tiggeSection "grib2/local.tigge.[tiggeLocalVersion:l].def";
         }
 
+        if(productionStatusOfProcessedData == 10 || productionStatusOfProcessedData == 11) {
+            # crra = Copernicus Regional ReAnalysis
+            codetable[2] crraLocalVersion 'grib2/crraLocalVersion.table' = 1 : dump;
+            template  crraSection "grib2/local.crra.[crraLocalVersion:l].def";
+        }
+
         codetable[2] grib2LocalSectionNumber 'grib2/grib2LocalSectionNumber.[centreForLocal:l].table' = 1 : dump;
     
         if (grib2LocalSectionNumber!=0) {

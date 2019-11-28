@@ -16,7 +16,6 @@
 
 #include "grib_api_internal.h"
 #include <math.h>
-#include <errno.h>
 #include <signal.h>
 #include <ctype.h>
 #include <stdlib.h>

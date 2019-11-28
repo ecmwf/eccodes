@@ -1391,7 +1391,7 @@ int grib_nearest_init(grib_nearest *i, grib_handle *h, grib_arguments *args);
 int grib_nearest_delete(grib_nearest *i);
 void grib_binary_search(double xx[], const unsigned long n, double x, int *ju, int *jl);
 double grib_nearest_distance(double radius, double lon1, double lat1, double lon2, double lat2);
-int grib_nearest_find_multiple(const grib_handle *h, int is_lsm, double *inlats, double *inlons, long npoints, double *outlats, double *outlons, double *values, double *distances, int *indexes);
+int grib_nearest_find_multiple(const grib_handle *h, int is_lsm, const double *inlats, const double *inlons, long npoints, double *outlats, double *outlons, double *values, double *distances, int *indexes);
 
 /* grib_nearest_class.c */
 grib_nearest *grib_nearest_factory(grib_handle *h, grib_arguments *args);
@@ -1470,11 +1470,12 @@ grib_handle *grib_util_set_spec(grib_handle *h, const grib_util_grid_spec *spec,
 grib_handle *grib_util_set_spec2(grib_handle *h, const grib_util_grid_spec2 *spec, const grib_util_packing_spec *packing_spec, int flags, const double *data_values, size_t data_values_count, int *err);
 int grib_moments(grib_handle *h, double east, double north, double west, double south, int order, double *moments, long *count);
 int parse_keyval_string(const char *grib_tool, char *arg, int values_required, int default_type, grib_values values[], int *count);
-int is_productDefinitionTemplateNumber_EPS(long productDefinitionTemplateNumber);
-int is_productDefinitionTemplateNumber_Chemical(long productDefinitionTemplateNumber);
-int is_productDefinitionTemplateNumber_ChemicalDistFunc(long productDefinitionTemplateNumber);
-int is_productDefinitionTemplateNumber_Aerosol(long productDefinitionTemplateNumber);
-int is_productDefinitionTemplateNumber_AerosolOptical(long productDefinitionTemplateNumber);
+int grib2_is_PDTN_EPS(long productDefinitionTemplateNumber);
+int grib2_is_PDTN_Chemical(long productDefinitionTemplateNumber);
+int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber);
+int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber);
+int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
+int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
 int is_index_file(const char *filename);
 char get_dir_separator_char(void);
 char *codes_getenv(const char *name);
@@ -1485,7 +1486,8 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
 int compute_bufr_key_rank(grib_handle *h, grib_string_list *keys, const char *key);
 char **codes_bufr_copy_data_return_copied_keys(grib_handle *hin, grib_handle *hout, size_t *nkeys, int *err);
 int codes_bufr_copy_data(grib_handle *hin, grib_handle *hout);
-int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages);
+int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
+int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char *val, size_t *len);
 
 
 /* string_util.c */

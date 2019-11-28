@@ -20,6 +20,3 @@
 # 161-191 Reserved
 # 192-254 Reserved for local use
 255 255 Missing
-# Notes:
-# (1) Negative values associated to this coordinate will indicate depth below ground surface.  If values are all below surface, use of entry 106 is recommended, with positive coordinate values instead.
-# (2) The Eta vertical coordinate system involves normalizing the pressure at some point on a specific level by the mean sea level pressure at that point.

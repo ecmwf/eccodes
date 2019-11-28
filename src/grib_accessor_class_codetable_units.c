@@ -8,12 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*****************************************
- *  Enrico Fucile
- ****************************************/
-
 #include "grib_api_internal.h"
-#include <ctype.h>
 
 /*
    This is used by make_class.pl
