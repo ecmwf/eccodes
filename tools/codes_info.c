@@ -35,6 +35,7 @@ int main( int argc,char* argv[])
     int major=ECCODES_MAJOR_VERSION;
     int minor=ECCODES_MINOR_VERSION;
     int revision=ECCODES_REVISION_VERSION;
+    grib_context* context = grib_context_get_default();
 
     while (1) {
         int c = getopt (argc, argv, "vds");
@@ -61,7 +62,6 @@ int main( int argc,char* argv[])
     if (nfiles != 0) usage_and_exit(argv[0]);
 
     if (print_flags ==  INFO_PRINT_ALL) {
-        grib_context* context = grib_context_get_default();
         printf("\n");
         printf("%s Version %d.%d.%d",
                 grib_get_package_name(), major,minor,revision);
@@ -90,7 +90,7 @@ int main( int argc,char* argv[])
             printf("(This is for backward compatibility. "
                    "It is recommended you use ECCODES_DEFINITION_PATH instead!)\n");
         } else {
-            printf("Default definition files path is used: %s\n",ECCODES_DEFINITION_PATH);
+            printf("Default definition files path is used: %s\n",context->grib_definition_files_path);
             printf("Definition files path can be changed by setting ECCODES_DEFINITION_PATH environment variable\n");
         }
         printf("\n");
@@ -118,7 +118,7 @@ int main( int argc,char* argv[])
         if ((path=codes_getenv("ECCODES_DEFINITION_PATH")) != NULL) {
             printf("%s",path);
         } else {
-            printf("%s",ECCODES_DEFINITION_PATH);
+            printf("%s",context->grib_definition_files_path);
         }
     }
 

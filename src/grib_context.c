@@ -461,6 +461,16 @@ grib_context* grib_context_get_default()
             }
         }
 
+        /* Definitions path supplement: Added at the head of existing path */
+        {
+            const char* defs_supp = codes_getenv("ECCODES_DEFINITION_PATH_SUPPLEMENT");
+            if (defs_supp) {
+                char buffer[DEF_PATH_MAXLEN];
+                ecc_snprintf(buffer, DEF_PATH_MAXLEN, "%s:%s", defs_supp, default_grib_context.grib_definition_files_path);
+                default_grib_context.grib_definition_files_path = strdup(buffer);
+            }
+        }
+
         grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Definitions path: %s",
                 default_grib_context.grib_definition_files_path);
         grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Samples path:     %s",

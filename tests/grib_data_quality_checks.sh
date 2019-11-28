@@ -11,7 +11,7 @@
 . ./include.sh
 set -u
 # ---------------------------------------------------------
-# This is the test for data quality checks
+# Tests for data quality checks
 # ---------------------------------------------------------
 label="grib_data_quality"
 tempOut=temp.${label}.out
@@ -19,6 +19,8 @@ tempErr=temp.${label}.err
 
 input1=${data_dir}/reduced_gaussian_surface.grib1
 input2=${data_dir}/reduced_gaussian_surface.grib2
+grib_check_key_equals $input1 paramId 167
+grib_check_key_equals $input2 paramId 167
 
 # Data quality checks disabled. Create cause huge values for temperature
 unset ECCODES_GRIB_DATA_QUALITY_CHECKS
@@ -43,6 +45,30 @@ set -e
 grep -q 'GRIB2 simple packing: unable to set values' $tempErr
 grep -q 'outside allowable limits' $tempErr
 
+# Override the defaults
+# ----------------------
+tempDir=tempdir.$label
+rm -rf $tempDir
+mkdir -p $tempDir
+# Set a large limit for temperature
+cat > $tempDir/param_limits.def <<EOF
+ constant default_min_val = -1e9 : long_type, hidden;
+ constant default_max_val = +1e9 : long_type, hidden;
+ concept param_value_min(default_min_val) {
+    0  = { paramId=167; }
+ } : long_type, hidden;
+ concept param_value_max(default_max_val) {
+    40000 = { paramId=167; }
+ } : long_type, hidden;
+EOF
+
+# Command should not fail now
+export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
+export ECCODES_DEFINITION_PATH_SUPPLEMENT=$test_dir/$tempDir
+${tools_dir}/grib_set -s scaleValuesBy=100 $input1 $tempOut
+
+
 
 # Clean up
+rm -rf $tempDir
 rm -f $tempOut $tempErr
