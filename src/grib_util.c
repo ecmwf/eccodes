@@ -2113,16 +2113,24 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
     int err = 0;
     long min_field_value_allowed=0, max_field_value_allowed=0;
     double dmin_allowed=0, dmax_allowed=0;
+    grib_context* ctx = h->context;
+    int is_error = 1;
+    /*
+     * If grib_data_quality_checks == 1, limits failure results in an error
+     * If grib_data_quality_checks == 2, limits failure results in a warning
+     */
+    Assert( ctx->grib_data_quality_checks == 1 || ctx->grib_data_quality_checks == 2 );
+    is_error = (ctx->grib_data_quality_checks == 1);
 
     /* The limit keys must exist if we are here */
     err = grib_get_long(h, "param_value_min", &min_field_value_allowed);
     if (err) {
-        grib_context_log(h->context, GRIB_LOG_ERROR,"grib_data_quality_check: Could not get param_value_min");
+        grib_context_log(ctx, GRIB_LOG_ERROR,"grib_data_quality_check: Could not get param_value_min");
         return err;
     }
     err = grib_get_long(h, "param_value_max", &max_field_value_allowed);
     if (err) {
-        grib_context_log(h->context, GRIB_LOG_ERROR,"grib_data_quality_check: Could not get param_value_max");
+        grib_context_log(ctx, GRIB_LOG_ERROR,"grib_data_quality_check: Could not get param_value_max");
         return err;
     }
 
@@ -2132,11 +2140,12 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
     if (min_val < dmin_allowed || max_val > dmax_allowed) {
         long paramId = 0;
         if (grib_get_long(h, "paramId", &paramId) == GRIB_SUCCESS) {
-            grib_context_log(h->context, GRIB_LOG_ERROR,
-                             "Parameter %ld: min/max (%g, %g) is outside allowable limits (%g, %g)",
-                             paramId, min_val, max_val, dmin_allowed, dmax_allowed);
+            fprintf(stderr, "ECCODES %s   :  Parameter %ld: min/max (%g, %g) is outside allowable limits (%g, %g)\n",
+                             (is_error? "ERROR":"WARNING"), paramId, min_val, max_val, dmin_allowed, dmax_allowed);
         }
-        return GRIB_OUT_OF_RANGE;
+        if (is_error) {
+            return GRIB_OUT_OF_RANGE; /* Failure */
+        }
     }
 
     return GRIB_SUCCESS;

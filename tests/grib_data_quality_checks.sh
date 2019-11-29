@@ -41,6 +41,13 @@ set -e
 [ $status -ne 0 ]
 grep -q 'outside allowable limits' $tempErr
 
+
+# Data quality checks enabled but only as a warning. Repacking should pass
+export ECCODES_GRIB_DATA_QUALITY_CHECKS=2
+${tools_dir}/grib_copy -r $tempOut /dev/null  2>$tempErr
+grep -q 'outside allowable limits' $tempErr
+
+
 # Data quality checks enabled. Scaling should fail
 export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
 set +e
@@ -58,6 +65,7 @@ set -e
 [ $status -ne 0 ]
 grep -q 'GRIB2 simple packing: unable to set values' $tempErr
 grep -q 'outside allowable limits' $tempErr
+
 
 # Override the defaults
 # ----------------------
