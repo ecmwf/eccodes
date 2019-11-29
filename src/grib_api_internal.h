@@ -64,6 +64,7 @@
    #include <dirent.h>
    #include <unistd.h>
    #include <inttypes.h>
+   #define ecc_snprintf snprintf
 #else
    #include <direct.h>
    #include <io.h>
@@ -98,6 +99,8 @@
    #    define chmod(path,mode)    _chmod(path,mode)
    #    define strdup(str)         _strdup(str)
    #  endif
+
+   #define ecc_snprintf _snprintf
 
 #endif
 

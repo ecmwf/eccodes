@@ -54,4 +54,17 @@ do
   fi
 done
 
+# In version 33 and higher, scanLevelQualityFlags (=033075) is renamed
+# This BUFR uses 033075
+input=${data_dir}/bufr/crit_202.bufr
+${tools_dir}/bufr_get -s masterTablesVersionNumber=$latest_wmo_version,unpack=1 \
+                      -p scanLevelDataValidityQualityFlags \
+                      $input
+# This BUFR uses 033080 which remains unchanged
+input=${data_dir}/bufr/atms_201.bufr
+${tools_dir}/bufr_get -s masterTablesVersionNumber=$latest_wmo_version,unpack=1 \
+                      -p scanLevelQualityFlags \
+                      $input
+
+
 rm -f $fTmp

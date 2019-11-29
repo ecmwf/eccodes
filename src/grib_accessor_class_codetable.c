@@ -419,6 +419,9 @@ static int grib_load_codetable(grib_context* c,const char* filename,
         char* r = title;
         char* units=0;
         char unknown[]="unknown";
+        char* last_open_paren = NULL;
+        char* last_clos_paren = NULL;
+
         ++lineNumber;
 
         line[strlen(line)-1] = 0;
@@ -427,6 +430,8 @@ static int grib_load_codetable(grib_context* c,const char* filename,
 
         if(*p == '#')
             continue;
+
+        last_open_paren = strrchr(line, '(');
 
         while(*p != '\0' && isspace(*p)) p++;
 
@@ -463,21 +468,25 @@ static int grib_load_codetable(grib_context* c,const char* filename,
         *q = 0;
         while(*p != '\0' && isspace(*p)) p++;
 
+        /* The title goes as far as the last open paren */
         while(*p != '\0')
         {
-            if(*p == '(' ) break;
+            if( last_open_paren && p >= last_open_paren && *p == '(' ) break;
             *r++ = *p++;
         }
         *r = 0;
 
-        while(*p != '\0' && isspace(*p)) p++;
-        if (*p != '\0') {
-            units=++p;
-            while(*p != '\0' && *p != ')' ) p++;
-            *p='\0';
-        } else {
-            units=unknown;
+        /* units at the end */
+        if (last_open_paren) {
+            last_clos_paren = strrchr(line, ')');
+            if (last_clos_paren && last_open_paren!=last_clos_paren) {
+                units = last_open_paren+1;
+                p = units;
+                p += (last_clos_paren - last_open_paren - 1);
+                *p='\0';
+            }
         }
+        if (!units) units=unknown;
 
         Assert(*abbreviation);
         Assert(*title);

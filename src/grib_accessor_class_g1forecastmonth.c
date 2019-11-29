@@ -23,6 +23,7 @@
    MEMBERS=const char* day
    MEMBERS=const char* hour
    MEMBERS=const char* fcmonth
+   MEMBERS=const char* check
    END_CLASS_DEF
 
  */
@@ -53,6 +54,7 @@ typedef struct grib_accessor_g1forecastmonth {
 	const char* day;
 	const char* hour;
 	const char* fcmonth;
+	const char* check;
 } grib_accessor_g1forecastmonth;
 
 extern grib_accessor_class* grib_accessor_class_long;
@@ -149,6 +151,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     self->day                      = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
     self->hour                     = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
     self->fcmonth                  = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->check                    = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -174,6 +177,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
 
     long fcmonth = 0;
     long gribForecastMonth = 0;
+    long check = 0;
 
     if ((ret=grib_get_long_internal(grib_handle_of_accessor(a),
             self->verification_yearmonth,&verification_yearmonth))!=GRIB_SUCCESS)
@@ -185,6 +189,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->hour,&hour))!=GRIB_SUCCESS)
         return ret;
     if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->fcmonth,&gribForecastMonth))!=GRIB_SUCCESS)
+        return ret;
+    if ((ret=grib_get_long_internal(grib_handle_of_accessor(a), self->check, &check))!=GRIB_SUCCESS)
         return ret;
 
     base_yearmonth = base_date / 100;
@@ -199,13 +205,14 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
         fcmonth++;
 
     if(gribForecastMonth != 0 && gribForecastMonth!=fcmonth) {
-        *val = gribForecastMonth;
-        return GRIB_SUCCESS;
-        /*
-        grib_context_log(a->context,GRIB_LOG_FATAL,"%s=%ld (%s-%s)=%ld",self->fcmonth,
-                gribForecastMonth,self->base_date,self->verification_yearmonth,fcmonth);
-        Assert(gribForecastMonth == fcmonth);
-        */
+        if (check) {
+            grib_context_log(a->context,GRIB_LOG_FATAL,"%s=%ld (%s-%s)=%ld",self->fcmonth,
+                             gribForecastMonth,self->base_date,self->verification_yearmonth,fcmonth);
+            Assert(gribForecastMonth == fcmonth);
+        } else {
+            *val = gribForecastMonth;
+            return GRIB_SUCCESS;
+        }
     }
 
     *val = fcmonth;

@@ -69,6 +69,16 @@ res2=`${tools_dir}/grib_get '-F%.1f' -p avg,enorm $temp`
 rm -f $temp
 
 
+# IEEE to Simple Packing
+# -----------------------
+input=${data_dir}/grid_ieee.grib
+${tools_dir}/grib_set -r -s packingType=grid_simple $input $temp
+grib_check_key_equals $temp packingType 'grid_simple'
+stats1=`${tools_dir}/grib_get -F%.2f -p skew,kurt $input`
+stats2=`${tools_dir}/grib_get -F%.2f -p skew,kurt $temp`
+[ "$stats1" = "$stats2" ]
+
+
 # Change grib packing test
 # -------------------------
 test_packing $grib1 $packing1

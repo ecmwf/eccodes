@@ -192,6 +192,7 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
     hdr->qualityControl = (long)grib_decode_unsigned_long(message, &pos_qualityControl, nbits_qualityControl);
     hdr->newSubtype     = (long)grib_decode_unsigned_long(message, &pos_newSubtype, nbits_newSubtype);
     hdr->daLoop         = (long)grib_decode_unsigned_long(message, &pos_daLoop, nbits_daLoop);
+    hdr->rdbSubtype = (hdr->oldSubtype < 255) ? hdr->oldSubtype : hdr->newSubtype;
 
     return GRIB_SUCCESS;
 }
@@ -219,7 +220,7 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
     } else {
         hdr->isSatellite = 0;
     }
-    
+
     if (hdr->isSatellite) {
         unsigned char* pKeyMoreLong = (unsigned char*)message + offset_keyMore; /* as an integer */
         unsigned char* pKeySat      = (unsigned char*)message + offset_keySat;
@@ -236,7 +237,7 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
         start = 32;
         lValue = (long)grib_decode_unsigned_long(pKeyMoreLong, &start, 25);
         hdr->localLatitude2  = (lValue - 9000000)/100000.0;
-        
+
         if (hdr->oldSubtype == 255 || hdr->numberOfSubsets > 255 ||
             (hdr->oldSubtype >= 121 && hdr->oldSubtype <= 130)   ||
             hdr->oldSubtype==31)
@@ -353,7 +354,7 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     hdr->dataCategory        = (long)grib_decode_unsigned_long(message, &pos_dataCategory, nbits_dataCategory);
     hdr->dataSubCategory     = (long)grib_decode_unsigned_long(message, &pos_dataSubCategory, nbits_dataSubCategory);
     hdr->masterTablesVersionNumber = (long)grib_decode_unsigned_long(
-        message, &pos_masterTablesVersionNumber, nbits_masterTablesVersionNumber);
+            message, &pos_masterTablesVersionNumber, nbits_masterTablesVersionNumber);
     hdr->localTablesVersionNumber = (long)grib_decode_unsigned_long(message, &pos_localTablesVersionNumber, nbits_localTablesVersionNumber);
     typicalYearOfCentury = (long)grib_decode_unsigned_long(message, &pos_typicalYearOfCentury, nbits_typicalYearOfCentury);
     hdr->typicalYear = (typicalCentury - 1) * 100  + typicalYearOfCentury;
@@ -367,8 +368,8 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
 
     offset_section2 = BUFR_SECTION0_LEN + section1Length;  /*bytes*/
     section2Length = 0;
-    hdr->ecmwfLocalSectionPresent = (section1Flags != 0);
-    if (hdr->ecmwfLocalSectionPresent) {
+    hdr->localSectionPresent = (section1Flags != 0);
+    if (hdr->localSectionPresent) {
         long pos_section2Length;
         const long nbits_section2Length = 3*8;
         pos_section2Length = offset_section2*8;
@@ -376,6 +377,7 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
         section2Length = grib_decode_unsigned_long(message, &pos_section2Length, nbits_section2Length);
 
         if (hdr->bufrHeaderCentre == 98) {
+            hdr->ecmwfLocalSectionPresent = 1;
             err = bufr_decode_rdb_keys(message, offset_section2, hdr);
         }
     }
@@ -497,8 +499,8 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
 
     offset_section2 = BUFR_SECTION0_LEN + section1Length;  /*bytes*/
     section2Length = 0;
-    hdr->ecmwfLocalSectionPresent = (section1Flags != 0);
-    if (hdr->ecmwfLocalSectionPresent) {
+    hdr->localSectionPresent = (section1Flags != 0);
+    if (hdr->localSectionPresent) {
         long pos_section2Length;
         const long nbits_section2Length = 3*8;
         pos_section2Length = offset_section2*8;
@@ -506,6 +508,7 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
         section2Length = grib_decode_unsigned_long(message, &pos_section2Length, nbits_section2Length);
 
         if (hdr->bufrHeaderCentre == 98) {
+            hdr->ecmwfLocalSectionPresent = 1;
             err = bufr_decode_rdb_keys(message, offset_section2, hdr);
         }
     }
@@ -548,7 +551,7 @@ static int bufr_decode_header(grib_context* c, const void* message, off_t offset
     return err;
 }
 
-static int count_bufr_messages(grib_context* c, FILE* f, int* n)
+static int count_bufr_messages(grib_context* c, FILE* f, int* n, int strict_mode)
 {
     int err=0;
     void* mesg=NULL;
@@ -565,19 +568,21 @@ static int count_bufr_messages(grib_context* c, FILE* f, int* n)
         if (!mesg) {
             if (err == GRIB_END_OF_FILE || err == GRIB_PREMATURE_END_OF_FILE) {
                 done = 1; /* reached the end */
+                break;
             }
+            if (strict_mode) return GRIB_DECODING_ERROR;
         }
         if (mesg && !err) {
             grib_context_free(c,mesg);
-            (*n)++;
         }
+        (*n)++;
     }
     rewind(f);
     if (err==GRIB_END_OF_FILE) err=GRIB_SUCCESS;
     return err;
 }
 
-int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages)
+int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode)
 {
     int err = 0, i = 0;
     FILE* fp = NULL;
@@ -592,7 +597,7 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
         perror(filename);
         return GRIB_IO_PROBLEM;
     }
-    err = count_bufr_messages(c, fp, num_messages);
+    err = count_bufr_messages(c, fp, num_messages, strict_mode);
     if (err) {
         grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to count BUFR messages in file \"%s\"", filename);
         fclose(fp);
@@ -611,23 +616,231 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
     }
     i = 0;
     while (err != GRIB_END_OF_FILE) {
+        if (i >= *num_messages) break;
         mesg = wmo_read_bufr_from_file_malloc(fp, 0, &size, &offset, &err);
         if (mesg != NULL && err == 0) {
-            int err2 = bufr_decode_header(c, mesg, offset, size, &(*result)[i++]);
+            int err2 = bufr_decode_header(c, mesg, offset, size, &(*result)[i]);
             if (err2) {
                 fclose(fp);
                 return err2;
             }
             grib_context_free(c, mesg);
         }
+        if (mesg && err) {
+            if (strict_mode) {
+                fclose(fp);
+                grib_context_free(c, mesg);
+                return GRIB_DECODING_ERROR;
+            }
+        }
         if (!mesg) {
             if (err != GRIB_END_OF_FILE && err != GRIB_PREMATURE_END_OF_FILE) {
                 /* An error occurred */
                 grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to read BUFR message");
+                if (strict_mode) {
+                    fclose(fp);
+                    return GRIB_DECODING_ERROR;
+                }
             }
         }
+        ++i;
     }
 
     fclose(fp);
+    return GRIB_SUCCESS;
+}
+
+static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
+{
+    switch (centre_code) {
+        case 1: return "ammc";
+        case 4: return "rums";
+        case 7: return "kwbc";
+        case 24: return "fapr";
+        case 28: return "vabb";
+        case 29: return "dems";
+        case 34: return "rjtd";
+        case 38: return "babj";
+        case 40: return "rksl";
+        case 41: return "sabm";
+        case 46: return "sbsj";
+        case 54: return "cwao";
+        case 58: return "fnmo";
+        case 69: return "nzkl";
+        case 74: return "egrr";
+        case 78: return "edzw";
+        case 80: return "cnmc";
+        case 82: return "eswi";
+        case 84: return "lfpw";
+        case 85: return "lfpw";
+        case 86: return "efkl";
+        case 88: return "enmi";
+        case 94: return "ekmi";
+        case 98: return "ecmf";
+        case 173: return "nasa";
+        case 195: return "wiix";
+        case 204: return "niwa";
+        case 214: return "lemm";
+        case 215: return "lssw";
+        case 218: return "habp";
+        case 224: return "lowm";
+        case 227: return "ebum";
+        case 233: return "eidb";
+        case 235: return "ingv";
+        case 239: return "crfc";
+        case 244: return "vuwien";
+        case 245: return "knmi";
+        case 246: return "ifmk";
+        case 247: return "hadc";
+        case 250: return "cosmo";
+        case 252: return "mpim";
+        case 254: return "eums";
+        case 255: return "consensus";
+        default: return NULL;
+    }
+}
+
+#if 0
+/* TODO: Not efficient as it opens the code table every time */
+static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
+{
+    char full_path[2014] = {0,};
+    char line[1024];
+    FILE *f = NULL;
+    const char* defs_path = grib_definition_path(NULL);
+
+    if      (edition == 3) sprintf(full_path, "%s/common/c-1.table", defs_path);
+    else if (edition == 4) sprintf(full_path, "%s/common/c-11.table", defs_path);
+    else return NULL;
+
+    f = codes_fopen(full_path, "r");
+    if (!f) return NULL;
+
+    while(fgets(line,sizeof(line)-1,f)) {
+        char* p = line;
+        int code = 0;
+        char abbreviation[32] = {0,};
+        char* q = abbreviation;
+
+        line[strlen(line)-1] = 0;
+
+        while(*p != '\0' && isspace(*p)) p++;
+
+        if(*p == '#')
+            continue;
+
+        while(*p != '\0' && isspace(*p)) p++;
+
+        if( *p =='\0' ) continue;
+
+        Assert(isdigit(*p));
+        while(*p != '\0') {
+            if(isspace(*p)) break;
+            code *= 10;
+            code += *p - '0';
+            p++;
+        }
+
+        while(*p != '\0' && isspace(*p)) p++;
+
+        while(*p != '\0') {
+            if(isspace(*p)) break;
+            *q++ = *p++;
+        }
+        *q = 0;
+        if (code == centre_code) {
+            fclose(f);
+            return strdup(abbreviation);
+        }
+    }
+    fclose(f);
+    return NULL;
+}
+#endif
+
+int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char *val, size_t *len)
+{
+    static const char* NOT_FOUND = "not_found";
+    int isEcmwfLocal = 0;
+    Assert(bh);
+    Assert(key);
+    *len = strlen(NOT_FOUND); /*By default*/
+
+    isEcmwfLocal = (bh->ecmwfLocalSectionPresent == 1);
+    Assert( !(isEcmwfLocal && bh->bufrHeaderCentre != 98)  );
+    Assert( !(bh->ecmwfLocalSectionPresent && !bh->localSectionPresent)  );
+
+    if      (strcmp(key, "message_offset")==0) *len = sprintf(val, "%lu", bh->message_offset);
+    else if (strcmp(key, "offset")==0) *len = sprintf(val, "%lu", bh->message_offset);
+    else if (strcmp(key, "message_size")==0) *len = sprintf(val, "%lu", bh->message_size);
+    else if (strcmp(key, "totalLength")==0) *len = sprintf(val, "%lu", bh->message_size);
+    else if (strcmp(key, "edition")==0) *len = sprintf(val, "%ld", bh->edition);
+    else if (strcmp(key, "masterTableNumber")==0) *len = sprintf(val, "%ld", bh->masterTableNumber);
+    else if (strcmp(key, "bufrHeaderSubCentre")==0) *len = sprintf(val, "%ld", bh->bufrHeaderSubCentre);
+    else if (strcmp(key, "bufrHeaderCentre")==0) *len = sprintf(val, "%ld", bh->bufrHeaderCentre);
+
+    else if (strcmp(key, "centre")==0) {
+        char* centre_str = codes_bufr_header_get_centre_name(bh->edition, bh->bufrHeaderCentre);
+        if (centre_str) *len = sprintf(val, "%s", centre_str);
+        else *len = sprintf(val, "%ld", bh->bufrHeaderCentre);
+    }
+
+    else if (strcmp(key, "updateSequenceNumber")==0) *len = sprintf(val, "%ld", bh->updateSequenceNumber);
+    else if (strcmp(key, "dataCategory")==0) *len = sprintf(val, "%ld", bh->dataCategory);
+    else if (strcmp(key, "dataSubCategory")==0) *len = sprintf(val, "%ld", bh->dataSubCategory);
+    else if (strcmp(key, "masterTablesVersionNumber")==0) *len = sprintf(val, "%ld", bh->masterTablesVersionNumber);
+    else if (strcmp(key, "localTablesVersionNumber")==0) *len = sprintf(val, "%ld", bh->localTablesVersionNumber);
+    else if (strcmp(key, "typicalYear")==0) *len = sprintf(val, "%ld", bh->typicalYear);
+    else if (strcmp(key, "typicalMonth")==0) *len = sprintf(val, "%ld", bh->typicalMonth);
+    else if (strcmp(key, "typicalDay")==0) *len = sprintf(val, "%ld", bh->typicalDay);
+    else if (strcmp(key, "typicalHour")==0) *len = sprintf(val, "%ld", bh->typicalHour);
+    else if (strcmp(key, "typicalMinute")==0) *len = sprintf(val, "%ld", bh->typicalMinute);
+    else if (strcmp(key, "typicalSecond")==0) *len = sprintf(val, "%ld", bh->typicalSecond);
+    else if (strcmp(key, "typicalDate")==0) *len = sprintf(val, "%06ld", bh->typicalDate);
+    else if (strcmp(key, "typicalTime")==0) *len = sprintf(val, "%06ld", bh->typicalTime);
+    else if (strcmp(key, "internationalDataSubCategory")==0) *len = sprintf(val, "%ld", bh->internationalDataSubCategory);
+    else if (strcmp(key, "localSectionPresent")==0) *len = sprintf(val, "%ld", bh->localSectionPresent);
+    else if (strcmp(key, "ecmwfLocalSectionPresent")==0) *len = sprintf(val, "%ld", bh->ecmwfLocalSectionPresent);
+
+    /* Local ECMWF keys. Can be absent so must return NOT_FOUND */
+    else if (strcmp(key, "rdbType")==0)    { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbType); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "oldSubtype")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->oldSubtype); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "ident")==0) {
+        if (!isEcmwfLocal || bh->ident == NULL || strlen(bh->ident)==0) strcpy(val, NOT_FOUND);
+        else *len = sprintf(val, "%s", bh->ident);
+    }
+    else if (strcmp(key, "localYear")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localYear); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localMonth")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localMonth); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localDay")==0)    { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localDay); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localHour")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localHour); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localMinute")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localMinute); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localSecond")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localSecond); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rdbtimeDay")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbtimeDay); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rdbtimeHour")==0)     { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbtimeHour); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rdbtimeMinute")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbtimeMinute); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rdbtimeSecond")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbtimeSecond); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rectimeDay")==0)      { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rectimeDay); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rectimeHour")==0)     { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rectimeHour); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rectimeMinute")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rectimeMinute); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rectimeSecond")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rectimeSecond); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "isSatellite")==0)     { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->isSatellite); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localLongitude1")==0) { if (isEcmwfLocal) *len = sprintf(val, "%g",  bh->localLongitude1); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localLatitude1")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%g",  bh->localLatitude1); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localLongitude2")==0) { if (isEcmwfLocal) *len = sprintf(val, "%g",  bh->localLongitude2); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localLatitude2")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%g",  bh->localLatitude2); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localLatitude")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%g",  bh->localLatitude); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localLongitude")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%g",  bh->localLongitude); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "qualityControl")==0)  { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->qualityControl); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "newSubtype")==0)      { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->newSubtype); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "rdbSubtype")==0)      { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbSubtype); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "daLoop")==0)          { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->daLoop); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "localNumberOfObservations")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localNumberOfObservations); else strcpy(val, NOT_FOUND); }
+    else if (strcmp(key, "satelliteID")==0)    { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->satelliteID); else strcpy(val, NOT_FOUND); }
+
+    else if (strcmp(key, "numberOfSubsets")==0) *len = sprintf(val, "%lu", bh->numberOfSubsets);
+    else if (strcmp(key, "observedData")==0) *len = sprintf(val, "%ld", bh->observedData);
+    else if (strcmp(key, "compressedData")==0) *len = sprintf(val, "%ld", bh->compressedData);
+    else return GRIB_NOT_FOUND;
+
     return GRIB_SUCCESS;
 }

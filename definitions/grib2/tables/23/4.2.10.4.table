@@ -18,7 +18,7 @@
 18 18 Water potential temperature (theta) (K)
 19 19 Water potential density (rho theta) (kg m-3)
 20 20 Water potential density anomaly (sigma theta) (kg m-3)
-21 21 Practical salinity (psu (numeric))
+21 21 Practical salinity (Numeric)
 # 22-191 Reserved 
 # 192-254 Reserved for local use 
 255 255 Missing 
