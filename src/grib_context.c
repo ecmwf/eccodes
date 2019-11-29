@@ -461,12 +461,12 @@ grib_context* grib_context_get_default()
             }
         }
 
-        /* Definitions path supplement: Added at the head of existing path */
+        /* Definitions path extra: Added at the head of (i.e. before) existing path */
         {
-            const char* defs_supp = codes_getenv("ECCODES_DEFINITION_PATH_SUPPLEMENT");
-            if (defs_supp) {
+            const char* defs_extra = getenv("ECCODES_EXTRA_DEFINITION_PATH");
+            if (defs_extra) {
                 char buffer[DEF_PATH_MAXLEN];
-                ecc_snprintf(buffer, DEF_PATH_MAXLEN, "%s:%s", defs_supp, default_grib_context.grib_definition_files_path);
+                ecc_snprintf(buffer, DEF_PATH_MAXLEN, "%s:%s", defs_extra, default_grib_context.grib_definition_files_path);
                 default_grib_context.grib_definition_files_path = strdup(buffer);
             }
         }

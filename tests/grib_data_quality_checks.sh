@@ -14,20 +14,34 @@ set -u
 # Tests for data quality checks
 # ---------------------------------------------------------
 label="grib_data_quality"
-tempOut=temp.${label}.out
+tempOut=temp.1.${label}.out
+temp2=temp.2.${label}.out
 tempErr=temp.${label}.err
+
+# Start with clean environment
+unset ECCODES_GRIB_DATA_QUALITY_CHECKS
+unset ECCODES_EXTRA_DEFINITION_PATH
+
 
 input1=${data_dir}/reduced_gaussian_surface.grib1
 input2=${data_dir}/reduced_gaussian_surface.grib2
 grib_check_key_equals $input1 paramId 167
 grib_check_key_equals $input2 paramId 167
 
-# Data quality checks disabled. Create cause huge values for temperature
-unset ECCODES_GRIB_DATA_QUALITY_CHECKS
+# Data quality checks disabled. Create huge values for temperature
 ${tools_dir}/grib_set -s scaleValuesBy=100 $input1 $tempOut
 ${tools_dir}/grib_set -s scaleValuesBy=100 $input2 $tempOut
 
-# Data quality checks enabled. Commands should fail
+# Data quality checks enabled. Repacking should fail
+export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
+set +e
+${tools_dir}/grib_copy -r $tempOut /dev/null  2>$tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q 'outside allowable limits' $tempErr
+
+# Data quality checks enabled. Scaling should fail
 export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
 set +e
 ${tools_dir}/grib_set -s scaleValuesBy=100 $input1 $tempOut 2>$tempErr
@@ -62,9 +76,9 @@ cat > $tempDir/param_limits.def <<EOF
  } : long_type, hidden;
 EOF
 
-# Command should not fail now
+# Command should succeed
 export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
-export ECCODES_DEFINITION_PATH_SUPPLEMENT=$test_dir/$tempDir
+export ECCODES_EXTRA_DEFINITION_PATH=$test_dir/$tempDir
 ${tools_dir}/grib_set -s scaleValuesBy=100 $input1 $tempOut
 
 
