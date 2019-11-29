@@ -11,6 +11,7 @@
 #include "eccodes.h"
 #include <assert.h>
 
+#define MAX_KEYS 100
 int main(int argc, char* argv[])
 {
     char *filename, *keys;
@@ -19,7 +20,6 @@ int main(int argc, char* argv[])
     codes_bufr_header* header_array = NULL;
     codes_context* c = codes_context_get_default();
     const int strict_mode = 1;
-    const int MAX_KEYS=100;
     int requested_print_keys_count = MAX_KEYS;
     codes_values requested_print_keys[MAX_KEYS];
 
