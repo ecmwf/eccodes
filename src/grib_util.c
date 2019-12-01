@@ -2108,44 +2108,6 @@ size_t sum_of_pl_array(const long* pl, size_t plsize)
     return count;
 }
 
-static int get_concept_condition_string(grib_handle* h, const char* key, char* result)
-{
-    int err = 0;
-    int length = 0;
-    char strVal[32]={0,};
-    size_t len = sizeof(strVal);
-    grib_concept_value* concept_value = NULL;
-    grib_accessor* acc = grib_find_accessor(h, key);
-    if (!acc) return GRIB_NOT_FOUND;
-
-    err = grib_get_string(h, key, strVal,&len);
-    if (err) return GRIB_INTERNAL_ERROR;
-
-    concept_value = action_concept_get_concept(acc);
-    while (concept_value) {
-        int err = 0;
-        long lres = 0;
-        grib_concept_condition* concept_condition = concept_value->conditions;
-
-        if (strcmp(strVal, concept_value->name)==0) {
-            while (concept_condition) {
-                grib_expression* expression = concept_condition->expression;
-                Assert(expression);
-                err = grib_expression_evaluate_long(h,expression,&lres);
-                if (err) return err;
-                length += sprintf(result+length, "%s%s=%ld",
-                                (length==0?"":","),concept_condition->name, lres);
-
-                concept_condition = concept_condition->next;
-            }
-        }
-
-        concept_value = concept_value->next;
-    }
-    if (length == 0) return GRIB_CONCEPT_NO_MATCH;
-    return GRIB_SUCCESS;
-}
-
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val)
 {
     int err = 0;
