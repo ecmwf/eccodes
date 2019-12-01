@@ -592,7 +592,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     }
 #endif
     if ((err = check_range(gh, min, max)) != GRIB_SUCCESS) {
-        //grib_context_log(a->context,GRIB_LOG_ERROR,"Maximum value out of range: %g", max);
         return err;
     }
 
