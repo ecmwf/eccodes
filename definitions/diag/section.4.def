@@ -13,7 +13,7 @@ unsigned[1] reserved1=0 : hidden;
 
 flags[1] missingDataFlag 'grib1/1.table';
 
-unsigned[1] numberOfBytesPerInteger ;
+unsigned[1] numberOfBytesPerInteger=4;
 
 unsigned[2] reserved=0 : hidden ;
 
@@ -22,7 +22,7 @@ alias numberOfChars=numberOfCharacters ;
 
 unsigned[3] numberOfFloats ;
 
-unsigned[3] numberOfIntegers ;
+unsigned[3] numberOfIntegers=0;
 alias numberOfInts=numberOfIntegers ;
 
 unsigned[3] numberOfLogicals ;
@@ -36,13 +36,18 @@ unsigned[1] reserved=0 : hidden;
 ibmfloat floatValues[numberOfFloats];
 alias floatVal=floatValues;
 
-if(numberOfBytesPerInteger == 1) { signed[1] integerValues[numberOfIntegers]; }
-if(numberOfBytesPerInteger == 2) { signed[2] integerValues[numberOfIntegers]; }
-if(numberOfBytesPerInteger == 3) { signed[3] integerValues[numberOfIntegers]; }
-if(numberOfBytesPerInteger == 4) { signed[4] integerValues[numberOfIntegers]; }
+if(numberOfIntegers) {
+  signed[4] integerValues[numberOfIntegers];
+}
+
+#if(numberOfBytesPerInteger == 1) { signed[1] integerValues[numberOfIntegers]; }
+#if(numberOfBytesPerInteger == 2) { signed[2] integerValues[numberOfIntegers]; }
+#if(numberOfBytesPerInteger == 3) { signed[3] integerValues[numberOfIntegers]; }
+#if(numberOfBytesPerInteger == 4) { signed[4] integerValues[numberOfIntegers]; }
 
 charValues list(numberOfCharacters) {
-	ascii[1] char;
+    ascii[1] char;
 }
 alias charVal=charValues;
-#section_padding padding;
+
+section_padding padding;
