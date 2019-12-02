@@ -1443,6 +1443,11 @@ static void test_concept_condition_strings()
     assert ( !err );
     /*printf("%s\n", result);*/
     assert( strcmp(result, "gridDefinitionTemplateNumber=0,PLPresent=0")==0 );
+
+    err = get_concept_condition_string(h, "stepType", NULL, result);
+    assert ( !err );
+    assert( strcmp(result, "selectStepTemplateInstant=1,stepTypeInternal=instant")==0 );
+
 }
 
 int main(int argc, char** argv)

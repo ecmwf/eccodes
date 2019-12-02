@@ -306,7 +306,8 @@ static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self
     return result;
 }
 
-static int concept_condition_expression_true(grib_handle* h,grib_concept_condition* c) {
+static int concept_condition_expression_true(grib_handle* h, grib_concept_condition* c, char* exprVal)
+{
     long lval;
     long lres=0;
     int ok = 0;
@@ -319,6 +320,7 @@ static int concept_condition_expression_true(grib_handle* h,grib_concept_conditi
         grib_expression_evaluate_long(h,c->expression,&lres);
         ok =  (grib_get_long(h,c->name,&lval) == GRIB_SUCCESS) &&
                 (lval == lres);
+        if (ok) sprintf(exprVal, "%ld", lres);
         break;
 
     case GRIB_TYPE_DOUBLE: {
@@ -327,6 +329,7 @@ static int concept_condition_expression_true(grib_handle* h,grib_concept_conditi
         grib_expression_evaluate_double(h,c->expression,&dres);
         ok = (grib_get_double(h,c->name,&dval) == GRIB_SUCCESS) &&
                 (dval == dres);
+        if (ok) sprintf(exprVal, "%g", dres);
         break;
     }
 
@@ -340,6 +343,7 @@ static int concept_condition_expression_true(grib_handle* h,grib_concept_conditi
         ok = (grib_get_string(h,c->name,buf,&len) == GRIB_SUCCESS) &&
         ((cval = grib_expression_evaluate_string(h,c->expression,tmp,&size,&err)) != NULL) &&
         (err==0) && (strcmp(buf,cval) == 0);
+        if (ok) sprintf(exprVal, "%s", cval);
         break;
     }
 
@@ -361,6 +365,7 @@ int get_concept_condition_string(grib_handle* h, const char* key, const char* va
     int err = 0;
     int length = 0;
     char strVal[64]={0,};
+    char exprVal[256]={0,};
     const char* pValue = value;
     size_t len = sizeof(strVal);
     grib_concept_value* concept_value = NULL;
@@ -375,19 +380,15 @@ int get_concept_condition_string(grib_handle* h, const char* key, const char* va
 
     concept_value = action_concept_get_concept(acc);
     while (concept_value) {
-        int err = 0;
-        long lres = 0;
         grib_concept_condition* concept_condition = concept_value->conditions;
 
         if (strcmp(pValue, concept_value->name)==0) {
             while (concept_condition) {
                 grib_expression* expression = concept_condition->expression;
                 Assert(expression);
-                if (concept_condition_expression_true(h, concept_condition)) {
-                    err = grib_expression_evaluate_long(h,expression,&lres);
-                    if (err) return err;
-                    length += sprintf(result+length, "%s%s=%ld",
-                                    (length==0?"":","),concept_condition->name, lres);
+                if (concept_condition_expression_true(h, concept_condition, exprVal)) {
+                    length += sprintf(result+length, "%s%s=%s",
+                                    (length==0?"":","),concept_condition->name, exprVal);
                 }
                 concept_condition = concept_condition->next;
             }
