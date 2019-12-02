@@ -67,7 +67,7 @@ grib_action *grib_action_create_when(grib_context *context, grib_expression *exp
 grib_concept_value *action_concept_get_concept(grib_accessor *a);
 int action_concept_get_nofail(grib_accessor *a);
 grib_action *grib_action_create_concept(grib_context *context, const char *name, grib_concept_value *concept, const char *basename, const char *name_space, const char *defaultkey, const char *masterDir, const char *localDir, const char *ecmfDir, int flags, int nofail);
-int get_concept_condition_string(grib_handle* h, const char* key, char* result);
+int get_concept_condition_string(grib_handle* h, const char* key, const char* value, char* result);
 
 /* action_class_hash_array.c */
 grib_action *grib_action_create_hash_array(grib_context *context, const char *name, grib_hash_array_value *hash_array, const char *basename, const char *name_space, const char *defaultkey, const char *masterDir, const char *localDir, const char *ecmfDir, int flags, int nofail);

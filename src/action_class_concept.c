@@ -307,21 +307,27 @@ static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self
 }
 
 /* Caller has to allocate space for the result.
+ * INPUTS: h, key and value (can be NULL)
+ * OUTPUT: result
  * Example: key='typeOfLevel' whose value is 'mixedLayerDepth',
  * result='typeOfFirstFixedSurface=169,typeOfSecondFixedSurface=255'
  */
-int get_concept_condition_string(grib_handle* h, const char* key, char* result)
+int get_concept_condition_string(grib_handle* h, const char* key, const char* value, char* result)
 {
     int err = 0;
     int length = 0;
     char strVal[64]={0,};
+    const char* pValue = value;
     size_t len = sizeof(strVal);
     grib_concept_value* concept_value = NULL;
     grib_accessor* acc = grib_find_accessor(h, key);
     if (!acc) return GRIB_NOT_FOUND;
 
-    err = grib_get_string(h, key, strVal,&len);
-    if (err) return GRIB_INTERNAL_ERROR;
+    if (!value) {
+        err = grib_get_string(h, key, strVal,&len);
+        if (err) return GRIB_INTERNAL_ERROR;
+        pValue = strVal;
+    }
 
     concept_value = action_concept_get_concept(acc);
     while (concept_value) {
@@ -329,10 +335,11 @@ int get_concept_condition_string(grib_handle* h, const char* key, char* result)
         long lres = 0;
         grib_concept_condition* concept_condition = concept_value->conditions;
 
-        if (strcmp(strVal, concept_value->name)==0) {
+        if (strcmp(pValue, concept_value->name)==0) {
             while (concept_condition) {
                 grib_expression* expression = concept_condition->expression;
                 Assert(expression);
+                /* TODO: Call concept_condition_expression_true to check if this condition is actually TRUE! */
                 err = grib_expression_evaluate_long(h,expression,&lres);
                 if (err) return err;
                 length += sprintf(result+length, "%s%s=%ld",

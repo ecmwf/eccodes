@@ -2139,7 +2139,7 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
 
     if (min_val < dmin_allowed) {
         char description[1024] = {0,};
-        if (get_concept_condition_string(h, "param_value_min", description)==GRIB_SUCCESS) {
+        if (get_concept_condition_string(h, "param_value_min", NULL, description)==GRIB_SUCCESS) {
             fprintf(stderr, "ECCODES %s   :  (%s): minimum (%g) is less than the allowable limit (%g)\n",
                              (is_error? "ERROR":"WARNING"), description, min_val, dmin_allowed);
         }
@@ -2149,7 +2149,7 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
     }
     if (max_val > dmax_allowed) {
         char description[1024] = {0,};
-        if (get_concept_condition_string(h, "param_value_max", description)==GRIB_SUCCESS) {
+        if (get_concept_condition_string(h, "param_value_max", NULL, description)==GRIB_SUCCESS) {
             fprintf(stderr, "ECCODES %s   :  (%s): maximum (%g) is more than the allowable limit (%g)\n",
                              (is_error? "ERROR":"WARNING"), description, max_val, dmax_allowed);
         }
