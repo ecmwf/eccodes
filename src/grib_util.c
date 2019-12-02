@@ -2112,6 +2112,7 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
 {
     int err = 0;
     long min_field_value_allowed=0, max_field_value_allowed=0;
+    long paramId = 0;
     double dmin_allowed=0, dmax_allowed=0;
     grib_context* ctx = h->context;
     int is_error = 1;
@@ -2142,6 +2143,11 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
         if (get_concept_condition_string(h, "param_value_min", NULL, description)==GRIB_SUCCESS) {
             fprintf(stderr, "ECCODES %s   :  (%s): minimum (%g) is less than the allowable limit (%g)\n",
                              (is_error? "ERROR":"WARNING"), description, min_val, dmin_allowed);
+        } else {
+            if (grib_get_long(h, "paramId", &paramId) == GRIB_SUCCESS) {
+                fprintf(stderr, "ECCODES %s   :  (paramId=%ld): minimum (%g) is less than the default allowable limit (%g)\n",
+                             (is_error? "ERROR":"WARNING"), paramId, min_val, dmin_allowed);
+            }
         }
         if (is_error) {
             return GRIB_OUT_OF_RANGE; /* Failure */
@@ -2152,6 +2158,11 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
         if (get_concept_condition_string(h, "param_value_max", NULL, description)==GRIB_SUCCESS) {
             fprintf(stderr, "ECCODES %s   :  (%s): maximum (%g) is more than the allowable limit (%g)\n",
                              (is_error? "ERROR":"WARNING"), description, max_val, dmax_allowed);
+        } else {
+            if (grib_get_long(h, "paramId", &paramId) == GRIB_SUCCESS) {
+                fprintf(stderr, "ECCODES %s   :  (paramId=%ld): maximum (%g) is more than the default allowable limit (%g)\n",
+                             (is_error? "ERROR":"WARNING"), paramId, max_val, dmax_allowed);
+            }
         }
         if (is_error) {
             return GRIB_OUT_OF_RANGE; /* Failure */
