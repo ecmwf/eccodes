@@ -306,6 +306,50 @@ static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self
     return result;
 }
 
+static int concept_condition_expression_true(grib_handle* h,grib_concept_condition* c) {
+    long lval;
+    long lres=0;
+    int ok = 0;
+    int err=0;
+    const int type = grib_expression_native_type(h,c->expression);
+
+    switch(type)
+    {
+    case GRIB_TYPE_LONG:
+        grib_expression_evaluate_long(h,c->expression,&lres);
+        ok =  (grib_get_long(h,c->name,&lval) == GRIB_SUCCESS) &&
+                (lval == lres);
+        break;
+
+    case GRIB_TYPE_DOUBLE: {
+        double dval;
+        double dres=0.0;
+        grib_expression_evaluate_double(h,c->expression,&dres);
+        ok = (grib_get_double(h,c->name,&dval) == GRIB_SUCCESS) &&
+                (dval == dres);
+        break;
+    }
+
+    case GRIB_TYPE_STRING: {
+        const char *cval;
+        char buf[80];
+        char tmp[80];
+        size_t len = sizeof(buf);
+        size_t size=sizeof(tmp);
+
+        ok = (grib_get_string(h,c->name,buf,&len) == GRIB_SUCCESS) &&
+        ((cval = grib_expression_evaluate_string(h,c->expression,tmp,&size,&err)) != NULL) &&
+        (err==0) && (strcmp(buf,cval) == 0);
+        break;
+    }
+
+    default:
+        /* TODO: */
+        break;
+    }
+    return ok;
+}
+
 /* Caller has to allocate space for the result.
  * INPUTS: h, key and value (can be NULL)
  * OUTPUT: result
@@ -339,12 +383,12 @@ int get_concept_condition_string(grib_handle* h, const char* key, const char* va
             while (concept_condition) {
                 grib_expression* expression = concept_condition->expression;
                 Assert(expression);
-                /* TODO: Call concept_condition_expression_true to check if this condition is actually TRUE! */
-                err = grib_expression_evaluate_long(h,expression,&lres);
-                if (err) return err;
-                length += sprintf(result+length, "%s%s=%ld",
-                                (length==0?"":","),concept_condition->name, lres);
-
+                if (concept_condition_expression_true(h, concept_condition)) {
+                    err = grib_expression_evaluate_long(h,expression,&lres);
+                    if (err) return err;
+                    length += sprintf(result+length, "%s%s=%ld",
+                                    (length==0?"":","),concept_condition->name, lres);
+                }
                 concept_condition = concept_condition->next;
             }
         }
