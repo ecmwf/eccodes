@@ -15,7 +15,6 @@
 
 #include "mir/repres/latlon/LatLon.h"
 
-#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <sstream>
@@ -30,7 +29,6 @@
 #include "mir/iterator/detail/RegularIterator.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/param/SameParametrisation.h"
-#include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"

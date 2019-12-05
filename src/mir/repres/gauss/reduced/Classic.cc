@@ -12,20 +12,24 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+
 #include "mir/repres/gauss/reduced/Classic.h"
+
+#include "eckit/exception/Exceptions.h"
 
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/util/Domain.h"
-#include "mir/util/Grib.h"
+
 
 namespace mir {
 namespace repres {
 namespace gauss {
 namespace reduced {
 
-Classic::Classic(size_t N, const util::BoundingBox& bbox, double angularPrecision)
-    : Reduced(N, bbox, angularPrecision) {
+
+Classic::Classic(size_t N, const util::BoundingBox& bbox, double angularPrecision) :
+    Reduced(N, bbox, angularPrecision) {
 
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox.north();
@@ -51,11 +55,14 @@ Classic::Classic(size_t N, const util::BoundingBox& bbox, double angularPrecisio
                                 << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
 }
 
+
 Classic::~Classic() = default;
+
 
 void Classic::fill(grib_info& info) const {
     Reduced::fill(info);
 }
+
 
 void Classic::fill(api::MIRJob& job) const {
     Reduced::fill(job);
@@ -64,21 +71,26 @@ void Classic::fill(api::MIRJob& job) const {
     job.set("gridname", os.str());
 }
 
+
 void Classic::makeName(std::ostream& out) const {
     out << "N" << N_;
     bbox_.makeName(out);
 }
+
 
 bool Classic::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const Classic*>(&other);
     return o && Reduced::sameAs(other);
 }
 
+
 atlas::Grid Classic::atlasGrid() const {
     return atlas::ReducedGaussianGrid("N" + std::to_string(N_), domain());
 }
 
-} // namespace reduced
-} // namespace gauss
-} // namespace repres
-} // namespace mir
+
+}  // namespace reduced
+}  // namespace gauss
+}  // namespace repres
+}  // namespace mir
+

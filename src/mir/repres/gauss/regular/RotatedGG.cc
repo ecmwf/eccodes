@@ -17,7 +17,6 @@
 
 #include <iostream>
 
-#include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 
 

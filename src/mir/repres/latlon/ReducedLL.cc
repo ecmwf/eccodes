@@ -16,8 +16,10 @@
 #include "mir/repres/latlon/ReducedLL.h"
 
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 
+#include "eckit/exception/Exceptions.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/MD5.h"
@@ -27,7 +29,6 @@
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
-#include "mir/util/Grib.h"
 #include "mir/util/GridBox.h"
 #include "mir/util/MeshGeneratorParameters.h"
 

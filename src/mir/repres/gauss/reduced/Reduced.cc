@@ -21,21 +21,17 @@
 #include <memory>
 #include <numeric>
 #include <set>
-#include <sstream>
 
 #include "eckit/exception/Exceptions.h"
-#include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 
 #include "mir/api/MIREstimation.h"
 #include "mir/api/MIRJob.h"
-#include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
-#include "mir/util/Angles.h"
 #include "mir/util/BoundingBox.h"
-#include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/GridBox.h"
+
 
 namespace mir {
 namespace repres {
@@ -114,16 +110,16 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e) const {
     using eckit::Fraction;
     ASSERT(w <= e);
 
-    const Fraction inc = getSmallestIncrement();
-    ASSERT(inc > 0);
+    const Fraction smallestIncrement = getSmallestIncrement();
+    ASSERT(smallestIncrement > 0);
 
     if (angleApproximatelyEqual(Longitude::GREENWICH, w) && (
-                angleApproximatelyEqual(Longitude::GLOBE - inc, e - w) ||
-                Longitude::GLOBE - inc < e - w ||
+                angleApproximatelyEqual(Longitude::GLOBE - smallestIncrement, e - w) ||
+                Longitude::GLOBE - smallestIncrement < e - w ||
                 (e != w && e.normalise(w) == w))) {
 
         w = Longitude::GREENWICH;
-        e = Longitude::GLOBE - inc;
+        e = Longitude::GLOBE - smallestIncrement;
 
     } else {
 

@@ -64,7 +64,7 @@ GribOutput::~GribOutput() = default;
 
 size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx) { // No interpolation performed
 
-    input::MIRInput& input = ctx.input();
+    const input::MIRInput& input = ctx.input();
 
     size_t total = 0;
     for (size_t i = 0; i < input.dimensions(); i++) {
@@ -160,29 +160,26 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
     auto& field = param.fieldParametrisation();
 
     long bits1 = -1;
-    long bits2 = -1;
-
     if (user.get("accuracy", bits1)) {
         ASSERT(bits1 > 0);
+        long bits2 = -1;
         save = field.get("accuracy", bits2) ? bits2 != bits1 : true;
     }
 
     if (!save) {
         std::string packing1;
-        std::string packing2;
-
         if (user.get("packing", packing1)) {
             ASSERT(!packing1.empty());
+            std::string packing2;
             save = field.get("packing", packing2) ? packing2 != packing1 : true;
         }
     }
 
     if (!save) {
         long edition1 = 0;
-        long edition2 = 0;
-
         if (user.get("edition", edition1)) {
             ASSERT(edition1 > 0);
+            long edition2 = 0;
             save = field.get("edition", edition2) ? edition2 != edition1 : true;
         }
     }
@@ -257,8 +254,8 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
     eckit::TraceResourceUsage<LibMir> usage("GribOutput::save");
 
 
-    const data::MIRField& field = ctx.field();
-    input::MIRInput& input = ctx.input();
+    const data::MIRField& field  = ctx.field();
+    const input::MIRInput& input = ctx.input();
 
     field.validate();
 
@@ -266,7 +263,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
     eckit::Timing saveTimer;
 
-    eckit::AutoTiming timing(ctx.statistics().timer_, ctx.statistics().gribEncodingTiming_);
+    eckit::AutoTiming timer(ctx.statistics().timer_, ctx.statistics().gribEncodingTiming_);
 
     for (size_t i = 0; i < field.dimensions(); i++) {
 

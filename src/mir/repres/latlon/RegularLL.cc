@@ -12,15 +12,18 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+
 #include "mir/repres/latlon/RegularLL.h"
 
+#include <cmath>
 #include <iostream>
 
-#include "mir/config/LibMir.h"
 #include "mir/iterator/detail/RegularIterator.h"
+#include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/GridBox.h"
+
 
 namespace mir {
 namespace repres {

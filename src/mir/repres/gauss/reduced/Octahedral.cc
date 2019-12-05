@@ -12,13 +12,16 @@
 /// @author Pedro Maciel
 /// @date Apr 2015
 
+
 #include "mir/repres/gauss/reduced/Octahedral.h"
+
+#include "eckit/exception/Exceptions.h"
 
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/util/Domain.h"
-#include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
+
 
 namespace mir {
 namespace repres {

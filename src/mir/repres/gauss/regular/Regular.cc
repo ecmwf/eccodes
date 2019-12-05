@@ -15,17 +15,11 @@
 
 #include "mir/repres/gauss/regular/Regular.h"
 
-#include <cmath>
-#include <memory>
-
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/FloatCompare.h"
-#include "eckit/utils/MD5.h"
 
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
-#include "mir/param/MIRParametrisation.h"
-#include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 
@@ -157,7 +151,7 @@ size_t Regular::numberOfPoints() const {
 bool Regular::getLongestElementDiagonal(double& d) const {
     ASSERT(N_);
 
-    auto& lats = latitudes();
+    const auto& lats = latitudes();
     auto snHalf = 0.5 * (lats[N_ - 1] - lats[N_]);
     ASSERT(!eckit::types::is_approximately_equal(snHalf, 0.));
 
@@ -177,13 +171,14 @@ util::BoundingBox Regular::extendBoundingBox(const util::BoundingBox& bbox) cons
         auto inc = getSmallestIncrement();
 
         auto Nmax = (Longitude::GLOBE.fraction() / inc).integralPart();
-        auto Nw = (bbox.west().fraction() / inc).integralPart() - 1;
-        auto Ne = (bbox.east().fraction() / inc).integralPart() + 1;
+        auto Nw   = (w.fraction() / inc).integralPart() - 1;
+        auto Ne   = (e.fraction() / inc).integralPart() + 1;
 
         if (Ne - Nw < Nmax) {
             w = Nw * inc;
             e = Ne * inc;
-        } else {
+        }
+        else {
             w = 0;
             e = Longitude::GLOBE;
         }

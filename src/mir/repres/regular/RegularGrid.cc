@@ -19,6 +19,7 @@
 
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
+#include "mir/repres/Iterator.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
