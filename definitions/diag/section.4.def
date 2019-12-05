@@ -1,18 +1,9 @@
 # Copyright 2005-2019 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
 
 section_length[3] section4Length ;
 
 unsigned[1] reserved1=0 : hidden;
-
 flags[1] missingDataFlag 'grib1/1.table';
-
 unsigned[1] numberOfBytesPerInteger=4;
 
 unsigned[2] reserved=0 : hidden ;
@@ -26,9 +17,7 @@ unsigned[3] numberOfIntegers=0;
 alias numberOfInts=numberOfIntegers ;
 
 unsigned[3] numberOfLogicals ;
-
 unsigned[3] numberOfReservedBytes ;
-
 unsigned[4] reserved=0 : hidden;
 unsigned[4] reserved=0 : hidden;
 unsigned[1] reserved=0 : hidden;
@@ -36,18 +25,18 @@ unsigned[1] reserved=0 : hidden;
 ibmfloat floatValues[numberOfFloats];
 alias floatVal=floatValues;
 
-if(numberOfIntegers) {
+if (numberOfIntegers) {
   signed[4] integerValues[numberOfIntegers];
 }
 
-#if(numberOfBytesPerInteger == 1) { signed[1] integerValues[numberOfIntegers]; }
-#if(numberOfBytesPerInteger == 2) { signed[2] integerValues[numberOfIntegers]; }
-#if(numberOfBytesPerInteger == 3) { signed[3] integerValues[numberOfIntegers]; }
-#if(numberOfBytesPerInteger == 4) { signed[4] integerValues[numberOfIntegers]; }
-
-charValues list(numberOfCharacters) {
-    ascii[1] char;
+# TODO: temporary solution for variable-length list of ascii
+#charValues list(numberOfCharacters) {
+#    ascii[1] char;
+#}
+if (numberOfCharacters) {
+  unsigned[1] charValues[numberOfCharacters];
+  alias charVal=charValues;
 }
-alias charVal=charValues;
 
+# Final padding
 section_padding padding;
