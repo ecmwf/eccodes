@@ -749,6 +749,9 @@ static const char* get_grid_type_name(const int spec_grid_type)
     if (spec_grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL)
         return "lambert";
 
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED)
+        return "unstructured_grid";
+
     return NULL;
 }
 
@@ -1067,10 +1070,11 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 }
                 break;
             case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
+            case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
                 if (editionNumber==1) {   /* This grid type is not available in edition 1 */
                     if (h->context->debug==-1)
-                        fprintf(stderr,"ECCODES DEBUG grib_util: lambert_azimuthal_equal_area specified "
-                                       "but input is GRIB1. Output must be a higher edition!\n");
+                        fprintf(stderr,"ECCODES DEBUG grib_util: '%s' specified "
+                                       "but input is GRIB1. Output must be a higher edition!\n", grid_type);
                     convertEditionEarlier=1;
                 }
                 sprintf(name, "GRIB%ld", editionNumber);
@@ -1217,6 +1221,13 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         COPY_SPEC_LONG(centralLongitudeInMicrodegrees);
         */
 
+        break;
+    case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
+        COPY_SPEC_LONG  (bitmapPresent);
+        if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+        /*
+         * TODO: Other keys
+        */
         break;
     case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
         COPY_SPEC_LONG  (bitmapPresent);
