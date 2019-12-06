@@ -806,7 +806,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char *v
     else if (strcmp(key, "rdbType")==0)    { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->rdbType); else strcpy(val, NOT_FOUND); }
     else if (strcmp(key, "oldSubtype")==0) { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->oldSubtype); else strcpy(val, NOT_FOUND); }
     else if (strcmp(key, "ident")==0) {
-        if (!isEcmwfLocal || bh->ident == NULL || strlen(bh->ident)==0) strcpy(val, NOT_FOUND);
+        if (!isEcmwfLocal || strlen(bh->ident)==0) strcpy(val, NOT_FOUND);
         else *len = sprintf(val, "%s", bh->ident);
     }
     else if (strcmp(key, "localYear")==0)   { if (isEcmwfLocal) *len = sprintf(val, "%ld", bh->localYear); else strcpy(val, NOT_FOUND); }
