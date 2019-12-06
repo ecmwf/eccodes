@@ -791,7 +791,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
         } else {
             if (*v > maxAllowed || *v < minAllowed) {
                 if (dont_fail_if_out_of_range) {
-                    grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
+                    fprintf(stderr, "ECCODES WARNING :  encode_double_array: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
                             " Setting it to missing value\n", bd->shortName, *v, minAllowed, maxAllowed);
                     grib_set_bits_on(buff->data,pos,modifiedWidth);
                 } else {
@@ -845,7 +845,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
         while (ii<nvals) {
             /* Turn out-of-range values into 'missing' */
             if (*v!=GRIB_MISSING_DOUBLE && (*v < minAllowed || *v > maxAllowed)) {
-                grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value at index %ld (%g) out of range (minAllowed=%g, maxAllowed=%g)."
+                fprintf(stderr, "ECCODES WARNING :  encode_double_array: %s. Value at index %ld (%g) out of range (minAllowed=%g, maxAllowed=%g)."
                         " Setting it to missing value\n",
                         bd->shortName, (long)ii, *v, minAllowed, maxAllowed);
                 *v = GRIB_MISSING_DOUBLE;
@@ -954,7 +954,7 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
     }
     else if (value>maxAllowed || value<minAllowed) {
         if (dont_fail_if_out_of_range) {
-            grib_context_log(c, GRIB_LOG_ERROR, "encode_double_value: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
+            fprintf(stderr, "ECCODES WARNING :  encode_double_value: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
                     " Setting it to missing value\n",
                     bd->shortName, value, minAllowed, maxAllowed);
             value = GRIB_MISSING_DOUBLE;  /* Ignore the bad value and instead use 'missing' */
