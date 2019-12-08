@@ -55,7 +55,8 @@ EOF
 diff $tempRef $tempTxt
 
 
-echo 'set numberOfIntegers=4; set integerValues={33, 55, -44, 66}; set numberOfFloats=3; set floatValues={-8.8, 9.9, 10.10}; write;' | ${tools_dir}/grib_filter -o $tempOut - $sample
+echo 'set numberOfIntegers=4; set integerValues={33, 55, -44, 66}; set numberOfFloats=3; set floatValues={-8.8, 9.9, 10.10}; write;' |\
+   ${tools_dir}/grib_filter -o $tempOut - $sample
 ${tools_dir}/grib_dump -p numberOfFloats,numberOfIntegers,floatValues,integerValues $tempOut | sed 1d > $tempTxt
 cat > $tempRef <<EOF
   numberOfFloats = 3;
@@ -69,6 +70,10 @@ cat > $tempRef <<EOF
 EOF
 diff $tempRef $tempTxt
 
+
+echo 'set numberOfCharacters=4; set charValues={"J","u","m","p"}; write;'| ${tools_dir}/grib_filter -o $tempOut - $sample
+res=`${tools_dir}/grib_dump $tempOut | grep charValues | tr -d '\n' | tr -d ' '`
+[ "$res" = "charValues=J;charValues=u;charValues=m;charValues=p;" ]
 
 # Clean up
 rm -f $tempOut $tempRef

@@ -8,12 +8,12 @@ unsigned[1] numberOfBytesPerInteger=4;
 
 unsigned[2] reserved=0 : hidden ;
 
-unsigned[3] numberOfCharacters ;
+unsigned[3] numberOfCharacters : dump;
 alias numberOfChars=numberOfCharacters ;
 
-unsigned[3] numberOfFloats ;
+unsigned[3] numberOfFloats : dump;
 
-unsigned[3] numberOfIntegers=0;
+unsigned[3] numberOfIntegers=0 : dump;
 alias numberOfInts=numberOfIntegers ;
 
 unsigned[3] numberOfLogicals ;
@@ -22,20 +22,15 @@ unsigned[4] reserved=0 : hidden;
 unsigned[4] reserved=0 : hidden;
 unsigned[1] reserved=0 : hidden;
 
-ibmfloat floatValues[numberOfFloats];
+ibmfloat floatValues[numberOfFloats] : dump;
 alias floatVal=floatValues;
 
 if (numberOfIntegers) {
-  signed[4] integerValues[numberOfIntegers];
+  signed[4] integerValues[numberOfIntegers] : dump;
 }
 
-# TODO: temporary solution for variable-length list of ascii
-#charValues list(numberOfCharacters) {
-#    ascii[1] char;
-#}
-if (numberOfCharacters) {
-  unsigned[1] charValues[numberOfCharacters];
-  alias charVal=charValues;
+charList list(numberOfCharacters) {
+  ascii[1] charValues : dump;
 }
 
 # Final padding
