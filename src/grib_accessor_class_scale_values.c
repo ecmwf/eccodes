@@ -191,10 +191,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         }
     }
 
-    if((ret = grib_set_double_array_internal(h, self->values,values,size)) != GRIB_SUCCESS) {
+    if ((ret = grib_set_double_array_internal(h, self->values,values,size)) != GRIB_SUCCESS) {
         grib_context_free(c,values);
         return ret;
     }
+
     grib_context_free(c,values);
 
     return GRIB_SUCCESS;

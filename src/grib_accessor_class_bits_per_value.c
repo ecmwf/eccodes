@@ -178,11 +178,15 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
         return ret;
     }
 
-    if((ret = grib_set_long_internal(h, self->bits_per_value,*val))
-            != GRIB_SUCCESS) return ret;
+    if ((ret = grib_set_long_internal(h, self->bits_per_value,*val)) != GRIB_SUCCESS) {
+        grib_context_free(c,values);
+        return ret;
+    }
 
-    if((ret = grib_set_double_array_internal(h, self->values,values,size))
-            != GRIB_SUCCESS) return ret;
+    if ((ret = grib_set_double_array_internal(h, self->values,values,size)) != GRIB_SUCCESS) {
+        grib_context_free(c,values);
+        return ret;
+    }
 
     grib_context_free(c,values);
 

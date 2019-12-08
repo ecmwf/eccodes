@@ -36,13 +36,16 @@ EOF
 
 # Expect this to fail as two values are out-of-range
 set +e
-${tools_dir}/codes_bufr_filter -o $tempOut $tempRules $BufrFile 2>/dev/null
+${tools_dir}/codes_bufr_filter -o $tempOut $tempRules $BufrFile 2>$tempText
 status=$?
 set -e
 [ $status -ne 0 ]
+grep -q 'longitude. Maximum value (value\[0\]=500) out of range' $tempText
+
 # Now set environment variable to turn out-of-range values into 'missing'
 export ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE=1
-${tools_dir}/codes_bufr_filter -o $tempOut $tempRules $BufrFile
+${tools_dir}/codes_bufr_filter -o $tempOut $tempRules $BufrFile 2>$tempText
+grep -q 'WARNING.*Setting it to missing value' $tempText
 unset ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE
 
 #echo 'set unpack=1;print "[longitude]";' | ${tools_dir}/bufr_filter - $BufrFile
