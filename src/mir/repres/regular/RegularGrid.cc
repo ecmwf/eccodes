@@ -11,7 +11,6 @@
 
 #include "mir/repres/regular/RegularGrid.h"
 
-#include <cmath>
 #include <ostream>
 
 #include "eckit/log/Log.h"

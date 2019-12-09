@@ -15,7 +15,6 @@
 
 #include "mir/repres/latlon/RegularLL.h"
 
-#include <cmath>
 #include <iostream>
 
 #include "mir/iterator/detail/RegularIterator.h"
