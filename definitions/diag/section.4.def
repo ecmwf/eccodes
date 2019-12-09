@@ -29,9 +29,13 @@ if (numberOfIntegers) {
   signed[4] integerValues[numberOfIntegers] : dump;
 }
 
-charList list(numberOfCharacters) {
-  ascii[1] charValues : dump;
+# Have to use integers to represent single char strings
+if (numberOfCharacters) {
+  unsigned[1] charValues[numberOfCharacters] : dump, string_type;
 }
+#charList list(numberOfCharacters) {
+#  ascii[1] charValues : dump;
+#}
 
 # Final padding
 section_padding padding;
