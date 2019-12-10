@@ -44,14 +44,14 @@ int main(int argc, char** argv)
     if (argc<2) usage(argv[0]);
     filename=argv[1];
 
-    in = fopen(filename,"r");
+    in = fopen(filename,"rb");
     if(!in) {
         printf("ERROR: unable to open file %s\n",filename);
         return 1;
     }
 
     /* create new handle from a message in a file*/
-    while((h = codes_handle_new_from_file(0,f,&err)) != NULL) {
+    while((h = codes_handle_new_from_file(0,in,&err)) != NULL) {
 
         /* get the size of the values array*/
         CODES_CHECK(codes_get_size(h,"values",&values_len),0);

@@ -27,10 +27,10 @@ static int encode_file(char *template_file, char *output_file)
     long numSubsets = 0;
 
     assert(template_file);
-    in = fopen(template_file,"r"); assert(in);
+    in = fopen(template_file,"rb"); assert(in);
     if (opt_write) {
         assert(output_file);
-        out = fopen(output_file,"w");  assert(out);
+        out = fopen(output_file,"wb");  assert(out);
     }
 
     /* loop over the messages in the source BUFR and clone them */

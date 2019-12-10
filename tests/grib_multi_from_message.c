@@ -49,7 +49,7 @@ int main(int argc,char* argv[]) {
     else usage(argv[0]);
 
     assert(filename);
-    f=fopen(filename,"r");
+    f=fopen(filename,"rb");
     if (!f) {perror(filename);exit(1);}
 
     fstat(fileno((FILE*)f),&finfo);

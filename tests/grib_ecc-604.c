@@ -25,9 +25,9 @@ static int encode_file(char *template_file, char *output_file)
     int err = 0;
     double *values;
 
-    in = fopen(template_file,"r"); assert(in);
+    in = fopen(template_file,"rb"); assert(in);
     if (opt_write) {
-        out = fopen(output_file,"w");  assert(out);
+        out = fopen(output_file,"wb");  assert(out);
     }
 
     /* loop over the messages in the source GRIB and clone them */

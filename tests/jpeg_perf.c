@@ -21,7 +21,7 @@ size_t grib_handle_write(grib_handle* h,char* filename) {
   FILE* of=NULL;
   const void *buffer; size_t size;
 
-  of = fopen(filename,"w");
+  of = fopen(filename,"wb");
   if(!of) {
       perror(filename);
       exit(1);
@@ -99,13 +99,13 @@ int main(int argc, char* argv[]) {
   repeatsimple=atoi(argv[iarg++]);
   bitsPerValue=atoi(argv[iarg++]);
 
-  fin = fopen(finname,"r");
+  fin = fopen(finname,"rb");
   if(!fin) {perror(finname);exit(1);}
 
   if (append) 
-	  fout = fopen(ofilename,"a");
+	  fout = fopen(ofilename,"ab");
   else
-	  fout = fopen(ofilename,"w");
+	  fout = fopen(ofilename,"wb");
 
   if(!fout) {perror(ofilename);exit(1);}
 
