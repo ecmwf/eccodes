@@ -86,8 +86,8 @@ static void pressure_level(grib_handle*,const parameter*,double,double);
 static void potential_temperature_level(grib_handle*,const parameter*,double,double);
 static void potential_vorticity_level(grib_handle*,const parameter*,double,double);
 
-/* 
-TODO: 
+/*
+TODO:
 - Shape of the earth
 - Levels
  */
@@ -500,7 +500,7 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
             CHECK(eq(h,"indicatorOfUnitOfTimeRange",1));/* Hours */
             CHECK((get(h,"forecastTime") % 3) == 0);  /* Every three hours */
         }
-    } 
+    }
     else if (is_uerra) {
         if(get(h,"indicatorOfUnitOfTimeRange") == 1) /*  hourly */
         {
@@ -747,8 +747,8 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
             CHECK(eq(h,"indicatorOfUnitOfTimeRange",1));/* Hours */
             CHECK((get(h,"forecastTime") % 3) == 0);  /* Every three hours */
         }
-    } 
-    else if (is_uerra) 
+    }
+    else if (is_uerra)
     {
 /*  forecastTime for uerra might be all steps decreased by 1 i.e 0,1,2,3,4,5,8,11...29 too many... */
         if(get(h,"indicatorOfUnitOfTimeRange") == 1)
@@ -756,7 +756,7 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
             CHECK(le(h,"forecastTime",30));
         }
     }
-    else 
+    else
     {
         if(get(h,"indicatorOfUnitOfTimeRange") == 11) /*  six hours */
         {
@@ -799,7 +799,7 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
     {
         CHECK((get(h,"endStep") % 6) == 0); /* Every six hours */
     }
-    
+
 
     if(get(h,"indicatorOfUnitForTimeRange") == 11)
     {
