@@ -1388,7 +1388,7 @@ static void verify(grib_handle* h)
 
 void validate(const char* path)
 {
-    FILE *f = fopen(path,"r");
+    FILE *f = fopen(path,"rb");
     grib_handle *h = 0;
     int err;
     int count = 0;
