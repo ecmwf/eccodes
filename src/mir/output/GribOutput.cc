@@ -36,6 +36,7 @@
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MIRStatistics.h"
+#include "mir/util/TraceResourceUsage.h"
 #include "mir/api/MIREstimation.h"
 
 
@@ -267,7 +268,7 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
                         context::Context& ctx) {
 
-    mir::TraceResourceUsage usage("GribOutput::save");
+    mir::util::TraceResourceUsage usage("GribOutput::save");
 
     const data::MIRField& field = ctx.field();
     input::MIRInput& input = ctx.input();
