@@ -49,7 +49,7 @@ int main(int argc, char** argv)
      *   number   latitude  longitude
      */
     fname=argv[1];
-    fin=fopen(fname,"r");
+    fin=fopen(fname,"r"); /* Open in text mode */
     if(!fin) { perror(fname); exit(1); }
     npoints=0;
     while (fscanf(fin,"%ld %g %g",&iid,&lat,&lon) != EOF) npoints++;
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
     if (!indexes) {printf("unable to allocate %ld bytes\n",(long)(npoints*sizeof(double)));exit(1);}
 
     fname=argv[1];
-    fin=fopen(fname,"r");
+    fin=fopen(fname,"r"); /* Open in text mode */
     if(!fin) { perror(fname); exit(1); }
     i=0;
     while (fscanf(fin,"%ld %g %g",&iid,&lat,&lon) != EOF) {
@@ -88,7 +88,7 @@ int main(int argc, char** argv)
 
     /* The first GRIB file on the arguments is treated as the land-sea mask file */
     fname=argv[2];
-    fin=fopen(fname,"rb");
+    fin=fopen(fname,"rb"); /* Open GRIB in binary mode */
     if(!fin) { perror(fname); exit(1); }
     h=codes_handle_new_from_file(0,fin,PRODUCT_GRIB, &ret);
     if (!h || ret!=CODES_SUCCESS) {printf(" unable to create handle\n");exit(1);}
