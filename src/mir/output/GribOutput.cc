@@ -37,6 +37,7 @@
 #include "mir/util/Grib.h"
 #include "mir/util/MIRStatistics.h"
 #include "mir/util/Pretty.h"
+#include "mir/util/TraceResourceUsage.h"
 
 
 namespace mir {
@@ -251,8 +252,7 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
 
 size_t GribOutput::save(const param::MIRParametrisation& parametrisation, context::Context& ctx) {
 
-    eckit::TraceResourceUsage<LibMir> usage("GribOutput::save");
-
+    mir::util::TraceResourceUsage usage("GribOutput::save");
 
     const data::MIRField& field  = ctx.field();
     const input::MIRInput& input = ctx.input();
