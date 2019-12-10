@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
     filename=argv[1];
 
     for (i=0;i<255;i++) {
-        FILE* in = fopen(filename,"r"); assert(in);
+        FILE* in = fopen(filename,"rb"); assert(in);
         h = grib_handle_new_from_file(0,in,&err); assert(h);
 
         /* get the size of the values array*/
