@@ -267,8 +267,7 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
 size_t GribOutput::save(const param::MIRParametrisation &parametrisation,
                         context::Context& ctx) {
 
-    eckit::TraceResourceUsage<LibMir> usage("GribOutput::save");
-
+    mir::TraceResourceUsage usage("GribOutput::save");
 
     const data::MIRField& field = ctx.field();
     input::MIRInput& input = ctx.input();
