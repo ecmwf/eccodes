@@ -9,3 +9,15 @@ function diff {
     command diff --strip-trailing-cr "$@"
 }
 export -f diff
+
+# We occasionally cat text files and use the lines as arguments.
+# Carriage returns here cause issues and need to be removed.
+function cat {
+    if [[ $# -eq 1 && "$1" =~ ".txt" ]]
+    then
+        command cat "$@" | sed 's/\r$//'
+    else
+        command cat "$@"
+    fi
+}
+export -f cat
