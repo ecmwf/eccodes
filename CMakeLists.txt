@@ -295,6 +295,7 @@ endif()
 if( EC_OS_NAME MATCHES "windows" )
     # Symbols need to be explicitly exported on Windows so we can link to dlls.
     set( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE )
+    set( ECCODES_ON_WINDOWS TRUE )
 
     # Suppress compliler warnings - see ECC-850
     # Suppress warnings about using 'insecure' functions. Fixing this would require changes all over

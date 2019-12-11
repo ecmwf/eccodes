@@ -250,6 +250,14 @@ ecbuild_add_test( TARGET eccodes_t_grib_lamb_az_eq_area
 
 # These ones are conditional
 ###########################################
+ecbuild_add_test( TARGET eccodes_t_tools_data_from_stdin
+                  TYPE SCRIPT
+                  CONDITION NOT ECCODES_ON_WINDOWS
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools_data_from_stdin.sh
+                  TEST_DEPENDS eccodes_download_bufrs
+)
+
+
 if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
     ecbuild_add_executable( TARGET    grib_encode_pthreads
                             NOINSTALL

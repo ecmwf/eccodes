@@ -48,15 +48,6 @@ ${tools_dir}/bufr_ls -p totalLength,bufrHeaderCentre,bufrHeaderSubCentre,masterT
 awk NR==3 $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_ls
 diff $ref_ls $res_ls
 
-#-------------------------------------------
-# Test reading from stdin
-#-------------------------------------------
-f="aaen_55.bufr"
-cat $f | ${tools_dir}/bufr_ls -
-result1=`${tools_dir}/bufr_get -p numberOfSubsets $f`
-result2=`cat $f | ${tools_dir}/bufr_get -p numberOfSubsets -`
-[ "$result1" = "$result2" ]
-
 
 rm -f $fLog $res_ls 
 rm -f $fTmp
