@@ -42,7 +42,11 @@ void rtrim(char* s)
 /*  "/tmp/"   -> ""   */
 const char* extract_filename(const char* filepath)
 {
-    const char* s = strrchr(filepath, get_dir_separator_char());
+    /* Note: Windows users could pass in fwd slashes!
+     * so have to check both separators
+     */
+    const char* s = strrchr(filepath, '/');
+    if (!s) s = strrchr(filepath, '\\');
     if (!s) return filepath;
     else    return s + 1;
 }
