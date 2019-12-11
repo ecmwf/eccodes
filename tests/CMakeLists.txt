@@ -95,7 +95,6 @@ list( APPEND tests_data_reqd
     bufr_extract_headers
     bufr_ecc-673
     bufr_ecc-428
-    bufr_ecc-197
     bufr_ecc-286
     bufr_ecc-288
     bufr_ecc-313
@@ -254,6 +253,13 @@ ecbuild_add_test( TARGET eccodes_t_tools_data_from_stdin
                   TYPE SCRIPT
                   CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools_data_from_stdin.sh
+                  TEST_DEPENDS eccodes_download_bufrs
+)
+
+ecbuild_add_test( TARGET eccodes_t_bufr_ecc-197
+                  TYPE SCRIPT
+                  CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_ecc-197.sh
                   TEST_DEPENDS eccodes_download_bufrs
 )
 
