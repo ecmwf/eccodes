@@ -252,7 +252,7 @@ ecbuild_add_test( TARGET eccodes_t_grib_lamb_az_eq_area
 ###########################################
 ecbuild_add_test( TARGET eccodes_t_tools_data_from_stdin
                   TYPE SCRIPT
-                  CONDITION NOT ECCODES_ON_WINDOWS
+                  CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools_data_from_stdin.sh
                   TEST_DEPENDS eccodes_download_bufrs
 )
