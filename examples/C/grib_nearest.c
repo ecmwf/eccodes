@@ -11,7 +11,8 @@
 /*
  * C Implementation: nearest
  *
- * Description: how to get nearest point(s)
+ * Description: How to get nearest point(s).
+ *              Assumes all input GRIB messages have the same grid geometry
  */
 
 #include <stdio.h>
@@ -29,10 +30,10 @@ int main(int argc, char** argv)
 {
     int err = 0;
     long step=0;
-    size_t nfiles;
-    int i=0;
-    int no_values = 0; /* Default: decode the values */
+    size_t nfiles=0;
+    size_t i=0, j=0;
     codes_fieldset* set=NULL;
+    const size_t max_numfiles = 100;
     codes_handle* h=NULL;
     char param[20]={0,};
     size_t len=20;
@@ -42,29 +43,29 @@ int main(int argc, char** argv)
     double distances[4]={0,};
     int indexes[4]={0,};
     char* order_by="param,step";
-    double* pValues = values;
+    double* pValues = values; /* Default: decode the values */
 
     size_t size=4;
     double lat=-40,lon=15;
     int mode=0;
     int count;
-    int filearg_offset = 1;
     char** filenames;
     codes_nearest* nearest=NULL;
 
     if (argc < 2) usage(argv[0]);
-    nfiles=argc-1;
 
-    if (strcmp(argv[1],"-n")==0) {
-        no_values = 1; /* No values decoding. Just indexes, distances etc */
-        nfiles -= 1;
-        pValues = NULL;
-        filearg_offset++;
+    filenames=(char**)malloc(sizeof(char*)*max_numfiles);
+
+    for(i=1; i<argc; ++i) {
+        if (strcmp(argv[i],"-n")==0) {
+            pValues = NULL; /* Do not decode the values */
+        } else {
+            if (j >= max_numfiles)
+                break;
+            filenames[j++]=(char*)strdup(argv[i]);
+        }
     }
-
-    filenames=(char**)malloc(sizeof(char*)*nfiles);
-    for (i=0;i<nfiles;i++)
-        filenames[i]=(char*)strdup(argv[i+filearg_offset]);
+    nfiles = j;
 
     set=codes_fieldset_new_from_files(0,filenames,nfiles,0,0,0,order_by,&err);
     CODES_CHECK(err,0);
@@ -85,14 +86,14 @@ int main(int argc, char** argv)
         if (!nearest) nearest=codes_grib_nearest_new(h,&err);
         CODES_CHECK(err,0);
         CODES_CHECK(codes_grib_nearest_find(nearest,h,lat,lon,mode,lats,lons,pValues,distances,indexes,&size),0);
-        if (no_values) {
+        if (!pValues) {
             printf("\nIdx\tlat\tlon\tdist\n");
             for (i=0;i<4;i++) printf("%d\t%.2f\t%.2f\t%g\n",
                     (int)indexes[i],lats[i],lons[i],distances[i]);
         } else {
             printf("\nIdx\tlat\tlon\tdist\tval\n");
             for (i=0;i<4;i++) printf("%d\t%.2f\t%.2f\t%g\t%g\n",
-                    (int)indexes[i],lats[i],lons[i],distances[i],values[i]);
+                    (int)indexes[i],lats[i],lons[i],distances[i],pValues[i]);
         }
         printf("\n");
 
