@@ -328,7 +328,9 @@ static int find(grib_nearest* nearest, grib_handle* h,
             distances[kk]=self->distances[kk];
             outlats[kk]=self->lats[self->j[jj]];
             outlons[kk]=self->lons[self->k[kk]];
-            grib_get_double_element_internal(h,self->values_key,self->k[kk],&(values[kk]));
+            if (values) { /* ECC-499 */
+                grib_get_double_element_internal(h,self->values_key,self->k[kk],&(values[kk]));
+            }
             indexes[kk]=self->k[kk];
             kk++;
         }
