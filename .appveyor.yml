@@ -50,11 +50,8 @@ install:
                                 m2-diffutils ^
                                 m2-perl
 
-    # get the latest version of cmake
-  - cmd: conda install -c conda-forge cmake
-
-    # other deps
-  - cmd: conda install libnetcdf
+    # get deps
+  - cmd: conda install -c conda-forge cmake libnetcdf
 
 #---------------------------------#
 #       build configuration       #
