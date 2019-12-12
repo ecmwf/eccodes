@@ -2770,10 +2770,11 @@ int main (int argc, char * argv[])
 
         }
 
-    printf (" %30s %30s %30s\n", "bitsPerValue", "error(optimizeScaleFactor=0)", "error(optimizeScaleFactor=1)");
+    printf (" %30s %30s %30s  %s\n", "bitsPerValue", "error(optimizeScaleFactor=0)", "error(optimizeScaleFactor=1)", "ratio");
     for (ibitsPerValue = 0; ibitsPerValue < 11; ibitsPerValue++)
     {
         double zerr[2];
+        double ratio = 0;
         for (ioptimizeScaleFactor = 0; ioptimizeScaleFactor < 2; ioptimizeScaleFactor++)
         {
             double zval[NLAT * NLON];
@@ -2781,11 +2782,12 @@ int main (int argc, char * argv[])
             zerr[ioptimizeScaleFactor] = calc_error (zval, values);
         }
 
-        printf (" %30d %30.6e %30.6e\n", bitsPerValue[ibitsPerValue], zerr[0], zerr[1]);
+        ratio = zerr[0]/zerr[1];
+        printf (" %30d %30.9e %30.9e  %g\n", bitsPerValue[ibitsPerValue], zerr[0], zerr[1], ratio);
 
-        if ((zerr[0]/zerr[1] < 1.90) || (zerr[0]/zerr[1] > 2.00))
+        if ((ratio < 1.90) || (ratio > 2.00))
         {
-            printf ("Packing error too big: optimizeScaleFactor appears to be broken\n");
+            printf ("Packing error too big: optimizeScaleFactor appears to be broken (zerr[0]/zerr[1]=%g)\n", ratio);
             return 1;
         }
 
