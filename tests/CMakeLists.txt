@@ -263,7 +263,6 @@ ecbuild_add_test( TARGET eccodes_t_bufr_ecc-197
                   TEST_DEPENDS eccodes_download_bufrs
 )
 
-
 if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
     ecbuild_add_executable( TARGET    grib_encode_pthreads
                             NOINSTALL
@@ -342,4 +341,3 @@ ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
                   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
                   TEST_DEPENDS eccodes_download_gribs
 )
-
