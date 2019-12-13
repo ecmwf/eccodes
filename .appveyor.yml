@@ -89,6 +89,7 @@ build_script:
                ..
   - cmd: nmake
   - cmd: ntldd %ECCODES_SRC%/build/bin/grib_to_netcdf.exe # debug
+  - cmd: echo %PATH%
   - cmd: ctest --output-on-failure
   - cmd: nmake install
 
