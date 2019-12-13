@@ -57,7 +57,7 @@ install:
   - cmd: conda install -c conda-forge cmake libnetcdf
 
     # debug
-  - cmd: find %CONDA_PREFIX% -n netcdf.dll
+  - cmd: find %CONDA_PREFIX% -name netcdf.dll
   - cmd: where netcdf.dll
 
 #---------------------------------#
