@@ -692,10 +692,16 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
 static int __grib_set_double_array(grib_handle* h, const char* name, const double* val, size_t length, int check)
 {
     double v=0;
-    int constant,i;
+    size_t i=0;
 
-    if (h->context->debug)
-        fprintf(stderr, "ECCODES DEBUG grib_set_double_array key=%s %ld values\n",name,(long)length);
+    if (h->context->debug) {
+        size_t N=5;
+        if (length<=N) N=length;
+        fprintf(stderr, "ECCODES DEBUG grib_set_double_array key=%s %ld values (",name,(long)length);
+        for(i=0; i<N; ++i) fprintf(stderr," %g,", val[i]);
+        if (N >= length) fprintf(stderr, " )\n");
+        else fprintf(stderr, " ... )\n");
+    }
 
     if (length==0) {
         grib_accessor* a = grib_find_accessor(h, name);
@@ -708,6 +714,7 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
     if (!strcmp(name,"values") || !strcmp(name,"codedValues")) {
         double missingValue;
         int ret=0;
+        int constant=0;
 
         ret=grib_get_double(h,"missingValue",&missingValue);
         if (ret) missingValue=9999;
@@ -802,7 +809,13 @@ static int _grib_set_long_array(grib_handle* h, const char* name, const long* va
     if (!a) return GRIB_NOT_FOUND ;
 
     if (h->context->debug) {
-        fprintf(stderr, "ECCODES DEBUG _grib_set_long_array key=%s %ld values\n",name,(long)length);
+        size_t i=0;
+        size_t N=5;
+        if (length<=N) N=length;
+        fprintf(stderr, "ECCODES DEBUG _grib_set_long_array key=%s %ld values (",name,(long)length);
+        for(i=0; i<N; ++i) fprintf(stderr," %ld,", val[i]);
+        if (N >= length) fprintf(stderr, " )\n");
+        else fprintf(stderr, " ... )\n");
     }
 
     if (name[0]=='/' || name[0]=='#' ) {
