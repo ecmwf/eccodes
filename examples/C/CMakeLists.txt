@@ -83,6 +83,7 @@ list( APPEND tests_extra
    grib_set_bitmap
    grib_list
    grib_get_data
+   grib_nearest
    grib_nearest_multiple
    set_missing
    bufr_attributes
