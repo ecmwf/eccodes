@@ -1480,7 +1480,7 @@ int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
 int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
-int is_index_file(const char *filename);
+int is_grib_index_file(const char *filename);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
 
 /* bufr_util.c */

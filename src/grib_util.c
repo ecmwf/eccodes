@@ -2022,7 +2022,7 @@ int grib2_select_PDTN(int is_eps, int is_instant,
     return -1;
 }
 
-int is_index_file(const char* filename)
+int is_grib_index_file(const char* filename)
 {
     FILE* fh;
     char buf[8]={0,};

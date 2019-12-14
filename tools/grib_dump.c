@@ -142,7 +142,7 @@ int grib_tool_new_file_action(grib_runtime_options* options,grib_tools_file* fil
      */
     if (strcmp(options->dump_mode, "debug")==0)
     {
-        if (is_index_file(options->current_infile->name))
+        if (is_grib_index_file(options->current_infile->name))
         {
             int err = 0;
             grib_context* c = grib_context_get_default();

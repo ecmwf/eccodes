@@ -169,8 +169,8 @@ int grib_tool(int argc, char **argv)
 
     /* ECC-926: Currently only GRIB indexing works. Disable the through_index if BUFR, GTS etc */
     if (global_options.mode == MODE_GRIB &&
-        is_index_file(global_options.infile->name) &&
-            ( global_options.infile_extra && is_index_file(global_options.infile_extra->name))) {
+        is_grib_index_file(global_options.infile->name) &&
+            ( global_options.infile_extra && is_grib_index_file(global_options.infile_extra->name))) {
         global_options.through_index=1;
         return grib_tool_index(&global_options);
     }
