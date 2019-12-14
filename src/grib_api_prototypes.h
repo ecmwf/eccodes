@@ -1462,6 +1462,10 @@ long grib_arguments_get_long(grib_handle *h, grib_arguments *args, int n);
 double grib_arguments_get_double(grib_handle *h, grib_arguments *args, int n);
 grib_expression *grib_arguments_get_expression(grib_handle *h, grib_arguments *args, int n);
 
+/* codes_util.c */
+char get_dir_separator_char(void);
+char *codes_getenv(const char *name);
+
 /* grib_util.c */
 grib_handle *grib_util_sections_copy(grib_handle *hfrom, grib_handle *hto, int what, int *err);
 grib_string_list *grib_util_get_param_id(const char *mars_param);
@@ -1477,8 +1481,6 @@ int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
 int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
 int is_index_file(const char *filename);
-char get_dir_separator_char(void);
-char *codes_getenv(const char *name);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
 
 /* bufr_util.c */
