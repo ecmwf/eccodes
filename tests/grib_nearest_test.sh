@@ -10,14 +10,14 @@
 
 . ./include.sh
 
-label="grib_nearest"
+label="grib_nearest_test"
 temp=$label.temp
 tempRef=$label.ref
 input_grb=${data_dir}/reduced_gaussian_pressure_level.grib1
 
 # Nearest with decoding the data values
 # --------------------------------------
-${examples_dir}/c_grib_nearest $input_grb > $temp
+$EXEC ${test_dir}/grib_nearest_test $input_grb > $temp
 cat > $tempRef <<EOF
 ordering by param,step
 1 fields in the fieldset
@@ -34,7 +34,7 @@ diff $tempRef $temp
 
 # Nearest without decoding the data values
 # ----------------------------------------
-${examples_dir}/c_grib_nearest -n $input_grb > $temp
+$EXEC ${test_dir}/grib_nearest_test -n $input_grb > $temp
 cat > $tempRef <<EOF
 ordering by param,step
 1 fields in the fieldset

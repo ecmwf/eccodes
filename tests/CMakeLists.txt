@@ -20,6 +20,7 @@ list( APPEND test_bins
       unit_tests
       bufr_keys_iter
       gauss_sub
+      grib_nearest_test
       grib_util_set_spec
       grib_local_MeteoFrance
       grib_2nd_order_numValues
@@ -144,6 +145,7 @@ list( APPEND tests_data_reqd
     grib_ls_json
     grib_filter
     grib_multi
+    grib_nearest_test
     budg
     grib_gridType
     grib_octahedral
