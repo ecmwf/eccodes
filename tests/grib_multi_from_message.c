@@ -9,7 +9,7 @@
  */
 
 /*
- * test: reading multi fields messages from memory
+ * test: reading GRIB2 multi fields messages from memory
  */
 
 #include "grib_api.h"
@@ -20,15 +20,17 @@
 #include <unistd.h>
 #endif
 
-static void usage(const char* prog) {
-    printf("usage: %s [-m] file.grib\n",prog);
+static void usage(const char* prog)
+{
+    fprintf(stderr, "usage: %s [-m] file.grib\n", prog);
     exit(1);
 }
 
-int main(int argc,char* argv[]) {
+int main(int argc,char* argv[])
+{
     struct stat finfo;
     char shortName[20]={0,};
-    size_t len=20;
+    size_t len;
     grib_handle* h=NULL;
     size_t fsize;
     unsigned char* data=NULL;
@@ -52,7 +54,7 @@ int main(int argc,char* argv[]) {
     f=fopen(filename,"rb");
     if (!f) {perror(filename);exit(1);}
 
-    fstat(fileno((FILE*)f),&finfo);
+    stat(filename, &finfo);
     fsize=finfo.st_size;
 
     data=(unsigned char*)malloc(fsize);
