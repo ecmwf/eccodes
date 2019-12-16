@@ -34,8 +34,8 @@ ${tools_dir}/grib_dump $infile  | grep -v FILE > $infile.dump
 ${tools_dir}/grib_dump $outfile | grep -v FILE > $outfile.dump
 
 grib_check_key_equals $outfile section1Flags,section3Length '192 772'
-diff $outfile.dump ${data_dir}/bitmap.diff    >$REDIRECT 2>&1
-diff $infile.dump ${data_dir}/no_bitmap.diff  >$REDIRECT 2>&1
+diff $outfile.dump ${data_dir}/bitmap.diff
+diff $infile.dump ${data_dir}/no_bitmap.diff
 
 
 ${tools_dir}/grib_dump -O -p bitmap $outfile | grep -v FILE > $outfile.dump
