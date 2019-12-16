@@ -404,6 +404,7 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     double*  buf = NULL;
     size_t size=0;
     long count=0;
+    int is_char = 0;
 
     if( a->length == 0  &&
             (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
@@ -419,6 +420,11 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
     buf = (double*)grib_context_malloc(d->handle->context,size * sizeof(double));
 
     set_begin_end(d,a);
+
+    /* For the DIAG pseudo GRIBs. Key charValues uses 1-byte integers to represent a character */
+    if ( a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE ) {
+        is_char = 1;
+    }
 
     /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
     print_offset(self->dumper.out,self->begin,self->theEnd);
@@ -453,7 +459,6 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         size = 100;
     }
 
-
     k = 0;
     while(k < size)
     {
@@ -462,14 +467,16 @@ static void dump_values(grib_dumper* d,grib_accessor* a)
         /*for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");*/
         for(j = 0; j < 8 && k < size; j++, k++)
         {
-            fprintf(self->dumper.out,"%.10e",buf[k]);
+            if (is_char) fprintf(self->dumper.out,"'%c'",(char)buf[k]);
+            else         fprintf(self->dumper.out,"%.10e",buf[k]);
             if(k != size-1)
                 fprintf(self->dumper.out,", ");
         }
         fprintf(self->dumper.out,"\n");
 #else
 
-        fprintf(self->dumper.out,"%d %g\n",k,buf[k]);
+        if(is_char) fprintf(self->dumper.out,"%d '%c'\n",k,(char)buf[k]);
+        else        fprintf(self->dumper.out,"%d %g\n",k,buf[k]);
 
 #endif
 

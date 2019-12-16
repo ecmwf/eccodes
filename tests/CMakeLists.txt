@@ -66,6 +66,7 @@ list( APPEND tests_no_data_reqd
     bufr_rdbSubTypes
     grib_efas
     grib_sh_imag
+    diag
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd
