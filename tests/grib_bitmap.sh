@@ -22,27 +22,51 @@ temp2=out.bmp.grib2
 tempData1=out.bmp.grib1.data
 tempData2=out.bmp.grib2.data
 tempRules=bitmap.rules
+tempRef=grib_bitmap.ref
 
 rm -f $outfile
 
+# Add a bitmap
+# -------------
 ${tools_dir}/grib_set -s bitmapPresent=1 $infile $outfile >$REDIRECT
 
-${tools_dir}/grib_dump -O $infile  | grep -v FILE > $infile.dump
-${tools_dir}/grib_dump -O $outfile | grep -v FILE  > $outfile.dump
+${tools_dir}/grib_dump $infile  | grep -v FILE > $infile.dump
+${tools_dir}/grib_dump $outfile | grep -v FILE > $outfile.dump
 
-diff $outfile.dump ${data_dir}/bitmap.diff
-diff $infile.dump ${data_dir}/no_bitmap.diff
+grib_check_key_equals $outfile section1Flags,section3Length '192 772'
+diff $outfile.dump ${data_dir}/bitmap.diff    >$REDIRECT 2>&1
+diff $infile.dump ${data_dir}/no_bitmap.diff  >$REDIRECT 2>&1
 
-rm -f $infile.dump $outfile.dump || true
 
+${tools_dir}/grib_dump -O -p bitmap $outfile | grep -v FILE > $outfile.dump
+cat > $tempRef <<EOF
+963-1728  bitmap = 766 {
+   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
+   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
+   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
+   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
+   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
+   ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
+   ff, ff, ff, ff
+   ... 665 more values
+} # g1bitmap bitmap 
+EOF
+diff $tempRef $outfile.dump
+
+rm -f $infile.dump $outfile.dump $tempRef
+
+
+# Remove the bitmap
+# -----------------
 ${tools_dir}/grib_set -s bitmapPresent=0 $outfile $outfile1 >$REDIRECT
 
-${tools_dir}/grib_dump -O $outfile1 | grep -v FILE > $outfile1.dump
-${tools_dir}/grib_dump -O $outfile  | grep -v FILE> $outfile.dump
+${tools_dir}/grib_dump $outfile1 | grep -v FILE > $outfile1.dump
+${tools_dir}/grib_dump $outfile  | grep -v FILE > $outfile.dump
 
 diff $outfile1.dump ${data_dir}/no_bitmap.diff
 
-rm -f $outfile1 $outfile1.dump $outfile $outfile.dump || true
+rm -f $outfile1 $outfile1.dump $outfile $outfile.dump
+
 
 cat > $tempRules<<EOF
 set bitmapPresent=1;

@@ -1,123 +1,151 @@
 #==============   MESSAGE 1 ( length=11680 )               ==============
-1-4       identifier = GRIB
-5-7       totalLength = 11680
-8         editionNumber = 1
-======================   SECTION_1 ( length=52, padding=0 )    ======================
-1-3       section1Length = 52
-4         table2Version = 128
-5         centre = 98 [European Centre for Medium-Range Weather Forecasts (common/c-1.table) ]
-6         generatingProcessIdentifier = 130
-7         gridDefinition = 255
-8         section1Flags = 192 [11000000]
-9         indicatorOfParameter = 130 [Temperature  (K)  (grib1/2.98.128.table) ]
-10        indicatorOfTypeOfLevel = 109 [Hybrid level level number  (2 octets)  (grib1/local/ecmf/3.table , grib1/3.table) ]
-11-12     level = 1
-13        yearOfCentury = 8
-14        month = 2
-15        day = 6
-16        hour = 12
-17        minute = 0
-18        unitOfTimeRange = 1 [Hour (grib1/4.table) ]
-19        P1 = 0
-20        P2 = 0
-21        timeRangeIndicator = 0 [Forecast product valid at reference time + P1  (P1>0)  (grib1/local/ecmf/5.table , grib1/5.table) ]
-22-23     numberIncludedInAverage = 0
-24        numberMissingFromAveragesOrAccumulations = 0
-25        centuryOfReferenceTimeOfData = 21
-26        subCentre = 0 [Unknown code table entry (grib1/0.ecmf.table) ]
-27-28     decimalScaleFactor = 0
-29-40     reservedNeedNotBePresent = 12 {
-                  00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00
-               } # pad reservedNeedNotBePresent 
-41        localDefinitionNumber = 1 [MARS labelling or ensemble forecast data (grib1/localDefinitionNumber.98.table) ]
-42        marsClass = 1 [Operational archive (mars/class.table) ]
-43        marsType = 2 [Analysis (mars/type.table) ]
-44-45     marsStream = 1025 [Atmospheric model (mars/stream.table) ]
-46-49     experimentVersionNumber = 0001
-50        perturbationNumber = 0
-51        numberOfForecastsInEnsemble = 0
-52        padding_local1_1 = 1 {
-                     00
-                  } # pad padding_local1_1 
-======================   SECTION_2 ( length=896, padding=0 )   ======================
-1-3       section2Length = 896
-4         numberOfVerticalCoordinateValues = 184
-5         pvlLocation = 33
-6         dataRepresentationType = 4 [Gaussian Latitude/Longitude Grid (grib1/6.table) ]
-7-8       Ni = MISSING
-9-10      Nj = 64
-11-13     latitudeOfFirstGridPoint = 87864
-14-16     longitudeOfFirstGridPoint = 0
-17        resolutionAndComponentFlags = 0 [00000000]
-18-20     latitudeOfLastGridPoint = -87864
-21-23     longitudeOfLastGridPoint = 357188
-24-25     iDirectionIncrement = MISSING
-26-27     N = 32
-28        scanningMode = 0 [00000000]
-29-32     padding_grid4_1 = 4 {
-                        00, 00, 00, 00
-                     } # pad padding_grid4_1 
-33-768    pv = (184,736) {
-0.0000000000e+00, 2.0000400543e+00, 3.9808320999e+00, 7.3871860504e+00, 1.2908319473e+01, 2.1413604736e+01, 3.3952865601e+01, 5.1746597290e+01, 
-7.6167663574e+01, 1.0871556091e+02, 1.5098602295e+02, 2.0463745117e+02, 2.7135644531e+02, 3.5282446289e+02, 4.5068579102e+02, 5.6651928711e+02, 
-7.0181323242e+02, 8.5794580078e+02, 1.0361665039e+03, 1.2375854492e+03, 1.4631638184e+03, 1.7137097168e+03, 1.9898745117e+03, 2.2921555176e+03, 
-2.6208984375e+03, 2.9763022461e+03, 3.3584257812e+03, 3.7671960449e+03, 4.2024179688e+03, 4.6637773438e+03, 5.1508593750e+03, 5.6631562500e+03, 
-6.1998398438e+03, 6.7597265625e+03, 7.3414687500e+03, 7.9429257812e+03, 8.5646250000e+03, 9.2083046875e+03, 9.8735625000e+03, 1.0558882812e+04, 
-1.1262484375e+04, 1.1982660156e+04, 1.2713898438e+04, 1.3453226562e+04, 1.4192011719e+04, 1.4922687500e+04, 1.5638054688e+04, 1.6329562500e+04, 
-1.6990625000e+04, 1.7613281250e+04, 1.8191031250e+04, 1.8716968750e+04, 1.9184546875e+04, 1.9587515625e+04, 1.9919796875e+04, 2.0175394531e+04, 
-2.0348917969e+04, 2.0434156250e+04, 2.0426218750e+04, 2.0319011719e+04, 2.0107031250e+04, 1.9785359375e+04, 1.9348777344e+04, 1.8798824219e+04, 
-1.8141296875e+04, 1.7385593750e+04, 1.6544585938e+04, 1.5633566406e+04, 1.4665644531e+04, 1.3653218750e+04, 1.2608382812e+04, 1.1543167969e+04, 
-1.0471312500e+04, 9.4052226562e+03, 8.3562539062e+03, 7.3351640625e+03, 6.3539218750e+03, 5.4228007812e+03, 4.5502148438e+03, 3.7434643555e+03, 
-3.0101469727e+03, 2.3562026367e+03, 1.7848544922e+03, 1.2976562500e+03, 8.9519360352e+02, 5.7631420898e+02, 3.3677246094e+02, 1.6204342651e+02, 
-5.4208343506e+01, 6.5756282806e+00, 3.1600000802e-03, 0.0000000000e+00, 0.0000000000e+00, 0.0000000000e+00, 0.0000000000e+00, 0.0000000000e+00, 
-0.0000000000e+00, 0.0000000000e+00, 0.0000000000e+00, 0.0000000000e+00
-... 84 more values
-} # ibmfloat pv 
-769-896   pl = (64,128) {
-2.0000000000e+01, 2.7000000000e+01, 3.6000000000e+01, 4.0000000000e+01, 4.5000000000e+01, 5.0000000000e+01, 6.0000000000e+01, 6.4000000000e+01, 
-7.2000000000e+01, 7.5000000000e+01, 8.0000000000e+01, 9.0000000000e+01, 9.0000000000e+01, 9.6000000000e+01, 1.0000000000e+02, 1.0800000000e+02, 
-1.0800000000e+02, 1.2000000000e+02, 1.2000000000e+02, 1.2000000000e+02, 1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 
-1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 
-1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 
-1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 1.2800000000e+02, 1.2000000000e+02, 1.2000000000e+02, 1.2000000000e+02, 1.0800000000e+02, 
-1.0800000000e+02, 1.0000000000e+02, 9.6000000000e+01, 9.0000000000e+01, 9.0000000000e+01, 8.0000000000e+01, 7.5000000000e+01, 7.2000000000e+01, 
-6.4000000000e+01, 6.0000000000e+01, 5.0000000000e+01, 4.5000000000e+01, 4.0000000000e+01, 3.6000000000e+01, 2.7000000000e+01, 2.0000000000e+01
-} # unsigned pl 
-======================   SECTION_3 ( length=772, padding=0 )   ======================
-1-3       section3Length = 772
-4         numberOfUnusedBitsAtEndOfSection3 = 14
-5-6       tableReference = 0
-7-772     bitmap = 766 {
-                  ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
-                  ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
-                  ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
-                  ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
-                  ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
-                  ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, ff, 
-                  ff, ff, ff, ff
-                  ... 665 more values
-               } # g1bitmap bitmap 
-======================   SECTION_4 ( length=9948, padding=0 )   ======================
-1-3       section4Length = 9948
-4         dataFlag = 14 [00001110]
-5-6       binaryScaleFactor = -6
-7-10      referenceValue = 160.252
-11        bitsPerValue = 13
-12-9948   codedValues = (6114,9937) {
-1.9907963562e+02, 1.9872026062e+02, 1.9851713562e+02, 1.9839213562e+02, 1.9822026062e+02, 1.9798588562e+02, 1.9770463562e+02, 1.9747026062e+02, 
-1.9737651062e+02, 1.9740776062e+02, 1.9756401062e+02, 1.9787651062e+02, 1.9839213562e+02, 1.9907963562e+02, 1.9979838562e+02, 2.0034526062e+02, 
-2.0059526062e+02, 2.0053276062e+02, 2.0015776062e+02, 1.9959526062e+02, 1.9984526062e+02, 1.9959526062e+02, 1.9954838562e+02, 1.9943901062e+02, 
-1.9940776062e+02, 1.9926713562e+02, 1.9875151062e+02, 1.9789213562e+02, 1.9698588562e+02, 1.9642338562e+02, 1.9637651062e+02, 1.9679838562e+02, 
-1.9737651062e+02, 1.9782963562e+02, 1.9806401062e+02, 1.9814213562e+02, 1.9843901062e+02, 1.9925151062e+02, 2.0065776062e+02, 2.0222026062e+02, 
-2.0334526062e+02, 2.0389213562e+02, 2.0420463562e+02, 2.0442338562e+02, 2.0404838562e+02, 2.0265776062e+02, 2.0090776062e+02, 2.0176713562e+02, 
-2.0101713562e+02, 2.0039213562e+02, 1.9961088562e+02, 1.9925151062e+02, 1.9940776062e+02, 1.9934526062e+02, 1.9872026062e+02, 1.9790776062e+02, 
-1.9725151062e+02, 1.9670463562e+02, 1.9623588562e+02, 1.9597026062e+02, 1.9595463562e+02, 1.9612651062e+02, 1.9645463562e+02, 1.9692338562e+02, 
-1.9750151062e+02, 1.9809526062e+02, 1.9845463562e+02, 1.9845463562e+02, 1.9829838562e+02, 1.9837651062e+02, 1.9882963562e+02, 1.9993901062e+02, 
-2.0181401062e+02, 2.0401713562e+02, 2.0581401062e+02, 2.0700151062e+02, 2.0781401062e+02, 2.0848588562e+02, 2.0926713562e+02, 2.0973588562e+02, 
-2.0887651062e+02, 2.0640776062e+02, 2.0356401062e+02, 2.0676713562e+02, 2.0443901062e+02, 2.0272026062e+02, 2.0140776062e+02, 2.0081401062e+02, 
-2.0068901062e+02, 1.9993901062e+02, 1.9834526062e+02, 1.9704838562e+02, 1.9695463562e+02, 1.9770463562e+02, 1.9812651062e+02, 1.9779838562e+02, 
-1.9726713562e+02, 1.9690776062e+02, 1.9653276062e+02, 1.9626713562e+02
-... 6014 more values
-} # data_g1simple_packing codedValues 
-======================   SECTION_5 ( length=4, padding=0 )     ======================
-1-4       7777 = 7777
+GRIB {
+  editionNumber = 1;
+  table2Version = 128;
+  # European Centre for Medium-Range Weather Forecasts (common/c-1.table)  
+  centre = 98;
+  generatingProcessIdentifier = 130;
+  # Temperature  (K)  (grib1/2.98.128.table)  
+  indicatorOfParameter = 130;
+  # Hybrid level level number  (2 octets)  (grib1/local/ecmf/3.table , grib1/3.table)  
+  indicatorOfTypeOfLevel = 109;
+  level = 1;
+  # Forecast product valid at reference time + P1  (P1>0)  (grib1/local/ecmf/5.table , grib1/5.table)  
+  timeRangeIndicator = 0;
+  # Unknown code table entry (grib1/0.ecmf.table)  
+  subCentre = 0;
+  paramId = 130;
+  #-READ ONLY- cfNameECMF = air_temperature;
+  #-READ ONLY- cfName = air_temperature;
+  #-READ ONLY- cfVarNameECMF = t;
+  #-READ ONLY- cfVarName = t;
+  #-READ ONLY- units = K;
+  #-READ ONLY- nameECMF = Temperature;
+  #-READ ONLY- name = Temperature;
+  decimalScaleFactor = 0;
+  dataDate = 20080206;
+  dataTime = 1200;
+  # Hour (stepUnits.table)  
+  stepUnits = 1;
+  stepRange = 0;
+  startStep = 0;
+  endStep = 0;
+  #-READ ONLY- marsParam = 130.128;
+  # MARS labelling or ensemble forecast data (grib1/localDefinitionNumber.98.table)  
+  localDefinitionNumber = 1;
+  # Operational archive (mars/class.table)  
+  marsClass = 1;
+  # Analysis (mars/type.table)  
+  marsType = 2;
+  # Atmospheric model (mars/stream.table)  
+  marsStream = 1025;
+  experimentVersionNumber = 0001;
+  perturbationNumber = 0;
+  numberOfForecastsInEnsemble = 0;
+  shortName = t;
+  GDSPresent = 1;
+  bitmapPresent = 1;
+  numberOfVerticalCoordinateValues = 184;
+  Ni = MISSING;
+  Nj = 64;
+  latitudeOfFirstGridPointInDegrees = 87.864;
+  longitudeOfFirstGridPointInDegrees = 0;
+  earthIsOblate = 0;
+  uvRelativeToGrid = 0;
+  latitudeOfLastGridPointInDegrees = -87.864;
+  longitudeOfLastGridPointInDegrees = 357.188;
+  iDirectionIncrement = MISSING;
+  iDirectionIncrementInDegrees = MISSING;
+  N = 32;
+  iScansNegatively = 0;
+  jScansPositively = 0;
+  jPointsAreConsecutive = 0;
+  #-READ ONLY- alternativeRowScanning = 0;
+  global = 1;
+  #-READ ONLY- numberOfDataPoints = 6114;
+  #-READ ONLY- numberOfDataPointsExpected = 6114;
+  #-READ ONLY- numberOfValues = 6114;
+  isOctahedral = 0;
+  pv(184) =  {
+  0, 2.00004, 3.98083, 7.38719, 12.9083, 
+  21.4136, 33.9529, 51.7466, 76.1677, 108.716, 
+  150.986, 204.637, 271.356, 352.824, 450.686, 
+  566.519, 701.813, 857.946, 1036.17, 1237.59, 
+  1463.16, 1713.71, 1989.87, 2292.16, 2620.9, 
+  2976.3, 3358.43, 3767.2, 4202.42, 4663.78, 
+  5150.86, 5663.16, 6199.84, 6759.73, 7341.47, 
+  7942.93, 8564.62, 9208.3, 9873.56, 10558.9, 
+  11262.5, 11982.7, 12713.9, 13453.2, 14192, 
+  14922.7, 15638.1, 16329.6, 16990.6, 17613.3, 
+  18191, 18717, 19184.5, 19587.5, 19919.8, 
+  20175.4, 20348.9, 20434.2, 20426.2, 20319, 
+  20107, 19785.4, 19348.8, 18798.8, 18141.3, 
+  17385.6, 16544.6, 15633.6, 14665.6, 13653.2, 
+  12608.4, 11543.2, 10471.3, 9405.22, 8356.25, 
+  7335.16, 6353.92, 5422.8, 4550.21, 3743.46, 
+  3010.15, 2356.2, 1784.85, 1297.66, 895.194, 
+  576.314, 336.772, 162.043, 54.2083, 6.57563, 
+  0.00316, 0, 0, 0, 0, 
+  0, 0, 0, 0, 0
+  ... 84 more values
+  } 
+  pl(64) =  {
+  20, 27, 36, 40, 45, 
+  50, 60, 64, 72, 75, 
+  80, 90, 90, 96, 100, 
+  108, 108, 120, 120, 120, 
+  128, 128, 128, 128, 128, 
+  128, 128, 128, 128, 128, 
+  128, 128, 128, 128, 128, 
+  128, 128, 128, 128, 128, 
+  128, 128, 128, 128, 120, 
+  120, 120, 108, 108, 100, 
+  96, 90, 90, 80, 75, 
+  72, 64, 60, 50, 45, 
+  40, 36, 27, 20
+  } 
+  missingValue = 9999;
+  tableReference = 0;
+  #-READ ONLY- binaryScaleFactor = -6;
+  #-READ ONLY- referenceValue = 160.252;
+  sphericalHarmonics = 0;
+  complexPacking = 0;
+  integerPointValues = 0;
+  additionalFlagPresent = 0;
+  packingType = grid_simple;
+  bitsPerValue = 13;
+  values(6114) =  {
+  199.08, 198.72, 198.517, 198.392, 198.22, 
+  197.986, 197.705, 197.47, 197.377, 197.408, 
+  197.564, 197.877, 198.392, 199.08, 199.798, 
+  200.345, 200.595, 200.533, 200.158, 199.595, 
+  199.845, 199.595, 199.548, 199.439, 199.408, 
+  199.267, 198.752, 197.892, 196.986, 196.423, 
+  196.377, 196.798, 197.377, 197.83, 198.064, 
+  198.142, 198.439, 199.252, 200.658, 202.22, 
+  203.345, 203.892, 204.205, 204.423, 204.048, 
+  202.658, 200.908, 201.767, 201.017, 200.392, 
+  199.611, 199.252, 199.408, 199.345, 198.72, 
+  197.908, 197.252, 196.705, 196.236, 195.97, 
+  195.955, 196.127, 196.455, 196.923, 197.502, 
+  198.095, 198.455, 198.455, 198.298, 198.377, 
+  198.83, 199.939, 201.814, 204.017, 205.814, 
+  207.002, 207.814, 208.486, 209.267, 209.736, 
+  208.877, 206.408, 203.564, 206.767, 204.439, 
+  202.72, 201.408, 200.814, 200.689, 199.939, 
+  198.345, 197.048, 196.955, 197.705, 198.127, 
+  197.798, 197.267, 196.908, 196.533, 196.267
+  ... 6014 more values
+  } 
+  #-READ ONLY- numberOfCodedValues = 6114;
+  #-READ ONLY- maximum = 224.455;
+  #-READ ONLY- minimum = 160.252;
+  #-READ ONLY- average = 194.458;
+  #-READ ONLY- numberOfMissing = 0;
+  #-READ ONLY- standardDeviation = 12.8976;
+  #-READ ONLY- skewness = -0.807543;
+  #-READ ONLY- kurtosis = 0.45733;
+  #-READ ONLY- isConstant = 0;
+  gridType = reduced_gg;
+  #-READ ONLY- getNumberOfValues = 6114;
+}
