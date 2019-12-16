@@ -33,6 +33,7 @@ long GRIB_MASK = -1;       /* Mask of sword bits */
 static const unsigned long dmasks[] = { 0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE0, 0xC0, 0x80, 0x00, };
 
 static const int max_nbits = sizeof(unsigned long)*8;
+static const int max_nbits_size_t = sizeof(size_t)*8;
 
 unsigned long grib_decode_unsigned_byte_long(const unsigned char* p, long o, int l)
 {
