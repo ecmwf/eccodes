@@ -49,7 +49,7 @@ exclude="ias1_240.bufr syno_multi.bufr tropical_cyclone.bufr aeolus_wmo_26.bufr 
 cmp_options=""
 
 if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
-    cmp_options="-R all=7e-8"
+    cmp_options="-R all=1e-7"
 fi
 
 for f in $files
