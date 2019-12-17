@@ -391,6 +391,35 @@ int grib_encode_unsigned_longb(unsigned char* p, unsigned long val ,long *bitp, 
     return GRIB_SUCCESS;
 }
 
+/*
+ * Note: On x64 Micrsoft Windows a "long" is 32 bits but "size_t" is 64 bits
+ */
+int grib_encode_size_tb(unsigned char* p, size_t val ,long *bitp, long nb)
+{
+    long i = 0;
+
+    if (nb > max_nbits_size_t) {
+        fprintf(stderr, "Number of bits (%ld) exceeds maximum number of bits (%d)\n", nb, max_nbits_size_t);
+        Assert(0);
+    }
+#ifdef DEBUG
+    {
+        size_t maxV = grib_power(nb,2);
+        if (val > maxV) {
+            fprintf(stderr, "grib_encode_size_tb: Value=%lu, but number of bits=%ld!\n", val, nb);
+            Assert(0);
+        }
+    }
+#endif
+    for(i=nb-1; i >= 0; i--){
+        if(test(val,i))
+            grib_set_bit_on (p, bitp);
+        else
+            grib_set_bit_off(p, bitp);
+    }
+    return GRIB_SUCCESS;
+}
+
 #if OMP_PACKING
  #include "grib_bits_any_endian_omp.c"
 #elif VECTOR

@@ -748,7 +748,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
 {
     int err=0;
     int j,i;
-    unsigned long lval;
+    size_t lval;
     long localReference=0,localWidth=0,modifiedWidth,modifiedReference;
     long reference,allone;
     double localRange,modifiedFactor,inverseFactor;
@@ -801,7 +801,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
                 }
             } else {
                 lval=round(*v * inverseFactor)-modifiedReference;
-                grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
+                grib_encode_size_tb(buff->data,lval,pos,modifiedWidth);
             }
         }
         grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
@@ -827,7 +827,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
             grib_set_bits_on(buff->data,pos,modifiedWidth);
         } else {
             lval=round(*v * inverseFactor)-modifiedReference;
-            grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
+            grib_encode_size_tb(buff->data,lval,pos,modifiedWidth);
         }
         grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
         grib_encode_unsigned_longb(buff->data,localWidth,pos,6);
@@ -908,7 +908,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
             grib_set_bits_on(buff->data,pos,modifiedWidth);
         } else {
             lval=localReference-modifiedReference;
-            grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
+            grib_encode_size_tb(buff->data,lval,pos,modifiedWidth);
         }
     }
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
@@ -921,7 +921,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
                 grib_set_bits_on(buff->data,pos,localWidth);
             } else {
                 lval=round(values[j]*inverseFactor)-reference;
-                grib_encode_unsigned_longb(buff->data,lval,pos,localWidth);
+                grib_encode_size_tb(buff->data,lval,pos,localWidth);
             }
         }
     }
@@ -934,7 +934,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
 static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_descriptor* bd,
         grib_accessor_bufr_data_array* self,double value)
 {
-    unsigned long lval;
+    size_t lval;
     double maxAllowed,minAllowed;
     int err=0;
     int modifiedWidth,modifiedReference;
@@ -968,7 +968,7 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
     else {
         lval=round(value/modifiedFactor)-modifiedReference;
         if (c->debug) grib_context_log(c, GRIB_LOG_DEBUG, "encode_double_value %s: value=%.15f lval=%lu\n", bd->shortName,value,lval);
-        grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
+        grib_encode_size_tb(buff->data,lval,pos,modifiedWidth);
     }
 
     return err;
