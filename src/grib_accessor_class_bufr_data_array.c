@@ -1012,7 +1012,7 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
         bufr_descriptor* bd,int canBeMissing,
         grib_accessor_bufr_data_array* self,int* err)
 {
-    unsigned long lval;
+    size_t lval;
     int modifiedWidth,modifiedReference;
     double modifiedFactor;
     double dval=0;
@@ -1026,7 +1026,7 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
     CHECK_END_DATA_RETURN(c, self, modifiedWidth, 0);
     if (*err) {*err=0; return GRIB_MISSING_DOUBLE;}
 
-    lval=grib_decode_unsigned_long(data,pos,modifiedWidth);
+    lval=grib_decode_size_t(data,pos,modifiedWidth);
     if (grib_is_all_bits_one(lval,modifiedWidth) && canBeMissing) {
         dval=GRIB_MISSING_DOUBLE;
     } else {
