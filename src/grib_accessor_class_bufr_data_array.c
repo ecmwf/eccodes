@@ -606,7 +606,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
 {
     grib_darray* ret=NULL;
     int j;
-    unsigned long lval;
+    size_t lval;
     int localReference,localWidth,modifiedWidth,modifiedReference;
     double modifiedFactor,dval;
     int bufr_multi_element_constant_arrays = c->bufr_multi_element_constant_arrays;
@@ -627,7 +627,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
         *err=0;
         return ret;
     }
-    lval=grib_decode_unsigned_long(data,pos,modifiedWidth);
+    lval=grib_decode_size_t(data,pos,modifiedWidth);
     localReference=(long)lval+modifiedReference;
     localWidth=grib_decode_unsigned_long(data,pos,6);
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tlocalWidth=%ld",localWidth);
@@ -644,7 +644,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
             return ret;
         }
         for (j=0;j<self->numberOfSubsets;j++) {
-            lval=grib_decode_unsigned_long(data,pos,localWidth);
+            lval=grib_decode_size_t(data,pos,localWidth);
             if (grib_is_all_bits_one(lval,localWidth) && canBeMissing) {
                 dval=GRIB_MISSING_DOUBLE;
             } else {
@@ -1012,7 +1012,7 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
         bufr_descriptor* bd,int canBeMissing,
         grib_accessor_bufr_data_array* self,int* err)
 {
-    unsigned long lval;
+    size_t lval;
     int modifiedWidth,modifiedReference;
     double modifiedFactor;
     double dval=0;
@@ -1026,7 +1026,7 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
     CHECK_END_DATA_RETURN(c, self, modifiedWidth, 0);
     if (*err) {*err=0; return GRIB_MISSING_DOUBLE;}
 
-    lval=grib_decode_unsigned_long(data,pos,modifiedWidth);
+    lval=grib_decode_size_t(data,pos,modifiedWidth);
     if (grib_is_all_bits_one(lval,modifiedWidth) && canBeMissing) {
         dval=GRIB_MISSING_DOUBLE;
     } else {

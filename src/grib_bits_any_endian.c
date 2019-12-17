@@ -298,6 +298,73 @@ int grib_encode_unsigned_long(unsigned char* p, unsigned long val ,long *bitp, l
     return GRIB_SUCCESS;
 }
 
+/*
+ * Note: On x64 Micrsoft Windows a "long" is 32 bits but "size_t" is 64 bits
+ */
+#define BIT_MASK_SIZE_T(x) \
+        (((x) == max_nbits_size_t) ? \
+                (size_t) -1UL : (1UL << (x)) - 1)
+
+size_t grib_decode_size_t(const unsigned char* p, long *bitp, long nbits)
+{
+    size_t ret = 0;
+    long oc = *bitp / 8;
+    size_t mask = 0;
+    long pi = 0;
+    int usefulBitsInByte = 0;
+    long bitsToRead = 0;
+
+    if (nbits == 0) return 0;
+
+    if (nbits > max_nbits_size_t)
+    {
+        int bits = nbits;
+        int mod = bits % max_nbits_size_t;
+
+        if (mod != 0)
+        {
+            int e = grib_decode_size_t(p, bitp, mod);
+            Assert(e == 0);
+            bits -= mod;
+        }
+
+        while (bits > max_nbits_size_t)
+        {
+            int e = grib_decode_size_t(p, bitp, max_nbits_size_t);
+            Assert(e == 0);
+            bits -= max_nbits_size_t;
+        }
+
+        return grib_decode_size_t(p, bitp, bits);
+    }
+
+    mask = BIT_MASK_SIZE_T(nbits);
+    /* pi: position of bitp in p[]. >>3 == /8 */
+    pi = oc;
+    /* number of useful bits in current byte */
+    usefulBitsInByte = 8 - (*bitp & 7);
+    /* read at least enough bits (byte by byte) from input */
+    bitsToRead = nbits;
+    while (bitsToRead > 0) {
+        ret <<= 8;
+        /*   ret += p[pi];     */
+        DebugAssert((ret & p[pi]) == 0);
+        ret = ret | p[pi];
+        pi++;
+        bitsToRead -= usefulBitsInByte;
+        usefulBitsInByte = 8;
+    }
+    *bitp += nbits;
+
+    /* bitsToRead might now be negative (too many bits read) */
+    /* remove those which are too much */
+    ret >>= -1 * bitsToRead;
+    /* remove leading bits (from previous value) */
+    ret &= mask;
+
+    return ret;
+}
+
 int grib_encode_unsigned_longb(unsigned char* p, unsigned long val ,long *bitp, long nb)
 {
     long  i = 0;
