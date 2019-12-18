@@ -153,6 +153,11 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: The rest of this test is currently disabled on Windows"
+    exit 0
+fi
+
 #----------------------------------------------------
 # ECC-656: using relative comparison (-R) with 'all'
 #----------------------------------------------------
