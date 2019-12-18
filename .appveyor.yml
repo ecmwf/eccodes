@@ -28,9 +28,8 @@ init:
   - cmd: call %CONDA%\Scripts\activate.bat
     # add eccodes\build\bin to path so tests can find eccodes.dll
   - cmd: set PATH=%PATH%;%ECCODES_SRC%\build\bin
-    # add %CONDA_PREFIX%\Library\bin to path so tests can find netcdf.dll
-    # I'm pretty sure this should already be in the system path once Conda is activated.
-  - cmd: set PATH=%PATH%;%CONDA_PREFIX%\Library\bin
+    # add %CONDA%\Library\bin to path so tests can find netcdf.dll
+  - cmd: set PATH=%PATH%;%CONDA%\Library\bin
     # auto-yes for conda
   - cmd: conda config --set always_yes yes
 
