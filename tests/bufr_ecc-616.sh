@@ -20,6 +20,12 @@ tempOut=temp.${label}.txt
 tempRef=temp.${label}.ref
 tempBufr=temp.${label}.bufr
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
+
 input=${data_dir}/bufr/israel_observations_2017041010.bufr
 
 cat > $tempRules <<EOF
