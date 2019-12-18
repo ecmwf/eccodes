@@ -8,13 +8,35 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 . ./include.sh
-#set -x
 
 # Disable if autotools being used
 src_config=${src_dir}/config.h
 if [ -f ${src_config} ]; then
   exit 0
 fi
+
+label="grib_to_netcdf_test"
+tempGrib=temp.${label}.grib
+tempNetcdf=temp.${label}.nc
+tempText=temp.${label}.txt
+
+# Do we have ncdump?
+NC_DUMPER=""
+if command -v "ncdump" >/dev/null 2>&1; then
+    NC_DUMPER="ncdump"
+fi
+
+# ECC-1041: One parameter with different expvers
+# This has 5 messages, all 'tp'. Change the first message to have a different expver
+input=${data_dir}/tp_ecmwf.grib
+${tools_dir}/grib_set -w stepRange=12 -s experimentVersionNumber=0005 $input $tempGrib
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
+if test "x$NC_DUMPER" != "x"; then
+    $NC_DUMPER -h $tempNetcdf > $tempText
+    grep -q "short tp_0005" $tempText
+    grep -q "short tp_0001" $tempText
+fi
+
 
 grib_files="\
  regular_latlon_surface.grib2 \
@@ -35,23 +57,22 @@ ls /bin
 ls /usr/bin
 
 # Go thru all the specified GRIB files and convert them to NetCDF
-for dt in $ncf_types
-do
-   for f in $grib_files
-   do
-      rm -f $tmp_netcdf
+for dt in $ncf_types; do
+    for f in $grib_files; do
+        rm -f $tempNetcdf
       [ -f ${data_dir}/$f ]
-      ${tools_dir}/grib_to_netcdf -D $dt -o $tmp_netcdf ${data_dir}/$f >/dev/null
-      ${tools_dir}/grib_to_netcdf -T -o $tmp_netcdf ${data_dir}/$f >/dev/null
+        ${tools_dir}/grib_to_netcdf -D $dt -o $tempNetcdf ${data_dir}/$f >/dev/null
+        ${tools_dir}/grib_to_netcdf -T -o $tempNetcdf ${data_dir}/$f >/dev/null
    done
 done
 
 # Try creating different kinds; netcdf3 classic and large
 # TODO: enable tests for netcdf4 formats too
 input=${data_dir}/regular_latlon_surface.grib2
-${tools_dir}/grib_to_netcdf -k 1 -o $tmp_netcdf $input >/dev/null
-${tools_dir}/grib_to_netcdf -k 2 -o $tmp_netcdf $input >/dev/null
-#${tools_dir}/grib_to_netcdf -k 3 -o $tmp_netcdf $input >/dev/null
-#${tools_dir}/grib_to_netcdf -k 4 -o $tmp_netcdf $input >/dev/null
+${tools_dir}/grib_to_netcdf -k 1 -o $tempNetcdf $input >/dev/null
+${tools_dir}/grib_to_netcdf -k 2 -o $tempNetcdf $input >/dev/null
+#${tools_dir}/grib_to_netcdf -k 3 -o $tempNetcdf $input >/dev/null
+#${tools_dir}/grib_to_netcdf -k 4 -o $tempNetcdf $input >/dev/null
 
-rm -f $tmp_netcdf
+
+rm -f $tempNetcdf $tempGrib $tempText
