@@ -30,6 +30,7 @@ tmp_netcdf=tmp.ncf
 
 # debug
 echo $PATH
+env
 
 # Go thru all the specified GRIB files and convert them to NetCDF
 for dt in $ncf_types
