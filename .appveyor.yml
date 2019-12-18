@@ -59,6 +59,7 @@ install:
     # debug
   - cmd: find %CONDA_PREFIX% -name netcdf.dll
   - cmd: where netcdf.dll
+  - cmd: where bash.exe
 
 #---------------------------------#
 #       build configuration       #
