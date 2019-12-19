@@ -204,7 +204,7 @@ set( HAVE_LIBOPENJPEG 0 )
 
 if( ENABLE_JPG )
 
-    # Note: ecbuild_add_extra_search_paths is a deprecated feature but we need it to find Jasper at ECMWF.
+    # Note: The function ecbuild_add_extra_search_paths is deprecated but we need it to find Jasper at ECMWF.
     #       It modifies CMAKE_PREFIX_PATH
     #       which can affect future package discovery if not undone by the caller.
     #       The current CMAKE_PREFIX_PATH is backed up as _CMAKE_PREFIX_PATH
