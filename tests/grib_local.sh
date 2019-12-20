@@ -109,6 +109,11 @@ grib_check_key_equals $temp.3 edition,productDefinitionTemplateNumber "2 5"
 grib_check_key_equals $temp.3 forecastProbabilityNumber,totalNumberOfForecastProbabilities "2 25"
 grib_check_key_equals $temp.3 probabilityType,scaledValueOfLowerLimit,scaledValueOfUpperLimit "2 54 56"
 
+# ECC-1045
+${tools_dir}/grib_set -s localDefinitionNumber=5,lowerThreshold=missing,upperThreshold=missing \
+   $sample_g1 $temp.1
+grib_check_key_equals $temp.1 'lowerThreshold,upperThreshold' 'MISSING MISSING'
+
 
 # Local Definition 42 for GRIB2 (LC-WFV)
 # ---------------------------------------
