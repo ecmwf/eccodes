@@ -48,9 +48,9 @@ files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 exclude="ias1_240.bufr syno_multi.bufr tropical_cyclone.bufr aeolus_wmo_26.bufr israel_observations_2017041010.bufr "
 cmp_options=""
 
-if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
-    cmp_options="-R all=1e-7"
-fi
+#if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+#    cmp_options="-R all=1e-7"
+#fi
 
 for f in $files
 do
