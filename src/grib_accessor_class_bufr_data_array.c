@@ -236,10 +236,6 @@ static void init_class(grib_accessor_class* c)
 
 #define OVERRIDDEN_REFERENCE_VALUES_KEY "inputOverriddenReferenceValues"
 
-#ifdef ECCODES_ON_WINDOWS
-#define round(a) ( (a) >=0 ? ((a)+0.5) : ((a)-0.5) )
-#endif
-
 /* Set the error code, if it is bad and we should fail (default case), return */
 /* variable 'err' is assumed to be pointer to int */
 /* If BUFRDC mode is enabled, then we tolerate problems like wrong data section length */
