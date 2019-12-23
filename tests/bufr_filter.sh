@@ -418,11 +418,6 @@ rm -f ${f}.ref ${f}.log
 #rm -f new_*bufr 
 #rm -f $testScript $testScript1
 
-if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
-    echo "$0: The rest of this test is currently disabled on Windows"
-    exit 0
-fi
-
 
 #-----------------------------------------------------------
 # Test:  packing   
