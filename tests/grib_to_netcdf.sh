@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
+# 
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
@@ -12,7 +12,7 @@
 # Disable if autotools being used
 src_config=${src_dir}/config.h
 if [ -f ${src_config} ]; then
-  exit 0
+    exit 0
 fi
 
 label="grib_to_netcdf_test"
@@ -48,22 +48,14 @@ grib_files="\
 
 ncf_types="NC_SHORT NC_INT NC_FLOAT NC_DOUBLE"
 
-tmp_netcdf=tmp.ncf
-
-# debug
-echo $PATH
-env
-ls /bin
-ls /usr/bin
-
 # Go thru all the specified GRIB files and convert them to NetCDF
 for dt in $ncf_types; do
     for f in $grib_files; do
         rm -f $tempNetcdf
-      [ -f ${data_dir}/$f ]
+        [ -f ${data_dir}/$f ]
         ${tools_dir}/grib_to_netcdf -D $dt -o $tempNetcdf ${data_dir}/$f >/dev/null
         ${tools_dir}/grib_to_netcdf -T -o $tempNetcdf ${data_dir}/$f >/dev/null
-   done
+    done
 done
 
 # Try creating different kinds; netcdf3 classic and large
