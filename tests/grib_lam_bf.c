@@ -804,7 +804,7 @@ int main (int argc, char *argv[])
                 free (vals);
 
                 if (norm > 0.0001) {
-                    fprintf (stderr, "Error too large !\n");
+                    fprintf (stderr, "Error too large! norm=%g\n", norm);
                     return 1;
                 }
                 fclose (fp);
