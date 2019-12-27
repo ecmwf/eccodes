@@ -312,7 +312,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
 
     int err = GRIB_SUCCESS;
     int i;
-    size_t buflen = grib_byte_count(a);
+    size_t buflen = 0;
 
     unsigned char* buf = NULL;
     unsigned char* encoded = NULL;

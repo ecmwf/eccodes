@@ -43,6 +43,19 @@ char get_dir_separator_char(void)
     return DIR_SEPARATOR_CHAR;
 }
 
+/* Return 1 if the filepath is a directory, 0 otherwise */
+int path_is_directory(const char* filename)
+{
+    struct stat s;
+    int stat_val = stat(filename, &s);
+    if ( stat_val == 0 ) {
+        if (S_ISDIR(s.st_mode)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 char* codes_getenv(const char* name)
 {
     /* Look for the new ecCodes environment variable names */

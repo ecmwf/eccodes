@@ -1464,6 +1464,7 @@ grib_expression *grib_arguments_get_expression(grib_handle *h, grib_arguments *a
 
 /* codes_util.c */
 char get_dir_separator_char(void);
+int path_is_directory(const char* filename);
 char *codes_getenv(const char *name);
 
 /* grib_util.c */
