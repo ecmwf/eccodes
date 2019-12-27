@@ -448,9 +448,6 @@ static int angle_can_be_encoded(grib_handle* h, const double angle)
     return retval;
 }
 
-#ifdef ECCODES_ON_WINDOWS
-#define round(a) ( (a) >=0 ? ((a)+0.5) : ((a)-0.5) )
-#endif
 static double adjust_angle(const double angle, const RoundingPolicy policy, const double angle_subdivisions)
 {
     double result = 0;
