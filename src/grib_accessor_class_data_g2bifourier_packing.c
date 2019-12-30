@@ -408,8 +408,8 @@ static double laplam (bif_trunc_t * bt, const double val[])
 
         if (! insub)
         {
-            int k = i*i+j*j;
-            itab1[k] = 1;
+            const int kk = i*i+j*j;
+            itab1[kk] = 1;
         }
     }
 
@@ -450,9 +450,9 @@ static double laplam (bif_trunc_t * bt, const double val[])
         }
         else
         {
-            int m, l = itab1[i*i+j*j];
+            int m, ll = itab1[i*i+j*j];
             for (m = 0; m < 4; m++, isp++)
-                znorm[l] = MAX (znorm[l], fabs (val[isp]));
+                znorm[ll] = MAX (znorm[ll], fabs (val[isp]));
         }
     }
 
