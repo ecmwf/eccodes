@@ -127,7 +127,7 @@ int main(int argc, char **argv)
     }
 
     {
-        pthread_t workers[NUM_THREADS];
+        pthread_t* workers = malloc(NUM_THREADS * sizeof(pthread_t));
         for (i = 0; i < NUM_THREADS; i++) {
             struct v *data = (struct v *) malloc(sizeof(struct v));
             data->number = i;
@@ -148,6 +148,7 @@ int main(int argc, char **argv)
                 pthread_join(workers[i], NULL);
             }
         }
+        free (workers);
     }
 
     return 0;
