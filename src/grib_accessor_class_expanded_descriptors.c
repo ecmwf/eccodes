@@ -696,8 +696,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     size_t i;
 
     ret=expand(a);
-    rlen=BUFR_DESCRIPTORS_ARRAY_USED_SIZE(self->expanded);
     if (ret) return ret;
+    if (!self->expanded) return GRIB_DECODING_ERROR;
+    rlen=BUFR_DESCRIPTORS_ARRAY_USED_SIZE(self->expanded);
 
     if(*len < rlen)
     {
