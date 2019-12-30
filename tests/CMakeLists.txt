@@ -71,6 +71,7 @@ list( APPEND tests_no_data_reqd
 # These tests do require data downloads
 list( APPEND tests_data_reqd
     bpv_limit
+    grib_complex
     grib_double_cmp
     grib_change_packing
     bufr_dump_data
