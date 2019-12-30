@@ -38,6 +38,7 @@ int main(int argc, char* argv[])
 
     /* Mimic the behaviour of bufr_get -f -p keys for testing */
     err = parse_keyval_string(NULL, keys, 0, GRIB_TYPE_UNDEFINED, requested_print_keys, &requested_print_keys_count);
+    assert(!err);
     assert(requested_print_keys_count > 0);
     for (i=0; i < num_messages; ++i) {
         int j;

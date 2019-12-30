@@ -2015,8 +2015,6 @@ int grib2_select_PDTN(int is_eps, int is_instant,
         if (is_instant) return 0;
         else            return 8;
     }
-
-    return -1;
 }
 
 int is_grib_index_file(const char* filename)

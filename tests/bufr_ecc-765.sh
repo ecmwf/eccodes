@@ -39,7 +39,6 @@ bufr_files_zero_leaks="
     aeolus_wmo_26.bufr
     delayed_repl_01.bufr
     goes16_nm.bufr
-    good_j2eo.bufr
     israel_observations_2017041010.bufr
     mhen_55.bufr
     modw_87.bufr
@@ -173,10 +172,7 @@ bufr_files_known_leaks="
     s4kn_165.bufr
     sb19_206.bufr
     sbu8_206.bufr
-    ship_11.bufr
-    ship_12.bufr
     ship_13.bufr
-    ship_14.bufr
     ship_19.bufr
     ship_9.bufr
     smin_49.bufr
@@ -190,11 +186,9 @@ bufr_files_known_leaks="
     ssbt_127.bufr
     stuk_7.bufr
     syno_1.bufr
-    syno_2.bufr
     syno_3.bufr
     syno_4.bufr
     syno_multi.bufr
-    synop.bufr
     temp-land-with-substituted-values.bufr
     temp_101.bufr
     temp_102.bufr
