@@ -13392,6 +13392,12 @@ dist_definitionscommon_DATA = \
 	common/statistics_grid.def\
 	common/statistics_spectral.def
 
+definitionsdiagdir = @ECCODES_DEFINITION_PATH@/diag
+dist_definitionsdiag_DATA = \
+	diag/boot.def\
+	diag/section.1.def\
+	diag/section.4.def
+
 definitionsgrib1dir = @ECCODES_DEFINITION_PATH@/grib1
 dist_definitionsgrib1_DATA = \
 	grib1/0.ecmf.table\
@@ -13672,6 +13678,7 @@ dist_definitionsgrib1_localConcepts_edzw_DATA = \
 	grib1/localConcepts/edzw/paramId.def\
 	grib1/localConcepts/edzw/shortName.def\
 	grib1/localConcepts/edzw/stepType.def\
+	grib1/localConcepts/edzw/typeOfLevel.def\
 	grib1/localConcepts/edzw/units.def
 
 definitionsgrib1_localConcepts_efkldir = @ECCODES_DEFINITION_PATH@/grib1/localConcepts/efkl
@@ -13767,6 +13774,8 @@ dist_definitionsgrib2_DATA = \
 	grib2/boot_multifield.def\
 	grib2/cfName.def\
 	grib2/cfVarName.def\
+	grib2/crraLocalVersion.table\
+	grib2/crra_suiteName.table\
 	grib2/dimension.0.table\
 	grib2/dimensionTableNumber.table\
 	grib2/dimensionType.table\
@@ -13785,6 +13794,7 @@ dist_definitionsgrib2_DATA = \
 	grib2/local.98.0.def\
 	grib2/local.98.1.def\
 	grib2/local.98.11.def\
+	grib2/local.98.12.def\
 	grib2/local.98.14.def\
 	grib2/local.98.15.def\
 	grib2/local.98.16.def\
@@ -13808,6 +13818,7 @@ dist_definitionsgrib2_DATA = \
 	grib2/local.98.7.def\
 	grib2/local.98.9.def\
 	grib2/local.98.def\
+	grib2/local.crra.1.def\
 	grib2/local.tigge.1.def\
 	grib2/ls.def\
 	grib2/ls_labeling.82.def\
@@ -13820,6 +13831,8 @@ dist_definitionsgrib2_DATA = \
 	grib2/parameters.def\
 	grib2/products_0.def\
 	grib2/products_1.def\
+	grib2/products_10.def\
+	grib2/products_11.def\
 	grib2/products_2.def\
 	grib2/products_3.def\
 	grib2/products_4.def\
@@ -13828,6 +13841,7 @@ dist_definitionsgrib2_DATA = \
 	grib2/products_7.def\
 	grib2/products_8.def\
 	grib2/products_9.def\
+	grib2/products_crra.def\
 	grib2/products_s2s.def\
 	grib2/products_tigge.def\
 	grib2/products_uerra.def\
@@ -13952,7 +13966,15 @@ dist_definitionsgrib2_DATA = \
 	grib2/template.4.71.def\
 	grib2/template.4.72.def\
 	grib2/template.4.73.def\
+	grib2/template.4.76.def\
+	grib2/template.4.77.def\
+	grib2/template.4.78.def\
+	grib2/template.4.79.def\
 	grib2/template.4.8.def\
+	grib2/template.4.80.def\
+	grib2/template.4.81.def\
+	grib2/template.4.82.def\
+	grib2/template.4.83.def\
 	grib2/template.4.9.def\
 	grib2/template.4.91.def\
 	grib2/template.4.categorical.def\
@@ -13964,8 +13986,11 @@ dist_definitionsgrib2_DATA = \
 	grib2/template.4.parameter_aerosol.def\
 	grib2/template.4.parameter_aerosol_44.def\
 	grib2/template.4.parameter_aerosol_optical.def\
+	grib2/template.4.parameter_aerosol_optical_source.def\
+	grib2/template.4.parameter_aerosol_source.def\
 	grib2/template.4.parameter_chemical.def\
 	grib2/template.4.parameter_chemical_distribution.def\
+	grib2/template.4.parameter_chemical_source.def\
 	grib2/template.4.parameter_partition.def\
 	grib2/template.4.parameter_postproc.def\
 	grib2/template.4.parameter_tile.def\
@@ -14186,7 +14211,6 @@ dist_definitionsgrib2_tables_0_DATA = \
 	grib2/tables/0/4.2.2.3.table\
 	grib2/tables/0/4.2.3.0.table\
 	grib2/tables/0/4.2.3.1.table\
-	grib2/tables/0/4.2.table\
 	grib2/tables/0/4.201.table\
 	grib2/tables/0/4.202.table\
 	grib2/tables/0/4.203.table\
@@ -14226,8 +14250,7 @@ dist_definitionsgrib2_tables_0_DATA = \
 	grib2/tables/0/5.7.table\
 	grib2/tables/0/5.8.table\
 	grib2/tables/0/5.9.table\
-	grib2/tables/0/6.0.table\
-	grib2/tables/0/stepType.table
+	grib2/tables/0/6.0.table
 
 definitionsgrib2_tables_1dir = @ECCODES_DEFINITION_PATH@/grib2/tables/1
 dist_definitionsgrib2_tables_1_DATA = \
@@ -14293,7 +14316,6 @@ dist_definitionsgrib2_tables_1_DATA = \
 	grib2/tables/1/4.2.2.3.table\
 	grib2/tables/1/4.2.3.0.table\
 	grib2/tables/1/4.2.3.1.table\
-	grib2/tables/1/4.2.table\
 	grib2/tables/1/4.201.table\
 	grib2/tables/1/4.202.table\
 	grib2/tables/1/4.203.table\
@@ -14333,8 +14355,7 @@ dist_definitionsgrib2_tables_1_DATA = \
 	grib2/tables/1/5.7.table\
 	grib2/tables/1/5.8.table\
 	grib2/tables/1/5.9.table\
-	grib2/tables/1/6.0.table\
-	grib2/tables/1/stepType.table
+	grib2/tables/1/6.0.table
 
 definitionsgrib2_tables_10dir = @ECCODES_DEFINITION_PATH@/grib2/tables/10
 dist_definitionsgrib2_tables_10_DATA = \
@@ -14406,7 +14427,6 @@ dist_definitionsgrib2_tables_10_DATA = \
 	grib2/tables/10/4.2.2.4.table\
 	grib2/tables/10/4.2.3.0.table\
 	grib2/tables/10/4.2.3.1.table\
-	grib2/tables/10/4.2.table\
 	grib2/tables/10/4.201.table\
 	grib2/tables/10/4.202.table\
 	grib2/tables/10/4.203.table\
@@ -15674,7 +15694,6 @@ dist_definitionsgrib2_tables_2_DATA = \
 	grib2/tables/2/4.2.2.3.table\
 	grib2/tables/2/4.2.3.0.table\
 	grib2/tables/2/4.2.3.1.table\
-	grib2/tables/2/4.2.table\
 	grib2/tables/2/4.201.table\
 	grib2/tables/2/4.202.table\
 	grib2/tables/2/4.203.table\
@@ -15714,8 +15733,7 @@ dist_definitionsgrib2_tables_2_DATA = \
 	grib2/tables/2/5.7.table\
 	grib2/tables/2/5.8.table\
 	grib2/tables/2/5.9.table\
-	grib2/tables/2/6.0.table\
-	grib2/tables/2/stepType.table
+	grib2/tables/2/6.0.table
 
 definitionsgrib2_tables_20dir = @ECCODES_DEFINITION_PATH@/grib2/tables/20
 dist_definitionsgrib2_tables_20_DATA = \
@@ -15956,6 +15974,7 @@ dist_definitionsgrib2_tables_21_DATA = \
 	grib2/tables/21/4.233.table\
 	grib2/tables/21/4.234.table\
 	grib2/tables/21/4.236.table\
+	grib2/tables/21/4.238.table\
 	grib2/tables/21/4.240.table\
 	grib2/tables/21/4.241.table\
 	grib2/tables/21/4.242.table\
@@ -16047,7 +16066,6 @@ dist_definitionsgrib2_tables_3_DATA = \
 	grib2/tables/3/4.2.2.3.table\
 	grib2/tables/3/4.2.3.0.table\
 	grib2/tables/3/4.2.3.1.table\
-	grib2/tables/3/4.2.table\
 	grib2/tables/3/4.201.table\
 	grib2/tables/3/4.202.table\
 	grib2/tables/3/4.203.table\
@@ -16412,7 +16430,6 @@ dist_definitionsgrib2_tables_4_DATA = \
 	grib2/tables/4/4.2.2.3.table\
 	grib2/tables/4/4.2.3.0.table\
 	grib2/tables/4/4.2.3.1.table\
-	grib2/tables/4/4.2.table\
 	grib2/tables/4/4.201.table\
 	grib2/tables/4/4.202.table\
 	grib2/tables/4/4.203.table\
@@ -16779,7 +16796,6 @@ dist_definitionsgrib2_tables_5_DATA = \
 	grib2/tables/5/4.2.2.3.table\
 	grib2/tables/5/4.2.3.0.table\
 	grib2/tables/5/4.2.3.1.table\
-	grib2/tables/5/4.2.table\
 	grib2/tables/5/4.201.table\
 	grib2/tables/5/4.202.table\
 	grib2/tables/5/4.203.table\
@@ -17152,7 +17168,6 @@ dist_definitionsgrib2_tables_6_DATA = \
 	grib2/tables/6/4.2.2.4.table\
 	grib2/tables/6/4.2.3.0.table\
 	grib2/tables/6/4.2.3.1.table\
-	grib2/tables/6/4.2.table\
 	grib2/tables/6/4.201.table\
 	grib2/tables/6/4.202.table\
 	grib2/tables/6/4.203.table\
@@ -17525,7 +17540,6 @@ dist_definitionsgrib2_tables_7_DATA = \
 	grib2/tables/7/4.2.2.4.table\
 	grib2/tables/7/4.2.3.0.table\
 	grib2/tables/7/4.2.3.1.table\
-	grib2/tables/7/4.2.table\
 	grib2/tables/7/4.201.table\
 	grib2/tables/7/4.202.table\
 	grib2/tables/7/4.203.table\
@@ -17900,7 +17914,6 @@ dist_definitionsgrib2_tables_8_DATA = \
 	grib2/tables/8/4.2.2.4.table\
 	grib2/tables/8/4.2.3.0.table\
 	grib2/tables/8/4.2.3.1.table\
-	grib2/tables/8/4.2.table\
 	grib2/tables/8/4.201.table\
 	grib2/tables/8/4.202.table\
 	grib2/tables/8/4.203.table\
@@ -18276,7 +18289,6 @@ dist_definitionsgrib2_tables_9_DATA = \
 	grib2/tables/9/4.2.2.4.table\
 	grib2/tables/9/4.2.3.0.table\
 	grib2/tables/9/4.2.3.1.table\
-	grib2/tables/9/4.2.table\
 	grib2/tables/9/4.201.table\
 	grib2/tables/9/4.202.table\
 	grib2/tables/9/4.203.table\
@@ -18331,6 +18343,7 @@ dist_definitionsgrib2_tables_9_DATA = \
 
 definitionsgrib2_tables_local_ecmfdir = @ECCODES_DEFINITION_PATH@/grib2/tables/local/ecmf
 dist_definitionsgrib2_tables_local_ecmf_DATA = \
+	grib2/tables/local/ecmf/1.1.table\
 	grib2/tables/local/ecmf/obstat.1.0.table\
 	grib2/tables/local/ecmf/obstat.10.0.table\
 	grib2/tables/local/ecmf/obstat.11.0.table\
@@ -18345,12 +18358,33 @@ dist_definitionsgrib2_tables_local_ecmf_DATA = \
 	grib2/tables/local/ecmf/obstat.reporttype.table\
 	grib2/tables/local/ecmf/obstat.varno.table
 
+definitionsgrib2_tables_local_ecmf_1dir = @ECCODES_DEFINITION_PATH@/grib2/tables/local/ecmf/1
+dist_definitionsgrib2_tables_local_ecmf_1_DATA = \
+	grib2/tables/local/ecmf/1/4.2.0.20.table\
+	grib2/tables/local/ecmf/1/4.2.2.0.table\
+	grib2/tables/local/ecmf/1/4.230.table\
+	grib2/tables/local/ecmf/1/4.233.table
+
 definitionsgrib2_tables_local_ecmf_4dir = @ECCODES_DEFINITION_PATH@/grib2/tables/local/ecmf/4
 dist_definitionsgrib2_tables_local_ecmf_4_DATA = \
 	grib2/tables/local/ecmf/4/1.2.table
 
 definitionsgrib2_tables_local_edzw_1dir = @ECCODES_DEFINITION_PATH@/grib2/tables/local/edzw/1
 dist_definitionsgrib2_tables_local_edzw_1_DATA = \
+	grib2/tables/local/edzw/1/1.4.table\
+	grib2/tables/local/edzw/1/4.0.table\
+	grib2/tables/local/edzw/1/4.1.0.table\
+	grib2/tables/local/edzw/1/4.11.table\
+	grib2/tables/local/edzw/1/4.2.0.0.table\
+	grib2/tables/local/edzw/1/4.2.0.1.table\
+	grib2/tables/local/edzw/1/4.2.0.13.table\
+	grib2/tables/local/edzw/1/4.2.0.14.table\
+	grib2/tables/local/edzw/1/4.2.0.15.table\
+	grib2/tables/local/edzw/1/4.2.0.16.table\
+	grib2/tables/local/edzw/1/4.2.0.17.table\
+	grib2/tables/local/edzw/1/4.2.0.18.table\
+	grib2/tables/local/edzw/1/4.2.0.19.table\
+	grib2/tables/local/edzw/1/4.2.0.191.table\
 	grib2/tables/local/edzw/1/4.2.0.192.table\
 	grib2/tables/local/edzw/1/4.2.0.193.table\
 	grib2/tables/local/edzw/1/4.2.0.194.table\
@@ -18359,11 +18393,32 @@ dist_definitionsgrib2_tables_local_edzw_1_DATA = \
 	grib2/tables/local/edzw/1/4.2.0.197.table\
 	grib2/tables/local/edzw/1/4.2.0.198.table\
 	grib2/tables/local/edzw/1/4.2.0.199.table\
+	grib2/tables/local/edzw/1/4.2.0.2.table\
+	grib2/tables/local/edzw/1/4.2.0.20.table\
 	grib2/tables/local/edzw/1/4.2.0.254.table\
+	grib2/tables/local/edzw/1/4.2.0.3.table\
+	grib2/tables/local/edzw/1/4.2.0.4.table\
+	grib2/tables/local/edzw/1/4.2.0.5.table\
+	grib2/tables/local/edzw/1/4.2.0.6.table\
+	grib2/tables/local/edzw/1/4.2.0.7.table\
+	grib2/tables/local/edzw/1/4.2.1.0.table\
+	grib2/tables/local/edzw/1/4.2.10.0.table\
+	grib2/tables/local/edzw/1/4.2.10.3.table\
+	grib2/tables/local/edzw/1/4.2.2.0.table\
+	grib2/tables/local/edzw/1/4.2.2.3.table\
 	grib2/tables/local/edzw/1/4.2.215.19.table\
 	grib2/tables/local/edzw/1/4.2.215.2.table\
 	grib2/tables/local/edzw/1/4.2.215.5.table\
-	grib2/tables/local/edzw/1/4.2.215.7.table
+	grib2/tables/local/edzw/1/4.2.215.7.table\
+	grib2/tables/local/edzw/1/4.2.3.0.table\
+	grib2/tables/local/edzw/1/4.2.3.1.table\
+	grib2/tables/local/edzw/1/4.3.table\
+	grib2/tables/local/edzw/1/4.5.table\
+	grib2/tables/local/edzw/1/4.6.table\
+	grib2/tables/local/edzw/1/4.7.table\
+	grib2/tables/local/edzw/1/4.9.table\
+	grib2/tables/local/edzw/1/backgroundProcess.table\
+	grib2/tables/local/edzw/1/generatingProcessIdentifier.table
 
 definitionsgrib2_tables_local_kwbc_1dir = @ECCODES_DEFINITION_PATH@/grib2/tables/local/kwbc/1
 dist_definitionsgrib2_tables_local_kwbc_1_DATA = \
@@ -18641,8 +18696,7 @@ dist_definitionsgrib3_tables_0_DATA = \
 	grib3/tables/0/5.7.table\
 	grib3/tables/0/5.8.table\
 	grib3/tables/0/5.9.table\
-	grib3/tables/0/6.0.table\
-	grib3/tables/0/stepType.table
+	grib3/tables/0/6.0.table
 
 definitionsgrib3_tables_1dir = @ECCODES_DEFINITION_PATH@/grib3/tables/1
 dist_definitionsgrib3_tables_1_DATA = \
@@ -18766,8 +18820,7 @@ dist_definitionsgrib3_tables_1_DATA = \
 	grib3/tables/1/7.3.0.7.table\
 	grib3/tables/1/7.3.1.0.table\
 	grib3/tables/1/7.3.1.1.table\
-	grib3/tables/1/7.3.1.2.table\
-	grib3/tables/1/stepType.table
+	grib3/tables/1/7.3.1.2.table
 
 definitionsgrib3_tables_local_ecmfdir = @ECCODES_DEFINITION_PATH@/grib3/tables/local/ecmf
 dist_definitionsgrib3_tables_local_ecmf_DATA = \
@@ -19053,6 +19106,7 @@ dist_definitionsmars_DATA = \
 	mars/grib.oper.fa.def\
 	mars/grib.oper.fc.def\
 	mars/grib.oper.fg.def\
+	mars/grib.oper.gai.def\
 	mars/grib.oper.go.def\
 	mars/grib.oper.ia.def\
 	mars/grib.oper.im.def\
@@ -19063,6 +19117,7 @@ dist_definitionsmars_DATA = \
 	mars/grib.oper.ssd.def\
 	mars/grib.scda.4i.def\
 	mars/grib.scda.me.def\
+	mars/grib.scda.ssd.def\
 	mars/grib.seap.an.def\
 	mars/grib.seap.ef.def\
 	mars/grib.seap.es.def\
@@ -19120,6 +19175,15 @@ dist_definitionsmars_DATA = \
 	mars/grib.wehs.em.def\
 	mars/grib.wehs.es.def\
 	mars/grib.weov.pf.def\
+	mars/grib.wfas.cf.def\
+	mars/grib.wfas.fc.def\
+	mars/grib.wfas.fu.def\
+	mars/grib.wfas.pf.def\
+	mars/grib.wfas.sfo.def\
+	mars/grib.wfcl.cf.def\
+	mars/grib.wfcl.fc.def\
+	mars/grib.wfcl.pf.def\
+	mars/grib.wfcl.sfo.def\
 	mars/grib.wmfm.fcmax.def\
 	mars/grib.wmfm.fcmean.def\
 	mars/grib.wmfm.fcmin.def\
