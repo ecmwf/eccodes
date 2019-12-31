@@ -31,6 +31,7 @@ grep -q "ECCODES ERROR.*no match for sequences=308014" $LOG
 
 
 # Create a temporary directory which holds the tables etc
+# This BUFR file uses masterTablesVersionNumber 26
 TEMP_DIR=${label}.temp-dir.$$
 rm -rf $TEMP_DIR
 mkdir -p $TEMP_DIR/definitions/bufr/tables/0/wmo/26
