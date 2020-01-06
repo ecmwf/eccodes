@@ -18,13 +18,20 @@
 label="bufr_ecc-197-test"
 
 input=${data_dir}/bufr/vos308014_v3_26.bufr
-if [ ! -f $input ]; then
-  echo "Data file $input not available"
-  exit 0
-fi
 TEMP=${label}.temp
+LOG=${label}.log
+
+
+# Get expanded descriptors
+cat > $TEMP <<EOF
+  print "expandedDescriptors=[expandedDescriptors%06d!0]";
+EOF
+${tools_dir}/bufr_filter -f $TEMP $input > $LOG 2>&1
+grep -q "ECCODES ERROR.*no match for sequences=308014" $LOG
+
 
 # Create a temporary directory which holds the tables etc
+# This BUFR file uses masterTablesVersionNumber 26
 TEMP_DIR=${label}.temp-dir.$$
 rm -rf $TEMP_DIR
 mkdir -p $TEMP_DIR/definitions/bufr/tables/0/wmo/26
@@ -47,4 +54,4 @@ set `wc -l $TEMP`
 [ $1 -gt 35700 ]
 
 rm -rf $TEMP_DIR
-rm -f $TEMP
+rm -f $TEMP $LOG
