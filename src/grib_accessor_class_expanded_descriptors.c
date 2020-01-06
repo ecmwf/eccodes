@@ -173,7 +173,7 @@ typedef struct change_coding_params {
 /* Handy macro to catch errors.
  * Arguments: array is a pointer to 'bufr_descriptors_array', result is pointer to 'bufr_descriptor' */
 #define DESCRIPTORS_POP_FRONT_OR_RETURN(array,result) {\
-       if(array->n == 0) { *err=GRIB_INTERNAL_ERROR; return 0; } \
+       if(array->n == 0) { *err=GRIB_INTERNAL_ERROR; return; } \
        result=grib_bufr_descriptors_array_pop_front(array); \
     }
 
@@ -210,7 +210,7 @@ static int global_depth=-1;
 
 #define BUFR_DESCRIPTORS_ARRAY_USED_SIZE(v) ((v)->n)
 
-static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded,
+static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded,
         change_coding_params* ccp, int* err)
 {
     int k,j,i;
@@ -227,11 +227,12 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
     bufr_descriptor* us=NULL;
     bufr_descriptors_array* inner_expanded=NULL;
     bufr_descriptors_array* inner_unexpanded=NULL;
+    grib_handle* hand = grib_handle_of_accessor(a);
 #if MYDEBUG
     int idepth;
 #endif
 
-    if (BUFR_DESCRIPTORS_ARRAY_USED_SIZE(unexpanded)==0) return 0;
+    if (BUFR_DESCRIPTORS_ARRAY_USED_SIZE(unexpanded)==0) return;
 
     us=grib_bufr_descriptor_clone(grib_bufr_descriptors_array_get(unexpanded,0));
     us->context = c;
@@ -250,13 +251,13 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
         printf("+++ pop  %06ld\n",u->code);
 #endif
         /*this is to get the sequence elements of the sequence unexpanded[i] */
-        *err=grib_set_long(grib_handle_of_accessor(a),self->sequence,u->code);
-        *err=grib_get_size(grib_handle_of_accessor(a),self->sequence,&size);
+        *err=grib_set_long(hand,self->sequence,u->code);
+        *err=grib_get_size(hand,self->sequence,&size);
         grib_bufr_descriptor_delete(u);
-        if (*err) return 0;
+        if (*err) return;
         v=(long*)grib_context_malloc_clear(c,sizeof(long)*size);
-        *err=grib_get_long_array(grib_handle_of_accessor(a),self->sequence,v,&size);
-        if (*err) return 0;
+        *err=grib_get_long_array(hand,self->sequence,v,&size);
+        if (*err) return;
 
         inner_unexpanded=grib_bufr_descriptors_array_new(c,DESC_SIZE_INIT,DESC_SIZE_INCR);
         for (i=0;i<size;i++) {
@@ -265,7 +266,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
         }
         grib_context_free(c,v);
         inner_expanded=do_expand(a,inner_unexpanded,ccp,err);
-        if (*err) return 0;
+        if (*err) return;
         grib_bufr_descriptors_array_delete(inner_unexpanded);
 #if MYDEBUG
         for (i=0;i<inner_expanded->n;i++) {
@@ -299,7 +300,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
                                  "Delayed replication: %06ld: expected %d but only found %lu elements",
                                  u->code, us->X, unexpanded->n - 1);
                 *err = GRIB_DECODING_ERROR;
-                return 0;
+                return;
             }
             for (j=0;j<us->X+1;j++) {
                 DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded, u0);
@@ -310,7 +311,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
 #endif
             }
             inner_expanded=do_expand(a,inner_unexpanded,ccp,err);
-            if (*err) return 0;
+            if (*err) return;
             grib_bufr_descriptors_array_delete(inner_unexpanded);
             size=BUFR_DESCRIPTORS_ARRAY_USED_SIZE(inner_expanded);
 #if MYDEBUG
@@ -353,7 +354,7 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
             for (i=0;i<us->X;i++) grib_bufr_descriptor_delete(ur[i]);
             grib_context_free(c,ur);
             inner_expanded=do_expand(a,inner_unexpanded,ccp,err);
-            if (*err) return 0;
+            if (*err) return;
             grib_bufr_descriptors_array_delete(inner_unexpanded);
 #if MYDEBUG
             for (i=0;i<inner_expanded->n;i++) {
@@ -482,7 +483,6 @@ static size_t __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, buf
     printf("expanding <== %d-%.2d-%.3d (size=%ld)\n\n",us->F,us->X,us->Y,size);
 #endif
     if (us) grib_bufr_descriptor_delete(us);
-    return size;
 }
 
 static bufr_descriptors_array* do_expand(grib_accessor* a,bufr_descriptors_array* unexpanded,change_coding_params* ccp,int *err)
@@ -566,7 +566,7 @@ static int expand(grib_accessor* a)
         return err;
     }
 
-    err=grib_get_size(grib_handle_of_accessor(a),self->unexpandedDescriptors,&unexpandedSize);
+    err=grib_get_size(h,self->unexpandedDescriptors,&unexpandedSize);
     if (err) return err;
     if (unexpandedSize==0) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Unexpanded size is zero!", a->name);
@@ -574,7 +574,7 @@ static int expand(grib_accessor* a)
     }
     u=(long*)grib_context_malloc_clear(c,sizeof(long)*unexpandedSize);
     if (!u) {err=GRIB_OUT_OF_MEMORY; return err;}
-    err=grib_get_long_array(grib_handle_of_accessor(a),self->unexpandedDescriptors,u,&unexpandedSize);
+    err=grib_get_long_array(h,self->unexpandedDescriptors,u,&unexpandedSize);
     if (err) return err;
 
     err=grib_get_long(h,"bufrHeaderCentre",&centre);
@@ -595,7 +595,7 @@ static int expand(grib_accessor* a)
     }
 
     if (!self->tablesAccessor) {
-        self->tablesAccessor=grib_find_accessor(grib_handle_of_accessor(a),self->tablesAccessorName);
+        self->tablesAccessor=grib_find_accessor(h,self->tablesAccessorName);
         Assert(self->tablesAccessor);
     }
 
@@ -696,8 +696,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t *len)
     size_t i;
 
     ret=expand(a);
-    rlen=BUFR_DESCRIPTORS_ARRAY_USED_SIZE(self->expanded);
     if (ret) return ret;
+    if (!self->expanded) return GRIB_DECODING_ERROR;
+    rlen=BUFR_DESCRIPTORS_ARRAY_USED_SIZE(self->expanded);
 
     if(*len < rlen)
     {
