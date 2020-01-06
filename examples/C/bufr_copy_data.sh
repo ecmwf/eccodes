@@ -12,6 +12,11 @@
 #Define a common label for all the tmp files
 label="bufr_copy_data_c"
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 TEMP_BUFR=$label.out.bufr
 TEMP_TEXT=$label.out.txt
 REF=$label.compare.log.ref
