@@ -28,8 +28,6 @@ init:
   - cmd: call %CONDA%\Scripts\activate.bat
     # add eccodes\build\bin to path so tests can find eccodes.dll
   - cmd: set PATH=%PATH%;%ECCODES_SRC%\build\bin
-    # add %CONDA%\Library\bin to path so tests can find netcdf.dll
-  - cmd: set PATH=%PATH%;%CONDA%\Library\bin
     # auto-yes for conda
   - cmd: conda config --set always_yes yes
 
@@ -55,28 +53,6 @@ install:
 
     # get deps
   - cmd: conda install -c conda-forge cmake libnetcdf
-
-    # debug
-  - cmd: find %CONDA_PREFIX% -name netcdf.dll
-  - cmd: where netcdf.dll
-  - cmd: where bash.exe
-
-    # We saw a problem with the grib_to_netcdf test where we could not find netcdf.dll.
-    #
-    #     $ where netcdf.dll
-    #     c:\Miniconda37-x64\Library\bin\netcdf.dll
-    #     $ where bash.exe
-    #     c:\Miniconda37-x64\Library\usr\bin\bash.exe
-    #
-    # When we use m2-bash for the tests it changes our system path.
-    # c:\Miniconda37-x64\Library\bin\ becomes /bin
-    # yet `ls /bin` shows bash.exe amongst others.
-    # It seems that /bin is actually pointing to c:\Miniconda37-x64\Library\usr\bin
-    # which means the path conversion is wrong.
-    # Seems like this could be a bug in m2-bash.
-    #
-    # Put netcdf.dll somewhere we can find it.
-  - cmd: cp %CONDA_PREFIX%\Library\bin\netcdf.dll %CONDA_PREFIX%\Library\usr\bin\netcdf.dll
 
 #---------------------------------#
 #       build configuration       #
@@ -105,10 +81,6 @@ build_script:
                -D WINDOWS_TESTING_BASHRC=%WINDOWS_TESTING_BASHRC% ^
                ..
   - cmd: nmake
-  - cmd: ntldd %ECCODES_SRC%/build/bin/grib_to_netcdf.exe # debug
-  - cmd: ntldd %CONDA_PREFIX%/Library/bin/netcdf.dll # debug
-  - cmd: ntldd %CONDA_PREFIX%/Library/usr/bin\netcdf.dll # debug
-  - cmd: echo %PATH% # debug
   - cmd: ctest --output-on-failure
   - cmd: nmake install
 
