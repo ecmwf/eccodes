@@ -3869,10 +3869,12 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"parameterNumber", GRIB_TYPE_LONG, 2},
 
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
 
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap},
    },
    {
       "northward_sea_water_velocity_o2d.s2",
@@ -3889,10 +3891,12 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"parameterNumber", GRIB_TYPE_LONG, 3},
 
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 160},
+         {"scaleFactorOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
+         {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 0},
 
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap},
    },
    {
       "sea-ice_thickness_o2d.s2",
