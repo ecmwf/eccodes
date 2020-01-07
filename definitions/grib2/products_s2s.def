@@ -101,7 +101,6 @@ if (isHindcast == 1) {
 # ECC-891, ECC-1013
 concept is_ocean2d_param(zero) {
    '1' = { discipline=10; typeOfFirstFixedSurface=160; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=0; typeOfSecondFixedSurface=255; }
-   '1' = { discipline=10; typeOfFirstFixedSurface=160; scaleFactorOfFirstFixedSurface=missing(); scaledValueOfFirstFixedSurface=missing(); typeOfSecondFixedSurface=255; }
    '1' = { discipline=10; typeOfFirstFixedSurface=20;  scaleFactorOfFirstFixedSurface=2; scaledValueOfFirstFixedSurface=29315; typeOfSecondFixedSurface=255; }
    '1' = { discipline=10; typeOfFirstFixedSurface=169; scaleFactorOfFirstFixedSurface=2; scaledValueOfFirstFixedSurface=1; typeOfSecondFixedSurface=255; }
    '1' = { discipline=10; typeOfFirstFixedSurface=160; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=0; typeOfSecondFixedSurface=160; scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=300; }
