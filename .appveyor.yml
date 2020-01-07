@@ -48,13 +48,11 @@ install:
                                 m2-sed ^
                                 m2-gawk ^
                                 m2-diffutils ^
-                                m2-perl
+                                m2-perl ^
+                                m2w64-ntldd-git
 
-    # get the latest version of cmake
-  - cmd: conda install -c conda-forge cmake
-
-    # other deps
-  - cmd: conda install libnetcdf
+    # get deps
+  - cmd: conda install -c conda-forge cmake libnetcdf
 
 #---------------------------------#
 #       build configuration       #
