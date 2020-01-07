@@ -126,6 +126,13 @@ ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=16,numberOfF
 grib_check_key_equals $temp 'totalNumber' '51'
 
 
+# Local Definition 49 for GRIB1
+# -----------------------------
+${tools_dir}/grib_set -s localDefinitionNumber=49,type=35 $sample_g1 $temp
+grib_check_key_equals $temp 'perturbationNumber,numberOfForecastsInEnsemble' '0 0'
+
+
+
 # Local Definition 18 (list of ascii keys)
 # ----------------------------------------
 ${tools_dir}/grib_filter -o $temp - $sample_g1 << EOF
