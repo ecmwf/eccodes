@@ -1,6 +1,6 @@
 # Copyright 2005-2019 ECMWF.
 
-# For grib2 to grib1 convertion
+# For grib2 to grib1 conversion
 constant dataRepresentationType = 90;
 
 # TEMPLATE 4.35, satellite product with or without associated quality values
