@@ -3,11 +3,24 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 . ./include.sh
+
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    # m2-bash messes with the system path.
+    # %CONDA_PREFIX%\Library\usr\bin is converted to /usr/bin.
+    # %CONDA_PREFIX%\Library\bin is converted to /bin.
+    # However the contents of /bin and /usr/bin are identical.
+    # They both point to %CONDA_PREFIX%\Library\usr\bin!
+    # This means we're unable to access important dlls (like netcdf.dll) which live in
+    # %CONDA_PREFIX%\Library\bin.
+    # It is not obvious why this behaviour exists.
+    # We add this directory back to the path manually.
+    export PATH=$PATH:$CONDA_PREFIX/Library/bin
+fi
 
 # Disable if autotools being used
 src_config=${src_dir}/config.h
