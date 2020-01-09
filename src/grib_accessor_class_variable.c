@@ -356,16 +356,16 @@ static long byte_count(grib_accessor* a)
 
 /* NOT ANY MORE
 static long byte_count(grib_accessor* a) {
-  grib_accessor_variable *self = (grib_accessor_variable*)a;
-  char buf[80]={0,};
+    grib_accessor_variable *self = (grib_accessor_variable*)a;
+    char buf[80]={0,};
 
-  if(self->type == GRIB_TYPE_STRING) {
-    return strlen(self->cval) +1;
-  } else {
-    sprintf(buf,"%g",self->dval);
-	printf("========> \"%s\"\n",buf);
-    return strlen(buf)+1;
-  }
+    if(self->type == GRIB_TYPE_STRING) {
+        return strlen(self->cval) +1;
+    } else {
+        sprintf(buf,"%g",self->dval);
+        printf("========> \"%s\"\n",buf);
+        return strlen(buf)+1;
+    }
 }
 */
 

@@ -129,33 +129,31 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg)
 {
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
-  a->length = 0;
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
+    a->length = 0;
 }
-
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_label(dumper,a,NULL);
+    grib_dump_label(dumper,a,NULL);
 }
 
 static int get_native_type(grib_accessor* a)
 {
-  return GRIB_TYPE_LABEL;
+    return GRIB_TYPE_LABEL;
 }
 
-
-static int compare(grib_accessor* a, grib_accessor* b) {
-  return GRIB_SUCCESS;
+static int compare(grib_accessor* a, grib_accessor* b)
+{
+    return GRIB_SUCCESS;
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {
-  size_t vlen=strlen(a->name);
-  if (vlen > *len) return GRIB_BUFFER_TOO_SMALL;
-  *len=vlen;
-  strcpy(val,a->name);
-  return GRIB_SUCCESS;
+    size_t vlen=strlen(a->name);
+    if (vlen > *len) return GRIB_BUFFER_TOO_SMALL;
+    *len=vlen;
+    strcpy(val,a->name);
+    return GRIB_SUCCESS;
 }
-

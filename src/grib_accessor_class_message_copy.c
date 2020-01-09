@@ -131,42 +131,43 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long length , grib_arguments* args )
 {
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->length=0;
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->length=0;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-      grib_dump_string(dumper,a,NULL);
+    grib_dump_string(dumper,a,NULL);
 }
 
 static int get_native_type(grib_accessor* a)
 {
-  return GRIB_TYPE_STRING;
+    return GRIB_TYPE_STRING;
 }
 
-static int unpack_string (grib_accessor* a, char* val, size_t *len){
-  size_t slen=grib_handle_of_accessor(a)->buffer->ulength ;
-  size_t i;
-  unsigned char* v=0;
+static int unpack_string(grib_accessor* a, char* val, size_t *len)
+{
+    size_t slen=grib_handle_of_accessor(a)->buffer->ulength ;
+    size_t i;
+    unsigned char* v=0;
 
-  if (*len < slen) { return GRIB_ARRAY_TOO_SMALL; }
-  v=grib_handle_of_accessor(a)->buffer->data;
-  /* replace unprintable characters with space */
-  for (i=0;i<slen;i++) if (v[i]>126) v[i]=32;
-  memcpy(val,grib_handle_of_accessor(a)->buffer->data,slen);
+    if (*len < slen) { return GRIB_ARRAY_TOO_SMALL; }
+    v=grib_handle_of_accessor(a)->buffer->data;
+    /* replace unprintable characters with space */
+    for (i=0;i<slen;i++) if (v[i]>126) v[i]=32;
+    memcpy(val,grib_handle_of_accessor(a)->buffer->data,slen);
 
-  *len=slen;
+    *len=slen;
 
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }
 
 static size_t string_length(grib_accessor* a)
 {
-  return grib_handle_of_accessor(a)->buffer->ulength;
+    return grib_handle_of_accessor(a)->buffer->ulength;
 }
 
-static long byte_count(grib_accessor* a) {
-	return a->length;
+static long byte_count(grib_accessor* a)
+{
+    return a->length;
 }
-

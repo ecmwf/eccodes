@@ -142,90 +142,91 @@ static void init_class(grib_accessor_class* c)
 /* END_CLASS_IMP */
 
 typedef struct grib_accessor_abstract_long_vector {
-  grib_accessor          att;
-  /* Members defined in gen */
-  /* Members defined in abstract_long_vector */
-  long* v;
-  long pack_index;
-  int number_of_elements;
+    grib_accessor          att;
+    /* Members defined in gen */
+    /* Members defined in abstract_long_vector */
+    long* v;
+    long pack_index;
+    int number_of_elements;
 } grib_accessor_abstract_long_vector;
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_long_vector* self = (grib_accessor_long_vector*)a;
-  grib_accessor* va=NULL;
-  grib_accessor_abstract_long_vector* v =NULL;
-  int n = 0;
+    grib_accessor_long_vector* self = (grib_accessor_long_vector*)a;
+    grib_accessor* va=NULL;
+    grib_accessor_abstract_long_vector* v =NULL;
+    int n = 0;
 
-  self->vector = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
+    self->vector = grib_arguments_get_name(grib_handle_of_accessor(a),c,n++);
 
-  va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
-  v=(grib_accessor_abstract_long_vector*)va;
+    va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
+    v=(grib_accessor_abstract_long_vector*)va;
 
-  self->index = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
+    self->index = grib_arguments_get_long(grib_handle_of_accessor(a),c,n++);
 
-  /* check self->index on init and never change it */
-  Assert(self->index < v->number_of_elements && self->index>=0);
+    /* check self->index on init and never change it */
+    Assert(self->index < v->number_of_elements && self->index>=0);
 
-  a->length=0;
+    a->length=0;
 }
 
-static int unpack_long(grib_accessor* a, long* val, size_t *len) {
-  size_t size=0;
-  long* vector;
-  grib_accessor_long_vector* self = (grib_accessor_long_vector*)a;
-  grib_accessor* va=NULL;
-  grib_accessor_abstract_long_vector* v =NULL;
-  
-  va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
-  v=(grib_accessor_abstract_long_vector*)va;
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
+{
+    size_t size=0;
+    long* vector;
+    grib_accessor_long_vector* self = (grib_accessor_long_vector*)a;
+    grib_accessor* va=NULL;
+    grib_accessor_abstract_long_vector* v =NULL;
 
-  /*TODO implement the dirty mechanism to avoid to unpack every time */
-  grib_get_size(grib_handle_of_accessor(a),self->vector,&size);
-  vector=(long*)grib_context_malloc(a->context,sizeof(long)*size);
-  grib_unpack_long(va,vector,&size);
-  grib_context_free(a->context,vector);
-  
+    va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
+    v=(grib_accessor_abstract_long_vector*)va;
 
-  *val = v->v[self->index];
+    /*TODO implement the dirty mechanism to avoid to unpack every time */
+    grib_get_size(grib_handle_of_accessor(a),self->vector,&size);
+    vector=(long*)grib_context_malloc(a->context,sizeof(long)*size);
+    grib_unpack_long(va,vector,&size);
+    grib_context_free(a->context,vector);
 
-  return GRIB_SUCCESS;
+    *val = v->v[self->index];
+
+    return GRIB_SUCCESS;
 }
 
-static int unpack_double(grib_accessor* a, double* val, size_t *len) {
-  long lval=0;
-  int err=0;
-  grib_accessor_long_vector* self = (grib_accessor_long_vector*)a;
-  grib_accessor* va=NULL;
-  grib_accessor_abstract_long_vector* v =NULL;
-  va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
-  v=(grib_accessor_abstract_long_vector*)va;
-  
-  err=unpack_long(a,&lval,len);
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
+{
+    long lval=0;
+    int err=0;
+    grib_accessor_long_vector* self = (grib_accessor_long_vector*)a;
+    grib_accessor* va=NULL;
+    grib_accessor_abstract_long_vector* v =NULL;
+    va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
+    v=(grib_accessor_abstract_long_vector*)va;
 
-  *val = (double)v->v[self->index];
+    err=unpack_long(a,&lval,len);
 
-  return err;
+    *val = (double)v->v[self->index];
+
+    return err;
 }
 
-static int    pack_long   (grib_accessor* a, const long* val, size_t *len) {
-  int err=0;
-  grib_accessor_long_vector* self = (grib_accessor_long_vector*)a;
-  grib_accessor* va=NULL;
-  grib_accessor_abstract_long_vector* v =NULL;
-  
-  va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
-  v=(grib_accessor_abstract_long_vector*)va;
+static int pack_long(grib_accessor* a, const long* val, size_t *len)
+{
+    int err=0;
+    grib_accessor_long_vector* self = (grib_accessor_long_vector*)a;
+    grib_accessor* va=NULL;
+    grib_accessor_abstract_long_vector* v =NULL;
 
-  v->pack_index=self->index;
+    va=(grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a),self->vector);
+    v=(grib_accessor_abstract_long_vector*)va;
 
-  err=grib_pack_long(va,val,len);
+    v->pack_index=self->index;
 
-  return err;
+    err=grib_pack_long(va,val,len);
+
+    return err;
 }
 
-static int  get_native_type(grib_accessor* a){
-  return GRIB_TYPE_LONG;
+static int get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_LONG;
 }
-
-

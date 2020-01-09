@@ -380,11 +380,10 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
     }
 
     /*
-  printf("UNPACKING LAPLACE=%.20f\n",laplacianOperator);
-
-  printf("packed offset=%ld\n",packed_offset);
-  for(i=0;i<maxv;i++)
-    printf("scals[%d]=%g\n",i,scals[i]);*/
+    printf("UNPACKING LAPLACE=%.20f\n",laplacianOperator);
+    printf("packed offset=%ld\n",packed_offset);
+    for(i=0;i<maxv;i++)
+        printf("scals[%d]=%g\n",i,scals[i]);*/
 
     i=0;
 

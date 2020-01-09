@@ -139,19 +139,15 @@ static void init_class(grib_accessor_class* c)
 
 static void grib_set_bit_on( unsigned char* p, long *bitp);
 
-static void init(grib_accessor* a, const long len , grib_arguments* arg )
+static void init(grib_accessor* a, const long len , grib_arguments* arg)
 {
-
     grib_accessor_g1bitmap* self = (grib_accessor_g1bitmap*)a;
-
     self->unusedBits     = grib_arguments_get_name(grib_handle_of_accessor(a),arg,4);
-
 }
 
-
-static int pack_double(grib_accessor* a, const double* val,size_t *len){
+static int pack_double(grib_accessor* a, const double* val,size_t *len)
+{
     grib_accessor_g1bitmap* self = (grib_accessor_g1bitmap*)a;
-
     size_t tlen;
 
     unsigned char* buf = NULL;
@@ -191,7 +187,6 @@ static int pack_double(grib_accessor* a, const double* val,size_t *len){
     return GRIB_SUCCESS;
 }
 
-
 static int value_count(grib_accessor* a,long* count)
 {
     grib_accessor_g1bitmap* self = (grib_accessor_g1bitmap*)a;
@@ -201,8 +196,8 @@ static int value_count(grib_accessor* a,long* count)
     if ((err=grib_get_long_internal(grib_handle_of_accessor(a), self->unusedBits, &tlen)) != GRIB_SUCCESS)
         grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap.value_count : cannot get %s err=%d",self->unusedBits,err);
 
-  *count = (a->length*8)-tlen;
-  return err;
+    *count = (a->length*8)-tlen;
+    return err;
 }
 
 static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t *len)
@@ -232,7 +227,8 @@ static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t *len)
     return GRIB_SUCCESS;
 }
 
-static void grib_set_bit_on( unsigned char* p, long *bitp){
+static void grib_set_bit_on( unsigned char* p, long *bitp)
+{
     unsigned char o =  1;
     p += (*bitp >> 3);
     o <<= 7-((*bitp)%8);
