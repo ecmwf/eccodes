@@ -138,30 +138,27 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-
 static int unpack_string(grib_accessor* a, char* val, size_t *len)
 {
-  long start = 0, theEnd = 0;
-  char tmp[1024];
-  int err = grib_g1_step_get_steps(a,&start,&theEnd);
-  size_t l = 0;
+    long start = 0, theEnd = 0;
+    char tmp[1024];
+    int err = grib_g1_step_get_steps(a,&start,&theEnd);
+    size_t l = 0;
 
+    if(err) return err;
 
-  if(err) return err;
+    sprintf(tmp,"%ld-%ld",start/24,theEnd/24);
+    /*printf("---- FCPERIOD %s [start:%g, end:%g]",tmp,start,end);*/
 
-  sprintf(tmp,"%ld-%ld",start/24,theEnd/24);
-  /*printf("---- FCPERIOD %s [start:%g, end:%g]",tmp,start,end);*/
+    l = strlen(tmp) + 1;
+    if(*len < l)
+    {
+        *len = l;
+        return GRIB_BUFFER_TOO_SMALL;
+    }
 
-  l = strlen(tmp) + 1;
-  if(*len < l)
-  {
     *len = l;
-    return GRIB_BUFFER_TOO_SMALL;
-  }
+    strcpy(val,tmp);
 
-  *len = l;
-  strcpy(val,tmp);
-
-
-  return GRIB_SUCCESS;
+    return GRIB_SUCCESS;
 }

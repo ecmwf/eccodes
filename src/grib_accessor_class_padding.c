@@ -132,33 +132,32 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-
 static void init(grib_accessor* a, const long len, grib_arguments*arg )
 {
-  a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
-  a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-static int compare(grib_accessor* a, grib_accessor* b) {
-  if (a->length != b->length) return GRIB_COUNT_MISMATCH;
-  return GRIB_SUCCESS;
+static int compare(grib_accessor* a, grib_accessor* b)
+{
+    if (a->length != b->length) return GRIB_COUNT_MISMATCH;
+    return GRIB_SUCCESS;
 }
 
 static void update_size(grib_accessor* a,size_t new_size)
 {
-  /* printf("update_size: grib_accessor_class_padding.c %ld %ld %s %s\n", (long)new_size,(long)a->length,a->cclass->name,a->name); */
-  a->length = new_size;
+    /* printf("update_size: grib_accessor_class_padding.c %ld %ld %s %s\n", (long)new_size,(long)a->length,a->cclass->name,a->name); */
+    a->length = new_size;
 }
 
 static void resize(grib_accessor* a,size_t new_size)
 {
-  void* zero = grib_context_malloc_clear(a->context,new_size);
+    void* zero = grib_context_malloc_clear(a->context,new_size);
 
-  grib_buffer_replace(a,(const unsigned char*)zero,new_size,1,0);
-  grib_context_free(a->context,zero);
-  grib_context_log(a->context,GRIB_LOG_DEBUG,"resize: grib_accessor_class_padding.c %ld %ld %s %s\n",(long)new_size,(long)a->length,a->cclass->name,a->name);
-  Assert(new_size == a->length);
-
+    grib_buffer_replace(a,(const unsigned char*)zero,new_size,1,0);
+    grib_context_free(a->context,zero);
+    grib_context_log(a->context,GRIB_LOG_DEBUG,"resize: grib_accessor_class_padding.c %ld %ld %s %s\n",(long)new_size,(long)a->length,a->cclass->name,a->name);
+    Assert(new_size == a->length);
 }
 
 static int value_count(grib_accessor* a,long *c){ *c=a->length; return 0;}

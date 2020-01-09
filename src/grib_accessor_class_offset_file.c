@@ -134,42 +134,39 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->length=0;
+    a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->length=0;
 }
 
-static int  unpack_double(grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
-  *val = (double)grib_handle_of_accessor(a)->offset;
-  *len =1;
-  return 0;
+    *val = (double)grib_handle_of_accessor(a)->offset;
+    *len =1;
+    return 0;
 }
 
-static int unpack_string(grib_accessor*a , char*  v, size_t *len){
+static int unpack_string(grib_accessor*a , char*  v, size_t *len)
+{
+    double val = 0;
+    size_t l = 1;
+    char repres[1024];
 
-  double val = 0;
-  size_t l = 1;
-  char repres[1024];
+    grib_unpack_double (a , &val, &l);
 
-  grib_unpack_double (a , &val, &l);
+    sprintf(repres,"%.0f", val);
 
-  sprintf(repres,"%.0f", val);
+    l = strlen(repres)+1;
 
-  l = strlen(repres)+1;
+    if(l >*len ){
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s ", a->name );
 
-  if(l >*len ){
-    grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s ", a->name );
+        *len = l;
+        return GRIB_BUFFER_TOO_SMALL;
+    }
+    grib_context_log(a->context,GRIB_LOG_DEBUG, "grib_accessor_long: Casting double %s to string  ", a->name);
 
     *len = l;
-    return GRIB_BUFFER_TOO_SMALL;
-  }
-  grib_context_log(a->context,GRIB_LOG_DEBUG, "grib_accessor_long: Casting double %s to string  ", a->name);
 
-  *len = l;
-
-  strcpy(v,repres);
-  return GRIB_SUCCESS;
-
-
+    strcpy(v,repres);
+    return GRIB_SUCCESS;
 }
-
