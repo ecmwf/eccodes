@@ -20,6 +20,7 @@
    IMPLEMENTS = dump_bytes;dump_values
    IMPLEMENTS = dump_label;dump_section
    IMPLEMENTS = init;destroy
+   IMPLEMENTS = header
    MEMBERS = long section_offset
    MEMBERS = long begin
    MEMBERS = long empty
@@ -54,6 +55,7 @@ static void dump_bytes      (grib_dumper* d, grib_accessor* a,const char* commen
 static void dump_values     (grib_dumper* d, grib_accessor* a);
 static void dump_label      (grib_dumper* d, grib_accessor* a,const char* comment);
 static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_accessors* block);
+static void header         (grib_dumper*,grib_handle*);
 
 typedef struct grib_dumper_bufr_encode_filter {
     grib_dumper          dumper;  
@@ -85,7 +87,7 @@ static grib_dumper_class _grib_dumper_class_bufr_encode_filter = {
     &dump_bits,                          /* dump bits   */
     &dump_section,                       /* dump section      */
     &dump_values,                        /* dump values   */
-    0,                             /* header   */
+    &header,                             /* header   */
     0,                             /* footer   */
 };
 
@@ -720,6 +722,31 @@ static void dump_attributes(grib_dumper* d,grib_accessor* a, const char* prefix)
         a->attributes[i]->flags=flags;
         i++;
     }
-    self->isLeaf=0;
-    self->isAttribute=0;
+    self->isLeaf = 0;
+    self->isAttribute = 0;
+}
+
+static void header(grib_dumper* d, grib_handle* h)
+{
+    grib_dumper_bufr_encode_filter *self = (grib_dumper_bufr_encode_filter*)d;
+    char sampleName[128]={0};
+    long localSectionPresent, edition, bufrHeaderCentre, isSatellite;
+
+    Assert(h->product_kind == PRODUCT_BUFR);
+
+    grib_get_long(h, "localSectionPresent", &localSectionPresent);
+    grib_get_long(h, "bufrHeaderCentre", &bufrHeaderCentre);
+    grib_get_long(h, "edition", &edition);
+
+    if (localSectionPresent && bufrHeaderCentre == 98) {
+        grib_get_long(h, "isSatellite", &isSatellite);
+        if (isSatellite)
+            sprintf(sampleName, "BUFR%ld_local_satellite", edition);
+        else
+            sprintf(sampleName, "BUFR%ld_local", edition);
+    } else {
+        sprintf(sampleName, "BUFR%ld", edition);
+    }
+
+    fprintf(self->dumper.out, "# BUFR sample file: %s.tmpl\n", sampleName);
 }
