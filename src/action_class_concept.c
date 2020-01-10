@@ -305,3 +305,97 @@ static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self
     GRIB_MUTEX_UNLOCK(&mutex);
     return result;
 }
+
+static int concept_condition_expression_true(grib_handle* h, grib_concept_condition* c, char* exprVal)
+{
+    long lval;
+    long lres=0;
+    int ok = 0;
+    int err=0;
+    const int type = grib_expression_native_type(h,c->expression);
+
+    switch(type)
+    {
+    case GRIB_TYPE_LONG:
+        grib_expression_evaluate_long(h,c->expression,&lres);
+        ok =  (grib_get_long(h,c->name,&lval) == GRIB_SUCCESS) &&
+                (lval == lres);
+        if (ok) sprintf(exprVal, "%ld", lres);
+        break;
+
+    case GRIB_TYPE_DOUBLE: {
+        double dval;
+        double dres=0.0;
+        grib_expression_evaluate_double(h,c->expression,&dres);
+        ok = (grib_get_double(h,c->name,&dval) == GRIB_SUCCESS) &&
+                (dval == dres);
+        if (ok) sprintf(exprVal, "%g", dres);
+        break;
+    }
+
+    case GRIB_TYPE_STRING: {
+        const char *cval;
+        char buf[80];
+        char tmp[80];
+        size_t len = sizeof(buf);
+        size_t size=sizeof(tmp);
+
+        ok = (grib_get_string(h,c->name,buf,&len) == GRIB_SUCCESS) &&
+        ((cval = grib_expression_evaluate_string(h,c->expression,tmp,&size,&err)) != NULL) &&
+        (err==0) && (strcmp(buf,cval) == 0);
+        if (ok) sprintf(exprVal, "%s", cval);
+        break;
+    }
+
+    default:
+        /* TODO: */
+        break;
+    }
+    return ok;
+}
+
+/* Caller has to allocate space for the result.
+ * INPUTS: h, key and value (can be NULL)
+ * OUTPUT: result
+ * Example: key='typeOfLevel' whose value is 'mixedLayerDepth',
+ * result='typeOfFirstFixedSurface=169,typeOfSecondFixedSurface=255'
+ */
+int get_concept_condition_string(grib_handle* h, const char* key, const char* value, char* result)
+{
+    int err = 0;
+    int length = 0;
+    char strVal[64]={0,};
+    char exprVal[256]={0,};
+    const char* pValue = value;
+    size_t len = sizeof(strVal);
+    grib_concept_value* concept_value = NULL;
+    grib_accessor* acc = grib_find_accessor(h, key);
+    if (!acc) return GRIB_NOT_FOUND;
+
+    if (!value) {
+        err = grib_get_string(h, key, strVal,&len);
+        if (err) return GRIB_INTERNAL_ERROR;
+        pValue = strVal;
+    }
+
+    concept_value = action_concept_get_concept(acc);
+    while (concept_value) {
+        grib_concept_condition* concept_condition = concept_value->conditions;
+
+        if (strcmp(pValue, concept_value->name)==0) {
+            while (concept_condition) {
+                grib_expression* expression = concept_condition->expression;
+                Assert(expression);
+                if (concept_condition_expression_true(h, concept_condition, exprVal)) {
+                    length += sprintf(result+length, "%s%s=%s",
+                                    (length==0?"":","),concept_condition->name, exprVal);
+                }
+                concept_condition = concept_condition->next;
+            }
+        }
+
+        concept_value = concept_value->next;
+    }
+    if (length == 0) return GRIB_CONCEPT_NO_MATCH;
+    return GRIB_SUCCESS;
+}

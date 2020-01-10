@@ -1425,9 +1425,36 @@ static void test_assertion_catching()
     assertion_caught = 0;
 }
 
+static void test_concept_condition_strings()
+{
+    int err = 0;
+    char result[1024] = {0,};
+    grib_handle* h = grib_handle_new_from_samples(0, "GRIB2");
+
+    err = get_concept_condition_string(h, "typeOfLevel", NULL, result);
+    assert ( !err );
+    assert( strcmp(result, "typeOfFirstFixedSurface=1,typeOfSecondFixedSurface=255")==0 );
+
+    err = get_concept_condition_string(h, "paramId", NULL, result);
+    assert ( !err );
+    assert( strcmp(result, "discipline=0,parameterCategory=0,parameterNumber=0")==0 );
+
+    err = get_concept_condition_string(h, "gridType", NULL, result);
+    assert ( !err );
+    /*printf("%s\n", result);*/
+    assert( strcmp(result, "gridDefinitionTemplateNumber=0,PLPresent=0")==0 );
+
+    err = get_concept_condition_string(h, "stepType", NULL, result);
+    assert ( !err );
+    assert( strcmp(result, "selectStepTemplateInstant=1,stepTypeInternal=instant")==0 );
+
+}
+
 int main(int argc, char** argv)
 {
     /*printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());*/
+
+    test_concept_condition_strings();
 
     test_assertion_catching();
 
