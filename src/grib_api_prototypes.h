@@ -67,6 +67,7 @@ grib_action *grib_action_create_when(grib_context *context, grib_expression *exp
 grib_concept_value *action_concept_get_concept(grib_accessor *a);
 int action_concept_get_nofail(grib_accessor *a);
 grib_action *grib_action_create_concept(grib_context *context, const char *name, grib_concept_value *concept, const char *basename, const char *name_space, const char *defaultkey, const char *masterDir, const char *localDir, const char *ecmfDir, int flags, int nofail);
+int get_concept_condition_string(grib_handle* h, const char* key, const char* value, char* result);
 
 /* action_class_hash_array.c */
 grib_action *grib_action_create_hash_array(grib_context *context, const char *name, grib_hash_array_value *hash_array, const char *basename, const char *name_space, const char *defaultkey, const char *masterDir, const char *localDir, const char *ecmfDir, int flags, int nofail);
@@ -1483,6 +1484,7 @@ int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
 int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
 int is_grib_index_file(const char *filename);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
+int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val);
 
 /* bufr_util.c */
 int compute_bufr_key_rank(grib_handle *h, grib_string_list *keys, const char *key);

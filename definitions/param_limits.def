@@ -1,0 +1,9 @@
+constant default_min_val = -1e9 : long_type, hidden;
+constant default_max_val = +1e9 : long_type, hidden;
+
+concept param_value_min(default_min_val) {
+    0  = { paramId=167; }
+} : long_type, hidden;
+concept param_value_max(default_max_val) {
+    373 = { paramId=167; }
+} : long_type, hidden;
