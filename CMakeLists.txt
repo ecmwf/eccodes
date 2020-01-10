@@ -118,7 +118,7 @@ ecbuild_add_option( FEATURE AEC
 )
 
 ecbuild_add_option( FEATURE PYTHON
-    DESCRIPTION "Build the ecCodes Python2 interface"
+    DESCRIPTION "Build the ecCodes Python2 interface (deprecated)"
     DEFAULT ON
     REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy
 )
