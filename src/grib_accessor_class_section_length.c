@@ -133,20 +133,20 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
-  a->parent->aclength = a;
-  a->length = len;
-  a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->flags  |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
-  Assert(a->length>=0);
+    a->parent->aclength = a;
+    a->length = len;
+    a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags  |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
+    Assert(a->length>=0);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-  grib_dump_long(dumper,a,NULL);
+    grib_dump_long(dumper,a,NULL);
 }
 
 static int value_count(grib_accessor* a,long* c)
 {
-  *c=1;
-  return 0;
+    *c=1;
+    return 0;
 }
