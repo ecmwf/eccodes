@@ -25,16 +25,14 @@ sample=$ECCODES_SAMPLES_PATH/diag.tmpl
 ${tools_dir}/grib_ls $sample > $REDIRECT
 ${tools_dir}/grib_dump $sample > $REDIRECT
 
-# Check setting keys
-# -------------------
+echo "Check setting integer keys..."
+# ----------------------------------
 echo 'set numberOfIntegers=3; set integerValues={55, 44, 66}; write;' | ${tools_dir}/grib_filter -o $tempOut - $sample
 ${tools_dir}/grib_dump -p numberOfFloats,numberOfIntegers,floatValues,integerValues $tempOut | sed 1d > $tempTxt
 cat > $tempRef <<EOF
-  numberOfFloats = 2;
+  numberOfFloats = 1;
   numberOfIntegers = 3;
-  floatValues(2) =  {
-  3.32, 1.21
-  } 
+  floatValues = 3600;
   integerValues(3) =  {
   55, 44, 66
   } 
@@ -42,6 +40,8 @@ EOF
 diff $tempRef $tempTxt
 
 
+echo "Check setting float keys..."
+# ---------------------------------
 echo 'set numberOfFloats=3; set floatValues={8.8, 9.9, 10.10}; write;' | ${tools_dir}/grib_filter -o $tempOut - $sample
 ${tools_dir}/grib_dump -p numberOfFloats,numberOfIntegers,floatValues,integerValues $tempOut | sed 1d > $tempTxt
 cat > $tempRef <<EOF
@@ -50,11 +50,13 @@ cat > $tempRef <<EOF
   floatValues(3) =  {
   8.8, 9.9, 10.1
   } 
-  integerValues = 66;
+  integerValues = -557;
 EOF
 diff $tempRef $tempTxt
 
 
+echo "Check setting integer & float keys..."
+# ------------------------------------------
 echo 'set numberOfIntegers=4; set integerValues={33, 55, -44, 66}; set numberOfFloats=3; set floatValues={-8.8, 9.9, 10.10}; write;' |\
    ${tools_dir}/grib_filter -o $tempOut - $sample
 ${tools_dir}/grib_dump -p numberOfFloats,numberOfIntegers,floatValues,integerValues $tempOut | sed 1d > $tempTxt
@@ -69,6 +71,13 @@ cat > $tempRef <<EOF
   } 
 EOF
 diff $tempRef $tempTxt
+
+
+echo "Check setting charValues (as ints)..."
+# ------------------------------------------
+echo 'set numberOfCharacters=6; set charValues={69,67,77,87,70,32}; write;' | ${tools_dir}/grib_filter -o $tempOut - $sample
+${tools_dir}/grib_dump -O $tempOut > $tempTxt
+grep -q "'E', 'C', 'M', 'W', 'F', ' '" $tempTxt
 
 # TODO encoding of characters not fully working. We are using one-byte integers instead
 #echo 'set numberOfCharacters=4; set charValues={"J","u","m","p"}; write;'| ${tools_dir}/grib_filter -o $tempOut - $sample
