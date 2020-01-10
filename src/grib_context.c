@@ -26,6 +26,16 @@ int feenableexcept(int excepts);
 
 grib_string_list grib_file_not_found;
 
+/* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
+/* in order to have multiple definitions directories */
+#ifdef ECCODES_ON_WINDOWS
+#   define DEFS_PATH_DELIMITER_CHAR ';'
+#   define DEFS_PATH_DELIMITER_STR  ";"
+#else
+#   define DEFS_PATH_DELIMITER_CHAR ':'
+#   define DEFS_PATH_DELIMITER_STR  ":"
+#endif
+
 #if GRIB_PTHREADS
 static pthread_once_t once  = PTHREAD_ONCE_INIT;
 
@@ -466,7 +476,7 @@ grib_context* grib_context_get_default()
             const char* defs_extra = getenv("ECCODES_EXTRA_DEFINITION_PATH");
             if (defs_extra) {
                 char buffer[DEF_PATH_MAXLEN];
-                ecc_snprintf(buffer, DEF_PATH_MAXLEN, "%s:%s", defs_extra, default_grib_context.grib_definition_files_path);
+                ecc_snprintf(buffer, DEF_PATH_MAXLEN, "%s%c%s", defs_extra, DEFS_PATH_DELIMITER_CHAR, default_grib_context.grib_definition_files_path);
                 default_grib_context.grib_definition_files_path = strdup(buffer);
             }
         }
@@ -565,16 +575,6 @@ static char* resolve_path(grib_context* c, char* path)
 #endif
     return result;
 }
-
-/* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
-/* in order to have multiple definitions directories */
-#ifdef ECCODES_ON_WINDOWS
-#   define DEFS_PATH_DELIMITER_CHAR ';'
-#   define DEFS_PATH_DELIMITER_STR  ";"
-#else
-#   define DEFS_PATH_DELIMITER_CHAR ':'
-#   define DEFS_PATH_DELIMITER_STR  ":"
-#endif
 
 static int init_definition_files_dir(grib_context* c)
 {
