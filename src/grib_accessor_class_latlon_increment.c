@@ -162,7 +162,7 @@ static void init(grib_accessor* a,const long l, grib_arguments* c)
     self->isLongitude=grib_arguments_get_long(grib_handle_of_accessor(a), c,n++);
 }
 
-static int    unpack_double   (grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t *len)
 {
     grib_accessor_latlon_increment* self = (grib_accessor_latlon_increment*)a;
     int ret = 0;
@@ -315,8 +315,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     }
 
     /*ret = grib_set_long_internal(grib_handle_of_accessor(a), self->numberOfPoints,numberOfPoints);
-  if(ret )
-     grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
+      if(ret)
+          grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
      */
 
     grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints,&codedNumberOfPoints);
@@ -342,8 +342,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     return ret;
 }
 
-static int is_missing(grib_accessor* a){
-
+static int is_missing(grib_accessor* a)
+{
     size_t len=1;
     double val=0;
 

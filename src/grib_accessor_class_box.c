@@ -131,31 +131,30 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* args)
 {
-  grib_accessor_box* self = (grib_accessor_box*)a;
-  self->args = args;
+    grib_accessor_box* self = (grib_accessor_box*)a;
+    self->args = args;
 }
 
 static void dump(grib_accessor* a,grib_dumper* dumper)
 {
-  /* TODO: pass args */
-  grib_dump_label(dumper,a,NULL);
+    /* TODO: pass args */
+    grib_dump_label(dumper,a,NULL);
 }
 
 grib_box* grib_box_new(grib_handle* h,int* error)
 {
-  grib_accessor* a = NULL;
-  grib_accessor_box* na =NULL;
-  grib_box* n =NULL;
-  *error=GRIB_NOT_IMPLEMENTED;
-  a = grib_find_accessor(h,"BOX");
-  na = (grib_accessor_box*)a;
+    grib_accessor* a = NULL;
+    grib_accessor_box* na =NULL;
+    grib_box* n =NULL;
+    *error=GRIB_NOT_IMPLEMENTED;
+    a = grib_find_accessor(h,"BOX");
+    na = (grib_accessor_box*)a;
 
-  if (!a) return NULL;
+    if (!a) return NULL;
 
-  n = grib_box_factory(h,na->args);
+    n = grib_box_factory(h,na->args);
 
-  if (n) *error=GRIB_SUCCESS;
+    if (n) *error=GRIB_SUCCESS;
 
-  return n;
+    return n;
 }
-
