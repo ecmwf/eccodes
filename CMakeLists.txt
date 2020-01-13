@@ -479,6 +479,12 @@ if( HAVE_FORTRAN )
 endif()
 
 ###############################################################################
+# Debugging aid. Print all known CMake variables
+# get_cmake_property(_variableNames VARIABLES)
+# foreach( _variableName ${_variableNames} )
+#   ecbuild_info("  ${_variableName}=${${_variableName}}")
+# endforeach()
+###############################################################################
 # finalize
 
 ecbuild_install_project( NAME ${CMAKE_PROJECT_NAME} )
