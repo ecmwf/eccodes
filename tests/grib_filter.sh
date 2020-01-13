@@ -14,10 +14,10 @@ REDIRECT=/dev/null
 
 if [ -f ${data_dir}/geavg.t12z.pgrbaf108 ]
 then
-	tmpdata=grib_api.$$.grib
-	rm -f $tmpdata || true
-	${tools_dir}/grib_filter ${data_dir}/filter_rules ${data_dir}/geavg.t12z.pgrbaf108 > $REDIRECT
-	rm -f $tmpdata
+   tmpdata=grib_api.$$.grib
+   rm -f $tmpdata || true
+   ${tools_dir}/grib_filter ${data_dir}/filter_rules ${data_dir}/geavg.t12z.pgrbaf108 > $REDIRECT
+   rm -f $tmpdata
 fi
 
 cat >${data_dir}/f.rules <<EOF
@@ -32,8 +32,8 @@ rm -f ${data_dir}/split/*
 rmdir ${data_dir}/split
 rm -f ${data_dir}/f.rules
 
-# Test with nonexistent keys. Note spelling of centre!
-# ----------------------------------------------------
+echo "Test with nonexistent keys. Note spelling of centre!"
+# ---------------------------------------------------------
 cat >${data_dir}/nonexkey.rules <<EOF
 set center="john";
 EOF
@@ -50,8 +50,8 @@ ${tools_dir}/grib_filter -f ${data_dir}/nonexkey.rules ${data_dir}/tigge_pf_ecmw
 
 rm -f ${data_dir}/nonexkey.rules
 
-# GRIB-308 format specifier for integer keys
-# -------------------------------------------
+echo "Test GRIB-308: format specifier for integer keys"
+# ----------------------------------------------------
 cat > ${data_dir}/formatint.rules <<EOF
 # Pad edition with leading zeroes and level with blanks
 print "edition=[edition%.3d], level=[level%5ld]";
@@ -60,8 +60,8 @@ EOF
 result=`${tools_dir}/grib_filter  ${data_dir}/formatint.rules  $ECCODES_SAMPLES_PATH/GRIB1.tmpl`
 [ "$result" = "edition=001, level=  500" ]
 
-# ECC-636 print all array entries on one line, num columns=0
-# ----------------------------------------------------------
+echo "Test ECC-636: print all array entries on one line, num columns=0"
+# --------------------------------------------------------------------
 cat > ${data_dir}/formatint.rules <<EOF
 print "[values\!0]";
 EOF
@@ -75,8 +75,8 @@ EOF
 numlines=`${tools_dir}/grib_filter  ${data_dir}/formatint.rules  $ECCODES_SAMPLES_PATH/GRIB1.tmpl | wc -l | tr -d ' '`
 [ "$numlines" = "8146" ]
 
-# Convert from grib1 to grib2 "Generalized vertical height coordinates"
-# ----------------------------------------------------------------------
+echo "Test conversion from grib1 to grib2 'Generalized vertical height coordinates'"
+# --------------------------------------------------------------------------------
 cat >temp.filt <<EOF
 set edition=2;
 set typeOfLevel="generalVertical";
@@ -88,8 +88,8 @@ ${tools_dir}/grib_filter -o temp_filt.grib2 temp.filt $ECCODES_SAMPLES_PATH/sh_m
 result=`${tools_dir}/grib_get -p typeOfFirstFixedSurface,NV,nlev temp_filt.grib2`
 [ "$result" = "150 6 41" ]
 
-# GRIB-394: grib_filter arithmetic operators not correct for floating point values
-# --------------------------------------------------------------------------------
+echo "Test GRIB-394: grib_filter arithmetic operators not correct for floating point values"
+# -----------------------------------------------------------------------------------------
 cat > ${data_dir}/binop.rules <<EOF
 transient val_exact=209.53530883789062500000;
 if (referenceValue == val_exact) {
@@ -119,8 +119,8 @@ EOF
 ${tools_dir}/grib_filter  ${data_dir}/binop.rules $ECCODES_SAMPLES_PATH/gg_sfc_grib1.tmpl >/dev/null
 
 
-# GRIB-526 grib_filter very picky about format of floats
-# -------------------------------------------------------
+echo "Test GRIB-526: grib_filter very picky about format of floats"
+# ----------------------------------------------------------------
 cat >temp.filt <<EOF
 set values = {
   -1000.0,
@@ -132,14 +132,16 @@ set values = {
 EOF
 ${tools_dir}/grib_filter temp.filt $ECCODES_SAMPLES_PATH/GRIB1.tmpl
 
-# Test reading from stdin
+
+echo "Test reading from stdin"
+# ----------------------------
 echo 'set centre="kwbc";write;' | ${tools_dir}/grib_filter -o temp_filt.grib2 - $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 result=`${tools_dir}/grib_get -p centre temp_filt.grib2`
 [ "$result" = "kwbc" ]
 
 
-# ECC-365: placeholder in the output filename
-# -------------------------------------------
+echo "Test ECC-365: placeholder in the output filename"
+# -----------------------------------------------------
 input=${data_dir}/tigge_cf_ecmwf.grib2
 echo 'write;' | ${tools_dir}/grib_filter -o 'temp.out.gfilter.[date].[level].grib' - $input
 [ -f temp.out.gfilter.20070122.925.grib ]
@@ -155,8 +157,9 @@ c=`${tools_dir}/grib_count temp.out.gfilter.20070122.320.grib`
 grib_check_key_equals temp.out.gfilter.20070122.320.grib "date,level" "20070122 320"
 rm -f temp.out.gfilter.*.grib
 
-# ECC-648: Set codetable key to array
-# ------------------------------------
+
+echo "Test ECC-648: Set codetable key to array"
+# ---------------------------------------------
 cat >temp.filt <<EOF
   set productDefinitionTemplateNumber = 11;
   set numberOfTimeRange = 3;
@@ -167,5 +170,20 @@ ${tools_dir}/grib_filter -o temp_filt.grib2 temp.filt $ECCODES_SAMPLES_PATH/GRIB
 stats=`echo 'print "[typeOfStatisticalProcessing]";' | ${tools_dir}/grib_filter - temp_filt.grib2`
 [ "$stats" = "3 1 2" ]
 
+
+echo "Test 'append'"
+# -------------------
+cp ${data_dir}/tigge_pf_ecmwf.grib2  temp_filt.grib2 # now has 38 msgs
+${tools_dir}/grib_count temp_filt.grib2
+cat > temp.filt <<EOF
+  append "temp_filt.grib2";
+EOF
+${tools_dir}/grib_filter temp.filt ${data_dir}/tigge_pf_ecmwf.grib2 # should end up with 38*2 msgs
+${tools_dir}/grib_count temp_filt.grib2
+count=`${tools_dir}/grib_count temp_filt.grib2`
+[ $count -eq 76 ]
+
+
+# Clean up
 rm -f temp_filt.grib2 temp.filt
 rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules
