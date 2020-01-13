@@ -420,7 +420,9 @@ static int find(grib_nearest* nearest, grib_handle* h,
                 outlats[kk] = new_lat;
                 outlons[kk] = new_lon;
             }
-            grib_get_double_element_internal(h,self->values_key,self->k[kk],&(values[kk]));
+            if (values) { /* ECC-499 */
+                grib_get_double_element_internal(h,self->values_key,self->k[kk],&(values[kk]));
+            }
             /* Using the brute force approach described above */
             /* Assert(self->k[kk] < nvalues); */
             /* values[kk]=nearest->values[self->k[kk]]; */

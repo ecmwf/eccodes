@@ -130,32 +130,31 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* args)
 {
-  grib_accessor_nearest* self = (grib_accessor_nearest*)a;
-  self->args = args;
+    grib_accessor_nearest* self = (grib_accessor_nearest*)a;
+    self->args = args;
 }
 
 static void dump(grib_accessor* a,grib_dumper* dumper)
 {
-  /* TODO: pass args */
-  grib_dump_label(dumper,a,NULL);
+    /* TODO: pass args */
+    grib_dump_label(dumper,a,NULL);
 }
 
 grib_nearest* grib_nearest_new(const grib_handle* ch, int* error)
 {
-  grib_handle* h = (grib_handle*)ch;
-  grib_accessor* a = NULL;
-  grib_accessor_nearest* na =NULL;
-  grib_nearest* n =NULL;
-  *error=GRIB_NOT_IMPLEMENTED;
-  a = grib_find_accessor(h,"NEAREST");
-  na = (grib_accessor_nearest*)a;
+    grib_handle* h = (grib_handle*)ch;
+    grib_accessor* a = NULL;
+    grib_accessor_nearest* na =NULL;
+    grib_nearest* n =NULL;
+    *error=GRIB_NOT_IMPLEMENTED;
+    a = grib_find_accessor(h,"NEAREST");
+    na = (grib_accessor_nearest*)a;
 
-  if (!a) return NULL;
+    if (!a) return NULL;
 
-  n = grib_nearest_factory(h,na->args);
+    n = grib_nearest_factory(h,na->args);
 
-  if (n) *error=GRIB_SUCCESS;
+    if (n) *error=GRIB_SUCCESS;
 
-  return n;
+    return n;
 }
-

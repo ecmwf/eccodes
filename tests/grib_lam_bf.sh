@@ -13,6 +13,11 @@
 label="grib_lam_bf"
 temp=temp.$label.txt
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 dump_and_check()
 {
     input=$1

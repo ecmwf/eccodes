@@ -131,21 +131,20 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a,const long l, grib_arguments* c)
 {
-  grib_accessor_size* self = (grib_accessor_size*)a;
-  self->accessor = grib_arguments_get_name(grib_handle_of_accessor(a),c,0);
-  a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-  a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
-  a->length=0;
+    grib_accessor_size* self = (grib_accessor_size*)a;
+    self->accessor = grib_arguments_get_name(grib_handle_of_accessor(a),c,0);
+    a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
+    a->length=0;
 }
 
-static int  unpack_long(grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t *len)
 {
-  int ret=0;
-  size_t size=0;
-  grib_accessor_size* self = (grib_accessor_size*)a;
-  ret=grib_get_size(grib_handle_of_accessor(a),self->accessor,&size);
-  *val=(long)size;
-  *len =1;
-  return ret;
+    int ret=0;
+    size_t size=0;
+    grib_accessor_size* self = (grib_accessor_size*)a;
+    ret=grib_get_size(grib_handle_of_accessor(a),self->accessor,&size);
+    *val=(long)size;
+    *len =1;
+    return ret;
 }
-

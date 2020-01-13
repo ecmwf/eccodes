@@ -194,6 +194,7 @@
     <ClCompile Include="..\..\..\src\bufr_keys_iterator.c" />
     <ClCompile Include="..\..\..\src\bufr_util.c" />
     <ClCompile Include="..\..\..\src\codes_memfs.c" />
+    <ClCompile Include="..\..\..\src\codes_util.c" />
     <ClCompile Include="..\..\..\src\eccodes.c" />
     <ClCompile Include="..\..\..\src\functions.c" />
     <ClCompile Include="..\..\..\src\grib_2order_packer_simple.c" />

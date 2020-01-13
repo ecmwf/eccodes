@@ -13,20 +13,19 @@ _if (timeRangeIndicator==3 || timeRangeIndicator==4
   alias productDefinitionTemplateNumber=probPoint;
 }
 
-
 template mars_labeling "grib1/mars_labeling.def";
 
-unsigned[1] forecastProbabilityNumber : dump ;
+unsigned[1] forecastProbabilityNumber : dump;
 
-unsigned[1] totalNumberOfForecastProbabilities  : dump;
+unsigned[1] totalNumberOfForecastProbabilities : dump;
 
-signed[1] localDecimalScaleFactor : dump ;
+signed[1] localDecimalScaleFactor : dump;
 
-unsigned[1] thresholdIndicator : dump ;
+unsigned[1] thresholdIndicator : dump;
 
-signed[2] lowerThreshold : dump ;
+signed[2] lowerThreshold : can_be_missing,dump;
 
-signed[2] upperThreshold  : dump;
+signed[2] upperThreshold : can_be_missing,dump;
 
 # 1 to 2 conversion
 _if (thresholdIndicator == 1) {
@@ -55,7 +54,6 @@ _if (thresholdIndicator == 3) {
   transient scaleFactorOfUpperLimit=localDecimalScaleFactor;
   transient scaledValueOfUpperLimit=upperThreshold;
 }
-
 
 # spareSetToZero
 pad padding_loc5_1(1);

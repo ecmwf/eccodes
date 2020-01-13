@@ -169,8 +169,8 @@ int grib_tool(int argc, char **argv)
 
     /* ECC-926: Currently only GRIB indexing works. Disable the through_index if BUFR, GTS etc */
     if (global_options.mode == MODE_GRIB &&
-        is_index_file(global_options.infile->name) &&
-            ( global_options.infile_extra && is_index_file(global_options.infile_extra->name))) {
+        is_grib_index_file(global_options.infile->name) &&
+            ( global_options.infile_extra && is_grib_index_file(global_options.infile_extra->name))) {
         global_options.through_index=1;
         return grib_tool_index(&global_options);
     }
@@ -1272,13 +1272,9 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
 }
 int exit_if_input_is_directory(const char* tool_name, const char* filename)
 {
-    struct stat s;
-    int stat_val = stat(filename, &s);
-    if ( stat_val == 0 ) {
-        if (S_ISDIR(s.st_mode)) {
-            fprintf(stderr, "%s: ERROR: \"%s\": Is a directory\n", tool_name, filename);
-            exit(1);
-        }
+    if ( path_is_directory(filename) ) {
+        fprintf(stderr, "%s: ERROR: \"%s\": Is a directory\n", tool_name, filename);
+        exit(1);
     }
     return 0;
 }

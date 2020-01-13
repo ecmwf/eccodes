@@ -358,6 +358,7 @@ list( APPEND grib_api_srcs
     grib_iterator_class_regular.c
     grib_iterator_class_space_view.c
     grib_expression.c
+    codes_util.c
     grib_util.c
     bufr_util.c
     string_util.c

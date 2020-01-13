@@ -48,7 +48,7 @@ if [ $status -eq 0 ]; then
 fi
 
 #----------------------------------------------------
-# Test: comparing with and witout the -b switch
+# Test: comparing with and without the -b switch
 #----------------------------------------------------
 # ${tools_dir}/metar_compare -b GG $metar_file $fMetarTmp >> $fLog
 

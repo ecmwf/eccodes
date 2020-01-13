@@ -39,7 +39,8 @@ rm -f temp_comp.1 temp_comp.2 temp_comp.3 temp_comp.123 temp_comp.321
 # GRIB-797: test last argument being a directory
 # ----------------------------------------
 temp_dir=tempdir.grib_compare
-mkdir -p $temp_dir
+rm -rf $temp_dir
+mkdir $temp_dir
 cp $infile $temp_dir
 ${tools_dir}/grib_compare $infile  $temp_dir
 rm -rf $temp_dir

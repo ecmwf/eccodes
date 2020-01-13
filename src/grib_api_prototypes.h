@@ -67,6 +67,7 @@ grib_action *grib_action_create_when(grib_context *context, grib_expression *exp
 grib_concept_value *action_concept_get_concept(grib_accessor *a);
 int action_concept_get_nofail(grib_accessor *a);
 grib_action *grib_action_create_concept(grib_context *context, const char *name, grib_concept_value *concept, const char *basename, const char *name_space, const char *defaultkey, const char *masterDir, const char *localDir, const char *ecmfDir, int flags, int nofail);
+int get_concept_condition_string(grib_handle* h, const char* key, const char* value, char* result);
 
 /* action_class_hash_array.c */
 grib_action *grib_action_create_hash_array(grib_context *context, const char *name, grib_hash_array_value *hash_array, const char *basename, const char *name_space, const char *defaultkey, const char *masterDir, const char *localDir, const char *ecmfDir, int flags, int nofail);
@@ -1462,6 +1463,11 @@ long grib_arguments_get_long(grib_handle *h, grib_arguments *args, int n);
 double grib_arguments_get_double(grib_handle *h, grib_arguments *args, int n);
 grib_expression *grib_arguments_get_expression(grib_handle *h, grib_arguments *args, int n);
 
+/* codes_util.c */
+char get_dir_separator_char(void);
+int path_is_directory(const char* filename);
+char *codes_getenv(const char *name);
+
 /* grib_util.c */
 grib_handle *grib_util_sections_copy(grib_handle *hfrom, grib_handle *hto, int what, int *err);
 grib_string_list *grib_util_get_param_id(const char *mars_param);
@@ -1476,10 +1482,9 @@ int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
 int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
-int is_index_file(const char *filename);
-char get_dir_separator_char(void);
-char *codes_getenv(const char *name);
+int is_grib_index_file(const char *filename);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
+int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val);
 
 /* bufr_util.c */
 int compute_bufr_key_rank(grib_handle *h, grib_string_list *keys, const char *key);
@@ -1550,7 +1555,10 @@ int grib_encode_string(unsigned char *bitStream, long *bitOffset, size_t numberO
 char *grib_decode_string(const unsigned char *bitStream, long *bitOffset, size_t numberOfCharacters, char *string);
 unsigned long grib_decode_unsigned_long(const unsigned char *p, long *bitp, long nbits);
 int grib_encode_unsigned_long(unsigned char *p, unsigned long val, long *bitp, long nbits);
+size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits);
 int grib_encode_unsigned_longb(unsigned char *p, unsigned long val, long *bitp, long nb);
+int grib_encode_size_tb(unsigned char* p, size_t val ,long *bitp, long nb);
+
 
 /* grib_bits_any_endian_simple.c */
 int grib_decode_long_array(const unsigned char *p, long *bitp, long bitsPerValue, size_t n_vals, long *val);

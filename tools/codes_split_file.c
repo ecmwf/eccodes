@@ -111,7 +111,6 @@ int main(int argc,char* argv[])
     FILE* infh = NULL;
     char* filename;
     int i, status=0;
-    struct stat s;
     int err=0,nchunks=0;
     unsigned long count=0;
 
@@ -133,11 +132,9 @@ int main(int argc,char* argv[])
 
     i++;
     filename=argv[i];
-    if (stat(filename, &s)==0) {
-        if (S_ISDIR(s.st_mode)) {
-            fprintf(stderr, "ERROR: %s: Is a directory\n", filename);
-            return 1;
-        }
+    if (path_is_directory(filename)) {
+        fprintf(stderr, "ERROR: %s: Is a directory\n", filename);
+        return 1;
     }
     infh=fopen(filename,"rb");
     if (!infh) {

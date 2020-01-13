@@ -30,17 +30,17 @@
 62 62 Height of maximum mass density (m)
 63 63 Column-averaged mass density in layer (kg m-3)
 # 64-99 Reserved 
-100 100 Surface area density (aerosol) (/m)
+100 100 Surface area density (aerosol) (m-1)
 101 101 Vertical visual range (m)
 102 102 Aerosol optical thickness (Numeric)
 103 103 Single scattering albedo (Numeric)
 104 104 Asymmetry factor (Numeric)
-105 105 Aerosol extinction coefficient (/m)
-106 106 Aerosol absorption coefficient (/m)
+105 105 Aerosol extinction coefficient (m-1)
+106 106 Aerosol absorption coefficient (m-1)
 107 107 Aerosol lidar backscatter from satellite (m-1 sr-1)
 108 108 Aerosol lidar backscatter from the ground (m-1 sr-1)
-109 109 Aerosol lidar extinction from satellite (/m)
-110 110 Aerosol lidar extinction from the ground (/m)
+109 109 Aerosol lidar extinction from satellite (m-1)
+110 110 Aerosol lidar extinction from the ground (m-1)
 111 111 Angstrom exponent (Numeric)
 # 112-191 Reserved 
 # 192-254 Reserved for local use 

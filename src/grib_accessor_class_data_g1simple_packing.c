@@ -283,7 +283,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t *len)
     case GRIB_SUCCESS:
         break;
     default:
-        grib_context_log(a->context,GRIB_LOG_ERROR,"GRIB1 simple packing: unable to set values");
+        grib_context_log(a->context,GRIB_LOG_ERROR,"GRIB1 simple packing: unable to set values (%s)", grib_get_error_message(ret));
         return ret;
     }
 

@@ -313,11 +313,9 @@ int grib_tool_init(grib_runtime_options* options)
     {
         /* Check for 2nd file being a directory. If so, we assume user is comparing to a file */
         /* with the same name as first file in that directory */
-        struct stat s;
         grib_tools_file* infile = options->infile; /* the 2nd file in comparison */
         if (infile) {
-            int stat_val = stat(infile->name, &s);
-            if ( stat_val == 0 && S_ISDIR(s.st_mode)) {
+            if (path_is_directory(infile->name)) {
                 /* Take the filename of the 1st file and append to dir */
                 char bufr[2048] = {0,};
                 /* options->infile_extra->name is the 1st file */

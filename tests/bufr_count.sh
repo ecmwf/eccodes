@@ -39,8 +39,5 @@ set -e
 vcount=`${tools_dir}/bufr_count -f $temp`
 [ "$vcount" = "2" ]
 
-# Reading from stdin
-count2=`cat $input | ${tools_dir}/bufr_count -`
-[ $count -eq $count2 ]
 
 rm -f $temp

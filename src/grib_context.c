@@ -26,6 +26,16 @@ int feenableexcept(int excepts);
 
 grib_string_list grib_file_not_found;
 
+/* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
+/* in order to have multiple definitions directories */
+#ifdef ECCODES_ON_WINDOWS
+#   define DEFS_PATH_DELIMITER_CHAR ';'
+#   define DEFS_PATH_DELIMITER_STR  ";"
+#else
+#   define DEFS_PATH_DELIMITER_CHAR ':'
+#   define DEFS_PATH_DELIMITER_STR  ":"
+#endif
+
 #if GRIB_PTHREADS
 static pthread_once_t once  = PTHREAD_ONCE_INIT;
 
@@ -308,13 +318,13 @@ static grib_context default_grib_context = {
         &default_seek,                /* lfile seek procedure       */
         &default_feof,                /* file feof procedure        */
 
-        &default_log,                 /* logging_procedure          */
-        &default_print,               /* print procedure            */
-        0,                            /* grib_codetable*            */
-        0,                            /* grib_smart_table*          */
-        0,                            /* char* outfilename          */
-        0,                            /* int multi_support_on       */
-        0,                            /* grib_multi_support* multi_support*/
+        &default_log,                 /* output_log                 */
+        &default_print,               /* print                      */
+        0,                            /* codetable                  */
+        0,                            /* smart_table                */
+        0,                            /* outfilename                */
+        0,                            /* multi_support_on           */
+        0,                            /* multi_support              */
         0,                            /* grib_definition_files_dir  */
         0,                            /* handle_file_count          */
         0,                            /* handle_total_count         */
@@ -323,9 +333,9 @@ static grib_context default_grib_context = {
         0,                            /* gts_header_on              */
         0,                            /* gribex_mode_on             */
         0,                            /* large_constant_fields      */
-        0,                            /* grib_itrie* keys           */
+        0,                            /* keys                       */
         0,                            /* keys_count                 */
-        0,                            /* grib_itrie* concepts_index */
+        0,                            /* concepts_index             */
         0,                            /* concepts_count             */
         {0,},                         /* concepts                   */
         0,                            /* hash_array_index           */
@@ -337,6 +347,7 @@ static grib_context default_grib_context = {
         0,                            /* bufrdc_mode                */
         0,                            /* bufr_set_to_missing_if_out_of_range */
         0,                            /* bufr_multi_element_constant_arrays */
+        0,                            /* grib_data_quality_checks   */
         0,                            /* log_stream                 */
         0,                            /* classes                    */
         0,                            /* lists                      */
@@ -371,6 +382,7 @@ grib_context* grib_context_get_default()
         const char* bufrdc_mode = NULL;
         const char* bufr_set_to_missing_if_out_of_range = NULL;
         const char* bufr_multi_element_constant_arrays = NULL;
+        const char* grib_data_quality_checks = NULL;
         const char* file_pool_max_opened_files = NULL;
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
@@ -381,6 +393,7 @@ grib_context* grib_context_get_default()
         bufrdc_mode = getenv("ECCODES_BUFRDC_MODE_ON");
         bufr_set_to_missing_if_out_of_range = getenv("ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE");
         bufr_multi_element_constant_arrays = getenv("ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS");
+        grib_data_quality_checks = getenv("ECCODES_GRIB_DATA_QUALITY_CHECKS");
         large_constant_fields = codes_getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
         no_abort = codes_getenv("ECCODES_NO_ABORT");
         debug = codes_getenv("ECCODES_DEBUG");
@@ -458,6 +471,16 @@ grib_context* grib_context_get_default()
             }
         }
 
+        /* Definitions path extra: Added at the head of (i.e. before) existing path */
+        {
+            const char* defs_extra = getenv("ECCODES_EXTRA_DEFINITION_PATH");
+            if (defs_extra) {
+                char buffer[DEF_PATH_MAXLEN];
+                ecc_snprintf(buffer, DEF_PATH_MAXLEN, "%s%c%s", defs_extra, DEFS_PATH_DELIMITER_CHAR, default_grib_context.grib_definition_files_path);
+                default_grib_context.grib_definition_files_path = strdup(buffer);
+            }
+        }
+
         grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Definitions path: %s",
                 default_grib_context.grib_definition_files_path);
         grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Samples path:     %s",
@@ -479,6 +502,8 @@ grib_context* grib_context_get_default()
                 atoi(bufr_set_to_missing_if_out_of_range) : 0;
         default_grib_context.bufr_multi_element_constant_arrays = bufr_multi_element_constant_arrays ?
                 atoi(bufr_multi_element_constant_arrays) : 0;
+        default_grib_context.grib_data_quality_checks = grib_data_quality_checks ?
+                atoi(grib_data_quality_checks) : 0;
         default_grib_context.file_pool_max_opened_files = file_pool_max_opened_files ?
                 atoi(file_pool_max_opened_files) : DEFAULT_FILE_POOL_MAX_OPENED_FILES;
     }
@@ -550,16 +575,6 @@ static char* resolve_path(grib_context* c, char* path)
 #endif
     return result;
 }
-
-/* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
-/* in order to have multiple definitions directories */
-#ifdef ECCODES_ON_WINDOWS
-#   define DEFS_PATH_DELIMITER_CHAR ';'
-#   define DEFS_PATH_DELIMITER_STR  ";"
-#else
-#   define DEFS_PATH_DELIMITER_CHAR ':'
-#   define DEFS_PATH_DELIMITER_STR  ":"
-#endif
 
 static int init_definition_files_dir(grib_context* c)
 {

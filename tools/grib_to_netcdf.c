@@ -3573,7 +3573,8 @@ static void find_nc_attributes(const request *subset_r, const request *user_r, n
     if(!isalpha(att->name[0]))
     {
         char buf[1048];
-        sprintf(buf,"p%s",att->name);
+        const char *val = get_value(subset_r, "param", 0);
+        sprintf(buf,"%s_%s", (val ? val : "p"), att->name);
         strcpy(att->name,buf);
     }
 }

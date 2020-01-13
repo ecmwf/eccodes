@@ -11,6 +11,8 @@
 #include "eccodes.h"
 #include <assert.h>
 
+#define MAX_KEYS 100
+
 int main(int argc, char* argv[])
 {
     char *filename, *keys;
@@ -19,7 +21,6 @@ int main(int argc, char* argv[])
     codes_bufr_header* header_array = NULL;
     codes_context* c = codes_context_get_default();
     const int strict_mode = 1;
-    const int MAX_KEYS=100;
     int requested_print_keys_count = MAX_KEYS;
     codes_values requested_print_keys[MAX_KEYS];
 
@@ -34,9 +35,10 @@ int main(int argc, char* argv[])
         printf("ERROR: %s\n",grib_get_error_message(err));
         return 1;
     }
-    
+
     /* Mimic the behaviour of bufr_get -f -p keys for testing */
     err = parse_keyval_string(NULL, keys, 0, GRIB_TYPE_UNDEFINED, requested_print_keys, &requested_print_keys_count);
+    assert(!err);
     assert(requested_print_keys_count > 0);
     for (i=0; i < num_messages; ++i) {
         int j;

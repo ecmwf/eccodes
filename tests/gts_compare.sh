@@ -55,7 +55,7 @@ if [ $status -eq 0 ]; then
 fi
 
 #----------------------------------------------------
-# Test: comparing with and witout the -b switch
+# Test: comparing with and without the -b switch
 #----------------------------------------------------
 ${tools_dir}//gts_compare -b GG $gts_file $fGtsTmp >> $fLog
 

@@ -136,40 +136,39 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-
-void accessor_constant_set_type(grib_accessor* a,int type) {
-  grib_accessor_constant* self = (grib_accessor_constant*)a;
-  self->type=type;
-}
-
-void accessor_constant_set_dval(grib_accessor* a,double dval) {
-  grib_accessor_constant* self = (grib_accessor_constant*)a;
-  self->dval=dval;
-}
-
-
-static void init(grib_accessor* a, const long len , grib_arguments* arg )
+void accessor_constant_set_type(grib_accessor* a,int type)
 {
-	a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
+    grib_accessor_constant* self = (grib_accessor_constant*)a;
+    self->type=type;
+}
+
+void accessor_constant_set_dval(grib_accessor* a,double dval)
+{
+    grib_accessor_constant* self = (grib_accessor_constant*)a;
+    self->dval=dval;
+}
+
+static void init(grib_accessor* a, const long len , grib_arguments* arg)
+{
+    a->flags  |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 static int pack_bytes(grib_accessor* a,const unsigned char* val, size_t *len)
 {
-	return GRIB_READ_ONLY;
+    return GRIB_READ_ONLY;
 }
 
 static int pack_double(grib_accessor* a, const double* val,size_t *len)
 {
-	return GRIB_READ_ONLY;
+    return GRIB_READ_ONLY;
 }
 
 static int pack_long(grib_accessor* a, const long* val,size_t *len)
 {
-	return GRIB_READ_ONLY;
+    return GRIB_READ_ONLY;
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t *len)
 {
-	return GRIB_READ_ONLY;
+    return GRIB_READ_ONLY;
 }
-

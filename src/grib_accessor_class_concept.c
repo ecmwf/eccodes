@@ -615,6 +615,14 @@ static int unpack_string (grib_accessor* a, char* val, size_t *len)
     }
     strcpy(val,p);
     *len = slen;
+#if 0
+    if (a->context->debug==1) {
+        int err = 0;
+        char result[1024] = {0,};
+        err = get_concept_condition_string(grib_handle_of_accessor(a), a->name, val, result);
+        if (!err) fprintf(stderr, "ECCODES DEBUG concept name=%s, value=%s, conditions=%s\n", a->name, val, result);
+    }
+#endif
     return GRIB_SUCCESS;
 }
 

@@ -768,7 +768,7 @@ int main (int argc, char *argv[])
                 size_t size;
                 const void *buffer = NULL;
                 sprintf (f, "lam_bf_%s_%s.grib", grids[igrid], trunc[itrunc].name);
-                fp = fopen (f, "w");
+                fp = fopen (f, "wb");
                 GRIB_CHECK (grib_get_message (h, &buffer, &size), 0);
                 if (fwrite (buffer, 1, size, fp) != size) {
                     perror (f);
@@ -793,7 +793,7 @@ int main (int argc, char *argv[])
 
 
                 sprintf (f, "lam_bf_%s_%s.grib", grids[igrid], trunc[itrunc].name);
-                fp = fopen (f, "r");
+                fp = fopen (f, "rb");
                 h = grib_handle_new_from_file (0, fp, &err);
                 vals = (double *) malloc (sizeof (double) * trunc[itrunc].len);
                 values_len = trunc[itrunc].len;
@@ -804,7 +804,7 @@ int main (int argc, char *argv[])
                 free (vals);
 
                 if (norm > 0.0001) {
-                    fprintf (stderr, "Error too large !\n");
+                    fprintf (stderr, "Error too large! norm=%g\n", norm);
                     return 1;
                 }
                 fclose (fp);

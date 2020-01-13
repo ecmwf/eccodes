@@ -395,7 +395,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
     grib_set_long(hand, self->grib2LocalSectionNumber,*val);
 
-  return 0;
+    return 0;
 }
 
 static int value_count(grib_accessor* a,long* count)
@@ -403,4 +403,3 @@ static int value_count(grib_accessor* a,long* count)
     *count=1;
     return 0;
 }
-

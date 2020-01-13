@@ -15,6 +15,11 @@ UseEcmfConventions = getenv("ECCODES_USE_ECMF_CONVENTIONS","1") :hidden ;
 
 constant defaultTypeOfLevel="unknown" : hidden;
 
+gribDataQualityChecks = getenv("ECCODES_GRIB_DATA_QUALITY_CHECKS","0") : hidden;
+if (gribDataQualityChecks) {
+    template LIMITS "param_limits.def";
+}
+
 # GRIBEX special boustrophedonic mode. See GRIB-472
 # If the environment variable is not defined, the key will be 0
 GRIBEX_boustrophedonic = getenv("ECCODES_GRIBEX_BOUSTROPHEDONIC","0")  :hidden;
@@ -64,8 +69,12 @@ if(kindOfProduct == `GRIB`){
  template      GRIB "grib[GRIBEditionNumber:l]/boot.def" ;
 }
 
-if(kindOfProduct == `BUDG`){
+if(kindOfProduct == `BUDG` ){
  template      BUDG "budg/boot.def" ;
+}
+
+if(kindOfProduct == `DIAG`){
+ template      DIAG "diag/boot.def" ;
 }
 
 if(kindOfProduct == `TIDE`){

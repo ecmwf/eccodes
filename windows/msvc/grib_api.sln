@@ -23,6 +23,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grib_set", "grib_set\grib_s
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bufr_dump", "bufr_dump\bufr_dump.vcxproj", "{A785A1F1-2AE8-4CD8-B484-9035D1961D42}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bufr_filter", "bufr_filter\bufr_filter.vcxproj", "{12E795DB-41D6-495E-8529-35B4FB0EDF8B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -111,6 +113,14 @@ Global
 		{A785A1F1-2AE8-4CD8-B484-9035D1961D42}.Release|Win32.Build.0 = Release|Win32
 		{A785A1F1-2AE8-4CD8-B484-9035D1961D42}.Release|x64.ActiveCfg = Release|x64
 		{A785A1F1-2AE8-4CD8-B484-9035D1961D42}.Release|x64.Build.0 = Release|x64
+		{12E795DB-41D6-495E-8529-35B4FB0EDF8B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{12E795DB-41D6-495E-8529-35B4FB0EDF8B}.Debug|Win32.Build.0 = Debug|Win32
+		{12E795DB-41D6-495E-8529-35B4FB0EDF8B}.Debug|x64.ActiveCfg = Debug|x64
+		{12E795DB-41D6-495E-8529-35B4FB0EDF8B}.Debug|x64.Build.0 = Debug|x64
+		{12E795DB-41D6-495E-8529-35B4FB0EDF8B}.Release|Win32.ActiveCfg = Release|Win32
+		{12E795DB-41D6-495E-8529-35B4FB0EDF8B}.Release|Win32.Build.0 = Release|Win32
+		{12E795DB-41D6-495E-8529-35B4FB0EDF8B}.Release|x64.ActiveCfg = Release|x64
+		{12E795DB-41D6-495E-8529-35B4FB0EDF8B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

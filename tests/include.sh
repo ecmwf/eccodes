@@ -20,6 +20,9 @@ else
   echo
   echo "TEST: $0"
 
+  # Only Unix supported
+  ECCODES_ON_WINDOWS=0
+
   data_dir=""
   # save current working dir
   save=`pwd`

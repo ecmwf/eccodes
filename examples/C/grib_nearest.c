@@ -11,7 +11,8 @@
 /*
  * C Implementation: nearest
  *
- * Description: how to get nearest point(s)
+ * Description: How to get nearest point(s).
+ *              Assumes all input GRIB messages have the same grid geometry
  */
 
 #include <stdio.h>

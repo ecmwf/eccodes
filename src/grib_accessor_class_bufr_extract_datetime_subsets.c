@@ -133,10 +133,6 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
-#ifdef ECCODES_ON_WINDOWS
-#define round(a) ( (a) >=0 ? ((a)+0.5) : ((a)-0.5) )
-#endif
-
 static void init(grib_accessor* a, const long len , grib_arguments* arg )
 {
     int n=0;

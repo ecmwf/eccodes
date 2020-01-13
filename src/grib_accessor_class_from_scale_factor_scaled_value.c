@@ -15,6 +15,7 @@
 
 #include "grib_api_internal.h"
 #include <math.h>
+#include <stdint.h>
 /*
    This is used by make_class.pl
 
@@ -167,7 +168,7 @@ static int is_approximately_equal(double a, double b, double epsilon)
     return 0;
 }
 
-static double eval_value_factor(long value, long factor)
+static double eval_value_factor(int64_t value, int64_t factor)
 {
     return (double)value * pow(10.0, -factor);
 }
@@ -179,8 +180,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     grib_accessor_from_scale_factor_scaled_value* self = (grib_accessor_from_scale_factor_scaled_value*)a;
     grib_handle* hand = grib_handle_of_accessor(a);
     int ret = 0;
-    long factor=0, prev_factor=0;
-    long value=0, prev_value=0;
+    int64_t factor=0, prev_factor=0;
+    int64_t value=0, prev_value=0;
     double exact = *val; /*the input*/
     const float epsilon = float_epsilon();
     unsigned long maxval_value, maxval_factor; /*maximum allowable values*/

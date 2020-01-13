@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
 
   
   if(argc > 1) 
-    in = fopen(argv[1],"r");
+    in = fopen(argv[1],"rb");
   else{
     printf("usage : gribvals filename [format]\n");
     exit(1);

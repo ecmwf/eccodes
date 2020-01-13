@@ -27,10 +27,10 @@ static int encode_file(char *template_file, char *output_file)
     long numSubsets = 0;
 
     assert(template_file);
-    in = fopen(template_file,"r"); assert(in);
+    in = fopen(template_file,"rb"); assert(in);
     if (opt_write) {
         assert(output_file);
-        out = fopen(output_file,"w");  assert(out);
+        out = fopen(output_file,"wb");  assert(out);
     }
 
     /* loop over the messages in the source BUFR and clone them */
@@ -118,7 +118,7 @@ int main(int argc, char **argv)
     }
 
     {
-        pthread_t workers[NUM_THREADS];
+        pthread_t* workers = malloc(NUM_THREADS * sizeof(pthread_t));
         for (i = 0; i < NUM_THREADS; i++) {
             struct v *data = (struct v *) malloc(sizeof(struct v));
             data->number = i;
@@ -139,6 +139,7 @@ int main(int argc, char **argv)
                 pthread_join(workers[i], NULL);
             }
         }
+        free (workers);
     }
 
     return 0;

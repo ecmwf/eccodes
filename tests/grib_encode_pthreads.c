@@ -56,8 +56,8 @@ static int encode_file(char *input_file, char *output_file)
     const void *buffer = NULL;
     int err = 0;
  
-    FILE* in = fopen(input_file,"r");
-    FILE* out = fopen(output_file,"w");
+    FILE* in = fopen(input_file,"rb");
+    FILE* out = fopen(output_file,"wb");
     assert(in);
     assert(out);
 

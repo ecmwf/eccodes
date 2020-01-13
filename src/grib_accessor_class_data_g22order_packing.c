@@ -707,21 +707,35 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     long lengthIncrementForTheGroupLengths;
     long trueLengthOfLastGroup;
     long numberOfBitsUsedForTheScaledGroupLengths;
+    long orderOfSpatialDifferencing;
+    long numberOfOctetsExtraDescriptors;
 
     long maxgrw ;
     long maxgrl ;
+    char packingType[254]={0,};
+    size_t slen=254;
 
     if (*len ==0) return GRIB_NO_VALUES;
 
-    if((err = grib_get_long_internal(gh,self->bits_per_value,&bits_per_value )) != GRIB_SUCCESS)  return err;
-    if((err = grib_get_long_internal(gh,self->decimal_scale_factor,&decimal_scale_factor )) != GRIB_SUCCESS)  return err;
-    if((err = grib_get_long_internal(gh,self->typeOfOriginalFieldValues,&typeOfOriginalFieldValues )) != GRIB_SUCCESS)  return err;
-    if((err = grib_get_long_internal(gh,self->groupSplittingMethodUsed,&groupSplittingMethodUsed )) != GRIB_SUCCESS)  return err;
-    if((err = grib_get_long_internal(gh,self->missingValueManagementUsed,&missingValueManagementUsed )) != GRIB_SUCCESS)  return err;
-    if((err = grib_get_long_internal(gh,self->primaryMissingValueSubstitute,&primaryMissingValueSubstitute )) != GRIB_SUCCESS)  return err;
-    if((err = grib_get_long_internal(gh,self->secondaryMissingValueSubstitute,&secondaryMissingValueSubstitute )) != GRIB_SUCCESS)  return err;
-    if((err = grib_get_long_internal(gh,self->numberOfBitsUsedForTheGroupWidths,&numberOfBitsUsedForTheGroupWidths )) != GRIB_SUCCESS)  return err;
-    if((err = grib_get_long_internal(gh,self->numberOfBitsUsedForTheScaledGroupLengths,&numberOfBitsUsedForTheScaledGroupLengths )) != GRIB_SUCCESS)  return err;
+    if((err = grib_get_long_internal(gh,self->bits_per_value,&bits_per_value )) != GRIB_SUCCESS) return err;
+    if((err = grib_get_long_internal(gh,self->decimal_scale_factor,&decimal_scale_factor )) != GRIB_SUCCESS) return err;
+    if((err = grib_get_long_internal(gh,self->typeOfOriginalFieldValues,&typeOfOriginalFieldValues )) != GRIB_SUCCESS) return err;
+
+    /*if((err = grib_get_long_internal(gh,self->groupSplittingMethodUsed,&groupSplittingMethodUsed )) != GRIB_SUCCESS) return err;*/
+    /* Key groupSplittingMethodUsed uses Code table 5.4 which has two entries:
+     *  0 Row by row splitting
+     *  1 General group splitting
+     * We only support General group splitting
+     */
+    groupSplittingMethodUsed = 1;
+
+    if((err = grib_get_long_internal(gh,self->missingValueManagementUsed,&missingValueManagementUsed )) != GRIB_SUCCESS) return err;
+    if((err = grib_get_long_internal(gh,self->primaryMissingValueSubstitute,&primaryMissingValueSubstitute )) != GRIB_SUCCESS) return err;
+    if((err = grib_get_long_internal(gh,self->secondaryMissingValueSubstitute,&secondaryMissingValueSubstitute )) != GRIB_SUCCESS) return err;
+    if((err = grib_get_long_internal(gh,self->numberOfBitsUsedForTheGroupWidths,&numberOfBitsUsedForTheGroupWidths )) != GRIB_SUCCESS) return err;
+    if((err = grib_get_long_internal(gh,self->numberOfBitsUsedForTheScaledGroupLengths,&numberOfBitsUsedForTheScaledGroupLengths )) != GRIB_SUCCESS) return err;
+    if((err = grib_get_long_internal(gh,self->orderOfSpatialDifferencing,&orderOfSpatialDifferencing)) != GRIB_SUCCESS) return err;
+    if((err = grib_get_long_internal(gh,self->numberOfOctetsExtraDescriptors,&numberOfOctetsExtraDescriptors)) != GRIB_SUCCESS) return err;
 
     self->dirty=1;
 
@@ -811,8 +825,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
         nv-=nvals_per_group;
     }
 
-    /*  fprintf(stdout," %d  bytes %d marked\n", (ref_p+7)/8 + (width_p+7)/8 + (length_p+7)/8 + (vals_p+7)/8,buf_size);
-     */
+    /*fprintf(stdout,"spatial pack_double::  %ld  bytes %lu marked\n", (ref_p+7)/8 + (width_p+7)/8 + (length_p+7)/8 + (vals_p+7)/8, buf_size);*/
 
     grib_buffer_replace(a, buf,buf_size,1,1);
     grib_context_free  (a->context,buf);
@@ -841,8 +854,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t *len)
     if((err = grib_set_long_internal(gh,self->trueLengthOfLastGroup,trueLengthOfLastGroup )) != GRIB_SUCCESS)  return err;
     if((err = grib_set_long_internal(gh,self->numberOfBitsUsedForTheScaledGroupLengths,numberOfBitsUsedForTheScaledGroupLengths )) != GRIB_SUCCESS)  return err;
 
-    if((err = grib_set_long_internal(gh,self->orderOfSpatialDifferencing,0 )) != GRIB_SUCCESS)  return err;
-    if((err = grib_set_long_internal(gh,self->numberOfOctetsExtraDescriptors,0 )) != GRIB_SUCCESS)  return err;
+    err = grib_get_string(gh, "packingType", packingType, &slen);
+    if (!err && strcmp(packingType, "grid_complex_spatial_differencing")==0) {
+        if((err = grib_set_long_internal(gh,self->orderOfSpatialDifferencing,0 )) != GRIB_SUCCESS)  return err;
+        if((err = grib_set_long_internal(gh,self->numberOfOctetsExtraDescriptors,0 )) != GRIB_SUCCESS)  return err;
+    }
+
     /* ECC-259: Set correct number of values */
     if((err = grib_set_long_internal(gh,self->numberOfValues,*len )) != GRIB_SUCCESS)  return err;
 

@@ -78,6 +78,18 @@ ecbuild_add_option( FEATURE JPG
     DESCRIPTION "Support for JPG decoding/encoding"
     DEFAULT ON
 )
+# Options related to JPG. The Jasper and OpenJPEG libraries
+ecbuild_add_option( FEATURE JPG_LIBJASPER
+    DESCRIPTION "Support for JPG decoding/encoding with the Jasper library"
+    CONDITION ENABLE_JPG
+    DEFAULT ON
+)
+ecbuild_add_option( FEATURE JPG_LIBOPENJPEG
+    DESCRIPTION "Support for JPG decoding/encoding with the OpenJPEG library"
+    CONDITION ENABLE_JPG
+    DEFAULT ON
+)
+
 
 ecbuild_add_option( FEATURE PNG
     DESCRIPTION "Support for PNG decoding/encoding"
@@ -192,8 +204,8 @@ set( HAVE_LIBOPENJPEG 0 )
 
 if( ENABLE_JPG )
 
-    # Note: This is a deprecated feature but we need it to find Jasper at ECMWF.
-    #       ecbuild_add_extra_search_paths modifies CMAKE_PREFIX_PATH
+    # Note: The function ecbuild_add_extra_search_paths is deprecated but we need it to find Jasper at ECMWF.
+    #       It modifies CMAKE_PREFIX_PATH
     #       which can affect future package discovery if not undone by the caller.
     #       The current CMAKE_PREFIX_PATH is backed up as _CMAKE_PREFIX_PATH
     #
@@ -205,7 +217,7 @@ if( ENABLE_JPG )
 
     find_package( OpenJPEG )
 
-    if( JASPER_FOUND )
+    if( JASPER_FOUND AND ENABLE_JPG_LIBJASPER )
         list( APPEND ECCODES_TPLS Jasper )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBJASPER 1 )
@@ -213,13 +225,15 @@ if( ENABLE_JPG )
         string(REGEX REPLACE "^([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" JASPER_VERSION_MAJOR "${JASPER_VERSION_STRING}")
     endif()
 
-    if( OPENJPEG_FOUND )
+    if( OPENJPEG_FOUND AND ENABLE_JPG_LIBOPENJPEG )
         list( APPEND ECCODES_TPLS OpenJPEG )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBOPENJPEG 1 )
     endif()
 
     ecbuild_info(" HAVE_JPEG=${HAVE_JPEG}")
+    ecbuild_info(" HAVE_LIBJASPER=${HAVE_LIBJASPER}")
+    ecbuild_info(" HAVE_LIBOPENJPEG=${HAVE_LIBOPENJPEG}")
 
 endif()
 
@@ -292,9 +306,11 @@ if( IEEE_LE )
     set( IEEE_BE 0 )
 endif()
 
+set( ECCODES_ON_WINDOWS 0 )
 if( EC_OS_NAME MATCHES "windows" )
     # Symbols need to be explicitly exported on Windows so we can link to dlls.
     set( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE )
+    set( ECCODES_ON_WINDOWS 1 )
 
     # Suppress compliler warnings - see ECC-850
     # Suppress warnings about using 'insecure' functions. Fixing this would require changes all over

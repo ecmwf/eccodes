@@ -236,10 +236,6 @@ static void init_class(grib_accessor_class* c)
 
 #define OVERRIDDEN_REFERENCE_VALUES_KEY "inputOverriddenReferenceValues"
 
-#ifdef ECCODES_ON_WINDOWS
-#define round(a) ( (a) >=0 ? ((a)+0.5) : ((a)-0.5) )
-#endif
-
 /* Set the error code, if it is bad and we should fail (default case), return */
 /* variable 'err' is assumed to be pointer to int */
 /* If BUFRDC mode is enabled, then we tolerate problems like wrong data section length */
@@ -606,7 +602,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
 {
     grib_darray* ret=NULL;
     int j;
-    unsigned long lval;
+    size_t lval;
     int localReference,localWidth,modifiedWidth,modifiedReference;
     double modifiedFactor,dval;
     int bufr_multi_element_constant_arrays = c->bufr_multi_element_constant_arrays;
@@ -627,7 +623,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
         *err=0;
         return ret;
     }
-    lval=grib_decode_unsigned_long(data,pos,modifiedWidth);
+    lval=grib_decode_size_t(data,pos,modifiedWidth);
     localReference=(long)lval+modifiedReference;
     localWidth=grib_decode_unsigned_long(data,pos,6);
     grib_context_log(c, GRIB_LOG_DEBUG,"BUFR data decoding: \tlocalWidth=%ld",localWidth);
@@ -644,7 +640,7 @@ static grib_darray* decode_double_array(grib_context* c,unsigned char* data,long
             return ret;
         }
         for (j=0;j<self->numberOfSubsets;j++) {
-            lval=grib_decode_unsigned_long(data,pos,localWidth);
+            lval=grib_decode_size_t(data,pos,localWidth);
             if (grib_is_all_bits_one(lval,localWidth) && canBeMissing) {
                 dval=GRIB_MISSING_DOUBLE;
             } else {
@@ -748,7 +744,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
 {
     int err=0;
     int j,i;
-    unsigned long lval;
+    size_t lval;
     long localReference=0,localWidth=0,modifiedWidth,modifiedReference;
     long reference,allone;
     double localRange,modifiedFactor,inverseFactor;
@@ -791,7 +787,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
         } else {
             if (*v > maxAllowed || *v < minAllowed) {
                 if (dont_fail_if_out_of_range) {
-                    grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
+                    fprintf(stderr, "ECCODES WARNING :  encode_double_array: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
                             " Setting it to missing value\n", bd->shortName, *v, minAllowed, maxAllowed);
                     grib_set_bits_on(buff->data,pos,modifiedWidth);
                 } else {
@@ -801,7 +797,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
                 }
             } else {
                 lval=round(*v * inverseFactor)-modifiedReference;
-                grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
+                grib_encode_size_tb(buff->data,lval,pos,modifiedWidth);
             }
         }
         grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
@@ -827,7 +823,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
             grib_set_bits_on(buff->data,pos,modifiedWidth);
         } else {
             lval=round(*v * inverseFactor)-modifiedReference;
-            grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
+            grib_encode_size_tb(buff->data,lval,pos,modifiedWidth);
         }
         grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
         grib_encode_unsigned_longb(buff->data,localWidth,pos,6);
@@ -845,7 +841,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
         while (ii<nvals) {
             /* Turn out-of-range values into 'missing' */
             if (*v!=GRIB_MISSING_DOUBLE && (*v < minAllowed || *v > maxAllowed)) {
-                grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s. Value at index %ld (%g) out of range (minAllowed=%g, maxAllowed=%g)."
+                fprintf(stderr, "ECCODES WARNING :  encode_double_array: %s. Value at index %ld (%g) out of range (minAllowed=%g, maxAllowed=%g)."
                         " Setting it to missing value\n",
                         bd->shortName, (long)ii, *v, minAllowed, maxAllowed);
                 *v = GRIB_MISSING_DOUBLE;
@@ -908,7 +904,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
             grib_set_bits_on(buff->data,pos,modifiedWidth);
         } else {
             lval=localReference-modifiedReference;
-            grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
+            grib_encode_size_tb(buff->data,lval,pos,modifiedWidth);
         }
     }
     grib_buffer_set_ulength_bits(c,buff,buff->ulength_bits+6);
@@ -921,7 +917,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
                 grib_set_bits_on(buff->data,pos,localWidth);
             } else {
                 lval=round(values[j]*inverseFactor)-reference;
-                grib_encode_unsigned_longb(buff->data,lval,pos,localWidth);
+                grib_encode_size_tb(buff->data,lval,pos,localWidth);
             }
         }
     }
@@ -934,7 +930,7 @@ static int encode_double_array(grib_context* c,grib_buffer* buff,long* pos, bufr
 static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_descriptor* bd,
         grib_accessor_bufr_data_array* self,double value)
 {
-    unsigned long lval;
+    size_t lval;
     double maxAllowed,minAllowed;
     int err=0;
     int modifiedWidth,modifiedReference;
@@ -954,7 +950,7 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
     }
     else if (value>maxAllowed || value<minAllowed) {
         if (dont_fail_if_out_of_range) {
-            grib_context_log(c, GRIB_LOG_ERROR, "encode_double_value: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
+            fprintf(stderr, "ECCODES WARNING :  encode_double_value: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
                     " Setting it to missing value\n",
                     bd->shortName, value, minAllowed, maxAllowed);
             value = GRIB_MISSING_DOUBLE;  /* Ignore the bad value and instead use 'missing' */
@@ -968,7 +964,7 @@ static int encode_double_value(grib_context* c,grib_buffer* buff,long* pos,bufr_
     else {
         lval=round(value/modifiedFactor)-modifiedReference;
         if (c->debug) grib_context_log(c, GRIB_LOG_DEBUG, "encode_double_value %s: value=%.15f lval=%lu\n", bd->shortName,value,lval);
-        grib_encode_unsigned_longb(buff->data,lval,pos,modifiedWidth);
+        grib_encode_size_tb(buff->data,lval,pos,modifiedWidth);
     }
 
     return err;
@@ -1012,7 +1008,7 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
         bufr_descriptor* bd,int canBeMissing,
         grib_accessor_bufr_data_array* self,int* err)
 {
-    unsigned long lval;
+    size_t lval;
     int modifiedWidth,modifiedReference;
     double modifiedFactor;
     double dval=0;
@@ -1026,7 +1022,7 @@ static double decode_double_value(grib_context* c,unsigned char* data,long* pos,
     CHECK_END_DATA_RETURN(c, self, modifiedWidth, 0);
     if (*err) {*err=0; return GRIB_MISSING_DOUBLE;}
 
-    lval=grib_decode_unsigned_long(data,pos,modifiedWidth);
+    lval=grib_decode_size_t(data,pos,modifiedWidth);
     if (grib_is_all_bits_one(lval,modifiedWidth) && canBeMissing) {
         dval=GRIB_MISSING_DOUBLE;
     } else {

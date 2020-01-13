@@ -16,6 +16,9 @@
 
 #include "grib_api_internal.h"
 
+/* Note: The 'values' argument can be NULL in which case the data section will not be decoded
+ * See ECC-499
+ */
 int grib_nearest_find(
         grib_nearest *nearest, const grib_handle* ch,
         double inlat, double inlon,
@@ -147,17 +150,22 @@ int grib_nearest_find_multiple(
     double qoutlats[4]={0,};
     double qoutlons[4]={0,};
     double qvalues[4]={0,};
+    double* rvalues = NULL;
     int qindexes[4]={0,};
     int ret=0;
     long i=0;
     size_t len=4;
     int flags=GRIB_NEAREST_SAME_GRID | GRIB_NEAREST_SAME_DATA;
 
+    if (values) rvalues = qvalues;
+
     nearest=grib_nearest_new(h,&ret);
     if (ret!=GRIB_SUCCESS) return ret;
 
     if (is_lsm) {
         int noland=1;
+        /* ECC-499: In land-sea mask mode, 'values' cannot be NULL because we need to query whether >= 0.5 */
+        Assert(values);
         for (i=0;i<npoints;i++) {
             ret=grib_nearest_find(nearest,h,inlats[i],inlons[i],flags,qoutlats,qoutlons,
                     qvalues,qdistances,qindexes,&len);
@@ -181,9 +189,10 @@ int grib_nearest_find_multiple(
 
         }
     } else {
+        /* ECC-499: 'values' can be NULL */
         for (i=0;i<npoints;i++) {
             ret=grib_nearest_find(nearest,h,inlats[i],inlons[i],flags,qoutlats,qoutlons,
-                    qvalues,qdistances,qindexes,&len);
+                    rvalues,qdistances,qindexes,&len);
             min=qdistances[0];
             for (ii=0;ii<4;ii++) {
                 if ((min >= qdistances[ii])) {
@@ -193,7 +202,9 @@ int grib_nearest_find_multiple(
             }
             *poutlats=qoutlats[idx];poutlats++;
             *poutlons=qoutlons[idx];poutlons++;
-            *pvalues=qvalues[idx];pvalues++;
+            if (values) {
+                *pvalues=qvalues[idx];pvalues++;
+            }
             *pdistances=qdistances[idx];pdistances++;
             *pindexes=qindexes[idx];pindexes++;
         }

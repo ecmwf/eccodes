@@ -161,11 +161,7 @@ int grib_jasper_encode(grib_context *c, j2k_encode_helper *helper)
     if( helper->compression != 0)
     {
         /* Lossy */
-#ifndef ECCODES_ON_WINDOWS
-        snprintf (opts, MAXOPTSSIZE, "mode=real\nrate=%f", 1.0/helper->compression);
-#else
-        _snprintf(opts, MAXOPTSSIZE, "mode=real\nrate=%f", 1.0/helper->compression);
-#endif
+        ecc_snprintf(opts, MAXOPTSSIZE, "mode=real\nrate=%f", 1.0/helper->compression);
     }
 
     Assert(cmpt.width_ * cmpt.height_ * cmpt.cps_ == buflen);

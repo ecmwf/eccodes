@@ -104,14 +104,18 @@ static int read_the_rest(reader* r,size_t message_length,unsigned char* tmp, int
 
     memcpy(buffer,tmp,already_read);
 
-    if((r->read(r->read_data,buffer+already_read,rest,&err) != rest) || err)
+    if((r->read(r->read_data,buffer+already_read,rest,&err) != rest) || err) {
+        /*fprintf(stderr, "read_the_rest: r->read failed: %s\n", grib_get_error_message(err));*/
         return err;
+    }
 
     if(check7777 && !r->headers_only && (buffer[message_length-4] != '7' ||
             buffer[message_length-3] != '7' ||
             buffer[message_length-2] != '7' ||
-            buffer[message_length-1] != '7')) {
-
+            buffer[message_length-1] != '7'))
+    {
+        grib_context* c = grib_context_get_default();
+        grib_context_log(c, GRIB_LOG_DEBUG, "read_the_rest: No final 7777 at expected location (Coded length=%lu)", message_length);
         return GRIB_WRONG_LENGTH;
     }
 

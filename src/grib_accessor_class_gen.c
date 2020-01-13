@@ -487,9 +487,23 @@ static int pack_double(grib_accessor* a, const double *v, size_t *len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-static int pack_string_array(grib_accessor*a , const char**  v, size_t *len)
+static int pack_string_array(grib_accessor*a , const char** v, size_t *len)
 {
-    return GRIB_NOT_IMPLEMENTED;
+    long i;
+    int err = 0;
+    size_t length = 0;
+    grib_accessor* as = 0;
+
+    as = a;
+    i = (long)*len - 1;
+    while(as && i >= 0) {
+        length = strlen(v[i]);
+        err = grib_pack_string(as, v[i], &length);
+        if (err) return err;
+        --i;
+        as = as->same;
+    }
+    return GRIB_SUCCESS;
 }
 
 static int pack_string(grib_accessor*a , const char*  v, size_t *len){
@@ -508,7 +522,7 @@ static int pack_string(grib_accessor*a , const char*  v, size_t *len){
     }
 
     grib_context_log(a->context,GRIB_LOG_ERROR,
-            " Should not grib_pack %s  as string", a->name);
+            " Should not grib_pack %s as string", a->name);
     return GRIB_NOT_IMPLEMENTED;
 }
 

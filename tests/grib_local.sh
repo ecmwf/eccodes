@@ -65,6 +65,7 @@ diff local.log local.good.log
 
 rm -f local.log loc.grib1 loc.grib2 loc1.grib1 loc1.grib2 eps.grib1 eps.grib2
 
+
 # Delete Local Definition
 # -----------------------
 sample_g1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_640_grib1.tmpl
@@ -79,6 +80,7 @@ ${tools_dir}/grib_set -s deleteLocalDefinition=1 $sample_g2 $temp
 grib_check_key_equals $temp "localUsePresent,section2Used" "0 0"
 rm -f $temp
 
+
 # Empty local section for GRIB2
 # ------------------------------
 sample_g2=$ECCODES_SAMPLES_PATH/reduced_gg_pl_640_grib2.tmpl
@@ -91,6 +93,7 @@ grib_check_key_equals $sample_g2 section2Length 17
 ${tools_dir}/grib_set -s addEmptySection2=1 $sample_g2 $temp
 grib_check_key_equals $temp section2Length 5
 rm -f $temp
+
 
 # Local Definition 5
 # -----------------------
@@ -106,13 +109,42 @@ grib_check_key_equals $temp.3 edition,productDefinitionTemplateNumber "2 5"
 grib_check_key_equals $temp.3 forecastProbabilityNumber,totalNumberOfForecastProbabilities "2 25"
 grib_check_key_equals $temp.3 probabilityType,scaledValueOfLowerLimit,scaledValueOfUpperLimit "2 54 56"
 
+# ECC-1045
+${tools_dir}/grib_set -s localDefinitionNumber=5,lowerThreshold=missing,upperThreshold=missing \
+   $sample_g1 $temp.1
+grib_check_key_equals $temp.1 'lowerThreshold,upperThreshold' 'MISSING MISSING'
+
+
 # Local Definition 42 for GRIB2 (LC-WFV)
 # ---------------------------------------
 ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=42,lcwfvSuiteName=9 $sample_g2 $temp
 grib_check_key_equals $temp 'mars.origin:s' 'lops'
 
+
 # Extra key in Local Definition 16 for GRIB1. ECC-679
 ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=16,numberOfForecastsInEnsemble=51 $sample_g1 $temp
 grib_check_key_equals $temp 'totalNumber' '51'
+
+
+# Local Definition 49 for GRIB1
+# -----------------------------
+${tools_dir}/grib_set -s localDefinitionNumber=49,type=35 $sample_g1 $temp
+grib_check_key_equals $temp 'perturbationNumber,numberOfForecastsInEnsemble' '0 0'
+
+
+
+# Local Definition 18 (list of ascii keys)
+# ----------------------------------------
+${tools_dir}/grib_filter -o $temp - $sample_g1 << EOF
+ set setLocalDefinition=1;
+ set localDefinitionNumber=18;
+ set consensusCount=3;
+ set ccccIdentifiers={"kwbc","ecmf","sabm"};
+ write;
+EOF
+
+result=`echo 'print "[ccccIdentifiers]";' | ${tools_dir}/grib_filter - $temp`
+[ "$result" = "kwbc ecmf sabm" ]
+
 
 rm -f $temp $temp.1 $temp.2 $temp.3

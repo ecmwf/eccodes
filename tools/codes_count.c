@@ -66,18 +66,6 @@ static int count_messages(FILE* in, int message_type, unsigned long *count)
     return err;
 }
 
-static int is_a_directory(const char* filename)
-{
-    struct stat s;
-    int stat_val = stat(filename, &s);
-    if ( stat_val == 0 ) {
-        if (S_ISDIR(s.st_mode)) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
 int main(int argc,char* argv[])
 {
     FILE* infh = NULL;
@@ -105,7 +93,7 @@ int main(int argc,char* argv[])
             continue;
         }
         filename=argv[i];
-        if (is_a_directory(filename)) {
+        if (path_is_directory(filename)) {
             fprintf(stderr, "%s: ERROR: \"%s\": Is a directory\n", tool_name, filename);
             continue;
         }

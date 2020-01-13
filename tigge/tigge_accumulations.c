@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
 
     for(i = 1; i < argc-1; i++)
     {
-        in = fopen(argv[i],"r");
+        in = fopen(argv[i],"rb");
         if(!in) {
             perror(argv[i]);
             exit(1);

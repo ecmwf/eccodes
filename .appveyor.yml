@@ -2,7 +2,7 @@
 #      general configuration      #
 #---------------------------------#
 
-version: 2.15.0-{build}-{branch}
+version: 2.16.0-{build}-{branch}
 
 branches:
   only:
@@ -17,6 +17,7 @@ environment:
   GIT_CLONE_DIR: $(ECMWF)\git
   INSTALL_DIR: $(ECMWF)\install
   ECCODES_SRC: $(GIT_CLONE_DIR)\eccodes
+  WINDOWS_TESTING_BASHRC: $(ECCODES_SRC)\tests\windows_testing.bashrc
   ECBUILD_SRC: $(GIT_CLONE_DIR)\ecbuild
 
 # scripts that are called at very beginning, before repo cloning
@@ -47,13 +48,11 @@ install:
                                 m2-sed ^
                                 m2-gawk ^
                                 m2-diffutils ^
-                                m2-perl
+                                m2-perl ^
+                                m2w64-ntldd-git
 
-    # get the latest version of cmake
-  - cmd: conda install -c conda-forge cmake
-
-    # other deps
-  - cmd: conda install libnetcdf
+    # get deps
+  - cmd: conda install -c conda-forge cmake libnetcdf
 
 #---------------------------------#
 #       build configuration       #
@@ -78,7 +77,8 @@ build_script:
                -D ENABLE_JPG=1 ^
                -D IEEE_LE=1 ^
                -D ENABLE_MEMFS=0 ^
-               -D ENABLE_EXTRA_TESTS=OFF ^
+               -D ENABLE_EXTRA_TESTS=ON ^
+               -D WINDOWS_TESTING_BASHRC=%WINDOWS_TESTING_BASHRC% ^
                ..
   - cmd: nmake
   - cmd: ctest --output-on-failure

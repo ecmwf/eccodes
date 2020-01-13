@@ -91,167 +91,164 @@ static void init_class(grib_expression_class* c)
 /* END_CLASS_IMP */
 
 
-static grib_trie* load_list(grib_context* c,grib_expression* e, int* err) {
+static grib_trie* load_list(grib_context* c,grib_expression* e, int* err)
+{
+    grib_expression_is_in_list* self = (grib_expression_is_in_list*)e;
 
-  grib_expression_is_in_list* self = (grib_expression_is_in_list*)e;
+    char* filename=NULL;
+    char line[1024]={0,};
+    grib_trie* list=NULL;
+    FILE* f=NULL;
 
-  char* filename=NULL;
-  char line[1024]={0,};
-  grib_trie* list=NULL;
-  FILE* f=NULL;
+    *err=GRIB_SUCCESS;
 
-  *err=GRIB_SUCCESS;
+    filename=grib_context_full_defs_path(c,self->list);
+    if (!filename) {
+        grib_context_log(c,GRIB_LOG_ERROR,"unable to find def file %s",self->list);
+        *err=GRIB_FILE_NOT_FOUND;
+        return NULL;
+    } else {
+        grib_context_log(c,GRIB_LOG_DEBUG,"found def file %s",filename);
+    }
+    list=(grib_trie*)grib_trie_get(c->lists,filename);
+    if (list) {
+        grib_context_log(c,GRIB_LOG_DEBUG,"using list %s from cache",self->list);
+        return list;
+    } else {
+        grib_context_log(c,GRIB_LOG_DEBUG,"using list %s from file %s",self->list,filename);
+    }
 
-  filename=grib_context_full_defs_path(c,self->list);
-  if (!filename) {
-    grib_context_log(c,GRIB_LOG_ERROR,"unable to find def file %s",self->list);
-    *err=GRIB_FILE_NOT_FOUND;
-    return NULL;
-  } else {
-    grib_context_log(c,GRIB_LOG_DEBUG,"found def file %s",filename);
-  }
-  list=(grib_trie*)grib_trie_get(c->lists,filename);
-  if (list) {
-	grib_context_log(c,GRIB_LOG_DEBUG,"using list %s from cache",self->list);
-  	return list;
-  } else {
-	grib_context_log(c,GRIB_LOG_DEBUG,"using list %s from file %s",self->list,filename);
-  }
+    f=codes_fopen(filename,"r");
+    if (!f) {*err=GRIB_IO_PROBLEM; return NULL;}
 
-  f=codes_fopen(filename,"r");
-  if (!f) {*err=GRIB_IO_PROBLEM; return NULL;}
+    list=grib_trie_new(c);
 
-  list=grib_trie_new(c);
+    while(fgets(line,sizeof(line)-1,f)) {
+        unsigned char* p=(unsigned char*)line;
+        while (*p!=0) {
+            if (*p<33) {*p=0; break;}
+            p++;
+        }
+        grib_trie_insert(list,line,line);
+    }
 
-  while(fgets(line,sizeof(line)-1,f)) {
-	unsigned char* p=(unsigned char*)line;
-	while (*p!=0) {
-		if (*p<33) {*p=0; break;}
-		p++;
-	}
-  	grib_trie_insert(list,line,line);
-  }
+    grib_trie_insert(c->lists,filename,list);
 
-  grib_trie_insert(c->lists,filename,list);
+    fclose(f);
 
-  fclose(f);
-
-  return list;
-
+    return list;
 }
 
 static const char* get_name(grib_expression* g)
 {
-  grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
-  return e->name;
+    grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
+    return e->name;
 }
 
 static int evaluate_long(grib_expression* g,grib_handle *h,long* result)
 {
-  grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
-  int err=0;
-  char mybuf[1024]={0,};
-  size_t size=1024;
+    grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
+    int err=0;
+    char mybuf[1024]={0,};
+    size_t size=1024;
 
-  grib_trie* list=load_list(h->context,g,&err);
+    grib_trie* list=load_list(h->context,g,&err);
 
-  if((err=grib_get_string_internal(h,e->name,mybuf,&size)) != GRIB_SUCCESS)
-      return err;
+    if((err=grib_get_string_internal(h,e->name,mybuf,&size)) != GRIB_SUCCESS)
+        return err;
 
-  if (grib_trie_get(list,mybuf)) *result=1;
-  else *result=0;
+    if (grib_trie_get(list,mybuf)) *result=1;
+    else *result=0;
 
-  return err;
+    return err;
 }
 
 static int evaluate_double(grib_expression *g,grib_handle *h,double* result)
 {
-  grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
-  int err=0;
-  char mybuf[1024]={0,};
-  size_t size=1024;
+    grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
+    int err=0;
+    char mybuf[1024]={0,};
+    size_t size=1024;
 
-  grib_trie* list=load_list(h->context,g,&err);
+    grib_trie* list=load_list(h->context,g,&err);
 
-  if((err=grib_get_string_internal(h,e->name,mybuf,&size)) != GRIB_SUCCESS)
-      return err;
+    if((err=grib_get_string_internal(h,e->name,mybuf,&size)) != GRIB_SUCCESS)
+        return err;
 
-  if (grib_trie_get(list,mybuf)) *result=1;
-  else *result=0;
+    if (grib_trie_get(list,mybuf)) *result=1;
+    else *result=0;
 
-  return err;
+    return err;
 }
 
 static string evaluate_string(grib_expression* g,grib_handle* h,char* buf,size_t* size,int* err)
 {
-  grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
-  char mybuf[1024]={0,};
-  size_t sizebuf=1024;
-  long result;
+    grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
+    char mybuf[1024]={0,};
+    size_t sizebuf=1024;
+    long result;
 
-  grib_trie* list=load_list(h->context,g,err);
+    grib_trie* list=load_list(h->context,g,err);
 
-  if((*err=grib_get_string_internal(h,e->name,mybuf,&sizebuf)) != GRIB_SUCCESS)
-      return NULL;
+    if((*err=grib_get_string_internal(h,e->name,mybuf,&sizebuf)) != GRIB_SUCCESS)
+        return NULL;
 
-  if (grib_trie_get(list,mybuf)) result=1;
-  else result=0;
+    if (grib_trie_get(list,mybuf)) result=1;
+    else result=0;
 
-  sprintf(buf,"%ld",result);
-  *size=strlen(buf);
-  return buf;
+    sprintf(buf,"%ld",result);
+    *size=strlen(buf);
+    return buf;
 }
 
 static void print(grib_context* c,grib_expression* g,grib_handle* f)
 {
-  grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
-  printf("access('%s",e->name);
-  if(f)
-  {
-    long s = 0;
-    grib_get_long(f,e->name,&s);
-    printf("=%ld",s);
-  }
-  printf("')");
+    grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
+    printf("access('%s",e->name);
+    if(f)
+    {
+        long s = 0;
+        grib_get_long(f,e->name,&s);
+        printf("=%ld",s);
+    }
+    printf("')");
 }
 
 static void destroy(grib_context* c,grib_expression* g)
 {
 }
 
+static void add_dependency(grib_expression* g, grib_accessor* observer){
+    grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
+    grib_accessor *observed = grib_find_accessor(grib_handle_of_accessor(observer),e->name);
 
-static void  add_dependency(grib_expression* g, grib_accessor* observer){
-  grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
-  grib_accessor *observed = grib_find_accessor(grib_handle_of_accessor(observer),e->name);
+    if(!observed)
+    {
+        /* grib_context_log(observer->context, GRIB_LOG_ERROR, */
+        /* "Error in accessor_add_dependency: cannot find [%s]", e->name); */
+        /* Assert(observed); */
+        return;
+    }
 
-  if(!observed)
-  {
-    /* grib_context_log(observer->context, GRIB_LOG_ERROR, */
-         /* "Error in accessor_add_dependency: cannot find [%s]", e->name); */
-       /* Assert(observed); */
-    return;
-  }
-
-  grib_dependency_add(observer,observed);
+    grib_dependency_add(observer,observed);
 }
 
 grib_expression* new_is_in_list_expression(grib_context* c,const char* name,const char* list)
 {
-  grib_expression_is_in_list* e = (grib_expression_is_in_list*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_is_in_list));
-  e->base.cclass            = grib_expression_class_is_in_list;
-  e->name                   = grib_context_strdup_persistent(c,name);
-  e->list                   = grib_context_strdup_persistent(c,list);
-  return (grib_expression*)e;
+    grib_expression_is_in_list* e = (grib_expression_is_in_list*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_is_in_list));
+    e->base.cclass            = grib_expression_class_is_in_list;
+    e->name                   = grib_context_strdup_persistent(c,name);
+    e->list                   = grib_context_strdup_persistent(c,list);
+    return (grib_expression*)e;
 }
 
 static int native_type(grib_expression* g,grib_handle *h)
 {
-  grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
-  int type = 0;
-  int err;
-  if((err=grib_get_native_type(h,e->name,&type)) != GRIB_SUCCESS)
-    grib_context_log(h->context, GRIB_LOG_ERROR,
-    "Error in native_type %s : %s", e->name,grib_get_error_message(err));
-  return type;
+    grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
+    int type = 0;
+    int err;
+    if((err=grib_get_native_type(h,e->name,&type)) != GRIB_SUCCESS)
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                "Error in native_type %s : %s", e->name,grib_get_error_message(err));
+    return type;
 }
-
