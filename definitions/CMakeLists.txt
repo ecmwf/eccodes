@@ -14,7 +14,7 @@ if(HAVE_INSTALL_ECCODES_DEFINITIONS)
   install( FILES installDefinitions.sh
            DESTINATION ${ECCODES_DEFINITION_SUFF})
 
-  install(  DIRECTORY budg bufr cdf common grib1 grib2 grib3 gts mars metar tide hdf5 wrap
+  install(  DIRECTORY budg diag bufr cdf common grib1 grib2 grib3 gts mars metar tide hdf5 wrap
             DESTINATION ${ECCODES_DEFINITION_SUFF}
             FILES_MATCHING
             PATTERN "*.def"
