@@ -2049,6 +2049,16 @@ size_t sum_of_pl_array(const long* pl, size_t plsize)
     return count;
 }
 
+int grib_is_earth_oblate(grib_handle* h)
+{
+    long oblate = 0;
+    int err = grib_get_long(h, "earthIsOblate", &oblate);
+    if (!err && oblate == 1) {
+        return 1;
+    }
+    return 0;
+}
+
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val)
 {
     int err = 0;
