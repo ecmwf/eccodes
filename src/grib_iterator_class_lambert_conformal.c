@@ -116,6 +116,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     int i, j, err=0;
     double *lats, *lons; /* the lat/lon arrays to be populated */
     long nx,ny,iScansNegatively,jScansPositively,jPointsAreConsecutive,alternativeRowScanning;
+    long oblate=0;
     double LoVInDegrees,LaDInDegrees,Latin1InDegrees,Latin2InDegrees,latFirstInDegrees,
     lonFirstInDegrees, Dx, Dy, radius=0;
     double latFirstInRadians, lonFirstInRadians, LoVInRadians, Latin1InRadians, Latin2InRadians,
@@ -145,6 +146,11 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return err;
     if((err = grib_get_long_internal(h, sny,&ny)) != GRIB_SUCCESS)
         return err;
+
+    if(grib_get_long(h, "earthIsOblate", &oblate) == GRIB_SUCCESS && oblate == 1) {
+        grib_context_log(h->context,GRIB_LOG_ERROR,"Lambert Conformal only supported for spherical earth.");
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
     if (iter->nv!=nx*ny) {
         grib_context_log(h->context,GRIB_LOG_ERROR,"Wrong number of points (%ld!=%ldx%ld)",iter->nv,nx,ny);
