@@ -9,7 +9,8 @@ assert len(sys.argv) > 2
 
 # For now exclude GRIB3 as it is still experimental
 # The BUFR codetables is not used in the engine
-EXCLUDED = ['grib3', 'codetables']
+# METAR and TAF are also experimental
+EXCLUDED = ['grib3', 'codetables', 'taf', 'metar']
 
 dirs = [os.path.realpath(x) for x in sys.argv[1:-1]]
 print(dirs)
