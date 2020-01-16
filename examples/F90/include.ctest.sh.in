@@ -4,6 +4,7 @@ set -eax
 
 proj_dir=@PROJECT_SOURCE_DIR@
 data_dir=@PROJECT_BINARY_DIR@/data
+HAVE_MEMFS=@HAVE_MEMFS@
 
 # use definitions from binary dir to test if installation will be correct
 def_dir="@CMAKE_BINARY_DIR@/@ECCODES_DEFINITION_SUFF@"
@@ -24,3 +25,7 @@ fi
 samp_dir="@CMAKE_BINARY_DIR@/@ECCODES_SAMPLES_SUFF@"
 ECCODES_SAMPLES_PATH=${samp_dir}
 export ECCODES_SAMPLES_PATH
+
+if [ $HAVE_MEMFS -eq 1 ]; then
+   unset ECCODES_DEFINITION_PATH
+fi

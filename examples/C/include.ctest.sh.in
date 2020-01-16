@@ -4,6 +4,7 @@ set -eax
 
 proj_dir=@PROJECT_SOURCE_DIR@
 data_dir=@PROJECT_BINARY_DIR@/data
+HAVE_MEMFS=@HAVE_MEMFS@
 
 # use definitions from binary dir to test if installation will be correct
 def_dir="@CMAKE_BINARY_DIR@/@ECCODES_DEFINITION_SUFF@"
@@ -18,6 +19,10 @@ examples_dir=@CMAKE_CURRENT_BINARY_DIR@
 if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
    tools_dir="valgrind --error-exitcode=1 -q $tools_dir"
    examples_dir="valgrind --error-exitcode=1 -q $examples_dir"
+fi
+
+if [ $HAVE_MEMFS -eq 1 ]; then
+   unset ECCODES_DEFINITION_PATH
 fi
 
 # use samples from binary dir to test if installation will be correct
