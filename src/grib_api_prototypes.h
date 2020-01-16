@@ -1484,6 +1484,7 @@ int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
 int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
 int is_grib_index_file(const char *filename);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
+int grib_is_earth_oblate(grib_handle* h);
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val);
 
 /* bufr_util.c */

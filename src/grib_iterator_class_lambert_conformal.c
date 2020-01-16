@@ -146,6 +146,11 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     if((err = grib_get_long_internal(h, sny,&ny)) != GRIB_SUCCESS)
         return err;
 
+    if (grib_is_earth_oblate(h)) {
+        grib_context_log(h->context,GRIB_LOG_ERROR,"Lambert Conformal only supported for spherical earth.");
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+
     if (iter->nv!=nx*ny) {
         grib_context_log(h->context,GRIB_LOG_ERROR,"Wrong number of points (%ld!=%ldx%ld)",iter->nv,nx,ny);
         return GRIB_WRONG_GRID;

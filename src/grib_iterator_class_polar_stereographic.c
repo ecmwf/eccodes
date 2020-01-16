@@ -151,6 +151,11 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
     if((ret = grib_get_long_internal(h, snx,&nx)) != GRIB_SUCCESS) return ret;
     if((ret = grib_get_long_internal(h, sny,&ny)) != GRIB_SUCCESS) return ret;
 
+    if (grib_is_earth_oblate(h)) {
+        grib_context_log(h->context,GRIB_LOG_ERROR,"Polar stereographic only supported for spherical earth.");
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+
     if (iter->nv!=nx*ny) {
         grib_context_log(h->context,GRIB_LOG_ERROR, "Wrong number of points (%ld!=%ldx%ld)", iter->nv,nx,ny);
         return GRIB_WRONG_GRID;

@@ -138,11 +138,11 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 
     if((ret = grib_get_double_internal(h, sradius,&radius)) != GRIB_SUCCESS) {
         /* Check if it's an oblate spheroid */
-        long oblate=0;
-        if (grib_get_long(h,"earthIsOblate",&oblate)==GRIB_SUCCESS && oblate==1)
+        if (grib_is_earth_oblate(h))
             grib_context_log(h->context,GRIB_LOG_ERROR,"Lambert Azimuthal Equal Area only supported for spherical earth.");
         return ret;
     }
+
     if((ret = grib_get_long_internal(h, snx,&nx)) != GRIB_SUCCESS)
         return ret;
     if((ret = grib_get_long_internal(h, sny,&ny)) != GRIB_SUCCESS)
