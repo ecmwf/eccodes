@@ -9,7 +9,10 @@
 #
 
 . ./include.sh
-
+if [ $HAVE_MEMFS -eq 1 ]; then
+   echo "$0: This test is currently disabled with MEMFS"
+   exit 0
+fi
 
 #Define a common label for all the tmp files
 label="metar_get_keys_test_p"
