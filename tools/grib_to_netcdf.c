@@ -610,6 +610,8 @@ static err handle_to_request(request *r, grib_handle* g)
     strcpy(name, "stepUnits");
     if((e = grib_get_string(g, name, value, &len)) == GRIB_SUCCESS) {
         set_value(r, name, "%s", value);
+    } else {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Cannot get %s as string (%s)", name, grib_get_error_message(e));
     }
 
     /*
@@ -4257,7 +4259,9 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
         g = read_field(file, h->offset, length);
 
         r = empty_request("");
-        Assert(handle_to_request(r,h) == 0);
+        if (handle_to_request(r,h) != GRIB_SUCCESS) {
+            grib_context_log(ctx, GRIB_LOG_ERROR, "Failed to convert GRIB handle to a request");
+        }
 
         /* Keep full MARS description */
         /* copy = clone_one_request(r); */
