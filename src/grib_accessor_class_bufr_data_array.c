@@ -1201,7 +1201,10 @@ static int encode_overridden_reference_value(grib_context* c, grib_accessor_bufr
     /* We must be encoding between 203YYY and 203255 */
     Assert(self->change_ref_value_operand > 0 && self->change_ref_value_operand != 255);
     if ( self->refValListSize == 0 ) {
-        grib_context_log(c, GRIB_LOG_ERROR,"encode_new_element: Overridden Reference Values array is empty!");
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_new_element: Overridden Reference Values array is empty! "
+                    "(Hint: set the key '%s')", OVERRIDDEN_REFERENCE_VALUES_KEY);
+        grib_context_log(c, GRIB_LOG_ERROR, "The number of overridden reference values must be equal to "
+                "number of descriptors between operator 203YYY and 203255");
         return GRIB_ENCODING_ERROR;
     }
     if ( self->refValIndex >= self->refValListSize ) {
