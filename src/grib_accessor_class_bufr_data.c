@@ -75,105 +75,106 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-static int  get_native_type(grib_accessor*);
-static int pack_double(grib_accessor*, const double* val,size_t *len);
-static int pack_long(grib_accessor*, const long* val,size_t *len);
-static int unpack_double(grib_accessor*, double* val,size_t *len);
+static int get_native_type(grib_accessor*);
+static int pack_double(grib_accessor*, const double* val, size_t* len);
+static int pack_long(grib_accessor*, const long* val, size_t* len);
+static int unpack_double(grib_accessor*, double* val, size_t* len);
 static long byte_count(grib_accessor*);
 static long byte_offset(grib_accessor*);
 static long next_offset(grib_accessor*);
-static int value_count(grib_accessor*,long*);
-static void destroy(grib_context*,grib_accessor*);
+static int value_count(grib_accessor*, long*);
+static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
-static void init(grib_accessor*,const long, grib_arguments* );
+static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
-static void update_size(grib_accessor*,size_t);
+static void update_size(grib_accessor*, size_t);
 static int compare(grib_accessor*, grib_accessor*);
 
-typedef struct grib_accessor_bufr_data {
-    grib_accessor          att;
-/* Members defined in gen */
-/* Members defined in bufr_data */
-	const char* offsetSection4Name;
-	const char* offsetBeforeDataName;
-	const char* offsetEndSection4Name;
-	const char* section4LengthName;
-	const char* numberOfDataSubsetsName;
-	const char* subsetNumberName;
-	const char* expandedDescriptorsName;
-	const char* abbreviationName;
-	const char* typeName;
-	const char* nameName;
-	const char* unitName;
-	const char* referenceName;
-	const char* scaleName;
-	const char* widthName;
-	const char* codeFlags;
-	const char* bitmapNumberName;
-	const char* associatedBitmapNumberName;
-	const char* associatedBitmapIndexName;
-	const char* associatedInfoNumberName;
-	long* expandedDescriptors;
-	char** abbreviation;
-	char** type;
-	char** names;
-	char** units;
-	long* reference;
-	double* factor;
-	long* width;
-	long* bitmapNumber;
-	long* associatedBitmapNumber;
-	long* associatedBitmapIndex;
-	long* associatedInfoNumber;
-	long numberOfElements;
-	long numberOfDataSubsets;
-	size_t numberOfDescriptors;
-	int do_compute;
+typedef struct grib_accessor_bufr_data
+{
+    grib_accessor att;
+    /* Members defined in gen */
+    /* Members defined in bufr_data */
+    const char* offsetSection4Name;
+    const char* offsetBeforeDataName;
+    const char* offsetEndSection4Name;
+    const char* section4LengthName;
+    const char* numberOfDataSubsetsName;
+    const char* subsetNumberName;
+    const char* expandedDescriptorsName;
+    const char* abbreviationName;
+    const char* typeName;
+    const char* nameName;
+    const char* unitName;
+    const char* referenceName;
+    const char* scaleName;
+    const char* widthName;
+    const char* codeFlags;
+    const char* bitmapNumberName;
+    const char* associatedBitmapNumberName;
+    const char* associatedBitmapIndexName;
+    const char* associatedInfoNumberName;
+    long* expandedDescriptors;
+    char** abbreviation;
+    char** type;
+    char** names;
+    char** units;
+    long* reference;
+    double* factor;
+    long* width;
+    long* bitmapNumber;
+    long* associatedBitmapNumber;
+    long* associatedBitmapIndex;
+    long* associatedInfoNumber;
+    long numberOfElements;
+    long numberOfDataSubsets;
+    size_t numberOfDescriptors;
+    int do_compute;
 } grib_accessor_bufr_data;
 
 extern grib_accessor_class* grib_accessor_class_gen;
 
 static grib_accessor_class _grib_accessor_class_bufr_data = {
-    &grib_accessor_class_gen,                      /* super                     */
-    "bufr_data",                      /* name                      */
-    sizeof(grib_accessor_bufr_data),  /* size                      */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    &init,                       /* init                      */
-    0,                  /* post_init                      */
-    &destroy,                    /* free mem                       */
-    &dump,                       /* describes himself         */
-    &next_offset,                /* get length of section     */
-    0,              /* get length of string      */
-    &value_count,                /* get number of values      */
-    &byte_count,                 /* get number of bytes      */
-    &byte_offset,                /* get offset to bytes           */
-    &get_native_type,            /* get native type               */
-    0,                /* get sub_section                */
-    0,               /* grib_pack procedures long      */
-    0,                 /* grib_pack procedures long      */
-    &pack_long,                  /* grib_pack procedures long      */
-    0,                /* grib_unpack procedures long    */
-    &pack_double,                /* grib_pack procedures double    */
-    &unpack_double,              /* grib_unpack procedures double  */
-    0,                /* grib_pack procedures string    */
-    0,              /* grib_unpack procedures string  */
-    0,          /* grib_pack array procedures string    */
-    0,        /* grib_unpack array procedures string  */
-    0,                 /* grib_pack procedures bytes     */
-    0,               /* grib_unpack procedures bytes   */
-    0,            /* pack_expression */
-    0,              /* notify_change   */
-    &update_size,                /* update_size   */
-    0,            /* preferred_size   */
-    0,                    /* resize   */
-    0,      /* nearest_smaller_value */
-    0,                       /* next accessor    */
-    &compare,                    /* compare vs. another accessor   */
-    0,     /* unpack only ith value          */
-    0,     /* unpack a subarray         */
-    0,              		/* clear          */
-    0,               		/* clone accessor          */
+    &grib_accessor_class_gen,        /* super                     */
+    "bufr_data",                     /* name                      */
+    sizeof(grib_accessor_bufr_data), /* size                      */
+    0,                               /* inited */
+    &init_class,                     /* init_class */
+    &init,                           /* init                      */
+    0,                               /* post_init                      */
+    &destroy,                        /* free mem                       */
+    &dump,                           /* describes himself         */
+    &next_offset,                    /* get length of section     */
+    0,                               /* get length of string      */
+    &value_count,                    /* get number of values      */
+    &byte_count,                     /* get number of bytes      */
+    &byte_offset,                    /* get offset to bytes           */
+    &get_native_type,                /* get native type               */
+    0,                               /* get sub_section                */
+    0,                               /* grib_pack procedures long      */
+    0,                               /* grib_pack procedures long      */
+    &pack_long,                      /* grib_pack procedures long      */
+    0,                               /* grib_unpack procedures long    */
+    &pack_double,                    /* grib_pack procedures double    */
+    &unpack_double,                  /* grib_unpack procedures double  */
+    0,                               /* grib_pack procedures string    */
+    0,                               /* grib_unpack procedures string  */
+    0,                               /* grib_pack array procedures string    */
+    0,                               /* grib_unpack array procedures string  */
+    0,                               /* grib_pack procedures bytes     */
+    0,                               /* grib_unpack procedures bytes   */
+    0,                               /* pack_expression */
+    0,                               /* notify_change   */
+    &update_size,                    /* update_size   */
+    0,                               /* preferred_size   */
+    0,                               /* resize   */
+    0,                               /* nearest_smaller_value */
+    0,                               /* next accessor    */
+    &compare,                        /* compare vs. another accessor   */
+    0,                               /* unpack only ith value          */
+    0,                               /* unpack a subarray         */
+    0,                               /* clear          */
+    0,                               /* clone accessor          */
 };
 
 
@@ -182,54 +183,56 @@ grib_accessor_class* grib_accessor_class_bufr_data = &_grib_accessor_class_bufr_
 
 static void init_class(grib_accessor_class* c)
 {
-	c->string_length	=	(*(c->super))->string_length;
-	c->sub_section	=	(*(c->super))->sub_section;
-	c->pack_missing	=	(*(c->super))->pack_missing;
-	c->is_missing	=	(*(c->super))->is_missing;
-	c->unpack_long	=	(*(c->super))->unpack_long;
-	c->pack_string	=	(*(c->super))->pack_string;
-	c->unpack_string	=	(*(c->super))->unpack_string;
-	c->pack_string_array	=	(*(c->super))->pack_string_array;
-	c->unpack_string_array	=	(*(c->super))->unpack_string_array;
-	c->pack_bytes	=	(*(c->super))->pack_bytes;
-	c->unpack_bytes	=	(*(c->super))->unpack_bytes;
-	c->pack_expression	=	(*(c->super))->pack_expression;
-	c->notify_change	=	(*(c->super))->notify_change;
-	c->preferred_size	=	(*(c->super))->preferred_size;
-	c->resize	=	(*(c->super))->resize;
-	c->nearest_smaller_value	=	(*(c->super))->nearest_smaller_value;
-	c->next	=	(*(c->super))->next;
-	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
-	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
-	c->clear	=	(*(c->super))->clear;
-	c->make_clone	=	(*(c->super))->make_clone;
+    c->string_length          = (*(c->super))->string_length;
+    c->sub_section            = (*(c->super))->sub_section;
+    c->pack_missing           = (*(c->super))->pack_missing;
+    c->is_missing             = (*(c->super))->is_missing;
+    c->unpack_long            = (*(c->super))->unpack_long;
+    c->pack_string            = (*(c->super))->pack_string;
+    c->unpack_string          = (*(c->super))->unpack_string;
+    c->pack_string_array      = (*(c->super))->pack_string_array;
+    c->unpack_string_array    = (*(c->super))->unpack_string_array;
+    c->pack_bytes             = (*(c->super))->pack_bytes;
+    c->unpack_bytes           = (*(c->super))->unpack_bytes;
+    c->pack_expression        = (*(c->super))->pack_expression;
+    c->notify_change          = (*(c->super))->notify_change;
+    c->preferred_size         = (*(c->super))->preferred_size;
+    c->resize                 = (*(c->super))->resize;
+    c->nearest_smaller_value  = (*(c->super))->nearest_smaller_value;
+    c->next                   = (*(c->super))->next;
+    c->unpack_double_element  = (*(c->super))->unpack_double_element;
+    c->unpack_double_subarray = (*(c->super))->unpack_double_subarray;
+    c->clear                  = (*(c->super))->clear;
+    c->make_clone             = (*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
 
-typedef struct grib_accessor_constant {
-    grib_accessor          att;
-/* Members defined in gen */
-/* Members defined in variable */
-  double dval;
-  char*  cval;
-  int    type;
-/* Members defined in constant */
+typedef struct grib_accessor_constant
+{
+    grib_accessor att;
+    /* Members defined in gen */
+    /* Members defined in variable */
+    double dval;
+    char* cval;
+    int type;
+    /* Members defined in constant */
 } grib_accessor_constant;
 
-typedef struct grib_accessor_bufr_data_element {
-    grib_accessor          att;
-/* Members defined in gen */
-/* Members defined in bufr_data_element */
-        int type;
-        size_t numberOfValues;
-        double* dvalues;
-        long* lvalues;
-        grib_sarray* svalues;
-        int isConstant;
+typedef struct grib_accessor_bufr_data_element
+{
+    grib_accessor att;
+    /* Members defined in gen */
+    /* Members defined in bufr_data_element */
+    int type;
+    size_t numberOfValues;
+    double* dvalues;
+    long* lvalues;
+    grib_sarray* svalues;
+    int isConstant;
 } grib_accessor_bufr_data_element;
 
-#define IS_QUALIFIER(a) (a==8 || a==1 || a==2)
+#define IS_QUALIFIER(a) (a == 8 || a == 1 || a == 2)
 #define NUMBER_OF_QUALIFIERS_PER_CATEGORY 256
 #define NUMBER_OF_QUALIFIERS_CATEGORIES 3
 
@@ -255,7 +258,7 @@ static long init_length(grib_accessor* a)
 #endif
 static int get_elements_and_decode(grib_accessor* a);
 
-static void init(grib_accessor* a,const long v, grib_arguments* params)
+static void init(grib_accessor* a, const long v, grib_arguments* params)
 {
 #if 0
     grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
@@ -302,68 +305,72 @@ static void init(grib_accessor* a,const long v, grib_arguments* params)
 #endif
 }
 
-static void self_clear(grib_context* c,grib_accessor_bufr_data* self)
+static void self_clear(grib_context* c, grib_accessor_bufr_data* self)
 {
-    int i=0;
-    for (i=0;i<self->numberOfDescriptors;i++) {
-        grib_context_free(c,self->abbreviation[i]);
-        grib_context_free(c,self->type[i]);
-        grib_context_free(c,self->names[i]);
-        grib_context_free(c,self->units[i]);
+    int i = 0;
+    for (i = 0; i < self->numberOfDescriptors; i++) {
+        grib_context_free(c, self->abbreviation[i]);
+        grib_context_free(c, self->type[i]);
+        grib_context_free(c, self->names[i]);
+        grib_context_free(c, self->units[i]);
     }
-    grib_context_free(c,self->expandedDescriptors);
-    grib_context_free(c,self->abbreviation);
-    grib_context_free(c,self->type);
-    grib_context_free(c,self->names);
-    grib_context_free(c,self->units);
-    grib_context_free(c,self->reference);
-    grib_context_free(c,self->width);
-    grib_context_free(c,self->bitmapNumber);
-    grib_context_free(c,self->associatedBitmapNumber);
-    grib_context_free(c,self->associatedBitmapIndex);
-    grib_context_free(c,self->associatedInfoNumber);
-    grib_context_free(c,self->factor);
+    grib_context_free(c, self->expandedDescriptors);
+    grib_context_free(c, self->abbreviation);
+    grib_context_free(c, self->type);
+    grib_context_free(c, self->names);
+    grib_context_free(c, self->units);
+    grib_context_free(c, self->reference);
+    grib_context_free(c, self->width);
+    grib_context_free(c, self->bitmapNumber);
+    grib_context_free(c, self->associatedBitmapNumber);
+    grib_context_free(c, self->associatedBitmapIndex);
+    grib_context_free(c, self->associatedInfoNumber);
+    grib_context_free(c, self->factor);
 }
-static int  get_native_type(grib_accessor* a){
+static int get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_DOUBLE;
 }
 
-static long byte_count(grib_accessor* a){
+static long byte_count(grib_accessor* a)
+{
     return a->length;
-
 }
 
-static long byte_offset(grib_accessor* a){
+static long byte_offset(grib_accessor* a)
+{
     return a->offset;
 }
 
-static long next_offset(grib_accessor* a){
-    return a->offset+a->length;
+static long next_offset(grib_accessor* a)
+{
+    return a->offset + a->length;
 }
 
-static void update_size(grib_accessor* a,size_t s)
+static void update_size(grib_accessor* a, size_t s)
 {
-    grib_context_log(a->context,GRIB_LOG_DEBUG,"updating size of %s old %ld new %ld",a->name,a->length,s);
+    grib_context_log(a->context, GRIB_LOG_DEBUG, "updating size of %s old %ld new %ld", a->name, a->length, s);
     a->length = s;
-    Assert(a->length>=0);
+    Assert(a->length >= 0);
 }
 
-static int compare(grib_accessor* a, grib_accessor* b) {
+static int compare(grib_accessor* a, grib_accessor* b)
+{
     return GRIB_NOT_IMPLEMENTED;
 }
 
-static int pack_long(grib_accessor* a, const long* val, size_t *len)
+static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
-    self->do_compute=1;
+    grib_accessor_bufr_data* self = (grib_accessor_bufr_data*)a;
+    self->do_compute              = 1;
 
     return GRIB_NOT_IMPLEMENTED;
 }
 
-static int pack_double(grib_accessor* a, const double* val, size_t *len)
+static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
-    grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
-    self->do_compute=1;
+    grib_accessor_bufr_data* self = (grib_accessor_bufr_data*)a;
+    self->do_compute              = 1;
     return GRIB_NOT_IMPLEMENTED;
 }
 
@@ -536,7 +543,7 @@ static GRIB_INLINE void reset_deeper_qualifiers(grib_accessor* significanceQuali
 #endif
 static int decode_elements(grib_accessor* a)
 {
-    int err=0;
+    int err = 0;
     Assert(!"The accessor bufr_data is not used");
 #if 0
     grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
@@ -869,12 +876,12 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 {
     get_elements_and_decode(a);
 
-    grib_dump_section(dumper,a,a->sub_section->block);
+    grib_dump_section(dumper, a, a->sub_section->block);
 
     return;
 }
 
-static int value_count(grib_accessor* a,long* count)
+static int value_count(grib_accessor* a, long* count)
 {
     return GRIB_NOT_IMPLEMENTED;
 #if 0
@@ -892,7 +899,7 @@ static int value_count(grib_accessor* a,long* count)
 #endif
 }
 
-static int unpack_double(grib_accessor* a, double* val, size_t *len)
+static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 #if 0
@@ -908,18 +915,18 @@ static int unpack_double(grib_accessor* a, double* val, size_t *len)
 
 static int get_elements_and_decode(grib_accessor* a)
 {
-    grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
-    int err=0;
+    grib_accessor_bufr_data* self = (grib_accessor_bufr_data*)a;
+    int err                       = 0;
     if (self->do_compute) {
-        err=decode_elements(a);
-        self->do_compute=0;
+        err              = decode_elements(a);
+        self->do_compute = 0;
     }
     return err;
 }
 
-static void destroy(grib_context* c,grib_accessor* a)
+static void destroy(grib_context* c, grib_accessor* a)
 {
-    grib_accessor_bufr_data *self =(grib_accessor_bufr_data*)a;
-    self_clear(c,self);
-    grib_section_delete(c,a->sub_section);
+    grib_accessor_bufr_data* self = (grib_accessor_bufr_data*)a;
+    self_clear(c, self);
+    grib_section_delete(c, a->sub_section);
 }

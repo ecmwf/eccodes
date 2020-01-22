@@ -14,30 +14,31 @@
 
 #include "grib_api.h"
 
-static void usage(const char *prog)
+static void usage(const char* prog)
 {
-	fprintf(stderr,"%s: N\n",prog);
-	exit(1);
+    fprintf(stderr, "%s: N\n", prog);
+    exit(1);
 }
-int main(int argc, const char *argv[])
+int main(int argc, const char* argv[])
 {
-	double *latitudes;
-	int count = 0;
-	int n,i;
+    double* latitudes;
+    int count = 0;
+    int n, i;
 
 
-	if(argc != 2) usage(argv[0]);
+    if (argc != 2)
+        usage(argv[0]);
 
-	n = atol(argv[1]);
-	count = n*2;
+    n     = atol(argv[1]);
+    count = n * 2;
 
-	latitudes = (double*)malloc(count*sizeof(double));
-	assert(latitudes);
+    latitudes = (double*)malloc(count * sizeof(double));
+    assert(latitudes);
 
-	assert(grib_get_gaussian_latitudes(n,latitudes) == 0);
+    assert(grib_get_gaussian_latitudes(n, latitudes) == 0);
 
-	for(i = 0; i < count ; i++)
-		printf("%g\n",latitudes[i]);
+    for (i = 0; i < count; i++)
+        printf("%g\n", latitudes[i]);
 
-	return 0;
+    return 0;
 }

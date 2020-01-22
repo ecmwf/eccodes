@@ -31,10 +31,10 @@ void get_param(FILE* f, grib_handle* h, const char* name, const char* arg)
 void get_iso_ref_date(FILE* f, grib_handle* h, const char* name, const char* arg)
 {
     long year;
-    long month ;
+    long month;
     long day;
-    long hour ;
-    long minute ;
+    long hour;
+    long minute;
     long second;
 
     GRIB_CHECK(grib_get_long(h, "year", &year), "year");
@@ -47,7 +47,8 @@ void get_iso_ref_date(FILE* f, grib_handle* h, const char* name, const char* arg
     fprintf(f, "\"%s\":\"%04ld-%02ld-%02ldT%02ld:%02ld:%02ld.000Z\"", name, year, month, day, hour, minute, second);
 }
 
-typedef struct header_keys {
+typedef struct header_keys
+{
     const char* name;
     getproc proc;
     const char* arg;
@@ -66,31 +67,81 @@ typedef struct header_keys {
  */
 header_keys header[] = {
 
-        {"scanMode",&get_long, "scanningMode",},
-        {"la1",&get_long, "latitudeOfFirstGridPointInDegrees",},
-        {"lo1",&get_long, "longitudeOfFirstGridPointInDegrees",},
+    {
+        "scanMode",
+        &get_long,
+        "scanningMode",
+    },
+    {
+        "la1",
+        &get_long,
+        "latitudeOfFirstGridPointInDegrees",
+    },
+    {
+        "lo1",
+        &get_long,
+        "longitudeOfFirstGridPointInDegrees",
+    },
 
-        {"la2",&get_long, "latitudeOfLastGridPointInDegrees",},
-        {"lo2",&get_long, "longitudeOfLastGridPointInDegrees",},
+    {
+        "la2",
+        &get_long,
+        "latitudeOfLastGridPointInDegrees",
+    },
+    {
+        "lo2",
+        &get_long,
+        "longitudeOfLastGridPointInDegrees",
+    },
 
-        {"forecastTime",&get_long, "step",},
+    {
+        "forecastTime",
+        &get_long,
+        "step",
+    },
 
-        {"nx",&get_long, "Nx",},
-        {"ny",&get_long, "Ny",},
+    {
+        "nx",
+        &get_long,
+        "Nx",
+    },
+    {
+        "ny",
+        &get_long,
+        "Ny",
+    },
 
-        {"dx",&get_long, "DxInDegrees",},
-        {"dy",&get_long, "DyInDegrees",},
+    {
+        "dx",
+        &get_long,
+        "DxInDegrees",
+    },
+    {
+        "dy",
+        &get_long,
+        "DyInDegrees",
+    },
 
-        {"parameterNumber", &get_param, "indicatorOfParameter",},
-        {"refTime", &get_iso_ref_date, NULL,},
+    {
+        "parameterNumber",
+        &get_param,
+        "indicatorOfParameter",
+    },
+    {
+        "refTime",
+        &get_iso_ref_date,
+        NULL,
+    },
 
-        {NULL,}
+    {
+        NULL,
+    }
 };
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     grib_handle* h = NULL;
-    FILE* f = NULL;
+    FILE* f        = NULL;
     size_t i, j = 0;
     int err = 0;
     double* values;
@@ -99,17 +150,15 @@ int main(int argc, char *argv[])
 
     printf("[");
 
-    for(i = 1; i < argc; i++)
-    {
-        f = fopen(argv[i],"r");
-        if(!f) {
+    for (i = 1; i < argc; i++) {
+        f = fopen(argv[i], "r");
+        if (!f) {
             perror(argv[i]);
             exit(1);
         }
 
-        while((h = grib_handle_new_from_file(0,f,&err)) != NULL)
-        {
-            if(++n>1) {
+        while ((h = grib_handle_new_from_file(0, f, &err)) != NULL) {
+            if (++n > 1) {
                 printf(",");
             }
 
@@ -117,8 +166,9 @@ int main(int argc, char *argv[])
             printf("\"header\":{\n");
 
             j = 0;
-            while(header[j].name) {
-                if(j) printf(",");
+            while (header[j].name) {
+                if (j)
+                    printf(",");
                 header[j].proc(stdout, h, header[j].name, header[j].arg);
                 j++;
             }
@@ -127,26 +177,27 @@ int main(int argc, char *argv[])
             printf("\"meta\":{\n");
             printf("},\n");
             /*========== data *============*/
-            size=0;
-            GRIB_CHECK(grib_get_size(h,"values",&size),0);
-            values = (double*)malloc(sizeof(double)*size);
+            size = 0;
+            GRIB_CHECK(grib_get_size(h, "values", &size), 0);
+            values = (double*)malloc(sizeof(double) * size);
 
             if (!values) {
-                fprintf(stderr,"%s: out of memory\n", argv[0]);
+                fprintf(stderr, "%s: out of memory\n", argv[0]);
                 exit(1);
             }
-            count=size;
-            GRIB_CHECK(grib_get_double_array(h,"values",values,&count),0);
+            count = size;
+            GRIB_CHECK(grib_get_double_array(h, "values", values, &count), 0);
             if (count != size) {
-                printf("%s: wrong values count %lu %lu\n",argv[0],count,size);
+                printf("%s: wrong values count %lu %lu\n", argv[0], count, size);
                 exit(1);
             }
             printf("\"data\":[\n");
 
-            for(j = 0; j < count; j ++ ) {
-                if(j) printf(",");
-                printf("%g", (long)(values[j]*10+0.5)/10.0);
-                if(((j+1) % 20) == 0) {
+            for (j = 0; j < count; j++) {
+                if (j)
+                    printf(",");
+                printf("%g", (long)(values[j] * 10 + 0.5) / 10.0);
+                if (((j + 1) % 20) == 0) {
                     printf("\n");
                 }
             }
@@ -159,9 +210,8 @@ int main(int argc, char *argv[])
             grib_handle_delete(h);
         }
         fclose(f);
-        if(err)
-        {
-            fprintf(stderr,"%s\n",grib_get_error_message(err));
+        if (err) {
+            fprintf(stderr, "%s\n", grib_get_error_message(err));
             exit(1);
         }
     }

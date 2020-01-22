@@ -41,38 +41,39 @@ or edit "iterator.class" and rerun ./make_class.pl
 */
 
 
-static void init_class              (grib_iterator_class*);
+static void init_class(grib_iterator_class*);
 
-static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
-static int next               (grib_iterator* i, double *lat, double *lon, double *val);
-static int destroy            (grib_iterator* i);
+static int init(grib_iterator* i, grib_handle*, grib_arguments*);
+static int next(grib_iterator* i, double* lat, double* lon, double* val);
+static int destroy(grib_iterator* i);
 
 
-typedef struct grib_iterator_lambert_azimuthal_equal_area{
-  grib_iterator it;
-/* Members defined in gen */
-	long carg;
-	const char* missingValue;
-/* Members defined in lambert_azimuthal_equal_area */
-	double *lats;
-	double *lons;
-	long nam;
+typedef struct grib_iterator_lambert_azimuthal_equal_area
+{
+    grib_iterator it;
+    /* Members defined in gen */
+    long carg;
+    const char* missingValue;
+    /* Members defined in lambert_azimuthal_equal_area */
+    double* lats;
+    double* lons;
+    long nam;
 } grib_iterator_lambert_azimuthal_equal_area;
 
 extern grib_iterator_class* grib_iterator_class_gen;
 
 static grib_iterator_class _grib_iterator_class_lambert_azimuthal_equal_area = {
-    &grib_iterator_class_gen,                    /* super                     */
-    "lambert_azimuthal_equal_area",                    /* name                      */
-    sizeof(grib_iterator_lambert_azimuthal_equal_area),/* size of instance          */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    &init,                     /* constructor               */
-    &destroy,                  /* destructor                */
-    &next,                     /* Next Value                */
-    0,                 /*  Previous Value           */
-    0,                    /* Reset the counter         */
-    0,                 /* has next values           */
+    &grib_iterator_class_gen,                           /* super                     */
+    "lambert_azimuthal_equal_area",                     /* name                      */
+    sizeof(grib_iterator_lambert_azimuthal_equal_area), /* size of instance          */
+    0,                                                  /* inited */
+    &init_class,                                        /* init_class */
+    &init,                                              /* constructor               */
+    &destroy,                                           /* destructor                */
+    &next,                                              /* Next Value                */
+    0,                                                  /*  Previous Value           */
+    0,                                                  /* Reset the counter         */
+    0,                                                  /* has next values           */
 };
 
 grib_iterator_class* grib_iterator_class_lambert_azimuthal_equal_area = &_grib_iterator_class_lambert_azimuthal_equal_area;
@@ -80,18 +81,17 @@ grib_iterator_class* grib_iterator_class_lambert_azimuthal_equal_area = &_grib_i
 
 static void init_class(grib_iterator_class* c)
 {
-	c->previous	=	(*(c->super))->previous;
-	c->reset	=	(*(c->super))->reset;
-	c->has_next	=	(*(c->super))->has_next;
+    c->previous = (*(c->super))->previous;
+    c->reset    = (*(c->super))->reset;
+    c->has_next = (*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
 
-static int next(grib_iterator* i, double *lat, double *lon, double *val)
+static int next(grib_iterator* i, double* lat, double* lon, double* val)
 {
-
     grib_iterator_lambert_azimuthal_equal_area* self = (grib_iterator_lambert_azimuthal_equal_area*)i;
 
-    if((long)i->e >= (long)(i->nv-1))
+    if ((long)i->e >= (long)(i->nv - 1))
         return 0;
     i->e++;
 
@@ -102,175 +102,169 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val)
     return 1;
 }
 
-static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
+static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 {
-    int ret=0;
-    double *lats,*lons;
-    double lonFirstInDegrees,latFirstInDegrees,lonFirst,latFirst,radius=0;
-    long nx,ny,standardParallel,centralLongitude;
-    double phi1,lambda0,xFirst,yFirst,x,y,Dx,Dy;
-    double kp,sinphi1,cosphi1;
-    long alternativeRowScanning,iScansNegatively;
-    long jScansPositively,jPointsAreConsecutive;
-    double sinphi,cosphi,cosdlambda,sindlambda;
-    double cosc,sinc;
-    long i,j;
+    int ret = 0;
+    double *lats, *lons;
+    double lonFirstInDegrees, latFirstInDegrees, lonFirst, latFirst, radius = 0;
+    long nx, ny, standardParallel, centralLongitude;
+    double phi1, lambda0, xFirst, yFirst, x, y, Dx, Dy;
+    double kp, sinphi1, cosphi1;
+    long alternativeRowScanning, iScansNegatively;
+    long jScansPositively, jPointsAreConsecutive;
+    double sinphi, cosphi, cosdlambda, sindlambda;
+    double cosc, sinc;
+    long i, j;
 
     grib_iterator_lambert_azimuthal_equal_area* self =
-            (grib_iterator_lambert_azimuthal_equal_area*)iter;
+        (grib_iterator_lambert_azimuthal_equal_area*)iter;
 
-    const char* sradius           = grib_arguments_get_name(h,args,self->carg++);
-    const char* snx               = grib_arguments_get_name(h,args,self->carg++);
-    const char* sny               = grib_arguments_get_name(h,args,self->carg++);
-    const char* slatFirstInDegrees = grib_arguments_get_name(h,args,self->carg++);
-    const char* slonFirstInDegrees = grib_arguments_get_name(h,args,self->carg++);
-    const char* sstandardParallel = grib_arguments_get_name(h,args,self->carg++);
-    const char* scentralLongitude = grib_arguments_get_name(h,args,self->carg++);
-    const char* sDx = grib_arguments_get_name(h,args,self->carg++);
-    const char* sDy = grib_arguments_get_name(h,args,self->carg++);
-    const char* siScansNegatively = grib_arguments_get_name(h,args,self->carg++);
-    const char* sjScansPositively = grib_arguments_get_name(h,args,self->carg++);
-    const char* sjPointsAreConsecutive = grib_arguments_get_name(h,args,self->carg++);
-    const char* salternativeRowScanning = grib_arguments_get_name(h,args,self->carg++);
-    double c,rho;
-    double epsilon=1.0e-20;
-    double d2r=acos(0.0)/90.0;
+    const char* sradius                 = grib_arguments_get_name(h, args, self->carg++);
+    const char* snx                     = grib_arguments_get_name(h, args, self->carg++);
+    const char* sny                     = grib_arguments_get_name(h, args, self->carg++);
+    const char* slatFirstInDegrees      = grib_arguments_get_name(h, args, self->carg++);
+    const char* slonFirstInDegrees      = grib_arguments_get_name(h, args, self->carg++);
+    const char* sstandardParallel       = grib_arguments_get_name(h, args, self->carg++);
+    const char* scentralLongitude       = grib_arguments_get_name(h, args, self->carg++);
+    const char* sDx                     = grib_arguments_get_name(h, args, self->carg++);
+    const char* sDy                     = grib_arguments_get_name(h, args, self->carg++);
+    const char* siScansNegatively       = grib_arguments_get_name(h, args, self->carg++);
+    const char* sjScansPositively       = grib_arguments_get_name(h, args, self->carg++);
+    const char* sjPointsAreConsecutive  = grib_arguments_get_name(h, args, self->carg++);
+    const char* salternativeRowScanning = grib_arguments_get_name(h, args, self->carg++);
+    double c, rho;
+    double epsilon = 1.0e-20;
+    double d2r     = acos(0.0) / 90.0;
 
-    if((ret = grib_get_double_internal(h, sradius,&radius)) != GRIB_SUCCESS) {
+    if ((ret = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS) {
         /* Check if it's an oblate spheroid */
         if (grib_is_earth_oblate(h))
-            grib_context_log(h->context,GRIB_LOG_ERROR,"Lambert Azimuthal Equal Area only supported for spherical earth.");
+            grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert Azimuthal Equal Area only supported for spherical earth.");
         return ret;
     }
 
-    if((ret = grib_get_long_internal(h, snx,&nx)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(h, sny,&ny)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS)
         return ret;
 
-    if (iter->nv!=nx*ny) {
-        grib_context_log(h->context,GRIB_LOG_ERROR,
-                "Wrong number of points (%ld!=%ldx%ld)",
-                iter->nv,nx,ny);
+    if (iter->nv != nx * ny) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "Wrong number of points (%ld!=%ldx%ld)",
+                         iter->nv, nx, ny);
         return GRIB_WRONG_GRID;
     }
-    if((ret = grib_get_double_internal(h, slatFirstInDegrees,&latFirstInDegrees))
-            != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(h, slatFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_double_internal(h, slonFirstInDegrees,&lonFirstInDegrees))
-            != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(h, slonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(h, sstandardParallel,&standardParallel))
-            != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, sstandardParallel, &standardParallel)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(h, scentralLongitude,&centralLongitude))
-            != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, scentralLongitude, &centralLongitude)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_double_internal(h, sDx,&Dx)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(h, sDx, &Dx)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_double_internal(h, sDy,&Dy)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(h, sDy, &Dy)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(h,
-            sjPointsAreConsecutive,&jPointsAreConsecutive))
-            != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h,
+                                      sjPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(h, sjScansPositively,&jScansPositively))
-            != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, sjScansPositively, &jScansPositively)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(h, siScansNegatively,&iScansNegatively))
-            != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, siScansNegatively, &iScansNegatively)) != GRIB_SUCCESS)
         return ret;
-    if((ret = grib_get_long_internal(h,
-            salternativeRowScanning,&alternativeRowScanning))
-            != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h,
+                                      salternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS)
         return ret;
 
-    lambda0=d2r*centralLongitude/1000000;
-    phi1=d2r*standardParallel/1000000;
-    latFirst=latFirstInDegrees*d2r;
-    lonFirst=lonFirstInDegrees*d2r;
+    lambda0  = d2r * centralLongitude / 1000000;
+    phi1     = d2r * standardParallel / 1000000;
+    latFirst = latFirstInDegrees * d2r;
+    lonFirst = lonFirstInDegrees * d2r;
 
-    cosphi1=cos(phi1);
-    sinphi1=sin(phi1);
+    cosphi1 = cos(phi1);
+    sinphi1 = sin(phi1);
 
-    Dx = iScansNegatively == 0 ? Dx/1000 : -Dx/1000;
-    Dy = jScansPositively == 1 ? Dy/1000 : -Dy/1000;
-    self->lats = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
+    Dx         = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
+    Dy         = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
+    self->lats = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context,GRIB_LOG_ERROR,
-                "unable to allocate %ld bytes",iter->nv*sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "unable to allocate %ld bytes", iter->nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    self->lons = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
+    self->lons = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context,GRIB_LOG_ERROR,
-                "unable to allocate %ld bytes",iter->nv*sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "unable to allocate %ld bytes", iter->nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    lats=self->lats;
-    lons=self->lons;
+    lats = self->lats;
+    lons = self->lons;
 
     /* compute xFirst,yFirst in metres */
-    sinphi=sin(latFirst);
-    cosphi=cos(latFirst);
-    cosdlambda=cos(lonFirst-lambda0);
-    sindlambda=sin(lonFirst-lambda0);
-    kp=radius*sqrt(2.0/(1+sinphi1*sinphi+cosphi1*cosphi*cosdlambda));
-    xFirst=kp*cosphi*sindlambda;
-    yFirst=kp*(cosphi1*sinphi-sinphi1*cosphi*cosdlambda);
+    sinphi     = sin(latFirst);
+    cosphi     = cos(latFirst);
+    cosdlambda = cos(lonFirst - lambda0);
+    sindlambda = sin(lonFirst - lambda0);
+    kp         = radius * sqrt(2.0 / (1 + sinphi1 * sinphi + cosphi1 * cosphi * cosdlambda));
+    xFirst     = kp * cosphi * sindlambda;
+    yFirst     = kp * (cosphi1 * sinphi - sinphi1 * cosphi * cosdlambda);
 
     if (jPointsAreConsecutive) {
-
-        x=xFirst;
-        for (i=0;i<nx;i++) {
-            double xsq = x*x;
-            y=yFirst;
-            for (j=0;j<ny;j++) {
-                rho=sqrt(xsq+y*y);
-                if (rho>epsilon) {
-                    c=2*asin(rho/(2.0*radius));
-                    cosc=cos(c);
-                    sinc=sin(c);
-                    *lats=asin(cosc*sinphi1+y*sinc*cosphi1/rho)/d2r;
-                    *lons=(lambda0+atan2(x*sinc,rho*cosphi1*cosc-y*sinphi1*sinc))/d2r;
-                } else {
-                    *lats=phi1/d2r;
-                    *lons=lambda0/d2r;
+        x = xFirst;
+        for (i = 0; i < nx; i++) {
+            double xsq = x * x;
+            y          = yFirst;
+            for (j = 0; j < ny; j++) {
+                rho = sqrt(xsq + y * y);
+                if (rho > epsilon) {
+                    c     = 2 * asin(rho / (2.0 * radius));
+                    cosc  = cos(c);
+                    sinc  = sin(c);
+                    *lats = asin(cosc * sinphi1 + y * sinc * cosphi1 / rho) / d2r;
+                    *lons = (lambda0 + atan2(x * sinc, rho * cosphi1 * cosc - y * sinphi1 * sinc)) / d2r;
                 }
-                if (*lons<0) *lons+=360;
+                else {
+                    *lats = phi1 / d2r;
+                    *lons = lambda0 / d2r;
+                }
+                if (*lons < 0)
+                    *lons += 360;
                 lons++;
                 lats++;
 
-                y+=Dy;
+                y += Dy;
             }
-            x+=Dx;
+            x += Dx;
         }
-
-    } else {
-
-        y=yFirst;
-        for (j=0;j<ny;j++) {
-            double ysq = y*y;
-            x=xFirst;
-            for (i=0;i<nx;i++) {
-                rho=sqrt(x*x+ysq);
-                if (rho>epsilon) {
-                    c=2*asin(rho/(2.0*radius));
-                    cosc=cos(c);
-                    sinc=sin(c);
-                    *lats=asin(cosc*sinphi1+y*sinc*cosphi1/rho)/d2r;
-                    *lons=(lambda0+atan2(x*sinc,rho*cosphi1*cosc-y*sinphi1*sinc))/d2r;
-                } else {
-                    *lats=phi1/d2r;
-                    *lons=lambda0/d2r;
+    }
+    else {
+        y = yFirst;
+        for (j = 0; j < ny; j++) {
+            double ysq = y * y;
+            x          = xFirst;
+            for (i = 0; i < nx; i++) {
+                rho = sqrt(x * x + ysq);
+                if (rho > epsilon) {
+                    c     = 2 * asin(rho / (2.0 * radius));
+                    cosc  = cos(c);
+                    sinc  = sin(c);
+                    *lats = asin(cosc * sinphi1 + y * sinc * cosphi1 / rho) / d2r;
+                    *lons = (lambda0 + atan2(x * sinc, rho * cosphi1 * cosc - y * sinphi1 * sinc)) / d2r;
                 }
-                if (*lons<0) *lons+=360;
+                else {
+                    *lats = phi1 / d2r;
+                    *lons = lambda0 / d2r;
+                }
+                if (*lons < 0)
+                    *lons += 360;
                 lons++;
                 lats++;
 
-                x+=Dx;
+                x += Dx;
             }
-            y+=Dy;
+            y += Dy;
         }
     }
 
@@ -282,9 +276,9 @@ static int init(grib_iterator* iter,grib_handle* h,grib_arguments* args)
 static int destroy(grib_iterator* i)
 {
     grib_iterator_lambert_azimuthal_equal_area* self = (grib_iterator_lambert_azimuthal_equal_area*)i;
-    const grib_context *c = i->h->context;
+    const grib_context* c                            = i->h->context;
 
-    grib_context_free(c,self->lats);
-    grib_context_free(c,self->lons);
+    grib_context_free(c, self->lats);
+    grib_context_free(c, self->lons);
     return 1;
 }

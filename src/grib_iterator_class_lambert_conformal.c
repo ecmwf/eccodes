@@ -36,38 +36,39 @@ or edit "iterator.class" and rerun ./make_class.pl
 */
 
 
-static void init_class              (grib_iterator_class*);
+static void init_class(grib_iterator_class*);
 
-static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
-static int next               (grib_iterator* i, double *lat, double *lon, double *val);
-static int destroy            (grib_iterator* i);
+static int init(grib_iterator* i, grib_handle*, grib_arguments*);
+static int next(grib_iterator* i, double* lat, double* lon, double* val);
+static int destroy(grib_iterator* i);
 
 
-typedef struct grib_iterator_lambert_conformal{
-  grib_iterator it;
-/* Members defined in gen */
-	long carg;
-	const char* missingValue;
-/* Members defined in lambert_conformal */
-	double *lats;
-	double *lons;
-	long nam;
+typedef struct grib_iterator_lambert_conformal
+{
+    grib_iterator it;
+    /* Members defined in gen */
+    long carg;
+    const char* missingValue;
+    /* Members defined in lambert_conformal */
+    double* lats;
+    double* lons;
+    long nam;
 } grib_iterator_lambert_conformal;
 
 extern grib_iterator_class* grib_iterator_class_gen;
 
 static grib_iterator_class _grib_iterator_class_lambert_conformal = {
-    &grib_iterator_class_gen,                    /* super                     */
-    "lambert_conformal",                    /* name                      */
-    sizeof(grib_iterator_lambert_conformal),/* size of instance          */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    &init,                     /* constructor               */
-    &destroy,                  /* destructor                */
-    &next,                     /* Next Value                */
-    0,                 /*  Previous Value           */
-    0,                    /* Reset the counter         */
-    0,                 /* has next values           */
+    &grib_iterator_class_gen,                /* super                     */
+    "lambert_conformal",                     /* name                      */
+    sizeof(grib_iterator_lambert_conformal), /* size of instance          */
+    0,                                       /* inited */
+    &init_class,                             /* init_class */
+    &init,                                   /* constructor               */
+    &destroy,                                /* destructor                */
+    &next,                                   /* Next Value                */
+    0,                                       /*  Previous Value           */
+    0,                                       /* Reset the counter         */
+    0,                                       /* has next values           */
 };
 
 grib_iterator_class* grib_iterator_class_lambert_conformal = &_grib_iterator_class_lambert_conformal;
@@ -75,17 +76,17 @@ grib_iterator_class* grib_iterator_class_lambert_conformal = &_grib_iterator_cla
 
 static void init_class(grib_iterator_class* c)
 {
-	c->previous	=	(*(c->super))->previous;
-	c->reset	=	(*(c->super))->reset;
-	c->has_next	=	(*(c->super))->has_next;
+    c->previous = (*(c->super))->previous;
+    c->reset    = (*(c->super))->reset;
+    c->has_next = (*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
 
-static int next(grib_iterator* i, double *lat, double *lon, double *val)
+static int next(grib_iterator* i, double* lat, double* lon, double* val)
 {
     grib_iterator_lambert_conformal* self = (grib_iterator_lambert_conformal*)i;
 
-    if((long)i->e >= (long)(i->nv-1))
+    if ((long)i->e >= (long)(i->nv - 1))
         return 0;
     i->e++;
 
@@ -97,89 +98,89 @@ static int next(grib_iterator* i, double *lat, double *lon, double *val)
 }
 
 #ifndef M_PI
-#define M_PI      3.14159265358979323846   /* Whole pie */
+#define M_PI 3.14159265358979323846 /* Whole pie */
 #endif
 
 #ifndef M_PI_2
-#define M_PI_2    1.57079632679489661923   /* Half a pie */
+#define M_PI_2 1.57079632679489661923 /* Half a pie */
 #endif
 
 #ifndef M_PI_4
-#define M_PI_4    0.78539816339744830962   /* Quarter of a pie */
+#define M_PI_4 0.78539816339744830962 /* Quarter of a pie */
 #endif
 
-#define RAD2DEG   57.29577951308232087684  /* 180 over pi */
-#define DEG2RAD   0.01745329251994329576   /* pi over 180 */
+#define RAD2DEG 57.29577951308232087684 /* 180 over pi */
+#define DEG2RAD 0.01745329251994329576  /* pi over 180 */
 
 static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 {
-    int i, j, err=0;
+    int i, j, err = 0;
     double *lats, *lons; /* the lat/lon arrays to be populated */
-    long nx,ny,iScansNegatively,jScansPositively,jPointsAreConsecutive,alternativeRowScanning;
-    double LoVInDegrees,LaDInDegrees,Latin1InDegrees,Latin2InDegrees,latFirstInDegrees,
-    lonFirstInDegrees, Dx, Dy, radius=0;
+    long nx, ny, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning;
+    double LoVInDegrees, LaDInDegrees, Latin1InDegrees, Latin2InDegrees, latFirstInDegrees,
+        lonFirstInDegrees, Dx, Dy, radius = 0;
     double latFirstInRadians, lonFirstInRadians, LoVInRadians, Latin1InRadians, Latin2InRadians,
-    LaDInRadians, lonDiff, lonDeg, latDeg;
+        LaDInRadians, lonDiff, lonDeg, latDeg;
     double f, n, rho, rho0, angle, x0, y0, x, y, tmp, tmp2;
 
     grib_iterator_lambert_conformal* self = (grib_iterator_lambert_conformal*)iter;
 
-    const char* sradius                  = grib_arguments_get_name(h,args,self->carg++);
-    const char* snx                      = grib_arguments_get_name(h,args,self->carg++);
-    const char* sny                      = grib_arguments_get_name(h,args,self->carg++);
-    const char* sLoVInDegrees            = grib_arguments_get_name(h,args,self->carg++);
-    const char* sLaDInDegrees            = grib_arguments_get_name(h,args,self->carg++);
-    const char* sLatin1InDegrees         = grib_arguments_get_name(h,args,self->carg++);
-    const char* sLatin2InDegrees         = grib_arguments_get_name(h,args,self->carg++);
-    const char* slatFirstInDegrees       = grib_arguments_get_name(h,args,self->carg++);
-    const char* slonFirstInDegrees       = grib_arguments_get_name(h,args,self->carg++);
+    const char* sradius            = grib_arguments_get_name(h, args, self->carg++);
+    const char* snx                = grib_arguments_get_name(h, args, self->carg++);
+    const char* sny                = grib_arguments_get_name(h, args, self->carg++);
+    const char* sLoVInDegrees      = grib_arguments_get_name(h, args, self->carg++);
+    const char* sLaDInDegrees      = grib_arguments_get_name(h, args, self->carg++);
+    const char* sLatin1InDegrees   = grib_arguments_get_name(h, args, self->carg++);
+    const char* sLatin2InDegrees   = grib_arguments_get_name(h, args, self->carg++);
+    const char* slatFirstInDegrees = grib_arguments_get_name(h, args, self->carg++);
+    const char* slonFirstInDegrees = grib_arguments_get_name(h, args, self->carg++);
     /* Dx and Dy are in Metres */
-    const char* sDx                      = grib_arguments_get_name(h,args,self->carg++);
-    const char* sDy                      = grib_arguments_get_name(h,args,self->carg++);
-    const char* siScansNegatively        = grib_arguments_get_name(h,args,self->carg++);
-    const char* sjScansPositively        = grib_arguments_get_name(h,args,self->carg++);
-    const char* sjPointsAreConsecutive   = grib_arguments_get_name(h,args,self->carg++);
-    const char* salternativeRowScanning  = grib_arguments_get_name(h,args,self->carg++);
+    const char* sDx                     = grib_arguments_get_name(h, args, self->carg++);
+    const char* sDy                     = grib_arguments_get_name(h, args, self->carg++);
+    const char* siScansNegatively       = grib_arguments_get_name(h, args, self->carg++);
+    const char* sjScansPositively       = grib_arguments_get_name(h, args, self->carg++);
+    const char* sjPointsAreConsecutive  = grib_arguments_get_name(h, args, self->carg++);
+    const char* salternativeRowScanning = grib_arguments_get_name(h, args, self->carg++);
 
-    if((err = grib_get_long_internal(h, snx,&nx)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_long_internal(h, sny,&ny)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS)
         return err;
 
     if (grib_is_earth_oblate(h)) {
-        grib_context_log(h->context,GRIB_LOG_ERROR,"Lambert Conformal only supported for spherical earth.");
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert Conformal only supported for spherical earth.");
         return GRIB_GEOCALCULUS_PROBLEM;
     }
 
-    if (iter->nv!=nx*ny) {
-        grib_context_log(h->context,GRIB_LOG_ERROR,"Wrong number of points (%ld!=%ldx%ld)",iter->nv,nx,ny);
+    if (iter->nv != nx * ny) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Wrong number of points (%ld!=%ldx%ld)", iter->nv, nx, ny);
         return GRIB_WRONG_GRID;
     }
-    if((err = grib_get_double_internal(h, sradius,&radius)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_double_internal(h, sLoVInDegrees, &LoVInDegrees))!=GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, sLoVInDegrees, &LoVInDegrees)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_double_internal(h, sLaDInDegrees, &LaDInDegrees))!=GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, sLaDInDegrees, &LaDInDegrees)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_double_internal(h, sLatin1InDegrees, &Latin1InDegrees))!=GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, sLatin1InDegrees, &Latin1InDegrees)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_double_internal(h, sLatin2InDegrees, &Latin2InDegrees))!=GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, sLatin2InDegrees, &Latin2InDegrees)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_double_internal(h, slatFirstInDegrees,&latFirstInDegrees)) !=GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, slatFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_double_internal(h, slonFirstInDegrees,&lonFirstInDegrees)) !=GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, slonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_double_internal(h, sDx,&Dx)) !=GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, sDx, &Dx)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_double_internal(h, sDy,&Dy)) !=GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, sDy, &Dy)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_long_internal(h, sjPointsAreConsecutive,&jPointsAreConsecutive)) !=GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, sjPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_long_internal(h, sjScansPositively,&jScansPositively)) !=GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, sjScansPositively, &jScansPositively)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_long_internal(h, siScansNegatively,&iScansNegatively)) !=GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, siScansNegatively, &iScansNegatively)) != GRIB_SUCCESS)
         return err;
-    if((err = grib_get_long_internal(h, salternativeRowScanning,&alternativeRowScanning)) !=GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(h, salternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS)
         return err;
 
     /*
@@ -192,67 +193,72 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     LaDInRadians      = LaDInDegrees * DEG2RAD;
     LoVInRadians      = LoVInDegrees * DEG2RAD;
 
-    if ( fabs(Latin1InRadians - Latin2InRadians) < 1E-09 ) {
+    if (fabs(Latin1InRadians - Latin2InRadians) < 1E-09) {
         n = sin(Latin1InRadians);
     }
     else {
-        n = log(cos(Latin1InRadians)/cos(Latin2InRadians)) /
-                log(tan(M_PI_4 + Latin2InRadians/2.0) / tan(M_PI_4 + Latin1InRadians/2.0));
+        n = log(cos(Latin1InRadians) / cos(Latin2InRadians)) /
+            log(tan(M_PI_4 + Latin2InRadians / 2.0) / tan(M_PI_4 + Latin1InRadians / 2.0));
     }
 
-    f = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians/2.0), n)) / n;
-    rho = radius * f * pow(tan(M_PI_4 + latFirstInRadians/2.0), -n);
-    rho0 = radius * f * pow(tan(M_PI_4 + LaDInRadians/2.0), -n);
-    if ( n < 0 ) /* adjustment for southern hemisphere */
+    f    = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
+    rho  = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
+    rho0 = radius * f * pow(tan(M_PI_4 + LaDInRadians / 2.0), -n);
+    if (n < 0) /* adjustment for southern hemisphere */
         rho0 = -rho0;
     lonDiff = lonFirstInRadians - LoVInRadians;
 
     /* Adjust longitude to range -180 to 180 */
-    if (lonDiff > M_PI)  lonDiff -= 2*M_PI;
-    if (lonDiff < -M_PI) lonDiff += 2*M_PI;
+    if (lonDiff > M_PI)
+        lonDiff -= 2 * M_PI;
+    if (lonDiff < -M_PI)
+        lonDiff += 2 * M_PI;
     angle = n * lonDiff;
-    x0 = rho * sin(angle);
-    y0 = rho0 - rho * cos(angle);
+    x0    = rho * sin(angle);
+    y0    = rho0 - rho * cos(angle);
     /*Dx = iScansNegatively == 0 ? Dx : -Dx;*/
     /* GRIB-405: Don't change sign of Dy. Latitudes ALWAYS increase from latitudeOfFirstGridPoint */
     /*Dy = jScansPositively == 1 ? Dy : -Dy;*/
 
     /* Allocate latitude and longitude arrays */
-    self->lats = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
+    self->lats = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to allocate %ld bytes",iter->nv*sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", iter->nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    self->lons = (double*)grib_context_malloc(h->context,iter->nv*sizeof(double));
+    self->lons = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to allocate %ld bytes",iter->nv*sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", iter->nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    lats=self->lats;
-    lons=self->lons;
+    lats = self->lats;
+    lons = self->lons;
 
     /* Populate our arrays */
     for (j = 0; j < ny; j++) {
-        y = y0 + j*Dy;
-        if ( n < 0 ) {  /* adjustment for southern hemisphere */
+        y = y0 + j * Dy;
+        if (n < 0) { /* adjustment for southern hemisphere */
             y = -y;
         }
-        tmp = rho0 - y;
-        tmp2 = tmp*tmp;
+        tmp  = rho0 - y;
+        tmp2 = tmp * tmp;
         for (i = 0; i < nx; i++) {
-            int index =i+j*nx;
-            x = x0 + i*Dx;
-            if ( n < 0 ) {  /* adjustment for southern hemisphere */
+            int index = i + j * nx;
+            x         = x0 + i * Dx;
+            if (n < 0) { /* adjustment for southern hemisphere */
                 x = -x;
             }
 
             angle = atan2(x, tmp); /* See ECC-524 */
-            rho = sqrt(x*x + tmp2);
-            if (n <= 0) rho = -rho;
-            lonDeg = LoVInDegrees + (angle/n) * RAD2DEG;
-            latDeg = (2.0 * atan(pow(radius * f/rho, 1.0/n)) - M_PI_2) * RAD2DEG;
-            while ( lonDeg >= 360.0) lonDeg -= 360.0;
-            while ( lonDeg < 0.0)    lonDeg += 360.0;
+            rho   = sqrt(x * x + tmp2);
+            if (n <= 0)
+                rho = -rho;
+            lonDeg = LoVInDegrees + (angle / n) * RAD2DEG;
+            latDeg = (2.0 * atan(pow(radius * f / rho, 1.0 / n)) - M_PI_2) * RAD2DEG;
+            while (lonDeg >= 360.0)
+                lonDeg -= 360.0;
+            while (lonDeg < 0.0)
+                lonDeg += 360.0;
             lons[index] = lonDeg;
             lats[index] = latDeg;
             /*printf("DBK: llat[%d] = %g \t llon[%d] = %g\n", index,lats[index], index,lons[index]);*/
@@ -263,9 +269,10 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     /* Apply the scanning mode flags which may require data array to be transformed */
     err = transform_iterator_data(h, iter->data,
-            iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
-            iter->nv, nx, ny);
-    if (err) return err;
+                                  iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
+                                  iter->nv, nx, ny);
+    if (err)
+        return err;
 
     return err;
 }
@@ -273,9 +280,9 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 static int destroy(grib_iterator* i)
 {
     grib_iterator_lambert_conformal* self = (grib_iterator_lambert_conformal*)i;
-    const grib_context *c = i->h->context;
+    const grib_context* c                 = i->h->context;
 
-    grib_context_free(c,self->lats);
-    grib_context_free(c,self->lons);
+    grib_context_free(c, self->lats);
+    grib_context_free(c, self->lons);
     return 1;
 }

@@ -13,49 +13,47 @@
 
 #include "grib_api.h"
 
-static void usage(const char *prog)
+static void usage(const char* prog)
 {
-	fprintf(stderr,"%s: file\n",prog);
-	exit(1);
+    fprintf(stderr, "%s: file\n", prog);
+    exit(1);
 }
 
 
-int main(int argc, const char *argv[])
+int main(int argc, const char* argv[])
 {
-	FILE *in;
-	int e;
-	grib_handle *h;
+    FILE* in;
+    int e;
+    grib_handle* h;
 
-	if(argc != 2) usage(argv[0]);
+    if (argc != 2)
+        usage(argv[0]);
 
-	in = fopen(argv[argc-1],"r");
-	if(!in) {
-		perror(argv[argc-1]);
-		exit(1);
-	}
+    in = fopen(argv[argc - 1], "r");
+    if (!in) {
+        perror(argv[argc - 1]);
+        exit(1);
+    }
 
-	while( (h = grib_handle_new_from_file(NULL,in,&e)) != NULL )
-	{
-		grib_keys_iterator* i  = grib_keys_iterator_new(h,GRIB_KEYS_ITERATOR_ALL_KEYS,"mars");
+    while ((h = grib_handle_new_from_file(NULL, in, &e)) != NULL) {
+        grib_keys_iterator* i = grib_keys_iterator_new(h, GRIB_KEYS_ITERATOR_ALL_KEYS, "mars");
 
-		while(grib_keys_iterator_next(i))
-		{
-			char value[1024];
-			size_t len = sizeof(value);
-			const char* name;
+        while (grib_keys_iterator_next(i)) {
+            char value[1024];
+            size_t len = sizeof(value);
+            const char* name;
 
-			name=grib_keys_iterator_get_name(i);
-			GRIB_CHECK(grib_get_string(h,name,value,&len),0);
+            name = grib_keys_iterator_get_name(i);
+            GRIB_CHECK(grib_get_string(h, name, value, &len), 0);
 
-			printf("%s = %s\n",name,value);
+            printf("%s = %s\n", name, value);
+        }
 
-		}
+        grib_keys_iterator_delete(i);
+        grib_handle_delete(h);
+    }
 
-		grib_keys_iterator_delete(i);
-		grib_handle_delete(h);
-	}
+    GRIB_CHECK(e, argv[argc - 1]);
 
-	GRIB_CHECK(e,argv[argc-1]);
-
-	return 0;
+    return 0;
 }

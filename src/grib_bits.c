@@ -18,61 +18,69 @@
 #include "omp.h"
 #endif
 
-#define mask1(i)    (1UL << i)
-#define test(n,i)    !!((n) & mask1(i))
+#define mask1(i) (1UL << i)
+#define test(n, i) !!((n)&mask1(i))
 
-long GRIB_MASK = -1;       /* Mask of sword bits */
+long GRIB_MASK = -1; /* Mask of sword bits */
 
-# define VALUE(p,q,b) \
- (((b)==max_nbits ? GRIB_MASK : ~(GRIB_MASK<<(b))) & ((p)>>(max_nbits-((q)+(b)))))
+#define VALUE(p, q, b) \
+    (((b) == max_nbits ? GRIB_MASK : ~(GRIB_MASK << (b))) & ((p) >> (max_nbits - ((q) + (b)))))
 
-# define MASKVALUE(q,b) \
- ((b)==max_nbits ? GRIB_MASK : (~(GRIB_MASK<<(b))<<(max_nbits-((q)+(b)))))
+#define MASKVALUE(q, b) \
+    ((b) == max_nbits ? GRIB_MASK : (~(GRIB_MASK << (b)) << (max_nbits - ((q) + (b)))))
 
 
-static const unsigned long dmasks[] = { 0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE0, 0xC0, 0x80, 0x00, };
+static const unsigned long dmasks[] = {
+    0xFF,
+    0xFE,
+    0xFC,
+    0xF8,
+    0xF0,
+    0xE0,
+    0xC0,
+    0x80,
+    0x00,
+};
 
-static const int max_nbits = sizeof(unsigned long)*8;
-static const int max_nbits_size_t = sizeof(size_t)*8;
+static const int max_nbits        = sizeof(unsigned long) * 8;
+static const int max_nbits_size_t = sizeof(size_t) * 8;
 
 unsigned long grib_decode_unsigned_byte_long(const unsigned char* p, long o, int l)
 {
-    long accum = 0;
-    int i = 0;
+    long accum      = 0;
+    int i           = 0;
     unsigned char b = p[o++];
 
     Assert(l <= max_nbits);
 
-    accum  <<= 8;
-    accum |= b ;
+    accum <<= 8;
+    accum |= b;
 
-    for ( i=1; i<l; i++ )
-    {
+    for (i = 1; i < l; i++) {
         b = p[o++];
         accum <<= 8;
-        accum |= b ;
+        accum |= b;
     }
     return accum;
 }
 
 long grib_decode_signed_long(const unsigned char* p, long o, int l)
 {
-    long accum = 0;
-    int i = 0;
+    long accum      = 0;
+    int i           = 0;
     unsigned char b = p[o++];
-    int sign = grib_get_bit(&b, 0);
+    int sign        = grib_get_bit(&b, 0);
 
     Assert(l <= max_nbits);
 
     b &= 0x7f;
-    accum  <<= 8;
-    accum |= b ;
+    accum <<= 8;
+    accum |= b;
 
-    for ( i=1; i<l; i++ )
-    {
+    for (i = 1; i < l; i++) {
         b = p[o++];
         accum <<= 8;
-        accum |= b ;
+        accum |= b;
     }
     if (sign == 0)
         return accum;
@@ -80,63 +88,66 @@ long grib_decode_signed_long(const unsigned char* p, long o, int l)
         return -accum;
 }
 
-int grib_encode_signed_long(unsigned char* p, long val , long o, int l)
+int grib_encode_signed_long(unsigned char* p, long val, long o, int l)
 {
     unsigned short accum = 0;
-    int i = 0;
-    int off = o;
-    int sign = (val<0);
+    int i                = 0;
+    int off              = o;
+    int sign             = (val < 0);
 
     Assert(l <= max_nbits);
 
-    if (sign) val *= -1;
+    if (sign)
+        val *= -1;
 
-    for (  i=0; i<l; i++ )
-    {
-        accum    =  val >> (l*8-(8*(i+1)));
-        p[o++] =  accum ;
+    for (i = 0; i < l; i++) {
+        accum  = val >> (l * 8 - (8 * (i + 1)));
+        p[o++] = accum;
     }
 
-    if (sign) p[off] |= 128;
+    if (sign)
+        p[off] |= 128;
 
     return GRIB_SUCCESS;
 }
 
-static void grib_set_bit_on( unsigned char* p, long* bitp)
+static void grib_set_bit_on(unsigned char* p, long* bitp)
 {
-    p +=  *bitp/8;
-    *p |=  (1u << (7-((*bitp)%8)));
+    p += *bitp / 8;
+    *p |= (1u << (7 - ((*bitp) % 8)));
     (*bitp)++;
 }
 
-void grib_set_bits_on( unsigned char* p, long* bitp,long nbits)
+void grib_set_bits_on(unsigned char* p, long* bitp, long nbits)
 {
     int i;
-    for (i=0;i<nbits;i++) {
-      grib_set_bit_on(p,bitp);
+    for (i = 0; i < nbits; i++) {
+        grib_set_bit_on(p, bitp);
     }
 }
 
-static void grib_set_bit_off( unsigned char* p, long* bitp)
+static void grib_set_bit_off(unsigned char* p, long* bitp)
 {
-    p +=  *bitp/8;
-    *p &= ~(1u << (7-((*bitp)%8)));
+    p += *bitp / 8;
+    *p &= ~(1u << (7 - ((*bitp) % 8)));
     (*bitp)++;
 }
 
 int grib_get_bit(const unsigned char* p, long bitp)
 {
     p += (bitp >> 3);
-    return (*p&(1<<(7-(bitp%8))));
+    return (*p & (1 << (7 - (bitp % 8))));
 }
 
-void grib_set_bit( unsigned char* p, long bitp, int val)
+void grib_set_bit(unsigned char* p, long bitp, int val)
 {
-    if(val == 0) grib_set_bit_off(p,&bitp);
-    else grib_set_bit_on(p,&bitp);
+    if (val == 0)
+        grib_set_bit_off(p, &bitp);
+    else
+        grib_set_bit_on(p, &bitp);
 }
 
-long grib_decode_signed_longb(const unsigned char* p, long *bitp, long nbits)
+long grib_decode_signed_longb(const unsigned char* p, long* bitp, long nbits)
 {
     int sign = grib_get_bit(p, *bitp);
     long val = 0;
@@ -145,35 +156,37 @@ long grib_decode_signed_longb(const unsigned char* p, long *bitp, long nbits)
 
     *bitp += 1;
 
-    val = grib_decode_unsigned_long( p, bitp,  nbits-1);
+    val = grib_decode_unsigned_long(p, bitp, nbits - 1);
 
-    if (sign)val = -val;
+    if (sign)
+        val = -val;
 
-    return  val;
+    return val;
 }
 
-int grib_encode_signed_longb(unsigned char* p,  long val ,long *bitp, long nb)
+int grib_encode_signed_longb(unsigned char* p, long val, long* bitp, long nb)
 {
-    short  sign = val < 0;
+    short sign = val < 0;
 
     Assert(nb <= max_nbits);
 
-    if(sign) val = -val;
+    if (sign)
+        val = -val;
 
-    if(sign)
-        grib_set_bit_on (p, bitp);
+    if (sign)
+        grib_set_bit_on(p, bitp);
     else
         grib_set_bit_off(p, bitp);
 
-    return grib_encode_unsigned_longb(p, val ,bitp, nb-1);
+    return grib_encode_unsigned_longb(p, val, bitp, nb - 1);
 }
 
 #if GRIB_IBMPOWER67_OPT
- #include "grib_bits_ibmpow.c"
+#include "grib_bits_ibmpow.c"
 #else
- #if FAST_BIG_ENDIAN
-  #include "grib_bits_fast_big_endian.c"
- #else
-  #include "grib_bits_any_endian.c"
- #endif
+#if FAST_BIG_ENDIAN
+#include "grib_bits_fast_big_endian.c"
+#else
+#include "grib_bits_any_endian.c"
+#endif
 #endif
