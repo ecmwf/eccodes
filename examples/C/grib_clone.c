@@ -18,27 +18,27 @@
 #include <stdio.h>
 #include "eccodes.h"
 
-static void usage(const char *app)
+static void usage(const char* app)
 {
-    fprintf(stderr,"Usage is: %s input_file ouput_file\n", app);
+    fprintf(stderr, "Usage is: %s input_file ouput_file\n", app);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-    FILE *in = NULL;
-    FILE *out = NULL;
-    codes_handle *source_handle = NULL;
-    const void *buffer = NULL;
-    size_t size = 0;
-    int err = 0;
+    FILE* in                    = NULL;
+    FILE* out                   = NULL;
+    codes_handle* source_handle = NULL;
+    const void* buffer          = NULL;
+    size_t size                 = 0;
+    int err                     = 0;
 
     if (argc != 3) {
         usage(argv[0]);
         return 1;
     }
 
-    in = fopen(argv[1],"rb");
-    out = fopen(argv[2],"wb");
+    in  = fopen(argv[1], "rb");
+    out = fopen(argv[2], "wb");
 
     if (!in || !out) {
         perror("ERROR: unable to open files");
@@ -48,9 +48,8 @@ int main(int argc, char *argv[])
     }
 
     /* loop over the messages in the source grib and clone them */
-    while ((source_handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err))!=NULL)
-    {
-        codes_handle *clone_handle = codes_handle_clone(source_handle);
+    while ((source_handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err)) != NULL) {
+        codes_handle* clone_handle = codes_handle_clone(source_handle);
 
         if (clone_handle == NULL) {
             perror("ERROR: could not clone field");
@@ -64,9 +63,9 @@ int main(int argc, char *argv[])
          */
 
         /* get the coded message in a buffer */
-        CODES_CHECK(codes_get_message(clone_handle,&buffer,&size),0);
+        CODES_CHECK(codes_get_message(clone_handle, &buffer, &size), 0);
         /* write the buffer to a file */
-        if(fwrite(buffer,1,size,out) != size) {
+        if (fwrite(buffer, 1, size, out) != size) {
             perror(argv[1]);
             return 1;
         }

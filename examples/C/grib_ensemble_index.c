@@ -17,41 +17,41 @@
 
 #include "eccodes.h"
 
-int main(int argc, char * argv[])
+int main(int argc, char* argv[])
 {
     int ret;
     int i, j;
-    int count=0;
-    size_t paramIdSize, numberSize, values_len=0;
+    int count = 0;
+    size_t paramIdSize, numberSize, values_len = 0;
     char** paramId;
     long* number;
     double* values;
-    double* result=NULL;
-    double min=1e13,max=-1e13,avg=0;
+    double* result = NULL;
+    double min = 1e13, max = -1e13, avg = 0;
     codes_index* index;
-    codes_handle* h=NULL;
+    codes_handle* h = NULL;
 
-    if (argc<2) return 1;
+    if (argc < 2) return 1;
 
     /* create index of file contents for paramId and number */
-    index = codes_index_new_from_file(0, argv[1], "paramId,number",&ret);
-    CODES_CHECK(ret,0);
+    index = codes_index_new_from_file(0, argv[1], "paramId,number", &ret);
+    CODES_CHECK(ret, 0);
 
     /* get size of "paramId" list */
-    CODES_CHECK(codes_index_get_size(index, "paramId", &paramIdSize),0);
-    printf("grib contains %lu different parameters\n",paramIdSize);
+    CODES_CHECK(codes_index_get_size(index, "paramId", &paramIdSize), 0);
+    printf("grib contains %lu different parameters\n", paramIdSize);
     /* allocate memory for "paramId" list */
-    paramId = (char**) malloc(paramIdSize * sizeof(char*));
+    paramId = (char**)malloc(paramIdSize * sizeof(char*));
     /* get list of "paramId" */
-    CODES_CHECK(codes_index_get_string(index, "paramId", paramId, &paramIdSize),0);
+    CODES_CHECK(codes_index_get_string(index, "paramId", paramId, &paramIdSize), 0);
 
     /* get size of ensemble number list */
-    CODES_CHECK(codes_index_get_size(index, "number", &numberSize),0);
-    printf("GRIB contains %lu different ensemble members\n",numberSize);
+    CODES_CHECK(codes_index_get_size(index, "number", &numberSize), 0);
+    printf("GRIB contains %lu different ensemble members\n", numberSize);
     /* allocate memory for ensemble number list */
-    number = (long*) malloc(numberSize * sizeof(long));
+    number = (long*)malloc(numberSize * sizeof(long));
     /* get list of ensemble numbers */
-    CODES_CHECK(codes_index_get_long(index, "number", number, &numberSize),0);
+    CODES_CHECK(codes_index_get_long(index, "number", number, &numberSize), 0);
 
     /* select T850 with paramId 130 */
     CODES_CHECK(codes_index_select_string(index, "paramId", "130"), 0);
@@ -63,7 +63,7 @@ int main(int argc, char * argv[])
         CODES_CHECK(codes_index_select_long(index, "number", number[i]), 0);
 
         /* create handle for next GRIB message */
-        h=codes_handle_new_from_index(index, &ret);
+        h = codes_handle_new_from_index(index, &ret);
         if (ret) {
             printf("Error: %s\n", codes_get_error_message(ret));
             exit(ret);
@@ -76,8 +76,8 @@ int main(int argc, char * argv[])
         values = (double*)malloc(values_len * sizeof(double));
 
         /* allocate memory for result */
-        if ( i == 0 ) {
-            result = (double *)calloc(values_len, sizeof(double));
+        if (i == 0) {
+            result = (double*)calloc(values_len, sizeof(double));
         }
 
         /* get data values */
@@ -106,15 +106,15 @@ int main(int argc, char * argv[])
         }
         avg += result[j];
     }
-    avg = avg/values_len;
+    avg = avg / values_len;
 
     printf("==============================================================================\n");
     printf("Stats for ensemble mean of T850\n");
-    printf("Min: %f Max: %f Avg: %f\n",min,max,avg);
+    printf("Min: %f Max: %f Avg: %f\n", min, max, avg);
     printf("==============================================================================\n");
 
     /* finally free all other memory */
-    for (i=0;i<paramIdSize;i++)
+    for (i = 0; i < paramIdSize; i++)
         free(paramId[i]);
     free(paramId);
     free(number);
