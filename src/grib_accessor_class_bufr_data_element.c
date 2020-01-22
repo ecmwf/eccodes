@@ -166,9 +166,7 @@ static grib_accessor* make_clone(grib_accessor* a, grib_section* s, int* err)
     grib_accessor_bufr_data_element* self;
     char* copied_name = NULL;
     int i;
-    grib_action creator = {
-        0,
-    };
+    grib_action creator = {0,};
     creator.op         = "bufr_data_element";
     creator.name_space = "";
     creator.set        = 0;
@@ -352,9 +350,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     char* str                             = NULL;
     char* p                               = 0;
     size_t slen                           = 0;
-    char sval[100]                        = {
-        0,
-    };
+    char sval[100]                        = {0,};
     double dval = 0;
     size_t dlen = 1;
 

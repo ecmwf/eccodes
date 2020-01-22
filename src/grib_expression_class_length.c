@@ -103,9 +103,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
 {
     grib_expression_length* e = (grib_expression_length*)g;
     int err                   = 0;
-    char mybuf[1024]          = {
-        0,
-    };
+    char mybuf[1024]          = {0,};
     size_t size = 1024;
     if ((err = grib_get_string_internal(h, e->name, mybuf, &size)) != GRIB_SUCCESS)
         return err;
@@ -117,9 +115,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
 static int evaluate_double(grib_expression* g, grib_handle* h, double* result)
 {
     grib_expression_length* e = (grib_expression_length*)g;
-    char mybuf[1024]          = {
-        0,
-    };
+    char mybuf[1024]          = {0,};
     size_t size = 1024;
     int err     = 0;
     if ((err = grib_get_string_internal(h, e->name, mybuf, &size)) != GRIB_SUCCESS)
@@ -132,9 +128,7 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* result)
 static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, size_t* size, int* err)
 {
     grib_expression_length* e = (grib_expression_length*)g;
-    char mybuf[1024]          = {
-        0,
-    };
+    char mybuf[1024]          = {0,};
     Assert(buf);
     if ((*err = grib_get_string_internal(h, e->name, mybuf, size)) != GRIB_SUCCESS)
         return NULL;

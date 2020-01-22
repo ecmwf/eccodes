@@ -191,9 +191,7 @@ static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
     size_t size = 1;
     long* code;
     int err        = GRIB_SUCCESS;
-    char tmp[1024] = {
-        0,
-    };
+    char tmp[1024] = {0,};
     int i = 0;
 
     tableAccessor = (grib_accessor_smart_table*)grib_find_accessor(grib_handle_of_accessor(a), self->smartTable);

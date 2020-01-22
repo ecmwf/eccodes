@@ -147,9 +147,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     char stepType[100];
     size_t stepTypeLen = 100;
-    char buf[100]      = {
-        0,
-    };
+    char buf[100]      = {0,};
     int ret;
     grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
     grib_accessor* stepRangeAcc   = grib_find_accessor(grib_handle_of_accessor(a), self->stepRange);
@@ -174,9 +172,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     int ret                       = 0;
     grib_accessor_mars_step* self = (grib_accessor_mars_step*)a;
-    char buf[100]                 = {
-        0,
-    };
+    char buf[100]                 = {0,};
     char* p       = NULL;
     size_t buflen = 100;
     long step;
@@ -211,9 +207,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    char buff[100] = {
-        0,
-    };
+    char buff[100] = {0,};
     size_t bufflen = 100;
 
     sprintf(buff, "%ld", *val);

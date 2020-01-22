@@ -97,9 +97,7 @@ static grib_trie* load_list(grib_context* c, grib_expression* e, int* err)
     grib_expression_is_in_list* self = (grib_expression_is_in_list*)e;
 
     char* filename  = NULL;
-    char line[1024] = {
-        0,
-    };
+    char line[1024] = {0,};
     grib_trie* list = NULL;
     FILE* f         = NULL;
 
@@ -160,9 +158,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
 {
     grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
     int err                       = 0;
-    char mybuf[1024]              = {
-        0,
-    };
+    char mybuf[1024]              = {0,};
     size_t size = 1024;
 
     grib_trie* list = load_list(h->context, g, &err);
@@ -182,9 +178,7 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* result)
 {
     grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
     int err                       = 0;
-    char mybuf[1024]              = {
-        0,
-    };
+    char mybuf[1024]              = {0,};
     size_t size = 1024;
 
     grib_trie* list = load_list(h->context, g, &err);
@@ -203,9 +197,7 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* result)
 static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, size_t* size, int* err)
 {
     grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
-    char mybuf[1024]              = {
-        0,
-    };
+    char mybuf[1024]              = {0,};
     size_t sizebuf = 1024;
     long result;
 

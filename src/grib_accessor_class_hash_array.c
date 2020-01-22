@@ -160,9 +160,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_hash_array* self = (grib_accessor_hash_array*)a;
-    char s[200]                    = {
-        0,
-    };
+    char s[200]                    = {0,};
     sprintf(s, "%g", *val);
     self->key = grib_context_strdup(a->context, s);
     self->ha  = 0;
@@ -172,9 +170,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_accessor_hash_array* self = (grib_accessor_hash_array*)a;
-    char s[200]                    = {
-        0,
-    };
+    char s[200]                    = {0,};
     sprintf(s, "%ld", *val);
     if (self->key)
         grib_context_free(a->context, self->key);

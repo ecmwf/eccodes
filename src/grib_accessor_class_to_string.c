@@ -198,9 +198,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     int err                       = 0;
     grib_accessor_to_string* self = (grib_accessor_to_string*)a;
-    char buff[512]                = {
-        0,
-    };
+    char buff[512]                = {0,};
     size_t length;
     size_t size = 512;
 
@@ -246,9 +244,7 @@ static int pack_double(grib_accessor* a, const double* v, size_t* len)
 
 static int unpack_long(grib_accessor* a, long* v, size_t* len)
 {
-    char val[1024] = {
-        0,
-    };
+    char val[1024] = {0,};
     size_t l   = sizeof(val);
     char* last = NULL;
     int err    = unpack_string(a, val, &l);

@@ -205,9 +205,7 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
     }
     else {
         /* uncompressed */
-        char keystr[20] = {
-            0,
-        };
+        char keystr[20] = {0,};
         size_t values_len = 0;
         for (i = 0; i < numberOfSubsets; ++i) {
             long lVal = 0;
@@ -235,15 +233,7 @@ static int select_datetime(grib_accessor* a)
     grib_context* c                                   = h->context;
     size_t n;
     double julianStart = 0, julianEnd = 0, julianDT = 0;
-    char start_str[80] = {
-        0,
-    },
-         end_str[80] = {
-             0,
-         },
-         datetime_str[80] = {
-             0,
-         };
+    char start_str[80] = {0,}, end_str[80] = {0,}, datetime_str[80] = {0,};
     long yearRank, monthRank, dayRank, hourRank, minuteRank, secondRank;
     long yearStart, monthStart, dayStart, hourStart, minuteStart, secondStart;
     long yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd, secondEnd;

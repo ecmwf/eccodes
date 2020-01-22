@@ -1830,9 +1830,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     pos = 0;
     if (orderOfSPD) {
-        long SPD[4] = {
-            0,
-        };
+        long SPD[4] = {0,};
         size_t nSPD = orderOfSPD + 1;
         Assert(orderOfSPD <= 3);
         for (i = 0; i < orderOfSPD; i++)

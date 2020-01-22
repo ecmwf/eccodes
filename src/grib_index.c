@@ -1205,7 +1205,6 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
         field->file = file;
         index->count++;
         field->offset = h->offset;
-        ;
 
         err = grib_get_long(h, "totalLength", &length);
         if (err)
@@ -1374,7 +1373,7 @@ int grib_index_add_file(grib_index* index, const char* filename)
         field=(grib_field*)grib_context_malloc_clear(c,sizeof(grib_field));
         field->file=file;
         index->count++;
-        field->offset=h->offset;;
+        field->offset=h->offset;
 
         err=grib_get_long(h,"totalLength",&length);
         if (err) return err;

@@ -342,12 +342,8 @@ static int apply_operators(grib_accessor* a)
     char* associatedFieldType                              = "long";
     char* associatedFieldUnit                              = "CODE TABLE 31021";
     long associatedFieldDescriptor                         = 99999;
-    long delayedReplication[MAX_DELAYED_REPLICATION_COUNT] = {
-        0,
-    };
-    long delayedReplicationIndex[MAX_DELAYED_REPLICATION_COUNT] = {
-        0,
-    };
+    long delayedReplication[MAX_DELAYED_REPLICATION_COUNT] = {0,};
+    long delayedReplicationIndex[MAX_DELAYED_REPLICATION_COUNT] = {0,};
     long delayedReplicationCount = 0;
     long iassociatedInfoNumber   = 0;
     int id                       = 0;
@@ -632,9 +628,7 @@ static int apply_operators(grib_accessor* a)
 static void long_to_string(grib_context* c, long* v, size_t len, char** val)
 {
     size_t i;
-    char tmp[1024] = {
-        0,
-    };
+    char tmp[1024] = {0,};
     for (i = 0; i < len; i++) {
         sprintf(tmp, "%ld", v[i]);
         val[i] = grib_context_strdup(c, tmp);
@@ -644,9 +638,7 @@ static void long_to_string(grib_context* c, long* v, size_t len, char** val)
 static void double_to_string(grib_context* c, double* v, size_t len, char** val)
 {
     size_t i;
-    char tmp[1024] = {
-        0,
-    };
+    char tmp[1024] = {0,};
     for (i = 0; i < len; i++) {
         sprintf(tmp, "%g", v[i]);
         val[i] = grib_context_strdup(c, tmp);

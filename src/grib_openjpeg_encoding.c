@@ -47,16 +47,10 @@ int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper)
     double decimal         = helper->decimal;
     int* data;
 
-    opj_cparameters_t parameters = {
-        0,
-    }; /* compression parameters */
-    opj_event_mgr_t event_mgr = {
-        0,
-    }; /* event manager */
+    opj_cparameters_t parameters = {0,}; /* compression parameters */
+    opj_event_mgr_t event_mgr = {0,}; /* event manager */
     opj_image_t* image            = NULL;
-    opj_image_cmptparm_t cmptparm = {
-        0,
-    };
+    opj_image_cmptparm_t cmptparm = {0,};
     opj_cio_t* cio     = NULL;
     opj_cinfo_t* cinfo = NULL;
 
@@ -147,18 +141,12 @@ int grib_openjpeg_decode(grib_context* c, unsigned char* buf, size_t* buflen, do
     int* data;
     size_t count;
 
-    opj_dparameters_t parameters = {
-        0,
-    };                                /* decompression parameters */
+    opj_dparameters_t parameters = {0,};   /* decompression parameters */
     opj_dinfo_t* dinfo        = NULL; /* handle to a decompressor */
-    opj_event_mgr_t event_mgr = {
-        0,
-    }; /* event manager */
+    opj_event_mgr_t event_mgr = {0,}; /* event manager */
     opj_cio_t* cio        = NULL;
     opj_image_t* image    = NULL;
-    opj_image_comp_t comp = {
-        0,
-    };
+    opj_image_comp_t comp = {0,};
 
     /* set decoding parameters to default values */
     opj_set_default_decoder_parameters(&parameters);
@@ -348,14 +336,10 @@ int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper)
     double decimal         = helper->decimal;
     int* data;
 
-    opj_cparameters_t parameters = {
-        0,
-    }; /* compression parameters */
+    opj_cparameters_t parameters = {0,}; /* compression parameters */
     opj_codec_t* codec            = NULL;
     opj_image_t* image            = NULL;
-    opj_image_cmptparm_t cmptparm = {
-        0,
-    };
+    opj_image_cmptparm_t cmptparm = {0,};
     opj_stream_t* stream = NULL;
     opj_memory_stream mstream;
 
@@ -472,16 +456,12 @@ int grib_openjpeg_decode(grib_context* c, unsigned char* buf, size_t* buflen, do
     int* data;
     size_t count;
 
-    opj_dparameters_t parameters = {
-        0,
-    }; /* decompression parameters */
+    opj_dparameters_t parameters = {0,}; /* decompression parameters */
     opj_stream_t* stream = NULL;
     opj_memory_stream mstream;
     opj_image_t* image    = NULL;
     opj_codec_t* codec    = NULL;
-    opj_image_comp_t comp = {
-        0,
-    };
+    opj_image_comp_t comp = {0,};
 
     /* set decoding parameters to default values */
     opj_set_default_decoder_parameters(&parameters);

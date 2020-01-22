@@ -157,22 +157,12 @@ int grib_nearest_find_multiple(
     int* pindexes         = indexes;
     int idx = 0, ii = 0;
     double max, min;
-    double qdistances[4] = {
-        0,
-    };
-    double qoutlats[4] = {
-        0,
-    };
-    double qoutlons[4] = {
-        0,
-    };
-    double qvalues[4] = {
-        0,
-    };
+    double qdistances[4] = {0,};
+    double qoutlats[4] = {0,};
+    double qoutlons[4] = {0,};
+    double qvalues[4] = {0,};
     double* rvalues = NULL;
-    int qindexes[4] = {
-        0,
-    };
+    int qindexes[4] = {0,};
     int ret    = 0;
     long i     = 0;
     size_t len = 4;

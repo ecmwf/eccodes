@@ -194,9 +194,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     long aerosol                                 = -1;
     long chemical_distfn                         = -1;
     long aerosol_optical                         = -1;
-    char stepType[15]                            = {
-        0,
-    };
+    char stepType[15]                            = {0,};
     size_t slen               = 15;
     int localDefinitionNumber = *val;
     int isInstant             = 0;

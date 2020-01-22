@@ -158,9 +158,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_g1end_of_interval_monthly* self = (grib_accessor_g1end_of_interval_monthly*)a;
     int ret                                       = 0;
-    char verifyingMonth[7]                        = {
-        0,
-    };
+    char verifyingMonth[7]                        = {0,};
     size_t slen = 7;
     long year = 0, month = 0, date = 0;
     long mdays[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };

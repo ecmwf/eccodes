@@ -228,9 +228,7 @@ static int extra_set(grib_accessor* a, long val)
     int ret                              = 0;
     grib_accessor_g2_mars_labeling* self = (grib_accessor_g2_mars_labeling*)a;
     grib_handle* hand                    = grib_handle_of_accessor(a);
-    char stepType[30]                    = {
-        0,
-    };
+    char stepType[30]                    = {0,};
     size_t stepTypelen                      = 30;
     long derivedForecast                    = -1;
     long productDefinitionTemplateNumberNew = -1;

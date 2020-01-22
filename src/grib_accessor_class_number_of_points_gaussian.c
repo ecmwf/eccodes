@@ -338,9 +338,7 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
     int is_global = 0;
     long ni = 0, nj = 0, plpresent = 0, order = 0;
     size_t plsize = 0;
-    double* lats  = {
-        0,
-    };
+    double* lats  = {0,};
     double lat_first, lat_last, lon_first, lon_last;
     long* pl     = NULL;
     long* plsave = NULL;
@@ -450,7 +448,6 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
     return ret;
 }
 
-
 /* With Legacy support */
 static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len)
 {
@@ -458,9 +455,7 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
     int is_global = 0;
     long ni = 0, nj = 0, plpresent = 0, order = 0;
     size_t plsize = 0;
-    double* lats  = {
-        0,
-    };
+    double* lats  = {0,};
     double lat_first, lat_last, lon_first, lon_last;
     long* pl     = NULL;
     long* plsave = NULL;

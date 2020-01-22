@@ -442,9 +442,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_json* self      = (grib_dumper_json*)d;
-    char value[MAX_STRING_SIZE] = {
-        0,
-    }; /* See ECC-710 */
+    char value[MAX_STRING_SIZE] = {0,}; /* See ECC-710 */
     char* p              = NULL;
     size_t size          = MAX_STRING_SIZE;
     int is_missing       = 0;

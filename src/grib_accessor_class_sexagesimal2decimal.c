@@ -156,9 +156,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     int err                                 = 0;
     grib_accessor_sexagesimal2decimal* self = (grib_accessor_sexagesimal2decimal*)a;
-    char buff[512]                          = {
-        0,
-    };
+    char buff[512]                          = {0,};
     size_t length = 0;
     size_t size   = 512;
     char* p;
@@ -264,7 +262,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         len[0] = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
-
 
     strcpy(val, buff);
 

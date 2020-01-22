@@ -590,9 +590,7 @@ static int expand(grib_accessor* a)
     /* grib_iarray* unexp=0; */
     int i;
     long* u      = 0;
-    char key[50] = {
-        0,
-    };
+    char key[50] = {0,};
     long centre, masterTablesVersionNumber, localTablesVersionNumber, masterTablesNumber;
     change_coding_params ccp;
     bufr_descriptors_array* unexpanded      = NULL;

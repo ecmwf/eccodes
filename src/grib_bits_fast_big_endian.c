@@ -21,9 +21,7 @@ typedef struct bits_all_one_t
     long v[128];
 } bits_all_one_t;
 
-static bits_all_one_t bits_all_one = { 0, 0, {
-                                                 0,
-                                             } };
+static bits_all_one_t bits_all_one = { 0, 0, {0,} };
 
 static void init_bits_all_one()
 {

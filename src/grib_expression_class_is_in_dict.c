@@ -95,12 +95,8 @@ static grib_trie* load_dictionary(grib_context* c, grib_expression* e, int* err)
     grib_expression_is_in_dict* self = (grib_expression_is_in_dict*)e;
 
     char* filename  = NULL;
-    char line[1024] = {
-        0,
-    };
-    char key[1024] = {
-        0,
-    };
+    char line[1024] = {0,};
+    char key[1024] = {0,};
     char* list            = 0;
     grib_trie* dictionary = NULL;
     FILE* f               = NULL;
@@ -153,7 +149,6 @@ static grib_trie* load_dictionary(grib_context* c, grib_expression* e, int* err)
     return dictionary;
 }
 
-
 static const char* get_name(grib_expression* g)
 {
     grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
@@ -164,9 +159,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
 {
     grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
     int err                       = 0;
-    char mybuf[1024]              = {
-        0,
-    };
+    char mybuf[1024]              = {0,};
     size_t size = 1024;
 
     grib_trie* dict = load_dictionary(h->context, g, &err);
@@ -186,9 +179,7 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* result)
 {
     grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
     int err                       = 0;
-    char mybuf[1024]              = {
-        0,
-    };
+    char mybuf[1024]              = {0,};
     size_t size = 1024;
 
     grib_trie* list = load_dictionary(h->context, g, &err);
@@ -207,9 +198,7 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* result)
 static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, size_t* size, int* err)
 {
     grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-    char mybuf[1024]              = {
-        0,
-    };
+    char mybuf[1024]              = {0,};
     size_t sizebuf = 1024;
     long result;
 
@@ -239,7 +228,6 @@ static void print(grib_context* c, grib_expression* g, grib_handle* f)
     }
     printf("')");
 }
-
 
 grib_expression* new_is_in_dict_expression(grib_context* c, const char* name, const char* list)
 {

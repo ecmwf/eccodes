@@ -114,9 +114,7 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* result)
 static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, size_t* size, int* err)
 {
     grib_expression_accessor* e = (grib_expression_accessor*)g;
-    char mybuf[1024]            = {
-        0,
-    };
+    char mybuf[1024]            = {0,};
     long start = e->start;
 
     Assert(buf);

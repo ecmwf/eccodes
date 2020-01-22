@@ -172,7 +172,6 @@ int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s
         tlen += 4;
 
         slen = tlen - s4->offset - 4; /* 4 is for 7777 */
-        ;
 
         /*printf("DECODING large grib total=%ld section4=%ld\n",tlen,slen);*/
     }

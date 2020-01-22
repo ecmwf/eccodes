@@ -205,9 +205,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_serialize* self = (grib_dumper_serialize*)d;
-    char value[1024]            = {
-        0,
-    };
+    char value[1024]            = {0,};
     size_t size = sizeof(value);
     int err     = grib_unpack_string(a, value, &size);
     int i;

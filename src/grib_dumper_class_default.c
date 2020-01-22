@@ -700,7 +700,6 @@ static void print_offset(FILE* out, grib_dumper* d, grib_accessor* a)
     grib_handle* h            = grib_handle_of_accessor(a);
 
     theBegin = a->offset - self->section_offset + 1;
-    ;
     theEnd = grib_get_next_position_offset(a) - self->section_offset;
 
     if ((d->option_flags & GRIB_DUMP_FLAG_HEXADECIMAL) != 0 && a->length != 0) {

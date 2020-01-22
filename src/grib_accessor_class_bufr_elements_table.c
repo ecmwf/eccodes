@@ -185,18 +185,10 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     grib_accessor_bufr_elements_table* self = (grib_accessor_bufr_elements_table*)a;
 
     char* filename  = NULL;
-    char line[1024] = {
-        0,
-    };
-    char masterDir[1024] = {
-        0,
-    };
-    char localDir[1024] = {
-        0,
-    };
-    char dictName[1024] = {
-        0,
-    };
+    char line[1024] = {0,};
+    char masterDir[1024] = {0,};
+    char localDir[1024] = {0,};
+    char dictName[1024] = {0,};
     char* localFilename   = 0;
     char** list           = 0;
     size_t len            = 1024;
@@ -218,12 +210,8 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     GRIB_MUTEX_LOCK(&mutex1);
 
     if (*masterDir != 0) {
-        char name[4096] = {
-            0,
-        };
-        char recomposed[4096] = {
-            0,
-        };
+        char name[4096] = {0,};
+        char recomposed[4096] = {0,};
         sprintf(name, "%s/%s", masterDir, self->dictionary);
         grib_recompose_name(h, NULL, name, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
@@ -233,12 +221,8 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     }
 
     if (*localDir != 0) {
-        char localRecomposed[1024] = {
-            0,
-        };
-        char localName[2048] = {
-            0,
-        };
+        char localRecomposed[1024] = {0,};
+        char localName[2048] = {0,};
         sprintf(localName, "%s/%s", localDir, self->dictionary);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);

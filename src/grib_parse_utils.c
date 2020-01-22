@@ -77,15 +77,11 @@ static void init()
 int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* uname, char* fname, int fail)
 {
     grib_accessor* a;
-    char loc[1024] = {
-        0,
-    };
+    char loc[1024] = {0,};
     int i          = 0;
     int ret        = 0;
     int mode       = -1;
-    char val[1024] = {
-        0,
-    };
+    char val[1024] = {0,};
     double dval        = 0;
     long lval          = 0;
     int type           = GRIB_TYPE_STRING;
@@ -185,9 +181,7 @@ int grib_accessor_print(grib_accessor* a, const char* name, int type, const char
     char* p         = NULL;
     double* dval    = 0;
     long* lval      = 0;
-    char sbuf[1024] = {
-        0,
-    };
+    char sbuf[1024] = {0,};
     size_t replen            = 0;
     int ret                  = 0;
     char* myformat           = NULL;
@@ -329,9 +323,7 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
         case GRIB_TYPE_STRING:
             myseparator = separator ? (char*)separator : default_separator;
             if (size == 1) {
-                char sbuf[1024] = {
-                    0,
-                };
+                char sbuf[1024] = {0,};
                 len = sizeof(sbuf);
                 ret = grib_unpack_string(al->accessor, sbuf, &len);
                 if (grib_is_missing_string(al->accessor, (unsigned char*)sbuf, len)) {
@@ -440,12 +432,8 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
     int type        = -1;
     char* separator = NULL;
     int l;
-    char buff[10] = {
-        0,
-    };
-    char buff1[1024] = {
-        0,
-    };
+    char buff[10] = {0,};
+    char buff1[1024] = {0,};
     int maxcolsd = 8;
     int maxcols;
     long numcols           = 0;

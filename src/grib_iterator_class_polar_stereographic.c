@@ -129,12 +129,8 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     double ts;                                /* value of small t */
     double height;                            /* height above ellipsoid */
     double x0, y0, lonFirst, latFirst;
-    proj_data_t fwd_proj_data = {
-        0,
-    };
-    proj_data_t inv_proj_data = {
-        0,
-    };
+    proj_data_t fwd_proj_data = {0,};
+    proj_data_t inv_proj_data = {0,};
 
     grib_iterator_polar_stereographic* self = (grib_iterator_polar_stereographic*)iter;
 

@@ -159,9 +159,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     grib_accessor_gaussian_grid_name* self = (grib_accessor_gaussian_grid_name*)a;
 
     long N = 0, Ni = 0, isOctahedral = 0;
-    char tmp[MAX_GRIDNAME_LEN] = {
-        0,
-    };
+    char tmp[MAX_GRIDNAME_LEN] = {0,};
     size_t length = sizeof(tmp);
     int ret       = GRIB_SUCCESS;
 

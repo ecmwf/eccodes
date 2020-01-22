@@ -129,9 +129,7 @@ static void init_class(grib_accessor_class* c)
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
-    char result[30] = {
-        0,
-    };
+    char result[30] = {0,};
     size_t size;
 
     int major    = ECCODES_MAJOR_VERSION;

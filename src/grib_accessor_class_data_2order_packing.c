@@ -962,10 +962,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 #if KEEP_OLD == 1
 
 #else
-
     grib_free_second_order_groups(a->context, sd);
 #endif
-    ;
 
     grib_context_free(a->context, buf);
     grib_context_free(a->context, sec_val);

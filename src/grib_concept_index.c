@@ -101,13 +101,9 @@ static int index_insert_entry(grib_concept_index* index, grib_concept_index_entr
 static void index_add_conditions(grib_concept_index* index, grib_concept_condition* condition)
 {
     grib_concept_condition* c = condition;
-    char s[512]               = {
-        0,
-    };
+    char s[512]               = {0,};
     grib_concept_index_entry* e;
-    ;
     grib_concept_index_entry* entry = index_entry_new(index->context, index->keys);
-    ;
 
     while (c) {
         size_t size = 512;

@@ -418,9 +418,7 @@ static grib_accessor* make_clone(grib_accessor* a, grib_section* s, int* err)
     grib_accessor* the_clone                 = NULL;
     grib_accessor_variable* self             = (grib_accessor_variable*)a;
     grib_accessor_variable* variableAccessor = NULL;
-    grib_action creator                      = {
-        0,
-    };
+    grib_action creator                      = {0,};
     creator.op         = "variable";
     creator.name_space = "";
     creator.set        = 0;

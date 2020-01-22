@@ -111,9 +111,7 @@ static int execute(grib_action* act, grib_handle* h)
     size_t size;
     const void* buffer   = NULL;
     const char* filename = NULL;
-    char string[1024]    = {
-        0,
-    };
+    char string[1024]    = {0,};
 
     grib_file* of = NULL;
 

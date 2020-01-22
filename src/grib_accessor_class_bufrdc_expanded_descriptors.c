@@ -202,9 +202,7 @@ static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
     grib_context* c            = a->context;
     long l                     = 0;
     size_t size, i;
-    char buf[25] = {
-        0,
-    };
+    char buf[25] = {0,};
     long* v = 0;
 
     descriptors = get_accessor(a);

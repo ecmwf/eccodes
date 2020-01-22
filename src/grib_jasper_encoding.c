@@ -102,9 +102,7 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
     jas_image_t image       = { 0 };
     jas_stream_t* jpcstream = 0;
     jas_stream_t* istream   = 0;
-    jas_image_cmpt_t cmpt   = {
-        0,
-    };
+    jas_image_cmpt_t cmpt   = {0,};
     jas_image_cmpt_t* pcmpt = 0;
 
     image.tlx_      = 0;

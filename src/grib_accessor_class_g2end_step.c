@@ -243,9 +243,7 @@ static const int u2s[] = {
 static int is_special_expver(grib_handle* h)
 {
     int ret            = 0;
-    char strExpVer[50] = {
-        0,
-    };
+    char strExpVer[50] = {0,};
     size_t slen = 50;
     ret         = grib_get_string(h, "experimentVersionNumber", strExpVer, &slen);
     if (ret == GRIB_SUCCESS && !strcmp(strExpVer, "1605")) {
@@ -345,15 +343,9 @@ static int unpack_multiple_time_ranges(grib_accessor* a, long* val, size_t* len)
     long numberOfTimeRange = 0, unit = 0, start_step = 0;
 
     size_t count                                      = 0;
-    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
-    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
-    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {
-        0,
-    };
+    long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_coded_unit[MAX_NUM_TIME_RANGES] = {0,};
+    long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {0,};
 
     if ((err = grib_get_long_internal(h, self->start_step, &start_step)))
         return err;

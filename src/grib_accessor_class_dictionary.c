@@ -159,21 +159,11 @@ static grib_trie* load_dictionary(grib_context* c, grib_accessor* a, int* err)
     grib_accessor_dictionary* self = (grib_accessor_dictionary*)a;
 
     char* filename  = NULL;
-    char line[1024] = {
-        0,
-    };
-    char key[1024] = {
-        0,
-    };
-    char masterDir[1024] = {
-        0,
-    };
-    char localDir[1024] = {
-        0,
-    };
-    char dictName[1024] = {
-        0,
-    };
+    char line[1024] = {0,};
+    char key[1024] = {0,};
+    char masterDir[1024] = {0,};
+    char localDir[1024] = {0,};
+    char dictName[1024] = {0,};
     char* localFilename   = 0;
     char* list            = 0;
     size_t len            = 1024;
@@ -192,12 +182,8 @@ static grib_trie* load_dictionary(grib_context* c, grib_accessor* a, int* err)
         grib_get_string(h, self->localDir, localDir, &len);
 
     if (*masterDir != 0) {
-        char name[2048] = {
-            0,
-        };
-        char recomposed[2048] = {
-            0,
-        };
+        char name[2048] = {0,};
+        char recomposed[2048] = {0,};
         sprintf(name, "%s/%s", masterDir, self->dictionary);
         grib_recompose_name(h, NULL, name, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
@@ -207,12 +193,8 @@ static grib_trie* load_dictionary(grib_context* c, grib_accessor* a, int* err)
     }
 
     if (*localDir != 0) {
-        char localName[2048] = {
-            0,
-        };
-        char localRecomposed[1024] = {
-            0,
-        };
+        char localName[2048] = {0,};
+        char localRecomposed[1024] = {0,};
         sprintf(localName, "%s/%s", localDir, self->dictionary);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
@@ -306,9 +288,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
 {
     grib_accessor_dictionary* self = (grib_accessor_dictionary*)a;
     int err                        = GRIB_SUCCESS;
-    char key[1024]                 = {
-        0,
-    };
+    char key[1024]                 = {0,};
     size_t size  = 1024;
     char* list   = NULL;
     char* start  = NULL;
@@ -377,9 +357,7 @@ static int get_native_type(grib_accessor* a)
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     int err           = 0;
-    char buffer[1024] = {
-        0,
-    };
+    char buffer[1024] = {0,};
     size_t size = 1024;
 
     err = unpack_string(a, buffer, &size);
@@ -395,9 +373,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     int err           = 0;
-    char buffer[1024] = {
-        0,
-    };
+    char buffer[1024] = {0,};
     size_t size = 1024;
 
     err = unpack_string(a, buffer, &size);

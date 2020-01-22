@@ -162,9 +162,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     long type_first         = 0;
     long scale_first        = 0;
     long value_first        = 0;
-    char pressure_units[10] = {
-        0,
-    };
+    char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
 
     double v;
@@ -245,9 +243,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     double value_first          = *val;
     long scale_first            = 0;
     long type_first             = 0;
-    char pressure_units[10]     = {
-        0,
-    };
+    char pressure_units[10]     = {0,};
     size_t pressure_units_len = 10;
 
     if (*len != 1)
@@ -295,9 +291,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     long value_first        = *val;
     long scale_first        = 0;
     long type_first         = 0;
-    char pressure_units[10] = {
-        0,
-    };
+    char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
 
     grib_accessor_g2level* self = (grib_accessor_g2level*)a;

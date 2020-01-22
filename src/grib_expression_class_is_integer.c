@@ -103,9 +103,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
 {
     grib_expression_is_integer* e = (grib_expression_is_integer*)g;
     int err                       = 0;
-    char mybuf[1024]              = {
-        0,
-    };
+    char mybuf[1024]              = {0,};
     size_t size = 1024;
     char* p     = 0;
     long val    = 0;
