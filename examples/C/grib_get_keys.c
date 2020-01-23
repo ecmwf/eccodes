@@ -138,6 +138,7 @@ int main(int argc, char** argv)
         CODES_CHECK(codes_get_size(h, name, &keySize), 0);
         byte_val = (unsigned char*)malloc(keySize * sizeof(char));
         GRIB_CHECK(codes_get_bytes(h, name, byte_val, &keySize), name);
+        free(byte_val);
     }
 
     codes_handle_delete(h);
