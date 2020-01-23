@@ -1409,6 +1409,18 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 23 ;
 	}
+#Universal thermal climate index
+'261001' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	}
+#Mean radiant temperature
+'261002' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	}
 #Virtual temperature
 '300012' = {
 	 discipline = 0 ;
