@@ -146,6 +146,7 @@ static grib_handle* grib_handle_new_from_file_x(grib_context* c, FILE* f, int mo
 int grib_tool(int argc, char** argv)
 {
     int ret                = 0;
+    int i = 0;
     grib_context* c        = grib_context_get_default();
     global_options.context = c;
 
@@ -193,6 +194,13 @@ int grib_tool(int argc, char** argv)
 
     if (global_options.dump_filename)
         fclose(dump_file);
+
+    /* Free memory */
+    for (i = 0; i < global_options.print_keys_count; i++) {
+        if (global_options.print_keys[i].name) {
+            free((char*)global_options.print_keys[i].name);
+        }
+    }
     return ret;
 }
 
@@ -285,6 +293,9 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
     }
 
     grib_tool_finalise_action(options);
+
+    grib_fieldset_delete(set);
+    free(filenames);
 
     return 0;
 }
@@ -721,6 +732,9 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
                 fprintf(stderr, "ERROR: keys list too long (more than %d keys)\n",
                         options->print_keys_count);
                 exit(1);
+            }
+            if (options->print_keys[options->print_keys_count].name) {
+                free((char*)options->print_keys[options->print_keys_count].name);
             }
             options->print_keys[options->print_keys_count].name = strdup(name);
             if (strlen(name) > options->default_print_width)

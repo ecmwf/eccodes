@@ -637,6 +637,7 @@ void grib_fieldset_delete(grib_fieldset* set)
     grib_fieldset_delete_fields(set);
     grib_fieldset_delete_int_array(set->order);
     grib_fieldset_delete_int_array(set->filter);
+    grib_fieldset_delete_order_by(c, set->order_by);
 
     grib_context_free(c, set);
 }
