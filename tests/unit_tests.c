@@ -1381,6 +1381,8 @@ static void test_string_splitting()
     if ( strcmp(list[2], "Be")  !=0 ) assert(0);
     if ( strcmp(list[3], "Wild")!=0 ) assert(0);
     assert( list[4] == NULL );
+    for(i=0; list[i] != NULL; ++i) free(list[i]);
+    free(list);
 
     strcpy(input, "12345|a gap|");
     list = string_split(input, "|");
@@ -1389,6 +1391,8 @@ static void test_string_splitting()
     if ( strcmp(list[0], "12345")!=0 ) assert(0);
     if ( strcmp(list[1], "a gap")!=0 ) assert(0);
     assert( list[2] == NULL );
+    for(i=0; list[i] != NULL; ++i) free(list[i]);
+    free(list);
 
     strcpy(input, "Steppenwolf");
     list = string_split(input, ",");
@@ -1396,6 +1400,8 @@ static void test_string_splitting()
     assert(i == 1);
     if ( strcmp(list[0], "Steppenwolf")!=0 ) assert(0);
     assert( list[1] == NULL );
+    for(i=0; list[i] != NULL; ++i) free(list[i]);
+    free(list);
 
     /* Note: currently cannot cope with */
     /*  input being NULL */
@@ -1405,24 +1411,29 @@ static void test_string_splitting()
 
 static void my_assertion_proc(const char* message)
 {
-    printf("Caught it: %s\n", message);
+    printf("It's OK. I caught the assertion: %s\n", message);
     assertion_caught = 1;
 }
 
 static void test_assertion_catching()
 {
     char empty[]="";
+    char** list=0;
+    int i = 0;
     assert(assertion_caught == 0);
     codes_set_codes_assertion_failed_proc(&my_assertion_proc);
 
     /* Do something illegal */
-    string_split(empty, " ");
+    list = string_split(empty, " ");
 
     assert(assertion_caught == 1);
 
     /* Restore everything */
     codes_set_codes_assertion_failed_proc(NULL);
     assertion_caught = 0;
+
+    for(i=0; list[i] != NULL; ++i) free(list[i]);
+    free(list);
 }
 
 static void test_concept_condition_strings()
@@ -1448,6 +1459,7 @@ static void test_concept_condition_strings()
     assert ( !err );
     assert( strcmp(result, "selectStepTemplateInstant=1,stepTypeInternal=instant")==0 );
 
+    grib_handle_delete(h);
 }
 
 int main(int argc, char** argv)
