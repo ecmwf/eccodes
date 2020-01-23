@@ -55,8 +55,7 @@ int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
 int main(int argc, char* argv[])
 {
-    int ret = grib_tool(argc, argv);
-    return ret;
+    return grib_tool(argc, argv);
 }
 
 int grib_tool_before_getopt(grib_runtime_options* options)

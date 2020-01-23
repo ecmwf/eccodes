@@ -3956,7 +3956,7 @@ struct KindValue
 
 int main(int argc, char* argv[])
 {
-    int i, ret = 0;
+    int i = 0;
 
     /* GRIB-413: Collect all program arguments into a string */
     const size_t maxLen = sizeof(argvString);
@@ -3969,9 +3969,7 @@ int main(int argc, char* argv[])
         if (i != argc - 1)
             strcat(argvString, " ");
     }
-    ret = grib_tool(argc, argv);
-
-    return ret;
+    return grib_tool(argc, argv);
 }
 
 int grib_tool_before_getopt(grib_runtime_options* options)
