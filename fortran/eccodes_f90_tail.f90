@@ -1545,6 +1545,26 @@ subroutine codes_dump ( msgid , status)
     call grib_dump (msgid, status)
 end subroutine codes_dump
 
+
+  !> Get the API version
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param api_version  The version as an integer
+  !> @param status       GRIB_SUCCESS if OK, integer value on error
+subroutine codes_get_api_version(api_version, status)
+    integer(kind = kindOfInt),        intent(out) :: api_version
+    integer(kind=kindOfInt),optional, intent(out) :: status
+
+    call grib_f_get_api_version(api_version)
+    if (present(status)) then
+      status = CODES_SUCCESS
+    endif
+end subroutine codes_get_api_version
+
+
 !> Get the error message given an error code
 !>
 !> @param error          error code

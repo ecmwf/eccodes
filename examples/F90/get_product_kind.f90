@@ -20,12 +20,16 @@ program get_product_kind
   integer            :: iret
   integer            :: ihandle
   integer            :: count=0
+  integer            :: version=0
   character(len=32)  :: product_kind
   character(len=120) :: infile_name
 
   call getarg(1, infile_name)
   write(*,*) 'infile_name|',infile_name,'|'
   call codes_open_file(ifile,infile_name,'r')
+
+  call codes_get_api_version(version)
+  write(*,*) 'API version: ',version
 
 ! the first message is loaded from file
 ! ihandle is the message id to be used in subsequent calls

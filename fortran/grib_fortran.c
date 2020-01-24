@@ -2161,6 +2161,18 @@ int grib_f_get_error_string(int* err, char* buf,  int len){
 }
 
 /*****************************************************************************/
+int grib_f_get_api_version_(int* apiVersion,int len){
+    *apiVersion = grib_get_api_version();
+    return GRIB_SUCCESS;
+}
+int grib_f_get_api_version__(int* apiVersion, int len){
+    return grib_f_get_api_version_(apiVersion, len);
+}
+int grib_f_get_api_version(int* apiVersion, int len){
+    return grib_f_get_api_version_(apiVersion, len);
+}
+
+/*****************************************************************************/
 int grib_f_get_size_int_(int* gid, char* key, int* val, int len){
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
