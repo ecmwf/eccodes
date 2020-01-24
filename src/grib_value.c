@@ -1179,7 +1179,7 @@ int grib_get_double_array(const grib_handle* h, const char* name, double* val, s
         if (!al)
             return GRIB_NOT_FOUND;
         ret = grib_accessors_list_unpack_double(al, val, length);
-        grib_context_free(h->context, al);
+        grib_accessors_list_delete(h->context, al);
         return ret;
     }
     else {
@@ -1268,7 +1268,7 @@ int grib_get_size(const grib_handle* ch, const char* name, size_t* size)
         if (!al)
             return GRIB_NOT_FOUND;
         ret = grib_accessors_list_value_count(al, size);
-        grib_context_free(h->context, al);
+        grib_accessors_list_delete(h->context, al);
         return ret;
     }
     else {
