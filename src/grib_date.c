@@ -14,103 +14,115 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-#define ROUND(a)     ((a) >=0 ? (long)((a)+0.5) : (long) ((a)-0.5))
-int grib_julian_to_datetime(double jd,long *year,long* month,long* day,
-        long *hour,long *minute,long *second)
+#define ROUND(a) ((a) >= 0 ? (long)((a) + 0.5) : (long)((a)-0.5))
+int grib_julian_to_datetime(double jd, long* year, long* month, long* day,
+                            long* hour, long* minute, long* second)
 {
-    long z,a,alpha,b,c,d,e;
+    long z, a, alpha, b, c, d, e;
     double dday;
     double f;
     long s;
 
-    jd+=0.5;
-    z=(long)jd;
-    f=jd-z;
+    jd += 0.5;
+    z = (long)jd;
+    f = jd - z;
 
-    if (z < 2299161) a=z;
+    if (z < 2299161)
+        a = z;
     else {
-        alpha=(long)((z-1867216.25)/36524.25);
-        a=z+1+alpha-(long)(((double)alpha)/4);
+        alpha = (long)((z - 1867216.25) / 36524.25);
+        a     = z + 1 + alpha - (long)(((double)alpha) / 4);
     }
-    b=a+1524;
-    c=(long)((b-122.1)/365.25);
-    d=(long)(365.25*c);
-    e=(long)(((double)(b-d))/30.6001);
+    b = a + 1524;
+    c = (long)((b - 122.1) / 365.25);
+    d = (long)(365.25 * c);
+    e = (long)(((double)(b - d)) / 30.6001);
 
-    dday=b-d-(long)(30.6001*e)+f;
-    *day=(long)dday;
-    dday-=*day;
+    dday = b - d - (long)(30.6001 * e) + f;
+    *day = (long)dday;
+    dday -= *day;
 
 #if 1
     /* ANF-CG 02.03.2012 */
-    s=ROUND((double)(dday*86400)); /* total in sec , no msec*/
-    *hour=(long)s/3600;
-    *minute=(long)((s % 3600)/60);
+    s       = ROUND((double)(dday * 86400)); /* total in sec , no msec*/
+    *hour   = (long)s / 3600;
+    *minute = (long)((s % 3600) / 60);
     *second = (long)(s % 60);
 #else
     /* Old algorithm, now replaced by above. See GRIB-180 */
-    dhour=dday*24;
-    *hour=(long)dhour;
-    dhour-=*hour;
-    dminute=dhour*60;
-    *minute=(long)dminute;
-    *second=(long)((dminute-*minute)*60);
+    dhour = dday * 24;
+    *hour = (long)dhour;
+    dhour -= *hour;
+    dminute = dhour * 60;
+    *minute = (long)dminute;
+    *second = (long)((dminute - *minute) * 60);
 #endif
 
-    if (e<14) *month=e-1;
-    else *month=e-13;
+    if (e < 14)
+        *month = e - 1;
+    else
+        *month = e - 13;
 
-    if (*month>2) *year=c-4716;
-    else *year=c-4715;
+    if (*month > 2)
+        *year = c - 4716;
+    else
+        *year = c - 4715;
 
     return GRIB_SUCCESS;
 }
 
-int grib_datetime_to_julian(long year,long month,long day,
-        long hour,long minute,long second,double* jd)
+int grib_datetime_to_julian(long year, long month, long day,
+                            long hour, long minute, long second, double* jd)
 {
-    return grib_datetime_to_julian_d(year,month,day,hour,minute,second,jd);
+    return grib_datetime_to_julian_d(year, month, day, hour, minute, second, jd);
 }
 
 /* This version can deal with seconds provided as a double. Supporting milliseconds etc */
 int grib_datetime_to_julian_d(
-        long year,long month,long day,long hour,long minute,
-        double second, double* jd)
+    long year, long month, long day, long hour, long minute,
+    double second, double* jd)
 {
-    double a,b,dday;
-    long y,m;
+    double a, b, dday;
+    long y, m;
 
-    dday=(double)(hour*3600+minute*60+second)/86400.0+day;
+    dday = (double)(hour * 3600 + minute * 60 + second) / 86400.0 + day;
 
-    if ( month < 3) {
-        y=year-1;
-        m=month+12;
-    } else {
-        y=year;
-        m=month;
+    if (month < 3) {
+        y = year - 1;
+        m = month + 12;
     }
-    a=(long)(((double)y)/100);
+    else {
+        y = year;
+        m = month;
+    }
+    a = (long)(((double)y) / 100);
 
-    if ( y > 1582 ) b=2-a+(long)(a/4);
+    if (y > 1582)
+        b = 2 - a + (long)(a / 4);
     else if (y == 1582) {
-        if (m > 10) b=2-a+(long)(a/4);
+        if (m > 10)
+            b = 2 - a + (long)(a / 4);
         else if (m == 10) {
-            if (day >14) b=2-a+(long)(a/4);
-            else b=0;
+            if (day > 14)
+                b = 2 - a + (long)(a / 4);
+            else
+                b = 0;
         }
-        else b=0;
+        else
+            b = 0;
     }
-    else b=0;
+    else
+        b = 0;
 
-    *jd=(long)(365.25*(y+4716))+ (long)(30.6001*(m+1))+dday+b-1524.5;
+    *jd = (long)(365.25 * (y + 4716)) + (long)(30.6001 * (m + 1)) + dday + b - 1524.5;
 
     return GRIB_SUCCESS;
 }
 
 long grib_julian_to_date(long jdate)
 {
-    long x,y,d,m,e;
-    long day,month,year;
+    long x, y, d, m, e;
+    long day, month, year;
 
     x = 4 * jdate - 6884477;
     y = (x / 146097) * 100;
@@ -127,12 +139,12 @@ long grib_julian_to_date(long jdate)
     e = x % 153;
     d = e / 5 + 1;
 
-    if( m < 11 )
+    if (m < 11)
         month = m + 2;
     else
         month = m - 10;
 
-    day = d;
+    day  = d;
     year = y + m / 11;
 
     return year * 10000 + month * 100 + day;
@@ -140,37 +152,35 @@ long grib_julian_to_date(long jdate)
 
 long grib_date_to_julian(long ddate)
 {
-    long  m1,y1,a,b,c,d,j1;
+    long m1, y1, a, b, c, d, j1;
 
-    long month,day,year;
+    long month, day, year;
 
     /*Asserts(ddate > 0);*/
 
     year = ddate / 10000;
     ddate %= 10000;
-    month  = ddate / 100;
+    month = ddate / 100;
     ddate %= 100;
     day = ddate;
 
     /*  if (year < 100) year = year + 1900; */
 
-    if (month > 2)
-    {
+    if (month > 2) {
         m1 = month - 3;
         y1 = year;
     }
-    else
-    {
+    else {
         m1 = month + 9;
         y1 = year - 1;
     }
-    a = 146097*(y1/100)/4;
-    d = y1 % 100;
-    b = 1461*d/4;
-    c = (153*m1+2)/5+day+1721119;
-    j1 = a+b+c;
+    a  = 146097 * (y1 / 100) / 4;
+    d  = y1 % 100;
+    b  = 1461 * d / 4;
+    c  = (153 * m1 + 2) / 5 + day + 1721119;
+    j1 = a + b + c;
 
-    return(j1);
+    return (j1);
 }
 
 /*

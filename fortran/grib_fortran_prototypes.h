@@ -202,6 +202,11 @@ int grib_f_dump(int *gid);
 int grib_f_print_(int *gid, char *key, int len);
 int grib_f_print__(int *gid, char *key, int len);
 int grib_f_print(int *gid, char *key, int len);
+
+int grib_f_get_api_version_(int* apiVersion,int len);
+int grib_f_get_api_version__(int* apiVersion,int len);
+int grib_f_get_api_version(int* apiVersion,int len);
+
 int grib_f_get_error_string_(int *err, char *buf, int len);
 int grib_f_get_error_string__(int *err, char *buf, int len);
 int grib_f_get_error_string(int *err, char *buf, int len);

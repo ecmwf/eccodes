@@ -18,21 +18,21 @@
 #include <stdio.h>
 #include "eccodes.h"
 
-static void usage(const char *app)
+static void usage(const char* app)
 {
-    fprintf(stderr,"Usage is: %s input_file ouput_file\n", app);
+    fprintf(stderr, "Usage is: %s input_file ouput_file\n", app);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-    FILE *in = NULL;
-    FILE *out = NULL;
+    FILE* in  = NULL;
+    FILE* out = NULL;
 
     /* message handle. Required in all the ecCodes calls acting on a message.*/
-    codes_handle *source_handle = NULL;
+    codes_handle* source_handle = NULL;
 
-    const void *buffer = NULL;
-    size_t size = 0;
+    const void* buffer = NULL;
+    size_t size        = 0;
     int i, err = 0;
 
     if (argc != 3) {
@@ -40,8 +40,8 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    in = fopen(argv[1],"rb");
-    out = fopen(argv[2],"wb");
+    in  = fopen(argv[1], "rb");
+    out = fopen(argv[2], "wb");
 
     /* open input and output */
     if (!in || !out) {
@@ -64,10 +64,9 @@ int main(int argc, char *argv[])
     /* create several clones of this message and alter them
        in different ways */
 
-    for(i=0; i < 3; i++) {
-
+    for (i = 0; i < 3; i++) {
         /* clone the current handle */
-        codes_handle *clone_handle = codes_handle_clone(source_handle);
+        codes_handle* clone_handle = codes_handle_clone(source_handle);
 
         if (clone_handle == NULL) {
             perror("ERROR: could not clone field");
@@ -77,13 +76,13 @@ int main(int argc, char *argv[])
         /* This is the place where you may wish to modify the clone
            E.g. we change the typicalDay key */
 
-        CODES_CHECK(codes_set_long(clone_handle, "typicalDay", 20+i),0);
+        CODES_CHECK(codes_set_long(clone_handle, "typicalDay", 20 + i), 0);
 
         /* get the coded message in a buffer */
-        CODES_CHECK(codes_get_message(clone_handle, &buffer, &size),0);
+        CODES_CHECK(codes_get_message(clone_handle, &buffer, &size), 0);
 
         /* write the buffer to a file */
-        if(fwrite(buffer, 1, size, out) != size) {
+        if (fwrite(buffer, 1, size, out) != size) {
             perror("ERROR: could not write message to file");
             return 1;
         }

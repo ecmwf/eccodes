@@ -40,44 +40,45 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 
-static void init_class              (grib_expression_class*);
+static void init_class(grib_expression_class*);
 
 
-static void        print(grib_context*,grib_expression*,grib_handle*);
-static void        add_dependency(grib_expression* e, grib_accessor* observer);
+static void print(grib_context*, grib_expression*, grib_handle*);
+static void add_dependency(grib_expression* e, grib_accessor* observer);
 static string get_name(grib_expression* e);
 
-static int        native_type(grib_expression*,grib_handle*);
+static int native_type(grib_expression*, grib_handle*);
 
-static int        evaluate_long(grib_expression*,grib_handle*,long*);
-static int      evaluate_double(grib_expression*,grib_handle*,double*);
-static string evaluate_string(grib_expression*,grib_handle*,char*,size_t*,int*);
+static int evaluate_long(grib_expression*, grib_handle*, long*);
+static int evaluate_double(grib_expression*, grib_handle*, double*);
+static string evaluate_string(grib_expression*, grib_handle*, char*, size_t*, int*);
 
-typedef struct grib_expression_is_in_dict{
-  grib_expression base;
-/* Members defined in is_in_dict */
-	const char *key;
-	const char *dictionary;
+typedef struct grib_expression_is_in_dict
+{
+    grib_expression base;
+    /* Members defined in is_in_dict */
+    const char* key;
+    const char* dictionary;
 } grib_expression_is_in_dict;
 
 
 static grib_expression_class _grib_expression_class_is_in_dict = {
-    0,                    /* super                     */
-    "is_in_dict",                    /* name                      */
-    sizeof(grib_expression_is_in_dict),/* size of instance          */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    0,                     /* constructor               */
-    0,                  /* destructor                */
-    &print,                 
-    &add_dependency,       
+    0,                                  /* super                     */
+    "is_in_dict",                       /* name                      */
+    sizeof(grib_expression_is_in_dict), /* size of instance          */
+    0,                                  /* inited */
+    &init_class,                        /* init_class */
+    0,                                  /* constructor               */
+    0,                                  /* destructor                */
+    &print,
+    &add_dependency,
 
-	&native_type,
-	&get_name,
+    &native_type,
+    &get_name,
 
-	&evaluate_long,
-	&evaluate_double,
-	&evaluate_string,
+    &evaluate_long,
+    &evaluate_double,
+    &evaluate_string,
 };
 
 grib_expression_class* grib_expression_class_is_in_dict = &_grib_expression_class_is_in_dict;
@@ -89,164 +90,170 @@ static void init_class(grib_expression_class* c)
 /* END_CLASS_IMP */
 
 
-static grib_trie* load_dictionary(grib_context* c,grib_expression* e, int* err) {
+static grib_trie* load_dictionary(grib_context* c, grib_expression* e, int* err)
+{
+    grib_expression_is_in_dict* self = (grib_expression_is_in_dict*)e;
 
-  grib_expression_is_in_dict* self = (grib_expression_is_in_dict*)e;
+    char* filename  = NULL;
+    char line[1024] = {0,};
+    char key[1024] = {0,};
+    char* list            = 0;
+    grib_trie* dictionary = NULL;
+    FILE* f               = NULL;
+    int i                 = 0;
 
-  char* filename=NULL;
-  char line[1024]={0,};
-  char key[1024]={0,};
-  char* list=0;
-  grib_trie* dictionary=NULL;
-  FILE* f=NULL;
-  int i=0;
+    *err = GRIB_SUCCESS;
 
-  *err=GRIB_SUCCESS;
-
-  filename=grib_context_full_defs_path(c,self->dictionary);
-  if (!filename) {
-    grib_context_log(c,GRIB_LOG_ERROR,"unable to find def file %s",self->dictionary);
-    *err=GRIB_FILE_NOT_FOUND;
-    return NULL;
-  } else {
-    grib_context_log(c,GRIB_LOG_DEBUG,"found def file %s",filename);
-  }
-  dictionary=(grib_trie*)grib_trie_get(c->lists,filename);
-  if (dictionary) {
-        grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from cache",self->dictionary);
+    filename = grib_context_full_defs_path(c, self->dictionary);
+    if (!filename) {
+        grib_context_log(c, GRIB_LOG_ERROR, "unable to find def file %s", self->dictionary);
+        *err = GRIB_FILE_NOT_FOUND;
+        return NULL;
+    }
+    else {
+        grib_context_log(c, GRIB_LOG_DEBUG, "found def file %s", filename);
+    }
+    dictionary = (grib_trie*)grib_trie_get(c->lists, filename);
+    if (dictionary) {
+        grib_context_log(c, GRIB_LOG_DEBUG, "using dictionary %s from cache", self->dictionary);
         return dictionary;
-  } else {
-        grib_context_log(c,GRIB_LOG_DEBUG,"using dictionary %s from file %s",self->dictionary,filename);
-  }
+    }
+    else {
+        grib_context_log(c, GRIB_LOG_DEBUG, "using dictionary %s from file %s", self->dictionary, filename);
+    }
 
-  f=codes_fopen(filename,"r");
-  if (!f) {*err=GRIB_IO_PROBLEM; return NULL;}
+    f = codes_fopen(filename, "r");
+    if (!f) {
+        *err = GRIB_IO_PROBLEM;
+        return NULL;
+    }
 
-  dictionary=grib_trie_new(c);
+    dictionary = grib_trie_new(c);
 
-  while(fgets(line,sizeof(line)-1,f)) {
-        i=0;
-        while (line[i] != '|' && line[i] != 0)  {
-                key[i]=line[i];
-                i++;
+    while (fgets(line, sizeof(line) - 1, f)) {
+        i = 0;
+        while (line[i] != '|' && line[i] != 0) {
+            key[i] = line[i];
+            i++;
         }
-        key[i]=0;
-        list=(char*)grib_context_malloc_clear(c,strlen(line)+1);
-        memcpy(list,line,strlen(line));
-        grib_trie_insert(dictionary,key,list);
-  }
+        key[i] = 0;
+        list   = (char*)grib_context_malloc_clear(c, strlen(line) + 1);
+        memcpy(list, line, strlen(line));
+        grib_trie_insert(dictionary, key, list);
+    }
 
-  grib_trie_insert(c->lists,filename,dictionary);
+    grib_trie_insert(c->lists, filename, dictionary);
 
-  fclose(f);
+    fclose(f);
 
-  return dictionary;
-
+    return dictionary;
 }
-
 
 static const char* get_name(grib_expression* g)
 {
-  grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-  return e->key;
+    grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
+    return e->key;
 }
 
-static int evaluate_long(grib_expression* g,grib_handle *h,long* result)
+static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
 {
-  grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-  int err=0;
-  char mybuf[1024]={0,};
-  size_t size=1024;
+    grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
+    int err                       = 0;
+    char mybuf[1024]              = {0,};
+    size_t size = 1024;
 
-  grib_trie* dict=load_dictionary(h->context,g,&err);
+    grib_trie* dict = load_dictionary(h->context, g, &err);
 
-  if((err=grib_get_string_internal(h,e->key,mybuf,&size)) != GRIB_SUCCESS)
-      return err;
+    if ((err = grib_get_string_internal(h, e->key, mybuf, &size)) != GRIB_SUCCESS)
+        return err;
 
-  if (grib_trie_get(dict,mybuf)) *result=1;
-  else *result=0;
+    if (grib_trie_get(dict, mybuf))
+        *result = 1;
+    else
+        *result = 0;
 
-  return err;
+    return err;
 }
 
-static int evaluate_double(grib_expression *g,grib_handle *h,double* result)
+static int evaluate_double(grib_expression* g, grib_handle* h, double* result)
 {
-  grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-  int err=0;
-  char mybuf[1024]={0,};
-  size_t size=1024;
+    grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
+    int err                       = 0;
+    char mybuf[1024]              = {0,};
+    size_t size = 1024;
 
-  grib_trie* list=load_dictionary(h->context,g,&err);
+    grib_trie* list = load_dictionary(h->context, g, &err);
 
-  if((err=grib_get_string_internal(h,e->key,mybuf,&size)) != GRIB_SUCCESS)
-      return err;
+    if ((err = grib_get_string_internal(h, e->key, mybuf, &size)) != GRIB_SUCCESS)
+        return err;
 
-  if (grib_trie_get(list,mybuf)) *result=1;
-  else *result=0;
+    if (grib_trie_get(list, mybuf))
+        *result = 1;
+    else
+        *result = 0;
 
-  return err;
+    return err;
 }
 
-static string evaluate_string(grib_expression* g,grib_handle* h,char* buf,size_t* size,int* err)
+static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, size_t* size, int* err)
 {
-  grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-  char mybuf[1024]={0,};
-  size_t sizebuf=1024;
-  long result;
+    grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
+    char mybuf[1024]              = {0,};
+    size_t sizebuf = 1024;
+    long result;
 
-  grib_trie* list=load_dictionary(h->context,g,err);
+    grib_trie* list = load_dictionary(h->context, g, err);
 
-  if((*err=grib_get_string_internal(h,e->key,mybuf,&sizebuf)) != GRIB_SUCCESS)
-      return NULL;
+    if ((*err = grib_get_string_internal(h, e->key, mybuf, &sizebuf)) != GRIB_SUCCESS)
+        return NULL;
 
-  if (grib_trie_get(list,mybuf)) result=1;
-  else result=0;
+    if (grib_trie_get(list, mybuf))
+        result = 1;
+    else
+        result = 0;
 
-  sprintf(buf,"%ld",result);
-  *size=strlen(buf);
-  return buf;
+    sprintf(buf, "%ld", result);
+    *size = strlen(buf);
+    return buf;
 }
 
-static void print(grib_context* c,grib_expression* g,grib_handle* f)
+static void print(grib_context* c, grib_expression* g, grib_handle* f)
 {
-  grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-  printf("access('%s",e->key);
-  if(f)
-  {
-    long s = 0;
-    grib_get_long(f,e->key,&s);
-    printf("=%ld",s);
-  }
-  printf("')");
+    grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
+    printf("access('%s", e->key);
+    if (f) {
+        long s = 0;
+        grib_get_long(f, e->key, &s);
+        printf("=%ld", s);
+    }
+    printf("')");
 }
 
-
-grib_expression* new_is_in_dict_expression(grib_context* c,const char* name,const char* list)
+grib_expression* new_is_in_dict_expression(grib_context* c, const char* name, const char* list)
 {
-  grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_is_in_dict));
-  e->base.cclass            = grib_expression_class_is_in_dict;
-  e->key                   = grib_context_strdup_persistent(c,name);
-  e->dictionary                   = grib_context_strdup_persistent(c,list);
-  return (grib_expression*)e;
+    grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)grib_context_malloc_clear_persistent(c, sizeof(grib_expression_is_in_dict));
+    e->base.cclass                = grib_expression_class_is_in_dict;
+    e->key                        = grib_context_strdup_persistent(c, name);
+    e->dictionary                 = grib_context_strdup_persistent(c, list);
+    return (grib_expression*)e;
 }
 
-static int native_type(grib_expression* g,grib_handle *h)
+static int native_type(grib_expression* g, grib_handle* h)
 {
-  return GRIB_TYPE_LONG;
+    return GRIB_TYPE_LONG;
 }
 
-static void  add_dependency(grib_expression* g, grib_accessor* observer){
-  grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-  grib_accessor *observed = grib_find_accessor(grib_handle_of_accessor(observer),e->key);
+static void add_dependency(grib_expression* g, grib_accessor* observer)
+{
+    grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
+    grib_accessor* observed       = grib_find_accessor(grib_handle_of_accessor(observer), e->key);
 
-  if(!observed)
-  {
-    /* grib_context_log(observer->context, GRIB_LOG_ERROR, */
-         /* "Error in accessor_add_dependency: cannot find [%s]", e->name); */
-       /* Assert(observed); */
-    return;
-  }
+    if (!observed) {
+        /* grib_context_log(observer->context, GRIB_LOG_ERROR, */
+        /* "Error in accessor_add_dependency: cannot find [%s]", e->name); */
+        /* Assert(observed); */
+        return;
+    }
 
-  grib_dependency_add(observer,observed);
+    grib_dependency_add(observer, observed);
 }
-

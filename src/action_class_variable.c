@@ -34,75 +34,76 @@ or edit "action.class" and rerun ./make_class.pl
 
 */
 
-static void init_class      (grib_action_class*);
-static int execute(grib_action* a,grib_handle* h);
+static void init_class(grib_action_class*);
+static int execute(grib_action* a, grib_handle* h);
 
 
-typedef struct grib_action_variable {
-    grib_action          act;  
-/* Members defined in gen */
-	long            len;
-	grib_arguments* params;
-/* Members defined in variable */
+typedef struct grib_action_variable
+{
+    grib_action act;
+    /* Members defined in gen */
+    long len;
+    grib_arguments* params;
+    /* Members defined in variable */
 } grib_action_variable;
 
 extern grib_action_class* grib_action_class_gen;
 
 static grib_action_class _grib_action_class_variable = {
-    &grib_action_class_gen,                              /* super                     */
-    "action_class_variable",                              /* name                      */
-    sizeof(grib_action_variable),            /* size                      */
-    0,                                   /* inited */
-    &init_class,                         /* init_class */
-    0,                               /* init                      */
+    &grib_action_class_gen,       /* super                     */
+    "action_class_variable",      /* name                      */
+    sizeof(grib_action_variable), /* size                      */
+    0,                            /* inited */
+    &init_class,                  /* init_class */
+    0,                            /* init                      */
     0,                            /* destroy */
 
-    0,                               /* dump                      */
-    0,                               /* xref                      */
+    0, /* dump                      */
+    0, /* xref                      */
 
-    0,             /* create_accessor*/
+    0, /* create_accessor*/
 
-    0,                            /* notify_change */
-    0,                            /* reparse */
-    &execute,                            /* execute */
+    0,        /* notify_change */
+    0,        /* reparse */
+    &execute, /* execute */
 };
 
 grib_action_class* grib_action_class_variable = &_grib_action_class_variable;
 
 static void init_class(grib_action_class* c)
 {
-	c->dump	=	(*(c->super))->dump;
-	c->xref	=	(*(c->super))->xref;
-	c->create_accessor	=	(*(c->super))->create_accessor;
-	c->notify_change	=	(*(c->super))->notify_change;
-	c->reparse	=	(*(c->super))->reparse;
+    c->dump            = (*(c->super))->dump;
+    c->xref            = (*(c->super))->xref;
+    c->create_accessor = (*(c->super))->create_accessor;
+    c->notify_change   = (*(c->super))->notify_change;
+    c->reparse         = (*(c->super))->reparse;
 }
 /* END_CLASS_IMP */
 
-grib_action* grib_action_create_variable( grib_context* context, const char* name, const char* op, const long len,  grib_arguments* params,  grib_arguments* default_value,int flags,const char* name_space)
+grib_action* grib_action_create_variable(grib_context* context, const char* name, const char* op, const long len, grib_arguments* params, grib_arguments* default_value, int flags, const char* name_space)
 {
-    grib_action_variable* a     =  NULL;
-    grib_action_class* c   =  grib_action_class_variable;
-    grib_action* act       =  (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
-    act->next              =  NULL;
-    act->name              =  grib_context_strdup_persistent(context, name);
-    if(name_space)
-        act->name_space              =  grib_context_strdup_persistent(context, name_space);
-    act->op                =  grib_context_strdup_persistent(context, op);
-    act->cclass            =  c;
-    act->context           =  context;
-    act->flags             =  flags;
-    a                      =  (grib_action_variable*)act;
-    a->len                 =  len;
-    a->params              =  params;
-    act->default_value       =  default_value;
+    grib_action_variable* a = NULL;
+    grib_action_class* c    = grib_action_class_variable;
+    grib_action* act        = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
+    act->next               = NULL;
+    act->name               = grib_context_strdup_persistent(context, name);
+    if (name_space)
+        act->name_space = grib_context_strdup_persistent(context, name_space);
+    act->op            = grib_context_strdup_persistent(context, op);
+    act->cclass        = c;
+    act->context       = context;
+    act->flags         = flags;
+    a                  = (grib_action_variable*)act;
+    a->len             = len;
+    a->params          = params;
+    act->default_value = default_value;
 
     /* printf("CREATE %s\n",name); */
 
     return act;
 }
 
-static int execute(grib_action* a, grib_handle *h)
+static int execute(grib_action* a, grib_handle* h)
 {
-    return grib_create_accessor(h->root, a, NULL );
+    return grib_create_accessor(h->root, a, NULL);
 }

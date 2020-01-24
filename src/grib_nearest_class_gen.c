@@ -36,30 +36,31 @@ or edit "nearest.class" and rerun ./make_class.pl
 */
 
 
-static void init_class              (grib_nearest_class*);
+static void init_class(grib_nearest_class*);
 
-static int init               (grib_nearest* nearest,grib_handle* h,grib_arguments* args);
-static int find(grib_nearest* nearest, grib_handle* h,double inlat, double inlon, unsigned long flags, double* outlats,double* outlons, double *values,double *distances, int *indexes,size_t *len);
-static int destroy            (grib_nearest* nearest);
+static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args);
+static int find(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
+static int destroy(grib_nearest* nearest);
 
-typedef struct grib_nearest_gen{
-  grib_nearest nearest;
-/* Members defined in gen */
-	const char* values_key;
-	const char* radius;
-	int cargs;
+typedef struct grib_nearest_gen
+{
+    grib_nearest nearest;
+    /* Members defined in gen */
+    const char* values_key;
+    const char* radius;
+    int cargs;
 } grib_nearest_gen;
 
 
 static grib_nearest_class _grib_nearest_class_gen = {
-    0,                         /* super                     */
-    "gen",                         /* name                      */
-    sizeof(grib_nearest_gen),      /* size of instance          */
-    0,                              /* inited */
-    &init_class,                    /* init_class */
-    &init,                          /* constructor               */
-    &destroy,                       /* destructor                */
-    &find,                          /* find nearest              */
+    0,                        /* super                     */
+    "gen",                    /* name                      */
+    sizeof(grib_nearest_gen), /* size of instance          */
+    0,                        /* inited */
+    &init_class,              /* init_class */
+    &init,                    /* constructor               */
+    &destroy,                 /* destructor                */
+    &find,                    /* find nearest              */
 };
 
 grib_nearest_class* grib_nearest_class_gen = &_grib_nearest_class_gen;
@@ -70,33 +71,34 @@ static void init_class(grib_nearest_class* c)
 }
 /* END_CLASS_IMP */
 
-static int init(grib_nearest* nearest,grib_handle* h,grib_arguments* args)
+static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
 {
-    grib_nearest_gen* self = (grib_nearest_gen*) nearest;
-    int ret = GRIB_SUCCESS;
+    grib_nearest_gen* self = (grib_nearest_gen*)nearest;
+    int ret                = GRIB_SUCCESS;
 
     self->cargs = 1;
 
-    self->values_key  = grib_arguments_get_name(h,args,self->cargs++);
-    self->radius  = grib_arguments_get_name(h,args,self->cargs++);
-    nearest->values=NULL;
+    self->values_key = grib_arguments_get_name(h, args, self->cargs++);
+    self->radius     = grib_arguments_get_name(h, args, self->cargs++);
+    nearest->values  = NULL;
 
-    nearest->context=h->context;
+    nearest->context = h->context;
 
     return ret;
 }
 
 static int destroy(grib_nearest* nearest)
 {
-    if (nearest->values) grib_context_free(nearest->context,nearest->values);
-    grib_context_free(nearest->context,nearest);
+    if (nearest->values)
+        grib_context_free(nearest->context, nearest->values);
+    grib_context_free(nearest->context, nearest);
     return GRIB_SUCCESS;
 }
 
 static int find(grib_nearest* nearest, grib_handle* h,
-        double inlat, double inlon,unsigned long flags,
-        double* outlats,double* outlons, double *values,
-        double *distances,int *indexes, size_t *len)
+                double inlat, double inlon, unsigned long flags,
+                double* outlats, double* outlons, double* values,
+                double* distances, int* indexes, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

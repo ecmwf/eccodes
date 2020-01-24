@@ -14,10 +14,10 @@
  * strcasecmp is not in the C standard. However, it's defined by
  * 4.4BSD, POSIX.1-2001. So we use our own
  */
-int strcmp_nocase(const char *s1, const char *s2)
+int strcmp_nocase(const char* s1, const char* s2)
 {
-    const unsigned char *us1 = (const unsigned char *)s1,
-            *us2 = (const unsigned char *)s2;
+    const unsigned char *us1 = (const unsigned char*)s1,
+                        *us2 = (const unsigned char*)s2;
 
     while (tolower(*us1) == tolower(*us2++)) {
         if (*us1++ == '\0')
@@ -30,7 +30,8 @@ int strcmp_nocase(const char *s1, const char *s2)
 void rtrim(char* s)
 {
     size_t len = 0;
-    if (!s) return;
+    if (!s)
+        return;
     len = strlen(s);
     while (len > 0 && isspace((unsigned char)s[len - 1]))
         len--;
@@ -46,9 +47,12 @@ const char* extract_filename(const char* filepath)
      * so have to check both separators
      */
     const char* s = strrchr(filepath, '/');
-    if (!s) s = strrchr(filepath, '\\');
-    if (!s) return filepath;
-    else    return s + 1;
+    if (!s)
+        s = strrchr(filepath, '\\');
+    if (!s)
+        return filepath;
+    else
+        return s + 1;
 }
 
 /* Returns an array of strings the last of which is NULL.
@@ -57,17 +61,17 @@ const char* extract_filename(const char* filepath)
  */
 char** string_split(char* inputString, const char* delimiter)
 {
-    char** result = NULL;
-    char* p = inputString;
+    char** result       = NULL;
+    char* p             = inputString;
     char* lastDelimiter = NULL;
-    char* aToken = NULL;
-    size_t numTokens = 0;
-    size_t strLength = 0;
-    size_t index = 0;
-    char delimiterChar = 0;
+    char* aToken        = NULL;
+    size_t numTokens    = 0;
+    size_t strLength    = 0;
+    size_t index        = 0;
+    char delimiterChar  = 0;
 
     DebugAssert(inputString);
-    DebugAssert( delimiter && (strlen(delimiter)==1) );
+    DebugAssert(delimiter && (strlen(delimiter) == 1));
     delimiterChar = delimiter[0];
     while (*p) {
         const char ctmp = *p;
@@ -91,7 +95,7 @@ char** string_split(char* inputString, const char* delimiter)
     while (aToken) {
         Assert(index < numTokens);
         *(result + index++) = strdup(aToken);
-        aToken = strtok(NULL, delimiter);
+        aToken              = strtok(NULL, delimiter);
     }
     Assert(index == numTokens - 1);
     *(result + index) = NULL;
@@ -103,16 +107,16 @@ char** string_split(char* inputString, const char* delimiter)
 int string_to_long(const char* input, long* output)
 {
     const int base = 10;
-    char *endptr;
+    char* endptr;
     long val = 0;
 
-    if (!input) return GRIB_INVALID_ARGUMENT;
+    if (!input)
+        return GRIB_INVALID_ARGUMENT;
 
     errno = 0;
-    val = strtol(input, &endptr, base);
-    if ( (errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) ||
-         (errno != 0 && val == 0) )
-    {
+    val   = strtol(input, &endptr, base);
+    if ((errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) ||
+        (errno != 0 && val == 0)) {
         /*perror("strtol");*/
         return GRIB_INVALID_ARGUMENT;
     }
@@ -132,7 +136,7 @@ int string_ends_with(const char* str1, const char* str2)
     if (len2 > len1)
         return 0;
 
-    if (strcmp(&str1[len1-len2], str2) == 0)
+    if (strcmp(&str1[len1 - len2], str2) == 0)
         return 1;
     return 0;
 }

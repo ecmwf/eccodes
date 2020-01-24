@@ -15,68 +15,60 @@
 #include "grib_api_internal.h"
 
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-	grib_handle* h = NULL;
-	FILE* f = NULL;
-	int i = 0;
-	int err = 0;
-	char *mode = "file";
-	char name[80];
-	char value[80];
+    grib_handle* h = NULL;
+    FILE* f        = NULL;
+    int i          = 0;
+    int err        = 0;
+    char* mode     = "file";
+    char name[80];
+    char value[80];
 
 
-	for(i = 1; i < argc; i++)
-	{
+    for (i = 1; i < argc; i++) {
+        if (argv[i][0] == '-') {
+            mode = argv[i] + 1;
+            continue;
+        }
 
-		if(argv[i][0] == '-')
-		{
-			mode = argv[i]+1;
-			continue;
-		}
+        f = fopen(argv[i], "r");
+        if (!f) {
+            perror(argv[i]);
+            exit(1);
+        }
 
-		f = fopen(argv[i],"r");
-		if(!f) {
-			perror(argv[i]);
-			exit(1);
-		}
+        while ((h = grib_handle_new_from_file(0, f, &err)) != NULL) {
+            grib_keys_iterator* ks = grib_keys_iterator_new(h, GRIB_KEYS_ITERATOR_ALL_KEYS, "mars");
+            while (grib_keys_iterator_next(ks)) {
+                size_t len = sizeof(value);
+                char tmp[100];
 
-		while((h = grib_handle_new_from_file(0,f,&err)) != NULL)
-		{
+                strcpy(name, grib_keys_iterator_get_name(ks));
 
-			grib_keys_iterator* ks  = grib_keys_iterator_new(h,GRIB_KEYS_ITERATOR_ALL_KEYS,"mars");
-			while(grib_keys_iterator_next(ks))
-			{
-				size_t len = sizeof(value);
-				char tmp[100];
+                sprintf(tmp, "mars.%s", name);
 
-				strcpy(name,grib_keys_iterator_get_name(ks));
+                if ((err = grib_keys_iterator_get_string(ks, value, &len)) != GRIB_SUCCESS)
+                /* if(err = grib_get_string(h,tmp,value,&len)) */
+                {
+                    fprintf(stderr, "Cannot get %s as string %d (%s)\n", name, err,
+                            grib_get_error_message(err));
+                    exit(err);
+                }
 
-				sprintf(tmp,"mars.%s",name);
-
-				if((err = grib_keys_iterator_get_string(ks,value,&len)) != GRIB_SUCCESS)
-				/* if(err = grib_get_string(h,tmp,value,&len)) */
-				{
-					fprintf(stderr,"Cannot get %s as string %d (%s)\n",name,err,
-							grib_get_error_message(err));
-					exit(err);
-				}
-
-				printf("%s=%s\n",name,value);
-			}
-			grib_keys_iterator_delete(ks);
-			printf("\n");
+                printf("%s=%s\n", name, value);
+            }
+            grib_keys_iterator_delete(ks);
+            printf("\n");
 
 
-
-			grib_handle_delete(h);
-		}
-		fclose(f);
-		if(err)
-		{
-			fprintf(stderr,"%s\n",grib_get_error_message(err));
-			exit(1);
-		}
-	}
-	return 0;
+            grib_handle_delete(h);
+        }
+        fclose(f);
+        if (err) {
+            fprintf(stderr, "%s\n", grib_get_error_message(err));
+            exit(1);
+        }
+    }
+    return 0;
 }

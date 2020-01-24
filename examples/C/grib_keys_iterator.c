@@ -28,11 +28,11 @@
 
 #include "eccodes.h"
 
-#define MAX_VAL_LEN  1024
+#define MAX_VAL_LEN 1024
 
 static void usage(char* progname);
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     /* To skip read only and computed keys
      unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_SKIP_READ_ONLY |
@@ -42,54 +42,52 @@ int main(int argc, char *argv[])
                                               CODES_KEYS_ITERATOR_SKIP_DUPLICATES;
 
     /* Choose a namespace. E.g. "ls", "time", "parameter", "geography", "statistics" */
-    const char* name_space="ls";
+    const char* name_space = "ls";
 
     /* name_space=NULL to get all the keys */
     /* char* name_space=0; */
 
-    FILE* f = NULL;
-    codes_handle* h=NULL;
+    FILE* f         = NULL;
+    codes_handle* h = NULL;
 
-    int err=0;
-    int msg_count=0;
+    int err       = 0;
+    int msg_count = 0;
 
     char value[MAX_VAL_LEN];
-    size_t vlen=MAX_VAL_LEN;
+    size_t vlen = MAX_VAL_LEN;
 
     if (argc != 2) usage(argv[0]);
 
-    f = fopen(argv[1],"rb");
-    if(!f) {
+    f = fopen(argv[1], "rb");
+    if (!f) {
         perror(argv[1]);
         exit(1);
     }
 
-    while((h = codes_handle_new_from_file(0,f,PRODUCT_GRIB,&err)) != NULL)
-    {
-        codes_keys_iterator* kiter=NULL;
+    while ((h = codes_handle_new_from_file(0, f, PRODUCT_GRIB, &err)) != NULL) {
+        codes_keys_iterator* kiter = NULL;
         msg_count++;
-        printf("-- GRIB N. %d --\n",msg_count);
-        if(!h) {
+        printf("-- GRIB N. %d --\n", msg_count);
+        if (!h) {
             printf("ERROR: Unable to create grib handle\n");
             exit(1);
         }
 
-        kiter=codes_keys_iterator_new(h,key_iterator_filter_flags,name_space);
+        kiter = codes_keys_iterator_new(h, key_iterator_filter_flags, name_space);
         if (!kiter) {
             printf("ERROR: Unable to create keys iterator\n");
             exit(1);
         }
 
-        while(codes_keys_iterator_next(kiter))
-        {
+        while (codes_keys_iterator_next(kiter)) {
             const char* name = codes_keys_iterator_get_name(kiter);
-            vlen=MAX_VAL_LEN;
+            vlen             = MAX_VAL_LEN;
             memset(value, 0, vlen);
-            CODES_CHECK(codes_get_string(h,name,value,&vlen),name);
-            printf("%s = %s\n",name,value);
+            CODES_CHECK(codes_get_string(h, name, value, &vlen), name);
+            printf("%s = %s\n", name, value);
 
             /* Alternative way of getting the string value */
-            CODES_CHECK(codes_keys_iterator_get_string(kiter, value, &vlen),0);
+            CODES_CHECK(codes_keys_iterator_get_string(kiter, value, &vlen), 0);
         }
 
         codes_keys_iterator_delete(kiter);
@@ -101,6 +99,6 @@ int main(int argc, char *argv[])
 
 static void usage(char* progname)
 {
-    printf("\nUsage: %s grib_file\n",progname);
+    printf("\nUsage: %s grib_file\n", progname);
     exit(1);
 }
