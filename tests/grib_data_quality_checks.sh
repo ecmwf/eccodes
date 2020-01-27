@@ -143,4 +143,4 @@ ${tools_dir}/grib_set -s scaleValuesBy=100 $input1 $tempOut
 
 # Clean up
 rm -rf $tempDir
-rm -f $tempOut $tempErr
+rm -f $tempOut $tempErr $tempGrib1 $tempGrib2
