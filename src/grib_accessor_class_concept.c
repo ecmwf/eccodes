@@ -434,10 +434,25 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
      *   if (referenceValue > 0 && paramId == 129)
      */
     /*return GRIB_NOT_IMPLEMENTED*/
-    long lval = 0;
-    int ret   = unpack_long(a, &lval, len);
-    if (ret == GRIB_SUCCESS) {
-        *val = lval;
+    int ret = 0;
+    if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE) {
+        long lval = 0;
+        int ret   = unpack_long(a, &lval, len);
+        if (ret == GRIB_SUCCESS) {
+            *val = lval;
+        }
+    } else if (a->flags & GRIB_ACCESSOR_FLAG_DOUBLE_TYPE) {
+        const char* p = concept_evaluate(a);
+
+        if (!p) {
+            grib_handle* h = grib_handle_of_accessor(a);
+            if (a->creator->defaultkey)
+                return grib_get_double_internal(h, a->creator->defaultkey, val);
+
+            return GRIB_NOT_FOUND;
+        }
+        *val = atof(p);
+        *len = 1;
     }
     return ret;
 }

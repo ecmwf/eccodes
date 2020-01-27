@@ -1409,6 +1409,18 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 23 ;
 	}
+#Universal thermal climate index
+'utci' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	}
+#Mean radiant temperature
+'mrt' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	}
 #Virtual temperature
 'vtmp' = {
 	 discipline = 0 ;

@@ -2180,7 +2180,7 @@ int grib_is_earth_oblate(grib_handle* h)
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val)
 {
     int err                      = 0;
-    long min_field_value_allowed = 0, max_field_value_allowed = 0;
+    double min_field_value_allowed = 0, max_field_value_allowed = 0;
     long paramId        = 0;
     double dmin_allowed = 0, dmax_allowed = 0;
     grib_context* ctx = h->context;
@@ -2193,19 +2193,19 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
     is_error = (ctx->grib_data_quality_checks == 1);
 
     /* The limit keys must exist if we are here */
-    err = grib_get_long(h, "param_value_min", &min_field_value_allowed);
+    err = grib_get_double(h, "param_value_min", &min_field_value_allowed);
     if (err) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "grib_data_quality_check: Could not get param_value_min");
         return err;
     }
-    err = grib_get_long(h, "param_value_max", &max_field_value_allowed);
+    err = grib_get_double(h, "param_value_max", &max_field_value_allowed);
     if (err) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "grib_data_quality_check: Could not get param_value_max");
         return err;
     }
 
-    dmin_allowed = (double)min_field_value_allowed;
-    dmax_allowed = (double)max_field_value_allowed;
+    dmin_allowed = min_field_value_allowed;
+    dmax_allowed = max_field_value_allowed;
 
     if (min_val < dmin_allowed) {
         char description[1024] = {0,};
