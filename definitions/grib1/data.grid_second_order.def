@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 unsigned [2] N2 : dump;
 unsigned [2] codedNumberOfGroups : no_copy ;

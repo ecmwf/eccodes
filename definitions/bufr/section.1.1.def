@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 codetable[2] bufrHeaderCentre 'common/c-1.table' : dump;
 unsigned[1]  updateSequenceNumber;

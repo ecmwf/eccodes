@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 codetable[1] groupSplitting ('5.4.table',masterDir,localDir) = 1 ; #default general
 

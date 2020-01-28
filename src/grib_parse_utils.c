@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -483,7 +483,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
                 case ']':
                     loc[mode] = 0;
                     mode      = -1;
-                    al        = grib_find_accessors_list(h, loc);
+                    al        = grib_find_accessors_list(h, loc); /* This allocates memory */
                     if (!al) {
                         if (!fail) {
                             fprintf(out, "undef");
@@ -499,6 +499,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
 
                         if (ret != GRIB_SUCCESS) {
                             /* grib_context_log(h->context, GRIB_LOG_ERROR,"grib_recompose_print: Could not recompose print : %s", uname); */
+                            grib_accessors_list_delete(h->context, al);
                             return ret;
                         }
                     }
@@ -520,6 +521,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
     if (newline)
         fprintf(out, "\n");
 
+    grib_accessors_list_delete(h->context, al);
     return ret;
 }
 

@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 signed[3] latitudeOfStretchingPole : edition_specific,no_copy;
 signed[3] longitudeOfStretchingPole : edition_specific,no_copy;

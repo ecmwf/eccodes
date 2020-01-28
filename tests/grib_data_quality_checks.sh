@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -143,4 +143,4 @@ ${tools_dir}/grib_set -s scaleValuesBy=100 $input1 $tempOut
 
 # Clean up
 rm -rf $tempDir
-rm -f $tempOut $tempErr
+rm -f $tempOut $tempErr $tempGrib1 $tempGrib2

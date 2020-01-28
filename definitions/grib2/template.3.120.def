@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.120, Azimuth-range projection
 #  Nb - number of data bins along radials (A data bin is a data point representing the volume centred on it)

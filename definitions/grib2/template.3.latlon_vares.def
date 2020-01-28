@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 unsigned[4] Ni : can_be_missing,dump;
 alias numberOfPointsAlongAParallel=Ni;

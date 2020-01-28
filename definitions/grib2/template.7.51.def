@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 7.51, Spherical harmonics - complex packing
 # Octets 6-(5+I*TS) : Data values from the unpacked subset
