@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 #  Total number of forecast probabilities
 unsigned[1] numberOfCategories  : dump;

@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 # moved here to allow different bitsPerValue in second order packing
 unsigned[1] bitsPerValue : dump ;

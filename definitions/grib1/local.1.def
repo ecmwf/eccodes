@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 # Definition for BOM , same as ECWF
 unsigned[1] localDefinitionNumber = 1 : dump;

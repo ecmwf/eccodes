@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.1100, Hovmoller diagram grid with points equally spaced on the horizontal
 include "grib2/template.3.shape_of_the_earth.def";

@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 constant defaultSequence=0;
 constant tablesMasterDir="bufr/tables/[masterTableNumber]/wmo/[masterTablesVersionNumber]" : hidden;

@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.20, Polar stereographic projection
 include "grib2/template.3.shape_of_the_earth.def";
