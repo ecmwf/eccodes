@@ -25,14 +25,12 @@ namespace regular {
 
 RotatedGG::RotatedGG(const param::MIRParametrisation& parametrisation) :
     Regular(parametrisation),
-    rotation_(parametrisation) {
-}
+    rotation_(parametrisation) {}
 
 
 RotatedGG::RotatedGG(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox, double angularPrecision) :
     Regular(N, bbox, angularPrecision),
-    rotation_(rotation) {
-}
+    rotation_(rotation) {}
 
 
 RotatedGG::~RotatedGG() = default;
@@ -40,12 +38,8 @@ RotatedGG::~RotatedGG() = default;
 
 void RotatedGG::print(std::ostream& out) const {
     out << "RotatedGG["
-            "N=" << N_
-        << ",Ni=" << Ni_
-        << ",Nj=" << Nj_
-        << ",bbox=" << bbox_
-        << ",rotation=" << rotation_
-        << "]";
+           "N="
+        << N_ << ",Ni=" << Ni_ << ",Nj=" << Nj_ << ",bbox=" << bbox_ << ",rotation=" << rotation_ << "]";
 }
 
 
@@ -56,7 +50,7 @@ bool RotatedGG::sameAs(const Representation& other) const {
 
 
 Iterator* RotatedGG::iterator() const {
-    auto Ni = [=](size_t){ return long(4 * N_); };
+    auto Ni = [=](size_t) { return long(4 * N_); };
     return Gaussian::rotatedIterator(Ni, rotation_);
 }
 
@@ -72,14 +66,14 @@ void RotatedGG::makeName(std::ostream& out) const {
 }
 
 
-void RotatedGG::fill(grib_info& info) const  {
+void RotatedGG::fill(grib_info& info) const {
     Regular::fill(info);
     rotation_.fill(info);
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
 }
 
 
-void RotatedGG::fill(api::MIRJob& job) const  {
+void RotatedGG::fill(api::MIRJob& job) const {
     Regular::fill(job);
     rotation_.fill(job);
 }
@@ -91,7 +85,7 @@ atlas::Grid RotatedGG::atlasGrid() const {
 
 
 namespace {
-static RepresentationBuilder<RotatedGG> rotatedGG("rotated_gg"); // Name is what is returned by grib_api
+static RepresentationBuilder<RotatedGG> rotatedGG("rotated_gg");  // Name is what is returned by grib_api
 }
 
 
@@ -99,4 +93,3 @@ static RepresentationBuilder<RotatedGG> rotatedGG("rotated_gg"); // Name is what
 }  // namespace gauss
 }  // namespace repres
 }  // namespace mir
-

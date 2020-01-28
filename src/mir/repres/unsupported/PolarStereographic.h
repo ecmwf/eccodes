@@ -21,18 +21,17 @@ namespace repres {
 
 
 class PolarStereographic : public Gridded {
-  public:
-
+public:
     // -- Exceptions
     // None
 
     // -- Contructors
 
-    PolarStereographic(const param::MIRParametrisation &);
+    PolarStereographic(const param::MIRParametrisation&);
 
     // -- Destructor
 
-    virtual ~PolarStereographic(); // Change to virtual if base class
+    virtual ~PolarStereographic();  // Change to virtual if base class
 
     // -- Convertors
     // None
@@ -51,14 +50,13 @@ class PolarStereographic : public Gridded {
     // -- Class methods
     // None
 
-  protected:
-
+protected:
     // -- Members
     // None
 
     // -- Methods
 
-    void print(std::ostream &) const; // Change to virtual if base class
+    void print(std::ostream&) const;  // Change to virtual if base class
 
     // -- Overridden methods
     // None
@@ -69,14 +67,13 @@ class PolarStereographic : public Gridded {
     // -- Class methods
     // None
 
-  private:
-
+private:
     PolarStereographic();
 
     // No copy allowed
 
-    PolarStereographic(const PolarStereographic &);
-    PolarStereographic &operator=(const PolarStereographic &);
+    PolarStereographic(const PolarStereographic&);
+    PolarStereographic& operator=(const PolarStereographic&);
 
     // -- Members
 
@@ -96,7 +93,7 @@ class PolarStereographic : public Gridded {
 
     // -- Overridden methods
 
-    virtual void fill(grib_info &) const;
+    virtual void fill(grib_info&) const;
     virtual void validate(const MIRValuesVector&) const;
 
     // -- Class members
@@ -107,13 +104,11 @@ class PolarStereographic : public Gridded {
 
     // -- Friends
 
-    //friend ostream& operator<<(ostream& s,const PolarStereographic& p)
+    // friend ostream& operator<<(ostream& s,const PolarStereographic& p)
     //  { p.print(s); return s; }
-
 };
 
 
 }  // namespace repres
 }  // namespace mir
 #endif
-

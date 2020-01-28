@@ -23,10 +23,10 @@ namespace gauss {
 namespace reduced {
 
 
-RotatedOctahedral::RotatedOctahedral(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox, double angularPrecision) :
+RotatedOctahedral::RotatedOctahedral(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox,
+                                     double angularPrecision) :
     Octahedral(N, bbox, angularPrecision),
-    rotation_(rotation) {
-}
+    rotation_(rotation) {}
 
 
 RotatedOctahedral::~RotatedOctahedral() = default;
@@ -34,10 +34,8 @@ RotatedOctahedral::~RotatedOctahedral() = default;
 
 void RotatedOctahedral::print(std::ostream& out) const {
     out << "RotatedOctahedral["
-            "N=" << N_
-        << ",bbox=" << bbox_
-        << ",rotation=" << rotation_
-        << "]";
+           "N="
+        << N_ << ",bbox=" << bbox_ << ",rotation=" << rotation_ << "]";
 }
 
 
@@ -57,14 +55,14 @@ Iterator* RotatedOctahedral::iterator() const {
 }
 
 
-void RotatedOctahedral::fill(grib_info& info) const  {
+void RotatedOctahedral::fill(grib_info& info) const {
     Octahedral::fill(info);
     rotation_.fill(info);
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
 }
 
 
-void RotatedOctahedral::fill(api::MIRJob&) const  {
+void RotatedOctahedral::fill(api::MIRJob&) const {
     NOTIMP;
 }
 
@@ -83,4 +81,3 @@ const Gridded* RotatedOctahedral::croppedRepresentation(const util::BoundingBox&
 }  // namespace gauss
 }  // namespace repres
 }  // namespace mir
-

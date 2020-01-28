@@ -23,12 +23,14 @@ namespace mir {
 namespace repres {
 namespace latlon {
 
-RotatedLL::RotatedLL(const param::MIRParametrisation& parametrisation)
-    : LatLon(parametrisation), rotation_(parametrisation) {}
+RotatedLL::RotatedLL(const param::MIRParametrisation& parametrisation) :
+    LatLon(parametrisation),
+    rotation_(parametrisation) {}
 
 RotatedLL::RotatedLL(const util::Increments& increments, const util::Rotation& rotation, const util::BoundingBox& bbox,
-                     const PointLatLon& reference)
-    : LatLon(increments, bbox, reference), rotation_(rotation) {}
+                     const PointLatLon& reference) :
+    LatLon(increments, bbox, reference),
+    rotation_(rotation) {}
 
 RotatedLL::~RotatedLL() = default;
 
@@ -46,8 +48,9 @@ Iterator* RotatedLL::iterator() const {
 
     public:
         RotatedLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, const util::Increments& increments,
-                          const util::Rotation& rotation)
-            : LatLonIterator(ni, nj, north, west, increments), Iterator(rotation) {}
+                          const util::Rotation& rotation) :
+            LatLonIterator(ni, nj, north, west, increments),
+            Iterator(rotation) {}
     };
 
     return new RotatedLLIterator(ni_, nj_, bbox_.north(), bbox_.west(), increments_, rotation_);
@@ -64,10 +67,10 @@ atlas::Grid RotatedLL::atlasGrid() const {
     // NOTE: for non-shifted/shifted grid, yspace uses bounding box
     // (this works together with the Atlas RectangularDomain cropping)
     const util::Domain dom = domain();
-    double n = bbox_.north().value();
-    double s = bbox_.south().value();
-    double w = dom.west().value();
-    double e = dom.east().value();
+    double n               = bbox_.north().value();
+    double s               = bbox_.south().value();
+    double w               = dom.west().value();
+    double e               = dom.east().value();
 
     using atlas::StructuredGrid;
     using atlas::grid::LinearSpacing;
@@ -114,8 +117,8 @@ std::string RotatedLL::factory() const {
     return "rotated_ll";
 }
 
-static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll"); // Name is what is returned by grib_api
+static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll");  // Name is what is returned by grib_api
 
-} // namespace latlon
-} // namespace repres
-} // namespace mir
+}  // namespace latlon
+}  // namespace repres
+}  // namespace mir

@@ -20,9 +20,9 @@
 #include "eckit/exception/Exceptions.h"
 
 
-inline bool grib_call(int e, const char *call, bool missingOK = false) {
+inline bool grib_call(int e, const char* call, bool missingOK = false) {
     if (e) {
-        if(missingOK && (e == GRIB_NOT_FOUND)) {
+        if (missingOK && (e == GRIB_NOT_FOUND)) {
             return false;
         }
 
@@ -47,9 +47,10 @@ struct grib_info {
 
 
 class HandleDeleter {
-    grib_handle *h_;
+    grib_handle* h_;
+
 public:
-    HandleDeleter(grib_handle *h) : h_(h) {}
+    HandleDeleter(grib_handle* h) : h_(h) {}
     HandleDeleter(const HandleDeleter&) = delete;
     void operator=(const HandleDeleter&) = delete;
     ~HandleDeleter() { grib_handle_delete(h_); }
@@ -57,7 +58,8 @@ public:
 
 
 class GKeyIteratorDeleter {
-    grib_keys_iterator *h_;
+    grib_keys_iterator* h_;
+
 public:
     GKeyIteratorDeleter(grib_keys_iterator* h) : h_(h) {}
     GKeyIteratorDeleter(const GKeyIteratorDeleter&) = delete;
@@ -67,7 +69,8 @@ public:
 
 
 class BKeyIteratorDeleter {
-    bufr_keys_iterator *h_;
+    bufr_keys_iterator* h_;
+
 public:
     BKeyIteratorDeleter(bufr_keys_iterator* h) : h_(h) {}
     BKeyIteratorDeleter(const BKeyIteratorDeleter&) = delete;

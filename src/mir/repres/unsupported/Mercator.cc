@@ -21,33 +21,30 @@ namespace mir {
 namespace repres {
 
 
-Mercator::Mercator(const param::MIRParametrisation &parametrisation) {
-}
+Mercator::Mercator(const param::MIRParametrisation& parametrisation) {}
 
 
-Mercator::Mercator() {
-}
+Mercator::Mercator() {}
 
 
 Mercator::~Mercator() = default;
 
 
-void Mercator::print(std::ostream &out) const {
+void Mercator::print(std::ostream& out) const {
     out << "Mercator["
         << "]";
 }
 
 
-void Mercator::fill(grib_info &info) const  {
+void Mercator::fill(grib_info& info) const {
     NOTIMP;
 }
 
 
 namespace {
-static RepresentationBuilder<Mercator> mercator("mercator"); // Name is what is returned by grib_api
+static RepresentationBuilder<Mercator> mercator("mercator");  // Name is what is returned by grib_api
 }
 
 
 }  // namespace repres
 }  // namespace mir
-

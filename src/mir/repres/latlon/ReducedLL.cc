@@ -81,7 +81,7 @@ bool ReducedLL::getLongestElementDiagonal(double& d) const {
     // Greenwich
 
     const util::Domain dom = domain();
-    const bool periodic = dom.isPeriodicWestEast();
+    const bool periodic    = dom.isPeriodicWestEast();
 
     ASSERT(pl_.size() >= 2);
     const size_t Dj(pl_.size() - 1);
@@ -133,8 +133,7 @@ atlas::Grid ReducedLL::atlasGrid() const {
     auto N                 = long(pl_.size());
 
     atlas::StructuredGrid::XSpace xspace({{dom.west().value(), dom.east().value()}}, pl_, !dom.isPeriodicWestEast());
-    atlas::StructuredGrid::YSpace yspace(
-        atlas::grid::LinearSpacing({{dom.north().value(), dom.south().value()}}, N));
+    atlas::StructuredGrid::YSpace yspace(atlas::grid::LinearSpacing({{dom.north().value(), dom.south().value()}}, N));
 
     return atlas::StructuredGrid(xspace, yspace);
 }
@@ -160,7 +159,7 @@ bool ReducedLL::isPeriodicWestEast() const {
         return eckit::types::is_approximately_equal(a.value(), b.value(), GRIB1EPSILON);
     };
 
-    const Longitude we = bbox_.east() - bbox_.west();
+    const Longitude we  = bbox_.east() - bbox_.west();
     const Longitude inc = Longitude::GLOBE - we;
 
     return same_with_grib1_accuracy(inc * maxpl, Longitude::GLOBE);
@@ -323,9 +322,9 @@ std::vector<util::GridBox> ReducedLL::gridBoxes() const {
 }
 
 namespace {
-static RepresentationBuilder<ReducedLL> reducedLL("reduced_ll"); // Name is what is returned by grib_api
+static RepresentationBuilder<ReducedLL> reducedLL("reduced_ll");  // Name is what is returned by grib_api
 }
 
-} // namespace latlon
-} // namespace repres
-} // namespace mir
+}  // namespace latlon
+}  // namespace repres
+}  // namespace mir

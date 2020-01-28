@@ -183,7 +183,7 @@ void UnstructuredGrid::fill(util::MeshGeneratorParameters& params) const {
 
 
 util::Domain UnstructuredGrid::domain() const {
-    //FIXME Should be global?
+    // FIXME Should be global?
     return util::Domain(bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east());
 }
 

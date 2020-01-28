@@ -54,11 +54,14 @@ LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
     ASSERT(parametrisation.get("Ni", ni));
     ASSERT(parametrisation.get("Nj", nj));
 
-    eckit::Log::debug<LibMir>()
-            << "LatLon:"
-            "\n\t" "(Ni, Nj) = (" << ni_ << ", " << nj_ << ") calculated"
-            "\n\t" "(Ni, Nj) = (" << ni << ", " << nj << ") from parametrisation"
-            << std::endl;
+    eckit::Log::debug<LibMir>() << "LatLon:"
+                                   "\n\t"
+                                   "(Ni, Nj) = ("
+                                << ni_ << ", " << nj_
+                                << ") calculated"
+                                   "\n\t"
+                                   "(Ni, Nj) = ("
+                                << ni << ", " << nj << ") from parametrisation" << std::endl;
 
     ASSERT(ni == ni_);
     ASSERT(nj == nj_);
@@ -87,11 +90,7 @@ void LatLon::reorder(long scanningMode, MIRValuesVector& values) const {
 
 void LatLon::print(std::ostream& out) const {
     out << "LatLon["
-        <<  "bbox=" << bbox_
-        << ",increments=" << increments_
-        << ",ni=" << ni_
-        << ",nj=" << nj_
-        << "]";
+        << "bbox=" << bbox_ << ",increments=" << increments_ << ",ni=" << ni_ << ",nj=" << nj_ << "]";
 }
 
 
@@ -190,16 +189,16 @@ Representation* LatLon::globalise(data::MIRField& field) const {
     ASSERT(newll->nj_ > nj_);
     ASSERT(newll->ni_ == ni_);
 
-    size_t n = ni_ * nj_;
-    size_t newn = newll->ni_ * newll->nj_;
+    size_t n            = ni_ * nj_;
+    size_t newn         = newll->ni_ * newll->nj_;
     double missingValue = field.missingValue();
 
-    for (size_t i = 0; i < field.dimensions(); i++ ) {
+    for (size_t i = 0; i < field.dimensions(); i++) {
         MIRValuesVector newvalues(newn, missingValue);
         const MIRValuesVector& values = field.direct(i);
         ASSERT(values.size() == n);
 
-        for (size_t j = 0 ; j < n; ++j) {
+        for (size_t j = 0; j < n; ++j) {
             newvalues[j] = values[j];
         }
 
@@ -249,7 +248,7 @@ size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue, 
     size_t k = 0;
     for (size_t j = 0; j < nj_; j++) {
         for (size_t i = 0; i < ni_; i++) {
-            if ( !((i < size) || (j < size) || (i >= ni_ - size) || (j >= nj_ - size))) { // Check me, may be buggy
+            if (!((i < size) || (j < size) || (i >= ni_ - size) || (j >= nj_ - size))) {  // Check me, may be buggy
                 if (!estimate) {
                     values[k] = missingValue;
                 }
@@ -266,7 +265,6 @@ size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue, 
         ASSERT(k == values.size());
     }
     return count;
-
 }
 
 
@@ -281,7 +279,8 @@ void LatLon::validate(const MIRValuesVector& values) const {
 }
 
 
-LatLon::LatLonIterator::LatLonIterator(size_t ni, size_t nj, Latitude north, Longitude west, const util::Increments& increments) :
+LatLon::LatLonIterator::LatLonIterator(size_t ni, size_t nj, Latitude north, Longitude west,
+                                       const util::Increments& increments) :
     ni_(ni),
     nj_(nj),
     north_(north.fraction()),
@@ -291,8 +290,8 @@ LatLon::LatLonIterator::LatLonIterator(size_t ni, size_t nj, Latitude north, Lon
     i_(0),
     j_(0),
     count_(0) {
-    lat_ = north_;
-    lon_ = west_;
+    lat_      = north_;
+    lon_      = west_;
     latValue_ = lat_;
     lonValue_ = lon_;
 }
@@ -305,16 +304,8 @@ LatLon::LatLonIterator::~LatLonIterator() {
 
 void LatLon::LatLonIterator::print(std::ostream& out) const {
     out << "LatLonIterator["
-        <<  "ni="     << ni_
-        << ",nj="     << nj_
-        << ",north="  << north_
-        << ",west="   << west_
-        << ",we="     << we_
-        << ",ns="     << ns_
-        << ",i="      << i_
-        << ",j="      << j_
-        << ",count="  << count_
-        << "]";
+        << "ni=" << ni_ << ",nj=" << nj_ << ",north=" << north_ << ",west=" << west_ << ",we=" << we_ << ",ns=" << ns_
+        << ",i=" << i_ << ",j=" << j_ << ",count=" << count_ << "]";
 }
 
 
@@ -329,7 +320,7 @@ bool LatLon::LatLonIterator::next(Latitude& lat, Longitude& lon) {
                 j_++;
                 i_ = 0;
                 lat_ -= ns_;
-                lon_ = west_;
+                lon_      = west_;
                 latValue_ = lat_;
             }
             lonValue_ = lon_;
@@ -342,8 +333,8 @@ bool LatLon::LatLonIterator::next(Latitude& lat, Longitude& lon) {
 
 
 void LatLon::globaliseBoundingBox(util::BoundingBox& bbox, const util::Increments& inc, const PointLatLon& reference) {
-    using iterator::detail::RegularIterator;
     using eckit::Fraction;
+    using iterator::detail::RegularIterator;
 
     Fraction sn = inc.south_north().latitude().fraction();
     Fraction we = inc.west_east().longitude().fraction();
@@ -380,18 +371,21 @@ void LatLon::globaliseBoundingBox(util::BoundingBox& bbox, const util::Increment
 }
 
 
-void LatLon::correctBoundingBox(util::BoundingBox& bbox, size_t& ni, size_t& nj, const util::Increments& inc, const PointLatLon& reference) {
+void LatLon::correctBoundingBox(util::BoundingBox& bbox, size_t& ni, size_t& nj, const util::Increments& inc,
+                                const PointLatLon& reference) {
     using iterator::detail::RegularIterator;
 
     // Latitude/longitude ranges
-    RegularIterator lat{ bbox.south().fraction(), bbox.north().fraction(), inc.south_north().latitude().fraction(), reference.lat().fraction() };
+    RegularIterator lat{bbox.south().fraction(), bbox.north().fraction(), inc.south_north().latitude().fraction(),
+                        reference.lat().fraction()};
     auto n = lat.b();
     auto s = lat.a();
 
     nj = lat.n();
     ASSERT(nj > 0);
 
-    RegularIterator lon{ bbox.west().fraction(), bbox.east().fraction(), inc.west_east().longitude().fraction(), reference.lon().fraction(), Longitude::GLOBE.fraction() };
+    RegularIterator lon{bbox.west().fraction(), bbox.east().fraction(), inc.west_east().longitude().fraction(),
+                        reference.lon().fraction(), Longitude::GLOBE.fraction()};
     auto w = lon.a();
     auto e = lon.b();
 
@@ -451,4 +445,3 @@ bool LatLon::samePoints(const param::MIRParametrisation& user, const param::MIRP
 }  // namespace latlon
 }  // namespace repres
 }  // namespace mir
-

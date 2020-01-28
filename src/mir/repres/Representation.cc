@@ -31,14 +31,12 @@ namespace mir {
 namespace repres {
 
 
-Representation::Representation() {
-}
+Representation::Representation() {}
 
 
 Representation::~Representation() = default;
 
-RepresentationHandle::RepresentationHandle(const Representation *representation):
-    representation_(representation) {
+RepresentationHandle::RepresentationHandle(const Representation* representation) : representation_(representation) {
     if (representation_) {
         representation_->attach();
     }
@@ -88,9 +86,7 @@ void Representation::estimate(api::MIREstimation&) const {
 
 
 bool Representation::isGlobal() const {
-    bool global = isPeriodicWestEast() &&
-                  includesNorthPole() &&
-                  includesSouthPole();
+    bool global = isPeriodicWestEast() && includesNorthPole() && includesSouthPole();
 
     ASSERT(global == domain().isGlobal());
     return global;
@@ -146,14 +142,14 @@ void Representation::fill(util::MeshGeneratorParameters&) const {
 }
 
 
-const Representation *Representation::croppedRepresentation(const util::BoundingBox&) const {
+const Representation* Representation::croppedRepresentation(const util::BoundingBox&) const {
     std::ostringstream os;
     os << "Representation::croppedRepresentation() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
 }
 
 
-const Representation *Representation::truncate(size_t, const MIRValuesVector&, MIRValuesVector&) const {
+const Representation* Representation::truncate(size_t, const MIRValuesVector&, MIRValuesVector&) const {
     std::ostringstream os;
     os << "Representation::truncate() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
@@ -265,7 +261,7 @@ void Representation::reorder(long, MIRValuesVector&) const {
 }
 
 
-Iterator *Representation::iterator() const {
+Iterator* Representation::iterator() const {
     std::ostringstream os;
     os << "Representation::iterator() not implemented for " << *this;
     throw eckit::SeriousBug(os.str());
@@ -284,8 +280,10 @@ const Representation* Representation::globalise(data::MIRField& field) const {
     RepresentationHandle octahedral(namedgrids::NamedGrid::lookup("O320").representation());
     size_t size = octahedral->numberOfPoints() + numberOfPoints();
 
-    std::vector<double> latitudes;  latitudes.resize(size);
-    std::vector<double> longitudes; longitudes.resize(size);
+    std::vector<double> latitudes;
+    latitudes.resize(size);
+    std::vector<double> longitudes;
+    longitudes.resize(size);
 
     std::unique_ptr<repres::Iterator> it(octahedral->iterator());
     while (it->next()) {
@@ -310,14 +308,14 @@ const Representation* Representation::globalise(data::MIRField& field) const {
 
 
     double missingValue = field.missingValue();
-    size = latitudes.size();
+    size                = latitudes.size();
 
-    for (size_t i = 0; i < field.dimensions(); i++ ) {
+    for (size_t i = 0; i < field.dimensions(); i++) {
         MIRValuesVector newvalues(size, missingValue);
         const MIRValuesVector& values = field.direct(i);
         ASSERT(values.size() < size);
 
-        for (size_t j = 0 ; j < values.size(); ++j) {
+        for (size_t j = 0; j < values.size(); ++j) {
             newvalues[j] = values[j];
         }
 
@@ -335,18 +333,17 @@ const Representation* Representation::globalise(data::MIRField& field) const {
 
 
 namespace {
-static pthread_once_t once = PTHREAD_ONCE_INIT;
-static eckit::Mutex* local_mutex = nullptr;
-static std::map< std::string, RepresentationFactory* >* m = nullptr;
+static pthread_once_t once                              = PTHREAD_ONCE_INIT;
+static eckit::Mutex* local_mutex                        = nullptr;
+static std::map<std::string, RepresentationFactory*>* m = nullptr;
 static void init() {
     local_mutex = new eckit::Mutex();
-    m = new std::map< std::string, RepresentationFactory* >();
+    m           = new std::map<std::string, RepresentationFactory*>();
 }
-}  // (anonymous namespace)
+}  // namespace
 
 
-RepresentationFactory::RepresentationFactory(const std::string& name):
-    name_(name) {
+RepresentationFactory::RepresentationFactory(const std::string& name) : name_(name) {
     pthread_once(&once, init);
     eckit::AutoLock<eckit::Mutex> lock(local_mutex);
 
@@ -401,4 +398,3 @@ void RepresentationFactory::list(std::ostream& out) {
 
 }  // namespace repres
 }  // namespace mir
-

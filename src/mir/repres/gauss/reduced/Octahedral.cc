@@ -25,8 +25,8 @@ namespace repres {
 namespace gauss {
 namespace reduced {
 
-Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox, double angularPrecision)
-    : Reduced(N, bbox, angularPrecision) {
+Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox, double angularPrecision) :
+    Reduced(N, bbox, angularPrecision) {
 
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox.north();
@@ -84,7 +84,7 @@ void Octahedral::fill(util::MeshGeneratorParameters& params) const {
     params.set("triangulate", true);
 }
 
-} // namespace reduced
-} // namespace gauss
-} // namespace repres
-} // namespace mir
+}  // namespace reduced
+}  // namespace gauss
+}  // namespace repres
+}  // namespace mir

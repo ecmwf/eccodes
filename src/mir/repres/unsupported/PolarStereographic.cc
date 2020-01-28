@@ -22,7 +22,7 @@ namespace mir {
 namespace repres {
 
 
-PolarStereographic::PolarStereographic(const param::MIRParametrisation &parametrisation) {
+PolarStereographic::PolarStereographic(const param::MIRParametrisation& parametrisation) {
 
     ASSERT(parametrisation.get("Nx", Nx_));
     ASSERT(parametrisation.get("Ny", Ny_));
@@ -39,33 +39,27 @@ PolarStereographic::PolarStereographic(const param::MIRParametrisation &parametr
     bool earthIsOblate;
     ASSERT(parametrisation.get("earthIsOblate", earthIsOblate));
     ASSERT(!earthIsOblate);
-
 }
 
-PolarStereographic::PolarStereographic() {
-}
+PolarStereographic::PolarStereographic() {}
 
 
 PolarStereographic::~PolarStereographic() = default;
 
 
-void PolarStereographic::print(std::ostream &out) const {
+void PolarStereographic::print(std::ostream& out) const {
 
     out << "PolarStereographic["
-        << "Nx=" << Nx_
-        << ",Ny=" << Ny_
-        << ",Dx=" << Dx_
-        << ",Dy=" << Dy_
+        << "Nx=" << Nx_ << ",Ny=" << Ny_ << ",Dx=" << Dx_ << ",Dy=" << Dy_
         << ",longitudeOfFirstGridPoint=" << longitudeOfFirstGridPoint_
         << ",latitudeOfFirstGridPoint=" << latitudeOfFirstGridPoint_
         << ",orientationOfTheGrid=" << orientationOfTheGrid_
-        << ",southPoleOnProjectionPlane=" << southPoleOnProjectionPlane_
-        << ",radiusOfTheEarth=" << radiusOfTheEarth_
+        << ",southPoleOnProjectionPlane=" << southPoleOnProjectionPlane_ << ",radiusOfTheEarth=" << radiusOfTheEarth_
 
         << "]";
 }
 
-void PolarStereographic::fill(grib_info &info) const  {
+void PolarStereographic::fill(grib_info& info) const {
     NOTIMP;
 }
 
@@ -75,9 +69,9 @@ void PolarStereographic::validate(const MIRValuesVector& values) const {
 
 
 namespace {
-static RepresentationBuilder<PolarStereographic> polarStereographic("polar_stereographic"); // Name is what is returned by grib_api
+static RepresentationBuilder<PolarStereographic> polarStereographic(
+    "polar_stereographic");  // Name is what is returned by grib_api
 }
 
 }  // namespace repres
 }  // namespace mir
-

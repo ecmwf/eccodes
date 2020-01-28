@@ -26,8 +26,8 @@ namespace reduced {
 FromPL::FromPL(const param::MIRParametrisation& parametrisation) : Reduced(parametrisation) {}
 
 
-FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox, double angularPrecision)
-    : Reduced(N, pl, bbox, angularPrecision) {}
+FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox, double angularPrecision) :
+    Reduced(N, pl, bbox, angularPrecision) {}
 
 
 FromPL::~FromPL() = default;
@@ -67,8 +67,7 @@ atlas::Grid FromPL::atlasGrid() const {
 }
 
 
-} // namespace reduced
-} // namespace gauss
-} // namespace repres
-} // namespace mir
-
+}  // namespace reduced
+}  // namespace gauss
+}  // namespace repres
+}  // namespace mir

@@ -22,27 +22,24 @@ namespace gauss {
 namespace reduced {
 
 
-RotatedFromPL::RotatedFromPL(const param::MIRParametrisation &parametrisation):
+RotatedFromPL::RotatedFromPL(const param::MIRParametrisation& parametrisation) :
     FromPL(parametrisation),
-    rotation_(parametrisation) {
-}
+    rotation_(parametrisation) {}
 
 
-RotatedFromPL::RotatedFromPL(size_t N, const std::vector<long>& pl, const util::Rotation& rotation, const util::BoundingBox& bbox, double angularPrecision) :
+RotatedFromPL::RotatedFromPL(size_t N, const std::vector<long>& pl, const util::Rotation& rotation,
+                             const util::BoundingBox& bbox, double angularPrecision) :
     FromPL(N, pl, bbox, angularPrecision),
-    rotation_(rotation) {
-}
+    rotation_(rotation) {}
 
 
 RotatedFromPL::~RotatedFromPL() = default;
 
 
-void RotatedFromPL::print(std::ostream &out) const {
+void RotatedFromPL::print(std::ostream& out) const {
     out << "RotatedFromPL["
-            "N=" << N_
-        << ",bbox=" << bbox_
-        << ",rotation=" << rotation_
-        << "]";
+           "N="
+        << N_ << ",bbox=" << bbox_ << ",rotation=" << rotation_ << "]";
 }
 
 
@@ -63,14 +60,14 @@ Iterator* RotatedFromPL::iterator() const {
 }
 
 
-void RotatedFromPL::fill(grib_info &info) const  {
+void RotatedFromPL::fill(grib_info& info) const {
     FromPL::fill(info);
     rotation_.fill(info);
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
 }
 
 
-void RotatedFromPL::fill(api::MIRJob&) const  {
+void RotatedFromPL::fill(api::MIRJob&) const {
     NOTIMP;
 }
 
@@ -86,7 +83,8 @@ const Gridded* RotatedFromPL::croppedRepresentation(const util::BoundingBox& bbo
 
 
 namespace {
-static RepresentationBuilder<RotatedFromPL> rotatedFromPL("reduced_rotated_gg"); // Name is what is returned by grib_api
+static RepresentationBuilder<RotatedFromPL> rotatedFromPL(
+    "reduced_rotated_gg");  // Name is what is returned by grib_api
 }
 
 
@@ -94,4 +92,3 @@ static RepresentationBuilder<RotatedFromPL> rotatedFromPL("reduced_rotated_gg");
 }  // namespace gauss
 }  // namespace repres
 }  // namespace mir
-

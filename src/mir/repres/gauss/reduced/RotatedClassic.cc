@@ -23,21 +23,19 @@ namespace gauss {
 namespace reduced {
 
 
-RotatedClassic::RotatedClassic(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox, double angularPrecision):
+RotatedClassic::RotatedClassic(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox,
+                               double angularPrecision) :
     Classic(N, bbox, angularPrecision),
-    rotation_(rotation) {
-}
+    rotation_(rotation) {}
 
 
 RotatedClassic::~RotatedClassic() = default;
 
 
-void RotatedClassic::print(std::ostream &out) const {
+void RotatedClassic::print(std::ostream& out) const {
     out << "RotatedClassic["
-            "N=" << N_
-        << ",bbox=" << bbox_
-        << ",rotation=" << rotation_
-        << "]";
+           "N="
+        << N_ << ",bbox=" << bbox_ << ",rotation=" << rotation_ << "]";
 }
 
 
@@ -57,14 +55,14 @@ Iterator* RotatedClassic::iterator() const {
 }
 
 
-void RotatedClassic::fill(grib_info &info) const  {
+void RotatedClassic::fill(grib_info& info) const {
     Classic::fill(info);
     rotation_.fill(info);
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
 }
 
 
-void RotatedClassic::fill(api::MIRJob&) const  {
+void RotatedClassic::fill(api::MIRJob&) const {
     NOTIMP;
 }
 
@@ -83,4 +81,3 @@ const Gridded* RotatedClassic::croppedRepresentation(const util::BoundingBox& bb
 }  // namespace gauss
 }  // namespace repres
 }  // namespace mir
-

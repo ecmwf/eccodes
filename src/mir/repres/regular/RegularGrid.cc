@@ -76,11 +76,8 @@ RegularGrid::~RegularGrid() = default;
 
 void RegularGrid::print(std::ostream& out) const {
     out << "RegularGrid["
-            "x=" << x_.spec()
-        << ",y=" << y_.spec()
-        << ",projection=" << grid_.projection().spec()
-        << ",bbox=" << bbox_
-        << "]";
+           "x="
+        << x_.spec() << ",y=" << y_.spec() << ",projection=" << grid_.projection().spec() << ",bbox=" << bbox_ << "]";
 }
 
 bool RegularGrid::extendBoundingBoxOnIntersect() const {
@@ -112,8 +109,10 @@ void RegularGrid::fill(grib_info& info) const {
                     GribExtraSetting::set(info, "radius", spec.getDouble("radius", radius_));
                     break;
                 case 3:
-                    GribExtraSetting::set(info, "earthMajorAxis", spec.getDouble("semi_major_axis", earthMajorAxis_) / 1000.);
-                    GribExtraSetting::set(info, "earthMinorAxis", spec.getDouble("semi_minor_axis", earthMinorAxis_) / 1000.);
+                    GribExtraSetting::set(info, "earthMajorAxis",
+                                          spec.getDouble("semi_major_axis", earthMajorAxis_) / 1000.);
+                    GribExtraSetting::set(info, "earthMinorAxis",
+                                          spec.getDouble("semi_minor_axis", earthMinorAxis_) / 1000.);
                     break;
                 case 7:
                     GribExtraSetting::set(info, "earthMajorAxis", spec.getDouble("semi_major_axis", earthMajorAxis_));
@@ -177,8 +176,8 @@ Iterator* RegularGrid::iterator() const {
         bool next(Latitude& _lat, Longitude& _lon) {
             if (j_ < nj_ && i_ < ni_) {
                 pLonLat_ = projection_.lonlat({x_[i_], y_[j_]});
-                _lat = lat(pLonLat_.lat());
-                _lon = lon(pLonLat_.lon());
+                _lat     = lat(pLonLat_.lat());
+                _lon     = lon(pLonLat_.lon());
 
                 if (++i_ == ni_) {
                     i_ = 0;

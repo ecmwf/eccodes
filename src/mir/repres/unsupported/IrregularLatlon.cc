@@ -33,14 +33,14 @@ static void range(const std::vector<double>& v, double& mn, double& mx, double& 
     ASSERT(v.size() >= 2);
 
     dmax = 0;
-    mx = v[0];
-    mn = v[0];
+    mx   = v[0];
+    mn   = v[0];
 
     for (size_t i = 1; i < v.size(); ++i) {
         double d = std::abs(v[i] - v[i - 1]);
-        dmax = std::max(d, dmax);
-        mx = std::max(v[i], mx);
-        mn = std::min(v[i], mn);
+        dmax     = std::max(d, dmax);
+        mx       = std::max(v[i], mx);
+        mn       = std::min(v[i], mn);
     }
 }
 
@@ -169,14 +169,14 @@ class IrregularLatlonIterator : public Iterator {
 public:
     // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
 
-    IrregularLatlonIterator(const std::vector<double>& latitudes, const std::vector<double>& longitudes)
-        : count_(0)
-        , i_(0)
-        , ni_(longitudes.size())
-        , j_(0)
-        , nj_(latitudes.size())
-        , latitudes_(latitudes)
-        , longitudes_(longitudes) {}
+    IrregularLatlonIterator(const std::vector<double>& latitudes, const std::vector<double>& longitudes) :
+        count_(0),
+        i_(0),
+        ni_(longitudes.size()),
+        j_(0),
+        nj_(latitudes.size()),
+        latitudes_(latitudes),
+        longitudes_(longitudes) {}
 
     ~IrregularLatlonIterator() { ASSERT(count_ == ni_ * nj_); }
 };
@@ -212,9 +212,9 @@ atlas::Grid IrregularLatlon::atlasGrid() const {
 }
 
 namespace {
-static RepresentationBuilder<IrregularLatlon>
-    irregularLatlon("irregular_latlon"); // Name is what is returned by grib_api
+static RepresentationBuilder<IrregularLatlon> irregularLatlon(
+    "irregular_latlon");  // Name is what is returned by grib_api
 }
 
-} // namespace repres
-} // namespace mir
+}  // namespace repres
+}  // namespace mir

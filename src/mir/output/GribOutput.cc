@@ -53,24 +53,24 @@ void eccodes_assertion(const char* message) {
 }
 
 
-GribOutput::GribOutput() : total_(0) {
-}
+GribOutput::GribOutput() : total_(0) {}
 
 
 GribOutput::~GribOutput() = default;
 
 
-size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx) { // No interpolation performed
+size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx) {  // No interpolation performed
 
     const input::MIRInput& input = ctx.input();
 
     size_t total = 0;
     for (size_t i = 0; i < input.dimensions(); i++) {
-        grib_handle *h = input.gribHandle(i); // Base class will throw an exception is input cannot provide a grib_handle
+        grib_handle* h =
+            input.gribHandle(i);  // Base class will throw an exception is input cannot provide a grib_handle
 
         ASSERT(h);
 
-        const void *message;
+        const void* message;
         size_t size;
 
         GRIB_CALL(grib_get_message(h, &message, &size));
@@ -82,8 +82,7 @@ size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx)
     return total;
 }
 
-void GribOutput::estimate(const param::MIRParametrisation& param,
-                          api::MIREstimation& estimator,
+void GribOutput::estimate(const param::MIRParametrisation& param, api::MIREstimation& estimator,
                           context::Context& ctx) const {
 
     const data::MIRField& field = ctx.field();
@@ -102,18 +101,16 @@ void GribOutput::estimate(const param::MIRParametrisation& param,
         estimator.packing(packing);
         // const packing::Packer &packer = packing::Packer::lookup(packing);
         // packer.estimate(estimator, *field.representation());
-
     }
 
     long edition;
     if (param.get("edition", edition)) {
         estimator.edition(edition);
     }
-
 }
 
 
-bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParametrisation &param) const {
+bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParametrisation& param) const {
     bool ok = false;
 
     long bits = 0;
@@ -124,21 +121,27 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
 
     std::string packing;
     if (param.userParametrisation().get("packing", packing)) {
-        if (ok) { out << ","; }
+        if (ok) {
+            out << ",";
+        }
         out << "packing=" << packing;
         ok = true;
     }
 
     long edition = 0;
     if (param.userParametrisation().get("edition", edition)) {
-        if (ok) { out << ","; }
+        if (ok) {
+            out << ",";
+        }
         out << "edition=" << edition;
         ok = true;
     }
 
     std::string compatibility;
     if (param.userParametrisation().get("compatibility", compatibility)) {
-        if (ok) { out << ","; }
+        if (ok) {
+            out << ",";
+        }
         out << "compatibility=" << compatibility;
         ok = true;
 
@@ -150,18 +153,19 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
 }
 
 
-void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionPlan& plan, input::MIRInput& input, output::MIROutput& output) {
+void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionPlan& plan, input::MIRInput& input,
+                         output::MIROutput& output) {
     ASSERT(!plan.ended());
 
-    bool save = false;
-    auto& user = param.userParametrisation();
+    bool save   = false;
+    auto& user  = param.userParametrisation();
     auto& field = param.fieldParametrisation();
 
     long bits1 = -1;
     if (user.get("accuracy", bits1)) {
         ASSERT(bits1 > 0);
         long bits2 = -1;
-        save = field.get("accuracy", bits2) ? bits2 != bits1 : true;
+        save       = field.get("accuracy", bits2) ? bits2 != bits1 : true;
     }
 
     if (!save) {
@@ -178,7 +182,7 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
         if (user.get("edition", edition1)) {
             ASSERT(edition1 > 0);
             long edition2 = 0;
-            save = field.get("edition", edition2) ? edition2 != edition1 : true;
+            save          = field.get("edition", edition2) ? edition2 != edition1 : true;
         }
     }
 
@@ -298,22 +302,25 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             continue;
         }
 
-        grib_handle *h = input.gribHandle(i); // Base class will throw an exception is input cannot provide a grib_handle
+        grib_handle* h =
+            input.gribHandle(i);  // Base class will throw an exception is input cannot provide a grib_handle
 
 
-        grib_info info = {{0},};
+        grib_info info = {
+            {0},
+        };
 
         // missing values
         info.grid.bitmapPresent = field.hasMissing() ? 1 : 0;
-        info.grid.missingValue = field.missingValue();
+        info.grid.missingValue  = field.missingValue();
 
         // Packing
-        info.packing.packing = GRIB_UTIL_PACKING_SAME_AS_INPUT;
+        info.packing.packing  = GRIB_UTIL_PACKING_SAME_AS_INPUT;
         info.packing.accuracy = GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT;
 
         long bits;
         if (parametrisation.userParametrisation().get("accuracy", bits)) {
-            info.packing.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
+            info.packing.accuracy     = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
             info.packing.bitsPerValue = bits;
         }
 
@@ -330,14 +337,14 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             long j = info.packing.extra_settings_count++;
             ASSERT(j < long(sizeof(info.packing.extra_settings) / sizeof(info.packing.extra_settings[0])));
 
-            info.packing.extra_settings[j].name = k.first.c_str();
-            info.packing.extra_settings[j].type = GRIB_TYPE_LONG;
+            info.packing.extra_settings[j].name       = k.first.c_str();
+            info.packing.extra_settings[j].type       = GRIB_TYPE_LONG;
             info.packing.extra_settings[j].long_value = k.second;
         }
 
         std::string packing;
         if (parametrisation.userParametrisation().get("packing", packing)) {
-            const packing::Packer &packer = packing::Packer::lookup(packing);
+            const packing::Packer& packer = packing::Packer::lookup(packing);
 
             if (field.values(i).size() < 4) {
 
@@ -345,10 +352,10 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
                 // Once this fixed, remove this code
                 eckit::Log::debug<LibMir>() << "Field has " << Pretty(field.values(i).size(), {"value"})
                                             << ", ignoring packer " << packer << std::endl;
-            } else {
+            }
+            else {
                 packer.fill(info, *field.representation());
             }
-
         }
 
         bool remove = false;
@@ -386,7 +393,8 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             X(info.grid.pl_size);
             for (long j = 0; j < info.grid.pl_size; j++) {
                 X(info.grid.pl[j]);
-                if (j > 4) break;
+                if (j > 4)
+                    break;
             }
 
             X(info.grid.truncation);
@@ -409,24 +417,23 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             for (long j = 0; j < info.packing.extra_settings_count; j++) {
                 X(info.packing.extra_settings[j].name);
                 switch (info.packing.extra_settings[j].type) {
-                case GRIB_TYPE_LONG:
-                    X(info.packing.extra_settings[j].long_value);
-                    break;
-                case GRIB_TYPE_DOUBLE:
-                    X(info.packing.extra_settings[j].double_value);
-                    break;
-                case GRIB_TYPE_STRING:
-                    X(info.packing.extra_settings[j].string_value);
-                    break;
+                    case GRIB_TYPE_LONG:
+                        X(info.packing.extra_settings[j].long_value);
+                        break;
+                    case GRIB_TYPE_DOUBLE:
+                        X(info.packing.extra_settings[j].double_value);
+                        break;
+                    case GRIB_TYPE_STRING:
+                        X(info.packing.extra_settings[j].string_value);
+                        break;
                 }
-
             }
             eckit::Log::debug<LibMir>().precision(p);
         }
 
 
         int flags = 0;
-        int err = 0;
+        int err   = 0;
 
         const MIRValuesVector& values = field.values(i);
 
@@ -434,8 +441,8 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
         // set error callback handling (throws)
         codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
-        grib_handle *result = grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
-        HandleDeleter hf(result); // Make sure handle deleted even in case of exception
+        grib_handle* result = grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
+        HandleDeleter hf(result);  // Make sure handle deleted even in case of exception
 
 
         if (err == GRIB_WRONG_GRID) {
@@ -465,7 +472,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
         GRIB_CALL(codes_check_message_header(message, size, PRODUCT_GRIB));
         GRIB_CALL(codes_check_message_footer(message, size, PRODUCT_GRIB));
 
-        {   // Remove
+        {  // Remove
             eckit::AutoTiming timing(ctx.statistics().timer_, saveTimer);
             out(message, size, true);
         }
@@ -480,27 +487,22 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
                 util::BoundingBox user(v[0], v[1], v[2], v[3]);
 
-                util::BoundingBox before(info.grid.latitudeOfFirstGridPointInDegrees,
-                                         info.grid.longitudeOfFirstGridPointInDegrees,
-                                         info.grid.latitudeOfLastGridPointInDegrees,
-                                         info.grid.longitudeOfLastGridPointInDegrees
-                                        );
+                util::BoundingBox before(
+                    info.grid.latitudeOfFirstGridPointInDegrees, info.grid.longitudeOfFirstGridPointInDegrees,
+                    info.grid.latitudeOfLastGridPointInDegrees, info.grid.longitudeOfLastGridPointInDegrees);
 
                 // input::GribMemoryInput g(message, size);
                 // util::BoundingBox after(g);
 
                 if (user != before /*|| user != after || before != after*/) {
                     eckit::Log::info() << "MIR_CHECK_AREA:"
-                                       << " request=" << user
-                                       << " result=" << before
+                                       << " request=" << user << " result="
+                                       << before
                                        // << " grib=" << after
                                        << std::endl;
                 }
-
             }
         }
-
-
     }
 
     ctx.statistics().gribEncodingTiming_ -= saveTimer;
@@ -510,8 +512,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 }
 
 
-void GribOutput::fill(grib_handle*, grib_info&) const {
-}
+void GribOutput::fill(grib_handle*, grib_info&) const {}
 
 
 #undef Y
@@ -520,4 +521,3 @@ void GribOutput::fill(grib_handle*, grib_info&) const {
 
 }  // namespace output
 }  // namespace mir
-

@@ -21,33 +21,30 @@ namespace mir {
 namespace repres {
 
 
-SpaceView::SpaceView(const param::MIRParametrisation &parametrisation) {
-}
+SpaceView::SpaceView(const param::MIRParametrisation& parametrisation) {}
 
 
-SpaceView::SpaceView() {
-}
+SpaceView::SpaceView() {}
 
 
 SpaceView::~SpaceView() = default;
 
 
-void SpaceView::print(std::ostream &out) const {
+void SpaceView::print(std::ostream& out) const {
     out << "SpaceView["
         << "]";
 }
 
 
-void SpaceView::fill(grib_info &info) const  {
+void SpaceView::fill(grib_info& info) const {
     NOTIMP;
 }
 
 
 namespace {
-static RepresentationBuilder<SpaceView> spaceView("space_view"); // Name is what is returned by grib_api
+static RepresentationBuilder<SpaceView> spaceView("space_view");  // Name is what is returned by grib_api
 }
 
 
 }  // namespace repres
 }  // namespace mir
-

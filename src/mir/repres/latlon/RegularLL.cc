@@ -27,8 +27,8 @@ namespace latlon {
 
 RegularLL::RegularLL(const param::MIRParametrisation& parametrisation) : LatLon(parametrisation) {}
 
-RegularLL::RegularLL(const util::Increments& increments, const util::BoundingBox& bbox, const PointLatLon& reference)
-    : LatLon(increments, bbox, reference) {}
+RegularLL::RegularLL(const util::Increments& increments, const util::BoundingBox& bbox, const PointLatLon& reference) :
+    LatLon(increments, bbox, reference) {}
 
 RegularLL::~RegularLL() = default;
 
@@ -45,8 +45,8 @@ Iterator* RegularLL::iterator() const {
         bool next(Latitude& lat, Longitude& lon) { return LatLonIterator::next(lat, lon); }
 
     public:
-        RegularLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, const util::Increments& increments)
-            : LatLonIterator(ni, nj, north, west, increments) {}
+        RegularLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, const util::Increments& increments) :
+            LatLonIterator(ni, nj, north, west, increments) {}
     };
 
     return new RegularLLIterator(ni_, nj_, bbox_.north(), bbox_.west(), increments_);
@@ -63,10 +63,10 @@ atlas::Grid RegularLL::atlasGrid() const {
     // NOTE: for non-shifted/shifted grid, yspace uses bounding box
     // (this works together with the Atlas RectangularDomain cropping)
     const util::Domain dom = domain();
-    double n = bbox_.north().value();
-    double s = bbox_.south().value();
-    double w = dom.west().value();
-    double e = dom.east().value();
+    double n               = bbox_.north().value();
+    double s               = bbox_.south().value();
+    double w               = dom.west().value();
+    double e               = dom.east().value();
 
     using atlas::StructuredGrid;
     using atlas::grid::LinearSpacing;
@@ -203,8 +203,8 @@ std::string RegularLL::factory() const {
 }
 
 
-static RepresentationBuilder<RegularLL> regularLL("regular_ll"); // Name is what is returned by grib_api
+static RepresentationBuilder<RegularLL> regularLL("regular_ll");  // Name is what is returned by grib_api
 
-} // namespace latlon
-} // namespace repres
-} // namespace mir
+}  // namespace latlon
+}  // namespace repres
+}  // namespace mir

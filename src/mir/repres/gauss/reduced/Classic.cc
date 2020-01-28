@@ -90,4 +90,3 @@ atlas::Grid Classic::atlasGrid() const {
 }  // namespace gauss
 }  // namespace repres
 }  // namespace mir
-
