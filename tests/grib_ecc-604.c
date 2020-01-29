@@ -26,7 +26,7 @@ static int encode_file(char *template_file, char *output_file)
     double *values;
 
     in = fopen(template_file,"rb"); assert(in);
-    if (opt_write) {
+    if (opt_write && output_file) {
         out = fopen(output_file,"wb");  assert(out);
     }
 
