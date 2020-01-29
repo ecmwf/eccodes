@@ -22,16 +22,14 @@ extern "C" {
  * Method:    gribIteratorGetNext
  * Signature: (J)Ljgribapi/GribPoint;
  */
-JNIEXPORT jobject JNICALL Java_jgribapi_GribIterator_gribIteratorGetNext
-  (JNIEnv *, jobject, jlong);
+JNIEXPORT jobject JNICALL Java_jgribapi_GribIterator_gribIteratorGetNext(JNIEnv*, jobject, jlong);
 
 /*
  * Class:     jgribapi_GribIterator
  * Method:    gribIteratorHasNext
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_jgribapi_GribIterator_gribIteratorHasNext
-  (JNIEnv *, jobject, jlong);
+JNIEXPORT jlong JNICALL Java_jgribapi_GribIterator_gribIteratorHasNext(JNIEnv*, jobject, jlong);
 
 #ifdef __cplusplus
 }

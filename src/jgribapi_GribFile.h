@@ -22,48 +22,42 @@ extern "C" {
  * Method:    gribGetNextHandle
  * Signature: (J)Ljgribapi/GribHandle;
  */
-JNIEXPORT jobject JNICALL Java_jgribapi_GribFile_gribGetNextHandle
-  (JNIEnv *, jobject, jlong);
+JNIEXPORT jobject JNICALL Java_jgribapi_GribFile_gribGetNextHandle(JNIEnv*, jobject, jlong);
 
 /*
  * Class:     jgribapi_GribFile
  * Method:    gribEOFReached
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_jgribapi_GribFile_gribEOFReached
-  (JNIEnv *, jobject, jlong);
+JNIEXPORT jlong JNICALL Java_jgribapi_GribFile_gribEOFReached(JNIEnv*, jobject, jlong);
 
 /*
  * Class:     jgribapi_GribFile
  * Method:    gribGetGribFile
  * Signature: (Ljava/lang/String;)J
  */
-JNIEXPORT jlong JNICALL Java_jgribapi_GribFile_gribGetGribFile
-  (JNIEnv *, jobject, jstring);
+JNIEXPORT jlong JNICALL Java_jgribapi_GribFile_gribGetGribFile(JNIEnv*, jobject, jstring);
 
 /*
  * Class:     jgribapi_GribFile
  * Method:    gribCloseFile
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_jgribapi_GribFile_gribCloseFile
-  (JNIEnv *, jobject, jlong);
+JNIEXPORT void JNICALL Java_jgribapi_GribFile_gribCloseFile(JNIEnv*, jobject, jlong);
 
 /*
  * Class:     jgribapi_GribFile
  * Method:    gribNewFile
  * Signature: (Ljava/lang/String;)J
  */
-JNIEXPORT jlong JNICALL Java_jgribapi_GribFile_gribNewFile
-  (JNIEnv *, jobject, jstring);
+JNIEXPORT jlong JNICALL Java_jgribapi_GribFile_gribNewFile(JNIEnv*, jobject, jstring);
 
 /*
  * Class:     jgribapi_GribFile
  * Method:    gribWriteHandle
  * Signature: (JJ)V
  */
-JNIEXPORT void JNICALL Java_jgribapi_GribFile_gribWriteHandle
-  (JNIEnv *, jobject, jlong, jlong);
+JNIEXPORT void JNICALL Java_jgribapi_GribFile_gribWriteHandle(JNIEnv*, jobject, jlong, jlong);
 
 #ifdef __cplusplus
 }
