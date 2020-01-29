@@ -1208,7 +1208,6 @@ int grib_accessor_print(grib_accessor* a, const char* name, int type, const char
 int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const char* name, int type, const char* format, const char* separator, int maxcols, int* newline, FILE* out);
 int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* uname, int fail, FILE* out);
 grib_action_file* grib_find_action_file(const char* fname, grib_action_file_list* afl);
-void grib_push_action_file(grib_action_file* af, grib_action_file_list* afl);
 int grib_yywrap(void);
 char* file_being_parsed(void);
 int grib_yyerror(const char* msg);
