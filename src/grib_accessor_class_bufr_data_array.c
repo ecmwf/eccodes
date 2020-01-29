@@ -1416,7 +1416,7 @@ static int encode_new_replication(grib_context* c, grib_accessor_bufr_data_array
     if (self->compressedData) {
         grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + 6);
         grib_encode_unsigned_longb(buff->data, 0, pos, 6);
-    };
+    }
 
     return err;
 }

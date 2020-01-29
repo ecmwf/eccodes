@@ -8,16 +8,16 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-extern char *prog;
+extern char* prog;
 
-int load_file(const char*,const char*);
-int dump_file(const char*,const char*);
+int load_file(const char*, const char*);
+int dump_file(const char*, const char*);
 
 void load_finish();
-void load_long(const char* name,long value) ;
+void load_long(const char* name, long value);
 void load_missing(const char* name);
-void load_string(const char* name,const char* value);
-void load_double(const char* name,double value);
+void load_string(const char* name, const char* value);
+void load_double(const char* name, double value);
 void load_start_array();
 void load_end_array(const char* name);
 void load_double_value(double value);

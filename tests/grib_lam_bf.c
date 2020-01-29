@@ -640,28 +640,25 @@ static double values[] = {
 };
 
 #define ILCHAM 3128
-#define NSTRON   10
-#define NSMAX    31
-#define NMSMAX   31
+#define NSTRON 10
+#define NSMAX 31
+#define NMSMAX 31
 
-static void rectfromellipse (double *vr, const double *ve, int nsmax, int nmsmax)
+static void rectfromellipse(double* vr, const double* ve, int nsmax, int nmsmax)
 {
     int i, j, kr = 0, ke = 0;
     for (i = 0; i <= nsmax; i++)
-        for (j = 0; j <= nmsmax; j++)
-        {
-            double xi = (double) i / (double) nsmax;
-            double xj = (double) j / (double) nmsmax;
-            if (xi * xi + xj * xj < 1)
-            {
+        for (j = 0; j <= nmsmax; j++) {
+            double xi = (double)i / (double)nsmax;
+            double xj = (double)j / (double)nmsmax;
+            if (xi * xi + xj * xj < 1) {
                 vr[kr + 0] = ve[ke + 0];
                 vr[kr + 1] = ve[ke + 1];
                 vr[kr + 2] = ve[ke + 2];
                 vr[kr + 3] = ve[ke + 3];
                 ke += 4;
             }
-            else
-            {
+            else {
                 vr[kr + 0] = 0.;
                 vr[kr + 1] = 0.;
                 vr[kr + 2] = 0.;
@@ -673,117 +670,117 @@ static void rectfromellipse (double *vr, const double *ve, int nsmax, int nmsmax
 
 typedef struct
 {
-    int trunc;                  /* 77, 88, 99 = truncation type */
-    int subtrunc;               /* 77, 88, 99 = subtruncation type */
-    double *values;
+    int trunc;    /* 77, 88, 99 = truncation type */
+    int subtrunc; /* 77, 88, 99 = subtruncation type */
+    double* values;
     int len;
-    const char *name;
+    const char* name;
 } trunc_t;
 
-int main (int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-    grib_handle *h;
+    grib_handle* h;
     size_t len;
-    const char *grids[] = { "lambert_bf", "mercator_bf", "polar_stereographic_bf" };
+    const char* grids[] = { "lambert_bf", "mercator_bf", "polar_stereographic_bf" };
     int igrid, itrunc;
     trunc_t trunc[2];
 
     /* Elliptic truncation with diamond subtruncation */
-    trunc[0].trunc = 88;
+    trunc[0].trunc    = 88;
     trunc[0].subtrunc = 99;
-    trunc[0].len = ILCHAM;
-    trunc[0].values = (double *) values;
-    trunc[0].name = "ellipse_diamond";
+    trunc[0].len      = ILCHAM;
+    trunc[0].values   = (double*)values;
+    trunc[0].name     = "ellipse_diamond";
 
     /* Rectangle truncation with rectangle subtruncation */
-    trunc[1].trunc = 77;
+    trunc[1].trunc    = 77;
     trunc[1].subtrunc = 77;
-    trunc[1].len = 4 * (NSMAX + 1) * (NMSMAX + 1);
-    trunc[1].values = (double *) malloc (sizeof (double) * trunc[1].len);
-    trunc[1].name = "rectangle_rectangle";
+    trunc[1].len      = 4 * (NSMAX + 1) * (NMSMAX + 1);
+    trunc[1].values   = (double*)malloc(sizeof(double) * trunc[1].len);
+    trunc[1].name     = "rectangle_rectangle";
 
-    rectfromellipse (trunc[1].values, trunc[0].values, NSMAX, NMSMAX);
+    rectfromellipse(trunc[1].values, trunc[0].values, NSMAX, NMSMAX);
 
     for (itrunc = 0; itrunc < 2; itrunc++) {
         for (igrid = 0; igrid < 3; igrid++) {
-            GRIB_CHECK (((h = grib_handle_new_from_samples (NULL, "lambert_bf_grib2")) == NULL), 0);
+            GRIB_CHECK(((h = grib_handle_new_from_samples(NULL, "lambert_bf_grib2")) == NULL), 0);
 
-            GRIB_CHECK (grib_set_long (h, "centre", 85), 0);
-            GRIB_CHECK (grib_set_long (h, "tablesVersion", 23), 0);
-            len = strlen (grids[igrid]);
-            GRIB_CHECK (grib_set_string (h, "gridType", grids[igrid], &len), 0);
-            GRIB_CHECK (grib_set_long (h, "biFourierResolutionParameterN", NSMAX), 0);
-            GRIB_CHECK (grib_set_long (h, "biFourierResolutionParameterM", NMSMAX), 0);
-            GRIB_CHECK (grib_set_long (h, "biFourierTruncationType", trunc[itrunc].trunc), 0);
+            GRIB_CHECK(grib_set_long(h, "centre", 85), 0);
+            GRIB_CHECK(grib_set_long(h, "tablesVersion", 23), 0);
+            len = strlen(grids[igrid]);
+            GRIB_CHECK(grib_set_string(h, "gridType", grids[igrid], &len), 0);
+            GRIB_CHECK(grib_set_long(h, "biFourierResolutionParameterN", NSMAX), 0);
+            GRIB_CHECK(grib_set_long(h, "biFourierResolutionParameterM", NMSMAX), 0);
+            GRIB_CHECK(grib_set_long(h, "biFourierTruncationType", trunc[itrunc].trunc), 0);
 
-            GRIB_CHECK (grib_set_long (h, "LxInMetres", 2000), 0);
-            GRIB_CHECK (grib_set_long (h, "LyInMetres", 2000), 0);
+            GRIB_CHECK(grib_set_long(h, "LxInMetres", 2000), 0);
+            GRIB_CHECK(grib_set_long(h, "LyInMetres", 2000), 0);
 
-            GRIB_CHECK (grib_set_long (h, "LuxInMetres", 1800), 0);
-            GRIB_CHECK (grib_set_long (h, "LuyInMetres", 1800), 0);
+            GRIB_CHECK(grib_set_long(h, "LuxInMetres", 1800), 0);
+            GRIB_CHECK(grib_set_long(h, "LuyInMetres", 1800), 0);
 
-            GRIB_CHECK (grib_set_long (h, "LcxInMetres", 100), 0);
-            GRIB_CHECK (grib_set_long (h, "LcyInMetres", 100), 0);
+            GRIB_CHECK(grib_set_long(h, "LcxInMetres", 100), 0);
+            GRIB_CHECK(grib_set_long(h, "LcyInMetres", 100), 0);
 
             if (igrid == 0) {
-                GRIB_CHECK (grib_set_double (h, "latitudeOfFirstGridPointInDegrees", 67.9372009520603), 0);
-                GRIB_CHECK (grib_set_double (h, "longitudeOfFirstGridPointInDegrees", 25.1580207144963), 0);
-                GRIB_CHECK (grib_set_long (h, "latitudeOfSouthernPoleInDegrees", 0), 0);
-                GRIB_CHECK (grib_set_long (h, "longitudeOfSouthernPoleInDegrees", 0), 0);
-                GRIB_CHECK (grib_set_double (h, "LoVInDegrees", 26.6400000000000), 0);
-                GRIB_CHECK (grib_set_double (h, "Latin1InDegrees", 67.3600000000000), 0);
-                GRIB_CHECK (grib_set_double (h, "Latin2InDegrees", 67.3600000000000), 0);
-                GRIB_CHECK (grib_set_long (h, "projectionCentreFlag", 0), 0);
-                GRIB_CHECK (grib_set_long (h, "bitsPerValue", 16), 0);
+                GRIB_CHECK(grib_set_double(h, "latitudeOfFirstGridPointInDegrees", 67.9372009520603), 0);
+                GRIB_CHECK(grib_set_double(h, "longitudeOfFirstGridPointInDegrees", 25.1580207144963), 0);
+                GRIB_CHECK(grib_set_long(h, "latitudeOfSouthernPoleInDegrees", 0), 0);
+                GRIB_CHECK(grib_set_long(h, "longitudeOfSouthernPoleInDegrees", 0), 0);
+                GRIB_CHECK(grib_set_double(h, "LoVInDegrees", 26.6400000000000), 0);
+                GRIB_CHECK(grib_set_double(h, "Latin1InDegrees", 67.3600000000000), 0);
+                GRIB_CHECK(grib_set_double(h, "Latin2InDegrees", 67.3600000000000), 0);
+                GRIB_CHECK(grib_set_long(h, "projectionCentreFlag", 0), 0);
+                GRIB_CHECK(grib_set_long(h, "bitsPerValue", 16), 0);
             }
             else if (igrid == 1) {
-                GRIB_CHECK (grib_set_double (h, "latitudeOfFirstGridPointInDegrees", 67.9372009520603), 0);
-                GRIB_CHECK (grib_set_double (h, "longitudeOfFirstGridPointInDegrees", 25.1580207144963), 0);
-                GRIB_CHECK (grib_set_double (h, "LaDInDegrees", 0.), 0);
-                GRIB_CHECK (grib_set_double (h, "latitudeOfLastGridPointInDegrees", 72.9372009520603), 0);
-                GRIB_CHECK (grib_set_double (h, "longitudeOfLastGridPointInDegrees", 29.1580207144963), 0);
-                GRIB_CHECK (grib_set_double (h, "orientationOfTheGridInDegrees", 0.), 0);
+                GRIB_CHECK(grib_set_double(h, "latitudeOfFirstGridPointInDegrees", 67.9372009520603), 0);
+                GRIB_CHECK(grib_set_double(h, "longitudeOfFirstGridPointInDegrees", 25.1580207144963), 0);
+                GRIB_CHECK(grib_set_double(h, "LaDInDegrees", 0.), 0);
+                GRIB_CHECK(grib_set_double(h, "latitudeOfLastGridPointInDegrees", 72.9372009520603), 0);
+                GRIB_CHECK(grib_set_double(h, "longitudeOfLastGridPointInDegrees", 29.1580207144963), 0);
+                GRIB_CHECK(grib_set_double(h, "orientationOfTheGridInDegrees", 0.), 0);
             }
             else if (igrid == 2) {
-                GRIB_CHECK (grib_set_double (h, "latitudeOfFirstGridPointInDegrees", 67.9372009520603), 0);
-                GRIB_CHECK (grib_set_double (h, "longitudeOfFirstGridPointInDegrees", 25.1580207144963), 0);
-                GRIB_CHECK (grib_set_double (h, "LaDInDegrees", 0.), 0);
-                GRIB_CHECK (grib_set_double (h, "orientationOfTheGridInDegrees", 0.), 0);
+                GRIB_CHECK(grib_set_double(h, "latitudeOfFirstGridPointInDegrees", 67.9372009520603), 0);
+                GRIB_CHECK(grib_set_double(h, "longitudeOfFirstGridPointInDegrees", 25.1580207144963), 0);
+                GRIB_CHECK(grib_set_double(h, "LaDInDegrees", 0.), 0);
+                GRIB_CHECK(grib_set_double(h, "orientationOfTheGridInDegrees", 0.), 0);
             }
 
-            len = strlen ("bifourier_complex");
-            GRIB_CHECK (grib_set_string (h, "packingType", "bifourier_complex", &len), 0);
-            GRIB_CHECK (grib_set_long (h, "biFourierResolutionSubSetParameterN", NSTRON), 0);
-            GRIB_CHECK (grib_set_long (h, "biFourierResolutionSubSetParameterM", NSTRON), 0);
-            GRIB_CHECK (grib_set_long (h, "biFourierSubTruncationType", trunc[itrunc].subtrunc), 0);
-            GRIB_CHECK (grib_set_long (h, "biFourierPackingModeForAxes", 1), 0);
-            GRIB_CHECK (grib_set_long (h, "unpackedSubsetPrecision", 2), 0);
+            len = strlen("bifourier_complex");
+            GRIB_CHECK(grib_set_string(h, "packingType", "bifourier_complex", &len), 0);
+            GRIB_CHECK(grib_set_long(h, "biFourierResolutionSubSetParameterN", NSTRON), 0);
+            GRIB_CHECK(grib_set_long(h, "biFourierResolutionSubSetParameterM", NSTRON), 0);
+            GRIB_CHECK(grib_set_long(h, "biFourierSubTruncationType", trunc[itrunc].subtrunc), 0);
+            GRIB_CHECK(grib_set_long(h, "biFourierPackingModeForAxes", 1), 0);
+            GRIB_CHECK(grib_set_long(h, "unpackedSubsetPrecision", 2), 0);
 
             len = trunc[itrunc].len;
-            GRIB_CHECK (grib_set_double_array (h, "values", trunc[itrunc].values, len), 0);
+            GRIB_CHECK(grib_set_double_array(h, "values", trunc[itrunc].values, len), 0);
 
             if (1) {
                 char f[128];
-                FILE *fp;
+                FILE* fp;
                 size_t size;
-                const void *buffer = NULL;
-                sprintf (f, "lam_bf_%s_%s.grib", grids[igrid], trunc[itrunc].name);
-                fp = fopen (f, "wb");
-                GRIB_CHECK (grib_get_message (h, &buffer, &size), 0);
-                if (fwrite (buffer, 1, size, fp) != size) {
-                    perror (f);
+                const void* buffer = NULL;
+                sprintf(f, "lam_bf_%s_%s.grib", grids[igrid], trunc[itrunc].name);
+                fp = fopen(f, "wb");
+                GRIB_CHECK(grib_get_message(h, &buffer, &size), 0);
+                if (fwrite(buffer, 1, size, fp) != size) {
+                    perror(f);
                     return 1;
                 }
-                fclose (fp);
+                fclose(fp);
             }
 
-            GRIB_CHECK (grib_handle_delete (h), 0);
+            GRIB_CHECK(grib_handle_delete(h), 0);
 
             /* Check message correctness */
             {
                 char f[128];
-                FILE *fp;
-                double *vals;
+                FILE* fp;
+                double* vals;
                 double norm = 0.;
                 int i, err;
                 size_t values_len, geometry_len;
@@ -792,55 +789,54 @@ int main (int argc, char *argv[])
                 char geometry[128];
 
 
-                sprintf (f, "lam_bf_%s_%s.grib", grids[igrid], trunc[itrunc].name);
-                fp = fopen (f, "rb");
-                h = grib_handle_new_from_file (0, fp, &err);
-                vals = (double *) malloc (sizeof (double) * trunc[itrunc].len);
+                sprintf(f, "lam_bf_%s_%s.grib", grids[igrid], trunc[itrunc].name);
+                fp         = fopen(f, "rb");
+                h          = grib_handle_new_from_file(0, fp, &err);
+                vals       = (double*)malloc(sizeof(double) * trunc[itrunc].len);
                 values_len = trunc[itrunc].len;
-                GRIB_CHECK (grib_get_double_array (h, "values", vals, &values_len), 0);
+                GRIB_CHECK(grib_get_double_array(h, "values", vals, &values_len), 0);
                 for (i = 0; i < trunc[itrunc].len; i++)
                     norm += (trunc[itrunc].values[i] - vals[i]) * (trunc[itrunc].values[i] - vals[i]);
-                norm = sqrt (norm / trunc[itrunc].len);
-                free (vals);
+                norm = sqrt(norm / trunc[itrunc].len);
+                free(vals);
 
                 if (norm > 0.0001) {
-                    fprintf (stderr, "Error too large! norm=%g\n", norm);
+                    fprintf(stderr, "Error too large! norm=%g\n", norm);
                     return 1;
                 }
-                fclose (fp);
+                fclose(fp);
 
-                GRIB_CHECK (grib_get_long (h, "biFourierResolutionParameterN", &nsmax), 0);
-                GRIB_CHECK (grib_get_long (h, "biFourierResolutionParameterM", &nmsmax), 0);
+                GRIB_CHECK(grib_get_long(h, "biFourierResolutionParameterN", &nsmax), 0);
+                GRIB_CHECK(grib_get_long(h, "biFourierResolutionParameterM", &nmsmax), 0);
 
-                GRIB_CHECK (grib_get_long (h, "LxInMetres", &LxInMetres), 0);
-                GRIB_CHECK (grib_get_long (h, "LyInMetres", &LyInMetres), 0);
+                GRIB_CHECK(grib_get_long(h, "LxInMetres", &LxInMetres), 0);
+                GRIB_CHECK(grib_get_long(h, "LyInMetres", &LyInMetres), 0);
 
-                GRIB_CHECK (grib_get_long (h, "LuxInMetres", &LuxInMetres), 0);
-                GRIB_CHECK (grib_get_long (h, "LuyInMetres", &LuyInMetres), 0);
+                GRIB_CHECK(grib_get_long(h, "LuxInMetres", &LuxInMetres), 0);
+                GRIB_CHECK(grib_get_long(h, "LuyInMetres", &LuyInMetres), 0);
 
-                GRIB_CHECK (grib_get_long (h, "LcxInMetres", &LcxInMetres), 0);
-                GRIB_CHECK (grib_get_long (h, "LcyInMetres", &LcyInMetres), 0);
+                GRIB_CHECK(grib_get_long(h, "LcxInMetres", &LcxInMetres), 0);
+                GRIB_CHECK(grib_get_long(h, "LcyInMetres", &LcyInMetres), 0);
 
                 if (LxInMetres != 2000 || LyInMetres != 2000 ||
                     LuxInMetres != 1800 || LuyInMetres != 1800 ||
                     LcxInMetres != 100 || LcyInMetres != 100 ||
-                    NSMAX != nsmax || NMSMAX != nmsmax)
-                {
-                    fprintf (stderr, "Geometry is incorrect\n");
+                    NSMAX != nsmax || NMSMAX != nmsmax) {
+                    fprintf(stderr, "Geometry is incorrect\n");
                     return 1;
                 }
 
                 geometry_len = 128;
-                GRIB_CHECK (grib_get_string (h, "gridType", geometry, &geometry_len), 0);
-                if (strcmp (geometry, grids[igrid])) {
-                    printf ("Geometry is incorrect\n");
+                GRIB_CHECK(grib_get_string(h, "gridType", geometry, &geometry_len), 0);
+                if (strcmp(geometry, grids[igrid])) {
+                    printf("Geometry is incorrect\n");
                     return 1;
                 }
 
-                GRIB_CHECK (grib_handle_delete (h), 0);
+                GRIB_CHECK(grib_handle_delete(h), 0);
             }
         }
     }
-    free (trunc[1].values);
+    free(trunc[1].values);
     return 0;
 }

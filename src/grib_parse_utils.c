@@ -549,7 +549,7 @@ grib_action_file* grib_find_action_file(const char* fname, grib_action_file_list
     return 0;
 }
 
-void grib_push_action_file(grib_action_file* af, grib_action_file_list* afl)
+static void grib_push_action_file(grib_action_file* af, grib_action_file_list* afl)
 {
     if (!afl->first)
         afl->first = afl->last = af;
@@ -853,7 +853,7 @@ grib_action* grib_parse_file(grib_context* gc, const char* filename)
         af->root = a;
 
         af->filename = grib_context_strdup_persistent(gc, filename);
-        grib_push_action_file(af, gc->grib_reader);
+        grib_push_action_file(af, gc->grib_reader); /* Add af to grib_reader action file list */
     }
     else
         grib_context_log(gc, GRIB_LOG_DEBUG, "Using cached version of %s", filename);

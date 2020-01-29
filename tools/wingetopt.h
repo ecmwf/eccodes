@@ -15,9 +15,8 @@
 
 #ifdef ECCODES_ON_WINDOWS
 extern int optind, opterr;
-extern char *optarg;
-int getopt(int argc, char *argv[], const char *optstring);
+extern char* optarg;
+int getopt(int argc, char* argv[], const char* optstring);
 #endif
 
 #endif
-
