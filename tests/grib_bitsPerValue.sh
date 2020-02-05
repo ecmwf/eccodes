@@ -108,10 +108,23 @@ for file in `echo $files`; do
 
   ${tools_dir}/grib_compare $outfile1 $outfile2
 
-  rm -f $outfile1 $outfile2 || true
+  rm -f $outfile1 $outfile2
 
 done
 
 # Extra test for grid_complex_spatial_differencing
 res=`${tools_dir}/grib_get -p decimalScaleFactor,bitsPerValue ${data_dir}/gfs.c255.grib2`
 [ "$res" = "1 20" ]
+
+
+# Test increasing bits per value
+input=${data_dir}/sample.grib2
+temp=temp.grib_bitsPerValue.grib
+stats1=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg,sd $input`
+grib_check_key_equals $input 'bitsPerValue,packingType' '16 grid_simple'
+for bpv in `seq 17 58`; do
+    ${tools_dir}/grib_set -M -s setBitsPerValue=$bpv $input $temp
+    stats2=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg,sd $temp`
+    [ "$stats1" = "$stats2" ]
+    rm -f $temp
+done
