@@ -172,5 +172,15 @@ int main(int argc, char** argv)
         fclose(fin);
     }
 
+    free(id);
+    free(vlat);
+    free(vlon);
+    free(outlats);
+    free(outlons);
+    free(values);
+    free(lsm_values);
+    free(distances);
+    free(indexes);
+
     return ret;
 }

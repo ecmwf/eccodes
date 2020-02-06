@@ -48,7 +48,6 @@ int main(int argc, char* argv[])
         codes_handle* new_handle = NULL;
 
         CODES_CHECK(codes_get_message_size(source_handle, &totalLength), 0);
-        buffer = (unsigned char*)malloc(totalLength * sizeof(char));
 
         CODES_CHECK(codes_get_message(source_handle, &buffer, &size), 0);
         assert(size == totalLength);

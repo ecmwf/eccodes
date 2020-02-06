@@ -27,7 +27,7 @@ sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 unset ECCODES_GRIB_DATA_QUALITY_CHECKS
 unset ECCODES_EXTRA_DEFINITION_PATH
 
-
+# These input files are 2m temperature with min=221.76 and max=311.619
 input1=${data_dir}/reduced_gaussian_surface.grib1
 input2=${data_dir}/reduced_gaussian_surface.grib2
 grib_check_key_equals $input1 paramId 167
@@ -80,14 +80,17 @@ echo "Test limits which are doubles..."
 pid=151131 # has limits -3.5 and +3.5
 ${tools_dir}/grib_set -s paramId=$pid $input1 $tempGrib1
 ${tools_dir}/grib_set -s paramId=$pid $input2 $tempGrib2
-minval1=`${tools_dir}/grib_get -p param_value_min $tempGrib1`
-maxval1=`${tools_dir}/grib_get -p param_value_max $tempGrib1`
-minval2=`${tools_dir}/grib_get -p param_value_min $tempGrib2`
-maxval2=`${tools_dir}/grib_get -p param_value_max $tempGrib2`
+minval1=`${tools_dir}/grib_get -p param_value_min:d $tempGrib1`
+maxval1=`${tools_dir}/grib_get -p param_value_max:d $tempGrib1`
+minval2=`${tools_dir}/grib_get -p param_value_min:d $tempGrib2`
+maxval2=`${tools_dir}/grib_get -p param_value_max:d $tempGrib2`
 [ "$minval1" = "-3.5" ]
 [ "$maxval1" = "3.5"  ]
 [ "$minval2" = "-3.5" ]
 [ "$maxval2" = "3.5"  ]
+
+# Decode as strings
+grib_check_key_equals $tempGrib2 'param_value_min:s,param_value_max:s' '-3.5 3.5'
 
 set +e
 ${tools_dir}/grib_set -s scaleValuesBy=1.1 $tempGrib1 $tempOut 2>$tempErr
