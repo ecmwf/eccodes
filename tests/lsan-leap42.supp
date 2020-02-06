@@ -3,3 +3,4 @@ leak:tools/bufr_filter.c
 leak:tools/gts_filter.c
 leak:tools/metar_filter.c
 leak:tools/taf_filter.c
+leak:src/action_class_rename.c
