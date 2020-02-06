@@ -2179,12 +2179,12 @@ int grib_is_earth_oblate(grib_handle* h)
 
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val)
 {
-    int err                      = 0;
+    int err                        = 0;
     double min_field_value_allowed = 0, max_field_value_allowed = 0;
-    long paramId        = 0;
-    double dmin_allowed = 0, dmax_allowed = 0;
-    grib_context* ctx = h->context;
-    int is_error      = 1;
+    long paramId           = 0;
+    grib_context* ctx      = h->context;
+    int is_error           = 1;
+    char description[1024] = {0,};
     /*
      * If grib_data_quality_checks == 1, limits failure results in an error
      * If grib_data_quality_checks == 2, limits failure results in a warning
@@ -2204,35 +2204,37 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
         return err;
     }
 
-    dmin_allowed = min_field_value_allowed;
-    dmax_allowed = max_field_value_allowed;
+    if (ctx->debug) {
+        if (get_concept_condition_string(h, "param_value_max", NULL, description) == GRIB_SUCCESS) {
+            printf("ECCODES DEBUG grib_data_quality_check: Checking condition '%s' (min=%g, max=%g)\n",
+                   description, min_field_value_allowed, max_field_value_allowed);
+        }
+    }
 
-    if (min_val < dmin_allowed) {
-        char description[1024] = {0,};
+    if (min_val < min_field_value_allowed) {
         if (get_concept_condition_string(h, "param_value_min", NULL, description) == GRIB_SUCCESS) {
             fprintf(stderr, "ECCODES %s   :  (%s): minimum (%g) is less than the allowable limit (%g)\n",
-                    (is_error ? "ERROR" : "WARNING"), description, min_val, dmin_allowed);
+                    (is_error ? "ERROR" : "WARNING"), description, min_val, min_field_value_allowed);
         }
         else {
             if (grib_get_long(h, "paramId", &paramId) == GRIB_SUCCESS) {
                 fprintf(stderr, "ECCODES %s   :  (paramId=%ld): minimum (%g) is less than the default allowable limit (%g)\n",
-                        (is_error ? "ERROR" : "WARNING"), paramId, min_val, dmin_allowed);
+                        (is_error ? "ERROR" : "WARNING"), paramId, min_val, min_field_value_allowed);
             }
         }
         if (is_error) {
             return GRIB_OUT_OF_RANGE; /* Failure */
         }
     }
-    if (max_val > dmax_allowed) {
-        char description[1024] = {0,};
+    if (max_val > max_field_value_allowed) {
         if (get_concept_condition_string(h, "param_value_max", NULL, description) == GRIB_SUCCESS) {
             fprintf(stderr, "ECCODES %s   :  (%s): maximum (%g) is more than the allowable limit (%g)\n",
-                    (is_error ? "ERROR" : "WARNING"), description, max_val, dmax_allowed);
+                    (is_error ? "ERROR" : "WARNING"), description, max_val, max_field_value_allowed);
         }
         else {
             if (grib_get_long(h, "paramId", &paramId) == GRIB_SUCCESS) {
                 fprintf(stderr, "ECCODES %s   :  (paramId=%ld): maximum (%g) is more than the default allowable limit (%g)\n",
-                        (is_error ? "ERROR" : "WARNING"), paramId, max_val, dmax_allowed);
+                        (is_error ? "ERROR" : "WARNING"), paramId, max_val, max_field_value_allowed);
             }
         }
         if (is_error) {
