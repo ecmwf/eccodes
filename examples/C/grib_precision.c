@@ -122,6 +122,8 @@ int main(int argc, char** argv)
 
     fclose(in);
     fclose(out);
+    free(values1);
+    free(values2);
 
     return 0;
 }
