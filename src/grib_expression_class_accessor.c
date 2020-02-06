@@ -125,16 +125,14 @@ static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, siz
         start += *size;
 
     if (e->length != 0) {
-        if (start > 0)
+        if (start >= 0)
             memcpy(buf, mybuf + start, e->length);
         buf[e->length] = 0;
     }
     else {
-        if (*size > 0) {
-            memcpy(buf, mybuf, *size);
-            if (*size == 1024)
-                *size = *size - 1; /* ECC-336 */
-        }
+        memcpy(buf, mybuf, *size);
+        if (*size == 1024)
+            *size = *size - 1; /* ECC-336 */
         buf[*size] = 0;
     }
     return buf;
