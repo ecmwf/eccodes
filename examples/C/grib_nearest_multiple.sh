@@ -24,6 +24,7 @@ input_pts=$temp1
 input_lsm=${data_dir}/reduced_gaussian_lsm.grib1
 input_grb=${data_dir}/reduced_gaussian_pressure_level.grib1
 
+cat $input_pts
 ${examples_dir}/c_grib_nearest_multiple $input_pts $input_lsm $input_grb > $temp2
 
 cat > $tempRef <<EOF
