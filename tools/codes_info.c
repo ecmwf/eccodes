@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
                 "It is recommended you use ECCODES_SAMPLES_PATH instead!)\n");
         }
         else {
-            printf("Default SAMPLES path is used: %s\n", ECCODES_SAMPLES_PATH);
+            printf("Default SAMPLES path is used: %s\n", context->grib_samples_path);
             printf("SAMPLES path can be changed by setting ECCODES_SAMPLES_PATH environment variable\n");
         }
         printf("\n");
@@ -137,7 +137,7 @@ int main(int argc, char* argv[])
             printf("%s", path);
         }
         else {
-            printf("%s", ECCODES_SAMPLES_PATH);
+            printf("%s", context->grib_samples_path);
         }
     }
 
