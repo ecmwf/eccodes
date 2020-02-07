@@ -107,19 +107,19 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
     size_t l1 = sizeof(b1);
     char b2[1024];
     size_t l2 = sizeof(b2);
-    const char* v1;
-    const char* v2;
+    const char* v1 = NULL;
+    const char* v2 = NULL;
 
     grib_expression_string_compare* e = (grib_expression_string_compare*)g;
 
     v1 = grib_expression_evaluate_string(h, e->left, b1, &l1, &ret);
-    if (!v1) {
+    if (!v1 || ret) {
         *lres = 0;
         return ret;
     }
 
     v2 = grib_expression_evaluate_string(h, e->right, b2, &l2, &ret);
-    if (!v2) {
+    if (!v2 || ret) {
         *lres = 0;
         return ret;
     }

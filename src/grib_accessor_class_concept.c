@@ -437,7 +437,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     int ret = 0;
     if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE) {
         long lval = 0;
-        int ret   = unpack_long(a, &lval, len);
+        ret = unpack_long(a, &lval, len);
         if (ret == GRIB_SUCCESS) {
             *val = lval;
         }

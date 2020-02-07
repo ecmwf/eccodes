@@ -101,6 +101,9 @@ set -e
 [ $stat1 -ne 0 ]
 [ $stat2 -ne 0 ]
 
+# Should succeed. Change paramId first and then scale all values down
+${tools_dir}/grib_set -s paramId=$pid,scaleValuesBy=0.01 $input1 $tempOut
+${tools_dir}/grib_set -s paramId=$pid,scaleValuesBy=0.01 $input2 $tempOut
 
 echo "Test close to the limit..."
 # ---------------------------------

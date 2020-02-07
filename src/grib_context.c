@@ -27,13 +27,13 @@ int feenableexcept(int excepts);
 grib_string_list grib_file_not_found;
 
 /* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
-/* in order to have multiple definitions directories */
+/* in order to have multiple definitions/samples directories */
 #ifdef ECCODES_ON_WINDOWS
-#define DEFS_PATH_DELIMITER_CHAR ';'
-#define DEFS_PATH_DELIMITER_STR ";"
+#define ECC_PATH_DELIMITER_CHAR ';'
+#define ECC_PATH_DELIMITER_STR ";"
 #else
-#define DEFS_PATH_DELIMITER_CHAR ':'
-#define DEFS_PATH_DELIMITER_STR ":"
+#define ECC_PATH_DELIMITER_CHAR ':'
+#define ECC_PATH_DELIMITER_STR ":"
 #endif
 
 #if GRIB_PTHREADS
@@ -371,8 +371,8 @@ static grib_context default_grib_context = {
 #endif
 };
 
-/* Hopefully big enough. Note: GRIB_DEFINITION_PATH can contain SEVERAL colon-separated sub-paths */
-#define DEF_PATH_MAXLEN 8192
+/* Hopefully big enough. Note: Definitions and samples path environment variables can contain SEVERAL colon-separated directories */
+#define ECC_PATH_MAXLEN 8192
 
 grib_context* grib_context_get_default()
 {
@@ -470,14 +470,14 @@ grib_context* grib_context_get_default()
             const char* test_defs = codes_getenv("_ECCODES_ECMWF_TEST_DEFINITION_PATH");
             const char* test_samp = codes_getenv("_ECCODES_ECMWF_TEST_SAMPLES_PATH");
             if (test_defs) {
-                char buffer[DEF_PATH_MAXLEN];
+                char buffer[ECC_PATH_MAXLEN];
                 strcpy(buffer, default_grib_context.grib_definition_files_path);
                 strcat(buffer, ":");
                 strcat(buffer, strdup(test_defs));
                 default_grib_context.grib_definition_files_path = strdup(buffer);
             }
             if (test_samp) {
-                char buffer[DEF_PATH_MAXLEN];
+                char buffer[ECC_PATH_MAXLEN];
                 strcpy(buffer, default_grib_context.grib_samples_path);
                 strcat(buffer, ":");
                 strcat(buffer, strdup(test_samp));
@@ -489,9 +489,19 @@ grib_context* grib_context_get_default()
         {
             const char* defs_extra = getenv("ECCODES_EXTRA_DEFINITION_PATH");
             if (defs_extra) {
-                char buffer[DEF_PATH_MAXLEN];
-                ecc_snprintf(buffer, DEF_PATH_MAXLEN, "%s%c%s", defs_extra, DEFS_PATH_DELIMITER_CHAR, default_grib_context.grib_definition_files_path);
+                char buffer[ECC_PATH_MAXLEN];
+                ecc_snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", defs_extra, ECC_PATH_DELIMITER_CHAR, default_grib_context.grib_definition_files_path);
                 default_grib_context.grib_definition_files_path = strdup(buffer);
+            }
+        }
+
+        /* Samples path extra: Added at the head of (i.e. before) existing path */
+        {
+            const char* samples_extra = getenv("ECCODES_EXTRA_SAMPLES_PATH");
+            if (samples_extra) {
+                char buffer[ECC_PATH_MAXLEN];
+                ecc_snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", samples_extra, ECC_PATH_DELIMITER_CHAR, default_grib_context.grib_samples_path);
+                default_grib_context.grib_samples_path = strdup(buffer);
             }
         }
 
@@ -576,7 +586,7 @@ static char* resolve_path(grib_context* c, char* path)
 #ifdef ECCODES_ON_WINDOWS
     result = grib_context_strdup(c, path);
 #else
-    char resolved[DEF_PATH_MAXLEN + 1];
+    char resolved[ECC_PATH_MAXLEN + 1];
     if (!realpath(path, resolved)) {
         result = grib_context_strdup(c, path); /* Failed to resolve. Use original path */
     }
@@ -590,7 +600,7 @@ static char* resolve_path(grib_context* c, char* path)
 static int init_definition_files_dir(grib_context* c)
 {
     int err = 0;
-    char path[DEF_PATH_MAXLEN];
+    char path[ECC_PATH_MAXLEN];
     char* p                = NULL;
     grib_string_list* next = NULL;
 
@@ -603,17 +613,17 @@ static int init_definition_files_dir(grib_context* c)
         return GRIB_NO_DEFINITIONS;
 
     /* Note: strtok modifies its first argument so we copy */
-    strncpy(path, c->grib_definition_files_path, DEF_PATH_MAXLEN);
+    strncpy(path, c->grib_definition_files_path, ECC_PATH_MAXLEN);
 
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex_c);
 
     p = path;
 
-    while (*p != DEFS_PATH_DELIMITER_CHAR && *p != '\0')
+    while (*p != ECC_PATH_DELIMITER_CHAR && *p != '\0')
         p++;
 
-    if (*p != DEFS_PATH_DELIMITER_CHAR) {
+    if (*p != ECC_PATH_DELIMITER_CHAR) {
         /* No delimiter found so this is a single directory */
         c->grib_definition_files_dir        = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
         c->grib_definition_files_dir->value = resolve_path(c, path);
@@ -621,7 +631,7 @@ static int init_definition_files_dir(grib_context* c)
     else {
         /* Definitions path contains multiple directories */
         char* dir = NULL;
-        dir       = strtok(path, DEFS_PATH_DELIMITER_STR);
+        dir       = strtok(path, ECC_PATH_DELIMITER_STR);
 
         while (dir != NULL) {
             if (next) {
@@ -633,7 +643,7 @@ static int init_definition_files_dir(grib_context* c)
                 next                         = c->grib_definition_files_dir;
             }
             next->value = resolve_path(c, dir);
-            dir         = strtok(NULL, DEFS_PATH_DELIMITER_STR);
+            dir         = strtok(NULL, ECC_PATH_DELIMITER_STR);
         }
     }
 

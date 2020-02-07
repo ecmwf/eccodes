@@ -125,7 +125,8 @@ static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, siz
         start += *size;
 
     if (e->length != 0) {
-        memcpy(buf, mybuf + start, e->length);
+        if (start >= 0)
+            memcpy(buf, mybuf + start, e->length);
         buf[e->length] = 0;
     }
     else {

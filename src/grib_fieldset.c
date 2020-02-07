@@ -142,6 +142,7 @@ static void grib_fieldset_delete_columns(grib_fieldset* set)
             case GRIB_TYPE_STRING:
                 for (j = 0; j < set->columns[i].size; j++)
                     grib_context_free(c, set->columns[i].string_values[j]);
+                grib_context_free(c, set->columns[i].string_values);
                 break;
             default:
                 grib_context_log(c, GRIB_LOG_ERROR,
