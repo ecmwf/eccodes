@@ -265,8 +265,11 @@ grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name)
 
     g = grib_external_template(c, name);
     if (!g)
-        grib_context_log(c, GRIB_LOG_ERROR, "Unable to load sample file %s.tmpl\n                    in %s",
-                         name, c->grib_samples_path);
+        grib_context_log(c, GRIB_LOG_ERROR,
+                         "Unable to load sample file '%s.tmpl'\n"
+                         "                   from %s\n"
+                         "                   (ecCodes Version=%s)",
+                         name, c->grib_samples_path, ECCODES_VERSION_STR);
 
     return g;
 }
@@ -284,13 +287,16 @@ grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* nam
      *  if(g) return g;
      */
     if (c->debug) {
-        fprintf(stderr, "ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
+        fprintf(stderr, "ECCODES DEBUG: codes_bufr_handle_new_from_samples '%s'\n", name);
     }
 
     g = bufr_external_template(c, name);
     if (!g)
-        grib_context_log(c, GRIB_LOG_ERROR, "Unable to load sample file %s.tmpl\n                    in %s",
-                         name, c->grib_samples_path);
+        grib_context_log(c, GRIB_LOG_ERROR,
+                         "Unable to load sample file '%s.tmpl'\n"
+                         "                   from %s\n"
+                         "                   (ecCodes Version=%s)",
+                         name, c->grib_samples_path, ECCODES_VERSION_STR);
 
     return g;
 }
