@@ -1421,6 +1421,72 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
 	}
+#Malaria cases
+'261003' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 0 ;
+	}
+#Malaria circumsporozoite protein rate
+'261004' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	}
+#Plasmodium falciparum entomological inoculation rate
+'261005' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 2 ;
+	}
+#Human bite rate by anopheles vectors
+'261006' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 3 ;
+	}
+#Malaria immunity
+'261007' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 4 ;
+	}
+#Falciparum parasite rates
+'261008' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 5 ;
+	}
+#Detectable falciparum parasite ratio (after day 10)
+'261009' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 6 ;
+	}
+#Anopheles vector to host ratio
+'261010' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 7 ;
+	}
+#Anopheles vector number
+'261011' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 8 ;
+	}
+#Fraction of malarial vector reproductive habitat
+'261012' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 9 ;
+	}
+#Population density
+'261013' = {
+	 discipline = 20 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	}
 #Virtual temperature
 '300012' = {
 	 discipline = 0 ;
