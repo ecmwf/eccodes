@@ -1463,6 +1463,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         default:
             fprintf(stderr, "invalid packing_spec->accuracy = %ld\n", (long)packing_spec->accuracy);
+            grib_handle_delete(tmp);
             *err = GRIB_INTERNAL_ERROR;
             goto cleanup;
             break;
