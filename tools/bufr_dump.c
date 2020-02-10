@@ -506,18 +506,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         sprintf(tmp, "MESSAGE %d ( length=%ld )", options->handle_count, length);
         if (!grib_options_on("C"))
             fprintf(stdout, "#==============   %-38s   ==============\n", tmp);
-        err = grib_set_long(h, "unpack", 1);
-        if (err) {
-            if (options->fail) {
-                fprintf(stderr, "ERROR: unable to unpack data section: %s\n", grib_get_error_message(err));
-                exit(err);
-            }
-            else {
-                fprintf(stdout, "ERROR: unable to unpack data section\n");
-                options->error = err;
-                /*return err; See ECC-723*/
-            }
-        }
         grib_dump_content(h, stdout, options->dump_mode, options->dump_flags, 0);
     }
     else if (dump_descriptors) {
