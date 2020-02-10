@@ -36,7 +36,15 @@ Representation::Representation() {}
 
 Representation::~Representation() = default;
 
-RepresentationHandle::RepresentationHandle(const Representation* representation) : representation_(representation) {
+
+RepresentationHandle::RepresentationHandle(const Representation* r) : representation_(r) {
+    if (representation_) {
+        representation_->attach();
+    }
+}
+
+
+RepresentationHandle::RepresentationHandle(const RepresentationHandle& rh) : representation_(rh) {
     if (representation_) {
         representation_->attach();
     }
