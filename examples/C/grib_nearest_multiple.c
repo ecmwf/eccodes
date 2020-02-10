@@ -113,7 +113,7 @@ int main(int argc, char** argv)
         exit(1);
     }
     i = 0;
-    while (fscanf(fin, "%ld %g %g", &iid, &lat, &lon) != EOF) {
+    while (i < npoints && fscanf(fin, "%ld %g %g", &iid, &lat, &lon) != EOF) {
         id[i]   = iid;
         vlat[i] = lat;
         while (lon < 0)
