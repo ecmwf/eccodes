@@ -84,9 +84,7 @@ atlas::Grid RotatedGG::atlasGrid() const {
 }
 
 
-namespace {
 static RepresentationBuilder<RotatedGG> rotatedGG("rotated_gg");  // Name is what is returned by grib_api
-}
 
 
 }  // namespace regular

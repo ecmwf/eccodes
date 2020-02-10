@@ -322,10 +322,9 @@ bool UnstructuredGrid::extendBoundingBoxOnIntersect() const {
 }
 
 
-namespace {
 static RepresentationBuilder<UnstructuredGrid> triangular_grid("triangular_grid");
 static RepresentationBuilder<UnstructuredGrid> unstructured_grid("unstructured_grid");
-}  // namespace
+
 
 }  // namespace other
 }  // namespace repres

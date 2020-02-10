@@ -211,10 +211,8 @@ atlas::Grid IrregularLatlon::atlasGrid() const {
     return atlas::UnstructuredGrid(pts);
 }
 
-namespace {
 static RepresentationBuilder<IrregularLatlon> irregularLatlon(
     "irregular_latlon");  // Name is what is returned by grib_api
-}
 
 }  // namespace repres
 }  // namespace mir

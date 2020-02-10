@@ -82,10 +82,8 @@ const Gridded* RotatedFromPL::croppedRepresentation(const util::BoundingBox& bbo
 }
 
 
-namespace {
 static RepresentationBuilder<RotatedFromPL> rotatedFromPL(
     "reduced_rotated_gg");  // Name is what is returned by grib_api
-}
 
 
 }  // namespace reduced

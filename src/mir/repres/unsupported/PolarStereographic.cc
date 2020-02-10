@@ -59,19 +59,20 @@ void PolarStereographic::print(std::ostream& out) const {
         << "]";
 }
 
+
 void PolarStereographic::fill(grib_info& info) const {
     NOTIMP;
 }
+
 
 void PolarStereographic::validate(const MIRValuesVector& values) const {
     ASSERT(values.size() == Nx_ * Ny_);
 }
 
 
-namespace {
 static RepresentationBuilder<PolarStereographic> polarStereographic(
     "polar_stereographic");  // Name is what is returned by grib_api
-}
+
 
 }  // namespace repres
 }  // namespace mir

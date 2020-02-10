@@ -194,18 +194,19 @@ void SphericalHarmonics::setSimplePacking(grib_info& info) const {
     info.packing.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE;
 }
 
+
 void SphericalHarmonics::estimate(api::MIREstimation& estimation) const {
     estimation.packing("spectral_complex");  // Will be overriden
     estimation.representation(factory());
 }
 
+
 std::string SphericalHarmonics::factory() const {
     return "sh";
 }
 
-namespace {
+
 static RepresentationBuilder<SphericalHarmonics> sphericalHarmonics("sh");  // Name is what is returned by grib_api
-}
 
 
 }  // namespace sh

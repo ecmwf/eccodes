@@ -41,9 +41,7 @@ void SpaceView::fill(grib_info& info) const {
 }
 
 
-namespace {
 static RepresentationBuilder<SpaceView> spaceView("space_view");  // Name is what is returned by grib_api
-}
 
 
 }  // namespace repres
