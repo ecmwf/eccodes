@@ -605,8 +605,10 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     int tab         = 0;
     long count      = 0;
 
-    c = a->context;
+    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+        return;
 
+    c = a->context;
     grib_value_count(a, &count);
     if (count == 0)
         return;
@@ -623,10 +625,6 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     }
 
     err = grib_unpack_string_array(a, values, &size);
-
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
-        return;
-
 
     /* print_offset(self->dumper.out,d,a); */
     print_offset(self->dumper.out, self->begin, self->theEnd);
@@ -662,5 +660,6 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     }
 
     fprintf(self->dumper.out, "\n");
+    for (i=0; i<size; ++i) grib_context_free(c, values[i]);
     grib_context_free(c, values);
 }
