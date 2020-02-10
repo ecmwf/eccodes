@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     grib_handle* h    = NULL;
     char* infile      = NULL;
     long *steps, *levels, *numbers; /* arrays */
-    char** shortName = NULL;
+    char** shortNames = NULL;
     int i, j, k, l;
     size_t stepSize, levelSize, shortNameSize, numberSize;
     long oStep, oLevel, oNumber;
@@ -85,21 +85,21 @@ int main(int argc, char* argv[])
 
     /*same as for "step"*/
     GRIB_CHECK(grib_index_get_size(index, "shortName", &shortNameSize), 0);
-    shortName = (char**)malloc(sizeof(char*) * shortNameSize);
-    if (!shortName) exit(1);
+    shortNames = (char**)malloc(sizeof(char*) * shortNameSize);
+    if (!shortNames) exit(1);
     /*same as for "step"*/
-    GRIB_CHECK(grib_index_get_string(index, "shortName", shortName, &shortNameSize), 0);
+    GRIB_CHECK(grib_index_get_string(index, "shortName", shortNames, &shortNameSize), 0);
     printf("shortNameSize=%ld\n", (long)shortNameSize);
     for (i = 0; i < shortNameSize; i++)
-        printf("%s ", shortName[i]);
+        printf("%s ", shortNames[i]);
     printf("\n");
 
     count = 0;
     /* nested loops on the keys values of the index */
     /* different order of the nested loops doesn't affect performance*/
     for (i = 0; i < shortNameSize; i++) {
-        /* select the GRIB with shortName=shortName[i] */
-        grib_index_select_string(index, "shortName", shortName[i]);
+        /* select the GRIB with shortName=shortNames[i] */
+        grib_index_select_string(index, "shortName", shortNames[i]);
 
         for (l = 0; l < levelSize; l++) {
             /* select the GRIB with level=levels[i] */
@@ -146,6 +146,12 @@ int main(int argc, char* argv[])
 
     grib_index_write(index, "out.gribidx");
     grib_index_delete(index);
+    free(levels);
+    free(numbers);
+    free(steps);
+    for (i = 0; i < shortNameSize; i++)
+        free(shortNames[i]);
+    free(shortNames);
 
     return 0;
 }

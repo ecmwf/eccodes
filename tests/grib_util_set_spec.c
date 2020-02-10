@@ -242,6 +242,7 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     }
     codes_handle_delete(handle);
     codes_handle_delete(finalh);
+    free(values);
     fclose(in);
     fclose(out);
 }
