@@ -383,7 +383,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                 for (i = 0; i < concept_count; ++i) {
                     if (all_concept_vals[i]) {
                         int print_it = 1;
-                        if (i > 0 && strcmp(all_concept_vals[i], all_concept_vals[i - 1]) == 0) {
+                        if (i > 0 && all_concept_vals[i - 1] && strcmp(all_concept_vals[i], all_concept_vals[i - 1]) == 0) {
                             print_it = 0; /* skip duplicate entries */
                         }
                         if (print_it)
