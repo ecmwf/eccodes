@@ -98,8 +98,8 @@ bool ReducedLL::getLongestElementDiagonal(double& d) const {
         ASSERT(Di > 0);
         const eckit::Fraction we((dom.east() - dom.west()).fraction() / Di);
 
-        const Latitude &latAwayFromEquator(std::abs(lat1.value()) > std::abs(lat2.value()) ? lat1 : lat2),
-            latCloserToEquator(std::abs(lat1.value()) > std::abs(lat2.value()) ? lat2 : lat1);
+        auto& latAwayFromEquator(std::abs(lat1.value()) > std::abs(lat2.value()) ? lat1 : lat2);
+        auto& latCloserToEquator(std::abs(lat1.value()) > std::abs(lat2.value()) ? lat2 : lat1);
 
         d = std::max(d, atlas::util::Earth::distance(atlas::PointLonLat(0., latCloserToEquator.value()),
                                                      atlas::PointLonLat(we, latAwayFromEquator.value())));
