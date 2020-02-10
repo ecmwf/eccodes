@@ -110,10 +110,10 @@ concept param_value_max(default_max_val) {
     125000 = { paramId=151; }
     308 = { paramId=151126; }
     360.5 = { paramId=140230; }
-    35 = { paramId=140221; }
+    50 = { paramId=140221; }
     100 = { paramId=3074; }
     330 = { paramId=122; }
-    35 = { paramId=140214; }
+    150 = { paramId=140214; }
     3.5 = { paramId=151132; }
     4000 = { paramId=151225; }
     8888 = { paramId=228002; }
@@ -128,7 +128,7 @@ concept param_value_max(default_max_val) {
     320 = { paramId=34; }
     1.001 = { paramId=31; }
     15 = { paramId=174098; }
-    35 = { paramId=140229; }
+    100 = { paramId=140229; }
     380 = { paramId=235; }
     100 = { paramId=228032; }
     1000 = { paramId=33; }
