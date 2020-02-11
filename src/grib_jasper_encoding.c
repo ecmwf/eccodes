@@ -199,9 +199,9 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
     }
 
     helper->jpeg_length = jpcstream->rwcnt_;
-    jaserr              = jas_stream_close(istream);
+    jas_stream_close(istream);
     istream             = 0;
-    jaserr              = jas_stream_close(jpcstream);
+    jas_stream_close(jpcstream);
     jpcstream           = 0;
 
 cleanup:
