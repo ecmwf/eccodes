@@ -101,7 +101,7 @@ void RotatedLL::makeName(std::ostream& out) const {
 bool RotatedLL::sameAs(const Representation& other) const {
 
     auto o = dynamic_cast<const RotatedLL*>(&other);
-    return o && (rotation_ == o->rotation_) && LatLon::sameAs(other);
+    return (o != nullptr) && (rotation_ == o->rotation_) && LatLon::sameAs(other);
 }
 
 const RotatedLL* RotatedLL::croppedRepresentation(const util::BoundingBox& bbox) const {

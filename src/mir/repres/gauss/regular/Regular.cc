@@ -128,7 +128,7 @@ void Regular::correctWestEast(Longitude& w, Longitude& e) const {
 
 bool Regular::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const Regular*>(&other);
-    return o && (N_ == o->N_) && (bbox_ == o->bbox_);
+    return (o != nullptr) && (N_ == o->N_) && (bbox_ == o->bbox_);
 }
 
 eckit::Fraction Regular::getSmallestIncrement() const {

@@ -171,7 +171,7 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e) const {
 
 bool Reduced::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const Reduced*>(&other);
-    return o && Gaussian::sameAs(other);
+    return (o != nullptr) && Gaussian::sameAs(other);
 }
 
 

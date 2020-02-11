@@ -94,7 +94,7 @@ void RegularLL::makeName(std::ostream& out) const {
 
 bool RegularLL::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const RegularLL*>(&other);
-    return o && LatLon::sameAs(other);
+    return (o != nullptr) && LatLon::sameAs(other);
 }
 
 const RegularLL* RegularLL::croppedRepresentation(const util::BoundingBox& bbox) const {

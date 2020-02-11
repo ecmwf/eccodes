@@ -121,7 +121,7 @@ void LatLon::makeName(std::ostream& out) const {
 
 bool LatLon::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const LatLon*>(&other);
-    return o && (bbox_ == o->bbox_) && (increments_ == o->increments_);
+    return (o != nullptr) && (bbox_ == o->bbox_) && (increments_ == o->increments_);
 }
 
 

@@ -114,7 +114,7 @@ bool ReducedLL::getLongestElementDiagonal(double& d) const {
 
 bool ReducedLL::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const ReducedLL*>(&other);
-    return o && (bbox_ == o->bbox_) && (pl_ == o->pl_);
+    return (o != nullptr) && (bbox_ == o->bbox_) && (pl_ == o->pl_);
 }
 
 void ReducedLL::fill(grib_info&) const {

@@ -45,7 +45,7 @@ void RotatedGG::print(std::ostream& out) const {
 
 bool RotatedGG::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const RotatedGG*>(&other);
-    return o && (rotation_ == o->rotation_) && Regular::sameAs(other);
+    return (o != nullptr) && (rotation_ == o->rotation_) && Regular::sameAs(other);
 }
 
 

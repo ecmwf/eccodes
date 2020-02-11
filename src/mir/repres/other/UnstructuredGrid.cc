@@ -63,7 +63,7 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName& path) {
         throw eckit::CantOpenFile(path);
     }
 
-    if (!::isprint(in.peek())) {
+    if (::isprint(in.peek()) == 0) {
 
         eckit::Log::info() << "UnstructuredGrid::load  " << path << std::endl;
 
@@ -159,7 +159,7 @@ void UnstructuredGrid::makeName(std::ostream& out) const {
 
 bool UnstructuredGrid::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const UnstructuredGrid*>(&other);
-    return o && (latitudes_ == o->latitudes_) && (longitudes_ == o->longitudes_);
+    return (o != nullptr) && (latitudes_ == o->latitudes_) && (longitudes_ == o->longitudes_);
 }
 
 

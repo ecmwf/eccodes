@@ -234,7 +234,7 @@ bool RegularGrid::sameAs(const Representation& other) const {
     };
 
     auto o = dynamic_cast<const RegularGrid*>(&other);
-    return o && name(*this) == name(*o);
+    return (o != nullptr) && name(*this) == name(*o);
 }
 
 void RegularGrid::fill(util::MeshGeneratorParameters& params) const {

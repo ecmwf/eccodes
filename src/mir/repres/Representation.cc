@@ -38,21 +38,21 @@ Representation::~Representation() = default;
 
 
 RepresentationHandle::RepresentationHandle(const Representation* r) : representation_(r) {
-    if (representation_) {
+    if (representation_ != nullptr) {
         representation_->attach();
     }
 }
 
 
 RepresentationHandle::RepresentationHandle(const RepresentationHandle& rh) : representation_(rh) {
-    if (representation_) {
+    if (representation_ != nullptr) {
         representation_->attach();
     }
 }
 
 
 RepresentationHandle::~RepresentationHandle() {
-    if (representation_) {
+    if (representation_ != nullptr) {
         representation_->detach();
     }
 }
