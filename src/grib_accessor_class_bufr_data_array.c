@@ -1003,7 +1003,7 @@ static int encode_double_value(grib_context* c, grib_buffer* buff, long* pos, bu
                     "ECCODES WARNING :  encode_double_value: %s. Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
                     " Setting it to missing value\n",
                     bd->shortName, value, minAllowed, maxAllowed);
-            value = GRIB_MISSING_DOUBLE; /* Ignore the bad value and instead use 'missing' */
+            /* Ignore the bad value and instead use 'missing' */
             grib_set_bits_on(buff->data, pos, modifiedWidth);
         }
         else {

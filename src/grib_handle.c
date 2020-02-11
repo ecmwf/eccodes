@@ -779,7 +779,8 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
 
     if (c->gts_header_on && gtslen >= 8) {
         gl->gts_header = (char*)grib_context_malloc_clear(c, sizeof(unsigned char) * gtslen);
-        memcpy(gl->gts_header, gts_header, gtslen);
+        DebugAssert(gts_header);
+        if (gts_header) memcpy(gl->gts_header, gts_header, gtslen);
         gl->gts_header_len = gtslen;
         grib_context_free(c, save_gts_header);
         gtslen = 0;
@@ -1012,7 +1013,8 @@ grib_handle* bufr_new_from_file(grib_context* c, FILE* f, int* error)
 
     if (c->gts_header_on && gtslen >= 8) {
         gl->gts_header = (char*)grib_context_malloc(c, sizeof(unsigned char) * gtslen);
-        memcpy(gl->gts_header, gts_header, gtslen);
+        DebugAssert(gts_header);
+        if (gts_header) memcpy(gl->gts_header, gts_header, gtslen);
         gl->gts_header_len = gtslen;
         grib_context_free(c, save_gts_header);
         gtslen = 0;
@@ -1135,7 +1137,8 @@ static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f,
 
     if (c->gts_header_on && gtslen >= 8) {
         gl->gts_header = (char*)grib_context_malloc(c, sizeof(unsigned char) * gtslen);
-        memcpy(gl->gts_header, gts_header, gtslen);
+        DebugAssert(gts_header);
+        if (gts_header) memcpy(gl->gts_header, gts_header, gtslen);
         gl->gts_header_len = gtslen;
         grib_context_free(c, save_gts_header);
         gtslen = 0;

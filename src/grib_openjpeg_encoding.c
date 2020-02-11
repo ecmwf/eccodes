@@ -280,9 +280,9 @@ static OPJ_OFF_T opj_memory_stream_skip(OPJ_OFF_T nb_bytes, void* user_data)
     l_nb_bytes = (OPJ_SIZE_T)nb_bytes; /* Allowed because it is positive */
     /* Do not allow jumping past the end */
     if (l_nb_bytes > mstream->dataSize - mstream->offset)
-        nb_bytes = mstream->dataSize - mstream->offset;
-    mstream->offset += l_nb_bytes;
-    return l_nb_bytes; /* Returm how far we jumped */
+        l_nb_bytes = mstream->dataSize - mstream->offset; /* Jump the max. */
+    mstream->offset += l_nb_bytes; /* Make the jump */
+    return l_nb_bytes; /* Return how far we jumped */
 }
 
 /* Sets the pointer to anywhere in the memory */

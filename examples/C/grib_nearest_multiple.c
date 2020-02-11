@@ -60,49 +60,49 @@ int main(int argc, char** argv)
         npoints++;
     fclose(fin);
 
-    id = (long*)malloc(npoints * sizeof(long));
+    id = (long*)calloc(npoints, sizeof(long));
     if (!id) {
         printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(long)));
         exit(1);
     }
-    vlat = (double*)malloc(npoints * sizeof(double));
+    vlat = (double*)calloc(npoints, sizeof(double));
     if (!vlat) {
         printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
         exit(1);
     }
-    vlon = (double*)malloc(npoints * sizeof(double));
+    vlon = (double*)calloc(npoints, sizeof(double));
     if (!vlon) {
         printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
         exit(1);
     }
-    outlats = (double*)malloc(npoints * sizeof(double));
+    outlats = (double*)calloc(npoints, sizeof(double));
     if (!outlats) {
         printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
         exit(1);
     }
-    outlons = (double*)malloc(npoints * sizeof(double));
+    outlons = (double*)calloc(npoints, sizeof(double));
     if (!outlons) {
         printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
         exit(1);
     }
-    values = (double*)malloc(npoints * sizeof(double));
+    values = (double*)calloc(npoints, sizeof(double));
     if (!values) {
         printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
         exit(1);
     }
-    lsm_values = (double*)malloc(npoints * sizeof(double));
+    lsm_values = (double*)calloc(npoints, sizeof(double));
     if (!lsm_values) {
         printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
         exit(1);
     }
-    distances = (double*)malloc(npoints * sizeof(double));
+    distances = (double*)calloc(npoints, sizeof(double));
     if (!distances) {
         printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
         exit(1);
     }
-    indexes = (int*)malloc(npoints * sizeof(int));
+    indexes = (int*)calloc(npoints, sizeof(int));
     if (!indexes) {
-        printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
+        printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(int)));
         exit(1);
     }
 
@@ -113,7 +113,7 @@ int main(int argc, char** argv)
         exit(1);
     }
     i = 0;
-    while (fscanf(fin, "%ld %g %g", &iid, &lat, &lon) != EOF) {
+    while (i < npoints && fscanf(fin, "%ld %g %g", &iid, &lat, &lon) != EOF) {
         id[i]   = iid;
         vlat[i] = lat;
         while (lon < 0)

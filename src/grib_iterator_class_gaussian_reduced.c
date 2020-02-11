@@ -92,7 +92,7 @@ static int next(grib_iterator* i, double* lat, double* lon, double* val)
 {
     grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)i;
 
-    if ((long)i->e >= (long)(i->nv - 1))
+    if (i->e >= (long)(i->nv - 1))
         return 0;
     i->e++;
 

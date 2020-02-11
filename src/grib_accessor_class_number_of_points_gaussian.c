@@ -338,7 +338,6 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
     int is_global = 0;
     long ni = 0, nj = 0, plpresent = 0, order = 0;
     size_t plsize = 0;
-    double* lats  = {0,};
     double lat_first, lat_last, lon_first, lon_last;
     long* pl     = NULL;
     long* plsave = NULL;
@@ -370,7 +369,6 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
 
     if (plpresent) {
         long max_pl          = 0;
-        float d              = 0;
         int j                = 0;
         double lon_first_row = 0, lon_last_row = 0;
 
@@ -384,10 +382,6 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
         if ((ret = grib_get_double_internal(h, self->lat_last, &lat_last)) != GRIB_SUCCESS)
             return ret;
         if ((ret = grib_get_double_internal(h, self->lon_last, &lon_last)) != GRIB_SUCCESS)
-            return ret;
-
-        lats = (double*)grib_context_malloc(a->context, sizeof(double) * order * 2);
-        if ((ret = grib_get_gaussian_latitudes(order, lats)) != GRIB_SUCCESS)
             return ret;
 
         if ((ret = grib_get_size(h, self->pl, &plsize)) != GRIB_SUCCESS)
@@ -410,14 +404,12 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
                 max_pl = pl[j];
         }
 
-        d         = fabs(lats[0] - lats[1]);
         is_global = 0; /* ECC-445 */
 
         correctWestEast(max_pl, angular_precision, &lon_first, &lon_last);
 
         if (!is_global) {
             /*sub area*/
-            (void)d;
             *val = 0;
             for (j = 0; j < nj; j++) {
                 row_count = 0;
@@ -440,8 +432,6 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
         /*regular*/
         *val = ni * nj;
     }
-    if (lats)
-        grib_context_free(c, lats);
     if (plsave)
         grib_context_free(c, plsave);
 
@@ -455,7 +445,6 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
     int is_global = 0;
     long ni = 0, nj = 0, plpresent = 0, order = 0;
     size_t plsize = 0;
-    double* lats  = {0,};
     double lat_first, lat_last, lon_first, lon_last;
     long* pl     = NULL;
     long* plsave = NULL;
@@ -487,8 +476,7 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
     }
 
     if (plpresent) {
-        long max_pl          = 0;
-        float d              = 0;
+        long max_pl = 0;
         int j                = 0;
         double lon_first_row = 0, lon_last_row = 0;
 
@@ -502,10 +490,6 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
         if ((ret = grib_get_double_internal(h, self->lat_last, &lat_last)) != GRIB_SUCCESS)
             return ret;
         if ((ret = grib_get_double_internal(h, self->lon_last, &lon_last)) != GRIB_SUCCESS)
-            return ret;
-
-        lats = (double*)grib_context_malloc(a->context, sizeof(double) * order * 2);
-        if ((ret = grib_get_gaussian_latitudes(order, lats)) != GRIB_SUCCESS)
             return ret;
 
         if ((ret = grib_get_size(h, self->pl, &plsize)) != GRIB_SUCCESS)
@@ -529,14 +513,12 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
         }
 
         /*is_global=is_gaussian_global(lat_first,lat_last,lon_first,lon_last,max_pl,lats,angular_precision);*/
-        d         = fabs(lats[0] - lats[1]);
         is_global = 0; /* ECC-445 */
 
         correctWestEast(max_pl, angular_precision, &lon_first, &lon_last);
 
         if (!is_global) {
             /*sub area*/
-            (void)d;
 #if EFDEBUG
             printf("-------- subarea fabs(lat_first-lats[0])=%g d=%g\n", fabs(lat_first - lats[0]), d);
             printf("-------- subarea fabs(lat_last+lats[0])=%g d=%g\n", fabs(lat_last + lats[0]), d);
@@ -584,8 +566,7 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
     for (i = 0; i < plsize; i++)
         printf(" DEBUG: pl[%d]=%ld\n", i, pl[i]);
 #endif
-    if (lats)
-        grib_context_free(c, lats);
+
     if (plsave)
         grib_context_free(c, plsave);
 
