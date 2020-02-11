@@ -356,13 +356,17 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
         err = nofail ? GRIB_SUCCESS : GRIB_CONCEPT_NO_MATCH;
         if (err) {
             size_t i = 0, concept_count = 0;
-            long editionNumber                             = 0;
+            long dummy = 0, editionNumber                  = 0;
             char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {
                 NULL,
             }; /* sorted array containing concept values */
             grib_concept_value* pCon = concepts;
 
             grib_context_log(h->context, GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name, name);
+            if (strcmp(act->name, "paramId")==0 && string_to_long(name, &dummy)==GRIB_SUCCESS) {
+                grib_context_log(h->context, GRIB_LOG_ERROR,
+                                 "Please check the Parameter Database 'https://apps.ecmwf.int/codes/grib/param-db/?id=%s'", name);
+            }
             if (grib_get_long(h, "edition", &editionNumber) == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle edition=%ld", editionNumber);
             }
