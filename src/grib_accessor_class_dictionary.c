@@ -329,10 +329,10 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
     }
 
     *len = rsize;
-    if (buffer && start) {
+    if (buffer && start)
         memcpy(buffer, start, rsize);
+    if (buffer)
         buffer[rsize] = 0;
-    }
 
     /* grib_trie_delete(dictionary); */
 
