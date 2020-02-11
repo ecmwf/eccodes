@@ -21,7 +21,7 @@ namespace mir {
 namespace repres {
 
 
-Mercator::Mercator(const param::MIRParametrisation& parametrisation) {}
+Mercator::Mercator(const param::MIRParametrisation& /*parametrisation*/) {}
 
 
 Mercator::Mercator() {}
@@ -36,7 +36,7 @@ void Mercator::print(std::ostream& out) const {
 }
 
 
-void Mercator::fill(grib_info& info) const {
+void Mercator::fill(grib_info& /*info*/) const {
     NOTIMP;
 }
 

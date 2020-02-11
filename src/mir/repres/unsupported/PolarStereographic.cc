@@ -60,7 +60,7 @@ void PolarStereographic::print(std::ostream& out) const {
 }
 
 
-void PolarStereographic::fill(grib_info& info) const {
+void PolarStereographic::fill(grib_info& /*info*/) const {
     NOTIMP;
 }
 

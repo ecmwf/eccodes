@@ -21,7 +21,7 @@ namespace mir {
 namespace repres {
 
 
-SpaceView::SpaceView(const param::MIRParametrisation& parametrisation) {}
+SpaceView::SpaceView(const param::MIRParametrisation& /*parametrisation*/) {}
 
 
 SpaceView::SpaceView() {}
@@ -36,7 +36,7 @@ void SpaceView::print(std::ostream& out) const {
 }
 
 
-void SpaceView::fill(grib_info& info) const {
+void SpaceView::fill(grib_info& /*info*/) const {
     NOTIMP;
 }
 

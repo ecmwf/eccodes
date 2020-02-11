@@ -47,7 +47,7 @@ void SphericalHarmonics::makeName(std::ostream& out) const {
 }
 
 
-bool SphericalHarmonics::sameAs(const Representation& other) const {
+bool SphericalHarmonics::sameAs(const Representation& /*other*/) const {
     NOTIMP;
 }
 
