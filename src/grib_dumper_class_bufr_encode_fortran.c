@@ -139,7 +139,7 @@ static int destroy(grib_dumper* d)
 {
     grib_dumper_bufr_encode_fortran* self = (grib_dumper_bufr_encode_fortran*)d;
     grib_string_list* next                = self->keys;
-    grib_string_list* cur                 = self->keys;
+    grib_string_list* cur                 = NULL;
     grib_context* c                       = d->handle->context;
     while (next) {
         cur  = next;
@@ -266,9 +266,8 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         }
         if (icount > cols || i == 0) {
             fprintf(self->dumper.out, "  &\n      ");
-            icount = 0;
         }
-        sval = dval_to_string(c, values[i]);
+        sval = dval_to_string(c, values[size - 1]);
         fprintf(self->dumper.out, "%s", sval);
         grib_context_free(c, sval);
 
@@ -360,9 +359,8 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
         }
         if (icount > cols || i == 0) {
             fprintf(self->dumper.out, "  &\n      ");
-            icount = 0;
         }
-        sval = dval_to_string(c, values[i]);
+        sval = dval_to_string(c, values[size - 1]);
         fprintf(self->dumper.out, "%s", sval);
         grib_context_free(c, sval);
 
@@ -465,7 +463,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             fprintf(self->dumper.out, "  &\n      ");
             icount = 0;
         }
-        fprintf(self->dumper.out, "%ld ", values[i]);
+        fprintf(self->dumper.out, "%ld ", values[size - 1]);
 
         depth -= 2;
         fprintf(self->dumper.out, "/)\n");
@@ -573,9 +571,8 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         }
         if (icount > cols || i == 0) {
             fprintf(self->dumper.out, "  &\n      ");
-            icount = 0;
         }
-        fprintf(self->dumper.out, "%ld ", values[i]);
+        fprintf(self->dumper.out, "%ld ", values[size - 1]);
 
         depth -= 2;
         fprintf(self->dumper.out, "/)\n");
@@ -692,7 +689,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     for (i = 0; i < size - 1; i++) {
         fprintf(self->dumper.out, "    \"%s\", &\n", values[i]);
     }
-    fprintf(self->dumper.out, "    \"%s\" /)\n", values[i]);
+    fprintf(self->dumper.out, "    \"%s\" /)\n", values[size - 1]);
 
     if (self->isLeaf == 0) {
         if ((r = compute_bufr_key_rank(h, self->keys, a->name)) != 0)
@@ -731,10 +728,11 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     size_t size                           = 0;
     grib_context* c                       = a->context;
     int r;
-    int err              = _grib_get_string_length(a, &size);
+    int err = 0;
     grib_handle* h       = grib_handle_of_accessor(a);
     const char* acc_name = a->name;
 
+    _grib_get_string_length(a, &size);
     if (size == 0)
         return;
 
