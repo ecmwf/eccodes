@@ -41,7 +41,8 @@ PolarStereographic::PolarStereographic(const param::MIRParametrisation& parametr
     ASSERT(!earthIsOblate);
 }
 
-PolarStereographic::PolarStereographic() {}
+
+PolarStereographic::PolarStereographic() = default;
 
 
 PolarStereographic::~PolarStereographic() = default;

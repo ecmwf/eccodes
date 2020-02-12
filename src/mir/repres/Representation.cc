@@ -31,7 +31,7 @@ namespace mir {
 namespace repres {
 
 
-Representation::Representation() {}
+Representation::Representation() = default;
 
 
 Representation::~Representation() = default;
@@ -337,9 +337,6 @@ const Representation* Representation::globalise(data::MIRField& field) const {
 }
 
 
-//=========================================================================
-
-
 static pthread_once_t once                              = PTHREAD_ONCE_INIT;
 static eckit::Mutex* local_mutex                        = nullptr;
 static std::map<std::string, RepresentationFactory*>* m = nullptr;
@@ -386,7 +383,7 @@ const Representation* RepresentationFactory::build(const param::MIRParametrisati
         throw eckit::SeriousBug("RepresentationFactory: unknown '" + name + "'");
     }
 
-    return (*j).second->make(params);
+    return j->second->make(params);
 }
 
 

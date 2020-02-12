@@ -24,7 +24,7 @@ namespace repres {
 SpaceView::SpaceView(const param::MIRParametrisation& /*parametrisation*/) {}
 
 
-SpaceView::SpaceView() {}
+SpaceView::SpaceView() = default;
 
 
 SpaceView::~SpaceView() = default;

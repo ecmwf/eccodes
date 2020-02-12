@@ -84,8 +84,8 @@ private:
     double longitudeOfFirstGridPoint_;
     double latitudeOfFirstGridPoint_;
     double orientationOfTheGrid_;
-    bool southPoleOnProjectionPlane_;
     double radiusOfTheEarth_;
+    bool southPoleOnProjectionPlane_;
 
 
     // -- Methods

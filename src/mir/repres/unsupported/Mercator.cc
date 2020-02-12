@@ -24,7 +24,7 @@ namespace repres {
 Mercator::Mercator(const param::MIRParametrisation& /*parametrisation*/) {}
 
 
-Mercator::Mercator() {}
+Mercator::Mercator() = default;
 
 
 Mercator::~Mercator() = default;

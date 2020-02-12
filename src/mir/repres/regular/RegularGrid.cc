@@ -29,7 +29,7 @@ namespace mir {
 namespace repres {
 namespace regular {
 
-RegularGrid::RegularGrid(const param::MIRParametrisation& param, RegularGrid::Projection projection) {
+RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGrid::Projection& projection) {
 
     ASSERT(projection);
 

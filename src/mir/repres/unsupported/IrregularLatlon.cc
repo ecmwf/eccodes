@@ -28,6 +28,7 @@
 namespace mir {
 namespace repres {
 
+
 static void range(const std::vector<double>& v, double& mn, double& mx, double& dmax) {
 
     ASSERT(v.size() >= 2);
@@ -44,6 +45,7 @@ static void range(const std::vector<double>& v, double& mn, double& mx, double& 
     }
 }
 
+
 IrregularLatlon::IrregularLatlon(const param::MIRParametrisation& parametrisation) {
 
     ASSERT(parametrisation.get("latitudes", latitudes_));
@@ -53,13 +55,17 @@ IrregularLatlon::IrregularLatlon(const param::MIRParametrisation& parametrisatio
     range(longitudes_, west_, east_, west_east_);
 }
 
-IrregularLatlon::IrregularLatlon() {}
+
+IrregularLatlon::IrregularLatlon() = default;
+
 
 IrregularLatlon::~IrregularLatlon() = default;
+
 
 size_t IrregularLatlon::numberOfPoints() const {
     return latitudes_.size() * longitudes_.size();
 }
+
 
 bool IrregularLatlon::getLongestElementDiagonal(double& d) const {
 
@@ -89,9 +95,11 @@ bool IrregularLatlon::getLongestElementDiagonal(double& d) const {
     return true;
 }
 
+
 void IrregularLatlon::print(std::ostream& out) const {
     out << "IrregularLatlon[latitudes=" << latitudes_.size() << ",longitudes=" << longitudes_.size() << "]";
 }
+
 
 void IrregularLatlon::makeName(std::ostream& out) const {
     out << "irregular-latlon-" << latitudes_.size() << "-" << longitudes_.size() << "-";
@@ -105,14 +113,17 @@ void IrregularLatlon::makeName(std::ostream& out) const {
     out << std::string(md5);
 }
 
+
 bool IrregularLatlon::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const IrregularLatlon*>(&other);
     return (o != nullptr) && (latitudes_ == o->latitudes_) && (longitudes_ == o->longitudes_);
 }
 
+
 void IrregularLatlon::fill(grib_info&) const {
     NOTIMP;
 }
+
 
 void IrregularLatlon::fill(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
@@ -126,11 +137,13 @@ void IrregularLatlon::fill(util::MeshGeneratorParameters& params) const {
     }
 }
 
+
 util::Domain IrregularLatlon::domain() const {
     return util::Domain(includesNorthPole() ? Latitude::NORTH_POLE.value() : north_, west_,
                         includesSouthPole() ? Latitude::SOUTH_POLE.value() : south_,
                         isPeriodicWestEast() ? west_ + Longitude::GLOBE.value() : east_);
 }
+
 
 class IrregularLatlonIterator : public Iterator {
 
@@ -181,25 +194,30 @@ public:
     ~IrregularLatlonIterator() { ASSERT(count_ == ni_ * nj_); }
 };
 
+
 Iterator* IrregularLatlon::iterator() const {
     return new IrregularLatlonIterator(latitudes_, longitudes_);
 }
+
 
 bool IrregularLatlon::isPeriodicWestEast() const {
     return (east_ - west_) + west_east_ >= Longitude::GLOBE.value();
 }
 
+
 bool IrregularLatlon::includesNorthPole() const {
     return north_ + south_north_ >= Latitude::NORTH_POLE.value();
 }
+
 
 bool IrregularLatlon::includesSouthPole() const {
     return south_ - south_north_ <= Latitude::SOUTH_POLE.value();
 }
 
+
 atlas::Grid IrregularLatlon::atlasGrid() const {
 
-    std::vector<atlas::PointXY>* pts = new std::vector<atlas::PointXY>();
+    auto pts = new std::vector<atlas::PointXY>();
     pts->reserve(latitudes_.size() * longitudes_.size());
 
     for (double lat : latitudes_) {
@@ -211,8 +229,10 @@ atlas::Grid IrregularLatlon::atlasGrid() const {
     return atlas::UnstructuredGrid(pts);
 }
 
+
 static RepresentationBuilder<IrregularLatlon> irregularLatlon(
     "irregular_latlon");  // Name is what is returned by grib_api
+
 
 }  // namespace repres
 }  // namespace mir

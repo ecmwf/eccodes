@@ -53,7 +53,7 @@ void eccodes_assertion(const char* message) {
 }
 
 
-GribOutput::GribOutput() : total_(0) {}
+GribOutput::GribOutput() = default;
 
 
 GribOutput::~GribOutput() = default;
@@ -92,7 +92,7 @@ void GribOutput::estimate(const param::MIRParametrisation& param, api::MIREstima
 
     long bits = 0;
     if (param.get("accuracy", bits)) {
-        estimator.accuracy(bits);
+        estimator.accuracy(size_t(bits));
     }
 
     std::string packing;
@@ -105,7 +105,7 @@ void GribOutput::estimate(const param::MIRParametrisation& param, api::MIREstima
 
     long edition;
     if (param.get("edition", edition)) {
-        estimator.edition(edition);
+        estimator.edition(size_t(edition));
     }
 }
 
@@ -253,18 +253,17 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
 
 size_t GribOutput::save(const param::MIRParametrisation& parametrisation, context::Context& ctx) {
 
-    mir::util::TraceResourceUsage usage("GribOutput::save");
+    util::TraceResourceUsage usage("GribOutput::save");
 
-    const data::MIRField& field  = ctx.field();
-    const input::MIRInput& input = ctx.input();
+    const auto& field = ctx.field();
+    const auto& input = ctx.input();
 
     field.validate();
 
     size_t total = 0;
 
-    eckit::Timing saveTimer;
-
-    eckit::AutoTiming timer(ctx.statistics().timer_, ctx.statistics().gribEncodingTiming_);
+    util::MIRStatistics::Timing saveTimer;
+    auto timer(ctx.statistics().gribEncodingTimer());
 
     for (size_t i = 0; i < field.dimensions(); i++) {
 
@@ -391,10 +390,8 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             X(info.grid.bitmapPresent);
             X(info.grid.missingValue);
             X(info.grid.pl_size);
-            for (long j = 0; j < info.grid.pl_size; j++) {
+            for (long j = 0; j < info.grid.pl_size && j < 4; j++) {
                 X(info.grid.pl[j]);
-                if (j > 4)
-                    break;
             }
 
             X(info.grid.truncation);
@@ -473,7 +470,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
         GRIB_CALL(codes_check_message_footer(message, size, PRODUCT_GRIB));
 
         {  // Remove
-            eckit::AutoTiming timing(ctx.statistics().timer_, saveTimer);
+            auto timing(ctx.statistics().saveTimer());
             out(message, size, true);
         }
 
@@ -505,8 +502,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
         }
     }
 
-    ctx.statistics().gribEncodingTiming_ -= saveTimer;
-
+    ctx.statistics().gribEncodingTiming() -= saveTimer;
 
     return total;
 }

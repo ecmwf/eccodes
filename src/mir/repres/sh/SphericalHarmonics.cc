@@ -108,19 +108,20 @@ void SphericalHarmonics::truncate(size_t truncation_from, size_t truncation_to, 
     size_t outsize = number_of_complex_coefficients(truncation_to) * 2;
     out.resize(outsize);
 
-    int delta = truncation_from - truncation_to;
-    size_t i  = 0;
-    size_t j  = 0;
+    auto delta = int(truncation_from - truncation_to);
+    size_t i   = 0;
+    size_t j   = 0;
 
     if (delta > 0) {
-        size_t t1 = truncation_to + 1;
+        auto delta2 = size_t(delta * 2);
+        size_t t1   = truncation_to + 1;
+
         for (size_t m = 0; m < t1; m++) {
             for (size_t n = m; n < t1; n++) {
                 out[i++] = in[j++];
                 out[i++] = in[j++];
             }
-            j += delta;
-            j += delta;
+            j += delta2;
         }
         ASSERT(i == outsize);
     }
@@ -171,7 +172,7 @@ const Representation* SphericalHarmonics::truncate(size_t truncation, const MIRV
 
 
     if (truncation == truncation_) {
-        return 0;
+        return nullptr;
     }
 
     truncate(truncation_, truncation, in, out);
