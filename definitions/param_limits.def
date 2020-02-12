@@ -26,13 +26,19 @@ concept param_value_min(default_min_val) {
     -0.05 = { paramId=3062; }
     0 = { paramId=260210; }
     0 = { paramId=3073; }
-    160 = { paramId=121; }
+    160 = {
+        one=(step > 0);
+        paramId=121;
+    }
+    150 = {
+        one=(step > 0);
+        paramId=122;
+    }
     85000 = { paramId=151; }
     270 = { paramId=151126; }
     -1 = { paramId=140230; }
     0 = { paramId=140221; }
     0 = { paramId=3074; }
-    150 = { paramId=122; }
     0 = { paramId=140214; }
     -3.5 = { paramId=151132; }
     0 = { paramId=151225; }
@@ -94,7 +100,7 @@ concept param_value_max(default_max_val) {
     50 = { paramId=151175; }
     100 = { paramId=260257; }
     40000 = { paramId=59; }
-    5 = { paramId=228001; }
+    1000 = { paramId=228001; }
     1500 = { paramId=151163; }
     3.5 = { paramId=151131; }
     5 = { paramId=260259; }
