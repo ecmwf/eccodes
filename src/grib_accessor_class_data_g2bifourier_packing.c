@@ -386,8 +386,9 @@ static double laplam(bif_trunc_t* bt, const double val[])
     itab1 = (int*)malloc(sizeof(int) * kmax);
     itab2 = (int*)malloc(sizeof(int) * ((1 + bt->bif_i) * (1 + bt->bif_j)));
 
-    for (k = 0; k < kmax; k++)
+    for (k = 0; k < kmax; k++) {
         itab1[k] = 0;
+    }
 
     /*
      * Keep record of the possible values of i**2+j**2 outside the non-packed truncation
@@ -405,12 +406,13 @@ static double laplam(bif_trunc_t* bt, const double val[])
     }
 
     l = 0;
-    for (k = 0; k < kmax; k++)
+    for (k = 0; k < kmax; k++) {
         if (itab1[k]) {
             itab2[l] = k;
             itab1[k] = l;
             l++;
         }
+    }
     lmax = l;
 
     /*
@@ -439,8 +441,13 @@ static double laplam(bif_trunc_t* bt, const double val[])
         }
         else {
             int m, ll = itab1[i * i + j * j];
-            for (m = 0; m < 4; m++, isp++)
-                znorm[ll] = MAX(znorm[ll], fabs(val[isp]));
+            for (m = 0; m < 4; m++, isp++) {
+                DebugAssertAccess(znorm, (long)ll, (long)lmax);
+                DebugAssertAccess(val, (long)isp, bt->n_vals_bif);
+                if (ll < lmax && isp < bt->n_vals_bif) {
+                    znorm[ll] = MAX(znorm[ll], fabs(val[isp]));
+                }
+            }
         }
     }
 
