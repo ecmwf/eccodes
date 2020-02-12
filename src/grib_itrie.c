@@ -320,7 +320,7 @@ grib_itrie* grib_itrie_new(grib_context* c, int* count)
 void grib_itrie_delete(grib_itrie* t)
 {
     GRIB_MUTEX_INIT_ONCE(&once, &init)
-    GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_LOCK(&mutex);
 
     if (t) {
         int i;
@@ -331,27 +331,31 @@ void grib_itrie_delete(grib_itrie* t)
         grib_context_free(t->context, t);
     }
 
-    GRIB_MUTEX_UNLOCK(&mutex)
+    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 int grib_itrie_get_id(grib_itrie* t, const char* key)
 {
     const char* k    = key;
     grib_itrie* last = t;
+    if (!t) {
+        Assert(!"grib_itrie_get_id: grib_trie==NULL");
+        return -1;
+    }
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init)
-    GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_LOCK(&mutex);
 
     while (*k && t)
         t = t->next[mapping[(int)*k++]];
 
     if (t != NULL && t->id != -1) {
-        GRIB_MUTEX_UNLOCK(&mutex)
+        GRIB_MUTEX_UNLOCK(&mutex);
         return t->id;
     }
     else {
         int ret = grib_itrie_insert(last, key);
-        GRIB_MUTEX_UNLOCK(&mutex)
+        GRIB_MUTEX_UNLOCK(&mutex);
         return ret;
     }
 }
@@ -362,9 +366,13 @@ int grib_itrie_insert(grib_itrie* t, const char* key)
     grib_itrie* last = t;
     int* count;
 
-    GRIB_MUTEX_INIT_ONCE(&once, &init)
+    if (!t) {
+        Assert(!"grib_itrie_insert: grib_trie==NULL");
+        return -1;
+    }
 
-    GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_LOCK(&mutex);
 
     count = t->count;
 
@@ -393,7 +401,7 @@ int grib_itrie_insert(grib_itrie* t, const char* key)
         Assert(*(t->count) < MAX_NUM_CONCEPTS);
     }
 
-    GRIB_MUTEX_UNLOCK(&mutex)
+    GRIB_MUTEX_UNLOCK(&mutex);
 
     /*printf("grib_itrie_get_id: %s -> %d\n",key,t->id);*/
 
