@@ -221,7 +221,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     lop *= 1e-6;
     if (lap != 0.0)
         return GRIB_NOT_IMPLEMENTED;
-    lap *= DEG2RAD;
+    /*lap *= DEG2RAD;*/
     lop *= DEG2RAD;
 
     orient_angle = orientationInDegrees;
