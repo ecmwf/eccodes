@@ -93,6 +93,7 @@ static void write_messages(grib_handle* h1, grib_handle* h2)
 static int blacklisted(const char* name)
 {
     grib_string_list* b = blacklist;
+    if (!name) return 0;
     while (b) {
         Assert(b->value);
         if (!strcmp(name, b->value))
