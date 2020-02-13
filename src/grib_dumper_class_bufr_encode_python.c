@@ -269,7 +269,7 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
 {
     grib_dumper_bufr_encode_python* self = (grib_dumper_bufr_encode_python*)d;
     double value                         = 0;
-    size_t size                          = 0;
+    size_t size = 0, size2 = 0;
     double* values                       = NULL;
     int err                              = 0;
     int i, icount;
@@ -283,14 +283,16 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
 
     grib_value_count(a, &count);
     size = count;
+    size2 = size;
 
     if (size > 1) {
         values = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
-        err    = grib_unpack_double(a, values, &size);
+        err    = grib_unpack_double(a, values, &size2);
     }
     else {
-        err = grib_unpack_double(a, &value, &size);
+        err = grib_unpack_double(a, &value, &size2);
     }
+    Assert(size == size2);
 
     self->empty = 0;
 
@@ -310,7 +312,6 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
         }
         if (icount > cols || i == 0) {
             fprintf(self->dumper.out, "\n      ");
-            icount = 0;
         }
         sval = dval_to_string(c, values[i]);
         fprintf(self->dumper.out, "%s", sval);
@@ -414,7 +415,6 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         }
         if (icount > cols || i == 0) {
             fprintf(self->dumper.out, "\n        ");
-            icount = 0;
         }
         fprintf(self->dumper.out, "%ld", values[i]);
 

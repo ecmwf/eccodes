@@ -383,12 +383,8 @@ static double laplam(bif_trunc_t* bt, const double val[])
     int i, j, k, l, isp;
     double zxmw, zymw, zwsum, zx, zy, zsum1, zsum2, zbeta1, zp;
 
-    itab1 = (int*)malloc(sizeof(int) * kmax);
+    itab1 = (int*)calloc(kmax, sizeof(int));
     itab2 = (int*)malloc(sizeof(int) * ((1 + bt->bif_i) * (1 + bt->bif_j)));
-
-    for (k = 0; k < kmax; k++) {
-        itab1[k] = 0;
-    }
 
     /*
      * Keep record of the possible values of i**2+j**2 outside the non-packed truncation
@@ -419,16 +415,13 @@ static double laplam(bif_trunc_t* bt, const double val[])
      * Now, itab2 contains all possible values of i*i+j*j, and itab1 contains
      * the rank of all i*i+j*j
      */
-    znorm = (double*)malloc(sizeof(double) * lmax);
+    znorm = (double*)calloc(lmax, sizeof(double));
     zw    = (double*)malloc(sizeof(double) * lmax);
 
     /*
      * Compute norms of input field, gathered by values of i**2+j**2; we have to
      * go through the unpacked truncation again
      */
-    for (l = 0; l < lmax; l++)
-        znorm[l] = 0.;
-
     isp = 0;
     for_ij()
     {
@@ -443,7 +436,7 @@ static double laplam(bif_trunc_t* bt, const double val[])
             int m, ll = itab1[i * i + j * j];
             for (m = 0; m < 4; m++, isp++) {
                 DebugAssertAccess(znorm, (long)ll, (long)lmax);
-                DebugAssertAccess(val, (long)isp, bt->n_vals_bif);
+                DebugAssertAccess(val, (long)isp, (long)bt->n_vals_bif);
                 if (ll < lmax && isp < bt->n_vals_bif) {
                     znorm[ll] = MAX(znorm[ll], fabs(val[isp]));
                 }
@@ -631,6 +624,7 @@ static bif_trunc_t* new_bif_trunc(grib_accessor* a, grib_accessor_data_g2bifouri
 cleanup:
 
     free_bif_trunc(bt, a);
+    if (ret) fprintf(stderr, "ERROR: new_bif_trunc: %s\n", grib_get_error_message(ret));
 
     return NULL;
 }
