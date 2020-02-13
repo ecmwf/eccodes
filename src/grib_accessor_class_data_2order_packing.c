@@ -472,7 +472,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_accessor* abitmap      = NULL;
     size_t bitmap_len           = 0;
 
-    err    = grib_value_count(a, &nn);
+    err = grib_value_count(a, &nn);
+    if (err) return err;
     n_vals = nn;
 
     if ((err = grib_get_long_internal(gh, self->offsetsection, &offsetsection)) != GRIB_SUCCESS)
