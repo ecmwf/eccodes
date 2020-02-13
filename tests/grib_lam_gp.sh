@@ -32,7 +32,7 @@ dump_and_check()
 
 # Grid-point LAM fields
 # Run the test which generates the GRIB files
-${test_dir}/grib_lam_gp
+$EXEC ${test_dir}/grib_lam_gp
 
 dump_and_check lam_gp_lambert_lam.grib
 dump_and_check lam_gp_mercator_lam.grib
