@@ -10,4 +10,4 @@
 
 
 . ./include.sh
-exec ${test_dir}/unit_tests
+$EXEC ${test_dir}/unit_tests

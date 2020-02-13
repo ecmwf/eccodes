@@ -15,4 +15,4 @@ if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     exit 0
 fi
 
-exec $test_dir/grib_sh_ieee64
+$EXEC $test_dir/grib_sh_ieee64

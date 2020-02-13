@@ -15,4 +15,4 @@ if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     exit 0
 fi
 
-exec $test_dir/grib_optimize_scaling
+$EXEC $test_dir/grib_optimize_scaling
