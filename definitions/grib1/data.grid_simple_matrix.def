@@ -107,7 +107,7 @@ if(matrixOfValues == 0)
         alias data.packedValues = values;
 	}
 } else {
-	if(secondaryBitmapPresent == 0) { meta error not_implemented(); }
+	#if(secondaryBitmapPresent == 0) { meta error not_implemented(); }
 
 	constant matrixBitmapsPresent  = 1;
 	constant bitMapIndicator = 0;
