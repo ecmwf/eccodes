@@ -313,7 +313,6 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
         }
         if (icount > cols || i == 0) {
             fprintf(self->dumper.out, "\n  ");
-            icount = 0;
         }
         sval = dval_to_string(c, values[i]);
         fprintf(self->dumper.out, "rvalues[%d]=%s;", i, sval);
@@ -417,7 +416,6 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         }
         if (icount > cols || i == 0) {
             fprintf(self->dumper.out, "\n  ");
-            icount = 0;
         }
         fprintf(self->dumper.out, "ivalues[%d]=%ld;", i, values[i]);
 

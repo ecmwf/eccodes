@@ -118,7 +118,7 @@ static int notify_change(grib_action* act, grib_accessor* notified,
 
     la          = grib_action_reparse(act, notified, &doit);
     old_section = notified->sub_section;
-    Assert(old_section);
+    if (!old_section) return GRIB_INTERNAL_ERROR;
 
     Assert(old_section->h == h);
 

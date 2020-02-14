@@ -266,6 +266,7 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd)
 
     /* TODO move to the def file */
     err = grib_get_long(hand, "timeRangeIndicatorFromStepRange", &timeRangeIndicatorFromStepRange);
+    if (err) return err;
 
     if (timeRangeIndicatorFromStepRange == 10)
         timeRangeIndicator = timeRangeIndicatorFromStepRange;

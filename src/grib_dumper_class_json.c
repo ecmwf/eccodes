@@ -130,7 +130,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_json* self = (grib_dumper_json*)d;
     double value           = 0;
-    size_t size            = 1;
+    size_t size = 1, size2 = 0;
     double* values         = NULL;
     int err                = 0;
     int i;
@@ -145,14 +145,17 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     h = grib_handle_of_accessor(a);
     grib_value_count(a, &count);
     size = count;
+    size2 = size;
 
     if (size > 1) {
         values = (double*)grib_context_malloc_clear(a->context, sizeof(double) * size);
-        err    = grib_unpack_double(a, values, &size);
+        err    = grib_unpack_double(a, values, &size2);
     }
     else {
-        err = grib_unpack_double(a, &value, &size);
+        err = grib_unpack_double(a, &value, &size2);
     }
+    Assert(size == size2);
+    (void)err; /* TODO */
 
     if (self->begin == 0 && self->empty == 0 && self->isAttribute == 0)
         fprintf(self->dumper.out, ",");

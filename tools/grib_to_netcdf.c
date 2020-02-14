@@ -2627,7 +2627,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
      grib_context_log(ctx,GRIB_LOG_DEBUG,"No scale required");
      return;
     }
-     */
+    */
+    DebugAssert(vals);
+    DebugAssert(n>0);
+    if(!vals) return;
 
     switch (nctype) {
         case NC_BYTE: {
