@@ -72,14 +72,42 @@ echo "Test ECC-1075: grib_dump error on GRIB1 with raw packing"
 # -------------------------------------------------------------
 temp=temp.grib_ieee.grib
 infile=${data_dir}/reduced_gaussian_surface.grib1
+grib_check_key_equals $infile numberOfMissing 0
 ${tools_dir}/grib_set -r -s packingType=grid_ieee $infile $temp
 grib_check_key_equals $temp 'numberOfEffectiveValues,numberOfValues' '6114 6114'
 ${tools_dir}/grib_get -p numberOfEffectiveValues,numberOfValues $temp
-${tools_dir}/grib_dump -O $temp
+#${tools_dir}/grib_dump -O $temp
 
 stats1=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $infile`
 stats2=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $temp`
 [ "$stats1" = "$stats2" ]
+
+echo "Test raw packing on GRIB2 with bitmap..."
+# ---------------------------------------------
+infile=${data_dir}/reduced_latlon_surface.grib2
+grib_check_key_equals $infile numberOfMissing,const '98701 0'
+${tools_dir}/grib_set -r -s packingType=grid_ieee $infile $temp
+${tools_dir}/grib_get -p numberOfEffectiveValues,numberOfValues,numberOfMissing $temp
+stats1=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $infile`
+stats2=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $temp`
+[ "$stats1" = "$stats2" ]
+grib_check_key_equals $temp numberOfEffectiveValues,numberOfValues,numberOfMissing '214661 214661 98701'
+grib_check_key_equals $temp totalLength 899004
+
+
+
+echo "Test raw packing on GRIB1 with bitmap..."
+# ---------------------------------------------
+# TODO: This test is currently failing
+# grib1 with a bitmap -> raw packing
+infile=${data_dir}/reduced_latlon_surface.grib1
+grib_check_key_equals $infile numberOfMissing 98701
+${tools_dir}/grib_set -r -s packingType=grid_ieee $infile $temp
+${tools_dir}/grib_get -p numberOfEffectiveValues,numberOfValues,numberOfMissing $temp
+stats1=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $infile`
+stats2=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $temp`
+# [ "$stats1" = "$stats2" ]
+
 
 rm -f $temp
 
