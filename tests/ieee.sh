@@ -67,6 +67,23 @@ ${tools_dir}/grib_filter r.filter ${shdata}_ieee > $shdata.txt
 diff $shdata.txt $shdata.good
 rm -f ${shdata}_ieee
 
+
+echo "Test ECC-1075: grib_dump error on GRIB1 with raw packing"
+# -------------------------------------------------------------
+temp=temp.grib_ieee.grib
+infile=${data_dir}/reduced_gaussian_surface.grib1
+${tools_dir}/grib_set -r -s packingType=grid_ieee $infile $temp
+grib_check_key_equals $temp 'numberOfEffectiveValues,numberOfValues' '6114 6114'
+${tools_dir}/grib_get -p numberOfEffectiveValues,numberOfValues $temp
+${tools_dir}/grib_dump -O $temp
+
+stats1=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $infile`
+stats2=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $temp`
+[ "$stats1" = "$stats2" ]
+
+rm -f $temp
+
+
 ##################################
 # Disabled for now. Infinite loop
 #GRIB_IEEE_PACKING=32
