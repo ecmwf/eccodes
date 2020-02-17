@@ -127,13 +127,7 @@ void IrregularLatlon::fill(grib_info&) const {
 
 void IrregularLatlon::fill(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
-        params.meshGenerator_ = "structured";
-    }
-    if (boundingBox().south() > Latitude::EQUATOR) {
-        params.set("force_include_south_pole", true);
-    }
-    if (boundingBox().north() < Latitude::EQUATOR) {
-        params.set("force_include_north_pole", true);
+        params.meshGenerator_ = "delaunay";
     }
 }
 
