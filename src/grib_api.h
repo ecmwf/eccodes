@@ -1345,8 +1345,13 @@ void grib_check(const char* call, const char* file, int line, int e, const char*
 int grib_set_values(grib_handle* h, grib_values* grib_values, size_t arg_count);
 grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t size);
 grib_handle* grib_handle_new_from_partial_message(grib_context* c, const void* data, size_t buflen);
+
+/* Returns a bool i.e. 0 or 1. The error code is an argument */
 int grib_is_missing(const grib_handle* h, const char* key, int* err);
+
+/* Returns a bool i.e. 0 or 1 */
 int grib_is_defined(const grib_handle* h, const char* key);
+
 int grib_set_missing(grib_handle* h, const char* key);
 /* The truncation is the Gaussian number (or order) */
 int grib_get_gaussian_latitudes(long truncation, double* latitudes);

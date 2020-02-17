@@ -455,9 +455,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     double s = 0;
     double d = 0;
 
-    double max = 0;
-    double min = 0;
-
     unsigned long* sec_val = NULL;
     long ref_vals          = 0;
     short n_sp_diff        = 0;
@@ -475,7 +472,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_accessor* abitmap      = NULL;
     size_t bitmap_len           = 0;
 
-    err    = grib_value_count(a, &nn);
+    err = grib_value_count(a, &nn);
+    if (err) return err;
     n_vals = nn;
 
     if ((err = grib_get_long_internal(gh, self->offsetsection, &offsetsection)) != GRIB_SUCCESS)
@@ -652,7 +650,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     for (i = 0; i < n_vals; i++)
         val[i] = (double)((((double)sec_val[i]) * s) + reference_value) * d;
 
-    max = val[0];
+    /*max = val[0];
     min = max;
     for (i = 0; i < n_vals; i++) {
         if (val[i] > max)
@@ -661,7 +659,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
             min = val[i];
     }
     min *= d;
-    max *= d;
+    max *= d;*/
 
     grib_context_free(a->context, sec_val);
     if (bitmap != NULL)

@@ -34,7 +34,7 @@ dump_and_check()
 
 # Spectral LAM fields (Bi-Fourier)
 # Run the test which generates the GRIB files
-${test_dir}/grib_lam_bf
+$EXEC ${test_dir}/grib_lam_bf
 
 dump_and_check lam_bf_lambert_bf_ellipse_diamond.grib                  3128
 dump_and_check lam_bf_mercator_bf_ellipse_diamond.grib                 3128

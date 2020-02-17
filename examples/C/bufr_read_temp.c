@@ -12,7 +12,6 @@
  * C Implementation: bufr_read_temp
  *
  * Description: how to read temperature significant levels from TEMP BUFR messages.
- *
  */
 
 /*
@@ -22,6 +21,14 @@
  */
 
 #include "eccodes.h"
+
+static void free_memory(double* sigt_pres, double* sigt_geo, double* sigt_t, double* sigt_td)
+{
+    free(sigt_pres);
+    free(sigt_geo);
+    free(sigt_t);
+    free(sigt_td);
+}
 
 int main(int argc, char* argv[])
 {
@@ -98,6 +105,7 @@ int main(int argc, char* argv[])
         CODES_CHECK(codes_get_size(h, key_name, &len), 0);
         if (len != sigt_len) {
             printf("inconsistent number of geopotential values found!\n");
+            free_memory(sigt_pres, sigt_geo, sigt_t, sigt_td);
             return 1;
         }
 
@@ -105,9 +113,9 @@ int main(int argc, char* argv[])
         CODES_CHECK(codes_get_double_array(h, key_name, sigt_geo, &len), 0);
 
         /* Get temperature */
-        if (len != sigt_len) /* Check the size */
-        {
+        if (len != sigt_len) { /* Check the size */
             printf("inconsistent number of temperature values found!\n");
+            free_memory(sigt_pres, sigt_geo, sigt_t, sigt_td);
             return 1;
         }
 
@@ -116,9 +124,9 @@ int main(int argc, char* argv[])
         CODES_CHECK(codes_get_double_array(h, key_name, sigt_t, &len), 0);
 
         /* Get dew point */
-        if (len != sigt_len) /* Check the size */
-        {
+        if (len != sigt_len) { /* Check the size */
             printf("inconsistent number of dewpoint temperature values found!\n");
+            free_memory(sigt_pres, sigt_geo, sigt_t, sigt_td);
             return 1;
         }
 
@@ -139,10 +147,7 @@ int main(int argc, char* argv[])
         codes_handle_delete(h);
 
         /* Release memory */
-        free(sigt_pres);
-        free(sigt_geo);
-        free(sigt_t);
-        free(sigt_td);
+        free_memory(sigt_pres, sigt_geo, sigt_t, sigt_td);
 
         cnt++;
     }

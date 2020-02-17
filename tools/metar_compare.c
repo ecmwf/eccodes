@@ -140,6 +140,7 @@ static double compare_double_relative(double* a, double* b, double* err)
 static int blacklisted(const char* name)
 {
     grib_string_list* b = blacklist;
+    if (!name) return 0;
     while (b) {
         Assert(b->value);
         if (!strcmp(name, b->value))

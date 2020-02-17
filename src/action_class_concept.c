@@ -393,14 +393,14 @@ int get_concept_condition_string(grib_handle* h, const char* key, const char* va
     concept_value = action_concept_get_concept(acc);
     while (concept_value) {
         grib_concept_condition* concept_condition = concept_value->conditions;
-
         if (strcmp(pValue, concept_value->name) == 0) {
             while (concept_condition) {
                 grib_expression* expression = concept_condition->expression;
+                const char* condition_name  = concept_condition->name;
                 Assert(expression);
-                if (concept_condition_expression_true(h, concept_condition, exprVal)) {
+                if (concept_condition_expression_true(h, concept_condition, exprVal) && strcmp(condition_name, "one") != 0) {
                     length += sprintf(result + length, "%s%s=%s",
-                                      (length == 0 ? "" : ","), concept_condition->name, exprVal);
+                                      (length == 0 ? "" : ","), condition_name, exprVal);
                 }
                 concept_condition = concept_condition->next;
             }

@@ -1310,8 +1310,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
         decimal = grib_power(decimal_scale_factor, 10);
         divisor = grib_power(-binary_scale_factor, 2);
-        min     = min * decimal;
-        max     = max * decimal;
+        /*min     = min * decimal;*/
+        /*max     = max * decimal;*/
 
         if ((ret = grib_set_long_internal(handle, self->decimal_scale_factor, decimal_scale_factor)) !=
             GRIB_SUCCESS)
@@ -1855,7 +1855,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     Xp    = X + orderOfSPD;
     pos   = 0;
+#if EFDEBUG
     count = 0;
+#endif
     for (i = 0; i < numberOfGroups; i++) {
         if (groupWidths[i] > 0) {
             for (j = 0; j < groupLengths[i]; j++) {

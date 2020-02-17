@@ -206,6 +206,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     ret = grib_get_long(grib_handle_of_accessor(a), self->numberOfBits, &numberOfBits);
     if (ret)
         return ret;
+    if (numberOfBits > 64) {
+        grib_context_log(a->context, GRIB_LOG_ERROR,"Invalid number of bits: %ld",numberOfBits);
+        return GRIB_DECODING_ERROR;
+    }
 
     for (i = 0; i < rlen - 1; i++)
         val[i] = grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, &pos, numberOfBits);

@@ -281,7 +281,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     char* value = NULL;
     char* p     = NULL;
 
-    err = _grib_get_string_length(a, &size);
+    _grib_get_string_length(a, &size);
     if ((size < 2) && grib_is_missing_internal(a)) {
         /* GRIB-302: transients and missing keys. Need to re-adjust the size */
         size = 10; /* big enough to hold the string "missing" */

@@ -306,7 +306,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if (!options->latlon_mask) {
             min                 = options->distances[0];
             options->latlon_idx = 0;
-            i                   = 0;
             for (i = 1; i < 4; i++) {
                 if (min > options->distances[i]) {
                     min                 = options->distances[i];
@@ -360,6 +359,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     }
 
     if (!json_latlon && options->json_output) {
+        if (options->current_infile && options->current_infile->name) {
+            size_t len = strlen(options->current_infile->name);
+            grib_set_string(h, "file", options->current_infile->name, &len);
+        }
         if (!first_handle && options->handle_count > 1) {
             fprintf(stdout, ",\n");
         }

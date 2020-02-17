@@ -394,6 +394,11 @@ void* grib_trie_insert(grib_trie* t, const char* key, void* data)
     const char* k   = key;
     void* old       = NULL;
 
+    if (!t) {
+        Assert(!"grib_trie_insert: grib_trie==NULL");
+        return NULL;
+    }
+
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex);
 
@@ -432,6 +437,11 @@ void* grib_trie_insert_no_replace(grib_trie* t, const char* key, void* data)
 {
     grib_trie* last = t;
     const char* k   = key;
+
+    if (!t) {
+        Assert(!"grib_trie_insert_no_replace: grib_trie==NULL");
+        return NULL;
+    }
 
     while (*k && t) {
         last = t;

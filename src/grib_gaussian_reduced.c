@@ -146,6 +146,8 @@ static Fraction_type fraction_construct_from_double(double x)
 
 static Fraction_value_type fraction_integralPart(const Fraction_type frac)
 {
+    Assert(frac.bottom_);
+    if (frac.bottom_ == 0) return frac.top_;
     return frac.top_ / frac.bottom_;
 }
 

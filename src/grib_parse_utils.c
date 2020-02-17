@@ -210,6 +210,7 @@ int grib_accessor_print(grib_accessor* a, const char* name, int type, const char
             else {
                 ret = _grib_get_size(h, a, &size);
             }
+            if (ret) return ret;
             dval = (double*)grib_context_malloc_clear(h->context, sizeof(double) * size);
             if (name[0] == '/' || name[0] == '#') {
                 replen = size;
@@ -250,6 +251,7 @@ int grib_accessor_print(grib_accessor* a, const char* name, int type, const char
             else {
                 ret = _grib_get_size(h, a, &size);
             }
+            if (ret) return ret;
             lval = (long*)grib_context_malloc_clear(h->context, sizeof(long) * size);
             if (name[0] == '/' || name[0] == '#') {
                 replen = size;

@@ -539,6 +539,7 @@ static int bufr_decode_header(grib_context* c, const void* message, off_t offset
     hdr->message_size   = (unsigned long)size;
 
     err = bufr_extract_edition(message, &hdr->edition);
+    if (err) return err;
 
     if (hdr->edition == 3) {
         err = bufr_decode_edition3(message, hdr);

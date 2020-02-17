@@ -1449,7 +1449,6 @@ grib_action* grib_action_from_filter(const char* filter)
 int grib_handle_apply_action(grib_handle* h, grib_action* a)
 {
     int err;
-    grib_action* ao = a;
 
     if (!a)
         return GRIB_SUCCESS; /* TODO: return error */
@@ -1460,8 +1459,6 @@ int grib_handle_apply_action(grib_handle* h, grib_action* a)
             return err;
         a = a->next;
     }
-
-    a = ao;
 
     return GRIB_SUCCESS;
 }
@@ -1469,7 +1466,6 @@ int grib_handle_apply_action(grib_handle* h, grib_action* a)
 int grib_handle_prepare_action(grib_handle* h, grib_action* a)
 {
     int err;
-    grib_action* ao = a;
 
     if (!a)
         return GRIB_SUCCESS; /* TODO: return error */
@@ -1480,8 +1476,6 @@ int grib_handle_prepare_action(grib_handle* h, grib_action* a)
             return err;
         a = a->next;
     }
-
-    a = ao;
 
     return GRIB_SUCCESS;
 }

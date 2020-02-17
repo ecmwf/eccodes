@@ -10,4 +10,4 @@
 
 . ./include.sh
 
-exec $test_dir/grib_sh_ieee64
+$EXEC $test_dir/grib_sh_ieee64

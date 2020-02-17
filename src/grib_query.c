@@ -618,7 +618,6 @@ grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)
         int i = 0, len = 0;
         char name_space[MAX_NAMESPACE_LEN];
         p--;
-        i   = 0;
         len = p - name + 1;
 
         for (i = 0; i < len; i++)

@@ -2241,7 +2241,6 @@ static int def_latlon(int ncid, fieldset* fs)
 {
     int n        = 0;
     size_t nlats = 0, nlons = 0;
-    int var_id = 0;
     err e      = 0;
 
     field* g = get_field(fs, 0, expand_mem);
@@ -2255,16 +2254,15 @@ static int def_latlon(int ncid, fieldset* fs)
 
     /* Define longitude */
     n      = (int)nlons;
-    var_id = set_dimension(ncid, "longitude", n, NC_FLOAT, "degrees_east", "longitude");
+    set_dimension(ncid, "longitude", n, NC_FLOAT, "degrees_east", "longitude");
 
     /* Define latitude */
     n      = nlats;
-    var_id = set_dimension(ncid, "latitude", n, NC_FLOAT, "degrees_north", "latitude");
+    set_dimension(ncid, "latitude", n, NC_FLOAT, "degrees_north", "latitude");
 
     /* g->purge_header = TRUE; */
     release_field(g);
 
-    (void)var_id; /* suppress gcc warning */
     return e;
 }
 
@@ -2629,7 +2627,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
      grib_context_log(ctx,GRIB_LOG_DEBUG,"No scale required");
      return;
     }
-     */
+    */
+    DebugAssert(vals);
+    DebugAssert(n>0);
+    if(!vals) return;
 
     switch (nctype) {
         case NC_BYTE: {

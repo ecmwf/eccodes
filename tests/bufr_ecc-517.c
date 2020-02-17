@@ -17,8 +17,6 @@ int main(int argc, char** argv)
     FILE* fout             = NULL;
     codes_handle* h        = NULL;
     long* ivalues          = NULL;
-    char** svalues         = NULL;
-    double* rvalues        = NULL;
     const char* sampleName = "BUFR3_local";
     char* outfilename      = NULL;
 
@@ -37,6 +35,7 @@ int main(int argc, char** argv)
     ivalues[0] = 1;
     CODES_CHECK(codes_set_long_array(h, "inputDelayedDescriptorReplicationFactor", ivalues, size), 0);
 
+    free(ivalues);
     ivalues    = (long*)malloc(1 * sizeof(long));
     size       = 1;
     ivalues[0] = 486;
@@ -81,9 +80,8 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_set_double(h, "localLongitude", -6.343119999999999870e+00), 0);
     CODES_CHECK(codes_set_long(h, "observedData", 1), 0);
     CODES_CHECK(codes_set_long(h, "compressedData", 0), 0);
-    free(ivalues);
-    ivalues = NULL;
 
+    free(ivalues);
     ivalues = (long*)malloc(9 * sizeof(long));
     if (!ivalues) {
         fprintf(stderr, "Failed to allocate memory (ivalues).\n");
@@ -102,6 +100,7 @@ int main(int argc, char** argv)
     fout = fopen(outfilename, "wb");
     if (!fout) {
         fprintf(stderr, "Failed to open (create) output file.\n");
+        free(ivalues);
         return 1;
     }
     CODES_CHECK(codes_get_message(h, &buffer, &size), 0);
@@ -110,14 +109,13 @@ int main(int argc, char** argv)
     if (fwrite(buffer, 1, size, fout) != size) {
         fclose(fout);
         fprintf(stderr, "Failed to write data.\n");
+        free(ivalues);
         return 1;
     }
 
     fclose(fout);
     codes_handle_delete(h);
     free(ivalues);
-    free(rvalues);
-    free(svalues);
 
     return 0;
 }

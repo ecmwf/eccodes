@@ -29,6 +29,7 @@
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = init
    IMPLEMENTS = unpack_long
+   IMPLEMENTS = get_native_type
    MEMBERS=const char*   values
    MEMBERS=const char*   precision
    END_CLASS_DEF
@@ -45,6 +46,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
+static int get_native_type(grib_accessor*);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
@@ -75,7 +77,7 @@ static grib_accessor_class _grib_accessor_class_number_of_values_data_raw_packin
     0,                                                       /* get number of values      */
     0,                                                       /* get number of bytes      */
     0,                                                       /* get offset to bytes           */
-    0,                                                       /* get native type               */
+    &get_native_type,                                        /* get native type               */
     0,                                                       /* get sub_section                */
     0,                                                       /* grib_pack procedures long      */
     0,                                                       /* grib_pack procedures long      */
@@ -115,7 +117,6 @@ static void init_class(grib_accessor_class* c)
     c->value_count            = (*(c->super))->value_count;
     c->byte_count             = (*(c->super))->byte_count;
     c->byte_offset            = (*(c->super))->byte_offset;
-    c->get_native_type        = (*(c->super))->get_native_type;
     c->sub_section            = (*(c->super))->sub_section;
     c->pack_missing           = (*(c->super))->pack_missing;
     c->is_missing             = (*(c->super))->is_missing;
@@ -188,4 +189,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     *val = byte_count / bytes;
 
     return err;
+}
+
+static int get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_LONG;
 }
