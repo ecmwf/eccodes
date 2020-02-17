@@ -195,7 +195,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                           0);
         min                 = options->distances[0];
         options->latlon_idx = 0;
-        i                   = 0;
         for (i = 1; i < 4; i++) {
             if (min > options->distances[i]) {
                 min                 = options->distances[i];

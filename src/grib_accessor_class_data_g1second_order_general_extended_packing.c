@@ -1855,7 +1855,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     Xp    = X + orderOfSPD;
     pos   = 0;
+#if EFDEBUG
     count = 0;
+#endif
     for (i = 0; i < numberOfGroups; i++) {
         if (groupWidths[i] > 0) {
             for (j = 0; j < groupLengths[i]; j++) {

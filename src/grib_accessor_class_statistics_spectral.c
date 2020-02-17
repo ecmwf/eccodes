@@ -218,7 +218,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     }
 
     avg   = values[0];
-    enorm = 0;
     sd    = 0;
 
     for (i = 2; i < 2 * J; i += 2)

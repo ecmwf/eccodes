@@ -163,7 +163,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return ret;
     }
 
-    size = 0;
     ret  = value_count(a, &count);
     if (ret)
         return ret;
