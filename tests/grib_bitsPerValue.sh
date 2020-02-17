@@ -120,9 +120,10 @@ res=`${tools_dir}/grib_get -p decimalScaleFactor,bitsPerValue ${data_dir}/gfs.c2
 # Test increasing bits per value
 input=${data_dir}/sample.grib2
 temp=temp.grib_bitsPerValue.grib
+MAX_BPV=58
 stats1=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg,sd $input`
 grib_check_key_equals $input 'bitsPerValue,packingType' '16 grid_simple'
-for bpv in `seq 17 58`; do
+for bpv in `seq 17 $MAX_BPV`; do
     ${tools_dir}/grib_set -M -s setBitsPerValue=$bpv $input $temp
     stats2=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg,sd $temp`
     [ "$stats1" = "$stats2" ]
