@@ -65,15 +65,13 @@ size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx)
 
     size_t total = 0;
     for (size_t i = 0; i < input.dimensions(); i++) {
-        grib_handle* h =
-            input.gribHandle(i);  // Base class will throw an exception is input cannot provide a grib_handle
-
+        auto h = input.gribHandle(i);  // Base class throws if input cannot provide handle
         ASSERT(h);
 
         const void* message;
         size_t size;
 
-        GRIB_CALL(grib_get_message(h, &message, &size));
+        GRIB_CALL(codes_get_message(h, &message, &size));
 
         out(message, size, false);
         total += size;
@@ -267,15 +265,14 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
     for (size_t i = 0; i < field.dimensions(); i++) {
 
-        // Protect grib_api
+        // Protect ecCodes
         eckit::AutoLock<eckit::Mutex> lock(local_mutex);
 
         // Special case where only values are changing; handle is cloned, and new values are set
         if (parametrisation.userParametrisation().has("filter")) {
 
             // Make sure handle deleted even in case of exception
-            grib_handle* h = codes_handle_clone(input.gribHandle(i));
-            ASSERT(h);
+            auto h = codes_handle_clone(input.gribHandle(i));
             HandleDeleter hf(h);
 
             long numberOfValues;
@@ -290,7 +287,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
             const void* message;
             size_t size;
-            GRIB_CALL(grib_get_message(h, &message, &size));
+            GRIB_CALL(codes_get_message(h, &message, &size));
 
             GRIB_CALL(codes_check_message_header(message, size, PRODUCT_GRIB));
             GRIB_CALL(codes_check_message_footer(message, size, PRODUCT_GRIB));
@@ -301,9 +298,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             continue;
         }
 
-        grib_handle* h =
-            input.gribHandle(i);  // Base class will throw an exception is input cannot provide a grib_handle
-
+        auto h = input.gribHandle(i);  // Base class throws if input cannot provide handle
 
         grib_info info = {
             {0},
@@ -314,12 +309,12 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
         info.grid.missingValue  = field.missingValue();
 
         // Packing
-        info.packing.packing  = GRIB_UTIL_PACKING_SAME_AS_INPUT;
-        info.packing.accuracy = GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT;
+        info.packing.packing  = CODES_UTIL_PACKING_SAME_AS_INPUT;
+        info.packing.accuracy = CODES_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT;
 
         long bits;
         if (parametrisation.userParametrisation().get("accuracy", bits)) {
-            info.packing.accuracy     = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
+            info.packing.accuracy     = CODES_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
             info.packing.bitsPerValue = bits;
         }
 
@@ -337,7 +332,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             ASSERT(j < long(sizeof(info.packing.extra_settings) / sizeof(info.packing.extra_settings[0])));
 
             info.packing.extra_settings[j].name       = k.first.c_str();
-            info.packing.extra_settings[j].type       = GRIB_TYPE_LONG;
+            info.packing.extra_settings[j].type       = CODES_TYPE_LONG;
             info.packing.extra_settings[j].long_value = k.second;
         }
 
@@ -347,7 +342,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
             if (field.values(i).size() < 4) {
 
-                // There is a bug in grib_api if the user ask 1 value and select second-order
+                // There is a bug in ecCodes if the user asks 1 value and select second-order
                 // Once this fixed, remove this code
                 eckit::Log::debug<LibMir>() << "Field has " << Pretty(field.values(i).size(), {"value"})
                                             << ", ignoring packer " << packer << std::endl;
@@ -414,13 +409,13 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             for (long j = 0; j < info.packing.extra_settings_count; j++) {
                 X(info.packing.extra_settings[j].name);
                 switch (info.packing.extra_settings[j].type) {
-                    case GRIB_TYPE_LONG:
+                    case CODES_TYPE_LONG:
                         X(info.packing.extra_settings[j].long_value);
                         break;
-                    case GRIB_TYPE_DOUBLE:
+                    case CODES_TYPE_DOUBLE:
                         X(info.packing.extra_settings[j].double_value);
                         break;
-                    case GRIB_TYPE_STRING:
+                    case CODES_TYPE_STRING:
                         X(info.packing.extra_settings[j].string_value);
                         break;
                 }
@@ -438,14 +433,14 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
         // set error callback handling (throws)
         codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
-        grib_handle* result = grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
+        auto result = codes_grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
         HandleDeleter hf(result);  // Make sure handle deleted even in case of exception
 
 
-        if (err == GRIB_WRONG_GRID) {
+        if (err == CODES_WRONG_GRID) {
             std::ostringstream oss;
 
-            oss << "GRIB_WRONG_GRID: ";
+            oss << "CODES_WRONG_GRID: ";
 
             Y(info.grid.grid_type);
             Y(info.grid.Ni);
@@ -464,7 +459,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
         const void* message;
         size_t size;
-        GRIB_CALL(grib_get_message(result, &message, &size));
+        GRIB_CALL(codes_get_message(result, &message, &size));
 
         GRIB_CALL(codes_check_message_header(message, size, PRODUCT_GRIB));
         GRIB_CALL(codes_check_message_footer(message, size, PRODUCT_GRIB));

@@ -58,7 +58,7 @@ Iterator* RotatedOctahedral::iterator() const {
 void RotatedOctahedral::fill(grib_info& info) const {
     Octahedral::fill(info);
     rotation_.fill(info);
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
 }
 
 

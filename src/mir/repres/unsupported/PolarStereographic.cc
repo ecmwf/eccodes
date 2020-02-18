@@ -71,8 +71,7 @@ void PolarStereographic::validate(const MIRValuesVector& values) const {
 }
 
 
-static RepresentationBuilder<PolarStereographic> polarStereographic(
-    "polar_stereographic");  // Name is what is returned by grib_api
+static RepresentationBuilder<PolarStereographic> polarStereographic("polar_stereographic");
 
 
 }  // namespace repres

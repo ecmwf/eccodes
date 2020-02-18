@@ -63,7 +63,7 @@ Iterator* RotatedFromPL::iterator() const {
 void RotatedFromPL::fill(grib_info& info) const {
     FromPL::fill(info);
     rotation_.fill(info);
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
 }
 
 
@@ -82,8 +82,7 @@ const Gridded* RotatedFromPL::croppedRepresentation(const util::BoundingBox& bbo
 }
 
 
-static RepresentationBuilder<RotatedFromPL> rotatedFromPL(
-    "reduced_rotated_gg");  // Name is what is returned by grib_api
+static RepresentationBuilder<RotatedFromPL> rotatedFromPL("reduced_rotated_gg");
 
 
 }  // namespace reduced

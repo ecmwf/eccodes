@@ -70,12 +70,11 @@ bool SphericalHarmonics::includesSouthPole() const {
 void SphericalHarmonics::fill(grib_info& info) const {
     // See copy_spec_from_ksec.c in libemos for info
 
-    info.grid.grid_type  = GRIB_UTIL_GRID_SPEC_SH;
+    info.grid.grid_type  = CODES_UTIL_GRID_SPEC_SH;
     info.grid.truncation = static_cast<long>(truncation_);
 
-    // Decision: MIR-131
-    info.packing.packing_type =
-        GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX;  // Check if this is needed, why does grib_api not copy input?
+    // MIR-131: repacking must happen, so computeLaplacianOperator is set
+    info.packing.packing_type             = CODES_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX;
     info.packing.computeLaplacianOperator = 1;
     info.packing.truncateLaplacian        = 1;
     // info.packing.laplacianOperator = 0;
@@ -187,12 +186,12 @@ void SphericalHarmonics::validate(const MIRValuesVector& values) const {
 
 
 void SphericalHarmonics::setComplexPacking(grib_info& info) const {
-    info.packing.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX;
+    info.packing.packing_type = CODES_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX;
 }
 
 
 void SphericalHarmonics::setSimplePacking(grib_info& info) const {
-    info.packing.packing_type = GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE;
+    info.packing.packing_type = CODES_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE;
 }
 
 
@@ -207,7 +206,7 @@ std::string SphericalHarmonics::factory() const {
 }
 
 
-static RepresentationBuilder<SphericalHarmonics> sphericalHarmonics("sh");  // Name is what is returned by grib_api
+static RepresentationBuilder<SphericalHarmonics> sphericalHarmonics("sh");
 
 
 }  // namespace sh

@@ -83,7 +83,7 @@ void GribExtraSetting::set(grib_info& info, const char* key, long value) {
     auto& set      = info.packing.extra_settings[info.packing.extra_settings_count++];
     set.name       = key;
     set.long_value = value;
-    set.type       = GRIB_TYPE_LONG;
+    set.type       = CODES_TYPE_LONG;
 }
 
 
@@ -91,5 +91,5 @@ void GribExtraSetting::set(grib_info& info, const char* key, double value) {
     auto& set        = info.packing.extra_settings[info.packing.extra_settings_count++];
     set.name         = key;
     set.double_value = value;
-    set.type         = GRIB_TYPE_DOUBLE;
+    set.type         = CODES_TYPE_DOUBLE;
 }

@@ -272,7 +272,7 @@ void Reduced::fill(grib_info& info) const {
 
     const std::vector<long>& pl = pls();
 
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REDUCED_GG;
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_REDUCED_GG;
     info.grid.Nj        = long(Nj_);
     info.grid.N         = long(N_);
 

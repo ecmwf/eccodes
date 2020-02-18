@@ -69,7 +69,7 @@ void RotatedGG::makeName(std::ostream& out) const {
 void RotatedGG::fill(grib_info& info) const {
     Regular::fill(info);
     rotation_.fill(info);
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_GG;
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_ROTATED_GG;
 }
 
 
@@ -84,7 +84,7 @@ atlas::Grid RotatedGG::atlasGrid() const {
 }
 
 
-static RepresentationBuilder<RotatedGG> rotatedGG("rotated_gg");  // Name is what is returned by grib_api
+static RepresentationBuilder<RotatedGG> rotatedGG("rotated_gg");
 
 
 }  // namespace regular

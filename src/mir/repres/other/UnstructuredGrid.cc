@@ -164,7 +164,7 @@ bool UnstructuredGrid::sameAs(const Representation& other) const {
 
 
 void UnstructuredGrid::fill(grib_info& info) const {
-    info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
+    info.grid.grid_type        = CODES_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 }
 

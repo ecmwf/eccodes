@@ -84,7 +84,7 @@ atlas::Grid RotatedLL::atlasGrid() const {
 void RotatedLL::fill(grib_info& info) const {
     LatLon::fill(info);
 
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_ROTATED_LL;
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_ROTATED_LL;
     rotation_.fill(info);
 }
 
@@ -117,7 +117,9 @@ std::string RotatedLL::factory() const {
     return "rotated_ll";
 }
 
-static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll");  // Name is what is returned by grib_api
+
+static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll");
+
 
 }  // namespace latlon
 }  // namespace repres

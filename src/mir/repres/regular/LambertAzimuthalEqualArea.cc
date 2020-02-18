@@ -62,7 +62,7 @@ RegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::
 
 void LambertAzimuthalEqualArea::fill(grib_info& info) const {
 
-    info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
+    info.grid.grid_type        = CODES_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
     info.packing.editionNumber = 2;
 
     ASSERT(x_.size() > 1);

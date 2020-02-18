@@ -70,7 +70,7 @@ void Regular::fill(grib_info& info) const {
 
     // See copy_spec_from_ksec.c in libemos for info
 
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_GG;
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_REGULAR_GG;
 
     info.grid.N                            = long(N_);
     info.grid.iDirectionIncrementInDegrees = getSmallestIncrement();

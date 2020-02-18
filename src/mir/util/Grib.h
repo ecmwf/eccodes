@@ -22,27 +22,26 @@
 
 inline bool grib_call(int e, const char* call, bool missingOK = false) {
     if (e) {
-        if (missingOK && (e == GRIB_NOT_FOUND)) {
+        if (missingOK && (e == CODES_NOT_FOUND)) {
             return false;
         }
 
         std::ostringstream os;
-        os << call << ": " << grib_get_error_message(e);
+        os << call << ": " << codes_get_error_message(e);
         throw eckit::SeriousBug(os.str());
     }
     return true;
 }
 
-#undef GRIB_CALL
-#define GRIB_CALL(a) grib_call(a, #a)
-#define GRIB_ERROR(a, b) grib_call(a, b)
 
+#define GRIB_CALL(a) grib_call(a, #a)
 #define GRIB_GET(a) grib_call(a, #a, true)
+#define GRIB_ERROR(a, b) grib_call(a, b)
 
 
 struct grib_info {
-    grib_util_grid_spec grid;
-    grib_util_packing_spec packing;
+    codes_util_grid_spec grid;
+    codes_util_packing_spec packing;
 };
 
 
@@ -50,29 +49,29 @@ class HandleDeleter {
     grib_handle* h_;
 
 public:
-    HandleDeleter(grib_handle* h) : h_(h) {}
+    HandleDeleter(grib_handle* h) : h_(h) { ASSERT(h); }
     HandleDeleter(const HandleDeleter&) = delete;
     void operator=(const HandleDeleter&) = delete;
-    ~HandleDeleter() { grib_handle_delete(h_); }
+    ~HandleDeleter() { codes_handle_delete(h_); }
 };
 
 
 class GKeyIteratorDeleter {
-    grib_keys_iterator* h_;
+    codes_keys_iterator* h_;
 
 public:
-    GKeyIteratorDeleter(grib_keys_iterator* h) : h_(h) {}
+    GKeyIteratorDeleter(codes_keys_iterator* h) : h_(h) {}
     GKeyIteratorDeleter(const GKeyIteratorDeleter&) = delete;
     void operator=(const GKeyIteratorDeleter&) = delete;
-    ~GKeyIteratorDeleter() { grib_keys_iterator_delete(h_); }
+    ~GKeyIteratorDeleter() { codes_keys_iterator_delete(h_); }
 };
 
 
 class BKeyIteratorDeleter {
-    bufr_keys_iterator* h_;
+    codes_bufr_keys_iterator* h_;
 
 public:
-    BKeyIteratorDeleter(bufr_keys_iterator* h) : h_(h) {}
+    BKeyIteratorDeleter(codes_bufr_keys_iterator* h) : h_(h) {}
     BKeyIteratorDeleter(const BKeyIteratorDeleter&) = delete;
     void operator=(const BKeyIteratorDeleter&) = delete;
     ~BKeyIteratorDeleter() { codes_bufr_keys_iterator_delete(h_); }

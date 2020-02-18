@@ -224,8 +224,7 @@ atlas::Grid IrregularLatlon::atlasGrid() const {
 }
 
 
-static RepresentationBuilder<IrregularLatlon> irregularLatlon(
-    "irregular_latlon");  // Name is what is returned by grib_api
+static RepresentationBuilder<IrregularLatlon> irregularLatlon("irregular_latlon");
 
 
 }  // namespace repres

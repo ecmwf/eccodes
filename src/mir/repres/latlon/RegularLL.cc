@@ -81,7 +81,7 @@ void RegularLL::fill(grib_info& info) const {
 
     // See copy_spec_from_ksec.c in libemos for info
     // Warning: scanning mode not considered
-    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_LL;
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_REGULAR_LL;
 }
 
 void RegularLL::fill(api::MIRJob& job) const {
@@ -203,7 +203,8 @@ std::string RegularLL::factory() const {
 }
 
 
-static RepresentationBuilder<RegularLL> regularLL("regular_ll");  // Name is what is returned by grib_api
+static RepresentationBuilder<RegularLL> regularLL("regular_ll");
+
 
 }  // namespace latlon
 }  // namespace repres

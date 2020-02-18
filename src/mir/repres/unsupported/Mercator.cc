@@ -41,7 +41,7 @@ void Mercator::fill(grib_info& /*info*/) const {
 }
 
 
-static RepresentationBuilder<Mercator> mercator("mercator");  // Name is what is returned by grib_api
+static RepresentationBuilder<Mercator> mercator("mercator");
 
 
 }  // namespace repres

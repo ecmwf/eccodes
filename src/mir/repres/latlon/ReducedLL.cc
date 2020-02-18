@@ -322,7 +322,7 @@ std::vector<util::GridBox> ReducedLL::gridBoxes() const {
 }
 
 
-static RepresentationBuilder<ReducedLL> reducedLL("reduced_ll");  // Name is what is returned by grib_api
+static RepresentationBuilder<ReducedLL> reducedLL("reduced_ll");
 
 
 }  // namespace latlon
