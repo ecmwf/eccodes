@@ -10,18 +10,18 @@ unsigned[4] numberOfRadials ;
 alias Nr  = numberOfRadials;
 
 #  La1 - latitude of centre point
-signed[4] latitudeOfCenterPoint ;
-alias La1 =  latitudeOfCenterPoint;
-meta  geography.latitudeOfCenterPointInDegrees
-        scale(latitudeOfCenterPoint,one,grib2divider,truncateDegrees) : dump;
-alias La1InDegrees=latitudeOfCenterPointInDegrees;
+signed[4] latitudeOfCentrePoint ;
+alias La1 =  latitudeOfCentrePoint;
+meta  geography.latitudeOfCentrePointInDegrees
+        scale(latitudeOfCentrePoint,one,grib2divider,truncateDegrees) : dump;
+alias La1InDegrees=latitudeOfCentrePointInDegrees;
 
 #  Lo1 - longitude of centre point
-unsigned[4] longitudeOfCenterPoint ;
-alias Lo1 =  longitudeOfCenterPoint;
-meta  geography.longitudeOfCenterPointInDegrees
-        scale(longitudeOfCenterPoint,one,grib2divider,truncateDegrees) : dump;
-alias Lo1InDegrees=longitudeOfCenterPointInDegrees;
+unsigned[4] longitudeOfCentrePoint ;
+alias Lo1 =  longitudeOfCentrePoint;
+meta  geography.longitudeOfCentrePointInDegrees
+        scale(longitudeOfCentrePoint,one,grib2divider,truncateDegrees) : dump;
+alias Lo1InDegrees=longitudeOfCentrePointInDegrees;
 
 #  Dx - spacing of bins along radials
 unsigned[4] spacingOfBinsAlongRadials ;

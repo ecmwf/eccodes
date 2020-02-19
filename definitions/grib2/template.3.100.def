@@ -24,8 +24,8 @@ unsigned[4] longitudeOfThePolePoint  : dump ;
 meta geography.longitudeOfThePolePointInDegrees g2lon(longitudeOfThePolePoint);
 
 #  Longitude of the centre line of the first diamond of the icosahedron on the sphere
-unsigned[4] longitudeOfFirstDiamondCenterLine  : dump ;
-meta geography.longitudeOfFirstDiamondCenterLineInDegrees g2lon(longitudeOfFirstDiamondCenterLine);
+unsigned[4] longitudeOfFirstDiamondCentreLine : dump ;
+meta geography.longitudeOfFirstDiamondCentreLineInDegrees g2lon(longitudeOfFirstDiamondCentreLine);
 
 #  Grid point position
 codetable[1] gridPointPosition ('3.8.table',masterDir,localDir);

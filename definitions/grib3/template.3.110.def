@@ -38,7 +38,7 @@ unsigned[4] Dx  : dump ;
 unsigned[4] Dy  : dump ;
 
 #  Projection centre flag
-unsigned[1] projectionCenterFlag  : dump ;
+unsigned[1] projectionCentreFlag  : dump ;
 
 include "grib2/template.3.scanning_mode.def";
 

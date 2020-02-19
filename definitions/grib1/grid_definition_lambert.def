@@ -49,7 +49,6 @@ alias geography.DyInMetres=DyInMetres;
 alias Dy= DyInMetres;
 alias Dj = DyInMetres;
 
-
 unsigned[1] projectionCentreFlag  : dump;
 # Also add the old spelling  of "centre" for backward compatibility
 alias projectionCenterFlag=projectionCentreFlag;
