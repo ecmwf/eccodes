@@ -257,7 +257,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     switch (type_first) {
         case 100: /* Pa */
-            scale_first = 0;
             if (!strcmp(pressure_units, "hPa"))
                 value_first *= 100;
             break;

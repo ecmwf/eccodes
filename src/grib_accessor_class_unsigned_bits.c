@@ -226,8 +226,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     unsigned long i                   = 0;
     long rlen                         = 0;
     ret                               = value_count(a, &rlen);
-    if (ret)
-        return ret;
+    if (ret) return ret;
 
     /*
 	if(*len < rlen)
@@ -239,10 +238,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
      */
     if (*len != rlen)
         ret = grib_set_long(grib_handle_of_accessor(a), self->numberOfElements, *len);
+    if (ret) return ret;
 
     ret = grib_get_long(grib_handle_of_accessor(a), self->numberOfBits, &numberOfBits);
-    if (ret)
-        return ret;
+    if (ret) return ret;
     if (numberOfBits == 0) {
         grib_buffer_replace(a, NULL, 0, 1, 1);
         return GRIB_SUCCESS;

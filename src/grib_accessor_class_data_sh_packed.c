@@ -377,7 +377,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
             for (hcount = 0; hcount < sub_k + 1; hcount++) {
                 dummy = decode_float(grib_decode_unsigned_long(hres, &hpos, 8 * bytes));
                 dummy = decode_float(grib_decode_unsigned_long(hres, &hpos, 8 * bytes));
-
+                (void)dummy;
                 lup++;
             }
             sub_k--;
@@ -406,8 +406,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     Assert(*len >= i);
     *len = n_vals;
 
-
-    (void)dummy; /* suppress gcc warning */
     grib_context_free(a->context, scals);
 
     return ret;
