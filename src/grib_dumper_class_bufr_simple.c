@@ -21,7 +21,6 @@
    IMPLEMENTS = dump_label;dump_section
    IMPLEMENTS = init;destroy
    MEMBERS = long section_offset
-   MEMBERS = long begin
    MEMBERS = long empty
    MEMBERS = long end
    MEMBERS = long isLeaf
@@ -61,7 +60,6 @@ typedef struct grib_dumper_bufr_simple
     grib_dumper dumper;
     /* Members defined in bufr_simple */
     long section_offset;
-    long begin;
     long empty;
     long end;
     long isLeaf;
@@ -138,7 +136,7 @@ static int destroy(grib_dumper* d)
 {
     grib_dumper_bufr_simple* self = (grib_dumper_bufr_simple*)d;
     grib_string_list* next        = self->keys;
-    grib_string_list* cur         = self->keys;
+    grib_string_list* cur         = NULL;
     grib_context* c               = d->handle->context;
     while (next) {
         cur  = next;
@@ -176,7 +174,6 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         err = grib_unpack_double(a, &value, &size);
     }
 
-    self->begin = 0;
     self->empty = 0;
 
     if (size > 1) {
@@ -369,7 +366,6 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         err = grib_unpack_long(a, &value, &size);
     }
 
-    self->begin = 0;
     self->empty = 0;
 
     if (size > 1) {
@@ -528,7 +524,6 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
 
     grib_unpack_double(a, &value, &size);
 
-    self->begin = 0;
     self->empty = 0;
 
     r = compute_bufr_key_rank(h, self->keys, a->name);
@@ -583,8 +578,6 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         return;
     }
 
-    self->begin = 0;
-
     if (self->isLeaf == 0) {
         if ((r = compute_bufr_key_rank(h, self->keys, a->name)) != 0)
             fprintf(self->dumper.out, "#%d#%s=", r, a->name);
@@ -637,14 +630,14 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     char* value                   = NULL;
     char* p                       = NULL;
     size_t size                   = 0;
-    grib_context* c               = NULL;
+    grib_context* c               = a->context;
     int r                         = 0;
     int is_missing                = 0;
-    int err                       = _grib_get_string_length(a, &size);
+    int err                       = 0;
     grib_handle* h                = grib_handle_of_accessor(a);
     const char* acc_name          = a->name;
 
-    c = a->context;
+    _grib_get_string_length(a, &size);
     if (size == 0)
         return;
 
@@ -666,9 +659,6 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         grib_context_log(c, GRIB_LOG_FATAL, "unable to allocate %d bytes", (int)size);
         return;
     }
-
-    else
-        self->begin = 0;
 
     self->empty = 0;
 
@@ -763,7 +753,6 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         !grib_inline_strcmp(a->name, "META")) {
         int err        = 0;
         grib_handle* h = grib_handle_of_accessor(a);
-        self->begin    = 1;
         self->empty    = 1;
 
         err = grib_get_long(h, "numberOfSubsets", &(self->numberOfSubsets));
@@ -779,7 +768,6 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
     else if (!grib_inline_strcmp(a->name, "groupNumber")) {
         if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
             return;
-        self->begin = 1;
         self->empty = 1;
         grib_dump_accessors_block(d, block);
     }

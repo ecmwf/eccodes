@@ -404,10 +404,14 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     char* value               = NULL;
     char* p                   = NULL;
     size_t size               = 0;
-    grib_context* c           = NULL;
-    int err                   = _grib_get_string_length(a, &size);
+    grib_context* c           = a->context;
+    int err = 0;
 
-    c = a->context;
+    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
+        return;
+    }
+
+    _grib_get_string_length(a, &size);
     if (size == 0)
         return;
 
@@ -419,11 +423,6 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     err = grib_unpack_string(a, value, &size);
     p   = value;
-
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0) {
-        grib_context_free(c, value);
-        return;
-    }
 
     while (*p) {
         if (!isprint(*p))
