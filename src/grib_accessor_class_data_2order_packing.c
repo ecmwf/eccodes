@@ -272,7 +272,7 @@ static int reverse_rows(unsigned long* data, long len, long number_along_paralle
 {
     long i     = 0;
     long left  = 0;
-    long right = number_along_parallel - 1;
+    long right = 0;
     long tmp   = 0;
     long inc;
 

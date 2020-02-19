@@ -254,7 +254,7 @@ static void destroy(grib_context* c, grib_accessor* a)
     grib_accessor_md5* self = (grib_accessor_md5*)a;
     if (self->blacklist) {
         grib_string_list* next = self->blacklist;
-        grib_string_list* cur  = self->blacklist;
+        grib_string_list* cur  = NULL;
         while (next) {
             cur  = next;
             next = next->next;

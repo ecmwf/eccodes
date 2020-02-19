@@ -258,7 +258,7 @@ static int push_file(FILE* f,char* buffer)
 
 static void _push_handle(grib_handle *h,int *gid)
 {
-    l_grib_handle* current= handle_set;
+    l_grib_handle* current= NULL;
     l_grib_handle* previous= handle_set;
     l_grib_handle* the_new= NULL;
     int myindex= 1;

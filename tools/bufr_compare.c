@@ -104,7 +104,7 @@ static void new_keys_list()
 static void release_keys_list()
 {
     grib_string_list* next = keys_list;
-    grib_string_list* cur  = keys_list;
+    grib_string_list* cur  = NULL;
     grib_context* c        = grib_context_get_default();
     while (next) {
         cur  = next;
