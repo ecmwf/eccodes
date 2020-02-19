@@ -55,7 +55,6 @@ alias bitmapSectionPresent=bitmapPresent;
 alias geography.bitmapPresent=bitmapPresent;
 alias missingValuesPresent=bitmapPresent : read_only;
 transient angleSubdivisions=1000;  # milli degrees
-alias angularPrecision=angleSubdivisions : hidden;
 
 if(gridDescriptionSectionPresent){
   template section_2 "grib1/section.2.def"     ;

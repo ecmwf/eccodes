@@ -18,7 +18,6 @@ alias is_tigge = zero;
 alias is_s2s = zero;
 transient is_efas = 0;
 transient angleSubdivisions=grib2divider;  # micro degrees
-alias angularPrecision=angleSubdivisions : hidden;
 
 meta gts_header gts_header() : no_copy,hidden,read_only;
 meta gts_TTAAii gts_header(20,6) : no_copy,hidden,read_only;
