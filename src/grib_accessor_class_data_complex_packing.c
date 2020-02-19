@@ -721,8 +721,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     for (i = 1; i < maxv; i++)
         scals[i] = ((double)pow(i * (i + 1), laplacianOperator));
 
-    i = 0;
-
     mmax   = 0;
     maxv   = pen_j + 1;
     i      = 0;

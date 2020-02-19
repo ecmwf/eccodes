@@ -89,7 +89,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if (values)
             free(values);
         values    = (double*)malloc(size * sizeof(double));
-        last_size = size;
+        /*last_size = size;*/
         if (!values) {
             fprintf(stderr, "Failed to allocate memory for values (%lu bytes)\n", size * sizeof(double));
             exit(1);

@@ -82,7 +82,6 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_set_long(h, "compressedData", 0), 0);
 
     free(ivalues);
-
     ivalues = (long*)malloc(9 * sizeof(long));
     if (!ivalues) {
         fprintf(stderr, "Failed to allocate memory (ivalues).\n");

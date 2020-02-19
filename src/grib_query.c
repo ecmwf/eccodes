@@ -525,7 +525,6 @@ static grib_accessor* _grib_find_accessor(const grib_handle* ch, const char* nam
         char name_space[MAX_NAMESPACE_LEN];
         char* basename = p + 1;
         p--;
-        i   = 0;
         len = p - name + 1;
 
         for (i = 0; i < len; i++)
