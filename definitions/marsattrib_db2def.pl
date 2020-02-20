@@ -1,4 +1,6 @@
-#!/usr/local/bin/perl56 -I/usr/local/lib/metaps/perl
+#! /usr/local/apps/perl/current/bin/perl
+
+# old #!/usr/local/bin/perl56 -I/usr/local/lib/metaps/perl
 
 use strict; use warnings;
 
@@ -19,19 +21,19 @@ use DBI;
 
 my $db="param";
 my $host="grib-param-db-prod.ecmwf.int";
-my $user="ecmwf_ro";
-my $pass="ecmwf_ro";
+my $user="ecmwf_ro";  # Read-only access to Param DB
+my $pass="ecmwf_ro";  # Read-only access to Param DB
 
 my $dbh = DBI->connect("dbi:mysql(RaiseError=>1):database=$db;host=$host","$user","$pass") or die $DBI::errstr;
 
 my $mars_dir = "mars";
 
-foreach my $att qw(class type stream) {
+foreach my $att ('class', 'type', 'stream') {
     my $sth = $dbh->prepare("select grib_code,mars_abbreviation,long_name from grib_$att order by grib_code");
     $sth->execute();
 
     my $mars_file = "${mars_dir}/${att}.table";
-    open OUT,">${mars_file}" or die $!;
+    open OUT,">${mars_file}" or die "Failed to write \"$mars_file\": $!";
     print OUT "0 0 Unknown\n";
 
     while (my @row = $sth->fetchrow_array) {

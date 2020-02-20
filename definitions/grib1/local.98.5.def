@@ -1,33 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# START 1/local.98.5 ----------------------------------------------------------------------
-# LOCAL 98 5
-#
-# localDefinitionTemplate_005
-# ---------------------------
-#
-# Description            Octet    Code    Ksec1    Count
-# -----------            -----    ----    -----    -----
-#localDefinitionNumber       41  I1  37  -
-#class                       42  I1  38  -
-#type                        43  I1  39  -
-#stream                      44  I2  40  -
-#experimentVersionNumber     46  A4  41  -
-#number                      50  I1  42  -
-#total                       51  I1  43  -
-#decimalScaleFactor          52  S1  44  -
-#thresholdIndicator          53  I1  45  -
-#lowerThreshold              54  S2  46  -
-#upperThreshold              56  S2  47  -
-#spareSetToZero              58  PAD n/a 1
-#
+# (C) Copyright 2005- ECMWF.
 
 constant GRIBEXSection1Problem = 58 - section1Length ;
 
@@ -42,20 +13,19 @@ _if (timeRangeIndicator==3 || timeRangeIndicator==4
   alias productDefinitionTemplateNumber=probPoint;
 }
 
-
 template mars_labeling "grib1/mars_labeling.def";
 
-unsigned[1] forecastProbabilityNumber : dump ;
+unsigned[1] forecastProbabilityNumber : dump;
 
-unsigned[1] totalNumberOfForecastProbabilities  : dump;
+unsigned[1] totalNumberOfForecastProbabilities : dump;
 
-signed[1] localDecimalScaleFactor : dump ;
+signed[1] localDecimalScaleFactor : dump;
 
-unsigned[1] thresholdIndicator : dump ;
+unsigned[1] thresholdIndicator : dump;
 
-signed[2] lowerThreshold : dump ;
+signed[2] lowerThreshold : can_be_missing,dump;
 
-signed[2] upperThreshold  : dump;
+signed[2] upperThreshold : can_be_missing,dump;
 
 # 1 to 2 conversion
 _if (thresholdIndicator == 1) {
@@ -85,10 +55,7 @@ _if (thresholdIndicator == 3) {
   transient scaledValueOfUpperLimit=upperThreshold;
 }
 
-
 # spareSetToZero
 pad padding_loc5_1(1);
 alias number = forecastProbabilityNumber;
 alias totalNumber=totalNumberOfForecastProbabilities;
-
-# END   1/local.98.5 ----------------------------------------------------------------------

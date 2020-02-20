@@ -1,36 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# START 1/local.98.18 ----------------------------------------------------------------------
-# LOCAL 98 18
-#
-# localDefinitionTemplate_018
-# ---------------------------
-#
-# Description            Octet    Code    Ksec1    Count
-# -----------            -----    ----    -----    -----
-#localDefinitionNumber       41  I1  37  -
-#class                       42  I1  38  -
-#type                        43  I1  39  -
-#stream                      44  I2  40  -
-#experimentVersionNumber     46  A4  41  -
-#number                      50  I1  42  -
-#total                       51  I1  43  -
-#dataOrigin                  52  I1  44  -
-#modelIdentifier             53  A4  45  -
-#consensusCount              57  I1  46  -
-#spareSetToZero              58  PAD n/a 3
-#wmoCentreIdentifiers        61  LIST    47  consensusCount
-#ccccIdentifiers             -   A4  -   -
-#ENDLIST                     -   ENDLIST -   wmoCentreIdentifiers
-#unusedEntriesSetToBlanks    -   SP_TO   -   120
-#
+# (C) Copyright 2005- ECMWF.
 
 constant GRIBEXSection1Problem = 120 - section1Length ;
 
@@ -73,5 +41,3 @@ padto padding_loc18_2(offsetSection1 + 120);
 alias local.dataOrigin=dataOrigin;
 alias local.modelIdentifier=modelIdentifier;
 alias local.consensusCount=consensusCount;
-
-# END   1/local.98.18 ----------------------------------------------------------------------

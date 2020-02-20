@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -34,29 +34,30 @@ or edit "box.class" and rerun ./make_class.pl
 */
 
 
-static void init_class              (grib_box_class*);
+static void init_class(grib_box_class*);
 
-static int init               (grib_box* box,grib_handle* h,grib_arguments* args);
-static grib_points* get_points(grib_box* box, double north, double west, double south,double east,int *err);
-static int destroy            (grib_box* box);
+static int init(grib_box* box, grib_handle* h, grib_arguments* args);
+static grib_points* get_points(grib_box* box, double north, double west, double south, double east, int* err);
+static int destroy(grib_box* box);
 
-typedef struct grib_box_regular_gaussian{
-  grib_box box;
-/* Members defined in gen */
-/* Members defined in regular_gaussian */
+typedef struct grib_box_regular_gaussian
+{
+    grib_box box;
+    /* Members defined in gen */
+    /* Members defined in regular_gaussian */
 } grib_box_regular_gaussian;
 
 extern grib_box_class* grib_box_class_gen;
 
 static grib_box_class _grib_box_class_regular_gaussian = {
-    &grib_box_class_gen,                         /* super                     */
-    "regular_gaussian",                         /* name                      */
-    sizeof(grib_box_regular_gaussian),      /* size of instance          */
-    0,                              /* inited */
-    &init_class,                    /* init_class */
-    &init,                          /* constructor               */
-    &destroy,                       /* destructor                */
-    &get_points,                    /* get points           */
+    &grib_box_class_gen,               /* super                     */
+    "regular_gaussian",                /* name                      */
+    sizeof(grib_box_regular_gaussian), /* size of instance          */
+    0,                                 /* inited */
+    &init_class,                       /* init_class */
+    &init,                             /* constructor               */
+    &destroy,                          /* destructor                */
+    &get_points,                       /* get points           */
 };
 
 grib_box_class* grib_box_class_regular_gaussian = &_grib_box_class_regular_gaussian;
@@ -67,19 +68,18 @@ static void init_class(grib_box_class* c)
 }
 /* END_CLASS_IMP */
 
-static int init(grib_box* box,grib_handle* h,grib_arguments* args)
+static int init(grib_box* box, grib_handle* h, grib_arguments* args)
 {
-  return 0;
+    return 0;
 }
 
-static int destroy(grib_box* box) {
-  return GRIB_SUCCESS;
+static int destroy(grib_box* box)
+{
+    return GRIB_SUCCESS;
 }
 
-static grib_points* get_points(grib_box* box, double north, double west, double south,double east, int *err) {
-	*err=GRIB_NOT_IMPLEMENTED;
-	return NULL;
+static grib_points* get_points(grib_box* box, double north, double west, double south, double east, int* err)
+{
+    *err = GRIB_NOT_IMPLEMENTED;
+    return NULL;
 }
-
-
-

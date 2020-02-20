@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,32 +9,36 @@
 
 . ./include.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_clone_test_c"
 
-#Prepare tmp file
-fBufrTmp=${label}.cloned.bufr
-rm -f $fBufrTmp | true
+fBufrTmp1=${label}.cloned1.bufr
+fBufrTmp2=${label}.cloned2.bufr
+rm -f $fBufrTmp1 $fBufrTmp2
 
-#We clone this bufr file
+# We clone this bufr file
 f=${data_dir}/bufr/syno_1.bufr
 
 REDIRECT=/dev/null
 
-#Clone the bufr messages
-${examples_dir}/c_bufr_clone $f $fBufrTmp >$REDIRECT 2> $REDIRECT
+# Clone the bufr message and change something
+${examples_dir}/c_bufr_clone $f $fBufrTmp1
 
-#Compare clone to the original
+# There should be 3 messages in the new file
+count=`${tools_dir}/bufr_count $fBufrTmp1`
+[ $count -eq 3 ]
+
+# Compare the first message to the original. It should be different
+${tools_dir}/bufr_copy -w count=1 $fBufrTmp1 $fBufrTmp2
 set +e
-${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT
+${tools_dir}/bufr_compare $f $fBufrTmp2
 
-#Check if clone is different
+# bufr_compare should have returned 1
 if [ $? -eq 0 ]; then
-   echo "cloning produced identical files " >&2
+   echo "Error: Clones messages should be different!" >&2
    exit 1
 fi
-
 set -e
 
-#Clean up
-rm -f ${fBufrTmp} | true
+# Clean up
+rm -f $fBufrTmp1 $fBufrTmp2

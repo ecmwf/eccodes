@@ -1,0 +1,4 @@
+0 0 Precipitation less than 0.1 mm during the preceding hour
+1 1 Precipitation greater than or equal 0.1 mm during the preceding hour
+2 2 Precipitation not reported because recorder is not heated
+3 3 Missing value

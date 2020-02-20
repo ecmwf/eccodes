@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -51,11 +51,21 @@ do
 done
 
 # ECC-457 ECMWF total precipitation
+# ----------------------------------
 input=${data_dir}/tp_ecmwf.grib
 output=temp.grib1to2.grib
 ${tools_dir}/grib_set -s edition=2 $input $output
 res=`${tools_dir}/grib_get -w count=1 -p edition,paramId,units $output`
 [ "$res" = "2 228228 kg m**-2" ]
+rm -f $output
+
+# Local Definition 30
+# --------------------
+sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=30,stepType=accum,edition=2 $sample_g1 $output
+grib_check_key_equals $output productDefinitionTemplateNumber 11
+${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=30,type=em,stepType=accum,edition=2 $sample_g1 $output
+grib_check_key_equals $output productDefinitionTemplateNumber 12
 rm -f $output
 
 #sed "s:toolsdir:${tools_dir}/:" ${tools_dir}/grib1to2.txt > ${tools_dir}/grib1to2.test

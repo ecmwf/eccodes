@@ -1,39 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# START 1/local.98.11 ----------------------------------------------------------------------
-# LOCAL 98 11
-#
-# localDefinitionTemplate_011
-# ---------------------------
-#
-# Description                Octet    Code    Ksec1    Count
-# -----------                -----    ----    -----    -----
-#localDefinitionNumber                   41      I1      37      -
-#class                                   42      I1      38      -
-#type                                    43      I1      39      -
-#stream                                  44      I2      40      -
-#experimentVersionNumber                 46      A4      41      -
-#classOfAnalysis                         50      I1      42      -
-#typeOfAnalysis                          51      I1      43      -
-#streamOfAnalysis                        52      I2      44      -
-#experimentVersionNumberOfAnalysis       54      A4      45      -
-#yearOfAnalysis                          58      I1      46      -
-#monthOfAnalysis                         59      I1      47      -
-#dayOfAnalysis                           60      I1      48      -
-#hourOfAnalysis                          61      I1      49      -
-#minuteOfAnalysis                        62      I1      50      -
-#centuryOfAnalysis                       63      I1      51      -
-#originatingCentreOfAnalysis             64      I1      52      -
-#subcentreOfAnalysis                     65      I1      53      -
-#spareSetToZero                          66      PAD     n/a     7
-#
+# (C) Copyright 2005- ECMWF.
 
 constant GRIBEXSection1Problem = 72 - section1Length ;
 
@@ -68,8 +33,3 @@ meta timeOfAnalysis  time(hourOfAnalysis,minuteOfAnalysis,secondsOfAnalysis) : d
 
 alias date = dateOfAnalysis;
 alias time = timeOfAnalysis;
-
-
-# ---------------------------------------------------------
-
-# END   1/local.98.11 ----------------------------------------------------------------------

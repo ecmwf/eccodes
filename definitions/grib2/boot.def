@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,15 +9,15 @@
 
 # This gets updated twice a year by WMO.
 # See http://www.wmo.int/pages/prog/www/WMOCodes/WMO306_vI2/LatestVERSION/LatestVERSION.html
-constant tablesVersionLatest = 19 : edition_specific;
+constant tablesVersionLatest = 25 : edition_specific;
 
-constant one = 1 : hidden ;
 constant million = 1000000 : hidden;
 constant grib2divider   = 1000000;
 alias extraDimensionPresent=zero;
 alias is_tigge = zero;
 alias is_s2s = zero;
-transient angularPrecision=grib2divider;  # micro degrees
+transient is_efas = 0;
+transient angleSubdivisions=grib2divider;  # micro degrees
 
 meta gts_header gts_header() : no_copy,hidden,read_only;
 meta gts_TTAAii gts_header(20,6) : no_copy,hidden,read_only;

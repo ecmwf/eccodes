@@ -4,15 +4,9 @@ if [ -f "$CMAKE_INCLUDE_FILE" ]; then
   . ./$CMAKE_INCLUDE_FILE
 
 else
-  set -ea
+  set -eax
   echo
   echo "TEST: $0"
-
-  # If this environment variable is set, then become verbose
-  # so one can see why and how a test failed
-  if test "x$ECCODES_TEST_VERBOSE_OUTPUT" != "x"; then
-     set -x
-  fi
 
   cpath=$TOPBUILDDIR
   ECCODES_DEFINITION_PATH=$cpath/definitions

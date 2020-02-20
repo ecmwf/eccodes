@@ -1,0 +1,12 @@
+0 0 Below haze layer
+1 1 Above haze layer
+2 2 Showers
+3 3 Drizzle
+4 4 Fog at surface
+5 5 Freezing rain
+6 6 Rain
+7 7 Snow
+8 8 Hail
+9 9 Thunderstorm
+10 10 No significant weather
+15 15 Missing value

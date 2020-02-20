@@ -1,34 +1,6 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# START 1/local.98.15 ----------------------------------------------------------------------
-# LOCAL 98 15
-#
-# localDefinitionTemplate_015
-# ---------------------------
-#
-# Description            Octet    Code    Ksec1    Count
-# -----------            -----    ----    -----    -----
-#localDefinitionNumber           41      I1      37      -
-#class                           42      I1      38      -
-#type                            43      I1      39      -
-#stream                          44      I2      40      -
-#experimentVersionNumber         46      A4      41      -
-#number                          50      I2      42      -
-#total                           56      I2      43      -
-#systemNumber                    52      I2      44      -
-#methodNumber                    54      I2      45      -
-#spareSetToZero                  58      PAD     n/a     3
-#
+# (C) Copyright 2005- ECMWF.
 
 # used in local definition 13
-
 constant GRIBEXSection1Problem = 60 - section1Length ;
 
 transient localFlag=1 : hidden ;
@@ -65,7 +37,3 @@ alias method = methodNumber;
 alias local.perturbationNumber=perturbationNumber;
 alias local.systemNumber=systemNumber;
 alias local.methodNumber=methodNumber;
-
-
-
-

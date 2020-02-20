@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,26 +10,25 @@
 
 #include "grib_api_internal.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-  int i = 0;
-  int fail = 0;
+    int i    = 0;
+    int fail = 0;
 
-  grib_context* c = grib_context_get_default();
-  grib_action* a=NULL;
+    grib_context* c = grib_context_get_default();
+    grib_action* a  = NULL;
 
-  for(i = 1; i < argc; i++){
-    printf("%s ... ",argv[i]);fflush(stdout);
-    if(!(a=grib_parse_file(c,argv[i])))
-    {
-      fail++;
-      printf("FAILED\n");
-      exit(1);
+    for (i = 1; i < argc; i++) {
+        printf("%s ... ", argv[i]);
+        fflush(stdout);
+        if (!(a = grib_parse_file(c, argv[i]))) {
+            fail++;
+            printf("FAILED\n");
+            exit(1);
+        }
+        else {
+            printf("OK\n");
+        }
     }
-    else
-    {
-      printf("OK\n");
-    }
-  }
-  return fail;
+    return fail;
 }

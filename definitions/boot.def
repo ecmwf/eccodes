@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,6 +15,11 @@ UseEcmfConventions = getenv("ECCODES_USE_ECMF_CONVENTIONS","1") :hidden ;
 
 constant defaultTypeOfLevel="unknown" : hidden;
 
+gribDataQualityChecks = getenv("ECCODES_GRIB_DATA_QUALITY_CHECKS","0") : hidden;
+if (gribDataQualityChecks) {
+    template LIMITS "param_limits.def";
+}
+
 # GRIBEX special boustrophedonic mode. See GRIB-472
 # If the environment variable is not defined, the key will be 0
 GRIBEX_boustrophedonic = getenv("ECCODES_GRIBEX_BOUSTROPHEDONIC","0")  :hidden;
@@ -22,21 +27,11 @@ GRIBEX_boustrophedonic = getenv("ECCODES_GRIBEX_BOUSTROPHEDONIC","0")  :hidden;
 
 constant zero=0 : hidden;
 constant one=1 : hidden;
-constant two=1 : hidden;
-constant three=1 : hidden;
-constant eight=8 : hidden;
 constant hundred=100 : hidden;
-constant eleven=11 : hidden;
-constant true="true" :hidden;
-constant false="false" : hidden;
 transient truncateLaplacian=0 : hidden;
 constant marsDir="mars" : no_copy,hidden;
 constant present=1 : hidden;
-constant epsPoint=1 : hidden;
-constant epsContinous=11 : hidden;
-constant epsStatisticsPoint=2 : hidden;
-constant epsStatisticsContinous=12 : hidden;
-alias epsStatistics=zero : hidden;
+# alias epsStatistics=zero : hidden;
 
 constant defaultParameter = 0 : hidden;
 constant defaultName="unknown" :hidden;
@@ -46,7 +41,6 @@ transient dummy = 1 :hidden;
 constant unknown="unknown" : hidden;
 constant oneConstant=1 : hidden;
 constant thousand=1000 :hidden;
-constant hundred=100 :hidden;
 constant oneMillionConstant=1000000 : hidden;
 constant grib1divider = 1000 : hidden;
 meta offset offset_file() : hidden;
@@ -59,8 +53,8 @@ transient unitsBias=0 : hidden;
 constant globalDomain = "g";
 transient timeRangeIndicatorFromStepRange=-1 : hidden;
 
-# GRIB-802
-transient override_large_constant_fields = 0 : hidden;
+# ECC-868
+transient produceLargeConstantFields = 0 : hidden;
 
 meta libraryVersion library_version() : hidden;
 
@@ -73,8 +67,12 @@ if(kindOfProduct == `GRIB`){
  template      GRIB "grib[GRIBEditionNumber:l]/boot.def" ;
 }
 
-if(kindOfProduct == `BUDG`){
+if(kindOfProduct == `BUDG` ){
  template      BUDG "budg/boot.def" ;
+}
+
+if(kindOfProduct == `DIAG`){
+ template      DIAG "diag/boot.def" ;
 }
 
 if(kindOfProduct == `TIDE`){
@@ -83,8 +81,8 @@ if(kindOfProduct == `TIDE`){
 
 if(kindOfProduct == `BUFR`){
  template      BUFR "bufr/boot.def" ;
- constant  BUFRstr="BUFR";
- alias identifier=BUFRstr;
+ #constant  BUFRstr="BUFR"; #ECC-742
+ #alias identifier=BUFRstr;
 }
 
 if(kindOfProduct == `CDFX`){

@@ -127,21 +127,57 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 185 ;
 	}
-#Surface net solar radiation, clear sky
-'surface_net_downward_shortwave_flux_assuming_clear_sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 210 ;
-	}
-#Surface net thermal radiation, clear sky
-'surface_net_downward_longwave_flux_assuming_clear_sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 211 ;
-	}
 #Temperature of snow layer
 'temperature_in_surface_snow' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 238 ;
 	}
+#Depth of 20C isotherm
+'depth_of_isosurface_of_sea_water_potential_temperature' = {
+	 discipline = 192 ;
+	 parameterCategory = 151 ;
+	 parameterNumber = 163 ;
+}
+#Ocean barotropic stream function
+'ocean_barotropic_streamfunction' = {
+	 discipline = 192 ;
+	 parameterCategory = 151 ;
+	 parameterNumber = 147 ;
+}
+#Surface downward northward stress
+'surface_downward_northward_stress' = {
+	 discipline = 192 ;
+	 parameterCategory = 151 ;
+	 parameterNumber = 154 ;
+}
+#Surface downward eastward stress
+'surface_downward_eastward_stress' = {
+	 discipline = 192 ;
+	 parameterCategory = 151 ;
+	 parameterNumber = 153 ;
+}
+#Sea water practical salinity
+'sea_water_practical_salinity' = {
+	 discipline = 192 ;
+	 parameterCategory = 151 ;
+	 parameterNumber = 130 ;
+}
+#Sea water potential temperature
+'sea_water_potential_temperature' = {
+	 discipline = 192 ;
+	 parameterCategory = 151 ;
+	 parameterNumber = 129 ;
+}
+#Sea water sigma theta
+'sea_water_sigma_theta' = {
+	 discipline = 192 ;
+	 parameterCategory = 151 ;
+	 parameterNumber = 138 ;
+}
+#Upward sea water velocity
+'upward_sea_water_velocity' = {
+	 discipline = 192 ;
+	 parameterCategory = 151 ;
+	 parameterNumber = 133 ;
+}

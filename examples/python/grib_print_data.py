@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -20,17 +20,23 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
     gid = codes_grib_new_from_file(f)
 
     values = codes_get_values(gid)
-    for i in range(len(values)):
+    num_vals = len(values)
+    for i in range(num_vals):
         print("%d %.10e" % (i + 1, values[i]))
 
-    print('%d values found in %s' % (len(values), INPUT))
+    print('%d values found in %s' % (num_vals, INPUT))
 
     for key in ('max', 'min', 'average'):
         print('%s=%.10e' % (key, codes_get(gid, key)))
+
+    # Example of accessing specific elements from data values
+    # Get first, middle and last elements
+    indexes = [0, int(num_vals/2), num_vals-1]
+    elems = codes_get_double_elements(gid, 'values', indexes)
 
     codes_release(gid)
     f.close()

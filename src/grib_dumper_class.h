@@ -7,7 +7,7 @@ extern grib_dumper_class* grib_dumper_class_bufr_encode_C;
 extern grib_dumper_class* grib_dumper_class_bufr_encode_filter;
 extern grib_dumper_class* grib_dumper_class_bufr_encode_fortran;
 extern grib_dumper_class* grib_dumper_class_bufr_encode_python;
-extern grib_dumper_class* grib_dumper_class_compare;
+extern grib_dumper_class* grib_dumper_class_bufr_simple;
 extern grib_dumper_class* grib_dumper_class_debug;
 extern grib_dumper_class* grib_dumper_class_default;
 extern grib_dumper_class* grib_dumper_class_file;

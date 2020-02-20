@@ -1,8 +1,7 @@
-!
-!Copyright 2005-2017 ECMWF.
+! (C) Copyright 2005- ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
-!which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 !
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
@@ -23,7 +22,7 @@ integer            :: count=0
 integer(kind=4)    :: dataCategory,dataSubCategory,typicalDate
 integer(kind=4)    :: centre,subcentre
 integer(kind=4)    :: masterversion,localversion
-integer(kind=4)    :: numberofsubsets
+integer(kind=4)    :: numberOfSubsets
 
   call codes_open_file(ifile,'../../data/bufr/syno_multi.bufr','r')
 
@@ -57,8 +56,8 @@ integer(kind=4)    :: numberofsubsets
     call codes_get(ibufr,'localTablesVersionNumber',localversion)
     write(*,*) '  localTablesVersionNumber:',localversion
 
-    call codes_get(ibufr,'numberOfSubsets',numberofsubsets)
-    write(*,*) '  numberOfSubsets:',numberofsubsets
+    call codes_get(ibufr,'numberOfSubsets',numberOfSubsets)
+    write(*,*) '  numberOfSubsets:',numberOfSubsets
 
     ! Release the bufr message
     call codes_release(ibufr)

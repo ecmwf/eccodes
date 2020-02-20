@@ -1,0 +1,9 @@
+# EFAS Perturbed forecast
+#meta efas_suite_name sprintf("%s_%s_%s", inputOriginatingCentre, efas_forecast, efas_post_proc) : no_copy;
+alias mars.origin = inputOriginatingCentre;
+
+alias mars.number = perturbationNumber;
+
+# We need this because 'efas_post_proc' is defined later
+meta efas_model sprintf("%s", efas_post_proc) : no_copy;
+alias mars.model = efas_model;

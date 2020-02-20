@@ -6,8 +6,8 @@ set +x # Trace
 
 # During development
 
-PATH=$PATH:/var/tmp/mab/p4/grib_api/main/tigge:/var/tmp/mab/p4/grib_api/main/tools
-RULES=/var/tmp/mab/p4/grib_api/main/tigge/ncep.rules
+PATH=$PATH:/path/to/install/p4/grib_api/main/tigge:/path/to/install/p4/grib_api/main/tools
+RULES=/path/to/install/p4/grib_api/main/tigge/ncep.rules
 
 # Cycle should be an argument
 

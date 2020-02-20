@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,10 +14,10 @@
  * strcasecmp is not in the C standard. However, it's defined by
  * 4.4BSD, POSIX.1-2001. So we use our own
  */
-int strcmp_nocase(const char *s1, const char *s2)
+int strcmp_nocase(const char* s1, const char* s2)
 {
-    const unsigned char *us1 = (const unsigned char *)s1,
-            *us2 = (const unsigned char *)s2;
+    const unsigned char *us1 = (const unsigned char*)s1,
+                        *us2 = (const unsigned char*)s2;
 
     while (tolower(*us1) == tolower(*us2++)) {
         if (*us1++ == '\0')
@@ -30,7 +30,8 @@ int strcmp_nocase(const char *s1, const char *s2)
 void rtrim(char* s)
 {
     size_t len = 0;
-    if (!s) return;
+    if (!s)
+        return;
     len = strlen(s);
     while (len > 0 && isspace((unsigned char)s[len - 1]))
         len--;
@@ -42,25 +43,35 @@ void rtrim(char* s)
 /*  "/tmp/"   -> ""   */
 const char* extract_filename(const char* filepath)
 {
-    const char* s = strrchr(filepath, get_dir_separator_char());
-    if (!s) return filepath;
-    else    return s + 1;
+    /* Note: Windows users could pass in fwd slashes!
+     * so have to check both separators
+     */
+    const char* s = strrchr(filepath, '/');
+    if (!s)
+        s = strrchr(filepath, '\\');
+    if (!s)
+        return filepath;
+    else
+        return s + 1;
 }
 
-/* Returns an array of strings the last of which is NULL */
+/* Returns an array of strings the last of which is NULL.
+ * Note: The delimiter here is a 'string' but must be ONE character!
+ *       Splitting with several delimiters is not supported.
+ */
 char** string_split(char* inputString, const char* delimiter)
 {
-    char** result = NULL;
-    char* p = inputString;
+    char** result       = NULL;
+    char* p             = inputString;
     char* lastDelimiter = NULL;
-    char* aToken = NULL;
-    size_t numTokens = 0;
-    size_t strLength = 0;
-    size_t index = 0;
-    char delimiterChar = 0;
+    char* aToken        = NULL;
+    size_t numTokens    = 0;
+    size_t strLength    = 0;
+    size_t index        = 0;
+    char delimiterChar  = 0;
 
     DebugAssert(inputString);
-    DebugAssert( delimiter && (strlen(delimiter)==1) );
+    DebugAssert(delimiter && (strlen(delimiter) == 1));
     delimiterChar = delimiter[0];
     while (*p) {
         const char ctmp = *p;
@@ -84,10 +95,48 @@ char** string_split(char* inputString, const char* delimiter)
     while (aToken) {
         Assert(index < numTokens);
         *(result + index++) = strdup(aToken);
-        aToken = strtok(NULL, delimiter);
+        aToken              = strtok(NULL, delimiter);
     }
     Assert(index == numTokens - 1);
     *(result + index) = NULL;
 
     return result;
+}
+
+/* Return GRIB_SUCCESS if can convert input to an integer, GRIB_INVALID_ARGUMENT otherwise */
+int string_to_long(const char* input, long* output)
+{
+    const int base = 10;
+    char* endptr;
+    long val = 0;
+
+    if (!input)
+        return GRIB_INVALID_ARGUMENT;
+
+    errno = 0;
+    val   = strtol(input, &endptr, base);
+    if ((errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) ||
+        (errno != 0 && val == 0)) {
+        /*perror("strtol");*/
+        return GRIB_INVALID_ARGUMENT;
+    }
+    if (endptr == input) {
+        /*fprintf(stderr, "No digits were found. EXIT_FAILURE\n");*/
+        return GRIB_INVALID_ARGUMENT;
+    }
+    *output = val;
+    return GRIB_SUCCESS;
+}
+
+/* Return 1 if str1 ends with str2, 0 otherwise */
+int string_ends_with(const char* str1, const char* str2)
+{
+    const size_t len1 = strlen(str1);
+    const size_t len2 = strlen(str2);
+    if (len2 > len1)
+        return 0;
+
+    if (strcmp(&str1[len1 - len2], str2) == 0)
+        return 1;
+    return 0;
 }

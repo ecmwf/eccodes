@@ -204,8 +204,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 30 ;
 	}
-#Sea-ice cover
-'ci' = {
+#Sea ice area fraction
+'siconc' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 31 ;
 	}
@@ -3314,10 +3314,30 @@
 	 table2Version = 131 ;
 	 indicatorOfParameter = 97 ;
 	}
+#Total precipitation of at least 25 mm
+'tpg25' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 98 ;
+	}
+#Total precipitation of at least 50 mm
+'tpg50' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 99 ;
+	}
+#10 metre wind gust of at least 10 m/s
+'fgg1010' = {
+	 table2Version = 131 ;
+	 indicatorOfParameter = 100 ;
+	}
 #Convective available potential energy shear index
 'capesi' = {
 	 table2Version = 132 ;
 	 indicatorOfParameter = 44 ;
+	}
+#Water vapour flux index
+'wvfi' = {
+	 table2Version = 132 ;
+	 indicatorOfParameter = 45 ;
 	}
 #Convective available potential energy index
 'capei' = {
@@ -3353,6 +3373,76 @@
 'p140084' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 84 ;
+	}
+#Wave induced mean sea level correction
+'weta' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 98 ;
+	}
+#Ratio of wave angular and frequency width
+'wraf' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 99 ;
+	}
+#Number of events in freak waves statistics
+'wnslc' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 100 ;
+	}
+#U-component of atmospheric surface momentum flux
+'utaua' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 101 ;
+	}
+#V-component of atmospheric surface momentum flux
+'vtaua' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 102 ;
+	}
+#U-component of surface momentum flux into ocean
+'utauo' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 103 ;
+	}
+#V-component of surface momentum flux into ocean
+'vtauo' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 104 ;
+	}
+#Wave turbulent energy flux into ocean
+'wphio' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 105 ;
+	}
+#Wave directional width of first swell partition
+'wdw1' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 106 ;
+	}
+#Wave frequency width of first swell partition
+'wfw1' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 107 ;
+	}
+#Wave directional width of second swell partition
+'wdw2' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 108 ;
+	}
+#Wave frequency width of second swell partition
+'wfw2' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 109 ;
+	}
+#Wave directional width of third swell partition
+'wdw3' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 110 ;
+	}
+#Wave frequency width of third swell partition
+'wfw3' = {
+	 table2Version = 140 ;
+	 indicatorOfParameter = 111 ;
 	}
 #Wave energy flux magnitude
 'wefxm' = {
@@ -3488,6 +3578,11 @@
 'p193.151' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 193 ;
+	}
+#Water vapour flux
+'wvf' = {
+	 table2Version = 162 ;
+	 indicatorOfParameter = 45 ;
 	}
 #Vertical integral of divergence of cloud liquid water flux
 'p79.162' = {
@@ -3664,6 +3759,21 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 141 ;
 	}
+#Standardised precipitation index valid in the last 3 months
+'spi03' = {
+	 table2Version = 170 ;
+	 indicatorOfParameter = 1 ;
+	}
+#Standardised precipitation index valid in the last 6 months
+'spi06' = {
+	 table2Version = 170 ;
+	 indicatorOfParameter = 2 ;
+	}
+#Standardised precipitation index valid in the last 12 months
+'spi12' = {
+	 table2Version = 170 ;
+	 indicatorOfParameter = 3 ;
+	}
 #100 metre U wind component anomaly
 'ua100' = {
 	 table2Version = 171 ;
@@ -3749,8 +3859,8 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 96 ;
 	}
-#Sea-ice Snow Thickness
-'sist' = {
+#Sea ice snow thickness
+'sisnthick' = {
 	 table2Version = 174 ;
 	 indicatorOfParameter = 97 ;
 	}
@@ -3873,6 +3983,11 @@
 'soapr' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 59 ;
+	}
+#Injection height (from IS4FIRES)
+'injh' = {
+	 table2Version = 210 ;
+	 indicatorOfParameter = 60 ;
 	}
 #Particulate matter d < 1 um
 'pm1' = {
@@ -4118,6 +4233,31 @@
 'taedab550' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 246 ;
+	}
+#Nitrate fine mode aerosol mass mixing ratio
+'aermr16' = {
+	 table2Version = 210 ;
+	 indicatorOfParameter = 247 ;
+	}
+#Nitrate coarse mode aerosol mass mixing ratio
+'aermr17' = {
+	 table2Version = 210 ;
+	 indicatorOfParameter = 248 ;
+	}
+#Ammonium aerosol mass mixing ratio
+'aermr18' = {
+	 table2Version = 210 ;
+	 indicatorOfParameter = 249 ;
+	}
+#Nitrate aerosol optical depth at 550 nm
+'niaod550' = {
+	 table2Version = 210 ;
+	 indicatorOfParameter = 250 ;
+	}
+#Ammonium aerosol optical depth at 550 nm
+'amaod550' = {
+	 table2Version = 210 ;
+	 indicatorOfParameter = 251 ;
 	}
 #Aerosol type 13 mass mixing ratio
 'aermr13diff' = {
@@ -5739,702 +5879,702 @@
 	 table2Version = 213 ;
 	 indicatorOfParameter = 150 ;
 	}
-# Cosine of solar zenith angle
+#Cosine of solar zenith angle
 'uvcossza' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 1 ;
 	}
-# UV biologically effective dose
+#UV biologically effective dose
 'uvbed' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 2 ;
 	}
-# UV biologically effective dose clear-sky
+#UV biologically effective dose clear-sky
 'uvbedcs' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 3 ;
 	}
-# Total surface UV spectral flux (280-285 nm)
+#Total surface UV spectral flux (280-285 nm)
 'uvsflxt280285' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 4 ;
 	}
-# Total surface UV spectral flux (285-290 nm)
+#Total surface UV spectral flux (285-290 nm)
 'uvsflxt285290' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 5 ;
 	}
-# Total surface UV spectral flux (290-295 nm)
+#Total surface UV spectral flux (290-295 nm)
 'uvsflxt290295' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 6 ;
 	}
-# Total surface UV spectral flux (295-300 nm)
+#Total surface UV spectral flux (295-300 nm)
 'uvsflxt295300' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 7 ;
 	}
-# Total surface UV spectral flux (300-305 nm)
+#Total surface UV spectral flux (300-305 nm)
 'uvsflxt300305' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 8 ;
 	}
-# Total surface UV spectral flux (305-310 nm)
+#Total surface UV spectral flux (305-310 nm)
 'uvsflxt305310' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 9 ;
 	}
-# Total surface UV spectral flux (310-315 nm)
+#Total surface UV spectral flux (310-315 nm)
 'uvsflxt310315' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 10 ;
 	}
-# Total surface UV spectral flux (315-320 nm)
+#Total surface UV spectral flux (315-320 nm)
 'uvsflxt315320' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 11 ;
 	}
-# Total surface UV spectral flux (320-325 nm)
+#Total surface UV spectral flux (320-325 nm)
 'uvsflxt320325' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 12 ;
 	}
-# Total surface UV spectral flux (325-330 nm)
+#Total surface UV spectral flux (325-330 nm)
 'uvsflxt325330' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 13 ;
 	}
-# Total surface UV spectral flux (330-335 nm)
+#Total surface UV spectral flux (330-335 nm)
 'uvsflxt330335' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 14 ;
 	}
-# Total surface UV spectral flux (335-340 nm)
+#Total surface UV spectral flux (335-340 nm)
 'uvsflxt335340' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 15 ;
 	}
-# Total surface UV spectral flux (340-345 nm)
+#Total surface UV spectral flux (340-345 nm)
 'uvsflxt340345' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 16 ;
 	}
-# Total surface UV spectral flux (345-350 nm)
+#Total surface UV spectral flux (345-350 nm)
 'uvsflxt345350' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 17 ;
 	}
-# Total surface UV spectral flux (350-355 nm)
+#Total surface UV spectral flux (350-355 nm)
 'uvsflxt350355' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 18 ;
 	}
-# Total surface UV spectral flux (355-360 nm)
+#Total surface UV spectral flux (355-360 nm)
 'uvsflxt355360' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 19 ;
 	}
-# Total surface UV spectral flux (360-365 nm)
+#Total surface UV spectral flux (360-365 nm)
 'uvsflxt360365' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 20 ;
 	}
-# Total surface UV spectral flux (365-370 nm)
+#Total surface UV spectral flux (365-370 nm)
 'uvsflxt365370' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 21 ;
 	}
-# Total surface UV spectral flux (370-375 nm)
+#Total surface UV spectral flux (370-375 nm)
 'uvsflxt370375' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 22 ;
 	}
-# Total surface UV spectral flux (375-380 nm)
+#Total surface UV spectral flux (375-380 nm)
 'uvsflxt375380' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 23 ;
 	}
-# Total surface UV spectral flux (380-385 nm)
+#Total surface UV spectral flux (380-385 nm)
 'uvsflxt380385' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 24 ;
 	}
-# Total surface UV spectral flux (385-390 nm)
+#Total surface UV spectral flux (385-390 nm)
 'uvsflxt385390' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 25 ;
 	}
-# Total surface UV spectral flux (390-395 nm)
+#Total surface UV spectral flux (390-395 nm)
 'uvsflxt390395' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 26 ;
 	}
-# Total surface UV spectral flux (395-400 nm)
+#Total surface UV spectral flux (395-400 nm)
 'uvsflxt395400' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 27 ;
 	}
-# Clear-sky surface UV spectral flux (280-285 nm)
+#Clear-sky surface UV spectral flux (280-285 nm)
 'uvsflxcs280285' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 28 ;
 	}
-# Clear-sky surface UV spectral flux (285-290 nm)
+#Clear-sky surface UV spectral flux (285-290 nm)
 'uvsflxcs285290' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 29 ;
 	}
-# Clear-sky surface UV spectral flux (290-295 nm)
+#Clear-sky surface UV spectral flux (290-295 nm)
 'uvsflxcs290295' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 30 ;
 	}
-# Clear-sky surface UV spectral flux (295-300 nm)
+#Clear-sky surface UV spectral flux (295-300 nm)
 'uvsflxcs295300' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 31 ;
 	}
-# Clear-sky surface UV spectral flux (300-305 nm)
+#Clear-sky surface UV spectral flux (300-305 nm)
 'uvsflxcs300305' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 32 ;
 	}
-# Clear-sky surface UV spectral flux (305-310 nm)
+#Clear-sky surface UV spectral flux (305-310 nm)
 'uvsflxcs305310' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 33 ;
 	}
-# Clear-sky surface UV spectral flux (310-315 nm)
+#Clear-sky surface UV spectral flux (310-315 nm)
 'uvsflxcs310315' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 34 ;
 	}
-# Clear-sky surface UV spectral flux (315-320 nm)
+#Clear-sky surface UV spectral flux (315-320 nm)
 'uvsflxcs315320' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 35 ;
 	}
-# Clear-sky surface UV spectral flux (320-325 nm)
+#Clear-sky surface UV spectral flux (320-325 nm)
 'uvsflxcs320325' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 36 ;
 	}
-# Clear-sky surface UV spectral flux (325-330 nm)
+#Clear-sky surface UV spectral flux (325-330 nm)
 'uvsflxcs325330' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 37 ;
 	}
-# Clear-sky surface UV spectral flux (330-335 nm)
+#Clear-sky surface UV spectral flux (330-335 nm)
 'uvsflxcs330335' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 38 ;
 	}
-# Clear-sky surface UV spectral flux (335-340 nm)
+#Clear-sky surface UV spectral flux (335-340 nm)
 'uvsflxcs335340' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 39 ;
 	}
-# Clear-sky surface UV spectral flux (340-345 nm)
+#Clear-sky surface UV spectral flux (340-345 nm)
 'uvsflxcs340345' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 40 ;
 	}
-# Clear-sky surface UV spectral flux (345-350 nm)
+#Clear-sky surface UV spectral flux (345-350 nm)
 'uvsflxcs345350' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 41 ;
 	}
-# Clear-sky surface UV spectral flux (350-355 nm)
+#Clear-sky surface UV spectral flux (350-355 nm)
 'uvsflxcs350355' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 42 ;
 	}
-# Clear-sky surface UV spectral flux (355-360 nm)
+#Clear-sky surface UV spectral flux (355-360 nm)
 'uvsflxcs355360' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 43 ;
 	}
-# Clear-sky surface UV spectral flux (360-365 nm)
+#Clear-sky surface UV spectral flux (360-365 nm)
 'uvsflxcs360365' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 44 ;
 	}
-# Clear-sky surface UV spectral flux (365-370 nm)
+#Clear-sky surface UV spectral flux (365-370 nm)
 'uvsflxcs365370' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 45 ;
 	}
-# Clear-sky surface UV spectral flux (370-375 nm)
+#Clear-sky surface UV spectral flux (370-375 nm)
 'uvsflxcs370375' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 46 ;
 	}
-# Clear-sky surface UV spectral flux (375-380 nm)
+#Clear-sky surface UV spectral flux (375-380 nm)
 'uvsflxcs375380' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 47 ;
 	}
-# Clear-sky surface UV spectral flux (380-385 nm)
+#Clear-sky surface UV spectral flux (380-385 nm)
 'uvsflxcs380385' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 48 ;
 	}
-# Clear-sky surface UV spectral flux (385-390 nm)
+#Clear-sky surface UV spectral flux (385-390 nm)
 'uvsflxcs385390' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 49 ;
 	}
-# Clear-sky surface UV spectral flux (390-395 nm)
+#Clear-sky surface UV spectral flux (390-395 nm)
 'uvsflxcs390395' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 50 ;
 	}
-# Clear-sky surface UV spectral flux (395-400 nm)
+#Clear-sky surface UV spectral flux (395-400 nm)
 'uvsflxcs395400' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 51 ;
 	}
-# Profile of optical thickness at 340 nm
+#Profile of optical thickness at 340 nm
 'aot340' = {
 	 table2Version = 214 ;
 	 indicatorOfParameter = 52 ;
 	}
-# Source/gain of sea salt aerosol (0.03 - 0.5 um)
+#Source/gain of sea salt aerosol (0.03 - 0.5 um)
 'aersrcsss' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 1 ;
 	}
-# Source/gain of sea salt aerosol (0.5 - 5 um)
+#Source/gain of sea salt aerosol (0.5 - 5 um)
 'aersrcssm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 2 ;
 	}
-# Source/gain of sea salt aerosol (5 - 20 um)
+#Source/gain of sea salt aerosol (5 - 20 um)
 'aersrcssl' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 3 ;
 	}
-# Dry deposition of sea salt aerosol (0.03 - 0.5 um)
+#Dry deposition of sea salt aerosol (0.03 - 0.5 um)
 'aerddpsss' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 4 ;
 	}
-# Dry deposition of sea salt aerosol (0.5 - 5 um)
+#Dry deposition of sea salt aerosol (0.5 - 5 um)
 'aerddpssm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 5 ;
 	}
-# Dry deposition of sea salt aerosol (5 - 20 um)
+#Dry deposition of sea salt aerosol (5 - 20 um)
 'aerddpssl' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 6 ;
 	}
-# Sedimentation of sea salt aerosol (0.03 - 0.5 um)
+#Sedimentation of sea salt aerosol (0.03 - 0.5 um)
 'aersdmsss' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 7 ;
 	}
-# Sedimentation of sea salt aerosol (0.5 - 5 um)
+#Sedimentation of sea salt aerosol (0.5 - 5 um)
 'aersdmssm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 8 ;
 	}
-# Sedimentation of sea salt aerosol (5 - 20 um)
+#Sedimentation of sea salt aerosol (5 - 20 um)
 'aersdmssl' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 9 ;
 	}
-# Wet deposition of sea salt aerosol (0.03 - 0.5 um) by large-scale precipitation
+#Wet deposition of sea salt aerosol (0.03 - 0.5 um) by large-scale precipitation
 'aerwdlssss' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 10 ;
 	}
-# Wet deposition of sea salt aerosol (0.5 - 5 um) by large-scale precipitation
+#Wet deposition of sea salt aerosol (0.5 - 5 um) by large-scale precipitation
 'aerwdlsssm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 11 ;
 	}
-# Wet deposition of sea salt aerosol (5 - 20 um) by large-scale precipitation
+#Wet deposition of sea salt aerosol (5 - 20 um) by large-scale precipitation
 'aerwdlsssl' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 12 ;
 	}
-# Wet deposition of sea salt aerosol (0.03 - 0.5 um) by convective precipitation
+#Wet deposition of sea salt aerosol (0.03 - 0.5 um) by convective precipitation
 'aerwdccsss' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 13 ;
 	}
-# Wet deposition of sea salt aerosol (0.5 - 5 um) by convective precipitation
+#Wet deposition of sea salt aerosol (0.5 - 5 um) by convective precipitation
 'aerwdccssm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 14 ;
 	}
-# Wet deposition of sea salt aerosol (5 - 20 um) by convective precipitation
+#Wet deposition of sea salt aerosol (5 - 20 um) by convective precipitation
 'aerwdccssl' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 15 ;
 	}
-# Negative fixer of sea salt aerosol (0.03 - 0.5 um)
+#Negative fixer of sea salt aerosol (0.03 - 0.5 um)
 'aerngtsss' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 16 ;
 	}
-# Negative fixer of sea salt aerosol (0.5 - 5 um)
+#Negative fixer of sea salt aerosol (0.5 - 5 um)
 'aerngtssm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 17 ;
 	}
-# Negative fixer of sea salt aerosol (5 - 20 um)
+#Negative fixer of sea salt aerosol (5 - 20 um)
 'aerngtssl' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 18 ;
 	}
-# Vertically integrated mass of sea salt aerosol (0.03 - 0.5 um)
+#Vertically integrated mass of sea salt aerosol (0.03 - 0.5 um)
 'aermsssss' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 19 ;
 	}
-# Vertically integrated mass of sea salt aerosol (0.5 - 5 um)
+#Vertically integrated mass of sea salt aerosol (0.5 - 5 um)
 'aermssssm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 20 ;
 	}
-# Vertically integrated mass of sea salt aerosol (5 - 20 um)
+#Vertically integrated mass of sea salt aerosol (5 - 20 um)
 'aermssssl' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 21 ;
 	}
-# Sea salt aerosol (0.03 - 0.5 um) optical depth
+#Sea salt aerosol (0.03 - 0.5 um) optical depth
 'aerodsss' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 22 ;
 	}
-# Sea salt aerosol (0.5 - 5 um) optical depth
+#Sea salt aerosol (0.5 - 5 um) optical depth
 'aerodssm' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 23 ;
 	}
-# Sea salt aerosol (5 - 20 um) optical depth
+#Sea salt aerosol (5 - 20 um) optical depth
 'aerodssl' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 24 ;
 	}
-# Source/gain of dust aerosol (0.03 - 0.55 um)
+#Source/gain of dust aerosol (0.03 - 0.55 um)
 'aersrcdus' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 25 ;
 	}
-# Source/gain of dust aerosol (0.55 - 9 um)
+#Source/gain of dust aerosol (0.55 - 9 um)
 'aersrcdum' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 26 ;
 	}
-# Source/gain of dust aerosol (9 - 20 um)
+#Source/gain of dust aerosol (9 - 20 um)
 'aersrcdul' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 27 ;
 	}
-# Dry deposition of dust aerosol (0.03 - 0.55 um)
+#Dry deposition of dust aerosol (0.03 - 0.55 um)
 'aerddpdus' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 28 ;
 	}
-# Dry deposition of dust aerosol (0.55 - 9 um)
+#Dry deposition of dust aerosol (0.55 - 9 um)
 'aerddpdum' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 29 ;
 	}
-# Dry deposition of dust aerosol (9 - 20 um)
+#Dry deposition of dust aerosol (9 - 20 um)
 'aerddpdul' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 30 ;
 	}
-# Sedimentation of dust aerosol (0.03 - 0.55 um)
+#Sedimentation of dust aerosol (0.03 - 0.55 um)
 'aersdmdus' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 31 ;
 	}
-# Sedimentation of dust aerosol (0.55 - 9 um)
+#Sedimentation of dust aerosol (0.55 - 9 um)
 'aersdmdum' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 32 ;
 	}
-# Sedimentation of dust aerosol (9 - 20 um)
+#Sedimentation of dust aerosol (9 - 20 um)
 'aersdmdul' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 33 ;
 	}
-# Wet deposition of dust aerosol (0.03 - 0.55 um) by large-scale precipitation
+#Wet deposition of dust aerosol (0.03 - 0.55 um) by large-scale precipitation
 'aerwdlsdus' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 34 ;
 	}
-# Wet deposition of dust aerosol (0.55 - 9 um) by large-scale precipitation
+#Wet deposition of dust aerosol (0.55 - 9 um) by large-scale precipitation
 'aerwdlsdum' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 35 ;
 	}
-# Wet deposition of dust aerosol (9 - 20 um) by large-scale precipitation
+#Wet deposition of dust aerosol (9 - 20 um) by large-scale precipitation
 'aerwdlsdul' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 36 ;
 	}
-# Wet deposition of dust aerosol (0.03 - 0.55 um) by convective precipitation
+#Wet deposition of dust aerosol (0.03 - 0.55 um) by convective precipitation
 'aerwdccdus' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 37 ;
 	}
-# Wet deposition of dust aerosol (0.55 - 9 um) by convective precipitation
+#Wet deposition of dust aerosol (0.55 - 9 um) by convective precipitation
 'aerwdccdum' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 38 ;
 	}
-# Wet deposition of dust aerosol (9 - 20 um) by convective precipitation
+#Wet deposition of dust aerosol (9 - 20 um) by convective precipitation
 'aerwdccdul' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 39 ;
 	}
-# Negative fixer of dust aerosol (0.03 - 0.55 um)
+#Negative fixer of dust aerosol (0.03 - 0.55 um)
 'aerngtdus' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 40 ;
 	}
-# Negative fixer of dust aerosol (0.55 - 9 um)
+#Negative fixer of dust aerosol (0.55 - 9 um)
 'aerngtdum' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 41 ;
 	}
-# Negative fixer of dust aerosol (9 - 20 um)
+#Negative fixer of dust aerosol (9 - 20 um)
 'aerngtdul' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 42 ;
 	}
-# Vertically integrated mass of dust aerosol (0.03 - 0.55 um)
+#Vertically integrated mass of dust aerosol (0.03 - 0.55 um)
 'aermssdus' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 43 ;
 	}
-# Vertically integrated mass of dust aerosol (0.55 - 9 um)
+#Vertically integrated mass of dust aerosol (0.55 - 9 um)
 'aermssdum' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 44 ;
 	}
-# Vertically integrated mass of dust aerosol (9 - 20 um)
+#Vertically integrated mass of dust aerosol (9 - 20 um)
 'aermssdul' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 45 ;
 	}
-# Dust aerosol (0.03 - 0.55 um) optical depth
+#Dust aerosol (0.03 - 0.55 um) optical depth
 'aeroddus' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 46 ;
 	}
-# Dust aerosol (0.55 - 9 um) optical depth
+#Dust aerosol (0.55 - 9 um) optical depth
 'aeroddum' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 47 ;
 	}
-# Dust aerosol (9 - 20 um) optical depth
+#Dust aerosol (9 - 20 um) optical depth
 'aeroddul' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 48 ;
 	}
-# Source/gain of hydrophobic organic matter aerosol
+#Source/gain of hydrophobic organic matter aerosol
 'aersrcomhphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 49 ;
 	}
-# Source/gain of hydrophilic organic matter aerosol
+#Source/gain of hydrophilic organic matter aerosol
 'aersrcomhphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 50 ;
 	}
-# Dry deposition of hydrophobic organic matter aerosol
+#Dry deposition of hydrophobic organic matter aerosol
 'aerddpomhphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 51 ;
 	}
-# Dry deposition of hydrophilic organic matter aerosol
+#Dry deposition of hydrophilic organic matter aerosol
 'aerddpomhphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 52 ;
 	}
-# Sedimentation of hydrophobic organic matter aerosol
+#Sedimentation of hydrophobic organic matter aerosol
 'aersdmomhphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 53 ;
 	}
-# Sedimentation of hydrophilic organic matter aerosol
+#Sedimentation of hydrophilic organic matter aerosol
 'aersdmomhphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 54 ;
 	}
-# Wet deposition of hydrophobic organic matter aerosol by large-scale precipitation
+#Wet deposition of hydrophobic organic matter aerosol by large-scale precipitation
 'aerwdlsomhphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 55 ;
 	}
-# Wet deposition of hydrophilic organic matter aerosol by large-scale precipitation
+#Wet deposition of hydrophilic organic matter aerosol by large-scale precipitation
 'aerwdlsomhphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 56 ;
 	}
-# Wet deposition of hydrophobic organic matter aerosol by convective precipitation
+#Wet deposition of hydrophobic organic matter aerosol by convective precipitation
 'aerwdccomhphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 57 ;
 	}
-# Wet deposition of hydrophilic organic matter aerosol by convective precipitation
+#Wet deposition of hydrophilic organic matter aerosol by convective precipitation
 'aerwdccomhphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 58 ;
 	}
-# Negative fixer of hydrophobic organic matter aerosol
+#Negative fixer of hydrophobic organic matter aerosol
 'aerngtomhphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 59 ;
 	}
-# Negative fixer of hydrophilic organic matter aerosol
+#Negative fixer of hydrophilic organic matter aerosol
 'aerngtomhphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 60 ;
 	}
-# Vertically integrated mass of hydrophobic organic matter aerosol
+#Vertically integrated mass of hydrophobic organic matter aerosol
 'aermssomhphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 61 ;
 	}
-# Vertically integrated mass of hydrophilic organic matter aerosol
+#Vertically integrated mass of hydrophilic organic matter aerosol
 'aermssomhphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 62 ;
 	}
-# Hydrophobic organic matter aerosol optical depth
+#Hydrophobic organic matter aerosol optical depth
 'aerodomhphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 63 ;
 	}
-# Hydrophilic organic matter aerosol optical depth
+#Hydrophilic organic matter aerosol optical depth
 'aerodomhphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 64 ;
 	}
-# Source/gain of hydrophobic black carbon aerosol
+#Source/gain of hydrophobic black carbon aerosol
 'aersrcbchphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 65 ;
 	}
-# Source/gain of hydrophilic black carbon aerosol
+#Source/gain of hydrophilic black carbon aerosol
 'aersrcbchphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 66 ;
 	}
-# Dry deposition of hydrophobic black carbon aerosol
+#Dry deposition of hydrophobic black carbon aerosol
 'aerddpbchphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 67 ;
 	}
-# Dry deposition of hydrophilic black carbon aerosol
+#Dry deposition of hydrophilic black carbon aerosol
 'aerddpbchphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 68 ;
 	}
-# Sedimentation of hydrophobic black carbon aerosol
+#Sedimentation of hydrophobic black carbon aerosol
 'aersdmbchphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 69 ;
 	}
-# Sedimentation of hydrophilic black carbon aerosol
+#Sedimentation of hydrophilic black carbon aerosol
 'aersdmbchphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 70 ;
 	}
-# Wet deposition of hydrophobic black carbon aerosol by large-scale precipitation
+#Wet deposition of hydrophobic black carbon aerosol by large-scale precipitation
 'aerwdlsbchphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 71 ;
 	}
-# Wet deposition of hydrophilic black carbon aerosol by large-scale precipitation
+#Wet deposition of hydrophilic black carbon aerosol by large-scale precipitation
 'aerwdlsbchphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 72 ;
 	}
-# Wet deposition of hydrophobic black carbon aerosol by convective precipitation
+#Wet deposition of hydrophobic black carbon aerosol by convective precipitation
 'aerwdccbchphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 73 ;
 	}
-# Wet deposition of hydrophilic black carbon aerosol by convective precipitation
+#Wet deposition of hydrophilic black carbon aerosol by convective precipitation
 'aerwdccbchphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 74 ;
 	}
-# Negative fixer of hydrophobic black carbon aerosol
+#Negative fixer of hydrophobic black carbon aerosol
 'aerngtbchphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 75 ;
 	}
-# Negative fixer of hydrophilic black carbon aerosol
+#Negative fixer of hydrophilic black carbon aerosol
 'aerngtbchphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 76 ;
 	}
-# Vertically integrated mass of hydrophobic black carbon aerosol
+#Vertically integrated mass of hydrophobic black carbon aerosol
 'aermssbchphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 77 ;
 	}
-# Vertically integrated mass of hydrophilic black carbon aerosol
+#Vertically integrated mass of hydrophilic black carbon aerosol
 'aermssbchphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 78 ;
 	}
-# Hydrophobic black carbon aerosol optical depth
+#Hydrophobic black carbon aerosol optical depth
 'aerodbchphob' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 79 ;
 	}
-# Hydrophilic black carbon aerosol optical depth
+#Hydrophilic black carbon aerosol optical depth
 'aerodbchphil' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 80 ;
 	}
-# Source/gain of sulphate aerosol
+#Source/gain of sulphate aerosol
 'aersrcsu' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 81 ;
 	}
-# Dry deposition of sulphate aerosol
+#Dry deposition of sulphate aerosol
 'aerddpsu' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 82 ;
 	}
-# Sedimentation of sulphate aerosol
+#Sedimentation of sulphate aerosol
 'aersdmsu' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 83 ;
 	}
-# Wet deposition of sulphate aerosol by large-scale precipitation
+#Wet deposition of sulphate aerosol by large-scale precipitation
 'aerwdlssu' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 84 ;
 	}
-# Wet deposition of sulphate aerosol by convective precipitation
+#Wet deposition of sulphate aerosol by convective precipitation
 'aerwdccsu' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 85 ;
 	}
-# Negative fixer of sulphate aerosol
+#Negative fixer of sulphate aerosol
 'aerngtsu' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 86 ;
 	}
-# Vertically integrated mass of sulphate aerosol
+#Vertically integrated mass of sulphate aerosol
 'aermsssu' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 87 ;
 	}
-# Sulphate aerosol optical depth
+#Sulphate aerosol optical depth
 'aerodsu' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 88 ;
@@ -6744,93 +6884,93 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 149 ;
 	}
-#Assimetry factor at 340 nm
-'assimetry340' = {
+#Asymmetry factor at 340 nm
+'asymmetry340' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 150 ;
 	}
-#Assimetry factor at 355 nm
-'assimetry355' = {
+#Asymmetry factor at 355 nm
+'asymmetry355' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 151 ;
 	}
-#Assimetry factor at 380 nm
-'assimetry380' = {
+#Asymmetry factor at 380 nm
+'asymmetry380' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 152 ;
 	}
-#Assimetry factor at 400 nm
-'assimetry400' = {
+#Asymmetry factor at 400 nm
+'asymmetry400' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 153 ;
 	}
-#Assimetry factor at 440 nm
-'assimetry440' = {
+#Asymmetry factor at 440 nm
+'asymmetry440' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Assimetry factor at 469 nm
-'assimetry469' = {
+#Asymmetry factor at 469 nm
+'asymmetry469' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 155 ;
 	}
-#Assimetry factor at 500 nm
-'assimetry500' = {
+#Asymmetry factor at 500 nm
+'asymmetry500' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 156 ;
 	}
-#Assimetry factor at 532 nm
-'assimetry532' = {
+#Asymmetry factor at 532 nm
+'asymmetry532' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 157 ;
 	}
-#Assimetry factor at 550 nm
-'assimetry550' = {
+#Asymmetry factor at 550 nm
+'asymmetry550' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 158 ;
 	}
-#Assimetry factor at 645 nm
-'assimetry645' = {
+#Asymmetry factor at 645 nm
+'asymmetry645' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 159 ;
 	}
-#Assimetry factor at 670 nm
-'assimetry670' = {
+#Asymmetry factor at 670 nm
+'asymmetry670' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 160 ;
 	}
-#Assimetry factor at 800 nm
-'assimetry800' = {
+#Asymmetry factor at 800 nm
+'asymmetry800' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 161 ;
 	}
-#Assimetry factor at 858 nm
-'assimetry858' = {
+#Asymmetry factor at 858 nm
+'asymmetry858' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 162 ;
 	}
-#Assimetry factor at 865 nm
-'assimetry865' = {
+#Asymmetry factor at 865 nm
+'asymmetry865' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 163 ;
 	}
-#Assimetry factor at 1020 nm
-'assimetry1020' = {
+#Asymmetry factor at 1020 nm
+'asymmetry1020' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 164 ;
 	}
-#Assimetry factor at 1064 nm
-'assimetry1064' = {
+#Asymmetry factor at 1064 nm
+'asymmetry1064' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 165 ;
 	}
-#Assimetry factor at 1240 nm
-'assimetry1240' = {
+#Asymmetry factor at 1240 nm
+'asymmetry1240' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 166 ;
 	}
-#Assimetry factor at 1640 nm
-'assimetry1640' = {
+#Asymmetry factor at 1640 nm
+'asymmetry1640' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 167 ;
 	}
@@ -6889,8 +7029,8 @@
 	 table2Version = 215 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Assimetry factor at 2130 nm
-'assimetry2130' = {
+#Asymmetry factor at 2130 nm
+'asymmetry2130' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 179 ;
 	}
@@ -6938,6 +7078,121 @@
 'aerbackscatgnd1064' = {
 	 table2Version = 215 ;
 	 indicatorOfParameter = 188 ;
+	}
+#Source/gain of fine-mode nitrate aerosol
+'aersrcnif' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 189 ;
+	}
+#Source/gain of coarse-mode nitrate aerosol
+'aersrcnic' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 190 ;
+	}
+#Dry deposition of fine-mode nitrate aerosol
+'aerddpnif' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 191 ;
+	}
+#Dry deposition of coarse-mode nitrate aerosol
+'aerddpnic' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 192 ;
+	}
+#Sedimentation of fine-mode nitrate aerosol
+'aersdmnif' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 193 ;
+	}
+#Sedimentation of coarse-mode nitrate aerosol
+'aersdmnic' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 194 ;
+	}
+#Wet deposition of fine-mode nitrate aerosol by large-scale precipitation
+'aerwdlnif' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 195 ;
+	}
+#Wet deposition of coarse-mode nitrate aerosol by large-scale precipitation
+'aerwdlnic' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 196 ;
+	}
+#Wet deposition of fine-mode nitrate aerosol by convective precipitation
+'aerwdcnif' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 197 ;
+	}
+#Wet deposition of coarse-mode nitrate aerosol by convective precipitation
+'aerwdcnic' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 198 ;
+	}
+#Negative fixer of fine-mode nitrate aerosol
+'aerngtnif' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 199 ;
+	}
+#Negative fixer of coarse-mode nitrate aerosol
+'aerngtnic' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 200 ;
+	}
+#Vertically integrated mass of fine-mode nitrate aerosol
+'aermssnif' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 201 ;
+	}
+#Vertically integrated mass of coarse-mode nitrate aerosol
+'aermssnic' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 202 ;
+	}
+#Fine-mode nitrate aerosol optical depth at 550 nm
+'aerodnif' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 203 ;
+	}
+#Coarse-mode nitrate aerosol optical depth at 550 nm
+'aerodnic' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 204 ;
+	}
+#Source/gain of ammonium aerosol
+'aersrcam' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 205 ;
+	}
+#Dry deposition of ammonium aerosol
+'aerddpam' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 206 ;
+	}
+#Sedimentation of ammonium aerosol
+'aersdmam' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 207 ;
+	}
+#Wet deposition of ammonium aerosol by large-scale precipitation
+'aerwdlam' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 208 ;
+	}
+#Wet deposition of ammonium aerosol by convective precipitation
+'aerwdcam' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 209 ;
+	}
+#Negative fixer of ammonium aerosol
+'aerngtam' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 210 ;
+	}
+#Vertically integrated mass of ammonium aerosol
+'aermssam' = {
+	 table2Version = 215 ;
+	 indicatorOfParameter = 211 ;
 	}
 #Experimental product
 'p1.216' = {
@@ -8219,8 +8474,8 @@
 	 table2Version = 217 ;
 	 indicatorOfParameter = 3 ;
 	}
-#Methane
-'ch4' = {
+#Methane (chemistry)
+'ch4_c' = {
 	 table2Version = 217 ;
 	 indicatorOfParameter = 4 ;
 	}
@@ -9264,6 +9519,11 @@
 	 table2Version = 221 ;
 	 indicatorOfParameter = 56 ;
 	}
+#-10 degrees C isothermal level (atm)
+'degm10l' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 20 ;
+	}
 #Total sky direct solar radiation at surface
 'fdir' = {
 	 table2Version = 228 ;
@@ -9279,7 +9539,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 23 ;
 	}
-#Zero degree level
+#0 degrees C isothermal level (atm)
 'deg0l' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 24 ;
@@ -9354,25 +9614,50 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 48 ;
 	}
-#Instantaneous total lightning density
+#Instantaneous total lightning flash density
 'litoti' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Averaged total lightning density since previous post-processing
-'litota' = {
+#Averaged total lightning flash density in the last hour
+'litota1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 51 ;
 	}
-#Instantaneous cloud-to-ground lightning density
+#Instantaneous cloud-to-ground lightning flash density
 'licgi' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 52 ;
 	}
-#Averaged cloud-to-ground lightning density since previous post-processing
-'licga' = {
+#Averaged cloud-to-ground lightning flash density in the last hour
+'licga1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 53 ;
+	}
+#SMOS observed soil moisture retrieved using neural network
+'smnnob' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 70 ;
+	}
+#SMOS observed soil moisture uncertainty retrieved using neural network
+'smnner' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 71 ;
+	}
+#SMOS radio frequency interference probability
+'smnnrfi' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 72 ;
+	}
+#SMOS number of observations per grid point
+'smnnnb' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 73 ;
+	}
+#SMOS observation time for the satellite soil moisture data
+'smnntim' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 74 ;
 	}
 #GPP coefficient from Biogenic Flux Adjustment System
 'gppbfas' = {
@@ -9528,6 +9813,21 @@
 'p228230' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 230 ;
+	}
+#200 metre U wind component
+'u200' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 239 ;
+	}
+#200 metre V wind component
+'v200' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 240 ;
+	}
+#200 metre wind speed
+'si200' = {
+	 table2Version = 228 ;
+	 indicatorOfParameter = 241 ;
 	}
 #Surface solar radiation diffuse total sky
 'fdif' = {
@@ -11369,17 +11669,17 @@
 	 table2Version = 131 ;
 	 indicatorOfParameter = 69 ;
 	}
-#10 metre Wind gust of at least 15 m/s
+#10 metre wind gust of at least 15 m/s
 'fg10g15' = {
 	 table2Version = 131 ;
 	 indicatorOfParameter = 70 ;
 	}
-#10 metre Wind gust of at least 20 m/s
+#10 metre wind gust of at least 20 m/s
 'fg10g20' = {
 	 table2Version = 131 ;
 	 indicatorOfParameter = 71 ;
 	}
-#10 metre Wind gust of at least 25 m/s
+#10 metre wind gust of at least 25 m/s
 'fg10g25' = {
 	 table2Version = 131 ;
 	 indicatorOfParameter = 72 ;
@@ -12019,7 +12319,7 @@
 	 table2Version = 140 ;
 	 indicatorOfParameter = 220 ;
 	}
-#Mean wave period based on second moment
+#Mean zero-crossing wave period
 'mp2' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 221 ;
@@ -12069,7 +12369,7 @@
 	 table2Version = 140 ;
 	 indicatorOfParameter = 230 ;
 	}
-#Peak period of 1D spectra
+#Peak wave period
 'pp1d' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 231 ;
@@ -12210,12 +12510,12 @@
 	 indicatorOfParameter = 131 ;
 	}
 #Ocean U wind component
-'ocu' = {
+'p133.150' = {
 	 table2Version = 150 ;
 	 indicatorOfParameter = 133 ;
 	}
 #Ocean V wind component
-'ocv' = {
+'p134.150' = {
 	 table2Version = 150 ;
 	 indicatorOfParameter = 134 ;
 	}
@@ -12359,28 +12659,28 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 128 ;
 	}
-#Ocean potential temperature
-'ocpt' = {
+#Sea water potential temperature
+'thetao' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 129 ;
 	}
-#Salinity
-'s' = {
+#Sea water practical salinity
+'so' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 130 ;
 	}
-#Ocean current zonal component
-'ocu' = {
+#Eastward sea water velocity
+'uoe' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 131 ;
 	}
-#Ocean current meridional component
-'ocv' = {
+#Northward sea water velocity
+'von' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 132 ;
 	}
-#Ocean current vertical component
-'ocw' = {
+#Upward sea water velocity
+'wo' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 133 ;
 	}
@@ -12404,8 +12704,8 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 137 ;
 	}
-#Sigma-theta
-'sth' = {
+#Sea water sigma theta
+'sigmat' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 138 ;
 	}
@@ -12439,8 +12739,8 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 144 ;
 	}
-#Sea level
-'sl' = {
+#Sea surface height
+'zos' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 145 ;
 	}
@@ -12449,8 +12749,8 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Barotropic stream function
-'bsf' = {
+#Ocean barotropic stream function
+'stfbarot' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 147 ;
 	}
@@ -12479,13 +12779,13 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 152 ;
 	}
-#U stress
-'tax' = {
+#Surface downward eastward stress
+'taueo' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 153 ;
 	}
-#V stress
-'tay' = {
+#Surface downward northward stress
+'tauno' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 154 ;
 	}
@@ -12529,8 +12829,8 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 162 ;
 	}
-#20 degrees isotherm depth
-'d20' = {
+#Depth of 20C isotherm
+'t20d' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 163 ;
 	}
@@ -13900,7 +14200,7 @@
 	 indicatorOfParameter = 169 ;
 	}
 #Soil temperature anomaly level 2
-'slal2' = {
+'stal2' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 170 ;
 	}
@@ -14334,23 +14634,23 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 48 ;
 	}
-#Large-scale precipitation fraction
-'p50.172' = {
+#Mean large-scale precipitation fraction
+'mlspfr' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Stratiform precipitation (Large-scale precipitation)
-'p142.172' = {
+#Mean large-scale precipitation rate
+'mlsprt' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 142 ;
 	}
-#Convective precipitation
+#Mean convective precipitation rate
 'cprate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 143 ;
 	}
-#Snowfall (convective + stratiform)
-'p144.172' = {
+#Mean total snowfall rate
+'mtsfr' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 144 ;
 	}
@@ -14359,68 +14659,68 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Surface sensible heat flux
-'p146.172' = {
+#Mean surface sensible heat flux
+'msshfl' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface latent heat flux
-'p147.172' = {
+#Mean surface latent heat flux
+'mslhfl' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Surface net radiation
-'p149.172' = {
+#Mean surface net radiation flux
+'msnrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 149 ;
 	}
-#Short-wave heating rate
-'p153.172' = {
+#Mean short-wave heating rate
+'mswhr' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 153 ;
 	}
-#Long-wave heating rate
-'p154.172' = {
+#Mean long-wave heating rate
+'mlwhr' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Surface solar radiation downwards
-'p169.172' = {
+#Mean surface downward solar radiation flux
+'msdsrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 169 ;
 	}
-#Surface thermal radiation downwards
-'p175.172' = {
+#Mean surface downward thermal radiation flux
+'msdtrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 175 ;
 	}
-#Surface solar radiation
-'p176.172' = {
+#Mean surface net solar radiation flux
+'msnsrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Surface thermal radiation
-'p177.172' = {
+#Mean surface net thermal radiation flux
+'msntrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Top solar radiation
-'p178.172' = {
+#Mean top net solar radiation flux
+'mtnsrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Top thermal radiation
-'p179.172' = {
+#Mean top net thermal radiation flux
+'mtntrf' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 179 ;
 	}
-#East-West surface stress
-'p180.172' = {
+#East-West surface stress rate of accumulation
+'ewssra' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 180 ;
 	}
-#North-South surface stress
-'p181.172' = {
+#North-South surface stress rate of accumulation
+'nsssra' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 181 ;
 	}
@@ -14429,8 +14729,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 182 ;
 	}
-#Sunshine duration
-'p189.172' = {
+#Mean sunshine duration rate
+'msdr' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 189 ;
 	}
@@ -14449,8 +14749,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 197 ;
 	}
-#Runoff
-'p205.172' = {
+#Mean runoff rate
+'mrort' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 205 ;
 	}
@@ -14474,12 +14774,12 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 211 ;
 	}
-#Solar insolation
-'p212.172' = {
+#Solar insolation rate of accumulation
+'soira' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 212 ;
 	}
-#Total precipitation
+#Mean total precipitation rate
 'tprate' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 228 ;
@@ -14519,13 +14819,13 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 50 ;
 	}
-#Stratiform precipitation (Large-scale precipitation) anomaly
-'p142.173' = {
+#Stratiform precipitation (Large-scale precipitation) anomalous rate of accumulation
+'lspara' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 142 ;
 	}
-#Convective precipitation anomaly
-'p143.173' = {
+#Mean convective precipitation rate anomaly
+'mcpra' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 143 ;
 	}
@@ -14539,13 +14839,13 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 145 ;
 	}
-#Surface sensible heat flux anomaly
-'p146.173' = {
+#Surface sensible heat flux anomalous rate of accumulation
+'sshfara' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 146 ;
 	}
-#Surface latent heat flux anomaly
-'p147.173' = {
+#Surface latent heat flux anomalous rate of accumulation
+'slhfara' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 147 ;
 	}
@@ -14564,48 +14864,48 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 154 ;
 	}
-#Surface solar radiation downwards anomaly
-'p169.173' = {
+#Surface solar radiation downwards anomalous rate of accumulation
+'ssrdara' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 169 ;
 	}
-#Surface thermal radiation downwards anomaly
-'p175.173' = {
+#Surface thermal radiation downwards anomalous rate of accumulation
+'strdara' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 175 ;
 	}
-#Surface solar radiation anomaly
-'p176.173' = {
+#Surface solar radiation anomalous rate of accumulation
+'ssrara' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Surface thermal radiation anomaly
-'p177.173' = {
+#Surface thermal radiation anomalous rate of accumulation
+'strara' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Top solar radiation anomaly
-'p178.173' = {
+#Top solar radiation anomalous rate of accumulation
+'tsrara' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Top thermal radiation anomaly
-'p179.173' = {
+#Top thermal radiation anomalous rate of accumulation
+'ttrara' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 179 ;
 	}
-#East-West surface stress anomaly
-'p180.173' = {
+#East-West surface stress anomalous rate of accumulation
+'ewssara' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 180 ;
 	}
-#North-South surface stress anomaly
-'p181.173' = {
+#North-South surface stress anomalous rate of accumulation
+'nsssara' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Evaporation anomaly
-'p182.173' = {
+#Evaporation anomalous rate of accumulation
+'evara' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 182 ;
 	}
@@ -14629,8 +14929,8 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 197 ;
 	}
-#Runoff anomaly
-'p205.173' = {
+#Runoff anomalous rate of accumulation
+'roara' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 205 ;
 	}
@@ -14654,8 +14954,8 @@
 	 table2Version = 173 ;
 	 indicatorOfParameter = 211 ;
 	}
-#Solar insolation anomaly
-'p212.173' = {
+#Solar insolation anomalous rate of accumulation
+'soiara' = {
 	 table2Version = 173 ;
 	 indicatorOfParameter = 212 ;
 	}
@@ -14780,7 +15080,7 @@
 	 indicatorOfParameter = 95 ;
 	}
 #Sea-ice thickness
-'p98.174' = {
+'sithick' = {
 	 table2Version = 174 ;
 	 indicatorOfParameter = 98 ;
 	}
@@ -15469,22 +15769,22 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 6 ;
 	}
-#Hydrophobic Organic Matter Aerosol Mixing Ratio
+#Hydrophilic Organic Matter Aerosol Mixing Ratio
 'aermr07' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 7 ;
 	}
-#Hydrophilic Organic Matter Aerosol Mixing Ratio
+#Hydrophobic Organic Matter Aerosol Mixing Ratio
 'aermr08' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 8 ;
 	}
-#Hydrophobic Black Carbon Aerosol Mixing Ratio
+#Hydrophilic Black Carbon Aerosol Mixing Ratio
 'aermr09' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 9 ;
 	}
-#Hydrophilic Black Carbon Aerosol Mixing Ratio
+#Hydrophobic Black Carbon Aerosol Mixing Ratio
 'aermr10' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 10 ;
@@ -15679,12 +15979,12 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 63 ;
 	}
-#Total column Carbon Dioxide
+#CO2 column-mean molar fraction
 'tcco2' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 64 ;
 	}
-#Total column Methane
+#CH4 column-mean molar fraction
 'tcch4' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 65 ;
@@ -15805,12 +16105,12 @@
 	 indicatorOfParameter = 96 ;
 	}
 #Wildfire fraction of area observed
-'bffire' = {
+'offire' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 97 ;
 	}
 #Number of positive FRP pixels per grid cell
-'oafire' = {
+'nofrp' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 98 ;
 	}
@@ -16169,22 +16469,22 @@
 	 table2Version = 211 ;
 	 indicatorOfParameter = 6 ;
 	}
-#Hydrophobic Organic Matter Aerosol Mixing Ratio
+#Hydrophilic Organic Matter Aerosol Mixing Ratio
 'aermr07diff' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 7 ;
 	}
-#Hydrophilic Organic Matter Aerosol Mixing Ratio
+#Hydrophobic Organic Matter Aerosol Mixing Ratio
 'aermr08diff' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 8 ;
 	}
-#Hydrophobic Black Carbon Aerosol Mixing Ratio
+#Hydrophilic Black Carbon Aerosol Mixing Ratio
 'aermr09diff' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 9 ;
 	}
-#Hydrophilic Black Carbon Aerosol Mixing Ratio
+#Hydrophobic Black Carbon Aerosol Mixing Ratio
 'aermr10diff' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 10 ;
@@ -16505,7 +16805,7 @@
 	 indicatorOfParameter = 96 ;
 	}
 #Wildfire fraction of area observed
-'bffirediff' = {
+'offirediff' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 97 ;
 	}

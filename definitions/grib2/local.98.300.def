@@ -1,13 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# Definition 300 - Multi-dimensional parameters
+# Local definition 300: Multi-dimensional parameters
 
 codetable[1] dimensionType "grib2/dimensionType.table"=0;
 
@@ -19,4 +10,3 @@ alias dimension=dimensionNumber;
 unsigned[2] totalNumberOfdimensions;
 
 alias extraDimensionPresent=one;
-

@@ -1,0 +1,11 @@
+0 0 Wind
+1 1 Reserved
+2 2 Visibility
+3 3 Clouds
+4 4 Hail/Ice pellets/freezing precipitation
+5 5 Reserved
+6 6 Precipitation
+7 7 Reserved
+8 8 Thunderstorm
+9 9 Tornado
+63 63 Missing value

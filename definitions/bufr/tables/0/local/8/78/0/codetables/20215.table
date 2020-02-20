@@ -1,0 +1,11 @@
+0 0 Open water
+1 1 Ice in belts or patches
+2 2 Ice evenly distributed
+3 3 Polynya(s) in combination with leads or cracks
+4 4 Lead(s) in combination with cracks
+5 5 Single polynya
+6 6 Single lead
+7 7 No openings in the ice
+8 8 Not used
+9 9 Not determined or unknown
+15 15 Missing value

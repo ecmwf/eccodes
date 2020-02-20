@@ -15,9 +15,9 @@
 		For each key a string (key:s), a double (key:d) or an integer (key:i)
 		type can be requested. Default type is string.
  \n \n -F format \n 
-		C style format for floating point values.
+		C style format for floating-point values.
  \n \n -l Latitude,Longitude[,MODE,file] \n 
-		Value close to the point of a Latitude/Longitude.
+		Value close to the point of a Latitude,Longitude.
 		Allowed values for MODE are:
 		4 (4 values in the nearest points are printed) Default
 		1 (the value at the nearest point is printed)

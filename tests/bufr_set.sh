@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -30,7 +30,7 @@ fBufrTmp=${label}".bufr.tmp"
 # Test: setting header for single message file
 #----------------------------------------------------
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_1.bufr"
 echo "Test: setting header for single message file" >> $fLog
@@ -44,7 +44,7 @@ centre=`${tools_dir}/bufr_get -p bufrHeaderCentre $fBufrTmp`
 # Test: setting header for multi-message file
 #----------------------------------------------------
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_multi.bufr"
 echo "Test: setting header for multi-message file" >> $fLog
@@ -63,7 +63,7 @@ done
 
 #TODO: when ECC-37 is fixed we need to enable it.
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_1.bufr"
 echo "Test: setting data values" >> $fLog
@@ -80,7 +80,7 @@ echo "file: $f" >> $fLog
 
 #TODO: when ECC-37 is fixed we need to enable it.
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_multi.bufr"
 echo "Test: setting data values for multi-message file" >> $fLog
@@ -140,7 +140,6 @@ ${tools_dir}/bufr_set -f -s bufrHeaderCentre=1024 -f $f $fBufrTmp 2>>$fLog 1>>$f
 #-----------------------------------------------------------
 # Test: key values out of range
 #-----------------------------------------------------------
-
 f=aaen_55.bufr
 
 # The correction1 key is of type "bits" and only 6 bits wide
@@ -160,7 +159,19 @@ if [ $? -eq 0 ]; then
 fi
 set -e
 
+#-----------------------------------------------------------
+# Test: Local ECMWF section. The 'ident' key
+#-----------------------------------------------------------
+f=temp_101.bufr
+${tools_dir}/bufr_set -s ident=ABCD $f $fBufrTmp
+result=`${tools_dir}/bufr_get -p ident $fBufrTmp`
+[ "$result" = "ABCD" ]
+${tools_dir}/bufr_set -s keyMore=ABCD $f $fBufrTmp
+result=`${tools_dir}/bufr_get -p keyMore,ident $fBufrTmp`
+[ "$result" = "ABCD ABCD" ]
+
+# ${tools_dir}/bufr_compare $f $fBufrTmp
 
 #Clean up
 rm -f $fLog 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp

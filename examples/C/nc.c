@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,28 +9,29 @@
  */
 #include "eccodes.h"
 
-void usage(char* prog) {
-    printf("usage: %s in.nc\n",prog);
+void usage(char* prog)
+{
+    printf("usage: %s in.nc\n", prog);
     exit(1);
 }
 
-int main(int argc,char* argv[]) {
-
+int main(int argc, char* argv[])
+{
     char* file;
-    int err=0;
+    int err = 0;
     codes_handle* h;
-    char identifier[7]={0,};
-    size_t len=7;
-    codes_context* c=codes_context_get_default();
+    char identifier[7] = {0,};
+    size_t len       = 7;
+    codes_context* c = codes_context_get_default();
 
-    if (argc>2) usage(argv[0]);
+    if (argc > 2) usage(argv[0]);
 
-    file=argv[1];
+    file = argv[1];
 
-    h=codes_handle_new_from_nc_file(c,file,&err);
-    codes_get_string(h,"identifier",identifier,&len);
-    printf("%s\n",identifier);
-    CODES_CHECK(err,0);
+    h = codes_handle_new_from_nc_file(c, file, &err);
+    codes_get_string(h, "identifier", identifier, &len);
+    printf("%s\n", identifier);
+    CODES_CHECK(err, 0);
 
     return err;
 }

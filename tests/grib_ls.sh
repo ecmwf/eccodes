@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -65,7 +65,7 @@ ${tools_dir}/grib_ls -plevels tmp_rlls.grib1 | grep MISSING>/dev/null
 
 ${tools_dir}/grib_set -s typeOfLevel=depthBelowLandLayer,bottomLevel=missing regular_latlon_surface.grib1 tmp_rlls.grib1
 ${tools_dir}/grib_ls -plevels tmp_rlls.grib1 | grep MISSING>/dev/null
-rm -f tmp_rlls.grib1 | true
+rm -f tmp_rlls.grib1
 
 # GRIB-305. GRIB edition 1 file with one large message
 if [ -f "sst_globus0083.grib" ]; then
@@ -86,5 +86,13 @@ grep -q 'Point chosen #3 index=21 .* distance=11\.' $temp_ls
 ${tools_dir}/grib_ls -l 53,2,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$temp_ls
 grep -q 'Point chosen #2 index=749 .* distance=204\.' $temp_ls
 
-rm -f $temp_ls
 
+# ECC-278: grib_ls -n namespace
+${tools_dir}/grib_ls -n geography $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl
+${tools_dir}/grib_ls -n data      $ECCODES_SAMPLES_PATH/GRIB1.tmpl
+
+# Angle subdivisions
+grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB1.tmpl angleSubdivisions 1000
+grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB2.tmpl angleSubdivisions 1000000
+
+rm -f $temp_ls

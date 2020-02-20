@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -20,6 +20,13 @@ from eccodes import *
 
 VERBOSE = 1  # verbose error reporting
 
+def parse_date(x):
+    return datetime.strptime(x.decode('ascii'), '%Y%m%d')
+
+
+def parse_time(x):
+    return datetime.strptime(x.decode('ascii'), '%H:%M:%S')
+
 
 def example(csvfile, input_filename, output_filename):
     fbufrin = open(input_filename, 'rb')
@@ -29,8 +36,6 @@ def example(csvfile, input_filename, output_filename):
 
     # The first line in the CSV has the column names
     print('Reading input CSV file: ', csvfile)
-    parse_date = lambda x: datetime.strptime(x, '%Y%m%d')
-    parse_time = lambda x: datetime.strptime(x, '%H:%M:%S')
     data = np.genfromtxt(csvfile, delimiter=',', dtype=None, names=True,
                          converters={0: parse_date, 1: parse_time})
 
@@ -86,6 +91,9 @@ def example(csvfile, input_filename, output_filename):
 
     codes_write(bufr, fbufrout)
     print('Created output BUFR file: ', output_filename)
+
+    fbufrin.close()
+    fbufrout.close()
 
 
 def main():

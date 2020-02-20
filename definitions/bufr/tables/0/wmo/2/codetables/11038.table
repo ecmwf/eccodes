@@ -1,0 +1,17 @@
+0 0 MIN < 1
+1 1 1 <= MIN < 2
+2 2 2 <= MIN < 3
+3 3 3 <= MIN < 4
+4 4 4 <= MIN < 5
+5 5 5 <= MIN < 6
+6 6 6 <= MIN < 7
+7 7 7 <= MIN < 8
+8 8 8 <= MIN < 9
+9 9 9 <= MIN < 10
+10 10 10 <= MIN < 11
+11 11 11 <= MIN < 12
+12 12 12 <= MIN < 13
+13 13 13 <= MIN < 14
+14 14 14 <= MIN < 15
+15 15 NO TIMING INFORMATION AVAILABLE
+31 31 MISSING VALUE

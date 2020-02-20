@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -26,7 +26,7 @@ data = collections.defaultdict(dict)
 
 def example():
     # open BUFR file
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     cnt = 0
 
@@ -175,7 +175,7 @@ def example():
             print("step  latitude  longitude   pressure  latitude   longitude    wind")
             for s in range(len(timePeriod)):
                 if data[m][s][0] != CODES_MISSING_DOUBLE and data[m][s][1] != CODES_MISSING_DOUBLE:
-                    print(" {:>3d}{}{:>6.1f}{}{:>6.1f}{}{:>8.1f}{}{:>6.1f}{}{:>6.1f}{}{:>6.1f}".format(
+                    print(" {0:>3d}{0}{0:>6.1f}{0}{0:>6.1f}{0}{0:>8.1f}{0}{0:>6.1f}{0}{0:>6.1f}{0}{0:>6.1f}".format(
                         timePeriod[s], '  ', data[m][s][0], '     ', data[m][s][1], '     ', data[m][s][2], '  ',
                         data[m][s][3], '     ', data[m][s][4], '     ', data[m][s][5]))
 

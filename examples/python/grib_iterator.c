@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
 
 	filename=strdup(argv[1]);
 
-	in = fopen(filename,"r");
+	in = fopen(filename,"rb");
 	if(!in) {
 		printf("ERROR: unable to open file %s\n",filename);
 		return 1;

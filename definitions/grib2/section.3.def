@@ -1,11 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# (C) Copyright 2005- ECMWF.
 
 # START grib2::section
 # SECTION 3, GRID DEFINITION SECTION
@@ -22,7 +15,6 @@ meta section3Pointer section_pointer(offsetSection3,section3Length,3);
 unsigned[1] numberOfSection = 3 :read_only;
 
 #  Source of grid definition
-# NOTE 1 NOT FOUND
 codetable[1] sourceOfGridDefinition ('3.0.table',masterDir,localDir) ;
 
 #  Number of data points
@@ -30,7 +22,6 @@ unsigned[4] numberOfDataPoints  : dump;
 alias numberOfPoints=numberOfDataPoints;
 
 #  Number of octets for optional list of numbers defining number of points
-# NOTE 2 NOT FOUND
 unsigned[1] numberOfOctectsForNumberOfPoints;
 
 #  Interpretation of list of numbers defining number of points
@@ -112,6 +103,12 @@ concept gridType {
  "cross_section"         = { gridDefinitionTemplateNumber=1000;PLPresent=0; }
  "Hovmoller"             = { gridDefinitionTemplateNumber=1100;PLPresent=0; }
  "time_section"          = { gridDefinitionTemplateNumber=1200;PLPresent=0; }
+ "lambert_lam"             = { gridDefinitionTemplateNumber=33; PLPresent=0;  }
+ "mercator_lam"            = { gridDefinitionTemplateNumber=13; PLPresent=0;  }
+ "polar_stereographic_lam" = { gridDefinitionTemplateNumber=23; PLPresent=0;  }
+ "lambert_bf"              = { gridDefinitionTemplateNumber=63; PLPresent=0;  }
+ "mercator_bf"             = { gridDefinitionTemplateNumber=61; PLPresent=0;  }
+ "polar_stereographic_bf"  = { gridDefinitionTemplateNumber=62; PLPresent=0;  }
  "unknown"               = {PLPresent=0;}
  "unknown_PLPresent"     = {PLPresent=1;}
 } : dump;

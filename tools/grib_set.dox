@@ -26,17 +26,17 @@
 		As -p adding the declared keys to the default list.
  \n \n -w key[:{s/d/i}]{=/!=}value,key[:{s/d/i}]=value,... \n 
 		Where clause.
-		Set is only executed for grib messages matching all the key/value constraints.
-		If a grib message does not match the constraints it is copied unchanged
-		to the output_grib_file. This behaviour can be changed setting the option -S.
+		Set is only executed for GRIB messages matching all the key/value constraints.
+		If a GRIB message does not match the constraints it is copied unchanged
+		to the output_grib_file. This behaviour can be changed by setting the -S option.
 		A valid constraint is of type key=value or key!=value.
 		For each key a string (key:s), a double (key:d) or an integer (key:i)
 		type can be defined. Default type is string.
  \n \n -7  \n Does not fail when the message has wrong length
- \n \n -S  \n Strict. Only grib messages matching all the constraints are copied to
+ \n \n -S  \n Strict. Only GRIB messages matching all the constraints are copied to
 		the output file
  \n \n -V  \n Version.
- \n \n -M  \n Multi-field support off. Turn off support for multiple fields in single grib message.
+ \n \n -M  \n Multi-field support off. Turn off support for multiple fields in single GRIB message.
  \n \n -g  \n Copy GTS header. 
  \n \n -G  \n GRIBEX compatibility mode.
  \n \n -T T | B | M | A \n Message type. T->GTS, B->BUFR, M->METAR (Experimental),A->Any (Experimental).
@@ -64,9 +64,9 @@ Since some values can not be set to missing you can get an error for those keys.
 \verbatim 
 >grib_set -s scaleFactorOfSecondFixedSurface=missing -w scaleFactorOfSecondFixedSurface!=missing tigge_pf_ecmwf.grib2 out.grib2
 \endverbatim\n
--# It's possible to produce a grib edition 2 file from a grib edition 1 just changing the edition number with grib_set.
+-# It's possible to produce a GRIB edition 2 file from a GRIB edition 1 just changing the edition number with grib_set.
 At this stage of development all the geography parameters, level and time information is correctly translated, for the product
-definition extra set calls must be done. To do this properly, \ref grib_filter is suggested. \n
+definition extra 'set' calls must be done. To do this properly, use the tool grib_filter.\n
 \verbatim 
 grib_set -s edition=2 ../data/reduced_gaussian_pressure_level.grib1
 \endverbatim\n

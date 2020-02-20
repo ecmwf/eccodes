@@ -1,0 +1,75 @@
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+sudo: false
+
+branches:
+  only:
+    - develop
+    - master
+
+language: c
+
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          packages:
+            - libnetcdf-dev
+
+    - os: osx
+      osx_image: xcode10.2
+      addons:
+        homebrew:
+          packages:
+            - netcdf
+
+env:
+  global:
+    - ECCODES_SRC=${TRAVIS_BUILD_DIR}
+    - ECBUILD_SRC=${ECCODES_SRC}/../ecbuild
+    - BUILD_DIR=${ECCODES_SRC}/build
+    - INSTALL_DIR=/tmp/install
+
+git:
+  depth: 1
+
+before_install:
+  - mkdir ${INSTALL_DIR}
+  - export PATH=${PATH}:${INSTALL_DIR}/bin
+
+install:
+  # install ecbuild
+  - git clone --depth 1 https://github.com/ecmwf/ecbuild.git ${ECBUILD_SRC}
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+script:
+  # env vars
+  - echo ${ECCODES_SRC}
+  - echo ${ECBUILD_SRC}
+  - echo ${BUILD_DIR}
+
+  # build ecCodes
+  - mkdir -p ${BUILD_DIR} && cd ${BUILD_DIR}
+  - cmake -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR}
+          -D ENABLE_FORTRAN=0
+          -D ENABLE_PYTHON=0
+          -D ENABLE_NETCDF=1
+          -D ENABLE_JPG=1
+          -D ENABLE_MEMFS=0
+          -D ENABLE_EXTRA_TESTS=ON
+          ${ECCODES_SRC}
+  - make -j4
+  - ctest -j4 --output-on-failure
+  - make install > /dev/null
+
+  # extra sanity tests
+  - codes_info
+  - ls $(codes_info -s)
+  - ls $(codes_info -d)

@@ -15,6 +15,7 @@ set -e
 
 rm -fr ../html/*
 touch ../html/Makefile.am
+doxygen --version
 doxygen grib_api_wiz.cfg
 
 # Do not copy this. Use default generated doxygen.css

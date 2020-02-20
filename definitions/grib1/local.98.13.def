@@ -1,37 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# START 1/local.98.13 ----------------------------------------------------------------------
-# LOCAL 98 13
-#
-# localDefinitionTemplate_013
-# ---------------------------
-#
-# Description            Octet    Code    Ksec1    Count
-# -----------            -----    ----    -----    -----
-#localDefinitionNumber           41      I1      37      -
-#class                           42      I1      38      -
-#type                            43      I1      39      -
-#stream                          44      I2      40      -
-#experimentVersionNumber         46      A4      41      -
-#number                          50      I1      42      -
-#total                           51      I1      43      -
-#directionNumber                 52      I1      44      -
-#frequencyNumber                 53      I1      45      -
-#numberOfDirections              54      I1      46      -
-#numberOfFrequencies             55      I1      47      -
-#directionScalingFactor          56      I4      48      -
-#frequencyScalingFactor          60      I4      49      -
-#flag                            64      F1      -       3
-#scaledDirections                101     LP_I4   50      numberOfDirections
-#scaledFrequencies               -       LP_I4   -       numberOfFrequencies
-#
+# (C) Copyright 2005- ECMWF.
 
 template mars_labeling "grib1/mars_labeling.def";
 
@@ -190,9 +157,7 @@ if(localFlag == 4)
    pad padding_loc13_5(8);
 }
 
- unsigned[4] scaledDirections[numberOfDirections] : dump;
- unsigned[4] scaledFrequencies[numberOfFrequencies] : dump;
+unsigned[4] scaledDirections[numberOfDirections] : dump;
+unsigned[4] scaledFrequencies[numberOfFrequencies] : dump;
 
 constant GRIBEXSection1Problem = 100 + 4 * numberOfDirections + 4 * numberOfFrequencies - section1Length ;
-
-# END   1/local.98.13 ----------------------------------------------------------------------

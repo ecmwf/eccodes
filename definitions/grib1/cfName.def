@@ -56,7 +56,7 @@
 	 table2Version = 3 ;
 	}
 #Mean sea level pressure
-'air_pressure_at_sea_level' = {
+'air_pressure_at_mean_sea_level' = {
 	 indicatorOfParameter = 2 ;
 	 table2Version = 3 ;
 	 indicatorOfTypeOfLevel = 1 ;
@@ -159,7 +159,7 @@
 	 table2Version = 2 ;
 	}
 #Mean sea level pressure
-'air_pressure_at_sea_level' = {
+'air_pressure_at_mean_sea_level' = {
 	 indicatorOfParameter = 2 ;
 	 table2Version = 2 ;
 	 indicatorOfTypeOfLevel = 1 ;
@@ -262,7 +262,7 @@
 	 table2Version = 1 ;
 	}
 #Mean sea level pressure
-'air_pressure_at_sea_level' = {
+'air_pressure_at_mean_sea_level' = {
 	 indicatorOfParameter = 2 ;
 	 table2Version = 1 ;
 	 indicatorOfTypeOfLevel = 1 ;

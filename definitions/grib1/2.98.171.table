@@ -137,7 +137,7 @@
 204 204 - Precipitation analysis weights
 205 205 - Runoff (m)
 206 206 - Total column ozone (kg m**-2)
-207 207 - 10 metre wind speed (m s**-1)
+207 207 10SIA 10 metre wind speed (m s**-1)
 208 208 - Top net solar radiation, clear sky (W m**-2 s)
 209 209 - Top net thermal radiation, clear sky (W m**-2 s)
 210 210 - Surface net solar radiation, clear sky (W m**-2 s)

@@ -12,6 +12,12 @@ set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/memfs.c PROPERTIES OBJE
     # "${PROJECT_SOURCE_DIR}/memfs.py" ${definition_files}"
     )
 
+# No debug symbols on Cray (workaround for HPC-230)
+if( CMAKE_C_COMPILER_ID MATCHES Cray )
+  string( REGEX REPLACE "-g|-G[ 0-3]" " " CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" )
+  string( REGEX REPLACE "-g|-G[ 0-3]" " " CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE_CAPS} "${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE_CAPS}}" )
+endif()
+
 if (HAVE_MEMFS)
     ecbuild_add_library(TARGET    eccodes_memfs
                         SOURCES   ${CMAKE_CURRENT_BINARY_DIR}/memfs.c

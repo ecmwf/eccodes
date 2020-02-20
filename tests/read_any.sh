@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -13,13 +13,13 @@
 infile=${data_dir}/mixed.grib
 outfile=${data_dir}/read_any.out
 
-if [ ! -f ${infile} ]
-then
-  echo no data to test
-  exit 0
-fi
+#if [ ! -f ${infile} ]
+#then
+#  echo no data to test
+#  exit 0
+#fi
 
-$test_dir/read_any $infile > ${outfile}
+$EXEC $test_dir/read_any $infile > ${outfile}
 
 diff ${outfile} ${data_dir}/read_any.ok
 

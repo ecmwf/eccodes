@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\src;..\..\..\tools;..\..\..\jasper-1.900.1\src\libjasper\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;IEEE;JAS_WIN_MSVC_BUILD;HAVE_STRING_H;YY_NO_UNISTD_H"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;IEEE;JAS_WIN_MSVC_BUILD;HAVE_STRING_H"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -113,7 +113,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\src;..\..\..\tools;..\..\..\jasper-1.900.1\src\libjasper\include"
-				PreprocessorDefinitions="WIN32;_WIN64;_DEBUG;_LIB;IEEE;HAVE_STRING_H;YY_NO_UNISTD_H"
+				PreprocessorDefinitions="WIN32;_WIN64;_DEBUG;_LIB;IEEE;HAVE_STRING_H"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -182,7 +182,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\..\..\src;..\..\..\tools;..\..\..\jasper-1.900.1\src\libjasper\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;IEEE;JAS_WIN_MSVC_BUILD;HAVE_STRING_H;YY_NO_UNISTD_H"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;IEEE;JAS_WIN_MSVC_BUILD;HAVE_STRING_H"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -251,7 +251,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\..\..\src;..\..\..\tools;..\..\..\jasper-1.900.1\src\libjasper\include"
-				PreprocessorDefinitions="WIN32;_WIN64;NDEBUG;_LIB;IEEE;HAVE_STRING_H;YY_NO_UNISTD_H"
+				PreprocessorDefinitions="WIN32;_WIN64;NDEBUG;_LIB;IEEE;HAVE_STRING_H"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -681,6 +681,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\grib_accessor_class_data_g2bifourier_packing.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\grib_accessor_class_data_g2complex_packing.c"
 				>
 			</File>
@@ -842,6 +846,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_accessor_class_g1verificationdate.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_accessor_class_g2_aerosol.c"
 				>
 			</File>
 			<File
@@ -1337,10 +1345,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_accessor_classes_hash.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\grib_api_version.c"
 				>
 			</File>
@@ -1438,6 +1442,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_dumper_class_bufr_encode_python.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\grib_dumper_class_bufr_simple.c"
 				>
 			</File>
 			<File
@@ -1828,10 +1836,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\grib_emoslib.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\grib_expression.h"
 				>
 			</File>
 			<File

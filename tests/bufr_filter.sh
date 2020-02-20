@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -45,7 +45,7 @@ bufr_files=`cat bufr_data_files.txt`
 for f in ${bufr_files} ; do
    echo "file: $f" >> $fLog
    ${tools_dir}/codes_bufr_filter $fRules $f >> $fLog
-   ${tools_dir}/bufr_filter       $fRules $f >> $fLog  # See ECC-205
+   ${tools_dir}/codes_bufr_filter       $fRules $f >> $fLog  # See ECC-205
 done
 
 #-----------------------------------------------------------
@@ -76,7 +76,7 @@ if (statid == 1003) {
 }		
 EOF
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_multi.bufr"
 echo "Test: filter SYNOP message according to conditions" >> $fLog
@@ -418,6 +418,7 @@ rm -f ${f}.ref ${f}.log
 #rm -f new_*bufr 
 #rm -f $testScript $testScript1
 
+
 #-----------------------------------------------------------
 # Test:  packing   
 #-----------------------------------------------------------
@@ -470,13 +471,24 @@ EOF
 f="ship_9.bufr"
 echo "Test: get string" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
-
 ${tools_dir}/codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
-cat > ${f}.ref <<EOF
-WYM9567
+echo "WYM9567" > ${f}.ref
+
+diff ${f}.ref ${f}.log 
+
+rm -f ${f}.ref ${f}.log
+
+#-----------------------------------------------------------
+# Test:  get string whose value is MISSING (ECC-650)
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+ set unpack=1;
+ print "[shipOrMobileLandStationIdentifier]";
 EOF
 
+f="btem_109.bufr"
+${tools_dir}/codes_bufr_filter $fRules $f 2> ${f}.log 1> ${f}.log
+echo "MISSING" > ${f}.ref
 diff ${f}.ref ${f}.log 
 
 rm -f ${f}.ref ${f}.log
@@ -485,10 +497,10 @@ rm -f ${f}.ref ${f}.log
 # Test:  get string array and stringValues
 #-----------------------------------------------------------
 cat > $fRules <<EOF
-set unpack=1;
-print "[stringValues!1]";
-print "====";
-print "[stationOrSiteName!1]";
+ set unpack=1;
+ print "[stringValues!1]";
+ print "====";
+ print "[stationOrSiteName!1]";
 EOF
 
 f="synop_multi_subset.bufr"
@@ -534,10 +546,8 @@ rm -f ${f}.ref ${f}.log
 #-----------------------------------------------------------
 # Test: with nonexistent keys.
 #-----------------------------------------------------------
-
-#Here "centre" is misspelled!!!
 cat > $fRules <<EOF
-set center="98";
+ set center="98";   #Here centre is misspelled
 EOF
 
 # Invoke without -f i.e. should fail if error encountered
@@ -560,10 +570,8 @@ ${tools_dir}/codes_bufr_filter -f $fRules $f 2>>$fLog 1>>$fLog
 #-----------------------------------------------------------
 # Test: with not allowed key values
 #-----------------------------------------------------------
-
-#Here 1024 is out of range for centre (it is 8-bit only)
 cat > $fRules <<EOF
-set centre=1024;
+ set centre=1024;  #1024 is out of range (it is 8-bit only)
 EOF
 
 # Invoke without -f i.e. should fail if error encountered
@@ -586,37 +594,32 @@ ${tools_dir}/codes_bufr_filter -f $fRules $f 2>>$fLog 1>>$fLog
 #----------------------------------------------------
 # Test: format specifier for integer keys
 #----------------------------------------------------
-
-#TODO: when ECC-36 is fixed we need to enable the output check again.
-
+#See ECC-36. bufrHeaderCentre is aliased 'centre'
 cat > $fRules <<EOF
-# Pad center with leading zeroes and heightOfStation with blanks
-set unpack=1;
-print "centre=[centre%.3d], height=[heightOfStation%5ld]";
+ # Pad center with leading zeroes and heightOfStation with blanks
+ set unpack=1;
+ print "centre={[centre%.3d',']}, height=[heightOfStation%5ld]";
 EOF
 
 f="syno_1.bufr"
 echo "Test: nformat specifier for integer keys" >> $fLog
 echo "file: $f" >> $fLog
 result=`${tools_dir}/codes_bufr_filter  $fRules $f`
-#[ "$result" = "centre=098, height=    3" ]
-
+[ "$result" = "centre={098,098}, height=    3" ]
 
 #----------------------------------------------------
 # Test: setting keys 
 #----------------------------------------------------
-
 #TODO: when ECC-37 is fixed we need to enable it.
-
 #Filter out the message with stationid=1003
 cat > $fRules <<EOF
-set unpack=1;
-set typicalDate="20010511";
-set year=2001;
-set airTemperatureAt2M=234.5;
+ set unpack=1;
+ set typicalDate="20010511";
+ set year=2001;
+ set airTemperatureAt2M=234.5;
 EOF
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_1.bufr"
 echo "Test: setting keys" >> $fLog
@@ -625,8 +628,8 @@ echo "file: $f" >> $fLog
 
 #Check if the resulting bufr message is the right one
 cat > $fRules <<EOF
-set unpack=1;
-print "[typicalDate] [year] [airTemperatureAt2M%.1f]";
+ set unpack=1;
+ print "[typicalDate] [year] [airTemperatureAt2M%.1f]";
 EOF
 
 #[ `${tools_dir}/codes_bufr_filter $fRules $fBufrTmp` = "20010511 2001 234.5" ]
@@ -634,7 +637,7 @@ EOF
 #Clean up
 rm -f ${dSplit}/*
 rm -f $fLog $fRules 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 #-----------------------------------------------------------
 # Test: set unexpandedDescriptors no create new data
@@ -645,15 +648,14 @@ echo "Test: set unexpandedDescriptors no create new data" >> $fLog
 echo "file: $f" >> $fLog
 
 cat >$fRules <<EOF
-set unpack=1;
-set createNewData=0;
-set unexpandedDescriptors={307005,13023,13013,222000,101049,31031,1031,1032,101049,33007};
+ set unpack=1;
+ set createNewData=0;
+ set unexpandedDescriptors={307005,13023,13013,222000,101049,31031,1031,1032,101049,33007};
 write;
-
 EOF
 
 ${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f 2>> $fLog 1>> $fLog
-${tools_dir}/bufr_compare ${f}.out $f 2>> $fLog 1>> $fLog
+${tools_dir}/bufr_compare ${f}.out $f #2>> $fLog 1>> $fLog
 
 rm -f  ${f}.out 
 
@@ -667,12 +669,12 @@ echo "Test: set BUFRTemplate" >> $fLog
 echo "file: $f" >> $fLog
 
 cat >$fRules <<EOF
-set BufrTemplate="synopLand";
-write;
+ set BufrTemplate="synopLand";
+ write;
 EOF
 
 ${tools_dir}/codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
-${tools_dir}/bufr_compare $fOut $fRef 2>> $fLog 1>> $fLog
+${tools_dir}/bufr_compare $fOut $fRef #2>> $fLog 1>> $fLog
 
 rm -f $fOut 
 
@@ -680,12 +682,12 @@ fOut="airep.bufr.out"
 fRef="airep.bufr.out.ref"
 
 cat >$fRules <<EOF
-set BufrTemplate="aircraftReportWithSecondsAndPressure";
-write;
+ set BufrTemplate="aircraftReportWithSecondsAndPressure";
+ write;
 EOF
 
 ${tools_dir}/codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
-${tools_dir}/bufr_compare $fOut $fRef 2>> $fLog 1>> $fLog
+${tools_dir}/bufr_compare $fOut $fRef #2>> $fLog 1>> $fLog
 
 rm -f $fOut 
 
@@ -698,33 +700,32 @@ echo "Test: set keys in data section" >> $fLog
 echo "file: $f" >> $fLog
 
 cat >$fRules <<EOF
-set masterTablesVersionNumber=20;
-set localTablesVersionNumber=0;
-set compressedData=1;
-set numberOfSubsets=10;
-set unexpandedDescriptors={311001};
+ set masterTablesVersionNumber=20;
+ set localTablesVersionNumber=0;
+ set compressedData=1;
+ set numberOfSubsets=10;
+ set unexpandedDescriptors={311001};
 
-set windSpeed={1,2,3,4,5,6,7,8,9,10};
-set windDirection={5,3,4,5,6,7,8,9,10,11};
-set aircraftFlightNumber={"ABCD","dfasd","qwerqwe","3241234","ywer","ABCD","dfasd","qwerqwe","3241234","erwe"};
+ set windSpeed={1,2,3,4,5,6,7,8,9,10};
+ set windDirection={5,3,4,5,6,7,8,9,10,11};
+ set aircraftFlightNumber={"ABCD","dfasd","qwerqwe","3241234","ywer","ABCD","dfasd","qwerqwe","3241234","erwe"};
 
-set pack=1;
-write;
-
+ set pack=1;
+ write;
 EOF
 
 ${tools_dir}/codes_bufr_filter -o ${fout} $fRules $f 2>> $fLog 1>> $fLog
-${tools_dir}/bufr_compare $fout ${fout}.ref 2>> $fLog 1>> $fLog
+${tools_dir}/bufr_compare $fout ${fout}.ref #2>> $fLog 1>> $fLog
 
 #-----------------------------------------------------------
 # ECC-147
 #-----------------------------------------------------------
 cat > $fRules <<EOF
-set unpack=1;
-set relativeHumidity=27;
-set horizontalVisibility=1500;
-set pack=1;
-write;
+ set unpack=1;
+ set relativeHumidity=27;
+ set horizontalVisibility=1500;
+ set pack=1;
+ write;
 EOF
 
 f="syno_1.bufr"
@@ -748,16 +749,16 @@ rm -f $fRules ${fout} $fLog
 # Test:  access subsets by condition 
 #-----------------------------------------------------------
 cat > $fRules <<EOF
-set unpack=1;
-print "stationId=[/subsetNumber=6/blockNumber!%.2d][/subsetNumber=6/stationNumber!%.3d]";
-print "latitude=[/subsetNumber=6/latitude]";
-print "longitude=[/subsetNumber=6/longitude]";
-print "airTemperature=[/subsetNumber=6/airTemperature]";
-print "--------";
-print "stationId=[/subsetNumber=9/blockNumber!%.2d][/subsetNumber=9/stationNumber!%.3d]";
-print "latitude=[/subsetNumber=9/latitude]";
-print "longitude=[/subsetNumber=9/longitude]";
-print "airTemperature=[/subsetNumber=9/airTemperature]";
+ set unpack=1;
+ print "stationId=[/subsetNumber=6/blockNumber!%.2d][/subsetNumber=6/stationNumber!%.3d]";
+ print "latitude=[/subsetNumber=6/latitude]";
+ print "longitude=[/subsetNumber=6/longitude]";
+ print "airTemperature=[/subsetNumber=6/airTemperature]";
+ print "--------";
+ print "stationId=[/subsetNumber=9/blockNumber!%.2d][/subsetNumber=9/stationNumber!%.3d]";
+ print "latitude=[/subsetNumber=9/latitude]";
+ print "longitude=[/subsetNumber=9/longitude]";
+ print "airTemperature=[/subsetNumber=9/airTemperature]";
 EOF
 
 f="synop_multi_subset.bufr"
@@ -786,8 +787,8 @@ rm -f ${f}.ref ${f}.log
 # Test:  access subsets and attribute by condition 
 #-----------------------------------------------------------
 cat > $fRules <<EOF
-set unpack=1;
-print "/subsetNumber=1/airTemperature->percentConfidence=[/subsetNumber=1/airTemperature->percentConfidence] [/subsetNumber=1/airTemperature->percentConfidence->units]";
+ set unpack=1;
+ print "/subsetNumber=1/airTemperature->percentConfidence=[/subsetNumber=1/airTemperature->percentConfidence] [/subsetNumber=1/airTemperature->percentConfidence->units]";
 EOF
 
 f="amda_144.bufr"
@@ -808,9 +809,9 @@ rm -f $fLog $fRules
 # Test:  set key by rank                           
 #-----------------------------------------------------------
 cat > $fRules <<EOF
-set unpack=1;
-set #4#airTemperature = 300.1;
-print "#4#airTemperature=[#4#airTemperature]";
+ set unpack=1;
+ set #4#airTemperature = 300.1;
+ print "#4#airTemperature=[#4#airTemperature]";
 EOF
 
 f="temp_101.bufr"
@@ -831,30 +832,26 @@ rm -f $fLog $fRules
 # Test:  initialise with given values of delayed replications
 #-----------------------------------------------------------
 cat > $fRules <<EOF
-set localTablesVersionNumber=0;
-set masterTablesVersionNumber=23;
+ set localTablesVersionNumber=0;
+ set masterTablesVersionNumber=23;
 
-set inputDelayedDescriptorReplicationFactor = {2,3};
-print "inputDelayedDescriptorReplicationFactor=[inputDelayedDescriptorReplicationFactor]";
-set inputExtendedDelayedDescriptorReplicationFactor = {3,4};
-print "inputExtendedDelayedDescriptorReplicationFactor=[inputExtendedDelayedDescriptorReplicationFactor]";
+ set inputDelayedDescriptorReplicationFactor = {2,3};
+ print "inputDelayedDescriptorReplicationFactor=[inputDelayedDescriptorReplicationFactor]";
+ set inputExtendedDelayedDescriptorReplicationFactor = {3,4};
+ print "inputExtendedDelayedDescriptorReplicationFactor=[inputExtendedDelayedDescriptorReplicationFactor]";
 
-set numberOfSubsets=2;
+ set numberOfSubsets=2;
+ set unexpandedDescriptors={309052};
+ print "/subsetNumber=1/delayedDescriptorReplicationFactor=[/subsetNumber=1/delayedDescriptorReplicationFactor]";
+ print "/subsetNumber=1/extendedDelayedDescriptorReplicationFactor=[/subsetNumber=1/extendedDelayedDescriptorReplicationFactor]";
+ print "/subsetNumber=2/delayedDescriptorReplicationFactor=[/subsetNumber=2/delayedDescriptorReplicationFactor]";
+ print "/subsetNumber=2/extendedDelayedDescriptorReplicationFactor=[/subsetNumber=2/extendedDelayedDescriptorReplicationFactor]";
 
-set unexpandedDescriptors={309052};
+ set pressure={102400,50000,40000,30000,20000,15000,102400,50000,40000,30000,20000,15000};
+ set pack=1;
 
-print "/subsetNumber=1/delayedDescriptorReplicationFactor=[/subsetNumber=1/delayedDescriptorReplicationFactor]";
-print "/subsetNumber=1/extendedDelayedDescriptorReplicationFactor=[/subsetNumber=1/extendedDelayedDescriptorReplicationFactor]";
-
-print "/subsetNumber=2/delayedDescriptorReplicationFactor=[/subsetNumber=2/delayedDescriptorReplicationFactor]";
-print "/subsetNumber=2/extendedDelayedDescriptorReplicationFactor=[/subsetNumber=2/extendedDelayedDescriptorReplicationFactor]";
-
-set pressure={102400,50000,40000,30000,20000,15000,102400,50000,40000,30000,20000,15000};
-set pack=1;
-
-print "pressure={[pressure!12',']}";
-
-write;
+ print "pressure={[pressure!12',']}";
+ write;
 EOF
 
 f="syno_1.bufr"
@@ -885,10 +882,9 @@ rm -f $fLog $fRules ${fOut}
 # Test:  add section 2
 #-----------------------------------------------------------
 cat > $fRules <<EOF
-set bufrHeaderCentre=98;
-set section2Present=1;
-
-write;
+ set bufrHeaderCentre=98;
+ set section2Present=1;
+ write;
 EOF
 
 f="vos308014_v3_26.bufr"
@@ -919,24 +915,24 @@ rm -f $fLog $fRules ${fOut}
 # Test:  extract subsets uncompressed data
 #-----------------------------------------------------------
 cat > $fRules <<EOF
-set unpack=1;
+ set unpack=1;
 
-set extractSubset=4;
-set doExtractSubsets=1;
-write;
+ set extractSubset=4;
+ set doExtractSubsets=1;
+ write;
 
-set extractSubset=2;
-set doExtractSubsets=1;
-write;
+ set extractSubset=2;
+ set doExtractSubsets=1;
+ write;
 
-set extractSubsetIntervalStart=5;
-set extractSubsetIntervalEnd=8;
-set doExtractSubsets=1;
-write;
+ set extractSubsetIntervalStart=5;
+ set extractSubsetIntervalEnd=8;
+ set doExtractSubsets=1;
+ write;
 
-set extractSubsetList={1,3};
-set doExtractSubsets=1;
-write;
+ set extractSubsetList={1,3};
+ set doExtractSubsets=1;
+ write;
 EOF
 
 f="synop_multi_subset.bufr"
@@ -1013,7 +1009,7 @@ fOut="g2nd_208.bufr.out"
 
 echo "Test: extract subsets compressed data" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}/codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
 
 cat > ${fRules} <<EOF
 set unpack=1;
@@ -1025,7 +1021,7 @@ print "orbitNumber=[orbitNumber!10]";
 print "casRegistryNumber=[casRegistryNumber!10]";
 EOF
 
-${tools_dir}/bufr_filter $fRules $fOut  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $fOut  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 === message number 1
@@ -1062,7 +1058,7 @@ f="gosat.bufr"
 
 echo "Test: firstOrderStatistics" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_filter $fRules $f  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $f  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 decimalScaleOfFollowingSignificands->firstOrderStatisticalValue=-15 -15 -15 -15 -15 -15 -15 -15 -15 -15 
@@ -1086,22 +1082,20 @@ rm -f $fLog $fRules
 # Test:  delayed replication compressed data
 #-----------------------------------------------------------
 cat > $fRules <<EOF
-set localTablesVersionNumber=1;
-set masterTablesVersionNumber=13;
+ set localTablesVersionNumber=1;
+ set masterTablesVersionNumber=13;
 
+ set inputDelayedDescriptorReplicationFactor = {5};
+ set compressedData=1;
+ set numberOfSubsets=2;
 
-set inputDelayedDescriptorReplicationFactor = {5};
-set compressedData=1;
-set numberOfSubsets=2;
+ set unexpandedDescriptors={312061};
 
-set unexpandedDescriptors={312061};
+ set #1#windSpeedAt10M={10,20};
+ set #3#windSpeedAt10M={30,40};
 
-set #1#windSpeedAt10M={10,20};
-set #3#windSpeedAt10M={30,40};
-
-set pack=1;
-
-write;
+ set pack=1;
+ write;
 EOF
 
 f="asel_139.bufr"
@@ -1109,7 +1103,7 @@ fOut="asel_139.bufr.out"
 
 echo "Test: delayed replication compressed data" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}/codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
 
 cat > ${fRules} <<EOF
 set unpack=1;
@@ -1120,7 +1114,7 @@ print "#3#windSpeedAt10M=[#3#windSpeedAt10M]";
 print "#5#windSpeedAt10M=[#5#windSpeedAt10M]";
 EOF
 
-${tools_dir}/bufr_filter $fRules $fOut  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $fOut  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 delayedDescriptorReplicationFactor=5
@@ -1161,7 +1155,7 @@ fOut="out.bufr"
 
 echo "Test: create new BUFR with bitmap" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+${tools_dir}/codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
 
 cat > ${fRules} <<EOF
 set unpack=1;
@@ -1170,7 +1164,7 @@ print "delayedDescriptorReplicationFactor=[delayedDescriptorReplicationFactor!20
 print "dataPresentIndicator=[dataPresentIndicator!20]";
 EOF
 
-${tools_dir}/bufr_filter $fRules $fOut  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $fOut  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 delayedDescriptorReplicationFactor=4 1 4 15 2 2
@@ -1213,7 +1207,7 @@ f="go15_87.bufr"
 echo "Test: create new BUFR with bitmap" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter $fRules $f  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $f  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 numberOfSubsets=128
@@ -1317,10 +1311,10 @@ rm -f ${f}.log ${f}.log.ref
 # Test: Data with two bias correction wrong bitmap
 #-----------------------------------------------------------
 cat > $fRules <<EOF
-set unpack=1;
-print "[nonCoordinatePressure->percentConfidence]";
-print "[nonCoordinatePressure->differenceStatisticalValue]";
-print "[nonCoordinatePressure->differenceStatisticalValue->differenceStatisticalValue]";
+ set unpack=1;
+ print "[nonCoordinatePressure->percentConfidence]";
+ print "[nonCoordinatePressure->differenceStatisticalValue]";
+ print "[nonCoordinatePressure->differenceStatisticalValue->differenceStatisticalValue]";
 EOF
 
 f="metar_with_2_bias.bufr"
@@ -1328,7 +1322,7 @@ f="metar_with_2_bias.bufr"
 echo "Test: Data with two bias correction wrong bitmap" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter $fRules $f  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $f  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 70
@@ -1355,7 +1349,7 @@ f="temp-land-with-substituted-values.bufr"
 echo "Test: Data with substituted value" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter $fRules $f  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $f  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 110
@@ -1382,7 +1376,7 @@ f="syno_1.bufr"
 echo "Test: Nested delayed replication" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter $fRules $f  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $f  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 -1e+100 -1e+100 2 -1e+100 -1e+100 3 -1e+100 -1e+100 
@@ -1409,7 +1403,7 @@ f="imssnow.bufr"
 echo "Test: Simple thinning" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter -o ${f}.out $fRules $f
+${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
 
 cat > $fRules <<EOF
 set unpack=1;
@@ -1418,7 +1412,7 @@ print "longitude=[longitude]";
 print "height=[height]";
 EOF
 
-${tools_dir}/bufr_filter $fRules ${f}.out > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules ${f}.out > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 latitude=4.93301 5.17216 5.40243 5.62361 7.86075
@@ -1446,7 +1440,7 @@ f="go15_87.bufr"
 echo "Test: subset extraction constant values" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter -o ${f}.out $fRules $f
+${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
 
 cat > $fRules <<EOF
 set unpack=1;
@@ -1456,14 +1450,14 @@ set doExtractSubsets=1;
 write;
 EOF
 
-${tools_dir}/bufr_filter -o ${f}.out.out $fRules ${f}.out
+${tools_dir}/codes_bufr_filter -o ${f}.out.out $fRules ${f}.out
 
 cat > $fRules <<EOF
 set unpack=1;
 print "latitude=[latitude]";
 EOF
 
-${tools_dir}/bufr_filter $fRules ${f}.out.out > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules ${f}.out.out > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 latitude=0
@@ -1488,14 +1482,14 @@ f="amsu_55.bufr"
 echo "Test: fix for ECC-389" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter -o ${f}.out $fRules $f
+${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
 
 cat > $fRules <<EOF
 set unpack=1;
 print "[#14#brightnessTemperature]";
 EOF
 
-${tools_dir}/bufr_filter $fRules ${f}.out > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules ${f}.out > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 266.53
@@ -1519,7 +1513,7 @@ f="bssh_176.bufr"
 
  # This should fail. Out of Range
 set +e
-${tools_dir}/bufr_filter -o ${f}.out $fRules $f
+${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
 status=$?
 set -e
 [ $status -ne 0 ]
@@ -1534,7 +1528,7 @@ cat > $fRules <<EOF
  print "airTemperature=[airTemperature], width=[airTemperature->width]";
  write;
 EOF
-${tools_dir}/bufr_filter -o ${f}.out $fRules $f > ${f}.log
+${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 airTemperature=$HIGH_TEMPERATURE, width=26
@@ -1587,7 +1581,7 @@ f="syno_1.bufr"
 echo "Test: Julian Date" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/bufr_filter $fRules $f  > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $f  > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 match

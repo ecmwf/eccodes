@@ -1,0 +1,108 @@
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+version: 2.17.0-{build}-{branch}
+
+branches:
+  only:
+    - develop
+    - master
+
+image: Visual Studio 2015
+
+environment:
+  CONDA: c:\Miniconda37-x64
+  ECMWF: c:\ecmwf
+  GIT_CLONE_DIR: $(ECMWF)\git
+  INSTALL_DIR: $(ECMWF)\install
+  ECCODES_SRC: $(GIT_CLONE_DIR)\eccodes
+  WINDOWS_TESTING_BASHRC: $(ECCODES_SRC)\tests\windows_testing.bashrc
+  ECBUILD_SRC: $(GIT_CLONE_DIR)\ecbuild
+
+# scripts that are called at very beginning, before repo cloning
+init:
+  # make sure git clones symlinks as symlinks
+  - cmd: git config --global core.symlinks true
+    # activate conda environment so the tests can find linux utils
+  - cmd: call %CONDA%\Scripts\activate.bat
+    # add eccodes\build\bin to path so tests can find eccodes.dll
+  - cmd: set PATH=%PATH%;%ECCODES_SRC%\build\bin
+    # auto-yes for conda
+  - cmd: conda config --set always_yes yes
+
+clone_folder: $(ECCODES_SRC)
+
+clone_depth: 1
+
+# scripts that run after cloning repository
+install:
+  # install ecbuild
+  - cmd: git clone --depth 1 https://github.com/ecmwf/ecbuild.git %ECBUILD_SRC%
+
+    # install linux utils
+  - cmd: conda install -c msys2 m2-bash ^
+                                m2-findutils ^
+                                m2-coreutils ^
+                                m2-grep ^
+                                m2-sed ^
+                                m2-gawk ^
+                                m2-diffutils ^
+                                m2-perl ^
+                                m2w64-ntldd-git
+
+    # get deps
+  - cmd: conda install -c conda-forge cmake libnetcdf
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+platform:
+  - x64
+
+before_build:
+  - cmd: call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
+  - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
+
+build_script:
+  - cmd: cd %ECCODES_SRC%
+  - cmd: mkdir build && cd build
+  - cmd: cmake -G "NMake Makefiles" ^
+               -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
+               -D CMAKE_BUILD_TYPE=Release ^
+               -D ENABLE_FORTRAN=0 ^
+               -D ENABLE_PYTHON=0 ^
+               -D ENABLE_NETCDF=1 ^
+               -D ENABLE_JPG=1 ^
+               -D IEEE_LE=1 ^
+               -D ENABLE_MEMFS=0 ^
+               -D ENABLE_EXTRA_TESTS=ON ^
+               -D WINDOWS_TESTING_BASHRC=%WINDOWS_TESTING_BASHRC% ^
+               ..
+  - cmd: nmake
+  - cmd: ctest --output-on-failure
+  - cmd: nmake install
+
+#---------------------------------#
+#       tests configuration       #
+#---------------------------------#
+
+test_script:
+  - cmd: codes_info
+  - cmd: for /F "tokens=* USEBACKQ" %%F IN (`codes_info -s`) DO (ls %%F)
+  - cmd: for /F "tokens=* USEBACKQ" %%F IN (`codes_info -d`) DO (ls %%F)
+
+#---------------------------------#
+#         notifications           #
+#---------------------------------#
+
+notifications:
+
+  # Email
+  - provider: Email
+    to:
+      - shahram.najm@ecmwf.int
+    subject: 'Build {{status}}'                  # optional
+    message: "{{message}}, {{commitId}}, ..."    # optional
+    on_build_success: false

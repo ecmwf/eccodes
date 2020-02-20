@@ -13,13 +13,14 @@ STRING(REGEX REPLACE "\n" ";" bufr_refs_to_download "${bufr_refs_to_download}")
 
 # Exceptional case: download bufr files which have to be treated specially
 LIST(APPEND bufr_refs_to_download "vos308014_v3_26.bufr")  # See test ecc-197
-LIST(APPEND bufr_refs_to_download "israel_observations_2017041010.bufr")  # See test ecc-313
 
-ecbuild_get_test_multidata(
-     TARGET eccodes_download_bufrs
-     NOCHECK
-     NAMES ${bufr_files_to_download} ${bufr_refs_to_download}
-)
+if( ENABLE_EXTRA_TESTS )
+    ecbuild_get_test_multidata(
+         TARGET eccodes_download_bufrs
+         NOCHECK
+        NAMES ${bufr_files_to_download} ${bufr_refs_to_download}
+    )
+endif()
 
 # Copy other files - e.g. text files etc from the source data/bufr dir
 LIST(APPEND other_files

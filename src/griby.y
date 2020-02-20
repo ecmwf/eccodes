@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -273,14 +273,14 @@ all        : empty        { grib_parser_all_actions = 0;grib_parser_concept=0;
 empty:;
 
 
-dvalues :  FLOAT  { $$=grib_darray_push(0,0,$1);}
-    |  dvalues ',' FLOAT { $$=grib_darray_push(0,$1,$3);}
-    |  INTEGER { $$=grib_darray_push(0,0,$1);}
-    |  dvalues ',' INTEGER { $$=grib_darray_push(0,$1,$3);}
+dvalues :  FLOAT  { $$=grib_darray_push(grib_parser_context,0,$1);}
+    |  dvalues ',' FLOAT { $$=grib_darray_push(grib_parser_context,$1,$3);}
+    |  INTEGER { $$=grib_darray_push(grib_parser_context,0,$1);}
+    |  dvalues ',' INTEGER { $$=grib_darray_push(grib_parser_context,$1,$3);}
    ;
 
-svalues : STRING { $$=grib_sarray_push(0,0,$1);}
-    |  svalues ',' STRING { $$=grib_sarray_push(0,$1,$3);}
+svalues : STRING { $$=grib_sarray_push(grib_parser_context,0,$1);}
+    |  svalues ',' STRING { $$=grib_sarray_push(grib_parser_context,$1,$3);}
     ;
 
 

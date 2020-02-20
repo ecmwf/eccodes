@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -230,7 +230,7 @@ int main(int argc, char* argv[]) {
 
   char finname[]="sh.grib";
 
-  fin = fopen(finname,"r");
+  fin = fopen(finname,"rb");
   if(!fin) {perror(finname);exit(1);}
 
   c=grib_context_get_default();
@@ -268,7 +268,7 @@ int main(int argc, char* argv[]) {
                       ksec4,gvalues,nvalues, buf,&gribex_msg_len,"C"));
 
 
-  fout=fopen("out_gribex.grib","w");
+  fout=fopen("out_gribex.grib","wb");
 	if (!fout) {perror("out_gribex.grib");exit(1);}
 	if (fwrite(buf,1,gribex_msg_len,fout)!=gribex_msg_len) {
 		perror("out_gribex.grib"); exit(1);

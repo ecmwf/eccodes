@@ -1,6 +1,7 @@
 # stepType for JMA
-# set uses the FIRST one
-# get returns the LAST match
+# In case of a repeated entry:
+#  set uses the FIRST one
+#  get returns the LAST match
 
 "instant" = {timeRangeIndicator=1;}
 "instant" = {timeRangeIndicator=10;}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -407,7 +407,7 @@ int main(int argc, char* argv[]) {
   err_threshold=atof(argv[++argi]);
   finname=argv[++argi];
 
-  fin = fopen(finname,"r");
+  fin = fopen(finname,"rb");
   if(!fin) {perror(finname);exit(1);}
 
   c=grib_context_get_default();
@@ -483,7 +483,7 @@ int main(int argc, char* argv[]) {
     /* writing the output grib files if required */
     if (write_grib == 1) {
 	  if (!foutgribex) {
-	    foutgribex=fopen(foutnamegribex,"w");
+	    foutgribex=fopen(foutnamegribex,"wb");
 		  if (!foutgribex) {
 		     perror(foutnamegribex);
 		     exit(1);
@@ -502,7 +502,7 @@ int main(int argc, char* argv[]) {
     if (write_grib == 2) {
       GRIB_CHECK(grib_get_message(h,&msg,&msg_len),0);
 	  if (!foutgrib) {
-	    foutgrib=fopen(foutnamegrib,"w");
+	    foutgrib=fopen(foutnamegrib,"wb");
 		  if (!foutgrib) {
 		     perror(foutnamegrib);
 		     exit(1);

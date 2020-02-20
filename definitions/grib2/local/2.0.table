@@ -26,7 +26,7 @@
 37 37 Ulan Bator
 38 babj Beijing (RSMC)
 40 rksl Seoul
-41 41 Buenos Aires (RSMC/RAFC)
+41 sabm Buenos Aires (RSMC/RAFC)
 43 43 Brasilia (RSMC/RAFC)
 45 45 Santiago
 46 sbsj Brasilian Space Agency - INPE
@@ -42,7 +42,7 @@
 64 64 Honolulu
 65 65 Darwin (RSMC)
 67 67 Melbourne (RSMC)
-69 69 Wellington (RSMC/RAFC)
+69 nzkl Wellington (RSMC/RAFC)
 74 egrr U.K. Met Office - Exeter
 76 76 Moscow (RSMC/RAFC)
 78 edzw Offenbach (RSMC)
@@ -74,6 +74,7 @@
 # 186 to 198 Reserved for centres in Region I which are not listed above
 # 199 to 209 Reserved for centres in Region V which are not in the list above
 195 wiix Indonesia (NMC)
+204 204 National Institute of Water and Atmospheric Research (NIWA - New Zealand)
 210 210 Frascati (ESA/ESRIN)
 211 211 Lannion
 212 212 Lisboa
@@ -93,4 +94,3 @@
 251 251 Meteorological Cooperation on Operational NWP (MetCoOp)
 254 eums EUMETSAT Operation Centre
 1098 tigge TIGGE CENTRES
-

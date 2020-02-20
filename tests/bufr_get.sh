@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,8 +9,6 @@
 #
 
 . ./include.sh
-
-#set -x
 
 #Enter data dir
 cd ${data_dir}/bufr
@@ -31,6 +29,13 @@ rm -f $fTmp
 res_get=${label}".get.test"
 rm -f $res_get
 
+# Check identidier. Edition 3 and 4
+id=`${tools_dir}/bufr_get -p edition,identifier avhn_87.bufr`
+[ "$id" = "3 BUFR" ]
+id=`${tools_dir}/bufr_get -p edition,identifier aaen_55.bufr`
+[ "$id" = "4 BUFR" ]
+
+
 #-------------------------------------------
 # Test "-p" switch
 #-------------------------------------------
@@ -47,7 +52,6 @@ ${tools_dir}/bufr_get -p totalLength,bufrHeaderCentre,bufrHeaderSubCentre,master
 cat $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_get
 diff $ref_get $res_get
 
-
 #-------------------------------------------
 # ECC-236
 #-------------------------------------------
@@ -60,6 +64,27 @@ result=`${tools_dir}/bufr_get -s unpack=1 -p majorFrameCount aaen_55.bufr`
 result=`${tools_dir}/bufr_get -s unpack=1 -p satelliteIdentifier wavb_134.bufr`
 [ "$result" = "MISSING" ]
 
+#-------------------------------------------
+# ECC-315: BUFR keys in the MARS namespace
+#-------------------------------------------
+result=`${tools_dir}/bufr_get -m aaen_55.bufr`
+[ "$result" = "2 55 2012 11 2 0 0 8 209" ]
+result=`${tools_dir}/bufr_get -m syno_1.bufr`
+[ "$result" = "1 1 2012 10 30 0 0 0 7.45 151.83" ]
 
-#Clean up
+#-------------------------------------------
+# Local ECMWF section: 'ident' key
+#-------------------------------------------
+result=`${tools_dir}/bufr_get -p isSatellite,ident syno_1.bufr`
+[ "$result" = "0 91334   " ]
+result=`${tools_dir}/bufr_get -p isSatellite,ident temp_102.bufr`
+[ "$result" = "0 ASDE3   " ]
+result=`${tools_dir}/bufr_get -p isSatellite,ident b004_145.bufr`
+[ "$result" = "0 FAVRTLZA" ]
+
+result=`${tools_dir}/bufr_get -f -p isSatellite,ident b003_56.bufr`
+[ "$result" = "1 not_found" ]
+
+
+# Clean up
 rm -f $fLog $fTmp $res_get

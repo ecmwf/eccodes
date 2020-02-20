@@ -25,6 +25,8 @@ class GribInternalError(Exception):
         return self.msg
 
 
+class FunctionalityNotEnabledError(GribInternalError):
+    """Functionality not enabled."""
 class WrongBitmapSizeError(GribInternalError):
     """Size of bitmap is incorrect."""
 class OutOfRangeError(GribInternalError):
@@ -159,6 +161,7 @@ class EndOfFileError(GribInternalError):
     """End of resource reached."""
 
 ERROR_MAP = {
+    -67 : FunctionalityNotEnabledError,
     -66 : WrongBitmapSizeError,
     -65 : OutOfRangeError,
     -64 : UnsupportedEditionError,

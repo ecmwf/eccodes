@@ -18,7 +18,7 @@ bin_PROGRAMS = grib_histogram big2gribex \
                grib_compare grib_list_keys codes_parser grib_count grib_index_build grib1to2 \
                gg_sub_area_check grib_to_netcdf grib_to_json \
                bufr_count codes_bufr_filter bufr_ls bufr_dump bufr_set bufr_get \
-               bufr_copy bufr_compare bufr_index_build \
+               bufr_copy bufr_compare bufr_index_build codes_split_file \
                gts_copy gts_dump gts_filter gts_ls gts_get gts_compare \
                metar_dump metar_ls metar_compare metar_copy metar_filter metar_get
 
@@ -34,6 +34,7 @@ grib_to_netcdf_SOURCES        =  grib_to_netcdf.c
 grib_to_json_SOURCES          =  grib_to_json.c
 grib_dump_SOURCES             =  grib_dump.c
 grib_count_SOURCES            =  codes_count.c
+codes_split_file_SOURCES      =  codes_split_file.c
 bufr_count_SOURCES            =  codes_count.c
 codes_count_SOURCES           =  codes_count.c
 grib_histogram_SOURCES        =  grib_histogram.c

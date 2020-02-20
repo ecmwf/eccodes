@@ -1,0 +1,11 @@
+0 0 Water level normal
+1 1 Water level much below normal
+2 2 Water level high, but not overflowing
+3 3 Banks overflowing
+4 4 Floating ice (more than half)
+5 5 Thin ice, complete cover, impassable for persons, 0 - 4 cm thick
+6 6 Ice, complete cover, passable for persons, depth unknown
+7 7 Ice, complete cover, 5 - 9 cm thick
+8 8 Ice, complete cover, 10 - 24 cm thick
+9 9 Ice, complete cover, 25 cm or more thick
+15 15 Missing value

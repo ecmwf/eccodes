@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,9 +15,11 @@
 # include <sys/types.h>
 #endif
 
+/*
 #if HAVE_SYS_STAT_H
 # include <sys/stat.h>
 #endif
+*/
 
 #ifdef HAVE_FCNTL_H
 # include <fcntl.h>
@@ -35,6 +37,7 @@
 static pthread_once_t once  = PTHREAD_ONCE_INIT;
 static pthread_mutex_t handle_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t index_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t read_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t multi_handle_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t keys_iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -46,6 +49,7 @@ static void init() {
     pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
     pthread_mutex_init(&handle_mutex,&attr);
     pthread_mutex_init(&index_mutex,&attr);
+    pthread_mutex_init(&read_mutex,&attr);
     pthread_mutex_init(&multi_handle_mutex,&attr);
     pthread_mutex_init(&iterator_mutex,&attr);
     pthread_mutex_init(&keys_iterator_mutex,&attr);
@@ -55,6 +59,7 @@ static void init() {
 static int once = 0;
 static omp_nest_lock_t handle_mutex;
 static omp_nest_lock_t index_mutex;
+static omp_nest_lock_t read_mutex;
 static omp_nest_lock_t multi_handle_mutex;
 static omp_nest_lock_t iterator_mutex;
 static omp_nest_lock_t keys_iterator_mutex;
@@ -67,6 +72,7 @@ static void init()
         {
             omp_init_nest_lock(&handle_mutex);
             omp_init_nest_lock(&index_mutex);
+            omp_init_nest_lock(&read_mutex);
             omp_init_nest_lock(&multi_handle_mutex);
             omp_init_nest_lock(&iterator_mutex);
             omp_init_nest_lock(&keys_iterator_mutex);
@@ -135,6 +141,18 @@ struct l_bufr_keys_iterator {
     l_bufr_keys_iterator* next;
 };
 
+typedef struct l_binary_message l_binary_message;
+struct l_binary_message {
+    size_t size;
+    void* data;
+};
+
+typedef struct l_message_info l_message_info;
+struct l_message_info {
+    off_t offset;
+    size_t size;
+};
+
 static l_grib_handle* handle_set = NULL;
 static l_grib_index* index_set = NULL;
 static l_grib_multi_handle* multi_handle_set = NULL;
@@ -142,6 +160,8 @@ static l_grib_file*   file_set   = NULL;
 static l_grib_iterator* iterator_set = NULL;
 static l_grib_keys_iterator* keys_iterator_set = NULL;
 static l_bufr_keys_iterator* bufr_keys_iterator_set = NULL;
+static grib_oarray* binary_messages = NULL;
+static grib_oarray* info_messages = NULL;
 
 static char* cast_char(char* buf, char* fortstr,int len)
 {
@@ -238,7 +258,7 @@ static int push_file(FILE* f,char* buffer)
 
 static void _push_handle(grib_handle *h,int *gid)
 {
-    l_grib_handle* current= handle_set;
+    l_grib_handle* current= NULL;
     l_grib_handle* previous= handle_set;
     l_grib_handle* the_new= NULL;
     int myindex= 1;
@@ -296,24 +316,24 @@ static void _push_handle(grib_handle *h,int *gid)
 
 static void _push_index(grib_index *h,int *gid)
 {
-    l_grib_index* current= index_set;
+    l_grib_index* current= NULL;
     l_grib_index* previous= index_set;
     l_grib_index* the_new= NULL;
     int myindex= 1;
 
     /*
-  if (*gid > 0 ) {
-    while(current) {
-      if(current->id == *gid) break;
-      current = current->next;
+    if (*gid > 0 ) {
+      while(current) {
+        if(current->id == *gid) break;
+        current = current->next;
+      }
+      if (current) {
+        grib_index_delete(current->h);
+        current->h=h;
+        return;
+      }
     }
-    if (current) {
-      grib_index_delete(current->h);
-      current->h=h;
-      return;
-    }
-  }
-     */
+    */
 
     if(!index_set){
         index_set = (l_grib_index*)malloc(sizeof(l_grib_index));
@@ -354,24 +374,24 @@ static void _push_index(grib_index *h,int *gid)
 
 static void _push_multi_handle(grib_multi_handle *h,int *gid)
 {
-    l_grib_multi_handle* current= multi_handle_set;
+    l_grib_multi_handle* current= NULL;
     l_grib_multi_handle* previous= multi_handle_set;
     l_grib_multi_handle* the_new= NULL;
     int myindex= 1;
 
     /*
-  if (*gid > 0 ) {
-    while(current) {
-      if(current->id == *gid) break;
-      current = current->next;
+    if (*gid > 0 ) {
+        while(current) {
+          if(current->id == *gid) break;
+          current = current->next;
+        }
+        if (current) {
+          grib_multi_handle_delete(current->h);
+          current->h=h;
+          return;
+        }
     }
-    if (current) {
-      grib_multi_handle_delete(current->h);
-      current->h=h;
-      return;
-    }
-  }
-     */
+    */
 
     if(!multi_handle_set){
         multi_handle_set = (l_grib_multi_handle*)malloc(sizeof(l_grib_multi_handle));
@@ -1622,6 +1642,159 @@ int grib_f_copy_namespace(int* gidsrc,char* name,int* giddest,int len){
 }
 
 /*****************************************************************************/
+int any_f_scan_file(int* fid,int* n) {
+    int err = 0;
+    off_t offset=0;
+    void *data = NULL;
+    size_t olen = 0;
+    l_message_info* msg=0;
+    FILE* f = get_file(*fid);
+    grib_context* c=grib_context_get_default();
+
+    /* this needs a callback to a destructor*/
+    /* grib_oarray_delete_content(c,binary_messages); */
+
+    grib_oarray_delete(c,info_messages);
+    info_messages=grib_oarray_new(c,1000,1000);
+
+    if (f) {
+        while (err!=GRIB_END_OF_FILE) {
+            data = wmo_read_any_from_file_malloc ( f, 0,&olen,&offset,&err );
+            msg=(l_message_info*)grib_context_malloc_clear(c,sizeof(l_message_info));
+            msg->offset=offset;
+            msg->size=olen;
+            
+            if (err==0 && data) grib_oarray_push(c,info_messages,msg);
+            grib_context_free(c,data);
+        }
+        if (err==GRIB_END_OF_FILE) err=0;
+    }
+    *n=info_messages->n;
+    return err;
+}
+int any_f_scan_file_(int* fid,int* n) {
+    return any_f_scan_file(fid,n);
+}
+int any_f_scan_file__(int* fid,int* n) {
+    return any_f_scan_file(fid,n);
+}
+
+int any_f_new_from_scanned_file(int* fid,int* msgid,int* gid)
+{
+    grib_handle *h = NULL;
+    grib_context* c=grib_context_get_default();
+    int err=0;
+    FILE* f = get_file(*fid);
+
+    /* fortran convention of 1 based index*/
+    const int n=*msgid-1;
+
+    l_message_info* msg=(l_message_info*)grib_oarray_get(info_messages,n);
+
+    if (msg && f) {
+        GRIB_MUTEX_INIT_ONCE(&once,&init);
+        GRIB_MUTEX_LOCK(&read_mutex);
+        fseeko(f,msg->offset,SEEK_SET);
+        h=any_new_from_file (c,f,&err);
+        GRIB_MUTEX_UNLOCK(&read_mutex);
+    }
+    if (err) return err;
+
+    if(h){
+        push_handle(h,gid);
+        return GRIB_SUCCESS;
+    } else {
+        *gid=-1;
+        return GRIB_END_OF_FILE;
+    }
+}
+
+int any_f_new_from_scanned_file_(int* fid,int* msgid,int* gid){
+  return any_f_new_from_scanned_file(fid,msgid,gid);
+}
+int any_f_new_from_scanned_file__(int* fid,int* msgid,int* gid){
+  return any_f_new_from_scanned_file(fid,msgid,gid);
+}
+
+/*****************************************************************************/
+int any_f_load_all_from_file(int* fid,int* n) {
+    int err = 0;
+    off_t offset=0;
+    void *data = NULL;
+    size_t olen = 0;
+    l_binary_message* msg=0;
+    FILE* f = get_file(*fid);
+    grib_context* c=grib_context_get_default();
+
+    /* this needs a callback to a destructor*/
+    /* grib_oarray_delete_content(c,binary_messages); */
+
+    grib_oarray_delete(c,binary_messages);
+    binary_messages=grib_oarray_new(c,1000,1000);
+
+    if (f) {
+      while (err!=GRIB_END_OF_FILE) {
+        data = wmo_read_any_from_file_malloc ( f, 0,&olen,&offset,&err );
+        msg=(l_binary_message*)grib_context_malloc_clear(c,sizeof(l_binary_message));
+        msg->data=data;
+        msg->size=olen;
+
+        if (err==0 && data) grib_oarray_push(c,binary_messages,msg);
+      }
+      if (err==GRIB_END_OF_FILE) err=0;
+    }
+    *n=binary_messages->n;
+    return err;
+}
+int any_f_load_all_from_file_(int* fid,int* n) {
+    return any_f_load_all_from_file(fid,n);
+}
+int any_f_load_all_from_file__(int* fid,int* n) {
+    return any_f_load_all_from_file(fid,n);
+}
+
+int any_f_new_from_loaded(int* msgid,int* gid)
+{
+    grib_handle *h = NULL;
+    grib_context* c=grib_context_get_default();
+
+    /* fortran convention of 1 based index*/
+    const int n=*msgid-1;
+
+    l_binary_message* msg=(l_binary_message*)grib_oarray_get(binary_messages,n);
+
+    if (msg && msg->data)
+      h=grib_handle_new_from_message_copy (c,msg->data,msg->size);
+
+    if(h){
+        push_handle(h,gid);
+        return GRIB_SUCCESS;
+    } else {
+        *gid=-1;
+        return GRIB_END_OF_FILE;
+    }
+}
+
+int any_f_new_from_loaded_(int* msgid,int* gid){
+  return any_f_new_from_loaded(msgid,gid);
+}
+int any_f_new_from_loaded__(int* msgid,int* gid){
+  return any_f_new_from_loaded(msgid,gid);
+}
+
+int codes_f_clear_loaded_from_file(void) {
+    grib_context* c=grib_context_get_default();
+    /* grib_oarray_delete_content(c,binary_messages); */
+    grib_oarray_delete(c,binary_messages);
+    return GRIB_SUCCESS;
+}
+int codes_f_clear_loaded_from_file_(void) {
+  return codes_f_clear_loaded_from_file();
+}
+int codes_f_clear_loaded_from_file__(void) {
+  return codes_f_clear_loaded_from_file();
+}
+/*****************************************************************************/
 int grib_f_count_in_file(int* fid,int* n) {
     int err = 0;
     FILE* f = get_file(*fid);
@@ -1914,6 +2087,11 @@ int grib_f_release(int* hid){
 /*****************************************************************************/
 static void do_the_dump(grib_handle* h)
 {
+    /* Add some debugging info too */
+    printf("ecCodes version: ");    grib_print_api_version(stdout);   printf("\n");
+    printf("Definitions path: %s\n", grib_definition_path(NULL));
+    printf("Samples path:     %s\n", grib_samples_path(NULL));
+
     if (h->product_kind == PRODUCT_GRIB)
     {
         const int dump_flags = GRIB_DUMP_FLAG_VALUES
@@ -1980,6 +2158,18 @@ int grib_f_get_error_string__(int* err, char* buf,  int len){
 }
 int grib_f_get_error_string(int* err, char* buf,  int len){
     return grib_f_get_error_string_(err,buf,len);
+}
+
+/*****************************************************************************/
+int grib_f_get_api_version_(int* apiVersion,int len){
+    *apiVersion = grib_get_api_version();
+    return GRIB_SUCCESS;
+}
+int grib_f_get_api_version__(int* apiVersion, int len){
+    return grib_f_get_api_version_(apiVersion, len);
+}
+int grib_f_get_api_version(int* apiVersion, int len){
+    return grib_f_get_api_version_(apiVersion, len);
 }
 
 /*****************************************************************************/
@@ -2214,6 +2404,9 @@ int grib_f_index_get_string_(int* gid, char* key, char* val, int *eachsize,int* 
         p+=l;
         for (j=0;j<*eachsize-l;j++) *(p++)=' ';
     }
+    for (i=0;i<lsize;i++) {
+        grib_context_free(h->context, bufval[i]);
+    }
     grib_context_free(h->context,bufval);
 
     return  err;
@@ -2264,6 +2457,7 @@ int grib_f_index_get_int_(int* gid, char* key, int *val, int* size,  int len){
     for (i=0;i<lsize;i++) val[i]=lval[i];
 
     *size = lsize;
+    grib_context_free(h->context, lval);
     return  err;
 }
 int grib_f_index_get_int__(int* gid, char* key, int *val, int* size,  int len){
@@ -2333,15 +2527,12 @@ int grib_f_set_int_array(int* gid, char* key, int* val, int* size,  int len){
 /*****************************************************************************/
 int grib_f_set_long_array_(int* gid, char* key, long* val, int* size,  int len){
     grib_handle *h = get_handle(*gid);
-    int err = GRIB_SUCCESS;
     char buf[1024];
     size_t lsize = *size;
 
     if(!h) return GRIB_INVALID_GRIB;
 
-    return  grib_set_long_array(h, cast_char(buf,key,len), val, lsize);
-
-    return err;
+    return grib_set_long_array(h, cast_char(buf,key,len), val, lsize);
 }
 int grib_f_set_long_array__(int* gid, char* key, long* val, int* size,  int len){
     return grib_f_set_long_array_( gid,  key,  val,  size,   len);
@@ -3021,9 +3212,10 @@ int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen
     size_t lsize = *nvals;
     char** cval=0;
     char* p=val;
-    grib_context* c=h->context;
+    grib_context* c;
 
     if(!h) return  GRIB_INVALID_GRIB;
+    c=h->context;
 
     cval=(char**)grib_context_malloc_clear(h->context,sizeof(char*)*lsize);
     for (i=0;i<lsize;i++) {
@@ -3076,6 +3268,14 @@ int grib_f_get_string(int* gid, char* key, char* val,  int len, int len2){
     return  grib_f_get_string_( gid,  key,  val,   len,  len2);
 }
 
+static int is_all_spaces(const char *s)
+{
+    while (*s != '\0') {
+        if (!isspace(*s)) return 0;
+        s++;
+    }
+    return 1;
+}
 int grib_f_set_string_(int* gid, char* key, char* val, int len, int len2){
 
     grib_handle *h = get_handle(*gid);
@@ -3088,8 +3288,11 @@ int grib_f_set_string_(int* gid, char* key, char* val, int len, int len2){
     if(!h) return GRIB_INVALID_GRIB;
     
     /* For BUFR, the value may contain spaces e.g. stationOrSiteName='CAMPO NOVO' */
+    /* So do not use cast_char. cast_char_no_cut does not stop at first space */
     val_str = cast_char_no_cut(buf2,val,len2);
-    rtrim( val_str ); /* trim spaces at end of string */
+    if (val_str && !is_all_spaces(val_str)) {
+        rtrim( val_str ); /* trim spaces at end of string */
+    }
 
     return grib_set_string(h, cast_char(buf,key,len), val_str, &lsize);
 }
@@ -3282,6 +3485,31 @@ int grib_f_multi_append(int* ingid, int* sec,int* mgid) {
 int grib_f_multi_append__(int* ingid, int* sec,int* mgid) {
     return grib_f_multi_append_(ingid, sec, mgid);
 }
+
+
+/*****************************************************************************/
+int codes_f_bufr_multi_element_constant_arrays_on_() {
+    codes_bufr_multi_element_constant_arrays_on(NULL);
+    return GRIB_SUCCESS;
+}
+int codes_f_bufr_multi_element_constant_arrays_on__() {
+    return codes_f_bufr_multi_element_constant_arrays_on_();
+}
+int codes_f_bufr_multi_element_constant_arrays_on() {
+    return codes_f_bufr_multi_element_constant_arrays_on_();
+}
+
+int codes_f_bufr_multi_element_constant_arrays_off_() {
+    codes_bufr_multi_element_constant_arrays_off(NULL);
+    return GRIB_SUCCESS;
+}
+int codes_f_bufr_multi_element_constant_arrays_off__() {
+    return codes_f_bufr_multi_element_constant_arrays_off_();
+}
+int codes_f_bufr_multi_element_constant_arrays_off() {
+    return codes_f_bufr_multi_element_constant_arrays_off_();
+}
+
 
 /*****************************************************************************/
 int grib_f_set_definitions_path_(char* path, int len){

@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -23,7 +23,7 @@ default_namespace = 'ls'
 
 
 def do_print(namespace, INPUT):
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
     first_time = True
 
     print('{')
@@ -44,7 +44,7 @@ def do_print(namespace, INPUT):
         f1 = True
         while codes_keys_iterator_next(iterid):
             keyname = codes_keys_iterator_get_name(iterid)
-            keyval = codes_get_string(iterid, keyname)
+            keyval = codes_get_string(gid, keyname)
             if not f1:
                 print(',')
             else:

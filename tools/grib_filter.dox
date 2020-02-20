@@ -125,12 +125,14 @@ Otherwise, the default case is executed. The default case is mandatory if the ca
 The "~" operator can be used to match "anything".\n\n
 Following is an example showing the use of the switch statement:\n
 \verbatim
-processing paramId=[paramId] [shortName] [stepType]
+print 'Processing paramId=[paramId] [shortName] [stepType]';
 switch (shortName) {
-    case tp :
-        set stepType=accum;
-    case 10u :
-        set typeOfLevel=surface;
+    case 'tp' :
+        set stepType='accum';
+        print 'Message #[count]: Total Precipitation';
+    case '10u' :
+        set typeOfLevel='surface';
+        print 'Message #[count]: 10m U-Wind';
     default:
 }
 \endverbatim\n

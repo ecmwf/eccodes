@@ -492,7 +492,7 @@
   !>
   !> @param ifile       id of the opened file to be used in all the file functions.
   !> @param filename    name of the file to be open
-  !> @param mode        open mode can be 'r' (read only) or 'w' (write only)
+  !> @param mode        open mode can be 'r' (read only), 'w' (write only) or 'a' (append)
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_open_file ( ifile, filename, mode, status )
         integer(kind=kindOfInt),intent(out)               :: ifile

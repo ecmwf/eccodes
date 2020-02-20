@@ -7,7 +7,12 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 
 # Build the executables used by test scripts
 ################################################
-list( APPEND tests
+list( APPEND tests_basic
+      grib_set_pv
+      grib_set_data
+      grib_ecc-671
+)
+list( APPEND tests_extra
       grib_index
       grib_copy_message
       bufr_copy_message
@@ -24,8 +29,6 @@ list( APPEND tests
       grib_set_keys
       grib_set_bitmap
       grib_set_missing
-      grib_set_pv
-      grib_set_data
       grib_samples
       grib_count_messages
       grib_count_messages_multi
@@ -52,13 +55,22 @@ list( APPEND tests
       get_product_kind
 )
 
-foreach( tool ${tests} )
-
+foreach( tool ${tests_basic} )
     ecbuild_add_test( TARGET eccodes_f_${tool}
                       SOURCES   ${tool}.f90
                       LINKER_LANGUAGE Fortran
                       LIBS      eccodes_f90 eccodes
                       CONDITION HAVE_FORTRAN
+                      RESOURCES bufr_read_scatterometer_f.ref
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
+    )
+endforeach()
+foreach( tool ${tests_extra} )
+    ecbuild_add_test( TARGET eccodes_f_${tool}
+                      SOURCES   ${tool}.f90
+                      LINKER_LANGUAGE Fortran
+                      LIBS      eccodes_f90 eccodes
+                      CONDITION HAVE_FORTRAN AND ENABLE_EXTRA_TESTS
                       RESOURCES bufr_read_scatterometer_f.ref
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
                       TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs

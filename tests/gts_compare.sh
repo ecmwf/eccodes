@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -55,7 +55,7 @@ if [ $status -eq 0 ]; then
 fi
 
 #----------------------------------------------------
-# Test: comparing with and witout the -b switch
+# Test: comparing with and without the -b switch
 #----------------------------------------------------
 ${tools_dir}//gts_compare -b GG $gts_file $fGtsTmp >> $fLog
 

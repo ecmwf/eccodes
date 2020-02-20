@@ -1,13 +1,3 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-
 constant P_INST = 0;
 constant P_TAVG = 1;
 constant P_TACC = 3;
@@ -44,7 +34,7 @@ meta verificationDate   g1verificationdate(dataDate, dataTime, endStep) : read_o
 
 
 if(horizontalCoordinateDefinition == 0)
-    {
+{
 
         if(coordinate1Flag == 1 )
         {
@@ -191,7 +181,6 @@ if(horizontalCoordinateDefinition == 0)
            alias mars.product = coordAveragingTims;
 # date
 
-
            if(marsType == TYPE_OR  && averaging1Flag == P_INST){
 
                #remove mars.date;
@@ -199,11 +188,6 @@ if(horizontalCoordinateDefinition == 0)
                #remove mars.step;
                constant stepZero = 0;
                alias mars.step =stepZero;
-
            }
-
-
         }
-
-
 }

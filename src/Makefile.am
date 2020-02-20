@@ -247,6 +247,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_select_step_template.c \
 	grib_accessor_class_local_definition.c \
 	grib_accessor_class_g2_eps.c \
+	grib_accessor_class_g2_aerosol.c \
 	grib_accessor_class_g2_chemical.c \
 	grib_accessor_class_g2_mars_labeling.c \
 	grib_accessor_class_transient_darray.c \
@@ -302,6 +303,7 @@ libeccodes_la_prototypes= \
 	grib_dumper_class_bufr_decode_filter.c \
 	grib_dumper_class_bufr_decode_fortran.c \
 	grib_dumper_class_bufr_decode_python.c \
+	grib_dumper_class_bufr_simple.c \
 	grib_dumper_class_json.c \
 	grib_dumper_class_grib_encode_C.c \
 	grib_dumper_class_wmo.c \
@@ -371,11 +373,13 @@ libeccodes_la_prototypes= \
 	grib_iterator_class_regular.c \
 	grib_iterator_class_space_view.c \
 	grib_expression.c \
+	codes_util.c \
 	grib_util.c \
 	bufr_util.c \
 	string_util.c \
 	functions.c \
 	codes_memfs.c \
+	grib_accessor_class_data_g2bifourier_packing.c \
 	grib_optimize_decimal_factor.c \
 	grib_api_version.c
 
@@ -403,7 +407,6 @@ noinst_HEADERS = grib_api_internal.h \
                  grib_dumper_factory.h \
                  grib_accessor_class.h \
                  grib_accessor_factory.h \
-                 grib_expression.h \
                  grib_nearest_class.h \
                  grib_nearest_factory.h \
                  grib_box_class.h \

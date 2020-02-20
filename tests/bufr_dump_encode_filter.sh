@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -37,7 +37,15 @@ fRules=${label}.filter
 #-----------------------------------------------------------
 files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
-exclude="ias1_240.bufr syno_multi.bufr tropical_cyclone.bufr"
+# Exclude BUFR files for various reasosn:
+# ias1_240.bufr: Too large. The filter rules file generated is too big for the parser!
+# tropical_cyclone.bufr: multi-message
+# syno_multi.bufr: multi-message
+# aeolus_wmo_26:   multi-message
+# israel_observations_2017041010.bufr: Suffers from a bug. In filter cannot do:
+#    set #1#3HourPressureChange=-1.6;
+# The hash cannot be followed by a number!
+exclude="ias1_240.bufr syno_multi.bufr tropical_cyclone.bufr aeolus_wmo_26.bufr israel_observations_2017041010.bufr "
 
 for f in $files
 do
@@ -51,15 +59,16 @@ do
 
     ${tools_dir}/bufr_dump -Efilter $f > $fRules
 
-    ${tools_dir}/bufr_filter -o $fBufrTmp $fRules $f
+    ${tools_dir}/codes_bufr_filter -o $fBufrTmp $fRules $f
+
     ${tools_dir}/bufr_compare $fBufrTmp $f
 
-    TEMP_JSON1=${label}.$f.json
-    TEMP_JSON2=${label}.$fBufrTmp.json
-    ${tools_dir}/bufr_dump $f        > $TEMP_JSON1
-    ${tools_dir}/bufr_dump $fBufrTmp > $TEMP_JSON2
-    diff $TEMP_JSON1 $TEMP_JSON2
-    rm -f $TEMP_JSON1 $TEMP_JSON2
+    TEMP_OUT1=${label}.$f.dump.out
+    TEMP_OUT2=${label}.$fBufrTmp.dump.out
+    ${tools_dir}/bufr_dump -p $f        > $TEMP_OUT1
+    ${tools_dir}/bufr_dump -p $fBufrTmp > $TEMP_OUT2
+    diff $TEMP_OUT1 $TEMP_OUT2
+    rm -f $TEMP_OUT1 $TEMP_OUT2
 
     rm -f $fBufrTmp $fRules
   fi

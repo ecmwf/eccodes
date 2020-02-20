@@ -2608,37 +2608,37 @@ grib_yyreduce:
   case 9:
 /* Line 1792 of yacc.c  */
 #line 276 "griby.y"
-    { (grib_yyval.dvalue)=grib_darray_push(0,0,(grib_yyvsp[(1) - (1)].dval));}
+    { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,0,(grib_yyvsp[(1) - (1)].dval));}
     break;
 
   case 10:
 /* Line 1792 of yacc.c  */
 #line 277 "griby.y"
-    { (grib_yyval.dvalue)=grib_darray_push(0,(grib_yyvsp[(1) - (3)].dvalue),(grib_yyvsp[(3) - (3)].dval));}
+    { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,(grib_yyvsp[(1) - (3)].dvalue),(grib_yyvsp[(3) - (3)].dval));}
     break;
 
   case 11:
 /* Line 1792 of yacc.c  */
 #line 278 "griby.y"
-    { (grib_yyval.dvalue)=grib_darray_push(0,0,(grib_yyvsp[(1) - (1)].lval));}
+    { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,0,(grib_yyvsp[(1) - (1)].lval));}
     break;
 
   case 12:
 /* Line 1792 of yacc.c  */
 #line 279 "griby.y"
-    { (grib_yyval.dvalue)=grib_darray_push(0,(grib_yyvsp[(1) - (3)].dvalue),(grib_yyvsp[(3) - (3)].lval));}
+    { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,(grib_yyvsp[(1) - (3)].dvalue),(grib_yyvsp[(3) - (3)].lval));}
     break;
 
   case 13:
 /* Line 1792 of yacc.c  */
 #line 282 "griby.y"
-    { (grib_yyval.svalue)=grib_sarray_push(0,0,(grib_yyvsp[(1) - (1)].str));}
+    { (grib_yyval.svalue)=grib_sarray_push(grib_parser_context,0,(grib_yyvsp[(1) - (1)].str));}
     break;
 
   case 14:
 /* Line 1792 of yacc.c  */
 #line 283 "griby.y"
-    { (grib_yyval.svalue)=grib_sarray_push(0,(grib_yyvsp[(1) - (3)].svalue),(grib_yyvsp[(3) - (3)].str));}
+    { (grib_yyval.svalue)=grib_sarray_push(grib_parser_context,(grib_yyvsp[(1) - (3)].svalue),(grib_yyvsp[(3) - (3)].str));}
     break;
 
   case 15:

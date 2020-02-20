@@ -29,9 +29,10 @@ BUFR (
       gts_filter
       gts_ls
     )  
-      
-!Generic (
+
+Generic (
       codes_count desc
       codes_info desc
+      codes_split_file desc
       )
 

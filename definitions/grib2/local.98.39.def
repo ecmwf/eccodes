@@ -1,13 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# Definition 39 - 4DVar model errors for long window 4Dvar system (inspired by local def 25)
+# Local definition 39: 4DVar model errors for long window 4Dvar system (inspired by local def 25)
 
 unsigned[1] componentIndex  : dump;
 alias mars.number=componentIndex;
@@ -23,4 +14,3 @@ alias local.modelErrorType=modelErrorType;
 unsigned[2] offsetToEndOf4DvarWindow : dump;
 unsigned[2] lengthOf4DvarWindow : dump;
 alias anoffset=offsetToEndOf4DvarWindow;
-

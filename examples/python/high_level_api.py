@@ -29,12 +29,10 @@ TEST_INDEX_OUTPUT = TESTGRIB
 TEST_STEPRANGE = ('0', '12', '18', '24', '6')
 # These keys should be available even if new keys are defined
 KNOWN_GRIB_KEYS = ['7777', 'GRIBEditionNumber', 'N', 'NV',
-                   'Ni', 'Nj', 'PLPresent', 'PVPresent',
-                   'addEmptySection2',
+                   'Ni', 'Nj', 'PLPresent', 'PVPresent', 'addEmptySection2',
                    'addExtraLocalSection', 'alternativeRowScanning',
-                   'angleDivisor', 'angleMultiplier', 'angularPrecision',
-                   'average', 'backgroundProcess',
-                   'basicAngleOfTheInitialProductionDomain',
+                   'angleDivisor', 'angleSubdivisions',
+                   'average', 'backgroundProcess', 'basicAngleOfTheInitialProductionDomain',
                    'binaryScaleFactor', 'bitMapIndicator', 'bitmapPresent',
                    'bitsPerValue', 'bottomLevel', 'centre',
                    'centreDescription', 'cfName', 'cfNameECMF', 'cfVarName',
@@ -62,17 +60,13 @@ KNOWN_GRIB_KEYS = ['7777', 'GRIBEditionNumber', 'N', 'NV',
                    'isHindcast', 'isOctahedral', 'is_uerra',
                    'jDirectionIncrementGiven', 'jPointsAreConsecutive',
                    'jScansPositively', 'julianDay', 'kurtosis', 'latLonValues',
-                   'latitudeOfFirstGridPoint',
-                   'latitudeOfFirstGridPointInDegrees',
-                   'latitudeOfLastGridPoint',
-                   'latitudeOfLastGridPointInDegrees', 'latitudes',
+                   'latitudeOfFirstGridPoint', 'latitudeOfFirstGridPointInDegrees',
+                   'latitudeOfLastGridPoint', 'latitudeOfLastGridPointInDegrees', 'latitudes',
                    'legBaseDate', 'legBaseTime', 'legNumber',
                    'lengthOfHeaders', 'level', 'localDefinitionNumber',
                    'localDir', 'localTablesVersion',
-                   'longitudeOfFirstGridPoint',
-                   'longitudeOfFirstGridPointInDegrees',
-                   'longitudeOfLastGridPoint',
-                   'longitudeOfLastGridPointInDegrees', 'longitudes',
+                   'longitudeOfFirstGridPoint', 'longitudeOfFirstGridPointInDegrees',
+                   'longitudeOfLastGridPoint', 'longitudeOfLastGridPointInDegrees', 'longitudes',
                    'mAngleMultiplier', 'mBasicAngle', 'marsClass',
                    'marsStream', 'marsType', 'masterDir', 'maximum',
                    'md5Headers', 'md5Section1', 'md5Section3', 'md5Section4',
@@ -92,29 +86,21 @@ KNOWN_GRIB_KEYS = ['7777', 'GRIBEditionNumber', 'N', 'NV',
                    'productDefinitionTemplateNumberInternal', 'productType',
                    'productionStatusOfProcessedData', 'radius',
                    'referenceDate', 'referenceValue', 'referenceValueError',
-                   'resolutionAndComponentFlags',
-                   'resolutionAndComponentFlags1',
-                   'resolutionAndComponentFlags2',
-                   'resolutionAndComponentFlags6',
-                   'resolutionAndComponentFlags7',
-                   'resolutionAndComponentFlags8',
-                   'scaleFactorOfEarthMajorAxis',
-                   'scaleFactorOfEarthMinorAxis',
-                   'scaleFactorOfFirstFixedSurface',
-                   'scaleFactorOfRadiusOfSphericalEarth',
+                   'resolutionAndComponentFlags', 'resolutionAndComponentFlags1',
+                   'resolutionAndComponentFlags2', 'resolutionAndComponentFlags6',
+                   'resolutionAndComponentFlags7', 'resolutionAndComponentFlags8',
+                   'scaleFactorOfEarthMajorAxis', 'scaleFactorOfEarthMinorAxis',
+                   'scaleFactorOfFirstFixedSurface', 'scaleFactorOfRadiusOfSphericalEarth',
                    'scaleFactorOfSecondFixedSurface', 'scaleValuesBy',
-                   'scaledValueOfEarthMajorAxis',
-                   'scaledValueOfEarthMinorAxis',
-                   'scaledValueOfFirstFixedSurface',
-                   'scaledValueOfRadiusOfSphericalEarth',
+                   'scaledValueOfEarthMajorAxis', 'scaledValueOfEarthMinorAxis',
+                   'scaledValueOfFirstFixedSurface', 'scaledValueOfRadiusOfSphericalEarth',
                    'scaledValueOfSecondFixedSurface', 'scanningMode',
                    'scanningMode5', 'scanningMode6', 'scanningMode7',
                    'scanningMode8', 'second', 'section0Length',
                    'section1Length', 'section2Length', 'section2Padding',
                    'section3Length', 'section3Padding', 'section4Length',
                    'section5Length', 'section6Length', 'section7Length',
-                   'section8Length', 'sectionNumber',
-                   'selectStepTemplateInstant', 'selectStepTemplateInterval',
+                   'section8Length', 'sectionNumber', 'selectStepTemplateInstant', 'selectStepTemplateInterval',
                    'setBitsPerValue', 'setCalendarId', 'shapeOfTheEarth',
                    'shortName', 'shortNameECMF', 'significanceOfReferenceTime',
                    'skewness', 'sourceOfGridDefinition', 'standardDeviation',
@@ -133,12 +119,11 @@ KNOWN_GRIB_KEYS = ['7777', 'GRIBEditionNumber', 'N', 'NV',
 KNOWN_BUFR_KEYS = ['edition', 'masterTableNumber', 'bufrHeaderSubCentre', 'bufrHeaderCentre',
                    'updateSequenceNumber', 'dataCategory', 'dataSubCategory', 'masterTablesVersionNumber',
                    'localTablesVersionNumber', 'typicalYearOfCentury', 'typicalMonth', 'typicalDay',
-                   'typicalHour', 'typicalMinute', 'rdbType', 'newSubtype', 'rdbtimeDay', 'rdbtimeHour',
-                   'rdbtimeMinute', 'rdbtimeSecond', 'rectimeDay', 'rectimeHour', 'rectimeMinute', 'rectimeSecond',
+                   'typicalHour', 'typicalMinute', 'typicalDate', 'typicalTime', 'rdbType', 'newSubtype', 'rdbtimeDay',
+                   'rdbtimeHour', 'rdbtimeMinute', 'rdbtimeSecond', 'rectimeDay', 'rectimeHour', 'rectimeMinute', 'rectimeSecond',
                    'correction1', 'correction1Part', 'correction2', 'correction2Part', 'correction3', 'correction3Part',
                    'correction4', 'correction4Part', 'qualityControl', 'numberOfSubsets', 'localLatitude',
-                   'localLongitude',
-                   'observedData', 'compressedData', 'unexpandedDescriptors', '#1#blockNumber',
+                   'localLongitude', 'observedData', 'compressedData', 'unexpandedDescriptors', 'subsetNumber', '#1#blockNumber',
                    '#1#blockNumber->percentConfidence', '#1#stationNumber', '#1#stationNumber->percentConfidence',
                    '#1#stationType', '#1#stationType->percentConfidence', '#1#year', '#1#year->percentConfidence',
                    '#1#month', '#1#month->percentConfidence', '#1#day', '#1#day->percentConfidence', '#1#hour',
@@ -279,7 +264,7 @@ class TestGribMessage(unittest.TestCase):
         """Message can be serialized to file."""
         with GribFile(TESTGRIB) as grib_file:
             msg = GribMessage(grib_file)
-            with open(TEST_OUTPUT, "w") as test:
+            with open(TEST_OUTPUT, "wb") as test:
                 msg.write(test)
         os.unlink(TEST_OUTPUT)
 
@@ -336,7 +321,7 @@ class TestBufrFile(unittest.TestCase):
                 self.assertEqual(msg["bufrHeaderCentre"], 98)
                 self.assertEqual(msg['count'], i + 1)
             self.assertEqual(len(bufr_file.open_messages), 3)
-        self.assertEquals(len(bufr_file.open_messages), 0)
+        self.assertEqual(len(bufr_file.open_messages), 0)
 
     def test_message_counting_works(self):
         """The BufrFile is aware of its messages."""
@@ -375,7 +360,7 @@ class TestBufrMessage(unittest.TestCase):
             msg = BufrMessage(bufr_file)
             msg.unpack()
             msg_keys = list(msg.keys())
-            self.assertEqual(len(msg_keys), 140)
+            self.assertEqual(len(msg_keys), 201)
             for key in KNOWN_BUFR_KEYS:
                 assert key in msg_keys
             # Size of message in bytes
@@ -403,7 +388,7 @@ class TestBufrMessage(unittest.TestCase):
         """Message can be serialized to file."""
         with BufrFile(TESTBUFR) as bufr_file:
             msg = BufrMessage(bufr_file)
-            with open(TEST_OUTPUT, "w") as test:
+            with open(TEST_OUTPUT, "wb") as test:
                 msg.write(test)
         os.unlink(TEST_OUTPUT)
 
@@ -454,7 +439,7 @@ class TestBufrMessage(unittest.TestCase):
             bufr['unexpandedDescriptors'] = ivalues
             bufrin.unpack()
             bufrin.copy_data(bufr)
-            with open(TEST_OUTPUT, 'w') as test:
+            with open(TEST_OUTPUT, 'wb') as test:
                 bufr.write(test)
             os.unlink(TEST_OUTPUT)
 

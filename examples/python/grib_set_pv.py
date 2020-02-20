@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -30,7 +30,7 @@ def example():
     numberOfCoefficients = 2 * (numberOfLevels + 1)
     assert (len(pv) == numberOfCoefficients)
 
-    fout = open('grib_set_pv.py.temp.grib', 'w')
+    fout = open('grib_set_pv.py.temp.grib', 'wb')
     gid = codes_grib_new_from_samples('reduced_gg_sfc_grib1')
 
     codes_set(gid, 'typeOfLevel', 'hybrid')

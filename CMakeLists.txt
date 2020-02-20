@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,7 +16,7 @@
 #
 #       -DCMAKE_MODULE_PATH=/path/to/ecbuild/cmake
 
-cmake_minimum_required( VERSION 2.8.11 FATAL_ERROR )
+cmake_minimum_required( VERSION 3.6 FATAL_ERROR )
 
 project( eccodes C )
 
@@ -32,6 +32,41 @@ ecbuild_requires_macro_version( 2.7.2 )
 ecbuild_declare_project()
 
 ###############################################################################
+# system checks needed for eccodes_config.h and some options like MEMFS
+
+check_type_size( int            ECCODES_SIZEOF_INT    )
+check_type_size( long           ECCODES_SIZEOF_LONG   )
+check_type_size( size_t         ECCODES_SIZEOF_SIZE_T )
+
+check_include_files( assert.h         ECCODES_HAVE_ASSERT_H      )
+check_include_files( string.h         ECCODES_HAVE_STRING_H      )
+check_include_files( sys/types.h      ECCODES_HAVE_SYS_TYPES_H   )
+check_include_files( sys/stat.h       ECCODES_HAVE_SYS_STAT_H    )
+check_include_files( fcntl.h          ECCODES_HAVE_FCNTL_H      )
+check_include_files( unistd.h         ECCODES_HAVE_UNISTD_H      )
+
+check_symbol_exists( fseeko           "stdio.h"    ECCODES_HAVE_FSEEKO )
+check_symbol_exists( posix_memalign   "stdlib.h"   ECCODES_HAVE_POSIX_MEMALIGN )
+check_symbol_exists( fmemopen         "stdio.h"    ECCODES_HAVE_FMEMOPEN )
+check_symbol_exists( funopen          "stdio.h"    ECCODES_HAVE_FUNOPEN )
+
+check_c_source_compiles(
+      " typedef int foo_t;
+      static inline foo_t static_foo(){return 0;}
+      foo_t foo(){return 0;}
+      int main(int argc, char *argv[]){return 0;}
+      " ECCODES_HAVE_C_INLINE )
+
+include(eccodes_test_endiness)
+if( EC_OS_NAME MATCHES "windows" )
+    include(eccodes_find_linux_utils)
+endif()
+
+ecbuild_debug("ECCODES_BIG_ENDIAN=${ECCODES_BIG_ENDIAN}")
+ecbuild_debug("ECCODES_LITTLE_ENDIAN=${ECCODES_LITTLE_ENDIAN}")
+ecbuild_info("Operating system=${CMAKE_SYSTEM} (${EC_OS_BITS} bits)")
+
+###############################################################################
 # some variables/options of this project
 
 ecbuild_add_option( FEATURE EXAMPLES
@@ -39,22 +74,22 @@ ecbuild_add_option( FEATURE EXAMPLES
     DEFAULT ON
 )
 
-# controls installation of files in definitions/ -- note that it still creates the symlinks in the build dir
-ecbuild_add_option( FEATURE INSTALL_ECCODES_DEFINITIONS
-    DESCRIPTION "Install the ecCodes definitions"
-    DEFAULT ON
-)
-
-# controls installation of files in samples/ and ifs_samples/ -- note that it still creates the symlinks in the build dir
-ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
-    DESCRIPTION "Install the ecCodes samples, including IFS samples"
-    DEFAULT ON
-)
-
 ecbuild_add_option( FEATURE JPG
     DESCRIPTION "Support for JPG decoding/encoding"
     DEFAULT ON
 )
+# Options related to JPG. The Jasper and OpenJPEG libraries
+ecbuild_add_option( FEATURE JPG_LIBJASPER
+    DESCRIPTION "Support for JPG decoding/encoding with the Jasper library"
+    CONDITION ENABLE_JPG
+    DEFAULT ON
+)
+ecbuild_add_option( FEATURE JPG_LIBOPENJPEG
+    DESCRIPTION "Support for JPG decoding/encoding with the OpenJPEG library"
+    CONDITION ENABLE_JPG
+    DEFAULT ON
+)
+
 
 ecbuild_add_option( FEATURE PNG
     DESCRIPTION "Support for PNG decoding/encoding"
@@ -83,10 +118,15 @@ ecbuild_add_option( FEATURE AEC
 )
 
 ecbuild_add_option( FEATURE PYTHON
-    DESCRIPTION "Build the ecCodes Python interface"
+    DESCRIPTION "Build the ecCodes Python2 interface (deprecated)"
     DEFAULT ON
     REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy
 )
+# For Python2 we build our own bindings (using SWIG) in the build directory
+# but for Python3 one has to add the eccodes-python from pip3 AFTER the install
+if( PYTHON_VERSION_MAJOR EQUAL 3 )
+    set( HAVE_PYTHON 0 )
+endif()
 
 ecbuild_add_option( FEATURE FORTRAN
     DESCRIPTION "Build the ecCodes Fortran interface"
@@ -97,6 +137,7 @@ ecbuild_add_option( FEATURE FORTRAN
 # TODO Remove this after REQUIRED_LANGUAGES
 if( ENABLE_FORTRAN )
     # will set EC_HAVE_FORTRAN with the result
+    set( EC_HAVE_FORTRAN 0 )
     ecbuild_enable_fortran( MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/fortran/modules )
     set( HAVE_FORTRAN ${EC_HAVE_FORTRAN} )
 else()
@@ -107,14 +148,34 @@ endif()
 ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
-    CONDITION EC_HAVE_FMEMOPEN OR EC_HAVE_FUNOPEN
-    REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS"
+    CONDITION ECCODES_HAVE_FMEMOPEN OR ECCODES_HAVE_FUNOPEN OR (EC_OS_NAME MATCHES "windows")
+    REQUIRED_PACKAGES PythonInterp
 )
 
 #if( HAVE_MEMFS AND "${CMAKE_C_COMPILER_ID}" STREQUAL "Cray")
 #  set( HAVE_MEMFS OFF )
 #  ecbuild_warn("MEMFS not supported with Cray C compiler")
 #endif()
+
+if(HAVE_MEMFS)
+  set( _will_install_defs_samples OFF )
+else()
+  set( _will_install_defs_samples ON )
+endif()
+
+# controls installation of files in definitions/ -- note that it still creates the symlinks in the build dir
+# by default, if memfs is available, then we don't need to install definitions
+ecbuild_add_option( FEATURE INSTALL_ECCODES_DEFINITIONS
+    DESCRIPTION "Install the ecCodes definitions"
+    DEFAULT ${_will_install_defs_samples}
+)
+
+# controls installation of files in samples/ and ifs_samples/ -- note that it still creates the symlinks in the build dir
+# by default, if memfs is available, then we don't need to install samples
+ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
+    DESCRIPTION "Install the ecCodes samples, including IFS samples"
+    DEFAULT ${_will_install_defs_samples}
+)
 
 # advanced options (not visible in cmake-gui )
 
@@ -143,8 +204,8 @@ set( HAVE_LIBOPENJPEG 0 )
 
 if( ENABLE_JPG )
 
-    # Note: This is a deprecated feature but we need it to find Jasper at ECMWF.
-    #       ecbuild_add_extra_search_paths modifies CMAKE_PREFIX_PATH
+    # Note: The function ecbuild_add_extra_search_paths is deprecated but we need it to find Jasper at ECMWF.
+    #       It modifies CMAKE_PREFIX_PATH
     #       which can affect future package discovery if not undone by the caller.
     #       The current CMAKE_PREFIX_PATH is backed up as _CMAKE_PREFIX_PATH
     #
@@ -156,7 +217,7 @@ if( ENABLE_JPG )
 
     find_package( OpenJPEG )
 
-    if( JASPER_FOUND )
+    if( JASPER_FOUND AND ENABLE_JPG_LIBJASPER )
         list( APPEND ECCODES_TPLS Jasper )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBJASPER 1 )
@@ -164,11 +225,15 @@ if( ENABLE_JPG )
         string(REGEX REPLACE "^([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" JASPER_VERSION_MAJOR "${JASPER_VERSION_STRING}")
     endif()
 
-    if( OPENJPEG_FOUND )
+    if( OPENJPEG_FOUND AND ENABLE_JPG_LIBOPENJPEG )
         list( APPEND ECCODES_TPLS OpenJPEG )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBOPENJPEG 1 )
     endif()
+
+    ecbuild_info(" HAVE_JPEG=${HAVE_JPEG}")
+    ecbuild_info(" HAVE_LIBJASPER=${HAVE_LIBJASPER}")
+    ecbuild_info(" HAVE_LIBOPENJPEG=${HAVE_LIBOPENJPEG}")
 
 endif()
 
@@ -183,7 +248,7 @@ else()
 endif()
 
 set( IS_BIG_ENDIAN 0 )
-if( EC_BIG_ENDIAN )
+if( ECCODES_BIG_ENDIAN )
     set( IS_BIG_ENDIAN 1 )
 endif()
 
@@ -241,6 +306,22 @@ if( IEEE_LE )
     set( IEEE_BE 0 )
 endif()
 
+set( ECCODES_ON_WINDOWS 0 )
+if( EC_OS_NAME MATCHES "windows" )
+    # Symbols need to be explicitly exported on Windows so we can link to dlls.
+    set( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE )
+    set( ECCODES_ON_WINDOWS 1 )
+
+    # Suppress compliler warnings - see ECC-850
+    # Suppress warnings about using 'insecure' functions. Fixing this would require changes all over
+    # the codebase which would damage portability.
+    ecbuild_add_c_flags("/D_CRT_SECURE_NO_WARNINGS")
+    # Suppress warnings about using well-known C functions.
+    ecbuild_add_c_flags("/D_CRT_NONSTDC_NO_DEPRECATE")
+    # Suppress C4267: warns about possible loss of data when converting 'size_t' to 'int'.
+    ecbuild_add_c_flags("/wd4267")
+endif()
+
 ###############################################################################
 # contents
 
@@ -264,6 +345,7 @@ set( ECCODES_DEFINITION_PATH  ${the_default_data_prefix}/${ECCODES_DEFINITION_SU
 set( ECCODES_SAMPLES_PATH     ${the_default_data_prefix}/${ECCODES_SAMPLES_SUFF} )
 set( ECCODES_IFS_SAMPLES_PATH ${the_default_data_prefix}/${ECCODES_IFS_SAMPLES_SUFF} )
 
+###############################################################################
 ### config header
 
 ecbuild_generate_config_headers()
@@ -271,8 +353,6 @@ ecbuild_generate_config_headers()
 configure_file( eccodes_config.h.in eccodes_config.h )
 
 add_definitions( -DHAVE_ECCODES_CONFIG_H )
-
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/eccodes_config.h DESTINATION ${INSTALL_INCLUDE_DIR} )
 
 if( CMAKE_COMPILER_IS_GNUCC )
     ecbuild_add_c_flags("-pedantic")
@@ -291,6 +371,21 @@ get_directory_property( COMPILE_DEFINITIONS ECCODES_DEFINITIONS )
 foreach( _tpl ${ECCODES_TPLS} )
     string( TOUPPER ${_tpl} TPL )
     if( ${TPL}_FOUND )
+        if( REPLACE_TPL_ABSOLUTE_PATHS )
+            # replace TPL absolute paths with their library names
+            # this helps make ecCodes relocatable
+            set( _TMP "" )
+
+            foreach( _lib ${${TPL}_LIBRARIES} )
+                get_filename_component( _lib_name ${_lib} NAME_WE )
+                string( REGEX REPLACE "^lib" "" _name ${_lib_name} )
+                list( APPEND _TMP "-l${_name}" )
+            endforeach()
+
+            set( ${TPL}_LIBRARIES ${_TMP} )
+            set( _TMP "" )
+        endif()
+
         list( APPEND ECCODES_EXTRA_DEFINITIONS   ${${TPL}_DEFINITIONS} )
         list( APPEND ECCODES_EXTRA_INCLUDE_DIRS  ${${TPL}_INCLUDE_DIRS} ${${TPL}_INCLUDE_DIR} )
         list( APPEND ECCODES_EXTRA_LIBRARIES     ${${TPL}_LIBRARIES} )
@@ -306,7 +401,16 @@ add_subdirectory( memfs )
 add_subdirectory( src )
 add_subdirectory( tools )
 add_subdirectory( fortran )
-add_subdirectory( python )
+
+if (PYTHON_VERSION_MAJOR GREATER 2)
+    # Python3 is no longer built with SWIG but is a separate
+    # package. User should do: pip3 install eccodes-python
+    #add_subdirectory( python3 )
+    set( ECCODES_PYTHON_DIR "python3" )
+else()
+    add_subdirectory( python )
+    set( ECCODES_PYTHON_DIR "python" )
+endif()
 add_subdirectory( tests )
 add_subdirectory( tigge )
 add_subdirectory( examples )
@@ -319,7 +423,7 @@ ecbuild_dont_pack( DIRS
      concepts tests.ecmwf doxygen confluence examples.dev templates parameters java
      perl config m4 rpms gaussian_experimental gribex examples/F77
      examples/extra examples/deprecated bamboo fortran/fortranCtypes tigge/tools
-     share/eccodes  .settings
+     share/eccodes  .settings python3
 )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
@@ -332,7 +436,7 @@ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 # temporary -- add support for ecbuild 1.0.x sub-project inclusion
 # to remove once mars server & client use eckit & ecbuild >= 1.1
 
-if( EC_HAVE_FORTRAN )
+if( HAVE_FORTRAN )
     list( APPEND ECCODES_INCLUDE_DIRS  ${CMAKE_Fortran_MODULE_DIRECTORY} )
     list( APPEND ECCODES_LIBRARIES eccodes_f90 )
 endif()
@@ -352,7 +456,7 @@ endif()
 # pkg-config
 ecbuild_pkgconfig(
   NAME           eccodes
-  URL            "https://software.ecmwf.int/wiki/display/ECC/"
+  URL            "https://confluence.ecmwf.int/display/ECC/"
   DESCRIPTION    "The ecCodes library"
   LIBRARIES      eccodes
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
@@ -360,10 +464,10 @@ ecbuild_pkgconfig(
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
                  HAVE_NETCDF HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
-if( EC_HAVE_FORTRAN )
+if( HAVE_FORTRAN )
   ecbuild_pkgconfig(
     NAME                eccodes_f90
-    URL                 "https://software.ecmwf.int/wiki/display/ECC/"
+    URL                 "https://confluence.ecmwf.int/display/ECC/"
     LIBRARIES           eccodes_f90 eccodes
     DESCRIPTION         "The ecCodes library for Fortran 90"
     IGNORE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/fortran ${PROJECT_BINARY_DIR}/fortran
@@ -375,6 +479,12 @@ if( EC_HAVE_FORTRAN )
 endif()
 
 ###############################################################################
+# Debugging aid. Print all known CMake variables
+# get_cmake_property(_variableNames VARIABLES)
+# foreach( _variableName ${_variableNames} )
+#   ecbuild_info("  ${_variableName}=${${_variableName}}")
+# endforeach()
+###############################################################################
 # finalize
 
 ecbuild_install_project( NAME ${CMAKE_PROJECT_NAME} )
@@ -383,6 +493,19 @@ ecbuild_print_summary()
 
 ecbuild_info("")
 ecbuild_info("   +--------------------------+")
-ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}   |")
+ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}  |")
 ecbuild_info("   +--------------------------+")
+ecbuild_info("")
+
+if( HAVE_PYTHON )
+  ecbuild_deprecate("Python2 support is deprecated and will be discontinued")
+endif()
+
+ecbuild_info("   +--------------------------------------+")
+ecbuild_info("   | Please note:                         |")
+ecbuild_info("   | For Python3 support, first install   |")
+ecbuild_info("   | ecCodes and then install the Python  |")
+ecbuild_info("   | bindings from PyPI with:             |")
+ecbuild_info("   |   $ pip3 install eccodes-python      |")
+ecbuild_info("   +--------------------------------------+")
 ecbuild_info("")

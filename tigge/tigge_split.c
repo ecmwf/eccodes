@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -25,9 +25,21 @@
 #include <string.h>
 #include <math.h>
 #include <sys/types.h>
-#include <dirent.h>
-#include <unistd.h>
 
+#ifndef ECCODES_ON_WINDOWS
+  #include <unistd.h>
+#else
+  #include <direct.h>
+  #include <io.h>
+
+  #ifndef F_OK
+  #  define F_OK 0
+  #endif
+
+  #ifdef _MSC_VER
+  #  define access(path,mode) _access(path,mode)
+  #endif
+#endif
 
 #define CHECK(a) check(#a,a)
 
@@ -173,7 +185,7 @@ static void split(grib_handle *h)
 
 static void validate(const char* path)
 {
-    FILE *f = fopen(path,"r");
+    FILE *f = fopen(path,"rb");
     grib_handle *h = 0;
     int err;
     int count = 0;
@@ -211,7 +223,7 @@ static void usage()
     exit(1);
 }
 
-int main(int argc,const char** argv)
+int main(int argc, char** argv)
 {
     int i = 1;
 

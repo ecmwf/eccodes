@@ -1,4 +1,4 @@
-! Copyright 2005-2017 ECMWF.
+! (C) Copyright 2005- ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -7,9 +7,9 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: get/set byte array in a grib2 message, using the uuid as example.
+! Description: get/set byte array in a grib2 message, using the uuid as example.
 !
-!  Original authors: Harald Anlauf, Doerte Liermann (DWD), Luis Kornblueh (MPIfM).
+! Original authors: Harald Anlauf, Doerte Liermann (DWD), Luis Kornblueh (MPIfM).
 !
 program get_set_uuid
   use eccodes

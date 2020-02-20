@@ -7,6 +7,7 @@
 { "bufr_encode_filter", &grib_dumper_class_bufr_encode_filter, },
 { "bufr_encode_fortran", &grib_dumper_class_bufr_encode_fortran, },
 { "bufr_encode_python", &grib_dumper_class_bufr_encode_python, },
+{ "bufr_simple", &grib_dumper_class_bufr_simple, },
 { "debug", &grib_dumper_class_debug, },
 { "default", &grib_dumper_class_default, },
 { "grib_encode_C", &grib_dumper_class_grib_encode_C, },

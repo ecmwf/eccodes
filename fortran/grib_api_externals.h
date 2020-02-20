@@ -25,6 +25,11 @@ integer, external :: grib_f_new_from_message, &
                      codes_bufr_f_new_from_samples, &
                      grib_f_read_any_from_file, &
                      any_f_new_from_file, &
+                     any_f_load_all_from_file, &
+                     any_f_new_from_loaded, &
+                     any_f_scan_file, &
+                     any_f_new_from_scanned_file, &
+                     codes_f_clear_loaded_from_file, &
                      grib_f_new_from_file, &
                      bufr_f_new_from_file, &
                      grib_f_headers_only_new_from_file
@@ -68,6 +73,7 @@ integer, external :: grib_f_set_int, grib_f_set_int_array, &
                      grib_f_set_force_real4_array, grib_f_set_force_real8_array, &
                      grib_f_set_string, grib_f_set_string_array, grib_f_set_missing, &
                      grib_f_gribex_mode_on,grib_f_gribex_mode_off, &
+                     codes_f_bufr_multi_element_constant_arrays_on,codes_f_bufr_multi_element_constant_arrays_off, &
                      grib_f_find_nearest_single,grib_f_find_nearest_four_single,grib_f_find_nearest_multiple
 integer, external :: grib_f_get_message_size, grib_f_copy_message, grib_f_count_in_file
 integer, external :: grib_f_write, grib_f_multi_write, grib_f_multi_append

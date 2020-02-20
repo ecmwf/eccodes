@@ -37,7 +37,6 @@
 35 35 Hydrogen bromide
 36 36 Hypobromous acid
 37 37 Bromine nitrate
-#38-9999 Reserved
 10000 10000 Hydroxyl radical
 10001 10001 Methyl peroxy radical
 10002 10002 Methyl hydroperoxide
@@ -61,9 +60,7 @@
 10021 10021 Benzene
 10022 10022 Toluene
 10023 10023 Xylene
-#10024-10499 Reserved for other simple organic molecules (e.g. higher aldehydes, alcohols, peroxides...)
 10500 10500 Dimethyl sulphide
-#10501-20000 Reserved
 20001 20001 Hydrogen chloride
 20002 20002 CFC-11
 20003 20003 CFC-12
@@ -85,9 +82,7 @@
 20019 20019 Hexachlorocyclohexane (HCH)
 20020 20020 Alpha hexachlorocyclohexane
 20021 20021 Hexachlorobiphenyl (PCB-153)
-#20022-29999 Reserved
 30000 30000 Radioactive pollutant (tracer, defined by originating centre)
-#30001-30009 Reserved
 30010 30010 Hydrogen H-3
 30011 30011 Hydrogen organic bounded H-3o
 30012 30012 Hydrogen inorganic H-3a
@@ -373,7 +368,6 @@
 30292 30292 Sum noble gas SumNG
 30293 30293 Activation gas ActGas
 30294 30294 Cs-137 Equivalent EquCs137
-#30295-59999 Reserved
 60000 60000 HOx radical (OH+HO2)
 60001 60001 Total inorganic and organic peroxy radicals (HO2 + RO2)
 60002 60002 Passive Ozone
@@ -391,7 +385,6 @@
 60014 60014 Anthropogenic non-methane volatile organic compounds expressed as carbon
 60015 60015 Biogenic non-methane volatile organic compounds expressed as carbon
 60016 60016 Lumped oxygenated hydrocarbons
-#60017-61999 Reserved
 62000 62000 Total aerosol
 62001 62001 Dust dry
 62002 62002 Water in ambient
@@ -411,5 +404,4 @@
 62016 62016 Particulate organic matter hydrophobic dry
 62017 62017 Nitrate hydrophilic dry
 62018 62018 Nitrate hydrophobic dry
-#62019-65534 Reserved
 65535 65535 Missing

@@ -139,5 +139,7 @@ Error codes returned by the grib_api functions.
 #define GRIB_OUT_OF_RANGE		-65
 /** Size of bitmap is incorrect */
 #define GRIB_WRONG_BITMAP_SIZE		-66
+/** Functionality not enabled */
+#define GRIB_FUNCTIONALITY_NOT_ENABLED		-67
 /*! @}*/
 #endif

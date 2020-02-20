@@ -1,7 +1,7 @@
 #!/usr/bin/perl -I/marsdev/data/p4/linux/amd64/grib_api/main/perl/GRIB-API/blib/lib -I/marsdev/data/p4/linux/amd64/grib_api/main/perl/GRIB-API/blib/arch
 
 
-use lib qw(/home/ma/mab/grib/api/lib);
+use lib qw(/path/to/install/grib/api/lib);
 
 use GRIB::API;
 use strict;
