@@ -38,34 +38,31 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
     param.get("earthMajorAxis", earthMajorAxis_ = radius_);
     param.get("earthMinorAxis", earthMinorAxis_ = radius_);
 
-    size_t nx = 0;
-    size_t ny = 0;
+    long nx = 0;
+    long ny = 0;
     ASSERT(param.get("numberOfPointsAlongXAxis", nx) && nx > 0);
     ASSERT(param.get("numberOfPointsAlongYAxis", ny) && ny > 0);
 
     std::vector<double> grid;
     ASSERT(param.get("grid", grid) && grid.size() == 2);
-    double dx = grid[0];
-    double dy = grid[1];
-    ASSERT(dx > 0);
-    ASSERT(dy > 0);
 
-    // y[0] > y[1], for the "canonical" scanningMode (iScansPositively, jScansNegatively)
     Point2 firstLL;
     ASSERT(param.get("latitudeOfFirstGridPointInDegrees", firstLL[LLCOORDS::LAT]));
     ASSERT(param.get("longitudeOfFirstGridPointInDegrees", firstLL[LLCOORDS::LON]));
 
+    bool plusx = true;   // iScansPositively != 0
+    bool plusy = false;  // jScansPositively == 0
+    param.get("iScansPositively", plusx);
+    param.get("jScansPositively", plusy);
+
     Point2 first = projection.xy(firstLL);
-    Point2 last  = first + Point2{(nx - 1) * dx, (1 - int(ny)) * dy};
+    param.get("first_point_bottom_left", firstPointBottomLeft_ = false);
 
-    x_ = {first[XYZCOORDS::XX], last[XYZCOORDS::XX], long(nx)};
-    y_ = {first[XYZCOORDS::YY], last[XYZCOORDS::YY], long(ny)};
-    ASSERT(x_.front() < x_.back());
-    ASSERT(y_.front() > y_.back());
-
+    x_    = {first.x(), first.x() + grid[0] * (firstPointBottomLeft_ || plusx ? nx - 1 : 1 - nx), nx};
+    y_    = {first.y(), first.y() + grid[1] * (firstPointBottomLeft_ || plusy ? ny - 1 : 1 - ny), ny};
     grid_ = {x_, y_, projection};
 
-    ::atlas::RectangularDomain range({x_.front(), x_.back()}, {y_.front(), y_.back()}, "meters");
+    ::atlas::RectangularDomain range({x_.min(), x_.max()}, {y_.min(), y_.max()}, "meters");
     ::atlas::RectangularLonLatDomain bbox = projection.lonlatBoundingBox(range);
     ASSERT(bbox);
 
@@ -75,9 +72,8 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
 RegularGrid::~RegularGrid() = default;
 
 void RegularGrid::print(std::ostream& out) const {
-    out << "RegularGrid["
-           "x="
-        << x_.spec() << ",y=" << y_.spec() << ",projection=" << grid_.projection().spec() << ",bbox=" << bbox_ << "]";
+    out << "RegularGrid[x=" << x_.spec() << ",y=" << y_.spec() << ",projection=" << grid_.projection().spec()
+        << ",firstPointBottomLeft=" << firstPointBottomLeft_ << ",bbox=" << bbox_ << "]";
 }
 
 bool RegularGrid::extendBoundingBoxOnIntersect() const {
@@ -132,6 +128,10 @@ void RegularGrid::fill(grib_info& info) const {
             GribExtraSetting::set(info, "earthMinorAxis", spec.getDouble("semi_minor_axis"));
         }
     }
+
+    // scanningMode
+    info.grid.iScansNegatively = x_.back() < x_.front() ? 1 : 0;
+    info.grid.jScansPositively = y_.front() < y_.back() ? 1 : 0;
 }
 
 bool RegularGrid::includesNorthPole() const {
@@ -142,8 +142,9 @@ bool RegularGrid::includesSouthPole() const {
     return bbox_.south() == Latitude::SOUTH_POLE;
 }
 
-void RegularGrid::reorder(long scanningMode, mir::data::MIRValuesVector& values) const {
-    GribReorder::reorder(values, scanningMode, x_.size(), y_.size());
+void RegularGrid::reorder(long, mir::data::MIRValuesVector&) const {
+    // do not reorder, iterator is doing the right thing
+    // FIXME this function should not be overriding to do nothing
 }
 
 void RegularGrid::validate(const MIRValuesVector& values) const {
@@ -155,7 +156,7 @@ void RegularGrid::validate(const MIRValuesVector& values) const {
 
 Iterator* RegularGrid::iterator() const {
 
-    class AtlasRegularIterator : public Iterator {
+    class RegularGridIterator : public Iterator {
         Projection projection_;
         const LinearSpacing& x_;
         const LinearSpacing& y_;
@@ -191,7 +192,7 @@ Iterator* RegularGrid::iterator() const {
         }
 
     public:
-        AtlasRegularIterator(Projection projection, const LinearSpacing& x, const LinearSpacing& y) :
+        RegularGridIterator(Projection projection, const LinearSpacing& x, const LinearSpacing& y) :
             projection_(std::move(projection)),
             x_(x),
             y_(y),
@@ -199,16 +200,12 @@ Iterator* RegularGrid::iterator() const {
             nj_(y.size()),
             i_(0),
             j_(0),
-            count_(0) {
-            // ensure iScansPositively, jScansNegatively
-            ASSERT(x_.front() < x_.back());
-            ASSERT(y_.front() > y_.back());
-        }
-        AtlasRegularIterator(const AtlasRegularIterator&) = delete;
-        AtlasRegularIterator& operator=(const AtlasRegularIterator&) = delete;
+            count_(0) {}
+        RegularGridIterator(const RegularGridIterator&) = delete;
+        RegularGridIterator& operator=(const RegularGridIterator&) = delete;
     };
 
-    return new AtlasRegularIterator(grid_.projection(), x_, y_);
+    return new RegularGridIterator(grid_.projection(), x_, y_);
 }
 
 void RegularGrid::makeName(std::ostream& out) const {
@@ -216,6 +213,7 @@ void RegularGrid::makeName(std::ostream& out) const {
     h << grid_.projection().spec();
     h << x_.spec();
     h << y_.spec();
+    h << firstPointBottomLeft_;
     if (shapeOfTheEarthProvided_) {
         h << shapeOfTheEarth_;
         h << radius_;

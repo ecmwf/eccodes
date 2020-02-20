@@ -32,8 +32,8 @@ RegularGrid::Projection Lambert::make_projection(const param::MIRParametrisation
     double Latin2InDegrees;
     ASSERT(param.get("LaDInDegrees", LaDInDegrees));
     ASSERT(param.get("LoVInDegrees", LoVInDegrees));
-    ASSERT(param.get("Latin1InDegrees", Latin1InDegrees));
-    ASSERT(param.get("Latin2InDegrees", Latin2InDegrees));
+    param.get("Latin1InDegrees", Latin1InDegrees = LaDInDegrees);
+    param.get("Latin2InDegrees", Latin2InDegrees = LaDInDegrees);
 
     return Projection::Spec("type", "lambert_conformal_conic")
         .set("latitude1", Latin1InDegrees)
