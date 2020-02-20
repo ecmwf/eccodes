@@ -122,6 +122,18 @@ set -e
 [ $status -ne 0 ]
 
 
+echo "Test limits with steps..."
+# -----------------------------
+input1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_48_grib1.tmpl
+# This sets the minimum to 1.1 but this should work for step=0
+${tools_dir}/grib_set -s step=0,paramId=121,scaleValuesBy=1.1 $input1 $tempOut
+
+# But it must fail when step > 0
+set +e
+${tools_dir}/grib_set -s step=6,paramId=121,scaleValuesBy=1.1 $input1 $tempOut
+set -e
+[ $status -ne 0 ]
+
 
 echo "Override the defaults..."
 # ------------------------------

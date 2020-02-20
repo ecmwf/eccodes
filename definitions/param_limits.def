@@ -70,8 +70,8 @@ concept param_value_min(default_min_val) {
     170 = { paramId=228096; }
     170 = { paramId=228095; }
     0 = { paramId=43; }
-    -0.01 = { paramId=247; }
-    0 = { paramId=246; }
+    -0.001 = { paramId=247; }
+    -0.001 = { paramId=246; }
     -0.1 = { paramId=133; }
     43000 = { paramId=134; }
     0 = { paramId=173; }
