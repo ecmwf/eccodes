@@ -325,8 +325,10 @@ int grib_section_adjust_sizes(grib_section* s, int update, int depth)
                 else {
                     if (!s->h->partial) {
                         if (length >= plen) {
-                            grib_context_log(s->h->context, GRIB_LOG_ERROR, "Invalid size %ld found for %s, assuming %ld",
+                            if (s->owner) {
+                                grib_context_log(s->h->context, GRIB_LOG_ERROR, "Invalid size %ld found for %s, assuming %ld",
                                              (long)plen, s->owner->name, (long)length);
+                            }
                             plen = length;
                         }
                         s->padding = plen - length;

@@ -249,7 +249,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     self->dirty = 0;
 
-    n_vals = 0;
     err    = grib_value_count(a, &nn);
     n_vals = nn;
     if (err)

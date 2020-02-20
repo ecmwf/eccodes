@@ -59,50 +59,54 @@ int main(int argc, char** argv)
     while (fscanf(fin, "%ld %g %g", &iid, &lat, &lon) != EOF)
         npoints++;
     fclose(fin);
+    if (npoints==0) {
+        fprintf(stderr, "No input points found!\n");
+        exit(1);
+    }
 
     id = (long*)calloc(npoints, sizeof(long));
     if (!id) {
-        printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(long)));
+        fprintf(stderr, "unable to allocate %ld bytes\n", (long)(npoints * sizeof(long)));
         exit(1);
     }
     vlat = (double*)calloc(npoints, sizeof(double));
     if (!vlat) {
-        printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
+        fprintf(stderr, "unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
         exit(1);
     }
     vlon = (double*)calloc(npoints, sizeof(double));
     if (!vlon) {
-        printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
+        fprintf(stderr, "unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
         exit(1);
     }
     outlats = (double*)calloc(npoints, sizeof(double));
     if (!outlats) {
-        printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
+        fprintf(stderr, "unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
         exit(1);
     }
     outlons = (double*)calloc(npoints, sizeof(double));
     if (!outlons) {
-        printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
+        fprintf(stderr, "unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
         exit(1);
     }
     values = (double*)calloc(npoints, sizeof(double));
     if (!values) {
-        printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
+        fprintf(stderr, "unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
         exit(1);
     }
     lsm_values = (double*)calloc(npoints, sizeof(double));
     if (!lsm_values) {
-        printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
+        fprintf(stderr, "unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
         exit(1);
     }
     distances = (double*)calloc(npoints, sizeof(double));
     if (!distances) {
-        printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
+        fprintf(stderr, "unable to allocate %ld bytes\n", (long)(npoints * sizeof(double)));
         exit(1);
     }
     indexes = (int*)calloc(npoints, sizeof(int));
     if (!indexes) {
-        printf("unable to allocate %ld bytes\n", (long)(npoints * sizeof(int)));
+        fprintf(stderr, "unable to allocate %ld bytes\n", (long)(npoints * sizeof(int)));
         exit(1);
     }
 
@@ -132,7 +136,7 @@ int main(int argc, char** argv)
     }
     h = codes_handle_new_from_file(0, fin, PRODUCT_GRIB, &ret);
     if (!h || ret != CODES_SUCCESS) {
-        printf(" unable to create handle\n");
+        fprintf(stderr, "unable to create handle\n");
         exit(1);
     }
 

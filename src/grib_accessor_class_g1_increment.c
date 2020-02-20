@@ -167,7 +167,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     long numberOfPoints = 0;
 
     if (*len < 1)
-        ret = GRIB_ARRAY_TOO_SMALL;
+        return GRIB_ARRAY_TOO_SMALL;
 
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->directionIncrementGiven, &directionIncrementGiven)) != GRIB_SUCCESS)
         return ret;

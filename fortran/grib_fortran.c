@@ -316,24 +316,24 @@ static void _push_handle(grib_handle *h,int *gid)
 
 static void _push_index(grib_index *h,int *gid)
 {
-    l_grib_index* current= index_set;
+    l_grib_index* current= NULL;
     l_grib_index* previous= index_set;
     l_grib_index* the_new= NULL;
     int myindex= 1;
 
     /*
-  if (*gid > 0 ) {
-    while(current) {
-      if(current->id == *gid) break;
-      current = current->next;
+    if (*gid > 0 ) {
+      while(current) {
+        if(current->id == *gid) break;
+        current = current->next;
+      }
+      if (current) {
+        grib_index_delete(current->h);
+        current->h=h;
+        return;
+      }
     }
-    if (current) {
-      grib_index_delete(current->h);
-      current->h=h;
-      return;
-    }
-  }
-     */
+    */
 
     if(!index_set){
         index_set = (l_grib_index*)malloc(sizeof(l_grib_index));
@@ -374,24 +374,24 @@ static void _push_index(grib_index *h,int *gid)
 
 static void _push_multi_handle(grib_multi_handle *h,int *gid)
 {
-    l_grib_multi_handle* current= multi_handle_set;
+    l_grib_multi_handle* current= NULL;
     l_grib_multi_handle* previous= multi_handle_set;
     l_grib_multi_handle* the_new= NULL;
     int myindex= 1;
 
     /*
-  if (*gid > 0 ) {
-    while(current) {
-      if(current->id == *gid) break;
-      current = current->next;
+    if (*gid > 0 ) {
+        while(current) {
+          if(current->id == *gid) break;
+          current = current->next;
+        }
+        if (current) {
+          grib_multi_handle_delete(current->h);
+          current->h=h;
+          return;
+        }
     }
-    if (current) {
-      grib_multi_handle_delete(current->h);
-      current->h=h;
-      return;
-    }
-  }
-     */
+    */
 
     if(!multi_handle_set){
         multi_handle_set = (l_grib_multi_handle*)malloc(sizeof(l_grib_multi_handle));
