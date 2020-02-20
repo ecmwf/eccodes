@@ -227,7 +227,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     val[length] = 0;
     len[0]      = length;
-    return GRIB_SUCCESS;
+    return err;
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)

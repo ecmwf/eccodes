@@ -216,7 +216,17 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
         for (i = 0; i < n_vals; i++)
             val[i] += units_bias;
 
-    ret = super->pack_double(a, val, len);
+    if (super != grib_accessor_class_data_g2simple_packing) {
+        /* Normal case: parent not same as me! */
+        ret = super->pack_double(a, val, len);
+    }
+    else {
+        /* GRIB-364: simple packing with logarithm pre-processing */
+        grib_accessor_class* super2 = NULL;
+        Assert(super->super);
+        super2 = *(super->super);
+        ret    = super2->pack_double(a, val, len);
+    }
     switch (ret) {
         case GRIB_CONSTANT_FIELD:
             grib_buffer_replace(a, NULL, 0, 1, 1);

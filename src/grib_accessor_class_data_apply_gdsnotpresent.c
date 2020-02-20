@@ -283,14 +283,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     ret = grib_set_long(grib_handle_of_accessor(a), self->bitmap_present, bitmap_present);
     if (ret) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "Accessor %s cannont pack value for %s error %d \n", a->name, self->bitmap_present, ret);
+                         "Accessor %s cannot pack value for %s error %d \n", a->name, self->bitmap_present, ret);
         return ret;
     }
 
 #if 0
     if(!grib_find_accessor(grib_handle_of_accessor(a),self->bitmap)){
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                "Accessor %s cannont access bitmap \n", a->name, self->bitmap_present, ret);
+                "Accessor %s cannot access bitmap \n", a->name, self->bitmap_present, ret);
         return ret;
     }
 #endif
@@ -298,7 +298,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     ret = grib_set_double_array_internal(grib_handle_of_accessor(a), self->coded_values, val, *len);
     if (ret) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "Accessor %s cannont pack value for %s error %d \n", a->name, self->coded_values, ret);
+                         "Accessor %s cannot pack value for %s error %d \n", a->name, self->coded_values, ret);
         return ret;
     }
 

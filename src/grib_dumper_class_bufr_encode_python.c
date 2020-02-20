@@ -139,7 +139,7 @@ static int destroy(grib_dumper* d)
 {
     grib_dumper_bufr_encode_python* self = (grib_dumper_bufr_encode_python*)d;
     grib_string_list* next               = self->keys;
-    grib_string_list* cur                = self->keys;
+    grib_string_list* cur                = NULL;
     grib_context* c                      = d->handle->context;
     while (next) {
         cur  = next;
@@ -675,11 +675,11 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     char* p                              = NULL;
     size_t size                          = 0;
     grib_context* c                      = a->context;
-    int r;
-    int err              = _grib_get_string_length(a, &size);
+    int r = 0, err = 0;
     grib_handle* h       = grib_handle_of_accessor(a);
     const char* acc_name = a->name;
 
+    _grib_get_string_length(a, &size);
     if (size == 0)
         return;
 

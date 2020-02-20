@@ -41,7 +41,7 @@ unsigned[3] orientationOfTheGrid : edition_specific ;
 meta geography.orientationOfTheGridInDegrees  scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) : dump;
 
 unsigned[3] NrInRadiusOfEarth : edition_specific,can_be_missing,no_copy;
-alias altitudeOfTheCameraFromTheEarthSCenterMeasuredInUnitsOfTheEarth = NrInRadiusOfEarth;
+alias altitudeOfTheCameraFromTheEarthsCentreMeasuredInUnitsOfTheEarthsRadius = NrInRadiusOfEarth;
 
 unsigned[2]  Xo : dump;
 alias xCoordinateOfOriginOfSectorImage=Xo;

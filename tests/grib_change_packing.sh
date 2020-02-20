@@ -18,8 +18,8 @@ packing1="
 packing2="
     grid_ieee
     grid_simple
-    grid_simple_matrix"
-#TODO: grid_simple_log_preprocessing
+    grid_simple_matrix
+    grid_simple_log_preprocessing"
 
 if [ $HAVE_JPEG -eq 1 ]; then
     packing2="grid_jpeg "$packing2

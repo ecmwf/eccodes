@@ -105,4 +105,4 @@ notifications:
       - shahram.najm@ecmwf.int
     subject: 'Build {{status}}'                  # optional
     message: "{{message}}, {{commitId}}, ..."    # optional
-    on_build_status_changed: true
+    on_build_success: false

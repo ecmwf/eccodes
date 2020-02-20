@@ -27,8 +27,10 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
     }
     if (!next) {
         DebugAssert(prev);
-        prev->next = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
-        next       = prev->next;
+        if (prev) {
+            prev->next = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
+            next       = prev->next;
+        }
     }
     if (!next->value) {
         next->value = strdup(key);
