@@ -76,8 +76,9 @@ echo "Check global gaussian grids are preserved..."
 input=$data_dir/reduced_gaussian_surface.grib1
 ${tools_dir}/grib_set -s edition=2 $input $output
 grib_check_key_equals $output latitudeOfFirstGridPoint,longitudeOfLastGridPoint '87863799 357187500'
-${tools_dir}/grib_check_gaussian_grid $input $output
-
+if [ -x "${tools_dir}/grib_check_gaussian_grid" ]; then
+    ${tools_dir}/grib_check_gaussian_grid $input $output
+fi
 
 #sed "s:toolsdir:${tools_dir}/:" ${tools_dir}/grib1to2.txt > ${tools_dir}/grib1to2.test
 #chmod +x ${tools_dir}/grib1to2.test
