@@ -107,3 +107,4 @@ notifications:
     message: "{{message}}, {{commitId}}, ..."    # optional
     on_build_success: true
     on_build_failure: true
+
