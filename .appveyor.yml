@@ -104,7 +104,7 @@ notifications:
     to:
       - shahram.najm@ecmwf.int
     subject: 'Build {{status}}: {{projectName}} {{buildVersion}}' # optional
-    message: "{{message}}, {{commitId}}, ..."    # optional
+    message: "{{message}}, {{commitId}}, {{pull_request_head_repo_branch}},..."    # optional
     on_build_success: true
     on_build_failure: true
 
