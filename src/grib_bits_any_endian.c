@@ -373,6 +373,7 @@ int grib_encode_unsigned_longb(unsigned char* p, unsigned long val, long* bitp, 
     if (nb > max_nbits) {
         fprintf(stderr, "Number of bits (%ld) exceeds maximum number of bits (%d)\n", nb, max_nbits);
         Assert(0);
+        return GRIB_INTERNAL_ERROR;
     }
 #ifdef DEBUG
     {
