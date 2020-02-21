@@ -103,6 +103,7 @@ notifications:
   - provider: Email
     to:
       - shahram.najm@ecmwf.int
-    subject: 'Build {{status}}'                  # optional
+    subject: 'Build {{status}}: {{projectName}} {{buildVersion}}' # optional
     message: "{{message}}, {{commitId}}, ..."    # optional
-    on_build_success: false
+    on_build_success: true
+    on_build_failure: true
