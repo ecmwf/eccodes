@@ -95,6 +95,7 @@ ecbuild_add_executable( TARGET     codes_bufr_filter
 
 # grib1to2 script needs to be generated before installation
 if (ECCODES_INSTALL_EXTRA_TOOLS)
+    ecbuild_info("ECCODES_INSTALL_EXTRA_TOOLS enabled")
     configure_file( grib1to2.in  grib1to2 )
     install( FILES ${CMAKE_CURRENT_BINARY_DIR}/grib1to2
              DESTINATION ${INSTALL_BIN_DIR}
