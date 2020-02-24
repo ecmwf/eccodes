@@ -601,17 +601,18 @@ static int check_handle_against_spec(grib_handle* handle, const long edition,
     int err = 0;
     int check_latitudes = 1;
     int check_longitudes = 1;
-    double angular_precision = 1.0/1000.0; /* millidegree */
-    double tolerance = angular_precision/2.0; /* half a millidegree */
-
-    if (edition == 2) {
-        angular_precision = 1.0/1000000.0; /* microdegree */
-        tolerance = angular_precision/2.0;
-    }
-
+    long angleSubdivisions = 0;
+    double angular_precision = 1.0/1000.0; /* millidegree by default */
+    double tolerance = 0;
+    
     if (edition == 2) {
         return GRIB_SUCCESS;  /* For now only do checks on edition 1 */
     }
+
+    if ((err = grib_get_long(handle, "angleSubdivisions", &angleSubdivisions))==GRIB_SUCCESS) {
+        angular_precision = 1.0/angleSubdivisions;
+    }
+    tolerance = angular_precision/2.0;
 
     if (spec->grid_type == GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC ||
         spec->grid_type == GRIB_UTIL_GRID_SPEC_SH)
@@ -643,8 +644,8 @@ static int check_handle_against_spec(grib_handle* handle, const long edition,
         double lat1, lat2;
         const double lat1spec = normalise_angle(spec->latitudeOfFirstGridPointInDegrees);
         const double lat2spec = normalise_angle(spec->latitudeOfLastGridPointInDegrees);
-        if ((err = grib_get_double(handle, "latitudeOfFirstGridPointInDegrees", &lat1))!=0)  return err;
-        if ((err = grib_get_double(handle, "latitudeOfLastGridPointInDegrees", &lat2))!=0)   return err;
+        if ((err = grib_get_double(handle, "latitudeOfFirstGridPointInDegrees", &lat1))!=0) return err;
+        if ((err = grib_get_double(handle, "latitudeOfLastGridPointInDegrees", &lat2))!=0) return err;
         lat1 = normalise_angle(lat1);
         lat2 = normalise_angle(lat2);
 
@@ -672,7 +673,7 @@ static int check_handle_against_spec(grib_handle* handle, const long edition,
         const double lon1spec = normalise_angle(spec->longitudeOfFirstGridPointInDegrees);
         const double lon2spec = normalise_angle(spec->longitudeOfLastGridPointInDegrees);
         if ((err = grib_get_double(handle, "longitudeOfFirstGridPointInDegrees", &lon1))!=0) return err;
-        if ((err = grib_get_double(handle, "longitudeOfLastGridPointInDegrees", &lon2))!=0)  return err;
+        if ((err = grib_get_double(handle, "longitudeOfLastGridPointInDegrees", &lon2))!=0) return err;
         lon1 = normalise_angle(lon1);
         lon2 = normalise_angle(lon2);
 
