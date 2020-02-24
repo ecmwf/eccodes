@@ -12,6 +12,7 @@
  * Enrico Fucile                                                           *
  ***************************************************************************/
 #include "grib_api_internal.h"
+#include <float.h>
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -708,15 +709,25 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
 
     if (h->context->debug) {
         size_t N = 5;
+        /*double minVal = DBL_MAX, maxVal = -DBL_MAX;*/
         if (length <= N)
             N = length;
         fprintf(stderr, "ECCODES DEBUG grib_set_double_array key=%s %ld values (", name, (long)length);
         for (i = 0; i < N; ++i)
             fprintf(stderr, " %g,", val[i]);
-        if (N >= length)
-            fprintf(stderr, " )\n");
-        else
-            fprintf(stderr, " ... )\n");
+        if (N >= length) fprintf(stderr, " )\n");
+        else fprintf(stderr, " ... )\n");
+        /*
+        * if (N >= length)
+        *    fprintf(stderr, " )\t");
+        * else
+        *     fprintf(stderr, " ... )\t");
+        * for (i = 0; i < length; ++i) {
+        *     if (val[i] < minVal) minVal = val[i];
+        *     if (val[i] > maxVal) maxVal = val[i];
+        * }
+        * fprintf(stderr, "min=%g, max=%g\n",minVal,maxVal);
+        */
     }
 
     if (length == 0) {
