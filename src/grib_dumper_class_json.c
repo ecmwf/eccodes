@@ -144,8 +144,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     h = grib_handle_of_accessor(a);
     grib_value_count(a, &count);
-    size = count;
-    size2 = size;
+    size = size2 = count;
 
     if (size > 1) {
         values = (double*)grib_context_malloc_clear(a->context, sizeof(double) * size);
@@ -154,7 +153,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     else {
         err = grib_unpack_double(a, &value, &size2);
     }
-    Assert(size == size2);
+    Assert(size2 == size);
     (void)err; /* TODO */
 
     if (self->begin == 0 && self->empty == 0 && self->isAttribute == 0)
@@ -227,7 +226,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_json* self = (grib_dumper_json*)d;
     long value             = 0;
-    size_t size            = 1;
+    size_t size = 1, size2 = 0;
     long* values           = NULL;
     int err                = 0;
     int i;
@@ -238,15 +237,16 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         return;
 
     grib_value_count(a, &count);
-    size = count;
+    size = size2 = count;
 
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
-        err    = grib_unpack_long(a, values, &size);
+        err    = grib_unpack_long(a, values, &size2);
     }
     else {
-        err = grib_unpack_long(a, &value, &size);
+        err = grib_unpack_long(a, &value, &size2);
     }
+    Assert(size2 == size);
 
     if (self->begin == 0 && self->empty == 0 && self->isAttribute == 0)
         fprintf(self->dumper.out, ",");

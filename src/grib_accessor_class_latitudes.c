@@ -194,7 +194,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_iterator* iter = NULL;
 
     self->save = 1;
-    size       = 0;
     ret        = value_count(a, &count);
     if (ret)
         return ret;

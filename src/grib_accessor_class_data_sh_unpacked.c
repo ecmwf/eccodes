@@ -371,6 +371,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         /* pscals=scals+lup; */
         for (lcount = hcount; lcount < maxv; lcount++) {
             dummy = d * (double)((grib_decode_unsigned_long(lres, &lpos, bits_per_value) * s) + reference_value);
+            (void)dummy;
             dummy = d * (double)((grib_decode_unsigned_long(lres, &lpos, bits_per_value) * s) + reference_value);
             (void)dummy; /* suppress gcc warning */
             lup++;

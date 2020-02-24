@@ -1510,7 +1510,7 @@ static int grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsign
         return 0;
     }
 
-    secbegin += seclen;
+    /*secbegin += seclen;*/
 
     return 1;
 }

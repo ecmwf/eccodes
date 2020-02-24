@@ -154,7 +154,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_bufr_encode_filter* self = (grib_dumper_bufr_encode_filter*)d;
     double value                         = 0;
-    size_t size                          = 0;
+    size_t size = 0, size2 = 0;
     double* values                       = NULL;
     int err                              = 0;
     int i, r;
@@ -167,15 +167,16 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         return;
 
     grib_value_count(a, &count);
-    size = count;
+    size = size2 = count;
 
     if (size > 1) {
         values = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
-        err    = grib_unpack_double(a, values, &size);
+        err    = grib_unpack_double(a, values, &size2);
     }
     else {
-        err = grib_unpack_double(a, &value, &size);
+        err = grib_unpack_double(a, &value, &size2);
     }
+    Assert(size2 == size);
 
     self->begin = 0;
     self->empty = 0;
@@ -256,8 +257,7 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
         return;
 
     grib_value_count(a, &count);
-    size  = count;
-    size2 = size;
+    size = size2 = count;
 
     if (size > 1) {
         values = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
@@ -266,7 +266,7 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
     else {
         err = grib_unpack_double(a, &value, &size2);
     }
-    Assert(size == size2);
+    Assert(size2 == size);
 
     self->empty = 0;
 
@@ -316,7 +316,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_encode_filter* self = (grib_dumper_bufr_encode_filter*)d;
     long value                           = 0;
-    size_t size                          = 0;
+    size_t size = 0, size2 = 0;
     long* values                         = NULL;
     int err                              = 0;
     int i, r, icount;
@@ -329,7 +329,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         return;
 
     grib_value_count(a, &count);
-    size = count;
+    size = size2 = count;
 
     if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
         if (self->isLeaf == 0) {
@@ -355,11 +355,12 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
-        err    = grib_unpack_long(a, values, &size);
+        err    = grib_unpack_long(a, values, &size2);
     }
     else {
-        err = grib_unpack_long(a, &value, &size);
+        err = grib_unpack_long(a, &value, &size2);
     }
+    Assert(size2 == size);
 
     self->begin = 0;
     self->empty = 0;
@@ -426,7 +427,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
 {
     grib_dumper_bufr_encode_filter* self = (grib_dumper_bufr_encode_filter*)d;
     long value                           = 0;
-    size_t size                          = 0;
+    size_t size = 0, size2 = 0;
     long* values                         = NULL;
     int err                              = 0;
     int i, icount;
@@ -438,15 +439,16 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         return;
 
     grib_value_count(a, &count);
-    size = count;
+    size = size2 = count;
 
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
-        err    = grib_unpack_long(a, values, &size);
+        err    = grib_unpack_long(a, values, &size2);
     }
     else {
-        err = grib_unpack_long(a, &value, &size);
+        err = grib_unpack_long(a, &value, &size2);
     }
+    Assert(size2 == size);
 
     self->empty = 0;
 

@@ -402,10 +402,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long number_of_data_points;
     long nn = 0;
 
-
     self->dirty = 1;
 
-    n_vals = 0;
     err    = grib_value_count(a, &nn);
     n_vals = nn;
     if (err)
@@ -542,8 +540,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             buflen++;
         }
     }
-    /*       buflen = n_vals*(bits_per_value/8);*/
-
+    /* buflen = n_vals*(bits_per_value/8); */
     grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "grib_accessor_data_png_packing : pack_double : packing %s, %d values", a->name, n_vals);
     buf = grib_context_buffer_malloc_clear(a->context, buflen);
