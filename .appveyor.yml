@@ -106,5 +106,5 @@ notifications:
     subject: 'Build {{status}}: {{projectName}} {{buildVersion}}' # optional
     message: "{{message}}, {{commitId}}, {{pull_request_head_repo_branch}},..."    # optional
     on_build_success: true
-    on_build_failure: true
+    on_build_failure: false
 
