@@ -240,7 +240,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     long n_vals   = 0;
     double* scals = NULL;
     /* double *pscals=NULL; */
-    double dummy = 0;
 
     double s                 = 0;
     double d                 = 0;
@@ -375,9 +374,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         lup = mmax;
         if (sub_k >= 0) {
             for (hcount = 0; hcount < sub_k + 1; hcount++) {
-                dummy = decode_float(grib_decode_unsigned_long(hres, &hpos, 8 * bytes));
-                dummy = decode_float(grib_decode_unsigned_long(hres, &hpos, 8 * bytes));
-                (void)dummy;
+                decode_float(grib_decode_unsigned_long(hres, &hpos, 8 * bytes));
+                decode_float(grib_decode_unsigned_long(hres, &hpos, 8 * bytes));
                 lup++;
             }
             sub_k--;

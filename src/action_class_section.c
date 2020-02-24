@@ -177,7 +177,7 @@ static int notify_change(grib_action* act, grib_accessor* notified,
     if (err) {
         if (err == GRIB_NOT_FOUND && strcmp(act->name, "dataValues") == 0) {
             /* FIXME: Allow this error. Needed when changing some packingTypes e.g. CCSDS to Simple */
-            err = GRIB_SUCCESS;
+            /*err = GRIB_SUCCESS;*/
         }
         else {
             return err;

@@ -330,6 +330,7 @@ static int select_datetime(grib_accessor* a)
             ret       = 0;
             second[0] = 0;
             n         = 1;
+            (void)ret;
         }
         if (n != numberOfSubsets) {
             if (n == 1) {

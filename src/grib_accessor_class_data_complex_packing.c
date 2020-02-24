@@ -724,7 +724,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     mmax   = 0;
     maxv   = pen_j + 1;
     i      = 0;
-    lcount = 0;
     hcount = 0;
     sub_k  = sub_j;
 
@@ -804,8 +803,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     mmax   = 0;
     maxv   = pen_j + 1;
-    i      = 0;
-    lcount = 0;
     hcount = 0;
     sub_k  = sub_j;
 
