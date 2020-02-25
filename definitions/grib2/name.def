@@ -1451,8 +1451,8 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 4 ;
 	}
-#Falciparum parasite rates
-'Falciparum parasite rates' = {
+#Falciparum parasite ratio
+'Falciparum parasite ratio' = {
 	 discipline = 20 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 5 ;
