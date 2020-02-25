@@ -175,31 +175,36 @@ Representation* LatLon::globalise(data::MIRField& field) const {
         return nullptr;
     }
 
-    ASSERT(!increments_.isShifted(bbox_));
+    // For now, we only grow towards North and South poles
+    ASSERT(domain().isPeriodicWestEast());
 
-    // For now, we only use that function for the LAW model, so we only grow by the end (south pole)
-    ASSERT(bbox_.north() == Latitude::NORTH_POLE);
-    ASSERT(bbox_.west() == Longitude::GREENWICH);
-    ASSERT(bbox_.east() + increments_.west_east().longitude() == Longitude::GLOBE);
-
-    util::BoundingBox newbbox(bbox_.north(), bbox_.west(), Latitude::SOUTH_POLE, bbox_.east());
+    util::BoundingBox newbbox(bbox_);
+    globaliseBoundingBox(newbbox, increments_, {bbox_.south(), bbox_.west()});
 
     std::unique_ptr<LatLon> newll(const_cast<LatLon*>(croppedRepresentation(newbbox)));
 
     ASSERT(newll->nj_ > nj_);
     ASSERT(newll->ni_ == ni_);
 
-    size_t n            = ni_ * nj_;
-    size_t newn         = newll->ni_ * newll->nj_;
-    double missingValue = field.missingValue();
+    size_t n    = ni_ * nj_;
+    size_t newn = newll->ni_ * newll->nj_;
+
+    auto lat       = newbbox.north();
+    auto lon       = newbbox.west();
+    size_t nBefore = 0;
+    while (!bbox_.contains(lat, lon)) {
+        lat -= increments_.south_north().latitude();
+        nBefore += ni_;
+        ASSERT(n + nBefore <= newn);
+    }
 
     for (size_t i = 0; i < field.dimensions(); i++) {
-        MIRValuesVector newvalues(newn, missingValue);
+        MIRValuesVector newvalues(newn, field.missingValue());
         const MIRValuesVector& values = field.direct(i);
         ASSERT(values.size() == n);
 
         for (size_t j = 0; j < n; ++j) {
-            newvalues[j] = values[j];
+            newvalues[j + nBefore] = values[j];
         }
 
         field.update(newvalues, i);
