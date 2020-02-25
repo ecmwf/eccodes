@@ -124,7 +124,8 @@ int grib_tool_init(grib_runtime_options* options)
                     exit(1);
                 }
             }
-            if (*p == ',') {
+            Assert(p);
+            if (p && *p == ',') {
                 p++;
                 options->latlon_mask = strdup(p);
             }
