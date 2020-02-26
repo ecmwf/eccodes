@@ -130,7 +130,7 @@ unsigned long grib_ieee_to_long(double x)
     unsigned long s    = 0;
     unsigned long mmax = 0xffffff;
     unsigned long mmin = 0x800000;
-    unsigned long m    = mmax;
+    unsigned long m    = 0;
     unsigned long e    = 0;
     double rmmax       = mmax + 0.5;
 

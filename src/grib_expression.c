@@ -67,7 +67,7 @@ const char* grib_expression_get_name(grib_expression* g)
             return c->get_name(g);
         c = c->super ? *(c->super) : NULL;
     }
-    printf("No expression_get_name() in %s\n", g->cclass->name);
+    if (g->cclass) printf("No expression_get_name() in %s\n", g->cclass->name);
     Assert(1 == 0);
     return 0;
 }

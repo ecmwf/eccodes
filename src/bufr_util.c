@@ -590,7 +590,7 @@ static int count_bufr_messages(grib_context* c, FILE* f, int* n, int strict_mode
             err = GRIB_INTERNAL_ERROR;
         }
     }
-
+    (void)done;
     rewind(f);
     if (err == GRIB_END_OF_FILE)
         err = GRIB_SUCCESS;
