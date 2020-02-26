@@ -567,6 +567,8 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
         }
         off = p1_accessor->offset * 8;
         /* Note: here we assume the key P2 is one octet and immediately follows P1. Hence 16 bits */
+        if (h->context->debug)
+            fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (as two octets)\n", p1_accessor->name, P1);
         ret = grib_encode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, P1, &off, 16);
         if (ret != 0)
             return ret;
@@ -609,6 +611,8 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
             /* Note:  case for timeRangeIndicator of 10
              * We assume the key P2 is one octet and immediately follows P1. Hence 16 bits
              */
+            if (h->context->debug)
+                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (as two octets)\n", p1_accessor->name, P1);
             ret = grib_encode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, P1, &off, 16);
             if (ret != 0)
                 return ret;
