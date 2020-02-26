@@ -45,5 +45,7 @@ fi
 # Now get the data from the newly created GRIB file
 ${tools_dir}/grib_get_data $tempGrib > $tempOut
 
+${tools_dir}/grib_ls -l 50,0 $tempGrib
+
 # Clean up
 rm -f $tempFilter $tempGrib $tempOut
