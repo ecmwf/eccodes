@@ -204,4 +204,12 @@ for bf in ${bufr_files}; do
 done
 
 
+echo "Test with invalid inputs..."
+# ---------------------------------
+set +e
+$EXEC ${test_dir}/bufr_extract_headers centre ${data_dir}
+status=$?
+set -e
+[ $status -ne 0 ]
+
 rm -f $temp1 $temp2
