@@ -247,7 +247,10 @@ static void gaussian_grid(grib_handle* h)
         last_n = n;
     }
 
-    values[0] = rint(values[0]*1e6)/1e6;
+    assert(values);
+    if (values) {
+        values[0] = rint(values[0]*1e6)/1e6;
+    }
 
     if ( !DBL_EQUAL(north, values[0], tolerance) || !DBL_EQUAL(south, -values[0], tolerance) )
         printf("N=%ld north=%f south=%f v(=gauss_lat[0])=%f north-v=%0.30f south-v=%0.30f\n",

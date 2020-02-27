@@ -1451,7 +1451,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 4 ;
 	}
-#Falciparum parasite rates
+#Falciparum parasite ratio
 'mal_para_rate' = {
 	 discipline = 20 ;
 	 parameterCategory = 1 ;

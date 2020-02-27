@@ -38,8 +38,16 @@ static void check_float_representation(const double val, const double expected, 
     compare_doubles(out, expected, tolerance);
 }
 
+static void test_get_git_sha1()
+{
+    const char* sha1 = grib_get_git_sha1();
+    printf("Testing: test_get_git_sha1...\n");
+    assert(sha1 != NULL);
+}
+
 static void test_grib_nearest_smaller_ibmfloat()
 {
+    printf("Testing: test_grib_nearest_smaller_ibmfloat...\n");
     check_float_representation(-1.0, -1.0, IBM_FLOAT);
     check_float_representation(0.0, 0.0, IBM_FLOAT);
     check_float_representation(1.0, 1.0, IBM_FLOAT);
@@ -50,6 +58,7 @@ static void test_grib_nearest_smaller_ibmfloat()
 
 static void test_grib_nearest_smaller_ieeefloat()
 {
+    printf("Testing: test_grib_nearest_smaller_ieeefloat...\n");
     check_float_representation(-1.0, -1.0, IEEE_FLOAT);
     check_float_representation(0.0, 0.0, IEEE_FLOAT);
     check_float_representation(1.0, 1.0, IEEE_FLOAT);
@@ -63,9 +72,8 @@ static void test_gaussian_latitudes(int order)
     int ret       = 0;
     const int num = 2 * order;
     double lat1 = 0, lat2 = 0;
-
     double* lats = (double*)malloc(sizeof(double) * num);
-
+    printf("Testing: test_gaussian_latitudes order=%d...\n", order);
     ret = grib_get_gaussian_latitudes(order, lats);
     Assert(ret == GRIB_SUCCESS);
 
@@ -87,6 +95,7 @@ static void test_gaussian_latitude_640()
     double* lats           = (double*)malloc(sizeof(double) * num);
     ret                    = grib_get_gaussian_latitudes(order, lats);
     Assert(ret == GRIB_SUCCESS);
+    printf("Testing: test_gaussian_latitude_640...\n");
 
     compare_doubles(lats[0], 89.892396, tolerance);
     compare_doubles(lats[1], 89.753005, tolerance);
@@ -1377,6 +1386,8 @@ static void test_string_splitting()
     int i          = 0;
     char input[80] = "Born|To|Be|Wild";
     char** list    = 0;
+    printf("Testing: test_string_splitting...\n");
+
     list           = string_split(input, "|");
     assert(list);
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
@@ -1432,6 +1443,8 @@ static void test_assertion_catching()
     int i        = 0;
     assert(assertion_caught == 0);
     codes_set_codes_assertion_failed_proc(&my_assertion_proc);
+    
+    printf("Testing: test_assertion_catching...\n");
 
     /* Do something illegal */
     list = string_split(empty, " ");
@@ -1452,6 +1465,8 @@ static void test_concept_condition_strings()
     int err           = 0;
     char result[1024] = {0,};
     grib_handle* h = grib_handle_new_from_samples(0, "GRIB2");
+
+    printf("Testing: test_concept_condition_strings...\n");
 
     err = get_concept_condition_string(h, "typeOfLevel", NULL, result);
     assert(!err);
@@ -1476,6 +1491,7 @@ static void test_concept_condition_strings()
 int main(int argc, char** argv)
 {
     /*printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());*/
+    test_get_git_sha1();
 
     test_concept_condition_strings();
 

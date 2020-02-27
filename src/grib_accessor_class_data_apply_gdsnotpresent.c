@@ -200,9 +200,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     long nn                      = 0;
     int err                      = 0;
     size_t size                  = 0;
-    long missing_value;
-
-    double* coded_vals = NULL;
+    long missing_value           = 0;
+    double* coded_vals           = NULL;
 
     err    = grib_value_count(a, &nn);
     n_vals = nn;
@@ -231,7 +230,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     if (number_of_values > 0) {
         coded_vals = (double*)grib_context_malloc(a->context, number_of_values * sizeof(double));
-
         if (coded_vals == NULL)
             return GRIB_OUT_OF_MEMORY;
     }
@@ -252,12 +250,16 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
                      a->name, number_of_points);
 
     if (latitude_of_first_point == 0) {
+        if (number_of_values && !coded_vals)
+            return GRIB_INTERNAL_ERROR;
         for (i = 0; i < number_of_values; i++)
             val[i] = coded_vals[i];
         for (i = number_of_values; i < number_of_points; i++)
             val[i] = coded_vals[number_of_values - 1];
     }
     else {
+        if ((ni-1) && !coded_vals)
+            return GRIB_INTERNAL_ERROR;
         for (i = 0; i < ni - 1; i++)
             val[i] = coded_vals[0];
         for (i = ni - 1; i < number_of_points; i++)

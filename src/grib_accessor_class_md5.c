@@ -146,7 +146,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
 
     self->offset    = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
     self->length    = grib_arguments_get_expression(grib_handle_of_accessor(a), arg, n++);
-    self->blacklist = 0;
+    self->blacklist = NULL;
     while ((b = (char*)grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++)) != NULL) {
         if (!self->blacklist) {
             self->blacklist        = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
@@ -154,9 +154,12 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
             current                = self->blacklist;
         }
         else {
-            current->next        = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
-            current->next->value = grib_context_strdup(context, b);
-            current              = current->next;
+            Assert(current);
+            if (current) {
+                current->next        = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
+                current->next->value = grib_context_strdup(context, b);
+                current              = current->next;
+            }
         }
     }
     a->length = 0;

@@ -593,8 +593,9 @@ static int is_missing(grib_accessor* a)
     if (a->flags & GRIB_ACCESSOR_FLAG_TRANSIENT) {
         if (a->vvalue == NULL) {
             grib_context_log(a->context, GRIB_LOG_ERROR, "%s internal error (flags=0x%X)", a->name, a->flags);
+            Assert(!"grib_accessor_class_gen::is_missing(): a->vvalue == NULL");
+            return 0;
         }
-        Assert(a->vvalue != NULL);
         return a->vvalue->missing;
     }
     Assert(a->length >= 0);
