@@ -252,7 +252,7 @@ if(((section1Length > 40) or new() or setLocalDefinition> 0) and deleteLocalDefi
   {
     pad reservedNeedNotBePresent(12);
     codetable[1] localDefinitionNumber 'grib1/localDefinitionNumber.98.table' = 1 : dump;
-    template  localDefinition  "grib1/local.98.[localDefinitionNumber:l].def";
+    template_nofail  localDefinition  "grib1/local.98.[localDefinitionNumber:l].def";
     if (changed(localDefinitionNumber)) {
       if(!new() && localDefinitionNumber!=4 ) {
          section_padding localExtensionPadding : read_only;

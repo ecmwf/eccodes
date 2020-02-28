@@ -19,7 +19,7 @@ meta eps g2_eps(productDefinitionTemplateNumber,
                 stepType,
                 derivedForecast);
 
-template  localSection  "grib2/local.98.[grib2LocalSectionNumber:l].def";
+template_nofail  localSection  "grib2/local.98.[grib2LocalSectionNumber:l].def";
 position offsetAfterLocalSection;
 transient addExtraLocalSection=0;
 transient deleteExtraLocalSection=0;
