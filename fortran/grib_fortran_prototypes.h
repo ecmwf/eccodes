@@ -19,12 +19,54 @@ int grib_f_read_any_headers_only_from_file(int *fid, char *buffer, size_t *nbyte
 int grib_f_read_any_from_file_(int *fid, char *buffer, size_t *nbytes);
 int grib_f_read_any_from_file__(int *fid, char *buffer, size_t *nbytes);
 int grib_f_read_any_from_file(int *fid, char *buffer, size_t *nbytes);
+
+int grib_f_read_any_from_file_char(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_from_file_char_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_from_file_char__(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_from_file_int4(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_from_file_int4_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_from_file_int4__(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_from_file_real4(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_from_file_real4_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_from_file_real4__(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_from_file_real8(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_from_file_real8_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_any_from_file_real8__(int *fid, char *buffer, size_t *nbytes);
+
 int grib_f_write_file_(int *fid, char *buffer, size_t *nbytes);
 int grib_f_write_file__(int *fid, char *buffer, size_t *nbytes);
 int grib_f_write_file(int *fid, char *buffer, size_t *nbytes);
+
+int grib_f_write_file_char(int *fid, char *buffer, size_t *nbytes);
+int grib_f_write_file_char_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_write_file_char__(int *fid, char *buffer, size_t *nbytes);
+int grib_f_write_file_int4(int *fid, char *buffer, size_t *nbytes);
+int grib_f_write_file_int4_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_write_file_int4__(int *fid, char *buffer, size_t *nbytes);
+int grib_f_write_file_real4(int *fid, char *buffer, size_t *nbytes);
+int grib_f_write_file_real4_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_write_file_real4__(int *fid, char *buffer, size_t *nbytes);
+int grib_f_write_file_real8(int *fid, char *buffer, size_t *nbytes);
+int grib_f_write_file_real8_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_write_file_real8__(int *fid, char *buffer, size_t *nbytes);
+
 int grib_f_read_file_(int *fid, char *buffer, size_t *nbytes);
 int grib_f_read_file__(int *fid, char *buffer, size_t *nbytes);
 int grib_f_read_file(int *fid, char *buffer, size_t *nbytes);
+
+int grib_f_read_file_char(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_file_char_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_file_char__(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_file_int4(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_file_int4_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_file_int4__(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_file_real4(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_file_real4_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_file_real4__(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_file_real8(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_file_real8_(int *fid, char *buffer, size_t *nbytes);
+int grib_f_read_file_real8__(int *fid, char *buffer, size_t *nbytes);
+  
 int grib_f_open_file_(int *fid, char *name, char *op, int lname, int lop);
 int grib_f_open_file__(int *fid, char *name, char *op, int lname, int lop);
 int grib_f_open_file(int *fid, char *name, char *op, int lname, int lop);
@@ -110,6 +152,14 @@ int grib_f_keys_iterator_rewind(int *kiter);
 int grib_f_new_from_message_(int *gid, void *buffer, size_t *bufsize);
 int grib_f_new_from_message__(int *gid, void *buffer, size_t *bufsize);
 int grib_f_new_from_message(int *gid, void *buffer, size_t *bufsize);
+
+int grib_f_new_from_message_char(int *gid, void *buffer, size_t *bufsize);
+int grib_f_new_from_message_char_(int *gid, void *buffer, size_t *bufsize);
+int grib_f_new_from_message_char__(int *gid, void *buffer, size_t *bufsize);
+int grib_f_new_from_message_int4(int *gid, void *buffer, size_t *bufsize);
+int grib_f_new_from_message_int4_(int *gid, void *buffer, size_t *bufsize);
+int grib_f_new_from_message_int4__(int *gid, void *buffer, size_t *bufsize);
+
 int grib_f_new_from_message_copy_(int *gid, void *buffer, size_t *bufsize);
 int grib_f_new_from_message_copy__(int *gid, void *buffer, size_t *bufsize);
 int grib_f_new_from_message_copy(int *gid, void *buffer, size_t *bufsize);

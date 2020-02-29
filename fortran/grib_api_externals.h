@@ -82,3 +82,113 @@ external :: grib_f_check
 integer, external :: grib_f_util_sections_copy
 integer, external :: grib_f_set_definitions_path, grib_f_set_samples_path
 integer, external :: grib_f_julian_to_datetime, grib_f_datetime_to_julian, grib_f_copy_key
+
+interface
+  function grib_f_write_file_char(ifile, buffer, ibytes) result(iret)
+    include "grib_kinds.h"
+    integer(kind=kindOfInt),intent(in)               :: ifile
+    character(len=1), dimension(:),intent(in)        :: buffer
+    integer(kind=kindOfSize_t)                       :: ibytes
+    integer(kind=kindOfInt)                          :: iret
+  end function grib_f_write_file_char
+  function grib_f_write_file_int4(ifile, buffer, ibytes) result(iret)
+    include "grib_kinds.h"
+    integer(kind=kindOfInt),intent(in)               :: ifile
+    integer(kind=4), dimension(:),intent(in)         :: buffer
+    integer(kind=kindOfSize_t)                       :: ibytes
+    integer(kind=kindOfInt)                          :: iret
+  end function grib_f_write_file_int4
+  function grib_f_write_file_real4(ifile, buffer, ibytes) result(iret)
+    include "grib_kinds.h"
+    integer(kind=kindOfInt),intent(in)               :: ifile
+    real(kind=4), dimension(:),intent(in)            :: buffer
+    integer(kind=kindOfSize_t)                       :: ibytes
+    integer(kind=kindOfInt)                          :: iret
+  end function grib_f_write_file_real4
+  function grib_f_write_file_real8(ifile, buffer, ibytes) result(iret)
+    include "grib_kinds.h"
+    integer(kind=kindOfInt),intent(in)               :: ifile
+    real(kind=8), dimension(:),intent(in)            :: buffer
+    integer(kind=kindOfSize_t)                       :: ibytes
+    integer(kind=kindOfInt)                          :: iret
+  end function grib_f_write_file_real8
+end interface
+
+interface
+  function grib_f_new_from_message_char(gribid, message, size_bytes) result(iret)
+    include "grib_kinds.h"
+    integer(kind=kindOfInt),intent(out)               :: gribid
+    character(len=1), dimension(:),intent(in)         :: message
+    integer(kind=kindOfSize_t)                        :: size_bytes
+    integer(kind=kindOfInt)                           :: iret
+  end function grib_f_new_from_message_char
+  function grib_f_new_from_message_int4(gribid, message, size_bytes) result(iret)
+    include "grib_kinds.h"
+    integer(kind=kindOfInt),intent(out)               :: gribid
+    integer(kind=4), dimension(:),intent(in)          :: message
+    integer(kind=kindOfSize_t)                        :: size_bytes
+    integer(kind=kindOfInt)                           :: iret
+  end function grib_f_new_from_message_int4
+end interface
+
+interface
+  function grib_f_read_any_from_file_char(ifile,buffer,nbytes) result(iret)
+    include "grib_kinds.h"
+    integer(kind=kindOfInt),intent(in)               :: ifile
+    character(len=1),dimension(:), intent(out)       :: buffer
+    integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+    integer(kind=kindOfInt)                          :: iret
+  end function grib_f_read_any_from_file_char
+  function grib_f_read_any_from_file_int4(ifile,buffer,nbytes) result(iret)
+    include "grib_kinds.h"
+    integer(kind=kindOfInt),intent(in)               :: ifile
+    integer(kind=4),dimension(:), intent(out)        :: buffer
+    integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+    integer(kind=kindOfInt)                          :: iret
+  end function grib_f_read_any_from_file_int4
+  function grib_f_read_any_from_file_real4(ifile,buffer,nbytes) result(iret)
+    include "grib_kinds.h"
+    integer(kind=kindOfInt),intent(in)               :: ifile
+    real(kind=4),dimension(:), intent(out)           :: buffer
+    integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+    integer(kind=kindOfInt)                          :: iret
+  end function grib_f_read_any_from_file_real4
+  function grib_f_read_any_from_file_real8(ifile,buffer,nbytes) result(iret)
+    include "grib_kinds.h"
+    integer(kind=kindOfInt),intent(in)               :: ifile
+    real(kind=8),dimension(:), intent(out)           :: buffer
+    integer(kind=kindOfSize_t), intent(inout)        :: nbytes
+    integer(kind=kindOfInt)                          :: iret
+  end function grib_f_read_any_from_file_real8
+end interface
+
+interface
+  function grib_f_read_file_char(ifile,buffer,ibytes) result(iret)
+    include "grib_kinds.h"
+    integer(kind=kindOfInt),intent(in)               :: ifile
+    character(len=1),dimension(:), intent(out)       :: buffer
+    integer(kind=kindOfSize_t)                       :: ibytes
+    integer(kind=kindOfInt)                          :: iret
+  end function grib_f_read_file_char
+  function grib_f_read_file_int4(ifile,buffer,ibytes) result(iret)
+    include "grib_kinds.h"
+    integer(kind=kindOfInt),intent(in)               :: ifile
+    integer(kind=4),dimension(:), intent(out)        :: buffer
+    integer(kind=kindOfSize_t)                       :: ibytes
+    integer(kind=kindOfInt)                          :: iret
+  end function grib_f_read_file_int4
+  function grib_f_read_file_real4(ifile,buffer,ibytes) result(iret)
+    include "grib_kinds.h"
+    integer(kind=kindOfInt),intent(in)               :: ifile
+    real(kind=4),dimension(:), intent(out)           :: buffer
+    integer(kind=kindOfSize_t)                       :: ibytes
+    integer(kind=kindOfInt)                          :: iret
+  end function grib_f_read_file_real4
+  function grib_f_read_file_real8(ifile,buffer,ibytes) result(iret)
+    include "grib_kinds.h"
+    integer(kind=kindOfInt),intent(in)               :: ifile
+    real(kind=8),dimension(:), intent(out)           :: buffer
+    integer(kind=kindOfSize_t)                       :: ibytes
+    integer(kind=kindOfInt)                          :: iret
+  end function grib_f_read_file_real8
+end interface
