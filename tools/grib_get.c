@@ -75,7 +75,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (options->latlon) {
         lat = strtod(options->latlon, &theEnd);
         if (*theEnd != ',') {
-            printf("ERROR: wrong latitude value\n");
+            fprintf(stderr, "Error %s: wrong latitude value. Please use 'latitude,longitude'\n",grib_tool_name);
             exit(1);
         }
         lon = strtod(++theEnd, &end1);
@@ -95,11 +95,12 @@ int grib_tool_init(grib_runtime_options* options)
                     options->latlon_mode = 1;
                 }
                 else {
-                    printf("ERROR %s: wrong mode given in option -l\n", grib_tool_name);
+                    fprintf(stderr, "Error %s: wrong mode given in option -l\n", grib_tool_name);
                     exit(1);
                 }
             }
-            if (*p == ',') {
+            Assert(p);
+            if (p && *p == ',') {
                 p++;
                 options->latlon_mask = strdup(p);
             }

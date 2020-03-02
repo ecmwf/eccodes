@@ -443,7 +443,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
 {
     grib_dumper_bufr_simple* self = (grib_dumper_bufr_simple*)d;
     long value                    = 0;
-    size_t size                   = 0;
+    size_t size = 0, size2 = 0;
     long* values                  = NULL;
     int err                       = 0;
     int i, icount;
@@ -455,15 +455,16 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         return;
 
     grib_value_count(a, &count);
-    size = count;
+    size = size2 = count;
 
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
-        err    = grib_unpack_long(a, values, &size);
+        err    = grib_unpack_long(a, values, &size2);
     }
     else {
-        err = grib_unpack_long(a, &value, &size);
+        err = grib_unpack_long(a, &value, &size2);
     }
+    Assert(size2 == size);
 
     self->empty = 0;
 

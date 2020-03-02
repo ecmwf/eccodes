@@ -97,7 +97,11 @@ int main(int argc, char* argv[])
         }
         else {
             printf("Default definition files path is used: %s\n", context->grib_definition_files_path);
-            printf("Definition files path can be changed by setting ECCODES_DEFINITION_PATH environment variable\n");
+            printf("Definition files path can be changed by setting the ECCODES_DEFINITION_PATH environment variable.\n");
+        }
+
+        if((path = getenv("ECCODES_EXTRA_DEFINITION_PATH")) != NULL) {
+            printf("Environment variable ECCODES_EXTRA_DEFINITION_PATH=%s\n", path);
         }
         printf("\n");
 
@@ -114,7 +118,10 @@ int main(int argc, char* argv[])
         }
         else {
             printf("Default SAMPLES path is used: %s\n", context->grib_samples_path);
-            printf("SAMPLES path can be changed by setting ECCODES_SAMPLES_PATH environment variable\n");
+            printf("SAMPLES path can be changed by setting the ECCODES_SAMPLES_PATH environment variable.\n");
+        }
+        if ((path = getenv("ECCODES_EXTRA_SAMPLES_PATH")) != NULL) {
+            printf("Environment variable ECCODES_EXTRA_SAMPLES_PATH=%s\n", path);
         }
         printf("\n");
         return 0;
