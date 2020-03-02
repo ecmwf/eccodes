@@ -159,7 +159,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     }
 
     *len = l;
-    strcpy(val, tmp);
+    strncpy(val, tmp, l);
 
     return GRIB_SUCCESS;
 }

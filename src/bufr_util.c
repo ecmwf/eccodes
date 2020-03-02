@@ -32,6 +32,9 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
             next       = prev->next;
         }
     }
+    DebugAssert(next);
+    if (!next) return 0;
+
     if (!next->value) {
         next->value = strdup(key);
         next->count = 0;

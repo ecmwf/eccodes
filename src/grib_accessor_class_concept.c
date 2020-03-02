@@ -648,6 +648,7 @@ static const char* get_ECMWF_local_parameter(grib_accessor* a, grib_handle* h)
     }
     return NULL;
 }
+
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     size_t slen;
@@ -667,11 +668,11 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     slen = strlen(p) + 1;
     if (*len < slen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Variable unpack_string Wrong size for %s it is %d bytes big (len=%d)", a->name, slen, *len);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Variable unpack_string. Wrong size for %s, it is %d bytes big (len=%d)", a->name, slen, *len);
         *len = slen;
         return GRIB_BUFFER_TOO_SMALL;
     }
-    strcpy(val, p);
+    strncpy(val, p, slen);
     *len = slen;
 #if 0
     if (a->context->debug==1) {
