@@ -12,7 +12,7 @@ int main(int argc,char** argv)
 	int cnt = 0;
 	extern const char* grib_get_accessor_class_name(grib_handle* , const char* );
 	int sample = getenv("SAMPLE") != NULL;
-	
+
 	f = fopen(argc > 1 ? argv[1]: "data" ,"r");
 	if(!f)
 	{
@@ -45,9 +45,9 @@ int main(int argc,char** argv)
 
 #if 0
 		if(result_class_name && (strcmp(result_class_name,"data_2order_packing") == 0 ||
-		
+
 			strcmp(result_class_name,"data_g22order_packing") == 0)
-		
+
 		)
 		{
 			cnt++;
