@@ -44,6 +44,34 @@ r1=`${tools_dir}/grib_get -w count=1 -n ls $input`
 r2=`${tools_dir}/grib_get -n ls $temp`
 [ "$r1" = "$r2" ]
 
+echo "Test: ECC-1086..."
+# -------------------------
+# This file is 179 bytes long. We chop the last byte to create
+# an invalid GRIB message (Final 7777 is 777)
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+badGrib=${label}".bad.grib"
+head -c 178 $input > $badGrib
+set +e
+${tools_dir}/grib_copy $badGrib /dev/null  # Only the bad GRIB
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+${tools_dir}/grib_copy $input $badGrib /dev/null # Good followed by bad
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+${tools_dir}/grib_copy $badGrib $input /dev/null # Bad followed by good
+status=$?
+set -e
+[ $status -ne 0 ]
+
+
+
+
 #${tools_dir}/grib_copy -w count=1 -X 57143 $input $temp #Last msg
 #r1=`${tools_dir}/grib_get -w count=37 -n ls $input`
 #r2=`${tools_dir}/grib_get -n ls $temp`

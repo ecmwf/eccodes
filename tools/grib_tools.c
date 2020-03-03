@@ -358,7 +358,13 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
                                       err != GRIB_SUCCESS)) {
             infile->handle_count++;
             options->handle_count++;
-            options->error = err;
+
+            if (c->no_fail_on_wrong_length && (err == GRIB_PREMATURE_END_OF_FILE || err == GRIB_WRONG_LENGTH))
+                err = 0;
+            if (!options->error) {
+                /* ECC-1086: Do not clear a previous error */
+                options->error = err;
+            }
 
             if (!h) {
                 /* fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n"); */
