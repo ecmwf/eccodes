@@ -496,6 +496,7 @@ grib_context* grib_context_get_default()
         }
 #ifdef ECCODES_DEFINITION_PATH
         {
+            /* ECC-1088 */
             if (strstr(default_grib_context.grib_definition_files_path, ECCODES_DEFINITION_PATH) == NULL) {
                 char buffer[ECC_PATH_MAXLEN];
                 ecc_snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_definition_files_path,
@@ -514,6 +515,16 @@ grib_context* grib_context_get_default()
                 default_grib_context.grib_samples_path = strdup(buffer);
             }
         }
+#ifdef ECCODES_SAMPLES_PATH
+        {
+            if (strstr(default_grib_context.grib_samples_path, ECCODES_SAMPLES_PATH) == NULL) {
+                char buffer[ECC_PATH_MAXLEN];
+                ecc_snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_samples_path,
+                             ECC_PATH_DELIMITER_CHAR, ECCODES_SAMPLES_PATH);
+                default_grib_context.grib_samples_path = strdup(buffer);
+            }
+        }
+#endif
 
         grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Definitions path: %s",
                          default_grib_context.grib_definition_files_path);
