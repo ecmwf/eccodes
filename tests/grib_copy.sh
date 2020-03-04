@@ -44,6 +44,7 @@ r1=`${tools_dir}/grib_get -w count=1 -n ls $input`
 r2=`${tools_dir}/grib_get -n ls $temp`
 [ "$r1" = "$r2" ]
 
+
 echo "Test: ECC-1086..."
 # -------------------------
 # This file is 179 bytes long. We chop the last byte to create
@@ -69,8 +70,16 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
-
-
+# If there is a bad message, make sure the rest (good ones) get copied
+combinedGrib=${label}".combined.grib"
+cat $badGrib tigge_cf_ecmwf.grib2 > $combinedGrib
+set +e
+${tools_dir}/grib_copy $combinedGrib $temp
+status=$?
+set -e
+[ $status -ne 0 ]
+count=`${tools_dir}/grib_count $temp`
+[ $count -eq 43 ]
 
 #${tools_dir}/grib_copy -w count=1 -X 57143 $input $temp #Last msg
 #r1=`${tools_dir}/grib_get -w count=37 -n ls $input`
@@ -89,4 +98,4 @@ set -e
 
 # Clean up
 #-----------
-rm -f $temp
+rm -f $temp $badGrib $combinedGrib
