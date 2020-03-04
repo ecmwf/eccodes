@@ -349,10 +349,10 @@ static grib_context default_grib_context = {
     0,              /* keys_count                 */
     0,              /* concepts_index             */
     0,              /* concepts_count             */
-    {0,}, /* concepts                   */
-    0, /* hash_array_index           */
-    0, /* hash_array_count           */
-    {0,},                                 /* hash_array                 */
+    {0,},           /* concepts                   */
+    0,              /* hash_array_index           */
+    0,              /* hash_array_count           */
+    {0,},                              /* hash_array                 */
     0,                                 /* def_files                  */
     0,                                 /* blacklist                  */
     0,                                 /* ieee_packing               */
@@ -494,6 +494,16 @@ grib_context* grib_context_get_default()
                 default_grib_context.grib_definition_files_path = strdup(buffer);
             }
         }
+#ifdef ECCODES_DEFINITION_PATH
+        {
+            if (strstr(default_grib_context.grib_definition_files_path, ECCODES_DEFINITION_PATH) == NULL) {
+                char buffer[ECC_PATH_MAXLEN];
+                ecc_snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_definition_files_path,
+                             ECC_PATH_DELIMITER_CHAR, ECCODES_DEFINITION_PATH);
+                default_grib_context.grib_definition_files_path = strdup(buffer);
+            }
+        }
+#endif
 
         /* Samples path extra: Added at the head of (i.e. before) existing path */
         {
