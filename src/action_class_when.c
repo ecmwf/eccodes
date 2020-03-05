@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -38,41 +38,42 @@ or edit "action.class" and rerun ./make_class.pl
 
 */
 
-static void init_class      (grib_action_class*);
-static void dump            (grib_action* d, FILE*,int);
-static void xref            (grib_action* d, FILE* f,const char* path);
-static void destroy         (grib_context*,grib_action*);
-static int create_accessor(grib_section*,grib_action*,grib_loader*);
-static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed);
+static void init_class(grib_action_class*);
+static void dump(grib_action* d, FILE*, int);
+static void xref(grib_action* d, FILE* f, const char* path);
+static void destroy(grib_context*, grib_action*);
+static int create_accessor(grib_section*, grib_action*, grib_loader*);
+static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor* observed);
 
 
-typedef struct grib_action_when {
-    grib_action          act;  
-/* Members defined in when */
-	grib_expression *expression;
-	grib_action     *block_true;
-	grib_action     *block_false;
-	int loop;
+typedef struct grib_action_when
+{
+    grib_action act;
+    /* Members defined in when */
+    grib_expression* expression;
+    grib_action* block_true;
+    grib_action* block_false;
+    int loop;
 } grib_action_when;
 
 
 static grib_action_class _grib_action_class_when = {
-    0,                              /* super                     */
-    "action_class_when",                              /* name                      */
-    sizeof(grib_action_when),            /* size                      */
-    0,                                   /* inited */
-    &init_class,                         /* init_class */
-    0,                               /* init                      */
-    &destroy,                            /* destroy */
+    0,                        /* super                     */
+    "action_class_when",      /* name                      */
+    sizeof(grib_action_when), /* size                      */
+    0,                        /* inited */
+    &init_class,              /* init_class */
+    0,                        /* init                      */
+    &destroy,                 /* destroy */
 
-    &dump,                               /* dump                      */
-    &xref,                               /* xref                      */
+    &dump, /* dump                      */
+    &xref, /* xref                      */
 
-    &create_accessor,             /* create_accessor*/
+    &create_accessor, /* create_accessor*/
 
-    &notify_change,                            /* notify_change */
-    0,                            /* reparse */
-    0,                            /* execute */
+    &notify_change, /* notify_change */
+    0,              /* reparse */
+    0,              /* execute */
 };
 
 grib_action_class* grib_action_class_when = &_grib_action_class_when;
@@ -84,44 +85,45 @@ static void init_class(grib_action_class* c)
 
 /* The check on self->loop can only be done in non-threaded mode */
 #if defined(DEBUG) && GRIB_PTHREADS == 0 && GRIB_OMP_THREADS == 0
-  #define CHECK_LOOP 1
+#define CHECK_LOOP 1
 #endif
 
-grib_action* grib_action_create_when( grib_context* context,
-        grib_expression* expression,
-        grib_action* block_true,grib_action* block_false)
+grib_action* grib_action_create_when(grib_context* context,
+                                     grib_expression* expression,
+                                     grib_action* block_true, grib_action* block_false)
 {
     char name[1024];
 
-    grib_action_when* a ;
-    grib_action_class* c   = grib_action_class_when;
-    grib_action* act       = (grib_action*)grib_context_malloc_clear_persistent(context,c->size);
-    act->op              = grib_context_strdup_persistent(context,"when");
+    grib_action_when* a;
+    grib_action_class* c = grib_action_class_when;
+    grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
+    act->op              = grib_context_strdup_persistent(context, "when");
 
-    act->cclass       = c;
-    a                 = (grib_action_when*)act;
-    act->context      = context;
+    act->cclass  = c;
+    a            = (grib_action_when*)act;
+    act->context = context;
 
     a->expression  = expression;
-    a->block_true       = block_true;
-    a->block_false      = block_false;
+    a->block_true  = block_true;
+    a->block_false = block_false;
 
-    sprintf(name,"_when%p",(void*)expression);
+    sprintf(name, "_when%p", (void*)expression);
 
-    act->name      = grib_context_strdup_persistent(context,name);
+    act->name = grib_context_strdup_persistent(context, name);
 
     return act;
 }
 
-static int create_accessor(grib_section* p, grib_action* act,grib_loader *h)
+static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 {
     grib_action_when* self = (grib_action_when*)act;
-    grib_accessor*  as = grib_accessor_factory(p, act,0,0);
-    if(!as)return GRIB_INTERNAL_ERROR;
+    grib_accessor* as      = grib_accessor_factory(p, act, 0, 0);
+    if (!as)
+        return GRIB_INTERNAL_ERROR;
 
-    grib_dependency_observe_expression(as,self->expression);
+    grib_dependency_observe_expression(as, self->expression);
 
-    grib_push_accessor(as,p->block);
+    grib_push_accessor(as, p->block);
 
     return GRIB_SUCCESS;
 }
@@ -129,74 +131,73 @@ static int create_accessor(grib_section* p, grib_action* act,grib_loader *h)
 static void dump(grib_action* act, FILE* f, int lvl)
 {
     grib_action_when* a = (grib_action_when*)act;
-    int i = 0;
+    int i               = 0;
 
-    for (i=0;i<lvl;i++)
-        grib_context_print(act->context,f,"     ");
+    for (i = 0; i < lvl; i++)
+        grib_context_print(act->context, f, "     ");
 
-    printf("when(%s) { ",act->name);
-    grib_expression_print(act->context,a->expression,0);
+    printf("when(%s) { ", act->name);
+    grib_expression_print(act->context, a->expression, 0);
     printf("\n");
 
-    grib_dump_action_branch(f,a->block_true,lvl+1);
+    grib_dump_action_branch(f, a->block_true, lvl + 1);
 
-    for (i=0;i<lvl;i++)
-        grib_context_print(act->context,f,"     ");
+    for (i = 0; i < lvl; i++)
+        grib_context_print(act->context, f, "     ");
     printf("}");
 
     if (a->block_false) {
         printf(" else { ");
 
-        grib_dump_action_branch(f,a->block_true,lvl+1);
+        grib_dump_action_branch(f, a->block_true, lvl + 1);
 
-        for (i=0;i<lvl;i++)
-            grib_context_print(act->context,f,"     ");
+        for (i = 0; i < lvl; i++)
+            grib_context_print(act->context, f, "     ");
         printf("}");
     }
     printf("\n");
 }
 
 #ifdef CHECK_LOOP
-  #define SET_LOOP(self,v)  self->loop=v;
+#define SET_LOOP(self, v) self->loop = v;
 #else
-  #define SET_LOOP(self,v)
+#define SET_LOOP(self, v)
 #endif
 
-static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed)
+static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor* observed)
 {
-    grib_action_when* self = (grib_action_when*) a;
-    grib_action *b = NULL;
-    int ret = GRIB_SUCCESS;
+    grib_action_when* self = (grib_action_when*)a;
+    grib_action* b         = NULL;
+    int ret                = GRIB_SUCCESS;
     long lres;
 
     /* ECC-974: observed->parent will change as a result of the execute
      * so must store the handle once here (in 'hand') rather than call
      * grib_handle_of_accessor(observed) later
      */
-    grib_handle* hand=grib_handle_of_accessor(observed);
+    grib_handle* hand = grib_handle_of_accessor(observed);
 
-    if ((ret = grib_expression_evaluate_long(hand, self->expression,&lres))
-            != GRIB_SUCCESS) return ret;
+    if ((ret = grib_expression_evaluate_long(hand, self->expression, &lres)) != GRIB_SUCCESS)
+        return ret;
 #ifdef CHECK_LOOP
-    if(self->loop)
-    {
+    if (self->loop) {
         printf("LOOP detected...\n");
-        printf("WHEN triggered by %s %ld\n",observed->name,lres);
-        grib_expression_print(observed->context,self->expression,0);
+        printf("WHEN triggered by %s %ld\n", observed->name, lres);
+        grib_expression_print(observed->context, self->expression, 0);
         printf("\n");
         return ret;
     }
 #endif
     SET_LOOP(self, 1);
 
-    if(lres)
-        b=self->block_true;
+    if (lres)
+        b = self->block_true;
     else
-        b=self->block_false;
+        b = self->block_false;
 
-    while(b) {
-        ret = grib_action_execute(b,hand);
-        if(ret != GRIB_SUCCESS) {
+    while (b) {
+        ret = grib_action_execute(b, hand);
+        if (ret != GRIB_SUCCESS) {
             SET_LOOP(self, 0);
             return ret;
         }
@@ -208,32 +209,30 @@ static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* 
     return GRIB_SUCCESS;
 }
 
-static void destroy(grib_context* context,grib_action* act)
+static void destroy(grib_context* context, grib_action* act)
 {
-    grib_action_when* self = (grib_action_when*) act;
-    grib_action *t = self->block_true;
+    grib_action_when* self = (grib_action_when*)act;
+    grib_action* t         = self->block_true;
 
-    while(t)
-    {
-        grib_action *nt = t->next;
-        grib_action_delete(context,t);
+    while (t) {
+        grib_action* nt = t->next;
+        grib_action_delete(context, t);
         t = nt;
     }
 
-    t=self->block_false;
-    while(t)
-    {
-        grib_action *nt = t->next;
-        grib_action_delete(context,t);
+    t = self->block_false;
+    while (t) {
+        grib_action* nt = t->next;
+        grib_action_delete(context, t);
         t = nt;
     }
 
-    grib_expression_free(context,self->expression);
+    grib_expression_free(context, self->expression);
 
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
 }
 
-static void xref(grib_action* d, FILE* f,const char* path)
+static void xref(grib_action* d, FILE* f, const char* path)
 {
 }

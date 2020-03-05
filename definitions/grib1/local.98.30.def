@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 # Forecasting Systems with Variable Resolution
 constant GRIBEXSection1Problem = 106 - section1Length ;

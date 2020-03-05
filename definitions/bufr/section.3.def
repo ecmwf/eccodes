@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 constant defaultSequence=0;
 constant tablesMasterDir="bufr/tables/[masterTableNumber]/wmo/[masterTablesVersionNumber]" : hidden;
@@ -34,7 +34,7 @@ when (changed(tablesLocalDir)) { set clearTables=1;}
 # we should implement some table version dependency
 #constant templatesMasterDir="bufr/templates/[masterTableNumber]/[masterTablesVersionNumber]";
 #constant templatesLocalDir="bufr/templates/local/[masterTableNumber]/[bufrHeaderCentre:l]/[localTablesVersionNumber]";
-constant templatesMasterDir="bufr/templates/";
+constant templatesMasterDir="bufr/templates";
 constant templatesLocalDir="bufr/templates/local";
 
 transient tableNumber=0;

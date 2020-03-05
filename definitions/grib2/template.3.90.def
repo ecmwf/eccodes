@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.90, Space view perspective or orthographic
 include "grib2/template.3.shape_of_the_earth.def";
@@ -55,7 +55,7 @@ meta geography.orientationOfTheGridInDegrees
 #  Nr - altitude of the camera from the Earth's centre, measured in units of the Earth's
 # (equatorial) radius multiplied by a scale factor of 10^6
 unsigned[4] Nr : edition_specific,can_be_missing,no_copy;
-alias altitudeOfTheCameraFromTheEarthSCenterMeasuredInUnitsOfTheEarth = Nr;
+alias altitudeOfTheCameraFromTheEarthsCentreMeasuredInUnitsOfTheEarthsRadius = Nr;
 meta geography.NrInRadiusOfEarth scale(Nr,oneConstant,oneMillionConstant,truncateDegrees) : dump;
 
 #  Xo - X-coordinate of origin of sector image

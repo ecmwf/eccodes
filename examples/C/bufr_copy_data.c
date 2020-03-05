@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -19,35 +19,35 @@
 
 static void usage(const char* progname);
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-    FILE* f = NULL;
-    codes_handle* h = NULL;
+    FILE* f          = NULL;
+    codes_handle* h  = NULL;
     codes_handle* ho = NULL;
     long size;
-    char** keys = NULL;
-    size_t nkeys=0,i;
-    int err=0;
-    char* outfile = NULL;
+    char** keys            = NULL;
+    size_t nkeys           = 0, i;
+    int err                = 0;
+    char* outfile          = NULL;
     const char* sampleName = "BUFR3";
-    const long ibitmap[]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,
-            1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,
-            1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-            1,1,1,1,0};
+    const long ibitmap[]   = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                             0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1,
+                             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                             1, 1, 1, 1, 0 };
 
-    const long ud[]={307011,7006,10004,222000,101023,31031,1031,1032,101023,33007,
-            225000,236000,101023,31031,1031,1032,8024,101001,225255,225000,
-            236000,101023,31031,1031,1032,8024,101001,225255,
-            1063,2001,4001,4002,4003,4004,4005,5002,
-            6002,7001,7006,11001,11016,11017,11002};
+    const long ud[] = { 307011, 7006, 10004, 222000, 101023, 31031, 1031, 1032, 101023, 33007,
+                        225000, 236000, 101023, 31031, 1031, 1032, 8024, 101001, 225255, 225000,
+                        236000, 101023, 31031, 1031, 1032, 8024, 101001, 225255,
+                        1063, 2001, 4001, 4002, 4003, 4004, 4005, 5002,
+                        6002, 7001, 7006, 11001, 11016, 11017, 11002 };
 
     if (argc != 3) usage(argv[0]);
 
-    outfile=argv[2];
+    outfile = argv[2];
 
-    f = fopen(argv[1],"rb");
-    if(!f) {
+    f = fopen(argv[1], "rb");
+    if (!f) {
         perror(argv[1]);
         exit(1);
     }
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    size = sizeof(ibitmap)/sizeof(ibitmap[0]);
+    size = sizeof(ibitmap) / sizeof(ibitmap[0]);
     CODES_CHECK(codes_set_long_array(ho, "inputDataPresentIndicator", ibitmap, size), 0);
     CODES_CHECK(codes_set_long(ho, "bufrHeaderCentre", 98), 0);
     CODES_CHECK(codes_set_long(ho, "updateSequenceNumber", 1), 0);
@@ -75,17 +75,16 @@ int main(int argc, char *argv[])
     CODES_CHECK(codes_set_long(ho, "observedData", 1), 0);
     CODES_CHECK(codes_set_long(ho, "compressedData", 0), 0);
 
-    size = sizeof(ud)/sizeof(ud[0]);
-    codes_set_long_array(ho,"unexpandedDescriptors",ud,size);
+    size = sizeof(ud) / sizeof(ud[0]);
+    codes_set_long_array(ho, "unexpandedDescriptors", ud, size);
 
-    while((h = codes_handle_new_from_file(0,f,PRODUCT_BUFR,&err)) != NULL)
-    {
-        if(!h) {
+    while ((h = codes_handle_new_from_file(0, f, PRODUCT_BUFR, &err)) != NULL) {
+        if (!h) {
             printf("ERROR: Unable to create BUFR handle\n");
             return 1;
         }
         /* codes_copy_key(h,ho,"unexpandedDescriptors",0); */
-        err = codes_set_long(h,"unpack",1);
+        err = codes_set_long(h, "unpack", 1);
         if (err) {
             printf("ERROR: Unable to unpack BUFR message. Quitting\n");
             printf("       %s\n", codes_get_error_message(err));
@@ -93,9 +92,9 @@ int main(int argc, char *argv[])
         }
 
         /* err=codes_bufr_copy_data(h,ho); */
-        keys=codes_bufr_copy_data_return_copied_keys(h,ho,&nkeys,&err);
-        for (i=0;i<nkeys;i++) {
-            printf("Copied %s\n",keys[i]);
+        keys = codes_bufr_copy_data_return_copied_keys(h, ho, &nkeys, &err);
+        for (i = 0; i < nkeys; i++) {
+            printf("Copied %s\n", keys[i]);
             free(keys[i]);
         }
         printf("Total number of copied keys = %lu\n", nkeys);
@@ -104,7 +103,7 @@ int main(int argc, char *argv[])
         codes_handle_delete(h);
     }
     fclose(f);
-    codes_write_message(ho,outfile,"w");
+    codes_write_message(ho, outfile, "w");
     codes_handle_delete(ho);
 
     return err;
@@ -112,6 +111,6 @@ int main(int argc, char *argv[])
 
 static void usage(const char* progname)
 {
-    printf("\nUsage: %s bufr_in bufr_out\n",progname);
+    printf("\nUsage: %s bufr_in bufr_out\n", progname);
     exit(1);
 }

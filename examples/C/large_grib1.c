@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -17,19 +17,19 @@ int main()
 {
     const int ni = 2880;
     const int nj = 2880;
-    double *values;
-    int i = 0;
-    codes_handle *h = NULL;
+    double* values;
+    int i                = 0;
+    codes_handle* h      = NULL;
     const char* filename = "bigfile.grib";
 
-    values = (double*) malloc(ni*nj*sizeof(double));
+    values = (double*)malloc(ni * nj * sizeof(double));
     if (!values) {
-        printf ("Malloc failed\n");
+        printf("Malloc failed\n");
         exit(1);
     }
 
-    for (i=0; i<ni*nj; i++) {
-        double r = rand() * 1.0 / RAND_MAX;
+    for (i = 0; i < ni * nj; i++) {
+        double r  = rand() * 1.0 / RAND_MAX;
         values[i] = r;
     }
 
@@ -52,21 +52,21 @@ int main()
 
     CODES_CHECK(codes_set_double(h, "iDirectionIncrementInDegrees", 0.125), 0);
     CODES_CHECK(codes_set_double(h, "jDirectionIncrementInDegrees", 0.125), 0);
-    CODES_CHECK(codes_set_long(h,   "iScansNegatively", 0), 0);
-    CODES_CHECK(codes_set_long(h,   "jScansPositively", 1), 0);
+    CODES_CHECK(codes_set_long(h, "iScansNegatively", 0), 0);
+    CODES_CHECK(codes_set_long(h, "jScansPositively", 1), 0);
 
     CODES_CHECK(codes_set_double(h, "latitudeOfFirstGridPointInDegrees", -90), 0);
     CODES_CHECK(codes_set_double(h, "latitudeOfLastGridPointInDegrees", 90), 0);
     CODES_CHECK(codes_set_double(h, "longitudeOfFirstGridPointInDegrees", -180), 0);
     CODES_CHECK(codes_set_double(h, "longitudeOfLastGridPointInDegrees", 180), 0);
 
-    CODES_CHECK(codes_set_double_array(h, "values", values, ni*nj), 0);
+    CODES_CHECK(codes_set_double_array(h, "values", values, ni * nj), 0);
 
     codes_write_message(h, filename, "w");
     /*printf("Wrote file %s\n", filename);*/
 
     codes_handle_delete(h);
-    free (values);
+    free(values);
 
     return 0;
 }

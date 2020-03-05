@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,9 +16,9 @@
 int codes_memfs_exists(const char* path);
 FILE* codes_memfs_open(const char* path);
 
-FILE* codes_fopen(const char* name, const char *mode)
+FILE* codes_fopen(const char* name, const char* mode)
 {
-    FILE *f;
+    FILE* f;
 
     if (strcmp(mode, "r") != 0) {
         return fopen(name, mode);

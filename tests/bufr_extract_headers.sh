@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -203,5 +203,13 @@ for bf in ${bufr_files}; do
     diff $temp1 $temp2
 done
 
+
+echo "Test with invalid inputs..."
+# ---------------------------------
+set +e
+$EXEC ${test_dir}/bufr_extract_headers centre ${data_dir}
+status=$?
+set -e
+[ $status -ne 0 ]
 
 rm -f $temp1 $temp2

@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -28,8 +28,6 @@ GRIBEX_boustrophedonic = getenv("ECCODES_GRIBEX_BOUSTROPHEDONIC","0")  :hidden;
 constant zero=0 : hidden;
 constant one=1 : hidden;
 constant hundred=100 : hidden;
-constant true="true" :hidden;
-constant false="false" : hidden;
 transient truncateLaplacian=0 : hidden;
 constant marsDir="mars" : no_copy,hidden;
 constant present=1 : hidden;

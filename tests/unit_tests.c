@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -13,60 +13,72 @@
 
 int assertion_caught = 0;
 
-typedef enum {IBM_FLOAT, IEEE_FLOAT} FloatRep;
+typedef enum
+{
+    IBM_FLOAT,
+    IEEE_FLOAT
+} FloatRep;
 
 static void compare_doubles(const double d1, const double d2, const double epsilon)
 {
-   assert(fabs(d1 - d2) < epsilon);
+    assert(fabs(d1 - d2) < epsilon);
 }
 
 static void check_float_representation(const double val, const double expected, const FloatRep rep)
 {
-   double out = 0;
-   const double tolerance = 1e-9;
-   if (rep == IBM_FLOAT)
-      assert(grib_nearest_smaller_ibm_float(val, &out) == GRIB_SUCCESS);
-   else
-      assert(grib_nearest_smaller_ieee_float(val, &out) == GRIB_SUCCESS);
+    double out             = 0;
+    const double tolerance = 1e-9;
+    if (rep == IBM_FLOAT)
+        assert(grib_nearest_smaller_ibm_float(val, &out) == GRIB_SUCCESS);
+    else
+        assert(grib_nearest_smaller_ieee_float(val, &out) == GRIB_SUCCESS);
 
-   /*printf("%s: d1=%10.20f, out=%10.20f\n", (rep==IBM_FLOAT)?"ibm":"ieee", val, out);*/
-   
-   compare_doubles(out, expected, tolerance);
+    /*printf("%s: d1=%10.20f, out=%10.20f\n", (rep==IBM_FLOAT)?"ibm":"ieee", val, out);*/
+
+    compare_doubles(out, expected, tolerance);
+}
+
+static void test_get_git_sha1()
+{
+    const char* sha1 = grib_get_git_sha1();
+    printf("Testing: test_get_git_sha1...\n");
+    assert(sha1 != NULL);
 }
 
 static void test_grib_nearest_smaller_ibmfloat()
 {
+    printf("Testing: test_grib_nearest_smaller_ibmfloat...\n");
     check_float_representation(-1.0, -1.0, IBM_FLOAT);
-    check_float_representation(0.0,  0.0, IBM_FLOAT);
-    check_float_representation(1.0,  1.0, IBM_FLOAT);
-    check_float_representation(1.1,  1.0999994277954, IBM_FLOAT);
+    check_float_representation(0.0, 0.0, IBM_FLOAT);
+    check_float_representation(1.0, 1.0, IBM_FLOAT);
+    check_float_representation(1.1, 1.0999994277954, IBM_FLOAT);
     check_float_representation(10.6, 10.599999427795, IBM_FLOAT);
     check_float_representation(7.85, 7.8499994277954, IBM_FLOAT);
 }
 
 static void test_grib_nearest_smaller_ieeefloat()
 {
+    printf("Testing: test_grib_nearest_smaller_ieeefloat...\n");
     check_float_representation(-1.0, -1.0, IEEE_FLOAT);
-    check_float_representation(0.0,  0.0, IEEE_FLOAT);
-    check_float_representation(1.0,  1.0, IEEE_FLOAT);
-    check_float_representation(1.1,  1.0999999046325, IEEE_FLOAT);
+    check_float_representation(0.0, 0.0, IEEE_FLOAT);
+    check_float_representation(1.0, 1.0, IEEE_FLOAT);
+    check_float_representation(1.1, 1.0999999046325, IEEE_FLOAT);
     check_float_representation(10.6, 10.599999427795, IEEE_FLOAT);
     check_float_representation(7.85, 7.8499999046325, IEEE_FLOAT);
 }
 
 static void test_gaussian_latitudes(int order)
 {
-    int ret = 0;
+    int ret       = 0;
     const int num = 2 * order;
     double lat1 = 0, lat2 = 0;
-
-    double* lats = (double*)malloc( sizeof(double)*num );
-
+    double* lats = (double*)malloc(sizeof(double) * num);
+    printf("Testing: test_gaussian_latitudes order=%d...\n", order);
     ret = grib_get_gaussian_latitudes(order, lats);
     Assert(ret == GRIB_SUCCESS);
 
     lat1 = lats[0];
-    lat2 = lats[num-1];
+    lat2 = lats[num - 1];
     /* Check first and last latitudes are the same with opposite sign */
     compare_doubles(lat1, -lat2, 1.0e-6);
 
@@ -76,13 +88,14 @@ static void test_gaussian_latitudes(int order)
 static void test_gaussian_latitude_640()
 {
     /* Test all latitudes for one specific Gaussian number */
-    const int order = 640;
-    const int num = 2 * order;
-    int ret = 0;
+    const int order        = 640;
+    const int num          = 2 * order;
+    int ret                = 0;
     const double tolerance = 1e-6;
-    double* lats = (double*)malloc( sizeof(double)*num );
-    ret = grib_get_gaussian_latitudes(order, lats);
+    double* lats           = (double*)malloc(sizeof(double) * num);
+    ret                    = grib_get_gaussian_latitudes(order, lats);
     Assert(ret == GRIB_SUCCESS);
+    printf("Testing: test_gaussian_latitude_640...\n");
 
     compare_doubles(lats[0], 89.892396, tolerance);
     compare_doubles(lats[1], 89.753005, tolerance);
@@ -1370,32 +1383,46 @@ static void test_gaussian_latitude_640()
 
 static void test_string_splitting()
 {
-    int i=0;
+    int i          = 0;
     char input[80] = "Born|To|Be|Wild";
-    char** list=0;
-    list = string_split(input, "|");
-    for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
+    char** list    = 0;
+    printf("Testing: test_string_splitting...\n");
+
+    list           = string_split(input, "|");
+    assert(list);
+    for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 4);
-    if ( strcmp(list[0], "Born")!=0 ) assert(0);
-    if ( strcmp(list[1], "To")  !=0 ) assert(0);
-    if ( strcmp(list[2], "Be")  !=0 ) assert(0);
-    if ( strcmp(list[3], "Wild")!=0 ) assert(0);
-    assert( list[4] == NULL );
+    if (strcmp(list[0], "Born") != 0) assert(0);
+    if (strcmp(list[1], "To") != 0) assert(0);
+    if (strcmp(list[2], "Be") != 0) assert(0);
+    if (strcmp(list[3], "Wild") != 0) assert(0);
+    assert(list[4] == NULL);
+    for (i = 0; list[i] != NULL; ++i)
+        free(list[i]);
+    free(list);
 
     strcpy(input, "12345|a gap|");
     list = string_split(input, "|");
-    for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
+    assert(list);
+    for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 2);
-    if ( strcmp(list[0], "12345")!=0 ) assert(0);
-    if ( strcmp(list[1], "a gap")!=0 ) assert(0);
-    assert( list[2] == NULL );
+    if (strcmp(list[0], "12345") != 0) assert(0);
+    if (strcmp(list[1], "a gap") != 0) assert(0);
+    assert(list[2] == NULL);
+    for (i = 0; list[i] != NULL; ++i)
+        free(list[i]);
+    free(list);
 
     strcpy(input, "Steppenwolf");
     list = string_split(input, ",");
-    for(i=0; list[i] != NULL; ++i) {} /* count how many tokens */
+    assert(list);
+    for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 1);
-    if ( strcmp(list[0], "Steppenwolf")!=0 ) assert(0);
-    assert( list[1] == NULL );
+    if (strcmp(list[0], "Steppenwolf") != 0) assert(0);
+    assert(list[1] == NULL);
+    for (i = 0; list[i] != NULL; ++i)
+        free(list[i]);
+    free(list);
 
     /* Note: currently cannot cope with */
     /*  input being NULL */
@@ -1405,54 +1432,66 @@ static void test_string_splitting()
 
 static void my_assertion_proc(const char* message)
 {
-    printf("Caught it: %s\n", message);
+    printf("It's OK. I caught the assertion: %s\n", message);
     assertion_caught = 1;
 }
 
 static void test_assertion_catching()
 {
-    char empty[]="";
+    char empty[] = "";
+    char** list  = 0;
+    int i        = 0;
     assert(assertion_caught == 0);
     codes_set_codes_assertion_failed_proc(&my_assertion_proc);
+    
+    printf("Testing: test_assertion_catching...\n");
 
     /* Do something illegal */
-    string_split(empty, " ");
+    list = string_split(empty, " ");
 
     assert(assertion_caught == 1);
 
     /* Restore everything */
     codes_set_codes_assertion_failed_proc(NULL);
     assertion_caught = 0;
+
+    for (i = 0; list[i] != NULL; ++i)
+        free(list[i]);
+    free(list);
 }
 
 static void test_concept_condition_strings()
 {
-    int err = 0;
+    int err           = 0;
     char result[1024] = {0,};
     grib_handle* h = grib_handle_new_from_samples(0, "GRIB2");
 
+    printf("Testing: test_concept_condition_strings...\n");
+
     err = get_concept_condition_string(h, "typeOfLevel", NULL, result);
-    assert ( !err );
-    assert( strcmp(result, "typeOfFirstFixedSurface=1,typeOfSecondFixedSurface=255")==0 );
+    assert(!err);
+    assert(strcmp(result, "typeOfFirstFixedSurface=1,typeOfSecondFixedSurface=255") == 0);
 
     err = get_concept_condition_string(h, "paramId", NULL, result);
-    assert ( !err );
-    assert( strcmp(result, "discipline=0,parameterCategory=0,parameterNumber=0")==0 );
+    assert(!err);
+    assert(strcmp(result, "discipline=0,parameterCategory=0,parameterNumber=0") == 0);
 
     err = get_concept_condition_string(h, "gridType", NULL, result);
-    assert ( !err );
+    assert(!err);
     /*printf("%s\n", result);*/
-    assert( strcmp(result, "gridDefinitionTemplateNumber=0,PLPresent=0")==0 );
+    assert(strcmp(result, "gridDefinitionTemplateNumber=0,PLPresent=0") == 0);
 
     err = get_concept_condition_string(h, "stepType", NULL, result);
-    assert ( !err );
-    assert( strcmp(result, "selectStepTemplateInstant=1,stepTypeInternal=instant")==0 );
+    assert(!err);
+    assert(strcmp(result, "selectStepTemplateInstant=1,stepTypeInternal=instant") == 0);
 
+    grib_handle_delete(h);
 }
 
 int main(int argc, char** argv)
 {
     /*printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());*/
+    test_get_git_sha1();
 
     test_concept_condition_strings();
 

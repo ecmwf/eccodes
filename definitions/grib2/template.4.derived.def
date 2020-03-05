@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 #  Derived forecast
 codetable[1] derivedForecast ('4.7.table',masterDir,localDir) : dump;

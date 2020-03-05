@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -37,41 +37,42 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 
-static void init_class              (grib_expression_class*);
+static void init_class(grib_expression_class*);
 
-static void        destroy(grib_context*,grib_expression* e);
+static void destroy(grib_context*, grib_expression* e);
 
-static void        print(grib_context*,grib_expression*,grib_handle*);
-static void        add_dependency(grib_expression* e, grib_accessor* observer);
+static void print(grib_context*, grib_expression*, grib_handle*);
+static void add_dependency(grib_expression* e, grib_accessor* observer);
 
-static int        native_type(grib_expression*,grib_handle*);
+static int native_type(grib_expression*, grib_handle*);
 
-static string evaluate_string(grib_expression*,grib_handle*,char*,size_t*,int*);
+static string evaluate_string(grib_expression*, grib_handle*, char*, size_t*, int*);
 
-typedef struct grib_expression_sub_string{
-  grib_expression base;
-/* Members defined in sub_string */
-	char* value;
+typedef struct grib_expression_sub_string
+{
+    grib_expression base;
+    /* Members defined in sub_string */
+    char* value;
 } grib_expression_sub_string;
 
 
 static grib_expression_class _grib_expression_class_sub_string = {
-    0,                    /* super                     */
-    "sub_string",                    /* name                      */
-    sizeof(grib_expression_sub_string),/* size of instance          */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    0,                     /* constructor               */
-    &destroy,                  /* destructor                */
-    &print,                 
-    &add_dependency,       
+    0,                                  /* super                     */
+    "sub_string",                       /* name                      */
+    sizeof(grib_expression_sub_string), /* size of instance          */
+    0,                                  /* inited */
+    &init_class,                        /* init_class */
+    0,                                  /* constructor               */
+    &destroy,                           /* destructor                */
+    &print,
+    &add_dependency,
 
-	&native_type,
-	0,
+    &native_type,
+    0,
 
-	0,
-	0,
-	&evaluate_string,
+    0,
+    0,
+    &evaluate_string,
 };
 
 grib_expression_class* grib_expression_class_sub_string = &_grib_expression_class_sub_string;
@@ -82,45 +83,44 @@ static void init_class(grib_expression_class* c)
 }
 /* END_CLASS_IMP */
 
-static const char* evaluate_string(grib_expression* g,grib_handle *h,char* buf,size_t* size,int* err)
+static const char* evaluate_string(grib_expression* g, grib_handle* h, char* buf, size_t* size, int* err)
 {
-	grib_expression_sub_string* e = (grib_expression_sub_string*)g;
-	*err=0;
-	return e->value;
+    grib_expression_sub_string* e = (grib_expression_sub_string*)g;
+    *err                          = 0;
+    return e->value;
 }
 
-static void print(grib_context* c,grib_expression* g,grib_handle* f)
+static void print(grib_context* c, grib_expression* g, grib_handle* f)
 {
-	grib_expression_sub_string* e = (grib_expression_sub_string*)g;
-	printf("string('%s')",e->value);
+    grib_expression_sub_string* e = (grib_expression_sub_string*)g;
+    printf("string('%s')", e->value);
 }
 
-static void destroy(grib_context* c,grib_expression* g)
+static void destroy(grib_context* c, grib_expression* g)
 {
-	grib_expression_sub_string* e = (grib_expression_sub_string*)g;
-	grib_context_free_persistent(c,e->value);
+    grib_expression_sub_string* e = (grib_expression_sub_string*)g;
+    grib_context_free_persistent(c, e->value);
 }
 
-
-static void  add_dependency(grib_expression* g, grib_accessor* observer){
-	/* grib_expression_sub_string* e = (grib_expression_sub_string*)g; */
+static void add_dependency(grib_expression* g, grib_accessor* observer)
+{
+    /* grib_expression_sub_string* e = (grib_expression_sub_string*)g; */
 }
 
-
-grib_expression* new_sub_string_expression(grib_context* c,const char* value,size_t start,size_t length)
+grib_expression* new_sub_string_expression(grib_context* c, const char* value, size_t start, size_t length)
 {
-	char v[1024]={0,};
-	grib_expression_sub_string* e = (grib_expression_sub_string*)grib_context_malloc_clear_persistent(c,sizeof(grib_expression_sub_string));
+    char v[1024] = {0,};
+    grib_expression_sub_string* e = (grib_expression_sub_string*)grib_context_malloc_clear_persistent(c, sizeof(grib_expression_sub_string));
 
-/* 	if (start<0) start+=strlen(value);  */
+    /* 	if (start<0) start+=strlen(value);  */
 
-	memcpy(v,value+start,length);
-	e->base.cclass                 = grib_expression_class_sub_string;
-	e->value               = grib_context_strdup_persistent(c,v);
-	return (grib_expression*)e;
+    memcpy(v, value + start, length);
+    e->base.cclass = grib_expression_class_sub_string;
+    e->value       = grib_context_strdup_persistent(c, v);
+    return (grib_expression*)e;
 }
 
-static int native_type(grib_expression* g,grib_handle *h)
+static int native_type(grib_expression* g, grib_handle* h)
 {
-	return GRIB_TYPE_STRING;
+    return GRIB_TYPE_STRING;
 }

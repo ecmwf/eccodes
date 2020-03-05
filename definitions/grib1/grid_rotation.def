@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 signed[3] latitudeOfSouthernPole : edition_specific;
 meta  geography.latitudeOfSouthernPoleInDegrees   scale(latitudeOfSouthernPole ,oneConstant,grib1divider,truncateDegrees) : dump;

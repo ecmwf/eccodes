@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,51 +15,52 @@
 #include <stdio.h>
 #include "grib_api_internal.h"
 
-static void usage(const char* prog) {
-    printf("usage: %s filename\n",prog);
+static void usage(const char* prog)
+{
+    printf("usage: %s filename\n", prog);
     exit(1);
 }
 
 #ifdef GRIB_TIMER
 int main(int argc, char** argv)
 {
-    grib_timer *tes = grib_get_timer(0,"decoding", 0, 0);
-    FILE *in = NULL;
+    grib_timer* tes = grib_get_timer(0, "decoding", 0, 0);
+    FILE* in        = NULL;
     int err = 0, i = 0;
-    grib_handle *h = NULL;
-    size_t values_len = 0;
-    double *values = NULL;
-    double duration_actual = 0;
+    grib_handle* h            = NULL;
+    size_t values_len         = 0;
+    double* values            = NULL;
+    double duration_actual    = 0;
     const double duration_max = 3; /* seconds */
     const int num_repetitions = 1000;
 
-    if (argc<2) usage(argv[0]);
+    if (argc < 2) usage(argv[0]);
 
-    in = fopen(argv[1],"rb");
-    if(!in) {
-        printf("ERROR: unable to open file %s\n",argv[1]);
+    in = fopen(argv[1], "rb");
+    if (!in) {
+        printf("ERROR: unable to open file %s\n", argv[1]);
         return 1;
     }
 
     /* create new handle */
     err = 0;
-    h = grib_handle_new_from_file(0,in,&err);
+    h   = grib_handle_new_from_file(0, in, &err);
     if (h == NULL) {
         printf("Error: unable to create handle from file.\n");
         return 1;
     }
 
     /* get the size of the values array*/
-    GRIB_CHECK(grib_get_size(h,"values",&values_len),0);
+    GRIB_CHECK(grib_get_size(h, "values", &values_len), 0);
 
-    values = malloc(values_len*sizeof(double));
+    values = malloc(values_len * sizeof(double));
 
     /* get data values*/
     grib_timer_start(tes);
-    for (i=0; i<num_repetitions; i++) {
-        GRIB_CHECK(grib_get_double_array(h,"values",values,&values_len),0);
+    for (i = 0; i < num_repetitions; i++) {
+        GRIB_CHECK(grib_get_double_array(h, "values", values, &values_len), 0);
     }
-    grib_timer_stop(tes,0);
+    grib_timer_stop(tes, 0);
     duration_actual = grib_timer_value(tes);
     if (duration_actual > duration_max) {
         fprintf(stderr, "Decoding took longer than expected! actual time=%g, expected to take less than %g seconds",
@@ -73,5 +74,8 @@ int main(int argc, char** argv)
     return 0;
 }
 #else
-int main(int argc, char** argv) { return 0; }
+int main(int argc, char** argv)
+{
+    return 0;
+}
 #endif

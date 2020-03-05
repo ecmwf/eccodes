@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -55,7 +55,6 @@ alias bitmapSectionPresent=bitmapPresent;
 alias geography.bitmapPresent=bitmapPresent;
 alias missingValuesPresent=bitmapPresent : read_only;
 transient angleSubdivisions=1000;  # milli degrees
-alias angularPrecision=angleSubdivisions : hidden;
 
 if(gridDescriptionSectionPresent){
   template section_2 "grib1/section.2.def"     ;

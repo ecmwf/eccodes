@@ -1409,6 +1409,84 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 23 ;
 	}
+#Universal thermal climate index
+'utci' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	}
+#Mean radiant temperature
+'mrt' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	}
+#Fraction of Malaria cases
+'mal_cases_frac' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 0 ;
+	}
+#Malaria circumsporozoite protein ratio
+'mal_prot_ratio' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	}
+#Plasmodium falciparum entomological inoculation rate
+'mal_innoc_rate' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 2 ;
+	}
+#Human bite rate by anopheles vectors
+'mal_hbite_rate' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 3 ;
+	}
+#Malaria immunity ratio
+'mal_immun_ratio' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 4 ;
+	}
+#Falciparum parasite ratio
+'mal_infect_ratio' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 5 ;
+	}
+#Detectable falciparum parasite ratio (after day 10)
+'mal_infect_d10_ratio' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 6 ;
+	}
+#Anopheles vector to host ratio
+'mal_host_ratio' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 7 ;
+	}
+#Anopheles vector density
+'mal_vect_dens' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 8 ;
+	}
+#Fraction of malarial vector reproductive habitat
+'mal_hab_frac' = {
+	 discipline = 20 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 9 ;
+	}
+#Population density
+'pop_dens' = {
+	 discipline = 20 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	}
 #Virtual temperature
 'vtmp' = {
 	 discipline = 0 ;

@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -118,7 +118,7 @@ ecbuild_add_option( FEATURE AEC
 )
 
 ecbuild_add_option( FEATURE PYTHON
-    DESCRIPTION "Build the ecCodes Python interface"
+    DESCRIPTION "Build the ecCodes Python2 interface (deprecated)"
     DEFAULT ON
     REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy
 )
@@ -479,6 +479,12 @@ if( HAVE_FORTRAN )
 endif()
 
 ###############################################################################
+# Debugging aid. Print all known CMake variables
+# get_cmake_property(_variableNames VARIABLES)
+# foreach( _variableName ${_variableNames} )
+#   ecbuild_info("  ${_variableName}=${${_variableName}}")
+# endforeach()
+###############################################################################
 # finalize
 
 ecbuild_install_project( NAME ${CMAKE_PROJECT_NAME} )
@@ -490,6 +496,10 @@ ecbuild_info("   +--------------------------+")
 ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}  |")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("")
+
+if( HAVE_PYTHON )
+  ecbuild_deprecate("Python2 support is deprecated and will be discontinued")
+endif()
 
 ecbuild_info("   +--------------------------------------+")
 ecbuild_info("   | Please note:                         |")

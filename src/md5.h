@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,7 +14,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-typedef struct grib_md5_state {
+typedef struct grib_md5_state
+{
     uint64_t size;
 
     unsigned long words[64];
@@ -31,6 +32,6 @@ typedef struct grib_md5_state {
 
 void grib_md5_init(grib_md5_state* s);
 void grib_md5_add(grib_md5_state* s, const void* data, size_t len);
-void grib_md5_end(grib_md5_state* s, char *digest);
+void grib_md5_end(grib_md5_state* s, char* digest);
 
 #endif

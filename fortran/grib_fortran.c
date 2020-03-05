@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -258,7 +258,7 @@ static int push_file(FILE* f,char* buffer)
 
 static void _push_handle(grib_handle *h,int *gid)
 {
-    l_grib_handle* current= handle_set;
+    l_grib_handle* current= NULL;
     l_grib_handle* previous= handle_set;
     l_grib_handle* the_new= NULL;
     int myindex= 1;
@@ -316,24 +316,24 @@ static void _push_handle(grib_handle *h,int *gid)
 
 static void _push_index(grib_index *h,int *gid)
 {
-    l_grib_index* current= index_set;
+    l_grib_index* current= NULL;
     l_grib_index* previous= index_set;
     l_grib_index* the_new= NULL;
     int myindex= 1;
 
     /*
-  if (*gid > 0 ) {
-    while(current) {
-      if(current->id == *gid) break;
-      current = current->next;
+    if (*gid > 0 ) {
+      while(current) {
+        if(current->id == *gid) break;
+        current = current->next;
+      }
+      if (current) {
+        grib_index_delete(current->h);
+        current->h=h;
+        return;
+      }
     }
-    if (current) {
-      grib_index_delete(current->h);
-      current->h=h;
-      return;
-    }
-  }
-     */
+    */
 
     if(!index_set){
         index_set = (l_grib_index*)malloc(sizeof(l_grib_index));
@@ -374,24 +374,24 @@ static void _push_index(grib_index *h,int *gid)
 
 static void _push_multi_handle(grib_multi_handle *h,int *gid)
 {
-    l_grib_multi_handle* current= multi_handle_set;
+    l_grib_multi_handle* current= NULL;
     l_grib_multi_handle* previous= multi_handle_set;
     l_grib_multi_handle* the_new= NULL;
     int myindex= 1;
 
     /*
-  if (*gid > 0 ) {
-    while(current) {
-      if(current->id == *gid) break;
-      current = current->next;
+    if (*gid > 0 ) {
+        while(current) {
+          if(current->id == *gid) break;
+          current = current->next;
+        }
+        if (current) {
+          grib_multi_handle_delete(current->h);
+          current->h=h;
+          return;
+        }
     }
-    if (current) {
-      grib_multi_handle_delete(current->h);
-      current->h=h;
-      return;
-    }
-  }
-     */
+    */
 
     if(!multi_handle_set){
         multi_handle_set = (l_grib_multi_handle*)malloc(sizeof(l_grib_multi_handle));
@@ -2158,6 +2158,18 @@ int grib_f_get_error_string__(int* err, char* buf,  int len){
 }
 int grib_f_get_error_string(int* err, char* buf,  int len){
     return grib_f_get_error_string_(err,buf,len);
+}
+
+/*****************************************************************************/
+int grib_f_get_api_version_(int* apiVersion,int len){
+    *apiVersion = grib_get_api_version();
+    return GRIB_SUCCESS;
+}
+int grib_f_get_api_version__(int* apiVersion, int len){
+    return grib_f_get_api_version_(apiVersion, len);
+}
+int grib_f_get_api_version(int* apiVersion, int len){
+    return grib_f_get_api_version_(apiVersion, len);
 }
 
 /*****************************************************************************/

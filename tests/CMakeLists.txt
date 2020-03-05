@@ -58,6 +58,7 @@ list( APPEND tests_no_data_reqd
     grib_2nd_order_numValues
     grib_ecc-136
     grib_ecc-967
+    grib_ecc-1065
     julian
     bufr_dump_samples
     bufr_json_samples
@@ -67,6 +68,7 @@ list( APPEND tests_no_data_reqd
     grib_efas
     grib_sh_imag
     diag
+    grib_lambert_conformal
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd

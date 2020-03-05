@@ -6,6 +6,6 @@
 4 4 Space weather products 
 # 5-9 Reserved 
 10 10 Oceanographic products
-# 11-191 Reserved
+20 20 Health and socioeconomic impacts
 # 192-254 Reserved for local use
 255 255 Missing

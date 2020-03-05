@@ -100,7 +100,7 @@ sub super_members {
     my $class = cleanup($s->{NAME});
 
     my @members    = map { cleanup($_);} split(";",$s->{MEMBERS});
-    unshift @members, "/* Members defined in $class */";
+    unshift @members, "    /* Members defined in $class */";
 
     unshift @{$list}, @members;
 
@@ -117,7 +117,7 @@ sub output {
 
     my $name = cleanup($args->{NAME});
     my @members    = map { cleanup($_);} split(";",$args->{MEMBERS});
-    unshift @members, "/* Members defined in $name */";
+    unshift @members, "    /* Members defined in $name */";
 
     my @implements = map { cleanup($_);} split(";",$args->{IMPLEMENTS});
 
@@ -190,7 +190,7 @@ EOF
                 }
                 else
                 {
-                    print OUT "\t$m;\n";
+                    print OUT "    $m;\n";
                 }
             }
             next;
@@ -241,7 +241,7 @@ EOF
 
             foreach my $c ( grep { !$implements{$_} } grep { ! /\binit\b|\bdestroy\b|\bpost_init\b/ } @procs )
             {
-                print OUT "\tc->$c\t=\t(*(c->super))->$c;\n";
+                print OUT "    c->$c    =    (*(c->super))->$c;\n";
             }
             next;
         }
@@ -255,10 +255,10 @@ EOF
     foreach my $proc ( grep { /clone/ } @procs ) { 
         my $done=0;
         print OUT "static grib_$class* clone(grib_$class* s) {\n";
-        print OUT "\tgrib_${class}_$name* c=grib_context_alloc_clear(a->parent->h,sizeof(grib_${class}_$name));\n";
+        print OUT "    grib_${class}_$name* c=grib_context_alloc_clear(a->parent->h,sizeof(grib_${class}_$name));\n";
         foreach my $m ( @members ) {
             if ( $m =~ /\/\*/ ) {next;}
-            print OUT "\n\tgrib_${class}_$name* self=(grib_${class}_$name*)s;\n\n" unless ($done);
+            print OUT "\n    grib_${class}_$name* self=(grib_${class}_$name*)s;\n\n" unless ($done);
             $done=1;
             my $is_pointer=0;
             my @ma=split(/ /,$m);
@@ -269,18 +269,18 @@ EOF
 
             if ($is_pointer) { 
                 if ($mtype =~ "\bchar\b") {
-                        print OUT "\tif (self->$mname) \n\t\tc->$mname=grib_context_strdup(a->parent->h,self->$mname);\n\n";
+                        print OUT "    if (self->$mname) \n        c->$mname=grib_context_strdup(a->parent->h,self->$mname);\n\n";
                 }
                 if ($mtype =~ "\b(double|long|int|float)\b") {
-                        print OUT "\tif (self->".$mname."_size) {\n";
-                        print OUT "\tint i=0;\n";
-                        print OUT "\tc->$mname=grib_context_alloc_clear(a->parent->h,self->".$mname."_size*sizeof($mtype));";
-                        print OUT "\tfor (i=0;i<self->${mname}_size;i++) c->".$mname."[i]=self->".$mname."[i];";
+                        print OUT "    if (self->".$mname."_size) {\n";
+                        print OUT "    int i=0;\n";
+                        print OUT "    c->$mname=grib_context_alloc_clear(a->parent->h,self->".$mname."_size*sizeof($mtype));";
+                        print OUT "    for (i=0;i<self->${mname}_size;i++) c->".$mname."[i]=self->".$mname."[i];";
                         print OUT "}\n";
                 }
-            } else { print OUT "\tc->$mname=self->$mname;\n\n"; }
+            } else { print OUT "    c->$mname=self->$mname;\n\n"; }
         }
-        print OUT "\treturn (grib_$class*)c;\n}\n\n"
+        print OUT "    return (grib_$class*)c;\n}\n\n"
     }
   }
 

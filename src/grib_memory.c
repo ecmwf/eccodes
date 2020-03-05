@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,28 +15,27 @@
 #if MANAGE_MEM
 
 #if GRIB_PTHREADS
-static pthread_once_t once  = PTHREAD_ONCE_INIT;
+static pthread_once_t once   = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static void init() {
-  pthread_mutexattr_t attr;
+static void init()
+{
+    pthread_mutexattr_t attr;
 
-  pthread_mutexattr_init(&attr);
-  pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-  pthread_mutex_init(&mutex,&attr);
-  pthread_mutexattr_destroy(&attr);
-
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&mutex, &attr);
+    pthread_mutexattr_destroy(&attr);
 }
 #elif GRIB_OMP_THREADS
-static int once  = 0;
+static int once = 0;
 static omp_nest_lock_t mutex;
 
 static void init()
 {
     GRIB_OMP_CRITICAL(lock_grib_memory_c)
     {
-        if (once == 0)
-        {
+        if (once == 0) {
             omp_init_nest_lock(&mutex);
             once = 1;
         }
@@ -44,34 +43,37 @@ static void init()
 }
 #endif
 
-union align {
-  double d;
-  int    n;
-  void * p;
-  long   l;
+union align
+{
+    double d;
+    int n;
+    void* p;
+    long l;
 };
 
 #define WORD sizeof(union align)
 
 static size_t page_size = 0;
 
-typedef struct {
-  int   pages;     /* Number of pages to allocate */
-  int   clear;     /* clear newly allocated memory */
-  int   first;     /* Allocate in first only */
-  void *priv;
+typedef struct
+{
+    int pages; /* Number of pages to allocate */
+    int clear; /* clear newly allocated memory */
+    int first; /* Allocate in first only */
+    void* priv;
 } mempool;
 
 
-typedef struct memblk {
-  struct memblk *next;
-  long     cnt;
-  size_t   left;
-  size_t   size;
-  char     buffer[WORD];
+typedef struct memblk
+{
+    struct memblk* next;
+    long cnt;
+    size_t left;
+    size_t size;
+    char buffer[WORD];
 } memblk;
 
-static memblk *reserve = NULL;
+static memblk* reserve = NULL;
 
 /*
    typedef struct memprocs {
@@ -83,130 +85,127 @@ static memblk *reserve = NULL;
    static memprocs *mprocs = NULL;
  */
 
-#define HEADER_SIZE  (sizeof(memblk) - WORD)
+#define HEADER_SIZE (sizeof(memblk) - WORD)
 
 static mempool _transient_mem = {
-  10,
-  0,
-  1,
+    10,
+    0,
+    1,
 };
 
-static mempool *transient_mem = &_transient_mem;
+static mempool* transient_mem = &_transient_mem;
 
 static mempool _permanent_mem = {
-  10,
-  0,
-  1,
+    10,
+    0,
+    1,
 };
 
-static mempool *permanent_mem = &_permanent_mem;
+static mempool* permanent_mem = &_permanent_mem;
 
-static void *fast_new(size_t s,mempool *pool)
+static void* fast_new(size_t s, mempool* pool)
 {
-  char *p;
-  memblk *m;
+    char* p;
+    memblk* m;
 
-  GRIB_MUTEX_INIT_ONCE(&once,&init)
-  GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_INIT_ONCE(&once, &init)
+    GRIB_MUTEX_LOCK(&mutex)
 
-  m = (memblk*)pool->priv;
+    m = (memblk*)pool->priv;
 
-  /* align */
+    /* align */
 
-  s = ((s+WORD-1)/WORD)*WORD;
+    s = ((s + WORD - 1) / WORD) * WORD;
 
-  if(pool->first)
-  {
-    if(m && (m->left < s))
-      m = NULL;
-  }
-
-  while(m && (m->left < s))
-    m = m->next;
-
-  if(m == NULL)
-  {
-    memblk *p;
-    size_t    size;
-    if(!page_size) page_size = getpagesize();
-
-    size = page_size*pool->pages;
-
-    if(s > size - HEADER_SIZE)
-    {
-      /* marslog(LOG_WARN,"Object of %d bytes is too big for grib_fast_new",s); */
-      /* marslog(LOG_WARN,"Block size if %d bytes", size - HEADER_SIZE); */
-      size = ((s + HEADER_SIZE + (page_size-1)) / page_size) * page_size;
+    if (pool->first) {
+        if (m && (m->left < s))
+            m = NULL;
     }
 
-    p = (memblk*)(pool->clear?calloc(size,1):malloc(size));
-    if(!p) {
-      GRIB_MUTEX_UNLOCK(&mutex)
-      return NULL;
+    while (m && (m->left < s))
+        m = m->next;
+
+    if (m == NULL) {
+        memblk* p;
+        size_t size;
+        if (!page_size)
+            page_size = getpagesize();
+
+        size = page_size * pool->pages;
+
+        if (s > size - HEADER_SIZE) {
+            /* marslog(LOG_WARN,"Object of %d bytes is too big for grib_fast_new",s); */
+            /* marslog(LOG_WARN,"Block size if %d bytes", size - HEADER_SIZE); */
+            size = ((s + HEADER_SIZE + (page_size - 1)) / page_size) * page_size;
+        }
+
+        p = (memblk*)(pool->clear ? calloc(size, 1) : malloc(size));
+        if (!p) {
+            GRIB_MUTEX_UNLOCK(&mutex)
+            return NULL;
+        }
+
+        p->next = (memblk*)pool->priv;
+        p->cnt  = 0;
+        p->size = p->left = size - HEADER_SIZE;
+        m                 = p;
+        pool->priv        = (void*)p;
     }
 
-    p->next = (memblk*)pool->priv;
-    p->cnt  = 0;
-    p->size = p->left = size-HEADER_SIZE;
-    m       = p;
-    pool->priv = (void*)p;
-  }
+    p = &m->buffer[m->size - m->left];
+    m->left -= s;
+    m->cnt++;
 
-  p = &m->buffer[m->size - m->left];
-  m->left -= s;
-  m->cnt++;
+    GRIB_MUTEX_UNLOCK(&mutex)
 
-  GRIB_MUTEX_UNLOCK(&mutex)
-
-  return p;
+    return p;
 }
 
 
-
-static void fast_delete(void *p,mempool *pool)
+static void fast_delete(void* p, mempool* pool)
 {
-  memblk *m ;
-  memblk *n = NULL;
+    memblk* m;
+    memblk* n = NULL;
 
-  GRIB_MUTEX_INIT_ONCE(&once,&init)
-  GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_INIT_ONCE(&once, &init)
+    GRIB_MUTEX_LOCK(&mutex)
 
-  m = (memblk*)pool->priv;
+    m = (memblk*)pool->priv;
 
-  while(m)
-  {
-    if( ((char*)p >= (char*)&m->buffer[0]) &&
-        ((char*)p < (char*)&m->buffer[m->size]))
-    {
-      m->cnt--;
-      if(m->cnt == 0)
-      {
-        if(n) n->next = m->next;
-        else pool->priv = (void*)m->next;
-        free((void*)m);
-      }
-      GRIB_MUTEX_UNLOCK(&mutex)
-      return;
+    while (m) {
+        if (((char*)p >= (char*)&m->buffer[0]) &&
+            ((char*)p < (char*)&m->buffer[m->size])) {
+            m->cnt--;
+            if (m->cnt == 0) {
+                if (n)
+                    n->next = m->next;
+                else
+                    pool->priv = (void*)m->next;
+                free((void*)m);
+            }
+            GRIB_MUTEX_UNLOCK(&mutex)
+            return;
+        }
+
+        n = m;
+        m = m->next;
     }
-
-    n = m;
-    m = m->next;
-  }
-  Assert(1==0);
+    Assert(1 == 0);
 }
 
-static void *fast_realloc(void *p,size_t s,mempool *pool)
+static void* fast_realloc(void* p, size_t s, mempool* pool)
 {
-  void *q;
+    void* q;
 
-  /* I'll come back here later... */
+    /* I'll come back here later... */
 
-  if((q = fast_new(s,pool)) == NULL) return NULL;
-  memcpy(q,p,s);
+    if ((q = fast_new(s, pool)) == NULL)
+        return NULL;
+    memcpy(q, p, s);
 
-  fast_delete(p,pool);
+    fast_delete(p, pool);
 
-  return q;
+    return q;
 }
 
 #if 0
@@ -246,102 +245,99 @@ static void *fast_realloc(void *p,size_t s,mempool *pool)
  */
 #endif
 
-void *grib_transient_malloc(const grib_context* c,size_t s)
+void* grib_transient_malloc(const grib_context* c, size_t s)
 {
-  return fast_new(s,transient_mem);
+    return fast_new(s, transient_mem);
 }
 
-void *grib_transient_realloc(const grib_context* c,void *p,size_t s)
+void* grib_transient_realloc(const grib_context* c, void* p, size_t s)
 {
-  return fast_realloc(p,s,transient_mem);
+    return fast_realloc(p, s, transient_mem);
 }
 
-void  grib_transient_free(const grib_context* c,void* p)
+void grib_transient_free(const grib_context* c, void* p)
 {
-  fast_delete(p,transient_mem);
+    fast_delete(p, transient_mem);
 }
 
-void *grib_permanent_malloc(const grib_context* c,size_t s)
+void* grib_permanent_malloc(const grib_context* c, size_t s)
 {
-  return fast_new(s,permanent_mem);
+    return fast_new(s, permanent_mem);
 }
 
-void *grib_permanent_realloc(const grib_context* c,void *p,size_t s)
+void* grib_permanent_realloc(const grib_context* c, void* p, size_t s)
 {
-  return fast_realloc(p,s,permanent_mem);
+    return fast_realloc(p, s, permanent_mem);
 }
 
-void  grib_permanent_free(const grib_context* c,void* p)
+void grib_permanent_free(const grib_context* c, void* p)
 {
-  fast_delete(p,permanent_mem);
+    fast_delete(p, permanent_mem);
 }
 
-void *grib_buffer_malloc(const grib_context* c,size_t s)
+void* grib_buffer_malloc(const grib_context* c, size_t s)
 {
-  memblk *r;
+    memblk* r;
 
-  GRIB_MUTEX_INIT_ONCE(&once,&init)
-  GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_INIT_ONCE(&once, &init)
+    GRIB_MUTEX_LOCK(&mutex)
 
-  s = ((s+WORD-1)/WORD)*WORD;
-  r = reserve;
-  while(r)
-  {
-    if(r->cnt == 0 && r->size == s)
-      break;
-    r = r->next;
-  }
+    s = ((s + WORD - 1) / WORD) * WORD;
+    r = reserve;
+    while (r) {
+        if (r->cnt == 0 && r->size == s)
+            break;
+        r = r->next;
+    }
 
-  if(r)
-  {
-    /* marslog(LOG_DBUG,"Reusing %ld bytes %d",s,r->size); */
-  }
-  else
-  {
-    size_t size = s + HEADER_SIZE;
-    /* marslog(LOG_DBUG,"Allocating %d (%d)bytes",s,size); */
-    r = (memblk*)malloc(size);
-    if(!r) return NULL;
-    r->next = reserve;
-    reserve = r;
-  }
-  r->size = s;
-  r->cnt  = 1;
+    if (r) {
+        /* marslog(LOG_DBUG,"Reusing %ld bytes %d",s,r->size); */
+    }
+    else {
+        size_t size = s + HEADER_SIZE;
+        /* marslog(LOG_DBUG,"Allocating %d (%d)bytes",s,size); */
+        r = (memblk*)malloc(size);
+        if (!r)
+            return NULL;
+        r->next = reserve;
+        reserve = r;
+    }
+    r->size = s;
+    r->cnt  = 1;
 
-  GRIB_MUTEX_UNLOCK(&mutex)
+    GRIB_MUTEX_UNLOCK(&mutex)
 
-  return &r->buffer[0];
-
+    return &r->buffer[0];
 }
 
-void grib_buffer_free(const grib_context* c,void *p)
+void grib_buffer_free(const grib_context* c, void* p)
 {
-  memblk *r;
-  memblk *s;
+    memblk* r;
+    memblk* s;
 
-  GRIB_MUTEX_INIT_ONCE(&once,&init)
-  GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_INIT_ONCE(&once, &init)
+    GRIB_MUTEX_LOCK(&mutex)
 
-  r = (memblk*)(((char*)p) - HEADER_SIZE);
-  s = reserve;
-  while(s && (s!=r)) s = s->next;
-  if(s == NULL)
-    ; /* marslog(LOG_WARN,"release_mem: invalid pointer"); */
-  else
-  {
-    s->cnt = 0;
-  }
+    r = (memblk*)(((char*)p) - HEADER_SIZE);
+    s = reserve;
+    while (s && (s != r))
+        s = s->next;
+    if (s == NULL)
+        ; /* marslog(LOG_WARN,"release_mem: invalid pointer"); */
+    else {
+        s->cnt = 0;
+    }
 
-  GRIB_MUTEX_UNLOCK(&mutex)
+    GRIB_MUTEX_UNLOCK(&mutex)
 }
 
-void *grib_buffer_realloc(const grib_context* c,void *p,size_t s)
+void* grib_buffer_realloc(const grib_context* c, void* p, size_t s)
 {
-  memblk *r = (memblk*)(((char*)p) - HEADER_SIZE);
-  void * n = grib_buffer_malloc(c,s);
-  memcpy(n,p,r->size < s? r->size:s);
-  grib_buffer_free(c,p);
-  return n;
+    memblk* r = (memblk*)(((char*)p) - HEADER_SIZE);
+    void* n   = grib_buffer_malloc(c, s);
+    memcpy(n, p, r->size < s ? r->size : s);
+    grib_buffer_free(c, p);
+    return n;
 }
 
 /*

@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 meta startStep step_in_units(forecastTime,indicatorOfUnitOfTimeRange,stepUnits): no_copy;
 meta endStep g2end_step(startStep,stepUnits) : no_copy;

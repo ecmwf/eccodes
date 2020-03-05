@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -247,7 +247,10 @@ static void gaussian_grid(grib_handle* h)
         last_n = n;
     }
 
-    values[0] = rint(values[0]*1e6)/1e6;
+    assert(values);
+    if (values) {
+        values[0] = rint(values[0]*1e6)/1e6;
+    }
 
     if ( !DBL_EQUAL(north, values[0], tolerance) || !DBL_EQUAL(south, -values[0], tolerance) )
         printf("N=%ld north=%f south=%f v(=gauss_lat[0])=%f north-v=%0.30f south-v=%0.30f\n",

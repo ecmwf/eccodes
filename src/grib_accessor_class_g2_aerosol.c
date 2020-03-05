@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -34,68 +34,69 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-static int pack_long(grib_accessor*, const long* val,size_t *len);
-static int unpack_long(grib_accessor*, long* val,size_t *len);
-static int value_count(grib_accessor*,long*);
-static void init(grib_accessor*,const long, grib_arguments* );
+static int pack_long(grib_accessor*, const long* val, size_t* len);
+static int unpack_long(grib_accessor*, long* val, size_t* len);
+static int value_count(grib_accessor*, long*);
+static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
 
-typedef struct grib_accessor_g2_aerosol {
-    grib_accessor          att;
-/* Members defined in gen */
-/* Members defined in long */
-/* Members defined in unsigned */
-	long nbytes;
-	grib_arguments* arg;
-/* Members defined in g2_aerosol */
-	const char* productDefinitionTemplateNumber;
-	const char* stepType;
-	int optical;
+typedef struct grib_accessor_g2_aerosol
+{
+    grib_accessor att;
+    /* Members defined in gen */
+    /* Members defined in long */
+    /* Members defined in unsigned */
+    long nbytes;
+    grib_arguments* arg;
+    /* Members defined in g2_aerosol */
+    const char* productDefinitionTemplateNumber;
+    const char* stepType;
+    int optical;
 } grib_accessor_g2_aerosol;
 
 extern grib_accessor_class* grib_accessor_class_unsigned;
 
 static grib_accessor_class _grib_accessor_class_g2_aerosol = {
-    &grib_accessor_class_unsigned,                      /* super                     */
-    "g2_aerosol",                      /* name                      */
-    sizeof(grib_accessor_g2_aerosol),  /* size                      */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    &init,                       /* init                      */
-    0,                  /* post_init                      */
-    0,                    /* free mem                       */
-    0,                       /* describes himself         */
-    0,                /* get length of section     */
-    0,              /* get length of string      */
-    &value_count,                /* get number of values      */
-    0,                 /* get number of bytes      */
-    0,                /* get offset to bytes           */
-    0,            /* get native type               */
-    0,                /* get sub_section                */
-    0,               /* grib_pack procedures long      */
-    0,                 /* grib_pack procedures long      */
-    &pack_long,                  /* grib_pack procedures long      */
-    &unpack_long,                /* grib_unpack procedures long    */
-    0,                /* grib_pack procedures double    */
-    0,              /* grib_unpack procedures double  */
-    0,                /* grib_pack procedures string    */
-    0,              /* grib_unpack procedures string  */
-    0,          /* grib_pack array procedures string    */
-    0,        /* grib_unpack array procedures string  */
-    0,                 /* grib_pack procedures bytes     */
-    0,               /* grib_unpack procedures bytes   */
-    0,            /* pack_expression */
-    0,              /* notify_change   */
-    0,                /* update_size   */
-    0,            /* preferred_size   */
-    0,                    /* resize   */
-    0,      /* nearest_smaller_value */
-    0,                       /* next accessor    */
-    0,                    /* compare vs. another accessor   */
-    0,     /* unpack only ith value          */
-    0,     /* unpack a subarray         */
-    0,              		/* clear          */
-    0,               		/* clone accessor          */
+    &grib_accessor_class_unsigned,    /* super                     */
+    "g2_aerosol",                     /* name                      */
+    sizeof(grib_accessor_g2_aerosol), /* size                      */
+    0,                                /* inited */
+    &init_class,                      /* init_class */
+    &init,                            /* init                      */
+    0,                                /* post_init                      */
+    0,                                /* free mem                       */
+    0,                                /* describes himself         */
+    0,                                /* get length of section     */
+    0,                                /* get length of string      */
+    &value_count,                     /* get number of values      */
+    0,                                /* get number of bytes      */
+    0,                                /* get offset to bytes           */
+    0,                                /* get native type               */
+    0,                                /* get sub_section                */
+    0,                                /* grib_pack procedures long      */
+    0,                                /* grib_pack procedures long      */
+    &pack_long,                       /* grib_pack procedures long      */
+    &unpack_long,                     /* grib_unpack procedures long    */
+    0,                                /* grib_pack procedures double    */
+    0,                                /* grib_unpack procedures double  */
+    0,                                /* grib_pack procedures string    */
+    0,                                /* grib_unpack procedures string  */
+    0,                                /* grib_pack array procedures string    */
+    0,                                /* grib_unpack array procedures string  */
+    0,                                /* grib_pack procedures bytes     */
+    0,                                /* grib_unpack procedures bytes   */
+    0,                                /* pack_expression */
+    0,                                /* notify_change   */
+    0,                                /* update_size   */
+    0,                                /* preferred_size   */
+    0,                                /* resize   */
+    0,                                /* nearest_smaller_value */
+    0,                                /* next accessor    */
+    0,                                /* compare vs. another accessor   */
+    0,                                /* unpack only ith value          */
+    0,                                /* unpack a subarray         */
+    0,                                /* clear          */
+    0,                                /* clone accessor          */
 };
 
 
@@ -104,81 +105,81 @@ grib_accessor_class* grib_accessor_class_g2_aerosol = &_grib_accessor_class_g2_a
 
 static void init_class(grib_accessor_class* c)
 {
-	c->dump	=	(*(c->super))->dump;
-	c->next_offset	=	(*(c->super))->next_offset;
-	c->string_length	=	(*(c->super))->string_length;
-	c->byte_count	=	(*(c->super))->byte_count;
-	c->byte_offset	=	(*(c->super))->byte_offset;
-	c->get_native_type	=	(*(c->super))->get_native_type;
-	c->sub_section	=	(*(c->super))->sub_section;
-	c->pack_missing	=	(*(c->super))->pack_missing;
-	c->is_missing	=	(*(c->super))->is_missing;
-	c->pack_double	=	(*(c->super))->pack_double;
-	c->unpack_double	=	(*(c->super))->unpack_double;
-	c->pack_string	=	(*(c->super))->pack_string;
-	c->unpack_string	=	(*(c->super))->unpack_string;
-	c->pack_string_array	=	(*(c->super))->pack_string_array;
-	c->unpack_string_array	=	(*(c->super))->unpack_string_array;
-	c->pack_bytes	=	(*(c->super))->pack_bytes;
-	c->unpack_bytes	=	(*(c->super))->unpack_bytes;
-	c->pack_expression	=	(*(c->super))->pack_expression;
-	c->notify_change	=	(*(c->super))->notify_change;
-	c->update_size	=	(*(c->super))->update_size;
-	c->preferred_size	=	(*(c->super))->preferred_size;
-	c->resize	=	(*(c->super))->resize;
-	c->nearest_smaller_value	=	(*(c->super))->nearest_smaller_value;
-	c->next	=	(*(c->super))->next;
-	c->compare	=	(*(c->super))->compare;
-	c->unpack_double_element	=	(*(c->super))->unpack_double_element;
-	c->unpack_double_subarray	=	(*(c->super))->unpack_double_subarray;
-	c->clear	=	(*(c->super))->clear;
-	c->make_clone	=	(*(c->super))->make_clone;
+    c->dump                   = (*(c->super))->dump;
+    c->next_offset            = (*(c->super))->next_offset;
+    c->string_length          = (*(c->super))->string_length;
+    c->byte_count             = (*(c->super))->byte_count;
+    c->byte_offset            = (*(c->super))->byte_offset;
+    c->get_native_type        = (*(c->super))->get_native_type;
+    c->sub_section            = (*(c->super))->sub_section;
+    c->pack_missing           = (*(c->super))->pack_missing;
+    c->is_missing             = (*(c->super))->is_missing;
+    c->pack_double            = (*(c->super))->pack_double;
+    c->unpack_double          = (*(c->super))->unpack_double;
+    c->pack_string            = (*(c->super))->pack_string;
+    c->unpack_string          = (*(c->super))->unpack_string;
+    c->pack_string_array      = (*(c->super))->pack_string_array;
+    c->unpack_string_array    = (*(c->super))->unpack_string_array;
+    c->pack_bytes             = (*(c->super))->pack_bytes;
+    c->unpack_bytes           = (*(c->super))->unpack_bytes;
+    c->pack_expression        = (*(c->super))->pack_expression;
+    c->notify_change          = (*(c->super))->notify_change;
+    c->update_size            = (*(c->super))->update_size;
+    c->preferred_size         = (*(c->super))->preferred_size;
+    c->resize                 = (*(c->super))->resize;
+    c->nearest_smaller_value  = (*(c->super))->nearest_smaller_value;
+    c->next                   = (*(c->super))->next;
+    c->compare                = (*(c->super))->compare;
+    c->unpack_double_element  = (*(c->super))->unpack_double_element;
+    c->unpack_double_subarray = (*(c->super))->unpack_double_subarray;
+    c->clear                  = (*(c->super))->clear;
+    c->make_clone             = (*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
 
-static void init(grib_accessor* a,const long l, grib_arguments* c)
+static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_g2_aerosol* self = (grib_accessor_g2_aerosol*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
-    int n = 0;
+    grib_handle* hand              = grib_handle_of_accessor(a);
+    int n                          = 0;
 
-    self->productDefinitionTemplateNumber = grib_arguments_get_name(hand,c,n++);
-    self->stepType = grib_arguments_get_name(hand,c,n++);
-    self->optical = grib_arguments_get_long(hand,c,n++);
+    self->productDefinitionTemplateNumber = grib_arguments_get_name(hand, c, n++);
+    self->stepType                        = grib_arguments_get_name(hand, c, n++);
+    self->optical                         = grib_arguments_get_long(hand, c, n++);
 }
 
-static int unpack_long(grib_accessor* a, long* val, size_t *len)
+static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    grib_accessor_g2_aerosol* self = (grib_accessor_g2_aerosol*)a;
-    long productDefinitionTemplateNumber=0;
-    grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber);
+    grib_accessor_g2_aerosol* self       = (grib_accessor_g2_aerosol*)a;
+    long productDefinitionTemplateNumber = 0;
+    grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
 
     if (self->optical)
-        *val=grib2_is_PDTN_AerosolOptical(productDefinitionTemplateNumber);
+        *val = grib2_is_PDTN_AerosolOptical(productDefinitionTemplateNumber);
     else
-        *val=grib2_is_PDTN_Aerosol(productDefinitionTemplateNumber);
+        *val = grib2_is_PDTN_Aerosol(productDefinitionTemplateNumber);
 
     return GRIB_SUCCESS;
 }
 
-static int pack_long(grib_accessor* a, const long* val, size_t *len)
+static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    grib_accessor_g2_aerosol* self = (grib_accessor_g2_aerosol*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
-    long productDefinitionTemplateNumber=-1;
-    long productDefinitionTemplateNumberNew=-1;
+    grib_accessor_g2_aerosol* self          = (grib_accessor_g2_aerosol*)a;
+    grib_handle* hand                       = grib_handle_of_accessor(a);
+    long productDefinitionTemplateNumber    = -1;
+    long productDefinitionTemplateNumberNew = -1;
     /*long type=-1;
     long stream=-1;*/
-    long eps=-1;
-    char stepType[15]={0,};
-    size_t slen=15;
+    long eps          = -1;
+    char stepType[15] = {0,};
+    size_t slen = 15;
     /*int aerosol = *val;*/
-    int isInstant=0;
+    int isInstant = 0;
     /*long derivedForecast=-1;*/
     int ret = 0;
 
-    if (grib_get_long(hand, self->productDefinitionTemplateNumber,&productDefinitionTemplateNumber)!=GRIB_SUCCESS)
+    if (grib_get_long(hand, self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber) != GRIB_SUCCESS)
         return GRIB_SUCCESS;
 
     /*
@@ -190,26 +191,32 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
 
     eps = grib2_is_PDTN_EPS(productDefinitionTemplateNumber);
 
-    if (!strcmp(stepType,"instant")) isInstant=1;
+    if (!strcmp(stepType, "instant"))
+        isInstant = 1;
 
-    if ( eps == 1 ) {
+    if (eps == 1) {
         if (isInstant) {
-            productDefinitionTemplateNumberNew=45;
-        } else {
-            productDefinitionTemplateNumberNew=47;
+            productDefinitionTemplateNumberNew = 45;
         }
-    } else {
-        if (isInstant) {
-            productDefinitionTemplateNumberNew=48;/*44 is deprecated*/
-        } else {
-            productDefinitionTemplateNumberNew=46;
+        else {
+            productDefinitionTemplateNumberNew = 47;
         }
     }
-    
+    else {
+        if (isInstant) {
+            productDefinitionTemplateNumberNew = 48; /*44 is deprecated*/
+        }
+        else {
+            productDefinitionTemplateNumberNew = 46;
+        }
+    }
+
     if (self->optical) {
         /* Note: There is no interval based template for optical properties of aerosol! */
-        if (eps) productDefinitionTemplateNumberNew = 49;
-        else     productDefinitionTemplateNumberNew = 48;
+        if (eps)
+            productDefinitionTemplateNumberNew = 49;
+        else
+            productDefinitionTemplateNumberNew = 48;
         if (!isInstant) {
             grib_context_log(hand->context, GRIB_LOG_ERROR,
                              "The product definition templates for optical properties of aerosol are for a point-in-time only");
@@ -217,15 +224,15 @@ static int pack_long(grib_accessor* a, const long* val, size_t *len)
     }
 
     if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
-        grib_set_long(hand, self->productDefinitionTemplateNumber,productDefinitionTemplateNumberNew);
+        grib_set_long(hand, self->productDefinitionTemplateNumber, productDefinitionTemplateNumberNew);
         /*if (derivedForecast>=0) grib_set_long(hand, self->derivedForecast,derivedForecast);*/
     }
 
     return 0;
 }
 
-static int value_count(grib_accessor* a,long* count)
+static int value_count(grib_accessor* a, long* count)
 {
-    *count=1;
+    *count = 1;
     return 0;
 }

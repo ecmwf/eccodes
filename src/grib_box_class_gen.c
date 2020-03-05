@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -35,27 +35,28 @@ or edit "box.class" and rerun ./make_class.pl
 */
 
 
-static void init_class              (grib_box_class*);
+static void init_class(grib_box_class*);
 
-static int init               (grib_box* box,grib_handle* h,grib_arguments* args);
-static grib_points* get_points(grib_box* box, double north, double west, double south,double east,int *err);
-static int destroy            (grib_box* box);
+static int init(grib_box* box, grib_handle* h, grib_arguments* args);
+static grib_points* get_points(grib_box* box, double north, double west, double south, double east, int* err);
+static int destroy(grib_box* box);
 
-typedef struct grib_box_gen{
-  grib_box box;
-/* Members defined in gen */
+typedef struct grib_box_gen
+{
+    grib_box box;
+    /* Members defined in gen */
 } grib_box_gen;
 
 
 static grib_box_class _grib_box_class_gen = {
-    0,                         /* super                     */
-    "gen",                         /* name                      */
-    sizeof(grib_box_gen),      /* size of instance          */
-    0,                              /* inited */
-    &init_class,                    /* init_class */
-    &init,                          /* constructor               */
-    &destroy,                       /* destructor                */
-    &get_points,                    /* get points           */
+    0,                    /* super                     */
+    "gen",                /* name                      */
+    sizeof(grib_box_gen), /* size of instance          */
+    0,                    /* inited */
+    &init_class,          /* init_class */
+    &init,                /* constructor               */
+    &destroy,             /* destructor                */
+    &get_points,          /* get points           */
 };
 
 grib_box_class* grib_box_class_gen = &_grib_box_class_gen;
@@ -66,21 +67,20 @@ static void init_class(grib_box_class* c)
 }
 /* END_CLASS_IMP */
 
-static int init(grib_box* box,grib_handle* h,grib_arguments* args)
+static int init(grib_box* box, grib_handle* h, grib_arguments* args)
 {
-  return 0;
+    return 0;
 }
 
-static int destroy(grib_box* box) {
-  grib_points_delete(box->points);
-  box->points=0;
-  return GRIB_SUCCESS;
+static int destroy(grib_box* box)
+{
+    grib_points_delete(box->points);
+    box->points = 0;
+    return GRIB_SUCCESS;
 }
 
-static grib_points* get_points(grib_box* box, double north, double west, double south,double east, int *err) {
-	*err=GRIB_NOT_IMPLEMENTED;
-	return NULL;
+static grib_points* get_points(grib_box* box, double north, double west, double south, double east, int* err)
+{
+    *err = GRIB_NOT_IMPLEMENTED;
+    return NULL;
 }
-
-
-

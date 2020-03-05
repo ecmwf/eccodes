@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -38,7 +38,7 @@ unsigned[4] Dx  : dump ;
 unsigned[4] Dy  : dump ;
 
 #  Projection centre flag
-unsigned[1] projectionCenterFlag  : dump ;
+unsigned[1] projectionCentreFlag  : dump ;
 
 include "grib2/template.3.scanning_mode.def";
 

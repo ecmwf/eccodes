@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 #  Forecast probability number
 unsigned[1] forecastProbabilityNumber  : dump;

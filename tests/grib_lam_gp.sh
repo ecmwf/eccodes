@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2018 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -32,7 +32,7 @@ dump_and_check()
 
 # Grid-point LAM fields
 # Run the test which generates the GRIB files
-${test_dir}/grib_lam_gp
+$EXEC ${test_dir}/grib_lam_gp
 
 dump_and_check lam_gp_lambert_lam.grib
 dump_and_check lam_gp_mercator_lam.grib

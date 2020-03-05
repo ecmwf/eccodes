@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,67 +14,60 @@
 
 #include "string.h"
 
-char *optarg;       /* global argument pointer */
-int optind = 0;     /* global argv index */
+char* optarg;   /* global argument pointer */
+int optind = 0; /* global argv index */
 int opterr = 0;
-int getopt(int argc, char *argv[], const char *optstring)
+int getopt(int argc, char* argv[], const char* optstring)
 {
-    static char *next = 0;
+    static char* next = 0;
     char c;
-    char *cp;
+    char* cp;
     if (optind == 0)
         next = 0;
 
     optarg = 0;
 
-    if (next == 0 || *next == '\0')
-    {
+    if (next == 0 || *next == '\0') {
         if (optind == 0)
             optind++;
 
-        if (optind >= argc || argv[optind][0] != '-' || argv[optind][1] == '\0')
-        {
+        if (optind >= argc || argv[optind][0] != '-' || argv[optind][1] == '\0') {
             optarg = 0;
             if (optind < argc)
                 optarg = argv[optind];
             return -1;
         }
 
-        if (strcmp(argv[optind], "--") == 0)
-        {
+        if (strcmp(argv[optind], "--") == 0) {
             optind++;
             optarg = NULL;
             if (optind < argc)
                 optarg = argv[optind];
-            return  -1;
+            return -1;
         }
 
         next = argv[optind];
-        next++;		/* skip past - */
+        next++; /* skip past - */
         optind++;
     }
 
-    c = *next++;
+    c  = *next++;
     cp = strrchr(optstring, c);
 
     if (cp == 0 || c == ':')
         return '?';
 
     cp++;
-    if (*cp == ':')
-    {
-        if (*next != '\0')
-        {
+    if (*cp == ':') {
+        if (*next != '\0') {
             optarg = next;
-            next = 0;
+            next   = 0;
         }
-        else if (optind < argc)
-        {
+        else if (optind < argc) {
             optarg = argv[optind];
             optind++;
         }
-        else
-        {
+        else {
             return '?';
         }
     }
@@ -82,4 +75,3 @@ int getopt(int argc, char *argv[], const char *optstring)
     return c;
 }
 #endif
-

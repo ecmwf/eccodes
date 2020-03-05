@@ -1,4 +1,4 @@
-# Copyright 2005-2019 ECMWF.
+# (C) Copyright 2005- ECMWF.
 
 meta groupWidths unsigned_bits(widthOfWidths,numberOfGroups) : read_only;
 meta groupLengths unsigned_bits(widthOfLengths,numberOfGroups) : read_only;
