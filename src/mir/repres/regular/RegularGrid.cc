@@ -169,7 +169,7 @@ Iterator* RegularGrid::iterator() const {
         size_t count_;
 
         void print(std::ostream& out) const {
-            out << "AtlasRegularIterator[";
+            out << "RegularGridIterator[";
             Iterator::print(out);
             out << ",i=" << i_ << ",j=" << j_ << ",count=" << count_ << "]";
         }
