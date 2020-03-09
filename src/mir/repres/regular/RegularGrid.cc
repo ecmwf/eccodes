@@ -20,6 +20,7 @@
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
+#include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
@@ -62,8 +63,8 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
     y_    = {first.y(), first.y() + grid[1] * (firstPointBottomLeft_ || plusy ? ny - 1 : 1 - ny), ny};
     grid_ = {x_, y_, projection};
 
-    ::atlas::RectangularDomain range({x_.min(), x_.max()}, {y_.min(), y_.max()}, "meters");
-    ::atlas::RectangularLonLatDomain bbox = projection.lonlatBoundingBox(range);
+    util::RectangularDomain range({x_.min(), x_.max()}, {y_.min(), y_.max()}, "meters");
+    auto bbox = projection.lonlatBoundingBox(range);
     ASSERT(bbox);
 
     bbox_ = {bbox.north(), bbox.west(), bbox.south(), bbox.east()};

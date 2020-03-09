@@ -29,7 +29,7 @@ namespace other {
 
 
 ORCA::ORCA(const std::string& name) : name_(name), grid_(name) {
-    ::atlas::RectangularDomain rect(grid_.domain());
+    util::RectangularDomain rect(grid_.domain());
     if (!rect) {
         std::ostringstream msg;
         msg << "ORCA: grid '" << name << "' not supported (domain " << grid_.domain().spec() << ")";
