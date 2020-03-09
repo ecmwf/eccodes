@@ -123,7 +123,7 @@ ecbuild_add_option( FEATURE PYTHON
     REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy
 )
 # For Python2 we build our own bindings (using SWIG) in the build directory
-# but for Python3 one has to add the eccodes-python from pip3 AFTER the install
+# but for Python3 one has to add the eccodes from pip3 AFTER the install
 if( PYTHON_VERSION_MAJOR EQUAL 3 )
     set( HAVE_PYTHON 0 )
 endif()
@@ -404,7 +404,7 @@ add_subdirectory( fortran )
 
 if (PYTHON_VERSION_MAJOR GREATER 2)
     # Python3 is no longer built with SWIG but is a separate
-    # package. User should do: pip3 install eccodes-python
+    # package. User should do: pip3 install eccodes
     #add_subdirectory( python3 )
     set( ECCODES_PYTHON_DIR "python3" )
 else()
@@ -506,6 +506,6 @@ ecbuild_info("   | Please note:                         |")
 ecbuild_info("   | For Python3 support, first install   |")
 ecbuild_info("   | ecCodes and then install the Python  |")
 ecbuild_info("   | bindings from PyPI with:             |")
-ecbuild_info("   |   $ pip3 install eccodes-python      |")
+ecbuild_info("   |   $ pip3 install eccodes             |")
 ecbuild_info("   +--------------------------------------+")
 ecbuild_info("")
