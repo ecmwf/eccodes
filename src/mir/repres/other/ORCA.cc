@@ -36,7 +36,10 @@ ORCA::ORCA(const std::string& name) : name_(name), grid_(name) {
         throw eckit::UserError(msg.str());
     }
 
-    domain_ = rect;
+    domain_ = util::Domain(rect.containsNorthPole() ? Latitude::NORTH_POLE : rect.ymax(), rect.xmin(),
+                           rect.containsSouthPole() ? Latitude::SOUTH_POLE : rect.ymin(),
+                           rect.zonal_band() ? rect.xmin() + Longitude::GLOBE.value() : rect.xmax());
+
     eckit::Log::debug<LibMir>() << "ORCA: grid '" << name << "', domain=" << domain_ << std::endl;
 }
 
