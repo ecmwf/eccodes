@@ -1265,9 +1265,10 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     char filename[1024] = {0,};
     Assert(options->outfile != NULL && options->outfile->name != NULL);
 
-    if (options->error == GRIB_WRONG_LENGTH)
-        return;
-
+    /* See ECC-1086
+     * if (options->error == GRIB_WRONG_LENGTH)
+     *   return;
+     */
     if ((err = grib_get_message(h, &buffer, &size)) != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "unable to get binary message\n");
         exit(err);

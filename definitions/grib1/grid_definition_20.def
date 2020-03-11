@@ -6,7 +6,7 @@ constant gridDefinitionTemplateNumber     = 2;
 
 template commonBlock "grib1/grid_definition_latlon.def";
 
-ascii[4] zero : read_only;
+ascii[4] zeros : read_only;
 
 # Stretching parameters
 include "grib1/grid_stretching.def"

@@ -570,6 +570,8 @@ static int is_local_ecmwf_grib2_param_key(grib_accessor* a, long edition, long c
 
 static char* get_legacy_param_info(const char* key_name, long paramId)
 {
+    if (strcmp(key_name, "modelName") == 0)
+        return "unknown";
     if (paramId == 210) {
         if (strcmp(key_name, "paramId") == 0)
             return "210";
@@ -581,7 +583,7 @@ static char* get_legacy_param_info(const char* key_name, long paramId)
             return "Surface net solar radiation, clear sky";
         if (strcmp(key_name, "cfVarName") == 0)
             return "ssrc";
-        if (strcmp(key_name, "cfName") == 0)
+        if (strncmp(key_name, "cfName", 6) == 0)
             return "surface_net_downward_shortwave_flux_assuming_clear_sky";
     }
     else if (paramId == 211) {
@@ -595,11 +597,11 @@ static char* get_legacy_param_info(const char* key_name, long paramId)
             return "Surface net thermal radiation, clear sky";
         if (strcmp(key_name, "cfVarName") == 0)
             return "strc";
-        if (strcmp(key_name, "cfName") == 0)
+        if (strncmp(key_name, "cfName", 6) == 0)
             return "surface_net_downward_longwave_flux_assuming_clear_sky";
     }
     else if (paramId == 228051 || paramId == 228053 || paramId == 228057 || paramId == 228058 || paramId == 228059 || paramId == 228060) {
-        if (strcmp(key_name, "cfName") == 0)
+        if (strncmp(key_name, "cfName", 6) == 0)
             return "unknown";
     }
     return NULL;
