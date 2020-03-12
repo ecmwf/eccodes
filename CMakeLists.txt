@@ -69,8 +69,12 @@ ecbuild_info("Operating system=${CMAKE_SYSTEM} (${EC_OS_BITS} bits)")
 ###############################################################################
 # some variables/options of this project
 
+ecbuild_add_option( FEATURE PRODUCT_GRIB
+    DESCRIPTION "Support for the product GRIB"
+    DEFAULT ON
+)
 ecbuild_add_option( FEATURE PRODUCT_BUFR
-    DESCRIPTION "Support for BUFR"
+    DESCRIPTION "Support for the product BUFR"
     DEFAULT ON
 )
 

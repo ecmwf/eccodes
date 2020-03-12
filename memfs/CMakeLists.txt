@@ -1,6 +1,8 @@
 set( exclude "" )
 if( NOT HAVE_PRODUCT_BUFR )
   set( exclude -exclude bufr )
+elseif( NOT HAVE_PRODUCT_GRIB )
+  set( exclude -exclude grib )
 endif()
 add_custom_command(
   OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/memfs.c

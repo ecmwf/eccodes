@@ -14,7 +14,13 @@ EXCLUDED = ['grib3', 'codetables', 'taf', 'metar']
 
 pos=1
 if sys.argv[1] == '-exclude':
-    EXCLUDED.append(sys.argv[2])
+    product = sys.argv[2]
+    if product == 'bufr':
+        EXCLUDED.append(product)
+    elif product == 'grib':
+        EXCLUDED.extend(['grib1', 'grib2'])
+    else:
+        assert False, 'Invalid product %s' % product
     pos = 3
 
 dirs = [os.path.realpath(x) for x in sys.argv[pos:-1]]
