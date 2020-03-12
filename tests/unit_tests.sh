@@ -8,6 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
+export ECCODES_DEBUG=1
 
 . ./include.sh
 $EXEC ${test_dir}/unit_tests
