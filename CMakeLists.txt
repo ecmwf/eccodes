@@ -69,6 +69,11 @@ ecbuild_info("Operating system=${CMAKE_SYSTEM} (${EC_OS_BITS} bits)")
 ###############################################################################
 # some variables/options of this project
 
+ecbuild_add_option( FEATURE PRODUCT_BUFR
+    DESCRIPTION "Support for BUFR"
+    DEFAULT ON
+)
+
 ecbuild_add_option( FEATURE EXAMPLES
     DESCRIPTION "Build the examples"
     DEFAULT ON
@@ -162,6 +167,7 @@ if(HAVE_MEMFS)
 else()
   set( _will_install_defs_samples ON )
 endif()
+
 
 # controls installation of files in definitions/ -- note that it still creates the symlinks in the build dir
 # by default, if memfs is available, then we don't need to install definitions
