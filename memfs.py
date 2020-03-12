@@ -12,8 +12,14 @@ assert len(sys.argv) > 2
 # METAR and TAF are also experimental
 EXCLUDED = ['grib3', 'codetables', 'taf', 'metar']
 
-dirs = [os.path.realpath(x) for x in sys.argv[1:-1]]
-print(dirs)
+pos=1
+if sys.argv[1] == '-exclude':
+    EXCLUDED.append(sys.argv[2])
+    pos = 3
+
+dirs = [os.path.realpath(x) for x in sys.argv[pos:-1]]
+print('Directories: ', dirs)
+print('Excluding: ', EXCLUDED)
 
 FILES = {}
 NAMES = []

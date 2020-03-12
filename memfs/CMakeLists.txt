@@ -1,6 +1,11 @@
+set( exclude "" )
+if( NOT HAVE_PRODUCT_BUFR )
+  set( exclude -exclude bufr )
+endif()
 add_custom_command(
   OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/memfs.c
   COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/memfs.py
+    ${exclude}
     ${PROJECT_SOURCE_DIR}/definitions
     ${PROJECT_SOURCE_DIR}/samples
     ${PROJECT_SOURCE_DIR}/ifs_samples
