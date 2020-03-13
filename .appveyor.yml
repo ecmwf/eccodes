@@ -2,7 +2,7 @@
 #      general configuration      #
 #---------------------------------#
 
-version: 2.17.0-{build}-{branch}
+version: 2.18.0-{build}-{branch}
 
 branches:
   only:
@@ -103,8 +103,6 @@ notifications:
   - provider: Email
     to:
       - shahram.najm@ecmwf.int
-    subject: 'Build {{status}}: {{projectName}} {{buildVersion}}' # optional
-    message: "{{message}}, {{commitId}}, {{pull_request_head_repo_branch}},..."    # optional
-    on_build_success: true
-    on_build_failure: false
-
+    subject: 'Build {{status}}'                  # optional
+    message: "{{message}}, {{commitId}}, ..."    # optional
+    on_build_success: false

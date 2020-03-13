@@ -82,7 +82,7 @@ int grib_datetime_to_julian_d(
     long year, long month, long day, long hour, long minute,
     double second, double* jd)
 {
-    double a, b, dday;
+    double a, b = 0, dday;
     long y, m;
 
     dday = (double)(hour * 3600 + minute * 60 + second) / 86400.0 + day;
@@ -97,22 +97,10 @@ int grib_datetime_to_julian_d(
     }
     a = (long)(((double)y) / 100);
 
-    if (y > 1582)
+    if (y > 1582 ||
+        (y == 1582 && ((m > 10) || (m == 10 && day > 14)))) {
         b = 2 - a + (long)(a / 4);
-    else if (y == 1582) {
-        if (m > 10)
-            b = 2 - a + (long)(a / 4);
-        else if (m == 10) {
-            if (day > 14)
-                b = 2 - a + (long)(a / 4);
-            else
-                b = 0;
-        }
-        else
-            b = 0;
     }
-    else
-        b = 0;
 
     *jd = (long)(365.25 * (y + 4716)) + (long)(30.6001 * (m + 1)) + dday + b - 1524.5;
 
