@@ -42,6 +42,13 @@ grib_handle* grib_internal_sample(grib_context* c,const char* name)
 }
 #endif
 
+/* Windows always has a colon in pathnames e.g. C:\temp\file. It uses semi-colons as delimiter */
+#ifdef ECCODES_ON_WINDOWS
+#define ECC_PATH_DELIMITER_CHAR ';'
+#else
+#define ECC_PATH_DELIMITER_CHAR ':'
+#endif
+
 static grib_handle* try_template(grib_context* c, const char* dir, const char* name)
 {
     char path[1024];
@@ -122,7 +129,7 @@ grib_handle* grib_external_template(grib_context* c, const char* name)
         return NULL;
 
     while (*base) {
-        if (*base == ':') {
+        if (*base == ECC_PATH_DELIMITER_CHAR) {
             *p = 0;
             g  = try_template(c, buffer, name);
             if (g)
@@ -148,7 +155,7 @@ grib_handle* bufr_external_template(grib_context* c, const char* name)
         return NULL;
 
     while (*base) {
-        if (*base == ':') {
+        if (*base == ECC_PATH_DELIMITER_CHAR) {
             *p = 0;
             g  = try_bufr_template(c, buffer, name);
             if (g)
@@ -175,7 +182,7 @@ char* grib_external_template_path(grib_context* c, const char* name)
         return NULL;
 
     while (*base) {
-        if (*base == ':') {
+        if (*base == ECC_PATH_DELIMITER_CHAR) {
             *p = 0;
             g  = try_template_path(c, buffer, name);
             if (g)
