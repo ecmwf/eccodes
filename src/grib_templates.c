@@ -42,12 +42,11 @@ grib_handle* grib_internal_sample(grib_context* c,const char* name)
 }
 #endif
 
-/* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
-/* in order to have multiple definitions/samples directories */
+/* Windows always has a colon in pathnames e.g. C:\temp\file. It uses semi-colons as delimiter */
 #ifdef ECCODES_ON_WINDOWS
- #define ECC_PATH_DELIMITER_CHAR ';'
+#define ECC_PATH_DELIMITER_CHAR ';'
 #else
- #define ECC_PATH_DELIMITER_CHAR ':'
+#define ECC_PATH_DELIMITER_CHAR ':'
 #endif
 
 static grib_handle* try_template(grib_context* c, const char* dir, const char* name)
