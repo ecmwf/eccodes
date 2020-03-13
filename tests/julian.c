@@ -181,12 +181,47 @@ static void Test3()
     }
 }
 
+static void Test4()
+{
+    const long iyear = 1582;
+
+    TestDateTime(iyear, 9, 1, 1, 0, 0);
+    TestDateTime(iyear, 9, 2, 1, 0, 0);
+    TestDateTime(iyear, 9, 3, 1, 0, 0);
+    TestDateTime(iyear, 9, 4, 1, 0, 0);
+    TestDateTime(iyear, 9, 4, 16, 0, 0);
+
+    /* TODO */
+    /* TestDateTime(iyear, 10, 5, 1, 0, 0); */
+    TestDateTime(iyear, 10, 1, 1, 0, 0);
+    TestDateTime(iyear, 10, 2, 1, 0, 0);
+    TestDateTime(iyear, 10, 3, 1, 0, 0);
+    TestDateTime(iyear, 10, 4, 1, 0, 0);
+    TestDateTime(iyear, 10, 15, 1, 0, 0);
+
+    TestDateTime(iyear, 11, 1, 1, 0, 0);
+    TestDateTime(iyear, 11, 2, 1, 0, 0);
+    TestDateTime(iyear, 11, 3, 1, 0, 0);
+    TestDateTime(iyear, 11, 4, 1, 0, 0);
+    TestDateTime(iyear, 11, 5, 1, 0, 0);
+    TestDateTime(iyear, 11, 5, 15, 0, 0);
+
+    /* TODO
+     * for (imnth = 1; imnth <= 12; imnth += 1) {
+     *   for (iday = 1; iday <= 28; iday += 1) {
+     *     TestDateTime(iyear, imnth, iday, 1, 0, 0);
+     *   }
+     * }
+     */
+}
+
 int main(int argc, char* argv[])
 {
     Test0();
     Test1();
     Test2();
     Test3();
+    Test4();
     printf("All OK\n");
     return 0;
 }
