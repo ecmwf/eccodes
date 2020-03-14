@@ -148,7 +148,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     self->southPoleLon       = 0;
     self->disableUnrotate    = 0; /* unrotate enabled by default */
 
-    if ((err = grib_get_long(h, "is_rotated_grid", &self->isRotated)))
+    if ((err = grib_get_long(h, "isRotatedGrid", &self->isRotated)))
         return err;
     if (self->isRotated) {
         if ((err = grib_get_double_internal(h, "angleOfRotation", &self->angleOfRotation)))

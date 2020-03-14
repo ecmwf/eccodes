@@ -218,7 +218,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
 static int is_rotated_grid(grib_handle* h)
 {
     long is_rotated = 0;
-    int err         = grib_get_long(h, "is_rotated_grid", &is_rotated);
+    int err         = grib_get_long(h, "isRotatedGrid", &is_rotated);
     if (!err && is_rotated)
         return 1;
     return 0;
