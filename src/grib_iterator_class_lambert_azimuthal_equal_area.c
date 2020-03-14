@@ -26,7 +26,7 @@
    IMPLEMENTS = init;next
    MEMBERS     =   double *lats
    MEMBERS     =   double *lons
-   MEMBERS     =   long nam
+   MEMBERS     =   long Nj
    END_CLASS_DEF
 */
 
@@ -57,7 +57,7 @@ typedef struct grib_iterator_lambert_azimuthal_equal_area
     /* Members defined in lambert_azimuthal_equal_area */
     double* lats;
     double* lons;
-    long nam;
+    long Nj;
 } grib_iterator_lambert_azimuthal_equal_area;
 
 extern grib_iterator_class* grib_iterator_class_gen;

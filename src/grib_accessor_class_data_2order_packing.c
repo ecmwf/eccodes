@@ -41,7 +41,7 @@
    MEMBERS=const char*  width_lengths
    MEMBERS=const char*  octet_start_group
    MEMBERS=const char*  width_spd_sp_desc
-   MEMBERS=const char*  nap
+   MEMBERS=const char*  Ni
    MEMBERS=const char*  bitmap
 
    END_CLASS_DEF
@@ -96,7 +96,7 @@ typedef struct grib_accessor_data_2order_packing
     const char* width_lengths;
     const char* octet_start_group;
     const char* width_spd_sp_desc;
-    const char* nap;
+    const char* Ni;
     const char* bitmap;
 } grib_accessor_data_2order_packing;
 
@@ -218,7 +218,7 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
     self->width_lengths     = grib_arguments_get_name(gh, args, self->carg++);
     self->octet_start_group = grib_arguments_get_name(gh, args, self->carg++);
     self->width_spd_sp_desc = grib_arguments_get_name(gh, args, self->carg++);
-    self->nap               = grib_arguments_get_name(gh, args, self->carg++);
+    self->Ni               = grib_arguments_get_name(gh, args, self->carg++);
     self->bitmap            = grib_arguments_get_name(gh, args, self->carg++);
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
@@ -466,7 +466,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     long pointer_of_group_size  = 0;
     long pointer_of_group_width = 0;
     long refsp                  = 0;
-    long nap                    = 0;
+    long Ni                    = 0;
     long nn                     = 0;
     unsigned char* bitmap       = NULL;
     grib_accessor* abitmap      = NULL;
@@ -523,7 +523,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if ((err = grib_get_long_internal(gh, self->width_spd_sp_desc, &width_spd_sp_desc)) != GRIB_SUCCESS)
         width_spd_sp_desc = -1;
 
-    if ((err = grib_get_long_internal(gh, self->nap, &nap)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(gh, self->Ni, &Ni)) != GRIB_SUCCESS)
         return err;
 
     self->dirty = 0;
@@ -642,7 +642,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         de_spatial_difference(a->context, sec_val, n_vals, n_sp_diff, bias);
 
     if (boustrophedonic)
-        reverse_rows(sec_val, n_vals, nap, bitmap, bitmap_len);
+        reverse_rows(sec_val, n_vals, Ni, bitmap, bitmap_len);
 
     s = grib_power(binary_scale_factor, 2);
     d = grib_power(-decimal_scale_factor, 10);
@@ -731,7 +731,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long pointer_of_group_size  = 0;
     long pointer_of_group_width = 0;
     long refsp                  = 0;
-    long nap                    = 0;
+    long Ni                    = 0;
     long offsetdata             = 0;
 
     double max;
@@ -763,7 +763,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(gh, self->width_spd_sp_desc, &width_spd_sp_desc)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(gh, self->nap, &nap)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(gh, self->Ni, &Ni)) != GRIB_SUCCESS)
         return err;
 
     if ((abitmap = grib_find_accessor(gh, self->bitmap)) != NULL) {
@@ -816,7 +816,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     /*  reverse the rows*/
     if (boustrophedonic)
-        reverse_rows(sec_val, n_vals, nap, bitmap, bitmap_len);
+        reverse_rows(sec_val, n_vals, Ni, bitmap, bitmap_len);
 
 
     if (snd_ordr_wdiff)
