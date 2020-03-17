@@ -280,12 +280,7 @@ int grib_encode_unsigned_long(unsigned char* p, unsigned long val, long* bitp, l
         else {
             tmp = ((val >> len) | ((*p) & dmasks[n]));
         }
-        *p = tmp;
-        (*p)++;
-
-        /*Beware of code like this! compiler warning: operation may be undefined
-      Read GCC manual on -Wsequence-point*/
-        /* *p  = ((val << -len) | ((*p)++ & dmasks[n])); */
+        *p++ = tmp;
     }
 
     /*  write the middle words */
