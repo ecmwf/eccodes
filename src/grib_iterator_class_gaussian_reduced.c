@@ -26,7 +26,7 @@
    IMPLEMENTS = init;next
    MEMBERS     =   double *las
    MEMBERS     =   double *los
-   MEMBERS     =   long nam
+   MEMBERS     =   long Nj
    END_CLASS_DEF
 
  */
@@ -58,7 +58,7 @@ typedef struct grib_iterator_gaussian_reduced
     /* Members defined in gaussian_reduced */
     double* las;
     double* los;
-    long nam;
+    long Nj;
 } grib_iterator_gaussian_reduced;
 
 extern grib_iterator_class* grib_iterator_class_gen;
