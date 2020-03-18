@@ -634,7 +634,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_accessor_data_g2bifourier_packing* self = (grib_accessor_data_g2bifourier_packing*)a;
     grib_handle* gh                              = grib_handle_of_accessor(a);
 
-    unsigned char* buf  = (unsigned char*)gh->buffer->data;
+    unsigned char* buf  = NULL;
     unsigned char* hres = NULL;
     unsigned char* lres = NULL;
     unsigned long packed_offset;

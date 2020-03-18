@@ -783,7 +783,6 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
         if (gts_header) memcpy(gl->gts_header, gts_header, gtslen);
         gl->gts_header_len = gtslen;
         grib_context_free(c, save_gts_header);
-        gtslen = 0;
     }
     else {
         gl->gts_header = NULL;

@@ -306,6 +306,7 @@ static void gaussian_grid(grib_handle* h)
 
         pl = (double*)malloc(sizeof(double)*(count));
         CHECK(pl != NULL);
+        if (!pl) return;
 
         nPl = count;
         if((err_code =  grib_get_double_array(h,"pl",pl,&count)))
