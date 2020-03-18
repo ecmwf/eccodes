@@ -53,7 +53,7 @@ void eccodes_assertion(const char* message) {
 }
 
 
-GribOutput::GribOutput() = default;
+GribOutput::GribOutput() : reuseHandle_(false) {}
 
 
 GribOutput::~GribOutput() = default;
@@ -155,15 +155,23 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
                          output::MIROutput& output) {
     ASSERT(!plan.ended());
 
-    bool save   = false;
     auto& user  = param.userParametrisation();
     auto& field = param.fieldParametrisation();
 
-    long bits1 = -1;
-    if (user.get("accuracy", bits1)) {
-        ASSERT(bits1 > 0);
-        long bits2 = -1;
-        save       = field.get("accuracy", bits2) ? bits2 != bits1 : true;
+    bool save = false;
+
+    if (user.has("derivative")) {
+        save         = true;
+        reuseHandle_ = true;
+    }
+
+    if (!save) {
+        long bits1 = -1;
+        if (user.get("accuracy", bits1)) {
+            ASSERT(bits1 > 0);
+            long bits2 = -1;
+            save       = field.get("accuracy", bits2) ? bits2 != bits1 : true;
+        }
     }
 
     if (!save) {
@@ -298,7 +306,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             continue;
         }
 
-        auto h = input.gribHandle(i);  // Base class throws if input cannot provide handle
+        auto h = input.gribHandle(reuseHandle_ ? 0 : i);  // Base class throws if input cannot provide handle
 
         grib_info info = {
             {0},
