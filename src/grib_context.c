@@ -501,6 +501,7 @@ grib_context* grib_context_get_default()
                 char buffer[ECC_PATH_MAXLEN];
                 ecc_snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_definition_files_path,
                              ECC_PATH_DELIMITER_CHAR, ECCODES_DEFINITION_PATH);
+                free(default_grib_context.grib_definition_files_path);
                 default_grib_context.grib_definition_files_path = strdup(buffer);
             }
         }
