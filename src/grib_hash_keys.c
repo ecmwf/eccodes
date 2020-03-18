@@ -34,7 +34,7 @@ error "gperf generated tables don't work with this execution character set. Plea
 struct grib_keys_hash { char* name; int id;};
 #include <string.h>
 
-#define TOTAL_KEYWORDS 2360
+#define TOTAL_KEYWORDS 2361
 #define MIN_WORD_LENGTH 1
 #define MAX_WORD_LENGTH 74
 #define MIN_HASH_VALUE 5
@@ -49,7 +49,9 @@ struct grib_keys_hash { char* name; int id;};
 #endif
 #endif
 static unsigned int
-hash_keys (const char* str, unsigned int len)
+hash_keys (str, len)
+     register const char *str;
+     register unsigned int len;
 {
   static const unsigned short asso_values[] =
     {
@@ -258,7 +260,7 @@ static const unsigned char lengthtable[] =
      0,  0,  0,  0,  0,  9,  0,  0, 11,  0,  0,  0, 12,  0,
      0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0, 11, 13,  0,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  2,  0,
-     2, 35,  0,  0,  0, 26,  0,  0,  0,  3,  0,  0,  4,  0,
+     2, 35,  0,  0,  0, 26,  0,  0,  0,  3,  5,  0,  4,  0,
      3,  0,  0,  0,  0,  9,  0,  0,  0,  0,  0,  0, 16, 31,
      0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 16, 19,
      0,  0, 10,  0,  0,  0,  0,  0,  0,  0, 18, 16, 13, 11,
@@ -581,7 +583,7 @@ static const unsigned char lengthtable[] =
     13, 12,  0,  0, 33,  0,  0,  0,  0,  0,  0,  0, 35,  0,
      0, 28,  0,  0, 18, 22,  0,  0,  0, 17,  0,  0,  0,  0,
     24,  0,  0, 21,  0, 16, 16,  0, 24,  8,  0,  0,  0,  9,
-     0,  0,  0,  0,  0, 11,  0,  0,  0,  0, 20, 15,  0,  0,
+     0,  0,  0,  0,  0, 11,  0,  0,  0,  0, 20,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0, 16,  0, 15,  0, 11,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0, 14,  0, 15,  0,  0,  0,
     32,  0, 19,  0,  0, 13,  0, 25,  0,  0,  0, 11,  0,  0,
@@ -613,7 +615,7 @@ static const unsigned char lengthtable[] =
     22,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     11,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0, 28,  0,  0,  0,  0,  0,  0,  0,
-     0,  0, 35,  0,  0,  0,  0,  0,  0, 24, 13,  0,  0,  0,
+     0,  0, 35,  0,  0,  0,  0,  0, 13, 24, 13,  0,  0,  0,
      0,  0, 25,  0,  0,  0,  0, 15, 21,  0, 37,  0,  0,  0,
      0, 14, 33,  0, 17, 14,  0,  0,  0,  0,  0,  0,  0,  0,
      0,  0,  0,  0,  0, 15,  0,  0, 16, 34,  0,  0,  0,  0,
@@ -2571,7 +2573,7 @@ static const struct grib_keys_hash wordlist[] =
     {"timerepres",2150},
     {"radius",1714},
     {""},
-    {"isSens",999},
+    {"isSens",1000},
     {"year",2353},
     {""},
     {"dataTime",630},
@@ -2737,7 +2739,7 @@ static const struct grib_keys_hash wordlist[] =
     {""},
     {"efiOrder",715},
     {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-    {"isSatellite",997},
+    {"isSatellite",998},
     {""},
     {"typicalDate",2211},
     {""}, {""}, {""}, {""}, {""}, {""},
@@ -3182,7 +3184,8 @@ static const struct grib_keys_hash wordlist[] =
     {"typeOfDistributionFunction",2186},
     {""}, {""}, {""},
     {"max",1231},
-    {""}, {""},
+    {"zeros",2361},
+    {""},
     {"zero",2360},
     {""},
     {"qfe",1701},
@@ -3309,7 +3312,7 @@ static const struct grib_keys_hash wordlist[] =
     {""}, {""},
     {"tiggeSection",2131},
     {""}, {""},
-    {"isSatelliteType",998},
+    {"isSatelliteType",999},
     {""},
     {"extractSubset",815},
     {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
@@ -4102,7 +4105,7 @@ static const struct grib_keys_hash wordlist[] =
     {""},
     {"longitudeOfIcosahedronPole",1156},
     {""}, {""}, {""}, {""},
-    {"is_aerosol",1000},
+    {"is_aerosol",1001},
     {""}, {""}, {""}, {""},
     {"projectLocalTemplate",1695},
     {""}, {""},
@@ -4136,12 +4139,12 @@ static const struct grib_keys_hash wordlist[] =
     {"verticalVisibility",2291},
     {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
     {""}, {""}, {""}, {""}, {""}, {""}, {""},
-    {"is_efas",1004},
+    {"is_efas",1005},
     {""}, {""}, {""},
     {"latLonValues",1041},
     {"listOfEnsembleForecastNumbers",1109},
     {""}, {""}, {""},
-    {"is_chemical",1002},
+    {"is_chemical",1003},
     {""},
     {"expandedOriginalReferences",772},
     {""},
@@ -4463,7 +4466,7 @@ static const struct grib_keys_hash wordlist[] =
     {""},
     {"numberOfDataValues",1365},
     {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
-    {"is_aerosol_optical",1001},
+    {"is_aerosol_optical",1002},
     {""}, {""}, {""},
     {"diffInHours",675},
     {""},
@@ -4532,7 +4535,7 @@ static const struct grib_keys_hash wordlist[] =
     {"n2",1304},
     {""}, {""}, {""}, {""}, {""}, {""},
     {"LoVInDegrees",128},
-    {"is_chemical_distfn",1003},
+    {"is_chemical_distfn",1004},
     {""}, {""}, {""}, {""},
     {"jDirectionIncrement",1018},
     {""}, {""},
@@ -4822,7 +4825,7 @@ static const struct grib_keys_hash wordlist[] =
     {""}, {""}, {""}, {""}, {""},
     {"recentWeather",1737},
     {""}, {""}, {""},
-    {"is_ocean3d_param",1006},
+    {"is_ocean3d_param",1007},
     {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
     {"changeIndicatorTrend1",409},
     {""},
@@ -5178,7 +5181,7 @@ static const struct grib_keys_hash wordlist[] =
     {""}, {""},
     {"jPointsAreConsecutive",1023},
     {""},
-    {"is_ocean2d_param",1005},
+    {"is_ocean2d_param",1006},
     {"firstOrderValues",846},
     {""},
     {"typeOfWavelengthInterval",2209},
@@ -5189,8 +5192,8 @@ static const struct grib_keys_hash wordlist[] =
     {"marsStream2",1214},
     {""}, {""}, {""}, {""},
     {"MinuteOfModelVersion",157},
-    {"is_rotated_grid",1007},
     {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
+    {""},
     {"dayOfTheYearDate",650},
     {""},
     {"beginHourTrend3",337},
@@ -5380,7 +5383,8 @@ static const struct grib_keys_hash wordlist[] =
     {"numberOfPointsAlongAMeridian",1410},
     {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
     {"biFourierResolutionSubSetParameterM",356},
-    {""}, {""}, {""}, {""}, {""}, {""},
+    {""}, {""}, {""}, {""}, {""},
+    {"isRotatedGrid",997},
     {"sizeOfPostAuxiliaryArray",2018},
     {"endHourTrend3",728},
     {""}, {""}, {""}, {""}, {""},
@@ -9298,7 +9302,9 @@ static const struct grib_keys_hash wordlist[] =
 #endif
 #endif
 const struct grib_keys_hash *
-grib_keys_hash_get (const char* str, unsigned int len)
+grib_keys_hash_get (str, len)
+     register const char *str;
+     register unsigned int len;
 {
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
     {
@@ -9653,6 +9659,52 @@ void grib_hash_keys_delete(grib_itrie* t)
     GRIB_MUTEX_UNLOCK(&mutex);
 }
 
+static int grib_hash_keys_insert(grib_itrie* t, const char* key)
+{
+    const char* k    = key;
+    grib_itrie* last = t;
+    int* count;
+
+    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_LOCK(&mutex);
+
+    Assert(t);
+    if (!t) return -1;
+
+    count = t->count;
+
+    while (*k && t) {
+        last = t;
+        t    = t->next[mapping[(int)*k]];
+        if (t)
+            k++;
+    }
+
+    if (*k != 0) {
+        t = last;
+        while (*k) {
+            int j      = mapping[(int)*k++];
+            t->next[j] = grib_hash_keys_new(t->context, count);
+            t          = t->next[j];
+        }
+    }
+    if (*(t->count) + TOTAL_KEYWORDS < ACCESSORS_ARRAY_SIZE) {
+        t->id = *(t->count);
+        (*(t->count))++;
+    }
+    else {
+        grib_context_log(t->context, GRIB_LOG_ERROR,
+                         "grib_hash_keys_insert: too many accessors, increase ACCESSORS_ARRAY_SIZE\n");
+        Assert(*(t->count) + TOTAL_KEYWORDS < ACCESSORS_ARRAY_SIZE);
+    }
+
+    GRIB_MUTEX_UNLOCK(&mutex);
+
+    /*printf("grib_hash_keys_get_id: %s -> %d\n",key,t->id);*/
+
+    return t->id;
+}
+
 int grib_hash_keys_get_id(grib_itrie* t, const char* key)
 {
     const struct grib_keys_hash* hash = grib_keys_hash_get(key, strlen(key));
@@ -9683,50 +9735,6 @@ int grib_hash_keys_get_id(grib_itrie* t, const char* key)
             return ret + TOTAL_KEYWORDS + 1;
         }
     }
-}
-
-int grib_hash_keys_insert(grib_itrie* t, const char* key)
-{
-    const char* k    = key;
-    grib_itrie* last = t;
-    int* count;
-
-    GRIB_MUTEX_INIT_ONCE(&once, &init)
-
-    GRIB_MUTEX_LOCK(&mutex)
-
-    count = t->count;
-
-    while (*k && t) {
-        last = t;
-        t    = t->next[mapping[(int)*k]];
-        if (t)
-            k++;
-    }
-
-    if (*k != 0) {
-        t = last;
-        while (*k) {
-            int j      = mapping[(int)*k++];
-            t->next[j] = grib_hash_keys_new(t->context, count);
-            t          = t->next[j];
-        }
-    }
-    if (*(t->count) + TOTAL_KEYWORDS < ACCESSORS_ARRAY_SIZE) {
-        t->id = *(t->count);
-        (*(t->count))++;
-    }
-    else {
-        grib_context_log(t->context, GRIB_LOG_ERROR,
-                         "grib_hash_keys_insert: too many accessors, increase ACCESSORS_ARRAY_SIZE\n");
-        Assert(*(t->count) + TOTAL_KEYWORDS < ACCESSORS_ARRAY_SIZE);
-    }
-
-    GRIB_MUTEX_UNLOCK(&mutex)
-
-    /*printf("grib_hash_keys_get_id: %s -> %d\n",key,t->id);*/
-
-    return t->id;
 }
 
 int grib_hash_keys_get_size(grib_itrie* t)

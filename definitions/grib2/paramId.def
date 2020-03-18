@@ -1421,13 +1421,13 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
 	}
-#Malaria cases
+#Fraction of Malaria cases
 '261003' = {
 	 discipline = 20 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
 	}
-#Malaria circumsporozoite protein rate
+#Malaria circumsporozoite protein ratio
 '261004' = {
 	 discipline = 20 ;
 	 parameterCategory = 1 ;
@@ -1445,13 +1445,13 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 3 ;
 	}
-#Malaria immunity
+#Malaria immunity ratio
 '261007' = {
 	 discipline = 20 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 4 ;
 	}
-#Falciparum parasite rates
+#Falciparum parasite ratio
 '261008' = {
 	 discipline = 20 ;
 	 parameterCategory = 1 ;
@@ -1469,7 +1469,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 7 ;
 	}
-#Anopheles vector number
+#Anopheles vector density
 '261011' = {
 	 discipline = 20 ;
 	 parameterCategory = 1 ;

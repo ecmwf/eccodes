@@ -353,6 +353,7 @@ static int extra_set(grib_accessor* a, long val)
                 case 36: /* Probability distribution  (pd)  */
                 case 37: /* Cluster information       (ci)  */
                 case 38: /* Shift of Tail             (sot) */
+                case 39: /* Ensemble data assimilation model errors */
                 case 40: /* Images                    (im)  */
                 case 42: /* Simulated images          (sim) */
                     typeOfProcessedData     = 255;

@@ -20,6 +20,18 @@ label="bufr_ecc-197-test"
 input=${data_dir}/bufr/vos308014_v3_26.bufr
 TEMP=${label}.temp
 LOG=${label}.log
+set -u
+decode_bufr()
+{
+    infile=$1
+    ${tools_dir}/codes_info
+    ${tools_dir}/bufr_dump $infile > $TEMP
+    # Ensure output JSON has all the expected contents
+    # After calling 'wc' and 'set', $1 will be the line count
+    set `wc -l $TEMP`
+    [ $1 -gt 35700 ]
+    grep -q encryptedShipOrMobileLandStationIdentifier $TEMP
+}
 
 
 # Get expanded descriptors
@@ -36,22 +48,31 @@ TEMP_DIR=${label}.temp-dir.$$
 rm -rf $TEMP_DIR
 mkdir -p $TEMP_DIR/definitions/bufr/tables/0/wmo/26
 
-# Copy the definition files needed to decode BUFR file
+# Copy the definition files needed to decode our BUFR file
 def_files="${proj_dir}/tests/ECC-197/*"
 for df in ${def_files}; do
   cp -f $df $TEMP_DIR/definitions/bufr/tables/0/wmo/26
 done
 
-# Point ecCodes to look in this dir as well as standard one
+# Point to dir containing the tables
 MY_DEFS=`pwd`/$TEMP_DIR/definitions
-export ECCODES_DEFINITION_PATH=$MY_DEFS:$ECCODES_DEFINITION_PATH
+export ECCODES_EXTRA_DEFINITION_PATH=$MY_DEFS
+decode_bufr $input
+unset ECCODES_EXTRA_DEFINITION_PATH
 
-# Now decode
-${tools_dir}/bufr_dump $input > $TEMP
-# Ensure output JSON has all the expected contents
-# After calling 'wc' and 'set', $1 will be the line count
-set `wc -l $TEMP`
-[ $1 -gt 35700 ]
+if [ $HAVE_MEMFS -eq 1 ]; then
+    unset ECCODES_DEFINITION_PATH
+    std_defs=`${tools_dir}/codes_info -d`
+    export ECCODES_DEFINITION_PATH=$MY_DEFS:$std_defs
+    decode_bufr $input
+    unset ECCODES_DEFINITION_PATH
+    export ECCODES_EXTRA_DEFINITION_PATH=$MY_DEFS
+    decode_bufr $input
+else
+    # Decode by extending the ECCODES_DEFINITION_PATH
+    export ECCODES_DEFINITION_PATH=$MY_DEFS:$ECCODES_DEFINITION_PATH
+    decode_bufr $input
+fi
 
 rm -rf $TEMP_DIR
 rm -f $TEMP $LOG

@@ -47,8 +47,8 @@ typedef struct grib_iterator_latlon
     /* Members defined in regular */
     double* las;
     double* los;
-    long nap;
-    long nam;
+    long Ni;
+    long Nj;
     long iScansNegatively;
     long isRotated;
     double angleOfRotation;
@@ -102,14 +102,14 @@ static int next(grib_iterator* iter, double* lat, double* lon, double* val)
      */
     if (!self->jPointsAreConsecutive) {
         /* Adjacent points in i (x) direction are consecutive */
-        ret_lat = self->las[(long)floor(iter->e / self->nap)];
-        ret_lon = self->los[(long)iter->e % self->nap];
+        ret_lat = self->las[(long)floor(iter->e / self->Ni)];
+        ret_lon = self->los[(long)iter->e % self->Ni];
         ret_val = iter->data[iter->e];
     }
     else {
         /* Adjacent points in j (y) direction is consecutive */
-        ret_lon = self->los[(long)iter->e / self->nam];
-        ret_lat = self->las[(long)floor(iter->e % self->nam)];
+        ret_lon = self->los[(long)iter->e / self->Nj];
+        ret_lat = self->las[(long)floor(iter->e % self->Nj)];
         ret_val = iter->data[iter->e];
     }
 
@@ -148,7 +148,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     self->southPoleLon       = 0;
     self->disableUnrotate    = 0; /* unrotate enabled by default */
 
-    if ((err = grib_get_long(h, "is_rotated_grid", &self->isRotated)))
+    if ((err = grib_get_long(h, "isRotatedGrid", &self->isRotated)))
         return err;
     if (self->isRotated) {
         if ((err = grib_get_double_internal(h, "angleOfRotation", &self->angleOfRotation)))
@@ -175,7 +175,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     if (grib_is_missing(h, s_jdir, &err) && err == GRIB_SUCCESS) {
         double lat2;
         if ((err = grib_get_double_internal(h, "latitudeLastInDegrees", &lat2)) == GRIB_SUCCESS) {
-            const long Nj = self->nam;
+            const long Nj = self->Nj;
             Assert(Nj > 1);
             if (lat1 > lat2) {
                 jdir = (lat1 - lat2) / (Nj - 1);
@@ -190,7 +190,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     if (jScansPositively)
         jdir = -jdir;
 
-    for (lai = 0; lai < self->nam; lai++) {
+    for (lai = 0; lai < self->Nj; lai++) {
         self->las[lai] = lat1;
         lat1 -= jdir;
     }

@@ -985,7 +985,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                     goto cleanup;
                     break;
             }
-            packingTypeIsSet = 1;
         }
         switch (packing_spec->accuracy) {
             case GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT:
@@ -1425,10 +1424,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             int ret;
             SET_STRING_VALUE("packingType", "grid_simple_matrix");
             ret = grib_get_long(h, "numberOfDirections", &numberOfDirections);
-            if (!ret) {
-                ret = grib_get_long(h, "numberOfDirections", &numberOfDirections);
+            if (ret == GRIB_SUCCESS) {
+                grib_get_long(h, "numberOfDirections", &numberOfDirections);
                 SET_LONG_VALUE("NC1", numberOfDirections);
-                ret = grib_get_long(h, "numberOfFrequencies", &numberOfFrequencies);
+                grib_get_long(h, "numberOfFrequencies", &numberOfFrequencies);
                 SET_LONG_VALUE("NC2", numberOfFrequencies);
                 SET_LONG_VALUE("physicalFlag1", 1);
                 SET_LONG_VALUE("physicalFlag2", 2);

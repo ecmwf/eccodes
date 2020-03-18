@@ -2549,13 +2549,14 @@ static void scale_bitmap(double* vals, long n, void* data, dataset_t* subset)
     int i          = 0;
     nc_type nctype = subset->att.nctype;
 
-    /*
-     if(!subset->bitmap)
-     {
-      grib_context_log(ctx,GRIB_LOG_DEBUG,"No scale of bitmap required");
-      return;
-     }
-     */
+    /* if(!subset->bitmap) {
+        grib_context_log(ctx,GRIB_LOG_DEBUG,"No scale of bitmap required");
+        return;
+     } */
+    if (n > 0 && !vals) {
+        Assert(!"scale_bitmap: n > 0 but vals == NULL");
+        return;
+    }
 
     switch (nctype) {
         case NC_BYTE: {

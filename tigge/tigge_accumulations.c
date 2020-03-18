@@ -265,6 +265,8 @@ int main(int argc, char *argv[])
     if(result)
         grib_handle_delete(result);
 
+    free(values);
+
     if(fclose(out))
     {
         perror(argv[argc-1]);

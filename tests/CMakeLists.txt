@@ -68,6 +68,7 @@ list( APPEND tests_no_data_reqd
     grib_efas
     grib_sh_imag
     diag
+    grib_lambert_conformal
 )
 # These tests do require data downloads
 list( APPEND tests_data_reqd

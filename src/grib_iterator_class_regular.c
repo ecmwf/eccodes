@@ -21,8 +21,8 @@
    IMPLEMENTS = init;destroy
    MEMBERS    = double   *las
    MEMBERS    = double   *los
-   MEMBERS    = long      nap
-   MEMBERS    = long      nam
+   MEMBERS    = long      Ni
+   MEMBERS    = long      Nj
    MEMBERS    = long iScansNegatively
    MEMBERS    = long isRotated
    MEMBERS    = double angleOfRotation
@@ -62,8 +62,8 @@ typedef struct grib_iterator_regular
     /* Members defined in regular */
     double* las;
     double* los;
-    long nap;
-    long nam;
+    long Ni;
+    long Nj;
     long iScansNegatively;
     long isRotated;
     double angleOfRotation;
@@ -109,8 +109,8 @@ static int next(grib_iterator* i, double* lat, double* lon, double* val)
 
     i->e++;
 
-    *lat = self->las[(long)floor(i->e / self->nap)];
-    *lon = self->los[(long)i->e % self->nap];
+    *lat = self->las[(long)floor(i->e / self->Ni)];
+    *lon = self->los[(long)i->e % self->Ni];
     *val = i->data[i->e];
 
     return 1;
@@ -122,8 +122,8 @@ static int previous(grib_iterator* i, double* lat, double* lon, double* val)
 
     if (i->e < 0)
         return 0;
-    *lat = self->las[(long)floor(i->e / self->nap)];
-    *lon = self->los[i->e % self->nap];
+    *lat = self->las[(long)floor(i->e / self->Ni)];
+    *lon = self->los[i->e % self->Ni];
     *val = i->data[i->e];
     i->e--;
 
@@ -168,7 +168,7 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
     if ((ret = grib_get_long_internal(h, s_iScansNeg, &self->iScansNegatively)))
         return ret;
 
-    /* GRIB-801: Careful of case with a single point! nap==1 */
+    /* GRIB-801: Careful of case with a single point! Ni==1 */
     if (Ni > 1) {
         /* Note: If first and last longitudes are equal I assume you wanna go round the globe */
         if (self->iScansNegatively) {
@@ -200,8 +200,8 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
         }*/
     }
 
-    self->nap = Ni;
-    self->nam = Nj;
+    self->Ni = Ni;
+    self->Nj = Nj;
 
     self->las = (double*)grib_context_malloc(h->context, Nj * sizeof(double));
     self->los = (double*)grib_context_malloc(h->context, Ni * sizeof(double));
