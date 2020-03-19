@@ -67,6 +67,8 @@ static int count_messages(FILE* in, int message_type, unsigned long* count)
     if (err == GRIB_END_OF_FILE)
         err = GRIB_SUCCESS;
 
+    if (mesg) grib_context_free(c, mesg);
+
     return err;
 }
 
