@@ -434,10 +434,12 @@ char* grib_options_get_args(char* id)
     sprintf(err, "%s%c\n", msg, *id);
     for (i = 0; i < grib_options_count; i++) {
         if (!strcmp(id, grib_options[i].id)) {
-            if (grib_options[i].args != NULL)
+            if (grib_options[i].args != NULL) {
+                free(err);
                 return grib_options[i].args;
-            else
+            } else {
                 break;
+            }
         }
     }
     for (i = 0; i < grib_options_help_count; i++) {

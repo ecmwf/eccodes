@@ -1125,8 +1125,10 @@ static request* fieldset_to_request(fieldset* fs)
     int i;
     request* r = empty_request("GRIB");
 
-    if (!fs)
+    if (!fs) {
+        free_one_request(r);
         return 0;
+    }
 
     for (i = 0; i < fs->count; i++) {
         request* s = field_to_request(fs->fields[i]);
@@ -2423,10 +2425,10 @@ static int compute_scale(dataset_t* subset)
         }
         else {
             for (j = 0; j < len; ++j) {
-                if (vals[j] > max)
-                    max = vals[j];
-                if (vals[j] < min)
-                    min = vals[j];
+                if (vals) {
+                    if (vals[j] > max) max = vals[j];
+                    if (vals[j] < min) min = vals[j];
+                }
             }
         }
         /* g->purge_header = TRUE; */
@@ -3268,8 +3270,10 @@ static int fill_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid)
         int* values         = (int*)grib_context_malloc(ctx, sizeof(int) * n);
         const char* lowaxis = (axis);
 
-        if (!values)
+        if (!values) {
             grib_context_log(ctx, GRIB_LOG_ERROR, "fill_netcdf_dimensions: cannot allocate %ld bytes", sizeof(int) * n);
+            exit(1);
+        }
 
         if (strcmp("levelist", axis) == 0)
             lowaxis = "level";
