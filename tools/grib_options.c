@@ -444,7 +444,12 @@ char* grib_options_get_args(char* id)
     }
     for (i = 0; i < grib_options_help_count; i++) {
         if (!strcmp(id, grib_options_help_list[i].id)) {
-            return grib_options_help_list[i].args != NULL ? (char*)grib_options_help_list[i].args : err;
+            if (grib_options_help_list[i].args != NULL) {
+                free(err);
+                return (char*)grib_options_help_list[i].args;
+            } else {
+                return err;
+            }
         }
     }
     return err;
