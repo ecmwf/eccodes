@@ -3896,7 +3896,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &given_level, &has_bitmap, &resolution_s2s},
+      {&daily_average, &given_level, &has_bitmap, &resolution_s2s_ocean},
    },
    {
       "sea-ice_thickness_o2d.s2",
