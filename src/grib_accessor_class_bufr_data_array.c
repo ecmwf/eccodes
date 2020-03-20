@@ -2951,7 +2951,7 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
         elementIndex = 0;
 
         numberOfNestedRepetitions = 0;
-        inr                       = 0;
+
         for (i = 0; i < numberOfDescriptors; i++) {
             grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data processing: elementNumber=%ld code=%6.6ld", icount++, descriptors[i]->code);
             switch (descriptors[i]->F) {
