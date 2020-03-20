@@ -727,6 +727,7 @@ static int parse(grib_context* gc, const char* filename)
         GRIB_MUTEX_UNLOCK(&mutex_parse);
         return GRIB_FILE_NOT_FOUND;
     }
+    //printf("parse::  grib_yyparse on %s\n", filename);
     err        = grib_yyparse();
     parse_file = 0;
 

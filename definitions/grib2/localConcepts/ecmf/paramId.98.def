@@ -1,0 +1,6 @@
+#Surface net solar radiation, clear sky
+'210' = {
+	 discipline = 192 ;
+	 parameterCategory = 128 ;
+	 parameterNumber = 210 ;
+}
