@@ -1698,6 +1698,8 @@ static hypercube* new_hypercube(const request* r)
 
 static void print_hypercube(const hypercube* h)
 {
+    Assert(h);
+    if (!h) return;
     print_all_requests(h->r);
     print_all_requests(h->cube);
     grib_context_log(ctx, GRIB_LOG_INFO, "%d active out of %d fields described\n", count_index(h), h->size);
@@ -2415,11 +2417,9 @@ static int compute_scale(dataset_t* subset)
         if (g->has_bitmap) {
             subset->bitmap = TRUE;
             for (j = 0; j < len; ++j) {
-                if (vals[j] != (double)global_missing_value) {
-                    if (vals[j] > max)
-                        max = vals[j];
-                    if (vals[j] < min)
-                        min = vals[j];
+                if (vals && vals[j] != global_missing_value) {
+                    if (vals[j] > max) max = vals[j];
+                    if (vals[j] < min) min = vals[j];
                 }
             }
         }
