@@ -80,6 +80,8 @@ static void given_thickness(grib_handle*,const parameter*,double,double);
 static void has_bitmap(grib_handle*,const parameter*,double,double);
 static void has_soil_level(grib_handle*,const parameter*,double,double);
 static void has_soil_layer(grib_handle*,const parameter*,double,double);
+static void resolution_s2s(grib_handle*,const parameter*,double,double);
+static void resolution_s2s_ocean(grib_handle*,const parameter*,double,double);
 
 static void height_level(grib_handle*,const parameter*,double,double);
 static void pressure_level(grib_handle*,const parameter*,double,double);
@@ -838,6 +840,18 @@ static void has_soil_layer(grib_handle* h,const parameter* p,double min,double m
 {
     CHECK(get(h,"topLevel") == get(h,"bottomLevel") - 1);
     CHECK(le(h,"level",14)); /* max in UERRA */
+}
+
+static void resolution_s2s(grib_handle* h,const parameter* p,double min,double max)
+{
+    CHECK(eq(h,"iDirectionIncrement",1500000));
+    CHECK(eq(h,"jDirectionIncrement",1500000));
+}
+
+static void resolution_s2s_ocean(grib_handle* h,const parameter* p,double min,double max)
+{
+    CHECK(eq(h,"iDirectionIncrement",1000000));
+    CHECK(eq(h,"jDirectionIncrement",1000000));
 }
 
 static void six_hourly(grib_handle* h,const parameter* p,double min,double max)
