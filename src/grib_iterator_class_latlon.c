@@ -142,20 +142,25 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     const char* s_jdir       = grib_arguments_get_name(h, args, self->carg++);
     const char* s_jScansPos  = grib_arguments_get_name(h, args, self->carg++);
     const char* s_jPtsConsec = grib_arguments_get_name(h, args, self->carg++);
-    self->angleOfRotation    = 0;
-    self->isRotated          = 0;
-    self->southPoleLat       = 0;
-    self->southPoleLon       = 0;
-    self->disableUnrotate    = 0; /* unrotate enabled by default */
+    const char* s_isRotatedGrid  = grib_arguments_get_name(h, args, self->carg++);
+    const char* s_angleOfRotation= grib_arguments_get_name(h, args, self->carg++);
+    const char* s_latSouthernPole= grib_arguments_get_name(h, args, self->carg++);
+    const char* s_lonSouthernPole= grib_arguments_get_name(h, args, self->carg++);
 
-    if ((err = grib_get_long(h, "isRotatedGrid", &self->isRotated)))
+    self->angleOfRotation  = 0;
+    self->isRotated        = 0;
+    self->southPoleLat     = 0;
+    self->southPoleLon     = 0;
+    self->disableUnrotate  = 0; /* unrotate enabled by default */
+
+    if ((err = grib_get_long(h, s_isRotatedGrid, &self->isRotated)))
         return err;
     if (self->isRotated) {
-        if ((err = grib_get_double_internal(h, "angleOfRotation", &self->angleOfRotation)))
+        if ((err = grib_get_double_internal(h, s_angleOfRotation, &self->angleOfRotation)))
             return err;
-        if ((err = grib_get_double_internal(h, "latitudeOfSouthernPoleInDegrees", &self->southPoleLat)))
+        if ((err = grib_get_double_internal(h, s_latSouthernPole, &self->southPoleLat)))
             return err;
-        if ((err = grib_get_double_internal(h, "longitudeOfSouthernPoleInDegrees", &self->southPoleLon)))
+        if ((err = grib_get_double_internal(h, s_lonSouthernPole, &self->southPoleLon)))
             return err;
     }
 

@@ -50,7 +50,10 @@ if(missing(Ni)){
    transient iteratorDisableUnrotate = 0 : hidden; # ECC-808
    iterator latlon(numberOfPoints,missingValue,values,longitudeFirstInDegrees,
                    DiInDegrees ,Ni,Nj,iScansNegatively ,
-                   latitudeFirstInDegrees,DjInDegrees,jScansPositively,jPointsAreConsecutive);
+                   latitudeFirstInDegrees,DjInDegrees,
+                   jScansPositively,jPointsAreConsecutive,
+                   isRotatedGrid, angleOfRotation,
+                   latitudeOfSouthernPoleInDegrees,longitudeOfSouthernPoleInDegrees);
    nearest regular(values,radius,Ni,Nj);
 }
 
