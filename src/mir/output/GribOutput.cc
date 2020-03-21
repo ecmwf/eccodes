@@ -160,7 +160,7 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
 
     bool save = false;
 
-    if (user.has("derivative")) {
+    if (user.has("nabla")) {
         save         = true;
         reuseHandle_ = true;
     }
