@@ -1187,7 +1187,7 @@ flex buffer optimization break the includes.
 
 #define YY_INPUT(buf,result,max_size) \
         { \
-        int c = getc(grib_yyin); \
+        int c = getc(grib_yyin); (void)max_size; \
         result = (c == EOF) ? YY_NULL : (buf[0] = c, 1); \
         }
 
