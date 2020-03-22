@@ -1,5 +1,7 @@
 if( HAVE_FORTRAN )
 
+    configure_file( eccodes_settings.h.in  eccodes_settings.h  @ONLY )
+
     set( srcdir ${CMAKE_CURRENT_SOURCE_DIR} )
     set( bindir ${CMAKE_CURRENT_BINARY_DIR} )
 
