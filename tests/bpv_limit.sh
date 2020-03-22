@@ -17,7 +17,7 @@
 
 REDIRECT=/dev/null
 
-$EXEC ./bpv_limit ${data_dir}/regular_latlon_surface.grib2
+$EXEC ${test_dir}/bpv_limit ${data_dir}/regular_latlon_surface.grib2
 
 # TODO: grib1 does not work yet. bpv=64 but decode does not fail as expected
 #for file in ${data_dir}/regular_latlon_surface.grib?; do 
