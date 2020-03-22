@@ -289,7 +289,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
             }
 #endif
             size     = BUFR_DESCRIPTORS_ARRAY_USED_SIZE(inner_expanded);
-            expanded = grib_bufr_descriptors_array_append(expanded, inner_expanded);
+            grib_bufr_descriptors_array_append(expanded, inner_expanded);
             break;
 
         case 1:
@@ -388,7 +388,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
                 }
 #endif
                 size     = BUFR_DESCRIPTORS_ARRAY_USED_SIZE(inner_expanded);
-                expanded = grib_bufr_descriptors_array_append(expanded, inner_expanded);
+                grib_bufr_descriptors_array_append(expanded, inner_expanded);
             }
             break;
 
