@@ -2953,7 +2953,8 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
         numberOfNestedRepetitions = 0;
 
         for (i = 0; i < numberOfDescriptors; i++) {
-            grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data processing: elementNumber=%ld code=%6.6ld", icount++, descriptors[i]->code);
+            if (c->debug && descriptors)
+                grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data processing: elementNumber=%ld code=%6.6ld", icount++, descriptors[i]->code);
             switch (descriptors[i]->F) {
                 case 0:
                     /* Table B element */
