@@ -27,7 +27,7 @@ ecbuild_add_library( TARGET    grib_tools
                      LIBS      eccodes )
 
 # tools binaries
-list( APPEND grib_tools_bins
+list( APPEND ecc_tools_binaries
              codes_info codes_count codes_split_file
              grib_histogram grib_filter grib_ls grib_dump grib_merge
              grib2ppm grib_set grib_get grib_get_data grib_copy
@@ -38,7 +38,7 @@ list( APPEND grib_tools_bins
              metar_dump metar_ls metar_compare metar_get metar_filter metar_copy
              )
 
-list( APPEND grib_tools_bins_EXTRA
+list( APPEND ecc_tools_binaries_extra
              big2gribex
              gg_sub_area_check
              grib_repair
@@ -48,7 +48,7 @@ list( APPEND grib_tools_bins_EXTRA
              )
 
 # Install generic tools
-foreach( tool ${grib_tools_bins} )
+foreach( tool ${ecc_tools_binaries} )
     # here we use the fact that each tool has only one C file that matches its name
     ecbuild_add_executable( TARGET     ${tool}
                             SOURCES    ${tool}.c
@@ -57,7 +57,7 @@ endforeach()
 
 # Install extra tools
 # User must run cmake with -DECCODES_INSTALL_EXTRA_TOOLS=ON
-foreach( tool ${grib_tools_bins_EXTRA} )
+foreach( tool ${ecc_tools_binaries_extra} )
     ecbuild_add_executable( TARGET     ${tool}
                             SOURCES    ${tool}.c
                             CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
