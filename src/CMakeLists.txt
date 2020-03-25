@@ -399,8 +399,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_data_g2bifourier_packing.c
     eccodes_windef.h
     # We ship our own generated lex/yacc C files
-    grib_yacc.c  grib_lex.c
-)
+    grib_yacc.c  grib_lex.c )
 
 list( APPEND grib_api_extra_srcs
     grib_bits_fast_big_endian.c grib_bits_any_endian.c
@@ -410,8 +409,7 @@ list( APPEND grib_api_extra_srcs
     encode_double_array.c
     grib_bits_ibmpow.c
     grib_bits_ibmpow_opt.c
-    minmax_val.c
-)
+    minmax_val.c )
 
 configure_file( grib_api_version.c.in grib_api_version.c @ONLY )
 configure_file( eccodes_version.h.in eccodes_version.h @ONLY )
@@ -426,19 +424,19 @@ configure_file( eccodes_version.h.in eccodes_version.h @ONLY )
 #                    YACC_FLAGS  "-y"
 #                    DEPENDANT action.c )
 
-if(HAVE_MEMFS)
+if( HAVE_MEMFS )
     list(APPEND ECCODES_EXTRA_LIBRARIES eccodes_memfs)
 endif()
 
 
-ecbuild_add_library(TARGET    eccodes
-                    SOURCES   grib_api_version.c
+ecbuild_add_library( TARGET    eccodes
+                     SOURCES   grib_api_version.c
                               # griby.c gribl.c
                               ${grib_api_srcs}
-                    GENERATED grib_api_version.c
-                    LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
-                    TEMPLATES ${grib_api_extra_srcs}
-                    INSTALL_HEADERS_LIST
+                     GENERATED grib_api_version.c
+                     LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
+                     TEMPLATES ${grib_api_extra_srcs}
+                     INSTALL_HEADERS_LIST
                               grib_api.h
                               eccodes.h
                               eccodes_windef.h
