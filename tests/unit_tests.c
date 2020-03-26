@@ -1392,36 +1392,33 @@ static void test_string_splitting()
     if (!list) { assert(!"List is NULL"); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 4);
-    if (strcmp(list[0], "Born") != 0) assert(0);
-    if (strcmp(list[1], "To") != 0) assert(0);
-    if (strcmp(list[2], "Be") != 0) assert(0);
-    if (strcmp(list[3], "Wild") != 0) assert(0);
-    assert(list[4] == NULL);
-    for (i = 0; list[i] != NULL; ++i)
-        free(list[i]);
+    if (!list[0] || !STR_EQ(list[0], "Born")) Assert(0);
+    if (!list[1] || !STR_EQ(list[1], "To"))   Assert(0);
+    if (!list[2] || !STR_EQ(list[2], "Be"))   Assert(0);
+    if (!list[3] || !STR_EQ(list[3], "Wild")) Assert(0);
+    Assert(list[4] == NULL);
+    for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
 
     strcpy(input, "12345|a gap|");
     list = string_split(input, "|");
-    if (!list) { assert(!"List is NULL"); return; }
+    if (!list) { assert(0); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 2);
-    if (strcmp(list[0], "12345") != 0) assert(0);
-    if (strcmp(list[1], "a gap") != 0) assert(0);
+    if (!list[0] || !STR_EQ(list[0], "12345")) Assert(0);
+    if (!list[1] || !STR_EQ(list[1], "a gap")) Assert(0);
     assert(list[2] == NULL);
-    for (i = 0; list[i] != NULL; ++i)
-        free(list[i]);
+    for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
 
     strcpy(input, "Steppenwolf");
     list = string_split(input, ",");
-    if (!list) { assert(!"List is NULL"); return; }
+    if (!list) { assert(0); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 1);
-    if (strcmp(list[0], "Steppenwolf") != 0) assert(0);
+    if (!list[0] || !STR_EQ(list[0], "Steppenwolf")) Assert(0);
     assert(list[1] == NULL);
-    for (i = 0; list[i] != NULL; ++i)
-        free(list[i]);
+    for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
 
     /* Note: currently cannot cope with */
