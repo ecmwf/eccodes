@@ -249,7 +249,7 @@ static void gaussian_grid(grib_handle* h)
         last_n = n;
     }
 
-    assert(values);
+    if (!values) { assert(0); return; }
     if (values) {
         values[0] = rint(values[0]*1e6)/1e6;
     }
