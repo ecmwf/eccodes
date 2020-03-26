@@ -112,6 +112,35 @@ static int next(grib_iterator* i, double* lat, double* lon, double* val)
 #define RAD2DEG 57.29577951308232087684 /* 180 over pi */
 #define DEG2RAD 0.01745329251994329576  /* pi over 180 */
 
+double msfnz(double eccent, double sinphi, double cosphi)
+{
+    double con = eccent * sinphi;
+    return((cosphi / (sqrt (1.0 - con * con))));
+}
+
+/* Function to compute the constant small t for use in the forward
+   computations in the Lambert Conformal Conic and the Polar
+   Stereographic projections.
+--------------------------------------------------------------*/
+double tsfnz(
+    double eccent,  /* Eccentricity of the spheroid */
+    double phi,     /* Latitude phi */
+    double sinphi)  /* Sine of the latitude */
+{
+    double con;
+    double com;
+
+    con = eccent * sinphi;
+    com = .5 * eccent;
+    con = pow(((1.0 - con) / (1.0 + con)),com);
+    return (tan(.5 * (M_PI_2 - phi))/con);
+}
+
+static double calculate_eccentricity(double minor, double major)
+{
+    double temp = minor / major;
+    return sqrt(1.0 - temp*temp);
+}
 static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 {
     int i, j, err = 0;
@@ -148,8 +177,12 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return err;
 
     if (grib_is_earth_oblate(h)) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert Conformal only supported for spherical earth.");
-        return GRIB_GEOCALCULUS_PROBLEM;
+        double earthMajorAxisInMetres, earthMinorAxisInMetres, e;
+        //grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert Conformal only supported for spherical earth.");
+        //return GRIB_GEOCALCULUS_PROBLEM;
+        if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
+        if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
+        e = calculate_eccentricity(earthMinorAxisInMetres,earthMajorAxisInMetres);
     }
 
     if (iter->nv != nx * ny) {
