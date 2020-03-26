@@ -58,8 +58,7 @@ if( HAVE_FORTRAN )
     add_custom_command( TARGET     eccodes_f90 POST_BUILD
                         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/include
                         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}/eccodes.mod ${CMAKE_BINARY_DIR}/include
-                        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}/grib_api.mod ${CMAKE_BINARY_DIR}/include
-    )
+                        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}/grib_api.mod ${CMAKE_BINARY_DIR}/include )
 
     # Add the eccodes module file as well
     #set(_eccodes_mod "${CMAKE_Fortran_MODULE_DIRECTORY}/eccodes.mod" )
