@@ -183,6 +183,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
         if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
         e = calculate_eccentricity(earthMinorAxisInMetres,earthMajorAxisInMetres);
+        (void)e;
     }
 
     if (iter->nv != nx * ny) {
