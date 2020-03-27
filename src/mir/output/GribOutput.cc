@@ -298,7 +298,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             continue;
         }
 
-        auto h = input.gribHandle(i);  // Base class throws if input cannot provide handle
+        auto h = input.gribHandle(field.handle(i));  // Base class throws if input cannot provide handle
 
         grib_info info = {
             {0},
