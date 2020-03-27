@@ -141,15 +141,197 @@ static double calculate_eccentricity(double minor, double major)
     double temp = minor / major;
     return sqrt(1.0 - temp*temp);
 }
-static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
+
+static int init_sphere(grib_handle* h, 
+                       grib_iterator_lambert_conformal* self,
+                       size_t nv, long nx, long ny,
+                       double LoVInDegrees,
+                       double Dx, double Dy, double radius,
+                       double latFirstInRadians, double lonFirstInRadians,
+                       double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
+                       double LaDInRadians,
+                       long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
 {
     int i, j, err = 0;
+    double *lats, *lons; /* the lat/lon arrays to be populated */
+    double f, n, rho, rho0, angle, x0, y0, x, y, tmp, tmp2;
+    double latDeg, lonDeg, lonDiff;
+
+    if (fabs(Latin1InRadians - Latin2InRadians) < 1E-09) {
+        n = sin(Latin1InRadians);
+    }
+    else {
+        n = log(cos(Latin1InRadians) / cos(Latin2InRadians)) /
+            log(tan(M_PI_4 + Latin2InRadians / 2.0) / tan(M_PI_4 + Latin1InRadians / 2.0));
+    }
+
+    f    = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
+    rho  = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
+    rho0 = radius * f * pow(tan(M_PI_4 + LaDInRadians / 2.0), -n);
+    if (n < 0) /* adjustment for southern hemisphere */
+        rho0 = -rho0;
+    lonDiff = lonFirstInRadians - LoVInRadians;
+
+    /* Adjust longitude to range -180 to 180 */
+    if (lonDiff > M_PI)
+        lonDiff -= 2 * M_PI;
+    if (lonDiff < -M_PI)
+        lonDiff += 2 * M_PI;
+    angle = n * lonDiff;
+    x0    = rho * sin(angle);
+    y0    = rho0 - rho * cos(angle);
+    /*Dx = iScansNegatively == 0 ? Dx : -Dx;*/
+    /* GRIB-405: Don't change sign of Dy. Latitudes ALWAYS increase from latitudeOfFirstGridPoint */
+    /*Dy = jScansPositively == 1 ? Dy : -Dy;*/
+
+    /* Allocate latitude and longitude arrays */
+    self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!self->lats) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", nv * sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
+    self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!self->lats) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", nv * sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
+    lats = self->lats;
+    lons = self->lons;
+
+    /* Populate our arrays */
+    for (j = 0; j < ny; j++) {
+        y = y0 + j * Dy;
+        if (n < 0) { /* adjustment for southern hemisphere */
+            y = -y;
+        }
+        tmp  = rho0 - y;
+        tmp2 = tmp * tmp;
+        for (i = 0; i < nx; i++) {
+            int index = i + j * nx;
+            x         = x0 + i * Dx;
+            if (n < 0) { /* adjustment for southern hemisphere */
+                x = -x;
+            }
+
+            angle = atan2(x, tmp); /* See ECC-524 */
+            rho   = sqrt(x * x + tmp2);
+            if (n <= 0)
+                rho = -rho;
+            lonDeg = LoVInDegrees + (angle / n) * RAD2DEG;
+            latDeg = (2.0 * atan(pow(radius * f / rho, 1.0 / n)) - M_PI_2) * RAD2DEG;
+            while (lonDeg >= 360.0)
+                lonDeg -= 360.0;
+            while (lonDeg < 0.0)
+                lonDeg += 360.0;
+            lons[index] = lonDeg;
+            lats[index] = latDeg;
+            /*printf("DBK: llat[%d] = %g \t llon[%d] = %g\n", index,lats[index], index,lons[index]);*/
+        }
+    }
+}
+// Oblate spheroid
+static int init_oblate(grib_handle* h, 
+                       grib_iterator_lambert_conformal* self,
+                       size_t nv,
+                       double LoVInDegrees,
+                       double Dx, double Dy,
+                       double earthMinorAxisInMetres, double earthMajorAxisInMetres,
+                       double latFirstInRadians, double lonFirstInRadians,
+                       double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
+                       double LaDInRadians)
+{
+    int i, j, err = 0;
+    long nx, ny, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning;
+    double *lats, *lons; /* the lat/lon arrays to be populated */
+    double f, n, rho, rho0, angle, x0, y0, x, y, tmp, tmp2;
+    double latDeg, lonDeg, lonDiff;
+    double radius = 1; // TODO
+    double e = calculate_eccentricity(earthMinorAxisInMetres,earthMajorAxisInMetres);
+    (void)e;
+
+    if (fabs(Latin1InRadians - Latin2InRadians) < 1E-09) {
+        n = sin(Latin1InRadians);
+    }
+    else {
+        n = log(cos(Latin1InRadians) / cos(Latin2InRadians)) /
+            log(tan(M_PI_4 + Latin2InRadians / 2.0) / tan(M_PI_4 + Latin1InRadians / 2.0));
+    }
+
+    f    = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
+    rho  = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
+    rho0 = radius * f * pow(tan(M_PI_4 + LaDInRadians / 2.0), -n);
+    if (n < 0) /* adjustment for southern hemisphere */
+        rho0 = -rho0;
+    lonDiff = lonFirstInRadians - LoVInRadians;
+
+    /* Adjust longitude to range -180 to 180 */
+    if (lonDiff > M_PI)
+        lonDiff -= 2 * M_PI;
+    if (lonDiff < -M_PI)
+        lonDiff += 2 * M_PI;
+    angle = n * lonDiff;
+    x0    = rho * sin(angle);
+    y0    = rho0 - rho * cos(angle);
+    /*Dx = iScansNegatively == 0 ? Dx : -Dx;*/
+    /* GRIB-405: Don't change sign of Dy. Latitudes ALWAYS increase from latitudeOfFirstGridPoint */
+    /*Dy = jScansPositively == 1 ? Dy : -Dy;*/
+
+    /* Allocate latitude and longitude arrays */
+    self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!self->lats) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", nv * sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
+    self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!self->lats) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", nv * sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
+    lats = self->lats;
+    lons = self->lons;
+
+    /* Populate our arrays */
+    for (j = 0; j < ny; j++) {
+        y = y0 + j * Dy;
+        if (n < 0) { /* adjustment for southern hemisphere */
+            y = -y;
+        }
+        tmp  = rho0 - y;
+        tmp2 = tmp * tmp;
+        for (i = 0; i < nx; i++) {
+            int index = i + j * nx;
+            x         = x0 + i * Dx;
+            if (n < 0) { /* adjustment for southern hemisphere */
+                x = -x;
+            }
+
+            angle = atan2(x, tmp); /* See ECC-524 */
+            rho   = sqrt(x * x + tmp2);
+            if (n <= 0)
+                rho = -rho;
+            lonDeg = LoVInDegrees + (angle / n) * RAD2DEG;
+            latDeg = (2.0 * atan(pow(radius * f / rho, 1.0 / n)) - M_PI_2) * RAD2DEG;
+            while (lonDeg >= 360.0)
+                lonDeg -= 360.0;
+            while (lonDeg < 0.0)
+                lonDeg += 360.0;
+            lons[index] = lonDeg;
+            lats[index] = latDeg;
+            /*printf("DBK: llat[%d] = %g \t llon[%d] = %g\n", index,lats[index], index,lons[index]);*/
+        }
+    }
+}
+
+static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
+{
+    int i, j, err = 0, is_oblate = 0;
     double *lats, *lons; /* the lat/lon arrays to be populated */
     long nx, ny, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning;
     double LoVInDegrees, LaDInDegrees, Latin1InDegrees, Latin2InDegrees, latFirstInDegrees,
         lonFirstInDegrees, Dx, Dy, radius = 0;
     double latFirstInRadians, lonFirstInRadians, LoVInRadians, Latin1InRadians, Latin2InRadians,
         LaDInRadians, lonDiff, lonDeg, latDeg;
+    double earthMajorAxisInMetres, earthMinorAxisInMetres;
     double f, n, rho, rho0, angle, x0, y0, x, y, tmp, tmp2;
 
     grib_iterator_lambert_conformal* self = (grib_iterator_lambert_conformal*)iter;
@@ -175,15 +357,14 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return err;
     if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS)
         return err;
+    
+    is_oblate = grib_is_earth_oblate(h);
 
-    if (grib_is_earth_oblate(h)) {
-        double earthMajorAxisInMetres, earthMinorAxisInMetres, e;
+    if (is_oblate) {
         //grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert Conformal only supported for spherical earth.");
         //return GRIB_GEOCALCULUS_PROBLEM;
         if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
         if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
-        e = calculate_eccentricity(earthMinorAxisInMetres,earthMajorAxisInMetres);
-        (void)e;
     }
 
     if (iter->nv != nx * ny) {
@@ -226,77 +407,22 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     Latin2InRadians   = Latin2InDegrees * DEG2RAD;
     LaDInRadians      = LaDInDegrees * DEG2RAD;
     LoVInRadians      = LoVInDegrees * DEG2RAD;
-
-    if (fabs(Latin1InRadians - Latin2InRadians) < 1E-09) {
-        n = sin(Latin1InRadians);
-    }
-    else {
-        n = log(cos(Latin1InRadians) / cos(Latin2InRadians)) /
-            log(tan(M_PI_4 + Latin2InRadians / 2.0) / tan(M_PI_4 + Latin1InRadians / 2.0));
-    }
-
-    f    = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
-    rho  = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
-    rho0 = radius * f * pow(tan(M_PI_4 + LaDInRadians / 2.0), -n);
-    if (n < 0) /* adjustment for southern hemisphere */
-        rho0 = -rho0;
-    lonDiff = lonFirstInRadians - LoVInRadians;
-
-    /* Adjust longitude to range -180 to 180 */
-    if (lonDiff > M_PI)
-        lonDiff -= 2 * M_PI;
-    if (lonDiff < -M_PI)
-        lonDiff += 2 * M_PI;
-    angle = n * lonDiff;
-    x0    = rho * sin(angle);
-    y0    = rho0 - rho * cos(angle);
-    /*Dx = iScansNegatively == 0 ? Dx : -Dx;*/
-    /* GRIB-405: Don't change sign of Dy. Latitudes ALWAYS increase from latitudeOfFirstGridPoint */
-    /*Dy = jScansPositively == 1 ? Dy : -Dy;*/
-
-    /* Allocate latitude and longitude arrays */
-    self->lats = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
-    if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", iter->nv * sizeof(double));
-        return GRIB_OUT_OF_MEMORY;
-    }
-    self->lons = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
-    if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", iter->nv * sizeof(double));
-        return GRIB_OUT_OF_MEMORY;
-    }
-    lats = self->lats;
-    lons = self->lons;
-
-    /* Populate our arrays */
-    for (j = 0; j < ny; j++) {
-        y = y0 + j * Dy;
-        if (n < 0) { /* adjustment for southern hemisphere */
-            y = -y;
-        }
-        tmp  = rho0 - y;
-        tmp2 = tmp * tmp;
-        for (i = 0; i < nx; i++) {
-            int index = i + j * nx;
-            x         = x0 + i * Dx;
-            if (n < 0) { /* adjustment for southern hemisphere */
-                x = -x;
-            }
-
-            angle = atan2(x, tmp); /* See ECC-524 */
-            rho   = sqrt(x * x + tmp2);
-            if (n <= 0)
-                rho = -rho;
-            lonDeg = LoVInDegrees + (angle / n) * RAD2DEG;
-            latDeg = (2.0 * atan(pow(radius * f / rho, 1.0 / n)) - M_PI_2) * RAD2DEG;
-            while (lonDeg >= 360.0)
-                lonDeg -= 360.0;
-            while (lonDeg < 0.0)
-                lonDeg += 360.0;
-            lons[index] = lonDeg;
-            lats[index] = latDeg;
-            /*printf("DBK: llat[%d] = %g \t llon[%d] = %g\n", index,lats[index], index,lons[index]);*/
-        }
+    
+    if (is_oblate) {
+        init_oblate(h, self, iter->nv,
+                    LoVInDegrees,
+                    Dx, Dy, earthMinorAxisInMetres, earthMajorAxisInMetres,
+                    latFirstInRadians, lonFirstInRadians,
+                    LoVInRadians, Latin1InRadians, Latin2InRadians,
+                    LaDInRadians);
+    } else {
+        init_sphere(h, self, iter->nv,
+                    nx, ny,
+                    LoVInDegrees,
+                    Dx, Dy, radius,
+                    latFirstInRadians, lonFirstInRadians,
+                    LoVInRadians, Latin1InRadians, Latin2InRadians, LaDInRadians,
+                    iScansNegatively, jScansPositively, jPointsAreConsecutive);
     }
 
     iter->e = -1;
