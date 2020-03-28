@@ -225,18 +225,15 @@ static int init_sphere(grib_handle* h,
             if (n < 0) { /* adjustment for southern hemisphere */
                 x = -x;
             }
-
             angle = atan2(x, tmp); /* See ECC-524 */
             rho   = sqrt(x * x + tmp2);
-            if (n <= 0)
-                rho = -rho;
+            if (n <= 0) rho = -rho;
             lonDeg = LoVInDegrees + (angle / n) * RAD2DEG;
             latDeg = (2.0 * atan(pow(radius * f / rho, 1.0 / n)) - M_PI_2) * RAD2DEG;
             while (lonDeg >= 360.0) lonDeg -= 360.0;
             while (lonDeg < 0.0)    lonDeg += 360.0;
             self->lons[index] = lonDeg;
             self->lats[index] = latDeg;
-            /*printf("DBK: llat[%d] = %g \t llon[%d] = %g\n", index,lats[index], index,lons[index]);*/
         }
     }
 
@@ -255,7 +252,9 @@ static int init_oblate(grib_handle* h,
                        double LaDInRadians)
 {
     int i, j, err = 0;
-    double x0, y0, x, y, latDeg, lonDeg, sinphi, ts, rh1, theta;
+    double x0, y0, x, y, latRad, lonRad, latDeg, lonDeg, sinphi, ts, rh1, theta;
+    double false_easting;  /* x offset in meters */
+    double false_northing; /* y offset in meters */
 
     double ns;     /* ratio of angle between meridian */
     double f0;     /* flattening of ellipsoid */
@@ -293,7 +292,7 @@ static int init_oblate(grib_handle* h,
     f0 = ms1 / (ns * pow(ts1, ns));
     rh = earthMajorAxisInMetres * f0 * pow(ts0, ns);
 
-    /* lat,lon to x,y */
+    /* Forward projection: convert lat,lon to x,y */
     con = fabs(fabs(latFirstInRadians) - M_PI_2);
     if (con > EPSILON) {
         sinphi = sin(latFirstInRadians);
@@ -311,8 +310,8 @@ static int init_oblate(grib_handle* h,
     theta = ns * adjust_lon_radians(lonFirstInRadians - LoVInRadians);
     x0    = rh1 * sin(theta);
     y0    = rh - rh1 * cos(theta);
-    x0 = -x0;
-    y0 = -y0;
+    x0    = -x0;
+    y0    = -y0;
 
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
@@ -327,45 +326,45 @@ static int init_oblate(grib_handle* h,
     }
 
     /* Populate our arrays */
+    false_easting  = x0;
+    false_northing = y0;
     for (j = 0; j < ny; j++) {
-        y = y0 + j * Dy;
+        y = j * Dy;
         for (i = 0; i < nx; i++) {
             const int index = i + j * nx;
-            x               = x0 + i * Dx;
-            /* from x,y to lat,lon */
-            y = rh - y;
+            double _x, _y;
+            x = i * Dx;
+            /* Inverse projection to convert from x,y to lat,lon */
+            _x = x - false_easting;
+            _y = rh - y + false_northing;
             if (ns > 0) {
-                rh1 = sqrt(x * x + y * y);
+                rh1 = sqrt(_x * _x + _y * _y);
                 con = 1.0;
-            }
-            else {
-                rh1 = -sqrt(x * x + y * y);
+            } else {
+                rh1 = -sqrt(_x * _x + _y * _y);
                 con = -1.0;
             }
             theta = 0.0;
             if (rh1 != 0)
-                theta = atan2((con * x), (con * y));
+                theta = atan2((con * _x), (con * _y));
             if ((rh1 != 0) || (ns > 0.0)) {
                 con    = 1.0 / ns;
                 ts     = pow((rh1 / (earthMajorAxisInMetres * f0)), con);
-                latDeg = phi2z(e, ts, &err);
+                latRad = phi2z(e, ts, &err);
                 if (err) {
                     grib_context_log(h->context, GRIB_LOG_ERROR, "Failed to compute the latitude angle, phi2, for the inverse");
                     return err;
                 }
+            } else {
+                latRad = -M_PI_2;
             }
-            else {
-                latDeg = -M_PI_2;
-            }
-            lonDeg = adjust_lon_radians(theta / ns + LoVInRadians);
-            // Convert to degrees
-            latDeg *= RAD2DEG;
-            lonDeg *= RAD2DEG;
+            lonRad = adjust_lon_radians(theta / ns + LoVInRadians);
+            latDeg = latRad * RAD2DEG;  /* Convert to degrees */
+            lonDeg = lonRad * RAD2DEG;
             while (lonDeg >= 360.0) lonDeg -= 360.0;
             while (lonDeg < 0.0)    lonDeg += 360.0;
             self->lons[index] = lonDeg;
             self->lats[index] = latDeg;
-            //printf("DBK: llat[%d] = %g \t llon[%d] = %g\n", index, self->lats[index], index, self->lons[index]);
         }
     }
     return GRIB_SUCCESS;
