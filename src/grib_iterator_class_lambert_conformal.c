@@ -126,7 +126,6 @@ double phi2z(
         if (fabs(dphi) <= .0000000001)
             return (phi);
     }
-    /*Assert(!"Convergence error");*/
     *error = GRIB_INTERNAL_ERROR;
     return 0;
 }
@@ -139,8 +138,7 @@ double msfnz(double eccent, double sinphi, double cosphi)
     return ((cosphi / (sqrt(1.0 - con * con))));
 }
 
-/* Compute the constant small t for use in the forward
-   computations */
+/* Compute the constant small t for use in the forward computations */
 double tsfnz(
     double eccent, /* Eccentricity of the spheroid */
     double phi,    /* Latitude phi */
@@ -174,8 +172,7 @@ static int init_sphere(grib_handle* h,
 
     if (fabs(Latin1InRadians - Latin2InRadians) < 1E-09) {
         n = sin(Latin1InRadians);
-    }
-    else {
+    } else {
         n = log(cos(Latin1InRadians) / cos(Latin2InRadians)) /
             log(tan(M_PI_4 + Latin2InRadians / 2.0) / tan(M_PI_4 + Latin1InRadians / 2.0));
     }
@@ -285,8 +282,7 @@ static int init_oblate(grib_handle* h,
 
     if (fabs(Latin1InRadians - Latin2InRadians) > EPSILON) {
         ns = log(ms1 / ms2) / log(ts1 / ts2);
-    }
-    else {
+    } else {
         ns = con;
     }
     f0 = ms1 / (ns * pow(ts1, ns));
@@ -298,8 +294,7 @@ static int init_oblate(grib_handle* h,
         sinphi = sin(latFirstInRadians);
         ts     = tsfnz(e, latFirstInRadians, sinphi);
         rh1    = earthMajorAxisInMetres * f0 * pow(ts, ns);
-    }
-    else {
+    } else {
         con = latFirstInRadians * ns;
         if (con <= 0) {
             grib_context_log(h->context, GRIB_LOG_ERROR, "Point cannot be projected");
@@ -353,6 +348,8 @@ static int init_oblate(grib_handle* h,
                 latRad = phi2z(e, ts, &err);
                 if (err) {
                     grib_context_log(h->context, GRIB_LOG_ERROR, "Failed to compute the latitude angle, phi2, for the inverse");
+                    grib_context_free(h->context, self->lats);
+                    grib_context_free(h->context, self->lons);
                     return err;
                 }
             } else {
@@ -399,16 +396,14 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     const char* sjPointsAreConsecutive  = grib_arguments_get_name(h, args, self->carg++);
     const char* salternativeRowScanning = grib_arguments_get_name(h, args, self->carg++);
 
-    if ((err = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS)
-        return err;
+    if ((err = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS) return err;
+    if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS) return err;
 
     is_oblate = grib_is_earth_oblate(h);
 
     if (is_oblate) {
-        if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
         if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
+        if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
     } else {
         if ((err = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS) return err;
     }
@@ -445,7 +440,8 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     /* Standard Parallels cannot be equal and on opposite sides of the equator */
     if (fabs(Latin1InDegrees + Latin2InDegrees) < EPSILON) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Cannot have equal latitudes for standard parallels on opposite sides of equator");
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "Cannot have equal latitudes for standard parallels on opposite sides of equator");
         return GRIB_WRONG_GRID;
     }
 
@@ -466,8 +462,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
                           latFirstInRadians, lonFirstInRadians,
                           LoVInRadians, Latin1InRadians, Latin2InRadians,
                           LaDInRadians);
-    }
-    else {
+    } else {
         err = init_sphere(h, self, iter->nv, nx, ny,
                           LoVInDegrees,
                           Dx, Dy, radius,
