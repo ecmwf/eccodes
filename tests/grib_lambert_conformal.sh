@@ -36,16 +36,51 @@ cat > $tempFilter <<EOF
  write;
 EOF
 
+# Use filter on input to create a new Lambert conformal GRIB
+${tools_dir}/grib_filter -o $tempGrib $tempFilter $input
+if [ ! -f "$tempGrib" ]; then
+   echo 'Failed to create output GRIB from filter' >&2
+   exit 1
+fi
+# Invoke Geoiterator on the newly created GRIB file
+${tools_dir}/grib_get_data $tempGrib > $tempOut
+
+${tools_dir}/grib_ls -l 50,0 $tempGrib
+
+# Oblate earth
+# --------------
+cat > $tempFilter <<EOF
+ set gridType="lambert";
+ set numberOfDataPoints=294000;
+ set shapeOfTheEarth=6;
+ set Nx=588;
+ set Ny=500;
+ set latitudeOfFirstGridPoint=40442000;
+ set longitudeOfFirstGridPoint=353559000;
+ set LaD=60000000;
+ set LoV=2200000;
+ set Dx=2499000;
+ set Dy=2499000;
+ set Latin1=46401000;
+ set Latin2=46401000;
+ set shapeOfTheEarth=2;
+ set numberOfValues=294000;
+ write;
+EOF
+
 # Use this filter and the input GRIB to create a new GRIB
 ${tools_dir}/grib_filter -o $tempGrib $tempFilter $input
 if [ ! -f "$tempGrib" ]; then
    echo 'Failed to create output GRIB from filter' >&2
    exit 1
 fi
-# Now get the data from the newly created GRIB file
+grib_check_key_equals $tempGrib 'earthIsOblate,earthMinorAxisInMetres,earthMajorAxisInMetres' '1 6356775 6378160'
+
+# Invoke Geoiterator on the newly created GRIB file
 ${tools_dir}/grib_get_data $tempGrib > $tempOut
 
-${tools_dir}/grib_ls -l 50,0 $tempGrib
+
+
 
 # Clean up
 rm -f $tempFilter $tempGrib $tempOut
