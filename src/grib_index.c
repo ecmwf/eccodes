@@ -980,6 +980,7 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
     index->count = index_count;
 
     fclose(fh);
+    grib_context_free(c, files);
     return index;
 }
 
