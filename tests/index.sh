@@ -50,11 +50,25 @@ EOF
 
 diff $tempRef $tempOut
 
-
 ${tools_dir}/grib_index_build -k mars.levtype -o $tempIndex ${data_dir}/tigge_cf_ecmwf.grib2 |\
    grep -q "mars.levtype = { sfc, pl, pv, pt }"
 
 ${tools_dir}/grib_index_build -k mars.levtype:i -o $tempIndex ${data_dir}/tigge_cf_ecmwf.grib2 |\
    grep -q "mars.levtype = { 103, 1, 106, 100, 101, 8, 109, 107 }"
 
+# grib_compare with index files
+# -----------------------------
+tempIndex1=temp.$$.1.idx
+tempIndex2=temp.$$.2.idx
+tempGribFile1=temp.index.$$.file1.grib
+tempGribFile2=temp.index.$$.file2.grib
+cat ${data_dir}/high_level_api.grib2 ${data_dir}/sample.grib2          > $tempGribFile1
+cat ${data_dir}/sample.grib2         ${data_dir}/high_level_api.grib2  > $tempGribFile2
+
+${tools_dir}/grib_index_build -o $tempIndex1 $tempGribFile1
+${tools_dir}/grib_index_build -o $tempIndex2 $tempGribFile2
+${tools_dir}/grib_compare $tempIndex1 $tempIndex2
+rm -f $tempIndex1 $tempIndex2 $tempGribFile1 $tempGribFile2
+
+# Clean up
 rm -f $tempIndex $tempOut $tempRef
