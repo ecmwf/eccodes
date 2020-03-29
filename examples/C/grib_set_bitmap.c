@@ -83,7 +83,7 @@ int main(int argc, char** argv)
     }
 
     codes_handle_delete(h);
-
+    free(values);
     fclose(in);
     fclose(out);
 
