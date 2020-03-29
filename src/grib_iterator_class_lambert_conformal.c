@@ -108,7 +108,7 @@ static double adjust_lon_radians(double lon)
 }
 
 /* Function to compute the latitude angle, phi2, for the inverse */
-double phi2z(
+static double compute_phi2(
     double eccent, /* Spheroid eccentricity */
     double ts,     /* Constant value t */
     int* error)
@@ -132,14 +132,14 @@ double phi2z(
 
 /* Compute the constant small m which is the radius of
    a parallel of latitude, phi, divided by the semimajor axis */
-double msfnz(double eccent, double sinphi, double cosphi)
+static double compute_m(double eccent, double sinphi, double cosphi)
 {
     const double con = eccent * sinphi;
     return ((cosphi / (sqrt(1.0 - con * con))));
 }
 
 /* Compute the constant small t for use in the forward computations */
-double tsfnz(
+static double compute_t(
     double eccent, /* Eccentricity of the spheroid */
     double phi,    /* Latitude phi */
     double sinphi) /* Sine of the latitude */
@@ -270,15 +270,15 @@ static int init_oblate(grib_handle* h,
     sin_po = sin(Latin1InRadians);
     cos_po = cos(Latin1InRadians);
     con    = sin_po;
-    ms1    = msfnz(e, sin_po, cos_po);
-    ts1    = tsfnz(e, Latin1InRadians, sin_po);
+    ms1    = compute_m(e, sin_po, cos_po);
+    ts1    = compute_t(e, Latin1InRadians, sin_po);
 
     sin_po = sin(Latin2InRadians);
     cos_po = cos(Latin2InRadians);
-    ms2    = msfnz(e, sin_po, cos_po);
-    ts2    = tsfnz(e, Latin2InRadians, sin_po);
+    ms2    = compute_m(e, sin_po, cos_po);
+    ts2    = compute_t(e, Latin2InRadians, sin_po);
     sin_po = sin(LaDInRadians);
-    ts0    = tsfnz(e, LaDInRadians, sin_po);
+    ts0    = compute_t(e, LaDInRadians, sin_po);
 
     if (fabs(Latin1InRadians - Latin2InRadians) > EPSILON) {
         ns = log(ms1 / ms2) / log(ts1 / ts2);
@@ -292,7 +292,7 @@ static int init_oblate(grib_handle* h,
     con = fabs(fabs(latFirstInRadians) - M_PI_2);
     if (con > EPSILON) {
         sinphi = sin(latFirstInRadians);
-        ts     = tsfnz(e, latFirstInRadians, sinphi);
+        ts     = compute_t(e, latFirstInRadians, sinphi);
         rh1    = earthMajorAxisInMetres * f0 * pow(ts, ns);
     } else {
         con = latFirstInRadians * ns;
@@ -345,7 +345,7 @@ static int init_oblate(grib_handle* h,
             if ((rh1 != 0) || (ns > 0.0)) {
                 con    = 1.0 / ns;
                 ts     = pow((rh1 / (earthMajorAxisInMetres * f0)), con);
-                latRad = phi2z(e, ts, &err);
+                latRad = compute_phi2(e, ts, &err);
                 if (err) {
                     grib_context_log(h->context, GRIB_LOG_ERROR, "Failed to compute the latitude angle, phi2, for the inverse");
                     grib_context_free(h->context, self->lats);
