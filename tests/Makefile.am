@@ -60,7 +60,7 @@ TESTS = definitions.sh \
         grib_dump_debug.sh \
         grib_jpeg.sh \
         grib_ccsds.sh \
-        md5.sh \
+        grib_md5.sh \
         grib_neg_fctime.sh \
         bufr_ecc-286.sh \
         bufr_ecc-288.sh
