@@ -271,7 +271,7 @@ if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
                       TYPE SCRIPT
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh )
 
-    foreach( test grib_threads_ecc-604 grib_threads_ecc-604-encode bufr_ecc-604 )
+    foreach( test grib_threads_ecc-604 grib_threads_ecc-604-encode bufr_threads_ecc-604 )
         ecbuild_add_executable( TARGET    ${test}
                                 NOINSTALL
                                 SOURCES   ${test}.c
@@ -281,10 +281,10 @@ if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
                       TYPE SCRIPT
                       TEST_DEPENDS eccodes_download_gribs
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_threads_ecc-604.sh )
-    ecbuild_add_test( TARGET eccodes_t_bufr_ecc-604
+    ecbuild_add_test( TARGET eccodes_t_bufr_threads_ecc-604
                       TYPE SCRIPT
                       TEST_DEPENDS eccodes_download_bufrs
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_ecc-604.sh )
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_threads_ecc-604.sh )
 endif()
 
 ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
