@@ -7,19 +7,19 @@ if( HAVE_PYTHON )
 
     # preparing for generating setup.py
     if( HAVE_LIBJASPER )
-        get_filename_component(JASPER_DIR ${JASPER_INCLUDE_DIR} PATH )
+        get_filename_component( JASPER_DIR ${JASPER_INCLUDE_DIR} PATH )
     endif()
 
     if( HAVE_LIBOPENJPEG )
         # Get the name of the OpenJPEG library: version dependent!
         # E.g. openjpeg (version 1.5) or openjp2 (version 2.x)
-        get_filename_component(OPENJPEG_LIB_DIR ${OPENJPEG_LIBRARY} PATH )
-        get_filename_component(OJ_NAME_WE       ${OPENJPEG_LIBRARY} NAME_WE )
-        STRING(REGEX REPLACE "^lib" "" OJ_WITHOUT_LIB ${OJ_NAME_WE})
+        get_filename_component( OPENJPEG_LIB_DIR ${OPENJPEG_LIBRARY} PATH )
+        get_filename_component( OJ_NAME_WE       ${OPENJPEG_LIBRARY} NAME_WE )
+        string(REGEX REPLACE "^lib" "" OJ_WITHOUT_LIB ${OJ_NAME_WE})
     endif()
 
     if( HAVE_AEC )
-      get_filename_component(AEC_DIR ${AEC_INCLUDE_DIR} PATH )
+      get_filename_component( AEC_DIR ${AEC_INCLUDE_DIR} PATH )
     endif()
 
     configure_file( setup.py.in setup.py )

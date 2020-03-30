@@ -2,15 +2,13 @@
 # Download all the METAR data and reference files from website
 #
 
-FILE(READ "metar_data_files.txt" metar_files_to_download)
+file(READ "metar_data_files.txt" metar_files_to_download)
 # Convert file contents into a CMake list (where each element in the list
 # is one line of the file)
-STRING(REGEX REPLACE "\n" ";" metar_files_to_download "${metar_files_to_download}")
+string(REGEX REPLACE "\n" ";" metar_files_to_download "${metar_files_to_download}")
 
-
-FILE(READ "metar_ref_files.txt" metar_refs_to_download)
-STRING(REGEX REPLACE "\n" ";" metar_refs_to_download "${metar_refs_to_download}")
-
+file(READ "metar_ref_files.txt" metar_refs_to_download)
+string(REGEX REPLACE "\n" ";" metar_refs_to_download "${metar_refs_to_download}")
 
 if( ENABLE_EXTRA_TESTS )
     ecbuild_get_test_multidata(
@@ -21,7 +19,7 @@ if( ENABLE_EXTRA_TESTS )
 endif()
 
 # Copy other files - e.g. text files etc from the source data/metar dir
-LIST(APPEND other_files
+list(APPEND other_files
     metar_data_files.txt
     metar_ref_files.txt
 )

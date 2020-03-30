@@ -7,7 +7,7 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 
 # Build the executables used by test scripts
 ################################################
-list( APPEND test_bins
+list(APPEND test_bins
    grib_keys_iterator
    grib_print_data
    grib_iterator
@@ -19,21 +19,20 @@ foreach( tool ${test_bins} )
                            NOINSTALL
                            SOURCES   ${tool}.c
                            CONDITION HAVE_PYTHON
-                           LIBS      eccodes
-   )
+                           LIBS      eccodes )
    list( APPEND ptools  p_${tool} )
 endforeach()
 
 
 # Now add each test
 #################################################
-list( APPEND tests_basic
+list(APPEND tests_basic
    grib_set_pv
    grib_read_sample
    bufr_read_sample
    bufr_ecc-869
 )
-list( APPEND tests_extra
+list(APPEND tests_extra
    grib_clone
    grib_count_messages
    grib_get_message_offset
@@ -81,8 +80,7 @@ foreach( test ${tests_basic} )
                       DEPENDS    ${ptools}
                       COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                       CONDITION  HAVE_PYTHON
-                      ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
-    )
+                      ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} )
 endforeach()
 foreach( test ${tests_extra} )
     ecbuild_add_test( TARGET eccodes_p_${test}_test
@@ -91,8 +89,7 @@ foreach( test ${tests_extra} )
                       COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                       CONDITION  HAVE_PYTHON AND ENABLE_EXTRA_TESTS
                       ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
-                      TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs eccodes_download_bufrs
-    )
+                      TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs eccodes_download_bufrs )
 endforeach()
 
 # Add test which requires input CSV file
@@ -103,8 +100,7 @@ ecbuild_add_test( TARGET eccodes_p_bufr_encode_flight_test
                   CONDITION  HAVE_PYTHON AND ENABLE_EXTRA_TESTS
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
                   RESOURCES   flight_data.csv
-                  TEST_DEPENDS eccodes_download_bufrs
-)
+                  TEST_DEPENDS eccodes_download_bufrs )
 
 # Conditional tests
 ecbuild_add_test( TARGET eccodes_p_grib_ccsds_test
@@ -113,5 +109,4 @@ ecbuild_add_test( TARGET eccodes_p_grib_ccsds_test
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
                   CONDITION  HAVE_PYTHON AND HAVE_AEC AND ENABLE_EXTRA_TESTS
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
-                  TEST_DEPENDS eccodes_download_gribs
-)
+                  TEST_DEPENDS eccodes_download_gribs )

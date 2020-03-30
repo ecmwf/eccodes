@@ -13,9 +13,8 @@ endif()
 
 #######
 # Copy other files - e.g. reference data, text files etc from the source data dir
-LIST(APPEND other_files
-    tigge_data_files.txt
-)
+list(APPEND other_files
+    tigge_data_files.txt)
 foreach( file ${other_files} )
    execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/${file} ${CMAKE_CURRENT_BINARY_DIR} )
 endforeach()

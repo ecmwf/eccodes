@@ -55,7 +55,8 @@ check_c_source_compiles(
       static inline foo_t static_foo(){return 0;}
       foo_t foo(){return 0;}
       int main(int argc, char *argv[]){return 0;}
-      " ECCODES_HAVE_C_INLINE )
+      " ECCODES_HAVE_C_INLINE
+)
 
 include(eccodes_test_endiness)
 if( EC_OS_NAME MATCHES "windows" )
