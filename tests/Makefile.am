@@ -27,7 +27,8 @@ TESTS = definitions.sh \
         grib_ls.sh \
         grib_filter.sh  \
         grib_multi.sh \
-        budg.sh \
+        pseudo_budg.sh \
+        pseudo_diag.sh \
         grib_gridType.sh \
         grib_octahedral.sh \
         grib_global.sh \

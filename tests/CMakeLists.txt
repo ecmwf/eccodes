@@ -65,7 +65,7 @@ list(APPEND tests_no_data_reqd
     bufr_rdbSubTypes
     grib_efas
     grib_sh_imag
-    diag
+    pseudo_diag
     grib_lambert_conformal
     grib_g1fcperiod)
 
@@ -150,7 +150,7 @@ list(APPEND tests_data_reqd
     grib_filter
     grib_multi
     grib_nearest_test
-    budg
+    pseudo_budg
     grib_gridType
     grib_octahedral
     grib_global
