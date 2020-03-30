@@ -14,9 +14,9 @@ list( APPEND test_bins
       grib_double_cmp
       read_any
       julian
-      index
+      grib_indexing
       grib_multi_from_message
-      read_index
+      grib_read_index
       unit_tests
       bufr_keys_iter
       gauss_sub
@@ -166,7 +166,7 @@ list(APPEND tests_data_reqd
     grib_compare
     grib_copy
     grib_level
-    index
+    grib_indexing
     grib_bitmap
     grib_list
     grib_second_order
