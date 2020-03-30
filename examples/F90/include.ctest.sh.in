@@ -4,6 +4,8 @@ set -eax
 
 proj_dir=@PROJECT_SOURCE_DIR@
 data_dir=@PROJECT_BINARY_DIR@/data
+HAVE_PRODUCT_BUFR=@HAVE_PRODUCT_BUFR@
+HAVE_PRODUCT_GRIB=@HAVE_PRODUCT_GRIB@
 HAVE_MEMFS=@HAVE_MEMFS@
 
 # use definitions from binary dir to test if installation will be correct

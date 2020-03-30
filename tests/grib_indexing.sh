@@ -8,27 +8,28 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
-#set -x
 . ./include.sh
+
+label="grib_indexing"
+temp=temp.$label.index.out
 infile=${data_dir}/index.grib
 
-$EXEC ${test_dir}/index ${infile} > index.out
+# Writes to "out.gribidx"
+$EXEC ${test_dir}/grib_indexing ${infile} > $temp
+diff ${data_dir}/index.ok $temp
 
-diff index.out ${data_dir}/index.ok
+# reads from "out.gribidx"
+$EXEC ${test_dir}/grib_read_index ${infile} > $temp
+diff ${data_dir}/index.ok $temp
 
-$EXEC ${test_dir}/read_index ${infile} > index.out
-
-diff index.out ${data_dir}/index.ok
-
-rm -f index.out out.gribidx
+rm -f out.gribidx $temp
 
 #-------------------------------
 # Test grib_index_build
 #-------------------------------
-tempIndex=temp.$$.idx
-tempOut=temp.$$.out
-tempRef=temp.$$.ref
+tempIndex=temp.$label.$$.idx
+tempOut=temp.$label.$$.out
+tempRef=temp.$label.$$.ref
 ${tools_dir}/grib_index_build -o $tempIndex ${infile} >/dev/null
 
 # Must remove first two lines and the last (filename specifics)
@@ -50,11 +51,25 @@ EOF
 
 diff $tempRef $tempOut
 
-
 ${tools_dir}/grib_index_build -k mars.levtype -o $tempIndex ${data_dir}/tigge_cf_ecmwf.grib2 |\
    grep -q "mars.levtype = { sfc, pl, pv, pt }"
 
 ${tools_dir}/grib_index_build -k mars.levtype:i -o $tempIndex ${data_dir}/tigge_cf_ecmwf.grib2 |\
    grep -q "mars.levtype = { 103, 1, 106, 100, 101, 8, 109, 107 }"
 
+# grib_compare with index files
+# -----------------------------
+tempIndex1=temp.$label.$$.1.idx
+tempIndex2=temp.$label.$$.2.idx
+tempGribFile1=temp.$label.$$.file1.grib
+tempGribFile2=temp.$label.$$.file2.grib
+cat ${data_dir}/high_level_api.grib2 ${data_dir}/sample.grib2          > $tempGribFile1
+cat ${data_dir}/sample.grib2         ${data_dir}/high_level_api.grib2  > $tempGribFile2
+
+${tools_dir}/grib_index_build -o $tempIndex1 $tempGribFile1
+${tools_dir}/grib_index_build -o $tempIndex2 $tempGribFile2
+${tools_dir}/grib_compare $tempIndex1 $tempIndex2
+rm -f $tempIndex1 $tempIndex2 $tempGribFile1 $tempGribFile2
+
+# Clean up
 rm -f $tempIndex $tempOut $tempRef

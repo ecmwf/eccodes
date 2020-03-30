@@ -10,8 +10,7 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 list( APPEND tests_basic
       grib_set_pv
       grib_set_data
-      grib_ecc-671
-)
+      grib_ecc-671 )
 list( APPEND tests_extra
       grib_index
       grib_copy_message
@@ -52,8 +51,7 @@ list( APPEND tests_extra
       bufr_set_keys
       bufr_copy_keys
       bufr_subset
-      get_product_kind
-)
+      get_product_kind )
 
 foreach( tool ${tests_basic} )
     ecbuild_add_test( TARGET eccodes_f_${tool}
@@ -62,8 +60,7 @@ foreach( tool ${tests_basic} )
                       LIBS      eccodes_f90 eccodes
                       CONDITION HAVE_FORTRAN
                       RESOURCES bufr_read_scatterometer_f.ref
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
-    )
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh )
 endforeach()
 foreach( tool ${tests_extra} )
     ecbuild_add_test( TARGET eccodes_f_${tool}
@@ -73,8 +70,7 @@ foreach( tool ${tests_extra} )
                       CONDITION HAVE_FORTRAN AND ENABLE_EXTRA_TESTS
                       RESOURCES bufr_read_scatterometer_f.ref
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
-                      TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs
-    )
+                      TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs )
 endforeach()
 
 # Executables without a shell script
@@ -84,22 +80,19 @@ ecbuild_add_executable( TARGET    eccodes_f_new_from_file
                         SOURCES   new_from_file.f90
                         CONDITION HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
-                        LIBS      eccodes_f90 eccodes
-)
+                        LIBS      eccodes_f90 eccodes )
 ecbuild_add_executable( TARGET    eccodes_f_grib_set_gvc
                         NOINSTALL
                         SOURCES   grib_set_gvc.f90
                         CONDITION HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
-                        LIBS      eccodes_f90 eccodes
-)
+                        LIBS      eccodes_f90 eccodes )
 ecbuild_add_executable( TARGET    eccodes_f_grib_print_data_static
                         NOINSTALL
                         SOURCES   grib_print_data_static.f90
                         CONDITION HAVE_FORTRAN
                         LINKER_LANGUAGE Fortran
-                        LIBS      eccodes_f90 eccodes
-)
+                        LIBS      eccodes_f90 eccodes )
 
 
 # # Note extra dependency

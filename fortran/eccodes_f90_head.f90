@@ -15,6 +15,7 @@ module eccodes
   implicit none
   include "eccodes_constants.h"
   include "eccodes_visibility.h"
+  include "eccodes_settings.h"
 
   real(8),    parameter,public :: CODES_MISSING_DOUBLE = -1.D+100
   integer(4), parameter,public :: CODES_MISSING_LONG   = 2147483647

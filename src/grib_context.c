@@ -349,10 +349,10 @@ static grib_context default_grib_context = {
     0,              /* keys_count                 */
     0,              /* concepts_index             */
     0,              /* concepts_count             */
-    {0,},           /* concepts                   */
-    0,              /* hash_array_index           */
-    0,              /* hash_array_count           */
-    {0,},                              /* hash_array                 */
+    {0,}, /* concepts                   */
+    0, /* hash_array_index           */
+    0, /* hash_array_count           */
+    {0,},                                 /* hash_array                 */
     0,                                 /* def_files                  */
     0,                                 /* blacklist                  */
     0,                                 /* ieee_packing               */
@@ -1012,6 +1012,7 @@ void grib_context_log(const grib_context* c, int level, const char* fmt, ...)
     else {
         char msg[1024];
         va_list list;
+        const int errsv = errno;
 
         va_start(list, fmt);
         vsprintf(msg, fmt, list);
@@ -1023,12 +1024,12 @@ void grib_context_log(const grib_context* c, int level, const char* fmt, ...)
             /* #if HAS_STRERROR */
 #if 1
             strcat(msg, " (");
-            strcat(msg, strerror(errno));
+            strcat(msg, strerror(errsv));
             strcat(msg, ")");
 #else
-            if (errno > 0 && errno < sys_nerr) {
+            if (errsv > 0 && errsv < sys_nerr) {
                 strcat(msg, " (");
-                strcat(msg, sys_errlist[errno]);
+                strcat(msg, sys_errlist[errsv]);
                 strcat(msg, " )");
             }
 #endif

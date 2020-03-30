@@ -10,12 +10,13 @@
 
 . ./include.sh
 
-label="grib_ecc-604"
+label="grib_threads_ecc-604"
 temp_dir=tempdir.${label}
 
 NUM_THREADS=3
 NUM_ITER=10
 OUTPUT=output
+PROG="${test_dir}/grib_threads_ecc-604"
 
 validate()
 {
@@ -36,19 +37,19 @@ process()
     # Test 01: Clone + output
     # ------------------------
     rm -fr $OUTPUT;   mkdir -p $OUTPUT
-    time ${test_dir}/grib_ecc-604 -c -w par $input $NUM_THREADS $NUM_ITER
+    time $PROG -c -w par $input $NUM_THREADS $NUM_ITER
     validate
 
     # Test 02: No clone + output
     # --------------------------
     rm -fr $OUTPUT;   mkdir -p $OUTPUT
-    time ${test_dir}/grib_ecc-604 -w par $input $NUM_THREADS $NUM_ITER
+    time $PROG -w par $input $NUM_THREADS $NUM_ITER
     validate
 
     # Test 03: Clone + dump + no output
     # ---------------------------------
     rm -fr $OUTPUT
-    time ${test_dir}/grib_ecc-604 -c -d par $input $NUM_THREADS $NUM_ITER
+    time $PROG -c -d par $input $NUM_THREADS $NUM_ITER
     # Nothing to validate as there is no output
 }
 ###################################################

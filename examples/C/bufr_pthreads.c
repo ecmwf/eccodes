@@ -70,13 +70,13 @@ int main(int argc, char** argv)
     assert(fin);
 
     err = pthread_create(&thread1, NULL, process_bufr, (void*)fin);
-    assert(!err);
+    if (err) return 1;
 
     err = pthread_create(&thread2, NULL, process_bufr, (void*)fin);
-    assert(!err);
+    if (err) return 1;
 
     err = pthread_create(&thread3, NULL, process_bufr, (void*)fin);
-    assert(!err);
+    if (err) return 1;
 
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);

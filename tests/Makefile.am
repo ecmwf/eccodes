@@ -27,14 +27,15 @@ TESTS = definitions.sh \
         grib_ls.sh \
         grib_filter.sh  \
         grib_multi.sh \
-        budg.sh \
+        pseudo_budg.sh \
+        pseudo_diag.sh \
         grib_gridType.sh \
         grib_octahedral.sh \
         grib_global.sh \
         grib_concept.sh \
         grib_decimalPrecision.sh \
         grib_bitsPerValue.sh \
-        get_fail.sh \
+        grib_get_fail.sh \
         grib_missing.sh \
         grib_local.sh \
         grib_step.sh \
@@ -59,7 +60,7 @@ TESTS = definitions.sh \
         grib_dump_debug.sh \
         grib_jpeg.sh \
         grib_ccsds.sh \
-        md5.sh \
+        grib_md5.sh \
         grib_neg_fctime.sh \
         bufr_ecc-286.sh \
         bufr_ecc-288.sh

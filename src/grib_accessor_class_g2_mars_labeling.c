@@ -403,8 +403,8 @@ static int extra_set(grib_accessor* a, long val)
                     typeOfGeneratingProcess = 4;
                     break;
                 default:
-                    grib_context_log(a->context, GRIB_LOG_ERROR, "unknown mars.type %d", (int)val);
-                    return GRIB_ENCODING_ERROR;
+                    grib_context_log(a->context, GRIB_LOG_WARNING, "g2_mars_labeling: unknown mars.type %d", (int)val);
+                    /*return GRIB_ENCODING_ERROR;*/
             }
             break;
         case 2:

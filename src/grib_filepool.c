@@ -238,28 +238,24 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
 
     GRIB_MUTEX_LOCK(&mutex1);
     if (!same_mode && file->handle) {
-        /*printf("========== mode=%s file->mode=%s\n",mode,file->mode);*/
         fclose(file->handle);
     }
 
     if (!file->handle) {
-        /*printf("-- opening file %s %s\n",file->name,mode);*/
         if (!is_new && *mode == 'w') {
-            /* fprintf(stderr,"++++ opening %s as append\n",file->name); */
             file->handle = fopen(file->name, "a");
         }
         else {
             file->handle = fopen(file->name, mode);
-            /* fprintf(stderr,"++++ opening %s as mode\n",file->name); */
         }
 
-        file->mode = strdup(mode);
         if (!file->handle) {
             grib_context_log(file->context, GRIB_LOG_PERROR, "grib_file_open: cannot open file %s", file->name);
             *err = GRIB_IO_PROBLEM;
             GRIB_MUTEX_UNLOCK(&mutex1);
             return NULL;
         }
+        file->mode = strdup(mode);
         if (file_pool.context->io_buffer_size) {
 #ifdef POSIX_MEMALIGN
             if (posix_memalign((void**)&(file->buffer), sysconf(_SC_PAGESIZE), file_pool.context->io_buffer_size)) {

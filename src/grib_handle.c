@@ -168,6 +168,7 @@ int grib_handle_delete(grib_handle* h)
 
         grib_buffer_delete(ct, h->buffer);
         grib_section_delete(ct, h->root);
+        grib_context_free(ct, h->gts_header);
 
         grib_context_log(ct, GRIB_LOG_DEBUG, "grib_handle_delete: deleting handle %p", h);
         grib_context_free(ct, h);
