@@ -157,7 +157,7 @@ list(APPEND tests_data_reqd
     grib_concept
     grib_decimalPrecision
     grib_bitsPerValue
-    get_fail
+    grib_get_fail
     grib_missing
     grib_local
     grib_step

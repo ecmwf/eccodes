@@ -34,7 +34,7 @@ TESTS = definitions.sh \
         grib_concept.sh \
         grib_decimalPrecision.sh \
         grib_bitsPerValue.sh \
-        get_fail.sh \
+        grib_get_fail.sh \
         grib_missing.sh \
         grib_local.sh \
         grib_step.sh \
