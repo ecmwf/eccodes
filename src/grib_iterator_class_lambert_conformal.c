@@ -233,8 +233,7 @@ static int init_sphere(grib_handle* h,
             if (n <= 0) rho = -rho;
             lonDeg = LoVInDegrees + (angle / n) * RAD2DEG;
             latDeg = (2.0 * atan(pow(radius * f / rho, 1.0 / n)) - M_PI_2) * RAD2DEG;
-            while (lonDeg >= 360.0) lonDeg -= 360.0;
-            while (lonDeg < 0.0)    lonDeg += 360.0;
+            lonDeg = normalise_longitude(lonDeg);
             self->lons[index] = lonDeg;
             self->lats[index] = latDeg;
         }
@@ -363,8 +362,7 @@ static int init_oblate(grib_handle* h,
             lonRad = adjust_lon_radians(theta / ns + LoVInRadians);
             latDeg = latRad * RAD2DEG;  /* Convert to degrees */
             lonDeg = lonRad * RAD2DEG;
-            while (lonDeg >= 360.0) lonDeg -= 360.0;
-            while (lonDeg < 0.0)    lonDeg += 360.0;
+            lonDeg = normalise_longitude(lonDeg);
             self->lons[index] = lonDeg;
             self->lats[index] = latDeg;
         }

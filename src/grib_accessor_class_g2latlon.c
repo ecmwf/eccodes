@@ -181,16 +181,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-static double normalise_longitude(double a_lon)
-{
-    /* WMO regulation: The longitude values shall be limited to the range 0 to 360 degrees inclusive */
-    while (a_lon < 0)
-        a_lon += 360;
-    while (a_lon > 360)
-        a_lon -= 360;
-    return a_lon;
-}
-
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_g2latlon* self = (grib_accessor_g2latlon*)a;
@@ -218,6 +208,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
      * index 3 is longitudeOfLastGridPointInDegrees
      */
     if ((self->index == 1 || self->index == 3)) {
+        /* WMO regulation for GRIB edition 2:
+         * The longitude values shall be limited to the range 0 to 360 degrees inclusive */
         new_val = normalise_longitude(*val);
     }
     grid[self->index] = new_val;

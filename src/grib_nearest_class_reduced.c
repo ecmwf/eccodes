@@ -230,10 +230,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         long row_count, ilon_first, ilon_last;
 
         if (self->global) {
-            while (inlon < 0)
-                inlon += 360;
-            while (inlon > 360)
-                inlon -= 360;
+            inlon = normalise_longitude(inlon);
         }
         else {
             /* TODO: Experimental */
