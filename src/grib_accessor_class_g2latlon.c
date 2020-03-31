@@ -210,7 +210,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if ((self->index == 1 || self->index == 3)) {
         /* WMO regulation for GRIB edition 2:
          * The longitude values shall be limited to the range 0 to 360 degrees inclusive */
-        new_val = normalise_longitude(*val);
+        new_val = normalise_longitude_in_degrees(*val);
     }
     grid[self->index] = new_val;
 

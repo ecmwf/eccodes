@@ -10,8 +10,9 @@
 
 #include "grib_api_internal.h"
 
+/* Input lon must be in degrees not radians */
 /* Not to be used for latitudes as they can be -ve */
-double normalise_longitude(double lon)
+double normalise_longitude_in_degrees(double lon)
 {
     while (lon < 0)    lon += 360;
     while (lon > 360)  lon -= 360;
