@@ -107,8 +107,14 @@ static double adjust_lon_radians(double lon)
     return lon;
 }
 
-/* Function to compute the latitude angle, phi2, for the inverse */
-static double compute_phi2(
+/* Function to compute the latitude angle, phi2, for the inverse
+ * From the book "Map Projections-A Working Manual-John P. Snyder (1987)"
+ * Equation (7–9) involves rapidly converging iteration: Calculate t from (15-11)
+ * Then, assuming an initial trial phi equal to (pi/2 - 2*arctan t) in the right side of equation (7–9),
+ * calculate phi on the left side. Substitute the calculated phi) into the right side,
+ * calculate a new phi, etc., until phi does not change significantly from the preceding trial value of phi
+ */
+static double compute_phi(
     double eccent, /* Spheroid eccentricity */
     double ts,     /* Constant value t */
     int* error)
@@ -123,7 +129,7 @@ static double compute_phi2(
         con   = eccent * sinpi;
         dphi  = M_PI_2 - 2 * atan(ts * (pow(((1.0 - con) / (1.0 + con)), eccnth))) - phi;
         phi += dphi;
-        if (fabs(dphi) <= .0000000001)
+        if (fabs(dphi) <= 0.0000000001)
             return (phi);
     }
     *error = GRIB_INTERNAL_ERROR;
@@ -254,7 +260,7 @@ static int init_oblate(grib_handle* h,
     double false_northing; /* y offset in meters */
 
     double ns;     /* ratio of angle between meridian */
-    double f0;     /* flattening of ellipsoid */
+    double F;      /* flattening of ellipsoid */
     double rh;     /* height above ellipsoid  */
     double sin_po; /* sin value */
     double cos_po; /* cos value */
@@ -285,15 +291,15 @@ static int init_oblate(grib_handle* h,
     } else {
         ns = con;
     }
-    f0 = ms1 / (ns * pow(ts1, ns));
-    rh = earthMajorAxisInMetres * f0 * pow(ts0, ns);
+    F = ms1 / (ns * pow(ts1, ns));
+    rh = earthMajorAxisInMetres * F * pow(ts0, ns);
 
     /* Forward projection: convert lat,lon to x,y */
     con = fabs(fabs(latFirstInRadians) - M_PI_2);
     if (con > EPSILON) {
         sinphi = sin(latFirstInRadians);
         ts     = compute_t(e, latFirstInRadians, sinphi);
-        rh1    = earthMajorAxisInMetres * f0 * pow(ts, ns);
+        rh1    = earthMajorAxisInMetres * F * pow(ts, ns);
     } else {
         con = latFirstInRadians * ns;
         if (con <= 0) {
@@ -332,20 +338,19 @@ static int init_oblate(grib_handle* h,
             /* Inverse projection to convert from x,y to lat,lon */
             _x = x - false_easting;
             _y = rh - y + false_northing;
-            if (ns > 0) {
-                rh1 = sqrt(_x * _x + _y * _y);
-                con = 1.0;
-            } else {
-                rh1 = -sqrt(_x * _x + _y * _y);
-                con = -1.0;
+            rh1 = sqrt(_x * _x + _y * _y);
+            con = 1.0;
+            if (ns <= 0) {
+                rh1 = -rh1;
+                con = -con;
             }
             theta = 0.0;
             if (rh1 != 0)
                 theta = atan2((con * _x), (con * _y));
             if ((rh1 != 0) || (ns > 0.0)) {
                 con    = 1.0 / ns;
-                ts     = pow((rh1 / (earthMajorAxisInMetres * f0)), con);
-                latRad = compute_phi2(e, ts, &err);
+                ts     = pow((rh1 / (earthMajorAxisInMetres * F)), con);
+                latRad = compute_phi(e, ts, &err);
                 if (err) {
                     grib_context_log(h->context, GRIB_LOG_ERROR, "Failed to compute the latitude angle, phi2, for the inverse");
                     grib_context_free(h->context, self->lats);
