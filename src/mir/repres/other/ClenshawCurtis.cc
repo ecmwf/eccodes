@@ -12,14 +12,33 @@
 
 #include "mir/repres/other/ClenshawCurtis.h"
 
+#include <algorithm>
+#include <cmath>
+//#include <limits>
+#include <map>
+//#include <memory>
+#include <mutex>
+#include <numeric>
 #include <ostream>
-#include <sstream>
+#include <string>
+//#include <type_traits>
+#include <vector>
 
 #include "eckit/exception/Exceptions.h"
+#include "eckit/log/Log.h"
+#include "eckit/log/Timer.h"
+#include "eckit/types/Fraction.h"
+#include "eckit/utils/MD5.h"
 
+//#include "mir/api/Atlas.h"
+#include "mir/api/MIREstimation.h"
 #include "mir/config/LibMir.h"
+#include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
+//#include "mir/util/Angles.h"
 #include "mir/util/Grib.h"
+//#include "mir/util/GridBox.h"
+#include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
 
 
@@ -28,110 +47,314 @@ namespace repres {
 namespace other {
 
 
-ClenshawCurtis::ClenshawCurtis(const std::string& name) : name_(name), grid_(name) {
-    util::RectangularDomain rect(grid_.domain());
-    if (!rect) {
-        std::ostringstream msg;
-        msg << "ClenshawCurtis: grid '" << name << "' not supported (domain " << grid_.domain().spec() << ")";
-        throw eckit::UserError(msg.str());
-    }
+static RepresentationBuilder<ClenshawCurtis> __representation("reduced_cc");
 
-    domain_ = util::Domain(rect.containsNorthPole() ? Latitude::NORTH_POLE : rect.ymax(), rect.xmin(),
-                           rect.containsSouthPole() ? Latitude::SOUTH_POLE : rect.ymin(),
-                           rect.zonal_band() ? rect.xmin() + Longitude::GLOBE.value() : rect.xmax());
+static pthread_once_t once                        = PTHREAD_ONCE_INIT;
+static std::mutex* mtx                            = nullptr;
+static std::map<size_t, std::vector<double> >* ml = nullptr;
 
-    eckit::Log::debug<LibMir>() << "ClenshawCurtis: grid '" << name << "', domain=" << domain_ << std::endl;
+static void init() {
+    mtx = new std::mutex();
+    ml  = new std::map<size_t, std::vector<double> >();
 }
 
 
-ClenshawCurtis::ClenshawCurtis(const param::MIRParametrisation&) {
-    NOTIMP;
+ClenshawCurtis::ClenshawCurtis(size_t N) : Gridded(util::BoundingBox()), N_(N) {
+    ASSERT(domain_.isGlobal() && domain_.west() == Longitude::GREENWICH.fraction());
+
+    ASSERT(N_ > 0);
+}
+
+
+ClenshawCurtis::ClenshawCurtis(const param::MIRParametrisation& parametrisation) : Gridded(parametrisation), N_(0) {
+    ASSERT(domain_.isGlobal() && domain_.west() == Longitude::GREENWICH.fraction());
+
+    ASSERT(parametrisation.get("N", N_));
+    ASSERT(N_ > 0);
+
+    ASSERT(parametrisation.get("pl", pl_));
+    ASSERT(!pl_.empty());
 }
 
 
 ClenshawCurtis::~ClenshawCurtis() = default;
 
 
-bool ClenshawCurtis::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const ClenshawCurtis*>(&other);
-    return (o != nullptr) && name_ == o->name_;
+// bool ClenshawCurtis::sameAs(const Representation& other) const {
+//    auto o = dynamic_cast<const ClenshawCurtis*>(&other);
+//    return (o != nullptr) && (N_ == o->N_) && (pl_ == o->pl_) && (domain() == o->domain());
+//}
+
+
+atlas::Grid ClenshawCurtis::atlasGrid() const {
+    return atlas::ReducedGaussianGrid(pl_, domain());
 }
 
 
-void ClenshawCurtis::validate(const data::MIRValuesVector& values) const {
-    size_t count = numberOfPoints();
-    eckit::Log::debug<LibMir>() << "ClenshawCurtis::validate " << Pretty(values.size(), {"value"}) << ", count: " << Pretty(count)
-                                << "." << std::endl;
+void ClenshawCurtis::validate(const MIRValuesVector& values) const {
+    const size_t count = numberOfPoints();
+
+    eckit::Log::debug<LibMir>() << "ClenshawCurtis::validate checked " << Pretty(values.size(), {"value"})
+                                << ", within domain: " << Pretty(count) << "." << std::endl;
     ASSERT(values.size() == count);
 }
 
 
-size_t ClenshawCurtis::numberOfPoints() const {
-    return grid_.size();
+bool ClenshawCurtis::extendBoundingBoxOnIntersect() const {
+    return false;
 }
+
+
+// std::vector<double> ClenshawCurtis::calculateUnrotatedGridBoxLatitudeEdges() const {
+
+//    // grid-box edge latitudes are the latitude midpoints
+//    size_t Nj = N_ * 2;
+//    ASSERT(Nj > 1);
+
+//    auto& w = weights();
+//    ASSERT(w.size() == Nj);
+
+//    std::vector<double> edges(Nj + 1);
+//    auto f = edges.begin();
+//    auto b = edges.rbegin();
+
+//    *(f++) = Latitude::NORTH_POLE.value();
+//    *(b++) = Latitude::SOUTH_POLE.value();
+
+//    double wacc = -1.;
+//    for (size_t j = 0; j < N_; ++j, ++b, ++f) {
+//        wacc += 2. * w[j];
+//        double deg = util::radian_to_degree(std::asin(wacc));
+//        ASSERT(Latitude::SOUTH_POLE.value() <= deg && deg <= Latitude::NORTH_POLE.value());
+
+//        *b = deg;
+//        *f = -(*b);
+//    }
+
+//    return edges;
+//}
+
+
+void ClenshawCurtis::fill(util::MeshGeneratorParameters& params) const {
+    if (params.meshGenerator_.empty()) {
+        params.meshGenerator_ = "structured";
+    }
+
+    const Latitude& s = bbox_.south();
+    if (s <= latitudes().back() || s > Latitude::EQUATOR) {
+        params.set("force_include_south_pole", true);
+    }
+
+    const Latitude& n = bbox_.north();
+    if (n >= latitudes().front() || n < Latitude::EQUATOR) {
+        params.set("force_include_north_pole", true);
+    }
+}
+
+
+const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
+    pthread_once(&once, init);
+    std::lock_guard<std::mutex> lock(*mtx);
+
+    ASSERT(N);
+    auto j = ml->find(N);
+    if (j == ml->end()) {
+        eckit::Timer timer("ClenshawCurtis latitudes " + std::to_string(N), eckit::Log::debug<LibMir>());
+
+        // calculate latitudes and insert in known-N-latitudes map
+        std::vector<double> latitudes(N * 2);
+        atlas::util::gaussian_latitudes_npole_spole(N, latitudes.data());
+
+        ml->operator[](N) = latitudes;
+        j                 = ml->find(N);
+    }
+    ASSERT(j != ml->end());
+
+
+    // these are the assumptions we expect from the ClenshawCurtis latitudes values
+    auto& lats = j->second;
+    ASSERT(2 * N == lats.size());
+    ASSERT(std::is_sorted(lats.begin(), lats.end(), [](double a, double b) { return a > b; }));
+
+    return lats;
+}
+
+
+// eckit::Fraction ClenshawCurtis::getSmallestIncrement() const {
+//    ASSERT(N_);
+//    using distance_t = std::make_signed<size_t>::type;
+
+//    const std::vector<long>& pl = pl_;
+//    const long maxpl            = *std::max_element(pl.begin(), pl.end());
+//    ASSERT(maxpl > 0);
+
+//    return Longitude::GLOBE.fraction() / maxpl;
+//}
 
 
 void ClenshawCurtis::fill(grib_info& info) const {
-    info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
-    info.packing.editionNumber = 2;
+    info.grid.grid_type = CODES_UTIL_GRID_SPEC_REDUCED_GG;
+    info.grid.Nj        = long(pl_.size());
+    info.grid.N         = long(N_);
+    info.grid.pl        = pl_.data();
+    info.grid.pl_size   = long(pl_.size());
 
-    // TODO fill metadata
+    bbox_.fill(info);
 }
 
 
-void ClenshawCurtis::makeName(std::ostream& out) const {
-    out << name_;
+void ClenshawCurtis::estimate(api::MIREstimation& estimation) const {
+    ClenshawCurtis::estimate(estimation);
+    estimation.pl(pl_.size());
 }
+
+
+// std::vector<util::GridBox> ClenshawCurtis::gridBoxes() const {
+//    NOTIMP;
+//}
+
+
+size_t ClenshawCurtis::numberOfPoints() const {
+    return size_t(std::accumulate(pl_.begin(), pl_.end(), 0));
+}
+
+
+bool ClenshawCurtis::getLongestElementDiagonal(double& d) const {
+
+    // Look for a majorant of all element diagonals, using the difference of
+    // latitudes closest/furthest from equator and longitude furthest from
+    // Greenwich
+
+    auto& lats = latitudes();
+
+    d = 0.;
+    for (size_t j = 0; j < pl_.size(); ++j) {
+
+        Latitude l1(lats[j - 1]);
+        Latitude l2(lats[j]);
+
+        const eckit::Fraction we = Longitude::GLOBE.fraction() / (std::min(pl_[j - 1], pl_[j]));
+        auto& latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l1 : l2);
+        auto& latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l2 : l1);
+
+        d = std::max(d, atlas::util::Earth::distance(atlas::PointLonLat(0., latCloserToEquator.value()),
+                                                     atlas::PointLonLat(we, latAwayFromEquator.value())));
+    }
+
+    ASSERT(d > 0.);
+    return true;
+}
+
+
+// util::BoundingBox ClenshawCurtis::extendBoundingBox(const util::BoundingBox&) const {
+//    NOTIMP;
+//}
 
 
 void ClenshawCurtis::print(std::ostream& out) const {
-    out << "ClenshawCurtis[atlasGrid=" << grid_.spec() << ",domain=" << domain_ << "]";
+    out << "ClenshawCurtis[N=" << N_ << ",bbox=" << bbox_ << "]";
 }
 
 
 Iterator* ClenshawCurtis::iterator() const {
+    struct ClenshawCurtisIterator : public Iterator {
 
-    class ClenshawCurtisIterator : public Iterator {
-        ::atlas::Grid grid_;  // Note: needs the object because IterateLonLat uses a Grid reference
-        ::atlas::Grid::IterateLonLat lonlat_;
+        ClenshawCurtisIterator(const std::vector<long>& pl, const std::vector<double>& latitudes) :
+            pl_(pl),
+            latitudes_(latitudes),
+            nj_(pl.size()),
+            latitude_(latitudes.front()),
+            longitude_(Longitude::GREENWICH.fraction()),
+            i_(0),
+            j_(0),
+            p_(0),
+            count_(0) {
+            ASSERT(nj_ > 1);
+            ASSERT(pl.size() == latitudes.size());
 
-        decltype(lonlat_)::iterator it_;
-        decltype(lonlat_)::iterator::value_type point_;
+            ni_ = size_t(pl_[p_++]);
+            ASSERT(ni_ > 1);
+            inc_west_east_ = {static_cast<eckit::Fraction::value_type>(360),
+                              static_cast<eckit::Fraction::value_type>(ni_)};
+        }
 
-        size_t count_;
-        const size_t total_;
+        ClenshawCurtisIterator(const ClenshawCurtisIterator&) = delete;
+        void operator=(const ClenshawCurtisIterator&) = delete;
 
         void print(std::ostream& out) const {
             out << "ClenshawCurtisIterator[";
             Iterator::print(out);
-            out << ",count=" << count_ << ",total=" << total_ << "]";
+            out << ",ni=" << ni_ << ",nj=" << nj_ << ",i=" << i_ << ",j=" << j_ << ",p=" << p_ << ",count=" << count_
+                << "]";
         }
 
-        bool next(Latitude& _lat, Longitude& _lon) {
-            if (it_.next(point_)) {
-                _lat = point_.lat();
-                _lon = point_.lon();
-                ++count_;
-                return true;
+        bool next(Latitude& lat, Longitude& lon) {
+            if (j_ >= nj_ || i_ >= ni_) {
+                return false;
             }
 
-            ASSERT(count_ == total_);
-            return false;
+            lon = longitude_;
+            longitude_ += inc_west_east_;
+
+            if (i_++ == ni_) {
+                j_++;
+                i_         = 0;
+                longitude_ = Longitude::GREENWICH.fraction();
+
+                if (j_ < nj_) {
+                    ASSERT(p_ < pl_.size());
+                    lat = latitudes_[p_];
+                    ni_ = size_t(pl_[p_++]);
+                    ASSERT(ni_ > 1);
+                    inc_west_east_ = {static_cast<eckit::Fraction::value_type>(360),
+                                      static_cast<eckit::Fraction::value_type>(ni_)};
+                }
+            }
+
+            count_++;
+            return true;
         }
 
-    public:
-        ClenshawCurtisIterator(::atlas::Grid grid) :
-            grid_(grid),
-            lonlat_(grid.lonlat()),
-            it_(lonlat_.begin()),
-            count_(0),
-            total_(grid.size()) {}
+        const std::vector<long>& pl_;
+        const std::vector<double>& latitudes_;
 
-        ClenshawCurtisIterator(const ClenshawCurtisIterator&) = delete;
-        ClenshawCurtisIterator& operator=(const ClenshawCurtisIterator&) = delete;
+        const size_t nj_;
+        size_t ni_;
+
+        eckit::Fraction inc_west_east_;
+        eckit::Fraction latitude_;
+        eckit::Fraction longitude_;
+
+        size_t i_;
+        size_t j_;
+        size_t p_;
+        size_t count_;
     };
 
-    return new ClenshawCurtisIterator(grid_);
+    return new ClenshawCurtisIterator(pl_, latitudes());
+}
+
+
+// const Gridded* ClenshawCurtis::croppedRepresentation(const util::BoundingBox&) const {
+//    NOTIMP;
+//}
+
+
+void ClenshawCurtis::makeName(std::ostream& out) const {
+    out << "RCC" << N_ << "-";
+
+    eckit::MD5 md5;
+    for (auto j : pl_) {
+        md5 << j;
+    }
+
+    out << std::string(md5);
+    bbox_.makeName(out);
+}
+
+
+util::Domain ClenshawCurtis::domain() const {
+    return domain_;
 }
 
 

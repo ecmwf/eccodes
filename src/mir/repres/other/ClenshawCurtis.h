@@ -15,9 +15,15 @@
 
 #include <string>
 
-#include "mir/api/Atlas.h"
 #include "mir/repres/Gridded.h"
 #include "mir/util/Domain.h"
+
+
+namespace mir {
+namespace util {
+class Rotation;
+}
+}  // namespace mir
 
 
 namespace mir {
@@ -32,7 +38,7 @@ public:
 
     // -- Constructors
 
-    ClenshawCurtis(const std::string& name);
+    ClenshawCurtis(size_t N);
     ClenshawCurtis(const param::MIRParametrisation&);
     ClenshawCurtis(const ClenshawCurtis&) = delete;
 
@@ -64,7 +70,8 @@ protected:
     // None
 
     // -- Methods
-    // None
+
+    static const std::vector<double>& latitudes(size_t N);
 
     // -- Overridden methods
 
@@ -81,26 +88,58 @@ private:
     // -- Members
 
     const std::string name_;
-    ::atlas::Grid grid_;
     util::Domain domain_;
+    std::vector<long> pl_;
+    size_t N_;
 
     // -- Methods
-    // None
+
+    const std::vector<double>& latitudes() const { return latitudes(N_); }
 
     // -- Overridden methods
 
-    // from Representation
-    bool sameAs(const Representation&) const;
-    void validate(const MIRValuesVector&) const;
-    size_t numberOfPoints() const;
-    void fill(grib_info&) const;
-    void makeName(std::ostream&) const;
+    // From Representation
+    virtual Iterator* iterator() const;
+    virtual atlas::Grid atlasGrid() const;
+    virtual bool extendBoundingBoxOnIntersect() const;
+    virtual size_t numberOfPoints() const;
+    virtual void fill(grib_info&) const;
+    virtual void fill(util::MeshGeneratorParameters&) const;
+    virtual void validate(const MIRValuesVector&) const;
+    virtual void makeName(std::ostream&) const;
 
-    bool includesNorthPole() const { return domain_.includesPoleNorth(); }
-    bool includesSouthPole() const { return domain_.includesPoleSouth(); }
-    bool isPeriodicWestEast() const { return domain_.isPeriodicWestEast(); }
+    // From Gridded
+    virtual bool getLongestElementDiagonal(double&) const;
+    virtual void estimate(api::MIREstimation&) const;
+    virtual util::Domain domain() const;
 
-    Iterator* iterator() const;
+    // // From Representation
+    // virtual bool isGlobal() const;
+    // virtual bool sameAs(const Representation&) const;
+    // virtual const Representation* croppedRepresentation(const util::BoundingBox&) const;
+    // virtual const Representation* globalise(data::MIRField&) const;
+    // virtual const Representation* truncate(size_t truncation, const MIRValuesVector&, MIRValuesVector&) const;
+    // virtual const std::string& uniqueName() const;
+    // virtual size_t truncation() const;
+    // virtual std::string factory() const;  // Return factory name
+    // virtual std::vector<util::GridBox> gridBoxes() const;
+    // virtual util::BoundingBox extendBoundingBox(const util::BoundingBox&) const;
+    // virtual util::Domain domain() const;
+    // virtual void comparison(std::string&) const;
+    // virtual void reorder(long scanningMode, MIRValuesVector&) const;
+    // virtual void fill(api::MIRJob&) const;
+    //
+    // // From Gridded
+    // virtual void setComplexPacking(grib_info&) const;
+    // virtual void setSimplePacking(grib_info&) const;
+    // virtual void setGivenPacking(grib_info&) const;
+
+    // // ???
+    // virtual bool includesNorthPole() const { return domain_.includesPoleNorth(); }
+    // virtual bool includesSouthPole() const { return domain_.includesPoleSouth(); }
+    // virtual bool isPeriodicWestEast() const { return domain_.isPeriodicWestEast(); }
+    // virtual eckit::Fraction getSmallestIncrement() const;
+    // virtual std::vector<double> calculateUnrotatedGridBoxLatitudeEdges() const;
 
     // -- Class members
     // None
