@@ -189,8 +189,8 @@ const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
         lats[N - 1] = lats[N] = 0.;
 
         j = ml->find(N);
+        ASSERT(j != ml->end());
     }
-    ASSERT(j != ml->end());
 
 
     // these are the assumptions we expect from the ClenshawCurtis latitudes values
@@ -280,18 +280,19 @@ Iterator* ClenshawCurtis::iterator() const {
         ClenshawCurtisIterator(const std::vector<long>& pl, const std::vector<double>& latitudes) :
             pl_(pl),
             latitudes_(latitudes),
-            nj_(pl.size()),
-            latitude_(latitudes.front()),
-            longitude_(Longitude::GREENWICH.fraction()),
             i_(0),
             j_(0),
-            p_(0),
             count_(0) {
-            ASSERT(nj_ > 1);
             ASSERT(pl.size() == latitudes.size());
 
-            ni_ = size_t(pl_[p_++]);
+            nj_ = pl.size();
+            ASSERT(nj_ > 0);
+
+            ni_ = size_t(pl_.front());
             ASSERT(ni_ > 1);
+
+            latitude_      = latitudes.front();
+            longitude_     = Longitude::GREENWICH.fraction();
             inc_west_east_ = {static_cast<eckit::Fraction::value_type>(360),
                               static_cast<eckit::Fraction::value_type>(ni_)};
         }
@@ -302,31 +303,32 @@ Iterator* ClenshawCurtis::iterator() const {
         void print(std::ostream& out) const {
             out << "ClenshawCurtisIterator[";
             Iterator::print(out);
-            out << ",ni=" << ni_ << ",nj=" << nj_ << ",i=" << i_ << ",j=" << j_ << ",p=" << p_ << ",count=" << count_
-                << "]";
+            out << ",ni=" << ni_ << ",nj=" << nj_ << ",i=" << i_ << ",j=" << j_ << ",count=" << count_ << "]";
         }
 
         bool next(Latitude& lat, Longitude& lon) {
-            if (j_ >= nj_ || i_ >= ni_) {
+            lat = latitude_;
+            lon = longitude_;
+
+            if (ni_ == 0) {
                 return false;
             }
-
-            lon = longitude_;
-            longitude_ += inc_west_east_;
-
-            if (i_++ == ni_) {
-                j_++;
-                i_         = 0;
+            else if (++i_ < ni_) {
+                longitude_ += inc_west_east_;
+            }
+            else if (++j_ < nj_) {
                 longitude_ = Longitude::GREENWICH.fraction();
+                latitude_  = latitudes_[j_];
 
-                if (j_ < nj_) {
-                    ASSERT(p_ < pl_.size());
-                    lat = latitudes_[p_];
-                    ni_ = size_t(pl_[p_++]);
-                    ASSERT(ni_ > 1);
-                    inc_west_east_ = {static_cast<eckit::Fraction::value_type>(360),
-                                      static_cast<eckit::Fraction::value_type>(ni_)};
-                }
+                i_  = 0;
+                ni_ = size_t(pl_[j_]);
+                ASSERT(ni_ > 1);
+
+                inc_west_east_ = {static_cast<eckit::Fraction::value_type>(360),
+                                  static_cast<eckit::Fraction::value_type>(ni_)};
+            }
+            else {
+                ni_ = 0;
             }
 
             count_++;
@@ -336,16 +338,15 @@ Iterator* ClenshawCurtis::iterator() const {
         const std::vector<long>& pl_;
         const std::vector<double>& latitudes_;
 
-        const size_t nj_;
+        size_t nj_;
         size_t ni_;
 
-        eckit::Fraction inc_west_east_;
-        eckit::Fraction latitude_;
+        Latitude latitude_;
         eckit::Fraction longitude_;
+        eckit::Fraction inc_west_east_;
 
         size_t i_;
         size_t j_;
-        size_t p_;
         size_t count_;
     };
 
