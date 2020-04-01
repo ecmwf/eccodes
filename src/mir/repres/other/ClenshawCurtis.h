@@ -107,6 +107,7 @@ private:
     virtual void fill(util::MeshGeneratorParameters&) const;
     virtual void validate(const MIRValuesVector&) const;
     virtual void makeName(std::ostream&) const;
+    virtual bool sameAs(const Representation&) const;
 
     // From Gridded
     virtual bool getLongestElementDiagonal(double&) const;
@@ -115,7 +116,6 @@ private:
 
     // // From Representation
     // virtual bool isGlobal() const;
-    // virtual bool sameAs(const Representation&) const;
     // virtual const Representation* croppedRepresentation(const util::BoundingBox&) const;
     // virtual const Representation* globalise(data::MIRField&) const;
     // virtual const Representation* truncate(size_t truncation, const MIRValuesVector&, MIRValuesVector&) const;

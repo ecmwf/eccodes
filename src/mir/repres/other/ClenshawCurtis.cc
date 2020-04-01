@@ -31,13 +31,13 @@
 #include "eckit/utils/MD5.h"
 
 //#include "mir/api/Atlas.h"
+//#include "mir/util/GridBox.h"
 #include "mir/api/MIREstimation.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-//#include "mir/util/Angles.h"
+#include "mir/util/Angles.h"
 #include "mir/util/Grib.h"
-//#include "mir/util/GridBox.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
 
@@ -63,6 +63,14 @@ ClenshawCurtis::ClenshawCurtis(size_t N) : Gridded(util::BoundingBox()), N_(N) {
     ASSERT(domain_.isGlobal() && domain_.west() == Longitude::GREENWICH.fraction());
 
     ASSERT(N_ > 0);
+    pl_.resize(2 * N_);
+
+    long n = 20;
+    for (size_t i = 0, j = 2 * N_ - 1; i < N_; ++i, --j) {
+        pl_[i] = n;
+        pl_[j] = n;
+        n += 4;
+    }
 }
 
 
@@ -73,17 +81,19 @@ ClenshawCurtis::ClenshawCurtis(const param::MIRParametrisation& parametrisation)
     ASSERT(N_ > 0);
 
     ASSERT(parametrisation.get("pl", pl_));
-    ASSERT(!pl_.empty());
+    ASSERT(pl_.size() == 2 * N_);
+
+    ASSERT(*std::min_element(pl_.begin(), pl_.end()) > 0);
 }
 
 
 ClenshawCurtis::~ClenshawCurtis() = default;
 
 
-// bool ClenshawCurtis::sameAs(const Representation& other) const {
-//    auto o = dynamic_cast<const ClenshawCurtis*>(&other);
-//    return (o != nullptr) && (N_ == o->N_) && (pl_ == o->pl_) && (domain() == o->domain());
-//}
+bool ClenshawCurtis::sameAs(const Representation& other) const {
+    auto o = dynamic_cast<const ClenshawCurtis*>(&other);
+    return (o != nullptr) && (N_ == o->N_) && (pl_ == o->pl_) && (domain() == o->domain());
+}
 
 
 atlas::Grid ClenshawCurtis::atlasGrid() const {
@@ -156,27 +166,35 @@ const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
     pthread_once(&once, init);
     std::lock_guard<std::mutex> lock(*mtx);
 
-    ASSERT(N);
+    ASSERT(N > 0);
+
     auto j = ml->find(N);
     if (j == ml->end()) {
         eckit::Timer timer("ClenshawCurtis latitudes " + std::to_string(N), eckit::Log::debug<LibMir>());
 
         // calculate latitudes and insert in known-N-latitudes map
-        std::vector<double> latitudes(N * 2);
-        atlas::util::gaussian_latitudes_npole_spole(N, latitudes.data());
+        auto& lats = (*ml)[N];
+        lats.resize(2 * N);
 
-        ml->operator[](N) = latitudes;
-        j                 = ml->find(N);
+        auto f = std::acos(-1.) / double(2 * N);
+
+        for (size_t i = 0, j = 2 * N - 1; i < N; ++i, --j) {
+            double theta = f * double(i + 1);
+            double latr  = std::asin(std::cos(theta));
+            double lat   = util::radian_to_degree(latr);
+
+            lats[i] = lat;
+            lats[j] = -lat;
+        }
+        lats[N - 1] = lats[N] = 0.;
+
+        j = ml->find(N);
     }
     ASSERT(j != ml->end());
 
 
     // these are the assumptions we expect from the ClenshawCurtis latitudes values
-    auto& lats = j->second;
-    ASSERT(2 * N == lats.size());
-    ASSERT(std::is_sorted(lats.begin(), lats.end(), [](double a, double b) { return a > b; }));
-
-    return lats;
+    return j->second;
 }
 
 
