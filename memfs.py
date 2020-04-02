@@ -28,6 +28,7 @@ print('Directories: ', dirs)
 print('Excluding: ', EXCLUDED)
 
 FILES = {}
+SIZES = {}
 NAMES = []
 
 # Binary to ASCII function. Different in Python 2 and 3
@@ -61,28 +62,32 @@ for directory in dirs:
             if ext not in ['.def', '.table', '.tmpl']:
                 continue
 
+            fsize = os.path.getsize(full)
             full = full.replace("\\","/")
             fname = full[full.find("/%s/" % (dname,)):]
             #print("MEMFS add", fname)
             name = re.sub(r'\W', '_', fname)
 
             assert name not in FILES
+            assert name not in SIZES
             FILES[name] = fname
+            SIZES[name] = fsize
 
             print('static const unsigned char %s[] = {' % (name,), file=g)
+            #print('const unsigned char %s[] = {' % (name,), file=g) #NEW
 
             with open(full, 'rb') as f:
                 i = 0
                 #Python 2
-                #fcont = f.read().encode("hex")
+                #contents_hex = f.read().encode("hex")
 
                 #Python 2 and 3
-                fcont = binascii.hexlify(f.read())
+                contents_hex = binascii.hexlify(f.read())
 
                 # Read two characters at a time and convert to C hex
                 # e.g. 23 -> 0x23
-                for n in range(0, len(fcont), 2):
-                    twoChars = ascii(fcont[n:n+2])
+                for n in range(0, len(contents_hex), 2):
+                    twoChars = ascii(contents_hex[n:n+2])
                     print("0x%s," % (twoChars,), end="", file=g)
                     i += 1
                     if (i % 20) == 0:
@@ -101,7 +106,13 @@ print("""
 #include <errno.h>
 #include <string.h>
 #include "eccodes_windef.h"
+""", file=g)
 
+# NEW
+#for k, v in SIZES.items():
+#    print ('extern const unsigned char %s[%d];' % (k, v), file=g)
+
+print("""
 struct entry {
     const char* path;
     const unsigned char* content;
