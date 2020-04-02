@@ -34,7 +34,6 @@
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Angles.h"
 #include "mir/util/Grib.h"
 #include "mir/util/GridBox.h"
 #include "mir/util/MeshGeneratorParameters.h"
@@ -205,13 +204,8 @@ const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
         auto& lats = (*ml)[N];
         lats.resize(2 * N);  // temporary
 
-        auto f = M_PI / double(2 * N);
-
         for (size_t i = 0, j = 2 * N - 1; i < N; ++i, --j) {
-            double theta = f * double(i + 1);
-            double latr  = M_PI_2 - theta;
-            double lat   = util::radian_to_degree(latr);
-
+            double lat = 90. - 90. * double(i + 1) / double(N);
             lats[i] = lat;
             lats[j] = -lat;
         }
