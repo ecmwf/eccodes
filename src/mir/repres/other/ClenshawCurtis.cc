@@ -58,18 +58,20 @@ static void init() {
 }
 
 
+eckit::Fraction increment(long ni) {
+    using t = eckit::Fraction::value_type;
+    return {t(360), t(ni)};
+}
+
+
 util::BoundingBox correctBoundingBox(const std::vector<long>& pl, const std::vector<double>& latitudes) {
     auto mm = std::minmax_element(pl.begin(), pl.end());
     ASSERT(*(mm.first) > 0);
 
-    eckit::Fraction inc = {static_cast<eckit::Fraction::value_type>(360),
-                           static_cast<eckit::Fraction::value_type>(*(mm.second))};
-
     Longitude w = Longitude::GREENWICH;
-    Longitude e = Longitude::GLOBE - inc;
-
-    Latitude n = latitudes.front();
-    Latitude s = latitudes.back();
+    Longitude e = Longitude::GLOBE - increment(*(mm.second));
+    Latitude n  = latitudes.front();
+    Latitude s  = latitudes.back();
 
     return {n, w, s, e};
 }
@@ -102,6 +104,10 @@ ClenshawCurtis::ClenshawCurtis(const param::MIRParametrisation& parametrisation)
 
     ASSERT(parametrisation.get("pl", pl_));
     ASSERT(pl_.size() == 2 * N_);  // temporary
+
+    for (auto ni : pl_) {
+        ASSERT(ni > 0);
+    }
 
     // Reset bounding box
     bbox_ = correctBoundingBox(pl_, latitudes());
@@ -221,10 +227,11 @@ const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
 
 void ClenshawCurtis::fill(grib_info& info) const {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_REDUCED_GG;
-    info.grid.Nj        = long(pl_.size());
-    info.grid.N         = long(N_);
-    info.grid.pl        = pl_.data();
-    info.grid.pl_size   = long(pl_.size());
+
+    info.grid.Nj      = long(pl_.size());
+    info.grid.N       = long(N_);
+    info.grid.pl      = pl_.data();
+    info.grid.pl_size = long(pl_.size());
 
     bbox_.fill(info);
 }
@@ -251,9 +258,9 @@ std::vector<util::GridBox> ClenshawCurtis::gridBoxes() const {
     ASSERT(!pl_.empty());
     for (size_t j = 0; j < pl_.size(); ++j) {
         ASSERT(pl_[j] > 0);
-        eckit::Fraction inc(360, pl_[j]);
 
-        auto Ni = size_t(pl_[j]);
+        auto inc = increment(pl_[j]);
+        auto ni  = size_t(pl_[j]);
 
         // longitude edges
         auto west = bbox_.west().fraction();
@@ -264,7 +271,7 @@ std::vector<util::GridBox> ClenshawCurtis::gridBoxes() const {
         Longitude lon0 = (Nw * inc) - (inc / 2);
         Longitude lon1 = lon0;
 
-        for (size_t i = 0; i < Ni; ++i) {
+        for (size_t i = 0; i < ni; ++i) {
             auto l = lon1;
             lon1 += inc;
             r.emplace_back(util::GridBox(latEdges[j], l.value(), latEdges[j + 1], lon1.value()));
@@ -297,12 +304,12 @@ bool ClenshawCurtis::getLongestElementDiagonal(double& d) const {
         Latitude l1(lats[j - 1]);
         Latitude l2(lats[j]);
 
-        const eckit::Fraction we = Longitude::GLOBE.fraction() / (std::min(pl_[j - 1], pl_[j]));
+        auto inc = increment(std::min(pl_[j - 1], pl_[j]));
         auto& latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l1 : l2);
         auto& latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l2 : l1);
 
         d = std::max(d, atlas::util::Earth::distance(atlas::PointLonLat(0., latCloserToEquator.value()),
-                                                     atlas::PointLonLat(we, latAwayFromEquator.value())));
+                                                     atlas::PointLonLat(inc, latAwayFromEquator.value())));
     }
 
     ASSERT(d > 0.);
@@ -339,7 +346,7 @@ Iterator* ClenshawCurtis::iterator() const {
 
             lat_ = latitudes_.front();
             lon_ = Longitude::GREENWICH;
-            inc_ = {static_cast<eckit::Fraction::value_type>(360), static_cast<eckit::Fraction::value_type>(ni_)};
+            inc_ = increment(ni_);
         }
 
         ClenshawCurtisIterator(const ClenshawCurtisIterator&) = delete;
@@ -370,7 +377,7 @@ Iterator* ClenshawCurtis::iterator() const {
 
                 lat_ = latitudes_[j_];
                 lon_ = Longitude::GREENWICH;
-                inc_ = {static_cast<eckit::Fraction::value_type>(360), static_cast<eckit::Fraction::value_type>(ni_)};
+                inc_ = increment(ni_);
             }
 
             return true;
