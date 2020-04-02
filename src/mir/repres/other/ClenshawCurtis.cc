@@ -14,14 +14,10 @@
 
 #include <algorithm>
 #include <cmath>
-//#include <limits>
 #include <map>
-//#include <memory>
 #include <mutex>
 #include <numeric>
 #include <ostream>
-#include <string>
-//#include <type_traits>
 #include <vector>
 
 #include "eckit/exception/Exceptions.h"
@@ -30,14 +26,13 @@
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/MD5.h"
 
-//#include "mir/api/Atlas.h"
-//#include "mir/util/GridBox.h"
 #include "mir/api/MIREstimation.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Angles.h"
 #include "mir/util/Grib.h"
+#include "mir/util/GridBox.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
 
@@ -59,31 +54,53 @@ static void init() {
 }
 
 
+util::BoundingBox correctBoundingBox(const std::vector<long>& pl, const std::vector<double>& latitudes) {
+    auto mm = std::minmax_element(pl.begin(), pl.end());
+    ASSERT(*(mm.first) > 0);
+
+    eckit::Fraction inc = {static_cast<eckit::Fraction::value_type>(360),
+                           static_cast<eckit::Fraction::value_type>(*(mm.second))};
+
+    Longitude w = Longitude::GREENWICH;
+    Longitude e = Longitude::GLOBE - inc;
+
+    Latitude n = latitudes.front();
+    Latitude s = latitudes.back();
+
+    return {n, w, s, e};
+}
+
+
 ClenshawCurtis::ClenshawCurtis(size_t N) : Gridded(util::BoundingBox()), N_(N) {
-    ASSERT(domain_.isGlobal() && domain_.west() == Longitude::GREENWICH.fraction());
+    ASSERT(domain_.isGlobal() && domain_.west() == Longitude::GREENWICH);
 
+    // pl as octahedral (temporary)
     ASSERT(N_ > 0);
-    pl_.resize(2 * N_);
+    pl_.resize(2 * N_);  // temporary
 
-    long n = 20;
+    long ni = 20;
     for (size_t i = 0, j = 2 * N_ - 1; i < N_; ++i, --j) {
-        pl_[i] = n;
-        pl_[j] = n;
-        n += 4;
+        pl_[i] = ni;
+        pl_[j] = ni;
+        ni += 4;
     }
+
+    // Reset bounding box
+    bbox_ = correctBoundingBox(pl_, latitudes());
 }
 
 
 ClenshawCurtis::ClenshawCurtis(const param::MIRParametrisation& parametrisation) : Gridded(parametrisation), N_(0) {
-    ASSERT(domain_.isGlobal() && domain_.west() == Longitude::GREENWICH.fraction());
+    ASSERT(domain_.isGlobal() && domain_.west() == Longitude::GREENWICH);
 
     ASSERT(parametrisation.get("N", N_));
     ASSERT(N_ > 0);
 
     ASSERT(parametrisation.get("pl", pl_));
-    ASSERT(pl_.size() == 2 * N_);
+    ASSERT(pl_.size() == 2 * N_);  // temporary
 
-    ASSERT(*std::min_element(pl_.begin(), pl_.end()) > 0);
+    // Reset bounding box
+    bbox_ = correctBoundingBox(pl_, latitudes());
 }
 
 
@@ -115,34 +132,28 @@ bool ClenshawCurtis::extendBoundingBoxOnIntersect() const {
 }
 
 
-// std::vector<double> ClenshawCurtis::calculateUnrotatedGridBoxLatitudeEdges() const {
+bool ClenshawCurtis::isGlobal() const {
+    return domain_.isGlobal();
+}
 
-//    // grid-box edge latitudes are the latitude midpoints
-//    size_t Nj = N_ * 2;
-//    ASSERT(Nj > 1);
 
-//    auto& w = weights();
-//    ASSERT(w.size() == Nj);
+std::vector<double> ClenshawCurtis::calculateUnrotatedGridBoxLatitudeEdges() const {
 
-//    std::vector<double> edges(Nj + 1);
-//    auto f = edges.begin();
-//    auto b = edges.rbegin();
+    // grid-box edge latitudes are the latitude midpoints
+    auto& lats = latitudes();
+    ASSERT(!lats.empty());
 
-//    *(f++) = Latitude::NORTH_POLE.value();
-//    *(b++) = Latitude::SOUTH_POLE.value();
+    std::vector<double> edges;
+    edges.reserve(lats.size() + 1);
 
-//    double wacc = -1.;
-//    for (size_t j = 0; j < N_; ++j, ++b, ++f) {
-//        wacc += 2. * w[j];
-//        double deg = util::radian_to_degree(std::asin(wacc));
-//        ASSERT(Latitude::SOUTH_POLE.value() <= deg && deg <= Latitude::NORTH_POLE.value());
+    edges.push_back(Latitude::NORTH_POLE.value());
+    for (auto b = lats.begin(), a = b++; b != lats.end(); a = b++) {
+        edges.push_back((*b + *a) / 2.);
+    }
+    edges.push_back(Latitude::SOUTH_POLE.value());
 
-//        *b = deg;
-//        *f = -(*b);
-//    }
-
-//    return edges;
-//}
+    return edges;
+}
 
 
 void ClenshawCurtis::fill(util::MeshGeneratorParameters& params) const {
@@ -172,15 +183,15 @@ const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
     if (j == ml->end()) {
         eckit::Timer timer("ClenshawCurtis latitudes " + std::to_string(N), eckit::Log::debug<LibMir>());
 
-        // calculate latitudes and insert in known-N-latitudes map
+        // calculate latitudes and save in map
         auto& lats = (*ml)[N];
-        lats.resize(2 * N);
+        lats.resize(2 * N);  // temporary
 
-        auto f = std::acos(-1.) / double(2 * N);
+        auto f = M_PI / double(2 * N);
 
         for (size_t i = 0, j = 2 * N - 1; i < N; ++i, --j) {
             double theta = f * double(i + 1);
-            double latr  = std::asin(std::cos(theta));
+            double latr  = M_PI_2 - theta;
             double lat   = util::radian_to_degree(latr);
 
             lats[i] = lat;
@@ -192,22 +203,8 @@ const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
         ASSERT(j != ml->end());
     }
 
-
-    // these are the assumptions we expect from the ClenshawCurtis latitudes values
     return j->second;
 }
-
-
-// eckit::Fraction ClenshawCurtis::getSmallestIncrement() const {
-//    ASSERT(N_);
-//    using distance_t = std::make_signed<size_t>::type;
-
-//    const std::vector<long>& pl = pl_;
-//    const long maxpl            = *std::max_element(pl.begin(), pl.end());
-//    ASSERT(maxpl > 0);
-
-//    return Longitude::GLOBE.fraction() / maxpl;
-//}
 
 
 void ClenshawCurtis::fill(grib_info& info) const {
@@ -227,9 +224,46 @@ void ClenshawCurtis::estimate(api::MIREstimation& estimation) const {
 }
 
 
-// std::vector<util::GridBox> ClenshawCurtis::gridBoxes() const {
-//    NOTIMP;
-//}
+std::vector<util::GridBox> ClenshawCurtis::gridBoxes() const {
+
+    // latitude edges
+    std::vector<double> latEdges = calculateUnrotatedGridBoxLatitudeEdges();
+    ASSERT(!latEdges.empty());
+
+
+    // grid boxes
+    std::vector<util::GridBox> r;
+    r.reserve(numberOfPoints());
+
+
+    ASSERT(!pl_.empty());
+    for (size_t j = 0; j < pl_.size(); ++j) {
+        ASSERT(pl_[j] > 0);
+        eckit::Fraction inc(360, pl_[j]);
+
+        auto Ni = size_t(pl_[j]);
+
+        // longitude edges
+        auto west = bbox_.west().fraction();
+        auto Nw   = (west / inc).integralPart();
+        if (Nw * inc < west) {
+            Nw += 1;
+        }
+        Longitude lon0 = (Nw * inc) - (inc / 2);
+        Longitude lon1 = lon0;
+
+        for (size_t i = 0; i < Ni; ++i) {
+            auto l = lon1;
+            lon1 += inc;
+            r.emplace_back(util::GridBox(latEdges[j], l.value(), latEdges[j + 1], lon1.value()));
+        }
+
+        ASSERT(lon0 == lon1.normalise(lon0));
+    }
+
+    ASSERT(r.size() == numberOfPoints());
+    return r;
+}
 
 
 size_t ClenshawCurtis::numberOfPoints() const {
@@ -246,7 +280,7 @@ bool ClenshawCurtis::getLongestElementDiagonal(double& d) const {
     auto& lats = latitudes();
 
     d = 0.;
-    for (size_t j = 0; j < pl_.size(); ++j) {
+    for (size_t j = 1; j < pl_.size(); ++j) {
 
         Latitude l1(lats[j - 1]);
         Latitude l2(lats[j]);
@@ -289,12 +323,11 @@ Iterator* ClenshawCurtis::iterator() const {
             ASSERT(nj_ > 0);
 
             ni_ = size_t(pl_.front());
-            ASSERT(ni_ > 1);
+            ASSERT(ni_ > 0);
 
-            latitude_      = latitudes.front();
-            longitude_     = Longitude::GREENWICH.fraction();
-            inc_west_east_ = {static_cast<eckit::Fraction::value_type>(360),
-                              static_cast<eckit::Fraction::value_type>(ni_)};
+            lat_ = latitudes_.front();
+            lon_ = Longitude::GREENWICH;
+            inc_ = {static_cast<eckit::Fraction::value_type>(360), static_cast<eckit::Fraction::value_type>(ni_)};
         }
 
         ClenshawCurtisIterator(const ClenshawCurtisIterator&) = delete;
@@ -307,31 +340,27 @@ Iterator* ClenshawCurtis::iterator() const {
         }
 
         bool next(Latitude& lat, Longitude& lon) {
-            lat = latitude_;
-            lon = longitude_;
-
-            if (ni_ == 0) {
+            if (j_ >= nj_) {
                 return false;
             }
-            else if (++i_ < ni_) {
-                longitude_ += inc_west_east_;
+
+            lat = lat_;
+            lon = lon_;
+            count_++;
+
+            if (++i_ < ni_) {
+                lon_ += inc_;
             }
             else if (++j_ < nj_) {
-                longitude_ = Longitude::GREENWICH.fraction();
-                latitude_  = latitudes_[j_];
-
                 i_  = 0;
                 ni_ = size_t(pl_[j_]);
                 ASSERT(ni_ > 1);
 
-                inc_west_east_ = {static_cast<eckit::Fraction::value_type>(360),
-                                  static_cast<eckit::Fraction::value_type>(ni_)};
-            }
-            else {
-                ni_ = 0;
+                lat_ = latitudes_[j_];
+                lon_ = Longitude::GREENWICH;
+                inc_ = {static_cast<eckit::Fraction::value_type>(360), static_cast<eckit::Fraction::value_type>(ni_)};
             }
 
-            count_++;
             return true;
         }
 
@@ -341,9 +370,9 @@ Iterator* ClenshawCurtis::iterator() const {
         size_t nj_;
         size_t ni_;
 
-        Latitude latitude_;
-        eckit::Fraction longitude_;
-        eckit::Fraction inc_west_east_;
+        Latitude lat_;
+        Longitude lon_;
+        eckit::Fraction inc_;
 
         size_t i_;
         size_t j_;

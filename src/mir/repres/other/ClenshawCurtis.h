@@ -95,6 +95,7 @@ private:
     // -- Methods
 
     const std::vector<double>& latitudes() const { return latitudes(N_); }
+    std::vector<double> calculateUnrotatedGridBoxLatitudeEdges() const;
 
     // -- Overridden methods
 
@@ -102,12 +103,14 @@ private:
     virtual Iterator* iterator() const;
     virtual atlas::Grid atlasGrid() const;
     virtual bool extendBoundingBoxOnIntersect() const;
+    virtual bool isGlobal() const;
+    virtual bool sameAs(const Representation&) const;
     virtual size_t numberOfPoints() const;
+    virtual std::vector<util::GridBox> gridBoxes() const;
     virtual void fill(grib_info&) const;
     virtual void fill(util::MeshGeneratorParameters&) const;
-    virtual void validate(const MIRValuesVector&) const;
     virtual void makeName(std::ostream&) const;
-    virtual bool sameAs(const Representation&) const;
+    virtual void validate(const MIRValuesVector&) const;
 
     // From Gridded
     virtual bool getLongestElementDiagonal(double&) const;
@@ -115,14 +118,12 @@ private:
     virtual util::Domain domain() const;
 
     // // From Representation
-    // virtual bool isGlobal() const;
     // virtual const Representation* croppedRepresentation(const util::BoundingBox&) const;
     // virtual const Representation* globalise(data::MIRField&) const;
     // virtual const Representation* truncate(size_t truncation, const MIRValuesVector&, MIRValuesVector&) const;
     // virtual const std::string& uniqueName() const;
     // virtual size_t truncation() const;
     // virtual std::string factory() const;  // Return factory name
-    // virtual std::vector<util::GridBox> gridBoxes() const;
     // virtual util::BoundingBox extendBoundingBox(const util::BoundingBox&) const;
     // virtual util::Domain domain() const;
     // virtual void comparison(std::string&) const;
@@ -138,8 +139,6 @@ private:
     // virtual bool includesNorthPole() const { return domain_.includesPoleNorth(); }
     // virtual bool includesSouthPole() const { return domain_.includesPoleSouth(); }
     // virtual bool isPeriodicWestEast() const { return domain_.isPeriodicWestEast(); }
-    // virtual eckit::Fraction getSmallestIncrement() const;
-    // virtual std::vector<double> calculateUnrotatedGridBoxLatitudeEdges() const;
 
     // -- Class members
     // None
