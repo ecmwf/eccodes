@@ -26,6 +26,10 @@
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/MD5.h"
 
+// temporary
+#include "atlas/grid/detail/spacing/CustomSpacing.h"
+
+#include "mir/api/Atlas.h"
 #include "mir/api/MIREstimation.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
@@ -114,7 +118,15 @@ bool ClenshawCurtis::sameAs(const Representation& other) const {
 
 
 atlas::Grid ClenshawCurtis::atlasGrid() const {
-    return atlas::ReducedGaussianGrid(pl_, domain());
+    using grid_t = atlas::StructuredGrid;
+
+    auto& lats = latitudes();
+    ASSERT(!lats.empty());
+
+    grid_t::XSpace x({0., 360.}, pl_, false);
+    grid_t::YSpace y = new atlas::grid::spacing::CustomSpacing(long(lats.size()), lats.data());
+
+    return grid_t(new grid_t::grid_t(x, y, atlas::Projection(), domain_));
 }
 
 
