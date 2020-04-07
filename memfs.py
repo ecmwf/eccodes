@@ -74,15 +74,15 @@ for directory in dirs:
             with open(full, 'rb') as f:
                 i = 0
                 #Python 2
-                #fcont = f.read().encode("hex")
+                #contents_hex = f.read().encode("hex")
 
                 #Python 2 and 3
-                fcont = binascii.hexlify(f.read())
+                contents_hex = binascii.hexlify(f.read())
 
                 # Read two characters at a time and convert to C hex
                 # e.g. 23 -> 0x23
-                for n in range(0, len(fcont), 2):
-                    twoChars = ascii(fcont[n:n+2])
+                for n in range(0, len(contents_hex), 2):
+                    twoChars = ascii(contents_hex[n:n+2])
                     print("0x%s," % (twoChars,), end="", file=g)
                     i += 1
                     if (i % 20) == 0:
