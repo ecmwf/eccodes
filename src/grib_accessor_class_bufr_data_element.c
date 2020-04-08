@@ -384,6 +384,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     }
 
     if (str == 0 || strlen(str) == 0) {
+        grib_context_free(c, str);
         *len = 0;
         *val = 0;
         return ret;
