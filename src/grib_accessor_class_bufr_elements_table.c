@@ -191,6 +191,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     char dictName[1024] = {0,};
     char* localFilename   = 0;
     char** list           = 0;
+    char** cached_list    = 0;
     size_t len            = 1024;
     grib_trie* dictionary = NULL;
     FILE* f               = NULL;
@@ -262,7 +263,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
 
     while (fgets(line, sizeof(line) - 1, f)) {
         DebugAssert( strlen(line) > 0 );
-        if (line[0] == '#') continue;
+        if (line[0] == '#') continue; /* Ignore first line with column titles */
         list = string_split(line, "|");
         grib_trie_insert(dictionary, list[0], list);
     }
@@ -279,16 +280,14 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
 
         while (fgets(line, sizeof(line) - 1, f)) {
             DebugAssert( strlen(line) > 0 );
-            if (line[0] == '#') continue;
+            if (line[0] == '#') continue;  /* Ignore first line with column titles */
             list = string_split(line, "|");
-            {
-                char** existing_list = (char**)grib_trie_get(dictionary, list[0]);
-                if(existing_list) {
-                    int i;
-                    //printf("EXISTS %s (%s, %s)\n", list[0],filename,localFilename);
-                    for (i = 0; existing_list[i] != NULL; ++i) free(existing_list[i]);
-                    free(existing_list);
-                }
+            /* Look for the descriptor code in the trie. It might be there from before */
+            cached_list = (char**)grib_trie_get(dictionary, list[0]);
+            if (cached_list) { /* If found, we are about to overwrite it. So free memory */
+                int i;
+                for (i = 0; cached_list[i] != NULL; ++i) free(cached_list[i]);
+                free(cached_list);
             }
             grib_trie_insert(dictionary, list[0], list);
         }
