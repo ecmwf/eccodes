@@ -281,6 +281,15 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
             DebugAssert( strlen(line) > 0 );
             if (line[0] == '#') continue;
             list = string_split(line, "|");
+            {
+                char** existing_list = (char**)grib_trie_get(dictionary, list[0]);
+                if(existing_list) {
+                    int i;
+                    //printf("EXISTS %s (%s, %s)\n", list[0],filename,localFilename);
+                    for (i = 0; existing_list[i] != NULL; ++i) free(existing_list[i]);
+                    free(existing_list);
+                }
+            }
             grib_trie_insert(dictionary, list[0], list);
         }
 
