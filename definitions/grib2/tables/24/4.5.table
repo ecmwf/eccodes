@@ -23,7 +23,7 @@
 23 23 Lowest level where air concentration exceeds the specified value (base for a given threshold of air concentration) (Bq m-3)
 24 24 Highest level where air concentration exceeds the specified value (top for a given threshold of air concentration) (Bq m-3)
 25 25 Highest level where radar reflectivity exceeds the specified value (echo top for a given threshold of reflectivity) (dBZ)
-# 26-99 Reserved 
+# 26-99 Reserved
 100 pl Isobaric surface (Pa)
 101 sfc Mean sea level 
 102 102 Specific altitude above mean sea level (m)
@@ -47,7 +47,7 @@
 # 120-149 Reserved 
 150 150 Generalized vertical height coordinate 
 151 sol Soil level (Numeric)
-# 152-159 Reserved 
+# 152-159 Reserved
 160 160 Depth below sea level (m)
 161 161 Depth below water surface (m)
 162 162 Lake or river bottom (-)
