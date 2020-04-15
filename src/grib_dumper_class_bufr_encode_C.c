@@ -665,6 +665,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         depth -= 2;
     }
 
+    for (i = 0; i < size; i++) grib_context_free(c, values[i]);
     grib_context_free(c, values);
     (void)err; /* TODO */
 }

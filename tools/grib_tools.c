@@ -559,7 +559,9 @@ static int grib_tool_index(grib_runtime_options* options)
     }
 
     navigate(options->index2->fields, options);
-
+    /* TODO(masn): memleak
+     * grib_context_free(c, options->index2->current);
+     */
     grib_tool_finalise_action(options);
 
     return 0;

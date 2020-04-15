@@ -86,4 +86,4 @@ grep -q "'E', 'C', 'M', 'W', 'F', ' '" $tempTxt
 
 
 # Clean up
-rm -f $tempOut $tempRef
+rm -f $tempOut $tempRef $tempTxt
