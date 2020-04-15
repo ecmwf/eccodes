@@ -39,9 +39,13 @@ except:
     ascii = lambda x: str(x)           # Python 2
 
 
-# The last argument is the path of the generated C file
+# The last argument is the base name of the generated C file(s)
 output_file_path = sys.argv[-1]
-g = open(output_file_path, "w")
+CHUNK = 7 * 1000 * 1000 # chunk size in bytes
+totsize = 0 # amount written
+fcount = 0
+opath = output_file_path + "_" + str(fcount).zfill(3) + ".c"
+g = open(opath, "w")
 
 for directory in dirs:
 
@@ -63,6 +67,7 @@ for directory in dirs:
                 continue
 
             fsize = os.path.getsize(full)
+            totsize += fsize
             full = full.replace("\\","/")
             fname = full[full.find("/%s/" % (dname,)):]
             #print("MEMFS add", fname)
@@ -73,8 +78,7 @@ for directory in dirs:
             FILES[name] = fname
             SIZES[name] = fsize
 
-            print('static const unsigned char %s[] = {' % (name,), file=g)
-            #print('const unsigned char %s[] = {' % (name,), file=g) #NEW
+            print('const unsigned char %s[] = {' % (name,), file=g) #NEW
 
             with open(full, 'rb') as f:
                 i = 0
@@ -94,6 +98,18 @@ for directory in dirs:
                         print("", file=g)
 
             print('};', file=g)
+            if totsize >= CHUNK:
+                g.close()
+                fcount += 1
+                opath = output_file_path + "_" + str(fcount).zfill(3) + ".c"
+                #print('....Now writing to ',opath)
+                g = open(opath, "w")
+                totsize = 0
+
+g.close()
+output_file_path = output_file_path + "_final.c"
+#print('....Finally writing to ',output_file_path)
+g = open(output_file_path, "w")
 
 print("""
 #include "eccodes_config.h"
@@ -108,9 +124,9 @@ print("""
 #include "eccodes_windef.h"
 """, file=g)
 
-# NEW
-#for k, v in SIZES.items():
-#    print ('extern const unsigned char %s[%d];' % (k, v), file=g)
+# Write extern variables with sizes
+for k, v in SIZES.items():
+    print ('extern const unsigned char %s[%d];' % (k, v), file=g)
 
 print("""
 struct entry {
