@@ -9,6 +9,7 @@ set( generated_c_files
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_000.c
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_001.c
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_002.c
+    ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_003.c
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_final.c)
 
 add_custom_command(

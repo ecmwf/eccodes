@@ -30,6 +30,7 @@ print('Excluding: ', EXCLUDED)
 FILES = {}
 SIZES = {}
 NAMES = []
+CHUNK = 5500 * 1000 # chunk size in bytes
 
 # Binary to ASCII function. Different in Python 2 and 3
 try:
@@ -41,10 +42,10 @@ except:
 
 # The last argument is the base name of the generated C file(s)
 output_file_path = sys.argv[-1]
-CHUNK = 7 * 1000 * 1000 # chunk size in bytes
 totsize = 0 # amount written
 fcount = 0
 opath = output_file_path + "_" + str(fcount).zfill(3) + ".c"
+print('Generating output: ', opath)
 g = open(opath, "w")
 
 for directory in dirs:
@@ -102,14 +103,14 @@ for directory in dirs:
                 g.close()
                 fcount += 1
                 opath = output_file_path + "_" + str(fcount).zfill(3) + ".c"
-                #print('Generating output: ', opath)
+                print('Generating output: ', opath)
                 g = open(opath, "w")
                 totsize = 0
 
 g.close()
-assert fcount == 2
+assert fcount == 3
 opath = output_file_path + "_final.c"
-#print('Generating output: ', opath)
+print('Generating output: ', opath)
 g = open(opath, "w")
 
 print("""
