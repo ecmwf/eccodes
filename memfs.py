@@ -40,11 +40,15 @@ except:
     ascii = lambda x: str(x)           # Python 2
 
 
+def get_outfile_name(base, count):
+    return base + "_" + str(count).zfill(3) + ".c"
+
+
 # The last argument is the base name of the generated C file(s)
-output_file_path = sys.argv[-1]
+output_file_base = sys.argv[-1]
 totsize = 0  # amount written
 fcount = 0
-opath = output_file_path + "_" + str(fcount).zfill(3) + ".c"
+opath = get_outfile_name(output_file_base, fcount)
 print('MEMFS: Generating output: ', opath)
 g = open(opath, "w")
 
@@ -102,14 +106,14 @@ for directory in dirs:
             if totsize >= CHUNK:
                 g.close()
                 fcount += 1
-                opath = output_file_path + "_" + str(fcount).zfill(3) + ".c"
+                opath = get_outfile_name(output_file_base, fcount)
                 print('MEMFS: Generating output: ', opath)
                 g = open(opath, "w")
                 totsize = 0
 
 g.close()
 assert fcount == 3
-opath = output_file_path + "_final.c"
+opath = output_file_base + "_final.c"
 print('MEMFS: Generating output: ', opath)
 g = open(opath, "w")
 
