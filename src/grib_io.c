@@ -49,9 +49,9 @@ static void init()
 #define HDF5 0x89484446
 #define WRAP 0x57524150
 
-#define GRIB_API_READS_BUFR 1
-#define GRIB_API_READS_HDF5 1
-#define GRIB_API_READS_WRAP 1
+#define ECCODES_READS_BUFR 1
+#define ECCODES_READS_HDF5 1
+#define ECCODES_READS_WRAP 1
 
 
 typedef struct alloc_buffer
@@ -1517,7 +1517,7 @@ int grib_read_any_headers_only_from_file(grib_context* ctx, FILE* f, void* buffe
     r.alloc           = &user_provider_buffer;
     r.headers_only    = 1;
 
-    err = read_any(&r, 1, GRIB_API_READS_BUFR, GRIB_API_READS_HDF5, GRIB_API_READS_WRAP);
+    err = read_any(&r, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
 
     *len = r.message_size;
 
@@ -1546,7 +1546,7 @@ int grib_read_any_from_file(grib_context* ctx, FILE* f, void* buffer, size_t* le
 
     offset = ftello(f);
 
-    err = read_any(&r, 1, GRIB_API_READS_BUFR, GRIB_API_READS_HDF5, GRIB_API_READS_WRAP);
+    err = read_any(&r, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
 
     if (err == GRIB_BUFFER_TOO_SMALL) {
         if (fseeko(f, offset, SEEK_SET))
@@ -1616,7 +1616,7 @@ int grib_read_any_from_memory_alloc(grib_context* ctx, unsigned char** data, siz
     r.alloc           = &context_allocate_buffer;
     r.headers_only    = 0;
 
-    err     = read_any(&r, 1, GRIB_API_READS_BUFR, GRIB_API_READS_HDF5, GRIB_API_READS_WRAP);
+    err     = read_any(&r, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
     *buffer = u.buffer;
     *length = u.length;
 
@@ -1649,7 +1649,7 @@ int grib_read_any_from_memory(grib_context* ctx, unsigned char** data, size_t* d
     r.alloc           = &user_provider_buffer;
     r.headers_only    = 0;
 
-    err  = read_any(&r, 1, GRIB_API_READS_BUFR, GRIB_API_READS_HDF5, GRIB_API_READS_WRAP);
+    err  = read_any(&r, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
     *len = r.message_size;
 
     *data_length = m.data_len;
