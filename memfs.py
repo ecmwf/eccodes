@@ -12,7 +12,7 @@ assert len(sys.argv) > 2
 # METAR and TAF are also experimental
 EXCLUDED = ['grib3', 'codetables', 'taf', 'metar']
 
-pos=1
+pos = 1
 if sys.argv[1] == '-exclude':
     product = sys.argv[2]
     if product == 'bufr':
@@ -30,7 +30,7 @@ print('Excluding: ', EXCLUDED)
 FILES = {}
 SIZES = {}
 NAMES = []
-CHUNK = 5500 * 1000 # chunk size in bytes
+CHUNK = 5500 * 1000  # chunk size in bytes
 
 # Binary to ASCII function. Different in Python 2 and 3
 try:
@@ -42,22 +42,22 @@ except:
 
 # The last argument is the base name of the generated C file(s)
 output_file_path = sys.argv[-1]
-totsize = 0 # amount written
+totsize = 0  # amount written
 fcount = 0
 opath = output_file_path + "_" + str(fcount).zfill(3) + ".c"
-print('Generating output: ', opath)
+print('MEMFS: Generating output: ', opath)
 g = open(opath, "w")
 
 for directory in dirs:
 
-    # print("---->", directory)
+    # print("MEMFS: directory=", directory)
     dname = os.path.basename(directory)
     NAMES.append(dname)
 
     for dirpath, dirnames, files in os.walk(directory, followlinks=True):
-        for ex in EXCLUDED:
-            if ex in dirnames:
-                print('Note: eccodes memfs.py script: %s/%s will not be included.' % (dirpath,ex))
+        # for ex in EXCLUDED:
+        #    if ex in dirnames:
+        #        print('Note: eccodes memfs.py script: %s/%s will not be included.' % (dirpath,ex))
 
         # Prune the walk by modifying the dirnames in-place
         dirnames[:] = [dirname for dirname in dirnames if dirname not in EXCLUDED]
@@ -69,9 +69,9 @@ for directory in dirs:
 
             fsize = os.path.getsize(full)
             totsize += fsize
-            full = full.replace("\\","/")
+            full = full.replace("\\", "/")
             fname = full[full.find("/%s/" % (dname,)):]
-            #print("MEMFS add", fname)
+            #print("MEMFS: Add ", fname)
             name = re.sub(r'\W', '_', fname)
 
             assert name not in FILES
@@ -79,20 +79,20 @@ for directory in dirs:
             FILES[name] = fname
             SIZES[name] = fsize
 
-            print('const unsigned char %s[] = {' % (name,), file=g) #NEW
+            print('const unsigned char %s[] = {' % (name,), file=g)
 
             with open(full, 'rb') as f:
                 i = 0
-                #Python 2
+                # Python 2
                 #contents_hex = f.read().encode("hex")
 
-                #Python 2 and 3
+                # Python 2 and 3
                 contents_hex = binascii.hexlify(f.read())
 
                 # Read two characters at a time and convert to C hex
                 # e.g. 23 -> 0x23
                 for n in range(0, len(contents_hex), 2):
-                    twoChars = ascii(contents_hex[n:n+2])
+                    twoChars = ascii(contents_hex[n:n + 2])
                     print("0x%s," % (twoChars,), end="", file=g)
                     i += 1
                     if (i % 20) == 0:
@@ -103,14 +103,14 @@ for directory in dirs:
                 g.close()
                 fcount += 1
                 opath = output_file_path + "_" + str(fcount).zfill(3) + ".c"
-                print('Generating output: ', opath)
+                print('MEMFS: Generating output: ', opath)
                 g = open(opath, "w")
                 totsize = 0
 
 g.close()
 assert fcount == 3
 opath = output_file_path + "_final.c"
-print('Generating output: ', opath)
+print('MEMFS: Generating output: ', opath)
 g = open(opath, "w")
 
 print("""
@@ -128,7 +128,7 @@ print("""
 
 # Write extern variables with sizes
 for k, v in SIZES.items():
-    print ('extern const unsigned char %s[%d];' % (k, v), file=g)
+    print('extern const unsigned char %s[%d];' % (k, v), file=g)
 
 print("""
 struct entry {
@@ -140,7 +140,7 @@ struct entry {
 items = [(v, k) for k, v in FILES.items()]
 
 for k, v in sorted(items):
-    print ('{"/MEMFS%s", &%s[0], sizeof(%s) / sizeof(%s[0]) },' % (k, v, v, v), file=g)
+    print('{"/MEMFS%s", &%s[0], sizeof(%s) / sizeof(%s[0]) },' % (k, v, v, v), file=g)
 
 
 print("""};
@@ -294,4 +294,4 @@ FILE* codes_memfs_open(const char* path) {
 
 """, file=g)
 
-print ('Finished')
+print('Finished')
