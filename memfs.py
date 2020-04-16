@@ -102,14 +102,15 @@ for directory in dirs:
                 g.close()
                 fcount += 1
                 opath = output_file_path + "_" + str(fcount).zfill(3) + ".c"
-                #print('....Now writing to ',opath)
+                #print('Generating output: ', opath)
                 g = open(opath, "w")
                 totsize = 0
 
 g.close()
-output_file_path = output_file_path + "_final.c"
-#print('....Finally writing to ',output_file_path)
-g = open(output_file_path, "w")
+assert fcount == 2
+opath = output_file_path + "_final.c"
+#print('Generating output: ', opath)
+g = open(opath, "w")
 
 print("""
 #include "eccodes_config.h"
@@ -291,4 +292,5 @@ FILE* codes_memfs_open(const char* path) {
 }
 
 """, file=g)
-print ('Created ',output_file_path)
+
+print ('Finished')
