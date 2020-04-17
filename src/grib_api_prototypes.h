@@ -1462,6 +1462,7 @@ double grib_arguments_get_double(grib_handle* h, grib_arguments* args, int n);
 grib_expression* grib_arguments_get_expression(grib_handle* h, grib_arguments* args, int n);
 
 /* codes_util.c */
+double normalise_longitude_in_degrees(double lon);
 char get_dir_separator_char(void);
 int path_is_directory(const char* filename);
 char* codes_getenv(const char* name);

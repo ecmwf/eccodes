@@ -117,6 +117,7 @@ int main(int argc, char** argv)
 void* runner(void* ptr)
 {
     do_encode(ptr);
+    free(ptr);
     pthread_exit(0);
 }
 

@@ -169,6 +169,7 @@ int main(int argc, char** argv)
 void* runner(void* ptr)
 {
     do_stuff(ptr);
+    free(ptr);
     pthread_exit(0);
 }
 

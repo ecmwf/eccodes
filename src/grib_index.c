@@ -1776,8 +1776,11 @@ int grib_index_dump_file(FILE* fout, const char* filename)
             return err;
         f = file;
         while (f) {
+            grib_file *prev = f;
             fprintf(fout, "GRIB File: %s\n", f->name);
+            grib_context_free(c, f->name);
             f = f->next;
+            grib_context_free(c, prev);
         }
         fclose(fh);
     }
