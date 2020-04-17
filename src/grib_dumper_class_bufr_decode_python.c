@@ -530,8 +530,10 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     err = grib_unpack_string(a, value, &size);
     p   = value;
     r   = compute_bufr_key_rank(h, self->keys, a->name);
-    if (grib_is_missing_string(a, (unsigned char*)value, size))
+    if (grib_is_missing_string(a, (unsigned char*)value, size)) {
+        grib_context_free(c, value);
         return;
+    }
 
     while (*p) {
         if (!isprint(*p))
