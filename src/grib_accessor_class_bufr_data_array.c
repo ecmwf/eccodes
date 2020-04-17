@@ -543,6 +543,7 @@ static int get_descriptors(grib_accessor* a)
         return ret;
 
     numberOfDescriptors = grib_bufr_descriptors_array_used_size(self->expanded);
+    if (self->canBeMissing ) grib_context_free(c, self->canBeMissing);
     self->canBeMissing  = (int*)grib_context_malloc_clear(c, numberOfDescriptors * sizeof(int));
     for (i = 0; i < numberOfDescriptors; i++)
         self->canBeMissing[i] = grib_bufr_descriptor_can_be_missing(self->expanded->v[i]);
@@ -860,6 +861,7 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
         }
         grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + 6);
         grib_encode_unsigned_longb(buff->data, localWidth, pos, 6);
+        grib_context_free(c, values);
         return err;
     }
 
