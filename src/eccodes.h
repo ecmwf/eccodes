@@ -1281,6 +1281,9 @@ codes_handle* codes_grib_util_set_spec(codes_handle* h,
 int codes_bufr_extract_headers_malloc(codes_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len);
 
+
+int codes_get_step_human_readable(codes_handle* h, char* result, size_t* length);
+
 /* --------------------------------------- */
 #ifdef __cplusplus
 }

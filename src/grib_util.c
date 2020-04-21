@@ -18,6 +18,47 @@ typedef enum
     eROUND_ANGLE_DOWN
 } RoundingPolicy;
 
+int codes_get_step_human_readable(grib_handle* h, char* result, size_t* length)
+{
+    long stepUnits, step, hour, minute, second;
+    int err = 0;
+    size_t slen;
+    //char step_str[32] = "unknown";
+
+    err = grib_get_long(h, "stepUnits", &stepUnits);
+    if (err) return err;
+    // now set it to seconds
+    slen = 2;
+    err = grib_set_string(h, "stepUnits", "s", &slen);
+    if (err) return err;
+    //slen = 32;
+    //err = grib_get_string(h, "step", step_str, &slen);
+    //if (err) return err;
+    err = grib_get_long(h, "step", &step);
+    if (err) return err;
+
+    hour = step/3600;
+    minute = step/60 % 60;
+    second = step % 60;
+    //sprintf(result, "%ld:%ld:%ld", hour, minute, second);
+
+    if (second) {
+        sprintf(result, "%ldh %ldm %lds", hour, minute, second);
+    } else {
+        if (minute) sprintf(result, "%ldh %ldm", hour, minute);
+        else sprintf(result, "%ldh", hour);
+    }
+
+    *length = strlen(result);
+
+    // Restore
+    err = grib_set_long(h, "stepUnits", stepUnits);
+    if (err) return err;
+
+    return GRIB_SUCCESS;
+}
+
+
 static void set_total_length(unsigned char* buffer, long* section_length, long* section_offset, int edition, size_t totalLength)
 {
     long off;
