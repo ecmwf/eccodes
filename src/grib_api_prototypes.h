@@ -1468,7 +1468,6 @@ int path_is_directory(const char* filename);
 char* codes_getenv(const char* name);
 
 /* grib_util.c */
-int codes_get_step_human_readable(grib_handle* h, char* result, size_t* length);
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);
 grib_string_list* grib_util_get_param_id(const char* mars_param);
 grib_string_list* grib_util_get_mars_param(const char* param_id);

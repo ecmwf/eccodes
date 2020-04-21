@@ -17,7 +17,8 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = init;unpack_string; get_native_type
-   MEMBERS    = const char* time
+   MEMBERS    = const char* stepUnits
+   MEMBERS    = const char* step
    END_CLASS_DEF
 
  */
@@ -42,7 +43,8 @@ typedef struct grib_accessor_step_human_readable
     grib_accessor att;
     /* Members defined in gen */
     /* Members defined in step_human_readable */
-    const char* time;
+    const char* stepUnits;
+    const char* step;
 } grib_accessor_step_human_readable;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -134,7 +136,10 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
     grib_accessor_step_human_readable* self = (grib_accessor_step_human_readable*)a;
     int n                              = 0;
-    self->time                         = grib_arguments_get_name(grib_handle_of_accessor(a), params, n++);
+    grib_handle* h = grib_handle_of_accessor(a);
+
+    self->stepUnits                    = grib_arguments_get_name(h, params, n++);
+    self->step                         = grib_arguments_get_name(h, params, n++);
     a->length                          = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
@@ -144,46 +149,51 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_STRING;
 }
 
+static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
+{
+    int err = 0;
+    size_t slen = 2;
+    long step, hour, minute, second;
+
+    /* Change units to seconds (highest resolution)
+     * before computing the step value
+     */
+    err = grib_set_string(h, "stepUnits", "s", &slen);
+    if (err) return err;
+    err = grib_get_long(h, "step", &step);
+    if (err) return err;
+
+    hour = step/3600;
+    minute = step/60 % 60;
+    second = step % 60;
+    /* sprintf(result, "%ld:%ld:%ld", hour, minute, second); */
+
+    if (second) {
+        sprintf(result, "%ldh %ldm %lds", hour, minute, second);
+    } else {
+        if (minute) sprintf(result, "%ldh %ldm", hour, minute);
+        else sprintf(result, "%ldh", hour);
+    }
+
+    *length = strlen(result);
+    return GRIB_SUCCESS;
+}
+
 static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
 {
-    /*grib_accessor_step_human_readable* self = (grib_accessor_step_human_readable*)a;*/
+    grib_accessor_step_human_readable* self = (grib_accessor_step_human_readable*)a;
     grib_handle* h = grib_handle_of_accessor(a);
-    int err = codes_get_step_human_readable(h, buffer, len);
-#if 0
-    grib_codetable* table               = NULL;
+    long stepUnits;
+    int err = 0;
 
-    size_t size = 1;
-    long value;
-    int err = GRIB_SUCCESS;
-    char tmp[1024];
-    size_t l                    = 1024;
-    grib_accessor_codetable* ca = (grib_accessor_codetable*)grib_find_accessor(grib_handle_of_accessor(a), self->codetable);
+    /* Save the current value of stepUnits */
+    err = grib_get_long_internal(h, self->stepUnits, &stepUnits);
+    if (err) return err;
 
-    if ((err = grib_unpack_long((grib_accessor*)ca, &value, &size)) != GRIB_SUCCESS)
-        return err;
+    /* This will change stepUnits to seconds for its calculation */
+    err = get_step_human_readable(h, buffer, len);
 
-    table = ca->table;
-
-    if (table && (value >= 0) && (value < table->size) && table->entries[value].title) {
-        strcpy(tmp, table->entries[value].title);
-    }
-    else {
-#if 1
-        sprintf(tmp, "%d", (int)value);
-#else
-        return GRIB_DECODING_ERROR;
-#endif
-    }
-
-    l = strlen(tmp) + 1;
-
-    if (*len < l) {
-        *len = l;
-        return GRIB_BUFFER_TOO_SMALL;
-    }
-
-    strcpy(buffer, tmp);
-    *len = l;
-#endif
+    /* Restore stepUnits */
+    grib_set_long(h, self->stepUnits, stepUnits);
     return err;
 }
