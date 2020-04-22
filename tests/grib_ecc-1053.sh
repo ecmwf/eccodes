@@ -19,9 +19,9 @@ temp=temp.${label}.grib
 sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 
 ${tools_dir}/grib_set -s unitOfTimeRange=254,P1=250 $sample_g1 $temp
-grib_check_key_equals $temp stepHuman '0h 4m 10s'
+grib_check_key_equals $temp stepHumanReadable '0h 4m 10s'
 
 ${tools_dir}/grib_set -s unitOfTimeRange=0,P1=200 $sample_g1 $temp
-grib_check_key_equals $temp stepHuman '3h 20m'
+grib_check_key_equals $temp stepHumanReadable '3h 20m'
 
 rm -f $temp
