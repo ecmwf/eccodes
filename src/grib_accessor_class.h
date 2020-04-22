@@ -196,6 +196,7 @@ extern grib_accessor_class* grib_accessor_class_spectral_truncation;
 extern grib_accessor_class* grib_accessor_class_sprintf;
 extern grib_accessor_class* grib_accessor_class_statistics;
 extern grib_accessor_class* grib_accessor_class_statistics_spectral;
+extern grib_accessor_class* grib_accessor_class_step_human_readable;
 extern grib_accessor_class* grib_accessor_class_step_in_units;
 extern grib_accessor_class* grib_accessor_class_sum;
 extern grib_accessor_class* grib_accessor_class_suppressed;

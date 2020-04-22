@@ -210,6 +210,7 @@ _if (stepType is "instant" ) {
 meta stepRange g1step_range(P1,P2,timeRangeIndicator,unitOfTimeRange,stepUnits,stepType) : dump;
 meta startStep long_vector(stepRange,0) : dump,no_copy;
 meta endStep   long_vector(stepRange,1) : dump,no_copy;
+meta stepHuman step_human_readable(stepUnits, stepRange): hidden,no_copy;
 
 alias stepInHours = endStep;
 alias ls.stepRange = stepRange;
