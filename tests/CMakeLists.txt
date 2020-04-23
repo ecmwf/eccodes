@@ -57,6 +57,7 @@ list(APPEND tests_no_data_reqd
     grib_ecc-136
     grib_ecc-967
     grib_ecc-1065
+    grib_ecc-1053
     julian
     bufr_dump_samples
     bufr_json_samples

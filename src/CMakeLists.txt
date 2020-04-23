@@ -96,6 +96,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_codetable.c
     grib_accessor_class_codetable_units.c
     grib_accessor_class_codetable_title.c
+    grib_accessor_class_step_human_readable.c
     grib_accessor_class_count_file.c
     grib_accessor_class_count_total.c
     grib_accessor_class_double.c

@@ -396,6 +396,7 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_sprintf.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_statistics.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_statistics_spectral.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_step_human_readable.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_step_in_units.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_sum.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_suppressed.c" />

@@ -195,6 +195,7 @@
 { "sprintf", &grib_accessor_class_sprintf, },
 { "statistics", &grib_accessor_class_statistics, },
 { "statistics_spectral", &grib_accessor_class_statistics_spectral, },
+{ "step_human_readable", &grib_accessor_class_step_human_readable, },
 { "step_in_units", &grib_accessor_class_step_in_units, },
 { "sum", &grib_accessor_class_sum, },
 { "suppressed", &grib_accessor_class_suppressed, },
