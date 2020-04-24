@@ -4,3 +4,9 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 210 ;
 }
+#Surface net thermal radiation, clear sky
+'211' = {
+	 discipline = 192 ;
+	 parameterCategory = 128 ;
+	 parameterNumber = 211 ;
+}
