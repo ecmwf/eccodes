@@ -461,7 +461,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     return ret;
 }
 
-#if 0
 static long guess_paramId(grib_handle* h)
 {
     int err = 0;
@@ -500,7 +499,6 @@ static long get_ECMWF_local_paramId(grib_accessor* a, grib_handle* h)
     }
     return -1;
 }
-#endif
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
@@ -508,13 +506,13 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     if (!p) {
         grib_handle* h = grib_handle_of_accessor(a);
-        //const long pid = get_ECMWF_local_paramId(a, h);
-        //if (pid != -1) {
-        //    grib_context_log(h->context, GRIB_LOG_DEBUG, "ECMWF local grib2: paramId guessed to be %ld", pid);
-        //    *val = pid;
-        //    *len = 1;
-        //    return GRIB_SUCCESS;
-        //}
+        const long pid = get_ECMWF_local_paramId(a, h);
+        if (pid != -1) {
+            grib_context_log(h->context, GRIB_LOG_DEBUG, "ECMWF local grib2: paramId guessed to be %ld", pid);
+            *val = pid;
+            *len = 1;
+            return GRIB_SUCCESS;
+        }
         if (a->creator->defaultkey)
             return grib_get_long_internal(h, a->creator->defaultkey, val);
 
@@ -561,7 +559,6 @@ static void destroy(grib_context* c, grib_accessor* a)
      */
 }
 
-#if 0
 static int is_local_ecmwf_grib2_param_key(grib_accessor* a, long edition, long centre)
 {
     if (edition == 2 && centre == 98) {
@@ -571,47 +568,19 @@ static int is_local_ecmwf_grib2_param_key(grib_accessor* a, long edition, long c
     return 0;
 }
 
+#if 0
 static char* get_legacy_param_info(const char* key_name, long paramId)
 {
     if (strcmp(key_name, "modelName") == 0)
         return "unknown";
-/*
- *     if (paramId == 210) {
- *         if (strcmp(key_name, "paramId") == 0)
- *             return "210";
- *         if (strcmp(key_name, "shortName") == 0)
- *             return "ssrc";
- *         if (strcmp(key_name, "units") == 0)
- *             return "J m**-2";
- *         if (strcmp(key_name, "name") == 0)
- *             return "Surface net solar radiation, clear sky";
- *         if (strcmp(key_name, "cfVarName") == 0)
- *             return "ssrc";
- *         if (strncmp(key_name, "cfName", 6) == 0)
- *             return "surface_net_downward_shortwave_flux_assuming_clear_sky";
- *     }
- *     else
- */
- if (paramId == 211) {
-        if (strcmp(key_name, "paramId") == 0)
-            return "211";
-        if (strcmp(key_name, "shortName") == 0)
-            return "strc";
-        if (strcmp(key_name, "units") == 0)
-            return "J m**-2";
-        if (strcmp(key_name, "name") == 0)
-            return "Surface net thermal radiation, clear sky";
-        if (strcmp(key_name, "cfVarName") == 0)
-            return "strc";
-        if (strncmp(key_name, "cfName", 6) == 0)
-            return "surface_net_downward_longwave_flux_assuming_clear_sky";
-    }
-    else if (paramId == 228051 || paramId == 228053 || paramId == 228057 || paramId == 228058 || paramId == 228059 || paramId == 228060) {
+
+    if (paramId == 228051 || paramId == 228053 || paramId == 228057 || paramId == 228058 || paramId == 228059 || paramId == 228060) {
         if (strncmp(key_name, "cfName", 6) == 0)
             return "unknown";
     }
     return NULL;
 }
+#endif
 
 /* Try to get the name, shortName, units etc for a GRIB2 message with
  * local ECMWF coding i.e. discipline=192 etc
@@ -630,17 +599,11 @@ static const char* get_ECMWF_local_parameter(grib_accessor* a, grib_handle* h)
     if (err)
         return NULL;
     if (is_local_ecmwf_grib2_param_key(a, edition, centre)) {
-        char* pLocalParam = NULL;
         /* Must be one of: 'name', 'shortName', 'units', 'cfName' etc */
         grib_accessor* a2    = NULL;
         const long pid_guess = guess_paramId(h);
         if (pid_guess == -1)
             return NULL;
-
-        /* TODO: Need to revisit */
-        pLocalParam = get_legacy_param_info(key_name, pid_guess);
-        if (pLocalParam)
-            return pLocalParam;
 
         /* Change the paramId so we can get the other string key*/
         err = grib_set_long(h, "paramId", pid_guess);
@@ -656,7 +619,6 @@ static const char* get_ECMWF_local_parameter(grib_accessor* a, grib_handle* h)
     }
     return NULL;
 }
-#endif
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
@@ -665,7 +627,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     if (!p) {
         grib_handle* h = grib_handle_of_accessor(a);
-        //p              = get_ECMWF_local_parameter(a, h);
+        /* p = get_ECMWF_local_parameter(a, h); */
         if (!p) {
             if (a->creator->defaultkey)
                 return grib_get_string_internal(h, a->creator->defaultkey, val, len);
