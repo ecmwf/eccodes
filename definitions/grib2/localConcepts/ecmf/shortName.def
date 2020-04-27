@@ -17983,7 +17983,7 @@
 	 parameterNumber = 54 ;
 	}
 #Mean 2 metre temperature in the last 24 hours anomaly
-'mn2t24a' = {
+'mean2t24a' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 55 ;

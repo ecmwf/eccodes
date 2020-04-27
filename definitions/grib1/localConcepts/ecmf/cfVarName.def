@@ -13910,7 +13910,7 @@
 	 indicatorOfParameter = 54 ;
 	}
 #Mean 2 metre temperature in the last 24 hours anomaly
-'mn2t24a' = {
+'mean2t24a' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 55 ;
 	}
