@@ -34,3 +34,9 @@
  parameterCategory = 151 ;
  parameterNumber = 145 ;
 }
+#Depth of 20C isotherm
+'depth_of_isosurface_of_sea_water_potential_temperature' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 163 ;
+}

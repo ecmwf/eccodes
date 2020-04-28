@@ -58,3 +58,63 @@
  parameterCategory = 228 ;
  parameterNumber = 24 ;
 }
+#Depth of 20C isotherm
+'151163' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 163 ;
+}
+#Average salinity in the upper 300m
+'151175' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 175 ;
+}
+#Total precipitation of at least 1 mm
+'131060' = {
+ discipline = 192 ;
+ parameterCategory = 131 ;
+ parameterNumber = 60 ;
+}
+#Total precipitation of at least 5 mm
+'131061' = {
+ discipline = 192 ;
+ parameterCategory = 131 ;
+ parameterNumber = 61 ;
+}
+#Total precipitation of at least 40 mm
+'131082' = {
+ discipline = 192 ;
+ parameterCategory = 131 ;
+ parameterNumber = 82 ;
+}
+#Total precipitation of at least 60 mm
+'131083' = {
+ discipline = 192 ;
+ parameterCategory = 131 ;
+ parameterNumber = 83 ;
+}
+#Total precipitation of at least 80 mm
+'131084' = {
+ discipline = 192 ;
+ parameterCategory = 131 ;
+ parameterNumber = 84 ;
+}
+#Total precipitation of at least 150 mm
+'131086' = {
+ discipline = 192 ;
+ parameterCategory = 131 ;
+ parameterNumber = 86 ;
+}
+#Total precipitation of at least 200 mm
+'131087' = {
+ discipline = 192 ;
+ parameterCategory = 131 ;
+ parameterNumber = 87 ;
+}
+#Total precipitation of at least 300 mm
+'131088' = {
+ discipline = 192 ;
+ parameterCategory = 131 ;
+ parameterNumber = 88 ;
+}
