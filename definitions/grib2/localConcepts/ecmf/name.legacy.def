@@ -1,12 +1,36 @@
 #Surface net solar radiation, clear sky
 'Surface net solar radiation, clear sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 210 ;
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 210 ;
 }
 #Surface net thermal radiation, clear sky
 'Surface net thermal radiation, clear sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 211 ;
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 211 ;
+}
+#Eastward sea water velocity
+'Eastward sea water velocity' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 131 ;
+}
+#Northward sea water velocity
+'Northward sea water velocity' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 132 ;
+}
+#Sea-ice thickness
+'Sea-ice thickness' = {
+ discipline = 192 ;
+ parameterCategory = 174 ;
+ parameterNumber = 98 ;
+}
+#Sea surface height
+'Sea surface height' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 145 ;
 }
