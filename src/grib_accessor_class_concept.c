@@ -356,14 +356,14 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
         err = nofail ? GRIB_SUCCESS : GRIB_CONCEPT_NO_MATCH;
         if (err) {
             size_t i = 0, concept_count = 0;
-            long dummy = 0, editionNumber                  = 0;
+            long dummy = 0, editionNumber = 0;
             char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {
                 NULL,
             }; /* sorted array containing concept values */
             grib_concept_value* pCon = concepts;
 
             grib_context_log(h->context, GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name, name);
-            if (strcmp(act->name, "paramId")==0 && string_to_long(name, &dummy)==GRIB_SUCCESS) {
+            if (strcmp(act->name, "paramId") == 0 && string_to_long(name, &dummy) == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_ERROR,
                                  "Please check the Parameter Database 'https://apps.ecmwf.int/codes/grib/param-db/?id=%s'", name);
             }
@@ -441,11 +441,12 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     int ret = 0;
     if (a->flags & GRIB_ACCESSOR_FLAG_LONG_TYPE) {
         long lval = 0;
-        ret = unpack_long(a, &lval, len);
+        ret       = unpack_long(a, &lval, len);
         if (ret == GRIB_SUCCESS) {
             *val = lval;
         }
-    } else if (a->flags & GRIB_ACCESSOR_FLAG_DOUBLE_TYPE) {
+    }
+    else if (a->flags & GRIB_ACCESSOR_FLAG_DOUBLE_TYPE) {
         const char* p = concept_evaluate(a);
 
         if (!p) {
@@ -571,20 +572,6 @@ static int is_local_ecmwf_grib2_param_key(grib_accessor* a, long edition, long c
 #endif
 
 #if 0
-static char* get_legacy_param_info(const char* key_name, long paramId)
-{
-    if (strcmp(key_name, "modelName") == 0)
-        return "unknown";
-
-    if (paramId == 228051 || paramId == 228053 || paramId == 228057 || paramId == 228058 || paramId == 228059 || paramId == 228060) {
-        if (strncmp(key_name, "cfName", 6) == 0)
-            return "unknown";
-    }
-    return NULL;
-}
-#endif
-
-#if 0
 /* Try to get the name, shortName, units etc for a GRIB2 message with
  * local ECMWF coding i.e. discipline=192 etc
  */
@@ -631,14 +618,10 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     if (!p) {
         grib_handle* h = grib_handle_of_accessor(a);
-        /* p = get_ECMWF_local_parameter(a, h); */
-        if (!p) {
-            if (a->creator->defaultkey)
-                return grib_get_string_internal(h, a->creator->defaultkey, val, len);
+        if (a->creator->defaultkey)
+            return grib_get_string_internal(h, a->creator->defaultkey, val, len);
 
-            return GRIB_NOT_FOUND;
-        }
-        grib_context_log(h->context, GRIB_LOG_DEBUG, "ECMWF local grib2 parameter: %s=%s", a->name, p);
+        return GRIB_NOT_FOUND;
     }
 
     slen = strlen(p) + 1;
