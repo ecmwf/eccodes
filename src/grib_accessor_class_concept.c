@@ -559,6 +559,7 @@ static void destroy(grib_context* c, grib_accessor* a)
      */
 }
 
+#if 0
 static int is_local_ecmwf_grib2_param_key(grib_accessor* a, long edition, long centre)
 {
     if (edition == 2 && centre == 98) {
@@ -567,6 +568,7 @@ static int is_local_ecmwf_grib2_param_key(grib_accessor* a, long edition, long c
     }
     return 0;
 }
+#endif
 
 #if 0
 static char* get_legacy_param_info(const char* key_name, long paramId)
@@ -582,6 +584,7 @@ static char* get_legacy_param_info(const char* key_name, long paramId)
 }
 #endif
 
+#if 0
 /* Try to get the name, shortName, units etc for a GRIB2 message with
  * local ECMWF coding i.e. discipline=192 etc
  */
@@ -619,6 +622,7 @@ static const char* get_ECMWF_local_parameter(grib_accessor* a, grib_handle* h)
     }
     return NULL;
 }
+#endif
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
