@@ -34,3 +34,27 @@
  parameterCategory = 151 ;
  parameterNumber = 145 ;
 }
+#100 metre U wind component
+'u100' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 246 ;
+}
+#100 metre V wind component
+'v100' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 247 ;
+}
+#100 metre wind speed
+'si100' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 249 ;
+}
+#0 degrees C isothermal level (atm)
+'deg0l' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 24 ;
+}
