@@ -97,7 +97,7 @@ grib_action* grib_action_create_gen(grib_context* context, const char* name, con
     act->cclass  = c;
     act->context = context;
     act->flags   = flags;
-#if CHECK_LOWERCASE_AND_STRING_TYPE
+#ifdef CHECK_LOWERCASE_AND_STRING_TYPE
     {
         int flag_lowercase=0, flag_stringtype=0;
         if (flags & GRIB_ACCESSOR_FLAG_LOWERCASE)

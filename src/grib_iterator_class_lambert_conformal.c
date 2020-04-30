@@ -378,7 +378,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         lonFirstInDegrees, Dx, Dy, radius = 0;
     double latFirstInRadians, lonFirstInRadians, LoVInRadians, Latin1InRadians, Latin2InRadians,
         LaDInRadians;
-    double earthMajorAxisInMetres, earthMinorAxisInMetres;
+    double earthMajorAxisInMetres=0, earthMinorAxisInMetres=0;
 
     grib_iterator_lambert_conformal* self = (grib_iterator_lambert_conformal*)iter;
 
