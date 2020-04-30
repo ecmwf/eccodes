@@ -346,6 +346,11 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
     (void)err; /* TODO */
 }
 
+static int is_hidden(grib_accessor* a)
+{
+    return ( (a->flags & GRIB_ACCESSOR_FLAG_HIDDEN) != 0 );
+}
+
 static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_encode_python* self = (grib_dumper_bufr_encode_python*)d;
@@ -360,8 +365,12 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_handle* h                  = grib_handle_of_accessor(a);
     int doing_unexpandedDescriptors = 0;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
-        return;
+    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0) { /* key does not have the dump attribute */
+        int skip = 1;
+        /* See ECC-1107 */
+        if (!is_hidden(a) && strcmp(a->name, "messageLength") == 0) skip = 0;
+        if (skip) return;
+    }
 
     doing_unexpandedDescriptors = (strcmp(a->name, "unexpandedDescriptors") == 0);
     grib_value_count(a, &count);
