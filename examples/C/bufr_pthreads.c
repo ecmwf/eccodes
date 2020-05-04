@@ -56,6 +56,7 @@ static void* process_bufr(void* arg)
     CODES_CHECK(codes_set_long(h, "#3#verticalSignificanceSurfaceObservations", 8), 0);
     CODES_CHECK(codes_set_long(h, "pack", 1), 0);
 
+    codes_handle_delete(h);
     pthread_exit(NULL);
 }
 
