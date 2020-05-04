@@ -187,6 +187,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_signed.c \
 	grib_accessor_class_signed_bits.c \
 	grib_accessor_class_section.c \
+	grib_accessor_class_step_human_readable.c \
 	grib_accessor_class_step_in_units.c \
 	grib_accessor_class_section_length.c \
 	grib_accessor_class_g1_message_length.c \

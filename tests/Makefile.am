@@ -43,7 +43,7 @@ TESTS = definitions.sh \
         grib_iterator.sh \
         grib_compare.sh \
         grib_level.sh \
-        index.sh \
+        grib_indexing.sh \
         grib_list.sh \
         grib_second_order.sh \
         grib_change_scanning.sh \
@@ -72,7 +72,7 @@ download_data:
 	@$(top_srcdir)/data/download.sh $(top_srcdir)/data
 
 noinst_PROGRAMS = packing_check gauss_sub read_any grib_double_cmp packing pack_unpack \
-                  julian read_index index gribex_perf\
+                  julian grib_read_index grib_indexing gribex_perf\
                   jpeg_perf grib_ccsds_perf so_perf png_perf bpv_limit laplacian \
                   unit_tests
 
@@ -84,8 +84,8 @@ grib_double_cmp_SOURCES = grib_double_cmp.c
 pack_unpack_SOURCES = pack_unpack.c
 julian_SOURCES = julian.c
 unit_tests_SOURCES = unit_tests.c
-index_SOURCES = index.c
-read_index_SOURCES = read_index.c
+grib_indexing_SOURCES = grib_indexing.c
+grib_read_index_SOURCES = grib_read_index.c
 jpeg_perf_SOURCES = jpeg_perf.c
 so_perf_SOURCES = so_perf.c
 png_perf_SOURCES = png_perf.c
