@@ -16,7 +16,7 @@ label="bufr_get_keys_test_c"
 
 #Define tmp file
 fTmp=${label}.tmp.txt
-rm -f $fTmp | true
+rm -f $fTmp
 
 #We check "syno_multi.bufr". The path is
 #hardcoded in the example
@@ -24,11 +24,11 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 #Write the key values into a file
-${examples_dir}/c_bufr_get_keys 2> $REDIRECT > $fTmp
+${examples_dir}/c_bufr_get_keys > $fTmp # 2> $REDIRECT
 
 #TODO: check the results
 
-#cat  $fTmp
+#cat $fTmp
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp
