@@ -412,7 +412,7 @@ static void init(grib_accessor* a, const long v, grib_arguments* params)
     a->length           = 0;
     self->bitsToEndData = get_length(a) * 8;
     self->unpackMode    = CODES_BUFR_UNPACK_STRUCTURE;
-
+    self->inputBitmap   = NULL;
     /* Assert(a->length>=0); */
 }
 
@@ -461,6 +461,7 @@ static void self_clear(grib_context* c, grib_accessor_bufr_data_array* self)
     self->refValIndex = 0;
     tableB_override_clear(c, self);
     self->set_to_missing_if_out_of_range = 0;
+    if (self->inputBitmap) grib_context_free(c, self->inputBitmap);
 }
 
 static int get_native_type(grib_accessor* a)
