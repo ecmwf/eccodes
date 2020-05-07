@@ -1203,7 +1203,7 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
         }
 
         field       = (grib_field*)grib_context_malloc_clear(c, sizeof(grib_field));
-        field->file = file;
+        field->file = newfile;
         index->count++;
         field->offset = h->offset;
 
