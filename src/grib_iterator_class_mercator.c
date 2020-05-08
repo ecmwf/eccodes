@@ -325,8 +325,8 @@ static int init_oblate(grib_handle* h,
 //     theta = ns * adjust_lon_radians(lonFirstInRadians - LoVInRadians);
 //     x0    = rh1 * sin(theta);
 //     y0    = rh - rh1 * cos(theta);
-//     x0    = -x0;
-//     y0    = -y0;
+     x0    = -x0;
+     y0    = -y0;
 
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
