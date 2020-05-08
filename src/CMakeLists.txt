@@ -349,6 +349,7 @@ list( APPEND grib_api_srcs
     grib_iterator_class_polar_stereographic.c
     grib_iterator_class_lambert_azimuthal_equal_area.c
     grib_iterator_class_lambert_conformal.c
+    grib_iterator_class_mercator.c
     grib_iterator.c
     grib_iterator_class.c
     grib_iterator_class_gaussian.c

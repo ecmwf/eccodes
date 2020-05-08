@@ -62,3 +62,15 @@ unsigned[4] Dj  : edition_specific,no_copy ;
 alias latitudinalDirectionGridLength =  Dj;
 meta geography.DjInMetres
     scale(Dj,oneConstant,thousand,truncateDegrees) : dump;
+
+iterator mercator(numberOfPoints,missingValue,values,
+          radius,Ni,Nj,
+          latitudeOfFirstGridPointInDegrees, longitudeOfFirstGridPointInDegrees,
+          LaDInDegrees,
+          latitudeOfLastGridPointInDegrees, longitudeOfLastGridPointInDegrees,
+          orientationOfTheGridInDegrees,
+          DiInMetres,DjInMetres,
+          iScansNegatively,
+          jScansPositively,
+          jPointsAreConsecutive,
+          alternativeRowScanning);
