@@ -58,17 +58,17 @@ typedef struct grib_iterator_mercator
 extern grib_iterator_class* grib_iterator_class_gen;
 
 static grib_iterator_class _grib_iterator_class_mercator = {
-    &grib_iterator_class_gen,                /* super                     */
+    &grib_iterator_class_gen,       /* super                     */
     "mercator",                     /* name                      */
     sizeof(grib_iterator_mercator), /* size of instance          */
-    0,                                       /* inited */
-    &init_class,                             /* init_class */
-    &init,                                   /* constructor               */
-    &destroy,                                /* destructor                */
-    &next,                                   /* Next Value                */
-    0,                                       /*  Previous Value           */
-    0,                                       /* Reset the counter         */
-    0,                                       /* has next values           */
+    0,                              /* inited */
+    &init_class,                    /* init_class */
+    &init,                          /* constructor               */
+    &destroy,                       /* destructor                */
+    &next,                          /* Next Value                */
+    0,                              /*  Previous Value           */
+    0,                              /* Reset the counter         */
+    0,                              /* has next values           */
 };
 
 grib_iterator_class* grib_iterator_class_mercator = &_grib_iterator_class_mercator;
@@ -102,7 +102,7 @@ static void init_class(grib_iterator_class* c)
 /* Adjust longitude (in radians) to range -180 to 180 */
 static double adjust_lon_radians(double lon)
 {
-    if (lon > M_PI)  lon -= 2 * M_PI;
+    if (lon > M_PI) lon -= 2 * M_PI;
     if (lon < -M_PI) lon += 2 * M_PI;
     return lon;
 }
@@ -149,39 +149,40 @@ static double compute_t(
 }
 
 static int init_mercator(grib_handle* h,
-                       grib_iterator_mercator* self,
-                       size_t nv, long nx, long ny,
-                       double DiInMetres, double DjInMetres,
-                       double earthMinorAxisInMetres, double earthMajorAxisInMetres,
-                       double latFirstInRadians, double lonFirstInRadians,
-                       double latLastInRadians, double lonLastInRadians,
-                       double LaDInRadians, double orientationInRadians)
+                         grib_iterator_mercator* self,
+                         size_t nv, long nx, long ny,
+                         double DiInMetres, double DjInMetres,
+                         double earthMinorAxisInMetres, double earthMajorAxisInMetres,
+                         double latFirstInRadians, double lonFirstInRadians,
+                         double latLastInRadians, double lonLastInRadians,
+                         double LaDInRadians, double orientationInRadians)
 {
     int i, j, err = 0;
     double x0, y0, x, y, latRad, lonRad, latDeg, lonDeg, sinphi, ts;
     double false_easting;  /* x offset in meters */
     double false_northing; /* y offset in meters */
-    double m1; /* small value m */
+    double m1;             /* small value m */
     double temp, e, es;
 
     temp = earthMinorAxisInMetres / earthMajorAxisInMetres;
-    es = 1.0 - (temp*temp);
-    e = sqrt(es);
+    es   = 1.0 - (temp * temp);
+    e    = sqrt(es);
 
-    m1 = cos(LaDInRadians)/(sqrt(1.0 - es * sin(LaDInRadians) * sin(LaDInRadians)));
+    m1 = cos(LaDInRadians) / (sqrt(1.0 - es * sin(LaDInRadians) * sin(LaDInRadians)));
 
     /* Forward projection: convert lat,lon to x,y */
-    if (fabs(fabs(latFirstInRadians) - M_PI_2)  <= EPSILON) {
+    if (fabs(fabs(latFirstInRadians) - M_PI_2) <= EPSILON) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Mercator: Transformation cannot be computed at the poles");
         return GRIB_GEOCALCULUS_PROBLEM;
-    } else {
-        sinphi = sin(latFirstInRadians);
-        ts = compute_t(e, latFirstInRadians, sinphi);
-        x0 = earthMajorAxisInMetres * m1 * adjust_lon_radians(lonFirstInRadians - orientationInRadians);
-        y0 = 0 - earthMajorAxisInMetres * m1 * log(ts);
     }
-    x0    = -x0;
-    y0    = -y0;
+    else {
+        sinphi = sin(latFirstInRadians);
+        ts     = compute_t(e, latFirstInRadians, sinphi);
+        x0     = earthMajorAxisInMetres * m1 * adjust_lon_radians(lonFirstInRadians - orientationInRadians);
+        y0     = 0 - earthMajorAxisInMetres * m1 * log(ts);
+    }
+    x0 = -x0;
+    y0 = -y0;
 
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
@@ -205,9 +206,9 @@ static int init_mercator(grib_handle* h,
             double _x, _y;
             x = i * DiInMetres;
             /* Inverse projection to convert from x,y to lat,lon */
-            _x = x - false_easting;
-            _y = y - false_northing;
-            ts = exp(-_y/(earthMajorAxisInMetres * m1));
+            _x     = x - false_easting;
+            _y     = y - false_northing;
+            ts     = exp(-_y / (earthMajorAxisInMetres * m1));
             latRad = compute_phi(e, ts, &err);
             if (err) {
                 grib_context_log(h->context, GRIB_LOG_ERROR, "Mercator: Failed to compute the latitude angle, phi2, for the inverse");
@@ -215,10 +216,10 @@ static int init_mercator(grib_handle* h,
                 grib_context_free(h->context, self->lons);
                 return err;
             }
-            lonRad = adjust_lon_radians(orientationInRadians + _x/(earthMajorAxisInMetres * m1));
-            latDeg = latRad * RAD2DEG;  /* Convert to degrees */
-            lonDeg = lonRad * RAD2DEG;
-            lonDeg = normalise_longitude_in_degrees(lonDeg);
+            lonRad            = adjust_lon_radians(orientationInRadians + _x / (earthMajorAxisInMetres * m1));
+            latDeg            = latRad * RAD2DEG; /* Convert to degrees */
+            lonDeg            = lonRad * RAD2DEG;
+            lonDeg            = normalise_longitude_in_degrees(lonDeg);
             self->lons[index] = lonDeg;
             self->lats[index] = latDeg;
         }
@@ -234,19 +235,19 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     double latLastInDegrees, lonLastInDegrees, orientationInDegrees, DiInMetres, DjInMetres, radius = 0;
     double latFirstInRadians, lonFirstInRadians, latLastInRadians, lonLastInRadians,
         LaDInRadians, orientationInRadians;
-    double earthMajorAxisInMetres=0, earthMinorAxisInMetres=0;
+    double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
 
     grib_iterator_mercator* self = (grib_iterator_mercator*)iter;
 
-    const char* sRadius            = grib_arguments_get_name(h, args, self->carg++);
-    const char* sNi                = grib_arguments_get_name(h, args, self->carg++);
-    const char* sNj                = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLatFirstInDegrees = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLonFirstInDegrees = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLaDInDegrees      = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLatLastInDegrees  = grib_arguments_get_name(h, args, self->carg++);
-    const char* sLonLastInDegrees  = grib_arguments_get_name(h, args, self->carg++);
-    const char* sOrientationInDegrees  = grib_arguments_get_name(h, args, self->carg++);
+    const char* sRadius               = grib_arguments_get_name(h, args, self->carg++);
+    const char* sNi                   = grib_arguments_get_name(h, args, self->carg++);
+    const char* sNj                   = grib_arguments_get_name(h, args, self->carg++);
+    const char* sLatFirstInDegrees    = grib_arguments_get_name(h, args, self->carg++);
+    const char* sLonFirstInDegrees    = grib_arguments_get_name(h, args, self->carg++);
+    const char* sLaDInDegrees         = grib_arguments_get_name(h, args, self->carg++);
+    const char* sLatLastInDegrees     = grib_arguments_get_name(h, args, self->carg++);
+    const char* sLonLastInDegrees     = grib_arguments_get_name(h, args, self->carg++);
+    const char* sOrientationInDegrees = grib_arguments_get_name(h, args, self->carg++);
     /* Dx and Dy are in Metres */
     const char* sDi                     = grib_arguments_get_name(h, args, self->carg++);
     const char* sDj                     = grib_arguments_get_name(h, args, self->carg++);
@@ -261,7 +262,8 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     if (grib_is_earth_oblate(h)) {
         if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
         if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
-    } else {
+    }
+    else {
         if ((err = grib_get_double_internal(h, sRadius, &radius)) != GRIB_SUCCESS) return err;
         earthMinorAxisInMetres = earthMajorAxisInMetres = radius;
     }
@@ -338,7 +340,7 @@ static int next(grib_iterator* i, double* lat, double* lon, double* val)
 static int destroy(grib_iterator* i)
 {
     grib_iterator_mercator* self = (grib_iterator_mercator*)i;
-    const grib_context* c                 = i->h->context;
+    const grib_context* c        = i->h->context;
 
     grib_context_free(c, self->lats);
     grib_context_free(c, self->lons);
