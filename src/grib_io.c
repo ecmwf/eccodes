@@ -399,6 +399,7 @@ static int read_GRIB(reader* r)
 
         default:
             r->seek_from_start(r->read_data, r->offset + 4);
+            grib_buffer_delete(c, buf);
             return GRIB_UNSUPPORTED_EDITION;
             break;
     }
