@@ -167,8 +167,7 @@ static int init_mercator(grib_handle* h,
     temp = earthMinorAxisInMetres / earthMajorAxisInMetres;
     es   = 1.0 - (temp * temp);
     e    = sqrt(es);
-
-    m1 = cos(LaDInRadians) / (sqrt(1.0 - es * sin(LaDInRadians) * sin(LaDInRadians)));
+    m1   = cos(LaDInRadians) / (sqrt(1.0 - es * sin(LaDInRadians) * sin(LaDInRadians)));
 
     /* Forward projection: convert lat,lon to x,y */
     if (fabs(fabs(latFirstInRadians) - M_PI_2) <= EPSILON) {
