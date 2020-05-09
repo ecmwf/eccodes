@@ -136,14 +136,6 @@ static double compute_phi(
     return 0;
 }
 
-/* Compute the constant small m which is the radius of
-   a parallel of latitude, phi, divided by the semimajor axis */
-static double compute_m(double eccent, double sinphi, double cosphi)
-{
-    const double con = eccent * sinphi;
-    return ((cosphi / (sqrt(1.0 - con * con))));
-}
-
 /* Compute the constant small t for use in the forward computations */
 static double compute_t(
     double eccent, /* Eccentricity of the spheroid */
@@ -156,94 +148,7 @@ static double compute_t(
     return (tan(0.5 * (M_PI_2 - phi)) / con);
 }
 
-static double calculate_eccentricity(double minor, double major)
-{
-    const double temp = minor / major;
-    return sqrt(1.0 - temp * temp);
-}
-
-static int init_sphere(grib_handle* h,
-                       grib_iterator_mercator* self,
-                       size_t nv, long nx, long ny,
-                       double LoVInDegrees,
-                       double Dx, double Dy, double radius,
-                       double latFirstInRadians, double lonFirstInRadians,
-                       double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
-                       double LaDInRadians,
-                       long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
-{
-    int i, j;
-    double f, n, rho, rho0, angle, x0, y0, x, y, tmp, tmp2;
-    double latDeg, lonDeg, lonDiff;
-
-    if (fabs(Latin1InRadians - Latin2InRadians) < 1E-09) {
-        n = sin(Latin1InRadians);
-    } else {
-        n = log(cos(Latin1InRadians) / cos(Latin2InRadians)) /
-            log(tan(M_PI_4 + Latin2InRadians / 2.0) / tan(M_PI_4 + Latin1InRadians / 2.0));
-    }
-
-    f    = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
-    rho  = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
-    rho0 = radius * f * pow(tan(M_PI_4 + LaDInRadians / 2.0), -n);
-    if (n < 0) /* adjustment for southern hemisphere */
-        rho0 = -rho0;
-    lonDiff = lonFirstInRadians - LoVInRadians;
-
-    /* Adjust longitude to range -180 to 180 */
-    if (lonDiff > M_PI)
-        lonDiff -= 2 * M_PI;
-    if (lonDiff < -M_PI)
-        lonDiff += 2 * M_PI;
-    angle = n * lonDiff;
-    x0    = rho * sin(angle);
-    y0    = rho0 - rho * cos(angle);
-    /*Dx = iScansNegatively == 0 ? Dx : -Dx;*/
-    /* GRIB-405: Don't change sign of Dy. Latitudes ALWAYS increase from latitudeOfFirstGridPoint */
-    /*Dy = jScansPositively == 1 ? Dy : -Dy;*/
-
-    /* Allocate latitude and longitude arrays */
-    self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
-    if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", nv * sizeof(double));
-        return GRIB_OUT_OF_MEMORY;
-    }
-    self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
-    if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", nv * sizeof(double));
-        return GRIB_OUT_OF_MEMORY;
-    }
-
-    /* Populate our arrays */
-    for (j = 0; j < ny; j++) {
-        y = y0 + j * Dy;
-        if (n < 0) { /* adjustment for southern hemisphere */
-            y = -y;
-        }
-        tmp  = rho0 - y;
-        tmp2 = tmp * tmp;
-        for (i = 0; i < nx; i++) {
-            int index = i + j * nx;
-            x         = x0 + i * Dx;
-            if (n < 0) { /* adjustment for southern hemisphere */
-                x = -x;
-            }
-            angle = atan2(x, tmp); /* See ECC-524 */
-            rho   = sqrt(x * x + tmp2);
-            if (n <= 0) rho = -rho;
-            lonDeg = LoVInDegrees + (angle / n) * RAD2DEG;
-            latDeg = (2.0 * atan(pow(radius * f / rho, 1.0 / n)) - M_PI_2) * RAD2DEG;
-            lonDeg = normalise_longitude_in_degrees(lonDeg);
-            self->lons[index] = lonDeg;
-            self->lats[index] = latDeg;
-        }
-    }
-
-    return GRIB_SUCCESS;
-}
-
-/* Oblate spheroid */
-static int init_oblate(grib_handle* h,
+static int init_mercator(grib_handle* h,
                        grib_iterator_mercator* self,
                        size_t nv, long nx, long ny,
                        double DiInMetres, double DjInMetres,
@@ -253,80 +158,30 @@ static int init_oblate(grib_handle* h,
                        double LaDInRadians, double orientationInRadians)
 {
     int i, j, err = 0;
-    double x0, y0, x, y, latRad, lonRad, latDeg, lonDeg, sinphi, ts, rh1, theta;
+    double x0, y0, x, y, latRad, lonRad, latDeg, lonDeg, sinphi, ts;
     double false_easting;  /* x offset in meters */
     double false_northing; /* y offset in meters */
     double m1; /* small value m */
-
-    double ns;     /* ratio of angle between meridian */
-    double F;      /* flattening of ellipsoid */
-    double rh;     /* height above ellipsoid  */
-    double sin_po; /* sin value */
-    double cos_po; /* cos value */
-    double con;    /* temporary variable */
-    double ms1;    /* small m 1 */
-    double ms2;    /* small m 2 */
-    double ts0;    /* small t 0 */
-    double ts1;    /* small t 1 */
-    double ts2;    /* small t 2 */
-    double center_lat = LaDInRadians;
     double temp, e, es;
 
-    //double e = calculate_eccentricity(earthMinorAxisInMetres, earthMajorAxisInMetres);
     temp = earthMinorAxisInMetres / earthMajorAxisInMetres;
     es = 1.0 - (temp*temp);
     e = sqrt(es);
-    m1 = cos(center_lat)/(sqrt(1.0 - es * sin(center_lat) * sin(center_lat)));
 
-//     sin_po = sin(Latin1InRadians);
-//     cos_po = cos(Latin1InRadians);
-//     con    = sin_po;
-//     ms1    = compute_m(e, sin_po, cos_po);
-//     ts1    = compute_t(e, Latin1InRadians, sin_po);
-// 
-//     sin_po = sin(Latin2InRadians);
-//     cos_po = cos(Latin2InRadians);
-//     ms2    = compute_m(e, sin_po, cos_po);
-//     ts2    = compute_t(e, Latin2InRadians, sin_po);
-//     sin_po = sin(LaDInRadians);
-//     ts0    = compute_t(e, LaDInRadians, sin_po);
-// 
-//     if (fabs(Latin1InRadians - Latin2InRadians) > EPSILON) {
-//         ns = log(ms1 / ms2) / log(ts1 / ts2);
-//     } else {
-//         ns = con;
-//     }
-//     F = ms1 / (ns * pow(ts1, ns));
-//     rh = earthMajorAxisInMetres * F * pow(ts0, ns);
-// 
-//     /* Forward projection: convert lat,lon to x,y */
+    m1 = cos(LaDInRadians)/(sqrt(1.0 - es * sin(LaDInRadians) * sin(LaDInRadians)));
+
+    /* Forward projection: convert lat,lon to x,y */
     if (fabs(fabs(latFirstInRadians) - M_PI_2)  <= EPSILON) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "Mercator: Transformation cannot be computed at the poles");
         return GRIB_GEOCALCULUS_PROBLEM;
     } else {
         sinphi = sin(latFirstInRadians);
-        ts = compute_t(e,latFirstInRadians,sinphi);
+        ts = compute_t(e, latFirstInRadians, sinphi);
         x0 = earthMajorAxisInMetres * m1 * adjust_lon_radians(lonFirstInRadians - orientationInRadians);
         y0 = 0 - earthMajorAxisInMetres * m1 * log(ts);
     }
-//     con = fabs(fabs(latFirstInRadians) - M_PI_2);
-//     if (con > EPSILON) {
-//         sinphi = sin(latFirstInRadians);
-//         ts     = compute_t(e, latFirstInRadians, sinphi);
-//         rh1    = earthMajorAxisInMetres * F * pow(ts, ns);
-//     } else {
-//         con = latFirstInRadians * ns;
-//         if (con <= 0) {
-//             grib_context_log(h->context, GRIB_LOG_ERROR, "Point cannot be projected");
-//             return GRIB_GEOCALCULUS_PROBLEM;
-//         }
-//         rh1 = 0;
-//     }
-//     theta = ns * adjust_lon_radians(lonFirstInRadians - LoVInRadians);
-//     x0    = rh1 * sin(theta);
-//     y0    = rh - rh1 * cos(theta);
-     x0    = -x0;
-     y0    = -y0;
+    x0    = -x0;
+    y0    = -y0;
 
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
@@ -351,30 +206,16 @@ static int init_oblate(grib_handle* h,
             x = i * DiInMetres;
             /* Inverse projection to convert from x,y to lat,lon */
             _x = x - false_easting;
-            _y = rh - y + false_northing;
-            rh1 = sqrt(_x * _x + _y * _y);
-            con = 1.0;
-            if (ns <= 0) {
-                rh1 = -rh1;
-                con = -con;
+            _y = y - false_northing;
+            ts = exp(-_y/(earthMajorAxisInMetres * m1));
+            latRad = compute_phi(e, ts, &err);
+            if (err) {
+                grib_context_log(h->context, GRIB_LOG_ERROR, "Mercator: Failed to compute the latitude angle, phi2, for the inverse");
+                grib_context_free(h->context, self->lats);
+                grib_context_free(h->context, self->lons);
+                return err;
             }
-            theta = 0.0;
-            if (rh1 != 0)
-                theta = atan2((con * _x), (con * _y));
-            if ((rh1 != 0) || (ns > 0.0)) {
-                con    = 1.0 / ns;
-                ts     = pow((rh1 / (earthMajorAxisInMetres * F)), con);
-                latRad = compute_phi(e, ts, &err);
-                if (err) {
-                    grib_context_log(h->context, GRIB_LOG_ERROR, "Failed to compute the latitude angle, phi2, for the inverse");
-                    grib_context_free(h->context, self->lats);
-                    grib_context_free(h->context, self->lons);
-                    return err;
-                }
-            } else {
-                latRad = -M_PI_2;
-            }
-            lonRad = 0; // TODO adjust_lon_radians(theta / ns + LoVInRadians);
+            lonRad = adjust_lon_radians(orientationInRadians + _x/(earthMajorAxisInMetres * m1));
             latDeg = latRad * RAD2DEG;  /* Convert to degrees */
             lonDeg = lonRad * RAD2DEG;
             lonDeg = normalise_longitude_in_degrees(lonDeg);
@@ -387,7 +228,7 @@ static int init_oblate(grib_handle* h,
 
 static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 {
-    int err = 0, is_oblate = 0;
+    int err = 0;
     long ni, nj, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning;
     double latFirstInDegrees, lonFirstInDegrees, LaDInDegrees;
     double latLastInDegrees, lonLastInDegrees, orientationInDegrees, DiInMetres, DjInMetres, radius = 0;
@@ -417,13 +258,12 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     if ((err = grib_get_long_internal(h, sNi, &ni)) != GRIB_SUCCESS) return err;
     if ((err = grib_get_long_internal(h, sNj, &nj)) != GRIB_SUCCESS) return err;
 
-    is_oblate = grib_is_earth_oblate(h);
-
-    if (is_oblate) {
+    if (grib_is_earth_oblate(h)) {
         if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
         if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
     } else {
         if ((err = grib_get_double_internal(h, sRadius, &radius)) != GRIB_SUCCESS) return err;
+        earthMinorAxisInMetres = earthMajorAxisInMetres = radius;
     }
 
     if (iter->nv != ni * nj) {
@@ -464,19 +304,11 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     LaDInRadians         = LaDInDegrees * DEG2RAD;
     orientationInRadians = orientationInDegrees * DEG2RAD;
 
-//     if (is_oblate) {
-//         err = init_oblate(h, self, iter->nv, ni, nj,
-//                           DiInMetres, DjInMetres, earthMinorAxisInMetres, earthMajorAxisInMetres,
-//                           latFirstInRadians, lonFirstInRadians,
-//                           latLastInRadians, lonLastInRadians,
-//                           LaDInRadians, orientationInRadians);
-//     } else {
-//         err = init_sphere(h, self, iter->nv, nx, ny,
-//                           Dx, Dy, radius,
-//                           latFirstInRadians, lonFirstInRadians,
-//                           LoVInRadians, Latin1InRadians, Latin2InRadians, LaDInRadians,
-//                           iScansNegatively, jScansPositively, jPointsAreConsecutive);
-//     }
+    err = init_mercator(h, self, iter->nv, ni, nj,
+                        DiInMetres, DjInMetres, earthMinorAxisInMetres, earthMajorAxisInMetres,
+                        latFirstInRadians, lonFirstInRadians,
+                        latLastInRadians, lonLastInRadians,
+                        LaDInRadians, orientationInRadians);
     if (err) return err;
 
     iter->e = -1;
