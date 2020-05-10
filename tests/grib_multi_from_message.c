@@ -43,9 +43,11 @@ int main(int argc, char* argv[])
     FILE* f             = NULL;
     long level          = 0;
     grib_context* c     = grib_context_get_default();
+    int multi_support   = 0;
 
     if (argc == 3 && !strcmp(argv[1], "-m")) {
-        grib_multi_support_on(0);
+        grib_multi_support_on(c);
+        multi_support = 1;
         filename = argv[2];
     }
     else if (argc == 2)
@@ -84,7 +86,9 @@ int main(int argc, char* argv[])
         GRIB_CHECK(grib_get_string(h, "shortName", shortName, &len), "shortName");
         GRIB_CHECK(grib_get_long(h, "level", &level), "level");
         printf("%d %s %ld\n", count, shortName, level);
-        grib_context_free(c, h->buffer->data); /* See grib_handle_delete and grib_buffer_delete */
+        if (!multi_support) {
+            grib_context_free(c, h->buffer->data); /* See grib_handle_delete and grib_buffer_delete */
+        }
         grib_handle_delete(h);
     }
 
