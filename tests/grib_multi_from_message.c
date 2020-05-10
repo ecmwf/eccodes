@@ -12,8 +12,7 @@
  * test: reading GRIB2 multi fields messages from memory
  */
 
-#include "grib_api.h"
-#include <sys/stat.h>
+#include "grib_api_internal.h"
 #include <assert.h>
 
 #ifndef ECCODES_ON_WINDOWS
@@ -85,6 +84,7 @@ int main(int argc, char* argv[])
         GRIB_CHECK(grib_get_string(h, "shortName", shortName, &len), "shortName");
         GRIB_CHECK(grib_get_long(h, "level", &level), "level");
         printf("%d %s %ld\n", count, shortName, level);
+        grib_context_free(c, h->buffer->data); /* See grib_handle_delete and grib_buffer_delete */
         grib_handle_delete(h);
     }
 
