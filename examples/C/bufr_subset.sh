@@ -39,8 +39,6 @@ EOF
 # We check "synop_multi_subset.bufr". The path is
 # hard coded in the example
 
-REDIRECT=/dev/null
-
 # Write the values into a file and compare with reference
 ${examples_dir}/c_bufr_subset > $fTmp
 
