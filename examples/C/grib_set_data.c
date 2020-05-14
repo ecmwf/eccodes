@@ -49,7 +49,7 @@ int main(int argc, char** argv)
     printf("Using samples path: %s\n", samples_path);
     h = codes_grib_handle_new_from_samples(0, sample_filename);
     if (h == NULL) {
-        printf("Error: unable to create handle from sample file %s\n", sample_filename);
+        fprintf(stderr, "Error: unable to create handle from sample file %s\n", sample_filename);
         exit(1);
     }
 

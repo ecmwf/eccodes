@@ -13,7 +13,6 @@
  *
  * Description: how to set a bitmap in a GRIB message
  *
- *
  */
 
 #include <stdio.h>
@@ -39,20 +38,20 @@ int main(int argc, char** argv)
 
     in = fopen(infile, "rb");
     if (!in) {
-        printf("ERROR: unable to open input file %s\n", infile);
+        fprintf(stderr, "Error: unable to open input file %s\n", infile);
         return 1;
     }
 
     out = fopen(outfile, "wb");
     if (!out) {
-        printf("ERROR: unable to open output file %s\n", outfile);
+        fprintf(stderr, "Error: unable to open output file %s\n", outfile);
         fclose(in);
         return 1;
     }
 
     h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     if (h == NULL) {
-        printf("Error: unable to create handle from file %s\n", infile);
+        fprintf(stderr, "Error: unable to create handle from file %s\n", infile);
     }
 
     CODES_CHECK(codes_set_double(h, "missingValue", missing), 0);
