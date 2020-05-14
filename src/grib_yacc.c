@@ -72,10 +72,10 @@
 #include "grib_api_internal.h"
 /* #include "grib_parser.h" */
 
-extern int grib_yylex();
+extern int grib_yylex(void);
 extern int grib_yyerror(const char*);
 extern int grib_yylineno;
-extern char* file_being_parsed();
+extern char* file_being_parsed(void);
 
 extern   grib_action*           grib_parser_all_actions;
 extern   grib_concept_value*    grib_parser_concept;

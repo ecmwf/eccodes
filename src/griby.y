@@ -14,10 +14,10 @@
 #include "grib_api_internal.h"
 /* #include "grib_parser.h" */
 
-extern int yylex();
+extern int yylex(void);
 extern int yyerror(const char*);
 extern int yylineno;
-extern char* file_being_parsed();
+extern char* file_being_parsed(void);
 
 extern   grib_action*           grib_parser_all_actions;
 extern   grib_concept_value*    grib_parser_concept;
