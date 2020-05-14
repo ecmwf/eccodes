@@ -399,6 +399,7 @@ static int read_GRIB(reader* r)
 
         default:
             r->seek_from_start(r->read_data, r->offset + 4);
+            grib_buffer_delete(c, buf);
             return GRIB_UNSUPPORTED_EDITION;
             break;
     }
@@ -898,13 +899,25 @@ static int _read_any(reader* r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_
 
     return err;
 }
+
 static int read_any(reader* r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
 {
     int result = 0;
+
+#ifndef ECCODES_EACH_THREAD_OWN_FILE
+    /* If several threads can open the same file, then we need the locks
+     * so each thread gets its own message. Otherwise if threads are passed
+     * different files, then the lock is not needed
+     */
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex1);
+#endif
+
     result = _read_any(r, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
+
+#ifndef ECCODES_EACH_THREAD_OWN_FILE
     GRIB_MUTEX_UNLOCK(&mutex1);
+#endif
     return result;
 }
 

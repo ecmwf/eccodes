@@ -58,9 +58,9 @@ static int count_messages(FILE* in, int message_type, unsigned long* count)
                 }
             }
             if (mesg && !err) {
-                grib_context_free(c, mesg);
                 (*count)++;
             }
+            grib_context_free(c, mesg);
         }
     }
 

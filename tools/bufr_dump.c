@@ -379,6 +379,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     long length = 0;
     int i, err = 0;
+    grib_handle* hclone     = NULL;
     grib_accessor* a        = NULL;
     grib_accessors_list* al = NULL;
     if (grib_get_long(h, "totalLength", &length) != GRIB_SUCCESS)
@@ -422,7 +423,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 new_handle = grib_handle_new_from_message(0, buffer, size);
                 Assert(new_handle);
                 /* Replace handle with the new one which has only one subset */
-                h = new_handle; /*TODO: possible leak!*/
+                h = new_handle;
+                hclone = h2; /* to be deleted later */
             }
         }
         else {
@@ -539,6 +541,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
     }
 
+    grib_handle_delete(hclone);
     return 0;
 }
 
