@@ -31,11 +31,14 @@ Mercator::Mercator(const param::MIRParametrisation& param) : RegularGrid(param, 
 RegularGrid::Projection Mercator::make_projection(const param::MIRParametrisation& param) {
 
     double LaDInDegrees;
+    double LonInDegrees;  // what to call this?
     double radius;
     ASSERT(param.get("LaDInDegrees", LaDInDegrees));
+    param.get("LonInDegrees", LonInDegrees = 0.);
     param.get("radius", radius = ::atlas::util::Earth::radius());
 
     return Projection::Spec("type", "mercator")
+        .set("longitude0", LonInDegrees)
         .set("latitude1", LaDInDegrees)
         .set("radius", radius);
 }
