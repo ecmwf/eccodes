@@ -30,6 +30,24 @@ Mercator::Mercator(const param::MIRParametrisation& param) : RegularGrid(param, 
 
 RegularGrid::Projection Mercator::make_projection(const param::MIRParametrisation& param) {
 
+    std::string proj;
+    if (param.get("proj", proj) && !proj.empty()) {
+        Projection::Spec spec("type", "proj");
+        spec.set("proj", proj);
+
+        std::string projSource;
+        if (param.get("projSource", projSource) && !projSource.empty()) {
+            spec.set("proj_source", projSource);
+        }
+
+        std::string projGeocentric;
+        if (param.get("projGeocentric", projGeocentric) && !projGeocentric.empty()) {
+            spec.set("proj_geocentric", projGeocentric);
+        }
+
+        return spec;
+    }
+
     double LaDInDegrees;
     double LonInDegrees;  // what to call this?
     double radius;
