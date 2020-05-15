@@ -497,6 +497,7 @@
     <ClCompile Include="..\..\..\src\grib_iterator_class_lambert_conformal.c" />
     <ClCompile Include="..\..\..\src\grib_iterator_class_latlon.c" />
     <ClCompile Include="..\..\..\src\grib_iterator_class_latlon_reduced.c" />
+    <ClCompile Include="..\..\..\src\grib_iterator_class_mercator.c" />
     <ClCompile Include="..\..\..\src\grib_iterator_class_polar_stereographic.c" />
     <ClCompile Include="..\..\..\src\grib_iterator_class_regular.c" />
     <ClCompile Include="..\..\..\src\grib_iterator_class_space_view.c" />
