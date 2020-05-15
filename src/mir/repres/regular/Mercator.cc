@@ -10,29 +10,24 @@
  */
 
 
-#include "mir/repres/unsupported/Mercator.h"
-
-#include <iostream>
+#include "mir/repres/regular/Mercator.h"
 
 #include "eckit/exception/Exceptions.h"
 
 
 namespace mir {
 namespace repres {
+namespace regular {
 
 
-Mercator::Mercator(const param::MIRParametrisation& /*parametrisation*/) {}
+static RepresentationBuilder<Mercator> __builder("mercator");
 
 
-Mercator::Mercator() = default;
+Mercator::Mercator(const param::MIRParametrisation& param) : RegularGrid(param, make_projection(param)) {}
 
 
-Mercator::~Mercator() = default;
-
-
-void Mercator::print(std::ostream& out) const {
-    out << "Mercator["
-        << "]";
+RegularGrid::Projection Mercator::make_projection(const param::MIRParametrisation& /*param*/) {
+    return Projection::Spec("type", "mercator");
 }
 
 
@@ -41,8 +36,6 @@ void Mercator::fill(grib_info& /*info*/) const {
 }
 
 
-static RepresentationBuilder<Mercator> mercator("mercator");
-
-
+}  // namespace regular
 }  // namespace repres
 }  // namespace mir
