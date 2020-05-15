@@ -74,6 +74,8 @@ concept_nofail vertical.typeOfLevel (unknown) {
   'entireOcean' = {typeOfFirstFixedSurface=1;typeOfSecondFixedSurface=9;}
   'snow' = {typeOfFirstFixedSurface=114;typeOfSecondFixedSurface=255;}
   'snowLayer' = {typeOfFirstFixedSurface=114; typeOfSecondFixedSurface=114;}
+  'seaIce' = {typeOfFirstFixedSurface=152;  typeOfSecondFixedSurface=255;}
+  'seaIceLayer'  = {typeOfFirstFixedSurface=152;  typeOfSecondFixedSurface=152;}
 
   'oceanSurface' = {typeOfFirstFixedSurface=160; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=0; typeOfSecondFixedSurface=255;}
   'oceanLayer' = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=160;}
