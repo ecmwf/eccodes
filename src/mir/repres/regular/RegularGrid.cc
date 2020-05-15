@@ -31,6 +31,7 @@ namespace mir {
 namespace repres {
 namespace regular {
 
+
 RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGrid::Projection& projection) {
 
     ASSERT(projection);
@@ -81,28 +82,56 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
     bbox_ = {bbox.north(), bbox.west(), bbox.south(), bbox.east()};
 }
 
+
 RegularGrid::~RegularGrid() = default;
+
+
+RegularGrid::Projection RegularGrid::make_projection_via_proj(const param::MIRParametrisation& param) {
+    std::string proj;
+    ASSERT(param.get("proj", proj) && !proj.empty());
+
+    Projection::Spec spec("type", "proj");
+    spec.set("proj", proj);
+
+    std::string projSource;
+    if (param.get("projSource", projSource) && !projSource.empty()) {
+        spec.set("proj_source", projSource);
+    }
+
+    std::string projGeocentric;
+    if (param.get("projGeocentric", projGeocentric) && !projGeocentric.empty()) {
+        spec.set("proj_geocentric", projGeocentric);
+    }
+
+    return spec;
+}
+
 
 void RegularGrid::print(std::ostream& out) const {
     out << "RegularGrid[x=" << x_.spec() << ",y=" << y_.spec() << ",projection=" << grid_.projection().spec()
         << ",firstPointBottomLeft=" << firstPointBottomLeft_ << ",bbox=" << bbox_ << "]";
 }
 
+
 bool RegularGrid::extendBoundingBoxOnIntersect() const {
     return true;
 }
+
 
 size_t RegularGrid::numberOfPoints() const {
     return x_.size() * y_.size();
 }
 
+
 ::atlas::Grid RegularGrid::atlasGrid() const {
     return grid_;
 }
 
+
 bool RegularGrid::isPeriodicWestEast() const {
     return false;
 }
+
 
 void RegularGrid::fill(grib_info& info) const {
 
@@ -146,18 +175,22 @@ void RegularGrid::fill(grib_info& info) const {
     info.grid.jScansPositively = y_.front() < y_.back() ? 1 : 0;
 }
 
+
 bool RegularGrid::includesNorthPole() const {
     return bbox_.north() == Latitude::NORTH_POLE;
 }
+
 
 bool RegularGrid::includesSouthPole() const {
     return bbox_.south() == Latitude::SOUTH_POLE;
 }
 
+
 void RegularGrid::reorder(long, mir::data::MIRValuesVector&) const {
     // do not reorder, iterator is doing the right thing
     // FIXME this function should not be overriding to do nothing
 }
+
 
 void RegularGrid::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
@@ -165,6 +198,7 @@ void RegularGrid::validate(const MIRValuesVector& values) const {
                                 << ", numberOfPoints: " << Pretty(count) << "." << std::endl;
     ASSERT(values.size() == count);
 }
+
 
 Iterator* RegularGrid::iterator() const {
 
@@ -220,6 +254,7 @@ Iterator* RegularGrid::iterator() const {
     return new RegularGridIterator(grid_.projection(), x_, y_);
 }
 
+
 void RegularGrid::makeName(std::ostream& out) const {
     eckit::MD5 h;
     h << grid_.projection().spec();
@@ -236,6 +271,7 @@ void RegularGrid::makeName(std::ostream& out) const {
     out << "RegularGrid-" << (type.empty() ? "" : type + "-") << h.digest();
 }
 
+
 bool RegularGrid::sameAs(const Representation& other) const {
     auto name = [](const RegularGrid& repres) {
         std::stringstream str;
@@ -247,11 +283,13 @@ bool RegularGrid::sameAs(const Representation& other) const {
     return (o != nullptr) && name(*this) == name(*o);
 }
 
+
 void RegularGrid::fill(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
         params.meshGenerator_ = "structured";
     }
 }
+
 
 }  // namespace regular
 }  // namespace repres
