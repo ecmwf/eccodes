@@ -102,7 +102,7 @@ static void init_class(grib_iterator_class* c)
 /* Adjust longitude (in radians) to range -180 to 180 */
 static double adjust_lon_radians(double lon)
 {
-    if (lon > M_PI) lon -= 2 * M_PI;
+    if (lon > M_PI)  lon -= 2 * M_PI;
     if (lon < -M_PI) lon += 2 * M_PI;
     return lon;
 }
@@ -111,7 +111,7 @@ static double adjust_lon_radians(double lon)
  * From the book "Map Projections-A Working Manual-John P. Snyder (1987)"
  * Equation (7–9) involves rapidly converging iteration: Calculate t from (15-11)
  * Then, assuming an initial trial phi equal to (pi/2 - 2*arctan t) in the right side of equation (7–9),
- * calculate phi on the left side. Substitute the calculated phi) into the right side,
+ * calculate phi on the left side. Substitute the calculated phi into the right side,
  * calculate a new phi, etc., until phi does not change significantly from the preceding trial value of phi
  */
 static double compute_phi(
@@ -129,8 +129,8 @@ static double compute_phi(
         con   = eccent * sinpi;
         dphi  = M_PI_2 - 2 * atan(ts * (pow(((1.0 - con) / (1.0 + con)), eccnth))) - phi;
         phi += dphi;
-        if (fabs(dphi) <= 0.0000000001)
-            return (phi);
+        if (fabs(dphi) <= EPSILON)
+            return phi;
     }
     *error = GRIB_INTERNAL_ERROR;
     return 0;
