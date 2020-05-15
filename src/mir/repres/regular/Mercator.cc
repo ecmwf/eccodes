@@ -14,6 +14,8 @@
 
 #include "eckit/exception/Exceptions.h"
 
+#include "mir/param/MIRParametrisation.h"
+
 
 namespace mir {
 namespace repres {
@@ -26,8 +28,16 @@ static RepresentationBuilder<Mercator> __builder("mercator");
 Mercator::Mercator(const param::MIRParametrisation& param) : RegularGrid(param, make_projection(param)) {}
 
 
-RegularGrid::Projection Mercator::make_projection(const param::MIRParametrisation& /*param*/) {
-    return Projection::Spec("type", "mercator");
+RegularGrid::Projection Mercator::make_projection(const param::MIRParametrisation& param) {
+
+    double LaDInDegrees;
+    double radius;
+    ASSERT(param.get("LaDInDegrees", LaDInDegrees));
+    param.get("radius", radius = ::atlas::util::Earth::radius());
+
+    return Projection::Spec("type", "mercator")
+        .set("latitude1", LaDInDegrees)
+        .set("radius", radius);
 }
 
 
