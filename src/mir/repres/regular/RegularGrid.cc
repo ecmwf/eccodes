@@ -16,6 +16,7 @@
 
 #include "eckit/log/Log.h"
 #include "eckit/utils/MD5.h"
+#include "eckit/utils/StringTools.h"
 
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
@@ -39,10 +40,20 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
     param.get("earthMajorAxis", earthMajorAxis_ = radius_);
     param.get("earthMinorAxis", earthMinorAxis_ = radius_);
 
-    long nx = 0;
-    long ny = 0;
-    ASSERT(param.get("numberOfPointsAlongXAxis", nx) && nx > 0);
-    ASSERT(param.get("numberOfPointsAlongYAxis", ny) && ny > 0);
+    auto get_long_first_key = [](const param::MIRParametrisation& param, const std::vector<std::string>& keys) -> long {
+        long value = 0;
+        for (auto key : keys) {
+            if (param.get(key, value)) {
+                return value;
+            }
+        }
+        throw eckit::SeriousBug("RegularGrid: couldn't find any key: " + eckit::StringTools::join(", ", keys));
+    };
+
+    long nx = get_long_first_key(param, {"numberOfPointsAlongXAxis", "Ni"});
+    long ny = get_long_first_key(param, {"numberOfPointsAlongYAxis", "Nj"});
+    ASSERT(nx > 0);
+    ASSERT(ny > 0);
 
     std::vector<double> grid;
     ASSERT(param.get("grid", grid) && grid.size() == 2);
