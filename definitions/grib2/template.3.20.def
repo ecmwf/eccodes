@@ -63,7 +63,6 @@ flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump;   # WMO bit 1
 
 include "grib2/template.3.scanning_mode.def";
 
-
 iterator polar_stereographic(numberOfPoints,missingValue,values,
           radius,Nx,Ny,
           latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
@@ -71,10 +70,8 @@ iterator polar_stereographic(numberOfPoints,missingValue,values,
           orientationOfTheGridInDegrees,
           LaDInDegrees,
           DxInMetres,DyInMetres,
-          iScansNegatively,
-          jScansPositively,
-          jPointsAreConsecutive,
-          alternativeRowScanning);
+          iScansNegatively, jScansPositively,
+          jPointsAreConsecutive, alternativeRowScanning);
 
 nearest polar_stereographic(values,radius,Nx,Ny);
 
@@ -82,3 +79,5 @@ meta latLonValues latlonvalues(values);
 alias latitudeLongitudeValues=latLonValues;
 meta latitudes latitudes(values,0);
 meta longitudes longitudes(values,0);
+meta distinctLatitudes latitudes(values,1);
+meta distinctLongitudes longitudes(values,1);

@@ -53,15 +53,13 @@ meta geography.orientationOfTheGridInDegrees
 # NOTE 2: Grid lengths are in units of 10**-3 m, at the latitude specified by LaD
 unsigned[4] Di  : edition_specific,no_copy ;
 alias longitudinalDirectionGridLength = Di   ;
-meta geography.DiInMetres
-    scale(Di,oneConstant,thousand,truncateDegrees) : dump;
+meta geography.DiInMetres scale(Di,oneConstant,thousand,truncateDegrees) : dump;
     
 # Dj - latitudinal direction grid length
 # NOTE 2: Grid lengths are in units of 10**-3 m, at the latitude specified by LaD
 unsigned[4] Dj  : edition_specific,no_copy ;
 alias latitudinalDirectionGridLength =  Dj;
-meta geography.DjInMetres
-    scale(Dj,oneConstant,thousand,truncateDegrees) : dump;
+meta geography.DjInMetres scale(Dj,oneConstant,thousand,truncateDegrees) : dump;
 
 iterator mercator(numberOfPoints,missingValue,values,
           radius,Ni,Nj,
@@ -70,7 +68,12 @@ iterator mercator(numberOfPoints,missingValue,values,
           latitudeOfLastGridPointInDegrees, longitudeOfLastGridPointInDegrees,
           orientationOfTheGridInDegrees,
           DiInMetres,DjInMetres,
-          iScansNegatively,
-          jScansPositively,
-          jPointsAreConsecutive,
-          alternativeRowScanning);
+          iScansNegatively, jScansPositively,
+          jPointsAreConsecutive, alternativeRowScanning);
+
+meta latLonValues latlonvalues(values);
+alias latitudeLongitudeValues=latLonValues;
+meta latitudes latitudes(values,0);
+meta longitudes longitudes(values,0);
+meta distinctLatitudes latitudes(values,1);
+meta distinctLongitudes longitudes(values,1);
