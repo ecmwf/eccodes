@@ -4,17 +4,26 @@ if( NOT HAVE_PRODUCT_BUFR )
 elseif( NOT HAVE_PRODUCT_GRIB )
   set( exclude -exclude grib )
 endif()
+
+set( generated_c_files
+    ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_000.c
+    ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_001.c
+    ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_002.c
+    ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_003.c
+    ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_final.c)
+
 add_custom_command(
-  OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/memfs.c
+  OUTPUT ${generated_c_files}
   COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/memfs.py
     ${exclude}
     ${PROJECT_SOURCE_DIR}/definitions
     ${PROJECT_SOURCE_DIR}/samples
     ${PROJECT_SOURCE_DIR}/ifs_samples
-    ${CMAKE_CURRENT_BINARY_DIR}/memfs.c
-  DEPENDS ${PROJECT_SOURCE_DIR}/memfs.py )
+    ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen
+  DEPENDS ${PROJECT_SOURCE_DIR}/memfs.py)
 
-set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/memfs.c PROPERTIES OBJECT_DEPENDS
+set_source_files_properties(
+    ${generated_c_files} PROPERTIES OBJECT_DEPENDS
     "${PROJECT_SOURCE_DIR}/memfs.py"
     # "${PROJECT_SOURCE_DIR}/memfs.py" ${definition_files}"
     )
@@ -25,8 +34,8 @@ if( CMAKE_C_COMPILER_ID MATCHES Cray )
   string( REGEX REPLACE "-g|-G[ 0-3]" " " CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE_CAPS} "${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE_CAPS}}" )
 endif()
 
-if (HAVE_MEMFS)
+if( HAVE_MEMFS )
     ecbuild_add_library(TARGET    eccodes_memfs
-                        SOURCES   ${CMAKE_CURRENT_BINARY_DIR}/memfs.c
-                        GENERATED ${CMAKE_CURRENT_BINARY_DIR}/memfs.c)
+                        SOURCES   ${generated_c_files}
+                        GENERATED ${generated_c_files})
 endif()

@@ -267,6 +267,7 @@ static int value_count(grib_accessor* a, long* count)
     }
     else {
         if (plSize) {
+            if (numberOfRows && !pl) return GRIB_INTERNAL_ERROR;
             for (i = 0; i < numberOfRows; i++)
                 n += pl[i];
             grib_context_free(c, pl);

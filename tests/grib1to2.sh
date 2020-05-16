@@ -80,6 +80,8 @@ if [ -x "${tools_dir}/grib_check_gaussian_grid" ]; then
     ${tools_dir}/grib_check_gaussian_grid $input $output
 fi
 
+rm -f $output
+
 #sed "s:toolsdir:${tools_dir}/:" ${tools_dir}/grib1to2.txt > ${tools_dir}/grib1to2.test
 #chmod +x ${tools_dir}/grib1to2.test
 #${tools_dir}/grib1to2.test -f ${data_dir}/test.grib1 ${data_dir}/test.grib2

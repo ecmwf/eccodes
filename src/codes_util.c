@@ -10,6 +10,17 @@
 
 #include "grib_api_internal.h"
 
+/* Input lon must be in degrees not radians */
+/* Not to be used for latitudes as they can be -ve */
+double normalise_longitude_in_degrees(double lon)
+{
+    while (lon < 0)
+        lon += 360;
+    while (lon > 360)
+        lon -= 360;
+    return lon;
+}
+
 
 #ifdef ECCODES_ON_WINDOWS
 /* Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions) */

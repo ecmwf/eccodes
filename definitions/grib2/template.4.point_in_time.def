@@ -16,6 +16,7 @@ alias ls.stepRange=stepRange;
 concept stepTypeInternal {
   "instant" = {dummy=1;}
 }
+meta stepHumanReadable step_human_readable(stepUnits, stepRange): hidden,no_copy;
 
 alias time.stepType=stepType;
 alias time.stepRange=stepRange;

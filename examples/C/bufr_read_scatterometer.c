@@ -40,14 +40,14 @@ int main(int argc, char* argv[])
 
     in = fopen(infile, "rb");
     if (!in) {
-        printf("ERROR: unable to open file %s\n", infile);
+        fprintf(stderr, "Error: unable to open file %s\n", infile);
         return 1;
     }
 
     /* Loop over the messages in the bufr file */
     while ((h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err)) != NULL || err != CODES_SUCCESS) {
         if (h == NULL) {
-            printf("Error: unable to create handle for message %d\n", cnt);
+            fprintf(stderr, "Error: unable to create handle for message %d\n", cnt);
             cnt++;
             continue;
         }
@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
         /* Check the size (including all the subsets) */
         CODES_CHECK(codes_get_size(h, key_name, &len), 0);
         if (len != numObs) {
-            printf("inconsistent number of %s values found!\n", key_name);
+            fprintf(stderr, "Error: inconsistent number of %s values found!\n", key_name);
             return 1;
         }
 
@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
         /* Check the size (including all the subsets) */
         CODES_CHECK(codes_get_size(h, key_name, &len), 0);
         if (len != numObs) {
-            printf("inconsistent number of %s values found!\n", key_name);
+            fprintf(stderr, "Error: inconsistent number of %s values found!\n", key_name);
             return 1;
         }
 
@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
         /* Check the size (including all the subsets) */
         CODES_CHECK(codes_get_size(h, key_name, &len), 0);
         if (len != numObs) {
-            printf("inconsistent number of %s values found!\n", key_name);
+            fprintf(stderr, "Error: inconsistent number of %s values found!\n", key_name);
             return 1;
         }
 

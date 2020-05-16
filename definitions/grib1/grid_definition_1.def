@@ -47,3 +47,22 @@ meta numberOfDataPoints number_of_points(Ni,Nj) : dump;
 alias numberOfPoints=numberOfDataPoints;
 meta numberOfValues number_of_values(values,bitsPerValue,numberOfDataPoints,bitmapPresent,bitmap,numberOfCodedValues) : dump;
 #alias ls.valuesCount=numberOfValues;
+
+iterator mercator(numberOfPoints,missingValue,values,
+          radius,Ni,Nj,
+          latitudeOfFirstGridPointInDegrees, longitudeOfFirstGridPointInDegrees,
+          LaDInDegrees,
+          latitudeOfLastGridPointInDegrees, longitudeOfLastGridPointInDegrees,
+          orientationOfTheGridInDegrees,
+          DiInMetres,DjInMetres,
+          iScansNegatively,
+          jScansPositively,
+          jPointsAreConsecutive,
+          alternativeRowScanning);
+
+meta latLonValues latlonvalues(values);
+alias latitudeLongitudeValues=latLonValues;
+meta latitudes latitudes(values,0);
+meta longitudes longitudes(values,0);
+meta distinctLatitudes latitudes(values,1);
+meta distinctLongitudes longitudes(values,1);

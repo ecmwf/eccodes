@@ -412,7 +412,7 @@ static void init(grib_accessor* a, const long v, grib_arguments* params)
     a->length           = 0;
     self->bitsToEndData = get_length(a) * 8;
     self->unpackMode    = CODES_BUFR_UNPACK_STRUCTURE;
-
+    self->inputBitmap   = NULL;
     /* Assert(a->length>=0); */
 }
 
@@ -461,6 +461,7 @@ static void self_clear(grib_context* c, grib_accessor_bufr_data_array* self)
     self->refValIndex = 0;
     tableB_override_clear(c, self);
     self->set_to_missing_if_out_of_range = 0;
+    if (self->inputBitmap) grib_context_free(c, self->inputBitmap);
 }
 
 static int get_native_type(grib_accessor* a)
@@ -543,6 +544,7 @@ static int get_descriptors(grib_accessor* a)
         return ret;
 
     numberOfDescriptors = grib_bufr_descriptors_array_used_size(self->expanded);
+    if (self->canBeMissing ) grib_context_free(c, self->canBeMissing);
     self->canBeMissing  = (int*)grib_context_malloc_clear(c, numberOfDescriptors * sizeof(int));
     for (i = 0; i < numberOfDescriptors; i++)
         self->canBeMissing[i] = grib_bufr_descriptor_can_be_missing(self->expanded->v[i]);
@@ -860,6 +862,7 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
         }
         grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + 6);
         grib_encode_unsigned_longb(buff->data, localWidth, pos, 6);
+        grib_context_free(c, values);
         return err;
     }
 
@@ -2450,7 +2453,7 @@ static int create_keys(grib_accessor* a, long onlySubset, long startSubset, long
         grib_sarray_delete(c, self->tempStrings);
         self->tempStrings = NULL;
     }
-    self->tempStrings = grib_sarray_new(c, self->numberOfSubsets, 500);
+    self->tempStrings = self->numberOfSubsets? grib_sarray_new(c, self->numberOfSubsets, 500) : NULL;
 
     end         = self->compressedData ? 1 : self->numberOfSubsets;
     groupNumber = 1;
@@ -2878,6 +2881,10 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
         return err;
 
     descriptors = self->expanded->v;
+    if (!descriptors) {
+        grib_context_log(c, GRIB_LOG_ERROR, "No descriptors found!");
+        return GRIB_INTERNAL_ERROR;
+    }
 
     if (do_clean == 1 && self->numericValues) {
         grib_vdarray_delete_content(c, self->numericValues);
@@ -2951,9 +2958,10 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
         elementIndex = 0;
 
         numberOfNestedRepetitions = 0;
-        inr                       = 0;
+
         for (i = 0; i < numberOfDescriptors; i++) {
-            grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data processing: elementNumber=%ld code=%6.6ld", icount++, descriptors[i]->code);
+            if (c->debug) grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data processing: elementNumber=%ld code=%6.6ld",
+                                           icount++, descriptors[i]->code);
             switch (descriptors[i]->F) {
                 case 0:
                     /* Table B element */
@@ -3415,4 +3423,5 @@ static void destroy(grib_context* c, grib_accessor* a)
         grib_sarray_delete_content(c, self->tempStrings);
         grib_sarray_delete(c, self->tempStrings);
     }
+    grib_iarray_delete(self->iss_list);
 }

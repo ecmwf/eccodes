@@ -380,6 +380,8 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
 
         numberOfColumns = 0;
         while (*s) {
+            char* tcol = t->entries[code].column[numberOfColumns];
+            if ( tcol ) grib_context_free_persistent(c, tcol);
             t->entries[code].column[numberOfColumns] = grib_context_strdup_persistent(c, s);
             numberOfColumns++;
             Assert(numberOfColumns < MAX_SMART_TABLE_COLUMNS);

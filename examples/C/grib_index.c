@@ -45,14 +45,14 @@ int main(int argc, char* argv[])
     /* Create an index given set of keys*/
     index = codes_index_new(0, "shortName,level,number,step", &ret);
     if (ret) {
-        printf("error: %s\n", codes_get_error_message(ret));
+        fprintf(stderr, "Error: %s\n", codes_get_error_message(ret));
         exit(ret);
     }
 
     /* Indexes a file */
     ret = codes_index_add_file(index, infile);
     if (ret) {
-        printf("error: %s\n", codes_get_error_message(ret));
+        fprintf(stderr, "Error: %s\n", codes_get_error_message(ret));
         exit(ret);
     }
     printf("end indexing...\n");
@@ -128,7 +128,7 @@ int main(int argc, char* argv[])
                     while ((h = codes_handle_new_from_index(index, &ret)) != NULL) {
                         count++;
                         if (ret) {
-                            printf("error: %d\n", ret);
+                            fprintf(stderr, "Error: %d\n", ret);
                             exit(ret);
                         }
                         lenshortName = 200;
@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
                         codes_handle_delete(h);
                     }
                     if (ret && ret != GRIB_END_OF_INDEX) {
-                        printf("error: %s\n", codes_get_error_message(ret));
+                        fprintf(stderr, "Error: %s\n", codes_get_error_message(ret));
                         exit(ret);
                     }
                 }

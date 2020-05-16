@@ -18,9 +18,9 @@
 
 cmake_minimum_required( VERSION 3.6 FATAL_ERROR )
 
-project( eccodes C )
+project( eccodes VERSION 2.18.0 LANGUAGES C )
 
-set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake")
+set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake" )
 
 include( ecbuild_system NO_POLICY_SCOPE )
 
@@ -34,16 +34,16 @@ ecbuild_declare_project()
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
 
-check_type_size( int            ECCODES_SIZEOF_INT    )
-check_type_size( long           ECCODES_SIZEOF_LONG   )
+check_type_size( int            ECCODES_SIZEOF_INT )
+check_type_size( long           ECCODES_SIZEOF_LONG )
 check_type_size( size_t         ECCODES_SIZEOF_SIZE_T )
 
-check_include_files( assert.h         ECCODES_HAVE_ASSERT_H      )
-check_include_files( string.h         ECCODES_HAVE_STRING_H      )
-check_include_files( sys/types.h      ECCODES_HAVE_SYS_TYPES_H   )
-check_include_files( sys/stat.h       ECCODES_HAVE_SYS_STAT_H    )
-check_include_files( fcntl.h          ECCODES_HAVE_FCNTL_H      )
-check_include_files( unistd.h         ECCODES_HAVE_UNISTD_H      )
+check_include_files( assert.h         ECCODES_HAVE_ASSERT_H )
+check_include_files( string.h         ECCODES_HAVE_STRING_H )
+check_include_files( sys/types.h      ECCODES_HAVE_SYS_TYPES_H )
+check_include_files( sys/stat.h       ECCODES_HAVE_SYS_STAT_H )
+check_include_files( fcntl.h          ECCODES_HAVE_FCNTL_H )
+check_include_files( unistd.h         ECCODES_HAVE_UNISTD_H )
 
 check_symbol_exists( fseeko           "stdio.h"    ECCODES_HAVE_FSEEKO )
 check_symbol_exists( posix_memalign   "stdlib.h"   ECCODES_HAVE_POSIX_MEMALIGN )
@@ -55,7 +55,8 @@ check_c_source_compiles(
       static inline foo_t static_foo(){return 0;}
       foo_t foo(){return 0;}
       int main(int argc, char *argv[]){return 0;}
-      " ECCODES_HAVE_C_INLINE )
+      " ECCODES_HAVE_C_INLINE
+)
 
 include(eccodes_test_endiness)
 if( EC_OS_NAME MATCHES "windows" )
@@ -71,40 +72,32 @@ ecbuild_info("Operating system=${CMAKE_SYSTEM} (${EC_OS_BITS} bits)")
 
 ecbuild_add_option( FEATURE PRODUCT_GRIB
     DESCRIPTION "Support for the product GRIB"
-    DEFAULT ON
-)
+    DEFAULT ON )
 ecbuild_add_option( FEATURE PRODUCT_BUFR
     DESCRIPTION "Support for the product BUFR"
-    DEFAULT ON
-)
+    DEFAULT ON )
 
 ecbuild_add_option( FEATURE EXAMPLES
     DESCRIPTION "Build the examples"
-    DEFAULT ON
-)
+    DEFAULT ON )
 
 ecbuild_add_option( FEATURE JPG
     DESCRIPTION "Support for JPG decoding/encoding"
-    DEFAULT ON
-)
+    DEFAULT ON )
 # Options related to JPG. The Jasper and OpenJPEG libraries
 ecbuild_add_option( FEATURE JPG_LIBJASPER
     DESCRIPTION "Support for JPG decoding/encoding with the Jasper library"
     CONDITION ENABLE_JPG
-    DEFAULT ON
-)
+    DEFAULT ON )
 ecbuild_add_option( FEATURE JPG_LIBOPENJPEG
     DESCRIPTION "Support for JPG decoding/encoding with the OpenJPEG library"
     CONDITION ENABLE_JPG
-    DEFAULT ON
-)
-
+    DEFAULT ON )
 
 ecbuild_add_option( FEATURE PNG
     DESCRIPTION "Support for PNG decoding/encoding"
     DEFAULT OFF
-    REQUIRED_PACKAGES PNG
-)
+    REQUIRED_PACKAGES PNG )
 
 if( HAVE_PNG )
     set( HAVE_LIBPNG 1 ) # compatibility with autotools
@@ -117,31 +110,27 @@ ecbuild_add_option( FEATURE NETCDF
     DESCRIPTION "Support for GRIB to NetCDF conversion"
     DEFAULT ON
     REQUIRED_PACKAGES NetCDF
-    NO_TPL
-)
+    NO_TPL )
 
 ecbuild_add_option( FEATURE AEC
     DESCRIPTION "Support for Adaptive Entropy Coding"
     DEFAULT OFF
-    REQUIRED_PACKAGES AEC
-)
+    REQUIRED_PACKAGES AEC )
 
 ecbuild_add_option( FEATURE PYTHON
     DESCRIPTION "Build the ecCodes Python2 interface (deprecated)"
     DEFAULT ON
-    REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy
-)
+    REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy )
 # For Python2 we build our own bindings (using SWIG) in the build directory
 # but for Python3 one has to add the eccodes from pip3 AFTER the install
 if( PYTHON_VERSION_MAJOR EQUAL 3 )
     set( HAVE_PYTHON 0 )
 endif()
 
+## TODO REQUIRED_LANGUAGES Fortran
 ecbuild_add_option( FEATURE FORTRAN
     DESCRIPTION "Build the ecCodes Fortran interface"
-    DEFAULT ON
-    # REQUIRED_LANGUAGES Fortran # TODO
-)
+    DEFAULT ON )
 
 # TODO Remove this after REQUIRED_LANGUAGES
 if( ENABLE_FORTRAN )
@@ -158,8 +147,7 @@ ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
     CONDITION ECCODES_HAVE_FMEMOPEN OR ECCODES_HAVE_FUNOPEN OR (EC_OS_NAME MATCHES "windows")
-    REQUIRED_PACKAGES PythonInterp
-)
+    REQUIRED_PACKAGES PythonInterp )
 
 #if( HAVE_MEMFS AND "${CMAKE_C_COMPILER_ID}" STREQUAL "Cray")
 #  set( HAVE_MEMFS OFF )
@@ -177,15 +165,13 @@ endif()
 # by default, if memfs is available, then we don't need to install definitions
 ecbuild_add_option( FEATURE INSTALL_ECCODES_DEFINITIONS
     DESCRIPTION "Install the ecCodes definitions"
-    DEFAULT ${_will_install_defs_samples}
-)
+    DEFAULT ${_will_install_defs_samples} )
 
 # controls installation of files in samples/ and ifs_samples/ -- note that it still creates the symlinks in the build dir
 # by default, if memfs is available, then we don't need to install samples
 ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
     DESCRIPTION "Install the ecCodes samples, including IFS samples"
-    DEFAULT ${_will_install_defs_samples}
-)
+    DEFAULT ${_will_install_defs_samples} )
 
 # advanced options (not visible in cmake-gui )
 
@@ -213,7 +199,6 @@ set( HAVE_LIBJASPER 0 )
 set( HAVE_LIBOPENJPEG 0 )
 
 if( ENABLE_JPG )
-
     # Note: The function ecbuild_add_extra_search_paths is deprecated but we need it to find Jasper at ECMWF.
     #       It modifies CMAKE_PREFIX_PATH
     #       which can affect future package discovery if not undone by the caller.
@@ -412,7 +397,7 @@ add_subdirectory( src )
 add_subdirectory( tools )
 add_subdirectory( fortran )
 
-if (PYTHON_VERSION_MAJOR GREATER 2)
+if( PYTHON_VERSION_MAJOR GREATER 2 )
     # Python3 is no longer built with SWIG but is a separate
     # package. User should do: pip3 install eccodes
     #add_subdirectory( python3 )
@@ -433,8 +418,7 @@ ecbuild_dont_pack( DIRS
      concepts tests.ecmwf doxygen confluence examples.dev templates parameters java
      perl config m4 rpms gaussian_experimental gribex examples/F77
      examples/extra examples/deprecated bamboo fortran/fortranCtypes tigge/tools
-     share/eccodes  .settings python3
-)
+     share/eccodes  .settings python3 )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
 

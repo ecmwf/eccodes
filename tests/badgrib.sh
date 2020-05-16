@@ -13,11 +13,11 @@
 REDIRECT=/dev/null
 
 # Do not fail on wrong length
-$EXEC ${tools_dir}/grib_ls -7 ${data_dir}/bad.grib 2> $REDIRECT > $REDIRECT
+${tools_dir}/grib_ls -7 ${data_dir}/bad.grib 2> $REDIRECT > $REDIRECT
 
 # Do fail on wrong length
 set +e
-$EXEC ${tools_dir}/grib_ls ${data_dir}/bad.grib 2> $REDIRECT > $REDIRECT
+${tools_dir}/grib_ls ${data_dir}/bad.grib 2> $REDIRECT > $REDIRECT
 status=$?
 set -e
 [ $status -ne 0 ]

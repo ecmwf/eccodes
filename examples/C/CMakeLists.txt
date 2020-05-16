@@ -49,26 +49,24 @@ list( APPEND test_bins
       bufr_read_synop
       bufr_read_temp
       bufr_set_keys
-      bufr_subset
-)
+      bufr_subset )
 foreach( tool ${test_bins} )
     ecbuild_add_executable( TARGET    c_${tool}
                             NOINSTALL
                             SOURCES   ${tool}.c
-                            LIBS      eccodes
-    )
+                            LIBS      eccodes )
 endforeach()
 
 # Now add each test (shell scripts)
 ########################################################################
-list( APPEND tests_basic
+list(APPEND tests_basic
    grib_multi
    grib_set_data
    large_grib1
    grib_sections_copy
    get_product_kind_samples
 )
-list( APPEND tests_extra
+list(APPEND tests_extra
    grib_iterator
    grib_get_keys
    grib_print_data
@@ -105,34 +103,30 @@ list( APPEND tests_extra
 foreach( test ${tests_basic} )
     ecbuild_add_test( TARGET       eccodes_c_${test}
                       TYPE         SCRIPT
-                      COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-    )
+                      COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
 endforeach()
 foreach( test ${tests_extra} )
     ecbuild_add_test( TARGET       eccodes_c_${test}
                       TYPE         SCRIPT
                       CONDITION    ENABLE_EXTRA_TESTS
                       COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                      TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs
-    )
+                      TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs )
 endforeach()
 
 ########################################################################
 # Tests which are conditional
 if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
     # For POSIX threads
-    LIST(APPEND pthread_tests grib_pthreads bufr_pthreads)
+    list(APPEND pthread_tests grib_pthreads bufr_pthreads)
     foreach( test ${pthread_tests} )
         ecbuild_add_executable( TARGET    c_${test}
                                 NOINSTALL
                                 SOURCES   ${test}.c
-                                LIBS      eccodes
-        )
+                                LIBS      eccodes )
         ecbuild_add_test( TARGET       eccodes_c_${test}
                           TYPE         SCRIPT
                           COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                          TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs
-        )
+                          TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs )
     endforeach()
 endif()
 
