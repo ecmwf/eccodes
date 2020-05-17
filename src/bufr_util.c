@@ -674,7 +674,7 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
     return GRIB_SUCCESS;
 }
 
-static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
+static const char* codes_bufr_header_get_centre_name(long edition, long centre_code)
 {
     switch (centre_code) {
         case 1:
@@ -856,7 +856,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
         *len = sprintf(val, "%ld", bh->bufrHeaderCentre);
 
     else if (strcmp(key, "centre") == 0) {
-        char* centre_str = codes_bufr_header_get_centre_name(bh->edition, bh->bufrHeaderCentre);
+        const char* centre_str = codes_bufr_header_get_centre_name(bh->edition, bh->bufrHeaderCentre);
         if (centre_str)
             *len = sprintf(val, "%s", centre_str);
         else
