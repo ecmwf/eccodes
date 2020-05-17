@@ -205,12 +205,12 @@ static int init_sphere(grib_handle* h,
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -316,12 +316,12 @@ static int init_oblate(grib_handle* h,
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
 
