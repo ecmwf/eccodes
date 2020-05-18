@@ -153,26 +153,39 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     size_t size = 64;
     char grid_type[512] = {0,};
     grib_handle* h = grib_handle_of_accessor(a);
+    double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0, radius = 0;
 
     err = grib_get_string(h, self->grid_type, grid_type, &size);
     if (err) return err;
     
+    if (grib_is_earth_oblate(h)) {
+        if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
+        if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
+    } else {
+        if ((err = grib_get_double_internal(h, "radius", &radius)) != GRIB_SUCCESS) return err;
+        earthMinorAxisInMetres = earthMajorAxisInMetres = radius;
+    }
+
     if (strcmp(grid_type, "mercator") == 0) {
-        double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0, radius = 0, LaDInDegrees = 0;
-        if (grib_is_earth_oblate(h)) {
-            if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
-            if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
-        } else {
-            if ((err = grib_get_double_internal(h, "radius", &radius)) != GRIB_SUCCESS) return err;
-            earthMinorAxisInMetres = earthMajorAxisInMetres = radius;
-        }
+        double LaDInDegrees = 0;
         if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
             return err;
         sprintf(v,"+proj=merc +lat_ts=%lf +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +a=%lf +b=%lf",
                 LaDInDegrees, earthMajorAxisInMetres, earthMinorAxisInMetres);
     }
     else if (strcmp(grid_type, "polar_stereographic") == 0) {
-        
+        double centralLongitude, centralLatitude;
+        long projectionCentreFlag = 0;
+        int has_northPole = 0;
+        if ((err = grib_get_double_internal(h, "orientationOfTheGridInDegrees", &centralLongitude)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_get_double_internal(h, "LaDInDegrees", &centralLatitude)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_get_long_internal(h, "projectionCentreFlag", &projectionCentreFlag)) != GRIB_SUCCESS)
+            return err;
+        has_northPole = ((projectionCentreFlag & 128) == 0);
+        sprintf(v,"+proj=stere +lat_ts=%lf +lat_0=%s +lon_0=%lf +k_0=1 +x_0=0 +y_0=0 +a=%lf +b=%lf",
+                centralLatitude, has_northPole ? "90" : "-90", centralLongitude, earthMajorAxisInMetres, earthMinorAxisInMetres);
     }
     else {
         grib_context_log(a->context, GRIB_LOG_ERROR, "proj string for grid '%s' not implemented", grid_type);
