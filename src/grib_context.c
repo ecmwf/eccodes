@@ -469,7 +469,7 @@ grib_context* grib_context_get_default()
             const char* test_defs = codes_getenv("_ECCODES_ECMWF_TEST_DEFINITION_PATH");
             const char* test_samp = codes_getenv("_ECCODES_ECMWF_TEST_SAMPLES_PATH");
             if (test_defs) {
-                char buffer[ECC_PATH_MAXLEN];
+                char buffer[ECC_PATH_MAXLEN]= {0,};
                 if (default_grib_context.grib_definition_files_path) {
                     strcpy(buffer, default_grib_context.grib_definition_files_path);
                     strcat(buffer, ":");
@@ -479,7 +479,7 @@ grib_context* grib_context_get_default()
                 default_grib_context.grib_definition_files_path = strdup(buffer);
             }
             if (test_samp) {
-                char buffer[ECC_PATH_MAXLEN];
+                char buffer[ECC_PATH_MAXLEN]= {0,};
                 if (default_grib_context.grib_samples_path) {
                     strcpy(buffer, default_grib_context.grib_samples_path);
                     strcat(buffer, ":");
@@ -493,7 +493,7 @@ grib_context* grib_context_get_default()
         {
             const char* defs_extra = getenv("ECCODES_EXTRA_DEFINITION_PATH");
             if (defs_extra) {
-                char buffer[ECC_PATH_MAXLEN];
+                char buffer[ECC_PATH_MAXLEN]= {0,};
                 ecc_snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", defs_extra, ECC_PATH_DELIMITER_CHAR, default_grib_context.grib_definition_files_path);
                 free(default_grib_context.grib_definition_files_path);
                 default_grib_context.grib_definition_files_path = strdup(buffer);
@@ -503,7 +503,7 @@ grib_context* grib_context_get_default()
         {
             /* ECC-1088 */
             if (strstr(default_grib_context.grib_definition_files_path, ECCODES_DEFINITION_PATH) == NULL) {
-                char buffer[ECC_PATH_MAXLEN];
+                char buffer[ECC_PATH_MAXLEN]= {0,};
                 ecc_snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_definition_files_path,
                              ECC_PATH_DELIMITER_CHAR, ECCODES_DEFINITION_PATH);
                 free(default_grib_context.grib_definition_files_path);
