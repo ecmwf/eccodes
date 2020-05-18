@@ -86,9 +86,17 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
 RegularGrid::~RegularGrid() = default;
 
 
-RegularGrid::Projection RegularGrid::make_projection_via_proj(const param::MIRParametrisation& param,
-                                                              std::string proj) {
-    ASSERT(!proj.empty());
+RegularGrid::Projection::Spec RegularGrid::make_proj_spec(const param::MIRParametrisation& param) {
+
+    bool projIfAvailable = true;
+    param.get("proj-if-available", projIfAvailable);
+
+    std::string proj;
+    param.get("proj", proj);
+
+    if (proj.empty() || !projIfAvailable || !::atlas::projection::ProjectionFactory::has("proj")) {
+        return {};
+    }
 
     Projection::Spec spec("type", "proj");
     spec.set("proj", proj);

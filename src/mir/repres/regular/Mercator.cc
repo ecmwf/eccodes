@@ -29,9 +29,9 @@ Mercator::Mercator(const param::MIRParametrisation& param) : RegularGrid(param, 
 
 
 RegularGrid::Projection Mercator::make_projection(const param::MIRParametrisation& param) {
-    std::string proj;
-    if (param.get("proj", proj)) {
-        return RegularGrid::make_projection_via_proj(param, proj);
+    auto spec = make_proj_spec(param);
+    if (!spec.empty()) {
+        return spec;
     }
 
     double LaDInDegrees;

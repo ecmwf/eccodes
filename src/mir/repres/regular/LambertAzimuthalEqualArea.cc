@@ -22,15 +22,18 @@ namespace mir {
 namespace repres {
 namespace regular {
 
+
 static RepresentationBuilder<LambertAzimuthalEqualArea> __builder("lambert_azimuthal_equal_area");
+
 
 LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const param::MIRParametrisation& param) :
     RegularGrid(param, make_projection(param)) {}
 
+
 RegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::MIRParametrisation& param) {
-    std::string proj;
-    if (param.get("proj", proj)) {
-        return RegularGrid::make_projection_via_proj(param, proj);
+    auto spec = make_proj_spec(param);
+    if (!spec.empty()) {
+        return spec;
     }
 
     double standardParallel;
@@ -45,6 +48,7 @@ RegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::
         .set("central_longitude", centralLongitude)
         .set("radius", radius);
 }
+
 
 void LambertAzimuthalEqualArea::fill(grib_info& info) const {
 
@@ -75,6 +79,7 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
     // some extra keys are edition-specific, so parent call is here
     RegularGrid::fill(info);
 }
+
 
 }  // namespace regular
 }  // namespace repres
