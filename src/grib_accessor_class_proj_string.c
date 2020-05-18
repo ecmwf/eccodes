@@ -146,6 +146,15 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_STRING;
 }
 
+/* Function pointer than takes a handle and returns the proj string */
+typedef int (*proj_func)(grib_handle*, char*);
+struct proj_mapping {
+    const char* gridType; /* key gridType */
+    proj_func   func;     /* function to compute proj string */
+};
+typedef struct proj_mapping proj_mapping;
+
+
 /* This should only be called for GRID POINT data (not spherical harmonics etc) */
 static int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor)
 {
@@ -243,34 +252,35 @@ static int proj_mercator(grib_handle* h, char* result)
     return err;
 }
 
+#define NUMBER(a) (sizeof(a)/sizeof(a[0]))
+proj_mapping proj_mappings[] = {
+    { "regular_ll", &proj_regular_latlon },
+    { "mercator", &proj_mercator },
+    { "polar_stereographic", &proj_polar_stereographic },
+    { "lambert", &proj_lambert_conformal },
+    { "lambert_azimuthal_equal_area", &proj_lambert_azimuthal_equal_area }
+};
+
 static int unpack_string(grib_accessor* a, char* v, size_t* len)
 {
     grib_accessor_proj_string* self = (grib_accessor_proj_string*)a;
-    int err                         = 0;
-    size_t size                     = 64;
-    char grid_type[512]             = {0,};
-    grib_handle* h                  = grib_handle_of_accessor(a);
+    int err = 0, found = 0;
+    size_t i = 0;
+    char grid_type[64] = {0,};
+    grib_handle* h = grib_handle_of_accessor(a);
+    size_t size = sizeof(grid_type) / sizeof(*grid_type);
 
     err = grib_get_string(h, self->grid_type, grid_type, &size);
     if (err) return err;
 
-    if (strcmp(grid_type, "regular_ll") == 0) {
-        if ((err = proj_regular_latlon(h, v)) != GRIB_SUCCESS) return err;
+    for (i=0; !found && i < NUMBER(proj_mappings); ++i) {
+        proj_mapping pm = proj_mappings[i];
+        if (strcmp(grid_type, pm.gridType) == 0) {
+            found = 1;
+            if ((err = pm.func(h, v)) != GRIB_SUCCESS) return err;
+        }
     }
-    else if (strcmp(grid_type, "mercator") == 0) {
-        if ((err = proj_mercator(h, v)) != GRIB_SUCCESS) return err;
-    }
-    else if (strcmp(grid_type, "polar_stereographic") == 0) {
-        if ((err = proj_polar_stereographic(h, v)) != GRIB_SUCCESS) return err;
-    }
-    else if (strcmp(grid_type, "lambert") == 0) {
-        if ((err = proj_lambert_conformal(h, v)) != GRIB_SUCCESS) return err;
-    }
-    else if (strcmp(grid_type, "lambert_azimuthal_equal_area") == 0) {
-        if ((err = proj_lambert_azimuthal_equal_area(h, v)) != GRIB_SUCCESS) return err;
-    }
-    else {
-        //grib_context_log(a->context, GRIB_LOG_ERROR, "proj string for grid '%s' not implemented", grid_type);
+    if (!found) {
         *len = 0;
         return GRIB_NOT_IMPLEMENTED;
     }
