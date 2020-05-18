@@ -14,6 +14,7 @@
 
 #include <ostream>
 
+#include "eckit/config/Resource.h"
 #include "eckit/log/Log.h"
 #include "eckit/utils/MD5.h"
 #include "eckit/utils/StringTools.h"
@@ -88,13 +89,12 @@ RegularGrid::~RegularGrid() = default;
 
 RegularGrid::Projection::Spec RegularGrid::make_proj_spec(const param::MIRParametrisation& param) {
 
-    bool projIfAvailable = true;
-    param.get("proj-if-available", projIfAvailable);
+    static bool useProjIfAvailable = eckit::Resource<bool>("$MIR_USE_PROJ_IF_AVAILABLE", true);
 
     std::string proj;
     param.get("proj", proj);
 
-    if (proj.empty() || !projIfAvailable || !::atlas::projection::ProjectionFactory::has("proj")) {
+    if (proj.empty() || !useProjIfAvailable || !::atlas::projection::ProjectionFactory::has("proj")) {
         return {};
     }
 
