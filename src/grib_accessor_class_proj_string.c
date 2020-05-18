@@ -16,7 +16,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = get_native_type;init
-   IMPLEMENTS = unpack_string;value_count
+   IMPLEMENTS = unpack_string
    MEMBERS = const char* grid_type
    END_CLASS_DEF
 
@@ -34,7 +34,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int get_native_type(grib_accessor*);
 static int unpack_string(grib_accessor*, char*, size_t* len);
-static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
 
@@ -60,7 +59,7 @@ static grib_accessor_class _grib_accessor_class_proj_string = {
     0,                       /* describes himself         */
     0,                /* get length of section     */
     0,              /* get length of string      */
-    &value_count,                /* get number of values      */
+    0,                /* get number of values      */
     0,                 /* get number of bytes      */
     0,                /* get offset to bytes           */
     &get_native_type,            /* get native type               */
@@ -100,6 +99,7 @@ static void init_class(grib_accessor_class* c)
     c->dump    =    (*(c->super))->dump;
     c->next_offset    =    (*(c->super))->next_offset;
     c->string_length    =    (*(c->super))->string_length;
+    c->value_count    =    (*(c->super))->value_count;
     c->byte_count    =    (*(c->super))->byte_count;
     c->byte_offset    =    (*(c->super))->byte_offset;
     c->sub_section    =    (*(c->super))->sub_section;
@@ -132,11 +132,11 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
 {
-    grib_accessor_proj_string* self   = (grib_accessor_proj_string*)a;
-    grib_handle* h = grib_handle_of_accessor(a);
+    grib_accessor_proj_string* self = (grib_accessor_proj_string*)a;
+    grib_handle* h                  = grib_handle_of_accessor(a);
 
-    self->grid_type  = grib_arguments_get_name(h, arg, 0);
-    a->length = 0;
+    self->grid_type = grib_arguments_get_name(h, arg, 0);
+    a->length       = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
@@ -149,19 +149,20 @@ static int get_native_type(grib_accessor* a)
 static int unpack_string(grib_accessor* a, char* v, size_t* len)
 {
     grib_accessor_proj_string* self = (grib_accessor_proj_string*)a;
-    int err = 0;
-    size_t size = 64;
-    char grid_type[512] = {0,};
-    grib_handle* h = grib_handle_of_accessor(a);
+    int err                         = 0;
+    size_t size                     = 64;
+    char grid_type[512]             = {0,};
+    grib_handle* h                = grib_handle_of_accessor(a);
     double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0, radius = 0;
 
     err = grib_get_string(h, self->grid_type, grid_type, &size);
     if (err) return err;
-    
+
     if (grib_is_earth_oblate(h)) {
         if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
         if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
-    } else {
+    }
+    else {
         if ((err = grib_get_double_internal(h, "radius", &radius)) != GRIB_SUCCESS) return err;
         earthMinorAxisInMetres = earthMajorAxisInMetres = radius;
     }
@@ -170,13 +171,13 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         double LaDInDegrees = 0;
         if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
             return err;
-        sprintf(v,"+proj=merc +lat_ts=%lf +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +a=%lf +b=%lf",
+        sprintf(v, "+proj=merc +lat_ts=%lf +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +a=%lf +b=%lf",
                 LaDInDegrees, earthMajorAxisInMetres, earthMinorAxisInMetres);
     }
     else if (strcmp(grid_type, "polar_stereographic") == 0) {
         double centralLongitude, centralLatitude;
         long projectionCentreFlag = 0;
-        int has_northPole = 0;
+        int has_northPole         = 0;
         if ((err = grib_get_double_internal(h, "orientationOfTheGridInDegrees", &centralLongitude)) != GRIB_SUCCESS)
             return err;
         if ((err = grib_get_double_internal(h, "LaDInDegrees", &centralLatitude)) != GRIB_SUCCESS)
@@ -184,7 +185,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         if ((err = grib_get_long_internal(h, "projectionCentreFlag", &projectionCentreFlag)) != GRIB_SUCCESS)
             return err;
         has_northPole = ((projectionCentreFlag & 128) == 0);
-        sprintf(v,"+proj=stere +lat_ts=%lf +lat_0=%s +lon_0=%lf +k_0=1 +x_0=0 +y_0=0 +a=%lf +b=%lf",
+        sprintf(v, "+proj=stere +lat_ts=%lf +lat_0=%s +lon_0=%lf +k_0=1 +x_0=0 +y_0=0 +a=%lf +b=%lf",
                 centralLatitude, has_northPole ? "90" : "-90", centralLongitude, earthMajorAxisInMetres, earthMinorAxisInMetres);
     }
     else {
@@ -192,13 +193,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         *len = 0;
         return GRIB_NOT_IMPLEMENTED;
     }
-    
-    *len = strlen(v)+1;
-    return err;
-}
 
-static int value_count(grib_accessor* a, long* count)
-{
-    *count = 16;
-    return 0;
+    *len = strlen(v) + 1;
+    return err;
 }
