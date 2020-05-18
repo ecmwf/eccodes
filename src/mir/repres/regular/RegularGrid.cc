@@ -86,9 +86,9 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
 RegularGrid::~RegularGrid() = default;
 
 
-RegularGrid::Projection RegularGrid::make_projection_via_proj(const param::MIRParametrisation& param) {
-    std::string proj;
-    ASSERT(param.get("proj", proj) && !proj.empty());
+RegularGrid::Projection RegularGrid::make_projection_via_proj(const param::MIRParametrisation& param,
+                                                              std::string proj) {
+    ASSERT(!proj.empty());
 
     Projection::Spec spec("type", "proj");
     spec.set("proj", proj);

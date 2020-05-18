@@ -25,9 +25,13 @@ namespace regular {
 static RepresentationBuilder<LambertAzimuthalEqualArea> __builder("lambert_azimuthal_equal_area");
 
 LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const param::MIRParametrisation& param) :
-    RegularGrid(param, param.has("proj") ? RegularGrid::make_projection_via_proj(param) : make_projection(param)) {}
+    RegularGrid(param, make_projection(param)) {}
 
 RegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::MIRParametrisation& param) {
+    std::string proj;
+    if (param.get("proj", proj)) {
+        return RegularGrid::make_projection_via_proj(param, proj);
+    }
 
     double standardParallel;
     double centralLongitude;

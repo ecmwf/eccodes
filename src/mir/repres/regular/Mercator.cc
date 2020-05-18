@@ -25,11 +25,14 @@ namespace regular {
 static RepresentationBuilder<Mercator> __builder("mercator");
 
 
-Mercator::Mercator(const param::MIRParametrisation& param) :
-    RegularGrid(param, param.has("proj") ? RegularGrid::make_projection_via_proj(param) : make_projection(param)) {}
+Mercator::Mercator(const param::MIRParametrisation& param) : RegularGrid(param, make_projection(param)) {}
 
 
 RegularGrid::Projection Mercator::make_projection(const param::MIRParametrisation& param) {
+    std::string proj;
+    if (param.get("proj", proj)) {
+        return RegularGrid::make_projection_via_proj(param, proj);
+    }
 
     double LaDInDegrees;
     double LonInDegrees;  // what to call this?
