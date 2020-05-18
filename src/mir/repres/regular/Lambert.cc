@@ -21,11 +21,19 @@ namespace mir {
 namespace repres {
 namespace regular {
 
+
 static RepresentationBuilder<Lambert> __builder("lambert");
+
 
 Lambert::Lambert(const param::MIRParametrisation& param) : RegularGrid(param, make_projection(param)) {}
 
+
 RegularGrid::Projection Lambert::make_projection(const param::MIRParametrisation& param) {
+    auto spec = make_proj_spec(param);
+    if (!spec.empty()) {
+        return spec;
+    }
+
     double LaDInDegrees;
     double LoVInDegrees;
     double Latin1InDegrees;
@@ -42,9 +50,11 @@ RegularGrid::Projection Lambert::make_projection(const param::MIRParametrisation
         .set("longitude0", LoVInDegrees);
 }
 
+
 void Lambert::fill(grib_info&) const {
     NOTIMP;
 }
+
 
 }  // namespace regular
 }  // namespace repres
