@@ -21,6 +21,11 @@ for f in `echo $files`; do
     ps=`${tools_dir}/grib_get -wcount=1 -p projString $file`
     # Check length of result is nonzero
     [ -n "$ps" ]
+    # Check contents (basic)
+    case $ps in
+      *+proj=*) echo OK;;
+      *)        echo "File: $file. Invalid proj string: |$ps|"; exit 1;;
+    esac
 done
 
 # Reminder
