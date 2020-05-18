@@ -165,6 +165,7 @@ list(APPEND tests_data_reqd
     grib_step
     grib_set
     grib_iterator
+    grib_proj_string
     grib_compare
     grib_copy
     grib_level

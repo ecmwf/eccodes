@@ -178,10 +178,10 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         earthMinorAxisInMetres = earthMajorAxisInMetres = radius;
     }
 
-    /* Default: lat/lon grid */
-    sprintf(v,"+proj=latlong +a=%lf +b=%lf", earthMajorAxisInMetres, earthMinorAxisInMetres);
-
-    if (strcmp(grid_type, "mercator") == 0) {
+    if (strcmp(grid_type, "regular_ll") == 0) {
+        sprintf(v,"+proj=latlong +a=%lf +b=%lf", earthMajorAxisInMetres, earthMinorAxisInMetres);
+    }
+    else if (strcmp(grid_type, "mercator") == 0) {
         double LaDInDegrees = 0;
         if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
             return err;
