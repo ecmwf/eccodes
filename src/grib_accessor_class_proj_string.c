@@ -188,6 +188,19 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         sprintf(v, "+proj=stere +lat_ts=%lf +lat_0=%s +lon_0=%lf +k_0=1 +x_0=0 +y_0=0 +a=%lf +b=%lf",
                 centralLatitude, has_northPole ? "90" : "-90", centralLongitude, earthMajorAxisInMetres, earthMinorAxisInMetres);
     }
+    else if (strcmp(grid_type, "lambert") == 0) {
+        double LoVInDegrees, LaDInDegrees, Latin1InDegrees, Latin2InDegrees;
+        if ((err = grib_get_double_internal(h, "Latin1InDegrees", &Latin1InDegrees)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_get_double_internal(h, "Latin2InDegrees", &Latin2InDegrees)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_get_double_internal(h, "LoVInDegrees", &LoVInDegrees)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
+            return err;
+        sprintf(v,"+proj=lcc +lon_0=%lf +lat_0=%lf +lat_1=%lf +lat_2=%lf +a=%lf +b=%lf",LoVInDegrees,
+                   LaDInDegrees, Latin1InDegrees,Latin2InDegrees, earthMajorAxisInMetres, earthMinorAxisInMetres);
+    }
     else {
         grib_context_log(a->context, GRIB_LOG_ERROR, "proj string for grid '%s' not implemented", grid_type);
         *len = 0;
