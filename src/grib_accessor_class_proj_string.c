@@ -170,11 +170,11 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     if (err) return err;
 
     if (grib_is_earth_oblate(h)) {
-        if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
-        if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
+        if ((err = grib_get_double(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
+        if ((err = grib_get_double(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
     }
     else {
-        if ((err = grib_get_double_internal(h, "radius", &radius)) != GRIB_SUCCESS) return err;
+        if ((err = grib_get_double(h, "radius", &radius)) != GRIB_SUCCESS) return err;
         earthMinorAxisInMetres = earthMajorAxisInMetres = radius;
     }
 
@@ -225,7 +225,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
                 centralLongitude, standardParallel, earthMajorAxisInMetres, earthMinorAxisInMetres);
     }
     else {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "proj string for grid '%s' not implemented", grid_type);
+        //grib_context_log(a->context, GRIB_LOG_ERROR, "proj string for grid '%s' not implemented", grid_type);
         *len = 0;
         return GRIB_NOT_IMPLEMENTED;
     }
