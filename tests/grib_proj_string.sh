@@ -11,6 +11,7 @@
 . ./include.sh
 
 files="
+  regular_latlon_surface.grib1
   mercator.grib2
   satellite.grib
 "
