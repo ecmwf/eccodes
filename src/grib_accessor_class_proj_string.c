@@ -158,7 +158,21 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     if (err) return err;
     
     if (strcmp(grid_type, "mercator") == 0) {
-        sprintf(v, "%s", "mercator proj string");
+        double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0, radius = 0, LaDInDegrees = 0;
+        if (grib_is_earth_oblate(h)) {
+            if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
+            if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
+        } else {
+            if ((err = grib_get_double_internal(h, "radius", &radius)) != GRIB_SUCCESS) return err;
+            earthMinorAxisInMetres = earthMajorAxisInMetres = radius;
+        }
+        if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
+            return err;
+        sprintf(v,"+proj=merc +lat_ts=%lf +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +a=%lf +b=%lf",
+                LaDInDegrees, earthMajorAxisInMetres, earthMinorAxisInMetres);
+    }
+    else if (strcmp(grid_type, "polar_stereographic") == 0) {
+        
     }
     else {
         grib_context_log(a->context, GRIB_LOG_ERROR, "proj string for grid '%s' not implemented", grid_type);
