@@ -190,11 +190,6 @@ grib_iarray* grib_iarray_push_array(grib_iarray* v, long* val, size_t size)
     return v;
 }
 
-long grib_iarray_get(grib_iarray* a, size_t i)
-{
-    return a->v[i];
-}
-
 void grib_iarray_delete(grib_iarray* v)
 {
     grib_context* c;
