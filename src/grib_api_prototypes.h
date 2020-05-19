@@ -238,7 +238,6 @@ grib_iarray* grib_iarray_push(grib_iarray* v, long val);
 grib_iarray* grib_iarray_push_front(grib_iarray* v, long val);
 grib_iarray* grib_iarray_push_array(grib_iarray* v, long* val, size_t size);
 long grib_iarray_get(grib_iarray* a, size_t i);
-void grib_iarray_set(grib_iarray* a, size_t i, long v);
 void grib_iarray_delete(grib_iarray* v);
 void grib_iarray_delete_array(grib_iarray* v);
 long* grib_iarray_get_array(grib_iarray* v);
