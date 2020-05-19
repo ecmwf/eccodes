@@ -31,14 +31,14 @@
 1054 rjtd Tokyo
 1055 cwao Montreal
 1056 ammc Melbourne
-1057 efas European Flood Awareness System (EFAS)
-1058 efse European Flood Awareness System (EFAS) seasonal forecasts
-1059 efcl European Flood Awareness System (EFAS) climatology
+1057 efas European flood awareness system (EFAS)
+1058 efse European flood awareness system (EFAS) seasonal forecasts
+1059 efcl European flood awareness system (EFAS) climatology
 1060 wfas Global flood awareness system (GLOFAS)
 1061 wfcl Global flood awareness system (GLOFAS) climatology
 1062 wfse Global flood awareness system (GLOFAS) seasonal forecasts
-1063 efrf European Flood Awareness System (EFAS) reforecasts
-1064 efsr European Flood Awareness System (EFAS) seasonal reforecasts
+1063 efrf European flood awareness system (EFAS) reforecasts
+1064 efsr European flood awareness system (EFAS) seasonal reforecasts
 1065 wfrf Global flood awareness system (GLOFAS) reforecasts
 1066 wfsr Global flood awareness system (GLOFAS) seasonal reforecasts
 1070 msdc Monthly standard deviation and covariance
