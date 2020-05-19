@@ -142,6 +142,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     long value = 0;
     long pos   = a->offset * 8;
     char* intc = NULL;
+    char* pTemp = NULL;
     char expver[5];
     char refexpver[5];
     size_t llen = a->length + 1;
@@ -158,13 +159,20 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     /* test for endian */
     intc = (char*)&value;
+    pTemp = intc;
 
+    expver[0] = *pTemp++;
+    expver[1] = *pTemp++;
+    expver[2] = *pTemp++;
+    expver[3] = *pTemp++;
+    expver[4] = 0;
+#if 0
     expver[0] = intc[0];
     expver[1] = intc[1];
     expver[2] = intc[2];
     expver[3] = intc[3];
     expver[4] = 0;
-
+#endif
     /* if there is a difference, have to reverse*/
     if (strcmp(refexpver, expver)) {
         intc[0] = expver[3];

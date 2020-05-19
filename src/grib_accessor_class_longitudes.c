@@ -205,7 +205,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (ret != GRIB_SUCCESS) {
         if (iter)
             grib_iterator_delete(iter);
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to create iterator");
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to create iterator");
         return ret;
     }
 
@@ -227,7 +227,7 @@ static int value_count(grib_accessor* a, long* len)
     size_t size;
     *len = 0;
     if ((ret = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "unable to get size of %s", self->values);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to get size of %s", self->values);
         return ret;
     }
     *len = size;
@@ -263,13 +263,13 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     if (ret != GRIB_SUCCESS) {
         if (iter)
             grib_iterator_delete(iter);
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to create iterator");
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to create iterator");
         return ret;
     }
     v = (double*)grib_context_malloc_clear(c, size * sizeof(double));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "unable to allocate %ld bytes", (long)size * sizeof(double));
+                         "Error allocating %ld bytes", (long)size * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     *val = v;
@@ -283,7 +283,7 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     v1 = (double*)grib_context_malloc_clear(c, size * sizeof(double));
     if (!v1) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "unable to allocate %ld bytes", (long)size * sizeof(double));
+                         "Error allocating %ld bytes", (long)size * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
 

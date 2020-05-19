@@ -154,6 +154,7 @@ list(APPEND tests_data_reqd
     pseudo_budg
     grib_gridType
     grib_octahedral
+    grib_mercator
     grib_global
     grib_concept
     grib_decimalPrecision
