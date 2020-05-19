@@ -243,7 +243,6 @@ void grib_iarray_delete(grib_iarray* v);
 void grib_iarray_delete_array(grib_iarray* v);
 long* grib_iarray_get_array(grib_iarray* v);
 size_t grib_iarray_used_size(grib_iarray* v);
-int grib_iarray_is_constant(grib_iarray* v);
 
 /* grib_vdarray.c */
 void grib_vdarray_print(const char* title, const grib_vdarray* vdarray);
