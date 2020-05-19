@@ -41,6 +41,7 @@ TESTS = definitions.sh \
         grib_step.sh \
         grib_set.sh \
         grib_iterator.sh \
+        grib_proj_string.sh \
         grib_compare.sh \
         grib_level.sh \
         grib_indexing.sh \

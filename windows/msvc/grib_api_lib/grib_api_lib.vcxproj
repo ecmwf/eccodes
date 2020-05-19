@@ -372,6 +372,7 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_padtoeven.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_padtomultiple.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_position.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_proj_string.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_raw.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_rdbtime_guess_date.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_reference_value_error.c" />

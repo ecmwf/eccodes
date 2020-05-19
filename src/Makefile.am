@@ -253,6 +253,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_g2_mars_labeling.c \
 	grib_accessor_class_transient_darray.c \
 	grib_accessor_class_md5.c \
+	grib_accessor_class_proj_string.c \
 	grib_jasper_encoding.c \
 	grib_openjpeg_encoding.c \
 	action_class_set_missing.c \

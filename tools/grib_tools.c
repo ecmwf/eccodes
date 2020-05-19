@@ -978,8 +978,10 @@ static int get_initial_element_of_array(grib_handle* h, const char* keyName, siz
             sval = (char*)grib_context_malloc(c, len * sizeof(char));
             if (!sval)
                 return GRIB_OUT_OF_MEMORY;
-            if ((err = grib_get_string(h, keyName, sval, &len)) != GRIB_SUCCESS)
+            if ((err = grib_get_string(h, keyName, sval, &len)) != GRIB_SUCCESS) {
+                free(sval);
                 return err;
+            }
             sprintf(value, "%s", sval);
             free(sval);
             break;

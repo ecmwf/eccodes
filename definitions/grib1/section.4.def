@@ -231,6 +231,8 @@ alias ls.gridType=gridType;
 alias geography.gridType=gridType;
 alias typeOfGrid=gridType;
 
+meta projString proj_string(gridType): hidden;
+
 meta getNumberOfValues size(values) : edition_specific,dump ;
 
 if (complexPacking==0 || sphericalHarmonics==1) {
