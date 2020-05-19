@@ -36,6 +36,11 @@
 1059 efcl European Flood Awareness System (EFAS) climatology
 1060 wfas Global flood awareness system (GLOFAS)
 1061 wfcl Global flood awareness system (GLOFAS) climatology
+1062 wfse Global flood awareness system (GLOFAS) seasonal forecasts
+1063 efrf European Flood Awareness System (EFAS) reforecasts
+1064 efsr European Flood Awareness System (EFAS) seasonal reforecasts 
+1065 wfrf Global flood awareness system (GLOFAS) reforecasts
+1066 wfsr Global flood awareness system (GLOFAS) seasonal reforecasts
 1070 msdc Monthly standard deviation and covariance
 1071 moda Monthly means of daily means
 1072 monr Monthly means using G. Boer's step function
