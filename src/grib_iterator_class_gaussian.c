@@ -51,8 +51,8 @@ typedef struct grib_iterator_gaussian
     /* Members defined in regular */
     double* las;
     double* los;
-    long nap;
-    long nam;
+    long Ni;
+    long Nj;
     long iScansNegatively;
     long isRotated;
     double angleOfRotation;
@@ -146,13 +146,13 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
     Assert(istart < size);
 
     if (jScansPositively) {
-        for (lai = 0; lai < self->nam; lai++) {
+        for (lai = 0; lai < self->Nj; lai++) {
             self->las[lai] = lats[istart--];
             /*if (istart<0) istart=size-1;  this condition is always FALSE -- 'istart' is unsigned long */
         }
     }
     else {
-        for (lai = 0; lai < self->nam; lai++) {
+        for (lai = 0; lai < self->Nj; lai++) {
             self->las[lai] = lats[istart++];
             if (istart > size - 1)
                 istart = 0;

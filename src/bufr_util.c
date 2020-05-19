@@ -32,6 +32,9 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
             next       = prev->next;
         }
     }
+    DebugAssert(next);
+    if (!next) return 0;
+
     if (!next->value) {
         next->value = strdup(key);
         next->count = 0;
@@ -571,7 +574,7 @@ static int count_bufr_messages(grib_context* c, FILE* f, int* n, int strict_mode
 
     while (!done) {
         mesg = wmo_read_bufr_from_file_malloc(f, 0, &size, &offset, &err);
-        /*printf("Count so far=%ld, mesg=%x, err=%d (%s)\n", *count, mesg, err, grib_get_error_message(err));*/
+        /*printf("Count so far=%d, mesg=%x, err=%d (%s)\n", *n, mesg, err, grib_get_error_message(err));*/
         if (!mesg) {
             if (err == GRIB_END_OF_FILE || err == GRIB_PREMATURE_END_OF_FILE) {
                 done = 1; /* reached the end */
@@ -584,7 +587,13 @@ static int count_bufr_messages(grib_context* c, FILE* f, int* n, int strict_mode
             grib_context_free(c, mesg);
         }
         (*n)++;
+        if (*n >= INT_MAX/100) {
+            grib_context_log(c, GRIB_LOG_ERROR, "Limit reached: looped %d times without finding a valid BUFR message", *n);
+            done = 1;
+            err = GRIB_INTERNAL_ERROR;
+        }
     }
+    (void)done;
     rewind(f);
     if (err == GRIB_END_OF_FILE)
         err = GRIB_SUCCESS;
@@ -601,6 +610,10 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
 
     if (!c)
         c = grib_context_get_default();
+    if (path_is_directory(filename)) {
+        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: \"%s\" is a directory", filename);
+        return GRIB_IO_PROBLEM;
+    }
     fp = fopen(filename, "rb");
     if (!fp) {
         grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to read file \"%s\"", filename);
@@ -661,7 +674,7 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
     return GRIB_SUCCESS;
 }
 
-static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
+static const char* codes_bufr_header_get_centre_name(long edition, long centre_code)
 {
     switch (centre_code) {
         case 1:
@@ -843,7 +856,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
         *len = sprintf(val, "%ld", bh->bufrHeaderCentre);
 
     else if (strcmp(key, "centre") == 0) {
-        char* centre_str = codes_bufr_header_get_centre_name(bh->edition, bh->bufrHeaderCentre);
+        const char* centre_str = codes_bufr_header_get_centre_name(bh->edition, bh->bufrHeaderCentre);
         if (centre_str)
             *len = sprintf(val, "%s", centre_str);
         else

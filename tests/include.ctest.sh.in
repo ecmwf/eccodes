@@ -20,8 +20,8 @@ tigge_dir=@CMAKE_BINARY_DIR@/bin
 # executables with valgrind. See ECC-746
 EXEC=""
 if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
-   tools_dir="valgrind --error-exitcode=1 -q @CMAKE_BINARY_DIR@/bin"
-   EXEC="valgrind --error-exitcode=1 -q "
+  EXEC="valgrind --error-exitcode=1 -q"
+  tools_dir="$EXEC @CMAKE_BINARY_DIR@/bin"
 fi
 
 # ecCodes tests are in the PROJECT_BINARY_DIR
@@ -33,6 +33,8 @@ ECCODES_SAMPLES_PATH=${samp_dir}
 export ECCODES_SAMPLES_PATH
 
 # Options
+HAVE_PRODUCT_BUFR=@HAVE_PRODUCT_BUFR@
+HAVE_PRODUCT_GRIB=@HAVE_PRODUCT_GRIB@
 HAVE_JPEG=@HAVE_JPEG@
 HAVE_LIBJASPER=@HAVE_LIBJASPER@
 HAVE_LIBOPENJPEG=@HAVE_LIBOPENJPEG@

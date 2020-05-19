@@ -345,6 +345,11 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
     (void)err; /* TODO */
 }
 
+static int is_hidden(grib_accessor* a)
+{
+    return ( (a->flags & GRIB_ACCESSOR_FLAG_HIDDEN) != 0 );
+}
+
 static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_encode_C* self = (grib_dumper_bufr_encode_C*)d;
@@ -360,8 +365,12 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_handle* h                  = grib_handle_of_accessor(a);
     int doing_unexpandedDescriptors = 0;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
-        return;
+    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0) { /* key does not have the dump attribute */
+        int skip = 1;
+        /* See ECC-1107 */
+        if (!is_hidden(a) && strcmp(a->name, "messageLength") == 0) skip = 0;
+        if (skip) return;
+    }
 
     doing_unexpandedDescriptors = (strcmp(a->name, "unexpandedDescriptors") == 0);
     grib_value_count(a, &count);
@@ -481,7 +490,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
 {
     grib_dumper_bufr_encode_C* self = (grib_dumper_bufr_encode_C*)d;
     long value                      = 0;
-    size_t size                     = 0;
+    size_t size = 0, size2 = 0;
     long* values                    = NULL;
     int err                         = 0;
     int i, icount;
@@ -493,15 +502,16 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         return;
 
     grib_value_count(a, &count);
-    size = count;
+    size = size2 = count;
 
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
-        err    = grib_unpack_long(a, values, &size);
+        err    = grib_unpack_long(a, values, &size2);
     }
     else {
-        err = grib_unpack_long(a, &value, &size);
+        err = grib_unpack_long(a, &value, &size2);
     }
+    Assert(size2 == size);
 
     self->empty = 0;
 
@@ -664,6 +674,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         depth -= 2;
     }
 
+    for (i = 0; i < size; i++) grib_context_free(c, values[i]);
     grib_context_free(c, values);
     (void)err; /* TODO */
 }

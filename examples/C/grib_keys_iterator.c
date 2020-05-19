@@ -69,13 +69,13 @@ int main(int argc, char* argv[])
         msg_count++;
         printf("-- GRIB N. %d --\n", msg_count);
         if (!h) {
-            printf("ERROR: Unable to create grib handle\n");
+            fprintf(stderr, "Error: Unable to create grib handle\n");
             exit(1);
         }
 
         kiter = codes_keys_iterator_new(h, key_iterator_filter_flags, name_space);
         if (!kiter) {
-            printf("ERROR: Unable to create keys iterator\n");
+            fprintf(stderr, "Error: Unable to create keys iterator\n");
             exit(1);
         }
 

@@ -10,29 +10,36 @@ file( GLOB children RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*" )
 set( dirlist "" )
 foreach( child ${children} )
   if( IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${child} )
-      list( APPEND dirlist ${child} )
+      set( add_child 1 )
+      if( NOT HAVE_PRODUCT_BUFR AND child STREQUAL bufr )
+        set( add_child 0 )
+      endif()
+      if( NOT HAVE_PRODUCT_GRIB AND child MATCHES "^grib" )
+        set( add_child 0 )
+      endif()
+      if( add_child )
+        list( APPEND dirlist ${child} )
+      endif()
   endif()
 endforeach()
 
-if(HAVE_INSTALL_ECCODES_DEFINITIONS)
-
+if( HAVE_INSTALL_ECCODES_DEFINITIONS )
   install( FILES ${definition_files} ${table_files} ${text_files}
            DESTINATION ${ECCODES_DEFINITION_SUFF}
            PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ )
 
   install( FILES installDefinitions.sh
-           DESTINATION ${ECCODES_DEFINITION_SUFF})
+           DESTINATION ${ECCODES_DEFINITION_SUFF} )
 
-  install(  DIRECTORY ${dirlist}
-            DESTINATION ${ECCODES_DEFINITION_SUFF}
-            FILES_MATCHING
-            PATTERN "*.def"
-            PATTERN "*.txt"
-            PATTERN "*.list"
-            PATTERN "*.table"
-            PATTERN "4.2.192.*.table" EXCLUDE
-            PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ )
-
+  install( DIRECTORY ${dirlist}
+           DESTINATION ${ECCODES_DEFINITION_SUFF}
+           FILES_MATCHING
+           PATTERN "*.def"
+           PATTERN "*.txt"
+           PATTERN "*.list"
+           PATTERN "*.table"
+           PATTERN "4.2.192.*.table" EXCLUDE
+           PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ )
 endif()
 
 # link to the definitions. See GRIB-786
@@ -46,11 +53,11 @@ endif()
 # copy the definitions to the build directory
 #file(    COPY ${definition_files} ${table_files} ${text_files}
 #         DESTINATION ${CMAKE_BINARY_DIR}/${ECCODES_DEFINITION_SUFF} )
-#file(     COPY budg bufr cdf common grib1 grib2 grib3 gts mars metar tide hdf5 wrap
-#          DESTINATION ${CMAKE_BINARY_DIR}/${ECCODES_DEFINITION_SUFF}
-#          FILES_MATCHING
-#          PATTERN "*.def"
-#          PATTERN "*.txt"
-#          PATTERN "*.list"
-#          PATTERN "*.table"
-#          PATTERN "4.2.192.*.table" EXCLUDE )
+#file(COPY budg bufr cdf common grib1 grib2 grib3 gts mars metar tide hdf5 wrap
+#     DESTINATION ${CMAKE_BINARY_DIR}/${ECCODES_DEFINITION_SUFF}
+#     FILES_MATCHING
+#     PATTERN "*.def"
+#     PATTERN "*.txt"
+#     PATTERN "*.list"
+#     PATTERN "*.table"
+#     PATTERN "4.2.192.*.table" EXCLUDE )

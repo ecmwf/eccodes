@@ -27,10 +27,10 @@ meta g2grid g2grid(
   subdivisionsOfBasicAngle
   );
 
-meta      geography.latitudeOfFirstGridPointInDegrees    g2latlon(g2grid,0) : dump;
-meta      geography.longitudeOfFirstGridPointInDegrees   g2latlon(g2grid,1) : dump;
-meta      geography.latitudeOfLastGridPointInDegrees     g2latlon(g2grid,2) : dump;
-meta      geography.longitudeOfLastGridPointInDegrees    g2latlon(g2grid,3) : dump;
+meta geography.latitudeOfFirstGridPointInDegrees    g2latlon(g2grid,0) : dump;
+meta geography.longitudeOfFirstGridPointInDegrees   g2latlon(g2grid,1) : dump;
+meta geography.latitudeOfLastGridPointInDegrees     g2latlon(g2grid,2) : dump;
+meta geography.longitudeOfLastGridPointInDegrees    g2latlon(g2grid,3) : dump;
 
 alias xFirst=longitudeOfFirstGridPointInDegrees;
 alias yFirst=latitudeOfFirstGridPointInDegrees;
@@ -63,7 +63,10 @@ _if ( missing(Ni) && PLPresent == 1 ) {
   iterator latlon(numberOfPoints,missingValue,values,
                   longitudeFirstInDegrees,DiInDegrees  ,
                   Ni,Nj,iScansNegatively,
-                  latitudeFirstInDegrees, DjInDegrees,jScansPositively, jPointsAreConsecutive);
+                  latitudeFirstInDegrees, DjInDegrees,
+                  jScansPositively, jPointsAreConsecutive,
+                  isRotatedGrid, angleOfRotation,
+                  latitudeOfSouthernPoleInDegrees,longitudeOfSouthernPoleInDegrees);
   nearest regular(values,radius,Ni,Nj);
 }
 meta latLonValues latlonvalues(values);

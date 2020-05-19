@@ -162,10 +162,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
     /* array of candidates for nearest neighbours */
     PointStore* neighbours = NULL;
 
-    while (inlon < 0)
-        inlon += 360;
-    while (inlon > 360)
-        inlon -= 360;
+    inlon = normalise_longitude_in_degrees(inlon);
 
     if ((ret = grib_get_size(h, self->values_key, &nvalues)) != GRIB_SUCCESS)
         return ret;

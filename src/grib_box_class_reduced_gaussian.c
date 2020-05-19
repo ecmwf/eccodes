@@ -208,8 +208,10 @@ static grib_points* get_points(grib_box* box, double north, double west, double 
 
     grib_context* c = box->context;
     points          = grib_points_new(c, self->size);
-    if (!points)
-        grib_context_log(c, GRIB_LOG_FATAL, "unable to create grib_points\n");
+    if (!points) {
+        grib_context_log(c, GRIB_LOG_ERROR, "unable to create grib_points\n");
+        return NULL;
+    }
 
     index       = 0;
     l           = 0;

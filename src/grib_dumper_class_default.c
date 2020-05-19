@@ -139,17 +139,17 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_default* self = (grib_dumper_default*)d;
     long value                = 0;
-    size_t size               = 1;
+    size_t size = 1, size2 = 0;
     long* values              = NULL;
     int err                   = 0;
     int i;
     long count = 0;
 
-    grib_value_count(a, &count);
-    size = count;
-
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
+
+    grib_value_count(a, &count);
+    size = size2 = count;
 
     print_offset(self->dumper.out, d, a);
 
@@ -160,11 +160,12 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
-        err    = grib_unpack_long(a, values, &size);
+        err    = grib_unpack_long(a, values, &size2);
     }
     else {
-        err = grib_unpack_long(a, &value, &size);
+        err = grib_unpack_long(a, &value, &size2);
     }
+    Assert(size2 == size);
 
     aliases(d, a);
     if (comment) {

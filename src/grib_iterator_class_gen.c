@@ -100,7 +100,8 @@ static double* pointer_to_data(unsigned int i, unsigned int j,
 /* Apply the scanning mode flags which may require data array to be transformed */
 /* to standard west-to-east south-to-north mode */
 int transform_iterator_data(grib_handle* h, double* data,
-                            long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning,
+                            long iScansNegatively, long jScansPositively,
+                            long jPointsAreConsecutive, long alternativeRowScanning,
                             size_t numPoints, long nx, long ny)
 {
     double* data2;
@@ -118,7 +119,7 @@ int transform_iterator_data(grib_handle* h, double* data,
         size_t row_size = ((size_t)nx) * sizeof(double);
         data2           = (double*)grib_context_malloc(h->context, row_size);
         if (!data2) {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", row_size);
+            grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", row_size);
             return GRIB_OUT_OF_MEMORY;
         }
         for (iy = 0; iy < ny / 2; iy++) {
@@ -136,7 +137,7 @@ int transform_iterator_data(grib_handle* h, double* data,
     }
     data2 = (double*)grib_context_malloc(h->context, numPoints * sizeof(double));
     if (!data2) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", numPoints * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", numPoints * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     pData0 = data2;

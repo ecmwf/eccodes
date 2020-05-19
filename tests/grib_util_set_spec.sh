@@ -104,3 +104,4 @@ ${tools_dir}/grib_get_data $outfile > /dev/null
 
 ### Clean up
 rm -f $outfile $tempOut
+rm -f error.data

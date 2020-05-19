@@ -107,8 +107,7 @@ int grib_encode_unsigned_long(unsigned char* p, unsigned long val, long* bitp, l
         else {
             tmp = ((val >> len) | ((*p) & dmasks[n]));
         }
-        *p = tmp;
-        (*p)++;
+        *p++ = tmp;
     }
 
     /*  write the middle words */

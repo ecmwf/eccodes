@@ -116,12 +116,14 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
         h2                    = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
         assert(err == GRIB_INTERNAL_ERROR);
         assert(!h2);
+        if (h2) exit(1);
 #ifdef INFINITY
         packing_spec.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
         values[0]             = INFINITY;
         h2                    = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
         assert(err == GRIB_ENCODING_ERROR);
         assert(!h2);
+        if (h2) exit(1);
 #endif
     }
 

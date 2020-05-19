@@ -77,7 +77,6 @@ EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 		perf/time.sh \
 		CMakeLists.txt \
 		project_summary.cmake \
-		VERSION.cmake \
 		eccodes_config.h.in \
 		examples/CMakeLists.txt \
 		data/CMakeLists.txt \

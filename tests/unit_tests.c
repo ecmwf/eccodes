@@ -38,8 +38,16 @@ static void check_float_representation(const double val, const double expected, 
     compare_doubles(out, expected, tolerance);
 }
 
+static void test_get_git_sha1()
+{
+    const char* sha1 = grib_get_git_sha1();
+    Assert(sha1 != NULL);
+    printf("Testing: test_get_git_sha1... %s\n", sha1);
+}
+
 static void test_grib_nearest_smaller_ibmfloat()
 {
+    printf("Testing: test_grib_nearest_smaller_ibmfloat...\n");
     check_float_representation(-1.0, -1.0, IBM_FLOAT);
     check_float_representation(0.0, 0.0, IBM_FLOAT);
     check_float_representation(1.0, 1.0, IBM_FLOAT);
@@ -50,6 +58,7 @@ static void test_grib_nearest_smaller_ibmfloat()
 
 static void test_grib_nearest_smaller_ieeefloat()
 {
+    printf("Testing: test_grib_nearest_smaller_ieeefloat...\n");
     check_float_representation(-1.0, -1.0, IEEE_FLOAT);
     check_float_representation(0.0, 0.0, IEEE_FLOAT);
     check_float_representation(1.0, 1.0, IEEE_FLOAT);
@@ -63,9 +72,8 @@ static void test_gaussian_latitudes(int order)
     int ret       = 0;
     const int num = 2 * order;
     double lat1 = 0, lat2 = 0;
-
     double* lats = (double*)malloc(sizeof(double) * num);
-
+    printf("Testing: test_gaussian_latitudes order=%d...\n", order);
     ret = grib_get_gaussian_latitudes(order, lats);
     Assert(ret == GRIB_SUCCESS);
 
@@ -87,6 +95,7 @@ static void test_gaussian_latitude_640()
     double* lats           = (double*)malloc(sizeof(double) * num);
     ret                    = grib_get_gaussian_latitudes(order, lats);
     Assert(ret == GRIB_SUCCESS);
+    printf("Testing: test_gaussian_latitude_640...\n");
 
     compare_doubles(lats[0], 89.892396, tolerance);
     compare_doubles(lats[1], 89.753005, tolerance);
@@ -1377,40 +1386,39 @@ static void test_string_splitting()
     int i          = 0;
     char input[80] = "Born|To|Be|Wild";
     char** list    = 0;
+    printf("Testing: test_string_splitting...\n");
+
     list           = string_split(input, "|");
-    assert(list);
+    if (!list) { assert(!"List is NULL"); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 4);
-    if (strcmp(list[0], "Born") != 0) assert(0);
-    if (strcmp(list[1], "To") != 0) assert(0);
-    if (strcmp(list[2], "Be") != 0) assert(0);
-    if (strcmp(list[3], "Wild") != 0) assert(0);
-    assert(list[4] == NULL);
-    for (i = 0; list[i] != NULL; ++i)
-        free(list[i]);
+    if (!list[0] || !STR_EQ(list[0], "Born")) Assert(0);
+    if (!list[1] || !STR_EQ(list[1], "To"))   Assert(0);
+    if (!list[2] || !STR_EQ(list[2], "Be"))   Assert(0);
+    if (!list[3] || !STR_EQ(list[3], "Wild")) Assert(0);
+    Assert(list[4] == NULL);
+    for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
 
     strcpy(input, "12345|a gap|");
     list = string_split(input, "|");
-    assert(list);
+    if (!list) { assert(0); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 2);
-    if (strcmp(list[0], "12345") != 0) assert(0);
-    if (strcmp(list[1], "a gap") != 0) assert(0);
+    if (!list[0] || !STR_EQ(list[0], "12345")) Assert(0);
+    if (!list[1] || !STR_EQ(list[1], "a gap")) Assert(0);
     assert(list[2] == NULL);
-    for (i = 0; list[i] != NULL; ++i)
-        free(list[i]);
+    for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
 
     strcpy(input, "Steppenwolf");
     list = string_split(input, ",");
-    assert(list);
+    if (!list) { assert(0); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 1);
-    if (strcmp(list[0], "Steppenwolf") != 0) assert(0);
+    if (!list[0] || !STR_EQ(list[0], "Steppenwolf")) Assert(0);
     assert(list[1] == NULL);
-    for (i = 0; list[i] != NULL; ++i)
-        free(list[i]);
+    for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
 
     /* Note: currently cannot cope with */
@@ -1432,6 +1440,8 @@ static void test_assertion_catching()
     int i        = 0;
     assert(assertion_caught == 0);
     codes_set_codes_assertion_failed_proc(&my_assertion_proc);
+    
+    printf("Testing: test_assertion_catching...\n");
 
     /* Do something illegal */
     list = string_split(empty, " ");
@@ -1453,22 +1463,24 @@ static void test_concept_condition_strings()
     char result[1024] = {0,};
     grib_handle* h = grib_handle_new_from_samples(0, "GRIB2");
 
+    printf("Testing: test_concept_condition_strings...\n");
+
     err = get_concept_condition_string(h, "typeOfLevel", NULL, result);
-    assert(!err);
-    assert(strcmp(result, "typeOfFirstFixedSurface=1,typeOfSecondFixedSurface=255") == 0);
+    Assert(!err);
+    Assert(strcmp(result, "typeOfFirstFixedSurface=1,typeOfSecondFixedSurface=255") == 0);
 
     err = get_concept_condition_string(h, "paramId", NULL, result);
-    assert(!err);
-    assert(strcmp(result, "discipline=0,parameterCategory=0,parameterNumber=0") == 0);
+    Assert(!err);
+    Assert(strcmp(result, "discipline=0,parameterCategory=0,parameterNumber=0") == 0);
 
     err = get_concept_condition_string(h, "gridType", NULL, result);
-    assert(!err);
+    Assert(!err);
     /*printf("%s\n", result);*/
-    assert(strcmp(result, "gridDefinitionTemplateNumber=0,PLPresent=0") == 0);
+    Assert(strcmp(result, "gridDefinitionTemplateNumber=0,PLPresent=0") == 0);
 
     err = get_concept_condition_string(h, "stepType", NULL, result);
-    assert(!err);
-    assert(strcmp(result, "selectStepTemplateInstant=1,stepTypeInternal=instant") == 0);
+    Assert(!err);
+    Assert(strcmp(result, "selectStepTemplateInstant=1,stepTypeInternal=instant") == 0);
 
     grib_handle_delete(h);
 }
@@ -1476,6 +1488,7 @@ static void test_concept_condition_strings()
 int main(int argc, char** argv)
 {
     /*printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());*/
+    test_get_git_sha1();
 
     test_concept_condition_strings();
 

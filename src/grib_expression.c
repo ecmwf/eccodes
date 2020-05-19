@@ -18,7 +18,8 @@ int grib_expression_native_type(grib_handle* h, grib_expression* g)
             return c->native_type(g, h);
         c = c->super ? *(c->super) : NULL;
     }
-    grib_context_log(h->context, GRIB_LOG_ERROR, "No native_type() in %s\n", g->cclass->name);
+    if (g->cclass)
+        grib_context_log(h->context, GRIB_LOG_ERROR, "No native_type() in %s\n", g->cclass->name);
     Assert(1 == 0);
     return 0;
 }
@@ -53,7 +54,8 @@ const char* grib_expression_evaluate_string(grib_handle* h, grib_expression* g, 
             return c->evaluate_string(g, h, buf, size, err);
         c = c->super ? *(c->super) : NULL;
     }
-    grib_context_log(h->context, GRIB_LOG_ERROR, "No evaluate_string() in %s\n", g->cclass->name);
+    if (g->cclass)
+        grib_context_log(h->context, GRIB_LOG_ERROR, "No evaluate_string() in %s\n", g->cclass->name);
     *err = GRIB_INVALID_TYPE;
 
     return 0;
@@ -67,7 +69,7 @@ const char* grib_expression_get_name(grib_expression* g)
             return c->get_name(g);
         c = c->super ? *(c->super) : NULL;
     }
-    printf("No expression_get_name() in %s\n", g->cclass->name);
+    if (g->cclass) printf("No expression_get_name() in %s\n", g->cclass->name);
     Assert(1 == 0);
     return 0;
 }

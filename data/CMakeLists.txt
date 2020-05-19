@@ -21,7 +21,7 @@ if( ENABLE_EXTRA_TESTS )
 endif()
 
 # Copy other files - e.g. reference data, text files etc from the source data dir
-LIST(APPEND other_files
+list(APPEND other_files
     60_model_levels
     bitmap.diff
     ieee_test.good

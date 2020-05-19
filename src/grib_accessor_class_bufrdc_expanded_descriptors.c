@@ -192,6 +192,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
             val[rlen++] = v[i];
     }
     *len = rlen;
+    grib_context_free(c,v);
 
     return GRIB_SUCCESS;
 }

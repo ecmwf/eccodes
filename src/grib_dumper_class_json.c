@@ -294,10 +294,14 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         }
         if (icount > cols)
             fprintf(self->dumper.out, "\n%-*s", depth, " ");
-        if (doing_unexpandedDescriptors)
+        if (doing_unexpandedDescriptors) {
             fprintf(self->dumper.out, "%06ld ", values[i]);
-        else
-            fprintf(self->dumper.out, "%ld ", values[i]);
+        } else {
+            if (grib_is_missing_long(a, values[i]))
+                fprintf(self->dumper.out, "%s", "null");
+            else
+                fprintf(self->dumper.out, "%ld ", values[i]);
+        }
 
         depth -= 2;
         fprintf(self->dumper.out, "\n%-*s]", depth, " ");

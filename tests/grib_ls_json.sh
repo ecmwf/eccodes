@@ -88,8 +88,8 @@ grep -q '"latitudeOfLastGridPointInDegrees": -89.463' $tempLog
 # Check output from all our downloaded GRIBs
 # ----------------------------------------------------
 grib_files=`cat ${data_dir}/grib_data_files.txt`
-for file in ${grib_files}
-do
+for file in ${grib_files}; do
+  if [ "$file" = "bad.grib" ]; then continue; fi
   input=${data_dir}/$file
   ${tools_dir}/grib_ls -j $input > $tempLog
   if test "x$JSON_CHECK" != "x"; then

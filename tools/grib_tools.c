@@ -358,7 +358,13 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
                                       err != GRIB_SUCCESS)) {
             infile->handle_count++;
             options->handle_count++;
-            options->error = err;
+
+            if (c->no_fail_on_wrong_length && (err == GRIB_PREMATURE_END_OF_FILE || err == GRIB_WRONG_LENGTH))
+                err = 0;
+            if (!options->error) {
+                /* ECC-1086: Do not clear a previous error */
+                options->error = err;
+            }
 
             if (!h) {
                 /* fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n"); */
@@ -553,7 +559,9 @@ static int grib_tool_index(grib_runtime_options* options)
     }
 
     navigate(options->index2->fields, options);
-
+    /* TODO(masn): memleak
+     * grib_context_free(c, options->index2->current);
+     */
     grib_tool_finalise_action(options);
 
     return 0;
@@ -1259,9 +1267,10 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     char filename[1024] = {0,};
     Assert(options->outfile != NULL && options->outfile->name != NULL);
 
-    if (options->error == GRIB_WRONG_LENGTH)
-        return;
-
+    /* See ECC-1086
+     * if (options->error == GRIB_WRONG_LENGTH)
+     *   return;
+     */
     if ((err = grib_get_message(h, &buffer, &size)) != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "unable to get binary message\n");
         exit(err);

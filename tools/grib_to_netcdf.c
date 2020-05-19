@@ -1125,8 +1125,10 @@ static request* fieldset_to_request(fieldset* fs)
     int i;
     request* r = empty_request("GRIB");
 
-    if (!fs)
+    if (!fs) {
+        free_one_request(r);
         return 0;
+    }
 
     for (i = 0; i < fs->count; i++) {
         request* s = field_to_request(fs->fields[i]);
@@ -1696,6 +1698,8 @@ static hypercube* new_hypercube(const request* r)
 
 static void print_hypercube(const hypercube* h)
 {
+    Assert(h);
+    if (!h) return;
     print_all_requests(h->r);
     print_all_requests(h->cube);
     grib_context_log(ctx, GRIB_LOG_INFO, "%d active out of %d fields described\n", count_index(h), h->size);
@@ -2413,20 +2417,18 @@ static int compute_scale(dataset_t* subset)
         if (g->has_bitmap) {
             subset->bitmap = TRUE;
             for (j = 0; j < len; ++j) {
-                if (vals[j] != (double)global_missing_value) {
-                    if (vals[j] > max)
-                        max = vals[j];
-                    if (vals[j] < min)
-                        min = vals[j];
+                if (vals && vals[j] != global_missing_value) {
+                    if (vals[j] > max) max = vals[j];
+                    if (vals[j] < min) min = vals[j];
                 }
             }
         }
         else {
             for (j = 0; j < len; ++j) {
-                if (vals[j] > max)
-                    max = vals[j];
-                if (vals[j] < min)
-                    min = vals[j];
+                if (vals) {
+                    if (vals[j] > max) max = vals[j];
+                    if (vals[j] < min) min = vals[j];
+                }
             }
         }
         /* g->purge_header = TRUE; */
@@ -2549,13 +2551,14 @@ static void scale_bitmap(double* vals, long n, void* data, dataset_t* subset)
     int i          = 0;
     nc_type nctype = subset->att.nctype;
 
-    /*
-     if(!subset->bitmap)
-     {
-      grib_context_log(ctx,GRIB_LOG_DEBUG,"No scale of bitmap required");
-      return;
-     }
-     */
+    /* if(!subset->bitmap) {
+        grib_context_log(ctx,GRIB_LOG_DEBUG,"No scale of bitmap required");
+        return;
+     } */
+    if (n > 0 && !vals) {
+        Assert(!"scale_bitmap: n > 0 but vals == NULL");
+        return;
+    }
 
     switch (nctype) {
         case NC_BYTE: {
@@ -3267,8 +3270,10 @@ static int fill_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid)
         int* values         = (int*)grib_context_malloc(ctx, sizeof(int) * n);
         const char* lowaxis = (axis);
 
-        if (!values)
+        if (!values) {
             grib_context_log(ctx, GRIB_LOG_ERROR, "fill_netcdf_dimensions: cannot allocate %ld bytes", sizeof(int) * n);
+            exit(1);
+        }
 
         if (strcmp("levelist", axis) == 0)
             lowaxis = "level";

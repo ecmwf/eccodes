@@ -331,8 +331,8 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     long start = 0, theEnd = 0;
     long timeRangeIndicator = 0;
     long unit;
-    int err           = 0;
-    char stepType[20] = {0,};
+    int err            = 0;
+    char stepType[20]  = {0,};
     size_t stepTypeLen = 20;
     grib_handle* hand  = grib_handle_of_accessor(a);
 
@@ -540,6 +540,9 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     }
 
     if (timeRangeIndicator == 10) {
+        /*
+        * timeRangeIndicator = 10 means 'P1 occupies octets 19 and 20' i.e. 16 bits
+        */
         long off                   = 0;
         grib_accessor* p1_accessor = NULL;
         if (theEnd != start && !h->context->gribex_mode_on) {
@@ -563,6 +566,9 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
             return GRIB_NOT_FOUND;
         }
         off = p1_accessor->offset * 8;
+        /* Note: here we assume the key P2 is one octet and immediately follows P1. Hence 16 bits */
+        if (h->context->debug)
+            fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (as two octets)\n", p1_accessor->name, P1);
         ret = grib_encode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, P1, &off, 16);
         if (ret != 0)
             return ret;
@@ -602,6 +608,11 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
                 return GRIB_NOT_FOUND;
             }
             off = p1_accessor->offset * 8;
+            /* Note:  case for timeRangeIndicator of 10
+             * We assume the key P2 is one octet and immediately follows P1. Hence 16 bits
+             */
+            if (h->context->debug)
+                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (as two octets)\n", p1_accessor->name, P1);
             ret = grib_encode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, P1, &off, 16);
             if (ret != 0)
                 return ret;

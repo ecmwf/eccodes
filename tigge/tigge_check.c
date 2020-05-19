@@ -80,6 +80,8 @@ static void given_thickness(grib_handle*,const parameter*,double,double);
 static void has_bitmap(grib_handle*,const parameter*,double,double);
 static void has_soil_level(grib_handle*,const parameter*,double,double);
 static void has_soil_layer(grib_handle*,const parameter*,double,double);
+static void resolution_s2s(grib_handle*,const parameter*,double,double);
+static void resolution_s2s_ocean(grib_handle*,const parameter*,double,double);
 
 static void height_level(grib_handle*,const parameter*,double,double);
 static void pressure_level(grib_handle*,const parameter*,double,double);
@@ -247,7 +249,10 @@ static void gaussian_grid(grib_handle* h)
         last_n = n;
     }
 
-    values[0] = rint(values[0]*1e6)/1e6;
+    if (!values) { assert(0); return; }
+    if (values) {
+        values[0] = rint(values[0]*1e6)/1e6;
+    }
 
     if ( !DBL_EQUAL(north, values[0], tolerance) || !DBL_EQUAL(south, -values[0], tolerance) )
         printf("N=%ld north=%f south=%f v(=gauss_lat[0])=%f north-v=%0.30f south-v=%0.30f\n",
@@ -303,6 +308,7 @@ static void gaussian_grid(grib_handle* h)
 
         pl = (double*)malloc(sizeof(double)*(count));
         CHECK(pl != NULL);
+        if (!pl) return;
 
         nPl = count;
         if((err_code =  grib_get_double_array(h,"pl",pl,&count)))
@@ -834,6 +840,18 @@ static void has_soil_layer(grib_handle* h,const parameter* p,double min,double m
 {
     CHECK(get(h,"topLevel") == get(h,"bottomLevel") - 1);
     CHECK(le(h,"level",14)); /* max in UERRA */
+}
+
+static void resolution_s2s(grib_handle* h,const parameter* p,double min,double max)
+{
+    CHECK(eq(h,"iDirectionIncrement",1500000));
+    CHECK(eq(h,"jDirectionIncrement",1500000));
+}
+
+static void resolution_s2s_ocean(grib_handle* h,const parameter* p,double min,double max)
+{
+    CHECK(eq(h,"iDirectionIncrement",1000000));
+    CHECK(eq(h,"jDirectionIncrement",1000000));
 }
 
 static void six_hourly(grib_handle* h,const parameter* p,double min,double max)

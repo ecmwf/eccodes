@@ -48,12 +48,15 @@ export GRIB_IEEE_PACKING
 ${tools_dir}/grib_filter -o $out32 w.filter $infile 
 ${tools_dir}/grib_filter r.filter $out32 > $out32.txt 
 diff $out32.txt ${data_dir}/ieee_test.good
+grib_check_key_equals $out32 'packingType,precision' 'grid_ieee 1'
 
 GRIB_IEEE_PACKING=64
 export GRIB_IEEE_PACKING
 ${tools_dir}/grib_filter -o $out64 w.filter $infile 
 ${tools_dir}/grib_filter r.filter $out64 > $out64.txt 
 diff $out64.txt ${data_dir}/ieee_test.good
+grib_check_key_equals $out64 'packingType,precision' 'grid_ieee 2'
+
 
 rm -f $outsimple $out32 $out64 $out32.txt $out64.txt
 rm -f ${data_dir}/$outsimple.txt ${data_dir}/$out32.txt ${data_dir}/$out64.txt 

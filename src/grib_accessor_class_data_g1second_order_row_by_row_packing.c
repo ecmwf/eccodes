@@ -249,7 +249,7 @@ static int value_count(grib_accessor* a, long* count)
         long *bitmap, *pbitmap;
         size_t numberOfPoints = 0;
 
-        if (plSize) {
+        if (plSize && pl) {
             for (i = 0; i < numberOfRows; i++)
                 numberOfPoints += pl[i];
             grib_context_free(c, pl);
@@ -267,6 +267,7 @@ static int value_count(grib_accessor* a, long* count)
     }
     else {
         if (plSize) {
+            if (numberOfRows && !pl) return GRIB_INTERNAL_ERROR;
             for (i = 0; i < numberOfRows; i++)
                 n += pl[i];
             grib_context_free(c, pl);
@@ -342,7 +343,7 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         long *bitmap, *pbitmap;
         size_t numberOfPoints = Ni * Nj;
 
-        if (plSize) {
+        if (plSize && pl) {
             numberOfPoints = 0;
             for (i = 0; i < numberOfRows; i++)
                 numberOfPoints += pl[i];
@@ -350,7 +351,7 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         bitmap  = (long*)grib_context_malloc_clear(a->context, sizeof(long) * numberOfPoints);
         pbitmap = bitmap;
         grib_get_long_array(gh, self->bitmap, bitmap, &numberOfPoints);
-        if (plSize) {
+        if (plSize && pl) {
             for (i = 0; i < numberOfRows; i++) {
                 for (j = 0; j < pl[i]; j++) {
                     numbersPerRow[i] += *(bitmap++);
@@ -369,7 +370,7 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         grib_context_free(a->context, pbitmap);
     }
     else {
-        if (plSize) {
+        if (plSize && pl) {
             for (i = 0; i < numberOfRows; i++)
                 numbersPerRow[i] = pl[i];
         }

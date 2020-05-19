@@ -61,7 +61,7 @@ static int encode_file(char* template_file, char* output_file)
             unsigned long dump_flags = CODES_DUMP_FLAG_ALL_DATA;
             /* codes_dump_content(source_handle,devnull, "json", 1024, NULL); */ /* JSON dump with all attributes */
             dumper = grib_dump_content_with_dumper(source_handle, dumper, devnull, dumper_name, dump_flags, NULL);
-            assert(dumper);
+            Assert(dumper);
             fclose(devnull);
         }
 
@@ -160,6 +160,7 @@ int main(int argc, char** argv)
 void* runner(void* ptr)
 {
     do_stuff(ptr);
+    free(ptr);
     pthread_exit(0);
 }
 
