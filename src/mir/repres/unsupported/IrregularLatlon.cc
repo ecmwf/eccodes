@@ -15,13 +15,13 @@
 #include <cmath>
 #include <iostream>
 
-#include "eckit/exception/Exceptions.h"
 #include "eckit/utils/MD5.h"
 
 #include "mir/api/Atlas.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
+#include "mir/util/Assert.h"
 #include "mir/util/Domain.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
@@ -99,10 +99,12 @@ bool IrregularLatlon::getLongestElementDiagonal(double& d) const {
 
 
 void IrregularLatlon::validate(const MIRValuesVector& values) const {
-    auto count = numberOfPoints();
-    eckit::Log::debug<LibMir>() << "IrregularLatlon::validate: check " << Pretty(values.size(), {"value"}) << ", "
-                                << Pretty(count) << " within " << domain() << ")" << std::endl;
-    ASSERT(values.size() == count);
+    const size_t count = numberOfPoints();
+
+    eckit::Log::debug<LibMir>() << "IrregularLatlon::validate checked " << Pretty(values.size(), {"value"})
+                                << ", iterator counts " << Pretty(count) << " (" << domain() << ")." << std::endl;
+
+    ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("IrregularLatlon", values.size(), count);
 }
 
 

@@ -28,6 +28,7 @@
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
+#include "mir/util/Assert.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
@@ -203,7 +204,7 @@ atlas::Grid UnstructuredGrid::atlasGrid() const {
 
 
 void UnstructuredGrid::validate(const MIRValuesVector& values) const {
-    ASSERT(values.size() == numberOfPoints());
+    ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("UnstructuredGrid", values.size(), numberOfPoints());
 }
 
 

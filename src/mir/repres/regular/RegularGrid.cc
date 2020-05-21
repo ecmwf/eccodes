@@ -15,6 +15,7 @@
 #include <ostream>
 
 #include "eckit/config/Resource.h"
+#include "eckit/exception/Exceptions.h"
 #include "eckit/log/Log.h"
 #include "eckit/utils/MD5.h"
 #include "eckit/utils/StringTools.h"
@@ -22,6 +23,7 @@
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
+#include "mir/util/Assert.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
@@ -58,7 +60,8 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
     ASSERT(ny > 0);
 
     std::vector<double> grid;
-    ASSERT(param.get("grid", grid) && grid.size() == 2);
+    ASSERT(param.get("grid", grid));
+    ASSERT_KEYWORD_GRID_SIZE(grid.size());
 
     Point2 firstLL;
     ASSERT(param.get("latitudeOfFirstGridPointInDegrees", firstLL[LLCOORDS::LAT]));
@@ -202,9 +205,11 @@ void RegularGrid::reorder(long, mir::data::MIRValuesVector&) const {
 
 void RegularGrid::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
+
     eckit::Log::debug<LibMir>() << "RegularGrid::validate checked " << Pretty(values.size(), {"value"})
-                                << ", numberOfPoints: " << Pretty(count) << "." << std::endl;
-    ASSERT(values.size() == count);
+                                << ", iterator counts " << Pretty(count) << " (" << domain() << ")." << std::endl;
+
+    ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("RegularGrid", values.size(), count);
 }
 
 

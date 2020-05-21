@@ -15,10 +15,9 @@
 #include <ostream>
 #include <sstream>
 
-#include "eckit/exception/Exceptions.h"
-
 #include "mir/config/LibMir.h"
 #include "mir/repres/Iterator.h"
+#include "mir/util/Assert.h"
 #include "mir/util/Grib.h"
 #include "mir/util/Pretty.h"
 
@@ -60,9 +59,11 @@ bool ORCA::sameAs(const Representation& other) const {
 
 void ORCA::validate(const data::MIRValuesVector& values) const {
     size_t count = numberOfPoints();
-    eckit::Log::debug<LibMir>() << "ORCA::validate " << Pretty(values.size(), {"value"}) << ", count: " << Pretty(count)
-                                << "." << std::endl;
-    ASSERT(values.size() == count);
+
+    eckit::Log::debug<LibMir>() << "ORCA::validate checked " << Pretty(values.size(), {"value"}) << ", iterator counts "
+                                << Pretty(count) << " (" << domain() << ")." << std::endl;
+
+    ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("ORCA", values.size(), count);
 }
 
 

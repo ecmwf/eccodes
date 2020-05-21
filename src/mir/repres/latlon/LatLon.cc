@@ -26,6 +26,7 @@
 #include "mir/iterator/detail/RegularIterator.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/param/SameParametrisation.h"
+#include "mir/util/Assert.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
@@ -276,11 +277,10 @@ size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue, 
 void LatLon::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
 
-    eckit::Log::debug<LibMir>() << domain() << std::endl;
-
     eckit::Log::debug<LibMir>() << "LatLon::validate checked " << Pretty(values.size(), {"value"})
-                                << ", within domain: " << Pretty(count) << "." << std::endl;
-    ASSERT(values.size() == count);
+                                << ", iterator counts " << Pretty(count) << " (" << domain() << ")." << std::endl;
+
+    ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("LatLon", values.size(), count);
 }
 
 
@@ -420,7 +420,7 @@ bool LatLon::samePoints(const param::MIRParametrisation& user, const param::MIRP
 
     std::vector<double> area;
     if (user.get("area", area)) {
-        ASSERT(area.size() == 4);
+        ASSERT_KEYWORD_AREA_SIZE(area.size());
 
         util::Increments inc(field);
         size_t ni = 0;

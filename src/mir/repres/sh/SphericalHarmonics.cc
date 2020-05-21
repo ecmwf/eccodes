@@ -13,10 +13,13 @@
 #include "mir/repres/sh/SphericalHarmonics.h"
 
 #include <iostream>
+
 #include "eckit/exception/Exceptions.h"
+
 #include "mir/api/MIREstimation.h"
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
+#include "mir/util/Assert.h"
 #include "mir/util/Grib.h"
 
 
@@ -181,7 +184,8 @@ const Representation* SphericalHarmonics::truncate(size_t truncation, const MIRV
 
 
 void SphericalHarmonics::validate(const MIRValuesVector& values) const {
-    ASSERT(values.size() == number_of_complex_coefficients(truncation_) * 2);
+    ASSERT_VALUES_SIZE_EQ_NUMBER_OF_COEFFS("SphericalHarmonics", values.size(),
+                                           number_of_complex_coefficients(truncation_) * 2);
 }
 
 

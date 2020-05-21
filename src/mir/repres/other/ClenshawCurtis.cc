@@ -34,6 +34,7 @@
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
+#include "mir/util/Assert.h"
 #include "mir/util/Grib.h"
 #include "mir/util/GridBox.h"
 #include "mir/util/MeshGeneratorParameters.h"
@@ -139,8 +140,9 @@ void ClenshawCurtis::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
 
     eckit::Log::debug<LibMir>() << "ClenshawCurtis::validate checked " << Pretty(values.size(), {"value"})
-                                << ", within domain: " << Pretty(count) << "." << std::endl;
-    ASSERT(values.size() == count);
+                                << ", iterator counts " << Pretty(count) << " (" << domain() << ")." << std::endl;
+
+    ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("ClenshawCurtis", values.size(), count);
 }
 
 
@@ -206,8 +208,8 @@ const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
 
         for (size_t i = 0, j = 2 * N - 1; i < N; ++i, --j) {
             double lat = 90. - 90. * double(i + 1) / double(N);
-            lats[i] = lat;
-            lats[j] = -lat;
+            lats[i]    = lat;
+            lats[j]    = -lat;
         }
         lats[N - 1] = lats[N] = 0.;
 
