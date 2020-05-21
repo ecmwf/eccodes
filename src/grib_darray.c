@@ -103,7 +103,7 @@ void grib_darray_delete(grib_context* c, grib_darray* v)
     if (!v)
         return;
     if (!c)
-        grib_context_get_default();
+        c = grib_context_get_default();
     if (v->v)
         grib_context_free(c, v->v);
     grib_context_free(c, v);

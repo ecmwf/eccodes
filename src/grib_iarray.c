@@ -221,7 +221,8 @@ long* grib_iarray_get_array(grib_iarray* v)
 {
     long* vv;
     size_t i;
-    grib_context* c = grib_context_get_default();
+    grib_context* c = v->context;
+    DebugAssert(c);
 
     vv = (long*)grib_context_malloc_clear(c, sizeof(long) * v->n);
     for (i = 0; i < v->n; i++)

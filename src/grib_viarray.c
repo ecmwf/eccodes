@@ -75,7 +75,7 @@ void grib_viarray_delete(grib_context* c, grib_viarray* v)
     if (!v)
         return;
     if (!c)
-        grib_context_get_default();
+        c = grib_context_get_default();
     if (v->v)
         grib_context_free(c, v->v);
     grib_context_free(c, v);
@@ -87,7 +87,7 @@ void grib_viarray_delete_content(grib_context* c, grib_viarray* v)
     if (!v || !v->v)
         return;
     if (!c)
-        grib_context_get_default();
+        c = grib_context_get_default();
     for (i = 0; i < v->n; i++) {
         grib_iarray_delete(v->v[i]);
         v->v[i] = 0;
