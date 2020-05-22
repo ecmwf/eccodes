@@ -86,8 +86,7 @@ void grib_viarray_delete_content(grib_context* c, grib_viarray* v)
     int i;
     if (!v || !v->v)
         return;
-    if (!c)
-        c = grib_context_get_default();
+
     for (i = 0; i < v->n; i++) {
         grib_iarray_delete(v->v[i]);
         v->v[i] = 0;
