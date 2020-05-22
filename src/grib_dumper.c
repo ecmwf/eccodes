@@ -67,7 +67,7 @@ void grib_init_dumper(grib_dumper* d)
 void grib_dumper_delete(grib_dumper* d)
 {
     grib_dumper_class* c = d->cclass;
-    grib_context* ctx    = d->handle->context;
+    grib_context* ctx    = d->context;
     while (c) {
         grib_dumper_class* s = c->super ? *(c->super) : NULL;
         if (c->destroy)

@@ -328,7 +328,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
     int i, k, err = 0;
     int more           = 0;
     size_t size        = a->length;
-    unsigned char* buf = (unsigned char*)grib_context_malloc(d->handle->context, size);
+    unsigned char* buf = (unsigned char*)grib_context_malloc(d->context, size);
 
     if (a->length == 0 &&
         (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
@@ -354,7 +354,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 
     err = grib_unpack_bytes(a, buf, &size);
     if (err) {
-        grib_context_free(d->handle->context, buf);
+        grib_context_free(d->context, buf);
         fprintf(self->dumper.out, " *** ERR=%d (%s) [grib_dumper_debug::dump_bytes]\n}", err, grib_get_error_message(err));
         return;
     }
@@ -387,7 +387,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
     for (i = 0; i < d->depth; i++)
         fprintf(self->dumper.out, " ");
     fprintf(self->dumper.out, "} # %s %s \n", a->creator->op, a->name);
-    grib_context_free(d->handle->context, buf);
+    grib_context_free(d->context, buf);
 }
 
 static void dump_values(grib_dumper* d, grib_accessor* a)
@@ -409,7 +409,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         dump_double(d, a, NULL);
         return;
     }
-    buf = (double*)grib_context_malloc_clear(d->handle->context, size * sizeof(double));
+    buf = (double*)grib_context_malloc_clear(d->context, size * sizeof(double));
 
     set_begin_end(d, a);
 
@@ -431,7 +431,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     err = grib_unpack_double(a, buf, &size);
     if (err) {
-        grib_context_free(d->handle->context, buf);
+        grib_context_free(d->context, buf);
         fprintf(self->dumper.out, " *** ERR=%d (%s) [grib_dumper_debug::dump_values]\n}", err, grib_get_error_message(err));
         return;
     }
@@ -468,7 +468,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     for (i = 0; i < d->depth; i++)
         fprintf(self->dumper.out, " ");
     fprintf(self->dumper.out, "} # %s %s \n", a->creator->op, a->name);
-    grib_context_free(d->handle->context, buf);
+    grib_context_free(d->context, buf);
 }
 
 static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)

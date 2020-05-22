@@ -650,7 +650,7 @@ struct grib_dumper
     void* arg;
     int depth;
     long count;
-    grib_handle* handle;
+    grib_context* context;
     grib_dumper_class* cclass;
 };
 
