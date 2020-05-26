@@ -92,7 +92,7 @@ long grib_iarray_pop_front(grib_iarray* a)
     return v;
 }
 
-grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
+static grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
 {
     long* newv;
     size_t i;
@@ -124,10 +124,9 @@ grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
     return v;
 }
 
-grib_iarray* grib_iarray_resize(grib_iarray* v)
+static grib_iarray* grib_iarray_resize(grib_iarray* v)
 {
-    int newsize = v->incsize + v->size;
-
+    const int newsize = v->incsize + v->size;
     return grib_iarray_resize_to(v, newsize);
 }
 
