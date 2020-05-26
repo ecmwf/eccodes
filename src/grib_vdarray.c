@@ -44,6 +44,7 @@ grib_vdarray* grib_vdarray_new(grib_context* c, size_t size, size_t incsize)
     v->size    = size;
     v->n       = 0;
     v->incsize = incsize;
+    v->context = c;
     v->v       = (grib_darray**)grib_context_malloc_clear(c, sizeof(grib_darray*) * size);
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
@@ -53,10 +54,10 @@ grib_vdarray* grib_vdarray_new(grib_context* c, size_t size, size_t incsize)
     return v;
 }
 
-grib_vdarray* grib_vdarray_resize(grib_context* c, grib_vdarray* v)
+static grib_vdarray* grib_vdarray_resize(grib_vdarray* v)
 {
-    int newsize = v->incsize + v->size;
-
+    const int newsize = v->incsize + v->size;
+    grib_context* c = v->context;
     if (!c)
         c = grib_context_get_default();
 
@@ -78,7 +79,7 @@ grib_vdarray* grib_vdarray_push(grib_context* c, grib_vdarray* v, grib_darray* v
         v = grib_vdarray_new(c, start_size, start_incsize);
 
     if (v->n >= v->size)
-        v = grib_vdarray_resize(c, v);
+        v = grib_vdarray_resize(v);
     v->v[v->n] = val;
     v->n++;
     return v;
@@ -89,7 +90,7 @@ void grib_vdarray_delete(grib_context* c, grib_vdarray* v)
     if (!v)
         return;
     if (!c)
-        grib_context_get_default();
+        c = grib_context_get_default();
     if (v->v)
         grib_context_free(c, v->v);
     grib_context_free(c, v);
@@ -101,7 +102,7 @@ void grib_vdarray_delete_content(grib_context* c, grib_vdarray* v)
     if (!v || !v->v)
         return;
     if (!c)
-        grib_context_get_default();
+        c = grib_context_get_default();
     for (i = 0; i < v->n; i++) {
         grib_darray_delete(c, v->v[i]);
         v->v[i] = 0;

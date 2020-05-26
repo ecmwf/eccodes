@@ -123,7 +123,7 @@ static void init_class(grib_dumper_class* c) {}
 static int init(grib_dumper* d)
 {
     grib_dumper_bufr_decode_filter* self = (grib_dumper_bufr_decode_filter*)d;
-    grib_context* c                      = d->handle->context;
+    grib_context* c                      = d->context;
     self->section_offset                 = 0;
     self->empty                          = 1;
     self->isLeaf                         = 0;
@@ -138,7 +138,7 @@ static int destroy(grib_dumper* d)
     grib_dumper_bufr_decode_filter* self = (grib_dumper_bufr_decode_filter*)d;
     grib_string_list* next               = self->keys;
     grib_string_list* cur                = NULL;
-    grib_context* c                      = d->handle->context;
+    grib_context* c                      = d->context;
     while (next) {
         cur  = next;
         next = next->next;

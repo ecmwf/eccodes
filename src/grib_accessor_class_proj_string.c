@@ -172,22 +172,37 @@ static int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor)
     return err;
 }
 
-static int proj_regular_latlon(grib_handle* h, char* result)
+/* Caller must have allocated enough space in the 'result' argument */
+static int get_earth_shape(grib_handle* h, char* result)
 {
-    int err      = 0;
+    int err = 0;
     double major = 0, minor = 0;
     if ((err = get_major_minor_axes(h, &major, &minor)) != GRIB_SUCCESS)
         return err;
-    sprintf(result, "+proj=latlong +a=%lf +b=%lf", major, minor);
+    if (major == minor)
+        sprintf(result, "+R=%lf", major); /* spherical */
+    else
+        sprintf(result, "+a=%lf +b=%lf", major, minor); /*oblate*/
+    return err;
+}
+
+static int proj_regular_latlon(grib_handle* h, char* result)
+{
+    int err      = 0;
+    char shape[64] = {0,};
+    if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
+        return err;
+    sprintf(result, "+proj=latlong %s", shape);
     return err;
 }
 
 static int proj_lambert_conformal(grib_handle* h, char* result)
 {
     int err      = 0;
-    double major = 0, minor = 0;
+    char shape[64] = {0,};
     double LoVInDegrees = 0, LaDInDegrees = 0, Latin1InDegrees = 0, Latin2InDegrees = 0;
-    if ((err = get_major_minor_axes(h, &major, &minor)) != GRIB_SUCCESS)
+
+    if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_double_internal(h, "Latin1InDegrees", &Latin1InDegrees)) != GRIB_SUCCESS)
         return err;
@@ -197,36 +212,37 @@ static int proj_lambert_conformal(grib_handle* h, char* result)
         return err;
     if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
         return err;
-    sprintf(result, "+proj=lcc +lon_0=%lf +lat_0=%lf +lat_1=%lf +lat_2=%lf +a=%lf +b=%lf", LoVInDegrees,
-            LaDInDegrees, Latin1InDegrees, Latin2InDegrees, major, minor);
+    sprintf(result, "+proj=lcc +lon_0=%lf +lat_0=%lf +lat_1=%lf +lat_2=%lf %s",
+            LoVInDegrees, LaDInDegrees, Latin1InDegrees, Latin2InDegrees, shape);
     return err;
 }
 
 static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result)
 {
     int err      = 0;
-    double major = 0, minor = 0;
+    char shape[64] = {0,};
     double standardParallel = 0, centralLongitude = 0;
-    if ((err = get_major_minor_axes(h, &major, &minor)) != GRIB_SUCCESS)
+
+    if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_double_internal(h, "standardParallel", &standardParallel)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_double_internal(h, "centralLongitude", &centralLongitude)) != GRIB_SUCCESS)
         return err;
-    sprintf(result, "+proj=laea +lon_0=%lf +lat_0=%lf +a=%lf +b=%lf",
-            centralLongitude, standardParallel, major, minor);
+    sprintf(result, "+proj=laea +lon_0=%lf +lat_0=%lf %s",
+            centralLongitude, standardParallel, shape);
     return err;
 }
 
 static int proj_polar_stereographic(grib_handle* h, char* result)
 {
     int err      = 0;
-    double major = 0, minor = 0;
     double centralLongitude = 0, centralLatitude = 0;
     int has_northPole         = 0;
     long projectionCentreFlag = 0;
+    char shape[64] = {0,};
 
-    if ((err = get_major_minor_axes(h, &major, &minor)) != GRIB_SUCCESS)
+    if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_double_internal(h, "orientationOfTheGridInDegrees", &centralLongitude)) != GRIB_SUCCESS)
         return err;
@@ -235,21 +251,23 @@ static int proj_polar_stereographic(grib_handle* h, char* result)
     if ((err = grib_get_long_internal(h, "projectionCentreFlag", &projectionCentreFlag)) != GRIB_SUCCESS)
         return err;
     has_northPole = ((projectionCentreFlag & 128) == 0);
-    sprintf(result, "+proj=stere +lat_ts=%lf +lat_0=%s +lon_0=%lf +k_0=1 +x_0=0 +y_0=0 +a=%lf +b=%lf",
-            centralLatitude, has_northPole ? "90" : "-90", centralLongitude, major, minor);
+    sprintf(result, "+proj=stere +lat_ts=%lf +lat_0=%s +lon_0=%lf +k_0=1 +x_0=0 +y_0=0 %s",
+            centralLatitude, has_northPole ? "90" : "-90", centralLongitude, shape);
     return err;
 }
 
 static int proj_mercator(grib_handle* h, char* result)
 {
     int err             = 0;
-    double LaDInDegrees = 0, major = 0, minor = 0;
-    if ((err = get_major_minor_axes(h, &major, &minor)) != GRIB_SUCCESS)
-        return err;
+    double LaDInDegrees = 0;
+    char shape[64] = {0,};
+
     if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
         return err;
-    sprintf(result, "+proj=merc +lat_ts=%lf +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +a=%lf +b=%lf",
-            LaDInDegrees, major, minor);
+    if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
+        return err;
+    sprintf(result, "+proj=merc +lat_ts=%lf +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 %s",
+            LaDInDegrees, shape);
     return err;
 }
 
