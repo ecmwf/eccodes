@@ -92,7 +92,7 @@ long grib_iarray_pop_front(grib_iarray* a)
     return v;
 }
 
-grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
+static grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
 {
     long* newv;
     size_t i;
@@ -124,10 +124,9 @@ grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
     return v;
 }
 
-grib_iarray* grib_iarray_resize(grib_iarray* v)
+static grib_iarray* grib_iarray_resize(grib_iarray* v)
 {
-    int newsize = v->incsize + v->size;
-
+    const int newsize = v->incsize + v->size;
     return grib_iarray_resize_to(v, newsize);
 }
 
@@ -221,7 +220,8 @@ long* grib_iarray_get_array(grib_iarray* v)
 {
     long* vv;
     size_t i;
-    grib_context* c = grib_context_get_default();
+    grib_context* c = v->context;
+    DebugAssert(c);
 
     vv = (long*)grib_context_malloc_clear(c, sizeof(long) * v->n);
     for (i = 0; i < v->n; i++)

@@ -132,3 +132,7 @@ concept is_uerra(zero) {
    '1' = {productionStatusOfProcessedData=8;}
    '0' = {dummy=1;}
 }
+
+constant conceptsMasterDir="grib2" : hidden;
+constant conceptsLocalDirAll="grib2/localConcepts/[centre:s]" : hidden;
+constant conceptsLocalDirECMF="grib2/localConcepts/ecmf" : hidden;
