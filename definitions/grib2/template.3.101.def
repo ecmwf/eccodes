@@ -15,5 +15,5 @@ unsigned[1] numberOfGridInReference : dump;
 # UUID of horizontal grid
 byte[16] uuidOfHGrid : dump;
 
-template_nofail unstructuredGrids "grib2/localConcepts/[centre:s]/unstructuredGrids.def";
+template_nofail unstructuredGrid "grib2/localConcepts/[centre:s]/unstructuredGrid.def";
 
