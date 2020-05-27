@@ -6,12 +6,14 @@ codetable[1] shapeOfTheEarth ('3.2.table',masterDir,localDir) : dump;
 
 unsigned[3] numberOfGridUsed : dump;
 
-concept_nofail unstructuredGrid (unknown,"unstructuredGridConcept.def",conceptsMasterDir,conceptsLocalDirAll);
+#concept_nofail unstructuredGrid (unknown,"unstructuredGridConcept.def",conceptsMasterDir,conceptsLocalDirAll);
 
 unsigned[1] numberOfGridInReference : dump;
 
-concept_nofail typeOfUnstructuredGrid (unknown,"typeOfUnstructuredGridConcept.def",conceptsMasterDir,conceptsLocalDirAll);
+#concept_nofail typeOfUnstructuredGrid (unknown,"typeOfUnstructuredGridConcept.def",conceptsMasterDir,conceptsLocalDirAll);
 
 # UUID of horizontal grid
 byte[16] uuidOfHGrid : dump;
+
+template_nofail unstructuredGrids "grib2/localConcepts/[centre:s]/unstructuredGrids.def";
 
