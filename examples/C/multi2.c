@@ -11,8 +11,7 @@
 /*
  * C Implementation: multi2.c
  *
- * Description: Repeatedly print data contained in a multi-field grib message
- *
+ * Description: Repeatedly print data contained in a multi-field GRIB message
  */
 
 #include "eccodes.h"
@@ -22,22 +21,16 @@
 #include <assert.h>
 
 const int NUM_FIELDS  = 4;
-const int COUNT       = 20;
+const int COUNT       = 5;
 const char* file_path = "../../data/multi_created.grib2";
 
-static void read_data(int num_msgs)
+static void read_data(FILE* fp, int num_msgs)
 {
     int err         = 0, i;
-    FILE* fp        = NULL;
     long stepRange  = 0;
     codes_handle* h = NULL;
 
-    fp = fopen(file_path, "rb");
-    if (!fp) {
-        fprintf(stderr, "ERROR: unable to open grib file %s\n", file_path);
-        exit(1);
-    }
-    printf("Opened GRIB file %s: \n", file_path);
+    printf("File offset start = %lu\n", ftello(fp));
     for (i = 0; i < num_msgs; ++i) {
         h = codes_handle_new_from_file(0, fp, PRODUCT_GRIB, &err);
         CODES_CHECK(err, 0);
@@ -52,21 +45,30 @@ static void read_data(int num_msgs)
         if (i == 2) assert(stepRange == 24); /* 3rd field */
         if (i == 3) assert(stepRange == 36); /* 4th field */
     }
-    /* Must reset this file pointer for the next round */
-    codes_grib_multi_support_reset_file(codes_context_get_default(), fp);
-    fclose(fp);
 }
 
 int main(int argc, char** argv)
 {
     int i;
+    FILE* fp = fopen(file_path, "rb");
+    if (!fp) {
+        fprintf(stderr, "ERROR: unable to open GRIB file %s)\n", file_path);
+        exit(1);
+    }
 
-    /* turn on support for multi fields messages */
+    /* turn on support for multi-field messages */
     codes_grib_multi_support_on(0);
 
     for (i = 1; i < COUNT; ++i) {
         printf("Pass %d: \n", i);
-        read_data(NUM_FIELDS);
+        fseeko(fp, 0, SEEK_SET);
+        read_data(fp, NUM_FIELDS);
+
+        /* Reset the internal engine state using this file pointer for the next round */
+        codes_grib_multi_support_reset_file(codes_context_get_default(), fp);
     }
+
+    fclose(fp);
+    printf("All OK\n");
     return 0;
 }
