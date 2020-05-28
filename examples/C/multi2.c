@@ -11,7 +11,7 @@
 /*
  * C Implementation: multi2.c
  *
- * Description: Repeatedly print data contained in a multi-field GRIB message
+ * Description: Repeatedly print data contained in a multi-field GRIB2 message
  */
 
 #include "eccodes.h"
@@ -19,6 +19,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+
+#ifndef HAVE_FSEEKO
+#define fseeko fseek
+#define ftello ftell
+#endif
 
 const int NUM_FIELDS  = 4;
 const int COUNT       = 5;
