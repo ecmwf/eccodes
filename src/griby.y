@@ -770,9 +770,9 @@ hash_array_value :  STRING '=' '[' integer_array ']' {
 	  				$$ = grib_integer_hash_array_value_new(grib_parser_context,$1,$4); free($1);}
         ;
 
-string_or_ident : SUBSTR '(' IDENT ',' INTEGER ',' INTEGER ')'  { $$ = new_accessor_expression(grib_parser_context,$3,$5,$7);  free($3); }
-								| IDENT   { $$ = new_accessor_expression(grib_parser_context,$1,0,0); free($1); }
-                | SUBSTR '(' STRING ',' INTEGER ',' INTEGER ')'  { $$ = new_sub_string_expression(grib_parser_context,$3,$5,$7);  free($3); }
+string_or_ident : SUBSTR '(' IDENT ',' INTEGER ',' INTEGER ')' { $$ = new_accessor_expression(grib_parser_context,$3,$5,$7); free($3); }
+				| IDENT   { $$ = new_accessor_expression(grib_parser_context,$1,0,0); free($1); }
+                | SUBSTR '(' STRING ',' INTEGER ',' INTEGER ')' { $$ = new_sub_string_expression(grib_parser_context,$3,$5,$7); free($3); }
                 | STRING  { $$ = new_string_expression(grib_parser_context,$1);  free($1); }
                 ;
 
