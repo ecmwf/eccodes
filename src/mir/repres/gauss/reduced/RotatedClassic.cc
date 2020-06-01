@@ -25,8 +25,7 @@ namespace reduced {
 
 RotatedClassic::RotatedClassic(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox,
                                double angularPrecision) :
-    Classic(N, bbox, angularPrecision),
-    rotation_(rotation) {}
+    Classic(N, bbox, angularPrecision), rotation_(rotation) {}
 
 
 RotatedClassic::~RotatedClassic() = default;

@@ -24,13 +24,11 @@ namespace repres {
 namespace latlon {
 
 RotatedLL::RotatedLL(const param::MIRParametrisation& parametrisation) :
-    LatLon(parametrisation),
-    rotation_(parametrisation) {}
+    LatLon(parametrisation), rotation_(parametrisation) {}
 
 RotatedLL::RotatedLL(const util::Increments& increments, const util::Rotation& rotation, const util::BoundingBox& bbox,
                      const PointLatLon& reference) :
-    LatLon(increments, bbox, reference),
-    rotation_(rotation) {}
+    LatLon(increments, bbox, reference), rotation_(rotation) {}
 
 RotatedLL::~RotatedLL() = default;
 
@@ -49,8 +47,7 @@ Iterator* RotatedLL::iterator() const {
     public:
         RotatedLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, const util::Increments& increments,
                           const util::Rotation& rotation) :
-            LatLonIterator(ni, nj, north, west, increments),
-            Iterator(rotation) {}
+            LatLonIterator(ni, nj, north, west, increments), Iterator(rotation) {}
     };
 
     return new RotatedLLIterator(ni_, nj_, bbox_.north(), bbox_.west(), increments_, rotation_);

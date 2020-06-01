@@ -327,11 +327,7 @@ Iterator* ClenshawCurtis::iterator() const {
     struct ClenshawCurtisIterator : public Iterator {
 
         ClenshawCurtisIterator(const std::vector<long>& pl, const std::vector<double>& latitudes) :
-            pl_(pl),
-            latitudes_(latitudes),
-            i_(0),
-            j_(0),
-            count_(0) {
+            pl_(pl), latitudes_(latitudes), i_(0), j_(0), count_(0) {
             ASSERT(pl.size() == latitudes.size());
 
             nj_ = pl.size();

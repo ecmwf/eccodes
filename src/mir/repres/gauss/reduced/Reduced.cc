@@ -84,17 +84,13 @@ Reduced::Reduced(const param::MIRParametrisation& parametrisation) : Gaussian(pa
 
 
 Reduced::Reduced(size_t N, const std::vector<long>& pl, const util::BoundingBox& bbox, double angularPrecision) :
-    Gaussian(N, bbox, angularPrecision),
-    k_(0),
-    Nj_(N_ * 2) {
+    Gaussian(N, bbox, angularPrecision), k_(0), Nj_(N_ * 2) {
     setNj(pl, bbox.south(), bbox.north());
 }
 
 
 Reduced::Reduced(size_t N, const util::BoundingBox& bbox, double angularPrecision) :
-    Gaussian(N, bbox, angularPrecision),
-    k_(0),
-    Nj_(N * 2) {
+    Gaussian(N, bbox, angularPrecision), k_(0), Nj_(N * 2) {
     // derived classes must set k_, Nj_ using this constructor
 }
 

@@ -122,11 +122,7 @@ Iterator* ORCA::iterator() const {
 
     public:
         ORCAIterator(::atlas::Grid grid) :
-            grid_(grid),
-            lonlat_(grid.lonlat()),
-            it_(lonlat_.begin()),
-            count_(0),
-            total_(grid.size()) {}
+            grid_(grid), lonlat_(grid.lonlat()), it_(lonlat_.begin()), count_(0), total_(grid.size()) {}
 
         ORCAIterator(const ORCAIterator&) = delete;
         ORCAIterator& operator=(const ORCAIterator&) = delete;

@@ -128,9 +128,7 @@ void UnstructuredGrid::save(const eckit::PathName& path, const std::vector<doubl
 
 UnstructuredGrid::UnstructuredGrid(const std::vector<double>& latitudes, const std::vector<double>& longitudes,
                                    const util::BoundingBox& bbox) :
-    Gridded(bbox),
-    latitudes_(latitudes),
-    longitudes_(longitudes) {
+    Gridded(bbox), latitudes_(latitudes), longitudes_(longitudes) {
     ASSERT(latitudes_.size() == longitudes_.size());
 }
 
@@ -269,10 +267,7 @@ class UnstructuredGridIterator : public Iterator {
 
 public:
     UnstructuredGridIterator(const std::vector<double>& latitudes, const std::vector<double>& longitudes) :
-        i_(0),
-        size_(latitudes.size()),
-        latitudes_(latitudes),
-        longitudes_(longitudes) {
+        i_(0), size_(latitudes.size()), latitudes_(latitudes), longitudes_(longitudes) {
         ASSERT(latitudes_.size() == longitudes_.size());
     }
 };

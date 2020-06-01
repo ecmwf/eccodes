@@ -25,8 +25,7 @@ namespace reduced {
 
 RotatedOctahedral::RotatedOctahedral(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox,
                                      double angularPrecision) :
-    Octahedral(N, bbox, angularPrecision),
-    rotation_(rotation) {}
+    Octahedral(N, bbox, angularPrecision), rotation_(rotation) {}
 
 
 RotatedOctahedral::~RotatedOctahedral() = default;

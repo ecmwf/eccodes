@@ -252,14 +252,7 @@ Iterator* RegularGrid::iterator() const {
 
     public:
         RegularGridIterator(Projection projection, const LinearSpacing& x, const LinearSpacing& y) :
-            projection_(std::move(projection)),
-            x_(x),
-            y_(y),
-            ni_(x.size()),
-            nj_(y.size()),
-            i_(0),
-            j_(0),
-            count_(0) {}
+            projection_(std::move(projection)), x_(x), y_(y), ni_(x.size()), nj_(y.size()), i_(0), j_(0), count_(0) {}
         RegularGridIterator(const RegularGridIterator&) = delete;
         RegularGridIterator& operator=(const RegularGridIterator&) = delete;
     };

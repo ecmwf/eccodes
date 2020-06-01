@@ -23,14 +23,12 @@ namespace reduced {
 
 
 RotatedFromPL::RotatedFromPL(const param::MIRParametrisation& parametrisation) :
-    FromPL(parametrisation),
-    rotation_(parametrisation) {}
+    FromPL(parametrisation), rotation_(parametrisation) {}
 
 
 RotatedFromPL::RotatedFromPL(size_t N, const std::vector<long>& pl, const util::Rotation& rotation,
                              const util::BoundingBox& bbox, double angularPrecision) :
-    FromPL(N, pl, bbox, angularPrecision),
-    rotation_(rotation) {}
+    FromPL(N, pl, bbox, angularPrecision), rotation_(rotation) {}
 
 
 RotatedFromPL::~RotatedFromPL() = default;

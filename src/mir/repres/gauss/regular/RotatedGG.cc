@@ -24,13 +24,11 @@ namespace regular {
 
 
 RotatedGG::RotatedGG(const param::MIRParametrisation& parametrisation) :
-    Regular(parametrisation),
-    rotation_(parametrisation) {}
+    Regular(parametrisation), rotation_(parametrisation) {}
 
 
 RotatedGG::RotatedGG(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox, double angularPrecision) :
-    Regular(N, bbox, angularPrecision),
-    rotation_(rotation) {}
+    Regular(N, bbox, angularPrecision), rotation_(rotation) {}
 
 
 RotatedGG::~RotatedGG() = default;
