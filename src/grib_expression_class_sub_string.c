@@ -111,8 +111,21 @@ grib_expression* new_sub_string_expression(grib_context* c, const char* value, s
 {
     char v[1024] = {0,};
     grib_expression_sub_string* e = (grib_expression_sub_string*)grib_context_malloc_clear_persistent(c, sizeof(grib_expression_sub_string));
-
+    const size_t slen = strlen(value);
     /* 	if (start<0) start+=strlen(value);  */
+
+    if (length == 0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Invalid substring: length must be > 0");
+        return NULL;
+    }
+    if (start > slen) { /* to catch a -ve number passed to start */
+        grib_context_log(c, GRIB_LOG_ERROR, "Invalid substring: start=%lu", start);
+        return NULL;
+    }
+    if (start + length > slen) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Invalid substring: start(=%lu)+length(=%lu) > length('%s'))",start, length,value);
+        return NULL;
+    }
 
     memcpy(v, value + start, length);
     e->base.cclass = grib_expression_class_sub_string;

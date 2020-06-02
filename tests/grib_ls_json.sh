@@ -21,6 +21,12 @@ JSON_CHECK=""
 if command -v $JSON_VERIF >/dev/null 2>&1; then
   JSON_CHECK=$JSON_VERIF
 fi
+# ECC-1119: Check the json_xs command actually works!
+set +e
+echo '[]' | json_xs > /dev/null 2>&1
+if [ $? -ne 0 ]; then JSON_CHECK=""; fi
+set -e
+echo "Using $JSON_CHECK ..."
 
 cd ${data_dir}
 

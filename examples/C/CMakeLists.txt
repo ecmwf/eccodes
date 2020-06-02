@@ -60,7 +60,6 @@ endforeach()
 # Now add each test (shell scripts)
 ########################################################################
 list(APPEND tests_basic
-   grib_multi
    grib_set_data
    large_grib1
    grib_sections_copy
@@ -82,6 +81,7 @@ list(APPEND tests_extra
    grib_list
    grib_get_data
    grib_nearest_multiple
+   grib_multi
    set_missing
    bufr_attributes
    bufr_copy_data
