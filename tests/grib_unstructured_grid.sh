@@ -14,11 +14,18 @@ label="grib_unstructured_grid"
 
 # Only relevant for GRIB2
 sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-temp=temp.${label}
+temp1=temp.1.${label}
+temp2=temp.2.${label}
 
-${tools_dir}/grib_set -s gridType=unstructured_grid,numberOfGridInReference=4,numberOfGridUsed=2 $sample $temp
-grib_check_key_equals $temp 'unstructuredGridType'    'ORCA1'
-grib_check_key_equals $temp 'unstructuredGridSubtype' 'W grid'
-#grib_check_key_equals $temp 'unstructuredGridUUID' 'ORCA1 W grid unknown'
+${tools_dir}/grib_set -s gridType=unstructured_grid,numberOfGridInReference=4,numberOfGridUsed=2 $sample $temp1
+grib_check_key_equals $temp1 'unstructuredGridType'    'ORCA1'
+grib_check_key_equals $temp1 'unstructuredGridSubtype' 'W grid'
+#grib_check_key_equals $temp1 'unstructuredGridUUID' 'ORCA1 W grid unknown'
 
-rm -f $temp
+${tools_dir}/grib_set -s gridType=unstructured_grid,unstructuredGridType=ORCA1,unstructuredGridSubtype='W grid' $sample $temp2
+${tools_dir}/grib_compare $temp1 $temp2
+grib_check_key_equals $temp2 'numberOfGridInReference' '4'
+grib_check_key_equals $temp2 'numberOfGridUsed' '2'
+
+
+rm -f $temp1 $temp2
