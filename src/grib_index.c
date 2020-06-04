@@ -1618,7 +1618,13 @@ grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* er
     grib_handle* h = NULL;
     typedef grib_handle* (*message_new_proc)(grib_context*, FILE*, int, int*);
     message_new_proc message_new = NULL;
-    Assert(field->file);
+
+    if (!field->file) {
+        grib_context_log(grib_context_get_default(), GRIB_LOG_ERROR, "codes_index_get_handle: NULL file handle");
+        *err = GRIB_INTERNAL_ERROR;
+        return NULL;
+    }
+
     grib_file_open(field->file->name, "r", err);
 
     if (*err != GRIB_SUCCESS)
