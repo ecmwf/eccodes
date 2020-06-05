@@ -225,9 +225,9 @@ static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result)
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_double_internal(h, "standardParallel", &standardParallel)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, "standardParallelInDegrees", &standardParallel)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_double_internal(h, "centralLongitude", &centralLongitude)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(h, "centralLongitudeInDegrees", &centralLongitude)) != GRIB_SUCCESS)
         return err;
     sprintf(result, "+proj=laea +lon_0=%lf +lat_0=%lf %s",
             centralLongitude, standardParallel, shape);
