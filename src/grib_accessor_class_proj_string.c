@@ -175,7 +175,7 @@ static int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor)
 /* Caller must have allocated enough space in the 'result' argument */
 static int get_earth_shape(grib_handle* h, char* result)
 {
-    int err = 0;
+    int err      = 0;
     double major = 0, minor = 0;
     if ((err = get_major_minor_axes(h, &major, &minor)) != GRIB_SUCCESS)
         return err;
@@ -188,7 +188,7 @@ static int get_earth_shape(grib_handle* h, char* result)
 
 static int proj_regular_latlon(grib_handle* h, char* result)
 {
-    int err      = 0;
+    int err        = 0;
     char shape[64] = {0,};
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
@@ -198,7 +198,7 @@ static int proj_regular_latlon(grib_handle* h, char* result)
 
 static int proj_lambert_conformal(grib_handle* h, char* result)
 {
-    int err      = 0;
+    int err        = 0;
     char shape[64] = {0,};
     double LoVInDegrees = 0, LaDInDegrees = 0, Latin1InDegrees = 0, Latin2InDegrees = 0;
 
@@ -219,7 +219,7 @@ static int proj_lambert_conformal(grib_handle* h, char* result)
 
 static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result)
 {
-    int err      = 0;
+    int err        = 0;
     char shape[64] = {0,};
     double standardParallel = 0, centralLongitude = 0;
 
@@ -236,11 +236,11 @@ static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result)
 
 static int proj_polar_stereographic(grib_handle* h, char* result)
 {
-    int err      = 0;
+    int err                 = 0;
     double centralLongitude = 0, centralLatitude = 0;
     int has_northPole         = 0;
     long projectionCentreFlag = 0;
-    char shape[64] = {0,};
+    char shape[64]            = {0,};
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
@@ -260,7 +260,7 @@ static int proj_mercator(grib_handle* h, char* result)
 {
     int err             = 0;
     double LaDInDegrees = 0;
-    char shape[64] = {0,};
+    char shape[64]      = {0,};
 
     if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
         return err;
