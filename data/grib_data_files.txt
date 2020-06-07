@@ -87,3 +87,4 @@ v.grib2
 msl.octa.glob.grib1
 test_file.grib2
 gfs.complex.mvmu.grib2
+mercator.grib2

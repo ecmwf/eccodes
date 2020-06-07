@@ -368,8 +368,11 @@ static void search_from_accessors_list(grib_accessors_list* al, grib_accessors_l
 {
     char attribute_name[200] = {0,};
     grib_accessor* accessor_result = 0;
+    grib_context* c = al->accessor->context;
+    int doFree = 1;
 
-    char* accessor_name = grib_split_name_attribute(al->accessor->context, name, attribute_name);
+    char* accessor_name = grib_split_name_attribute(c, name, attribute_name);
+    if (*attribute_name == 0) doFree = 0;
 
     while (al && al != end && al->accessor) {
         if (grib_inline_strcmp(al->accessor->name, accessor_name) == 0) {
@@ -398,6 +401,7 @@ static void search_from_accessors_list(grib_accessors_list* al, grib_accessors_l
             }
         }
     }
+    if (doFree) grib_context_free(c, accessor_name);
 }
 
 static void search_accessors_list_by_condition(grib_accessors_list* al, const char* name, codes_condition* condition, grib_accessors_list* result)

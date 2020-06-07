@@ -120,3 +120,4 @@ alias typeOfGrid=gridType;
 meta md5Section3 md5(offsetSection3,section3Length);
 alias md5GridSection = md5Section3;
 
+meta projString proj_string(gridType): hidden;

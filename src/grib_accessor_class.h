@@ -172,6 +172,7 @@ extern grib_accessor_class* grib_accessor_class_padto;
 extern grib_accessor_class* grib_accessor_class_padtoeven;
 extern grib_accessor_class* grib_accessor_class_padtomultiple;
 extern grib_accessor_class* grib_accessor_class_position;
+extern grib_accessor_class* grib_accessor_class_proj_string;
 extern grib_accessor_class* grib_accessor_class_raw;
 extern grib_accessor_class* grib_accessor_class_rdbtime_guess_date;
 extern grib_accessor_class* grib_accessor_class_reference_value_error;

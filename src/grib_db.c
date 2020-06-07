@@ -385,7 +385,7 @@ grib_query* grib_db_new_query(grib_context* c, const char* where_string,
     grib_query* q = 0;
 
     if (!c)
-        grib_context_get_default();
+        c = grib_context_get_default();
 
     q = (grib_query*)grib_context_malloc(c, sizeof(grib_query));
 

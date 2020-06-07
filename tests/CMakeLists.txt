@@ -52,6 +52,7 @@ list(APPEND tests_no_data_reqd
     grib_calendar
     unit_tests
     grib_md5
+    filter_substr
     grib_uerra
     grib_2nd_order_numValues
     grib_ecc-136
@@ -154,6 +155,7 @@ list(APPEND tests_data_reqd
     pseudo_budg
     grib_gridType
     grib_octahedral
+    grib_mercator
     grib_global
     grib_concept
     grib_decimalPrecision
@@ -164,6 +166,7 @@ list(APPEND tests_data_reqd
     grib_step
     grib_set
     grib_iterator
+    grib_proj_string
     grib_compare
     grib_copy
     grib_level

@@ -32,14 +32,14 @@ int main(int argc, char** argv)
 
     in = fopen(filename, "rb");
     if (!in) {
-        printf("ERROR: unable to open input file %s\n", filename);
+        fprintf(stderr, "Error: unable to open input file %s\n", filename);
         return 1;
     }
 
     /* create new handle from a message in a file */
     h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     if (h == NULL) {
-        printf("Error: unable to create handle from file %s\n", filename);
+        fprintf(stderr, "Error: unable to create handle from file %s\n", filename);
         return 1;
     }
 
@@ -48,18 +48,18 @@ int main(int argc, char** argv)
 
     lats = (double*)malloc(numberOfPoints * sizeof(double));
     if (!lats) {
-        printf("unable to allocate %ld bytes\n", (long)(numberOfPoints * sizeof(double)));
+        fprintf(stderr, "Error: unable to allocate %ld bytes\n", (long)(numberOfPoints * sizeof(double)));
         return 1;
     }
     lons = (double*)malloc(numberOfPoints * sizeof(double));
     if (!lons) {
-        printf("unable to allocate %ld bytes\n", (long)(numberOfPoints * sizeof(double)));
+        fprintf(stderr, "Error: unable to allocate %ld bytes\n", (long)(numberOfPoints * sizeof(double)));
         free(lats);
         return 1;
     }
     values = (double*)malloc(numberOfPoints * sizeof(double));
     if (!values) {
-        printf("unable to allocate %ld bytes\n", (long)(numberOfPoints * sizeof(double)));
+        fprintf(stderr, "Error: unable to allocate %ld bytes\n", (long)(numberOfPoints * sizeof(double)));
         free(lats);
         free(lons);
         return 1;
