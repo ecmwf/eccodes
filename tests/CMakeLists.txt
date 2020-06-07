@@ -52,6 +52,7 @@ list(APPEND tests_no_data_reqd
     grib_calendar
     unit_tests
     grib_md5
+    filter_substr
     grib_uerra
     grib_2nd_order_numValues
     grib_ecc-136

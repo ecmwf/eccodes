@@ -132,9 +132,6 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     long count              = 0;
     int err = 0, i = 0, more = 0;
 
-    grib_value_count(a, &count);
-    size = count;
-
     if (a->length == 0 && (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
         return;
 
@@ -142,6 +139,8 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         (d->option_flags & GRIB_DUMP_FLAG_READ_ONLY) == 0)
         return;
 
+    grib_value_count(a, &count);
+    size = count;
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
         err    = grib_unpack_long(a, values, &size);
@@ -281,6 +280,9 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     char* value = NULL;
     char* p     = NULL;
 
+    if (a->length == 0 && (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
+        return;
+
     _grib_get_string_length(a, &size);
     if ((size < 2) && grib_is_missing_internal(a)) {
         /* GRIB-302: transients and missing keys. Need to re-adjust the size */
@@ -296,9 +298,6 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         strcpy(value, "<error>");
 
     p = value;
-
-    if (a->length == 0 && (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
-        return;
 
     set_begin_end(d, a);
 
@@ -486,7 +485,6 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
     int i;
     /* grib_section* s = grib_get_sub_section(a); */
     grib_section* s = a->sub_section;
-
 
 #if 1
     if (a->name[0] == '_') {

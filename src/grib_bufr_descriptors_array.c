@@ -91,7 +91,7 @@ static bufr_descriptors_array* grib_bufr_descriptors_array_resize_to(bufr_descri
     return v;
 }
 
-bufr_descriptors_array* grib_bufr_descriptors_array_resize(bufr_descriptors_array* v)
+static bufr_descriptors_array* grib_bufr_descriptors_array_resize(bufr_descriptors_array* v)
 {
     const int newsize = v->incsize + v->size;
     return grib_bufr_descriptors_array_resize_to(v, newsize);
