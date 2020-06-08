@@ -5,14 +5,16 @@
 constant gridDefinitionTemplateNumber     = 20;
 
 signed[2] Ni : dump;
-alias numberOfPointsAlongAParallel= Ni ;
-alias Nx =Ni;
+alias numberOfPointsAlongAParallel=Ni;
+alias Nx=Ni;
 alias geography.Ni=Ni;
+alias numberOfPointsAlongXAxis=Ni;
 
 signed[2] Nj : dump;
 alias numberOfPointsAlongAMeridian=Nj;
 alias Nx=Nj;
 alias geography.Nj=Nj;
+alias numberOfPointsAlongYAxis=Nj;
 
 include "grib1/grid_first_last_resandcomp.def";
 
@@ -29,15 +31,17 @@ alias xLast=longitudeOfLastGridPointInDegrees;
 
 include "grib1/scanning_mode.def";
 
-signed[3] DiInMetres   : dump;
+signed[3] DiInMetres: dump;
 alias longitudinalDirectionGridLength=DiInMetres;
 alias Di=DiInMetres;
 alias geography.DiInMetres=DiInMetres;
+alias DxInMetres = DiInMetres;
 
-signed[3] DjInMetres   : dump;
+signed[3] DjInMetres: dump;
 alias latitudinalDirectionGridLength=DjInMetres;
 alias Dj=DjInMetres;
 alias geography.DjInMetres=DjInMetres;
+alias DyInMetres = DjInMetres;
 
 constant orientationOfTheGridInDegrees=0;
 
