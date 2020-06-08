@@ -53,13 +53,27 @@ void eccodes_assertion(const char* message) {
 }
 
 
-GribOutput::GribOutput() = default;
+GribOutput::GribOutput():
+    interpolated_(0),
+    saved_(0) {
+
+}
 
 
 GribOutput::~GribOutput() = default;
 
 
+size_t GribOutput::interpolated() const {
+    return interpolated_;
+}
+
+size_t GribOutput::saved() const {
+    return saved_;
+}
+
 size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx) {  // No interpolation performed
+
+    saved_++;
 
     const input::MIRInput& input = ctx.input();
 
@@ -252,6 +266,8 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
 size_t GribOutput::save(const param::MIRParametrisation& parametrisation, context::Context& ctx) {
 
     util::TraceResourceUsage usage("GribOutput::save");
+
+    interpolated_++;
 
     const auto& field = ctx.field();
     const auto& input = ctx.input();
