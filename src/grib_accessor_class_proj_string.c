@@ -185,7 +185,7 @@ static int get_earth_shape(grib_handle* h, char* result)
         sprintf(result, "+a=%lf +b=%lf", major, minor); /*oblate*/
     return err;
 }
-
+#if 0
 static int proj_regular_latlon(grib_handle* h, char* result)
 {
     int err        = 0;
@@ -195,7 +195,7 @@ static int proj_regular_latlon(grib_handle* h, char* result)
     sprintf(result, "+proj=latlong %s", shape);
     return err;
 }
-
+#endif
 static int proj_lambert_conformal(grib_handle* h, char* result)
 {
     int err        = 0;
@@ -273,7 +273,7 @@ static int proj_mercator(grib_handle* h, char* result)
 
 #define NUMBER(a) (sizeof(a) / sizeof(a[0]))
 static proj_mapping proj_mappings[] = {
-    { "regular_ll", &proj_regular_latlon },
+    /*{ "regular_ll", &proj_regular_latlon },*/
     { "mercator", &proj_mercator },
     { "lambert", &proj_lambert_conformal },
     { "polar_stereographic", &proj_polar_stereographic },
