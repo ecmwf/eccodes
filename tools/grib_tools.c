@@ -943,8 +943,12 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
     }
 
     if (ret != GRIB_SUCCESS) {
-        fprintf(dump_file, "Failed to get value for key %s\n", key_name);
-        exit(1);
+        if (ret == GRIB_NOT_FOUND) {
+            sprintf(value_str, "not_found");
+        } else {
+            fprintf(dump_file, "Failed to get value for key %s\n", key_name);
+            exit(1);
+        }
     }
 }
 
