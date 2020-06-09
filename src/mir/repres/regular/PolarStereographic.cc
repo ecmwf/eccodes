@@ -10,9 +10,9 @@
  */
 
 
-#include "eckit/exception/Exceptions.h"
-
 #include "mir/repres/regular/PolarStereographic.h"
+
+#include "eckit/exception/Exceptions.h"
 
 
 namespace mir {
