@@ -15,7 +15,7 @@
 
 #include "grib_api_internal.h"
 #include <math.h>
-#include <stdint.h>
+
 /*
    This is used by make_class.pl
 
