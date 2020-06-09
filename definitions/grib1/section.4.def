@@ -231,7 +231,9 @@ alias ls.gridType=gridType;
 alias geography.gridType=gridType;
 alias typeOfGrid=gridType;
 
-meta projString proj_string(gridType): hidden;
+constant projSourceString = "EPSG:4326" : hidden;
+meta     projTargetString proj_string(gridType): hidden;
+alias    projString = projTargetString : hidden;
 
 meta getNumberOfValues size(values) : edition_specific,dump ;
 
