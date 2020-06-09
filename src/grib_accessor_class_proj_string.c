@@ -18,6 +18,7 @@
    IMPLEMENTS = get_native_type;init
    IMPLEMENTS = unpack_string
    MEMBERS = const char* grid_type
+   MEMBERS = int endpoint
    END_CLASS_DEF
 
  */
@@ -43,6 +44,7 @@ typedef struct grib_accessor_proj_string
     /* Members defined in gen */
     /* Members defined in proj_string */
     const char* grid_type;
+    int endpoint;
 } grib_accessor_proj_string;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -136,6 +138,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
     grib_handle* h                  = grib_handle_of_accessor(a);
 
     self->grid_type = grib_arguments_get_name(h, arg, 0);
+    self->endpoint  = grib_arguments_get_long(h, arg, 1);
     a->length       = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
@@ -280,6 +283,8 @@ static proj_mapping proj_mappings[] = {
     { "lambert_azimuthal_equal_area", &proj_lambert_azimuthal_equal_area }
 };
 
+#define ENDPOINT_SOURCE 0
+#define ENDPOINT_TARGET 1
 static int unpack_string(grib_accessor* a, char* v, size_t* len)
 {
     grib_accessor_proj_string* self = (grib_accessor_proj_string*)a;
@@ -289,19 +294,26 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     grib_handle* h = grib_handle_of_accessor(a);
     size_t size    = sizeof(grid_type) / sizeof(*grid_type);
 
-    err = grib_get_string(h, self->grid_type, grid_type, &size);
-    if (err) return err;
+    Assert(self->endpoint == ENDPOINT_SOURCE || self->endpoint == ENDPOINT_TARGET);
 
-    for (i = 0; !found && i < NUMBER(proj_mappings); ++i) {
-        proj_mapping pm = proj_mappings[i];
-        if (strcmp(grid_type, pm.gridType) == 0) {
-            found = 1;
-            if ((err = pm.func(h, v)) != GRIB_SUCCESS) return err;
-        }
+    if (self->endpoint == ENDPOINT_SOURCE) {
+        sprintf(v, "EPSG:4326");
     }
-    if (!found) {
-        *len = 0;
-        return GRIB_NOT_IMPLEMENTED;
+    else {
+        err = grib_get_string(h, self->grid_type, grid_type, &size);
+        if (err) return err;
+
+        for (i = 0; !found && i < NUMBER(proj_mappings); ++i) {
+            proj_mapping pm = proj_mappings[i];
+            if (strcmp(grid_type, pm.gridType) == 0) {
+                found = 1;
+                if ((err = pm.func(h, v)) != GRIB_SUCCESS) return err;
+            }
+        }
+        if (!found) {
+            *len = 0;
+            return GRIB_NOT_IMPLEMENTED;
+        }
     }
 
     size = strlen(v);
