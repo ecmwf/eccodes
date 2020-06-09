@@ -199,6 +199,24 @@ static int proj_regular_latlon(grib_handle* h, char* result)
     return err;
 }
 #endif
+
+static int proj_space_view(grib_handle* h, char* result)
+{
+    return GRIB_NOT_IMPLEMENTED;
+}
+static int proj_albers(grib_handle* h, char* result)
+{
+    return GRIB_NOT_IMPLEMENTED;
+}
+static int proj_transverse_mercator(grib_handle* h, char* result)
+{
+    return GRIB_NOT_IMPLEMENTED;
+}
+static int proj_equatorial_azimuthal_equidistant(grib_handle* h, char* result)
+{
+    return GRIB_NOT_IMPLEMENTED;
+}
+
 static int proj_lambert_conformal(grib_handle* h, char* result)
 {
     int err        = 0;
@@ -277,10 +295,15 @@ static int proj_mercator(grib_handle* h, char* result)
 #define NUMBER(a) (sizeof(a) / sizeof(a[0]))
 static proj_mapping proj_mappings[] = {
     /*{ "regular_ll", &proj_regular_latlon },*/
+
     { "mercator", &proj_mercator },
     { "lambert", &proj_lambert_conformal },
     { "polar_stereographic", &proj_polar_stereographic },
-    { "lambert_azimuthal_equal_area", &proj_lambert_azimuthal_equal_area }
+    { "lambert_azimuthal_equal_area", &proj_lambert_azimuthal_equal_area },
+    { "space_view", &proj_space_view },
+    { "albers", &proj_albers },
+    { "transverse_mercator", &proj_transverse_mercator },
+    { "equatorial_azimuthal_equidistant", &proj_equatorial_azimuthal_equidistant },
 };
 
 #define ENDPOINT_SOURCE 0
@@ -296,24 +319,25 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 
     Assert(self->endpoint == ENDPOINT_SOURCE || self->endpoint == ENDPOINT_TARGET);
 
-    if (self->endpoint == ENDPOINT_SOURCE) {
-        sprintf(v, "EPSG:4326");
-    }
-    else {
-        err = grib_get_string(h, self->grid_type, grid_type, &size);
-        if (err) return err;
+    err = grib_get_string(h, self->grid_type, grid_type, &size);
+    if (err) return err;
 
-        for (i = 0; !found && i < NUMBER(proj_mappings); ++i) {
-            proj_mapping pm = proj_mappings[i];
-            if (strcmp(grid_type, pm.gridType) == 0) {
-                found = 1;
+    for (i = 0; !found && i < NUMBER(proj_mappings); ++i) {
+        proj_mapping pm = proj_mappings[i];
+        if (strcmp(grid_type, pm.gridType) == 0) {
+            found = 1;
+            if (self->endpoint == ENDPOINT_SOURCE) {
+                sprintf(v, "EPSG:4326");
+            }
+            else {
+                /* Invoke the appropriate function to get the target proj string */
                 if ((err = pm.func(h, v)) != GRIB_SUCCESS) return err;
             }
         }
-        if (!found) {
-            *len = 0;
-            return GRIB_NOT_IMPLEMENTED;
-        }
+    }
+    if (!found) {
+        *len = 0;
+        return GRIB_NOT_FOUND;
     }
 
     size = strlen(v);
