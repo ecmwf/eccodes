@@ -29,7 +29,15 @@ namespace regular {
 static RepresentationBuilder<Lambert> __builder("lambert");
 
 
-Lambert::Lambert(const param::MIRParametrisation& param) : RegularGrid(param, make_projection(param)) {}
+Lambert::Lambert(const param::MIRParametrisation& param) : RegularGrid(param, make_projection(param)) {
+
+    // GRIB1 cannot write LaD
+    long edition = 0;
+    param.get("edition", edition);
+
+    writeLaDInDegrees_ = edition != 1;
+    param.get("writeLaDInDegrees", writeLaDInDegrees_);
+}
 
 
 RegularGrid::Projection Lambert::make_projection(const param::MIRParametrisation& param) {
@@ -61,24 +69,28 @@ void Lambert::fill(grib_info& info) const {
 
     ASSERT(x_.size() > 1);
     ASSERT(y_.size() > 1);
-    auto Dx = std::lround((x_.max() - x_.min()) * 1000. / (x_.size() - 1.));
-    auto Dy = std::lround((y_.max() - y_.min()) * 1000. / (y_.size() - 1.));
+
+    auto Dx = (x_.max() - x_.min()) / (x_.size() - 1.);
+    auto Dy = (y_.max() - y_.min()) / (y_.size() - 1.);
 
     Point2 first     = {firstPointBottomLeft_ ? x_.min() : x_.front(), firstPointBottomLeft_ ? y_.min() : y_.front()};
     Point2 firstLL   = grid_.projection().lonlat(first);
     Point2 reference = grid_.projection().lonlat({0., 0.});
 
-    info.grid.Ni                                 = long(x_.size());
-    info.grid.Nj                                 = long(y_.size());
     info.grid.latitudeOfFirstGridPointInDegrees  = firstLL[LLCOORDS::LAT];
     info.grid.longitudeOfFirstGridPointInDegrees = firstLL[LLCOORDS::LON];
+    info.grid.Ni                                 = long(x_.size());
+    info.grid.Nj                                 = long(y_.size());
 
-    GribExtraSetting::set(info, "Dx", Dx);
-    GribExtraSetting::set(info, "Dy", Dy);
+    GribExtraSetting::set(info, "DxInMetres", Dx);
+    GribExtraSetting::set(info, "DyInMetres", Dy);
     GribExtraSetting::set(info, "LoVInDegrees", reference[LLCOORDS::LON]);
-    GribExtraSetting::set(info, "LaDInDegrees", reference[LLCOORDS::LAT]);  // LaD
     GribExtraSetting::set(info, "Latin1InDegrees", reference[LLCOORDS::LAT]);
     GribExtraSetting::set(info, "Latin2InDegrees", reference[LLCOORDS::LAT]);
+
+    if (writeLaDInDegrees_) {
+        GribExtraSetting::set(info, "LaDInDegrees", reference[LLCOORDS::LAT]);
+    }
 
     // some extra keys are edition-specific, so parent call is here
     RegularGrid::fill(info);
