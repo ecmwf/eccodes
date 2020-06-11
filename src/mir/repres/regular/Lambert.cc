@@ -12,10 +12,7 @@
 
 #include "mir/repres/regular/Lambert.h"
 
-#include <cmath>
-
 #include "eckit/exception/Exceptions.h"
-#include "eckit/types/FloatCompare.h"
 
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
@@ -69,7 +66,6 @@ void Lambert::fill(grib_info& info) const {
 
     ASSERT(x_.size() > 1);
     ASSERT(y_.size() > 1);
-
     auto Dx = (x_.max() - x_.min()) / (x_.size() - 1.);
     auto Dy = (y_.max() - y_.min()) / (y_.size() - 1.);
 

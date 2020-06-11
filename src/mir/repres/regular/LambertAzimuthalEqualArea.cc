@@ -14,6 +14,8 @@
 
 #include <string>
 
+#include "eckit/exception/Exceptions.h"
+
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
 
@@ -57,7 +59,6 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
 
     ASSERT(x_.size() > 1);
     ASSERT(y_.size() > 1);
-
     auto Dx = (x_.max() - x_.min()) / (x_.size() - 1.);
     auto Dy = (y_.max() - y_.min()) / (y_.size() - 1.);
 
