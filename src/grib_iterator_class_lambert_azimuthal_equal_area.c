@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
 #include <math.h>
 
@@ -102,111 +97,64 @@ static int next(grib_iterator* i, double* lat, double* lon, double* val)
     return 1;
 }
 
-static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
+static int init_oblate(grib_handle* h,
+                       grib_iterator_lambert_azimuthal_equal_area* self,
+                       size_t nv, long nx, long ny,
+                       double Dx, double Dy, double earthMinorAxisInMetres, double earthMajorAxisInMetres,
+                       double latFirstInRadians, double lonFirstInRadians,
+                       double centralLongitudeInRadians, double standardParallelInRadians,
+                       long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
 {
-    int ret = 0;
+    grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert Azimuthal Equal Area only supported for spherical earth.");
+    return GRIB_GEOCALCULUS_PROBLEM;
+}
+
+static int init_sphere(grib_handle* h,
+                       grib_iterator_lambert_azimuthal_equal_area* self,
+                       size_t nv, long nx, long ny,
+                       double Dx, double Dy, double radius,
+                       double latFirstInRadians, double lonFirstInRadians,
+                       double centralLongitudeInRadians, double standardParallelInRadians,
+                       long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
+{
     double *lats, *lons;
-    double lonFirstInDegrees, latFirstInDegrees, lonFirst, latFirst, radius = 0;
-    long nx, ny, standardParallel, centralLongitude;
-    double phi1, lambda0, xFirst, yFirst, x, y, Dx, Dy;
+    double phi1, lambda0, xFirst, yFirst, x, y;
     double kp, sinphi1, cosphi1;
-    long alternativeRowScanning, iScansNegatively;
-    long jScansPositively, jPointsAreConsecutive;
     double sinphi, cosphi, cosdlambda, sindlambda;
     double cosc, sinc;
     long i, j;
-
-    grib_iterator_lambert_azimuthal_equal_area* self =
-        (grib_iterator_lambert_azimuthal_equal_area*)iter;
-
-    const char* sradius                 = grib_arguments_get_name(h, args, self->carg++);
-    const char* snx                     = grib_arguments_get_name(h, args, self->carg++);
-    const char* sny                     = grib_arguments_get_name(h, args, self->carg++);
-    const char* slatFirstInDegrees      = grib_arguments_get_name(h, args, self->carg++);
-    const char* slonFirstInDegrees      = grib_arguments_get_name(h, args, self->carg++);
-    const char* sstandardParallel       = grib_arguments_get_name(h, args, self->carg++);
-    const char* scentralLongitude       = grib_arguments_get_name(h, args, self->carg++);
-    const char* sDx                     = grib_arguments_get_name(h, args, self->carg++);
-    const char* sDy                     = grib_arguments_get_name(h, args, self->carg++);
-    const char* siScansNegatively       = grib_arguments_get_name(h, args, self->carg++);
-    const char* sjScansPositively       = grib_arguments_get_name(h, args, self->carg++);
-    const char* sjPointsAreConsecutive  = grib_arguments_get_name(h, args, self->carg++);
-    const char* salternativeRowScanning = grib_arguments_get_name(h, args, self->carg++);
     double c, rho;
-    double epsilon = 1.0e-20;
-    double d2r     = acos(0.0) / 90.0;
+    const double epsilon = 1.0e-20;
+    const double d2r     = acos(0.0) / 90.0;
 
-    if ((ret = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS) {
-        /* Check if it's an oblate spheroid */
-        if (grib_is_earth_oblate(h))
-            grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert Azimuthal Equal Area only supported for spherical earth.");
-        return ret;
-    }
-
-    if ((ret = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS)
-        return ret;
-
-    if (iter->nv != nx * ny) {
-        grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "Wrong number of points (%ld!=%ldx%ld)",
-                         iter->nv, nx, ny);
-        return GRIB_WRONG_GRID;
-    }
-    if ((ret = grib_get_double_internal(h, slatFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_double_internal(h, slonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(h, sstandardParallel, &standardParallel)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(h, scentralLongitude, &centralLongitude)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_double_internal(h, sDx, &Dx)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_double_internal(h, sDy, &Dy)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(h,
-                                      sjPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(h, sjScansPositively, &jScansPositively)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(h, siScansNegatively, &iScansNegatively)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(h,
-                                      salternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS)
-        return ret;
-
-    lambda0  = d2r * centralLongitude / 1000000;
-    phi1     = d2r * standardParallel / 1000000;
-    latFirst = latFirstInDegrees * d2r;
-    lonFirst = lonFirstInDegrees * d2r;
+    lambda0 = centralLongitudeInRadians;  // / 1000000;
+    phi1    = standardParallelInRadians;  // / 1000000;
 
     cosphi1 = cos(phi1);
     sinphi1 = sin(phi1);
 
     Dx         = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
     Dy         = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
-    self->lats = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
+    self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "Error allocating %ld bytes", iter->nv * sizeof(double));
+                         "Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    self->lons = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
+    self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "Error allocating %ld bytes", iter->nv * sizeof(double));
+                         "Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     lats = self->lats;
     lons = self->lons;
 
     /* compute xFirst,yFirst in metres */
-    sinphi     = sin(latFirst);
-    cosphi     = cos(latFirst);
-    cosdlambda = cos(lonFirst - lambda0);
-    sindlambda = sin(lonFirst - lambda0);
+    sinphi     = sin(latFirstInRadians);
+    cosphi     = cos(latFirstInRadians);
+    cosdlambda = cos(lonFirstInRadians - lambda0);
+    sindlambda = sin(lonFirstInRadians - lambda0);
     kp         = radius * sqrt(2.0 / (1 + sinphi1 * sinphi + cosphi1 * cosphi * cosdlambda));
     xFirst     = kp * cosphi * sindlambda;
     yFirst     = kp * (cosphi1 * sinphi - sinphi1 * cosphi * cosdlambda);
@@ -267,10 +215,105 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
             y += Dy;
         }
     }
+    return GRIB_SUCCESS;
+}
+
+static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
+{
+    int err       = 0;
+    int is_oblate = 0;
+    double lonFirstInDegrees, latFirstInDegrees, lonFirstInRadians, latFirstInRadians, radius = 0;
+    long nx, ny;
+    double standardParallelInDegrees, centralLongitudeInDegrees;
+    double standardParallelInRadians, centralLongitudeInRadians;
+    double Dx, Dy;
+    long alternativeRowScanning, iScansNegatively;
+    long jScansPositively, jPointsAreConsecutive;
+    double earthMajorAxisInMetres = 0, earthMinorAxisInMetres = 0;
+
+    grib_iterator_lambert_azimuthal_equal_area* self =
+        (grib_iterator_lambert_azimuthal_equal_area*)iter;
+
+    const char* sradius                 = grib_arguments_get_name(h, args, self->carg++);
+    const char* snx                     = grib_arguments_get_name(h, args, self->carg++);
+    const char* sny                     = grib_arguments_get_name(h, args, self->carg++);
+    const char* slatFirstInDegrees      = grib_arguments_get_name(h, args, self->carg++);
+    const char* slonFirstInDegrees      = grib_arguments_get_name(h, args, self->carg++);
+    const char* sstandardParallel       = grib_arguments_get_name(h, args, self->carg++);
+    const char* scentralLongitude       = grib_arguments_get_name(h, args, self->carg++);
+    const char* sDx                     = grib_arguments_get_name(h, args, self->carg++);
+    const char* sDy                     = grib_arguments_get_name(h, args, self->carg++);
+    const char* siScansNegatively       = grib_arguments_get_name(h, args, self->carg++);
+    const char* sjScansPositively       = grib_arguments_get_name(h, args, self->carg++);
+    const char* sjPointsAreConsecutive  = grib_arguments_get_name(h, args, self->carg++);
+    const char* salternativeRowScanning = grib_arguments_get_name(h, args, self->carg++);
+    const double d2r                    = acos(0.0) / 90.0;
+
+    is_oblate = grib_is_earth_oblate(h);
+    if (is_oblate) {
+        if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", &earthMinorAxisInMetres)) != GRIB_SUCCESS) return err;
+        if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", &earthMajorAxisInMetres)) != GRIB_SUCCESS) return err;
+    }
+    else {
+        if ((err = grib_get_double_internal(h, sradius, &radius)) != GRIB_SUCCESS) return err;
+    }
+
+    if ((err = grib_get_long_internal(h, snx, &nx)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(h, sny, &ny)) != GRIB_SUCCESS)
+        return err;
+
+    if (iter->nv != nx * ny) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "Wrong number of points (%ld!=%ldx%ld)",
+                         iter->nv, nx, ny);
+        return GRIB_WRONG_GRID;
+    }
+    if ((err = grib_get_double_internal(h, slatFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, slonFirstInDegrees, &lonFirstInDegrees)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, sstandardParallel, &standardParallelInDegrees)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, scentralLongitude, &centralLongitudeInDegrees)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, sDx, &Dx)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, sDy, &Dy)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(h, sjPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(h, sjScansPositively, &jScansPositively)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(h, siScansNegatively, &iScansNegatively)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(h, salternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS)
+        return err;
+
+    latFirstInRadians         = latFirstInDegrees * d2r;
+    lonFirstInRadians         = lonFirstInDegrees * d2r;
+    centralLongitudeInRadians = centralLongitudeInDegrees * d2r;
+    standardParallelInRadians = standardParallelInDegrees * d2r;
+
+    if (is_oblate) {
+        err = init_oblate(h, self, iter->nv, nx, ny,
+                          Dx, Dy, earthMinorAxisInMetres, earthMajorAxisInMetres,
+                          latFirstInRadians, lonFirstInRadians,
+                          centralLongitudeInRadians, standardParallelInRadians,
+                          iScansNegatively, jScansPositively, jPointsAreConsecutive);
+    }
+    else {
+        err = init_sphere(h, self, iter->nv, nx, ny,
+                          Dx, Dy, radius,
+                          latFirstInRadians, lonFirstInRadians,
+                          centralLongitudeInRadians, standardParallelInRadians,
+                          iScansNegatively, jScansPositively, jPointsAreConsecutive);
+    }
+    if (err) return err;
 
     iter->e = -1;
 
-    return ret;
+    return err;
 }
 
 static int destroy(grib_iterator* i)

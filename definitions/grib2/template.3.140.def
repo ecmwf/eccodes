@@ -55,7 +55,7 @@ include "grib2/template.3.scanning_mode.def";
 iterator lambert_azimuthal_equal_area(numberOfPoints,missingValue,values,
           radius,Nx,Ny,
           latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
-          standardParallel,centralLongitude,
+          standardParallelInDegrees,centralLongitudeInDegrees,
           Dx,Dy,
           iScansNegatively, jScansPositively,
           jPointsAreConsecutive, alternativeRowScanning);
