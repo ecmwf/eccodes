@@ -107,9 +107,9 @@ static int find(grib_nearest* nearest, grib_handle* h,
 {
     grib_nearest_polar_stereographic* self = (grib_nearest_polar_stereographic*)nearest;
     return grib_nearest_find_generic(
-        nearest, h, inlat, inlon, flags,
+        nearest, h, inlat, inlon, flags, /* inputs */
 
-        self->values_key,
+        self->values_key,   /* outputs to set the 'self' object */
         self->radius,
         &(self->lats),
         &(self->lats_count),
@@ -119,7 +119,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         self->Ni,
         self->Nj,
 
-        outlats, outlons,
+        outlats, outlons,  /* outputs of the find function */
         values, distances, indexes, len);
 }
 

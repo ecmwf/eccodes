@@ -323,6 +323,11 @@ int grib_nearest_find_generic(
         return ret;
     nearest->values_count = nvalues;
 
+    if (grib_is_earth_oblate(h)) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Nearest neighbour functionality only supported for spherical earth.");
+        return GRIB_NOT_IMPLEMENTED;
+    }
+
     if ((ret = grib_get_long_internal(h, radius_keyname, &iradius)) != GRIB_SUCCESS)
         return ret;
     if (grib_is_missing(h, radius_keyname, &ret)) {

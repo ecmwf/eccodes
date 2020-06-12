@@ -2,6 +2,7 @@
 { "gen", &grib_nearest_class_gen, },
 { "lambert_conformal", &grib_nearest_class_lambert_conformal, },
 { "latlon_reduced", &grib_nearest_class_latlon_reduced, },
+{ "mercator", &grib_nearest_class_mercator, },
 { "polar_stereographic", &grib_nearest_class_polar_stereographic, },
 { "reduced", &grib_nearest_class_reduced, },
 { "regular", &grib_nearest_class_regular, },
