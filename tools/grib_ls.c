@@ -398,12 +398,13 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     int i = 0;
     if (options->latlon && options->verbose) {
         printf("Input Point: latitude=%.2f  longitude=%.2f\n", lat, lon);
-        printf("Grid Point chosen #%d index=%d latitude=%.2f longitude=%.2f distance=%.2f (Km)\n",
-               options->latlon_idx + 1, (int)options->indexes[options->latlon_idx],
-               options->lats[options->latlon_idx],
-               options->lons[options->latlon_idx],
-               options->distances[options->latlon_idx]);
-
+        if (options->latlon_idx >= 0 && options->latlon_idx < 4) {
+            printf("Grid Point chosen #%d index=%d latitude=%.2f longitude=%.2f distance=%.2f (Km)\n",
+                options->latlon_idx + 1, (int)options->indexes[options->latlon_idx],
+                options->lats[options->latlon_idx],
+                options->lons[options->latlon_idx],
+                options->distances[options->latlon_idx]);
+        }
         if (options->latlon_mask) {
             printf("Mask values:\n");
             for (i = 0; i < 4; i++) {
