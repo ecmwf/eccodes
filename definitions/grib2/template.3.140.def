@@ -60,6 +60,8 @@ iterator lambert_azimuthal_equal_area(numberOfPoints,missingValue,values,
           iScansNegatively, jScansPositively,
           jPointsAreConsecutive, alternativeRowScanning);
 
+nearest lambert_azimuthal_equal_area(values,radius,Nx,Ny);
+
 meta latLonValues latlonvalues(values);
 alias latitudeLongitudeValues=latLonValues;
 meta latitudes latitudes(values,0);
