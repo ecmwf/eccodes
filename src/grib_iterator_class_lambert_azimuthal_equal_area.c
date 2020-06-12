@@ -97,6 +97,66 @@ static int next(grib_iterator* i, double* lat, double* lon, double* val)
     return 1;
 }
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846 /* Whole pie */
+#endif
+
+#ifndef M_PI_2
+#define M_PI_2 1.57079632679489661923 /* Half a pie */
+#endif
+
+#ifndef M_PI_4
+#define M_PI_4 0.78539816339744830962 /* Quarter of a pie */
+#endif
+
+#define RAD2DEG 57.29577951308232087684 /* 180 over pi */
+#define DEG2RAD 0.01745329251994329576  /* pi over 180 */
+
+# define P00 .33333333333333333333 /*   1 /     3 */
+# define P01 .17222222222222222222 /*  31 /   180 */
+# define P02 .10257936507936507937 /* 517 /  5040 */
+# define P10 .06388888888888888888 /*  23 /   360 */
+# define P11 .06640211640211640212 /* 251 /  3780 */
+# define P20 .01677689594356261023 /* 761 / 45360 */
+
+void pj_authset(double es, double* APA)
+{
+    double t;
+    APA[0] = es * P00;
+    t = es * es;
+    APA[0] += t * P01;
+    APA[1] = t * P10;
+    t *= es;
+    APA[0] += t * P02;
+    APA[1] += t * P11;
+    APA[2] = t * P20;
+}
+double pj_authlat(double beta, double *APA)
+{
+    double t = beta+beta;
+    return(beta + APA[0] * sin(t) + APA[1] * sin(t+t) + APA[2] * sin(t+t+t));
+}
+
+static double pj_qsfn(double sinphi, double e, double one_es)
+{
+    double con, div1, div2;
+    const double EPSILON = 1.0e-7;
+
+    if (e >= EPSILON) {
+        con = e * sinphi;
+        div1 = 1.0 - con * con;
+        div2 = 1.0 + con;
+
+        /* avoid zero division, fail gracefully */
+        if (div1 == 0.0 || div2 == 0.0)
+            return HUGE_VAL;
+
+        return (one_es * (sinphi / div1 - (.5 / e) * log ((1. - con) / div2 )));
+    } else
+        return (sinphi + sinphi);
+}
+
+#define EPS10 1.e-10
 static int init_oblate(grib_handle* h,
                        grib_iterator_lambert_azimuthal_equal_area* self,
                        size_t nv, long nx, long ny,
@@ -105,8 +165,124 @@ static int init_oblate(grib_handle* h,
                        double centralLongitudeInRadians, double standardParallelInRadians,
                        long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
 {
-    grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert Azimuthal Equal Area only supported for spherical earth.");
-    return GRIB_GEOCALCULUS_PROBLEM;
+    double *lats, *lons;
+    long i, j;
+    double x0, y0, x, y;
+    double coslam, sinlam, sinphi, sinphi_,  q, sinb=0.0, cosb=0.0, b=0.0, cosb2;//fwd
+    double Q__qp = 0, Q__rq = 0, Q__mmf = 0, Q__cosb1, Q__sinb1, Q__dd, Q__xmf, Q__ymf, t;
+    double e, es, temp, one_es;
+    double false_easting;  /* x offset in meters */
+    double false_northing; /* y offset in meters */
+    double latRad, lonRad, latDeg, lonDeg;
+    double APA[3] = {0,};
+
+    //temp = earthMinorAxisInMetres/earthMajorAxisInMetres;
+    //es = 1.0 - temp * temp;
+    temp = (earthMajorAxisInMetres - earthMinorAxisInMetres)/earthMajorAxisInMetres;
+    es = 2*temp - temp*temp;
+    one_es = 1.0 - es;
+    e = sqrt(es);
+
+    coslam = cos(lonFirstInRadians - centralLongitudeInRadians);  //cos(lp.lam);
+    sinlam = sin(lonFirstInRadians - centralLongitudeInRadians);
+    sinphi = sin(latFirstInRadians); //  sin(lp.phi);
+    q = pj_qsfn(sinphi, e, one_es);
+    
+    //----------- setp start
+    t = fabs(standardParallelInRadians);
+    if (t > M_PI_2 + EPS10 ) {
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+    //if (fabs(t - M_HALFPI) < EPS10)
+    //    Q->mode = P->phi0 < 0. ? S_POLE : N_POLE;
+    //else if (fabs(t) < EPS10)
+    //    Q->mode = EQUIT;
+    //else
+    //    Q->mode = OBLIQ;
+    Q__qp = pj_qsfn(1.0, e, one_es);
+    Q__mmf = 0.5 / one_es;
+    pj_authset(es, APA); // sets up APA array
+    Q__rq = sqrt(0.5 * Q__qp);
+    sinphi_ = sin(standardParallelInRadians); //  (P->phi0);
+    Q__sinb1 = pj_qsfn(sinphi_, e, one_es) / Q__qp;
+    Q__cosb1 = sqrt(1.0 - Q__sinb1 * Q__sinb1);
+    Q__dd = cos(standardParallelInRadians) / (sqrt(1. - es * sinphi_ * sinphi_) * Q__rq * Q__cosb1);
+    Q__ymf = (Q__xmf = Q__rq) / Q__dd;
+    Q__xmf *= Q__dd;
+    //----------- setup end
+
+    sinb = q/Q__qp;
+    cosb2 = 1.0 - sinb * sinb;
+    cosb = cosb2 > 0 ? sqrt(cosb2) : 0;
+    b = 1. + Q__sinb1 * sinb + Q__cosb1 * cosb * coslam;
+    if (fabs(b) < EPS10) {
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+    b = sqrt(2.0 / b);
+
+    // OBLIQUE
+    y0 = Q__ymf * b * (Q__cosb1 * sinb - Q__sinb1 * cosb * coslam);
+    x0 = Q__xmf * b * cosb * sinlam;
+    y0 *= earthMajorAxisInMetres;
+    x0 *= earthMajorAxisInMetres;
+
+    /* Allocate latitude and longitude arrays */
+    self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!self->lats) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
+    self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
+    if (!self->lats) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
+
+    /* Populate the lat and lon arrays */
+    false_easting  = x0;
+    false_northing = y0;
+    for (j = 0; j < ny; j++) {
+        y = j * Dy;
+        for (i = 0; i < nx; i++) {
+            double cCe, sCe, q, rho, ab=0.0,  lp__lam, lp__phi,  xy_x,xy_y;
+            const int index = i + j * nx;
+
+            x = i * Dx;
+            xy_x = x;
+            xy_y = y;
+            /* Inverse projection to convert from x,y to lat,lon */
+            //_x = x - false_easting;
+            //_y = rh - y + false_northing;
+            // calculate latRad and lonRad
+            xy_x /= Q__dd;
+            xy_y *=  Q__dd;
+            rho = hypot(xy_x, xy_y);
+            Assert(rho >= EPS10); // TODO
+            sCe = 2. * asin(.5 * rho / Q__rq);
+            cCe = cos(sCe);
+            sCe = sin(sCe);
+            xy_x *= sCe;
+            // if oblique
+            ab = cCe * Q__sinb1 + xy_y * sCe * Q__cosb1 / rho;
+            xy_y = rho * Q__cosb1 * cCe - xy_y * Q__sinb1 * sCe;
+            // else
+            //ab = xy.y * sCe / rho;
+            //xy.y = rho * cCe;
+            
+            lp__lam = atan2(xy_x, xy_y); //longitude
+            lp__phi = pj_authlat(asin(ab), APA); // latitude
+
+            latDeg = latRad * RAD2DEG;  /* Convert to degrees */
+            lonDeg = lonRad * RAD2DEG;
+            lonDeg = normalise_longitude_in_degrees(lonDeg);
+            self->lons[index] = lonDeg;
+            self->lats[index] = latDeg;
+        }
+    }
+        
+    //grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert Azimuthal Equal Area only supported for spherical earth.");
+    //return GRIB_GEOCALCULUS_PROBLEM;
+    return GRIB_SUCCESS;
 }
 
 static int init_sphere(grib_handle* h,
