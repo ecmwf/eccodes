@@ -511,8 +511,10 @@
     <ClCompile Include="..\..\..\src\grib_nearest.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_gen.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest_class_lambert_azimuthal_equal_area.c.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_lambert_conformal.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_latlon_reduced.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest_class_mercator.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_polar_stereographic.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_reduced.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_regular.c" />
