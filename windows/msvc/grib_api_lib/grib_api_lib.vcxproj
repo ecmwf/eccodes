@@ -519,6 +519,7 @@
     <ClCompile Include="..\..\..\src\grib_nearest_class_reduced.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_regular.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_sh.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest_class_space_view.c" />
     <ClCompile Include="..\..\..\src\grib_oarray.c" />
     <ClCompile Include="..\..\..\src\grib_openjpeg_encoding.c" />
     <ClCompile Include="..\..\..\src\grib_optimize_decimal_factor.c" />
