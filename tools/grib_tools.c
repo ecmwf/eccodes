@@ -1170,7 +1170,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     if (options->latlon) {
         if (options->latlon_mode == 4) {
             int ii = 0;
-            for (ii = 0; ii < 4; ii++) {
+            for (ii = 0; ii < LATLON_SIZE; ii++) {
                 fprintf(dump_file, options->format, options->values[ii]);
                 fprintf(dump_file, " ");
             }
