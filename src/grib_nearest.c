@@ -296,13 +296,13 @@ int grib_nearest_find_generic(
 
     const char* values_keyname,
     const char* radius_keyname,
+    const char* Ni_keyname,
+    const char* Nj_keyname,
     double**    out_lats,
     int*        out_lats_count,
     double**    out_lons,
     int*        out_lons_count,
     double**    out_distances,
-    const char* Ni_keyname,
-    const char* Nj_keyname,
 
     double* outlats, double* outlons,
     double* values, double* distances, int* indexes, size_t* len)

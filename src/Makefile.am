@@ -362,8 +362,9 @@ libeccodes_la_prototypes= \
 	grib_nearest_class_sh.c \
 	grib_nearest_class_lambert_conformal.c \
 	grib_nearest_class_lambert_azimuthal_equal_area.c \
-   	grib_nearest_class_mercator.c \
+	grib_nearest_class_mercator.c \
 	grib_nearest_class_polar_stereographic.c \
+	grib_nearest_class_space_view.c \
 	grib_iterator_class_polar_stereographic.c \
 	grib_iterator_class_lambert_azimuthal_equal_area.c  \
 	grib_iterator_class_lambert_conformal.c \

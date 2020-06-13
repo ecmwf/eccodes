@@ -95,9 +95,11 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
     grib_nearest_mercator* self = (grib_nearest_mercator*)nearest;
     self->Ni                    = grib_arguments_get_name(h, args, self->cargs++);
     self->Nj                    = grib_arguments_get_name(h, args, self->cargs++);
+    self->lats = self->lons = self->distances = NULL;
+    self->lats_count = self->lons_count = 0;
     self->i                     = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
     self->j                     = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 static int find(grib_nearest* nearest, grib_handle* h,
@@ -111,13 +113,13 @@ static int find(grib_nearest* nearest, grib_handle* h,
 
         self->values_key,  /* outputs to set the 'self' object */
         self->radius,
+        self->Ni,
+        self->Nj,
         &(self->lats),
         &(self->lats_count),
         &(self->lons),
         &(self->lons_count),
         &(self->distances),
-        self->Ni,
-        self->Nj,
 
         outlats, outlons,  /* outputs of the find function */
         values, distances, indexes, len);
@@ -126,17 +128,11 @@ static int find(grib_nearest* nearest, grib_handle* h,
 static int destroy(grib_nearest* nearest)
 {
     grib_nearest_mercator* self = (grib_nearest_mercator*)nearest;
-    if (self->lats)
-        grib_context_free(nearest->context, self->lats);
-    if (self->lons)
-        grib_context_free(nearest->context, self->lons);
-    if (self->i)
-        grib_context_free(nearest->context, self->i);
-    if (self->j)
-        grib_context_free(nearest->context, self->j);
-    if (self->k)
-        grib_context_free(nearest->context, self->k);
-    if (self->distances)
-        grib_context_free(nearest->context, self->distances);
+    if (self->lats)      grib_context_free(nearest->context, self->lats);
+    if (self->lons)      grib_context_free(nearest->context, self->lons);
+    if (self->i)         grib_context_free(nearest->context, self->i);
+    if (self->j)         grib_context_free(nearest->context, self->j);
+    if (self->k)         grib_context_free(nearest->context, self->k);
+    if (self->distances) grib_context_free(nearest->context, self->distances);
     return GRIB_SUCCESS;
 }

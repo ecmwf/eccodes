@@ -8,3 +8,4 @@
 { "reduced", &grib_nearest_class_reduced, },
 { "regular", &grib_nearest_class_regular, },
 { "sh", &grib_nearest_class_sh, },
+{ "space_view", &grib_nearest_class_space_view, },
