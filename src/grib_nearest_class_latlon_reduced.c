@@ -346,7 +346,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         kk = 0;
         for (jj = 0; jj < 2; jj++) {
             for (ii = 0; ii < 2; ii++) {
-                self->distances[kk] = grib_nearest_distance(radius, inlon, inlat,
+                self->distances[kk] = grib_nearest_distance_spherical(radius, inlon, inlat,
                                                             self->lons[self->k[kk]], self->lats[self->j[jj]]);
                 kk++;
             }

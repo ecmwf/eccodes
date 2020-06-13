@@ -1376,7 +1376,8 @@ int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat,
 int grib_nearest_init(grib_nearest* i, grib_handle* h, grib_arguments* args);
 int grib_nearest_delete(grib_nearest* i);
 void grib_binary_search(double xx[], const unsigned long n, double x, int* ju, int* jl);
-double grib_nearest_distance(double radius, double lon1, double lat1, double lon2, double lat2);
+double grib_nearest_distance_spherical(double radius, double lon1, double lat1, double lon2, double lat2);
+double grib_nearest_distance_ellipsoid(double major, double minor, double lon1, double lat1, double lon2, double lat2);
 int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
 int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
     const char*  values_keyname, const char* radius_keyname,

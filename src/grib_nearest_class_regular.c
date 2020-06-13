@@ -193,7 +193,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         for (ii=0;ii<2;ii++) {
             for (jj=0;jj<2;jj++) {
                 self->k[kk]=self->i[ii]+self->lons_count*self->j[jj]-1;
-                self->distances[kk]=grib_nearest_distance(radius,inlon,inlat,
+                self->distances[kk]=grib_nearest_distance_spherical(radius,inlon,inlat,
                         self->lons[self->i[ii]],self->lats[self->j[jj]]);
                 kk++;
             }
@@ -409,7 +409,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         for (jj = 0; jj < 2; jj++) {
             for (ii = 0; ii < 2; ii++) {
                 self->k[kk]         = self->i[ii] + self->lons_count * self->j[jj];
-                self->distances[kk] = grib_nearest_distance(radius, inlon, inlat,
+                self->distances[kk] = grib_nearest_distance_spherical(radius, inlon, inlat,
                                                             self->lons[self->i[ii]], self->lats[self->j[jj]]);
                 kk++;
             }
