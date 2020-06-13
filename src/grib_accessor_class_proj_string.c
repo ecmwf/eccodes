@@ -18,6 +18,7 @@
    IMPLEMENTS = get_native_type;init
    IMPLEMENTS = unpack_string
    MEMBERS = const char* grid_type
+   MEMBERS = int endpoint
    END_CLASS_DEF
 
  */
@@ -43,6 +44,7 @@ typedef struct grib_accessor_proj_string
     /* Members defined in gen */
     /* Members defined in proj_string */
     const char* grid_type;
+    int endpoint;
 } grib_accessor_proj_string;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -136,6 +138,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
     grib_handle* h                  = grib_handle_of_accessor(a);
 
     self->grid_type = grib_arguments_get_name(h, arg, 0);
+    self->endpoint  = grib_arguments_get_long(h, arg, 1);
     a->length       = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
@@ -185,7 +188,7 @@ static int get_earth_shape(grib_handle* h, char* result)
         sprintf(result, "+a=%lf +b=%lf", major, minor); /*oblate*/
     return err;
 }
-
+#if 0
 static int proj_regular_latlon(grib_handle* h, char* result)
 {
     int err        = 0;
@@ -194,6 +197,24 @@ static int proj_regular_latlon(grib_handle* h, char* result)
         return err;
     sprintf(result, "+proj=latlong %s", shape);
     return err;
+}
+#endif
+
+static int proj_space_view(grib_handle* h, char* result)
+{
+    return GRIB_NOT_IMPLEMENTED;
+}
+static int proj_albers(grib_handle* h, char* result)
+{
+    return GRIB_NOT_IMPLEMENTED;
+}
+static int proj_transverse_mercator(grib_handle* h, char* result)
+{
+    return GRIB_NOT_IMPLEMENTED;
+}
+static int proj_equatorial_azimuthal_equidistant(grib_handle* h, char* result)
+{
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int proj_lambert_conformal(grib_handle* h, char* result)
@@ -273,13 +294,20 @@ static int proj_mercator(grib_handle* h, char* result)
 
 #define NUMBER(a) (sizeof(a) / sizeof(a[0]))
 static proj_mapping proj_mappings[] = {
-    { "regular_ll", &proj_regular_latlon },
+    /*{ "regular_ll", &proj_regular_latlon },*/
+
     { "mercator", &proj_mercator },
     { "lambert", &proj_lambert_conformal },
     { "polar_stereographic", &proj_polar_stereographic },
-    { "lambert_azimuthal_equal_area", &proj_lambert_azimuthal_equal_area }
+    { "lambert_azimuthal_equal_area", &proj_lambert_azimuthal_equal_area },
+    { "space_view", &proj_space_view },
+    { "albers", &proj_albers },
+    { "transverse_mercator", &proj_transverse_mercator },
+    { "equatorial_azimuthal_equidistant", &proj_equatorial_azimuthal_equidistant },
 };
 
+#define ENDPOINT_SOURCE 0
+#define ENDPOINT_TARGET 1
 static int unpack_string(grib_accessor* a, char* v, size_t* len)
 {
     grib_accessor_proj_string* self = (grib_accessor_proj_string*)a;
@@ -289,6 +317,8 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     grib_handle* h = grib_handle_of_accessor(a);
     size_t size    = sizeof(grid_type) / sizeof(*grid_type);
 
+    Assert(self->endpoint == ENDPOINT_SOURCE || self->endpoint == ENDPOINT_TARGET);
+
     err = grib_get_string(h, self->grid_type, grid_type, &size);
     if (err) return err;
 
@@ -296,12 +326,18 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         proj_mapping pm = proj_mappings[i];
         if (strcmp(grid_type, pm.gridType) == 0) {
             found = 1;
-            if ((err = pm.func(h, v)) != GRIB_SUCCESS) return err;
+            if (self->endpoint == ENDPOINT_SOURCE) {
+                sprintf(v, "EPSG:4326");
+            }
+            else {
+                /* Invoke the appropriate function to get the target proj string */
+                if ((err = pm.func(h, v)) != GRIB_SUCCESS) return err;
+            }
         }
     }
     if (!found) {
         *len = 0;
-        return GRIB_NOT_IMPLEMENTED;
+        return GRIB_NOT_FOUND;
     }
 
     size = strlen(v);

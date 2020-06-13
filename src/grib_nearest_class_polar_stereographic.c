@@ -97,53 +97,7 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
     self->Nj                               = grib_arguments_get_name(h, args, self->cargs++);
     self->i                                = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
     self->j                                = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
-    return 0;
-}
-
-static int compare_doubles(const void* a, const void* b, int ascending)
-{
-    /* ascending is a boolean: 0 or 1 */
-    double* arg1 = (double*)a;
-    double* arg2 = (double*)b;
-    if (ascending) {
-        if (*arg1 < *arg2)
-            return -1; /*Smaller values come before larger ones*/
-    }
-    else {
-        if (*arg1 > *arg2)
-            return -1; /*Larger values come before smaller ones*/
-    }
-    if (*arg1 == *arg2)
-        return 0;
-    else
-        return 1;
-}
-
-static int compare_doubles_ascending(const void* a, const void* b)
-{
-    return compare_doubles(a, b, 1);
-}
-
-typedef struct PointStore
-{
-    double m_lat;
-    double m_lon;
-    double m_dist;
-    double m_value;
-    int m_index;
-} PointStore;
-
-/* Comparison function to sort points by distance */
-static int compare_points(const void* a, const void* b)
-{
-    PointStore* pA = (PointStore*)a;
-    PointStore* pB = (PointStore*)b;
-
-    if (pA->m_dist < pB->m_dist)
-        return -1;
-    if (pA->m_dist > pB->m_dist)
-        return 1;
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 static int find(grib_nearest* nearest, grib_handle* h,
@@ -152,169 +106,31 @@ static int find(grib_nearest* nearest, grib_handle* h,
                 double* values, double* distances, int* indexes, size_t* len)
 {
     grib_nearest_polar_stereographic* self = (grib_nearest_polar_stereographic*)nearest;
-    int ret = 0, i = 0;
-    size_t nvalues = 0;
-    long iradius;
-    double radius;
-    grib_iterator* iter = NULL;
-    double lat = 0, lon = 0;
+    return grib_nearest_find_generic(
+        nearest, h, inlat, inlon, flags, /* inputs */
 
-    /* array of candidates for nearest neighbours */
-    PointStore* neighbours = NULL;
+        self->values_key,   /* outputs to set the 'self' object */
+        self->radius,
+        self->Ni,
+        self->Nj,
+        &(self->lats),
+        &(self->lats_count),
+        &(self->lons),
+        &(self->lons_count),
+        &(self->distances),
 
-    inlon = normalise_longitude_in_degrees(inlon);
-
-    if ((ret = grib_get_size(h, self->values_key, &nvalues)) != GRIB_SUCCESS)
-        return ret;
-    nearest->values_count = nvalues;
-
-    if (grib_is_missing(h, self->radius, &ret)) {
-        grib_context_log(h->context, GRIB_LOG_DEBUG, "Key '%s' is missing", self->radius);
-        return ret ? ret : GRIB_GEOCALCULUS_PROBLEM;
-    }
-
-    if ((ret = grib_get_long(h, self->radius, &iradius)) != GRIB_SUCCESS)
-        return ret;
-    radius = ((double)iradius) / 1000.0;
-
-    neighbours = (PointStore*)grib_context_malloc(nearest->context, nvalues * sizeof(PointStore));
-    for (i = 0; i < nvalues; ++i) {
-        neighbours[i].m_dist  = 1e10; /* set all distances to large number to begin with */
-        neighbours[i].m_lat   = 0;
-        neighbours[i].m_lon   = 0;
-        neighbours[i].m_value = 0;
-        neighbours[i].m_index = 0;
-    }
-
-    /* GRIB_NEAREST_SAME_GRID not yet implemented */
-    {
-        double the_value = 0;
-        double min_dist  = 1e10;
-        size_t the_index = 0;
-        int ilat = 0, ilon = 0;
-        int idx_upper = 0, idx_lower = 0;
-        double lat1 = 0, lat2 = 0; /* inlat will be between these */
-        double dist            = 0;
-        const double LAT_DELTA = 10.0; /* in degrees */
-
-        if (grib_is_missing(h, self->Ni, &ret)) {
-            grib_context_log(h->context, GRIB_LOG_DEBUG, "Key '%s' is missing", self->Ni);
-            return ret ? ret : GRIB_GEOCALCULUS_PROBLEM;
-        }
-
-        if (grib_is_missing(h, self->Nj, &ret)) {
-            grib_context_log(h->context, GRIB_LOG_DEBUG, "Key '%s' is missing", self->Nj);
-            return ret ? ret : GRIB_GEOCALCULUS_PROBLEM;
-        }
-
-        self->lons_count = nvalues; /* Maybe overestimate but safe */
-        self->lats_count = nvalues;
-
-        if (self->lats)
-            grib_context_free(nearest->context, self->lats);
-        self->lats = (double*)grib_context_malloc(nearest->context, nvalues * sizeof(double));
-        if (!self->lats)
-            return GRIB_OUT_OF_MEMORY;
-
-        if (self->lons)
-            grib_context_free(nearest->context, self->lons);
-        self->lons = (double*)grib_context_malloc(nearest->context, nvalues * sizeof(double));
-        if (!self->lons)
-            return GRIB_OUT_OF_MEMORY;
-
-        iter = grib_iterator_new(h, 0, &ret);
-        if (ret)
-            return ret;
-        /* First pass: collect all latitudes and longitudes */
-        while (grib_iterator_next(iter, &lat, &lon, &the_value)) {
-            ++the_index;
-            Assert(ilat < self->lats_count);
-            Assert(ilon < self->lons_count);
-            self->lats[ilat++] = lat;
-            self->lons[ilon++] = lon;
-        }
-
-        /* See between which 2 latitudes our point lies */
-        qsort(self->lats, nvalues, sizeof(double), &compare_doubles_ascending);
-        grib_binary_search(self->lats, self->lats_count - 1, inlat, &idx_upper, &idx_lower);
-        lat2 = self->lats[idx_upper];
-        lat1 = self->lats[idx_lower];
-        Assert(lat1 <= lat2);
-
-        /* Second pass: Iterate again and collect candidate neighbours */
-        grib_iterator_reset(iter);
-        the_index = 0;
-        i         = 0;
-        while (grib_iterator_next(iter, &lat, &lon, &the_value)) {
-            if (lat > lat2 + LAT_DELTA || lat < lat1 - LAT_DELTA) {
-                /* Ignore latitudes too far from our point */
-            }
-            else {
-                dist = grib_nearest_distance(radius, inlon, inlat, lon, lat);
-                if (dist < min_dist)
-                    min_dist = dist;
-                /*printf("Candidate: lat=%.5f lon=%.5f dist=%f Idx=%ld Val=%f\n",lat,lon,dist,the_index,the_value);*/
-                /* store this candidate point */
-                neighbours[i].m_dist  = dist;
-                neighbours[i].m_index = the_index;
-                neighbours[i].m_lat   = lat;
-                neighbours[i].m_lon   = lon;
-                neighbours[i].m_value = the_value;
-                i++;
-            }
-            ++the_index;
-        }
-        /* Sort the candidate neighbours in ascending order of distance */
-        /* The first 4 entries will now be the closest 4 neighbours */
-        qsort(neighbours, nvalues, sizeof(PointStore), &compare_points);
-
-        grib_iterator_delete(iter);
-    }
-    nearest->h = h;
-
-    /* Sanity check for sorting */
-#ifdef DEBUG
-    for (i = 0; i < nvalues - 1; ++i) {
-        Assert(neighbours[i].m_dist <= neighbours[i + 1].m_dist);
-    }
-#endif
-
-    /* GRIB_NEAREST_SAME_XXX not yet implemented */
-    if (!self->distances) {
-        self->distances = (double*)grib_context_malloc(nearest->context, 4 * sizeof(double));
-    }
-    self->distances[0] = neighbours[0].m_dist;
-    self->distances[1] = neighbours[1].m_dist;
-    self->distances[2] = neighbours[2].m_dist;
-    self->distances[3] = neighbours[3].m_dist;
-
-    for (i = 0; i < 4; ++i) {
-        distances[i] = neighbours[i].m_dist;
-        outlats[i]   = neighbours[i].m_lat;
-        outlons[i]   = neighbours[i].m_lon;
-        indexes[i]   = neighbours[i].m_index;
-        values[i]    = neighbours[i].m_value;
-        /*printf("(%f,%f)  i=%d  d=%f  v=%f\n",outlats[i],outlons[i],indexes[i],distances[i],values[i]);*/
-    }
-
-    free(neighbours);
-    return GRIB_SUCCESS;
+        outlats, outlons,  /* outputs of the find function */
+        values, distances, indexes, len);
 }
 
 static int destroy(grib_nearest* nearest)
 {
     grib_nearest_polar_stereographic* self = (grib_nearest_polar_stereographic*)nearest;
-    if (self->lats)
-        grib_context_free(nearest->context, self->lats);
-    if (self->lons)
-        grib_context_free(nearest->context, self->lons);
-    if (self->i)
-        grib_context_free(nearest->context, self->i);
-    if (self->j)
-        grib_context_free(nearest->context, self->j);
-    if (self->k)
-        grib_context_free(nearest->context, self->k);
-    if (self->distances)
-        grib_context_free(nearest->context, self->distances);
+    if (self->lats)      grib_context_free(nearest->context, self->lats);
+    if (self->lons)      grib_context_free(nearest->context, self->lons);
+    if (self->i)         grib_context_free(nearest->context, self->i);
+    if (self->j)         grib_context_free(nearest->context, self->j);
+    if (self->k)         grib_context_free(nearest->context, self->k);
+    if (self->distances) grib_context_free(nearest->context, self->distances);
     return GRIB_SUCCESS;
 }

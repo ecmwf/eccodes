@@ -52,28 +52,28 @@ static unsigned long I(unsigned long x,unsigned long y,unsigned long z) { return
 
 #define ROT(x, c) ((x << c) | (x >> (32 - c)))
 
-#define _F(x, y, z) ((x & y) | ((~x) & z))
-#define _G(x, y, z) ((x & z) | (y & (~z)))
-#define _H(x, y, z) (x ^ y ^ z)
-#define _I(x, y, z) (y ^ (x | (~z)))
+#define ECC_F(x, y, z) ((x & y) | ((~x) & z))
+#define ECC_G(x, y, z) ((x & z) | (y & (~z)))
+#define ECC_H(x, y, z) (x ^ y ^ z)
+#define ECC_I(x, y, z) (y ^ (x | (~z)))
 
 #define F_(A, B, C, D, g, i)        \
-    A += _F(B, C, D) + w[g] + k[i]; \
+    A += ECC_F(B, C, D) + w[g] + k[i]; \
     A &= 0xffffffff;                \
     A = ROT(A, r[i]);               \
     A += B;
 #define G_(A, B, C, D, g, i)        \
-    A += _G(B, C, D) + w[g] + k[i]; \
+    A += ECC_G(B, C, D) + w[g] + k[i]; \
     A &= 0xffffffff;                \
     A = ROT(A, r[i]);               \
     A += B;
 #define H_(A, B, C, D, g, i)        \
-    A += _H(B, C, D) + w[g] + k[i]; \
+    A += ECC_H(B, C, D) + w[g] + k[i]; \
     A &= 0xffffffff;                \
     A = ROT(A, r[i]);               \
     A += B;
 #define I_(A, B, C, D, g, i)        \
-    A += _I(B, C, D) + w[g] + k[i]; \
+    A += ECC_I(B, C, D) + w[g] + k[i]; \
     A &= 0xffffffff;                \
     A = ROT(A, r[i]);               \
     A += B;

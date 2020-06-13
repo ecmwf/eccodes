@@ -390,7 +390,6 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     }
 
     offset_section3       = BUFR_SECTION0_LEN + section1Length + section2Length; /*bytes*/
-    //nbits_numberOfSubsets = 2 * 8;
     pos_numberOfSubsets   = (offset_section3 + 4) * 8;
     hdr->numberOfSubsets  = grib_decode_unsigned_long(pMessage, &pos_numberOfSubsets, nbits_numberOfSubsets);
 
@@ -522,7 +521,6 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     }
 
     offset_section3       = BUFR_SECTION0_LEN + section1Length + section2Length; /*bytes*/
-    //nbits_numberOfSubsets = 2 * 8;
     pos_numberOfSubsets   = (offset_section3 + 4) * 8;
     hdr->numberOfSubsets  = grib_decode_unsigned_long(pMessage, &pos_numberOfSubsets, nbits_numberOfSubsets);
 

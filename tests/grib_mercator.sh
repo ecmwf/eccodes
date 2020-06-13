@@ -30,5 +30,9 @@ EOF
 
 ${tools_dir}/grib_filter $tempFilter $input
 
+# Nearest function
+${tools_dir}/grib_ls -l 19,-97,1 $input > $tempOut
+grep -q "Point chosen #1 index=618" $tempOut
+
 # Clean up
 rm -f $tempFilter $tempOut

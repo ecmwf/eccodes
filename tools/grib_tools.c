@@ -943,8 +943,12 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
     }
 
     if (ret != GRIB_SUCCESS) {
-        fprintf(dump_file, "Failed to get value for key %s\n", key_name);
-        exit(1);
+        if (ret == GRIB_NOT_FOUND) {
+            sprintf(value_str, "not_found");
+        } else {
+            fprintf(dump_file, "Failed to get value for key %s\n", key_name);
+            exit(1);
+        }
     }
 }
 
@@ -1166,7 +1170,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     if (options->latlon) {
         if (options->latlon_mode == 4) {
             int ii = 0;
-            for (ii = 0; ii < 4; ii++) {
+            for (ii = 0; ii < LATLON_SIZE; ii++) {
                 fprintf(dump_file, options->format, options->values[ii]);
                 fprintf(dump_file, " ");
             }

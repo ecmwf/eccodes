@@ -231,7 +231,9 @@ alias ls.gridType=gridType;
 alias geography.gridType=gridType;
 alias typeOfGrid=gridType;
 
-meta projString proj_string(gridType): hidden;
+meta  projSourceString proj_string(gridType, 0): hidden;
+meta  projTargetString proj_string(gridType, 1): hidden;
+alias projString = projTargetString : hidden;
 
 meta getNumberOfValues size(values) : edition_specific,dump ;
 
