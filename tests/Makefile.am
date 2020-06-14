@@ -57,6 +57,7 @@ TESTS = definitions.sh \
         grib_padding.sh \
         grib_lamb_az_eq_area.sh \
         grib_lambert_conformal.sh \
+        grib_space_view.sh \
         grib_mercator.sh \
         grib_to_netcdf.sh \
         grib_dump_debug.sh \

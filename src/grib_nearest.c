@@ -117,6 +117,7 @@ void grib_binary_search(double xx[], const unsigned long n, double x,
 #define RADIAN(x) ((x)*acos(0.0) / 90.0)
 
 /* radius is in km, angles in degrees */
+/* Spherical Law of Cosines */
 double grib_nearest_distance_spherical(double radius, double lon1, double lat1, double lon2, double lat2)
 {
     double rlat1 = RADIAN(lat1);
@@ -129,17 +130,13 @@ double grib_nearest_distance_spherical(double radius, double lon1, double lat1, 
         return 0.0; /* the two points are identical */
     }
 
-    if (rlon1 >= 360)
-        rlon1 -= 360.0;
+    if (rlon1 >= 360) rlon1 -= 360.0;
     rlon1 = RADIAN(rlon1);
-    if (rlon2 >= 360)
-        rlon2 -= 360.0;
+    if (rlon2 >= 360) rlon2 -= 360.0;
     rlon2 = RADIAN(rlon2);
 
     a = sin(rlat1) * sin(rlat2) + cos(rlat1) * cos(rlat2) * cos(rlon2 - rlon1);
-
-    if (a > 1 || a < -1)
-        a = (int)a;
+    DebugAssert(a >= -1 && a <= 1);
 
     return radius * acos(a);
 }
@@ -327,10 +324,8 @@ static int compare_points(const void* a, const void* b)
     PointStore* pA = (PointStore*)a;
     PointStore* pB = (PointStore*)b;
 
-    if (pA->m_dist < pB->m_dist)
-        return -1;
-    if (pA->m_dist > pB->m_dist)
-        return 1;
+    if (pA->m_dist < pB->m_dist) return -1;
+    if (pA->m_dist > pB->m_dist) return 1;
     return 0;
 }
 
@@ -397,7 +392,6 @@ int grib_nearest_find_generic(
         int ilat = 0, ilon = 0;
         int idx_upper = 0, idx_lower = 0;
         double lat1 = 0, lat2 = 0; /* inlat will be between these */
-        double dist            = 0;
         const double LAT_DELTA = 10.0; /* in degrees */
 
         if (grib_is_missing(h, Ni_keyname, &ret)) {
@@ -453,7 +447,7 @@ int grib_nearest_find_generic(
                 /* Ignore latitudes too far from our point */
             }
             else {
-                dist = grib_nearest_distance_spherical(radius, inlon, inlat, lon, lat);
+                double dist = grib_nearest_distance_spherical(radius, inlon, inlat, lon, lat);
                 if (dist < min_dist)
                     min_dist = dist;
                 /*printf("Candidate: lat=%.5f lon=%.5f dist=%f Idx=%ld Val=%f\n",lat,lon,dist,the_index,the_value);*/
