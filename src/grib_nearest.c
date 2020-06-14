@@ -352,7 +352,7 @@ int grib_nearest_find_generic(
     double* values, double* distances, int* indexes, size_t* len)
 {
     int ret = 0, i = 0;
-    size_t nvalues = 0;
+    size_t nvalues = 0, nneighbours = 0;
     long iradius;
     double radius;
     grib_iterator* iter = NULL;
@@ -467,9 +467,10 @@ int grib_nearest_find_generic(
             }
             ++the_index;
         }
+        nneighbours = i;
         /* Sort the candidate neighbours in ascending order of distance */
         /* The first 4 entries will now be the closest 4 neighbours */
-        qsort(neighbours, nvalues, sizeof(PointStore), &compare_points);
+        qsort(neighbours, nneighbours, sizeof(PointStore), &compare_points);
 
         grib_iterator_delete(iter);
     }
@@ -477,7 +478,7 @@ int grib_nearest_find_generic(
 
     /* Sanity check for sorting */
 #ifdef DEBUG
-    for (i = 0; i < nvalues - 1; ++i) {
+    for (i = 0; i < nneighbours - 1; ++i) {
         Assert(neighbours[i].m_dist <= neighbours[i + 1].m_dist);
     }
 #endif
