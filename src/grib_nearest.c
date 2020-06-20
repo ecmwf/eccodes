@@ -291,8 +291,8 @@ int grib_nearest_find_generic(
         return ret;
     nearest->values_count = nvalues;
 
-    // We need the radius to calculate the nearest distance. For an oblate earth
-    // approximate this using the average of the semimajor and semiminor axes
+    /* We need the radius to calculate the nearest distance. For an oblate earth
+       approximate this using the average of the semimajor and semiminor axes */
     if ((ret = grib_get_double(h, radius_keyname, &radiusInMetres)) == GRIB_SUCCESS &&
         !grib_is_missing(h, radius_keyname, &ret)) {
         radiusInKm = radiusInMetres/1000.0;
