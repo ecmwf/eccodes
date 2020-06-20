@@ -267,11 +267,11 @@ int grib_nearest_find_generic(
     const char* radius_keyname,
     const char* Ni_keyname,
     const char* Nj_keyname,
-    double**    out_lats,
-    int*        out_lats_count,
-    double**    out_lons,
-    int*        out_lons_count,
-    double**    out_distances,
+    double** out_lats,
+    int* out_lats_count,
+    double** out_lons,
+    int* out_lons_count,
+    double** out_distances,
 
     double* outlats, double* outlons,
     double* values, double* distances, int* indexes, size_t* len)
@@ -295,15 +295,16 @@ int grib_nearest_find_generic(
        approximate this using the average of the semimajor and semiminor axes */
     if ((ret = grib_get_double(h, radius_keyname, &radiusInMetres)) == GRIB_SUCCESS &&
         !grib_is_missing(h, radius_keyname, &ret)) {
-        radiusInKm = radiusInMetres/1000.0;
-    } else {
-        double minor=0, major=0;
+        radiusInKm = radiusInMetres / 1000.0;
+    }
+    else {
+        double minor = 0, major = 0;
         if ((ret = grib_get_double_internal(h, "earthMinorAxisInMetres", &minor)) != GRIB_SUCCESS) return ret;
         if ((ret = grib_get_double_internal(h, "earthMajorAxisInMetres", &major)) != GRIB_SUCCESS) return ret;
         if (grib_is_missing(h, "earthMinorAxisInMetres", &ret)) return GRIB_GEOCALCULUS_PROBLEM;
         if (grib_is_missing(h, "earthMajorAxisInMetres", &ret)) return GRIB_GEOCALCULUS_PROBLEM;
-        radiusInMetres = (major + minor)/2;
-        radiusInKm = radiusInMetres/1000.0;
+        radiusInMetres = (major + minor) / 2;
+        radiusInKm     = radiusInMetres / 1000.0;
     }
 
     neighbours = (PointStore*)grib_context_malloc(nearest->context, nvalues * sizeof(PointStore));
@@ -322,7 +323,7 @@ int grib_nearest_find_generic(
         size_t the_index = 0;
         int ilat = 0, ilon = 0;
         int idx_upper = 0, idx_lower = 0;
-        double lat1 = 0, lat2 = 0; /* inlat will be between these */
+        double lat1 = 0, lat2 = 0;     /* inlat will be between these */
         const double LAT_DELTA = 10.0; /* in degrees */
 
         if (grib_is_missing(h, Ni_keyname, &ret)) {
