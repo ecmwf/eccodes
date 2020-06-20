@@ -278,8 +278,7 @@ int grib_nearest_find_generic(
 {
     int ret = 0, i = 0;
     size_t nvalues = 0, nneighbours = 0;
-    long iradius;
-    double radius;
+    double radiusInMetres, radiusInKm;
     grib_iterator* iter = NULL;
     double lat = 0, lon = 0;
 
@@ -292,18 +291,20 @@ int grib_nearest_find_generic(
         return ret;
     nearest->values_count = nvalues;
 
-    if (grib_is_earth_oblate(h)) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Nearest neighbour functionality only supported for spherical earth.");
-        return GRIB_NOT_IMPLEMENTED;
+    // We need the radius to calculate the nearest distance. For an oblate earth
+    // approximate this using the average of the semimajor and semiminor axes
+    if ((ret = grib_get_double(h, radius_keyname, &radiusInMetres)) == GRIB_SUCCESS &&
+        !grib_is_missing(h, radius_keyname, &ret)) {
+        radiusInKm = radiusInMetres/1000.0;
+    } else {
+        double minor=0, major=0;
+        if ((ret = grib_get_double_internal(h, "earthMinorAxisInMetres", &minor)) != GRIB_SUCCESS) return ret;
+        if ((ret = grib_get_double_internal(h, "earthMajorAxisInMetres", &major)) != GRIB_SUCCESS) return ret;
+        if (grib_is_missing(h, "earthMinorAxisInMetres", &ret)) return GRIB_GEOCALCULUS_PROBLEM;
+        if (grib_is_missing(h, "earthMajorAxisInMetres", &ret)) return GRIB_GEOCALCULUS_PROBLEM;
+        radiusInMetres = (major + minor)/2;
+        radiusInKm = radiusInMetres/1000.0;
     }
-
-    if ((ret = grib_get_long_internal(h, radius_keyname, &iradius)) != GRIB_SUCCESS)
-        return ret;
-    if (grib_is_missing(h, radius_keyname, &ret)) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Key '%s' is missing", radius_keyname);
-        return ret ? ret : GRIB_GEOCALCULUS_PROBLEM;
-    }
-    radius = ((double)iradius) / 1000.0;
 
     neighbours = (PointStore*)grib_context_malloc(nearest->context, nvalues * sizeof(PointStore));
     for (i = 0; i < nvalues; ++i) {
@@ -377,7 +378,7 @@ int grib_nearest_find_generic(
                 /* Ignore latitudes too far from our point */
             }
             else {
-                double dist = geographic_distance_spherical(radius, inlon, inlat, lon, lat);
+                double dist = geographic_distance_spherical(radiusInKm, inlon, inlat, lon, lat);
                 if (dist < min_dist)
                     min_dist = dist;
                 /*printf("Candidate: lat=%.5f lon=%.5f dist=%f Idx=%ld Val=%f\n",lat,lon,dist,the_index,the_value);*/
