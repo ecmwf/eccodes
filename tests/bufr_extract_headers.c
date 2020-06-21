@@ -12,7 +12,7 @@
 #include <assert.h>
 
 #define MAX_KEYS 100
-
+#if 0
 int main(int argc, char* argv[])
 {
     char *filename;
@@ -38,8 +38,8 @@ int main(int argc, char* argv[])
     free(offsets);
     return 0;
 }
+#endif
 
-#if 0
 int main(int argc, char* argv[])
 {
     char *filename, *keys;
@@ -87,4 +87,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-#endif
