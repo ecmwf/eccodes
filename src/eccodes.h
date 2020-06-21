@@ -1281,6 +1281,16 @@ codes_handle* codes_grib_util_set_spec(codes_handle* h,
 int codes_bufr_extract_headers_malloc(codes_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len);
 
+/* EXPERIMENTAL FEATURE
+ * Build an array of offsets from input file.
+ * result = array of offsets with 'length' elements.
+ *          This array should be freed by the caller.
+ * length = number of messages found in the input file.
+ * strict = If 1 means fail if any message is invalid.
+ * returns 0 if OK, integer value on error.
+ */
+int codes_extract_offsets_malloc(grib_context* c, FILE* f, ProductKind product, off_t** offsets, size_t* length, int strict_mode);
+
 /* --------------------------------------- */
 #ifdef __cplusplus
 }

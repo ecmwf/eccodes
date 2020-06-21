@@ -15,6 +15,33 @@
 
 int main(int argc, char* argv[])
 {
+    char *filename;
+    int err = 0;
+    size_t num_messages = 0, i =0;
+    off_t* offsets = NULL;
+    codes_context* c = codes_context_get_default();
+    const int strict_mode = 1;
+    FILE* fp;
+
+    /* Usage: prog file */
+    assert(argc == 2);
+
+    filename = argv[1];
+    fp = fopen(filename, "rb");
+    assert(fp);
+    err = codes_extract_offsets_malloc(c, fp, PRODUCT_GRIB, &offsets, &num_messages, strict_mode);
+    assert(!err);
+    
+    for (i = 0; i < num_messages; ++i) {
+        printf("Message %lu: %lu\n", i, offsets[i]);
+    }
+    free(offsets);
+    return 0;
+}
+
+#if 0
+int main(int argc, char* argv[])
+{
     char *filename, *keys;
     int i, err = 0;
     int num_messages                = 0;
@@ -60,3 +87,4 @@ int main(int argc, char* argv[])
 
     return 0;
 }
+#endif
