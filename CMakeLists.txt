@@ -18,7 +18,7 @@
 
 cmake_minimum_required( VERSION 3.6 FATAL_ERROR )
 
-project( eccodes VERSION 2.18.0 LANGUAGES C )
+project( eccodes VERSION 2.19.0 LANGUAGES C )
 
 set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake" )
 
