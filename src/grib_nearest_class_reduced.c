@@ -230,10 +230,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         long row_count, ilon_first, ilon_last;
 
         if (self->global) {
-            while (inlon < 0)
-                inlon += 360;
-            while (inlon > 360)
-                inlon -= 360;
+            inlon = normalise_longitude_in_degrees(inlon);
         }
         else {
             /* TODO: Experimental */
@@ -412,7 +409,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         kk = 0;
         for (jj = 0; jj < 2; jj++) {
             for (ii = 0; ii < 2; ii++) {
-                self->distances[kk] = grib_nearest_distance(radius, inlon, inlat,
+                self->distances[kk] = geographic_distance_spherical(radius, inlon, inlat,
                                                             self->lons[self->k[kk]], self->lats[self->j[jj]]);
                 kk++;
             }
@@ -551,7 +548,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         kk = 0;
         for (ii = 0; ii < 2; ii++) {
             for (jj = 0; jj < 2; jj++) {
-                self->distances[kk] = grib_nearest_distance(radius, inlon, inlat,
+                self->distances[kk] = geographic_distance_spherical(radius, inlon, inlat,
                                                             self->lons[self->k[kk]], self->lats[self->j[jj]]);
                 kk++;
             }

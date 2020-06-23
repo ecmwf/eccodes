@@ -12,11 +12,25 @@ assert len(sys.argv) > 2
 # METAR and TAF are also experimental
 EXCLUDED = ['grib3', 'codetables', 'taf', 'metar']
 
-dirs = [os.path.realpath(x) for x in sys.argv[1:-1]]
-print(dirs)
+pos = 1
+if sys.argv[1] == '-exclude':
+    product = sys.argv[2]
+    if product == 'bufr':
+        EXCLUDED.append(product)
+    elif product == 'grib':
+        EXCLUDED.extend(['grib1', 'grib2'])
+    else:
+        assert False, 'Invalid product %s' % product
+    pos = 3
+
+dirs = [os.path.realpath(x) for x in sys.argv[pos:-1]]
+print('Directories: ', dirs)
+print('Excluding: ', EXCLUDED)
 
 FILES = {}
+SIZES = {}
 NAMES = []
+CHUNK = 5500 * 1000  # chunk size in bytes
 
 # Binary to ASCII function. Different in Python 2 and 3
 try:
@@ -26,20 +40,28 @@ except:
     ascii = lambda x: str(x)           # Python 2
 
 
-# The last argument is the path of the generated C file
-output_file_path = sys.argv[-1]
-g = open(output_file_path, "w")
+def get_outfile_name(base, count):
+    return base + "_" + str(count).zfill(3) + ".c"
+
+
+# The last argument is the base name of the generated C file(s)
+output_file_base = sys.argv[-1]
+totsize = 0  # amount written
+fcount = 0
+opath = get_outfile_name(output_file_base, fcount)
+print('MEMFS: Generating output: ', opath)
+g = open(opath, "w")
 
 for directory in dirs:
 
-    # print("---->", directory)
+    # print("MEMFS: directory=", directory)
     dname = os.path.basename(directory)
     NAMES.append(dname)
 
     for dirpath, dirnames, files in os.walk(directory, followlinks=True):
-        for ex in EXCLUDED:
-            if ex in dirnames:
-                print('Note: eccodes memfs.py script: %s/%s will not be included.' % (dirpath,ex))
+        # for ex in EXCLUDED:
+        #    if ex in dirnames:
+        #        print('Note: eccodes memfs.py script: %s/%s will not be included.' % (dirpath,ex))
 
         # Prune the walk by modifying the dirnames in-place
         dirnames[:] = [dirname for dirname in dirnames if dirname not in EXCLUDED]
@@ -49,34 +71,51 @@ for directory in dirs:
             if ext not in ['.def', '.table', '.tmpl']:
                 continue
 
-            full = full.replace("\\","/")
+            fsize = os.path.getsize(full)
+            totsize += fsize
+            full = full.replace("\\", "/")
             fname = full[full.find("/%s/" % (dname,)):]
-            #print("MEMFS add", fname)
+            #print("MEMFS: Add ", fname)
             name = re.sub(r'\W', '_', fname)
 
             assert name not in FILES
+            assert name not in SIZES
             FILES[name] = fname
+            SIZES[name] = fsize
 
-            print('static const unsigned char %s[] = {' % (name,), file=g)
+            print('const unsigned char %s[] = {' % (name,), file=g)
 
             with open(full, 'rb') as f:
                 i = 0
-                #Python 2
-                #fcont = f.read().encode("hex")
+                # Python 2
+                #contents_hex = f.read().encode("hex")
 
-                #Python 2 and 3
-                fcont = binascii.hexlify(f.read())
+                # Python 2 and 3
+                contents_hex = binascii.hexlify(f.read())
 
                 # Read two characters at a time and convert to C hex
                 # e.g. 23 -> 0x23
-                for n in range(0, len(fcont), 2):
-                    twoChars = ascii(fcont[n:n+2])
+                for n in range(0, len(contents_hex), 2):
+                    twoChars = ascii(contents_hex[n:n + 2])
                     print("0x%s," % (twoChars,), end="", file=g)
                     i += 1
                     if (i % 20) == 0:
                         print("", file=g)
 
             print('};', file=g)
+            if totsize >= CHUNK:
+                g.close()
+                fcount += 1
+                opath = get_outfile_name(output_file_base, fcount)
+                print('MEMFS: Generating output: ', opath)
+                g = open(opath, "w")
+                totsize = 0
+
+g.close()
+assert fcount == 3
+opath = output_file_base + "_final.c"
+print('MEMFS: Generating output: ', opath)
+g = open(opath, "w")
 
 print("""
 #include "eccodes_config.h"
@@ -89,7 +128,13 @@ print("""
 #include <errno.h>
 #include <string.h>
 #include "eccodes_windef.h"
+""", file=g)
 
+# Write extern variables with sizes
+for k, v in SIZES.items():
+    print('extern const unsigned char %s[%d];' % (k, v), file=g)
+
+print("""
 struct entry {
     const char* path;
     const unsigned char* content;
@@ -99,7 +144,7 @@ struct entry {
 items = [(v, k) for k, v in FILES.items()]
 
 for k, v in sorted(items):
-    print ('{"/MEMFS%s", &%s[0], sizeof(%s) / sizeof(%s[0]) },' % (k, v, v, v), file=g)
+    print('{"/MEMFS%s", &%s[0], sizeof(%s) / sizeof(%s[0]) },' % (k, v, v, v), file=g)
 
 
 print("""};
@@ -252,4 +297,5 @@ FILE* codes_memfs_open(const char* path) {
 }
 
 """, file=g)
-print ('Created ',output_file_path)
+
+print('Finished')

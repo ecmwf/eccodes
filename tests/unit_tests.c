@@ -41,8 +41,8 @@ static void check_float_representation(const double val, const double expected, 
 static void test_get_git_sha1()
 {
     const char* sha1 = grib_get_git_sha1();
-    printf("Testing: test_get_git_sha1...\n");
-    assert(sha1 != NULL);
+    Assert(sha1 != NULL);
+    printf("Testing: test_get_git_sha1... %s\n", sha1);
 }
 
 static void test_grib_nearest_smaller_ibmfloat()
@@ -1389,39 +1389,36 @@ static void test_string_splitting()
     printf("Testing: test_string_splitting...\n");
 
     list           = string_split(input, "|");
-    assert(list);
+    if (!list) { assert(!"List is NULL"); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 4);
-    if (strcmp(list[0], "Born") != 0) assert(0);
-    if (strcmp(list[1], "To") != 0) assert(0);
-    if (strcmp(list[2], "Be") != 0) assert(0);
-    if (strcmp(list[3], "Wild") != 0) assert(0);
-    assert(list[4] == NULL);
-    for (i = 0; list[i] != NULL; ++i)
-        free(list[i]);
+    if (!list[0] || !STR_EQ(list[0], "Born")) Assert(0);
+    if (!list[1] || !STR_EQ(list[1], "To"))   Assert(0);
+    if (!list[2] || !STR_EQ(list[2], "Be"))   Assert(0);
+    if (!list[3] || !STR_EQ(list[3], "Wild")) Assert(0);
+    Assert(list[4] == NULL);
+    for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
 
     strcpy(input, "12345|a gap|");
     list = string_split(input, "|");
-    assert(list);
+    if (!list) { assert(0); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 2);
-    if (strcmp(list[0], "12345") != 0) assert(0);
-    if (strcmp(list[1], "a gap") != 0) assert(0);
+    if (!list[0] || !STR_EQ(list[0], "12345")) Assert(0);
+    if (!list[1] || !STR_EQ(list[1], "a gap")) Assert(0);
     assert(list[2] == NULL);
-    for (i = 0; list[i] != NULL; ++i)
-        free(list[i]);
+    for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
 
     strcpy(input, "Steppenwolf");
     list = string_split(input, ",");
-    assert(list);
+    if (!list) { assert(0); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     assert(i == 1);
-    if (strcmp(list[0], "Steppenwolf") != 0) assert(0);
+    if (!list[0] || !STR_EQ(list[0], "Steppenwolf")) Assert(0);
     assert(list[1] == NULL);
-    for (i = 0; list[i] != NULL; ++i)
-        free(list[i]);
+    for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
 
     /* Note: currently cannot cope with */
@@ -1469,21 +1466,21 @@ static void test_concept_condition_strings()
     printf("Testing: test_concept_condition_strings...\n");
 
     err = get_concept_condition_string(h, "typeOfLevel", NULL, result);
-    assert(!err);
-    assert(strcmp(result, "typeOfFirstFixedSurface=1,typeOfSecondFixedSurface=255") == 0);
+    Assert(!err);
+    Assert(strcmp(result, "typeOfFirstFixedSurface=1,typeOfSecondFixedSurface=255") == 0);
 
     err = get_concept_condition_string(h, "paramId", NULL, result);
-    assert(!err);
-    assert(strcmp(result, "discipline=0,parameterCategory=0,parameterNumber=0") == 0);
+    Assert(!err);
+    Assert(strcmp(result, "discipline=0,parameterCategory=0,parameterNumber=0") == 0);
 
     err = get_concept_condition_string(h, "gridType", NULL, result);
-    assert(!err);
+    Assert(!err);
     /*printf("%s\n", result);*/
-    assert(strcmp(result, "gridDefinitionTemplateNumber=0,PLPresent=0") == 0);
+    Assert(strcmp(result, "gridDefinitionTemplateNumber=0,PLPresent=0") == 0);
 
     err = get_concept_condition_string(h, "stepType", NULL, result);
-    assert(!err);
-    assert(strcmp(result, "selectStepTemplateInstant=1,stepTypeInternal=instant") == 0);
+    Assert(!err);
+    Assert(strcmp(result, "selectStepTemplateInstant=1,stepTypeInternal=instant") == 0);
 
     grib_handle_delete(h);
 }

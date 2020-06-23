@@ -168,6 +168,7 @@ int grib_handle_delete(grib_handle* h)
 
         grib_buffer_delete(ct, h->buffer);
         grib_section_delete(ct, h->root);
+        grib_context_free(ct, h->gts_header);
 
         grib_context_log(ct, GRIB_LOG_DEBUG, "grib_handle_delete: deleting handle %p", h);
         grib_context_free(ct, h);
@@ -783,7 +784,6 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
         if (gts_header) memcpy(gl->gts_header, gts_header, gtslen);
         gl->gts_header_len = gtslen;
         grib_context_free(c, save_gts_header);
-        gtslen = 0;
     }
     else {
         gl->gts_header = NULL;

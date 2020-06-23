@@ -4140,3 +4140,73 @@ void unrotate(const double inlat, const double inlon,
     *outlat = ret_lat;
     *outlon = ret_lon;
 }
+
+#define RADIAN(x) ((x)*acos(0.0) / 90.0)
+
+/* radius is in km, angles in degrees */
+/* Spherical Law of Cosines */
+double geographic_distance_spherical(double radius, double lon1, double lat1, double lon2, double lat2)
+{
+    double rlat1 = RADIAN(lat1);
+    double rlat2 = RADIAN(lat2);
+    double rlon1 = lon1;
+    double rlon2 = lon2;
+    double a;
+
+    if (lat1 == lat2 && lon1 == lon2) {
+        return 0.0; /* the two points are identical */
+    }
+
+    if (rlon1 >= 360) rlon1 -= 360.0;
+    rlon1 = RADIAN(rlon1);
+    if (rlon2 >= 360) rlon2 -= 360.0;
+    rlon2 = RADIAN(rlon2);
+
+    a = sin(rlat1) * sin(rlat2) + cos(rlat1) * cos(rlat2) * cos(rlon2 - rlon1);
+    DebugAssert(a >= -1 && a <= 1);
+
+    return radius * acos(a);
+}
+
+/* major and minor axes in km, angles in degrees */
+double geographic_distance_ellipsoid(double major, double minor, double lon1, double lat1, double lon2, double lat2)
+{
+    /* Lambert's formula */
+    double rlat1 = RADIAN(lat1);
+    double rlat2 = RADIAN(lat2);
+    double rlon1 = RADIAN(lon1);
+    double rlon2 = RADIAN(lon2);
+    double deltaLat = rlat2 - rlat1;
+    double deltaLon = rlon2 - rlon1;
+    double sinDlat = sin(deltaLat/2.0);
+    double sinDlon = sin(deltaLon/2.0);
+    double sin2Dlat = sinDlat*sinDlat;
+    double sin2Dlon = sinDlon*sinDlon;
+    
+    double a = sin2Dlat + cos(rlat1) * cos(rlat2) * sin2Dlon;
+    double c = 2 * atan2(sqrt(a), sqrt(1.0-a));
+    double f = (major - minor)/major; /*flattening*/
+    
+    double latr1 = atan( (1.0-f)*tan(rlat1) ); /*Reduced latitude1*/
+    double latr2 = atan( (1.0-f)*tan(rlat2) ); /*Reduced latitude2*/
+    double P = (latr1+latr2)/2;
+    double Q = (latr2-latr1)/2;
+    double sinP = sin(P);
+    double sin2P = sinP*sinP;
+    double cosQ = cos(Q);
+    double cos2Q = cosQ*cosQ;
+    double cosc2 = cos(c/2);
+    double cos2c2 = cosc2*cosc2;
+    
+    double sinQ = sin(Q);
+    double sin2Q = sinQ*sinQ;
+    double cosP = cos(P);
+    double cos2P = cosP*cosP;
+    double sinc2 = sin(c/2);
+    double sin2c2 = sinc2*sinc2;
+    
+    double X = (c - sin(c))* sin2P * cos2Q / cos2c2;
+    double Y = (c + sin(c))*sin2Q*cos2P/sin2c2;
+    double dist = major * (c - f*(X+Y)/2);
+    return dist;
+}

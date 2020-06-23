@@ -124,7 +124,7 @@ static void init_class(grib_dumper_class* c) {}
 static int init(grib_dumper* d)
 {
     grib_dumper_bufr_decode_C* self = (grib_dumper_bufr_decode_C*)d;
-    grib_context* c                 = d->handle->context;
+    grib_context* c                 = d->context;
     self->section_offset            = 0;
     self->empty                     = 1;
     d->count                        = 1;
@@ -140,7 +140,7 @@ static int destroy(grib_dumper* d)
     grib_dumper_bufr_decode_C* self = (grib_dumper_bufr_decode_C*)d;
     grib_string_list* next          = self->keys;
     grib_string_list* cur           = NULL;
-    grib_context* c                 = d->handle->context;
+    grib_context* c                 = d->context;
     while (next) {
         cur  = next;
         next = next->next;
@@ -482,13 +482,13 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_decode_C* self = (grib_dumper_bufr_decode_C*)d;
-    char** values                   = NULL;
-    size_t size                     = 0;
-    grib_context* c                 = NULL;
-    int err                         = 0;
-    long count                      = 0;
-    int r                           = 0;
-    grib_handle* h                  = grib_handle_of_accessor(a);
+    char** values;
+    size_t size = 0, i = 0;
+    grib_context* c    = NULL;
+    int err            = 0;
+    long count         = 0;
+    int r              = 0;
+    grib_handle* h     = grib_handle_of_accessor(a);
 
     c = a->context;
 
@@ -542,6 +542,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         depth -= 2;
     }
 
+    for (i = 0; i < size; i++) grib_context_free(c, values[i]);
     grib_context_free(c, values);
     (void)err; /* TODO */
 }
@@ -574,8 +575,10 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     err = grib_unpack_string(a, value, &size);
     p   = value;
     r   = compute_bufr_key_rank(h, self->keys, a->name);
-    if (grib_is_missing_string(a, (unsigned char*)value, size))
+    if (grib_is_missing_string(a, (unsigned char*)value, size)) {
+        grib_context_free(c, value);
         return;
+    }
 
     while (*p) {
         if (!isprint(*p))

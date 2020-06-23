@@ -415,6 +415,12 @@ static double laplam(bif_trunc_t* bt, const double val[])
      * Now, itab2 contains all possible values of i*i+j*j, and itab1 contains
      * the rank of all i*i+j*j
      */
+    if (lmax <= 0) {
+        free(itab1);
+        free(itab2);
+        Assert(!"data_g2bifourier_packing::laplam: lmax must be > 0");
+        return 0;
+    }
     znorm = (double*)calloc(lmax, sizeof(double));
     zw    = (double*)malloc(sizeof(double) * lmax);
 
@@ -634,7 +640,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_accessor_data_g2bifourier_packing* self = (grib_accessor_data_g2bifourier_packing*)a;
     grib_handle* gh                              = grib_handle_of_accessor(a);
 
-    unsigned char* buf  = (unsigned char*)gh->buffer->data;
+    unsigned char* buf  = NULL;
     unsigned char* hres = NULL;
     unsigned char* lres = NULL;
     unsigned long packed_offset;

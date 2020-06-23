@@ -49,9 +49,9 @@ static void init()
 #define HDF5 0x89484446
 #define WRAP 0x57524150
 
-#define GRIB_API_READS_BUFR 1
-#define GRIB_API_READS_HDF5 1
-#define GRIB_API_READS_WRAP 1
+#define ECCODES_READS_BUFR 1
+#define ECCODES_READS_HDF5 1
+#define ECCODES_READS_WRAP 1
 
 
 typedef struct alloc_buffer
@@ -399,6 +399,7 @@ static int read_GRIB(reader* r)
 
         default:
             r->seek_from_start(r->read_data, r->offset + 4);
+            grib_buffer_delete(c, buf);
             return GRIB_UNSUPPORTED_EDITION;
             break;
     }
@@ -898,13 +899,25 @@ static int _read_any(reader* r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_
 
     return err;
 }
+
 static int read_any(reader* r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
 {
     int result = 0;
+
+#ifndef ECCODES_EACH_THREAD_OWN_FILE
+    /* If several threads can open the same file, then we need the locks
+     * so each thread gets its own message. Otherwise if threads are passed
+     * different files, then the lock is not needed
+     */
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex1);
+#endif
+
     result = _read_any(r, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
+
+#ifndef ECCODES_EACH_THREAD_OWN_FILE
     GRIB_MUTEX_UNLOCK(&mutex1);
+#endif
     return result;
 }
 
@@ -1517,7 +1530,7 @@ int grib_read_any_headers_only_from_file(grib_context* ctx, FILE* f, void* buffe
     r.alloc           = &user_provider_buffer;
     r.headers_only    = 1;
 
-    err = read_any(&r, 1, GRIB_API_READS_BUFR, GRIB_API_READS_HDF5, GRIB_API_READS_WRAP);
+    err = read_any(&r, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
 
     *len = r.message_size;
 
@@ -1546,7 +1559,7 @@ int grib_read_any_from_file(grib_context* ctx, FILE* f, void* buffer, size_t* le
 
     offset = ftello(f);
 
-    err = read_any(&r, 1, GRIB_API_READS_BUFR, GRIB_API_READS_HDF5, GRIB_API_READS_WRAP);
+    err = read_any(&r, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
 
     if (err == GRIB_BUFFER_TOO_SMALL) {
         if (fseeko(f, offset, SEEK_SET))
@@ -1616,7 +1629,7 @@ int grib_read_any_from_memory_alloc(grib_context* ctx, unsigned char** data, siz
     r.alloc           = &context_allocate_buffer;
     r.headers_only    = 0;
 
-    err     = read_any(&r, 1, GRIB_API_READS_BUFR, GRIB_API_READS_HDF5, GRIB_API_READS_WRAP);
+    err     = read_any(&r, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
     *buffer = u.buffer;
     *length = u.length;
 
@@ -1649,7 +1662,7 @@ int grib_read_any_from_memory(grib_context* ctx, unsigned char** data, size_t* d
     r.alloc           = &user_provider_buffer;
     r.headers_only    = 0;
 
-    err  = read_any(&r, 1, GRIB_API_READS_BUFR, GRIB_API_READS_HDF5, GRIB_API_READS_WRAP);
+    err  = read_any(&r, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
     *len = r.message_size;
 
     *data_length = m.data_len;

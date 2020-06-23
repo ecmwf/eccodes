@@ -21,6 +21,12 @@ JSON_CHECK=""
 if command -v $JSON_VERIF >/dev/null 2>&1; then
   JSON_CHECK=$JSON_VERIF
 fi
+# ECC-1119: Check the json_xs command actually works!
+set +e
+echo '[]' | json_xs > /dev/null 2>&1
+if [ $? -ne 0 ]; then JSON_CHECK=""; fi
+set -e
+echo "Using $JSON_CHECK ..."
 
 cd ${data_dir}
 
@@ -88,8 +94,8 @@ grep -q '"latitudeOfLastGridPointInDegrees": -89.463' $tempLog
 # Check output from all our downloaded GRIBs
 # ----------------------------------------------------
 grib_files=`cat ${data_dir}/grib_data_files.txt`
-for file in ${grib_files}
-do
+for file in ${grib_files}; do
+  if [ "$file" = "bad.grib" ]; then continue; fi
   input=${data_dir}/$file
   ${tools_dir}/grib_ls -j $input > $tempLog
   if test "x$JSON_CHECK" != "x"; then

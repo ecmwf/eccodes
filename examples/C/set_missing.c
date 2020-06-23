@@ -36,13 +36,13 @@ int main(int argc, char** argv)
 
     in = fopen(infile, "rb");
     if (!in) {
-        printf("ERROR: unable to open input file %s\n", infile);
+        fprintf(stderr, "Error: unable to open input file %s\n", infile);
         return 1;
     }
 
     out = fopen(outfile, "wb");
     if (!out) {
-        printf("ERROR: unable to open output file %s\n", outfile);
+        fprintf(stderr, "Error: unable to open output file %s\n", outfile);
         fclose(in);
         return 1;
     }
@@ -50,7 +50,7 @@ int main(int argc, char** argv)
     /* create a new handle from a message in a file */
     h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     if (h == NULL) {
-        printf("Error: unable to create handle from file %s\n", infile);
+        fprintf(stderr, "Error: unable to create handle from file %s\n", infile);
     }
 
     CODES_CHECK(codes_set_string(h, "typeOfFirstFixedSurface", str, &str_len), 0);

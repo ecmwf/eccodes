@@ -980,6 +980,7 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
     index->count = index_count;
 
     fclose(fh);
+    grib_context_free(c, files);
     return index;
 }
 
@@ -1617,7 +1618,13 @@ grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* er
     grib_handle* h = NULL;
     typedef grib_handle* (*message_new_proc)(grib_context*, FILE*, int, int*);
     message_new_proc message_new = NULL;
-    Assert(field->file);
+
+    if (!field->file) {
+        grib_context_log(grib_context_get_default(), GRIB_LOG_ERROR, "codes_index_get_handle: NULL file handle");
+        *err = GRIB_INTERNAL_ERROR;
+        return NULL;
+    }
+
     grib_file_open(field->file->name, "r", err);
 
     if (*err != GRIB_SUCCESS)
@@ -1775,8 +1782,11 @@ int grib_index_dump_file(FILE* fout, const char* filename)
             return err;
         f = file;
         while (f) {
+            grib_file* prev = f;
             fprintf(fout, "GRIB File: %s\n", f->name);
+            grib_context_free(c, f->name);
             f = f->next;
+            grib_context_free(c, prev);
         }
         fclose(fh);
     }

@@ -250,20 +250,23 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
                      a->name, number_of_points);
 
     if (latitude_of_first_point == 0) {
-        if (number_of_values && !coded_vals)
-            return GRIB_INTERNAL_ERROR;
-        for (i = 0; i < number_of_values; i++)
-            val[i] = coded_vals[i];
-        for (i = number_of_values; i < number_of_points; i++)
-            val[i] = coded_vals[number_of_values - 1];
+        for (i = 0; i < number_of_values; i++) {
+            DebugAssert(coded_vals);
+            if (coded_vals) val[i] = coded_vals[i];
+        }
+        for (i = number_of_values; i < number_of_points; i++) {
+            DebugAssert(coded_vals);
+            if (coded_vals) val[i] = coded_vals[number_of_values - 1];
+        }
     }
     else {
-        if ((ni-1) && !coded_vals)
-            return GRIB_INTERNAL_ERROR;
-        for (i = 0; i < ni - 1; i++)
-            val[i] = coded_vals[0];
-        for (i = ni - 1; i < number_of_points; i++)
-            val[i] = coded_vals[i - ni + 1];
+        for (i = 0; i < ni - 1; i++) {
+            DebugAssert(coded_vals);
+            if (coded_vals) val[i] = coded_vals[0];
+        }
+        for (i = ni - 1; i < number_of_points; i++) {
+            if (coded_vals && (i - ni + 1) < number_of_values) val[i] = coded_vals[i - ni + 1];
+        }
     }
 
     *len = number_of_points;

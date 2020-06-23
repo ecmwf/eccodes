@@ -31,6 +31,7 @@ grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize)
     v->n       = 0;
     v->incsize = incsize;
     v->v       = (void**)grib_context_malloc_clear(c, sizeof(char*) * size);
+    v->context = c;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "grib_oarray_new unable to allocate %d bytes\n", sizeof(char*) * size);
@@ -39,10 +40,10 @@ grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize)
     return v;
 }
 
-grib_oarray* grib_oarray_resize(grib_context* c, grib_oarray* v)
+static grib_oarray* grib_oarray_resize(grib_oarray* v)
 {
-    int newsize = v->incsize + v->size;
-
+    const int newsize = v->incsize + v->size;
+    grib_context* c = v->context;
     if (!c)
         c = grib_context_get_default();
 
@@ -64,7 +65,7 @@ grib_oarray* grib_oarray_push(grib_context* c, grib_oarray* v, void* val)
         v = grib_oarray_new(c, start_size, start_incsize);
 
     if (v->n >= v->size)
-        v = grib_oarray_resize(c, v);
+        v = grib_oarray_resize(v);
     v->v[v->n] = val;
     v->n++;
     return v;
@@ -75,7 +76,7 @@ void grib_oarray_delete(grib_context* c, grib_oarray* v)
     if (!v)
         return;
     if (!c)
-        grib_context_get_default();
+        c = grib_context_get_default();
     if (v->v)
         grib_context_free(c, v->v);
     grib_context_free(c, v);
@@ -87,7 +88,7 @@ void grib_oarray_delete_content(grib_context* c, grib_oarray* v)
     if (!v || !v->v)
         return;
     if (!c)
-        grib_context_get_default();
+        c = grib_context_get_default();
     for (i = 0; i < v->n; i++) {
         if (v->v[i])
             grib_context_free(c, v->v[i]);

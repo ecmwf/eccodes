@@ -96,6 +96,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_codetable.c
     grib_accessor_class_codetable_units.c
     grib_accessor_class_codetable_title.c
+    grib_accessor_class_step_human_readable.c
     grib_accessor_class_count_file.c
     grib_accessor_class_count_total.c
     grib_accessor_class_double.c
@@ -235,6 +236,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_g2_chemical.c
     grib_accessor_class_g2_mars_labeling.c
     grib_accessor_class_md5.c
+    grib_accessor_class_proj_string.c
     grib_jasper_encoding.c
     grib_openjpeg_encoding.c
     action_class_set_missing.c
@@ -344,10 +346,14 @@ list( APPEND grib_api_srcs
     grib_nearest_class_latlon_reduced.c
     grib_nearest_class_sh.c
     grib_nearest_class_lambert_conformal.c
+    grib_nearest_class_lambert_azimuthal_equal_area.c
+    grib_nearest_class_mercator.c
     grib_nearest_class_polar_stereographic.c
+    grib_nearest_class_space_view.c
     grib_iterator_class_polar_stereographic.c
     grib_iterator_class_lambert_azimuthal_equal_area.c
     grib_iterator_class_lambert_conformal.c
+    grib_iterator_class_mercator.c
     grib_iterator.c
     grib_iterator_class.c
     grib_iterator_class_gaussian.c
@@ -399,8 +405,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_data_g2bifourier_packing.c
     eccodes_windef.h
     # We ship our own generated lex/yacc C files
-    grib_yacc.c  grib_lex.c
-)
+    grib_yacc.c  grib_lex.c )
 
 list( APPEND grib_api_extra_srcs
     grib_bits_fast_big_endian.c grib_bits_any_endian.c
@@ -410,8 +415,7 @@ list( APPEND grib_api_extra_srcs
     encode_double_array.c
     grib_bits_ibmpow.c
     grib_bits_ibmpow_opt.c
-    minmax_val.c
-)
+    minmax_val.c )
 
 configure_file( grib_api_version.c.in grib_api_version.c @ONLY )
 configure_file( eccodes_version.h.in eccodes_version.h @ONLY )
@@ -426,19 +430,19 @@ configure_file( eccodes_version.h.in eccodes_version.h @ONLY )
 #                    YACC_FLAGS  "-y"
 #                    DEPENDANT action.c )
 
-if(HAVE_MEMFS)
+if( HAVE_MEMFS )
     list(APPEND ECCODES_EXTRA_LIBRARIES eccodes_memfs)
 endif()
 
 
-ecbuild_add_library(TARGET    eccodes
-                    SOURCES   grib_api_version.c
+ecbuild_add_library( TARGET    eccodes
+                     SOURCES   grib_api_version.c
                               # griby.c gribl.c
                               ${grib_api_srcs}
-                    GENERATED grib_api_version.c
-                    LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
-                    TEMPLATES ${grib_api_extra_srcs}
-                    INSTALL_HEADERS_LIST
+                     GENERATED grib_api_version.c
+                     LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
+                     TEMPLATES ${grib_api_extra_srcs}
+                     INSTALL_HEADERS_LIST
                               grib_api.h
                               eccodes.h
                               eccodes_windef.h

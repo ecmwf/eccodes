@@ -1495,7 +1495,7 @@ uerra, eswi-an: an.sp.sfc.grib2, field 1 [surface_pressure_sfc]: surface_pressur
          {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 8},
          {NULL, },
       },
-      {&daily_average, &predefined_thickness},
+      {&daily_average, &predefined_thickness, &resolution_s2s},
    },
 /* 
    S2S/CAWCR: total_column_water_sfc.glob minimum value 0.00832421 is not in [0.01,1]
@@ -1521,7 +1521,7 @@ warning: s2s.z_tigge_c_kwbc_20090829000000_ncep_prod_pf_sl_0024_003_0000_tcw.gri
          {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 8},
          {NULL, },
       },
-      {&daily_average, &predefined_thickness},
+      {&daily_average, &predefined_thickness, &resolution_s2s},
    },
 
    {
@@ -1567,7 +1567,7 @@ s2s/ammc: warning: s2s.2t_20151224_26.grib2, field 12 [surface_air_temperature_s
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 103},
          {NULL, },
       },
-      {&daily_average, &given_level},
+      {&daily_average, &given_level, &resolution_s2s},
    },
 
    {
@@ -1614,7 +1614,7 @@ s2s/ammc: warning: s2s.2t_20151224_26.grib2, field 12 [surface_air_temperature_s
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 103},
          {NULL, },
       },
-      {&daily_average, &given_level},
+      {&daily_average, &given_level, &resolution_s2s},
    },
 /* 
    S2S/CAWCR: skin_temperature_sfc.glob maximum value 309.28 is not in [310,355]
@@ -1639,7 +1639,7 @@ uerra/egrr/det/an: skin_temperature_sfc minimum value 266.875 is not in [160,250
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&daily_average, &predefined_level},
+      {&daily_average, &predefined_level, &resolution_s2s},
    },
 
 /* 
@@ -1842,7 +1842,7 @@ s2s_prod/ammc/enfo:warning: s2s.st20_20151004_4.grib2, field 61 [soil_temperatur
          {"scaledValueOfSecondFixedSurface", GRIB_TYPE_LONG, 10},
          {NULL, },
       },
-      {&daily_average, &given_thickness, &has_bitmap},
+      {&daily_average, &given_thickness, &has_bitmap, &resolution_s2s},
    },
 /* 
    S2S/CAWCR: snow_depth_water_equivalent_sfc.glob maximum value 9066.25 is not in [10000,15000]
@@ -1866,7 +1866,7 @@ warning: s2s.z_tigge_c_kwbc_19990817000000_ncep_prod_cf_sl_0024_000_0000_sd.grib
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&daily_average, &predefined_level},
+      {&daily_average, &predefined_level, &resolution_s2s},
    },
 
 /*s2s/isac:warning: s2s.z_s2s_c_isac_201510190000_glob_prod_cf_0744_00.sl.grib2, field 25 [snow_depth_water_equivalent_sfc.glob]: snow_depth_water_equivalent_sfc.glob maximum value 118.824
@@ -1894,7 +1894,7 @@ warning: s2s.z_tigge_c_kwbc_19990817000000_ncep_prod_cf_sl_0024_000_0000_sd.grib
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&daily_average, &predefined_level},
+      {&daily_average, &predefined_level, &resolution_s2s},
    },
 
  /*
@@ -1926,7 +1926,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
          {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 8},
          {NULL, },
       },
-      {&daily_average, &predefined_thickness},
+      {&daily_average, &predefined_thickness, &resolution_s2s},
    },
 
 /*
@@ -1957,7 +1957,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
          {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 8},
          {NULL, },
       },
-      {&daily_average, &predefined_thickness},
+      {&daily_average, &predefined_thickness, &resolution_s2s},
    },
 
    {
@@ -2003,7 +2003,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &predefined_level, &has_bitmap, &resolution_s2s},
    },
 
    {
@@ -2027,7 +2027,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&daily_average, &predefined_level},
+      {&daily_average, &predefined_level, &resolution_s2s},
    },
 
 /*
@@ -2055,7 +2055,7 @@ s2s/ammc/enfo:s2s.tcc_20151004_9.grib2, field 21 [total_cloud_cover_sfc.glob]: t
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&daily_average, &predefined_level, &has_bitmap},
+      {&daily_average, &predefined_level, &has_bitmap, &resolution_s2s},
    },
 
    {
@@ -3755,7 +3755,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"scaledValueOfFirstFixedSurface", GRIB_TYPE_LONG, 29315},
          {NULL, },
       },
-      {&daily_average, &given_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap, &resolution_s2s_ocean},
    },
    {
       "average_salinity_in_the_upper_300_m_o2d.s2",
@@ -3780,7 +3780,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"scaledValueOfSecondFixedSurface", GRIB_TYPE_LONG, 300},
          {NULL, },
       },
-      {&daily_average, &given_thickness, &has_bitmap},
+      {&daily_average, &given_thickness, &has_bitmap, &resolution_s2s_ocean},
    },
    {
       "mean_sea_water_temperature_in_the_upper_300_m_o2d.s2",
@@ -3805,7 +3805,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"scaledValueOfSecondFixedSurface", GRIB_TYPE_LONG, 300},
          {NULL, },
       },
-      {&daily_average, &given_thickness, &has_bitmap},
+      {&daily_average, &given_thickness, &has_bitmap, &resolution_s2s_ocean},
    },
    {
       "mean_sea_water_potential_temperature_in_the_upper_300_m_o2d.s2",
@@ -3830,7 +3830,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"scaledValueOfSecondFixedSurface", GRIB_TYPE_LONG, 300},
          {NULL, },
       },
-      {&daily_average, &given_thickness, &has_bitmap},
+      {&daily_average, &given_thickness, &has_bitmap, &resolution_s2s_ocean},
    },
    {
       "ocean_mixed_layer_thickness_defined_by_sigma_theta_0.01_kg/m3_o2d.s2",
@@ -3852,7 +3852,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &given_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap, &resolution_s2s_ocean},
    },
    {
       "eastward_sea_water_velocity_o2d.s2",
@@ -3874,7 +3874,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &given_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap, &resolution_s2s_ocean},
    },
    {
       "northward_sea_water_velocity_o2d.s2",
@@ -3896,7 +3896,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &given_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap, &resolution_s2s_ocean},
    },
    {
       "sea-ice_thickness_o2d.s2",
@@ -3918,7 +3918,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &given_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap, &resolution_s2s_ocean},
    },
    {
       "sea_surface_height_o2d.s2",
@@ -3940,7 +3940,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &given_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap, &resolution_s2s_ocean},
    },
    {
       "sea_surface_practical_salinity_o2d.s2",
@@ -3962,7 +3962,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
 
          {NULL, },
       },
-      {&daily_average, &given_level, &has_bitmap},
+      {&daily_average, &given_level, &has_bitmap, &resolution_s2s_ocean},
    },
 
 };

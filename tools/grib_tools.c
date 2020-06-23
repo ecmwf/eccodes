@@ -358,7 +358,13 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
                                       err != GRIB_SUCCESS)) {
             infile->handle_count++;
             options->handle_count++;
-            options->error = err;
+
+            if (c->no_fail_on_wrong_length && (err == GRIB_PREMATURE_END_OF_FILE || err == GRIB_WRONG_LENGTH))
+                err = 0;
+            if (!options->error) {
+                /* ECC-1086: Do not clear a previous error */
+                options->error = err;
+            }
 
             if (!h) {
                 /* fprintf(dump_file,"\t\t\"ERROR: unreadable message\"\n"); */
@@ -553,7 +559,9 @@ static int grib_tool_index(grib_runtime_options* options)
     }
 
     navigate(options->index2->fields, options);
-
+    /* TODO(masn): memleak
+     * grib_context_free(c, options->index2->current);
+     */
     grib_tool_finalise_action(options);
 
     return 0;
@@ -935,8 +943,12 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
     }
 
     if (ret != GRIB_SUCCESS) {
-        fprintf(dump_file, "Failed to get value for key %s\n", key_name);
-        exit(1);
+        if (ret == GRIB_NOT_FOUND) {
+            sprintf(value_str, "not_found");
+        } else {
+            fprintf(dump_file, "Failed to get value for key %s\n", key_name);
+            exit(1);
+        }
     }
 }
 
@@ -970,8 +982,10 @@ static int get_initial_element_of_array(grib_handle* h, const char* keyName, siz
             sval = (char*)grib_context_malloc(c, len * sizeof(char));
             if (!sval)
                 return GRIB_OUT_OF_MEMORY;
-            if ((err = grib_get_string(h, keyName, sval, &len)) != GRIB_SUCCESS)
+            if ((err = grib_get_string(h, keyName, sval, &len)) != GRIB_SUCCESS) {
+                free(sval);
                 return err;
+            }
             sprintf(value, "%s", sval);
             free(sval);
             break;
@@ -1156,7 +1170,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     if (options->latlon) {
         if (options->latlon_mode == 4) {
             int ii = 0;
-            for (ii = 0; ii < 4; ii++) {
+            for (ii = 0; ii < LATLON_SIZE; ii++) {
                 fprintf(dump_file, options->format, options->values[ii]);
                 fprintf(dump_file, " ");
             }
@@ -1259,9 +1273,10 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     char filename[1024] = {0,};
     Assert(options->outfile != NULL && options->outfile->name != NULL);
 
-    if (options->error == GRIB_WRONG_LENGTH)
-        return;
-
+    /* See ECC-1086
+     * if (options->error == GRIB_WRONG_LENGTH)
+     *   return;
+     */
     if ((err = grib_get_message(h, &buffer, &size)) != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "unable to get binary message\n");
         exit(err);

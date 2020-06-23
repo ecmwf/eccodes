@@ -55,5 +55,9 @@ diff $DATA_OUTFILE $REF_FILE
 grib_check_key_equals $GRIB_OUTFILE standardParallelInDegrees,centralLongitudeInDegrees '48 9'
 grib_check_key_equals $GRIB_OUTFILE xDirectionGridLengthInMetres,yDirectionGridLengthInMetres '5000 5000'
 
+# Nearest
+${tools_dir}/grib_ls -l 67,-33,1 $GRIB_OUTFILE
+
+
 # Clean up
 rm -f $FILTER_FILE $GRIB_OUTFILE $DATA_OUTFILE

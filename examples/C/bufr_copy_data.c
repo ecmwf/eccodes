@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
     }
     ho = codes_bufr_handle_new_from_samples(NULL, sampleName);
     if (ho == NULL) {
-        fprintf(stderr, "ERROR creating BUFR from %s\n", sampleName);
+        fprintf(stderr, "Error: creating BUFR from %s\n", sampleName);
         fclose(f);
         return 1;
     }
@@ -80,14 +80,14 @@ int main(int argc, char* argv[])
 
     while ((h = codes_handle_new_from_file(0, f, PRODUCT_BUFR, &err)) != NULL) {
         if (!h) {
-            printf("ERROR: Unable to create BUFR handle\n");
+            fprintf(stderr, "Error: Unable to create BUFR handle\n");
             return 1;
         }
         /* codes_copy_key(h,ho,"unexpandedDescriptors",0); */
         err = codes_set_long(h, "unpack", 1);
         if (err) {
-            printf("ERROR: Unable to unpack BUFR message. Quitting\n");
-            printf("       %s\n", codes_get_error_message(err));
+            fprintf(stderr, "Error: Unable to unpack BUFR message. Quitting\n");
+            fprintf(stderr, "       %s\n", codes_get_error_message(err));
             return 1;
         }
 

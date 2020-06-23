@@ -30,6 +30,14 @@ program get_product_kind
   call codes_get_api_version(version)
   write(*,*) 'API version: ',version
 
+  write(*,*) 'ecCodes settings: '
+  write(*,*) '  ECCODES_POSIX_THREADS:  ',ECCODES_SETTINGS_POSIX_THREADS
+  write(*,*) '  ECCODES_OMP_THREADS:    ',ECCODES_SETTINGS_OMP_THREADS
+  write(*,*) '  ECCODES_SETTINGS_MEMFS: ',ECCODES_SETTINGS_MEMFS
+  write(*,*) '  ECCODES_SETTINGS_JPEG:  ',ECCODES_SETTINGS_JPEG
+  write(*,*) '  ECCODES_SETTINGS_PNG:   ',ECCODES_SETTINGS_PNG
+  write(*,*) '  ECCODES_SETTINGS_AEC:   ',ECCODES_SETTINGS_AEC
+
 ! the first message is loaded from file
 ! ihandle is the message id to be used in subsequent calls
   call codes_new_from_file(ifile,ihandle,CODES_PRODUCT_ANY,iret)

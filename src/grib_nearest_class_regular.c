@@ -193,7 +193,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         for (ii=0;ii<2;ii++) {
             for (jj=0;jj<2;jj++) {
                 self->k[kk]=self->i[ii]+self->lons_count*self->j[jj]-1;
-                self->distances[kk]=grib_nearest_distance(radius,inlon,inlat,
+                self->distances[kk]=geographic_distance_spherical(radius,inlon,inlat,
                         self->lons[self->i[ii]],self->lats[self->j[jj]]);
                 kk++;
             }
@@ -218,7 +218,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
 static int is_rotated_grid(grib_handle* h)
 {
     long is_rotated = 0;
-    int err         = grib_get_long(h, "is_rotated_grid", &is_rotated);
+    int err         = grib_get_long(h, "isRotatedGrid", &is_rotated);
     if (!err && is_rotated)
         return 1;
     return 0;
@@ -409,7 +409,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         for (jj = 0; jj < 2; jj++) {
             for (ii = 0; ii < 2; ii++) {
                 self->k[kk]         = self->i[ii] + self->lons_count * self->j[jj];
-                self->distances[kk] = grib_nearest_distance(radius, inlon, inlat,
+                self->distances[kk] = geographic_distance_spherical(radius, inlon, inlat,
                                                             self->lons[self->i[ii]], self->lats[self->j[jj]]);
                 kk++;
             }

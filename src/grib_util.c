@@ -985,7 +985,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                     goto cleanup;
                     break;
             }
-            packingTypeIsSet = 1;
         }
         switch (packing_spec->accuracy) {
             case GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT:

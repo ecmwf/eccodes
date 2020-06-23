@@ -55,11 +55,11 @@ INSTALLATION
 
 To add the Python3 bindings, use pip3 install from PyPI as follows:
    ```
-   pip3 install eccodes-python
+   pip3 install eccodes
    ```
    or
    ```
-   pip3 install --install-option="--prefix=/path/to/where/you/install/eccodes" eccodes-python
+   pip3 install --install-option="--prefix=/path/to/where/you/install/eccodes" eccodes
    ```
 
 

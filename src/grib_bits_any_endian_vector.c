@@ -10,7 +10,7 @@
 
 /***************************************************************************
  *   Enrico Fucile  - 19.06.2007                                           *
- *                                                                         *
+ *   EXPERIMENTAL CODE - NOT FULLY TESTED                                  *
  ***************************************************************************/
 
 int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue,
@@ -19,7 +19,8 @@ int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue
     long i               = 0;
     unsigned long lvalue = 0;
 
-    if (bitsPerValue % 8) {
+    /* SUP-3196: Thanks to Daniel Tameling */
+    if (bitsPerValue % 8 || (*bitp & 7)) {
         int j = 0;
         for (i = 0; i < n_vals; i++) {
             lvalue = 0;
@@ -53,7 +54,6 @@ int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue
 
     return 0;
 }
-
 
 int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerValue,
                              double reference_value, double s, double d,
@@ -96,12 +96,14 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerVal
     return 0;
 }
 
-int grib_decode_double_array_complex(const unsigned char* p, long* bitp, long nbits, double reference_value, double s, double* d, size_t size, double* val)
+int grib_decode_double_array_complex(const unsigned char* p, long* bitp, long nbits, double reference_value,
+                                     double s, double* d, size_t size, double* val)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_encode_double_array(size_t n_vals, const double* val, long bits_per_value, double reference_value, double d, double divisor, unsigned char* p, long* off)
+int grib_encode_double_array(size_t n_vals, const double* val, long bits_per_value, double reference_value,
+                             double d, double divisor, unsigned char* p, long* off)
 {
     size_t i                   = 0;
     unsigned long unsigned_val = 0;
