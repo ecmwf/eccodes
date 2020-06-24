@@ -52,7 +52,6 @@ ${tools_dir}/grib_ls -l 50,0 $tempGrib
 cat > $tempFilter <<EOF
  set gridType="lambert";
  set numberOfDataPoints=294000;
- set shapeOfTheEarth=6;
  set Nx=588;
  set Ny=500;
  set latitudeOfFirstGridPoint=40442000;
@@ -63,7 +62,7 @@ cat > $tempFilter <<EOF
  set Dy=2499000;
  set Latin1=46401000;
  set Latin2=46401000;
- set shapeOfTheEarth=2;
+ set shapeOfTheEarth=2;  # oblate earth
  set numberOfValues=294000;
  write;
 EOF
@@ -76,10 +75,11 @@ if [ ! -f "$tempGrib" ]; then
 fi
 grib_check_key_equals $tempGrib 'earthIsOblate,earthMinorAxisInMetres,earthMajorAxisInMetres' '1 6356775 6378160'
 
-# Invoke Geoiterator on the newly created GRIB file
+# Invoke Geoiterator on the oblate lambert GRIB
 ${tools_dir}/grib_get_data $tempGrib > $tempOut
 
-
+# Nearest neighbour on the oblate lambert GRIB
+${tools_dir}/grib_ls -l 40.44,353.56 $tempGrib
 
 
 # Clean up

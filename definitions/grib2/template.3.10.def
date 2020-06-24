@@ -75,6 +75,8 @@ iterator mercator(numberOfPoints,missingValue,values,
           iScansNegatively, jScansPositively,
           jPointsAreConsecutive, alternativeRowScanning);
 
+nearest mercator(values,radius,Nx,Ny);
+
 meta latLonValues latlonvalues(values);
 alias latitudeLongitudeValues=latLonValues;
 meta latitudes latitudes(values,0);

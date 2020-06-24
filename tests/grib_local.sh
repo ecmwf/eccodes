@@ -132,6 +132,15 @@ ${tools_dir}/grib_set -s localDefinitionNumber=49,type=35 $sample_g1 $temp
 grib_check_key_equals $temp 'perturbationNumber,numberOfForecastsInEnsemble' '0 0'
 
 
+# Local Definition 39 and type 'eme' for GRIB2
+# --------------------------------------------
+${tools_dir}/grib_set -s \
+   setLocalDefinition=1,localDefinitionNumber=39,type=eme,stream=elda,componentIndex=11,offsetToEndOf4DvarWindow=12 \
+   $sample_g2 $temp
+grib_check_key_equals $temp 'mars.number,mars.anoffset' '11 12'
+${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=39,type=eme,stream=enda,componentIndex=11 $sample_g2 $temp
+grib_check_key_equals $temp 'mars.number' '11'
+
 
 # Local Definition 18 (list of ascii keys)
 # ----------------------------------------

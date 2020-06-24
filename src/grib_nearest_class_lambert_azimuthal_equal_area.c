@@ -49,14 +49,14 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args);
 static int find(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
 static int destroy(grib_nearest* nearest);
 
-typedef struct grib_nearest_lambert_conformal
+typedef struct grib_nearest_lambert_azimuthal_equal_area
 {
     grib_nearest nearest;
     /* Members defined in gen */
     const char* values_key;
     const char* radius;
     int cargs;
-    /* Members defined in lambert_conformal */
+    /* Members defined in lambert_azimuthal_equal_area */
     double* lats;
     int lats_count;
     double* lons;
@@ -67,14 +67,14 @@ typedef struct grib_nearest_lambert_conformal
     int* j;
     const char* Ni;
     const char* Nj;
-} grib_nearest_lambert_conformal;
+} grib_nearest_lambert_azimuthal_equal_area;
 
 extern grib_nearest_class* grib_nearest_class_gen;
 
-static grib_nearest_class _grib_nearest_class_lambert_conformal = {
+static grib_nearest_class _grib_nearest_class_lambert_azimuthal_equal_area = {
     &grib_nearest_class_gen,                /* super                     */
-    "lambert_conformal",                    /* name                      */
-    sizeof(grib_nearest_lambert_conformal), /* size of instance          */
+    "lambert_azimuthal_equal_area",                    /* name                      */
+    sizeof(grib_nearest_lambert_azimuthal_equal_area), /* size of instance          */
     0,                                      /* inited */
     &init_class,                            /* init_class */
     &init,                                  /* constructor               */
@@ -82,7 +82,7 @@ static grib_nearest_class _grib_nearest_class_lambert_conformal = {
     &find,                                  /* find nearest              */
 };
 
-grib_nearest_class* grib_nearest_class_lambert_conformal = &_grib_nearest_class_lambert_conformal;
+grib_nearest_class* grib_nearest_class_lambert_azimuthal_equal_area = &_grib_nearest_class_lambert_azimuthal_equal_area;
 
 
 static void init_class(grib_nearest_class* c)
@@ -92,7 +92,7 @@ static void init_class(grib_nearest_class* c)
 
 static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
 {
-    grib_nearest_lambert_conformal* self = (grib_nearest_lambert_conformal*)nearest;
+    grib_nearest_lambert_azimuthal_equal_area* self = (grib_nearest_lambert_azimuthal_equal_area*)nearest;
     self->Ni                             = grib_arguments_get_name(h, args, self->cargs++);
     self->Nj                             = grib_arguments_get_name(h, args, self->cargs++);
     self->i                              = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
@@ -105,7 +105,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
                 double* outlats, double* outlons,
                 double* values, double* distances, int* indexes, size_t* len)
 {
-    grib_nearest_lambert_conformal* self = (grib_nearest_lambert_conformal*)nearest;
+    grib_nearest_lambert_azimuthal_equal_area* self = (grib_nearest_lambert_azimuthal_equal_area*)nearest;
     return grib_nearest_find_generic(
         nearest, h, inlat, inlon, flags,  /* inputs */
 
@@ -125,7 +125,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
 
 static int destroy(grib_nearest* nearest)
 {
-    grib_nearest_lambert_conformal* self = (grib_nearest_lambert_conformal*)nearest;
+    grib_nearest_lambert_azimuthal_equal_area* self = (grib_nearest_lambert_azimuthal_equal_area*)nearest;
     if (self->lats)      grib_context_free(nearest->context, self->lats);
     if (self->lons)      grib_context_free(nearest->context, self->lons);
     if (self->i)         grib_context_free(nearest->context, self->i);
