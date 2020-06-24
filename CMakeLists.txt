@@ -119,7 +119,7 @@ ecbuild_add_option( FEATURE AEC
 
 ecbuild_add_option( FEATURE PYTHON
     DESCRIPTION "Build the ecCodes Python2 interface (deprecated)"
-    DEFAULT ON
+    DEFAULT OFF
     REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy )
 # For Python2 we build our own bindings (using SWIG) in the build directory
 # but for Python3 one has to add the eccodes from pip3 AFTER the install
