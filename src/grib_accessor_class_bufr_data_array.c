@@ -3423,4 +3423,5 @@ static void destroy(grib_context* c, grib_accessor* a)
         grib_sarray_delete_content(c, self->tempStrings);
         grib_sarray_delete(c, self->tempStrings);
     }
+    grib_iarray_delete(self->iss_list);
 }

@@ -23,7 +23,6 @@
 #include <grib_api.h>
 #include <errno.h>
 #include <string.h>
-#include <math.h>
 #include <sys/types.h>
 
 #ifndef ECCODES_ON_WINDOWS

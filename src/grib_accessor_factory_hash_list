@@ -172,6 +172,7 @@ padto, &grib_accessor_class_padto
 padtoeven, &grib_accessor_class_padtoeven
 padtomultiple, &grib_accessor_class_padtomultiple
 position, &grib_accessor_class_position
+proj_string, &grib_accessor_class_proj_string
 raw, &grib_accessor_class_raw
 rdbtime_guess_date, &grib_accessor_class_rdbtime_guess_date
 reference_value_error, &grib_accessor_class_reference_value_error

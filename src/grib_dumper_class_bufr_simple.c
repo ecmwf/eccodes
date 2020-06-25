@@ -121,7 +121,7 @@ static void init_class(grib_dumper_class* c) {}
 static int init(grib_dumper* d)
 {
     grib_dumper_bufr_simple* self = (grib_dumper_bufr_simple*)d;
-    grib_context* c               = d->handle->context;
+    grib_context* c               = d->context;
     self->section_offset          = 0;
     self->empty                   = 1;
     self->isLeaf                  = 0;
@@ -137,7 +137,7 @@ static int destroy(grib_dumper* d)
     grib_dumper_bufr_simple* self = (grib_dumper_bufr_simple*)d;
     grib_string_list* next        = self->keys;
     grib_string_list* cur         = NULL;
-    grib_context* c               = d->handle->context;
+    grib_context* c               = d->context;
     while (next) {
         cur  = next;
         next = next->next;
@@ -623,7 +623,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         if (dofree)
             grib_context_free(c, prefix);
     }
-
+    for (i=0; i<size; ++i) grib_context_free(c, values[i]);
     grib_context_free(c, values);
     (void)err; /* TODO */
 }

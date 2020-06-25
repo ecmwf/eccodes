@@ -41,6 +41,7 @@ TESTS = definitions.sh \
         grib_step.sh \
         grib_set.sh \
         grib_iterator.sh \
+        grib_proj_string.sh \
         grib_compare.sh \
         grib_level.sh \
         grib_indexing.sh \
@@ -56,6 +57,8 @@ TESTS = definitions.sh \
         grib_padding.sh \
         grib_lamb_az_eq_area.sh \
         grib_lambert_conformal.sh \
+        grib_space_view.sh \
+        grib_mercator.sh \
         grib_to_netcdf.sh \
         grib_dump_debug.sh \
         grib_jpeg.sh \
