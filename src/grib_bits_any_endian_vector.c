@@ -10,7 +10,7 @@
 
 /***************************************************************************
  *   Enrico Fucile  - 19.06.2007                                           *
- *                                                                         *
+ *   Johannes Schick, Deutscher Wetterdienst - 24.06.2020                  *
  ***************************************************************************/
 int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue,
                            size_t n_vals, long* val)
@@ -18,7 +18,6 @@ int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue
     long i               = 0;
     unsigned long lvalue = 0;
 
-    /* if (bitsPerValue % 8) { */
     if (bitsPerValue % 8 || (*bitp & 7)) {
         int j = 0;
         for (i = 0; i < n_vals; i++) {
@@ -113,50 +112,49 @@ int grib_encode_double_array(size_t n_vals, const double* val, long bits_per_val
         }
     }
     else {
-      if (bits_per_value == 16 && !((uint64_t)p&3)) {
-        uint32_t *encoded4byte = (uint32_t *) p;
-        uint32_t tmp;
-        unsigned long unsigned_val2 = 0;
-        for(i = 0; i < n_vals - 1; i+=2){
-          unsigned_val  = (unsigned long)((((val[i]*d)-reference_value)*divisor)+0.5);
-          unsigned_val2 = (unsigned long)((((val[i+1]*d)-reference_value)*divisor)+0.5);
-          tmp = (unsigned_val2 & 0xff);
-          tmp = (tmp << 8) + (unsigned_val2 >> 8 & 0xff);
-          tmp = (tmp << 8) + (unsigned_val  & 0xff);
-          tmp = (tmp << 8) + ((unsigned_val >> 8) & 0xff);
-          *encoded4byte = tmp;
-          encoded4byte++;
-          *off+=32;
+        if (bits_per_value == 16 && !((uint64_t)p & 3)) {
+            uint32_t* encoded4byte = (uint32_t*)p;
+            uint32_t tmp;
+            unsigned long unsigned_val2 = 0;
+            for (i = 0; i < n_vals - 1; i += 2) {
+                unsigned_val  = (unsigned long)((((val[i] * d) - reference_value) * divisor) + 0.5);
+                unsigned_val2 = (unsigned long)((((val[i + 1] * d) - reference_value) * divisor) + 0.5);
+                tmp           = (unsigned_val2 & 0xff);
+                tmp           = (tmp << 8) + (unsigned_val2 >> 8 & 0xff);
+                tmp           = (tmp << 8) + (unsigned_val & 0xff);
+                tmp           = (tmp << 8) + ((unsigned_val >> 8) & 0xff);
+                *encoded4byte = tmp;
+                encoded4byte++;
+                *off += 32;
+            }
+            /* remainder */
+            if (n_vals % 2) {
+                int blen     = 0;
+                i            = n_vals - 1;
+                encoded      = (unsigned char*)encoded4byte;
+                blen         = bits_per_value;
+                unsigned_val = (unsigned long)((((val[i] * d) - reference_value) * divisor) + 0.5);
+                while (blen >= 8) {
+                    blen -= 8;
+                    *encoded = (unsigned_val >> blen);
+                    encoded++;
+                    *off += 8;
+                }
+            }
         }
-        /* remainder */
-        if (n_vals % 2) {
-          int blen     = 0;
-          i            = n_vals-1;
-          encoded      = (unsigned char *) encoded4byte;
-          blen         = bits_per_value;
-          unsigned_val = (unsigned long)((((val[i]*d)-reference_value)*divisor)+0.5);
-          while(blen >= 8)
-          {
-            blen   -= 8;
-            *encoded = (unsigned_val >> blen);
-            encoded++;
-            *off+=8;
-          }
+        else {
+            for (i = 0; i < n_vals; i++) {
+                int blen     = 0;
+                blen         = bits_per_value;
+                unsigned_val = (unsigned long)((((val[i] * d) - reference_value) * divisor) + 0.5);
+                while (blen >= 8) {
+                    blen -= 8;
+                    *encoded = (unsigned_val >> blen);
+                    encoded++;
+                    *off += 8;
+                }
+            }
         }
-      } 
-      else {
-        for (i = 0; i < n_vals; i++) {
-          int blen     = 0;
-          blen         = bits_per_value;
-          unsigned_val = (unsigned long)((((val[i] * d) - reference_value) * divisor) + 0.5);
-          while (blen >= 8) {
-            blen -= 8;
-            *encoded = (unsigned_val >> blen);
-            encoded++;
-            *off += 8;
-          }
-        }
-      }
     }
     return GRIB_SUCCESS;
 }
