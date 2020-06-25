@@ -75,19 +75,15 @@ if (section2Present && bufrHeaderCentre==98 && section2Length==52) {
             oldSubtype==31) {
             meta ls.localNumberOfObservations bits(keySat,0,16) : dump,long_type,no_copy;
             meta ls.satelliteID bits(keySat,16,16) : dump,long_type,no_copy;
-            alias mars.satelliteID=satelliteID;
         } else {
             meta ls.localNumberOfObservations bits(keySat,0,8) : dump,long_type,no_copy;
             meta ls.satelliteID bits(keySat,8,16) : dump,long_type,no_copy;
-            alias mars.satelliteID=satelliteID;
         }
     } else {
         meta ls.localLatitude bits(keyData,72,25,-9000000,100000) : dump,no_copy;
         meta ls.localLongitude bits(keyData,40,26,-18000000,100000) : dump,no_copy;
+        meta mars.ident sprintf("%s", keyMore) : string_type, no_copy;
         alias ls.ident=keyMore : dump,string_type,no_copy;
-
-        alias mars.localLatitude=localLatitude;
-        alias mars.localLongitude=localLongitude;
     }
 }
 

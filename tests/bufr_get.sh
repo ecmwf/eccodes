@@ -68,9 +68,9 @@ result=`${tools_dir}/bufr_get -s unpack=1 -p satelliteIdentifier wavb_134.bufr`
 # ECC-315: BUFR keys in the MARS namespace
 #-------------------------------------------
 result=`${tools_dir}/bufr_get -m aaen_55.bufr`
-[ "$result" = "2 55 2012 11 2 0 0 8 209" ]
+[ "$result" = "55 20121102 0000" ]
 result=`${tools_dir}/bufr_get -m syno_1.bufr`
-[ "$result" = "1 1 2012 10 30 0 0 0 7.45 151.83" ]
+[ "$result" = "1 20121030 0000 91334   " ]
 
 #-------------------------------------------
 # Local ECMWF section: 'ident' key
