@@ -1494,6 +1494,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
 /* string_util.c */
 int strcmp_nocase(const char* s1, const char* s2);
 void rtrim(char* s);
+void lrtrim(char** x, int do_left, int do_right);
 const char* extract_filename(const char* filepath);
 char** string_split(char* inputString, const char* delimiter);
 int string_to_long(const char* input, long* output);

@@ -204,6 +204,8 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
     return GRIB_SUCCESS;
 }
 
+#define IDENT_LEN 9 /* 8 chars plus the final 0 terminator */
+
 /* The ECMWF BUFR local use section */
 static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2, codes_bufr_header* hdr)
 {
@@ -261,8 +263,11 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
         }
     }
     else {
-        size_t i = 0, j = 0;
-        long lValue         = 0;
+        size_t i = 0;
+        long lValue  = 0;
+        char* pTemp = NULL;
+        char temp[IDENT_LEN] = {0,};
+
         start               = 72;
         lValue              = (long)grib_decode_unsigned_long(pKeyData, &start, 25);
         hdr->localLatitude  = (lValue - 9000000.0) / 100000.0;
@@ -270,17 +275,14 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
         lValue              = (long)grib_decode_unsigned_long(pKeyData, &start, 26);
         hdr->localLongitude = (lValue - 18000000.0) / 100000.0;
 
-        /* interpret keyMore as a string */
+        /* interpret keyMore as a string. Copy to a temporary */
         for (i = 0; i < 8; ++i) {
-            const char c = *pKeyMore;
-            //printf("Lookin at %c, i=%lu, j=%lu\n", c, i, j);
-            if (c != ' ') {
-                //printf("  not space so copy to %lu\n", j);
-                hdr->ident[j++] = c;
-            }
-            pKeyMore++;
+            temp[i] = *pKeyMore++;
         }
-        hdr->ident[j] = '\0';
+        temp[i] = '\0';
+        pTemp = temp;
+        lrtrim(&pTemp, 1, 1); /* Trim left and right */
+        strncpy(hdr->ident, pTemp, 8);
     }
 
     return GRIB_SUCCESS;

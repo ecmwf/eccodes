@@ -18,8 +18,8 @@
    IMPLEMENTS = unpack_string;pack_string
    IMPLEMENTS = init
    MEMBERS=  const char* input
-   MEMBERS=  int trimleft
-   MEMBERS=  int trimright
+   MEMBERS=  int trim_left
+   MEMBERS=  int trim_right
    END_CLASS_DEF
 
  */
@@ -46,8 +46,8 @@ typedef struct grib_accessor_trim
     /* Members defined in ascii */
     /* Members defined in trim */
     const char* input;
-    int trimleft;
-    int trimright;
+    int trim_left;
+    int trim_right;
 } grib_accessor_trim;
 
 extern grib_accessor_class* grib_accessor_class_ascii;
@@ -141,27 +141,11 @@ static void init(grib_accessor* a, const long l, grib_arguments* arg)
     grib_accessor_trim* self = (grib_accessor_trim*)a;
     grib_handle* h           = grib_handle_of_accessor(a);
 
-    self->input    = grib_arguments_get_name(h, arg, n++);
-    self->trimleft = grib_arguments_get_long(h, arg, n++);
-    self->trimright= grib_arguments_get_long(h, arg, n++);
-    DebugAssert(self->trimleft == 0 || self->trimleft == 1);
-    DebugAssert(self->trimright == 0 || self->trimright == 1);
-}
-
-static void trim(char** x)
-{
-    char* p = 0;
-    while (**x == ' ' && **x != '\0')
-        (*x)++;
-    if (**x == '\0')
-        return;
-    p = (*x) + strlen(*x) - 1;
-    while (*p == ' ') {
-        *p = '\0';
-        p--;
-    }
-    if (*p == ' ')
-        *p = '\0';
+    self->input     = grib_arguments_get_name(h, arg, n++);
+    self->trim_left = grib_arguments_get_long(h, arg, n++);
+    self->trim_right= grib_arguments_get_long(h, arg, n++);
+    DebugAssert(self->trim_left == 0 || self->trim_left == 1);
+    DebugAssert(self->trim_right == 0 || self->trim_right == 1);
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
@@ -176,13 +160,12 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     err = grib_get_string(h, self->input, input, &size);
     if (err) return err;
-    DebugAssert(size < 9);
 
-    trim(&pInput);
+    lrtrim(&pInput, self->trim_left, self->trim_right);
     sprintf(val, "%s", pInput); 
     size = strlen(val);
     *len = size + 1;
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
@@ -206,7 +189,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     
     sprintf(buf, "%s", val);
     pBuf = buf;
-    trim(&pBuf);
+    lrtrim(&pBuf, self->trim_left, self->trim_right);
 
     return grib_pack_string(inputAccesstor, pBuf, len);
 }
