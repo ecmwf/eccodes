@@ -649,9 +649,13 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         /* ECC-356: Solution for the special local section key 'keyMore' and its alias 'ident' */
         int skip = 1;
         if ((a->flags & GRIB_ACCESSOR_FLAG_HIDDEN) != 0) {
+            /* We've come across a key which is hidden */
             if (strcmp(a->name, "keyMore") == 0 && grib_is_defined(h, "ls.ident")) {
+                grib_accessor* acc = NULL;
                 skip     = 0;
                 acc_name = "ident";
+                acc = grib_find_accessor(h, "identTrimmed");
+                if (acc) a = acc;
             }
         }
         if (skip)

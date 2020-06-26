@@ -70,15 +70,15 @@ result=`${tools_dir}/bufr_get -s unpack=1 -p satelliteIdentifier wavb_134.bufr`
 result=`${tools_dir}/bufr_get -m aaen_55.bufr`
 [ "$result" = "55 20121102 0000" ]
 result=`${tools_dir}/bufr_get -m syno_1.bufr`
-[ "$result" = "1 20121030 0000 91334   " ]
+[ "$result" = "1 20121030 0000 91334" ]
 
 #-------------------------------------------
 # Local ECMWF section: 'ident' key
 #-------------------------------------------
 result=`${tools_dir}/bufr_get -p isSatellite,ident syno_1.bufr`
-[ "$result" = "0 91334   " ]
+[ "$result" = "0 91334" ]
 result=`${tools_dir}/bufr_get -p isSatellite,ident temp_102.bufr`
-[ "$result" = "0 ASDE3   " ]
+[ "$result" = "0 ASDE3" ]
 result=`${tools_dir}/bufr_get -p isSatellite,ident b004_145.bufr`
 [ "$result" = "0 FAVRTLZA" ]
 

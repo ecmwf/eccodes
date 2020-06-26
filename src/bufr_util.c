@@ -261,7 +261,7 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
         }
     }
     else {
-        size_t i            = 0;
+        size_t i = 0, j = 0;
         long lValue         = 0;
         start               = 72;
         lValue              = (long)grib_decode_unsigned_long(pKeyData, &start, 25);
@@ -272,9 +272,15 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
 
         /* interpret keyMore as a string */
         for (i = 0; i < 8; ++i) {
-            hdr->ident[i] = *pKeyMore++;
+            const char c = *pKeyMore;
+            //printf("Lookin at %c, i=%lu, j=%lu\n", c, i, j);
+            if (c != ' ') {
+                //printf("  not space so copy to %lu\n", j);
+                hdr->ident[j++] = c;
+            }
+            pKeyMore++;
         }
-        hdr->ident[i] = '\0';
+        hdr->ident[j] = '\0';
     }
 
     return GRIB_SUCCESS;
