@@ -10,22 +10,23 @@
 
 . ./include.sh
 
-#Enter data dir
+# Enter data dir
 cd ${data_dir}/bufr
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_get_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define tmp file
+# Define tmp file
 fTmp=${label}".tmp.txt"
-rm -f $fTmp
+tempRef=${label}".tmp.ref.txt"
+rm -f $fTmp $tempRef
 
-#Define another tmp file to store the test results
+# Define another tmp file to store the test results
 res_get=${label}".get.test"
 rm -f $res_get
 
@@ -41,14 +42,14 @@ id=`${tools_dir}/bufr_get -p edition,identifier aaen_55.bufr`
 #-------------------------------------------
 f="aaen_55.bufr"
 
-#The reference is the same as for ls
+# The reference is the same as for ls
 ref_get=$f".ls.ref"
 
 echo "Test: -p switch" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}/bufr_get -p totalLength,bufrHeaderCentre,bufrHeaderSubCentre,masterTableNumber,masterTablesVersionNumber,localTablesVersionNumber,numberOfSubsets,localNumberOfObservations $f > $fTmp
 
-#Write the values into a file and compare with ref
+# Write the values into a file and compare with ref
 cat $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_get
 diff $ref_get $res_get
 
@@ -71,6 +72,19 @@ result=`${tools_dir}/bufr_get -m aaen_55.bufr`
 [ "$result" = "55 20121102 0000" ]
 result=`${tools_dir}/bufr_get -m syno_1.bufr`
 [ "$result" = "1 20121030 0000 91334" ]
+${tools_dir}/bufr_ls -j -m syno_1.bufr > $fTmp
+cat > $tempRef <<EOF
+{ "messages" : [ 
+  {
+    "obstype": 1,
+    "date": 20121030,
+    "time": "0000",
+    "ident": 91334
+  }
+]}
+EOF
+cat $tempRef
+diff $tempRef $fTmp
 
 #-------------------------------------------
 # Local ECMWF section: 'ident' key
@@ -87,4 +101,4 @@ result=`${tools_dir}/bufr_get -f -p isSatellite,ident b003_56.bufr`
 
 
 # Clean up
-rm -f $fLog $fTmp $res_get
+rm -f $fLog $fTmp $res_get $tempRef

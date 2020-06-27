@@ -636,6 +636,7 @@ EOF
 
 #Clean up
 rm -f ${dSplit}/*
+rmdir ${dSplit}
 rm -f $fLog $fRules 
 rm -f $fBufrTmp
 
@@ -877,7 +878,7 @@ diff ${fOut}.log.ref ${fOut}.log
 ${tools_dir}/bufr_compare ${fOut} ${fOut}.ref
 
 rm -f ${fOut}.log
-rm -f $fLog $fRules ${fOut}
+rm -f $fLog $fRules ${fOut} ${fOut}.log.ref
 #-----------------------------------------------------------
 # Test:  add section 2
 #-----------------------------------------------------------
@@ -909,7 +910,7 @@ EOF
 fi
 
 rm -f ${fOut}.log
-rm -f $fLog $fRules ${fOut}
+rm -f $fLog $fRules ${fOut} ${fOut}.log.ref
 
 #-----------------------------------------------------------
 # Test:  extract subsets uncompressed data
