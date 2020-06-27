@@ -136,6 +136,7 @@ fieldOfViewNumber=7 8 9 10 11 12 13 8 9 10 11 12 11 12
 EOF
 
 diff $outputRef $outputFilt
+rm -f $outputBufr
 
 # Uncompressed message
 # ---------------------

@@ -10,6 +10,11 @@
 #
 # Description: how to read data of the ECMWF EPS tropical cyclone tracks encoded in BUFR format.
 #
+# Please note that tropical cyclone tracks can be encoded in various ways in BUFR.
+# Therefore the code below might not work directly for other types of messages
+# than the one used in the example. It is advised to use bufr_dump to
+# understand the structure of the messages.
+#
 
 from __future__ import print_function
 import traceback

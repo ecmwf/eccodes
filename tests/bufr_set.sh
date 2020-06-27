@@ -170,6 +170,11 @@ ${tools_dir}/bufr_set -s keyMore=ABCD $f $fBufrTmp
 result=`${tools_dir}/bufr_get -p keyMore,ident $fBufrTmp`
 [ "$result" = "ABCD ABCD" ]
 
+${tools_dir}/bufr_set -s ident=' AB CD ' $f $fBufrTmp
+result=`${tools_dir}/bufr_get -p ident $fBufrTmp`
+[ "$result" = "AB CD" ]
+
+
 # ${tools_dir}/bufr_compare $f $fBufrTmp
 
 #Clean up

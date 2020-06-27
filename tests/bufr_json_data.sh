@@ -55,6 +55,7 @@ for c in 1 3 1/3; do
   if test "x$JSON_CHECK" != "x"; then
     json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
   fi
+  rm -f ${file}.json
 done
 
 
