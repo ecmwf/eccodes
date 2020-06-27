@@ -276,13 +276,13 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
         hdr->localLongitude = (lValue - 18000000.0) / 100000.0;
 
         /* interpret keyMore as a string. Copy to a temporary */
-        for (i = 0; i < 8; ++i) {
+        for (i = 0; i < IDENT_LEN - 1; ++i) {
             temp[i] = *pKeyMore++;
         }
         temp[i] = '\0';
         pTemp = temp;
         lrtrim(&pTemp, 1, 1); /* Trim left and right */
-        strncpy(hdr->ident, pTemp, 8);
+        strncpy(hdr->ident, pTemp, IDENT_LEN - 1);
     }
 
     return GRIB_SUCCESS;

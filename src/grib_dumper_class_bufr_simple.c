@@ -641,9 +641,6 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     int err                       = 0;
     grib_handle* h                = grib_handle_of_accessor(a);
     const char* acc_name          = a->name;
-    
-    if ( strcmp(acc_name,"ident")==0 )
-        puts("");
 
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
         return;

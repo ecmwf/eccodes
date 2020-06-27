@@ -748,18 +748,8 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     if (size == 0)
         return;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
-        /* ECC-356: Solution for the special local section key 'keyMore' and its alias 'ident' */
-        int skip = 1;
-        if ((a->flags & GRIB_ACCESSOR_FLAG_HIDDEN) != 0) {
-            if (strcmp(a->name, "keyMore") == 0 && grib_is_defined(h, "ls.ident")) {
-                skip     = 0;
-                acc_name = "ident";
-            }
-        }
-        if (skip)
-            return;
-    }
+    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
+        return;
 
     value = (char*)grib_context_malloc_clear(c, size);
     if (!value) {
