@@ -173,8 +173,12 @@ static int init_oblate(grib_handle* h,
     double e, es, temp, one_es;
     double false_easting;  /* x offset in meters */
     double false_northing; /* y offset in meters */
-    double latRad, lonRad, latDeg, lonDeg;
+    double latRad=0, lonRad=0, latDeg, lonDeg;
     double APA[3] = {0,};
+    double xFirst, yFirst;
+    
+    Dx         = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
+    Dy         = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
 
     //temp = earthMinorAxisInMetres/earthMajorAxisInMetres;
     //es = 1.0 - temp * temp;
@@ -182,7 +186,7 @@ static int init_oblate(grib_handle* h,
     es = 2*temp - temp*temp;
     one_es = 1.0 - es;
     e = sqrt(es);
-
+printf("latFirstInRadians=%g,  lonFirstInRadians=%g\n", latFirstInRadians, lonFirstInRadians);
     coslam = cos(lonFirstInRadians - centralLongitudeInRadians);  //cos(lp.lam);
     sinlam = sin(lonFirstInRadians - centralLongitudeInRadians);
     sinphi = sin(latFirstInRadians); //  sin(lp.phi);
@@ -223,8 +227,8 @@ static int init_oblate(grib_handle* h,
     // OBLIQUE
     y0 = Q__ymf * b * (Q__cosb1 * sinb - Q__sinb1 * cosb * coslam);
     x0 = Q__xmf * b * cosb * sinlam;
-    y0 *= earthMajorAxisInMetres;
-    x0 *= earthMajorAxisInMetres;
+    //y0 *= earthMajorAxisInMetres;
+    //x0 *= earthMajorAxisInMetres;
 
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
@@ -237,8 +241,63 @@ static int init_oblate(grib_handle* h,
         grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
+    lats = self->lats;
+    lons = self->lons;
 
     /* Populate the lat and lon arrays */
+    {
+        xFirst = x0; yFirst = y0;
+        y = yFirst;
+        for (j = 0; j < ny; j++) {
+            x  = xFirst;
+            for (i = 0; i < nx; i++) {
+                double cCe, sCe, q, rho, ab=0.0,  lp__lam, lp__phi,  xy_x=x , xy_y = y;
+                xy_x /= Q__dd;
+                xy_y *= Q__dd;
+                rho = hypot(xy_x, xy_y);
+                Assert(rho >= EPS10); // TODO
+                sCe = 2. * asin(.5 * rho / Q__rq);
+                cCe = cos(sCe);
+                sCe = sin(sCe);
+                xy_x *= sCe;
+                // if oblique
+                ab = cCe * Q__sinb1 + xy_y * sCe * Q__cosb1 / rho;
+                xy_y = rho * Q__cosb1 * cCe - xy_y * Q__sinb1 * sCe;
+                // else
+                //ab = xy.y * sCe / rho;
+                //xy.y = rho * cCe;
+                lp__lam = atan2(xy_x, xy_y); //longitude
+                lp__phi = pj_authlat(asin(ab), APA); // latitude
+                //printf("lp__phi=%g,  lp__lam=%g\n", lp__phi, lp__lam);
+                //printf("lp__phi=%g,  lp__lam=%g\n", lp__phi * RAD2DEG, lp__lam* RAD2DEG);
+                
+                *lats = lp__phi * RAD2DEG;
+                *lons = lp__lam * RAD2DEG;
+                //rho = sqrt(x * x + ysq);
+                //if (rho > epsilon) {
+                //    c     = 2 * asin(rho / (2.0 * radius));
+                //    cosc  = cos(c);
+                //    sinc  = sin(c);
+                //    *lats = asin(cosc * sinphi1 + y * sinc * cosphi1 / rho) / d2r;
+                //    *lons = (lambda0 + atan2(x * sinc, rho * cosphi1 * cosc - y * sinphi1 * sinc)) / d2r;
+                //}
+                //else {
+                //    *lats = phi1 / d2r;
+                //    *lons = lambda0 / d2r;
+                //}
+                //if (*lons < 0)  *lons += 360;
+                lons++;
+                lats++;
+
+                //x += Dx;
+                x += Dx/earthMajorAxisInMetres;
+            }
+            //y += Dy;
+            y += Dy/earthMajorAxisInMetres;
+        }
+    }
+
+#if 0
     false_easting  = x0;
     false_northing = y0;
     for (j = 0; j < ny; j++) {
@@ -271,6 +330,8 @@ static int init_oblate(grib_handle* h,
             
             lp__lam = atan2(xy_x, xy_y); //longitude
             lp__phi = pj_authlat(asin(ab), APA); // latitude
+            printf("lp__phi=%g,  lp__lam=%g\n", lp__phi, lp__lam);
+
 
             latDeg = latRad * RAD2DEG;  /* Convert to degrees */
             lonDeg = lonRad * RAD2DEG;
@@ -279,7 +340,7 @@ static int init_oblate(grib_handle* h,
             self->lats[index] = latDeg;
         }
     }
-        
+#endif   
     //grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert Azimuthal Equal Area only supported for spherical earth.");
     //return GRIB_GEOCALCULUS_PROBLEM;
     return GRIB_SUCCESS;
@@ -470,7 +531,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     lonFirstInRadians         = lonFirstInDegrees * d2r;
     centralLongitudeInRadians = centralLongitudeInDegrees * d2r;
     standardParallelInRadians = standardParallelInDegrees * d2r;
-
+printf("latFirstInDegrees=%g, lonFirstInDegrees=%g\n",latFirstInDegrees,lonFirstInDegrees);
     if (is_oblate) {
         err = init_oblate(h, self, iter->nv, nx, ny,
                           Dx, Dy, earthMinorAxisInMetres, earthMajorAxisInMetres,
