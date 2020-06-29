@@ -150,6 +150,14 @@ int grib_tool(int argc, char** argv)
     grib_context* c        = grib_context_get_default();
     global_options.context = c;
 
+    /* This is a consequence of ECC-440.
+     * We want to keep the output file(s) opened as various
+     * messages are appended to them. Otherwise they will be opened/closed
+     * multiple times.
+     */
+    if (c->file_pool_max_opened_files == 0)
+        c->file_pool_max_opened_files = 200;
+
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
     feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
 #endif
