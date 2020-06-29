@@ -1485,7 +1485,7 @@ static void test_concept_condition_strings()
     grib_handle_delete(h);
 }
 
-void test_trimming()
+static void test_trimming()
 {
     char a[] = " Standing  ";
     char b[] = "  Weeping ";
