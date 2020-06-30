@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_tools
- *
- */
-
 #include "grib_tools.h"
 #if HAVE_LIBJASPER
 /* Remove compiler warnings re macros being redefined */
@@ -567,9 +562,10 @@ static int grib_tool_index(grib_runtime_options* options)
     }
 
     navigate(options->index2->fields, options);
-    /* TODO(masn): memleak
-     * grib_context_free(c, options->index2->current);
-     */
+
+    if (options->index2)
+        grib_context_free(c, options->index2->current);
+
     grib_tool_finalise_action(options);
 
     return 0;
