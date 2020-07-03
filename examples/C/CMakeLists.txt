@@ -59,7 +59,7 @@ endforeach()
 
 # Now add each test (shell scripts)
 ########################################################################
-list(APPEND tests_basic
+list(APPEND tests_sanity
    grib_set_data
    large_grib1
    grib_sections_copy
@@ -100,10 +100,11 @@ list(APPEND tests_extra
    get_product_kind
 )
 
-foreach( test ${tests_basic} )
+foreach( test ${tests_sanity} )
     ecbuild_add_test( TARGET       eccodes_c_${test}
                       TYPE         SCRIPT
                       COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
+    set_tests_properties( eccodes_c_${test} PROPERTIES LABELS "sanity" )
 endforeach()
 foreach( test ${tests_extra} )
     ecbuild_add_test( TARGET       eccodes_c_${test}

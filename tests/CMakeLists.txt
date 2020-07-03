@@ -205,6 +205,7 @@ foreach( test ${tests_no_data_reqd} )
     ecbuild_add_test( TARGET eccodes_t_${test}
                       TYPE SCRIPT
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
+    set_tests_properties( eccodes_t_${test}  PROPERTIES LABELS "sanity" )
 endforeach()
 ecbuild_add_test( TARGET eccodes_t_grib_check_gaussian_grids
                   TYPE SCRIPT

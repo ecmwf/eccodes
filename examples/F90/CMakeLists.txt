@@ -7,7 +7,7 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 
 # Build the executables used by test scripts
 ################################################
-list( APPEND tests_basic
+list( APPEND tests_sanity
       grib_set_pv
       grib_set_data
       grib_ecc-671 )
@@ -53,7 +53,7 @@ list( APPEND tests_extra
       bufr_subset
       get_product_kind )
 
-foreach( tool ${tests_basic} )
+foreach( tool ${tests_sanity} )
     ecbuild_add_test( TARGET eccodes_f_${tool}
                       SOURCES   ${tool}.f90
                       LINKER_LANGUAGE Fortran
@@ -61,6 +61,7 @@ foreach( tool ${tests_basic} )
                       CONDITION HAVE_FORTRAN
                       RESOURCES bufr_read_scatterometer_f.ref
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh )
+    set_tests_properties( eccodes_f_${tool} PROPERTIES LABELS "sanity" )
 endforeach()
 foreach( tool ${tests_extra} )
     ecbuild_add_test( TARGET eccodes_f_${tool}
