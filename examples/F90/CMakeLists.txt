@@ -61,7 +61,9 @@ foreach( tool ${tests_sanity} )
                       CONDITION HAVE_FORTRAN
                       RESOURCES bufr_read_scatterometer_f.ref
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh )
-    set_tests_properties( eccodes_f_${tool} PROPERTIES LABELS "sanity" )
+    if( HAVE_FORTRAN )
+        set_tests_properties( eccodes_f_${tool} PROPERTIES LABELS "sanity" )
+    endif()
 endforeach()
 foreach( tool ${tests_extra} )
     ecbuild_add_test( TARGET eccodes_f_${tool}
