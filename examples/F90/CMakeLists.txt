@@ -54,26 +54,24 @@ list( APPEND tests_extra
       get_product_kind )
 
 foreach( tool ${tests_sanity} )
-    ecbuild_add_test( TARGET eccodes_f_${tool}
-                      SOURCES   ${tool}.f90
+    ecbuild_add_test( TARGET          eccodes_f_${tool}
+                      SOURCES         ${tool}.f90
                       LINKER_LANGUAGE Fortran
-                      LIBS      eccodes_f90 eccodes
-                      CONDITION HAVE_FORTRAN
-                      RESOURCES bufr_read_scatterometer_f.ref
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh )
-    if( HAVE_FORTRAN )
-        set_tests_properties( eccodes_f_${tool} PROPERTIES LABELS "sanity" )
-    endif()
+                      LIBS            eccodes_f90 eccodes
+                      CONDITION       HAVE_FORTRAN
+                      LABELS          "sanity"
+                      RESOURCES       bufr_read_scatterometer_f.ref
+                      COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh )
 endforeach()
 foreach( tool ${tests_extra} )
-    ecbuild_add_test( TARGET eccodes_f_${tool}
-                      SOURCES   ${tool}.f90
+    ecbuild_add_test( TARGET          eccodes_f_${tool}
+                      SOURCES         ${tool}.f90
                       LINKER_LANGUAGE Fortran
-                      LIBS      eccodes_f90 eccodes
-                      CONDITION HAVE_FORTRAN AND ENABLE_EXTRA_TESTS
-                      RESOURCES bufr_read_scatterometer_f.ref
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
-                      TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs )
+                      LIBS            eccodes_f90 eccodes
+                      CONDITION       HAVE_FORTRAN AND ENABLE_EXTRA_TESTS
+                      RESOURCES       bufr_read_scatterometer_f.ref
+                      COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
+                      TEST_DEPENDS    eccodes_download_gribs eccodes_download_bufrs )
 endforeach()
 
 # Executables without a shell script

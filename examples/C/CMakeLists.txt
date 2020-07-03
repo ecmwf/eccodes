@@ -103,8 +103,8 @@ list(APPEND tests_extra
 foreach( test ${tests_sanity} )
     ecbuild_add_test( TARGET       eccodes_c_${test}
                       TYPE         SCRIPT
+                      LABELS       "sanity"
                       COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
-    set_tests_properties( eccodes_c_${test} PROPERTIES LABELS "sanity" )
 endforeach()
 foreach( test ${tests_extra} )
     ecbuild_add_test( TARGET       eccodes_c_${test}
