@@ -3,6 +3,8 @@ TESTS = definitions.sh \
         bufrdc_desc_ref.sh \
         bufrdc_ref.sh \
         bufr_dump_data.sh \
+        bufr_dump_samples.sh \
+        bufr_json_samples.sh \
         bufr_filter.sh \
         bufr_json_data.sh \
         bufr_compare.sh \

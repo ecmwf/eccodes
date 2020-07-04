@@ -10,7 +10,7 @@
 
 . ./include.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_dump_samples_test"
 
 temp=${label}".temp"

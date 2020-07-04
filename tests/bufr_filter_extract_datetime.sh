@@ -13,18 +13,18 @@ set -x
 
 cd ${data_dir}/bufr
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_filter_extract_datetime_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define tmp bufr file
+# Define tmp bufr file
 fBufrTmp=${label}".bufr.tmp"
 
-#Define filter rules file
+# Define filter rules file
 fRules=${label}.filter
 
 generate_filter()

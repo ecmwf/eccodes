@@ -5,3 +5,4 @@ leak:tools/bufr_compare.c
 leak:tools/gts_filter.c
 leak:src/action_class_rename.c
 leak:tools/grib_to_netcdf.c
+leak:tests/bufr_ecc-517.c
