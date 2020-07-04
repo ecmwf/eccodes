@@ -108,7 +108,7 @@ download_data:
 
 noinst_PROGRAMS = packing_check gauss_sub read_any grib_double_cmp packing pack_unpack \
                   julian grib_read_index grib_indexing gribex_perf\
-                  jpeg_perf grib_ccsds_perf so_perf png_perf bpv_limit laplacian \
+                  jpeg_perf grib_ccsds_perf so_perf png_perf grib_bpv_limit laplacian \
                   unit_tests bufr_ecc-517
 
 laplacian_SOURCES = laplacian.c

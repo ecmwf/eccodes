@@ -10,7 +10,7 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 # Build the executables used by test scripts
 ################################################
 list( APPEND test_bins
-      bpv_limit
+      grib_bpv_limit
       grib_double_cmp
       read_any
       julian
@@ -75,7 +75,7 @@ list(APPEND tests_no_data_reqd
 # These tests do require data downloads
 list(APPEND tests_data_reqd
     grib_data_quality_checks
-    bpv_limit
+    grib_bpv_limit
     grib_complex
     grib_double_cmp
     grib_change_packing
