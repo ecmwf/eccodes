@@ -68,7 +68,37 @@ TESTS = definitions.sh \
         grib_md5.sh \
         grib_neg_fctime.sh \
         bufr_ecc-286.sh \
-        bufr_ecc-288.sh
+        bufr_ecc-288.sh \
+        bufr_ecc-313.sh \
+        bufr_ecc-359.sh \
+        bufr_ecc-379.sh \
+        bufr_ecc-393.sh \
+        bufr_ecc-428.sh \
+        bufr_ecc-433.sh \
+        bufr_ecc-517.sh \
+        bufr_ecc-556.sh \
+        bufr_ecc-616.sh \
+        bufr_ecc-673.sh \
+        bufr_ecc-686.sh \
+        bufr_ecc-690.sh \
+        bufr_ecc-750.sh \
+        bufr_ecc-765.sh \
+        bufr_ecc-875.sh \
+        bufr_ecc-887.sh \
+        grib_ecc-136.sh \
+        grib_ecc-967.sh \
+        grib_ecc-1065.sh \
+        grib_ecc-1053.sh \
+        grib_ecc-490.sh \
+        grib_ecc-756.sh \
+        grib_ecc-873.sh \
+        grib_ecc-600.sh \
+        grib_ecc-923.sh \
+        grib_ecc-979.sh \
+        grib_ecc-984.sh \
+        grib_ecc-1000.sh \
+        grib_ecc-1001.sh \
+        grib_ecc-1030.sh
 
 # First download all the necessary data for testing
 # Note: if download fails, no tests will be done
@@ -79,7 +109,7 @@ download_data:
 noinst_PROGRAMS = packing_check gauss_sub read_any grib_double_cmp packing pack_unpack \
                   julian grib_read_index grib_indexing gribex_perf\
                   jpeg_perf grib_ccsds_perf so_perf png_perf bpv_limit laplacian \
-                  unit_tests
+                  unit_tests bufr_ecc-517
 
 laplacian_SOURCES = laplacian.c
 packing_SOURCES = packing.c
@@ -97,6 +127,7 @@ png_perf_SOURCES = png_perf.c
 grib_ccsds_perf_SOURCES  = grib_ccsds_perf.c
 gribex_perf_SOURCES = gribex_perf.c
 gauss_sub_SOURCES = gauss_sub.c
+bufr_ecc_517_SOURCES = bufr_ecc-517.c
 
 LDADD = $(top_builddir)/src/libeccodes.la $(EMOS_LIB)
 
