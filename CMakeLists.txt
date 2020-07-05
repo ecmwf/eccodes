@@ -418,7 +418,7 @@ ecbuild_dont_pack( DIRS
      concepts tests.ecmwf doxygen confluence examples.dev templates parameters java
      perl config m4 rpms gaussian_experimental gribex examples/F77
      examples/extra examples/deprecated bamboo fortran/fortranCtypes tigge/tools
-     share/eccodes  .settings python3 )
+     share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
 

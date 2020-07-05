@@ -241,7 +241,7 @@ if( HAVE_PYTHON AND ENABLE_EXTRA_TESTS )
         ecbuild_add_test( TARGET eccodes_t_${test}
                           TYPE SCRIPT
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                          ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} PYTHONPATH=${PROJECT_BINARY_DIR}/${ECCODES_PYTHON_DIR}
+                          ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} PYTHONPATH=${PROJECT_BINARY_DIR}/python
                           TEST_DEPENDS eccodes_download_bufrs )
     endforeach()
 endif()
