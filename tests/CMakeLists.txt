@@ -68,9 +68,9 @@ list(APPEND tests_no_data_reqd
     grib_efas
     grib_sh_imag
     pseudo_diag
-    grib_lambert_conformal
-    grib_polar_stereographic
-    grib_space_view
+    grib_grid_lambert_conformal
+    grib_grid_polar_stereographic
+    grib_grid_space_view
     grib_g1fcperiod)
 
 # These tests do require data downloads
@@ -157,7 +157,7 @@ list(APPEND tests_data_reqd
     pseudo_budg
     grib_gridType
     grib_octahedral
-    grib_mercator
+    grib_grid_mercator
     grib_global
     grib_concept
     grib_decimalPrecision
@@ -248,10 +248,10 @@ endif()
 
 ###########################################
 # Note: the reference file is in the tests dir not data dir!
-ecbuild_add_test( TARGET eccodes_t_grib_lamb_az_eq_area
+ecbuild_add_test( TARGET eccodes_t_grib_grid_lamb_az_eq_area
                   TYPE SCRIPT
                   CONDITION ENABLE_EXTRA_TESTS
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_lamb_az_eq_area.sh
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_grid_lamb_az_eq_area.sh
                   RESOURCES grib_lamb_az_eq_area.ref
                   TEST_DEPENDS eccodes_download_gribs )
 
