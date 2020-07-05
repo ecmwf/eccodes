@@ -69,6 +69,7 @@ list(APPEND tests_no_data_reqd
     grib_sh_imag
     pseudo_diag
     grib_lambert_conformal
+    grib_polar_stereographic
     grib_space_view
     grib_g1fcperiod)
 
