@@ -38,6 +38,26 @@ void rtrim(char* s)
     s[len] = '\0';
 }
 
+void lrtrim(char** x, int do_left, int do_right)
+{
+    DebugAssert(do_left || do_right);
+    if (do_left) {
+        while (isspace(**x) && **x != '\0')
+            (*x)++;
+    }
+    if (**x == '\0')
+        return;
+    if (do_right) {
+        char* p = (*x) + strlen(*x) - 1;
+        while (isspace(*p)) {
+            *p = '\0';
+            p--;
+        }
+        if (isspace(*p))
+            *p = '\0';
+    }
+}
+
 /* Return the component after final slash */
 /*  "/tmp/x"  -> "x"  */
 /*  "/tmp/"   -> ""   */

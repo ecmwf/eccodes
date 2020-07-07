@@ -116,6 +116,10 @@ static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, siz
     grib_expression_accessor* e = (grib_expression_accessor*)g;
     char mybuf[1024]            = {0,};
     long start = e->start;
+    if (e->length > sizeof(mybuf)) {
+        *err = GRIB_INVALID_ARGUMENT;
+        return NULL;
+    }
 
     Assert(buf);
     if ((*err = grib_get_string_internal(h, e->name, mybuf, size)) != GRIB_SUCCESS)

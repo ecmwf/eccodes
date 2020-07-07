@@ -360,9 +360,11 @@ static int init_oblate(grib_handle* h,
                 latRad = -M_PI_2;
             }
             lonRad = adjust_lon_radians(theta / ns + LoVInRadians);
+            if (i == 0 && j == 0) {
+                DebugAssert(fabs(latFirstInRadians - latRad) <= EPSILON);
+            }
             latDeg = latRad * RAD2DEG;  /* Convert to degrees */
-            lonDeg = lonRad * RAD2DEG;
-            lonDeg = normalise_longitude_in_degrees(lonDeg);
+            lonDeg = normalise_longitude_in_degrees(lonRad * RAD2DEG);
             self->lons[index] = lonDeg;
             self->lats[index] = latDeg;
         }

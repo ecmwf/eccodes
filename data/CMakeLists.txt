@@ -61,6 +61,7 @@ list(APPEND other_files
     typeOfProcessedData.ok
     tigge_pf_ecmwf.grib2.ref
     grib_data_files.txt
+    BUFR3.tmpl.dump.plain.ref
 )
 
 foreach( file ${other_files} )

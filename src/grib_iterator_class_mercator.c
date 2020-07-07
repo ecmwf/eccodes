@@ -215,10 +215,12 @@ static int init_mercator(grib_handle* h,
                 grib_context_free(h->context, self->lons);
                 return err;
             }
-            lonRad            = adjust_lon_radians(orientationInRadians + _x / (earthMajorAxisInMetres * m1));
+            lonRad = adjust_lon_radians(orientationInRadians + _x / (earthMajorAxisInMetres * m1));
+            if (i == 0 && j == 0) {
+                DebugAssert(fabs(latFirstInRadians - latRad) <= EPSILON);
+            }
             latDeg            = latRad * RAD2DEG; /* Convert to degrees */
-            lonDeg            = lonRad * RAD2DEG;
-            lonDeg            = normalise_longitude_in_degrees(lonDeg);
+            lonDeg            = normalise_longitude_in_degrees(lonRad * RAD2DEG);
             self->lons[index] = lonDeg;
             self->lats[index] = latDeg;
         }

@@ -42,11 +42,13 @@ flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : 
 unsigned[4] xDirectionGridLengthInMillimetres  : dump ;
 alias Dx  = xDirectionGridLengthInMillimetres ;
 meta geography.xDirectionGridLengthInMetres scale(xDirectionGridLengthInMillimetres,one,thousand,truncateDegrees): dump;
+alias DxInMetres = xDirectionGridLengthInMetres;
 
 #  Dy - Y-direction grid length in millimetres
 unsigned[4] yDirectionGridLengthInMillimetres  : dump ;
 alias Dy  = yDirectionGridLengthInMillimetres ;
 meta geography.yDirectionGridLengthInMetres scale(yDirectionGridLengthInMillimetres,one,thousand,truncateDegrees): dump;
+alias DyInMetres = yDirectionGridLengthInMetres;
 
 include "grib2/template.3.scanning_mode.def";
 
@@ -57,6 +59,8 @@ iterator lambert_azimuthal_equal_area(numberOfPoints,missingValue,values,
           Dx,Dy,
           iScansNegatively, jScansPositively,
           jPointsAreConsecutive, alternativeRowScanning);
+
+nearest lambert_azimuthal_equal_area(values,radius,Nx,Ny);
 
 meta latLonValues latlonvalues(values);
 alias latitudeLongitudeValues=latLonValues;

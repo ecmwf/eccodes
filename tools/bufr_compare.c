@@ -1319,16 +1319,6 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
 
     grib_keys_iterator_delete(iter);
 
-    /* ECC-356: Handling special case of 'ident' key */
-    name = "ls.ident";
-    if (!blacklisted("ident") && grib_is_defined(handle1, name) && grib_is_defined(handle2, name)) {
-        if (compare_values(options, handle1, handle2, "ident", GRIB_TYPE_STRING)) {
-            (*pErr)++;
-            write_messages(handle1, handle2);
-            ret = 1;
-        }
-    }
-
     return ret;
 }
 

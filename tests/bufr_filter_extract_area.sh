@@ -13,18 +13,18 @@ set -x
 
 cd ${data_dir}/bufr
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_filter_extract_area"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define tmp bufr file
+# Define tmp bufr file
 fBufrTmp=${label}".bufr.tmp"
 
-#Define filter rules file
+# Define filter rules file
 fRules=${label}.filter
 
 #-----------------------------------------------------------
@@ -136,6 +136,7 @@ fieldOfViewNumber=7 8 9 10 11 12 13 8 9 10 11 12 11 12
 EOF
 
 diff $outputRef $outputFilt
+rm -f $outputBufr
 
 # Uncompressed message
 # ---------------------

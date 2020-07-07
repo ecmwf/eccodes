@@ -186,7 +186,7 @@ int grib_encode_unsigned_longb(unsigned char* p, unsigned long val, long* bitp, 
 }
 
 #if VECTOR
-#include "grib_bits_fast_big_endian_vector.c"
+#include "grib_bits_fast_big_endian_vector.c" /* Experimental */
 #elif OMP
 #include "grib_bits_fast_big_endian_omp.c"
 #else

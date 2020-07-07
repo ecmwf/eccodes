@@ -11,18 +11,22 @@ meta localMinute bits(keyData,27,6) : dump,long_type,no_copy;
 meta localSecond bits(keyData,33,6) : dump,long_type,no_copy;
 meta spare  bits(keyData,39,1) : no_copy; # 40 bits = 5 bytes
 
-alias mars.localYear=localYear;
-alias mars.localMonth=localMonth;
-alias mars.localDay=localDay;
-alias mars.localHour=localHour;
-alias mars.localMinute=localMinute;
-alias mars.localSecond=localSecond;
+alias rdb.localYear=localYear;
+alias rdb.localMonth=localMonth;
+alias rdb.localDay=localDay;
+alias rdb.localHour=localHour;
+alias rdb.localMinute=localMinute;
+alias rdb.localSecond=localSecond;
 
+meta localDate sprintf("%.4d%.2d%.2d",localYear,localMonth,localDay) : no_copy,read_only;
+meta localTime sprintf("%.2d%.2d",localHour,localMinute) : no_copy,read_only;
 meta localDateTime julian_date(localYear,localMonth,localDay,localHour,localMinute,localSecond) : no_copy;
+alias mars.date = localDate;
+alias mars.time = localTime;
 
 # isSatellite and other stuff moved to section 3
-ascii[8]    keyMore : hidden; 
-byte[9]    keySat : hidden; 
+ascii[8] keyMore : hidden; 
+byte[9]  keySat : hidden; 
 
 # 16 bytes
 unsigned[2] messageLength;
@@ -80,9 +84,10 @@ if (oldSubtype < 255 ) {
 alias ls.rdbType=rdbType;
 alias ls.rdbSubtype=rdbSubtype;
 
-alias mars.rdbType=rdbType;
-alias mars.rdbSubtype=rdbSubtype;
+alias rdb.rdbType=rdbType;
+alias rdb.rdbSubtype=rdbSubtype;
+
+alias mars.obstype = rdbSubtype;
 
 #Data assimilation loop for purpose of Continous DA
 unsigned[1] daLoop;
-

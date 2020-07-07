@@ -36,7 +36,7 @@ grib_dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE* out
             grib_dumper_class* c = *(table[i].cclass);
             grib_dumper* d       = (grib_dumper*)grib_context_malloc_clear(h->context, c->size);
             d->depth             = 0;
-            d->handle            = (grib_handle*)h;
+            d->context           = h->context;
             d->cclass            = c;
             d->option_flags      = option_flags;
             d->arg               = arg;
@@ -100,12 +100,14 @@ void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long fla
     grib_dumper_delete(dumper);
 }
 
+/* Note: if the dumper passed in is non-NULL, it will be freed up */
 grib_dumper* grib_dump_content_with_dumper(grib_handle* h, grib_dumper* dumper, FILE* f, const char* mode, unsigned long flags, void* data)
 {
     long count = 1;
     if (dumper != NULL) {
         count = dumper->count;
         count++;
+        grib_dumper_delete(dumper);
     }
     dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
     if (!dumper)
