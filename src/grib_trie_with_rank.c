@@ -270,6 +270,9 @@ static const int mapping[] = {
     0,  /* ff */
 };
 
+#define DYN_OARRAY_SIZE_INIT 5000 /* Initial size for grib_odarray_new */
+#define DYN_OARRAY_SIZE_INCR 6000 /* Increment size for grib_odarray_new */
+
 /* ECC-388 */
 #ifdef DEBUG
 static const size_t NUM_MAPPINGS = sizeof(mapping) / sizeof(mapping[0]);
@@ -483,7 +486,8 @@ int grib_trie_with_rank_insert(grib_trie_with_rank* t, const char* key, void* da
         }
     }
     if (t->objs == NULL)
-        t->objs = grib_oarray_new(t->context, 100, 1000);
+        t->objs = grib_oarray_new(t->context, DYN_OARRAY_SIZE_INIT, DYN_OARRAY_SIZE_INCR);
+    	//t->objs = grib_oarray_new(t->context, 100, 1000);
     grib_oarray_push(t->context, t->objs, data);
     /* grib_trie_with_rank_insert_in_list(t,data); */
     GRIB_MUTEX_UNLOCK(&mutex);

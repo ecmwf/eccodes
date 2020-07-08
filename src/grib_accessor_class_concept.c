@@ -40,6 +40,9 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
+#define DYN_SARRAY_SIZE_INIT 50 /* Initial size for grib_sarray_new */
+#define DYN_SARRAY_SIZE_INCR 60 /* Increment size for grib_sarray_new */
+
 static int get_native_type(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
@@ -399,7 +402,9 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
         return err;
     }
     e  = c->conditions;
-    sa = grib_sarray_new(h->context, 10, 10);
+    //magic number 10 is not documented anywhere...
+    //sa = grib_sarray_new(h->context, 10, 10);
+    sa = grib_sarray_new(h->context, DYN_SARRAY_SIZE_INIT, DYN_SARRAY_SIZE_INCR);
     while (e) {
         concept_conditions_apply(h, e, values, sa, &count);
         e = e->next;

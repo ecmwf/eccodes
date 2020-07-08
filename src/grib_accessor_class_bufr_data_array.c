@@ -374,8 +374,18 @@ static void tableB_override_dump(grib_accessor_bufr_data_array *self)
 }
  */
 
-#define DYN_ARRAY_SIZE_INIT 1000 /* Initial size for grib_iarray_new and grib_darray_new */
-#define DYN_ARRAY_SIZE_INCR 1000 /* Increment size for grib_iarray_new and grib_darray_new */
+//#define DYN_ARRAY_SIZE_INIT 1000 /* Initial size for grib_iarray_new and grib_darray_new */
+//#define DYN_ARRAY_SIZE_INCR 1000 /* Increment size for grib_iarray_new and grib_darray_new */
+#define DYN_ARRAY_SIZE_INIT 5000 /* Initial size for grib_iarray_new and grib_darray_new */
+#define DYN_ARRAY_SIZE_INCR 6000 /* Increment size for grib_iarray_new and grib_darray_new */
+#define DYN_VARRAY_SIZE_INIT 500 /* Initial size for grib_varray_new */
+#define DYN_VARRAY_SIZE_INCR 600 /* Increment size for grib_varray_new */
+#define DYN_VDARRAY_SIZE_INIT 5000 /* Initial size for grib_vdarray_new */
+#define DYN_VDARRAY_SIZE_INCR 6000 /* Increment size for grib_vdarray_new */
+#define DYN_VSARRAY_SIZE_INIT 50 /* Initial size for grib_vsarray_new */
+#define DYN_VSARRAY_SIZE_INCR 60 /* Increment size for grib_vsarray_new */
+#define DYN_ODARRAY_SIZE_INIT 2000 /* Initial size for grib_odarray_new */
+#define DYN_ODARRAY_SIZE_INCR 2400 /* Increment size for grib_odarray_new */
 
 static void init(grib_accessor* a, const long v, grib_arguments* params)
 {
@@ -562,7 +572,8 @@ static int decode_string_array(grib_context* c, unsigned char* data, long* pos, 
     int* err   = &ret;
     char* sval = 0;
     int j, modifiedWidth, width;
-    grib_sarray* sa                        = grib_sarray_new(c, self->numberOfSubsets, 10);
+    //grib_sarray* sa                        = grib_sarray_new(c, self->numberOfSubsets, 10);
+    grib_sarray* sa                        = grib_sarray_new(c, self->numberOfSubsets, self->numberOfSubsets);
     int bufr_multi_element_constant_arrays = c->bufr_multi_element_constant_arrays;
 
     modifiedWidth = bd->width;
@@ -2450,6 +2461,7 @@ static int create_keys(grib_accessor* a, long onlySubset, long startSubset, long
         grib_sarray_delete(c, self->tempStrings);
         self->tempStrings = NULL;
     }
+    //magic number 500 is not even documented anywhere...
     self->tempStrings = grib_sarray_new(c, self->numberOfSubsets, 500);
 
     end         = self->compressedData ? 1 : self->numberOfSubsets;
@@ -2887,12 +2899,14 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
     }
 
     if (flag != PROCESS_ENCODE) {
-        self->numericValues = grib_vdarray_new(c, 1000, 1000);
-        self->stringValues  = grib_vsarray_new(c, 10, 10);
+        //self->numericValues = grib_vdarray_new(c, 1000, 1000);
+        self->numericValues = grib_vdarray_new(c, DYN_VDARRAY_SIZE_INIT, DYN_VDARRAY_SIZE_INCR);
+        //self->stringValues  = grib_vsarray_new(c, 10, 10);
+        self->stringValues  = grib_vsarray_new(c, DYN_VSARRAY_SIZE_INIT, DYN_VSARRAY_SIZE_INCR);
 
         if (self->elementsDescriptorsIndex)
             grib_viarray_delete(c, self->elementsDescriptorsIndex);
-        self->elementsDescriptorsIndex = grib_viarray_new(c, 100, 100);
+        self->elementsDescriptorsIndex = grib_viarray_new(c, DYN_VARRAY_SIZE_INIT, DYN_VARRAY_SIZE_INCR);
     }
 
     if (flag != PROCESS_DECODE) { /* Operator 203YYY: key OVERRIDDEN_REFERENCE_VALUES_KEY */

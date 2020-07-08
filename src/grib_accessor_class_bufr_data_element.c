@@ -331,7 +331,8 @@ static int pack_string_array(grib_accessor* a, const char** v, size_t* len)
             return GRIB_ARRAY_TOO_SMALL;
         }
         grib_sarray_delete(c, self->stringValues->v[idx]);
-        self->stringValues->v[idx] = grib_sarray_new(c, *len, 1);
+        //self->stringValues->v[idx] = grib_sarray_new(c, *len, 1);
+        self->stringValues->v[idx] = grib_sarray_new(c, *len, *len );
         for (i = 0; i < *len; i++) {
             s = grib_context_strdup(c, v[i]);
             grib_sarray_push(c, self->stringValues->v[idx], s);

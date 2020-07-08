@@ -1,0 +1,543 @@
+Test project /home/eccuser/eccodes-2.17.0-BUILD.B5
+        Start   1: eccodes_t_definitions
+  1/266 Test   #1: eccodes_t_definitions .......................   Passed    5.67 sec
+        Start   2: eccodes_t_grib_calendar
+  2/266 Test   #2: eccodes_t_grib_calendar .....................   Passed    0.67 sec
+        Start   3: eccodes_t_unit_tests
+  3/266 Test   #3: eccodes_t_unit_tests ........................   Passed    0.28 sec
+        Start   4: eccodes_t_md5
+  4/266 Test   #4: eccodes_t_md5 ...............................   Passed    0.15 sec
+        Start   5: eccodes_t_grib_uerra
+  5/266 Test   #5: eccodes_t_grib_uerra ........................   Passed    1.31 sec
+        Start   6: eccodes_t_grib_2nd_order_numValues
+  6/266 Test   #6: eccodes_t_grib_2nd_order_numValues ..........   Passed    0.15 sec
+        Start   7: eccodes_t_grib_ecc-136
+  7/266 Test   #7: eccodes_t_grib_ecc-136 ......................   Passed    0.29 sec
+        Start   8: eccodes_t_grib_ecc-967
+  8/266 Test   #8: eccodes_t_grib_ecc-967 ......................   Passed    0.08 sec
+        Start   9: eccodes_t_grib_ecc-1065
+  9/266 Test   #9: eccodes_t_grib_ecc-1065 .....................   Passed    0.05 sec
+        Start  10: eccodes_t_julian
+ 10/266 Test  #10: eccodes_t_julian ............................   Passed    1.73 sec
+        Start  11: eccodes_t_bufr_dump_samples
+ 11/266 Test  #11: eccodes_t_bufr_dump_samples .................   Passed    0.83 sec
+        Start  12: eccodes_t_bufr_json_samples
+ 12/266 Test  #12: eccodes_t_bufr_json_samples .................   Passed    0.27 sec
+        Start  13: eccodes_t_bufr_ecc-359
+ 13/266 Test  #13: eccodes_t_bufr_ecc-359 ......................   Passed    0.18 sec
+        Start  14: eccodes_t_bufr_ecc-517
+ 14/266 Test  #14: eccodes_t_bufr_ecc-517 ......................   Passed    0.12 sec
+        Start  15: eccodes_t_bufr_rdbSubTypes
+ 15/266 Test  #15: eccodes_t_bufr_rdbSubTypes ..................   Passed    0.15 sec
+        Start  16: eccodes_t_grib_efas
+ 16/266 Test  #16: eccodes_t_grib_efas .........................   Passed    1.35 sec
+        Start  17: eccodes_t_grib_sh_imag
+ 17/266 Test  #17: eccodes_t_grib_sh_imag ......................   Passed    0.03 sec
+        Start  18: eccodes_t_diag
+ 18/266 Test  #18: eccodes_t_diag ..............................   Passed    0.13 sec
+        Start  19: eccodes_t_grib_lambert_conformal
+ 19/266 Test  #19: eccodes_t_grib_lambert_conformal ............   Passed    0.69 sec
+        Start 262: eccodes_download_gribs
+ 20/266 Test #262: eccodes_download_gribs ......................   Passed    4.31 sec
+        Start 263: eccodes_download_tigge_gribs
+ 21/266 Test #263: eccodes_download_tigge_gribs ................   Passed   10.74 sec
+        Start 264: eccodes_download_bufrs
+ 22/266 Test #264: eccodes_download_bufrs ......................   Passed   23.25 sec
+        Start 265: eccodes_download_metars
+ 23/266 Test #265: eccodes_download_metars .....................   Passed    0.14 sec
+        Start 266: eccodes_download_gts
+ 24/266 Test #266: eccodes_download_gts ........................   Passed    0.10 sec
+        Start  20: eccodes_t_grib_data_quality_checks
+ 25/266 Test  #20: eccodes_t_grib_data_quality_checks ..........   Passed    2.68 sec
+        Start  21: eccodes_t_bpv_limit
+ 26/266 Test  #21: eccodes_t_bpv_limit .........................   Passed    0.16 sec
+        Start  22: eccodes_t_grib_complex
+ 27/266 Test  #22: eccodes_t_grib_complex ......................   Passed    0.09 sec
+        Start  23: eccodes_t_grib_double_cmp
+ 28/266 Test  #23: eccodes_t_grib_double_cmp ...................   Passed    0.06 sec
+        Start  24: eccodes_t_grib_change_packing
+ 29/266 Test  #24: eccodes_t_grib_change_packing ...............   Passed    0.46 sec
+        Start  25: eccodes_t_bufr_dump_data
+ 30/266 Test  #25: eccodes_t_bufr_dump_data ....................   Passed    1.06 sec
+        Start  26: eccodes_t_bufr_dump_descriptors
+ 31/266 Test  #26: eccodes_t_bufr_dump_descriptors .............   Passed    9.34 sec
+        Start  27: eccodes_t_bufr_dump_subset
+ 32/266 Test  #27: eccodes_t_bufr_dump_subset ..................   Passed    3.05 sec
+        Start  28: eccodes_t_bufr_dump_decode_filter
+ 33/266 Test  #28: eccodes_t_bufr_dump_decode_filter ...........   Passed    5.78 sec
+        Start  29: eccodes_t_bufr_dump_encode_filter
+ 34/266 Test  #29: eccodes_t_bufr_dump_encode_filter ...........   Passed   16.26 sec
+        Start  30: eccodes_t_bufrdc_desc_ref
+ 35/266 Test  #30: eccodes_t_bufrdc_desc_ref ...................   Passed    2.52 sec
+        Start  31: eccodes_t_bufrdc_ref
+ 36/266 Test  #31: eccodes_t_bufrdc_ref ........................   Passed   28.45 sec
+        Start  32: eccodes_t_bufr_compare
+ 37/266 Test  #32: eccodes_t_bufr_compare ......................   Passed    0.39 sec
+        Start  33: eccodes_t_bufr_copy
+ 38/266 Test  #33: eccodes_t_bufr_copy .........................   Passed    0.11 sec
+        Start  34: eccodes_t_bufr_count
+ 39/266 Test  #34: eccodes_t_bufr_count ........................   Passed    0.04 sec
+        Start  35: eccodes_t_bufr_get
+ 40/266 Test  #35: eccodes_t_bufr_get ..........................   Passed    0.14 sec
+        Start  36: eccodes_t_bufr_filter
+ 41/266 Test  #36: eccodes_t_bufr_filter .......................   Passed    6.79 sec
+        Start  37: eccodes_t_bufr_filter_extract_datetime
+ 42/266 Test  #37: eccodes_t_bufr_filter_extract_datetime ......   Passed    0.68 sec
+        Start  38: eccodes_t_bufr_filter_extract_area
+ 43/266 Test  #38: eccodes_t_bufr_filter_extract_area ..........   Passed    0.32 sec
+        Start  39: eccodes_t_bufr_json_data
+ 44/266 Test  #39: eccodes_t_bufr_json_data ....................   Passed   10.70 sec
+        Start  40: eccodes_t_bufr_ls
+ 45/266 Test  #40: eccodes_t_bufr_ls ...........................   Passed    0.87 sec
+        Start  41: eccodes_t_bufr_ls_json
+ 46/266 Test  #41: eccodes_t_bufr_ls_json ......................   Passed    0.89 sec
+        Start  42: eccodes_t_bufr_change_edition
+ 47/266 Test  #42: eccodes_t_bufr_change_edition ...............   Passed    4.51 sec
+        Start  43: eccodes_t_bufr_keys_iter
+ 48/266 Test  #43: eccodes_t_bufr_keys_iter ....................   Passed    0.09 sec
+        Start  44: eccodes_t_bufr_get_element
+ 49/266 Test  #44: eccodes_t_bufr_get_element ..................   Passed    0.04 sec
+        Start  45: eccodes_t_bufr_wmo_tables
+ 50/266 Test  #45: eccodes_t_bufr_wmo_tables ...................   Passed    2.30 sec
+        Start  46: eccodes_t_bufr_extract_headers
+ 51/266 Test  #46: eccodes_t_bufr_extract_headers ..............   Passed    2.10 sec
+        Start  47: eccodes_t_bufr_ecc-673
+ 52/266 Test  #47: eccodes_t_bufr_ecc-673 ......................   Passed    0.08 sec
+        Start  48: eccodes_t_bufr_ecc-428
+ 53/266 Test  #48: eccodes_t_bufr_ecc-428 ......................   Passed    0.22 sec
+        Start  49: eccodes_t_bufr_ecc-286
+ 54/266 Test  #49: eccodes_t_bufr_ecc-286 ......................   Passed    0.02 sec
+        Start  50: eccodes_t_bufr_ecc-288
+ 55/266 Test  #50: eccodes_t_bufr_ecc-288 ......................   Passed    0.04 sec
+        Start  51: eccodes_t_bufr_ecc-313
+ 56/266 Test  #51: eccodes_t_bufr_ecc-313 ......................   Passed    0.17 sec
+        Start  52: eccodes_t_bufr_ecc-616
+ 57/266 Test  #52: eccodes_t_bufr_ecc-616 ......................   Passed    0.11 sec
+        Start  53: eccodes_t_bufr_ecc-686
+ 58/266 Test  #53: eccodes_t_bufr_ecc-686 ......................   Passed    0.08 sec
+        Start  54: eccodes_t_bufr_ecc-690
+ 59/266 Test  #54: eccodes_t_bufr_ecc-690 ......................   Passed    0.06 sec
+        Start  55: eccodes_t_bufr_ecc-379
+ 60/266 Test  #55: eccodes_t_bufr_ecc-379 ......................   Passed    0.18 sec
+        Start  56: eccodes_t_bufr_ecc-393
+ 61/266 Test  #56: eccodes_t_bufr_ecc-393 ......................   Passed    0.09 sec
+        Start  57: eccodes_t_bufr_ecc-433
+ 62/266 Test  #57: eccodes_t_bufr_ecc-433 ......................   Passed    0.05 sec
+        Start  58: eccodes_t_bufr_ecc-750
+ 63/266 Test  #58: eccodes_t_bufr_ecc-750 ......................   Passed    0.08 sec
+        Start  59: eccodes_t_bufr_ecc-765
+ 64/266 Test  #59: eccodes_t_bufr_ecc-765 ......................   Passed    0.00 sec
+        Start  60: eccodes_t_bufr_ecc-875
+ 65/266 Test  #60: eccodes_t_bufr_ecc-875 ......................   Passed    0.14 sec
+        Start  61: eccodes_t_bufr_ecc-887
+ 66/266 Test  #61: eccodes_t_bufr_ecc-887 ......................   Passed    0.03 sec
+        Start  62: eccodes_t_grib_ecc-490
+ 67/266 Test  #62: eccodes_t_grib_ecc-490 ......................   Passed    0.08 sec
+        Start  63: eccodes_t_grib_ecc-756
+ 68/266 Test  #63: eccodes_t_grib_ecc-756 ......................   Passed    0.52 sec
+        Start  64: eccodes_t_grib_ecc-873
+ 69/266 Test  #64: eccodes_t_grib_ecc-873 ......................   Passed    0.22 sec
+        Start  65: eccodes_t_grib_ecc-600
+ 70/266 Test  #65: eccodes_t_grib_ecc-600 ......................   Passed    0.10 sec
+        Start  66: eccodes_t_grib_ecc-923
+ 71/266 Test  #66: eccodes_t_grib_ecc-923 ......................   Passed    0.12 sec
+        Start  67: eccodes_t_grib_ecc-979
+ 72/266 Test  #67: eccodes_t_grib_ecc-979 ......................   Passed    0.17 sec
+        Start  68: eccodes_t_grib_ecc-984
+ 73/266 Test  #68: eccodes_t_grib_ecc-984 ......................   Passed    0.05 sec
+        Start  69: eccodes_t_grib_ecc-1000
+ 74/266 Test  #69: eccodes_t_grib_ecc-1000 .....................   Passed    0.09 sec
+        Start  70: eccodes_t_grib_ecc-1001
+ 75/266 Test  #70: eccodes_t_grib_ecc-1001 .....................   Passed    0.32 sec
+        Start  71: eccodes_t_grib_ecc-1030
+ 76/266 Test  #71: eccodes_t_grib_ecc-1030 .....................   Passed    0.07 sec
+        Start  72: eccodes_t_bufr_ecc-556
+ 77/266 Test  #72: eccodes_t_bufr_ecc-556 ......................   Passed    0.02 sec
+        Start  73: eccodes_t_gts_get
+ 78/266 Test  #73: eccodes_t_gts_get ...........................   Passed    0.08 sec
+        Start  74: eccodes_t_gts_ls
+ 79/266 Test  #74: eccodes_t_gts_ls ............................   Passed    0.06 sec
+        Start  75: eccodes_t_gts_count
+ 80/266 Test  #75: eccodes_t_gts_count .........................   Passed    0.04 sec
+        Start  76: eccodes_t_gts_compare
+ 81/266 Test  #76: eccodes_t_gts_compare .......................   Passed    0.18 sec
+        Start  77: eccodes_t_metar_ls
+ 82/266 Test  #77: eccodes_t_metar_ls ..........................   Passed    0.26 sec
+        Start  78: eccodes_t_metar_get
+ 83/266 Test  #78: eccodes_t_metar_get .........................   Passed    0.15 sec
+        Start  79: eccodes_t_metar_dump
+ 84/266 Test  #79: eccodes_t_metar_dump ........................   Passed    0.29 sec
+        Start  80: eccodes_t_metar_compare
+ 85/266 Test  #80: eccodes_t_metar_compare .....................   Passed    0.19 sec
+        Start  81: eccodes_t_bufr_set
+ 86/266 Test  #81: eccodes_t_bufr_set ..........................   Passed    0.11 sec
+        Start  82: eccodes_t_ieee
+ 87/266 Test  #82: eccodes_t_ieee ..............................   Passed    0.56 sec
+        Start  83: eccodes_t_grib_sh_ieee64
+ 88/266 Test  #83: eccodes_t_grib_sh_ieee64 ....................   Passed    0.03 sec
+        Start  84: eccodes_t_grib_optimize_scaling
+ 89/266 Test  #84: eccodes_t_grib_optimize_scaling .............   Passed    0.19 sec
+        Start  85: eccodes_t_grib_optimize_scaling_sh
+ 90/266 Test  #85: eccodes_t_grib_optimize_scaling_sh ..........   Passed    0.05 sec
+        Start  86: eccodes_t_grib_lam_bf
+ 91/266 Test  #86: eccodes_t_grib_lam_bf .......................   Passed    0.26 sec
+        Start  87: eccodes_t_grib_lam_gp
+ 92/266 Test  #87: eccodes_t_grib_lam_gp .......................   Passed    0.14 sec
+        Start  88: eccodes_t_grib1to2
+ 93/266 Test  #88: eccodes_t_grib1to2 ..........................   Passed    3.39 sec
+        Start  89: eccodes_t_grib2to1
+ 94/266 Test  #89: eccodes_t_grib2to1 ..........................   Passed    2.78 sec
+        Start  90: eccodes_t_grib1to3
+ 95/266 Test  #90: eccodes_t_grib1to3 ..........................   Passed    0.22 sec
+        Start  91: eccodes_t_grib2to3
+ 96/266 Test  #91: eccodes_t_grib2to3 ..........................   Passed    0.13 sec
+        Start  92: eccodes_t_grib3_templates
+ 97/266 Test  #92: eccodes_t_grib3_templates ...................   Passed    0.27 sec
+        Start  93: eccodes_t_badgrib
+ 98/266 Test  #93: eccodes_t_badgrib ...........................   Passed    0.07 sec
+        Start  94: eccodes_t_grib_ls
+ 99/266 Test  #94: eccodes_t_grib_ls ...........................   Passed    2.15 sec
+        Start  95: eccodes_t_grib_ls_json
+100/266 Test  #95: eccodes_t_grib_ls_json ......................   Passed    9.83 sec
+        Start  96: eccodes_t_grib_filter
+101/266 Test  #96: eccodes_t_grib_filter .......................   Passed    0.69 sec
+        Start  97: eccodes_t_grib_multi
+102/266 Test  #97: eccodes_t_grib_multi ........................   Passed    0.15 sec
+        Start  98: eccodes_t_grib_nearest_test
+103/266 Test  #98: eccodes_t_grib_nearest_test .................   Passed    0.11 sec
+        Start  99: eccodes_t_budg
+104/266 Test  #99: eccodes_t_budg ..............................   Passed    0.01 sec
+        Start 100: eccodes_t_grib_gridType
+105/266 Test #100: eccodes_t_grib_gridType .....................   Passed    0.12 sec
+        Start 101: eccodes_t_grib_octahedral
+106/266 Test #101: eccodes_t_grib_octahedral ...................   Passed   16.88 sec
+        Start 102: eccodes_t_grib_global
+107/266 Test #102: eccodes_t_grib_global .......................   Passed    0.46 sec
+        Start 103: eccodes_t_grib_concept
+108/266 Test #103: eccodes_t_grib_concept ......................   Passed    1.29 sec
+        Start 104: eccodes_t_grib_decimalPrecision
+109/266 Test #104: eccodes_t_grib_decimalPrecision .............   Passed    0.25 sec
+        Start 105: eccodes_t_grib_bitsPerValue
+110/266 Test #105: eccodes_t_grib_bitsPerValue .................   Passed    2.99 sec
+        Start 106: eccodes_t_get_fail
+111/266 Test #106: eccodes_t_get_fail ..........................   Passed    0.02 sec
+        Start 107: eccodes_t_grib_missing
+112/266 Test #107: eccodes_t_grib_missing ......................   Passed    0.10 sec
+        Start 108: eccodes_t_grib_local
+113/266 Test #108: eccodes_t_grib_local ........................   Passed    8.99 sec
+        Start 109: eccodes_t_grib_step
+114/266 Test #109: eccodes_t_grib_step .........................   Passed    0.86 sec
+        Start 110: eccodes_t_grib_set
+115/266 Test #110: eccodes_t_grib_set ..........................   Passed    0.30 sec
+        Start 111: eccodes_t_grib_iterator
+116/266 Test #111: eccodes_t_grib_iterator .....................   Passed    1.82 sec
+        Start 112: eccodes_t_grib_compare
+117/266 Test #112: eccodes_t_grib_compare ......................   Passed    0.65 sec
+        Start 113: eccodes_t_grib_copy
+118/266 Test #113: eccodes_t_grib_copy .........................   Passed    0.21 sec
+        Start 114: eccodes_t_grib_level
+119/266 Test #114: eccodes_t_grib_level ........................   Passed    1.55 sec
+        Start 115: eccodes_t_index
+120/266 Test #115: eccodes_t_index .............................   Passed    1.15 sec
+        Start 116: eccodes_t_grib_bitmap
+121/266 Test #116: eccodes_t_grib_bitmap .......................   Passed    1.06 sec
+        Start 117: eccodes_t_grib_list
+122/266 Test #117: eccodes_t_grib_list .........................   Passed    0.05 sec
+        Start 118: eccodes_t_grib_second_order
+123/266 Test #118: eccodes_t_grib_second_order .................   Passed    1.75 sec
+        Start 119: eccodes_t_grib_multi_from_message
+124/266 Test #119: eccodes_t_grib_multi_from_message ...........   Passed    0.48 sec
+        Start 120: eccodes_t_grib_change_scanning
+125/266 Test #120: eccodes_t_grib_change_scanning ..............   Passed    3.01 sec
+        Start 121: eccodes_t_grib_statistics
+126/266 Test #121: eccodes_t_grib_statistics ...................   Passed    1.55 sec
+        Start 122: eccodes_t_grib_tigge
+127/266 Test #122: eccodes_t_grib_tigge ........................   Passed   14.11 sec
+        Start 123: eccodes_t_read_any
+128/266 Test #123: eccodes_t_read_any ..........................   Passed    0.19 sec
+        Start 124: eccodes_t_grib_dump
+129/266 Test #124: eccodes_t_grib_dump .........................   Passed    1.02 sec
+        Start 125: eccodes_t_grib_dump_debug
+130/266 Test #125: eccodes_t_grib_dump_debug ...................   Passed   16.84 sec
+        Start 126: eccodes_t_grib_dump_json
+131/266 Test #126: eccodes_t_grib_dump_json ....................   Passed   19.44 sec
+        Start 127: eccodes_t_grib_local_MeteoFrance
+132/266 Test #127: eccodes_t_grib_local_MeteoFrance ............   Passed    0.15 sec
+        Start 128: eccodes_t_grib_neg_fctime
+133/266 Test #128: eccodes_t_grib_neg_fctime ...................   Passed    0.51 sec
+        Start 129: eccodes_t_codes_split_file
+134/266 Test #129: eccodes_t_codes_split_file ..................   Passed    1.29 sec
+        Start 130: eccodes_t_grib_mars_types
+135/266 Test #130: eccodes_t_grib_mars_types ...................   Passed   11.23 sec
+        Start 131: eccodes_t_bufr_dump_encode_fortran
+136/266 Test #131: eccodes_t_bufr_dump_encode_fortran ..........   Passed    4.07 sec
+        Start 132: eccodes_t_bufr_dump_decode_fortran
+137/266 Test #132: eccodes_t_bufr_dump_decode_fortran ..........   Passed    4.20 sec
+        Start 133: eccodes_t_grib_util_set_spec
+138/266 Test #133: eccodes_t_grib_util_set_spec ................   Passed    0.59 sec
+        Start 134: eccodes_t_grib_padding
+139/266 Test #134: eccodes_t_grib_padding ......................   Passed   42.12 sec
+        Start 135: eccodes_t_grib_tigge_conversions
+140/266 Test #135: eccodes_t_grib_tigge_conversions ............   Passed   30.79 sec
+        Start 136: eccodes_t_bufr_dump_encode_C
+141/266 Test #136: eccodes_t_bufr_dump_encode_C ................   Passed    4.10 sec
+        Start 137: eccodes_t_bufr_dump_decode_C
+142/266 Test #137: eccodes_t_bufr_dump_decode_C ................   Passed    3.35 sec
+        Start 138: eccodes_t_bufr_dump_encode_python
+143/266 Test #138: eccodes_t_bufr_dump_encode_python ...........   Passed   33.90 sec
+        Start 139: eccodes_t_bufr_dump_decode_python
+144/266 Test #139: eccodes_t_bufr_dump_decode_python ...........   Passed   20.49 sec
+        Start 140: eccodes_t_grib_lamb_az_eq_area
+145/266 Test #140: eccodes_t_grib_lamb_az_eq_area ..............   Passed    0.18 sec
+        Start 141: eccodes_t_tools_data_from_stdin
+146/266 Test #141: eccodes_t_tools_data_from_stdin .............   Passed    0.03 sec
+        Start 142: eccodes_t_bufr_ecc-197
+147/266 Test #142: eccodes_t_bufr_ecc-197 ......................   Passed    0.15 sec
+        Start 143: eccodes_t_grib_check_param_concepts
+148/266 Test #143: eccodes_t_grib_check_param_concepts .........   Passed    0.01 sec
+        Start 144: eccodes_c_grib_multi
+149/266 Test #144: eccodes_c_grib_multi ........................   Passed    0.13 sec
+        Start 145: eccodes_c_grib_set_data
+150/266 Test #145: eccodes_c_grib_set_data .....................   Passed    0.02 sec
+        Start 146: eccodes_c_large_grib1
+151/266 Test #146: eccodes_c_large_grib1 .......................   Passed    0.29 sec
+        Start 147: eccodes_c_grib_sections_copy
+152/266 Test #147: eccodes_c_grib_sections_copy ................   Passed    0.26 sec
+        Start 148: eccodes_c_get_product_kind_samples
+153/266 Test #148: eccodes_c_get_product_kind_samples ..........   Passed    0.03 sec
+        Start 149: eccodes_c_grib_iterator
+154/266 Test #149: eccodes_c_grib_iterator .....................   Passed    0.07 sec
+        Start 150: eccodes_c_grib_get_keys
+155/266 Test #150: eccodes_c_grib_get_keys .....................   Passed    0.02 sec
+        Start 151: eccodes_c_grib_print_data
+156/266 Test #151: eccodes_c_grib_print_data ...................   Passed    0.12 sec
+        Start 152: eccodes_c_grib_set_keys
+157/266 Test #152: eccodes_c_grib_set_keys .....................   Passed    0.04 sec
+        Start 153: eccodes_c_grib_keys_iterator
+158/266 Test #153: eccodes_c_grib_keys_iterator ................   Passed    0.26 sec
+        Start 154: eccodes_c_grib_multi_write
+159/266 Test #154: eccodes_c_grib_multi_write ..................   Passed    0.18 sec
+        Start 155: eccodes_c_grib_precision
+160/266 Test #155: eccodes_c_grib_precision ....................   Passed    0.02 sec
+        Start 156: eccodes_c_grib_clone
+161/266 Test #156: eccodes_c_grib_clone ........................   Passed    0.06 sec
+        Start 157: eccodes_c_grib_copy_message
+162/266 Test #157: eccodes_c_grib_copy_message .................   Passed    0.06 sec
+        Start 158: eccodes_c_grib_ensemble_index
+163/266 Test #158: eccodes_c_grib_ensemble_index ...............   Passed    0.30 sec
+        Start 159: eccodes_c_grib_set_pv
+164/266 Test #159: eccodes_c_grib_set_pv .......................   Passed    0.03 sec
+        Start 160: eccodes_c_grib_set_bitmap
+165/266 Test #160: eccodes_c_grib_set_bitmap ...................   Passed    0.03 sec
+        Start 161: eccodes_c_grib_list
+166/266 Test #161: eccodes_c_grib_list .........................   Passed    0.02 sec
+        Start 162: eccodes_c_grib_get_data
+167/266 Test #162: eccodes_c_grib_get_data .....................   Passed    0.35 sec
+        Start 163: eccodes_c_grib_nearest_multiple
+168/266 Test #163: eccodes_c_grib_nearest_multiple .............   Passed    0.03 sec
+        Start 164: eccodes_c_set_missing
+169/266 Test #164: eccodes_c_set_missing .......................   Passed    0.03 sec
+        Start 165: eccodes_c_bufr_attributes
+170/266 Test #165: eccodes_c_bufr_attributes ...................   Passed    0.02 sec
+        Start 166: eccodes_c_bufr_copy_data
+171/266 Test #166: eccodes_c_bufr_copy_data ....................   Passed    0.05 sec
+        Start 167: eccodes_c_bufr_clone
+172/266 Test #167: eccodes_c_bufr_clone ........................   Passed    0.04 sec
+        Start 168: eccodes_c_bufr_expanded
+173/266 Test #168: eccodes_c_bufr_expanded .....................   Passed    0.02 sec
+        Start 169: eccodes_c_bufr_get_keys
+174/266 Test #169: eccodes_c_bufr_get_keys .....................   Passed    0.03 sec
+        Start 170: eccodes_c_bufr_get_string_array
+175/266 Test #170: eccodes_c_bufr_get_string_array .............   Passed    0.03 sec
+        Start 171: eccodes_c_bufr_keys_iterator
+176/266 Test #171: eccodes_c_bufr_keys_iterator ................   Passed    0.03 sec
+        Start 172: eccodes_c_bufr_missing
+177/266 Test #172: eccodes_c_bufr_missing ......................   Passed    0.02 sec
+        Start 173: eccodes_c_bufr_read_header
+178/266 Test #173: eccodes_c_bufr_read_header ..................   Passed    0.11 sec
+        Start 174: eccodes_c_bufr_read_scatterometer
+179/266 Test #174: eccodes_c_bufr_read_scatterometer ...........   Passed    0.03 sec
+        Start 175: eccodes_c_bufr_read_synop
+180/266 Test #175: eccodes_c_bufr_read_synop ...................   Passed    0.02 sec
+        Start 176: eccodes_c_bufr_read_temp
+181/266 Test #176: eccodes_c_bufr_read_temp ....................   Passed    0.03 sec
+        Start 177: eccodes_c_bufr_set_keys
+182/266 Test #177: eccodes_c_bufr_set_keys .....................   Passed    0.04 sec
+        Start 178: eccodes_c_bufr_subset
+183/266 Test #178: eccodes_c_bufr_subset .......................   Passed    0.04 sec
+        Start 179: eccodes_c_get_product_kind
+184/266 Test #179: eccodes_c_get_product_kind ..................   Passed    0.03 sec
+        Start 180: eccodes_c_new_sample
+185/266 Test #180: eccodes_c_new_sample ........................   Passed    0.02 sec
+        Start 181: eccodes_f_grib_set_pv
+186/266 Test #181: eccodes_f_grib_set_pv .......................   Passed    0.13 sec
+        Start 182: eccodes_f_grib_set_data
+187/266 Test #182: eccodes_f_grib_set_data .....................   Passed    0.03 sec
+        Start 183: eccodes_f_grib_ecc-671
+188/266 Test #183: eccodes_f_grib_ecc-671 ......................   Passed    0.02 sec
+        Start 184: eccodes_f_grib_index
+189/266 Test #184: eccodes_f_grib_index ........................   Passed    1.08 sec
+        Start 185: eccodes_f_grib_copy_message
+190/266 Test #185: eccodes_f_grib_copy_message .................   Passed    0.13 sec
+        Start 186: eccodes_f_bufr_copy_message
+191/266 Test #186: eccodes_f_bufr_copy_message .................   Passed    0.03 sec
+        Start 187: eccodes_f_grib_get_keys
+192/266 Test #187: eccodes_f_grib_get_keys .....................   Passed    0.03 sec
+        Start 188: eccodes_f_grib_get_data
+193/266 Test #188: eccodes_f_grib_get_data .....................   Passed    0.82 sec
+        Start 189: eccodes_f_get_pl
+194/266 Test #189: eccodes_f_get_pl ............................   Passed    0.02 sec
+        Start 190: eccodes_f_get_pv
+195/266 Test #190: eccodes_f_get_pv ............................   Passed    0.12 sec
+        Start 191: eccodes_f_grib_keys_iterator
+196/266 Test #191: eccodes_f_grib_keys_iterator ................   Passed    0.06 sec
+        Start 192: eccodes_f_grib_multi_write
+197/266 Test #192: eccodes_f_grib_multi_write ..................   Passed    0.05 sec
+        Start 193: eccodes_f_grib_multi
+198/266 Test #193: eccodes_f_grib_multi ........................   Passed    0.04 sec
+        Start 194: eccodes_f_grib_nearest
+199/266 Test #194: eccodes_f_grib_nearest ......................   Passed    0.02 sec
+        Start 195: eccodes_f_grib_precision
+200/266 Test #195: eccodes_f_grib_precision ....................   Passed    0.02 sec
+        Start 196: eccodes_f_grib_print_data
+201/266 Test #196: eccodes_f_grib_print_data ...................   Passed    0.44 sec
+        Start 197: eccodes_f_grib_set_keys
+202/266 Test #197: eccodes_f_grib_set_keys .....................   Passed    0.08 sec
+        Start 198: eccodes_f_grib_set_bitmap
+203/266 Test #198: eccodes_f_grib_set_bitmap ...................   Passed    0.04 sec
+        Start 199: eccodes_f_grib_set_missing
+204/266 Test #199: eccodes_f_grib_set_missing ..................   Passed    0.02 sec
+        Start 200: eccodes_f_grib_samples
+205/266 Test #200: eccodes_f_grib_samples ......................   Passed    0.05 sec
+        Start 201: eccodes_f_grib_count_messages
+206/266 Test #201: eccodes_f_grib_count_messages ...............   Passed    0.06 sec
+        Start 202: eccodes_f_grib_count_messages_multi
+207/266 Test #202: eccodes_f_grib_count_messages_multi .........   Passed    0.05 sec
+        Start 203: eccodes_f_grib_copy_namespace
+208/266 Test #203: eccodes_f_grib_copy_namespace ...............   Passed    0.06 sec
+        Start 204: eccodes_f_read_message
+209/266 Test #204: eccodes_f_read_message ......................   Passed    0.44 sec
+        Start 205: eccodes_f_read_from_file
+210/266 Test #205: eccodes_f_read_from_file ....................   Passed    0.01 sec
+        Start 206: eccodes_f_get_set_uuid
+211/266 Test #206: eccodes_f_get_set_uuid ......................   Passed    0.05 sec
+        Start 207: eccodes_f_grib_clone
+212/266 Test #207: eccodes_f_grib_clone ........................   Passed    0.03 sec
+        Start 208: eccodes_f_bufr_attributes
+213/266 Test #208: eccodes_f_bufr_attributes ...................   Passed    0.03 sec
+        Start 209: eccodes_f_bufr_copy_data
+214/266 Test #209: eccodes_f_bufr_copy_data ....................   Passed    0.04 sec
+        Start 210: eccodes_f_bufr_clone
+215/266 Test #210: eccodes_f_bufr_clone ........................   Passed    0.04 sec
+        Start 211: eccodes_f_bufr_expanded
+216/266 Test #211: eccodes_f_bufr_expanded .....................   Passed    0.02 sec
+        Start 212: eccodes_f_bufr_get_keys
+217/266 Test #212: eccodes_f_bufr_get_keys .....................   Passed    0.03 sec
+        Start 213: eccodes_f_bufr_get_string_array
+218/266 Test #213: eccodes_f_bufr_get_string_array .............   Passed    0.13 sec
+        Start 214: eccodes_f_bufr_keys_iterator
+219/266 Test #214: eccodes_f_bufr_keys_iterator ................   Passed    0.02 sec
+        Start 215: eccodes_f_bufr_read_header
+220/266 Test #215: eccodes_f_bufr_read_header ..................   Passed    0.01 sec
+        Start 216: eccodes_f_bufr_read_scatterometer
+221/266 Test #216: eccodes_f_bufr_read_scatterometer ...........   Passed    0.08 sec
+        Start 217: eccodes_f_bufr_read_synop
+222/266 Test #217: eccodes_f_bufr_read_synop ...................   Passed    0.02 sec
+        Start 218: eccodes_f_bufr_read_temp
+223/266 Test #218: eccodes_f_bufr_read_temp ....................   Passed    0.04 sec
+        Start 219: eccodes_f_bufr_read_tropical_cyclone
+224/266 Test #219: eccodes_f_bufr_read_tropical_cyclone ........   Passed    0.05 sec
+        Start 220: eccodes_f_bufr_set_keys
+225/266 Test #220: eccodes_f_bufr_set_keys .....................   Passed    0.04 sec
+        Start 221: eccodes_f_bufr_copy_keys
+226/266 Test #221: eccodes_f_bufr_copy_keys ....................   Passed    0.02 sec
+        Start 222: eccodes_f_bufr_subset
+227/266 Test #222: eccodes_f_bufr_subset .......................   Passed    0.04 sec
+        Start 223: eccodes_f_get_product_kind
+228/266 Test #223: eccodes_f_get_product_kind ..................   Passed    0.03 sec
+        Start 224: eccodes_p_grib_set_pv_test
+229/266 Test #224: eccodes_p_grib_set_pv_test ..................   Passed    0.13 sec
+        Start 225: eccodes_p_grib_read_sample_test
+230/266 Test #225: eccodes_p_grib_read_sample_test .............   Passed    0.27 sec
+        Start 226: eccodes_p_bufr_read_sample_test
+231/266 Test #226: eccodes_p_bufr_read_sample_test .............   Passed    0.22 sec
+        Start 227: eccodes_p_bufr_ecc-869_test
+232/266 Test #227: eccodes_p_bufr_ecc-869_test .................   Passed    0.31 sec
+        Start 228: eccodes_p_grib_clone_test
+233/266 Test #228: eccodes_p_grib_clone_test ...................   Passed    0.18 sec
+        Start 229: eccodes_p_grib_count_messages_test
+234/266 Test #229: eccodes_p_grib_count_messages_test ..........   Passed    0.17 sec
+        Start 230: eccodes_p_grib_get_message_offset_test
+235/266 Test #230: eccodes_p_grib_get_message_offset_test ......   Passed    0.18 sec
+        Start 231: eccodes_p_grib_get_keys_test
+236/266 Test #231: eccodes_p_grib_get_keys_test ................   Passed    0.20 sec
+        Start 232: eccodes_p_grib_index_test
+237/266 Test #232: eccodes_p_grib_index_test ...................   Passed    1.13 sec
+        Start 233: eccodes_p_grib_iterator_test
+238/266 Test #233: eccodes_p_grib_iterator_test ................   Passed    6.70 sec
+        Start 234: eccodes_p_grib_keys_iterator_test
+239/266 Test #234: eccodes_p_grib_keys_iterator_test ...........   Passed    0.23 sec
+        Start 235: eccodes_p_grib_multi_write_test
+240/266 Test #235: eccodes_p_grib_multi_write_test .............   Passed    0.12 sec
+        Start 236: eccodes_p_grib_nearest_test
+241/266 Test #236: eccodes_p_grib_nearest_test .................   Passed    0.12 sec
+        Start 237: eccodes_p_grib_print_data_test
+242/266 Test #237: eccodes_p_grib_print_data_test ..............   Passed    0.15 sec
+        Start 238: eccodes_p_grib_samples_test
+243/266 Test #238: eccodes_p_grib_samples_test .................   Passed    0.12 sec
+        Start 239: eccodes_p_grib_set_missing_test
+244/266 Test #239: eccodes_p_grib_set_missing_test .............   Passed    0.13 sec
+        Start 240: eccodes_p_binary_message_test
+245/266 Test #240: eccodes_p_binary_message_test ...............   Passed    0.48 sec
+        Start 241: eccodes_p_grib_set_bitmap_test
+246/266 Test #241: eccodes_p_grib_set_bitmap_test ..............   Passed    0.11 sec
+        Start 242: eccodes_p_bufr_attributes_test
+247/266 Test #242: eccodes_p_bufr_attributes_test ..............   Passed    0.11 sec
+        Start 243: eccodes_p_bufr_clone_test
+248/266 Test #243: eccodes_p_bufr_clone_test ...................   Passed    0.12 sec
+        Start 244: eccodes_p_bufr_copy_data_test
+249/266 Test #244: eccodes_p_bufr_copy_data_test ...............   Passed    0.71 sec
+        Start 245: eccodes_p_bufr_expanded_test
+250/266 Test #245: eccodes_p_bufr_expanded_test ................   Passed    0.11 sec
+        Start 246: eccodes_p_bufr_get_keys_test
+251/266 Test #246: eccodes_p_bufr_get_keys_test ................   Passed    0.11 sec
+        Start 247: eccodes_p_bufr_keys_iterator_test
+252/266 Test #247: eccodes_p_bufr_keys_iterator_test ...........   Passed    0.11 sec
+        Start 248: eccodes_p_bufr_read_header_test
+253/266 Test #248: eccodes_p_bufr_read_header_test .............   Passed    0.37 sec
+        Start 249: eccodes_p_bufr_read_scatterometer_test
+254/266 Test #249: eccodes_p_bufr_read_scatterometer_test ......   Passed    0.13 sec
+        Start 250: eccodes_p_bufr_read_tropical_cyclone_test
+255/266 Test #250: eccodes_p_bufr_read_tropical_cyclone_test ...   Passed    0.20 sec
+        Start 251: eccodes_p_bufr_read_synop_test
+256/266 Test #251: eccodes_p_bufr_read_synop_test ..............   Passed    0.11 sec
+        Start 252: eccodes_p_bufr_read_temp_test
+257/266 Test #252: eccodes_p_bufr_read_temp_test ...............   Passed    0.11 sec
+        Start 253: eccodes_p_bufr_set_keys_test
+258/266 Test #253: eccodes_p_bufr_set_keys_test ................   Passed    0.13 sec
+        Start 254: eccodes_p_bufr_subset_test
+259/266 Test #254: eccodes_p_bufr_subset_test ..................   Passed    0.12 sec
+        Start 255: eccodes_p_get_product_kind_test
+260/266 Test #255: eccodes_p_get_product_kind_test .............   Passed    0.11 sec
+        Start 256: eccodes_p_gts_get_keys_test
+261/266 Test #256: eccodes_p_gts_get_keys_test .................   Passed    0.19 sec
+        Start 257: eccodes_p_metar_get_keys_test
+262/266 Test #257: eccodes_p_metar_get_keys_test ...............   Passed    0.22 sec
+        Start 258: eccodes_p_bufr_ecc-448_test
+263/266 Test #258: eccodes_p_bufr_ecc-448_test .................   Passed    0.12 sec
+        Start 259: eccodes_p_high_level_api_test
+264/266 Test #259: eccodes_p_high_level_api_test ...............   Passed    0.35 sec
+        Start 260: eccodes_p_grib_set_keys_test
+265/266 Test #260: eccodes_p_grib_set_keys_test ................   Passed    0.10 sec
+        Start 261: eccodes_p_bufr_encode_flight_test
+266/266 Test #261: eccodes_p_bufr_encode_flight_test ...........   Passed    0.29 sec
+
+100% tests passed, 0 tests failed out of 266
+
+Label Time Summary:
+download_data    =  38.54 sec*proc (5 tests)
+eccodes          = 454.62 sec*proc (266 tests)
+executable       =   0.02 sec*proc (1 test)
+script           = 416.06 sec*proc (260 tests)
+
+Total Test time (real) = 454.97 sec

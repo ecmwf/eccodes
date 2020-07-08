@@ -70,7 +70,9 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin, grib_handle* ho
     kiter = codes_bufr_data_section_keys_iterator_new(hin);
     if (!kiter)
         return NULL;
-    k = grib_sarray_new(hin->context, 50, 10);
+    //magic numbers 50 and 10 are not documented anywhere...
+    //k = grib_sarray_new(hin->context, 50, 10);
+    k = grib_sarray_new(hin->context, 50, 60);
 
     while (codes_bufr_keys_iterator_next(kiter)) {
         name = codes_bufr_keys_iterator_get_name(kiter);

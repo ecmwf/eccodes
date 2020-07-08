@@ -16,6 +16,9 @@
 
 #include "grib_api_internal.h"
 
+#define DYN_DEFAULT_VIARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+#define DYN_DEFAULT_VIARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
+
 grib_viarray* grib_viarray_new(grib_context* c, size_t size, size_t incsize)
 {
     grib_viarray* v = NULL;
@@ -58,8 +61,8 @@ grib_viarray* grib_viarray_resize(grib_context* c, grib_viarray* v)
 
 grib_viarray* grib_viarray_push(grib_context* c, grib_viarray* v, grib_iarray* val)
 {
-    size_t start_size    = 100;
-    size_t start_incsize = 100;
+    size_t start_size    = DYN_DEFAULT_VIARRAY_SIZE_INIT;
+    size_t start_incsize = DYN_DEFAULT_VIARRAY_SIZE_INCR;
     if (!v)
         v = grib_viarray_new(c, start_size, start_incsize);
 

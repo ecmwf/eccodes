@@ -16,6 +16,9 @@
 
 #include "grib_api_internal.h"
 
+#define DYN_DEFAULT_DARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+#define DYN_DEFAULT_DARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
+
 /* For debugging purposes */
 void grib_darray_print(const char* title, const grib_darray* darray)
 {
@@ -36,7 +39,8 @@ grib_darray* grib_darray_new_from_array(grib_context* c, double* a, size_t size)
     if (!c)
         c = grib_context_get_default();
 
-    v = grib_darray_new(c, size, 100);
+    //v = grib_darray_new(c, size, 100);
+    v = grib_darray_new(c, size, DYN_DEFAULT_DARRAY_SIZE_INCR);
     for (i = 0; i < size; i++)
         v->v[i] = a[i];
     v->n       = size;
@@ -70,6 +74,7 @@ grib_darray* grib_darray_new(grib_context* c, size_t size, size_t incsize)
 grib_darray* grib_darray_resize(grib_context* c, grib_darray* v)
 {
     int newsize = v->incsize + v->size;
+    //int newsize =  (v->size * 2);
 
     if (!c)
         c = grib_context_get_default();
@@ -86,8 +91,11 @@ grib_darray* grib_darray_resize(grib_context* c, grib_darray* v)
 
 grib_darray* grib_darray_push(grib_context* c, grib_darray* v, double val)
 {
-    size_t start_size    = 100;
-    size_t start_incsize = 100;
+    //size_t start_size    = 100;
+    //size_t start_incsize = 100;
+    size_t start_size    = DYN_DEFAULT_DARRAY_SIZE_INIT;
+    size_t start_incsize = DYN_DEFAULT_DARRAY_SIZE_INCR;
+
     if (!v)
         v = grib_darray_new(c, start_size, start_incsize);
 

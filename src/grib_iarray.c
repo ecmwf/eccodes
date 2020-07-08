@@ -16,6 +16,9 @@
 
 #include "grib_api_internal.h"
 
+#define DYN_DEFAULT_IARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+#define DYN_DEFAULT_IARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
+
 /* For debugging purposes */
 void grib_iarray_print(const char* title, const grib_iarray* iarray)
 {
@@ -28,6 +31,7 @@ void grib_iarray_print(const char* title, const grib_iarray* iarray)
     printf("\n");
 }
 
+//NOT USED
 grib_iarray* grib_iarray_new_from_array(grib_context* c, long* a, size_t size)
 {
     size_t i;
@@ -36,11 +40,13 @@ grib_iarray* grib_iarray_new_from_array(grib_context* c, long* a, size_t size)
     if (!c)
         c = grib_context_get_default();
 
-    v = grib_iarray_new(c, size, 100);
+    //v = grib_iarray_new(c, size, 100);
+    v = grib_iarray_new(c, size, DYN_DEFAULT_IARRAY_SIZE_INCR);
+
     for (i = 0; i < size; i++)
         v->v[i] = a[i];
     v->n                   = size;
-    v->number_of_pop_front = 0;
+    v->number_of_pop_front = 0; //never changed atm
     v->context             = c;
     return v;
 }
@@ -78,6 +84,7 @@ long grib_iarray_pop(grib_iarray* a)
     return a->v[a->n];
 }
 
+//NEVER USED
 long grib_iarray_pop_front(grib_iarray* a)
 {
     long v = a->v[0];
@@ -86,7 +93,7 @@ long grib_iarray_pop_front(grib_iarray* a)
         Assert(0);
     a->n--;
     a->v++;
-    a->number_of_pop_front++;
+    a->number_of_pop_front++; //NEVER CHANGED ATM
     /* for (i=0;i<a->n;i++) a->v[i]=a->v[i+1]; */
 
     return v;
@@ -104,20 +111,32 @@ grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
     if (!c)
         c = grib_context_get_default();
 
-    newv = (long*)grib_context_malloc_clear(c, newsize * sizeof(long));
-    if (!newv) {
+    //TES: LET THE realloc work for you, it is more performative, recommandable
+    //and does exactly the same with less Instructions fetched
+    //newv = (long*)grib_context_malloc_clear(c, newsize * sizeof(long));
+    //if (!newv) {
+    //    grib_context_log(c, GRIB_LOG_ERROR,
+    //                     "grib_iarray_resize unable to allocate %d bytes\n", sizeof(long) * newsize);
+    //    return NULL;
+    //}
+    //
+    //for (i = 0; i < v->n; i++)
+    //    newv[i] = v->v[i];
+    //
+    //v->v -= v->number_of_pop_front;
+    //grib_context_free(c, v->v);
+    //v->v                   = newv;
+    //v->size                = newsize;
+    //v->number_of_pop_front = 0;
+
+    v->v    = (void**)grib_context_realloc(c, v->v, newsize * sizeof(long));
+
+    if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_iarray_resize unable to allocate %d bytes\n", sizeof(long) * newsize);
-        return NULL;
+                             "grib_iarray_resize unable to allocate %d bytes\n", sizeof(long) * newsize);
+            return NULL;
     }
 
-    for (i = 0; i < v->n; i++)
-        newv[i] = v->v[i];
-
-    v->v -= v->number_of_pop_front;
-    grib_context_free(c, v->v);
-
-    v->v                   = newv;
     v->size                = newsize;
     v->number_of_pop_front = 0;
 
@@ -127,14 +146,17 @@ grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
 grib_iarray* grib_iarray_resize(grib_iarray* v)
 {
     int newsize = v->incsize + v->size;
+    //int newsize =  (v->size * 2);
 
     return grib_iarray_resize_to(v, newsize);
 }
 
 grib_iarray* grib_iarray_push(grib_iarray* v, long val)
 {
-    size_t start_size    = 100;
-    size_t start_incsize = 100;
+	//size_t start_size    = 100;
+	//size_t start_incsize = 100;
+	size_t start_size    = DYN_DEFAULT_IARRAY_SIZE_INIT;
+	size_t start_incsize = DYN_DEFAULT_IARRAY_SIZE_INCR;
 
     if (!v)
         v = grib_iarray_new(0, start_size, start_incsize);
@@ -147,17 +169,20 @@ grib_iarray* grib_iarray_push(grib_iarray* v, long val)
     return v;
 }
 
+//NOT USED
 grib_iarray* grib_iarray_push_front(grib_iarray* v, long val)
 {
-    size_t start_size    = 100;
-    size_t start_incsize = 100;
+    //size_t start_size    = 100;
+    //size_t start_incsize = 100;
+	size_t start_size    = DYN_DEFAULT_IARRAY_SIZE_INIT;
+	size_t start_incsize = DYN_DEFAULT_IARRAY_SIZE_INCR;
     int i;
     if (!v)
         v = grib_iarray_new(0, start_size, start_incsize);
 
     if (v->number_of_pop_front) {
         v->v--;
-        v->number_of_pop_front--;
+        v->number_of_pop_front--;//NEVER changed ATM
     }
     else {
         if (v->n >= v->size)
@@ -171,17 +196,19 @@ grib_iarray* grib_iarray_push_front(grib_iarray* v, long val)
     return v;
 }
 
+//NEVER CALLED
 grib_iarray* grib_iarray_push_array(grib_iarray* v, long* val, size_t size)
 {
     size_t start_size    = size;
-    size_t start_incsize = 100;
+    //size_t start_incsize = 100;
+    size_t start_incsize = DYN_DEFAULT_IARRAY_SIZE_INCR;
     long* vp             = 0;
     long* valp           = val;
     if (!v)
         v = grib_iarray_new(0, start_size, start_incsize);
 
     v  = grib_iarray_resize_to(v, size + v->n);
-    vp = v->v + v->n + v->number_of_pop_front;
+    vp = v->v + v->n + v->number_of_pop_front;//NEVER CHANGED ATM
     v->n += size;
     while (size) {
         *(vp++) = *(valp++);

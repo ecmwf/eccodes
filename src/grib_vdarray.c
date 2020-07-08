@@ -16,6 +16,9 @@
 
 #include "grib_api_internal.h"
 
+#define DYN_DEFAULT_VDARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+#define DYN_DEFAULT_VDARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
+
 /* For debugging purposes */
 void grib_vdarray_print(const char* title, const grib_vdarray* vdarray)
 {
@@ -72,8 +75,11 @@ grib_vdarray* grib_vdarray_resize(grib_context* c, grib_vdarray* v)
 
 grib_vdarray* grib_vdarray_push(grib_context* c, grib_vdarray* v, grib_darray* val)
 {
-    size_t start_size    = 100;
-    size_t start_incsize = 100;
+    //size_t start_size    = 100;
+    //size_t start_incsize = 100;
+    size_t start_size    = DYN_DEFAULT_VDARRAY_SIZE_INIT;
+    size_t start_incsize = DYN_DEFAULT_VDARRAY_SIZE_INCR;
+
     if (!v)
         v = grib_vdarray_new(c, start_size, start_incsize);
 

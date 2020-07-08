@@ -10,8 +10,10 @@
 
 #include "grib_api_internal.h"
 
-#define DYN_ARRAY_SIZE_INIT 200 /* Initial size for grib_bufr_descriptors_array_new */
-#define DYN_ARRAY_SIZE_INCR 400 /* Increment size for the above */
+//#define DYN_ARRAY_SIZE_INIT 200 /* Initial size for grib_bufr_descriptors_array_new */
+//#define DYN_ARRAY_SIZE_INCR 400 /* Increment size for the above */
+#define DYN_ARRAY_SIZE_INIT 1000 /* Initial size for grib_bufr_descriptors_array_new */
+#define DYN_ARRAY_SIZE_INCR 1200 /* Increment size for the above */
 
 bufr_descriptors_array* grib_bufr_descriptors_array_new(grib_context* c, size_t size, size_t incsize)
 {

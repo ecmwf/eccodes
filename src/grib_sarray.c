@@ -16,6 +16,9 @@
 
 #include "grib_api_internal.h"
 
+#define DYN_DEFAULT_SARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+#define DYN_DEFAULT_SARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
+
 grib_sarray* grib_sarray_new(grib_context* c, size_t size, size_t incsize)
 {
     grib_sarray* v = NULL;
@@ -58,8 +61,8 @@ grib_sarray* grib_sarray_resize(grib_context* c, grib_sarray* v)
 
 grib_sarray* grib_sarray_push(grib_context* c, grib_sarray* v, char* val)
 {
-    size_t start_size    = 100;
-    size_t start_incsize = 100;
+    size_t start_size    = DYN_DEFAULT_SARRAY_SIZE_INIT;
+    size_t start_incsize = DYN_DEFAULT_SARRAY_SIZE_INCR;
     if (!v)
         v = grib_sarray_new(c, start_size, start_incsize);
 

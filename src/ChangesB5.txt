@@ -1,0 +1,248 @@
+Compilation
+---------------
+#Debug compilation
+cmake3 -DCMAKE_C_FLAGS="-g -O0" -DENABLE_NETCDF=OFF -DENABLE_FORTRAN=ON -DCMAKE_INSTALL_PREFIX=/home/eccuser/eccodes-2.17.0-INSTALL.B5 -DCMAKE_BUILD_TYPE=Debug -DENABLE_EXTRA_TESTS=ON -DDEVELOPER_MODE=1 /home/eccuser/eccodes-2.17.0-Source >> cmake.out 2>&1
+
+# Normal compilation
+cmake3 -DENABLE_NETCDF=OFF -DENABLE_FORTRAN=ON -DCMAKE_INSTALL_PREFIX=/home/eccuser/eccodes-2.17.0-INSTALL.B5 -DENABLE_EXTRA_TESTS=ON /home/eccuser/eccodes-2.17.0-Source >> cmake.out 2>&1
+make >> make.out 2>&1
+ctest3 >> ctest3.out 2>&1
+make install >> make_install.out 2>&1
+
+
+----
+Differences
+
+* Rule 1. Change of array incsize attribute: changed the incsize as the sum of (startsize + 20%(startsize))
+* Rule 2. Changed the dynamic arrays startsize, multiplied by a factor of 5.
+* Rule 3. Where not convenient to estimate (startsize + 20%(startsize)), put increment size equal to startsize.
+* Correction 1. In grib_iarray.c in the resize function the realloc library function is not used, while in the other resize functions of the dynamic arrays it is, correclty, used.
+Corrected.
+
+* Correction 1
+
+src/grib_iarray.c L114-130
+//TES: LET THE realloc work for you, it is more performative, recommandable
+//and does exactly the same with less Instructions fetched
+//newv = (long*)grib_context_malloc_clear(c, newsize * sizeof(long));
+//if (!newv) {
+//    grib_context_log(c, GRIB_LOG_ERROR,
+//                     "grib_iarray_resize unable to allocate %d bytes\n", sizeof(long) * newsize);
+//    return NULL;
+//}
+//
+//for (i = 0; i < v->n; i++)
+//    newv[i] = v->v[i];
+//
+//v->v -= v->number_of_pop_front;
+//grib_context_free(c, v->v);
+//v->v                   = newv;
+//v->size                = newsize;
+//v->number_of_pop_front = 0;
+
+>>    v->v    = (void**)grib_context_realloc(c, v->v, newsize * sizeof(long));
+>>    
+>>    if (!v->v) {
+>>        grib_context_log(c, GRIB_LOG_ERROR,
+>>                           "grib_iarray_resize unable to allocate %d bytes\n", sizeof(long) * newsize);
+>>        return NULL;
+>>    }
+>>    
+>>    v->size                = newsize;
+>>    v->number_of_pop_front = 0;
+
+* New: Invocation of grib_sarray_new
+
+src/bufr_util.c L.73 RULE 1.
+//k = grib_sarray_new(hin->context, 50, 10); 
+
+* New: Invocation of grib_sarray_new
+
+src/bufr_util.c L.73 RULE 1.
+//k = grib_sarray_new(hin->context, 50, 10); 
+>>	k = grib_sarray_new(hin->context, 50, 60);
+
+src/grib_accessor_class_bufr_data_array.c L.565 RULE 3
+//grib_sarray* sa                        = grib_sarray_new(c, self->numberOfSubsets, 10);
+>>	grib_sarray* sa                        = grib_sarray_new(c, self->numberOfSubsets, self->numberOfSubsets);
+
+src/grib_accessor_class_bufr_data_element.c L.335 RULE 3
+//self->stringValues->v[idx] = grib_sarray_new(c, *len, 1);
+>         self->stringValues->v[idx] = grib_sarray_new(c, *len, *len );
+
+./grib_accessor_class_concept.c L.407 RULE 2 and RULE 1
+//sa = grib_sarray_new(h->context, 10, 10);
+>>	sa = grib_sarray_new(h->context, DYN_SARRAY_SIZE_INIT, DYN_SARRAY_SIZE_INCR);
+
+src/grib_sarray.c L.64
+
+//     size_t start_size    = 100;
+//     size_t start_incsize = 100;
+>     size_t start_size    = DYN_DEFAULT_SARRAY_SIZE_INIT;
+>     size_t start_incsize = DYN_DEFAULT_SARRAY_SIZE_INCR;
+
+
+* Defines: startsize and inc size of dynamic arrays
+
+src/grib_accessor_class_bufr_data_array.c L.377 RULE 2 and RULE 1.
+
+> #define DYN_ARRAY_SIZE_INIT 5000 /* Initial size for grib_iarray_new and grib_darray_new */
+> #define DYN_ARRAY_SIZE_INCR 6000 /* Increment size for grib_iarray_new and grib_darray_new */
+> #define DYN_VARRAY_SIZE_INIT 500 /* Initial size for grib_viarray_new */
+> #define DYN_VARRAY_SIZE_INCR 600 /* Increment size for grib_viarray_new */
+> #define DYN_VDARRAY_SIZE_INIT 5000 /* Initial size for grib_vdarray_new */
+> #define DYN_VDARRAY_SIZE_INCR 6000 /* Increment size for grib_vdarray_new */
+> #define DYN_VSARRAY_SIZE_INIT 50 /* Initial size for grib_vdarray_new */
+> #define DYN_VSARRAY_SIZE_INCR 60 /* Increment size for grib_vdarray_new */
+> #define DYN_ODARRAY_SIZE_INIT 2000 /* Initial size for grib_odarray_new */
+> #define DYN_ODARRAY_SIZE_INCR 2400 /* Increment size for grib_odarray_new */
+
+src/grib_accessor_class_concept.c L.43 RULE 2 and RULE 1.
+
+#define DYN_SARRAY_SIZE_INIT 50 /* Initial size for grib_sarray_new */
+#define DYN_SARRAY_SIZE_INCR 60 /* Increment size for grib_sarray_new */
+
+src/grib_bufr_descriptors_array.c L.13 RULE 2 and RULE 1.
+
+//#define DYN_ARRAY_SIZE_INIT 200 /* Initial size for grib_bufr_descriptors_array_new */
+//#define DYN_ARRAY_SIZE_INCR 400 /* Increment size for the above */
+>> 	#define DYN_ARRAY_SIZE_INIT 1000 /* Initial size for grib_bufr_descriptors_array_new */
+>> 	#define DYN_ARRAY_SIZE_INCR 1200 /* Increment size for the above */
+
+src/grib_darray.c L.21 RULE 2 and RULE 1.
+
+> #define DYN_DEFAULT_DARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+> #define DYN_DEFAULT_DARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
+
+src/grib_iarray.c L.21 RULE 2 and RULE 1.
+> #define DYN_DEFAULT_IARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+> #define DYN_DEFAULT_IARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
+
+src/grib_oarray.c L/13 RULE 2 and RULE 1.
+> #define DYN_DEFAULT_OARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+> #define DYN_DEFAULT_OARRAY_SIZE_INCR 600
+
+src/grib_sarray.c L.19 RULE 2 and RULE 1.
+
+> #define DYN_DEFAULT_SARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+> #define DYN_DEFAULT_SARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
+
+src/grib_trie_with_rank.c L.273 RULE 2 and RULE 1.
+
+> #define DYN_OARRAY_SIZE_INIT 5000 /* Initial size for grib_odarray_new */
+> #define DYN_OARRAY_SIZE_INCR 6000 /* Increment size for grib_odarray_new */
+
+src/grib_vdarray.c L.19 RULE 2 and RULE 1.
+
+#define DYN_DEFAULT_VDARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+#define DYN_DEFAULT_VDARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
+
+src/grib_viarray.c L.19 RULE 2 and RULE 1.
+
+#define DYN_DEFAULT_VIARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+#define DYN_DEFAULT_VIARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
+
+src/grib_vsarray.c L.19 RULE 2 and RULE 1.
+
+#define DYN_DEFAULT_VSARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+#define DYN_DEFAULT_VSARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
+
+* New: Invocation of grib_vdarray_new
+
+src/grib_accessor_class_bufr_data_array.c RULE 1
+
+//self->numericValues = grib_vdarray_new(c, 1000, 1000);
+>         self->numericValues = grib_vdarray_new(c, DYN_VDARRAY_SIZE_INIT, DYN_VDARRAY_SIZE_INCR);
+
+src/grib_vdarray.c L.78 RULE 1
+
+    //size_t start_size    = 100;
+    //size_t start_incsize = 100;
+    size_t start_size    = DYN_DEFAULT_VDARRAY_SIZE_INIT;
+    size_t start_incsize = DYN_DEFAULT_VDARRAY_SIZE_INCR;
+
+* New: Invocation of grib_vsarray_new
+
+src/grib_accessor_class_bufr_data_array.c RULE 1
+
+//self->stringValues  = grib_vsarray_new(c, 10, 10);
+>         self->stringValues  = grib_vsarray_new(c, DYN_VSARRAY_SIZE_INIT, DYN_VSARRAY_SIZE_INCR);
+
+* New: Invocation of grib_viarray_new
+
+src/grib_accessor_class_bufr_data_array.c RULE 1
+
+//self->elementsDescriptorsIndex = grib_viarray_new(c, 100, 100);
+>         self->elementsDescriptorsIndex = grib_viarray_new(c, DYN_VARRAY_SIZE_INIT, DYN_VARRAY_SIZE_INCR);
+
+src/grib_vsarray.c L.64 RULE 2 and RULE 1.
+
+    //size_t start_size    = 100;
+    //size_t start_incsize = 100;
+    size_t start_size    = DYN_DEFAULT_VSARRAY_SIZE_INIT;
+    size_t start_incsize = DYN_DEFAULT_VSARRAY_SIZE_INCR;
+
+* New: Invocation of grib_darray_new
+
+src/grib_darray.c L.43 RULE 1 - NOTE: this function is not used.
+
+//v = grib_darray_new(c, size, 100);
+>     v = grib_darray_new(c, size, DYN_DEFAULT_DARRAY_SIZE_INCR);
+
+src/grib_darray.c L.96 RULE 1 - NOTE: this function is not used.
+
+//size_t start_size    = 100;
+//size_t start_incsize = 100;
+>     size_t start_size    = DYN_DEFAULT_DARRAY_SIZE_INIT;
+>     size_t start_incsize = DYN_DEFAULT_DARRAY_SIZE_INCR;
+ 
+
+* New: Invocation of grib_iarray_new
+
+src/grib_iarray.c L.44 RULE 1 - NOTE: this function is not used.
+
+>     //v = grib_iarray_new(c, size, 100);
+>     v = grib_iarray_new(c, size, DYN_DEFAULT_IARRAY_SIZE_INCR);
+
+src/grib_iarray.c L.145 RULE 1
+
+//size_t start_size    = 100;
+//size_t start_incsize = 100;
+>       size_t start_size    = DYN_DEFAULT_IARRAY_SIZE_INIT;
+>       size_t start_incsize = DYN_DEFAULT_IARRAY_SIZE_INCR;
+
+src/grib_iarray.c L.160 RULE 1 - NOTE: this function is not used.
+
+//size_t start_size    = 100;
+//size_t start_incsize = 100;
+>       size_t start_size    = DYN_DEFAULT_IARRAY_SIZE_INIT;
+>       size_t start_incsize = DYN_DEFAULT_IARRAY_SIZE_INCR;
+
+src/grib_iarray.c L.187 RULE 1 - NOTE: this function is not used.
+
+//size_t start_incsize = 100;
+>     size_t start_incsize = DYN_DEFAULT_IARRAY_SIZE_INCR;
+
+* New: Invocation of grib_oarray_new
+
+src/grib_oarray.c L.64 RULE 1
+
+//size_t start_size    = 100;
+//size_t start_incsize = 100;
+>     size_t start_size    = DYN_DEFAULT_OARRAY_SIZE_INIT;
+>     size_t start_incsize = DYN_DEFAULT_OARRAY_SIZE_INCR;
+
+src/grib_trie_with_rank.c L.489 RULE 2 and RULE 1.
+
+t->objs = grib_oarray_new(t->context, DYN_OARRAY_SIZE_INIT, DYN_OARRAY_SIZE_INCR);
+//t->objs = grib_oarray_new(t->context, 100, 1000);
+
+* New: Invocation of grib_viarray_new
+
+src/grib_viarray.c L.64 RULE 1
+
+//     size_t start_size    = 100;
+//     size_t start_incsize = 100;
+>     size_t start_size    = DYN_DEFAULT_VIARRAY_SIZE_INIT;
+>     size_t start_incsize = DYN_DEFAULT_VIARRAY_SIZE_INCR;
+
