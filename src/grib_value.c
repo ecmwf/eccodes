@@ -799,18 +799,18 @@ int grib_set_double_array(grib_handle* h, const char* name, const double* val, s
     return __grib_set_double_array(h, name, val, length, /*check=*/1);
 }
 
-static int _grib_set_long_array_internal(grib_handle* h, grib_accessor* a, const long* val, size_t buffer_len, size_t* encoded_length, int check)
+static int _grib_set_long_array_internal(grib_handle* h, grib_accessor* a, const long* iarrayval, size_t iarraysize, size_t* encoded_length, int check)
 {
     if (a) {
-        int err = _grib_set_long_array_internal(h, a->same, val, buffer_len, encoded_length, check);
+        int err = _grib_set_long_array_internal(h, a->same, iarrayval, iarraysize, encoded_length, check);
 
         if (check && (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
             return GRIB_READ_ONLY;
 
         if (err == GRIB_SUCCESS) {
-            size_t len = buffer_len - *encoded_length;
+            size_t len = iarraysize - *encoded_length;
             if (len) {
-                err = grib_pack_long(a, val + *encoded_length, &len);
+                err = grib_pack_long(a, iarrayval + *encoded_length, &len);
                 *encoded_length += len;
             }
             else {
@@ -826,7 +826,7 @@ static int _grib_set_long_array_internal(grib_handle* h, grib_accessor* a, const
     }
 }
 
-static int _grib_set_long_array(grib_handle* h, const char* name, const long* val, size_t length, int check)
+static int _grib_set_long_array(grib_handle* h, const char* name, const long* iarrayval, size_t iarraysize, int check)
 {
     size_t encoded   = 0;
     grib_accessor* a = grib_find_accessor(h, name);
@@ -838,12 +838,12 @@ static int _grib_set_long_array(grib_handle* h, const char* name, const long* va
     if (h->context->debug) {
         size_t i = 0;
         size_t N = 5;
-        if (length <= N)
-            N = length;
-        fprintf(stderr, "ECCODES DEBUG _grib_set_long_array key=%s %ld values (", name, (long)length);
+        if (iarraysize <= N)
+            N = iarraysize;
+        fprintf(stderr, "ECCODES DEBUG _grib_set_long_array key=%s %ld values (", name, (long)iarraysize);
         for (i = 0; i < N; ++i)
-            fprintf(stderr, " %ld,", val[i]);
-        if (N >= length)
+            fprintf(stderr, " %ld,", iarrayval[i]);
+        if (N >= iarraysize)
             fprintf(stderr, " )\n");
         else
             fprintf(stderr, " ... )\n");
@@ -852,13 +852,13 @@ static int _grib_set_long_array(grib_handle* h, const char* name, const long* va
     if (name[0] == '/' || name[0] == '#') {
         if (check && (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
             return GRIB_READ_ONLY;
-        err     = grib_pack_long(a, val, &length);
-        encoded = length;
+        err     = grib_pack_long(a, iarrayval, &iarraysize);
+        encoded = iarraysize;
     }
     else
-        err = _grib_set_long_array_internal(h, a, val, length, &encoded, check);
+        err = _grib_set_long_array_internal(h, a, iarrayval, iarraysize, &encoded, check);
 
-    if (err == GRIB_SUCCESS && length > encoded)
+    if (err == GRIB_SUCCESS && iarraysize > encoded)
         err = GRIB_ARRAY_TOO_SMALL;
 
     if (err == GRIB_SUCCESS)
@@ -876,9 +876,9 @@ int grib_set_long_array_internal(grib_handle* h, const char* name, const long* v
     return ret;
 }
 
-int grib_set_long_array(grib_handle* h, const char* name, const long* val, size_t length)
+int grib_set_long_array(grib_handle* h, const char* name, const long* iarrayval, size_t iarraysize)
 {
-    return _grib_set_long_array(h, name, val, length, 1);
+    return _grib_set_long_array(h, name, iarrayval, iarraysize, 1);
 }
 
 int grib_get_long_internal(grib_handle* h, const char* name, long* val)

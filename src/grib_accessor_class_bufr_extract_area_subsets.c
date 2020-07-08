@@ -324,6 +324,7 @@ static int select_area(grib_accessor* a)
     grib_context_free(c, lat);
     grib_context_free(c, lon);
     grib_iarray_delete(subsets);
+    /*grib_iarray_delete(subsets_ar);*//* CSGMB: deallocate array after the set ?*/
     subsets = 0;
 
     return ret;

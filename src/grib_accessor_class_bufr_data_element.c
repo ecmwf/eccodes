@@ -10,6 +10,7 @@
 
 /*****************************************
  *  Enrico Fucile
+ *  Modified for Performance Study by: CS GMBH
  ****************************************/
 
 #include "grib_api_internal.h"
@@ -295,20 +296,30 @@ static int unpack_string_array(grib_accessor* a, char** val, size_t* len)
     grib_context* c = a->context;
 
     if (self->compressedData) {
-        DebugAssert(self->index < self->numericValues->n);
-        idx = ((int)self->numericValues->v[self->index]->v[0] / 1000 - 1) / self->numberOfSubsets;
-        DebugAssert(idx < self->stringValues->n);
-        count = grib_sarray_used_size(self->stringValues->v[idx]);
+        //DebugAssert(self->index < self->numericValues->n);
+        DebugAssert(self->index < grib_vdarray_used_size (self->numericValues));
+        //idx = ((int)self->numericValues->v[self->index]->v[0] / 1000 - 1) / self->numberOfSubsets;
+        //idx = (  (int) grib_darray_get (self->numericValues->v[self->index], 0) / 1000 - 1) / self->numberOfSubsets;
+        idx = (  (int) grib_darray_get (grib_vdarray_get (self->numericValues, self->index), 0) / 1000 - 1) / self->numberOfSubsets;
+        //DebugAssert(idx < self->stringValues->n);
+        DebugAssert(idx < grib_vsarray_used_size(self->stringValues));
+        //count = grib_sarray_used_size(self->stringValues->v[idx]);
+        count = grib_sarray_used_size(grib_vsarray_get(self->stringValues,idx));
         for (i = 0; i < count; i++) {
-            val[i] = grib_context_strdup(c, self->stringValues->v[idx]->v[i]);
+            //val[i] = grib_context_strdup(c, self->stringValues->v[idx]->v[i]);
+            val[i] = grib_context_strdup(c, grib_sarray_get(grib_vsarray_get(self->stringValues,idx),i));
         }
         *len = count;
     }
     else {
-        DebugAssert(self->subsetNumber < self->numericValues->n);
-        DebugAssert(self->index < self->numericValues->v[self->subsetNumber]->n);
-        idx    = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
-        val[0] = grib_context_strdup(c, self->stringValues->v[idx]->v[0]);
+        DebugAssert(self->subsetNumber < grib_vdarray_used_size (self->numericValues));
+        DebugAssert(self->index < grib_darray_used_size(grib_vdarray_get (self->numericValues, self->subsetNumber)) );
+        //idx    = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
+        //idx    = (int) grib_darray_get ( self->numericValues->v[self->subsetNumber], self->index) / 1000 - 1;
+        idx    = (int) grib_darray_get ( grib_vdarray_get (self->numericValues, self->subsetNumber), self->index) / 1000 - 1;
+        //val[0] = grib_context_strdup(c, self->stringValues->v[idx]->v[0]);
+        //val[0] = grib_context_strdup(c, grib_sarray_get(self->stringValues->v[idx],0));
+        val[0] = grib_context_strdup(c, grib_sarray_get(grib_vsarray_get(self->stringValues,idx),0));
         *len   = 1;
     }
 
@@ -324,17 +335,21 @@ static int pack_string_array(grib_accessor* a, const char** v, size_t* len)
     grib_context* c = a->context;
 
     if (self->compressedData) {
-        idx = ((int)self->numericValues->v[self->index]->v[0] / 1000 - 1) / self->numberOfSubsets;
+        //idx = ((int)self->numericValues->v[self->index]->v[0] / 1000 - 1) / self->numberOfSubsets;
+        idx = ((int) grib_darray_get (grib_vdarray_get (self->numericValues, self->index), 0 ) / 1000 - 1) / self->numberOfSubsets;
         if (*len != 1 && *len != self->numberOfSubsets) {
             grib_context_log(c, GRIB_LOG_ERROR, "Number of values mismatch for '%s': %ld strings provided but expected %ld (=number of subsets)",
-                             self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[idx]]->shortName, *len, self->numberOfSubsets);
+                            // self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[idx]]->shortName, *len, self->numberOfSubsets);
+            		          self->descriptors->v[  grib_iarray_get ( grib_viarray_get (self->elementsDescriptorsIndex, 0), idx) ]->shortName, *len, self->numberOfSubsets);
             return GRIB_ARRAY_TOO_SMALL;
         }
-        grib_sarray_delete(c, self->stringValues->v[idx]);
-        self->stringValues->v[idx] = grib_sarray_new(c, *len, 1);
+        grib_sarray_delete(c, grib_vsarray_get(self->stringValues,idx));
+        //self->stringValues->v[idx] = grib_sarray_new(c, *len, 1);
+        //self->stringValues->v[idx] = grib_sarray_new(c, *len, *len );
+        grib_vsarray_put ( self->stringValues, idx, grib_sarray_new(c, *len, *len ));
         for (i = 0; i < *len; i++) {
             s = grib_context_strdup(c, v[i]);
-            grib_sarray_push(c, self->stringValues->v[idx], s);
+            grib_sarray_push(c, grib_vsarray_get(self->stringValues,idx), s);
         }
     }
     else {
@@ -368,19 +383,25 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     }
 
     if (self->compressedData) {
-        DebugAssert(self->index < self->numericValues->n);
-        idx = ((int)self->numericValues->v[self->index]->v[0] / 1000 - 1) / self->numberOfSubsets;
+        DebugAssert(self->index < grib_vdarray_used_size (self->numericValues));
+        //idx = ((int)self->numericValues->v[self->index]->v[0] / 1000 - 1) / self->numberOfSubsets;
+        idx = ((int) grib_darray_get (grib_vdarray_get (self->numericValues, self->index), 0) / 1000 - 1) / self->numberOfSubsets;
         if (idx < 0)
             return GRIB_INTERNAL_ERROR;
-        str = grib_context_strdup(c, self->stringValues->v[idx]->v[0]);
+        //str = grib_context_strdup(c, self->stringValues->v[idx]->v[0]);
+        //str = grib_context_strdup(c, grib_sarray_get(self->stringValues->v[idx],0));
+        str = grib_context_strdup(c, grib_sarray_get( grib_vsarray_get(self->stringValues,idx),0));
     }
     else {
-        DebugAssert(self->subsetNumber < self->numericValues->n);
-        idx = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
+        DebugAssert(self->subsetNumber < grib_vdarray_used_size (self->numericValues));
+        //idx = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
+        idx = (int) grib_darray_get (grib_vdarray_get (self->numericValues, self->subsetNumber), self->index) / 1000 - 1;
         if (idx < 0)
             return GRIB_INTERNAL_ERROR;
-        DebugAssert(idx < self->stringValues->n);
-        str = grib_context_strdup(c, self->stringValues->v[idx]->v[0]);
+        //DebugAssert(idx < self->stringValues->n);
+        DebugAssert(idx < grib_vsarray_used_size(self->stringValues));
+        //str = grib_context_strdup(c, self->stringValues->v[idx]->v[0]);
+        str = grib_context_strdup(c, grib_sarray_get(grib_vsarray_get(self->stringValues,idx),0));
     }
 
     if (str == 0 || strlen(str) == 0) {
@@ -420,15 +441,20 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     grib_context* c = a->context;
 
     if (self->compressedData) {
-        idx = ((int)self->numericValues->v[self->index]->v[0] / 1000 - 1) / self->numberOfSubsets;
+       // idx = ((int)self->numericValues->v[self->index]->v[0] / 1000 - 1) / self->numberOfSubsets;
+        idx = ((int) grib_darray_get ( grib_vdarray_get (self->numericValues, self->index), 0) / 1000 - 1) / self->numberOfSubsets;
     }
     else {
-        idx = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
+        //idx = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
+        idx = (int) grib_darray_get ( grib_vdarray_get (self->numericValues, self->subsetNumber), self->index) / 1000 - 1;
     }
-    grib_sarray_delete(c, self->stringValues->v[idx]);
-    self->stringValues->v[idx] = grib_sarray_new(c, 1, 1);
+    //grib_sarray_delete(c, self->stringValues->v[idx]);
+    grib_sarray_delete(c, grib_vsarray_get(self->stringValues,idx));
+    //self->stringValues->v[idx] = grib_sarray_new(c, 1, 1);
+    grib_vsarray_put(self->stringValues, idx, grib_sarray_new(c, 1, 1));
     s                          = grib_context_strdup(c, val);
-    grib_sarray_push(c, self->stringValues->v[idx], s);
+    //grib_sarray_push(c, self->stringValues->v[idx], s);
+    grib_sarray_push(c, grib_vsarray_get(self->stringValues, idx), s);
 
     return ret;
 }
@@ -446,16 +472,27 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     if (self->compressedData) {
         for (i = 0; i < count; i++) {
-            DebugAssert(self->index < self->numericValues->n);
-            DebugAssert(i < self->numericValues->v[self->index]->n);
-            val[i] = self->numericValues->v[self->index]->v[i] == GRIB_MISSING_DOUBLE ? GRIB_MISSING_LONG : (long)self->numericValues->v[self->index]->v[i];
+            //DebugAssert(self->index < self->numericValues->n);
+            DebugAssert(self->index < grib_vdarray_used_size (self->numericValues) );
+            //DebugAssert(i < self->numericValues->v[self->index]->n);
+            DebugAssert(i <  grib_darray_used_size (grib_vdarray_get (self->numericValues, self->index)) );
+            //val[i] = self->numericValues->v[self->index]->v[i] == GRIB_MISSING_DOUBLE ? GRIB_MISSING_LONG : (long)self->numericValues->v[self->index]->v[i];
+            val[i] = (grib_darray_get (grib_vdarray_get (self->numericValues, self->index), i) == GRIB_MISSING_DOUBLE ) ?
+            		GRIB_MISSING_LONG :
+					(long) grib_darray_get ( grib_vdarray_get (self->numericValues, self->index), i);
         }
         *len = count;
     }
     else {
-        DebugAssert(self->subsetNumber < self->numericValues->n);
-        DebugAssert(self->index < self->numericValues->v[self->subsetNumber]->n);
-        val[0] = self->numericValues->v[self->subsetNumber]->v[self->index] == GRIB_MISSING_DOUBLE ? GRIB_MISSING_LONG : (long)self->numericValues->v[self->subsetNumber]->v[self->index];
+        //DebugAssert(self->subsetNumber < self->numericValues->n);
+        DebugAssert(self->subsetNumber <  grib_vdarray_used_size (self->numericValues) );
+        //DebugAssert(self->index < self->numericValues->v[self->subsetNumber]->n);
+        DebugAssert(self->index < grib_darray_used_size (grib_vdarray_get (self->numericValues, self->subsetNumber)) );
+
+        //val[0] = self->numericValues->v[self->subsetNumber]->v[self->index] == GRIB_MISSING_DOUBLE ? GRIB_MISSING_LONG : (long)self->numericValues->v[self->subsetNumber]->v[self->index];
+        val[0] = ( grib_darray_get (grib_vdarray_get (self->numericValues, self->subsetNumber), self->index ) == GRIB_MISSING_DOUBLE  ) ?
+        		GRIB_MISSING_LONG :
+				(long) grib_darray_get ( grib_vdarray_get (self->numericValues, self->subsetNumber),  self->index );
         *len   = 1;
     }
 
@@ -475,16 +512,24 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     if (self->compressedData) {
         for (i = 0; i < count; i++) {
-            DebugAssert(self->index < self->numericValues->n);
-            DebugAssert(i < self->numericValues->v[self->index]->n);
-            val[i] = self->numericValues->v[self->index]->v[i];
+            //DebugAssert(self->index < self->numericValues->n);
+            //DebugAssert(i < self->numericValues->v[self->index]->n);
+            DebugAssert(self->index < grib_vdarray_used_size (self->numericValues));
+            DebugAssert(i < grib_darray_used_size (grib_vdarray_get (self->numericValues, self->index)) );
+
+            //val[i] = self->numericValues->v[self->index]->v[i];
+            val[i] = grib_darray_get ( grib_vdarray_get (self->numericValues, self->index) , i );
         }
         *len = count;
     }
     else {
-        DebugAssert(self->subsetNumber < self->numericValues->n);
-        DebugAssert(self->index < self->numericValues->v[self->subsetNumber]->n);
-        val[0] = self->numericValues->v[self->subsetNumber]->v[self->index];
+        //DebugAssert(self->subsetNumber < self->numericValues->n);
+        //DebugAssert(self->index < self->numericValues->v[self->subsetNumber]->n);
+        DebugAssert(self->subsetNumber < grib_vdarray_used_size (self->numericValues));
+        DebugAssert(self->index < grib_darray_used_size (grib_vdarray_get (self->numericValues, self->subsetNumber)));
+
+        //val[0] = self->numericValues->v[self->subsetNumber]->v[self->index];
+        val[0] = grib_darray_get ( grib_vdarray_get (self->numericValues, self->subsetNumber), self->index );
         *len   = 1;
     }
 
@@ -502,20 +547,23 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         count = *len;
         if (count != 1 && count != self->numberOfSubsets) {
             grib_context_log(c, GRIB_LOG_ERROR, "Number of values mismatch for '%s': %ld doubles provided but expected %ld (=number of subsets)",
-                             self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[self->index]]->shortName, count, self->numberOfSubsets);
+                             //self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[self->index]]->shortName, count, self->numberOfSubsets);
+            			self->descriptors->v[ grib_iarray_get ( grib_viarray_get (self->elementsDescriptorsIndex, 0), self->index) ]->shortName, count, self->numberOfSubsets);
             return GRIB_ARRAY_TOO_SMALL;
         }
-        grib_darray_delete(a->context, self->numericValues->v[self->index]);
-        self->numericValues->v[self->index] = grib_darray_new(a->context, count, 1);
+        grib_darray_delete(a->context, grib_vdarray_get (self->numericValues, self->index) );
+        //self->numericValues->v[self->index] = grib_darray_new(a->context, count, 1);
+        grib_vdarray_put (self->numericValues, self->index, grib_darray_new(a->context, count, 1));
 
         for (i = 0; i < count; i++)
-            grib_darray_push(a->context, self->numericValues->v[self->index], val[i]);
+            grib_darray_push(a->context, grib_vdarray_get (self->numericValues, self->index), val[i]);
 
         *len = count;
     }
     else {
-        self->numericValues->v[self->subsetNumber]->v[self->index] = val[0];
-        *len                                                       = 1;
+        //self->numericValues->v[self->subsetNumber]->v[self->index] = val[0];
+    	grib_darray_put(grib_vdarray_get (self->numericValues, self->subsetNumber), self->index, val[0]);
+        *len = 1;
     }
 
     return ret;
@@ -532,20 +580,24 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         count = *len;
         if (count != 1 && count != self->numberOfSubsets) {
             grib_context_log(c, GRIB_LOG_ERROR, "Number of values mismatch for '%s': %ld integers provided but expected %ld (=number of subsets)",
-                             self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[self->index]]->shortName, count, self->numberOfSubsets);
+                             //self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[self->index]]->shortName, count, self->numberOfSubsets);
+            			self->descriptors->v[ grib_iarray_get ( grib_viarray_get (self->elementsDescriptorsIndex, 0), self->index) ]->shortName, count, self->numberOfSubsets);
             return GRIB_ARRAY_TOO_SMALL;
         }
-        grib_darray_delete(a->context, self->numericValues->v[self->index]);
-        self->numericValues->v[self->index] = grib_darray_new(a->context, count, 1);
+        grib_darray_delete(a->context, grib_vdarray_get (self->numericValues, self->index));
+        //self->numericValues->v[self->index] = grib_darray_new(a->context, count, 1);
+        //self->numericValues->v[self->index] = grib_darray_new(a->context, count, count);
+        grib_vdarray_put (self->numericValues, self->index, grib_darray_new(a->context, count, count));
 
         for (i = 0; i < count; i++) {
-            grib_darray_push(a->context, self->numericValues->v[self->index], val[i] == GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[i]);
+            grib_darray_push(a->context, grib_vdarray_get (self->numericValues, self->index), ( (val[i] == GRIB_MISSING_LONG) ? GRIB_MISSING_DOUBLE : val[i] ) );
         }
         *len = count;
     }
     else {
-        self->numericValues->v[self->subsetNumber]->v[self->index] = val[0] == GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[0];
-        *len                                                       = 1;
+       // self->numericValues->v[self->subsetNumber]->v[self->index] = val[0] == GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[0];
+    	grib_darray_put (grib_vdarray_get (self->numericValues, self->subsetNumber), self->index,  ( (val[0] == GRIB_MISSING_LONG ) ? GRIB_MISSING_DOUBLE : val[0] )  );
+        *len = 1;
     }
 
     return ret;
@@ -563,13 +615,15 @@ static int value_count(grib_accessor* a, long* count)
     type = get_native_type(a);
 
     if (type == GRIB_TYPE_STRING) {
-        DebugAssert(self->index < self->numericValues->n);
-        idx  = ((int)self->numericValues->v[self->index]->v[0] / 1000 - 1) / self->numberOfSubsets;
-        size = grib_sarray_used_size(self->stringValues->v[idx]);
+        DebugAssert(self->index < grib_vdarray_used_size (self->numericValues));
+        //idx  = ((int)self->numericValues->v[self->index]->v[0] / 1000 - 1) / self->numberOfSubsets;
+        idx  = ( (int)(grib_darray_get (grib_vdarray_get (self->numericValues, self->index), 0 )) / 1000 - 1) / self->numberOfSubsets;
+        //size = grib_sarray_used_size(self->stringValues->v[idx]);
+        size = grib_sarray_used_size( grib_vsarray_get(self->stringValues, idx) );
     }
     else {
-        DebugAssert(self->index < self->numericValues->n);
-        size = grib_darray_used_size(self->numericValues->v[self->index]);
+        DebugAssert(self->index < grib_vdarray_used_size (self->numericValues));
+        size = grib_darray_used_size(grib_vdarray_get (self->numericValues, self->index));
     }
 
     *count = size == 1 ? 1 : self->numberOfSubsets;
@@ -590,7 +644,8 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     }
 
     if (self->compressedData) {
-        *val = self->numericValues->v[self->index]->v[idx];
+        //*val = self->numericValues->v[self->index]->v[idx];
+        *val = grib_darray_get ( grib_vdarray_get (self->numericValues, self->index), idx);
     }
     else {
         ret = GRIB_NOT_IMPLEMENTED;

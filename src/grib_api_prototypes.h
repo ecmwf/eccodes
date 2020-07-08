@@ -1,4 +1,14 @@
-
+/*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ *
+ *   Modified for Performance Study by: CS GMBH
+ */
 /* action.c */
 void grib_dump(grib_action* a, FILE* f, int l);
 void grib_xref(grib_action* a, FILE* f, const char* path);
@@ -80,7 +90,7 @@ grib_action* grib_action_create_set(grib_context* context, const char* name, gri
 grib_action* grib_action_create_set_darray(grib_context* context, const char* name, grib_darray* darray);
 
 /* action_class_set_iarray.c */
-grib_action* grib_action_create_set_iarray(grib_context* context, const char* name, grib_iarray* iarray);
+grib_action* grib_action_create_set_iarray(grib_context* context, const char* name, grib_iarray* source);
 
 /* action_class_set_sarray.c */
 grib_action* grib_action_create_set_sarray(grib_context* context, const char* name, grib_sarray* sarray);
@@ -162,7 +172,7 @@ void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al);
 /* grib_concept.c */
 grib_concept_value* grib_concept_value_new(grib_context* c, const char* name, grib_concept_condition* conditions);
 void grib_concept_value_delete(grib_context* c, grib_concept_value* v);
-grib_concept_condition* grib_concept_condition_new(grib_context* c, const char* name, grib_expression* expression, grib_iarray* iarray);
+grib_concept_condition* grib_concept_condition_new(grib_context* c, const char* name, grib_expression* expression, grib_iarray* source);
 void grib_concept_condition_delete(grib_context* c, grib_concept_condition* v);
 
 /* grib_hash_array.c */
@@ -202,6 +212,9 @@ grib_darray* grib_darray_new_from_array(grib_context* c, double* a, size_t size)
 grib_darray* grib_darray_new(grib_context* c, size_t size, size_t incsize);
 grib_darray* grib_darray_resize(grib_context* c, grib_darray* v);
 grib_darray* grib_darray_push(grib_context* c, grib_darray* v, double val);
+double grib_darray_get(grib_darray* source, size_t index);
+double* grib_darray_get_arrays_by_reference(grib_darray* source);
+int grib_darray_put (grib_darray* source, size_t index, double val);
 void grib_darray_delete(grib_context* c, grib_darray* v);
 double* grib_darray_get_array(grib_context* c, grib_darray* v);
 int grib_darray_is_constant(grib_darray* v, double eps);
@@ -211,6 +224,9 @@ size_t grib_darray_used_size(grib_darray* v);
 grib_sarray* grib_sarray_new(grib_context* c, size_t size, size_t incsize);
 grib_sarray* grib_sarray_resize(grib_context* c, grib_sarray* v);
 grib_sarray* grib_sarray_push(grib_context* c, grib_sarray* v, char* val);
+char* grib_sarray_get(grib_sarray* source, size_t index);
+char** grib_sarray_get_arrays_by_reference(grib_sarray* source);
+int grib_sarray_put (grib_sarray* source, size_t index, char* val);
 void grib_sarray_delete(grib_context* c, grib_sarray* v);
 void grib_sarray_delete_content(grib_context* c, grib_sarray* v);
 char** grib_sarray_get_array(grib_context* c, grib_sarray* v);
@@ -218,38 +234,31 @@ size_t grib_sarray_used_size(grib_sarray* v);
 
 /* grib_oarray.c */
 grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize);
-grib_oarray* grib_oarray_resize(grib_context* c, grib_oarray* v);
-grib_oarray* grib_oarray_push(grib_context* c, grib_oarray* v, void* val);
-void grib_oarray_delete(grib_context* c, grib_oarray* v);
-void grib_oarray_delete_content(grib_context* c, grib_oarray* v);
-void** grib_oarray_get_array(grib_context* c, grib_oarray* v);
-void* grib_oarray_get(grib_oarray* v, int i);
-size_t grib_oarray_used_size(grib_oarray* v);
+grib_oarray* grib_oarray_resize(grib_context* c, grib_oarray* origin);
+grib_oarray* grib_oarray_push(grib_context* c, grib_oarray* source, void* val);
+void* grib_oarray_get(grib_oarray* source, size_t index);
+int grib_oarray_put (grib_oarray* source, size_t index, void* val);
+void grib_oarray_delete(grib_context* c, grib_oarray* source);
+void grib_oarray_delete_content(grib_context* c, grib_oarray* source);
+size_t grib_oarray_used_size(grib_oarray* source);
 
 /* grib_iarray.c */
-void grib_iarray_print(const char* title, const grib_iarray* iarray);
-grib_iarray* grib_iarray_new_from_array(grib_context* c, long* a, size_t size);
+void grib_iarray_print(const char* title, const grib_iarray* source);
 grib_iarray* grib_iarray_new(grib_context* c, size_t size, size_t incsize);
-long grib_iarray_pop(grib_iarray* a);
-long grib_iarray_pop_front(grib_iarray* a);
-grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize);
-grib_iarray* grib_iarray_resize(grib_iarray* v);
-grib_iarray* grib_iarray_push(grib_iarray* v, long val);
-grib_iarray* grib_iarray_push_front(grib_iarray* v, long val);
-grib_iarray* grib_iarray_push_array(grib_iarray* v, long* val, size_t size);
-long grib_iarray_get(grib_iarray* a, size_t i);
-void grib_iarray_set(grib_iarray* a, size_t i, long v);
-void grib_iarray_delete(grib_iarray* v);
-void grib_iarray_delete_array(grib_iarray* v);
-long* grib_iarray_get_array(grib_iarray* v);
-size_t grib_iarray_used_size(grib_iarray* v);
-int grib_iarray_is_constant(grib_iarray* v);
+grib_iarray* grib_iarray_push(grib_iarray* source, long val);
+long grib_iarray_get(grib_iarray* source, size_t index);
+long* grib_iarray_get_arrays_by_reference(grib_iarray* source);
+void grib_iarray_delete(grib_iarray* source);
+long* grib_iarray_get_array(grib_iarray* source);
+size_t grib_iarray_used_size(grib_iarray* source);
 
 /* grib_vdarray.c */
 void grib_vdarray_print(const char* title, const grib_vdarray* vdarray);
 grib_vdarray* grib_vdarray_new(grib_context* c, size_t size, size_t incsize);
 grib_vdarray* grib_vdarray_resize(grib_context* c, grib_vdarray* v);
 grib_vdarray* grib_vdarray_push(grib_context* c, grib_vdarray* v, grib_darray* val);
+grib_darray* grib_vdarray_get(grib_vdarray* source, size_t index);
+int grib_vdarray_put (grib_vdarray* source, size_t index, grib_darray* val);
 void grib_vdarray_delete(grib_context* c, grib_vdarray* v);
 void grib_vdarray_delete_content(grib_context* c, grib_vdarray* v);
 grib_darray** grib_vdarray_get_array(grib_context* c, grib_vdarray* v);
@@ -259,15 +268,19 @@ size_t grib_vdarray_used_size(grib_vdarray* v);
 grib_vsarray* grib_vsarray_new(grib_context* c, size_t size, size_t incsize);
 grib_vsarray* grib_vsarray_resize(grib_context* c, grib_vsarray* v);
 grib_vsarray* grib_vsarray_push(grib_context* c, grib_vsarray* v, grib_sarray* val);
+grib_sarray* grib_vsarray_get(grib_vsarray* source, size_t index);
+int grib_vsarray_put (grib_vsarray* source, size_t index, grib_sarray* val);
 void grib_vsarray_delete(grib_context* c, grib_vsarray* v);
 void grib_vsarray_delete_content(grib_context* c, grib_vsarray* v);
 grib_sarray** grib_vsarray_get_array(grib_context* c, grib_vsarray* v);
 size_t grib_vsarray_used_size(grib_vsarray* v);
 
 /* grib_viarray.c */
+void grib_viarray_print(const char* title, const grib_viarray* source);
 grib_viarray* grib_viarray_new(grib_context* c, size_t size, size_t incsize);
 grib_viarray* grib_viarray_resize(grib_context* c, grib_viarray* v);
 grib_viarray* grib_viarray_push(grib_context* c, grib_viarray* v, grib_iarray* val);
+grib_iarray* grib_viarray_get(grib_viarray* source, size_t index);
 void grib_viarray_delete(grib_context* c, grib_viarray* v);
 void grib_viarray_delete_content(grib_context* c, grib_viarray* v);
 grib_iarray** grib_viarray_get_array(grib_context* c, grib_viarray* v);

@@ -899,8 +899,10 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 int ii;
                 countdiff = 0;
                 for (ii = 0; ii < len1; ii++)
-                    if (lval1[ii] != lval2[ii])
+                    if (lval1[ii] != lval2[ii]) {
+                    	printf("DIFF!!! long [%s][%d]: [%ld] != [%ld]\n", name, ii, lval1[ii], lval2[ii]);
                         countdiff++;
+                    }
 
                 if (countdiff) {
                     printInfo(handle1);
@@ -1037,6 +1039,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                     printf("  (%d values) tolerance=%g\n", (int)len1, value_tolerance);
                 for (i = 0; i < len1; i++) {
                     if ((diff = compare_double(pv1++, pv2++, &value_tolerance)) != 0) {
+                    	printf("DIFF!!! double [%s][%d]: [%ld] != [%ld]\n", name, i, *pv1, *pv2);
                         countdiff++;
                         if (maxdiff < diff) {
                             maxdiff  = diff;

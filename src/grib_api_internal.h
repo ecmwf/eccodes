@@ -6,6 +6,8 @@
  *
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ *
+ *   Modified for Performance Study by: CS GMBH
  */
 
 /**
@@ -728,69 +730,89 @@ typedef struct grib_trie_with_rank_list grib_trie_with_rank_list;
 typedef struct grib_trie_with_rank grib_trie_with_rank;
 typedef struct grib_itrie grib_itrie;
 
+#define DYN_DEFAULT_SARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+#define DYN_DEFAULT_SARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
 
 struct grib_sarray
 {
-    char** v;
+    char * stA[DYN_DEFAULT_SARRAY_SIZE_INIT];
     size_t size;
     size_t n;
     size_t incsize;
-    grib_context* context;
+    char** dynA;
 };
+
+#define DYN_DEFAULT_OARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+#define DYN_DEFAULT_OARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
 
 struct grib_oarray
 {
-    void** v;
+    void* stA[DYN_DEFAULT_OARRAY_SIZE_INIT];
     size_t size;
     size_t n;
     size_t incsize;
-    grib_context* context;
+    void** dynA;
 };
+
+#define DYN_DEFAULT_DARRAY_SIZE_INIT 500 /* Initial size for the double dynamic array */
+#define DYN_DEFAULT_DARRAY_SIZE_INCR 600 /* Increment size for the double dynamic array */
 
 struct grib_darray
 {
-    double* v;
+    double stA[DYN_DEFAULT_DARRAY_SIZE_INIT];
     size_t size;
     size_t n;
     size_t incsize;
-    grib_context* context;
+    double* dynA;
 };
+
+#define DYN_DEFAULT_IARRAY_SIZE_INIT 5000
+#define DYN_DEFAULT_IARRAY_SIZE_INCR 6000
 
 struct grib_iarray
 {
-    long* v;
+	long stA[DYN_DEFAULT_IARRAY_SIZE_INIT];
     size_t size;
     size_t n;
     size_t incsize;
-    size_t number_of_pop_front;
     grib_context* context;
+    long* dynA;
 };
+
+#define DYN_DEFAULT_VDARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+#define DYN_DEFAULT_VDARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
 
 struct grib_vdarray
 {
-    grib_darray** v;
+    grib_darray* stA[DYN_DEFAULT_VDARRAY_SIZE_INIT];
     size_t size;
     size_t n;
     size_t incsize;
-    grib_context* context;
+    grib_darray** dynA;
 };
+
+#define DYN_DEFAULT_VSARRAY_SIZE_INIT 500 /* Initial size for the dynamic array */
+#define DYN_DEFAULT_VSARRAY_SIZE_INCR 600 /* Increment size for the dynamic array */
 
 struct grib_vsarray
 {
-    grib_sarray** v;
+    grib_sarray* stA[DYN_DEFAULT_VSARRAY_SIZE_INIT];
     size_t size;
     size_t n;
     size_t incsize;
-    grib_context* context;
+    grib_sarray** dynA;
 };
+
+#define DYN_DEFAULT_VIARRAY_SIZE_INIT 500 /* Initial size for the dynamic array VIARRAY */
+#define DYN_DEFAULT_VIARRAY_SIZE_INCR 600 /* Increment size for the dynamic array VIARRAY */
 
 struct grib_viarray
 {
-    grib_iarray** v;
+	grib_iarray* stA[DYN_DEFAULT_VIARRAY_SIZE_INIT];
     size_t size;
     size_t n;
     size_t incsize;
-    grib_context* context;
+    grib_iarray** dynA;
 };
 
 /* types of BUFR descriptors used in bufr_descriptor->type*/

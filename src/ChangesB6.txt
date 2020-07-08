@@ -1,0 +1,157 @@
+Compilation
+---------------
+unlink eccodes-2.17.0-Source; unlink eccodes-2.17.0-BUILD; unlink eccodes-2.17.0-INSTALL ; 
+ln -fs eccodes-2.17.0-Source.B6 eccodes-2.17.0-Source ; ln -fs eccodes-2.17.0-BUILD.B6 eccodes-2.17.0-BUILD ; ln -fs eccodes-2.17.0-INSTALL.B6 eccodes-2.17.0-INSTALL ; 
+
+#DEBUG OFF
+rm -rf cmake.out ;cmake3 -DENABLE_NETCDF=OFF -DENABLE_FORTRAN=ON -DCMAKE_INSTALL_PREFIX=/home/eccuser/eccodes-2.17.0-INSTALL.B6 -DENABLE_EXTRA_TESTS=1 /home/eccuser/eccodes-2.17.0-Source >> cmake.out 2>&1 ; egrep -i "error|fail" cmake.out
+
+#DEBUG ON
+rm -rf cmake.out ;cmake3 -DCMAKE_C_FLAGS="-g -O0" -DENABLE_NETCDF=OFF -DENABLE_FORTRAN=ON -DCMAKE_INSTALL_PREFIX=/home/eccuser/eccodes-2.17.0-INSTALL.B6  -DCMAKE_BUILD_TYPE=Debug -DENABLE_EXTRA_TESTS=1 -DDEVELOPER_MODE=1 /home/eccuser/eccodes-2.17.0-Source.B6 >> cmake.out 2>&1 ; egrep -i "error|fail" cmake.out
+
+rm -rf make.out; make >> make.out 2>&1; egrep -i "error|fail" make.out;
+
+rm -rf ctest3.out; ctest3 >> ctest3.out 2>&1 ; egrep -i "error|fail" ctest3.out; 
+
+rm -rf make_install.out; make install >> make_install.out 2>&1 ; egrep -i "error|fail" make_install.out;
+
+Base version
+-------------
+The base version for this version is B5.
+
+Differences/Rules
+-----------------
+The Rule 1,2,3 are applied on the dynamic array structs of:  
+* grib_darray.c  
+* grib_iarray.c  
+* grib_oarray.c  
+* grib_sarray.c  
+* grib_vdarray.c  
+* grib_viarray.c  
+* grib_vsarray.c 
+
+* Rule 1. Add to a dynamic array struct a static array , which will be filled for first;  
+* Rule 2. Once the static array is full, proceed to resize the array, allocating the dynamic memory in the dynamic area of the dynamic array struct;  
+* Rule 3. Tuning all the dynamic arrays getters/setters methods accordingly.  
+
+Corrections
+-----------
+* Removed unused functions in all the mentioned arrays;
+
+Examples
+----------
+* Rule 1.
+
+"grib_darray" struct in version B5 was
+
+struct grib_darray  
+{  
+    double* v;  
+    size_t size;  
+    size_t n;  
+    size_t incsize;    
+};  
+  
+In B6 the same struct is  
+  
+struct grib_darray  
+{  
+    double sv[DYN_DEFAULT_DARRAY_SIZE_INIT];  
+    size_t size;  
+    size_t n;  
+    size_t incsize;  
+    double* v;  
+};  
+  
+Where "sv" is a static array which is allocated at runtime when the malloc for "grib_darray" allocation is called. This space will first be filled and only if completely full, the dynamic area "v" will be allocated, with a consequent malloc/free burden at runtime.   
+When a new dynamic array is build through the method "new", only one malloc will be called to build it and not two mallocs as in B5. Here an example which clarify the mechanism.
+Location: grib_accessor_class_bufr_data_array.c/process_elements  
+elementsDescriptorsIndex = grib_iarray_new(c, DYN_DEFAULT_IARRAY_SIZE_INIT, DYN_DEFAULT_IARRAY_SIZE_INCR);  
+The method grib_iarray_new directly instantiates in only one malloc the space for the struct, like this:  
+grib_iarray* result = NULL;  
+	result = (grib_iarray*)grib_context_malloc(c, sizeof(grib_iarray));  
+The dynamic area "v" will be allocated only if the startsize is bigger than the defined value DYN_DEFAULT_IARRAY_SIZE_INIT. This mechanism, already eliminates a malloc call.
+
+* Rule 2.
+
+The changed dynamic arrays are quite similar in their structures. As a matter of fact, also the functions which access them have similar signatures. So the allocation of more space is done for all of them in the "resize" method" and it is precisely the method which was changed for all of them. Here it is reported the the resize method for "grib_iarray":
+newsize = origin->incsize + origin->size;
+	if (origin->v != NULL){
+		newv      = (long*)grib_context_realloc(c, origin->v, (newsize-DYN_DEFAULT_IARRAY_SIZE_INIT) * sizeof(long));
+		origin->v=newv;
+	} else {
+		newv      = (long*)grib_context_malloc(c,  (newsize-DYN_DEFAULT_IARRAY_SIZE_INIT ) * sizeof(long) );
+		origin->v=newv;
+	}
+	origin->size                = newsize; 
+
+* Rule 3.
+
+While in the original version the dynamic array "v", of any of the dynamic structures under exam, was accessed widely through the C access operators "[]", in B6 this was changed. In fact, after the reenginering of the data structures, it is not obvious anymore that an element at index "idx" can be found in v[idx]. In fact the general rule is that if idx is smaller that the default size of the static array, than the element is to be searched in at "sv[idx]". Otherwise, the element will be searched in v[idx-SV_DEFAULT_SIZE]. These calculations are done by setters/getters method like:  
+long grib_iarray_get(grib_iarray* source, size_t index);  
+grib_iarray* grib_iarray_push(grib_iarray* source, long val);
+Another method whch is important to mention is:  
+double* grib_darray_get_arrays_by_reference(grib_darray* source);
+The method will in fact analyse which is the actual array and will return the correct reference to it. This method is directly used from the accessors in order to unpack the messages, with the help of the parser.  
+  
+Differences
+------------
+The complete list of differences, due to Rule 1, 2 and 3 and other corrections are here.
+
+Difference between original code contained in eccodes-2.17.0 and B6:
+For Rule 1 and 2, plus removal of unused functions:
+grib_api.h
+grib_api_internal.h
+grib_api_prototypes.h
+grib_darray.c
+grib_iarray.c
+grib_oarray.c
+grib_sarray.c
+grib_vdarray.c
+grib_viarray.c
+grib_vsarray.c
+
+For Rule 3
+action_class_set_darray.c
+action_class_set_iarray.c
+action_class_set_sarray.c
+bufr_util.c
+grib_accessor_class_bufr_data_array.c
+grib_accessor_class_bufr_data_element.c
+grib_accessor_class_bufr_string_values.c
+grib_accessor_class_concept.c
+grib_accessor_class_hash_array.c
+grib_accessor_class_long_vector.c
+grib_bufr_descriptors_array.c
+grib_accessor_class_transient_darray.c
+grib_trie_with_rank.c
+
+Difference between B5 code and B6:
+
+./action_class_set_darray.c
+./action_class_set_iarray.c
+./action_class_set_sarray.c
+./grib_accessor_class_bufr_data_array.c
+./grib_accessor_class_bufr_data_element.c
+./grib_accessor_class_bufr_string_values.c
+./grib_accessor_class_concept.c
+./grib_accessor_class_hash_array.c
+./grib_accessor_class_long_vector.c
+./grib_accessor_class_transient_darray.c
+./grib_api.h
+./grib_api_internal.h
+./grib_api_prototypes.h
+./grib_darray.c
+./grib_iarray.c
+./grib_oarray.c
+./grib_sarray.c
+./grib_trie_with_rank.c
+./grib_vdarray.c
+./grib_viarray.c
+./grib_vsarray.c
+
+Observations
+------------
+* "grib_action* grib_action_create_set_iarray(grib_context* context, const char* name, grib_iarray* iarray)"
+in action_class_set_iarray.c is never used
+

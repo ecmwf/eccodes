@@ -22,9 +22,11 @@ touch $fLog
 fJsonTmp=${label}".json.tmp"
 
 # Test sample BUFR files
+echo "ECCODES_SAMPLES_PATH: \""$ECCODES_SAMPLES_PATH"\" ";
+echo "fLog: \""$fLog"\" ";
 for file in $ECCODES_SAMPLES_PATH/BUFR*.tmpl; do
   ${tools_dir}/bufr_dump -O $file >/dev/null
   ${tools_dir}/bufr_dump -d $file >/dev/null
 done
 
-rm -f $fLog
+#rm -f $fLog

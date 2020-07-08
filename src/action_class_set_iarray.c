@@ -106,8 +106,9 @@ grib_action* grib_action_create_set_iarray(grib_context* context,
 static int execute(grib_action* a, grib_handle* h)
 {
     grib_action_set_iarray* self = (grib_action_set_iarray*)a;
-
-    return grib_set_long_array(h, self->name, self->iarray->v, self->iarray->n);
+    size_t size = grib_iarray_used_size(self->iarray);
+    //return grib_set_long_array(h, self->name, self->iarray->v, self->iarray->n);
+    return grib_set_long_array(h, self->name, grib_iarray_get_arrays_by_reference(self->iarray), size);
 }
 
 static void dump(grib_action* act, FILE* f, int lvl)

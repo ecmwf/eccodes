@@ -188,14 +188,16 @@ static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
 
     tl = 0;
     for (j = 0; j < n; j++) {
-        l = grib_sarray_used_size(stringValues->v[j]);
+        //l = grib_sarray_used_size(stringValues->v[j]);
+        l = grib_sarray_used_size(grib_vsarray_get (stringValues, j) );
         tl += l;
 
         if (tl > *len)
             return GRIB_ARRAY_TOO_SMALL;
 
         for (i = 0; i < l; i++) {
-            *(b++) = grib_context_strdup(c, stringValues->v[j]->v[i]);
+            //*(b++) = grib_context_strdup(c, stringValues->v[j]->v[i]);
+        	*(b++) = grib_context_strdup(c, grib_sarray_get (  grib_vsarray_get (stringValues, j), i)  );
         }
     }
     *len = tl;

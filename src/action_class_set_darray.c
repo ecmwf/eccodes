@@ -107,7 +107,8 @@ static int execute(grib_action* a, grib_handle* h)
 {
     grib_action_set_darray* self = (grib_action_set_darray*)a;
 
-    return grib_set_double_array(h, self->name, self->darray->v, self->darray->n);
+    return grib_set_double_array(h, self->name, grib_darray_get_arrays_by_reference(self->darray), self->darray->n);
+    //return grib_set_double_array(h, self->name, self->darray->v, self->darray->n);
 }
 
 static void dump(grib_action* act, FILE* f, int lvl)
