@@ -6,6 +6,8 @@
  *
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ *
+ * Modified for Performance Study by: CS GMBH
  */
 
 /*! \file grib_api.h
@@ -234,6 +236,12 @@ typedef struct grib_viarray grib_viarray;
 typedef struct bufr_descriptor bufr_descriptor;
 typedef struct bufr_descriptors_array bufr_descriptors_array;
 typedef struct bufr_descriptors_map_list bufr_descriptors_map_list;
+
+typedef struct grib_iarrayPOOL grib_iarrayPOOL;
+typedef struct grib_darrayPOOL grib_darrayPOOL;
+typedef struct grib_viarrayPOOL grib_viarrayPOOL;
+typedef struct grib_vdarrayPOOL grib_vdarrayPOOL;
+typedef struct grib_vsarrayPOOL grib_vsarrayPOOL;
 
 grib_fieldset* grib_fieldset_new_from_files(grib_context* c, char* filenames[], int nfiles, char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
 void grib_fieldset_delete(grib_fieldset* set);

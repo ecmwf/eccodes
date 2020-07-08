@@ -8,6 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+/*******************************************************
+ *   Modified for Performance Study by: CS GMBH
+ ******************************************************/
 #include "grib_api_internal.h"
 
 /*
@@ -196,7 +199,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     *len = count;
     for (i = 0; i < *len; i++)
-        val[i] = self->arr->v[i];
+        /* val[i] = self->arr->v[i]; */
+    	val[i] = grib_darray_get ( self->arr, i );
 
 
     return GRIB_SUCCESS;
@@ -216,8 +220,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     *len = count;
     for (i = 0; i < *len; i++)
-        val[i] = (long)self->arr->v[i];
-
+        /* val[i] = (long)self->arr->v[i]; */
+    	val[i] = ( (long) (grib_darray_get ( self->arr, i )) );
 
     return GRIB_SUCCESS;
 }

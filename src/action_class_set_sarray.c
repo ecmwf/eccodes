@@ -9,7 +9,8 @@
  */
 
 /***************************************************************************
- *  Enrico Fucile                                                                         *
+ *  Enrico Fucile
+ *  Modified for Performance Study by: CS GMBH                                                              *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -106,8 +107,9 @@ grib_action* grib_action_create_set_sarray(grib_context* context,
 static int execute(grib_action* a, grib_handle* h)
 {
     grib_action_set_sarray* self = (grib_action_set_sarray*)a;
-
-    return grib_set_string_array(h, self->name, (const char**)self->sarray->v, self->sarray->n);
+    size_t size = grib_sarray_used_size(self->sarray);
+    /*return grib_set_string_array(h, self->name, (const char**)self->sarray->v, self->sarray->n);*/
+    return grib_set_string_array(h, self->name, (const char**)grib_sarray_get_arrays_by_reference(self->sarray), size);
 }
 
 static void dump(grib_action* act, FILE* f, int lvl)

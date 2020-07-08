@@ -11,251 +11,259 @@
 /***************************************************************************
  *
  *   Enrico Fucile
+ *   Modified for Performance Study by: CS GMBH
  *
  ***************************************************************************/
 
 #include "grib_api_internal.h"
 
+extern grib_iarrayPOOL iarrayPOOL;
+
 /* For debugging purposes */
-void grib_iarray_print(const char* title, const grib_iarray* iarray)
+void grib_iarray_print(const char* title, const grib_iarray* source)
 {
-    size_t i;
-    Assert(iarray);
-    printf("%s: iarray.n=%lu  \t", title, (unsigned long)iarray->n);
-    for (i = 0; i < iarray->n; i++) {
-        printf("iarray[%lu]=%ld\t", (unsigned long)i, iarray->v[i]);
-    }
-    printf("\n");
-}
-
-grib_iarray* grib_iarray_new_from_array(grib_context* c, long* a, size_t size)
-{
-    size_t i;
-    grib_iarray* v;
-
-    if (!c)
-        c = grib_context_get_default();
-
-    v = grib_iarray_new(c, size, 100);
-    for (i = 0; i < size; i++)
-        v->v[i] = a[i];
-    v->n                   = size;
-    v->number_of_pop_front = 0;
-    v->context             = c;
-    return v;
+	size_t i;
+	Assert(source);
+	printf("%s: iarray.n=%lu  \t", title, (unsigned long)source->n);
+	for (i = 0; i < source->n; i++) {
+		if( i<= (DYN_DEFAULT_IARRAY_SIZE_INIT - 1)) {
+			printf("iarray[%lu]=%ld\t", (unsigned long)i, source->stA[i]);
+		} else {
+			printf("iarray[%lu]=%ld\t", (unsigned long)i, source->dynA[(i-(DYN_DEFAULT_IARRAY_SIZE_INIT))]);
+		}
+	}
+	printf("\n");
 }
 
 grib_iarray* grib_iarray_new(grib_context* c, size_t size, size_t incsize)
 {
-    grib_iarray* v = NULL;
+	grib_iarray* result = NULL;
 
-    if (!c)
-        c = grib_context_get_default();
+	if (!c)
+		c = grib_context_get_default();
 
-    v = (grib_iarray*)grib_context_malloc(c, sizeof(grib_iarray));
-    if (!v) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_iarray_new unable to allocate %d bytes\n", sizeof(grib_iarray));
-        return NULL;
-    }
-    v->context             = c;
-    v->size                = size;
-    v->n                   = 0;
-    v->incsize             = incsize;
-    v->v                   = (long*)grib_context_malloc(c, sizeof(long) * size);
-    v->number_of_pop_front = 0;
-    if (!v->v) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_iarray_new unable to allocate %d bytes\n", sizeof(long) * size);
-        return NULL;
-    }
-    return v;
+	result = (grib_iarray*)grib_context_malloc(c, sizeof(grib_iarray));
+	if (!result) {
+		grib_context_log(c, GRIB_LOG_ERROR,
+				"grib_iarray_new unable to allocate %d bytes\n", sizeof(grib_iarray));
+		return NULL;
+	}
+	result->context             = c;
+
+	if(size > DYN_DEFAULT_IARRAY_SIZE_INIT) {
+
+		result->dynA                   = (long*)grib_context_malloc(c, (sizeof(long) * (size-DYN_DEFAULT_IARRAY_SIZE_INIT)) );
+
+		if (!result->dynA) {
+			grib_context_log(c, GRIB_LOG_ERROR,
+					"grib_iarray_new unable to allocate %d bytes\n", (sizeof(long) * (size-DYN_DEFAULT_IARRAY_SIZE_INIT)) );
+			return NULL;
+		}
+
+		result->size                = size;
+		if (incsize > 0)
+			result->incsize             = incsize;
+		else
+			result->incsize             = DYN_DEFAULT_IARRAY_SIZE_INCR;
+
+	} else {
+
+		result->dynA					= NULL;
+		result->size                = DYN_DEFAULT_IARRAY_SIZE_INIT;
+		result->incsize             = DYN_DEFAULT_IARRAY_SIZE_INCR;
+
+	}
+
+	result->n                   = 0;
+
+	return result;
 }
 
-long grib_iarray_pop(grib_iarray* a)
+grib_iarray* grib_iarray_resize(grib_iarray* origin)
 {
-    a->n -= 1;
-    return a->v[a->n];
+	grib_context* c;
+	int newsize;
+
+	if (!origin)
+	{
+		return origin;
+	}
+
+	newsize = (origin->incsize + origin->size);
+	c = origin->context;
+
+	if (!c)
+		c = grib_context_get_default();
+
+	if (origin->dynA){
+
+		origin->dynA      = (long*)grib_context_realloc(c, origin->dynA, (newsize-DYN_DEFAULT_IARRAY_SIZE_INIT) * sizeof(long));
+
+		if (!origin->dynA) {
+			grib_context_log(c, GRIB_LOG_ERROR,
+					"grib_iarray_resize unable to allocate %d bytes\n", sizeof(long) * newsize);
+			return NULL;
+		}
+
+	}
+	else {
+
+		origin->dynA      = (long*)grib_context_malloc(c,  (newsize-DYN_DEFAULT_IARRAY_SIZE_INIT ) * sizeof(long) );
+
+		if (!origin->dynA) {
+			grib_context_log(c, GRIB_LOG_ERROR,
+					"grib_iarray_resize unable to allocate %d bytes\n", sizeof(long) * newsize);
+			return NULL;
+		}
+
+	}
+
+	origin->size                = newsize;
+
+	return origin;
 }
 
-long grib_iarray_pop_front(grib_iarray* a)
+void iarrayPoolInit(grib_context* c)
 {
-    long v = a->v[0];
-    /* size_t i=0; */
-    if (a->n == 0)
-        Assert(0);
-    a->n--;
-    a->v++;
-    a->number_of_pop_front++;
-    /* for (i=0;i<a->n;i++) a->v[i]=a->v[i+1]; */
+	int i;
+	grib_context* poolContext = c ? c : 0 ;
 
-    return v;
+	for (i=0; i<DYN_DEFAULT_IARRAY_POOL_SIZE; i++) {
+		iarrayPOOL.arrayPOOL[i].context=poolContext;
+		iarrayPOOL.arrayPOOL[i].size=DYN_DEFAULT_IARRAY_SIZE_INIT;
+		iarrayPOOL.arrayPOOL[i].n=0;
+		iarrayPOOL.arrayPOOL[i].incsize=DYN_DEFAULT_IARRAY_SIZE_INCR;
+		iarrayPOOL.arrayPOOL[i].dynA=0;
+		memset(iarrayPOOL.arrayPOOL[i].stA,0,DYN_DEFAULT_IARRAY_SIZE_INIT);
+	}
 }
 
-grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
+grib_iarray* grib_iarray_push(grib_iarray* source, long val)
 {
-    long* newv;
-    size_t i;
-    grib_context* c = v->context;
+	size_t start_size    = DYN_DEFAULT_IARRAY_SIZE_INIT;
+	size_t start_incsize = DYN_DEFAULT_IARRAY_SIZE_INCR;
 
-    if (newsize < v->size)
-        return v;
+	/*If the target is empty, initialize it*/
+	/*if (!source)
+		source = grib_iarray_new(0, start_size, start_incsize);*/
+	if (!source) {
+		if(iarrayPOOL.poolCounter != (DYN_DEFAULT_IARRAY_POOL_SIZE - 1) ) {
+			grib_context* c = grib_context_get_default();
+			iarrayPOOL.arrayPOOL[iarrayPOOL.poolCounter].context=c;
+			source = &(iarrayPOOL.arrayPOOL[iarrayPOOL.poolCounter]);
+			iarrayPOOL.poolCounter++;
+		} else {
+			source = grib_iarray_new(0, start_size, start_incsize);
+		}
+	}
 
-    if (!c)
-        c = grib_context_get_default();
+	/*If the actual used size of the target is equal to the allowed size, resize the array*/
+	if (source->n == source->size) {
 
-    newv = (long*)grib_context_malloc_clear(c, newsize * sizeof(long));
-    if (!newv) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_iarray_resize unable to allocate %d bytes\n", sizeof(long) * newsize);
-        return NULL;
-    }
+		source = grib_iarray_resize(source);
 
-    for (i = 0; i < v->n; i++)
-        newv[i] = v->v[i];
+		/*Check if REALLOC WAS POSSIBLE, otherwise it is not possible to insert a new value!*/
+		if (!source)
+		{
+			return source;
+		}
 
-    v->v -= v->number_of_pop_front;
-    grib_context_free(c, v->v);
+		/*insertion in new allocated dynamic array*/
+		source->dynA[ (source->n-(DYN_DEFAULT_IARRAY_SIZE_INIT)) ] = val;
+		source->n++;
+		return source;
 
-    v->v                   = newv;
-    v->size                = newsize;
-    v->number_of_pop_front = 0;
+	}
 
-    return v;
+	/*insertion in static array*/
+	if (source->n <= (DYN_DEFAULT_IARRAY_SIZE_INIT - 1) )
+	{
+		source->stA[source->n] = val;
+	}
+	else {
+		/*insertion in dynamic array*/
+		source->dynA[ (source->n-(DYN_DEFAULT_IARRAY_SIZE_INIT)) ] = val;
+	}
+
+	source->n++;
+	return source;
 }
 
-grib_iarray* grib_iarray_resize(grib_iarray* v)
+long grib_iarray_get(const grib_iarray* source, size_t index)
 {
-    int newsize = v->incsize + v->size;
 
-    return grib_iarray_resize_to(v, newsize);
+	if (!source)
+		return 0;
+	if (index < 0)
+		return 0;
+	if (index < DYN_DEFAULT_IARRAY_SIZE_INIT) {
+		return source->stA[index];
+	} else {
+		if (source->dynA) {
+			return source->dynA[index-DYN_DEFAULT_IARRAY_SIZE_INIT];
+		}
+	}
+
+	return 0;
 }
 
-grib_iarray* grib_iarray_push(grib_iarray* v, long val)
+/**
+ * The method returns the array currently in use. If the given grib_iarray structure pointer is null, it returns NULL.
+ */
+long* grib_iarray_get_arrays_by_reference(const grib_iarray* source)
 {
-    size_t start_size    = 100;
-    size_t start_incsize = 100;
 
-    if (!v)
-        v = grib_iarray_new(0, start_size, start_incsize);
+	if(!source)
+		return NULL;
 
-    if (v->n >= v->size - v->number_of_pop_front)
-        v = grib_iarray_resize(v);
+	/*return source->stA;*/
 
-    v->v[v->n] = val;
-    v->n++;
-    return v;
+	/* PREVIOUS ATTEMPT */
+	if (source->n < DYN_DEFAULT_IARRAY_SIZE_INIT) {
+		return source->stA; /* stA is the static array */
+	} else {
+		if (source->dynA) {
+			return source->dynA;/* dynA is the dynamic array */
+		}
+	}
+
+	return NULL;
 }
 
-grib_iarray* grib_iarray_push_front(grib_iarray* v, long val)
+void grib_iarray_delete(grib_iarray* source)
 {
-    size_t start_size    = 100;
-    size_t start_incsize = 100;
-    int i;
-    if (!v)
-        v = grib_iarray_new(0, start_size, start_incsize);
+	grib_context* c;
 
-    if (v->number_of_pop_front) {
-        v->v--;
-        v->number_of_pop_front--;
-    }
-    else {
-        if (v->n >= v->size)
-            v = grib_iarray_resize(v);
-        for (i = v->n; i > 0; i--)
-            v[i] = v[i - 1];
-    }
-    v->v[0] = val;
-    v->n++;
+	if (!source)
+		return;
+	c = source->context;
 
-    return v;
+	if (source->dynA) {
+		grib_context_free(c, source->dynA);
+	}
+
+	grib_context_free(c, source);
 }
 
-grib_iarray* grib_iarray_push_array(grib_iarray* v, long* val, size_t size)
+long* grib_iarray_get_array(grib_iarray* source)
 {
-    size_t start_size    = size;
-    size_t start_incsize = 100;
-    long* vp             = 0;
-    long* valp           = val;
-    if (!v)
-        v = grib_iarray_new(0, start_size, start_incsize);
+	long* vv;
+	size_t i;
+	grib_context* c = grib_context_get_default();
 
-    v  = grib_iarray_resize_to(v, size + v->n);
-    vp = v->v + v->n + v->number_of_pop_front;
-    v->n += size;
-    while (size) {
-        *(vp++) = *(valp++);
-        size--;
-    }
-    return v;
+	vv = (long*)grib_context_malloc_clear(c, sizeof(long) * source->n);
+	for (i = 0; i < source->n; i++) {
+		if( i<= (DYN_DEFAULT_IARRAY_SIZE_INIT - 1)) {
+			vv[i] = source->stA[i];
+		} else {
+			vv[i] = source->dynA[(i-(DYN_DEFAULT_IARRAY_SIZE_INIT))];
+		}
+	}
+
+	return vv;
 }
 
-long grib_iarray_get(grib_iarray* a, size_t i)
+size_t grib_iarray_used_size(grib_iarray* source)
 {
-    return a->v[i];
-}
-
-void grib_iarray_set(grib_iarray* a, size_t i, long v)
-{
-    a->v[i] = v;
-}
-
-void grib_iarray_delete(grib_iarray* v)
-{
-    grib_context* c;
-
-    if (!v)
-        return;
-    c = v->context;
-
-    grib_iarray_delete_array(v);
-
-    grib_context_free(c, v);
-}
-
-void grib_iarray_delete_array(grib_iarray* v)
-{
-    grib_context* c;
-
-    if (!v)
-        return;
-    c = v->context;
-
-    if (v->v) {
-        long* vv = v->v - v->number_of_pop_front;
-        grib_context_free(c, vv);
-    }
-}
-
-long* grib_iarray_get_array(grib_iarray* v)
-{
-    long* vv;
-    size_t i;
-    grib_context* c = grib_context_get_default();
-
-    vv = (long*)grib_context_malloc_clear(c, sizeof(long) * v->n);
-    for (i = 0; i < v->n; i++)
-        vv[i] = v->v[i];
-
-    return vv;
-}
-
-size_t grib_iarray_used_size(grib_iarray* v)
-{
-    return v == NULL ? 0 : v->n;
-}
-
-int grib_iarray_is_constant(grib_iarray* v)
-{
-    int i;
-    long val;
-    if (v->n == 1)
-        return 1;
-
-    val = v->v[0];
-    for (i = 1; i < v->n; i++) {
-        if (val != v->v[i])
-            return 0;
-    }
-    return 1;
+	return (!source) ? 0 : source->n;
 }

@@ -10,6 +10,8 @@
 #include "eccodes.h"
 #include <assert.h>
 
+/*extern grib_darrayPOOL darrayPOOL;*/
+
 int main(int argc, char** argv)
 {
     size_t size            = 0;
@@ -22,6 +24,8 @@ int main(int argc, char** argv)
 
     assert(argc == 2);
     outfilename = argv[1];
+
+    /*darrayPoolInit();*/
 
     h = codes_bufr_handle_new_from_samples(NULL, sampleName);
     assert(h);

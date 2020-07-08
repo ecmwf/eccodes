@@ -11,6 +11,7 @@
 
 /*******************************************************
  *   Enrico Fucile
+ *   Modified for Performance Study by: CS GMBH
  ******************************************************/
 
 #include "grib_api_internal.h"
@@ -226,7 +227,7 @@ static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition*
 
     ret = 1;
     for (i = 0; i < size; i++) {
-        if (val[i] != c->iarray->v[i]) {
+        if (val[i] != grib_iarray_get(c->iarray, i) ) {
             ret = 0;
             break;
         }
@@ -299,8 +300,10 @@ static int concept_conditions_expression_apply(grib_handle* h, grib_concept_cond
             values[count].double_value = dres;
             break;
         case GRIB_TYPE_STRING:
-            size                       = sizeof(sa->v[count]);
-            values[count].string_value = grib_expression_evaluate_string(h, e->expression, sa->v[count], &size, &err);
+            /* size                       = sizeof(sa->v[count]); */
+        	size						  = sizeof(grib_sarray_get(sa, count));
+            /* values[count].string_value = grib_expression_evaluate_string(h, e->expression, sa->v[count], &size, &err); */
+            values[count].string_value = grib_expression_evaluate_string(h, e->expression, grib_sarray_get(sa, count), &size, &err);
             break;
         default:
             return GRIB_NOT_IMPLEMENTED;
@@ -313,7 +316,8 @@ static int concept_conditions_expression_apply(grib_handle* h, grib_concept_cond
 static int concept_conditions_iarray_apply(grib_handle* h, grib_concept_condition* c)
 {
     size_t size = grib_iarray_used_size(c->iarray);
-    return grib_set_long_array(h, c->name, c->iarray->v, size);
+    /* return grib_set_long_array(h, c->name, c->iarray->dynA, size); */
+    return grib_set_long_array(h, c->name, grib_iarray_get_arrays_by_reference(c->iarray), size);
 }
 
 static int concept_conditions_apply(grib_handle* h, grib_concept_condition* c, grib_values* values, grib_sarray* sa, int* n)
@@ -399,7 +403,9 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
         return err;
     }
     e  = c->conditions;
-    sa = grib_sarray_new(h->context, 10, 10);
+    /* magic number 10 is not documented anywhere... */
+    /* sa = grib_sarray_new(h->context, 10, 10); */
+    sa = grib_sarray_new(h->context, DYN_DEFAULT_SARRAY_SIZE_INIT, DYN_DEFAULT_SARRAY_SIZE_INCR);
     while (e) {
         concept_conditions_apply(h, e, values, sa, &count);
         e = e->next;

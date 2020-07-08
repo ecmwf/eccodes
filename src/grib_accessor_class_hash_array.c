@@ -11,6 +11,7 @@
 
 /*******************************************************
  *   Enrico Fucile
+ *   Modified for Performance Study by: CS GMBH
  ******************************************************/
 
 #include "grib_api_internal.h"
@@ -251,7 +252,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
             }
             *len = self->ha->iarray->n;
             for (i = 0; i < *len; i++)
-                val[i] = self->ha->iarray->v[i];
+                /* val[i] = self->ha->iarray->v[i]; */
+            	val[i] = grib_iarray_get (self->ha->iarray, i );
             break;
 
         default:

@@ -10,7 +10,7 @@
 
 /*
  * C Implementation: grib_tools
- *
+ * Modified for Performance Study by: CS GMBH
  */
 
 #include "grib_tools.h"
@@ -48,6 +48,8 @@ static int grib_tool_onlyfiles(grib_runtime_options* options);
 static int grib_tool_index(grib_runtime_options* options);
 static int process(grib_context* c, grib_runtime_options* options, const char* path);
 static int scan(grib_context* c, grib_runtime_options* options, const char* dir);
+
+/* extern grib_iarrayPOOL iarrayPOOL; extern grib_darrayPOOL darrayPOOL; */
 
 FILE* dump_file;
 
@@ -162,6 +164,8 @@ int grib_tool(int argc, char** argv)
     grib_tool_before_getopt(&global_options);
 
     grib_process_runtime_options(c, argc, argv, &global_options);
+
+    /*iarrayPoolInit(c); darrayPoolInit();*/
 
     grib_tool_init(&global_options);
     if (global_options.dump_filename) {

@@ -51,6 +51,10 @@ struct table_entry
     grib_accessor_class** cclass;
 };
 
+/* grib_vdarrayPOOL vdarrayPOOL; */
+/* grib_vsarrayPOOL vsarrayPOOL; */
+/* grib_viarrayPOOL viarrayPOOL; */
+
 #ifdef ACCESSOR_FACTORY_USE_TRIE
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -177,6 +181,10 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     }
 
     a->cclass = c;
+
+    /* vdarrayPoolInit(); grib_vdarrayPOOL vdarrayPOOL; */
+    /* vsarrayPoolInit(); grib_vsarrayPOOL vsarrayPOOL; */
+    /* viarrayPoolInit(); grib_viarrayPOOL viarrayPOOL; */
 
     grib_init_accessor(a, len, params);
     size = grib_get_next_position_offset(a);

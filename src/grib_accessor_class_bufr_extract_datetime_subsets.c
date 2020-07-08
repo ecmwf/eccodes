@@ -457,7 +457,7 @@ static int select_datetime(grib_accessor* a)
     grib_context_free(c, hour);
     grib_context_free(c, minute);
     grib_context_free(c, second);
-    grib_iarray_delete(subsets);
+    grib_iarray_delete(subsets); /* CSGMB: deallocate array after the set ? */
     subsets = 0;
 
     return ret;

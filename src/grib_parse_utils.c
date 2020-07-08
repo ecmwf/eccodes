@@ -21,6 +21,9 @@ grib_concept_value* grib_parser_concept       = 0;
 grib_hash_array_value* grib_parser_hash_array = 0;
 grib_rule* grib_parser_rules                  = 0;
 
+grib_iarrayPOOL iarrayPOOL;
+grib_darrayPOOL darrayPOOL;
+
 extern FILE* grib_yyin;
 extern int grib_yydebug;
 

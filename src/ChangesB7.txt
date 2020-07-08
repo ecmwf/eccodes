@@ -1,0 +1,262 @@
+Compilation
+---------------
+unlink eccodes-2.17.0-Source; unlink eccodes-2.17.0-BUILD; unlink eccodes-2.17.0-INSTALL ; 
+ln -fs eccodes-2.17.0-Source.B7 eccodes-2.17.0-Source ; ln -fs eccodes-2.17.0-BUILD.B7 eccodes-2.17.0-BUILD ; ln -fs eccodes-2.17.0-INSTALL.B7 eccodes-2.17.0-INSTALL ; 
+
+#DEBUG OFF
+rm -rf cmake.out ;cmake3 -DENABLE_NETCDF=OFF -DENABLE_FORTRAN=ON -DCMAKE_INSTALL_PREFIX=/home/eccuser/eccodes-2.17.0-INSTALL.B7 -DENABLE_EXTRA_TESTS=1 /home/eccuser/eccodes-2.17.0-Source.B7 >> cmake.out 2>&1 ; egrep -i "error|fail" cmake.out
+
+#DEBUG ON
+rm -rf cmake.out ;cmake3 -DCMAKE_C_FLAGS="-g -O0" -DENABLE_NETCDF=OFF -DENABLE_FORTRAN=ON -DCMAKE_INSTALL_PREFIX=/home/eccuser/eccodes-2.17.0-INSTALL.B7  -DCMAKE_BUILD_TYPE=Debug -DENABLE_EXTRA_TESTS=1 -DDEVELOPER_MODE=1 /home/eccuser/eccodes-2.17.0-Source.B7 >> cmake.out 2>&1 ; egrep -i "error|fail" cmake.out
+
+rm -rf make.out; make >> make.out 2>&1; egrep -i "error|fail" make.out;
+
+rm -rf ctest3.out; ctest3 >> ctest3.out 2>&1 ; egrep -i "error|fail" ctest3.out; 
+
+rm -rf make_install.out; make install >> make_install.out 2>&1 ; egrep -i "error|fail" make_install.out;
+
+Base version
+-------------
+The base version for this version is B6.
+
+Differences/Rules
+-----------------
+The Rules 1 to 5 are applied to the dynamic array structs of:  
+* grib_vdarray.c  
+* grib_viarray.c  
+* grib_vsarray.c 
+
+* Rule 1. Introduce in the dynamic array struct an initialization method for the static area of the struct: this doesn't require the use of malloc to allocate dynamic memory.
+* Rule 2. Introduce in the dynamic array struct a destroy method for the dynamic area of the struct: this method will not invoke "free" on the whole struct, but only on the dynamic part of the struct.
+* Rule 3. Substitute the references to grib_vdarray, grib_viarray, grib_vsarray inside the data structures "grib_accessor_bufr_data_array" and "grib_accessor_bufr_data_element" in this way: from pointers, to which allocate dynamic memory, to variables meant to hold static memory.
+* Rule 4. Substitute the dynamic allocation for the substitutions done in Rule 3 with static initializations.
+* Rule 5. Substitue the call of "delete" method for the substitutions done in Rule 3 with the call to "free_dynamic", addedd in Rule 2.
+
+The Rules 6 to 9 are applied in order to preallocate a static pool of data structures, when the application is starting.
+At the moment, these rules are applied for preallocating a pool of grib_iarray data structures:
+
+* Rule 6. Introduce in eccodes start points the declaration of an "extern" to the static preallocated grib_iarray pool.
+* Rule 7. Introduce in eccodes start points the initialization of default values for the static preallocated grib_iarray pool.
+* Rule 8. Introduce in eccodes grib_iarray data structure the static preallocated grib_iarray pool management method.
+* Rule 9. Introduce in eccodes grib_iarray data structure "push" method the selection of a free array in the static preallocated grib_iarray pool.
+
+Corrections
+-----------
+* delete_content function for the dynamic arrays of:  
+* grib_vdarray.c  
+* grib_viarray.c  
+* grib_vsarray.c 
+have been changed in two respects:
+	1. The setting of zeroes with the for cycles was substituted with memset. Testing showed it is on average bringing at the same processing time but it is more maintanable.
+	2. The check on the context has been commented. The context is never used, consider to remove the context from inputs.
+
+Examples
+----------
+* Rule 1 and Rule 2, example for grib_vdarray.c:
+
+int grib_vdarray_init(grib_vdarray* source)
+{
+
+	if (source == NULL)
+	{
+		return 0;
+	}
+
+	memset(source->sv,0,sizeof(grib_vdarray*)*DYN_DEFAULT_VDARRAY_SIZE_INIT);
+	source->size 				= DYN_DEFAULT_VDARRAY_SIZE_INIT;
+	source->incsize             = DYN_DEFAULT_VDARRAY_SIZE_INCR;
+	source->n					= 0;
+
+	return 1;
+}
+
+void grib_vdarray_free_dynamic ( grib_vdarray* source)
+{
+    if (!source)
+        return;
+
+    if (source->v)
+        free(source->v);
+}
+
+* Rule 3 examples for grib_accessor_bufr_data_array.
+The new structure is
+
+typedef struct grib_accessor_bufr_data_array
+{
+    grib_accessor att;
+    /* Members defined in gen */
+    /* Members defined in bufr_data_array */
+    const char* bufrDataEncodedName;
+    const char* numberOfSubsetsName;
+    const char* expandedDescriptorsName;
+    const char* flagsName;
+    const char* unitsName;
+    const char* elementsDescriptorsIndexName;
+    const char* compressedDataName;
+    bufr_descriptors_array* expanded;
+    grib_accessor* expandedAccessor;
+    int* canBeMissing;
+    long numberOfSubsets;
+    long compressedData;
+    grib_vdarray numericValues;
+    grib_vsarray stringValues;
+    grib_viarray elementsDescriptorsIndex;
+    int do_decode;
+    int bitmapStartElementsDescriptorsIndex;
+    int bitmapCurrentElementsDescriptorsIndex;
+    int bitmapSize;
+    int bitmapStart;
+    int bitmapCurrent;
+    grib_accessors_list* dataAccessors;
+    int unpackMode;
+    int bitsToEndData;
+    grib_section* dataKeys;
+    double* inputBitmap;
+    int nInputBitmap;
+    int iInputBitmap;
+    long* inputReplications;
+    int nInputReplications;
+    int iInputReplications;
+    long* inputExtendedReplications;
+    int nInputExtendedReplications;
+    int iInputExtendedReplications;
+    long* inputShortReplications;
+    int nInputShortReplications;
+    int iInputShortReplications;
+    grib_iarray* iss_list;
+    grib_trie_with_rank* dataAccessorsTrie;
+    grib_sarray* tempStrings;
+    int change_ref_value_operand;
+    size_t refValListSize;
+    long* refValList;
+    long refValIndex;
+    bufr_tableb_override* tableb_override;
+    int set_to_missing_if_out_of_range;
+} grib_accessor_bufr_data_array;
+
+* Rule 4
+In the init method
+static void init(grib_accessor* a, const long v, grib_arguments* params)
+the new initializations are
+  
+    /*self->elementsDescriptorsIndex = 0;*/
+    self->elementsDescriptorsIndex = (grib_viarray){ .sv = { [0 ... (DYN_DEFAULT_VIARRAY_SIZE_INIT-1)] = 0}, .size = DYN_DEFAULT_VIARRAY_SIZE_INIT, .n = 0, .incsize = DYN_DEFAULT_VIARRAY_SIZE_INCR, .v = 0 };
+    /*self->numericValues            = 0;*/
+    /*grib_vdarray_init(&(self->numericValues), DYN_DEFAULT_VDARRAY_SIZE_INIT, DYN_DEFAULT_VDARRAY_SIZE_INCR);*//* TBD: check the return pointer */
+    self->numericValues = (grib_vdarray){ .sv = { [0 ... (DYN_DEFAULT_VDARRAY_SIZE_INIT-1)] = 0}, .size = DYN_DEFAULT_VDARRAY_SIZE_INIT, .n = 0, .incsize = DYN_DEFAULT_VDARRAY_SIZE_INCR, .v = 0 };
+    /*self->stringValues             = 0;*/
+    self->stringValues  = (grib_vsarray){ .sv = { [0 ... (DYN_DEFAULT_VSARRAY_SIZE_INIT-1)] = 0}, .size = DYN_DEFAULT_VSARRAY_SIZE_INIT, .n = 0, .incsize = DYN_DEFAULT_VSARRAY_SIZE_INCR, .v = 0 };
+
+* Rule 5
+In the clearing method
+static void self_clear(grib_context* c, grib_accessor_bufr_data_array* self)
+the final clearing of dynamic allocation has changed:
+    /* grib_vdarray_delete(c, self->numericValues); */
+    grib_vdarray_free_dynamic(&(self->numericValues));
+    /* if (self->stringValues) { grib_vsarray_delete_content(c, self->stringValues); */
+        grib_vsarray_delete_content(c, &(self->stringValues) );
+        grib_vsarray_free_dynamic(&(self->stringValues));
+        /* grib_vsarray_delete(c, self->stringValues); */
+    /* } */
+    grib_viarray_delete_content(c, &(self->elementsDescriptorsIndex) );
+    /*grib_viarray_delete(c, self->elementsDescriptorsIndex);*/
+    grib_viarray_free_dynamic( &(self->elementsDescriptorsIndex) );
+
+* Rule 6 and Rule 7
+
+Declaration:
+
+/home/eccuser/eccodes-2.17.0-Source.B7/tools/grib_tools.c:53
+
+extern grib_iarrayPOOL iarrayPOOL;
+
+Initialization with default values:
+
+/home/eccuser/eccodes-2.17.0-Source.B7/tools/grib_tools.c:168
+
+iarrayPoolInit(c);
+
+* Rule 8 and Rule 9
+
+Management methods:
+
+/home/eccuser/eccodes-2.17.0-Source.B7/src/grib_iarray.c:126
+
+void iarrayPoolInit(grib_context* c)
+{
+	int i;
+	grib_context* poolContext = c ? c : 0 ;
+
+	for (i=0; i<DYN_DEFAULT_IARRAY_POOL_SIZE; i++) {
+		iarrayPOOL.arrayPOOL[i].context=poolContext;
+		iarrayPOOL.arrayPOOL[i].size=DYN_DEFAULT_IARRAY_SIZE_INIT;
+		iarrayPOOL.arrayPOOL[i].n=0;
+		iarrayPOOL.arrayPOOL[i].incsize=DYN_DEFAULT_IARRAY_SIZE_INCR;
+		iarrayPOOL.arrayPOOL[i].dynA=0;
+	}
+}
+
+push method change in case of unallocated source:
+
+/home/eccuser/eccodes-2.17.0-Source.B7/src/grib_iarray.c:148
+
+if (!source) {
+		if(iarrayPOOL.poolCounter != (DYN_DEFAULT_IARRAY_POOL_SIZE - 1) ) {
+			grib_context* c = grib_context_get_default();
+			iarrayPOOL.arrayPOOL[iarrayPOOL.poolCounter].context=c;
+			source = &(iarrayPOOL.arrayPOOL[iarrayPOOL.poolCounter]);
+			iarrayPOOL.poolCounter++;
+		} else {
+			source = grib_iarray_new(0, start_size, start_incsize);
+		}
+}
+
+Differences/List
+----------------
+Difference between original code contained in eccodes-2.17.0 and B7:
+action_class_set_darray.c
+action_class_set_iarray.c
+action_class_set_sarray.c
+bufr_util.c
+grib_accessor_class_bufr_data_array.c
+grib_accessor_class_bufr_data_element.c
+grib_accessor_class_bufr_string_values.c
+grib_accessor_class_concept.c
+grib_accessor_class_hash_array.c
+grib_accessor_class_long_vector.c
+grib_accessor_class_transient_darray.c
+grib_api.h
+grib_api_internal.h
+grib_api_prototypes.h
+grib_bufr_descriptors_array.c
+grib_darray.c
+grib_iarray.c
+grib_oarray.c
+grib_sarray.c
+grib_trie_with_rank.c
+grib_vdarray.c
+grib_viarray.c
+grib_vsarray.c
+
+Difference between original code contained in eccodes-2.17.0 and B6:
+action_class_set_darray.c
+action_class_set_iarray.c
+action_class_set_sarray.c
+bufr_util.c
+grib_accessor_class_bufr_data_array.c
+grib_accessor_class_bufr_data_element.c
+grib_accessor_class_bufr_string_values.c
+grib_accessor_class_concept.c
+grib_accessor_class_hash_array.c
+grib_accessor_class_transient_darray.c
+grib_api_prototypes.h
+grib_bufr_descriptors_array.c
+grib_darray.c
+grib_iarray.c
+grib_oarray.c
+grib_sarray.c
+grib_trie_with_rank.c
+grib_vdarray.c
+grib_viarray.c
+grib_vsarray.c
