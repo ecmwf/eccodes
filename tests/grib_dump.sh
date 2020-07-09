@@ -12,6 +12,9 @@
 
 REDIRECT=/dev/null
 
+label="grib_dump_test"
+temp=temp.$label.txt
+
 if [ $HAVE_MEMFS -eq 1 ]; then
     unset ECCODES_DEFINITION_PATH
     unset ECCODES_SAMPLES_PATH
@@ -76,3 +79,23 @@ for file in $files; do
       ${tools_dir}/grib_dump -O ${data_dir}/$file 2> $REDIRECT > $REDIRECT
    fi
 done
+
+
+# Test for dumping a section
+if [ $HAVE_JPEG -eq 0 ]; then
+    # No JPEG decoding enabled so dumping section 7 will issue errors
+    # but dumping non-data sections should work
+    file=${data_dir}/jpeg.grib2
+    ${tools_dir}/grib_dump -O -p section_3,section_4 $file > $temp 2>&1
+    set +e
+    # Look for the word ERROR in output. We should not find any
+    grep -q 'ERROR ' $temp
+    if [ $? -eq 0 ]; then
+        echo "grib_dump on $file: found string ERROR in grib_dump output!"
+        cat $temp
+        exit 1
+    fi
+    set -e
+fi
+
+rm -f $temp
