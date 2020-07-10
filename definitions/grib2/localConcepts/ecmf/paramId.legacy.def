@@ -118,3 +118,21 @@
  parameterCategory = 131 ;
  parameterNumber = 88 ;
 }
+#Total column cloud liquid water
+'78' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 78 ;
+}
+#Total column cloud ice water
+'79' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 79 ;
+}
+#Top net solar radiation
+'178' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 178 ;
+}
