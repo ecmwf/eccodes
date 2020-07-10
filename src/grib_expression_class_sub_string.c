@@ -116,14 +116,17 @@ grib_expression* new_sub_string_expression(grib_context* c, const char* value, s
 
     if (length == 0) {
         grib_context_log(c, GRIB_LOG_ERROR, "Invalid substring: length must be > 0");
+        grib_context_free_persistent(c, e);
         return NULL;
     }
     if (start > slen) { /* to catch a -ve number passed to start */
         grib_context_log(c, GRIB_LOG_ERROR, "Invalid substring: start=%lu", start);
+        grib_context_free_persistent(c, e);
         return NULL;
     }
     if (start + length > slen) {
         grib_context_log(c, GRIB_LOG_ERROR, "Invalid substring: start(=%lu)+length(=%lu) > length('%s'))", start, length, value);
+        grib_context_free_persistent(c, e);
         return NULL;
     }
 
