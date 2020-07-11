@@ -313,6 +313,7 @@ static int select_area(grib_accessor* a)
     if (nsubsets != 0) {
         subsets_ar = grib_iarray_get_array(subsets);
         ret        = grib_set_long_array(h, self->extractSubsetList, subsets_ar, nsubsets);
+        grib_context_free(c, subsets_ar);
         if (ret)
             return ret;
 
