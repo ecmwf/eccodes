@@ -1048,6 +1048,8 @@ int grib_get_gaussian_latitudes(long trunc, double* lats);
 int is_gaussian_global(double lat1, double lat2, double lon1, double lon2, long num_points_equator, const double* latitudes, double angular_precision);
 void rotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double* outlat, double* outlon);
 void unrotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double* outlat, double* outlon);
+double geographic_distance_spherical(double radius, double lon1, double lat1, double lon2, double lat2);
+double geographic_distance_ellipsoid(double major, double minor, double lon1, double lat1, double lon2, double lat2);
 
 /* grib_handle.c */
 grib_section* grib_section_create(grib_handle* h, grib_accessor* owner);
@@ -1376,8 +1378,16 @@ int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat,
 int grib_nearest_init(grib_nearest* i, grib_handle* h, grib_arguments* args);
 int grib_nearest_delete(grib_nearest* i);
 void grib_binary_search(double xx[], const unsigned long n, double x, int* ju, int* jl);
-double grib_nearest_distance(double radius, double lon1, double lat1, double lon2, double lat2);
 int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
+int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
+    const char*  values_keyname, const char* radius_keyname,
+    const char* Ni_keyname, const char* Nj_keyname,
+    double**     out_lats,
+    int*         out_lats_count,
+    double**     out_lons,
+    int*         out_lons_count,
+    double**     out_distances,
+    double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
 
 /* grib_nearest_class.c */
 grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args);
@@ -1484,6 +1494,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
 /* string_util.c */
 int strcmp_nocase(const char* s1, const char* s2);
 void rtrim(char* s);
+void lrtrim(char** x, int do_left, int do_right);
 const char* extract_filename(const char* filepath);
 char** string_split(char* inputString, const char* delimiter);
 int string_to_long(const char* input, long* output);

@@ -24,7 +24,9 @@ fi
 
 for f in `echo $files`; do
     file=${data_dir}/$f
-    ps=`${tools_dir}/grib_get -wcount=1 -p projString $file`
+    ps=`${tools_dir}/grib_get -wcount=1 -p projSourceString $file`
+    [ "$ps" = "EPSG:4326" ]
+    ps=`${tools_dir}/grib_get -wcount=1 -p projTargetString $file`
     # Check length of result is nonzero
     [ -n "$ps" ]
     # Check contents (basic)
@@ -40,4 +42,4 @@ done
 
 # Reminder
 keysfile=${proj_dir}/tests/keys
-grep -q projString $keysfile
+grep -q projTargetString $keysfile

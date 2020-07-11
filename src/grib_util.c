@@ -1909,12 +1909,14 @@ static void set_value(grib_values* value, char* str, int equal)
  'arg'              The string to be parsed e.g. key1=value1,key2!=value2 etc
  'values_required'  If true then each key must have a value after it
  'default_type'     The default type e.g. GRIB_TYPE_UNDEFINED or GRIB_TYPE_DOUBLE
- 'values'           The array we populate and return
- 'count'            The number of elements
+ 'values'           The array we populate and return (output)
+ 'count'            The number of elements (output)
  */
-int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count)
+int parse_keyval_string(const char* grib_tool,
+                        char* arg, int values_required, int default_type,
+                        grib_values values[], int* count)
 {
-    char* p;
+    char* p = NULL;
     int i = 0;
     if (arg == NULL) {
         *count = 0;
@@ -1927,8 +1929,10 @@ int parse_keyval_string(const char* grib_tool, char* arg, int values_required, i
         strcpy((char*)values[i].name, p);
         p = strtok(NULL, ",");
         i++;
-        if (i > *count)
+        if (i >= *count) {
+            fprintf(stderr, "Input string contains too many entries (max=%d)\n", *count);
             return GRIB_ARRAY_TOO_SMALL;
+        }
     }
     *count = i;
 
@@ -1973,9 +1977,9 @@ int parse_keyval_string(const char* grib_tool, char* arg, int values_required, i
         if (values_required) {
             if (strlen(value) == 0) {
                 if (grib_tool)
-                    printf("%s error: no value provided for key \"%s\"\n", grib_tool, values[i].name);
+                    fprintf(stderr, "%s error: no value provided for key \"%s\"\n", grib_tool, values[i].name);
                 else
-                    printf("Error: no value provided for key \"%s\"\n", values[i].name);
+                    fprintf(stderr, "Error: no value provided for key \"%s\"\n", values[i].name);
                 return GRIB_INVALID_ARGUMENT;
             }
             set_value(&values[i], value, equal);

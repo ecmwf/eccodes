@@ -6,11 +6,13 @@ include "grib2/template.3.shape_of_the_earth.def";
 unsigned[4] Ni : dump;
 alias numberOfPointsAlongAParallel=Ni;
 alias Nx = Ni;
+alias numberOfPointsAlongXAxis = Ni;
 alias geography.Ni=Ni;
 
 unsigned[4] Nj : dump;
 alias numberOfPointsAlongAMeridian=Nj;
-alias Ny = Nj ;
+alias Ny = Nj;
+alias numberOfPointsAlongYAxis = Nj;
 alias geography.Nj=Nj;
 
 # La1 - latitude of first grid point
@@ -51,15 +53,17 @@ meta geography.orientationOfTheGridInDegrees
     
 # Di - longitudinal direction grid length
 # NOTE 2: Grid lengths are in units of 10**-3 m, at the latitude specified by LaD
-unsigned[4] Di  : edition_specific,no_copy ;
-alias longitudinalDirectionGridLength = Di   ;
+unsigned[4] Di : edition_specific,no_copy;
+alias longitudinalDirectionGridLength = Di;
 meta geography.DiInMetres scale(Di,oneConstant,thousand,truncateDegrees) : dump;
-    
+alias DxInMetres = DiInMetres;
+
 # Dj - latitudinal direction grid length
 # NOTE 2: Grid lengths are in units of 10**-3 m, at the latitude specified by LaD
-unsigned[4] Dj  : edition_specific,no_copy ;
-alias latitudinalDirectionGridLength =  Dj;
+unsigned[4] Dj : edition_specific,no_copy ;
+alias latitudinalDirectionGridLength = Dj;
 meta geography.DjInMetres scale(Dj,oneConstant,thousand,truncateDegrees) : dump;
+alias DyInMetres = DjInMetres;
 
 iterator mercator(numberOfPoints,missingValue,values,
           radius,Ni,Nj,
@@ -70,6 +74,8 @@ iterator mercator(numberOfPoints,missingValue,values,
           DiInMetres,DjInMetres,
           iScansNegatively, jScansPositively,
           jPointsAreConsecutive, alternativeRowScanning);
+
+nearest mercator(values,radius,Nx,Ny);
 
 meta latLonValues latlonvalues(values);
 alias latitudeLongitudeValues=latLonValues;

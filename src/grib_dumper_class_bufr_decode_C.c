@@ -547,12 +547,13 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     (void)err; /* TODO */
 }
 
+#define MAX_STRING_SIZE 4096
 static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_decode_C* self = (grib_dumper_bufr_decode_C*)d;
-    char* value                     = NULL;
+    char value[MAX_STRING_SIZE]     = {0,}; /* See ECC-710 */
+    size_t size                     = MAX_STRING_SIZE;
     char* p                         = NULL;
-    size_t size                     = 0;
     grib_context* c                 = a->context;
     int r = 0, err = 0;
     grib_handle* h = grib_handle_of_accessor(a);
@@ -560,23 +561,12 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    _grib_get_string_length(a, &size);
-    if (size == 0)
-        return;
-
-    value = (char*)grib_context_malloc_clear(c, size);
-    if (!value) {
-        grib_context_log(c, GRIB_LOG_FATAL, "unable to allocate %d bytes", (int)size);
-        return;
-    }
-
     self->empty = 0;
 
     err = grib_unpack_string(a, value, &size);
     p   = value;
     r   = compute_bufr_key_rank(h, self->keys, a->name);
     if (grib_is_missing_string(a, (unsigned char*)value, size)) {
-        grib_context_free(c, value);
         return;
     }
 
@@ -613,7 +603,6 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         depth -= 2;
     }
 
-    grib_context_free(c, value);
     (void)err; /* TODO */
 }
 

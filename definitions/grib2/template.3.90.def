@@ -80,6 +80,8 @@ iterator space_view(numberOfPoints, missingValue, values, radius,
           iScansNegatively, jScansPositively,
           jPointsAreConsecutive, alternativeRowScanning);
 
+nearest space_view(values,radius,Nx,Ny);
+
 meta latLonValues latlonvalues(values);
 alias latitudeLongitudeValues=latLonValues;
 meta latitudes latitudes(values,0);
