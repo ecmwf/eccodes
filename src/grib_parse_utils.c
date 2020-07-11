@@ -486,7 +486,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
                 case ']':
                     loc[mode] = 0;
                     mode      = -1;
-                    if(al) grib_accessors_list_delete(h->context, al);
+                    if (al) grib_accessors_list_delete(h->context, al);
                     al        = grib_find_accessors_list(h, loc); /* This allocates memory */
                     if (!al) {
                         if (!fail) {
