@@ -2133,11 +2133,12 @@ int grib2_select_PDTN(int is_eps, int is_instant,
     }
 }
 
-int is_grib_index_file(const char* filename)
+int is_index_file(const char* filename)
 {
     FILE* fh;
     char buf[8] = {0,};
-    const char* str = "GRBIDX";
+    const char* id_grib = "GRBIDX";
+    const char* id_bufr = "BFRIDX";
     int ret         = 0;
     size_t size     = 0;
 
@@ -2156,7 +2157,7 @@ int is_grib_index_file(const char* filename)
         return 0;
     }
 
-    ret = !strcmp(buf, str);
+    ret = (strcmp(buf, id_grib)==0 || strcmp(buf, id_bufr)==0);
 
     fclose(fh);
 

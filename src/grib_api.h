@@ -281,6 +281,8 @@ grib_index* grib_index_new_from_file(grib_context* c,
  */
 grib_index* grib_index_new(grib_context* c, const char* keys, int* err);
 
+int codes_index_set_product_kind(grib_index* index, ProductKind product_kind);
+int codes_index_set_unpack_bufr(grib_index* index, int unpack);
 /**
  *  Indexes the file given in argument in the index given in argument.
  *
