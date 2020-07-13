@@ -96,7 +96,7 @@ int codes_fieldset_count(grib_fieldset* set)
 
 /* Indexing */
 /******************************************************************************/
-grib_index* codes_index_new_from_file(grib_context* c, char* filename, const char* keys, int* err)
+grib_index* codes_index_new_from_file(grib_context* c, const char* filename, const char* keys, int* err)
 {
     return grib_index_new_from_file(c, filename, keys, err);
 }
@@ -140,7 +140,7 @@ int codes_index_select_double(grib_index* index, const char* key, double value)
 {
     return grib_index_select_double(index, key, value);
 }
-int codes_index_select_string(grib_index* index, const char* key, char* value)
+int codes_index_select_string(grib_index* index, const char* key, const char* value)
 {
     return grib_index_select_string(index, key, value);
 }
