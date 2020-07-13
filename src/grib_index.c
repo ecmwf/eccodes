@@ -930,7 +930,7 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
         fclose(fh);
         return NULL;
     }
-    if (strcmp(identifier, "GRBIDX1")==0) product_kind = PRODUCT_GRIB;
+
     if (strcmp(identifier, "BFRIDX1")==0) product_kind = PRODUCT_BUFR;
     grib_context_free(c, identifier);
 
@@ -1056,22 +1056,21 @@ int grib_index_search_same(grib_index* index, grib_handle* h)
 
 int grib_index_add_file(grib_index* index, const char* filename)
 {
-    const ProductKind pkind = index->product_kind;
-    if (pkind == PRODUCT_GRIB)
-        return _codes_index_add_file(index, filename, CODES_GRIB);
-    else if (pkind == PRODUCT_BUFR)
-        return _codes_index_add_file(index, filename, CODES_BUFR);
-    Assert(!"grib_index_add_file: Only GRIB and BUFR are supported");
-    return GRIB_INVALID_ARGUMENT;
+    int message_type = 0;
+    if (index->product_kind == PRODUCT_GRIB) message_type = CODES_GRIB;
+    else if (index->product_kind == PRODUCT_BUFR) message_type = CODES_BUFR;
+    else return GRIB_INVALID_ARGUMENT;
+
+    return _codes_index_add_file(index, filename, message_type);
 }
 
-grib_handle* new_message_from_file(int message_type, grib_context* c, FILE* f, int* error)
+static grib_handle* new_message_from_file(int message_type, grib_context* c, FILE* f, int* error)
 {
     if (message_type == CODES_GRIB)
         return grib_new_from_file(c, f, 0, error); /* headers_only=0 */
     if (message_type == CODES_BUFR)
         return bufr_new_from_file(c, f, error);
-    Assert(0);
+    Assert(!"new_message_from_file: invalid message type");
     return NULL;
 }
 
@@ -1140,7 +1139,7 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
         if (index->product_kind == PRODUCT_BUFR && index->unpack_bufr) {
             err = grib_set_long(h, "unpack", 1);
             if (err) {
-                grib_context_log(c, GRIB_LOG_ERROR, "BUFR: unable to create index. \"%s\": %s",
+                grib_context_log(c, GRIB_LOG_ERROR, "unable to unpack BUFR to create index. \"%s\": %s",
                                  index_key->name, grib_get_error_message(err));
                 return err;
             }

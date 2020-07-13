@@ -728,7 +728,6 @@ int grib_index_write(grib_index* index, const char* filename);
 grib_index* grib_index_read(grib_context* c, const char* filename, int* err);
 int grib_index_search_same(grib_index* index, grib_handle* h);
 int grib_index_add_file(grib_index* index, const char* filename);
-grib_handle* new_message_from_file(int message_type, grib_context* c, FILE* f, int* error);
 int _codes_index_add_file(grib_index* index, const char* filename, int message_type);
 int grib_index_add_file(grib_index* index, const char* filename);
 grib_index* grib_index_new_from_file(grib_context* c, const char* filename, const char* keys, int* err);
