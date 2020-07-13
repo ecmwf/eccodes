@@ -214,7 +214,7 @@ typedef struct grib_index codes_index;
  * @param err         :  0 if OK, integer value on error
  * @return            the newly created index
  */
-codes_index* codes_index_new_from_file(codes_context* c, char* filename, const char* keys, int* err);
+codes_index* codes_index_new_from_file(codes_context* c, const char* filename, const char* keys, int* err);
 
 /**
  *  Create a new index based on a set of keys.
@@ -320,7 +320,7 @@ int codes_index_select_double(codes_index* index, const char* key, double value)
  * @param value       : value of the key to select
  * @return            0 if OK, integer value on error
  */
-int codes_index_select_string(codes_index* index, const char* key, char* value);
+int codes_index_select_string(codes_index* index, const char* key, const char* value);
 
 /**
  *  Create a new handle from an index after having selected the key values.

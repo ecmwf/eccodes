@@ -1400,7 +1400,7 @@ int grib_index_add_file(grib_index* index, const char* filename)
 }
 #endif
 
-grib_index* grib_index_new_from_file(grib_context* c, char* filename, const char* keys, int* err)
+grib_index* grib_index_new_from_file(grib_context* c, const char* filename, const char* keys, int* err)
 {
     grib_index* index = NULL;
 
@@ -1576,7 +1576,7 @@ int grib_index_select_double(grib_index* index, const char* skey, double value)
     return 0;
 }
 
-int grib_index_select_string(grib_index* index, const char* skey, char* value)
+int grib_index_select_string(grib_index* index, const char* skey, const char* value)
 {
     grib_index_key* key = NULL;
     int err             = GRIB_NOT_FOUND;

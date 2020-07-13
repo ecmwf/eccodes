@@ -266,7 +266,7 @@ typedef struct grib_index grib_index;
  * @return            the newly created index
  */
 grib_index* grib_index_new_from_file(grib_context* c,
-                                     char* filename, const char* keys, int* err);
+                                     const char* filename, const char* keys, int* err);
 /**
  *  Create a new index based on a set of keys.
  *
@@ -374,7 +374,7 @@ int grib_index_select_double(grib_index* index, const char* key, double value);
  * @param value       : value of the key to select
  * @return            0 if OK, integer value on error
  */
-int grib_index_select_string(grib_index* index, const char* key, char* value);
+int grib_index_select_string(grib_index* index, const char* key, const char* value);
 
 /**
  *  Create a new handle from an index after having selected the key values.
