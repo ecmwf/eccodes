@@ -739,7 +739,6 @@ int grib_index_get_double(const grib_index* index, const char* key, double* valu
 int grib_index_select_long(grib_index* index, const char* skey, long value);
 int grib_index_select_double(grib_index* index, const char* skey, double value);
 int grib_index_select_string(grib_index* index, const char* skey, char* value);
-grib_handle* grib_index_get_handle(grib_field* field, int* err);
 grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* err);
 int grib_index_dump_file(FILE* fout, const char* filename);
 void grib_index_dump(FILE* fout, grib_index* index);
