@@ -118,3 +118,21 @@
  parameterCategory = 131 ;
  parameterNumber = 88 ;
 }
+#Total column cloud liquid water
+'tclw' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 78 ;
+}
+#Total column cloud ice water
+'tciw' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 79 ;
+}
+#Top net solar radiation
+'tsr' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 178 ;
+}
