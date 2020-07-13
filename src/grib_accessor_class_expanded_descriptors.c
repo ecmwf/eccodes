@@ -265,11 +265,11 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
             *err = grib_get_size(hand, self->sequence, &size);
             grib_bufr_descriptor_delete(u);
             if (*err)
-                return;
+                goto cleanup;
             v    = (long*)grib_context_malloc_clear(c, sizeof(long) * size);
             *err = grib_get_long_array(hand, self->sequence, v, &size);
             if (*err)
-                return;
+                goto cleanup;
 
             inner_unexpanded = grib_bufr_descriptors_array_new(c, DESC_SIZE_INIT, DESC_SIZE_INCR);
             for (i = 0; i < size; i++) {
@@ -518,8 +518,8 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
         printf("\t");
     printf("expanding <== %d-%.2d-%.3d (size=%ld)\n\n", us->F, us->X, us->Y, size);
 #endif
-    if (us)
-        grib_bufr_descriptor_delete(us);
+cleanup:
+    if (us) grib_bufr_descriptor_delete(us);
 }
 
 static bufr_descriptors_array* do_expand(grib_accessor* a, bufr_descriptors_array* unexpanded, change_coding_params* ccp, int* err)
@@ -552,8 +552,10 @@ static bufr_descriptors_array* do_expand(grib_accessor* a, bufr_descriptors_arra
 #endif
     while (unexpanded->n) {
         __expand(a, unexpanded, expanded, ccp, err);
-        if (*err)
+        if (*err) {
+            grib_bufr_descriptors_array_delete(expanded);
             return NULL;
+        }
     }
 #if MYDEBUG
     {
@@ -689,8 +691,11 @@ static int expand(grib_accessor* a)
     ccp.associatedFieldWidth = 0;
     ccp.newStringWidth       = 0;
     self->expanded           = do_expand(a, unexpanded, &ccp, &err);
-    if (err)
+    if (err) {
+        grib_bufr_descriptors_array_delete(unexpanded);
+        grib_bufr_descriptors_array_delete(unexpanded_copy);
         return err;
+    }
     grib_context_expanded_descriptors_list_push(c, key, self->expanded, unexpanded_copy);
     grib_bufr_descriptors_array_delete(unexpanded);
 
@@ -809,6 +814,7 @@ static int value_count(grib_accessor* a, long* rlen)
     err = expand(a);
     if (err) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "%s unable to compute size", a->name);
+        grib_bufr_descriptors_array_delete(self->expanded);
         return err;
     }
     *rlen = BUFR_DESCRIPTORS_ARRAY_USED_SIZE(self->expanded);
