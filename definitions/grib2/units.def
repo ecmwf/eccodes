@@ -977,6 +977,33 @@
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time integral of rain flux
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 65 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of surface eastward momentum flux
+'N m**-2 s' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of surface northward momentum flux
+'N m**-2 s' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Cross sectional area of flow in channel
 'm**2' = {
 	 discipline = 1 ;
@@ -1080,6 +1107,14 @@
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
+	}
+#Total column graupel
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 74 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #2 metre relative humidity
 '%' = {
