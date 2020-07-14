@@ -974,6 +974,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                     if (strcmp(input_packing_type, "grid_ccsds") && !strcmp(input_packing_type, "grid_simple"))
                         SET_STRING_VALUE("packingType", "grid_ccsds");
                     break;
+                case GRIB_UTIL_PACKING_TYPE_IEEE:
+                    if (strcmp(input_packing_type, "grid_ieee") && !strcmp(input_packing_type, "grid_simple"))
+                        SET_STRING_VALUE("packingType", "grid_ieee");
+                    break;
                 case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
                     /* we delay the set of grid_second_order because we don't want
                    to do it on a field with bitsPerValue=0 */
@@ -1401,6 +1405,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
              */
                 if (strcmp(input_packing_type, "grid_ccsds") && !strcmp(input_packing_type, "grid_simple"))
                     setCcsdsPacking = 1;
+                break;
+            case GRIB_UTIL_PACKING_TYPE_IEEE:
+                if (strcmp(input_packing_type, "grid_ieee") && !strcmp(input_packing_type, "grid_simple"))
+                    SET_STRING_VALUE("packingType", "grid_ieee");
                 break;
             case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
                 /* we delay the set of grid_second_order because we don't want
