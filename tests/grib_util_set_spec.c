@@ -28,6 +28,8 @@ static int get_packing_type_code(const char* packingType)
         result = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
     else if (STR_EQUAL(packingType, "grid_second_order"))
         result = GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER;
+    else if (STR_EQUAL(packingType, "grid_ieee"))
+        result = GRIB_UTIL_PACKING_TYPE_IEEE;
 
     return result;
 }
