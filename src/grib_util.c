@@ -2141,37 +2141,6 @@ int grib2_select_PDTN(int is_eps, int is_instant,
     }
 }
 
-int is_index_file(const char* filename)
-{
-    FILE* fh;
-    char buf[8] = {0,};
-    const char* id_grib = "GRBIDX";
-    const char* id_bufr = "BFRIDX";
-    int ret         = 0;
-    size_t size     = 0;
-
-    fh = fopen(filename, "r");
-    if (!fh)
-        return 0;
-
-    size = fread(buf, 1, 1, fh);
-    if (size != 1) {
-        fclose(fh);
-        return 0;
-    }
-    size = fread(buf, 6, 1, fh);
-    if (size != 1) {
-        fclose(fh);
-        return 0;
-    }
-
-    ret = (strcmp(buf, id_grib)==0 || strcmp(buf, id_bufr)==0);
-
-    fclose(fh);
-
-    return ret;
-}
-
 size_t sum_of_pl_array(const long* pl, size_t plsize)
 {
     long i, count = 0;

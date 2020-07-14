@@ -746,6 +746,9 @@ grib_handle* grib_handle_new_from_index(grib_index* index, int* err);
 grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err);
 void grib_index_rewind(grib_index* index);
 int grib_index_search(grib_index* index, grib_index_key* keys);
+int codes_index_set_product_kind(grib_index* index, ProductKind product_kind);
+int codes_index_set_unpack_bufr(grib_index* index, int unpack);
+int is_index_file(const char* filename);
 
 /* grib_accessor_class_number_of_points_gaussian.c */
 
@@ -1476,7 +1479,6 @@ int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
 int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
-int is_index_file(const char* filename);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
 int grib_is_earth_oblate(grib_handle* h);
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val);
