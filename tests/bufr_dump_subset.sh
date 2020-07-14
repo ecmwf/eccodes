@@ -10,14 +10,14 @@
 
 . ./include.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_dump_subset_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 
-#Define tmp bufr files
+# Define tmp bufr files
 temp1=${label}".temp1.txt"
 temp2=${label}".temp2.txt"
 

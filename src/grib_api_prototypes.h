@@ -731,15 +731,14 @@ int grib_index_add_file(grib_index* index, const char* filename);
 grib_handle* new_message_from_file(int message_type, grib_context* c, FILE* f, int* error);
 int _codes_index_add_file(grib_index* index, const char* filename, int message_type);
 int grib_index_add_file(grib_index* index, const char* filename);
-grib_index* grib_index_new_from_file(grib_context* c, char* filename, const char* keys, int* err);
+grib_index* grib_index_new_from_file(grib_context* c, const char* filename, const char* keys, int* err);
 int grib_index_get_size(const grib_index* index, const char* key, size_t* size);
 int grib_index_get_string(const grib_index* index, const char* key, char** values, size_t* size);
 int grib_index_get_long(const grib_index* index, const char* key, long* values, size_t* size);
 int grib_index_get_double(const grib_index* index, const char* key, double* values, size_t* size);
 int grib_index_select_long(grib_index* index, const char* skey, long value);
 int grib_index_select_double(grib_index* index, const char* skey, double value);
-int grib_index_select_string(grib_index* index, const char* skey, char* value);
-grib_handle* grib_index_get_handle(grib_field* field, int* err);
+int grib_index_select_string(grib_index* index, const char* skey, const char* value);
 grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* err);
 int grib_index_dump_file(FILE* fout, const char* filename);
 void grib_index_dump(FILE* fout, grib_index* index);
@@ -1048,6 +1047,8 @@ int grib_get_gaussian_latitudes(long trunc, double* lats);
 int is_gaussian_global(double lat1, double lat2, double lon1, double lon2, long num_points_equator, const double* latitudes, double angular_precision);
 void rotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double* outlat, double* outlon);
 void unrotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double* outlat, double* outlon);
+double geographic_distance_spherical(double radius, double lon1, double lat1, double lon2, double lat2);
+double geographic_distance_ellipsoid(double major, double minor, double lon1, double lat1, double lon2, double lat2);
 
 /* grib_handle.c */
 grib_section* grib_section_create(grib_handle* h, grib_accessor* owner);
@@ -1376,7 +1377,6 @@ int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat,
 int grib_nearest_init(grib_nearest* i, grib_handle* h, grib_arguments* args);
 int grib_nearest_delete(grib_nearest* i);
 void grib_binary_search(double xx[], const unsigned long n, double x, int* ju, int* jl);
-double grib_nearest_distance(double radius, double lon1, double lat1, double lon2, double lat2);
 int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
 int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
     const char*  values_keyname, const char* radius_keyname,
@@ -1493,6 +1493,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
 /* string_util.c */
 int strcmp_nocase(const char* s1, const char* s2);
 void rtrim(char* s);
+void lrtrim(char** x, int do_left, int do_right);
 const char* extract_filename(const char* filepath);
 char** string_split(char* inputString, const char* delimiter);
 int string_to_long(const char* input, long* output);

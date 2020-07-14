@@ -33,11 +33,10 @@
 #define S_ISLNK(mode) (((mode) & (S_IFMT)) == (S_IFLNK))
 #endif
 
-#define MAX_KEYS 1000
+#define MAX_KEYS       256
 #define MAX_STRING_LEN 512
-#define MAX_FAILED 1024
-#define MAX_CONSTRAINT_VALUES 500
-#define LATLON_SIZE 4 /* nearest */
+#define MAX_FAILED     1024
+#define LATLON_SIZE    4 /* nearest */
 
 #define MODE_GRIB 0
 #define MODE_GTS 1
@@ -54,6 +53,7 @@ typedef union grib_typed_value
 } grib_typed_value;
 
 /*
+#define MAX_CONSTRAINT_VALUES 500
 typedef struct grib_constraints {
   const char* name;
   int         type;

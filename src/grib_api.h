@@ -266,7 +266,7 @@ typedef struct grib_index grib_index;
  * @return            the newly created index
  */
 grib_index* grib_index_new_from_file(grib_context* c,
-                                     char* filename, const char* keys, int* err);
+                                     const char* filename, const char* keys, int* err);
 /**
  *  Create a new index based on a set of keys.
  *
@@ -374,7 +374,7 @@ int grib_index_select_double(grib_index* index, const char* key, double value);
  * @param value       : value of the key to select
  * @return            0 if OK, integer value on error
  */
-int grib_index_select_string(grib_index* index, const char* key, char* value);
+int grib_index_select_string(grib_index* index, const char* key, const char* value);
 
 /**
  *  Create a new handle from an index after having selected the key values.
@@ -1522,6 +1522,7 @@ typedef struct grib_util_grid_spec2
 #define GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE_MATRIX 6
 #define GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER 7
 #define GRIB_UTIL_PACKING_TYPE_CCSDS 8
+#define GRIB_UTIL_PACKING_TYPE_IEEE 9
 
 #define GRIB_UTIL_PACKING_SAME_AS_INPUT 0
 #define GRIB_UTIL_PACKING_USE_PROVIDED 1

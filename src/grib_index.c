@@ -1400,7 +1400,7 @@ int grib_index_add_file(grib_index* index, const char* filename)
 }
 #endif
 
-grib_index* grib_index_new_from_file(grib_context* c, char* filename, const char* keys, int* err)
+grib_index* grib_index_new_from_file(grib_context* c, const char* filename, const char* keys, int* err)
 {
     grib_index* index = NULL;
 
@@ -1576,7 +1576,7 @@ int grib_index_select_double(grib_index* index, const char* skey, double value)
     return 0;
 }
 
-int grib_index_select_string(grib_index* index, const char* skey, char* value)
+int grib_index_select_string(grib_index* index, const char* skey, const char* value)
 {
     grib_index_key* key = NULL;
     int err             = GRIB_NOT_FOUND;
@@ -1608,11 +1608,6 @@ int grib_index_select_string(grib_index* index, const char* skey, char* value)
     return 0;
 }
 
-grib_handle* grib_index_get_handle(grib_field* field, int* err)
-{
-    return codes_index_get_handle(field, CODES_GRIB, err);
-}
-
 grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* err)
 {
     grib_handle* h = NULL;
@@ -1634,11 +1629,15 @@ grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* er
             message_new = grib_new_from_file;
             break;
         case CODES_BUFR:
-            Assert(!"_codes_index_add_file for BUFR: not yet implemented");
+            grib_context_log(grib_context_get_default(), GRIB_LOG_ERROR, "codes_index_get_handle: indexing not implemented for BUFR");
             /* message_new=bufr_new_from_file; */
+            *err = GRIB_NOT_IMPLEMENTED;
+            return NULL;
             break;
         default:
-            Assert(0);
+            grib_context_log(grib_context_get_default(), GRIB_LOG_ERROR, "codes_index_get_handle: invalid message type");
+            *err = GRIB_INTERNAL_ERROR;
+            return NULL;
     }
 
     fseeko(field->file->handle, field->offset, SEEK_SET);

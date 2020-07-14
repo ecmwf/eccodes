@@ -207,6 +207,7 @@
 { "to_string", &grib_accessor_class_to_string, },
 { "transient", &grib_accessor_class_transient, },
 { "transient_darray", &grib_accessor_class_transient_darray, },
+{ "trim", &grib_accessor_class_trim, },
 { "uint16", &grib_accessor_class_uint16, },
 { "uint16_little_endian", &grib_accessor_class_uint16_little_endian, },
 { "uint32", &grib_accessor_class_uint32, },

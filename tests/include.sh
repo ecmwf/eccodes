@@ -70,6 +70,6 @@ else
 
   # go back to current working dir
   cd $save
-  set -u
+  # set -u
 fi
 

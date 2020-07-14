@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_tools
- *
- */
-
 #include "grib_tools.h"
 #if HAVE_LIBJASPER
 /* Remove compiler warnings re macros being redefined */
@@ -149,6 +144,14 @@ int grib_tool(int argc, char** argv)
     int i = 0;
     grib_context* c        = grib_context_get_default();
     global_options.context = c;
+
+    /* This is a consequence of ECC-440.
+     * We want to keep the output file(s) opened as various
+     * messages are appended to them. Otherwise they will be opened/closed
+     * multiple times.
+     */
+    if (c->file_pool_max_opened_files == 0)
+        c->file_pool_max_opened_files = 200;
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
     feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
@@ -559,9 +562,10 @@ static int grib_tool_index(grib_runtime_options* options)
     }
 
     navigate(options->index2->fields, options);
-    /* TODO(masn): memleak
-     * grib_context_free(c, options->index2->current);
-     */
+
+    if (options->index2)
+        grib_context_free(c, options->index2->current);
+
     grib_tool_finalise_action(options);
 
     return 0;

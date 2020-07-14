@@ -280,7 +280,7 @@ const char* grib_get_package_name()
     return "ecCodes";
 }
 
-#define DEFAULT_FILE_POOL_MAX_OPENED_FILES 200
+#define DEFAULT_FILE_POOL_MAX_OPENED_FILES 0
 
 static grib_context default_grib_context = {
     0,               /* inited                     */
@@ -425,19 +425,19 @@ grib_context* grib_context_get_default()
         _set_fmode(_O_BINARY);
 #endif
 
-        default_grib_context.inited                = 1;
-        default_grib_context.io_buffer_size        = io_buffer_size ? atoi(io_buffer_size) : 0;
-        default_grib_context.no_big_group_split    = no_big_group_split ? atoi(no_big_group_split) : 0;
-        default_grib_context.no_spd                = no_spd ? atoi(no_spd) : 0;
-        default_grib_context.keep_matrix           = keep_matrix ? atoi(keep_matrix) : 1;
-        default_grib_context.write_on_fail         = write_on_fail ? atoi(write_on_fail) : 0;
-        default_grib_context.no_abort              = no_abort ? atoi(no_abort) : 0;
-        default_grib_context.debug                 = debug ? atoi(debug) : 0;
-        default_grib_context.gribex_mode_on        = gribex ? atoi(gribex) : 0;
+        default_grib_context.inited = 1;
+        default_grib_context.io_buffer_size = io_buffer_size ? atoi(io_buffer_size) : 0;
+        default_grib_context.no_big_group_split = no_big_group_split ? atoi(no_big_group_split) : 0;
+        default_grib_context.no_spd = no_spd ? atoi(no_spd) : 0;
+        default_grib_context.keep_matrix = keep_matrix ? atoi(keep_matrix) : 1;
+        default_grib_context.write_on_fail = write_on_fail ? atoi(write_on_fail) : 0;
+        default_grib_context.no_abort = no_abort ? atoi(no_abort) : 0;
+        default_grib_context.debug = debug ? atoi(debug) : 0;
+        default_grib_context.gribex_mode_on = gribex ? atoi(gribex) : 0;
         default_grib_context.large_constant_fields = large_constant_fields ? atoi(large_constant_fields) : 0;
-        default_grib_context.ieee_packing          = ieee_packing ? atoi(ieee_packing) : 0;
-        default_grib_context.grib_samples_path     = codes_getenv("ECCODES_SAMPLES_PATH");
-        default_grib_context.log_stream            = stderr;
+        default_grib_context.ieee_packing = ieee_packing ? atoi(ieee_packing) : 0;
+        default_grib_context.grib_samples_path = codes_getenv("ECCODES_SAMPLES_PATH");
+        default_grib_context.log_stream = stderr;
         if (!log_stream) {
             default_grib_context.log_stream = stderr;
         }
@@ -538,21 +538,18 @@ grib_context* grib_context_get_default()
                          default_grib_context.grib_samples_path);
 
         default_grib_context.keys_count = 0;
-        default_grib_context.keys       = grib_hash_keys_new(&(default_grib_context),
-                                                       &(default_grib_context.keys_count));
+        default_grib_context.keys       = grib_hash_keys_new(&(default_grib_context), &(default_grib_context.keys_count));
 
-        default_grib_context.concepts_index                      = grib_itrie_new(&(default_grib_context),
-                                                             &(default_grib_context.concepts_count));
-        default_grib_context.hash_array_index                    = grib_itrie_new(&(default_grib_context),
-                                                               &(default_grib_context.hash_array_count));
-        default_grib_context.def_files                           = grib_trie_new(&(default_grib_context));
-        default_grib_context.lists                               = grib_trie_new(&(default_grib_context));
-        default_grib_context.classes                             = grib_trie_new(&(default_grib_context));
-        default_grib_context.bufrdc_mode                         = bufrdc_mode ? atoi(bufrdc_mode) : 0;
+        default_grib_context.concepts_index = grib_itrie_new(&(default_grib_context), &(default_grib_context.concepts_count));
+        default_grib_context.hash_array_index = grib_itrie_new(&(default_grib_context), &(default_grib_context.hash_array_count));
+        default_grib_context.def_files = grib_trie_new(&(default_grib_context));
+        default_grib_context.lists = grib_trie_new(&(default_grib_context));
+        default_grib_context.classes = grib_trie_new(&(default_grib_context));
+        default_grib_context.bufrdc_mode = bufrdc_mode ? atoi(bufrdc_mode) : 0;
         default_grib_context.bufr_set_to_missing_if_out_of_range = bufr_set_to_missing_if_out_of_range ? atoi(bufr_set_to_missing_if_out_of_range) : 0;
-        default_grib_context.bufr_multi_element_constant_arrays  = bufr_multi_element_constant_arrays ? atoi(bufr_multi_element_constant_arrays) : 0;
-        default_grib_context.grib_data_quality_checks            = grib_data_quality_checks ? atoi(grib_data_quality_checks) : 0;
-        default_grib_context.file_pool_max_opened_files          = file_pool_max_opened_files ? atoi(file_pool_max_opened_files) : DEFAULT_FILE_POOL_MAX_OPENED_FILES;
+        default_grib_context.bufr_multi_element_constant_arrays = bufr_multi_element_constant_arrays ? atoi(bufr_multi_element_constant_arrays) : 0;
+        default_grib_context.grib_data_quality_checks = grib_data_quality_checks ? atoi(grib_data_quality_checks) : 0;
+        default_grib_context.file_pool_max_opened_files = file_pool_max_opened_files ? atoi(file_pool_max_opened_files) : DEFAULT_FILE_POOL_MAX_OPENED_FILES;
     }
 
     GRIB_MUTEX_UNLOCK(&mutex_c);
