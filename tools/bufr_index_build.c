@@ -41,7 +41,7 @@ grib_option grib_options[] = {
       0, 1, 0 }
 };
 
-int compress_index;
+static int compress_index;
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -73,6 +73,8 @@ int grib_tool_init(grib_runtime_options* options)
     options->onlyfiles = 1;
 
     idx = grib_index_new(c, keys, &ret);
+    codes_index_set_product_kind(idx, PRODUCT_BUFR);
+    codes_index_set_unpack_bufr(idx, 1);
 
     if (!idx || ret)
         grib_context_log(c, GRIB_LOG_FATAL,
@@ -85,7 +87,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 {
     int ret = 0;
     printf("--- %s: processing %s\n", grib_tool_name, file);
-    ret = _codes_index_add_file(idx, file, CODES_BUFR);
+    ret = grib_index_add_file(idx, file);
     if (ret) {
         printf("error: %s\n", grib_get_error_message(ret));
         exit(ret);
