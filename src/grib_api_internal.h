@@ -1394,7 +1394,7 @@ struct grib_index
     grib_file* files;
     int count;
     ProductKind product_kind;
-    int unpack_bufr; /* For meaningful for BUFR */
+    int unpack_bufr; /* Only meaningful for product_kind of BUFR */
 };
 
 /* header compute */

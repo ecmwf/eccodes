@@ -272,17 +272,19 @@ grib_index* grib_index_new_from_file(grib_context* c,
  *
  * @param c           : context  (NULL for default context)
  * @param keys        : comma separated list of keys for the index.
- *    The type of the key can be explicitly declared appending :l for long,
- *    (or alternatively :i)
- *    :d for double, :s for string to the key name. If the type is not
+ *    The type of the key can be explicitly declared appending ":l" for long,
+ *    (or alternatively ":i"), ":d" for double, ":s" for string to the key name. If the type is not
  *    declared explicitly, the native type is assumed.
  * @param err         :  0 if OK, integer value on error
  * @return            the newly created index
  */
 grib_index* grib_index_new(grib_context* c, const char* keys, int* err);
 
+/* EXPERIMENTAL */
 int codes_index_set_product_kind(grib_index* index, ProductKind product_kind);
 int codes_index_set_unpack_bufr(grib_index* index, int unpack);
+
+
 /**
  *  Indexes the file given in argument in the index given in argument.
  *

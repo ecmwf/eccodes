@@ -1986,8 +1986,10 @@ int is_index_file(const char* filename)
 {
     FILE* fh;
     char buf[8] = {0,};
-    const char* id_grib = "GRBIDX";
-    const char* id_bufr = "BFRIDX";
+    /* Only read the first 6 characters of identifier. Exclude version */
+    const size_t numChars = 6;
+    const char* id_grib   = "GRBIDX";
+    const char* id_bufr   = "BFRIDX";
     int ret         = 0;
     size_t size     = 0;
 
@@ -2000,7 +2002,7 @@ int is_index_file(const char* filename)
         fclose(fh);
         return 0;
     }
-    size = fread(buf, 6, 1, fh);
+    size = fread(buf, numChars, 1, fh);
     if (size != 1) {
         fclose(fh);
         return 0;
