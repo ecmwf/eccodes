@@ -34,9 +34,9 @@ int key_values_size = MAX_KEY_VALUES;
  * tool to identify the fields to be merged */
 static const char* md5Key = "md5Product";
 
-const char* grib_tool_description = "Merge two fields with identical parameters and different geographical area";
-const char* grib_tool_name        = "grib_merge";
-const char* grib_tool_usage       = "[options] file file ... output_file";
+const char* tool_description = "Merge two fields with identical parameters and different geographical area";
+const char* tool_name        = "grib_merge";
+const char* tool_usage       = "[options] file file ... output_file";
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value */

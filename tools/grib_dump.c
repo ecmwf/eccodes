@@ -39,9 +39,9 @@ grib_option grib_options[] = {
     { "x", 0, 0, 0, 1, 0 }
 };
 
-const char* grib_tool_description = "Dump the content of a GRIB file in different formats.";
-const char* grib_tool_name        = "grib_dump";
-const char* grib_tool_usage       = "[options] grib_file grib_file ...";
+const char* tool_description = "Dump the content of a GRIB file in different formats.";
+const char* tool_name        = "grib_dump";
+const char* tool_usage       = "[options] grib_file grib_file ...";
 static int json                   = 0;
 static int first_handle           = 1;
 static int dump_keys              = 0;
@@ -69,7 +69,7 @@ int grib_tool_init(grib_runtime_options* options)
     options->dump_mode = "default";
 
     if (opt > 1) {
-        printf("%s: simultaneous j/O/D options not allowed\n", grib_tool_name);
+        printf("%s: simultaneous j/O/D options not allowed\n", tool_name);
         exit(1);
     }
 
@@ -130,7 +130,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
         return 0;
 
     Assert(file);
-    exit_if_input_is_directory(grib_tool_name, file->name);
+    exit_if_input_is_directory(tool_name, file->name);
 
     sprintf(tmp, "FILE: %s ", options->current_infile->name);
     if (!grib_options_on("C"))
@@ -147,7 +147,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
         err = grib_index_dump_file(stdout, filename);
         if (err) {
             grib_context_log(c, GRIB_LOG_ERROR, "%s: Could not dump index file \"%s\".\n%s\n",
-                             grib_tool_name,
+                             tool_name,
                              filename,
                              grib_get_error_message(err));
             exit(1);

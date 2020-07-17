@@ -15,11 +15,11 @@
 
 #include "grib_tools.h"
 
-const char* grib_tool_description =
+const char* tool_description =
     "Build an index file for a set of input BUFR files.\n"
     "\tWarning: THIS TOOL IS NOT YET IMPLEMENTED";
-const char* grib_tool_name  = "bufr_index_build";
-const char* grib_tool_usage = "[options] file file ... ";
+const char* tool_name  = "bufr_index_build";
+const char* tool_usage = "[options] file file ... ";
 grib_index* idx             = NULL;
 char* keys;
 char* default_keys = "mars";
@@ -86,7 +86,7 @@ int grib_tool_init(grib_runtime_options* options)
 int grib_tool_new_filename_action(grib_runtime_options* options, const char* file)
 {
     int ret = 0;
-    printf("--- %s: processing %s\n", grib_tool_name, file);
+    printf("--- %s: processing %s\n", tool_name, file);
     ret = grib_index_add_file(idx, file);
     if (ret) {
         printf("error: %s\n", grib_get_error_message(ret));
@@ -124,7 +124,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         grib_index_compress(idx);
     }
     printf("--- %s: keys included in the index file %s:\n",
-           grib_tool_name, options->outfile->name);
+           tool_name, options->outfile->name);
     printf("--- ");
     first    = 1;
     the_keys = idx->keys;
