@@ -186,6 +186,32 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 {
     if (!options->current_infile->name)
         return 0;
+
+    Assert(file);
+    exit_if_input_is_directory(grib_tool_name, file->name);
+
+    /*
+     * Dumping of index files
+     */
+    if (is_index_file(options->current_infile->name)) {
+        int err              = 0;
+        grib_context* c      = grib_context_get_default();
+        const char* filename = options->current_infile->name;
+
+        err = grib_index_dump_file(stdout, filename);
+        if (err) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Could not dump index file \"%s\".\n%s\n",
+                             grib_tool_name,
+                             filename,
+                             grib_get_error_message(err));
+            exit(1);
+        }
+        /* Since there are no BUFR messages, we have to stop tool exiting in case there
+         * are more index files */
+        options->fail = 0;
+        return 0;
+    }
+
     if (json)
         return 0;
 
