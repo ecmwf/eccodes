@@ -48,9 +48,12 @@ endforeach()
 #################################################
 # These tests do not require any data downloads
 list(APPEND tests_no_data_reqd
+    unit_tests
+    julian
+    grib_dump_samples
+    bufr_dump_samples
     definitions
     grib_calendar
-    unit_tests
     grib_md5
     filter_substr
     grib_uerra
@@ -59,8 +62,6 @@ list(APPEND tests_no_data_reqd
     grib_ecc-967
     grib_ecc-1065
     grib_ecc-1053
-    julian
-    bufr_dump_samples
     bufr_json_samples
     bufr_ecc-359
     bufr_ecc-517
