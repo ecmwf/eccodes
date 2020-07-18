@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 
     h = codes_handle_new_from_file(c, f, PRODUCT_GRIB, &err);
     if (!h) {
-        printf("unable to create handle from file %s\n", infile);
+        fprintf(stderr, "unable to create handle from file %s\n", infile);
         exit(err);
     }
     fclose(f);
@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
         for (i = 0; i < nvalues; i++) {
             if (values[i].error == err) name = (char*)values[i].name;
         }
-        printf("ERROR: \"%s\" %s\n", name, codes_get_error_message(err));
+        fprintf(stderr, "Error: \"%s\" %s\n", name, codes_get_error_message(err));
     }
 
     values[1].name = "levelll";
@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
         for (i = 0; i < nvalues; i++) {
             if (values[i].error == err) name = (char*)values[i].name;
         }
-        printf("ERROR: \"%s\" %s\n", name, codes_get_error_message(err));
+        fprintf(stderr, "Error: \"%s\" %s\n", name, codes_get_error_message(err));
     }
 
     return 0;

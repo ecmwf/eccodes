@@ -10,10 +10,10 @@
 
 . ./include.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_dump_encode_python_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 

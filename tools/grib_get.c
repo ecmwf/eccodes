@@ -35,12 +35,12 @@ grib_option grib_options[] = {
     { "i:", 0, 0, 0, 1, 0 }
 };
 
-const char* grib_tool_description =
+const char* tool_description =
     "Get values of some keys from a GRIB file."
     "\n\tIt is similar to grib_ls, but fails returning an error code "
     "\n\twhen an error occurs (e.g. key not found).";
-const char* grib_tool_name  = "grib_get";
-const char* grib_tool_usage = "[options] grib_file grib_file ...";
+const char* tool_name  = "grib_get";
+const char* tool_usage = "[options] grib_file grib_file ...";
 
 int grib_options_count       = sizeof(grib_options) / sizeof(grib_option);
 static double lat            = 0;
@@ -75,7 +75,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (options->latlon) {
         lat = strtod(options->latlon, &theEnd);
         if (*theEnd != ',') {
-            fprintf(stderr, "Error %s: wrong latitude value. Please use 'latitude,longitude'\n",grib_tool_name);
+            fprintf(stderr, "Error %s: wrong latitude value. Please use 'latitude,longitude'\n",tool_name);
             exit(1);
         }
         lon = strtod(++theEnd, &end1);
@@ -95,7 +95,7 @@ int grib_tool_init(grib_runtime_options* options)
                     options->latlon_mode = 1;
                 }
                 else {
-                    fprintf(stderr, "Error %s: wrong mode given in option -l\n", grib_tool_name);
+                    fprintf(stderr, "Error %s: wrong mode given in option -l\n", tool_name);
                     exit(1);
                 }
             }
@@ -162,7 +162,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 
 int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* file)
 {
-    exit_if_input_is_directory(grib_tool_name, file->name);
+    exit_if_input_is_directory(tool_name, file->name);
     if (nearest)
         grib_nearest_delete(nearest);
     nearest = NULL;

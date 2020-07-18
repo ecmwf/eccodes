@@ -205,12 +205,12 @@ static int init_sphere(grib_handle* h,
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -316,12 +316,12 @@ static int init_oblate(grib_handle* h,
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -360,9 +360,11 @@ static int init_oblate(grib_handle* h,
                 latRad = -M_PI_2;
             }
             lonRad = adjust_lon_radians(theta / ns + LoVInRadians);
+            if (i == 0 && j == 0) {
+                DebugAssert(fabs(latFirstInRadians - latRad) <= EPSILON);
+            }
             latDeg = latRad * RAD2DEG;  /* Convert to degrees */
-            lonDeg = lonRad * RAD2DEG;
-            lonDeg = normalise_longitude_in_degrees(lonDeg);
+            lonDeg = normalise_longitude_in_degrees(lonRad * RAD2DEG);
             self->lons[index] = lonDeg;
             self->lats[index] = latDeg;
         }

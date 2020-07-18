@@ -90,6 +90,7 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
     size_t buffer_size;
     size_t rest;
     unsigned char* buffer;
+    grib_context* c = grib_context_get_default();
 
     if (message_length == 0)
         return GRIB_BUFFER_TOO_SMALL;
@@ -109,12 +110,20 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
 
     if ((r->read(r->read_data, buffer + already_read, rest, &err) != rest) || err) {
         /*fprintf(stderr, "read_the_rest: r->read failed: %s\n", grib_get_error_message(err));*/
+        if (c->debug)
+            fprintf(stderr, "ECCODES DEBUG: read_the_rest: Read failed (Coded length=%lu, Already read=%d)\n",
+                    message_length, already_read);
         return err;
     }
 
-    if (check7777 && !r->headers_only && (buffer[message_length - 4] != '7' || buffer[message_length - 3] != '7' || buffer[message_length - 2] != '7' || buffer[message_length - 1] != '7')) {
-        grib_context* c = grib_context_get_default();
-        grib_context_log(c, GRIB_LOG_DEBUG, "read_the_rest: No final 7777 at expected location (Coded length=%lu)", message_length);
+    if (check7777 && !r->headers_only &&
+        (buffer[message_length - 4] != '7' ||
+         buffer[message_length - 3] != '7' ||
+         buffer[message_length - 2] != '7' ||
+         buffer[message_length - 1] != '7'))
+    {
+        if (c->debug)
+            fprintf(stderr, "ECCODES DEBUG: read_the_rest: No final 7777 at expected location (Coded length=%lu)\n", message_length);
         return GRIB_WRONG_LENGTH;
     }
 
@@ -899,13 +908,25 @@ static int _read_any(reader* r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_
 
     return err;
 }
+
 static int read_any(reader* r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
 {
     int result = 0;
+
+#ifndef ECCODES_EACH_THREAD_OWN_FILE
+    /* If several threads can open the same file, then we need the locks
+     * so each thread gets its own message. Otherwise if threads are passed
+     * different files, then the lock is not needed
+     */
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex1);
+#endif
+
     result = _read_any(r, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
+
+#ifndef ECCODES_EACH_THREAD_OWN_FILE
     GRIB_MUTEX_UNLOCK(&mutex1);
+#endif
     return result;
 }
 

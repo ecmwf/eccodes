@@ -19,8 +19,8 @@ signed[4] latitudeOfSubSatellitePoint ;
 #  Lop - longitude of sub-satellite point
 signed[4] longitudeOfSubSatellitePoint ;
 
-meta  geography.latitudeOfSubSatellitePointInDegrees   scale(latitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
-meta  geography.longitudeOfSubSatellitePointInDegrees   scale(longitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
+meta geography.latitudeOfSubSatellitePointInDegrees   scale(latitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
+meta geography.longitudeOfSubSatellitePointInDegrees   scale(longitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
 
 include "grib2/template.3.resolution_flags.def";
 
@@ -35,13 +35,13 @@ alias geography.dy=dy;
 #  Xp - X-coordinate of sub-satellite point
 # (in units of 10^-3 grid length expressed as an integer)
 unsigned[4] Xp  : no_copy;
-meta  geography.XpInGridLengths scale(Xp,one,thousand) : dump;
+meta geography.XpInGridLengths scale(Xp,one,thousand) : dump;
 alias xCoordinateOfSubSatellitePoint=XpInGridLengths;
 
 #  Yp - Y-coordinate of sub-satellite point
 # (in units of 10^-3 grid length expressed as an integer)
 unsigned[4] Yp  : no_copy;
-meta  geography.YpInGridLengths scale(Yp,one,thousand) : dump;
+meta geography.YpInGridLengths scale(Yp,one,thousand) : dump;
 alias yCoordinateOfSubSatellitePoint=YpInGridLengths;
 
 include "grib2/template.3.scanning_mode.def";
@@ -77,7 +77,14 @@ iterator space_view(numberOfPoints, missingValue, values, radius,
           dx, dy, XpInGridLengths, YpInGridLengths,
           orientationOfTheGridInDegrees,
           NrInRadiusOfEarth, Xo, Yo,
-          iScansNegatively,
-          jScansPositively,
-          jPointsAreConsecutive,
-          alternativeRowScanning);
+          iScansNegatively, jScansPositively,
+          jPointsAreConsecutive, alternativeRowScanning);
+
+nearest space_view(values,radius,Nx,Ny);
+
+meta latLonValues latlonvalues(values);
+alias latitudeLongitudeValues=latLonValues;
+meta latitudes latitudes(values,0);
+meta longitudes longitudes(values,0);
+meta distinctLatitudes latitudes(values,1);
+meta distinctLongitudes longitudes(values,1);

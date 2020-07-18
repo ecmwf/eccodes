@@ -25,6 +25,12 @@ JSON_CHECK=""
 if command -v $JSON_VERIF >/dev/null 2>&1; then
   JSON_CHECK=$JSON_VERIF
 fi
+# ECC-1119: Check the json_xs command actually works!
+set +e
+echo '[]' | json_xs > $REDIRECT 2>&1
+if [ $? -ne 0 ]; then JSON_CHECK=""; fi
+set -e
+echo "Using $JSON_CHECK ..."
 
 # Test downloaded BUFR files
 # -------------------------
@@ -49,6 +55,7 @@ for c in 1 3 1/3; do
   if test "x$JSON_CHECK" != "x"; then
     json_xs < ${file}.json >$REDIRECT 2> $REDIRECT
   fi
+  rm -f ${file}.json
 done
 
 

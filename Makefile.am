@@ -64,6 +64,7 @@ EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 		data/scan_y_rotated_ll_8_4_good.dump \
 		data/scan_y_rotated_ll_8_7_good.dump \
 		data/tigge_pf_ecmwf.grib2.ref \
+		data/BUFR3.tmpl.dump.plain.ref
 		data/60_model_levels \
 		data/list_points \
 		data/step.log \

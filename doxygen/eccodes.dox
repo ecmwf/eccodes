@@ -12,7 +12,7 @@ set of tools for decoding and encoding messages in the following formats:
 A useful set of <a href="https://software.ecmwf.int/wiki/display/ECC/Command+line+tools">command line tools</a>
 provide quick access to the messages. C, Fortran 90 and Python interfaces provide access to the main %ecCodes functionality.
 
-%ecCodes is an evolution of <a href="https://software.ecmwf.int/wiki/display/GRIB/Home">GRIB-API</a>.  It is designed to provide the user with a simple set of
+%ecCodes is an evolution of GRIB-API.  It is designed to provide the user with a simple set of
 functions to access data from several formats with a key/value approach.
 
 For GRIB encoding and decoding, the GRIB-API functionality is provided fully in %ecCodes with the same user interface and behaviour.

@@ -15,8 +15,6 @@
 #include "tigge_tools.h"
 #include "eccodes_windef.h"
 
-#include <sys/types.h>
-
 #ifndef ECCODES_ON_WINDOWS
   #include <dirent.h>
 #else

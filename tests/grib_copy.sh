@@ -10,13 +10,12 @@
 
 . ./include.sh
 
-#Enter data dir
+# Enter data dir
 cd ${data_dir}
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="grib_copy_test"
 temp=${label}".grib.tmp"
-
 
 echo "Test: The -g option..."
 # -----------------------------------

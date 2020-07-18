@@ -184,6 +184,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_spectral_truncation.c
     grib_accessor_class_time.c
     grib_accessor_class_transient.c
+    grib_accessor_class_trim.c
     grib_accessor_class_transient_darray.c
     grib_accessor_class_values.c
     grib_accessor_class_simple_packing_error.c
@@ -236,6 +237,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_g2_chemical.c
     grib_accessor_class_g2_mars_labeling.c
     grib_accessor_class_md5.c
+    grib_accessor_class_proj_string.c
     grib_jasper_encoding.c
     grib_openjpeg_encoding.c
     action_class_set_missing.c
@@ -345,10 +347,14 @@ list( APPEND grib_api_srcs
     grib_nearest_class_latlon_reduced.c
     grib_nearest_class_sh.c
     grib_nearest_class_lambert_conformal.c
+    grib_nearest_class_lambert_azimuthal_equal_area.c
+    grib_nearest_class_mercator.c
     grib_nearest_class_polar_stereographic.c
+    grib_nearest_class_space_view.c
     grib_iterator_class_polar_stereographic.c
     grib_iterator_class_lambert_azimuthal_equal_area.c
     grib_iterator_class_lambert_conformal.c
+    grib_iterator_class_mercator.c
     grib_iterator.c
     grib_iterator_class.c
     grib_iterator_class_gaussian.c

@@ -2,7 +2,7 @@
 #      general configuration      #
 #---------------------------------#
 
-version: 2.18.0-{build}-{branch}
+version: 2.19.0-{build}-{branch}
 
 branches:
   only:

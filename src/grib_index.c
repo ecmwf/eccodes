@@ -366,9 +366,9 @@ int grib_write_string(FILE* fh, const char* s)
     return GRIB_SUCCESS;
 }
 
-int grib_write_identifier(FILE* fh)
+int grib_write_identifier(FILE* fh, const char* ID)
 {
-    return grib_write_string(fh, "GRBIDX1");
+    return grib_write_string(fh, ID);
 }
 
 int grib_write_null_marker(FILE* fh)
@@ -557,6 +557,8 @@ grib_index* grib_index_new(grib_context* c, const char* key, int* err)
         return NULL;
     }
     index->context = c;
+    index->product_kind = PRODUCT_GRIB;
+    index->unpack_bufr = 0;
 
     while ((key = get_key(&p, &type)) != NULL) {
         keys = grib_index_new_key(c, keys, key, type, err);
@@ -835,6 +837,7 @@ int grib_index_write(grib_index* index, const char* filename)
     int err = 0;
     FILE* fh;
     grib_file* files;
+    char* identifier = NULL;
 
     fh = fopen(filename, "w");
     if (!fh) {
@@ -844,7 +847,10 @@ int grib_index_write(grib_index* index, const char* filename)
         return GRIB_IO_PROBLEM;
     }
 
-    err = grib_write_identifier(fh);
+    if (index->product_kind == PRODUCT_GRIB) identifier = "GRBIDX1";
+    if (index->product_kind == PRODUCT_BUFR) identifier = "BFRIDX1";
+    Assert(identifier);
+    err = grib_write_identifier(fh, identifier);
     if (err) {
         grib_context_log(index->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                          "Unable to write in file %s", filename);
@@ -905,6 +911,7 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
     char* identifier     = NULL;
     int max              = 0;
     FILE* fh             = NULL;
+    ProductKind product_kind = PRODUCT_GRIB;
 
     if (!c)
         c = grib_context_get_default();
@@ -923,6 +930,8 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
         fclose(fh);
         return NULL;
     }
+
+    if (strcmp(identifier, "BFRIDX1")==0) product_kind = PRODUCT_BUFR;
     grib_context_free(c, identifier);
 
     *err = grib_read_uchar(fh, &marker);
@@ -967,6 +976,7 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
 
     index          = (grib_index*)grib_context_malloc_clear(c, sizeof(grib_index));
     index->context = c;
+    index->product_kind = product_kind;
 
     index->keys = grib_read_index_keys(c, fh, err);
     if (*err)
@@ -1046,16 +1056,21 @@ int grib_index_search_same(grib_index* index, grib_handle* h)
 
 int grib_index_add_file(grib_index* index, const char* filename)
 {
-    return _codes_index_add_file(index, filename, CODES_GRIB);
+    int message_type = 0;
+    if (index->product_kind == PRODUCT_GRIB) message_type = CODES_GRIB;
+    else if (index->product_kind == PRODUCT_BUFR) message_type = CODES_BUFR;
+    else return GRIB_INVALID_ARGUMENT;
+
+    return _codes_index_add_file(index, filename, message_type);
 }
 
-grib_handle* new_message_from_file(int message_type, grib_context* c, FILE* f, int* error)
+static grib_handle* new_message_from_file(int message_type, grib_context* c, FILE* f, int* error)
 {
     if (message_type == CODES_GRIB)
         return grib_new_from_file(c, f, 0, error); /* headers_only=0 */
     if (message_type == CODES_BUFR)
         return bufr_new_from_file(c, f, error);
-    Assert(0);
+    Assert(!"new_message_from_file: invalid message type");
     return NULL;
 }
 
@@ -1120,6 +1135,15 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
         field_tree          = index->fields;
         index_key->value[0] = 0;
         message_count++;
+        
+        if (index->product_kind == PRODUCT_BUFR && index->unpack_bufr) {
+            err = grib_set_long(h, "unpack", 1);
+            if (err) {
+                grib_context_log(c, GRIB_LOG_ERROR, "unable to unpack BUFR to create index. \"%s\": %s",
+                                 index_key->name, grib_get_error_message(err));
+                return err;
+            }
+        }
 
         while (index_key) {
             if (index_key->type == GRIB_TYPE_UNDEFINED) {
@@ -1222,7 +1246,7 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
             field_tree->field = field;
 
         grib_handle_delete(h);
-    }
+    }/*foreach message*/
 
     grib_file_close(file->name, 0, &err);
 
@@ -1400,7 +1424,7 @@ int grib_index_add_file(grib_index* index, const char* filename)
 }
 #endif
 
-grib_index* grib_index_new_from_file(grib_context* c, char* filename, const char* keys, int* err)
+grib_index* grib_index_new_from_file(grib_context* c, const char* filename, const char* keys, int* err)
 {
     grib_index* index = NULL;
 
@@ -1576,7 +1600,7 @@ int grib_index_select_double(grib_index* index, const char* skey, double value)
     return 0;
 }
 
-int grib_index_select_string(grib_index* index, const char* skey, char* value)
+int grib_index_select_string(grib_index* index, const char* skey, const char* value)
 {
     grib_index_key* key = NULL;
     int err             = GRIB_NOT_FOUND;
@@ -1608,35 +1632,37 @@ int grib_index_select_string(grib_index* index, const char* skey, char* value)
     return 0;
 }
 
-grib_handle* grib_index_get_handle(grib_field* field, int* err)
-{
-    return codes_index_get_handle(field, CODES_GRIB, err);
-}
-
 grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* err)
 {
     grib_handle* h = NULL;
-    typedef grib_handle* (*message_new_proc)(grib_context*, FILE*, int, int*);
+    typedef grib_handle* (*message_new_proc)(grib_context*, FILE*, int*);
     message_new_proc message_new = NULL;
-    Assert(field->file);
+
+    if (!field->file) {
+        grib_context_log(grib_context_get_default(), GRIB_LOG_ERROR, "codes_index_get_handle: NULL file handle");
+        *err = GRIB_INTERNAL_ERROR;
+        return NULL;
+    }
+
     grib_file_open(field->file->name, "r", err);
 
     if (*err != GRIB_SUCCESS)
         return NULL;
     switch (message_type) {
         case CODES_GRIB:
-            message_new = grib_new_from_file;
+            message_new = codes_grib_handle_new_from_file;
             break;
         case CODES_BUFR:
-            Assert(!"_codes_index_add_file for BUFR: not yet implemented");
-            /* message_new=bufr_new_from_file; */
+            message_new = codes_bufr_handle_new_from_file;
             break;
         default:
-            Assert(0);
+            grib_context_log(grib_context_get_default(), GRIB_LOG_ERROR, "codes_index_get_handle: invalid message type");
+            *err = GRIB_INTERNAL_ERROR;
+            return NULL;
     }
 
     fseeko(field->file->handle, field->offset, SEEK_SET);
-    h = message_new(0, field->file->handle, 0, err);
+    h = message_new(0, field->file->handle, err);
     if (*err != GRIB_SUCCESS)
         return NULL;
 
@@ -1776,7 +1802,7 @@ int grib_index_dump_file(FILE* fout, const char* filename)
             return err;
         f = file;
         while (f) {
-            grib_file *prev = f;
+            grib_file* prev = f;
             fprintf(fout, "GRIB File: %s\n", f->name);
             grib_context_free(c, f->name);
             f = f->next;
@@ -1824,7 +1850,12 @@ char* grib_get_field_file(grib_index* index, off_t* offset)
 
 grib_handle* grib_handle_new_from_index(grib_index* index, int* err)
 {
-    return codes_new_from_index(index, CODES_GRIB, err);
+    ProductKind pkind = index->product_kind;
+    if (pkind == PRODUCT_GRIB)
+        return codes_new_from_index(index, CODES_GRIB, err);
+    if (pkind == PRODUCT_BUFR)
+        return codes_new_from_index(index, CODES_BUFR, err);
+    return NULL;
 }
 
 grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
@@ -1925,4 +1956,61 @@ int grib_index_search(grib_index* index, grib_index_key* keys)
 
     grib_index_rewind(index);
     return 0;
+}
+
+int codes_index_set_product_kind(grib_index* index, ProductKind product_kind)
+{
+    if (!index)
+        return GRIB_INVALID_ARGUMENT;
+
+    if (product_kind == PRODUCT_GRIB || product_kind == PRODUCT_BUFR) {
+        index->product_kind = product_kind;
+    } else {
+        return GRIB_INVALID_ARGUMENT;
+    }
+    return GRIB_SUCCESS;
+}
+
+int codes_index_set_unpack_bufr(grib_index* index, int unpack)
+{
+    if (!index)
+        return GRIB_INVALID_ARGUMENT;
+    if (index->product_kind != PRODUCT_BUFR)
+        return GRIB_INVALID_ARGUMENT;
+    index->unpack_bufr = unpack;
+    return GRIB_SUCCESS;
+}
+
+/* Return 1 if the file is an index file. 0 otherwise */
+int is_index_file(const char* filename)
+{
+    FILE* fh;
+    char buf[8] = {0,};
+    /* Only read the first 6 characters of identifier. Exclude version */
+    const size_t numChars = 6;
+    const char* id_grib   = "GRBIDX";
+    const char* id_bufr   = "BFRIDX";
+    int ret         = 0;
+    size_t size     = 0;
+
+    fh = fopen(filename, "r");
+    if (!fh)
+        return 0;
+
+    size = fread(buf, 1, 1, fh);
+    if (size != 1) {
+        fclose(fh);
+        return 0;
+    }
+    size = fread(buf, numChars, 1, fh);
+    if (size != 1) {
+        fclose(fh);
+        return 0;
+    }
+
+    ret = (strcmp(buf, id_grib)==0 || strcmp(buf, id_bufr)==0);
+
+    fclose(fh);
+
+    return ret;
 }

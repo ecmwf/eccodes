@@ -15,12 +15,12 @@
 
 #include "grib_tools.h"
 
-const char* grib_tool_description =
+const char* tool_description =
     "Copies the content of BUFR files printing"
     " values of some keys."
     "\n\tIf the name of the output_bufr_file contains a key enclosed in square brackets, its value will be used.";
-const char* grib_tool_name  = "bufr_copy";
-const char* grib_tool_usage = "[options] bufr_file bufr_file ... output_bufr_file";
+const char* tool_name  = "bufr_copy";
+const char* tool_usage = "[options] bufr_file bufr_file ... output_bufr_file";
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value */
@@ -90,7 +90,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 
 int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* file)
 {
-    exit_if_input_is_directory(grib_tool_name, file->name);
+    exit_if_input_is_directory(tool_name, file->name);
     return 0;
 }
 

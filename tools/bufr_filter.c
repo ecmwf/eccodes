@@ -30,12 +30,12 @@ grib_option grib_options[] = {
     { "7", 0, 0, 0, 1, 0 },
     { "v", 0, 0, 0, 1, 0 }
 };
-const char* grib_tool_description =
+const char* tool_description =
     "Apply the rules defined in rules_file to each BUFR "
     "message\n\tin the BUFR files provided as arguments.\n\t"
     "If you specify '-' (a single dash) for the rules_file, the rules will be read from standard input.";
-const char* grib_tool_name = "bufr_filter";
-const char* grib_tool_usage =
+const char* tool_name = "bufr_filter";
+const char* tool_usage =
     "[options] rules_file "
     "bufr_file bufr_file ...";
 
@@ -75,7 +75,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 
 int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* file)
 {
-    exit_if_input_is_directory(grib_tool_name, file->name);
+    exit_if_input_is_directory(tool_name, file->name);
     return 0;
 }
 
@@ -112,7 +112,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     int err = 0;
     grib_file_close_all(&err);
     if (err != GRIB_SUCCESS) {
-        perror(grib_tool_name);
+        perror(tool_name);
         exit(err);
     }
 

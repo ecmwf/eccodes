@@ -184,8 +184,6 @@ void grib_bufr_descriptor_delete(bufr_descriptor* v);
 bufr_descriptors_array* grib_bufr_descriptors_array_new(grib_context* c, size_t size, size_t incsize);
 bufr_descriptor* grib_bufr_descriptors_array_pop(bufr_descriptors_array* a);
 bufr_descriptor* grib_bufr_descriptors_array_pop_front(bufr_descriptors_array* a);
-bufr_descriptors_array* grib_bufr_descriptors_array_resize_to(bufr_descriptors_array* v, size_t newsize);
-bufr_descriptors_array* grib_bufr_descriptors_array_resize(bufr_descriptors_array* v);
 bufr_descriptors_array* grib_bufr_descriptors_array_push(bufr_descriptors_array* v, bufr_descriptor* val);
 bufr_descriptors_array* grib_bufr_descriptors_array_append(bufr_descriptors_array* v, bufr_descriptors_array* ar);
 bufr_descriptors_array* grib_bufr_descriptors_array_push_front(bufr_descriptors_array* v, bufr_descriptor* val);
@@ -200,16 +198,14 @@ size_t grib_bufr_descriptors_array_used_size(bufr_descriptors_array* v);
 void grib_darray_print(const char* title, const grib_darray* darray);
 grib_darray* grib_darray_new_from_array(grib_context* c, double* a, size_t size);
 grib_darray* grib_darray_new(grib_context* c, size_t size, size_t incsize);
-grib_darray* grib_darray_resize(grib_context* c, grib_darray* v);
 grib_darray* grib_darray_push(grib_context* c, grib_darray* v, double val);
 void grib_darray_delete(grib_context* c, grib_darray* v);
 double* grib_darray_get_array(grib_context* c, grib_darray* v);
-int grib_darray_is_constant(grib_darray* v, double eps);
+int grib_darray_is_constant(grib_darray* v, double epsilon);
 size_t grib_darray_used_size(grib_darray* v);
 
 /* grib_sarray.c */
 grib_sarray* grib_sarray_new(grib_context* c, size_t size, size_t incsize);
-grib_sarray* grib_sarray_resize(grib_context* c, grib_sarray* v);
 grib_sarray* grib_sarray_push(grib_context* c, grib_sarray* v, char* val);
 void grib_sarray_delete(grib_context* c, grib_sarray* v);
 void grib_sarray_delete_content(grib_context* c, grib_sarray* v);
@@ -218,7 +214,6 @@ size_t grib_sarray_used_size(grib_sarray* v);
 
 /* grib_oarray.c */
 grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize);
-grib_oarray* grib_oarray_resize(grib_context* c, grib_oarray* v);
 grib_oarray* grib_oarray_push(grib_context* c, grib_oarray* v, void* val);
 void grib_oarray_delete(grib_context* c, grib_oarray* v);
 void grib_oarray_delete_content(grib_context* c, grib_oarray* v);
@@ -232,23 +227,17 @@ grib_iarray* grib_iarray_new_from_array(grib_context* c, long* a, size_t size);
 grib_iarray* grib_iarray_new(grib_context* c, size_t size, size_t incsize);
 long grib_iarray_pop(grib_iarray* a);
 long grib_iarray_pop_front(grib_iarray* a);
-grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize);
-grib_iarray* grib_iarray_resize(grib_iarray* v);
 grib_iarray* grib_iarray_push(grib_iarray* v, long val);
 grib_iarray* grib_iarray_push_front(grib_iarray* v, long val);
 grib_iarray* grib_iarray_push_array(grib_iarray* v, long* val, size_t size);
-long grib_iarray_get(grib_iarray* a, size_t i);
-void grib_iarray_set(grib_iarray* a, size_t i, long v);
 void grib_iarray_delete(grib_iarray* v);
 void grib_iarray_delete_array(grib_iarray* v);
 long* grib_iarray_get_array(grib_iarray* v);
 size_t grib_iarray_used_size(grib_iarray* v);
-int grib_iarray_is_constant(grib_iarray* v);
 
 /* grib_vdarray.c */
 void grib_vdarray_print(const char* title, const grib_vdarray* vdarray);
 grib_vdarray* grib_vdarray_new(grib_context* c, size_t size, size_t incsize);
-grib_vdarray* grib_vdarray_resize(grib_context* c, grib_vdarray* v);
 grib_vdarray* grib_vdarray_push(grib_context* c, grib_vdarray* v, grib_darray* val);
 void grib_vdarray_delete(grib_context* c, grib_vdarray* v);
 void grib_vdarray_delete_content(grib_context* c, grib_vdarray* v);
@@ -257,7 +246,6 @@ size_t grib_vdarray_used_size(grib_vdarray* v);
 
 /* grib_vsarray.c */
 grib_vsarray* grib_vsarray_new(grib_context* c, size_t size, size_t incsize);
-grib_vsarray* grib_vsarray_resize(grib_context* c, grib_vsarray* v);
 grib_vsarray* grib_vsarray_push(grib_context* c, grib_vsarray* v, grib_sarray* val);
 void grib_vsarray_delete(grib_context* c, grib_vsarray* v);
 void grib_vsarray_delete_content(grib_context* c, grib_vsarray* v);
@@ -266,7 +254,6 @@ size_t grib_vsarray_used_size(grib_vsarray* v);
 
 /* grib_viarray.c */
 grib_viarray* grib_viarray_new(grib_context* c, size_t size, size_t incsize);
-grib_viarray* grib_viarray_resize(grib_context* c, grib_viarray* v);
 grib_viarray* grib_viarray_push(grib_context* c, grib_viarray* v, grib_iarray* val);
 void grib_viarray_delete(grib_context* c, grib_viarray* v);
 void grib_viarray_delete_content(grib_context* c, grib_viarray* v);
@@ -730,7 +717,7 @@ int grib_write_short(FILE* fh, short val);
 int grib_write_long(FILE* fh, long val);
 int grib_write_unsigned_long(FILE* fh, unsigned long val);
 int grib_write_string(FILE* fh, const char* s);
-int grib_write_identifier(FILE* fh);
+int grib_write_identifier(FILE* fh, const char* id);
 int grib_write_null_marker(FILE* fh);
 int grib_write_not_null_marker(FILE* fh);
 char* grib_read_string(grib_context* c, FILE* fh, int* err);
@@ -741,18 +728,16 @@ int grib_index_write(grib_index* index, const char* filename);
 grib_index* grib_index_read(grib_context* c, const char* filename, int* err);
 int grib_index_search_same(grib_index* index, grib_handle* h);
 int grib_index_add_file(grib_index* index, const char* filename);
-grib_handle* new_message_from_file(int message_type, grib_context* c, FILE* f, int* error);
 int _codes_index_add_file(grib_index* index, const char* filename, int message_type);
 int grib_index_add_file(grib_index* index, const char* filename);
-grib_index* grib_index_new_from_file(grib_context* c, char* filename, const char* keys, int* err);
+grib_index* grib_index_new_from_file(grib_context* c, const char* filename, const char* keys, int* err);
 int grib_index_get_size(const grib_index* index, const char* key, size_t* size);
 int grib_index_get_string(const grib_index* index, const char* key, char** values, size_t* size);
 int grib_index_get_long(const grib_index* index, const char* key, long* values, size_t* size);
 int grib_index_get_double(const grib_index* index, const char* key, double* values, size_t* size);
 int grib_index_select_long(grib_index* index, const char* skey, long value);
 int grib_index_select_double(grib_index* index, const char* skey, double value);
-int grib_index_select_string(grib_index* index, const char* skey, char* value);
-grib_handle* grib_index_get_handle(grib_field* field, int* err);
+int grib_index_select_string(grib_index* index, const char* skey, const char* value);
 grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* err);
 int grib_index_dump_file(FILE* fout, const char* filename);
 void grib_index_dump(FILE* fout, grib_index* index);
@@ -761,6 +746,9 @@ grib_handle* grib_handle_new_from_index(grib_index* index, int* err);
 grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err);
 void grib_index_rewind(grib_index* index);
 int grib_index_search(grib_index* index, grib_index_key* keys);
+int codes_index_set_product_kind(grib_index* index, ProductKind product_kind);
+int codes_index_set_unpack_bufr(grib_index* index, int unpack);
+int is_index_file(const char* filename);
 
 /* grib_accessor_class_number_of_points_gaussian.c */
 
@@ -1061,6 +1049,8 @@ int grib_get_gaussian_latitudes(long trunc, double* lats);
 int is_gaussian_global(double lat1, double lat2, double lon1, double lon2, long num_points_equator, const double* latitudes, double angular_precision);
 void rotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double* outlat, double* outlon);
 void unrotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double* outlat, double* outlon);
+double geographic_distance_spherical(double radius, double lon1, double lat1, double lon2, double lat2);
+double geographic_distance_ellipsoid(double major, double minor, double lon1, double lat1, double lon2, double lat2);
 
 /* grib_handle.c */
 grib_section* grib_section_create(grib_handle* h, grib_accessor* owner);
@@ -1389,8 +1379,16 @@ int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat,
 int grib_nearest_init(grib_nearest* i, grib_handle* h, grib_arguments* args);
 int grib_nearest_delete(grib_nearest* i);
 void grib_binary_search(double xx[], const unsigned long n, double x, int* ju, int* jl);
-double grib_nearest_distance(double radius, double lon1, double lat1, double lon2, double lat2);
 int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
+int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
+    const char*  values_keyname, const char* radius_keyname,
+    const char* Ni_keyname, const char* Nj_keyname,
+    double**     out_lats,
+    int*         out_lats_count,
+    double**     out_lons,
+    int*         out_lons_count,
+    double**     out_distances,
+    double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
 
 /* grib_nearest_class.c */
 grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args);
@@ -1481,7 +1479,6 @@ int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
 int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
-int is_grib_index_file(const char* filename);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
 int grib_is_earth_oblate(grib_handle* h);
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val);
@@ -1497,6 +1494,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
 /* string_util.c */
 int strcmp_nocase(const char* s1, const char* s2);
 void rtrim(char* s);
+void lrtrim(char** x, int do_left, int do_right);
 const char* extract_filename(const char* filepath);
 char** string_split(char* inputString, const char* delimiter);
 int string_to_long(const char* input, long* output);

@@ -117,7 +117,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
     values = (double*)grib_context_malloc_clear(h->context, sizeof(double) * size);
     if (!values) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "nearest_sh: unable to allocate %d bytes",
+                         "nearest_sh: Error allocating %d bytes",
                          sizeof(double) * size);
         return GRIB_OUT_OF_MEMORY;
     }
@@ -199,7 +199,7 @@ static int grib_invtrans_legendre(int L, double x,
 
     pP = (double*)malloc(sizeof(double) * (L + 1));
     if (!pP) {
-        printf("unable to allocate %d bytes\n", (int)sizeof(double) * (L + 1));
+        printf("Error allocating %d bytes\n", (int)sizeof(double) * (L + 1));
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -259,14 +259,14 @@ static int grib_invtrans(grib_context* context, int L, double latdeg, double lon
     c = (double*)grib_context_malloc_clear(context, sizeof(double) * Lp1);
     if (!c) {
         grib_context_log(context, GRIB_LOG_ERROR,
-                         "nearest_sh: unable to allocate %d bytes", sizeof(double) * Lp1);
+                         "nearest_sh: Error allocating %d bytes", sizeof(double) * Lp1);
         return GRIB_OUT_OF_MEMORY;
     }
 
     s = (double*)grib_context_malloc_clear(context, sizeof(double) * Lp1);
     if (!s) {
         grib_context_log(context, GRIB_LOG_ERROR,
-                         "nearest_sh: unable to allocate %d bytes", sizeof(double) * Lp1);
+                         "nearest_sh: Error allocating %d bytes", sizeof(double) * Lp1);
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -275,13 +275,13 @@ static int grib_invtrans(grib_context* context, int L, double latdeg, double lon
     TR = (double*)grib_context_malloc_clear(context, sizeof(double) * Lp1);
     if (!TR) {
         grib_context_log(context, GRIB_LOG_ERROR,
-                         "nearest_sh: unable to allocate %d bytes", sizeof(double) * Lp1);
+                         "nearest_sh: Error allocating %d bytes", sizeof(double) * Lp1);
         return GRIB_OUT_OF_MEMORY;
     }
     TI = (double*)grib_context_malloc_clear(context, sizeof(double) * Lp1);
     if (!TI) {
         grib_context_log(context, GRIB_LOG_ERROR,
-                         "nearest_sh: unable to allocate %d bytes", sizeof(double) * Lp1);
+                         "nearest_sh: Error allocating %d bytes", sizeof(double) * Lp1);
         return GRIB_OUT_OF_MEMORY;
     }
 

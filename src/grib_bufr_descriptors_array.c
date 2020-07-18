@@ -59,7 +59,7 @@ bufr_descriptor* grib_bufr_descriptors_array_pop_front(bufr_descriptors_array* a
     return v;
 }
 
-bufr_descriptors_array* grib_bufr_descriptors_array_resize_to(bufr_descriptors_array* v, size_t newsize)
+static bufr_descriptors_array* grib_bufr_descriptors_array_resize_to(bufr_descriptors_array* v, size_t newsize)
 {
     bufr_descriptor** newv;
     size_t i;
@@ -91,10 +91,9 @@ bufr_descriptors_array* grib_bufr_descriptors_array_resize_to(bufr_descriptors_a
     return v;
 }
 
-bufr_descriptors_array* grib_bufr_descriptors_array_resize(bufr_descriptors_array* v)
+static bufr_descriptors_array* grib_bufr_descriptors_array_resize(bufr_descriptors_array* v)
 {
-    int newsize = v->incsize + v->size;
-
+    const int newsize = v->incsize + v->size;
     return grib_bufr_descriptors_array_resize_to(v, newsize);
 }
 

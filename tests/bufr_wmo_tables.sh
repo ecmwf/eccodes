@@ -10,10 +10,10 @@
 
 . ./include.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_wmo_tables_test"
 
-#Define tmp bufr file
+# Define tmp bufr file
 fTmp=${label}".tmp.bufr"
 
 #==============================================

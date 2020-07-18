@@ -121,7 +121,7 @@ static void init_class(grib_dumper_class* c) {}
 static int init(grib_dumper* d)
 {
     grib_dumper_bufr_simple* self = (grib_dumper_bufr_simple*)d;
-    grib_context* c               = d->handle->context;
+    grib_context* c               = d->context;
     self->section_offset          = 0;
     self->empty                   = 1;
     self->isLeaf                  = 0;
@@ -137,7 +137,7 @@ static int destroy(grib_dumper* d)
     grib_dumper_bufr_simple* self = (grib_dumper_bufr_simple*)d;
     grib_string_list* next        = self->keys;
     grib_string_list* cur         = NULL;
-    grib_context* c               = d->handle->context;
+    grib_context* c               = d->context;
     while (next) {
         cur  = next;
         next = next->next;
@@ -623,17 +623,18 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         if (dofree)
             grib_context_free(c, prefix);
     }
-
+    for (i=0; i<size; ++i) grib_context_free(c, values[i]);
     grib_context_free(c, values);
     (void)err; /* TODO */
 }
 
+#define MAX_STRING_SIZE 4096
 static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_simple* self = (grib_dumper_bufr_simple*)d;
-    char* value                   = NULL;
+    char value[MAX_STRING_SIZE]   = {0,}; /* See ECC-710 */
     char* p                       = NULL;
-    size_t size                   = 0;
+    size_t size                   = MAX_STRING_SIZE;
     grib_context* c               = a->context;
     int r                         = 0;
     int is_missing                = 0;
@@ -641,32 +642,14 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_handle* h                = grib_handle_of_accessor(a);
     const char* acc_name          = a->name;
 
-    _grib_get_string_length(a, &size);
-    if (size == 0)
-        return;
-
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
-        /* ECC-356: Solution for the special local section key 'keyMore' and its alias 'ident' */
-        int skip = 1;
-        if ((a->flags & GRIB_ACCESSOR_FLAG_HIDDEN) != 0) {
-            if (strcmp(a->name, "keyMore") == 0 && grib_is_defined(h, "ls.ident")) {
-                skip     = 0;
-                acc_name = "ident";
-            }
-        }
-        if (skip)
-            return;
-    }
-
-    value = (char*)grib_context_malloc_clear(c, size);
-    if (!value) {
-        grib_context_log(c, GRIB_LOG_FATAL, "unable to allocate %d bytes", (int)size);
         return;
     }
 
     self->empty = 0;
 
     err = grib_unpack_string(a, value, &size);
+    Assert(size < MAX_STRING_SIZE);
     p   = value;
     r   = compute_bufr_key_rank(h, self->keys, acc_name);
     if (grib_is_missing_string(a, (unsigned char*)value, size)) {
@@ -707,7 +690,6 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
             grib_context_free(c, prefix);
     }
 
-    grib_context_free(c, value);
     (void)err; /* TODO */
 }
 

@@ -15,7 +15,10 @@
 
 #include "grib_api_internal.h"
 #include <math.h>
-#include <stdint.h>
+#ifdef ECCODES_ON_WINDOWS
+ #include <stdint.h>
+#endif
+
 /*
    This is used by make_class.pl
 

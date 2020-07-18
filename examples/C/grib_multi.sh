@@ -9,17 +9,6 @@
 
 . ./include.sh
 
-if [ ! -f "${data_dir}/multi.grib2" ] 
-then
-  echo "SKIP test 1: $0"
-else
-  ${examples_dir}/c_grib_multi > /dev/null
-fi
-
-if [ ! -f "${data_dir}/multi_created.grib2" ]
-then
-  echo "SKIP test 2: $0"
-else
-  ${examples_dir}/c_multi2 > /dev/null
-fi
-
+# Test decoding multi-field GRIB2 data
+${examples_dir}/c_grib_multi
+${examples_dir}/c_multi2

@@ -6,7 +6,6 @@ alias mars.step = endStep;
 alias mars.date = dateOfForecast;
 alias mars.time = timeOfForecast;
 
-#meta efas_suite_name sprintf("%s_%s", inputOriginatingCentre, efas_post_proc) : no_copy;
 alias mars.origin = inputOriginatingCentre;
 
 alias mars.anoffset=anoffset;
