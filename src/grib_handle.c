@@ -1441,11 +1441,13 @@ grib_action* grib_action_from_filter(const char* filter)
     grib_context* context = grib_context_get_default();
     a                     = grib_parse_file(context, filter);
 
-    grib_context_free_persistent(context, context->grib_reader->first->filename);
-    grib_context_free_persistent(context, context->grib_reader->first);
-    grib_context_free_persistent(context, context->grib_reader);
+    if (context->grib_reader && context->grib_reader->first) {
+        grib_context_free_persistent(context, context->grib_reader->first->filename);
+        grib_context_free_persistent(context, context->grib_reader->first);
+        grib_context_free_persistent(context, context->grib_reader);
+    }
 
-    context->grib_reader  = NULL;
+    context->grib_reader = NULL;
     return a;
 }
 
