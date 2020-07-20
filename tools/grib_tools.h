@@ -174,9 +174,9 @@ typedef struct grib_runtime_options
 
 extern grib_option grib_options[];
 extern int grib_options_count;
-extern const char* grib_tool_name;
-extern const char* grib_tool_description;
-extern const char* grib_tool_usage;
+extern const char* tool_name;
+extern const char* tool_description;
+extern const char* tool_usage;
 
 extern FILE* dump_file;
 
@@ -206,6 +206,6 @@ int grib_process_runtime_options(grib_context* c, int argc, char** argv, grib_ru
 void grib_tools_write_message(grib_runtime_options* options, grib_handle* h);
 int grib_tool_new_filename_action(grib_runtime_options* options, const char* file);
 int grib_no_handle_action(grib_runtime_options* options, int err);
-int exit_if_input_is_directory(const char* tool_name, const char* filename);
+int exit_if_input_is_directory(const char* toolname, const char* filename);
 
 #endif

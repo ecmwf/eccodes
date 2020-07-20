@@ -974,9 +974,13 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                     if (strcmp(input_packing_type, "grid_ccsds") && !strcmp(input_packing_type, "grid_simple"))
                         SET_STRING_VALUE("packingType", "grid_ccsds");
                     break;
+                case GRIB_UTIL_PACKING_TYPE_IEEE:
+                    if (strcmp(input_packing_type, "grid_ieee") && !strcmp(input_packing_type, "grid_simple"))
+                        SET_STRING_VALUE("packingType", "grid_ieee");
+                    break;
                 case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
                     /* we delay the set of grid_second_order because we don't want
-                   to do it on a field with bitsPerValue=0 */
+                       to do it on a field with bitsPerValue=0 */
                     setSecondOrder = 1;
                     break;
                 default:
@@ -1255,18 +1259,17 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             COPY_SPEC_LONG(Ni); /* same as Nx */
             COPY_SPEC_LONG(Nj); /* same as Ny */
             /* TODO
-         * pass in extra keys e.g. Dx, Dy, standardParallel and centralLongitude
-         */
+             * pass in extra keys e.g. Dx, Dy, standardParallel and centralLongitude
+             */
 
             /*
-        COPY_SPEC_LONG(DxInMetres);
-        COPY_SPEC_LONG(DyInMetres);
-
-        COPY_SPEC_LONG(xDirectionGridLengthInMillimetres);
-        COPY_SPEC_LONG(yDirectionGridLengthInMillimetres);
-        COPY_SPEC_LONG(standardParallelInMicrodegrees);
-        COPY_SPEC_LONG(centralLongitudeInMicrodegrees);
-        */
+            COPY_SPEC_LONG(DxInMetres);
+            COPY_SPEC_LONG(DyInMetres);
+            COPY_SPEC_LONG(xDirectionGridLengthInMillimetres);
+            COPY_SPEC_LONG(yDirectionGridLengthInMillimetres);
+            COPY_SPEC_LONG(standardParallelInMicrodegrees);
+            COPY_SPEC_LONG(centralLongitudeInMicrodegrees);
+            */
 
             break;
         case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
@@ -1274,8 +1277,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             if (spec->missingValue)
                 COPY_SPEC_DOUBLE(missingValue);
             /*
-         * TODO: Other keys
-        */
+            * TODO: Other keys
+            */
             break;
         case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
             COPY_SPEC_LONG(bitmapPresent);
@@ -1287,14 +1290,14 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             COPY_SPEC_LONG(Nj); /* same as Ny */
 
             /*
-         * Note: DxInMetres and DyInMetres
-         * should be 'double' and not integer. WMO GRIB2 uses millimetres!
-         * TODO:
-         * Add other keys like Latin1, LoV etc
+             * Note: DxInMetres and DyInMetres
+             * should be 'double' and not integer. WMO GRIB2 uses millimetres!
+             * TODO:
+             * Add other keys like Latin1, LoV etc
 
-         *err = GRIB_NOT_IMPLEMENTED;
-         goto cleanup;
-        */
+             *err = GRIB_NOT_IMPLEMENTED;
+             goto cleanup;
+            */
             break;
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
@@ -1388,23 +1391,27 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 break;
             case GRIB_UTIL_PACKING_TYPE_JPEG:
                 /* Have to delay JPEG packing:
-             * Reason 1: It is not available in GRIB1 and so we have to wait until we change edition
-             * Reason 2: It has to be done AFTER we set the data values
-             */
+                 * Reason 1: It is not available in GRIB1 and so we have to wait until we change edition
+                 * Reason 2: It has to be done AFTER we set the data values
+                */
                 if (strcmp(input_packing_type, "grid_jpeg") && !strcmp(input_packing_type, "grid_simple"))
                     setJpegPacking = 1;
                 break;
             case GRIB_UTIL_PACKING_TYPE_CCSDS:
                 /* Have to delay CCSDS packing:
-             * Reason 1: It is not available in GRIB1 and so we have to wait until we change edition
-             * Reason 2: It has to be done AFTER we set the data values
-             */
+                 * Reason 1: It is not available in GRIB1 and so we have to wait until we change edition
+                 * Reason 2: It has to be done AFTER we set the data values
+                */
                 if (strcmp(input_packing_type, "grid_ccsds") && !strcmp(input_packing_type, "grid_simple"))
                     setCcsdsPacking = 1;
                 break;
+            case GRIB_UTIL_PACKING_TYPE_IEEE:
+                if (strcmp(input_packing_type, "grid_ieee") && !strcmp(input_packing_type, "grid_simple"))
+                    SET_STRING_VALUE("packingType", "grid_ieee");
+                break;
             case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
                 /* we delay the set of grid_second_order because we don't want
-               to do it on a field with bitsPerValue=0 */
+                   to do it on a field with bitsPerValue=0 */
                 setSecondOrder = 1;
                 break;
             default:
@@ -1588,14 +1595,14 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     /* grib_write_message(outh,"h.grib","w"); */
     /* if the field is empty GRIBEX is packing as simple*/
-    /*	if (!strcmp(input_packing_type,"grid_simple_matrix")) {
-		long numberOfValues;
-		grib_get_long(outh,"numberOfValues",&numberOfValues);
-		if (numberOfValues==0)  {
-			slen=11;
-			grib_set_string(outh,"packingType","grid_simple",&slen);
-		}
-	}   */
+    /*    if (!strcmp(input_packing_type,"grid_simple_matrix")) {
+        long numberOfValues;
+        grib_get_long(outh,"numberOfValues",&numberOfValues);
+        if (numberOfValues==0)  {
+            slen=11;
+            grib_set_string(outh,"packingType","grid_simple",&slen);
+        }
+    }   */
 
     if (grib1_high_resolution_fix) {
         /* GRIB-863: must set increments to MISSING */
@@ -1917,7 +1924,7 @@ int parse_keyval_string(const char* grib_tool,
                         grib_values values[], int* count)
 {
     char* p = NULL;
-    int i = 0;
+    int i   = 0;
     if (arg == NULL) {
         *count = 0;
         return GRIB_SUCCESS;
@@ -2133,36 +2140,6 @@ int grib2_select_PDTN(int is_eps, int is_instant,
     }
 }
 
-int is_grib_index_file(const char* filename)
-{
-    FILE* fh;
-    char buf[8] = {0,};
-    const char* str = "GRBIDX";
-    int ret         = 0;
-    size_t size     = 0;
-
-    fh = fopen(filename, "r");
-    if (!fh)
-        return 0;
-
-    size = fread(buf, 1, 1, fh);
-    if (size != 1) {
-        fclose(fh);
-        return 0;
-    }
-    size = fread(buf, 6, 1, fh);
-    if (size != 1) {
-        fclose(fh);
-        return 0;
-    }
-
-    ret = !strcmp(buf, str);
-
-    fclose(fh);
-
-    return ret;
-}
-
 size_t sum_of_pl_array(const long* pl, size_t plsize)
 {
     long i, count = 0;
@@ -2191,7 +2168,7 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
     int is_error           = 1;
     char description[1024] = {0,};
     char step[32] = "unknown";
-    size_t len = 32;
+    size_t len    = 32;
     /*
      * If grib_data_quality_checks == 1, limits failure results in an error
      * If grib_data_quality_checks == 2, limits failure results in a warning

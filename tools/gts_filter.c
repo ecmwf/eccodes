@@ -26,12 +26,12 @@ grib_option grib_options[] = {
     { "7", 0, 0, 0, 1, 0 },
     { "v", 0, 0, 0, 1, 0 }
 };
-const char* grib_tool_description =
+const char* tool_description =
     "Apply the rules defined in rules_file to each GTS "
     "message\n\tin the GTS files provided as arguments.\n\t"
     "If you specify '-' (a single dash) for the rules_file, the rules will be read from standard input.";
-const char* grib_tool_name = "gts_filter";
-const char* grib_tool_usage =
+const char* tool_name = "gts_filter";
+const char* tool_usage =
     "[options] rules_file "
     "file file ...";
 int fail               = 0;

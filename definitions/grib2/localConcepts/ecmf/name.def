@@ -395,18 +395,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 74 ;
 	}
-#Total column cloud liquid water
-'Total column cloud liquid water' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 78 ;
-	}
-#Total column cloud ice water
-'Total column cloud ice water' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 79 ;
-	}
 #Experimental product
 'Experimental product' = {
 	 discipline = 192 ;
@@ -829,12 +817,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 174 ;
-	}
-#Top net solar radiation
-'Top net solar radiation' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 178 ;
 	}
 #Evaporation
 'Evaporation' = {

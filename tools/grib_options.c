@@ -118,9 +118,9 @@ static int grib_options_help_count = sizeof(grib_options_help_list) / sizeof(gri
 void usage(void)
 {
     int i = 0;
-    printf("\nNAME \t%s\n\n", grib_tool_name);
-    printf("DESCRIPTION\n\t%s\n\n", grib_tool_description);
-    printf("USAGE \n\t%s %s\n\n", grib_tool_name, grib_tool_usage);
+    printf("\nNAME \t%s\n\n", tool_name);
+    printf("DESCRIPTION\n\t%s\n\n", tool_description);
+    printf("USAGE \n\t%s %s\n\n", tool_name, tool_usage);
     printf("OPTIONS\n");
     for (i = 0; i < grib_options_count; i++) {
         if (grib_options[i].command_line)
@@ -333,7 +333,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     }
 
     options->requested_print_keys_count = MAX_KEYS;
-    ret = parse_keyval_string(grib_tool_name, karg, 0, GRIB_TYPE_UNDEFINED,
+    ret = parse_keyval_string(tool_name, karg, 0, GRIB_TYPE_UNDEFINED,
                               options->requested_print_keys, &(options->requested_print_keys_count));
     if (ret == GRIB_INVALID_ARGUMENT)
         usage();
@@ -360,7 +360,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     if (grib_options_on("s:")) {
         sarg                      = grib_options_get_option("s:");
         options->set_values_count = MAX_KEYS;
-        ret                       = parse_keyval_string(grib_tool_name, sarg, 1, GRIB_TYPE_UNDEFINED, options->set_values, &(options->set_values_count));
+        ret                       = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_UNDEFINED, options->set_values, &(options->set_values_count));
         if (ret == GRIB_INVALID_ARGUMENT)
             usage();
     }
@@ -368,7 +368,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     if (grib_options_on("b:")) {
         barg                      = grib_options_get_option("b:");
         options->set_values_count = MAX_KEYS;
-        ret                       = parse_keyval_string(grib_tool_name, barg, 0, GRIB_TYPE_STRING, options->set_values, &(options->set_values_count));
+        ret                       = parse_keyval_string(tool_name, barg, 0, GRIB_TYPE_STRING, options->set_values, &(options->set_values_count));
         if (ret == GRIB_INVALID_ARGUMENT)
             usage();
     }
@@ -376,7 +376,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     if (grib_options_on("c:")) {
         sarg                   = grib_options_get_option("c:");
         options->compare_count = MAX_KEYS;
-        ret                    = parse_keyval_string(grib_tool_name, sarg, 0, GRIB_TYPE_UNDEFINED, options->compare,
+        ret                    = parse_keyval_string(tool_name, sarg, 0, GRIB_TYPE_UNDEFINED, options->compare,
                                   &(options->compare_count));
         if (ret == GRIB_INVALID_ARGUMENT)
             usage();
@@ -392,7 +392,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     warg = grib_options_get_option("w:");
 
     options->constraints_count = MAX_KEYS;
-    ret                        = parse_keyval_string(grib_tool_name, warg, 1, GRIB_TYPE_UNDEFINED,
+    ret                        = parse_keyval_string(tool_name, warg, 1, GRIB_TYPE_UNDEFINED,
                               options->constraints, &(options->constraints_count));
     if (ret == GRIB_INVALID_ARGUMENT)
         usage();
@@ -458,9 +458,9 @@ char* grib_options_get_args(char* id)
 void usage_doxygen(void)
 {
     int i = 0;
-    printf("/*!  \\page %s %s\n", grib_tool_name, grib_tool_name);
-    printf("\\section DESCRIPTION \n %s\n\n", grib_tool_description);
-    printf("\\section USAGE \n %s \n %s\n\n", grib_tool_name, grib_tool_usage);
+    printf("/*!  \\page %s %s\n", tool_name, tool_name);
+    printf("\\section DESCRIPTION \n %s\n\n", tool_description);
+    printf("\\section USAGE \n %s \n %s\n\n", tool_name, tool_usage);
     printf("\\section OPTIONS \n");
     for (i = 0; i < grib_options_count; i++) {
         if (grib_options[i].command_line) {
@@ -477,9 +477,9 @@ void usage_doxygen(void)
 #if 0
 void usage_doxygen(void) {
     int i=0;
-    printf("/*!  \\page %s %s\n",grib_tool_name,grib_tool_name);
-    printf("\\section DESCRIPTION \n%s\n\n",grib_tool_description);
-    printf("\\section USAGE \n%s \n%s\n\n",grib_tool_name,grib_tool_usage);
+    printf("/*!  \\page %s %s\n",tool_name,tool_name);
+    printf("\\section DESCRIPTION \n%s\n\n",tool_description);
+    printf("\\section USAGE \n%s \n%s\n\n",tool_name,tool_usage);
     printf("\\section OPTIONS\n");
     printf("<table frame=void border=0>\n");
     for (i=0;i<grib_options_count;i++) {

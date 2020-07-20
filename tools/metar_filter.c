@@ -24,11 +24,11 @@ grib_option grib_options[] = {
     { "7", 0, 0, 0, 1, 0 },
     { "v", 0, 0, 0, 1, 0 }
 };
-const char* grib_tool_description =
+const char* tool_description =
     "Apply the rules defined in rules_file to each METAR "
     "message\n\tin the files provided as arguments.";
-const char* grib_tool_name = "metar_filter";
-const char* grib_tool_usage =
+const char* tool_name = "metar_filter";
+const char* tool_usage =
     "[options] rules_file "
     "file file ...";
 int fail               = 0;
