@@ -69,7 +69,7 @@ list(APPEND tests_no_data_reqd
     grib_efas
     grib_sh_imag
     pseudo_diag
-    grib_unstructured_grid
+    grib_grid_unstructured
     grib_grid_lambert_conformal
     grib_grid_polar_stereographic
     grib_grid_space_view

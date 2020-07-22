@@ -10,7 +10,7 @@
 
 . ./include.sh
 
-label="grib_unstructured_grid"
+label="grib_grid_unstructured"
 
 # Only relevant for GRIB2
 sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
@@ -26,6 +26,22 @@ ${tools_dir}/grib_set -s gridType=unstructured_grid,unstructuredGridType=ORCA1,u
 ${tools_dir}/grib_compare $temp1 $temp2
 grib_check_key_equals $temp2 'numberOfGridInReference' '4'
 grib_check_key_equals $temp2 'numberOfGridUsed' '2'
+
+# Test some lat/lon parameters
+${tools_dir}/grib_set -s paramId=250003 $sample $temp1
+grib_check_key_equals $temp1 'unstructuredGridSubtype' 'T grid'
+
+${tools_dir}/grib_set -s paramId=250005 $sample $temp1
+grib_check_key_equals $temp1 'unstructuredGridSubtype' 'U grid'
+
+${tools_dir}/grib_set -s paramId=250007 $sample $temp1
+grib_check_key_equals $temp1 'unstructuredGridSubtype' 'V grid'
+
+${tools_dir}/grib_set -s paramId=250009 $sample $temp1
+grib_check_key_equals $temp1 'unstructuredGridSubtype' 'W grid'
+
+${tools_dir}/grib_set -s paramId=250011 $sample $temp1
+grib_check_key_equals $temp1 'unstructuredGridSubtype' 'F grid'
 
 
 rm -f $temp1 $temp2

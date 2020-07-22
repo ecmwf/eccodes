@@ -62,6 +62,7 @@ TESTS = definitions.sh \
         grib_grid_space_view.sh \
         grib_grid_polar_stereographic.sh \
         grib_grid_mercator.sh \
+        grib_grid_unstructured.sh \
         grib_to_netcdf.sh \
         grib_dump_debug.sh \
         grib_jpeg.sh \
