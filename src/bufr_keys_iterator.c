@@ -89,28 +89,12 @@ int codes_bufr_keys_iterator_rewind(bufr_keys_iterator* ki)
     return GRIB_SUCCESS;
 }
 
-static int is_ident_key(const bufr_keys_iterator* kiter)
-{
-    if (kiter->current->sub_section)
-        return 0;
-
-    if ((GRIB_ACCESSOR_FLAG_HIDDEN & kiter->current->flags) != 0 &&
-        strcmp(kiter->current->name, "keyMore") == 0 &&
-        grib_is_defined(kiter->handle, "ls.ident")) {
-        return 1;
-    }
-    return 0;
-}
-
 static int skip(bufr_keys_iterator* kiter)
 {
     if (kiter->current->sub_section)
         return 1;
 
     if (kiter->current->flags & kiter->accessor_flags_skip) {
-        /* The "ident" key deserves special treatment */
-        if (is_ident_key(kiter))
-            return 0;
         return 1;
     }
 
@@ -233,12 +217,7 @@ char* codes_bufr_keys_iterator_get_name(const bufr_keys_iterator* ckiter)
             sprintf(ret, "#%d#%s", *r, kiter->current->name);
         }
         else {
-            if (is_ident_key(kiter)) {
-                strcpy(ret, "ident");
-            }
-            else {
-                strcpy(ret, kiter->current->name);
-            }
+            strcpy(ret, kiter->current->name);
         }
     }
 

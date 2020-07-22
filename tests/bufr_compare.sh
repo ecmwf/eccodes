@@ -10,23 +10,23 @@
 
 . ./include.sh
 
-#Enter data dir
+# Enter data dir
 cd ${data_dir}/bufr
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_compare_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define tmp bufr file
+# Define tmp bufr file
 fBufrTmp=${label}".bufr.tmp"
 fBufrInput1=${label}".bufr.input1"
 fBufrInput2=${label}".bufr.input2"
 
-#Define filter rules file
+# Define filter rules file
 fRules=${label}.filter
 
 #----------------------------------------------------
@@ -59,7 +59,7 @@ f="syno_1.bufr"
 echo "Test: comparing with and without the -b switch" >> $fLog
 echo "file: $f" >> $fLog
 
-#Alter a key in the file 
+# Alter a key in the file 
 ${tools_dir}/bufr_set -s dataCategory=2 $f ${fBufrTmp} >> $fLog
 
 set +e
@@ -76,7 +76,7 @@ ${tools_dir}/bufr_compare -b dataCategory $f ${fBufrTmp}>> $fLog
 #----------------------------------------------------
 # Test: comparing with the -r switch
 #----------------------------------------------------
-#Create a bufr file with various message types
+# Create a bufr file with various message types
 #cat syno_multi.bufr temp_101.bufr > $fBufrInput1 
 #cat temp_101.bufr syno_multi.bufr > $fBufrInput2
 

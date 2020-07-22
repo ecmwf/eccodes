@@ -23,7 +23,6 @@
 #include <grib_api.h>
 #include <errno.h>
 #include <string.h>
-#include <math.h>
 #include <sys/types.h>
 #include "tigge_tools.h"
 

@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_tools
- *
- */
-
 #include "grib_tools.h"
 #if HAVE_LIBJASPER
 /* Remove compiler warnings re macros being redefined */
@@ -150,6 +145,14 @@ int grib_tool(int argc, char** argv)
     grib_context* c        = grib_context_get_default();
     global_options.context = c;
 
+    /* This is a consequence of ECC-440.
+     * We want to keep the output file(s) opened as various
+     * messages are appended to them. Otherwise they will be opened/closed
+     * multiple times.
+     */
+    if (c->file_pool_max_opened_files == 0)
+        c->file_pool_max_opened_files = 200;
+
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
     feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
 #endif
@@ -177,8 +180,8 @@ int grib_tool(int argc, char** argv)
 
     /* ECC-926: Currently only GRIB indexing works. Disable the through_index if BUFR, GTS etc */
     if (global_options.mode == MODE_GRIB &&
-        is_grib_index_file(global_options.infile->name) &&
-        (global_options.infile_extra && is_grib_index_file(global_options.infile_extra->name))) {
+        is_index_file(global_options.infile->name) &&
+        (global_options.infile_extra && is_index_file(global_options.infile_extra->name))) {
         global_options.through_index = 1;
         return grib_tool_index(&global_options);
     }
@@ -559,9 +562,10 @@ static int grib_tool_index(grib_runtime_options* options)
     }
 
     navigate(options->index2->fields, options);
-    /* TODO(masn): memleak
-     * grib_context_free(c, options->index2->current);
-     */
+
+    if (options->index2)
+        grib_context_free(c, options->index2->current);
+
     grib_tool_finalise_action(options);
 
     return 0;
@@ -943,8 +947,12 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
     }
 
     if (ret != GRIB_SUCCESS) {
-        fprintf(dump_file, "Failed to get value for key %s\n", key_name);
-        exit(1);
+        if (ret == GRIB_NOT_FOUND) {
+            sprintf(value_str, "not_found");
+        } else {
+            fprintf(dump_file, "Failed to get value for key %s\n", key_name);
+            exit(1);
+        }
     }
 }
 
@@ -1166,7 +1174,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     if (options->latlon) {
         if (options->latlon_mode == 4) {
             int ii = 0;
-            for (ii = 0; ii < 4; ii++) {
+            for (ii = 0; ii < LATLON_SIZE; ii++) {
                 fprintf(dump_file, options->format, options->values[ii]);
                 fprintf(dump_file, " ");
             }
@@ -1344,10 +1352,10 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     }
 #endif
 }
-int exit_if_input_is_directory(const char* tool_name, const char* filename)
+int exit_if_input_is_directory(const char* toolname, const char* filename)
 {
     if (path_is_directory(filename)) {
-        fprintf(stderr, "%s: ERROR: \"%s\": Is a directory\n", tool_name, filename);
+        fprintf(stderr, "%s: ERROR: \"%s\": Is a directory\n", toolname, filename);
         exit(1);
     }
     return 0;

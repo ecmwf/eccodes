@@ -236,14 +236,14 @@ static int counter                = 0;
 static int start                  = -1;
 static int end                    = -1;
 
-const char* grib_tool_description =
+const char* tool_description =
     "Compare BUFR messages contained in two files."
     "\n\tIf some differences are found it fails returning an error code."
     "\n\tFloating-point values are compared exactly by default, different tolerance can be defined see -P -A -R."
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
-const char* grib_tool_name  = "bufr_compare";
-const char* grib_tool_usage = "[options] bufr_file1 bufr_file2";
+const char* tool_name  = "bufr_compare";
+const char* tool_usage = "[options] bufr_file1 bufr_file2";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -326,7 +326,7 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     /* Check 1st file is not a directory */
-    exit_if_input_is_directory(grib_tool_name, options->infile_extra->name);
+    exit_if_input_is_directory(tool_name, options->infile_extra->name);
 
     if (grib_options_on("r")) {
         char* filename[1];
@@ -388,7 +388,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("R:")) {
         char* sarg               = grib_options_get_option("R:");
         options->tolerance_count = MAX_KEYS;
-        ret                      = parse_keyval_string(grib_tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
+        ret                      = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
         if (ret == GRIB_INVALID_ARGUMENT) {
             usage();
             exit(1);
@@ -426,7 +426,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 
 int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* file)
 {
-    exit_if_input_is_directory(grib_tool_name, file->name);
+    exit_if_input_is_directory(tool_name, file->name);
     return 0;
 }
 
@@ -1318,16 +1318,6 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
     }
 
     grib_keys_iterator_delete(iter);
-
-    /* ECC-356: Handling special case of 'ident' key */
-    name = "ls.ident";
-    if (!blacklisted("ident") && grib_is_defined(handle1, name) && grib_is_defined(handle2, name)) {
-        if (compare_values(options, handle1, handle2, "ident", GRIB_TYPE_STRING)) {
-            (*pErr)++;
-            write_messages(handle1, handle2);
-            ret = 1;
-        }
-    }
 
     return ret;
 }

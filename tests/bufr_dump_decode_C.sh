@@ -10,7 +10,7 @@
 
 . ./include.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_dump_decode_C_test"
 
 if [ $HAVE_MEMFS -eq 1 ]; then
@@ -18,7 +18,7 @@ if [ $HAVE_MEMFS -eq 1 ]; then
     unset ECCODES_SAMPLES_PATH
 fi
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 

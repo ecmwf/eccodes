@@ -15,7 +15,7 @@ REDIRECT=/dev/null
 if [ -f ${data_dir}/geavg.t12z.pgrbaf108 ]
 then
    tmpdata=grib_api.$$.grib
-   rm -f $tmpdata || true
+   rm -f $tmpdata
    ${tools_dir}/grib_filter ${data_dir}/filter_rules ${data_dir}/geavg.t12z.pgrbaf108 > $REDIRECT
    rm -f $tmpdata
 fi

@@ -10,18 +10,18 @@
 
 . ./include.sh
 
-#Enter data dir
+# Enter data dir
 cd ${data_dir}/bufr
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_ls_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define tmp file
+# Define tmp file
 fTmp=${label}".tmp.txt"
 rm -f $fTmp
 
@@ -44,7 +44,7 @@ REDIRECT=/dev/null
 
 ${tools_dir}/bufr_ls -p totalLength,bufrHeaderCentre,bufrHeaderSubCentre,masterTableNumber,masterTablesVersionNumber,localTablesVersionNumber,numberOfSubsets,localNumberOfObservations $f 2> $REDIRECT > $fTmp
 
-#Write the values into a file and compare with ref
+# Write the values into a file and compare with ref
 awk NR==3 $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_ls
 diff $ref_ls $res_ls
 

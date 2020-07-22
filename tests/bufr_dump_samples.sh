@@ -10,16 +10,11 @@
 
 . ./include.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_dump_samples_test"
 
-#Create log file
-fLog=${label}".log"
-rm -f $fLog
-touch $fLog
-
-#Define tmp bufr files
-fJsonTmp=${label}".json.tmp"
+temp=${label}".temp"
+rm -f $temp
 
 # Test sample BUFR files
 for file in $ECCODES_SAMPLES_PATH/BUFR*.tmpl; do
@@ -27,4 +22,8 @@ for file in $ECCODES_SAMPLES_PATH/BUFR*.tmpl; do
   ${tools_dir}/bufr_dump -d $file >/dev/null
 done
 
-rm -f $fLog
+# Check one specific BUFR file dump output
+${tools_dir}/bufr_dump -p $ECCODES_SAMPLES_PATH/BUFR3.tmpl > $temp
+diff ${data_dir}/BUFR3.tmpl.dump.plain.ref $temp
+
+rm -f $temp

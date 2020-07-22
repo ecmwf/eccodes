@@ -408,6 +408,7 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_to_string.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_transient.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_transient_darray.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_trim.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_uint16.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_uint16_little_endian.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_uint32.c" />
@@ -511,12 +512,15 @@
     <ClCompile Include="..\..\..\src\grib_nearest.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_gen.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest_class_lambert_azimuthal_equal_area.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_lambert_conformal.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_latlon_reduced.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest_class_mercator.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_polar_stereographic.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_reduced.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_regular.c" />
     <ClCompile Include="..\..\..\src\grib_nearest_class_sh.c" />
+    <ClCompile Include="..\..\..\src\grib_nearest_class_space_view.c" />
     <ClCompile Include="..\..\..\src\grib_oarray.c" />
     <ClCompile Include="..\..\..\src\grib_openjpeg_encoding.c" />
     <ClCompile Include="..\..\..\src\grib_optimize_decimal_factor.c" />

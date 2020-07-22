@@ -15,9 +15,6 @@
 #include "grib_api_internal.h"
 #include <assert.h>
 
-#ifndef ECCODES_ON_WINDOWS
-#include <unistd.h>
-#endif
 
 static void usage(const char* prog)
 {
