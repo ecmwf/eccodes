@@ -63,6 +63,7 @@ rectimeDay
 rectimeHour
 rectimeMinute
 rectimeSecond
+restricted
 correction1
 correction1Part
 correction2
