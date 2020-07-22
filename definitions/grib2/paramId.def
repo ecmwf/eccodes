@@ -1108,6 +1108,98 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
+#Latitude
+'250001' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	}
+#Longitude
+'250002' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	}
+#Latitude on T grid
+'250003' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 1 ;
+	}
+#Longitude on T grid
+'250004' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 1 ;
+	}
+#Latitude on U grid
+'250005' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 2 ;
+	}
+#Longitude on U grid
+'250006' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 2 ;
+	}
+#Latitude on V grid
+'250007' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 3 ;
+	}
+#Longitude on V grid
+'250008' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 3 ;
+	}
+#Latitude on W grid
+'250009' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 4 ;
+	}
+#Longitude on W grid
+'250010' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 4 ;
+	}
+#Latitude on F grid
+'250011' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 5 ;
+	}
+#Longitude on F grid
+'250012' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 5 ;
+	}
 #Total column graupel
 '260001' = {
 	 discipline = 0 ;
