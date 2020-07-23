@@ -8,7 +8,7 @@ meta section2Pointer section_pointer(offsetSection2,section2Length,2);
 transient radius=6367470;
 alias radiusOfTheEarth=radius;
 alias radiusInMetres=radius;
-transient shapeOfTheEarth=6 : hidden;
+transient shapeOfTheEarth=0: hidden; #ECC-811
 
 #  NV -- number of vertical coordinate parameters
 
