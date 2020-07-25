@@ -3394,7 +3394,14 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return err;
 
     if (self->compressedData) {
+        const size_t rlen = l * self->numberOfSubsets;
         ii = 0;
+        if (*len < rlen) {
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "wrong size (%ld) for %s, it contains %d values ", *len, a->name, rlen);
+            *len = 0;
+            return GRIB_ARRAY_TOO_SMALL;
+        }
         for (k = 0; k < numberOfSubsets; k++) {
             for (i = 0; i < l; i++) {
                 val[ii++] = self->numericValues->v[i]->n > 1 ? self->numericValues->v[i]->v[k] : self->numericValues->v[i]->v[0];
