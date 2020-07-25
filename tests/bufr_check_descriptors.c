@@ -11,9 +11,6 @@
 #include <assert.h>
 #include "grib_api_internal.h"
 
-#define MAX_LEN_NAME 128
-#define MAX_LEN_UNIT 128
-
 int main(int argc, char** argv)
 {
     char* filename  = NULL;
@@ -23,6 +20,9 @@ int main(int argc, char** argv)
     size_t i    = 0, line_number = 0;
     char* str_key = NULL;
     char* str_units = NULL;
+    bufr_descriptor v = {0,};
+    const size_t maxlen_keyName = sizeof(v.shortName);
+    const size_t maxlen_units = sizeof(v.units);
 
     Assert(argc == 2);
 
@@ -38,14 +38,14 @@ int main(int argc, char** argv)
         Assert(list);
         str_key = list[1];
         str_units = list[4];
-        if (strlen(str_key) >= MAX_LEN_NAME) {
-            fprintf(stderr, "Error on line %lu: bufr_descriptor key name '%s' exceeds %d characters.\n",
-                    line_number, str_key, MAX_LEN_NAME);
+        if (strlen(str_key) >= maxlen_keyName) {
+            fprintf(stderr, "Error on line %lu: bufr_descriptor key name '%s' exceeds %lu characters.\n",
+                    line_number, str_key, maxlen_keyName);
             return 1;
         }
-        if (strlen(str_units) >= MAX_LEN_UNIT) {
-            fprintf(stderr, "Error on line %lu: bufr_descriptor units '%s' exceeds %d characters.\n",
-                    line_number, str_units, MAX_LEN_UNIT);
+        if (strlen(str_units) >= maxlen_units) {
+            fprintf(stderr, "Error on line %lu: bufr_descriptor units '%s' exceeds %lu characters.\n",
+                    line_number, str_units, maxlen_units);
             return 1;
         }
 
