@@ -2641,6 +2641,9 @@ static int create_keys(grib_accessor* a, long onlySubset, long startSubset, long
                 err = GRIB_DECODING_ERROR;
                 return err;
             }
+            if (elementAccessor->name == NULL) {
+                return GRIB_DECODING_ERROR;
+            }
 
             /*if (associatedFieldAccessor) grib_accessor_delete(c, associatedFieldAccessor);*/
             associatedFieldAccessor = NULL;
