@@ -343,6 +343,8 @@ static int bufr_get_from_table(grib_accessor* a, bufr_descriptor* v)
     int ret      = 0;
     char** list  = 0;
     char code[7] = { 0 };
+    const size_t maxlen_shortName = sizeof(v->shortName);
+    const size_t maxlen_units = sizeof(v->units);
 
     grib_trie* table = load_bufr_elements_table(a, &ret);
     if (ret)
@@ -354,12 +356,12 @@ static int bufr_get_from_table(grib_accessor* a, bufr_descriptor* v)
     if (!list)
         return GRIB_NOT_FOUND;
 
+    DebugAssert( strlen(list[1]) < maxlen_shortName );
     strcpy(v->shortName, list[1]);
-    DebugAssert( strlen(v->shortName) < 128 );
     v->type      = convert_type(list[2]);
     /* v->name=grib_context_strdup(c,list[3]);  See ECC-489 */
+    DebugAssert( strlen(list[4]) < maxlen_units );
     strcpy(v->units, list[4]);
-    DebugAssert( strlen(v->units) < 64 );
 
     /* ECC-985: Scale and reference are often 0 so we can reduce calls to atol */
     v->scale  = atol_fast(list[5]);

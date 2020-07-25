@@ -35,9 +35,7 @@ bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d)
     cd->X       = d->X;
     cd->Y       = d->Y;
     /* cd->name=grib_context_strdup(d->context,d->name); See ECC-489 */
-    DebugAssert( strlen(d->shortName) < 128 );
     strcpy(cd->shortName, d->shortName);
-    DebugAssert( strlen(d->units) < 64 );
     strcpy(cd->units, d->units);
     cd->scale     = d->scale;
     cd->factor    = d->factor;
@@ -52,13 +50,10 @@ bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d)
 int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor, int code, bufr_descriptor* v)
 {
     int err = 0;
-    //grib_context* c;
     bufr_descriptor* d;
 
     if (!v)
         return GRIB_NULL_POINTER;
-
-    //c = v->context;
 
     if (v->type == BUFR_DESCRIPTOR_TYPE_REPLICATION || v->type == BUFR_DESCRIPTOR_TYPE_OPERATOR) {
         v->code = code;
@@ -77,9 +72,7 @@ int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor, int code, bufr
         /* grib_context_free(c,v->name); See ECC-489 */
         /* v->name=grib_context_strdup(c,d->name); See ECC-489 */
 
-        DebugAssert( strlen(d->shortName) < 128 );
         strcpy(v->shortName,d->shortName);
-        DebugAssert( strlen(d->units) < 64 );
         strcpy(v->units,d->units);
 
         v->scale     = d->scale;
