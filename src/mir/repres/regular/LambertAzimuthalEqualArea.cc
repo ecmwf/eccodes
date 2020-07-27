@@ -14,6 +14,8 @@
 
 #include <string>
 
+#include "eckit/exception/Exceptions.h"
+
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Grib.h"
 
@@ -57,11 +59,8 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
 
     ASSERT(x_.size() > 1);
     ASSERT(y_.size() > 1);
-
     auto Dx = (x_.max() - x_.min()) / (x_.size() - 1.);
     auto Dy = (y_.max() - y_.min()) / (y_.size() - 1.);
-    ASSERT(Dx > 0.);
-    ASSERT(Dy > 0.);
 
     Point2 reference = grid_.projection().lonlat({0., 0.});
     Point2 firstLL   = grid_.projection().lonlat({x_.front(), y_.front()});
@@ -71,8 +70,8 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
     info.grid.Ni                                 = long(x_.size());
     info.grid.Nj                                 = long(y_.size());
 
-    GribExtraSetting::set(info, "xDirectionGridLengthInMetres", Dx);
-    GribExtraSetting::set(info, "yDirectionGridLengthInMetres", Dy);
+    GribExtraSetting::set(info, "DxInMetres", Dx);
+    GribExtraSetting::set(info, "DyInMetres", Dy);
     GribExtraSetting::set(info, "standardParallelInDegrees", reference[LLCOORDS::LAT]);
     GribExtraSetting::set(info, "centralLongitudeInDegrees", reference[LLCOORDS::LON]);
 
