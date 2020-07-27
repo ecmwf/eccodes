@@ -285,7 +285,7 @@ const Representation* Representation::globalise(data::MIRField& field) const {
 
     // TODO: cache me
 
-    RepresentationHandle octahedral(namedgrids::NamedGrid::lookup("O320").representation());
+    RepresentationHandle octahedral(key::grid::NamedGrid::lookup("O320").representation());
     size_t size = octahedral->numberOfPoints() + numberOfPoints();
 
     std::vector<double> latitudes;
