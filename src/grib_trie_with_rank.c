@@ -358,25 +358,27 @@ static void grib_trie_with_rank_delete_container_list(grib_context* c,grib_trie_
 }
 */
 
+static void _grib_trie_with_rank_delete_container(grib_trie_with_rank* t)
+{
+    int i;
+    DebugAssert(t);
+    for (i = t->first; i <= t->last; i++)
+        if (t->next[i]) {
+            grib_trie_with_rank_delete_container(t->next[i]);
+        }
+    grib_oarray_delete(t->context, t->objs);
+    /* grib_trie_with_rank_delete_container_list(t->context,t->list); */
+#ifdef RECYCLE_TRIE
+    grib_context_free_persistent(t->context, t);
+#else
+    grib_context_free(t->context, t);
+#endif
+}
 void grib_trie_with_rank_delete_container(grib_trie_with_rank* t)
 {
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex);
-    DebugAssert(t);
-    {
-        int i;
-        for (i = t->first; i <= t->last; i++)
-            if (t->next[i]) {
-                grib_trie_with_rank_delete_container(t->next[i]);
-            }
-        grib_oarray_delete(t->context, t->objs);
-        /* grib_trie_with_rank_delete_container_list(t->context,t->list); */
-#ifdef RECYCLE_TRIE
-        grib_context_free_persistent(t->context, t);
-#else
-        grib_context_free(t->context, t);
-#endif
-    }
+    _grib_trie_with_rank_delete_container(t);
     GRIB_MUTEX_UNLOCK(&mutex);
 }
 
