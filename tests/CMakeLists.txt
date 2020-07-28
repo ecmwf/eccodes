@@ -30,6 +30,7 @@ list( APPEND test_bins
       bufr_ecc-517
       bufr_get_element
       bufr_extract_headers
+      bufr_check_descriptors
       grib_sh_ieee64
       ieee
       grib_sh_imag
@@ -52,6 +53,7 @@ list(APPEND tests_no_data_reqd
     julian
     grib_dump_samples
     bufr_dump_samples
+    bufr_check_descriptors
     definitions
     grib_calendar
     grib_md5
