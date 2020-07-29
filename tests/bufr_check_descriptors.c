@@ -20,7 +20,7 @@ int main(int argc, char** argv)
     size_t i    = 0, line_number = 0;
     char* str_key = NULL;
     char* str_units = NULL;
-    bufr_descriptor v = {0,};
+    bufr_descriptor v;
     const size_t maxlen_keyName = sizeof(v.shortName);
     const size_t maxlen_units = sizeof(v.units);
 
