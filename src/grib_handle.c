@@ -172,7 +172,6 @@ int grib_handle_delete(grib_handle* h)
 
         grib_context_log(ct, GRIB_LOG_DEBUG, "grib_handle_delete: deleting handle %p", h);
         grib_context_free(ct, h);
-        h = NULL;
     }
     return GRIB_SUCCESS;
 }
@@ -1576,16 +1575,12 @@ static grib_multi_support* grib_get_multi_support(grib_context* c, FILE* f)
         prev = gm;
         gm   = gm->next;
     }
-
-    if (!gm) {
-        gm = grib_multi_support_new(c);
-        if (!c->multi_support) {
-            c->multi_support = gm;
-        }
-        else {
-            if (prev)
-                prev->next = gm;
-        }
+    gm = grib_multi_support_new(c);
+    if (prev==NULL) { // equivalent to 'if (!c->multi_support)'
+      c->multi_support = gm;
+    }
+    else {
+      prev->next = gm;
     }
 
     gm->next = 0;
