@@ -53,6 +53,7 @@ static int grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsign
 static void grib2_build_message(grib_context* context, unsigned char* sections[], size_t sections_len[], void** data, size_t* msglen);
 static grib_multi_support* grib_get_multi_support(grib_context* c, FILE* f);
 static grib_multi_support* grib_multi_support_new(grib_context* c);
+static void grib_multi_support_clear(grib_context* c, grib_multi_support* gm);
 static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** idata, size_t* buflen, int* error);
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
@@ -1600,23 +1601,14 @@ static grib_multi_support* grib_get_multi_support(grib_context* c, FILE* f)
 void grib_multi_support_reset(grib_context* c)
 {
     grib_multi_support* gm   = c->multi_support;
-    grib_multi_support* next = NULL;
-    int i                    = 0;
-    while (next) {
-        next = gm->next;
-        if (gm->file)
-            fclose(gm->file);
-        if (gm->message)
-            grib_context_free(c, gm->message);
-        gm->message = NULL;
-        for (i = 0; i < 8; i++)
-            gm->sections[i] = 0;
-        if (gm->bitmap_section)
-            grib_context_free(c, gm->bitmap_section);
-        gm->bitmap_section = NULL;
-        grib_context_free(c, gm);
-        gm = NULL;
+    grib_multi_support* gm_next = NULL;
+    while (gm) {
+        gm_next = gm->next;
+        grib_multi_support_clear(c, gm);
+	grib_context_free(c, gm);
+        gm = gm_next;
     }
+    c->multi_support = NULL;
 }
 
 static grib_multi_support* grib_multi_support_new(grib_context* c)
@@ -1637,4 +1629,18 @@ static grib_multi_support* grib_multi_support_new(grib_context* c)
     gm->sections_length[8] = 4;
 
     return gm;
+}
+
+static void grib_multi_support_clear(grib_context* c, grib_multi_support *gm)
+{
+  /* Don't close gm->file. It is supposed to be owned by the client. */
+  /* At lease that is the case for cfgrib.                           */
+  if (gm->message) {
+    grib_context_free(c, gm->message);
+    gm->message = NULL;
+  }
+  if (gm->bitmap_section) {
+    grib_context_free(c, gm->bitmap_section);
+    gm->bitmap_section = NULL;
+  }
 }
