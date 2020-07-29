@@ -319,10 +319,9 @@ endif()
 
 ###############################################################################
 # contents
-
-if( NOT ${DEVELOPER_MODE} )
-    set( the_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
-else()
+set( the_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
+if( ${DEVELOPER_MODE} )
+    ecbuild_info("DEVELOPER_MODE is defined")
     set( the_default_data_prefix ${CMAKE_BINARY_DIR} )
 endif()
 
