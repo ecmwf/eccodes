@@ -100,7 +100,11 @@ TESTS = definitions.sh \
         grib_ecc-984.sh \
         grib_ecc-1000.sh \
         grib_ecc-1001.sh \
-        grib_ecc-1030.sh
+        grib_ecc-1030.sh \
+        grib_lam_gp.sh \
+        grib_lam_bf.sh \
+        bufr_get_element.sh \
+        bufr_extract_headers.sh
 
 # First download all the necessary data for testing
 # Note: if download fails, no tests will be done
@@ -111,7 +115,8 @@ download_data:
 noinst_PROGRAMS = packing_check gauss_sub read_any grib_double_cmp packing pack_unpack \
                   julian grib_read_index grib_indexing gribex_perf\
                   jpeg_perf grib_ccsds_perf so_perf png_perf grib_bpv_limit laplacian \
-                  unit_tests bufr_ecc-517
+                  unit_tests bufr_ecc-517 grib_lam_gp grib_sh_imag \
+                  bufr_extract_headers bufr_get_element
 
 laplacian_SOURCES = laplacian.c
 packing_SOURCES = packing.c
@@ -130,6 +135,11 @@ grib_ccsds_perf_SOURCES  = grib_ccsds_perf.c
 gribex_perf_SOURCES = gribex_perf.c
 gauss_sub_SOURCES = gauss_sub.c
 bufr_ecc_517_SOURCES = bufr_ecc-517.c
+grib_lam_gp_SOURCES = grib_lam_gp.c
+grib_lam_bf_SOURCES = grib_lam_bf.c
+grib_sh_imag_SOURCES = grib_sh_imag.c
+bufr_extract_headers_SOURCES = bufr_extract_headers.c
+bufr_get_element_SOURCES = bufr_get_element.c
 
 LDADD = $(top_builddir)/src/libeccodes.la $(EMOS_LIB)
 

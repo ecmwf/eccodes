@@ -9,33 +9,33 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 
 # Build the executables used by test scripts
 ################################################
-list( APPEND test_bins
-      grib_bpv_limit
-      grib_double_cmp
-      read_any
-      julian
-      grib_indexing
-      grib_multi_from_message
-      grib_read_index
-      unit_tests
-      bufr_keys_iter
-      gauss_sub
-      grib_nearest_test
-      grib_util_set_spec
-      grib_local_MeteoFrance
-      grib_2nd_order_numValues
-      grib_optimize_scaling
-      grib_optimize_scaling_sh
-      grib_ecc-386
-      bufr_ecc-517
-      bufr_get_element
-      bufr_extract_headers
-      bufr_check_descriptors
-      grib_sh_ieee64
-      ieee
-      grib_sh_imag
-      grib_lam_bf
-      grib_lam_gp )
+list(APPEND test_bins
+    grib_bpv_limit
+    grib_double_cmp
+    read_any
+    julian
+    grib_indexing
+    grib_multi_from_message
+    grib_read_index
+    unit_tests
+    bufr_keys_iter
+    gauss_sub
+    grib_nearest_test
+    grib_util_set_spec
+    grib_local_MeteoFrance
+    grib_2nd_order_numValues
+    grib_optimize_scaling
+    grib_optimize_scaling_sh
+    grib_ecc-386
+    bufr_ecc-517
+    bufr_get_element
+    bufr_extract_headers
+    bufr_check_descriptors
+    grib_sh_ieee64
+    ieee
+    grib_sh_imag
+    grib_lam_bf
+    grib_lam_gp)
 
 foreach( tool ${test_bins} )
     # here we use the fact that each tool has only one C file that matches its name
