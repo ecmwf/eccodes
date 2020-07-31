@@ -1,13 +1,17 @@
 TESTS = definitions.sh \
         grib_calendar.sh \
+        codes_split_file.sh \
         bufrdc_desc_ref.sh \
         bufrdc_ref.sh \
+        grib_data_quality_checks.sh \
         bufr_dump_data.sh \
         bufr_dump_samples.sh \
+        bufr_dump_subset.sh \
         bufr_json_samples.sh \
         bufr_filter.sh \
         bufr_json_data.sh \
         bufr_compare.sh \
+        bufr_dump_descriptors.sh \
         bufr_copy.sh \
         bufr_count.sh \
         bufr_get.sh \
@@ -32,6 +36,7 @@ TESTS = definitions.sh \
         pseudo_budg.sh \
         pseudo_diag.sh \
         grib_gridType.sh \
+        grib_change_packing.sh \
         grib_octahedral.sh \
         grib_global.sh \
         grib_concept.sh \
@@ -65,6 +70,7 @@ TESTS = definitions.sh \
         grib_grid_unstructured.sh \
         grib_to_netcdf.sh \
         grib_dump_debug.sh \
+        grib_dump_json.sh \
         grib_jpeg.sh \
         grib_ccsds.sh \
         grib_md5.sh \
@@ -115,7 +121,7 @@ download_data:
 noinst_PROGRAMS = packing_check gauss_sub read_any grib_double_cmp packing pack_unpack \
                   julian grib_read_index grib_indexing gribex_perf\
                   jpeg_perf grib_ccsds_perf so_perf png_perf grib_bpv_limit laplacian \
-                  unit_tests bufr_ecc-517 grib_lam_gp grib_sh_imag \
+                  unit_tests bufr_ecc-517 grib_lam_gp grib_lam_bf grib_sh_imag \
                   bufr_extract_headers bufr_get_element
 
 laplacian_SOURCES = laplacian.c
