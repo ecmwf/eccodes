@@ -140,8 +140,6 @@ static void destroy(grib_context* context, grib_action* act)
 
     grib_context_free_persistent(context, a->name);
     grib_darray_delete(context, a->darray);
-    grib_context_free_persistent(context, act->name);
-    grib_context_free_persistent(context, act->op);
 }
 
 static void xref(grib_action* d, FILE* f, const char* path)
