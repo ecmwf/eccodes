@@ -12,18 +12,18 @@
 
 #set -x
 
-#Enter data dir
+# Enter data dir
 cd ${data_dir}/bufr
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_set_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define tmp bufr file
+# Define tmp bufr file
 fBufrTmp=${label}".bufr.tmp"
 
 #----------------------------------------------------
@@ -61,7 +61,7 @@ done
 # Test: setting data values for single message file
 #-----------------------------------------------------
 
-#TODO: when ECC-37 is fixed we need to enable it.
+# TODO: when ECC-37 is fixed we need to enable it.
 
 rm -f $fBufrTmp
 
@@ -78,7 +78,7 @@ echo "file: $f" >> $fLog
 # Test: setting header for multi-message file
 #----------------------------------------------------
 
-#TODO: when ECC-37 is fixed we need to enable it.
+# TODO: when ECC-37 is fixed we need to enable it.
 
 rm -f $fBufrTmp
 
@@ -95,8 +95,7 @@ echo "file: $f" >> $fLog
 #-----------------------------------------------------------
 # Test: with nonexistent keys. 
 #-----------------------------------------------------------
-
-#Key "center" does not exist!!
+# Key "center" does not exist!!
 
 # Invoke without -f i.e. should fail if error encountered
 set +e
@@ -119,7 +118,7 @@ ${tools_dir}/bufr_set -f -s center=98 $f $fBufrTmp 2>>$fLog 1>>$fLog
 # Test: with not allowed key values
 #-----------------------------------------------------------
 
-#Here 1024 is out of range for centre (it is 8-bit only for edition=3 files)
+# Here 1024 is out of range for centre (it is 8-bit only for edition=3 files)
 
 # Invoke without -f i.e. should fail if error encountered
 set +e
@@ -170,8 +169,13 @@ ${tools_dir}/bufr_set -s keyMore=ABCD $f $fBufrTmp
 result=`${tools_dir}/bufr_get -p keyMore,ident $fBufrTmp`
 [ "$result" = "ABCD ABCD" ]
 
+${tools_dir}/bufr_set -s ident=' AB CD ' $f $fBufrTmp
+result=`${tools_dir}/bufr_get -p ident $fBufrTmp`
+[ "$result" = "AB CD" ]
+
+
 # ${tools_dir}/bufr_compare $f $fBufrTmp
 
-#Clean up
+# Clean up
 rm -f $fLog 
 rm -f $fBufrTmp

@@ -165,14 +165,14 @@ static int global_counter         = 0;
 static int theStart               = -1;
 static int theEnd                 = -1;
 
-const char* grib_tool_description =
+const char* tool_description =
     "Compare GRIB messages contained in two files."
     "\n\tIf some differences are found it fails returning an error code."
     "\n\tFloating-point values are compared exactly by default, different tolerance can be defined see -P -A -R."
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
-const char* grib_tool_name  = "grib_compare";
-const char* grib_tool_usage = "[options] grib_file1 grib_file2";
+const char* tool_name  = "grib_compare";
+const char* tool_usage = "[options] grib_file1 grib_file2";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -319,7 +319,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("R:")) {
         char* sarg               = grib_options_get_option("R:");
         options->tolerance_count = MAX_KEYS;
-        ret                      = parse_keyval_string(grib_tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
+        ret                      = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
         if (ret == GRIB_INVALID_ARGUMENT) {
             usage();
             exit(1);

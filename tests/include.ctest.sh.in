@@ -2,6 +2,7 @@ set -ea
 # For CMake
 
 set -x
+echo "Script: $0"
 
 proj_dir=@PROJECT_SOURCE_DIR@
 build_dir=@PROJECT_BINARY_DIR@

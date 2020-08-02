@@ -10,11 +10,11 @@
 
 #include "grib_tools.h"
 
-const char* grib_tool_description =
+const char* tool_description =
     "Copies the content of GTS files printing"
     " values of some keys.";
-const char* grib_tool_name  = "gts_copy";
-const char* grib_tool_usage = "[options] file file ... output_file";
+const char* tool_name  = "gts_copy";
+const char* tool_usage = "[options] file file ... output_file";
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value */

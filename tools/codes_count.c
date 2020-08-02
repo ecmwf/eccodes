@@ -11,7 +11,7 @@
 #include "grib_api_internal.h"
 
 static int fail_on_error     = 1;
-static const char* tool_name = NULL;
+static const char* toolname = NULL;
 
 static void usage(const char* prog)
 {
@@ -81,15 +81,15 @@ int main(int argc, char* argv[])
     unsigned long count_total = 0, count_curr = 0;
     int message_type = 0; /* GRIB, BUFR etc */
 
-    tool_name = argv[0];
+    toolname = argv[0];
     if (argc < 2)
-        usage(tool_name);
+        usage(toolname);
 
-    if (strstr(tool_name, "grib_count"))
+    if (strstr(toolname, "grib_count"))
         message_type = CODES_GRIB;
-    if (strstr(tool_name, "bufr_count"))
+    if (strstr(toolname, "bufr_count"))
         message_type = CODES_BUFR;
-    if (strstr(tool_name, "gts_count"))
+    if (strstr(toolname, "gts_count"))
         message_type = CODES_GTS;
 
     count_total = 0;
@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
         }
         filename = argv[i];
         if (path_is_directory(filename)) {
-            fprintf(stderr, "%s: ERROR: \"%s\": Is a directory\n", tool_name, filename);
+            fprintf(stderr, "%s: ERROR: \"%s\": Is a directory\n", toolname, filename);
             continue;
         }
 

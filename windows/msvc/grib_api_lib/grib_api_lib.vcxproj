@@ -408,6 +408,7 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_to_string.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_transient.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_transient_darray.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_trim.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_uint16.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_uint16_little_endian.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_uint32.c" />

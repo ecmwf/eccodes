@@ -9,32 +9,33 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 
 # Build the executables used by test scripts
 ################################################
-list( APPEND test_bins
-      bpv_limit
-      grib_double_cmp
-      read_any
-      julian
-      grib_indexing
-      grib_multi_from_message
-      grib_read_index
-      unit_tests
-      bufr_keys_iter
-      gauss_sub
-      grib_nearest_test
-      grib_util_set_spec
-      grib_local_MeteoFrance
-      grib_2nd_order_numValues
-      grib_optimize_scaling
-      grib_optimize_scaling_sh
-      grib_ecc-386
-      bufr_ecc-517
-      bufr_get_element
-      bufr_extract_headers
-      grib_sh_ieee64
-      ieee
-      grib_sh_imag
-      grib_lam_bf
-      grib_lam_gp )
+list(APPEND test_bins
+    grib_bpv_limit
+    grib_double_cmp
+    read_any
+    julian
+    grib_indexing
+    grib_multi_from_message
+    grib_read_index
+    unit_tests
+    bufr_keys_iter
+    gauss_sub
+    grib_nearest_test
+    grib_util_set_spec
+    grib_local_MeteoFrance
+    grib_2nd_order_numValues
+    grib_optimize_scaling
+    grib_optimize_scaling_sh
+    grib_ecc-386
+    bufr_ecc-517
+    bufr_get_element
+    bufr_extract_headers
+    bufr_check_descriptors
+    grib_sh_ieee64
+    ieee
+    grib_sh_imag
+    grib_lam_bf
+    grib_lam_gp)
 
 foreach( tool ${test_bins} )
     # here we use the fact that each tool has only one C file that matches its name
@@ -48,9 +49,13 @@ endforeach()
 #################################################
 # These tests do not require any data downloads
 list(APPEND tests_no_data_reqd
+    unit_tests
+    julian
+    grib_dump_samples
+    bufr_dump_samples
+    bufr_check_descriptors
     definitions
     grib_calendar
-    unit_tests
     grib_md5
     filter_substr
     grib_uerra
@@ -59,8 +64,6 @@ list(APPEND tests_no_data_reqd
     grib_ecc-967
     grib_ecc-1065
     grib_ecc-1053
-    julian
-    bufr_dump_samples
     bufr_json_samples
     bufr_ecc-359
     bufr_ecc-517
@@ -68,14 +71,16 @@ list(APPEND tests_no_data_reqd
     grib_efas
     grib_sh_imag
     pseudo_diag
-    grib_lambert_conformal
-    grib_space_view
+    grib_grid_unstructured
+    grib_grid_lambert_conformal
+    grib_grid_polar_stereographic
+    grib_grid_space_view
     grib_g1fcperiod)
 
 # These tests do require data downloads
 list(APPEND tests_data_reqd
     grib_data_quality_checks
-    bpv_limit
+    grib_bpv_limit
     grib_complex
     grib_double_cmp
     grib_change_packing
@@ -156,7 +161,7 @@ list(APPEND tests_data_reqd
     pseudo_budg
     grib_gridType
     grib_octahedral
-    grib_mercator
+    grib_grid_mercator
     grib_global
     grib_concept
     grib_decimalPrecision
@@ -202,8 +207,9 @@ endif()
 
 # These tests do not require any data downloads
 foreach( test ${tests_no_data_reqd} )
-    ecbuild_add_test( TARGET eccodes_t_${test}
-                      TYPE SCRIPT
+    ecbuild_add_test( TARGET  eccodes_t_${test}
+                      TYPE    SCRIPT
+                      LABELS  "sanity"
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
 endforeach()
 ecbuild_add_test( TARGET eccodes_t_grib_check_gaussian_grids
@@ -239,17 +245,17 @@ if( HAVE_PYTHON AND ENABLE_EXTRA_TESTS )
         ecbuild_add_test( TARGET eccodes_t_${test}
                           TYPE SCRIPT
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                          ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} PYTHONPATH=${PROJECT_BINARY_DIR}/${ECCODES_PYTHON_DIR}
+                          ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} PYTHONPATH=${PROJECT_BINARY_DIR}/python
                           TEST_DEPENDS eccodes_download_bufrs )
     endforeach()
 endif()
 
 ###########################################
 # Note: the reference file is in the tests dir not data dir!
-ecbuild_add_test( TARGET eccodes_t_grib_lamb_az_eq_area
+ecbuild_add_test( TARGET eccodes_t_grib_grid_lamb_az_eq_area
                   TYPE SCRIPT
                   CONDITION ENABLE_EXTRA_TESTS
-                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_lamb_az_eq_area.sh
+                  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_grid_lamb_az_eq_area.sh
                   RESOURCES grib_lamb_az_eq_area.ref
                   TEST_DEPENDS eccodes_download_gribs )
 

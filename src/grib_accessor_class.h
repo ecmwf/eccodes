@@ -208,6 +208,7 @@ extern grib_accessor_class* grib_accessor_class_to_integer;
 extern grib_accessor_class* grib_accessor_class_to_string;
 extern grib_accessor_class* grib_accessor_class_transient;
 extern grib_accessor_class* grib_accessor_class_transient_darray;
+extern grib_accessor_class* grib_accessor_class_trim;
 extern grib_accessor_class* grib_accessor_class_uint16;
 extern grib_accessor_class* grib_accessor_class_uint16_little_endian;
 extern grib_accessor_class* grib_accessor_class_uint32;

@@ -1,9 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
 transient dummyc=0: hidden;
-constant conceptsMasterDir="grib2" : hidden;
-constant conceptsLocalDirAll="grib2/localConcepts/[centre:s]" : hidden;
-constant conceptsLocalDirECMF="grib2/localConcepts/ecmf" : hidden;
+
 
 concept paramIdLegacyECMF(defaultParameter,"paramId.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): long_type,no_copy,hidden;
 concept paramIdECMF (paramIdLegacyECMF,"paramId.def",conceptsMasterDir,conceptsLocalDirECMF): long_type,no_copy;

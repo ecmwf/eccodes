@@ -18,7 +18,7 @@
 
 cmake_minimum_required( VERSION 3.6 FATAL_ERROR )
 
-project( eccodes VERSION 2.18.0 LANGUAGES C )
+project( eccodes VERSION 2.19.0 LANGUAGES C )
 
 set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake" )
 
@@ -119,7 +119,7 @@ ecbuild_add_option( FEATURE AEC
 
 ecbuild_add_option( FEATURE PYTHON
     DESCRIPTION "Build the ecCodes Python2 interface (deprecated)"
-    DEFAULT ON
+    DEFAULT OFF
     REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy )
 # For Python2 we build our own bindings (using SWIG) in the build directory
 # but for Python3 one has to add the eccodes from pip3 AFTER the install
@@ -319,10 +319,9 @@ endif()
 
 ###############################################################################
 # contents
-
-if( NOT ${DEVELOPER_MODE} )
-    set( the_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
-else()
+set( the_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
+if( ${DEVELOPER_MODE} )
+    ecbuild_info("DEVELOPER_MODE is defined")
     set( the_default_data_prefix ${CMAKE_BINARY_DIR} )
 endif()
 
@@ -418,7 +417,7 @@ ecbuild_dont_pack( DIRS
      concepts tests.ecmwf doxygen confluence examples.dev templates parameters java
      perl config m4 rpms gaussian_experimental gribex examples/F77
      examples/extra examples/deprecated bamboo fortran/fortranCtypes tigge/tools
-     share/eccodes  .settings python3 )
+     share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
 

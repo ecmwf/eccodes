@@ -820,8 +820,8 @@ struct bufr_descriptor
     int Y;
     int type;
     /*char* name;   Not needed: All usage commented out. See ECC-489 */
-    char* shortName;
-    char* units;
+    char shortName[128];
+    char units[128];
     long scale;
     double factor;
     long reference;
@@ -1393,6 +1393,8 @@ struct grib_index
     grib_field_list* current;
     grib_file* files;
     int count;
+    ProductKind product_kind;
+    int unpack_bufr; /* Only meaningful for product_kind of BUFR */
 };
 
 /* header compute */

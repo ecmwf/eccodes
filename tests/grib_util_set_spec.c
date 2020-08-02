@@ -10,7 +10,6 @@
 
 #include "grib_api_internal.h"
 #include "eccodes.h"
-#include <assert.h>
 
 #define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 
@@ -28,6 +27,8 @@ static int get_packing_type_code(const char* packingType)
         result = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
     else if (STR_EQUAL(packingType, "grid_second_order"))
         result = GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER;
+    else if (STR_EQUAL(packingType, "grid_ieee"))
+        result = GRIB_UTIL_PACKING_TYPE_IEEE;
 
     return result;
 }
@@ -51,20 +52,20 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     grib_util_grid_spec spec = {0,};
     grib_util_packing_spec packing_spec = {0,};
 
-    assert(input_filename);
+    Assert(input_filename);
     in = fopen(input_filename, "rb");
-    assert(in);
+    Assert(in);
     handle = grib_handle_new_from_file(0, in, &err);
-    assert(handle);
+    Assert(handle);
 
     CODES_CHECK(grib_get_string(handle, "gridType", gridType, &slen), 0);
     if (!STR_EQUAL(gridType, "reduced_gg")) {
         grib_handle_delete(handle);
         return;
     }
-    assert(output_filename);
+    Assert(output_filename);
     out = fopen(output_filename, "wb");
-    assert(out);
+    Assert(out);
 
     CODES_CHECK(grib_get_size(handle, "values", &inlen), 0);
     values = (double*)malloc(sizeof(double) * inlen);
@@ -106,23 +107,23 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
         values,
         outlen,
         &err);
-    assert(finalh);
-    assert(err == 0);
+    Assert(finalh);
+    Assert(err == 0);
 
     /* Try some invalid inputs and check it is handled */
     {
         codes_handle* h2      = 0;
         packing_spec.accuracy = 999;
         h2                    = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
-        assert(err == GRIB_INTERNAL_ERROR);
-        assert(!h2);
+        Assert(err == GRIB_INTERNAL_ERROR);
+        Assert(!h2);
         if (h2) exit(1);
 #ifdef INFINITY
         packing_spec.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
         values[0]             = INFINITY;
         h2                    = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
-        assert(err == GRIB_ENCODING_ERROR);
-        assert(!h2);
+        Assert(err == GRIB_ENCODING_ERROR);
+        Assert(!h2);
         if (h2) exit(1);
 #endif
     }
@@ -132,7 +133,7 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     CODES_CHECK(codes_check_message_header(buffer, size, PRODUCT_GRIB), 0);
     CODES_CHECK(codes_check_message_footer(buffer, size, PRODUCT_GRIB), 0);
     if (fwrite(buffer, 1, size, out) != size) {
-        assert(0);
+        Assert(0);
     }
     grib_handle_delete(handle);
     grib_handle_delete(finalh);
@@ -162,11 +163,11 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     grib_util_grid_spec spec = {0,};
     grib_util_packing_spec packing_spec = {0,};
 
-    assert(input_filename);
+    Assert(input_filename);
     in = fopen(input_filename, "rb");
-    assert(in);
+    Assert(in);
     handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
-    assert(handle);
+    Assert(handle);
 
     CODES_CHECK(codes_get_long(handle, "edition", &input_edition), 0);
 
@@ -175,9 +176,9 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
         grib_handle_delete(handle);
         return;
     }
-    assert(output_filename);
+    Assert(output_filename);
     out = fopen(output_filename, "wb");
-    assert(out);
+    Assert(out);
 
     CODES_CHECK(codes_get_size(handle, "values", &inlen), 0);
     values = (double*)malloc(sizeof(double) * inlen);
@@ -222,8 +223,8 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
         values,
         outlen,
         &err);
-    assert(finalh);
-    assert(err == 0);
+    Assert(finalh);
+    Assert(err == 0);
 
     /* Check expand_bounding_box worked.
      * Specified latitudeOfFirstGridPointInDegrees cannot be encoded in GRIB1
@@ -232,7 +233,7 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
         const double expected_lat1 = 60.001;
         double lat1                = 0;
         CODES_CHECK(codes_get_double(finalh, "latitudeOfFirstGridPointInDegrees", &lat1), 0);
-        assert(fabs(lat1 - expected_lat1) < 1e-10);
+        Assert(fabs(lat1 - expected_lat1) < 1e-10);
     }
 
     /* Write out the message to the output file */
@@ -240,7 +241,7 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     CODES_CHECK(codes_check_message_header(buffer, size, PRODUCT_GRIB), 0);
     CODES_CHECK(codes_check_message_footer(buffer, size, PRODUCT_GRIB), 0);
     if (fwrite(buffer, 1, size, out) != size) {
-        assert(0);
+        Assert(0);
     }
     codes_handle_delete(handle);
     codes_handle_delete(finalh);
@@ -270,15 +271,15 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
     grib_util_grid_spec spec={0,};
     grib_util_packing_spec packing_spec={0,};
 
-    in = fopen(input_filename,"rb");     assert(in);
-    handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);    assert(handle);
+    in = fopen(input_filename,"rb");     Assert(in);
+    handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);    Assert(handle);
 
     CODES_CHECK(grib_get_string(handle, "packingType", gridType, &slen),0);
     if (!STR_EQUAL(gridType, "grid_complex_spatial_differencing")) {
         grib_handle_delete(handle);
         return;
     }
-    out = fopen(output_filename,"wb");   assert(out);
+    out = fopen(output_filename,"wb");   Assert(out);
 
     CODES_CHECK(codes_get_size(handle,"values",&inlen), 0);
     values = (double*)malloc(sizeof(double)*inlen);
@@ -323,13 +324,13 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
             values,
             outlen,
             &err);
-    assert(finalh);
-    assert(err == 0);
+    Assert(finalh);
+    Assert(err == 0);
 
     /* Write out the message to the output file */
     CODES_CHECK(codes_get_message(finalh, &buffer, &size),0);
     if(fwrite(buffer,1,size,out) != size) {
-        assert(0);
+        Assert(0);
     }
     codes_handle_delete(handle);
     codes_handle_delete(finalh);

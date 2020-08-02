@@ -717,7 +717,7 @@ int grib_write_short(FILE* fh, short val);
 int grib_write_long(FILE* fh, long val);
 int grib_write_unsigned_long(FILE* fh, unsigned long val);
 int grib_write_string(FILE* fh, const char* s);
-int grib_write_identifier(FILE* fh);
+int grib_write_identifier(FILE* fh, const char* id);
 int grib_write_null_marker(FILE* fh);
 int grib_write_not_null_marker(FILE* fh);
 char* grib_read_string(grib_context* c, FILE* fh, int* err);
@@ -728,18 +728,16 @@ int grib_index_write(grib_index* index, const char* filename);
 grib_index* grib_index_read(grib_context* c, const char* filename, int* err);
 int grib_index_search_same(grib_index* index, grib_handle* h);
 int grib_index_add_file(grib_index* index, const char* filename);
-grib_handle* new_message_from_file(int message_type, grib_context* c, FILE* f, int* error);
 int _codes_index_add_file(grib_index* index, const char* filename, int message_type);
 int grib_index_add_file(grib_index* index, const char* filename);
-grib_index* grib_index_new_from_file(grib_context* c, char* filename, const char* keys, int* err);
+grib_index* grib_index_new_from_file(grib_context* c, const char* filename, const char* keys, int* err);
 int grib_index_get_size(const grib_index* index, const char* key, size_t* size);
 int grib_index_get_string(const grib_index* index, const char* key, char** values, size_t* size);
 int grib_index_get_long(const grib_index* index, const char* key, long* values, size_t* size);
 int grib_index_get_double(const grib_index* index, const char* key, double* values, size_t* size);
 int grib_index_select_long(grib_index* index, const char* skey, long value);
 int grib_index_select_double(grib_index* index, const char* skey, double value);
-int grib_index_select_string(grib_index* index, const char* skey, char* value);
-grib_handle* grib_index_get_handle(grib_field* field, int* err);
+int grib_index_select_string(grib_index* index, const char* skey, const char* value);
 grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* err);
 int grib_index_dump_file(FILE* fout, const char* filename);
 void grib_index_dump(FILE* fout, grib_index* index);
@@ -748,6 +746,9 @@ grib_handle* grib_handle_new_from_index(grib_index* index, int* err);
 grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err);
 void grib_index_rewind(grib_index* index);
 int grib_index_search(grib_index* index, grib_index_key* keys);
+int codes_index_set_product_kind(grib_index* index, ProductKind product_kind);
+int codes_index_set_unpack_bufr(grib_index* index, int unpack);
+int is_index_file(const char* filename);
 
 /* grib_accessor_class_number_of_points_gaussian.c */
 
@@ -1478,7 +1479,6 @@ int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
 int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
-int is_grib_index_file(const char* filename);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
 int grib_is_earth_oblate(grib_handle* h);
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val);
@@ -1494,6 +1494,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
 /* string_util.c */
 int strcmp_nocase(const char* s1, const char* s2);
 void rtrim(char* s);
+void lrtrim(char** x, int do_left, int do_right);
 const char* extract_filename(const char* filepath);
 char** string_split(char* inputString, const char* delimiter);
 int string_to_long(const char* input, long* output);
