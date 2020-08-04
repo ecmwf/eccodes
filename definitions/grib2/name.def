@@ -1108,6 +1108,98 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
+#Latitude
+'Latitude' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	}
+#Longitude
+'Longitude' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	}
+#Latitude on T grid
+'Latitude on T grid' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 1 ;
+	}
+#Longitude on T grid
+'Longitude on T grid' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 1 ;
+	}
+#Latitude on U grid
+'Latitude on U grid' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 2 ;
+	}
+#Longitude on U grid
+'Longitude on U grid' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 2 ;
+	}
+#Latitude on V grid
+'Latitude on V grid' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 3 ;
+	}
+#Longitude on V grid
+'Longitude on V grid' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 3 ;
+	}
+#Latitude on W grid
+'Latitude on W grid' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 4 ;
+	}
+#Longitude on W grid
+'Longitude on W grid' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 4 ;
+	}
+#Latitude on F grid
+'Latitude on F grid' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 5 ;
+	}
+#Longitude on F grid
+'Longitude on F grid' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 5 ;
+	}
 #Total column graupel
 'Total column graupel' = {
 	 discipline = 0 ;

@@ -820,8 +820,8 @@ struct bufr_descriptor
     int Y;
     int type;
     /*char* name;   Not needed: All usage commented out. See ECC-489 */
-    char* shortName;
-    char* units;
+    char shortName[128];
+    char units[128];
     long scale;
     double factor;
     long reference;

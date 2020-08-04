@@ -1,0 +1,7 @@
+# ECMWF Unstructured Grid Mapping
+
+concept_nofail unstructuredGridType(unknown,"unstructuredGridType.def",conceptsLocalDirAll,conceptsMasterDir);
+
+concept_nofail unstructuredGridSubtype(unknown,"unstructuredGridSubtype.def",conceptsLocalDirAll,conceptsMasterDir);
+
+concept_nofail unstructuredGridUUID(unknown,"unstructuredGridUUID.def",conceptsLocalDirAll,conceptsMasterDir);

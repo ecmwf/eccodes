@@ -319,10 +319,9 @@ endif()
 
 ###############################################################################
 # contents
-
-if( NOT ${DEVELOPER_MODE} )
-    set( the_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
-else()
+set( the_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
+if( ${DEVELOPER_MODE} )
+    ecbuild_info("DEVELOPER_MODE is defined")
     set( the_default_data_prefix ${CMAKE_BINARY_DIR} )
 endif()
 
@@ -351,6 +350,11 @@ add_definitions( -DHAVE_ECCODES_CONFIG_H )
 
 if( CMAKE_COMPILER_IS_GNUCC )
     ecbuild_add_c_flags("-pedantic")
+endif()
+
+# gfortran 10 has become stricter with argument matching
+if( HAVE_FORTRAN AND CMAKE_Fortran_COMPILER_ID MATCHES "GNU" AND NOT CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 10 )
+    ecbuild_add_fortran_flags("-fallow-argument-mismatch")
 endif()
 
 ###############################################################################

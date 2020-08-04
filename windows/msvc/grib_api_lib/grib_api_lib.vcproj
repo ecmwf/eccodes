@@ -509,10 +509,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\grib_accessor_class_bufr_data.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\grib_accessor_class_bufr_data_array.c"
 				>
 			</File>
