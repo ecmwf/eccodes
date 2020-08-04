@@ -352,6 +352,11 @@ if( CMAKE_COMPILER_IS_GNUCC )
     ecbuild_add_c_flags("-pedantic")
 endif()
 
+# gfortran 10 has become stricter with argument matching
+if( HAVE_FORTRAN AND CMAKE_Fortran_COMPILER_ID MATCHES "GNU" AND NOT CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 10 )
+    ecbuild_add_fortran_flags("-fallow-argument-mismatch")
+endif()
+
 ###############################################################################
 # contents
 
