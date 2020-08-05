@@ -454,11 +454,7 @@ int grib_trie_with_rank_insert(grib_trie_with_rank* t, const char* key, void* da
 {
     grib_trie_with_rank* last = t;
     const char* k             = key;
-
-    if (!t) {
-        Assert(!"grib_trie_with_rank_insert: grib_trie==NULL");
-        return -1;
-    }
+    DebugAssert(t);
 
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex);
@@ -489,7 +485,7 @@ int grib_trie_with_rank_insert(grib_trie_with_rank* t, const char* key, void* da
     grib_oarray_push(t->context, t->objs, data);
     /* grib_trie_with_rank_insert_in_list(t,data); */
     GRIB_MUTEX_UNLOCK(&mutex);
-    return grib_oarray_used_size(t->objs);
+    return t->objs->n; /* grib_oarray_used_size(t->objs) */
 }
 
 /*
