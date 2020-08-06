@@ -167,7 +167,7 @@ void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
     int err = 0;
-    grib_file_close_all(&err);
+    grib_file_pool_clean(&err);
     if (err != GRIB_SUCCESS) {
         perror(tool_name);
         exit(err);

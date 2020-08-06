@@ -1189,7 +1189,10 @@ struct grib_file
     char* mode;
     char* buffer;
     long refcount;
-    grib_file* next;
+    grib_file* pool_next;   /* for linking to pool chain */
+    grib_file* index_next;  /* for linking to index chain */
+    grib_file* dependants;  /* for linking to dependants chain */
+    int      is_dependant;
     short id;
 };
 
@@ -1198,7 +1201,6 @@ struct grib_file_pool
     grib_context* context;
     grib_file* first;
     grib_file* current;
-    size_t size;
     int number_of_opened_files;
     int max_opened_files;
 };

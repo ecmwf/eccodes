@@ -698,7 +698,7 @@ int grib_fieldset_add(grib_fieldset* set, char* filename)
     if (h)
         grib_handle_delete(h);
 
-    grib_file_close(file->name, 0, &err);
+    grib_file_close(file, 0, &err);
 
     grib_fieldset_rewind(set);
 
@@ -768,7 +768,7 @@ grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err)
     if (*err != GRIB_SUCCESS)
         return NULL;
 
-    grib_file_close(field->file->name, 0, err);
+    grib_file_close(field->file, 0, err);
 
     return h;
 }

@@ -453,7 +453,9 @@ static grib_field* grib_read_field(grib_context* c, FILE* fh, grib_file** files,
     if (*err)
         return NULL;
 
+    Assert(files[file_id]);
     field->file = files[file_id];
+    files[file_id] = NULL;
 
     *err          = grib_read_unsigned_long(fh, &offset);
     field->offset = offset;
@@ -732,11 +734,13 @@ static void grib_field_delete(grib_context* c, grib_field* field)
 
     grib_field_delete(c, field->next);
 
+    /* 'grib_file's get closed along index->files link */
+#if 0
     if (field->file) {
-        grib_file_close(field->file->name, 0, &err);
+        grib_file_close(field->file, 0, &err);
         field->file = NULL;
     }
-
+#endif
     grib_context_free(c, field);
 }
 
@@ -773,10 +777,13 @@ void grib_index_delete(grib_index* index)
     grib_index_key_delete(index->context, index->keys);
     grib_field_tree_delete(index->context, index->fields);
     grib_field_list_delete(index->context, index->fieldset);
+
     while (file) {
-        grib_file* f = file;
-        file         = file->next;
-        grib_file_delete(f);
+        int err;
+        grib_file * next = file->index_next;
+        /* Keeping the file open is probabily not beneficial. */
+        grib_file_close(file, 1, &err);
+        file = next;
     }
     grib_context_free(index->context, index);
 }
@@ -799,7 +806,7 @@ static int grib_write_files(FILE* fh, grib_file* files)
     if (err)
         return err;
 
-    return grib_write_files(fh, files->next);
+    return grib_write_files(fh, files->index_next);
 }
 
 static grib_file* grib_read_files(grib_context* c, FILE* fh, int* err)
@@ -825,7 +832,7 @@ static grib_file* grib_read_files(grib_context* c, FILE* fh, int* err)
     if (*err)
         return NULL;
 
-    file->next = grib_read_files(c, fh, err);
+    file->index_next = grib_read_files(c, fh, err);
     if (*err)
         return NULL;
 
@@ -953,23 +960,24 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
     while (f) {
         if (max < f->id)
             max = f->id;
-        f = f->next;
+        f = f->index_next;
     }
 
     files = (grib_file**)grib_context_malloc_clear(c, sizeof(grib_file) * (max + 1));
 
     f = file;
     while (f) {
-        grib_file_open(f->name, "r", err);
+        int created;
+        /* fetch from pool */
+        files[f->id] = grib_file_open(f->name, "r", err);
         if (*err)
             return NULL;
-        files[f->id] = grib_get_file(f->name, err); /* fetch from pool */
-        f            = f->next;
+        f = f->index_next;
     }
 
     while (file) {
         f    = file;
-        file = file->next;
+        file = file->index_next;
         grib_context_free(c, f->name);
         grib_context_free(c, f);
     }
@@ -990,7 +998,13 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
     index->count = index_count;
 
     fclose(fh);
+
+    for(int i = 0; i < max + 1; ++i) {
+        /* 'grib_file' files should have been copfied to field->file */
+        Assert(files[i]==NULL);
+    }
     grib_context_free(c, files);
+
     return index;
 }
 
@@ -1082,7 +1096,7 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
     long length, lval;
     char buf[1024] = {0,};
     int err = 0;
-    grib_file* indfile;
+    grib_file* p, **pp;
     grib_file* newfile;
 
     grib_index_key* index_key = NULL;
@@ -1101,33 +1115,29 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
     if (!file || !file->handle)
         return err;
 
-    if (!index->files) {
-        grib_filesid++;
-        newfile         = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
-        newfile->id     = grib_filesid;
-        newfile->name   = strdup(file->name);
-        newfile->handle = file->handle;
-        index->files    = newfile;
-    }
-    else {
-        indfile = index->files;
-        while (indfile) {
-            if (!strcmp(indfile->name, file->name))
-                return 0;
-            indfile = indfile->next;
-        }
-        indfile = index->files;
-        while (indfile->next)
-            indfile = indfile->next;
-        grib_filesid++;
-        newfile         = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
-        newfile->id     = grib_filesid;
-        newfile->name   = strdup(file->name);
-        newfile->handle = file->handle;
-        indfile->next   = newfile;
-    }
+    newfile = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
+    newfile->context  = file->context;
+    newfile->id       = ++grib_filesid;
+    newfile->name     = strdup(file->name);
+    newfile->handle   = file->handle;
+    newfile->is_dependant = 1;
+    newfile->refcount = 1;
+    /* Prepend 'newfile' to 'file->dependants' chain. */
+    newfile->dependants = file->dependants;
+    file->dependants = newfile;
 
-    fseeko(file->handle, 0, SEEK_SET);
+    /* Append 'newfile' to 'index->files' */
+    pp = &index->files;
+    p  =  index->files;
+    while (p) {
+        if (strcmp(p->name, file->name)==0)
+            return 0;
+        pp = &p->index_next;
+        p  =  p->index_next;
+    }
+    fseeko(newfile->handle, 0, SEEK_SET);
+    newfile->index_next = NULL;
+    *pp = newfile;
 
     while ((h = new_message_from_file(message_type, c, file->handle, &err)) != NULL) {
         grib_string_list* v = 0;
@@ -1227,7 +1237,7 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
         }
 
         field       = (grib_field*)grib_context_malloc_clear(c, sizeof(grib_field));
-        field->file = file;
+        field->file = newfile;
         index->count++;
         field->offset = h->offset;
 
@@ -1248,7 +1258,7 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
         grib_handle_delete(h);
     }/*foreach message*/
 
-    grib_file_close(file->name, 0, &err);
+    grib_file_close(file, 0, &err);
 
     if (err)
         return err;
@@ -1416,7 +1426,7 @@ int grib_index_add_file(grib_index* index, const char* filename)
 
     }
 
-    grib_file_close(file->name, 0, &err);
+    grib_file_close(file, 0, &err);
 
     if (err) return err;
     index->rewind=1;
@@ -1666,7 +1676,10 @@ grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* er
     if (*err != GRIB_SUCCESS)
         return NULL;
 
-    grib_file_close(field->file->name, 0, err);
+    /* Don't close 'file_gribs' as a side-effect.      . */
+    /* Get them closed when disposing the index handle. */
+    /* grib_file_close(field->file, 0, err); */
+
     return h;
 }
 
@@ -1805,7 +1818,7 @@ int grib_index_dump_file(FILE* fout, const char* filename)
             grib_file* prev = f;
             fprintf(fout, "GRIB File: %s\n", f->name);
             grib_context_free(c, f->name);
-            f = f->next;
+            f = f->index_next;
             grib_context_free(c, prev);
         }
         fclose(fh);

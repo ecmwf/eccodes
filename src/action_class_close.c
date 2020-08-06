@@ -106,11 +106,13 @@ static int execute(grib_action* act, grib_handle* h)
     if (err)
         return err;
     /* grib_file_close(filename,1,&err); */
-    file = grib_get_file(filename, &err);
+    int created;
+    file = grib_get_or_create_file(filename, &created, &err);
+    DebugAssert(!created);
     if (err)
         return err;
-    if (file)
-        grib_file_pool_delete_file(file);
+    DebugAssert(file);
+    grib_file_close(file, 0, &err);
 
     return err;
 }

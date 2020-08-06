@@ -101,8 +101,10 @@ void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
 
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    grib_file_pool_clean();
-    return 0;
+    int err = GRIB_SUCCESS;
+    grib_file_pool_clean(&err);
+    Assert(GRIB_SUCCESS==0);
+    return err;
 }
 
 int grib_no_handle_action(grib_runtime_options* options, int err)

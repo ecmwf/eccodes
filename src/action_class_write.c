@@ -185,7 +185,7 @@ static int execute(grib_action* act, grib_handle* h)
         }
     }
 
-    grib_file_close(filename, 0, &err);
+    grib_file_close(of, 0, &err);
     if (err != GRIB_SUCCESS) {
         grib_context_log(act->context, GRIB_LOG_ERROR, "unable to write message\n");
         return err;
