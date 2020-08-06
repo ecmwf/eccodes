@@ -455,6 +455,7 @@ int grib_trie_with_rank_insert(grib_trie_with_rank* t, const char* key, void* da
     grib_trie_with_rank* last = t;
     const char* k             = key;
     DebugAssert(t);
+    if (!t) return -1;
 
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex);
