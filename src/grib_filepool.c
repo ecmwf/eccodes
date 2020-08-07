@@ -321,7 +321,8 @@ static void grib_file_pool_delete_file(grib_file* file, int keep_open,
         /* Only one 'grib_file' represents the given filename. */
         Assert(root == file);
         if( !keep_open ) {
-            fclose(root->handle);
+            if (fclose(root->handle) != 0)
+                *err = GRIB_IO_PROBLEM;
             grib_file_delete(root);
             --file_pool.number_of_opened_files;
 
