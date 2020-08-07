@@ -302,7 +302,6 @@ static grib_file * grib_file_pool_remove_file(const char * filename)
     return file;
 }
 
-
 /* Must be called with MUTEX lock being held because we work on static var. */
 static void grib_file_pool_delete_file(grib_file* file, int keep_open,
                                        int * err)
@@ -312,7 +311,7 @@ static void grib_file_pool_delete_file(grib_file* file, int keep_open,
         return;
 
     grib_file * root = grib_file_pool_remove_file(file->name);
-    DebugAssert(!root);
+    DebugAssert(root);
     DebugAssert(!root->is_dependant);
     *err = GRIB_SUCCESS; // be lazy for the time being. FixMe!
     if (root->dependants==NULL) {
@@ -332,7 +331,7 @@ static void grib_file_pool_delete_file(grib_file* file, int keep_open,
         grib_file **pp = &root;
         grib_file *p   =  root;
         while(p) {
-            DebugAssert(p->hanlde == file->handle);
+            DebugAssert(p->handle == file->handle);
             if(p == file)
                 break;
             pp = &p->dependants;
