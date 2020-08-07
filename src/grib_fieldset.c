@@ -654,6 +654,7 @@ int grib_fieldset_add(grib_fieldset* set, char* filename)
     double offset   = 0;
     long length     = 0;
     grib_context* c = 0;
+    int created;
 
     if (!set || !filename)
         return GRIB_INVALID_ARGUMENT;
@@ -661,7 +662,7 @@ int grib_fieldset_add(grib_fieldset* set, char* filename)
 
     /* nkeys=set->columns_size; */
 
-    file = grib_file_open(filename, "r", &err);
+    file = grib_file_open(filename, "r", &created, &err);
     if (!file || !file->handle)
         return err;
 
@@ -750,6 +751,7 @@ grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err)
 {
     grib_handle* h    = 0;
     grib_field* field = 0;
+    int created;
     *err              = GRIB_SUCCESS;
     if (!set) {
         *err = GRIB_INVALID_ARGUMENT;
@@ -759,7 +761,7 @@ grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err)
         return NULL;
 
     field = set->fields[set->filter->el[set->order->el[i]]];
-    grib_file_open(field->file->name, "r", err);
+    grib_file_open(field->file->name, "r", &created, err);
     if (*err != GRIB_SUCCESS)
         return NULL;
 

@@ -112,7 +112,7 @@ static int execute(grib_action* act, grib_handle* h)
     const void* buffer   = NULL;
     const char* filename = NULL;
     char string[1024]    = {0,};
-
+    int created;
     grib_file* of = NULL;
 
     if ((err = grib_get_message(h, &buffer, &size)) != GRIB_SUCCESS) {
@@ -138,9 +138,9 @@ static int execute(grib_action* act, grib_handle* h)
 
     Assert(filename);
     if (a->append)
-        of = grib_file_open(filename, "a", &err);
+        of = grib_file_open(filename, "a", &created, &err);
     else
-        of = grib_file_open(filename, "w", &err);
+        of = grib_file_open(filename, "w", &created, &err);
 
     if (!of || !of->handle) {
         grib_context_log(act->context, GRIB_LOG_ERROR, "unable to open file %s\n", filename);

@@ -986,6 +986,7 @@ static err to_packed_mem(field* g)
 static err to_expand_mem(field* g)
 {
     err e = 0;
+    int created;
 
     Assert(g);
     if (g->shape == expand_mem)
@@ -994,7 +995,7 @@ static err to_expand_mem(field* g)
     if (g->shape == packed_file) {
         const void* dummy = NULL;
 
-        grib_file* file = grib_file_open(g->file->name, "r", &e);
+        grib_file* file = grib_file_open(g->file->name, "r", &created, &e);
         if (!file || !file->handle) {
             grib_context_log(ctx, GRIB_LOG_ERROR | GRIB_LOG_PERROR, "%s", g->file->name);
             return -1;
@@ -4127,10 +4128,11 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
     int i           = 0;
     grib_handle* h  = NULL;
     grib_file* file = NULL;
+    int created;
 
     printf("%s: Processing input file '%s'.\n", tool_name, filename);
 
-    file = grib_file_open(filename, "r", &e);
+    file = grib_file_open(filename, "r", &created, &e);
     if (!file || !file->handle)
         return e;
 

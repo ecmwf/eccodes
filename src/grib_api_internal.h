@@ -1371,7 +1371,6 @@ struct grib_index_key
     grib_string_list* values;
     grib_string_list* current;
     int values_count;
-    int count;
     grib_index_key* next;
 };
 
@@ -1397,6 +1396,7 @@ struct grib_index
     int count;
     ProductKind product_kind;
     int unpack_bufr; /* Only meaningful for product_kind of BUFR */
+    int file_id_seqnum;
 };
 
 /* header compute */
@@ -1591,6 +1591,17 @@ typedef struct j2k_encode_helper
 } j2k_encode_helper;
 
 #include "grib_api_prototypes.h"
+
+#define LIST_APPEND(NODE_TYPE,LINK_FIELD,ANCHOR,ELEM) \
+    do {  \
+        NODE_TYPE ** pp = &ANCHOR; \
+        NODE_TYPE  *  p =  ANCHOR; \
+        while (p) { \
+            pp = &p->LINK_FIELD; \
+            p  =  p->LINK_FIELD; \
+        } \
+        (*pp) = ELEM; \
+    } while(0)
 
 
 #ifdef __cplusplus

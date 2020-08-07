@@ -1282,6 +1282,7 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     grib_file* of       = NULL;
     int err             = 0;
     char filename[1024] = {0,};
+    int created;
     Assert(options->outfile != NULL && options->outfile->name != NULL);
 
     /* See ECC-1086
@@ -1295,7 +1296,7 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
 
     err = grib_recompose_name(h, NULL, options->outfile->name, filename, 0);
 
-    of = grib_file_open(filename, "w", &err);
+    of = grib_file_open(filename, "w", &created, &err);
 
     if (!of || !of->handle) {
         grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),

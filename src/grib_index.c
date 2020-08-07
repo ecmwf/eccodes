@@ -65,10 +65,6 @@ static const char* mars_keys =
     "mars.model,mars.origin,mars.quantile,mars.range,mars.refdate,mars.direction,mars.frequency";
 
 
-/* See GRIB-32: start off ID with -1 as it is incremented before being used */
-static int grib_filesid = -1;
-static int index_count;
-
 static char* get_key(char** keys, int* type)
 {
     char* key = NULL;
@@ -240,14 +236,14 @@ int grib_index_compress(grib_index* index)
     return 0;
 }
 
-static grib_index_key* grib_index_new_key(grib_context* c, grib_index_key* keys,
-                                          const char* key, int type, int* err)
+static grib_index_key* grib_index_add_new_key(grib_context* c, grib_index_key* keys,
+                                              const char* key, int type, int* err)
 {
-    grib_index_key *next = NULL, *current = NULL;
-    grib_string_list* values = NULL;
+    grib_index_key *newkey, *current, **pp;
+    grib_string_list* values;
 
-    next = (grib_index_key*)grib_context_malloc_clear(c, sizeof(grib_index_key));
-    if (!next) {
+    newkey = (grib_index_key*)grib_context_malloc_clear(c, sizeof(grib_index_key));
+    if (!newkey) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "unable to allocate %d bytes",
                          sizeof(grib_index_key));
@@ -256,29 +252,19 @@ static grib_index_key* grib_index_new_key(grib_context* c, grib_index_key* keys,
     }
     values = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
     if (!values) {
+        grib_context_free(c, newkey);
         grib_context_log(c, GRIB_LOG_ERROR,
                          "unable to allocate %d bytes",
                          sizeof(grib_string_list));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
+    newkey->values = values;
+    newkey->type = type;
+    newkey->name = grib_context_strdup(c, key);
 
-    next->values = values;
+    LIST_APPEND(grib_index_key, next, keys, newkey);
 
-    if (!keys) {
-        keys    = next;
-        current = keys;
-    }
-    else {
-        current = keys;
-        while (current->next)
-            current = current->next;
-        current->next = next;
-        current       = current->next;
-    }
-
-    current->type = type;
-    current->name = grib_context_strdup(c, key);
     return keys;
 }
 
@@ -431,7 +417,7 @@ static int grib_write_field(FILE* fh, grib_field* field)
     return GRIB_SUCCESS;
 }
 
-static grib_field* grib_read_field(grib_context* c, FILE* fh, grib_file** files, int* err)
+static grib_field* grib_read_field(grib_index *self, grib_context* c, FILE* fh, grib_file** files,int* err)
 {
     grib_field* field = NULL;
     short file_id;
@@ -447,12 +433,13 @@ static grib_field* grib_read_field(grib_context* c, FILE* fh, grib_file** files,
         return NULL;
     }
 
-    index_count++;
+    self->count++;
     field = (grib_field*)grib_context_malloc(c, sizeof(grib_field));
     *err  = grib_read_short(fh, &file_id);
     if (*err)
         return NULL;
 
+    Assert(0<=file_id);
     Assert(files[file_id]);
     field->file = files[file_id];
 
@@ -469,7 +456,7 @@ static grib_field* grib_read_field(grib_context* c, FILE* fh, grib_file** files,
     if (*err)
         return NULL;
 
-    field->next = grib_read_field(c, fh, files, err);
+    field->next = grib_read_field(self, c, fh, files, err);
 
     return field;
 }
@@ -503,7 +490,7 @@ static int grib_write_field_tree(FILE* fh, grib_field_tree* tree)
     return GRIB_SUCCESS;
 }
 
-grib_field_tree* grib_read_field_tree(grib_context* c, FILE* fh, grib_file** files, int* err)
+static grib_field_tree* grib_read_field_tree(grib_index *self, grib_context* c, FILE* fh, grib_file** files, int* err)
 {
     grib_field_tree* tree = NULL;
     unsigned char marker  = 0;
@@ -517,7 +504,7 @@ grib_field_tree* grib_read_field_tree(grib_context* c, FILE* fh, grib_file** fil
     }
 
     tree        = (grib_field_tree*)grib_context_malloc(c, sizeof(grib_field_tree));
-    tree->field = grib_read_field(c, fh, files, err);
+    tree->field = grib_read_field(self, c, fh, files, err);
     if (*err)
         return NULL;
 
@@ -525,11 +512,11 @@ grib_field_tree* grib_read_field_tree(grib_context* c, FILE* fh, grib_file** fil
     if (*err)
         return NULL;
 
-    tree->next_level = grib_read_field_tree(c, fh, files, err);
+    tree->next_level = grib_read_field_tree(self, c, fh, files, err);
     if (*err)
         return NULL;
 
-    tree->next = grib_read_field_tree(c, fh, files, err);
+    tree->next = grib_read_field_tree(self, c, fh, files, err);
     if (*err)
         return NULL;
 
@@ -540,15 +527,13 @@ grib_index* grib_index_new(grib_context* c, const char* key, int* err)
 {
     grib_index* index;
     grib_index_key* keys = NULL;
-    char* q;
     int type;
-    char* p;
+    char *key_copy, *key_copy_tmp;
 
     if (!strcmp(key, "mars"))
         return grib_index_new(c, mars_keys, err);
 
-    p = grib_context_strdup(c, key);
-    q = p;
+    key_copy = key_copy_tmp = grib_context_strdup(c, key);
 
     *err = 0;
     if (!c)
@@ -564,20 +549,23 @@ grib_index* grib_index_new(grib_context* c, const char* key, int* err)
     index->product_kind = PRODUCT_GRIB;
     index->unpack_bufr = 0;
 
-    while ((key = get_key(&p, &type)) != NULL) {
-        keys = grib_index_new_key(c, keys, key, type, err);
+    /* This is O(n**2) computation due to O(n) list append. FixMe! */
+    while ((key = get_key(&key_copy_tmp, &type)) != NULL) {
+        keys = grib_index_add_new_key(c, keys, key, type, err);
         if (*err)
             return NULL;
     }
     index->keys   = keys;
-    index->fields = (grib_field_tree*)grib_context_malloc_clear(c,
-                                                                sizeof(grib_field_tree));
+    index->fields = (grib_field_tree*)grib_context_malloc_clear(c, sizeof(grib_field_tree));
     if (!index->fields) {
+        grib_context_free(c, index);
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
+    index->file_id_seqnum = 0;
+    index->count = 0;
 
-    grib_context_free(c, q);
+    grib_context_free(c, key_copy);
     return index;
 }
 
@@ -606,8 +594,7 @@ static void grib_index_key_delete(grib_context* c, grib_index_key* keys)
     grib_context_free(c, keys);
 }
 
-static long values_count = 0;
-static grib_string_list* grib_read_key_values(grib_context* c, FILE* fh, int* err)
+static grib_string_list* grib_read_key_values(grib_context* c, FILE* fh, int * values_count, int* err)
 {
     grib_string_list* values;
     unsigned char marker = 0;
@@ -619,15 +606,13 @@ static grib_string_list* grib_read_key_values(grib_context* c, FILE* fh, int* er
         *err = GRIB_CORRUPTED_INDEX;
         return NULL;
     }
-
-    values_count++;
-
+    ++*values_count;
     values        = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
     values->value = grib_read_string(c, fh, err);
     if (*err)
         return NULL;
 
-    values->next = grib_read_key_values(c, fh, err);
+    values->next = grib_read_key_values(c, fh, values_count,  err);
     if (*err)
         return NULL;
 
@@ -661,6 +646,7 @@ static grib_index_key* grib_read_index_keys(grib_context* c, FILE* fh, int* err)
     grib_index_key* keys = NULL;
     unsigned char marker = 0;
     unsigned char type   = 0;
+    int values_count;
 
     if (!c)
         c = grib_context_get_default();
@@ -684,10 +670,9 @@ static grib_index_key* grib_read_index_keys(grib_context* c, FILE* fh, int* err)
         return NULL;
 
     values_count = 0;
-    keys->values = grib_read_key_values(c, fh, err);
+    keys->values = grib_read_key_values(c, fh, &values_count, err);
     if (*err)
         return NULL;
-
     keys->values_count = values_count;
 
     keys->next = grib_read_index_keys(c, fh, err);
@@ -971,7 +956,7 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
     while (f) {
         int created;
         /* fetch from pool */
-        files[f->id] = grib_file_open(f->name, "r", err);
+        files[f->id] = grib_file_open(f->name, "r", &created, err);
         if (*err)
             return NULL;
         f = f->index_next;
@@ -992,12 +977,10 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
     if (*err)
         return NULL;
 
-    index_count   = 0;
-    index->fields = grib_read_field_tree(c, fh, files, err);
+    index->count  = 0;
+    index->fields = grib_read_field_tree(index, c, fh, files, err);
     if (*err)
         return NULL;
-
-    index->count = index_count;
 
     fclose(fh);
 
@@ -1097,7 +1080,6 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
     char buf[1024] = {0,};
     int err = 0;
     grib_file* p, **pp;
-    grib_file* newfile;
 
     grib_index_key* index_key = NULL;
     grib_handle* h            = NULL;
@@ -1106,38 +1088,41 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
     grib_file* file = NULL;
     grib_context* c;
 
+    int created;
+
     if (!index)
         return GRIB_NULL_INDEX;
     c = index->context;
 
-    file = grib_file_open(filename, "r", &err);
+    file = grib_file_open(filename, "r", &created, &err);
 
     if (!file || !file->handle)
         return err;
 
-    newfile = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
-    newfile->context  = file->context;
-    newfile->id       = ++grib_filesid;
-    newfile->name     = strdup(file->name);
-    newfile->handle   = file->handle;
-    newfile->is_dependant = 1;
-    newfile->refcount = 1;
-    /* Prepend 'newfile' to 'file->dependants' chain. */
-    newfile->dependants = file->dependants;
-    file->dependants = newfile;
-
-    /* Append 'newfile' to 'index->files' */
-    pp = &index->files;
-    p  =  index->files;
-    while (p) {
-        if (strcmp(p->name, file->name)==0)
-            return 0;
-        pp = &p->index_next;
-        p  =  p->index_next;
+    if ( created ) { /* is this 'grib_file' newly created? */
+        /* Yes. Use it. */
+        file->id = index->file_id_seqnum++;
+        Assert(!file->dependants);
+        Assert(!file->is_dependant);
+    } else{
+        /* No. Must create a dup! */
+        grib_file* newfile;
+        newfile = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
+        newfile->context  = file->context;
+        newfile->id       = index->file_id_seqnum++;
+        newfile->name     = strdup(file->name);
+        newfile->handle   = file->handle;
+        newfile->is_dependant = 1;
+        newfile->refcount = 1;
+        /* Prepend 'newfile' to 'file->dependants' chain. */
+        newfile->dependants = file->dependants;
+        file->dependants = newfile;
+        grib_file_close(file, 0, &err);
+        file = newfile;
     }
-    fseeko(newfile->handle, 0, SEEK_SET);
-    newfile->index_next = NULL;
-    *pp = newfile;
+    LIST_APPEND(grib_file, index_next, index->files, file);
+    fseeko(file->handle, 0, SEEK_SET);
+    file->index_next = NULL;
 
     while ((h = new_message_from_file(message_type, c, file->handle, &err)) != NULL) {
         grib_string_list* v = 0;
@@ -1237,7 +1222,7 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
         }
 
         field       = (grib_field*)grib_context_malloc_clear(c, sizeof(grib_field));
-        field->file = newfile;
+        field->file = file;
         index->count++;
         field->offset = h->offset;
 
@@ -1245,20 +1230,9 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
         if (err)
             return err;
         field->length = length;
-
-        if (field_tree->field) {
-            grib_field* pfield = field_tree->field;
-            while (pfield->next)
-                pfield = pfield->next;
-            pfield->next = field;
-        }
-        else
-            field_tree->field = field;
-
+        LIST_APPEND(grib_field, next, field_tree->field, field);
         grib_handle_delete(h);
     }/*foreach message*/
-
-    grib_file_close(file, 0, &err);
 
     if (err)
         return err;
@@ -1647,6 +1621,7 @@ grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* er
     grib_handle* h = NULL;
     typedef grib_handle* (*message_new_proc)(grib_context*, FILE*, int*);
     message_new_proc message_new = NULL;
+    int created;
 
     if (!field->file) {
         grib_context_log(grib_context_get_default(), GRIB_LOG_ERROR, "codes_index_get_handle: NULL file handle");
@@ -1654,7 +1629,7 @@ grib_handle* codes_index_get_handle(grib_field* field, int message_type, int* er
         return NULL;
     }
 
-    grib_file_open(field->file->name, "r", err);
+    grib_file_open(field->file->name, "r", &created, err);
 
     if (*err != GRIB_SUCCESS)
         return NULL;

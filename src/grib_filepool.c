@@ -45,8 +45,6 @@ static void init()
 }
 #endif
 
-static short next_id = 0;
-
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
@@ -191,7 +189,8 @@ static int poolcache_matches(const char *filename)
 }
 
 
-grib_file* grib_file_open(const char* filename, const char* mode, int* err)
+grib_file* grib_file_open(const char* filename, const char* mode,
+                          int * created, int* err)
 {
     grib_file *file = 0, *prev = 0;
     int same_mode = 0;
@@ -203,6 +202,7 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
 
     if (poolcache_matches(filename)) {
         file = file_pool.current;
+        *created = 0;
     }
     else {
         GRIB_MUTEX_LOCK(&mutex1);
@@ -213,7 +213,10 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
             prev = file;
             file = file->pool_next;
         }
-        if (!file) {
+        if (file) {
+            *created = 0;
+        } else {
+            *created = 1;
             is_new = 1;
             file   = grib_file_new(file_pool.context, filename, err);
             if (prev)
@@ -454,15 +457,8 @@ grib_file* grib_file_new(grib_context* c, const char* name, int* err)
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
-
     file->name = strdup(name);
-    file->id   = next_id;
-
-    GRIB_MUTEX_LOCK(&mutex1);
-    next_id++;
-    GRIB_MUTEX_UNLOCK(&mutex1);
-
+    file->id       = -1;
     file->mode     = 0;
     file->handle   = 0;
     file->refcount = 0;

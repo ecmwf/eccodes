@@ -721,7 +721,6 @@ int grib_write_identifier(FILE* fh, const char* id);
 int grib_write_null_marker(FILE* fh);
 int grib_write_not_null_marker(FILE* fh);
 char* grib_read_string(grib_context* c, FILE* fh, int* err);
-grib_field_tree* grib_read_field_tree(grib_context* c, FILE* fh, grib_file** files, int* err);
 grib_index* grib_index_new(grib_context* c, const char* key, int* err);
 void grib_index_delete(grib_index* index);
 int grib_index_write(grib_index* index, const char* filename);
@@ -1035,7 +1034,7 @@ void grib_file_pool_clean(int *err);
 grib_file* grib_file_pool_get_files(void);
 int grib_file_pool_read(grib_context* c, FILE* fh);
 int grib_file_pool_write(FILE* fh);
-grib_file* grib_file_open(const char* filename, const char* mode, int* err);
+grib_file* grib_file_open(const char* filename, const char* mode, int * created,int* err);
 void grib_file_close(grib_file * file, int force, int* err);
 grib_file* grib_get_or_create_file(const char* filename, int *created,
                                    int* err);
