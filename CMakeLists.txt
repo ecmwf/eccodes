@@ -49,6 +49,7 @@ check_symbol_exists( fseeko           "stdio.h"    ECCODES_HAVE_FSEEKO )
 check_symbol_exists( posix_memalign   "stdlib.h"   ECCODES_HAVE_POSIX_MEMALIGN )
 check_symbol_exists( fmemopen         "stdio.h"    ECCODES_HAVE_FMEMOPEN )
 check_symbol_exists( funopen          "stdio.h"    ECCODES_HAVE_FUNOPEN )
+check_symbol_exists( realpath         "stdlib.h"   ECCODES_HAVE_REALPATH )
 
 check_c_source_compiles(
       " typedef int foo_t;
