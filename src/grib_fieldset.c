@@ -761,17 +761,10 @@ grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err)
         return NULL;
 
     field = set->fields[set->filter->el[set->order->el[i]]];
-    grib_file_open(field->file->name, "r", &created, err);
-    if (*err != GRIB_SUCCESS)
-        return NULL;
-
     fseeko(field->file->handle, field->offset, SEEK_SET);
     h = grib_handle_new_from_file(set->context, field->file->handle, err);
     if (*err != GRIB_SUCCESS)
         return NULL;
-
-    grib_file_close(field->file, 0, err);
-
     return h;
 }
 

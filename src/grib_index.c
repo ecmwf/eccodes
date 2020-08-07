@@ -398,6 +398,7 @@ static int grib_write_field(FILE* fh, grib_field* field)
     if (err)
         return err;
 
+    Assert(0<=field->file->id);
     err = grib_write_short(fh, field->file->id);
     if (err)
         return err;
