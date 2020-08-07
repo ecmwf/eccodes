@@ -455,7 +455,9 @@ static grib_field* grib_read_field(grib_context* c, FILE* fh, grib_file** files,
 
     Assert(files[file_id]);
     field->file = files[file_id];
-    files[file_id] = NULL;
+
+    /* same value appear for 'file_id' repeatedly. */
+    /* files[file_id] = NULL;                      */
 
     *err          = grib_read_unsigned_long(fh, &offset);
     field->offset = offset;
@@ -999,10 +1001,8 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
 
     fclose(fh);
 
-    for(int i = 0; i < max + 1; ++i) {
-        /* 'grib_file' files should have been copfied to field->file */
-        Assert(files[i]==NULL);
-    }
+    /* File handles in 'files' will get copied to index->files */
+    /* and get closed in grib_index_delete().                  */
     grib_context_free(c, files);
 
     return index;
