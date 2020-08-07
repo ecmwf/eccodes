@@ -82,6 +82,10 @@ ecbuild_add_option( FEATURE EXAMPLES
     DESCRIPTION "Build the examples"
     DEFAULT ON )
 
+ecbuild_add_option( FEATURE BUILD_TOOLS
+    DESCRIPTION "Build the command line tools"
+    DEFAULT ON )
+
 ecbuild_add_option( FEATURE JPG
     DESCRIPTION "Support for JPG decoding/encoding"
     DEFAULT ON )
@@ -399,7 +403,9 @@ include_directories( ${ECCODES_INCLUDE_DIRS}  ${ECCODES_EXTRA_INCLUDE_DIRS} )
 add_subdirectory( definitions ) # must be before memfs
 add_subdirectory( memfs )
 add_subdirectory( src )
-add_subdirectory( tools )
+if( HAVE_BUILD_TOOLS )
+    add_subdirectory( tools )
+endif()
 add_subdirectory( fortran )
 
 if( PYTHON_VERSION_MAJOR GREATER 2 )
