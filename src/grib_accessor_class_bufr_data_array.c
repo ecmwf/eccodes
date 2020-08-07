@@ -252,7 +252,7 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
 typedef int (*codec_element_proc)(grib_context* c, grib_accessor_bufr_data_array* self, int subsetIndex, grib_buffer* b, unsigned char* data, long* pos, int i, bufr_descriptor* descriptor, long elementIndex, grib_darray* dval, grib_sarray* sval);
 typedef int (*codec_replication_proc)(grib_context* c, grib_accessor_bufr_data_array* self, int subsetIndex, grib_buffer* buff, unsigned char* data, long* pos, int i, long elementIndex, grib_darray* dval, long* numberOfRepetitions);
 
-static int create_keys(grib_accessor* a, long onlySubset, long startSubset, long endSubset);
+static int create_keys(const grib_accessor* a, long onlySubset, long startSubset, long endSubset);
 
 static void restart_bitmap(grib_accessor_bufr_data_array* self)
 {
@@ -1929,7 +1929,7 @@ static int adding_extra_key_attributes(grib_handle* h)
     return (!skip);
 }
 
-static grib_accessor* create_accessor_from_descriptor(grib_accessor* a, grib_accessor* attribute, grib_section* section,
+static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, grib_accessor* attribute, grib_section* section,
                                                       long ide, long subset, int dump, int count, int add_extra_attributes)
 {
     grib_accessor_bufr_data_array* self = (grib_accessor_bufr_data_array*)a;
@@ -2127,7 +2127,7 @@ static const int number_of_qualifiers = NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMB
 
 static GRIB_INLINE int significanceQualifierIndex(int X, int Y)
 {
-    int a[] = { -1, 0, 1, -1, 2, 3, 4, 5, 6 };
+    static const int a[] = { -1, 0, 1, -1, 2, 3, 4, 5, 6 };
     int ret = Y + a[X] * NUMBER_OF_QUALIFIERS_PER_CATEGORY;
     DebugAssert(ret > 0);
     return ret;
@@ -2141,7 +2141,7 @@ static GRIB_INLINE void reset_deeper_qualifiers(
     int i;
     for (i = 0; i < numElements; i++) {
         if (significanceQualifierDepth[i] > depth) {
-            significanceQualifierGroup[i] = 0;
+            significanceQualifierGroup[i] = NULL;
         }
     }
 }
@@ -2153,7 +2153,7 @@ typedef struct bitmap_s
     grib_accessors_list* referredElementStart;
 } bitmap_s;
 
-static grib_accessor* get_element_from_bitmap(grib_accessor* a, bitmap_s* bitmap)
+static grib_accessor* get_element_from_bitmap(const grib_accessor* a, bitmap_s* bitmap)
 {
     int ret;
     long bitmapVal = 1;
@@ -2390,7 +2390,7 @@ static int grib_data_accessors_trie_push(grib_trie_with_rank* accessorsTrie, gri
     return grib_trie_with_rank_insert(accessorsTrie, a->name, a);
 }
 
-static int create_keys(grib_accessor* a, long onlySubset, long startSubset, long endSubset)
+static int create_keys(const grib_accessor* a, long onlySubset, long startSubset, long endSubset)
 {
     grib_accessor_bufr_data_array* self = (grib_accessor_bufr_data_array*)a;
     int err                             = 0;
@@ -2428,6 +2428,7 @@ static int create_keys(grib_accessor* a, long onlySubset, long startSubset, long
     int bitmapIndex                         = -1;
     int incrementBitmapIndex                = 1;
     grib_accessor* elementFromBitmap        = NULL;
+    grib_handle* hand = grib_handle_of_accessor(a);
     /*int reuseBitmap=0;*/
     int dump = 1, count = 0;
     /*int forceGroupClosure=0;*/
@@ -2460,7 +2461,7 @@ static int create_keys(grib_accessor* a, long onlySubset, long startSubset, long
 
     gaGroup                    = grib_accessor_factory(self->dataKeys, &creatorGroup, 0, NULL);
     gaGroup->bufr_group_number = groupNumber;
-    gaGroup->sub_section       = grib_section_create(grib_handle_of_accessor(a), gaGroup);
+    gaGroup->sub_section       = grib_section_create(hand, gaGroup);
     section                    = gaGroup->sub_section;
     /*rootSection=section;*/
     /*sectionUp=self->dataKeys;*/
@@ -2475,7 +2476,7 @@ static int create_keys(grib_accessor* a, long onlySubset, long startSubset, long
     /*indexOfGroupNumber=0;*/
     depth                = 0;
     extraElement         = 0;
-    add_extra_attributes = adding_extra_key_attributes(grib_handle_of_accessor(a));
+    add_extra_attributes = adding_extra_key_attributes(hand);
 
     for (iss = 0; iss < end; iss++) {
         qualityPresent = 0;
@@ -2521,7 +2522,7 @@ static int create_keys(grib_accessor* a, long onlySubset, long startSubset, long
                 }
 
                 gaGroup                    = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
-                gaGroup->sub_section       = grib_section_create(grib_handle_of_accessor(a), gaGroup);
+                gaGroup->sub_section       = grib_section_create(hand, gaGroup);
                 gaGroup->bufr_group_number = groupNumber;
                 accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
                 accessor_constant_set_dval(gaGroup, groupNumber);
@@ -2565,7 +2566,7 @@ static int create_keys(grib_accessor* a, long onlySubset, long startSubset, long
                     depth++;
                 }
                 gaGroup                    = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
-                gaGroup->sub_section       = grib_section_create(grib_handle_of_accessor(a), gaGroup);
+                gaGroup->sub_section       = grib_section_create(hand, gaGroup);
                 gaGroup->bufr_group_number = groupNumber;
                 accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
                 accessor_constant_set_dval(gaGroup, groupNumber);
