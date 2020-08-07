@@ -64,7 +64,6 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_bitmap.c \
 	grib_accessor_class_bits.c  \
 	grib_accessor_class_bits_per_value.c \
-	grib_accessor_class_bufr_data.c \
 	grib_accessor_class_bufr_clear_tables.c \
 	grib_accessor_class_bufr_data_array.c \
 	grib_accessor_class_bufr_data_element.c \

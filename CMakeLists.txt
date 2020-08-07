@@ -49,6 +49,7 @@ check_symbol_exists( fseeko           "stdio.h"    ECCODES_HAVE_FSEEKO )
 check_symbol_exists( posix_memalign   "stdlib.h"   ECCODES_HAVE_POSIX_MEMALIGN )
 check_symbol_exists( fmemopen         "stdio.h"    ECCODES_HAVE_FMEMOPEN )
 check_symbol_exists( funopen          "stdio.h"    ECCODES_HAVE_FUNOPEN )
+check_symbol_exists( realpath         "stdlib.h"   ECCODES_HAVE_REALPATH )
 
 check_c_source_compiles(
       " typedef int foo_t;
@@ -350,6 +351,11 @@ add_definitions( -DHAVE_ECCODES_CONFIG_H )
 
 if( CMAKE_COMPILER_IS_GNUCC )
     ecbuild_add_c_flags("-pedantic")
+endif()
+
+# gfortran 10 has become stricter with argument matching
+if( HAVE_FORTRAN AND CMAKE_Fortran_COMPILER_ID MATCHES "GNU" AND NOT CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 10 )
+    ecbuild_add_fortran_flags("-fallow-argument-mismatch")
 endif()
 
 ###############################################################################

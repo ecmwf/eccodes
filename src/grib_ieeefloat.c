@@ -442,21 +442,21 @@ unsigned long grib_ieee_to_long(double x)
  * Byte swapping is actually implemented in grib_decode_unsigned_long and
  * grib_encode_unsigned_long.
  */
-
 unsigned long grib_ieee64_to_long(double x)
 {
     unsigned long lval;
-    memcpy(&lval, &x, 8);
+    DebugAssert(sizeof(double) == sizeof(long));
+    memcpy(&lval, &x, sizeof(long));
     return lval;
 }
 
 double grib_long_to_ieee64(unsigned long x)
 {
     double dval;
-    memcpy(&dval, &x, 8);
+    DebugAssert(sizeof(double) == sizeof(long));
+    memcpy(&dval, &x, sizeof(long));
     return dval;
 }
-
 
 int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val)
 {

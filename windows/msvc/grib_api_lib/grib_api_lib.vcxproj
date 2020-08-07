@@ -215,7 +215,6 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_budgdate.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufrdc_expanded_descriptors.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_clear_tables.c" />
-    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_data.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_data_array.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_data_element.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_elements_table.c" />
