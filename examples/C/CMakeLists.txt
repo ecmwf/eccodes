@@ -60,6 +60,7 @@ endforeach()
 # Now add each test (shell scripts)
 ########################################################################
 if( HAVE_BUILD_TOOLS )
+    # Command line tools are available
     list(APPEND tests_sanity
          grib_set_data
          large_grib1
@@ -99,7 +100,7 @@ if( HAVE_BUILD_TOOLS )
        bufr_subset
        get_product_kind)
 else()
-    # No tools
+    # No command line tools
     list(APPEND tests_sanity
         grib_set_data
         get_product_kind_samples)

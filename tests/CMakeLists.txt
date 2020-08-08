@@ -342,15 +342,14 @@ if( HAVE_BUILD_TOOLS )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
                       TEST_DEPENDS eccodes_download_gribs )
 else()
-    # No tools
+    # No command line tools
     list(APPEND tests_no_tools
         unit_tests
         julian
         bufr_check_descriptors
         grib_sh_imag
         grib_2nd_order_numValues
-        grib_sh_ieee64
-        )
+        grib_sh_ieee64)
 
     foreach( test ${tests_no_tools} )
     ecbuild_add_test( TARGET  eccodes_t_${test}

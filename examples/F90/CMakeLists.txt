@@ -5,7 +5,7 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 
 execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/include.sh ${CMAKE_CURRENT_BINARY_DIR} )
 
-# Build the executables used by test scripts
+# Add all the tests
 #############################################
 if( HAVE_BUILD_TOOLS )
     list( APPEND tests_sanity
@@ -54,7 +54,7 @@ if( HAVE_BUILD_TOOLS )
           bufr_subset
           get_product_kind )
 else()
-    # No tools
+    # No command line tools
     list( APPEND tests_sanity
           grib_set_pv
           grib_set_data

@@ -67,7 +67,7 @@ if( HAVE_BUILD_TOOLS )
        bufr_ecc-448
     )
 else()
-    # No tools
+    # No command line tools
     list(APPEND tests_basic
        grib_read_sample
        bufr_read_sample
