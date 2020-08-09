@@ -19,7 +19,7 @@ However it requires that cmake be installed on your system.
 2. Unpack distribution:
    > tar -xzf eccodes-x.y.z-Source.tar.gz
 
-3. Create a separate directory where to build ecCodes:
+3. Create a separate directory to build ecCodes:
    > mkdir build
    > cd build
 
@@ -56,6 +56,8 @@ However if you wish to exercise more of the functionality of ecCodes, you are ad
 In this mode the tests will take longer and you need to be connected to the internet so data files can be downloaded
 for the tests.
 
+Also note that if you have several CPUs, you can invoke the "make" and "ctest" commands above in parallel
+(e.g. "make -j4", "ctest -j4"). This will speed up the whole build/test process significantly.
+
 For more details, please see:
 https://confluence.ecmwf.int/display/ECC/ecCodes+installation
-
