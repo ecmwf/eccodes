@@ -209,7 +209,7 @@ static void destroy(grib_context* context, grib_action* act)
 
     grib_concept_value* v = self->concept;
     if (v)
-        grib_trie_delete(v->index);
+        grib_trie_delete_container(v->index);
     while (v) {
         grib_concept_value* n = v->next;
         grib_concept_value_delete(context, v);
