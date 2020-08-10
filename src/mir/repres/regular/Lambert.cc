@@ -15,6 +15,7 @@
 #include "eckit/exception/Exceptions.h"
 
 #include "mir/param/MIRParametrisation.h"
+#include "mir/util/Angles.h"
 #include "mir/util/Grib.h"
 
 
@@ -28,12 +29,16 @@ static RepresentationBuilder<Lambert> __builder("lambert");
 
 Lambert::Lambert(const param::MIRParametrisation& param) : RegularGrid(param, make_projection(param)) {
 
-    // GRIB1 cannot write LaD
     long edition = 0;
     param.get("edition", edition);
 
+    // GRIB1 cannot write LaD
     writeLaDInDegrees_ = edition != 1;
     param.get("writeLaDInDegrees", writeLaDInDegrees_);
+
+    // GRIB2 cannot write negative longitude values
+    writeLonPositive_ = edition == 2;
+    param.get("writeLonPositive", writeLonPositive_);
 }
 
 
@@ -74,15 +79,19 @@ void Lambert::fill(grib_info& info) const {
     Point2 reference = grid_.projection().lonlat({0., 0.});
 
     info.grid.latitudeOfFirstGridPointInDegrees  = firstLL[LLCOORDS::LAT];
-    info.grid.longitudeOfFirstGridPointInDegrees = firstLL[LLCOORDS::LON];
-    info.grid.Ni                                 = long(x_.size());
-    info.grid.Nj                                 = long(y_.size());
+    info.grid.longitudeOfFirstGridPointInDegrees =
+        writeLonPositive_ ? util::normalise_longitude(firstLL[LLCOORDS::LON], 0) : firstLL[LLCOORDS::LON];
+
+    info.grid.Ni = long(x_.size());
+    info.grid.Nj = long(y_.size());
 
     GribExtraSetting::set(info, "DxInMetres", Dx);
     GribExtraSetting::set(info, "DyInMetres", Dy);
-    GribExtraSetting::set(info, "LoVInDegrees", reference[LLCOORDS::LON]);
     GribExtraSetting::set(info, "Latin1InDegrees", reference[LLCOORDS::LAT]);
     GribExtraSetting::set(info, "Latin2InDegrees", reference[LLCOORDS::LAT]);
+    GribExtraSetting::set(
+        info, "LoVInDegrees",
+        writeLonPositive_ ? util::normalise_longitude(reference[LLCOORDS::LON], 0) : reference[LLCOORDS::LON]);
 
     if (writeLaDInDegrees_) {
         GribExtraSetting::set(info, "LaDInDegrees", reference[LLCOORDS::LAT]);
