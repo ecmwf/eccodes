@@ -20,6 +20,7 @@ rm -f $fTmp | true
 REDIRECT=/dev/null
 
 f=${data_dir}/bufr/syno_1.bufr
+grib_check_filesize bufr/syno_1.bufr
 
 #The input ($f) is hardcoded in the f90 example!!!
 ${examples_dir}/eccodes_f_bufr_keys_iterator #2> $REDIRECT > $fTmp

@@ -20,6 +20,8 @@ fBufrTmp=${label}".bufr.tmp"
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
 for f in ${bufr_files}; do
+  grib_check_filesize bufr/$f
+
   if [ "$f" = "ias1_240.bufr" ]; then continue; fi
   
   # Convert to BUFR edition 4

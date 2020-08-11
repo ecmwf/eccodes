@@ -27,6 +27,7 @@ rm -f $fTmp
 #----------------------------------------------
 bufr_files=`cat bufr_data_files.txt`
 for f in ${bufr_files} ; do
+   grib_check_filesize bufr/$f
    echo $f >> $fLog
    ${tools_dir}/bufr_ls $f >> $fLog
 done

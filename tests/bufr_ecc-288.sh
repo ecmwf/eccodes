@@ -20,6 +20,7 @@ label="bufr_ecc_288_test"
 tempRules=temp.${label}.filter
 tempOut=temp.${label}.out
 BufrFile=syno_1.bufr
+grib_check_filesize bufr/$BufrFile
 
 cat > $tempRules <<EOF
  set localLongitude=151.831;

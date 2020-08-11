@@ -38,6 +38,8 @@ blacklist=$blacklist",centre,subCentre,generatingApplication"
 
 for file in ${bufr_files}
 do
+  grib_check_filesize bufr/$file
+
   input=${data_dir}/bufr/$file
   mtv=`${tools_dir}/bufr_get -wcount=1 -p masterTablesVersionNumber $input`
   # Must exclude old versions (before 14):

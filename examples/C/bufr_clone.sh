@@ -18,6 +18,7 @@ rm -f $fBufrTmp1 $fBufrTmp2
 
 # We clone this bufr file
 f=${data_dir}/bufr/syno_1.bufr
+grib_check_filesize bufr/syno_1.bufr
 
 REDIRECT=/dev/null
 

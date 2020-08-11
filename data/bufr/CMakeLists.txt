@@ -26,6 +26,7 @@ endif()
 list(APPEND other_files
     bufr_data_files.txt
     bufr_ref_files.txt
+    filesize_db.txt
 )
 
 foreach( file ${other_files} )

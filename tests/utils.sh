@@ -37,3 +37,18 @@ grib_check_key_exists()
    # grib_get will fail if the key is not found
    $tools_dir/grib_get -p $a_key $a_file >/dev/null
 }
+
+grib_check_filesize()
+(
+  # There are tests that try to work on non-existing file.
+  # e.g. eccodes_t_grib_bitsPerValue. Check the size if it exists.
+  if [ -f "${data_dir}/$1" ]; then
+    subdir=`dirname $1`
+    realsize=`stat -c %s ${data_dir}/$1`
+    expected=`grep " $1$" ${data_dir}/${subdir}/filesize_db.txt | awk -F " " '{print $1}'`
+    if [ "$realsize" != "$expected" ]; then
+      echo Data file \"$1\" does not have the expected size, $expected, which is from http://download.ecmwf.org/test-data/eccodes/data/.
+      exit 1
+    fi
+  fi
+)

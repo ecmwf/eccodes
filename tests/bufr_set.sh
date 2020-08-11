@@ -33,6 +33,7 @@ fBufrTmp=${label}".bufr.tmp"
 rm -f $fBufrTmp
 
 f="syno_1.bufr"
+grib_check_filesize bufr/$f
 echo "Test: setting header for single message file" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}/bufr_set -v -p bufrHeaderCentre,bufrHeaderCentre:l -s bufrHeaderCentre=222 $f $fBufrTmp >> $fLog
@@ -47,6 +48,7 @@ centre=`${tools_dir}/bufr_get -p bufrHeaderCentre $fBufrTmp`
 rm -f $fBufrTmp
 
 f="syno_multi.bufr"
+grib_check_filesize bufr/$f
 echo "Test: setting header for multi-message file" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}/bufr_set -v -p bufrHeaderCentre,bufrHeaderCentre:l -s bufrHeaderCentre=222 $f $fBufrTmp >> $fLog
@@ -141,6 +143,7 @@ ${tools_dir}/bufr_set -f -s bufrHeaderCentre=1024 -f $f $fBufrTmp 2>>$fLog 1>>$f
 #-----------------------------------------------------------
 f=aaen_55.bufr
 
+grib_check_filesize bufr/$f
 # The correction1 key is of type "bits" and only 6 bits wide
 # So its range is 0 -> 63 inclusive
 ${tools_dir}/bufr_set -s correction1=63 $f $fBufrTmp 2>>$fLog 1>>$fLog
@@ -162,6 +165,7 @@ set -e
 # Test: Local ECMWF section. The 'ident' key
 #-----------------------------------------------------------
 f=temp_101.bufr
+grib_check_filesize bufr/$f
 ${tools_dir}/bufr_set -s ident=ABCD $f $fBufrTmp
 result=`${tools_dir}/bufr_get -p ident $fBufrTmp`
 [ "$result" = "ABCD" ]

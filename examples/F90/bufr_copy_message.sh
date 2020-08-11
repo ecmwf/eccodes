@@ -10,6 +10,7 @@
 . ./include.sh
 
 INPUT="../../data/bufr/syno_1.bufr"
+grib_check_filesize bufr/syno_1.bufr
 OUTPUT=out.copy.bufr
 
 ${examples_dir}/eccodes_f_bufr_copy_message > /dev/null

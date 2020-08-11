@@ -29,6 +29,7 @@ fBufrInput2=${label}".bufr.input2"
 # Define filter rules file
 fRules=${label}.filter
 
+grib_check_filesize bufr/syno_1.bufr
 #----------------------------------------------------
 # Test: comparing same files
 #----------------------------------------------------

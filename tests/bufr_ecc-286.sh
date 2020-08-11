@@ -21,6 +21,7 @@ tempRules=temp.${label}.filter
 tempOut=temp.${label}.out
 tempRef=temp.${label}.ref
 BufrFile=syno_1.bufr
+grib_check_filesize bufr/$BufrFile
 
 cat > $tempRules <<EOF
  set unpack=1;

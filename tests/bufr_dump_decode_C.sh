@@ -55,6 +55,8 @@ fi
 
 for file in ${bufr_files}
 do
+  grib_check_filesize bufr/$file
+
   tempSrc=$label.$file.c
   tempExe=$label.$file.exe
   filePath=${data_dir}/bufr/$file

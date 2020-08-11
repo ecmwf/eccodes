@@ -41,6 +41,7 @@ id=`${tools_dir}/bufr_get -p edition,identifier aaen_55.bufr`
 # Test "-p" switch
 #-------------------------------------------
 f="aaen_55.bufr"
+grib_check_filesize bufr/$f
 
 # The reference is the same as for ls
 ref_get=$f".ls.ref"
@@ -56,6 +57,9 @@ diff $ref_get $res_get
 #-------------------------------------------
 # ECC-236
 #-------------------------------------------
+grib_check_filesize bufr/syno_1.bufr
+grib_check_filesize bufr/bssh_176.bufr
+grib_check_filesize bufr/wavb_134.bufr
 result=`${tools_dir}/bufr_get -s unpack=1 -p nonCoordinatePressure syno_1.bufr`
 [ "$result" = "100910" ]
 result=`${tools_dir}/bufr_get -s unpack=1 -p stationOrSiteName bssh_176.bufr`
@@ -89,6 +93,8 @@ diff $tempRef $fTmp
 #-------------------------------------------
 # Local ECMWF section: 'ident' key
 #-------------------------------------------
+grib_check_filesize bufr/temp_102.bufr
+grib_check_filesize bufr/b003_56.bufr
 result=`${tools_dir}/bufr_get -p isSatellite,ident syno_1.bufr`
 [ "$result" = "0 91334" ]
 result=`${tools_dir}/bufr_get -p isSatellite,ident temp_102.bufr`

@@ -73,6 +73,8 @@ tmp="tmp.concept.out"
 
 for d in $data
 do
+  grib_check_filesize $d
+
   set -e
   ${tools_dir}/grib_ls -p gridType,packingType -w dataRepresentationType!=192 ${data_dir}/$d > $tmp
  

@@ -44,6 +44,7 @@ EOF
 bufr_files=`cat bufr_data_files.txt`
 for f in ${bufr_files} ; do
    echo "file: $f" >> $fLog
+   grib_check_filesize bufr/$f
    ${tools_dir}/codes_bufr_filter $fRules $f >> $fLog
    ${tools_dir}/codes_bufr_filter       $fRules $f >> $fLog  # See ECC-205
 done

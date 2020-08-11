@@ -51,6 +51,8 @@ fi
 
 for file in ${bufr_files}
 do
+  grib_check_filesize bufr/$file
+
   tempSrc=$label.$file.f90
   tempExe=$label.$file.exe
 

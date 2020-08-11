@@ -84,6 +84,7 @@ bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 KEYS='edition,totalLength,bufrHeaderCentre,dataCategory,masterTablesVersionNumber,typicalMonth,typicalDay,rdbType,localYear,qualityControl,numberOfSubsets,compressedData,ident'
 
 for bf in ${bufr_files}; do
+    grib_check_filesize bufr/$bf
     input=${data_dir}/bufr/$bf
     $EXEC ${test_dir}/bufr_extract_headers $KEYS $input > $temp1
     ${tools_dir}/bufr_get            -f -p $KEYS $input > $temp2

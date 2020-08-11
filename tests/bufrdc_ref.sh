@@ -21,7 +21,10 @@ bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
 for bf in ${bufr_files}
 do
+  grib_check_filesize bufr/$bf
+
   file=${data_dir}/bufr/$bf
+  grib_check_filesize bufr/$bf.num.ref
   # Test numeric data: compare output of filter (res) with reference file (ref)
   res_num=$file.num.test
   ref_num=$file.num.ref

@@ -21,6 +21,7 @@ rm -f $fTmp | true
 #----------------------------------------------------
   
 #f=${data_dir}/bufr/syno_1.bufr
+grib_check_filesize bufr/syno_1.bufr
 REDIRECT=/dev/null
 
 #We check "syno_1.bufr". The path is

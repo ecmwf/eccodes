@@ -27,6 +27,8 @@ bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
 for file in ${bufr_files}
 do
+  grib_check_filesize bufr/$file
+
   inputBufr=${data_dir}/bufr/$file
   tempSrc=$label.$file.py
 

@@ -19,6 +19,8 @@ EOF
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 for bf in ${bufr_files}
 do
+  grib_check_filesize bufr/$bf
+
   file=${data_dir}/bufr/$bf
 
   # Test descriptors: compare output of filter (res) with reference file (ref)

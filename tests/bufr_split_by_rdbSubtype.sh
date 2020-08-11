@@ -27,6 +27,8 @@ EOF
 
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 for f in ${bufr_files}; do
+    grib_check_filesize bufr/$f
+
     fpath=${data_dir}/bufr/$f
 
     # This will create output files like out.filter_by_rdbSubtype.*

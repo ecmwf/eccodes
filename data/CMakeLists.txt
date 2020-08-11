@@ -62,6 +62,7 @@ list(APPEND other_files
     tigge_pf_ecmwf.grib2.ref
     grib_data_files.txt
     BUFR3.tmpl.dump.plain.ref
+    filesize_db.txt
 )
 
 foreach( file ${other_files} )

@@ -36,6 +36,7 @@ echo "Using $JSON_CHECK ..."
 # -------------------------
 bufr_files=`cat bufr_data_files.txt`
 for file in ${bufr_files}; do
+  grib_check_filesize bufr/$file
   # Test the various JSON dump modes: 'structure', 'all' and 'flat'
   for mode in s a f; do
     rm -f ${file}.json

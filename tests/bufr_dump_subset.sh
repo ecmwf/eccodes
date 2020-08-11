@@ -60,6 +60,7 @@ ${tools_dir}/bufr_dump -p -S12 $input| grep 'stationOrSiteName="SANDE-GALLEBERG"
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 for file in ${bufr_files}
 do
+  grib_check_filesize bufr/$file
   # Every file has at least one subset
   ${tools_dir}/bufr_dump -wcount=1 -S1 ${data_dir}/bufr/$file >/dev/null
 done

@@ -86,6 +86,7 @@ v.grib2
 # Make sure the key "bitsPerValue" is defined for all gribs
 # grib_get will fail if the key is not defined
 for file in $files; do
+  grib_check_filesize $file
   infile=${data_dir}/$file
   if [ -f "$infile" ]; then
     ${tools_dir}/grib_get -p bitsPerValue $infile >/dev/null

@@ -34,6 +34,7 @@ echo "Using $JSON_CHECK ..."
 bufr_files=`cat bufr_data_files.txt`
 for file in ${bufr_files}
 do
+  grib_check_filesize bufr/$file
   ${tools_dir}/bufr_ls -j $file > $tempLog
   if test "x$JSON_CHECK" != "x"; then
     cat $tempLog | json_xs -t none

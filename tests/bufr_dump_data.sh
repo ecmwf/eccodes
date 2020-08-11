@@ -32,6 +32,7 @@ bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 REDIRECT=/dev/null
 
 for file in ${bufr_files}; do
+  grib_check_filesize bufr/$file
   ${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file >/dev/null
 done
 

@@ -34,6 +34,7 @@ REDIRECT=/dev/null
 
 for file in ${bufr_files}
 do
+  grib_check_filesize bufr/$file
   ${tools_dir}/bufr_dump -d ${data_dir}/bufr/$file >/dev/null
 done
 

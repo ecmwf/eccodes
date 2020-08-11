@@ -59,6 +59,8 @@ cd $temp_dir
 
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 for bf in ${bufr_files}; do
+    grib_check_filesize bufr/$bf
+
     b=${data_dir}/bufr/$bf
     echo "Doing $b"
     process $b

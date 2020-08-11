@@ -49,6 +49,8 @@ exclude="ias1_240.bufr syno_multi.bufr tropical_cyclone.bufr aeolus_wmo_26.bufr 
 
 for f in $files
 do
+  grib_check_filesize bufr/$f
+
   process_bufr=1
   for ex in $exclude; do
     if [ "$f" = "$ex" ]; then process_bufr=0; break; fi

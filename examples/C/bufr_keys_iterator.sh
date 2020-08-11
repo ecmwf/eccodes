@@ -22,6 +22,7 @@ rm -f $fTmp
 REDIRECT=/dev/null
 
 f=${data_dir}/bufr/syno_1.bufr
+grib_check_filesize bufr/syno_1.bufr
 ${examples_dir}/c_bufr_keys_iterator $f 2> $REDIRECT > $fTmp
 
 # Check the output
