@@ -20,7 +20,7 @@
 
 #include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
-#include "mir/namedgrids/NamedGrid.h"
+#include "mir/key/grid/Grid.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/repres/other/UnstructuredGrid.h"
@@ -285,7 +285,7 @@ const Representation* Representation::globalise(data::MIRField& field) const {
 
     // TODO: cache me
 
-    RepresentationHandle octahedral(namedgrids::NamedGrid::lookup("O320").representation());
+    RepresentationHandle octahedral(key::grid::Grid::lookup("O320").representation());
     size_t size = octahedral->numberOfPoints() + numberOfPoints();
 
     std::vector<double> latitudes;

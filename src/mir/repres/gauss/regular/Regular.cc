@@ -81,7 +81,7 @@ void Regular::fill(grib_info& info) const {
 void Regular::fill(api::MIRJob& job) const {
     std::stringstream os;
     os << "F" << N_;
-    job.set("gridname", os.str());
+    job.set("grid", os.str());
 }
 
 void Regular::makeName(std::ostream& out) const {
