@@ -48,8 +48,8 @@ grib_check_filesize()
     set +e
     realsize=`stat -c %s $fullpath`
     if [ $? != 0 ]; then
-      realsize=`stat -f %z $fullpath`
       set -e
+      realsize=`stat -f %z $fullpath`
     else
       set -e
     fi
