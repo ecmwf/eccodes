@@ -42,10 +42,19 @@ grib_check_filesize()
 (
   # There are tests that try to work on non-existing file.
   # e.g. eccodes_t_grib_bitsPerValue. Check the size if it exists.
-  if [ -f "${data_dir}/$1" ]; then
-    subdir=`dirname $1`
-    realsize=`stat -c %s ${data_dir}/$1`
-    expected=`grep " $1$" ${data_dir}/${subdir}/filesize_db.txt | awk -F " " '{print $1}'`
+  fullpath=${data_dir}/$1
+  if [ -f $fullpath ]; then
+    # try GNU version first
+    set +e
+    realsize=`stat -c %s $fullpath`
+    if [ $? != 0 ]; then
+      realsize=`stat -f %z $fullpath`
+      set -e
+    else
+      set -e
+    fi
+    dir=`dirname $fullpath`;
+    expected=`grep " $1$" $dir/filesize_db.txt | awk -F " " '{print $1}'`
     if [ "$realsize" != "$expected" ]; then
       echo Data file \"$1\" does not have the expected size, $expected, which is from http://download.ecmwf.org/test-data/eccodes/data/.
       exit 1
