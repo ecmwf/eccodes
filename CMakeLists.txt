@@ -99,10 +99,11 @@ ecbuild_add_option( FEATURE JPG_LIBOPENJPEG
     CONDITION ENABLE_JPG
     DEFAULT ON )
 
+find_package( PNG )
 ecbuild_add_option( FEATURE PNG
     DESCRIPTION "Support for PNG decoding/encoding"
     DEFAULT OFF
-    REQUIRED_PACKAGES PNG )
+    CONDITION PNG_FOUND )
 
 if( HAVE_PNG )
     set( HAVE_LIBPNG 1 ) # compatibility with autotools
@@ -111,21 +112,29 @@ else()
     set( HAVE_LIBPNG 0 )
 endif()
 
+find_package( NetCDF )
 ecbuild_add_option( FEATURE NETCDF
     DESCRIPTION "Support for GRIB to NetCDF conversion"
     DEFAULT ON
-    REQUIRED_PACKAGES NetCDF
+    CONDITION NetCDF_FOUND
     NO_TPL )
 
+find_package( AEC QUIET )
 ecbuild_add_option( FEATURE AEC
     DESCRIPTION "Support for Adaptive Entropy Coding"
     DEFAULT OFF
-    REQUIRED_PACKAGES AEC )
+    CONDITION AEC_FOUND )
 
+#find_package( Python 2.6 NO_LIBS )
+ecbuild_find_python( VERSION 2.6 NO_LIBS )
+find_package( NumPy )
+message(STATUS "..............Python_FOUND=${PYTHON_FOUND}    and NumPy_FOUND=${NUMPY_FOUND}")
 ecbuild_add_option( FEATURE PYTHON
     DESCRIPTION "Build the ecCodes Python2 interface (deprecated)"
     DEFAULT OFF
-    REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy )
+    #REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy
+    CONDITION Python_FOUND AND NumPy_FOUND
+    )
 # For Python2 we build our own bindings (using SWIG) in the build directory
 # but for Python3 one has to add the eccodes from pip3 AFTER the install
 if( PYTHON_VERSION_MAJOR EQUAL 3 )
