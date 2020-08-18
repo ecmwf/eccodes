@@ -99,11 +99,10 @@ ecbuild_add_option( FEATURE JPG_LIBOPENJPEG
     CONDITION ENABLE_JPG
     DEFAULT ON )
 
-find_package( PNG )
 ecbuild_add_option( FEATURE PNG
     DESCRIPTION "Support for PNG decoding/encoding"
     DEFAULT OFF
-    CONDITION PNG_FOUND )
+    REQUIRED_PACKAGES PNG )
 
 if( HAVE_PNG )
     set( HAVE_LIBPNG 1 ) # compatibility with autotools
@@ -112,20 +111,18 @@ else()
     set( HAVE_LIBPNG 0 )
 endif()
 
-find_package( NetCDF )
 ecbuild_add_option( FEATURE NETCDF
     DESCRIPTION "Support for GRIB to NetCDF conversion"
     DEFAULT ON
-    CONDITION NetCDF_FOUND
+    REQUIRED_PACKAGES NetCDF
     NO_TPL )
 
-find_package( AEC QUIET )
+find_package( AEC )
 ecbuild_add_option( FEATURE AEC
     DESCRIPTION "Support for Adaptive Entropy Coding"
     DEFAULT OFF
     CONDITION AEC_FOUND )
 
-#find_package( Python 2.6 NO_LIBS )
 ecbuild_find_python( VERSION 2.6 NO_LIBS )
 find_package( NumPy )
 message(STATUS "..............Python_FOUND=${PYTHON_FOUND}    and NumPy_FOUND=${NUMPY_FOUND}")
@@ -218,11 +215,11 @@ if( ENABLE_JPG )
     #       which can affect future package discovery if not undone by the caller.
     #       The current CMAKE_PREFIX_PATH is backed up as _CMAKE_PREFIX_PATH
     #
-    set(CMAKE_WARN_DEPRECATED OFF) # Suppress deprecation message
-    ecbuild_add_extra_search_paths( jasper )
+    #set(CMAKE_WARN_DEPRECATED OFF) # Suppress deprecation message
+    #ecbuild_add_extra_search_paths( jasper )
     find_package( Jasper )
-    set(CMAKE_PREFIX_PATH ${_CMAKE_PREFIX_PATH})    # Restore CMAKE_PREFIX_PATH
-    set(CMAKE_WARN_DEPRECATED ON)  # Remove suppression
+    #set(CMAKE_PREFIX_PATH ${_CMAKE_PREFIX_PATH})    # Restore CMAKE_PREFIX_PATH
+    #set(CMAKE_WARN_DEPRECATED ON)  # Remove suppression
 
     find_package( OpenJPEG )
 
@@ -507,7 +504,7 @@ ecbuild_print_summary()
 
 ecbuild_info("")
 ecbuild_info("   +--------------------------+")
-ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}  |")
+ecbuild_info("   |  ecCodes version ${eccodes_VERSION}  |")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("")
 

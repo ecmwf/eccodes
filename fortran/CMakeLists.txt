@@ -45,7 +45,7 @@ if( HAVE_FORTRAN )
     ecbuild_add_library( TARGET     eccodes_f90
                          SOURCES    grib_fortran.c grib_f90.f90 eccodes_f90.f90 grib_kinds.h
                          GENERATED  grib_f90.f90 eccodes_f90.f90
-                         LIBS       eccodes )
+                         PRIVATE_LIBS       eccodes )
     if( DEFINED ecbuild_VERSION AND NOT ${ecbuild_VERSION} VERSION_LESS 3.1 )
         # Installed module directory is not in the PUBLIC INCLUDES!
         target_include_directories( eccodes_f90 PUBLIC $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}> )
