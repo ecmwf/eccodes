@@ -54,7 +54,7 @@ However if you wish to exercise more of the functionality of ecCodes, you are ad
   > cmake  ...  -DENABLE_EXTRA_TESTS=ON
 
 In this mode the tests will take longer and you need to be connected to the internet so data files can be downloaded
-for the tests.
+for the tests. Depending on the speed of your connection, downloading tests may timeout before completion. Then you may want to bump up 'TIMEOUT' parameter in DartConfiguration.tcl. If incomplete file is left behind after a timeout, downloading tests will continue to fail. You'll have to remove the corrupt file itself and the associated .localmd5 file to have download retried.
 
 Also note that if you have several CPUs, you can invoke the "make" and "ctest" commands above in parallel
 (e.g. "make -j4", "ctest -j4"). This will speed up the whole build/test process significantly.
