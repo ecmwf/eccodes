@@ -28,7 +28,7 @@ fi
 #==============================================
 # Test downloaded data files
 #==============================================
-bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
+bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt | awk -F : '{print $1}'`
 REDIRECT=/dev/null
 
 for file in ${bufr_files}; do

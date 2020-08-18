@@ -13,9 +13,11 @@ string(REGEX REPLACE "\n" ";" metar_refs_to_download "${metar_refs_to_download}"
 if( ENABLE_EXTRA_TESTS )
     ecbuild_get_test_multidata(
          TARGET eccodes_download_metars
-         NOCHECK
+#         NOCHECK
         NAMES ${metar_files_to_download} ${metar_refs_to_download}
     )
+    set_tests_properties( eccodes_download_metars PROPERTIES FIXTURES_SETUP fixture_download_metars )
+
 endif()
 
 # Copy other files - e.g. text files etc from the source data/metar dir

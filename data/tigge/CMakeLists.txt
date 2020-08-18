@@ -7,8 +7,9 @@ string(REGEX REPLACE "\n" ";" tigge_files_to_download "${tigge_files_to_download
 if( ENABLE_EXTRA_TESTS )
     # Download all data files
     ecbuild_get_test_multidata( TARGET eccodes_download_tigge_gribs
-                            NOCHECK
+#                           NOCHECK
                             NAMES ${tigge_files_to_download} )
+    set_tests_properties( eccodes_download_tigge_gribs PROPERTIES FIXTURES_SETUP fixture_download_tigge_gribs )
 endif()
 
 #######

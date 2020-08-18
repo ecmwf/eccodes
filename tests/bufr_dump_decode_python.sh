@@ -23,7 +23,7 @@ cd $tempDir
 
 echo "PYTHONPATH set to $PYTHONPATH"
 
-bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
+bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt | awk -F : '{print $1}'`
 
 for file in ${bufr_files}
 do

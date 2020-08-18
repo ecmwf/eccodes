@@ -17,7 +17,7 @@ label="bufr_change_edition"
 
 fBufrTmp=${label}".bufr.tmp"
 
-bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
+bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt | awk -F : '{print $1}'`
 
 for f in ${bufr_files}; do
   if [ "$f" = "ias1_240.bufr" ]; then continue; fi

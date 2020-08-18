@@ -22,7 +22,7 @@ tempDir=${label}.dir
 rm -rf $tempDir
 mkdir -p $tempDir
 
-bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
+bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt | awk -F : '{print $1}'`
 
 # If FORTRAN is enabled, then the pkgconfig should be one level above the test dir
 PKGCONFIG_FILE=../../lib/pkgconfig/eccodes_f90.pc

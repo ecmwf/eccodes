@@ -10,9 +10,10 @@ string(REGEX REPLACE "\n" ";" gts_refs_to_download "${gts_refs_to_download}")
 if( ENABLE_EXTRA_TESTS )
     ecbuild_get_test_multidata(
         TARGET eccodes_download_gts
-        NOCHECK
+#       NOCHECK
         NAMES ${gts_files_to_download} ${gts_refs_to_download}
     )
+    set_tests_properties( eccodes_download_gts PROPERTIES FIXTURES_SETUP fixtures_download_gts )
 endif()
 
 # Copy other files - e.g. text files etc from the source data/gts dir

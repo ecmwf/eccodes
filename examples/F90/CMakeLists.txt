@@ -102,16 +102,19 @@ foreach( tool ${tests_sanity} )
                       RESOURCES       bufr_read_scatterometer_f.ref
                       COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh )
 endforeach()
-foreach( tool ${tests_extra} )
-    ecbuild_add_test( TARGET          eccodes_f_${tool}
-                      SOURCES         ${tool}.f90
-                      LINKER_LANGUAGE Fortran
-                      LIBS            eccodes_f90 eccodes
-                      CONDITION       HAVE_FORTRAN AND ENABLE_EXTRA_TESTS
-                      RESOURCES       bufr_read_scatterometer_f.ref
-                      COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
-                      TEST_DEPENDS    eccodes_download_gribs eccodes_download_bufrs )
-endforeach()
+
+if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
+    foreach( tool ${tests_extra} )
+        ecbuild_add_test( TARGET          eccodes_f_${tool}
+                          SOURCES         ${tool}.f90
+                          LINKER_LANGUAGE Fortran
+                          LIBS            eccodes_f90 eccodes
+                          RESOURCES       bufr_read_scatterometer_f.ref
+                          COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
+                          )
+        set_tests_properties( eccodes_f_${tool} PROPERTIES FIXTURES_REQUIRED "fixture_download_gribs;fixture_download_bufrs" )
+    endforeach()
+endif()
 
 # Executables without a shell script
 # TODO

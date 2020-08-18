@@ -118,31 +118,39 @@ foreach( test ${tests_basic} )
                       CONDITION  HAVE_PYTHON
                       ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} )
 endforeach()
-foreach( test ${tests_extra} )
-    ecbuild_add_test( TARGET eccodes_p_${test}_test
-                      TYPE       SCRIPT
-                      DEPENDS    ${ptools}
-                      COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                      CONDITION  HAVE_PYTHON AND ENABLE_EXTRA_TESTS
-                      ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
-                      TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs eccodes_download_bufrs )
-endforeach()
+
+if( HAVE_PYTHON AND ENABLE_EXTRA_TESTS )
+    foreach( test ${tests_extra} )
+        ecbuild_add_test( TARGET eccodes_p_${test}_test
+                          TYPE       SCRIPT
+                          DEPENDS    ${ptools}
+                          COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                          ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
+                          )
+        set_tests_properties( eccodes_p_${test}_test PROPERTIES FIXTURES_REQUIRED "fixture_download_gribs;fixture_download_tigge_gribs;fixture_download_bufrs" )
+    endforeach()
+endif()
 
 # Add test which requires input CSV file
-ecbuild_add_test( TARGET eccodes_p_bufr_encode_flight_test
-                  TYPE       SCRIPT
-                  DEPENDS    ${ptools}
-                  COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_flight.sh
-                  CONDITION  HAVE_PYTHON AND ENABLE_EXTRA_TESTS AND HAVE_BUILD_TOOLS
-                  ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
-                  RESOURCES   flight_data.csv
-                  TEST_DEPENDS eccodes_download_bufrs )
+if( HAVE_PYTHON AND ENABLE_EXTRA_TESTS AND HAVE_BUILD_TOOLS )
+    ecbuild_add_test( TARGET eccodes_p_bufr_encode_flight_test
+                      TYPE       SCRIPT
+                      DEPENDS    ${ptools}
+                      COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_flight.sh
+                      ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
+                      RESOURCES   flight_data.csv
+                      )
+    set_tests_properties( eccodes_p_bufr_encode_flight_test PROPERTIES FIXTURES_REQUIRED fixture_download_bufrs )
+endif()
+
 
 # Conditional tests
-ecbuild_add_test( TARGET eccodes_p_grib_ccsds_test
-                  TYPE       SCRIPT
-                  DEPENDS    ${ptools}
-                  COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
-                  CONDITION  HAVE_PYTHON AND HAVE_AEC AND ENABLE_EXTRA_TESTS
-                  ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
-                  TEST_DEPENDS eccodes_download_gribs )
+if( HAVE_PYTHON AND HAVE_AEC AND ENABLE_EXTRA_TESTS )
+    ecbuild_add_test( TARGET eccodes_p_grib_ccsds_test
+                      TYPE       SCRIPT
+                      DEPENDS    ${ptools}
+                      COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
+                      ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
+                      )
+    set_tests_properties( eccodes_p_grib_ccsds_test PROPERTIES FIXTURES_REQUIRED fixture_download_gribs )
+endif()

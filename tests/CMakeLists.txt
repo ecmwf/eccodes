@@ -223,15 +223,15 @@ if( HAVE_BUILD_TOOLS )
     # Note: making the test dependent on the grib files (with DEPENDS)
     #       means they will be downloaded at "make" time
     #       rather than when you do "ctest". Use TEST_DEPENDS instead
-    foreach( test ${tests_data_reqd} )
-        ecbuild_add_test( TARGET eccodes_t_${test}
-                      TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                      RESOURCES asca_139.t1.ref
-                      TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs
-                                   eccodes_download_bufrs eccodes_download_metars eccodes_download_gts )
-    endforeach()
+    if( ENABLE_EXTRA_TESTS )
+      foreach( test ${tests_data_reqd} )
+          ecbuild_add_test( TARGET eccodes_t_${test}
+                            TYPE SCRIPT
+                            COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                            RESOURCES asca_139.t1.ref )
+          set_tests_properties( eccodes_t_${test} PROPERTIES FIXTURES_REQUIRED "fixture_download_gribs;fixture_download_tigge_gribs;fixture_download_bufrs;fixture_download_metars;eccodes_download_gts" )
+      endforeach()
+    endif()
 
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         set_tests_properties( eccodes_t_bufr_dump_encode_fortran PROPERTIES TIMEOUT 2500 )
@@ -247,33 +247,31 @@ if( HAVE_BUILD_TOOLS )
             ecbuild_add_test( TARGET eccodes_t_${test}
                               TYPE SCRIPT
                               COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                              ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} PYTHONPATH=${PROJECT_BINARY_DIR}/python
-                              TEST_DEPENDS eccodes_download_bufrs )
+                              ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} PYTHONPATH=${PROJECT_BINARY_DIR}/python )
+            set_tests_properties( eccodes_t_${test} PROPERTIES FIXTURES_REQUIRED fixture_download_bufrs )
         endforeach()
     endif()
 
     ###########################################
     # Note: the reference file is in the tests dir not data dir!
-    ecbuild_add_test( TARGET eccodes_t_grib_grid_lamb_az_eq_area
-                      TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_grid_lamb_az_eq_area.sh
-                      RESOURCES grib_lamb_az_eq_area.ref
-                      TEST_DEPENDS eccodes_download_gribs )
+    if (ENABLE_EXTRA_TESTS)
+        ecbuild_add_test( TARGET eccodes_t_grib_grid_lamb_az_eq_area
+                          TYPE SCRIPT
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_grid_lamb_az_eq_area.sh
+                          RESOURCES grib_lamb_az_eq_area.ref )
+        set_tests_properties( eccodes_t_grib_grid_lamb_az_eq_area PROPERTIES FIXTURES_REQUIRED fixture_download_gribs )
+    endif()
 
-    # These ones are conditional
-    ###########################################
-    ecbuild_add_test( TARGET eccodes_t_tools_data_from_stdin
-                      TYPE SCRIPT
-                      CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools_data_from_stdin.sh
-                      TEST_DEPENDS eccodes_download_bufrs )
-
-    ecbuild_add_test( TARGET eccodes_t_bufr_ecc-197
-                      TYPE SCRIPT
-                      CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_ecc-197.sh
-                      TEST_DEPENDS eccodes_download_bufrs )
+    if(NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS)
+        ecbuild_add_test( TARGET eccodes_t_tools_data_from_stdin
+                          TYPE SCRIPT
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools_data_from_stdin.sh)
+        set_tests_properties( eccodes_t_tools_data_from_stdin PROPERTIES FIXTURES_REQUIRED fixture_download_bufrs )
+        ecbuild_add_test( TARGET eccodes_t_bufr_ecc-197
+                          TYPE SCRIPT
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_ecc-197.sh)
+        set_tests_properties(eccodes_t_bufr_ecc-197 PROPERTIES  FIXTURES_REQUIRED fixture_download_bufrs )
+    endif()
 
     if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
         ecbuild_add_executable( TARGET    grib_encode_pthreads
@@ -292,55 +290,69 @@ if( HAVE_BUILD_TOOLS )
         endforeach()
         ecbuild_add_test( TARGET eccodes_t_grib_threads_ecc-604
                           TYPE SCRIPT
-                          TEST_DEPENDS eccodes_download_gribs
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_threads_ecc-604.sh )
+        set_tests_properties(eccodes_t_grib_threads_ecc-604 PROPERTIES FIXTURES_REQUIRED fixture_download_gribs)
+
         ecbuild_add_test( TARGET eccodes_t_bufr_threads_ecc-604
                           TYPE SCRIPT
-                          TEST_DEPENDS eccodes_download_bufrs
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_threads_ecc-604.sh )
+        set_tests_properties(eccodes_t_bufr_threads_ecc-604 PROPERTIES FIXTURES_REQUIRED fixture_download_bufrs)
+
     endif()
 
-    ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
-                      TYPE SCRIPT
-                      CONDITION HAVE_NETCDF AND ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
-                      TEST_DEPENDS eccodes_download_gribs )
+    if( HAVE_NETCDF AND ENABLE_EXTRA_TESTS )
+        ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
+                          TYPE SCRIPT
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
+                          )
+        set_tests_properties(eccodes_t_grib_to_netcdf PROPERTIES FIXTURES_REQUIRED fixture_download_gribs)
+    endif()
 
-    ecbuild_add_test( TARGET eccodes_t_grib_jpeg
-                      TYPE SCRIPT
-                      CONDITION HAVE_JPEG AND ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_jpeg.sh
-                      TEST_DEPENDS eccodes_download_gribs )
+    if( HAVE_JPEG AND ENABLE_EXTRA_TESTS )
+        ecbuild_add_test( TARGET eccodes_t_grib_jpeg
+                          TYPE SCRIPT
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_jpeg.sh
+                        )
+        set_tests_properties(eccodes_t_grib_jpeg PROPERTIES FIXTURES_REQUIRED fixture_download_gribs)
+    endif()
 
-    ecbuild_add_test( TARGET eccodes_t_grib_png
-                      TYPE SCRIPT
-                      CONDITION HAVE_PNG AND ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_png.sh
-                      TEST_DEPENDS eccodes_download_gribs )
+    if( HAVE_PNG AND ENABLE_EXTRA_TESTS )
+        ecbuild_add_test( TARGET eccodes_t_grib_png
+                          TYPE SCRIPT
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_png.sh
+                          )
+        set_tests_properties(eccodes_t_grib_png PROPERTIES FIXTURES_REQUIRED fixture_download_gribs)
+    endif()
 
-    ecbuild_add_test( TARGET eccodes_t_grib_ccsds
-                      TYPE SCRIPT
-                      CONDITION HAVE_AEC AND ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
-                      TEST_DEPENDS eccodes_download_gribs )
+    if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
+        ecbuild_add_test( TARGET eccodes_t_grib_ccsds
+                          TYPE SCRIPT
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
+                          )
+        set_tests_properties(eccodes_t_grib_ccsds PROPERTIES FIXTURES_REQUIRED fixture_download_gribs)
+    endif()
 
     ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
                       TYPE SCRIPT
                       CONDITION ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh )
 
-    ecbuild_add_test( TARGET eccodes_t_bufr_split_by_rdbSubtype
-                      TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS AND ECCODES_INSTALL_EXTRA_TOOLS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_split_by_rdbSubtype.sh
-                      TEST_DEPENDS eccodes_download_bufrs )
+    if( ENABLE_EXTRA_TESTS AND ECCODES_INSTALL_EXTRA_TOOLS )
+        ecbuild_add_test( TARGET eccodes_t_bufr_split_by_rdbSubtype
+                          TYPE SCRIPT
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_split_by_rdbSubtype.sh
+                          )
+        set_tests_properties(eccodes_t_bufr_split_by_rdbSubtype PROPERTIES FIXTURES_REQUIRED fixture_download_bufrs)
+    endif()
 
     # Performance test. Must have -DENABLE_GRIB_TIMER=ON
-    ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
-                      TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS AND ENABLE_GRIB_TIMER
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
-                      TEST_DEPENDS eccodes_download_gribs )
+    if( ENABLE_EXTRA_TESTS AND ENABLE_GRIB_TIMER )
+        ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
+                          TYPE SCRIPT
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
+                          )
+	set_tests_properties(eccodes_t_grib_ecc-386 PROPERTIES FIXTURES_REQUIRED fixture_download_gribs)
+    endif()
 else()
     # No command line tools
     list(APPEND tests_no_tools

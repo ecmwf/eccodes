@@ -1,1 +1,1 @@
-metar.txt
+metar.txt:6d63d9ba8afe3a84f5b61d27a3b591ed

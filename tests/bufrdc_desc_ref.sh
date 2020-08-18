@@ -16,7 +16,7 @@ cat > bufrdc_desc_ref.filter<<EOF
 print "[bufrdcExpandedDescriptors!1''%06d]";
 EOF
 
-bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
+bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt | awk -F : '{print $1}'`
 for bf in ${bufr_files}
 do
   file=${data_dir}/bufr/$bf

@@ -32,7 +32,7 @@ fRules=${label}.filter
 #   tropical_cyclone.bufr   -- multi message
 #   syno_multi.bufr         -- multi message
 #-----------------------------------------------------------
-files=`cat ${data_dir}/bufr/bufr_data_files.txt`
+files=`cat ${data_dir}/bufr/bufr_data_files.txt | awk -F : '{print $1}'`
 
 exclude="ias1_240.bufr syno_multi.bufr tropical_cyclone.bufr aeolus_wmo_26.bufr"
 
