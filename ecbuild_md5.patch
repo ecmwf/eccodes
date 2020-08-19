@@ -1,22 +1,24 @@
 diff --git a/cmake/ecbuild_get_test_data.cmake b/cmake/ecbuild_get_test_data.cmake
-index ac1113e..c227b34 100644
+index ac1113e..c99a31b 100644
 --- a/cmake/ecbuild_get_test_data.cmake
 +++ b/cmake/ecbuild_get_test_data.cmake
-@@ -217,7 +217,12 @@ function( ecbuild_get_test_data )
-                                 COMMAND ${CMAKE_COMMAND} -E md5sum ${_p_NAME} > ${_p_NAME}.localmd5
+@@ -213,12 +213,12 @@ function( ecbuild_get_test_data )
+ 
+         if( _p_MD5 )
+ 
++            configure_file( "${ECBUILD_MACROS_DIR}/md5.in" ${_p_NAME}.md5 @ONLY NEWLINE_STYLE LF )
++
+             add_custom_command( OUTPUT ${_p_NAME}.localmd5
+-                                COMMAND ${CMAKE_COMMAND} -E md5sum ${_p_NAME} > ${_p_NAME}.localmd5
++                                COMMAND ${CMAKE_COMMAND} -E md5sum ${_p_NAME} > ${_p_NAME}.localmd5 && od -c ${_p_NAME}.localmd5 && od -c ${_p_NAME}.md5
                                  DEPENDS ${_p_NAME} )
  
 -            configure_file( "${ECBUILD_MACROS_DIR}/md5.in" ${_p_NAME}.md5 @ONLY )
-+            add_custom_command( COMMAND od -c ${_p_NAME}.localmd5 )
-+
-+            configure_file( "${ECBUILD_MACROS_DIR}/md5.in" ${_p_NAME}.md5 @ONLY NEWLINE_STYLE LF )
-+            endif()
-+
-+            add_custom_command( COMMAND od -c ${_p_NAME}.md5 )
- 
+-
              add_custom_command( OUTPUT ${_p_NAME}.ok
                                  COMMAND ${CMAKE_COMMAND} -E compare_files ${_p_NAME}.md5 ${_p_NAME}.localmd5 &&
-@@ -353,11 +358,11 @@ function( ecbuild_get_test_multidata )
+                                         ${CMAKE_COMMAND} -E touch ${_p_NAME}.ok
+@@ -353,11 +353,11 @@ function( ecbuild_get_test_multidata )
      ### check parameters
  
      if( NOT _p_NAMES )
