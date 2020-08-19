@@ -156,7 +156,7 @@ if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
         ecbuild_add_executable( TARGET    c_${test}
                                 NOINSTALL
                                 SOURCES   ${test}.c
-                                LIBS      eccodes )
+                                LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         ecbuild_add_test( TARGET       eccodes_c_${test}
                           TYPE         SCRIPT
                           COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh

@@ -279,7 +279,7 @@ if( HAVE_BUILD_TOOLS )
         ecbuild_add_executable( TARGET    grib_encode_pthreads
                                 NOINSTALL
                                 SOURCES   grib_encode_pthreads.c
-                                LIBS      eccodes )
+                                LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads
                           TYPE SCRIPT
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh )
@@ -288,7 +288,7 @@ if( HAVE_BUILD_TOOLS )
             ecbuild_add_executable( TARGET    ${test}
                                     NOINSTALL
                                     SOURCES   ${test}.c
-                                    LIBS      eccodes )
+                                    LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         endforeach()
         ecbuild_add_test( TARGET eccodes_t_grib_threads_ecc-604
                           TYPE SCRIPT
