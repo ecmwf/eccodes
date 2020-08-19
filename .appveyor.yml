@@ -71,7 +71,7 @@ before_build:
 build_script:
   - cmd: cd %ECCODES_SRC%
   - cmd: copy %ECBUILD_SRC%\cmake\md5.in %ECBUILD_SRC%\cmake\md5.in.tmp
-  - cmd: tr '\015' %ECBUILD_SRC%\cmake\md5.in.tmp > %ECBUILD_SRC%\cmake\md5.in
+  - cmd: tr -d '\015' < %ECBUILD_SRC%\cmake\md5.in.tmp > %ECBUILD_SRC%\cmake\md5.in
   - cmd: mkdir build && cd build
   - cmd: cmake -G "NMake Makefiles" ^
                -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
