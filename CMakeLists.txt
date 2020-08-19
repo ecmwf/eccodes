@@ -16,7 +16,7 @@
 #
 #       -DCMAKE_MODULE_PATH=/path/to/ecbuild/cmake
 
-cmake_minimum_required( VERSION 3.6 FATAL_ERROR )
+cmake_minimum_required( VERSION 3.11 FATAL_ERROR )
 
 project( eccodes VERSION 2.19.0 LANGUAGES C )
 
@@ -24,7 +24,7 @@ set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} 
 
 include( ecbuild_system NO_POLICY_SCOPE )
 
-ecbuild_requires_macro_version( 2.7.2 )
+ecbuild_requires_macro_version( 3.4 )
 
 ###############################################################################
 # local project
