@@ -229,7 +229,7 @@ if( HAVE_BUILD_TOOLS )
                             TYPE SCRIPT
                             COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                             RESOURCES asca_139.t1.ref )
-          set_tests_properties( eccodes_t_${test} PROPERTIES FIXTURES_REQUIRED "fixture_download_gribs;fixture_download_tigge_gribs;fixture_download_bufrs;fixture_download_metars;eccodes_download_gts" )
+          set_tests_properties( eccodes_t_${test} PROPERTIES FIXTURES_REQUIRED "fixture_download_gribs;fixture_download_tigge_gribs;fixture_download_bufrs;fixture_download_metars;fixture_download_gts" )
       endforeach()
     endif()
 

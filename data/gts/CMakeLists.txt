@@ -13,7 +13,7 @@ if( ENABLE_EXTRA_TESTS )
 #       NOCHECK
         NAMES ${gts_files_to_download} ${gts_refs_to_download}
     )
-    set_tests_properties( eccodes_download_gts PROPERTIES FIXTURES_SETUP fixtures_download_gts )
+    set_tests_properties( eccodes_download_gts PROPERTIES FIXTURES_SETUP fixture_download_gts )
 endif()
 
 # Copy other files - e.g. text files etc from the source data/gts dir
