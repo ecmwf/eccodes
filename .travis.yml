@@ -56,6 +56,7 @@ script:
   - echo ${BUILD_DIR}
 
   # build ecCodes
+  - cat ${ECCODES_SRC}/ecbuild_md5.patch | patch -p1 -d ${ECBUILD_SRC}
   - mkdir -p ${BUILD_DIR} && cd ${BUILD_DIR}
   - cmake -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR}
           -D ENABLE_FORTRAN=0
