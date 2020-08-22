@@ -219,7 +219,7 @@ grib_option grib_options[] = {
     { "R:", 0, 0, 0, 1, 0 },
     { "A:", 0, 0, 0, 1, 0 },
     /*    {"P",0,"Compare data values using the packing error as tolerance.\n",0,1,0},*/
-    { "t:", "factor", "Compare data values using factor multiplied by the tolerance specified in options -P -R -A.\n", 0, 1, 0 },
+    { "t:", "factor", "Compare data values using factor multiplied by the tolerance specified in options -R -A.\n", 0, 1, 0 },
     { "w:", 0, 0, 0, 1, 0 },
     { "f", 0, 0, 0, 1, 0 },
     { "F", 0, 0, 1, 0, 0 },
@@ -239,7 +239,7 @@ static int end                    = -1;
 const char* tool_description =
     "Compare BUFR messages contained in two files."
     "\n\tIf some differences are found it fails returning an error code."
-    "\n\tFloating-point values are compared exactly by default, different tolerance can be defined see -P -A -R."
+    "\n\tFloating-point values are compared exactly by default, different tolerances can be defined (see -A -R)."
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
 const char* tool_name  = "bufr_compare";
