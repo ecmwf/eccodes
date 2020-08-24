@@ -66,7 +66,7 @@ if shared_libs == 'OFF':
 
 
 setup(name='eccodes',
-      version='@ECCODES_VERSION_STR@',
+      version='@eccodes_VERSION_STR@',
       author='ECMWF',
       author_email='Software.Support@ecmwf.int',
       description="""Python interface for ecCodes""",
