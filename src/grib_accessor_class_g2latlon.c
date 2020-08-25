@@ -212,7 +212,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
          * The longitude values shall be limited to the range 0 to 360 degrees inclusive */
         new_val = normalise_longitude_in_degrees(*val);
         if (hand->context->debug && new_val != *val) {
-            fprintf(stderr, "ECCODES DEBUG pack_double g2latlon: normalise longitude %g -> %g\n", *val, new_val);//??
+            fprintf(stderr, "ECCODES DEBUG pack_double g2latlon: normalise longitude %g -> %g\n", *val, new_val);
         }
     }
     grid[self->index] = new_val;
