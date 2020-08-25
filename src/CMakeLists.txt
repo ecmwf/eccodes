@@ -450,4 +450,7 @@ ecbuild_add_library( TARGET    eccodes
                               eccodes.h
                               eccodes_windef.h
                               ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h
-                              ${PROJECT_BINARY_DIR}/eccodes_config.h )
+                              ${PROJECT_BINARY_DIR}/eccodes_config.h
+                    PUBLIC_INCLUDES
+                              $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
+                              $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src> )
