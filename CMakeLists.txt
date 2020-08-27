@@ -17,12 +17,13 @@
 #       -DCMAKE_MODULE_PATH=/path/to/ecbuild/cmake
 
 cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
+
+set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake" )
 find_package( ecbuild 3.4 REQUIRED )
 
 # Initialise project
 project( eccodes VERSION 2.19.0 LANGUAGES C )
 
-set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake" )
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
