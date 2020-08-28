@@ -16,12 +16,9 @@ cd ${data_dir}/bufr
 # Define a common label for all the tmp files
 label="bufr_ls_test"
 
-# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
-
-# Define tmp file
 fTmp=${label}".tmp.txt"
 rm -f $fTmp
 
@@ -34,9 +31,9 @@ for f in ${bufr_files} ; do
    ${tools_dir}/bufr_ls $f >> $fLog
 done
 
-#-------------------------------------------
+#-----------------
 # Test "-p" switch
-#-------------------------------------------
+#-----------------
 f="aaen_55.bufr"
 ref_ls=$f".ls.ref"
 res_ls=$f".ls.test"
@@ -47,6 +44,17 @@ ${tools_dir}/bufr_ls -p totalLength,bufrHeaderCentre,bufrHeaderSubCentre,masterT
 # Write the values into a file and compare with ref
 awk NR==3 $fTmp | awk '{split($0,a," "); for (i=1; i<=8; i++) print a[i]}' > $res_ls
 diff $ref_ls $res_ls
+
+# ------------------------
+# Test printing array key
+# ------------------------
+set +e
+${tools_dir}/bufr_ls -p numericValues $f >$fTmp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+cat $fTmp
+grep -q "Passed array is too small" $fTmp
 
 
 rm -f $fLog $res_ls 

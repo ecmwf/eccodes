@@ -1073,6 +1073,9 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             if (!grib_is_defined(h, options->print_keys[i].name))
                 ret = GRIB_NOT_FOUND;
             if (ret == GRIB_SUCCESS) {
+                ret = grib_get_size(h, options->print_keys[i].name, &num_vals);
+            }
+            if (ret == GRIB_SUCCESS) {
                 if (options->print_keys[i].type == GRIB_TYPE_UNDEFINED)
                     grib_get_native_type(h, options->print_keys[i].name, &(options->print_keys[i].type));
                 switch (options->print_keys[i].type) {
@@ -1083,18 +1086,22 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                             sprintf(value, "MISSING");
                         break;
                     case GRIB_TYPE_DOUBLE:
-                        ret = grib_get_double(h, options->print_keys[i].name, &dvalue);
-                        if (dvalue == GRIB_MISSING_DOUBLE)
-                            sprintf(value, "MISSING");
-                        else
-                            sprintf(value, options->format, dvalue);
+                        if (num_vals > 1) {
+                            ret = GRIB_ARRAY_TOO_SMALL;
+                        } else {
+                            ret = grib_get_double(h, options->print_keys[i].name, &dvalue);
+                            if (dvalue == GRIB_MISSING_DOUBLE) sprintf(value, "MISSING");
+                            else                               sprintf(value, options->format, dvalue);
+                        }
                         break;
                     case GRIB_TYPE_LONG:
-                        ret = grib_get_long(h, options->print_keys[i].name, &lvalue);
-                        if (lvalue == GRIB_MISSING_LONG)
-                            sprintf(value, "MISSING");
-                        else
-                            sprintf(value, "%ld", lvalue);
+                        if (num_vals > 1) {
+                            ret = GRIB_ARRAY_TOO_SMALL;
+                        } else {
+                            ret = grib_get_long(h, options->print_keys[i].name, &lvalue);
+                            if (lvalue == GRIB_MISSING_LONG) sprintf(value, "MISSING");
+                            else                             sprintf(value, "%ld", lvalue);
+                        }
                         break;
                     case GRIB_TYPE_BYTES:
                         ret = grib_get_string(h, options->print_keys[i].name, value, &len);

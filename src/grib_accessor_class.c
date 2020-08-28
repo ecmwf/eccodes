@@ -248,6 +248,7 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
     l->last = a;
 
     if (hand->use_trie) {
+        DebugAssert( a->all_names[0] );
         if (*(a->all_names[0]) != '_') {
             id = grib_hash_keys_get_id(a->context->keys, a->all_names[0]);
 

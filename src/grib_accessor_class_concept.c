@@ -345,7 +345,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     grib_action* act             = a->creator;
     int nofail                   = action_concept_get_nofail(a);
 
-    Assert(concepts != NULL);
+    DebugAssert(concepts);
 
     c = (grib_concept_value*)grib_trie_get(concepts->index, name);
 
@@ -630,7 +630,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         *len = slen;
         return GRIB_BUFFER_TOO_SMALL;
     }
-    strncpy(val, p, slen);
+    strcpy(val, p); /* NOLINT: CWE-119 clang-analyzer-security.insecureAPI.strcpy */
     *len = slen;
 #if 0
     if (a->context->debug==1) {
