@@ -3076,6 +3076,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
             stat = nc_def_var_deflate(ncid, var_id, setup.shuffle, 1, setup.deflate);
             check_err("nc_def_var_deflate", stat, __LINE__);
 #else
+            (void)chunks;
             grib_context_log(ctx, GRIB_LOG_ERROR, "Deflate option only supported in NetCDF4");
 #endif
         }
