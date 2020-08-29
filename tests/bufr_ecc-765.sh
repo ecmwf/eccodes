@@ -35,8 +35,6 @@ cat > $tempFilt <<EOF
   set unpack=1;
 EOF
 
-# bufr_filter has a small leak to do with parsing and action files not related to BUFR decoding,
-# So instead we use bufr_ls to do the unpacking
 for bf in $files; do
   valgrind $VALGRIND_OPTIONS ${tools_dir}/codes_bufr_filter $tempFilt ${data_dir}/bufr/$bf >/dev/null
 done
