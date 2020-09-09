@@ -49,6 +49,7 @@ check_symbol_exists( fseeko           "stdio.h"    ECCODES_HAVE_FSEEKO )
 check_symbol_exists( posix_memalign   "stdlib.h"   ECCODES_HAVE_POSIX_MEMALIGN )
 check_symbol_exists( fmemopen         "stdio.h"    ECCODES_HAVE_FMEMOPEN )
 check_symbol_exists( funopen          "stdio.h"    ECCODES_HAVE_FUNOPEN )
+check_symbol_exists( realpath         "stdlib.h"   ECCODES_HAVE_REALPATH )
 
 check_c_source_compiles(
       " typedef int foo_t;
@@ -79,6 +80,10 @@ ecbuild_add_option( FEATURE PRODUCT_BUFR
 
 ecbuild_add_option( FEATURE EXAMPLES
     DESCRIPTION "Build the examples"
+    DEFAULT ON )
+
+ecbuild_add_option( FEATURE BUILD_TOOLS
+    DESCRIPTION "Build the command line tools"
     DEFAULT ON )
 
 ecbuild_add_option( FEATURE JPG
@@ -398,7 +403,10 @@ include_directories( ${ECCODES_INCLUDE_DIRS}  ${ECCODES_EXTRA_INCLUDE_DIRS} )
 add_subdirectory( definitions ) # must be before memfs
 add_subdirectory( memfs )
 add_subdirectory( src )
-add_subdirectory( tools )
+if( HAVE_BUILD_TOOLS )
+    add_subdirectory( tools )
+    add_subdirectory( tigge )
+endif()
 add_subdirectory( fortran )
 
 if( PYTHON_VERSION_MAJOR GREATER 2 )
@@ -411,7 +419,6 @@ else()
     set( ECCODES_PYTHON_DIR "python" )
 endif()
 add_subdirectory( tests )
-add_subdirectory( tigge )
 add_subdirectory( examples )
 add_subdirectory( data )
 add_subdirectory( samples )
