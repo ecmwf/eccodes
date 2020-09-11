@@ -13,6 +13,7 @@
 #include "mir/output/GribOutput.h"
 
 #include <istream>
+#include <memory>
 
 #include "eckit/config/Resource.h"
 #include "eckit/log/ResourceUsage.h"
@@ -53,11 +54,7 @@ void eccodes_assertion(const char* message) {
 }
 
 
-GribOutput::GribOutput():
-    interpolated_(0),
-    saved_(0) {
-
-}
+GribOutput::GribOutput() : interpolated_(0), saved_(0) {}
 
 
 GribOutput::~GribOutput() = default;
@@ -354,17 +351,17 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
         std::string packing;
         if (parametrisation.userParametrisation().get("packing", packing)) {
-            const packing::Packer& packer = packing::Packer::lookup(packing);
+            std::unique_ptr<const packing::Packer> packer(packing::PackerFactory::build(packing, parametrisation));
 
             if (field.values(i).size() < 4) {
 
                 // There is a bug in ecCodes if the user asks 1 value and select second-order
                 // Once this fixed, remove this code
                 eckit::Log::debug<LibMir>() << "Field has " << Pretty(field.values(i).size(), {"value"})
-                                            << ", ignoring packer " << packer << std::endl;
+                                            << ", ignoring packer " << *packer << std::endl;
             }
             else {
-                packer.fill(info, *field.representation());
+                packer->fill(info, *field.representation());
             }
         }
 
