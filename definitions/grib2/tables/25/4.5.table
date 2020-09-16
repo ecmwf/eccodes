@@ -13,9 +13,9 @@
 11 11 Cumulonimbus (CB) base (m)
 12 12 Cumulonimbus (CB) top (m)
 13 13 Lowest level where vertically integrated cloud cover exceeds the specified percentage (cloud base for a given percentage cloud cover) (%)
-14 14 Level of free convection (LFC)
-15 15 Convective condensation level (CCL)
-16 16 Level of neutral buoyancy or equilibrium level (LNB)
+14 14 Level of free convection (LFC) (-)
+15 15 Convective condensation level (CCL) (-)
+16 16 Level of neutral buoyancy or equilibrium level (LNB) (-)
 # 17-19 Reserved 
 20 20 Isothermal level (K)
 21 21 Lowest level where mass density exceeds the specified value (base for a given threshold of mass density) (kg m-3)
@@ -45,7 +45,7 @@
 111 111 Eta level (-)
 112 112 Reserved 
 113 113 Logarithmic hybrid level 
-114 114 Snow level (Numeric)
+114 sol Snow level (Numeric)
 115 115 Sigma height level
 # 116 Reserved
 117 117 Mixed layer depth (m)
@@ -54,7 +54,7 @@
 # 120-149 Reserved 
 150 150 Generalized vertical height coordinate 
 151 sol Soil level (Numeric)
-152 152 Sea ice level (Numeric)
+152 sol Sea ice level (Numeric)
 # 153-159 Reserved
 160 160 Depth below sea level (m)
 161 161 Depth below water surface (m)
