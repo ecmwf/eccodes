@@ -240,9 +240,9 @@ static void init_class(grib_accessor_class* c)
 /* Set the error code, if it is bad and we should fail (default case), return */
 /* variable 'err' is assumed to be pointer to int */
 /* If BUFRDC mode is enabled, then we tolerate problems like wrong data section length */
-#define CHECK_END_DATA_RETURN(ctx, b, size, retval) \
+#define CHECK_END_DATA_RETURN(ctx, bd, b, size, retval) \
     {                                               \
-        *err = check_end_data(ctx, b, size);        \
+        *err = check_end_data(ctx, bd, b, size);        \
         if (*err != 0 && ctx->bufrdc_mode == 0)     \
             return retval;                          \
     }
@@ -428,12 +428,18 @@ static void clean_string(char* s,int len)
 }
  */
 
-static int check_end_data(grib_context* c, grib_accessor_bufr_data_array* self, int size)
+static int check_end_data(grib_context* c, bufr_descriptor* bd, grib_accessor_bufr_data_array* self, int size)
 {
-    grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: \tbitsToEndData=%d elementSize=%d", self->bitsToEndData, size);
+    const int saved_bitsToEndData = self->bitsToEndData;
+    if (c->debug == 1)
+        grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: \tbitsToEndData=%d elementSize=%d", self->bitsToEndData, size);
     self->bitsToEndData -= size;
-    if (self->bitsToEndData < 0)
+    if (self->bitsToEndData < 0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "BUFR data decoding: Number of bits left=%d but element size=%d", saved_bitsToEndData, size);
+        if (bd)
+            grib_context_log(c, GRIB_LOG_ERROR, "BUFR data decoding: code=%06ld key=%s", bd->code, bd->shortName);
         return GRIB_DECODING_ERROR;
+    }
     return 0;
 }
 
@@ -570,14 +576,14 @@ static int decode_string_array(grib_context* c, unsigned char* data, long* pos, 
     modifiedWidth = bd->width;
 
     sval = (char*)grib_context_malloc_clear(c, modifiedWidth / 8 + 1);
-    CHECK_END_DATA_RETURN(c, self, modifiedWidth, *err);
+    CHECK_END_DATA_RETURN(c, bd, self, modifiedWidth, *err);
     if (*err) {
         grib_sarray_push(c, sa, sval);
         grib_vsarray_push(c, self->stringValues, sa);
         return ret;
     }
     grib_decode_string(data, pos, modifiedWidth / 8, sval);
-    CHECK_END_DATA_RETURN(c, self, 6, *err);
+    CHECK_END_DATA_RETURN(c, bd, self, 6, *err);
     if (*err) {
         grib_sarray_push(c, sa, sval);
         grib_vsarray_push(c, self->stringValues, sa);
@@ -585,7 +591,7 @@ static int decode_string_array(grib_context* c, unsigned char* data, long* pos, 
     }
     width = grib_decode_unsigned_long(data, pos, 6);
     if (width) {
-        CHECK_END_DATA_RETURN(c, self, width * 8 * self->numberOfSubsets, *err);
+        CHECK_END_DATA_RETURN(c, bd, self, width * 8 * self->numberOfSubsets, *err);
         if (*err) {
             grib_sarray_push(c, sa, sval);
             grib_vsarray_push(c, self->stringValues, sa);
@@ -632,7 +638,7 @@ static grib_darray* decode_double_array(grib_context* c, unsigned char* data, lo
     modifiedFactor    = bd->factor;
     modifiedWidth     = bd->width;
 
-    CHECK_END_DATA_RETURN(c, self, modifiedWidth + 6, NULL);
+    CHECK_END_DATA_RETURN(c, bd, self, modifiedWidth + 6, NULL);
     if (*err) {
         dval = GRIB_MISSING_DOUBLE;
         lval = 0;
@@ -648,7 +654,7 @@ static grib_darray* decode_double_array(grib_context* c, unsigned char* data, lo
     grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: \tlocalWidth=%ld", localWidth);
     ret = grib_darray_new(c, self->numberOfSubsets, 50);
     if (localWidth) {
-        CHECK_END_DATA_RETURN(c, self, localWidth * self->numberOfSubsets, NULL);
+        CHECK_END_DATA_RETURN(c, bd, self, localWidth * self->numberOfSubsets, NULL);
         if (*err) {
             dval = GRIB_MISSING_DOUBLE;
             lval = 0;
@@ -1049,7 +1055,7 @@ static char* decode_string_value(grib_context* c, unsigned char* data, long* pos
 
     len = bd->width / 8;
 
-    CHECK_END_DATA_RETURN(c, self, bd->width, NULL);
+    CHECK_END_DATA_RETURN(c, bd, self, bd->width, NULL);
     sval = (char*)grib_context_malloc_clear(c, len + 1);
     if (*err) {
         *err = 0;
@@ -1077,7 +1083,7 @@ static double decode_double_value(grib_context* c, unsigned char* data, long* po
     modifiedFactor    = bd->factor;
     modifiedWidth     = bd->width;
 
-    CHECK_END_DATA_RETURN(c, self, modifiedWidth, 0);
+    CHECK_END_DATA_RETURN(c, bd, self, modifiedWidth, 0);
     if (*err) {
         *err = 0;
         return GRIB_MISSING_DOUBLE;
@@ -1116,7 +1122,7 @@ static int decode_element(grib_context* c, grib_accessor_bufr_data_array* self, 
         grib_context_log(c, GRIB_LOG_DEBUG, "Operator 203YYY: Store for code %6.6ld => new ref val %ld", bd->code, new_ref_val);
         tableB_override_store_ref_val(c, self, bd->code, new_ref_val);
         bd->nokey = 1;
-        err       = check_end_data(c, self, number_of_bits); /*advance bitsToEnd*/
+        err       = check_end_data(c, NULL, self, number_of_bits); /*advance bitsToEnd*/
         return err;
     }
     grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: -%ld- \tcode=%6.6ld width=%ld scale=%ld ref=%ld type=%ld (pos=%ld -> %ld)",
@@ -1192,7 +1198,7 @@ static int decode_replication(grib_context* c, grib_accessor_bufr_data_array* se
                      i, self->expanded->v[i]->code, self->expanded->v[i]->width);
     if (self->compressedData) {
         grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data decoding: \tdelayed replication localReference width=%ld", descriptors[i]->width);
-        CHECK_END_DATA_RETURN(c, self, descriptors[i]->width + 6, *err);
+        CHECK_END_DATA_RETURN(c, NULL, self, descriptors[i]->width + 6, *err);
         if (*err) {
             *numberOfRepetitions = 0;
         }
@@ -1212,7 +1218,7 @@ static int decode_replication(grib_context* c, grib_accessor_bufr_data_array* se
         }
     }
     else {
-        CHECK_END_DATA_RETURN(c, self, descriptors[i]->width, *err);
+        CHECK_END_DATA_RETURN(c, NULL, self, descriptors[i]->width, *err);
         if (*err) {
             *numberOfRepetitions = 0;
         }
