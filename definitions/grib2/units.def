@@ -675,6 +675,12 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	}
+#Liquid water content in snow pack
+'kg m**-2' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 23 ;
+	}
 #Height of convective cloud top
 'm' = {
 	 discipline = 0 ;
