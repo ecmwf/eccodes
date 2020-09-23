@@ -1576,6 +1576,54 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 23 ;
 	}
+#Keetch-Byram drought index
+'kbdi' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 12 ;
+	}
+#Drought factor (as defined by the Australian forest service)
+'drtmrk' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	}
+#Rate of spread (as defined by the Australian forest service)
+'rosmrk' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	}
+#Fire danger index (as defined by the Australian forest service)
+'fdimrk' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 15 ;
+	}
+#Spread component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'scnfdr' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 16 ;
+	}
+#Burning index (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'buinfdr' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 17 ;
+	}
+#Ignition component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'icnfdr' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	}
+#Energy release component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'ercnfdr' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 19 ;
+	}
 #Universal thermal climate index
 'utci' = {
 	 discipline = 20 ;
@@ -3963,7 +4011,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Snow Fall water equivalent
 'sf' = {

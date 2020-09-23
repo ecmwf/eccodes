@@ -1576,6 +1576,54 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 23 ;
 	}
+#Keetch-Byram drought index
+'Keetch-Byram drought index' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 12 ;
+	}
+#Drought factor (as defined by the Australian forest service)
+'Drought factor (as defined by the Australian forest service)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	}
+#Rate of spread (as defined by the Australian forest service)
+'Rate of spread (as defined by the Australian forest service)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	}
+#Fire danger index (as defined by the Australian forest service)
+'Fire danger index (as defined by the Australian forest service)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 15 ;
+	}
+#Spread component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'Spread component (as defined by the U.S Forest Service National Fire-Danger Rating System)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 16 ;
+	}
+#Burning index (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'Burning index (as defined by the U.S Forest Service National Fire-Danger Rating System)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 17 ;
+	}
+#Ignition component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'Ignition component (as defined by the U.S Forest Service National Fire-Danger Rating System)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	}
+#Energy release component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'Energy release component (as defined by the U.S Forest Service National Fire-Danger Rating System)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 19 ;
+	}
 #Universal thermal climate index
 'Universal thermal climate index' = {
 	 discipline = 20 ;
@@ -3963,7 +4011,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Snow Fall water equivalent
 'Snow Fall water equivalent' = {
