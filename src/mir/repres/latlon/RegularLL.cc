@@ -176,12 +176,17 @@ std::vector<util::GridBox> RegularLL::gridBoxes() const {
         lonEdges[i + 1] = (lon0 + (i + half) * we.fraction()).value();
     }
 
+    bool periodic = isPeriodicWestEast();
+    if (!periodic) {
+        lonEdges.front() = std::max(lonEdges.front(), lon0.value());
+        lonEdges.back()  = std::min(lonEdges.back(), bbox_.east().value());
+    }
+
 
     // grid boxes
     std::vector<util::GridBox> r;
     r.reserve(ni_ * nj_);
 
-    bool periodic = isPeriodicWestEast();
     for (size_t j = 0; j < nj_; ++j) {
         Longitude lon1 = lon0;
 
