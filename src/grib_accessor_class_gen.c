@@ -275,7 +275,10 @@ static int unpack_long(grib_accessor* a, long* v, size_t* len)
         double val = 0.0;
         size_t l   = 1;
         grib_unpack_double(a, &val, &l);
-        *v = (long)val;
+        if (val == GRIB_MISSING_DOUBLE)
+            *v = GRIB_MISSING_LONG;
+        else
+            *v = (long)val;
         grib_context_log(a->context, GRIB_LOG_DEBUG, " Casting double %s to long", a->name);
         return GRIB_SUCCESS;
     }

@@ -63,9 +63,11 @@ if( HAVE_BUILD_TOOLS )
         grib_uerra
         grib_2nd_order_numValues
         grib_ecc-136
+        grib_ecc-966
         grib_ecc-967
-        grib_ecc-1065
+        grib_ecc-1150
         grib_ecc-1053
+        grib_ecc-1065
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
