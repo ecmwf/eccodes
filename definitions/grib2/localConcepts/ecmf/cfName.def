@@ -13,10 +13,10 @@
 	}
 #Snow depth
 'lwe_thickness_of_surface_snow_amount' = {
+	 localTablesVersion = 1 ;
 	 discipline = 0 ;
-	 parameterNumber = 11 ;
 	 parameterCategory = 1 ;
-	 unitsFactor = 1000 ;
+	 parameterNumber = 254 ;
 	}
 #Convective precipitation
 'lwe_thickness_of_convective_precipitation_amount' = {
@@ -108,12 +108,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 174 ;
-	}
-#Top net solar radiation
-'toa_net_upward_shortwave_flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 178 ;
 	}
 #Evaporation
 'lwe_thickness_of_water_evaporation_amount' = {

@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_tools
- *
- */
-
 #include "grib_tools.h"
 #if HAVE_LIBJASPER
 /* Remove compiler warnings re macros being redefined */
@@ -150,6 +145,14 @@ int grib_tool(int argc, char** argv)
     grib_context* c        = grib_context_get_default();
     global_options.context = c;
 
+    /* This is a consequence of ECC-440.
+     * We want to keep the output file(s) opened as various
+     * messages are appended to them. Otherwise they will be opened/closed
+     * multiple times.
+     */
+    if (c->file_pool_max_opened_files == 0)
+        c->file_pool_max_opened_files = 200;
+
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
     feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
 #endif
@@ -177,8 +180,8 @@ int grib_tool(int argc, char** argv)
 
     /* ECC-926: Currently only GRIB indexing works. Disable the through_index if BUFR, GTS etc */
     if (global_options.mode == MODE_GRIB &&
-        is_grib_index_file(global_options.infile->name) &&
-        (global_options.infile_extra && is_grib_index_file(global_options.infile_extra->name))) {
+        is_index_file(global_options.infile->name) &&
+        (global_options.infile_extra && is_index_file(global_options.infile_extra->name))) {
         global_options.through_index = 1;
         return grib_tool_index(&global_options);
     }
@@ -559,9 +562,10 @@ static int grib_tool_index(grib_runtime_options* options)
     }
 
     navigate(options->index2->fields, options);
-    /* TODO(masn): memleak
-     * grib_context_free(c, options->index2->current);
-     */
+
+    if (options->index2)
+        grib_context_free(c, options->index2->current);
+
     grib_tool_finalise_action(options);
 
     return 0;
@@ -1069,6 +1073,9 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             if (!grib_is_defined(h, options->print_keys[i].name))
                 ret = GRIB_NOT_FOUND;
             if (ret == GRIB_SUCCESS) {
+                ret = grib_get_size(h, options->print_keys[i].name, &num_vals);
+            }
+            if (ret == GRIB_SUCCESS) {
                 if (options->print_keys[i].type == GRIB_TYPE_UNDEFINED)
                     grib_get_native_type(h, options->print_keys[i].name, &(options->print_keys[i].type));
                 switch (options->print_keys[i].type) {
@@ -1079,18 +1086,22 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                             sprintf(value, "MISSING");
                         break;
                     case GRIB_TYPE_DOUBLE:
-                        ret = grib_get_double(h, options->print_keys[i].name, &dvalue);
-                        if (dvalue == GRIB_MISSING_DOUBLE)
-                            sprintf(value, "MISSING");
-                        else
-                            sprintf(value, options->format, dvalue);
+                        if (num_vals > 1) {
+                            ret = GRIB_ARRAY_TOO_SMALL;
+                        } else {
+                            ret = grib_get_double(h, options->print_keys[i].name, &dvalue);
+                            if (dvalue == GRIB_MISSING_DOUBLE) sprintf(value, "MISSING");
+                            else                               sprintf(value, options->format, dvalue);
+                        }
                         break;
                     case GRIB_TYPE_LONG:
-                        ret = grib_get_long(h, options->print_keys[i].name, &lvalue);
-                        if (lvalue == GRIB_MISSING_LONG)
-                            sprintf(value, "MISSING");
-                        else
-                            sprintf(value, "%ld", lvalue);
+                        if (num_vals > 1) {
+                            ret = GRIB_ARRAY_TOO_SMALL;
+                        } else {
+                            ret = grib_get_long(h, options->print_keys[i].name, &lvalue);
+                            if (lvalue == GRIB_MISSING_LONG) sprintf(value, "MISSING");
+                            else                             sprintf(value, "%ld", lvalue);
+                        }
                         break;
                     case GRIB_TYPE_BYTES:
                         ret = grib_get_string(h, options->print_keys[i].name, value, &len);
@@ -1348,10 +1359,10 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     }
 #endif
 }
-int exit_if_input_is_directory(const char* tool_name, const char* filename)
+int exit_if_input_is_directory(const char* toolname, const char* filename)
 {
     if (path_is_directory(filename)) {
-        fprintf(stderr, "%s: ERROR: \"%s\": Is a directory\n", tool_name, filename);
+        fprintf(stderr, "%s: ERROR: \"%s\": Is a directory\n", toolname, filename);
         exit(1);
     }
     return 0;

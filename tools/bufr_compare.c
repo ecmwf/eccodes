@@ -54,7 +54,7 @@ static grib_error* error_summary;
 static compare_double_proc compare_double;
 static double global_tolerance     = 0;
 static int packingCompare          = 0;
-static grib_string_list* blacklist = 0;
+static grib_string_list* blocklist = 0;
 static grib_string_list* keys_list = NULL; /* Used to determine rank of key */
 static int isLeafKey               = 0;    /* 0 if key is top-level, 1 if key has no children attributes */
 static int compareAbsolute         = 1;
@@ -177,9 +177,9 @@ static double compare_double_relative(double* a, double* b, double* err)
     return relativeError > *err ? relativeError : 0;
 }
 
-static int blacklisted(const char* name)
+static int blocklisted(const char* name)
 {
-    grib_string_list* b = blacklist;
+    grib_string_list* b = blocklist;
     if (!name) return 0;
     while (b) {
         Assert(b->value);
@@ -219,7 +219,7 @@ grib_option grib_options[] = {
     { "R:", 0, 0, 0, 1, 0 },
     { "A:", 0, 0, 0, 1, 0 },
     /*    {"P",0,"Compare data values using the packing error as tolerance.\n",0,1,0},*/
-    { "t:", "factor", "Compare data values using factor multiplied by the tolerance specified in options -P -R -A.\n", 0, 1, 0 },
+    { "t:", "factor", "Compare data values using factor multiplied by the tolerance specified in options -R -A.\n", 0, 1, 0 },
     { "w:", 0, 0, 0, 1, 0 },
     { "f", 0, 0, 0, 1, 0 },
     { "F", 0, 0, 1, 0, 0 },
@@ -236,14 +236,14 @@ static int counter                = 0;
 static int start                  = -1;
 static int end                    = -1;
 
-const char* grib_tool_description =
+const char* tool_description =
     "Compare BUFR messages contained in two files."
     "\n\tIf some differences are found it fails returning an error code."
-    "\n\tFloating-point values are compared exactly by default, different tolerance can be defined see -P -A -R."
+    "\n\tFloating-point values are compared exactly by default, different tolerances can be defined (see -A -R)."
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
-const char* grib_tool_name  = "bufr_compare";
-const char* grib_tool_usage = "[options] bufr_file1 bufr_file2";
+const char* tool_name  = "bufr_compare";
+const char* tool_usage = "[options] bufr_file1 bufr_file2";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -314,19 +314,19 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("b:")) {
         grib_string_list* next = 0;
         int ii                 = 0;
-        blacklist              = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
-        blacklist->value       = grib_context_strdup(context, options->set_values[0].name);
-        next                   = blacklist;
+        blocklist              = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
+        blocklist->value       = grib_context_strdup(context, options->set_values[0].name);
+        next                   = blocklist;
         for (ii = 1; ii < options->set_values_count; ii++) {
             next->next        = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
             next->next->value = grib_context_strdup(context, options->set_values[ii].name);
             next              = next->next;
         }
-        context->blacklist = blacklist;
+        context->blocklist = blocklist;
     }
 
     /* Check 1st file is not a directory */
-    exit_if_input_is_directory(grib_tool_name, options->infile_extra->name);
+    exit_if_input_is_directory(tool_name, options->infile_extra->name);
 
     if (grib_options_on("r")) {
         char* filename[1];
@@ -388,7 +388,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("R:")) {
         char* sarg               = grib_options_get_option("R:");
         options->tolerance_count = MAX_KEYS;
-        ret                      = parse_keyval_string(grib_tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
+        ret                      = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
         if (ret == GRIB_INVALID_ARGUMENT) {
             usage();
             exit(1);
@@ -426,7 +426,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 
 int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* file)
 {
-    exit_if_input_is_directory(grib_tool_name, file->name);
+    exit_if_input_is_directory(tool_name, file->name);
     return 0;
 }
 
@@ -1280,7 +1280,7 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
 
         isLeafKey = 0; /* clear global variable for each key */
         name      = grib_keys_iterator_get_name(iter);
-        if (blacklisted(name))
+        if (blocklisted(name))
             continue;
         if (xa == NULL || (xa->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
             continue;
@@ -1296,7 +1296,7 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
             prefix = (char*)xa->name;
         }
 
-        if (blacklisted(prefix)) {
+        if (blocklisted(prefix)) {
             if (dofree) grib_context_free(context, prefix);
             continue;
         }
@@ -1319,16 +1319,6 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
 
     grib_keys_iterator_delete(iter);
 
-    /* ECC-356: Handling special case of 'ident' key */
-    name = "ls.ident";
-    if (!blacklisted("ident") && grib_is_defined(handle1, name) && grib_is_defined(handle2, name)) {
-        if (compare_values(options, handle1, handle2, "ident", GRIB_TYPE_STRING)) {
-            (*pErr)++;
-            write_messages(handle1, handle2);
-            ret = 1;
-        }
-    }
-
     return ret;
 }
 
@@ -1340,10 +1330,10 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
     const char* name         = NULL;
 
     /* mask only if no -c option or headerMode (-H)*/
-    if (blacklist && (!listFromCommandLine || headerMode)) {
+    if (blocklist && (!listFromCommandLine || headerMode)) {
         /* See ECC-245, GRIB-573, GRIB-915: Do not change handles in memory */
         /*
-        grib_string_list* nextb=blacklist;
+        grib_string_list* nextb=blocklist;
         while (nextb) {
             grib_clear(handle1,nextb->value);
             grib_clear(handle2,nextb->value);
@@ -1353,7 +1343,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
 
     if (listFromCommandLine && onlyListed) {
         for (i = 0; i < options->compare_count; i++) {
-            if (blacklisted(options->compare[i].name))
+            if (blocklisted(options->compare[i].name))
                 continue;
             if (options->compare[i].type == GRIB_NAMESPACE) {
                 iter = grib_keys_iterator_new(handle1, 0, options->compare[i].name);
@@ -1365,7 +1355,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
                     name = grib_keys_iterator_get_name(iter);
                     /*printf("----- comparing %s\n",name);*/
 
-                    if (blacklisted(name))
+                    if (blocklisted(name))
                         continue;
                     if (compare_values(options, handle1, handle2, name, GRIB_TYPE_UNDEFINED)) {
                         err++;
@@ -1415,7 +1405,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
 
         if (listFromCommandLine) {
             for (i = 0; i < options->compare_count; i++) {
-                if (blacklisted(name))
+                if (blocklisted(name))
                     continue;
                 if (options->compare[i].type == GRIB_NAMESPACE) {
                     iter = grib_keys_iterator_new(handle1, 0, options->compare[i].name);
@@ -1428,7 +1418,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
                         name = grib_keys_iterator_get_name(iter);
                         /*printf("----- comparing %s\n",name);*/
 
-                        if (blacklisted(name))
+                        if (blocklisted(name))
                             continue;
                         if (compare_values(options, handle1, handle2, name, GRIB_TYPE_UNDEFINED)) {
                             err++;

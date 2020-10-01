@@ -64,7 +64,6 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_bitmap.c \
 	grib_accessor_class_bits.c  \
 	grib_accessor_class_bits_per_value.c \
-	grib_accessor_class_bufr_data.c \
 	grib_accessor_class_bufr_clear_tables.c \
 	grib_accessor_class_bufr_data_array.c \
 	grib_accessor_class_bufr_data_element.c \
@@ -201,6 +200,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_spectral_truncation.c \
 	grib_accessor_class_time.c \
 	grib_accessor_class_transient.c \
+	grib_accessor_class_trim.c \
 	grib_accessor_class_values.c \
 	grib_accessor_class_simple_packing_error.c \
 	grib_accessor_class_data_simple_packing.c \

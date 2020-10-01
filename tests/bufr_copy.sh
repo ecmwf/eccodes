@@ -10,24 +10,23 @@
 
 . ./include.sh
 
-#set -x
 
-#Enter data dir
+# Enter data dir
 cd ${data_dir}/bufr
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_copy_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define tmp bufr files
+# Define tmp bufr files
 fBufrInput=${label}".bufr.input"
 fBufrTmp=${label}".bufr.tmp"
 
-#Create a bufr file with various message types
+# Create a bufr file with various message types
 cat syno_multi.bufr temp_101.bufr > $fBufrInput 
 
 #----------------------------------------------------

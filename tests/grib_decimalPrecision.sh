@@ -36,4 +36,13 @@ export ECCODES_FAIL_IF_LOG_MESSAGE=1
 ${tools_dir}/grib_set -r -s decimalScaleFactor=0 $infile $temp
 ${tools_dir}/grib_set -r -s decimalScaleFactor=1 $infile $temp
 
+# Constant field with bitsPerValue=0 and decimalScaleFactor!=0
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s decimalScaleFactor=3 $sample1 $temp
+grib_check_key_equals $temp min,max,const,decimalScaleFactor,referenceValue '47485.4 47485.4 1 3 47485.4'
+${tools_dir}/grib_set -s decimalScaleFactor=3 $sample2 $temp
+grib_check_key_equals $temp min,max,const,decimalScaleFactor,referenceValue '1 1 1 3 1'
+
+
 rm -f $temp

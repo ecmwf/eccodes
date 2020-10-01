@@ -16,20 +16,14 @@
 #
 #       -DCMAKE_MODULE_PATH=/path/to/ecbuild/cmake
 
-cmake_minimum_required( VERSION 3.6 FATAL_ERROR )
-
-project( eccodes VERSION 2.18.0 LANGUAGES C )
+cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 
 set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake" )
+find_package( ecbuild 3.4 REQUIRED )
 
-include( ecbuild_system NO_POLICY_SCOPE )
+# Initialise project
+project( eccodes VERSION 2.19.0 LANGUAGES C )
 
-ecbuild_requires_macro_version( 2.7.2 )
-
-###############################################################################
-# local project
-
-ecbuild_declare_project()
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
@@ -49,6 +43,7 @@ check_symbol_exists( fseeko           "stdio.h"    ECCODES_HAVE_FSEEKO )
 check_symbol_exists( posix_memalign   "stdlib.h"   ECCODES_HAVE_POSIX_MEMALIGN )
 check_symbol_exists( fmemopen         "stdio.h"    ECCODES_HAVE_FMEMOPEN )
 check_symbol_exists( funopen          "stdio.h"    ECCODES_HAVE_FUNOPEN )
+check_symbol_exists( realpath         "stdlib.h"   ECCODES_HAVE_REALPATH )
 
 check_c_source_compiles(
       " typedef int foo_t;
@@ -79,6 +74,10 @@ ecbuild_add_option( FEATURE PRODUCT_BUFR
 
 ecbuild_add_option( FEATURE EXAMPLES
     DESCRIPTION "Build the examples"
+    DEFAULT ON )
+
+ecbuild_add_option( FEATURE BUILD_TOOLS
+    DESCRIPTION "Build the command line tools"
     DEFAULT ON )
 
 ecbuild_add_option( FEATURE JPG
@@ -112,15 +111,20 @@ ecbuild_add_option( FEATURE NETCDF
     REQUIRED_PACKAGES NetCDF
     NO_TPL )
 
+find_package( AEC )
 ecbuild_add_option( FEATURE AEC
     DESCRIPTION "Support for Adaptive Entropy Coding"
     DEFAULT OFF
-    REQUIRED_PACKAGES AEC )
+    CONDITION AEC_FOUND )
 
+ecbuild_find_python( VERSION 2.6 NO_LIBS )
+find_package( NumPy )
 ecbuild_add_option( FEATURE PYTHON
     DESCRIPTION "Build the ecCodes Python2 interface (deprecated)"
-    DEFAULT ON
-    REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy )
+    DEFAULT OFF
+    #CONDITION Python_FOUND AND NumPy_FOUND
+    CONDITION PYTHON_FOUND AND NUMPY_FOUND
+    )
 # For Python2 we build our own bindings (using SWIG) in the build directory
 # but for Python3 one has to add the eccodes from pip3 AFTER the install
 if( PYTHON_VERSION_MAJOR EQUAL 3 )
@@ -204,11 +208,11 @@ if( ENABLE_JPG )
     #       which can affect future package discovery if not undone by the caller.
     #       The current CMAKE_PREFIX_PATH is backed up as _CMAKE_PREFIX_PATH
     #
-    set(CMAKE_WARN_DEPRECATED OFF) # Suppress deprecation message
-    ecbuild_add_extra_search_paths( jasper )
+    #set(CMAKE_WARN_DEPRECATED OFF) # Suppress deprecation message
+    #ecbuild_add_extra_search_paths( jasper )
     find_package( Jasper )
-    set(CMAKE_PREFIX_PATH ${_CMAKE_PREFIX_PATH})    # Restore CMAKE_PREFIX_PATH
-    set(CMAKE_WARN_DEPRECATED ON)  # Remove suppression
+    #set(CMAKE_PREFIX_PATH ${_CMAKE_PREFIX_PATH})    # Restore CMAKE_PREFIX_PATH
+    #set(CMAKE_WARN_DEPRECATED ON)  # Remove suppression
 
     find_package( OpenJPEG )
 
@@ -319,10 +323,9 @@ endif()
 
 ###############################################################################
 # contents
-
-if( NOT ${DEVELOPER_MODE} )
-    set( the_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
-else()
+set( the_default_data_prefix ${CMAKE_INSTALL_PREFIX} )
+if( ${DEVELOPER_MODE} )
+    ecbuild_info("DEVELOPER_MODE is defined")
     set( the_default_data_prefix ${CMAKE_BINARY_DIR} )
 endif()
 
@@ -351,6 +354,11 @@ add_definitions( -DHAVE_ECCODES_CONFIG_H )
 
 if( CMAKE_COMPILER_IS_GNUCC )
     ecbuild_add_c_flags("-pedantic")
+endif()
+
+# gfortran 10 has become stricter with argument matching
+if( HAVE_FORTRAN AND CMAKE_Fortran_COMPILER_ID MATCHES "GNU" AND NOT CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 10 )
+    ecbuild_add_fortran_flags("-fallow-argument-mismatch")
 endif()
 
 ###############################################################################
@@ -394,7 +402,10 @@ include_directories( ${ECCODES_INCLUDE_DIRS}  ${ECCODES_EXTRA_INCLUDE_DIRS} )
 add_subdirectory( definitions ) # must be before memfs
 add_subdirectory( memfs )
 add_subdirectory( src )
-add_subdirectory( tools )
+if( HAVE_BUILD_TOOLS )
+    add_subdirectory( tools )
+    add_subdirectory( tigge )
+endif()
 add_subdirectory( fortran )
 
 if( PYTHON_VERSION_MAJOR GREATER 2 )
@@ -407,7 +418,6 @@ else()
     set( ECCODES_PYTHON_DIR "python" )
 endif()
 add_subdirectory( tests )
-add_subdirectory( tigge )
 add_subdirectory( examples )
 add_subdirectory( data )
 add_subdirectory( samples )
@@ -415,10 +425,10 @@ add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
 ecbuild_dont_pack( DIRS
-     concepts tests.ecmwf doxygen confluence examples.dev templates parameters java
+     concepts tests.ecmwf doxygen confluence templates parameters java
      perl config m4 rpms gaussian_experimental gribex examples/F77
-     examples/extra examples/deprecated bamboo fortran/fortranCtypes tigge/tools
-     share/eccodes  .settings python3 )
+     examples/examples.dev examples/extra examples/deprecated bamboo
+     fortran/fortranCtypes tigge/tools share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
 
@@ -433,18 +443,6 @@ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 if( HAVE_FORTRAN )
     list( APPEND ECCODES_INCLUDE_DIRS  ${CMAKE_Fortran_MODULE_DIRECTORY} )
     list( APPEND ECCODES_LIBRARIES eccodes_f90 )
-endif()
-
-# Bundle
-if( NOT PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME )
-  set( ECCODES_FOUND            TRUE PARENT_SCOPE )
-  set( ECCODES_DEFINITIONS      ${ECCODES_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
-  set( ECCODES_INCLUDE_DIRS     ${ECCODES_INCLUDE_DIRS} ${ECCODES_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
-  set( ECCODES_LIBRARIES        ${ECCODES_LIBRARIES}    ${ECCODES_EXTRA_LIBRARIES} PARENT_SCOPE )
-  set( ECCODES_INSTALL_EXTRA_TOOLS  ${ECCODES_INSTALL_EXTRA_TOOLS} PARENT_SCOPE )
-  set( ECCODES_DEFINITION_PATH  ${CMAKE_BINARY_DIR}/${ECCODES_DEFINITION_SUFF}  PARENT_SCOPE )
-  set( ECCODES_SAMPLES_PATH     ${CMAKE_BINARY_DIR}/${ECCODES_SAMPLES_SUFF}     PARENT_SCOPE )
-  set( ECCODES_IFS_SAMPLES_PATH ${CMAKE_BINARY_DIR}/${ECCODES_IFS_SAMPLES_SUFF} PARENT_SCOPE )
 endif()
 
 # pkg-config
@@ -487,7 +485,7 @@ ecbuild_print_summary()
 
 ecbuild_info("")
 ecbuild_info("   +--------------------------+")
-ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}  |")
+ecbuild_info("   |  ecCodes version ${eccodes_VERSION}  |")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("")
 

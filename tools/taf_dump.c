@@ -29,9 +29,9 @@ grib_option grib_options[] = {
     { "x", 0, 0, 0, 1, 0 }
 };
 
-const char* grib_tool_description = "Dump the content of a TAF file in different formats.";
-const char* grib_tool_name        = "taf_dump";
-const char* grib_tool_usage       = "[options] file file ...";
+const char* tool_description = "Dump the content of a TAF file in different formats.";
+const char* tool_name        = "taf_dump";
+const char* tool_usage       = "[options] file file ...";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -53,7 +53,7 @@ int grib_tool_init(grib_runtime_options* options)
 
 
     if (opt > 1) {
-        printf("%s: simultaneous C/O/D options not allowed\n", grib_tool_name);
+        printf("%s: simultaneous C/O/D options not allowed\n", tool_name);
         exit(1);
     }
 

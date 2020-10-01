@@ -10,14 +10,14 @@
 
 . ./include.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_dump_subset_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 
-#Define tmp bufr files
+# Define tmp bufr files
 temp1=${label}".temp1.txt"
 temp2=${label}".temp2.txt"
 
@@ -61,7 +61,7 @@ bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 for file in ${bufr_files}
 do
   # Every file has at least one subset
-  ${tools_dir}/bufr_dump -S1 ${data_dir}/bufr/$file >/dev/null
+  ${tools_dir}/bufr_dump -wcount=1 -S1 ${data_dir}/bufr/$file >/dev/null
 done
 
 # Check strict option with 'where' clause

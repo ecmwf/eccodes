@@ -20,7 +20,7 @@
    IMPLEMENTS = compare;unpack_string;value_count;destroy
    MEMBERS = const char* offset
    MEMBERS = grib_expression* length
-   MEMBERS = grib_string_list* blacklist
+   MEMBERS = grib_string_list* blocklist
    END_CLASS_DEF
 
  */
@@ -50,7 +50,7 @@ typedef struct grib_accessor_md5
     /* Members defined in md5 */
     const char* offset;
     grib_expression* length;
-    grib_string_list* blacklist;
+    grib_string_list* blocklist;
 } grib_accessor_md5;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -146,12 +146,12 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
 
     self->offset    = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
     self->length    = grib_arguments_get_expression(grib_handle_of_accessor(a), arg, n++);
-    self->blacklist = NULL;
+    self->blocklist = NULL;
     while ((b = (char*)grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++)) != NULL) {
-        if (!self->blacklist) {
-            self->blacklist        = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
-            self->blacklist->value = grib_context_strdup(context, b);
-            current                = self->blacklist;
+        if (!self->blocklist) {
+            self->blocklist        = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
+            self->blocklist->value = grib_context_strdup(context, b);
+            current                = self->blocklist;
         }
         else {
             Assert(current);
@@ -204,7 +204,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     unsigned char* mess;
     unsigned char* p;
     long offset = 0, length = 0;
-    grib_string_list* blacklist = NULL;
+    grib_string_list* blocklist = NULL;
     grib_accessor* b            = NULL;
     int ret                     = 0;
     int i                       = 0;
@@ -223,14 +223,14 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     memcpy(mess, grib_handle_of_accessor(a)->buffer->data + offset, length);
     mess_len = length;
 
-    blacklist = a->context->blacklist;
-    /* passed blacklist overrides context blacklist.
-     Consider to modify following line to extend context blacklist.
+    blocklist = a->context->blocklist;
+    /* passed blocklist overrides context blocklist.
+     Consider to modify following line to extend context blocklist.
      */
-    if (self->blacklist)
-        blacklist = self->blacklist;
-    while (blacklist && blacklist->value) {
-        b = grib_find_accessor(grib_handle_of_accessor(a), blacklist->value);
+    if (self->blocklist)
+        blocklist = self->blocklist;
+    while (blocklist && blocklist->value) {
+        b = grib_find_accessor(grib_handle_of_accessor(a), blocklist->value);
         if (!b) {
             grib_context_free(a->context, mess);
             return GRIB_NOT_FOUND;
@@ -240,7 +240,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         for (i = 0; i < b->length; i++)
             *(p++) = 0;
 
-        blacklist = blacklist->next;
+        blocklist = blocklist->next;
     }
 
     grib_md5_init(&md5c);
@@ -255,8 +255,8 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 static void destroy(grib_context* c, grib_accessor* a)
 {
     grib_accessor_md5* self = (grib_accessor_md5*)a;
-    if (self->blacklist) {
-        grib_string_list* next = self->blacklist;
+    if (self->blocklist) {
+        grib_string_list* next = self->blocklist;
         grib_string_list* cur  = NULL;
         while (next) {
             cur  = next;

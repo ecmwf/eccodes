@@ -69,6 +69,7 @@ data/bufr/*test
 
 *.sublime-workspace
 .idea
+.vscode
 
 build/
 *.back

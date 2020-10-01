@@ -1,11 +1,17 @@
 TESTS = definitions.sh \
         grib_calendar.sh \
+        codes_split_file.sh \
         bufrdc_desc_ref.sh \
         bufrdc_ref.sh \
+        grib_data_quality_checks.sh \
         bufr_dump_data.sh \
+        bufr_dump_samples.sh \
+        bufr_dump_subset.sh \
+        bufr_json_samples.sh \
         bufr_filter.sh \
         bufr_json_data.sh \
         bufr_compare.sh \
+        bufr_dump_descriptors.sh \
         bufr_copy.sh \
         bufr_count.sh \
         bufr_get.sh \
@@ -30,6 +36,7 @@ TESTS = definitions.sh \
         pseudo_budg.sh \
         pseudo_diag.sh \
         grib_gridType.sh \
+        grib_change_packing.sh \
         grib_octahedral.sh \
         grib_global.sh \
         grib_concept.sh \
@@ -55,18 +62,55 @@ TESTS = definitions.sh \
         grib_tigge_conversions.sh \
         read_any.sh \
         grib_padding.sh \
-        grib_lamb_az_eq_area.sh \
-        grib_lambert_conformal.sh \
-        grib_space_view.sh \
-        grib_mercator.sh \
+        grib_grid_lamb_az_eq_area.sh \
+        grib_grid_lambert_conformal.sh \
+        grib_grid_space_view.sh \
+        grib_grid_polar_stereographic.sh \
+        grib_grid_mercator.sh \
+        grib_grid_unstructured.sh \
         grib_to_netcdf.sh \
         grib_dump_debug.sh \
+        grib_dump_json.sh \
         grib_jpeg.sh \
         grib_ccsds.sh \
         grib_md5.sh \
         grib_neg_fctime.sh \
         bufr_ecc-286.sh \
-        bufr_ecc-288.sh
+        bufr_ecc-288.sh \
+        bufr_ecc-313.sh \
+        bufr_ecc-359.sh \
+        bufr_ecc-379.sh \
+        bufr_ecc-393.sh \
+        bufr_ecc-428.sh \
+        bufr_ecc-433.sh \
+        bufr_ecc-517.sh \
+        bufr_ecc-556.sh \
+        bufr_ecc-616.sh \
+        bufr_ecc-673.sh \
+        bufr_ecc-686.sh \
+        bufr_ecc-690.sh \
+        bufr_ecc-750.sh \
+        bufr_ecc-765.sh \
+        bufr_ecc-875.sh \
+        bufr_ecc-887.sh \
+        grib_ecc-136.sh \
+        grib_ecc-967.sh \
+        grib_ecc-1065.sh \
+        grib_ecc-1053.sh \
+        grib_ecc-490.sh \
+        grib_ecc-756.sh \
+        grib_ecc-873.sh \
+        grib_ecc-600.sh \
+        grib_ecc-923.sh \
+        grib_ecc-979.sh \
+        grib_ecc-984.sh \
+        grib_ecc-1000.sh \
+        grib_ecc-1001.sh \
+        grib_ecc-1030.sh \
+        grib_lam_gp.sh \
+        grib_lam_bf.sh \
+        bufr_get_element.sh \
+        bufr_extract_headers.sh
 
 # First download all the necessary data for testing
 # Note: if download fails, no tests will be done
@@ -76,8 +120,9 @@ download_data:
 
 noinst_PROGRAMS = packing_check gauss_sub read_any grib_double_cmp packing pack_unpack \
                   julian grib_read_index grib_indexing gribex_perf\
-                  jpeg_perf grib_ccsds_perf so_perf png_perf bpv_limit laplacian \
-                  unit_tests
+                  jpeg_perf grib_ccsds_perf so_perf png_perf grib_bpv_limit laplacian \
+                  unit_tests bufr_ecc-517 grib_lam_gp grib_lam_bf grib_sh_imag \
+                  bufr_extract_headers bufr_get_element
 
 laplacian_SOURCES = laplacian.c
 packing_SOURCES = packing.c
@@ -95,6 +140,12 @@ png_perf_SOURCES = png_perf.c
 grib_ccsds_perf_SOURCES  = grib_ccsds_perf.c
 gribex_perf_SOURCES = gribex_perf.c
 gauss_sub_SOURCES = gauss_sub.c
+bufr_ecc_517_SOURCES = bufr_ecc-517.c
+grib_lam_gp_SOURCES = grib_lam_gp.c
+grib_lam_bf_SOURCES = grib_lam_bf.c
+grib_sh_imag_SOURCES = grib_sh_imag.c
+bufr_extract_headers_SOURCES = bufr_extract_headers.c
+bufr_get_element_SOURCES = bufr_get_element.c
 
 LDADD = $(top_builddir)/src/libeccodes.la $(EMOS_LIB)
 

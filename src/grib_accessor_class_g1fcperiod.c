@@ -159,7 +159,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     }
 
     *len = l;
-    strncpy(val, tmp, l);
+    strcpy(val, tmp); /* NOLINT: CWE-119 clang-analyzer-security.insecureAPI.strcpy */
 
     return GRIB_SUCCESS;
 }

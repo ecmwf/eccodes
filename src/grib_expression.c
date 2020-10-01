@@ -89,13 +89,15 @@ void grib_expression_print(grib_context* ctx, grib_expression* g, grib_handle* f
 
 void grib_expression_free(grib_context* ctx, grib_expression* g)
 {
-    grib_expression_class* c = g->cclass;
-    while (c) {
-        if (c->destroy)
-            c->destroy(ctx, g);
-        c = c->super ? *(c->super) : NULL;
+    if (g) {
+        grib_expression_class* c = g->cclass;
+        while (c) {
+            if (c->destroy)
+                c->destroy(ctx, g);
+            c = c->super ? *(c->super) : NULL;
+        }
+        grib_context_free_persistent(ctx, g);
     }
-    grib_context_free_persistent(ctx, g);
 }
 
 void grib_expression_add_dependency(grib_expression* e, grib_accessor* observer)
