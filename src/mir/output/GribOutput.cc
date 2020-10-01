@@ -21,6 +21,7 @@
 
 #include "mir/action/context/Context.h"
 #include "mir/action/io/Save.h"
+#include "mir/action/io/Set.h"
 #include "mir/action/plan/ActionPlan.h"
 #include "mir/api/MIREstimation.h"
 #include "mir/compat/GribCompatibility.h"
@@ -29,6 +30,7 @@
 #include "mir/input/MIRInput.h"
 #include "mir/packing/Packer.h"
 #include "mir/param/MIRParametrisation.h"
+#include "mir/repres/Gridded.h"
 #include "mir/repres/Representation.h"
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Grib.h"
@@ -200,7 +202,8 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
     }
 
     if (save) {
-        plan.add(new action::io::Save(param, input, output));
+        plan.add(plan.empty() ? static_cast<action::Action*>(new action::io::Set(param, input, output))
+                              : new action::io::Save(param, input, output));
     }
 }
 
@@ -497,6 +500,73 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
                 }
             }
         }
+    }
+
+    ctx.statistics().gribEncodingTiming() -= saveTimer;
+
+    return total;
+}
+
+
+size_t GribOutput::set(const param::MIRParametrisation& param, context::Context& ctx) {
+    util::TraceResourceUsage usage("GribOutput::set");
+
+    interpolated_++;
+
+    const auto& field = ctx.field();
+    const auto& input = ctx.input();
+
+    field.validate();
+
+    size_t total = 0;
+
+    util::MIRStatistics::Timing saveTimer;
+    auto timer(ctx.statistics().gribEncodingTimer());
+
+    ASSERT(field.dimensions() == 1);
+
+    for (size_t i = 0; i < field.dimensions(); i++) {
+
+        // Protect ecCodes
+        eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+
+
+        auto h = input.gribHandle(field.handle(i));  // Base class throws if input cannot provide handle
+        auto r = codes_handle_clone(h);
+        HandleDeleter rd(r);
+
+        long bitsPerValue = 0;
+        if (param.userParametrisation().get("accuracy", bitsPerValue)) {
+            GRIB_CALL(codes_set_long(r, "bitsPerValue", bitsPerValue));
+        }
+
+        std::string packing;
+        if (param.userParametrisation().get("packing", packing)) {
+            NOTIMP;
+        }
+
+        long edition = 0;
+        if (param.userParametrisation().get("edition", edition)) {
+            GRIB_CALL(codes_set_long(r, "edition", edition));
+        }
+
+
+        // set error callback handling (throws)
+        codes_set_codes_assertion_failed_proc(&eccodes_assertion);
+
+        const void* message;
+        size_t size;
+        GRIB_CALL(codes_get_message(r, &message, &size));
+
+        GRIB_CALL(codes_check_message_header(message, size, PRODUCT_GRIB));
+        GRIB_CALL(codes_check_message_footer(message, size, PRODUCT_GRIB));
+
+        {  // Remove
+            auto timing(ctx.statistics().saveTimer());
+            out(message, size, true);
+        }
+
+        total += size;
     }
 
     ctx.statistics().gribEncodingTiming() -= saveTimer;
