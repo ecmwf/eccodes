@@ -13,6 +13,7 @@
 #include "mir/output/GribOutput.h"
 
 #include <istream>
+#include <memory>
 
 #include "eckit/config/Resource.h"
 #include "eckit/log/ResourceUsage.h"
@@ -354,8 +355,9 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
         std::string packing;
         if (parametrisation.userParametrisation().get("packing", packing)) {
-            packing::Packer::lookup(packing).fill(info, *field.representation(), parametrisation.userParametrisation(),
-                                                  parametrisation.fieldParametrisation());
+            std::unique_ptr<packing::Packer> packer(packing::PackerFactory::build(
+                packing, parametrisation.userParametrisation(), parametrisation.fieldParametrisation()));
+            packer->fill(info, *field.representation());
         }
 
         bool remove = false;
@@ -535,7 +537,9 @@ size_t GribOutput::set(const param::MIRParametrisation& param, context::Context&
         // set new handle key/values
         std::string packing;
         if (param.userParametrisation().get("packing", packing)) {
-            auto type = packing::Packer::lookup(packing).packingType(field.representation());
+            std::unique_ptr<packing::Packer> packer(
+                packing::PackerFactory::build(packing, param.userParametrisation(), param.fieldParametrisation()));
+            auto type = packer->type(field.representation());
             auto len  = type.length();
             if (len > 0) {
                 GRIB_CALL(codes_set_string(h, "packingType", type.c_str(), &len));
