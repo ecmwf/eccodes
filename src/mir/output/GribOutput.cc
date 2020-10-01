@@ -13,6 +13,7 @@
 #include "mir/output/GribOutput.h"
 
 #include <istream>
+#include <memory>
 
 #include "eckit/config/Resource.h"
 #include "eckit/log/ResourceUsage.h"
@@ -21,6 +22,7 @@
 
 #include "mir/action/context/Context.h"
 #include "mir/action/io/Save.h"
+#include "mir/action/io/Set.h"
 #include "mir/action/plan/ActionPlan.h"
 #include "mir/api/MIREstimation.h"
 #include "mir/compat/GribCompatibility.h"
@@ -29,6 +31,7 @@
 #include "mir/input/MIRInput.h"
 #include "mir/packing/Packer.h"
 #include "mir/param/MIRParametrisation.h"
+#include "mir/repres/Gridded.h"
 #include "mir/repres/Representation.h"
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Grib.h"
@@ -165,42 +168,43 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
                          output::MIROutput& output) {
     ASSERT(!plan.ended());
 
-    bool save   = false;
     auto& user  = param.userParametrisation();
     auto& field = param.fieldParametrisation();
+    bool todo   = false;
 
     long bits1 = -1;
     if (user.get("accuracy", bits1)) {
         ASSERT(bits1 > 0);
         long bits2 = -1;
-        save       = field.get("accuracy", bits2) ? bits2 != bits1 : true;
+        todo       = field.get("accuracy", bits2) ? bits2 != bits1 : true;
     }
 
-    if (!save) {
+    if (!todo) {
         std::string packing1;
         if (user.get("packing", packing1)) {
             ASSERT(!packing1.empty());
             std::string packing2;
-            save = field.get("packing", packing2) ? packing2 != packing1 : true;
+            todo = field.get("packing", packing2) ? packing2 != packing1 : true;
         }
     }
 
-    if (!save) {
+    if (!todo) {
         long edition1 = 0;
         if (user.get("edition", edition1)) {
             ASSERT(edition1 > 0);
             long edition2 = 0;
-            save          = field.get("edition", edition2) ? edition2 != edition1 : true;
+            todo          = field.get("edition", edition2) ? edition2 != edition1 : true;
         }
     }
 
-    if (!save) {
+    if (!todo) {
         std::string compatibility;
-        save = user.get("compatibility", compatibility) && !compatibility.empty();
+        todo = user.get("compatibility", compatibility) && !compatibility.empty();
     }
 
-    if (save) {
-        plan.add(new action::io::Save(param, input, output));
+    if (todo) {
+        plan.add(plan.empty() ? static_cast<action::Action*>(new action::io::Set(param, input, output))
+                              : new action::io::Save(param, input, output));
     }
 }
 
@@ -277,8 +281,9 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
     for (size_t i = 0; i < field.dimensions(); i++) {
 
-        // Protect ecCodes
+        // Protect ecCodes and set error callback handling (throws)
         eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+        codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
         // Special case where only values are changing; handle is cloned, and new values are set
         if (parametrisation.userParametrisation().has("filter")) {
@@ -350,8 +355,9 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
         std::string packing;
         if (parametrisation.userParametrisation().get("packing", packing)) {
-            packing::Packer::lookup(packing).fill(info, *field.representation(), parametrisation.userParametrisation(),
-                                                  parametrisation.fieldParametrisation());
+            std::unique_ptr<packing::Packer> packer(packing::PackerFactory::build(
+                packing, parametrisation.userParametrisation(), parametrisation.fieldParametrisation()));
+            packer->fill(info, *field.representation());
         }
 
         bool remove = false;
@@ -426,14 +432,9 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
         }
 
 
-        int flags = 0;
-        int err   = 0;
-
-        const MIRValuesVector& values = field.values(i);
-
-
-        // set error callback handling (throws)
-        codes_set_codes_assertion_failed_proc(&eccodes_assertion);
+        auto& values = field.values(i);
+        int flags    = 0;
+        int err      = 0;
 
         auto result = codes_grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
         HandleDeleter hf(result);  // Make sure handle deleted even in case of exception
@@ -497,6 +498,84 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
                 }
             }
         }
+    }
+
+    ctx.statistics().gribEncodingTiming() -= saveTimer;
+
+    return total;
+}
+
+
+size_t GribOutput::set(const param::MIRParametrisation& param, context::Context& ctx) {
+    util::TraceResourceUsage usage("GribOutput::set");
+
+    interpolated_++;
+
+    const auto& field = ctx.field();
+    const auto& input = ctx.input();
+
+    field.validate();
+
+    size_t total = 0;
+
+    util::MIRStatistics::Timing saveTimer;
+    auto timer(ctx.statistics().gribEncodingTimer());
+
+    ASSERT(field.dimensions() == 1);
+
+    for (size_t i = 0; i < field.dimensions(); i++) {
+
+        // Protect ecCodes and set error callback handling (throws)
+        eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+        codes_set_codes_assertion_failed_proc(&eccodes_assertion);
+
+        // Make sure handle deleted even in case of exception
+        auto h = codes_handle_clone(input.gribHandle(field.handle(i)));
+        HandleDeleter hf(h);
+
+
+        // set new handle key/values
+        std::string packing;
+        if (param.userParametrisation().get("packing", packing)) {
+            std::unique_ptr<packing::Packer> packer(
+                packing::PackerFactory::build(packing, param.userParametrisation(), param.fieldParametrisation()));
+            auto type = packer->type(field.representation());
+            auto len  = type.length();
+            if (len > 0) {
+                GRIB_CALL(codes_set_string(h, "packingType", type.c_str(), &len));
+            }
+        }
+
+        long bitsPerValue = 0;
+        if (param.userParametrisation().get("accuracy", bitsPerValue)) {
+            GRIB_CALL(codes_set_long(h, "bitsPerValue", bitsPerValue));
+        }
+
+        long edition = 0;
+        if (param.userParametrisation().get("edition", edition)) {
+            GRIB_CALL(codes_set_long(h, "edition", edition));
+        }
+
+
+        // set values
+        GRIB_CALL(codes_set_double(h, "missingValue", field.missingValue()));
+        GRIB_CALL(codes_set_long(h, "bitmapPresent", field.hasMissing()));
+        GRIB_CALL(codes_set_double_array(h, "values", field.values(i).data(), field.values(i).size()));
+
+
+        const void* message;
+        size_t size;
+        GRIB_CALL(codes_get_message(h, &message, &size));
+
+        GRIB_CALL(codes_check_message_header(message, size, PRODUCT_GRIB));
+        GRIB_CALL(codes_check_message_footer(message, size, PRODUCT_GRIB));
+
+        {  // Remove
+            auto timing(ctx.statistics().saveTimer());
+            out(message, size, true);
+        }
+
+        total += size;
     }
 
     ctx.statistics().gribEncodingTiming() -= saveTimer;

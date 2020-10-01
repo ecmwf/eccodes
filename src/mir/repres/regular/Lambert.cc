@@ -78,7 +78,7 @@ void Lambert::fill(grib_info& info) const {
     Point2 firstLL   = grid_.projection().lonlat(first);
     Point2 reference = grid_.projection().lonlat({0., 0.});
 
-    info.grid.latitudeOfFirstGridPointInDegrees  = firstLL[LLCOORDS::LAT];
+    info.grid.latitudeOfFirstGridPointInDegrees = firstLL[LLCOORDS::LAT];
     info.grid.longitudeOfFirstGridPointInDegrees =
         writeLonPositive_ ? util::normalise_longitude(firstLL[LLCOORDS::LON], 0) : firstLL[LLCOORDS::LON];
 
