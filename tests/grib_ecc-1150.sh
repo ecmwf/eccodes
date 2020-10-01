@@ -20,8 +20,8 @@ tempFilt=temp.${label}.filt
 
 in=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
-# Lower limit
-# -------------
+# Decoding: Lower limit
+# ----------------------
 ${tools_dir}/grib_set -s \
    productDefinitionTemplateNumber=5,scaleFactorOfLowerLimit=missing,scaledValueOfLowerLimit=missing \
    $in $tempGrib
@@ -39,8 +39,8 @@ EOF
 ${tools_dir}/grib_filter $tempFilt $tempGrib
 
 
-# Try upper limit too
-# --------------------
+# Decoding: upper limit
+# -----------------------
 ${tools_dir}/grib_set -s \
    productDefinitionTemplateNumber=5,scaleFactorOfUpperLimit=missing,scaledValueOfUpperLimit=missing \
    $in $tempGrib
@@ -57,6 +57,15 @@ cat > $tempFilt <<EOF
 EOF
 ${tools_dir}/grib_filter $tempFilt $tempGrib
 
+# Encoding
+# ----------
+temp2=temp2.${label}.grib
+${tools_dir}/grib_set -s upperLimit=missing,lowerLimit=missing $tempGrib $temp2
+grib_check_key_equals $temp2 lowerLimit,upperLimit 'MISSING MISSING'
+grib_check_key_equals $temp2 \
+  scaleFactorOfLowerLimit,scaledValueOfLowerLimit,scaleFactorOfUpperLimit,scaledValueOfUpperLimit \
+  'MISSING MISSING MISSING MISSING'
+rm -f $temp2
 
 # Clean up
 rm -f $tempGrib $tempFilt

@@ -200,6 +200,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
+    if (exact == GRIB_MISSING_DOUBLE) {
+        if ((ret = grib_set_missing(hand, self->scaleFactor)) != GRIB_SUCCESS)
+            return ret;
+        if ((ret = grib_set_missing(hand, self->scaledValue)) != GRIB_SUCCESS)
+            return ret;
+        return GRIB_SUCCESS;
+    }
+
     accessor_factor = grib_find_accessor(hand, self->scaleFactor);
     accessor_value  = grib_find_accessor(hand, self->scaledValue);
     if (!accessor_factor || !accessor_value) {
