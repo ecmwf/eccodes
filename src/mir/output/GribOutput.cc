@@ -542,7 +542,11 @@ size_t GribOutput::set(const param::MIRParametrisation& param, context::Context&
 
         std::string packing;
         if (param.userParametrisation().get("packing", packing)) {
-            NOTIMP;
+            auto type = packing::Packer::lookup(packing).packingType(field.representation());
+            auto len  = type.length();
+            if (len > 0) {
+                GRIB_CALL(codes_set_string(r, "packingType", type.c_str(), &len));
+            }
         }
 
         long edition = 0;
