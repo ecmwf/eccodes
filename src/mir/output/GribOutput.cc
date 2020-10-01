@@ -168,41 +168,41 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
                          output::MIROutput& output) {
     ASSERT(!plan.ended());
 
-    bool save   = false;
     auto& user  = param.userParametrisation();
     auto& field = param.fieldParametrisation();
+    bool todo   = false;
 
     long bits1 = -1;
     if (user.get("accuracy", bits1)) {
         ASSERT(bits1 > 0);
         long bits2 = -1;
-        save       = field.get("accuracy", bits2) ? bits2 != bits1 : true;
+        todo       = field.get("accuracy", bits2) ? bits2 != bits1 : true;
     }
 
-    if (!save) {
+    if (!todo) {
         std::string packing1;
         if (user.get("packing", packing1)) {
             ASSERT(!packing1.empty());
             std::string packing2;
-            save = field.get("packing", packing2) ? packing2 != packing1 : true;
+            todo = field.get("packing", packing2) ? packing2 != packing1 : true;
         }
     }
 
-    if (!save) {
+    if (!todo) {
         long edition1 = 0;
         if (user.get("edition", edition1)) {
             ASSERT(edition1 > 0);
             long edition2 = 0;
-            save          = field.get("edition", edition2) ? edition2 != edition1 : true;
+            todo          = field.get("edition", edition2) ? edition2 != edition1 : true;
         }
     }
 
-    if (!save) {
+    if (!todo) {
         std::string compatibility;
-        save = user.get("compatibility", compatibility) && !compatibility.empty();
+        todo = user.get("compatibility", compatibility) && !compatibility.empty();
     }
 
-    if (save) {
+    if (todo) {
         plan.add(plan.empty() ? static_cast<action::Action*>(new action::io::Set(param, input, output))
                               : new action::io::Save(param, input, output));
     }
