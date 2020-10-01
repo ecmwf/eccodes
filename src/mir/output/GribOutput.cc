@@ -280,8 +280,9 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
     for (size_t i = 0; i < field.dimensions(); i++) {
 
-        // Protect ecCodes
+        // Protect ecCodes and set error callback handling (throws)
         eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+        codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
         // Special case where only values are changing; handle is cloned, and new values are set
         if (parametrisation.userParametrisation().has("filter")) {
@@ -429,14 +430,9 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
         }
 
 
-        int flags = 0;
-        int err   = 0;
-
-        const MIRValuesVector& values = field.values(i);
-
-
-        // set error callback handling (throws)
-        codes_set_codes_assertion_failed_proc(&eccodes_assertion);
+        auto& values = field.values(i);
+        int flags    = 0;
+        int err      = 0;
 
         auto result = codes_grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
         HandleDeleter hf(result);  // Make sure handle deleted even in case of exception
@@ -527,40 +523,45 @@ size_t GribOutput::set(const param::MIRParametrisation& param, context::Context&
 
     for (size_t i = 0; i < field.dimensions(); i++) {
 
-        // Protect ecCodes
+        // Protect ecCodes and set error callback handling (throws)
         eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+        codes_set_codes_assertion_failed_proc(&eccodes_assertion);
+
+        // Make sure handle deleted even in case of exception
+        auto h = codes_handle_clone(input.gribHandle(field.handle(i)));
+        HandleDeleter hf(h);
 
 
-        auto h = input.gribHandle(field.handle(i));  // Base class throws if input cannot provide handle
-        auto r = codes_handle_clone(h);
-        HandleDeleter rd(r);
-
-        long bitsPerValue = 0;
-        if (param.userParametrisation().get("accuracy", bitsPerValue)) {
-            GRIB_CALL(codes_set_long(r, "bitsPerValue", bitsPerValue));
-        }
-
+        // set new handle key/values
         std::string packing;
         if (param.userParametrisation().get("packing", packing)) {
             auto type = packing::Packer::lookup(packing).packingType(field.representation());
             auto len  = type.length();
             if (len > 0) {
-                GRIB_CALL(codes_set_string(r, "packingType", type.c_str(), &len));
+                GRIB_CALL(codes_set_string(h, "packingType", type.c_str(), &len));
             }
+        }
+
+        long bitsPerValue = 0;
+        if (param.userParametrisation().get("accuracy", bitsPerValue)) {
+            GRIB_CALL(codes_set_long(h, "bitsPerValue", bitsPerValue));
         }
 
         long edition = 0;
         if (param.userParametrisation().get("edition", edition)) {
-            GRIB_CALL(codes_set_long(r, "edition", edition));
+            GRIB_CALL(codes_set_long(h, "edition", edition));
         }
 
 
-        // set error callback handling (throws)
-        codes_set_codes_assertion_failed_proc(&eccodes_assertion);
+        // set values
+        GRIB_CALL(codes_set_double(h, "missingValue", field.missingValue()));
+        GRIB_CALL(codes_set_long(h, "bitmapPresent", field.hasMissing()));
+        GRIB_CALL(codes_set_double_array(h, "values", field.values(i).data(), field.values(i).size()));
+
 
         const void* message;
         size_t size;
-        GRIB_CALL(codes_get_message(r, &message, &size));
+        GRIB_CALL(codes_get_message(h, &message, &size));
 
         GRIB_CALL(codes_check_message_header(message, size, PRODUCT_GRIB));
         GRIB_CALL(codes_check_message_footer(message, size, PRODUCT_GRIB));
