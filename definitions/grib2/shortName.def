@@ -891,8 +891,8 @@
 	 parameterCategory = 7 ;
 	 parameterNumber = 6 ;
 	 typeOfFirstFixedSurface = 17 ;
-	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
 	}
 #Most-unstable CIN
 'mucin' = {
@@ -900,8 +900,17 @@
 	 parameterCategory = 7 ;
 	 parameterNumber = 7 ;
 	 typeOfFirstFixedSurface = 17 ;
-	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	}
+#Departure level of the most unstable parcel expressed as Pressure
+'mudlp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
 	}
 #200 metre U wind component
 '200u' = {
