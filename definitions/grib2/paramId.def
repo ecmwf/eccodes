@@ -849,6 +849,56 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
 	}
+#Mixed-layer CAPE in the lowest 50 hPa
+'228231' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 5000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CIN in the lowest 50 hPa
+'228232' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 5000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CAPE in the lowest 100 hPa
+'228233' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 10000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CIN in the lowest 100 hPa
+'228234' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 10000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Most-unstable CAPE
+'228235' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 17 ;
+	}
+#Most-unstable CIN
+'228236' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 17 ;
+	}
 #200 metre U wind component
 '228239' = {
 	 discipline = 0 ;
