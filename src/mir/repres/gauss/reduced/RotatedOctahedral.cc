@@ -61,8 +61,9 @@ void RotatedOctahedral::fill(grib_info& info) const {
 }
 
 
-void RotatedOctahedral::fill(api::MIRJob&) const {
-    NOTIMP;
+void RotatedOctahedral::fill(api::MIRJob& job) const {
+    Octahedral::fill(job);
+    rotation_.fill(job);
 }
 
 

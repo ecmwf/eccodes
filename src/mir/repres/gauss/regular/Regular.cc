@@ -79,9 +79,8 @@ void Regular::fill(grib_info& info) const {
 }
 
 void Regular::fill(api::MIRJob& job) const {
-    std::stringstream os;
-    os << "F" << N_;
-    job.set("grid", os.str());
+    Gaussian::fill(job);
+    job.set("grid", "F" + std::to_string(N_));
 }
 
 void Regular::makeName(std::ostream& out) const {

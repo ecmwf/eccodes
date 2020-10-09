@@ -60,9 +60,7 @@ void Octahedral::fill(grib_info& info) const {
 
 void Octahedral::fill(api::MIRJob& job) const {
     Reduced::fill(job);
-    std::stringstream os;
-    os << "O" << N_;
-    job.set("grid", os.str());
+    job.set("grid", "O" + std::to_string(N_));
 }
 
 void Octahedral::makeName(std::ostream& out) const {
