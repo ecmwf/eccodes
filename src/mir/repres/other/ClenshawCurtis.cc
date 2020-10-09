@@ -151,11 +151,6 @@ bool ClenshawCurtis::extendBoundingBoxOnIntersect() const {
 }
 
 
-bool ClenshawCurtis::isGlobal() const {
-    return domain_.isGlobal();
-}
-
-
 std::vector<double> ClenshawCurtis::calculateUnrotatedGridBoxLatitudeEdges() const {
 
     // grid-box edge latitudes are the latitude midpoints
