@@ -87,6 +87,9 @@ EOF
         if ($attribute =~ /stepType/ ) {
             $value="\"accum\"";
         }
+        if ($value eq '') {
+            $value="missing()";
+        }
         print $out "\t $attribute = $value ;\n" ;
     }
     if ($filebase) {
