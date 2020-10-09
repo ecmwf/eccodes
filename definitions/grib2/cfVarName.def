@@ -900,6 +900,8 @@
 	 parameterCategory = 7 ;
 	 parameterNumber = 7 ;
 	 typeOfFirstFixedSurface = 17 ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfFirstFixedSurface = missing() ;
 	}
 #200 metre U wind component
 'u200' = {
