@@ -891,6 +891,8 @@
 	 parameterCategory = 7 ;
 	 parameterNumber = 6 ;
 	 typeOfFirstFixedSurface = 17 ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfFirstFixedSurface = missing() ;
 	}
 #Most-unstable CIN
 'J kg**-1' = {
