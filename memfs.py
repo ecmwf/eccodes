@@ -7,10 +7,9 @@ import binascii
 
 assert len(sys.argv) > 2
 
-# For now exclude GRIB3 as it is still experimental
+# Exclude experimental features e.g. GRIB3 and TAF
 # The BUFR codetables is not used in the engine
-# METAR and TAF are also experimental
-EXCLUDED = ['grib3', 'codetables', 'taf', 'metar']
+EXCLUDED = ['grib3', 'codetables', 'taf', 'stations']
 
 pos = 1
 if sys.argv[1] == '-exclude':
@@ -68,7 +67,9 @@ for directory in dirs:
         for name in files:
             full = '%s/%s' % (dirpath, name)
             _, ext = os.path.splitext(full)
-            if ext not in ['.def', '.table', '.tmpl']:
+            if ext not in ['.def', '.table', '.tmpl', '.list', '.txt']:
+                continue
+            if name == 'CMakeLists.txt':
                 continue
 
             fsize = os.path.getsize(full)
