@@ -33,7 +33,7 @@ Lambert::Lambert(const param::MIRParametrisation& param) : RegularGrid(param, ma
     param.get("edition", edition);
 
     // GRIB1 cannot write LaD
-    writeLaDInDegrees_ = edition != 1;
+    writeLaDInDegrees_ = edition == 2;
     param.get("writeLaDInDegrees", writeLaDInDegrees_);
 
     // GRIB2 cannot write negative longitude values
