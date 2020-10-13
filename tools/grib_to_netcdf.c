@@ -1040,7 +1040,7 @@ static err to_expand_mem(field* g)
         }
 
         if (count != g->value_count)
-            grib_context_log(ctx, GRIB_LOG_FATAL, "ecCodes: value count mismatch %d %d", count, g->value_count);
+            grib_context_log(ctx, GRIB_LOG_FATAL, "ecCodes: value count mismatch %ld %ld", count, g->value_count);
 
         if ((e = grib_get_long(g->handle, "missingValuesPresent", &bitmap))) {
             grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get missingValuesPresent: %s", grib_get_error_message(e));
@@ -2847,7 +2847,7 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
 
             if (nj != count[naxis] || ni != count[naxis + 1]) {
                 grib_context_log(ctx, GRIB_LOG_ERROR, "Grib %d has different resolution\n", i + 1);
-                grib_context_log(ctx, GRIB_LOG_ERROR, "lat=%d, long=%d instead of lat=%d, long=%d\n", nj, ni, count[naxis], count[naxis + 1]);
+                grib_context_log(ctx, GRIB_LOG_ERROR, "lat=%ld, long=%ld instead of lat=%ld, long=%ld\n", nj, ni, count[naxis], count[naxis + 1]);
                 exit(1);
             }
 
