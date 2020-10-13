@@ -461,7 +461,7 @@ static int grib_load_codetable(grib_context* c, const char* filename,
         }
 
         if (code < 0 || code >= size) {
-            grib_context_log(c, GRIB_LOG_WARNING, "code_table_entry: invalid code in %s: %d (table size=%d)", filename, code, size);
+            grib_context_log(c, GRIB_LOG_WARNING, "code_table_entry: invalid code in %s: %d (table size=%ld)", filename, code, size);
             continue;
         }
 
@@ -502,7 +502,7 @@ static int grib_load_codetable(grib_context* c, const char* filename,
         Assert(*title);
 
         if (t->entries[code].abbreviation != NULL) {
-            grib_context_log(c, GRIB_LOG_WARNING, "code_table_entry: duplicate code in %s: %d (table size=%d)", filename, code, size);
+            grib_context_log(c, GRIB_LOG_WARNING, "code_table_entry: duplicate code in %s: %d (table size=%ld)", filename, code, size);
             continue;
         }
 
