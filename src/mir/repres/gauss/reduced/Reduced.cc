@@ -337,7 +337,7 @@ std::vector<util::GridBox> Reduced::gridBoxes() const {
 
 
 void Reduced::fill(api::MIRJob& job) const {
-    ASSERT(isGlobal());
+    Gaussian::fill(job);
     job.set("pl", pls());
 }
 

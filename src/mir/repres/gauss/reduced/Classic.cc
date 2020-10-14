@@ -63,9 +63,7 @@ void Classic::fill(grib_info& info) const {
 
 void Classic::fill(api::MIRJob& job) const {
     Reduced::fill(job);
-    std::stringstream os;
-    os << "N" << N_;
-    job.set("grid", os.str());
+    job.set("grid", "N" + std::to_string(N_));
 }
 
 

@@ -25,6 +25,7 @@ namespace repres {
 namespace gauss {
 namespace reduced {
 
+
 Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox, double angularPrecision) :
     Reduced(N, bbox, angularPrecision) {
 
@@ -52,37 +53,43 @@ Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox, double angularPr
                                 << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
 }
 
+
 Octahedral::~Octahedral() = default;
+
 
 void Octahedral::fill(grib_info& info) const {
     Reduced::fill(info);
 }
 
+
 void Octahedral::fill(api::MIRJob& job) const {
     Reduced::fill(job);
-    std::stringstream os;
-    os << "O" << N_;
-    job.set("grid", os.str());
+    job.set("grid", "O" + std::to_string(N_));
 }
+
 
 void Octahedral::makeName(std::ostream& out) const {
     out << "O" << N_;
     bbox_.makeName(out);
 }
 
+
 bool Octahedral::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const Octahedral*>(&other);
     return (o != nullptr) && Reduced::sameAs(other);
 }
 
+
 atlas::Grid Octahedral::atlasGrid() const {
     return atlas::ReducedGaussianGrid("O" + std::to_string(N_), domain());
 }
+
 
 void Octahedral::fill(util::MeshGeneratorParameters& params) const {
     Gaussian::fill(params);
     params.set("triangulate", true);
 }
+
 
 }  // namespace reduced
 }  // namespace gauss

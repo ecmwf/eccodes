@@ -94,10 +94,7 @@ void Representation::estimate(api::MIREstimation&) const {
 
 
 bool Representation::isGlobal() const {
-    bool global = isPeriodicWestEast() && includesNorthPole() && includesSouthPole();
-
-    ASSERT(global == domain().isGlobal());
-    return global;
+    return domain().isGlobal();
 }
 
 

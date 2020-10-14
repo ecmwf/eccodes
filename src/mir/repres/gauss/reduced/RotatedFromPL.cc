@@ -65,8 +65,9 @@ void RotatedFromPL::fill(grib_info& info) const {
 }
 
 
-void RotatedFromPL::fill(api::MIRJob&) const {
-    NOTIMP;
+void RotatedFromPL::fill(api::MIRJob& job) const {
+    FromPL::fill(job);
+    rotation_.fill(job);
 }
 
 
