@@ -9,17 +9,17 @@
 #
 
 # Test limitations in number of bits per value we can decode/encode are
-# working. Grib API can currently decode message with a bpv <= sizeof(long)
+# working. ecCodes can currently decode a message with a bpv <= sizeof(long)
 # and encode messages with bpv < sizeof(long). Attempt to do otherwise will
-# result in an error. Packing type this is valid for is simple packing.
+# result in an error. This is valid for Simple Packing.
 
 . ./include.sh
 
 REDIRECT=/dev/null
 
-$EXEC ${test_dir}/bpv_limit ${data_dir}/regular_latlon_surface.grib2 2>/dev/null
+$EXEC ${test_dir}/grib_bpv_limit ${data_dir}/regular_latlon_surface.grib2 2>/dev/null
 
 # TODO: grib1 does not work yet. bpv=64 but decode does not fail as expected
 #for file in ${data_dir}/regular_latlon_surface.grib?; do 
-#    ./bpv_limit $file
+#    ./grib_bpv_limit $file
 #done

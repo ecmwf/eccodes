@@ -25,46 +25,82 @@ endforeach()
 
 
 # Now add each test
-#################################################
-list(APPEND tests_basic
-   grib_set_pv
-   grib_read_sample
-   bufr_read_sample
-   bufr_ecc-869
-)
-list(APPEND tests_extra
-   grib_clone
-   grib_count_messages
-   grib_get_message_offset
-   grib_get_keys
-   grib_index
-   grib_iterator
-   grib_keys_iterator
-   grib_multi_write
-   grib_nearest
-   grib_print_data
-   grib_samples
-   grib_set_missing
-   binary_message
-   grib_set_bitmap
-   bufr_attributes
-   bufr_clone
-   bufr_copy_data
-   bufr_expanded
-   bufr_get_keys
-   bufr_keys_iterator
-   bufr_read_header
-   bufr_read_scatterometer
-   bufr_read_tropical_cyclone
-   bufr_read_synop
-   bufr_read_temp
-   bufr_set_keys
-   bufr_subset
-   get_product_kind
-   gts_get_keys
-   metar_get_keys
-   bufr_ecc-448
-)
+################################################
+if( HAVE_BUILD_TOOLS )
+    list(APPEND tests_basic
+       grib_set_pv
+       grib_read_sample
+       bufr_read_sample
+       bufr_ecc-869
+    )
+    list(APPEND tests_extra
+       grib_clone
+       grib_count_messages
+       grib_get_message_offset
+       grib_get_keys
+       grib_index
+       grib_iterator
+       grib_keys_iterator
+       grib_multi_write
+       grib_nearest
+       grib_print_data
+       grib_samples
+       grib_set_missing
+       binary_message
+       grib_set_bitmap
+       bufr_attributes
+       bufr_clone
+       bufr_copy_data
+       bufr_expanded
+       bufr_get_keys
+       bufr_keys_iterator
+       bufr_read_header
+       bufr_read_scatterometer
+       bufr_read_tropical_cyclone
+       bufr_read_synop
+       bufr_read_temp
+       bufr_set_keys
+       bufr_subset
+       get_product_kind
+       gts_get_keys
+       metar_get_keys
+       bufr_ecc-448
+    )
+else()
+    # No command line tools
+    list(APPEND tests_basic
+       grib_read_sample
+       bufr_read_sample
+    )
+    list(APPEND tests_extra
+       grib_clone
+       grib_count_messages
+       grib_get_keys
+       grib_index
+       grib_iterator
+       grib_keys_iterator
+       grib_multi_write
+       grib_nearest
+       grib_print_data
+       grib_samples
+       bufr_attributes
+       bufr_clone
+       bufr_expanded
+       bufr_get_keys
+       bufr_keys_iterator
+       bufr_read_header
+       bufr_read_scatterometer
+       bufr_read_tropical_cyclone
+       bufr_read_synop
+       bufr_read_temp
+       bufr_set_keys
+       bufr_subset
+       get_product_kind
+       gts_get_keys
+       metar_get_keys
+       bufr_ecc-448
+    )
+endif()
 
 # The high level python test requires new features in the unittest
 # which are only there for python 2.7 onwards
@@ -97,7 +133,7 @@ ecbuild_add_test( TARGET eccodes_p_bufr_encode_flight_test
                   TYPE       SCRIPT
                   DEPENDS    ${ptools}
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_flight.sh
-                  CONDITION  HAVE_PYTHON AND ENABLE_EXTRA_TESTS
+                  CONDITION  HAVE_PYTHON AND ENABLE_EXTRA_TESTS AND HAVE_BUILD_TOOLS
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
                   RESOURCES   flight_data.csv
                   TEST_DEPENDS eccodes_download_bufrs )

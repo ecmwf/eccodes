@@ -1440,7 +1440,14 @@ grib_action* grib_action_from_filter(const char* filter)
     grib_action* a        = NULL;
     grib_context* context = grib_context_get_default();
     a                     = grib_parse_file(context, filter);
-    context->grib_reader  = NULL;
+
+    if (context->grib_reader && context->grib_reader->first) {
+        grib_context_free_persistent(context, context->grib_reader->first->filename);
+        grib_context_free_persistent(context, context->grib_reader->first);
+        grib_context_free_persistent(context, context->grib_reader);
+    }
+
+    context->grib_reader = NULL;
     return a;
 }
 

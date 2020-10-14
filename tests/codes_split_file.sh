@@ -10,7 +10,7 @@
 
 . ./include.sh
 pwd
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="codes_split_file"
 temp=$label.temp.grib
 

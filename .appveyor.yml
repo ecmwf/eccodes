@@ -2,7 +2,7 @@
 #      general configuration      #
 #---------------------------------#
 
-version: 2.18.0-{build}-{branch}
+version: 2.19.0-{build}-{branch}
 
 branches:
   only:
@@ -38,7 +38,7 @@ clone_depth: 1
 # scripts that run after cloning repository
 install:
   # install ecbuild
-  - cmd: git clone --depth 1 https://github.com/ecmwf/ecbuild.git %ECBUILD_SRC%
+  - cmd: git clone --depth 1 https://github.com/ecmwf/ecbuild.git %ECBUILD_SRC% --branch %APPVEYOR_REPO_BRANCH%
 
     # install linux utils
   - cmd: conda install -c msys2 m2-bash ^

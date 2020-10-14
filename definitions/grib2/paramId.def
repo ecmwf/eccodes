@@ -205,6 +205,22 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 32 ;
 	}
+#Total column cloud liquid water
+'78' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column cloud ice water
+'79' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 70 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
 #Surface solar radiation downwards
 '169' = {
 	 discipline = 0 ;
@@ -219,6 +235,14 @@
 	 parameterCategory = 5 ;
 	 parameterNumber = 3 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Top net solar radiation
+'178' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Eastward turbulent surface stress
@@ -475,6 +499,16 @@
 	 typeOfFirstFixedSurface = 169 ;
 	 scaledValueOfFirstFixedSurface = 1 ;
 	}
+#2 metre specific humidity
+'174096' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
 #Ammonium aerosol mass mixing ratio
 '210249' = {
 	 discipline = 0 ;
@@ -640,6 +674,12 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
+	}
+#Liquid water content in snow pack
+'228038' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 23 ;
 	}
 #Height of convective cloud top
 '228046' = {
@@ -809,6 +849,69 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
 	}
+#Mixed-layer CAPE in the lowest 50 hPa
+'228231' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 5000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CIN in the lowest 50 hPa
+'228232' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 5000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CAPE in the lowest 100 hPa
+'228233' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 10000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CIN in the lowest 100 hPa
+'228234' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 10000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Most-unstable CAPE
+'228235' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	}
+#Most-unstable CIN
+'228236' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	}
+#Departure level of the most unstable parcel expressed as Pressure
+'228237' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	}
 #200 metre U wind component
 '228239' = {
 	 discipline = 0 ;
@@ -943,6 +1046,33 @@
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time integral of rain flux
+'235015' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 65 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of surface eastward momentum flux
+'235017' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of surface northward momentum flux
+'235018' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Cross sectional area of flow in channel
 '240011' = {
 	 discipline = 1 ;
@@ -1046,6 +1176,106 @@
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
+	}
+#Latitude
+'250001' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	}
+#Longitude
+'250002' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	}
+#Latitude on T grid
+'250003' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 1 ;
+	}
+#Longitude on T grid
+'250004' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 1 ;
+	}
+#Latitude on U grid
+'250005' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 2 ;
+	}
+#Longitude on U grid
+'250006' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 2 ;
+	}
+#Latitude on V grid
+'250007' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 3 ;
+	}
+#Longitude on V grid
+'250008' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 3 ;
+	}
+#Latitude on W grid
+'250009' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 4 ;
+	}
+#Longitude on W grid
+'250010' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 4 ;
+	}
+#Latitude on F grid
+'250011' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 5 ;
+	}
+#Longitude on F grid
+'250012' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 5 ;
+	}
+#Total column graupel
+'260001' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 74 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #2 metre relative humidity
 '260242' = {
@@ -1408,6 +1638,54 @@
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 23 ;
+	}
+#Keetch-Byram drought index
+'260557' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 12 ;
+	}
+#Drought factor (as defined by the Australian forest service)
+'260558' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	}
+#Rate of spread (as defined by the Australian forest service)
+'260559' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	}
+#Fire danger index (as defined by the Australian forest service)
+'260560' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 15 ;
+	}
+#Spread component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'260561' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 16 ;
+	}
+#Burning index (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'260562' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 17 ;
+	}
+#Ignition component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'260563' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	}
+#Energy release component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'260564' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 19 ;
 	}
 #Universal thermal climate index
 '261001' = {
@@ -3796,7 +4074,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Snow Fall water equivalent
 '228144' = {

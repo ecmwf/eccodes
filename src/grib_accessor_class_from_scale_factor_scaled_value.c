@@ -200,6 +200,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
+    if (exact == GRIB_MISSING_DOUBLE) {
+        if ((ret = grib_set_missing(hand, self->scaleFactor)) != GRIB_SUCCESS)
+            return ret;
+        if ((ret = grib_set_missing(hand, self->scaledValue)) != GRIB_SUCCESS)
+            return ret;
+        return GRIB_SUCCESS;
+    }
+
     accessor_factor = grib_find_accessor(hand, self->scaleFactor);
     accessor_value  = grib_find_accessor(hand, self->scaledValue);
     if (!accessor_factor || !accessor_value) {
@@ -246,15 +254,21 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     if ((ret = grib_get_long_internal(hand, self->scaleFactor, &scaleFactor)) != GRIB_SUCCESS)
         return ret;
-    /* ECC-966: If scale factor is missing, print error and treat it as zero (as a fallback) */
-    if (grib_is_missing(hand, self->scaleFactor, &ret) && ret == GRIB_SUCCESS) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "unpack_double for %s: %s is missing! Setting it to zero", a->name, self->scaleFactor);
-        scaleFactor = 0;
-    }
-
     if ((ret = grib_get_long_internal(hand, self->scaledValue, &scaledValue)) != GRIB_SUCCESS)
         return ret;
+
+    if (grib_is_missing(hand, self->scaledValue, &ret) && ret == GRIB_SUCCESS) {
+        *val = GRIB_MISSING_DOUBLE;
+        *len = 1;
+        return GRIB_SUCCESS;
+    } else {
+        /* ECC-966: If scale factor is missing, print error and treat it as zero (as a fallback) */
+        if (grib_is_missing(hand, self->scaleFactor, &ret) && ret == GRIB_SUCCESS) {
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                    "unpack_double for %s: %s is missing! Using zero instead", a->name, self->scaleFactor);
+            scaleFactor = 0;
+        }
+    }
 
     *val = scaledValue;
 
@@ -289,5 +303,5 @@ static int is_missing(grib_accessor* a)
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->scaledValue, &scaledValue)) != GRIB_SUCCESS)
         return ret;
 
-    return ((scaleFactor == GRIB_MISSING_LONG) | (scaledValue == GRIB_MISSING_LONG));
+    return ((scaleFactor == GRIB_MISSING_LONG) || (scaledValue == GRIB_MISSING_LONG));
 }

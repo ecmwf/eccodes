@@ -11,8 +11,8 @@
 # Python implementation: bufr_keys_iterator
 #
 # Description: Example on how to use keys_iterator functions and the
-#           codes_bufr_keys_iterator structure to get all the available
-#           keys in a BUFR message.
+#              codes_bufr_keys_iterator structure to get all the available
+#              keys in a BUFR message.
 
 
 from __future__ import print_function

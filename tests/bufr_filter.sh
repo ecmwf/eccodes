@@ -13,22 +13,22 @@ set -x
 
 cd ${data_dir}/bufr
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_filter_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Create split directory
+# Create split directory
 dSplit=${label}"_split"
 [ -d $dSplit ] || mkdir -p $dSplit 
 
-#Define tmp bufr file
+# Define tmp bufr file
 fBufrTmp=${label}".bufr.tmp"
 
-#Define filter rules file
+# Define filter rules file
 fRules=${label}.filter
 
 #-----------------------------------------------------------
@@ -66,7 +66,7 @@ ${tools_dir}/codes_bufr_filter $fRules $f >> $fLog
 # Test: filter SYNOP message according to conditions
 #-----------------------------------------------------------
 
-#Filter out the message with stationid=1003
+# Filter out the message with stationid=1003
 cat > $fRules <<EOF
 set unpack=1;
 transient statid=1000*blockNumber+stationNumber;
@@ -83,7 +83,7 @@ echo "Test: filter SYNOP message according to conditions" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}/codes_bufr_filter $fRules $f >> $fLog
 
-#Check if the resulting bufr message is the right one
+# Check if the resulting bufr message is the right one
 cat > $fRules <<EOF
 set unpack=1;
 transient statid=1000*blockNumber+stationNumber;
@@ -96,7 +96,7 @@ EOF
 # Test: splitting according to keys 
 #-----------------------------------------------------------
 
-#TODO: when ECC-32 is fixed we need to remove hack using the transient variables!
+# TODO: when ECC-32 is fixed we need to remove hack using the transient variables!
 
 cat > $fRules <<EOF
 set unpack=1;
@@ -112,7 +112,7 @@ echo "Test: splitting according to keys" >> $fLog
 echo "file: $f" >> $fLog
 ${tools_dir}/codes_bufr_filter $fRules $f >> $fLog
 
-#Check if the resulting files exist
+# Check if the resulting files exist
 for statid  in 1 3 7 ; do
     [ -s ${dSplit}/split_98_13_1_1_${statid}.bufr ]
 done
@@ -594,7 +594,7 @@ ${tools_dir}/codes_bufr_filter -f $fRules $f 2>>$fLog 1>>$fLog
 #----------------------------------------------------
 # Test: format specifier for integer keys
 #----------------------------------------------------
-#See ECC-36. bufrHeaderCentre is aliased 'centre'
+# See ECC-36. bufrHeaderCentre is aliased 'centre'
 cat > $fRules <<EOF
  # Pad center with leading zeroes and heightOfStation with blanks
  set unpack=1;
@@ -610,8 +610,8 @@ result=`${tools_dir}/codes_bufr_filter  $fRules $f`
 #----------------------------------------------------
 # Test: setting keys 
 #----------------------------------------------------
-#TODO: when ECC-37 is fixed we need to enable it.
-#Filter out the message with stationid=1003
+# TODO: when ECC-37 is fixed we need to enable it.
+# Filter out the message with stationid=1003
 cat > $fRules <<EOF
  set unpack=1;
  set typicalDate="20010511";
@@ -626,7 +626,7 @@ echo "Test: setting keys" >> $fLog
 echo "file: $f" >> $fLog
 #${tools_dir}/codes_bufr_filter -o $fBufrTmp $fRules $f >> $fLog
 
-#Check if the resulting bufr message is the right one
+# Check if the resulting bufr message is the right one
 cat > $fRules <<EOF
  set unpack=1;
  print "[typicalDate] [year] [airTemperatureAt2M%.1f]";
@@ -634,8 +634,9 @@ EOF
 
 #[ `${tools_dir}/codes_bufr_filter $fRules $fBufrTmp` = "20010511 2001 234.5" ]
 
-#Clean up
+# Clean up
 rm -f ${dSplit}/*
+rmdir ${dSplit}
 rm -f $fLog $fRules 
 rm -f $fBufrTmp
 
@@ -877,7 +878,7 @@ diff ${fOut}.log.ref ${fOut}.log
 ${tools_dir}/bufr_compare ${fOut} ${fOut}.ref
 
 rm -f ${fOut}.log
-rm -f $fLog $fRules ${fOut}
+rm -f $fLog $fRules ${fOut} ${fOut}.log.ref
 #-----------------------------------------------------------
 # Test:  add section 2
 #-----------------------------------------------------------
@@ -909,7 +910,7 @@ EOF
 fi
 
 rm -f ${fOut}.log
-rm -f $fLog $fRules ${fOut}
+rm -f $fLog $fRules ${fOut} ${fOut}.log.ref
 
 #-----------------------------------------------------------
 # Test:  extract subsets uncompressed data

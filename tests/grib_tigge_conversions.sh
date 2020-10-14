@@ -16,7 +16,7 @@
 
 REDIRECT=/dev/null
 
-dir="${data_dir}/tigge/"
+dir="${data_dir}/tigge"
 temp1="temp.grib1_"
 temp2="temp.grib2_"
 

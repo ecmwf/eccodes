@@ -40,3 +40,9 @@
  parameterCategory = 151 ;
  parameterNumber = 163 ;
 }
+#Top net solar radiation
+'toa_net_upward_shortwave_flux' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 178 ;
+}

@@ -87,6 +87,7 @@ int main(int argc, char* argv[])
         if ((path = getenv("ECCODES_DEFINITION_PATH")) != NULL) {
             printf("Definition files path from environment variable");
             printf(" ECCODES_DEFINITION_PATH=%s\n", path);
+            printf("Full definition files path=%s\n", context->grib_definition_files_path);
         }
         else if ((path = getenv("GRIB_DEFINITION_PATH")) != NULL) {
             printf("Definition files path from environment variable");
@@ -94,6 +95,7 @@ int main(int argc, char* argv[])
             printf(
                 "(This is for backward compatibility. "
                 "It is recommended you use ECCODES_DEFINITION_PATH instead!)\n");
+            printf("Full definition files path=%s\n", context->grib_definition_files_path);
         }
         else {
             printf("Default definition files path is used: %s\n", context->grib_definition_files_path);

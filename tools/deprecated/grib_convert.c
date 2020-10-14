@@ -32,14 +32,14 @@ grib_option grib_options[]={
   {"v",0,0,0,1,0}
 };
 
-char* grib_tool_description=
+char* tool_description=
 "It converts grib messages applying the rules from a conversion_rules file."
 "\n\tThe rules are of the type \"keyname = value;\" and if blocks are allowed as"
 "\n\tif ( keyname1 == value1 || keyname2 != value2 && keyname3 == value3 ) {"
 "\n\t keyname4 = value4;"
 "\n\t}";
-char* grib_tool_name="grib_convert";
-char* grib_tool_usage="[options] conversion_rules "
+char* tool_name="grib_convert";
+char* tool_usage="[options] conversion_rules "
 "grib_file grib_file ... output_grib_file";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);

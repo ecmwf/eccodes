@@ -354,10 +354,20 @@ static int bufr_get_from_table(grib_accessor* a, bufr_descriptor* v)
     if (!list)
         return GRIB_NOT_FOUND;
 
-    v->shortName = grib_context_strdup(a->context, list[1]);
-    v->type      = convert_type(list[2]);
+#ifdef DEBUG
+    {
+        /* ECC-1137: check descriptor key name and unit lengths */
+        const size_t maxlen_shortName = sizeof(v->shortName);
+        const size_t maxlen_units     = sizeof(v->units);
+        Assert( strlen(list[1]) < maxlen_shortName );
+        Assert( strlen(list[4]) < maxlen_units );
+    }
+#endif
+
+    strcpy(v->shortName, list[1]);
+    v->type = convert_type(list[2]);
     /* v->name=grib_context_strdup(c,list[3]);  See ECC-489 */
-    v->units = grib_context_strdup(a->context, list[4]);
+    strcpy(v->units, list[4]);
 
     /* ECC-985: Scale and reference are often 0 so we can reduce calls to atol */
     v->scale  = atol_fast(list[5]);

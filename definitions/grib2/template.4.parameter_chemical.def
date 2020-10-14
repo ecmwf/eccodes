@@ -10,6 +10,7 @@ meta parameterName  codetable_title(parameterNumber) : dump;
 
 # Atmospheric chemical or physical constitutent type
 codetable[2] constituentType ('4.230.table',masterDir,localDir) : dump;
+meta constituentTypeName codetable_title(constituentType);
 
 #  Type of generating process
 codetable[1] typeOfGeneratingProcess ('4.3.table',masterDir,localDir) : dump;

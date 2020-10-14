@@ -10,15 +10,15 @@
 
 . ./include.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_dump_descriptors_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define tmp bufr files
+# Define tmp bufr files
 fJsonTmp=${label}".txt.tmp"
 
 if [ $HAVE_MEMFS -eq 1 ]; then

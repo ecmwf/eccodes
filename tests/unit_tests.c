@@ -1485,9 +1485,41 @@ static void test_concept_condition_strings()
     grib_handle_delete(h);
 }
 
+static void test_trimming()
+{
+    char a[] = " Standing  ";
+    char b[] = "  Weeping ";
+    char c[] = "  Silhouette ";
+    char d[] = " The Forest Of October  ";
+    char e[] = "\t\n Apostle In Triumph \r ";
+    char* pA = a;
+    char* pB = b;
+    char* pC = c;
+    char* pD = d;
+    char* pE = e;
+
+    lrtrim(&pA, 0, 1); /*right only*/
+    assert( strcmp(pA, " Standing")==0 );
+
+    lrtrim(&pB, 1, 0); /*left only*/
+    assert( strcmp(pB, "Weeping ")==0 );
+
+    lrtrim(&pC, 1, 1); /*both ends*/
+    assert( strcmp(pC, "Silhouette")==0 );
+
+    lrtrim(&pD, 1, 1); /*make sure other spaces are not removed*/
+    assert( strcmp(pD, "The Forest Of October")==0 );
+
+    lrtrim(&pE, 1, 1); /* Other chars */
+    assert( strcmp(pE, "Apostle In Triumph")==0 );
+}
+
 int main(int argc, char** argv)
 {
     /*printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());*/
+    
+    test_trimming();
+
     test_get_git_sha1();
 
     test_concept_condition_strings();

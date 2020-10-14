@@ -37,11 +37,11 @@ grib_option grib_options[] = {
     { "x", 0, 0, 0, 1, 0 }
 };
 
-const char* grib_tool_description =
+const char* tool_description =
     "List content of TAF files printing values of "
     "some keys.\n\tIt does not fail when a key is not found.";
-const char* grib_tool_name  = "taf_ls";
-const char* grib_tool_usage = "[options] file file ...";
+const char* tool_name  = "taf_ls";
+const char* tool_usage = "[options] file file ...";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 double lat             = 0;

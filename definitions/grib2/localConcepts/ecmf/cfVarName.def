@@ -395,18 +395,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 74 ;
 	}
-#Total column cloud liquid water
-'tclw' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 78 ;
-	}
-#Total column cloud ice water
-'tciw' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 79 ;
-	}
 #Experimental product
 'p80.128' = {
 	 discipline = 192 ;
@@ -709,10 +697,10 @@
 	}
 #Snow depth
 'sd' = {
+	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 11 ;
-	 unitsFactor = 1000 ;
+	 parameterNumber = 254 ;
 	}
 #Large-scale precipitation
 'lsp' = {
@@ -829,12 +817,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 174 ;
-	}
-#Top net solar radiation
-'tsr' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 178 ;
 	}
 #Evaporation
 'e' = {
