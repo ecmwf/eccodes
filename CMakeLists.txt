@@ -21,7 +21,7 @@ cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 find_package( ecbuild 3.4 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 
 # Initialise project
-project( eccodes VERSION 2.19.0 LANGUAGES C )
+project( eccodes VERSION 2.20.0 LANGUAGES C )
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
@@ -117,7 +117,7 @@ ecbuild_add_option( FEATURE AEC
 
 ecbuild_find_python( VERSION 2.6 NO_LIBS )
 find_package( NumPy )
-ecbuild_add_option( FEATURE PYTHON
+ecbuild_add_option( FEATURE PYTHON2
     DESCRIPTION "Build the ecCodes Python2 interface (deprecated)"
     DEFAULT OFF
     #CONDITION Python_FOUND AND NumPy_FOUND
@@ -452,7 +452,7 @@ ecbuild_pkgconfig(
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
   VARIABLES      HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                 HAVE_NETCDF HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
+                 HAVE_NETCDF HAVE_PYTHON2 HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
 if( HAVE_FORTRAN )
   ecbuild_pkgconfig(
@@ -464,7 +464,7 @@ if( HAVE_FORTRAN )
                         ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
     VARIABLES           HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                         HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                        HAVE_NETCDF HAVE_PYTHON HAVE_PNG HAVE_AEC
+                        HAVE_NETCDF HAVE_PYTHON2 HAVE_PNG HAVE_AEC
   )
 endif()
 
@@ -487,7 +487,7 @@ ecbuild_info("   |  ecCodes version ${eccodes_VERSION}  |")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("")
 
-if( HAVE_PYTHON )
+if( HAVE_PYTHON2 )
   ecbuild_deprecate("Python2 support is deprecated and will be discontinued")
 endif()
 

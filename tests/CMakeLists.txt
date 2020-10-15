@@ -243,7 +243,7 @@ if( HAVE_BUILD_TOOLS )
     endif()
 
 
-    if( HAVE_PYTHON AND ENABLE_EXTRA_TESTS )
+    if( HAVE_PYTHON2 AND ENABLE_EXTRA_TESTS )
         list( APPEND ptests bufr_dump_encode_python bufr_dump_decode_python )
         foreach( test ${ptests} )
             ecbuild_add_test( TARGET eccodes_t_${test}
