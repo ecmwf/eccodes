@@ -113,7 +113,9 @@ for directory in dirs:
                 totsize = 0
 
 g.close()
-assert fcount == 3
+# The number of generated C files is hard coded.
+# See memfs/CMakeLists.txt
+assert fcount == 3, fcount
 opath = output_file_base + "_final.c"
 print('MEMFS: Generating output: ', opath)
 g = open(opath, "w")
