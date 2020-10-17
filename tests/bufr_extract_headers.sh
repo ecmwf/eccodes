@@ -60,6 +60,14 @@ r=`${test_dir}/bufr_extract_headers centre ${data_dir}/bufr/PraticaTemp.bufr`
 r=`${test_dir}/bufr_extract_headers centre ${data_dir}/bufr/israel_observations_2017041010.bufr`
 [ "$r" = "234" ]
 
+# Check all centres with an abbreviation
+centre_table=${ECCODES_DEFINITION_PATH}/common/c-11.table
+centres=`awk 'NR > 1 && $2 ~ /^[A-z]/ {print $2}' < $centre_table`
+for c in $centres; do
+    ${tools_dir}/bufr_set -s centre=$c $ECCODES_SAMPLES_PATH/BUFR4.tmpl $temp1
+    r=`${test_dir}/bufr_extract_headers centre $temp1`
+    [ "$r" = "$c" ]
+done
 
 # Test rdbSubtype
 # ---------------
