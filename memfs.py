@@ -4,8 +4,12 @@ import os
 import re
 import sys
 import binascii
+import time
 
 assert len(sys.argv) > 2
+
+start = time.time()
+print("MEMFS: starting")
 
 # Exclude experimental features e.g. GRIB3 and TAF
 # The BUFR codetables is not used in the engine
@@ -29,7 +33,7 @@ print("Excluding: ", EXCLUDED)
 FILES = {}
 SIZES = {}
 NAMES = []
-CHUNK = 5500 * 1000  # chunk size in bytes
+CHUNK = 16 * 1024 * 1024  # chunk size in bytes
 
 # Binary to ASCII function. Different in Python 2 and 3
 try:
@@ -45,11 +49,12 @@ def get_outfile_name(base, count):
 
 # The last argument is the base name of the generated C file(s)
 output_file_base = sys.argv[-1]
-totsize = 0  # amount written
-fcount = 0
-opath = get_outfile_name(output_file_base, fcount)
-print("MEMFS: Generating output: ", opath)
-g = open(opath, "w")
+
+buffer = None
+fcount = -1
+
+
+
 
 for directory in dirs:
 
@@ -58,13 +63,21 @@ for directory in dirs:
     NAMES.append(dname)
 
     for dirpath, dirnames, files in os.walk(directory, followlinks=True):
-        # for ex in EXCLUDED:
-        #    if ex in dirnames:
-        #        print('Note: eccodes memfs.py script: %s/%s will not be included.' % (dirpath,ex))
+
+
 
         # Prune the walk by modifying the dirnames in-place
         dirnames[:] = [dirname for dirname in dirnames if dirname not in EXCLUDED]
         for name in files:
+
+
+            if buffer is None:
+                fcount += 1
+                opath = get_outfile_name(output_file_base, fcount)
+                print("MEMFS: Generating output:", opath)
+                buffer = open(opath, 'wb')
+
+
             full = "%s/%s" % (dirpath, name)
             _, ext = os.path.splitext(full)
             if ext not in [".def", ".table", ".tmpl", ".list", ".txt"]:
@@ -72,8 +85,6 @@ for directory in dirs:
             if name == "CMakeLists.txt":
                 continue
 
-            fsize = os.path.getsize(full)
-            totsize += fsize
             full = full.replace("\\", "/")
             fname = full[full.find("/%s/" % (dname,)) :]
             # print("MEMFS: Add ", fname)
@@ -82,9 +93,10 @@ for directory in dirs:
             assert name not in FILES
             assert name not in SIZES
             FILES[name] = fname
-            SIZES[name] = fsize
+            SIZES[name] = os.path.getsize(full)
 
-            print("const unsigned char %s[] = {" % (name,), file=g)
+            txt = "const unsigned char %s[] = {" % (name,)
+            buffer.write(txt.encode())
 
             with open(full, "rb") as f:
                 i = 0
@@ -98,24 +110,24 @@ for directory in dirs:
                 # e.g. 23 -> 0x23
                 for n in range(0, len(contents_hex), 2):
                     twoChars = ascii(contents_hex[n : n + 2])
-                    print("0x%s," % (twoChars,), end="", file=g)
+                    txt = "0x%s," % (twoChars,)
+                    buffer.write(txt.encode())
                     i += 1
                     if (i % 20) == 0:
-                        print("", file=g)
+                        buffer.write("\n".encode())
 
-            print("};", file=g)
-            if totsize >= CHUNK:
-                g.close()
-                fcount += 1
-                opath = get_outfile_name(output_file_base, fcount)
-                print("MEMFS: Generating output: ", opath)
-                g = open(opath, "w")
-                totsize = 0
+            buffer.write("};\n".encode())
+            if buffer.tell() >= CHUNK:
+                buffer.close()
+                buffer = None
 
-g.close()
+
+if buffer is not None:
+    buffer.close()
+
 # The number of generated C files is hard coded.
 # See memfs/CMakeLists.txt
-assert fcount == 3, fcount
+assert fcount == 6, fcount
 opath = output_file_base + "_final.c"
 print("MEMFS: Generating output: ", opath)
 g = open(opath, "w")
@@ -311,3 +323,5 @@ FILE* codes_memfs_open(const char* path) {
 )
 
 print("Finished")
+
+print("MEMFS: done", time.time() - start)
