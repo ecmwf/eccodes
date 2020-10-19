@@ -4,9 +4,12 @@ import os
 import re
 import sys
 import binascii
-import StringIO
+import time
 
 assert len(sys.argv) > 2
+
+start = time.time()
+print("MEMFS: starting")
 
 # Exclude experimental features e.g. GRIB3 and TAF
 # The BUFR codetables is not used in the engine
@@ -47,21 +50,10 @@ def get_outfile_name(base, count):
 # The last argument is the base name of the generated C file(s)
 output_file_base = sys.argv[-1]
 
-buffer = StringIO.StringIO()
+buffer = None
 fcount = -1
 
 
-def dump():
-    global buffer
-    global fcount
-
-    fcount += 1
-    opath = get_outfile_name(output_file_base, fcount)
-    print("MEMFS: Generating output: ", opath, "size:", buffer.tell())
-    with open(opath, "wb") as f:
-        f.write(buffer.getvalue())
-
-    buffer = StringIO.StringIO()
 
 
 for directory in dirs:
@@ -71,13 +63,21 @@ for directory in dirs:
     NAMES.append(dname)
 
     for dirpath, dirnames, files in os.walk(directory, followlinks=True):
-        # for ex in EXCLUDED:
-        #    if ex in dirnames:
-        #        print('Note: eccodes memfs.py script: %s/%s will not be included.' % (dirpath,ex))
+
+
 
         # Prune the walk by modifying the dirnames in-place
         dirnames[:] = [dirname for dirname in dirnames if dirname not in EXCLUDED]
         for name in files:
+
+
+            if buffer is None:
+                fcount += 1
+                opath = get_outfile_name(output_file_base, fcount)
+                print("MEMFS: Generating output:", opath)
+                buffer = open(opath, 'wb')
+
+
             full = "%s/%s" % (dirpath, name)
             _, ext = os.path.splitext(full)
             if ext not in [".def", ".table", ".tmpl", ".list", ".txt"]:
@@ -116,11 +116,13 @@ for directory in dirs:
 
             buffer.write("};\n")
             if buffer.tell() >= CHUNK:
-                dump()
+                buffer.close()
+                buffer = None
 
 
-if buffer.tell():
-    dump()
+if buffer is not None:
+    buffer.close()
+
 # The number of generated C files is hard coded.
 # See memfs/CMakeLists.txt
 assert fcount == 6, fcount
@@ -319,3 +321,5 @@ FILE* codes_memfs_open(const char* path) {
 )
 
 print("Finished")
+
+print("MEMFS: done", time.time() - start)
