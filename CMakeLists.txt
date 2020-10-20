@@ -69,6 +69,9 @@ ecbuild_add_option( FEATURE PRODUCT_GRIB
 ecbuild_add_option( FEATURE PRODUCT_BUFR
     DESCRIPTION "Support for the product BUFR"
     DEFAULT ON )
+if( NOT HAVE_PRODUCT_GRIB AND NOT HAVE_PRODUCT_BUFR )
+    ecbuild_critical("Cannot disable both GRIB and BUFR! Please specify just one option")
+endif()
 
 ecbuild_add_option( FEATURE EXAMPLES
     DESCRIPTION "Build the examples"

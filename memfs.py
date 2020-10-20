@@ -125,7 +125,7 @@ if buffer is not None:
 # See memfs/CMakeLists.txt
 assert fcount == EXPECTED_FCOUNT, fcount
 opath = output_file_base + "_final.c"
-print("MEMFS: Generating output: ", opath)
+print("MEMFS: Generating output:", opath)
 g = open(opath, "w")
 
 print(
