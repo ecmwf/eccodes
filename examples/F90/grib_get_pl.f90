@@ -10,7 +10,7 @@
 !  Description: how to get PL values.
 !
 !
-program get_pl
+program grib_get_pl
   use eccodes
   implicit none
   integer                         :: infile
@@ -42,4 +42,4 @@ program get_pl
 
   call codes_close_file(infile)
 
-end program get_pl
+end program grib_get_pl

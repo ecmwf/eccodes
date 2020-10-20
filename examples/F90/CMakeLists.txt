@@ -18,7 +18,7 @@ if( HAVE_BUILD_TOOLS )
           bufr_copy_message
           grib_get_keys
           grib_get_data
-          get_pl
+          grib_get_pl
           get_pv
           grib_keys_iterator
           grib_multi_write
@@ -63,7 +63,7 @@ else()
           grib_index
           grib_get_keys
           grib_get_data
-          get_pl
+          grib_get_pl
           get_pv
           grib_keys_iterator
           grib_multi
