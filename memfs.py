@@ -14,14 +14,17 @@ print("MEMFS: starting")
 # Exclude experimental features e.g. GRIB3 and TAF
 # The BUFR codetables is not used in the engine
 EXCLUDED = ["grib3", "codetables", "taf", "stations"]
+EXPECTED_FCOUNT = 6
 
 pos = 1
 if sys.argv[1] == "-exclude":
     product = sys.argv[2]
     if product == "bufr":
         EXCLUDED.append(product)
+        EXPECTED_FCOUNT = 4
     elif product == "grib":
         EXCLUDED.extend(["grib1", "grib2"])
+        EXPECTED_FCOUNT = 2
     else:
         assert False, "Invalid product %s" % product
     pos = 3
@@ -120,7 +123,7 @@ if buffer is not None:
 
 # The number of generated C files is hard coded.
 # See memfs/CMakeLists.txt
-assert fcount == 6, fcount
+assert fcount == EXPECTED_FCOUNT, fcount
 opath = output_file_base + "_final.c"
 print("MEMFS: Generating output: ", opath)
 g = open(opath, "w")
