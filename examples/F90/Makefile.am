@@ -5,8 +5,8 @@ TESTS = grib_copy_message.sh grib_get_keys.sh grib_get_data.sh grib_get_pl.sh gr
         grib_nearest.sh grib_precision.sh grib_multi_write.sh grib_multi.sh \
         grib_print_data.sh grib_set_keys.sh \
         grib_set_bitmap.sh grib_set_missing.sh grib_set_pv.sh grib_samples.sh grib_count_messages.sh \
-        read_message.sh grib_count_messages_multi.sh \
-        read_from_file.sh grib_index.sh get_set_uuid.sh \
+        grib_read_message.sh grib_count_messages_multi.sh \
+        read_from_file.sh grib_index.sh grib_get_set_uuid.sh \
         bufr_attributes.sh grib_clone.sh bufr_clone.sh \
         bufr_expanded.sh bufr_get_keys.sh bufr_get_string_array.sh \
         bufr_read_header.sh bufr_read_synop.sh \
@@ -34,11 +34,11 @@ noinst_PROGRAMS  = eccodes_f_grib_index \
                    eccodes_f_grib_samples \
                    eccodes_f_grib_count_messages \
                    eccodes_f_grib_count_messages_multi \
-                   eccodes_f_read_message \
+                   eccodes_f_grib_read_message \
                    eccodes_f_read_from_file \
                    eccodes_f_new_from_file \
                    eccodes_f_grib_copy_namespace \
-                   eccodes_f_get_set_uuid \
+                   eccodes_f_grib_get_set_uuid \
                    eccodes_f_grib_set_gvc \
                    eccodes_f_grib_clone \
                    eccodes_f_bufr_clone \
@@ -76,11 +76,11 @@ eccodes_f_grib_set_pv_SOURCES=grib_set_pv.f90
 eccodes_f_grib_samples_SOURCES=grib_samples.f90
 eccodes_f_grib_count_messages_SOURCES=grib_count_messages.f90
 eccodes_f_grib_count_messages_multi_SOURCES=grib_count_messages_multi.f90
-eccodes_f_read_message_SOURCES=read_message.f90
+eccodes_f_grib_read_message_SOURCES=grib_read_message.f90
 eccodes_f_read_from_file_SOURCES=read_from_file.f90
 eccodes_f_new_from_file_SOURCES=new_from_file.f90
 eccodes_f_grib_copy_namespace_SOURCES=grib_copy_namespace.f90
-eccodes_f_get_set_uuid_SOURCES=get_set_uuid.f90
+eccodes_f_grib_get_set_uuid_SOURCES=grib_get_set_uuid.f90
 eccodes_f_grib_set_gvc_SOURCES=grib_set_gvc.f90
 eccodes_f_grib_clone_SOURCES=grib_clone.f90
 eccodes_f_bufr_attributes_SOURCES=bufr_attributes.f90

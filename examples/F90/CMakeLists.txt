@@ -33,9 +33,9 @@ if( HAVE_BUILD_TOOLS )
           grib_count_messages
           grib_count_messages_multi
           grib_copy_namespace
-          read_message
+          grib_read_message
           read_from_file
-          get_set_uuid
+          grib_get_set_uuid
           grib_clone
           bufr_attributes
           bufr_copy_data
