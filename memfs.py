@@ -69,7 +69,7 @@ for directory in dirs:
                 fcount += 1
                 opath = get_outfile_name(output_file_base, fcount)
                 print("MEMFS: Generating output:", opath)
-                buffer = open(opath, 'wb')
+                buffer = open(opath, "w")
 
             full = "%s/%s" % (dirpath, name)
             _, ext = os.path.splitext(full)
@@ -89,7 +89,7 @@ for directory in dirs:
             SIZES[name] = os.path.getsize(full)
 
             txt = "const unsigned char %s[] = {" % (name,)
-            buffer.write(txt.encode())
+            buffer.write(txt)
 
             with open(full, "rb") as f:
                 i = 0
@@ -104,12 +104,12 @@ for directory in dirs:
                 for n in range(0, len(contents_hex), 2):
                     twoChars = ascii(contents_hex[n : n + 2])
                     txt = "0x%s," % (twoChars,)
-                    buffer.write(txt.encode())
+                    buffer.write(txt)
                     i += 1
                     if (i % 20) == 0:
-                        buffer.write("\n".encode())
+                        buffer.write("\n")
 
-            buffer.write("};\n".encode())
+            buffer.write("};\n")
             if buffer.tell() >= CHUNK:
                 buffer.close()
                 buffer = None
