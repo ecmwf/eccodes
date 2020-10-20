@@ -10,7 +10,7 @@
 ! Description: how to get PV values.
 !
 !
-program get_pv
+program grib_get_pv
   use eccodes
   implicit none
   integer                         :: infile
@@ -42,4 +42,4 @@ program get_pv
 
   call codes_close_file(infile)
 
-end program get_pv
+end program grib_get_pv

@@ -1,7 +1,7 @@
 
 AM_CFLAGS =  @WARN_PEDANTIC@ @WERROR@ @FORCE_32_CFLAGS@
 
-TESTS = grib_copy_message.sh grib_get_keys.sh grib_get_data.sh grib_get_pl.sh get_pv.sh grib_keys_iterator.sh \
+TESTS = grib_copy_message.sh grib_get_keys.sh grib_get_data.sh grib_get_pl.sh grib_get_pv.sh grib_keys_iterator.sh \
         grib_nearest.sh grib_precision.sh grib_multi_write.sh grib_multi.sh \
         grib_print_data.sh grib_set_keys.sh \
         grib_set_bitmap.sh grib_set_missing.sh grib_set_pv.sh grib_samples.sh grib_count_messages.sh \
@@ -19,7 +19,7 @@ noinst_PROGRAMS  = eccodes_f_grib_index \
                    eccodes_f_grib_get_keys \
                    eccodes_f_grib_get_data \
                    eccodes_f_grib_get_pl \
-                   eccodes_f_get_pv \
+                   eccodes_f_grib_get_pv \
                    eccodes_f_grib_keys_iterator \
                    eccodes_f_grib_multi_write \
                    eccodes_f_grib_multi \
@@ -61,7 +61,7 @@ eccodes_f_grib_copy_message_SOURCES=grib_copy_message.f90
 eccodes_f_grib_get_keys_SOURCES=grib_get_keys.f90
 eccodes_f_grib_get_data_SOURCES=grib_get_data.f90
 eccodes_f_grib_get_pl_SOURCES=grib_get_pl.f90
-eccodes_f_get_pv_SOURCES=get_pv.f90
+eccodes_f_grib_get_pv_SOURCES=grib_get_pv.f90
 eccodes_f_grib_keys_iterator_SOURCES=grib_keys_iterator.f90
 eccodes_f_grib_multi_write_SOURCES=grib_multi_write.f90
 eccodes_f_grib_multi_SOURCES=grib_multi.f90

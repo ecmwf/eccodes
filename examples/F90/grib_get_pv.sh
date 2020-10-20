@@ -9,4 +9,4 @@
 
 . ./include.sh
 
-${examples_dir}/eccodes_f_get_pv > /dev/null
+${examples_dir}/eccodes_f_grib_get_pv > /dev/null

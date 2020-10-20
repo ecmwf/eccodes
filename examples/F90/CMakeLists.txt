@@ -19,7 +19,7 @@ if( HAVE_BUILD_TOOLS )
           grib_get_keys
           grib_get_data
           grib_get_pl
-          get_pv
+          grib_get_pv
           grib_keys_iterator
           grib_multi_write
           grib_multi
@@ -64,7 +64,7 @@ else()
           grib_get_keys
           grib_get_data
           grib_get_pl
-          get_pv
+          grib_get_pv
           grib_keys_iterator
           grib_multi
           grib_nearest
