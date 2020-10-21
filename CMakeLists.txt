@@ -426,8 +426,8 @@ add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
 ecbuild_dont_pack( DIRS
-     concepts tests.ecmwf doxygen confluence templates parameters java
-     perl config m4 rpms gaussian_experimental gribex examples/F77
+     experimental doxygen confluence tests/tests.ecmwf
+     config m4 rpms examples/F77
      examples/examples.dev examples/extra examples/deprecated bamboo
      fortran/fortranCtypes tigge/tools share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
