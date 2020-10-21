@@ -53,9 +53,6 @@ output_file_base = sys.argv[-1]
 buffer = None
 fcount = -1
 
-
-
-
 for directory in dirs:
 
     # print("MEMFS: directory=", directory)
@@ -70,13 +67,11 @@ for directory in dirs:
         dirnames[:] = [dirname for dirname in dirnames if dirname not in EXCLUDED]
         for name in files:
 
-
             if buffer is None:
                 fcount += 1
                 opath = get_outfile_name(output_file_base, fcount)
                 print("MEMFS: Generating output:", opath)
                 buffer = open(opath, 'wb')
-
 
             full = "%s/%s" % (dirpath, name)
             _, ext = os.path.splitext(full)
@@ -118,7 +113,6 @@ for directory in dirs:
             if buffer.tell() >= CHUNK:
                 buffer.close()
                 buffer = None
-
 
 if buffer is not None:
     buffer.close()
@@ -323,3 +317,4 @@ FILE* codes_memfs_open(const char* path) {
 print("Finished")
 
 print("MEMFS: done", time.time() - start)
+
