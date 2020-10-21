@@ -11,7 +11,7 @@
 !
 ! Original authors: Harald Anlauf, Doerte Liermann (DWD), Luis Kornblueh (MPIfM).
 !
-program get_set_uuid
+program grib_get_set_uuid
   use eccodes
   implicit none
   integer              :: infile, outfile
@@ -97,4 +97,4 @@ contains
        nibble = achar (iachar ('a') - 10 + x)
     end select
   end function nibble
-end program get_set_uuid
+end program grib_get_set_uuid

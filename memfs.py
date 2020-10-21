@@ -63,8 +63,6 @@ for directory in dirs:
 
     for dirpath, dirnames, files in os.walk(directory, followlinks=True):
 
-
-
         # Prune the walk by modifying the dirnames in-place
         dirnames[:] = [dirname for dirname in dirnames if dirname not in EXCLUDED]
         for name in files:
@@ -73,7 +71,7 @@ for directory in dirs:
                 fcount += 1
                 opath = get_outfile_name(output_file_base, fcount)
                 print("MEMFS: Generating output:", opath)
-                buffer = open(opath, 'wb')
+                buffer = open(opath, "w")
 
             full = "%s/%s" % (dirpath, name)
             _, ext = os.path.splitext(full)
@@ -106,7 +104,9 @@ for directory in dirs:
                 # e.g. 23 -> 0x23
                 for n in range(0, len(contents_hex), 2):
                     twoChars = ascii(contents_hex[n : n + 2])
+                    
                     buffer.write(encode("0x%s," % (twoChars,)))
+
                     i += 1
                     if (i % 20) == 0:
                         buffer.write(encode("\n"))
@@ -115,6 +115,7 @@ for directory in dirs:
             if buffer.tell() >= CHUNK:
                 buffer.close()
                 buffer = None
+
 
 if buffer is not None:
     buffer.close()

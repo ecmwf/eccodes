@@ -15,7 +15,7 @@ list( APPEND test_bins
       grib_print_data
       grib_set_keys
       grib_index
-      set_missing
+      grib_set_missing
       grib_keys_iterator
       grib_set_data
       mars_param
@@ -83,7 +83,7 @@ if( HAVE_BUILD_TOOLS )
        grib_get_data
        grib_nearest_multiple
        grib_multi
-       set_missing
+       grib_set_missing
        bufr_attributes
        bufr_copy_data
        bufr_clone
@@ -117,7 +117,7 @@ else()
        grib_get_data
        grib_nearest_multiple
        grib_multi
-       set_missing
+       grib_set_missing
        bufr_attributes
        bufr_expanded
        bufr_get_keys
