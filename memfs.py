@@ -95,7 +95,7 @@ for directory in dirs:
             FILES[name] = fname
             SIZES[name] = os.path.getsize(full)
 
-            buffer.write("const unsigned char %s[] = {" % (name,))
+            buffer.write(b"const unsigned char %s[] = {" % (name,))
 
             with open(full, "rb") as f:
                 i = 0
@@ -109,12 +109,12 @@ for directory in dirs:
                 # e.g. 23 -> 0x23
                 for n in range(0, len(contents_hex), 2):
                     twoChars = ascii(contents_hex[n : n + 2])
-                    buffer.write("0x%s," % (twoChars,))
+                    buffer.write(b"0x%s," % (twoChars,))
                     i += 1
                     if (i % 20) == 0:
-                        buffer.write("\n")
+                        buffer.write(b"\n")
 
-            buffer.write("};\n")
+            buffer.write(b"};\n")
             if buffer.tell() >= CHUNK:
                 buffer.close()
                 buffer = None
