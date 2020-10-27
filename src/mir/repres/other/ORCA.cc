@@ -68,8 +68,11 @@ ORCA::ORCA(const std::string& name) : Gridded(util::BoundingBox()) {
     if (type_.front() == 'E') {
         type_.front() = 'e';
     }
-    subtype_ = match[2].str().front();
-    name_    = type_ + '_' + subtype_;
+
+    subtype_     = match[2].str().front();
+    subtypeLong_ = subtype_ + std::string(" grid");
+
+    name_ = type_ + '_' + subtype_;
 
 
     // setup grid coordinates
@@ -145,7 +148,12 @@ void ORCA::fill(grib_info& info) const {
     info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 
-    // TODO fill metadata
+
+    GribExtraSetting::set(info, "unstructuredGridType", type_.c_str());
+    GribExtraSetting::set(info, "unstructuredGridSubtype", subtypeLong_.c_str());
+
+    // TODO fill uuidOfHGdrid (or maybe not?)
+    // GribExtraSetting::set(info, "uuidOfHGdrid", /*16076978a048410747dd7c9876677b28*/);
 }
 
 

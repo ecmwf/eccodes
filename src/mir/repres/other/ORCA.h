@@ -81,6 +81,7 @@ private:
 
     std::string name_;
     std::string type_;
+    std::string subtypeLong_;
     char subtype_;
 
     std::vector<double> latitudes_;
