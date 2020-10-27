@@ -672,6 +672,15 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return GRIB_INTERNAL_ERROR;
     }
 
+    /* Data Quality checks */
+    if (a->context->grib_data_quality_checks) {
+        /* First value is the field's average */
+        double min_val = val[0];
+        double max_val = min_val;
+        if ((ret = grib_util_grib_data_quality_check(gh, min_val, max_val)) != GRIB_SUCCESS)
+            return ret;
+    }
+
     if (pen_j == sub_j) {
         double* values;
         d = grib_power(decimal_scale_factor, 10);
@@ -819,7 +828,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                 }
                 else {
                     /* _test(val[i]*d,0); */
-
                     grib_encode_unsigned_long(hres, encode_float(val[i++]), &hpos, 8 * bytes);
                     /* _test(val[i]*d,0); */
                     grib_encode_unsigned_long(hres, encode_float(val[i++]), &hpos, 8 * bytes);
