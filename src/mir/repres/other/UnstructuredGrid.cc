@@ -27,8 +27,10 @@
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
 #include "mir/iterator/UnstructuredIterator.h"
+#include "mir/key/grid/ORCAPattern.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
+#include "mir/repres/other/ORCA.h"
 #include "mir/util/Assert.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
@@ -293,5 +295,21 @@ static RepresentationBuilder<UnstructuredGrid> unstructured_grid("unstructured_g
 
 
 }  // namespace other
+
+
+template <>
+Representation* RepresentationBuilder<other::UnstructuredGrid>::make(const param::MIRParametrisation& param) {
+    // specially-named unstructured grids
+    std::string grid;
+    if (param.get("grid", grid)) {
+        if (key::grid::ORCAPattern::match(grid)) {
+            return new other::ORCA(param);
+        }
+    }
+
+    return new other::UnstructuredGrid(param);
+}
+
+
 }  // namespace repres
 }  // namespace mir
