@@ -26,6 +26,7 @@
 
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
+#include "mir/iterator/UnstructuredIterator.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Assert.h"
@@ -242,39 +243,8 @@ const Gridded* UnstructuredGrid::croppedRepresentation(const util::BoundingBox& 
 }
 
 
-class UnstructuredGridIterator : public Iterator {
-
-    size_t i_;
-    const size_t size_;
-    const std::vector<double>& latitudes_;
-    const std::vector<double>& longitudes_;
-
-    void print(std::ostream& out) const {
-        out << "UnstructuredGridIterator[";
-        Iterator::print(out);
-        out << "]";
-    }
-
-    bool next(Latitude& lat, Longitude& lon) {
-        if (i_ < size_) {
-            lat = latitudes_[i_];
-            lon = longitudes_[i_];
-            i_++;
-            return true;
-        }
-        return false;
-    }
-
-public:
-    UnstructuredGridIterator(const std::vector<double>& latitudes, const std::vector<double>& longitudes) :
-        i_(0), size_(latitudes.size()), latitudes_(latitudes), longitudes_(longitudes) {
-        ASSERT(latitudes_.size() == longitudes_.size());
-    }
-};
-
-
 Iterator* UnstructuredGrid::iterator() const {
-    return new UnstructuredGridIterator(latitudes_, longitudes_);
+    return new iterator::UnstructuredIterator(latitudes_, longitudes_);
 }
 
 
