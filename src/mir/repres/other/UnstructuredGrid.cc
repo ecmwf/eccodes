@@ -18,6 +18,7 @@
 #include <set>
 #include <utility>
 
+#include "eckit/config/Resource.h"
 #include "eckit/exception/Exceptions.h"
 #include "eckit/filesystem/PathName.h"
 #include "eckit/serialisation/FileStream.h"
@@ -52,12 +53,7 @@ UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation& parametrisat
     }
     ASSERT(latitudes_.size() == longitudes_.size());
 
-    bool checkDuplicatePoints = true;
-    parametrisation.get("check-duplicate-points", checkDuplicatePoints);
-
-    if (checkDuplicatePoints) {
-        check("UnstructuredGrid from MIRParametrisation", latitudes_, longitudes_);
-    }
+    check("UnstructuredGrid from MIRParametrisation", latitudes_, longitudes_);
 }
 
 
@@ -103,10 +99,9 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName& path) {
 
 void UnstructuredGrid::save(const eckit::PathName& path, const std::vector<double>& latitudes,
                             const std::vector<double>& longitudes, bool binary) {
+    eckit::Log::info() << "UnstructuredGrid::save " << path << std::endl;
 
     check("UnstructuredGrid save to " + path.asString(), latitudes, longitudes);
-
-    eckit::Log::info() << "UnstructuredGrid::save " << path << std::endl;
 
     ASSERT(latitudes.size() == longitudes.size());
     if (binary) {
@@ -267,6 +262,10 @@ bool UnstructuredGrid::includesSouthPole() const {
 
 void UnstructuredGrid::check(const std::string& title, const std::vector<double>& latitudes,
                              const std::vector<double>& longitudes) {
+    static bool checkDuplicatePoints = eckit::Resource<bool>("$MIR_CHECK_DUPLICATE_POINTS", true);
+    if (!checkDuplicatePoints) {
+        return;
+    }
 
     ASSERT(latitudes.size() == longitudes.size());
     ASSERT(!longitudes.empty());
