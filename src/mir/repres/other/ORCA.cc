@@ -16,6 +16,7 @@
 #include <cctype>
 #include <fstream>
 #include <ostream>
+#include <regex>
 
 #include "eckit/exception/Exceptions.h"
 
@@ -28,6 +29,7 @@
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
+#include "mir/util/Regex.h"
 
 
 namespace mir {
@@ -59,8 +61,8 @@ std::string change_case(const std::string& in, bool up) {
 
 ORCA::ORCA(const std::string& name) : Gridded(util::BoundingBox()) {
     // setup canonical type/subtype
-    auto match = key::grid::ORCAPattern::match(name);
-    if (match.size() != 3) {
+    auto match = util::Regex(key::grid::ORCAPattern::pattern()).match(name);
+    if (!match || match.size() != 3) {
         throw eckit::UserError("ORCA: unrecognized name '" + name + "'");
     }
 
@@ -71,8 +73,7 @@ ORCA::ORCA(const std::string& name) : Gridded(util::BoundingBox()) {
 
     subtype_     = match[2].str().front();
     subtypeLong_ = subtype_ + std::string(" grid");
-
-    name_ = type_ + '_' + subtype_;
+    name_        = type_ + '_' + subtype_;
 
 
     // setup grid coordinates
