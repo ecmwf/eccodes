@@ -34,6 +34,7 @@ list(APPEND test_bins
     grib_sh_ieee64
     ieee
     grib_sh_imag
+    grib_sh_spectral_complex
     grib_lam_bf
     grib_lam_gp)
 
@@ -74,6 +75,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_rdbSubTypes
         grib_efas
         grib_sh_imag
+        grib_sh_spectral_complex
         pseudo_diag
         grib_grid_unstructured
         grib_grid_lambert_conformal
@@ -351,6 +353,7 @@ else()
         julian
         bufr_check_descriptors
         grib_sh_imag
+        grib_sh_spectral_complex
         grib_2nd_order_numValues
         grib_sh_ieee64)
 
