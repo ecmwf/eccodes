@@ -15,7 +15,7 @@
  * philippe.marguinaud@meteo.fr, 2016/02
  */
 
-#include "grib_sh_values.h"
+#include "grib_sh_values.h" /* array 'values' defined here*/
 
 #define ILCHAM 992
 #define MTRONC 30

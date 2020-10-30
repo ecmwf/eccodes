@@ -11,7 +11,7 @@
 #include "grib_api.h"
 #include <assert.h>
 
-#include "grib_sh_values.h"
+#include "grib_sh_values.h" /* array 'values' defined here*/
 
 #define ILCHAM 992
 #define MTRONC 30
