@@ -670,7 +670,7 @@ AC_CHECK_FUNCS([bzero gettimeofday])
 
 AX_LINUX_DISTRIBUTION
 
-AC_OUTPUT( Makefile src/Makefile fortran/Makefile tools/Makefile data/Makefile definitions/Makefile samples/Makefile ifs_samples/grib1/Makefile ifs_samples/grib1_mlgrib2/Makefile ifs_samples/grib1_mlgrib2_ieee64/Makefile tests/Makefile examples/C/Makefile examples/F90/Makefile tigge/Makefile perl/GRIB-API/Makefile.PL perl/Makefile python/Makefile examples/python/Makefile)
+AC_OUTPUT( Makefile src/Makefile fortran/Makefile tools/Makefile data/Makefile definitions/Makefile samples/Makefile ifs_samples/grib1/Makefile ifs_samples/grib1_mlgrib2/Makefile ifs_samples/grib1_mlgrib2_ieee64/Makefile tests/Makefile examples/C/Makefile examples/F90/Makefile tigge/Makefile python/Makefile examples/python/Makefile)
 
 AC_MSG_NOTICE([
 
