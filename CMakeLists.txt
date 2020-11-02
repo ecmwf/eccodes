@@ -69,6 +69,9 @@ ecbuild_add_option( FEATURE PRODUCT_GRIB
 ecbuild_add_option( FEATURE PRODUCT_BUFR
     DESCRIPTION "Support for the product BUFR"
     DEFAULT ON )
+if( NOT HAVE_PRODUCT_GRIB AND NOT HAVE_PRODUCT_BUFR )
+    ecbuild_critical("Cannot disable both GRIB and BUFR! Please specify just one option")
+endif()
 
 ecbuild_add_option( FEATURE EXAMPLES
     DESCRIPTION "Build the examples"
@@ -423,8 +426,8 @@ add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
 ecbuild_dont_pack( DIRS
-     concepts tests.ecmwf doxygen confluence templates parameters java
-     perl config m4 rpms gaussian_experimental gribex examples/F77
+     experimental doxygen confluence tests/tests.ecmwf
+     config m4 rpms examples/F77
      examples/examples.dev examples/extra examples/deprecated bamboo
      fortran/fortranCtypes tigge/tools share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
