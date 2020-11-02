@@ -449,8 +449,10 @@ static void self_clear(grib_context* c, grib_accessor_bufr_data_array* self)
     grib_vdarray_delete_content(c, self->numericValues);
     grib_vdarray_delete(c, self->numericValues);
     if (self->stringValues) {
+        /*printf("dbg self_clear: clear %p\n", (void*)(self->stringValues));*/
         grib_vsarray_delete_content(c, self->stringValues);
         grib_vsarray_delete(c, self->stringValues);
+        self->stringValues = NULL;
     }
     grib_viarray_delete_content(c, self->elementsDescriptorsIndex);
     grib_viarray_delete(c, self->elementsDescriptorsIndex);
@@ -514,7 +516,6 @@ grib_vsarray* accessor_bufr_data_array_get_stringValues(grib_accessor* a)
 {
     grib_accessor_bufr_data_array* self = (grib_accessor_bufr_data_array*)a;
     process_elements(a, PROCESS_DECODE, 0, 0, 0);
-
     return self->stringValues;
 }
 
@@ -579,6 +580,7 @@ static int decode_string_array(grib_context* c, unsigned char* data, long* pos, 
     CHECK_END_DATA_RETURN(c, bd, self, modifiedWidth, *err);
     if (*err) {
         grib_sarray_push(c, sa, sval);
+        /*printf("dbg: decode_string_array push1 %p\n", (void*)(self->stringValues));*/
         grib_vsarray_push(c, self->stringValues, sa);
         return ret;
     }
@@ -586,6 +588,7 @@ static int decode_string_array(grib_context* c, unsigned char* data, long* pos, 
     CHECK_END_DATA_RETURN(c, bd, self, 6, *err);
     if (*err) {
         grib_sarray_push(c, sa, sval);
+        /*printf("dbg: decode_string_array push2 %p\n", (void*)(self->stringValues));*/
         grib_vsarray_push(c, self->stringValues, sa);
         return ret;
     }
@@ -594,6 +597,7 @@ static int decode_string_array(grib_context* c, unsigned char* data, long* pos, 
         CHECK_END_DATA_RETURN(c, bd, self, width * 8 * self->numberOfSubsets, *err);
         if (*err) {
             grib_sarray_push(c, sa, sval);
+            /*printf("dbg: decode_string_array push3 %p\n", (void*)(self->stringValues));*/
             grib_vsarray_push(c, self->stringValues, sa);
             return ret;
         }
@@ -617,6 +621,7 @@ static int decode_string_array(grib_context* c, unsigned char* data, long* pos, 
             grib_sarray_push(c, sa, sval);
         }
     }
+    /*printf("dbg: decode_string_array push4 %p\n", (void*)(self->stringValues));*/
     grib_vsarray_push(c, self->stringValues, sa);
     return ret;
 }
@@ -714,7 +719,9 @@ static int encode_string_array(grib_context* c, grib_buffer* buff, long* pos, bu
         grib_context_log(c, GRIB_LOG_ERROR, "encode_string_array: self->iss_list==NULL");
         return GRIB_INTERNAL_ERROR;
     }
-
+    if (!stringValues) {
+        return GRIB_INTERNAL_ERROR;
+    }
     n = grib_iarray_used_size(self->iss_list);
 
     if (n <= 0)
@@ -2899,13 +2906,16 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
     if (do_clean == 1 && self->numericValues) {
         grib_vdarray_delete_content(c, self->numericValues);
         grib_vdarray_delete(c, self->numericValues);
+        /*printf("dbg process_elements: clear %p\n", (void*)(self->stringValues));*/
         grib_vsarray_delete_content(c, self->stringValues);
         grib_vsarray_delete(c, self->stringValues);
+        self->stringValues = NULL;
     }
 
     if (flag != PROCESS_ENCODE) {
         self->numericValues = grib_vdarray_new(c, 1000, 1000);
         self->stringValues  = grib_vsarray_new(c, 10, 10);
+        /*printf("dbg process_elements: Create a new one %p\n", (void*)(self->stringValues));*/
 
         if (self->elementsDescriptorsIndex)
             grib_viarray_delete(c, self->elementsDescriptorsIndex);
