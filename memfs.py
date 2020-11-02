@@ -42,7 +42,7 @@ CHUNK = 16 * 1024 * 1024  # chunk size in bytes
 if sys.version_info[0] >= 3:
     ascii = lambda x: str(x, "ascii")  # Python 3
     encode = lambda x: x.encode()
-except:
+else:
     ascii = lambda x: str(x)  # Python 2
     encode = lambda x: x
 
