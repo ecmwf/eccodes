@@ -39,8 +39,7 @@ NAMES = []
 CHUNK = 16 * 1024 * 1024  # chunk size in bytes
 
 # Binary to ASCII function. Different in Python 2 and 3
-try:
-    str(b"\x23\x20", "ascii")
+if sys.version_info[0] >= 3:
     ascii = lambda x: str(x, "ascii")  # Python 3
     encode = lambda x: x.encode()
 except:
@@ -74,7 +73,7 @@ for directory in dirs:
                 fcount += 1
                 opath = get_outfile_name(output_file_base, fcount)
                 print("MEMFS: Generating output:", opath)
-                buffer = open(opath, "w")
+                buffer = open(opath, "wb")
 
             full = "%s/%s" % (dirpath, name)
             _, ext = os.path.splitext(full)
