@@ -8,7 +8,7 @@
 !
 ! Description: how to get values using keys.
 !
-program read_message
+program grib_read_message
 use eccodes
 implicit none
   integer                      ::  ifile,ofile
@@ -49,5 +49,5 @@ implicit none
   call codes_close_file(ifile)
   call codes_close_file(ofile)
 
-end program read_message
+end program grib_read_message
 

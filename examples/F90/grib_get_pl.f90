@@ -7,39 +7,39 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! Description: how to get PV values.
+!  Description: how to get PL values.
 !
 !
-program get_pv
+program grib_get_pl
   use eccodes
   implicit none
   integer                         :: infile
   integer                         :: igrib
-  integer                         :: PVPresent, nb_pv
-  real, dimension(:), allocatable :: pv
+  integer                         :: PLPresent, nb_pl
+  real, dimension(:), allocatable :: pl
 
   call codes_open_file(infile, &
-       '../../data/reduced_gaussian_model_level.grib1','r')
+       '../../data/reduced_gaussian_surface.grib1','r')
 
   ! A new grib message is loaded from file
   ! igrib is the grib id to be used in subsequent calls
   call codes_grib_new_from_file(infile,igrib)
 
-  ! Get PVPresent to see if the 'pv' array is there
-  call codes_get(igrib,'PVPresent',PVPresent)
-  print*, "PVPresent = ", PVPresent
-  if (PVPresent == 1) then
-    call codes_get_size(igrib,'pv',nb_pv)
-    print*, "There are ", nb_pv, " PV values"
-    allocate(pv(nb_pv))
-    call codes_get(igrib,'pv',pv)
-    print*, "pv = ", pv
-    deallocate(pv)
+  ! get PLPresent to see if the 'pl' array is there
+  call codes_get(igrib,'PLPresent',PLPresent)
+  print*, "PLPresent= ", PLPresent
+  if (PLPresent == 1) then
+    call codes_get_size(igrib,'pl',nb_pl)
+    print*, "there are ", nb_pl, " PL values"
+    allocate(pl(nb_pl))
+    call codes_get(igrib,'pl',pl)
+    print*, "pl = ", pl
+    deallocate(pl)
   else
-    print*, "There is no PV values in your GRIB message!"
+    print*, "There is no PL values in your GRIB message!"
   end if
   call codes_release(igrib)
 
   call codes_close_file(infile)
 
-end program get_pv
+end program grib_get_pl

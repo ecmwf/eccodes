@@ -9,5 +9,4 @@
 
 . ./include.sh
 
-${examples_dir}/c_set_missing
-rm -f out_surface_level.grib2
+${examples_dir}/eccodes_f_grib_get_pv > /dev/null

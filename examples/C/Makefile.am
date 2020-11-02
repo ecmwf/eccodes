@@ -13,7 +13,7 @@ TESTS = grib_iterator.sh \
         large_grib1.sh \
         grib_get_data.sh \
         grib_sections_copy.sh \
-        set_missing.sh \
+        grib_set_missing.sh \
         grib_clone.sh \
         grib_set_pv.sh \
         grib_set_bitmap.sh \
@@ -37,7 +37,7 @@ noinst_PROGRAMS  = c_grib_nearest \
                    c_grib_get_keys \
                    c_grib_print_data \
                    c_grib_set_keys \
-                   c_set_missing \
+                   c_grib_set_missing \
                    c_grib_keys_iterator \
                    c_grib_set_data \
                    c_grib_index \
@@ -84,7 +84,7 @@ c_grib_multi_write_SOURCES     = grib_multi_write.c
 c_grib_get_keys_SOURCES        = grib_get_keys.c
 c_grib_print_data_SOURCES      = grib_print_data.c
 c_grib_set_keys_SOURCES        = grib_set_keys.c
-c_set_missing_SOURCES          = set_missing.c
+c_grib_set_missing_SOURCES     = grib_set_missing.c
 c_grib_index_SOURCES           = grib_index.c
 c_grib_set_bitmap_SOURCES      = grib_set_bitmap.c
 c_grib_multi_SOURCES           = grib_multi.c

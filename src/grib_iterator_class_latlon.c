@@ -186,7 +186,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
                 jdir = (lat1 - lat2) / (Nj - 1);
             }
             else {
-                jdir = (lat1 + 360.0 - lat2) / (Nj - 1);
+                jdir = (lat2 - lat1) / (Nj - 1);
             }
             grib_context_log(h->context, GRIB_LOG_INFO,
                              "%s is missing (See jDirectionIncrementGiven). Using value of %.6f obtained from La1, La2 and Nj", s_jdir, jdir);

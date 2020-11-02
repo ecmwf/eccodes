@@ -34,6 +34,7 @@ list(APPEND test_bins
     grib_sh_ieee64
     ieee
     grib_sh_imag
+    grib_sh_spectral_complex
     grib_lam_bf
     grib_lam_gp)
 
@@ -74,6 +75,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_rdbSubTypes
         grib_efas
         grib_sh_imag
+        grib_sh_spectral_complex
         pseudo_diag
         grib_grid_unstructured
         grib_grid_lambert_conformal
@@ -127,6 +129,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-887
         grib_ecc-490
         grib_ecc-756
+        grib_ecc-806
         grib_ecc-873
         grib_ecc-600
         grib_ecc-923
@@ -243,7 +246,7 @@ if( HAVE_BUILD_TOOLS )
     endif()
 
 
-    if( HAVE_PYTHON AND ENABLE_EXTRA_TESTS )
+    if( HAVE_PYTHON2 AND ENABLE_EXTRA_TESTS )
         list( APPEND ptests bufr_dump_encode_python bufr_dump_decode_python )
         foreach( test ${ptests} )
             ecbuild_add_test( TARGET eccodes_t_${test}
@@ -350,6 +353,7 @@ else()
         julian
         bufr_check_descriptors
         grib_sh_imag
+        grib_sh_spectral_complex
         grib_2nd_order_numValues
         grib_sh_ieee64)
 
