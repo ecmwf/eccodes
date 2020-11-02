@@ -52,7 +52,7 @@ concept param_value_min(default_min_val) {
     -4 = { paramId=151145; }
     0 = { paramId=151219; }
     160 = { paramId=34; }
-    0 = { paramId=31; }
+    -0.00001 = { paramId=31; }
     0 = { paramId=174098; }
     0 = { paramId=140229; }
     120 = { paramId=235; }
