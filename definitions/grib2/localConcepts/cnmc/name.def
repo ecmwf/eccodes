@@ -346,7 +346,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Snow Depth
 'Snow Depth' = {
