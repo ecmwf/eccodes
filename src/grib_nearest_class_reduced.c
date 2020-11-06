@@ -148,7 +148,13 @@ static int find(grib_nearest* nearest, grib_handle* h,
     long iradius;
     double radius;
     int ilat = 0, ilon = 0;
-    const int is_legacy_grib                  = is_legacy(h);
+    static int s_is_legacy = -1;
+
+    if (s_is_legacy < 0 || !(flags & GRIB_NEAREST_SAME_GRID)) {
+        s_is_legacy = is_legacy(h);
+    }
+
+    const int is_legacy_grib                  = s_is_legacy;
     get_reduced_row_proc get_reduced_row_func = &grib_get_reduced_row;
     if (is_legacy_grib) {
         get_reduced_row_func = &grib_get_reduced_row_legacy;
