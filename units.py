@@ -205,7 +205,10 @@ class Q(defaultdict):
 
 
 def F(u):
-    return FIX.get(u, u)
+    u = FIX.get(u, u)
+    # if not "(" in u:
+    #     u = " ".join(sorted(u.split(" ")))
+    return u
 
 
 def C(u):
