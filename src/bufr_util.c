@@ -772,6 +772,8 @@ static const char* codes_bufr_header_get_centre_name(long edition, long centre_c
             return "eums";
         case 255:
             return "consensus";
+        case 291:
+            return "iapc";
         default:
             return NULL;
     }

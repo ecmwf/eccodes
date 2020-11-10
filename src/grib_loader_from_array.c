@@ -117,7 +117,7 @@ int grib_init_accessor_from_array(grib_loader* loader, grib_accessor* ga, grib_a
                         lval = GRIB_MISSING_LONG;
                     else
                         lval = atol(strvalue);
-                    grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting %s to long %d", ga->name, lval);
+                    grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting %s to long %ld", ga->name, lval);
                     grib_set_long_internal(h, ga->name, lval);
                     break;
 

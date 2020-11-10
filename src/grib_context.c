@@ -354,7 +354,7 @@ static grib_context default_grib_context = {
     0, /* hash_array_count           */
     {0,},                                 /* hash_array                 */
     0,                                 /* def_files                  */
-    0,                                 /* blacklist                  */
+    0,                                 /* blocklist                  */
     0,                                 /* ieee_packing               */
     0,                                 /* bufrdc_mode                */
     0,                                 /* bufr_set_to_missing_if_out_of_range */

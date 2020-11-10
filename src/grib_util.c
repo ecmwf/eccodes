@@ -2190,8 +2190,10 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
 
     if (ctx->debug) {
         if (get_concept_condition_string(h, "param_value_max", NULL, description) == GRIB_SUCCESS) {
-            printf("ECCODES DEBUG grib_data_quality_check: Checking condition '%s' (min=%g, max=%g)\n",
-                   description, min_field_value_allowed, max_field_value_allowed);
+            printf("ECCODES DEBUG grib_data_quality_check: Checking condition '%s' (allowed=%g, %g) (actual=%g, %g)\n",
+                   description, min_field_value_allowed, max_field_value_allowed,
+                   min_val, max_val
+                  );
         }
     }
 

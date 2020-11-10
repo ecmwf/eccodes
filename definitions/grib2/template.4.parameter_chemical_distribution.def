@@ -10,6 +10,7 @@ meta parameterName  codetable_title(parameterNumber) : dump;
 
 # Atmospheric chemical or physical constitutent type
 codetable[2] constituentType ('4.230.table',masterDir,localDir) : dump;
+meta constituentTypeName codetable_title(constituentType);
 
 # Number of mode(N) of distribution
 unsigned[2] numberOfModeOfDistribution : dump;

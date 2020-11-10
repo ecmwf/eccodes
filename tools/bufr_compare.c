@@ -54,7 +54,7 @@ static grib_error* error_summary;
 static compare_double_proc compare_double;
 static double global_tolerance     = 0;
 static int packingCompare          = 0;
-static grib_string_list* blacklist = 0;
+static grib_string_list* blocklist = 0;
 static grib_string_list* keys_list = NULL; /* Used to determine rank of key */
 static int isLeafKey               = 0;    /* 0 if key is top-level, 1 if key has no children attributes */
 static int compareAbsolute         = 1;
@@ -177,9 +177,9 @@ static double compare_double_relative(double* a, double* b, double* err)
     return relativeError > *err ? relativeError : 0;
 }
 
-static int blacklisted(const char* name)
+static int blocklisted(const char* name)
 {
-    grib_string_list* b = blacklist;
+    grib_string_list* b = blocklist;
     if (!name) return 0;
     while (b) {
         Assert(b->value);
@@ -314,15 +314,15 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("b:")) {
         grib_string_list* next = 0;
         int ii                 = 0;
-        blacklist              = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
-        blacklist->value       = grib_context_strdup(context, options->set_values[0].name);
-        next                   = blacklist;
+        blocklist              = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
+        blocklist->value       = grib_context_strdup(context, options->set_values[0].name);
+        next                   = blocklist;
         for (ii = 1; ii < options->set_values_count; ii++) {
             next->next        = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
             next->next->value = grib_context_strdup(context, options->set_values[ii].name);
             next              = next->next;
         }
-        context->blacklist = blacklist;
+        context->blocklist = blocklist;
     }
 
     /* Check 1st file is not a directory */
@@ -1280,7 +1280,7 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
 
         isLeafKey = 0; /* clear global variable for each key */
         name      = grib_keys_iterator_get_name(iter);
-        if (blacklisted(name))
+        if (blocklisted(name))
             continue;
         if (xa == NULL || (xa->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
             continue;
@@ -1296,7 +1296,7 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
             prefix = (char*)xa->name;
         }
 
-        if (blacklisted(prefix)) {
+        if (blocklisted(prefix)) {
             if (dofree) grib_context_free(context, prefix);
             continue;
         }
@@ -1330,10 +1330,10 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
     const char* name         = NULL;
 
     /* mask only if no -c option or headerMode (-H)*/
-    if (blacklist && (!listFromCommandLine || headerMode)) {
+    if (blocklist && (!listFromCommandLine || headerMode)) {
         /* See ECC-245, GRIB-573, GRIB-915: Do not change handles in memory */
         /*
-        grib_string_list* nextb=blacklist;
+        grib_string_list* nextb=blocklist;
         while (nextb) {
             grib_clear(handle1,nextb->value);
             grib_clear(handle2,nextb->value);
@@ -1343,7 +1343,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
 
     if (listFromCommandLine && onlyListed) {
         for (i = 0; i < options->compare_count; i++) {
-            if (blacklisted(options->compare[i].name))
+            if (blocklisted(options->compare[i].name))
                 continue;
             if (options->compare[i].type == GRIB_NAMESPACE) {
                 iter = grib_keys_iterator_new(handle1, 0, options->compare[i].name);
@@ -1355,7 +1355,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
                     name = grib_keys_iterator_get_name(iter);
                     /*printf("----- comparing %s\n",name);*/
 
-                    if (blacklisted(name))
+                    if (blocklisted(name))
                         continue;
                     if (compare_values(options, handle1, handle2, name, GRIB_TYPE_UNDEFINED)) {
                         err++;
@@ -1405,7 +1405,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
 
         if (listFromCommandLine) {
             for (i = 0; i < options->compare_count; i++) {
-                if (blacklisted(name))
+                if (blocklisted(name))
                     continue;
                 if (options->compare[i].type == GRIB_NAMESPACE) {
                     iter = grib_keys_iterator_new(handle1, 0, options->compare[i].name);
@@ -1418,7 +1418,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
                         name = grib_keys_iterator_get_name(iter);
                         /*printf("----- comparing %s\n",name);*/
 
-                        if (blacklisted(name))
+                        if (blocklisted(name))
                             continue;
                         if (compare_values(options, handle1, handle2, name, GRIB_TYPE_UNDEFINED)) {
                             err++;

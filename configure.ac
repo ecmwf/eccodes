@@ -20,12 +20,12 @@ ECCODES_MAIN_VERSION="${ECCODES_MAJOR_VERSION}.${ECCODES_MINOR_VERSION}.${ECCODE
 
 PACKAGE_VERSION="${ECCODES_MAIN_VERSION}"
 ECCODES_VERSION_STR="${ECCODES_MAIN_VERSION}"
-ECCODES_PATCH_VERSION="${ECCODES_REVISION_VERSION}"
+ECCODES_REVISION_VERSION="${ECCODES_REVISION_VERSION}"
 AC_SUBST(ECCODES_MAIN_VERSION)
 AC_SUBST(ECCODES_VERSION_STR)
 AC_SUBST(ECCODES_MAJOR_VERSION)
 AC_SUBST(ECCODES_MINOR_VERSION)
-AC_SUBST(ECCODES_PATCH_VERSION)
+AC_SUBST(ECCODES_REVISION_VERSION)
 
 AC_SUBST(ECCODES_CURRENT)
 AC_SUBST(ECCODES_REVISION)
@@ -670,7 +670,7 @@ AC_CHECK_FUNCS([bzero gettimeofday])
 
 AX_LINUX_DISTRIBUTION
 
-AC_OUTPUT( Makefile src/Makefile fortran/Makefile tools/Makefile data/Makefile definitions/Makefile samples/Makefile ifs_samples/grib1/Makefile ifs_samples/grib1_mlgrib2/Makefile ifs_samples/grib1_mlgrib2_ieee64/Makefile tests/Makefile examples/C/Makefile examples/F90/Makefile tigge/Makefile perl/GRIB-API/Makefile.PL perl/Makefile python/Makefile examples/python/Makefile)
+AC_OUTPUT( Makefile src/Makefile fortran/Makefile tools/Makefile data/Makefile definitions/Makefile samples/Makefile ifs_samples/grib1/Makefile ifs_samples/grib1_mlgrib2/Makefile ifs_samples/grib1_mlgrib2_ieee64/Makefile tests/Makefile examples/C/Makefile examples/F90/Makefile tigge/Makefile python/Makefile examples/python/Makefile)
 
 AC_MSG_NOTICE([
 

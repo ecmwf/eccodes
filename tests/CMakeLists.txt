@@ -34,6 +34,7 @@ list(APPEND test_bins
     grib_sh_ieee64
     ieee
     grib_sh_imag
+    grib_sh_spectral_complex
     grib_lam_bf
     grib_lam_gp)
 
@@ -63,15 +64,18 @@ if( HAVE_BUILD_TOOLS )
         grib_uerra
         grib_2nd_order_numValues
         grib_ecc-136
+        grib_ecc-966
         grib_ecc-967
-        grib_ecc-1065
+        grib_ecc-1150
         grib_ecc-1053
+        grib_ecc-1065
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
         bufr_rdbSubTypes
         grib_efas
         grib_sh_imag
+        grib_sh_spectral_complex
         pseudo_diag
         grib_grid_unstructured
         grib_grid_lambert_conformal
@@ -125,6 +129,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-887
         grib_ecc-490
         grib_ecc-756
+        grib_ecc-806
         grib_ecc-873
         grib_ecc-600
         grib_ecc-923
@@ -241,7 +246,7 @@ if( HAVE_BUILD_TOOLS )
     endif()
 
 
-    if( HAVE_PYTHON AND ENABLE_EXTRA_TESTS )
+    if( HAVE_PYTHON2 AND ENABLE_EXTRA_TESTS )
         list( APPEND ptests bufr_dump_encode_python bufr_dump_decode_python )
         foreach( test ${ptests} )
             ecbuild_add_test( TARGET eccodes_t_${test}
@@ -277,7 +282,7 @@ if( HAVE_BUILD_TOOLS )
         ecbuild_add_executable( TARGET    grib_encode_pthreads
                                 NOINSTALL
                                 SOURCES   grib_encode_pthreads.c
-                                LIBS      eccodes )
+                                LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads
                           TYPE SCRIPT
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh )
@@ -286,7 +291,7 @@ if( HAVE_BUILD_TOOLS )
             ecbuild_add_executable( TARGET    ${test}
                                     NOINSTALL
                                     SOURCES   ${test}.c
-                                    LIBS      eccodes )
+                                    LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         endforeach()
         ecbuild_add_test( TARGET eccodes_t_grib_threads_ecc-604
                           TYPE SCRIPT
@@ -360,6 +365,7 @@ else()
         julian
         bufr_check_descriptors
         grib_sh_imag
+        grib_sh_spectral_complex
         grib_2nd_order_numValues
         grib_sh_ieee64)
 

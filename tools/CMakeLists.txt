@@ -23,7 +23,7 @@ ecbuild_add_library( TARGET    grib_tools
                      TYPE      STATIC
                      NOINSTALL
                      SOURCES   ${grib_tools_sources}
-                     LIBS      eccodes )
+                     PRIVATE_LIBS      eccodes )
 
 # tools binaries
 list( APPEND ecc_tools_binaries
@@ -75,9 +75,8 @@ ecbuild_add_executable( TARGET     gts_count
 # grib to netcdf is optional
 ecbuild_add_executable( TARGET     grib_to_netcdf
                         SOURCES    grib_to_netcdf.c
-                        INCLUDES   ${NETCDF_INCLUDE_DIRS}
                         CONDITION  HAVE_NETCDF
-                        LIBS       grib_tools ${NETCDF_LIBRARIES} )
+                        LIBS       grib_tools NetCDF::NetCDF_C )
 
 
 ecbuild_add_executable( TARGET     grib_list_keys

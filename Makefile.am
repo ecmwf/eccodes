@@ -89,16 +89,7 @@ EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 		ifs_samples/CMakeLists.txt \
 		ifs_samples/grib1_mlgrib2/CMakeLists.txt \
 		samples/CMakeLists.txt \
-		windows/msvc/grib_api.sln \
-		windows/msvc/grib_api_lib/grib_api_lib.vcproj \
-		windows/msvc/grib_dump/grib_dump.vcproj \
-		windows/msvc/grib_compare/grib_compare.vcproj \
-		windows/msvc/grib_copy/grib_copy.vcproj \
-		windows/msvc/grib_filter/grib_filter.vcproj \
-		windows/msvc/grib_get/grib_get.vcproj \
-		windows/msvc/grib_get_data/grib_get_data.vcproj \
-		windows/msvc/grib_ls/grib_ls.vcproj \
-		windows/msvc/grib_set/grib_set.vcproj
+		windows/msvc/grib_api.sln
 
 
 perf_dir = @abs_builddir@/perf
