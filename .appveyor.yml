@@ -67,7 +67,6 @@ before_build:
 
 build_script:
   - cmd: cd %ECCODES_SRC%
-  - cmd: cat ecbuild_md5.patch | patch -p1 -d %ECBUILD_SRC%
   - cmd: mkdir build && cd build
   - cmd: cmake -G "NMake Makefiles" ^
                -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
