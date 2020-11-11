@@ -15,6 +15,6 @@ module unload fftw
 module unload libemos
 module unload metview
 
-module load cmake/3.10.2
+module load cmake/3.16.5
 
 module switch gnu clang

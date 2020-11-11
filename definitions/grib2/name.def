@@ -675,6 +675,12 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	}
+#Liquid water content in snow pack
+'Liquid water content in snow pack' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 23 ;
+	}
 #Height of convective cloud top
 'Height of convective cloud top' = {
 	 discipline = 0 ;
@@ -842,6 +848,69 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
+	}
+#Mixed-layer CAPE in the lowest 50 hPa
+'Mixed-layer CAPE in the lowest 50 hPa' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 5000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CIN in the lowest 50 hPa
+'Mixed-layer CIN in the lowest 50 hPa' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 5000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CAPE in the lowest 100 hPa
+'Mixed-layer CAPE in the lowest 100 hPa' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 10000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CIN in the lowest 100 hPa
+'Mixed-layer CIN in the lowest 100 hPa' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 10000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Most-unstable CAPE
+'Most-unstable CAPE' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	}
+#Most-unstable CIN
+'Most-unstable CIN' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	}
+#Departure level of the most unstable parcel expressed as Pressure
+'Departure level of the most unstable parcel expressed as Pressure' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
 	}
 #200 metre U wind component
 '200 metre U wind component' = {
@@ -1569,6 +1638,54 @@
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 23 ;
+	}
+#Keetch-Byram drought index
+'Keetch-Byram drought index' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 12 ;
+	}
+#Drought factor (as defined by the Australian forest service)
+'Drought factor (as defined by the Australian forest service)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	}
+#Rate of spread (as defined by the Australian forest service)
+'Rate of spread (as defined by the Australian forest service)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	}
+#Fire danger index (as defined by the Australian forest service)
+'Fire danger index (as defined by the Australian forest service)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 15 ;
+	}
+#Spread component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'Spread component (as defined by the U.S Forest Service National Fire-Danger Rating System)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 16 ;
+	}
+#Burning index (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'Burning index (as defined by the U.S Forest Service National Fire-Danger Rating System)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 17 ;
+	}
+#Ignition component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'Ignition component (as defined by the U.S Forest Service National Fire-Danger Rating System)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	}
+#Energy release component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'Energy release component (as defined by the U.S Forest Service National Fire-Danger Rating System)' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 19 ;
 	}
 #Universal thermal climate index
 'Universal thermal climate index' = {
@@ -3957,7 +4074,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Snow Fall water equivalent
 'Snow Fall water equivalent' = {

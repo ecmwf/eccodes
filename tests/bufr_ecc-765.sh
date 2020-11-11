@@ -17,6 +17,7 @@
 label="bufr_ecc-765-test"
 tempLog=temp.${label}.log
 tempSupp=temp.${label}.supp
+tempFilt=temp.${label}.filt
 
 if test "x$ECCODES_TEST_WITH_VALGRIND" = "x"; then
   echo "Environment variable ECCODES_TEST_WITH_VALGRIND not defined. Test disabled"
@@ -30,10 +31,12 @@ tools_dir=$build_dir/bin
 files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 VALGRIND_OPTIONS="--error-exitcode=1 --leak-check=full --log-file=$tempLog"
 
-# bufr_filter has a small leak to do with parsing and action files not related to BUFR decoding,
-# So instead we use bufr_ls to do the unpacking
+cat > $tempFilt <<EOF
+  set unpack=1;
+EOF
+
 for bf in $files; do
-  valgrind $VALGRIND_OPTIONS ${tools_dir}/bufr_ls -s unpack=1 ${data_dir}/bufr/$bf >/dev/null
+  valgrind $VALGRIND_OPTIONS ${tools_dir}/codes_bufr_filter $tempFilt ${data_dir}/bufr/$bf >/dev/null
 done
 
 
@@ -56,4 +59,4 @@ done
 
 
 # Clean up
-rm -f $tempLog $tempSupp
+rm -f $tempLog $tempSupp $tempFilt
