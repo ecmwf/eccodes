@@ -56,7 +56,7 @@
 151 sol Soil level (Numeric)
 152 sol Sea ice level (Numeric)
 # 153-159 Reserved
-160 160 Depth below sea level (m)
+160 o2d Depth below sea level (m)
 161 161 Depth below water surface (m)
 162 162 Lake or river bottom (-)
 163 163 Bottom of sediment layer (-)
@@ -64,9 +64,9 @@
 165 165 Bottom of sediment layer penetrated by thermal wave (-)
 166 166 Mixing layer (-)
 167 167 Bottom of root zone (-)
-168 168 Ocean model level (Numeric)
-169 169 Ocean level defined by water density (sigma-theta) difference from near-surface to level (kg m-3)
-170 170 Ocean level defined by water potential temperature difference from near-surface to level (K)
+168 o3d Ocean model level (Numeric)
+169 o2d Ocean level defined by water density (sigma-theta) difference from near-surface to level (kg m-3)
+170 o2d Ocean level defined by water potential temperature difference from near-surface to level (K)
 # 171-173 Reserved 
 174 174 Top surface of ice on sea, lake or river
 175 175 Top surface of ice, under snow cover, on sea, lake or river
