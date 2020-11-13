@@ -484,7 +484,7 @@ void* grib_trie_get(grib_trie* t, const char* key)
 
     if( t ) {
         /* t!=NULL implies *k==0 */
-        void * saved = t->data;
+        void * saved = t->data; /* save the data while no one touches it. */
         GRIB_MUTEX_UNLOCK(&mutex);
         return saved;
     }
