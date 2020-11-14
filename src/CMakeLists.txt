@@ -65,7 +65,6 @@ list( APPEND grib_api_srcs
     grib_accessor_class_bits.c
     grib_accessor_class_bits_per_value.c
     grib_accessor_class_bufr_clear_tables.c
-    grib_accessor_class_bufr_data.c
     grib_accessor_class_bufr_elements_table.c
     grib_accessor_class_bufr_data_array.c
     grib_accessor_class_bufr_data_element.c
@@ -441,11 +440,17 @@ ecbuild_add_library( TARGET    eccodes
                               # griby.c gribl.c
                               ${grib_api_srcs}
                      GENERATED grib_api_version.c
-                     LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
+                     #PRIVATE_LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
+                     PRIVATE_INCLUDES "${AEC_INCLUDE_DIRS}"
+                     PRIVATE_LIBS ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${AEC_LIBRARIES} ${PNG_LIBRARIES}
+                     PUBLIC_LIBS  ${CMATH_LIBRARIES} ${THREADS_LIBRARIES}
                      TEMPLATES ${grib_api_extra_srcs}
                      INSTALL_HEADERS_LIST
                               grib_api.h
                               eccodes.h
                               eccodes_windef.h
                               ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h
-                              ${PROJECT_BINARY_DIR}/eccodes_config.h )
+                              ${PROJECT_BINARY_DIR}/eccodes_config.h
+                    PUBLIC_INCLUDES
+                              $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
+                              $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src> )

@@ -249,7 +249,7 @@ static grib_index_key* grib_index_new_key(grib_context* c, grib_index_key* keys,
     next = (grib_index_key*)grib_context_malloc_clear(c, sizeof(grib_index_key));
     if (!next) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "unable to allocate %d bytes",
+                         "unable to allocate %ld bytes",
                          sizeof(grib_index_key));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
@@ -257,7 +257,7 @@ static grib_index_key* grib_index_new_key(grib_context* c, grib_index_key* keys,
     values = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
     if (!values) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "unable to allocate %d bytes",
+                         "unable to allocate %ld bytes",
                          sizeof(grib_string_list));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;

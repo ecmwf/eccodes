@@ -190,7 +190,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     value_count(a, &count);
 
     if (*len < count) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s (setting %d, required %d) ", a->name, *len, count);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s (setting %ld, required %ld) ", a->name, *len, count);
         return GRIB_ARRAY_TOO_SMALL;
     }
 
@@ -210,7 +210,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     value_count(a, &count);
 
     if (*len < count) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s (setting %d, required %d) ", a->name, *len, count);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s (setting %ld, required %ld) ", a->name, *len, count);
         return GRIB_ARRAY_TOO_SMALL;
     }
 

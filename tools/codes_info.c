@@ -28,6 +28,26 @@ static void usage_and_exit(const char* progname)
 #define INFO_PRINT_DEFINITION_PATH (1 << 1)
 #define INFO_PRINT_SAMPLES_PATH (1 << 2)
 
+void print_debug_info(grib_context* context)
+{
+    int memfs = 0, aec = 0;
+#ifdef HAVE_MEMFS
+    memfs = 1;
+#endif
+#ifdef HAVE_AEC
+    aec = 1;
+#endif
+    grib_context_log(context, GRIB_LOG_DEBUG, "Git SHA1=%s", grib_get_git_sha1());
+    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_JPEG=%d", HAVE_JPEG);
+    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_LIBJASPER=%d", HAVE_LIBJASPER);
+    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_LIBOPENJPEG=%d", HAVE_JPEG);
+    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_LIBPNG=%d", HAVE_LIBPNG);
+    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_AEC=%d", aec);
+    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_ECCODES_THREADS=%d", GRIB_PTHREADS);
+    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_ECCODES_OMP_THREADS=%d", GRIB_OMP_THREADS);
+    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_MEMFS=%d", memfs);
+}
+
 int main(int argc, char* argv[])
 {
     char* path                = NULL;
@@ -64,6 +84,7 @@ int main(int argc, char* argv[])
         usage_and_exit(argv[0]);
 
     if (print_flags == INFO_PRINT_ALL) {
+        print_debug_info(context);
         printf("\n");
         printf("%s Version %d.%d.%d",
                grib_get_package_name(), major, minor, revision);
@@ -73,17 +94,7 @@ int main(int argc, char* argv[])
 
         printf("\n");
         printf("\n");
-        if (context->debug) {
-            grib_context_log(context, GRIB_LOG_DEBUG, "Git SHA1=%s", grib_get_git_sha1());
-        }
-#if GRIB_PTHREADS
-        grib_context_log(context, GRIB_LOG_DEBUG, "POSIX threads enabled\n");
-#elif GRIB_OMP_THREADS
-        grib_context_log(context, GRIB_LOG_DEBUG, "OMP threads enabled\n");
-#endif
-#ifdef HAVE_MEMFS
-        grib_context_log(context, GRIB_LOG_DEBUG, "MEMFS enabled");
-#endif
+
         if ((path = getenv("ECCODES_DEFINITION_PATH")) != NULL) {
             printf("Definition files path from environment variable");
             printf(" ECCODES_DEFINITION_PATH=%s\n", path);

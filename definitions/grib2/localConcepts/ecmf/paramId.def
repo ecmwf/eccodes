@@ -697,10 +697,10 @@
 	}
 #Snow depth
 '141' = {
+	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 11 ;
-	 unitsFactor = 1000 ;
+	 parameterNumber = 254 ;
 	}
 #Large-scale precipitation
 '142' = {

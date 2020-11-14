@@ -33,7 +33,7 @@ INSTALLATION
    tar -xzf eccodes-x.y.z-Source.tar.gz
    ```
 
-3. Create a separate directory where to build ecCodes:
+3. Create a separate directory to build ecCodes:
    ```
    mkdir build
    cd build

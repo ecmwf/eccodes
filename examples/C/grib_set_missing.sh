@@ -9,14 +9,5 @@
 
 . ./include.sh
 
-in=../../data/index.grib
-out=out.readmsg.grib
-
-rm -f $out | true
-
-${examples_dir}/eccodes_f_read_message > /dev/null
-
-${tools_dir}/grib_compare $in $out
-
-rm -f $out
-
+${examples_dir}/c_grib_set_missing
+rm -f out_surface_level.grib2

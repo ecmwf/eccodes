@@ -32,9 +32,9 @@ tempOut=temp.$label.$$.out
 tempRef=temp.$label.$$.ref
 ${tools_dir}/grib_index_build -N -o $tempIndex ${infile} >/dev/null
 
-# Must remove first two lines and the last (filename specifics)
-${tools_dir}/grib_dump -D ${tempIndex} | sed '1,2d' | sed '$d' > $tempOut
-cat $tempOut
+# Must remove first two lines (filename specifics)
+${tools_dir}/grib_dump ${tempIndex} | sed '1,2d' > $tempOut
+#cat $tempOut
 
 cat > $tempRef <<EOF
 Index keys:
@@ -97,8 +97,8 @@ ${tools_dir}/grib_index_build -N -k mars.levtype -o $tempIndex ${data_dir}/tigge
 ${tools_dir}/grib_index_build -N -k mars.levtype:i -o $tempIndex ${data_dir}/tigge_cf_ecmwf.grib2 |\
    grep -q "mars.levtype = { 103, 1, 106, 100, 101, 8, 109, 107 }"
 
-# grib_compare with index files
-# -----------------------------
+echo "grib_compare with index files..."
+# ------------------------------------
 tempIndex1=temp.$label.$$.1.idx
 tempIndex2=temp.$label.$$.2.idx
 tempGribFile1=temp.$label.$$.file1.grib
