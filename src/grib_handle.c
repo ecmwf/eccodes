@@ -1612,7 +1612,7 @@ void grib_multi_support_reset(grib_context* c)
     while (gm) {
         gm_next = gm->next;
         grib_multi_support_clear(c, gm);
-	grib_context_free(c, gm);
+        grib_context_free(c, gm);
         gm = gm_next;
     }
     c->multi_support = NULL;
