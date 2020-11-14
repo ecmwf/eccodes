@@ -350,8 +350,9 @@ int grib_itrie_get_id(grib_itrie* t, const char* key)
         t = t->next[mapping[(int)*k++]];
 
     if (t != NULL && t->id != -1) {
+        int id = t->id;
         GRIB_MUTEX_UNLOCK(&mutex);
-        return t->id;
+        return id;
     }
     else {
         int ret = grib_itrie_insert(last, key);
@@ -401,11 +402,12 @@ int grib_itrie_insert(grib_itrie* t, const char* key)
         Assert(*(t->count) < MAX_NUM_CONCEPTS);
     }
 
+    int id = t->id;
     GRIB_MUTEX_UNLOCK(&mutex);
 
     /*printf("grib_itrie_get_id: %s -> %d\n",key,t->id);*/
 
-    return t->id;
+    return id;
 }
 
 int grib_itrie_get_size(grib_itrie* t)

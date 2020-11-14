@@ -375,11 +375,12 @@ static int grib_hash_keys_insert(grib_itrie* t, const char* key)
         Assert(*(t->count) + TOTAL_KEYWORDS < ACCESSORS_ARRAY_SIZE);
     }
 
+    int id = t->id;
     GRIB_MUTEX_UNLOCK(&mutex);
 
     /*printf("grib_hash_keys_get_id: %s -> %d\n",key,t->id);*/
 
-    return t->id;
+    return id;
 }
 
 int grib_hash_keys_get_id(grib_itrie* t, const char* key)
@@ -403,8 +404,9 @@ int grib_hash_keys_get_id(grib_itrie* t, const char* key)
             t = t->next[mapping[(int)*k++]];
 
         if (t != NULL && t->id != -1) {
+            int id = t->id;
             GRIB_MUTEX_UNLOCK(&mutex);
-            return t->id + TOTAL_KEYWORDS + 1;
+            return id + TOTAL_KEYWORDS + 1;
         }
         else {
             int ret = grib_hash_keys_insert(last, key);
