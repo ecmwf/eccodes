@@ -242,3 +242,78 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 123 ;
 }
+#Vertical velocity (geometric)
+'lagrangian_tendency_of_air_pressure' = {
+  indicatorOfParameter = 40 ;
+  table2Version = 3 ;
+}
+#Vertical velocity (geometric)
+'lagrangian_tendency_of_air_pressure' = {
+ indicatorOfParameter = 40 ;
+ table2Version = 2 ;
+}
+#Vertical velocity (geometric)
+'lagrangian_tendency_of_air_pressure' = {
+ indicatorOfParameter = 40 ;
+ table2Version = 1 ;
+}
+#Surface sensible heat flux
+'surface_upward_sensible_heat_flux' = {
+ indicatorOfParameter = 122 ;
+ table2Version = 3 ;
+}
+#Surface sensible heat flux
+'surface_upward_sensible_heat_flux' = {
+ indicatorOfParameter = 122 ;
+ table2Version = 2 ;
+}
+#Surface sensible heat flux
+'surface_upward_sensible_heat_flux' = {
+ indicatorOfParameter = 122 ;
+ table2Version = 1 ;
+}
+#Surface latent heat flux
+'surface_upward_latent_heat_flux' = {
+ indicatorOfParameter = 121 ;
+ table2Version = 3 ;
+}
+#Surface latent heat flux
+'surface_upward_latent_heat_flux' = {
+ indicatorOfParameter = 121 ;
+ table2Version = 2 ;
+}
+#Surface latent heat flux
+'surface_upward_latent_heat_flux' = {
+ indicatorOfParameter = 121 ;
+ table2Version = 1 ;
+}
+#Albedo
+'surface_albedo' = {
+ indicatorOfParameter = 84 ;
+ table2Version = 3 ;
+}
+#Albedo
+'surface_albedo' = {
+ indicatorOfParameter = 84 ;
+ table2Version = 2 ;
+}
+#Albedo
+'surface_albedo' = {
+ indicatorOfParameter = 84 ;
+ table2Version = 1 ;
+}
+#Convective cloud cover
+'convective_cloud_area_fraction' = {
+ indicatorOfParameter = 72 ;
+ table2Version = 3 ;
+}
+#Convective cloud cover
+'convective_cloud_area_fraction' = {
+ indicatorOfParameter = 72 ;
+ table2Version = 2 ;
+}
+#Convective cloud cover
+'convective_cloud_area_fraction' = {
+ indicatorOfParameter = 72 ;
+ table2Version = 1 ;
+}

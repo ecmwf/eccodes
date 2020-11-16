@@ -163,7 +163,7 @@
 	 parameterNumber = 12 ;
 	}
 #Boundary layer dissipation
-'dissipation_in_atmosphere_boundary_layer' = {
+'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 20 ;
@@ -245,4 +245,16 @@
 	 parameterNumber = 5 ;
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
+}
+#Convective precipitation
+'lwe_thickness_of_convective_precipitation_amount' = {
+  discipline = 0 ;
+  parameterCategory = 1 ;
+  parameterNumber = 10 ;
+}
+#Snow depth
+'lwe_thickness_of_surface_snow_amount' = {
+ discipline = 0 ;
+ parameterCategory = 1 ;
+ parameterNumber = 11 ;
 }

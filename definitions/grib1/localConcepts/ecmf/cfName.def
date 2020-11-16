@@ -165,7 +165,7 @@
 	 indicatorOfParameter = 135 ;
 	}
 #Total column water vapour
-'lwe_thickness_of_atmosphere_water_vapor_content' = {
+'lwe_thickness_of_atmosphere_mass_content_of_water_vapor' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 137 ;
 	}
@@ -245,17 +245,17 @@
 	 indicatorOfParameter = 141 ;
 	}
 #Large-scale precipitation
-'lwe_thickness_of_large_scale_precipitation_amount' = {
+'lwe_thickness_of_stratiform_precipitation_amount' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 142 ;
 	}
 #Large-scale precipitation
-'lwe_thickness_of_large_scale_precipitation_amount' = {
+'lwe_thickness_of_stratiform_precipitation_amount' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 142 ;
 	}
 #Large-scale precipitation
-'lwe_thickness_of_large_scale_precipitation_amount' = {
+'lwe_thickness_of_stratiform_precipitation_amount' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 142 ;
 	}
@@ -285,7 +285,7 @@
 	 indicatorOfParameter = 144 ;
 	}
 #Boundary layer dissipation
-'dissipation_in_atmosphere_boundary_layer' = {
+'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 145 ;
 	}
@@ -665,7 +665,7 @@
 	 indicatorOfParameter = 211 ;
 	}
 #Temperature of snow layer
-'snow_temperature' = {
+'temperature_in_surface_snow' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 238 ;
 	}
@@ -728,4 +728,14 @@
 'sea_ice_thickness' = {
 	 table2Version = 174 ;
 	 indicatorOfParameter = 98 ;
+}
+#Surface downward northward stress
+'surface_downward_northward_stress' = {
+  table2Version = 151 ;
+  indicatorOfParameter = 154 ;
+}
+#Surface downward eastward stress
+'surface_downward_eastward_stress' = {
+  table2Version = 151 ;
+  indicatorOfParameter = 153 ;
 }
