@@ -60,6 +60,7 @@ if( HAVE_BUILD_TOOLS )
         definitions
         grib_calendar
         grib_md5
+        grib_cfNames
         filter_substr
         grib_uerra
         grib_2nd_order_numValues
