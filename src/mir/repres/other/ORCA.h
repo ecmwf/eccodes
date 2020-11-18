@@ -18,6 +18,7 @@
 #include "mir/repres/Gridded.h"
 #include "mir/util/Atlas.h"
 
+#define MIR_USE_ATLAS_ORCA 1
 
 namespace mir {
 namespace repres {
@@ -83,8 +84,10 @@ private:
     std::string type_;
     std::string subtypeLong_;
 
+#if ! MIR_USE_ATLAS_ORCA
     std::vector<double> latitudes_;
     std::vector<double> longitudes_;
+#endif
 
     char subtype_;
 

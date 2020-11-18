@@ -74,7 +74,10 @@ ORCA::ORCA(const std::string& name) : Gridded(util::BoundingBox()) {
     subtypeLong_ = subtype_ + std::string(" grid");
     name_        = type_ + '_' + subtype_;
 
-
+#if MIR_USE_ATLAS_ORCA
+    // setup atlas grid
+    grid_ = atlas::Grid(name_);
+#else
     // setup grid coordinates
     eckit::PathName path = "~atlas-orca/share/atlas-orca/data/" + change_case(type_, false) + '_' + subtype_ + ".ascii";
     std::ifstream in(path.asString().c_str());
@@ -102,11 +105,6 @@ ORCA::ORCA(const std::string& name) : Gridded(util::BoundingBox()) {
 
     ASSERT(!in.getline(&buffer[0], buffer.size()));
 
-
-    // setup atlas grid
-#if 0
-    grid_ = atlas::Grid(name_);
-#else
     std::vector<atlas::PointXY> pts(N);
     for (size_t n = 0; n < N; ++n) {
         pts[n] = {longitudes_[n], latitudes_[n]};
@@ -139,8 +137,12 @@ void ORCA::validate(const data::MIRValuesVector& values) const {
 
 
 size_t ORCA::numberOfPoints() const {
+#if MIR_USE_ATLAS_ORCA
+    return static_cast<size_t>(grid_.size());
+#else
     ASSERT(latitudes_.size() == longitudes_.size());
     return latitudes_.size();
+#endif
 }
 
 
@@ -163,12 +165,16 @@ void ORCA::makeName(std::ostream& out) const {
 
 
 void ORCA::print(std::ostream& out) const {
-    out << "ORCA[atlasGrid=" /*<< grid_.spec()*/ << "]";
+#if MIR_USE_ATLAS_ORCA
+    out << "ORCA[atlasGrid="<< grid_.spec() << "]";
+#else
+    out << "ORCA[atlasGrid=]";
+#endif
 }
 
 
 Iterator* ORCA::iterator() const {
-#if 0
+#if MIR_USE_ATLAS_ORCA
     class ORCAIterator : public Iterator {
         ::atlas::Grid grid_;  // Note: needs the object because IterateLonLat uses a Grid reference
         ::atlas::Grid::IterateLonLat lonlat_;
@@ -217,9 +223,18 @@ atlas::Grid ORCA::atlasGrid() const {
 
 
 void ORCA::fill(util::MeshGeneratorParameters& params) const {
+#if MIR_USE_ATLAS_ORCA
+    if (params.meshGenerator_.empty()) {
+        params.meshGenerator_ = "orca";
+    }
+    params.set("force_include_south_pole",true);
+    params.set("invalid_quads",true);
+    params.set("triangulate",false);
+#else
     if (params.meshGenerator_.empty()) {
         params.meshGenerator_ = "delaunay";  // "orca"
     }
+#endif
 }
 
 
