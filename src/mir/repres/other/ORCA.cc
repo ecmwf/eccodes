@@ -14,13 +14,11 @@
 
 #include <algorithm>
 #include <cctype>
-#include <fstream>
 #include <ostream>
-#include <regex>
 
 #include "eckit/filesystem/PathName.h"
 
-#include "mir/iterator/UnstructuredIterator.h"
+#include "mir/config/LibMir.h"
 #include "mir/key/grid/ORCAPattern.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
@@ -74,43 +72,8 @@ ORCA::ORCA(const std::string& name) : Gridded(util::BoundingBox()) {
     subtypeLong_ = subtype_ + std::string(" grid");
     name_        = type_ + '_' + subtype_;
 
-#if MIR_USE_ATLAS_ORCA
     // setup atlas grid
     grid_ = atlas::Grid(name_);
-#else
-    // setup grid coordinates
-    eckit::PathName path = "~atlas-orca/share/atlas-orca/data/" + change_case(type_, false) + '_' + subtype_ + ".ascii";
-    std::ifstream in(path.asString().c_str());
-    if (!in) {
-        throw exception::CantOpenFile(path);
-    }
-
-    std::string buffer(1024, ' ');
-
-    int Ni;
-    int Nj;
-    ASSERT(in >> Ni >> Nj);
-    in.getline(&buffer[0], buffer.size());
-
-    ASSERT(Ni * Nj > 0);
-    auto N = size_t(Ni * Nj);
-
-    latitudes_.resize(N);
-    longitudes_.resize(N);
-
-    for (size_t n = 0; n < N; ++n) {
-        ASSERT(in >> latitudes_[n] >> longitudes_[n]);
-        in.getline(&buffer[0], buffer.size());
-    }
-
-    ASSERT(!in.getline(&buffer[0], buffer.size()));
-
-    std::vector<atlas::PointXY> pts(N);
-    for (size_t n = 0; n < N; ++n) {
-        pts[n] = {longitudes_[n], latitudes_[n]};
-    }
-    grid_ = atlas::UnstructuredGrid(std::move(pts));
-#endif
 }
 
 
@@ -137,12 +100,7 @@ void ORCA::validate(const data::MIRValuesVector& values) const {
 
 
 size_t ORCA::numberOfPoints() const {
-#if MIR_USE_ATLAS_ORCA
     return static_cast<size_t>(grid_.size());
-#else
-    ASSERT(latitudes_.size() == longitudes_.size());
-    return latitudes_.size();
-#endif
 }
 
 
@@ -165,16 +123,11 @@ void ORCA::makeName(std::ostream& out) const {
 
 
 void ORCA::print(std::ostream& out) const {
-#if MIR_USE_ATLAS_ORCA
-    out << "ORCA[atlasGrid="<< grid_.spec() << "]";
-#else
-    out << "ORCA[atlasGrid=]";
-#endif
+    out << "ORCA[atlasGrid=" << grid_.spec() << "]";
 }
 
 
 Iterator* ORCA::iterator() const {
-#if MIR_USE_ATLAS_ORCA
     class ORCAIterator : public Iterator {
         ::atlas::Grid grid_;  // Note: needs the object because IterateLonLat uses a Grid reference
         ::atlas::Grid::IterateLonLat lonlat_;
@@ -211,9 +164,6 @@ Iterator* ORCA::iterator() const {
         ORCAIterator& operator=(const ORCAIterator&) = delete;
     };
     return new ORCAIterator(grid_);
-#else
-    return new iterator::UnstructuredIterator(latitudes_, longitudes_);
-#endif
 }
 
 
@@ -223,18 +173,12 @@ atlas::Grid ORCA::atlasGrid() const {
 
 
 void ORCA::fill(util::MeshGeneratorParameters& params) const {
-#if MIR_USE_ATLAS_ORCA
     if (params.meshGenerator_.empty()) {
         params.meshGenerator_ = "orca";
     }
-    params.set("force_include_south_pole",true);
-    params.set("invalid_quads",true);
-    params.set("triangulate",false);
-#else
-    if (params.meshGenerator_.empty()) {
-        params.meshGenerator_ = "delaunay";  // "orca"
-    }
-#endif
+    params.set("force_include_south_pole", true);
+    params.set("invalid_quads", true);
+    params.set("triangulate", false);
 }
 
 
