@@ -71,9 +71,6 @@ ORCA::ORCA(const std::string& name) : Gridded(util::BoundingBox()) {
     subtype_     = match[2].str().front();
     subtypeLong_ = subtype_ + std::string(" grid");
     name_        = type_ + '_' + subtype_;
-
-    // setup atlas grid
-    grid_ = atlas::Grid(name_);
 }
 
 
@@ -100,14 +97,13 @@ void ORCA::validate(const data::MIRValuesVector& values) const {
 
 
 size_t ORCA::numberOfPoints() const {
-    return static_cast<size_t>(grid_.size());
+    return static_cast<size_t>(atlasGridRef().size());
 }
 
 
 void ORCA::fill(grib_info& info) const {
     info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
-
 
     GribExtraSetting::set(info, "unstructuredGridType", type_.c_str());
     GribExtraSetting::set(info, "unstructuredGridSubtype", subtypeLong_.c_str());
@@ -123,7 +119,7 @@ void ORCA::makeName(std::ostream& out) const {
 
 
 void ORCA::print(std::ostream& out) const {
-    out << "ORCA[atlasGrid=" << grid_.spec() << "]";
+    out << "ORCA[atlasGrid=" << atlasGridRef().spec() << "]";
 }
 
 
@@ -163,12 +159,21 @@ Iterator* ORCA::iterator() const {
         ORCAIterator(const ORCAIterator&) = delete;
         ORCAIterator& operator=(const ORCAIterator&) = delete;
     };
-    return new ORCAIterator(grid_);
+    return new ORCAIterator(atlasGridRef());
+}
+
+
+const atlas::Grid& ORCA::atlasGridRef() const {
+    if (!grid_) {
+        // setup atlas grid (once)
+        grid_ = atlas::Grid(name_);
+    }
+    return grid_;
 }
 
 
 atlas::Grid ORCA::atlasGrid() const {
-    return grid_;
+    return atlasGridRef();
 }
 
 

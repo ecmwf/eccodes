@@ -84,10 +84,11 @@ private:
     std::string subtypeLong_;
     char subtype_;
 
-    ::atlas::Grid grid_;
+    mutable atlas::Grid grid_;
 
     // -- Methods
-    // None
+
+    const atlas::Grid& atlasGridRef() const;
 
     // -- Overridden methods
 
