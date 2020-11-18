@@ -75,6 +75,11 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 57 ;
 	}
+#Total column ozone
+'atmosphere_mass_content_of_ozone' = {
+	 table2Version = 3 ;
+	 indicatorOfParameter = 10 ;
+	}
 #Boundary layer dissipation
 'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 table2Version = 3 ;
@@ -156,6 +161,11 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 57 ;
 	}
+#Total column ozone
+'atmosphere_mass_content_of_ozone' = {
+	 table2Version = 2 ;
+	 indicatorOfParameter = 10 ;
+	}
 #Boundary layer dissipation
 'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 table2Version = 2 ;
@@ -236,6 +246,11 @@
 'lwe_thickness_of_water_evaporation_amount' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 57 ;
+	}
+#Total column ozone
+'atmosphere_mass_content_of_ozone' = {
+	 table2Version = 1 ;
+	 indicatorOfParameter = 10 ;
 	}
 #Boundary layer dissipation
 'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {

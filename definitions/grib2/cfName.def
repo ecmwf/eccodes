@@ -33,6 +33,12 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 37 ;
 	}
+#Ozone mass mixing ratio
+'mass_fraction_of_ozone_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 1 ;
+	}
 #Surface net solar radiation, clear sky
 'surface_net_downward_shortwave_flux_assuming_clear_sky' = {
 	 discipline = 0 ;
