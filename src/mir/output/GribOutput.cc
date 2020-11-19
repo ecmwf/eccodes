@@ -457,6 +457,11 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
         GRIB_CALL(err);
 
+
+        // set (possible) additional settings
+        info.post.set(result);
+
+
         const void* message;
         size_t size;
         GRIB_CALL(codes_get_message(result, &message, &size));

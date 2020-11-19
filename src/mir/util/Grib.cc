@@ -16,6 +16,31 @@
 #include "mir/util/Log.h"
 
 
+void post_t::addBytes(const char* key, const unsigned char* value, size_t length) {
+    struct codes_values_post_bytes_t final : codes_values_post_t {
+        codes_values_post_bytes_t(const char* name, const unsigned char* bytes_value, size_t length) :
+            name_(name), value_(bytes_value), length_(length) {}
+        void set(codes_handle* h) override { GRIB_CALL(codes_set_bytes(h, name_, value_, &length_)); }
+
+        codes_values_post_bytes_t(const codes_values_post_bytes_t&) = delete;
+        void operator=(const codes_values_post_bytes_t&) = delete;
+
+        const char* name_;
+        const unsigned char* value_;
+        size_t length_;
+    };
+
+    emplace_back(new codes_values_post_bytes_t(key, value, length));
+}
+
+
+void post_t::set(codes_handle* h) {
+    for (auto& p : *this) {
+        p->set(h);
+    }
+}
+
+
 void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t Ni, size_t Nj) {
     using mir::Log;
 

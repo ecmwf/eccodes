@@ -108,6 +108,9 @@ void ORCA::fill(grib_info& info) const {
     GribExtraSetting::set(info, "unstructuredGridType", type_.c_str());
     GribExtraSetting::set(info, "unstructuredGridSubtype", subtypeLong_.c_str());
 
+    unsigned char uuid[] = "PedroIsSoNaughty";  // exactly 16 bytes
+    info.post.addBytes("uuidOfHGrid", uuid, 16);
+
     // TODO fill uuidOfHGdrid (or maybe not?)
     // GribExtraSetting::set(info, "uuidOfHGdrid", /*16076978a048410747dd7c9876677b28*/);
 }

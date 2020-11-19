@@ -15,6 +15,7 @@
 
 #include <eccodes.h>
 
+#include <memory>
 #include <vector>
 
 #include "mir/util/Exceptions.h"
@@ -39,10 +40,22 @@ inline bool grib_call(int e, const char* call, bool missingOK = false) {
 #define GRIB_ERROR(a, b) grib_call(a, b)
 
 
+struct codes_values_post_t {
+    virtual void set(codes_handle*) = 0;
+};
+
+
+struct post_t : std::vector<std::unique_ptr<codes_values_post_t>> {
+    void addBytes(const char* key, const unsigned char* value, size_t length);
+    void set(codes_handle*);
+};
+
+
 struct grib_info {
     grib_info();
     codes_util_grid_spec grid;
     codes_util_packing_spec packing;
+    post_t post;
 
 private:
     grib_info(const grib_info&) = delete;
