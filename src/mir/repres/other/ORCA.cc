@@ -182,7 +182,6 @@ void ORCA::fill(util::MeshGeneratorParameters& params) const {
         params.meshGenerator_ = "orca";
     }
     params.set("force_include_south_pole", true);
-    params.set("invalid_quads", true);
     params.set("triangulate", false);
 }
 
