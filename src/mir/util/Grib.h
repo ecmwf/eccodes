@@ -40,12 +40,12 @@ inline bool grib_call(int e, const char* call, bool missingOK = false) {
 #define GRIB_ERROR(a, b) grib_call(a, b)
 
 
-struct codes_values_post_t {
+struct post_value_t {
     virtual void set(codes_handle*) = 0;
 };
 
 
-struct post_t : std::vector<std::unique_ptr<codes_values_post_t>> {
+struct post_t : std::vector<std::unique_ptr<post_value_t>> {
     void addBytes(const char* key, const unsigned char* value, size_t length);
     void set(codes_handle*);
 };
