@@ -31,6 +31,9 @@ codetable[1] indicatorOfUnitForForecastTime ('4.4.table',masterDir,localDir)=1 ;
 #  Length of the time range over which statistical processing is done, in units defined by the previous octet
 unsigned[4] forecastTime=0 ;
 
+#  Number of time increments of Forecast used in Local Time
+unsigned[1] numberOfTimeIncrementsOfForecastsUsedInLocalTime=1 ;
+
 #  Indicator of unit of time for the increment between the successive steps used
 codetable[1]  indicatorOfUnitForTimeIncrement ('4.4.table',masterDir,localDir)=255 ;
 
