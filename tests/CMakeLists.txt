@@ -161,6 +161,7 @@ if( HAVE_BUILD_TOOLS )
         grib2to1
         grib1to3
         grib2to3
+        grib2_templates
         grib3_templates
         badgrib
         grib_ls
