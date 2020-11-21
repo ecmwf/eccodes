@@ -5,3 +5,6 @@ concept_nofail unstructuredGridType(unknown,"unstructuredGridType.def",conceptsL
 concept_nofail unstructuredGridSubtype(unknown,"unstructuredGridSubtype.def",conceptsLocalDirAll,conceptsMasterDir);
 
 concept_nofail unstructuredGridUUID(unknown,"unstructuredGridUUID.def",conceptsLocalDirAll,conceptsMasterDir);
+
+meta unstructuredGridName sprintf("%s_%s",unstructuredGridType,unstructuredGridSubtype);
+alias gridName=unstructuredGridName;
