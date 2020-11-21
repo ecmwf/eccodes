@@ -16,6 +16,7 @@
 #include <eccodes.h>
 
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "mir/util/Exceptions.h"
@@ -46,7 +47,7 @@ struct post_value_t {
 
 
 struct post_t : std::vector<std::unique_ptr<post_value_t>> {
-    void addBytes(const char* key, const unsigned char* value, size_t length);
+    void addBytes(const std::string& key, const std::string& value);
     void set(codes_handle*);
 };
 
@@ -113,6 +114,16 @@ struct GribExtraSetting {
     static void set(grib_info&, const char* key, long);
     static void set(grib_info&, const char* key, double);
     static void set(grib_info&, const char* key, const char*);
+};
+
+
+struct Bytes {
+    using byte_t  = uint8_t;
+    using bytes_t = std::vector<byte_t>;
+
+    static byte_t to_byte(char nibble_hi, char nibble_lo);
+    static std::string to_string(const bytes_t&);
+    static bytes_t to_bytes(const std::string&);
 };
 
 
