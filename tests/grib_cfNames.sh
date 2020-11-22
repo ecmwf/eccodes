@@ -31,9 +31,6 @@ grib_check_key_equals $temp cfName lwe_thickness_of_atmosphere_mass_content_of_w
 ${tools_dir}/grib_set -s paramId=145 $sample2 $temp
 grib_check_key_equals $temp cfName kinetic_energy_dissipation_in_atmosphere_boundary_layer
 
-${tools_dir}/grib_set -s indicatorOfParameter=40,table2Version=3 $sample1 $temp
-grib_check_key_equals $temp cfName lagrangian_tendency_of_air_pressure
-
 ${tools_dir}/grib_set -s indicatorOfParameter=122,table2Version=1 $sample1 $temp
 grib_check_key_equals $temp cfName surface_upward_sensible_heat_flux
 

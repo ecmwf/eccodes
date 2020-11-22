@@ -529,6 +529,18 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 147 ;
 	}
+#Surface downward eastward stress
+'surface_downward_eastward_stress' = {
+	 discipline = 192 ;
+	 parameterCategory = 151 ;
+	 parameterNumber = 153 ;
+	}
+#Surface downward northward stress
+'surface_downward_northward_stress' = {
+	 discipline = 192 ;
+	 parameterCategory = 151 ;
+	 parameterNumber = 154 ;
+	}
 #Carbon Dioxide
 'mass_fraction_of_carbon_dioxide_in_air' = {
 	 discipline = 192 ;
@@ -624,16 +636,4 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 206 ;
-}
-#Surface downward northward stress
-'surface_downward_northward_stress' = {
- discipline = 192 ;
- parameterCategory = 151 ;
- parameterNumber = 154 ;
-}
-#Surface downward eastward stress
-'surface_downward_eastward_stress' = {
- discipline = 192 ;
- parameterCategory = 151 ;
- parameterNumber = 153 ;
 }

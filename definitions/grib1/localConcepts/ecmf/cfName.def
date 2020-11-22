@@ -170,7 +170,7 @@
 	 indicatorOfParameter = 137 ;
 	}
 #Total column water vapour
-'lwe_thickness_of_atmosphere_water_vapor_content' = {
+'lwe_thickness_of_atmosphere_mass_content_of_water_vapor' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 137 ;
 	}
@@ -290,7 +290,7 @@
 	 indicatorOfParameter = 145 ;
 	}
 #Boundary layer dissipation
-'dissipation_in_atmosphere_boundary_layer' = {
+'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 145 ;
 	}
@@ -680,7 +680,7 @@
 	 indicatorOfParameter = 238 ;
 	}
 #Temperature of snow layer
-'snow_temperature' = {
+'temperature_in_surface_snow' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 238 ;
 	}
@@ -939,6 +939,16 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 147 ;
 	}
+#Surface downward eastward stress
+'surface_downward_eastward_stress' = {
+	 table2Version = 151 ;
+	 indicatorOfParameter = 153 ;
+	}
+#Surface downward northward stress
+'surface_downward_northward_stress' = {
+	 table2Version = 151 ;
+	 indicatorOfParameter = 154 ;
+	}
 #Depth of 20C isotherm
 'depth_of_isosurface_of_sea_water_potential_temperature' = {
 	 table2Version = 151 ;
@@ -1028,14 +1038,4 @@
 'atmosphere_mass_content_of_ozone' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 206 ;
-}
-#Surface downward northward stress
-'surface_downward_northward_stress' = {
-  table2Version = 151 ;
-  indicatorOfParameter = 154 ;
-}
-#Surface downward eastward stress
-'surface_downward_eastward_stress' = {
-  table2Version = 151 ;
-  indicatorOfParameter = 153 ;
 }
