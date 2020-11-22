@@ -35,7 +35,7 @@ fRules=${label}.filter
 #   tropical_cyclone.bufr   -- multi message
 #   syno_multi.bufr         -- multi message
 #-----------------------------------------------------------
-files=`cat ${data_dir}/bufr/bufr_data_files.txt`
+files=`cat ${data_dir}/bufr/bufr_data_files.txt | awk -F : '{print $1}'`
 
 # Exclude BUFR files for various reasons:
 # ias1_240.bufr: Too large. The filter rules file generated is too big for the parser!

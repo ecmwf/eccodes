@@ -19,7 +19,7 @@ fTmp=${label}".tmp.bufr"
 #==============================================
 # Testing latest WMO tables
 #==============================================
-bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
+bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt | awk -F : '{print $1}'`
 REDIRECT=/dev/null
 
 blacklist=masterTablesVersionNumber

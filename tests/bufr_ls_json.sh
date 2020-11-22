@@ -31,7 +31,7 @@ set -e
 echo "Using $JSON_CHECK ..."
 
 
-bufr_files=`cat bufr_data_files.txt`
+bufr_files=`cat bufr_data_files.txt | awk -F : '{print $1}'`
 for file in ${bufr_files}
 do
   ${tools_dir}/bufr_ls -j $file > $tempLog

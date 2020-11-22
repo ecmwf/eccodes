@@ -41,7 +41,7 @@ cat > $fRules <<EOF
 print "[centre] [subCentre] [masterTablesVersionNumber] [localTablesVersionNumber] [numberOfSubsets]"; 
 EOF
 
-bufr_files=`cat bufr_data_files.txt`
+bufr_files=`cat bufr_data_files.txt | awk -F : '{print $1}'`
 for f in ${bufr_files} ; do
    echo "file: $f" >> $fLog
    ${tools_dir}/codes_bufr_filter $fRules $f >> $fLog

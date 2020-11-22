@@ -12,14 +12,16 @@ file(READ "bufr_ref_files.txt" bufr_refs_to_download)
 string(REGEX REPLACE "\n" ";" bufr_refs_to_download "${bufr_refs_to_download}")
 
 # Exceptional case: download bufr files which have to be treated specially
-list(APPEND bufr_refs_to_download "vos308014_v3_26.bufr")  # See test ecc-197
+list(APPEND bufr_refs_to_download "vos308014_v3_26.bufr:801bc5e9b9d887d45bdc1210a95afb9f")  # See test ecc-197
 
 if( ENABLE_EXTRA_TESTS )
     ecbuild_get_test_multidata(
          TARGET eccodes_download_bufrs
-         NOCHECK
+#       NOCHECK
         NAMES ${bufr_files_to_download} ${bufr_refs_to_download}
     )
+    set_tests_properties( eccodes_download_bufrs PROPERTIES FIXTURES_SETUP fixture_download_bufrs )
+
 endif()
 
 # Copy other files - e.g. text files etc from the source data/bufr dir

@@ -25,7 +25,7 @@ rm -f $fTmp
 #----------------------------------------------
 # Test default "ls" on all the bufr data files
 #----------------------------------------------
-bufr_files=`cat bufr_data_files.txt`
+bufr_files=`cat bufr_data_files.txt | awk -F : '{print $1}'`
 for f in ${bufr_files} ; do
    echo $f >> $fLog
    ${tools_dir}/bufr_ls $f >> $fLog

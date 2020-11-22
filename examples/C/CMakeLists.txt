@@ -139,13 +139,16 @@ foreach( test ${tests_sanity} )
                           LABELS       "sanity"
                           COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
 endforeach()
-foreach( test ${tests_extra} )
-        ecbuild_add_test( TARGET       eccodes_c_${test}
-                          TYPE         SCRIPT
-                          CONDITION    ENABLE_EXTRA_TESTS
-                          COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                          TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs )
-endforeach()
+
+if (ENABLE_EXTRA_TESTS)
+    foreach( test ${tests_extra} )
+            ecbuild_add_test( TARGET       eccodes_c_${test}
+                              TYPE         SCRIPT
+                              COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                              )
+	    set_tests_properties( eccodes_c_${test} PROPERTIES FIXTURES_REQUIRED "fixture_download_gribs;fixture_download_bufrs" )
+    endforeach()
+endif()
 
 ########################################################################
 # Tests which are conditional
@@ -160,7 +163,8 @@ if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
         ecbuild_add_test( TARGET       eccodes_c_${test}
                           TYPE         SCRIPT
                           COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                          TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs )
+                          )
+	set_tests_properties( eccodes_c_${test} PROPERTIES FIXTURES_REQUIRED "fixture_download_gribs;fixture_download_bufrs" )
     endforeach()
 endif()
 

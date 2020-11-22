@@ -57,7 +57,7 @@ rm -fr $temp_dir
 mkdir -p $temp_dir
 cd $temp_dir
 
-bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
+bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt | awk -F : '{print $1}'`
 for bf in ${bufr_files}; do
     b=${data_dir}/bufr/$bf
     echo "Doing $b"

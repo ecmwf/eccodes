@@ -34,7 +34,7 @@ echo "Using $JSON_CHECK ..."
 
 # Test downloaded BUFR files
 # -------------------------
-bufr_files=`cat bufr_data_files.txt`
+bufr_files=`cat bufr_data_files.txt | awk -F : '{print $1}'`
 for file in ${bufr_files}; do
   # Test the various JSON dump modes: 'structure', 'all' and 'flat'
   for mode in s a f; do

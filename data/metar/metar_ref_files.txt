@@ -1,2 +1,2 @@
-metar.txt.dump.ref
-metar.txt.ls.ref
+metar.txt.dump.ref:fcd3392baac25cc3d37d0d520e8a78ea
+metar.txt.ls.ref:429a1ea3648e030b3162a6326079a504

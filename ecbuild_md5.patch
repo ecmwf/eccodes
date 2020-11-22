@@ -1,0 +1,27 @@
+diff --git a/cmake/ecbuild_get_test_data.cmake b/cmake/ecbuild_get_test_data.cmake
+index ac1113e..5630898 100644
+--- a/cmake/ecbuild_get_test_data.cmake
++++ b/cmake/ecbuild_get_test_data.cmake
+@@ -217,7 +217,7 @@ function( ecbuild_get_test_data )
+                                 COMMAND ${CMAKE_COMMAND} -E md5sum ${_p_NAME} > ${_p_NAME}.localmd5
+                                 DEPENDS ${_p_NAME} )
+ 
+-            configure_file( "${ECBUILD_MACROS_DIR}/md5.in" ${_p_NAME}.md5 @ONLY )
++            configure_file( "${ECBUILD_MACROS_DIR}/md5.in" ${_p_NAME}.md5 @ONLY NEWLINE_STYLE LF )
+ 
+             add_custom_command( OUTPUT ${_p_NAME}.ok
+                                 COMMAND ${CMAKE_COMMAND} -E compare_files ${_p_NAME}.md5 ${_p_NAME}.localmd5 &&
+@@ -353,11 +353,11 @@ function( ecbuild_get_test_multidata )
+     ### check parameters
+ 
+     if( NOT _p_NAMES )
+-      ecbuild_critical("ecbuild_get_test_data() expects a NAMES")
++      ecbuild_critical("ecbuild_get_test_multidata() expects one or more NAMES")
+     endif()
+ 
+     if( NOT _p_TARGET )
+-      ecbuild_critical("ecbuild_get_test_data() expects a TARGET")
++      ecbuild_critical("ecbuild_get_test_multidata() expects a TARGET")
+     endif()
+ 
+ #    ecbuild_debug_var( _p_TARGET )

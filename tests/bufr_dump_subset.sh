@@ -57,7 +57,7 @@ ${tools_dir}/bufr_dump -p -S12 $input| grep 'stationOrSiteName="SANDE-GALLEBERG"
 #==============================================
 # Test all downloaded BUFR files
 #==============================================
-bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
+bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt | awk -F : '{print $1}'`
 for file in ${bufr_files}
 do
   # Every file has at least one subset

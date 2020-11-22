@@ -16,8 +16,9 @@ endif()
 if( ENABLE_EXTRA_TESTS )
     # Download all data files
     ecbuild_get_test_multidata( TARGET eccodes_download_gribs
-                            NOCHECK
-                            NAMES ${files_to_download} )
+#                               NOCHECK
+                                NAMES ${files_to_download} )
+    set_tests_properties( eccodes_download_gribs PROPERTIES FIXTURES_SETUP fixture_download_gribs )
 endif()
 
 # Copy other files - e.g. reference data, text files etc from the source data dir
