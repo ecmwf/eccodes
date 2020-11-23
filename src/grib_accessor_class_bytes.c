@@ -184,9 +184,9 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
      */
     int err = 0;
     grib_accessor_class* super = *(a->cclass->super);
-    const size_t expected_blen = 16;
+    const size_t expected_blen = 16; /* TODO: only 16 byte keys implemented */
     const size_t expected_slen = 2 * expected_blen;
-    unsigned char bytearray[16];
+    unsigned char bytearray[16] = {0,};
     size_t i = 0, slen = strlen(val);
     size_t blen = sizeof(bytearray);
 
