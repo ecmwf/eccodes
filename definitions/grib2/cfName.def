@@ -55,6 +55,12 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Snow depth
+'lwe_thickness_of_surface_snow_amount' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 11 ;
+	}
 #Sea surface practical salinity
 'sea_surface_salinity' = {
 	 discipline = 10 ;
@@ -251,16 +257,16 @@
 	 parameterNumber = 5 ;
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
-}
-#Convective precipitation
+	}
+#Albedo
+'surface_albedo' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 1 ;
+	}
+#Convective precipitation (water)
 'lwe_thickness_of_convective_precipitation_amount' = {
-  discipline = 0 ;
-  parameterCategory = 1 ;
-  parameterNumber = 10 ;
-}
-#Snow depth
-'lwe_thickness_of_surface_snow_amount' = {
- discipline = 0 ;
- parameterCategory = 1 ;
- parameterNumber = 11 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 10 ;
 }
