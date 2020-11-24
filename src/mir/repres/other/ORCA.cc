@@ -105,10 +105,23 @@ void ORCA::fill(grib_info& info) const {
     info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 
-    GribExtraSetting::set(info, "unstructuredGridType", type_.c_str());
-    GribExtraSetting::set(info, "unstructuredGridSubtype", subtypeLong_.c_str());
+#if 0
+    std::string type    = "ORCA2";            // eg. "ORCA2", "eORCA1", etc.
+    std::string subtype = "T grid";           // eg. "T grid", "U grid", "V grid", ...
+    std::string uuid    = atlasGridRef().uid();  // eg. "16076978a048410747dd7c9876677b28"
 
-    info.post.addBytes("uuidOfHGrid", "C0ffEEc0FFEEC0fFFeedDeadBeefBaff");
+    auto spec = atlasGridRef().spec();
+    ASSERT(spec.get("type", type) && !type.empty());
+    ASSERT(spec.get("subtype", subtype) && !subtype.empty());
+
+    GribExtraSetting::set(info, "unstructuredGridType", type.c_str());
+    GribExtraSetting::set(info, "unstructuredGridSubtype", subtype.c_str());
+    GribExtraSetting::set(info, "uuidOfHGrid", uuid.c_str());
+#endif
+
+    info.extra_set("unstructuredGridType", type_.c_str());
+    info.extra_set("unstructuredGridSubtype", subtypeLong_.c_str());
+    info.extra_set("uuidOfHGrid", "BeefBaffC0ffEEc0FFEEC0fFFeedDead");
 }
 
 

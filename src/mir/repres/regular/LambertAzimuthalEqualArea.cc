@@ -69,10 +69,10 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
     info.grid.Ni                                 = long(x_.size());
     info.grid.Nj                                 = long(y_.size());
 
-    GribExtraSetting::set(info, "DxInMetres", Dx);
-    GribExtraSetting::set(info, "DyInMetres", Dy);
-    GribExtraSetting::set(info, "standardParallelInDegrees", reference[LLCOORDS::LAT]);
-    GribExtraSetting::set(info, "centralLongitudeInDegrees", reference[LLCOORDS::LON]);
+    info.extra_set("DxInMetres", Dx);
+    info.extra_set("DyInMetres", Dy);
+    info.extra_set("standardParallelInDegrees", reference[LLCOORDS::LAT]);
+    info.extra_set("centralLongitudeInDegrees", reference[LLCOORDS::LON]);
 
     // some extra keys are edition-specific, so parent call is here
     RegularGrid::fill(info);

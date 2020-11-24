@@ -15,7 +15,6 @@
 
 #include <eccodes.h>
 
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -41,26 +40,21 @@ inline bool grib_call(int e, const char* call, bool missingOK = false) {
 #define GRIB_ERROR(a, b) grib_call(a, b)
 
 
-struct post_value_t {
-    virtual void set(codes_handle*) = 0;
-};
-
-
-struct post_t : std::vector<std::unique_ptr<post_value_t>> {
-    void addBytes(const std::string& key, const std::string& value);
-    void set(codes_handle*);
-};
-
-
 struct grib_info {
     grib_info();
+
+    void extra_set(const char* key, long);
+    void extra_set(const char* key, double);
+    void extra_set(const char* key, const char*);
+
     codes_util_grid_spec grid;
     codes_util_packing_spec packing;
-    post_t post;
 
 private:
     grib_info(const grib_info&) = delete;
     void operator=(const grib_info&) = delete;
+
+    std::vector<std::string> strings_;
 };
 
 
@@ -107,23 +101,6 @@ struct GribReorder {
     };
 
     static void reorder(std::vector<double>& values, long scanningMode, size_t Ni, size_t Nj);
-};
-
-
-struct GribExtraSetting {
-    static void set(grib_info&, const char* key, long);
-    static void set(grib_info&, const char* key, double);
-    static void set(grib_info&, const char* key, const char*);
-};
-
-
-struct Bytes {
-    using byte_t  = uint8_t;
-    using bytes_t = std::vector<byte_t>;
-
-    static byte_t to_byte(char nibble_hi, char nibble_lo);
-    static std::string to_string(const bytes_t&);
-    static bytes_t to_bytes(const std::string&);
 };
 
 
