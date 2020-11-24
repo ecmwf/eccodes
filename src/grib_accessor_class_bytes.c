@@ -184,20 +184,27 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
      */
     int err = 0;
     grib_accessor_class* super = *(a->cclass->super);
-    const size_t expected_blen = 16; /* TODO: only 16 byte keys implemented */
+    grib_context* c = a->context;
+    size_t nbytes = a->length;
+    const size_t expected_blen = nbytes;
     const size_t expected_slen = 2 * expected_blen;
-    unsigned char bytearray[16] = {0,};
+    unsigned char* bytearray = NULL;
     size_t i = 0, slen = strlen(val);
-    size_t blen = sizeof(bytearray);
 
     if (slen != expected_slen || *len != expected_slen) {
+        grib_context_log(c, GRIB_LOG_ERROR,"pack_string: key %s is %lu bytes. Expected a string with %lu characters",
+                         a->name, expected_blen, expected_slen);
         return GRIB_WRONG_ARRAY_SIZE;
     }
+
+    bytearray = (unsigned char*)grib_context_malloc(c, nbytes * (sizeof(unsigned char)));
+    if (!bytearray) return GRIB_OUT_OF_MEMORY;
 
     for (i = 0; i < (slen/2); i++) {
         unsigned int byteVal = 0;
         if (sscanf(val + 2*i, "%02x", &byteVal) != 1) {
-            grib_context_log(a->context, GRIB_LOG_ERROR,"pack_string: Invalid hex byte specfication '%.2s'",val + 2*i);
+            grib_context_log(c, GRIB_LOG_ERROR,"pack_string: Invalid hex byte specfication '%.2s'",val + 2*i);
+            grib_context_free(c, bytearray);
             return GRIB_INVALID_KEY_VALUE;
         }
         Assert(byteVal < 256);
@@ -205,6 +212,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     }
 
     /* Forward to base class to pack the byte array */
-    err = super->pack_bytes(a, bytearray, &blen);
+    err = super->pack_bytes(a, bytearray, &nbytes);
+    grib_context_free(c, bytearray);
     return err;
 }
