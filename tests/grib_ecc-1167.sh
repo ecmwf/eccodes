@@ -27,6 +27,10 @@ grib_check_key_equals $temp1 uuidOfHGrid '00000000000000000000000000000000'
 ${tools_dir}/grib_set -s uuidOfHGrid=DEfdBEef10203040b00b1e50001100FF $temp1 $temp2
 grib_check_key_equals $temp2 uuidOfHGrid 'defdbeef10203040b00b1e50001100ff'
 
+${tools_dir}/grib_set -s uuidOfHGrid:s=10991111111111111111115000110000 $temp1 $temp2
+grib_check_key_equals $temp2 uuidOfHGrid '10991111111111111111115000110000'
+
+exit 0
 # Test errors
 set +e
 # Invalid HEX
