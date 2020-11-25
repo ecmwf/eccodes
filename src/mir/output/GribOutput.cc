@@ -170,7 +170,14 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
 
     auto& user  = param.userParametrisation();
     auto& field = param.fieldParametrisation();
-    bool todo   = false;
+
+    std::string compatibility;
+    if (user.get("compatibility", compatibility) && !compatibility.empty()) {
+        plan.add(new action::io::Save(param, input, output));
+        return;
+    }
+
+    bool todo = false;
 
     long bits1 = -1;
     if (user.get("accuracy", bits1)) {
@@ -195,11 +202,6 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
             long edition2 = 0;
             todo          = field.get("edition", edition2) ? edition2 != edition1 : true;
         }
-    }
-
-    if (!todo) {
-        std::string compatibility;
-        todo = user.get("compatibility", compatibility) && !compatibility.empty();
     }
 
     if (todo) {
