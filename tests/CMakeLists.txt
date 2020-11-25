@@ -33,6 +33,7 @@ list(APPEND test_bins
     bufr_check_descriptors
     grib_sh_ieee64
     ieee
+    grib_set_bytes
     grib_sh_imag
     grib_sh_spectral_complex
     grib_lam_bf
@@ -60,6 +61,7 @@ if( HAVE_BUILD_TOOLS )
         definitions
         grib_calendar
         grib_md5
+        grib_cfNames
         filter_substr
         grib_uerra
         grib_2nd_order_numValues
@@ -69,6 +71,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1150
         grib_ecc-1053
         grib_ecc-1065
+        grib_ecc-1167
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
@@ -138,6 +141,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1000
         grib_ecc-1001
         grib_ecc-1030
+        grib_set_bytes
         bufr_ecc-556
         gts_get
         gts_ls
@@ -158,6 +162,7 @@ if( HAVE_BUILD_TOOLS )
         grib2to1
         grib1to3
         grib2to3
+        grib2_templates
         grib3_templates
         badgrib
         grib_ls
