@@ -541,6 +541,15 @@
 	 aerosolType = 62003 ;
 	 is_aerosol_optical = 1 ;
 	}
+#Ammonium aerosol mass mixing ratio
+'211249' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
 #Dry deposition of ammonium aerosol
 '215206' = {
 	 discipline = 0 ;

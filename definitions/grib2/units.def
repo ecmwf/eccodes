@@ -541,6 +541,15 @@
 	 is_aerosol_optical = 1 ;
 	 typeOfSizeInterval = 255 ;
 	}
+#Ammonium aerosol mass mixing ratio
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
 #Dry deposition of ammonium aerosol
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
