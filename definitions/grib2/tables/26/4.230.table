@@ -102,8 +102,8 @@
 10053 10053 3-hydroxypropyl dioxidanyl radical HOCH2CH2CH2OO
 10054 10054 3-hydroxypropyl hydroperoxide HOCH2CH2CH2OOH
 10055 10055 methyl-peroxy-nitrate (nitroperoxy-methane) CH_3OONO_2
-10056 10056 2-lambda^1-Oxidanyloxy-2-methylbut-3-en-1-ol (4-Hydroxy-3-methyl-1-butene-3-ylperoxy radical) HOCH_2C(CH_3)CHCH_2
-10057 10057 2-lambda^1-Oxidanyloxy-3-methylbut-3-en-1-ol (2-Hydroxy-1-isopropenylethylperoxy radical) HOCH_2CHC(CH_3)CH_2
+10056 10056 2-lambda^1-Oxidanyloxy-2-methylbut-3-en-1-ol (4-Hydroxy-3-methyl-1-butene-3-ylperoxy radical) HOCH_2C(CH_3)(OO)CHCH_2
+10057 10057 2-lambda^1-Oxidanyloxy-3-methylbut-3-en-1-ol (2-Hydroxy-1-isopropenylethylperoxy radical) HOCH_2CH(OO)C(CH_3)CH_2
 10058 10058 (Z)-4-Hydroperoxy-2-methyl-2-butenal CH2(OOH)CHC(CH_3)CHO
 10059 10059 (Z)-4-Hydroperoxy-3-methyl-2-butenal CH2(OOH)C(CH_3)CHCHO
 # 10060-10499 Reserved for other simple organic molecules e.g. higher aldehydes alcohols
