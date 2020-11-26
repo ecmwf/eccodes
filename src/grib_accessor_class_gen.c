@@ -390,7 +390,8 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
             len = 1;
             ret = grib_expression_evaluate_long(hand, e, &lval);
             if (ret != GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to set %s as long", a->name);
+                grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to set %s as long (from %s)",
+                                 a->name, e->cclass->name);
                 return ret;
             }
             /*if (hand->context->debug)
@@ -401,6 +402,11 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
         case GRIB_TYPE_DOUBLE: {
             len = 1;
             ret = grib_expression_evaluate_double(hand, e, &dval);
+            if (ret != GRIB_SUCCESS) {
+                grib_context_log(a->context, GRIB_LOG_ERROR, "unable to set %s as double (from %s)",
+                                 a->name, e->cclass->name);
+                return ret;
+            }
             /*if (hand->context->debug)
                 printf("ECCODES DEBUG grib_accessor_class_gen::pack_expression %s %g\n", a->name, dval);*/
             return grib_pack_double(a, &dval, &len);
@@ -411,7 +417,8 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
             len  = sizeof(tmp);
             cval = grib_expression_evaluate_string(hand, e, tmp, &len, &ret);
             if (ret != GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "unable to set %s as string", a->name);
+                grib_context_log(a->context, GRIB_LOG_ERROR, "unable to set %s as string (from %s)",
+                                 a->name, e->cclass->name);
                 return ret;
             }
             len = strlen(cval);
