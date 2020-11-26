@@ -72,6 +72,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1053
         grib_ecc-1065
         grib_ecc-1167
+        grib_ecc-1170
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
