@@ -1,4 +1,4 @@
-if( HAVE_PYTHON )
+if( HAVE_PYTHON2 )
 
     #find_package( SWIG )
     #if( SWIG_FOUND )

@@ -180,7 +180,7 @@ def example():
             print("step  latitude  longitude   pressure  latitude   longitude    wind")
             for s in range(len(timePeriod)):
                 if data[m][s][0] != CODES_MISSING_DOUBLE and data[m][s][1] != CODES_MISSING_DOUBLE:
-                    print(" {0:>3d}{0}{0:>6.1f}{0}{0:>6.1f}{0}{0:>8.1f}{0}{0:>6.1f}{0}{0:>6.1f}{0}{0:>6.1f}".format(
+                    print(" {0:>3d}{1}{2:>6.1f}{3}{4:>6.1f}{5}{6:>8.1f}{7}{8:>6.1f}{9}{10:>6.1f}{11}{12:>6.1f}".format(
                         timePeriod[s], '  ', data[m][s][0], '     ', data[m][s][1], '     ', data[m][s][2], '  ',
                         data[m][s][3], '     ', data[m][s][4], '     ', data[m][s][5]))
 

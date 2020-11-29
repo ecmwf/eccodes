@@ -3299,6 +3299,26 @@
 	 parameterCategory = 211 ;
 	 parameterNumber = 120 ;
 	}
+#Nitrate fine mode aerosol mass mixing ratio
+'aermr16diff' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Nitrate coarse mode aerosol mass mixing ratio
+'aermr17diff' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
+	}
 #Experimental product
 'p1.212' = {
 	 discipline = 192 ;

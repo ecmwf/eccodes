@@ -8,6 +8,7 @@ dist_definitions_DATA = \
 	./installDefinitions.sh\
 	./mars_param.table\
 	./param_id.table\
+	./param_limits.def\
 	./parameters_version.def\
 	./publish_new_parameters.sh\
 	./stepUnits.table
@@ -19281,10 +19282,6 @@ dist_definitionsmetar_DATA = \
 	metar/wind_Trend4.def\
 	metar/wind_shear.def\
 	metar/wrong_delayed.def
-
-definitionsmetar_stationsdir = @ECCODES_DEFINITION_PATH@/metar/stations
-dist_definitionsmetar_stations_DATA = \
-	metar/stations/nsd_cccc.txt
 
 definitionstafdir = @ECCODES_DEFINITION_PATH@/taf
 dist_definitionstaf_DATA = \

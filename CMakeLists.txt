@@ -18,12 +18,10 @@
 
 cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 
-set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake" )
-find_package( ecbuild 3.4 REQUIRED )
+find_package( ecbuild 3.4 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 
 # Initialise project
-project( eccodes VERSION 2.19.0 LANGUAGES C )
-
+project( eccodes VERSION 2.20.0 LANGUAGES C )
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
@@ -71,6 +69,9 @@ ecbuild_add_option( FEATURE PRODUCT_GRIB
 ecbuild_add_option( FEATURE PRODUCT_BUFR
     DESCRIPTION "Support for the product BUFR"
     DEFAULT ON )
+if( NOT HAVE_PRODUCT_GRIB AND NOT HAVE_PRODUCT_BUFR )
+    ecbuild_critical("Cannot disable both GRIB and BUFR! Please specify just one option")
+endif()
 
 ecbuild_add_option( FEATURE EXAMPLES
     DESCRIPTION "Build the examples"
@@ -119,7 +120,7 @@ ecbuild_add_option( FEATURE AEC
 
 ecbuild_find_python( VERSION 2.6 NO_LIBS )
 find_package( NumPy )
-ecbuild_add_option( FEATURE PYTHON
+ecbuild_add_option( FEATURE PYTHON2
     DESCRIPTION "Build the ecCodes Python2 interface (deprecated)"
     DEFAULT OFF
     #CONDITION Python_FOUND AND NumPy_FOUND
@@ -150,7 +151,6 @@ endif()
 ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
-    CONDITION ECCODES_HAVE_FMEMOPEN OR ECCODES_HAVE_FUNOPEN OR (EC_OS_NAME MATCHES "windows")
     REQUIRED_PACKAGES PythonInterp )
 
 #if( HAVE_MEMFS AND "${CMAKE_C_COMPILER_ID}" STREQUAL "Cray")
@@ -425,8 +425,8 @@ add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
 ecbuild_dont_pack( DIRS
-     concepts tests.ecmwf doxygen confluence templates parameters java
-     perl config m4 rpms gaussian_experimental gribex examples/F77
+     experimental doxygen confluence tests/tests.ecmwf
+     config m4 rpms examples/F77
      examples/examples.dev examples/extra examples/deprecated bamboo
      fortran/fortranCtypes tigge/tools share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
@@ -454,7 +454,7 @@ ecbuild_pkgconfig(
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
   VARIABLES      HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                 HAVE_NETCDF HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
+                 HAVE_NETCDF HAVE_PYTHON2 HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
 if( HAVE_FORTRAN )
   ecbuild_pkgconfig(
@@ -466,7 +466,7 @@ if( HAVE_FORTRAN )
                         ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
     VARIABLES           HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                         HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                        HAVE_NETCDF HAVE_PYTHON HAVE_PNG HAVE_AEC
+                        HAVE_NETCDF HAVE_PYTHON2 HAVE_PNG HAVE_AEC
   )
 endif()
 
@@ -489,7 +489,7 @@ ecbuild_info("   |  ecCodes version ${eccodes_VERSION}  |")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("")
 
-if( HAVE_PYTHON )
+if( HAVE_PYTHON2 )
   ecbuild_deprecate("Python2 support is deprecated and will be discontinued")
 endif()
 

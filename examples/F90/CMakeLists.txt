@@ -18,8 +18,8 @@ if( HAVE_BUILD_TOOLS )
           bufr_copy_message
           grib_get_keys
           grib_get_data
-          get_pl
-          get_pv
+          grib_get_pl
+          grib_get_pv
           grib_keys_iterator
           grib_multi_write
           grib_multi
@@ -33,9 +33,9 @@ if( HAVE_BUILD_TOOLS )
           grib_count_messages
           grib_count_messages_multi
           grib_copy_namespace
-          read_message
+          grib_read_message
           read_from_file
-          get_set_uuid
+          grib_get_set_uuid
           grib_clone
           bufr_attributes
           bufr_copy_data
@@ -63,8 +63,8 @@ else()
           grib_index
           grib_get_keys
           grib_get_data
-          get_pl
-          get_pv
+          grib_get_pl
+          grib_get_pv
           grib_keys_iterator
           grib_multi
           grib_nearest

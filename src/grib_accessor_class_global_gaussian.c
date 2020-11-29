@@ -237,7 +237,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     lats = (double*)grib_context_malloc(c, sizeof(double) * N * 2);
     if (!lats) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "global_gaussian unpack_long: Memory allocation error: %d bytes", sizeof(double) * N * 2);
+                         "global_gaussian unpack_long: Memory allocation error: %ld bytes", sizeof(double) * N * 2);
         return GRIB_OUT_OF_MEMORY;
     }
     if ((ret = grib_get_gaussian_latitudes(N, lats)) != GRIB_SUCCESS)
@@ -323,7 +323,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     lats = (double*)grib_context_malloc(c, sizeof(double) * N * 2);
     if (!lats) {
         grib_context_log(c, GRIB_LOG_FATAL,
-                         "global_gaussian pack_long: Memory allocation error: %d bytes", sizeof(double) * N * 2);
+                         "global_gaussian pack_long: Memory allocation error: %ld bytes", sizeof(double) * N * 2);
         return GRIB_OUT_OF_MEMORY;
     }
     if ((ret = grib_get_gaussian_latitudes(N, lats)) != GRIB_SUCCESS)
