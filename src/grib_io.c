@@ -1771,7 +1771,7 @@ static int count_product_in_file(grib_context* c, FILE* f, ProductKind product, 
     return err == GRIB_END_OF_FILE ? 0 : err;
 }
 
-int codes_extract_offsets_malloc(grib_context* c, FILE* f, ProductKind product, off_t** offsets, size_t* length, int strict_mode)
+int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductKind product, off_t** offsets, int* length, int strict_mode)
 {
     int err      = 0;
     void* mesg   = NULL;
@@ -1779,6 +1779,7 @@ int codes_extract_offsets_malloc(grib_context* c, FILE* f, ProductKind product, 
     off_t offset = 0;
     int num_messages = 0, i = 0;
     decoder_proc decoder = NULL;
+    FILE* f = NULL;
 
     decoder = get_reader_for_product(product);
     if (!decoder) {
@@ -1786,19 +1787,28 @@ int codes_extract_offsets_malloc(grib_context* c, FILE* f, ProductKind product, 
         return GRIB_INVALID_ARGUMENT;
     }
     if (!c) c = grib_context_get_default();
+    f = fopen(filename, "rb");
+    if (!f) {
+        grib_context_log(c, GRIB_LOG_ERROR, "codes_extract_offsets_malloc: Unable to read file \"%s\"", filename);
+        perror(filename);
+        return GRIB_IO_PROBLEM;
+    }
 
     err = count_product_in_file(c, f, product, &num_messages);
     if (err) {
         grib_context_log(c, GRIB_LOG_ERROR, "codes_extract_offsets_malloc: Unable to count messages");
+        fclose(f);
         return err;
     }
     *length = num_messages;
     if (num_messages == 0) {
         grib_context_log(c, GRIB_LOG_ERROR, "codes_extract_offsets_malloc: No messages in file");
+        fclose(f);
         return GRIB_INVALID_MESSAGE;
     }
     *offsets = (off_t*)calloc(num_messages, sizeof(off_t));
     if (!*offsets) {
+        fclose(f);
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1815,6 +1825,7 @@ int codes_extract_offsets_malloc(grib_context* c, FILE* f, ProductKind product, 
         if (mesg && err) {
             if (strict_mode) {
                 grib_context_free(c, mesg);
+                fclose(f);
                 return GRIB_DECODING_ERROR;
             }
         }
@@ -1823,6 +1834,7 @@ int codes_extract_offsets_malloc(grib_context* c, FILE* f, ProductKind product, 
                 /* An error occurred */
                 grib_context_log(c, GRIB_LOG_ERROR, "codes_extract_offsets_malloc: Unable to read message");
                 if (strict_mode) {
+                    fclose(f);
                     return GRIB_DECODING_ERROR;
                 }
             }
@@ -1830,5 +1842,6 @@ int codes_extract_offsets_malloc(grib_context* c, FILE* f, ProductKind product, 
         ++i;
     }
 
+    fclose(f);
     return err;
 }
