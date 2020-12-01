@@ -11,7 +11,6 @@
 #include "eccodes.h"
 #include <assert.h>
 
-
 int main(int argc, char* argv[])
 {
     char *filename;
@@ -29,7 +28,7 @@ int main(int argc, char* argv[])
     if (err) return err;
     
     for (i = 0; i < num_messages; ++i) {
-        printf("%lu\n", offsets[i]);
+        printf("%lu\n", (unsigned long)offsets[i]);
     }
     free(offsets);
     return 0;
