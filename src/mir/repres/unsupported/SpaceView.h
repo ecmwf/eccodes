@@ -31,7 +31,7 @@ public:
 
     // -- Destructor
 
-    virtual ~SpaceView();  // Change to virtual if base class
+    virtual ~SpaceView() override;  // Change to virtual if base class
 
     // -- Convertors
     // None

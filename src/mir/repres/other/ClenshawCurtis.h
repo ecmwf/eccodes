@@ -44,7 +44,7 @@ public:
 
     // -- Destructor
 
-    virtual ~ClenshawCurtis();
+    virtual ~ClenshawCurtis() override;
 
     // -- Convertors
     // None
