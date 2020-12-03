@@ -33,7 +33,7 @@ Lambert::Lambert(const param::MIRParametrisation& param) : RegularGrid(param, ma
     param.get("edition", edition);
 
     // GRIB1 cannot write LaD
-    writeLaDInDegrees_ = edition != 1;
+    writeLaDInDegrees_ = edition == 2;
     param.get("writeLaDInDegrees", writeLaDInDegrees_);
 
     // GRIB2 cannot write negative longitude values
@@ -78,7 +78,7 @@ void Lambert::fill(grib_info& info) const {
     Point2 firstLL   = grid_.projection().lonlat(first);
     Point2 reference = grid_.projection().lonlat({0., 0.});
 
-    info.grid.latitudeOfFirstGridPointInDegrees  = firstLL[LLCOORDS::LAT];
+    info.grid.latitudeOfFirstGridPointInDegrees = firstLL[LLCOORDS::LAT];
     info.grid.longitudeOfFirstGridPointInDegrees =
         writeLonPositive_ ? util::normalise_longitude(firstLL[LLCOORDS::LON], 0) : firstLL[LLCOORDS::LON];
 

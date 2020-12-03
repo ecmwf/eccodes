@@ -18,6 +18,7 @@
 #include <set>
 #include <utility>
 
+#include "eckit/config/Resource.h"
 #include "eckit/exception/Exceptions.h"
 #include "eckit/filesystem/PathName.h"
 #include "eckit/serialisation/FileStream.h"
@@ -26,8 +27,11 @@
 
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
+#include "mir/iterator/UnstructuredIterator.h"
+#include "mir/key/grid/ORCAPattern.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
+#include "mir/repres/other/ORCA.h"
 #include "mir/util/Assert.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
@@ -49,12 +53,7 @@ UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation& parametrisat
     }
     ASSERT(latitudes_.size() == longitudes_.size());
 
-    bool checkDuplicatePoints = true;
-    parametrisation.get("check-duplicate-points", checkDuplicatePoints);
-
-    if (checkDuplicatePoints) {
-        check("UnstructuredGrid from MIRParametrisation", latitudes_, longitudes_);
-    }
+    check("UnstructuredGrid from MIRParametrisation", latitudes_, longitudes_);
 }
 
 
@@ -100,10 +99,9 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName& path) {
 
 void UnstructuredGrid::save(const eckit::PathName& path, const std::vector<double>& latitudes,
                             const std::vector<double>& longitudes, bool binary) {
+    eckit::Log::info() << "UnstructuredGrid::save " << path << std::endl;
 
     check("UnstructuredGrid save to " + path.asString(), latitudes, longitudes);
-
-    eckit::Log::info() << "UnstructuredGrid::save " << path << std::endl;
 
     ASSERT(latitudes.size() == longitudes.size());
     if (binary) {
@@ -242,39 +240,8 @@ const Gridded* UnstructuredGrid::croppedRepresentation(const util::BoundingBox& 
 }
 
 
-class UnstructuredGridIterator : public Iterator {
-
-    size_t i_;
-    const size_t size_;
-    const std::vector<double>& latitudes_;
-    const std::vector<double>& longitudes_;
-
-    void print(std::ostream& out) const {
-        out << "UnstructuredGridIterator[";
-        Iterator::print(out);
-        out << "]";
-    }
-
-    bool next(Latitude& lat, Longitude& lon) {
-        if (i_ < size_) {
-            lat = latitudes_[i_];
-            lon = longitudes_[i_];
-            i_++;
-            return true;
-        }
-        return false;
-    }
-
-public:
-    UnstructuredGridIterator(const std::vector<double>& latitudes, const std::vector<double>& longitudes) :
-        i_(0), size_(latitudes.size()), latitudes_(latitudes), longitudes_(longitudes) {
-        ASSERT(latitudes_.size() == longitudes_.size());
-    }
-};
-
-
 Iterator* UnstructuredGrid::iterator() const {
-    return new UnstructuredGridIterator(latitudes_, longitudes_);
+    return new iterator::UnstructuredIterator(latitudes_, longitudes_);
 }
 
 
@@ -295,6 +262,10 @@ bool UnstructuredGrid::includesSouthPole() const {
 
 void UnstructuredGrid::check(const std::string& title, const std::vector<double>& latitudes,
                              const std::vector<double>& longitudes) {
+    static bool checkDuplicatePoints = eckit::Resource<bool>("$MIR_CHECK_DUPLICATE_POINTS", true);
+    if (!checkDuplicatePoints) {
+        return;
+    }
 
     ASSERT(latitudes.size() == longitudes.size());
     ASSERT(!longitudes.empty());
@@ -323,5 +294,21 @@ static RepresentationBuilder<UnstructuredGrid> unstructured_grid("unstructured_g
 
 
 }  // namespace other
+
+
+template <>
+Representation* RepresentationBuilder<other::UnstructuredGrid>::make(const param::MIRParametrisation& param) {
+    // specially-named unstructured grids
+    std::string grid;
+    if (param.get("grid", grid)) {
+        if (key::grid::ORCAPattern::match(grid)) {
+            return new other::ORCA(param);
+        }
+    }
+
+    return new other::UnstructuredGrid(param);
+}
+
+
 }  // namespace repres
 }  // namespace mir

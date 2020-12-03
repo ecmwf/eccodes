@@ -93,3 +93,11 @@ void GribExtraSetting::set(grib_info& info, const char* key, double value) {
     set.double_value = value;
     set.type         = CODES_TYPE_DOUBLE;
 }
+
+
+void GribExtraSetting::set(grib_info& info, const char* key, const char* value) {
+    auto& set        = info.packing.extra_settings[info.packing.extra_settings_count++];
+    set.name         = key;
+    set.string_value = value;
+    set.type         = CODES_TYPE_STRING;
+}

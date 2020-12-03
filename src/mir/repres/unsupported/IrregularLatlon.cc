@@ -145,14 +145,16 @@ void IrregularLatlon::fill(util::MeshGeneratorParameters& params) const {
 
 
 util::Domain IrregularLatlon::domain() const {
-    return util::Domain(includesNorthPole() ? Latitude::NORTH_POLE.value() : north_, west_,
-                        includesSouthPole() ? Latitude::SOUTH_POLE.value() : south_,
-                        isPeriodicWestEast() ? west_ + Longitude::GLOBE.value() : east_);
+    const Latitude n  = includesNorthPole() ? Latitude::NORTH_POLE.value() : north_;
+    const Latitude s  = includesSouthPole() ? Latitude::SOUTH_POLE.value() : south_;
+    const Longitude w = west_;
+    const Longitude e = isPeriodicWestEast() ? west_ + Longitude::GLOBE.value() : east_;
+
+    return util::Domain(n, w, s, e);
 }
 
 
 class IrregularLatlonIterator : public Iterator {
-
     size_t count_;
     size_t i_;
     size_t ni_;

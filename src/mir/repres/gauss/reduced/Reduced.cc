@@ -337,7 +337,7 @@ std::vector<util::GridBox> Reduced::gridBoxes() const {
 
 
 void Reduced::fill(api::MIRJob& job) const {
-    ASSERT(isGlobal());
+    Gaussian::fill(job);
     job.set("pl", pls());
 }
 
@@ -477,10 +477,10 @@ util::BoundingBox Reduced::extendBoundingBox(const util::BoundingBox& bbox) cons
                 auto Nw = (west / inc).integralPart() - 1;
                 auto Ne = (east / inc).integralPart() + 1;
 
-                if (w > Nw * inc || first) {
+                if (w > Longitude(Nw * inc) || first) {
                     w = Nw * inc;
                 }
-                if (e < Ne * inc || first) {
+                if (e < Longitude(Ne * inc) || first) {
                     e = Ne * inc;
                 }
                 first = false;

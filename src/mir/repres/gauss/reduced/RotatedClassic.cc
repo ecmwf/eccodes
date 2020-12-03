@@ -61,8 +61,9 @@ void RotatedClassic::fill(grib_info& info) const {
 }
 
 
-void RotatedClassic::fill(api::MIRJob&) const {
-    NOTIMP;
+void RotatedClassic::fill(api::MIRJob& job) const {
+    Classic::fill(job);
+    rotation_.fill(job);
 }
 
 

@@ -17,7 +17,6 @@
 
 #include "mir/api/Atlas.h"
 #include "mir/repres/Gridded.h"
-#include "mir/util/Domain.h"
 
 
 namespace mir {
@@ -80,9 +79,15 @@ protected:
 private:
     // -- Members
 
-    const std::string name_;
+    std::string name_;
+    std::string type_;
+    std::string subtypeLong_;
+    char subtype_;
+
+    std::vector<double> latitudes_;
+    std::vector<double> longitudes_;
+
     ::atlas::Grid grid_;
-    util::Domain domain_;
 
     // -- Methods
     // None
@@ -93,14 +98,17 @@ private:
     bool sameAs(const Representation&) const override;
     void validate(const MIRValuesVector&) const;
     size_t numberOfPoints() const;
-    void fill(grib_info&) const;
     void makeName(std::ostream&) const;
 
-    bool includesNorthPole() const { return domain_.includesPoleNorth(); }
-    bool includesSouthPole() const { return domain_.includesPoleSouth(); }
-    bool isPeriodicWestEast() const { return domain_.isPeriodicWestEast(); }
+    void fill(grib_info&) const;
+    void fill(util::MeshGeneratorParameters&) const;
+
+    bool includesNorthPole() const { return true; }
+    bool includesSouthPole() const { return true; }
+    bool isPeriodicWestEast() const { return true; }
 
     Iterator* iterator() const;
+    atlas::Grid atlasGrid() const;
 
     // -- Class members
     // None
