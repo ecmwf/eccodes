@@ -10,8 +10,8 @@
  */
 
 
-#ifndef SpaceView_H
-#define SpaceView_H
+#ifndef mir_repres_SpaceView_h
+#define mir_repres_SpaceView_h
 
 #include "mir/repres/Gridded.h"
 
@@ -31,7 +31,7 @@ public:
 
     // -- Destructor
 
-    virtual ~SpaceView() override;  // Change to virtual if base class
+    ~SpaceView() override;
 
     // -- Convertors
     // None
@@ -56,7 +56,7 @@ protected:
 
     // -- Methods
 
-    void print(std::ostream&) const override;  // Change to virtual if base class
+    void print(std::ostream&) const override;
 
     // -- Overridden methods
     // None
@@ -84,7 +84,7 @@ private:
 
     // -- Overridden methods
 
-    virtual void fill(grib_info&) const override;
+    void fill(grib_info&) const override;
 
     // -- Class members
     // None
@@ -93,12 +93,12 @@ private:
     // None
 
     // -- Friends
-
-    // friend ostream& operator<<(ostream& s,const SpaceView& p)
-    //	{ p.print(s); return s; }
+    // None
 };
 
 
 }  // namespace repres
 }  // namespace mir
+
+
 #endif

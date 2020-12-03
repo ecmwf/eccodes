@@ -37,7 +37,7 @@ public:
 
     // -- Destructor
 
-    virtual ~ORCA() override;
+    ~ORCA() override;
 
     // -- Convertors
     // None

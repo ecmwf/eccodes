@@ -44,7 +44,7 @@ public:
 
     // -- Destructor
 
-    virtual ~ClenshawCurtis() override;
+    ~ClenshawCurtis() override;
 
     // -- Convertors
     // None
@@ -100,21 +100,21 @@ private:
     // -- Overridden methods
 
     // From Representation
-    virtual Iterator* iterator() const override;
-    virtual atlas::Grid atlasGrid() const override;
-    virtual bool extendBoundingBoxOnIntersect() const override;
-    virtual bool sameAs(const Representation&) const override;
-    virtual size_t numberOfPoints() const override;
-    virtual std::vector<util::GridBox> gridBoxes() const override;
-    virtual void fill(grib_info&) const override;
-    virtual void fill(util::MeshGeneratorParameters&) const override;
-    virtual void makeName(std::ostream&) const override;
-    virtual void validate(const MIRValuesVector&) const override;
+    Iterator* iterator() const override;
+    atlas::Grid atlasGrid() const override;
+    bool extendBoundingBoxOnIntersect() const override;
+    bool sameAs(const Representation&) const override;
+    size_t numberOfPoints() const override;
+    std::vector<util::GridBox> gridBoxes() const override;
+    void fill(grib_info&) const override;
+    void fill(util::MeshGeneratorParameters&) const override;
+    void makeName(std::ostream&) const override;
+    void validate(const MIRValuesVector&) const override;
 
     // From Gridded
-    virtual bool getLongestElementDiagonal(double&) const override;
-    virtual void estimate(api::MIREstimation&) const override;
-    virtual util::Domain domain() const override;
+    bool getLongestElementDiagonal(double&) const override;
+    void estimate(api::MIREstimation&) const override;
+    util::Domain domain() const override;
 
     // // From Representation
     // virtual const Representation* croppedRepresentation(const util::BoundingBox&) const;
