@@ -68,7 +68,7 @@ protected:
     // -- Overridden methods
 
     // from Representation
-    void print(std::ostream&) const;
+    void print(std::ostream&) const override;
 
     // -- Class members
     // None
@@ -96,19 +96,19 @@ private:
 
     // from Representation
     bool sameAs(const Representation&) const override;
-    void validate(const MIRValuesVector&) const;
-    size_t numberOfPoints() const;
-    void makeName(std::ostream&) const;
+    void validate(const MIRValuesVector&) const override;
+    size_t numberOfPoints() const override;
+    void makeName(std::ostream&) const override;
 
-    void fill(grib_info&) const;
-    void fill(util::MeshGeneratorParameters&) const;
+    void fill(grib_info&) const override;
+    void fill(util::MeshGeneratorParameters&) const override;
 
-    bool includesNorthPole() const { return true; }
-    bool includesSouthPole() const { return true; }
-    bool isPeriodicWestEast() const { return true; }
+    bool includesNorthPole() const override { return true; }
+    bool includesSouthPole() const override { return true; }
+    bool isPeriodicWestEast() const override { return true; }
 
-    Iterator* iterator() const;
-    atlas::Grid atlasGrid() const;
+    Iterator* iterator() const override;
+    atlas::Grid atlasGrid() const override;
 
     // -- Class members
     // None
