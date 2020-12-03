@@ -44,7 +44,7 @@ public:
 
     // -- Destructor
 
-    virtual ~ClenshawCurtis();
+    virtual ~ClenshawCurtis() override;
 
     // -- Convertors
     // None
@@ -104,7 +104,7 @@ private:
     virtual atlas::Grid atlasGrid() const;
     virtual bool extendBoundingBoxOnIntersect() const;
     virtual bool isGlobal() const;
-    virtual bool sameAs(const Representation&) const;
+    virtual bool sameAs(const Representation&) const override;
     virtual size_t numberOfPoints() const;
     virtual std::vector<util::GridBox> gridBoxes() const;
     virtual void fill(grib_info&) const;

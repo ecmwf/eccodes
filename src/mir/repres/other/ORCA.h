@@ -38,7 +38,7 @@ public:
 
     // -- Destructor
 
-    virtual ~ORCA();
+    virtual ~ORCA() override;
 
     // -- Convertors
     // None
@@ -90,7 +90,7 @@ private:
     // -- Overridden methods
 
     // from Representation
-    bool sameAs(const Representation&) const;
+    bool sameAs(const Representation&) const override;
     void validate(const MIRValuesVector&) const;
     size_t numberOfPoints() const;
     void fill(grib_info&) const;
