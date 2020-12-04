@@ -14,8 +14,6 @@
 
 #include <iostream>
 
-#include "eckit/exception/Exceptions.h"
-
 
 namespace mir {
 namespace repres {
@@ -24,24 +22,13 @@ namespace repres {
 SpaceView::SpaceView(const param::MIRParametrisation& /*parametrisation*/) {}
 
 
-SpaceView::SpaceView() = default;
-
-
-SpaceView::~SpaceView() = default;
-
-
 void SpaceView::print(std::ostream& out) const {
     out << "SpaceView["
         << "]";
 }
 
 
-void SpaceView::fill(grib_info& /*info*/) const {
-    NOTIMP;
-}
-
-
-static RepresentationBuilder<SpaceView> spaceView("space_view");
+static RepresentationBuilder<SpaceView> __repres("space_view");
 
 
 }  // namespace repres

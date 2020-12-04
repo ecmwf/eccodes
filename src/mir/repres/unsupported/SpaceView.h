@@ -28,18 +28,20 @@ public:
     // -- Constructors
 
     SpaceView(const param::MIRParametrisation&);
+    SpaceView(const SpaceView&) = delete;
 
     // -- Destructor
-
-    ~SpaceView() override;
+    // None
 
     // -- Convertors
     // None
 
     // -- Operators
-    // None
+
+    SpaceView& operator=(const SpaceView&) = delete;
 
     // -- Methods
+    // // None
 
     // -- Overridden methods
     // None
@@ -68,23 +70,14 @@ protected:
     // None
 
 private:
-    SpaceView();
-
-    // No copy allowed
-
-    SpaceView(const SpaceView&);
-    SpaceView& operator=(const SpaceView&);
-
     // -- Members
-
+    // None
 
     // -- Methods
     // None
 
-
     // -- Overridden methods
-
-    void fill(grib_info&) const override;
+    // None
 
     // -- Class members
     // None
