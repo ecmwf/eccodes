@@ -27,8 +27,20 @@ ${tools_dir}/grib_set -s gridType=unstructured_grid,unstructuredGridType=ORCA1,u
 ${tools_dir}/grib_compare $temp1 $temp2
 grib_check_key_equals $temp2 'numberOfGridInReference,numberOfGridUsed,gridName' '4 2 ORCA1_W'
 
+# Test bad values
+# ---------------
+${tools_dir}/grib_set -s gridType=unstructured_grid $sample $temp1
+set +e
+${tools_dir}/grib_set -s unstructuredGridType=bad $temp1 $temp2 2>/dev/null
+status1=$?
+${tools_dir}/grib_set -s unstructuredGridSubtype=sad $temp1 $temp2 2>/dev/null
+status2=$?
+set -e
+[ $status1 -ne 0 ]
+[ $status2 -ne 0 ]
 
 # Test some lat/lon parameters
+# -----------------------------
 ${tools_dir}/grib_set -s paramId=250003 $sample $temp1
 grib_check_key_equals $temp1 'unstructuredGridSubtype' 'T'
 
