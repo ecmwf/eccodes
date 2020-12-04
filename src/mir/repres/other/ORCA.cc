@@ -68,9 +68,8 @@ ORCA::ORCA(const std::string& name) : Gridded(util::BoundingBox()) {
         type_.front() = 'e';
     }
 
-    subtype_     = match[2].str().front();
-    subtypeLong_ = subtype_ + std::string(" grid");
-    name_        = type_ + '_' + subtype_;
+    subtype_ = match[2].str().front();
+    name_    = type_ + '_' + subtype_;
 }
 
 
@@ -106,22 +105,18 @@ void ORCA::fill(grib_info& info) const {
     info.packing.editionNumber = 2;
 
 #if 0
-    std::string type    = "ORCA2";            // eg. "ORCA2", "eORCA1", etc.
-    std::string subtype = "T grid";           // eg. "T grid", "U grid", "V grid", ...
     std::string uuid    = atlasGridRef().uid();  // eg. "16076978a048410747dd7c9876677b28"
+    std::string type    = "ORCA2";
+    std::string subtype = "T";
 
     auto spec = atlasGridRef().spec();
-    ASSERT(spec.get("type", type) && !type.empty());
-    ASSERT(spec.get("subtype", subtype) && !subtype.empty());
-
-    GribExtraSetting::set(info, "unstructuredGridType", type.c_str());
-    GribExtraSetting::set(info, "unstructuredGridSubtype", subtype.c_str());
-    GribExtraSetting::set(info, "uuidOfHGrid", uuid.c_str());
+    ASSERT(spec.get("type", type) && !type.empty());                // eg. "ORCA2", "eORCA1", etc.
+    ASSERT(spec.get("subtype", subtype) && subtype.length() == 1);  // eg. "T", "U", "V", ...
 #endif
 
     info.extra_set("unstructuredGridType", type_.c_str());
-    info.extra_set("unstructuredGridSubtype", subtypeLong_.c_str());
-    info.extra_set("uuidOfHGrid", "BeefBaffC0ffEEc0FFEEC0fFFeedDead");
+    info.extra_set("unstructuredGridSubtype", subtype_.c_str());
+    info.extra_set("uuidOfHGrid", "C0ffEEC0ffEEC0ffEEC0ffEEC0ffEEee");  // uuid.c_str()
 }
 
 

@@ -81,8 +81,7 @@ private:
 
     std::string name_;
     std::string type_;
-    std::string subtypeLong_;
-    char subtype_;
+    std::string subtype_;
 
     mutable atlas::Grid grid_;
 

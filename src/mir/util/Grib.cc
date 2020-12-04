@@ -86,7 +86,10 @@ grib_info::grib_info() :
     },
     packing{
         0,
-    } {}
+    } {
+    constexpr size_t extra_settings_size = 80;  // ecCodes extra_settings array size
+    strings_.reserve(extra_settings_size);
+}
 
 
 void grib_info::extra_set(const char* key, long value) {
