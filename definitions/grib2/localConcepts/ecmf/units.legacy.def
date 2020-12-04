@@ -136,3 +136,9 @@
  parameterCategory = 128 ;
  parameterNumber = 178 ;
 }
+#Temperature of snow layer
+'K' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 238 ;
+}

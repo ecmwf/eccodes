@@ -74,7 +74,7 @@ EOF
 }
 
 #-----------------------------------------------------------
-# Test: Datetime extraction
+echo "Test: Datetime extraction ..."
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  transient originalNumberOfSubsets = numberOfSubsets;
@@ -170,7 +170,7 @@ EOF
 diff $outputRef $outputFilt
 
 #-----------------------------------------------------------
-# Test invalid date
+echo "Test invalid date ..."
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  transient originalNumberOfSubsets=numberOfSubsets;
@@ -205,7 +205,7 @@ if [ $status -eq 0 ]; then
 fi
 
 #-----------------------------------------------------------
-# Test end date < start date
+echo "Test end date < start date ..."
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  transient originalNumberOfSubsets=numberOfSubsets;
@@ -240,7 +240,7 @@ if [ $status -eq 0 ]; then
 fi
 
 #-----------------------------------------------------------
-# Test boundary case
+echo "Test boundary case ..."
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  transient originalNumberOfSubsets=numberOfSubsets;
@@ -269,7 +269,7 @@ ${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
 rm -f $outputBufr
 
 #-----------------------------------------------------------
-# Test: uncompressed BUFR
+echo "Test uncompressed BUFR ..."
 #-----------------------------------------------------------
 inputBufr="delayed_repl_01.bufr"
 outputBufr=${label}.${inputBufr}.out
@@ -286,6 +286,19 @@ ${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
 generate_filter 20171102120000 20171102125959 8
 ${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
 
+#-----------------------------------------------------------
+echo "Test ECC-1174 ..."
+#-----------------------------------------------------------
+inputBufr="smin_49.bufr"
+temp=temp.${label}.bufr
+errlog=temp.${label}.err
+outputBufr=${label}.${inputBufr}.out
+miss='-1e+100'
+${tools_dir}/bufr_set -s unpack=1,second=$miss,pack=1 $inputBufr $temp
+generate_filter 20121031000000 20121031000001 60
+${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $temp 2>$errlog
+grep -q "WARNING.*Key '#1#second' is missing" $errlog
+rm -f $temp $errlog
 
 # Clean up
 rm -f $outputRef $outputFilt $outputBufr $fLog $fRules

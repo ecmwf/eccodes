@@ -15,10 +15,12 @@ label="bufr_wmo_tables_test"
 
 # Define tmp bufr file
 fTmp=${label}".tmp.bufr"
+fRules=${label}".tmp.filt"
+fDump=${label}".tmp.dump"
 
-#==============================================
+# --------------------------------
 # Testing latest WMO tables
-#==============================================
+# --------------------------------
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 REDIRECT=/dev/null
 
@@ -66,5 +68,49 @@ ${tools_dir}/bufr_get -s masterTablesVersionNumber=$latest_wmo_version,unpack=1 
                       -p scanLevelQualityFlags \
                       $input
 
+# ---------------
+# Duplicate keys
+# ---------------
+# New keys appeared in v35. Ensure we added a digit suffix to make them unique e.g.
+#   015063 = attenuatedBackscatter
+#   015073 = attenuatedBackscatter1
+cat > $fRules <<EOF
+  set masterTablesVersionNumber=$latest_wmo_version;
+  set unexpandedDescriptors={
+    15063, 15073,  # attenuatedBackscatter
+    15065, 15074,  # particleBackscatterCoefficient
+    15067, 15075,  # particleExtinctionCoefficient
+    15069, 15076,  # particleLidarRatio
+    15070, 15077,  # uncertaintyInLidarRatio
+    15071, 15078,  # particleDepolarizationRatio
+    # 040063 got renamed in v35 and should use the new name in subsequent versions
+    # Old name = scalingVectorMultiplyingTheAPrioriCoVectorInOrderToDefineTheRetrievedCoVector
+    # New name = scalingVectorMultiplyingTheAPrioriVectorInOrderToDefineTheRetrievedVector
+    40063
+  };
+  write;
+EOF
+${tools_dir}/codes_bufr_filter -o $fTmp $fRules $sample
+${tools_dir}/bufr_dump -p $fTmp > $fDump
+grep -q "attenuatedBackscatter=MISSING" $fDump
+grep -q "attenuatedBackscatter1=MISSING" $fDump
+grep -q "particleBackscatterCoefficient=MISSING" $fDump
+grep -q "particleBackscatterCoefficient1=MISSING" $fDump
+grep -q "particleExtinctionCoefficient=MISSING" $fDump
+grep -q "particleExtinctionCoefficient1=MISSING" $fDump
+grep -q "particleLidarRatio=MISSING" $fDump
+grep -q "particleLidarRatio1=MISSING" $fDump
+grep -q "uncertaintyInLidarRatio=MISSING" $fDump
+grep -q "uncertaintyInLidarRatio1=MISSING" $fDump
+grep -q "particleDepolarizationRatio=MISSING" $fDump
+grep -q "particleDepolarizationRatio1=MISSING" $fDump
+grep -q "scalingVectorMultiplyingTheAPrioriVectorInOrderToDefineTheRetrievedVector=MISSING" $fDump
+set +e
+# The old name should not be there 
+grep -q "scalingVectorMultiplyingTheAPrioriCoVectorInOrderToDefineTheRetrievedCoVector" $fDump
+status=$?
+set -e
+[ $status -eq 1 ]
 
-rm -f $fTmp
+
+rm -f $fTmp $fRules $fDump

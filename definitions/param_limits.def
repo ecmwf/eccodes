@@ -1,5 +1,5 @@
 constant default_min_val = -1e9 : double_type, hidden;
-constant default_max_val = +1e9 : double_type, hidden;
+constant default_max_val = +1e13 : double_type, hidden;
 
 concept param_value_min(default_min_val) {
     -150 = { paramId=165; }
