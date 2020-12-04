@@ -55,6 +55,12 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Temperature of snow layer
+'temperature_in_surface_snow' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 28 ;
+	}
 #Snow depth
 'lwe_thickness_of_surface_snow_amount' = {
 	 discipline = 0 ;

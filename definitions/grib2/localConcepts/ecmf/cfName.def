@@ -79,12 +79,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 206 ;
 	}
-#Temperature of snow layer
-'temperature_in_surface_snow' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 238 ;
-	}
 #Particulate matter d < 1 um
 'mass_concentration_of_pm1_ambient_aerosol_particles_in_air' = {
 	 discipline = 192 ;

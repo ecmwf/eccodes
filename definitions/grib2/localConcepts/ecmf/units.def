@@ -1103,12 +1103,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 237 ;
 	}
-#Temperature of snow layer
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 238 ;
-	}
 #Convective snowfall
 'm of water equivalent' = {
 	 discipline = 192 ;

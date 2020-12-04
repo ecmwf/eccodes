@@ -1103,12 +1103,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 237 ;
 	}
-#Temperature of snow layer
-'tsn' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 238 ;
-	}
 #Convective snowfall
 'csf' = {
 	 discipline = 192 ;

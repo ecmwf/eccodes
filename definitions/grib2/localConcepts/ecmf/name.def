@@ -1103,12 +1103,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 237 ;
 	}
-#Temperature of snow layer
-'Temperature of snow layer' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 238 ;
-	}
 #Convective snowfall
 'Convective snowfall' = {
 	 discipline = 192 ;

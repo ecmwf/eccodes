@@ -301,6 +301,12 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Temperature of snow layer
+'K' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 28 ;
+	}
 #Specific cloud liquid water content
 'kg kg**-1' = {
 	 discipline = 0 ;
