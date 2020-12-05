@@ -69,7 +69,7 @@ typedef struct grib_nearest_reduced
     long global;
     double lon_first;
     double lon_last;
-    int    legacy; /* -1, 0 or 1 */
+    int legacy; /* -1, 0 or 1 */
 } grib_nearest_reduced;
 
 extern grib_nearest_class* grib_nearest_class_gen;
@@ -99,7 +99,7 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
     self->Nj                   = grib_arguments_get_name(h, args, self->cargs++);
     self->pl                   = grib_arguments_get_name(h, args, self->cargs++);
     self->j                    = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
-    self->legacy = -1;
+    self->legacy               = -1;
     if (!self->j)
         return GRIB_OUT_OF_MEMORY;
     self->k = (int*)grib_context_malloc(nearest->context, 4 * sizeof(int));
@@ -173,6 +173,9 @@ static int find(grib_nearest* nearest, grib_handle* h,
         return ret;
     radius = ((double)iradius) / 1000.0;
 
+    /* Compute lat/lon info, create iterator etc if it's the 1st time or different grid.
+     * This is for performance: if the grid has not changed, we only do this once
+     * and reuse for other messages */
     if (!nearest->h || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
         double dummy = 0;
         double olat  = 1.e10;
@@ -215,7 +218,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
             }
             while (lon > 360)
                 lon -= 360;
-            if (!self->global) {     /* ECC-756 */
+            if (!self->global) {       /* ECC-756 */
                 if (self->legacy == 0) /*TODO*/
                     if (lon > 180 && lon < 360)
                         lon -= 360;
@@ -229,8 +232,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
 
     /* Compute distances if it's the 1st time or different point or different grid.
      * This is for performance: if the grid and the input point have not changed
-     * we only do this once and reuse for other messages
-    */
+     * we only do this once and reuse for other messages */
     if (!self->distances || (flags & GRIB_NEAREST_SAME_POINT) == 0 || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
         double* lons           = NULL;
         int nlon               = 0;
@@ -420,7 +422,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         for (jj = 0; jj < 2; jj++) {
             for (ii = 0; ii < 2; ii++) {
                 self->distances[kk] = geographic_distance_spherical(radius, inlon, inlat,
-                                                            self->lons[self->k[kk]], self->lats[self->j[jj]]);
+                                                                    self->lons[self->k[kk]], self->lats[self->j[jj]]);
                 kk++;
             }
         }
