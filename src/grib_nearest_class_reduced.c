@@ -28,6 +28,7 @@
    MEMBERS    = long global
    MEMBERS    = double lon_first
    MEMBERS    = double lon_last
+   MEMBERS    = int legacy
    END_CLASS_DEF
 
  */
@@ -68,6 +69,7 @@ typedef struct grib_nearest_reduced
     long global;
     double lon_first;
     double lon_last;
+    int    legacy; /* -1, 0 or 1 */
 } grib_nearest_reduced;
 
 extern grib_nearest_class* grib_nearest_class_gen;
@@ -97,6 +99,7 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
     self->Nj                   = grib_arguments_get_name(h, args, self->cargs++);
     self->pl                   = grib_arguments_get_name(h, args, self->cargs++);
     self->j                    = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
+    self->legacy = -1;
     if (!self->j)
         return GRIB_OUT_OF_MEMORY;
     self->k = (int*)grib_context_malloc(nearest->context, 4 * sizeof(int));
@@ -148,15 +151,12 @@ static int find(grib_nearest* nearest, grib_handle* h,
     long iradius;
     double radius;
     int ilat = 0, ilon = 0;
-    static int s_is_legacy = -1;
-
-    if (s_is_legacy < 0 || !(flags & GRIB_NEAREST_SAME_GRID)) {
-        s_is_legacy = is_legacy(h);
-    }
-
-    const int is_legacy_grib                  = s_is_legacy;
     get_reduced_row_proc get_reduced_row_func = &grib_get_reduced_row;
-    if (is_legacy_grib) {
+
+    if (self->legacy == -1 || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
+        self->legacy = is_legacy(h);
+    }
+    if (self->legacy == 1) {
         get_reduced_row_func = &grib_get_reduced_row_legacy;
     }
 
@@ -216,7 +216,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
             while (lon > 360)
                 lon -= 360;
             if (!self->global) {     /* ECC-756 */
-                if (!is_legacy_grib) /*TODO*/
+                if (self->legacy == 0) /*TODO*/
                     if (lon > 180 && lon < 360)
                         lon -= 360;
             }
@@ -244,7 +244,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         }
         else {
             /* TODO: Experimental */
-            if (!is_legacy_grib)
+            if (self->legacy == 0)
                 if (inlon > 180 && inlon < 360)
                     inlon -= 360;
         }
