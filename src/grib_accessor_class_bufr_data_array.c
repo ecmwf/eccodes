@@ -1354,6 +1354,7 @@ static int encode_new_element(grib_context* c, grib_accessor_bufr_data_array* se
         }
         else {
             err = encode_string_value(c, buff, pos, bd, self, csval);
+            grib_context_free(c, csval);
         }
     }
     else {
