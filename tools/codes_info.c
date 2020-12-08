@@ -141,7 +141,7 @@ int main(int argc, char* argv[])
     }
 
     if (print_flags & INFO_PRINT_VERSION)
-        printf("%d.%d.%d ", major, minor, revision);
+        printf("%d.%d.%d", major, minor, revision);
 
     if (print_flags & INFO_PRINT_DEFINITION_PATH) {
         if ((path = codes_getenv("ECCODES_DEFINITION_PATH")) != NULL) {
