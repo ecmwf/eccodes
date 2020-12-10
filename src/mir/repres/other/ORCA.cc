@@ -188,8 +188,8 @@ void ORCA::fill(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
         params.meshGenerator_ = "orca";
     }
-    params.set("fixup",true); // This makes sure that there are no invalid elements
-    params.set("force_include_south_pole", true); // Add South Pole virtual points
+    params.set("fixup", true);                     // This makes sure that there are no invalid elements
+    params.set("force_include_south_pole", true);  // Add South Pole virtual points
 }
 
 
