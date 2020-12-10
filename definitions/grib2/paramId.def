@@ -301,6 +301,12 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Temperature of snow layer
+'238' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 28 ;
+	}
 #Specific cloud liquid water content
 '246' = {
 	 discipline = 0 ;
@@ -540,6 +546,15 @@
 	 typeOfSizeInterval = 255 ;
 	 aerosolType = 62003 ;
 	 is_aerosol_optical = 1 ;
+	}
+#Ammonium aerosol mass mixing ratio
+'211249' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
 	}
 #Dry deposition of ammonium aerosol
 '215206' = {

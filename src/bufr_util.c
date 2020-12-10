@@ -195,6 +195,7 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
     hdr->rectimeHour   = (long)grib_decode_unsigned_long(p, &start, 5);
     hdr->rectimeMinute = (long)grib_decode_unsigned_long(p, &start, 6);
     hdr->rectimeSecond = (long)grib_decode_unsigned_long(p, &start, 6);
+    hdr->restricted    = (long)grib_decode_unsigned_long(p, &start, 1);
 
     hdr->qualityControl = (long)grib_decode_unsigned_long(pMessage, &pos_qualityControl, nbits_qualityControl);
     hdr->newSubtype     = (long)grib_decode_unsigned_long(pMessage, &pos_newSubtype, nbits_newSubtype);
@@ -1007,6 +1008,12 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
     else if (strcmp(key, "rectimeSecond") == 0) {
         if (isEcmwfLocal)
             *len = sprintf(val, "%ld", bh->rectimeSecond);
+        else
+            strcpy(val, NOT_FOUND);
+    }
+    else if (strcmp(key, "restricted") == 0) {
+        if (isEcmwfLocal)
+            *len = sprintf(val, "%ld", bh->restricted);
         else
             strcpy(val, NOT_FOUND);
     }
