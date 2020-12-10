@@ -40,8 +40,13 @@ inline bool grib_call(int e, const char* call, bool missingOK = false) {
 
 
 struct grib_info {
+    grib_info();
     codes_util_grid_spec grid;
     codes_util_packing_spec packing;
+
+private:
+    grib_info(const grib_info&) = delete;
+    void operator=(const grib_info&) = delete;
 };
 
 

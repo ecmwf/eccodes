@@ -79,6 +79,15 @@ void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t
 }
 
 
+grib_info::grib_info() :
+    grid{
+        0,
+    },
+    packing{
+        0,
+    } {}
+
+
 void GribExtraSetting::set(grib_info& info, const char* key, long value) {
     auto& set      = info.packing.extra_settings[info.packing.extra_settings_count++];
     set.name       = key;

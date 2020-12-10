@@ -319,9 +319,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
         auto h = input.gribHandle(field.handle(i));  // Base class throws if input cannot provide handle
 
-        grib_info info = {
-            {0},
-        };
+        grib_info info;
 
         // missing values
         info.grid.bitmapPresent = field.hasMissing() ? 1 : 0;

@@ -152,7 +152,7 @@ void SphericalHarmonics::truncate(size_t truncation_from, size_t truncation_to, 
 void SphericalHarmonics::interlace_spectra(data::MIRValuesVector& interlaced, const data::MIRValuesVector& spectra,
                                            size_t truncation, size_t numberOfComplexCoefficients, size_t index,
                                            size_t indexTotal) {
-    ASSERT(0 <= index && index < indexTotal);
+    ASSERT(index < indexTotal);
     ASSERT(numberOfComplexCoefficients * 2 * indexTotal == interlaced.size());
 
     if (spectra.size() != numberOfComplexCoefficients * 2) {
