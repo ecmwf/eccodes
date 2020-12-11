@@ -1108,6 +1108,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
     return GRIB_SUCCESS;
 }
 
+/* Returns 1 if the BUFR key is in the header and 0 if it is in the data section */
 int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err)
 {
     grib_accessor* acc = grib_find_accessor(h, key);
