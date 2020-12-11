@@ -1489,7 +1489,7 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin, grib_handle* ho
 int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout);
 int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len);
-
+int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err);
 
 /* string_util.c */
 int strcmp_nocase(const char* s1, const char* s2);

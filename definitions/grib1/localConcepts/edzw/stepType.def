@@ -1,7 +1,6 @@
 # Concept stepType for DWD
-# In case of a repeated entry:
-#  set uses the FIRST one
-#  get returns the LAST match
+# set uses the FIRST one
+# get returns the LAST match
 
 #  "accum" = {timeRangeIndicator=0;centre=98;indicatorOfParameter=61;table2Version=1;}
 #  "accum" = {timeRangeIndicator=0;centre=98;indicatorOfParameter=61;table2Version=2;}
