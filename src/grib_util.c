@@ -2118,7 +2118,7 @@ int grib2_select_PDTN(int is_eps, int is_instant,
             if (is_instant)
                 return 45;
             else
-                return 47;
+                return 85; /* PDT 47 is deprecated*/
         }
         else {
             if (is_instant)
