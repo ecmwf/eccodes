@@ -830,6 +830,17 @@ void grib_skip_check(grib_runtime_options* options, grib_handle* h)
 {
     int i, ret = 0;
     grib_values* v = NULL;
+
+    /* ECC-1179: bufr_copy/bufr_ls: Allow 'where' clause with Data Section keys */
+    if (options->constraints_count > 0 && h->product_kind == PRODUCT_BUFR) {
+        for (i = 0; i < options->set_values_count; i++) {
+            if (strcmp(options->set_values[i].name, "unpack")==0) {
+                grib_set_long(h, "unpack", 1);
+                break;
+            }
+        }
+    }
+
     for (i = 0; i < options->constraints_count; i++) {
         v = &(options->constraints[i]);
         if (v->equal) {
