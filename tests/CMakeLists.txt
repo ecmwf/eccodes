@@ -30,6 +30,7 @@ list(APPEND test_bins
     bufr_ecc-517
     bufr_get_element
     bufr_extract_headers
+    extract_offsets
     bufr_check_descriptors
     grib_sh_ieee64
     ieee
@@ -72,6 +73,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1053
         grib_ecc-1065
         grib_ecc-1167
+        grib_ecc-1170
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
@@ -115,6 +117,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_get_element
         bufr_wmo_tables
         bufr_extract_headers
+        extract_offsets
         bufr_ecc-673
         bufr_ecc-428
         bufr_ecc-286

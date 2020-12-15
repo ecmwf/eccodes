@@ -7,10 +7,9 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
+
 #include <pthread.h>
+#include "grib_api_internal.h"
 
 #include "eccodes.h"
 #define NUM_THREADS 4
@@ -41,9 +40,9 @@ static void* process_grib(void* threadID)
     ProductKind prod_kind = 0;
 
     codes_handle* h = codes_grib_handle_new_from_samples(0, "regular_ll_pl_grib2");
-    assert(h);
+    Assert(h);
     CODES_CHECK(codes_get_product_kind(h, &prod_kind), 0);
-    assert(prod_kind == PRODUCT_GRIB);
+    Assert(prod_kind == PRODUCT_GRIB);
     printf("Thread %ld running\n", tid);
 
     CODES_CHECK(codes_set_long(h, "indicatorOfUnitOfTimeRange", indicatorOfUnitOfTimeRange), 0);
@@ -74,9 +73,9 @@ static void* process_grib(void* threadID)
     CODES_CHECK(codes_get_double(h, "max", &max), 0);
     CODES_CHECK(codes_get_double(h, "avg", &avg), 0);
     printf("Thread %ld: min=%g max=%g avg=%g\n", tid, min, max, avg);
-    assert(compare_doubles(min, 0.84, tol) == 0);
-    assert(compare_doubles(max, 1.00, tol) == 0);
-    assert(compare_doubles(avg, 0.916774, tol) == 0);
+    Assert(compare_doubles(min, 0.84, tol) == 0);
+    Assert(compare_doubles(max, 1.00, tol) == 0);
+    Assert(compare_doubles(avg, 0.916774, tol) == 0);
 
     codes_handle_delete(h);
     pthread_exit(NULL);
@@ -91,7 +90,7 @@ int main(int argc, char** argv)
         printf("Creating thread %ld\n", i);
         error = pthread_create(&threads[i], NULL, process_grib, (void*)i);
         if (error) {
-            assert(0);
+            Assert(0);
             return 1;
         }
     }

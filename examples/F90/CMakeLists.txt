@@ -48,6 +48,7 @@ if( HAVE_BUILD_TOOLS )
           bufr_read_scatterometer
           bufr_read_synop
           bufr_read_temp
+          bufr_read_tempf
           bufr_read_tropical_cyclone
           bufr_set_keys
           bufr_copy_keys
@@ -86,6 +87,7 @@ else()
           bufr_read_scatterometer
           bufr_read_synop
           bufr_read_temp
+          bufr_read_tempf
           bufr_read_tropical_cyclone
           bufr_set_keys
           bufr_subset

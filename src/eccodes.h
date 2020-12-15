@@ -1200,10 +1200,14 @@ int codes_set_values(codes_handle* h, codes_values* codes_values, size_t arg_cou
 codes_handle* codes_handle_new_from_partial_message_copy(codes_context* c, const void* data, size_t size);
 codes_handle* codes_handle_new_from_partial_message(codes_context* c, const void* data, size_t buflen);
 
-/* Returns a bool i.e. 0 or 1. The error code is an argument */
+/* Returns a bool i.e. 0 or 1. The error code is the final argument */
 int codes_is_missing(const codes_handle* h, const char* key, int* err);
 /* Returns a bool i.e. 0 or 1 */
 int codes_is_defined(const codes_handle* h, const char* key);
+
+/* Returns 1 if the BUFR key is in the header and 0 if it is in the data section.
+   The error code is the final argument */
+int codes_bufr_key_is_header(const codes_handle* h, const char* key, int* err);
 
 int codes_set_missing(codes_handle* h, const char* key);
 /* The truncation is the Gaussian number (or order) */
@@ -1272,7 +1276,7 @@ codes_handle* codes_grib_util_set_spec(codes_handle* h,
                                        int* err);
 
 /* EXPERIMENTAL FEATURE
- * Build an array of headers from input BUFR file.
+ * Build an array of message headers from input BUFR file.
  * result = array of 'codes_bufr_header' structs with 'num_messages' elements.
  *          This array should be freed by the caller.
  * num_messages = number of messages found in the input file.
@@ -1281,6 +1285,16 @@ codes_handle* codes_grib_util_set_spec(codes_handle* h,
  */
 int codes_bufr_extract_headers_malloc(codes_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len);
+
+/* EXPERIMENTAL FEATURE
+ * Build an array of message offsets from input file. The client has to supply the ProductKind (GRIB, BUFR etc)
+ * result = array of offsets with 'num_messages' elements.
+ *          This array should be freed by the caller.
+ * num_messages = number of messages found in the input file.
+ * strict_mode  = If 1 means fail if any message is invalid.
+ * returns 0 if OK, integer value on error.
+ */
+int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductKind product, off_t** offsets, int* num_messages, int strict_mode);
 
 /* --------------------------------------- */
 #ifdef __cplusplus

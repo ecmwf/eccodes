@@ -381,6 +381,7 @@ static int select_datetime(grib_accessor* a)
     if (ret)
         secondStart = 0;
     sprintf(start_str, "%04ld/%02ld/%02ld %02ld:%02ld:%02ld", yearStart, monthStart, dayStart, hourStart, minuteStart, secondStart);
+    if (c->debug) fprintf(stderr, "ECCODES DEBUG bufr_extract_datetime_subsets: start   =%s\n", start_str);
     julianStart = date_to_julian(yearStart, monthStart, dayStart, hourStart, minuteStart, secondStart);
     if (julianStart == -1) {
         grib_context_log(c, GRIB_LOG_ERROR, "Invalid start date/time: %s", start_str);
@@ -406,6 +407,7 @@ static int select_datetime(grib_accessor* a)
     if (ret)
         secondEnd = 0;
     sprintf(end_str, "%04ld/%02ld/%02ld %02ld:%02ld:%02ld", yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd, secondEnd);
+    if (c->debug) fprintf(stderr, "ECCODES DEBUG bufr_extract_datetime_subsets: end     =%s\n", end_str);
     julianEnd = date_to_julian(yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd, secondEnd);
     if (julianEnd == -1) {
         grib_context_log(c, GRIB_LOG_ERROR, "Invalid end date/time: %s", end_str);
@@ -418,7 +420,12 @@ static int select_datetime(grib_accessor* a)
     }
 
     for (i = 0; i < numberOfSubsets; i++) {
+        if (second[i] == GRIB_MISSING_DOUBLE) {
+            fprintf(stderr, "ECCODES WARNING: bufr_extract_datetime_subsets: Key '%s' is missing! Using zero instead\n", secondstr);
+            second[i] = 0;
+        }
         sprintf(datetime_str, "%04ld/%02ld/%02ld %02ld:%02ld:%.3f", year[i], month[i], day[i], hour[i], minute[i], second[i]);
+        if (c->debug) fprintf(stderr, "ECCODES DEBUG bufr_extract_datetime_subsets: datetime=%s\n", datetime_str);
         julianDT = date_to_julian(year[i], month[i], day[i], hour[i], minute[i], second[i]);
         if (julianDT == -1) {
             grib_context_log(c, GRIB_LOG_ERROR, "Invalid date/time: %s", datetime_str);

@@ -46,3 +46,9 @@
  parameterCategory = 128 ;
  parameterNumber = 178 ;
 }
+#Temperature of snow layer
+'temperature_in_surface_snow' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 238 ;
+}

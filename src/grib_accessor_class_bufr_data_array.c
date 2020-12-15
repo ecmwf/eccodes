@@ -1354,6 +1354,7 @@ static int encode_new_element(grib_context* c, grib_accessor_bufr_data_array* se
         }
         else {
             err = encode_string_value(c, buff, pos, bd, self, csval);
+            grib_context_free(c, csval);
         }
     }
     else {
@@ -2131,7 +2132,8 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
     return elementAccessor;
 }
 
-#define IS_QUALIFIER(a) (a == 8 || a == 1 || a == 2 || a == 4 || a == 5 || a == 6 || a == 7)
+/* Section 3.1.2.2 of WMO BUFR guide: classes 03 and 09 at present reserved for future use */
+#define IS_COORDINATE_DESCRIPTOR(a) (a == 8 || a == 1 || a == 2 || a == 4 || a == 5 || a == 6 || a == 7)
 #define NUMBER_OF_QUALIFIERS_PER_CATEGORY 256
 #define NUMBER_OF_QUALIFIERS_CATEGORIES 7
 #define MAX_NUMBER_OF_BITMAPS 5
@@ -2509,7 +2511,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                 continue; /* Descriptor does not have an associated key e.g. inside op 203YYY */
             }
             elementFromBitmap = NULL;
-            if (descriptor->F == 0 && IS_QUALIFIER(descriptor->X) &&
+            if (descriptor->F == 0 && IS_COORDINATE_DESCRIPTOR(descriptor->X) &&
                 self->unpackMode == CODES_BUFR_UNPACK_STRUCTURE) {
                 int sidx = significanceQualifierIndex(descriptor->X, descriptor->Y);
                 groupNumber++;
@@ -2622,7 +2624,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                     bitmap_init(c, &bitmap, bitmapStart[bitmapIndex], bitmapSize[bitmapIndex], lastAccessorInList);
                 elementFromBitmap = get_element_from_bitmap(a, &bitmap);
                 dump              = 1;
-                /* } else if ( descriptor->Y==1 && IS_QUALIFIER(self->expanded->v[idx-1]->X)==0) { */
+                /* } else if ( descriptor->Y==1 && IS_COORDINATE_DESCRIPTOR(self->expanded->v[idx-1]->X)==0) { */
                 /* forceGroupClosure=1; */
                 /* reset_qualifiers(significanceQualifierGroup); */
             }
