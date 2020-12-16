@@ -6,4 +6,9 @@ concept unstructuredGridSubtype(unknown,"unstructuredGridSubtype.def",conceptsLo
 
 concept unstructuredGridUUID(unknown,"unstructuredGridUUID.def",conceptsLocalDirAll,conceptsMasterDir);
 
-meta gridName sprintf("%s_%s",unstructuredGridType,unstructuredGridSubtype);
+if (unstructuredGridType is "undefined" || unstructuredGridType is "unknown") {
+  meta gridName sprintf("%s",unstructuredGridType);
+} else {
+  meta gridName sprintf("%s_%s",unstructuredGridType,unstructuredGridSubtype);
+}
+alias ls.gridName=gridName;
