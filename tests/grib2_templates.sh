@@ -97,5 +97,12 @@ $tools_dir/grib_set -s tablesVersion=19,productDefinitionTemplateNumber=68 $samp
 grib_check_key_exists $temp 'constituentType,perturbationNumber'
 
 
+# Aerosol ensemble interval template. PDT deprecated: 4.47 -> 4.85
+$tools_dir/grib_set -s tablesVersion=26,productDefinitionTemplateNumber=11,stepType=accum,paramId=215211 $sample2 $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber,perturbationNumber '85 0'
+$tools_dir/grib_set -s tablesVersion=26,productDefinitionTemplateNumber=47 $sample2 $temp1
+$tools_dir/grib_set -s tablesVersion=26,productDefinitionTemplateNumber=85 $sample2 $temp2
+$tools_dir/grib_compare -b productDefinitionTemplateNumber $temp1 $temp2
+
 
 rm -f $temp $temp1 $temp2

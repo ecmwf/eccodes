@@ -199,7 +199,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             productDefinitionTemplateNumberNew = 45;
         }
         else {
-            productDefinitionTemplateNumberNew = 47;
+            /*productDefinitionTemplateNumberNew = 47; PDT deprecated*/
+            productDefinitionTemplateNumberNew = 85;
         }
     }
     else {
