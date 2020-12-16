@@ -645,7 +645,7 @@ static void destroy(grib_context* ct, grib_accessor* a)
 static int is_missing(grib_accessor* a)
 {
     const int ktype = get_native_type(a);
-    int err = 0, result = 1; // default: assume all are missing
+    int err = 0, result = 1; /* default: assume all are missing */
     long count = 0;
     size_t i = 0, size = 1, size2 = 0;
     grib_context* c = a->context;
@@ -663,12 +663,12 @@ static int is_missing(grib_accessor* a)
         else {
             err = grib_unpack_long(a, &value, &size2);
         }
-        if (err) return 0; // TODO: no way of propagating the error up
+        if (err) return 0; /* TODO: no way of propagating the error up */
         Assert(size2 == size);
         if (size > 1) {
             for (i = 0; i < size; i++) {
                 if (!grib_is_missing_long(a, values[i])) {
-                    result = 0; // at least one not missing
+                    result = 0; /* at least one not missing */
                     break;
                 }
             }
@@ -690,7 +690,7 @@ static int is_missing(grib_accessor* a)
         else {
             err = grib_unpack_double(a, &value, &size2);
         }
-        if (err) return 0; // TODO: no way of propagating the error up
+        if (err) return 0; /* TODO: no way of propagating the error up */
         Assert(size2 == size);
         if (size > 1) {
             for (i = 0; i < size; ++i) {
@@ -712,7 +712,7 @@ static int is_missing(grib_accessor* a)
         if (size > 1) {
             values = (char**)grib_context_malloc_clear(a->context, size * sizeof(char*));
             err = grib_unpack_string_array(a, values, &size);
-            if (err) return 0; // TODO: no way of propagating the error up
+            if (err) return 0; /* TODO: no way of propagating the error up */
             for (i = 0; i < size; i++) {
                 if (!grib_is_missing_string(a, (unsigned char*)values[i], size)) {
                     result = 0;
@@ -725,7 +725,7 @@ static int is_missing(grib_accessor* a)
             char value[MAX_STRING_SIZE] = {0,}; /* See ECC-710 */
             size = MAX_STRING_SIZE;
             err = grib_unpack_string(a, value, &size);
-            if (err) return 0; // TODO: no way of propagating the error up
+            if (err) return 0; /* TODO: no way of propagating the error up */
             result = grib_is_missing_string(a, (unsigned char*)value, size);
         }
     }
