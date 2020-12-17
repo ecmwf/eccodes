@@ -11,10 +11,12 @@
 ! This version also lists the position information from the WMO list
 ! (now OSCAR/Surface) - ECMWF version
 !
+! Author: Bruce Ingleby
+!
 ! Please note that TEMP reports can be encoded in various ways in BUFR. Therefore the code
 ! below might not work directly for other types of TEMP messages than the one used in the
 ! example. It is advised to use bufr_dump first to understand the structure of these messages.
-
+!
 program bufr_read_temp
   use eccodes
   implicit none
@@ -24,7 +26,7 @@ program bufr_read_temp
   integer            :: i, count=0
   integer            :: iflag
   integer            :: status_id, status_ht, status_time=0, status_p
-  integer            :: status_rsno, status_rssoft
+  integer            :: status_rsno, status_rssoft, statid_missing
   integer(kind=4)    :: sizews
   integer(kind=4)    :: blockNumber,stationNumber
   integer(kind=4)    :: ymd,hms
@@ -63,7 +65,9 @@ program bufr_read_temp
 
     ! Metadata:
     call codes_get(ibufr,'shipOrMobileLandStationIdentifier',statid,status_id)
-    IF (status_id /= CODES_SUCCESS) statid = "   "
+    IF (status_id /= CODES_SUCCESS) statid = "UNKNOWN"
+    call codes_is_missing(ibufr,'shipOrMobileLandStationIdentifier',statid_missing)
+    IF (statid_missing == 1) statid = "MISSING"
     call codes_get(ibufr,'blockNumber',blockNumber)
     call codes_get(ibufr,'stationNumber',stationNumber)
     call codes_get(ibufr,'year',year)
@@ -90,22 +94,22 @@ program bufr_read_temp
     ! Ascent (skip incomplete reports for now)
     call codes_get(ibufr,'timePeriod',timeVal,status_time)
     IF (status_time /= CODES_SUCCESS) THEN
-      write(*,'(A,I7,X,I2.2,I3.3,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ',count, &
-        blockNumber,stationNumber,ymd,hms,lat(1),lon(1),htg,htp,INT(sondeType)
+      write(*,'(A,I7,A,I2.2,A,I3.3,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ',count, &
+        ' ',blockNumber,' ',stationNumber,ymd,hms,lat(1),lon(1),htg,htp,INT(sondeType)
       write(*,'(A)') 'Missing times - skip'
       llskip=.True.
     ENDIF
     call codes_get(ibufr,'pressure',presVal,status_p)
     IF (status_p /= CODES_SUCCESS) THEN
-      write(*,'(A,I7,X,I2.2,I3.3,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ',count, &
-        blockNumber,stationNumber,ymd,hms,lat(1),lon(1),htg,htp,INT(sondeType)
+      write(*,'(A,I7,A,I2.2,A,I3.3,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ',count, &
+        ' ',blockNumber,' ',stationNumber,ymd,hms,lat(1),lon(1),htg,htp,INT(sondeType)
       write(*,'(A)') 'Missing pressures - skip'
       llskip=.True.
     ENDIF
     call codes_get(ibufr,'nonCoordinateGeopotentialHeight',zVal,status_ht)
     IF (status_ht /= CODES_SUCCESS) THEN
-      write(*,'(A,I7,X,I2.2,I3.3,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ',count, &
-        blockNumber,stationNumber,ymd,hms,lat(1),lon(1),htg,htp,INT(sondeType)
+      write(*,'(A,I7,A,I2.2,A,I3.3,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ',count, &
+        ' ',blockNumber,' ',stationNumber,ymd,hms,lat(1),lon(1),htg,htp,INT(sondeType)
       write(*,'(A)') 'Missing heights - skip'
       llskip=.True.
     ENDIF
@@ -126,15 +130,14 @@ program bufr_read_temp
       sizews = size(wspVal)
 
       ! ---- Print the values --------------------------------
-      write(*,'(A,A)') 'Statid: ',statid
-      write(*,'(A,I7,X,I2.2,I3.3,I9,I7.6,F9.3,F10.3,2F7.1,I4,I5)') 'Ob: ',count, &
-    blockNumber,stationNumber,ymd,hms,lat(1),lon(1),htg,htp,INT(sondeType),sizews
+      write(*,'(A,A72)') 'Statid: ',statid
+      write(*,'(A,I7,A,I2.2,A,I3.3,I9,I7.6,F9.3,F10.3,2F7.1,I4,I5)') 'Ob: ',count, &
+          ' ',blockNumber,' ',stationNumber,ymd,hms,lat(1),lon(1),htg,htp,INT(sondeType),sizews
       IF (status_ht == CODES_SUCCESS) write(*,'(A,F9.3,F10.3,F7.1)')  &
-    'WMO list lat, lon, ht: ', lat(1),lon(1),htec
+         'WMO list lat, lon, ht: ', lat(1),lon(1),htec
       IF (status_rsno == CODES_SUCCESS) write(*,'(A,A,A)')  &
-    'Radiosonde number/software: ', rsnumber, rssoftware
-      write(*,'(A)') &
-    'level  dtime   dlat   dlon pressure geopotH airTemp  dewPtT windDir  windSp  signif'
+         'Radiosonde number/software: ', rsnumber, rssoftware
+      write(*,'(A)') 'level  dtime   dlat   dlon pressure geopotH airTemp  dewPtT windDir  windSp  signif'
       do i=1,sizews
     Note = '        '
     iflag = vssVal(i)
