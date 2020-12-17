@@ -25,7 +25,7 @@ program bufr_read_temp
   integer            :: iflag
   integer            :: status_id, status_ht, status_time=0, status_p
   integer            :: status_rsno, status_rssoft
-  integer(kind=4)    :: num,sizews
+  integer(kind=4)    :: sizews
   integer(kind=4)    :: blockNumber,stationNumber
   integer(kind=4)    :: ymd,hms
   logical            :: llstdonly = .True.  ! Set True to list standard levels only
@@ -36,7 +36,6 @@ program bufr_read_temp
   real(kind=8), dimension(:), allocatable :: timeVal,dlatVal,dlonVal,vssVal
   real(kind=8), dimension(:), allocatable :: presVal,zVal,tVal,tdVal,wdirVal,wspVal
   character(len=128) :: statid
-  character(len=128) :: keyName
   character(len=16)  :: rsnumber
   character(len=16)  :: rssoftware
   character(len=8)   :: Note
@@ -129,31 +128,31 @@ program bufr_read_temp
       ! ---- Print the values --------------------------------
       write(*,'(A,A)') 'Statid: ',statid
       write(*,'(A,I7,X,I2.2,I3.3,I9,I7.6,F9.3,F10.3,2F7.1,I4,I5)') 'Ob: ',count, &
-	blockNumber,stationNumber,ymd,hms,lat(1),lon(1),htg,htp,INT(sondeType),sizews
+    blockNumber,stationNumber,ymd,hms,lat(1),lon(1),htg,htp,INT(sondeType),sizews
       IF (status_ht == CODES_SUCCESS) write(*,'(A,F9.3,F10.3,F7.1)')  &
-	'WMO list lat, lon, ht: ', lat(1),lon(1),htec
+    'WMO list lat, lon, ht: ', lat(1),lon(1),htec
       IF (status_rsno == CODES_SUCCESS) write(*,'(A,A,A)')  &
-	'Radiosonde number/software: ', rsnumber, rssoftware
+    'Radiosonde number/software: ', rsnumber, rssoftware
       write(*,'(A)') &
-	'level  dtime   dlat   dlon pressure geopotH airTemp  dewPtT windDir  windSp  signif'
+    'level  dtime   dlat   dlon pressure geopotH airTemp  dewPtT windDir  windSp  signif'
       do i=1,sizews
-	Note = '        '
-	iflag = vssVal(i)
-	IF (i > 1) THEN
+    Note = '        '
+    iflag = vssVal(i)
+    IF (i > 1) THEN
           IF (presVal(i) > presVal(i-1) .OR. zVal(i) < zVal(i-1) &
-	      .OR. timeVal(i) < timeVal(i-1)) Note=' OOO    '
+          .OR. timeVal(i) < timeVal(i-1)) Note=' OOO    '
           IF ((timeVal(i)-timeVal(i-1))>120) Note=' tjump  '
           IF (ABS(dlatVal(i)-dlatVal(i-1))>0.1 .OR. &
-	      ABS(dlonVal(i)-dlonVal(i-1))>0.1) THEN
-	    Note=' pjump  '
-	    IF (dlatVal(i) == CODES_MISSING_DOUBLE .OR. &
-		dlatVal(i-1) == CODES_MISSING_DOUBLE) Note=' pmiss  '
+          ABS(dlonVal(i)-dlonVal(i-1))>0.1) THEN
+        Note=' pjump  '
+        IF (dlatVal(i) == CODES_MISSING_DOUBLE .OR. &
+        dlatVal(i-1) == CODES_MISSING_DOUBLE) Note=' pmiss  '
           ENDIF
-	ENDIF
-	IF (.NOT.llstdonly .OR. BTEST(iflag,16)) &
-	write(*,'(I5,F7.1,2F7.3,F9.1,F8.1,4F8.2,I8,A)') i,timeVal(i), &
+    ENDIF
+    IF (.NOT.llstdonly .OR. BTEST(iflag,16)) &
+    write(*,'(I5,F7.1,2F7.3,F9.1,F8.1,4F8.2,I8,A)') i,timeVal(i), &
           dlatVal(i),dlonVal(i),presVal(i),zVal(i),tVal(i),tVal(i)-tdVal(i), &
-	  wdirVal(i),wspVal(i),INT(vssVal(i)), Note
+      wdirVal(i),wspVal(i),INT(vssVal(i)), Note
       end do
 
       ! free arrays
