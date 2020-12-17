@@ -7,11 +7,10 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: How to decode GRIB messages containing multiple
-!               fields. Try to turn on and off multi support to
+!  Description: How to decode GRIB2 multi-field messages.
+!               Try to turn multi support on and off to
 !               see the difference. Default is OFF.
 !               For all the tools default is multi support ON.
-!
 !
 program multi
   use eccodes
@@ -23,14 +22,14 @@ program multi
 
   call codes_open_file(ifile, '../../data/multi_created.grib2','r')
 
-  !     turn on support for multi fields messages */
+  ! turn on support for multi-field messages */
   call codes_grib_multi_support_on()
 
-  !     turn off support for multi fields messages */
+  ! turn off support for multi-field messages */
   !call codes_grib_multi_support_off()
 
   call codes_grib_new_from_file(ifile,igrib, iret)
-  !     Loop on all the messages in a file.
+  ! Loop on all the messages in a file.
 
   write(*,*) 'step'
   do while (iret /= CODES_END_OF_FILE)
