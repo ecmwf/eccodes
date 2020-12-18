@@ -24,7 +24,11 @@ latest=`${tools_dir}/grib_get -p tablesVersionLatest $sample2`
 # These level types are S2S ocean parameters and are dealt with differently (See products_s2s.def)
 exclude="20 160 169"
 
-levtypes=`grep typeOfFirstFixedSurface $ECCODES_DEFINITION_PATH/grib2/paramId.def |awk -F'=' '{print $2}'|tr -d ' '|tr -d ';'|sort -un`
+paramId_file_wmo="$ECCODES_DEFINITION_PATH/grib2/paramId.def"
+paramId_file_ecm="$ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def"
+
+levtypes=`grep typeOfFirstFixedSurface $paramId_file_wmo $paramId_file_ecm |\
+         awk -F'=' '{print $2}'|tr -d ' '|tr -d ';'|sort -un`
 for lt in $levtypes; do
     process_type=1
     for ex in $exclude; do
