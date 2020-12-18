@@ -82,6 +82,7 @@ if( HAVE_BUILD_TOOLS )
         grib_sh_imag
         grib_sh_spectral_complex
         pseudo_diag
+        grib_levtype
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
