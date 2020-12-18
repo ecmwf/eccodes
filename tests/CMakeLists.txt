@@ -168,7 +168,7 @@ if( HAVE_BUILD_TOOLS )
         grib2to3
         grib2_templates
         grib3_templates
-        badgrib
+        grib_bad
         grib_ls
         grib_ls_json
         grib_filter
