@@ -60,6 +60,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_dump_samples
         bufr_check_descriptors
         definitions
+        grib2_version
         grib_calendar
         grib_md5
         grib_cfNames
