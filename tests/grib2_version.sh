@@ -28,6 +28,7 @@ highest_num=`ls -1d [0-9]* | sort -rn | sed 1q`
 latest=`${tools_dir}/grib_get -p tablesVersionLatest $sample2`
 if [ "$latest" != "$highest_num" ]; then
     echo "The GRIB2 key tablesVersionLatest = $latest but the highest number in $tables_dir is $highest_num"
+    exit 1
 fi
 
 rm -f $temp
