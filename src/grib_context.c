@@ -800,8 +800,16 @@ void grib_context_reset(grib_context* c)
         grib_smart_table_delete(c);
     c->smart_table = NULL;
 
-    if (c->grib_definition_files_dir)
-        grib_context_free(c, c->grib_definition_files_dir);
+    if (c->grib_definition_files_dir) {
+        grib_string_list* next = c->grib_definition_files_dir;
+        grib_string_list* cur  = NULL;
+        while (next) {
+            cur  = next;
+            next = next->next;
+            grib_context_free(c, cur->value);
+            grib_context_free(c, cur);
+        }
+    }
 
     if (c->multi_support_on)
         grib_multi_support_reset(c);
@@ -813,7 +821,7 @@ void grib_context_delete(grib_context* c)
         c = grib_context_get_default();
 
     grib_hash_keys_delete(c->keys);
-    grib_trie_delete(c->def_files);
+    /*grib_trie_delete(c->def_files);  TODO:masn */
 
     grib_context_reset(c);
     if (c != &default_grib_context)

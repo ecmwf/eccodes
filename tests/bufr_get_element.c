@@ -52,5 +52,7 @@ int main(int argc, char* argv[])
         codes_handle_delete(h);
     }
     fclose(in);
+
+    grib_context_delete(grib_context_get_default());
     return 0;
 }

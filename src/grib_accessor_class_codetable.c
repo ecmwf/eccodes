@@ -530,6 +530,7 @@ void grib_codetable_delete(grib_context* c)
         for (i = 0; i < t->size; i++) {
             grib_context_free_persistent(c, t->entries[i].abbreviation);
             grib_context_free_persistent(c, t->entries[i].title);
+            grib_context_free_persistent(c, t->entries[i].units);
         }
         grib_context_free_persistent(c, t->filename[0]);
         if (t->filename[1])
