@@ -229,22 +229,24 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
     /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
     print_offset(self->dumper.out, self->begin, self->theEnd);
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
-        fprintf(self->dumper.out, "%s ", a->creator->op);
+        fprintf(self->dumper.out, "%s (int) ", a->creator->op);
 
     fprintf(self->dumper.out, "%s = %ld [", a->name, value);
-
     for (i = 0; i < (a->length * 8); i++) {
         if (test_bit(value, a->length * 8 - i - 1))
             fprintf(self->dumper.out, "1");
         else
             fprintf(self->dumper.out, "0");
     }
-    /*
-  if(comment)
-    fprintf(self->dumper.out,":%s]",comment);
-  else
-     */
-    fprintf(self->dumper.out, "]");
+
+    if(comment) {
+        /* ECC-1186: Whole comment is too big, so pick the part that follows the ':' i.e. flag table file */
+        const char* p = strchr(comment, ':');
+        if (p) fprintf(self->dumper.out," (%s) ]", p+1);
+        else   fprintf(self->dumper.out, "]");
+    } else {
+        fprintf(self->dumper.out, "]");
+    }
 
     if (err == 0)
         print_hexadecimal(self->dumper.out, d->option_flags, a);
