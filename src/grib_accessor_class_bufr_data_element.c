@@ -23,7 +23,7 @@
    IMPLEMENTS = init;dump
    IMPLEMENTS = unpack_string;unpack_string_array;unpack_long; unpack_double
    IMPLEMENTS = unpack_double_element ; is_missing
-   IMPLEMENTS = pack_long; pack_double ; pack_string_array; pack_string
+   IMPLEMENTS = pack_long; pack_double ; pack_string_array; pack_string; pack_missing
    IMPLEMENTS = value_count; get_native_type; make_clone; destroy
    MEMBERS    = long index
    MEMBERS    = int type
@@ -51,6 +51,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int get_native_type(grib_accessor*);
+static int pack_missing(grib_accessor*);
 static int is_missing(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
@@ -104,7 +105,7 @@ static grib_accessor_class _grib_accessor_class_bufr_data_element = {
     0,                /* get offset to bytes           */
     &get_native_type,            /* get native type               */
     0,                /* get sub_section                */
-    0,               /* grib_pack procedures long      */
+    &pack_missing,               /* grib_pack procedures long      */
     &is_missing,                 /* grib_pack procedures long      */
     &pack_long,                  /* grib_pack procedures long      */
     &unpack_long,                /* grib_unpack procedures long    */
@@ -141,7 +142,6 @@ static void init_class(grib_accessor_class* c)
     c->byte_count    =    (*(c->super))->byte_count;
     c->byte_offset    =    (*(c->super))->byte_offset;
     c->sub_section    =    (*(c->super))->sub_section;
-    c->pack_missing    =    (*(c->super))->pack_missing;
     c->pack_bytes    =    (*(c->super))->pack_bytes;
     c->unpack_bytes    =    (*(c->super))->unpack_bytes;
     c->pack_expression    =    (*(c->super))->pack_expression;
@@ -729,5 +729,36 @@ static int is_missing(grib_accessor* a)
             result = grib_is_missing_string(a, (unsigned char*)value, size);
         }
     }
+    else {
+        return GRIB_INVALID_TYPE;
+    }
     return result;
+}
+
+static int pack_missing(grib_accessor* a)
+{
+    int ktype = GRIB_TYPE_UNDEFINED;
+    int err = 0;
+    size_t size = 1;
+    const int can_be_missing = (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING);
+    if (!can_be_missing)
+        return GRIB_VALUE_CANNOT_BE_MISSING;
+
+    ktype = get_native_type(a);
+    if (ktype == GRIB_TYPE_LONG) {
+        long missing = GRIB_MISSING_LONG;
+        err = pack_long(a, &missing, &size);
+    }
+    else if (ktype == GRIB_TYPE_DOUBLE) {
+        double missing = GRIB_MISSING_DOUBLE;
+        err = pack_double(a, &missing, &size);
+    }
+    else if (ktype == GRIB_TYPE_STRING) {
+        err = pack_string(a, "", &size);
+    }
+    else {
+        err = GRIB_INVALID_TYPE;
+    }
+
+    return err;
 }

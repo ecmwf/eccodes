@@ -65,6 +65,10 @@ int main(int argc, char* argv[])
         assert(!err);
         assert(is_missing == 1);
 
+        /* Set some other keys to be missing */
+        CODES_CHECK(codes_set_missing(h, "blockNumber"), 0);
+        CODES_CHECK(codes_set_missing(h, "#1#heightOfBaseOfCloud"), 0);
+
         /* delete handle */
         codes_handle_delete(h);
 
