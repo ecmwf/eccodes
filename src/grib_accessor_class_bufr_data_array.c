@@ -2139,14 +2139,7 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
 #define MAX_NUMBER_OF_BITMAPS 5
 
 static const int number_of_qualifiers = NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES;
-
-static GRIB_INLINE int significanceQualifierIndex(int X, int Y)
-{
-    static const int a[] = { -1, 0, 1, -1, 2, 3, 4, 5, 6 };
-    int ret = Y + a[X] * NUMBER_OF_QUALIFIERS_PER_CATEGORY;
-    DebugAssert(ret > 0);
-    return ret;
-}
+static const int significanceQualifierIndexArray[] = { -1, 0, 1, -1, 2, 3, 4, 5, 6 };
 
 static GRIB_INLINE void reset_deeper_qualifiers(
     grib_accessor* significanceQualifierGroup[],
@@ -2513,7 +2506,8 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
             elementFromBitmap = NULL;
             if (descriptor->F == 0 && IS_COORDINATE_DESCRIPTOR(descriptor->X) &&
                 self->unpackMode == CODES_BUFR_UNPACK_STRUCTURE) {
-                int sidx = significanceQualifierIndex(descriptor->X, descriptor->Y);
+                const int sidx = descriptor->Y + significanceQualifierIndexArray[descriptor->X] * NUMBER_OF_QUALIFIERS_PER_CATEGORY;
+                DebugAssert(sidx > 0);
                 groupNumber++;
 
                 if (significanceQualifierGroup[sidx]) {
