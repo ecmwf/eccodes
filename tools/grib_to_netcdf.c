@@ -2848,7 +2848,7 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
             }
 
             if (nj != count[naxis] || ni != count[naxis + 1]) {
-                grib_context_log(ctx, GRIB_LOG_ERROR, "Grib %d has different resolution\n", i + 1);
+                grib_context_log(ctx, GRIB_LOG_ERROR, "GRIB message %d has different resolution\n", i + 1);
                 grib_context_log(ctx, GRIB_LOG_ERROR, "lat=%ld, long=%ld instead of lat=%ld, long=%ld\n", nj, ni, count[naxis], count[naxis + 1]);
                 exit(1);
             }
