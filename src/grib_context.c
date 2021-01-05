@@ -766,6 +766,7 @@ void grib_context_free_persistent(const grib_context* c, void* p)
 
 void grib_context_reset(grib_context* c)
 {
+    size_t i = 0;
     if (!c)
         c = grib_context_get_default();
 
@@ -813,6 +814,12 @@ void grib_context_reset(grib_context* c)
 
     if (c->multi_support_on)
         grib_multi_support_reset(c);
+
+    for (i=0; i < MAX_NUM_CONCEPTS; ++i) {
+        if (c->concepts[i]) {
+            grib_trie_delete_container(c->concepts[i]->index);
+        }
+    }
 }
 
 void grib_context_delete(grib_context* c)
