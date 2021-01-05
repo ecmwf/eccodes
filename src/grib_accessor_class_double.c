@@ -217,11 +217,11 @@ static int compare(grib_accessor* a, grib_accessor* b)
 
 static int pack_missing(grib_accessor* a)
 {
-    size_t one   = 1;
+    size_t len   = 1;
     double value = GRIB_MISSING_DOUBLE;
 
     if (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
-        return grib_pack_double(a, &value, &one);
+        return grib_pack_double(a, &value, &len);
     return GRIB_VALUE_CANNOT_BE_MISSING;
 }
 /*
