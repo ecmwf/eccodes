@@ -816,8 +816,14 @@ void grib_context_reset(grib_context* c)
         grib_multi_support_reset(c);
 
     for (i=0; i < MAX_NUM_CONCEPTS; ++i) {
-        if (c->concepts[i]) {
-            grib_trie_delete_container(c->concepts[i]->index);
+        grib_concept_value* cv = c->concepts[i];
+        if (cv) {
+            grib_trie_delete_container(cv->index);
+        }
+        while (cv) {
+            grib_concept_value* n = cv->next;
+            grib_concept_value_delete(c, cv);
+            cv = n;
         }
     }
 }
