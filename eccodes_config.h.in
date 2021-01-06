@@ -36,7 +36,7 @@
 
 #define ECCODES_SAMPLES_PATH    "@ECCODES_SAMPLES_PATH@"
 
-#define GRIB_TIMER @GRIB_TIMER@
+#define ECCODES_TIMER @ECCODES_TIMER@
 
 /* headers */
 
