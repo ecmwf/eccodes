@@ -172,6 +172,18 @@
  parameterCategory = 128 ;
  parameterNumber = 175 ;
 }
+#Eastward turbulent surface stress
+'ewss' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 180 ;
+}
+#Northward turbulent surface stress
+'nsss' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 181 ;
+}
 #Surface runoff
 'sro' = {
  discipline = 192 ;

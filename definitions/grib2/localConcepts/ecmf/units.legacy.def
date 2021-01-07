@@ -172,6 +172,18 @@
  parameterCategory = 128 ;
  parameterNumber = 175 ;
 }
+#Eastward turbulent surface stress
+'N m**-2 s' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 180 ;
+}
+#Northward turbulent surface stress
+'N m**-2 s' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 181 ;
+}
 #Surface runoff
 'kg m**-2' = {
  discipline = 192 ;
