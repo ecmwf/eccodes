@@ -25,6 +25,10 @@ grib_check_key_equals $temp1 gridName 'undefined'
 ${tools_dir}/grib_set -s gridType=unstructured_grid,numberOfGridInReference=94,numberOfGridUsed=200 $sample $temp1
 grib_check_key_equals $temp1 gridName 'unknown'
 
+# Two invocations of grib_set
+${tools_dir}/grib_set -s gridType=unstructured_grid $sample $temp1
+${tools_dir}/grib_set -s unstructuredGridType=ORCA1 $temp1  $temp2
+
 # ORCA1, W grid
 ${tools_dir}/grib_set -s gridType=unstructured_grid,numberOfGridInReference=4,numberOfGridUsed=2 $sample $temp1
 grib_check_key_equals $temp1 'unstructuredGridType'    'ORCA1'
