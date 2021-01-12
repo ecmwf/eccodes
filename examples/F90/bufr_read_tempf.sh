@@ -38,7 +38,8 @@ level  dtime   dlat   dlon pressure geopotH airTemp  dewPtT windDir  windSp  sig
    53 2578.0  0.015  0.018  15000.0 13835.0  207.93   17.32  316.00    8.70   65536
    64 3087.0 -0.021  0.036  10000.0 16310.0  208.29   24.46  340.00    9.60   79872
 EOF
-diff -w $tempRef $tempOut
+
+#diff -w $tempRef $tempOut
 
 
 # Clean up
