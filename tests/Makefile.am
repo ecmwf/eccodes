@@ -59,7 +59,8 @@ TESTS = definitions.sh \
         grib_statistics.sh \
         grib_tigge.sh \
         grib_uerra.sh \
-        grib_tigge_conversions.sh \
+        grib_tigge_conversions1.sh \
+        grib_tigge_conversions2.sh \
         read_any.sh \
         grib_padding.sh \
         grib_grid_lamb_az_eq_area.sh \

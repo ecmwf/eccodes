@@ -16,14 +16,15 @@
 
 REDIRECT=/dev/null
 
+label="grib_tigge_conv2"
 dir="${data_dir}/tigge"
-temp1="temp.grib1_"
-temp2="temp.grib2_"
+temp1="temp.${label}.grib1_"
+temp2="temp.${label}.grib2_"
 
 # --- Do I want to exclude any file pattern from the comparison ?
 exclusion_pattern="tcw|ssr|str|skt|cap|ci|ttr|st|sm|sd|slhf|sshf"
 
-for file in ${dir}/tigge_*.grib; do
+for file in ${dir}/tigge_[f-z]*.grib; do
   exclude=`echo $file | awk " /$exclusion_pattern/ {print \"found\";} "`
   if [ -z "$exclude" ]; then
     rm -f ${temp1} ${temp2}
