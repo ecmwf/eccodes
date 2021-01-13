@@ -774,7 +774,7 @@ static const char* codes_bufr_header_get_centre_name(long edition, long centre_c
         case 255:
             return "consensus";
         case 291:
-            return "iapc";
+            return "anso";
         default:
             return NULL;
     }
