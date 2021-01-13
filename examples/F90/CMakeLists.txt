@@ -115,6 +115,14 @@ foreach( tool ${tests_extra} )
                       TEST_DEPENDS    eccodes_download_gribs eccodes_download_bufrs )
 endforeach()
 
+# Test for CCSDS (AEC) packing
+ecbuild_add_test( TARGET          eccodes_f_grib_set_packing
+                  SOURCES         grib_set_packing.f90
+                  LINKER_LANGUAGE Fortran
+                  LIBS            eccodes_f90 eccodes
+                  CONDITION       HAVE_AEC AND HAVE_FORTRAN
+                  COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/grib_set_packing.sh )
+
 # Executables without a shell script
 # TODO
 ecbuild_add_executable( TARGET    eccodes_f_new_from_file
