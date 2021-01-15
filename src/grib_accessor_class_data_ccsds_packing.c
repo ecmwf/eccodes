@@ -189,6 +189,25 @@ static int value_count(grib_accessor* a, long* count)
 
 #include <libaec.h>
 
+static const char* aec_get_error_message(int code)
+{
+    if (code == AEC_MEM_ERROR)    return "AEC_MEM_ERROR";
+    if (code == AEC_DATA_ERROR)   return "AEC_DATA_ERROR";
+    if (code == AEC_STREAM_ERROR) return "AEC_STREAM_ERROR";
+    if (code == AEC_CONF_ERROR)   return "AEC_CONF_ERROR";
+    if (code == AEC_OK)           return "AEC_OK";
+    return "Unknown error code";
+}
+static void print_aec_stream_info(struct aec_stream* strm, const char* func)
+{
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s flags=%u\n",           func, strm->flags);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s bits_per_sample=%u\n", func, strm->bits_per_sample);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s block_size=%u\n",      func, strm->block_size);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s rsi=%u\n",             func, strm->rsi);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s avail_out=%lu\n",      func, strm->avail_out);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s avail_in=%lu\n",       func, strm->avail_in);
+}
+
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
@@ -278,17 +297,11 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     strm.next_out  = decoded;
     strm.avail_out = size;
 
-    if (hand->context->debug) {
-        fprintf(stderr, "ECCODES DEBUG CCSDS unpack_double flags=%u\n", strm.flags);
-        fprintf(stderr, "ECCODES DEBUG CCSDS unpack_double bits_per_sample=%u\n", strm.bits_per_sample);
-        fprintf(stderr, "ECCODES DEBUG CCSDS unpack_double block_size=%u\n", strm.block_size);
-        fprintf(stderr, "ECCODES DEBUG CCSDS unpack_double rsi=%u\n", strm.rsi);
-        fprintf(stderr, "ECCODES DEBUG CCSDS unpack_double avail_out=%lu\n", strm.avail_out);
-        fprintf(stderr, "ECCODES DEBUG CCSDS unpack_double avail_in=%lu\n", strm.avail_in);
-    }
+    if (hand->context->debug) print_aec_stream_info(&strm, "unpack_double");
 
     if ((err = aec_buffer_decode(&strm)) != AEC_OK) {
-        fprintf(stderr, "aec_buffer_decode Error %d\n", err);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "CCSDS unpack_double: aec_buffer_decode error %d (%s)\n",
+                         err, aec_get_error_message(err));
         err = GRIB_ENCODING_ERROR;
         goto cleanup;
     }
@@ -411,13 +424,15 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     if (grib_get_nearest_smaller_value(hand, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+            "CCSDS pack_double: unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
         return GRIB_INTERNAL_ERROR;
     }
 
     if (reference_value > min) {
-        fprintf(stderr, "reference_value=%g min_value=%g diff=%g\n", reference_value, min, reference_value - min);
-        Assert(reference_value <= min);
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+            "CCSDS pack_double: reference_value=%g min_value=%g diff=%g", reference_value, min, reference_value - min);
+        DebugAssert(reference_value <= min);
+        return GRIB_INTERNAL_ERROR;
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
@@ -446,7 +461,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     /*       buflen = n_vals*(bits_per_value/8);*/
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,
-                     "grib_accessor_data_ccsds_packing : pack_double : packing %s, %d values", a->name, n_vals);
+        "CCSDS pack_double: packing %s, %d values", a->name, n_vals);
 
     buflen += 10240;
     buf = grib_context_buffer_malloc_clear(a->context, buflen);
@@ -485,18 +500,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         This does not support spherical harmonics, and treats 24 differently than:
         see http://cdo.sourcearchive.com/documentation/1.5.1.dfsg.1-1/cgribexlib_8c_source.html
     */
-
-    if (hand->context->debug) {
-        fprintf(stderr, "ECCODES DEBUG CCSDS pack_double flags=%u\n", strm.flags);
-        fprintf(stderr, "ECCODES DEBUG CCSDS pack_double bits_per_sample=%u\n", strm.bits_per_sample);
-        fprintf(stderr, "ECCODES DEBUG CCSDS pack_double block_size=%u\n", strm.block_size);
-        fprintf(stderr, "ECCODES DEBUG CCSDS pack_double rsi=%u\n", strm.rsi);
-        fprintf(stderr, "ECCODES DEBUG CCSDS pack_double avail_out=%lu\n", strm.avail_out);
-        fprintf(stderr, "ECCODES DEBUG CCSDS pack_double avail_in=%lu\n", strm.avail_in);
-    }
+    if (hand->context->debug) print_aec_stream_info(&strm, "pack_double");
 
     if ((err = aec_buffer_encode(&strm)) != AEC_OK) {
-        fprintf(stderr, "aec_buffer_encode Error %d\n", err);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "CCSDS pack_double: aec_buffer_encode error %d (%s)\n",
+                         err, aec_get_error_message(err));
         err = GRIB_ENCODING_ERROR;
         goto cleanup;
     }
@@ -543,7 +551,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
 #else
 
-static void print_error_msg(grib_context* c)
+static void print_error_feature_not_enabled(grib_context* c)
 {
     grib_context_log(c, GRIB_LOG_ERROR,
                      "grib_accessor_data_ccsds_packing: CCSDS support not enabled. "
@@ -551,17 +559,17 @@ static void print_error_msg(grib_context* c)
 }
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
-    print_error_msg(a->context);
+    print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
-    print_error_msg(a->context);
+    print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 {
-    print_error_msg(a->context);
+    print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
