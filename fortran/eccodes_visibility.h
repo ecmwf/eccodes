@@ -36,3 +36,10 @@ public :: codes_index_get,codes_index_select,&
           codes_index_create,codes_index_get_size,codes_index_release,&
           codes_grib_util_sections_copy
 public :: codes_datetime_to_julian,codes_julian_to_datetime,codes_copy_key
+
+! these public declarations cannot be added in grib_kinds.h
+! since if you do that, grib_kinds.h cannot be included
+! inside interface statements
+public :: kindOfInt, kindOfLong, kindOfSize_t, kindOfSize
+public :: kindOfDouble, kindOfFloat, sizeOfInteger, sizeOfInteger2
+public ::  sizeOfInteger4, sizeOfReal4, sizeOfReal8

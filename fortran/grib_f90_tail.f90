@@ -530,7 +530,7 @@
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
-        iret=grib_f_read_file(ifile,buffer,ibytes)
+        iret=grib_f_read_file_char(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -557,7 +557,7 @@
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_read_file(ifile,buffer,nbytes)
+        iret=grib_f_read_file_char(ifile,buffer,nbytes)
         if (present(status)) then
            status = iret
         else
@@ -586,7 +586,7 @@
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
-        iret=grib_f_read_file(ifile,buffer,ibytes)
+        iret=grib_f_read_file_int4(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -613,7 +613,7 @@
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_read_file(ifile,buffer,nbytes)
+        iret=grib_f_read_file_int4(ifile,buffer,nbytes)
         if (present(status)) then
            status = iret
         else
@@ -642,7 +642,7 @@
       integer(kind=kindOfInt)                          :: iret
 
       ibytes=nbytes
-      iret=grib_f_read_file(ifile,buffer,ibytes)
+      iret=grib_f_read_file_real4(ifile,buffer,ibytes)
       if (present(status)) then
         status = iret
       else
@@ -669,7 +669,7 @@
       integer(kind=kindOfInt),optional, intent(out)    :: status
       integer(kind=kindOfInt)                          :: iret
 
-      iret=grib_f_read_file(ifile,buffer,nbytes)
+      iret=grib_f_read_file_real4(ifile,buffer,nbytes)
       if (present(status)) then
         status = iret
       else
@@ -698,7 +698,7 @@
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
-        iret=grib_f_read_file(ifile,buffer,ibytes)
+        iret=grib_f_read_file_real8(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -725,7 +725,7 @@
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_read_file(ifile,buffer,nbytes)
+        iret=grib_f_read_file_real8(ifile,buffer,nbytes)
         if (present(status)) then
            status = iret
         else
@@ -753,12 +753,12 @@
         integer(kind=kindOfSize_t)                       :: ibytes
         integer(kind=kindOfInt)                          :: iret
 
-        ibytes=nbytes
-        iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
+        ibytes=int(nbytes,kindOfSize_t)
+        iret=grib_f_read_any_from_file_int4(ifile,buffer,ibytes)
         if (iret == GRIB_SUCCESS .and. ibytes > huge(nbytes)) then
           iret = GRIB_MESSAGE_TOO_LARGE
         endif
-        nbytes=ibytes
+        nbytes=int(ibytes,kindOfInt)
         if (present(status)) then
            status = iret
         else
@@ -785,7 +785,7 @@
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_read_any_from_file(ifile,buffer,nbytes)
+        iret=grib_f_read_any_from_file_int4(ifile,buffer,nbytes)
         if (present(status)) then
            status = iret
         else
@@ -814,11 +814,11 @@
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
-        iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
+        iret=grib_f_read_any_from_file_real4(ifile,buffer,ibytes)
         if (iret == GRIB_SUCCESS .and. ibytes > huge(nbytes)) then
           iret = GRIB_MESSAGE_TOO_LARGE
         endif
-        nbytes=ibytes
+        nbytes=int(ibytes,kindOfInt)
         if (present(status)) then
            status = iret
         else
@@ -845,7 +845,7 @@
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_read_any_from_file(ifile,buffer,nbytes)
+        iret=grib_f_read_any_from_file_real4(ifile,buffer,nbytes)
         if (present(status)) then
            status = iret
         else
@@ -874,11 +874,11 @@
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
-        iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
+        iret=grib_f_read_any_from_file_real8(ifile,buffer,ibytes)
         if (iret == GRIB_SUCCESS .and. ibytes > huge(nbytes)) then
           iret = GRIB_MESSAGE_TOO_LARGE
         endif
-        nbytes=ibytes
+        nbytes=int(ibytes,kindOfInt)
         if (present(status)) then
            status = iret
         else
@@ -905,7 +905,7 @@
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_read_any_from_file(ifile,buffer,nbytes)
+        iret=grib_f_read_any_from_file_real8(ifile,buffer,nbytes)
         if (present(status)) then
            status = iret
         else
@@ -934,11 +934,11 @@
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
-        iret=grib_f_read_any_from_file(ifile,buffer,ibytes)
+        iret=grib_f_read_any_from_file_char(ifile,buffer,ibytes)
         if (iret == GRIB_SUCCESS .and. ibytes > huge(nbytes)) then
           iret = GRIB_MESSAGE_TOO_LARGE
         endif
-        nbytes=ibytes
+        nbytes=int(ibytes,kindOfInt)
         if (present(status)) then
            status = iret
         else
@@ -965,7 +965,7 @@
         integer(kind=kindOfInt),optional, intent(out)    :: status
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_read_any_from_file(ifile,buffer,nbytes)
+        iret=grib_f_read_any_from_file_char(ifile,buffer,nbytes)
         if (present(status)) then
            status = iret
         else
@@ -994,7 +994,7 @@
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
-        iret=grib_f_write_file(ifile,buffer,ibytes)
+        iret=grib_f_write_file_char(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -1021,7 +1021,7 @@
         integer(kind=kindOfInt),optional,intent(out)     :: status
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_write_file(ifile,buffer,nbytes)
+        iret=grib_f_write_file_char(ifile,buffer,nbytes)
         if (present(status)) then
            status = iret
         else
@@ -1050,7 +1050,7 @@
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
-        iret=grib_f_write_file(ifile,buffer,ibytes)
+        iret=grib_f_write_file_int4(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -1077,7 +1077,7 @@
         integer(kind=kindOfInt),optional,intent(out)     :: status
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_write_file(ifile,buffer,nbytes)
+        iret=grib_f_write_file_int4(ifile,buffer,nbytes)
         if (present(status)) then
            status = iret
         else
@@ -1106,7 +1106,7 @@
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
-        iret=grib_f_write_file(ifile,buffer,ibytes)
+        iret=grib_f_write_file_real4(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -1133,7 +1133,7 @@
         integer(kind=kindOfInt),optional,intent(out)     :: status
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_write_file(ifile,buffer,nbytes)
+        iret=grib_f_write_file_real4(ifile,buffer,nbytes)
         if (present(status)) then
            status = iret
         else
@@ -1162,7 +1162,7 @@
         integer(kind=kindOfInt)                          :: iret
 
         ibytes=nbytes
-        iret=grib_f_write_file(ifile,buffer,ibytes)
+        iret=grib_f_write_file_real8(ifile,buffer,ibytes)
         if (present(status)) then
            status = iret
         else
@@ -1189,7 +1189,7 @@
         integer(kind=kindOfInt),optional,intent(out)     :: status
         integer(kind=kindOfInt)                          :: iret
 
-        iret=grib_f_write_file(ifile,buffer,nbytes)
+        iret=grib_f_write_file_real8(ifile,buffer,nbytes)
         if (present(status)) then
            status = iret
         else
@@ -1362,7 +1362,7 @@
       integer(kind=kindOfInt)                           :: iret
 
       size_bytes=size(message,dim=1)
-      iret = grib_f_new_from_message ( gribid, message, size_bytes )
+      iret = grib_f_new_from_message_char ( gribid, message, size_bytes )
       if (present(status)) then
          status = iret
       else
@@ -1395,7 +1395,7 @@
       integer(kind=kindOfInt)                         :: iret
 
       size_bytes=size(message,dim=1)*sizeOfInteger4
-      iret = grib_f_new_from_message ( gribid, message, size_bytes )
+      iret = grib_f_new_from_message_int4 ( gribid, message, size_bytes )
       if (present(status)) then
          status = iret
       else
@@ -2705,7 +2705,7 @@
       if (iret == GRIB_SUCCESS .and. ibytes > huge(nbytes)) then
         iret = GRIB_MESSAGE_TOO_LARGE
       endif
-      nbytes = ibytes
+      nbytes = int(ibytes,kindOfInt)
       if (iret /= 0) then
         call grib_f_write_on_fail(gribid)
       endif
