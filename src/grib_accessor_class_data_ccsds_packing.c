@@ -200,12 +200,12 @@ static const char* aec_get_error_message(int code)
 }
 static void print_aec_stream_info(struct aec_stream* strm, const char* func)
 {
-    fprintf(stderr, "ECCODES DEBUG CCSDS %s flags=%u\n",           func, strm->flags);
-    fprintf(stderr, "ECCODES DEBUG CCSDS %s bits_per_sample=%u\n", func, strm->bits_per_sample);
-    fprintf(stderr, "ECCODES DEBUG CCSDS %s block_size=%u\n",      func, strm->block_size);
-    fprintf(stderr, "ECCODES DEBUG CCSDS %s rsi=%u\n",             func, strm->rsi);
-    fprintf(stderr, "ECCODES DEBUG CCSDS %s avail_out=%lu\n",      func, strm->avail_out);
-    fprintf(stderr, "ECCODES DEBUG CCSDS %s avail_in=%lu\n",       func, strm->avail_in);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.flags=%u\n",           func, strm->flags);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.bits_per_sample=%u\n", func, strm->bits_per_sample);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.block_size=%u\n",      func, strm->block_size);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.rsi=%u\n",             func, strm->rsi);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_out=%lu\n",      func, strm->avail_out);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_in=%lu\n",       func, strm->avail_in);
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
@@ -213,15 +213,14 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
     grib_handle* hand = grib_handle_of_accessor(a);
 
-    int err = GRIB_SUCCESS;
-    int i;
+    int err = GRIB_SUCCESS, i = 0;
     size_t buflen = grib_byte_count(a);
     struct aec_stream strm;
     double bscale      = 0;
     double dscale      = 0;
     unsigned char* buf = NULL;
     size_t n_vals      = 0;
-    size_t size;
+    size_t size        = 0;
     unsigned char* decoded = NULL;
     unsigned char* p       = NULL;
     long pos               = 0;
@@ -325,8 +324,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
 
     grib_handle* hand = grib_handle_of_accessor(a);
-    int err = GRIB_SUCCESS;
-    int i;
+    int err = GRIB_SUCCESS, i = 0;
     size_t buflen = 0;
 
     unsigned char* buf     = NULL;
@@ -337,15 +335,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long binary_scale_factor  = 0;
     long decimal_scale_factor = 0;
     double reference_value    = 0;
-    long bits8;
-    long bits_per_value = 0;
-    double max, min;
-
-    double d;
+    long bits8                = 0;
+    long bits_per_value       = 0;
+    double max, min, d, divisor;
 
     unsigned char* p;
-    double divisor;
-
     long number_of_data_points;
 
     long ccsds_flags;
@@ -382,12 +376,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    if (bits_per_value == 0) {
-        int i;
-        /* constant field */
-        for (i = 1; i < n_vals; i++)
+    if (bits_per_value == 0) { /* constant field */
+#ifdef DEBUG
+        for (i = 1; i < n_vals; i++) {
             Assert(val[i] == val[0]);
-
+        }
+#endif
         if ((err = grib_set_double_internal(hand, self->reference_value, val[0])) != GRIB_SUCCESS)
             return err;
         {
@@ -458,7 +452,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             buflen++;
         }
     }
-    /*       buflen = n_vals*(bits_per_value/8);*/
+    /* buflen = n_vals*(bits_per_value/8);*/
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,
         "CCSDS pack_double: packing %s, %d values", a->name, n_vals);
