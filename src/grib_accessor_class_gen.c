@@ -373,7 +373,7 @@ static int unpack_string_array(grib_accessor* a, char** v, size_t* len)
     grib_unpack_string(a, v[0], &length);
     *len = 1;
 
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static int pack_expression(grib_accessor* a, grib_expression* e)
