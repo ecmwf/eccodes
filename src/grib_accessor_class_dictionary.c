@@ -368,7 +368,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     *val = atol(buffer);
     *len = 1;
 
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
@@ -384,5 +384,5 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     *val = atof(buffer);
     *len = 1;
 
-    return err;
+    return GRIB_SUCCESS;
 }

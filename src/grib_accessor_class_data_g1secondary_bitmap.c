@@ -159,7 +159,7 @@ static int value_count(grib_accessor* a, long* count)
         return err;
 
     *count = expand_by * len;
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
