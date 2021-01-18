@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 5.42, Grid point and spectral data - CCSDS recommended lossless compression
+# TEMPLATE 5.42, Grid point data - CCSDS recommended lossless compression
 
 include "grib2/template.5.packing.def";
 include "grib2/template.5.original_values.def";
