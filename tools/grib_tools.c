@@ -295,6 +295,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
         grib_handle_delete(h);
     }
 
+    if (set->size==0) fprintf(stderr, "no messages found in fieldset\n");
     grib_tool_finalise_action(options);
 
     grib_fieldset_delete(set);
@@ -416,7 +417,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
             fclose(infile->file);
 
         if (infile->handle_count == 0) {
-            fprintf(dump_file, "no messages found in %s\n", infile->name);
+            fprintf(stderr, "no messages found in %s\n", infile->name);
             if (options->fail)
                 exit(1);
         }
@@ -733,7 +734,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
     if (ns) {
         kiter = grib_keys_iterator_new(h, 0, ns);
         if (!kiter) {
-            fprintf(dump_file, "ERROR: Unable to create keys iterator\n");
+            fprintf(stderr, "ERROR: Unable to create keys iterator\n");
             exit(1);
         }
 
@@ -829,6 +830,17 @@ void grib_skip_check(grib_runtime_options* options, grib_handle* h)
 {
     int i, ret = 0;
     grib_values* v = NULL;
+
+    /* ECC-1179: bufr_copy/bufr_ls: Allow 'where' clause with Data Section keys */
+    if (options->constraints_count > 0 && h->product_kind == PRODUCT_BUFR) {
+        for (i = 0; i < options->set_values_count; i++) {
+            if (strcmp(options->set_values[i].name, "unpack")==0) {
+                grib_set_long(h, "unpack", 1);
+                break;
+            }
+        }
+    }
+
     for (i = 0; i < options->constraints_count; i++) {
         v = &(options->constraints[i]);
         if (v->equal) {

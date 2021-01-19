@@ -18,8 +18,8 @@ if( HAVE_BUILD_TOOLS )
           bufr_copy_message
           grib_get_keys
           grib_get_data
-          get_pl
-          get_pv
+          grib_get_pl
+          grib_get_pv
           grib_keys_iterator
           grib_multi_write
           grib_multi
@@ -33,9 +33,9 @@ if( HAVE_BUILD_TOOLS )
           grib_count_messages
           grib_count_messages_multi
           grib_copy_namespace
-          read_message
+          grib_read_message
           read_from_file
-          get_set_uuid
+          grib_get_set_uuid
           grib_clone
           bufr_attributes
           bufr_copy_data
@@ -48,6 +48,7 @@ if( HAVE_BUILD_TOOLS )
           bufr_read_scatterometer
           bufr_read_synop
           bufr_read_temp
+          bufr_read_tempf
           bufr_read_tropical_cyclone
           bufr_set_keys
           bufr_copy_keys
@@ -63,8 +64,8 @@ else()
           grib_index
           grib_get_keys
           grib_get_data
-          get_pl
-          get_pv
+          grib_get_pl
+          grib_get_pv
           grib_keys_iterator
           grib_multi
           grib_nearest
@@ -86,6 +87,7 @@ else()
           bufr_read_scatterometer
           bufr_read_synop
           bufr_read_temp
+          bufr_read_tempf
           bufr_read_tropical_cyclone
           bufr_set_keys
           bufr_subset

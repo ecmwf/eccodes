@@ -214,7 +214,12 @@ static void destroy(grib_context* context, grib_action* act)
 
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
-    grib_context_free_persistent(context, act->name_space);
+    if(act->name_space) {
+        grib_context_free_persistent(context, act->name_space);
+    }
     if (act->set)
         grib_context_free_persistent(context, act->set);
+    if (act->defaultkey) {
+        grib_context_free_persistent(context, act->defaultkey);
+    }
 }

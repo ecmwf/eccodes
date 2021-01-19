@@ -29,7 +29,7 @@ TESTS = definitions.sh \
         unit_tests.sh \
         grib2to1.sh \
         grib2to3.sh \
-        badgrib.sh \
+        grib_bad.sh \
         grib_ls.sh \
         grib_filter.sh  \
         grib_multi.sh \

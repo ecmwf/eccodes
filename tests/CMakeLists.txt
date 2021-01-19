@@ -30,10 +30,13 @@ list(APPEND test_bins
     bufr_ecc-517
     bufr_get_element
     bufr_extract_headers
+    extract_offsets
     bufr_check_descriptors
     grib_sh_ieee64
     ieee
+    grib_set_bytes
     grib_sh_imag
+    grib_sh_spectral_complex
     grib_lam_bf
     grib_lam_gp)
 
@@ -57,8 +60,10 @@ if( HAVE_BUILD_TOOLS )
         bufr_dump_samples
         bufr_check_descriptors
         definitions
+        grib2_version
         grib_calendar
         grib_md5
+        grib_cfNames
         filter_substr
         grib_uerra
         grib_2nd_order_numValues
@@ -68,13 +73,17 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1150
         grib_ecc-1053
         grib_ecc-1065
+        grib_ecc-1167
+        grib_ecc-1170
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
         bufr_rdbSubTypes
         grib_efas
         grib_sh_imag
+        grib_sh_spectral_complex
         pseudo_diag
+        grib_levtype
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
@@ -110,6 +119,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_get_element
         bufr_wmo_tables
         bufr_extract_headers
+        extract_offsets
         bufr_ecc-673
         bufr_ecc-428
         bufr_ecc-286
@@ -125,8 +135,10 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-765
         bufr_ecc-875
         bufr_ecc-887
+        bufr_ecc-1187
         grib_ecc-490
         grib_ecc-756
+        grib_ecc-806
         grib_ecc-873
         grib_ecc-600
         grib_ecc-923
@@ -135,6 +147,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1000
         grib_ecc-1001
         grib_ecc-1030
+        grib_set_bytes
         bufr_ecc-556
         gts_get
         gts_ls
@@ -155,8 +168,9 @@ if( HAVE_BUILD_TOOLS )
         grib2to1
         grib1to3
         grib2to3
+        grib2_templates
         grib3_templates
-        badgrib
+        grib_bad
         grib_ls
         grib_ls_json
         grib_filter
@@ -243,7 +257,7 @@ if( HAVE_BUILD_TOOLS )
     endif()
 
 
-    if( HAVE_PYTHON AND ENABLE_EXTRA_TESTS )
+    if( HAVE_PYTHON2 AND ENABLE_EXTRA_TESTS )
         list( APPEND ptests bufr_dump_encode_python bufr_dump_decode_python )
         foreach( test ${ptests} )
             ecbuild_add_test( TARGET eccodes_t_${test}
@@ -337,10 +351,10 @@ if( HAVE_BUILD_TOOLS )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_split_by_rdbSubtype.sh
                       TEST_DEPENDS eccodes_download_bufrs )
 
-    # Performance test. Must have -DENABLE_GRIB_TIMER=ON
+    # Performance test. Must have -DENABLE_TIMER=ON
     ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
                       TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS AND ENABLE_GRIB_TIMER
+                      CONDITION ENABLE_EXTRA_TESTS AND ENABLE_TIMER
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
                       TEST_DEPENDS eccodes_download_gribs )
 else()
@@ -350,6 +364,7 @@ else()
         julian
         bufr_check_descriptors
         grib_sh_imag
+        grib_sh_spectral_complex
         grib_2nd_order_numValues
         grib_sh_ieee64)
 

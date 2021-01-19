@@ -332,9 +332,9 @@ AC_ARG_ENABLE([timer],
   [AS_HELP_STRING([--enable-timer],[enable timer [by default disabled]])],
      [with_timer=${enableval}], [with_timer=no])
 if test "x${with_timer}" = xyes; then
-  AC_DEFINE(GRIB_TIMER,1,1->Timer on 0->Timer off)
+  AC_DEFINE(ECCODES_TIMER,1,1->Timer on 0->Timer off)
 else
-  AC_DEFINE(GRIB_TIMER,0,1->Timer on 0->Timer off)
+  AC_DEFINE(ECCODES_TIMER,0,1->Timer on 0->Timer off)
 fi
 
 
@@ -670,7 +670,7 @@ AC_CHECK_FUNCS([bzero gettimeofday])
 
 AX_LINUX_DISTRIBUTION
 
-AC_OUTPUT( Makefile src/Makefile fortran/Makefile tools/Makefile data/Makefile definitions/Makefile samples/Makefile ifs_samples/grib1/Makefile ifs_samples/grib1_mlgrib2/Makefile ifs_samples/grib1_mlgrib2_ieee64/Makefile tests/Makefile examples/C/Makefile examples/F90/Makefile tigge/Makefile perl/GRIB-API/Makefile.PL perl/Makefile python/Makefile examples/python/Makefile)
+AC_OUTPUT( Makefile src/Makefile fortran/Makefile tools/Makefile data/Makefile definitions/Makefile samples/Makefile ifs_samples/grib1/Makefile ifs_samples/grib1_mlgrib2/Makefile ifs_samples/grib1_mlgrib2_ieee64/Makefile tests/Makefile examples/C/Makefile examples/F90/Makefile tigge/Makefile python/Makefile examples/python/Makefile)
 
 AC_MSG_NOTICE([
 

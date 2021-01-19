@@ -39,8 +39,8 @@ if command -v "ncdump" >/dev/null 2>&1; then
     NC_DUMPER="ncdump"
 fi
 
-echo "Test ECC-1041: One parameter with different expvers"
-# --------------------------------------------------------
+echo "Test ECC-1041: One parameter with different expvers ..."
+# ------------------------------------------------------------
 # This has 5 messages, all 'tp'. Change the first message to have a different expver
 input=${data_dir}/tp_ecmwf.grib
 ${tools_dir}/grib_set -w stepRange=12 -s experimentVersionNumber=0005 $input $tempGrib
@@ -72,8 +72,8 @@ for dt in $ncf_types; do
     done
 done
 
-echo "Test creating different kinds; netcdf3 classic and large"
-# -------------------------------------------------------------
+echo "Test creating different kinds; netcdf3 classic and large ..."
+# ------------------------------------------------------------------
 # TODO: enable tests for netcdf4 formats too
 input=${data_dir}/regular_latlon_surface.grib2
 ${tools_dir}/grib_to_netcdf -k 1 -o $tempNetcdf $input >/dev/null
@@ -81,14 +81,28 @@ ${tools_dir}/grib_to_netcdf -k 2 -o $tempNetcdf $input >/dev/null
 #${tools_dir}/grib_to_netcdf -k 3 -o $tempNetcdf $input >/dev/null
 #${tools_dir}/grib_to_netcdf -k 4 -o $tempNetcdf $input >/dev/null
 
-echo "Test for ECC-1060"
-# -----------------------
+echo "Test ECC-1060 ..."
+# ----------------------
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=30 $sample2 $tempGrib
 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=31 $sample2 $tempGrib
 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
 
+echo "Test different resolutions ..."
+# ------------------------------------
+# This should fail as messages have different resolutions
+tempGrib2=temp.${label}.2.grib
+${tools_dir}/grib_set -s Ni=17,Nj=32,step=12 $ECCODES_SAMPLES_PATH/regular_ll_pl_grib2.tmpl $tempGrib
+cat $ECCODES_SAMPLES_PATH/regular_ll_pl_grib2.tmpl $tempGrib > $tempGrib2
+set +e
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib2 2>$tempText
+status=$?
+set -e
+[ $status = 1 ]
+grep -q "GRIB message 2 has different resolution" $tempText
+
+rm -f $tempGrib2
 
 # Clean up
 rm -f $tempNetcdf $tempGrib $tempText

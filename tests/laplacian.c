@@ -17,7 +17,7 @@
 #define BUFF_SIZE 50000000
 
 #ifdef HAVE_LIBEMOS
-#if GRIB_TIMER
+#if ECCODES_TIMER
 #define TEST_OK
 #endif
 #endif

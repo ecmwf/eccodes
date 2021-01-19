@@ -1,0 +1,16 @@
+name: Notify ecmwflibs
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: mvasigh/dispatch-action@main
+      with:
+          token: ${{ secrets.NOTIFY_ECMWFLIBS }}
+          repo: ecmwflibs
+          owner: ecmwf
+          event_type: eccodes-updated

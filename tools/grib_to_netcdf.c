@@ -1040,7 +1040,7 @@ static err to_expand_mem(field* g)
         }
 
         if (count != g->value_count)
-            grib_context_log(ctx, GRIB_LOG_FATAL, "ecCodes: value count mismatch %d %d", count, g->value_count);
+            grib_context_log(ctx, GRIB_LOG_FATAL, "ecCodes: value count mismatch %ld %ld", count, g->value_count);
 
         if ((e = grib_get_long(g->handle, "missingValuesPresent", &bitmap))) {
             grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get missingValuesPresent: %s", grib_get_error_message(e));
@@ -2460,7 +2460,7 @@ static int compute_scale(dataset_t* subset)
 
     if (scaled_max > nc_type_values[idx].nc_type_max) {
         grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: scaled_max (=%lld) > nc_type_max (=%lf). Set sf to 1.0",
-                         scaled_max, nc_type_values[idx].nc_type_max);
+                         (long long)scaled_max, nc_type_values[idx].nc_type_max);
         sf = 1.0; /* ECC-685 */
     }
 
@@ -2468,9 +2468,11 @@ static int compute_scale(dataset_t* subset)
     test_scaled_min    = (char)scaled_min;
     test_scaled_median = (char)scaled_median;
 
-    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: scaled_max: %lld, scaled_min: %lld, scaled_median: %lld, x: %lf", scaled_max, scaled_min, scaled_median, x);
+    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: scaled_max: %lld, scaled_min: %lld, scaled_median: %lld, x: %lf",
+                     (long long)scaled_max, (long long)scaled_min, (long long)scaled_median, x);
 
-    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: test_scaled_max: %x, test_scaled_min: %x, test_scaled_median: %x", test_scaled_max, test_scaled_min, test_scaled_median, x);
+    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: test_scaled_max: %x, test_scaled_min: %x, test_scaled_median: %x",
+                     test_scaled_max, test_scaled_min, test_scaled_median);
 
     max    = scaled_max * sf + ao;
     min    = scaled_min * sf + ao;
@@ -2846,8 +2848,8 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
             }
 
             if (nj != count[naxis] || ni != count[naxis + 1]) {
-                grib_context_log(ctx, GRIB_LOG_ERROR, "Grib %d has different resolution\n", i + 1);
-                grib_context_log(ctx, GRIB_LOG_ERROR, "lat=%d, long=%d instead of lat=%d, long=%d\n", nj, ni, count[naxis], count[naxis + 1]);
+                grib_context_log(ctx, GRIB_LOG_ERROR, "GRIB message %d has different resolution\n", i + 1);
+                grib_context_log(ctx, GRIB_LOG_ERROR, "lat=%ld, long=%ld instead of lat=%ld, long=%ld\n", nj, ni, count[naxis], count[naxis + 1]);
                 exit(1);
             }
 

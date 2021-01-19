@@ -12,7 +12,31 @@
 #include <assert.h>
 
 #define MAX_KEYS 100
+#if 0
+int main(int argc, char* argv[])
+{
+    char *filename;
+    int err = 0;
+    int num_messages = 0, i =0;
+    off_t* offsets = NULL;
+    codes_context* c = codes_context_get_default();
+    const int strict_mode = 1;
 
+    /* Usage: prog file */
+    assert(argc == 2);
+
+    filename = argv[1];
+    err = codes_extract_offsets_malloc(c, filename, PRODUCT_GRIB, &offsets, &num_messages, strict_mode);
+    assert(!err);
+    
+    for (i = 0; i < num_messages; ++i) {
+        printf("Message #%d: %lu\n", i, offsets[i]);
+    }
+    free(offsets);
+    return 0;
+}
+#endif
+#if 1
 int main(int argc, char* argv[])
 {
     char *filename, *keys;
@@ -60,3 +84,4 @@ int main(int argc, char* argv[])
 
     return 0;
 }
+#endif
