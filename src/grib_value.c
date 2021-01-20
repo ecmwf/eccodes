@@ -95,10 +95,14 @@ int grib_set_long(grib_handle* h, const char* name, long val)
 
     a = grib_find_accessor(h, name);
 
-    if (h->context->debug)
-        fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld\n", name, (long)val);
-
     if (a) {
+        if (h->context->debug) {
+            if (strcmp(name, a->name)!=0)
+                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (a->name=%s)\n", name, (long)val, a->name);
+            else
+                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld\n", name, (long)val);
+        }
+
         if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
             return GRIB_READ_ONLY;
 
@@ -318,10 +322,14 @@ int grib_set_double(grib_handle* h, const char* name, double val)
 
     a = grib_find_accessor(h, name);
 
-    if (h->context->debug)
-        fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%g\n", name, val);
-
     if (a) {
+        if (h->context->debug) {
+            if (strcmp(name, a->name)!=0)
+                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%g (a->name=%s)\n", name, val, a->name);
+            else
+                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%g\n", name, val);
+        }
+
         if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
             return GRIB_READ_ONLY;
 
@@ -392,10 +400,14 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
 
     a = grib_find_accessor(h, name);
 
-    if (h->context->debug)
-        fprintf(stderr, "ECCODES DEBUG grib_set_string %s=|%s|\n", name, val);
-
     if (a) {
+        if (h->context->debug) {
+            if (strcmp(name, a->name)!=0)
+                fprintf(stderr, "ECCODES DEBUG grib_set_string %s=|%s| (a->name=%s)\n", name, val, a->name);
+            else
+                fprintf(stderr, "ECCODES DEBUG grib_set_string %s=|%s|\n", name, val);
+        }
+
         if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
             return GRIB_READ_ONLY;
 
