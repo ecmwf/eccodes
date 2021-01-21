@@ -65,6 +65,7 @@ if( HAVE_BUILD_TOOLS )
         grib_calendar
         grib_md5
         grib_cfNames
+        grib_packing_order
         filter_substr
         grib_uerra
         grib_2nd_order_numValues

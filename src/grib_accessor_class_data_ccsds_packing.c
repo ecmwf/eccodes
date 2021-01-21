@@ -330,7 +330,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     unsigned char* buf     = NULL;
     unsigned char* encoded = NULL;
     size_t n_vals          = 0;
-    //long nn                = 0;
 
     long binary_scale_factor  = 0;
     long decimal_scale_factor = 0;
@@ -350,9 +349,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     self->dirty = 1;
 
-    //if ((err = grib_value_count(a, &nn)) != GRIB_SUCCESS)
-    //    return err;
-    //n_vals = nn;
     n_vals = *len;
 
     if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
