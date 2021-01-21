@@ -35,6 +35,7 @@ list(APPEND test_bins
     grib_sh_ieee64
     ieee
     grib_set_bytes
+    grib_packing_order
     grib_sh_imag
     grib_sh_spectral_complex
     grib_lam_bf
