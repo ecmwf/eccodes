@@ -400,14 +400,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long scanning_mode;
     long list_defining_points;
     long number_of_data_points;
-    long nn = 0;
 
     self->dirty = 1;
 
-    err    = grib_value_count(a, &nn);
-    n_vals = nn;
-    if (err)
-        return err;
+    n_vals = *len;
 
     if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
         return err;
