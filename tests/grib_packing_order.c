@@ -1,5 +1,14 @@
-#include <assert.h>
+/*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
 
+#include <assert.h>
 #include "eccodes.h"
 
 /* Values taken from an actual IFS forecast run for paramId=133 (Specific humidity) */
@@ -24813,7 +24822,7 @@ int main(int argc, char** argv)
         CODES_CHECK(codes_set_string(h, "packingType", packing_type, &str_len), 0);
     }
     
-    printf("Set values. values_len=%lu\n", values_len);
+    printf("Set values. values_len=%lu\n", (unsigned long)values_len);
     CODES_CHECK(codes_set_double_array(h, "values", values, values_len), 0);
     
     if (packing_stage == VALUES_BEFORE_PACKING_TYPE) {
