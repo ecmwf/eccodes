@@ -1,5 +1,5 @@
 #!/bin/sh
-# set -e
+
 TEST_DIR=`dirname $0`
 
 if [ $# -ne 1 ]; then
@@ -7,10 +7,7 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-TEST_TITLE=""
-if [ $# -eq 1 ]; then
-  TEST_TITLE="$1"
-fi
+TEST_TITLE="$1"
 
 # Check label is unique
 grep -q "label=\"$TEST_TITLE\"" $TEST_DIR/*.sh
@@ -35,9 +32,11 @@ cat <<EOF
 set -u
 REDIRECT=/dev/null
 label="$TEST_TITLE"
-temp=\${label}".grib.tmp"
-sample1=\$ECCODES_SAMPLES_PATH/GRIB1.tmpl
-sample2=\$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+temp=temp.\$label
+sample_grib1=\$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+sample_grib2=\$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+sample_bufr3=\$ECCODES_SAMPLES_PATH/BUFR3.tmpl
+sample_bufr4=\$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 
 #...
 #infile=\${data_dir}/SOME_FILE
