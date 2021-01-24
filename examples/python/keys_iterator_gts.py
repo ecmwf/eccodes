@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -20,14 +20,14 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     while 1:
-        bid = gts_new_from_file(f)
-        if bid is None:
+        gid = gts_new_from_file(f)
+        if gid is None:
             break
 
-        iterid = codes_keys_iterator_new(bid)
+        iterid = codes_keys_iterator_new(gid)
 
         # Different types of keys can be skipped
         # codes_skip_computed(iterid)
@@ -36,11 +36,11 @@ def example():
 
         while codes_keys_iterator_next(iterid):
             keyname = codes_keys_iterator_get_name(iterid)
-            keyval = codes_get_string(iterid, keyname)
+            keyval = codes_get_string(gid, keyname)
             print("%s = %s" % (keyname, keyval))
 
         codes_keys_iterator_delete(iterid)
-        codes_release(bid)
+        codes_release(gid)
 
     f.close()
 

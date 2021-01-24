@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -25,7 +25,6 @@ REDIRECT=/dev/null
 
 echo $PYTHON $examples_src
 #Write the key values into a file
-#$PYTHON $examples_src/bufr_read_tropical_cyclone.py >$fTmp
 $PYTHON $examples_src/bufr_read_tropical_cyclone.py >$fTmp
 
 # Check the results

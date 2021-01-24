@@ -1,11 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# (C) Copyright 2005- ECMWF.
 
 #  Type of first fixed surface
 codetable[1] typeOfFirstFixedSurface ('4.5.table',masterDir,localDir) : dump,no_copy,edition_specific,string_type;
@@ -31,55 +24,7 @@ unsigned[4] scaledValueOfSecondFixedSurface = missing() : can_be_missing,dump,no
 
 transient pressureUnits="hPa";
 
-concept_nofail vertical.typeOfLevel (unknown) {
-#set uses the last one
-#get returns the first match
-  'surface'       = { typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=255;   }
-  'cloudBase'     = { typeOfFirstFixedSurface=2;   typeOfSecondFixedSurface=255;   }
-  'cloudTop'      = { typeOfFirstFixedSurface=3;   typeOfSecondFixedSurface=255;   }
-  'isothermZero'  = { typeOfFirstFixedSurface=4;   typeOfSecondFixedSurface=255;   }
-  'adiabaticCondensation' = {typeOfFirstFixedSurface=5;   typeOfSecondFixedSurface=255;  }
-  'maxWind' = {typeOfFirstFixedSurface=6; typeOfSecondFixedSurface=255;}
-  'tropopause' = {typeOfFirstFixedSurface=7; typeOfSecondFixedSurface=255;}
-  'nominalTop' = {typeOfFirstFixedSurface=8; typeOfSecondFixedSurface=255; }
-  'seaBottom' = {typeOfFirstFixedSurface=9;    typeOfSecondFixedSurface=255;}
-
-  # Note: We already had 'entireAtmosphere' mapped before adding this one so had to choose another name
-  'atmosphere' = {typeOfFirstFixedSurface=10;    typeOfSecondFixedSurface=255;}
-
-  'isothermal' = {typeOfFirstFixedSurface=20;   typeOfSecondFixedSurface=255;}
-  'isobaricInPa' = {typeOfFirstFixedSurface=100; typeOfSecondFixedSurface=255; pressureUnits='Pa'; }
-  'isobaricInhPa' = {typeOfFirstFixedSurface=100; pressureUnits='hPa'; typeOfSecondFixedSurface=255;}
-  'isobaricLayer' = {typeOfFirstFixedSurface=100; typeOfSecondFixedSurface=100;}
-  'meanSea' = { typeOfFirstFixedSurface=101; typeOfSecondFixedSurface=255; }
-  'heightAboveSea' = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=255;}
-  'heightAboveSeaLayer' = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=102;}
-  'heightAboveGround' = {typeOfFirstFixedSurface=103; typeOfSecondFixedSurface=255;}
-  'heightAboveGroundLayer' = {typeOfFirstFixedSurface=103;typeOfSecondFixedSurface=103;}
-  'sigma' = {typeOfFirstFixedSurface=104; typeOfSecondFixedSurface=255;}
-  'sigmaLayer' = {typeOfFirstFixedSurface=104; typeOfSecondFixedSurface=104;}
-  'hybrid' = {typeOfFirstFixedSurface=105; typeOfSecondFixedSurface=255;}
-  'hybridHeight' = {typeOfFirstFixedSurface=118; typeOfSecondFixedSurface=255;}
-  'hybridLayer' = {typeOfFirstFixedSurface=105; typeOfSecondFixedSurface=105; }
-  'depthBelowLand' = {typeOfFirstFixedSurface=106;  typeOfSecondFixedSurface=255;}
-  'depthBelowLandLayer' = {typeOfFirstFixedSurface=106; typeOfSecondFixedSurface=106;}
-  'theta' = {typeOfFirstFixedSurface=107; typeOfSecondFixedSurface=255;}
-  'thetaLayer' = {typeOfFirstFixedSurface=107;typeOfSecondFixedSurface=107;}
-  'pressureFromGround' = {typeOfFirstFixedSurface=108; typeOfSecondFixedSurface=255;}
-  'pressureFromGroundLayer' = {typeOfFirstFixedSurface=108;typeOfSecondFixedSurface=108;}
-  'potentialVorticity' = {typeOfFirstFixedSurface=109; typeOfSecondFixedSurface=255;}
-  'eta' = {typeOfFirstFixedSurface=111;  typeOfSecondFixedSurface=255;}
-
-# In the case of Generalized vertical height coordinates, NV must be 6
-  'generalVertical' = {genVertHeightCoords=1; typeOfFirstFixedSurface=150; NV=6;}
-  'generalVerticalLayer' = {genVertHeightCoords=1; typeOfFirstFixedSurface=150; typeOfSecondFixedSurface=150; NV=6;}
-
-  'depthBelowSea' = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=255;}
-  'entireAtmosphere' = {typeOfFirstFixedSurface=1;typeOfSecondFixedSurface=8;}
-  'entireOcean' = {typeOfFirstFixedSurface=1;typeOfSecondFixedSurface=9;}
-  'snow' = {typeOfFirstFixedSurface=114;typeOfSecondFixedSurface=255;}
-  'snowLayer' = {typeOfFirstFixedSurface=114; typeOfSecondFixedSurface=114;}
-}
+concept_nofail vertical.typeOfLevel (unknown,"typeOfLevelConcept.def",conceptsDir2,conceptsDir1);
 
 alias levelType=typeOfFirstFixedSurface;
 
@@ -102,6 +47,7 @@ if (typeOfSecondFixedSurface == 255) {
     scaledValueOfSecondFixedSurface,
     pressureUnits)  :dump;
     alias level=topLevel;  # (see GRIB-725)
+    
 }
 alias ls.level=level;
 alias vertical.level=level;
@@ -134,4 +80,10 @@ if (extraDim) {
         unalias mars.levelist;
     }
 }
+
+# See ECC-854
+if(typeOfFirstFixedSurface == 151 && typeOfSecondFixedSurface == 151) {
+    alias mars.levelist = bottomLevel;
+}
+
 alias ls.typeOfLevel=typeOfLevel;

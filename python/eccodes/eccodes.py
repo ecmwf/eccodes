@@ -4,6 +4,7 @@ from gribapi import GRIB_CHECK as CODES_CHECK
 
 from gribapi import CODES_PRODUCT_GRIB
 from gribapi import CODES_PRODUCT_BUFR
+from gribapi import CODES_PRODUCT_GTS
 from gribapi import CODES_PRODUCT_ANY
 from gribapi import GRIB_MISSING_DOUBLE as CODES_MISSING_DOUBLE
 from gribapi import GRIB_MISSING_LONG as CODES_MISSING_LONG
@@ -104,6 +105,9 @@ from gribapi import grib_get_message as codes_get_message
 from gribapi import grib_new_from_message as codes_new_from_message
 from gribapi import grib_set_definitions_path as codes_set_definitions_path
 from gribapi import grib_set_samples_path as codes_set_samples_path
+
+from gribapi import codes_bufr_multi_element_constant_arrays_on
+from gribapi import codes_bufr_multi_element_constant_arrays_off
 
 from gribapi import GribInternalError as CodesInternalError
 from gribapi.errors import *

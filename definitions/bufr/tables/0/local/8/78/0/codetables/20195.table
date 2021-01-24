@@ -1,0 +1,11 @@
+0 0 Not used
+1 1 More than zero to 4 oktas haze, mist, fog, clouds below station level developing during the past hour
+2 2 4 to less than 8 oktas haze, mist, fog, clouds below station level developing during the past hour
+3 3 8 oktas haze, mist, fog, clouds below station level developing during the past hour
+4 4 More than zero to 4 oktas haze, mist, fog, clouds below station level on the whole unchanged during the past hour
+5 5 4 to less than 8 oktas haze, mist, fog, clouds below station level on the whole unchanged during the past hour
+6 6 8 oktas haze, mist, fog, clouds below station level on the whole unchanged during the past hour
+7 7 More than zero to 4 oktas haze, mist, fog, clouds below station level dissolving during the past hour
+8 8 4 to less than 8 oktas haze, mist, fog, clouds below station level dissolving during the past hour
+9 9 8 oktas haze, mist, fog, clouds below station level dissolving during the past hour
+15 15 Missing value

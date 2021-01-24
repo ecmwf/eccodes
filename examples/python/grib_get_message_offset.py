@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -9,7 +9,7 @@
 # nor does it submit to any jurisdiction.
 #
 
-# Python implementation: get_message_offset
+# Python implementation: grib_get_message_offset
 #
 # Description: how to get the message offset
 #
@@ -27,7 +27,7 @@ def example():
         print('Usage: ', sys.argv[0], ' file', file=sys.stderr)
         sys.exit(1)
 
-    f = open(sys.argv[1])
+    f = open(sys.argv[1], 'rb')
     while 1:
         ident = codes_grib_new_from_file(f)
         if ident is None:

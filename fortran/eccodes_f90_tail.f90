@@ -375,7 +375,7 @@ end subroutine codes_index_release
   !>
   !> @param ifile       id of the opened file to be used in all the file functions.
   !> @param filename    name of the file to be open
-  !> @param mode        open mode can be 'r' (read) or 'w' (write)
+  !> @param mode        open mode can be 'r' (read), 'w' (write) or 'a' (append)
   !> @param status      CODES_SUCCESS if OK, integer value on error
 subroutine codes_open_file ( ifile, filename, mode, status )
     integer(kind=kindOfInt),intent(out)               :: ifile
@@ -954,6 +954,96 @@ subroutine codes_new_from_file (ifile, msgid , product_kind, status)
     end if
 end subroutine codes_new_from_file
 
+  !> Scan a file to search for messages without decoding.
+  !>
+  !> @param ifile     id of the file opened with @ref codes_open_file
+  !> @param nmessages number of messages found
+  !> @param status    CODES_SUCCESS if OK, CODES_END_OF_FILE at the end of file, or error code
+subroutine codes_any_scan_file ( ifile, nmessages , status)
+    integer(kind=kindOfInt),intent(in)              :: ifile
+    integer(kind=kindOfInt),intent(out)          :: nmessages
+    integer(kind=kindOfInt)                       :: iret
+    integer(kind=kindOfInt),optional,intent(out)    :: status
+
+    iret=any_f_scan_file ( ifile, nmessages)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret,'any_f_scan_file','')
+    endif
+
+end subroutine codes_any_scan_file 
+
+  !> Decode message from scanned file. This function provides direct access to the n-th message in a file.
+  !> A call to codes_any_scan_file must precede a call to this function. The file needs to be scanned to prepare
+  !> direct access by rank.
+  !>
+  !> The message can be accessed through its msgid and it will be available\n
+  !> until @ref codes_release is called.\n
+  !>
+  !> @param ifile     id of the file opened with @ref codes_open_file
+  !> @param nmsg      n-th message in the file to be read
+  !> @param msgid     id of the message loaded in memory
+  !> @param status    CODES_SUCCESS if OK, CODES_END_OF_FILE at the end of file, or error code
+subroutine codes_any_new_from_scanned_file ( ifile, nmsg, msgid , status)
+    integer(kind=kindOfInt),intent(in)              :: ifile
+    integer(kind=kindOfInt),intent(in)              :: nmsg
+    integer(kind=kindOfInt),intent(out)             :: msgid
+    integer(kind=kindOfInt)                       :: iret
+    integer(kind=kindOfInt),optional,intent(out)    :: status
+
+    iret=any_f_new_from_scanned_file( ifile, nmsg, msgid )
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret,'any_f_new_from_scanned_file','')
+    endif
+
+end subroutine codes_any_new_from_scanned_file 
+
+  !> Load in memory all messages from a file without decoding.
+  !>
+  !> @param ifile     id of the file opened with @ref codes_open_file
+  !> @param nmessages number of messages loaded
+  !> @param status    CODES_SUCCESS if OK, CODES_END_OF_FILE at the end of file, or error code
+subroutine codes_any_load_all_from_file ( ifile, nmessages , status)
+    integer(kind=kindOfInt),intent(in)              :: ifile
+    integer(kind=kindOfInt),intent(out)          :: nmessages
+    integer(kind=kindOfInt)                       :: iret
+    integer(kind=kindOfInt),optional,intent(out)    :: status
+
+    iret=any_f_load_all_from_file ( ifile, nmessages)
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret,'any_f_load_all_from_file','')
+    endif
+
+end subroutine codes_any_load_all_from_file 
+
+  !> Decode message from loaded.
+  !>
+  !> The message can be accessed through its msgid and it will be available\n
+  !> until @ref codes_release is called.\n
+  !>
+  !> @param imsg      id of the binary message 
+  !> @param msgid     id of the message loaded in memory
+  !> @param status    CODES_SUCCESS if OK, CODES_END_OF_FILE at the end of file, or error code
+subroutine codes_any_new_from_loaded ( imsg, msgid , status)
+    integer(kind=kindOfInt),intent(in)              :: imsg
+    integer(kind=kindOfInt),intent(out)             :: msgid
+    integer(kind=kindOfInt)                       :: iret
+    integer(kind=kindOfInt),optional,intent(out)    :: status
+
+    iret=any_f_new_from_loaded( imsg, msgid )
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret,'any_f_new_from_loaded','')
+    endif
+
+end subroutine codes_any_new_from_loaded 
+
   !> Load in memory a message from a file.
   !>
   !> The message can be accessed through its msgid and it will be available\n
@@ -1455,6 +1545,26 @@ subroutine codes_dump ( msgid , status)
     call grib_dump (msgid, status)
 end subroutine codes_dump
 
+
+  !> Get the API version
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param api_version  The version as an integer
+  !> @param status       GRIB_SUCCESS if OK, integer value on error
+subroutine codes_get_api_version(api_version, status)
+    integer(kind = kindOfInt),        intent(out) :: api_version
+    integer(kind=kindOfInt),optional, intent(out) :: status
+
+    call grib_f_get_api_version(api_version)
+    if (present(status)) then
+      status = CODES_SUCCESS
+    endif
+end subroutine codes_get_api_version
+
+
 !> Get the error message given an error code
 !>
 !> @param error          error code
@@ -1720,6 +1830,7 @@ end subroutine codes_bufr_copy_data
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
+  !> Note: This function supports the \b allocatable array attribute
   !>
   !> @param msgid      id of the message loaded in memory
   !> @param key        key name
@@ -2744,5 +2855,31 @@ subroutine codes_copy_key( msgid_src, key, msgid_dest, status )
         call grib_check(iret,'codes_copy_key','('//key//')')
     endif
 end subroutine codes_copy_key 
+
+subroutine codes_bufr_multi_element_constant_arrays_on (status )
+    integer(kind=kindOfInt),optional, intent(out) :: status
+    integer(kind=kindOfInt)               :: iret
+
+    iret=codes_f_bufr_multi_element_constant_arrays_on()
+    if (present(status)) then
+        status = iret
+    else
+        call grib_check(iret,'codes_bufr_multi_element_constant_arrays_on','')
+    endif
+end subroutine codes_bufr_multi_element_constant_arrays_on
+
+subroutine codes_bufr_multi_element_constant_arrays_off (status )
+    integer(kind=kindOfInt),optional, intent(out) :: status
+    integer(kind=kindOfInt)               :: iret
+
+    iret=codes_f_bufr_multi_element_constant_arrays_off()
+    if (present(status)) then
+        status = iret
+    else
+        call grib_check(iret,'codes_bufr_multi_element_constant_arrays_off','')
+    endif
+
+end subroutine codes_bufr_multi_element_constant_arrays_off
+
 
 end module eccodes

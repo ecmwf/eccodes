@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -37,15 +37,18 @@ res=`${tools_dir}/grib_get -M -p angleOfRotation,stretchingFactorScaled $temp2`
 # Section 5 templates: Vertical Domain
 # -----------------------------------------
 ${tools_dir}/grib_set -M -s verticalDomainTemplateNumber=1 $temp1 $temp2
+res=`${tools_dir}/grib_get -M -p level,scaleFactorOfFirstFixedSurface,scaledValueOfFirstFixedSurface $temp2`
+[ "$res" = "500 0 50000" ]
 res=`${tools_dir}/grib_get -M -p scaleFactorOfFirstFixedSurface,scaleFactorOfSecondFixedSurface $temp2`
 [ "$res" = "0 MISSING" ]
 
 
 # Section 6 templates: Generating Process
 # -----------------------------------------
-${tools_dir}/grib_set -M -s generatingProcessTemplateNumber=1 $temp1 $temp2
-res=`${tools_dir}/grib_get -M -p numberOfMembersInEnsemble $temp2`
-[ "$res" = "0" ]
+# Try large number of ensembles
+${tools_dir}/grib_set -M -s generatingProcessTemplateNumber=1,memberNumber=1000,numberOfMembersInEnsemble=2000 $temp1 $temp2
+res=`${tools_dir}/grib_get -M -p memberNumber,numberOfMembersInEnsemble $temp2`
+[ "$res" = "1000 2000" ]
 
 
 # Section 7 templates: Observable Property

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -17,7 +17,7 @@
 #define BUFF_SIZE 10000000
 
 #ifdef HAVE_LIBEMOS
-#if GRIB_TIMER
+#if ECCODES_TIMER
 #define TEST_OK
 #endif
 #endif
@@ -215,7 +215,7 @@ size_t grib_handle_write(grib_handle* h,char* filename) {
   FILE* of=NULL;
   const void *buffer; size_t size;
 
-  of = fopen(filename,"w");
+  of = fopen(filename,"wb");
   if(!of) {
       perror(filename);
       exit(1);
@@ -312,7 +312,7 @@ int main(int argc, char* argv[]) {
   repeatsimple=atoi(argv[iarg++]);
   bitsPerValue=atoi(argv[iarg++]);
 
-  fin = fopen(finname,"r");
+  fin = fopen(finname,"rb");
   if(!fin) {perror(finname);exit(1);}
 
   c=grib_context_get_default();
@@ -322,9 +322,9 @@ int main(int argc, char* argv[]) {
 
 
   if (append) 
-	  fout = fopen(ofilename,"a");
+	  fout = fopen(ofilename,"ab");
   else
-	  fout = fopen(ofilename,"w");
+	  fout = fopen(ofilename,"wb");
 
   if(!fout) {perror(ofilename);exit(1);}
 

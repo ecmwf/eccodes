@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -18,8 +18,8 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    fin = open(INPUT)
-    fout = open(OUTPUT, 'w')
+    fin = open(INPUT, 'rb')
+    fout = open(OUTPUT, 'wb')
     gid = codes_grib_new_from_file(fin)
 
     # The missingValue is not coded in the message.

@@ -1,8 +1,7 @@
-
-!Copyright 2005-2017 ECMWF.
+! (C) Copyright 2005- ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
-!which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 !
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
@@ -12,7 +11,11 @@
 !
 ! Description: how to read data for a tropical cyclone BUFR message.
 !
-
+! Please note that tropical cyclone tracks can be encoded in various ways in BUFR.
+! Therefore the code below might not work directly for other types of messages
+! than the one used in the example. It is advised to use bufr_dump to
+! understand the structure of the messages.
+!
 program bufr_read_tropical_cyclone
   use eccodes
   implicit none

@@ -128,6 +128,7 @@ tros_31.bufr.num.ref
 wavb_134.bufr.num.ref
 syno_multi.bufr.num.ref
 synop_multi_subset.bufr.num.ref
+delayed_repl_01.bufr.num.ref
 aaen_55.bufr.desc.ref
 aben_55.bufr.desc.ref
 ahws_139.bufr.desc.ref

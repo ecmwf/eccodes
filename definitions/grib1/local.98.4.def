@@ -1,85 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# START 1/local.98.4 ----------------------------------------------------------------------
-# LOCAL 98 4
-#
-# localDefinitionTemplate_004
-# ---------------------------
-#
-# Description                Octet    Code    Ksec1    Count
-# -----------                -----    ----    -----    -----
-#localDefinitionNumber                41  I1  37  -
-#class                                42  I1  38  -
-#type                                 43  I1  39  -
-#stream                               44  I2  40  -
-#experimentVersionNumber              46  A4  41  -
-#! if stream == 1090
-#if1                                  -   IF_EQ   1090    stream
-#ensembleMemberNumber                 50  I2  42  -
-#setToZeroForStream1090Unpacking      n/a PAD 43  1
-#endif1                               -   ENDIF   if1
-#! if stream != 1090
-#if2                                  -   IF_NEQ  1090    stream
-#ensembleMemberNumber                 50  I1  42  -
-#setToZero                            51  PAD 43  1
-#endif2                               -   ENDIF   if2
-#flagShowingPostAuxiliaryArrayInUse   52  F1  -   1
-#systemNumber                         53  I1  44  -
-#methodNumber                         54  I1  45  -
-#!  Coordinate structure definition
-#spaceUnitFlag                        55  I1  46  -
-#verticalCoordinateDefinition         56  I1  47  -
-#horizontalCoordinateDefinition       57  I1  48  -
-#timeUnitFlag                         58  I1  49  -
-#timeCoordinateDefinition             59  I1  50  -
-#!  Position definition:  mixed coordinates
-#mixedCoordinateFieldFlag             60  I1  51  -
-#coordinate1Flag                      61  I1  52  -
-#averagingFlag                        62  I1  53  -
-#positionOfLevel1                     63  S4  54  -
-#positionOfLevel2                     67  S4  55  -
-#coordinate2Flag                      71  I1  56  -
-#averagingFlag                        72  I1  57  -
-#positionOfLevel1                     73  S4  58  -
-#positionOfLevel2                     77  S4  59  -
-#!  Data grid definitions
-#coordinate3Flag                      81  I1  60  -
-#coordinate4Flag                      82  I1  61  -
-#coordinate4OfFirstGridPoint          83  S4  62  -
-#coordinate3OfFirstGridPoint          87  S4  63  -
-#coordinate4OfLastGridPoint           91  S4  64  -
-#coordinate3OfLastGridPoint           95  S4  65  -
-#iIncrement                           99  S4  66  -
-#jIncrement                           103 S4  67  -
-#flagForIrregularGridCoordinateList   107 I1  68  -
-#flagForNormalOrStaggeredGrid         108 I1  69  -
-#!  Auxiliary information
-#flagForAnyFurtherInformation         109 I1  70  -
-#numberInHorizontalCoordinates        110 I1  71  -
-#numberInMixedCoordinateDefinition    111 I2  72  -
-#numberInTheGridCoordinateList        113 I2  73  -
-#numberInTheAuxiliaryArray            115 I2  74  -
-#!   Horizontal coordinate definition
-#horizontalCoordinateSupplement       -   LP_S4   -   numberInHorizontalCoordinates
-#!  Mixed coordinate definition
-#mixedCoordinateDefinition            -   LP_S4   -   numberInMixedCoordinateDefinition
-#!   Grid coordinate list
-#gridCoordinateList                   -   LP_S4   -   numberInTheGridCoordinateList
-#!   Auxiliary array
-#auxiliaryArray                       -   LP_I4   -   numberInTheAuxiliaryArray
-#!  Post-auxiliary array
-#if3                                  -   IF_EQ   1   flagShowingPostAuxiliaryArrayInUse
-#sizeOfPostAuxiliaryArray             -   I4  -   -
-#arrayValues                          -   LP_I4M1 -   sizeOfPostAuxiliaryArray
-#endif3                               -   ENDIF   if3
-##
+# (C) Copyright 2005- ECMWF.
 
 constant GRIBEXSection1Problem = 0 ;
 
@@ -106,7 +25,6 @@ unsigned[1] systemNumber : dump ;
 alias system=systemNumber;
 
 unsigned[1] methodNumber : dump ;
-
 
 #
 # Coordinate structure definition
@@ -233,7 +151,4 @@ if (flagShowingPostAuxiliaryArrayInUse == postAuxiliaryArrayPresent){
 }
 alias hdate = dataDate;
 
-
-
 template local_use "grib1/mars_labeling.4.def";
-# END   1/local.98.4 ----------------------------------------------------------------------

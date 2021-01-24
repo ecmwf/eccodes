@@ -1,12 +1,3 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
 constant ECMWF = 98 : hidden;
 constant ECMWF_s = "ecmf" : hidden;
 constant WMO= 0;
@@ -16,6 +7,15 @@ constant conceptsLocalDirAll="grib1/localConcepts/[centre:s]" : hidden;
 
 constant tablesMasterDir="grib1" : hidden;
 constant tablesLocalDir="grib1/local/[centre:s]" : hidden;
+
+# ECC-806: Local concepts precedence order
+if (preferLocalConcepts) {
+    constant conceptsDir1 = conceptsMasterDir : hidden;
+    constant conceptsDir2 = conceptsLocalDirAll : hidden;
+} else {
+    constant conceptsDir1 = conceptsLocalDirAll : hidden;
+    constant conceptsDir2 = conceptsMasterDir : hidden;
+}
 
 transient productionStatusOfProcessedData=0;
 position offsetSection1;
@@ -62,7 +62,7 @@ alias levelType=indicatorOfTypeOfLevel;
 transient pressureUnits="hPa";
 
 concept_nofail typeOfLevelECMF      (unknown,         "typeOfLevel.def",conceptsMasterDir,conceptsLocalDirECMF); 
-concept_nofail vertical.typeOfLevel (typeOfLevelECMF, "typeOfLevel.def",conceptsMasterDir,conceptsLocalDirAll);
+concept_nofail vertical.typeOfLevel (typeOfLevelECMF, "typeOfLevel.def",conceptsDir2,conceptsDir1);
 
 when ( typeOfLevel is "isobaricInPa" ) { set pressureUnits="Pa"; }
 else { set pressureUnits="hPa";}
@@ -80,7 +80,7 @@ if ( indicatorOfTypeOfLevel == 101 or
      indicatorOfTypeOfLevel == 120 or
      indicatorOfTypeOfLevel == 121 or
      indicatorOfTypeOfLevel == 128 or
-     indicatorOfTypeOfLevel == 141    )
+     indicatorOfTypeOfLevel == 141 )
 {
     unsigned[1] topLevel : can_be_missing,dump;
     unsigned[1] bottomLevel : can_be_missing,dump;
@@ -157,19 +157,20 @@ if(table2Version >= 128) {
 #}
 
 concept paramIdECMF (defaultParameter,"paramId.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy;
-concept paramId (paramIdECMF,"paramId.def",conceptsMasterDir,conceptsLocalDirAll): long_type,dump;
+concept paramId (paramIdECMF,"paramId.def",conceptsDir2,conceptsDir1): long_type,dump;
+# transient pid = paramId : hidden;
 
 concept cfNameECMF(defaultName,"cfName.def",conceptsMasterDir,conceptsLocalDirECMF) : dump,no_copy,read_only;
-concept cfName(cfNameECMF,"cfName.def",conceptsMasterDir,conceptsLocalDirAll) : dump,no_copy,read_only;
+concept cfName(cfNameECMF,"cfName.def",conceptsDir2,conceptsDir1) : dump,no_copy,read_only;
 
 concept cfVarNameECMF(defaultName,"cfVarName.def",conceptsMasterDir,conceptsLocalDirECMF) : dump,no_copy,read_only;
-concept cfVarName(cfVarNameECMF,"cfVarName.def",conceptsMasterDir,conceptsLocalDirAll) : dump,no_copy,read_only;
+concept cfVarName(cfVarNameECMF,"cfVarName.def",conceptsDir2,conceptsDir1) : dump,no_copy,read_only;
 
 concept unitsECMF(defaultName,"units.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy,read_only;
-concept units(unitsECMF,"units.def",conceptsMasterDir,conceptsLocalDirAll) : dump,no_copy,read_only;
+concept units(unitsECMF,"units.def",conceptsDir2,conceptsDir1) : dump,no_copy,read_only;
 
 concept nameECMF(defaultName,"name.def",conceptsMasterDir,conceptsLocalDirECMF) : dump,no_copy,read_only;
-concept name(nameECMF,"name.def",conceptsMasterDir,conceptsLocalDirAll) : dump,no_copy,read_only;
+concept name(nameECMF,"name.def",conceptsDir2,conceptsDir1) : dump,no_copy,read_only;
 
 signed[2] decimalScaleFactor :dump;
 transient setLocalDefinition= 0 : no_copy;
@@ -185,7 +186,7 @@ meta julianDay  julian_day(dataDate,hour,minute,second) : edition_specific;
 
 codetable[1] stepUnits 'stepUnits.table' = 1 : transient,dump,no_copy;
 
-concept_nofail stepType (timeRangeIndicator, "stepType.def", conceptsMasterDir, conceptsLocalDirAll);
+concept_nofail stepType (timeRangeIndicator, "stepType.def", conceptsDir2, conceptsDir1);
 
 #alias stepTypeInternal=stepType;
 #alias lengthOfTimeRange=numberIncludedInAverage;
@@ -218,6 +219,7 @@ _if (stepType is "instant" ) {
 meta stepRange g1step_range(P1,P2,timeRangeIndicator,unitOfTimeRange,stepUnits,stepType) : dump;
 meta startStep long_vector(stepRange,0) : dump,no_copy;
 meta endStep   long_vector(stepRange,1) : dump,no_copy;
+meta stepHumanReadable step_human_readable(stepUnits, stepRange): hidden,no_copy;
 
 alias stepInHours = endStep;
 alias ls.stepRange = stepRange;
@@ -260,7 +262,7 @@ if(((section1Length > 40) or new() or setLocalDefinition> 0) and deleteLocalDefi
   {
     pad reservedNeedNotBePresent(12);
     codetable[1] localDefinitionNumber 'grib1/localDefinitionNumber.98.table' = 1 : dump;
-    template  localDefinition  "grib1/local.98.[localDefinitionNumber:l].def";
+    template_nofail  localDefinition  "grib1/local.98.[localDefinitionNumber:l].def";
     if (changed(localDefinitionNumber)) {
       if(!new() && localDefinitionNumber!=4 ) {
          section_padding localExtensionPadding : read_only;
@@ -294,9 +296,8 @@ section_padding section1Padding : read_only;
 #  padtoeven evenpadding_sec1(offsetSection1,section1Length);
 #}
 
-
 concept shortNameECMF (defaultShortName,"shortName.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy;
-concept ls.shortName (shortNameECMF,"shortName.def",conceptsMasterDir,conceptsLocalDirAll) : no_copy,dump;
+concept ls.shortName (shortNameECMF,"shortName.def",conceptsDir2,conceptsDir1) : no_copy,dump;
 meta ifsParam ifs_param(paramId,type);
 
 alias parameter.paramId=paramId;
@@ -316,9 +317,11 @@ alias time.endStep=endStep;
 alias time.stepType=stepType;
 
 # ECC-457: GRIB1 to GRIB2 conversion
-concept_nofail stepTypeForConversion (unknown, "stepTypeForConversion.def", conceptsMasterDir, conceptsLocalDirAll);
+concept_nofail stepTypeForConversion (unknown, "stepTypeForConversion.def", conceptsDir2, conceptsDir1);
 if (stepTypeForConversion is "accum" ) {
     alias productDefinitionTemplateNumber=eight;
 }
 
 meta md5Section1 md5(offsetSection1,section1Length);
+# md5(start,length,blacklisted1,blacklisted2,...);
+meta md5Product md5(offsetSection1,section1Length,gridDefinition,section1Flags,decimalScaleFactor);

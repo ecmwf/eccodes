@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,10 +14,10 @@
 #include "grib_api_internal.h"
 /* #include "grib_parser.h" */
 
-extern int yylex();
+extern int yylex(void);
 extern int yyerror(const char*);
 extern int yylineno;
-extern char* file_being_parsed();
+extern char* file_being_parsed(void);
 
 extern   grib_action*           grib_parser_all_actions;
 extern   grib_concept_value*    grib_parser_concept;
@@ -273,14 +273,14 @@ all        : empty        { grib_parser_all_actions = 0;grib_parser_concept=0;
 empty:;
 
 
-dvalues :  FLOAT  { $$=grib_darray_push(0,0,$1);}
-    |  dvalues ',' FLOAT { $$=grib_darray_push(0,$1,$3);}
-    |  INTEGER { $$=grib_darray_push(0,0,$1);}
-    |  dvalues ',' INTEGER { $$=grib_darray_push(0,$1,$3);}
+dvalues :  FLOAT  { $$=grib_darray_push(grib_parser_context,0,$1);}
+    |  dvalues ',' FLOAT { $$=grib_darray_push(grib_parser_context,$1,$3);}
+    |  INTEGER { $$=grib_darray_push(grib_parser_context,0,$1);}
+    |  dvalues ',' INTEGER { $$=grib_darray_push(grib_parser_context,$1,$3);}
    ;
 
-svalues : STRING { $$=grib_sarray_push(0,0,$1);}
-    |  svalues ',' STRING { $$=grib_sarray_push(0,$1,$3);}
+svalues : STRING { $$=grib_sarray_push(grib_parser_context,0,$1);}
+    |  svalues ',' STRING { $$=grib_sarray_push(grib_parser_context,$1,$3);}
     ;
 
 
@@ -770,9 +770,9 @@ hash_array_value :  STRING '=' '[' integer_array ']' {
 	  				$$ = grib_integer_hash_array_value_new(grib_parser_context,$1,$4); free($1);}
         ;
 
-string_or_ident : SUBSTR '(' IDENT ',' INTEGER ',' INTEGER ')'  { $$ = new_accessor_expression(grib_parser_context,$3,$5,$7);  free($3); }
-								| IDENT   { $$ = new_accessor_expression(grib_parser_context,$1,0,0); free($1); }
-                | SUBSTR '(' STRING ',' INTEGER ',' INTEGER ')'  { $$ = new_sub_string_expression(grib_parser_context,$3,$5,$7);  free($3); }
+string_or_ident : SUBSTR '(' IDENT ',' INTEGER ',' INTEGER ')' { $$ = new_accessor_expression(grib_parser_context,$3,$5,$7); free($3); }
+				| IDENT   { $$ = new_accessor_expression(grib_parser_context,$1,0,0); free($1); }
+                | SUBSTR '(' STRING ',' INTEGER ',' INTEGER ')' { $$ = new_sub_string_expression(grib_parser_context,$3,$5,$7); free($3); }
                 | STRING  { $$ = new_string_expression(grib_parser_context,$1);  free($1); }
                 ;
 

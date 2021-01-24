@@ -27,7 +27,7 @@ if (scalar @ARGV < 2) {
 }
 # Tolerance is optional
 my $tolerance = 1e-9;
-my $result = GetOptions (
+my $res = GetOptions (
   "t=s" => \$tolerance
   );
 
@@ -54,11 +54,26 @@ my $delta = $tolerance;
 if (not cmp($fileA, $fileB, sub {
         my $arg1 = munge $_[0];
         my $arg2 = munge $_[1];
-        #print "Line $line_num: Comparing $arg1 with $arg2 ...\n";
-        my $result = (abs($arg1 - $arg2) > $delta);
-        if ($result) {
-            print "Line $line_num differs: [$arg1] <=> [$arg2]\n";
-            print "Absolute error = ". abs($arg1 - $arg2) . "\n";
+        # $arg1 is a line from $fileA, $arg2 is a line from $fileB
+        my $result = 0;
+        my @data1 = split(/\s/, $arg1);
+        my @data2 = split(/\s/, $arg2);
+        my $data1_length = @data1;
+        my $data2_length = @data2;
+        if ($data1_length != $data2_length) {
+            print "Line $line_num lengths differs: [$arg1] <=> [$arg2]\n";
+            return 1;
+        }
+        foreach my $idx (0 .. $#data1) {
+            my $d1 = $data1[$idx];
+            my $d2 = $data2[$idx];
+            #print "Line $line_num: Comparing |$d1| with |$d2| ...\n";
+            $result = (abs($d1 - $d2) > $delta);
+            if ($result) {
+                print "Line $line_num differs: [$d1] <=> [$d2]\n";
+                print "Absolute error = ". abs($d1 - $d2) . "\n";
+                return $result; # Failed
+            }
         }
         ++$line_num;
         return $result;

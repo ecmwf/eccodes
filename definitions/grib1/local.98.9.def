@@ -1,50 +1,5 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# (C) Copyright 2005- ECMWF.
 
-# START 1/local.98.9 ----------------------------------------------------------------------
-# LOCAL 98 9
-#
-# localDefinitionTemplate_009
-# ---------------------------
-#
-# Description                Octet    Code    Ksec1    Count
-# -----------                -----    ----    -----    -----
-#localDefinitionNumber               41  I1  37  -
-#class                               42  I1  38  -
-#type                                43  I1  39  -
-#stream                              44  I2  40  -
-#experimentVersionNumber             46  A4  41  -
-#forecastOrSingularVectorNumber      50  I2  42  -
-#!  These elements are set to zero for perturbed forecast
-#if1                                 -   IF_EQ   60  type
-#octetsSetToZero                     52  PAD n/a 41
-#ksec1SetToZero                      n/a PAD 43  13
-#endif1                              -   ENDIF   if1
-#!  These elements are coded for singular vectors
-#if2                                 -   IF_NEQ  60  type
-#numberOfIterations                  52  I2  43  -
-#numberOfSingularVectorsComputed     54  I2  44  -
-#normAtInitialTime                   56  I1  45  -
-#normAtFinalTime                     57  I1  46  -
-#multiplicationFactorForLatLong      58  I4  47  -
-#northWestLatitudeOfLPOArea          62  S4  48  -
-#northWestLongitudeOfLPOArea         66  S4  49  -
-#southEastLatitudeOfLPOArea          70  S4  50  -
-#southEastLongitudeOfLPOArea         74  S4  51  -
-#accuracyMultipliedByFactor          78  I4  52  -
-#numberOfSingularVectorsEvolved      82  I2  53  -
-#!Ritz numbers:
-#NINT(LOG10(RITZ)-5)                 84  S4  54  -
-#NINT(RITZ/(EXP(LOG(10.0*KSEC1(54))  88  S4  55  -
-#endif2                              -   ENDIF   if2
-#spareSetToZero                      92  PAD n/a 1
-#
 # 1-> 2
 alias grib2LocalSectionPresent=present;
 constant grib2LocalSectionNumber=9;
@@ -105,7 +60,3 @@ if(type != perturbedType)
 
 # spareSetToZero
 pad padding_loc9_2(1);
-
-# END   1/local.98.9 ----------------------------------------------------------------------
-
-# END   grib::edition

@@ -1,4 +1,3 @@
-# FLAG TABLE 3.4, Scanning Mode
 1 0 Points of first row or column scan in the +i (+x) direction
 1 1 Points of first row or column scan in the -i (-x) direction
 2 0 Points of first row or column scan in the -j (-y) direction

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -32,7 +32,7 @@ for f in $files
 do
   file=${data_dir}/$f
   output=${file}.grib1_
-  rm -f ${output} || true
+  rm -f ${output}
   ${tools_dir}/grib_set -s editionNumber=1 ${file}.grib2 ${output} 2> $REDIRECT > $REDIRECT
 
   grib1Statistics=`${tools_dir}/grib_get -fp numberOfValues,numberOfPoints,max,min,average,numberOfMissing ${output}` 
@@ -50,7 +50,7 @@ done
 # First create a grib2 file with NV () > 255 which should not be convertible to grib1
 filter=temp.setpv.filt
 COUNT=264
-rm -f $filter || true
+rm -f $filter
 echo "set NV=$COUNT;" >> $filter
 echo "set pv={"       >> $filter
 i=1
@@ -73,4 +73,4 @@ if [ $? -eq 0 ]; then
   exit 1
 fi
 set -e
-rm -f $filter temp.pv.grib2 || true
+rm -f $filter temp.pv.grib2

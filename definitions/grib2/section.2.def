@@ -1,11 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# (C) Copyright 2005- ECMWF.
 
 position offsetSection2;
 section_length[4] section2Length ;
@@ -27,6 +20,12 @@ if ( addEmptySection2 == 0 ) {
             # This is TIGGE-LAM because of the productionStatusOfProcessedData and the non-empty section 2
             codetable[2] tiggeLocalVersion 'grib2/tiggeLocalVersion.table' = 1 : dump;
             template  tiggeSection "grib2/local.tigge.[tiggeLocalVersion:l].def";
+        }
+
+        if(productionStatusOfProcessedData == 10 || productionStatusOfProcessedData == 11) {
+            # crra = Copernicus Regional ReAnalysis
+            codetable[2] crraLocalVersion 'grib2/crraLocalVersion.table' = 1 : dump;
+            template  crraSection "grib2/local.crra.[crraLocalVersion:l].def";
         }
 
         codetable[2] grib2LocalSectionNumber 'grib2/grib2LocalSectionNumber.[centreForLocal:l].table' = 1 : dump;

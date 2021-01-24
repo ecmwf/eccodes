@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -29,9 +29,9 @@ grib_option grib_options[]={
     {"q",0,0,1,0,0}
 };
 
-char* grib_tool_description="Dump the content of a grib file in debug mode.";
-char* grib_tool_name="grib_debug";
-char* grib_tool_usage="[options] grib_file grib_file ...";
+char* tool_description="Dump the content of a grib file in debug mode.";
+char* tool_name="grib_debug";
+char* tool_usage="[options] grib_file grib_file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 

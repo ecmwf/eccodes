@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,7 +12,7 @@
 
 cd ${data_dir}/bufr
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_change_edition"
 
 fBufrTmp=${label}".bufr.tmp"

@@ -1,12 +1,11 @@
-
 NAME    bufr_count
 
 DESCRIPTION
         Print the total number of BUFR messages in the given files. 
 
 USAGE 
-        bufr_count [options] file file ...
+        bufr_count [options] bufr_file bufr_file ...
 
 OPTIONS
         -v  Verbose mode. The number of messages is given for each file.
-         
+        -f  Force. Force the execution not to fail on error.

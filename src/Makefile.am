@@ -64,7 +64,6 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_bitmap.c \
 	grib_accessor_class_bits.c  \
 	grib_accessor_class_bits_per_value.c \
-	grib_accessor_class_bufr_data.c \
 	grib_accessor_class_bufr_clear_tables.c \
 	grib_accessor_class_bufr_data_array.c \
 	grib_accessor_class_bufr_data_element.c \
@@ -187,6 +186,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_signed.c \
 	grib_accessor_class_signed_bits.c \
 	grib_accessor_class_section.c \
+	grib_accessor_class_step_human_readable.c \
 	grib_accessor_class_step_in_units.c \
 	grib_accessor_class_section_length.c \
 	grib_accessor_class_g1_message_length.c \
@@ -200,6 +200,7 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_spectral_truncation.c \
 	grib_accessor_class_time.c \
 	grib_accessor_class_transient.c \
+	grib_accessor_class_trim.c \
 	grib_accessor_class_values.c \
 	grib_accessor_class_simple_packing_error.c \
 	grib_accessor_class_data_simple_packing.c \
@@ -247,10 +248,12 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_select_step_template.c \
 	grib_accessor_class_local_definition.c \
 	grib_accessor_class_g2_eps.c \
+	grib_accessor_class_g2_aerosol.c \
 	grib_accessor_class_g2_chemical.c \
 	grib_accessor_class_g2_mars_labeling.c \
 	grib_accessor_class_transient_darray.c \
 	grib_accessor_class_md5.c \
+	grib_accessor_class_proj_string.c \
 	grib_jasper_encoding.c \
 	grib_openjpeg_encoding.c \
 	action_class_set_missing.c \
@@ -358,10 +361,14 @@ libeccodes_la_prototypes= \
 	grib_nearest_class_latlon_reduced.c \
 	grib_nearest_class_sh.c \
 	grib_nearest_class_lambert_conformal.c \
+	grib_nearest_class_lambert_azimuthal_equal_area.c \
+	grib_nearest_class_mercator.c \
 	grib_nearest_class_polar_stereographic.c \
+	grib_nearest_class_space_view.c \
 	grib_iterator_class_polar_stereographic.c \
 	grib_iterator_class_lambert_azimuthal_equal_area.c  \
 	grib_iterator_class_lambert_conformal.c \
+	grib_iterator_class_mercator.c \
 	grib_iterator.c \
 	grib_iterator_class.c \
 	grib_iterator_class_gaussian.c \
@@ -372,11 +379,13 @@ libeccodes_la_prototypes= \
 	grib_iterator_class_regular.c \
 	grib_iterator_class_space_view.c \
 	grib_expression.c \
+	codes_util.c \
 	grib_util.c \
 	bufr_util.c \
 	string_util.c \
 	functions.c \
 	codes_memfs.c \
+	grib_accessor_class_data_g2bifourier_packing.c \
 	grib_optimize_decimal_factor.c \
 	grib_api_version.c
 
@@ -404,7 +413,6 @@ noinst_HEADERS = grib_api_internal.h \
                  grib_dumper_factory.h \
                  grib_accessor_class.h \
                  grib_accessor_factory.h \
-                 grib_expression.h \
                  grib_nearest_class.h \
                  grib_nearest_factory.h \
                  grib_box_class.h \

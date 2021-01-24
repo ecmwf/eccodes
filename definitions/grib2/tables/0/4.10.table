@@ -1,4 +1,3 @@
-# CODE TABLE 4.10, Type of statistical processing
 
 0 avg  Average
 1 accum  Accumulation
@@ -10,5 +9,4 @@
 7 cov  Covariance (Temporal variance)
 8 8  Difference (Value at the start of time range minus value at the end)
 9 ratio  Ratio
-# 192 254  Reserved for local use
 255 missing  Missing

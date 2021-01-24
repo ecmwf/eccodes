@@ -1,14 +1,5 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# (C) Copyright 2005- ECMWF.
 
-
-# START 2/template.3.20 ----------------------------------------------------------------------
 # TEMPLATE 3.20, Polar stereographic projection
 include "grib2/template.3.shape_of_the_earth.def";
 transient oneThousand=1000;
@@ -72,7 +63,6 @@ flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump;   # WMO bit 1
 
 include "grib2/template.3.scanning_mode.def";
 
-
 iterator polar_stereographic(numberOfPoints,missingValue,values,
           radius,Nx,Ny,
           latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
@@ -80,12 +70,14 @@ iterator polar_stereographic(numberOfPoints,missingValue,values,
           orientationOfTheGridInDegrees,
           LaDInDegrees,
           DxInMetres,DyInMetres,
-          iScansNegatively,
-          jScansPositively,
-          jPointsAreConsecutive,
-          alternativeRowScanning);
+          iScansNegatively, jScansPositively,
+          jPointsAreConsecutive, alternativeRowScanning);
 
 nearest polar_stereographic(values,radius,Nx,Ny);
 
-
-# END   2/template.3.20 ----------------------------------------------------------------------
+meta latLonValues latlonvalues(values);
+alias latitudeLongitudeValues=latLonValues;
+meta latitudes latitudes(values,0);
+meta longitudes longitudes(values,0);
+meta distinctLatitudes latitudes(values,1);
+meta distinctLongitudes longitudes(values,1);

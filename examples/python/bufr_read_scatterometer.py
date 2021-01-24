@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,8 +10,8 @@
 #
 # Python implementation:  bufr_read_scatterometer
 #
-# Description: how to read data for a given beam from scatterometer BUFR
-# messages.
+# Description: How to read data for a given beam from scatterometer BUFR
+#              messages.
 #
 # Please note that scatterometer data can be encoded in various ways in BUFR.
 # Therefore the code below might not work directly for other types of messages
@@ -31,7 +31,7 @@ VERBOSE = 1  # verbose error reporting
 
 def example():
     # open bufr file
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     cnt = 0
 

@@ -194,7 +194,7 @@ def codes_new_from_file(fileobj, product_kind, headers_only=False):
     \b Examples: \ref get_product_kind.py "get_product_kind.py"
 
     @param fileobj        python file object
-    @param product_kind   one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_METAR or CODES_PRODUCT_GTS
+    @param product_kind   one of CODES_PRODUCT_GRIB, CODES_PRODUCT_BUFR, CODES_PRODUCT_GTS or CODES_PRODUCT_ANY
     @param headers_only   whether or not to load the message with the headers only
     @return               id of the message loaded in memory
     @exception GribInternalError
@@ -1613,6 +1613,9 @@ def grib_get(msgid, key, ktype=None):
     @return scalar value of key as int, float or str
     @exception GribInternalError
     """
+    if not key:
+        raise ValueError("Invalid key name")
+
     if ktype is None:
         ktype = grib_get_native_type(msgid, key)
 
@@ -1943,3 +1946,26 @@ def grib_set_samples_path(samples_path):
     @param samples_path   samples path
     """
     _internal.grib_c_set_samples_path(samples_path)
+
+
+
+def codes_bufr_multi_element_constant_arrays_on():
+    """
+    @brief BUFR: Turn on the mode where you get multiple elements
+    in constant arrays
+
+    @exception GribInternalError
+    """
+    _internal.codes_c_bufr_multi_element_constant_arrays_on()
+
+
+def codes_bufr_multi_element_constant_arrays_off():
+    """
+    @brief BUFR: Turn off the mode where you get multiple elements
+    in constant arrays i.e. you get a single element
+
+    @exception GribInternalError
+    """
+    _internal.codes_c_bufr_multi_element_constant_arrays_off()
+
+

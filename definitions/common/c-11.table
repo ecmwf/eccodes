@@ -1,4 +1,4 @@
-# COMMON CODE TABLE C-11: Originating/generating centres
+# COMMON CODE TABLE C-11: Originating/generating centres (GRIB2, BUFR4)
 0 0 WMO Secretariat
 1 ammc Melbourne (WMC)
 2 2 Melbourne (WMC)
@@ -27,7 +27,7 @@
 37 37 Ulan Bator
 38 babj Beijing (RSMC)
 40 rksl Seoul
-41 41 Buenos Aires (RSMC/RAFC)
+41 sabm Buenos Aires (RSMC/RAFC)
 43 43 Brasilia (RSMC/RAFC)
 45 45 Santiago
 46 sbsj Brasilian Space Agency - INPE
@@ -43,7 +43,7 @@
 64 64 Honolulu
 65 65 Darwin (RSMC)
 67 67 Melbourne (RSMC)
-69 69 Wellington (RSMC/RAFC)
+69 nzkl Wellington (RSMC/RAFC)
 74 egrr U.K. Met Office - Exeter
 76 76 Moscow (RSMC/RAFC)
 78 edzw Offenbach (RSMC)
@@ -65,21 +65,16 @@
 97 97 European Space Agency (ESA)
 98 ecmf European Centre for Medium-Range Weather Forecasts
 99 99 DeBilt, Netherlands
-#100 to 109 Reserved for centres in Region I which are not in the list above
 110 110 Hong-Kong
-#111 to 133 Reserved for centres in Region II which are not in the list above
-#134 to 153 Reserved for centres in Region I which are not listed above
-#154 to 159 Reserved for centres in Region III which are not in the list above
 160 160 US NOAA/NESDIS
-# 161 to 185 Reserved for centres in Region IV which are not in the list above
-# 186 to 198 Reserved for centres in Region I which are not listed above
-# 199 to 209 Reserved for centres in Region V which are not in the list above
+173 nasa US National Aeronautics and Space Administration (NASA)
 195 wiix Indonesia (NMC)
+204 niwa  National Institute of Water and Atmospheric Research (NIWA - New Zealand)
 210 210  Frascati (ESA/ESRIN)
 211 211  Lannion
 212 212  Lisboa
 213 213  Reykjavik
-214 lemm INM
+214 lemm INM Madrid
 215 lssw Zurich
 216 216  Service ARGOS Toulouse
 217 217 Bratislava
@@ -146,5 +141,6 @@
 287 287 Swaziland (NMC)
 288 288 Togo (NMC)
 289 289 Zambia (NMC)
+291 anso Alliance of International Science Organizations (Beijing, China)
 
 65535 65535 Missing value

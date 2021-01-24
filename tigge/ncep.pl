@@ -1,4 +1,4 @@
-#!/usr/bin/perl -I/var/tmp/mab/p4/grib_api/main/perl/GRIB-API/blib/lib -I/var/tmp/mab/p4/grib_api/main/perl/GRIB-API/blib/arch
+#!/usr/bin/perl -I/path/to/install/p4/grib_api/main/perl/GRIB-API/blib/lib -I/path/to/install/p4/grib_api/main/perl/GRIB-API/blib/arch
 use lib qw(/bison/user/schuster/grib_api-0.9.5/perl/GRIB-API/lib);
 use lib qw(/bison/user/schuster/grib_api-0.9.5/perl/GRIB-API/blib/lib);
 use lib qw(/bison/user/schuster/grib_api-0.9.5/perl/GRIB-API/blib/arch);

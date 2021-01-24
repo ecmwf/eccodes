@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -6,6 +6,11 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
+
+# Python Implementation: grib_set_keys
+#
+# Description: how to set key values in GRIB messages
+#
 
 from __future__ import print_function
 import traceback
@@ -21,8 +26,8 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    fin = open(INPUT)
-    fout = open(OUTPUT, 'w')
+    fin = open(INPUT, 'rb')
+    fout = open(OUTPUT, 'wb')
     gid = codes_grib_new_from_file(fin)
 
     dt = date.today()

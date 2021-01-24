@@ -15,12 +15,13 @@ list( APPEND test_bins
       grib_print_data
       grib_set_keys
       grib_index
-      set_missing
+      grib_set_missing
       grib_keys_iterator
       grib_set_data
       mars_param
       values_check
       box
+      grib_nearest_multiple
       grib_multi
       multi2
       grib_multi_write
@@ -28,7 +29,7 @@ list( APPEND test_bins
       grib_set_pv
       grib_list
       grib_get_data
-      sections_copy
+      grib_sections_copy
       grib_iterator_bitmap
       large_grib1
       grib_clone
@@ -40,6 +41,7 @@ list( APPEND test_bins
       bufr_clone
       bufr_expanded
       bufr_get_keys
+      bufr_get_string_array
       bufr_keys_iterator
       bufr_missing
       bufr_read_header
@@ -47,77 +49,118 @@ list( APPEND test_bins
       bufr_read_synop
       bufr_read_temp
       bufr_set_keys
-      bufr_subset
-)
+      bufr_subset )
 foreach( tool ${test_bins} )
     ecbuild_add_executable( TARGET    c_${tool}
                             NOINSTALL
                             SOURCES   ${tool}.c
-                            LIBS      eccodes
-    )
+                            LIBS      eccodes )
 endforeach()
 
 # Now add each test (shell scripts)
 ########################################################################
-list( APPEND tests
-   grib_iterator
-   grib_get_keys
-   grib_print_data
-   grib_set_keys
-   grib_keys_iterator
-   grib_multi
-   grib_multi_write
-   grib_precision
-   grib_clone
-   grib_copy_message
-   grib_ensemble_index
-   grib_set_pv
-   grib_set_data
-   grib_set_bitmap
-   grib_list
-   grib_get_data
-   large_grib1
-   set_missing
-   sections_copy
-   bufr_attributes
-   bufr_copy_data
-   bufr_clone
-   bufr_expanded
-   bufr_get_keys
-   bufr_keys_iterator
-   bufr_missing
-   bufr_read_header
-   bufr_read_scatterometer
-   bufr_read_synop
-   bufr_read_temp
-   bufr_set_keys
-   bufr_subset
-   get_product_kind
-)
-foreach( test ${tests} )
-    ecbuild_add_test( TARGET eccodes_c_${test}
-                      TYPE       SCRIPT
-                      COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                      TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs
-    )
+if( HAVE_BUILD_TOOLS )
+    # Command line tools are available
+    list(APPEND tests_sanity
+         grib_set_data
+         large_grib1
+         grib_sections_copy
+         get_product_kind_samples)
+    list(APPEND tests_extra
+       grib_iterator
+       grib_get_keys
+       grib_print_data
+       grib_set_keys
+       grib_keys_iterator
+       grib_multi_write
+       grib_precision
+       grib_clone
+       grib_copy_message
+       grib_ensemble_index
+       grib_set_pv
+       grib_set_bitmap
+       grib_list
+       grib_get_data
+       grib_nearest_multiple
+       grib_multi
+       grib_set_missing
+       bufr_attributes
+       bufr_copy_data
+       bufr_clone
+       bufr_expanded
+       bufr_get_keys
+       bufr_get_string_array
+       bufr_keys_iterator
+       bufr_missing
+       bufr_read_header
+       bufr_read_scatterometer
+       bufr_read_synop
+       bufr_read_temp
+       bufr_set_keys
+       bufr_subset
+       get_product_kind)
+else()
+    # No command line tools
+    list(APPEND tests_sanity
+        grib_set_data
+        get_product_kind_samples)
+    list(APPEND tests_extra
+       grib_iterator
+       grib_get_keys
+       grib_print_data
+       grib_set_keys
+       grib_keys_iterator
+       grib_precision
+       grib_ensemble_index
+       grib_set_pv
+       grib_list
+       grib_get_data
+       grib_nearest_multiple
+       grib_multi
+       grib_set_missing
+       bufr_attributes
+       bufr_expanded
+       bufr_get_keys
+       bufr_get_string_array
+       bufr_keys_iterator
+       bufr_missing
+       bufr_read_header
+       bufr_read_scatterometer
+       bufr_read_synop
+       bufr_read_temp
+       bufr_set_keys
+       bufr_subset
+       get_product_kind)
+endif()
+
+foreach( test ${tests_sanity} )
+        ecbuild_add_test( TARGET       eccodes_c_${test}
+                          TYPE         SCRIPT
+                          LABELS       "sanity"
+                          COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh )
+endforeach()
+foreach( test ${tests_extra} )
+        ecbuild_add_test( TARGET       eccodes_c_${test}
+                          TYPE         SCRIPT
+                          CONDITION    ENABLE_EXTRA_TESTS
+                          COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
+                          TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs )
 endforeach()
 
 ########################################################################
 # Tests which are conditional
 if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
     # For POSIX threads
-    LIST(APPEND pthread_tests grib_pthreads bufr_pthreads)
+    list(APPEND pthread_tests grib_pthreads bufr_pthreads)
     foreach( test ${pthread_tests} )
         ecbuild_add_executable( TARGET    c_${test}
                                 NOINSTALL
                                 SOURCES   ${test}.c
-                                LIBS      eccodes
-        )
+                                LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         ecbuild_add_test( TARGET       eccodes_c_${test}
                           TYPE         SCRIPT
                           COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                          TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs
-        )
+                          TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs )
     endforeach()
 endif()
 

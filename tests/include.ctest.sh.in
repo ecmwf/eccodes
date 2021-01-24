@@ -1,13 +1,11 @@
 set -ea
 # For CMake
 
-# If this environment variable is set, then become verbose
-# so one can see why and how a test failed
-if test "x$ECCODES_TEST_VERBOSE_OUTPUT" != "x"; then
-   set -x
-fi
+set -x
+echo "Script: $0"
 
 proj_dir=@PROJECT_SOURCE_DIR@
+build_dir=@PROJECT_BINARY_DIR@
 data_dir=@PROJECT_BINARY_DIR@/data
 
 # use definitions from binary dir to test if installation will be correct
@@ -20,9 +18,11 @@ tools_dir=@CMAKE_BINARY_DIR@/bin
 tigge_dir=@CMAKE_BINARY_DIR@/bin
 
 # If this environment variable is set, then run the
-# executables with valgrind
+# executables with valgrind. See ECC-746
+EXEC=""
 if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
-   tools_dir="valgrind --error-exitcode=1 -q @CMAKE_BINARY_DIR@/bin"
+  EXEC="valgrind --error-exitcode=1 -q"
+  tools_dir="$EXEC @CMAKE_BINARY_DIR@/bin"
 fi
 
 # ecCodes tests are in the PROJECT_BINARY_DIR
@@ -34,6 +34,15 @@ ECCODES_SAMPLES_PATH=${samp_dir}
 export ECCODES_SAMPLES_PATH
 
 # Options
+HAVE_PRODUCT_BUFR=@HAVE_PRODUCT_BUFR@
+HAVE_PRODUCT_GRIB=@HAVE_PRODUCT_GRIB@
 HAVE_JPEG=@HAVE_JPEG@
+HAVE_LIBJASPER=@HAVE_LIBJASPER@
+HAVE_LIBOPENJPEG=@HAVE_LIBOPENJPEG@
 HAVE_PNG=@HAVE_PNG@
 HAVE_AEC=@HAVE_AEC@
+HAVE_EXTRA_TESTS=@HAVE_EXTRA_TESTS@
+HAVE_MEMFS=@HAVE_MEMFS@
+ECCODES_ON_WINDOWS=@ECCODES_ON_WINDOWS@
+
+echo "Current directory: `pwd`"

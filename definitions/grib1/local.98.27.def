@@ -1,40 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# START 1/local.98.21 ----------------------------------------------------------------------
-# LOCAL 98 21
-#
-# localDefinitionTemplate_027 (replaced by 30)
-# ---------------------------
-#
-# Description                Octet    Code    Ksec1    Count
-# -----------                -----    ----    -----    -----
-#localDefinitionNumber           41      I1      37      -
-#class                           42      I1      38      -
-#type                            43      I1      39      -
-#stream                          44      I2      40      -
-#experimentVersionNumber         46      A4      41      -
-#number                          50      I1      42      -
-#total                           51      I1      43      -
-#oceanAtmosphereCoupling         52      I1      44      -
-#spare                           53      I1      45      -
-#padding                         54      PAD     n/a     2
-#! VAriable Resolution (VAREPS)
-#legBaseDate                     56      I4      46      -     ! yyyymmdd
-#legBaseTime                     60      I2      47      -     ! hhmm
-#legNumber                       62      I1      48      -
-#! For hindcasts
-#referenceDate                   63      I4      49      -     !
-#climateDateFrom                 67      I4      50      -     ! yyyymmdd (ensemble means of hindcasts)
-#climateDateTo                   71      I4      51      -     ! yyyymmdd (ensemble means of hindcasts)
-#spareSetToZero                  75      PAD     n/a    33
-#
+# (C) Copyright 2005- ECMWF.
 
 constant GRIBEXSection1Problem = 107 - section1Length ;
 

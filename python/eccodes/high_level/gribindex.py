@@ -1,6 +1,6 @@
 """
 ``GribIndex`` class that implements a GRIB index that allows access to
-the GRIB API's index functionality.
+ecCodes's index functionality.
 
 Author: Daniel Lee, DWD, 2014
 """

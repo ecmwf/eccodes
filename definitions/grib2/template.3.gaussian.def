@@ -1,11 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# (C) Copyright 2005- ECMWF.
 
 include "grib2/template.3.grid.def";
 
@@ -65,6 +58,9 @@ if(missing(Ni) && PLPresent == 1){
     latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
       N,pl,Nj);
   nearest reduced(values,radius,Nj,pl);
+
+  #meta sumPlArray sum(pl);
+  #meta dataGlobal evaluate( sumPlArray == (numberOfValues+numberOfMissing) );
 } else {
     iterator gaussian(numberOfPoints,missingValue,values,
               longitudeFirstInDegrees,DiInDegrees  ,
@@ -86,9 +82,10 @@ meta gaussianGridName gaussian_grid_name(N, Ni, isOctahedral);
 alias gridName=gaussianGridName;
 
 
-# Useful for sub-areas
-# meta numberOfExpectedPoints number_of_points_gaussian(Ni,Nj,PLPresent,pl,
-#    N,
-#    latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
-#    latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees) : dump;
+# For sub-areas
+# Uses new algorithm for counting. No support for legacy mode
+meta numberOfDataPointsExpected number_of_points_gaussian(Ni,Nj,PLPresent,pl,N,
+  latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+  latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,zero) : dump;
 
+meta legacyGaussSubarea evaluate(numberOfDataPoints != numberOfDataPointsExpected);

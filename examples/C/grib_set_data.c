@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -23,15 +23,15 @@
 
 static void usage(const char* prog)
 {
-    printf("usage: %s out.grib\n",prog);
+    printf("usage: %s out.grib\n", prog);
     exit(1);
 }
 
 int main(int argc, char** argv)
 {
     int i;
-    double *values = NULL;
-    size_t values_len= 0;
+    double* values    = NULL;
+    size_t values_len = 0;
 
     /* Note: the full name of the sample file is "regular_ll_pl_grib1.tmpl" */
     /* Sample files are stored in the samples directory (use codes_info to  */
@@ -40,16 +40,16 @@ int main(int argc, char** argv)
     const char* sample_filename = "regular_ll_pl_grib1";
     /* Here is how you can get the samples path */
     const char* samples_path = codes_samples_path(NULL);
-    codes_handle *h = NULL;
-    double d,e;
+    codes_handle* h          = NULL;
+    double d, e;
     long count;
 
-    if (argc!=2) usage(argv[0]);
+    if (argc != 2) usage(argv[0]);
     /* create new handle from message in sample file */
     printf("Using samples path: %s\n", samples_path);
     h = codes_grib_handle_new_from_samples(0, sample_filename);
     if (h == NULL) {
-        printf("Error: unable to create handle from sample file %s\n", sample_filename);
+        fprintf(stderr, "Error: unable to create handle from sample file %s\n", sample_filename);
         exit(1);
     }
 
@@ -57,24 +57,27 @@ int main(int argc, char** argv)
     /* will be the same as the sample GRIB. */
     /* But if your data array has a different size, then specify the grid geometry */
     /* (e.g. keys Ni, Nj etc) and set the correct number of data values */
-    CODES_CHECK(codes_get_size(h, "values", &values_len),0);
+    CODES_CHECK(codes_get_size(h, "values", &values_len), 0);
 
-    values = (double*)malloc(values_len*sizeof(double));
-    d=10e-8;
-    e=d;
-    count=1;
-    for (i=0;i<values_len;i++) {
-        if (count>100) {e*=10; count=1;}
-        values[i]=d;
+    values = (double*)malloc(values_len * sizeof(double));
+    d      = 10e-8;
+    e      = d;
+    count  = 1;
+    for (i = 0; i < values_len; i++) {
+        if (count > 100) {
+            e *= 10;
+            count = 1;
+        }
+        values[i] = d;
         /*printf("%g \n",values[i]);*/
-        d+=e;
+        d += e;
         count++;
     }
 
-    CODES_CHECK(codes_set_long(h,"bitsPerValue",16),0);
+    CODES_CHECK(codes_set_long(h, "bitsPerValue", 16), 0);
 
     /* set data values */
-    CODES_CHECK(codes_set_double_array(h,"values",values,values_len),0);
+    CODES_CHECK(codes_set_double_array(h, "values", values, values_len), 0);
 
     CODES_CHECK(codes_write_message(h, argv[1], "w"), 0);
 

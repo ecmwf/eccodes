@@ -29,7 +29,7 @@
 28 efic Extreme forecast index control
 29 pb Probability boundaries
 30 ep Event probability
-31 bf Bias-corrected Forecast
+31 bf Bias-corrected forecast
 32 cd Climate distribution
 33 4i 4D analysis increments
 34 go Gridded observations
@@ -37,6 +37,7 @@
 36 pd Probability distribution
 37 ci Cluster information
 38 sot Shift of Tail
+39 eme Ensemble data assimilation model errors
 40 im Images
 42 sim Simulated images
 43 wem Weighted ensemble mean
@@ -55,6 +56,8 @@
 65 cv Calibration/Validation forecast
 70 or Ocean reanalysis
 71 fx Flux forcing
+72 fu Fill-up
+73 sfo Simulations with forcing
 80 fcmean Forecast mean
 81 fcmax Forecast maximum
 82 fcmin Forecast minimum
@@ -65,3 +68,4 @@
 87 ssd Simulated satellite data
 88 gsd Gridded satellite data
 89 ga GFAS analysis
+90 gai Gridded analysis input

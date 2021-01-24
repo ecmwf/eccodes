@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,7 +16,7 @@
 #define NUMBER(a) (sizeof(a)/sizeof(a[0]))
 
 #ifdef HAVE_LIBEMOS
-#if GRIB_TIMER
+#if ECCODES_TIMER
 
 extern void grsrnd_(flong*);
 extern void gribex_(flong*, flong*, flong*, double*, flong*, double*, flong*, double*,
@@ -238,7 +238,7 @@ int main(int argc, char* argv[]) {
   if (argc != 2) usage(argv[0]);
   finname=argv[1];
 
-  fin = fopen(finname,"r");
+  fin = fopen(finname,"rb");
   if(!fin) {perror(finname);exit(1);}
 
   c=grib_context_get_default();

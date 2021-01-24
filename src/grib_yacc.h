@@ -1,19 +1,20 @@
-/* A Bison parser, made by GNU Bison 2.7.  */
+/* A Bison parser, made by GNU Bison 3.5.4.  */
 
 /* Bison interface for Yacc-like parsers in C
-   
-      Copyright (C) 1984, 1989-1990, 2000-2012 Free Software Foundation, Inc.
-   
+
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Inc.
+
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
@@ -26,13 +27,16 @@
    special exception, which will cause the skeleton and the resulting
    Bison output files to be licensed under the GNU General Public
    License without this special exception.
-   
+
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
+
 #ifndef YY_YY_Y_TAB_H_INCLUDED
 # define YY_YY_Y_TAB_H_INCLUDED
-/* Enabling traces.  */
+/* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
 #endif
@@ -40,137 +44,136 @@
 extern int grib_yydebug;
 #endif
 
-/* Tokens.  */
+/* Token type.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum grib_yytokentype {
-     LOWERCASE = 258,
-     IF = 259,
-     IF_TRANSIENT = 260,
-     ELSE = 261,
-     END = 262,
-     CLOSE = 263,
-     UNSIGNED = 264,
-     TEMPLATE = 265,
-     TEMPLATE_NOFAIL = 266,
-     TRIGGER = 267,
-     ASCII = 268,
-     GROUP = 269,
-     NON_ALPHA = 270,
-     KSEC1EXPVER = 271,
-     LABEL = 272,
-     LIST = 273,
-     IS_IN_LIST = 274,
-     IS_IN_DICT = 275,
-     IS_INTEGER = 276,
-     TO_INTEGER = 277,
-     TO_STRING = 278,
-     SEX2DEC = 279,
-     WHILE = 280,
-     IBMFLOAT = 281,
-     SIGNED = 282,
-     UINT8 = 283,
-     INT8 = 284,
-     UINT16 = 285,
-     INT16 = 286,
-     UINT16_LITTLE_ENDIAN = 287,
-     INT16_LITTLE_ENDIAN = 288,
-     UINT32 = 289,
-     INT32 = 290,
-     UINT32_LITTLE_ENDIAN = 291,
-     INT32_LITTLE_ENDIAN = 292,
-     UINT64 = 293,
-     INT64 = 294,
-     UINT64_LITTLE_ENDIAN = 295,
-     INT64_LITTLE_ENDIAN = 296,
-     BLOB = 297,
-     BYTE = 298,
-     CODETABLE = 299,
-     SMART_TABLE = 300,
-     DICTIONARY = 301,
-     COMPLEX_CODETABLE = 302,
-     LOOKUP = 303,
-     ALIAS = 304,
-     UNALIAS = 305,
-     META = 306,
-     POS = 307,
-     INTCONST = 308,
-     TRANS = 309,
-     FLAGBIT = 310,
-     CONCEPT = 311,
-     GETENV = 312,
-     HASH_ARRAY = 313,
-     CONCEPT_NOFAIL = 314,
-     NIL = 315,
-     DUMMY = 316,
-     MODIFY = 317,
-     READ_ONLY = 318,
-     STRING_TYPE = 319,
-     LONG_TYPE = 320,
-     DOUBLE_TYPE = 321,
-     NO_COPY = 322,
-     DUMP = 323,
-     JSON = 324,
-     XML = 325,
-     NO_FAIL = 326,
-     EDITION_SPECIFIC = 327,
-     OVERRIDE = 328,
-     HIDDEN = 329,
-     CAN_BE_MISSING = 330,
-     MISSING = 331,
-     CONSTRAINT = 332,
-     COPY_OK = 333,
-     WHEN = 334,
-     SET = 335,
-     SET_NOFAIL = 336,
-     WRITE = 337,
-     APPEND = 338,
-     PRINT = 339,
-     EXPORT = 340,
-     REMOVE = 341,
-     RENAME = 342,
-     SKIP = 343,
-     PAD = 344,
-     SECTION_PADDING = 345,
-     MESSAGE = 346,
-     MESSAGE_COPY = 347,
-     PADTO = 348,
-     PADTOEVEN = 349,
-     PADTOMULTIPLE = 350,
-     G1_HALF_BYTE = 351,
-     G1_MESSAGE_LENGTH = 352,
-     G1_SECTION4_LENGTH = 353,
-     SECTION_LENGTH = 354,
-     LENGTH = 355,
-     FLAG = 356,
-     ITERATOR = 357,
-     NEAREST = 358,
-     BOX = 359,
-     KSEC = 360,
-     ASSERT = 361,
-     SUBSTR = 362,
-     CASE = 363,
-     SWITCH = 364,
-     DEFAULT = 365,
-     EQ = 366,
-     NE = 367,
-     GE = 368,
-     LE = 369,
-     LT = 370,
-     GT = 371,
-     BIT = 372,
-     BITOFF = 373,
-     AND = 374,
-     OR = 375,
-     NOT = 376,
-     IS = 377,
-     IDENT = 378,
-     STRING = 379,
-     INTEGER = 380,
-     FLOAT = 381
-   };
+  enum grib_yytokentype
+  {
+    LOWERCASE = 258,
+    IF = 259,
+    IF_TRANSIENT = 260,
+    ELSE = 261,
+    END = 262,
+    CLOSE = 263,
+    UNSIGNED = 264,
+    TEMPLATE = 265,
+    TEMPLATE_NOFAIL = 266,
+    TRIGGER = 267,
+    ASCII = 268,
+    GROUP = 269,
+    NON_ALPHA = 270,
+    KSEC1EXPVER = 271,
+    LABEL = 272,
+    LIST = 273,
+    IS_IN_LIST = 274,
+    IS_IN_DICT = 275,
+    IS_INTEGER = 276,
+    TO_INTEGER = 277,
+    TO_STRING = 278,
+    SEX2DEC = 279,
+    WHILE = 280,
+    IBMFLOAT = 281,
+    SIGNED = 282,
+    UINT8 = 283,
+    INT8 = 284,
+    UINT16 = 285,
+    INT16 = 286,
+    UINT16_LITTLE_ENDIAN = 287,
+    INT16_LITTLE_ENDIAN = 288,
+    UINT32 = 289,
+    INT32 = 290,
+    UINT32_LITTLE_ENDIAN = 291,
+    INT32_LITTLE_ENDIAN = 292,
+    UINT64 = 293,
+    INT64 = 294,
+    UINT64_LITTLE_ENDIAN = 295,
+    INT64_LITTLE_ENDIAN = 296,
+    BLOB = 297,
+    BYTE = 298,
+    CODETABLE = 299,
+    SMART_TABLE = 300,
+    DICTIONARY = 301,
+    COMPLEX_CODETABLE = 302,
+    LOOKUP = 303,
+    ALIAS = 304,
+    UNALIAS = 305,
+    META = 306,
+    POS = 307,
+    INTCONST = 308,
+    TRANS = 309,
+    FLAGBIT = 310,
+    CONCEPT = 311,
+    GETENV = 312,
+    HASH_ARRAY = 313,
+    CONCEPT_NOFAIL = 314,
+    NIL = 315,
+    DUMMY = 316,
+    MODIFY = 317,
+    READ_ONLY = 318,
+    STRING_TYPE = 319,
+    LONG_TYPE = 320,
+    DOUBLE_TYPE = 321,
+    NO_COPY = 322,
+    DUMP = 323,
+    JSON = 324,
+    XML = 325,
+    NO_FAIL = 326,
+    EDITION_SPECIFIC = 327,
+    OVERRIDE = 328,
+    HIDDEN = 329,
+    CAN_BE_MISSING = 330,
+    MISSING = 331,
+    CONSTRAINT = 332,
+    COPY_OK = 333,
+    WHEN = 334,
+    SET = 335,
+    SET_NOFAIL = 336,
+    WRITE = 337,
+    APPEND = 338,
+    PRINT = 339,
+    EXPORT = 340,
+    REMOVE = 341,
+    RENAME = 342,
+    SKIP = 343,
+    PAD = 344,
+    SECTION_PADDING = 345,
+    MESSAGE = 346,
+    MESSAGE_COPY = 347,
+    PADTO = 348,
+    PADTOEVEN = 349,
+    PADTOMULTIPLE = 350,
+    G1_HALF_BYTE = 351,
+    G1_MESSAGE_LENGTH = 352,
+    G1_SECTION4_LENGTH = 353,
+    SECTION_LENGTH = 354,
+    LENGTH = 355,
+    FLAG = 356,
+    ITERATOR = 357,
+    NEAREST = 358,
+    BOX = 359,
+    KSEC = 360,
+    ASSERT = 361,
+    SUBSTR = 362,
+    CASE = 363,
+    SWITCH = 364,
+    DEFAULT = 365,
+    EQ = 366,
+    NE = 367,
+    GE = 368,
+    LE = 369,
+    LT = 370,
+    GT = 371,
+    BIT = 372,
+    BITOFF = 373,
+    AND = 374,
+    OR = 375,
+    NOT = 376,
+    IS = 377,
+    IDENT = 378,
+    STRING = 379,
+    INTEGER = 380,
+    FLOAT = 381
+  };
 #endif
 /* Tokens.  */
 #define LOWERCASE 258
@@ -298,12 +301,10 @@ extern int grib_yydebug;
 #define INTEGER 380
 #define FLOAT 381
 
-
-
+/* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE
+union YYSTYPE
 {
-/* Line 2058 of yacc.c  */
 #line 39 "griby.y"
 
     char                    *str;
@@ -322,29 +323,17 @@ typedef union YYSTYPE
   grib_rule               *rules;
   grib_rule_entry         *rule_entry;
 
+#line 327 "y.tab.h"
 
-/* Line 2058 of yacc.c  */
-#line 328 "y.tab.h"
-} YYSTYPE;
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
-# define grib_yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
+
 extern YYSTYPE grib_yylval;
 
-#ifdef YYPARSE_PARAM
-#if defined __STDC__ || defined __cplusplus
-int grib_yyparse (void *YYPARSE_PARAM);
-#else
-int grib_yyparse ();
-#endif
-#else /* ! YYPARSE_PARAM */
-#if defined __STDC__ || defined __cplusplus
 int grib_yyparse (void);
-#else
-int grib_yyparse ();
-#endif
-#endif /* ! YYPARSE_PARAM */
 
 #endif /* !YY_YY_Y_TAB_H_INCLUDED  */

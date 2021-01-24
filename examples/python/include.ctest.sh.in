@@ -1,13 +1,11 @@
 # examples/python include file for CMake
 
-set -ea
-# If this environment variable is set, then become verbose
-# so one can see why and how a test failed
-if test "x$ECCODES_TEST_VERBOSE_OUTPUT" != "x"; then
-   set -x
-fi
+set -eax
 
 data_dir=@PROJECT_BINARY_DIR@/data
+HAVE_PRODUCT_BUFR=@HAVE_PRODUCT_BUFR@
+HAVE_PRODUCT_GRIB=@HAVE_PRODUCT_GRIB@
+HAVE_MEMFS=@HAVE_MEMFS@
 
 # use definitions from binary dir to test if installation will be correct
 def_dir="@CMAKE_BINARY_DIR@/@ECCODES_DEFINITION_SUFF@"
@@ -23,5 +21,11 @@ samp_dir="@CMAKE_BINARY_DIR@/@ECCODES_SAMPLES_SUFF@"
 ECCODES_SAMPLES_PATH=${samp_dir}
 export ECCODES_SAMPLES_PATH
 
+if [ $HAVE_MEMFS -eq 1 ]; then
+   unset ECCODES_DEFINITION_PATH
+fi
+
 PYTHONPATH=@PROJECT_BINARY_DIR@/python:$PYTHONPATH
 export PYTHONPATH
+
+echo "Current directory: `pwd`"

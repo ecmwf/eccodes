@@ -1,0 +1,6 @@
+integer, parameter, public :: ECCODES_SETTINGS_POSIX_THREADS = @HAVE_ECCODES_THREADS@
+integer, parameter, public :: ECCODES_SETTINGS_OMP_THREADS   = @HAVE_ECCODES_OMP_THREADS@
+integer, parameter, public :: ECCODES_SETTINGS_MEMFS         = @HAVE_MEMFS@
+integer, parameter, public :: ECCODES_SETTINGS_JPEG          = @HAVE_JPEG@
+integer, parameter, public :: ECCODES_SETTINGS_PNG           = @HAVE_PNG@
+integer, parameter, public :: ECCODES_SETTINGS_AEC           = @HAVE_AEC@

@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -65,7 +65,6 @@ list( APPEND grib_api_srcs
     grib_accessor_class_bits.c
     grib_accessor_class_bits_per_value.c
     grib_accessor_class_bufr_clear_tables.c
-    grib_accessor_class_bufr_data.c
     grib_accessor_class_bufr_elements_table.c
     grib_accessor_class_bufr_data_array.c
     grib_accessor_class_bufr_data_element.c
@@ -96,6 +95,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_codetable.c
     grib_accessor_class_codetable_units.c
     grib_accessor_class_codetable_title.c
+    grib_accessor_class_step_human_readable.c
     grib_accessor_class_count_file.c
     grib_accessor_class_count_total.c
     grib_accessor_class_double.c
@@ -183,6 +183,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_spectral_truncation.c
     grib_accessor_class_time.c
     grib_accessor_class_transient.c
+    grib_accessor_class_trim.c
     grib_accessor_class_transient_darray.c
     grib_accessor_class_values.c
     grib_accessor_class_simple_packing_error.c
@@ -231,9 +232,11 @@ list( APPEND grib_api_srcs
     grib_accessor_class_select_step_template.c
     grib_accessor_class_local_definition.c
     grib_accessor_class_g2_eps.c
+    grib_accessor_class_g2_aerosol.c
     grib_accessor_class_g2_chemical.c
     grib_accessor_class_g2_mars_labeling.c
     grib_accessor_class_md5.c
+    grib_accessor_class_proj_string.c
     grib_jasper_encoding.c
     grib_openjpeg_encoding.c
     action_class_set_missing.c
@@ -343,10 +346,14 @@ list( APPEND grib_api_srcs
     grib_nearest_class_latlon_reduced.c
     grib_nearest_class_sh.c
     grib_nearest_class_lambert_conformal.c
+    grib_nearest_class_lambert_azimuthal_equal_area.c
+    grib_nearest_class_mercator.c
     grib_nearest_class_polar_stereographic.c
+    grib_nearest_class_space_view.c
     grib_iterator_class_polar_stereographic.c
     grib_iterator_class_lambert_azimuthal_equal_area.c
     grib_iterator_class_lambert_conformal.c
+    grib_iterator_class_mercator.c
     grib_iterator.c
     grib_iterator_class.c
     grib_iterator_class_gaussian.c
@@ -357,6 +364,7 @@ list( APPEND grib_api_srcs
     grib_iterator_class_regular.c
     grib_iterator_class_space_view.c
     grib_expression.c
+    codes_util.c
     grib_util.c
     bufr_util.c
     string_util.c
@@ -370,7 +378,6 @@ list( APPEND grib_api_srcs
     grib_dumper_class.h
     grib_dumper_factory.h
     grib_emoslib.h
-    grib_expression.h
     grib_iterator_class.h
     grib_iterator_factory.h
     grib_nearest_class.h
@@ -395,10 +402,10 @@ list( APPEND grib_api_srcs
     grib_accessor_class_uint8.c
     grib_accessor_class_blob.c
     grib_optimize_decimal_factor.c
+    grib_accessor_class_data_g2bifourier_packing.c
     eccodes_windef.h
     # We ship our own generated lex/yacc C files
-    grib_yacc.c  grib_lex.c
-)
+    grib_yacc.c  grib_lex.c )
 
 list( APPEND grib_api_extra_srcs
     grib_bits_fast_big_endian.c grib_bits_any_endian.c
@@ -408,8 +415,7 @@ list( APPEND grib_api_extra_srcs
     encode_double_array.c
     grib_bits_ibmpow.c
     grib_bits_ibmpow_opt.c
-    minmax_val.c
-)
+    minmax_val.c )
 
 configure_file( grib_api_version.c.in grib_api_version.c @ONLY )
 configure_file( eccodes_version.h.in eccodes_version.h @ONLY )
@@ -424,20 +430,27 @@ configure_file( eccodes_version.h.in eccodes_version.h @ONLY )
 #                    YACC_FLAGS  "-y"
 #                    DEPENDANT action.c )
 
-if(HAVE_MEMFS)
+if( HAVE_MEMFS )
     list(APPEND ECCODES_EXTRA_LIBRARIES eccodes_memfs)
 endif()
 
 
-ecbuild_add_library(TARGET    eccodes
-                    SOURCES   grib_api_version.c
+ecbuild_add_library( TARGET    eccodes
+                     SOURCES   grib_api_version.c
                               # griby.c gribl.c
-                             ${grib_api_srcs}
-                    GENERATED grib_api_version.c
-                    LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
-                    TEMPLATES ${grib_api_extra_srcs})
-
-
-install( FILES grib_api.h eccodes.h eccodes_windef.h DESTINATION ${INSTALL_INCLUDE_DIR} )
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h DESTINATION ${INSTALL_INCLUDE_DIR} )
-
+                              ${grib_api_srcs}
+                     GENERATED grib_api_version.c
+                     #PRIVATE_LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
+                     PRIVATE_INCLUDES "${AEC_INCLUDE_DIRS}"
+                     PRIVATE_LIBS ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${AEC_LIBRARIES} ${PNG_LIBRARIES}
+                     PUBLIC_LIBS  ${CMATH_LIBRARIES} ${THREADS_LIBRARIES}
+                     TEMPLATES ${grib_api_extra_srcs}
+                     INSTALL_HEADERS_LIST
+                              grib_api.h
+                              eccodes.h
+                              eccodes_windef.h
+                              ${CMAKE_CURRENT_BINARY_DIR}/eccodes_version.h
+                              ${PROJECT_BINARY_DIR}/eccodes_config.h
+                    PUBLIC_INCLUDES
+                              $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
+                              $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src> )

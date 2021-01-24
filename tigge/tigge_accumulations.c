@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -19,7 +19,6 @@
 #endif
 
 #include <stdio.h>
-#include <string.h>
 #include <assert.h>
 
 #include "grib_api.h"
@@ -169,7 +168,7 @@ int main(int argc, char *argv[])
     grib_handle *result = NULL,*h;
     double* values = NULL;
     double *tmp = NULL;
-    size_t size,count,j;
+    size_t size=0,count,j;
 
     long step      = 0;
     long startStep = 0;
@@ -186,7 +185,7 @@ int main(int argc, char *argv[])
 
     for(i = 1; i < argc-1; i++)
     {
-        in = fopen(argv[i],"r");
+        in = fopen(argv[i],"rb");
         if(!in) {
             perror(argv[i]);
             exit(1);
@@ -265,6 +264,8 @@ int main(int argc, char *argv[])
 
     if(result)
         grib_handle_delete(result);
+
+    free(values);
 
     if(fclose(out))
     {

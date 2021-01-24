@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -26,7 +26,7 @@ VERBOSE = 1  # verbose error reporting
 
 def example():
     # open bufr file
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     cnt = 0
 
@@ -60,6 +60,7 @@ def example():
             print('  %s: %s' % (key, codes_get(bufr, key)))
         except CodesInternalError as err:
             print('Error with key="%s" : %s' % (key, err.msg))
+        assert codes_is_missing(bufr, key) == 0
 
         # Native type float
         key = 'airTemperatureAt2M'
@@ -67,6 +68,7 @@ def example():
             print('  %s: %s' % (key, codes_get(bufr, key)))
         except CodesInternalError as err:
             print('Error with key="%s" : %s' % (key, err.msg))
+        assert codes_is_missing(bufr, key) == 0
 
         # Native type string
         key = 'typicalDate'
@@ -74,6 +76,9 @@ def example():
             print('  %s: %s' % (key, codes_get(bufr, key)))
         except CodesInternalError as err:
             print('Error with key="%s" : %s' % (key, err.msg))
+
+        assert codes_is_missing(bufr, 'relativeHumidity') == 1
+        assert codes_is_missing(bufr, '#5#cloudAmount') == 1
 
         # --------------------------------
         # get values for an array

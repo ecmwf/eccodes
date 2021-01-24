@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,7 +15,7 @@ label="bufr_subset_test_c"
 
 #Prepare tmp file
 fTmp=${label}.tmp.txt
-rm -f $fTmp | true
+rm -f $fTmp
 
 #Prepare ref file
 fRef=${label}.ref
@@ -36,16 +36,14 @@ message: 0
   subsetNumber=12  blockNumber=1  stationNumber=485  stationOrSiteName="SANDE-GALLEBERG"  airTemperature=275.45
 EOF
 
-#We check "synop_multi_subset.bufr". The path is
-#hardcoded in the example
+# We check "synop_multi_subset.bufr". The path is
+# hard coded in the example
 
-REDIRECT=/dev/null
+# Write the values into a file and compare with reference
+${examples_dir}/c_bufr_subset > $fTmp
 
-#Write the values into a file and compare with reference
-${examples_dir}/c_bufr_subset 2> $REDIRECT > $fTmp
+# We compare output to the reference by ignoring the whitespaces 
+diff -w $fRef $fTmp
 
-#We compare output to the reference by ignoring the whitespaces 
-diff -w $fRef $fTmp >$REDIRECT 2> $REDIRECT
-
-#Clean up
+# Clean up
 rm -f $fTmp $fRef

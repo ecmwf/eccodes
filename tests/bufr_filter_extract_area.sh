@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -13,18 +13,18 @@ set -x
 
 cd ${data_dir}/bufr
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_filter_extract_area"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define tmp bufr file
+# Define tmp bufr file
 fBufrTmp=${label}".bufr.tmp"
 
-#Define filter rules file
+# Define filter rules file
 fRules=${label}.filter
 
 #-----------------------------------------------------------
@@ -32,6 +32,7 @@ fRules=${label}.filter
 #-----------------------------------------------------------
 cat > $fRules <<EOF
  transient originalNumberOfSubsets = numberOfSubsets;
+ set unpack=1;
  set extractAreaNorthLatitude=52.5;
  set extractAreaSouthLatitude=51.1;
  set extractAreaWestLongitude=155.2;
@@ -135,5 +136,28 @@ fieldOfViewNumber=7 8 9 10 11 12 13 8 9 10 11 12 11 12
 EOF
 
 diff $outputRef $outputFilt
+rm -f $outputBufr
+
+# Uncompressed message
+# ---------------------
+inputBufr="delayed_repl_01.bufr"
+outputBufr=${label}.${inputBufr}.out
+cat > $fRules <<EOF
+ transient originalNumberOfSubsets = numberOfSubsets;
+ set unpack=1;
+ set extractAreaNorthLatitude = -21.0;
+ set extractAreaSouthLatitude = -25.0;
+ set extractAreaWestLongitude = 136;
+ set extractAreaEastLongitude = 154;
+ set extractAreaLongitudeRank=1;
+ set doExtractArea=1;
+ write;
+ print "extracted [numberOfSubsets] of [originalNumberOfSubsets] subsets";
+ assert(3 == extractedAreaNumberOfSubsets);
+EOF
+
+${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
+ns=`${tools_dir}/bufr_get -p numberOfSubsets $outputBufr`
+[ $ns -eq 3 ]
 
 rm -f $outputRef $outputFilt $outputBufr $fLog $fRules

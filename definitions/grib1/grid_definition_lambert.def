@@ -1,12 +1,3 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
 unsigned[2] Nx  : dump;
 alias Ni =  Nx;
 alias numberOfPointsAlongXAxis =  Nx;
@@ -44,21 +35,19 @@ meta geography.LoVInDegrees
 alias orientationOfTheGrid = LoV;
 alias orientationOfTheGridInDegrees = LoVInDegrees;
 
-#  Dx - X-direction grid length
+#  Dx - X-direction grid length (in units of metres)
 unsigned[3] DxInMetres  : dump;
 alias xDirectionGridLength=DxInMetres;
 alias geography.DxInMetres=DxInMetres ;
 alias Dx = DxInMetres;
 alias Di = DxInMetres;
 
-
-#  Dy - Y-direction grid length
+#  Dy - Y-direction grid length (in units of metres)
 unsigned[3] DyInMetres  : dump;
 alias yDirectionGridLength=DyInMetres;
 alias geography.DyInMetres=DyInMetres;
 alias Dy= DyInMetres;
 alias Dj = DyInMetres;
-
 
 unsigned[1] projectionCentreFlag  : dump;
 # Also add the old spelling  of "centre" for backward compatibility
@@ -122,6 +111,3 @@ meta distinctLongitudes longitudes(values,1);
 nearest lambert_conformal(values,radius,Nx,Ny);
 
 pad padding_grid3_1(2);
-
-# END   1/grid_definition.lambert_conformal ----------------------------------------------------------------------
-

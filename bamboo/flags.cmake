@@ -1,1 +1,1 @@
-SET(GRIB_API_PYTHON OFF CACHE BOOL "Enable python")
+SET(ENABLE_EXTRA_TESTS ON CACHE BOOL "Enable extra tests")

@@ -19,7 +19,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 32 ;
 	}
-#Sea-ice cover
+#Sea ice area fraction
 '(0 - 1)' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 91 ;

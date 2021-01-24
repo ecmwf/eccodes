@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -23,9 +23,19 @@ from eccodes import *
 INPUT = '../../data/metar/metar.txt'
 VERBOSE = 1  # verbose error reporting
 
+def print_keys(msg_id):
+    keys = ['CCCC', 'latitude', 'longitude', 'dateTime',
+                'elevation', 'temperature', 'dewPointTemperature', 'qnh']
+    for key in keys:
+        try:
+            if codes_is_defined(msg_id, key):
+                print('  %s: %s' % (key, codes_get(msg_id, key)))
+        except CodesInternalError as err:
+            print('Error with key="%s" : %s' % (key, err.msg))
 
-def example():
-    # open metar file
+
+def example1():
+    # open METAR file
     f = open(INPUT)
 
     cnt = 0
@@ -33,36 +43,38 @@ def example():
     # loop for the messages in the file
     while 1:
         # get handle for message
-        gid = codes_metar_new_from_file(f)
-        if gid is None:
+        msg_id = codes_metar_new_from_file(f)
+        if msg_id is None:
             break
 
         print("message: %s" % cnt)
-
-        # ---------------------------------------------
-        # get values for keys holding a single value
-        # ---------------------------------------------
-        keys = ['CCCC', 'latitude', 'longitude', 'dateTime',
-                'elevation', 'temperature', 'dewPointTemperature', 'qnh']
-
-        for key in keys:
-            try:
-                print('  %s: %s' % (key, codes_get(gid, key)))
-            except CodesInternalError as err:
-                print('Error with key="%s" : %s' % (key, err.msg))
-
+        print_keys(msg_id)
         cnt += 1
 
         # delete handle
-        codes_release(gid)
+        codes_release(msg_id)
 
     # close the file
     f.close()
 
 
+def example2():
+    # This time read from a string rather than a file.
+    metar_str = 'METAR LQMO 022350Z 09003KT 6000 FEW010 SCT035 BKN060 08/08 Q1003='
+
+    # get handle for message
+    msg_id = codes_new_from_message(metar_str)
+
+    print("\nFrom string: '%s'" % metar_str)
+    print_keys(msg_id)
+
+    codes_release(msg_id)
+
+
 def main():
     try:
-        example()
+        example1()
+        example2()
     except CodesInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)

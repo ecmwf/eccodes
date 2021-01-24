@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -13,15 +13,15 @@ set -x
 
 cd ${data_dir}/bufr
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_dump_decode_filter_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define filter rules file
+# Define filter rules file
 fRules=${label}.filter
 
 #-----------------------------------------------------------
@@ -34,7 +34,7 @@ fRules=${label}.filter
 #-----------------------------------------------------------
 files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
-exclude="ias1_240.bufr syno_multi.bufr tropical_cyclone.bufr"
+exclude="ias1_240.bufr syno_multi.bufr tropical_cyclone.bufr aeolus_wmo_26.bufr"
 
 for f in $files
 do

@@ -20,3 +20,5 @@ gribex and missing local definition
 SST dats
 Don't repack unecessary values in packers
 grid 90
+
+GRIB_LOG_WARNING: does not work unless ctx.debug>=2

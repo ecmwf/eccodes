@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -22,16 +22,14 @@ extern "C" {
  * Method:    gribIteratorGetNext
  * Signature: (J)Ljgribapi/GribPoint;
  */
-JNIEXPORT jobject JNICALL Java_jgribapi_GribIterator_gribIteratorGetNext
-  (JNIEnv *, jobject, jlong);
+JNIEXPORT jobject JNICALL Java_jgribapi_GribIterator_gribIteratorGetNext(JNIEnv*, jobject, jlong);
 
 /*
  * Class:     jgribapi_GribIterator
  * Method:    gribIteratorHasNext
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_jgribapi_GribIterator_gribIteratorHasNext
-  (JNIEnv *, jobject, jlong);
+JNIEXPORT jlong JNICALL Java_jgribapi_GribIterator_gribIteratorHasNext(JNIEnv*, jobject, jlong);
 
 #ifdef __cplusplus
 }

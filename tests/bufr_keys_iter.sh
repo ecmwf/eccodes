@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -13,11 +13,17 @@
 tempOut=temp.bufr_keys_iter.$$.out
 tempRef=temp.bufr_keys_iter.$$.ref
 
-input=${data_dir}/bufr/aaen_55.bufr
+# Test: check ident key is present
+# -------------------------------------------
+input=${data_dir}/bufr/syno_multi.bufr
+$EXEC ${test_dir}/bufr_keys_iter -a $input > $tempOut
+grep -q '^ident$' $tempOut
 
-## Iterate over ALL keys and skip none
-# ------------------------------------
-${test_dir}/bufr_keys_iter -a $input > $tempOut
+
+# Test: check full output
+# -------------------------------------------
+input=${data_dir}/bufr/aaen_55.bufr
+$EXEC ${test_dir}/bufr_keys_iter -a $input > $tempOut
 
 # Check the output of BUFR keys iterator
 # Note: the two hidden keys 'typicalDate' and 'typicalTime' are NOT in the iterator output
@@ -38,16 +44,26 @@ typicalDay
 typicalHour
 typicalMinute
 typicalSecond
+typicalDate
+typicalTime
 rdbType
 oldSubtype
+localYear
+localMonth
+localDay
+localHour
+localMinute
+localSecond
 rdbtimeDay
 rdbtimeHour
 rdbtimeMinute
 rdbtimeSecond
+rdbtimeTime
 rectimeDay
 rectimeHour
 rectimeMinute
 rectimeSecond
+restricted
 correction1
 correction1Part
 correction2
@@ -230,7 +246,7 @@ diff $tempRef $tempOut
 
 ## Now iterate over Data Section keys and skip all others
 # ---------------------------------------------------------
-${test_dir}/bufr_keys_iter -d $input > $tempOut
+$EXEC ${test_dir}/bufr_keys_iter -d $input > $tempOut
 cat > $tempRef<<EOF
 #1#tovsOrAtovsProductQualifier
 #1#centre

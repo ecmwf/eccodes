@@ -1,48 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
-# START 1/local.98.21 ----------------------------------------------------------------------
-# LOCAL 98 21
-#
-# localDefinitionTemplate_021
-# ---------------------------
-#
-# Description                Octet    Code    Ksec1    Count
-# -----------                -----    ----    -----    -----
-#localDefinitionNumber               41  I1  37  -
-#class                               42  I1  38  -
-#type                                43  I1  39  -
-#stream                              44  I2  40  -
-#experimentVersionNumber             46  A4  41  -
-#forecastOrSingularVectorNumber      50  I2  42  -
-#numberOfIterations                  52  I2  43  -
-#numberOfSingularVectorsComputed     54  I2  44  -
-#normAtInitialTime                   56  I1  45  -
-#normAtFinalTime                     57  I1  46  -
-#multiplicationFactorForLatLong      58  I4  47  -
-#northWestLatitudeOfVerficationArea  62  S4  48  -
-#northWestLongitudeOfVerficationArea 66  S4  49  -
-#southEastLatitudeOfVerficationArea  70  S4  50  -
-#southEastLongitudeOfVerficationArea 74  S4  51  -
-#accuracyMultipliedByFactor          78  I4  52  -
-#numberOfSingularVectorsEvolved      82  I2  53  -
-#!Ritz numbers:
-#NINT(LOG10(RITZ)-5)                 84  S4  54  -
-#NINT(RITZ/(EXP(LOG(10.0*KSEC1(54))  88  S4  55  -
-#optimisationTime                    92  I1  56  -
-#forecastLeadTime                    93  I1  57  -
-#domain                              94  A1  58  -
-#methodNumber                        95  I2  59  -
-#totalNumberOfForecastsInEnsemble    97  I2  60  -
-#shapeOfVerificationArea             99  I1  61  -
-#spareSetToZero                      100 PAD n/a 1
-#
+# (C) Copyright 2005- ECMWF.
 
 constant GRIBEXSection1Problem = 100 - section1Length ;
 
@@ -93,7 +49,6 @@ unsigned[1] shapeOfVerificationArea  : dump;
 
 # spareSetToZero
 pad padding_loc21_1(1);
-
 
 # concept sensitiveAreaDomain(unknown,"sensitive_area_domain.def",conceptsMasterDir,conceptsLocalDir);
 alias mars.domain = marsDomain;

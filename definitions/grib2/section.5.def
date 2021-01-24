@@ -1,11 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# (C) Copyright 2005- ECMWF.
 
 position offsetBSection5;
 
@@ -59,6 +52,7 @@ concept packingType (unknown) {
   "grid_second_order_SPD3"                = { dataRepresentationTemplateNumber = 50001;orderOfSPD=3;     }
   "spectral_ieee"                         = { dataRepresentationTemplateNumber=50000; }
   "grid_simple_log_preprocessing"         = { dataRepresentationTemplateNumber = 61;    }
+  "bifourier_complex"                     = { dataRepresentationTemplateNumber = 53; spectralType=2; }
 }  : dump;
 
 template dataRepresentation "grib2/template.5.[dataRepresentationTemplateNumber:l].def";

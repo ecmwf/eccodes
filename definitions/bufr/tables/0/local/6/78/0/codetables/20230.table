@@ -1,0 +1,5 @@
+0 0 Mountain(s) free of cloud
+1 1 Mountain(s) partly or temporarily in clouds
+2 2 Mountain(s) in clouds
+9 9 Mountains(s) not visible due to precipitation, haze/mist, fog or fog in patches  in a sector <=30 degree
+15 15 Missing value

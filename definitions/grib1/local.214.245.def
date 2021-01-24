@@ -1,11 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# (C) Copyright 2005- ECMWF.
 
 # START 1/local.98.245 ----------------------------------------------------------------------
 # LOCAL 214 98 245
@@ -58,8 +51,4 @@ unsigned[2]  Extra_Data_FreeFormat_0_none  : dump ;
 position offsetFreeFormData;
 unsigned[1] freeFormData[Extra_Data_FreeFormat_0_none] : dump ;
 
-#
 padtomultiple padding_loc245_2(offsetSection1,80);
-#
-
-# END   1/local.98.245 ----------------------------------------------------------------------

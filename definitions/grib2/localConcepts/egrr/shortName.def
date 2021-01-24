@@ -72,3 +72,13 @@
 	 scaledValueOfFirstFixedSurface = 15 ;
 	 scaleFactorOfFirstFixedSurface = 1 ;
 	}
+#2 metre specific humidity
+'2sh' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 15 ;
+	 scaleFactorOfFirstFixedSurface = 1 ;
+	}

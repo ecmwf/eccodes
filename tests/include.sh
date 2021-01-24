@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -20,15 +20,18 @@ else
   echo
   echo "TEST: $0"
 
+  # Only Unix supported
+  ECCODES_ON_WINDOWS=0
+
   data_dir=""
   # save current working dir
   save=`pwd`
 
-  # If this environment variable is set, then become verbose
-  # so one can see why and how a test failed
-  if test "x$ECCODES_TEST_VERBOSE_OUTPUT" != "x"; then
-     set -x
-  fi
+  set -x
+  EXEC=""
+  HAVE_MEMFS=0
+  HAVE_EXTRA_TESTS=0
+  HAVE_JPEG=0
 
   if [ -z "${data_dir}" ]
   then
@@ -67,6 +70,6 @@ else
 
   # go back to current working dir
   cd $save
-  set -u
+  # set -u
 fi
 

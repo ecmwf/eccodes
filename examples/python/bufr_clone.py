@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -28,10 +28,10 @@ VERBOSE = 1  # verbose error reporting
 
 def example():
     # open BUFR file
-    fin = open(INPUT)
+    fin = open(INPUT, 'rb')
 
     # open output BUFR file
-    fout = open(OUTPUT, 'w')
+    fout = open(OUTPUT, 'wb')
 
     # get handle for message
     bufr = codes_bufr_new_from_file(fin)

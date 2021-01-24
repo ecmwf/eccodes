@@ -1,11 +1,4 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
+# (C) Copyright 2005- ECMWF.
 
 # S2S
 constant marsClass  = 's2';
@@ -103,4 +96,30 @@ if (isHindcast == 1) {
    alias mars.hdate = dataDate;
    alias mars.date  = modelVersionDate;
    alias mars.time  = modelVersionTime;
+}
+
+# ECC-891, ECC-1013
+concept is_ocean2d_param(zero) {
+   '1' = { discipline=10; typeOfFirstFixedSurface=160; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=0; typeOfSecondFixedSurface=255; }
+   '1' = { discipline=10; typeOfFirstFixedSurface=20;  scaleFactorOfFirstFixedSurface=2; scaledValueOfFirstFixedSurface=29315; typeOfSecondFixedSurface=255; }
+   '1' = { discipline=10; typeOfFirstFixedSurface=169; scaleFactorOfFirstFixedSurface=2; scaledValueOfFirstFixedSurface=1; typeOfSecondFixedSurface=255; }
+   '1' = { discipline=10; typeOfFirstFixedSurface=160; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=0; typeOfSecondFixedSurface=160; scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=300; }
+   '0' = { dummy=1; }
+} : no_copy;
+concept is_ocean3d_param(zero) {
+   '1' = { discipline=10; typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=160; }
+   '0' = { discipline=10; typeOfFirstFixedSurface=160; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=0; typeOfSecondFixedSurface=160; scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=300; }
+   '0' = { dummy=1; }
+}: no_copy;
+
+if (is_ocean2d_param) {
+   constant oceanLevName = 'o2d';
+   alias mars.levtype = oceanLevName;
+   unalias mars.levelist;
+}
+
+if (is_ocean3d_param) {
+   constant oceanLevName = 'o3d';
+   alias mars.levtype = oceanLevName;
+   unalias mars.levelist;
 }

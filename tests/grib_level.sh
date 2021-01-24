@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,6 +14,7 @@
 sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 temp=temp.level.grib
+temp2=temp2.level.grib
 
 file=${data_dir}/regular_gaussian_pressure_level.grib1
 
@@ -59,6 +60,18 @@ EOF
 ${tools_dir}/grib_filter level.filter $file > test.dump
 diff temp.level.good test.dump
 
+# Use of 'level' key for GRIB2
+${tools_dir}/grib_set -s typeOfFirstFixedSurface=103,level=24 $sample_g2 $temp
+grib_check_key_equals $temp level,scaledValueOfFirstFixedSurface,scaleFactorOfFirstFixedSurface '24 24 0'
+${tools_dir}/grib_set -s typeOfFirstFixedSurface=103,level=2.4 $sample_g2 $temp
+grib_check_key_equals $temp level:d,scaledValueOfFirstFixedSurface,scaleFactorOfFirstFixedSurface '2.4 240 2'
+
+# Use a parameter which has two levels
+${tools_dir}/grib_set -s paramId=228086,topLevel=1.3,bottomLevel=5.4 $sample_g2 $temp
+grib_check_key_equals $temp 'topLevel:d,bottomLevel:d' '1.3 5.4'
+grib_check_key_equals $temp scaleFactorOfFirstFixedSurface,scaledValueOfFirstFixedSurface '2 130'
+grib_check_key_equals $temp scaleFactorOfSecondFixedSurface,scaledValueOfSecondFixedSurface '2 540'
+
 # GRIB-492
 ${tools_dir}/grib_set -s indicatorOfTypeOfLevel=110 $sample_g1 $temp
 res=`${tools_dir}/grib_get -p indicatorOfTypeOfLevel:l,topLevel,bottomLevel $temp`
@@ -74,4 +87,31 @@ input=${data_dir}/tigge_pf_ecmwf.grib2
 res=`${tools_dir}/grib_get -wcount=7 -F%.20f -p level:d $input`
 [ "$res" = "2.00000000000000000000" ]
 
-rm -f level.filter temp.level.good test.dump $temp
+# Setting productDefinitionTemplateNumber should keep level info
+${tools_dir}/grib_set -s typeOfFirstFixedSurface=100,level=5 $sample_g2 $temp
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=1 $temp $temp2
+grib_check_key_equals $temp2 level 5
+
+# ECC-530: Setting typeOfSecondFixedSurface should not overwrite
+# scale factor and scaled value of first fixed surface
+# cat >level.filter<<EOF
+#   set typeOfFirstFixedSurface=106;
+#   set scaleFactorOfFirstFixedSurface=-2;
+#   set scaledValueOfFirstFixedSurface=4;
+#   set typeOfSecondFixedSurface=106; # Should not overwrite
+#   assert(scaledValueOfFirstFixedSurface == 4);
+#   assert(scaleFactorOfFirstFixedSurface == -2);
+#   assert(level==400);
+# EOF
+# ${tools_dir}/grib_filter level.filter $sample_g2
+
+# Related to ECC-530: make sure GRIB2 parameters with typeOfSecondFixedSurface
+# have correct parameter definitions (grib_set does not cause scale factor/value loss
+params="228086 228087 228095 228096 228170 228171 228039 228139"
+for pid in $params; do
+ ${tools_dir}/grib_set -s paramId=$pid $sample_g2 $temp
+ grib_check_key_equals $temp paramId $pid
+done
+
+
+rm -f level.filter temp.level.good test.dump $temp $temp2

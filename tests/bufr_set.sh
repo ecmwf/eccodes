@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -12,25 +12,25 @@
 
 #set -x
 
-#Enter data dir
+# Enter data dir
 cd ${data_dir}/bufr
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_set_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define tmp bufr file
+# Define tmp bufr file
 fBufrTmp=${label}".bufr.tmp"
 
 #----------------------------------------------------
 # Test: setting header for single message file
 #----------------------------------------------------
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_1.bufr"
 echo "Test: setting header for single message file" >> $fLog
@@ -44,7 +44,7 @@ centre=`${tools_dir}/bufr_get -p bufrHeaderCentre $fBufrTmp`
 # Test: setting header for multi-message file
 #----------------------------------------------------
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_multi.bufr"
 echo "Test: setting header for multi-message file" >> $fLog
@@ -61,9 +61,9 @@ done
 # Test: setting data values for single message file
 #-----------------------------------------------------
 
-#TODO: when ECC-37 is fixed we need to enable it.
+# TODO: when ECC-37 is fixed we need to enable it.
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_1.bufr"
 echo "Test: setting data values" >> $fLog
@@ -78,9 +78,9 @@ echo "file: $f" >> $fLog
 # Test: setting header for multi-message file
 #----------------------------------------------------
 
-#TODO: when ECC-37 is fixed we need to enable it.
+# TODO: when ECC-37 is fixed we need to enable it.
 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 f="syno_multi.bufr"
 echo "Test: setting data values for multi-message file" >> $fLog
@@ -95,8 +95,7 @@ echo "file: $f" >> $fLog
 #-----------------------------------------------------------
 # Test: with nonexistent keys. 
 #-----------------------------------------------------------
-
-#Key "center" does not exist!!
+# Key "center" does not exist!!
 
 # Invoke without -f i.e. should fail if error encountered
 set +e
@@ -119,7 +118,7 @@ ${tools_dir}/bufr_set -f -s center=98 $f $fBufrTmp 2>>$fLog 1>>$fLog
 # Test: with not allowed key values
 #-----------------------------------------------------------
 
-#Here 1024 is out of range for centre (it is 8-bit only for edition=3 files)
+# Here 1024 is out of range for centre (it is 8-bit only for edition=3 files)
 
 # Invoke without -f i.e. should fail if error encountered
 set +e
@@ -140,7 +139,6 @@ ${tools_dir}/bufr_set -f -s bufrHeaderCentre=1024 -f $f $fBufrTmp 2>>$fLog 1>>$f
 #-----------------------------------------------------------
 # Test: key values out of range
 #-----------------------------------------------------------
-
 f=aaen_55.bufr
 
 # The correction1 key is of type "bits" and only 6 bits wide
@@ -160,7 +158,24 @@ if [ $? -eq 0 ]; then
 fi
 set -e
 
+#-----------------------------------------------------------
+# Test: Local ECMWF section. The 'ident' key
+#-----------------------------------------------------------
+f=temp_101.bufr
+${tools_dir}/bufr_set -s ident=ABCD $f $fBufrTmp
+result=`${tools_dir}/bufr_get -p ident $fBufrTmp`
+[ "$result" = "ABCD" ]
+${tools_dir}/bufr_set -s keyMore=ABCD $f $fBufrTmp
+result=`${tools_dir}/bufr_get -p keyMore,ident $fBufrTmp`
+[ "$result" = "ABCD ABCD" ]
 
-#Clean up
+${tools_dir}/bufr_set -s ident=' AB CD ' $f $fBufrTmp
+result=`${tools_dir}/bufr_get -p ident $fBufrTmp`
+[ "$result" = "AB CD" ]
+
+
+# ${tools_dir}/bufr_compare $f $fBufrTmp
+
+# Clean up
 rm -f $fLog 
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp

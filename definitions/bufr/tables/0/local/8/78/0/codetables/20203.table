@@ -1,0 +1,14 @@
+0 0 No precipitation
+1 1 Total precipitation solely of depositional precipitation (solid and liquid)
+2 2 Total precipitation solely of liquid depositional precipitation
+3 3 Total precipitation solely of solid depositional precipitation
+6 6 Liquid precipitation
+7 7 Solid precipitation
+8 8 Liquid and solid precipitation
+9 9 Type of precipitation unascertainable, manually ascertainment
+10 10 No precipitation, automatically ascertainment
+11 11 Liquid precipitation, automatically ascertainment
+12 12 Solid precipitation, automatically ascertainment
+13 13 Liquid and solid precipitation, automatically ascertainment
+14 14 Type of precipitation unascertainable and depositional precipitation, automatically ascertainment
+15 15 Missing value, Type of precipitation unascertainable, automatically ascertainment

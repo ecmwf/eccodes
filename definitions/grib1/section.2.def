@@ -1,16 +1,6 @@
-# Copyright 2005-2017 ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
 # START grib1::section
 # SECTION 2, Grid description section
 #  Length of section
-# (octets)
 
 position offsetSection2;
 section_length[3] section2Length ;
@@ -18,7 +8,7 @@ meta section2Pointer section_pointer(offsetSection2,section2Length,2);
 transient radius=6367470;
 alias radiusOfTheEarth=radius;
 alias radiusInMetres=radius;
-transient shapeOfTheEarth=6 : hidden;
+transient shapeOfTheEarth=0: hidden; #ECC-811
 
 #  NV -- number of vertical coordinate parameters
 
@@ -41,7 +31,7 @@ meta gridDefinitionDescription codetable_title(dataRepresentationType);
 
 #  Grid definition
 # (according to data representation type - octet 6 above)
-alias is_rotated_grid=zero;
+alias isRotatedGrid=zero;
 
 if (dataRepresentationType < 192)
 {

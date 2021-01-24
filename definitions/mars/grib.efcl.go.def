@@ -1,0 +1,14 @@
+# EFAS climatology Gridded observations
+
+# ECC-701
+alias mars.step = endStep;
+
+alias mars.date  = dateOfModelVersion;
+alias mars.time  = dataTime;
+alias mars.hdate = dataDate;
+
+alias mars.origin = inputOriginatingCentre;
+
+# We need this because 'efas_post_proc' is defined later
+meta efas_model sprintf("%s", efas_post_proc) : no_copy;
+alias mars.model = efas_model;

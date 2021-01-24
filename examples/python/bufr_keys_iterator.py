@@ -1,4 +1,4 @@
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -11,8 +11,8 @@
 # Python implementation: bufr_keys_iterator
 #
 # Description: Example on how to use keys_iterator functions and the
-#           codes_bufr_keys_iterator structure to get all the available
-#           keys in a BUFR message.
+#              codes_bufr_keys_iterator structure to get all the available
+#              keys in a BUFR message.
 
 
 from __future__ import print_function
@@ -21,13 +21,12 @@ import sys
 
 from eccodes import *
 
-INPUT = '../../data/bufr/syno_1.bufr'
 VERBOSE = 1  # verbose error reporting
 
 
-def example():
+def example(INPUT):
     # open bufr file
-    f = open(INPUT)
+    f = open(INPUT, 'rb')
 
     cnt = 0
 
@@ -67,7 +66,7 @@ def example():
 
 def main():
     try:
-        example()
+        example(sys.argv[1])
     except CodesInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)

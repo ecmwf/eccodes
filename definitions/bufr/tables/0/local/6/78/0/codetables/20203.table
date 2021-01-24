@@ -1,0 +1,9 @@
+0 0 No precipitation
+1 1 Total precipitation solely of depositional precipitation (solid and liquid)
+2 2 Total precipitation solely of liquid depositional precipitation
+3 3 Total precipitation solely of solid depositional precipitation
+6 6 Liquid precipitation
+7 7 Solid precipitation
+8 8 Liquid and solid precipitation
+9 9 No measurement
+15 15 Missing value

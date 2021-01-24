@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -29,10 +29,10 @@ grib_option grib_options[]={
     {"a",0,0,0,1,0}
 };
 
-char* grib_tool_description="Lists the keys available for a type of grib (-T option) or \n"
+char* tool_description="Lists the keys available for a type of grib (-T option) or \n"
                  "\tin a grib message from a file (-F option).";
-char* grib_tool_name="grib_keys";
-char* grib_tool_usage="[options]";
+char* tool_name="grib_keys";
+char* tool_usage="[options]";
 char name[1024];
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);

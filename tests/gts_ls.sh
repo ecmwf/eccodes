@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2005-2017 ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -10,18 +10,18 @@
 
 . ./include.sh
 
-#Enter data dir
+# Enter data dir
 cd ${data_dir}/gts
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="gts_ls_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define tmp file
+# Define tmp file
 fTmp=${label}".tmp.txt"
 rm -f $fTmp
 

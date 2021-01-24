@@ -1,4 +1,4 @@
-! Copyright 2005-2017 ECMWF.
+! (C) Copyright 2005- ECMWF.
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -15,6 +15,7 @@ module eccodes
   implicit none
   include "eccodes_constants.h"
   include "eccodes_visibility.h"
+  include "eccodes_settings.h"
 
   real(8),    parameter,public :: CODES_MISSING_DOUBLE = -1.D+100
   integer(4), parameter,public :: CODES_MISSING_LONG   = 2147483647

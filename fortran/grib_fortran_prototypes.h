@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2017 ECMWF.
+ * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
  * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -141,6 +141,26 @@ int any_f_new_from_file_(int *fid, int *gid);
 int any_f_new_from_file__(int *fid, int *gid);
 int any_f_new_from_file(int *fid, int *gid);
 
+int any_f_scan_file_(int* fid,int* n);
+int any_f_scan_file__(int* fid,int* n);
+int any_f_scan_file(int* fid,int* n);
+
+int any_f_new_from_scanned_file_(int* fid,int* msgid,int* gid);
+int any_f_new_from_scanned_file__(int* fid,int* msgid,int* gid);
+int any_f_new_from_scanned_file(int* fid,int* msgid,int* gid);
+
+int any_f_load_all_from_file_(int* fid,int* n);
+int any_f_load_all_from_file__(int* fid,int* n);
+int any_f_load_all_from_file(int* fid,int* n);
+
+int any_f_new_from_loaded_(int* msgid,int* gid);
+int any_f_new_from_loaded__(int* msgid,int* gid);
+int any_f_new_from_loaded(int* msgid,int* gid);
+
+int codes_f_clear_loaded_from_file_(void);
+int codes_f_clear_loaded_from_file__(void);
+int codes_f_clear_loaded_from_file(void);
+
 int grib_f_new_from_file_(int *fid, int *gid);
 int grib_f_new_from_file__(int *fid, int *gid);
 int grib_f_new_from_file(int *fid, int *gid);
@@ -182,6 +202,11 @@ int grib_f_dump(int *gid);
 int grib_f_print_(int *gid, char *key, int len);
 int grib_f_print__(int *gid, char *key, int len);
 int grib_f_print(int *gid, char *key, int len);
+
+int grib_f_get_api_version_(int* apiVersion,int len);
+int grib_f_get_api_version__(int* apiVersion,int len);
+int grib_f_get_api_version(int* apiVersion,int len);
+
 int grib_f_get_error_string_(int *err, char *buf, int len);
 int grib_f_get_error_string__(int *err, char *buf, int len);
 int grib_f_get_error_string(int *err, char *buf, int len);
@@ -353,6 +378,13 @@ int grib_f_multi_append__(int *ingid, int *sec, int *mgid);
 int codes_f_bufr_copy_data(int* gid1,int* gid2);
 int codes_f_bufr_copy_data_(int* gid1,int* gid2);
 int codes_f_bufr_copy_data__(int* gid1,int* gid2);
+
+int codes_f_bufr_multi_element_constant_arrays_on_(void);
+int codes_f_bufr_multi_element_constant_arrays_on__(void);
+int codes_f_bufr_multi_element_constant_arrays_on(void);
+int codes_f_bufr_multi_element_constant_arrays_off_(void);
+int codes_f_bufr_multi_element_constant_arrays_off__(void);
+int codes_f_bufr_multi_element_constant_arrays_off(void);
 
 int grib_f_set_definitions_path_(char *path, int len);
 int grib_f_set_definitions_path__(char *path, int len);
