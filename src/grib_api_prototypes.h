@@ -961,7 +961,7 @@ long grib_get_api_version(void);
 void grib_print_api_version(FILE* out);
 const char* grib_get_package_name(void);
 grib_context* grib_context_get_default(void);
-char* codes_resolve_path(grib_context* c, char* path);
+char* codes_resolve_path(grib_context* c, const char* path);
 char* grib_context_full_defs_path(grib_context* c, const char* basename);
 char* grib_samples_path(const grib_context* c);
 char* grib_definition_path(const grib_context* c);

@@ -605,7 +605,7 @@ grib_context* grib_context_new(grib_context* parent)
 
 /* GRIB-235: Resolve path to expand symbolic links etc */
 /* Note: return value is allocated. Client has to free */
-char* codes_resolve_path(grib_context* c, char* path)
+char* codes_resolve_path(grib_context* c, const char* path)
 {
     char* result = NULL;
 #if defined(ECCODES_HAVE_REALPATH)

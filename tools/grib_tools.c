@@ -1289,14 +1289,15 @@ void grib_print_full_statistics(grib_runtime_options* options)
                 options->filter_handle_count, options->handle_count, options->file_count);
 }
 
-static int filenames_equal(const char * f1, const char * f2)
+static int filenames_equal(const char* f1, const char* f2)
 {
-    char resolved1[8192] = {0,};
-    char resolved2[8192] = {0,};
     int eq = 0;
-    realpath(f1, resolved1);
-    realpath(f2, resolved2);
+    grib_context* c = grib_context_get_default();
+    char* resolved1 = codes_resolve_path(c, f1);
+    char* resolved2 = codes_resolve_path(c, f2);
     eq = (strcmp(resolved1, resolved2)==0);
+    grib_context_free(c, resolved1);
+    grib_context_free(c, resolved2);
     return eq;
 }
 
