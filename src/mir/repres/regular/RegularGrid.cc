@@ -79,7 +79,7 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
     y_    = {first.y(), first.y() + grid[1] * (firstPointBottomLeft_ || plusy ? ny - 1 : 1 - ny), ny};
     grid_ = {x_, y_, projection};
 
-    util::RectangularDomain range({x_.min(), x_.max()}, {y_.min(), y_.max()}, "meters");
+    atlas::RectangularDomain range({x_.min(), x_.max()}, {y_.min(), y_.max()}, "meters");
     auto bbox = projection.lonlatBoundingBox(range);
     ASSERT(bbox);
 

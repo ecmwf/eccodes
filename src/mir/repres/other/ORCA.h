@@ -15,8 +15,8 @@
 
 #include <string>
 
-#include "mir/api/Atlas.h"
 #include "mir/repres/Gridded.h"
+#include "mir/util/Types.h"
 
 
 namespace mir {

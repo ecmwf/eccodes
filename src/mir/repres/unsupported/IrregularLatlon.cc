@@ -17,7 +17,6 @@
 
 #include "eckit/utils/MD5.h"
 
-#include "mir/api/Atlas.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
@@ -25,6 +24,7 @@
 #include "mir/util/Domain.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
+#include "mir/util/Types.h"
 
 
 namespace mir {
@@ -224,17 +224,18 @@ bool IrregularLatlon::includesSouthPole() const {
 
 
 atlas::Grid IrregularLatlon::atlasGrid() const {
+    ASSERT(numberOfPoints());
 
-    auto pts = new std::vector<atlas::PointXY>();
-    pts->reserve(latitudes_.size() * longitudes_.size());
+    std::vector<atlas::PointXY> pts;
+    pts.reserve(numberOfPoints());
 
     for (double lat : latitudes_) {
         for (double lon : longitudes_) {
-            pts->push_back(atlas::PointXY(lon, lat));
+            pts.emplace_back(atlas::PointXY(lon, lat));
         }
     }
 
-    return atlas::UnstructuredGrid(pts);
+    return atlas::UnstructuredGrid(std::move(pts));
 }
 
 

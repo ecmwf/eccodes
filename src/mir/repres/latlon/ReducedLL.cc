@@ -20,7 +20,6 @@
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/MD5.h"
 
-#include "mir/api/Atlas.h"
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
@@ -28,6 +27,7 @@
 #include "mir/util/Domain.h"
 #include "mir/util/GridBox.h"
 #include "mir/util/MeshGeneratorParameters.h"
+#include "mir/util/Types.h"
 
 
 namespace mir {
@@ -129,6 +129,7 @@ void ReducedLL::fill(api::MIRJob& job) const {
 }
 
 atlas::Grid ReducedLL::atlasGrid() const {
+#if defined(mir_HAVE_ATLAS)
     const util::Domain dom = domain();
     auto N                 = long(pl_.size());
 
@@ -136,6 +137,9 @@ atlas::Grid ReducedLL::atlasGrid() const {
     atlas::StructuredGrid::YSpace yspace(atlas::grid::LinearSpacing({{dom.north().value(), dom.south().value()}}, N));
 
     return atlas::StructuredGrid(xspace, yspace);
+#else
+    NOTIMP;
+#endif
 }
 
 void ReducedLL::fill(util::MeshGeneratorParameters& params) const {

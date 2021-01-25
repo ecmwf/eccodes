@@ -29,7 +29,6 @@
 // temporary
 #include "atlas/grid/detail/spacing/CustomSpacing.h"
 
-#include "mir/api/Atlas.h"
 #include "mir/api/MIREstimation.h"
 #include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
@@ -39,6 +38,7 @@
 #include "mir/util/GridBox.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
+#include "mir/util/Types.h"
 
 
 namespace mir {
@@ -124,6 +124,7 @@ bool ClenshawCurtis::sameAs(const Representation& other) const {
 
 
 atlas::Grid ClenshawCurtis::atlasGrid() const {
+#if defined(mir_HAVE_ATLAS)
     using grid_t = atlas::StructuredGrid;
 
     auto& lats = latitudes();
@@ -133,6 +134,9 @@ atlas::Grid ClenshawCurtis::atlasGrid() const {
     grid_t::YSpace y = new atlas::grid::spacing::CustomSpacing(long(lats.size()), lats.data());
 
     return grid_t(new grid_t::grid_t(x, y, atlas::Projection(), domain_));
+#else
+    NOTIMP;
+#endif
 }
 
 

@@ -20,7 +20,6 @@
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 
-#include "mir/api/Atlas.h"
 #include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
 #include "mir/iterator/detail/RegularIterator.h"
@@ -31,6 +30,7 @@
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
+#include "mir/util/Types.h"
 
 
 namespace mir {
