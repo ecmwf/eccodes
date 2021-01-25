@@ -1293,9 +1293,10 @@ static int filenames_equal(const char * f1, const char * f2)
 {
     char resolved1[8192] = {0,};
     char resolved2[8192] = {0,};
+    int eq = 0;
     realpath(f1, resolved1);
     realpath(f2, resolved2);
-    int eq = (strcmp(resolved1, resolved2)==0);
+    eq = (strcmp(resolved1, resolved2)==0);
     return eq;
 }
 
