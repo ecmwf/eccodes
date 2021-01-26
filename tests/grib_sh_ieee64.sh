@@ -10,9 +10,5 @@
 
 . ./include.sh
 
-if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
-    echo "$0: This test is currently disabled on Windows"
-    exit 0
-fi
 
 $EXEC $test_dir/grib_sh_ieee64
