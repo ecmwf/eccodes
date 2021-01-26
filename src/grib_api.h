@@ -46,6 +46,10 @@ typedef enum ProductKind
 
 #include "eccodes_version.h"
 
+#ifdef ECCODES_ON_WINDOWS
+#define long int64_t
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
