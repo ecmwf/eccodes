@@ -121,9 +121,7 @@ res=`${tools_dir}/grib_get -p decimalScaleFactor,bitsPerValue ${data_dir}/gfs.c2
 input=${data_dir}/sample.grib2
 temp=temp.grib_bitsPerValue.grib
 MAX_BPV=58
-if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
-    MAX_BPV=26
-fi
+
 stats1=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg,sd $input`
 grib_check_key_equals $input 'bitsPerValue,packingType' '16 grid_simple'
 for bpv in `seq 17 $MAX_BPV`; do
