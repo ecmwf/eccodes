@@ -14,7 +14,6 @@
 /* Microsoft Windows Visual Studio support */
 #if defined(_WIN32) && defined(_MSC_VER)
 #define ECCODES_ON_WINDOWS
-#define long int64_t
 #ifndef YY_NO_UNISTD_H
 #define YY_NO_UNISTD_H
 #endif
