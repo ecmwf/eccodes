@@ -19,6 +19,7 @@
 #include <regex>
 
 #include "eckit/exception/Exceptions.h"
+#include "eckit/filesystem/PathName.h"
 
 #include "mir/config/LibMir.h"
 #include "mir/iterator/UnstructuredIterator.h"
