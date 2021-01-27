@@ -18,6 +18,7 @@
 #include <memory>
 #include <numeric>
 #include <set>
+#include <type_traits>
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/Fraction.h"
@@ -219,8 +220,24 @@ const std::vector<long>& Reduced::pls() const {
     return pl_;
 }
 
-template <typename PlVector>
-void Reduced::setNj(const PlVector& pl, const Latitude& s, const Latitude& n) {
+
+std::vector<long> Reduced::pls(const std::string& name) {
+    atlas::ReducedGaussianGrid grid(name);
+    ASSERT(grid);
+
+    auto& nx      = grid.nx();
+    using nx_type = std::remove_reference<decltype(nx)>::type::value_type;
+    if (std::is_same<nx_type, long>::value) {
+        return nx;
+    }
+
+    std::vector<long> pl(nx.size());
+    std::transform(nx.begin(), nx.end(), pl.begin(), [](nx_type p) { return long(p); });
+    return pl;
+}
+
+
+void Reduced::setNj(const std::vector<long>& pl, const Latitude& s, const Latitude& n) {
     ASSERT(N_ > 0);
     ASSERT(N_ * 2 == pl.size());
 
@@ -249,24 +266,16 @@ void Reduced::setNj(const PlVector& pl, const Latitude& s, const Latitude& n) {
         }
     }
 
-    pl_ = std::vector<long>(pl.begin(), pl.end());
+    pl_ = {pl.begin(), pl.end()};
     pls();  // check internal assumptions
 }
-
-// Explicit template instantiations of above implementation for different PlVector types
-
-// PlVector = std::vector<int>
-template void Reduced::setNj(const std::vector<int>& pl, const Latitude& s, const Latitude& n);
-
-// PlVector = std::vector<long>
-template void Reduced::setNj(const std::vector<long>& pl, const Latitude& s, const Latitude& n);
 
 
 void Reduced::fill(grib_info& info) const {
 
     // See copy_spec_from_ksec.c in libemos for info
 
-    const std::vector<long>& pl = pls();
+    auto& pl = pls();
 
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_REDUCED_GG;
     info.grid.Nj        = long(Nj_);

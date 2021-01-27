@@ -12,7 +12,7 @@
 
 #include "mir/repres/gauss/reduced/Octahedral.h"
 
-#include "eckit/exception/Exceptions.h"
+#include "eckit/log/Log.h"
 
 #include "mir/api/MIRJob.h"
 #include "mir/config/LibMir.h"
@@ -34,14 +34,7 @@ Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox, double angularPr
     Latitude s = bbox.south();
     correctSouthNorth(s, n);
 
-    {
-        atlas::util::Config config;
-        config.set("name", "O" + std::to_string(N_));
-        atlas::ReducedGaussianGrid grid(config);
-        ASSERT(grid);
-
-        setNj(grid.nx(), s, n);
-    }
+    setNj(pls("O" + std::to_string(N_)), s, n);
 
     Longitude w = bbox.west();
     Longitude e = bbox.east();
