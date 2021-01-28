@@ -22,8 +22,8 @@ sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 # Template 4.86
 # -------------
 # TODO: Add tablesVersion later...
-$tools_dir/grib_set -s productDefinitionTemplateNumber=86,numberOfForecastsUsedInLocalTime=1 $sample2 $temp
-grib_check_key_equals $temp totalNumberOfQuantiles,quantileValue '0 0'
+$tools_dir/grib_set -s productDefinitionTemplateNumber=86,totalNumberOfQuantiles=2 $sample2 $temp
+grib_check_key_equals $temp totalNumberOfQuantiles,quantileValue '2 0'
 
 
 # Template 4.88
