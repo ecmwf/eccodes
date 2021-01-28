@@ -18,10 +18,18 @@ temp2=temp2.$label.grib2
 temp=temp.$label.grib2
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
+
+# Template 4.86
+# -------------
+# TODO: Add tablesVersion later...
+$tools_dir/grib_set -s productDefinitionTemplateNumber=86,numberOfForecastsUsedInLocalTime=1 $sample2 $temp
+grib_check_key_equals $temp totalNumberOfQuantiles,quantileValue '0 0'
+
+
 # Template 4.88
 # -------------
 # TODO: Add tablesVersion later...
-grib_set -s productDefinitionTemplateNumber=88,numberOfForecastsUsedInLocalTime=1 $sample2 $temp
+$tools_dir/grib_set -s productDefinitionTemplateNumber=88,numberOfForecastsUsedInLocalTime=1 $sample2 $temp
 grib_check_key_equals $temp localTimeMethod 255
 
 # Templates 4.76 -> 4.79, 4.80 -> 4.83
