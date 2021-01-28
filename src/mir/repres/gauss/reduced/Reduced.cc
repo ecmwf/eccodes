@@ -18,7 +18,6 @@
 #include <memory>
 #include <numeric>
 #include <set>
-#include <type_traits>
 
 #include "eckit/exception/Exceptions.h"
 #include "eckit/types/Fraction.h"
@@ -37,6 +36,22 @@ namespace gauss {
 namespace reduced {
 
 
+template <typename T>
+std::vector<long> pl_convert(const T& nx) {
+    ASSERT(!nx.empty());
+    std::vector<long> pl(nx.size());
+    std::transform(nx.begin(), nx.end(), pl.begin(), [](typename T::value_type p) { return long(p); });
+    return pl;
+}
+
+
+template <>
+std::vector<long> pl_convert(const std::vector<long>& nx) {
+    ASSERT(!nx.empty());
+    return nx;
+}
+
+
 Reduced::Reduced(const param::MIRParametrisation& parametrisation) : Gaussian(parametrisation), k_(0), Nj_(N_ * 2) {
 
     // adjust latitudes, longitudes and re-set bounding box
@@ -48,7 +63,7 @@ Reduced::Reduced(const param::MIRParametrisation& parametrisation) : Gaussian(pa
     ASSERT(parametrisation.get("pl", pl));
 
     // if pl isn't global (from file!) insert leading/trailing 0's
-    const auto& lats = latitudes();
+    auto& lats = latitudes();
     if (n < lats.front() || s > lats.back()) {
 
         size_t k  = 0;
@@ -123,7 +138,7 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e) const {
         bool first = true;
         std::set<long> NiTried;
 
-        const std::vector<long>& pl = pls();
+        auto& pl = pls();
         for (size_t j = k_; j < k_ + Nj_; ++j) {
 
             // crop longitude-wise, track distinct attempts
@@ -176,9 +191,9 @@ eckit::Fraction Reduced::getSmallestIncrement() const {
     ASSERT(N_);
     using distance_t = std::make_signed<size_t>::type;
 
-    const std::vector<long>& pl = pls();
-    const long maxpl            = *std::max_element(pl.begin() + distance_t(k_), pl.begin() + distance_t(k_ + Nj_));
-    ASSERT(maxpl);
+    auto& pl   = pls();
+    auto maxpl = *std::max_element(pl.begin() + distance_t(k_), pl.begin() + distance_t(k_ + Nj_));
+    ASSERT(maxpl > 0);
 
     return Longitude::GLOBE.fraction() / maxpl;
 }
@@ -188,8 +203,8 @@ Iterator* Reduced::unrotatedIterator() const {
 
     // Lambda captures a vector reference, ok because the representation
     // holding the vector lives longer than the iterator
-    const std::vector<long>& pl = pls();
-    auto Ni                     = [&pl](size_t i) {
+    auto& pl = pls();
+    auto Ni  = [&pl](size_t i) {
         ASSERT(i < pl.size());
         return pl[i];
     };
@@ -202,8 +217,8 @@ Iterator* Reduced::rotatedIterator(const util::Rotation& rotation) const {
 
     // Lambda captures a vector reference, ok because the representation
     // holding the vector lives longer than the iterator
-    const std::vector<long>& pl = pls();
-    auto Ni                     = [&pl](size_t i) {
+    auto& pl = pls();
+    auto Ni  = [&pl](size_t i) {
         ASSERT(i < pl.size());
         return pl[i];
     };
@@ -224,16 +239,7 @@ const std::vector<long>& Reduced::pls() const {
 std::vector<long> Reduced::pls(const std::string& name) {
     atlas::ReducedGaussianGrid grid(name);
     ASSERT(grid);
-
-    auto& nx      = grid.nx();
-    using nx_type = std::remove_reference<decltype(nx)>::type::value_type;
-    if (std::is_same<nx_type, long>::value) {
-        return nx;
-    }
-
-    std::vector<long> pl(nx.size());
-    std::transform(nx.begin(), nx.end(), pl.begin(), [](nx_type p) { return long(p); });
-    return pl;
+    return pl_convert(grid.nx());
 }
 
 
@@ -248,7 +254,7 @@ void Reduced::setNj(const std::vector<long>& pl, const Latitude& s, const Latitu
     k_  = 0;
     Nj_ = N_ * 2;
 
-    const auto& lats = latitudes();
+    auto& lats = latitudes();
     if (n < lats.front() || s > lats.back()) {
         Nj_ = 0;
         for (auto& lat : lats) {
@@ -280,10 +286,8 @@ void Reduced::fill(grib_info& info) const {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_REDUCED_GG;
     info.grid.Nj        = long(Nj_);
     info.grid.N         = long(N_);
-
-    ASSERT(k_ + Nj_ <= pl.size());
-    info.grid.pl      = &pl[k_];
-    info.grid.pl_size = long(Nj_);
+    info.grid.pl        = &pl[k_];
+    info.grid.pl_size   = long(Nj_);
 
     for (size_t i = k_; i < k_ + Nj_; i++) {
         ASSERT(pl[i] > 0);
@@ -295,7 +299,7 @@ void Reduced::fill(grib_info& info) const {
 
 void Reduced::estimate(api::MIREstimation& estimation) const {
     Gaussian::estimate(estimation);
-    const std::vector<long>& pl = pls();
+    auto& pl = pls();
     estimation.pl(pl.size());
 }
 
@@ -314,7 +318,6 @@ std::vector<util::GridBox> Reduced::gridBoxes() const {
 
     bool periodic = isPeriodicWestEast();
     auto& pl      = pls();
-    ASSERT(k_ + Nj_ <= pl.size());
 
     for (size_t j = k_; j < k_ + Nj_; ++j) {
         ASSERT(pl[j] > 0);
@@ -417,17 +420,14 @@ size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue,
 
 
 size_t Reduced::numberOfPoints() const {
-    size_t total = 0;
-
     if (isGlobal()) {
-        const std::vector<long>& pl = pls();
-        total                       = size_t(std::accumulate(pl.begin(), pl.end(), 0));
+        auto& pl = pls();
+        return size_t(std::accumulate(pl.begin(), pl.end(), 0));
     }
-    else {
-        std::unique_ptr<repres::Iterator> iter(iterator());
-        while (iter->next()) {
-            total++;
-        }
+
+    size_t total = 0;
+    for (std::unique_ptr<repres::Iterator> iter(iterator()); iter->next();) {
+        total++;
     }
     return total;
 }
@@ -439,8 +439,8 @@ bool Reduced::getLongestElementDiagonal(double& d) const {
     // latitudes closest/furthest from equator and longitude furthest from
     // Greenwich
 
-    const std::vector<long>& pl     = pls();
-    const std::vector<double>& lats = latitudes();
+    auto& pl   = pls();
+    auto& lats = latitudes();
 
     d = 0.;
     for (size_t j = k_ + 1; j < k_ + Nj_; ++j) {
@@ -473,7 +473,7 @@ util::BoundingBox Reduced::extendBoundingBox(const util::BoundingBox& bbox) cons
         bool first = true;
         std::set<long> NiTried;
 
-        const std::vector<long>& pl = pls();
+        auto& pl = pls();
         for (size_t j = k_; j < k_ + Nj_; ++j) {
 
             // extend longitude-wise, track distinct attempts
@@ -530,9 +530,11 @@ bool Reduced::isPeriodicWestEast() const {
     return bbox_.east() - bbox_.west() + inc >= Longitude::GLOBE;
 }
 
+
 std::string Reduced::factory() const {
     return "reduced_gg";
 }
+
 
 }  // namespace reduced
 }  // namespace gauss
