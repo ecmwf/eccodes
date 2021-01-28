@@ -1,9 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 7.3, Grid point data - complex packing and spatial differencing
-# Octets 6-ww : First value(s) of original
-# (undifferenced)
-# ????          first_value_s_of_original
 
 position offsetBeforeData;
 

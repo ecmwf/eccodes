@@ -1,0 +1,22 @@
+# (C) Copyright 2005- ECMWF.
+
+# TEMPLATE 4.88, Analysis or Forecast at a horizontal level or in a horizontal layer at a local time
+
+codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) : dump;
+codetable[1] parameterNumber ('4.2.[discipline:l].[parameterCategory:l].table',masterDir,localDir)  : dump;
+meta parameterUnits codetable_units(parameterNumber) : dump;
+meta parameterName  codetable_title(parameterNumber) : dump;
+
+codetable[1] typeOfGeneratingProcess ('4.3.table',masterDir,localDir) : dump;
+
+unsigned[1] backgroundProcess = 255 : edition_specific;
+alias backgroundGeneratingProcessIdentifier=backgroundProcess;
+
+unsigned[1] generatingProcessIdentifier  : dump;
+
+#Cannot include this as it has keys we do not need e.g. minutesAfterDataCutoff
+#Also forecastTime will be used in the localtime template
+#include "grib2/template.4.parameter.def"
+
+include "grib2/template.4.horizontal.def"
+include "grib2/template.4.localtime.def"
