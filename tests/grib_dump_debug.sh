@@ -82,7 +82,7 @@ fi
 
 for file in $files; do
    if [ -f ${data_dir}/$file ]; then
-      ${tools_dir}/grib_dump -Da ${data_dir}/$file > $temp 2>&1
+      ${tools_dir}/grib_dump -w count=1 -Da ${data_dir}/$file > $temp 2>&1
       set +e
       # Look for the word ERROR in output. We should not find any
       grep -q 'ERROR ' $temp

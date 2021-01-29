@@ -198,7 +198,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     *val = self->yearOrMonth == 1 ? rdbYear : rdbMonth;
     *len = 1;
 
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 static int pack_long(grib_accessor* a, const long* v, size_t* len)

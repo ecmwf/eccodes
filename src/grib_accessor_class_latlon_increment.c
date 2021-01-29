@@ -350,7 +350,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (ret == GRIB_SUCCESS)
         *len = 1;
 
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 static int is_missing(grib_accessor* a)

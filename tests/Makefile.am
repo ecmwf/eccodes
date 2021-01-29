@@ -29,7 +29,7 @@ TESTS = definitions.sh \
         unit_tests.sh \
         grib2to1.sh \
         grib2to3.sh \
-        badgrib.sh \
+        grib_bad.sh \
         grib_ls.sh \
         grib_filter.sh  \
         grib_multi.sh \
@@ -59,7 +59,8 @@ TESTS = definitions.sh \
         grib_statistics.sh \
         grib_tigge.sh \
         grib_uerra.sh \
-        grib_tigge_conversions.sh \
+        grib_tigge_conversions1.sh \
+        grib_tigge_conversions2.sh \
         read_any.sh \
         grib_padding.sh \
         grib_grid_lamb_az_eq_area.sh \

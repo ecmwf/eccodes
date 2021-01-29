@@ -332,14 +332,9 @@ static int select_area(grib_accessor* a)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    int err = 0;
     /*grib_accessor_bufr_extract_area_subsets *self =(grib_accessor_bufr_extract_area_subsets*)a;*/
 
     if (*len == 0)
         return GRIB_SUCCESS;
-    err = select_area(a);
-    if (err)
-        return err;
-
-    return err;
+    return select_area(a);
 }

@@ -1996,58 +1996,61 @@ int parse_keyval_string(const char* grib_tool,
 }
 
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to EPS */
-int grib2_is_PDTN_EPS(long productDefinitionTemplateNumber)
+int grib2_is_PDTN_EPS(long pdtn)
 {
     return (
-        productDefinitionTemplateNumber == 1 || productDefinitionTemplateNumber == 11 ||
-        productDefinitionTemplateNumber == 33 || productDefinitionTemplateNumber == 34 || /*simulated (synthetic) satellite data*/
-        productDefinitionTemplateNumber == 41 || productDefinitionTemplateNumber == 43 || /*atmospheric chemical constituents*/
-        productDefinitionTemplateNumber == 45 || productDefinitionTemplateNumber == 47    /*aerosols*/
+        pdtn == 1 || pdtn == 11 ||
+        pdtn == 33 || pdtn == 34 || /*simulated (synthetic) satellite data*/
+        pdtn == 41 || pdtn == 43 || /*atmospheric chemical constituents*/
+        pdtn == 45 || pdtn == 47 || pdtn == 85  /*aerosols*/
     );
 }
 
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for atmospheric chemical constituents */
-int grib2_is_PDTN_Chemical(long productDefinitionTemplateNumber)
+int grib2_is_PDTN_Chemical(long pdtn)
 {
     return (
-        productDefinitionTemplateNumber == 40 ||
-        productDefinitionTemplateNumber == 41 ||
-        productDefinitionTemplateNumber == 42 ||
-        productDefinitionTemplateNumber == 43);
+        pdtn == 40 ||
+        pdtn == 41 ||
+        pdtn == 42 ||
+        pdtn == 43);
 }
 
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for
  * atmospheric chemical constituents based on a distribution function */
-int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber)
+int grib2_is_PDTN_ChemicalDistFunc(long pdtn)
 {
     return (
-        productDefinitionTemplateNumber == 57 ||
-        productDefinitionTemplateNumber == 58 ||
-        productDefinitionTemplateNumber == 67 ||
-        productDefinitionTemplateNumber == 68);
+        pdtn == 57 ||
+        pdtn == 58 ||
+        pdtn == 67 ||
+        pdtn == 68);
 }
 
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for aerosols */
-int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber)
+int grib2_is_PDTN_Aerosol(long pdtn)
 {
+    /* Notes: PDT 44 is deprecated and replaced by 48 */
+    /*        PDT 47 is deprecated and replaced by 85 */
     return (
-        productDefinitionTemplateNumber == 44 || /* Note: PDT 44 is deprecated. Use 48 instead */
-        productDefinitionTemplateNumber == 48 ||
-        productDefinitionTemplateNumber == 49 ||
-        productDefinitionTemplateNumber == 45 ||
-        productDefinitionTemplateNumber == 46 ||
-        productDefinitionTemplateNumber == 47);
+        pdtn == 44 || 
+        pdtn == 48 ||
+        pdtn == 49 ||
+        pdtn == 45 ||
+        pdtn == 46 ||
+        pdtn == 47 ||
+        pdtn == 85);
 }
 
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for optical properties of aerosol */
-int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber)
+int grib2_is_PDTN_AerosolOptical(long pdtn)
 {
     /* Note: PDT 48 can be used for both plain aerosols as well as optical properties of aerosol.
      * For the former user must set the optical wavelength range to missing.
      */
     return (
-        productDefinitionTemplateNumber == 48 ||
-        productDefinitionTemplateNumber == 49);
+        pdtn == 48 ||
+        pdtn == 49);
 }
 
 /* Given some information about the type of grib2 parameter, return the productDefinitionTemplateNumber to use.
@@ -2115,7 +2118,7 @@ int grib2_select_PDTN(int is_eps, int is_instant,
             if (is_instant)
                 return 45;
             else
-                return 47;
+                return 85; /* PDT 47 is deprecated*/
         }
         else {
             if (is_instant)

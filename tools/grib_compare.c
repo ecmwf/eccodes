@@ -160,7 +160,7 @@ grib_option grib_options[] = {
     { "v", 0, 0, 0, 1, 0 }
 };
 
-static grib_handle* global_handle = NULL;
+static grib_handle* handle1 = NULL;
 static int global_counter         = 0;
 static int theStart               = -1;
 static int theEnd                 = -1;
@@ -250,7 +250,7 @@ int grib_tool_init(grib_runtime_options* options)
 
     if (grib_options_on("r")) {
         char* filename[1];
-        filename[0]      = options->infile_extra->name;
+        filename[0]      = options->infile_extra->name; /* First file */
         options->random  = 1;
         options->orderby = strdup(orderby);
         options->idx     = grib_fieldset_new_from_files(context, filename,
@@ -403,6 +403,7 @@ static void print_index_key_values(grib_index* index, int counter)
     printf("\n");
 }
 
+/* Note: the grib_handle 'h' here is from the 2nd file */
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     int err = 0;
@@ -421,7 +422,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
 
         grib_index_search_same(idx1, h);
-        global_handle = grib_handle_new_from_index(idx1, &err);
+        handle1 = grib_handle_new_from_index(idx1, &err);
         if (options->verbose) {
             off_t offset   = 0;
             char* filename = grib_get_field_file(options->index2, &offset);
@@ -431,67 +432,63 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             print_index_key_values(options->index1, global_counter);
         }
 
-        if (!global_handle) {
+        if (!handle1) {
             if (!options->verbose)
                 print_index_key_values(idx1, global_counter);
             printf("====== NOT FOUND in %s\n", options->infile->name);
         }
 
-        if (!global_handle || err != GRIB_SUCCESS) {
+        if (!handle1 || err != GRIB_SUCCESS) {
             morein1++;
-            if (global_handle)
-                grib_handle_delete(global_handle);
+            if (handle1)
+                grib_handle_delete(handle1);
             return 0;
         }
 
-        if (compare_handles(h, global_handle, options)) {
+        if (compare_handles(h, handle1, options)) {
             error++;
-            if (!force)
-                exit(1);
+            if (!force) exit(1);
         }
 
-        grib_handle_delete(global_handle);
+        grib_handle_delete(handle1);
 
         return 0;
     }
     else if (options->random)
-        global_handle = grib_fieldset_next_handle(options->idx, &err);
+        handle1 = grib_fieldset_next_handle(options->idx, &err);
     else
-        global_handle = grib_handle_new_from_file(h->context, options->infile_extra->file, &err);
+        handle1 = grib_handle_new_from_file(h->context, options->infile_extra->file, &err);
 
-    if (!global_handle || err != GRIB_SUCCESS) {
+    if (!handle1 || err != GRIB_SUCCESS) {
         morein2++;
-        if (global_handle)
-            grib_handle_delete(global_handle);
+        if (handle1)
+            grib_handle_delete(handle1);
         return 0;
     }
 
-    if (compare_handles(global_handle, h, options)) {
+    if (compare_handles(handle1, h, options)) {
         error++;
         if (!two_way) {
             /* If two_way mode: Don't exit yet. Show further differences */
-            if (!force)
-                exit(1);
+            if (!force) exit(1);
         }
     }
     if (two_way) {
         /* ECC-651 and ECC-431 */
         handles_swapped = 1;
-        if (compare_handles(h, global_handle, options)) {
+        if (compare_handles(h, handle1, options)) {
             error++;
-            if (!force)
-                exit(1);
+            if (!force) exit(1);
         }
         else {
             if (error) {
                 /* Error from first pass */
-                if (!force)
-                    exit(1);
+                if (!force) exit(1);
             }
         }
     }
 
-    grib_handle_delete(global_handle);
+    grib_handle_delete(handle1);
 
     return 0;
 }
@@ -500,12 +497,12 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     int err = 0;
     if (!options->through_index && !options->random) {
-        global_handle = grib_handle_new_from_file(h->context, options->infile_extra->file, &err);
+        handle1 = grib_handle_new_from_file(h->context, options->infile_extra->file, &err);
 
-        if (!global_handle || err != GRIB_SUCCESS)
+        if (!handle1 || err != GRIB_SUCCESS)
             morein2++;
 
-        grib_handle_delete(global_handle);
+        grib_handle_delete(handle1);
     }
 
     grib_handle_delete(h);
@@ -527,10 +524,10 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     /*if (grib_options_on("w:")) return 0;*/
 
-    while ((global_handle = grib_handle_new_from_file(c, options->infile_extra->file, &err))) {
+    while ((handle1 = grib_handle_new_from_file(c, options->infile_extra->file, &err))) {
         morein1++;
-        if (global_handle)
-            grib_handle_delete(global_handle);
+        if (handle1)
+            grib_handle_delete(handle1);
     }
 
     error += morein1 + morein2;
@@ -564,8 +561,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         grib_index_delete(options->index2);
     }
 
-    if (error != 0)
-        exit(1);
+    if (error != 0) exit(1);
     return 0;
 }
 

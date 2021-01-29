@@ -30,5 +30,12 @@ for file in $samples; do
   ${tools_dir}/grib_dump -O $sf >/dev/null
 done
 
+# Test grib_dump with -t option
+${tools_dir}/grib_dump -O -t $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $temp
+grep -q "signed (int) scaleFactorOfFirstFixedSurface" $temp
+grep -q "codetable (int) typeOfSecondFixedSurface" $temp
+grep -q "ieeefloat (double) referenceValue" $temp
+grep -q "unsigned (int) numberOfSection" $temp
+
 
 rm -f $temp

@@ -7,7 +7,7 @@
 # 5-39 Reserved 
 40 40 Grid point data - JPEG 2000 code stream format 
 41 41 Grid point data - Portable Network Graphics (PNG) 
-42 42 Grid point and spectral data - CCSDS recommended lossless compression 
+42 42 Grid point data - CCSDS recommended lossless compression 
 # 43-49 Reserved 
 50 50 Spectral data - simple packing 
 51 51 Spherical harmonics data - complex packing 

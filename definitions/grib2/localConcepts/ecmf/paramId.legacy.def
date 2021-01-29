@@ -136,3 +136,57 @@
  parameterCategory = 128 ;
  parameterNumber = 178 ;
 }
+#Temperature of snow layer
+'238' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 238 ;
+}
+#Sea-ice cover
+'31' = {
+  discipline = 192 ;
+  parameterCategory = 128 ;
+  parameterNumber = 31 ;
+}
+#Snow density
+'33' = {
+  discipline = 192 ;
+  parameterCategory = 128 ;
+  parameterNumber = 33 ;
+}
+#Sea surface temperature
+'34' = {
+  discipline = 192 ;
+  parameterCategory = 128 ;
+  parameterNumber = 34 ;
+}
+#Surface solar radiation downwards
+'169' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 169 ;
+}
+#Surface thermal radiation downwards
+'175' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 175 ;
+}
+#Eastward turbulent surface stress
+'180' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 180 ;
+}
+#Northward turbulent surface stress
+'181' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 181 ;
+}
+#Surface runoff
+'174008' = {
+ discipline = 192 ;
+ parameterCategory = 174 ;
+ parameterNumber = 8 ;
+}

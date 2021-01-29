@@ -72,5 +72,11 @@ done
 ${tools_dir}/grib_set -s centre=289 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $outfile
 ${tools_dir}/grib_dump -O $outfile | grep -q 'centre = 289.*Zambia'
 
+# ECC-539: avoid output being the same as input
+set +e
+${tools_dir}/grib_set -s centre=0 $outfile $outfile
+status=$?
+set -e
+[ $status -ne 0 ]
 
 rm -f $outfile

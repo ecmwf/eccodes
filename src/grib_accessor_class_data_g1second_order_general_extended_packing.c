@@ -328,11 +328,13 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
     values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
     err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
-    if (err)
+    if (err) {
+        grib_context_free(a->context, values);
         return err;
+    }
     *val = values[idx];
     grib_context_free(a->context, values);
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static int unpack_double(grib_accessor* a, double* values, size_t* len)
@@ -1889,7 +1891,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     grib_context_free(a->context, groupWidths);
     grib_context_free(a->context, firstOrderValues);
 
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 static void destroy(grib_context* context, grib_accessor* a)

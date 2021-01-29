@@ -222,7 +222,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     *len = 1;
 
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 static int value_count(grib_accessor* a, long* count)
