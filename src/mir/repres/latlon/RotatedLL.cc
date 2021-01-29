@@ -15,6 +15,7 @@
 #include <iostream>
 
 #include "mir/repres/Iterator.h"
+#include "mir/util/Atlas.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 

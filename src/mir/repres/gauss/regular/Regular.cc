@@ -15,6 +15,7 @@
 #include "eckit/types/FloatCompare.h"
 
 #include "mir/api/MIRJob.h"
+#include "mir/util/Atlas.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
@@ -149,7 +150,7 @@ bool Regular::getLongestElementDiagonal(double& d) const {
     auto weHalf = double(getSmallestIncrement() / 2);
     ASSERT(!eckit::types::is_approximately_equal(weHalf, 0.));
 
-    d = 2. * atlas::util::Earth::distance({0., 0.}, {weHalf, snHalf});
+    d = 2. * util::Earth::distance({0., 0.}, {weHalf, snHalf});
     return true;
 }
 

@@ -37,7 +37,7 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
     ASSERT(projection);
 
     shapeOfTheEarthProvided_ = param.get("shapeOfTheEarth", shapeOfTheEarth_ = 6);
-    param.get("radius", radius_ = ::atlas::util::Earth::radius());
+    param.get("radius", radius_ = util::Earth::radius());
     param.get("earthMajorAxis", earthMajorAxis_ = radius_);
     param.get("earthMinorAxis", earthMinorAxis_ = radius_);
 

@@ -16,7 +16,6 @@
 #include <memory>
 
 #include "eckit/config/Resource.h"
-#include "eckit/log/ResourceUsage.h"
 #include "eckit/thread/AutoLock.h"
 #include "eckit/thread/Mutex.h"
 
@@ -36,7 +35,7 @@
 #include "mir/util/Grib.h"
 #include "mir/util/MIRStatistics.h"
 #include "mir/util/Pretty.h"
-#include "mir/util/TraceResourceUsage.h"
+#include "mir/util/Trace.h"
 #include "mir/util/Types.h"
 
 
@@ -266,8 +265,7 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
 
 
 size_t GribOutput::save(const param::MIRParametrisation& parametrisation, context::Context& ctx) {
-
-    util::TraceResourceUsage usage("GribOutput::save");
+    trace::ResourceUsage usage("GribOutput::save");
 
     interpolated_++;
 
@@ -507,7 +505,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
 
 size_t GribOutput::set(const param::MIRParametrisation& param, context::Context& ctx) {
-    util::TraceResourceUsage usage("GribOutput::set");
+    trace::ResourceUsage usage("GribOutput::set");
 
     interpolated_++;
 

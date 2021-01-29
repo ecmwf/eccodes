@@ -156,7 +156,7 @@ bool LatLon::getLongestElementDiagonal(double& d) const {
     auto weHalf = increments_.west_east().longitude().value() / 2.;
     ASSERT(!eckit::types::is_approximately_equal(weHalf, 0.));
 
-    d = 2. * atlas::util::Earth::distance({0., 0.}, {weHalf, snHalf});
+    d = 2. * util::Earth::distance({0., 0.}, {weHalf, snHalf});
     return true;
 }
 
