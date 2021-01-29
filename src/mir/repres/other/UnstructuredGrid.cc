@@ -19,24 +19,23 @@
 #include <utility>
 
 #include "eckit/config/Resource.h"
-#include "eckit/exception/Exceptions.h"
 #include "eckit/filesystem/PathName.h"
 #include "eckit/serialisation/FileStream.h"
 #include "eckit/serialisation/IfstreamStream.h"
 #include "eckit/utils/MD5.h"
 
 #include "mir/api/MIRJob.h"
-#include "mir/config/LibMir.h"
 #include "mir/iterator/UnstructuredIterator.h"
 #include "mir/key/grid/ORCAPattern.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/repres/other/ORCA.h"
-#include "mir/util/Assert.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
+#include "mir/util/Types.h"
 
 
 namespace mir {
@@ -49,7 +48,7 @@ UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation& parametrisat
     parametrisation.get("longitudes", longitudes_);
 
     if (latitudes_.empty() || longitudes_.empty()) {
-        throw eckit::UserError("UnstructuredGrid: requires 'latitudes' and 'longitudes'");
+        throw exception::UserError("UnstructuredGrid: requires 'latitudes' and 'longitudes'");
     }
     ASSERT(latitudes_.size() == longitudes_.size());
 
@@ -60,12 +59,12 @@ UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation& parametrisat
 UnstructuredGrid::UnstructuredGrid(const eckit::PathName& path) {
     std::ifstream in(path.asString().c_str());
     if (!in) {
-        throw eckit::CantOpenFile(path);
+        throw exception::CantOpenFile(path);
     }
 
     if (::isprint(in.peek()) == 0) {
 
-        eckit::Log::info() << "UnstructuredGrid::load  " << path << std::endl;
+        Log::info() << "UnstructuredGrid::load  " << path << std::endl;
 
         eckit::IfstreamStream s(in);
         size_t version;
@@ -81,7 +80,7 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName& path) {
         for (size_t i = 0; i < count; ++i) {
             s >> latitudes_[i];
             s >> longitudes_[i];
-            // eckit::Log::info() << latitudes_[i] << " " << longitudes_[i] << std::endl;
+            // Log::info() << latitudes_[i] << " " << longitudes_[i] << std::endl;
         }
     }
     else {
@@ -99,7 +98,7 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName& path) {
 
 void UnstructuredGrid::save(const eckit::PathName& path, const std::vector<double>& latitudes,
                             const std::vector<double>& longitudes, bool binary) {
-    eckit::Log::info() << "UnstructuredGrid::save " << path << std::endl;
+    Log::info() << "UnstructuredGrid::save " << path << std::endl;
 
     check("UnstructuredGrid save to " + path.asString(), latitudes, longitudes);
 
@@ -114,7 +113,7 @@ void UnstructuredGrid::save(const eckit::PathName& path, const std::vector<doubl
             s << latitudes[i];
             s << longitudes[i];
 
-            eckit::Log::info() << latitudes[i] << " " << longitudes[i] << std::endl;
+            Log::info() << latitudes[i] << " " << longitudes[i] << std::endl;
         }
         s.close();
     }
@@ -229,13 +228,13 @@ const Gridded* UnstructuredGrid::croppedRepresentation(const util::BoundingBox& 
     }
 
     if (j < i) {
-        eckit::Log::debug<LibMir>() << "UnstructuredGrid::croppedRepresentation: cropped " << Pretty(i) << " to "
-                                    << Pretty(j, {"point"}) << std::endl;
+        Log::debug() << "UnstructuredGrid::croppedRepresentation: cropped " << Pretty(i) << " to "
+                     << Pretty(j, {"point"}) << std::endl;
         ASSERT(j);
         return new UnstructuredGrid(lat, lon, bbox);
     }
 
-    eckit::Log::debug<LibMir>() << "UnstructuredGrid::croppedRepresentation: no cropping" << std::endl;
+    Log::debug() << "UnstructuredGrid::croppedRepresentation: no cropping" << std::endl;
     return this;
 }
 
@@ -278,7 +277,7 @@ void UnstructuredGrid::check(const std::string& title, const std::vector<double>
         if (!seen.insert(p).second) {
             std::ostringstream oss;
             oss << title << ": duplicate point lat=" << latitudes[i] << ", lon=" << longitudes[i];
-            throw eckit::UserError(oss.str());
+            throw exception::UserError(oss.str());
         }
     }
 }

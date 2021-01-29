@@ -12,13 +12,13 @@
 
 #include "mir/repres/gauss/regular/Regular.h"
 
-#include "eckit/exception/Exceptions.h"
 #include "eckit/types/FloatCompare.h"
 
 #include "mir/api/MIRJob.h"
-#include "mir/config/LibMir.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
+#include "mir/util/Log.h"
 
 
 namespace mir {
@@ -40,8 +40,8 @@ Regular::Regular(const param::MIRParametrisation& parametrisation) : Gaussian(pa
     auto old(bbox_);
     bbox_ = util::BoundingBox(n, w, s, e);
 
-    eckit::Log::debug<LibMir>() << "Regular::Regular: BoundingBox:"
-                                << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
+    Log::debug() << "Regular::Regular: BoundingBox:"
+                 << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
     setNiNj();
 }
 
@@ -239,8 +239,7 @@ void Regular::setNiNj() {
         ASSERT(Nj_ > 0);
     }
 
-    eckit::Log::debug<LibMir>() << "Regular::setNiNj: Ni*Nj = " << Ni_ << " * " << Nj_ << " = " << (Ni_ * Nj_)
-                                << std::endl;
+    Log::debug() << "Regular::setNiNj: Ni*Nj = " << Ni_ << " * " << Nj_ << " = " << (Ni_ * Nj_) << std::endl;
 }
 
 size_t Regular::frame(MIRValuesVector& values, size_t size, double missingValue, bool estimate) const {

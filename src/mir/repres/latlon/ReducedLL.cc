@@ -23,8 +23,8 @@
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Assert.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/GridBox.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Types.h"
@@ -266,7 +266,7 @@ public:
         ASSERT(ni_ > 1);
         inc_west_east_ = ew_ / (ni_ - (periodic_ ? 0 : 1));
 
-        // eckit::Log::debug<LibMir>() << *this << std::endl;
+        // Log::debug() << *this << std::endl;
     }
 };
 

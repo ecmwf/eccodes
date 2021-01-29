@@ -15,16 +15,13 @@
 #include <ostream>
 
 #include "eckit/config/Resource.h"
-#include "eckit/exception/Exceptions.h"
-#include "eckit/log/Log.h"
 #include "eckit/utils/MD5.h"
 #include "eckit/utils/StringTools.h"
 
-#include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Assert.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
@@ -51,7 +48,7 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
                 return value;
             }
         }
-        throw eckit::SeriousBug("RegularGrid: couldn't find any key: " + eckit::StringTools::join(", ", keys));
+        throw exception::SeriousBug("RegularGrid: couldn't find any key: " + eckit::StringTools::join(", ", keys));
     };
 
     long nx = get_long_first_key(param, {"numberOfPointsAlongXAxis", "Ni"});
@@ -206,8 +203,8 @@ void RegularGrid::reorder(long, mir::data::MIRValuesVector&) const {
 void RegularGrid::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
 
-    eckit::Log::debug<LibMir>() << "RegularGrid::validate checked " << Pretty(values.size(), {"value"})
-                                << ", iterator counts " << Pretty(count) << " (" << domain() << ")." << std::endl;
+    Log::debug() << "RegularGrid::validate checked " << Pretty(values.size(), {"value"}) << ", iterator counts "
+                 << Pretty(count) << " (" << domain() << ")." << std::endl;
 
     ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("RegularGrid", values.size(), count);
 }

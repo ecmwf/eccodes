@@ -12,9 +12,8 @@
 
 #include "mir/repres/regular/Mercator.h"
 
-#include "eckit/exception/Exceptions.h"
-
 #include "mir/param/MIRParametrisation.h"
+#include "mir/util/Exceptions.h"
 
 
 namespace mir {

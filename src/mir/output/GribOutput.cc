@@ -26,7 +26,6 @@
 #include "mir/action/plan/ActionPlan.h"
 #include "mir/api/MIREstimation.h"
 #include "mir/compat/GribCompatibility.h"
-#include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
 #include "mir/input/MIRInput.h"
 #include "mir/packing/Packer.h"
@@ -38,6 +37,7 @@
 #include "mir/util/MIRStatistics.h"
 #include "mir/util/Pretty.h"
 #include "mir/util/TraceResourceUsage.h"
+#include "mir/util/Types.h"
 
 
 namespace mir {
@@ -47,12 +47,12 @@ namespace output {
 static eckit::Mutex local_mutex;
 
 
-#define X(a) eckit::Log::debug<LibMir>() << "  GRIB encoding: " << #a << " = " << a << std::endl
+#define X(a) Log::debug() << "  GRIB encoding: " << #a << " = " << a << std::endl
 #define Y(a) oss << " " << #a << "=" << a
 
 
 void eccodes_assertion(const char* message) {
-    throw eckit::SeriousBug(message);
+    throw exception::SeriousBug(message);
 }
 
 
@@ -297,7 +297,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             long numberOfValues;
             GRIB_CALL(codes_get_long(h, "numberOfValues", &numberOfValues));
             if (size_t(numberOfValues) != field.values(i).size()) {
-                throw eckit::UserError("Using 'filter' requires preserving the number of points from input");
+                throw exception::UserError("Using 'filter' requires preserving the number of points from input");
             }
 
             GRIB_CALL(codes_set_double(h, "missingValue", field.missingValue()));
@@ -373,8 +373,8 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             c.execute(*this, parametrisation, h, info);
         }
 
-        if (eckit::Log::debug<LibMir>()) {
-            const std::streamsize p(eckit::Log::debug<LibMir>().precision(12));
+        if (Log::debug()) {
+            const std::streamsize p(Log::debug().precision(12));
             X(info.grid.grid_type);
             X(info.grid.Ni);
             X(info.grid.Nj);
@@ -428,7 +428,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
                         break;
                 }
             }
-            eckit::Log::debug<LibMir>().precision(p);
+            Log::debug().precision(p);
         }
 
 
@@ -455,7 +455,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             Y(info.grid.latitudeOfFirstGridPointInDegrees);
             Y(info.grid.latitudeOfLastGridPointInDegrees);
 
-            throw eckit::SeriousBug(oss.str());
+            throw exception::SeriousBug(oss.str());
         }
 
         GRIB_CALL(err);
@@ -490,11 +490,11 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
                 // util::BoundingBox after(g);
 
                 if (user != before /*|| user != after || before != after*/) {
-                    eckit::Log::info() << "MIR_CHECK_AREA:"
-                                       << " request=" << user << " result="
-                                       << before
-                                       // << " grib=" << after
-                                       << std::endl;
+                    Log::info() << "MIR_CHECK_AREA:"
+                                << " request=" << user << " result="
+                                << before
+                                // << " grib=" << after
+                                << std::endl;
                 }
             }
         }

@@ -12,11 +12,10 @@
 
 #include "mir/repres/gauss/reduced/Classic.h"
 
-#include "eckit/log/Log.h"
-
 #include "mir/api/MIRJob.h"
-#include "mir/config/LibMir.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Log.h"
+#include "mir/util/Types.h"
 
 
 namespace mir {
@@ -41,8 +40,8 @@ Classic::Classic(size_t N, const util::BoundingBox& bbox, double angularPrecisio
 
     auto old(bbox_);
     bbox_ = util::BoundingBox(n, w, s, e);
-    eckit::Log::debug<LibMir>() << "Classic BoundingBox:"
-                                << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
+    Log::debug() << "Classic BoundingBox:"
+                 << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
 }
 
 

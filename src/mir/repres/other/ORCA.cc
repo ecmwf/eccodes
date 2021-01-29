@@ -18,15 +18,13 @@
 #include <ostream>
 #include <regex>
 
-#include "eckit/exception/Exceptions.h"
 #include "eckit/filesystem/PathName.h"
 
-#include "mir/config/LibMir.h"
 #include "mir/iterator/UnstructuredIterator.h"
 #include "mir/key/grid/ORCAPattern.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Assert.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
@@ -64,7 +62,7 @@ ORCA::ORCA(const std::string& name) : Gridded(util::BoundingBox()) {
     // setup canonical type/subtype
     auto match = util::Regex(key::grid::ORCAPattern::pattern()).match(name);
     if (!match || match.size() != 3) {
-        throw eckit::UserError("ORCA: unrecognized name '" + name + "'");
+        throw exception::UserError("ORCA: unrecognized name '" + name + "'");
     }
 
     type_ = change_case(match[1], true);
@@ -81,7 +79,7 @@ ORCA::ORCA(const std::string& name) : Gridded(util::BoundingBox()) {
     eckit::PathName path = "~atlas-orca/share/atlas-orca/data/" + change_case(type_, false) + '_' + subtype_ + ".ascii";
     std::ifstream in(path.asString().c_str());
     if (!in) {
-        throw eckit::CantOpenFile(path);
+        throw exception::CantOpenFile(path);
     }
 
     std::string buffer(1024, ' ');
@@ -133,8 +131,8 @@ bool ORCA::sameAs(const Representation& other) const {
 void ORCA::validate(const data::MIRValuesVector& values) const {
     size_t count = numberOfPoints();
 
-    eckit::Log::debug<LibMir>() << "ORCA::validate checked " << Pretty(values.size(), {"value"}) << ", iterator counts "
-                                << Pretty(count) << "." << std::endl;
+    Log::debug() << "ORCA::validate checked " << Pretty(values.size(), {"value"}) << ", iterator counts "
+                 << Pretty(count) << "." << std::endl;
 
     ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("ORCA", values.size(), count);
 }

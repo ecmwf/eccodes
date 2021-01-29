@@ -16,17 +16,15 @@
 #include <memory>
 #include <sstream>
 
-#include "eckit/exception/Exceptions.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 
-#include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
 #include "mir/iterator/detail/RegularIterator.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/param/SameParametrisation.h"
-#include "mir/util/Assert.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
@@ -52,14 +50,14 @@ LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
     ASSERT(parametrisation.get("Ni", ni));
     ASSERT(parametrisation.get("Nj", nj));
 
-    eckit::Log::debug<LibMir>() << "LatLon:"
-                                   "\n\t"
-                                   "(Ni, Nj) = ("
-                                << ni_ << ", " << nj_
-                                << ") calculated"
-                                   "\n\t"
-                                   "(Ni, Nj) = ("
-                                << ni << ", " << nj << ") from parametrisation" << std::endl;
+    Log::debug() << "LatLon:"
+                    "\n\t"
+                    "(Ni, Nj) = ("
+                 << ni_ << ", " << nj_
+                 << ") calculated"
+                    "\n\t"
+                    "(Ni, Nj) = ("
+                 << ni << ", " << nj << ") from parametrisation" << std::endl;
 
     ASSERT(ni == ni_);
     ASSERT(nj == nj_);
@@ -214,7 +212,7 @@ Representation* LatLon::globalise(data::MIRField& field) const {
 const LatLon* LatLon::croppedRepresentation(const util::BoundingBox&) const {
     std::ostringstream os;
     os << "LatLon::croppedRepresentation() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
@@ -258,7 +256,7 @@ size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue, 
         }
     }
 
-    // eckit::Log::info() << "LatLon::frame(" << size << ") " << count << " " << k << std::endl;
+    // Log::info() << "LatLon::frame(" << size << ") " << count << " " << k << std::endl;
 
 
     if (!estimate) {
@@ -271,8 +269,8 @@ size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue, 
 void LatLon::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
 
-    eckit::Log::debug<LibMir>() << "LatLon::validate checked " << Pretty(values.size(), {"value"})
-                                << ", iterator counts " << Pretty(count) << " (" << domain() << ")." << std::endl;
+    Log::debug() << "LatLon::validate checked " << Pretty(values.size(), {"value"}) << ", iterator counts "
+                 << Pretty(count) << " (" << domain() << ")." << std::endl;
 
     ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("LatLon", values.size(), count);
 }

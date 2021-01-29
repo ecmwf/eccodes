@@ -14,17 +14,17 @@
 
 #include <memory>
 
-#include "eckit/exception/Exceptions.h"
 #include "eckit/thread/AutoLock.h"
 #include "eckit/thread/Mutex.h"
 
-#include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
 #include "mir/key/grid/Grid.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/repres/other/UnstructuredGrid.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Exceptions.h"
+#include "mir/util/Log.h"
 
 
 namespace mir {
@@ -61,35 +61,35 @@ RepresentationHandle::~RepresentationHandle() {
 void Representation::setComplexPacking(grib_info&) const {
     std::ostringstream os;
     os << "Representation::setComplexPacking() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 void Representation::setSimplePacking(grib_info&) const {
     std::ostringstream os;
     os << "Representation::setSimplePacking() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 void Representation::setGivenPacking(grib_info&) const {
     std::ostringstream os;
     os << "Representation::setGivenPacking() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 std::vector<util::GridBox> Representation::gridBoxes() const {
     std::ostringstream os;
     os << "Representation::gridBoxes() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 void Representation::estimate(api::MIREstimation&) const {
     std::ostringstream os;
     os << "Representation::estimate() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
@@ -101,63 +101,63 @@ bool Representation::isGlobal() const {
 bool Representation::isPeriodicWestEast() const {
     std::ostringstream os;
     os << "Representation::isPeriodicWestEast() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 bool Representation::includesNorthPole() const {
     std::ostringstream os;
     os << "Representation::includesNorthPole() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 bool Representation::includesSouthPole() const {
     std::ostringstream os;
     os << "Representation::includesSouthPole() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 void Representation::validate(const MIRValuesVector&) const {
     std::ostringstream os;
     os << "Representation::validate() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 void Representation::fill(grib_info&) const {
     std::ostringstream os;
     os << "Representation::fill(grib_info&) not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 void Representation::fill(api::MIRJob&) const {
     std::ostringstream os;
     os << "Representation::fill(api::MIRJob&) not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 void Representation::fill(util::MeshGeneratorParameters&) const {
     std::ostringstream os;
     os << "Representation::fill(util::MeshGeneratorParameters&) not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 const Representation* Representation::croppedRepresentation(const util::BoundingBox&) const {
     std::ostringstream os;
     os << "Representation::croppedRepresentation() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 const Representation* Representation::truncate(size_t, const MIRValuesVector&, MIRValuesVector&) const {
     std::ostringstream os;
     os << "Representation::truncate() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
@@ -176,69 +176,69 @@ const std::string& Representation::uniqueName() const {
 void Representation::makeName(std::ostream&) const {
     std::ostringstream os;
     os << "Representation::makeName(std::ostream& out) not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 bool Representation::sameAs(const Representation&) const {
     std::ostringstream os;
     os << "Representation::sameAs() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 atlas::Grid Representation::atlasGrid() const {
     std::ostringstream os;
     os << "Representation::atlasGrid() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 util::Domain Representation::domain() const {
     std::ostringstream os;
     os << "Representation::domain() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 const util::BoundingBox& Representation::boundingBox() const {
     std::ostringstream os;
     os << "Representation::boundingBox() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 util::BoundingBox Representation::extendBoundingBox(const util::BoundingBox&) const {
     std::ostringstream os;
     os << "Representation::extendBoundingBox() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 bool Representation::extendBoundingBoxOnIntersect() const {
     std::ostringstream os;
     os << "Representation::extendBoundingBoxOnIntersect() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 size_t Representation::truncation() const {
     std::ostringstream os;
     os << "Representation::truncation() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 size_t Representation::numberOfPoints() const {
     std::ostringstream os;
     os << "Representation::numberOfPoints() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 bool Representation::getLongestElementDiagonal(double&) const {
     std::ostringstream os;
     os << "Representation::getLongestElementDiagonal() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
@@ -250,26 +250,26 @@ void Representation::comparison(std::string&) const {
 size_t Representation::frame(MIRValuesVector&, size_t, double, bool) const {
     std::ostringstream os;
     os << "Representation::frame() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 std::string Representation::factory() const {
     std::ostringstream os;
     os << "Representation::factory() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 void Representation::reorder(long, MIRValuesVector&) const {
     std::ostringstream os;
     os << "Representation::reorder() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
 Iterator* Representation::iterator() const {
     std::ostringstream os;
     os << "Representation::iterator() not implemented for " << *this;
-    throw eckit::SeriousBug(os.str());
+    throw exception::SeriousBug(os.str());
 }
 
 
@@ -348,7 +348,7 @@ RepresentationFactory::RepresentationFactory(const std::string& name) : name_(na
     eckit::AutoLock<eckit::Mutex> lock(local_mutex);
 
     if (m->find(name) != m->end()) {
-        throw eckit::SeriousBug("RepresentationFactory: duplicate '" + name + "'");
+        throw exception::SeriousBug("RepresentationFactory: duplicate '" + name + "'");
     }
 
     ASSERT(m->find(name) == m->end());
@@ -369,15 +369,15 @@ const Representation* RepresentationFactory::build(const param::MIRParametrisati
 
     std::string name;
     if (!params.get("gridType", name)) {
-        throw eckit::SeriousBug("RepresentationFactory: cannot get 'gridType'");
+        throw exception::SeriousBug("RepresentationFactory: cannot get 'gridType'");
     }
 
-    eckit::Log::debug<LibMir>() << "RepresentationFactory: looking for '" << name << "'" << std::endl;
+    Log::debug() << "RepresentationFactory: looking for '" << name << "'" << std::endl;
 
     auto j = m->find(name);
     if (j == m->end()) {
-        list(eckit::Log::error() << "RepresentationFactory: unknown '" << name << "', choices are: ");
-        throw eckit::SeriousBug("RepresentationFactory: unknown '" + name + "'");
+        list(Log::error() << "RepresentationFactory: unknown '" << name << "', choices are: ");
+        throw exception::SeriousBug("RepresentationFactory: unknown '" + name + "'");
     }
 
     return j->second->make(params);

@@ -14,13 +14,12 @@
 
 #include <iostream>
 
-#include "eckit/exception/Exceptions.h"
-
 #include "mir/api/MIREstimation.h"
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
-#include "mir/util/Assert.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
+#include "mir/util/Log.h"
 
 
 namespace mir {
@@ -159,8 +158,8 @@ void SphericalHarmonics::interlace_spectra(data::MIRValuesVector& interlaced, co
         const std::string msg = "MIRSpectralTransform: expected field values size " +
                                 std::to_string(numberOfComplexCoefficients * 2) + " (T=" + std::to_string(truncation) +
                                 "), " + " got " + std::to_string(spectra.size());
-        eckit::Log::error() << msg << std::endl;
-        throw eckit::UserError(msg);
+        Log::error() << msg << std::endl;
+        throw exception::UserError(msg);
     }
 
     for (size_t j = 0; j < numberOfComplexCoefficients * 2; ++j) {

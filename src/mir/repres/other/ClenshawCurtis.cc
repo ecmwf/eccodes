@@ -20,20 +20,19 @@
 #include <ostream>
 #include <vector>
 
-#include "eckit/exception/Exceptions.h"
-#include "eckit/log/Log.h"
 #include "eckit/log/Timer.h"
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/MD5.h"
 
 // temporary
+#if defined(mir_HAVE_ATLAS)
 #include "atlas/grid/detail/spacing/CustomSpacing.h"
+#endif
 
 #include "mir/api/MIREstimation.h"
-#include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Assert.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 #include "mir/util/GridBox.h"
 #include "mir/util/MeshGeneratorParameters.h"
@@ -143,8 +142,8 @@ atlas::Grid ClenshawCurtis::atlasGrid() const {
 void ClenshawCurtis::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
 
-    eckit::Log::debug<LibMir>() << "ClenshawCurtis::validate checked " << Pretty(values.size(), {"value"})
-                                << ", iterator counts " << Pretty(count) << " (" << domain() << ")." << std::endl;
+    Log::debug() << "ClenshawCurtis::validate checked " << Pretty(values.size(), {"value"}) << ", iterator counts "
+                 << Pretty(count) << " (" << domain() << ")." << std::endl;
 
     ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("ClenshawCurtis", values.size(), count);
 }
@@ -199,7 +198,7 @@ const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
 
     auto j = ml->find(N);
     if (j == ml->end()) {
-        eckit::Timer timer("ClenshawCurtis latitudes " + std::to_string(N), eckit::Log::debug<LibMir>());
+        eckit::Timer timer("ClenshawCurtis latitudes " + std::to_string(N), Log::debug());
 
         // calculate latitudes and save in map
         auto& lats = (*ml)[N];

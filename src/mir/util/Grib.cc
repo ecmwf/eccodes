@@ -12,12 +12,13 @@
 
 #include <sstream>
 
-#include "eckit/log/Log.h"
-
 #include "mir/util/Grib.h"
+#include "mir/util/Log.h"
 
 
 void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t Ni, size_t Nj) {
+    using mir::Log;
+
     auto scanningModeAsString = [](long mode) {
         std::ostringstream os;
         os << "scanningMode=" << mode << " (0x" << std::hex << mode << std::dec << ")";
@@ -34,7 +35,7 @@ void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t
     std::vector<double> out(values.size());
 
     if (scanningMode == jScansPositively) {
-        eckit::Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
+        Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
         size_t count = 0;
         for (size_t j = Nj; j > 0; --j) {
             for (size_t i = 0; i < Ni; ++i) {
@@ -47,7 +48,7 @@ void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t
     }
 
     if (scanningMode == iScansNegatively) {
-        eckit::Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
+        Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
         size_t count = 0;
         for (size_t j = 0; j < Nj; ++j) {
             for (size_t i = Ni; i > 0; --i) {
@@ -60,7 +61,7 @@ void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t
     }
 
     if (scanningMode == (iScansNegatively | jScansPositively)) {
-        eckit::Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
+        Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
         size_t count = 0;
         for (size_t j = Nj; j > 0; --j) {
             for (size_t i = Ni; i > 0; --i) {
@@ -74,8 +75,8 @@ void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t
 
     std::ostringstream os;
     os << "LatLon::reorder " << current << " not supported";
-    eckit::Log::error() << os.str() << std::endl;
-    throw eckit::SeriousBug(os.str());
+    Log::error() << os.str() << std::endl;
+    throw mir::exception::SeriousBug(os.str());
 }
 
 

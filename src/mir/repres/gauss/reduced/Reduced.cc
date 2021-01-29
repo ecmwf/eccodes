@@ -19,13 +19,13 @@
 #include <numeric>
 #include <set>
 
-#include "eckit/exception/Exceptions.h"
 #include "eckit/types/Fraction.h"
 
 #include "mir/api/MIREstimation.h"
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/BoundingBox.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 #include "mir/util/GridBox.h"
 

@@ -14,9 +14,8 @@
 
 #include <string>
 
-#include "eckit/exception/Exceptions.h"
-
 #include "mir/param/MIRParametrisation.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 
 

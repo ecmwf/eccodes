@@ -17,7 +17,7 @@
 
 #include <vector>
 
-#include "eckit/exception/Exceptions.h"
+#include "mir/util/Exceptions.h"
 
 
 inline bool grib_call(int e, const char* call, bool missingOK = false) {
@@ -28,7 +28,7 @@ inline bool grib_call(int e, const char* call, bool missingOK = false) {
 
         std::ostringstream os;
         os << call << ": " << codes_get_error_message(e);
-        throw eckit::SeriousBug(os.str());
+        throw mir::exception::SeriousBug(os.str());
     }
     return true;
 }
