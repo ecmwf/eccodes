@@ -20,7 +20,6 @@
 #include <ostream>
 #include <vector>
 
-#include "eckit/log/Timer.h"
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/MD5.h"
 
@@ -37,6 +36,7 @@
 #include "mir/util/GridBox.h"
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Pretty.h"
+#include "mir/util/Trace.h"
 #include "mir/util/Types.h"
 
 
@@ -198,7 +198,7 @@ const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
 
     auto j = ml->find(N);
     if (j == ml->end()) {
-        eckit::Timer timer("ClenshawCurtis latitudes " + std::to_string(N), Log::debug());
+        trace::Timer timer("ClenshawCurtis latitudes " + std::to_string(N), Log::debug());
 
         // calculate latitudes and save in map
         auto& lats = (*ml)[N];
@@ -232,7 +232,7 @@ void ClenshawCurtis::fill(grib_info& info) const {
 
 
 void ClenshawCurtis::estimate(api::MIREstimation& estimation) const {
-    ClenshawCurtis::estimate(estimation);
+    Gridded::estimate(estimation);
     estimation.pl(pl_.size());
 }
 
@@ -336,19 +336,19 @@ Iterator* ClenshawCurtis::iterator() const {
 
             lat_ = latitudes_.front();
             lon_ = Longitude::GREENWICH;
-            inc_ = increment(ni_);
+            inc_ = increment(long(ni_));
         }
 
         ClenshawCurtisIterator(const ClenshawCurtisIterator&) = delete;
         void operator=(const ClenshawCurtisIterator&) = delete;
 
-        void print(std::ostream& out) const {
+        void print(std::ostream& out) const override {
             out << "ClenshawCurtisIterator[";
             Iterator::print(out);
             out << ",ni=" << ni_ << ",nj=" << nj_ << ",i=" << i_ << ",j=" << j_ << ",count=" << count_ << "]";
         }
 
-        bool next(Latitude& lat, Longitude& lon) {
+        bool next(Latitude& lat, Longitude& lon) override {
             if (j_ >= nj_) {
                 return false;
             }
@@ -367,7 +367,7 @@ Iterator* ClenshawCurtis::iterator() const {
 
                 lat_ = latitudes_[j_];
                 lon_ = Longitude::GREENWICH;
-                inc_ = increment(ni_);
+                inc_ = increment(long(ni_));
             }
 
             return true;

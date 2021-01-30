@@ -70,8 +70,8 @@ void Lambert::fill(grib_info& info) const {
 
     ASSERT(x_.size() > 1);
     ASSERT(y_.size() > 1);
-    auto Dx = (x_.max() - x_.min()) / (x_.size() - 1.);
-    auto Dy = (y_.max() - y_.min()) / (y_.size() - 1.);
+    auto Dx = (x_.max() - x_.min()) / double(x_.size() - 1);
+    auto Dy = (y_.max() - y_.min()) / double(y_.size() - 1);
 
     Point2 first     = {firstPointBottomLeft_ ? x_.min() : x_.front(), firstPointBottomLeft_ ? y_.min() : y_.front()};
     Point2 firstLL   = grid_.projection().lonlat(first);

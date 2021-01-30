@@ -36,14 +36,14 @@ RotatedLL::~RotatedLL() = default;
 Iterator* RotatedLL::iterator() const {
 
     class RotatedLLIterator : protected LatLonIterator, public Iterator {
-        void print(std::ostream& out) const {
+        void print(std::ostream& out) const override {
             out << "RotatedLLIterator[";
             Iterator::print(out);
             out << ",";
             LatLonIterator::print(out);
             out << "]";
         }
-        bool next(Latitude& lat, Longitude& lon) { return LatLonIterator::next(lat, lon); }
+        bool next(Latitude& lat, Longitude& lon) override { return LatLonIterator::next(lat, lon); }
 
     public:
         RotatedLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, const util::Increments& increments,

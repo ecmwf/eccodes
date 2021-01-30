@@ -163,13 +163,13 @@ class IrregularLatlonIterator : public Iterator {
     const std::vector<double>& latitudes_;
     const std::vector<double>& longitudes_;
 
-    virtual void print(std::ostream& out) const {
+    void print(std::ostream& out) const override {
         out << "IrregularLatlonIterator[";
         Iterator::print(out);
         out << "]";
     }
 
-    virtual bool next(Latitude& lat, Longitude& lon) {
+    bool next(Latitude& lat, Longitude& lon) override {
         if (j_ < nj_) {
             if (i_ < ni_) {
                 lat = latitudes_[j_];
@@ -198,7 +198,7 @@ public:
         latitudes_(latitudes),
         longitudes_(longitudes) {}
 
-    ~IrregularLatlonIterator() { ASSERT(count_ == ni_ * nj_); }
+    ~IrregularLatlonIterator() override { ASSERT(count_ == ni_ * nj_); }
 };
 
 

@@ -156,17 +156,13 @@ void ReducedLL::fill(util::MeshGeneratorParameters& params) const {
 
 bool ReducedLL::isPeriodicWestEast() const {
     ASSERT(pl_.size());
-    const long maxpl = *std::max_element(pl_.begin(), pl_.end());
 
-    auto same_with_grib1_accuracy = [&](const Longitude& a, const Longitude& b) {
-        static const double GRIB1EPSILON = 0.001;
-        return eckit::types::is_approximately_equal(a.value(), b.value(), GRIB1EPSILON);
-    };
+    auto we    = bbox_.east() - bbox_.west();
+    auto inc   = (Longitude::GLOBE - we).value();
+    auto maxpl = double(*std::max_element(pl_.begin(), pl_.end()));
 
-    const Longitude we  = bbox_.east() - bbox_.west();
-    const Longitude inc = Longitude::GLOBE - we;
-
-    return same_with_grib1_accuracy(inc * maxpl, Longitude::GLOBE);
+    constexpr double GRIB1_EPSILON = 0.001;
+    return eckit::types::is_approximately_equal(inc * maxpl, Longitude::GLOBE.value(), GRIB1_EPSILON);
 }
 
 bool ReducedLL::includesNorthPole() const {
@@ -203,14 +199,14 @@ class ReducedLLIterator : public Iterator {
     size_t count_;
     bool periodic_;
 
-    virtual void print(std::ostream& out) const {
+    void print(std::ostream& out) const override {
         out << "ReducedLLIterator[";
         Iterator::print(out);
         out << ",domain=" << domain_ << ",ni=" << ni_ << ",nj=" << nj_ << ",i=" << i_ << ",j=" << j_ << ",p=" << p_
             << ",count=" << count_ << "]";
     }
 
-    virtual bool next(Latitude& lat, Longitude& lon) {
+    bool next(Latitude& lat, Longitude& lon) override {
 
         while (j_ < nj_ && i_ < ni_) {
 

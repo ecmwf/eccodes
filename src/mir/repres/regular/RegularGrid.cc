@@ -43,7 +43,7 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
 
     auto get_long_first_key = [](const param::MIRParametrisation& param, const std::vector<std::string>& keys) -> long {
         long value = 0;
-        for (auto key : keys) {
+        for (auto& key : keys) {
             if (param.get(key, value)) {
                 return value;
             }
@@ -72,8 +72,8 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
     Point2 first = projection.xy(firstLL);
     param.get("first_point_bottom_left", firstPointBottomLeft_ = false);
 
-    x_    = {first.x(), first.x() + grid[0] * (firstPointBottomLeft_ || plusx ? nx - 1 : 1 - nx), nx};
-    y_    = {first.y(), first.y() + grid[1] * (firstPointBottomLeft_ || plusy ? ny - 1 : 1 - ny), ny};
+    x_    = {first.x(), first.x() + grid[0] * double(firstPointBottomLeft_ || plusx ? nx - 1 : 1 - nx), nx};
+    y_    = {first.y(), first.y() + grid[1] * double(firstPointBottomLeft_ || plusy ? ny - 1 : 1 - ny), ny};
     grid_ = {x_, y_, projection};
 
     atlas::RectangularDomain range({x_.min(), x_.max()}, {y_.min(), y_.max()}, "meters");
@@ -224,13 +224,13 @@ Iterator* RegularGrid::iterator() const {
         size_t j_;
         size_t count_;
 
-        void print(std::ostream& out) const {
+        void print(std::ostream& out) const override {
             out << "RegularGridIterator[";
             Iterator::print(out);
             out << ",i=" << i_ << ",j=" << j_ << ",count=" << count_ << "]";
         }
 
-        bool next(Latitude& _lat, Longitude& _lon) {
+        bool next(Latitude& _lat, Longitude& _lon) override {
             if (j_ < nj_ && i_ < ni_) {
                 pLonLat_ = projection_.lonlat({x_[i_], y_[j_]});
                 _lat     = lat(pLonLat_.lat());

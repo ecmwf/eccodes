@@ -141,16 +141,18 @@ size_t Regular::numberOfPoints() const {
 }
 
 bool Regular::getLongestElementDiagonal(double& d) const {
-    ASSERT(N_);
+    constexpr double TWO = 2.;
 
+    ASSERT(N_ > 0);
     const auto& lats = latitudes();
-    auto snHalf      = 0.5 * (lats[N_ - 1] - lats[N_]);
+
+    auto snHalf = (lats[N_ - 1] - lats[N_]) / TWO;
     ASSERT(!eckit::types::is_approximately_equal(snHalf, 0.));
 
-    auto weHalf = double(getSmallestIncrement() / 2);
+    auto weHalf = double(getSmallestIncrement()) / TWO;
     ASSERT(!eckit::types::is_approximately_equal(weHalf, 0.));
 
-    d = 2. * util::Earth::distance({0., 0.}, {weHalf, snHalf});
+    d = TWO * util::Earth::distance({0., 0.}, {weHalf, snHalf});
     return true;
 }
 

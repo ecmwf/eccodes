@@ -150,13 +150,15 @@ size_t LatLon::numberOfPoints() const {
 
 
 bool LatLon::getLongestElementDiagonal(double& d) const {
-    auto snHalf = increments_.south_north().latitude().value() / 2.;
+    constexpr double TWO = 2.;
+
+    auto snHalf = increments_.south_north().latitude().value() / TWO;
     ASSERT(!eckit::types::is_approximately_equal(snHalf, 0.));
 
-    auto weHalf = increments_.west_east().longitude().value() / 2.;
+    auto weHalf = increments_.west_east().longitude().value() / TWO;
     ASSERT(!eckit::types::is_approximately_equal(weHalf, 0.));
 
-    d = 2. * util::Earth::distance({0., 0.}, {weHalf, snHalf});
+    d = TWO * util::Earth::distance({0., 0.}, {weHalf, snHalf});
     return true;
 }
 

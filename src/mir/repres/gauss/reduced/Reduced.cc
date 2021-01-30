@@ -66,7 +66,6 @@ Reduced::Reduced(const param::MIRParametrisation& parametrisation) : Gaussian(pa
     // if pl isn't global (from file!) insert leading/trailing 0's
     auto& lats = latitudes();
     if (n < lats.front() || s > lats.back()) {
-
         size_t k  = 0;
         size_t nj = 0;
         for (Latitude lat : lats) {
@@ -194,7 +193,7 @@ eckit::Fraction Reduced::getSmallestIncrement() const {
 
     auto& pl   = pls();
     auto maxpl = *std::max_element(pl.begin() + distance_t(k_), pl.begin() + distance_t(k_ + Nj_));
-    ASSERT(maxpl > 0);
+    ASSERT(maxpl >= 2);
 
     return Longitude::GLOBE.fraction() / maxpl;
 }
@@ -244,14 +243,13 @@ std::vector<long> Reduced::pls(const std::string& name) {
 }
 
 
-void Reduced::setNj(const std::vector<long>& pl, const Latitude& s, const Latitude& n) {
-    ASSERT(N_ > 0);
-    ASSERT(N_ * 2 == pl.size());
-
+void Reduced::setNj(std::vector<long> pl, const Latitude& s, const Latitude& n) {
+    ASSERT(0 < N_ && N_ * 2 == pl.size());
 
     // position to first latitude and first/last longitude
     // NOTE: latitudes() spans the globe, sorted from North-to-South, k_ positions the North
     // NOTE: pl spans the globe
+    pl_ = pl;
     k_  = 0;
     Nj_ = N_ * 2;
 
@@ -273,8 +271,8 @@ void Reduced::setNj(const std::vector<long>& pl, const Latitude& s, const Latitu
         }
     }
 
-    pl_ = {pl.begin(), pl.end()};
-    pls();  // check internal assumptions
+    // check internal assumptions
+    pls();
 }
 
 

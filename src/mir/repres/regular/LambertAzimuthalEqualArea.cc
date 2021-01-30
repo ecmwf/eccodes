@@ -58,8 +58,8 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
 
     ASSERT(x_.size() > 1);
     ASSERT(y_.size() > 1);
-    auto Dx = (x_.max() - x_.min()) / (x_.size() - 1.);
-    auto Dy = (y_.max() - y_.min()) / (y_.size() - 1.);
+    auto Dx = (x_.max() - x_.min()) / double(x_.size() - 1);
+    auto Dy = (y_.max() - y_.min()) / double(y_.size() - 1);
 
     Point2 reference = grid_.projection().lonlat({0., 0.});
     Point2 firstLL   = grid_.projection().lonlat({x_.front(), y_.front()});
