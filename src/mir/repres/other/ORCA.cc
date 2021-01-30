@@ -26,8 +26,8 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
+#include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
-#include "mir/util/Pretty.h"
 #include "mir/util/Regex.h"
 
 
@@ -131,8 +131,8 @@ bool ORCA::sameAs(const Representation& other) const {
 void ORCA::validate(const data::MIRValuesVector& values) const {
     size_t count = numberOfPoints();
 
-    Log::debug() << "ORCA::validate checked " << Pretty(values.size(), {"value"}) << ", iterator counts "
-                 << Pretty(count) << "." << std::endl;
+    Log::debug() << "ORCA::validate checked " << Log::Pretty(values.size(), {"value"}) << ", iterator counts "
+                 << Log::Pretty(count) << "." << std::endl;
 
     ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("ORCA", values.size(), count);
 }

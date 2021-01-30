@@ -34,8 +34,8 @@
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 #include "mir/util/GridBox.h"
+#include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
-#include "mir/util/Pretty.h"
 #include "mir/util/Trace.h"
 #include "mir/util/Types.h"
 
@@ -142,8 +142,8 @@ atlas::Grid ClenshawCurtis::atlasGrid() const {
 void ClenshawCurtis::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
 
-    Log::debug() << "ClenshawCurtis::validate checked " << Pretty(values.size(), {"value"}) << ", iterator counts "
-                 << Pretty(count) << " (" << domain() << ")." << std::endl;
+    Log::debug() << "ClenshawCurtis::validate checked " << Log::Pretty(values.size(), {"value"}) << ", iterator counts "
+                 << Log::Pretty(count) << " (" << domain() << ")." << std::endl;
 
     ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("ClenshawCurtis", values.size(), count);
 }

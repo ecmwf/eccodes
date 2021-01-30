@@ -23,8 +23,8 @@
 #include "mir/util/Domain.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
+#include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
-#include "mir/util/Pretty.h"
 
 
 namespace mir {
@@ -203,8 +203,8 @@ void RegularGrid::reorder(long, mir::data::MIRValuesVector&) const {
 void RegularGrid::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
 
-    Log::debug() << "RegularGrid::validate checked " << Pretty(values.size(), {"value"}) << ", iterator counts "
-                 << Pretty(count) << " (" << domain() << ")." << std::endl;
+    Log::debug() << "RegularGrid::validate checked " << Log::Pretty(values.size(), {"value"}) << ", iterator counts "
+                 << Log::Pretty(count) << " (" << domain() << ")." << std::endl;
 
     ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("RegularGrid", values.size(), count);
 }

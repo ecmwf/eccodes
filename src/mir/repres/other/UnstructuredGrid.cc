@@ -33,8 +33,8 @@
 #include "mir/util/Domain.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
+#include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
-#include "mir/util/Pretty.h"
 #include "mir/util/Types.h"
 
 
@@ -228,8 +228,8 @@ const Gridded* UnstructuredGrid::croppedRepresentation(const util::BoundingBox& 
     }
 
     if (j < i) {
-        Log::debug() << "UnstructuredGrid::croppedRepresentation: cropped " << Pretty(i) << " to "
-                     << Pretty(j, {"point"}) << std::endl;
+        Log::debug() << "UnstructuredGrid::croppedRepresentation: cropped " << Log::Pretty(i) << " to "
+                     << Log::Pretty(j, {"point"}) << std::endl;
         ASSERT(j);
         return new UnstructuredGrid(lat, lon, bbox);
     }

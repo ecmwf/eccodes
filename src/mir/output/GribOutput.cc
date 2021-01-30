@@ -33,8 +33,8 @@
 #include "mir/repres/Representation.h"
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Grib.h"
+#include "mir/util/Log.h"
 #include "mir/util/MIRStatistics.h"
-#include "mir/util/Pretty.h"
 #include "mir/util/Trace.h"
 #include "mir/util/Types.h"
 

@@ -26,8 +26,8 @@
 #include "mir/util/Domain.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
+#include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
-#include "mir/util/Pretty.h"
 #include "mir/util/Types.h"
 
 
@@ -271,8 +271,8 @@ size_t LatLon::frame(MIRValuesVector& values, size_t size, double missingValue, 
 void LatLon::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
 
-    Log::debug() << "LatLon::validate checked " << Pretty(values.size(), {"value"}) << ", iterator counts "
-                 << Pretty(count) << " (" << domain() << ")." << std::endl;
+    Log::debug() << "LatLon::validate checked " << Log::Pretty(values.size(), {"value"}) << ", iterator counts "
+                 << Log::Pretty(count) << " (" << domain() << ")." << std::endl;
 
     ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("LatLon", values.size(), count);
 }

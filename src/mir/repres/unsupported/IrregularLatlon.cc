@@ -21,8 +21,8 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Exceptions.h"
+#include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
-#include "mir/util/Pretty.h"
 #include "mir/util/Types.h"
 
 
@@ -100,8 +100,8 @@ bool IrregularLatlon::getLongestElementDiagonal(double& d) const {
 void IrregularLatlon::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
 
-    Log::debug() << "IrregularLatlon::validate checked " << Pretty(values.size(), {"value"}) << ", iterator counts "
-                 << Pretty(count) << " (" << domain() << ")." << std::endl;
+    Log::debug() << "IrregularLatlon::validate checked " << Log::Pretty(values.size(), {"value"})
+                 << ", iterator counts " << Log::Pretty(count) << " (" << domain() << ")." << std::endl;
 
     ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("IrregularLatlon", values.size(), count);
 }
