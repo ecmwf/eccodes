@@ -18,6 +18,7 @@ if [ ! -d "$ECCODES_DEFINITION_PATH" ]; then
 fi
 
 temp=temp.$label.grib2
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 tables_dir="$ECCODES_DEFINITION_PATH/grib2/tables"
 
@@ -30,5 +31,14 @@ if [ "$latest" != "$highest_num" ]; then
     echo "The GRIB2 key tablesVersionLatest = $latest but the highest number in $tables_dir is $highest_num"
     exit 1
 fi
+
+# Also grib1 to grib2 conversion should set the correct version
+${tools_dir}/grib_set -s edition=2 $sample1 $temp
+tv=`${tools_dir}/grib_get -p tablesVersion $temp`
+if [ "$tv" != "$latest" ]; then
+    echo "After conversion to GRIB2, tablesVersion=$tv. Should be $latest. Check definitions/grib2/tables/1.0.table"
+    exit 1
+fi
+# grib_check_key_equals $temp tablesVersion $latest
 
 rm -f $temp
