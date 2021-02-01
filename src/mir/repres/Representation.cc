@@ -13,9 +13,7 @@
 #include "mir/repres/Representation.h"
 
 #include <memory>
-
-#include "eckit/thread/AutoLock.h"
-#include "eckit/thread/Mutex.h"
+#include <mutex>
 
 #include "mir/data/MIRField.h"
 #include "mir/key/grid/Grid.h"
@@ -186,6 +184,7 @@ bool Representation::sameAs(const Representation&) const {
     throw exception::SeriousBug(os.str());
 }
 
+
 atlas::Grid Representation::atlasGrid() const {
     std::ostringstream os;
     os << "Representation::atlasGrid() not implemented for " << *this;
@@ -334,18 +333,18 @@ const Representation* Representation::globalise(data::MIRField& field) const {
 }
 
 
-static pthread_once_t once                              = PTHREAD_ONCE_INIT;
-static eckit::Mutex* local_mutex                        = nullptr;
+static std::once_flag once;
+static std::mutex* local_mutex                          = nullptr;
 static std::map<std::string, RepresentationFactory*>* m = nullptr;
 static void init() {
-    local_mutex = new eckit::Mutex();
+    local_mutex = new std::mutex();
     m           = new std::map<std::string, RepresentationFactory*>();
 }
 
 
 RepresentationFactory::RepresentationFactory(const std::string& name) : name_(name) {
-    pthread_once(&once, init);
-    eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+    std::call_once(once, init);
+    std::lock_guard<std::mutex> lock(*local_mutex);
 
     if (m->find(name) != m->end()) {
         throw exception::SeriousBug("RepresentationFactory: duplicate '" + name + "'");
@@ -357,15 +356,15 @@ RepresentationFactory::RepresentationFactory(const std::string& name) : name_(na
 
 
 RepresentationFactory::~RepresentationFactory() {
-    eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+    std::lock_guard<std::mutex> lock(*local_mutex);
 
     m->erase(name_);
 }
 
 
 const Representation* RepresentationFactory::build(const param::MIRParametrisation& params) {
-    pthread_once(&once, init);
-    eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+    std::call_once(once, init);
+    std::lock_guard<std::mutex> lock(*local_mutex);
 
     std::string name;
     if (!params.get("gridType", name)) {
@@ -385,8 +384,8 @@ const Representation* RepresentationFactory::build(const param::MIRParametrisati
 
 
 void RepresentationFactory::list(std::ostream& out) {
-    pthread_once(&once, init);
-    eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+    std::call_once(once, init);
+    std::lock_guard<std::mutex> lock(*local_mutex);
 
     const char* sep = "";
     for (const auto& j : *m) {

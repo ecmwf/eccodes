@@ -14,10 +14,9 @@
 
 #include <istream>
 #include <memory>
+#include <mutex>
 
 #include "eckit/config/Resource.h"
-#include "eckit/thread/AutoLock.h"
-#include "eckit/thread/Mutex.h"
 
 #include "mir/action/context/Context.h"
 #include "mir/action/io/Save.h"
@@ -43,7 +42,7 @@ namespace mir {
 namespace output {
 
 
-static eckit::Mutex local_mutex;
+static std::mutex local_mutex;
 
 
 #define X(a) Log::debug() << "  GRIB encoding: " << #a << " = " << a << std::endl
@@ -282,7 +281,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
     for (size_t i = 0; i < field.dimensions(); i++) {
 
         // Protect ecCodes and set error callback handling (throws)
-        eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+        std::lock_guard<std::mutex> lock(local_mutex);
         codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
         // Special case where only values are changing; handle is cloned, and new values are set
@@ -524,7 +523,7 @@ size_t GribOutput::set(const param::MIRParametrisation& param, context::Context&
     for (size_t i = 0; i < field.dimensions(); i++) {
 
         // Protect ecCodes and set error callback handling (throws)
-        eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+        std::lock_guard<std::mutex> lock(local_mutex);
         codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
         // Make sure handle deleted even in case of exception

@@ -47,7 +47,7 @@ namespace other {
 
 static RepresentationBuilder<ClenshawCurtis> __representation("reduced_cc");
 
-static pthread_once_t once                        = PTHREAD_ONCE_INIT;
+static std::once_flag once;
 static std::mutex* mtx                            = nullptr;
 static std::map<size_t, std::vector<double> >* ml = nullptr;
 
@@ -191,7 +191,7 @@ void ClenshawCurtis::fill(util::MeshGeneratorParameters& params) const {
 
 
 const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
-    pthread_once(&once, init);
+    std::call_once(once, init);
     std::lock_guard<std::mutex> lock(*mtx);
 
     ASSERT(N > 0);
