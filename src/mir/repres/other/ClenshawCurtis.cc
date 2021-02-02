@@ -196,8 +196,8 @@ const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
 
     ASSERT(N > 0);
 
-    auto j = ml->find(N);
-    if (j == ml->end()) {
+    auto k = ml->find(N);
+    if (k == ml->end()) {
         trace::Timer timer("ClenshawCurtis latitudes " + std::to_string(N), Log::debug());
 
         // calculate latitudes and save in map
@@ -211,11 +211,11 @@ const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
         }
         lats[N - 1] = lats[N] = 0.;
 
-        j = ml->find(N);
-        ASSERT(j != ml->end());
+        k = ml->find(N);
+        ASSERT(k != ml->end());
     }
 
-    return j->second;
+    return k->second;
 }
 
 
