@@ -32,13 +32,13 @@ if [ "$latest" != "$highest_num" ]; then
     exit 1
 fi
 
-# Also grib1 to grib2 conversion should set the correct version
+# Also grib1 to grib2 conversion should set the official version, not the highest
 ${tools_dir}/grib_set -s edition=2 $sample1 $temp
-tv=`${tools_dir}/grib_get -p tablesVersion $temp`
-if [ "$tv" != "$latest" ]; then
-    echo "After conversion to GRIB2, tablesVersion=$tv. Should be $latest. Check definitions/grib2/tables/1.0.table"
+tablesVersion=`${tools_dir}/grib_get -p tablesVersion $temp`
+latestOfficial=`${tools_dir}/grib_get -p tablesVersionLatestOfficial $temp`
+if [ "$tablesVersion" != "$latestOfficial" ]; then
+    echo "After conversion to GRIB2, tablesVersion=$tablesVersion. Should be $latestOfficial"
     exit 1
 fi
-# grib_check_key_equals $temp tablesVersion $latest
 
 rm -f $temp
