@@ -69,11 +69,13 @@ sub WriteFile {
         print MYFILE "# $title\n";
     }
     my $unit_text = ($unit eq "" ? "" : "($unit)");
+    $unit_text =~ s/\(\(Code /(Code /;
+    $unit_text =~ s/\)\)/)/;
     if ($codeFlag =~ /\-/) {
         print MYFILE "# $codeFlag $meaning $unit_text\n";
     } else {
-        my $codeFlag1 = $codeFlag;
-        my $codeFlag2 = $codeFlag;
+        my $codeFlag1 = $codeFlag; # A number
+        my $codeFlag2 = $codeFlag; # A number or string abbreviation
         if ($filename eq "1.4.table") {
             # Special case. Do not just put 2nd code, translate it to shortName for 'mars type'
             $codeFlag2 = TranslateCodes_Table_1_4($codeFlag);
