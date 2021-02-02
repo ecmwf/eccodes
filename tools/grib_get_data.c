@@ -188,7 +188,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     }
 
     if (iter)
-        fprintf(dump_file, "Latitude, Longitude, ");
+        fprintf(dump_file, "Latitude Longitude ");
 
     fprintf(dump_file, "Value");
 
