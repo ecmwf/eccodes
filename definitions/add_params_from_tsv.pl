@@ -10,9 +10,27 @@
 # nor does it submit to any jurisdiction.
 #
 #######################################################################
-# Script to generate parameter definition files for GRIB2
-# Read an input TSV file which should contain parameter keys
-# and generate the .def files for them
+# Script to generate parameter definition files for GRIB2.
+# Reads an input TSV (tab-separated-value) file which should contain
+# the following parameter keys as columns:
+#   paramId
+#   shortName
+#   name
+#   units
+#   discipline
+#   parameterCategory
+#   parameterNumber
+#   # The following are optional keys
+#   typeOfFirstFixedSurface
+#   typeOfSecondFixedSurface
+#   scaledValueOfFirstFixedSurface
+#   scaleFactorOfFirstFixedSurface
+#   scaledValueOfSecondFixedSurface
+#   scaleFactorOfSecondFixedSurface
+#   typeOfStatisticalProcessing
+#
+# It outputs the def files: name.def paramId.def shortName.def units.def
+#
 #######################################################################
 $|=1;
 use strict;
