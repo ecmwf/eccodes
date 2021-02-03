@@ -29,3 +29,6 @@ for f in $files; do
  [ $numberOfPoints = ${iterator_count} ]
 done
 
+# ECC-822: Increase lat/lon decimals using default grib_get_data
+${tools_dir}/grib_get_data -L%12.6f%11.5f ${data_dir}/regular_latlon_surface.grib2
+

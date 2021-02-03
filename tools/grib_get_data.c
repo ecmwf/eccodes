@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_get_data
- *
- */
-
 #include "grib_tools.h"
 
 static void print_key_values(grib_values* values, int values_count);
@@ -29,7 +24,8 @@ grib_option grib_options[] = {
       "\n\t\tvalues. Default is to skip the missing values.\n",
       0, 1, 0 },
     { "p:", 0, 0, 0, 1, 0 },
-    { "F:", "format", "\n\t\tC style format for values. Default is \"%.10e\"\n", 0, 1, 0 },
+    { "F:", "format", "\n\t\tC style format for data values. Default is \"%.10e\"\n", 0, 1, 0 },
+    { "L:", "format", "\n\t\tC style format for latitudes/longitudes. Default is \"%9.3f%9.3f\"\n", 0, 1, 0 },
     { "w:", 0, 0, 0, 1, 0 },
     { "s:", 0, 0, 0, 1, 0 },
     { "f", 0, 0, 0, 1, 0 },
@@ -86,7 +82,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     grib_values* values  = NULL;
     grib_iterator* iter  = NULL;
     char* format_values  = NULL;
-    char* default_format = "%.10e";
+    char format_latlons[64] = {0,};
+    char* default_format_values  = "%.10e";
+    char* default_format_latlons = "%9.3f%9.3f ";
     int print_keys       = grib_options_on("p:");
     long numberOfPoints  = 0;
     long bitmapPresent   = 0;
@@ -127,13 +125,28 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         /*missing_string=grib_options_get_option("m:");*/
     }
 
-    if (grib_options_on("F:"))
+    if (grib_options_on("F:")) {
         format_values = grib_options_get_option("F:");
-    else
-        format_values = default_format;
+    } else {
+        format_values = default_format_values;
+    }
+
+    if (grib_options_on("L:")) {
+        /* Do a very basic sanity check */
+        size_t i=0, count=0;
+        const char* str = grib_options_get_option("L:");
+        for(i=0; str[i]; i++) if (str[i] == '%') count++;
+        if (count != 2) {
+            fprintf(stderr, "ERROR: Invalid lats/lons format option \"%s\"\n", str);
+            return err;
+        }
+        sprintf(format_latlons, "%s ", grib_options_get_option("L:"));/*Add a final space to separate from data values*/
+    } else {
+        sprintf(format_latlons, "%s", default_format_latlons);
+    }
 
     if ((err = grib_get_long(h, "numberOfPoints", &numberOfPoints)) != GRIB_SUCCESS) {
-        fprintf(dump_file, "ERROR: unable to get number of points\n");
+        fprintf(stderr, "ERROR: unable to get number of points\n");
         return err;
     }
 
@@ -142,7 +155,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     num_bytes   = (numberOfPoints + 1) * sizeof(double);
     data_values = (double*)calloc(numberOfPoints + 1, sizeof(double));
     if (!data_values) {
-        fprintf(dump_file, "ERROR: failed to allocate %ld bytes for data values (number of points=%ld)\n",
+        fprintf(stderr, "ERROR: failed to allocate %ld bytes for data values (number of points=%ld)\n",
                 (long)num_bytes, numberOfPoints);
         exit(GRIB_OUT_OF_MEMORY);
     }
@@ -166,7 +179,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
         if (size != numberOfPoints) {
             if (!grib_options_on("q"))
-                fprintf(dump_file, "ERROR: wrong number of points %d\n", (int)numberOfPoints);
+                fprintf(stderr, "ERROR: wrong number of points %d\n", (int)numberOfPoints);
             if (grib_options_on("f"))
                 exit(1);
         }
@@ -212,7 +225,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                     is_missing_val = (data_values[i] == missingValue);
             }
             if (iter)
-                fprintf(dump_file, "%9.3f%9.3f ", lats[i], lons[i]);
+                fprintf(dump_file, format_latlons, lats[i], lons[i]);
 
             if (is_missing_val)
                 fprintf(dump_file, "%s", missing_string);
@@ -237,7 +250,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             }
             if (!is_missing_val) {
                 if (iter)
-                    fprintf(dump_file, "%9.3f%9.3f ", lats[i], lons[i]);
+                    fprintf(dump_file, format_latlons, lats[i], lons[i]);
                 fprintf(dump_file, format_values, data_values[i]);
                 if (print_keys)
                     print_key_values(values, options->print_keys_count);
