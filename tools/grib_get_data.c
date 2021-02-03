@@ -85,7 +85,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     int i                = 0;
     grib_values* values  = NULL;
     grib_iterator* iter  = NULL;
-    char* format         = NULL;
+    char* format_values  = NULL;
     char* default_format = "%.10e";
     int print_keys       = grib_options_on("p:");
     long numberOfPoints  = 0;
@@ -128,9 +128,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     }
 
     if (grib_options_on("F:"))
-        format = grib_options_get_option("F:");
+        format_values = grib_options_get_option("F:");
     else
-        format = default_format;
+        format_values = default_format;
 
     if ((err = grib_get_long(h, "numberOfPoints", &numberOfPoints)) != GRIB_SUCCESS) {
         fprintf(dump_file, "ERROR: unable to get number of points\n");
@@ -217,7 +217,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             if (is_missing_val)
                 fprintf(dump_file, "%s", missing_string);
             else
-                fprintf(dump_file, format, data_values[i]);
+                fprintf(dump_file, format_values, data_values[i]);
 
             if (print_keys)
                 print_key_values(values, options->print_keys_count);
@@ -238,7 +238,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             if (!is_missing_val) {
                 if (iter)
                     fprintf(dump_file, "%9.3f%9.3f ", lats[i], lons[i]);
-                fprintf(dump_file, format, data_values[i]);
+                fprintf(dump_file, format_values, data_values[i]);
                 if (print_keys)
                     print_key_values(values, options->print_keys_count);
                 fprintf(dump_file, "\n");
