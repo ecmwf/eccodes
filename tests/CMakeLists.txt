@@ -10,6 +10,7 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 # Build the executables used by test scripts
 ################################################
 list(APPEND test_bins
+    list_codetable_flagtable_keys
     grib_bpv_limit
     grib_double_cmp
     read_any
@@ -226,6 +227,7 @@ if( HAVE_BUILD_TOOLS )
         list(APPEND tests_data_reqd grib_tigge_conversions2)
         list(APPEND tests_data_reqd bufr_dump_encode_C)
         list(APPEND tests_data_reqd bufr_dump_decode_C)
+        list(APPEND tests_no_data_reqd list_codetable_flagtable_keys)
     endif()
 
     # These tests do not require any data downloads
