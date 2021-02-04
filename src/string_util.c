@@ -160,3 +160,13 @@ int string_ends_with(const char* str1, const char* str2)
         return 1;
     return 0;
 }
+
+int count_char_in_string(const char* str, char c)
+{
+    int i = 0, count = 0;
+    DebugAssert(str);
+    for(i=0; str[i]; i++) {
+        if (str[i] == c) count++;
+    }
+    return count;
+}
