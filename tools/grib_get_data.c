@@ -82,9 +82,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     grib_values* values  = NULL;
     grib_iterator* iter  = NULL;
     char* format_values  = NULL;
-    char format_latlons[64] = {0,};
+    char format_latlons[32] = {0,};
     char* default_format_values  = "%.10e";
-    char* default_format_latlons = "%9.3f%9.3f ";
+    char* default_format_latlons = "%9.3f%9.3f";
     int print_keys       = grib_options_on("p:");
     long numberOfPoints  = 0;
     long bitmapPresent   = 0;
@@ -133,21 +133,20 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     if (grib_options_on("L:")) {
         /* Do a very basic sanity check */
-        size_t ii=0, count=0;
         const char* str = grib_options_get_option("L:");
-        for(ii=0; str[ii]; ii++) if (str[ii] == '%') count++;
-        if (count != 2) {
-            fprintf(stderr, "ERROR: Invalid lats/lons format option \"%s\"\n", str);
-            return err;
+        if (count_char_in_string(str, '%') != 2) {
+            fprintf(stderr, "ERROR: Invalid lats/lons format option \"%s\".\nThe default is: \"%s\"\n",
+                    str, default_format_latlons);
+            exit(1);
         }
-        sprintf(format_latlons, "%s ", grib_options_get_option("L:"));/*Add a final space to separate from data values*/
+        sprintf(format_latlons, "%s ", str);/* Add a final space to separate from data values */
     } else {
-        sprintf(format_latlons, "%s", default_format_latlons);
+        sprintf(format_latlons, "%s ", default_format_latlons);
     }
 
     if ((err = grib_get_long(h, "numberOfPoints", &numberOfPoints)) != GRIB_SUCCESS) {
-        fprintf(stderr, "ERROR: unable to get number of points\n");
-        return err;
+        fprintf(stderr, "ERROR: Unable to get number of points\n");
+        exit(err);
     }
 
     iter = grib_iterator_new(h, 0, &err);
@@ -155,7 +154,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     num_bytes   = (numberOfPoints + 1) * sizeof(double);
     data_values = (double*)calloc(numberOfPoints + 1, sizeof(double));
     if (!data_values) {
-        fprintf(stderr, "ERROR: failed to allocate %ld bytes for data values (number of points=%ld)\n",
+        fprintf(stderr, "ERROR: Failed to allocate %ld bytes for data values (number of points=%ld)\n",
                 (long)num_bytes, numberOfPoints);
         exit(GRIB_OUT_OF_MEMORY);
     }
@@ -179,7 +178,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
         if (size != numberOfPoints) {
             if (!grib_options_on("q"))
-                fprintf(stderr, "ERROR: wrong number of points %d\n", (int)numberOfPoints);
+                fprintf(stderr, "ERROR: Wrong number of points %d\n", (int)numberOfPoints);
             if (grib_options_on("f"))
                 exit(1);
         }
