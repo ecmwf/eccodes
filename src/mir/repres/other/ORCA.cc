@@ -18,6 +18,8 @@
 
 #include "eckit/filesystem/PathName.h"
 
+#include "atlas/util/Spec.h"
+
 #include "mir/config/LibMir.h"
 #include "mir/key/grid/ORCAPattern.h"
 #include "mir/param/MIRParametrisation.h"
@@ -104,19 +106,11 @@ void ORCA::fill(grib_info& info) const {
     info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 
-#if 0
-    std::string uuid    = atlasGridRef().uid();  // eg. "16076978a048410747dd7c9876677b28"
-    std::string type    = "ORCA2";
-    std::string subtype = "T";
-
-    auto spec = atlasGridRef().spec();
-    ASSERT(spec.get("type", type) && !type.empty());                // eg. "ORCA2", "eORCA1", etc.
-    ASSERT(spec.get("subtype", subtype) && subtype.length() == 1);  // eg. "T", "U", "V", ...
-#endif
-
-    info.extra_set("unstructuredGridType", type_.c_str());
-    info.extra_set("unstructuredGridSubtype", subtype_.c_str());
-    info.extra_set("uuidOfHGrid", "C0ffEEC0ffEEC0ffEEC0ffEEC0ffEEee");  // uuid.c_str()
+    auto spec = atlas::util::SpecRegistry<atlas::Grid>::lookup("eORCA1_T");
+    for (auto& key : {"unstructuredGridType", "unstructuredGridSubtype", "uuidOfHGrid"}) {
+        auto value = spec.getString(key);
+        info.extra_set(key, value.c_str());
+    }
 }
 
 
