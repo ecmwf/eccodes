@@ -18,11 +18,19 @@ temp2=temp2.$label.grib2
 temp=temp.$label.grib2
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
+
+# Template 4.86
+# -------------
+# TODO: Add tablesVersion later...
+$tools_dir/grib_set -s productDefinitionTemplateNumber=86,totalNumberOfQuantiles=2 $sample2 $temp
+grib_check_key_equals $temp totalNumberOfQuantiles,quantileValue '2 0'
+
+
 # Template 4.88
 # -------------
 # TODO: Add tablesVersion later...
-#grib_set -s productDefinitionTemplateNumber=88,numberOfForecastsUsedInLocalTime=1 $sample2 $temp
-#grib_check_key_equals $temp localTimeMethod 255
+$tools_dir/grib_set -s productDefinitionTemplateNumber=88,numberOfForecastsUsedInLocalTime=1 $sample2 $temp
+grib_check_key_equals $temp localTimeMethod 255
 
 # Templates 4.76 -> 4.79, 4.80 -> 4.83
 # -------------------------------------
@@ -96,6 +104,13 @@ grib_check_key_exists $temp 'constituentType,timeIncrement'
 $tools_dir/grib_set -s tablesVersion=19,productDefinitionTemplateNumber=68 $sample2 $temp
 grib_check_key_exists $temp 'constituentType,perturbationNumber'
 
+
+# Aerosol ensemble interval template. PDT deprecated: 4.47 -> 4.85
+$tools_dir/grib_set -s tablesVersion=26,productDefinitionTemplateNumber=11,stepType=accum,paramId=215211 $sample2 $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber,perturbationNumber '85 0'
+$tools_dir/grib_set -s tablesVersion=26,productDefinitionTemplateNumber=47 $sample2 $temp1
+$tools_dir/grib_set -s tablesVersion=26,productDefinitionTemplateNumber=85 $sample2 $temp2
+$tools_dir/grib_compare -b productDefinitionTemplateNumber $temp1 $temp2
 
 
 rm -f $temp $temp1 $temp2

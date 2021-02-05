@@ -28,7 +28,7 @@ static void usage_and_exit(const char* progname)
 #define INFO_PRINT_DEFINITION_PATH (1 << 1)
 #define INFO_PRINT_SAMPLES_PATH (1 << 2)
 
-void print_debug_info(grib_context* context)
+static void print_debug_info(grib_context* context)
 {
     int memfs = 0, aec = 0;
 #ifdef HAVE_MEMFS

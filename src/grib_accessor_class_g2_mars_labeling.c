@@ -397,11 +397,6 @@ static int extra_set(grib_accessor* a, long val)
                     typeOfProcessedData     = 255;
                     typeOfGeneratingProcess = 255;
                     break;
-                case 84: /* Ensemble mean of temporal mean   (emtm) */
-                case 85: /* Ensemble standard deviation of temporal mean  (estdtm) */
-                    typeOfProcessedData     = 255;
-                    typeOfGeneratingProcess = 4;
-                    break;
                 default:
                     grib_context_log(a->context, GRIB_LOG_WARNING, "g2_mars_labeling: unknown mars.type %d", (int)val);
                     /*return GRIB_ENCODING_ERROR;*/

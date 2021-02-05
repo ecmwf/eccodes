@@ -21,7 +21,7 @@ cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 find_package( ecbuild 3.4 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 
 # Initialise project
-project( eccodes VERSION 2.20.0 LANGUAGES C )
+project( eccodes VERSION 2.21.0 LANGUAGES C )
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
@@ -181,7 +181,7 @@ ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
 
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "Enable memory management" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "Enable memory alignment"  DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE GRIB_TIMER          DESCRIPTION "Enable timer" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE TIMER               DESCRIPTION "Enable timer" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable POSIX threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable OMP threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "Enable extended regression testing" DEFAULT OFF ADVANCED )
@@ -240,10 +240,10 @@ endif()
 ###############################################################################
 # other options
 
-if( HAVE_GRIB_TIMER )
-    set( GRIB_TIMER 1 )
+if( HAVE_TIMER )
+    set( ECCODES_TIMER 1 )
 else()
-    set( GRIB_TIMER 0 )
+    set( ECCODES_TIMER 0 )
 endif()
 
 set( IS_BIG_ENDIAN 0 )

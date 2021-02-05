@@ -1,0 +1,5 @@
+0 0 Nearest analysis time or forecast time to specified local time
+1 1 Interpolated to be valid at the specified local time
+# 2-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

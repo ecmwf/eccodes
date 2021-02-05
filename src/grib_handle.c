@@ -1153,9 +1153,10 @@ grib_multi_handle* grib_multi_handle_new(grib_context* c)
     grib_multi_handle* h;
     if (c == NULL)
         c = grib_context_get_default();
-    if (!c->multi_support_on)
+    if (!c->multi_support_on) {
+        grib_context_log(c, GRIB_LOG_DEBUG, "grib_multi_handle_new: Setting multi_support_on = 1");
         c->multi_support_on = 1;
-
+    }
     h = (grib_multi_handle*)grib_context_malloc_clear(c, sizeof(grib_multi_handle));
     if (h == NULL) {
         grib_context_log(c, GRIB_LOG_ERROR,

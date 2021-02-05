@@ -10,6 +10,7 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 # Build the executables used by test scripts
 ################################################
 list(APPEND test_bins
+    list_codetable_flagtable_keys
     grib_bpv_limit
     grib_double_cmp
     read_any
@@ -35,6 +36,7 @@ list(APPEND test_bins
     grib_sh_ieee64
     ieee
     grib_set_bytes
+    grib_packing_order
     grib_sh_imag
     grib_sh_spectral_complex
     grib_lam_bf
@@ -60,9 +62,11 @@ if( HAVE_BUILD_TOOLS )
         bufr_dump_samples
         bufr_check_descriptors
         definitions
+        grib2_version
         grib_calendar
         grib_md5
         grib_cfNames
+        grib_packing_order
         filter_substr
         grib_uerra
         grib_2nd_order_numValues
@@ -74,6 +78,8 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1065
         grib_ecc-1167
         grib_ecc-1170
+        grib_ecc-1195
+        bufr_ecc-1195
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
@@ -82,6 +88,7 @@ if( HAVE_BUILD_TOOLS )
         grib_sh_imag
         grib_sh_spectral_complex
         pseudo_diag
+        grib_levtype
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
@@ -133,6 +140,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-765
         bufr_ecc-875
         bufr_ecc-887
+        bufr_ecc-1187
         grib_ecc-490
         grib_ecc-756
         grib_ecc-806
@@ -167,7 +175,7 @@ if( HAVE_BUILD_TOOLS )
         grib2to3
         grib2_templates
         grib3_templates
-        badgrib
+        grib_bad
         grib_ls
         grib_ls_json
         grib_filter
@@ -215,9 +223,11 @@ if( HAVE_BUILD_TOOLS )
     if( ENABLE_EXTRA_TESTS )
         list(APPEND tests_data_reqd grib_util_set_spec)
         list(APPEND tests_data_reqd grib_padding)
-        list(APPEND tests_data_reqd grib_tigge_conversions)
+        list(APPEND tests_data_reqd grib_tigge_conversions1)
+        list(APPEND tests_data_reqd grib_tigge_conversions2)
         list(APPEND tests_data_reqd bufr_dump_encode_C)
         list(APPEND tests_data_reqd bufr_dump_decode_C)
+        list(APPEND tests_no_data_reqd list_codetable_flagtable_keys)
     endif()
 
     # These tests do not require any data downloads
@@ -348,10 +358,10 @@ if( HAVE_BUILD_TOOLS )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_split_by_rdbSubtype.sh
                       TEST_DEPENDS eccodes_download_bufrs )
 
-    # Performance test. Must have -DENABLE_GRIB_TIMER=ON
+    # Performance test. Must have -DENABLE_TIMER=ON
     ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
                       TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS AND ENABLE_GRIB_TIMER
+                      CONDITION ENABLE_EXTRA_TESTS AND ENABLE_TIMER
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
                       TEST_DEPENDS eccodes_download_gribs )
 else()

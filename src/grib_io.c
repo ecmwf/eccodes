@@ -1753,7 +1753,7 @@ static int count_product_in_file(grib_context* c, FILE* f, ProductKind product, 
         return GRIB_INVALID_ARGUMENT;
     }
 
-    if (c->multi_support_on) {
+    if (c->multi_support_on && product == PRODUCT_GRIB) {
         grib_context_log(c, GRIB_LOG_ERROR, "count_product_in_file: Multi-field GRIBs not supported");
         err = GRIB_NOT_IMPLEMENTED;
     }

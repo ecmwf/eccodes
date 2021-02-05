@@ -48,6 +48,7 @@ if( HAVE_BUILD_TOOLS )
           bufr_read_scatterometer
           bufr_read_synop
           bufr_read_temp
+          bufr_read_tempf
           bufr_read_tropical_cyclone
           bufr_set_keys
           bufr_copy_keys
@@ -86,6 +87,7 @@ else()
           bufr_read_scatterometer
           bufr_read_synop
           bufr_read_temp
+          bufr_read_tempf
           bufr_read_tropical_cyclone
           bufr_set_keys
           bufr_subset
@@ -112,6 +114,14 @@ foreach( tool ${tests_extra} )
                       COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
                       TEST_DEPENDS    eccodes_download_gribs eccodes_download_bufrs )
 endforeach()
+
+# Test for CCSDS (AEC) packing
+ecbuild_add_test( TARGET          eccodes_f_grib_set_packing
+                  SOURCES         grib_set_packing.f90
+                  LINKER_LANGUAGE Fortran
+                  LIBS            eccodes_f90 eccodes
+                  CONDITION       HAVE_AEC AND HAVE_FORTRAN
+                  COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/grib_set_packing.sh )
 
 # Executables without a shell script
 # TODO

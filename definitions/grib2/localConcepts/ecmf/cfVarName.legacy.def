@@ -142,3 +142,51 @@
  parameterCategory = 128 ;
  parameterNumber = 238 ;
 }
+#Sea-ice cover
+'ci' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 31 ;
+}
+#Snow density
+'rsn' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 33 ;
+}
+#Sea surface temperature
+'sst' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 34 ;
+}
+#Surface solar radiation downwards
+'ssrd' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 169 ;
+}
+#Surface thermal radiation downwards
+'strd' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 175 ;
+}
+#Eastward turbulent surface stress
+'ewss' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 180 ;
+}
+#Northward turbulent surface stress
+'nsss' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 181 ;
+}
+#Surface runoff
+'sro' = {
+ discipline = 192 ;
+ parameterCategory = 174 ;
+ parameterNumber = 8 ;
+}

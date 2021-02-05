@@ -1200,10 +1200,14 @@ int codes_set_values(codes_handle* h, codes_values* codes_values, size_t arg_cou
 codes_handle* codes_handle_new_from_partial_message_copy(codes_context* c, const void* data, size_t size);
 codes_handle* codes_handle_new_from_partial_message(codes_context* c, const void* data, size_t buflen);
 
-/* Returns a bool i.e. 0 or 1. The error code is an argument */
+/* Returns a bool i.e. 0 or 1. The error code is the final argument */
 int codes_is_missing(const codes_handle* h, const char* key, int* err);
 /* Returns a bool i.e. 0 or 1 */
 int codes_is_defined(const codes_handle* h, const char* key);
+
+/* Returns 1 if the BUFR key is in the header and 0 if it is in the data section.
+   The error code is the final argument */
+int codes_bufr_key_is_header(const codes_handle* h, const char* key, int* err);
 
 int codes_set_missing(codes_handle* h, const char* key);
 /* The truncation is the Gaussian number (or order) */

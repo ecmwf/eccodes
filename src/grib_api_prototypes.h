@@ -961,6 +961,7 @@ long grib_get_api_version(void);
 void grib_print_api_version(FILE* out);
 const char* grib_get_package_name(void);
 grib_context* grib_context_get_default(void);
+char* codes_resolve_path(grib_context* c, const char* path);
 char* grib_context_full_defs_path(grib_context* c, const char* basename);
 char* grib_samples_path(const grib_context* c);
 char* grib_definition_path(const grib_context* c);
@@ -1489,7 +1490,7 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin, grib_handle* ho
 int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout);
 int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len);
-
+int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err);
 
 /* string_util.c */
 int strcmp_nocase(const char* s1, const char* s2);
@@ -1499,6 +1500,7 @@ const char* extract_filename(const char* filepath);
 char** string_split(char* inputString, const char* delimiter);
 int string_to_long(const char* input, long* output);
 int string_ends_with(const char* str1, const char* str2);
+int count_char_in_string(const char* str, char c);
 
 /* functions.c */
 long grib_op_eq(long a, long b);

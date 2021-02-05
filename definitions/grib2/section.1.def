@@ -22,7 +22,7 @@ alias centreForLocal=subCentre;
 alias centreForLocal=centre;
 }
 
-codetable[1] tablesVersion 'grib2/tables/1.0.table' = tablesVersionLatest : edition_specific;
+codetable[1] tablesVersion 'grib2/tables/1.0.table' = tablesVersionLatestOfficial : edition_specific;
 alias gribMasterTablesVersionNumber=tablesVersion;
 
 transient masterDir="grib2/tables/[tablesVersion]";

@@ -1,4 +1,6 @@
-# DWD concept type of level
+# ECMWF concept type of level
+#set uses the last one
+#get returns the first match
 'surface'                  = {indicatorOfTypeOfLevel=1;}
 'cloudBase'                = {indicatorOfTypeOfLevel=2;}
 'cloudTop'                 = {indicatorOfTypeOfLevel=3;}
