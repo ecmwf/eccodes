@@ -8,7 +8,7 @@ meta section4Pointer section_pointer(offsetSection4,section4Length,4);
 
 unsigned[1] numberOfSection = 4:read_only;
 
-unsigned[2] NV  : dump ;
+unsigned[2] NV : dump ;
 alias numberOfVerticalCoordinateValues=NV ;
 alias numberOfCoordinatesValues=NV;
 # For table 4.5, code 150 Generalized vertical height coordinate
@@ -48,7 +48,7 @@ if (defined(typeOfFirstFixedSurface)) {
 
 if (genVertHeightCoords) {
    # Generalized vertical height coordinate case
-   ieeefloat nlev  : dump ;
+   ieeefloat nlev : dump ;
    ieeefloat numberOfVGridUsed : dump;
    byte[16] uuidOfVGrid : dump;
 
@@ -72,7 +72,6 @@ else {
    concept_nofail deletePV(unknown) {
       "1" = { PVPresent=0; NV=0; }
    }
-
 }
 
 meta md5Section4 md5(offsetSection4,section4Length);

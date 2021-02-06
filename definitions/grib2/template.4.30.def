@@ -11,7 +11,8 @@ codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) :
 codetable[1] parameterNumber ('4.2.[discipline:l].[parameterCategory:l].table',masterDir,localDir)  : dump;
 meta parameterUnits codetable_units(parameterNumber) : dump;
 meta parameterName  codetable_title(parameterNumber) : dump;
-codetable[1] typeOfGeneratingProcess 'grib2/tables/[tablesVersion]/4.3.table' : dump;
+codetable[1] typeOfGeneratingProcess ('4.3.table',masterDir,localDir) : dump;
+
 unsigned[1] observationGeneratingProcessIdentifier  : dump;
 unsigned[1]  NB : dump;
 alias numberOfContributingSpectralBands=NB;
