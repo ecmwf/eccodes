@@ -142,20 +142,19 @@ rm -rf $tempDir
 mkdir -p $tempDir
 # Change limits for 2m temperature (grid-point) and Temperature (spectral)
 cat > $tempDir/param_limits.def <<EOF
- constant default_min_val = -1e9 : long_type, hidden;
- constant default_max_val = +1e9 : long_type, hidden;
+ constant default_min_val = -1e9 : double_type, hidden;
+ constant default_max_val = +1e9 : double_type, hidden;
  concept param_value_min(default_min_val) {
-    0  = { paramId=167; }
+    0   = { paramId=167; }
     273 = { paramId=130; }
- } : long_type, hidden;
+ } : double_type, hidden;
  concept param_value_max(default_max_val) {
     40000 = { paramId=167; }
-    273 = { paramId=130; }
- } : long_type, hidden;
+    273   = { paramId=130; }
+ } : double_type, hidden;
 EOF
 
-# High 2m temperature should succeed
-#export ECCODES_DEBUG=-1
+# High 2m temperature (paramId=167) should succeed
 export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
 export ECCODES_EXTRA_DEFINITION_PATH=$test_dir/$tempDir
 ${tools_dir}/grib_set -s paramId=167,scaleValuesBy=1000 $input1 $tempOut
@@ -168,6 +167,35 @@ ${tools_dir}/grib_copy -r $sh_sample $tempGrib1
 status=$?
 set -e
 [ $status -ne 0 ]
+
+
+
+# Set limits based on a more complex condition
+# ---------------------------------------------
+export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
+export ECCODES_EXTRA_DEFINITION_PATH=$test_dir/$tempDir
+cat > $tempDir/param_limits.def <<EOF
+ constant default_min_val = -1e9 : double_type, hidden;
+ constant default_max_val = +1e9 : double_type, hidden;
+ concept param_value_min(default_min_val) {
+    0 = { paramId=260509; }
+ } : double_type, hidden;
+ concept param_value_max(default_max_val) {
+    400  = { paramId=260509; }
+    1001 = { paramId=260509; one=(step % 2 == 0 && step > 4); }
+ } : double_type, hidden;
+EOF
+# Step of 12 satisfies the condition: it is even and > 4
+${tools_dir}/grib_set -s paramId=260509,step=12,scaleValuesBy=1000 $sample_g2 $tempGrib2
+
+# Step of 0 doesn't satisfy the condition so will use 400
+set +e
+${tools_dir}/grib_set -s paramId=260509,scaleValuesBy=1000 $sample_g2 $tempGrib2
+status=$?
+set -e
+[ $status -ne 0 ]
+
+
 
 # Clean up
 rm -rf $tempDir

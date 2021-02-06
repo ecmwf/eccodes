@@ -94,6 +94,7 @@ TESTS = definitions.sh \
         bufr_ecc-765.sh \
         bufr_ecc-875.sh \
         bufr_ecc-887.sh \
+        bufr_ecc-1187.sh \
         grib_ecc-136.sh \
         grib_ecc-967.sh \
         grib_ecc-1065.sh \
@@ -110,6 +111,7 @@ TESTS = definitions.sh \
         grib_ecc-1030.sh \
         grib_lam_gp.sh \
         grib_lam_bf.sh \
+        filter_substr.sh \
         list_codetable_flagtable_keys.sh \
         bufr_get_element.sh \
         bufr_extract_headers.sh
