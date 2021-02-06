@@ -1321,7 +1321,7 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
 
     err = grib_recompose_name(h, NULL, options->outfile->name, filename, 0);
 
-    // Check outfile is not same as infile
+    /* Check outfile is not same as infile */
     if (filenames_equal(options->infile->name, filename)) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
                 "output file '%s' is the same as input file. Aborting\n", filename);
