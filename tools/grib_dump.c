@@ -42,9 +42,9 @@ grib_option grib_options[] = {
 const char* tool_description = "Dump the content of a GRIB file in different formats.";
 const char* tool_name        = "grib_dump";
 const char* tool_usage       = "[options] grib_file grib_file ...";
-static int json                   = 0;
-static int first_handle           = 1;
-static int dump_keys              = 0;
+static int json              = 0;
+static int first_handle      = 1;
+static int dump_keys         = 0;
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 

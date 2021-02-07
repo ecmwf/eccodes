@@ -88,14 +88,14 @@ static int headerMode          = 0;
 static int morein1             = 0;
 static int morein2             = 0;
 static int listFromCommandLine;
-static int verbose            = 0;
-static int tolerance_factor   = 1;
-static int write_error = 0;
+static int verbose                = 0;
+static int tolerance_factor       = 1;
+static int write_error            = 0;
 static grib_handle* global_handle = NULL;
 static int global_counter         = 0;
 static int start                  = -1;
 static int end                    = -1;
-static int write_count = 0;
+static int write_count            = 0;
 
 GRIB_INLINE static double compare_double_absolute(double* a, double* b, double* err)
 {
