@@ -57,6 +57,7 @@ write_or_append(\*OUT_CFVARNAME, "$CFVARNAME_FILENAME");
 my $first = 1;
 while (<>) {
     chomp;
+    s/\r//g;  # Remove DOS carriage returns
     if ($first == 1) {
         check_first_row_column_names($_);
         $first = 0;
