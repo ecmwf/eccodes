@@ -38,7 +38,7 @@ use strict;
 use warnings;
 $ARGV[0] or die "USAGE: $0 input.tsv\n";
 
-my ($paramId, $shortName, $name, $units);
+my ($paramId, $shortName, $name, $units, $cfVarName);
 my ($discipline, $pcategory, $pnumber, $type1, $type2, $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2, $stat);
 
 my $PARAMID_FILENAME   = "paramId.def";
@@ -47,37 +47,18 @@ my $NAME_FILENAME      = "name.def";
 my $UNITS_FILENAME     = "units.def";
 my $CFVARNAME_FILENAME = "cfVarName.def";
 
-open(OUT_PARAMID,  ">$PARAMID_FILENAME")   or die "$PARAMID_FILENAME: $!";
-open(OUT_SHORTNAME,">$SHORTNAME_FILENAME") or die "$SHORTNAME_FILENAME: $!";
-open(OUT_NAME,     ">$NAME_FILENAME")      or die "$NAME_FILENAME: $!";
-open(OUT_UNITS,    ">$UNITS_FILENAME")     or die "$UNITS_FILENAME: $!";
-open(OUT_CFVARNAME,">$CFVARNAME_FILENAME") or die "$CFVARNAME_FILENAME: $!";
+write_or_append(\*OUT_PARAMID,   "$PARAMID_FILENAME");
+write_or_append(\*OUT_SHORTNAME, "$SHORTNAME_FILENAME");
+write_or_append(\*OUT_NAME,      "$NAME_FILENAME");
+write_or_append(\*OUT_UNITS,     "$UNITS_FILENAME");
+write_or_append(\*OUT_CFVARNAME, "$CFVARNAME_FILENAME");
+
 
 my $first = 1;
 while (<>) {
     chomp;
     if ($first == 1) {
-        #die "Error: first line of input must contain the correct key names" if ( $_ !~ /^paramId/ );
-        my @keys = split(/\t/);
-        die "Error: column titles wrong: Column 1 should be paramId"   if ($keys[0] ne "paramId");
-        die "Error: column titles wrong: Column 2 should be shortName" if ($keys[1] ne "shortName");
-        die "Error: column titles wrong: Column 3 should be name"      if ($keys[2] ne "name");
-        die "Error: column titles wrong: Column 4 should be units"     if ($keys[3] ne "units");
-
-        die "Error: column titles wrong: Column 5 should be discipline"        if ($keys[4] ne "discipline");
-        die "Error: column titles wrong: Column 6 should be parameterCategory" if ($keys[5] ne "parameterCategory");
-        die "Error: column titles wrong: Column 7 should be parameterNumber"   if ($keys[6] ne "parameterNumber");
-
-        die "Error: column titles wrong: Column 8 should be #typeOfFirstFixedSurface" if ($keys[7] ne "typeOfFirstFixedSurface");
-        die "Error: column titles wrong: Column 9 should be typeOfSecondFixedSurface" if ($keys[8] ne "typeOfSecondFixedSurface");
-
-        die "Error: column titles wrong: Column 10 should be scaledValueOfFirstFixedSurface" if ($keys[9] ne "scaledValueOfFirstFixedSurface");
-        die "Error: column titles wrong: Column 11 should be scaleFactorOfFirstFixedSurface" if ($keys[10] ne "scaleFactorOfFirstFixedSurface");
-
-        die "Error: column titles wrong: Column 12 should be scaledValueOfSecondFixedSurface" if ($keys[11] ne "scaledValueOfSecondFixedSurface");
-        die "Error: column titles wrong: Column 13 should be scaleFactorOfSecondFixedSurface" if ($keys[12] ne "scaleFactorOfSecondFixedSurface");
-        die "Error: column titles wrong: Column 14 should be typeOfStatisticalProcessing"     if ($keys[13] ne "typeOfStatisticalProcessing");
-
+        check_first_row_column_names($_);
         $first = 0;
         next;
     }
@@ -87,17 +68,19 @@ while (<>) {
         $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2, $stat) = split(/\t/);
 
     die "Error: paramID \"$paramId\" is not an integer!" if (!is_integer($paramId));
-    
+
     $units = "~" if ($units eq "");
+    $cfVarName = $shortName;
+    $cfVarName = '\\'.$shortName if ($shortName =~ /^[0-9]/);
 
     write_out_file(\*OUT_PARAMID,   $name, $paramId);
     write_out_file(\*OUT_SHORTNAME, $name, $shortName);
     write_out_file(\*OUT_NAME,      $name, $name);
     write_out_file(\*OUT_UNITS,     $name, $units);
-    write_out_file(\*OUT_CFVARNAME, $name, $shortName);
+    write_out_file(\*OUT_CFVARNAME, $name, $cfVarName);
 }
 
-print "Wrote output files: $PARAMID_FILENAME, $SHORTNAME_FILENAME, $NAME_FILENAME, $UNITS_FILENAME, $CFVARNAME_FILENAME\n";
+print "Wrote output files: $PARAMID_FILENAME $SHORTNAME_FILENAME $NAME_FILENAME $UNITS_FILENAME $CFVARNAME_FILENAME\n";
 close(OUT_PARAMID)   or die "$PARAMID_FILENAME: $!";
 close(OUT_SHORTNAME) or die "$SHORTNAME_FILENAME: $!";
 close(OUT_NAME)      or die "$NAME_FILENAME: $!";
@@ -126,6 +109,40 @@ sub write_out_file {
     print $outfile "  scaleFactorOfSecondFixedSurface = $scaleFactor2 ;\n" if ($scaleFactor2 ne "");
     print $outfile "  typeOfStatisticalProcessing = $stat ;\n"             if ($stat ne "");
     print $outfile "}\n";
+}
+
+sub check_first_row_column_names {
+    my $line = shift; # This is the first row
+    my @keys = split(/\t/, $line);
+    die "Error: 1st row column titles wrong: Column 1 should be 'paramId'\n"   if ($keys[0] ne "paramId");
+    die "Error: 1st row column titles wrong: Column 2 should be 'shortName'\n" if ($keys[1] ne "shortName");
+    die "Error: 1st row column titles wrong: Column 3 should be 'name'\n"      if ($keys[2] ne "name");
+    die "Error: 1st row column titles wrong: Column 4 should be 'units'\n"     if ($keys[3] ne "units");
+
+    die "Error: 1st row column titles wrong: Column 5 should be 'discipline'\n"        if ($keys[4] ne "discipline");
+    die "Error: 1st row column titles wrong: Column 6 should be 'parameterCategory'\n" if ($keys[5] ne "parameterCategory");
+    die "Error: 1st row column titles wrong: Column 7 should be 'parameterNumber'\n"   if ($keys[6] ne "parameterNumber");
+
+    die "Error: 1st row column titles wrong: Column 8 should be 'typeOfFirstFixedSurface'\n" if ($keys[7] ne "typeOfFirstFixedSurface");
+    die "Error: 1st row column titles wrong: Column 9 should be 'typeOfSecondFixedSurface'\n" if ($keys[8] ne "typeOfSecondFixedSurface");
+
+    die "Error: 1st row column titles wrong: Column 10 should be 'scaledValueOfFirstFixedSurface'\n" if ($keys[9] ne "scaledValueOfFirstFixedSurface");
+    die "Error: 1st row column titles wrong: Column 11 should be 'scaleFactorOfFirstFixedSurface'\n" if ($keys[10] ne "scaleFactorOfFirstFixedSurface");
+
+    die "Error: 1st row column titles wrong: Column 12 should be 'scaledValueOfSecondFixedSurface'\n" if ($keys[11] ne "scaledValueOfSecondFixedSurface");
+    die "Error: 1st row column titles wrong: Column 13 should be 'scaleFactorOfSecondFixedSurface'\n" if ($keys[12] ne "scaleFactorOfSecondFixedSurface");
+    die "Error: 1st row column titles wrong: Column 14 should be 'typeOfStatisticalProcessing'\n" if ($keys[13] ne "typeOfStatisticalProcessing");
+}
+
+sub write_or_append {
+    my $outfile = $_[0];
+    my $fname   = $_[1];
+
+    if (-f "$fname") {
+        open($outfile,  ">>$fname") or die "$fname: $!";
+    } else {
+        open($outfile,  ">$fname")  or die "$fname: $!";
+    }
 }
 
 sub is_integer {
