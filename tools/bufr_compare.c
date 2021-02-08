@@ -104,7 +104,7 @@ static int listFromCommandLine;
 static int verbose          = 0;
 static int tolerance_factor = 1;
 static int write_error      = 0;
-static int write_count = 0;
+static int write_count      = 0;
 
 static grib_handle* global_handle = NULL;
 static int counter                = 0;

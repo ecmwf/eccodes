@@ -1,9 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# START grib2::section
 # SECTION 6, BIT-MAP SECTION
-#  Length of section in octets
-# (nn)
 position offsetSection6;
 position offsetBSection6;
 
@@ -21,20 +18,16 @@ meta geography.bitmapPresent g2bitmap_present(bitMapIndicator): dump;
 transient missingValuesPresent = bitmapPresent : hidden, read_only;
 
 # Bitmap...
-if(bitMapIndicator == 0)
-{
-  if(dataRepresentationTemplateNumber == 1)
-  {
-    if(matrixBitmapsPresent == 1)
-    {
+if (bitMapIndicator == 0) {
+  if (dataRepresentationTemplateNumber == 1) {
+    if (matrixBitmapsPresent == 1) {
       meta primaryBitmap g2bitmap( tableReference,
           missingValue,
           offsetBSection6,
           section6Length,
           numberOfDataMatrices) : read_only;
     }
-    else
-    {
+    else {
       meta geography.bitmap g2bitmap( tableReference,
           missingValue,
           offsetBSection6,
@@ -42,8 +35,7 @@ if(bitMapIndicator == 0)
           numberOfDataPoints) : read_only;
     }
   }
-  else
-  {
+  else {
     meta geography.bitmap g2bitmap( tableReference,
         missingValue,
         offsetBSection6,
@@ -52,7 +44,7 @@ if(bitMapIndicator == 0)
   }
 }
 
-if(bitMapIndicator == 255)
+if (bitMapIndicator == 255)
 {
   # No bitmap is used but some complex packing schemes embed the missing values in the data section
   if (dataRepresentationTemplateNumber == 2 || dataRepresentationTemplateNumber == 3) {

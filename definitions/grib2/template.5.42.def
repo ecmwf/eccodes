@@ -21,5 +21,5 @@ flagbit AEC_RESTRICTED_OPTION_MASK(ccsdsFlags,4)      = 0;
 flagbit AEC_PAD_RSI_OPTION_MASK(ccsdsFlags,5)         = 0;
 
 unsigned[1] ccsdsBlockSize = 32 : dump;
-unsigned[2] ccsdsRsi = 128      : dump;
+unsigned[2] ccsdsRsi = 128 : dump;
 alias referenceSampleInterval=ccsdsRsi;

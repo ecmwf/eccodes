@@ -10,7 +10,7 @@
 
 #include "grib_api_internal.h"
 
-static int fail_on_error     = 1;
+static int fail_on_error    = 1;
 static const char* toolname = NULL;
 
 static void usage(const char* prog)
