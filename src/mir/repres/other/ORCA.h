@@ -15,6 +15,8 @@
 
 #include <string>
 
+#include "atlas/util/Spec.h"
+
 #include "mir/repres/Gridded.h"
 #include "mir/util/Atlas.h"
 
@@ -31,7 +33,7 @@ public:
 
     // -- Constructors
 
-    ORCA(const std::string& name);
+    ORCA(const std::string& id);
     ORCA(const param::MIRParametrisation&);
     ORCA(const ORCA&) = delete;
 
@@ -79,10 +81,7 @@ protected:
 private:
     // -- Members
 
-    std::string name_;
-    std::string type_;
-    std::string subtype_;
-
+    const atlas::util::Spec spec_;
     mutable atlas::Grid grid_;
 
     // -- Methods

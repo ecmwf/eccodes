@@ -12,23 +12,14 @@
 
 #include "mir/repres/other/ORCA.h"
 
-#include <algorithm>
-#include <cctype>
 #include <ostream>
 
-#include "eckit/filesystem/PathName.h"
-
-#include "atlas/util/Spec.h"
-
-#include "mir/config/LibMir.h"
-#include "mir/key/grid/ORCAPattern.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 #include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
-#include "mir/util/Regex.h"
 
 
 namespace mir {
@@ -36,46 +27,21 @@ namespace repres {
 namespace other {
 
 
-namespace {
+static const char* UUID    = "uuidOfHGrid";
+static const char* TYPE    = "unstructuredGridType";
+static const char* SUBTYPE = "unstructuredGridSubtype";
 
 
-std::string get_name(const param::MIRParametrisation& param) {
-    std::string name;
-    ASSERT(param.get("grid", name));
-    return name;
-}
+ORCA::ORCA(const std::string& id) :
+    Gridded(util::BoundingBox()), spec_(atlas::util::SpecRegistry<atlas::Grid>::lookup(id)) {}
 
 
-std::string change_case(const std::string& in, bool up) {
-    ASSERT(!in.empty());
-    std::string out(in);
-    std::transform(in.begin(), in.end(), out.begin(),
-                   [up](unsigned char c) { return up ? std::toupper(c) : std::tolower(c); });
-    return out;
-}
-
-
-}  // namespace
-
-
-ORCA::ORCA(const std::string& name) : Gridded(util::BoundingBox()) {
-    // setup canonical type/subtype
-    auto match = util::Regex(key::grid::ORCAPattern::pattern()).match(name);
-    if (!match || match.size() != 3) {
-        throw exception::UserError("ORCA: unrecognized name '" + name + "'");
-    }
-
-    type_ = change_case(match[1], true);
-    if (type_.front() == 'E') {
-        type_.front() = 'e';
-    }
-
-    subtype_ = match[2].str().front();
-    name_    = type_ + '_' + subtype_;
-}
-
-
-ORCA::ORCA(const param::MIRParametrisation& param) : ORCA(get_name(param)) {}
+ORCA::ORCA(const param::MIRParametrisation& param) :
+    ORCA([&param]() {
+        std::string uuid;
+        ASSERT(param.get(UUID, uuid) && !uuid.empty());
+        return uuid;
+    }()) {}
 
 
 ORCA::~ORCA() = default;
@@ -83,7 +49,7 @@ ORCA::~ORCA() = default;
 
 bool ORCA::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const ORCA*>(&other);
-    return (o != nullptr) && name_ == o->name_;
+    return (o != nullptr) && spec_.getString(UUID) == o->spec_.getString(UUID);
 }
 
 
@@ -106,21 +72,21 @@ void ORCA::fill(grib_info& info) const {
     info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 
-    auto spec = atlas::util::SpecRegistry<atlas::Grid>::lookup("eORCA1_T");
-    for (auto& key : {"unstructuredGridType", "unstructuredGridSubtype", "uuidOfHGrid"}) {
-        auto value = spec.getString(key);
+    for (auto& key : {TYPE, SUBTYPE, UUID}) {
+        auto value = spec_.getString(key);
         info.extra_set(key, value.c_str());
     }
 }
 
 
 void ORCA::makeName(std::ostream& out) const {
-    out << name_;
+    auto name = spec_.getString(TYPE) + "_" + spec_.getString(SUBTYPE) + "_" + spec_.getString(UUID);
+    out << name;
 }
 
 
 void ORCA::print(std::ostream& out) const {
-    out << "ORCA[atlasGrid=" << atlasGridRef().spec() << "]";
+    out << "ORCA[spec=" << spec_ << "]";
 }
 
 
@@ -165,11 +131,7 @@ Iterator* ORCA::iterator() const {
 
 
 const atlas::Grid& ORCA::atlasGridRef() const {
-    if (!grid_) {
-        // setup atlas grid (once)
-        grid_ = atlas::Grid(name_);
-    }
-    return grid_;
+    return grid_ ? grid_ : (grid_ = atlas::Grid(spec_));
 }
 
 
@@ -179,6 +141,7 @@ atlas::Grid ORCA::atlasGrid() const {
 
 
 void ORCA::fill(util::MeshGeneratorParameters& params) const {
+    // FIXME: should come from spec
     if (params.meshGenerator_.empty()) {
         params.meshGenerator_ = "orca";
     }
