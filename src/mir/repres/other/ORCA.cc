@@ -13,6 +13,8 @@
 #include "mir/repres/other/ORCA.h"
 
 #include <ostream>
+#include <utility>
+#include <vector>
 
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
@@ -27,9 +29,9 @@ namespace repres {
 namespace other {
 
 
-static const char* UUID    = "uuidOfHGrid";
-static const char* TYPE    = "unstructuredGridType";
-static const char* SUBTYPE = "unstructuredGridSubtype";
+// order is important for makeName()
+static const std::vector<std::pair<std::string, std::string>> grib_keys{
+    {"orca_name", "unstructuredGridType"}, {"orca_staggering", "unstructuredGridSubtype"}, {"uid", "uuidOfHGrid"}};
 
 
 ORCA::ORCA(const std::string& id) :
@@ -38,9 +40,9 @@ ORCA::ORCA(const std::string& id) :
 
 ORCA::ORCA(const param::MIRParametrisation& param) :
     ORCA([&param]() {
-        std::string uuid;
-        ASSERT(param.get(UUID, uuid) && !uuid.empty());
-        return uuid;
+        std::string uid;
+        ASSERT(param.get("uuidOfHGrid", uid) && !uid.empty());
+        return uid;
     }()) {}
 
 
@@ -49,7 +51,7 @@ ORCA::~ORCA() = default;
 
 bool ORCA::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const ORCA*>(&other);
-    return (o != nullptr) && spec_.getString(UUID) == o->spec_.getString(UUID);
+    return (o != nullptr) && spec_.getString("uid") == o->spec_.getString("uid");
 }
 
 
@@ -72,16 +74,19 @@ void ORCA::fill(grib_info& info) const {
     info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 
-    for (auto& key : {TYPE, SUBTYPE, UUID}) {
-        auto value = spec_.getString(key);
-        info.extra_set(key, value.c_str());
+    for (auto& key : grib_keys) {
+        auto value = spec_.getString(key.first);
+        info.extra_set(key.second.c_str(), value.c_str());
     }
 }
 
 
 void ORCA::makeName(std::ostream& out) const {
-    auto name = spec_.getString(TYPE) + "_" + spec_.getString(SUBTYPE) + "_" + spec_.getString(UUID);
-    out << name;
+    auto sep = "";
+    for (auto& key : grib_keys) {
+        out << sep << spec_.getString(key.first);
+        sep = "_";
+    }
 }
 
 
