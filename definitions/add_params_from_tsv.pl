@@ -22,11 +22,11 @@
 #   parameterNumber
 #   # The following are optional keys
 #   typeOfFirstFixedSurface
-#   typeOfSecondFixedSurface
-#   scaledValueOfFirstFixedSurface
 #   scaleFactorOfFirstFixedSurface
-#   scaledValueOfSecondFixedSurface
+#   scaledValueOfFirstFixedSurface
+#   typeOfSecondFixedSurface
 #   scaleFactorOfSecondFixedSurface
+#   scaledValueOfSecondFixedSurface
 #   typeOfStatisticalProcessing
 #
 # It outputs the def files:
@@ -125,13 +125,12 @@ sub check_first_row_column_names {
     die "Error: 1st row column titles wrong: Column 7 should be 'parameterNumber'\n"   if ($keys[6] ne "parameterNumber");
 
     die "Error: 1st row column titles wrong: Column 8 should be 'typeOfFirstFixedSurface'\n" if ($keys[7] ne "typeOfFirstFixedSurface");
-    die "Error: 1st row column titles wrong: Column 9 should be 'typeOfSecondFixedSurface'\n" if ($keys[8] ne "typeOfSecondFixedSurface");
-
+    die "Error: 1st row column titles wrong: Column 9 should be 'scaleFactorOfFirstFixedSurface'\n" if ($keys[8] ne "scaleFactorOfFirstFixedSurface");
     die "Error: 1st row column titles wrong: Column 10 should be 'scaledValueOfFirstFixedSurface'\n" if ($keys[9] ne "scaledValueOfFirstFixedSurface");
-    die "Error: 1st row column titles wrong: Column 11 should be 'scaleFactorOfFirstFixedSurface'\n" if ($keys[10] ne "scaleFactorOfFirstFixedSurface");
-
-    die "Error: 1st row column titles wrong: Column 12 should be 'scaledValueOfSecondFixedSurface'\n" if ($keys[11] ne "scaledValueOfSecondFixedSurface");
-    die "Error: 1st row column titles wrong: Column 13 should be 'scaleFactorOfSecondFixedSurface'\n" if ($keys[12] ne "scaleFactorOfSecondFixedSurface");
+    
+    die "Error: 1st row column titles wrong: Column 11 should be 'typeOfSecondFixedSurface'\n" if ($keys[10] ne "typeOfSecondFixedSurface");
+    die "Error: 1st row column titles wrong: Column 12 should be 'scaleFactorOfSecondFixedSurface'\n" if ($keys[11] ne "scaleFactorOfSecondFixedSurface");
+    die "Error: 1st row column titles wrong: Column 13 should be 'scaledValueOfSecondFixedSurface'\n" if ($keys[12] ne "scaledValueOfSecondFixedSurface");
     die "Error: 1st row column titles wrong: Column 14 should be 'typeOfStatisticalProcessing'\n" if ($keys[13] ne "typeOfStatisticalProcessing");
 }
 
