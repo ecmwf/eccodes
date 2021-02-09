@@ -84,16 +84,15 @@ void Lambert::fill(grib_info& info) const {
     info.grid.Ni = long(x_.size());
     info.grid.Nj = long(y_.size());
 
-    GribExtraSetting::set(info, "DxInMetres", Dx);
-    GribExtraSetting::set(info, "DyInMetres", Dy);
-    GribExtraSetting::set(info, "Latin1InDegrees", reference[LLCOORDS::LAT]);
-    GribExtraSetting::set(info, "Latin2InDegrees", reference[LLCOORDS::LAT]);
-    GribExtraSetting::set(
-        info, "LoVInDegrees",
-        writeLonPositive_ ? util::normalise_longitude(reference[LLCOORDS::LON], 0) : reference[LLCOORDS::LON]);
+    info.extra_set("DxInMetres", Dx);
+    info.extra_set("DyInMetres", Dy);
+    info.extra_set("Latin1InDegrees", reference[LLCOORDS::LAT]);
+    info.extra_set("Latin2InDegrees", reference[LLCOORDS::LAT]);
+    info.extra_set("LoVInDegrees", writeLonPositive_ ? util::normalise_longitude(reference[LLCOORDS::LON], 0)
+                                                     : reference[LLCOORDS::LON]);
 
     if (writeLaDInDegrees_) {
-        GribExtraSetting::set(info, "LaDInDegrees", reference[LLCOORDS::LAT]);
+        info.extra_set("LaDInDegrees", reference[LLCOORDS::LAT]);
     }
 
     // some extra keys are edition-specific, so parent call is here

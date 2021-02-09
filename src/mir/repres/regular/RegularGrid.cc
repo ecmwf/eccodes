@@ -148,33 +148,31 @@ void RegularGrid::fill(grib_info& info) const {
         auto spec = grid_.projection().spec();
 
         if (shapeOfTheEarthProvided_) {
-            GribExtraSetting::set(info, "shapeOfTheEarth", shapeOfTheEarth_);
+            info.extra_set("shapeOfTheEarth", shapeOfTheEarth_);
             switch (shapeOfTheEarth_) {
                 case 1:
-                    GribExtraSetting::set(info, "radius", spec.getDouble("radius", radius_));
+                    info.extra_set("radius", spec.getDouble("radius", radius_));
                     break;
                 case 3:
-                    GribExtraSetting::set(info, "earthMajorAxis",
-                                          spec.getDouble("semi_major_axis", earthMajorAxis_) / 1000.);
-                    GribExtraSetting::set(info, "earthMinorAxis",
-                                          spec.getDouble("semi_minor_axis", earthMinorAxis_) / 1000.);
+                    info.extra_set("earthMajorAxis", spec.getDouble("semi_major_axis", earthMajorAxis_) / 1000.);
+                    info.extra_set("earthMinorAxis", spec.getDouble("semi_minor_axis", earthMinorAxis_) / 1000.);
                     break;
                 case 7:
-                    GribExtraSetting::set(info, "earthMajorAxis", spec.getDouble("semi_major_axis", earthMajorAxis_));
-                    GribExtraSetting::set(info, "earthMinorAxis", spec.getDouble("semi_minor_axis", earthMinorAxis_));
+                    info.extra_set("earthMajorAxis", spec.getDouble("semi_major_axis", earthMajorAxis_));
+                    info.extra_set("earthMinorAxis", spec.getDouble("semi_minor_axis", earthMinorAxis_));
                     break;
                 default:
                     break;
             }
         }
         else if (spec.has("radius")) {
-            GribExtraSetting::set(info, "shapeOfTheEarth", 1L);
-            GribExtraSetting::set(info, "radius", spec.getDouble("radius"));
+            info.extra_set("shapeOfTheEarth", 1L);
+            info.extra_set("radius", spec.getDouble("radius"));
         }
         else if (spec.has("semi_major_axis") && spec.has("semi_minor_axis")) {
-            GribExtraSetting::set(info, "shapeOfTheEarth", 7L);
-            GribExtraSetting::set(info, "earthMajorAxis", spec.getDouble("semi_major_axis"));
-            GribExtraSetting::set(info, "earthMinorAxis", spec.getDouble("semi_minor_axis"));
+            info.extra_set("shapeOfTheEarth", 7L);
+            info.extra_set("earthMajorAxis", spec.getDouble("semi_major_axis"));
+            info.extra_set("earthMinorAxis", spec.getDouble("semi_minor_axis"));
         }
     }
 

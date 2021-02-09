@@ -12,23 +12,16 @@
 
 #include "mir/repres/other/ORCA.h"
 
-#include <algorithm>
-#include <cctype>
-#include <fstream>
 #include <ostream>
-#include <regex>
+#include <utility>
+#include <vector>
 
-#include "eckit/filesystem/PathName.h"
-
-#include "mir/iterator/UnstructuredIterator.h"
-#include "mir/key/grid/ORCAPattern.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 #include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
-#include "mir/util/Regex.h"
 
 
 namespace mir {
@@ -36,87 +29,21 @@ namespace repres {
 namespace other {
 
 
-namespace {
+// order is important for makeName()
+static const std::vector<std::pair<std::string, std::string>> grib_keys{
+    {"orca_name", "unstructuredGridType"}, {"orca_staggering", "unstructuredGridSubtype"}, {"uid", "uuidOfHGrid"}};
 
 
-std::string get_name(const param::MIRParametrisation& param) {
-    std::string name;
-    ASSERT(param.get("grid", name));
-    return name;
-}
+ORCA::ORCA(const std::string& name) :
+    Gridded(util::BoundingBox()), spec_(atlas::util::SpecRegistry<atlas::Grid>::lookup(name)) {}
 
 
-std::string change_case(const std::string& in, bool up) {
-    ASSERT(!in.empty());
-    std::string out(in);
-    std::transform(in.begin(), in.end(), out.begin(),
-                   [up](unsigned char c) { return up ? std::toupper(c) : std::tolower(c); });
-    return out;
-}
-
-
-}  // namespace
-
-
-ORCA::ORCA(const std::string& name) : Gridded(util::BoundingBox()) {
-    // setup canonical type/subtype
-    auto match = util::Regex(key::grid::ORCAPattern::pattern()).match(name);
-    if (!match || match.size() != 3) {
-        throw exception::UserError("ORCA: unrecognized name '" + name + "'");
-    }
-
-    type_ = change_case(match[1], true);
-    if (type_.front() == 'E') {
-        type_.front() = 'e';
-    }
-
-    subtype_     = match[2].str().front();
-    subtypeLong_ = subtype_ + std::string(" grid");
-    name_        = type_ + '_' + subtype_;
-
-
-    // setup grid coordinates
-    eckit::PathName path = "~atlas-orca/share/atlas-orca/data/" + change_case(type_, false) + '_' + subtype_ + ".ascii";
-    std::ifstream in(path.asString().c_str());
-    if (!in) {
-        throw exception::CantOpenFile(path);
-    }
-
-    std::string buffer(1024, ' ');
-
-    int Ni;
-    int Nj;
-    ASSERT(in >> Ni >> Nj);
-    in.getline(&buffer[0], buffer.size());
-
-    ASSERT(Ni * Nj > 0);
-    auto N = size_t(Ni * Nj);
-
-    latitudes_.resize(N);
-    longitudes_.resize(N);
-
-    for (size_t n = 0; n < N; ++n) {
-        ASSERT(in >> latitudes_[n] >> longitudes_[n]);
-        in.getline(&buffer[0], buffer.size());
-    }
-
-    ASSERT(!in.getline(&buffer[0], buffer.size()));
-
-
-    // setup atlas grid
-#if 0
-    grid_ = atlas::Grid(name_);
-#else
-    std::vector<atlas::PointXY> pts(N);
-    for (size_t n = 0; n < N; ++n) {
-        pts[n] = {longitudes_[n], latitudes_[n]};
-    }
-    grid_ = atlas::UnstructuredGrid(std::move(pts));
-#endif
-}
-
-
-ORCA::ORCA(const param::MIRParametrisation& param) : ORCA(get_name(param)) {}
+ORCA::ORCA(const param::MIRParametrisation& param) :
+    ORCA([&param]() {
+        std::string uid;
+        ASSERT(param.get("uuidOfHGrid", uid) && !uid.empty());
+        return uid;
+    }()) {}
 
 
 ORCA::~ORCA() = default;
@@ -124,7 +51,7 @@ ORCA::~ORCA() = default;
 
 bool ORCA::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const ORCA*>(&other);
-    return (o != nullptr) && name_ == o->name_;
+    return (o != nullptr) && spec_.getString("uid") == o->spec_.getString("uid");
 }
 
 
@@ -139,8 +66,7 @@ void ORCA::validate(const data::MIRValuesVector& values) const {
 
 
 size_t ORCA::numberOfPoints() const {
-    ASSERT(latitudes_.size() == longitudes_.size());
-    return latitudes_.size();
+    return static_cast<size_t>(atlasGridRef().size());
 }
 
 
@@ -148,27 +74,28 @@ void ORCA::fill(grib_info& info) const {
     info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 
-
-    GribExtraSetting::set(info, "unstructuredGridType", type_.c_str());
-    GribExtraSetting::set(info, "unstructuredGridSubtype", subtypeLong_.c_str());
-
-    // TODO fill uuidOfHGdrid (or maybe not?)
-    // GribExtraSetting::set(info, "uuidOfHGdrid", /*16076978a048410747dd7c9876677b28*/);
+    for (auto& key : grib_keys) {
+        auto value = spec_.getString(key.first);
+        info.extra_set(key.second.c_str(), value.c_str());
+    }
 }
 
 
 void ORCA::makeName(std::ostream& out) const {
-    out << name_;
+    auto sep = "";
+    for (auto& key : grib_keys) {
+        out << sep << spec_.getString(key.first);
+        sep = "_";
+    }
 }
 
 
 void ORCA::print(std::ostream& out) const {
-    out << "ORCA[atlasGrid=" /*<< grid_.spec()*/ << "]";
+    out << "ORCA[spec=" << spec_ << "]";
 }
 
 
 Iterator* ORCA::iterator() const {
-#if 0
     class ORCAIterator : public Iterator {
         ::atlas::Grid grid_;  // Note: needs the object because IterateLonLat uses a Grid reference
         ::atlas::Grid::IterateLonLat lonlat_;
@@ -204,22 +131,26 @@ Iterator* ORCA::iterator() const {
         ORCAIterator(const ORCAIterator&) = delete;
         ORCAIterator& operator=(const ORCAIterator&) = delete;
     };
-    return new ORCAIterator(grid_);
-#else
-    return new iterator::UnstructuredIterator(latitudes_, longitudes_);
-#endif
+    return new ORCAIterator(atlasGridRef());
+}
+
+
+const atlas::Grid& ORCA::atlasGridRef() const {
+    return grid_ ? grid_ : (grid_ = atlas::Grid(spec_));
 }
 
 
 atlas::Grid ORCA::atlasGrid() const {
-    return grid_;
+    return atlasGridRef();
 }
 
 
 void ORCA::fill(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
-        params.meshGenerator_ = "delaunay";  // "orca"
+        params.meshGenerator_ = "orca";
     }
+    params.set("fixup", true);                     // This makes sure that there are no invalid elements
+    params.set("force_include_south_pole", true);  // Add South Pole virtual points
 }
 
 

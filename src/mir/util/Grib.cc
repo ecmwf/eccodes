@@ -86,28 +86,33 @@ grib_info::grib_info() :
     },
     packing{
         0,
-    } {}
+    } {
+    constexpr size_t extra_settings_size = 80;  // ecCodes extra_settings array size
+    strings_.reserve(extra_settings_size);
+}
 
 
-void GribExtraSetting::set(grib_info& info, const char* key, long value) {
-    auto& set      = info.packing.extra_settings[info.packing.extra_settings_count++];
+void grib_info::extra_set(const char* key, long value) {
+    auto& set      = packing.extra_settings[packing.extra_settings_count++];
     set.name       = key;
-    set.long_value = value;
     set.type       = CODES_TYPE_LONG;
+    set.long_value = value;
 }
 
 
-void GribExtraSetting::set(grib_info& info, const char* key, double value) {
-    auto& set        = info.packing.extra_settings[info.packing.extra_settings_count++];
+void grib_info::extra_set(const char* key, double value) {
+    auto& set        = packing.extra_settings[packing.extra_settings_count++];
     set.name         = key;
-    set.double_value = value;
     set.type         = CODES_TYPE_DOUBLE;
+    set.double_value = value;
 }
 
 
-void GribExtraSetting::set(grib_info& info, const char* key, const char* value) {
-    auto& set        = info.packing.extra_settings[info.packing.extra_settings_count++];
-    set.name         = key;
-    set.string_value = value;
-    set.type         = CODES_TYPE_STRING;
+void grib_info::extra_set(const char* key, const char* value) {
+    auto& set = packing.extra_settings[packing.extra_settings_count++];
+    set.name  = key;
+    set.type  = CODES_TYPE_STRING;
+
+    strings_.emplace_back(value);
+    set.string_value = strings_.back().c_str();
 }
