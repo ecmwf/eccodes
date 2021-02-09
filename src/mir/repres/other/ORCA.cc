@@ -34,8 +34,8 @@ static const std::vector<std::pair<std::string, std::string>> grib_keys{
     {"orca_name", "unstructuredGridType"}, {"orca_staggering", "unstructuredGridSubtype"}, {"uid", "uuidOfHGrid"}};
 
 
-ORCA::ORCA(const std::string& id) :
-    Gridded(util::BoundingBox()), spec_(atlas::util::SpecRegistry<atlas::Grid>::lookup(id)) {}
+ORCA::ORCA(const std::string& name) :
+    Gridded(util::BoundingBox()), spec_(atlas::util::SpecRegistry<atlas::Grid>::lookup(name)) {}
 
 
 ORCA::ORCA(const param::MIRParametrisation& param) :
@@ -146,7 +146,6 @@ atlas::Grid ORCA::atlasGrid() const {
 
 
 void ORCA::fill(util::MeshGeneratorParameters& params) const {
-    // FIXME: should come from spec
     if (params.meshGenerator_.empty()) {
         params.meshGenerator_ = "orca";
     }
