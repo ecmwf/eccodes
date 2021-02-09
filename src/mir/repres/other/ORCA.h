@@ -15,10 +15,22 @@
 
 #include <string>
 
+#if 0
 #include "atlas/util/Spec.h"
 
 #include "mir/repres/Gridded.h"
 #include "mir/util/Atlas.h"
+#else
+#include "mir/repres/Gridded.h"
+#include "mir/util/Atlas.h"
+
+
+namespace atlas {
+namespace util {
+using Spec = Config;
+}  // namespace util
+}  // namespace atlas
+#endif
 
 
 namespace mir {
