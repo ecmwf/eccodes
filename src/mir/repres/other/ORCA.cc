@@ -35,12 +35,7 @@ static const std::vector<std::pair<std::string, std::string>> grib_keys{
 
 
 ORCA::ORCA(const std::string& name) :
-    Gridded(util::BoundingBox())
-#if 0
-  , spec_(atlas::util::SpecRegistry<atlas::Grid>::lookup(name))
-#endif
-{
-}
+    Gridded(util::BoundingBox()), spec_(atlas::util::SpecRegistry<atlas::Grid>::lookup(name)) {}
 
 
 ORCA::ORCA(const param::MIRParametrisation& param) :
