@@ -41,7 +41,7 @@ ORCA::ORCA(const std::string& name) :
 ORCA::ORCA(const param::MIRParametrisation& param) :
     ORCA([&param]() {
         std::string uid;
-        ASSERT(param.get("uuidOfHGrid", uid) && !uid.empty());
+        ASSERT(param.get("uid", uid));
         return uid;
     }()) {}
 
