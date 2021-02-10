@@ -10,12 +10,21 @@
 
 . ./include.sh
 
-REDIRECT=/dev/null
-
-# This script will check the following concept files:
-#   name.def paramId.def shortName.def units.def cfVarName.def
+#
+# This script will do various checks on the concepts files
 #
 
+# First check the GRIB2 paramId.def on its own
+# --------------------------------------------
+$EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/paramId.def
+$EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def
+
+$EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/shortName.def
+$EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/shortName.def
+
+
+# Check the group: name.def paramId.def shortName.def units.def cfVarName.def
+# ----------------------------------------------------------------------------
 # Check whether the Test::More Perl module is available
 set +e
 perl -e 'use Test::More;'
