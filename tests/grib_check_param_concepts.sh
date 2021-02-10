@@ -11,11 +11,11 @@
 . ./include.sh
 
 #
-# This script will do various checks on the concepts files
+# Do various checks on the concepts files
 #
 
-# First check the GRIB2 paramId.def on its own
-# --------------------------------------------
+# First check the GRIB2 paramId.def and shortName.def
+# ----------------------------------------------------
 $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/paramId.def
 $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def
 

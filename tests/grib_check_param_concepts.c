@@ -26,6 +26,13 @@ typedef struct grib_expression_functor
     grib_arguments* args;
 } grib_expression_functor;
 
+typedef struct grib_expression_string
+{
+    grib_expression base;
+    /* Members defined in string */
+    char* value;
+} grib_expression_string;
+
 static int grib_check_param_concepts(const char* key, const char* filename)
 {
     grib_concept_value* concept_value = grib_parse_concept_file(NULL, filename);
@@ -34,25 +41,33 @@ static int grib_check_param_concepts(const char* key, const char* filename)
         int scaleFactor1Missing = 0, scaleFactor2Missing = 0;
         int scaledValue1Missing = 0, scaledValue2Missing = 0;
         int err = 0;
-        /* printf("\nconcept_value->name=%s\n", concept_value->name); // A given paramId e.g. 151163 */
+        /* concept_value->name is the value of the key e.g. 151163 */
         while (concept_condition) {
             char condition_value[512] = {0,};
             grib_expression* expression = concept_condition->expression;
             const char* condition_name  = concept_condition->name;
-            /* printf(" condition_name->name=%s", condition_name); // e.g. discipline, parameterCategory */
-            if(strcmp(expression->cclass->name,"long")==0) {
-                grib_expression_long* e = (grib_expression_long*)expression;
-                sprintf(condition_value, "%ld", e->value);
+            /* condition_name is discipline, parameterCategory etc. */
+            if (strcmp(expression->cclass->name,"long")==0) {
+                grib_expression_long* el = (grib_expression_long*)expression;
+                sprintf(condition_value, "%ld", el->value);
             } else if(strcmp(expression->cclass->name,"functor")==0) {
-                grib_expression_functor* e = (grib_expression_functor*)expression;
-                sprintf(condition_value, "%s", e->name);
+                grib_expression_functor* ef = (grib_expression_functor*)expression;
+                sprintf(condition_value, "%s", ef->name);
+            } else if(strcmp(expression->cclass->name,"string")==0) {
+                grib_expression_string* es = (grib_expression_string*)expression;
+                sprintf(condition_value, "%s", es->value);
             } else {
                 Assert(0);
             }
-            if (strcmp(condition_name, "scaleFactorOfFirstFixedSurface")==0 && strcmp(condition_value,"missing")==0)
-                scaleFactor1Missing = 1;
-            if (strcmp(condition_name, "scaleFactorOfSecondFixedSurface")==0 && strcmp(condition_value,"missing")==0)
-                scaleFactor2Missing = 1;
+            if (strcmp(condition_name, "scaleFactorOfFirstFixedSurface")==0) {
+                /* scale factor is one octet so 255 is the same as missing */
+                if (strcmp(condition_value,"missing")==0 || strcmp(condition_value,"255")==0)
+                    scaleFactor1Missing = 1;
+            }
+            if (strcmp(condition_name, "scaleFactorOfSecondFixedSurface")==0) {
+                if (strcmp(condition_value,"missing")==0 || strcmp(condition_value,"255")==0)
+                    scaleFactor2Missing = 1;
+            }
             if (strcmp(condition_name, "scaledValueOfFirstFixedSurface")==0 && strcmp(condition_value,"missing")==0)
                 scaledValue1Missing = 1;
             if (strcmp(condition_name, "scaledValueOfSecondFixedSurface")==0 && strcmp(condition_value,"missing")==0)
@@ -66,12 +81,14 @@ static int grib_check_param_concepts(const char* key, const char* filename)
         if (scaleFactor2Missing && !scaledValue2Missing) err = 1;
         if (!scaleFactor2Missing && scaledValue2Missing) err = 1;
         if (err) {
-            fprintf(stderr, "Error: mismatched scale factor, scaled value keys for %s=%s\n", key, concept_value->name);
-            return 1;
+            fprintf(stderr, "Error: Mismatched scale factor, scaled value keys for %s='%s'.\n"
+                            "       If the scale factor is missing so should the scaled value and vice versa\n",
+                    key, concept_value->name);
+            return GRIB_INVALID_KEY_VALUE;
         }
         concept_value = concept_value->next;
     }
-    return 0; /* ALL OK */
+    return GRIB_SUCCESS;
 }
 
 int main(int argc, char** argv)
