@@ -1,0 +1,17 @@
+# Concept typeOfLevel for kwbc
+'atmosphereSingleLayer'         = {typeOfFirstFixedSurface=200;}
+'highestTroposphericFreezing'   = {typeOfFirstFixedSurface=204;}
+'boundaryLayerCloudLayer'       = {typeOfFirstFixedSurface=211;}
+'lowCloudBottom'                = {typeOfFirstFixedSurface=212;}
+'lowCloudTop'                   = {typeOfFirstFixedSurface=213;}
+'lowCloudLayer'                 = {typeOfFirstFixedSurface=214;}
+'planetaryBoundaryLayer'        = {typeOfFirstFixedSurface=220;}
+'middleCloudBottom'             = {typeOfFirstFixedSurface=222;}
+'middleCloudTop'                = {typeOfFirstFixedSurface=223;}
+'middleCloudLayer'              = {typeOfFirstFixedSurface=224;}
+'highCloudBottom'               = {typeOfFirstFixedSurface=232;}
+'highCloudTop'                  = {typeOfFirstFixedSurface=233;}
+'highCloudLayer'                = {typeOfFirstFixedSurface=234;}
+'convectiveCloudBottom'         = {typeOfFirstFixedSurface=242;}
+'convectiveCloudTop'            = {typeOfFirstFixedSurface=243;}
+'convectiveCloudLayer'          = {typeOfFirstFixedSurface=244;}
