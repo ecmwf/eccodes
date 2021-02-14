@@ -12,53 +12,53 @@
 ! Description: how to get an array of strings from a BUFR message.
 
 program bufr_get_string_array
-  use eccodes
-  implicit none
-  integer            :: ifile
-  integer            :: iret,i,n
-  integer            :: ibufr
-  integer            :: strsize
-  integer, parameter  :: max_strsize = 20
-  character(len=max_strsize) , dimension(:),allocatable   :: stationOrSiteName
+   use eccodes
+   implicit none
+   integer            :: ifile
+   integer            :: iret, i, n
+   integer            :: ibufr
+   integer            :: strsize
+   integer, parameter  :: max_strsize = 20
+   character(len=max_strsize), dimension(:), allocatable   :: stationOrSiteName
 
-  call codes_open_file(ifile,'../../data/bufr/pgps_110.bufr','r')
+   call codes_open_file(ifile, '../../data/bufr/pgps_110.bufr', 'r')
 
-  call codes_bufr_new_from_file(ifile,ibufr,iret)
+   call codes_bufr_new_from_file(ifile, ibufr, iret)
 
-  ! Unpack the data values
-  call codes_set(ibufr,'unpack',1)
+   ! Unpack the data values
+   call codes_set(ibufr, 'unpack', 1)
 
-  ! Get the width of the strings which is the same for all of them
-  call codes_get(ibufr,'stationOrSiteName->width',strsize)
+   ! Get the width of the strings which is the same for all of them
+   call codes_get(ibufr, 'stationOrSiteName->width', strsize)
 
-  ! The width is given in bits
-  strsize=strsize/8
+   ! The width is given in bits
+   strsize = strsize/8
 
-  ! max_strsize has to be set to a value >= to the size of the strings that we are getting
-  ! back from the call to codes_get_string_array
-  if (strsize > max_strsize) then
-    print *,'stationOrSiteName array dimension is ',max_strsize,' and should be ',strsize
-    call exit(1)
-  end if
+   ! max_strsize has to be set to a value >= to the size of the strings that we are getting
+   ! back from the call to codes_get_string_array
+   if (strsize > max_strsize) then
+      print *, 'stationOrSiteName array dimension is ', max_strsize, ' and should be ', strsize
+      call exit(1)
+   end if
 
-  ! Allocating the array of strings to be passed to codes_get_string_array is mandatory
-  call codes_get_size(ibufr,'stationOrSiteName',n)
-  allocate(stationOrSiteName(n))
+   ! Allocating the array of strings to be passed to codes_get_string_array is mandatory
+   call codes_get_size(ibufr, 'stationOrSiteName', n)
+   allocate (stationOrSiteName(n))
 
-  ! Passing an array of strings stationOrSiteName which must be allocated beforehand
-  call codes_get_string_array(ibufr,'stationOrSiteName',stationOrSiteName)
-  do i=1,n
-    write(*,'(A)')trim(stationOrSiteName(i))
-  end do
+   ! Passing an array of strings stationOrSiteName which must be allocated beforehand
+   call codes_get_string_array(ibufr, 'stationOrSiteName', stationOrSiteName)
+   do i = 1, n
+      write (*, '(A)') trim(stationOrSiteName(i))
+   end do
 
-  ! Remember to deallocate
-  deallocate(stationOrSiteName)
+   ! Remember to deallocate
+   deallocate (stationOrSiteName)
 
-  ! Release memory associated with bufr handle
-  ! ibufr won't be accessible after this
-  call codes_release(ibufr)
+   ! Release memory associated with bufr handle
+   ! ibufr won't be accessible after this
+   call codes_release(ibufr)
 
-  ! Close file
-  call codes_close_file(ifile)
+   ! Close file
+   call codes_close_file(ifile)
 
 end program bufr_get_string_array
