@@ -17,10 +17,10 @@
   !> @param nbytes      number of bytes to be read
   !> @param status      CODES_SUCCESS if OK, integer value on error
   interface codes_read_from_file
-      module procedure codes_read_from_file_int4
-      module procedure codes_read_from_file_int4_size_t
-      module procedure codes_read_from_file_char
-      module procedure codes_read_from_file_char_size_t
+    module procedure codes_read_from_file_int4
+    module procedure codes_read_from_file_int4_size_t
+    module procedure codes_read_from_file_char
+    module procedure codes_read_from_file_char_size_t
   end interface codes_read_from_file
 
   !> Reads nbytes bytes into the buffer from a file opened with codes_open_file.
@@ -34,14 +34,14 @@
   !> @param nbytes      number of bytes to be read
   !> @param status      CODES_SUCCESS if OK, integer value on error
   interface codes_read_bytes
-      module procedure codes_read_bytes_int4
-      module procedure codes_read_bytes_int4_size_t
-      module procedure codes_read_bytes_char
-      module procedure codes_read_bytes_char_size_t
-      module procedure codes_read_bytes_real8
-      module procedure codes_read_bytes_real8_size_t
-      module procedure codes_read_bytes_real4
-      module procedure codes_read_bytes_real4_size_t
+    module procedure codes_read_bytes_int4
+    module procedure codes_read_bytes_int4_size_t
+    module procedure codes_read_bytes_char
+    module procedure codes_read_bytes_char_size_t
+    module procedure codes_read_bytes_real8
+    module procedure codes_read_bytes_real8_size_t
+    module procedure codes_read_bytes_real4
+    module procedure codes_read_bytes_real4_size_t
   end interface codes_read_bytes
 
   !> Write nbytes bytes from the buffer in a file opened with codes_open_file.
@@ -55,14 +55,14 @@
   !> @param nbytes      number of bytes to be written
   !> @param status      CODES_SUCCESS if OK, integer value on error
   interface codes_write_bytes
-      module procedure codes_write_bytes_int4
-      module procedure codes_write_bytes_int4_size_t
-      module procedure codes_write_bytes_char
-      module procedure codes_write_bytes_char_size_t
-      module procedure codes_write_bytes_real8
-      module procedure codes_write_bytes_real8_size_t
-      module procedure codes_write_bytes_real4
-      module procedure codes_write_bytes_real4_size_t
+    module procedure codes_write_bytes_int4
+    module procedure codes_write_bytes_int4_size_t
+    module procedure codes_write_bytes_char
+    module procedure codes_write_bytes_char_size_t
+    module procedure codes_write_bytes_real8
+    module procedure codes_write_bytes_real8_size_t
+    module procedure codes_write_bytes_real4
+    module procedure codes_write_bytes_real4_size_t
   end interface codes_write_bytes
 
   !> Get the size of a coded message.

@@ -18,9 +18,8 @@ module grib_api
   include "grib_api_externals.h"
   include "grib_api_visibility.h"
 
-  real(8),    parameter,public :: GRIB_MISSING_DOUBLE = -1.D+100
-  integer(4), parameter,public :: GRIB_MISSING_LONG   = 2147483647
-
+  real(8), parameter, public :: GRIB_MISSING_DOUBLE = -1.D+100
+  integer(4), parameter, public :: GRIB_MISSING_LONG = 2147483647
 
   !> Create a new message in memory from an integer or character array containting the coded message.
   !>
@@ -39,8 +38,8 @@ module grib_api
   !> @param message     array containing the coded message
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   interface grib_new_from_message
-      module procedure grib_new_from_message_int4
-      module procedure grib_new_from_message_char
+    module procedure grib_new_from_message_int4
+    module procedure grib_new_from_message_char
   end interface grib_new_from_message
 
   !> Get a value of specified index from an array key.
@@ -67,9 +66,9 @@ module grib_api
   !> @param[out] status   GRIB_SUCCESS if OK, integer value on error
   interface grib_get_element
     module procedure grib_get_real4_element, &
-                     grib_get_real8_element, &
-                     grib_get_real4_elements, &
-                     grib_get_real8_elements
+      grib_get_real8_element, &
+      grib_get_real4_elements, &
+      grib_get_real8_elements
   end interface grib_get_element
 
   !> Find the nearest point/points of a given latitude/longitude point.
@@ -110,8 +109,8 @@ module grib_api
   !> @param[out] status     GRIB_SUCCESS if OK, integer value on error
   interface grib_find_nearest
     module procedure grib_find_nearest_single, &
-                     grib_find_nearest_four_single, &
-                     grib_find_nearest_multiple
+      grib_find_nearest_four_single, &
+      grib_find_nearest_multiple
   end interface grib_find_nearest
 
   !> Get latitude/longitude and data values.
@@ -134,6 +133,6 @@ module grib_api
   !> @param[out] status      GRIB_SUCCESS if OK, integer value on error
   interface grib_get_data
     module procedure grib_get_data_real4, &
-                     grib_get_data_real8
+      grib_get_data_real8
   end interface grib_get_data
 
