@@ -4,7 +4,15 @@
 # It is recommended not to use this template. PDT 4.48 should be used instead with optical wave length range set to missing
 
 # GRIB-530: Special case for aerosol thanks to WMO error
-include "grib2/template.4.parameter_aerosol_44.def"
+
+include "grib2/template.4.parameter.def"
+include "grib2/template.4.aerosol.def"
+include "grib2/template.4.aerosol_size.def"
+include "grib2/template.4.optical.def"
+include "grib2/template.4.generating_process.def"
+
+# GRIB-530: Special case for aerosol thanks to WMO error
+include "grib2/template.4.forecast_time_44.def"
 
 include "grib2/template.4.point_in_time.def"
 include "grib2/template.4.horizontal.def"
