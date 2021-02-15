@@ -1,6 +1,6 @@
 # Concept typeOfLevel for kwbc
 'atmosphereSingleLayer'         = {typeOfFirstFixedSurface=200;}
-'cceanSingleLayer'              = {typeOfFirstFixedSurface=201;}
+'oceanSingleLayer'              = {typeOfFirstFixedSurface=201;}
 'highestTroposphericFreezing'   = {typeOfFirstFixedSurface=204;}
 'gridScaleCloudBottom'          = {typeOfFirstFixedSurface=206;}
 'gridScaleCloudTop'             = {typeOfFirstFixedSurface=207;}
