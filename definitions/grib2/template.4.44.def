@@ -8,7 +8,6 @@
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.aerosol.def"
 include "grib2/template.4.aerosol_size.def"
-include "grib2/template.4.optical.def"
 include "grib2/template.4.generating_process.def"
 
 # GRIB-530: Special case for aerosol thanks to WMO error
