@@ -3,4 +3,6 @@
 # TEMPLATE 4.1100, Hovmöller-type grid with no averaging or other statistical processing
 
 include "grib2/template.4.parameter.def"
+include "grib2/template.4.generating_process.def";
+include "grib2/template.4.forecast_time.def";
 include "grib2/template.4.horizontal.def"

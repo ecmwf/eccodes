@@ -3,6 +3,8 @@
 # TEMPLATE 4.1002, Cross-section of analysis and forecast, averaged or otherwise statistically processed over latitude or longitude
 
 include "grib2/template.4.parameter.def"
+include "grib2/template.4.generating_process.def";
+include "grib2/template.4.forecast_time.def";
 
 #  Horizontal dimension processed
 codetable[1] horizontalDimensionProcessed ('4.220.table',masterDir,localDir) : dump;
