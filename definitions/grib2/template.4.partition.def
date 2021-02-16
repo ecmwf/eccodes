@@ -7,3 +7,7 @@ partitions list(numberOfPartitions) {
 }
 
 codetable[2] partitionNumber ('4.[partitionTable].table',masterDir,localDir) : dump;
+
+constant cat="cat";
+alias mars.levtype=cat;
+alias mars.levelist=partitionNumber;
