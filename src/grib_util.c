@@ -920,8 +920,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     /* Get edition number from input handle */
     if ((*err = grib_get_long(h, "edition", &editionNumber)) != 0) {
         grib_context* c = grib_context_get_default();
-        if (c->write_on_fail)
-            grib_write_message(h, "error.grib", "w");
+        if (c->write_on_fail) grib_write_message(h, "error.grib", "w");
         return NULL;
     }
 
@@ -1027,10 +1026,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         if ((*err = grib_set_values(h, values, count)) != 0) {
             fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set values  %s\n", grib_get_error_message(*err));
-
             for (i = 0; i < count; i++)
-                if (values[i].error)
-                    fprintf(stderr, " %s %s\n", values[i].name, grib_get_error_message(values[i].error));
+                if (values[i].error) fprintf(stderr, " %s %s\n", values[i].name, grib_get_error_message(values[i].error));
             goto cleanup;
         }
         if (h->context->debug == -1) {
@@ -1565,10 +1562,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     if ((*err = grib_set_values(h_out, values, count)) != 0) {
         fprintf(stderr, "SET_GRID_DATA_DESCRIPTION: Cannot set key values: %s\n", grib_get_error_message(*err));
-
         for (i = 0; i < count; i++)
-            if (values[i].error)
-                fprintf(stderr, " %s %s\n", values[i].name, grib_get_error_message(values[i].error));
+            if (values[i].error) fprintf(stderr, " %s %s\n", values[i].name, grib_get_error_message(values[i].error));
         goto cleanup;
     }
 
@@ -1591,8 +1586,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         }
         fprintf(ferror, "%g }", data_values[data_values_count - 1]);
         fclose(ferror);
-        if (c->write_on_fail)
-            grib_write_message(h_out, "error.grib", "w");
+        if (c->write_on_fail) grib_write_message(h_out, "error.grib", "w");
         goto cleanup;
     }
 
@@ -1717,21 +1711,17 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     /* Disable check: need to re-examine GRIB-864 */
 #if 0
-    if ( (*err = check_handle_against_spec(h_out, editionNumber, spec, global_grid)) != GRIB_SUCCESS)
-    {
-
+    if ( (*err = check_handle_against_spec(h_out, editionNumber, spec, global_grid)) != GRIB_SUCCESS) {
         grib_context* c=grib_context_get_default();
         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed! %s\n", grib_get_error_message(*err));
         if (editionNumber == 1) {
             fprintf(stderr,"Note: in GRIB edition 1 latitude and longitude values cannot be represented with sub-millidegree precision.\n");
         }
-        if (c->write_on_fail)
-            grib_write_message(h_out,"error.grib","w");
+        if (c->write_on_fail) grib_write_message(h_out,"error.grib","w");
         goto cleanup;
     }
 #endif
-    if (h->context->debug == -1)
-        fprintf(stderr, "ECCODES DEBUG: grib_util_set_spec end\n");
+    if (h->context->debug == -1) fprintf(stderr, "ECCODES DEBUG: grib_util_set_spec end\n");
 
     return h_out;
 
