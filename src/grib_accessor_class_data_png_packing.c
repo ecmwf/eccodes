@@ -365,11 +365,26 @@ cleanup:
     return err;
 }
 
+static int is_constant(const double* values, size_t n_vals)
+{
+    int isConstant = 1;
+    double v = 0;
+    size_t i;
+    for (i = 0; i < n_vals; i++) {
+        if (i == 0) v = values[i];
+        else if (v != values[i]) {
+            isConstant = 0;
+            break;
+        }
+    }
+    return isConstant;
+}
+
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_data_png_packing* self = (grib_accessor_data_png_packing*)a;
 
-    int err = GRIB_SUCCESS;
+    int err = GRIB_SUCCESS, is_constant_field = 0;
     int i, j;
     size_t buflen = 0;
 
@@ -421,12 +436,18 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    if (bits_per_value == 0) {
-        int i;
-        /* constant field */
-        for (i = 1; i < n_vals; i++)
-            Assert(val[i] == val[0]);
+    is_constant_field = is_constant(val, n_vals);
+    if (!is_constant_field && bits_per_value==0) {
+        /* A non-constant field with bitsPerValue==0! */
+        bits_per_value = 24; /* Set sane value */
+    }
 
+    if (is_constant_field) {
+#ifdef DEBUG
+        for (i = 1; i < n_vals; i++) {
+            Assert(val[i] == val[0]);
+        }
+#endif
         if ((err = grib_set_double_internal(grib_handle_of_accessor(a), self->reference_value, val[0])) != GRIB_SUCCESS)
             return err;
         {
@@ -491,10 +512,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     max = val[0];
     min = max;
     for (i = 1; i < n_vals; i++) {
-        if (val[i] > max)
-            max = val[i];
-        else if (val[i] < min)
-            min = val[i];
+        if (val[i] > max)      max = val[i];
+        else if (val[i] < min) min = val[i];
     }
     min *= d;
     max *= d;
