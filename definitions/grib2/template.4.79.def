@@ -4,7 +4,7 @@
 
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.chemical.def"
-include "grib2/template.4.source.def";
+include "grib2/template.4.source.def"
 include "grib2/template.4.generating_process.def"
 include "grib2/template.4.forecast_time.def"
 include "grib2/template.4.horizontal.def"

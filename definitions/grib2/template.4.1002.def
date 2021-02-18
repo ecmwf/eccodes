@@ -3,23 +3,19 @@
 # TEMPLATE 4.1002, Cross-section of analysis and forecast, averaged or otherwise statistically processed over latitude or longitude
 
 include "grib2/template.4.parameter.def"
-include "grib2/template.4.generating_process.def";
-include "grib2/template.4.forecast_time.def";
+include "grib2/template.4.generating_process.def"
+include "grib2/template.4.forecast_time.def"
 
-#  Horizontal dimension processed
 codetable[1] horizontalDimensionProcessed ('4.220.table',masterDir,localDir) : dump;
 
-#  Treatment of missing data (e.g. below ground)
+# Treatment of missing data (e.g. below ground)
 codetable[1] treatmentOfMissingData ('4.221.table',masterDir,localDir) : dump;
 
-#  Type of statistical processing
+# Type of statistical processing
 codetable[1] typeOfStatisticalProcessing ('4.10.table',masterDir,localDir) : dump;
 #alias typeOfStatisticalProcessing=stepType;
 
-#  Start of range
 unsigned[4] startOfRange  : dump;
-
-#  End of range
 unsigned[4] endOfRange  : dump;
 
 #  Number of values
