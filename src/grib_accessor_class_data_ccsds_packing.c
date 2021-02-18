@@ -324,7 +324,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
 
     grib_handle* hand = grib_handle_of_accessor(a);
-    int err = GRIB_SUCCESS, i = 0;
+    int err = GRIB_SUCCESS, i = 0, is_constant_field = 0;
     size_t buflen = 0;
 
     unsigned char* buf     = NULL;
@@ -373,7 +373,23 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    if (bits_per_value == 0) { /* constant field */
+    max = val[0];
+    min = max;
+    for (i = 1; i < n_vals; i++) {
+        if (val[i] > max)      max = val[i];
+        else if (val[i] < min) min = val[i];
+    }
+
+    if (min == max) {
+        is_constant_field = 1;
+    } else {
+        if (bits_per_value == 0) {
+            /* ECC-1202: A non-constant field with bitsPerValue==0! */
+            bits_per_value = 24; /* Set sane value */
+        }
+    }
+
+    if (is_constant_field) {
 #ifdef DEBUG
         for (i = 1; i < n_vals; i++) {
             Assert(val[i] == val[0]);
@@ -401,15 +417,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
 
     d = grib_power(decimal_scale_factor, 10);
-
-    max = val[0];
-    min = max;
-    for (i = 1; i < n_vals; i++) {
-        if (val[i] > max)
-            max = val[i];
-        else if (val[i] < min)
-            min = val[i];
-    }
     min *= d;
     max *= d;
 

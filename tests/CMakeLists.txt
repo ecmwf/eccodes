@@ -23,6 +23,7 @@ list(APPEND test_bins
     gauss_sub
     grib_nearest_test
     grib_util_set_spec
+    grib_check_param_concepts
     grib_local_MeteoFrance
     grib_2nd_order_numValues
     grib_optimize_scaling
