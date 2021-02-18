@@ -64,6 +64,13 @@
 62 62 Wave frequency width (-)
 63 63 Frequency width of wind waves (-)
 64 64 Frequency width of total swell (-)
-# 65-191 Reserved 
+65 65 Peak wave period of first swell partition (s)
+66 66 Peak wave period of second swell partition (s)
+67 67 Peak wave period of third swell partition (s)
+68 68 Peak wave direction of first swell partition (degree true)
+69 69 Peak wave direction of second swell partition (degree true)
+70 70 Peak wave direction of third swell partition (degree true)
+71 71 Peak direction of wind waves (degree true)
+# 72-191 Reserved
 # 192-254 Reserved for local use 
 255 255 Missing 
