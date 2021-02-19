@@ -935,7 +935,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     grib_handle* h_out    = NULL;
     grib_handle* h_sample = NULL;
     const char* grid_type = NULL;
-    char name[1024];
+    char sample_name[1024]; /* name of sample file */
     char input_grid_type[100];
     char input_packing_type[100];
     long input_bits_per_value       = 0;
@@ -1148,10 +1148,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
             case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
                 /* Choose a sample with the right Gaussian number and edition */
-                sprintf(name, "%s_pl_%ld_grib%ld", grid_type, spec->N, editionNumber);
+                sprintf(sample_name, "%s_pl_%ld_grib%ld", grid_type, spec->N, editionNumber);
                 if (spec->pl && spec->pl_size) {
                     /* GRIB-834: pl is given so can use any of the reduced_gg_pl samples */
-                    sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
+                    sprintf(sample_name, "%s_pl_grib%ld", grid_type, editionNumber);
                 }
                 break;
             case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
@@ -1164,13 +1164,13 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                                 grid_type);
                     convertEditionEarlier = 1;
                 }
-                sprintf(name, "GRIB%ld", editionNumber);
+                sprintf(sample_name, "GRIB%ld", editionNumber);
                 break;
             case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
-                sprintf(name, "GRIB%ld", editionNumber);
+                sprintf(sample_name, "GRIB%ld", editionNumber);
                 break;
             default:
-                sprintf(name, "%s_pl_grib%ld", grid_type, editionNumber);
+                sprintf(sample_name, "%s_pl_grib%ld", grid_type, editionNumber);
         }
 
         if (spec->pl && spec->grid_name) {
@@ -1179,12 +1179,12 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             goto cleanup;
         }
         if (spec->grid_name) {
-            sprintf(name, "%s_grib%ld", spec->grid_name, editionNumber);
+            sprintf(sample_name, "%s_grib%ld", spec->grid_name, editionNumber);
         }
     }
 
     /* TODO: recycle h_sample handle */
-    h_sample = grib_handle_new_from_samples(NULL, name);
+    h_sample = grib_handle_new_from_samples(NULL, sample_name);
     if (!h_sample) {
         *err = GRIB_INVALID_FILE;
         return NULL;
@@ -1232,15 +1232,12 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         case GRIB_UTIL_GRID_SPEC_ROTATED_GG:
 
             COPY_SPEC_LONG(bitmapPresent);
-            if (spec->missingValue)
-                COPY_SPEC_DOUBLE(missingValue);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 1);
 
             /* TODO: add Assert */
-
             COPY_SPEC_LONG(Ni);
             COPY_SPEC_DOUBLE(iDirectionIncrementInDegrees);
-
             COPY_SPEC_LONG(Nj);
             COPY_SPEC_LONG(N);
 
@@ -1255,12 +1252,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_LL:
             COPY_SPEC_LONG(bitmapPresent);
-            if (spec->missingValue)
-                COPY_SPEC_DOUBLE(missingValue);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
 
             COPY_SPEC_LONG(Nj);
-
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
 
@@ -1270,8 +1265,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         case GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC:
             COPY_SPEC_LONG(bitmapPresent);
-            if (spec->missingValue)
-                COPY_SPEC_DOUBLE(missingValue);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
@@ -1281,26 +1275,20 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             /* default iScansNegatively=0 jScansPositively=0 is ok */
             COPY_SPEC_LONG(iScansNegatively);
             COPY_SPEC_LONG(jScansPositively);
-
             COPY_SPEC_DOUBLE(orientationOfTheGridInDegrees);
-
             COPY_SPEC_LONG(DxInMetres);
             COPY_SPEC_LONG(DyInMetres);
-
             break;
 
         case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
             COPY_SPEC_LONG(bitmapPresent);
-            if (spec->missingValue)
-                COPY_SPEC_DOUBLE(missingValue);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
 
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
             COPY_SPEC_LONG(Ni); /* same as Nx */
             COPY_SPEC_LONG(Nj); /* same as Ny */
-            /* TODO
-             * pass in extra keys e.g. Dx, Dy, standardParallel and centralLongitude
-             */
+            /* TODO: pass in extra keys e.g. Dx, Dy, standardParallel and centralLongitude */
 
             /*
             COPY_SPEC_LONG(DxInMetres);
@@ -1314,16 +1302,12 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             break;
         case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
             COPY_SPEC_LONG(bitmapPresent);
-            if (spec->missingValue)
-                COPY_SPEC_DOUBLE(missingValue);
-            /*
-            * TODO: Other keys
-            */
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+            /* TODO: Other keys */
             break;
         case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
             COPY_SPEC_LONG(bitmapPresent);
-            if (spec->missingValue)
-                COPY_SPEC_DOUBLE(missingValue);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
             COPY_SPEC_LONG(Ni); /* same as Nx */
@@ -1332,11 +1316,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             /*
              * Note: DxInMetres and DyInMetres
              * should be 'double' and not integer. WMO GRIB2 uses millimetres!
-             * TODO:
-             * Add other keys like Latin1, LoV etc
-
-             *err = GRIB_NOT_IMPLEMENTED;
-             goto cleanup;
+             * TODO: Add other keys like Latin1, LoV etc
             */
             break;
 
@@ -1344,16 +1324,13 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
 
             COPY_SPEC_LONG(bitmapPresent);
-            if (spec->missingValue)
-                COPY_SPEC_DOUBLE(missingValue);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             SET_LONG_VALUE("ijDirectionIncrementGiven", 0);
 
             COPY_SPEC_LONG(Nj);
             COPY_SPEC_LONG(N);
-
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
-
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
 
@@ -1433,7 +1410,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 /* Have to delay JPEG packing:
                  * Reason 1: It is not available in GRIB1 and so we have to wait until we change edition
                  * Reason 2: It has to be done AFTER we set the data values
-                */
+                 */
                 if (strcmp(input_packing_type, "grid_jpeg") && !strcmp(input_packing_type, "grid_simple"))
                     setJpegPacking = 1;
                 break;
@@ -1441,7 +1418,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 /* Have to delay CCSDS packing:
                  * Reason 1: It is not available in GRIB1 and so we have to wait until we change edition
                  * Reason 2: It has to be done AFTER we set the data values
-                */
+                 */
                 if (strcmp(input_packing_type, "grid_ccsds") && !strcmp(input_packing_type, "grid_simple"))
                     setCcsdsPacking = 1;
                 break;
