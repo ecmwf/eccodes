@@ -3,11 +3,7 @@
 unsigned[1] partitionTable : dump;
 unsigned[1] numberOfPartitions=1 :dump;
 partitions list(numberOfPartitions) {
-    unsigned[2] partitionItems ;
+    unsigned[2] partitionItems;
 }
 
 codetable[2] partitionNumber ('4.[partitionTable].table',masterDir,localDir) : dump;
-
-#constant cat="cat";
-#alias mars.levtype=cat;
-#alias mars.levelist=partitionNumber;
