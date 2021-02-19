@@ -338,31 +338,69 @@ static grib_trie* init_list(const char* name)
     return 0;
 }
 
+static const char* get_packing_spec_packing_name(long packing_spec_packing)
+{
+    if (GRIB_UTIL_PACKING_USE_PROVIDED == packing_spec_packing)
+        return "GRIB_UTIL_PACKING_USE_PROVIDED";
+    if (GRIB_UTIL_PACKING_SAME_AS_INPUT == packing_spec_packing)
+        return "GRIB_UTIL_PACKING_SAME_AS_INPUT";
+    Assert(!"get_packing_spec_packing_name: invalid packing");
+    return NULL;
+}
+
+static const char* get_packing_spec_packing_type_name(long packing_spec_packing_type)
+{
+    if (GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT == packing_spec_packing_type)
+        return "GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT";
+    if (GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX == packing_spec_packing_type)
+        return "GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX";
+    if (GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE == packing_spec_packing_type)
+        return "GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE";
+    if (GRIB_UTIL_PACKING_TYPE_JPEG == packing_spec_packing_type)
+        return "GRIB_UTIL_PACKING_TYPE_JPEG";
+    if (GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX == packing_spec_packing_type)
+        return "GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX";
+    if (GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE == packing_spec_packing_type)
+        return "GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE";
+    if (GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE_MATRIX == packing_spec_packing_type)
+        return "GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE_MATRIX";
+    if (GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER == packing_spec_packing_type)
+        return "GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER";
+    if (GRIB_UTIL_PACKING_TYPE_CCSDS == packing_spec_packing_type)
+        return "GRIB_UTIL_PACKING_TYPE_CCSDS";
+    if (GRIB_UTIL_PACKING_TYPE_IEEE == packing_spec_packing_type)
+        return "GRIB_UTIL_PACKING_TYPE_IEEE";
+    Assert(!"get_packing_spec_packing_type_name: invalid packing_type");
+    return NULL;
+}
+
 /* For debugging purposes */
-static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
+static void print_values(grib_context* c,
+                         const grib_util_grid_spec2* spec,
+                         const grib_util_packing_spec* packing_spec,
                          const double* data_values, const size_t data_values_count, /* the data pay load */
                          const grib_values* keyval_pairs, const size_t count)       /* keys and their values */
 {
     size_t i       = 0;
     int isConstant = 1;
     double v = 0, minVal = DBL_MAX, maxVal = -DBL_MAX;
-    fprintf(stderr, "ECCODES DEBUG grib_util grib_set_values: setting %lu key/value pairs\n", (unsigned long)count);
+    fprintf(stderr, "ECCODES DEBUG grib_util: grib_set_values, setting %lu key/value pairs\n", (unsigned long)count);
 
     for (i = 0; i < count; i++) {
         switch (keyval_pairs[i].type) {
             case GRIB_TYPE_LONG:
-                fprintf(stderr, "ECCODES DEBUG  grib_util: => %s =  %ld;\n", keyval_pairs[i].name, (long)keyval_pairs[i].long_value);
+                fprintf(stderr, "ECCODES DEBUG grib_util: => %s =  %ld;\n", keyval_pairs[i].name, (long)keyval_pairs[i].long_value);
                 break;
             case GRIB_TYPE_DOUBLE:
-                fprintf(stderr, "ECCODES DEBUG  grib_util: => %s = %.16e;\n", keyval_pairs[i].name, keyval_pairs[i].double_value);
+                fprintf(stderr, "ECCODES DEBUG grib_util: => %s = %.16e;\n", keyval_pairs[i].name, keyval_pairs[i].double_value);
                 break;
             case GRIB_TYPE_STRING:
-                fprintf(stderr, "ECCODES DEBUG  grib_util: => %s = \"%s\";\n", keyval_pairs[i].name, keyval_pairs[i].string_value);
+                fprintf(stderr, "ECCODES DEBUG grib_util: => %s = \"%s\";\n", keyval_pairs[i].name, keyval_pairs[i].string_value);
                 break;
         }
     }
 
-    fprintf(stderr, "ECCODES DEBUG  grib_util: data_values_count=%lu;\n", (unsigned long)data_values_count);
+    fprintf(stderr, "ECCODES DEBUG grib_util: data_values_count=%lu;\n", (unsigned long)data_values_count);
     for (i = 0; i < data_values_count; i++) {
         if (i == 0)
             v = data_values[i];
@@ -386,10 +424,15 @@ static void print_values(grib_context* c, const grib_util_grid_spec2* spec,
                 maxVal = v;
         }
     }
-    fprintf(stderr, "ECCODES DEBUG  grib_util: data_values are CONSTANT? %d\t(min=%.16e, max=%.16e)\n",
+    fprintf(stderr, "ECCODES DEBUG grib_util: data_values are CONSTANT? %d\t(min=%.16e, max=%.16e)\n",
             isConstant, minVal, maxVal);
     if (c->gribex_mode_on)
-        fprintf(stderr, "ECCODES DEBUG  grib_util: GRIBEX mode is turned on!\n");
+        fprintf(stderr, "ECCODES DEBUG grib_util: GRIBEX mode is turned on!\n");
+
+    fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->packing = %s\n",
+            get_packing_spec_packing_name(packing_spec->packing));
+    fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->packing_type = %s\n",
+            get_packing_spec_packing_type_name(packing_spec->packing_type));
 
 #if 0
         if (spec->bitmapPresent) {
@@ -531,7 +574,7 @@ static int expand_bounding_box(grib_handle* h, grib_values* values, const size_t
         if (is_angle && !angle_can_be_encoded(h, values[i].double_value)) {
             new_angle = adjust_angle(values[i].double_value, roundingPolicy, angle_subdivisions);
             if (h->context->debug) {
-                fprintf(stderr, "ECCODES DEBUG  grib_util EXPAND_BOUNDING_BOX %s: old=%.15e new=%.15e (%s)\n",
+                fprintf(stderr, "ECCODES DEBUG grib_util: EXPAND_BOUNDING_BOX %s: old=%.15e new=%.15e (%s)\n",
                         values[i].name, values[i].double_value, new_angle,
                         (roundingPolicy == eROUND_ANGLE_UP ? "Up" : "Down"));
             }
@@ -1020,7 +1063,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         }
 
         if (h->context->debug == -1) {
-            print_values(h->context, spec, data_values, data_values_count, values, count);
+            print_values(h->context, spec, packing_spec, data_values, data_values_count, values, count);
         }
 
         if ((*err = grib_set_values(h, values, count)) != 0) {
@@ -1504,8 +1547,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     grib_handle_delete(h_sample);
     Assert(*err == 0);
 
-    /* Set "pl" array if provided (For reduced Gaussian grids) */
-    /* See GRIB-857 */
+    /* GRIB-857: Set "pl" array if provided (For reduced Gaussian grids) */
     Assert(spec->pl_size >= 0);
     if (spec->pl && spec->pl_size == 0) {
         fprintf(stderr, "pl array not NULL but pl_size == 0!\n");
@@ -1536,7 +1578,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     if (h->context->debug == -1) {
         fprintf(stderr, "ECCODES DEBUG grib_util: global_grid = %d\n", global_grid);
         fprintf(stderr, "ECCODES DEBUG grib_util: expandBoundingBox = %d\n", expandBoundingBox);
-        print_values(h->context, spec, data_values, data_values_count, values, count);
+        print_values(h->context, spec, packing_spec, data_values, data_values_count, values, count);
     }
 
     /* Apply adjustments to bounding box if needed */
@@ -1612,7 +1654,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     }
 
     /*grib_dump_content(h_out, stdout,"debug", ~0, NULL);*/
-
     /* convert to second_order if not constant field. (Also see ECC-326) */
     if (setSecondOrder) {
         int constant        = 0;
@@ -1669,8 +1710,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         }
     }
 
-    if (editionNumber > 1 || packing_spec->editionNumber > 1) {
-        /* ECC-353 */
+    if (editionNumber > 1 || packing_spec->editionNumber > 1) { /* ECC-353 */
         /* JPEG packing is not available in GRIB edition 1 and has to be done AFTER we set data values */
         if (setJpegPacking == 1) {
             *err = grib_set_string(h_out, "packingType", "grid_jpeg", &slen);
@@ -1718,7 +1758,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         goto cleanup;
     }
 #endif
-    if (h->context->debug == -1) fprintf(stderr, "ECCODES DEBUG: grib_util_set_spec end\n");
+    if (h->context->debug == -1) fprintf(stderr, "ECCODES DEBUG grib_util: grib_util_set_spec end\n");
 
     return h_out;
 
