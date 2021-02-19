@@ -928,7 +928,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         SET_LONG_VALUE("deleteLocalDefinition", 1);
     }
 
-    len = 100;
     grib_get_string(h, "packingType", input_packing_type, &len);
     grib_get_long(h, "bitsPerValue", &input_bits_per_value);
     grib_get_long(h, "decimalScaleFactor", &input_decimal_scale_factor);
@@ -1444,8 +1443,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             SET_STRING_VALUE("packingType", "grid_simple");
         }
     }
-    
-    /* ECC-1201: case of IEEE input ?? */
 
     switch (packing_spec->accuracy) {
         case GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT: {
@@ -1555,13 +1552,13 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     if (convertEditionEarlier && packing_spec->editionNumber > 1) {
         *err = grib_set_long(h_out, "edition", packing_spec->editionNumber);
         if (*err) {
-            fprintf(stderr, "SET_GRID_DATA_DESCRIPTION: Cannot convert to edition %ld.\n", packing_spec->editionNumber);
+            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot convert to edition %ld.\n", packing_spec->editionNumber);
             goto cleanup;
         }
     }
 
     if ((*err = grib_set_values(h_out, values, count)) != 0) {
-        fprintf(stderr, "SET_GRID_DATA_DESCRIPTION: Cannot set key values: %s\n", grib_get_error_message(*err));
+        fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set key values: %s\n", grib_get_error_message(*err));
         for (i = 0; i < count; i++)
             if (values[i].error) fprintf(stderr, " %s %s\n", values[i].name, grib_get_error_message(values[i].error));
         goto cleanup;
