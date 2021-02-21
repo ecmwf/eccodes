@@ -38,6 +38,9 @@ use strict;
 use warnings;
 $ARGV[0] or die "USAGE: $0 input.tsv\n";
 
+my $WRITE_TO_FILES = 1;
+my $WRITE_TO_PARAMDB = 0;
+
 my ($paramId, $shortName, $name, $units, $cfVarName);
 my ($discipline, $pcategory, $pnumber, $type1, $type2, $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2, $stat);
 
@@ -47,12 +50,13 @@ my $NAME_FILENAME      = "name.def";
 my $UNITS_FILENAME     = "units.def";
 my $CFVARNAME_FILENAME = "cfVarName.def";
 
-write_or_append(\*OUT_PARAMID,   "$PARAMID_FILENAME");
-write_or_append(\*OUT_SHORTNAME, "$SHORTNAME_FILENAME");
-write_or_append(\*OUT_NAME,      "$NAME_FILENAME");
-write_or_append(\*OUT_UNITS,     "$UNITS_FILENAME");
-write_or_append(\*OUT_CFVARNAME, "$CFVARNAME_FILENAME");
-
+if ($WRITE_TO_FILES) {
+    create_or_append(\*OUT_PARAMID,   "$PARAMID_FILENAME");
+    create_or_append(\*OUT_SHORTNAME, "$SHORTNAME_FILENAME");
+    create_or_append(\*OUT_NAME,      "$NAME_FILENAME");
+    create_or_append(\*OUT_UNITS,     "$UNITS_FILENAME");
+    create_or_append(\*OUT_CFVARNAME, "$CFVARNAME_FILENAME");
+}
 
 my $first = 1;
 while (<>) {
@@ -74,21 +78,25 @@ while (<>) {
     $cfVarName = $shortName;
     $cfVarName = '\\'.$shortName if ($shortName =~ /^[0-9]/);
 
-    write_out_file(\*OUT_PARAMID,   $name, $paramId);
-    write_out_file(\*OUT_SHORTNAME, $name, $shortName);
-    write_out_file(\*OUT_NAME,      $name, $name);
-    write_out_file(\*OUT_UNITS,     $name, $units);
-    write_out_file(\*OUT_CFVARNAME, $name, $cfVarName);
+    if ($WRITE_TO_FILES) {
+        write_out_file(\*OUT_PARAMID,   $name, $paramId);
+        write_out_file(\*OUT_SHORTNAME, $name, $shortName);
+        write_out_file(\*OUT_NAME,      $name, $name);
+        write_out_file(\*OUT_UNITS,     $name, $units);
+        write_out_file(\*OUT_CFVARNAME, $name, $cfVarName);
+    }
 }
 
-print "Wrote output files: $PARAMID_FILENAME $SHORTNAME_FILENAME $NAME_FILENAME $UNITS_FILENAME $CFVARNAME_FILENAME\n";
-close(OUT_PARAMID)   or die "$PARAMID_FILENAME: $!";
-close(OUT_SHORTNAME) or die "$SHORTNAME_FILENAME: $!";
-close(OUT_NAME)      or die "$NAME_FILENAME: $!";
-close(OUT_UNITS)     or die "$UNITS_FILENAME: $!";
-close(OUT_CFVARNAME) or die "$CFVARNAME_FILENAME: $!";
+if ($WRITE_TO_FILES) {
+    print "Wrote output files: $PARAMID_FILENAME $SHORTNAME_FILENAME $NAME_FILENAME $UNITS_FILENAME $CFVARNAME_FILENAME\n";
+    close(OUT_PARAMID)   or die "$PARAMID_FILENAME: $!";
+    close(OUT_SHORTNAME) or die "$SHORTNAME_FILENAME: $!";
+    close(OUT_NAME)      or die "$NAME_FILENAME: $!";
+    close(OUT_UNITS)     or die "$UNITS_FILENAME: $!";
+    close(OUT_CFVARNAME) or die "$CFVARNAME_FILENAME: $!";
+}
 
-
+# -------------------------------------------------------------------
 sub write_out_file {
     my $outfile = $_[0];
     my $name    = $_[1];
@@ -134,7 +142,7 @@ sub check_first_row_column_names {
     die "Error: 1st row column titles wrong: Column 14 should be 'typeOfStatisticalProcessing'\n" if ($keys[13] ne "typeOfStatisticalProcessing");
 }
 
-sub write_or_append {
+sub create_or_append {
     my $outfile = $_[0];
     my $fname   = $_[1];
 
