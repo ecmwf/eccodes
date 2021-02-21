@@ -7,7 +7,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-flags[1] scanningMode 'grib2/tables/[tablesVersion]/3.4.table' : edition_specific,no_copy ;
+flags[1] scanningMode 'grib3/tables/[tablesVersion]/3.4.table' : edition_specific,no_copy ;
 
 # Note our flagbit numbers go from 7 to 0, while WMO convention is from 1 to 8
 flagbit iScansNegatively(scanningMode,7) : dump;   # WMO bit 1

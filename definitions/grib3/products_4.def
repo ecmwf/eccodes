@@ -9,4 +9,4 @@
 
 # Tigge
 constant marsExpver = 'prod';
-include "grib2/products_tigge.def"
+include "grib3/products_tigge.def"

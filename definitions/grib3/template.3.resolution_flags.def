@@ -8,7 +8,7 @@
 #
 
 #  Resolution and component flags
-flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : edition_specific,no_copy;
+flags[1] resolutionAndComponentFlags 'grib3/tables/[tablesVersion]/3.3.table' : edition_specific,no_copy;
 
 # Note our flagbit numbers run from 7 to 0, while WMO convention uses 1 to 8
 # (most significant to least significant)

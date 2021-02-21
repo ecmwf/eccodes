@@ -9,7 +9,7 @@
 
 # Definition 300 - Multi-dimensional parameters
 
-codetable[1] dimensionType "grib2/dimensionType.table"=0;
+codetable[1] dimensionType "grib3/dimensionType.table"=0;
 
 # The n-th dimension (out of total number of dimensions)
 unsigned[2] dimensionNumber;

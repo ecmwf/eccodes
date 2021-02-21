@@ -9,4 +9,4 @@
 
 # Uncertainties in ensembles of regional re-analysis project test (UERRA)
 constant marsExpver = 'test';
-include "grib2/products_uerra.def"
+include "grib3/products_uerra.def"
