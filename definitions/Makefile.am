@@ -14041,7 +14041,6 @@ dist_definitionsgrib2_DATA = \
 	grib2/template.7.6.def\
 	grib2/template.7.61.def\
 	grib2/template.7.second_order.def\
-	grib2/template.second_order.def\
 	grib2/tiggeLocalVersion.table\
 	grib2/tigge_name.def\
 	grib2/tigge_parameter.def\

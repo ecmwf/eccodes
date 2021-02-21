@@ -13,54 +13,54 @@
 !              and print the kind of product (e.g. GRIB, BUFR etc)
 !
 program get_product_kind
-  use eccodes
-  implicit none
-  integer            :: ifile
-  integer            :: iret
-  integer            :: ihandle
-  integer            :: count=0
-  integer            :: version=0
-  character(len=32)  :: product_kind
-  character(len=120) :: infile_name
+   use eccodes
+   implicit none
+   integer            :: ifile
+   integer            :: iret
+   integer            :: ihandle
+   integer            :: count = 0
+   integer            :: version = 0
+   character(len=32)  :: product_kind
+   character(len=120) :: infile_name
 
-  call getarg(1, infile_name)
-  write(*,*) 'infile_name|',infile_name,'|'
-  call codes_open_file(ifile,infile_name,'r')
+   call getarg(1, infile_name)
+   write (*, *) 'infile_name|', infile_name, '|'
+   call codes_open_file(ifile, infile_name, 'r')
 
-  call codes_get_api_version(version)
-  write(*,*) 'API version: ',version
+   call codes_get_api_version(version)
+   write (*, *) 'API version: ', version
 
-  write(*,*) 'ecCodes settings: '
-  write(*,*) '  ECCODES_POSIX_THREADS:  ',ECCODES_SETTINGS_POSIX_THREADS
-  write(*,*) '  ECCODES_OMP_THREADS:    ',ECCODES_SETTINGS_OMP_THREADS
-  write(*,*) '  ECCODES_SETTINGS_MEMFS: ',ECCODES_SETTINGS_MEMFS
-  write(*,*) '  ECCODES_SETTINGS_JPEG:  ',ECCODES_SETTINGS_JPEG
-  write(*,*) '  ECCODES_SETTINGS_PNG:   ',ECCODES_SETTINGS_PNG
-  write(*,*) '  ECCODES_SETTINGS_AEC:   ',ECCODES_SETTINGS_AEC
+   write (*, *) 'ecCodes settings: '
+   write (*, *) '  ECCODES_POSIX_THREADS:  ', ECCODES_SETTINGS_POSIX_THREADS
+   write (*, *) '  ECCODES_OMP_THREADS:    ', ECCODES_SETTINGS_OMP_THREADS
+   write (*, *) '  ECCODES_SETTINGS_MEMFS: ', ECCODES_SETTINGS_MEMFS
+   write (*, *) '  ECCODES_SETTINGS_JPEG:  ', ECCODES_SETTINGS_JPEG
+   write (*, *) '  ECCODES_SETTINGS_PNG:   ', ECCODES_SETTINGS_PNG
+   write (*, *) '  ECCODES_SETTINGS_AEC:   ', ECCODES_SETTINGS_AEC
 
 ! the first message is loaded from file
 ! ihandle is the message id to be used in subsequent calls
-  call codes_new_from_file(ifile,ihandle,CODES_PRODUCT_ANY,iret)
+   call codes_new_from_file(ifile, ihandle, CODES_PRODUCT_ANY, iret)
 
-  do while (iret/=CODES_END_OF_FILE)
+   do while (iret /= CODES_END_OF_FILE)
 
-    write(*,*) 'message: ',count
+      write (*, *) 'message: ', count
 
-    ! get the product kind
-    call codes_get(ihandle,'kindOfProduct',product_kind)
-    write(*,*) '  product: ',product_kind
+      ! get the product kind
+      call codes_get(ihandle, 'kindOfProduct', product_kind)
+      write (*, *) '  product: ', product_kind
 
-    ! release the message
-    call codes_release(ihandle)
+      ! release the message
+      call codes_release(ihandle)
 
-    ! load the next message
-    call codes_new_from_file(ifile,ihandle,CODES_PRODUCT_ANY,iret)
+      ! load the next message
+      call codes_new_from_file(ifile, ihandle, CODES_PRODUCT_ANY, iret)
 
-    count=count+1
+      count = count + 1
 
-  end do
+   end do
 
-  ! close file
-  call codes_close_file(ifile)
+   ! close file
+   call codes_close_file(ifile)
 
 end program get_product_kind

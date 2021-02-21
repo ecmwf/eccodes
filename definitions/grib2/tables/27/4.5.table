@@ -56,7 +56,7 @@
 # 120-149 Reserved 
 150 150 Generalized vertical height coordinate 
 151 sol Soil level (Numeric)
-152 sol Sea ice level (Numeric)
+152 sol Sea-ice level (Numeric)
 # 153-159 Reserved 
 160 o2d Depth below sea level (m)
 161 161 Depth below water surface (m)

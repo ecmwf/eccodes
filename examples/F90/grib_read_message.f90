@@ -9,45 +9,45 @@
 ! Description: how to get values using keys.
 !
 program grib_read_message
-use eccodes
-implicit none
-  integer                      ::  ifile,ofile
-  integer                      ::  iret,igrib
-  integer , dimension(50000)   :: buffer
-  integer(kind=kindOfSize_t)   :: len1
-  integer                      :: step,level
+   use eccodes
+   implicit none
+   integer                      ::  ifile, ofile
+   integer                      ::  iret, igrib
+   integer, dimension(50000)   :: buffer
+   integer(kind=kindOfSize_t)   :: len1
+   integer                      :: step, level
 
-  call codes_open_file(ifile,'../../data/index.grib','r')
-  call codes_open_file(ofile,'out.readmsg.grib','w')
+   call codes_open_file(ifile, '../../data/index.grib', 'r')
+   call codes_open_file(ofile, 'out.readmsg.grib', 'w')
 
 ! a grib message is read from file into buffer
-  len1=size(buffer)*4
-  call  codes_read_from_file(ifile,buffer,len1,iret)
+   len1 = size(buffer)*4
+   call codes_read_from_file(ifile, buffer, len1, iret)
 
-  do while (iret/=CODES_END_OF_FILE)
+   do while (iret /= CODES_END_OF_FILE)
 
 !   a new grib message is created from buffer
-    call codes_new_from_message(igrib,buffer)
+      call codes_new_from_message(igrib, buffer)
 
 !   get as a integer
-    call codes_get(igrib,'step', step)
-    write(*,*) 'step=',step
+      call codes_get(igrib, 'step', step)
+      write (*, *) 'step=', step
 
-    call codes_get(igrib,'level',level)
-    write(*,*) 'level=',level
+      call codes_get(igrib, 'level', level)
+      write (*, *) 'level=', level
 
-    call codes_release(igrib)
+      call codes_release(igrib)
 
-    call codes_write_bytes(ofile,buffer,len1)
+      call codes_write_bytes(ofile, buffer, len1)
 
 !   a grib message is read from file into buffer
-    len1=size(buffer)*4
-    call  codes_read_from_file(ifile,buffer,len1,iret)
+      len1 = size(buffer)*4
+      call codes_read_from_file(ifile, buffer, len1, iret)
 
-  enddo
+   end do
 
-  call codes_close_file(ifile)
-  call codes_close_file(ofile)
+   call codes_close_file(ifile)
+   call codes_close_file(ofile)
 
 end program grib_read_message
 

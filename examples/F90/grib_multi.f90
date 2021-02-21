@@ -13,33 +13,33 @@
 !               For all the tools default is multi support ON.
 !
 program multi
-  use eccodes
-  implicit none
+   use eccodes
+   implicit none
 
-  integer              :: iret
-  integer(kind = 4)    :: step
-  integer              :: ifile,igrib
+   integer              :: iret
+   integer(kind=4)    :: step
+   integer              :: ifile, igrib
 
-  call codes_open_file(ifile, '../../data/multi_created.grib2','r')
+   call codes_open_file(ifile, '../../data/multi_created.grib2', 'r')
 
-  ! turn on support for multi-field messages */
-  call codes_grib_multi_support_on()
+   ! turn on support for multi-field messages */
+   call codes_grib_multi_support_on()
 
-  ! turn off support for multi-field messages */
-  !call codes_grib_multi_support_off()
+   ! turn off support for multi-field messages */
+   !call codes_grib_multi_support_off()
 
-  call codes_grib_new_from_file(ifile,igrib, iret)
-  ! Loop on all the messages in a file.
+   call codes_grib_new_from_file(ifile, igrib, iret)
+   ! Loop on all the messages in a file.
 
-  write(*,*) 'step'
-  do while (iret /= CODES_END_OF_FILE)
+   write (*, *) 'step'
+   do while (iret /= CODES_END_OF_FILE)
 
-     call codes_get(igrib,'step', step)
-     write(*,'(i3)') step
+      call codes_get(igrib, 'step', step)
+      write (*, '(i3)') step
 
-     call codes_grib_new_from_file(ifile,igrib, iret)
+      call codes_grib_new_from_file(ifile, igrib, iret)
 
-  end do
-  call codes_close_file(ifile)
+   end do
+   call codes_close_file(ifile)
 
 end program multi

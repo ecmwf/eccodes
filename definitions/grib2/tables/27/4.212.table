@@ -1,5 +1,5 @@
 # Code table 4.212 - Land use
-0 0 Reserved 
+0 0 Reserved
 1 1 Urban land 
 2 2 Agriculture 
 3 3 Range land 
@@ -13,6 +13,6 @@
 11 11 Ice 
 12 12 Tropical forest 
 13 13 Savannah 
-# 14-191 Reserved 
+# 14-191 Reserved
 # 192-254 Reserved for local use 
 255 255 Missing 
