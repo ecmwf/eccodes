@@ -36,13 +36,41 @@
 $|=1;
 use strict;
 use warnings;
+use DBI;
+use Time::localtime;
+
 $ARGV[0] or die "USAGE: $0 input.tsv\n";
 
-my $WRITE_TO_FILES = 1;
+my $WRITE_TO_FILES = 0;
 my $WRITE_TO_PARAMDB = 0;
 
 my ($paramId, $shortName, $name, $units, $cfVarName);
 my ($discipline, $pcategory, $pnumber, $type1, $type2, $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2, $stat);
+
+my %key_to_attrib_map = (
+    'discipline'         => 4,
+    'parameterCategory'  => 8,
+    'parameterNumber'    => 5,
+    'localTablesVersion' => 16,
+    'typeOfFirstFixedSurface' => 6,
+    'scaleFactorOfFirstFixedSurface' => 7,
+    'scaledValueOfFirstFixedSurface' => 9,
+    'typeOfStatisticalProcessing' => 11,
+    'typeOfSecondFixedSurface' => 13,
+    'scaledValueOfSecondFixedSurface' => 14,
+    'scaleFactorOfSecondFixedSurface' => 15,
+    'typeOfGeneratingProcess' => 28,
+    'constituentType' => 40,
+    'aerosolType' => 46
+);
+my $db = "param";
+my $host = $ENV{'DB_HOST'} || 'unknown';
+my $user = $ENV{'DB_USER'} || 'unknown';
+my $pass = $ENV{'DB_PASS'} || 'unknown';
+my $dbh = 0;
+my $centre = -3; # WMO
+my $edition = 2;
+my $contactId = "A test"; # JIRA issue ID
 
 my $PARAMID_FILENAME   = "paramId.def";
 my $SHORTNAME_FILENAME = "shortName.def";
@@ -50,12 +78,19 @@ my $NAME_FILENAME      = "name.def";
 my $UNITS_FILENAME     = "units.def";
 my $CFVARNAME_FILENAME = "cfVarName.def";
 
+my $tm = localtime;
+my $today_date = sprintf("%04d-%02d-%02d", $tm->year+1900, ($tm->mon)+1, $tm->mday);
+print "Using insert and update dates: $today_date\n";
+
 if ($WRITE_TO_FILES) {
     create_or_append(\*OUT_PARAMID,   "$PARAMID_FILENAME");
     create_or_append(\*OUT_SHORTNAME, "$SHORTNAME_FILENAME");
     create_or_append(\*OUT_NAME,      "$NAME_FILENAME");
     create_or_append(\*OUT_UNITS,     "$UNITS_FILENAME");
     create_or_append(\*OUT_CFVARNAME, "$CFVARNAME_FILENAME");
+}
+if ($WRITE_TO_PARAMDB) {
+    $dbh = DBI->connect("dbi:mysql(RaiseError=>1):database=$db;host=$host",$user,$pass) or die $DBI::errstr;
 }
 
 my $first = 1;
@@ -85,7 +120,33 @@ while (<>) {
         write_out_file(\*OUT_UNITS,     $name, $units);
         write_out_file(\*OUT_CFVARNAME, $name, $cfVarName);
     }
-}
+
+    if ($WRITE_TO_PARAMDB) {
+        my $units_code = get_db_units_code($units);
+        my $is_chem = "y";
+        my $is_aero = "y";
+        $dbh->do("insert into param(id,shortName,name,units_id,insert_date,update_date,contact) values (?,?,?,?,?,?,?)",undef,
+            $paramId, $shortName, $name , $units_code, $today_date, $today_date, $contactId);
+
+      # Table 'grib' columns: param_id  edition  centre  attribute_id  attribute_value  param_version
+      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,4, $discipline,0);
+      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,8, $pcategory,0);
+      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,5, $pnumber,0);
+      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,6, $type1,0)        if ($type1 ne "");
+      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,13,$type2,0)        if ($type2 ne "");
+      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,9, $scaledValue1,0) if ($scaledValue1 ne "");
+      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,7, $scaleFactor1,0) if ($scaleFactor1 ne "");
+      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,14,$scaledValue2,0) if ($scaledValue2 ne "");
+      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,15,$scaleFactor2,0) if ($scaleFactor2 ne "");
+      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,11,$stat,0)         if ($stat ne "");
+      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,53,$is_chem,0)      if ($is_chem ne "");
+      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,54,$is_aero,0)      if ($is_aero ne "");
+      #$dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,yy,xx,0) if (xx ne "");
+
+      # format is only GRIB2
+      $dbh->do("insert into param_format(param_id,grib1,grib2) values (?,?,?)",undef,$paramId,0,1);
+    }
+} # for each input line
 
 if ($WRITE_TO_FILES) {
     print "Wrote output files: $PARAMID_FILENAME $SHORTNAME_FILENAME $NAME_FILENAME $UNITS_FILENAME $CFVARNAME_FILENAME\n";
@@ -97,6 +158,45 @@ if ($WRITE_TO_FILES) {
 }
 
 # -------------------------------------------------------------------
+sub get_db_units_code {
+    my $u = shift;
+    return 1  if ($u eq 'm**2 s**-1');
+    return 2  if ($u eq 'K');
+    return 3  if ($u eq '(0 - 1)');
+    return 4  if ($u eq 'm');
+    return 5  if ($u eq 'm s**-1');
+    return 6  if ($u eq 'J m**-2');
+    return 7  if ($u eq '~');
+    return 8  if ($u eq 's**-1');
+    return 9  if ($u eq 'kg m**-3');
+    return 10 if ($u eq 'm**3 m**-3');
+    return 12 if ($u eq 's');
+    return 14 if ($u eq 'N m**-2 s');
+    return 15 if ($u eq 'm**2 s**-2');
+    return 16 if ($u eq 'Pa');
+    return 17 if ($u eq 'J kg**-1');
+    return 18 if ($u eq 'K m**2 kg**-1 s**-1');
+    return 19 if ($u eq 'm**2 m**-2');
+    return 20 if ($u eq 's m**-1');
+    return 21 if ($u eq 'kg kg**-1');
+    return 22 if ($u eq 'kg m**-2');
+    return 23 if ($u eq 'dimensionless');
+    return 26 if ($u eq 'Pa s**-1');
+    return 27 if ($u eq 'm of water equivalent');
+    return 28 if ($u eq 'gpm');
+    return 29 if ($u eq '%');
+    return 33 if ($u eq 'kg m**-2 s**-1');
+
+    return 179 if ($u eq 'W');
+    return 172 if ($u eq 'W m**-2');
+    return 173 if ($u eq 'Index');
+    return 174 if ($u eq 'W m**-2');
+    return 175 if ($u eq 'kg m**-3');
+    return 182 if ($u eq 'Degree N');
+
+    die "Unrecognized units $u\n";
+}
+
 sub write_out_file {
     my $outfile = $_[0];
     my $name    = $_[1];
