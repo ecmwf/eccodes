@@ -21,13 +21,15 @@
 #   parameterCategory
 #   parameterNumber
 #   # The following are optional keys
-#   typeOfFirstFixedSurface
-#   scaleFactorOfFirstFixedSurface
-#   scaledValueOfFirstFixedSurface
-#   typeOfSecondFixedSurface
-#   scaleFactorOfSecondFixedSurface
-#   scaledValueOfSecondFixedSurface
-#   typeOfStatisticalProcessing
+#    typeOfFirstFixedSurface
+#    scaleFactorOfFirstFixedSurface
+#    scaledValueOfFirstFixedSurface
+#    typeOfSecondFixedSurface
+#    scaleFactorOfSecondFixedSurface
+#    scaledValueOfSecondFixedSurface
+#    typeOfStatisticalProcessing
+#    aerosolType
+#    constituentType
 #
 # It outputs the def files:
 #    name.def paramId.def shortName.def units.def cfVarName.def
@@ -45,7 +47,8 @@ my $WRITE_TO_FILES = 0;
 my $WRITE_TO_PARAMDB = 0;
 
 my ($paramId, $shortName, $name, $units, $cfVarName);
-my ($discipline, $pcategory, $pnumber, $type1, $type2, $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2, $stat);
+my ($discipline, $pcategory, $pnumber, $type1, $type2, $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2);
+my ($stat, $aero, $constit);
 
 my %key_to_attrib_map = (
     'discipline'         => 4,
@@ -94,6 +97,7 @@ if ($WRITE_TO_PARAMDB) {
 }
 
 my $first = 1;
+my $lcount = 0;
 while (<>) {
     chomp;
     s/\r//g;  # Remove DOS carriage returns
@@ -102,10 +106,11 @@ while (<>) {
         $first = 0;
         next;
     }
+    $lcount++;
 
     ($paramId, $shortName, $name, $units,
         $discipline, $pcategory, $pnumber, $type1, $type2,
-        $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2, $stat) = split(/\t/);
+        $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2, $stat, $aero, $constit) = split(/\t/);
 
     die "Error: paramID \"$paramId\" is not an integer!" if (!is_integer($paramId));
 
@@ -123,28 +128,32 @@ while (<>) {
 
     if ($WRITE_TO_PARAMDB) {
         my $units_code = get_db_units_code($units);
-        my $is_chem = "y";
-        my $is_aero = "y";
+        my $is_chem = "1";
+        my $is_aero = "";
         $dbh->do("insert into param(id,shortName,name,units_id,insert_date,update_date,contact) values (?,?,?,?,?,?,?)",undef,
             $paramId, $shortName, $name , $units_code, $today_date, $today_date, $contactId);
 
-      # Table 'grib' columns: param_id  edition  centre  attribute_id  attribute_value  param_version
-      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,4, $discipline,0);
-      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,8, $pcategory,0);
-      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,5, $pnumber,0);
-      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,6, $type1,0)        if ($type1 ne "");
-      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,13,$type2,0)        if ($type2 ne "");
-      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,9, $scaledValue1,0) if ($scaledValue1 ne "");
-      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,7, $scaleFactor1,0) if ($scaleFactor1 ne "");
-      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,14,$scaledValue2,0) if ($scaledValue2 ne "");
-      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,15,$scaleFactor2,0) if ($scaleFactor2 ne "");
-      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,11,$stat,0)         if ($stat ne "");
-      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,53,$is_chem,0)      if ($is_chem ne "");
-      $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,54,$is_aero,0)      if ($is_aero ne "");
-      #$dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,yy,xx,0) if (xx ne "");
+        # Table 'grib' columns: param_id  edition  centre  attribute_id  attribute_value  param_version
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,4, $discipline,0);
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,8, $pcategory,0);
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,5, $pnumber,0);
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,6, $type1,0)        if ($type1 ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,13,$type2,0)        if ($type2 ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,9, $scaledValue1,0) if ($scaledValue1 ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,7, $scaleFactor1,0) if ($scaleFactor1 ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,14,$scaledValue2,0) if ($scaledValue2 ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,15,$scaleFactor2,0) if ($scaleFactor2 ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,11,$stat,0)         if ($stat ne "");
 
-      # format is only GRIB2
-      $dbh->do("insert into param_format(param_id,grib1,grib2) values (?,?,?)",undef,$paramId,0,1);
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,46,$aero,0)         if ($aero ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,40,$constit,0)      if ($constit ne "");
+
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,53,$is_chem,0)      if ($is_chem ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,54,$is_aero,0)      if ($is_aero ne "");
+        #$dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,yy,xx,0) if (xx ne "");
+
+        # format is only GRIB2
+        $dbh->do("insert into param_format(param_id,grib1,grib2) values (?,?,?)",undef,$paramId,0,1);
     }
 } # for each input line
 
@@ -155,6 +164,9 @@ if ($WRITE_TO_FILES) {
     close(OUT_NAME)      or die "$NAME_FILENAME: $!";
     close(OUT_UNITS)     or die "$UNITS_FILENAME: $!";
     close(OUT_CFVARNAME) or die "$CFVARNAME_FILENAME: $!";
+}
+if ($WRITE_TO_PARAMDB) {
+    print "Wrote to Param DB. $lcount rows processed\n";
 }
 
 # -------------------------------------------------------------------
@@ -240,6 +252,9 @@ sub check_first_row_column_names {
     die "Error: 1st row column titles wrong: Column 12 should be 'scaleFactorOfSecondFixedSurface'\n" if ($keys[11] ne "scaleFactorOfSecondFixedSurface");
     die "Error: 1st row column titles wrong: Column 13 should be 'scaledValueOfSecondFixedSurface'\n" if ($keys[12] ne "scaledValueOfSecondFixedSurface");
     die "Error: 1st row column titles wrong: Column 14 should be 'typeOfStatisticalProcessing'\n" if ($keys[13] ne "typeOfStatisticalProcessing");
+
+    die "Error: 1st row column titles wrong: Column 15 should be 'aerosolType'\n" if ($keys[14] ne "aerosolType");
+    die "Error: 1st row column titles wrong: Column 16 should be 'constituentType'\n" if ($keys[15] ne "constituentType");
 }
 
 sub create_or_append {
