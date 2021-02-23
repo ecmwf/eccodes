@@ -9,7 +9,7 @@
 !
 ! FORTRAN 90 Implementation: bufr_get_keys
 !
-! Description: how to read values of different type of keys from BUFR messages.
+! Description: How to read values of different type of keys from BUFR messages.
 !
 !
 program bufr_get_keys

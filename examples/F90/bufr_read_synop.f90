@@ -9,7 +9,7 @@
 !
 ! FORTRAN 90 Implementation: bufr_read_synop
 !
-! Description: how to read SYNOP BUFR messages.
+! Description: How to read SYNOP BUFR messages.
 
 ! Please note that SYNOP reports can be encoded in various ways in BUFR. Therefore the code
 ! below might not work directly for other types of SYNOP messages than the one used in the

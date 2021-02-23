@@ -9,7 +9,7 @@
 !
 ! FORTRAN 90 Implementation: bufr_read_temp
 !
-! Description: how to read levels from TEMP BUFR messages.
+! Description: How to read levels from TEMP BUFR messages.
 !
 ! Please note that TEMP reports can be encoded in various ways in BUFR. Therefore the code
 ! below might not work directly for other types of TEMP messages than the one used in the

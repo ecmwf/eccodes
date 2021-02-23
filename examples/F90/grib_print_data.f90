@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: prints all the data contained in a GRIB file
+!  Description: Prints all the data contained in a GRIB file
 !
 !
 !

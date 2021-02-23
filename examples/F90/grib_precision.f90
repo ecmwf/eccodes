@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: how to control decimal precision when packing fields.
+!  Description: How to control decimal precision when packing fields.
 !
 !
 !

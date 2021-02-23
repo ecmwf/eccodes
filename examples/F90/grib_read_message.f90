@@ -6,7 +6,7 @@
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
-! Description: how to get values using keys.
+! Description: How to get values using keys.
 !
 program grib_read_message
    use eccodes

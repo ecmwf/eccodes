@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: how to copy a namespace from a message to another.
+!  Description: How to copy a namespace from a message to another.
 !
 !
 program copy_namespace

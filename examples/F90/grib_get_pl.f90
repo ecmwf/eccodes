@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: how to get PL values.
+!  Description: How to get PL values.
 !
 !
 program grib_get_pl

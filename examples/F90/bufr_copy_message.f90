@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! Description: how to copy a BUFR message in memory
+! Description: How to copy a BUFR message in memory
 !
 !
 program copy

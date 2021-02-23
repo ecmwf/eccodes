@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: how to use codes_grib_find_nearest and codes_get_element
+!  Description: How to use codes_grib_find_nearest and codes_get_element
 !
 !
 !

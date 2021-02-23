@@ -8,7 +8,7 @@
 !
 !  FORTRAN 90 implementation: bufr_clone
 !
-!  Description: how to create a new BUFR message by cloning
+!  Description: How to create a new BUFR message by cloning
 !               an existing message.
 !
 !

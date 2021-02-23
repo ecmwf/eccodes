@@ -9,7 +9,7 @@
 !
 ! FORTRAN 90 Implementation: bufr_attributes
 !
-! Description: how to read attributes of keys in BUFR messages.
+! Description: How to read attributes of keys in BUFR messages.
 !
 !
 program bufr_attributes

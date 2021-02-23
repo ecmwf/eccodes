@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! Description: how to read radiosonde data from TEMP BUFR messages.
+! Description: How to read radiosonde data from TEMP BUFR messages.
 ! This version also lists the position information from the WMO list
 ! (now OSCAR/Surface) - ECMWF version
 !

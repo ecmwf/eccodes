@@ -7,8 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!
-!  Description: how to set pv values in a GRIB message
+!  Description: How to set pv values in a GRIB message
 !
 !
 program grib_set_pv

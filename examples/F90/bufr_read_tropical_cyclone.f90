@@ -9,7 +9,7 @@
 !
 ! FORTRAN 90 Implementation: bufr_read_tropical_cyclone
 !
-! Description: how to read data for a tropical cyclone BUFR message.
+! Description: How to read data for a tropical cyclone BUFR message.
 !
 ! Please note that tropical cyclone tracks can be encoded in various ways in BUFR.
 ! Therefore the code below might not work directly for other types of messages

@@ -6,7 +6,7 @@
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
-!  Description: count messages in a file with GRIB2 multi-field messages
+!  Description: Count messages in a file with GRIB2 multi-field messages
 !
 !
 program grib_count_messages_multi

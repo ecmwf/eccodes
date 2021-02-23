@@ -10,7 +10,7 @@
 ! FORTRAN 90 implementation: bufr_keys_iterator
 !
 !
-! Description: how to use keys_iterator functions and the
+! Description: How to use keys_iterator functions and the
 !              codes_bufr_keys_iterator structure to get all the available
 !              keys in a BUFR message.
 !

@@ -9,7 +9,7 @@
 !
 ! FORTRAN 90 implementation: bufr_read_header
 !
-! Description: how to read the header of BUFR messages.
+! Description: How to read the header of BUFR messages.
 !
 !
 program bufr_read_header

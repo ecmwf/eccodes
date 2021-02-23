@@ -8,7 +8,7 @@
 !
 !
 !
-!  Description: how to create a multi field message in memory and write
+!  Description: How to create a multi field message in memory and write
 !               it in a file. The multi field messages can be created
 !               only in GRIB edition 2.
 !

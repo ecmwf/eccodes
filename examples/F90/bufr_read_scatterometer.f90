@@ -9,7 +9,7 @@
 !
 ! FORTRAN 90 Implementation: bufr_read_scatterometer
 !
-! Description: how to read data for a given beam from scatterometer BUFR messages.
+! Description: How to read data for a given beam from scatterometer BUFR messages.
 !
 ! Please note that scatterometer data can be encoded in various ways in BUFR. Therefore the code
 ! below might not work directly for other types of messages than the one used in the

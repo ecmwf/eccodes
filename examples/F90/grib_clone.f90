@@ -9,7 +9,7 @@
 !
 !  FORTRAN 90 Implementation: grib_clone
 !
-!  Description: how to create a new GRIB message by cloning
+!  Description: How to create a new GRIB message by cloning
 !               an existing message.
 !
 !

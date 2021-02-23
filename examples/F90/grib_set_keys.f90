@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: how to set key values in GRIB messages
+!  Description: How to set key values in GRIB messages
 !
 !
 program set

@@ -9,7 +9,7 @@
 !
 ! FORTRAN 90 Implementation: bufr_expanded
 !
-! Description: how to read all the expanded data values from BUFR messages.
+! Description: How to read all the expanded data values from BUFR messages.
 !
 !
 program bufr_expanded

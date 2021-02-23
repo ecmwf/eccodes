@@ -8,7 +8,7 @@
 !
 !  FORTRAN 90 implementation: bufr_set_keys
 !
-!  Description: how to set different type of keys in BUFR messages.
+!  Description: How to set different type of keys in BUFR messages.
 !
 !
 program bufr_set_keys

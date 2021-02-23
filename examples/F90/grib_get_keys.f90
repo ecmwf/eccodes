@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: how to get values using keys from GRIB messages
+!  Description: How to get values using keys from GRIB messages
 !
 !
 program grib_get_keys

@@ -6,7 +6,7 @@
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
-!  Description: set string key with spaces
+!  Description: Set string key with spaces
 !
 !
 USE eccodes

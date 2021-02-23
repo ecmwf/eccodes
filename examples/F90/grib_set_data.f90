@@ -8,7 +8,7 @@
 !
 !
 !
-!  Description: set the data contained in a GRIB file.
+!  Description: Set the data contained in a GRIB file.
 !               In this example no missing values are present.
 !               If there are missing values, refer to: grib_set_bitmap
 !

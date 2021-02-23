@@ -8,7 +8,7 @@
 !
 !
 !
-!  Description: how to set keys for a grib2 file with
+!  Description: How to set keys for a grib2 file with
 !               a Generalized Vertical Height Coordinate
 !
 !

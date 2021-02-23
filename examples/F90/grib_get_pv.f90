@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! Description: how to get PV values.
+! Description: How to get PV values.
 !
 !
 program grib_get_pv

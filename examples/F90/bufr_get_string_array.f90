@@ -9,7 +9,7 @@
 !
 ! FORTRAN 90 Implementation: bufr_get_string_array
 !
-! Description: how to get an array of strings from a BUFR message.
+! Description: How to get an array of strings from a BUFR message.
 
 program bufr_get_string_array
    use eccodes

@@ -8,7 +8,7 @@
 !
 !
 !
-!  Description: how to set a bitmap in a GRIB message
+!  Description: How to set a bitmap in a GRIB message
 !               to encode missing values in the data
 !
 !

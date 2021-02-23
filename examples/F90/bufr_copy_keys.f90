@@ -6,7 +6,7 @@
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
-!  Description: how to copy a BUFR key from a message to another.
+!  Description: How to copy a BUFR key from a message to another.
 !
 program bufr_copy_keys
    use eccodes

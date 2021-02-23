@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  Description: how to create a new GRIB message from a sample.
+!  Description: How to create a new GRIB message from a sample.
 !
 !
 program sample
