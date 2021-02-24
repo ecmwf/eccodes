@@ -411,6 +411,9 @@ static double laplam(bif_trunc_t* bt, const double val[])
     }
     lmax = l;
 
+    if (lmax == 0)
+      return 0.;
+
     /*
      * Now, itab2 contains all possible values of i*i+j*j, and itab1 contains
      * the rank of all i*i+j*j
