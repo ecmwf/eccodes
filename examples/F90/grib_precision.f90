@@ -16,13 +16,13 @@ program precision
    use eccodes
    implicit none
    integer(kind=4)                             :: size1
-   integer                                       :: infile, outfile
-   integer                                       :: igrib
+   integer                                     :: infile, outfile
+   integer                                     :: igrib
    real(kind=8), dimension(:), allocatable     :: values1
    real(kind=8), dimension(:), allocatable     :: values2
-   real(kind=8)                                ::  maxa, a, maxv, minv, maxr, r
-   integer(kind=4)                            :: decimalPrecision, bitsPerValue1, bitsPerValue2
-   integer                                       :: i, iret
+   real(kind=8)                                :: maxa, a, maxv, minv, maxr, r=0
+   integer(kind=4)                             :: decimalPrecision, bitsPerValue1, bitsPerValue2
+   integer                                     :: i, iret
 
    call codes_open_file(infile, &
                         '../../data/regular_latlon_surface_constant.grib1', 'r')
