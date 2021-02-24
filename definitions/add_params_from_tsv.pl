@@ -10,7 +10,9 @@
 # nor does it submit to any jurisdiction.
 #
 #######################################################################
-# Script to generate parameter definition files for GRIB2.
+# Script for GRIB2 parameter definitions
+# Can either write the *.def files or push to the Parameter DB
+#
 # Reads an input TSV (tab-separated-value) file which should contain
 # the following parameter keys as columns:
 #   paramId
@@ -30,9 +32,15 @@
 #    typeOfStatisticalProcessing
 #    aerosolType
 #    constituentType
+#    typeOfGeneratingProcess
+#    localTablesVersion
+#    typeOfWavelengthInterval
+#    scaleFactorOfFirstWavelength
+#    scaledValueOfFirstWavelength
+#    scaleFactorOfSecondWavelength
+#    scaledValueOfSecondWavelength
+#    sourceSinkChemicalPhysicalProcess
 #
-# It outputs the def files:
-#    name.def paramId.def shortName.def units.def cfVarName.def
 #
 #######################################################################
 $|=1;
@@ -49,6 +57,7 @@ my $WRITE_TO_PARAMDB = 0;
 my ($paramId, $shortName, $name, $units, $cfVarName);
 my ($discipline, $pcategory, $pnumber, $type1, $type2, $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2);
 my ($stat, $aero, $constit);
+my ($typeGen, $localTV, $typeOfWLInt, $scaleFactorWL1, $scaledValueWL1, $scaleFactorWL2, $scaledValueWL2, $sourceSink);
 
 my %key_to_attrib_map = (
     'discipline'         => 4,
@@ -73,7 +82,7 @@ my $pass = $ENV{'DB_PASS'} || 'unknown';
 my $dbh = 0;
 my $centre = -3; # WMO
 my $edition = 2;
-my $contactId = "A test"; # JIRA issue ID
+my $contactId; # JIRA issue ID
 
 my $PARAMID_FILENAME   = "paramId.def";
 my $SHORTNAME_FILENAME = "shortName.def";
@@ -83,7 +92,7 @@ my $CFVARNAME_FILENAME = "cfVarName.def";
 
 my $tm = localtime;
 my $today_date = sprintf("%04d-%02d-%02d", $tm->year+1900, ($tm->mon)+1, $tm->mday);
-print "Using insert and update dates: $today_date\n";
+#print "Using insert and update dates: $today_date\n";
 
 if ($WRITE_TO_FILES) {
     create_or_append(\*OUT_PARAMID,   "$PARAMID_FILENAME");
@@ -109,14 +118,20 @@ while (<>) {
     $lcount++;
 
     ($paramId, $shortName, $name, $units,
-        $discipline, $pcategory, $pnumber, $type1, $type2,
-        $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2, $stat, $aero, $constit) = split(/\t/);
+     $discipline, $pcategory, $pnumber, $type1, $type2,
+     $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2, $stat, $aero, $constit,
+     $typeGen, $localTV, $typeOfWLInt, $scaleFactorWL1, $scaledValueWL1, $scaleFactorWL2, $scaledValueWL2, $sourceSink
+     ) = split(/\t/);
 
-    die "Error: paramID \"$paramId\" is not an integer!" if (!is_integer($paramId));
+    die "Error: paramID \"$paramId\" is not an integer (input row=$lcount)!" if (!is_integer($paramId));
 
     $units = "~" if ($units eq "");
     $cfVarName = $shortName;
     $cfVarName = '\\'.$shortName if ($shortName =~ /^[0-9]/);
+    $scaleFactorWL1 = undef if ($scaleFactorWL1 =~ /missing/);
+    $scaledValueWL1 = undef if ($scaledValueWL1 =~ /missing/);
+    $scaleFactorWL2 = undef if ($scaleFactorWL2 =~ /missing/);
+    $scaledValueWL2 = undef if ($scaledValueWL2 =~ /missing/);
 
     if ($WRITE_TO_FILES) {
         write_out_file(\*OUT_PARAMID,   $name, $paramId);
@@ -128,8 +143,19 @@ while (<>) {
 
     if ($WRITE_TO_PARAMDB) {
         my $units_code = get_db_units_code($units);
-        my $is_chem = "1";
+        my $is_chem = "";
         my $is_aero = "";
+        if ($aero ne "") {
+            $is_aero = "1";
+            $is_chem = "";
+        }
+        if ($constit ne "") {
+            $is_aero = "";
+            $is_chem = "1";
+        }
+        die "Error: Both aerosolType and constituentType cannot be set!" if ($constit ne "" && $aero ne "");
+        die "Error: No contact ID provided\n" if (!$contactId);
+        #print "Inserting paramId $paramId ...\n";
         $dbh->do("insert into param(id,shortName,name,units_id,insert_date,update_date,contact) values (?,?,?,?,?,?,?)",undef,
             $paramId, $shortName, $name , $units_code, $today_date, $today_date, $contactId);
 
@@ -150,7 +176,23 @@ while (<>) {
 
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,53,$is_chem,0)      if ($is_chem ne "");
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,54,$is_aero,0)      if ($is_aero ne "");
-        #$dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,yy,xx,0) if (xx ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,28,$typeGen,0)      if ($typeGen ne "");
+
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,16,$localTV,0)         if ($localTV ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,57,$typeOfWLInt,0)     if ($typeOfWLInt ne "");
+        
+        if (! defined $scaleFactorWL1 || $scaleFactorWL1 ne "") {
+            $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,58,$scaleFactorWL1,0);
+        }
+        if (! defined $scaledValueWL1 || $scaledValueWL1 ne "") {
+            $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,59,$scaledValueWL1,0);
+        }
+        if (! defined $scaleFactorWL2 ||$scaleFactorWL2 ne "") {
+            $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,60,$scaleFactorWL2,0);
+        }
+        if (! defined $scaledValueWL2 || $scaledValueWL2 ne "") {
+            $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,61,$scaledValueWL2,0);
+        }
 
         # format is only GRIB2
         $dbh->do("insert into param_format(param_id,grib1,grib2) values (?,?,?)",undef,$paramId,0,1);
@@ -166,47 +208,15 @@ if ($WRITE_TO_FILES) {
     close(OUT_CFVARNAME) or die "$CFVARNAME_FILENAME: $!";
 }
 if ($WRITE_TO_PARAMDB) {
-    print "Wrote to Param DB. $lcount rows processed\n";
+    print "Wrote to Parameter Database. Number of rows processed = $lcount\n";
 }
 
 # -------------------------------------------------------------------
 sub get_db_units_code {
     my $u = shift;
-    return 1  if ($u eq 'm**2 s**-1');
-    return 2  if ($u eq 'K');
-    return 3  if ($u eq '(0 - 1)');
-    return 4  if ($u eq 'm');
-    return 5  if ($u eq 'm s**-1');
-    return 6  if ($u eq 'J m**-2');
-    return 7  if ($u eq '~');
-    return 8  if ($u eq 's**-1');
-    return 9  if ($u eq 'kg m**-3');
-    return 10 if ($u eq 'm**3 m**-3');
-    return 12 if ($u eq 's');
-    return 14 if ($u eq 'N m**-2 s');
-    return 15 if ($u eq 'm**2 s**-2');
-    return 16 if ($u eq 'Pa');
-    return 17 if ($u eq 'J kg**-1');
-    return 18 if ($u eq 'K m**2 kg**-1 s**-1');
-    return 19 if ($u eq 'm**2 m**-2');
-    return 20 if ($u eq 's m**-1');
-    return 21 if ($u eq 'kg kg**-1');
-    return 22 if ($u eq 'kg m**-2');
-    return 23 if ($u eq 'dimensionless');
-    return 26 if ($u eq 'Pa s**-1');
-    return 27 if ($u eq 'm of water equivalent');
-    return 28 if ($u eq 'gpm');
-    return 29 if ($u eq '%');
-    return 33 if ($u eq 'kg m**-2 s**-1');
-
-    return 179 if ($u eq 'W');
-    return 172 if ($u eq 'W m**-2');
-    return 173 if ($u eq 'Index');
-    return 174 if ($u eq 'W m**-2');
-    return 175 if ($u eq 'kg m**-3');
-    return 182 if ($u eq 'Degree N');
-
-    die "Unrecognized units $u\n";
+    my $unit_id = $dbh->selectrow_array("select id from units where name = ?",undef,$u);
+    die "Error: Unit not found: '$u'\n" if (!$unit_id);
+    return $unit_id;
 }
 
 sub write_out_file {
@@ -262,9 +272,9 @@ sub create_or_append {
     my $fname   = $_[1];
 
     if (-f "$fname") {
-        open($outfile,  ">>$fname") or die "$fname: $!";
+        open($outfile,  ">>$fname") or die "Error: $fname: $!";
     } else {
-        open($outfile,  ">$fname")  or die "$fname: $!";
+        open($outfile,  ">$fname")  or die "Error: $fname: $!";
     }
 }
 
