@@ -700,7 +700,7 @@ int main(int argc, char* argv[])
     trunc[1].trunc     = 77;
     trunc[1].subtrunc  = 77;
     trunc[1].subnsmax  = NSTRON;
-    trunc[2].subnmsmax = NSTRON;
+    trunc[1].subnmsmax = NSTRON;
     trunc[1].len       = 4 * (NSMAX + 1) * (NMSMAX + 1);
     trunc[1].values    = (double*)malloc(sizeof(double) * trunc[1].len);
     trunc[1].name      = "rectangle_rectangle";
@@ -714,8 +714,6 @@ int main(int argc, char* argv[])
     trunc[2].len       = ILCHAM;
     trunc[2].values    = (double*)values;
     trunc[2].name      = "ellipse_full";
-
-
 
     for (itrunc = 0; itrunc < 3; itrunc++) {
         for (igrid = 0; igrid < 3; igrid++) {
@@ -803,7 +801,6 @@ int main(int argc, char* argv[])
                 long int LxInMetres, LyInMetres, LuxInMetres, LuyInMetres, LcxInMetres, LcyInMetres;
                 long int nsmax, nmsmax;
                 char geometry[128];
-
 
                 sprintf(f, "lam_bf_%s_%s.grib", grids[igrid], trunc[itrunc].name);
                 fp         = fopen(f, "rb");
