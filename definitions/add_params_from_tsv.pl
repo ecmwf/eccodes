@@ -80,9 +80,9 @@ my $host = $ENV{'DB_HOST'} || 'unknown';
 my $user = $ENV{'DB_USER'} || 'unknown';
 my $pass = $ENV{'DB_PASS'} || 'unknown';
 my $dbh = 0;
-my $centre = -3; # WMO
-my $edition = 2;
-my $contactId; # JIRA issue ID
+my $centre = -3; # WMO table ID
+my $edition = 2; # GRIB edition 2
+my $contactId;   # JIRA issue ID
 
 my $PARAMID_FILENAME   = "paramId.def";
 my $SHORTNAME_FILENAME = "shortName.def";
@@ -92,7 +92,6 @@ my $CFVARNAME_FILENAME = "cfVarName.def";
 
 my $tm = localtime;
 my $today_date = sprintf("%04d-%02d-%02d", $tm->year+1900, ($tm->mon)+1, $tm->mday);
-#print "Using insert and update dates: $today_date\n";
 
 if ($WRITE_TO_FILES) {
     create_or_append(\*OUT_PARAMID,   "$PARAMID_FILENAME");
@@ -123,7 +122,9 @@ while (<>) {
      $typeGen, $localTV, $typeOfWLInt, $scaleFactorWL1, $scaledValueWL1, $scaleFactorWL2, $scaledValueWL2, $sourceSink
      ) = split(/\t/);
 
-    die "Error: paramID \"$paramId\" is not an integer (input row=$lcount)!" if (!is_integer($paramId));
+    die "Error: paramID \"$paramId\" is not an integer (input row=$lcount)!\n"             if (!is_integer($paramId));
+    die "Error: shortName \"$shortName\" has an invalid character (input row=$lcount)!\n"  if ($shortName =~ /[ '"]/);
+    die "Error: name \"$name\" should have uppercase 1st letter (input row=$lcount)!\n"    if ($name !~ /^[A-Z]/);
 
     $units = "~" if ($units eq "");
     $cfVarName = $shortName;
@@ -178,8 +179,8 @@ while (<>) {
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,54,$is_aero,0)      if ($is_aero ne "");
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,28,$typeGen,0)      if ($typeGen ne "");
 
-        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,16,$localTV,0)         if ($localTV ne "");
-        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,57,$typeOfWLInt,0)     if ($typeOfWLInt ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,16,$localTV,0)      if ($localTV ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,57,$typeOfWLInt,0)  if ($typeOfWLInt ne "");
         
         if (! defined $scaleFactorWL1 || $scaleFactorWL1 ne "") {
             $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,58,$scaleFactorWL1,0);
@@ -193,8 +194,9 @@ while (<>) {
         if (! defined $scaledValueWL2 || $scaledValueWL2 ne "") {
             $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,61,$scaledValueWL2,0);
         }
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,64,$sourceSink,0)  if ($sourceSink ne "");
 
-        # format is only GRIB2
+        # format is only GRIB2 hence grib1 entry=0 and grib2=1
         $dbh->do("insert into param_format(param_id,grib1,grib2) values (?,?,?)",undef,$paramId,0,1);
     }
 } # for each input line
@@ -239,6 +241,15 @@ sub write_out_file {
     print $outfile "  scaledValueOfSecondFixedSurface = $scaledValue2 ;\n" if ($scaledValue2 ne "");
     print $outfile "  scaleFactorOfSecondFixedSurface = $scaleFactor2 ;\n" if ($scaleFactor2 ne "");
     print $outfile "  typeOfStatisticalProcessing = $stat ;\n"             if ($stat ne "");
+
+    print $outfile "  aerosolType = $aero ;\n"         if ($aero ne "");
+    print $outfile "  constituentType = $constit ;\n"  if ($constit ne "");
+    print $outfile "  is_aerosol = 1 ;\n"              if ($aero ne "");
+    print $outfile "  is_chemical = 1 ;\n"             if ($constit ne "");
+
+    print $outfile "  typeOfGeneratingProcess = $typeGen ;\n"  if ($typeGen ne "");
+    print $outfile "  localTablesVersion = $localTV ;\n"       if ($localTV ne "");
+
     print $outfile "}\n";
 }
 
@@ -265,6 +276,17 @@ sub check_first_row_column_names {
 
     die "Error: 1st row column titles wrong: Column 15 should be 'aerosolType'\n" if ($keys[14] ne "aerosolType");
     die "Error: 1st row column titles wrong: Column 16 should be 'constituentType'\n" if ($keys[15] ne "constituentType");
+
+    die "Error: 1st row column titles wrong: Column 17 should be 'typeOfGeneratingProcess'\n" if ($keys[16] ne "typeOfGeneratingProcess");
+    die "Error: 1st row column titles wrong: Column 18 should be 'localTablesVersion'\n" if ($keys[17] ne "localTablesVersion");
+
+    die "Error: 1st row column titles wrong: Column 19 should be 'typeOfWavelengthInterval'\n" if ($keys[18] ne "typeOfWavelengthInterval");
+    die "Error: 1st row column titles wrong: Column 20 should be 'scaleFactorOfFirstWavelength'\n" if ($keys[19] ne "scaleFactorOfFirstWavelength");
+    die "Error: 1st row column titles wrong: Column 21 should be 'scaledValueOfFirstWavelength'\n" if ($keys[20] ne "scaledValueOfFirstWavelength");
+    die "Error: 1st row column titles wrong: Column 22 should be 'scaleFactorOfSecondWavelength'\n" if ($keys[21] ne "scaleFactorOfSecondWavelength");
+
+    die "Error: 1st row column titles wrong: Column 23 should be 'scaledValueOfSecondWavelength'\n" if ($keys[22] ne "scaledValueOfSecondWavelength");
+    die "Error: 1st row column titles wrong: Column 24 should be 'sourceSinkChemicalPhysicalProcess'\n" if ($keys[23] ne "sourceSinkChemicalPhysicalProcess");
 }
 
 sub create_or_append {
