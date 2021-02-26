@@ -26,7 +26,7 @@
 #include "mir/compat/GribCompatibility.h"
 #include "mir/data/MIRField.h"
 #include "mir/input/MIRInput.h"
-#include "mir/packing/Packer.h"
+#include "mir/key/packing/Packing.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Gridded.h"
 #include "mir/repres/Representation.h"
@@ -108,7 +108,7 @@ void GribOutput::estimate(const param::MIRParametrisation& param, api::MIREstima
     if (param.userParametrisation().get("packing", packing)) {
 
         estimator.packing(packing);
-        // const packing::Packer &packer = packing::Packer::lookup(packing);
+        // const key::packing::Packing &packer = key::packing::Packing::lookup(packing);
         // packer.estimate(estimator, *field.representation());
     }
 
@@ -352,7 +352,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
         std::string packing;
         if (parametrisation.userParametrisation().get("packing", packing)) {
-            std::unique_ptr<packing::Packer> packer(packing::PackerFactory::build(
+            std::unique_ptr<key::packing::Packing> packer(key::packing::PackingFactory::build(
                 packing, parametrisation.userParametrisation(), parametrisation.fieldParametrisation()));
             packer->fill(info, *field.representation());
         }
@@ -534,8 +534,8 @@ size_t GribOutput::set(const param::MIRParametrisation& param, context::Context&
         // set new handle key/values
         std::string packing;
         if (param.userParametrisation().get("packing", packing)) {
-            std::unique_ptr<packing::Packer> packer(
-                packing::PackerFactory::build(packing, param.userParametrisation(), param.fieldParametrisation()));
+            std::unique_ptr<key::packing::Packing> packer(key::packing::PackingFactory::build(
+                packing, param.userParametrisation(), param.fieldParametrisation()));
             auto type = packer->type(field.representation());
             auto len  = type.length();
             if (len > 0) {
