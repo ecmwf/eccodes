@@ -196,8 +196,8 @@ static int select_area(grib_accessor* a)
     grib_iarray* subsets;
     long* subsets_ar = 0;
     size_t nsubsets  = 0;
-    char latstr[20]  = {0,};
-    char lonstr[20] = {0,};
+    char latstr[32]  = {0,};
+    char lonstr[32] = {0,};
 
     ret = grib_get_long(h, "compressedData", &compressed);
     if (ret)

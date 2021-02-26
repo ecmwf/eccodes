@@ -18,14 +18,14 @@ program print_data
    integer            :: ifile
    integer            :: igrib
    integer            :: i
-   real(kind=8), dimension(99200)       :: values_static
+   real(kind=8), dimension(496)   :: values_static
    integer(kind=4)    :: numPoints
    real(kind=8)       :: average
    real(kind=8)       :: the_max
    real(kind=8)       :: the_min
 
    call grib_open_file(ifile, &
-                       '../../data/constant_field.grib1', 'r')
+                       '../../data/regular_latlon_surface_constant.grib1', 'r')
 
    ! A new GRIB message is loaded from file
    ! igrib is the grib id to be used in subsequent calls

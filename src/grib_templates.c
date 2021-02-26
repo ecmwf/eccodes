@@ -107,7 +107,7 @@ static grib_handle* try_bufr_template(grib_context* c, const char* dir, const ch
 
 static char* try_template_path(grib_context* c, const char* dir, const char* name)
 {
-    char path[1024];
+    char path[2048];
 
     sprintf(path, "%s/%s.tmpl", dir, name);
 

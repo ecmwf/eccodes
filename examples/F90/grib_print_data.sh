@@ -10,4 +10,4 @@
 . ./include.sh
 
 ${examples_dir}/eccodes_f_grib_print_data | grep '99200 *values found'
-${examples_dir}/eccodes_f_grib_print_data_static | grep '99200 *values found'
+${examples_dir}/eccodes_f_grib_print_data_static | grep '496 *values found'
