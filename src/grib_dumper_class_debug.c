@@ -511,7 +511,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
 static void set_begin_end(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_debug* self = (grib_dumper_debug*)d;
-    if ((d->option_flags & GRIB_DUMP_FLAG_OCTECT) != 0) {
+    if ((d->option_flags & GRIB_DUMP_FLAG_OCTET) != 0) {
         self->begin  = a->offset - self->section_offset + 1;
         self->theEnd = grib_get_next_position_offset(a) - self->section_offset;
     }

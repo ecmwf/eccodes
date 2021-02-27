@@ -125,7 +125,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("O")) {
         options->dump_mode  = "wmo";
         json                = 0;
-        options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTECT | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
+        options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("p")) {

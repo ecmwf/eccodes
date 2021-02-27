@@ -104,7 +104,7 @@ Log mode for information for processing information
 #define GRIB_DUMP_FLAG_DUMP_OK (1 << 1)
 #define GRIB_DUMP_FLAG_VALUES (1 << 2)
 #define GRIB_DUMP_FLAG_CODED (1 << 3)
-#define GRIB_DUMP_FLAG_OCTECT (1 << 4)
+#define GRIB_DUMP_FLAG_OCTET (1 << 4)
 #define GRIB_DUMP_FLAG_ALIASES (1 << 5)
 #define GRIB_DUMP_FLAG_TYPE (1 << 6)
 #define GRIB_DUMP_FLAG_HEXADECIMAL (1 << 7)
@@ -700,9 +700,9 @@ int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat,
                       double* values, double* distances, int* indexes, size_t* len);
 
 /**
-*  Frees an nearest from memory
+*  Frees a nearest neighbour object from memory
 *
-* @param nearest           : the nearest
+* @param nearest     : the nearest
 * @return            0 if OK, integer value on error
 */
 int grib_nearest_delete(grib_nearest* nearest);
@@ -766,7 +766,7 @@ int grib_get_size(const grib_handle* h, const char* key, size_t* size);
 *
 * @param h           : the handle to get the offset from
 * @param key         : the key to be searched
-* @param length        : the address of a size_t where the length will be set
+* @param length      : the address of a size_t where the length will be set
 * @return            0 if OK, integer value on error
 */
 int grib_get_length(const grib_handle* h, const char* key, size_t* length);
