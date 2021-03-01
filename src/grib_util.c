@@ -1086,7 +1086,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         if (h->context->debug == -1)
             fprintf(stderr, "ECCODES DEBUG grib_util: done grib_set_double_array \n");
 
-
         /* convert to second_order if not constant field */
         if (setSecondOrder) {
             int constant        = 0;
@@ -1248,7 +1247,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(latitudeOfLastGridPointInDegrees);
             break;
-
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_LL:
             COPY_SPEC_LONG(bitmapPresent);

@@ -22,7 +22,6 @@
 #define NULL_MARKER 0
 #define NOT_NULL_MARKER 255
 
-
 /* #if GRIB_PTHREADS */
 #if 0
 static pthread_once_t once  = PTHREAD_ONCE_INIT;
@@ -57,7 +56,6 @@ static void init()
 }
 #endif
 
-
 static const char* mars_keys =
     "mars.date,mars.time,mars.expver,mars.stream,mars.class,mars.type,"
     "mars.step,mars.param,mars.levtype,mars.levelist,mars.number,mars.iteration,"
@@ -80,7 +78,6 @@ static char* get_key(char** keys, int* type)
     p     = *keys;
     while (*p == ' ')
         p++;
-
 
     while (*p != 0 && *p != ':' && *p != ',')
         p++;
@@ -1403,7 +1400,6 @@ int grib_index_add_file(grib_index* index, const char* filename)
         err=grib_get_long(h,"totalLength",&length);
         if (err) return err;
         field->length=length;
-
 
         if (field_tree->field) {
             grib_field* pfield=field_tree->field;
