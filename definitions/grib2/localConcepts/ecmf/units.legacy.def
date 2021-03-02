@@ -190,3 +190,9 @@
  parameterCategory = 174 ;
  parameterNumber = 8 ;
 }
+#Direct solar radiation
+'J m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 47 ;
+}
