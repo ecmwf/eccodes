@@ -105,7 +105,7 @@ void GribOutput::estimate(const param::MIRParametrisation& param, api::MIREstima
     }
 
     std::string packing;
-    if (param.userParametrisation().get("packing", packing)) {
+    if (key::packing::PackingFactory::get(packing, param)) {
 
         estimator.packing(packing);
         // const key::packing::Packing &packer = key::packing::Packing::lookup(packing);
@@ -120,41 +120,47 @@ void GribOutput::estimate(const param::MIRParametrisation& param, api::MIREstima
 
 
 bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParametrisation& param) const {
+    auto& user  = param.userParametrisation();
+    auto& field = param.fieldParametrisation();
+
     bool ok = false;
 
-    long bits = 0;
-    if (param.userParametrisation().get("accuracy", bits)) {
-        out << "accuracy=" << bits;
-        ok = true;
+    long bits1 = -1;
+    long bits2 = -1;
+    if (user.get("accuracy", bits1)) {
+        ASSERT(bits1 > 0);
+        if (!field.get("accuracy", bits2) || bits2 != bits1) {
+            out << (ok ? "," : "") << "accuracy=" << bits1;
+            ok = true;
+        }
     }
 
-    std::string packing;
-    if (param.userParametrisation().get("packing", packing)) {
-        if (ok) {
-            out << ",";
+    std::string packing1;
+    std::string packing2;
+    if (key::packing::PackingFactory::get(packing1, param)) {
+        ASSERT(!packing1.empty());
+        if (!field.get("packing", packing2) || packing2 != packing1) {
+            out << (ok ? "," : "") << "packing=" << packing1;
+            ok = true;
         }
-        out << "packing=" << packing;
-        ok = true;
     }
 
-    long edition = 0;
-    if (param.userParametrisation().get("edition", edition)) {
-        if (ok) {
-            out << ",";
+    long edition1 = 0;
+    long edition2 = 0;
+    if (user.get("edition", edition1)) {
+        ASSERT(edition1 > 0);
+        if (!field.get("edition", edition2) || edition2 != edition1) {
+            out << (ok ? "," : "") << "edition=" << bits1;
+            ok = true;
         }
-        out << "edition=" << edition;
-        ok = true;
     }
 
     std::string compatibility;
-    if (param.userParametrisation().get("compatibility", compatibility)) {
-        if (ok) {
-            out << ",";
-        }
-        out << "compatibility=" << compatibility;
+    if (user.get("compatibility", compatibility)) {
+        out << (ok ? "," : "") << "compatibility=" << compatibility;
         ok = true;
 
-        const compat::GribCompatibility& c = compat::GribCompatibility::lookup(compatibility);
+        auto& c = compat::GribCompatibility::lookup(compatibility);
         c.printParametrisation(out, param);
     }
 
@@ -178,27 +184,27 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
     bool todo = false;
 
     long bits1 = -1;
+    long bits2 = -1;
     if (user.get("accuracy", bits1)) {
         ASSERT(bits1 > 0);
-        long bits2 = -1;
-        todo       = field.get("accuracy", bits2) ? bits2 != bits1 : true;
+        todo = !field.get("accuracy", bits2) || bits1 != bits2;
     }
 
     if (!todo) {
         std::string packing1;
-        if (user.get("packing", packing1)) {
+        std::string packing2;
+        if (key::packing::PackingFactory::get(packing1, param)) {
             ASSERT(!packing1.empty());
-            std::string packing2;
-            todo = field.get("packing", packing2) ? packing2 != packing1 : true;
+            todo = !field.get("packing", packing2) || packing1 != packing2;
         }
     }
 
     if (!todo) {
         long edition1 = 0;
+        long edition2 = 0;
         if (user.get("edition", edition1)) {
             ASSERT(edition1 > 0);
-            long edition2 = 0;
-            todo          = field.get("edition", edition2) ? edition2 != edition1 : true;
+            todo = !field.get("edition", edition2) || edition1 != edition2;
         }
     }
 
@@ -224,8 +230,8 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
     std::string packing1;
     std::string packing2;
 
-    param1.userParametrisation().get("packing", packing1);
-    param2.userParametrisation().get("packing", packing2);
+    key::packing::PackingFactory::get(packing1, param1);
+    key::packing::PackingFactory::get(packing2, param2);
 
     if (packing1 != packing2) {
         return false;
@@ -263,7 +269,7 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
 }
 
 
-size_t GribOutput::save(const param::MIRParametrisation& parametrisation, context::Context& ctx) {
+size_t GribOutput::save(const param::MIRParametrisation& param, context::Context& ctx) {
     trace::ResourceUsage usage("GribOutput::save");
 
     interpolated_++;
@@ -285,7 +291,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
         codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
         // Special case where only values are changing; handle is cloned, and new values are set
-        if (parametrisation.userParametrisation().has("filter")) {
+        if (param.userParametrisation().has("filter")) {
 
             // Make sure handle deleted even in case of exception
             auto h = codes_handle_clone(input.gribHandle(i));
@@ -322,23 +328,13 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
         info.grid.bitmapPresent = field.hasMissing() ? 1 : 0;
         info.grid.missingValue  = field.missingValue();
 
-        // Packing
-        info.packing.packing  = CODES_UTIL_PACKING_SAME_AS_INPUT;
-        info.packing.accuracy = CODES_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT;
-
-        long bits;
-        if (parametrisation.userParametrisation().get("accuracy", bits)) {
-            info.packing.accuracy     = CODES_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
-            info.packing.bitsPerValue = bits;
-        }
-
-        long edition;
-        if (parametrisation.userParametrisation().get("edition", edition)) {
-            info.packing.editionNumber = edition;
-        }
-
         // Ask representation to update info
-        field.representation()->fill(info);
+        repres::RepresentationHandle repres(field.representation());
+        repres->fill(info);
+
+        // Packing, accuracy, edition
+        std::unique_ptr<key::packing::Packing> packing(key::packing::PackingFactory::build(param, repres));
+        packing->fill(info);
 
         // Extra settings (paramId comes from here)
         for (const auto& k : field.metadata(i)) {
@@ -350,24 +346,18 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             info.packing.extra_settings[j].long_value = k.second;
         }
 
-        std::string packing;
-        if (parametrisation.userParametrisation().get("packing", packing)) {
-            std::unique_ptr<key::packing::Packing> packer(key::packing::PackingFactory::build(
-                packing, parametrisation.userParametrisation(), parametrisation.fieldParametrisation()));
-            packer->fill(info, *field.representation());
-        }
 
         bool remove = false;
-        parametrisation.get("delete-local-definition", remove);
+        param.get("delete-local-definition", remove);
         info.packing.deleteLocalDefinition = remove ? 1 : 0;
 
         // Give a chance to a sub-class to modify info
         fill(h, info);
 
         std::string compatibility;
-        if (parametrisation.userParametrisation().get("compatibility", compatibility)) {
-            const compat::GribCompatibility& c = compat::GribCompatibility::lookup(compatibility);
-            c.execute(*this, parametrisation, h, info);
+        if (param.userParametrisation().get("compatibility", compatibility)) {
+            auto& c = compat::GribCompatibility::lookup(compatibility);
+            c.execute(*this, param, h, info);
         }
 
         if (Log::debug()) {
@@ -475,7 +465,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
         static bool checkArea = eckit::Resource<bool>("$MIR_CHECK_AREA", false);
         if (checkArea) {
             std::vector<double> v;
-            if (parametrisation.userParametrisation().get("area", v) && v.size() == 4) {
+            if (param.userParametrisation().get("area", v) && v.size() == 4) {
 
                 util::BoundingBox user(v[0], v[1], v[2], v[3]);
 
@@ -530,31 +520,12 @@ size_t GribOutput::set(const param::MIRParametrisation& param, context::Context&
         auto h = codes_handle_clone(input.gribHandle(field.handle(i)));
         HandleDeleter hf(h);
 
+        // Packing, accuracy, edition
+        repres::RepresentationHandle repres(field.representation());
+        std::unique_ptr<key::packing::Packing> packing(key::packing::PackingFactory::build(param, repres));
+        packing->set(h);
 
-        // set new handle key/values
-        std::string packing;
-        if (param.userParametrisation().get("packing", packing)) {
-            std::unique_ptr<key::packing::Packing> packer(key::packing::PackingFactory::build(
-                packing, param.userParametrisation(), param.fieldParametrisation()));
-            auto type = packer->type(field.representation());
-            auto len  = type.length();
-            if (len > 0) {
-                GRIB_CALL(codes_set_string(h, "packingType", type.c_str(), &len));
-            }
-        }
-
-        long bitsPerValue = 0;
-        if (param.userParametrisation().get("accuracy", bitsPerValue)) {
-            GRIB_CALL(codes_set_long(h, "bitsPerValue", bitsPerValue));
-        }
-
-        long edition = 0;
-        if (param.userParametrisation().get("edition", edition)) {
-            GRIB_CALL(codes_set_long(h, "edition", edition));
-        }
-
-
-        // set values
+        // Values
         GRIB_CALL(codes_set_double(h, "missingValue", field.missingValue()));
         GRIB_CALL(codes_set_long(h, "bitmapPresent", field.hasMissing()));
         GRIB_CALL(codes_set_double_array(h, "values", field.values(i).data(), field.values(i).size()));
