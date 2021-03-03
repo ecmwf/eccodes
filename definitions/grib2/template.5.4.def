@@ -3,7 +3,7 @@
 # TEMPLATE 5.4, Grid point data - IEEE packing
 # added for conversion from other packing
 transient bitsPerValue=0 : hidden;
-transient referenceValue=0  : hidden;
+transient referenceValue=0 : hidden;
 transient binaryScaleFactor=0 : hidden;
 transient decimalScaleFactor=0 : hidden;
 alias numberOfBits = bitsPerValue;

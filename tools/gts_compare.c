@@ -10,6 +10,42 @@
 
 #include "grib_tools.h"
 
+grib_option grib_options[] = {
+    /*  {id, args, help}, on, command_line, value*/
+    /*{"r",0,"Compare files in which the messages are not in the same order. This option is time expensive.\n",0,1,0},*/
+    { "b:", 0, 0, 0, 1, 0 },
+    { "d", 0, "Write different messages on files\n", 0, 1, 0 },
+    { "T:", 0, 0, 1, 0, "T" }, /* GTS */
+    { "c:", 0, 0, 0, 1, 0 },
+    { "S:", "start", "First field to be processed.\n", 0, 1, 0 },
+    { "E:", "end", "Last field to be processed.\n", 0, 1, 0 },
+    { "a", 0, "-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n", 0, 1, 0 },
+    /*{"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},*/
+    /*{"R:",0,0,0,1,0},*/
+    /*{"A:",0,0,0,1,0},*/
+    { "w:", 0, 0, 0, 1, 0 },
+    { "f", 0, 0, 0, 1, 0 },
+    { "F", 0, 0, 1, 0, 0 },
+    { "q", 0, 0, 1, 0, 0 },
+    { "I", 0, 0, 1, 0, 0 },
+    { "V", 0, 0, 0, 1, 0 },
+    { "7", 0, 0, 0, 1, 0 },
+    { "v", 0, 0, 0, 1, 0 }
+};
+
+int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
+
+const char* tool_description =
+    "Compare GTS messages contained in two files."
+    "\n\tIf some differences are found it fails returning an error code."
+    "\n\tDefault behaviour: bit-by-bit compare, same order in files.";
+
+const char* tool_name = "gts_compare";
+const char* tool_usage =
+    "[options] "
+    "file file";
+
+
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 {
     if (*a != *b)
@@ -37,7 +73,7 @@ compare_double_proc compare_double;
 grib_string_list* blocklist = 0;
 
 static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_options* options);
-static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_handle* h2, const char* name, int type);
+
 int error               = 0;
 int count               = 0;
 int lastPrint           = 0;
@@ -53,6 +89,12 @@ int tolerance_factor   = 1;
 static int write_error = 0;
 
 static int write_count = 0;
+
+grib_handle* global_handle = NULL;
+int counter                = 0;
+int start                  = -1;
+int end                    = -1;
+
 
 static void write_message(grib_handle* h, const char* str)
 {
@@ -102,46 +144,6 @@ static int blocklisted(const char* name)
     }
     return 0;
 }
-
-grib_option grib_options[] = {
-    /*  {id, args, help}, on, command_line, value*/
-    /*{"r",0,"Compare files in which the messages are not in the same order. This option is time expensive.\n",0,1,0},*/
-    { "b:", 0, 0, 0, 1, 0 },
-    { "d", 0, "Write different messages on files\n", 0, 1, 0 },
-    { "T:", 0, 0, 1, 0, "T" }, /* GTS */
-    { "c:", 0, 0, 0, 1, 0 },
-    { "S:", "start", "First field to be processed.\n", 0, 1, 0 },
-    { "E:", "end", "Last field to be processed.\n", 0, 1, 0 },
-    { "a", 0, "-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n", 0, 1, 0 },
-    /*{"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},*/
-    /*{"R:",0,0,0,1,0},*/
-    /*{"A:",0,0,0,1,0},*/
-    { "w:", 0, 0, 0, 1, 0 },
-    { "f", 0, 0, 0, 1, 0 },
-    { "F", 0, 0, 1, 0, 0 },
-    { "q", 0, 0, 1, 0, 0 },
-    { "I", 0, 0, 1, 0, 0 },
-    { "V", 0, 0, 0, 1, 0 },
-    { "7", 0, 0, 0, 1, 0 },
-    { "v", 0, 0, 0, 1, 0 }
-};
-
-grib_handle* global_handle = NULL;
-int counter                = 0;
-int start                  = -1;
-int end                    = -1;
-
-const char* tool_description =
-    "Compare GTS messages contained in two files."
-    "\n\tIf some differences are found it fails returning an error code."
-    "\n\tDefault behaviour: bit-by-bit compare, same order in files.";
-
-const char* tool_name = "gts_compare";
-const char* tool_usage =
-    "[options] "
-    "file file";
-
-int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
 int main(int argc, char* argv[])
 {

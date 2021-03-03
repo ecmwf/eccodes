@@ -10,6 +10,87 @@
 
 #include "grib_tools.h"
 
+grib_option grib_options[] = {
+    /*  {id, args, help}, on, command_line, value*/
+    { "r", 0, "Compare files in which the messages are not in the same order. This option is time expensive.\n", 0, 1, 0 },
+    { "b:", 0, 0, 0, 1, 0 },
+    { "e", 0, "Edition independent compare. It is used to compare GRIB edition 1 and 2.\n", 0, 1, 0 },
+    { "2", 0, "Enable two-way comparison.\n", 0, 1, 0 },
+    { "c:", 0, 0, 0, 1, 0 },
+    { "S:", "start", "First field to be processed.\n", 0, 1, 0 },
+    { "E:", "end", "Last field to be processed.\n", 0, 1, 0 },
+    { "a", 0, "-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n", 0, 1, 0 },
+    { "H", 0, "Compare only message headers (everything except data and bitmap). Bit-by-bit compare on. Incompatible with -c option.\n", 0, 1, 0 },
+    { "R:", 0, 0, 0, 1, 0 },
+    { "A:", 0, 0, 0, 1, 0 },
+    { "P", 0, "Compare data values using the packing error as tolerance.\n", 0, 1, 0 },
+    { "T:", "factor", "Compare data values using factor multiplied by the tolerance specified in options -P -R -A.\n", 0, 1, 0 },
+    { "w:", 0, 0, 0, 1, 0 },
+    { "f", 0, 0, 0, 1, 0 },
+    { "F", 0, 0, 1, 0, 0 },
+    { "q", 0, 0, 1, 0, 0 },
+    { "M", 0, 0, 1, 0, 0 },
+    { "I", 0, 0, 1, 0, 0 },
+    { "V", 0, 0, 0, 1, 0 },
+    { "7", 0, 0, 0, 1, 0 },
+    { "v", 0, 0, 0, 1, 0 }
+};
+int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
+
+const char* tool_description =
+    "Compare GRIB messages contained in two files."
+    "\n\tIf some differences are found it fails returning an error code."
+    "\n\tFloating-point values are compared exactly by default, different tolerances can be defined (see -P -A -R)."
+    "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
+
+const char* tool_name  = "grib_compare";
+const char* tool_usage = "[options] grib_file1 grib_file2";
+
+typedef double (*compare_double_proc)(double*, double*, double);
+static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_options* options);
+
+typedef struct grib_error grib_error;
+struct grib_error
+{
+    char* key;
+    int count;
+    grib_error* next;
+};
+
+static grib_error* error_summary;
+static compare_double_proc compare_double;
+static double global_tolerance     = 0;
+static int packingCompare          = 0;
+static grib_string_list* blocklist = 0;
+static int compareAbsolute         = 1;
+
+static int error     = 0;
+static int count     = 0;
+static int lastPrint = 0;
+static int force     = 0;
+
+/* ECC-651: Boolean 'two_way' set to 1 when '-2' option used */
+static int two_way = 0;
+/* Boolean 'handles_swapped' relevant in 'two_way' mode:
+ *  0 means: h1 is first file,  h2 is second file
+ *  1 means: h1 is second file, h2 is first file
+ */
+static int handles_swapped = 0;
+
+static double maxAbsoluteError = 1e-19;
+static int onlyListed          = 1;
+static int headerMode          = 0;
+static int morein1             = 0;
+static int morein2             = 0;
+static int listFromCommandLine;
+static int verbose             = 0;
+static double tolerance_factor = 1;
+
+static grib_handle* handle1 = NULL;
+static int global_counter   = 0;
+static int theStart         = -1;
+static int theEnd           = -1;
+
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 {
     if (*a != *b)
@@ -39,47 +120,6 @@ GRIB_INLINE static int grib_inline_rstrcmp(const char* a, const char* b)
     }
     return (q == b) ? 0 : 1;
 }
-
-typedef double (*compare_double_proc)(double*, double*, double);
-
-typedef struct grib_error grib_error;
-struct grib_error
-{
-    char* key;
-    int count;
-    grib_error* next;
-};
-
-static grib_error* error_summary;
-static compare_double_proc compare_double;
-static double global_tolerance     = 0;
-static int packingCompare          = 0;
-static grib_string_list* blocklist = 0;
-static int compareAbsolute         = 1;
-
-static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_options* options);
-static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_handle* h2, const char* name, int type);
-static int error     = 0;
-static int count     = 0;
-static int lastPrint = 0;
-static int force     = 0;
-
-/* ECC-651: Boolean 'two_way' set to 1 when '-2' option used */
-static int two_way = 0;
-/* Boolean 'handles_swapped' relevant in 'two_way' mode:
- *  0 means: h1 is first file,  h2 is second file
- *  1 means: h1 is second file, h2 is first file
- */
-static int handles_swapped = 0;
-
-static double maxAbsoluteError = 1e-19;
-static int onlyListed          = 1;
-static int headerMode          = 0;
-static int morein1             = 0;
-static int morein2             = 0;
-static int listFromCommandLine;
-static int verbose             = 0;
-static double tolerance_factor = 1;
 
 /* Returns 0 when the values are considered the same */
 static double compare_double_absolute(double* a, double* b, double tolerance)
@@ -133,48 +173,6 @@ static double relative_error(double a, double b, double err)
 
     return relativeError;
 }
-
-grib_option grib_options[] = {
-    /*  {id, args, help}, on, command_line, value*/
-    { "r", 0, "Compare files in which the messages are not in the same order. This option is time expensive.\n", 0, 1, 0 },
-    { "b:", 0, 0, 0, 1, 0 },
-    { "e", 0, "Edition independent compare. It is used to compare GRIB edition 1 and 2.\n", 0, 1, 0 },
-    { "2", 0, "Enable two-way comparison.\n", 0, 1, 0 },
-    { "c:", 0, 0, 0, 1, 0 },
-    { "S:", "start", "First field to be processed.\n", 0, 1, 0 },
-    { "E:", "end", "Last field to be processed.\n", 0, 1, 0 },
-    { "a", 0, "-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n", 0, 1, 0 },
-    { "H", 0, "Compare only message headers (everything except data and bitmap). Bit-by-bit compare on. Incompatible with -c option.\n", 0, 1, 0 },
-    { "R:", 0, 0, 0, 1, 0 },
-    { "A:", 0, 0, 0, 1, 0 },
-    { "P", 0, "Compare data values using the packing error as tolerance.\n", 0, 1, 0 },
-    { "T:", "factor", "Compare data values using factor multiplied by the tolerance specified in options -P -R -A.\n", 0, 1, 0 },
-    { "w:", 0, 0, 0, 1, 0 },
-    { "f", 0, 0, 0, 1, 0 },
-    { "F", 0, 0, 1, 0, 0 },
-    { "q", 0, 0, 1, 0, 0 },
-    { "M", 0, 0, 1, 0, 0 },
-    { "I", 0, 0, 1, 0, 0 },
-    { "V", 0, 0, 0, 1, 0 },
-    { "7", 0, 0, 0, 1, 0 },
-    { "v", 0, 0, 0, 1, 0 }
-};
-
-static grib_handle* handle1 = NULL;
-static int global_counter         = 0;
-static int theStart               = -1;
-static int theEnd                 = -1;
-
-const char* tool_description =
-    "Compare GRIB messages contained in two files."
-    "\n\tIf some differences are found it fails returning an error code."
-    "\n\tFloating-point values are compared exactly by default, different tolerances can be defined (see -P -A -R)."
-    "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
-
-const char* tool_name  = "grib_compare";
-const char* tool_usage = "[options] grib_file1 grib_file2";
-
-int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
 int main(int argc, char* argv[])
 {
@@ -403,8 +401,8 @@ static void print_index_key_values(grib_index* index, int counter)
     printf("\n");
 }
 
-/* Note: the grib_handle 'h' here is from the 2nd file */
-int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
+/* Note: the grib_handle 'handle2' here is from the 2nd file */
+int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* handle2)
 {
     int err = 0;
     count++;
@@ -421,7 +419,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             return 0;
         }
 
-        grib_index_search_same(idx1, h);
+        grib_index_search_same(idx1, handle2);
         handle1 = grib_handle_new_from_index(idx1, &err);
         if (options->verbose) {
             off_t offset   = 0;
@@ -445,7 +443,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             return 0;
         }
 
-        if (compare_handles(h, handle1, options)) {
+        if (compare_handles(handle2, handle1, options)) {
             error++;
             if (!force) exit(1);
         }
@@ -457,7 +455,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     else if (options->random)
         handle1 = grib_fieldset_next_handle(options->idx, &err);
     else
-        handle1 = grib_handle_new_from_file(h->context, options->infile_extra->file, &err);
+        handle1 = grib_handle_new_from_file(handle2->context, options->infile_extra->file, &err);
 
     if (!handle1 || err != GRIB_SUCCESS) {
         morein2++;
@@ -466,7 +464,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         return 0;
     }
 
-    if (compare_handles(handle1, h, options)) {
+    if (compare_handles(handle1, handle2, options)) {
         error++;
         if (!two_way) {
             /* If two_way mode: Don't exit yet. Show further differences */
@@ -476,7 +474,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     if (two_way) {
         /* ECC-651 and ECC-431 */
         handles_swapped = 1;
-        if (compare_handles(h, handle1, options)) {
+        if (compare_handles(handle2, handle1, options)) {
             error++;
             if (!force) exit(1);
         }

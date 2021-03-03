@@ -71,19 +71,42 @@
 # 192-254 Reserved for local use
 # See ECC-469
 200 200 Entire atmosphere (considered as a single layer)
+201 201 Entire ocean (considered as a single layer)
 204 204 Highest tropospheric freezing level
+206 206 Grid scale cloud bottom level
+207 207 Grid scale cloud top level
+209 209 Boundary layer cloud bottom level
+210 210 Boundary layer cloud top level
 211 211 Boundary layer cloud layer
 212 212 Low cloud bottom level
 213 213 Low cloud top level
 214 214 Low cloud layer
+215 215 Cloud ceiling
 220 220 Planetary boundary layer
+221 221 Layer between two hybrid levels
 222 222 Middle cloud bottom level
 223 223 Middle cloud top level
 224 224 Middle cloud layer
 232 232 High cloud bottom level
 233 233 High cloud top level
 234 234 High cloud layer
+235 235 Ocean isotherm level (1/10 deg C)
+236 236 Layer between two depths below ocean surface
+237 237 Bottom of ocean mixed layer
+238 238 Bottom of ocean isothermal layer
+239 239 Layer ocean surface and 26C ocean isothermal level
+240 240 Ocean mixed layer
+241 241 Ordered sequence of data
 242 242 Convective cloud bottom level
 243 243 Convective cloud top level
 244 244 Convective cloud layer
-255 255 Missing 
+245 245 Lowest level of the wet bulb zero
+246 246 Maximum equivalent potential temperature level
+247 247 Equilibrium level
+248 248 Shallow convective cloud bottom level
+249 249 Shallow convective cloud top level
+251 251 Deep convective cloud bottom level
+252 252 Deep convective cloud top level
+253 253 Lowest bottom level of supercooled liquid water layer
+254 254 Highest top level of supercooled liquid water layer
+255 255 Missing

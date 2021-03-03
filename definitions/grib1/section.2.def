@@ -11,7 +11,6 @@ alias radiusInMetres=radius;
 transient shapeOfTheEarth=0: hidden; #ECC-811
 
 #  NV -- number of vertical coordinate parameters
-
 unsigned[1] numberOfVerticalCoordinateValues : dump ;
 
 constant neitherPresent = 255;
@@ -33,12 +32,9 @@ meta gridDefinitionDescription codetable_title(dataRepresentationType);
 # (according to data representation type - octet 6 above)
 alias isRotatedGrid=zero;
 
-if (dataRepresentationType < 192)
-{
+if (dataRepresentationType < 192) {
   template dataRepresentation "grib1/grid_definition_[dataRepresentationType:l].def";
-}
-else
-{
+} else {
   template dataRepresentation "grib1/grid_definition_[dataRepresentationType:l].[centre:l].def";
 }
 position endGridDefinition;
@@ -46,15 +42,13 @@ position endGridDefinition;
 position offsetBeforePV;
 transient PVPresent = ( NV > 0);
 
-if (pvlLocation != neitherPresent)
-{
+if (pvlLocation != neitherPresent) {
   padto padding_sec2_2(offsetSection2 + pvlLocation - 1);
 } else {
   padto padding_sec2_2(offsetSection2 + 32 );
 }
 
-if(PVPresent )
-{
+if (PVPresent ) {
   ibmfloat pv[NV] : dump;
   alias vertical.pv=pv;
 }
@@ -62,10 +56,9 @@ if(PVPresent )
 position offsetBeforePL;
 
 transient PLPresent = (section2Length > (offsetBeforePL - offsetSection2))
-      && (section2Length >= (Nj * 2 + offsetBeforePL - offsetSection2))  ;
+      && (section2Length >= (Nj * 2 + offsetBeforePL - offsetSection2));
 
-if(PLPresent)
-{
+if (PLPresent) {
   # For grib 1 -> 2
   constant numberOfOctectsForNumberOfPoints = 2;
   constant interpretationOfNumberOfPoints = 1;
@@ -74,8 +67,7 @@ if(PLPresent)
   alias geography.pl=pl;
 }
 
-if(PVPresent == 0 && PLPresent == 0)
-{
+if (PVPresent == 0 && PLPresent == 0) {
   # pad to the end of the grid definiton as in documentation
   # ( gribex compatibility )
   padto padding_sec2_1(offsetSection2 + 32);

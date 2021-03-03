@@ -1,5 +1,5 @@
 # Code table 4.213 - Soil type
-0 0 Reserved 
+0 0 Reserved
 1 1 Sand 
 2 2 Loamy sand 
 3 3 Sandy loam 
@@ -11,6 +11,6 @@
 9 9 Sandy clay 
 10 10 Silty clay 
 11 11 Clay 
-# 12-191 Reserved 
+# 12-191 Reserved
 # 192-254 Reserved for local use 
 255 255 Missing 

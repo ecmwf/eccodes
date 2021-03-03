@@ -8,59 +8,59 @@
 !
 !  FORTRAN 90 implementation: bufr_set_keys
 !
-!  Description: how to set different type of keys in BUFR messages.
+!  Description: How to set different type of keys in BUFR messages.
 !
 !
 program bufr_set_keys
-  use eccodes
-  implicit none
-  integer                                       :: iret
-  integer                                       :: infile,outfile
-  integer                                       :: ibufr
-  integer                                       :: count=0
-  integer(kind=4)                               :: centre, centreNew
+   use eccodes
+   implicit none
+   integer                                       :: iret
+   integer                                       :: infile, outfile
+   integer                                       :: ibufr
+   integer                                       :: count = 0
+   integer(kind=4)                               :: centre, centreNew
 
-  ! Open input file
-  call codes_open_file(infile,'../../data/bufr/syno_multi.bufr','r')
+   ! Open input file
+   call codes_open_file(infile, '../../data/bufr/syno_multi.bufr', 'r')
 
-  ! Open output file
-  call codes_open_file(outfile,'bufr_set_keys_test_f.tmp.bufr','w')
+   ! Open output file
+   call codes_open_file(outfile, 'bufr_set_keys_test_f.tmp.bufr', 'w')
 
-  ! The first bufr message is loaded from file,
-  ! ibufr is the bufr id to be used in subsequent calls
-  call codes_bufr_new_from_file(infile,ibufr,iret)
+   ! The first bufr message is loaded from file,
+   ! ibufr is the bufr id to be used in subsequent calls
+   call codes_bufr_new_from_file(infile, ibufr, iret)
 
-  do while (iret/=CODES_END_OF_FILE)
+   do while (iret /= CODES_END_OF_FILE)
 
-    write(*,*) 'message: ',count
+      write (*, *) 'message: ', count
 
-    ! This is the place where you may wish to modify the message
-    ! E.g. we change the centre
+      ! This is the place where you may wish to modify the message
+      ! E.g. we change the centre
 
-    ! Set centre
-    centre=222
-    call codes_set(ibufr,'bufrHeaderCentre',222)
-    write(*,*) '  set bufrHeaderCentre to:',centre
+      ! Set centre
+      centre = 222
+      call codes_set(ibufr, 'bufrHeaderCentre', 222)
+      write (*, *) '  set bufrHeaderCentre to:', centre
 
-    ! Check centre's new value
-    centreNew=0
-    call codes_get(ibufr,'bufrHeaderCentre',centreNew)
-    write(*,*) '  bufrHeaderCentre''s new value:',centreNew
+      ! Check centre's new value
+      centreNew = 0
+      call codes_get(ibufr, 'bufrHeaderCentre', centreNew)
+      write (*, *) '  bufrHeaderCentre''s new value:', centreNew
 
-    ! Write modified message to a file
-    call codes_write(ibufr,outfile)
+      ! Write modified message to a file
+      call codes_write(ibufr, outfile)
 
-    ! Release the handle
-    call codes_release(ibufr)
+      ! Release the handle
+      call codes_release(ibufr)
 
-    ! Next message from source
-    call codes_bufr_new_from_file(infile,ibufr,iret)
+      ! Next message from source
+      call codes_bufr_new_from_file(infile, ibufr, iret)
 
-    count=count+1
+      count = count + 1
 
-  end do
+   end do
 
-  call codes_close_file(infile)
-  call codes_close_file(outfile)
+   call codes_close_file(infile)
+   call codes_close_file(outfile)
 
 end program bufr_set_keys

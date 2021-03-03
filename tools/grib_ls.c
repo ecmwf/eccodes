@@ -45,9 +45,9 @@ grib_option grib_options[] = {
 const char* tool_description =
     "List content of GRIB files printing values of "
     "some keys.\n\tIt does not fail when a key is not found.";
-const char* tool_name  = "grib_ls";
-const char* tool_usage = "[options] grib_file grib_file ...";
-static char* new_handle     = "";
+const char* tool_name   = "grib_ls";
+const char* tool_usage  = "[options] grib_file grib_file ...";
+static char* new_handle = "";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 static double lat      = 0;
@@ -100,7 +100,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (options->latlon) {
         lat = strtod(options->latlon, &theEnd);
         if (*theEnd != ',') {
-            fprintf(stderr, "Error %s: wrong latitude value. Please use 'latitude,longitude'\n",tool_name);
+            fprintf(stderr, "Error %s: wrong latitude value. Please use 'latitude,longitude'\n", tool_name);
             exit(1);
         }
         lon = strtod(++theEnd, &end1);
@@ -400,10 +400,10 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         printf("Input Point: latitude=%.2f  longitude=%.2f\n", lat, lon);
         if (options->latlon_idx >= 0 && options->latlon_idx < LATLON_SIZE) {
             printf("Grid Point chosen #%d index=%d latitude=%.2f longitude=%.2f distance=%.2f (Km)\n",
-                options->latlon_idx + 1, (int)options->indexes[options->latlon_idx],
-                options->lats[options->latlon_idx],
-                options->lons[options->latlon_idx],
-                options->distances[options->latlon_idx]);
+                   options->latlon_idx + 1, (int)options->indexes[options->latlon_idx],
+                   options->lats[options->latlon_idx],
+                   options->lons[options->latlon_idx],
+                   options->distances[options->latlon_idx]);
         }
         if (options->latlon_mask) {
             printf("Mask values:\n");

@@ -176,6 +176,15 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	}
+#Direct solar radiation
+'47' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #10 metre wind gust since previous post-processing
 '49' = {
 	 discipline = 0 ;
@@ -1088,6 +1097,24 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Time integral of surface latent heat evaporation flux
+'235019' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 30 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of surface latent heat sublimation flux
+'235071' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 31 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Cross sectional area of flow in channel
 '240011' = {
 	 discipline = 1 ;
@@ -1701,6 +1728,21 @@
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 19 ;
+	}
+#Volumetric soil ice
+'260644' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 38 ;
+	}
+#Time integral of total solid precipitation flux
+'260645' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 128 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Universal thermal climate index
 '261001' = {

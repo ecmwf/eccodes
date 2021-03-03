@@ -10,6 +10,7 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 # Build the executables used by test scripts
 ################################################
 list(APPEND test_bins
+    list_codetable_flagtable_keys
     grib_bpv_limit
     grib_double_cmp
     read_any
@@ -22,6 +23,7 @@ list(APPEND test_bins
     gauss_sub
     grib_nearest_test
     grib_util_set_spec
+    grib_check_param_concepts
     grib_local_MeteoFrance
     grib_2nd_order_numValues
     grib_optimize_scaling
@@ -77,6 +79,8 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1065
         grib_ecc-1167
         grib_ecc-1170
+        grib_ecc-1195
+        bufr_ecc-1195
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
@@ -224,6 +228,7 @@ if( HAVE_BUILD_TOOLS )
         list(APPEND tests_data_reqd grib_tigge_conversions2)
         list(APPEND tests_data_reqd bufr_dump_encode_C)
         list(APPEND tests_data_reqd bufr_dump_decode_C)
+        list(APPEND tests_no_data_reqd list_codetable_flagtable_keys)
     endif()
 
     # These tests do not require any data downloads

@@ -68,8 +68,10 @@
 83 83 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for aerosol with source or sink 
 84 84 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for aerosol with source or sink 
 85 85 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for aerosol 
-88 88 Analysis or Forecast at a horizontal level or in a horizontal layer at a local time
-# 86-90 Reserved 
+86 86 Quantile forecasts at a horizontal level or in a horizontal layer at a point in time
+87 87 Quantile forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
+88 88 Analysis or forecast at a horizontal level or in a horizontal layer at a specified local time 
+# 89-90 Reserved 
 91 91 Categorical forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval 
 # 92-253 Reserved 
 254 254 CCITT IA5 character string 

@@ -18,7 +18,7 @@
 const char* tool_description = "Build an index file for a set of input GRIB files.";
 const char* tool_name        = "grib_index_build";
 const char* tool_usage       = "[options] grib_file grib_file ... ";
-static grib_index* idx            = NULL;
+static grib_index* idx       = NULL;
 static char* keys;
 static char* default_keys = "mars";
 

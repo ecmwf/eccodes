@@ -29,6 +29,7 @@ TESTS = grib_iterator.sh \
         bufr_keys_iterator.sh \
         bufr_missing.sh \
         bufr_read_temp.sh \
+        bufr_copy_data.sh \
         get_product_kind.sh
 
 noinst_PROGRAMS  = c_grib_nearest \
@@ -71,6 +72,7 @@ noinst_PROGRAMS  = c_grib_nearest \
                    c_bufr_set_keys \
                    c_bufr_missing \
                    c_bufr_read_temp \
+                   c_bufr_copy_data \
                    c_get_product_kind
 
 #bin_PROGRAMS            = grib_nearest_multiple
@@ -112,6 +114,7 @@ c_bufr_read_header_SOURCES     = bufr_read_header.c
 c_bufr_read_scatterometer_SOURCES = bufr_read_scatterometer.c
 c_bufr_read_synop_SOURCES      = bufr_read_synop.c
 c_bufr_read_temp_SOURCES       = bufr_read_temp.c
+c_bufr_copy_data_SOURCES       = bufr_copy_data.c
 c_bufr_set_keys_SOURCES        = bufr_set_keys.c
 c_bufr_subset_SOURCES          = bufr_subset.c
 c_get_product_kind_SOURCES     = get_product_kind.c

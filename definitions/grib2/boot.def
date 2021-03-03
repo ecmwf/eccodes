@@ -9,6 +9,8 @@
 
 # This gets updated twice a year by WMO.
 # See http://www.wmo.int/pages/prog/www/WMOCodes/WMO306_vI2/LatestVERSION/LatestVERSION.html
+constant tablesVersionLatestOfficial = 26 : edition_specific;
+# If this is different from the official version, then it is the pre-operational version
 constant tablesVersionLatest = 27 : edition_specific;
 
 constant million = 1000000 : hidden;

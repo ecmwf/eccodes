@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
             printf("Definition files path can be changed by setting the ECCODES_DEFINITION_PATH environment variable.\n");
         }
 
-        if((path = getenv("ECCODES_EXTRA_DEFINITION_PATH")) != NULL) {
+        if ((path = getenv("ECCODES_EXTRA_DEFINITION_PATH")) != NULL) {
             printf("Environment variable ECCODES_EXTRA_DEFINITION_PATH=%s\n", path);
         }
         printf("\n");

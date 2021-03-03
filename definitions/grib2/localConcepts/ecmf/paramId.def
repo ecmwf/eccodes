@@ -245,12 +245,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 46 ;
 	}
-#Direct solar radiation
-'47' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 47 ;
-	}
 #Magnitude of turbulent surface stress
 '48' = {
 	 discipline = 192 ;

@@ -535,7 +535,6 @@ static void grib_split_long_groups(grib_handle* hand, grib_context* c, long* num
     long* localFirstOrderValues;
     int maxNumberOfGroups = *numberOfGroups * 2;
 
-
     /* the widthOfLengths is the same for all the groupLengths and therefore if
         few big groups are present all the groups have to be coded with a large number
         of bits (big widthOfLengths) even if the majority of them is small.
