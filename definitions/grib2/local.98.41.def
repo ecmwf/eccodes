@@ -45,6 +45,7 @@ concept efas_post_proc {
   "lisflood_eric"     = { typeOfPostProcessing=2  ; }
   "lisflood_season"   = { typeOfPostProcessing=3  ; }
   "lisflood_merged"   = { typeOfPostProcessing=4  ; }
+  "lisflood_global"   = { typeOfPostProcessing=5  ; }
   "ericha"            = { typeOfPostProcessing=51 ; }
   "htessel_lisflood"  = { typeOfPostProcessing=101; }
   "htessel_eric"      = { typeOfPostProcessing=102; }
