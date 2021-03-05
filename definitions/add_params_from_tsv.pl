@@ -82,7 +82,7 @@ my $pass = $ENV{'DB_PASS'} || 'unknown';
 my $dbh = 0;
 my $centre = -3; # WMO table ID
 my $edition = 2; # GRIB edition 2
-my $contactId;   # JIRA issue ID
+my $contactId="ECC-1213";   # JIRA issue ID
 
 my $PARAMID_FILENAME   = "paramId.def";
 my $SHORTNAME_FILENAME = "shortName.def";
@@ -117,14 +117,15 @@ while (<>) {
     $lcount++;
 
     ($paramId, $shortName, $name, $units,
-     $discipline, $pcategory, $pnumber, $type1, $type2,
-     $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2, $stat, $aero, $constit,
+     $discipline, $pcategory, $pnumber,
+     $type1, $scaleFactor1, $scaledValue1, $type2, $scaleFactor2, $scaledValue2,
+     $stat, $aero, $constit,
      $typeGen, $localTV, $typeOfWLInt, $scaleFactorWL1, $scaledValueWL1, $scaleFactorWL2, $scaledValueWL2, $sourceSink
      ) = split(/\t/);
 
     die "Error: paramID \"$paramId\" is not an integer (input row=$lcount)!\n"             if (!is_integer($paramId));
     die "Error: shortName \"$shortName\" has an invalid character (input row=$lcount)!\n"  if ($shortName =~ /[ '"]/);
-    die "Error: name \"$name\" should have uppercase 1st letter (input row=$lcount)!\n"    if ($name !~ /^[A-Z]/);
+    die "Error: name \"$name\" should have uppercase 1st letter or digit (input row=$lcount)!\n"    if ($name !~ /^[A-Z0-9]/);
 
     $units = "~" if ($units eq "");
     $cfVarName = $shortName;
