@@ -1,7 +1,6 @@
-# START grib1::section
 # SECTION 2, Grid description section
-#  Length of section
 
+# Length of section
 position offsetSection2;
 section_length[3] section2Length ;
 meta section2Pointer section_pointer(offsetSection2,section2Length,2);
@@ -10,7 +9,7 @@ alias radiusOfTheEarth=radius;
 alias radiusInMetres=radius;
 transient shapeOfTheEarth=0: hidden; #ECC-811
 
-#  NV -- number of vertical coordinate parameters
+# NV -- number of vertical coordinate parameters
 unsigned[1] numberOfVerticalCoordinateValues : dump ;
 
 constant neitherPresent = 255;
@@ -18,18 +17,14 @@ constant neitherPresent = 255;
 alias NV = numberOfVerticalCoordinateValues;
 alias numberOfCoordinatesValues= numberOfVerticalCoordinateValues;
 
-#  PV -- location
-# (octet number)
-
+# PV -- location (octet number)
 unsigned[1] pvlLocation = 255;
 
-#  Data representation type
+# Data representation type
 codetable[1] dataRepresentationType 'grib1/6.table' = 0;
 meta gridDefinitionDescription codetable_title(dataRepresentationType);
 
-
-#  Grid definition
-# (according to data representation type - octet 6 above)
+# Grid definition (according to data representation type - octet 6 above)
 alias isRotatedGrid=zero;
 
 if (dataRepresentationType < 192) {
