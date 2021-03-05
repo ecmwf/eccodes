@@ -39,11 +39,11 @@
 # 151-159 Reserved 
 160 160 Depth below sea level (m)
 161 161 Depth below water surface (m)
-162 162 Lake or river bottom
+162 sfc Lake or river bottom
 163 163 Bottom of sediment layer
 164 164 Bottom of thermally active sediment layer
 165 165 Bottom of sediment layer penetrated by thermal wave
-166 166 Mixing layer
+166 sfc Mixing layer
 # 167-191 Reserved 
 # 192-254 Reserved for local use 
 255 255 Missing 
