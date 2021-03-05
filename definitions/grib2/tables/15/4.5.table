@@ -47,7 +47,7 @@
 167 167 Bottom of root zone
 # 168-173 Reserved
 # 168-169 Reserved
-174 174 Top surface of ice on sea, lake or river 
+174 sfc Top surface of ice on sea, lake or river 
 175 175 Top surface of ice, under snow cover, on sea, lake or river 
 176 176 Bottom surface (underside) ice on sea, lake or river 
 177 sfc Deep soil (of indefinite depth) 

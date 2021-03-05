@@ -24,7 +24,6 @@ latestOfficial=`${tools_dir}/grib_get -p tablesVersionLatestOfficial $sample2`
 
 # These level types are S2S ocean parameters and are dealt with differently (See products_s2s.def)
 exclude="20 160 169"
-exclude="$exclude 174" ### TODO. See ECC-1213
 
 paramId_file_wmo="$ECCODES_DEFINITION_PATH/grib2/paramId.def"
 paramId_file_ecm="$ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def"
