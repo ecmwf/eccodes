@@ -196,3 +196,21 @@
  parameterCategory = 128 ;
  parameterNumber = 47 ;
 }
+#Lake total layer temperature
+'228011' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 11 ;
+}
+#Lake mix-layer temperature
+'228008' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 8 ;
+}
+#Lake mix-layer depth
+'228009' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 9 ;
+}
