@@ -2002,7 +2002,7 @@
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
-#Lake depth
+#Lake total depth
 '228007' = {
 	 discipline = 1 ;
 	 parameterCategory = 2 ;
@@ -2048,7 +2048,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 10 ;
 	}
-#Lake ice temperature
+#Lake ice surface temperature
 '228013' = {
 	 discipline = 1 ;
 	 parameterCategory = 2 ;
@@ -2056,7 +2056,7 @@
 	 typeOfFirstFixedSurface = 174 ;
 	 typeOfSecondFixedSurface = 255 ;
 	}
-#Lake ice depth
+#Lake ice total depth
 '228014' = {
 	 discipline = 1 ;
 	 parameterCategory = 2 ;
