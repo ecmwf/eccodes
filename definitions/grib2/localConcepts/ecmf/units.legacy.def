@@ -226,7 +226,7 @@
  parameterCategory = 228 ;
  parameterNumber = 12 ;
 }
-#Lake ice temperature
+#Lake ice surface temperature
 'K' = {
  discipline = 192 ;
  parameterCategory = 228 ;
