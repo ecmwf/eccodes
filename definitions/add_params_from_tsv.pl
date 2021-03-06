@@ -51,8 +51,8 @@ use Time::localtime;
 
 $ARGV[0] or die "USAGE: $0 input.tsv\n";
 
-my $WRITE_TO_FILES = 0;
-my $WRITE_TO_PARAMDB = 0;
+my $WRITE_TO_FILES   = 0;
+my $WRITE_TO_PARAMDB = 1; # Be careful. Fill in $contactId before proceeding
 
 my ($paramId, $shortName, $name, $units, $cfVarName);
 my ($discipline, $pcategory, $pnumber, $type1, $type2, $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2);
@@ -75,14 +75,14 @@ my %key_to_attrib_map = (
     'constituentType' => 40,
     'aerosolType' => 46
 );
-my $db = "param";
-my $host = $ENV{'DB_HOST'} || 'unknown';
-my $user = $ENV{'DB_USER'} || 'unknown';
-my $pass = $ENV{'DB_PASS'} || 'unknown';
-my $dbh = 0;
+my $db   = "param";
+my $host = $ENV{'PARAM_DB_HOST'} || 'unknown';
+my $user = $ENV{'PARAM_DB_USER'} || 'unknown';
+my $pass = $ENV{'PARAM_DB_PASS'} || 'unknown';
+my $dbh  = 0;
 my $centre = -3; # WMO table ID
 my $edition = 2; # GRIB edition 2
-my $contactId="ECC-1213";   # JIRA issue ID
+my $contactId;   # JIRA issue ID
 
 my $PARAMID_FILENAME   = "paramId.def";
 my $SHORTNAME_FILENAME = "shortName.def";
