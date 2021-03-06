@@ -214,3 +214,33 @@
  parameterCategory = 228 ;
  parameterNumber = 9 ;
 }
+#Lake bottom temperature
+'lblt' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 10 ;
+}
+#Lake shape factor
+'lshf' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 12 ;
+}
+#Lake ice temperature
+'lict' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 13 ;
+}
+#Lake ice total depth
+'licd' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 14 ;
+}
+#Lake total depth
+'dl' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 7 ;
+}
