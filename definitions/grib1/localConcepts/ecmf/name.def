@@ -17174,8 +17174,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 6 ;
 	}
-#Lake depth
-'Lake depth' = {
+#Lake total depth
+'Lake total depth' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 7 ;
 	}
@@ -17204,13 +17204,13 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 12 ;
 	}
-#Lake ice temperature
-'Lake ice temperature' = {
+#Lake ice surface temperature
+'Lake ice surface temperature' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 13 ;
 	}
-#Lake ice depth
-'Lake ice depth' = {
+#Lake ice total depth
+'Lake ice total depth' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 14 ;
 	}

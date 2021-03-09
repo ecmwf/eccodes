@@ -196,3 +196,51 @@
  parameterCategory = 128 ;
  parameterNumber = 47 ;
 }
+#Lake total layer temperature
+'K' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 11 ;
+}
+#Lake mix-layer temperature
+'K' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 8 ;
+}
+#Lake mix-layer depth
+'m' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 9 ;
+}
+#Lake bottom temperature
+'K' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 10 ;
+}
+#Lake shape factor
+'dimensionless' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 12 ;
+}
+#Lake ice surface temperature
+'K' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 13 ;
+}
+#Lake ice total depth
+'m' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 14 ;
+}
+#Lake total depth
+'m' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 7 ;
+}

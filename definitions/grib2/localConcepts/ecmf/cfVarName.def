@@ -21788,54 +21788,6 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 6 ;
 	}
-#Lake depth
-'dl' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 7 ;
-	}
-#Lake mix-layer temperature
-'lmlt' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 8 ;
-	}
-#Lake mix-layer depth
-'lmld' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 9 ;
-	}
-#Lake bottom temperature
-'lblt' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 10 ;
-	}
-#Lake total layer temperature
-'ltlt' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 11 ;
-	}
-#Lake shape factor
-'lshf' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 12 ;
-	}
-#Lake ice temperature
-'lict' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 13 ;
-	}
-#Lake ice depth
-'licd' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 14 ;
-	}
 #Minimum vertical gradient of refractivity inside trapping layer
 'dndzn' = {
 	 discipline = 192 ;
