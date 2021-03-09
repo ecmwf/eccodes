@@ -52,12 +52,24 @@ if (numberOfForecastsUsedInLocalTime == 1) {
 
   # need something here to compute the diff between date time of *OfForecastUsedInLocalTime and the local time defined in section 1 (dataDate and dataTime)
   # this would be the offset (step) used to index data in mars as mars.step
-  meta DateTimeOfForecastUsedInLocalTime julian_date(yearOfForecastUsedInLocalTime, monthOfForecastUsedInLocalTime, dayOfForecastUsedInLocalTime, hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime) : hidden;
-  meta DateTimeOfLocalTime julian_date(dataDate, dataTime) : hidden;
-  
-  transient stepOfLocalTime = DateTimeOfLocalTime - DateTimeOfForecastUsedInLocalTime : dump;  
+  meta DateTimeOfForecastUsedInLocalTime julian_date(yearOfForecastUsedInLocalTime, monthOfForecastUsedInLocalTime, dayOfForecastUsedInLocalTime,
+                                                     hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime) : hidden;
+  meta DateTimeOfLocalTime               julian_date(dataDate, dataTime) : hidden;
+
+
+  meta jd1 julian_day(dateOfForecastUsedInLocalTime,
+                      hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime);
+  meta jd2 julian_day(dataDate, hour,minute,second);
+
+  transient diffInDays = (jd2 - jd1) : hidden;  # float
+  transient diffInHours = (diffInDays * 1440 + 0.5)/60 : hidden;
+  meta _endStep  round(diffInHours, 10): dump, long_type;
+  transient endStep = _endStep; # needed to force it to be integer
+
+  #transient stepOfLocalTime = DateTimeOfLocalTime - DateTimeOfForecastUsedInLocalTime : dump;
 
   alias mars.date = dateOfForecastUsedInLocalTime : dump;
   alias mars.time = timeOfForecastUsedInLocalTime : dump;
-  #alias mars.step = stepOfLocalTime : dump;
+  alias mars.step = endStep;
+
 }
