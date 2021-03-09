@@ -2148,9 +2148,9 @@ int grib_f_print(int* gid, char* key,  int len){
 /*****************************************************************************/
 int grib_f_get_error_string_(int* err, char* buf,  int len){
     const char* err_msg = grib_get_error_message(*err);
-    size_t erlen = strlen(err_msg);
+    const size_t erlen = strlen(err_msg);
     if( len <  erlen) return GRIB_ARRAY_TOO_SMALL;
-    strncpy(buf, err_msg,(size_t)erlen);
+    strncpy(buf, err_msg,(size_t)len);
     return GRIB_SUCCESS;
 }
 int grib_f_get_error_string__(int* err, char* buf,  int len){
