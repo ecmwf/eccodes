@@ -1,5 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
+transient is_localtime=1;
+
 # Method used to calculate the field value at the local time specified in section 1
 codetable[1] localTimeMethod ('4.248.table',masterDir,localDir)=255 : dump;
 
@@ -40,4 +42,19 @@ localTimeForecastList list(numberOfForecastsUsedInLocalTime)
 
   # Time increment between successive fields, in units defined by the previous octet
   unsigned[4] timeIncrement=0 : dump;
+}
+
+if (numberOfForecastsUsedInLocalTime == 1) {
+  meta dateOfForecastUsedInLocalTime g2date(yearOfForecastUsedInLocalTime, monthOfForecastUsedInLocalTime, dayOfForecastUsedInLocalTime) : dump;
+  meta timeOfForecastUsedInLocalTime g2time(hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime) : dump;
+
+  transient stepOfForecastUsedInLocalTime = forecastTime : dump; 
+
+  # need something here to compute the diff between date time step of *OfForecastUsedInLocalTime and the local time defined in section 1 (dataDate and dataTime)
+  # this would be the offset (step) used to index data in mars as mars.step
+  #meta stepOfLocalTime XXXXXX() : hidden;
+
+  alias mars.date = dateOfForecastUsedInLocalTime : dump;
+  alias mars.time = timeOfForecastUsedInLocalTime : dump;
+  alias mars.step = stepOfLocalTime : dump;
 }

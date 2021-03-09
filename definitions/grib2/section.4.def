@@ -1,6 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
 transient timeRangeIndicator=0 : no_copy,hidden;
+transient is_localtime=0 : no_copy,hidden;
 
 position offsetSection4;
 section_length[4] section4Length ;
