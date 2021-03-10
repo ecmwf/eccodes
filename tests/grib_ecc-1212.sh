@@ -73,12 +73,13 @@ grib_check_key_equals $tempGrib dateOfForecastUsedInLocalTime '20200804'
 grib_check_key_equals $tempGrib timeOfForecastUsedInLocalTime '0'
 
 
-# Check grib_ls output
+# Check "ls" namespace
 ${tools_dir}/grib_get -n ls $tempGrib > $tempOut
-echo "2 ecmf 20200805 an regular_ll surface 0 t grid_simple" > $tempRef
+#     edition centre date     time dataType gridType   typeOfLevel level shortName packingType
+echo "2       ecmf   20200805 1200 an       regular_ll surface     0     t         grid_simple" > $tempRef
 cat $tempOut
-diff $tempRef $tempOut
+diff -w $tempRef $tempOut
 
 
 # Clean up
-rm -f $tempGrib $tempFilt $tempOut $tempRef
+#rm -f $tempGrib $tempFilt $tempOut $tempRef

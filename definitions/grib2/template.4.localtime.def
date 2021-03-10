@@ -44,6 +44,12 @@ localTimeForecastList list(numberOfForecastsUsedInLocalTime)
   unsigned[4] timeIncrement=0 : dump;
 }
 
+alias ls.time=dataTime;
+# See ECC-707
+transient lsdate_bug = 1: hidden;
+transient lstime_bug = 1: hidden;
+
+
 if (numberOfForecastsUsedInLocalTime == 1) {
   meta dateOfForecastUsedInLocalTime g2date(yearOfForecastUsedInLocalTime, monthOfForecastUsedInLocalTime, dayOfForecastUsedInLocalTime) : dump;
   meta timeOfForecastUsedInLocalTime   time(hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime) : dump;
@@ -73,6 +79,3 @@ if (numberOfForecastsUsedInLocalTime == 1) {
   alias mars.step = endStep;
 
 }
-
-# See ECC-707
-transient lsdate_bug = 1: hidden;
