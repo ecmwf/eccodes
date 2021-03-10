@@ -51,8 +51,8 @@ use Time::localtime;
 
 $ARGV[0] or die "USAGE: $0 input.tsv\n";
 
-my $WRITE_TO_FILES   = 0;
-my $WRITE_TO_PARAMDB = 1; # Be careful. Fill in $contactId before proceeding
+my $WRITE_TO_FILES   = 1;
+my $WRITE_TO_PARAMDB = 0; # Be careful. Fill in $contactId before proceeding
 
 my ($paramId, $shortName, $name, $units, $cfVarName);
 my ($discipline, $pcategory, $pnumber, $type1, $type2, $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2);
