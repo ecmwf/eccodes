@@ -73,3 +73,6 @@ if (numberOfForecastsUsedInLocalTime == 1) {
   alias mars.step = endStep;
 
 }
+
+# See ECC-707
+alias ls.date = dataDate;
