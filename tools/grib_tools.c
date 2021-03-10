@@ -917,7 +917,8 @@ static int is_valid_JSON_number(const char* input)
     return 1;
 }
 
-static void get_value_for_key(grib_handle* h, const char* key_name, int key_type, char* value_str, const char* format)
+static void get_value_for_key(grib_handle* h, const char* key_name, int key_type, char* value_str,
+                              const char* format, int fix_lsdate, int fix_lstime)
 {
     int ret = 0, type = key_type;
     double dvalue = 0;
@@ -942,7 +943,11 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
     }
 
     if (type == GRIB_TYPE_STRING) {
-        ret = grib_get_string(h, key_name, value_str, &len);
+        const char* pName = key_name;
+        /* ECC-707 */
+        if (fix_lsdate && strcmp(pName, "date") == 0) pName = "ls.date";
+        if (fix_lstime && strcmp(pName, "time") == 0) pName = "ls.time";
+        ret = grib_get_string(h, pName, value_str, &len);
     }
     else if (type == GRIB_TYPE_DOUBLE) {
         ret = grib_get_double(h, key_name, &dvalue);
@@ -1063,12 +1068,16 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     if (!options->verbose)
         return;
 
+    fix_lsdate = (options->name_space && strcmp(options->name_space, "ls") == 0 && fix_for_lsdate_needed(h));
+    fix_lstime = (options->name_space && strcmp(options->name_space, "ls") == 0 && fix_for_lstime_needed(h));
+
     if (options->json_output && !options->latlon) {
         /* fprintf(dump_file, "\"message %d\" : {\n", options->handle_count); */
         fprintf(dump_file, "  {\n");
         for (i = 0; i < options->print_keys_count; i++) {
             fprintf(dump_file, "    \"%s\": ", options->print_keys[i].name);
-            get_value_for_key(h, options->print_keys[i].name, options->print_keys[i].type, value, options->format);
+            get_value_for_key(h, options->print_keys[i].name, options->print_keys[i].type, value,
+                              options->format, fix_lsdate, fix_lstime);
             if (is_valid_JSON_number(value))
                 fprintf(dump_file, "%s", value);
             else
@@ -1081,9 +1090,6 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         fprintf(dump_file, "  }");
         return;
     }
-
-    fix_lsdate = (options->name_space && strcmp(options->name_space, "ls") == 0 && fix_for_lsdate_needed(h));
-    fix_lstime = (options->name_space && strcmp(options->name_space, "ls") == 0 && fix_for_lstime_needed(h));
 
     for (i = 0; i < options->print_keys_count; i++) {
         size_t len = MAX_STRING_LEN;
