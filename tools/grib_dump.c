@@ -69,7 +69,7 @@ int grib_tool_init(grib_runtime_options* options)
     options->dump_mode = "default";
 
     if (opt > 1) {
-        printf("%s: simultaneous j/O/D options not allowed\n", tool_name);
+        fprintf(stderr, "%s: simultaneous j/O/D options not allowed\n", tool_name);
         exit(1);
     }
 
