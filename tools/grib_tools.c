@@ -975,9 +975,14 @@ static int fix_for_lsdate_needed(grib_handle* h)
 {
     long lsdate_bug = 0;
     int err         = grib_get_long(h, "lsdate_bug", &lsdate_bug);
-    if (!err && lsdate_bug == 1) {
-        return 1;
-    }
+    if (!err && lsdate_bug == 1) return 1;
+    return 0;
+}
+static int fix_for_lstime_needed(grib_handle* h)
+{
+    long lstime_bug = 0;
+    int err         = grib_get_long(h, "lstime_bug", &lstime_bug);
+    if (!err && lstime_bug == 1) return 1;
     return 0;
 }
 
@@ -1053,6 +1058,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     grib_accessor* acc   = NULL;
     size_t num_vals      = 0;
     int fix_lsdate       = 0;
+    int fix_lstime       = 0;
 
     if (!options->verbose)
         return;
@@ -1076,7 +1082,8 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         return;
     }
 
-    fix_lsdate = (fix_for_lsdate_needed(h) && options->name_space && strcmp(options->name_space, "ls") == 0);
+    fix_lsdate = (options->name_space && strcmp(options->name_space, "ls") == 0 && fix_for_lsdate_needed(h));
+    fix_lstime = (options->name_space && strcmp(options->name_space, "ls") == 0 && fix_for_lstime_needed(h));
 
     for (i = 0; i < options->print_keys_count; i++) {
         size_t len = MAX_STRING_LEN;
@@ -1140,6 +1147,9 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                         pName = options->print_keys[i].name;
                         if (fix_lsdate && strcmp(pName, "date") == 0) { /* ECC-707 */
                             pName = "ls.date";
+                        }
+                        if (fix_lstime && strcmp(pName, "time") == 0) {
+                            pName = "ls.time";
                         }
                         ret = grib_get_size(h, pName, &num_vals);
                         if (ret == GRIB_SUCCESS && num_vals > 1) { /* See ECC-278 */
