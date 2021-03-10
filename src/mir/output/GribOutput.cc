@@ -25,7 +25,6 @@
 #include "mir/compat/GribCompatibility.h"
 #include "mir/data/MIRField.h"
 #include "mir/input/MIRInput.h"
-#include "mir/key/packing/ArchivedValue.h"
 #include "mir/key/packing/Packing.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Gridded.h"
@@ -51,30 +50,6 @@ static std::mutex local_mutex;
 
 void eccodes_assertion(const char* message) {
     throw exception::SeriousBug(message);
-}
-
-
-static std::string get_packing(const param::MIRParametrisation& param) {
-    auto& user  = param.userParametrisation();
-    auto& field = param.fieldParametrisation();
-
-    std::string packing = "av";
-    param.get("packing", packing);
-
-    // when converting from spectral to gridded, default to simple packing
-    if (!user.has("packing") && user.has("grid") && field.has("spectral")) {
-        packing = "simple";
-    }
-
-    // on packing=av, get field packing (set to 'simple' (if gridded) or 'complex' if not defined)
-    if (packing == "av" || packing == "archived-value") {
-        if (!field.get("packing", packing)) {
-            packing = user.has("grid") || field.has("gridded") ? "simple" : "complex";
-        }
-    }
-
-    ASSERT(packing != "av" && packing != "archived-value");
-    return packing;
 }
 
 
@@ -172,15 +147,10 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
         return;
     }
 
-    // Set packing
-    std::string packing = get_packing(param);
-    packing_.reset(key::packing::PackingFactory::build(packing, param));
+    // Packing, accuracy, edition
+    packing_.reset(key::packing::PackingFactory::build(param));
 
-    key::packing::ArchivedValue fieldPacking(param.fieldParametrisation());
-    bool todo = fieldPacking.prepare(*packing_);
-
-
-    if (todo) {
+    if (!packing_->empty()) {
         plan.add(plan.empty() ? static_cast<action::Action*>(new action::io::Set(param, input, output))
                               : new action::io::Save(param, input, output));
     }
@@ -189,8 +159,8 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
 
 bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
                                      const param::MIRParametrisation& param2) const {
-    std::unique_ptr<key::packing::Packing> packing1(key::packing::PackingFactory::build(get_packing(param1), param1));
-    std::unique_ptr<key::packing::Packing> packing2(key::packing::PackingFactory::build(get_packing(param2), param1));
+    std::unique_ptr<key::packing::Packing> packing1(key::packing::PackingFactory::build(param1));
+    std::unique_ptr<key::packing::Packing> packing2(key::packing::PackingFactory::build(param2));
 
     if (!packing1->sameAs(packing2.get())) {
         return false;
