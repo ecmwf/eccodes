@@ -75,4 +75,4 @@ if (numberOfForecastsUsedInLocalTime == 1) {
 }
 
 # See ECC-707
-alias ls.date = dataDate;
+transient lsdate_bug = 1: hidden;

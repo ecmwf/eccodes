@@ -49,7 +49,7 @@ EOF
 
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
 
-# Check mars keys
+# Check MARS keys
 ${tools_dir}/grib_ls -j -m $tempGrib > $tempOut
 cat > $tempRef <<EOF
 { "messages" : [ 
@@ -60,7 +60,7 @@ cat > $tempRef <<EOF
     "type": "an",
     "stream": "oper",
     "levtype": "sfc",
-    "date": 20200805,
+    "date": 20200804,
     "time": "0000",
     "step": 36,
     "param": 130
@@ -69,6 +69,9 @@ cat > $tempRef <<EOF
 EOF
 cat $tempOut
 diff $tempRef $tempOut
+grib_check_key_equals $tempGrib dateOfForecastUsedInLocalTime '20200804'
+grib_check_key_equals $tempGrib timeOfForecastUsedInLocalTime '0'
+
 
 # Check grib_ls output
 ${tools_dir}/grib_get -n ls $tempGrib > $tempOut
