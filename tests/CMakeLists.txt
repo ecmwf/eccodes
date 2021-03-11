@@ -70,6 +70,7 @@ if( HAVE_BUILD_TOOLS )
         grib_packing_order
         filter_substr
         grib_uerra
+        grib_element
         grib_2nd_order_numValues
         grib_ecc-136
         grib_ecc-966

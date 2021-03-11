@@ -53,6 +53,7 @@ TESTS = definitions.sh \
         grib_level.sh \
         grib_indexing.sh \
         grib_list.sh \
+        grib_element.sh \
         grib_second_order.sh \
         grib_change_scanning.sh \
         julian.sh \
