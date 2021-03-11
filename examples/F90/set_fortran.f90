@@ -10,49 +10,49 @@
 !
 !
 program set
-  use eccodes
-  implicit none
+   use eccodes
+   implicit none
 
-  integer(kind = 4)    :: centre
-  integer(kind = 4)    :: int_value
-  character(len = 10)  :: string_value
-  character(len = 20)  :: string_centre
-  integer              :: infile,outfile
-  integer              :: igrib
+   integer(kind=4)    :: centre
+   integer(kind=4)    :: int_value
+   character(len=10)  :: string_value
+   character(len=20)  :: string_centre
+   integer              :: infile, outfile
+   integer              :: igrib
 
-  infile=5
-  outfile=6
+   infile = 5
+   outfile = 6
 
-  call codes_open_file(infile, &
-       '../../data/regular_latlon_surface_constant.grib1','r')
+   call codes_open_file(infile, &
+                        '../../data/regular_latlon_surface_constant.grib1', 'r')
 
-  call codes_open_file(outfile, &
-       '../../data/out.grib1','w')
+   call codes_open_file(outfile, &
+                        '../../data/out.grib1', 'w')
 
-  ! A new grib message is loaded from file
-  ! igrib is the grib id to be used in subsequent calls
-  call codes_grib_new_from_file(infile,igrib)
+   ! A new grib message is loaded from file
+   ! igrib is the grib id to be used in subsequent calls
+   call codes_grib_new_from_file(infile, igrib)
 
-  ! set centre as a long */
-  centre=80
-  call codes_set(igrib,'centre',centre)
+   ! set centre as a long */
+   centre = 80
+   call codes_set(igrib, 'centre', centre)
 
-  ! get centre as a integer*4
-  call codes_get(igrib,'centre',int_value)
-  write(*,*) 'centre=',int_value
+   ! get centre as a integer*4
+   call codes_get(igrib, 'centre', int_value)
+   write (*, *) 'centre=', int_value
 
-  ! get centre as a string
-  call codes_get(igrib,'centre',string_value)
-  string_centre='centre='//string_value
-  write(*,*) string_centre
+   ! get centre as a string
+   call codes_get(igrib, 'centre', string_value)
+   string_centre = 'centre='//string_value
+   write (*, *) string_centre
 
-  ! write modified message to a file
-  call codes_write(igrib,outfile)
+   ! write modified message to a file
+   call codes_write(igrib, outfile)
 
-  call codes_release(igrib)
+   call codes_release(igrib)
 
-  call codes_close_file(infile)
+   call codes_close_file(infile)
 
-  call codes_close_file(outfile)
+   call codes_close_file(outfile)
 
 end program set

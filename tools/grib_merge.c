@@ -34,9 +34,9 @@ int key_values_size = MAX_KEY_VALUES;
  * tool to identify the fields to be merged */
 static const char* md5Key = "md5Product";
 
-const char* grib_tool_description = "Merge two fields with identical parameters and different geographical area";
-const char* grib_tool_name        = "grib_merge";
-const char* grib_tool_usage       = "[options] file file ... output_file";
+const char* tool_description = "Merge two fields with identical parameters and different geographical area";
+const char* tool_name        = "grib_merge";
+const char* tool_usage       = "[options] file file ... output_file";
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value */
@@ -131,21 +131,13 @@ static grib_handle* merge(grib_handle* h1, grib_handle* h2)
     long Ni1, Nj1, Ni2, Nj2;
     grib_handle* h = NULL;
     int err        = 0;
-    /*
-    int dump_flags=   GRIB_DUMP_FLAG_CODED 
-                    | GRIB_DUMP_FLAG_OCTECT 
-                    | GRIB_DUMP_FLAG_VALUES 
-                    | GRIB_DUMP_FLAG_READ_ONLY;
 
-     */
-
-    /* same products? */
+    /* Same products? */
     if (grib_key_equal(h1, h2, md5Key, GRIB_TYPE_STRING, &err) == 0 && err == 0) {
         return NULL;
     }
 
-    /* can we do it?*/
-
+    /* Can we do it? */
     len2 = sizeof(s2) / sizeof(*s2);
     err  = grib_get_string(h2, "gridType", s2, &len2);
     if (strcmp(s2, "regular_ll")) {
@@ -187,21 +179,17 @@ static grib_handle* merge(grib_handle* h1, grib_handle* h2)
         return NULL;
     }
 
-    /* yes we can!*/
-
-    /* do we have something to do?*/
-
+    /* Yes we can! Do we have something to do? */
     if (grib_key_equal(h1, h2, "latitudeOfFirstGridPointInDegrees", GRIB_TYPE_DOUBLE, &err) &&
         grib_key_equal(h1, h2, "latitudeOfLastGridPointInDegrees", GRIB_TYPE_DOUBLE, &err) &&
         grib_key_equal(h1, h2, "longitudeOfFirstGridPointInDegrees", GRIB_TYPE_DOUBLE, &err) &&
         grib_key_equal(h1, h2, "longitudeOfLastGridPointInDegrees", GRIB_TYPE_DOUBLE, &err)) {
-        /* no we don't */
+        /* No we don't */
         return NULL;
     }
 
-    /* yes we do! */
-
-    /* check scanning mode */
+    /* Yes we do! */
+    /* Check scanning mode */
     grib_get_long(h1, "iScansNegatively", &iscan);
     if (iscan)
         grib_set_long(h1, "swapScanningLon", 1);
@@ -258,7 +246,7 @@ static grib_handle* merge(grib_handle* h1, grib_handle* h2)
         lonLast  = 360 - di;
     }
 
-    /* create new grib for bigger area*/
+    /* Create new grib for bigger area*/
     h = grib_handle_clone(h1);
     grib_set_double(h, "latitudeOfFirstGridPointInDegrees", latFirst);
     grib_set_double(h, "longitudeOfFirstGridPointInDegrees", lonFirst);
@@ -317,6 +305,16 @@ static grib_handle* merge(grib_handle* h1, grib_handle* h2)
     }
 
     grib_set_double_array(h, "values", v, n);
+
+    grib_context_free(h->context, v);
+    grib_context_free(h->context, v1);
+    grib_context_free(h->context, v2);
+    grib_context_free(h->context, lat);
+    grib_context_free(h->context, lat1);
+    grib_context_free(h->context, lat2);
+    grib_context_free(h->context, lon);
+    grib_context_free(h->context, lon1);
+    grib_context_free(h->context, lon2);
 
     return h;
 }

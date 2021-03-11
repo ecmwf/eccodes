@@ -45,11 +45,17 @@ concept efas_post_proc {
   "lisflood_eric"     = { typeOfPostProcessing=2  ; }
   "lisflood_season"   = { typeOfPostProcessing=3  ; }
   "lisflood_merged"   = { typeOfPostProcessing=4  ; }
+  "lisflood_global"   = { typeOfPostProcessing=5  ; }
   "ericha"            = { typeOfPostProcessing=51 ; }
   "htessel_lisflood"  = { typeOfPostProcessing=101; }
   "htessel_eric"      = { typeOfPostProcessing=102; }
   "htessel_camaflood" = { typeOfPostProcessing=103; }
   "epic"              = { typeOfPostProcessing=152; }
+  "jules_mrm"         = { typeOfPostProcessing=201; }
+  "htessel_mrm"       = { typeOfPostProcessing=202; }
+  "mhm_mrm"           = { typeOfPostProcessing=203; }
+  "pcrg_mrm"          = { typeOfPostProcessing=204; }
+  "meteogrid"         = { typeOfPostProcessing=205; }
   "unknown"           = { dummy = 1; }
 } : hidden;
 

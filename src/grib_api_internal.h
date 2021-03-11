@@ -650,7 +650,7 @@ struct grib_dumper
     void* arg;
     int depth;
     long count;
-    grib_handle* handle;
+    grib_context* context;
     grib_dumper_class* cclass;
 };
 
@@ -729,66 +729,73 @@ typedef struct grib_trie_with_rank grib_trie_with_rank;
 typedef struct grib_itrie grib_itrie;
 
 
+/* Dynamic array of strings */
 struct grib_sarray
 {
     char** v;
-    size_t size;
-    size_t n;
+    size_t size; /* capacity */
+    size_t n;    /* used size */
     size_t incsize;
     grib_context* context;
 };
 
+/* Dynamic array of objects (void*) */
 struct grib_oarray
 {
     void** v;
-    size_t size;
-    size_t n;
+    size_t size; /* capacity */
+    size_t n;    /* used size */
     size_t incsize;
     grib_context* context;
 };
 
+/* Dynamic array of doubles */
 struct grib_darray
 {
     double* v;
-    size_t size;
-    size_t n;
+    size_t size; /* capacity */
+    size_t n;    /* used size */
     size_t incsize;
     grib_context* context;
 };
 
+/* Dynamic array of integers (long) */
 struct grib_iarray
 {
     long* v;
-    size_t size;
-    size_t n;
+    size_t size; /* capacity */
+    size_t n;    /* used size */
     size_t incsize;
     size_t number_of_pop_front;
     grib_context* context;
 };
 
+/* Dynamic array of double arrays */
 struct grib_vdarray
 {
     grib_darray** v;
-    size_t size;
-    size_t n;
+    size_t size; /* capacity */
+    size_t n;    /* used size */
     size_t incsize;
     grib_context* context;
 };
 
+/* Dynamic array of string arrays */
 struct grib_vsarray
 {
     grib_sarray** v;
-    size_t size;
-    size_t n;
+    size_t size; /* capacity */
+    size_t n;    /* used size */
     size_t incsize;
     grib_context* context;
 };
 
+/* Dynamic array of integer arrays */
 struct grib_viarray
 {
     grib_iarray** v;
-    size_t size;
-    size_t n;
+    size_t size; /* capacity */
+    size_t n;    /* used size */
     size_t incsize;
     grib_context* context;
 };
@@ -813,8 +820,8 @@ struct bufr_descriptor
     int Y;
     int type;
     /*char* name;   Not needed: All usage commented out. See ECC-489 */
-    char* shortName;
-    char* units;
+    char shortName[128];
+    char units[128];
     long scale;
     double factor;
     long reference;
@@ -1087,7 +1094,7 @@ struct grib_context
     int hash_array_count;
     grib_hash_array_value* hash_array[MAX_NUM_HASH_ARRAY];
     grib_trie* def_files;
-    grib_string_list* blacklist;
+    grib_string_list* blocklist;
     int ieee_packing;
     int bufrdc_mode;
     int bufr_set_to_missing_if_out_of_range;
@@ -1386,6 +1393,8 @@ struct grib_index
     grib_field_list* current;
     grib_file* files;
     int count;
+    ProductKind product_kind;
+    int unpack_bufr; /* Only meaningful for product_kind of BUFR */
 };
 
 /* header compute */
@@ -1532,7 +1541,7 @@ struct grib_smart_table
 };
 
 
-#if GRIB_TIMER
+#if ECCODES_TIMER
 typedef struct grib_timer
 {
     struct timeval start_;

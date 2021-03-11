@@ -42,12 +42,12 @@ grib_option grib_options[] = {
     { "x", 0, 0, 0, 1, 0 }
 };
 
-const char* grib_tool_description =
+const char* tool_description =
     "List content of GRIB files printing values of "
     "some keys.\n\tIt does not fail when a key is not found.";
-const char* grib_tool_name  = "grib_ls";
-const char* grib_tool_usage = "[options] grib_file grib_file ...";
-static char* new_handle     = "";
+const char* tool_name   = "grib_ls";
+const char* tool_usage  = "[options] grib_file grib_file ...";
+static char* new_handle = "";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 static double lat      = 0;
@@ -100,7 +100,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (options->latlon) {
         lat = strtod(options->latlon, &theEnd);
         if (*theEnd != ',') {
-            fprintf(stderr, "Error %s: wrong latitude value. Please use 'latitude,longitude'\n",grib_tool_name);
+            fprintf(stderr, "Error %s: wrong latitude value. Please use 'latitude,longitude'\n", tool_name);
             exit(1);
         }
         lon = strtod(++theEnd, &end1);
@@ -120,7 +120,7 @@ int grib_tool_init(grib_runtime_options* options)
                     options->latlon_mode = 1;
                 }
                 else {
-                    fprintf(stderr, "Error %s: wrong mode given in option -l\n", grib_tool_name);
+                    fprintf(stderr, "Error %s: wrong mode given in option -l\n", tool_name);
                     exit(1);
                 }
             }
@@ -156,14 +156,14 @@ int grib_tool_init(grib_runtime_options* options)
 
         options->latlon_idx = -1;
         max                 = options->distances[0];
-        for (i = 0; i < 4; i++)
+        for (i = 0; i < LATLON_SIZE; i++)
             if (max < options->distances[i]) {
                 max = options->distances[i];
             }
         min         = max;
         min_overall = max;
         /* See GRIB-213 */
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < LATLON_SIZE; i++) {
             if (min_overall >= options->distances[i]) { /* find overall min and index ignoring mask */
                 min_overall = options->distances[i];
                 idx_overall = i;
@@ -184,7 +184,7 @@ int grib_tool_init(grib_runtime_options* options)
         if (options->latlon_idx < 0) {
             min                 = 0;
             options->latlon_idx = 0;
-            for (i = 1; i < 4; i++)
+            for (i = 1; i < LATLON_SIZE; i++)
                 if (min > options->distances[i]) {
                     min                 = options->distances[i];
                     options->latlon_idx = i;
@@ -208,7 +208,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 
 int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* file)
 {
-    exit_if_input_is_directory(grib_tool_name, file->name);
+    exit_if_input_is_directory(tool_name, file->name);
     if (nearest)
         grib_nearest_delete(nearest);
     nearest = NULL;
@@ -307,7 +307,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if (!options->latlon_mask) {
             min                 = options->distances[0];
             options->latlon_idx = 0;
-            for (i = 1; i < 4; i++) {
+            for (i = 1; i < LATLON_SIZE; i++) {
                 if (min > options->distances[i]) {
                     min                 = options->distances[i];
                     options->latlon_idx = i;
@@ -330,7 +330,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             else
                 printf("\"nearest\"");
             printf("\n, \"neighbours\" : ");
-            for (i = 0; i < 4; i++) {
+            for (i = 0; i < LATLON_SIZE; i++) {
                 printf("%s", s);
                 len = MAX_STRING_LEN;
                 printf(
@@ -398,15 +398,16 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     int i = 0;
     if (options->latlon && options->verbose) {
         printf("Input Point: latitude=%.2f  longitude=%.2f\n", lat, lon);
-        printf("Grid Point chosen #%d index=%d latitude=%.2f longitude=%.2f distance=%.2f (Km)\n",
-               options->latlon_idx + 1, (int)options->indexes[options->latlon_idx],
-               options->lats[options->latlon_idx],
-               options->lons[options->latlon_idx],
-               options->distances[options->latlon_idx]);
-
+        if (options->latlon_idx >= 0 && options->latlon_idx < LATLON_SIZE) {
+            printf("Grid Point chosen #%d index=%d latitude=%.2f longitude=%.2f distance=%.2f (Km)\n",
+                   options->latlon_idx + 1, (int)options->indexes[options->latlon_idx],
+                   options->lats[options->latlon_idx],
+                   options->lons[options->latlon_idx],
+                   options->distances[options->latlon_idx]);
+        }
         if (options->latlon_mask) {
             printf("Mask values:\n");
-            for (i = 0; i < 4; i++) {
+            for (i = 0; i < LATLON_SIZE; i++) {
                 printf("- %d - index=%d latitude=%.2f longitude=%.2f distance=%.2f (Km) value=%.2f\n",
                        i + 1, (int)options->indexes[i], options->lats[i], options->lons[i],
                        options->distances[i], options->mask_values[i]);
@@ -414,7 +415,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         }
         else {
             printf("Other grid Points\n");
-            for (i = 0; i < 4; i++) {
+            for (i = 0; i < LATLON_SIZE; i++) {
                 printf("- %d - index=%d latitude=%.2f longitude=%.2f distance=%.2f (Km)\n",
                        i + 1, (int)options->indexes[i], options->lats[i], options->lons[i],
                        options->distances[i]);

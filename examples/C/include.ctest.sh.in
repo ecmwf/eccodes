@@ -1,6 +1,7 @@
 # examples/C include file for CMake
 
 set -eax
+echo "Script: $0"
 
 proj_dir=@PROJECT_SOURCE_DIR@
 data_dir=@PROJECT_BINARY_DIR@/data

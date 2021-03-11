@@ -13,18 +13,18 @@ set -x
 
 cd ${data_dir}/bufr
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_dump_encode_filter_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define tmp bufr file
+# Define tmp bufr file
 fBufrTmp=${label}".bufr.tmp"
 
-#Define filter rules file
+# Define filter rules file
 fRules=${label}.filter
 
 #-----------------------------------------------------------
@@ -37,7 +37,7 @@ fRules=${label}.filter
 #-----------------------------------------------------------
 files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
-# Exclude BUFR files for various reasosn:
+# Exclude BUFR files for various reasons:
 # ias1_240.bufr: Too large. The filter rules file generated is too big for the parser!
 # tropical_cyclone.bufr: multi-message
 # syno_multi.bufr: multi-message

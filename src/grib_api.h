@@ -104,7 +104,7 @@ Log mode for information for processing information
 #define GRIB_DUMP_FLAG_DUMP_OK (1 << 1)
 #define GRIB_DUMP_FLAG_VALUES (1 << 2)
 #define GRIB_DUMP_FLAG_CODED (1 << 3)
-#define GRIB_DUMP_FLAG_OCTECT (1 << 4)
+#define GRIB_DUMP_FLAG_OCTET (1 << 4)
 #define GRIB_DUMP_FLAG_ALIASES (1 << 5)
 #define GRIB_DUMP_FLAG_TYPE (1 << 6)
 #define GRIB_DUMP_FLAG_HEXADECIMAL (1 << 7)
@@ -266,20 +266,24 @@ typedef struct grib_index grib_index;
  * @return            the newly created index
  */
 grib_index* grib_index_new_from_file(grib_context* c,
-                                     char* filename, const char* keys, int* err);
+                                     const char* filename, const char* keys, int* err);
 /**
  *  Create a new index based on a set of keys.
  *
  * @param c           : context  (NULL for default context)
  * @param keys        : comma separated list of keys for the index.
- *    The type of the key can be explicitly declared appending :l for long,
- *    (or alternatively :i)
- *    :d for double, :s for string to the key name. If the type is not
+ *    The type of the key can be explicitly declared appending ":l" for long,
+ *    (or alternatively ":i"), ":d" for double, ":s" for string to the key name. If the type is not
  *    declared explicitly, the native type is assumed.
  * @param err         :  0 if OK, integer value on error
  * @return            the newly created index
  */
 grib_index* grib_index_new(grib_context* c, const char* keys, int* err);
+
+/* EXPERIMENTAL */
+int codes_index_set_product_kind(grib_index* index, ProductKind product_kind);
+int codes_index_set_unpack_bufr(grib_index* index, int unpack);
+
 
 /**
  *  Indexes the file given in argument in the index given in argument.
@@ -374,7 +378,7 @@ int grib_index_select_double(grib_index* index, const char* key, double value);
  * @param value       : value of the key to select
  * @return            0 if OK, integer value on error
  */
-int grib_index_select_string(grib_index* index, const char* key, char* value);
+int grib_index_select_string(grib_index* index, const char* key, const char* value);
 
 /**
  *  Create a new handle from an index after having selected the key values.
@@ -696,9 +700,9 @@ int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat,
                       double* values, double* distances, int* indexes, size_t* len);
 
 /**
-*  Frees an nearest from memory
+*  Frees a nearest neighbour object from memory
 *
-* @param nearest           : the nearest
+* @param nearest     : the nearest
 * @return            0 if OK, integer value on error
 */
 int grib_nearest_delete(grib_nearest* nearest);
@@ -762,7 +766,7 @@ int grib_get_size(const grib_handle* h, const char* key, size_t* size);
 *
 * @param h           : the handle to get the offset from
 * @param key         : the key to be searched
-* @param length        : the address of a size_t where the length will be set
+* @param length      : the address of a size_t where the length will be set
 * @return            0 if OK, integer value on error
 */
 int grib_get_length(const grib_handle* h, const char* key, size_t* length);
@@ -1522,6 +1526,7 @@ typedef struct grib_util_grid_spec2
 #define GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE_MATRIX 6
 #define GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER 7
 #define GRIB_UTIL_PACKING_TYPE_CCSDS 8
+#define GRIB_UTIL_PACKING_TYPE_IEEE 9
 
 #define GRIB_UTIL_PACKING_SAME_AS_INPUT 0
 #define GRIB_UTIL_PACKING_USE_PROVIDED 1
@@ -1631,6 +1636,7 @@ typedef struct codes_bufr_header
     long rectimeHour;
     long rectimeMinute;
     long rectimeSecond;
+    long restricted;
 
     long isSatellite;
     double localLongitude1;

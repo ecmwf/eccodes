@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 
     in = fopen(filename, "rb");
     if (!in) {
-        printf("ERROR: unable to open file %s\n", filename);
+        fprintf(stderr, "Error: unable to open file %s\n", filename);
         return 1;
     }
 
@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
     while ((h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err)) != NULL || err != CODES_SUCCESS) {
         codes_bufr_keys_iterator* kiter = NULL;
         if (h == NULL) {
-            printf("Error: unable to create handle for message %d\n", cnt);
+            fprintf(stderr, "Error: unable to create handle for message %d\n", cnt);
             cnt++;
             continue;
         }
@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
         /* get BUFR key iterator */
         kiter = codes_bufr_keys_iterator_new(h, 0);
         if (!kiter) {
-            printf("ERROR: Unable to create BUFR keys iterator\n");
+            fprintf(stderr, "Error: Unable to create BUFR keys iterator\n");
             exit(1);
         }
 

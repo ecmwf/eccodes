@@ -1,8 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# START grib2::section
 # SECTION 3, GRID DEFINITION SECTION
-#  Length of section in octets
 
 # For grib2 -> 1
 constant gridDescriptionSectionPresent = 1;
@@ -11,21 +9,20 @@ position offsetSection3;
 section_length[4] section3Length ;
 meta section3Pointer section_pointer(offsetSection3,section3Length,3);
 
-#  Number of section
 unsigned[1] numberOfSection = 3 :read_only;
 
-#  Source of grid definition
+# Source of grid definition
 codetable[1] sourceOfGridDefinition ('3.0.table',masterDir,localDir) ;
 
-#  Number of data points
-unsigned[4] numberOfDataPoints  : dump;
+# Number of data points
+unsigned[4] numberOfDataPoints : dump;
 alias numberOfPoints=numberOfDataPoints;
 
-#  Number of octets for optional list of numbers defining number of points
+# Number of octets for optional list of numbers defining number of points
 unsigned[1] numberOfOctectsForNumberOfPoints;
 
-#  Interpretation of list of numbers defining number of points
-codetable[1] interpretationOfNumberOfPoints ('3.11.table',masterDir,localDir)  : dump;
+# Interpretation of list of numbers defining number of points
+codetable[1] interpretationOfNumberOfPoints ('3.11.table',masterDir,localDir) : dump;
 
 if(numberOfOctectsForNumberOfPoints  == 0){
   transient PLPresent = 0 ;
@@ -120,3 +117,6 @@ alias typeOfGrid=gridType;
 meta md5Section3 md5(offsetSection3,section3Length);
 alias md5GridSection = md5Section3;
 
+meta  projSourceString proj_string(gridType, 0): hidden;
+meta  projTargetString proj_string(gridType, 1): hidden;
+alias projString = projTargetString : hidden;

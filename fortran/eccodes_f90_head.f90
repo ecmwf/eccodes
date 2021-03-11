@@ -17,13 +17,12 @@ module eccodes
   include "eccodes_visibility.h"
   include "eccodes_settings.h"
 
-  real(8),    parameter,public :: CODES_MISSING_DOUBLE = -1.D+100
-  integer(4), parameter,public :: CODES_MISSING_LONG   = 2147483647
+  real(8), parameter, public :: CODES_MISSING_DOUBLE = -1.D+100
+  integer(4), parameter, public :: CODES_MISSING_LONG = 2147483647
 
-  integer, parameter,public :: CODES_PRODUCT_ANY  = 0
-  integer, parameter,public :: CODES_PRODUCT_GRIB = 1
-  integer, parameter,public :: CODES_PRODUCT_BUFR = 2
-
+  integer, parameter, public :: CODES_PRODUCT_ANY = 0
+  integer, parameter, public :: CODES_PRODUCT_GRIB = 1
+  integer, parameter, public :: CODES_PRODUCT_BUFR = 2
 
   !> Create a new message in memory from an integer or character array containting the coded message.
   !>
@@ -42,8 +41,8 @@ module eccodes
   !> @param message     array containing the coded message
   !> @param status      CODES_SUCCESS if OK, integer value on error
   interface codes_new_from_message
-      module procedure codes_new_from_message_int4
-      module procedure codes_new_from_message_char
+    module procedure codes_new_from_message_int4
+    module procedure codes_new_from_message_char
   end interface codes_new_from_message
 
   !> Get a value of specified index from an array key.
@@ -70,9 +69,9 @@ module eccodes
   !> @param[out] status     CODES_SUCCESS if OK, integer value on error
   interface codes_get_element
     module procedure codes_get_real4_element, &
-                     codes_get_real8_element, &
-                     codes_get_real4_elements, &
-                     codes_get_real8_elements
+      codes_get_real8_element, &
+      codes_get_real4_elements, &
+      codes_get_real8_elements
   end interface codes_get_element
 
   !> Find the nearest point/points of a given latitude/longitude point.
@@ -113,8 +112,8 @@ module eccodes
   !> @param[out] status     CODES_SUCCESS if OK, integer value on error
   interface codes_grib_find_nearest
     module procedure codes_grib_find_nearest_single, &
-                     codes_grib_find_nearest_four_single, &
-                     codes_grib_find_nearest_multiple
+      codes_grib_find_nearest_four_single, &
+      codes_grib_find_nearest_multiple
   end interface codes_grib_find_nearest
 
   !> Get latitude/longitude and data values.
@@ -136,5 +135,5 @@ module eccodes
   !> @param[out] values      data values array with dimension "size"
   interface codes_grib_get_data
     module procedure codes_grib_get_data_real4, &
-                     codes_grib_get_data_real8
+      codes_grib_get_data_real8
   end interface codes_grib_get_data

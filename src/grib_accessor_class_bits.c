@@ -288,6 +288,20 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         grib_context_log(h->context, GRIB_LOG_ERROR, "key=%s: value cannot be negative", a->name);
         return GRIB_ENCODING_ERROR;
     }
+
+#ifdef DEBUG
+    {
+        const long numbits = (x->length)*8;
+        if (start + length > numbits) {
+            grib_context_log(h->context, GRIB_LOG_ERROR,
+                    "grib_accessor_class_bits::pack_long: key=%s (x=%s): "
+                    "Invalid start/length. x->length=%ld, start=%ld, length=%ld",
+                    a->name, x->name, numbits, start, length);
+            return GRIB_ENCODING_ERROR;
+        }
+    }
+#endif
+
     maxval = (1 << length) - 1;
     if (*val > maxval) {
         grib_context_log(h->context, GRIB_LOG_ERROR,

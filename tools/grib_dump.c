@@ -39,12 +39,12 @@ grib_option grib_options[] = {
     { "x", 0, 0, 0, 1, 0 }
 };
 
-const char* grib_tool_description = "Dump the content of a GRIB file in different formats.";
-const char* grib_tool_name        = "grib_dump";
-const char* grib_tool_usage       = "[options] grib_file grib_file ...";
-static int json                   = 0;
-static int first_handle           = 1;
-static int dump_keys              = 0;
+const char* tool_description = "Dump the content of a GRIB file in different formats.";
+const char* tool_name        = "grib_dump";
+const char* tool_usage       = "[options] grib_file grib_file ...";
+static int json              = 0;
+static int first_handle      = 1;
+static int dump_keys         = 0;
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -69,7 +69,7 @@ int grib_tool_init(grib_runtime_options* options)
     options->dump_mode = "default";
 
     if (opt > 1) {
-        printf("%s: simultaneous j/O/D options not allowed\n", grib_tool_name);
+        fprintf(stderr, "%s: simultaneous j/O/D options not allowed\n", tool_name);
         exit(1);
     }
 
@@ -90,7 +90,7 @@ int grib_tool_init(grib_runtime_options* options)
 
     if (grib_options_on("O")) {
         options->dump_mode  = "wmo";
-        options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTECT | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
+        options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("D")) {
@@ -129,35 +129,34 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
     if (json)
         return 0;
 
-    exit_if_input_is_directory(grib_tool_name, file->name);
+    Assert(file);
+    exit_if_input_is_directory(tool_name, file->name);
 
     sprintf(tmp, "FILE: %s ", options->current_infile->name);
     if (!grib_options_on("C"))
         fprintf(stdout, "***** %s\n", tmp);
 
     /*
-     * In debug dump mode, allow dumping of GRIB index files
+     * Dumping of index files
      */
-    if (strcmp(options->dump_mode, "debug") == 0) {
-        if (is_grib_index_file(options->current_infile->name)) {
-            int err              = 0;
-            grib_context* c      = grib_context_get_default();
-            const char* filename = options->current_infile->name;
+    if (is_index_file(options->current_infile->name)) {
+        int err              = 0;
+        grib_context* c      = grib_context_get_default();
+        const char* filename = options->current_infile->name;
 
-            err = grib_index_dump_file(stdout, filename);
-            if (err) {
-                grib_context_log(c, GRIB_LOG_ERROR, "%s: Could not dump index file \"%s\".\n%s\n",
-                                 grib_tool_name,
-                                 filename,
-                                 grib_get_error_message(err));
-                exit(1);
-            }
-            /* Since there are no GRIB messages, we have to stop tool exiting in case there
-             * are more index files
-             */
-            options->fail = 0;
+        err = grib_index_dump_file(stdout, filename);
+        if (err) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Could not dump index file \"%s\".\n%s\n",
+                             tool_name,
+                             filename,
+                             grib_get_error_message(err));
+            exit(1);
         }
+        /* Since there are no GRIB messages, we have to stop tool exiting in case there
+         * are more index files */
+        options->fail = 0;
     }
+
     return 0;
 }
 

@@ -245,12 +245,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 46 ;
 	}
-#Direct solar radiation
-'dsrp' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 47 ;
-	}
 #Magnitude of turbulent surface stress
 'magss' = {
 	 discipline = 192 ;
@@ -394,18 +388,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 74 ;
-	}
-#Total column cloud liquid water
-'tclw' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 78 ;
-	}
-#Total column cloud ice water
-'tciw' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 79 ;
 	}
 #Experimental product
 '~' = {
@@ -709,10 +691,10 @@
 	}
 #Snow depth
 'sd' = {
+	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 11 ;
-	 unitsFactor = 1000 ;
+	 parameterNumber = 254 ;
 	}
 #Large-scale precipitation
 'lsp' = {
@@ -829,12 +811,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 174 ;
-	}
-#Top net solar radiation
-'tsr' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 178 ;
 	}
 #Evaporation
 'e' = {
@@ -1120,12 +1096,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 237 ;
-	}
-#Temperature of snow layer
-'tsn' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 238 ;
 	}
 #Convective snowfall
 'csf' = {
@@ -3316,6 +3286,26 @@
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 120 ;
+	}
+#Nitrate fine mode aerosol mass mixing ratio
+'aermr16diff' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Nitrate coarse mode aerosol mass mixing ratio
+'aermr17diff' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
 	}
 #Experimental product
 '~' = {
@@ -21797,54 +21787,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 6 ;
-	}
-#Lake depth
-'dl' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 7 ;
-	}
-#Lake mix-layer temperature
-'lmlt' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 8 ;
-	}
-#Lake mix-layer depth
-'lmld' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 9 ;
-	}
-#Lake bottom temperature
-'lblt' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 10 ;
-	}
-#Lake total layer temperature
-'ltlt' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 11 ;
-	}
-#Lake shape factor
-'lshf' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 12 ;
-	}
-#Lake ice temperature
-'lict' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 13 ;
-	}
-#Lake ice depth
-'licd' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 14 ;
 	}
 #Minimum vertical gradient of refractivity inside trapping layer
 'dndzn' = {

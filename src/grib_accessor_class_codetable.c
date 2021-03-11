@@ -461,7 +461,7 @@ static int grib_load_codetable(grib_context* c, const char* filename,
         }
 
         if (code < 0 || code >= size) {
-            grib_context_log(c, GRIB_LOG_WARNING, "code_table_entry: invalid code in %s: %d (table size=%d)", filename, code, size);
+            grib_context_log(c, GRIB_LOG_WARNING, "code_table_entry: invalid code in %s: %d (table size=%ld)", filename, code, size);
             continue;
         }
 
@@ -502,7 +502,7 @@ static int grib_load_codetable(grib_context* c, const char* filename,
         Assert(*title);
 
         if (t->entries[code].abbreviation != NULL) {
-            grib_context_log(c, GRIB_LOG_WARNING, "code_table_entry: duplicate code in %s: %d (table size=%d)", filename, code, size);
+            grib_context_log(c, GRIB_LOG_WARNING, "code_table_entry: duplicate code in %s: %d (table size=%ld)", filename, code, size);
             continue;
         }
 
@@ -530,6 +530,7 @@ void grib_codetable_delete(grib_context* c)
         for (i = 0; i < t->size; i++) {
             grib_context_free_persistent(c, t->entries[i].abbreviation);
             grib_context_free_persistent(c, t->entries[i].title);
+            grib_context_free_persistent(c, t->entries[i].units);
         }
         grib_context_free_persistent(c, t->filename[0]);
         if (t->filename[1])
@@ -734,10 +735,8 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
     grib_handle* hand = grib_handle_of_accessor(a);
 
     if (strcmp(e->cclass->name, "long") == 0) {
-        ret = grib_expression_evaluate_long(hand, e, &lval);
-        /*if (hand->context->debug)
-            printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %ld\n", a->name,lval);*/
-
+        grib_expression_evaluate_long(hand, e, &lval); /* TDOD: check return value */
+        /*if (hand->context->debug) printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %ld\n", a->name,lval);*/
         ret = grib_pack_long(a, &lval, &len);
     }
     else {

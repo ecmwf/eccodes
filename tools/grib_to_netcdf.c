@@ -28,12 +28,12 @@
 #include <stdint.h>
 #endif
 
-const char* grib_tool_description =
+const char* tool_description =
     "Convert a GRIB file to netCDF format."
     "\n\tNote: The GRIB geometry should be a regular lat/lon grid or a regular Gaussian grid"
     "\n\t(the key \"typeOfGrid\" should be \"regular_ll\" or \"regular_gg\")";
-const char* grib_tool_name   = "grib_to_netcdf";
-const char* grib_tool_usage  = "[options] grib_file grib_file ... ";
+const char* tool_name        = "grib_to_netcdf";
+const char* tool_usage       = "[options] grib_file grib_file ... ";
 static char argvString[2048] = {0,};
 
 /*=====================================================================*/
@@ -1040,7 +1040,7 @@ static err to_expand_mem(field* g)
         }
 
         if (count != g->value_count)
-            grib_context_log(ctx, GRIB_LOG_FATAL, "ecCodes: value count mismatch %d %d", count, g->value_count);
+            grib_context_log(ctx, GRIB_LOG_FATAL, "ecCodes: value count mismatch %ld %ld", count, g->value_count);
 
         if ((e = grib_get_long(g->handle, "missingValuesPresent", &bitmap))) {
             grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get missingValuesPresent: %s", grib_get_error_message(e));
@@ -2143,9 +2143,9 @@ static nc_type translate_nctype(const char* name)
 static void check_err(const char* function, const int stat, const int line)
 {
     if (stat != NC_NOERR) {
-        /* (void) fprintf(stderr, "line %d of %s: %s\n", line, grib_tool_name, nc_strerror(stat)); */
+        /* (void) fprintf(stderr, "line %d of %s: %s\n", line, tool_name, nc_strerror(stat)); */
         (void)fprintf(stderr, "\n%s ERROR: line %d, %s: %s\n",
-                      grib_tool_name, line, function, nc_strerror(stat));
+                      tool_name, line, function, nc_strerror(stat));
         if (stat == NC_EVARSIZE) {
             (void)fprintf(stderr,
                           "\nCannot create netCDF classic format, dataset is too large!\n"
@@ -2245,7 +2245,7 @@ static int def_latlon(int ncid, fieldset* fs)
 {
     int n        = 0;
     size_t nlats = 0, nlons = 0;
-    err e      = 0;
+    err e = 0;
 
     field* g = get_field(fs, 0, expand_mem);
 
@@ -2257,11 +2257,11 @@ static int def_latlon(int ncid, fieldset* fs)
     }
 
     /* Define longitude */
-    n      = (int)nlons;
+    n = (int)nlons;
     set_dimension(ncid, "longitude", n, NC_FLOAT, "degrees_east", "longitude");
 
     /* Define latitude */
-    n      = nlats;
+    n = nlats;
     set_dimension(ncid, "latitude", n, NC_FLOAT, "degrees_north", "latitude");
 
     /* g->purge_header = TRUE; */
@@ -2460,7 +2460,7 @@ static int compute_scale(dataset_t* subset)
 
     if (scaled_max > nc_type_values[idx].nc_type_max) {
         grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: scaled_max (=%lld) > nc_type_max (=%lf). Set sf to 1.0",
-                         scaled_max, nc_type_values[idx].nc_type_max);
+                         (long long)scaled_max, nc_type_values[idx].nc_type_max);
         sf = 1.0; /* ECC-685 */
     }
 
@@ -2468,9 +2468,11 @@ static int compute_scale(dataset_t* subset)
     test_scaled_min    = (char)scaled_min;
     test_scaled_median = (char)scaled_median;
 
-    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: scaled_max: %lld, scaled_min: %lld, scaled_median: %lld, x: %lf", scaled_max, scaled_min, scaled_median, x);
+    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: scaled_max: %lld, scaled_min: %lld, scaled_median: %lld, x: %lf",
+                     (long long)scaled_max, (long long)scaled_min, (long long)scaled_median, x);
 
-    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: test_scaled_max: %x, test_scaled_min: %x, test_scaled_median: %x", test_scaled_max, test_scaled_min, test_scaled_median, x);
+    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: test_scaled_max: %x, test_scaled_min: %x, test_scaled_median: %x",
+                     test_scaled_max, test_scaled_min, test_scaled_median);
 
     max    = scaled_max * sf + ao;
     min    = scaled_min * sf + ao;
@@ -2632,8 +2634,8 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
     }
     */
     DebugAssert(vals);
-    DebugAssert(n>0);
-    if(!vals) return;
+    DebugAssert(n > 0);
+    if (!vals) return;
 
     switch (nctype) {
         case NC_BYTE: {
@@ -2846,8 +2848,8 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
             }
 
             if (nj != count[naxis] || ni != count[naxis + 1]) {
-                grib_context_log(ctx, GRIB_LOG_ERROR, "Grib %d has different resolution\n", i + 1);
-                grib_context_log(ctx, GRIB_LOG_ERROR, "lat=%d, long=%d instead of lat=%d, long=%d\n", nj, ni, count[naxis], count[naxis + 1]);
+                grib_context_log(ctx, GRIB_LOG_ERROR, "GRIB message %d has different resolution\n", i + 1);
+                grib_context_log(ctx, GRIB_LOG_ERROR, "lat=%ld, long=%ld instead of lat=%ld, long=%ld\n", nj, ni, count[naxis], count[naxis + 1]);
                 exit(1);
             }
 
@@ -3062,7 +3064,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
         dims[i] = n - i - 1;
 
     for (i = 0; i < subsetcnt; ++i) {
-        printf("%s: Defining variable '%s'.\n", grib_tool_name, subsets[i].att.name);
+        printf("%s: Defining variable '%s'.\n", tool_name, subsets[i].att.name);
 
         stat = nc_def_var(ncid, subsets[i].att.name, subsets[i].att.nctype, n, dims, &var_id);
         check_err("nc_def_var", stat, __LINE__);
@@ -3076,6 +3078,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
             stat = nc_def_var_deflate(ncid, var_id, setup.shuffle, 1, setup.deflate);
             check_err("nc_def_var_deflate", stat, __LINE__);
 #else
+            (void)chunks;
             grib_context_log(ctx, GRIB_LOG_ERROR, "Deflate option only supported in NetCDF4");
 #endif
         }
@@ -3351,7 +3354,7 @@ static void print_ignored_keys(FILE* f, request* data)
     int i              = 0;
     while ((ignore = get_value(data, "ignore", i)) != NULL) {
         if (i == 0) {
-            fprintf(f, "%s: Ignoring key(s): %s", grib_tool_name, ignore);
+            fprintf(f, "%s: Ignoring key(s): %s", tool_name, ignore);
         }
         else {
             fprintf(f, ", %s", ignore);
@@ -3861,25 +3864,25 @@ static int get_creation_mode(int option_kind)
     int creation_mode = NC_CLOBBER;
     switch (option_kind) {
         case NC_FORMAT_CLASSIC:
-            printf("%s: Creating classic file format.\n", grib_tool_name);
+            printf("%s: Creating classic file format.\n", tool_name);
             break;
         case NC_FORMAT_64BIT:
             creation_mode |= NC_64BIT_OFFSET;
-            printf("%s: Creating large (64 bit) file format.\n", grib_tool_name);
+            printf("%s: Creating large (64 bit) file format.\n", tool_name);
             break;
 #ifdef NC_NETCDF4
         case NC_FORMAT_NETCDF4:
             creation_mode |= NC_NETCDF4;
-            printf("%s: Creating netCDF-4/HDF5 format.\n", grib_tool_name);
+            printf("%s: Creating netCDF-4/HDF5 format.\n", tool_name);
             break;
         case NC_FORMAT_NETCDF4_CLASSIC:
             creation_mode |= NC_NETCDF4 | NC_CLASSIC_MODEL;
-            printf("%s: Creating netCDF-4 classic model file format.\n", grib_tool_name);
+            printf("%s: Creating netCDF-4 classic model file format.\n", tool_name);
             break;
 #else
         case NC_FORMAT_NETCDF4:
         case NC_FORMAT_NETCDF4_CLASSIC:
-            grib_context_log(ctx, GRIB_LOG_ERROR, "%s not built with netcdf4, cannot create netCDF-4 files.", grib_tool_name);
+            grib_context_log(ctx, GRIB_LOG_ERROR, "%s not built with netcdf4, cannot create netCDF-4 files.", tool_name);
             exit(1);
             break;
 #endif
@@ -3993,7 +3996,7 @@ int grib_tool_init(grib_runtime_options* options)
     data_r             = empty_request(0);
     user_r             = empty_request(0);
 
-    printf("%s: Version ", grib_tool_name);
+    printf("%s: Version ", tool_name);
     grib_print_api_version(stdout);
     printf("\n");
 
@@ -4128,7 +4131,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
     grib_handle* h  = NULL;
     grib_file* file = NULL;
 
-    printf("%s: Processing input file '%s'.\n", grib_tool_name, filename);
+    printf("%s: Processing input file '%s'.\n", tool_name, filename);
 
     file = grib_file_open(filename, "r", &e);
     if (!file || !file->handle)
@@ -4280,7 +4283,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         return -1;
     }
 
-    printf("%s: Found %d GRIB field%s in %d file%s.\n", grib_tool_name, fs->count, fs->count > 1 ? "s" : "", files, files > 1 ? "s" : "");
+    printf("%s: Found %d GRIB field%s in %d file%s.\n", tool_name, fs->count, fs->count > 1 ? "s" : "", files, files > 1 ? "s" : "");
 
     if (ctx->debug) {
         grib_context_log(ctx, GRIB_LOG_INFO, "Request representing %d fields ", fs->count);
@@ -4304,8 +4307,8 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     /* Create netcdf file */
 
-    printf("%s: Creating netCDF file '%s'\n", grib_tool_name, options->outfile->name);
-    printf("%s: NetCDF library version: %s\n", grib_tool_name, nc_inq_libvers());
+    printf("%s: Creating netCDF file '%s'\n", tool_name, options->outfile->name);
+    printf("%s: NetCDF library version: %s\n", tool_name, nc_inq_libvers());
 
     creation_mode = get_creation_mode(option_kind);
     stat          = nc_create(options->outfile->name, creation_mode, &ncid);
@@ -4354,7 +4357,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     free_subsets(subsets, count);
 
     free_nc_options();
-    printf("%s: Done.\n", grib_tool_name);
+    printf("%s: Done.\n", tool_name);
 
     return 0;
 }

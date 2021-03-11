@@ -17,12 +17,12 @@ alias originatingCentre=centre;
 unsigned[2] subCentre  : dump;
 
 _if (subCentre==98 ) {
-alias centreForLocal=subCentre;
+  alias centreForLocal=subCentre;
 } else {
-alias centreForLocal=centre;
+  alias centreForLocal=centre;
 }
 
-codetable[1] tablesVersion 'grib2/tables/1.0.table' = tablesVersionLatest : edition_specific;
+codetable[1] tablesVersion 'grib2/tables/1.0.table' = tablesVersionLatestOfficial : edition_specific;
 alias gribMasterTablesVersionNumber=tablesVersion;
 
 transient masterDir="grib2/tables/[tablesVersion]";
@@ -46,32 +46,21 @@ if (localTablesVersion != 0 and localTablesVersion != 255) {
 # Significance of Reference Time
 codetable[1] significanceOfReferenceTime ('1.2.table',masterDir,localDir) = 1 : dump;
 
-# Year
-# (4 digits)
-unsigned[2] year ;
+# Year (4 digits)
+unsigned[2] year;
+unsigned[1] month;
+unsigned[1] day;
+unsigned[1] hour;
+unsigned[1] minute;
+unsigned[1] second;
 
-# Month
-unsigned[1] month ;
-
-# Day
-unsigned[1] day ;
-
-# Hour
-unsigned[1] hour ;
-
-# Minute
-unsigned[1] minute ;
-
-# Second
-unsigned[1] second ;
-
-meta    dataDate    g2date(year,month,day) : dump;
+meta  dataDate  g2date(year,month,day) : dump;
 alias mars.date = dataDate;
 alias ls.date = dataDate;
 
 meta julianDay julian_day(dataDate,hour,minute,second) : edition_specific;
 
-meta      dataTime    time(hour,minute,second) : dump;
+meta  dataTime  time(hour,minute,second) : dump;
 alias mars.time = dataTime;
 
 # Production status of processed data in this GRIB message
@@ -131,4 +120,17 @@ concept is_uerra(zero) {
    '1' = {productionStatusOfProcessedData=9;}
    '1' = {productionStatusOfProcessedData=8;}
    '0' = {dummy=1;}
+}
+
+constant conceptsMasterDir="grib2" : hidden;
+constant conceptsLocalDirAll="grib2/localConcepts/[centre:s]" : hidden;
+constant conceptsLocalDirECMF="grib2/localConcepts/ecmf" : hidden;
+
+# ECC-806: Local concepts precedence order
+if (preferLocalConcepts) {
+  constant conceptsDir1 = conceptsMasterDir : hidden;
+  constant conceptsDir2 = conceptsLocalDirAll : hidden;
+} else {
+  constant conceptsDir1 = conceptsLocalDirAll : hidden;
+  constant conceptsDir2 = conceptsMasterDir : hidden;
 }

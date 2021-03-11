@@ -12,7 +12,6 @@
  * C Implementation: grib_iterator
  *
  * Description: how to use an iterator on lat/lon/values for GRIB messages
- *
  */
 
 #include <stdio.h>
@@ -33,6 +32,7 @@ int main(int argc, char** argv)
     double lat, lon, value;
     double missingValue = 1e+20; /* A value out of range */
     int n               = 0;
+    long bitmapPresent  = 0;
     char* filename      = NULL;
 
     /* Message handle. Required in all the ecCodes calls acting on a message.*/
@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 
     in = fopen(filename, "rb");
     if (!in) {
-        printf("ERROR: unable to open file %s\n", filename);
+        fprintf(stderr, "Error: unable to open file %s\n", filename);
         return 1;
     }
 
@@ -55,9 +55,14 @@ int main(int argc, char** argv)
         /* Check of errors after reading a message. */
         if (err != CODES_SUCCESS) CODES_CHECK(err, 0);
 
-        /* Set the double representing the missing value in the field. */
-        /* Choose a missingValue that does not correspond to any real value in the data array */
-        CODES_CHECK(codes_set_double(h, "missingValue", missingValue), 0);
+        /* Check if a bitmap applies */
+        CODES_CHECK(codes_get_long(h, "bitmapPresent", &bitmapPresent), 0);
+
+        if (bitmapPresent) {
+            /* Set the double representing the missing value in the field. */
+            /* Choose a missingValue that does not correspond to any real value in the data array */
+            CODES_CHECK(codes_set_double(h, "missingValue", missingValue), 0);
+        }
 
         /* A new iterator on lat/lon/values is created from the message handle h. */
         iter = codes_grib_iterator_new(h, 0, &err);
@@ -69,7 +74,7 @@ int main(int argc, char** argv)
             /* You can now print lat and lon,  */
             printf("- %d - lat=%f lon=%f value=", n, lat, lon);
             /* decide what to print if a missing value is found. */
-            if (value == missingValue) printf("missing\n");
+            if (bitmapPresent && value == missingValue) printf("missing\n");
             /* and print the value if is not missing. */
             else
                 printf("%f\n", value);

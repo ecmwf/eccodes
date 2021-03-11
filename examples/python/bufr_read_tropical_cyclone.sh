@@ -25,7 +25,6 @@ REDIRECT=/dev/null
 
 echo $PYTHON $examples_src
 #Write the key values into a file
-#$PYTHON $examples_src/bufr_read_tropical_cyclone.py >$fTmp
 $PYTHON $examples_src/bufr_read_tropical_cyclone.py >$fTmp
 
 # Check the results

@@ -175,7 +175,6 @@ static int find(grib_nearest* nearest, grib_handle* h,
 
         }
         nearest->h=h;
-
     }
 
     if (!self->distances || (flags & GRIB_NEAREST_SAME_POINT)==0
@@ -193,7 +192,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         for (ii=0;ii<2;ii++) {
             for (jj=0;jj<2;jj++) {
                 self->k[kk]=self->i[ii]+self->lons_count*self->j[jj]-1;
-                self->distances[kk]=grib_nearest_distance(radius,inlon,inlat,
+                self->distances[kk]=geographic_distance_spherical(radius,inlon,inlat,
                         self->lons[self->i[ii]],self->lats[self->j[jj]]);
                 kk++;
             }
@@ -258,6 +257,9 @@ static int find(grib_nearest* nearest, grib_handle* h,
         return ret;
     radius = ((double)iradius) / 1000.0;
 
+    /* Compute lat/lon info, create iterator etc if it's the 1st time or different grid.
+     * This is for performance: if the grid has not changed, we only do this once
+     * and reuse for other messages */
     if (!nearest->h || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
         double dummy = 0;
         double olat = 1.e10, olon = 1.e10;
@@ -342,6 +344,9 @@ static int find(grib_nearest* nearest, grib_handle* h,
     }
     nearest->h = h;
 
+    /* Compute distances if it's the 1st time or different point or different grid.
+     * This is for performance: if the grid and the input point have not changed
+     * we only do this once and reuse for other messages */
     if (!self->distances || (flags & GRIB_NEAREST_SAME_POINT) == 0 || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
         int nearest_lons_found = 0;
 
@@ -409,7 +414,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         for (jj = 0; jj < 2; jj++) {
             for (ii = 0; ii < 2; ii++) {
                 self->k[kk]         = self->i[ii] + self->lons_count * self->j[jj];
-                self->distances[kk] = grib_nearest_distance(radius, inlon, inlat,
+                self->distances[kk] = geographic_distance_spherical(radius, inlon, inlat,
                                                             self->lons[self->i[ii]], self->lats[self->j[jj]]);
                 kk++;
             }

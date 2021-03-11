@@ -48,12 +48,15 @@ export GRIB_IEEE_PACKING
 ${tools_dir}/grib_filter -o $out32 w.filter $infile 
 ${tools_dir}/grib_filter r.filter $out32 > $out32.txt 
 diff $out32.txt ${data_dir}/ieee_test.good
+grib_check_key_equals $out32 'packingType,precision' 'grid_ieee 1'
 
 GRIB_IEEE_PACKING=64
 export GRIB_IEEE_PACKING
 ${tools_dir}/grib_filter -o $out64 w.filter $infile 
 ${tools_dir}/grib_filter r.filter $out64 > $out64.txt 
 diff $out64.txt ${data_dir}/ieee_test.good
+grib_check_key_equals $out64 'packingType,precision' 'grid_ieee 2'
+
 
 rm -f $outsimple $out32 $out64 $out32.txt $out64.txt
 rm -f ${data_dir}/$outsimple.txt ${data_dir}/$out32.txt ${data_dir}/$out64.txt 
@@ -109,8 +112,21 @@ stats2=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $temp`
 # [ "$stats1" = "$stats2" ]
 
 
-rm -f $temp
+echo "Test changing precision ..."
+# ----------------------------------
+infile=${data_dir}/grid_ieee.grib
+grib_check_key_equals $infile 'precision,section7Length' '1 44005'
+# Switch from 32bits to 64bits
+${tools_dir}/grib_set -r -s precision=2 $infile $temp
+grib_check_key_equals $temp 'precision,section7Length' '2 88005'
 
+stats1=`${tools_dir}/grib_get -M -F%.3f -p skew,kurt $infile`
+stats2=`${tools_dir}/grib_get -M -F%.3f -p skew,kurt $temp`
+[ "$stats1" = "$stats2" ]
+
+
+
+rm -f $temp
 
 ##################################
 # Disabled for now. Infinite loop

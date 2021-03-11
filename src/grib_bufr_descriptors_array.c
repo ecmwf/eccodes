@@ -23,7 +23,7 @@ bufr_descriptors_array* grib_bufr_descriptors_array_new(grib_context* c, size_t 
     v = (bufr_descriptors_array*)grib_context_malloc(c, sizeof(bufr_descriptors_array));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "bufr_descriptors_array_new unable to allocate %d bytes\n", sizeof(bufr_descriptors_array));
+                         "bufr_descriptors_array_new unable to allocate %ld bytes\n", sizeof(bufr_descriptors_array));
         return NULL;
     }
     v->context             = c;
@@ -34,7 +34,7 @@ bufr_descriptors_array* grib_bufr_descriptors_array_new(grib_context* c, size_t 
     v->number_of_pop_front = 0;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_bufr_descriptors_array_new unable to allocate %d bytes\n", sizeof(bufr_descriptor) * size);
+                         "grib_bufr_descriptors_array_new unable to allocate %ld bytes\n", sizeof(bufr_descriptor) * size);
         return NULL;
     }
     return v;
@@ -59,7 +59,7 @@ bufr_descriptor* grib_bufr_descriptors_array_pop_front(bufr_descriptors_array* a
     return v;
 }
 
-bufr_descriptors_array* grib_bufr_descriptors_array_resize_to(bufr_descriptors_array* v, size_t newsize)
+static bufr_descriptors_array* grib_bufr_descriptors_array_resize_to(bufr_descriptors_array* v, size_t newsize)
 {
     bufr_descriptor** newv;
     size_t i;
@@ -74,7 +74,7 @@ bufr_descriptors_array* grib_bufr_descriptors_array_resize_to(bufr_descriptors_a
     newv = (bufr_descriptor**)grib_context_malloc_clear(c, newsize * sizeof(bufr_descriptor*));
     if (!newv) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_bufr_descriptors_array_resize unable to allocate %d bytes\n", sizeof(bufr_descriptor*) * newsize);
+                         "grib_bufr_descriptors_array_resize unable to allocate %ld bytes\n", sizeof(bufr_descriptor*) * newsize);
         return NULL;
     }
 
@@ -91,10 +91,9 @@ bufr_descriptors_array* grib_bufr_descriptors_array_resize_to(bufr_descriptors_a
     return v;
 }
 
-bufr_descriptors_array* grib_bufr_descriptors_array_resize(bufr_descriptors_array* v)
+static bufr_descriptors_array* grib_bufr_descriptors_array_resize(bufr_descriptors_array* v)
 {
-    int newsize = v->incsize + v->size;
-
+    const int newsize = v->incsize + v->size;
     return grib_bufr_descriptors_array_resize_to(v, newsize);
 }
 

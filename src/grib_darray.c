@@ -8,12 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *
- *   Enrico Fucile
- *
- ***************************************************************************/
-
 #include "grib_api_internal.h"
 
 /* For debugging purposes */
@@ -52,25 +46,26 @@ grib_darray* grib_darray_new(grib_context* c, size_t size, size_t incsize)
     v = (grib_darray*)grib_context_malloc_clear(c, sizeof(grib_darray));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_darray_new unable to allocate %d bytes\n", sizeof(grib_darray));
+                         "grib_darray_new unable to allocate %ld bytes\n", sizeof(grib_darray));
         return NULL;
     }
     v->size    = size;
     v->n       = 0;
     v->incsize = incsize;
+    v->context = c;
     v->v       = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_darray_new unable to allocate %d bytes\n", sizeof(double) * size);
+                         "grib_darray_new unable to allocate %ld bytes\n", sizeof(double) * size);
         return NULL;
     }
     return v;
 }
 
-grib_darray* grib_darray_resize(grib_context* c, grib_darray* v)
+static grib_darray* grib_darray_resize(grib_darray* v)
 {
-    int newsize = v->incsize + v->size;
-
+    const size_t newsize = v->incsize + v->size;
+    grib_context* c = v->context;
     if (!c)
         c = grib_context_get_default();
 
@@ -78,7 +73,7 @@ grib_darray* grib_darray_resize(grib_context* c, grib_darray* v)
     v->size = newsize;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_darray_resize unable to allocate %d bytes\n", sizeof(double) * newsize);
+                         "grib_darray_resize unable to allocate %ld bytes\n", sizeof(double) * newsize);
         return NULL;
     }
     return v;
@@ -92,7 +87,7 @@ grib_darray* grib_darray_push(grib_context* c, grib_darray* v, double val)
         v = grib_darray_new(c, start_size, start_incsize);
 
     if (v->n >= v->size)
-        v = grib_darray_resize(c, v);
+        v = grib_darray_resize(v);
     v->v[v->n] = val;
     v->n++;
     return v;
@@ -103,7 +98,7 @@ void grib_darray_delete(grib_context* c, grib_darray* v)
     if (!v)
         return;
     if (!c)
-        grib_context_get_default();
+        c = grib_context_get_default();
     if (v->v)
         grib_context_free(c, v->v);
     grib_context_free(c, v);
@@ -121,7 +116,7 @@ double* grib_darray_get_array(grib_context* c, grib_darray* v)
     return ret;
 }
 
-int grib_darray_is_constant(grib_darray* v, double eps)
+int grib_darray_is_constant(grib_darray* v, double epsilon)
 {
     int i;
     double val;
@@ -130,7 +125,7 @@ int grib_darray_is_constant(grib_darray* v, double eps)
 
     val = v->v[0];
     for (i = 1; i < v->n; i++) {
-        if (fabs(val - v->v[i]) > eps)
+        if (fabs(val - v->v[i]) > epsilon)
             return 0;
     }
     return 1;

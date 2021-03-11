@@ -351,6 +351,7 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
                         *newline = 1;
                         cols     = 0;
                     }
+                    grib_context_free(h->context, cvals[i]);
                 }
             }
             grib_context_free(h->context, cvals);
@@ -485,6 +486,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
                 case ']':
                     loc[mode] = 0;
                     mode      = -1;
+                    if (al) grib_accessors_list_delete(h->context, al);
                     al        = grib_find_accessors_list(h, loc); /* This allocates memory */
                     if (!al) {
                         if (!fail) {
@@ -731,7 +733,8 @@ static int parse(grib_context* gc, const char* filename)
     parse_file = 0;
 
     if (err)
-        grib_context_log(gc, GRIB_LOG_ERROR, "Parsing error %d > %s\n", err, filename);
+        grib_context_log(gc, GRIB_LOG_ERROR, "Parsing error: %s, file: %s\n",
+                grib_get_error_message(err), filename);
 
     GRIB_MUTEX_UNLOCK(&mutex_parse);
     return err;

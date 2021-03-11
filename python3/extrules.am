@@ -1,7 +1,0 @@
-# Use SWIG version 3.0.12
-# Python3 support added with -py3
-#
-swig : gribapi_swig.i
-	swig -v -py3 -python -module gribapi_swig -o swig_wrap_numpy.c gribapi_swig.i
-	cp gribapi_swig.py swig_wrap_numpy.py
-

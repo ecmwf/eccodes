@@ -102,25 +102,25 @@ int main(int argc, char* argv[])
         grib_index_select_string(index, "shortName", shortNames[i]);
 
         for (l = 0; l < levelSize; l++) {
-            /* select the GRIB with level=levels[i] */
+            /* select the GRIB with level=levels[l] */
             grib_index_select_long(index, "level", levels[l]);
 
             for (j = 0; j < numberSize; j++) {
-                /* select the GRIB with number=numbers[i] */
+                /* select the GRIB with number=numbers[j] */
                 grib_index_select_long(index, "number", numbers[j]);
 
                 for (k = 0; k < stepSize; k++) {
-                    /* select the GRIB with step=steps[i] */
+                    /* select the GRIB with step=steps[k] */
                     grib_index_select_long(index, "step", steps[k]);
 
                     /* create a new grib_handle from the index with the constraints
-                           imposed by the select statements. It is a loop because
-                           in the index there could be more than one GRIB with those
-                           constraints */
+                       imposed by the select statements. It is a loop because
+                       in the index there could be more than one GRIB with those
+                       constraints */
                     while ((h = grib_handle_new_from_index(index, &ret)) != NULL) {
                         count++;
                         if (ret) {
-                            printf("error: %d\n", ret);
+                            printf("error: %s\n", grib_get_error_message(ret));
                             exit(ret);
                         }
                         lenShortName = 200;
@@ -152,6 +152,8 @@ int main(int argc, char* argv[])
     for (i = 0; i < shortNameSize; i++)
         free(shortNames[i]);
     free(shortNames);
+
+    grib_context_delete(grib_context_get_default());
 
     return 0;
 }

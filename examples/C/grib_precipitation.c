@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 
     in = fopen(filename, "rb");
     if (!in) {
-        printf("ERROR: unable to open file %s\n", filename);
+        fprintf(stderr, "ERROR: unable to open file %s\n", filename);
         return 1;
     }
 

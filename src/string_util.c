@@ -38,6 +38,26 @@ void rtrim(char* s)
     s[len] = '\0';
 }
 
+void lrtrim(char** x, int do_left, int do_right)
+{
+    DebugAssert(do_left || do_right);
+    if (do_left) {
+        while (isspace(**x) && **x != '\0')
+            (*x)++;
+    }
+    if (**x == '\0')
+        return;
+    if (do_right) {
+        char* p = (*x) + strlen(*x) - 1;
+        while (isspace(*p)) {
+            *p = '\0';
+            p--;
+        }
+        if (isspace(*p))
+            *p = '\0';
+    }
+}
+
 /* Return the component after final slash */
 /*  "/tmp/x"  -> "x"  */
 /*  "/tmp/"   -> ""   */
@@ -139,4 +159,14 @@ int string_ends_with(const char* str1, const char* str2)
     if (strcmp(&str1[len1 - len2], str2) == 0)
         return 1;
     return 0;
+}
+
+int count_char_in_string(const char* str, char c)
+{
+    int i = 0, count = 0;
+    DebugAssert(str);
+    for(i=0; str[i]; i++) {
+        if (str[i] == c) count++;
+    }
+    return count;
 }

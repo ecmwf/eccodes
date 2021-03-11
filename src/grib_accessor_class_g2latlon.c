@@ -181,24 +181,14 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-static double normalise_longitude(double a_lon)
-{
-    /* WMO regulation: The longitude values shall be limited to the range 0 to 360 degrees inclusive */
-    while (a_lon < 0)
-        a_lon += 360;
-    while (a_lon > 360)
-        a_lon -= 360;
-    return a_lon;
-}
-
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_g2latlon* self = (grib_accessor_g2latlon*)a;
     int ret                      = 0;
-
     double grid[6];
     size_t size    = 6;
     double new_val = *val;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -207,22 +197,27 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     if (self->given) {
         long given = *val != GRIB_MISSING_DOUBLE;
-        if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->given, given)) != GRIB_SUCCESS)
+        if ((ret = grib_set_long_internal(hand, self->given, given)) != GRIB_SUCCESS)
             return ret;
     }
 
-    if ((ret = grib_get_double_array_internal(grib_handle_of_accessor(a), self->grid, grid, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_array_internal(hand, self->grid, grid, &size)) != GRIB_SUCCESS)
         return ret;
 
     /* index 1 is longitudeOfFirstGridPointInDegrees
      * index 3 is longitudeOfLastGridPointInDegrees
      */
     if ((self->index == 1 || self->index == 3)) {
-        new_val = normalise_longitude(*val);
+        /* WMO regulation for GRIB edition 2:
+         * The longitude values shall be limited to the range 0 to 360 degrees inclusive */
+        new_val = normalise_longitude_in_degrees(*val);
+        if (hand->context->debug && new_val != *val) {
+            fprintf(stderr, "ECCODES DEBUG pack_double g2latlon: normalise longitude %g -> %g\n", *val, new_val);
+        }
     }
     grid[self->index] = new_val;
 
-    return grib_set_double_array_internal(grib_handle_of_accessor(a), self->grid, grid, size);
+    return grib_set_double_array_internal(hand, self->grid, grid, size);
 }
 
 static int pack_missing(grib_accessor* a)
@@ -242,10 +237,8 @@ static int is_missing(grib_accessor* a)
     grib_accessor_g2latlon* self = (grib_accessor_g2latlon*)a;
     long given                   = 1;
 
-
     if (self->given)
         grib_get_long_internal(grib_handle_of_accessor(a), self->given, &given);
-
 
     return !given;
 }

@@ -10,10 +10,10 @@
 
 . ./include.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_dump_encode_fortran_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 
@@ -25,7 +25,7 @@ mkdir -p $tempDir
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
 # If FORTRAN is enabled, then the pkgconfig should be one level above the test dir
-PKGCONFIG_FILE=../../eccodes_f90.pc
+PKGCONFIG_FILE=../../lib/pkgconfig/eccodes_f90.pc
 CACHE_FILE=../../CMakeCache.txt
 
 COMPILE_AND_RUN=0
@@ -69,16 +69,14 @@ do
     # valgrind --error-exitcode=1  ./$tempExe
     ./$tempExe
 
-    # ECC-356: have to blacklist 'ident' because of the spaces
-    ${tools_dir}/bufr_compare -b ident ${data_dir}/bufr/$file $tempBufr
+    ${tools_dir}/bufr_compare ${data_dir}/bufr/$file $tempBufr
 
     TEMP_OUT1=${label}.$file.dump.out
     TEMP_OUT2=${label}.$tempBufr.dump.out
     ${tools_dir}/bufr_dump -p ${data_dir}/bufr/$file > $TEMP_OUT1
     ${tools_dir}/bufr_dump -p $tempBufr              > $TEMP_OUT2
-    # Using the '-w' (--ignore-all-space option) for diff because of the 'ident' key
-    # See ECC-356
-    diff -w $TEMP_OUT1 $TEMP_OUT2
+
+    diff  $TEMP_OUT1 $TEMP_OUT2
     rm -f $TEMP_OUT1 $TEMP_OUT2
   fi
 

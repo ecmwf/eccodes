@@ -36,9 +36,9 @@ grib_option grib_options[] = {
     { "x", 0, 0, 0, 1, 0 }
 };
 
-const char* grib_tool_description = "Dump the content of a METAR file in different formats.";
-const char* grib_tool_name        = "metar_dump";
-const char* grib_tool_usage       = "[options] file file ...";
+const char* tool_description = "Dump the content of a METAR file in different formats.";
+const char* tool_name        = "metar_dump";
+const char* tool_usage       = "[options] file file ...";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -59,13 +59,13 @@ int grib_tool_init(grib_runtime_options* options)
     options->dump_mode = "default";
 
     if (opt > 1) {
-        printf("%s: simultaneous O/D options not allowed\n", grib_tool_name);
+        printf("%s: simultaneous O/D options not allowed\n", tool_name);
         exit(1);
     }
 
     if (grib_options_on("O")) {
         options->dump_mode  = "wmo";
-        options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTECT | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
+        options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("D")) {

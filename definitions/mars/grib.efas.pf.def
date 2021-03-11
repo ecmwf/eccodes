@@ -1,5 +1,4 @@
 # EFAS Perturbed forecast
-#meta efas_suite_name sprintf("%s_%s_%s", inputOriginatingCentre, efas_forecast, efas_post_proc) : no_copy;
 alias mars.origin = inputOriginatingCentre;
 
 alias mars.number = perturbationNumber;

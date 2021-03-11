@@ -25,7 +25,7 @@ grib_option grib_options[] = {
     { "w:", "key[:{s|d|i}]=value,key[:{s|d|i}]=value,...",
       "\n\t\tWhere clause.\n\t\tSet is only executed for BUFR messages matching all the "
       "key/value constraints.\n\t\tIf a BUFR message does not match the constraints it is"
-      " copied unchanged\n\t\tto the output_bufr_file. This behaviour can be changed "
+      " copied unchanged\n\t\tto the output_file. This behaviour can be changed "
       "setting the option -S.\n\t\tFor each key a string (key:s), a double (key:d) or"
       " an integer (key:i)\n\t\ttype can be defined. Default type is string."
       "\n\t\tNote: only one -w clause is allowed.\n",
@@ -42,12 +42,12 @@ grib_option grib_options[] = {
     { "v", 0, 0, 0, 1, 0 }
 };
 
-const char* grib_tool_description =
+const char* tool_description =
     "Sets key/value pairs in the input BUFR file and writes"
-    "\n\teach message to the output_bufr_file."
+    "\n\teach message to the output_file."
     "\n\tIt fails when an error occurs (e.g. key not found).";
-const char* grib_tool_name  = "bufr_set";
-const char* grib_tool_usage = "[options] file file ... output_file";
+const char* tool_name  = "bufr_set";
+const char* tool_usage = "[options] file file ... output_file";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -166,7 +166,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     int err = 0;
     grib_file_close_all(&err);
     if (err != GRIB_SUCCESS) {
-        perror(grib_tool_name);
+        perror(tool_name);
         exit(err);
     }
 

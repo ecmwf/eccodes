@@ -55,7 +55,7 @@ grib_iarray* grib_iarray_new(grib_context* c, size_t size, size_t incsize)
     v = (grib_iarray*)grib_context_malloc(c, sizeof(grib_iarray));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_iarray_new unable to allocate %d bytes\n", sizeof(grib_iarray));
+                         "grib_iarray_new unable to allocate %ld bytes\n", sizeof(grib_iarray));
         return NULL;
     }
     v->context             = c;
@@ -66,7 +66,7 @@ grib_iarray* grib_iarray_new(grib_context* c, size_t size, size_t incsize)
     v->number_of_pop_front = 0;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_iarray_new unable to allocate %d bytes\n", sizeof(long) * size);
+                         "grib_iarray_new unable to allocate %ld bytes\n", sizeof(long) * size);
         return NULL;
     }
     return v;
@@ -92,7 +92,7 @@ long grib_iarray_pop_front(grib_iarray* a)
     return v;
 }
 
-grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
+static grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
 {
     long* newv;
     size_t i;
@@ -107,7 +107,7 @@ grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
     newv = (long*)grib_context_malloc_clear(c, newsize * sizeof(long));
     if (!newv) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_iarray_resize unable to allocate %d bytes\n", sizeof(long) * newsize);
+                         "grib_iarray_resize unable to allocate %ld bytes\n", sizeof(long) * newsize);
         return NULL;
     }
 
@@ -124,10 +124,9 @@ grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
     return v;
 }
 
-grib_iarray* grib_iarray_resize(grib_iarray* v)
+static grib_iarray* grib_iarray_resize(grib_iarray* v)
 {
-    int newsize = v->incsize + v->size;
-
+    const int newsize = v->incsize + v->size;
     return grib_iarray_resize_to(v, newsize);
 }
 
@@ -190,16 +189,6 @@ grib_iarray* grib_iarray_push_array(grib_iarray* v, long* val, size_t size)
     return v;
 }
 
-long grib_iarray_get(grib_iarray* a, size_t i)
-{
-    return a->v[i];
-}
-
-void grib_iarray_set(grib_iarray* a, size_t i, long v)
-{
-    a->v[i] = v;
-}
-
 void grib_iarray_delete(grib_iarray* v)
 {
     grib_context* c;
@@ -231,7 +220,8 @@ long* grib_iarray_get_array(grib_iarray* v)
 {
     long* vv;
     size_t i;
-    grib_context* c = grib_context_get_default();
+    grib_context* c = v->context;
+    DebugAssert(c);
 
     vv = (long*)grib_context_malloc_clear(c, sizeof(long) * v->n);
     for (i = 0; i < v->n; i++)
@@ -243,19 +233,4 @@ long* grib_iarray_get_array(grib_iarray* v)
 size_t grib_iarray_used_size(grib_iarray* v)
 {
     return v == NULL ? 0 : v->n;
-}
-
-int grib_iarray_is_constant(grib_iarray* v)
-{
-    int i;
-    long val;
-    if (v->n == 1)
-        return 1;
-
-    val = v->v[0];
-    for (i = 1; i < v->n; i++) {
-        if (val != v->v[i])
-            return 0;
-    }
-    return 1;
 }

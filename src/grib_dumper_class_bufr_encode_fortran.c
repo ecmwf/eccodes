@@ -124,7 +124,7 @@ static void init_class(grib_dumper_class* c) {}
 static int init(grib_dumper* d)
 {
     grib_dumper_bufr_encode_fortran* self = (grib_dumper_bufr_encode_fortran*)d;
-    grib_context* c                       = d->handle->context;
+    grib_context* c                       = d->context;
     self->section_offset                  = 0;
     self->empty                           = 1;
     d->count                              = 1;
@@ -140,7 +140,7 @@ static int destroy(grib_dumper* d)
     grib_dumper_bufr_encode_fortran* self = (grib_dumper_bufr_encode_fortran*)d;
     grib_string_list* next                = self->keys;
     grib_string_list* cur                 = NULL;
-    grib_context* c                       = d->handle->context;
+    grib_context* c                       = d->context;
     while (next) {
         cur  = next;
         next = next->next;
@@ -393,6 +393,11 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
     (void)err; /* TODO */
 }
 
+static int is_hidden(grib_accessor* a)
+{
+    return ( (a->flags & GRIB_ACCESSOR_FLAG_HIDDEN) != 0 );
+}
+
 static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_encode_fortran* self = (grib_dumper_bufr_encode_fortran*)d;
@@ -408,8 +413,12 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_handle* h                  = grib_handle_of_accessor(a);
     int doing_unexpandedDescriptors = 0;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
-        return;
+    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0) { /* key does not have the dump attribute */
+        int skip = 1;
+        /* See ECC-1107 */
+        if (!is_hidden(a) && strcmp(a->name, "messageLength") == 0) skip = 0;
+        if (skip) return;
+    }
 
     doing_unexpandedDescriptors = (strcmp(a->name, "unexpandedDescriptors") == 0);
     grib_value_count(a, &count);
@@ -718,7 +727,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
             grib_context_free(c, prefix);
         depth -= 2;
     }
-
+    for (i=0; i<size; ++i) grib_context_free(c, values[i]);
     grib_context_free(c, values);
     (void)err; /* TODO */
 }
@@ -739,18 +748,8 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     if (size == 0)
         return;
 
-    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0) {
-        /* ECC-356: Solution for the special local section key 'keyMore' and its alias 'ident' */
-        int skip = 1;
-        if ((a->flags & GRIB_ACCESSOR_FLAG_HIDDEN) != 0) {
-            if (strcmp(a->name, "keyMore") == 0 && grib_is_defined(h, "ls.ident")) {
-                skip     = 0;
-                acc_name = "ident";
-            }
-        }
-        if (skip)
-            return;
-    }
+    if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
+        return;
 
     value = (char*)grib_context_malloc_clear(c, size);
     if (!value) {

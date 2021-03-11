@@ -97,7 +97,7 @@ grib_action* grib_action_create_gen(grib_context* context, const char* name, con
     act->cclass  = c;
     act->context = context;
     act->flags   = flags;
-#if CHECK_LOWERCASE_AND_STRING_TYPE
+#ifdef CHECK_LOWERCASE_AND_STRING_TYPE
     {
         int flag_lowercase=0, flag_stringtype=0;
         if (flags & GRIB_ACCESSOR_FLAG_LOWERCASE)
@@ -214,7 +214,12 @@ static void destroy(grib_context* context, grib_action* act)
 
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
-    grib_context_free_persistent(context, act->name_space);
+    if(act->name_space) {
+        grib_context_free_persistent(context, act->name_space);
+    }
     if (act->set)
         grib_context_free_persistent(context, act->set);
+    if (act->defaultkey) {
+        grib_context_free_persistent(context, act->defaultkey);
+    }
 }

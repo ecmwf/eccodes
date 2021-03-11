@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
         /* create handle for next GRIB message */
         h = codes_handle_new_from_index(index, &ret);
         if (ret) {
-            printf("Error: %s\n", codes_get_error_message(ret));
+            fprintf(stderr, "Error: %s\n", codes_get_error_message(ret));
             exit(ret);
         }
 

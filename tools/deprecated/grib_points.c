@@ -34,9 +34,9 @@ grib_option grib_options[]={
     {"v",0,0,1,0,0}
 };
 
-char* grib_tool_description="Lat lon values list for given points list. ";
-char* grib_tool_name="grib_points";
-char* grib_tool_usage="file_list_of_points grib_file grib_file ...";
+char* tool_description="Lat lon values list for given points list. ";
+char* tool_name="grib_points";
+char* tool_usage="file_list_of_points grib_file grib_file ...";
 
 int grib_options_count=sizeof(grib_options)/sizeof(grib_option);
 double lat=0;
@@ -79,7 +79,7 @@ int grib_tool_init(grib_runtime_options* options) {
         } else if (*end1 == '1') {
             options->latlon_mode=1;
         } else {
-          printf("ERROR %s: wrong mode given in option -l\n",grib_tool_name);
+          printf("ERROR %s: wrong mode given in option -l\n",tool_name);
           exit(1);
         }
       }

@@ -33,10 +33,10 @@
 #define S_ISLNK(mode) (((mode) & (S_IFMT)) == (S_IFLNK))
 #endif
 
-#define MAX_KEYS 1000
+#define MAX_KEYS       256
 #define MAX_STRING_LEN 512
-#define MAX_FAILED 1024
-#define MAX_CONSTRAINT_VALUES 500
+#define MAX_FAILED     1024
+#define LATLON_SIZE    4 /* nearest */
 
 #define MODE_GRIB 0
 #define MODE_GTS 1
@@ -53,6 +53,7 @@ typedef union grib_typed_value
 } grib_typed_value;
 
 /*
+#define MAX_CONSTRAINT_VALUES 500
 typedef struct grib_constraints {
   const char* name;
   int         type;
@@ -140,15 +141,15 @@ typedef struct grib_runtime_options
     int gts;
     char* orderby;
     char* latlon;
-    double lats[4];
-    double lons[4];
-    double values[4];
-    double distances[4];
-    int indexes[4];
+    double lats[LATLON_SIZE];
+    double lons[LATLON_SIZE];
+    double values[LATLON_SIZE];
+    double distances[LATLON_SIZE];
+    int indexes[LATLON_SIZE];
     int latlon_mode;
     char* latlon_mask;
     int latlon_idx;
-    double mask_values[4];
+    double mask_values[LATLON_SIZE];
     int index;
     int index_on;
     double constant;
@@ -173,9 +174,9 @@ typedef struct grib_runtime_options
 
 extern grib_option grib_options[];
 extern int grib_options_count;
-extern const char* grib_tool_name;
-extern const char* grib_tool_description;
-extern const char* grib_tool_usage;
+extern const char* tool_name;
+extern const char* tool_description;
+extern const char* tool_usage;
 
 extern FILE* dump_file;
 
@@ -205,6 +206,6 @@ int grib_process_runtime_options(grib_context* c, int argc, char** argv, grib_ru
 void grib_tools_write_message(grib_runtime_options* options, grib_handle* h);
 int grib_tool_new_filename_action(grib_runtime_options* options, const char* file);
 int grib_no_handle_action(grib_runtime_options* options, int err);
-int exit_if_input_is_directory(const char* tool_name, const char* filename);
+int exit_if_input_is_directory(const char* toolname, const char* filename);
 
 #endif
