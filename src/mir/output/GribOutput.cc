@@ -153,8 +153,13 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
     }
 
     if (!packing_->empty()) {
-        plan.add(plan.empty() ? static_cast<action::Action*>(new action::io::Set(param, input, output))
-                              : new action::io::Save(param, input, output));
+        if (!plan.empty()) {
+            plan.add(new action::io::Save(param, input, output));
+        }
+        else {
+            plan.add(new action::io::Set(param, input, output));
+        }
+        return;
     }
 }
 
