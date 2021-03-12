@@ -3,7 +3,12 @@
 TEST_DIR=`dirname $0`
 
 if [ $# -ne 1 ]; then
-    echo "Usage: $0 title > $TEST_DIR/title.sh"
+    echo "Usage: $0 title > $TEST_DIR/title.sh"  1>&2
+    echo  1>&2
+    echo "Example:"  1>&2
+    echo "  $0 ECC-6666 > tests/grib_ecc-6666.sh"  1>&2
+    echo "  $0 ECC-9999 > tests/bufr_ecc-9999.sh"  1>&2
+    echo  1>&2
     exit 1
 fi
 
@@ -31,7 +36,7 @@ cat <<EOF
 . ./include.sh
 set -u
 REDIRECT=/dev/null
-label="$TEST_TITLE"
+label="prod_${TEST_TITLE}-test"
 temp=temp.\$label
 sample_grib1=\$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 sample_grib2=\$ECCODES_SAMPLES_PATH/GRIB2.tmpl
