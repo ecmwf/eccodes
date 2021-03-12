@@ -12,6 +12,7 @@ TESTS = definitions.sh \
         bufr_filter_extract_subsets.sh \
         bufr_filter_extract_datetime.sh \
         bufr_filter_extract_area.sh \
+        bufr_filter_unpack_pack.sh \
         bufr_json_data.sh \
         bufr_compare.sh \
         bufr_dump_descriptors.sh \
