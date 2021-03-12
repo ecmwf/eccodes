@@ -10,7 +10,7 @@
 
 . ./include.sh
 set -u
-REDIRECT=/dev/null
+
 label="grib_ecc-1212-test"
 tempGrib=temp.$label.grib
 tempFilt=temp.$label.filt
