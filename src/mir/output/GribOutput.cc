@@ -252,7 +252,7 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
 
         // Packing, accuracy, edition
         ASSERT(packing_);
-        packing_->fill(info);
+        packing_->fill(repres, info);
 
         // Extra settings (paramId comes from here)
         for (const auto& k : field.metadata(i)) {
@@ -438,9 +438,11 @@ size_t GribOutput::set(const param::MIRParametrisation&, context::Context& ctx) 
         auto h = codes_handle_clone(input.gribHandle(field.handle(i)));
         HandleDeleter hf(h);
 
+        repres::RepresentationHandle repres(field.representation());
+
         // Packing, accuracy, edition
         ASSERT(packing_);
-        packing_->set(h);
+        packing_->set(repres, h);
 
         // Values
         GRIB_CALL(codes_set_double(h, "missingValue", field.missingValue()));
