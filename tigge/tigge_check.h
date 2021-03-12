@@ -652,7 +652,6 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
       -1e+8,
        1e+8,
       {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"paramId", GRIB_TYPE_LONG, 179},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 5},
@@ -671,7 +670,6 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
       -1e+8,
        1e+8,
       {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"paramId", GRIB_TYPE_LONG, 147},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 0},
@@ -693,7 +691,6 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
       1e+05,
       1e+07,
       {
-         {"model", GRIB_TYPE_STRING, 0, "glob"},
          {"paramId", GRIB_TYPE_LONG, 176},
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 4},
@@ -3559,9 +3556,6 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 1},
          {"parameterNumber", GRIB_TYPE_LONG, 19},
-
-         {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 1},
-
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
@@ -3719,8 +3713,8 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 4},
          {"parameterNumber", GRIB_TYPE_LONG, 54},
-         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 1},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
       {&from_start, &predefined_level},
@@ -3842,7 +3836,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       }, 
-      {&from_start, &predefined_level},
+      {&from_start, &predefined_level, &has_bitmap},
    },
    {
       "10_metre_eastward_wind_gust_since_pp_sfc",
@@ -3912,7 +3906,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 174},
          {NULL, },
       },
-      {&point_in_time, &predefined_level},
+      {&point_in_time, &predefined_level, &has_bitmap},
    },
    {
       "fraction_of_snow_cover_sfc",
@@ -3928,7 +3922,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&point_in_time, &predefined_level},
+      {&point_in_time, &predefined_level, &has_bitmap},
    },
    {
       "snow_albedo_sfc",
@@ -3941,6 +3935,22 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 19},
          {"parameterNumber", GRIB_TYPE_LONG, 19},
+         {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
+         {NULL, },
+      },
+      {&point_in_time, &predefined_level, &has_bitmap},
+   },
+   {
+      "temperature_of_snow_layer_sfc",
+      -1e+8,
+       1e+8,
+      -1e+8,
+       1e+8,
+      {
+         {"paramId", GRIB_TYPE_LONG, 238},
+         {"discipline", GRIB_TYPE_LONG, 2},
+         {"parameterCategory", GRIB_TYPE_LONG, 3},
+         {"parameterNumber", GRIB_TYPE_LONG, 28},
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
@@ -4067,7 +4077,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 162},
          {NULL, },
       },
-      {&point_in_time, &predefined_thickness},
+      {&point_in_time, &predefined_thickness, &has_bitmap},
    },
    {
       "lake_mix_layer_temperature_sfc",
@@ -4083,7 +4093,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 166},
          {NULL, },
       },
-      {&point_in_time, &predefined_level},
+      {&point_in_time, &predefined_level, &has_bitmap},
    },
    {
       "lake_mix_layer_depth_sfc",
@@ -4099,7 +4109,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 166},
          {NULL, },
       },
-      {&point_in_time, &predefined_level},
+      {&point_in_time, &predefined_level, &has_bitmap},
    },
    {
       "lake_bottom_temperature_sfc",
@@ -4115,7 +4125,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 162},
          {NULL, },
       },
-      {&point_in_time, &predefined_level},
+      {&point_in_time, &predefined_level, &has_bitmap},
    },
    {
       "lake_shape_factor_sfc",
@@ -4131,7 +4141,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&point_in_time, &predefined_level},
+      {&point_in_time, &predefined_level, &has_bitmap},
    },
    {
       "lake_ice_surface_temperature_sfc",
@@ -4147,7 +4157,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 174},
          {NULL, },
       },
-      {&point_in_time, &predefined_level},
+      {&point_in_time, &predefined_level, &has_bitmap},
    },
    {
       "lake_ice_total_depth_sfc",
@@ -4164,7 +4174,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 176},
          {NULL, },
       },
-      {&point_in_time, &predefined_thickness},
+      {&point_in_time, &predefined_thickness, &has_bitmap},
    },
    {
       "lake_total_depth_sfc",
@@ -4181,7 +4191,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"typeOfSecondFixedSurface", GRIB_TYPE_LONG, 162},
          {NULL, },
       },
-      {&point_in_time, &predefined_thickness},
+      {&point_in_time, &predefined_thickness, &has_bitmap},
    },
   {
       "momentum_flux_u_component_sfc",
