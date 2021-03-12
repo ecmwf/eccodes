@@ -56,27 +56,6 @@ RepresentationHandle::~RepresentationHandle() {
 }
 
 
-void Representation::setComplexPacking(grib_info&) const {
-    std::ostringstream os;
-    os << "Representation::setComplexPacking() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
-}
-
-
-void Representation::setSimplePacking(grib_info&) const {
-    std::ostringstream os;
-    os << "Representation::setSimplePacking() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
-}
-
-
-void Representation::setGivenPacking(grib_info&) const {
-    std::ostringstream os;
-    os << "Representation::setGivenPacking() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
-}
-
-
 std::vector<util::GridBox> Representation::gridBoxes() const {
     std::ostringstream os;
     os << "Representation::gridBoxes() not implemented for " << *this;
