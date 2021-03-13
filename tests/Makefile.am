@@ -8,7 +8,7 @@ TESTS = definitions.sh \
         bufr_dump_samples.sh \
         bufr_dump_subset.sh \
         bufr_json_samples.sh \
-        bufr_filter.sh \
+        bufr_filter_misc.sh \
         bufr_filter_extract_subsets.sh \
         bufr_filter_extract_datetime.sh \
         bufr_filter_extract_area.sh \

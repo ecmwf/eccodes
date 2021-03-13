@@ -14,7 +14,7 @@ set -x
 cd ${data_dir}/bufr
 
 # Define a common label for all the tmp files
-label="bufr_filter_test"
+label="bufr_filter_misc_test"
 
 # Create log file
 fLog=${label}".log"

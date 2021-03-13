@@ -116,7 +116,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_copy
         bufr_count
         bufr_get
-        bufr_filter
+        bufr_filter_misc
         bufr_filter_extract_subsets
         bufr_filter_extract_datetime
         bufr_filter_extract_area
