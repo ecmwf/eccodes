@@ -6,7 +6,7 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/include.sh ${CMAKE_CURRENT_BINARY_DIR} )
 
 # Add all the tests
-#############################################
+####################
 if( HAVE_BUILD_TOOLS )
     list( APPEND tests_sanity
           grib_set_pv
@@ -124,7 +124,6 @@ ecbuild_add_test( TARGET          eccodes_f_grib_set_packing
                   COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/grib_set_packing.sh )
 
 # Executables without a shell script
-# TODO
 ecbuild_add_executable( TARGET    eccodes_f_new_from_file
                         NOINSTALL
                         SOURCES   new_from_file.f90
