@@ -23,6 +23,7 @@ touch $fLog
 
 # Define filter rules file
 fRules=${label}.filter
+temp=${label}.bufr
 
 cat > $fRules <<EOF
  set unpack=1;
@@ -49,13 +50,12 @@ tros_31.bufr wavb_134.bufr"
 
 
 for f in $files; do
-  echo "Test: packing $f ..." >> $fLog
-  ${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f 2>> $fLog 1>> $fLog
+  echo "Test: unpack and pack $f ..." >> $fLog
+  ${tools_dir}/codes_bufr_filter -o $temp $fRules $f 2>> $fLog 1>> $fLog
+  ${tools_dir}/bufr_compare $temp $f
 
-  ${tools_dir}/bufr_compare ${f}.out $f
-
-  rm -f ${f}.out
+  rm -f $temp
 done
 
 
-rm -f $fRules $fLog
+rm -f $fRules $fLog $temp

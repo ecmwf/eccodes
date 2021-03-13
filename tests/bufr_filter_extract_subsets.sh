@@ -21,8 +21,8 @@ fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-# Define tmp bufr file
-fBufrTmp=${label}".bufr.tmp"
+fBufrTmp1=temp1.${label}.bufr
+fBufrTmp2=temp2.${label}.bufr
 
 # Define filter rules file
 fRules=${label}.filter
@@ -96,7 +96,7 @@ write;
 EOF
 
 f="g2nd_208.bufr"
-fOut="g2nd_208.bufr.out"
+fOut="$label.g2nd_208.bufr.out"
 
 echo "Test: extract subsets compressed data" >> $fLog
 echo "file: $f" >> $fLog
@@ -149,7 +149,7 @@ f="imssnow.bufr"
 echo "Test: Simple thinning" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
+${tools_dir}/codes_bufr_filter -o $fBufrTmp1 $fRules $f
 
 cat > $fRules <<EOF
 set unpack=1;
@@ -158,7 +158,7 @@ print "longitude=[longitude]";
 print "height=[height]";
 EOF
 
-${tools_dir}/codes_bufr_filter $fRules ${f}.out > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $fBufrTmp1 > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 latitude=4.93301 5.17216 5.40243 5.62361 7.86075
@@ -168,7 +168,7 @@ EOF
 
 diff ${f}.log.ref ${f}.log 
 
-rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
+rm -f ${f}.log ${f}.log.ref $fBufrTmp1 $fLog $fRules
 #-----------------------------------------------------------
 # Test: subset extraction constant values
 #-----------------------------------------------------------
@@ -186,7 +186,7 @@ f="go15_87.bufr"
 echo "Test: subset extraction constant values" >> $fLog
 echo "file: $f" >> $fLog
 
-${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
+${tools_dir}/codes_bufr_filter -o $fBufrTmp1 $fRules $f
 
 cat > $fRules <<EOF
 set unpack=1;
@@ -196,14 +196,14 @@ set doExtractSubsets=1;
 write;
 EOF
 
-${tools_dir}/codes_bufr_filter -o ${f}.out.out $fRules ${f}.out
+${tools_dir}/codes_bufr_filter -o $fBufrTmp2 $fRules $fBufrTmp1
 
 cat > $fRules <<EOF
 set unpack=1;
 print "latitude=[latitude]";
 EOF
 
-${tools_dir}/codes_bufr_filter $fRules ${f}.out.out > ${f}.log
+${tools_dir}/codes_bufr_filter $fRules $fBufrTmp2 > ${f}.log
 
 cat > ${f}.log.ref <<EOF
 latitude=0
@@ -211,5 +211,4 @@ EOF
 diff ${f}.log.ref ${f}.log 
 
 # Clean up
-rm -f ${f}.log ${f}.log.ref ${f}.out ${f}.out.out $fLog $fRules
-rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
+rm -f ${f}.log ${f}.log.ref $fBufrTmp1 $fBufrTmp2 $fLog $fRules
