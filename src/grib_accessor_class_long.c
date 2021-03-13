@@ -233,7 +233,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     values = (long*)grib_context_malloc(a->context, rlen * sizeof(long));
     if (!values)
-        return GRIB_INTERNAL_ERROR;
+        return GRIB_OUT_OF_MEMORY;
 
     ret = grib_unpack_long(a, values, &rlen);
     if (ret != GRIB_SUCCESS) {
