@@ -21,6 +21,7 @@ TESTS = definitions.sh \
         bufr_get.sh \
         bufr_ls.sh \
         bufr_set.sh \
+        bufr_templates.sh \
         bufr_change_edition.sh \
         gts_ls.sh \
         gts_compare.sh \
