@@ -4004,7 +4004,7 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&point_in_time, &predefined_level},
+      {&point_in_time, &predefined_level, &has_bitmap},
    },
    {
       "volumetric_soil_ice_layer",
