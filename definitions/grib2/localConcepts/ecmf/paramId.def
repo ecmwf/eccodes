@@ -13636,6 +13636,23 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 255 ;
 	}
+#Time integral of snow evaporation flux
+'235072' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Surface roughness length for heat
+'260651' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 200 ;
+	}
 #Stream function gradient
 '129001' = {
 	 discipline = 192 ;
