@@ -13708,11 +13708,12 @@
 	 discipline = 4 ;
 	 parameterCategory = 8 ;
 	 parameterNumber = 254 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 scaledValueOfSecondWavelength = missing() ;
 	 typeOfWavelengthInterval = 11 ;
 	 scaleFactorOfFirstWavelength = 9 ;
 	 scaledValueOfFirstWavelength = 740 ;
-	 scaleFactorOfSecondWavelength = missing() ;
-	 scaledValueOfSecondWavelength = missing() ;
+	 is_aerosol_optical = 1 ;
 	}
 #Solar induced Chlorophyll fluorescence at 755nm
 '228106' = {
@@ -13723,6 +13724,7 @@
 	 typeOfWavelengthInterval = 11 ;
 	 scaleFactorOfFirstWavelength = 9 ;
 	 scaledValueOfFirstWavelength = 755 ;
+	 is_aerosol_optical = 1 ;
 	 scaleFactorOfSecondWavelength = missing() ;
 	 scaledValueOfSecondWavelength = missing() ;
 	}
@@ -13737,6 +13739,7 @@
 	 scaledValueOfFirstWavelength = 771 ;
 	 scaleFactorOfSecondWavelength = missing() ;
 	 scaledValueOfSecondWavelength = missing() ;
+	 is_aerosol_optical = 1 ;
 	}
 #Solar induced Chlorophyll fluorescence at 757nm
 '228108' = {
@@ -13744,6 +13747,7 @@
 	 discipline = 4 ;
 	 parameterCategory = 8 ;
 	 parameterNumber = 254 ;
+	 is_aerosol_optical = 1 ;
 	 typeOfWavelengthInterval = 11 ;
 	 scaleFactorOfFirstWavelength = 9 ;
 	 scaledValueOfFirstWavelength = 757 ;

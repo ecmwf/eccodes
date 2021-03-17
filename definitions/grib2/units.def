@@ -751,7 +751,7 @@
 	 aerosolType = 62012 ;
 	 scaleFactorOfSecondWavelength = missing() ;
 	 scaleFactorOfFirstWavelength = 9 ;
-	 is_aerosol = 1 ;
+	 is_aerosol_optical = 1 ;
 	}
 #Aromatic peroxy radical mass mixing ratio
 'kg kg**-1' = {

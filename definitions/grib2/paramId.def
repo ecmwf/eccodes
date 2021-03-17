@@ -745,13 +745,13 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 102 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 9 ;
 	 scaledValueOfFirstWavelength = 550 ;
 	 scaleFactorOfSecondWavelength = missing() ;
 	 scaledValueOfSecondWavelength = missing() ;
+	 is_aerosol_optical = 1 ;
 	 aerosolType = 62012 ;
-	 is_aerosol = 1 ;
-	 typeOfWavelengthInterval = 11 ;
-	 scaleFactorOfFirstWavelength = 9 ;
 	}
 #Aromatic peroxy radical mass mixing ratio
 '217222' = {
