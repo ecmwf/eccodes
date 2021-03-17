@@ -6781,6 +6781,42 @@
 	 aerosolType = 62003 ;
 	 is_aerosol = 1 ;
 	}
+#Source/gain of biogenic secondary organic aerosol
+'215212' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of biogenic secondary organic aerosol
+'215217' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Source/gain of anthropogenic secondary organic aerosol
+'215219' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of anthropogenic secondary organic aerosol
+'215224' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
 #Experimental product
 '216001' = {
 	 discipline = 192 ;
@@ -9505,6 +9541,24 @@
 	 parameterCategory = 217 ;
 	 parameterNumber = 206 ;
 	}
+#Anthropogenic volatile organic compounds mass mixing ratio
+'217231' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 65532 ;
+	 is_chemical = 1 ;
+	}
+#Biomass burning volatile organic compounds mass mixing ratio
+'217232' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 65531 ;
+	 is_chemical = 1 ;
+	}
 #Total column hydrogen peroxide
 '218003' = {
 	 discipline = 192 ;
@@ -10698,6 +10752,24 @@
 	 discipline = 192 ;
 	 parameterCategory = 218 ;
 	 parameterNumber = 206 ;
+	}
+#Column integrated mass density of Anthropogenic volatile organic compounds 
+'218231' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 65532 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Biomass burning volatile organic compounds 
+'218232' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 is_chemical = 1 ;
+	 constituentType = 65531 ;
 	}
 #Ozone emissions
 '219001' = {
@@ -12019,6 +12091,24 @@
 	 parameterCategory = 219 ;
 	 parameterNumber = 220 ;
 	}
+#Atmosphere emission mass flux of Anthropogenic volatile organic compounds 
+'219231' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 65532 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Biomass burning volatile organic compounds 
+'219232' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 65531 ;
+	 is_chemical = 1 ;
+	}
 #Ozone deposition velocity
 '221001' = {
 	 discipline = 192 ;
@@ -13255,6 +13345,24 @@
 	 parameterCategory = 221 ;
 	 parameterNumber = 206 ;
 	}
+#Dry deposition velocity of Anthropogenic volatile organic compounds 
+'221231' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 65532 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Biomass burning volatile organic compounds 
+'221232' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 65531 ;
+	 is_chemical = 1 ;
+	}
 #Total sky direct solar radiation at surface
 '228021' = {
 	 discipline = 192 ;
@@ -13593,6 +13701,54 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 103 ;
+	}
+#Solar induced Chlorophyll fluorescence at 740nm
+'228105' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 scaledValueOfFirstWavelength = 740 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 scaledValueOfSecondWavelength = missing() ;
+	}
+#Solar induced Chlorophyll fluorescence at 755nm
+'228106' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 scaledValueOfFirstWavelength = 755 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 scaledValueOfSecondWavelength = missing() ;
+	}
+#Solar induced Chlorophyll fluorescence at 771nm
+'228107' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 scaledValueOfFirstWavelength = 771 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 scaledValueOfSecondWavelength = missing() ;
+	}
+#Solar induced Chlorophyll fluorescence at 757nm
+'228108' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 scaledValueOfFirstWavelength = 757 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 scaledValueOfSecondWavelength = missing() ;
 	}
 #Surface solar radiation downward clear-sky
 '228129' = {

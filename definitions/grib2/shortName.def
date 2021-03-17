@@ -524,6 +524,15 @@
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Volcanic sulfur dioxide mass mixing ratio
+'VSO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_chemical = 1 ;
+	 constituentType = 8 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
 #Ammonium aerosol mass mixing ratio
 'aermr18' = {
 	 discipline = 0 ;
@@ -549,21 +558,65 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 102 ;
-	 typeOfWavelengthInterval = 11 ;
 	 scaleFactorOfFirstWavelength = 8 ;
 	 scaledValueOfFirstWavelength = 55 ;
 	 typeOfSizeInterval = 255 ;
 	 aerosolType = 62003 ;
 	 is_aerosol_optical = 1 ;
+	 typeOfWavelengthInterval = 11 ;
+	}
+#Biogenic secondary organic aerosol mass mixing ratio
+'aermr19' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Anthropogenic secondary organic aerosol mass mixing ratio
+'aermr20' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Volcanic sulfur dioxide mass mixing ratio increment
+'VSO2diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_chemical = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	 constituentType = 8 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #Ammonium aerosol mass mixing ratio
 'aermr18diff' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
 	 aerosolType = 62003 ;
 	 is_aerosol = 1 ;
+	}
+#Biogenic secondary organic aerosol mass mixing ratio increment
+'aermr19diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
 	 typeOfGeneratingProcess = 20 ;
+	}
+#Anthropogenic secondary organic aerosol mass mixing ratio increment
+'aermr20diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_aerosol = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	 aerosolType = 62033 ;
 	}
 #Dry deposition of ammonium aerosol
 'aerddpam' = {
@@ -606,6 +659,414 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 aerosolType = 62003 ;
+	}
+#Dry deposition of biogenic secondary organic aerosol
+'aerddpsoab' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 12 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62032 ;
+	}
+#Sedimentation of biogenic secondary organic aerosol
+'aersdmsoab' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of biogenic secondary organic aerosol by large-scale precipitation
+'aerwdlsoab' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of biogenic secondary organic aerosol by convective precipitation
+'aerwdcsoab' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Vertically integrated mass of biogenic secondary organic aerosol
+'aermsssoab' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62032 ;
+	}
+#Dry deposition of anthropogenic secondary organic aerosol
+'aerddpsoaa' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 12 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Sedimentation of anthropogenic secondary organic aerosol
+'aersdmsoaa' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of anthropogenic secondary organic aerosol by large-scale precipitation
+'aerwdlsoaa' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of anthropogenic secondary organic aerosol by convective precipitation
+'aerwdcsoaa' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62033 ;
+	}
+#Vertically integrated mass of anthropogenic secondary organic aerosol
+'aermsssoaa' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Secondary organic aerosol optical depth at 550 nm
+'soaod550' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 scaledValueOfFirstWavelength = 550 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 aerosolType = 62012 ;
+	 is_aerosol = 1 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	}
+#Aromatic peroxy radical mass mixing ratio
+'AROO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 60029 ;
+	 is_chemical = 1 ;
+	}
+#Ethyne mass mixing ratio
+'C2H2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 10010 ;
+	 is_chemical = 1 ;
+	}
+#Acetonitrile mass mixing ratio
+'CH3CN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 10007 ;
+	 is_chemical = 1 ;
+	}
+#Methyl peroxy nitrate mass mixing ratio
+'CH3O2NO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 10055 ;
+	 is_chemical = 1 ;
+	}
+#Hydrogen cyanide mass mixing ratio
+'HCN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 10006 ;
+	 is_chemical = 1 ;
+	}
+#Hydroperoxy aldehydes type 1 mass mixing ratio
+'HPALD1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_chemical = 1 ;
+	 constituentType = 60058 ;
+	}
+#Hydroperoxy aldehydes type 2 mass mixing ratio
+'HPALD' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 60059 ;
+	 is_chemical = 1 ;
+	}
+#Isoprene peroxy type B mass mixing ratio
+'ISOPBO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 60056 ;
+	 is_chemical = 1 ;
+	}
+#Isoprene peroxy type D mass mixing ratio
+'ISOPDO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 60057 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Volcanic sulfur dioxide 
+'tc_VSO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 is_chemical = 1 ;
+	 constituentType = 8 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Column integrated mass density of Aromatic peroxy radical 
+'tc_AROO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 is_chemical = 1 ;
+	 constituentType = 60029 ;
+	}
+#Column integrated mass density of Ethyne 
+'tc_C2H2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 10010 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Acetonitrile 
+'tc_CH3CN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 10007 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Methyl peroxy nitrate 
+'tc_CH3O2NO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 10055 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Hydrogen cyanide 
+'tc_HCN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 10006 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Hydroperoxy aldehydes type 1 
+'tc_HPALD1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 is_chemical = 1 ;
+	 constituentType = 60058 ;
+	}
+#Column integrated mass density of Hydroperoxy aldehydes type 2 
+'tc_HPALD2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 60059 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Isoprene peroxy type B 
+'tc_ISOPBO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 60056 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Isoprene peroxy type D 
+'tc_ISOPDO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 60057 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Volcanic sulfur dioxide 
+'e_VSO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 8 ;
+	 is_chemical = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Atmosphere emission mass flux of Aromatic peroxy radical 
+'e_AROO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 60029 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Ethyne 
+'e_C2H2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 10010 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Acetonitrile 
+'e_CH3CN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 10007 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Methyl peroxy nitrate 
+'e_CH3O2NO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 10055 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Hydrogen cyanide 
+'e_HCN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 is_chemical = 1 ;
+	 constituentType = 10006 ;
+	}
+#Atmosphere emission mass flux of Hydroperoxy aldehydes type 1 
+'e_HPALD1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 60058 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Hydroperoxy aldehydes type 2 
+'e_HPALD2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 60059 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Isoprene peroxy type B 
+'e_ISOPBO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 60056 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Isoprene peroxy type D 
+'e_ISOPDO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 60057 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Volcanic sulfur dioxide 
+'dv_VSO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 8 ;
+	 is_chemical = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Dry deposition velocity of Aromatic peroxy radical 
+'dv_AROO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 60029 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Ethyne 
+'dv_C2H2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 10010 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Acetonitrile 
+'dv_CH3CN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 10007 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Methyl peroxy nitrate 
+'dv_CH3O2NO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 is_chemical = 1 ;
+	 constituentType = 10055 ;
+	}
+#Dry deposition velocity of Hydrogen cyanide 
+'dv_HCN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 10006 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Hydroperoxy aldehydes type 1 
+'dv_HPALD1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 60058 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Hydroperoxy aldehydes type 2 
+'dv_HPALD2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 60059 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Isoprene peroxy type B 
+'dv_ISOPBO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 60056 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Isoprene peroxy type D 
+'dv_ISOPDO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 is_chemical = 1 ;
+	 constituentType = 60057 ;
 	}
 #-10 degrees C isothermal level (atm)
 'degm10l' = {
@@ -858,6 +1319,15 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 10 ;
+	}
+#Atmosphere emission mass flux of Methane from Wetlands
+'e_WLCH4' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 2 ;
+	 is_chemical = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 10 ;
 	}
 #Convective precipitation
 'cp' = {
