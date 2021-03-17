@@ -19,7 +19,7 @@
    IMPLEMENTS = init
    MEMBERS=const char* productDefinitionTemplateNumber
    MEMBERS=const char* stepType
-   MEMBERS=int distribution
+   MEMBERS=int chemical_type
    END_CLASS_DEF
 
  */
@@ -51,7 +51,7 @@ typedef struct grib_accessor_g2_chemical
     /* Members defined in g2_chemical */
     const char* productDefinitionTemplateNumber;
     const char* stepType;
-    int distribution;
+    int chemical_type;
 } grib_accessor_g2_chemical;
 
 extern grib_accessor_class* grib_accessor_class_unsigned;
@@ -146,7 +146,7 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 
     self->productDefinitionTemplateNumber = grib_arguments_get_name(hand, c, n++);
     self->stepType                        = grib_arguments_get_name(hand, c, n++);
-    self->distribution                    = grib_arguments_get_long(hand, c, n++);
+    self->chemical_type                    = grib_arguments_get_long(hand, c, n++);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
@@ -160,10 +160,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
      * 1 = atmospheric chemical constituents based on a distribution function
      * 2 = atmospheric chemical constituents with source or sink
      */
-    Assert(self->distribution == 0 || self->distribution == 1 || self->distribution == 2);
-    if (self->distribution == 1)
+    Assert(self->chemical_type == 0 || self->chemical_type == 1 || self->chemical_type == 2);
+    if (self->chemical_type == 1)
         *val = grib2_is_PDTN_ChemicalDistFunc(productDefinitionTemplateNumber);
-    else if (self->distribution == 2)
+    else if (self->chemical_type == 2)
         *val = grib2_is_PDTN_ChemicalSourceSink(productDefinitionTemplateNumber);
     else
         *val = grib2_is_PDTN_Chemical(productDefinitionTemplateNumber);
@@ -207,30 +207,31 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
      * 1 = atmospheric chemical constituents based on a distribution function
      * 2 = atmospheric chemical constituents with source or sink
      */
-    Assert(self->distribution == 0 || self->distribution == 1 || self->distribution == 2);
+    Assert(self->chemical_type == 0 || self->chemical_type == 1 || self->chemical_type == 2);
 
     if (eps == 1) {
         if (isInstant) {
-            if (self->distribution == 0) productDefinitionTemplateNumberNew=41;
-            if (self->distribution == 1) productDefinitionTemplateNumberNew=58;
-            if (self->distribution == 2) productDefinitionTemplateNumberNew=77;
+            if      (self->chemical_type == 0) productDefinitionTemplateNumberNew=41;
+            else if (self->chemical_type == 1) productDefinitionTemplateNumberNew=58;
+            else if (self->chemical_type == 2) productDefinitionTemplateNumberNew=77;
         }
         else {
-            if (self->distribution == 0) productDefinitionTemplateNumberNew=43;
-            if (self->distribution == 1) productDefinitionTemplateNumberNew=68;
-            if (self->distribution == 2) productDefinitionTemplateNumberNew=79;
+            if      (self->chemical_type == 0) productDefinitionTemplateNumberNew=43;
+            else if (self->chemical_type == 1) productDefinitionTemplateNumberNew=68;
+            else if (self->chemical_type == 2) productDefinitionTemplateNumberNew=79;
         }
     }
     else {
+        /* deterministic */
         if (isInstant) {
-            if (self->distribution == 0) productDefinitionTemplateNumberNew=40;
-            if (self->distribution == 1) productDefinitionTemplateNumberNew=57;
-            if (self->distribution == 2) productDefinitionTemplateNumberNew=76;
+            if      (self->chemical_type == 0) productDefinitionTemplateNumberNew=40;
+            else if (self->chemical_type == 1) productDefinitionTemplateNumberNew=57;
+            else if (self->chemical_type == 2) productDefinitionTemplateNumberNew=76;
         }
         else {
-            if (self->distribution == 0) productDefinitionTemplateNumberNew=42;
-            if (self->distribution == 0) productDefinitionTemplateNumberNew=67;
-            if (self->distribution == 0) productDefinitionTemplateNumberNew=78;
+            if      (self->chemical_type == 0) productDefinitionTemplateNumberNew=42;
+            else if (self->chemical_type == 1) productDefinitionTemplateNumberNew=67;
+            else if (self->chemical_type == 2) productDefinitionTemplateNumberNew=78;
         }
     }
 
