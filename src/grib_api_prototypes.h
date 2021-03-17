@@ -1476,10 +1476,11 @@ int grib_moments(grib_handle* h, double east, double north, double west, double 
 int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
 int grib2_is_PDTN_EPS(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Chemical(long productDefinitionTemplateNumber);
+int grib2_is_PDTN_ChemicalSourceSink(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
-int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
+int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_srcsink, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
 int grib_is_earth_oblate(grib_handle* h);
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val);

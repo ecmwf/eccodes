@@ -2022,6 +2022,17 @@ int grib2_is_PDTN_Chemical(long pdtn)
 }
 
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for
+ * atmospheric chemical constituents with source or sink */
+int grib2_is_PDTN_ChemicalSourceSink(long pdtn)
+{
+    return (
+        pdtn == 76 ||
+        pdtn == 77 ||
+        pdtn == 78 ||
+        pdtn == 79);
+}
+
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for
  * atmospheric chemical constituents based on a distribution function */
 int grib2_is_PDTN_ChemicalDistFunc(long pdtn)
 {
@@ -2066,13 +2077,14 @@ int grib2_is_PDTN_AerosolOptical(long pdtn)
  */
 int grib2_select_PDTN(int is_eps, int is_instant,
                       int is_chemical,
+                      int is_chemical_srcsink,
                       int is_chemical_distfn,
                       int is_aerosol,
                       int is_aerosol_optical)
 {
     /* At most one has to be set. All could be 0 */
     /* Unfortunately if PDTN=48 then both aerosol and aerosol_optical can be 1! */
-    const int sum = is_chemical + is_chemical_distfn + is_aerosol + is_aerosol_optical;
+    const int sum = is_chemical + is_chemical_srcsink + is_chemical_distfn + is_aerosol + is_aerosol_optical;
     Assert(sum == 0 || sum == 1 || sum == 2);
 
     if (is_chemical) {
@@ -2087,6 +2099,21 @@ int grib2_select_PDTN(int is_eps, int is_instant,
                 return 40;
             else
                 return 42;
+        }
+    }
+
+    if (is_chemical_srcsink) {
+        if (is_eps) {
+            if (is_instant)
+                return 77;
+            else
+                return 79;
+        }
+        else {
+            if (is_instant)
+                return 76;
+            else
+                return 78;
         }
     }
 
