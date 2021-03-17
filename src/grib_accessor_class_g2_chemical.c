@@ -155,8 +155,16 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     long productDefinitionTemplateNumber = 0;
     grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
 
-    if (self->distribution)
+    /*
+     * 0 = atmospheric chemical constituents
+     * 1 = atmospheric chemical constituents based on a distribution function
+     * 2 = atmospheric chemical constituents with source or sink
+     */
+    Assert(self->distribution == 0 || self->distribution == 1 || self->distribution == 2);
+    if (self->distribution == 1)
         *val = grib2_is_PDTN_ChemicalDistFunc(productDefinitionTemplateNumber);
+    else if (self->distribution == 2)
+        *val = grib2_is_PDTN_ChemicalSourceSink(productDefinitionTemplateNumber);
     else
         *val = grib2_is_PDTN_Chemical(productDefinitionTemplateNumber);
 
@@ -194,20 +202,35 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if (!strcmp(stepType, "instant"))
         isInstant = 1;
 
+    /*
+     * 0 = atmospheric chemical constituents
+     * 1 = atmospheric chemical constituents based on a distribution function
+     * 2 = atmospheric chemical constituents with source or sink
+     */
+    Assert(self->distribution == 0 || self->distribution == 1 || self->distribution == 2);
+
     if (eps == 1) {
         if (isInstant) {
-            productDefinitionTemplateNumberNew = (self->distribution ? 58 : 41);
+            if (self->distribution == 0) productDefinitionTemplateNumberNew=41;
+            if (self->distribution == 1) productDefinitionTemplateNumberNew=58;
+            if (self->distribution == 2) productDefinitionTemplateNumberNew=77;
         }
         else {
-            productDefinitionTemplateNumberNew = (self->distribution ? 68 : 43);
+            if (self->distribution == 0) productDefinitionTemplateNumberNew=43;
+            if (self->distribution == 1) productDefinitionTemplateNumberNew=68;
+            if (self->distribution == 2) productDefinitionTemplateNumberNew=79;
         }
     }
     else {
         if (isInstant) {
-            productDefinitionTemplateNumberNew = (self->distribution ? 57 : 40);
+            if (self->distribution == 0) productDefinitionTemplateNumberNew=40;
+            if (self->distribution == 1) productDefinitionTemplateNumberNew=57;
+            if (self->distribution == 2) productDefinitionTemplateNumberNew=76;
         }
         else {
-            productDefinitionTemplateNumberNew = (self->distribution ? 67 : 42);
+            if (self->distribution == 0) productDefinitionTemplateNumberNew=42;
+            if (self->distribution == 0) productDefinitionTemplateNumberNew=67;
+            if (self->distribution == 0) productDefinitionTemplateNumberNew=78;
         }
     }
 

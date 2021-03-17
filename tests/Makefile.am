@@ -8,7 +8,11 @@ TESTS = definitions.sh \
         bufr_dump_samples.sh \
         bufr_dump_subset.sh \
         bufr_json_samples.sh \
-        bufr_filter.sh \
+        bufr_filter_misc.sh \
+        bufr_filter_extract_subsets.sh \
+        bufr_filter_extract_datetime.sh \
+        bufr_filter_extract_area.sh \
+        bufr_filter_unpack_pack.sh \
         bufr_json_data.sh \
         bufr_compare.sh \
         bufr_dump_descriptors.sh \
@@ -17,6 +21,7 @@ TESTS = definitions.sh \
         bufr_get.sh \
         bufr_ls.sh \
         bufr_set.sh \
+        bufr_templates.sh \
         bufr_change_edition.sh \
         gts_ls.sh \
         gts_compare.sh \
@@ -53,6 +58,7 @@ TESTS = definitions.sh \
         grib_level.sh \
         grib_indexing.sh \
         grib_list.sh \
+        grib_element.sh \
         grib_second_order.sh \
         grib_change_scanning.sh \
         julian.sh \

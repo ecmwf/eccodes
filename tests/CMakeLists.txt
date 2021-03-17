@@ -70,6 +70,7 @@ if( HAVE_BUILD_TOOLS )
         grib_packing_order
         filter_substr
         grib_uerra
+        grib_element
         grib_2nd_order_numValues
         grib_ecc-136
         grib_ecc-966
@@ -86,6 +87,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-359
         bufr_ecc-517
         bufr_rdbSubTypes
+        bufr_templates
         grib_efas
         grib_sh_imag
         grib_sh_spectral_complex
@@ -115,9 +117,11 @@ if( HAVE_BUILD_TOOLS )
         bufr_copy
         bufr_count
         bufr_get
-        bufr_filter
+        bufr_filter_misc
+        bufr_filter_extract_subsets
         bufr_filter_extract_datetime
         bufr_filter_extract_area
+        bufr_filter_unpack_pack
         bufr_json_data
         bufr_ls
         bufr_ls_json

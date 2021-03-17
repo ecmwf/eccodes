@@ -14,7 +14,7 @@ set -x
 cd ${data_dir}/bufr
 
 # Define a common label for all the tmp files
-label="bufr_filter_test"
+label="bufr_filter_misc_test"
 
 # Create log file
 fLog=${label}".log"
@@ -45,7 +45,7 @@ bufr_files=`cat bufr_data_files.txt`
 for f in ${bufr_files} ; do
    echo "file: $f" >> $fLog
    ${tools_dir}/codes_bufr_filter $fRules $f >> $fLog
-   ${tools_dir}/codes_bufr_filter       $fRules $f >> $fLog  # See ECC-205
+   ${tools_dir}/bufr_filter       $fRules $f >> $fLog  # See ECC-205
 done
 
 #-----------------------------------------------------------
@@ -72,8 +72,8 @@ set unpack=1;
 transient statid=1000*blockNumber+stationNumber;
 
 if (statid == 1003) {
-	write "${fBufrTmp}";
-}		
+  write "${fBufrTmp}";
+}
 EOF
 
 rm -f $fBufrTmp
@@ -417,48 +417,6 @@ rm -f ${f}.ref ${f}.log
 #./$testScript1
 #rm -f new_*bufr 
 #rm -f $testScript $testScript1
-
-
-#-----------------------------------------------------------
-# Test:  packing   
-#-----------------------------------------------------------
-cat > $fRules <<EOF
-set unpack=1;
-set pack=1;
-write;
-EOF
-
-files=" 207003.bufr aaen_55.bufr aben_55.bufr ahws_139.bufr airc_142.bufr airc_144.bufr airs_57.bufr alws_139.bufr
-amda_144.bufr amsa_55.bufr amsb_55.bufr amse_55.bufr amsu_55.bufr amv2_87.bufr amv3_87.bufr asbh_139.bufr asbl_139.bufr
-asca_139.bufr asch_139.bufr ascs_139.bufr aseh_139.bufr asel_139.bufr ashs_139.bufr atap_55.bufr ateu_155.bufr atms_201.bufr
-atov_55.bufr avhm_87.bufr avhn_87.bufr avhr_58.bufr b002_95.bufr b002_96.bufr b003_56.bufr b004_145.bufr b005_87.bufr
-b005_89.bufr b006_96.bufr b007_31.bufr bssh_170.bufr bssh_176.bufr bssh_178.bufr bssh_180.bufr btem_109.bufr buoy_27.bufr
-cmwi_87.bufr cmwn_87.bufr cnow_28.bufr cori_156.bufr crit_202.bufr csrh_189.bufr emsg_189.bufr emsg_87.bufr euwv_87.bufr
-fy3a_154.bufr fy3b_154.bufr g2nd_208.bufr g2to_206.bufr go15_87.bufr goee_87.bufr goes_87.bufr goga_89.bufr gosat.bufr
-grst_26.bufr gsd1_208.bufr gsd2_208.bufr gsd3_208.bufr gst4_26.bufr hirb_55.bufr hirs_55.bufr ias1_240.bufr iasi_241.bufr
-ifco_208.bufr ikco_217.bufr itrg_208.bufr itwt_233.bufr j2eo_216.bufr j2nb_216.bufr jaso_214.bufr kond_209.bufr maer_207.bufr
-meta_140.bufr mhen_55.bufr mhsa_55.bufr mhsb_55.bufr mhse_55.bufr mloz_206.bufr modi_87.bufr modw_87.bufr monw_87.bufr
-new.bufr nomi_206.bufr nos1_208.bufr nos2_208.bufr nos3_208.bufr nos4_208.bufr nos5_208.bufr nos6_208.bufr nos7_208.bufr
-nos8_208.bufr ocea_131.bufr ocea_132.bufr ocea_133.bufr ocea_21.bufr pgps_110.bufr pilo_91.bufr rada_250.bufr rado_250.bufr
-s4kn_165.bufr sb19_206.bufr sbu8_206.bufr ship_13.bufr ship_19.bufr ship_9.bufr smin_49.bufr
-smis_49.bufr smiu_49.bufr smos_203.bufr sn4k_165.bufr soil_7.bufr ssbt_127.bufr stuk_7.bufr syno_1.bufr syno_3.bufr
-syno_4.bufr syno_multi.bufr synop_multi_subset.bufr temp_101.bufr temp_102.bufr temp_106.bufr tmr7_129.bufr tropical_cyclone.bufr
-tros_31.bufr wavb_134.bufr"
-
-
-for f in $files
-do
-  echo "Test: packing " >> $fLog
-  echo "file: $f" >> $fLog
-  ${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f 2>> $fLog 1>> $fLog
-
-  ${tools_dir}/bufr_compare ${f}.out $f
-
-  rm -f ${f}.out
-done
-
-
-rm -f $fRules
 
 #-----------------------------------------------------------
 # Test:  get string
@@ -928,57 +886,6 @@ rm -f ${fOut}.log
 rm -f $fLog $fRules ${fOut} ${fOut}.log.ref
 
 #-----------------------------------------------------------
-# Test:  extract subsets uncompressed data
-#-----------------------------------------------------------
-cat > $fRules <<EOF
- set unpack=1;
-
- set extractSubset=4;
- set doExtractSubsets=1;
- write;
-
- set extractSubset=2;
- set doExtractSubsets=1;
- write;
-
- set extractSubsetIntervalStart=5;
- set extractSubsetIntervalEnd=8;
- set doExtractSubsets=1;
- write;
-
- set extractSubsetList={1,3};
- set doExtractSubsets=1;
- write;
-EOF
-
-f="synop_multi_subset.bufr"
-fOut="extract.bufr"
-
-echo "Test: extract subsets uncompressed data" >> $fLog
-echo "file: $f" >> $fLog
-${tools_dir}/codes_bufr_filter -o ${fOut} $fRules $f 2>> $fLog 1>> $fLog
-
-cat > ${fRules} <<EOF
-set unpack=1;
-print "stationNumber=[stationNumber!13]";
-EOF
-
-${tools_dir}/codes_bufr_filter $fRules $f $fOut > ${fOut}.log
-
-cat > ${fOut}.log.ref <<EOF
-stationNumber=27 84 270 272 308 371 381 382 387 413 464 485
-stationNumber=272
-stationNumber=84
-stationNumber=308 371 381 382 84
-stationNumber=308 371 381 382 84 27 270
-EOF
-
-diff ${fOut}.log.ref ${fOut}.log 
-
-rm -f ${fOut}.log ${fOut}.log.ref
-rm -f $fLog $fRules ${fOut}
-
-#-----------------------------------------------------------
 # Test:  associatedField
 #-----------------------------------------------------------
 cat > $fRules <<EOF
@@ -1003,61 +910,6 @@ diff ${f}.log.ref ${f}.log
 
 rm -f ${f}.log ${f}.log.ref
 rm -f $fLog $fRules 
-
-#-----------------------------------------------------------
-# Test:  extract subsets compressed data
-#-----------------------------------------------------------
-cat > $fRules <<EOF
-set unpack=1;
-
-set extractSubset=10;
-set doExtractSubsets=1;
-write;
-
-set extractSubsetIntervalStart=3;
-set extractSubsetIntervalEnd=8;
-set doExtractSubsets=1;
-write;
-EOF
-
-f="g2nd_208.bufr"
-fOut="g2nd_208.bufr.out"
-
-echo "Test: extract subsets compressed data" >> $fLog
-echo "file: $f" >> $fLog
-${tools_dir}/codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
-
-cat > ${fRules} <<EOF
-set unpack=1;
-print "=== message number [count]";
-print "numberOfSubsets=[numberOfSubsets]";
-print "solarElevation=[solarElevation!10]";
-print "fieldOfViewNumber=[fieldOfViewNumber!10]";
-print "orbitNumber=[orbitNumber!10]";
-print "casRegistryNumber=[casRegistryNumber!10]";
-EOF
-
-${tools_dir}/codes_bufr_filter $fRules $fOut  > ${f}.log
-
-cat > ${f}.log.ref <<EOF
-=== message number 1
-numberOfSubsets=1
-solarElevation=33.2
-fieldOfViewNumber=1
-orbitNumber=2147483647
-casRegistryNumber=10102-44-0
-=== message number 2
-numberOfSubsets=7
-solarElevation=29.71 29.23 37.21 36.78 36.34 35.46 33.2
-fieldOfViewNumber=2 2 0 0 0 1 1
-orbitNumber=2147483647
-casRegistryNumber=10102-44-0
-EOF
-
-diff ${f}.log.ref ${f}.log 
-
-rm -f ${f}.log ${f}.log.ref
-rm -f $fLog $fOut $fRules 
 
 #-----------------------------------------------------------
 # Test:  firstOrderStatistics
@@ -1404,84 +1256,7 @@ EOF
 diff ${f}.log.ref ${f}.log 
 
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
-#-----------------------------------------------------------
-# Test: Simple thinning
-#-----------------------------------------------------------
-cat > $fRules <<EOF
-set simpleThinningSkip=36;
-set doSimpleThinning=1;
-write;
-assert(numberOfSubsets == 5);
-EOF
 
-f="imssnow.bufr"
-
-echo "Test: Simple thinning" >> $fLog
-echo "file: $f" >> $fLog
-
-${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
-
-cat > $fRules <<EOF
-set unpack=1;
-print "latitude=[latitude]";
-print "longitude=[longitude]";
-print "height=[height]";
-EOF
-
-${tools_dir}/codes_bufr_filter $fRules ${f}.out > ${f}.log
-
-cat > ${f}.log.ref <<EOF
-latitude=4.93301 5.17216 5.40243 5.62361 7.86075
-longitude=118.16205 117.41896 116.66977 115.91467 99.56805
-height=119 231 587 187 23
-EOF
-
-diff ${f}.log.ref ${f}.log 
-
-rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
-#-----------------------------------------------------------
-# Test: subset extraction constant values
-#-----------------------------------------------------------
-cat > $fRules <<EOF
-set numberOfSubsets=10;
-set compressedData=1;
-set unexpandedDescriptors={5002};
-set latitude={0,0,0,0,0,0,0,1,0,0};
-set pack=1;
-write;
-EOF
-
-f="go15_87.bufr"
-
-echo "Test: subset extraction constant values" >> $fLog
-echo "file: $f" >> $fLog
-
-${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
-
-cat > $fRules <<EOF
-set unpack=1;
-set extractSubsetIntervalStart=1;
-set extractSubsetIntervalEnd=4;
-set doExtractSubsets=1;
-write;
-EOF
-
-${tools_dir}/codes_bufr_filter -o ${f}.out.out $fRules ${f}.out
-
-cat > $fRules <<EOF
-set unpack=1;
-print "latitude=[latitude]";
-EOF
-
-${tools_dir}/codes_bufr_filter $fRules ${f}.out.out > ${f}.log
-
-cat > ${f}.log.ref <<EOF
-latitude=0
-EOF
-
-diff ${f}.log.ref ${f}.log 
-
-rm -f ${f}.log ${f}.log.ref ${f}.out ${f}.out.out $fLog $fRules
 #-----------------------------------------------------------
 # Test: fix for ECC-389 
 #-----------------------------------------------------------

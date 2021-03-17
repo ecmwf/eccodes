@@ -10,23 +10,17 @@
 
 . ./include.sh
 
+set -u
+label="bufr_templates_test"
 
-#Define a common label for all the tmp files
-label="bufr_missing_test_c"
+temp=${label}.bufr
+sample=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 
-#Define tmp file
-fTmp=${label}.tmp.txt
-rm -f $fTmp
+templates_file="${ECCODES_DEFINITION_PATH}/bufr/templates/BufrTemplate.def"
+templates=`cat $templates_file | awk -F= '{print $1}' | tr -d '"'`
+for t in $templates; do
+    ${tools_dir}/bufr_set -s bufrTemplate=$t $sample $temp
+    ${tools_dir}/bufr_dump -p $temp > /dev/null
+done
 
-#We check "syno_1.bufr". The path is
-#hardcoded in the example
-
-#Write the key values into a file
-${examples_dir}/c_bufr_missing
-
-#TODO: check the results
-
-#cat  $fTmp
-
-#Clean up
-rm -f $fTmp
+rm -f $temp

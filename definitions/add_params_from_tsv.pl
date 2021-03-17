@@ -14,33 +14,7 @@
 # Can either write the *.def files or push to the Parameter DB
 #
 # Reads an input TSV (tab-separated-value) file which should contain
-# the following parameter keys as columns:
-#   paramId
-#   shortName
-#   name
-#   units
-#   discipline
-#   parameterCategory
-#   parameterNumber
-#   # The following are optional keys
-#    typeOfFirstFixedSurface
-#    scaleFactorOfFirstFixedSurface
-#    scaledValueOfFirstFixedSurface
-#    typeOfSecondFixedSurface
-#    scaleFactorOfSecondFixedSurface
-#    scaledValueOfSecondFixedSurface
-#    typeOfStatisticalProcessing
-#    aerosolType
-#    constituentType
-#    typeOfGeneratingProcess
-#    localTablesVersion
-#    typeOfWavelengthInterval
-#    scaleFactorOfFirstWavelength
-#    scaledValueOfFirstWavelength
-#    scaleFactorOfSecondWavelength
-#    scaledValueOfSecondWavelength
-#    sourceSinkChemicalPhysicalProcess
-#
+# parameter keys as columns. See the @columns variable for expected contents
 #
 #######################################################################
 $|=1;
@@ -51,13 +25,22 @@ use Time::localtime;
 
 $ARGV[0] or die "USAGE: $0 input.tsv\n";
 
-my $WRITE_TO_FILES   = 1;
+my $SANITY_CHECK     = 0;
+my $WRITE_TO_FILES   = 0;
 my $WRITE_TO_PARAMDB = 0; # Be careful. Fill in $contactId before proceeding
 
-my ($paramId, $shortName, $name, $units, $cfVarName);
+my ($paramId, $shortName, $name, $units, $cfVarName, $interpol);
 my ($discipline, $pcategory, $pnumber, $type1, $type2, $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2);
 my ($stat, $aero, $constit);
 my ($typeGen, $localTV, $typeOfWLInt, $scaleFactorWL1, $scaledValueWL1, $scaleFactorWL2, $scaledValueWL2, $sourceSink);
+
+my @columns = ("paramId", "shortName", "name", "units", "interpolation",
+    "discipline", "parameterCategory", "parameterNumber",
+    "typeOfFirstFixedSurface", "scaleFactorOfFirstFixedSurface", "scaledValueOfFirstFixedSurface",
+    "typeOfSecondFixedSurface", "scaleFactorOfSecondFixedSurface", "scaledValueOfSecondFixedSurface",
+    "typeOfStatisticalProcessing", "aerosolType", "constituentType", "typeOfGeneratingProcess", "localTablesVersion",
+    "typeOfWavelengthInterval", "scaleFactorOfFirstWavelength", "scaledValueOfFirstWavelength",
+    "scaleFactorOfSecondWavelength", "scaledValueOfSecondWavelength", "sourceSinkChemicalPhysicalProcess");
 
 my %key_to_attrib_map = (
     'discipline'         => 4,
@@ -80,7 +63,8 @@ my $host = $ENV{'PARAM_DB_HOST'} || 'unknown';
 my $user = $ENV{'PARAM_DB_USER'} || 'unknown';
 my $pass = $ENV{'PARAM_DB_PASS'} || 'unknown';
 my $dbh  = 0;
-my $centre = -3; # WMO table ID
+my $centre_wmo   = -3; # WMO centre ID
+my $centre_ecmwf = 98; # ECMWF centre ID
 my $edition = 2; # GRIB edition 2
 my $contactId;   # JIRA issue ID
 
@@ -106,6 +90,27 @@ if ($WRITE_TO_PARAMDB) {
 
 my $first = 1;
 my $lcount = 0;
+
+if ($SANITY_CHECK) {
+    print "Checking sanity: uniqueness of paramId and shortName keys ...\n";
+    while (<>) {
+        chomp;
+        s/\r//g;  # Remove DOS carriage returns
+        if ($first == 1) {
+            $first = 0;
+            next;
+        }
+        $lcount++;
+        ($paramId, $shortName) = split(/\t/);
+        my $x = $dbh->selectrow_array("select * from param.param where id = ?",undef,$paramId);
+        die "Error: paramId=$x already exists (line ", $lcount+1, ")\n" if (defined $x);
+        $x = $dbh->selectrow_array("select shortName from param.param where shortName = ?",undef,$shortName);
+        die "Error: shortName=$x already exists (line ", $lcount+1, ")\n" if (defined $x);
+    }
+    print "Sanity checking completed. $lcount rows checked. No errors\n";
+    exit 0;
+}
+
 while (<>) {
     chomp;
     s/\r//g;  # Remove DOS carriage returns
@@ -116,7 +121,7 @@ while (<>) {
     }
     $lcount++;
 
-    ($paramId, $shortName, $name, $units,
+    ($paramId, $shortName, $name, $units, $interpol,
      $discipline, $pcategory, $pnumber,
      $type1, $scaleFactor1, $scaledValue1, $type2, $scaleFactor2, $scaledValue2,
      $stat, $aero, $constit,
@@ -155,9 +160,11 @@ while (<>) {
             $is_aero = "";
             $is_chem = "1";
         }
+        my $centre = $localTV ne "" ? $centre_ecmwf : $centre_wmo;
+
         die "Error: Both aerosolType and constituentType cannot be set!" if ($constit ne "" && $aero ne "");
         die "Error: No contact ID provided\n" if (!$contactId);
-        #print "Inserting paramId $paramId ...\n";
+        print "Inserting paramId $paramId (centre=$centre) ...\n";
         $dbh->do("insert into param(id,shortName,name,units_id,insert_date,update_date,contact) values (?,?,?,?,?,?,?)",undef,
             $paramId, $shortName, $name , $units_code, $today_date, $today_date, $contactId);
 
@@ -257,37 +264,20 @@ sub write_out_file {
 sub check_first_row_column_names {
     my $line = shift; # This is the first row
     my @keys = split(/\t/, $line);
-    die "Error: 1st row column titles wrong: Column 1 should be 'paramId'\n"   if ($keys[0] ne "paramId");
-    die "Error: 1st row column titles wrong: Column 2 should be 'shortName'\n" if ($keys[1] ne "shortName");
-    die "Error: 1st row column titles wrong: Column 3 should be 'name'\n"      if ($keys[2] ne "name");
-    die "Error: 1st row column titles wrong: Column 4 should be 'units'\n"     if ($keys[3] ne "units");
-
-    die "Error: 1st row column titles wrong: Column 5 should be 'discipline'\n"        if ($keys[4] ne "discipline");
-    die "Error: 1st row column titles wrong: Column 6 should be 'parameterCategory'\n" if ($keys[5] ne "parameterCategory");
-    die "Error: 1st row column titles wrong: Column 7 should be 'parameterNumber'\n"   if ($keys[6] ne "parameterNumber");
-
-    die "Error: 1st row column titles wrong: Column 8 should be 'typeOfFirstFixedSurface'\n" if ($keys[7] ne "typeOfFirstFixedSurface");
-    die "Error: 1st row column titles wrong: Column 9 should be 'scaleFactorOfFirstFixedSurface'\n" if ($keys[8] ne "scaleFactorOfFirstFixedSurface");
-    die "Error: 1st row column titles wrong: Column 10 should be 'scaledValueOfFirstFixedSurface'\n" if ($keys[9] ne "scaledValueOfFirstFixedSurface");
-    
-    die "Error: 1st row column titles wrong: Column 11 should be 'typeOfSecondFixedSurface'\n" if ($keys[10] ne "typeOfSecondFixedSurface");
-    die "Error: 1st row column titles wrong: Column 12 should be 'scaleFactorOfSecondFixedSurface'\n" if ($keys[11] ne "scaleFactorOfSecondFixedSurface");
-    die "Error: 1st row column titles wrong: Column 13 should be 'scaledValueOfSecondFixedSurface'\n" if ($keys[12] ne "scaledValueOfSecondFixedSurface");
-    die "Error: 1st row column titles wrong: Column 14 should be 'typeOfStatisticalProcessing'\n" if ($keys[13] ne "typeOfStatisticalProcessing");
-
-    die "Error: 1st row column titles wrong: Column 15 should be 'aerosolType'\n" if ($keys[14] ne "aerosolType");
-    die "Error: 1st row column titles wrong: Column 16 should be 'constituentType'\n" if ($keys[15] ne "constituentType");
-
-    die "Error: 1st row column titles wrong: Column 17 should be 'typeOfGeneratingProcess'\n" if ($keys[16] ne "typeOfGeneratingProcess");
-    die "Error: 1st row column titles wrong: Column 18 should be 'localTablesVersion'\n" if ($keys[17] ne "localTablesVersion");
-
-    die "Error: 1st row column titles wrong: Column 19 should be 'typeOfWavelengthInterval'\n" if ($keys[18] ne "typeOfWavelengthInterval");
-    die "Error: 1st row column titles wrong: Column 20 should be 'scaleFactorOfFirstWavelength'\n" if ($keys[19] ne "scaleFactorOfFirstWavelength");
-    die "Error: 1st row column titles wrong: Column 21 should be 'scaledValueOfFirstWavelength'\n" if ($keys[20] ne "scaledValueOfFirstWavelength");
-    die "Error: 1st row column titles wrong: Column 22 should be 'scaleFactorOfSecondWavelength'\n" if ($keys[21] ne "scaleFactorOfSecondWavelength");
-
-    die "Error: 1st row column titles wrong: Column 23 should be 'scaledValueOfSecondWavelength'\n" if ($keys[22] ne "scaledValueOfSecondWavelength");
-    die "Error: 1st row column titles wrong: Column 24 should be 'sourceSinkChemicalPhysicalProcess'\n" if ($keys[23] ne "sourceSinkChemicalPhysicalProcess");
+    my $c = 0;
+    my $numkeys = scalar @keys;
+    my $numcols = scalar @columns;
+    die "Error: 1st row column titles wrong: Expected $numcols columns, got $numkeys.\n" if ($numkeys != $numcols);
+    for ( my $i = 0; $i < $numkeys; $i++ ) {
+        if ( $keys[$i] ne $columns[$i] ) {
+            die "Error: 1st row column titles wrong: check column ", $i+1, ". Expected '$columns[$i]', got '$keys[$i]'.\n";
+        }
+    }
+    #if (@keys ~~ @columns) {
+    #    print "[@keys] and [@columns] match\n";
+    #} else {
+    #    die "Error: must use these columns: @columns\n";
+    #}
 }
 
 sub create_or_append {
