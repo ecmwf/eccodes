@@ -180,6 +180,7 @@ if( HAVE_BUILD_TOOLS )
         grib1to3
         grib2to3
         grib2_templates
+        grib2_chemicals_aerosols
         grib3_templates
         grib_bad
         grib_ls
