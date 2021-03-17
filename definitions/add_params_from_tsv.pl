@@ -25,7 +25,8 @@ use Time::localtime;
 
 $ARGV[0] or die "USAGE: $0 input.tsv\n";
 
-my $WRITE_TO_FILES   = 1;
+my $SANITY_CHECK     = 0;
+my $WRITE_TO_FILES   = 0;
 my $WRITE_TO_PARAMDB = 0; # Be careful. Fill in $contactId before proceeding
 
 my ($paramId, $shortName, $name, $units, $cfVarName, $interpol);
@@ -89,6 +90,27 @@ if ($WRITE_TO_PARAMDB) {
 
 my $first = 1;
 my $lcount = 0;
+
+if ($SANITY_CHECK) {
+    print "Checking sanity: uniqueness of paramId and shortName keys ...\n";
+    while (<>) {
+        chomp;
+        s/\r//g;  # Remove DOS carriage returns
+        if ($first == 1) {
+            $first = 0;
+            next;
+        }
+        $lcount++;
+        ($paramId, $shortName) = split(/\t/);
+        my $x = $dbh->selectrow_array("select * from param.param where id = ?",undef,$paramId);
+        die "Error: paramId=$x already exists (line ", $lcount+1, ")\n" if (defined $x);
+        $x = $dbh->selectrow_array("select shortName from param.param where shortName = ?",undef,$shortName);
+        die "Error: shortName=$x already exists (line ", $lcount+1, ")\n" if (defined $x);
+    }
+    print "Sanity checking completed. $lcount rows checked. No errors\n";
+    exit 0;
+}
+
 while (<>) {
     chomp;
     s/\r//g;  # Remove DOS carriage returns
