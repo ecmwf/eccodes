@@ -17,8 +17,9 @@ sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 latest=`${tools_dir}/grib_get -p tablesVersionLatest $sample2`
 
-# CHEMICALS
-# -----------
+# =============================
+# Deterministic instantaneous
+# =============================
 # Plain chemicals
 ${tools_dir}/grib_set -s tablesVersion=$latest,is_chemical=1 $sample2 $temp
 grib_check_key_equals $temp productDefinitionTemplateNumber '40'
@@ -34,8 +35,6 @@ ${tools_dir}/grib_set -s tablesVersion=$latest,is_chemical_distfn=1 $sample2 $te
 grib_check_key_equals $temp productDefinitionTemplateNumber '57'
 grib_check_key_equals $temp constituentType,numberOfModeOfDistribution,modeNumber '0 0 0'
 
-# AEROSOLS
-# ----------
 # Plain aerosols
 ${tools_dir}/grib_set -s tablesVersion=$latest,is_aerosol=1 $sample2 $temp
 grib_check_key_equals $temp productDefinitionTemplateNumber '48'
@@ -45,6 +44,59 @@ grib_check_key_equals $temp aerosolType,typeOfSizeInterval,typeOfWavelengthInter
 ${tools_dir}/grib_set -s tablesVersion=$latest,is_aerosol_optical=1 $sample2 $temp
 grib_check_key_equals $temp productDefinitionTemplateNumber '48'
 #${tools_dir}/grib_dump -O $temp
+
+
+# =============================
+# Deterministic interval-based
+# =============================
+# Plain chemicals
+${tools_dir}/grib_set -s tablesVersion=$latest,stepType=accum,is_chemical=1 $sample2 $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '42'
+grib_check_key_equals $temp constituentType '0'
+
+# Chemicals with source and sink
+${tools_dir}/grib_set -s tablesVersion=$latest,stepType=accum,is_chemical_srcsink=1 $sample2 $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '78'
+grib_check_key_equals $temp constituentType,sourceSinkChemicalPhysicalProcess '0 255'
+
+# Chemicals with distribution function
+${tools_dir}/grib_set -s tablesVersion=$latest,stepType=accum,is_chemical_distfn=1 $sample2 $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '67'
+grib_check_key_equals $temp constituentType,numberOfModeOfDistribution,modeNumber '0 0 0'
+
+# Plain aerosols
+${tools_dir}/grib_set -s tablesVersion=$latest,stepType=accum,is_aerosol=1 $sample2 $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '46'
+grib_check_key_equals $temp aerosolType,typeOfSizeInterval '0 0'
+
+
+# =============================
+# Ensemble instantaneous
+# =============================
+# Plain chemicals
+tempSample=temp.sample.$label
+${tools_dir}/grib_set -s tablesVersion=$latest,productDefinitionTemplateNumber=1 $sample2 $tempSample
+grib_check_key_equals $tempSample perturbationNumber '0'
+
+${tools_dir}/grib_set -s is_chemical=1 $tempSample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '41'
+grib_check_key_equals $temp constituentType,perturbationNumber '0 0'
+
+# Chemicals with source and sink
+${tools_dir}/grib_set -s is_chemical_srcsink=1 $tempSample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '77'
+grib_check_key_equals $temp constituentType,sourceSinkChemicalPhysicalProcess '0 255'
+
+# Chemicals with distribution function
+${tools_dir}/grib_set -s is_chemical_distfn=1 $tempSample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '58'
+grib_check_key_equals $temp constituentType,numberOfModeOfDistribution,modeNumber '0 0 0'
+
+# Plain aerosols
+${tools_dir}/grib_set -s is_aerosol=1 $tempSample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '45'
+grib_check_key_equals $temp aerosolType,typeOfSizeInterval '0 0'
+
 
 
 rm -f $temp
