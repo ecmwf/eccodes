@@ -73,22 +73,13 @@ double get_precision(long edition)
     return 0.0;
 }
 
-static int is_regular_file(const char* path)
-{
-    struct stat s;
-    int stat_val = stat(path, &s);
-    if (stat_val != 0)
-        return 0; /*error doing stat*/
-    return S_ISREG(s.st_mode);
-}
-
 int process_file(const char* filename)
 {
     int err = 0, msg_num = 0;
     codes_handle* h = NULL;
     FILE* in        = NULL;
 
-    if (!is_regular_file(filename)) {
+    if (!path_is_regular_file(filename)) {
         if (verbose)
             printf(" WARNING: '%s' not a regular file! Ignoring\n", filename);
         return GRIB_IO_PROBLEM;
