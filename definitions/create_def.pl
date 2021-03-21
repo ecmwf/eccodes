@@ -18,7 +18,7 @@ my $query; my $q; my $qh;
 my $dbh  = DBI->connect("dbi:mysql(RaiseError=>1):database=$db;host=$host",$user,$pass) or die $DBI::errstr;
 
 # I have written to it already or not
-my $tarfilesflag = 0;
+#my $tarfilesflag = 0;
 
 sub create_cfName {
     my $p; my %seen; 
@@ -39,8 +39,8 @@ EOF
     # file containing the list of grib api parameters files we want to tar and 
     # distribute to users for them to download and update their list of parameter
     # to the latest
-    open(TAR,$tarfilesflag ? ">>" : ">","tarfiles.txt") or die "Count not open file tarfiles.txt: $!";
-    $tarfilesflag=1;
+    #open(TAR,$tarfilesflag ? ">>" : ">","tarfiles.txt") or die "Count not open file tarfiles.txt: $!";
+    #$tarfilesflag=1;
 
     while (my ($keyval,$force128,$edition,$centre,$paramId,$attribute,$value,$name,$shortName)=$qh->fetchrow_array )
     {
@@ -112,8 +112,8 @@ EOF
     # file containing the list of grib api parameters files we want to tar and 
     # distribute to users for them to download and update their list of parameter
     # to the latest
-    open(TAR,$tarfilesflag ? ">>" : ">","tarfiles.txt") or die "Count not open file tarfiles.txt: $!";
-    $tarfilesflag=1;
+    #open(TAR,$tarfilesflag ? ">>" : ">","tarfiles.txt") or die "Count not open file tarfiles.txt: $!";
+    #$tarfilesflag=1;
 
     while (my ($keyval,$force128,$edition,$centre,$paramId,$attribute,$value,$name,$shortName)=$qh->fetchrow_array )
     {
