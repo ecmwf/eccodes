@@ -19,7 +19,8 @@
 #include <assert.h>
 #include <stdarg.h>
 #include <sys/stat.h>
-#include "eccodes.h"
+
+#include "grib_api_internal.h"
 
 #define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 
@@ -76,8 +77,8 @@ double get_precision(long edition)
 int process_file(const char* filename)
 {
     int err = 0, msg_num = 0;
-    codes_handle* h = NULL;
-    FILE* in        = NULL;
+    grib_handle* h = NULL;
+    FILE* in       = NULL;
 
     if (!path_is_regular_file(filename)) {
         if (verbose)
@@ -94,7 +95,7 @@ int process_file(const char* filename)
     if (verbose)
         printf("Checking file %s\n", filename);
 
-    while ((h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err)) != NULL) {
+    while ((h = grib_handle_new_from_file(0, in, &err)) != NULL) {
         int is_reduced = 0, is_regular = 0, grid_ok = 0;
         long edition = 0, N = 0, Nj = 0, numberOfDataPoints;
         size_t len = 0, sizeOfValuesArray = 0;
@@ -104,15 +105,15 @@ int process_file(const char* filename)
         double angular_tolerance, lat1, lon1, lat2, lon2, expected_lon2;
         double iDirectionIncrementInDegrees;
 
-        if (err != CODES_SUCCESS)
-            CODES_CHECK(err, 0);
+        if (err != GRIB_SUCCESS)
+            GRIB_CHECK(err, 0);
         ++msg_num;
-        CODES_CHECK(codes_get_long(h, "edition", &edition), 0);
+        GRIB_CHECK(grib_get_long(h, "edition", &edition), 0);
         if (verbose)
             printf(" Processing GRIB message #%d (edition=%ld)\n", msg_num, edition);
 
         len = 32;
-        CODES_CHECK(codes_get_string(h, "gridType", gridType, &len), 0);
+        GRIB_CHECK(grib_get_string(h, "gridType", gridType, &len), 0);
         is_regular = STR_EQUAL(gridType, "regular_gg");
         is_reduced = STR_EQUAL(gridType, "reduced_gg");
         grid_ok    = is_regular || is_reduced;
@@ -120,18 +121,18 @@ int process_file(const char* filename)
             /*error("ERROR: gridType should be Reduced or Regular Gaussian Grid!\n");*/
             if (verbose)
                 printf(" WARNING: gridType should be Reduced or Regular Gaussian Grid! Ignoring\n");
-            codes_handle_delete(h);
+            grib_handle_delete(h);
             continue;
         }
 
-        CODES_CHECK(codes_get_long(h, "N", &N), 0);
-        CODES_CHECK(codes_get_long(h, "Nj", &Nj), 0);
-        CODES_CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints), 0);
-        CODES_CHECK(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &lat1), 0);
-        CODES_CHECK(codes_get_double(h, "longitudeOfFirstGridPointInDegrees", &lon1), 0);
-        CODES_CHECK(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &lat2), 0);
-        CODES_CHECK(codes_get_double(h, "longitudeOfLastGridPointInDegrees", &lon2), 0);
-        CODES_CHECK(codes_get_double(h, "iDirectionIncrementInDegrees", &iDirectionIncrementInDegrees), 0);
+        GRIB_CHECK(grib_get_long(h, "N", &N), 0);
+        GRIB_CHECK(grib_get_long(h, "Nj", &Nj), 0);
+        GRIB_CHECK(grib_get_long(h, "numberOfDataPoints", &numberOfDataPoints), 0);
+        GRIB_CHECK(grib_get_double(h, "latitudeOfFirstGridPointInDegrees", &lat1), 0);
+        GRIB_CHECK(grib_get_double(h, "longitudeOfFirstGridPointInDegrees", &lon1), 0);
+        GRIB_CHECK(grib_get_double(h, "latitudeOfLastGridPointInDegrees", &lat2), 0);
+        GRIB_CHECK(grib_get_double(h, "longitudeOfLastGridPointInDegrees", &lon2), 0);
+        GRIB_CHECK(grib_get_double(h, "iDirectionIncrementInDegrees", &iDirectionIncrementInDegrees), 0);
 
         angular_tolerance = get_precision(edition);
 
@@ -155,7 +156,7 @@ int process_file(const char* filename)
         /* Note: grib_get_gaussian_latitudes() assumes the 'lats' array has 2N elements! */
         /*       So do not allocate Nj */
         lats = (double*)malloc(sizeof(double) * 2 * N);
-        CODES_CHECK(codes_get_gaussian_latitudes(N, lats), 0);
+        GRIB_CHECK(grib_get_gaussian_latitudes(N, lats), 0);
 
         if (!DBL_EQUAL(lats[0], lat1, angular_tolerance)) {
             error(filename, msg_num, "latitudeOfFirstGridPointInDegrees=%f but should be %f\n", lat1, lats[0]);
@@ -168,10 +169,10 @@ int process_file(const char* filename)
             int pl_sum = 0, max_pl = 0, is_missing_Ni = 0, is_missing_Di = 0;
             size_t i = 0, pl_len = 0;
             long is_octahedral = 0;
-            is_missing_Ni      = codes_is_missing(h, "Ni", &err);
-            assert(err == CODES_SUCCESS);
-            is_missing_Di = codes_is_missing(h, "iDirectionIncrement", &err);
-            assert(err == CODES_SUCCESS);
+            is_missing_Ni      = grib_is_missing(h, "Ni", &err);
+            assert(err == GRIB_SUCCESS);
+            is_missing_Di = grib_is_missing(h, "iDirectionIncrement", &err);
+            assert(err == GRIB_SUCCESS);
             if (!is_missing_Ni) {
                 error(filename, msg_num, "For a reduced gaussian grid Ni should be missing\n");
             }
@@ -179,14 +180,14 @@ int process_file(const char* filename)
                 error(filename, msg_num, "For a reduced gaussian grid iDirectionIncrement should be missing\n");
             }
 
-            CODES_CHECK(codes_get_size(h, "pl", &pl_len), 0);
+            GRIB_CHECK(grib_get_size(h, "pl", &pl_len), 0);
             assert(pl_len > 0);
             if (pl_len != 2 * N) {
                 error(filename, msg_num, "Length of pl array is %ld but should be 2*N (%ld)\n", pl_len, 2 * N);
             }
             pl = (long*)malloc(pl_len * sizeof(long));
             assert(pl);
-            CODES_CHECK(codes_get_long_array(h, "pl", pl, &pl_len), 0);
+            GRIB_CHECK(grib_get_long_array(h, "pl", pl, &pl_len), 0);
             max_pl = pl[0];
 
             /* Check pl is symmetric */
@@ -208,7 +209,7 @@ int process_file(const char* filename)
             if (pl_sum != numberOfDataPoints) {
                 error(filename, msg_num, "Sum of pl array %ld does not match numberOfDataPoints %ld\n", pl_sum, numberOfDataPoints);
             }
-            CODES_CHECK(codes_get_long(h, "isOctahedral", &is_octahedral), 0);
+            GRIB_CHECK(grib_get_long(h, "isOctahedral", &is_octahedral), 0);
             if (is_octahedral) {
                 if (verbose)
                     printf("  This is an Octahedral Gaussian grid\n");
@@ -221,14 +222,14 @@ int process_file(const char* filename)
             error(filename, msg_num, "longitudeOfLastGridPointInDegrees=%f but should be %f\n", lon2, expected_lon2);
         }
 
-        CODES_CHECK(codes_get_size(h, "values", &sizeOfValuesArray), 0);
+        GRIB_CHECK(grib_get_size(h, "values", &sizeOfValuesArray), 0);
         if (sizeOfValuesArray != numberOfDataPoints) {
             error(filename, msg_num, "Number of data points %d different from size of values array %d\n",
                   numberOfDataPoints, sizeOfValuesArray);
         }
 
         free(lats);
-        codes_handle_delete(h);
+        grib_handle_delete(h);
     }
     fclose(in);
     if (verbose)
