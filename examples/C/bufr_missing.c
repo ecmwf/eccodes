@@ -62,8 +62,10 @@ int main(int argc, char* argv[])
         }
 
         is_missing = codes_is_missing(h, "relativeHumidity", &err);
-        assert(!err);
-        assert(is_missing == 1);
+        if (err || !is_missing) {
+            fprintf(stderr, "Error: relativeHumidity should be 'missing'\n");
+            return 1;
+        }
 
         /* Set some other keys to be missing */
         CODES_CHECK(codes_set_missing(h, "blockNumber"), 0);
