@@ -170,7 +170,7 @@ int grib_handle_delete(grib_handle* h)
         grib_section_delete(ct, h->root);
         grib_context_free(ct, h->gts_header);
 
-        grib_context_log(ct, GRIB_LOG_DEBUG, "grib_handle_delete: deleting handle %p", h);
+        grib_context_log(ct, GRIB_LOG_DEBUG, "grib_handle_delete: deleting handle %p", (void*)h);
         grib_context_free(ct, h);
         h = NULL;
     }
@@ -192,7 +192,7 @@ grib_handle* grib_new_handle(grib_context* c)
         g->product_kind = PRODUCT_ANY; /* Default. Will later be set to a specific product */
     }
 
-    grib_context_log(c, GRIB_LOG_DEBUG, "grib_new_handle: allocated handle %p", g);
+    grib_context_log(c, GRIB_LOG_DEBUG, "grib_new_handle: allocated handle %p", (void*)g);
 
     return g;
 }
@@ -261,7 +261,7 @@ grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name)
      * if(g) return g;
      */
     if (c->debug) {
-        fprintf(stderr, "ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
+        fprintf(stderr, "ECCODES DEBUG grib_handle_new_from_samples '%s'\n", name);
     }
 
     g = grib_external_template(c, name);
@@ -288,7 +288,7 @@ grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* nam
      *  if(g) return g;
      */
     if (c->debug) {
-        fprintf(stderr, "ECCODES DEBUG: codes_bufr_handle_new_from_samples '%s'\n", name);
+        fprintf(stderr, "ECCODES DEBUG codes_bufr_handle_new_from_samples '%s'\n", name);
     }
 
     g = bufr_external_template(c, name);
@@ -1153,9 +1153,10 @@ grib_multi_handle* grib_multi_handle_new(grib_context* c)
     grib_multi_handle* h;
     if (c == NULL)
         c = grib_context_get_default();
-    if (!c->multi_support_on)
+    if (!c->multi_support_on) {
+        grib_context_log(c, GRIB_LOG_DEBUG, "grib_multi_handle_new: Setting multi_support_on = 1");
         c->multi_support_on = 1;
-
+    }
     h = (grib_multi_handle*)grib_context_malloc_clear(c, sizeof(grib_multi_handle));
     if (h == NULL) {
         grib_context_log(c, GRIB_LOG_ERROR,
@@ -1441,11 +1442,13 @@ grib_action* grib_action_from_filter(const char* filter)
     grib_context* context = grib_context_get_default();
     a                     = grib_parse_file(context, filter);
 
-    grib_context_free_persistent(context, context->grib_reader->first->filename);
-    grib_context_free_persistent(context, context->grib_reader->first);
-    grib_context_free_persistent(context, context->grib_reader);
+    if (context->grib_reader && context->grib_reader->first) {
+        grib_context_free_persistent(context, context->grib_reader->first->filename);
+        grib_context_free_persistent(context, context->grib_reader->first);
+        grib_context_free_persistent(context, context->grib_reader);
+    }
 
-    context->grib_reader  = NULL;
+    context->grib_reader = NULL;
     return a;
 }
 

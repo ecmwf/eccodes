@@ -2,10 +2,9 @@
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-! 
+!
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-
 
   !> Get the distinct values of the key in argument contained in the index. The key must belong to the index.
   !>
@@ -22,9 +21,9 @@
   !> @param status      CODES_SUCCESS if OK, integer value on error
   interface codes_index_get
     module procedure codes_index_get_int, &
-                     codes_index_get_long, &
-                     codes_index_get_string, &
-                     codes_index_get_real8
+      codes_index_get_long, &
+      codes_index_get_string, &
+      codes_index_get_real8
   end interface codes_index_get
 
   !> Get the number of distinct values of the key in argument contained in the index. The key must belong to the index.
@@ -41,10 +40,10 @@
   !> @param status      CODES_SUCCESS if OK, integer value on error
   interface codes_index_get_size
     module procedure codes_index_get_size_int, &
-                     codes_index_get_size_long
+      codes_index_get_size_long
   end interface codes_index_get_size
-                                 
-  !> Select the message subset with key==value. 
+
+  !> Select the message subset with key==value.
   !>
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
@@ -59,11 +58,11 @@
   !> @param status      CODES_SUCCESS if OK, integer value on error
   interface codes_index_select
     module procedure codes_index_select_int, &
-                     codes_index_select_long, &
-                     codes_index_select_string, &
-                     codes_index_select_real8
+      codes_index_select_long, &
+      codes_index_select_string, &
+      codes_index_select_real8
   end interface codes_index_select
-          
+
   !> Get the value for a key from a message.
   !>
   !> Given a \em msgid and \em key as input a \em value for the \em key is returned.
@@ -96,14 +95,14 @@
   !> @param[out] status   CODES_SUCCESS if OK, integer value on error
   interface codes_get
     module procedure codes_get_int, &
-                     codes_get_long, &
-                     codes_get_real4, &
-                     codes_get_real8, &
-                     codes_get_string, &
-                     codes_get_byte_array, &
-                     codes_get_int_array, &
-                     codes_get_real4_array, &
-                     codes_get_real8_array
+      codes_get_long, &
+      codes_get_real4, &
+      codes_get_real8, &
+      codes_get_string, &
+      codes_get_byte_array, &
+      codes_get_int_array, &
+      codes_get_real4_array, &
+      codes_get_real8_array
   end interface codes_get
 
   !> Get the size of an array key.
@@ -119,8 +118,8 @@
   !> @param size        size of the array key
   !> @param status      CODES_SUCCESS if OK, integer value on error
   interface codes_get_size
-      module procedure  codes_get_size_int, &
-                        codes_get_size_long 
+    module procedure codes_get_size_int, &
+      codes_get_size_long
   end interface codes_get_size
 
   !> Set the value for a key in a message.
@@ -148,19 +147,19 @@
   !> @param[out] status   CODES_SUCCESS if OK, integer value on error
   interface codes_set
     module procedure codes_set_int, &
-                     codes_set_long, &
-                     codes_set_real4, &
-                     codes_set_real8, &
-                     codes_set_string, &
-                     codes_set_int_array, &
-                     codes_set_long_array, &
-                     codes_set_byte_array, &
-                     codes_set_real4_array, &
-                     codes_set_real8_array
+      codes_set_long, &
+      codes_set_real4, &
+      codes_set_real8, &
+      codes_set_string, &
+      codes_set_int_array, &
+      codes_set_long_array, &
+      codes_set_byte_array, &
+      codes_set_real4_array, &
+      codes_set_real8_array
   end interface codes_set
 
   interface codes_set_force
     module procedure codes_set_force_real4_array, &
-                     codes_set_force_real8_array
+      codes_set_force_real8_array
   end interface codes_set_force
 

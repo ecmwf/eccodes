@@ -479,6 +479,21 @@ diff ${f}.ref ${f}.log
 rm -f ${f}.ref ${f}.log
 
 #-----------------------------------------------------------
+# Test: missing() functor
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+ set unpack=1;
+ transient m1 = missing(heightOfBarometerAboveMeanSeaLevel);
+ transient m2 = missing(blockNumber);
+ transient m3 = missing(stationOrSiteName);
+ assert ( m1 == 1 );
+ assert ( m2 == 1 );
+ assert ( m3 == 1 );
+EOF
+f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
+${tools_dir}/codes_bufr_filter $fRules $f
+
+#-----------------------------------------------------------
 # Test:  get string whose value is MISSING (ECC-650)
 #-----------------------------------------------------------
 cat > $fRules <<EOF

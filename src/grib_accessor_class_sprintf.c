@@ -135,6 +135,7 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_sprintf* self = (grib_accessor_sprintf*)a;
     self->args                  = c;
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)

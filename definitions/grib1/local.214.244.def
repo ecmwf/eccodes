@@ -1,22 +1,12 @@
 # (C) Copyright 2005- ECMWF.
 
-# START 1/local.98.244 ----------------------------------------------------------------------
-# LOCAL 214 98 244
 #
-#!
-#!       localDefinitionTemplate_244
-#!       ---------------------------
-#!
-#! # SREPS Short-Range EPS information
-#!
-#! Last update: 20070223
-#!
-#!Description
-#!-----------
-#!
-#!
-#! Compatibility with MARS
-#!
+# # SREPS Short-Range EPS information
+#
+# Last update: 20070223
+#
+# Compatibility with MARS
+#
 #localDefinitionNumber
 #Class
 #Type
@@ -24,13 +14,13 @@
 #experimentVersionNumber
 #Number
 #Total
-#!
+#
 #************_EXPERIMENT_************
 #Experiment_Identifier_1
 #Experiment_Identifier_2
 #Sub-Experiment_Identifier_1
 #Sub-Experiment_Identifier_2
-#!
+#
 #************_PRODUCT_***************
 #Original_CodeTable_2_Version_Number
 #Original_Parameter_Iden_(CodeTable2)
@@ -38,16 +28,16 @@
 #Original_Parameter_Identifier_2
 #Product_Identifier_1
 #Product_Identifier_2
-#!
-#! Thresholds and Distributions
-#!
+#
+# Thresholds and Distributions
+#
 #Threshold_[Distribution]_(0=n,1=yes)
 #Threshold_[Distribution]_Units
 #At_least__[Distribut._Proportion_Of]
 #Less_Than_[To_Overall_Distribution]
-#!
+#
 #zeroForFutureProducts
-#!
+#
 #************_ENSEMBLE_**************
 #Number_Combination_Ensembles_(1=no)
 #Show_Combination_E._[2]_(0=no,1=yes)
@@ -63,17 +53,17 @@
 #Local_Number_Members_Used
 #Local_Number_Members_Possible
 #Local_Number_Members_Missing
-#!
+#
 #listMembersUsed                         -       LIST    -       Local_Number_Members_Used
 #Used_Model_LBC
 #endlistMembersUsed                      -       ENDLIST -       listMembersUsed
-#!
+#
 #listMembersMissing                      -       LIST    -       Local_Number_Members_Missing
 #Missing_Model_LBC
 #endlistMembersMissing                   -       ENDLIST -       listMembersMissing
-#!
-#! More than one Combination
-#!
+#
+# More than one Combination
+#
 #listEnsembleCombination2                -       LIST    -       Show_Combination_E._[2]_(0=no,1=yes)
 #Ensemble_Combinat._Number_(0=no)_[2]
 #Ensemble_Identifier_1_[2]
@@ -87,15 +77,15 @@
 #Time_Range_One_[2]
 #Time_Range_Two_[2]
 #endlistEnsembleCombination2             -       ENDLIST -       listEnsembleCombination2
-#!
+#
 #listMembersUsed_[2]                     -       LIST    -       Local_Number_Members_Used_[2]
 #Used_Model_LBC_[2]
 #endlistMembersUsed_[2]                  -       ENDLIST -       listMembersUsed_[2]
-#!
+#
 #listMembersMissing_[2]                  -       LIST    -       Local_Number_Members_Missing_[2]
 #Missing_Model_LBC_[2]
 #endlistMembersMissing_[2]               -       ENDLIST -       listMembersMissing_[2]
-#!
+#
 #listEnsembleCombination3                -       LIST    -       Show_Combination_E._[3]_(0=no,1=yes)
 #Ensemble_Combinat._Number_(0=no)_[3]
 #Ensemble_Identifier_1_[3]
@@ -109,15 +99,15 @@
 #Time_Range_One_[3]
 #Time_Range_Two_[3]
 #endlistEnsembleCombination3             -       ENDLIST -       listEnsembleCombination3
-#!
+#
 #listMembersUsed_[3]                     -       LIST    -       Local_Number_Members_Used_[3]
 #Used_Model_LBC_[3]                      -       A4
 #endlistMembersUsed_[3]                  -       ENDLIST -       listMembersUsed_[3]
-#!
+#
 #listMembersMissing_[3]                  -       LIST    -       Local_Number_Members_Missing_[3]
 #Missing_Model_LBC_[3]                   -       A4
 #endlistMembersMissing_[3]               -       ENDLIST -       listMembersMissing_[3]
-#!
+#
 #listEnsembleCombination4                -       LIST    -       Show_Combination_E._[4]_(0=no,1=yes)
 #Ensemble_Combinat._Number_(0=no)_[4]
 #Ensemble_Identifier_1_[4]
@@ -131,21 +121,21 @@
 #Time_Range_One_[4]
 #Time_Range_Two_[4]
 #endlistEnsembleCombination4             -       ENDLIST -       listEnsembleCombination4
-#!
+#
 #listMembersUsed_[4]                     -       LIST    -       Local_Number_Members_Used_[4]
 #Used_Model_LBC_[4]
 #endlistMembersUsed_[4]                  -       ENDLIST -       listMembersUsed_[4]
-#!
+#
 #listMembersMissing_[4]                  -       LIST    -       Local_Number_Members_Missing_[4]
 #Missing_Model_LBC_[4]
 #endlistMembersMissing_[4]               -       ENDLIST -       listMembersMissing_[4]
-#!
-#! EXTRA INFORMATION like 191
+#
+# EXTRA INFORMATION like 191
 #*********_EXTRA_DATA_***************
 #Extra_Data_FreeFormat_(0=none)
 #Data_Descriptor_Bytes                   -       BYTES   -       Extra_Data_FreeFormat_(0=none)
 #padToAMultipleOf80Bytes                 -       PADFROM n/a
-#!
+#
 
 template mars_labeling "grib1/mars_labeling.def";
 

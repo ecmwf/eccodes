@@ -733,7 +733,8 @@ static int parse(grib_context* gc, const char* filename)
     parse_file = 0;
 
     if (err)
-        grib_context_log(gc, GRIB_LOG_ERROR, "Parsing error %d > %s\n", err, filename);
+        grib_context_log(gc, GRIB_LOG_ERROR, "Parsing error: %s, file: %s\n",
+                grib_get_error_message(err), filename);
 
     GRIB_MUTEX_UNLOCK(&mutex_parse);
     return err;

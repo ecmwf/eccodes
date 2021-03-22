@@ -25,6 +25,7 @@
 23 23 Version implemented on 15 May 2019
 24 24 Version implemented on 6 November 2019
 25 25 Version implemented on 6 May 2020
-26 26 Pre-operational to be implemented by next amendment
-# 27-254 Future versions
+26 26 Version implemented on 16 November 2020
+27 27 Pre-operational to be implemented by next amendment
+# 28-254 Future versions
 255 255 Master tables not used. Local table entries and local templates may use the entire range of the table, not just those sections marked Reserved for local used.

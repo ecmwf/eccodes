@@ -245,12 +245,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 46 ;
 	}
-#Direct solar radiation
-'47' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 47 ;
-	}
 #Magnitude of turbulent surface stress
 '48' = {
 	 discipline = 192 ;
@@ -697,10 +691,10 @@
 	}
 #Snow depth
 '141' = {
+	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 11 ;
-	 unitsFactor = 1000 ;
+	 parameterNumber = 254 ;
 	}
 #Large-scale precipitation
 '142' = {
@@ -1102,12 +1096,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 237 ;
-	}
-#Temperature of snow layer
-'238' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 238 ;
 	}
 #Convective snowfall
 '239' = {
@@ -3298,6 +3286,26 @@
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 120 ;
+	}
+#Nitrate fine mode aerosol mass mixing ratio
+'211247' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Nitrate coarse mode aerosol mass mixing ratio
+'211248' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
 	}
 #Experimental product
 '212001' = {
@@ -21779,54 +21787,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 6 ;
-	}
-#Lake depth
-'228007' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 7 ;
-	}
-#Lake mix-layer temperature
-'228008' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 8 ;
-	}
-#Lake mix-layer depth
-'228009' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 9 ;
-	}
-#Lake bottom temperature
-'228010' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 10 ;
-	}
-#Lake total layer temperature
-'228011' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 11 ;
-	}
-#Lake shape factor
-'228012' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 12 ;
-	}
-#Lake ice temperature
-'228013' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 13 ;
-	}
-#Lake ice depth
-'228014' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 14 ;
 	}
 #Minimum vertical gradient of refractivity inside trapping layer
 '228015' = {

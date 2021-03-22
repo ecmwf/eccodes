@@ -127,8 +127,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
         if (options->set_values_count != 0) {
             err = grib_set_values(h, options->set_values, options->set_values_count);
-            if (err != GRIB_SUCCESS && options->fail)
+            if (err != GRIB_SUCCESS && options->fail) {
+                free(v);
                 exit(err);
+            }
         }
 
         if (options->repack) {

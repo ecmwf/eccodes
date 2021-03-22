@@ -195,6 +195,7 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
     hdr->rectimeHour   = (long)grib_decode_unsigned_long(p, &start, 5);
     hdr->rectimeMinute = (long)grib_decode_unsigned_long(p, &start, 6);
     hdr->rectimeSecond = (long)grib_decode_unsigned_long(p, &start, 6);
+    hdr->restricted    = (long)grib_decode_unsigned_long(p, &start, 1);
 
     hdr->qualityControl = (long)grib_decode_unsigned_long(pMessage, &pos_qualityControl, nbits_qualityControl);
     hdr->newSubtype     = (long)grib_decode_unsigned_long(pMessage, &pos_newSubtype, nbits_newSubtype);
@@ -772,6 +773,8 @@ static const char* codes_bufr_header_get_centre_name(long edition, long centre_c
             return "eums";
         case 255:
             return "consensus";
+        case 291:
+            return "anso";
         default:
             return NULL;
     }
@@ -1008,6 +1011,12 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
         else
             strcpy(val, NOT_FOUND);
     }
+    else if (strcmp(key, "restricted") == 0) {
+        if (isEcmwfLocal)
+            *len = sprintf(val, "%ld", bh->restricted);
+        else
+            strcpy(val, NOT_FOUND);
+    }
     else if (strcmp(key, "isSatellite") == 0) {
         if (isEcmwfLocal)
             *len = sprintf(val, "%ld", bh->isSatellite);
@@ -1097,4 +1106,15 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
         return GRIB_NOT_FOUND;
 
     return GRIB_SUCCESS;
+}
+
+/* Returns 1 if the BUFR key is in the header and 0 if it is in the data section */
+int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err)
+{
+    grib_accessor* acc = grib_find_accessor(h, key);
+    if (!acc) {
+        *err = GRIB_NOT_FOUND;
+        return 0;
+    }
+    return ((acc->flags & GRIB_ACCESSOR_FLAG_BUFR_DATA) == 0);
 }

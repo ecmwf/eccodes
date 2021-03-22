@@ -399,9 +399,9 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
                 bufr_descriptor* au = grib_bufr_descriptor_new(self->tablesAccessor, 999999, err);
                 au->width           = ccp->associatedFieldWidth;
                 grib_bufr_descriptor_set_scale(au, 0);
-                au->shortName = grib_context_strdup(c, "associatedField");
+                strcpy(au->shortName, "associatedField");
                 /* au->name=grib_context_strdup(c,"associated field");  See ECC-489 */
-                au->units = grib_context_strdup(c, "associated units");
+                strcpy(au->units, "associated units");
 #if MYDEBUG
                 for (idepth = 0; idepth < global_depth; idepth++)
                     printf("\t");
@@ -646,7 +646,7 @@ static int expand(grib_accessor* a)
     if (expanded) {
         self->expanded = expanded;
         grib_context_free(c, u);
-        return err;
+        return GRIB_SUCCESS;
     }
 
     if (!self->tablesAccessor) {

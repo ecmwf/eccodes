@@ -153,5 +153,7 @@ int main(int argc, char* argv[])
         free(shortNames[i]);
     free(shortNames);
 
+    grib_context_delete(grib_context_get_default());
+
     return 0;
 }

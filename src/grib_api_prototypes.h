@@ -274,8 +274,6 @@ size_t grib_viarray_used_size(grib_viarray* v);
 
 /* grib_accessor_class_bits_per_value.c */
 
-/* grib_accessor_class_bufr_data.c */
-
 /* grib_accessor_class_bufr_clear_tables.c */
 
 /* grib_accessor_class_bufr_data_array.c */
@@ -963,6 +961,7 @@ long grib_get_api_version(void);
 void grib_print_api_version(FILE* out);
 const char* grib_get_package_name(void);
 grib_context* grib_context_get_default(void);
+char* codes_resolve_path(grib_context* c, const char* path);
 char* grib_context_full_defs_path(grib_context* c, const char* basename);
 char* grib_samples_path(const grib_context* c);
 char* grib_definition_path(const grib_context* c);
@@ -1139,6 +1138,8 @@ int grib_read_any_from_memory_alloc(grib_context* ctx, unsigned char** data, siz
 int grib_read_any_from_memory(grib_context* ctx, unsigned char** data, size_t* data_length, void* buffer, size_t* len);
 int grib_count_in_file(grib_context* c, FILE* f, int* n);
 int grib_count_in_filename(grib_context* c, const char* filename, int* n);
+int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductKind product, off_t** offsets, int* length, int strict_mode);
+
 
 /* grib_trie.c */
 grib_trie* grib_trie_new(grib_context* c);
@@ -1227,7 +1228,7 @@ grib_handle* bufr_external_template(grib_context* c, const char* name);
 char* grib_external_template_path(grib_context* c, const char* name);
 
 /* grib_dependency.c */
-grib_handle* grib_handle_of_accessor(grib_accessor* a);
+grib_handle* grib_handle_of_accessor(const grib_accessor* a);
 void grib_dependency_add(grib_accessor* observer, grib_accessor* observed);
 void grib_dependency_remove_observed(grib_accessor* observed);
 int _grib_dependency_notify_change(grib_handle* h, grib_accessor* observed);
@@ -1489,7 +1490,7 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin, grib_handle* ho
 int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout);
 int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len);
-
+int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err);
 
 /* string_util.c */
 int strcmp_nocase(const char* s1, const char* s2);
@@ -1499,6 +1500,7 @@ const char* extract_filename(const char* filepath);
 char** string_split(char* inputString, const char* delimiter);
 int string_to_long(const char* input, long* output);
 int string_ends_with(const char* str1, const char* str2);
+int count_char_in_string(const char* str, char c);
 
 /* functions.c */
 long grib_op_eq(long a, long b);

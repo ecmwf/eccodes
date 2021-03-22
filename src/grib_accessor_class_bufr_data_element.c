@@ -22,8 +22,8 @@
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = init;dump
    IMPLEMENTS = unpack_string;unpack_string_array;unpack_long; unpack_double
-   IMPLEMENTS = unpack_double_element
-   IMPLEMENTS = pack_long; pack_double ; pack_string_array; pack_string
+   IMPLEMENTS = unpack_double_element ; is_missing
+   IMPLEMENTS = pack_long; pack_double ; pack_string_array; pack_string; pack_missing
    IMPLEMENTS = value_count; get_native_type; make_clone; destroy
    MEMBERS    = long index
    MEMBERS    = int type
@@ -51,6 +51,8 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int get_native_type(grib_accessor*);
+static int pack_missing(grib_accessor*);
+static int is_missing(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int pack_string(grib_accessor*, const char*, size_t* len);
@@ -87,46 +89,46 @@ typedef struct grib_accessor_bufr_data_element
 extern grib_accessor_class* grib_accessor_class_gen;
 
 static grib_accessor_class _grib_accessor_class_bufr_data_element = {
-    &grib_accessor_class_gen,                /* super                     */
-    "bufr_data_element",                     /* name                      */
-    sizeof(grib_accessor_bufr_data_element), /* size                      */
-    0,                                       /* inited */
-    &init_class,                             /* init_class */
-    &init,                                   /* init                      */
-    0,                                       /* post_init                      */
-    &destroy,                                /* free mem                       */
-    &dump,                                   /* describes himself         */
-    0,                                       /* get length of section     */
-    0,                                       /* get length of string      */
-    &value_count,                            /* get number of values      */
-    0,                                       /* get number of bytes      */
-    0,                                       /* get offset to bytes           */
-    &get_native_type,                        /* get native type               */
-    0,                                       /* get sub_section                */
-    0,                                       /* grib_pack procedures long      */
-    0,                                       /* grib_pack procedures long      */
-    &pack_long,                              /* grib_pack procedures long      */
-    &unpack_long,                            /* grib_unpack procedures long    */
-    &pack_double,                            /* grib_pack procedures double    */
-    &unpack_double,                          /* grib_unpack procedures double  */
-    &pack_string,                            /* grib_pack procedures string    */
-    &unpack_string,                          /* grib_unpack procedures string  */
-    &pack_string_array,                      /* grib_pack array procedures string    */
-    &unpack_string_array,                    /* grib_unpack array procedures string  */
-    0,                                       /* grib_pack procedures bytes     */
-    0,                                       /* grib_unpack procedures bytes   */
-    0,                                       /* pack_expression */
-    0,                                       /* notify_change   */
-    0,                                       /* update_size   */
-    0,                                       /* preferred_size   */
-    0,                                       /* resize   */
-    0,                                       /* nearest_smaller_value */
-    0,                                       /* next accessor    */
-    0,                                       /* compare vs. another accessor   */
-    &unpack_double_element,                  /* unpack only ith value          */
-    0,                                       /* unpack a subarray         */
-    0,                                       /* clear          */
-    &make_clone,                             /* clone accessor          */
+    &grib_accessor_class_gen,                      /* super                     */
+    "bufr_data_element",                      /* name                      */
+    sizeof(grib_accessor_bufr_data_element),  /* size                      */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    &init,                       /* init                      */
+    0,                  /* post_init                      */
+    &destroy,                    /* free mem                       */
+    &dump,                       /* describes himself         */
+    0,                /* get length of section     */
+    0,              /* get length of string      */
+    &value_count,                /* get number of values      */
+    0,                 /* get number of bytes      */
+    0,                /* get offset to bytes           */
+    &get_native_type,            /* get native type               */
+    0,                /* get sub_section                */
+    &pack_missing,               /* grib_pack procedures long      */
+    &is_missing,                 /* grib_pack procedures long      */
+    &pack_long,                  /* grib_pack procedures long      */
+    &unpack_long,                /* grib_unpack procedures long    */
+    &pack_double,                /* grib_pack procedures double    */
+    &unpack_double,              /* grib_unpack procedures double  */
+    &pack_string,                /* grib_pack procedures string    */
+    &unpack_string,              /* grib_unpack procedures string  */
+    &pack_string_array,          /* grib_pack array procedures string    */
+    &unpack_string_array,        /* grib_unpack array procedures string  */
+    0,                 /* grib_pack procedures bytes     */
+    0,               /* grib_unpack procedures bytes   */
+    0,            /* pack_expression */
+    0,              /* notify_change   */
+    0,                /* update_size   */
+    0,             /* preferred_size   */
+    0,                     /* resize   */
+    0,      /* nearest_smaller_value */
+    0,                       /* next accessor    */
+    0,                    /* compare vs. another accessor   */
+    &unpack_double_element,      /* unpack only ith value          */
+    0,     /* unpack a subarray         */
+    0,                      /* clear          */
+    &make_clone,                 /* clone accessor          */
 };
 
 
@@ -135,25 +137,23 @@ grib_accessor_class* grib_accessor_class_bufr_data_element = &_grib_accessor_cla
 
 static void init_class(grib_accessor_class* c)
 {
-    c->next_offset            = (*(c->super))->next_offset;
-    c->string_length          = (*(c->super))->string_length;
-    c->byte_count             = (*(c->super))->byte_count;
-    c->byte_offset            = (*(c->super))->byte_offset;
-    c->sub_section            = (*(c->super))->sub_section;
-    c->pack_missing           = (*(c->super))->pack_missing;
-    c->is_missing             = (*(c->super))->is_missing;
-    c->pack_bytes             = (*(c->super))->pack_bytes;
-    c->unpack_bytes           = (*(c->super))->unpack_bytes;
-    c->pack_expression        = (*(c->super))->pack_expression;
-    c->notify_change          = (*(c->super))->notify_change;
-    c->update_size            = (*(c->super))->update_size;
-    c->preferred_size         = (*(c->super))->preferred_size;
-    c->resize                 = (*(c->super))->resize;
-    c->nearest_smaller_value  = (*(c->super))->nearest_smaller_value;
-    c->next                   = (*(c->super))->next;
-    c->compare                = (*(c->super))->compare;
-    c->unpack_double_subarray = (*(c->super))->unpack_double_subarray;
-    c->clear                  = (*(c->super))->clear;
+    c->next_offset    =    (*(c->super))->next_offset;
+    c->string_length    =    (*(c->super))->string_length;
+    c->byte_count    =    (*(c->super))->byte_count;
+    c->byte_offset    =    (*(c->super))->byte_offset;
+    c->sub_section    =    (*(c->super))->sub_section;
+    c->pack_bytes    =    (*(c->super))->pack_bytes;
+    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
+    c->pack_expression    =    (*(c->super))->pack_expression;
+    c->notify_change    =    (*(c->super))->notify_change;
+    c->update_size    =    (*(c->super))->update_size;
+    c->preferred_size    =    (*(c->super))->preferred_size;
+    c->resize    =    (*(c->super))->resize;
+    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
+    c->next    =    (*(c->super))->next;
+    c->compare    =    (*(c->super))->compare;
+    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
+    c->clear    =    (*(c->super))->clear;
 }
 
 /* END_CLASS_IMP */
@@ -638,4 +638,127 @@ static void destroy(grib_context* ct, grib_accessor* a)
         a->attributes[i] = NULL;
         i++;
     }
+}
+
+#define MAX_STRING_SIZE 4096
+/* Return 1 if BUFR element(s) is/are missing, 0 otherwise. In case of decoding errors, also return 0 */
+static int is_missing(grib_accessor* a)
+{
+    const int ktype = get_native_type(a);
+    int err = 0, result = 1; /* default: assume all are missing */
+    long count = 0;
+    size_t i = 0, size = 1, size2 = 0;
+    grib_context* c = a->context;
+
+    if (ktype == GRIB_TYPE_LONG) {
+        long* values           = NULL;
+        long value             = 0;
+
+        value_count(a, &count);
+        size = size2 = count;
+        if (size > 1) {
+            values = (long*)grib_context_malloc_clear(c, sizeof(long) * size);
+            err    = grib_unpack_long(a, values, &size2);
+        }
+        else {
+            err = grib_unpack_long(a, &value, &size2);
+        }
+        if (err) return 0; /* TODO: no way of propagating the error up */
+        Assert(size2 == size);
+        if (size > 1) {
+            for (i = 0; i < size; i++) {
+                if (!grib_is_missing_long(a, values[i])) {
+                    result = 0; /* at least one not missing */
+                    break;
+                }
+            }
+            grib_context_free(c, values);
+        } else {
+            result = grib_is_missing_long(a, value);
+        }
+    } 
+    else if (ktype == GRIB_TYPE_DOUBLE) {
+        double value           = 0;
+        double* values         = NULL;
+
+        value_count(a, &count);
+        size = size2 = count;
+        if (size > 1) {
+            values = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
+            err    = grib_unpack_double(a, values, &size2);
+        }
+        else {
+            err = grib_unpack_double(a, &value, &size2);
+        }
+        if (err) return 0; /* TODO: no way of propagating the error up */
+        Assert(size2 == size);
+        if (size > 1) {
+            for (i = 0; i < size; ++i) {
+                if (!grib_is_missing_double(a, values[i])) {
+                    result = 0;
+                    break;
+                }
+            }
+            grib_context_free(c, values);
+        }
+        else {
+            result = grib_is_missing_double(a, value);
+        }
+    }
+    else if (ktype == GRIB_TYPE_STRING) {
+        char** values          = NULL;
+        value_count(a, &count);
+        size = count;
+        if (size > 1) {
+            values = (char**)grib_context_malloc_clear(a->context, size * sizeof(char*));
+            err = grib_unpack_string_array(a, values, &size);
+            if (err) return 0; /* TODO: no way of propagating the error up */
+            for (i = 0; i < size; i++) {
+                if (!grib_is_missing_string(a, (unsigned char*)values[i], size)) {
+                    result = 0;
+                    break;
+                }
+            }
+            for (i = 0; i < size; i++) grib_context_free(c, values[i]);
+            grib_context_free(c, values);
+        } else {
+            char value[MAX_STRING_SIZE] = {0,}; /* See ECC-710 */
+            size = MAX_STRING_SIZE;
+            err = grib_unpack_string(a, value, &size);
+            if (err) return 0; /* TODO: no way of propagating the error up */
+            result = grib_is_missing_string(a, (unsigned char*)value, size);
+        }
+    }
+    else {
+        return GRIB_INVALID_TYPE;
+    }
+    return result;
+}
+
+static int pack_missing(grib_accessor* a)
+{
+    int ktype = GRIB_TYPE_UNDEFINED;
+    int err = 0;
+    size_t size = 1;
+    const int can_be_missing = (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING);
+    if (!can_be_missing)
+        return GRIB_VALUE_CANNOT_BE_MISSING;
+
+    ktype = get_native_type(a);
+    if (ktype == GRIB_TYPE_LONG) {
+        long missing = GRIB_MISSING_LONG;
+        err = pack_long(a, &missing, &size);
+    }
+    else if (ktype == GRIB_TYPE_DOUBLE) {
+        double missing = GRIB_MISSING_DOUBLE;
+        err = pack_double(a, &missing, &size);
+    }
+    else if (ktype == GRIB_TYPE_STRING) {
+        err = pack_string(a, "", &size);
+    }
+    else {
+        err = GRIB_INVALID_TYPE;
+    }
+
+    return err;
 }

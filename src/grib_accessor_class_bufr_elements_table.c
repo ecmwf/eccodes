@@ -354,10 +354,20 @@ static int bufr_get_from_table(grib_accessor* a, bufr_descriptor* v)
     if (!list)
         return GRIB_NOT_FOUND;
 
-    v->shortName = grib_context_strdup(a->context, list[1]);
-    v->type      = convert_type(list[2]);
+#ifdef DEBUG
+    {
+        /* ECC-1137: check descriptor key name and unit lengths */
+        const size_t maxlen_shortName = sizeof(v->shortName);
+        const size_t maxlen_units     = sizeof(v->units);
+        Assert( strlen(list[1]) < maxlen_shortName );
+        Assert( strlen(list[4]) < maxlen_units );
+    }
+#endif
+
+    strcpy(v->shortName, list[1]);
+    v->type = convert_type(list[2]);
     /* v->name=grib_context_strdup(c,list[3]);  See ECC-489 */
-    v->units = grib_context_strdup(a->context, list[4]);
+    strcpy(v->units, list[4]);
 
     /* ECC-985: Scale and reference are often 0 so we can reduce calls to atol */
     v->scale  = atol_fast(list[5]);
@@ -366,7 +376,7 @@ static int bufr_get_from_table(grib_accessor* a, bufr_descriptor* v)
     v->reference = atol_fast(list[6]);
     v->width     = atol(list[7]);
 
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 int bufr_descriptor_is_marker(bufr_descriptor* d)
@@ -397,7 +407,7 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
     v = (bufr_descriptor*)grib_context_malloc_clear(c, sizeof(bufr_descriptor));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_bufr_descriptor_new unable to allocate %d bytes\n", sizeof(bufr_descriptor));
+                         "grib_bufr_descriptor_new unable to allocate %ld bytes\n", sizeof(bufr_descriptor));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }

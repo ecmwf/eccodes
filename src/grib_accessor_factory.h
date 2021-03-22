@@ -13,7 +13,6 @@
 { "box", &grib_accessor_class_box, },
 { "budgdate", &grib_accessor_class_budgdate, },
 { "bufr_clear_tables", &grib_accessor_class_bufr_clear_tables, },
-{ "bufr_data", &grib_accessor_class_bufr_data, },
 { "bufr_data_array", &grib_accessor_class_bufr_data_array, },
 { "bufr_data_element", &grib_accessor_class_bufr_data_element, },
 { "bufr_elements_table", &grib_accessor_class_bufr_elements_table, },

@@ -176,6 +176,15 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	}
+#Direct solar radiation
+'dsrp' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #10 metre wind gust since previous post-processing
 '10fg' = {
 	 discipline = 0 ;
@@ -300,6 +309,12 @@
 	 parameterNumber = 6 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Temperature of snow layer
+'tsn' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 28 ;
 	}
 #Specific cloud liquid water content
 'clwc' = {
@@ -541,6 +556,15 @@
 	 aerosolType = 62003 ;
 	 is_aerosol_optical = 1 ;
 	}
+#Ammonium aerosol mass mixing ratio
+'aermr18diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
 #Dry deposition of ammonium aerosol
 'aerddpam' = {
 	 discipline = 0 ;
@@ -674,6 +698,12 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
+	}
+#Liquid water content in snow pack
+'lwcs' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 23 ;
 	}
 #Height of convective cloud top
 'hcct' = {
@@ -843,6 +873,69 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
 	}
+#Mixed-layer CAPE in the lowest 50 hPa
+'mlcape50' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 5000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CIN in the lowest 50 hPa
+'mlcin50' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 5000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CAPE in the lowest 100 hPa
+'mlcape100' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 10000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CIN in the lowest 100 hPa
+'mlcin100' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 10000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Most-unstable CAPE
+'mucape' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	}
+#Most-unstable CIN
+'mucin' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	}
+#Departure level of the most unstable parcel expressed as Pressure
+'mudlp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	}
 #200 metre U wind component
 '200u' = {
 	 discipline = 0 ;
@@ -1004,6 +1097,42 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Time integral of surface latent heat evaporation flux
+'tislhef' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 30 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of surface latent heat sublimation flux
+'tislhsf' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 31 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of snow evaporation flux
+'tisef' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of evapotranspiration flux
+'tietrf' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 39 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Cross sectional area of flow in channel
 'chcross' = {
 	 discipline = 1 ;
@@ -1107,6 +1236,98 @@
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
+	}
+#Latitude
+'lat' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	}
+#Longitude
+'lon' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	}
+#Latitude on T grid
+'tlat' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 1 ;
+	}
+#Longitude on T grid
+'tlon' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 1 ;
+	}
+#Latitude on U grid
+'ulat' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 2 ;
+	}
+#Longitude on U grid
+'ulon' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 2 ;
+	}
+#Latitude on V grid
+'vlat' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 3 ;
+	}
+#Longitude on V grid
+'vlon' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 3 ;
+	}
+#Latitude on W grid
+'wlat' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 4 ;
+	}
+#Longitude on W grid
+'wlon' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 4 ;
+	}
+#Latitude on F grid
+'flat' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 5 ;
+	}
+#Longitude on F grid
+'flon' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 5 ;
 	}
 #Total column graupel
 'tcolg' = {
@@ -1478,6 +1699,115 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 23 ;
 	}
+#Keetch-Byram drought index
+'kbdi' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 12 ;
+	}
+#Drought factor (as defined by the Australian forest service)
+'drtmrk' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	}
+#Rate of spread (as defined by the Australian forest service)
+'rosmrk' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	}
+#Fire danger index (as defined by the Australian forest service)
+'fdimrk' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 15 ;
+	}
+#Spread component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'scnfdr' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 16 ;
+	}
+#Burning index (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'buinfdr' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 17 ;
+	}
+#Ignition component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'icnfdr' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	}
+#Energy release component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'ercnfdr' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 19 ;
+	}
+#Volumetric soil ice
+'vsi' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 38 ;
+	}
+#Time integral of total solid precipitation flux
+'titspf' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 128 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#10 metre eastward wind gust since previous post-processing
+'10efg' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 23 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#10 metre northward wind gust since previous post-processing
+'10nfg' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Fog
+'fog' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 50 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Sea ice surface temperature
+'sist' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Snow on ice total depth
+'sitd' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
 #Universal thermal climate index
 'utci' = {
 	 discipline = 20 ;
@@ -1671,6 +2001,68 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Lake total depth
+'dl' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 162 ;
+	}
+#Lake mix-layer temperature
+'lmlt' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 166 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Lake mix-layer depth
+'lmld' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 166 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Lake bottom temperature
+'lblt' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 162 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Lake total layer temperature
+'ltlt' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 162 ;
+	}
+#Lake shape factor
+'lshf' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 10 ;
+	}
+#Lake ice surface temperature
+'lict' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Lake ice total depth
+'licd' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
 	}
 #100 metre U wind component
 '100u' = {
@@ -3865,7 +4257,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Snow Fall water equivalent
 'sf' = {

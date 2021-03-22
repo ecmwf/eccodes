@@ -44,37 +44,37 @@ Log mode for information for processing information
 
 /* Types */
 #define CODES_TYPE_UNDEFINED GRIB_TYPE_UNDEFINED
-#define CODES_TYPE_LONG GRIB_TYPE_LONG
-#define CODES_TYPE_DOUBLE GRIB_TYPE_DOUBLE
-#define CODES_TYPE_STRING GRIB_TYPE_STRING
-#define CODES_TYPE_BYTES GRIB_TYPE_BYTES
-#define CODES_TYPE_SECTION GRIB_TYPE_SECTION
-#define CODES_TYPE_LABEL GRIB_TYPE_LABEL
-#define CODES_TYPE_MISSING GRIB_TYPE_MISSING
+#define CODES_TYPE_LONG      GRIB_TYPE_LONG
+#define CODES_TYPE_DOUBLE    GRIB_TYPE_DOUBLE
+#define CODES_TYPE_STRING    GRIB_TYPE_STRING
+#define CODES_TYPE_BYTES     GRIB_TYPE_BYTES
+#define CODES_TYPE_SECTION   GRIB_TYPE_SECTION
+#define CODES_TYPE_LABEL     GRIB_TYPE_LABEL
+#define CODES_TYPE_MISSING   GRIB_TYPE_MISSING
 
 /* Missing values */
-#define CODES_MISSING_LONG GRIB_MISSING_LONG
+#define CODES_MISSING_LONG   GRIB_MISSING_LONG
 #define CODES_MISSING_DOUBLE GRIB_MISSING_DOUBLE
 
 /*set spec flags*/
 #define CODES_UTIL_SET_SPEC_FLAGS_ONLY_PACKING GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING
 
 /* Dump option flags*/
-#define CODES_DUMP_FLAG_READ_ONLY GRIB_DUMP_FLAG_READ_ONLY
-#define CODES_DUMP_FLAG_DUMP_OK GRIB_DUMP_FLAG_DUMP_OK
-#define CODES_DUMP_FLAG_VALUES GRIB_DUMP_FLAG_VALUES
-#define CODES_DUMP_FLAG_CODED GRIB_DUMP_FLAG_CODED
-#define CODES_DUMP_FLAG_OCTECT GRIB_DUMP_FLAG_OCTECT
-#define CODES_DUMP_FLAG_ALIASES GRIB_DUMP_FLAG_ALIASES
-#define CODES_DUMP_FLAG_TYPE GRIB_DUMP_FLAG_TYPE
-#define CODES_DUMP_FLAG_HEXADECIMAL GRIB_DUMP_FLAG_HEXADECIMAL
-#define CODES_DUMP_FLAG_NO_DATA GRIB_DUMP_FLAG_NO_DATA
-#define CODES_DUMP_FLAG_ALL_DATA GRIB_DUMP_FLAG_ALL_DATA
+#define CODES_DUMP_FLAG_READ_ONLY      GRIB_DUMP_FLAG_READ_ONLY
+#define CODES_DUMP_FLAG_DUMP_OK        GRIB_DUMP_FLAG_DUMP_OK
+#define CODES_DUMP_FLAG_VALUES         GRIB_DUMP_FLAG_VALUES
+#define CODES_DUMP_FLAG_CODED          GRIB_DUMP_FLAG_CODED
+#define CODES_DUMP_FLAG_OCTET          GRIB_DUMP_FLAG_OCTET
+#define CODES_DUMP_FLAG_ALIASES        GRIB_DUMP_FLAG_ALIASES
+#define CODES_DUMP_FLAG_TYPE           GRIB_DUMP_FLAG_TYPE
+#define CODES_DUMP_FLAG_HEXADECIMAL    GRIB_DUMP_FLAG_HEXADECIMAL
+#define CODES_DUMP_FLAG_NO_DATA        GRIB_DUMP_FLAG_NO_DATA
+#define CODES_DUMP_FLAG_ALL_DATA       GRIB_DUMP_FLAG_ALL_DATA
 #define CODES_DUMP_FLAG_ALL_ATTRIBUTES GRIB_DUMP_FLAG_ALL_ATTRIBUTES
 
 /* codes_nearest flags */
-#define CODES_NEAREST_SAME_GRID GRIB_NEAREST_SAME_GRID
-#define CODES_NEAREST_SAME_DATA GRIB_NEAREST_SAME_DATA
+#define CODES_NEAREST_SAME_GRID  GRIB_NEAREST_SAME_GRID
+#define CODES_NEAREST_SAME_DATA  GRIB_NEAREST_SAME_DATA
 #define CODES_NEAREST_SAME_POINT GRIB_NEAREST_SAME_POINT
 
 /*! Iteration is carried out on all the keys available in the message
@@ -1200,10 +1200,14 @@ int codes_set_values(codes_handle* h, codes_values* codes_values, size_t arg_cou
 codes_handle* codes_handle_new_from_partial_message_copy(codes_context* c, const void* data, size_t size);
 codes_handle* codes_handle_new_from_partial_message(codes_context* c, const void* data, size_t buflen);
 
-/* Returns a bool i.e. 0 or 1. The error code is an argument */
+/* Returns a bool i.e. 0 or 1. The error code is the final argument */
 int codes_is_missing(const codes_handle* h, const char* key, int* err);
 /* Returns a bool i.e. 0 or 1 */
 int codes_is_defined(const codes_handle* h, const char* key);
+
+/* Returns 1 if the BUFR key is in the header and 0 if it is in the data section.
+   The error code is the final argument */
+int codes_bufr_key_is_header(const codes_handle* h, const char* key, int* err);
 
 int codes_set_missing(codes_handle* h, const char* key);
 /* The truncation is the Gaussian number (or order) */
@@ -1272,7 +1276,7 @@ codes_handle* codes_grib_util_set_spec(codes_handle* h,
                                        int* err);
 
 /* EXPERIMENTAL FEATURE
- * Build an array of headers from input BUFR file.
+ * Build an array of message headers from input BUFR file.
  * result = array of 'codes_bufr_header' structs with 'num_messages' elements.
  *          This array should be freed by the caller.
  * num_messages = number of messages found in the input file.
@@ -1281,6 +1285,16 @@ codes_handle* codes_grib_util_set_spec(codes_handle* h,
  */
 int codes_bufr_extract_headers_malloc(codes_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len);
+
+/* EXPERIMENTAL FEATURE
+ * Build an array of message offsets from input file. The client has to supply the ProductKind (GRIB, BUFR etc)
+ * result = array of offsets with 'num_messages' elements.
+ *          This array should be freed by the caller.
+ * num_messages = number of messages found in the input file.
+ * strict_mode  = If 1 means fail if any message is invalid.
+ * returns 0 if OK, integer value on error.
+ */
+int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductKind product, off_t** offsets, int* num_messages, int strict_mode);
 
 /* --------------------------------------- */
 #ifdef __cplusplus

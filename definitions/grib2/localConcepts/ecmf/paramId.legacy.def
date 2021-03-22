@@ -136,3 +136,111 @@
  parameterCategory = 128 ;
  parameterNumber = 178 ;
 }
+#Temperature of snow layer
+'238' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 238 ;
+}
+#Sea-ice cover
+'31' = {
+  discipline = 192 ;
+  parameterCategory = 128 ;
+  parameterNumber = 31 ;
+}
+#Snow density
+'33' = {
+  discipline = 192 ;
+  parameterCategory = 128 ;
+  parameterNumber = 33 ;
+}
+#Sea surface temperature
+'34' = {
+  discipline = 192 ;
+  parameterCategory = 128 ;
+  parameterNumber = 34 ;
+}
+#Surface solar radiation downwards
+'169' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 169 ;
+}
+#Surface thermal radiation downwards
+'175' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 175 ;
+}
+#Eastward turbulent surface stress
+'180' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 180 ;
+}
+#Northward turbulent surface stress
+'181' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 181 ;
+}
+#Surface runoff
+'174008' = {
+ discipline = 192 ;
+ parameterCategory = 174 ;
+ parameterNumber = 8 ;
+}
+#Direct solar radiation
+'47' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 47 ;
+}
+#Lake total layer temperature
+'228011' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 11 ;
+}
+#Lake mix-layer temperature
+'228008' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 8 ;
+}
+#Lake mix-layer depth
+'228009' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 9 ;
+}
+#Lake bottom temperature
+'228010' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 10 ;
+}
+#Lake shape factor
+'228012' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 12 ;
+}
+#Lake ice surface temperature
+'228013' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 13 ;
+}
+#Lake ice total depth
+'228014' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 14 ;
+}
+#Lake total depth
+'228007' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 7 ;
+}

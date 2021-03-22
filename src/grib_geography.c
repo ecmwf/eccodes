@@ -33,7 +33,6 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-
 static void gauss_first_guess(long trunc, double* vals)
 {
     long i                = 0, numVals;

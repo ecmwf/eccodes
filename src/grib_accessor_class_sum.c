@@ -163,7 +163,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     if (size == 0) {
         *val = 0;
-        return ret;
+        return GRIB_SUCCESS;
     }
     values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
     if (!values)
@@ -177,7 +177,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     grib_context_free(a->context, values);
 
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
@@ -196,21 +196,24 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     if (size == 0) {
         *val = 0;
-        return ret;
+        return GRIB_SUCCESS;
     }
     values = (double*)grib_context_malloc_clear(a->context, sizeof(double) * size);
     if (!values)
         return GRIB_OUT_OF_MEMORY;
 
-    grib_get_double_array(grib_handle_of_accessor(a), self->values, values, &size);
-
+    ret = grib_get_double_array(grib_handle_of_accessor(a), self->values, values, &size);
+    if (ret) {
+        grib_context_free(a->context, values);
+        return ret;
+    }
     *val = 0;
     for (i = 0; i < size; i++)
         *val += values[i];
 
     grib_context_free(a->context, values);
 
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 static int value_count(grib_accessor* a, long* count)

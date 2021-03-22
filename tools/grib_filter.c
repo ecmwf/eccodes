@@ -51,7 +51,9 @@ int grib_tool_init(grib_runtime_options* options)
 {
     options->action = grib_action_from_filter(options->infile_extra->name);
     if (!options->action) {
-        fprintf(stderr, "%s: error unable to create action\n", options->infile_extra->name);
+        const char* filt = options->infile_extra->name;
+        if (strcmp(filt, "-") == 0) filt = "stdin";
+        fprintf(stderr, "Error: %s: unable to create action\n", filt);
         exit(1);
     }
 

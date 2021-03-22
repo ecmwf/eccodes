@@ -32,8 +32,8 @@ const char* tool_description =
     "Convert a GRIB file to netCDF format."
     "\n\tNote: The GRIB geometry should be a regular lat/lon grid or a regular Gaussian grid"
     "\n\t(the key \"typeOfGrid\" should be \"regular_ll\" or \"regular_gg\")";
-const char* tool_name   = "grib_to_netcdf";
-const char* tool_usage  = "[options] grib_file grib_file ... ";
+const char* tool_name        = "grib_to_netcdf";
+const char* tool_usage       = "[options] grib_file grib_file ... ";
 static char argvString[2048] = {0,};
 
 /*=====================================================================*/
@@ -1040,7 +1040,7 @@ static err to_expand_mem(field* g)
         }
 
         if (count != g->value_count)
-            grib_context_log(ctx, GRIB_LOG_FATAL, "ecCodes: value count mismatch %d %d", count, g->value_count);
+            grib_context_log(ctx, GRIB_LOG_FATAL, "ecCodes: value count mismatch %ld %ld", count, g->value_count);
 
         if ((e = grib_get_long(g->handle, "missingValuesPresent", &bitmap))) {
             grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get missingValuesPresent: %s", grib_get_error_message(e));
@@ -2245,7 +2245,7 @@ static int def_latlon(int ncid, fieldset* fs)
 {
     int n        = 0;
     size_t nlats = 0, nlons = 0;
-    err e      = 0;
+    err e = 0;
 
     field* g = get_field(fs, 0, expand_mem);
 
@@ -2257,11 +2257,11 @@ static int def_latlon(int ncid, fieldset* fs)
     }
 
     /* Define longitude */
-    n      = (int)nlons;
+    n = (int)nlons;
     set_dimension(ncid, "longitude", n, NC_FLOAT, "degrees_east", "longitude");
 
     /* Define latitude */
-    n      = nlats;
+    n = nlats;
     set_dimension(ncid, "latitude", n, NC_FLOAT, "degrees_north", "latitude");
 
     /* g->purge_header = TRUE; */
@@ -2460,7 +2460,7 @@ static int compute_scale(dataset_t* subset)
 
     if (scaled_max > nc_type_values[idx].nc_type_max) {
         grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: scaled_max (=%lld) > nc_type_max (=%lf). Set sf to 1.0",
-                         scaled_max, nc_type_values[idx].nc_type_max);
+                         (long long)scaled_max, nc_type_values[idx].nc_type_max);
         sf = 1.0; /* ECC-685 */
     }
 
@@ -2468,9 +2468,11 @@ static int compute_scale(dataset_t* subset)
     test_scaled_min    = (char)scaled_min;
     test_scaled_median = (char)scaled_median;
 
-    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: scaled_max: %lld, scaled_min: %lld, scaled_median: %lld, x: %lf", scaled_max, scaled_min, scaled_median, x);
+    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: scaled_max: %lld, scaled_min: %lld, scaled_median: %lld, x: %lf",
+                     (long long)scaled_max, (long long)scaled_min, (long long)scaled_median, x);
 
-    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: test_scaled_max: %x, test_scaled_min: %x, test_scaled_median: %x", test_scaled_max, test_scaled_min, test_scaled_median, x);
+    grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: test_scaled_max: %x, test_scaled_min: %x, test_scaled_median: %x",
+                     test_scaled_max, test_scaled_min, test_scaled_median);
 
     max    = scaled_max * sf + ao;
     min    = scaled_min * sf + ao;
@@ -2632,8 +2634,8 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
     }
     */
     DebugAssert(vals);
-    DebugAssert(n>0);
-    if(!vals) return;
+    DebugAssert(n > 0);
+    if (!vals) return;
 
     switch (nctype) {
         case NC_BYTE: {
@@ -2846,8 +2848,8 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
             }
 
             if (nj != count[naxis] || ni != count[naxis + 1]) {
-                grib_context_log(ctx, GRIB_LOG_ERROR, "Grib %d has different resolution\n", i + 1);
-                grib_context_log(ctx, GRIB_LOG_ERROR, "lat=%d, long=%d instead of lat=%d, long=%d\n", nj, ni, count[naxis], count[naxis + 1]);
+                grib_context_log(ctx, GRIB_LOG_ERROR, "GRIB message %d has different resolution\n", i + 1);
+                grib_context_log(ctx, GRIB_LOG_ERROR, "lat=%ld, long=%ld instead of lat=%ld, long=%ld\n", nj, ni, count[naxis], count[naxis + 1]);
                 exit(1);
             }
 
@@ -3076,6 +3078,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
             stat = nc_def_var_deflate(ncid, var_id, setup.shuffle, 1, setup.deflate);
             check_err("nc_def_var_deflate", stat, __LINE__);
 #else
+            (void)chunks;
             grib_context_log(ctx, GRIB_LOG_ERROR, "Deflate option only supported in NetCDF4");
 #endif
         }

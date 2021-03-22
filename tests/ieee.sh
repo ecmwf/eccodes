@@ -112,8 +112,21 @@ stats2=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $temp`
 # [ "$stats1" = "$stats2" ]
 
 
-rm -f $temp
+echo "Test changing precision ..."
+# ----------------------------------
+infile=${data_dir}/grid_ieee.grib
+grib_check_key_equals $infile 'precision,section7Length' '1 44005'
+# Switch from 32bits to 64bits
+${tools_dir}/grib_set -r -s precision=2 $infile $temp
+grib_check_key_equals $temp 'precision,section7Length' '2 88005'
 
+stats1=`${tools_dir}/grib_get -M -F%.3f -p skew,kurt $infile`
+stats2=`${tools_dir}/grib_get -M -F%.3f -p skew,kurt $temp`
+[ "$stats1" = "$stats2" ]
+
+
+
+rm -f $temp
 
 ##################################
 # Disabled for now. Infinite loop

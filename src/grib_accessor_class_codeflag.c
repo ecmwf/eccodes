@@ -162,8 +162,10 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
     char line[1024];
     size_t i = 0;
     int j    = 0;
+    int err  = 0;
 
-    grib_recompose_name(grib_handle_of_accessor(a), NULL, self->tablename, fname, 1);
+    err = grib_recompose_name(grib_handle_of_accessor(a), NULL, self->tablename, fname, 1);
+    if (err) strncpy(fname, self->tablename, 1023);
 
     if ((filename = grib_context_full_defs_path(a->context, fname)) == NULL) {
         grib_context_log(a->context, GRIB_LOG_WARNING, "Cannot open flag table %s", filename);
@@ -213,7 +215,7 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
     codename[j] = 0;
 
     strcat(codename, ":");
-    strcat(codename, self->tablename);
+    strcat(codename, fname);
 
     fclose(f);
     return GRIB_SUCCESS;
