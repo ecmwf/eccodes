@@ -98,5 +98,5 @@ grib_check_key_equals $temp productDefinitionTemplateNumber '45'
 grib_check_key_equals $temp aerosolType,typeOfSizeInterval '0 0'
 
 
-
+rm -f $tempSample
 rm -f $temp
