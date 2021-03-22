@@ -63,7 +63,7 @@ flags[1] projectionCentreFlag 'grib3/tables/[tablesVersion]/3.5.table' : dump;
 # If bit 1 is 1, then the South Pole is on the projection plane
 flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump;   # WMO bit 1
 
-include "grib3/template.3.scanning_mode.def";
+include "grib3/template.4.scanning_mode.def";
 
 
 iterator polar_stereographic(numberOfPoints,missingValue,values,
