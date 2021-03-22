@@ -18,12 +18,14 @@
 #include <memory>
 #include <numeric>
 #include <set>
+#include <utility>
 
 #include "eckit/types/Fraction.h"
 
 #include "mir/api/MIREstimation.h"
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
+#include "mir/repres/gauss/GaussianIterator.h"
 #include "mir/util/Atlas.h"
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Exceptions.h"
@@ -200,30 +202,14 @@ eckit::Fraction Reduced::getSmallestIncrement() const {
 
 
 Iterator* Reduced::unrotatedIterator() const {
-
-    // Lambda captures a vector reference, ok because the representation
-    // holding the vector lives longer than the iterator
-    auto& pl = pls();
-    auto Ni  = [&pl](size_t i) {
-        ASSERT(i < pl.size());
-        return pl[i];
-    };
-
-    return Gaussian::unrotatedIterator(Ni);
+    auto pl = pls();
+    return new gauss::GaussianIterator(latitudes(), std::move(pl), bbox_, N_, Nj_, k_);
 }
 
 
 Iterator* Reduced::rotatedIterator(const util::Rotation& rotation) const {
-
-    // Lambda captures a vector reference, ok because the representation
-    // holding the vector lives longer than the iterator
-    auto& pl = pls();
-    auto Ni  = [&pl](size_t i) {
-        ASSERT(i < pl.size());
-        return pl[i];
-    };
-
-    return Gaussian::rotatedIterator(Ni, rotation);
+    auto pl = pls();
+    return new gauss::GaussianIterator(latitudes(), std::move(pl), bbox_, N_, Nj_, k_, rotation);
 }
 
 
@@ -258,10 +244,10 @@ void Reduced::setNj(std::vector<long> pl, const Latitude& s, const Latitude& n) 
         Nj_ = 0;
         for (auto& lat : lats) {
             Latitude ll(lat);
-            if (n < ll) {
+            if (n < ll && !angleApproximatelyEqual(n, ll)) {
                 ++k_;
             }
-            else if (s <= ll) {
+            else if (s < ll || angleApproximatelyEqual(s, ll)) {
                 ASSERT(pl[k_ + Nj_] >= 2);
                 ++Nj_;
             }

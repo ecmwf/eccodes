@@ -14,6 +14,7 @@
 
 #include <iostream>
 
+#include "mir/util/Atlas.h"
 #include "mir/util/Grib.h"
 
 
