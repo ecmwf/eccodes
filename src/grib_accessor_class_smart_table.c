@@ -539,7 +539,7 @@ static int value_count(grib_accessor* a, long* count)
         return err;
 
     *count = self->tableCodesSize;
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static void destroy(grib_context* context, grib_accessor* a)

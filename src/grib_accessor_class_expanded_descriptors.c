@@ -646,7 +646,7 @@ static int expand(grib_accessor* a)
     if (expanded) {
         self->expanded = expanded;
         grib_context_free(c, u);
-        return err;
+        return GRIB_SUCCESS;
     }
 
     if (!self->tablesAccessor) {

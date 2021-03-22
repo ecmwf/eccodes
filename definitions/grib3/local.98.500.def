@@ -25,29 +25,29 @@
 #meta      dataTime    time(hour,minute,second) : dump;
 #alias mars.time = dataTime;
 
-codetable[2] observationType "grib2/tables/local/ecmf/obstat.2.0.table";
+codetable[2] observationType "grib3/tables/local/ecmf/obstat.2.0.table";
 
-codetable[2] codeType "grib2/tables/local/ecmf/obstat.3.0.table";
+codetable[2] codeType "grib3/tables/local/ecmf/obstat.3.0.table";
 
-codetable[2] varno "grib2/tables/local/ecmf/obstat.varno.table";
+codetable[2] varno "grib3/tables/local/ecmf/obstat.varno.table";
 
-codetable[2] reportType "grib2/tables/local/ecmf/obstat.reporttype.table";
+codetable[2] reportType "grib3/tables/local/ecmf/obstat.reporttype.table";
 
 unsigned[1] phase;
 
-codetable[2] platform "grib2/tables/local/ecmf/obstat.4.0.table";
+codetable[2] platform "grib3/tables/local/ecmf/obstat.4.0.table";
 
-codetable[2] instrument "grib2/tables/local/ecmf/obstat.5.0.table";
+codetable[2] instrument "grib3/tables/local/ecmf/obstat.5.0.table";
 
-codetable[2] dataStream "grib2/tables/local/ecmf/obstat.6.0.table";
+codetable[2] dataStream "grib3/tables/local/ecmf/obstat.6.0.table";
 
-#  include "grib2/template.4.horizontal.def"
+#  include "grib3/template.4.horizontal.def"
 
-codetable[2] observationDiagnostic "grib2/tables/local/ecmf/obstat.9.0.table";
+codetable[2] observationDiagnostic "grib3/tables/local/ecmf/obstat.9.0.table";
 
-codetable[2] dataSelection "grib2/tables/local/ecmf/obstat.10.0.table";
+codetable[2] dataSelection "grib3/tables/local/ecmf/obstat.10.0.table";
 
 unsigned[2] scanPosition;
 
-codetable[1] mask "grib2/tables/local/ecmf/obstat.8.0.table";
+codetable[1] mask "grib3/tables/local/ecmf/obstat.8.0.table";
 

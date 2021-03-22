@@ -173,7 +173,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (ret == GRIB_SUCCESS)
         *len = 4;
 
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
@@ -205,7 +205,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (ret == GRIB_SUCCESS)
         *len = 4;
 
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)

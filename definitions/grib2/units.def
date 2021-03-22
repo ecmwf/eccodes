@@ -176,6 +176,15 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	}
+#Direct solar radiation
+'J m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #10 metre wind gust since previous post-processing
 'm s**-1' = {
 	 discipline = 0 ;
@@ -515,6 +524,15 @@
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Volcanic sulfur dioxide mass mixing ratio
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 8 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
 #Ammonium aerosol mass mixing ratio
 'kg kg**-1' = {
 	 discipline = 0 ;
@@ -540,21 +558,65 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 102 ;
-	 scaledValueOfFirstWavelength = 55 ;
-	 typeOfWavelengthInterval = 11 ;
-	 aerosolType = 62003 ;
 	 scaleFactorOfFirstWavelength = 8 ;
 	 is_aerosol_optical = 1 ;
 	 typeOfSizeInterval = 255 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	 typeOfWavelengthInterval = 11 ;
+	 aerosolType = 62003 ;
+	}
+#Biogenic secondary organic aerosol mass mixing ratio
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Anthropogenic secondary organic aerosol mass mixing ratio
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62033 ;
+	}
+#Volcanic sulfur dioxide mass mixing ratio increment
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	 constituentType = 8 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #Ammonium aerosol mass mixing ratio
 'kg kg**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
 	 aerosolType = 62003 ;
 	 is_aerosol = 1 ;
+	}
+#Biogenic secondary organic aerosol mass mixing ratio increment
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
 	 typeOfGeneratingProcess = 20 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Anthropogenic secondary organic aerosol mass mixing ratio increment
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_aerosol = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	 aerosolType = 62033 ;
 	}
 #Dry deposition of ammonium aerosol
 'kg m**-2 s**-1' = {
@@ -593,10 +655,418 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
-	 aerosolType = 62003 ;
-	 is_aerosol = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62003 ;
+	}
+#Dry deposition of biogenic secondary organic aerosol
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 12 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62032 ;
+	}
+#Sedimentation of biogenic secondary organic aerosol
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62032 ;
+	}
+#Wet deposition of biogenic secondary organic aerosol by large-scale precipitation
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of biogenic secondary organic aerosol by convective precipitation
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62032 ;
+	}
+#Vertically integrated mass of biogenic secondary organic aerosol
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62032 ;
+	}
+#Dry deposition of anthropogenic secondary organic aerosol
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 12 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62033 ;
+	}
+#Sedimentation of anthropogenic secondary organic aerosol
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of anthropogenic secondary organic aerosol by large-scale precipitation
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62033 ;
+	}
+#Wet deposition of anthropogenic secondary organic aerosol by convective precipitation
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Vertically integrated mass of anthropogenic secondary organic aerosol
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Secondary organic aerosol optical depth at 550 nm
+'dimensionless' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 scaledValueOfFirstWavelength = 550 ;
+	 typeOfWavelengthInterval = 11 ;
+	 aerosolType = 62012 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 is_aerosol_optical = 1 ;
+	}
+#Aromatic peroxy radical mass mixing ratio
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 60029 ;
+	 is_chemical = 1 ;
+	}
+#Ethyne mass mixing ratio
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_chemical = 1 ;
+	 constituentType = 10010 ;
+	}
+#Acetonitrile mass mixing ratio
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_chemical = 1 ;
+	 constituentType = 10007 ;
+	}
+#Methyl peroxy nitrate mass mixing ratio
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 10055 ;
+	 is_chemical = 1 ;
+	}
+#Hydrogen cyanide mass mixing ratio
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_chemical = 1 ;
+	 constituentType = 10006 ;
+	}
+#Hydroperoxy aldehydes type 1 mass mixing ratio
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_chemical = 1 ;
+	 constituentType = 60058 ;
+	}
+#Hydroperoxy aldehydes type 2 mass mixing ratio
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 60059 ;
+	 is_chemical = 1 ;
+	}
+#Isoprene peroxy type B mass mixing ratio
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_chemical = 1 ;
+	 constituentType = 60056 ;
+	}
+#Isoprene peroxy type D mass mixing ratio
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_chemical = 1 ;
+	 constituentType = 60057 ;
+	}
+#Column integrated mass density of Volcanic sulfur dioxide 
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 8 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Column integrated mass density of Aromatic peroxy radical 
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 60029 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Ethyne 
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 10010 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Acetonitrile 
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 is_chemical = 1 ;
+	 constituentType = 10007 ;
+	}
+#Column integrated mass density of Methyl peroxy nitrate 
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 10055 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Hydrogen cyanide 
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 10006 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Hydroperoxy aldehydes type 1 
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 is_chemical = 1 ;
+	 constituentType = 60058 ;
+	}
+#Column integrated mass density of Hydroperoxy aldehydes type 2 
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 60059 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Isoprene peroxy type B 
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 60056 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Isoprene peroxy type D 
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 is_chemical = 1 ;
+	 constituentType = 60057 ;
+	}
+#Atmosphere emission mass flux of Volcanic sulfur dioxide 
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 8 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Atmosphere emission mass flux of Aromatic peroxy radical 
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 is_chemical = 1 ;
+	 constituentType = 60029 ;
+	}
+#Atmosphere emission mass flux of Ethyne 
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 is_chemical = 1 ;
+	 constituentType = 10010 ;
+	}
+#Atmosphere emission mass flux of Acetonitrile 
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 10007 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Methyl peroxy nitrate 
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 is_chemical = 1 ;
+	 constituentType = 10055 ;
+	}
+#Atmosphere emission mass flux of Hydrogen cyanide 
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 is_chemical = 1 ;
+	 constituentType = 10006 ;
+	}
+#Atmosphere emission mass flux of Hydroperoxy aldehydes type 1 
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 60058 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Hydroperoxy aldehydes type 2 
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 is_chemical = 1 ;
+	 constituentType = 60059 ;
+	}
+#Atmosphere emission mass flux of Isoprene peroxy type B 
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 is_chemical = 1 ;
+	 constituentType = 60056 ;
+	}
+#Atmosphere emission mass flux of Isoprene peroxy type D 
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 60057 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Volcanic sulfur dioxide 
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 8 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Dry deposition velocity of Aromatic peroxy radical 
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 is_chemical = 1 ;
+	 constituentType = 60029 ;
+	}
+#Dry deposition velocity of Ethyne 
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 10010 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Acetonitrile 
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 is_chemical = 1 ;
+	 constituentType = 10007 ;
+	}
+#Dry deposition velocity of Methyl peroxy nitrate 
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 is_chemical = 1 ;
+	 constituentType = 10055 ;
+	}
+#Dry deposition velocity of Hydrogen cyanide 
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 10006 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Hydroperoxy aldehydes type 1 
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 is_chemical = 1 ;
+	 constituentType = 60058 ;
+	}
+#Dry deposition velocity of Hydroperoxy aldehydes type 2 
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 is_chemical = 1 ;
+	 constituentType = 60059 ;
+	}
+#Dry deposition velocity of Isoprene peroxy type B 
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 60056 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Isoprene peroxy type D 
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 is_chemical = 1 ;
+	 constituentType = 60057 ;
 	}
 #-10 degrees C isothermal level (atm)
 'm' = {
@@ -850,6 +1320,15 @@
 	 typeOfSecondFixedSurface = 106 ;
 	 typeOfFirstFixedSurface = 106 ;
 	}
+#Atmosphere emission mass flux of Methane from Wetlands
+'kg m**-2 s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 2 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 10 ;
+	}
 #Convective precipitation
 'kg m**-2' = {
 	 discipline = 0 ;
@@ -1084,6 +1563,33 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of surface latent heat evaporation flux
+'J m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 30 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of surface latent heat sublimation flux
+'J m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 31 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of evapotranspiration flux
+'kg m**-2' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 39 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
@@ -1702,6 +2208,67 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 19 ;
 	}
+#Volumetric soil ice
+'m**3 m**-3' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 38 ;
+	}
+#Time integral of total solid precipitation flux
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 128 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#10 metre eastward wind gust since previous post-processing
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 23 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#10 metre northward wind gust since previous post-processing
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Fog
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 50 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Sea ice surface temperature
+'K' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Snow on ice total depth
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
 #Universal thermal climate index
 'K' = {
 	 discipline = 20 ;
@@ -1895,6 +2462,68 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Lake total depth
+'m' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 162 ;
+	}
+#Lake mix-layer temperature
+'K' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 166 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Lake mix-layer depth
+'m' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 166 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Lake bottom temperature
+'K' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 162 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Lake total layer temperature
+'K' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 162 ;
+	}
+#Lake shape factor
+'dimensionless' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 10 ;
+	}
+#Lake ice surface temperature
+'K' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Lake ice total depth
+'m' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
 	}
 #100 metre U wind component
 'm s**-1' = {

@@ -16,7 +16,7 @@ label="bufr_attributes_test_f"
 
 #Define tmp file
 fTmp=${label}.tmp.txt
-rm -f ${fTmp} | true
+rm -f ${fTmp}
 
 #We check "syno_multi.bufr". The path is
 #hardcoded in the example
@@ -31,4 +31,4 @@ ${examples_dir}/eccodes_f_bufr_attributes #2> $REDIRECT > $fTmp
 #cat  $fTmp
 
 #Clean up
-rm -f ${fTmp} | true
+rm -f ${fTmp}

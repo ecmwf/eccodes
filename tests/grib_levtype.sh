@@ -19,7 +19,8 @@ fi
 
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 tempGrib=temp.${label}.grib
-latest=`${tools_dir}/grib_get -p tablesVersionLatest $sample2`
+latestAvailable=`${tools_dir}/grib_get -p tablesVersionLatest $sample2`
+latestOfficial=`${tools_dir}/grib_get -p tablesVersionLatestOfficial $sample2`
 
 # These level types are S2S ocean parameters and are dealt with differently (See products_s2s.def)
 exclude="20 160 169"
@@ -35,7 +36,13 @@ for lt in $levtypes; do
         if [ "$lt" = "$ex" ]; then process_type=0; break; fi
     done
     if [ $process_type = 1 ]; then
-        ${tools_dir}/grib_set -s tablesVersion=$latest,typeOfFirstFixedSurface=$lt $sample2 $tempGrib
+        ${tools_dir}/grib_set -s tablesVersion=$latestAvailable,typeOfFirstFixedSurface=$lt $sample2 $tempGrib
+        result=`${tools_dir}/grib_get -p mars.levtype $tempGrib`
+        if [ "$result" = "$lt" ]; then
+            echo "ERROR: typeOfFirstFixedSurface of |$lt| not mapped to a string!"
+            exit 1
+        fi
+        ${tools_dir}/grib_set -s tablesVersion=$latestOfficial,typeOfFirstFixedSurface=$lt $sample2 $tempGrib
         result=`${tools_dir}/grib_get -p mars.levtype $tempGrib`
         if [ "$result" = "$lt" ]; then
             echo "ERROR: typeOfFirstFixedSurface of |$lt| not mapped to a string!"

@@ -16,7 +16,7 @@ label="bufr_set_keys_test_c"
 
 #Define tmp file
 fBufrTmp=${label}.tmp.bufr
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 #We check "syno_multi.bufr". The path is
 #hardcoded in the example
@@ -43,4 +43,4 @@ set -e
 [ `${tools_dir}/bufr_count $f` -eq `${tools_dir}/bufr_count ${fBufrTmp}` ]
 
 #Clean up
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp

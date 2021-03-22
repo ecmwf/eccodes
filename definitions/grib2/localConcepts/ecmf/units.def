@@ -245,12 +245,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 46 ;
 	}
-#Direct solar radiation
-'J m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 47 ;
-	}
 #Magnitude of turbulent surface stress
 'N m**-2 s' = {
 	 discipline = 192 ;
@@ -6787,6 +6781,42 @@
 	 is_aerosol = 1 ;
 	 aerosolType = 62003 ;
 	}
+#Source/gain of biogenic secondary organic aerosol
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62032 ;
+	}
+#Negative fixer of biogenic secondary organic aerosol
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Source/gain of anthropogenic secondary organic aerosol
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of anthropogenic secondary organic aerosol
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
 #Experimental product
 '~' = {
 	 discipline = 192 ;
@@ -9511,6 +9541,24 @@
 	 parameterCategory = 217 ;
 	 parameterNumber = 206 ;
 	}
+#Anthropogenic volatile organic compounds mass mixing ratio
+'kg kg**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 65532 ;
+	 is_chemical = 1 ;
+	}
+#Biomass burning volatile organic compounds mass mixing ratio
+'kg kg**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 65531 ;
+	 is_chemical = 1 ;
+	}
 #Total column hydrogen peroxide
 'kg m**-2' = {
 	 discipline = 192 ;
@@ -10704,6 +10752,24 @@
 	 discipline = 192 ;
 	 parameterCategory = 218 ;
 	 parameterNumber = 206 ;
+	}
+#Column integrated mass density of Anthropogenic volatile organic compounds 
+'kg m**-2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 65532 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Biomass burning volatile organic compounds 
+'kg m**-2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 is_chemical = 1 ;
+	 constituentType = 65531 ;
 	}
 #Ozone emissions
 'kg m**-2 s**-1' = {
@@ -12025,6 +12091,24 @@
 	 parameterCategory = 219 ;
 	 parameterNumber = 220 ;
 	}
+#Atmosphere emission mass flux of Anthropogenic volatile organic compounds 
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 is_chemical = 1 ;
+	 constituentType = 65532 ;
+	}
+#Atmosphere emission mass flux of Biomass burning volatile organic compounds 
+'kg m**-2 s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 65531 ;
+	 is_chemical = 1 ;
+	}
 #Ozone deposition velocity
 'm s**-1' = {
 	 discipline = 192 ;
@@ -13261,6 +13345,24 @@
 	 parameterCategory = 221 ;
 	 parameterNumber = 206 ;
 	}
+#Dry deposition velocity of Anthropogenic volatile organic compounds 
+'m s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 is_chemical = 1 ;
+	 constituentType = 65532 ;
+	}
+#Dry deposition velocity of Biomass burning volatile organic compounds 
+'m s**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 is_chemical = 1 ;
+	 constituentType = 65531 ;
+	}
 #Total sky direct solar radiation at surface
 'J m**-2' = {
 	 discipline = 192 ;
@@ -13600,6 +13702,58 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 103 ;
 	}
+#Solar induced Chlorophyll fluorescence at 740nm
+'10**-6 W m**-2 sr**-1 m**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 scaledValueOfFirstWavelength = 740 ;
+	 typeOfWavelengthInterval = 11 ;
+	 is_aerosol_optical = 1 ;
+	}
+#Solar induced Chlorophyll fluorescence at 755nm
+'10**-6 W m**-2 sr**-1 m**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 scaledValueOfFirstWavelength = 755 ;
+	 typeOfWavelengthInterval = 11 ;
+	 is_aerosol_optical = 1 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	}
+#Solar induced Chlorophyll fluorescence at 771nm
+'10**-6 W m**-2 sr**-1 m**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 scaledValueOfFirstWavelength = 771 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 is_aerosol_optical = 1 ;
+	}
+#Solar induced Chlorophyll fluorescence at 757nm
+'10**-6 W m**-2 sr**-1 m**-1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 is_aerosol_optical = 1 ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 scaledValueOfFirstWavelength = 757 ;
+	 typeOfWavelengthInterval = 11 ;
+	}
 #Surface solar radiation downward clear-sky
 'J m**-2' = {
 	 discipline = 192 ;
@@ -13641,6 +13795,23 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 255 ;
+	}
+#Time integral of snow evaporation flux
+'kg m**-2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Surface roughness length for heat
+'m' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 200 ;
 	}
 #Stream function gradient
 'm**2 s**-1' = {
@@ -21793,54 +21964,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 6 ;
-	}
-#Lake depth
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 7 ;
-	}
-#Lake mix-layer temperature
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 8 ;
-	}
-#Lake mix-layer depth
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 9 ;
-	}
-#Lake bottom temperature
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 10 ;
-	}
-#Lake total layer temperature
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 11 ;
-	}
-#Lake shape factor
-'dimensionless' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 12 ;
-	}
-#Lake ice temperature
-'K' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 13 ;
-	}
-#Lake ice depth
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 14 ;
 	}
 #Minimum vertical gradient of refractivity inside trapping layer
 'm**-1' = {

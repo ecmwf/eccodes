@@ -205,7 +205,7 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
     }
     else {
         /* uncompressed */
-        char keystr[20] = {0,};
+        char keystr[32] = {0,};
         size_t values_len = 0;
         for (i = 0; i < numberOfSubsets; ++i) {
             long lVal = 0;
@@ -243,12 +243,12 @@ static int select_datetime(grib_accessor* a)
     grib_iarray* subsets;
     long* subsets_ar   = 0;
     size_t nsubsets    = 0;
-    char yearstr[20]   = "year";
-    char monthstr[20]  = "month";
-    char daystr[20]    = "day";
-    char hourstr[20]   = "hour";
-    char minutestr[20] = "minute";
-    char secondstr[20] = "second";
+    char yearstr[32]   = "year";
+    char monthstr[32]  = "month";
+    char daystr[32]    = "day";
+    char hourstr[32]   = "hour";
+    char minutestr[32] = "minute";
+    char secondstr[32] = "second";
 
     ret = grib_get_long(h, "compressedData", &compressed);
     if (ret)
@@ -473,14 +473,9 @@ static int select_datetime(grib_accessor* a)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    int err = 0;
     /*grib_accessor_bufr_extract_datetime_subsets *self =(grib_accessor_bufr_extract_datetime_subsets*)a;*/
 
     if (*len == 0)
         return GRIB_SUCCESS;
-    err = select_datetime(a);
-    if (err)
-        return err;
-
-    return err;
+    return select_datetime(a);
 }

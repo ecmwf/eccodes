@@ -10,7 +10,6 @@
 
 . ./include.sh
 
-REDIRECT=/dev/null
 label="grib_complex"
 temp=${label}".grib.tmp"
 temp1=${label}".1.tmp"

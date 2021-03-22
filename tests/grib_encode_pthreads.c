@@ -54,6 +54,7 @@ static int encode_file(char* input_file, char* output_file)
     grib_handle* source_handle = NULL;
     const void* buffer         = NULL;
     int err                    = 0;
+    size_t str_len = 0;
 
     FILE* in  = fopen(input_file, "rb");
     FILE* out = fopen(output_file, "wb");
@@ -86,6 +87,10 @@ static int encode_file(char* input_file, char* output_file)
             count++;
         }
         GRIB_CHECK(grib_set_long(clone_handle, "bitsPerValue", 16), 0);
+
+        /*GRIB_CHECK(grib_set_string(clone_handle, "packingType", "grid_ccsds", &str_len), 0);*/
+        GRIB_CHECK(grib_set_string(clone_handle, "packingType", "grid_simple", &str_len), 0);
+
         GRIB_CHECK(grib_set_double_array(clone_handle, "values", values, values_len), 0);
 
         /* get the coded message in a buffer */

@@ -10,34 +10,34 @@
 !
 !
 program set
-  use eccodes
-  implicit none
-  integer              :: infile,outfile
-  integer              :: igrib
+   use eccodes
+   implicit none
+   integer              :: infile, outfile
+   integer              :: igrib
 
-  infile=5
-  outfile=6
+   infile = 5
+   outfile = 6
 
-  call codes_open_file(infile, &
-       '../../data/reduced_gaussian_pressure_level.grib2','r')
+   call codes_open_file(infile, &
+                        '../../data/reduced_gaussian_pressure_level.grib2', 'r')
 
-  call codes_open_file(outfile, &
-       'out_surface_level.grib2','w')
+   call codes_open_file(outfile, &
+                        'out_surface_level.grib2', 'w')
 
-  !     a new grib message is loaded from file
-  !     igrib is the grib id to be used in subsequent calls
-  call codes_grib_new_from_file(infile,igrib)
+   !     a new grib message is loaded from file
+   !     igrib is the grib id to be used in subsequent calls
+   call codes_grib_new_from_file(infile, igrib)
 
-  call codes_set(igrib,'typeOfFirstFixedSurface','sfc')
-  call codes_set_missing(igrib,'scaleFactorOfFirstFixedSurface')
-  call codes_set_missing(igrib,'scaledValueOfFirstFixedSurface')
+   call codes_set(igrib, 'typeOfFirstFixedSurface', 'sfc')
+   call codes_set_missing(igrib, 'scaleFactorOfFirstFixedSurface')
+   call codes_set_missing(igrib, 'scaledValueOfFirstFixedSurface')
 
-  call codes_write(igrib,outfile)
+   call codes_write(igrib, outfile)
 
-  call codes_release(igrib)
+   call codes_release(igrib)
 
-  call codes_close_file(infile)
+   call codes_close_file(infile)
 
-  call codes_close_file(outfile)
+   call codes_close_file(outfile)
 
 end program set

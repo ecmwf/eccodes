@@ -261,7 +261,7 @@ grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name)
      * if(g) return g;
      */
     if (c->debug) {
-        fprintf(stderr, "ECCODES DEBUG: grib_handle_new_from_samples '%s'\n", name);
+        fprintf(stderr, "ECCODES DEBUG grib_handle_new_from_samples '%s'\n", name);
     }
 
     g = grib_external_template(c, name);
@@ -288,7 +288,7 @@ grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* nam
      *  if(g) return g;
      */
     if (c->debug) {
-        fprintf(stderr, "ECCODES DEBUG: codes_bufr_handle_new_from_samples '%s'\n", name);
+        fprintf(stderr, "ECCODES DEBUG codes_bufr_handle_new_from_samples '%s'\n", name);
     }
 
     g = bufr_external_template(c, name);
@@ -1153,9 +1153,10 @@ grib_multi_handle* grib_multi_handle_new(grib_context* c)
     grib_multi_handle* h;
     if (c == NULL)
         c = grib_context_get_default();
-    if (!c->multi_support_on)
+    if (!c->multi_support_on) {
+        grib_context_log(c, GRIB_LOG_DEBUG, "grib_multi_handle_new: Setting multi_support_on = 1");
         c->multi_support_on = 1;
-
+    }
     h = (grib_multi_handle*)grib_context_malloc_clear(c, sizeof(grib_multi_handle));
     if (h == NULL) {
         grib_context_log(c, GRIB_LOG_ERROR,

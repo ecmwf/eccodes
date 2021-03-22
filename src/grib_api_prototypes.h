@@ -961,6 +961,7 @@ long grib_get_api_version(void);
 void grib_print_api_version(FILE* out);
 const char* grib_get_package_name(void);
 grib_context* grib_context_get_default(void);
+char* codes_resolve_path(grib_context* c, const char* path);
 char* grib_context_full_defs_path(grib_context* c, const char* basename);
 char* grib_samples_path(const grib_context* c);
 char* grib_definition_path(const grib_context* c);
@@ -1475,10 +1476,11 @@ int grib_moments(grib_handle* h, double east, double north, double west, double 
 int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
 int grib2_is_PDTN_EPS(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Chemical(long productDefinitionTemplateNumber);
+int grib2_is_PDTN_ChemicalSourceSink(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
-int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
+int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_srcsink, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
 int grib_is_earth_oblate(grib_handle* h);
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val);
@@ -1499,6 +1501,7 @@ const char* extract_filename(const char* filepath);
 char** string_split(char* inputString, const char* delimiter);
 int string_to_long(const char* input, long* output);
 int string_ends_with(const char* str1, const char* str2);
+int count_char_in_string(const char* str, char c);
 
 /* functions.c */
 long grib_op_eq(long a, long b);

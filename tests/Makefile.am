@@ -8,7 +8,11 @@ TESTS = definitions.sh \
         bufr_dump_samples.sh \
         bufr_dump_subset.sh \
         bufr_json_samples.sh \
-        bufr_filter.sh \
+        bufr_filter_misc.sh \
+        bufr_filter_extract_subsets.sh \
+        bufr_filter_extract_datetime.sh \
+        bufr_filter_extract_area.sh \
+        bufr_filter_unpack_pack.sh \
         bufr_json_data.sh \
         bufr_compare.sh \
         bufr_dump_descriptors.sh \
@@ -17,6 +21,7 @@ TESTS = definitions.sh \
         bufr_get.sh \
         bufr_ls.sh \
         bufr_set.sh \
+        bufr_templates.sh \
         bufr_change_edition.sh \
         gts_ls.sh \
         gts_compare.sh \
@@ -53,13 +58,15 @@ TESTS = definitions.sh \
         grib_level.sh \
         grib_indexing.sh \
         grib_list.sh \
+        grib_element.sh \
         grib_second_order.sh \
         grib_change_scanning.sh \
         julian.sh \
         grib_statistics.sh \
         grib_tigge.sh \
         grib_uerra.sh \
-        grib_tigge_conversions.sh \
+        grib_tigge_conversions1.sh \
+        grib_tigge_conversions2.sh \
         read_any.sh \
         grib_padding.sh \
         grib_grid_lamb_az_eq_area.sh \
@@ -93,6 +100,7 @@ TESTS = definitions.sh \
         bufr_ecc-765.sh \
         bufr_ecc-875.sh \
         bufr_ecc-887.sh \
+        bufr_ecc-1187.sh \
         grib_ecc-136.sh \
         grib_ecc-967.sh \
         grib_ecc-1065.sh \
@@ -109,6 +117,8 @@ TESTS = definitions.sh \
         grib_ecc-1030.sh \
         grib_lam_gp.sh \
         grib_lam_bf.sh \
+        filter_substr.sh \
+        list_codetable_flagtable_keys.sh \
         bufr_get_element.sh \
         bufr_extract_headers.sh
 
@@ -122,7 +132,7 @@ noinst_PROGRAMS = packing_check gauss_sub read_any grib_double_cmp packing pack_
                   julian grib_read_index grib_indexing gribex_perf\
                   jpeg_perf grib_ccsds_perf so_perf png_perf grib_bpv_limit laplacian \
                   unit_tests bufr_ecc-517 grib_lam_gp grib_lam_bf grib_sh_imag \
-                  bufr_extract_headers bufr_get_element
+                  bufr_extract_headers bufr_get_element list_codetable_flagtable_keys
 
 laplacian_SOURCES = laplacian.c
 packing_SOURCES = packing.c
@@ -143,6 +153,7 @@ gauss_sub_SOURCES = gauss_sub.c
 bufr_ecc_517_SOURCES = bufr_ecc-517.c
 grib_lam_gp_SOURCES = grib_lam_gp.c
 grib_lam_bf_SOURCES = grib_lam_bf.c
+list_codetable_flagtable_keys_SOURCES = list_codetable_flagtable_keys.c
 grib_sh_imag_SOURCES = grib_sh_imag.c
 bufr_extract_headers_SOURCES = bufr_extract_headers.c
 bufr_get_element_SOURCES = bufr_get_element.c

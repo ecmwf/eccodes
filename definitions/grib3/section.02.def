@@ -1,11 +1,4 @@
 # (C) Copyright 2005- ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
 
 # Section 2 - Repetitions and Index Section
 
@@ -40,7 +33,7 @@ unsigned[4] lengthOfIndexTemplate = 0: dump,edition_specific;
 template_nofail indexTemplate "grib3/template.2.[indexTemplateNumber:i].def";
 
 #if ( addEmptySection2 == 0 ) {
-#    if ( grib2LocalSectionPresent==1 or ( section2Length>5 or new() ) ) {
+#    if ( grib3LocalSectionPresent==1 or ( section2Length>5 or new() ) ) {
 #        alias section2Used=one;
 #
 #        if(productionStatusOfProcessedData == 4 || productionStatusOfProcessedData == 5) {
@@ -49,9 +42,9 @@ template_nofail indexTemplate "grib3/template.2.[indexTemplateNumber:i].def";
 #            template  tiggeSection "grib3/local.tigge.[tiggeLocalVersion:l].def";
 #        }
 #
-#        codetable[2] grib2LocalSectionNumber 'grib3/grib2LocalSectionNumber.[centreForLocal:l].table' = 1 : dump;
+#        codetable[2] grib3LocalSectionNumber 'grib3/grib3LocalSectionNumber.[centreForLocal:l].table' = 1 : dump;
 #
-#        if (grib2LocalSectionNumber!=0) {
+#        if (grib3LocalSectionNumber!=0) {
 #            template_nofail local "grib3/local.[centreForLocal:l].def";
 #        } else {
 #            constant deleteLocalDefinition=1;
