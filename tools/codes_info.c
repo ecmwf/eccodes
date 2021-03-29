@@ -44,7 +44,9 @@ static void print_debug_info(grib_context* context)
     grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_LIBPNG=%d", HAVE_LIBPNG);
     grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_AEC=%d", aec);
     grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_ECCODES_THREADS=%d", GRIB_PTHREADS);
+#ifdef GRIB_OMP_THREADS
     grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_ECCODES_OMP_THREADS=%d", GRIB_OMP_THREADS);
+#endif
     grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_MEMFS=%d", memfs);
 }
 
