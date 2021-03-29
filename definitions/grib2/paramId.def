@@ -1166,6 +1166,14 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 23 ;
 	}
+#Tropopause pressure
+'228045' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = missing() ;
+	}
 #Height of convective cloud top
 '228046' = {
 	 discipline = 0 ;
