@@ -1172,7 +1172,7 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 7 ;
-	 typeOfSecondFixedSurface = missing() ;
+	 typeOfSecondFixedSurface = 255 ;
 	}
 #Height of convective cloud top
 'hcct' = {
