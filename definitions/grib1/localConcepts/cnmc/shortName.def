@@ -415,18 +415,18 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
+	 topLevel = 10 ;
 	 timeRangeIndicator = 4 ;
 	 bottomLevel = 100 ;
-	 topLevel = 10 ;
 	}
 #Water Runoff (10-190)
 'runoff_g_lm' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
+	 topLevel = 10 ;
 	 timeRangeIndicator = 4 ;
 	 bottomLevel = 190 ;
-	 topLevel = 10 ;
 	}
 #Water Runoff (s)
 'runoff_s' = {
@@ -1325,8 +1325,8 @@
 	 table2Version = 202 ;
 	 indicatorOfParameter = 74 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 bottomLevel = 100 ;
 	 topLevel = 10 ;
+	 bottomLevel = 100 ;
 	}
 #evergreen forest
 'for_e' = {

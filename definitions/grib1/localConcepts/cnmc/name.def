@@ -385,24 +385,24 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 86 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 bottomLevel = 190 ;
 	 topLevel = 100 ;
+	 bottomLevel = 190 ;
 	}
 #Column-integrated Soil Moisture (1) 0 -10 cm
 'Column-integrated Soil Moisture (1) 0 -10 cm' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 86 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 topLevel = 0 ;
 	 bottomLevel = 10 ;
+	 topLevel = 0 ;
 	}
 #Column-integrated Soil Moisture (2) 10-100cm
 'Column-integrated Soil Moisture (2) 10-100cm' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 86 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 bottomLevel = 100 ;
 	 topLevel = 10 ;
+	 bottomLevel = 100 ;
 	}
 #Plant cover
 'Plant cover' = {
@@ -415,27 +415,27 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
+	 bottomLevel = 100 ;
 	 timeRangeIndicator = 4 ;
 	 topLevel = 10 ;
-	 bottomLevel = 100 ;
 	}
 #Water Runoff (10-190)
 'Water Runoff (10-190)' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
+	 bottomLevel = 190 ;
 	 timeRangeIndicator = 4 ;
 	 topLevel = 10 ;
-	 bottomLevel = 190 ;
 	}
 #Water Runoff (s)
 'Water Runoff (s)' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 bottomLevel = 10 ;
 	 timeRangeIndicator = 4 ;
 	 topLevel = 0 ;
+	 bottomLevel = 10 ;
 	}
 #Sea Ice Cover ( 0= free, 1=cover)
 'Sea Ice Cover ( 0= free, 1=cover)' = {
@@ -1325,8 +1325,8 @@
 	 table2Version = 202 ;
 	 indicatorOfParameter = 74 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 topLevel = 10 ;
 	 bottomLevel = 100 ;
+	 topLevel = 10 ;
 	}
 #evergreen forest
 'evergreen forest' = {

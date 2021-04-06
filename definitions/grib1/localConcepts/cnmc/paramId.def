@@ -401,8 +401,8 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 86 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 topLevel = 10 ;
 	 bottomLevel = 100 ;
+	 topLevel = 10 ;
 	}
 #Plant cover
 '500065' = {
@@ -415,27 +415,27 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
+	 bottomLevel = 100 ;
 	 topLevel = 10 ;
 	 timeRangeIndicator = 4 ;
-	 bottomLevel = 100 ;
 	}
 #Water Runoff (10-190)
 '500067' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
+	 bottomLevel = 190 ;
 	 topLevel = 10 ;
 	 timeRangeIndicator = 4 ;
-	 bottomLevel = 190 ;
 	}
 #Water Runoff (s)
 '500068' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
+	 timeRangeIndicator = 4 ;
 	 bottomLevel = 10 ;
 	 topLevel = 0 ;
-	 timeRangeIndicator = 4 ;
 	}
 #Sea Ice Cover ( 0= free, 1=cover)
 '500069' = {
