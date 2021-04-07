@@ -10,8 +10,7 @@
  */
 
 
-#ifndef mir_util_Grib_h
-#define mir_util_Grib_h
+#pragma once
 
 #include <eccodes.h>
 
@@ -102,6 +101,3 @@ struct GribReorder {
 
     static void reorder(std::vector<double>& values, long scanningMode, size_t Ni, size_t Nj);
 };
-
-
-#endif

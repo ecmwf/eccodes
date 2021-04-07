@@ -10,8 +10,7 @@
  */
 
 
-#ifndef mir_repres_other_ORCA_h
-#define mir_repres_other_ORCA_h
+#pragma once
 
 #include <string>
 
@@ -120,6 +119,3 @@ private:
 }  // namespace other
 }  // namespace repres
 }  // namespace mir
-
-
-#endif
