@@ -31,11 +31,16 @@ namespace other {
 
 // order is important for makeName()
 static const std::vector<std::pair<std::string, std::string>> grib_keys{
-    {"orca_name", "unstructuredGridType"}, {"orca_staggering", "unstructuredGridSubtype"}, {"uid", "uuidOfHGrid"}};
+    {"orca_name", "unstructuredGridType"}, {"orca_arrangement", "unstructuredGridSubtype"}, {"uid", "uuidOfHGrid"}};
+
+
+ORCA::ORCA(const atlas::util::Spec& spec) :
+    Gridded(util::BoundingBox()), // assumed global!
+    spec_(spec) {}
 
 
 ORCA::ORCA(const std::string& name) :
-    Gridded(util::BoundingBox()), spec_(atlas::util::SpecRegistry<atlas::Grid>::lookup(name)) {}
+    ORCA(atlas::util::SpecRegistry<atlas::Grid>::lookup(name)) {}
 
 
 ORCA::ORCA(const param::MIRParametrisation& param) :
@@ -106,13 +111,13 @@ Iterator* ORCA::iterator() const {
         size_t count_;
         const size_t total_;
 
-        void print(std::ostream& out) const {
+        void print(std::ostream& out) const override {
             out << "ORCAIterator[";
             Iterator::print(out);
             out << ",count=" << count_ << ",total=" << total_ << "]";
         }
 
-        bool next(Latitude& _lat, Longitude& _lon) {
+        bool next(Latitude& _lat, Longitude& _lon) override {
             if (it_.next(point_)) {
                 _lat = point_.lat();
                 _lon = point_.lon();
@@ -149,8 +154,6 @@ void ORCA::fill(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
         params.meshGenerator_ = "orca";
     }
-    params.set("fixup", true);                     // This makes sure that there are no invalid elements
-    params.set("force_include_south_pole", true);  // Add South Pole virtual points
 }
 
 

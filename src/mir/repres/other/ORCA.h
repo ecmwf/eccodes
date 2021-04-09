@@ -35,6 +35,7 @@ public:
     ORCA(const std::string& id);
     ORCA(const param::MIRParametrisation&);
     ORCA(const ORCA&) = delete;
+    ORCA(const atlas::util::Spec& spec);
 
     // -- Destructor
 
