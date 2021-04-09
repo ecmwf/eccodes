@@ -34,13 +34,8 @@ static const std::vector<std::pair<std::string, std::string>> grib_keys{
     {"orca_name", "unstructuredGridType"}, {"orca_arrangement", "unstructuredGridSubtype"}, {"uid", "uuidOfHGrid"}};
 
 
-ORCA::ORCA(const atlas::util::Spec& spec) :
-    Gridded(util::BoundingBox()), // assumed global!
-    spec_(spec) {}
-
-
-ORCA::ORCA(const std::string& name) :
-    ORCA(atlas::util::SpecRegistry<atlas::Grid>::lookup(name)) {}
+ORCA::ORCA(const std::string& uid) :
+    Gridded(util::BoundingBox() /*assumed global*/), spec_(atlas::util::SpecRegistry<atlas::Grid>::lookup(uid)) {}
 
 
 ORCA::ORCA(const param::MIRParametrisation& param) :
