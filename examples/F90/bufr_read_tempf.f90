@@ -17,7 +17,7 @@
 ! below might not work directly for other types of TEMP messages than the one used in the
 ! example. It is advised to use bufr_dump first to understand the structure of these messages.
 !
-program bufr_read_temp
+program bufr_read_tempf
    use eccodes
    implicit none
    integer            :: ifile
@@ -44,11 +44,11 @@ program bufr_read_temp
 
    call codes_open_file(ifile, '../../data/bufr/PraticaTemp.bufr', 'r')
 
-   ! the first bufr message is loaded from file
-   ! ibufr is the bufr id to be used in subsequent calls
+   ! the first BUFR message is loaded from file
+   ! ibufr is the BUFR id to be used in subsequent calls
    call codes_bufr_new_from_file(ifile, ibufr, iret)
 
-   ! do while (iret/=CODES_END_OF_FILE)
+   ! loop through all messages in the file
    do while (iret /= CODES_END_OF_FILE .AND. status_time == CODES_SUCCESS)
 
       ! we need to instruct ecCodes to expand all the descriptors
@@ -57,7 +57,6 @@ program bufr_read_temp
       ! In our BUFR message verticalSoundingSignificance is always followed by
       !      geopotential, airTemperature, dewpointTemperature,
       !      windDirection, windSpeed and pressure.
-      !
 
       count = count + 1
       llskip = .False.
@@ -157,21 +156,21 @@ program bufr_read_temp
                wdirVal(i), wspVal(i), INT(vssVal(i)), Note
          end do
 
-         ! free arrays
+         ! free allocated arrays
          deallocate (dlatVal, dlonVal, vssVal)
          deallocate (presVal, zVal, tVal, tdVal, wdirVal, wspVal)
+         deallocate (lat, lon)
       END IF
       IF (ALLOCATED(timeVal)) deallocate (timeVal)
 
-      ! release the bufr message
+      ! release the BUFR message
       call codes_release(ibufr)
 
-      ! load the next bufr message
+      ! load the next BUFR message
       call codes_bufr_new_from_file(ifile, ibufr, iret)
 
    end do
 
-   ! close file
    call codes_close_file(ifile)
 
-end program bufr_read_temp
+end program bufr_read_tempf
