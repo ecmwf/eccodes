@@ -7,9 +7,9 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! Description: How to read radiosonde data from TEMP BUFR messages.
-! This version also lists the position information from the WMO list
-! (now OSCAR/Surface) - ECMWF version
+! Description: read and print radiosonde data from TEMP BUFR messages.
+! If available this version also lists the position information from the WMO list
+! (now OSCAR/Surface) appended to the reports by ECMWF
 !
 ! Author: Bruce Ingleby
 !
@@ -34,6 +34,7 @@ program bufr_read_tempf
    logical            :: llskip
    real(kind=8)       :: year, month, day, hour, minute, second
    real(kind=8)       :: htg, htp, htec = 0, sondeType
+   ! real(kind=8), dimension(:), allocatable :: descriptors
    real(kind=8), dimension(:), allocatable :: lat, lon
    real(kind=8), dimension(:), allocatable :: timeVal, dlatVal, dlonVal, vssVal
    real(kind=8), dimension(:), allocatable :: presVal, zVal, tVal, tdVal, wdirVal, wspVal
@@ -51,9 +52,14 @@ program bufr_read_tempf
    ! loop through all messages in the file
    do while (iret /= CODES_END_OF_FILE .AND. status_time == CODES_SUCCESS)
 
+      ! Can check the template used
+      ! call codes_get(ibufr,'unexpandedDescriptors',descriptors)
+      ! write(0,*) 'Template: ', descriptors
+      ! IF (descriptors(1) /= 309056.0) GOTO 999 ! only list descent profiles
+
       ! we need to instruct ecCodes to expand all the descriptors
       ! i.e. unpack the data values
-      call codes_set(ibufr, "unpack", 1); 
+      call codes_set(ibufr, "unpack", 1);
       ! In our BUFR message verticalSoundingSignificance is always followed by
       !      geopotential, airTemperature, dewpointTemperature,
       !      windDirection, windSpeed and pressure.
@@ -68,6 +74,8 @@ program bufr_read_tempf
       IF (statid_missing == 1) statid = "MISSING"
       call codes_get(ibufr, 'blockNumber', blockNumber)
       call codes_get(ibufr, 'stationNumber', stationNumber)
+      IF (blockNumber <= 99.0 .AND. stationNumber <= 1000) write(statid,'(I2.2,I3.3,3X)') blockNumber,stationNumber
+
       call codes_get(ibufr, 'year', year)
       call codes_get(ibufr, 'month', month)
       call codes_get(ibufr, 'day', day)
@@ -92,22 +100,22 @@ program bufr_read_tempf
       ! Ascent (skip incomplete reports for now)
       call codes_get(ibufr, 'timePeriod', timeVal, status_time)
       IF (status_time /= CODES_SUCCESS) THEN
-         write (*, '(A,I7,A,I2.2,A,I3.3,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ', count, &
-            ' ', blockNumber, ' ', stationNumber, ymd, hms, lat(1), lon(1), htg, htp, INT(sondeType)
+         write (*, '(A,I7,A,A8,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ', count, &
+            ' ', statid, ymd, hms, lat(1), lon(1), htg, htp, INT(sondeType)
          write (*, '(A)') 'Missing times - skip'
          llskip = .True.
       END IF
       call codes_get(ibufr, 'pressure', presVal, status_p)
       IF (status_p /= CODES_SUCCESS) THEN
-         write (*, '(A,I7,A,I2.2,A,I3.3,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ', count, &
-            ' ', blockNumber, ' ', stationNumber, ymd, hms, lat(1), lon(1), htg, htp, INT(sondeType)
+         write (*, '(A,I7,A,A8,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ', count, &
+            ' ', statid, ymd, hms, lat(1), lon(1), htg, htp, INT(sondeType)
          write (*, '(A)') 'Missing pressures - skip'
          llskip = .True.
       END IF
       call codes_get(ibufr, 'nonCoordinateGeopotentialHeight', zVal, status_ht)
       IF (status_ht /= CODES_SUCCESS) THEN
-         write (*, '(A,I7,A,I2.2,A,I3.3,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ', count, &
-            ' ', blockNumber, ' ', stationNumber, ymd, hms, lat(1), lon(1), htg, htp, INT(sondeType)
+         write (*, '(A,I7,A,A8,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ', count, &
+            ' ', statid, ymd, hms, lat(1), lon(1), htg, htp, INT(sondeType)
          write (*, '(A)') 'Missing heights - skip'
          llskip = .True.
       END IF
@@ -118,7 +126,6 @@ program bufr_read_tempf
          call codes_get(ibufr, 'latitudeDisplacement', dlatVal)
          call codes_get(ibufr, 'longitudeDisplacement', dlonVal)
          call codes_get(ibufr, 'extendedVerticalSoundingSignificance', vssVal)
-         !call codes_get(ibufr,'geopotentialHeight',zVal)
          call codes_get(ibufr, 'airTemperature', tVal)
          call codes_get(ibufr, 'dewpointTemperature', tdVal)
          call codes_get(ibufr, 'windDirection', wdirVal)
@@ -128,11 +135,10 @@ program bufr_read_tempf
          sizews = size(wspVal)
 
          ! ---- Print the values --------------------------------
-         write (*, '(A,A72)') 'Statid: ', statid
-         write (*, '(A,I7,A,I2.2,A,I3.3,I9,I7.6,F9.3,F10.3,2F7.1,I4,I5)') 'Ob: ', count, &
-            ' ', blockNumber, ' ', stationNumber, ymd, hms, lat(1), lon(1), htg, htp, INT(sondeType), sizews
-         IF (status_ht == CODES_SUCCESS) write (*, '(A,F9.3,F10.3,F7.1)') &
-            'WMO list lat, lon, ht: ', lat(1), lon(1), htec
+         write (*, '(A,I7,A,A8,I9,I7.6,F9.3,F10.3,2F7.1,I4,I5)') 'Ob: ', count, &
+            ' ', statid, ymd, hms, lat(1), lon(1), htg, htp, INT(sondeType), sizews
+         IF (status_ht == CODES_SUCCESS .AND. SIZE(lat)>1) write (*, '(A,F9.3,F10.3,F7.1)') &
+            'WMO list lat, lon, ht: ', lat(2), lon(2), htec
          IF (status_rsno == CODES_SUCCESS) write (*, '(A,A,A)') &
             'Radiosonde number/software: ', rsnumber, rssoftware
          write (*, '(A)') 'level  dtime   dlat   dlon pressure geopotH airTemp  dewPtT windDir  windSp  signif'
@@ -140,14 +146,12 @@ program bufr_read_tempf
             Note = '        '
             iflag = vssVal(i)
             IF (i > 1) THEN
-               IF (presVal(i) > presVal(i - 1) .OR. zVal(i) < zVal(i - 1) &
-                   .OR. timeVal(i) < timeVal(i - 1)) Note = ' OOO    '
                IF ((timeVal(i) - timeVal(i - 1)) > 120) Note = ' tjump  '
                IF (ABS(dlatVal(i) - dlatVal(i - 1)) > 0.1 .OR. &
                    ABS(dlonVal(i) - dlonVal(i - 1)) > 0.1) THEN
-                  Note = ' pjump  '
+                  Note = ' lljump '
                   IF (dlatVal(i) == CODES_MISSING_DOUBLE .OR. &
-                      dlatVal(i - 1) == CODES_MISSING_DOUBLE) Note = ' pmiss  '
+                      dlatVal(i - 1) == CODES_MISSING_DOUBLE) Note = ' llmiss '
                END IF
             END IF
             IF (.NOT. llstdonly .OR. BTEST(iflag, 16)) &
@@ -156,13 +160,22 @@ program bufr_read_tempf
                wdirVal(i), wspVal(i), INT(vssVal(i)), Note
          end do
 
-         ! free allocated arrays
-         deallocate (dlatVal, dlonVal, vssVal)
-         deallocate (presVal, zVal, tVal, tdVal, wdirVal, wspVal)
-         deallocate (lat, lon)
       END IF
+      ! free allocated arrays
       IF (ALLOCATED(timeVal)) deallocate (timeVal)
+      IF (ALLOCATED(dlatVal)) deallocate(dlatVal)
+      IF (ALLOCATED(dlonVal)) deallocate(dlonVal)
+      IF (ALLOCATED(vssVal))  deallocate(vssVal)
+      IF (ALLOCATED(presVal)) deallocate(presVal)
+      IF (ALLOCATED(zVal))    deallocate(zVal)
+      IF (ALLOCATED(tVal))    deallocate(tVal)
+      IF (ALLOCATED(tdVal))   deallocate(tdVal)
+      IF (ALLOCATED(wdirVal)) deallocate(wdirVal)
+      IF (ALLOCATED(wspVal))  deallocate(wspVal)
+      IF (ALLOCATED(lat))     deallocate(lat)
+      IF (ALLOCATED(lon))     deallocate(lon)
 
+      ! 999 CONTINUE
       ! release the BUFR message
       call codes_release(ibufr)
 
