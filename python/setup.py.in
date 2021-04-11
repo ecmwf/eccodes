@@ -74,4 +74,4 @@ setup(name='eccodes',
       url='https://confluence.ecmwf.int/display/ECC/ecCodes+Home',
       download_url='https://confluence.ecmwf.int/display/ECC/Releases',
       ext_modules=[Extension('gribapi._gribapi_swig', **attdict)],
-      packages=['eccodes', 'eccodes.high_level', 'gribapi'])
+      packages=['eccodes', 'gribapi'])
