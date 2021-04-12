@@ -2028,7 +2028,7 @@
 	 parameterNumber = 160 ;
 	}
 #Anisotropy of sub-gridscale orography difference
-'~' = {
+'m' = {
 	 discipline = 192 ;
 	 parameterCategory = 200 ;
 	 parameterNumber = 161 ;
@@ -18438,13 +18438,13 @@
 	 parameterNumber = 159 ;
 	}
 #Standard deviation of orography anomaly
-'~' = {
+'m' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 160 ;
 	}
 #Anisotropy of sub-gridscale orography anomaly
-'~' = {
+'m' = {
 	 discipline = 192 ;
 	 parameterCategory = 171 ;
 	 parameterNumber = 161 ;

@@ -141,7 +141,7 @@
 158 tspdiff Tendency of surface pressure difference (Pa s**-1)
 159 blhdiff Boundary layer height difference (m)
 160 sdordiff Standard deviation of orography difference (~)
-161 isordiff Anisotropy of sub-gridscale orography difference (~)
+161 isordiff Anisotropy of sub-gridscale orography difference (m)
 162 anordiff Angle of sub-gridscale orography difference (radians)
 163 slordiff Slope of sub-gridscale orography difference (~)
 164 tccdiff Total cloud cover difference ((0 - 1))
