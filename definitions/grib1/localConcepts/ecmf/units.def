@@ -1170,7 +1170,7 @@
 	 indicatorOfParameter = 159 ;
 	}
 #Standard deviation of orography
-'~' = {
+'m' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 160 ;
 	}
@@ -2800,12 +2800,12 @@
 	 indicatorOfParameter = 159 ;
 	}
 #Standard deviation of orography difference
-'~' = {
+'m' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 160 ;
 	}
 #Anisotropy of sub-gridscale orography difference
-'m' = {
+'~' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 161 ;
 	}
@@ -14155,7 +14155,7 @@
 	 indicatorOfParameter = 160 ;
 	}
 #Anisotropy of sub-gridscale orography anomaly
-'m' = {
+'~' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 161 ;
 	}
