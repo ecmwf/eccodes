@@ -157,7 +157,7 @@
 157 r Relative humidity (%)
 158 tsp Tendency of surface pressure (Pa s**-1)
 159 blh Boundary layer height (m)
-160 sdor Standard deviation of orography (~)
+160 sdor Standard deviation of orography (m)
 161 isor Anisotropy of sub-gridscale orography (~)
 162 anor Angle of sub-gridscale orography (radians)
 163 slor Slope of sub-gridscale orography (~)
