@@ -26,14 +26,14 @@ program bufr_read_tempf
    integer            :: i, count = 0
    integer            :: iflag
    integer            :: status_id, status_ht, status_time = 0, status_p
-   integer            :: status_rsno, status_rssoft, statid_missing
+   integer            :: status_rsno, status_rssoft, status_balloonwt, statid_missing
    integer(kind=4)    :: sizews
    integer(kind=4)    :: blockNumber, stationNumber
    integer(kind=4)    :: ymd, hms
    logical            :: llstdonly = .True.  ! Set True to list standard levels only
    logical            :: llskip
    real(kind=8)       :: year, month, day, hour, minute, second
-   real(kind=8)       :: htg, htp, htec = 0, sondeType
+   real(kind=8)       :: htg, htp, htec = 0, sondeType, balloonwt
    ! real(kind=8), dimension(:), allocatable :: descriptors
    real(kind=8), dimension(:), allocatable :: lat, lon
    real(kind=8), dimension(:), allocatable :: timeVal, dlatVal, dlonVal, vssVal
@@ -96,6 +96,8 @@ program bufr_read_tempf
       hms = INT(hour)*10000 + INT(minute)*100 + INT(second)
       call codes_get(ibufr, 'radiosondeSerialNumber', rsnumber, status_rsno)
       call codes_get(ibufr, 'softwareVersionNumber', rssoftware, status_rssoft)
+      call codes_get(ibufr, 'weightOfBalloon', balloonwt, status_balloonwt)
+      IF (status_balloonwt /= CODES_SUCCESS) balloonwt = 0.0
 
       ! Ascent (skip incomplete reports for now)
       call codes_get(ibufr, 'timePeriod', timeVal, status_time)
@@ -137,32 +139,22 @@ program bufr_read_tempf
          ! ---- Print the values --------------------------------
          write (*, '(A,I7,A,A8,I9,I7.6,F9.3,F10.3,2F7.1,I4,I5)') 'Ob: ', count, &
             ' ', statid, ymd, hms, lat(1), lon(1), htg, htp, INT(sondeType), sizews
+         IF (status_rsno == CODES_SUCCESS) write (*, '(A,A,A,F7.3)') &
+            'RS number/software/balloonwt: ', rsnumber, rssoftware, balloonwt
          IF (status_ht == CODES_SUCCESS .AND. SIZE(lat)>1) write (*, '(A,F9.3,F10.3,F7.1)') &
             'WMO list lat, lon, ht: ', lat(2), lon(2), htec
-         IF (status_rsno == CODES_SUCCESS) write (*, '(A,A,A)') &
-            'Radiosonde number/software: ', rsnumber, rssoftware
          write (*, '(A)') 'level  dtime   dlat   dlon pressure geopotH airTemp  dewPtT windDir  windSp  signif'
          do i = 1, sizews
-            Note = '        '
             iflag = vssVal(i)
-            IF (i > 1) THEN
-               IF ((timeVal(i) - timeVal(i - 1)) > 120) Note = ' tjump  '
-               IF (ABS(dlatVal(i) - dlatVal(i - 1)) > 0.1 .OR. &
-                   ABS(dlonVal(i) - dlonVal(i - 1)) > 0.1) THEN
-                  Note = ' lljump '
-                  IF (dlatVal(i) == CODES_MISSING_DOUBLE .OR. &
-                      dlatVal(i - 1) == CODES_MISSING_DOUBLE) Note = ' llmiss '
-               END IF
-            END IF
             IF (.NOT. llstdonly .OR. BTEST(iflag, 16)) &
-               write (*, '(I5,F7.1,2F7.3,F9.1,F8.1,4F8.2,I8,A)') i, timeVal(i), &
-               dlatVal(i), dlonVal(i), presVal(i), zVal(i), tVal(i), tVal(i) - tdVal(i), &
-               wdirVal(i), wspVal(i), INT(vssVal(i)), Note
+               write (*, '(I5,F7.1,2F7.3,F9.1,F8.1,4F8.2,I8)') i, timeVal(i), &
+               dlatVal(i), dlonVal(i), presVal(i), zVal(i), tVal(i), tdVal(i), &
+               wdirVal(i), wspVal(i), INT(vssVal(i))
          end do
 
       END IF
       ! free allocated arrays
-      IF (ALLOCATED(timeVal)) deallocate (timeVal)
+      IF (ALLOCATED(timeVal)) deallocate(timeVal)
       IF (ALLOCATED(dlatVal)) deallocate(dlatVal)
       IF (ALLOCATED(dlonVal)) deallocate(dlonVal)
       IF (ALLOCATED(vssVal))  deallocate(vssVal)
