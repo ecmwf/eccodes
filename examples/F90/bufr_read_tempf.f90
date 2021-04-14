@@ -41,7 +41,6 @@ program bufr_read_tempf
    character(len=128) :: statid
    character(len=16)  :: rsnumber
    character(len=16)  :: rssoftware
-   character(len=8)   :: Note
 
    call codes_open_file(ifile, '../../data/bufr/PraticaTemp.bufr', 'r')
 

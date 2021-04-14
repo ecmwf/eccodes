@@ -304,7 +304,6 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
 {
     size_t size = 0, len = 0, replen = 0, j = 0;
     unsigned char* bval      = NULL;
-    char* p                  = NULL;
     double* dval             = 0;
     long* lval               = 0;
     char** cvals             = NULL;
