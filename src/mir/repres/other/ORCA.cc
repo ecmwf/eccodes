@@ -55,7 +55,7 @@ bool ORCA::sameAs(const Representation& other) const {
 }
 
 
-void ORCA::validate(const data::MIRValuesVector& values) const {
+void ORCA::validate(const MIRValuesVector& values) const {
     size_t count = numberOfPoints();
 
     Log::debug() << "ORCA::validate checked " << Log::Pretty(values.size(), {"value"}) << ", iterator counts "

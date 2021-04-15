@@ -192,7 +192,7 @@ bool RegularGrid::includesSouthPole() const {
 }
 
 
-void RegularGrid::reorder(long, mir::data::MIRValuesVector&) const {
+void RegularGrid::reorder(long, MIRValuesVector&) const {
     // do not reorder, iterator is doing the right thing
     // FIXME this function should not be overriding to do nothing
 }
