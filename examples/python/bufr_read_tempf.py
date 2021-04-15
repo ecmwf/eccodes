@@ -1,5 +1,5 @@
 #
-# Copyright 2005-2018 ECMWF.
+# Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -43,8 +43,6 @@ def example():
         bufr = codes_bufr_new_from_file(f)
         if bufr is None:
             break
-        # if cnt>9:
-        #     break  # Fix
         cnt += 1
 
         # desc = codes_get_array(bufr, 'unexpandedDescriptors')
@@ -61,15 +59,15 @@ def example():
         except Exception:
             sid = "UNKNOWN"
 
-        statid = "00000"
+        statid = "00000   "
         try:
             block = codes_get(bufr, "blockNumber")
             stnum = codes_get(bufr, "stationNumber")
             if (block > 0) and (block < 100):  # or block != CODES_MISSING_LONG
-                statid = str.format("%.2i%.3i" % (block, stnum))
+                statid = str.format("%.2i%.3i   " % (block, stnum))
         except Exception:
-            statid = "00000"
-        if statid == "00000":
+            statid = "00000   "
+        if statid == "00000   ":
             statid = sid[0:8]
 
         # subtype = codes_get(bufr,'rdbSubtype')
@@ -127,7 +125,7 @@ def example():
             htec = codes_get(
                 bufr, "heightOfStation"
             )  # Height from WMO list (appended by ECMWF)
-            print("WMO list lat, lon, ht: ", statid, slat[1], slon[1], htec)
+            print("WMO list lat, lon, ht: %7.3f %8.3f %6.1f" % (slat[1], slon[1], htec))
         except Exception:
             htec = 0
 
@@ -151,18 +149,18 @@ def example():
         windd = codes_get_array(bufr, "windDirection")
         dtime = np.where(dtime != CODES_MISSING_LONG, dtime, np.nan)
         dlat = np.where(dlat != CODES_MISSING_DOUBLE, dlat, np.nan)
-        # dlat = np.where(dlat>-1E10, dlat, np.nan)
-        dlon = np.where(dlon > -1e10, dlon, np.nan)
-        airt = np.where(airt > -1e10, airt, np.nan)
-        dewt = np.where(dewt > -1e10, dewt, np.nan)
+        dlon = np.where(dlon != CODES_MISSING_DOUBLE, dlon, np.nan)
+        airt = np.where(airt != CODES_MISSING_DOUBLE, airt, np.nan)
+        dewt = np.where(dewt != CODES_MISSING_DOUBLE, dewt, np.nan)
         windd = np.where(windd != CODES_MISSING_LONG, windd, np.nan)
-        windsp = np.where(windsp > -1e10, windsp, np.nan)
-        geopoth = np.where(geopoth > -1e10, geopoth, np.nan)
-        pressure = np.where(pressure > -1e10, pressure, np.nan)
+        windsp = np.where(windsp != CODES_MISSING_DOUBLE, windsp, np.nan)
+        geopoth = np.where(geopoth != CODES_MISSING_DOUBLE, geopoth, np.nan)
+        pressure = np.where(pressure != CODES_MISSING_DOUBLE, pressure, np.nan)
+        # pressure = np.where(pressure > -1e10, pressure, np.nan)
         print(
             "level  dtime   dlat   dlon pressure geopotH airTemp  dewPtT windDir  windSp  signif"
         )
-        for i in range(0, len(windsp) - 1):
+        for i in range(0, len(windsp)):
             if (not llstdonly) or vsSignif[i] != 65536:
                 continue
             print(
