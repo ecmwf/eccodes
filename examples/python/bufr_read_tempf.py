@@ -77,11 +77,11 @@ def example():
         slat = codes_get_array(bufr, "latitude")
         slon = codes_get_array(bufr, "longitude")
         try:
-            htg = codes_get(ibufr, "heightOfStationGroundAboveMeanSeaLevel")
+            htg = codes_get(bufr, "heightOfStationGroundAboveMeanSeaLevel")
         except Exception:
             htg = -999.0
         try:
-            htp = codes_get(ibufr, "heightOfBarometerAboveMeanSeaLevel")
+            htp = codes_get(bufr, "heightOfBarometerAboveMeanSeaLevel")
         except Exception:
             htp = -999.0
         year = codes_get(bufr, "year")
