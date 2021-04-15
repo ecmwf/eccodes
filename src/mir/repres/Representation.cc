@@ -14,6 +14,7 @@
 
 #include <memory>
 #include <mutex>
+#include <sstream>
 
 #include "mir/data/MIRField.h"
 #include "mir/key/grid/Grid.h"

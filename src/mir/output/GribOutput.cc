@@ -12,8 +12,9 @@
 
 #include "mir/output/GribOutput.h"
 
-#include <istream>
 #include <mutex>
+#include <ostream>
+#include <sstream>
 
 #include "eckit/config/Resource.h"
 
@@ -286,7 +287,7 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
         }
 
         if (Log::debug()) {
-            const std::streamsize p(Log::debug().precision(12));
+            auto p(Log::debug().precision(12));
             X(info.grid.grid_type);
             X(info.grid.Ni);
             X(info.grid.Nj);

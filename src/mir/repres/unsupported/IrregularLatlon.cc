@@ -13,7 +13,7 @@
 #include "mir/repres/unsupported/IrregularLatlon.h"
 
 #include <cmath>
-#include <iostream>
+#include <ostream>
 
 #include "eckit/utils/MD5.h"
 

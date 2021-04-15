@@ -13,9 +13,10 @@
 #include "mir/repres/other/UnstructuredGrid.h"
 
 #include <fstream>
-#include <iostream>
 #include <memory>
+#include <ostream>
 #include <set>
+#include <sstream>
 #include <utility>
 
 #include "eckit/config/Resource.h"

@@ -13,6 +13,7 @@
 #include "mir/repres/regular/RegularGrid.h"
 
 #include <ostream>
+#include <sstream>
 
 #include "eckit/config/Resource.h"
 #include "eckit/utils/MD5.h"
@@ -275,7 +276,7 @@ void RegularGrid::makeName(std::ostream& out) const {
 
 bool RegularGrid::sameAs(const Representation& other) const {
     auto name = [](const RegularGrid& repres) {
-        std::stringstream str;
+        std::ostringstream str;
         repres.makeName(str);
         return str.str();
     };

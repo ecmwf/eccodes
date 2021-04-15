@@ -14,7 +14,7 @@
 
 #include <algorithm>
 #include <cmath>
-#include <iostream>
+#include <ostream>
 
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"

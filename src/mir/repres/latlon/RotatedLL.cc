@@ -12,7 +12,7 @@
 
 #include "mir/repres/latlon/RotatedLL.h"
 
-#include <iostream>
+#include <ostream>
 
 #include "mir/repres/Iterator.h"
 #include "mir/util/Atlas.h"

@@ -12,8 +12,8 @@
 
 #include "mir/repres/latlon/LatLon.h"
 
-#include <iostream>
 #include <memory>
+#include <ostream>
 #include <sstream>
 
 #include "eckit/types/FloatCompare.h"

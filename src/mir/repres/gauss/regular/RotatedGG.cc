@@ -12,7 +12,7 @@
 
 #include "mir/repres/gauss/regular/RotatedGG.h"
 
-#include <iostream>
+#include <ostream>
 #include <utility>
 
 #include "mir/repres/gauss/GaussianIterator.h"

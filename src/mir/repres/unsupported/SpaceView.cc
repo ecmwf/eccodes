@@ -12,7 +12,7 @@
 
 #include "mir/repres/unsupported/SpaceView.h"
 
-#include <iostream>
+#include <ostream>
 
 
 namespace mir {

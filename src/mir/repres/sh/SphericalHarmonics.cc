@@ -12,7 +12,7 @@
 
 #include "mir/repres/sh/SphericalHarmonics.h"
 
-#include <iostream>
+#include <ostream>
 
 #include "mir/api/MIREstimation.h"
 #include "mir/api/MIRJob.h"

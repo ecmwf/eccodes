@@ -12,7 +12,7 @@
 
 #include "mir/repres/latlon/RegularLL.h"
 
-#include <iostream>
+#include <ostream>
 
 #include "mir/iterator/detail/RegularIterator.h"
 #include "mir/repres/Iterator.h"
