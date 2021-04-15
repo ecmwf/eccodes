@@ -28,7 +28,7 @@ import sys
 import numpy as np
 from eccodes import *
 
-INPUT = '../../data/bufr/PraticaTemp.bufr'
+INPUT = "../../data/bufr/PraticaTemp.bufr"
 VERBOSE = 1  # verbose error reporting
 
 
