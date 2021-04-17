@@ -385,8 +385,8 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 86 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 topLevel = 100 ;
 	 bottomLevel = 190 ;
+	 topLevel = 100 ;
 	}
 #Column-integrated Soil Moisture (1) 0 -10 cm
 'kg m**-2' = {
@@ -401,8 +401,8 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 86 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 topLevel = 10 ;
 	 bottomLevel = 100 ;
+	 topLevel = 10 ;
 	}
 #Plant cover
 '%' = {
@@ -416,8 +416,8 @@
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
 	 bottomLevel = 100 ;
-	 timeRangeIndicator = 4 ;
 	 topLevel = 10 ;
+	 timeRangeIndicator = 4 ;
 	}
 #Water Runoff (10-190)
 'kg m**-2' = {
@@ -425,17 +425,17 @@
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
 	 bottomLevel = 190 ;
-	 timeRangeIndicator = 4 ;
 	 topLevel = 10 ;
+	 timeRangeIndicator = 4 ;
 	}
 #Water Runoff (s)
 'kg m**-2' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 timeRangeIndicator = 4 ;
-	 topLevel = 0 ;
 	 bottomLevel = 10 ;
+	 topLevel = 0 ;
+	 timeRangeIndicator = 4 ;
 	}
 #Sea Ice Cover ( 0= free, 1=cover)
 '~' = {
@@ -1317,8 +1317,8 @@
 	 table2Version = 202 ;
 	 indicatorOfParameter = 74 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 topLevel = 0 ;
 	 bottomLevel = 10 ;
+	 topLevel = 0 ;
 	}
 #variance of soil moisture content (10-100)
 'kg**2 m**-4' = {

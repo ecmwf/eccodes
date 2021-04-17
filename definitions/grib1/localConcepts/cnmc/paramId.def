@@ -433,9 +433,9 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 timeRangeIndicator = 4 ;
 	 bottomLevel = 10 ;
 	 topLevel = 0 ;
+	 timeRangeIndicator = 4 ;
 	}
 #Sea Ice Cover ( 0= free, 1=cover)
 '500069' = {
@@ -1317,16 +1317,16 @@
 	 table2Version = 202 ;
 	 indicatorOfParameter = 74 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 topLevel = 0 ;
 	 bottomLevel = 10 ;
+	 topLevel = 0 ;
 	}
 #variance of soil moisture content (10-100)
 '500216' = {
 	 table2Version = 202 ;
 	 indicatorOfParameter = 74 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 topLevel = 10 ;
 	 bottomLevel = 100 ;
+	 topLevel = 10 ;
 	}
 #evergreen forest
 '500217' = {
