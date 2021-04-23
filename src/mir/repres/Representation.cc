@@ -13,7 +13,6 @@
 #include "mir/repres/Representation.h"
 
 #include <memory>
-#include <mutex>
 #include <sstream>
 
 #include "mir/data/MIRField.h"
@@ -24,6 +23,7 @@
 #include "mir/util/Domain.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Log.h"
+#include "mir/util/Mutex.h"
 
 
 namespace mir {
@@ -313,18 +313,18 @@ const Representation* Representation::globalise(data::MIRField& field) const {
 }
 
 
-static std::once_flag once;
-static std::mutex* local_mutex                          = nullptr;
+static util::once_flag once;
+static util::recursive_mutex* local_mutex               = nullptr;
 static std::map<std::string, RepresentationFactory*>* m = nullptr;
 static void init() {
-    local_mutex = new std::mutex();
+    local_mutex = new util::recursive_mutex();
     m           = new std::map<std::string, RepresentationFactory*>();
 }
 
 
 RepresentationFactory::RepresentationFactory(const std::string& name) : name_(name) {
-    std::call_once(once, init);
-    std::lock_guard<std::mutex> lock(*local_mutex);
+    util::call_once(once, init);
+    util::lock_guard<util::recursive_mutex> lock(*local_mutex);
 
     if (m->find(name) != m->end()) {
         throw exception::SeriousBug("RepresentationFactory: duplicate '" + name + "'");
@@ -336,15 +336,15 @@ RepresentationFactory::RepresentationFactory(const std::string& name) : name_(na
 
 
 RepresentationFactory::~RepresentationFactory() {
-    std::lock_guard<std::mutex> lock(*local_mutex);
+    util::lock_guard<util::recursive_mutex> lock(*local_mutex);
 
     m->erase(name_);
 }
 
 
 const Representation* RepresentationFactory::build(const param::MIRParametrisation& params) {
-    std::call_once(once, init);
-    std::lock_guard<std::mutex> lock(*local_mutex);
+    util::call_once(once, init);
+    util::lock_guard<util::recursive_mutex> lock(*local_mutex);
 
     std::string name;
     if (!params.get("gridType", name)) {
@@ -364,8 +364,8 @@ const Representation* RepresentationFactory::build(const param::MIRParametrisati
 
 
 void RepresentationFactory::list(std::ostream& out) {
-    std::call_once(once, init);
-    std::lock_guard<std::mutex> lock(*local_mutex);
+    util::call_once(once, init);
+    util::lock_guard<util::recursive_mutex> lock(*local_mutex);
 
     const char* sep = "";
     for (const auto& j : *m) {

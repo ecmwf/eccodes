@@ -15,7 +15,6 @@
 #include <algorithm>
 #include <cmath>
 #include <map>
-#include <mutex>
 #include <numeric>
 #include <ostream>
 #include <vector>
@@ -36,6 +35,7 @@
 #include "mir/util/GridBox.h"
 #include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
+#include "mir/util/Mutex.h"
 #include "mir/util/Trace.h"
 #include "mir/util/Types.h"
 
@@ -47,12 +47,12 @@ namespace other {
 
 static RepresentationBuilder<ClenshawCurtis> __representation("reduced_cc");
 
-static std::once_flag once;
-static std::mutex* mtx                            = nullptr;
+static util::once_flag once;
+static util::recursive_mutex* mtx                 = nullptr;
 static std::map<size_t, std::vector<double> >* ml = nullptr;
 
 static void init() {
-    mtx = new std::mutex();
+    mtx = new util::recursive_mutex();
     ml  = new std::map<size_t, std::vector<double> >();
 }
 
@@ -191,8 +191,8 @@ void ClenshawCurtis::fill(util::MeshGeneratorParameters& params) const {
 
 
 const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
-    std::call_once(once, init);
-    std::lock_guard<std::mutex> lock(*mtx);
+    util::call_once(once, init);
+    util::lock_guard<util::recursive_mutex> lock(*mtx);
 
     ASSERT(N > 0);
 
