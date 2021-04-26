@@ -9,7 +9,7 @@
 ! Get message lengths using two different interfaces
 ! See GRIB-292
 !
-program read_from_file
+program grib_read_from_file
   use eccodes
   implicit none
   character(len=32) :: input_grib_file
@@ -57,7 +57,7 @@ contains
     if (iret /= CODES_END_OF_FILE) then
       call codes_get_error_string(iret, error_message)
       write (*, *) 'error message: ', error_message
-      call codes_check(iret, 'read_from_file', '')
+      call codes_check(iret, 'grib_read_from_file', '')
     end if
     call codes_close_file(ifile)
 
@@ -94,7 +94,7 @@ contains
     if (iret /= CODES_END_OF_FILE) then
       call codes_get_error_string(iret, error_message)
       write (*, *) 'error message: ', error_message
-      call codes_check(iret, 'read_from_file', '')
+      call codes_check(iret, 'grib_read_from_file', '')
     end if
     call codes_close_file(ifile)
 
