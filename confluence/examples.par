@@ -14,6 +14,7 @@ GRIB (
       grib_nearest
       grib_precision
       grib_print_data
+      grib_read_from_file
       grib_samples
       grib_set_bitmap
       grib_set_data
