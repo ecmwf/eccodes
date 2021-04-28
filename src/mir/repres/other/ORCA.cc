@@ -16,6 +16,8 @@
 #include <utility>
 #include <vector>
 
+#include "atlas/grid/SpecRegistry.h"
+
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Exceptions.h"
@@ -35,7 +37,7 @@ static const std::vector<std::pair<std::string, std::string>> grib_keys{
 
 
 ORCA::ORCA(const std::string& uid) :
-    Gridded(util::BoundingBox() /*assumed global*/), spec_(atlas::util::SpecRegistry<atlas::Grid>::lookup(uid)) {}
+    Gridded(util::BoundingBox() /*assumed global*/), spec_(atlas::grid::SpecRegistry::get(uid)) {}
 
 
 ORCA::ORCA(const param::MIRParametrisation& param) :

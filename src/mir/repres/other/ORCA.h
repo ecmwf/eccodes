@@ -14,8 +14,6 @@
 
 #include <string>
 
-#include "atlas/util/Spec.h"
-
 #include "mir/repres/Gridded.h"
 #include "mir/util/Atlas.h"
 
@@ -80,7 +78,7 @@ protected:
 private:
     // -- Members
 
-    const atlas::util::Spec spec_;
+    const atlas::Grid::Spec spec_;
     mutable atlas::Grid grid_;
 
     // -- Methods
