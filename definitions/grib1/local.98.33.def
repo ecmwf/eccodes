@@ -14,11 +14,11 @@ transient secondsOfReference = 0 ;
 
 unsigned[1] numberOfForcasts=0 : dump;
 if (numberOfForcasts) {
-	unsigned[3] forecastSteps[numberOfForcasts] : dump;
+  unsigned[3] forecastSteps[numberOfForcasts] : dump;
 }
 unsigned[1] numberOfAnalysis=1 : dump;
 if (numberOfAnalysis) {
-	signed[3] analysisOffsets[numberOfAnalysis] : dump;
+  signed[3] analysisOffsets[numberOfAnalysis] : dump;
 }
 
 meta dateOfReference  g1date(centuryOfReference,yearOfReference,monthOfReference,dayOfReference) : dump;

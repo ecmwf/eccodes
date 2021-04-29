@@ -1,4 +1,5 @@
 # (C) Copyright 2005- ECMWF.
+# Forecasting Systems with Variable Resolution (Obsolete)
 
 constant GRIBEXSection1Problem = 107 - section1Length ;
 
@@ -8,12 +9,10 @@ transient grib2LocalSectionNumber=30;
 template mars_labeling "grib1/mars_labeling.def";
 constant wrongPadding=1 : hidden;
 
-
 unsigned[1] perturbationNumber : dump ;
 unsigned[1] numberOfForecastsInEnsemble : dump ;
 alias totalNumber=numberOfForecastsInEnsemble;
 alias number = perturbationNumber; 
-
 
 unsigned[1] oceanAtmosphereCoupling : dump   ;
 

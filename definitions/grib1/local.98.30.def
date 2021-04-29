@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
-
 # Forecasting Systems with Variable Resolution
+
 constant GRIBEXSection1Problem = 106 - section1Length ;
 
 # used in local definition 13
@@ -14,19 +14,18 @@ template mars_labeling "grib1/mars_labeling.def";
 
 #1->2
 if (stepType is "instant" ) {
-	if (type is "em" || type is "es" ) {
-	  alias productDefinitionTemplateNumber=epsStatisticsPoint;
-	} else {
-	  alias productDefinitionTemplateNumber=epsPoint;
-	}
+  if (type is "em" || type is "es" ) {
+    alias productDefinitionTemplateNumber=epsStatisticsPoint;
+  } else {
+    alias productDefinitionTemplateNumber=epsPoint;
+  }
 } else {
-	if (type is "em" || type is "es" ) {
-	  alias productDefinitionTemplateNumber=epsStatisticsContinous;
-	} else {
-	  alias productDefinitionTemplateNumber=epsContinous;
-	}
+  if (type is "em" || type is "es" ) {
+    alias productDefinitionTemplateNumber=epsStatisticsContinous;
+  } else {
+    alias productDefinitionTemplateNumber=epsContinous;
+  }
 }
-
 
 unsigned[1] perturbationNumber  : dump;
 alias number=perturbationNumber;
