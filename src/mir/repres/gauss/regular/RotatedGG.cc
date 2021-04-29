@@ -33,9 +33,6 @@ RotatedGG::RotatedGG(size_t N, const util::Rotation& rotation, const util::Bound
     Regular(N, bbox, angularPrecision), rotation_(rotation) {}
 
 
-RotatedGG::~RotatedGG() = default;
-
-
 void RotatedGG::print(std::ostream& out) const {
     out << "RotatedGG["
            "N="

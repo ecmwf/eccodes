@@ -29,9 +29,6 @@ RotatedOctahedral::RotatedOctahedral(size_t N, const util::Rotation& rotation, c
     Octahedral(N, bbox, angularPrecision), rotation_(rotation) {}
 
 
-RotatedOctahedral::~RotatedOctahedral() = default;
-
-
 void RotatedOctahedral::print(std::ostream& out) const {
     out << "RotatedOctahedral["
            "N="

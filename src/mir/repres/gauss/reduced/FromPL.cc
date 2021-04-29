@@ -30,9 +30,6 @@ FromPL::FromPL(size_t N, const std::vector<long>& pl, const util::BoundingBox& b
     Reduced(N, pl, bbox, angularPrecision) {}
 
 
-FromPL::~FromPL() = default;
-
-
 void FromPL::makeName(std::ostream& out) const {
     out << "R" << N_ << "-";
 

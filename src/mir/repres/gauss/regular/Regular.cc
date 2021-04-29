@@ -63,8 +63,6 @@ Regular::Regular(size_t N, const util::BoundingBox& bbox, double angularPrecisio
     setNiNj();
 }
 
-Regular::~Regular() = default;
-
 void Regular::fill(grib_info& info) const {
 
     // See copy_spec_from_ksec.c in libemos for info

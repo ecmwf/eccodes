@@ -45,9 +45,6 @@ Classic::Classic(size_t N, const util::BoundingBox& bbox, double angularPrecisio
 }
 
 
-Classic::~Classic() = default;
-
-
 void Classic::fill(grib_info& info) const {
     Reduced::fill(info);
 }

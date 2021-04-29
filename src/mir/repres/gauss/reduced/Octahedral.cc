@@ -46,9 +46,6 @@ Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox, double angularPr
 }
 
 
-Octahedral::~Octahedral() = default;
-
-
 void Octahedral::fill(grib_info& info) const {
     Reduced::fill(info);
 }

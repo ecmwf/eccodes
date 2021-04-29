@@ -33,9 +33,6 @@ RotatedFromPL::RotatedFromPL(size_t N, const std::vector<long>& pl, const util::
     FromPL(N, pl, bbox, angularPrecision), rotation_(rotation) {}
 
 
-RotatedFromPL::~RotatedFromPL() = default;
-
-
 void RotatedFromPL::print(std::ostream& out) const {
     out << "RotatedFromPL["
            "N="
