@@ -376,16 +376,13 @@ Iterator* ClenshawCurtis::iterator() const {
         const std::vector<long>& pl_;
         const std::vector<double>& latitudes_;
 
-        size_t nj_;
         size_t ni_;
-
-        Latitude lat_;
-        Longitude lon_;
-        eckit::Fraction inc_;
-
+        size_t nj_;
         size_t i_;
         size_t j_;
         size_t count_;
+
+        eckit::Fraction inc_;
     };
 
     return new ClenshawCurtisIterator(pl_, latitudes());
