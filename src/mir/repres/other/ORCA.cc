@@ -103,7 +103,7 @@ Iterator* ORCA::iterator() const {
         ::atlas::Grid::IterateLonLat lonlat_;
 
         decltype(lonlat_)::iterator it_;
-        decltype(lonlat_)::iterator::value_type point_;
+        decltype(lonlat_)::iterator::value_type p_;
 
         size_t count_;
         const size_t total_;
@@ -115,9 +115,11 @@ Iterator* ORCA::iterator() const {
         }
 
         bool next(Latitude& _lat, Longitude& _lon) override {
-            if (it_.next(point_)) {
-                _lat = point_.lat();
-                _lon = point_.lon();
+            if (it_.next(p_)) {
+                point_[0] = p_.lat();
+                point_[1] = p_.lon();
+                _lat      = p_.lat();
+                _lon      = p_.lon();
                 ++count_;
                 return true;
             }
@@ -128,7 +130,7 @@ Iterator* ORCA::iterator() const {
 
     public:
         ORCAIterator(::atlas::Grid grid) :
-            grid_(grid), lonlat_(grid.lonlat()), it_(lonlat_.begin()), count_(0), total_(grid.size()) {}
+            grid_(grid), lonlat_(grid.lonlat()), it_(lonlat_.begin()), count_(0), total_(size_t(grid.size())) {}
 
         ORCAIterator(const ORCAIterator&) = delete;
         ORCAIterator& operator=(const ORCAIterator&) = delete;
