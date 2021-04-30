@@ -980,6 +980,16 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         fprintf(stderr, "ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n", input_decimal_scale_factor);
     }
 
+    /* ECC-1201
+       TODO: make sure input packing type is preserved */
+    if (packing_spec->packing == GRIB_UTIL_PACKING_SAME_AS_INPUT &&
+        packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT)
+    {
+        if (STR_EQUAL(input_packing_type, "grid_ieee")) {
+            SET_STRING_VALUE("packingType", input_packing_type);
+        }
+    }
+
     /*if ( (*err=check_values(data_values, data_values_count))!=GRIB_SUCCESS ) {
         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Data values check failed! %s\n", grib_get_error_message(*err));
         goto cleanup;
