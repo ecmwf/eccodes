@@ -429,6 +429,8 @@ static void print_values(grib_context* c,
     if (c->gribex_mode_on)
         fprintf(stderr, "ECCODES DEBUG grib_util: GRIBEX mode is turned on!\n");
 
+    fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->editionNumber = %ld\n",
+            packing_spec->editionNumber);
     fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->packing = %s\n",
             get_packing_spec_packing_name(packing_spec->packing));
     fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->packing_type = %s\n",
