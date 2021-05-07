@@ -1433,7 +1433,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                     setCcsdsPacking = 1;
                 break;
             case GRIB_UTIL_PACKING_TYPE_IEEE:
-                if (strcmp(input_packing_type, "grid_ieee") && !strcmp(input_packing_type, "grid_simple"))
+                if ( !STR_EQUAL(input_packing_type, "grid_ieee") )
                     SET_STRING_VALUE("packingType", "grid_ieee");
                 break;
             case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
