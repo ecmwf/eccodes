@@ -12,8 +12,10 @@
 
 #include "mir/repres/gauss/regular/RotatedGG.h"
 
-#include <iostream>
+#include <ostream>
+#include <utility>
 
+#include "mir/repres/gauss/GaussianIterator.h"
 #include "mir/util/Grib.h"
 
 
@@ -48,8 +50,8 @@ bool RotatedGG::sameAs(const Representation& other) const {
 
 
 Iterator* RotatedGG::iterator() const {
-    auto Ni = [=](size_t) { return long(4 * N_); };
-    return Gaussian::rotatedIterator(Ni, rotation_);
+    std::vector<long> pl(N_ * 2, long(4 * N_));
+    return new gauss::GaussianIterator(latitudes(), std::move(pl), bbox_, N_, Nj_, 0, rotation_);
 }
 
 

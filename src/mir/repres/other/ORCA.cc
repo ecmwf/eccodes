@@ -13,13 +13,15 @@
 #include "mir/repres/other/ORCA.h"
 
 #include <ostream>
-#include <sstream>
+#include <utility>
+#include <vector>
 
-#include "mir/config/LibMir.h"
+#include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Assert.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
-#include "mir/util/Pretty.h"
+#include "mir/util/Log.h"
+#include "mir/util/MeshGeneratorParameters.h"
 
 
 namespace mir {
@@ -27,25 +29,21 @@ namespace repres {
 namespace other {
 
 
-ORCA::ORCA(const std::string& name) : name_(name), grid_(name) {
-    util::RectangularDomain rect(grid_.domain());
-    if (!rect) {
-        std::ostringstream msg;
-        msg << "ORCA: grid '" << name << "' not supported (domain " << grid_.domain().spec() << ")";
-        throw eckit::UserError(msg.str());
-    }
-
-    domain_ = util::Domain(rect.containsNorthPole() ? Latitude::NORTH_POLE : rect.ymax(), rect.xmin(),
-                           rect.containsSouthPole() ? Latitude::SOUTH_POLE : rect.ymin(),
-                           rect.zonal_band() ? rect.xmin() + Longitude::GLOBE.value() : rect.xmax());
-
-    eckit::Log::debug<LibMir>() << "ORCA: grid '" << name << "', domain=" << domain_ << std::endl;
-}
+// order is important for makeName()
+static const std::vector<std::pair<std::string, std::string>> grib_keys{
+    {"orca_name", "unstructuredGridType"}, {"orca_arrangement", "unstructuredGridSubtype"}, {"uid", "uuidOfHGrid"}};
 
 
-ORCA::ORCA(const param::MIRParametrisation&) {
-    NOTIMP;
-}
+ORCA::ORCA(const std::string& uid) :
+    Gridded(util::BoundingBox() /*assumed global*/), spec_(atlas::util::SpecRegistry<atlas::Grid>::lookup(uid)) {}
+
+
+ORCA::ORCA(const param::MIRParametrisation& param) :
+    ORCA([&param]() {
+        std::string uid;
+        ASSERT(param.get("uid", uid));
+        return uid;
+    }()) {}
 
 
 ORCA::~ORCA() = default;
@@ -53,22 +51,22 @@ ORCA::~ORCA() = default;
 
 bool ORCA::sameAs(const Representation& other) const {
     auto o = dynamic_cast<const ORCA*>(&other);
-    return (o != nullptr) && name_ == o->name_;
+    return (o != nullptr) && spec_.getString("uid") == o->spec_.getString("uid");
 }
 
 
-void ORCA::validate(const data::MIRValuesVector& values) const {
+void ORCA::validate(const MIRValuesVector& values) const {
     size_t count = numberOfPoints();
 
-    eckit::Log::debug<LibMir>() << "ORCA::validate checked " << Pretty(values.size(), {"value"}) << ", iterator counts "
-                                << Pretty(count) << " (" << domain() << ")." << std::endl;
+    Log::debug() << "ORCA::validate checked " << Log::Pretty(values.size(), {"value"}) << ", iterator counts "
+                 << Log::Pretty(count) << "." << std::endl;
 
     ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("ORCA", values.size(), count);
 }
 
 
 size_t ORCA::numberOfPoints() const {
-    return grid_.size();
+    return static_cast<size_t>(atlasGridRef().size());
 }
 
 
@@ -76,22 +74,28 @@ void ORCA::fill(grib_info& info) const {
     info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 
-    // TODO fill metadata
+    for (auto& key : grib_keys) {
+        auto value = spec_.getString(key.first);
+        info.extra_set(key.second.c_str(), value.c_str());
+    }
 }
 
 
 void ORCA::makeName(std::ostream& out) const {
-    out << name_;
+    auto sep = "";
+    for (auto& key : grib_keys) {
+        out << sep << spec_.getString(key.first);
+        sep = "_";
+    }
 }
 
 
 void ORCA::print(std::ostream& out) const {
-    out << "ORCA[atlasGrid=" << grid_.spec() << ",domain=" << domain_ << "]";
+    out << "ORCA[spec=" << spec_ << "]";
 }
 
 
 Iterator* ORCA::iterator() const {
-
     class ORCAIterator : public Iterator {
         ::atlas::Grid grid_;  // Note: needs the object because IterateLonLat uses a Grid reference
         ::atlas::Grid::IterateLonLat lonlat_;
@@ -102,13 +106,13 @@ Iterator* ORCA::iterator() const {
         size_t count_;
         const size_t total_;
 
-        void print(std::ostream& out) const {
+        void print(std::ostream& out) const override {
             out << "ORCAIterator[";
             Iterator::print(out);
             out << ",count=" << count_ << ",total=" << total_ << "]";
         }
 
-        bool next(Latitude& _lat, Longitude& _lon) {
+        bool next(Latitude& _lat, Longitude& _lon) override {
             if (it_.next(point_)) {
                 _lat = point_.lat();
                 _lon = point_.lon();
@@ -127,8 +131,24 @@ Iterator* ORCA::iterator() const {
         ORCAIterator(const ORCAIterator&) = delete;
         ORCAIterator& operator=(const ORCAIterator&) = delete;
     };
+    return new ORCAIterator(atlasGridRef());
+}
 
-    return new ORCAIterator(grid_);
+
+const atlas::Grid& ORCA::atlasGridRef() const {
+    return grid_ ? grid_ : (grid_ = atlas::Grid(spec_));
+}
+
+
+atlas::Grid ORCA::atlasGrid() const {
+    return atlasGridRef();
+}
+
+
+void ORCA::fill(util::MeshGeneratorParameters& params) const {
+    if (params.meshGenerator_.empty()) {
+        params.meshGenerator_ = "orca";
+    }
 }
 
 

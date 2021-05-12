@@ -13,21 +13,19 @@
 #include "mir/repres/regular/RegularGrid.h"
 
 #include <ostream>
+#include <sstream>
 
 #include "eckit/config/Resource.h"
-#include "eckit/exception/Exceptions.h"
-#include "eckit/log/Log.h"
 #include "eckit/utils/MD5.h"
 #include "eckit/utils/StringTools.h"
 
-#include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Assert.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
+#include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
-#include "mir/util/Pretty.h"
 
 
 namespace mir {
@@ -40,18 +38,18 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
     ASSERT(projection);
 
     shapeOfTheEarthProvided_ = param.get("shapeOfTheEarth", shapeOfTheEarth_ = 6);
-    param.get("radius", radius_ = ::atlas::util::Earth::radius());
+    param.get("radius", radius_ = util::Earth::radius());
     param.get("earthMajorAxis", earthMajorAxis_ = radius_);
     param.get("earthMinorAxis", earthMinorAxis_ = radius_);
 
     auto get_long_first_key = [](const param::MIRParametrisation& param, const std::vector<std::string>& keys) -> long {
         long value = 0;
-        for (auto key : keys) {
+        for (auto& key : keys) {
             if (param.get(key, value)) {
                 return value;
             }
         }
-        throw eckit::SeriousBug("RegularGrid: couldn't find any key: " + eckit::StringTools::join(", ", keys));
+        throw exception::SeriousBug("RegularGrid: couldn't find any key: " + eckit::StringTools::join(", ", keys));
     };
 
     long nx = get_long_first_key(param, {"numberOfPointsAlongXAxis", "Ni"});
@@ -75,11 +73,11 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
     Point2 first = projection.xy(firstLL);
     param.get("first_point_bottom_left", firstPointBottomLeft_ = false);
 
-    x_    = {first.x(), first.x() + grid[0] * (firstPointBottomLeft_ || plusx ? nx - 1 : 1 - nx), nx};
-    y_    = {first.y(), first.y() + grid[1] * (firstPointBottomLeft_ || plusy ? ny - 1 : 1 - ny), ny};
+    x_    = {first.x(), first.x() + grid[0] * double(firstPointBottomLeft_ || plusx ? nx - 1 : 1 - nx), nx};
+    y_    = {first.y(), first.y() + grid[1] * double(firstPointBottomLeft_ || plusy ? ny - 1 : 1 - ny), ny};
     grid_ = {x_, y_, projection};
 
-    util::RectangularDomain range({x_.min(), x_.max()}, {y_.min(), y_.max()}, "meters");
+    atlas::RectangularDomain range({x_.min(), x_.max()}, {y_.min(), y_.max()}, "meters");
     auto bbox = projection.lonlatBoundingBox(range);
     ASSERT(bbox);
 
@@ -151,33 +149,31 @@ void RegularGrid::fill(grib_info& info) const {
         auto spec = grid_.projection().spec();
 
         if (shapeOfTheEarthProvided_) {
-            GribExtraSetting::set(info, "shapeOfTheEarth", shapeOfTheEarth_);
+            info.extra_set("shapeOfTheEarth", shapeOfTheEarth_);
             switch (shapeOfTheEarth_) {
                 case 1:
-                    GribExtraSetting::set(info, "radius", spec.getDouble("radius", radius_));
+                    info.extra_set("radius", spec.getDouble("radius", radius_));
                     break;
                 case 3:
-                    GribExtraSetting::set(info, "earthMajorAxis",
-                                          spec.getDouble("semi_major_axis", earthMajorAxis_) / 1000.);
-                    GribExtraSetting::set(info, "earthMinorAxis",
-                                          spec.getDouble("semi_minor_axis", earthMinorAxis_) / 1000.);
+                    info.extra_set("earthMajorAxis", spec.getDouble("semi_major_axis", earthMajorAxis_) / 1000.);
+                    info.extra_set("earthMinorAxis", spec.getDouble("semi_minor_axis", earthMinorAxis_) / 1000.);
                     break;
                 case 7:
-                    GribExtraSetting::set(info, "earthMajorAxis", spec.getDouble("semi_major_axis", earthMajorAxis_));
-                    GribExtraSetting::set(info, "earthMinorAxis", spec.getDouble("semi_minor_axis", earthMinorAxis_));
+                    info.extra_set("earthMajorAxis", spec.getDouble("semi_major_axis", earthMajorAxis_));
+                    info.extra_set("earthMinorAxis", spec.getDouble("semi_minor_axis", earthMinorAxis_));
                     break;
                 default:
                     break;
             }
         }
         else if (spec.has("radius")) {
-            GribExtraSetting::set(info, "shapeOfTheEarth", 1L);
-            GribExtraSetting::set(info, "radius", spec.getDouble("radius"));
+            info.extra_set("shapeOfTheEarth", 1L);
+            info.extra_set("radius", spec.getDouble("radius"));
         }
         else if (spec.has("semi_major_axis") && spec.has("semi_minor_axis")) {
-            GribExtraSetting::set(info, "shapeOfTheEarth", 7L);
-            GribExtraSetting::set(info, "earthMajorAxis", spec.getDouble("semi_major_axis"));
-            GribExtraSetting::set(info, "earthMinorAxis", spec.getDouble("semi_minor_axis"));
+            info.extra_set("shapeOfTheEarth", 7L);
+            info.extra_set("earthMajorAxis", spec.getDouble("semi_major_axis"));
+            info.extra_set("earthMinorAxis", spec.getDouble("semi_minor_axis"));
         }
     }
 
@@ -197,7 +193,7 @@ bool RegularGrid::includesSouthPole() const {
 }
 
 
-void RegularGrid::reorder(long, mir::data::MIRValuesVector&) const {
+void RegularGrid::reorder(long, MIRValuesVector&) const {
     // do not reorder, iterator is doing the right thing
     // FIXME this function should not be overriding to do nothing
 }
@@ -206,8 +202,8 @@ void RegularGrid::reorder(long, mir::data::MIRValuesVector&) const {
 void RegularGrid::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
 
-    eckit::Log::debug<LibMir>() << "RegularGrid::validate checked " << Pretty(values.size(), {"value"})
-                                << ", iterator counts " << Pretty(count) << " (" << domain() << ")." << std::endl;
+    Log::debug() << "RegularGrid::validate checked " << Log::Pretty(values.size(), {"value"}) << ", iterator counts "
+                 << Log::Pretty(count) << " (" << domain() << ")." << std::endl;
 
     ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("RegularGrid", values.size(), count);
 }
@@ -227,13 +223,13 @@ Iterator* RegularGrid::iterator() const {
         size_t j_;
         size_t count_;
 
-        void print(std::ostream& out) const {
+        void print(std::ostream& out) const override {
             out << "RegularGridIterator[";
             Iterator::print(out);
             out << ",i=" << i_ << ",j=" << j_ << ",count=" << count_ << "]";
         }
 
-        bool next(Latitude& _lat, Longitude& _lon) {
+        bool next(Latitude& _lat, Longitude& _lon) override {
             if (j_ < nj_ && i_ < ni_) {
                 pLonLat_ = projection_.lonlat({x_[i_], y_[j_]});
                 _lat     = lat(pLonLat_.lat());
@@ -280,7 +276,7 @@ void RegularGrid::makeName(std::ostream& out) const {
 
 bool RegularGrid::sameAs(const Representation& other) const {
     auto name = [](const RegularGrid& repres) {
-        std::stringstream str;
+        std::ostringstream str;
         repres.makeName(str);
         return str.str();
     };

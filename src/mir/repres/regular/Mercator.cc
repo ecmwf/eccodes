@@ -12,9 +12,9 @@
 
 #include "mir/repres/regular/Mercator.h"
 
-#include "eckit/exception/Exceptions.h"
-
 #include "mir/param/MIRParametrisation.h"
+#include "mir/util/Atlas.h"
+#include "mir/util/Exceptions.h"
 
 
 namespace mir {
@@ -39,7 +39,7 @@ RegularGrid::Projection Mercator::make_projection(const param::MIRParametrisatio
     double radius;
     ASSERT(param.get("LaDInDegrees", LaDInDegrees));
     param.get("LonInDegrees", LonInDegrees = 0.);
-    param.get("radius", radius = ::atlas::util::Earth::radius());
+    param.get("radius", radius = util::Earth::radius());
 
     return Projection::Spec("type", "mercator")
         .set("longitude0", LonInDegrees)

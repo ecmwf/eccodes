@@ -13,18 +13,17 @@
 #include "mir/repres/unsupported/IrregularLatlon.h"
 
 #include <cmath>
-#include <iostream>
+#include <ostream>
 
 #include "eckit/utils/MD5.h"
 
-#include "mir/api/Atlas.h"
-#include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Assert.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Exceptions.h"
+#include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
-#include "mir/util/Pretty.h"
+#include "mir/util/Types.h"
 
 
 namespace mir {
@@ -89,8 +88,8 @@ bool IrregularLatlon::getLongestElementDiagonal(double& d) const {
         auto& latAwayFromEquator(latitudes_[away ? j - 1 : j]);
         auto& latCloserToEquator(latitudes_[away ? j : j - 1]);
 
-        d = std::max(d, atlas::util::Earth::distance(atlas::PointLonLat(0., latCloserToEquator),
-                                                     atlas::PointLonLat(we, latAwayFromEquator)));
+        d = std::max(d, util::Earth::distance(atlas::PointLonLat(0., latCloserToEquator),
+                                              atlas::PointLonLat(we, latAwayFromEquator)));
     }
 
     ASSERT(d > 0.);
@@ -101,8 +100,8 @@ bool IrregularLatlon::getLongestElementDiagonal(double& d) const {
 void IrregularLatlon::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
 
-    eckit::Log::debug<LibMir>() << "IrregularLatlon::validate checked " << Pretty(values.size(), {"value"})
-                                << ", iterator counts " << Pretty(count) << " (" << domain() << ")." << std::endl;
+    Log::debug() << "IrregularLatlon::validate checked " << Log::Pretty(values.size(), {"value"})
+                 << ", iterator counts " << Log::Pretty(count) << " (" << domain() << ")." << std::endl;
 
     ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("IrregularLatlon", values.size(), count);
 }
@@ -164,13 +163,13 @@ class IrregularLatlonIterator : public Iterator {
     const std::vector<double>& latitudes_;
     const std::vector<double>& longitudes_;
 
-    virtual void print(std::ostream& out) const {
+    void print(std::ostream& out) const override {
         out << "IrregularLatlonIterator[";
         Iterator::print(out);
         out << "]";
     }
 
-    virtual bool next(Latitude& lat, Longitude& lon) {
+    bool next(Latitude& lat, Longitude& lon) override {
         if (j_ < nj_) {
             if (i_ < ni_) {
                 lat = latitudes_[j_];
@@ -199,7 +198,7 @@ public:
         latitudes_(latitudes),
         longitudes_(longitudes) {}
 
-    ~IrregularLatlonIterator() { ASSERT(count_ == ni_ * nj_); }
+    ~IrregularLatlonIterator() override { ASSERT(count_ == ni_ * nj_); }
 };
 
 
@@ -224,17 +223,18 @@ bool IrregularLatlon::includesSouthPole() const {
 
 
 atlas::Grid IrregularLatlon::atlasGrid() const {
+    ASSERT(numberOfPoints());
 
-    auto pts = new std::vector<atlas::PointXY>();
-    pts->reserve(latitudes_.size() * longitudes_.size());
+    std::vector<atlas::PointXY> pts;
+    pts.reserve(numberOfPoints());
 
     for (double lat : latitudes_) {
         for (double lon : longitudes_) {
-            pts->push_back(atlas::PointXY(lon, lat));
+            pts.emplace_back(atlas::PointXY(lon, lat));
         }
     }
 
-    return atlas::UnstructuredGrid(pts);
+    return atlas::UnstructuredGrid(std::move(pts));
 }
 
 

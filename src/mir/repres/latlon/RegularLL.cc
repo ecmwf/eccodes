@@ -12,10 +12,11 @@
 
 #include "mir/repres/latlon/RegularLL.h"
 
-#include <iostream>
+#include <ostream>
 
 #include "mir/iterator/detail/RegularIterator.h"
 #include "mir/repres/Iterator.h"
+#include "mir/util/Atlas.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Grib.h"
 #include "mir/util/GridBox.h"
@@ -35,14 +36,14 @@ RegularLL::~RegularLL() = default;
 Iterator* RegularLL::iterator() const {
 
     class RegularLLIterator : protected LatLonIterator, public Iterator {
-        void print(std::ostream& out) const {
+        void print(std::ostream& out) const override {
             out << "RegularLLIterator[";
             Iterator::print(out);
             out << ",";
             LatLonIterator::print(out);
             out << "]";
         }
-        bool next(Latitude& lat, Longitude& lon) { return LatLonIterator::next(lat, lon); }
+        bool next(Latitude& lat, Longitude& lon) override { return LatLonIterator::next(lat, lon); }
 
     public:
         RegularLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, const util::Increments& increments) :
@@ -152,7 +153,7 @@ std::vector<util::GridBox> RegularLL::gridBoxes() const {
     auto lat0 = bbox_.north();
     auto lon0 = bbox_.west();
     auto sn   = increments_.south_north().latitude();
-    auto we   = increments_.west_east().longitude();
+    auto we   = increments_.west_east().longitude().fraction();
 
     eckit::Fraction half(1, 2);
 
@@ -173,7 +174,7 @@ std::vector<util::GridBox> RegularLL::gridBoxes() const {
     std::vector<double> lonEdges(ni_ + 1);
     lonEdges[0] = (lon0 - we / 2).value();
     for (size_t i = 0; i < ni_; ++i) {
-        lonEdges[i + 1] = (lon0 + (i + half) * we.fraction()).value();
+        lonEdges[i + 1] = (lon0 + (i + half) * we).value();
     }
 
     bool periodic = isPeriodicWestEast();

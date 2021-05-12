@@ -12,11 +12,10 @@
 
 #include "mir/repres/gauss/reduced/Classic.h"
 
-#include "eckit/exception/Exceptions.h"
-
 #include "mir/api/MIRJob.h"
-#include "mir/config/LibMir.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Log.h"
+#include "mir/util/Types.h"
 
 
 namespace mir {
@@ -33,14 +32,7 @@ Classic::Classic(size_t N, const util::BoundingBox& bbox, double angularPrecisio
     Latitude s = bbox.south();
     correctSouthNorth(s, n);
 
-    {
-        atlas::util::Config config;
-        config.set("name", "N" + std::to_string(N_));
-        atlas::ReducedGaussianGrid grid(config);
-        ASSERT(grid);
-
-        setNj(grid.nx(), s, n);
-    }
+    setNj(pls("N" + std::to_string(N_)), s, n);
 
     Longitude w = bbox.west();
     Longitude e = bbox.east();
@@ -48,8 +40,8 @@ Classic::Classic(size_t N, const util::BoundingBox& bbox, double angularPrecisio
 
     auto old(bbox_);
     bbox_ = util::BoundingBox(n, w, s, e);
-    eckit::Log::debug<LibMir>() << "Classic BoundingBox:"
-                                << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
+    Log::debug() << "Classic BoundingBox:"
+                 << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
 }
 
 

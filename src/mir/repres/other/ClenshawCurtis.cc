@@ -15,30 +15,29 @@
 #include <algorithm>
 #include <cmath>
 #include <map>
-#include <mutex>
 #include <numeric>
 #include <ostream>
 #include <vector>
 
-#include "eckit/exception/Exceptions.h"
-#include "eckit/log/Log.h"
-#include "eckit/log/Timer.h"
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/MD5.h"
 
 // temporary
+#if defined(mir_HAVE_ATLAS)
 #include "atlas/grid/detail/spacing/CustomSpacing.h"
+#endif
 
-#include "mir/api/Atlas.h"
 #include "mir/api/MIREstimation.h"
-#include "mir/config/LibMir.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Assert.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 #include "mir/util/GridBox.h"
+#include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
-#include "mir/util/Pretty.h"
+#include "mir/util/Mutex.h"
+#include "mir/util/Trace.h"
+#include "mir/util/Types.h"
 
 
 namespace mir {
@@ -48,12 +47,12 @@ namespace other {
 
 static RepresentationBuilder<ClenshawCurtis> __representation("reduced_cc");
 
-static pthread_once_t once                        = PTHREAD_ONCE_INIT;
-static std::mutex* mtx                            = nullptr;
+static util::once_flag once;
+static util::recursive_mutex* mtx                 = nullptr;
 static std::map<size_t, std::vector<double> >* ml = nullptr;
 
 static void init() {
-    mtx = new std::mutex();
+    mtx = new util::recursive_mutex();
     ml  = new std::map<size_t, std::vector<double> >();
 }
 
@@ -124,6 +123,7 @@ bool ClenshawCurtis::sameAs(const Representation& other) const {
 
 
 atlas::Grid ClenshawCurtis::atlasGrid() const {
+#if defined(mir_HAVE_ATLAS)
     using grid_t = atlas::StructuredGrid;
 
     auto& lats = latitudes();
@@ -133,14 +133,17 @@ atlas::Grid ClenshawCurtis::atlasGrid() const {
     grid_t::YSpace y = new atlas::grid::spacing::CustomSpacing(long(lats.size()), lats.data());
 
     return grid_t(new grid_t::grid_t(x, y, atlas::Projection(), domain_));
+#else
+    NOTIMP;
+#endif
 }
 
 
 void ClenshawCurtis::validate(const MIRValuesVector& values) const {
     const size_t count = numberOfPoints();
 
-    eckit::Log::debug<LibMir>() << "ClenshawCurtis::validate checked " << Pretty(values.size(), {"value"})
-                                << ", iterator counts " << Pretty(count) << " (" << domain() << ")." << std::endl;
+    Log::debug() << "ClenshawCurtis::validate checked " << Log::Pretty(values.size(), {"value"}) << ", iterator counts "
+                 << Log::Pretty(count) << " (" << domain() << ")." << std::endl;
 
     ASSERT_VALUES_SIZE_EQ_ITERATOR_COUNT("ClenshawCurtis", values.size(), count);
 }
@@ -188,14 +191,14 @@ void ClenshawCurtis::fill(util::MeshGeneratorParameters& params) const {
 
 
 const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
-    pthread_once(&once, init);
-    std::lock_guard<std::mutex> lock(*mtx);
+    util::call_once(once, init);
+    util::lock_guard<util::recursive_mutex> lock(*mtx);
 
     ASSERT(N > 0);
 
-    auto j = ml->find(N);
-    if (j == ml->end()) {
-        eckit::Timer timer("ClenshawCurtis latitudes " + std::to_string(N), eckit::Log::debug<LibMir>());
+    auto k = ml->find(N);
+    if (k == ml->end()) {
+        trace::Timer timer("ClenshawCurtis latitudes " + std::to_string(N), Log::debug());
 
         // calculate latitudes and save in map
         auto& lats = (*ml)[N];
@@ -208,11 +211,11 @@ const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
         }
         lats[N - 1] = lats[N] = 0.;
 
-        j = ml->find(N);
-        ASSERT(j != ml->end());
+        k = ml->find(N);
+        ASSERT(k != ml->end());
     }
 
-    return j->second;
+    return k->second;
 }
 
 
@@ -229,7 +232,7 @@ void ClenshawCurtis::fill(grib_info& info) const {
 
 
 void ClenshawCurtis::estimate(api::MIREstimation& estimation) const {
-    ClenshawCurtis::estimate(estimation);
+    Gridded::estimate(estimation);
     estimation.pl(pl_.size());
 }
 
@@ -299,8 +302,8 @@ bool ClenshawCurtis::getLongestElementDiagonal(double& d) const {
         auto& latAwayFromEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l1 : l2);
         auto& latCloserToEquator(std::abs(l1.value()) > std::abs(l2.value()) ? l2 : l1);
 
-        d = std::max(d, atlas::util::Earth::distance(atlas::PointLonLat(0., latCloserToEquator.value()),
-                                                     atlas::PointLonLat(inc, latAwayFromEquator.value())));
+        d = std::max(d, util::Earth::distance(atlas::PointLonLat(0., latCloserToEquator.value()),
+                                              atlas::PointLonLat(inc, latAwayFromEquator.value())));
     }
 
     ASSERT(d > 0.);
@@ -333,19 +336,19 @@ Iterator* ClenshawCurtis::iterator() const {
 
             lat_ = latitudes_.front();
             lon_ = Longitude::GREENWICH;
-            inc_ = increment(ni_);
+            inc_ = increment(long(ni_));
         }
 
         ClenshawCurtisIterator(const ClenshawCurtisIterator&) = delete;
         void operator=(const ClenshawCurtisIterator&) = delete;
 
-        void print(std::ostream& out) const {
+        void print(std::ostream& out) const override {
             out << "ClenshawCurtisIterator[";
             Iterator::print(out);
             out << ",ni=" << ni_ << ",nj=" << nj_ << ",i=" << i_ << ",j=" << j_ << ",count=" << count_ << "]";
         }
 
-        bool next(Latitude& lat, Longitude& lon) {
+        bool next(Latitude& lat, Longitude& lon) override {
             if (j_ >= nj_) {
                 return false;
             }
@@ -364,7 +367,7 @@ Iterator* ClenshawCurtis::iterator() const {
 
                 lat_ = latitudes_[j_];
                 lon_ = Longitude::GREENWICH;
-                inc_ = increment(ni_);
+                inc_ = increment(long(ni_));
             }
 
             return true;

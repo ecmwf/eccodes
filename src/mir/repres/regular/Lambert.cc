@@ -12,10 +12,9 @@
 
 #include "mir/repres/regular/Lambert.h"
 
-#include "eckit/exception/Exceptions.h"
-
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Angles.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 
 
@@ -71,8 +70,8 @@ void Lambert::fill(grib_info& info) const {
 
     ASSERT(x_.size() > 1);
     ASSERT(y_.size() > 1);
-    auto Dx = (x_.max() - x_.min()) / (x_.size() - 1.);
-    auto Dy = (y_.max() - y_.min()) / (y_.size() - 1.);
+    auto Dx = (x_.max() - x_.min()) / double(x_.size() - 1);
+    auto Dy = (y_.max() - y_.min()) / double(y_.size() - 1);
 
     Point2 first     = {firstPointBottomLeft_ ? x_.min() : x_.front(), firstPointBottomLeft_ ? y_.min() : y_.front()};
     Point2 firstLL   = grid_.projection().lonlat(first);
@@ -85,16 +84,15 @@ void Lambert::fill(grib_info& info) const {
     info.grid.Ni = long(x_.size());
     info.grid.Nj = long(y_.size());
 
-    GribExtraSetting::set(info, "DxInMetres", Dx);
-    GribExtraSetting::set(info, "DyInMetres", Dy);
-    GribExtraSetting::set(info, "Latin1InDegrees", reference[LLCOORDS::LAT]);
-    GribExtraSetting::set(info, "Latin2InDegrees", reference[LLCOORDS::LAT]);
-    GribExtraSetting::set(
-        info, "LoVInDegrees",
-        writeLonPositive_ ? util::normalise_longitude(reference[LLCOORDS::LON], 0) : reference[LLCOORDS::LON]);
+    info.extra_set("DxInMetres", Dx);
+    info.extra_set("DyInMetres", Dy);
+    info.extra_set("Latin1InDegrees", reference[LLCOORDS::LAT]);
+    info.extra_set("Latin2InDegrees", reference[LLCOORDS::LAT]);
+    info.extra_set("LoVInDegrees", writeLonPositive_ ? util::normalise_longitude(reference[LLCOORDS::LON], 0)
+                                                     : reference[LLCOORDS::LON]);
 
     if (writeLaDInDegrees_) {
-        GribExtraSetting::set(info, "LaDInDegrees", reference[LLCOORDS::LAT]);
+        info.extra_set("LaDInDegrees", reference[LLCOORDS::LAT]);
     }
 
     // some extra keys are edition-specific, so parent call is here

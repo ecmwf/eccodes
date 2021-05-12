@@ -12,12 +12,13 @@
 
 #include <sstream>
 
-#include "eckit/log/Log.h"
-
 #include "mir/util/Grib.h"
+#include "mir/util/Log.h"
 
 
 void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t Ni, size_t Nj) {
+    using mir::Log;
+
     auto scanningModeAsString = [](long mode) {
         std::ostringstream os;
         os << "scanningMode=" << mode << " (0x" << std::hex << mode << std::dec << ")";
@@ -34,7 +35,7 @@ void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t
     std::vector<double> out(values.size());
 
     if (scanningMode == jScansPositively) {
-        eckit::Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
+        Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
         size_t count = 0;
         for (size_t j = Nj; j > 0; --j) {
             for (size_t i = 0; i < Ni; ++i) {
@@ -47,7 +48,7 @@ void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t
     }
 
     if (scanningMode == iScansNegatively) {
-        eckit::Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
+        Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
         size_t count = 0;
         for (size_t j = 0; j < Nj; ++j) {
             for (size_t i = Ni; i > 0; --i) {
@@ -60,7 +61,7 @@ void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t
     }
 
     if (scanningMode == (iScansNegatively | jScansPositively)) {
-        eckit::Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
+        Log::warning() << "LatLon::reorder " << current << " to " << canonical << std::endl;
         size_t count = 0;
         for (size_t j = Nj; j > 0; --j) {
             for (size_t i = Ni; i > 0; --i) {
@@ -74,22 +75,44 @@ void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t
 
     std::ostringstream os;
     os << "LatLon::reorder " << current << " not supported";
-    eckit::Log::error() << os.str() << std::endl;
-    throw eckit::SeriousBug(os.str());
+    Log::error() << os.str() << std::endl;
+    throw mir::exception::SeriousBug(os.str());
 }
 
 
-void GribExtraSetting::set(grib_info& info, const char* key, long value) {
-    auto& set      = info.packing.extra_settings[info.packing.extra_settings_count++];
+grib_info::grib_info() :
+    grid{
+        0,
+    },
+    packing{
+        0,
+    } {
+    constexpr size_t extra_settings_size = 80;  // ecCodes extra_settings array size
+    strings_.reserve(extra_settings_size);
+}
+
+
+void grib_info::extra_set(const char* key, long value) {
+    auto& set      = packing.extra_settings[packing.extra_settings_count++];
     set.name       = key;
-    set.long_value = value;
     set.type       = CODES_TYPE_LONG;
+    set.long_value = value;
 }
 
 
-void GribExtraSetting::set(grib_info& info, const char* key, double value) {
-    auto& set        = info.packing.extra_settings[info.packing.extra_settings_count++];
+void grib_info::extra_set(const char* key, double value) {
+    auto& set        = packing.extra_settings[packing.extra_settings_count++];
     set.name         = key;
-    set.double_value = value;
     set.type         = CODES_TYPE_DOUBLE;
+    set.double_value = value;
+}
+
+
+void grib_info::extra_set(const char* key, const char* value) {
+    auto& set = packing.extra_settings[packing.extra_settings_count++];
+    set.name  = key;
+    set.type  = CODES_TYPE_STRING;
+
+    strings_.emplace_back(value);
+    set.string_value = strings_.back().c_str();
 }

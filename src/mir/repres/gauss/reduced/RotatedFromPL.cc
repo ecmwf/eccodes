@@ -12,7 +12,9 @@
 
 #include "mir/repres/gauss/reduced/RotatedFromPL.h"
 
-#include <iostream>
+#include <ostream>
+
+#include "mir/util/Atlas.h"
 #include "mir/util/Grib.h"
 
 

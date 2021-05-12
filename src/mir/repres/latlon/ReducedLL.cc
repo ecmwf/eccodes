@@ -14,20 +14,20 @@
 
 #include <algorithm>
 #include <cmath>
-#include <iostream>
+#include <ostream>
 
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 #include "eckit/utils/MD5.h"
 
-#include "mir/api/Atlas.h"
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Assert.h"
 #include "mir/util/Domain.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/GridBox.h"
 #include "mir/util/MeshGeneratorParameters.h"
+#include "mir/util/Types.h"
 
 
 namespace mir {
@@ -101,8 +101,8 @@ bool ReducedLL::getLongestElementDiagonal(double& d) const {
         auto& latAwayFromEquator(std::abs(lat1.value()) > std::abs(lat2.value()) ? lat1 : lat2);
         auto& latCloserToEquator(std::abs(lat1.value()) > std::abs(lat2.value()) ? lat2 : lat1);
 
-        d = std::max(d, atlas::util::Earth::distance(atlas::PointLonLat(0., latCloserToEquator.value()),
-                                                     atlas::PointLonLat(we, latAwayFromEquator.value())));
+        d = std::max(d, util::Earth::distance(atlas::PointLonLat(0., latCloserToEquator.value()),
+                                              atlas::PointLonLat(we, latAwayFromEquator.value())));
 
         lat1 = lat2;
         lat2 -= sn;
@@ -129,6 +129,7 @@ void ReducedLL::fill(api::MIRJob& job) const {
 }
 
 atlas::Grid ReducedLL::atlasGrid() const {
+#if defined(mir_HAVE_ATLAS)
     const util::Domain dom = domain();
     auto N                 = long(pl_.size());
 
@@ -136,6 +137,9 @@ atlas::Grid ReducedLL::atlasGrid() const {
     atlas::StructuredGrid::YSpace yspace(atlas::grid::LinearSpacing({{dom.north().value(), dom.south().value()}}, N));
 
     return atlas::StructuredGrid(xspace, yspace);
+#else
+    NOTIMP;
+#endif
 }
 
 void ReducedLL::fill(util::MeshGeneratorParameters& params) const {
@@ -152,17 +156,13 @@ void ReducedLL::fill(util::MeshGeneratorParameters& params) const {
 
 bool ReducedLL::isPeriodicWestEast() const {
     ASSERT(pl_.size());
-    const long maxpl = *std::max_element(pl_.begin(), pl_.end());
 
-    auto same_with_grib1_accuracy = [&](const Longitude& a, const Longitude& b) {
-        static const double GRIB1EPSILON = 0.001;
-        return eckit::types::is_approximately_equal(a.value(), b.value(), GRIB1EPSILON);
-    };
+    auto we    = bbox_.east() - bbox_.west();
+    auto inc   = (Longitude::GLOBE - we).value();
+    auto maxpl = double(*std::max_element(pl_.begin(), pl_.end()));
 
-    const Longitude we  = bbox_.east() - bbox_.west();
-    const Longitude inc = Longitude::GLOBE - we;
-
-    return same_with_grib1_accuracy(inc * maxpl, Longitude::GLOBE);
+    constexpr double GRIB1_EPSILON = 0.001;
+    return eckit::types::is_approximately_equal(inc * maxpl, Longitude::GLOBE.value(), GRIB1_EPSILON);
 }
 
 bool ReducedLL::includesNorthPole() const {
@@ -199,14 +199,14 @@ class ReducedLLIterator : public Iterator {
     size_t count_;
     bool periodic_;
 
-    virtual void print(std::ostream& out) const {
+    void print(std::ostream& out) const override {
         out << "ReducedLLIterator[";
         Iterator::print(out);
         out << ",domain=" << domain_ << ",ni=" << ni_ << ",nj=" << nj_ << ",i=" << i_ << ",j=" << j_ << ",p=" << p_
             << ",count=" << count_ << "]";
     }
 
-    virtual bool next(Latitude& lat, Longitude& lon) {
+    bool next(Latitude& lat, Longitude& lon) override {
 
         while (j_ < nj_ && i_ < ni_) {
 
@@ -262,7 +262,7 @@ public:
         ASSERT(ni_ > 1);
         inc_west_east_ = ew_ / (ni_ - (periodic_ ? 0 : 1));
 
-        // eckit::Log::debug<LibMir>() << *this << std::endl;
+        // Log::debug() << *this << std::endl;
     }
 };
 

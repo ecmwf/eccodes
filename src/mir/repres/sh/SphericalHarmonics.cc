@@ -12,15 +12,14 @@
 
 #include "mir/repres/sh/SphericalHarmonics.h"
 
-#include <iostream>
-
-#include "eckit/exception/Exceptions.h"
+#include <ostream>
 
 #include "mir/api/MIREstimation.h"
 #include "mir/api/MIRJob.h"
 #include "mir/param/MIRParametrisation.h"
-#include "mir/util/Assert.h"
+#include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
+#include "mir/util/Log.h"
 
 
 namespace mir {
@@ -149,18 +148,18 @@ void SphericalHarmonics::truncate(size_t truncation_from, size_t truncation_to, 
 }
 
 
-void SphericalHarmonics::interlace_spectra(data::MIRValuesVector& interlaced, const data::MIRValuesVector& spectra,
+void SphericalHarmonics::interlace_spectra(MIRValuesVector& interlaced, const MIRValuesVector& spectra,
                                            size_t truncation, size_t numberOfComplexCoefficients, size_t index,
                                            size_t indexTotal) {
-    ASSERT(0 <= index && index < indexTotal);
+    ASSERT(index < indexTotal);
     ASSERT(numberOfComplexCoefficients * 2 * indexTotal == interlaced.size());
 
     if (spectra.size() != numberOfComplexCoefficients * 2) {
         const std::string msg = "MIRSpectralTransform: expected field values size " +
                                 std::to_string(numberOfComplexCoefficients * 2) + " (T=" + std::to_string(truncation) +
                                 "), " + " got " + std::to_string(spectra.size());
-        eckit::Log::error() << msg << std::endl;
-        throw eckit::UserError(msg);
+        Log::error() << msg << std::endl;
+        throw exception::UserError(msg);
     }
 
     for (size_t j = 0; j < numberOfComplexCoefficients * 2; ++j) {
@@ -186,16 +185,6 @@ const Representation* SphericalHarmonics::truncate(size_t truncation, const MIRV
 void SphericalHarmonics::validate(const MIRValuesVector& values) const {
     ASSERT_VALUES_SIZE_EQ_NUMBER_OF_COEFFS("SphericalHarmonics", values.size(),
                                            number_of_complex_coefficients(truncation_) * 2);
-}
-
-
-void SphericalHarmonics::setComplexPacking(grib_info& info) const {
-    info.packing.packing_type = CODES_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX;
-}
-
-
-void SphericalHarmonics::setSimplePacking(grib_info& info) const {
-    info.packing.packing_type = CODES_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE;
 }
 
 

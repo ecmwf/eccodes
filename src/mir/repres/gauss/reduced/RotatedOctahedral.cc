@@ -12,8 +12,9 @@
 
 #include "mir/repres/gauss/reduced/RotatedOctahedral.h"
 
-#include <iostream>
+#include <ostream>
 
+#include "mir/util/Atlas.h"
 #include "mir/util/Grib.h"
 
 

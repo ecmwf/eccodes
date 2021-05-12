@@ -10,8 +10,7 @@
  */
 
 
-#ifndef mir_repres_other_ClenshawCurtis_h
-#define mir_repres_other_ClenshawCurtis_h
+#pragma once
 
 #include <string>
 
@@ -44,7 +43,7 @@ public:
 
     // -- Destructor
 
-    virtual ~ClenshawCurtis();
+    ~ClenshawCurtis() override;
 
     // -- Convertors
     // None
@@ -76,7 +75,7 @@ protected:
     // -- Overridden methods
 
     // from Representation
-    void print(std::ostream&) const;
+    void print(std::ostream&) const override;
 
     // -- Class members
     // None
@@ -100,21 +99,21 @@ private:
     // -- Overridden methods
 
     // From Representation
-    virtual Iterator* iterator() const;
-    virtual atlas::Grid atlasGrid() const;
-    virtual bool extendBoundingBoxOnIntersect() const;
-    virtual bool sameAs(const Representation&) const;
-    virtual size_t numberOfPoints() const;
-    virtual std::vector<util::GridBox> gridBoxes() const;
-    virtual void fill(grib_info&) const;
-    virtual void fill(util::MeshGeneratorParameters&) const;
-    virtual void makeName(std::ostream&) const;
-    virtual void validate(const MIRValuesVector&) const;
+    Iterator* iterator() const override;
+    atlas::Grid atlasGrid() const override;
+    bool extendBoundingBoxOnIntersect() const override;
+    bool sameAs(const Representation&) const override;
+    size_t numberOfPoints() const override;
+    std::vector<util::GridBox> gridBoxes() const override;
+    void fill(grib_info&) const override;
+    void fill(util::MeshGeneratorParameters&) const override;
+    void makeName(std::ostream&) const override;
+    void validate(const MIRValuesVector&) const override;
 
     // From Gridded
-    virtual bool getLongestElementDiagonal(double&) const;
-    virtual void estimate(api::MIREstimation&) const;
-    virtual util::Domain domain() const;
+    bool getLongestElementDiagonal(double&) const override;
+    void estimate(api::MIREstimation&) const override;
+    util::Domain domain() const override;
 
     // // From Representation
     // virtual const Representation* croppedRepresentation(const util::BoundingBox&) const;
@@ -153,6 +152,3 @@ private:
 }  // namespace other
 }  // namespace repres
 }  // namespace mir
-
-
-#endif

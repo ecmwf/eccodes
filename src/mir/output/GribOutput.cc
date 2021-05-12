@@ -12,13 +12,10 @@
 
 #include "mir/output/GribOutput.h"
 
-#include <istream>
-#include <memory>
+#include <ostream>
+#include <sstream>
 
 #include "eckit/config/Resource.h"
-#include "eckit/log/ResourceUsage.h"
-#include "eckit/thread/AutoLock.h"
-#include "eckit/thread/Mutex.h"
 
 #include "mir/action/context/Context.h"
 #include "mir/action/io/Save.h"
@@ -26,33 +23,34 @@
 #include "mir/action/plan/ActionPlan.h"
 #include "mir/api/MIREstimation.h"
 #include "mir/compat/GribCompatibility.h"
-#include "mir/config/LibMir.h"
 #include "mir/data/MIRField.h"
 #include "mir/input/MIRInput.h"
-#include "mir/packing/Packer.h"
+#include "mir/key/packing/Packing.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Gridded.h"
 #include "mir/repres/Representation.h"
 #include "mir/util/BoundingBox.h"
 #include "mir/util/Grib.h"
+#include "mir/util/Log.h"
 #include "mir/util/MIRStatistics.h"
-#include "mir/util/Pretty.h"
-#include "mir/util/TraceResourceUsage.h"
+#include "mir/util/Mutex.h"
+#include "mir/util/Trace.h"
+#include "mir/util/Types.h"
 
 
 namespace mir {
 namespace output {
 
 
-static eckit::Mutex local_mutex;
+static util::recursive_mutex local_mutex;
 
 
-#define X(a) eckit::Log::debug<LibMir>() << "  GRIB encoding: " << #a << " = " << a << std::endl
+#define X(a) Log::debug() << "  GRIB encoding: " << #a << " = " << a << std::endl
 #define Y(a) oss << " " << #a << "=" << a
 
 
 void eccodes_assertion(const char* message) {
-    throw eckit::SeriousBug(message);
+    throw exception::SeriousBug(message);
 }
 
 
@@ -66,9 +64,11 @@ size_t GribOutput::interpolated() const {
     return interpolated_;
 }
 
+
 size_t GribOutput::saved() const {
     return saved_;
 }
+
 
 size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx) {  // No interpolation performed
 
@@ -93,6 +93,7 @@ size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx)
     return total;
 }
 
+
 void GribOutput::estimate(const param::MIRParametrisation& param, api::MIREstimation& estimator,
                           context::Context& ctx) const {
 
@@ -107,10 +108,9 @@ void GribOutput::estimate(const param::MIRParametrisation& param, api::MIREstima
     }
 
     std::string packing;
-    if (param.userParametrisation().get("packing", packing)) {
-
+    if (param.get(packing, packing)) {
         estimator.packing(packing);
-        // const packing::Packer &packer = packing::Packer::lookup(packing);
+        // const key::packing::Packing &packer = key::packing::Packing::lookup(packing);
         // packer.estimate(estimator, *field.representation());
     }
 
@@ -122,41 +122,15 @@ void GribOutput::estimate(const param::MIRParametrisation& param, api::MIREstima
 
 
 bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParametrisation& param) const {
-    bool ok = false;
-
-    long bits = 0;
-    if (param.userParametrisation().get("accuracy", bits)) {
-        out << "accuracy=" << bits;
-        ok = true;
-    }
-
-    std::string packing;
-    if (param.userParametrisation().get("packing", packing)) {
-        if (ok) {
-            out << ",";
-        }
-        out << "packing=" << packing;
-        ok = true;
-    }
-
-    long edition = 0;
-    if (param.userParametrisation().get("edition", edition)) {
-        if (ok) {
-            out << ",";
-        }
-        out << "edition=" << edition;
-        ok = true;
-    }
+    ASSERT(packing_);
+    bool ok = packing_->printParametrisation(out);
 
     std::string compatibility;
     if (param.userParametrisation().get("compatibility", compatibility)) {
-        if (ok) {
-            out << ",";
-        }
-        out << "compatibility=" << compatibility;
+        out << (ok ? "," : "") << "compatibility=" << compatibility;
         ok = true;
 
-        const compat::GribCompatibility& c = compat::GribCompatibility::lookup(compatibility);
+        auto& c = compat::GribCompatibility::lookup(compatibility);
         c.printParametrisation(out, param);
     }
 
@@ -166,80 +140,37 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
 
 void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionPlan& plan, input::MIRInput& input,
                          output::MIROutput& output) {
-    ASSERT(!plan.ended());
+    // Packing, accuracy, edition
+    packing_.reset(key::packing::PackingFactory::build(param));
 
-    auto& user  = param.userParametrisation();
-    auto& field = param.fieldParametrisation();
+    if (plan.ended()) {
+        return;
+    }
 
     std::string compatibility;
-    if (user.get("compatibility", compatibility) && !compatibility.empty()) {
+    if (param.userParametrisation().get("compatibility", compatibility) && !compatibility.empty()) {
         plan.add(new action::io::Save(param, input, output));
         return;
     }
 
-    bool todo = false;
-
-    long bits1 = -1;
-    if (user.get("accuracy", bits1)) {
-        ASSERT(bits1 > 0);
-        long bits2 = -1;
-        todo       = field.get("accuracy", bits2) ? bits2 != bits1 : true;
-    }
-
-    if (!todo) {
-        std::string packing1;
-        if (user.get("packing", packing1)) {
-            ASSERT(!packing1.empty());
-            std::string packing2;
-            todo = field.get("packing", packing2) ? packing2 != packing1 : true;
+    if (!packing_->empty()) {
+        if (!plan.empty()) {
+            plan.add(new action::io::Save(param, input, output));
         }
-    }
-
-    if (!todo) {
-        long edition1 = 0;
-        if (user.get("edition", edition1)) {
-            ASSERT(edition1 > 0);
-            long edition2 = 0;
-            todo          = field.get("edition", edition2) ? edition2 != edition1 : true;
+        else {
+            plan.add(new action::io::Set(param, input, output));
         }
-    }
-
-    if (todo) {
-        plan.add(plan.empty() ? static_cast<action::Action*>(new action::io::Set(param, input, output))
-                              : new action::io::Save(param, input, output));
+        return;
     }
 }
 
 
 bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
                                      const param::MIRParametrisation& param2) const {
-    long bits1 = -1;
-    long bits2 = -1;
+    std::unique_ptr<key::packing::Packing> packing1(key::packing::PackingFactory::build(param1));
+    std::unique_ptr<key::packing::Packing> packing2(key::packing::PackingFactory::build(param2));
 
-    param1.userParametrisation().get("accuracy", bits1);
-    param2.userParametrisation().get("accuracy", bits2);
-
-    if (bits1 != bits2) {
-        return false;
-    }
-
-    std::string packing1;
-    std::string packing2;
-
-    param1.userParametrisation().get("packing", packing1);
-    param2.userParametrisation().get("packing", packing2);
-
-    if (packing1 != packing2) {
-        return false;
-    }
-
-    long edition1 = -1;
-    long edition2 = -1;
-
-    param1.userParametrisation().get("edition", edition1);
-    param2.userParametrisation().get("edition", edition2);
-
-    if (edition1 != edition2) {
+    if (!packing1->sameAs(packing2.get())) {
         return false;
     }
 
@@ -254,8 +185,7 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
     }
 
     if (!compatibility1.empty()) {
-        const compat::GribCompatibility& c = compat::GribCompatibility::lookup(compatibility1);
-
+        auto& c = compat::GribCompatibility::lookup(compatibility1);
         if (!c.sameParametrisation(param1, param2)) {
             return false;
         }
@@ -265,9 +195,8 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
 }
 
 
-size_t GribOutput::save(const param::MIRParametrisation& parametrisation, context::Context& ctx) {
-
-    util::TraceResourceUsage usage("GribOutput::save");
+size_t GribOutput::save(const param::MIRParametrisation& param, context::Context& ctx) {
+    trace::ResourceUsage usage("GribOutput::save");
 
     interpolated_++;
 
@@ -284,11 +213,11 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
     for (size_t i = 0; i < field.dimensions(); i++) {
 
         // Protect ecCodes and set error callback handling (throws)
-        eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+        util::lock_guard<util::recursive_mutex> lock(local_mutex);
         codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
         // Special case where only values are changing; handle is cloned, and new values are set
-        if (parametrisation.userParametrisation().has("filter")) {
+        if (param.userParametrisation().has("filter")) {
 
             // Make sure handle deleted even in case of exception
             auto h = codes_handle_clone(input.gribHandle(i));
@@ -297,7 +226,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             long numberOfValues;
             GRIB_CALL(codes_get_long(h, "numberOfValues", &numberOfValues));
             if (size_t(numberOfValues) != field.values(i).size()) {
-                throw eckit::UserError("Using 'filter' requires preserving the number of points from input");
+                throw exception::UserError("Using 'filter' requires preserving the number of points from input");
             }
 
             GRIB_CALL(codes_set_double(h, "missingValue", field.missingValue()));
@@ -319,31 +248,19 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 
         auto h = input.gribHandle(field.handle(i));  // Base class throws if input cannot provide handle
 
-        grib_info info = {
-            {0},
-        };
+        grib_info info;
 
         // missing values
         info.grid.bitmapPresent = field.hasMissing() ? 1 : 0;
         info.grid.missingValue  = field.missingValue();
 
-        // Packing
-        info.packing.packing  = CODES_UTIL_PACKING_SAME_AS_INPUT;
-        info.packing.accuracy = CODES_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT;
-
-        long bits;
-        if (parametrisation.userParametrisation().get("accuracy", bits)) {
-            info.packing.accuracy     = CODES_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
-            info.packing.bitsPerValue = bits;
-        }
-
-        long edition;
-        if (parametrisation.userParametrisation().get("edition", edition)) {
-            info.packing.editionNumber = edition;
-        }
-
         // Ask representation to update info
-        field.representation()->fill(info);
+        repres::RepresentationHandle repres(field.representation());
+        repres->fill(info);
+
+        // Packing, accuracy, edition
+        ASSERT(packing_);
+        packing_->fill(repres, info);
 
         // Extra settings (paramId comes from here)
         for (const auto& k : field.metadata(i)) {
@@ -355,28 +272,22 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             info.packing.extra_settings[j].long_value = k.second;
         }
 
-        std::string packing;
-        if (parametrisation.userParametrisation().get("packing", packing)) {
-            std::unique_ptr<packing::Packer> packer(packing::PackerFactory::build(
-                packing, parametrisation.userParametrisation(), parametrisation.fieldParametrisation()));
-            packer->fill(info, *field.representation());
-        }
 
         bool remove = false;
-        parametrisation.get("delete-local-definition", remove);
+        param.get("delete-local-definition", remove);
         info.packing.deleteLocalDefinition = remove ? 1 : 0;
 
         // Give a chance to a sub-class to modify info
         fill(h, info);
 
         std::string compatibility;
-        if (parametrisation.userParametrisation().get("compatibility", compatibility)) {
-            const compat::GribCompatibility& c = compat::GribCompatibility::lookup(compatibility);
-            c.execute(*this, parametrisation, h, info);
+        if (param.userParametrisation().get("compatibility", compatibility)) {
+            auto& c = compat::GribCompatibility::lookup(compatibility);
+            c.execute(*this, param, h, info);
         }
 
-        if (eckit::Log::debug<LibMir>()) {
-            const std::streamsize p(eckit::Log::debug<LibMir>().precision(12));
+        if (Log::debug()) {
+            auto p(Log::debug().precision(12));
             X(info.grid.grid_type);
             X(info.grid.Ni);
             X(info.grid.Nj);
@@ -430,7 +341,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
                         break;
                 }
             }
-            eckit::Log::debug<LibMir>().precision(p);
+            Log::debug().precision(p);
         }
 
 
@@ -457,7 +368,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
             Y(info.grid.latitudeOfFirstGridPointInDegrees);
             Y(info.grid.latitudeOfLastGridPointInDegrees);
 
-            throw eckit::SeriousBug(oss.str());
+            throw exception::SeriousBug(oss.str());
         }
 
         GRIB_CALL(err);
@@ -480,7 +391,7 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
         static bool checkArea = eckit::Resource<bool>("$MIR_CHECK_AREA", false);
         if (checkArea) {
             std::vector<double> v;
-            if (parametrisation.userParametrisation().get("area", v) && v.size() == 4) {
+            if (param.userParametrisation().get("area", v) && v.size() == 4) {
 
                 util::BoundingBox user(v[0], v[1], v[2], v[3]);
 
@@ -492,11 +403,11 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
                 // util::BoundingBox after(g);
 
                 if (user != before /*|| user != after || before != after*/) {
-                    eckit::Log::info() << "MIR_CHECK_AREA:"
-                                       << " request=" << user << " result="
-                                       << before
-                                       // << " grib=" << after
-                                       << std::endl;
+                    Log::info() << "MIR_CHECK_AREA:"
+                                << " request=" << user << " result="
+                                << before
+                                // << " grib=" << after
+                                << std::endl;
                 }
             }
         }
@@ -508,8 +419,8 @@ size_t GribOutput::save(const param::MIRParametrisation& parametrisation, contex
 }
 
 
-size_t GribOutput::set(const param::MIRParametrisation& param, context::Context& ctx) {
-    util::TraceResourceUsage usage("GribOutput::set");
+size_t GribOutput::set(const param::MIRParametrisation&, context::Context& ctx) {
+    trace::ResourceUsage usage("GribOutput::set");
 
     interpolated_++;
 
@@ -528,38 +439,20 @@ size_t GribOutput::set(const param::MIRParametrisation& param, context::Context&
     for (size_t i = 0; i < field.dimensions(); i++) {
 
         // Protect ecCodes and set error callback handling (throws)
-        eckit::AutoLock<eckit::Mutex> lock(local_mutex);
+        util::lock_guard<util::recursive_mutex> lock(local_mutex);
         codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
         // Make sure handle deleted even in case of exception
         auto h = codes_handle_clone(input.gribHandle(field.handle(i)));
         HandleDeleter hf(h);
 
+        repres::RepresentationHandle repres(field.representation());
 
-        // set new handle key/values
-        std::string packing;
-        if (param.userParametrisation().get("packing", packing)) {
-            std::unique_ptr<packing::Packer> packer(
-                packing::PackerFactory::build(packing, param.userParametrisation(), param.fieldParametrisation()));
-            auto type = packer->type(field.representation());
-            auto len  = type.length();
-            if (len > 0) {
-                GRIB_CALL(codes_set_string(h, "packingType", type.c_str(), &len));
-            }
-        }
+        // Packing, accuracy, edition
+        ASSERT(packing_);
+        packing_->set(repres, h);
 
-        long bitsPerValue = 0;
-        if (param.userParametrisation().get("accuracy", bitsPerValue)) {
-            GRIB_CALL(codes_set_long(h, "bitsPerValue", bitsPerValue));
-        }
-
-        long edition = 0;
-        if (param.userParametrisation().get("edition", edition)) {
-            GRIB_CALL(codes_set_long(h, "edition", edition));
-        }
-
-
-        // set values
+        // Values
         GRIB_CALL(codes_set_double(h, "missingValue", field.missingValue()));
         GRIB_CALL(codes_set_long(h, "bitmapPresent", field.hasMissing()));
         GRIB_CALL(codes_set_double_array(h, "values", field.values(i).data(), field.values(i).size()));
