@@ -12,7 +12,6 @@
 
 #include "mir/output/GribOutput.h"
 
-#include <mutex>
 #include <ostream>
 #include <sstream>
 
@@ -34,6 +33,7 @@
 #include "mir/util/Grib.h"
 #include "mir/util/Log.h"
 #include "mir/util/MIRStatistics.h"
+#include "mir/util/Mutex.h"
 #include "mir/util/Trace.h"
 #include "mir/util/Types.h"
 
@@ -42,7 +42,7 @@ namespace mir {
 namespace output {
 
 
-static std::mutex local_mutex;
+static util::recursive_mutex local_mutex;
 
 
 #define X(a) Log::debug() << "  GRIB encoding: " << #a << " = " << a << std::endl
@@ -213,7 +213,7 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
     for (size_t i = 0; i < field.dimensions(); i++) {
 
         // Protect ecCodes and set error callback handling (throws)
-        std::lock_guard<std::mutex> lock(local_mutex);
+        util::lock_guard<util::recursive_mutex> lock(local_mutex);
         codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
         // Special case where only values are changing; handle is cloned, and new values are set
@@ -439,7 +439,7 @@ size_t GribOutput::set(const param::MIRParametrisation&, context::Context& ctx) 
     for (size_t i = 0; i < field.dimensions(); i++) {
 
         // Protect ecCodes and set error callback handling (throws)
-        std::lock_guard<std::mutex> lock(local_mutex);
+        util::lock_guard<util::recursive_mutex> lock(local_mutex);
         codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
         // Make sure handle deleted even in case of exception
