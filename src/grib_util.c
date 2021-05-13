@@ -1413,8 +1413,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                     SET_STRING_VALUE("packingType", "grid_simple");
                 break;
             case GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX:
-                if (strcmp(input_packing_type, "grid_complex") && !strcmp(input_packing_type, "grid_simple"))
+                if (!STR_EQUAL(input_packing_type, "grid_complex")) {
                     SET_STRING_VALUE("packingType", "grid_complex");
+                    convertEditionEarlier=1;
+                }
                 break;
             case GRIB_UTIL_PACKING_TYPE_JPEG:
                 /* Have to delay JPEG packing:
