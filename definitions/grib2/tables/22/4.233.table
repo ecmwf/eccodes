@@ -1,4 +1,4 @@
-# Code table 4.230 - Atmospheric chemical constituent type
+# Code table 4.233 - Aerosol type
 0 0 Ozone O3
 1 1 Water vapour H2O
 2 2 Methane CH4
@@ -505,7 +505,7 @@
 62203 62203 Plantago (plantain) pollen
 62204 62204 Rumex (dock, sorrel) pollen
 62205 62205 Urtica (nettle) pollen
-# 62206-62299 Reserved 
+# 62206-62299 Reserved
 62300 62300 Poaceae (grass family) pollen
 #6230-65534 Reserved
 65535 65535 Missing
