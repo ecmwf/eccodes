@@ -900,8 +900,10 @@ static int is_valid_JSON_number(const char* input)
         p++;
 
     while (*p) {
-        if (*p == '.')
+        if (*p == '.') {
+            if (is_float) return 0; /*more than 1 dot*/
             is_float = 1;
+        }
         if (*p != '.' && !isdigit(*p))
             return 0;
         p++;
@@ -915,80 +917,6 @@ static int is_valid_JSON_number(const char* input)
     if (!is_float && len > 2 && input[0] == '0' && isdigit(input[1]))
         return 0; /* Not a valid JSON number */
     return 1;
-}
-
-static void get_value_for_key(grib_handle* h, const char* key_name, int key_type, char* value_str,
-                              const char* format, int fix_lsdate, int fix_lstime)
-{
-    int ret = 0, type = key_type;
-    double dvalue = 0;
-    long lvalue   = 0;
-    size_t len    = MAX_STRING_LEN;
-
-    if (grib_is_missing(h, key_name, &ret) && ret == GRIB_SUCCESS) {
-        sprintf(value_str, "MISSING");
-        return;
-    }
-    if (ret == GRIB_NOT_FOUND) {
-        sprintf(value_str, "not_found");
-        return;
-    }
-
-    if (type == GRIB_TYPE_UNDEFINED) {
-        ret = grib_get_native_type(h, key_name, &type);
-        if (ret != GRIB_SUCCESS) {
-            fprintf(dump_file, "Could not determine type for %s\n", key_name);
-            exit(1);
-        }
-    }
-
-    if (type == GRIB_TYPE_STRING) {
-        const char* pName = key_name;
-        /* ECC-707 */
-        if (fix_lsdate && strcmp(pName, "date") == 0) pName = "ls.date";
-        if (fix_lstime && strcmp(pName, "time") == 0) pName = "ls.time";
-        ret = grib_get_string(h, pName, value_str, &len);
-    }
-    else if (type == GRIB_TYPE_DOUBLE) {
-        ret = grib_get_double(h, key_name, &dvalue);
-        sprintf(value_str, format, dvalue);
-    }
-    else if (type == GRIB_TYPE_LONG) {
-        ret = grib_get_long(h, key_name, &lvalue);
-        sprintf(value_str, "%ld", lvalue);
-    }
-    else if (type == GRIB_TYPE_BYTES) {
-        ret = grib_get_string(h, key_name, value_str, &len);
-    }
-    else {
-        fprintf(dump_file, "invalid format option for %s\n", key_name);
-        exit(1);
-    }
-
-    if (ret != GRIB_SUCCESS) {
-        if (ret == GRIB_NOT_FOUND) {
-            sprintf(value_str, "not_found");
-        } else {
-            fprintf(dump_file, "Failed to get value for key %s\n", key_name);
-            exit(1);
-        }
-    }
-}
-
-/* See ECC-707 */
-static int fix_for_lsdate_needed(grib_handle* h)
-{
-    long lsdate_bug = 0;
-    int err         = grib_get_long(h, "lsdate_bug", &lsdate_bug);
-    if (!err && lsdate_bug == 1) return 1;
-    return 0;
-}
-static int fix_for_lstime_needed(grib_handle* h)
-{
-    long lstime_bug = 0;
-    int err         = grib_get_long(h, "lstime_bug", &lstime_bug);
-    if (!err && lstime_bug == 1) return 1;
-    return 0;
 }
 
 static int get_initial_element_of_array(grib_handle* h, const char* keyName, size_t num_vals, char* value)
@@ -1048,6 +976,86 @@ static int get_initial_element_of_array(grib_handle* h, const char* keyName, siz
             sprintf(value, "%s...", "");
     }
     return GRIB_SUCCESS;
+}
+
+static void get_value_for_key(grib_handle* h, const char* key_name, int key_type, char* value_str,
+                              const char* format, int fix_lsdate, int fix_lstime)
+{
+    int ret = 0, type = key_type;
+    double dvalue = 0;
+    long lvalue   = 0;
+    size_t len    = MAX_STRING_LEN;
+
+    if (grib_is_missing(h, key_name, &ret) && ret == GRIB_SUCCESS) {
+        sprintf(value_str, "MISSING");
+        return;
+    }
+    if (ret == GRIB_NOT_FOUND) {
+        sprintf(value_str, "not_found");
+        return;
+    }
+
+    if (type == GRIB_TYPE_UNDEFINED) {
+        ret = grib_get_native_type(h, key_name, &type);
+        if (ret != GRIB_SUCCESS) {
+            fprintf(dump_file, "Could not determine type for %s\n", key_name);
+            exit(1);
+        }
+    }
+
+    if (type == GRIB_TYPE_STRING) {
+        const char* pName = key_name;
+        size_t num_vals = 0;
+        /* ECC-707 */
+        if (fix_lsdate && strcmp(pName, "date") == 0) pName = "ls.date";
+        if (fix_lstime && strcmp(pName, "time") == 0) pName = "ls.time";
+        ret = grib_get_size(h, pName, &num_vals);
+        if (ret == GRIB_SUCCESS && num_vals > 1) { /* See ECC-278 */
+            ret = get_initial_element_of_array(h, pName, num_vals, value_str);
+        } else {
+            ret = grib_get_string(h, pName, value_str, &len);
+        }
+    }
+    else if (type == GRIB_TYPE_DOUBLE) {
+        ret = grib_get_double(h, key_name, &dvalue);
+        sprintf(value_str, format, dvalue);
+    }
+    else if (type == GRIB_TYPE_LONG) {
+        ret = grib_get_long(h, key_name, &lvalue);
+        sprintf(value_str, "%ld", lvalue);
+    }
+    else if (type == GRIB_TYPE_BYTES) {
+        ret = grib_get_string(h, key_name, value_str, &len);
+    }
+    else {
+        fprintf(dump_file, "invalid format option for %s\n", key_name);
+        exit(1);
+    }
+
+    if (ret != GRIB_SUCCESS) {
+        if (ret == GRIB_NOT_FOUND) {
+            sprintf(value_str, "not_found");
+        } else {
+            fprintf(dump_file, "Failed to get value for key %s\n", key_name);
+            exit(1);
+        }
+    }
+}
+
+/* See ECC-707 */
+static int fix_for_lsdate_needed(grib_handle* h)
+{
+    long lsdate_bug = 0;
+    int err         = grib_get_long(h, "lsdate_bug", &lsdate_bug);
+    if (!err && lsdate_bug == 1) return 1;
+    return 0;
+}
+static int fix_for_lstime_needed(grib_handle* h)
+{
+    long lstime_bug = 0;
+    int err         = grib_get_long(h, "lstime_bug", &lstime_bug);
+    if (!err && lstime_bug == 1) return 1;
+    return 0;
 }
 
 void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
