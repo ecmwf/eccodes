@@ -73,6 +73,7 @@ if( HAVE_BUILD_TOOLS )
         grib_element
         grib_2nd_order_numValues
         grib_ecc-136
+        grib_ecc-922
         grib_ecc-966
         grib_ecc-967
         grib_ecc-1150
