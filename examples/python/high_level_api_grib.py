@@ -1,9 +1,7 @@
 #!/bin/env python
 
 """
-Unit tests for high level Python interface for GRIB.
-
-Author: Daniel Lee, DWD, 2016
+This is now deprecated. Use cfgrib instead
 """
 
 import os

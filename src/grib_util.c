@@ -429,6 +429,8 @@ static void print_values(grib_context* c,
     if (c->gribex_mode_on)
         fprintf(stderr, "ECCODES DEBUG grib_util: GRIBEX mode is turned on!\n");
 
+    fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->editionNumber = %ld\n",
+            packing_spec->editionNumber);
     fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->packing = %s\n",
             get_packing_spec_packing_name(packing_spec->packing));
     fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->packing_type = %s\n",
@@ -980,6 +982,16 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         fprintf(stderr, "ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n", input_decimal_scale_factor);
     }
 
+    /* ECC-1201
+       TODO: make sure input packing type is preserved */
+    if (packing_spec->packing == GRIB_UTIL_PACKING_SAME_AS_INPUT &&
+        packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT)
+    {
+        if (STR_EQUAL(input_packing_type, "grid_ieee")) {
+            SET_STRING_VALUE("packingType", input_packing_type);
+        }
+    }
+
     /*if ( (*err=check_values(data_values, data_values_count))!=GRIB_SUCCESS ) {
         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Data values check failed! %s\n", grib_get_error_message(*err));
         goto cleanup;
@@ -1401,8 +1413,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                     SET_STRING_VALUE("packingType", "grid_simple");
                 break;
             case GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX:
-                if (strcmp(input_packing_type, "grid_complex") && !strcmp(input_packing_type, "grid_simple"))
+                if (!STR_EQUAL(input_packing_type, "grid_complex")) {
                     SET_STRING_VALUE("packingType", "grid_complex");
+                    convertEditionEarlier=1;
+                }
                 break;
             case GRIB_UTIL_PACKING_TYPE_JPEG:
                 /* Have to delay JPEG packing:
@@ -1417,11 +1431,11 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                  * Reason 1: It is not available in GRIB1 and so we have to wait until we change edition
                  * Reason 2: It has to be done AFTER we set the data values
                  */
-                if (strcmp(input_packing_type, "grid_ccsds") && !strcmp(input_packing_type, "grid_simple"))
+                if (!STR_EQUAL(input_packing_type, "grid_ccsds"))
                     setCcsdsPacking = 1;
                 break;
             case GRIB_UTIL_PACKING_TYPE_IEEE:
-                if (strcmp(input_packing_type, "grid_ieee") && !strcmp(input_packing_type, "grid_simple"))
+                if ( !STR_EQUAL(input_packing_type, "grid_ieee") )
                     SET_STRING_VALUE("packingType", "grid_ieee");
                 break;
             case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:

@@ -43,7 +43,7 @@ alias Dx  = xDirectionGridLengthInMillimetres ;
 unsigned[4] yDirectionGridLengthInMillimetres  : dump ;
 alias Dy  = yDirectionGridLengthInMillimetres ;
 
-include "grib3/template.3.scanning_mode.def";
+include "grib3/template.4.scanning_mode.def";
 
 iterator lambert_azimuthal_equal_area(numberOfPoints,missingValue,values,
           radius,Nx,Ny,

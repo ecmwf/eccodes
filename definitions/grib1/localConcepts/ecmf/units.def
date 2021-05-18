@@ -1170,7 +1170,7 @@
 	 indicatorOfParameter = 159 ;
 	}
 #Standard deviation of orography
-'~' = {
+'m' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 160 ;
 	}
@@ -2800,7 +2800,7 @@
 	 indicatorOfParameter = 159 ;
 	}
 #Standard deviation of orography difference
-'~' = {
+'m' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 160 ;
 	}
@@ -14150,7 +14150,7 @@
 	 indicatorOfParameter = 159 ;
 	}
 #Standard deviation of orography anomaly
-'~' = {
+'m' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 160 ;
 	}

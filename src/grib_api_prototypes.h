@@ -1194,7 +1194,6 @@ int codes_bufr_keys_iterator_delete(bufr_keys_iterator* kiter);
 
 /* grib_parse_utils.c */
 int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* uname, char* fname, int fail);
-int grib_accessor_print(grib_accessor* a, const char* name, int type, const char* format, const char* separator, int maxcols, int* newline, FILE* out);
 int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const char* name, int type, const char* format, const char* separator, int maxcols, int* newline, FILE* out);
 int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* uname, int fail, FILE* out);
 grib_action_file* grib_find_action_file(const char* fname, grib_action_file_list* afl);
@@ -1463,6 +1462,7 @@ grib_expression* grib_arguments_get_expression(grib_handle* h, grib_arguments* a
 /* codes_util.c */
 double normalise_longitude_in_degrees(double lon);
 char get_dir_separator_char(void);
+int path_is_regular_file(const char* path);
 int path_is_directory(const char* filename);
 char* codes_getenv(const char* name);
 

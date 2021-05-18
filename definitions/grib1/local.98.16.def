@@ -1,5 +1,4 @@
 # (C) Copyright 2005- ECMWF.
-
 # Seasonal forecast monthly mean data
 
 constant GRIBEXSection1Problem = 80 - section1Length ;

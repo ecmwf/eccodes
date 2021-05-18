@@ -31,11 +31,16 @@ typedef struct grib_expression_string {
     char* value;
 } grib_expression_string;
 
-static int type_of_surface_missing(const char* value)
+static int type_of_surface_missing(const char* name, const char* value)
 {
     /* Surface Type is Code Table 4.5 in which 255 is the same as missing */
-    if (strcmp(value, "missing") == 0 || strcmp(value, "255") == 0) {
+    if (strcmp(value, "255") == 0) {
         return 1;
+    }
+    /* Beware of problems where we put 'missing()' for a code table key! */
+    if (strncmp(value, "missing", 7) == 0) {
+        fprintf(stderr, "Invalid value for %s Code Table entry: '%s'\n", name, value);
+        Assert(0);
     }
     return 0;
 }
@@ -70,6 +75,7 @@ static int grib_check_param_concepts(const char* key, const char* filename)
             char condition_value[512] = {0,};
             grib_expression* expression = concept_condition->expression;
             const char* condition_name  = concept_condition->name;
+            /* printf("%s\n", concept_value->name); */
             /* condition_name is discipline, parameterCategory etc. */
             if (strcmp(expression->cclass->name, "long") == 0) {
                 grib_expression_long* el = (grib_expression_long*)expression;
@@ -84,13 +90,15 @@ static int grib_check_param_concepts(const char* key, const char* filename)
                 sprintf(condition_value, "%s", es->value);
             }
             else {
+                fprintf(stderr, "%s %s: Unknown class name: '%s'\n",
+                        key, concept_value->name, expression->cclass->name);
                 Assert(0);
             }
             if (strcmp(condition_name, "typeOfFirstFixedSurface") == 0) {
-                type1Missing = type_of_surface_missing(condition_value);
+                type1Missing = type_of_surface_missing(condition_name, condition_value);
             }
             if (strcmp(condition_name, "typeOfSecondFixedSurface") == 0) {
-                type2Missing = type_of_surface_missing(condition_value);
+                type2Missing = type_of_surface_missing(condition_name, condition_value);
             }
             if (strcmp(condition_name, "scaleFactorOfFirstFixedSurface") == 0) {
                 scaleFactor1Missing = scale_factor_missing(condition_value);
@@ -99,10 +107,10 @@ static int grib_check_param_concepts(const char* key, const char* filename)
                 scaleFactor2Missing = scale_factor_missing(condition_value);
             }
             if (strcmp(condition_name, "scaledValueOfFirstFixedSurface") == 0) {
-                scaledValue1Missing = (strcmp(condition_value, "missing") == 0);
+                scaledValue1Missing = (strncmp(condition_value, "missing", 7) == 0);
             }
             if (strcmp(condition_name, "scaledValueOfSecondFixedSurface") == 0) {
-                scaledValue2Missing = (strcmp(condition_value, "missing") == 0);
+                scaledValue2Missing = (strncmp(condition_value, "missing", 7) == 0);
             }
 
             concept_condition = concept_condition->next;

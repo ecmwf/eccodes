@@ -8,15 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- *
- * Description: grib index
- *
- */
-
 #include "grib_api_internal.h"
 
-#define UNDEF_LONG -99999
+#define UNDEF_LONG   -99999
 #define UNDEF_DOUBLE -99999
 
 #define NULL_MARKER 0
@@ -66,6 +60,7 @@ static const char* mars_keys =
 /* See GRIB-32: start off ID with -1 as it is incremented before being used */
 static int grib_filesid = -1;
 static int index_count;
+static long values_count = 0;
 
 static char* get_key(char** keys, int* type)
 {
@@ -599,7 +594,6 @@ static void grib_index_key_delete(grib_context* c, grib_index_key* keys)
     grib_context_free(c, keys);
 }
 
-static long values_count = 0;
 static grib_string_list* grib_read_key_values(grib_context* c, FILE* fh, int* err)
 {
     grib_string_list* values;

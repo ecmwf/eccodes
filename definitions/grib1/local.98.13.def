@@ -1,4 +1,5 @@
 # (C) Copyright 2005- ECMWF.
+# Wave 2D spectra direction and frequency
 
 template mars_labeling "grib1/mars_labeling.def";
 

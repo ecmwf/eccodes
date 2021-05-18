@@ -393,8 +393,8 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 86 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 topLevel = 0 ;
 	 bottomLevel = 10 ;
+	 topLevel = 0 ;
 	}
 #Column-integrated Soil Moisture (2) 10-100cm
 'kg m**-2' = {
@@ -415,18 +415,18 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 timeRangeIndicator = 4 ;
-	 topLevel = 10 ;
 	 bottomLevel = 100 ;
+	 topLevel = 10 ;
+	 timeRangeIndicator = 4 ;
 	}
 #Water Runoff (10-190)
 'kg m**-2' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 timeRangeIndicator = 4 ;
-	 topLevel = 10 ;
 	 bottomLevel = 190 ;
+	 topLevel = 10 ;
+	 timeRangeIndicator = 4 ;
 	}
 #Water Runoff (s)
 'kg m**-2' = {
@@ -434,8 +434,8 @@
 	 indicatorOfParameter = 90 ;
 	 indicatorOfTypeOfLevel = 112 ;
 	 bottomLevel = 10 ;
-	 timeRangeIndicator = 4 ;
 	 topLevel = 0 ;
+	 timeRangeIndicator = 4 ;
 	}
 #Sea Ice Cover ( 0= free, 1=cover)
 '~' = {
@@ -1317,16 +1317,16 @@
 	 table2Version = 202 ;
 	 indicatorOfParameter = 74 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 topLevel = 0 ;
 	 bottomLevel = 10 ;
+	 topLevel = 0 ;
 	}
 #variance of soil moisture content (10-100)
 'kg**2 m**-4' = {
 	 table2Version = 202 ;
 	 indicatorOfParameter = 74 ;
 	 indicatorOfTypeOfLevel = 112 ;
-	 topLevel = 10 ;
 	 bottomLevel = 100 ;
+	 topLevel = 10 ;
 	}
 #evergreen forest
 '~' = {

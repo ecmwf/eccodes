@@ -1,5 +1,4 @@
 # (C) Copyright 2005- ECMWF.
-
 # Seasonal forecast monthly mean data for lagged systems
 
 constant GRIBEXSection1Problem = 120 - section1Length ;

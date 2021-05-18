@@ -34,7 +34,7 @@ if( HAVE_BUILD_TOOLS )
           grib_count_messages_multi
           grib_copy_namespace
           grib_read_message
-          read_from_file
+          grib_read_from_file
           grib_get_set_uuid
           grib_clone
           bufr_attributes
@@ -75,7 +75,7 @@ else()
           grib_samples
           grib_count_messages
           grib_count_messages_multi
-          read_from_file
+          grib_read_from_file
           grib_clone
           bufr_attributes
           bufr_clone

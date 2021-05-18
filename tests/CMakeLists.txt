@@ -82,6 +82,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1170
         grib_ecc-1195
         grib_ecc-1212
+        grib_ecc-1230
         bufr_ecc-1195
         bufr_json_samples
         bufr_ecc-359
@@ -221,7 +222,7 @@ if( HAVE_BUILD_TOOLS )
         grib_local_MeteoFrance
         grib_neg_fctime
         codes_split_file
-        grib_mars_types)
+        grib_mars_keys)
 
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_data_reqd bufr_dump_encode_fortran)

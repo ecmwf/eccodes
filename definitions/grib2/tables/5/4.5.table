@@ -6,7 +6,7 @@
 4 4 Level of 0 degree C isotherm 
 5 5 Level of adiabatic condensation lifted from the surface
 6 6 Maximum wind level 
-7 7 Tropopause 
+7 sfc Tropopause 
 8 sfc Nominal top of the atmosphere 
 9 9 Sea bottom
 10 10 Entire atmosphere
