@@ -88,7 +88,7 @@ int process_file(const char* filename)
 
     in = fopen(filename, "r");
     if (!in) {
-        fprintf(stderr, "ERROR: unable to open input file %s\n", filename);
+        fprintf(stderr, "ERROR: unable to open input file '%s'\n", filename);
         exit(1);
     }
 
@@ -263,7 +263,7 @@ int main(int argc, char** argv)
             verbose = 1;
         }
         else {
-            /* We have a GRIB file */
+            /* We have a file (not an option) */
             process_file(arg);
         }
     }
