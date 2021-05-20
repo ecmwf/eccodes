@@ -122,6 +122,7 @@ TESTS = definitions.sh \
         bufr_ecc-1187.sh \
         grib_ecc-136.sh \
         grib_ecc-967.sh \
+        grib_ecc-922.sh \
         grib_ecc-1065.sh \
         grib_ecc-1053.sh \
         grib_ecc-490.sh \
