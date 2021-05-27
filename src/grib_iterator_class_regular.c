@@ -164,14 +164,14 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
     if ((ret = grib_get_long_internal(h, s_Ni, &Ni)))
         return ret;
     if (grib_is_missing(h, s_Ni, &ret) && ret == GRIB_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Key %s cannot be missing for a regular grid!", s_Ni);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Key %s cannot be 'missing' for a regular grid!", s_Ni);
         return GRIB_WRONG_GRID;
     }
 
     if ((ret = grib_get_long_internal(h, s_Nj, &Nj)))
         return ret;
     if (grib_is_missing(h, s_Nj, &ret) && ret == GRIB_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Key %s cannot be missing for a regular grid!", s_Nj);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Key %s cannot be 'missing' for a regular grid!", s_Nj);
         return GRIB_WRONG_GRID;
     }
 
