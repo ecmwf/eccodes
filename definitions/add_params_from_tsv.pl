@@ -26,7 +26,7 @@ use Time::localtime;
 $ARGV[0] or die "USAGE: $0 input.tsv\n";
 
 my $SANITY_CHECK     = 0;
-my $WRITE_TO_FILES   = 0;
+my $WRITE_TO_FILES   = 1;
 my $WRITE_TO_PARAMDB = 0; # Be careful. Fill in $contactId before proceeding
 
 my ($paramId, $shortName, $name, $units, $cfVarName, $interpol);
@@ -267,7 +267,8 @@ sub check_first_row_column_names {
     my $c = 0;
     my $numkeys = scalar @keys;
     my $numcols = scalar @columns;
-    die "Error: 1st row column titles wrong: Expected $numcols columns, got $numkeys.\n" if ($numkeys != $numcols);
+    die "Error: 1st row column titles wrong: Expected $numcols columns, got $numkeys.\nColumns should be:\n@columns\n"
+        if ($numkeys != $numcols);
     for ( my $i = 0; $i < $numkeys; $i++ ) {
         if ( $keys[$i] ne $columns[$i] ) {
             die "Error: 1st row column titles wrong: check column ", $i+1, ". Expected '$columns[$i]', got '$keys[$i]'.\n";
