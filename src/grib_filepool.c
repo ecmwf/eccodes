@@ -287,6 +287,7 @@ void grib_file_pool_delete_file(grib_file* file)
     if (file == file_pool.first) {
         file_pool.first   = file->next;
         file_pool.current = file->next;
+        file_pool.size--;
     }
     else {
         prev              = file_pool.first;
@@ -299,10 +300,13 @@ void grib_file_pool_delete_file(grib_file* file)
         DebugAssert(prev);
         if (prev) {
             prev->next = file->next;
+            file_pool.size--;
         }
     }
 
     if (file->handle) {
+        fclose(file->handle);
+        file->handle = NULL;
         file_pool.number_of_opened_files--;
     }
     grib_file_delete(file);
@@ -425,12 +429,13 @@ grib_file* grib_file_new(grib_context* c, const char* name, int* err)
     next_id++;
     GRIB_MUTEX_UNLOCK(&mutex1);
 
-    file->mode     = 0;
-    file->handle   = 0;
-    file->refcount = 0;
-    file->context  = c;
-    file->next     = 0;
-    file->buffer   = 0;
+    file->mode      = 0;
+    file->handle    = 0;
+    file->refcount  = 0;
+    file->context   = c;
+    file->next      = 0;
+    file->pool_file = 0;
+    file->buffer    = 0;
     return file;
 }
 
