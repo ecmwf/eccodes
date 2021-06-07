@@ -87,6 +87,22 @@
 	 scaledValueOfFirstFixedSurface = 1 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
+#Ammonia
+'mass_fraction_of_ammonia_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 9 ;
+	 is_chemical = 1 ;
+	}
+#Nitrogen monoxide
+'mass_fraction_of_nitrogen_monoxide_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 11 ;
+	 is_chemical = 1 ;
+	}
 #Eastward sea water velocity
 'eastward_sea_water_velocity' = {
 	 discipline = 10 ;
@@ -130,6 +146,38 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Nitrogen dioxide
+'mass_fraction_of_nitrogen_dioxide_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 5 ;
+	 is_chemical = 1 ;
+	}
+#Sulphur dioxide
+'mass_fraction_of_sulfur_dioxide_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 8 ;
+	 is_chemical = 1 ;
+	}
+#Carbon monoxide
+'mass_fraction_of_carbon_monoxide_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 4 ;
+	 is_chemical = 1 ;
+	}
+#GEMS Ozone
+'mass_fraction_of_ozone_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 0 ;
+	 is_chemical = 1 ;
 	}
 #Geopotential
 'geopotential' = {

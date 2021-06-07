@@ -753,6 +753,22 @@
 	 scaleFactorOfSecondWavelength = missing() ;
 	 is_aerosol_optical = 1 ;
 	}
+#Ammonia
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 9 ;
+	 is_chemical = 1 ;
+	}
+#Nitrogen monoxide
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 11 ;
+	 is_chemical = 1 ;
+	}
 #Aromatic peroxy radical mass mixing ratio
 'kg kg**-1' = {
 	 discipline = 0 ;
@@ -2470,6 +2486,74 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Nitrogen dioxide
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 5 ;
+	 is_chemical = 1 ;
+	}
+#Sulphur dioxide
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 8 ;
+	 is_chemical = 1 ;
+	}
+#Carbon monoxide
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 4 ;
+	 is_chemical = 1 ;
+	}
+#GEMS Ozone
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 0 ;
+	 is_chemical = 1 ;
+	}
+#Nitrogen dioxide
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 5 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
+#Sulphur dioxide
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 8 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
+#Carbon monoxide
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 4 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
+#GEMS Ozone
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 0 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
 	}
 #Lake total depth
 'm' = {

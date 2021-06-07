@@ -753,6 +753,22 @@
 	 scaleFactorOfSecondWavelength = missing() ;
 	 is_aerosol_optical = 1 ;
 	}
+#Ammonia
+'nh3' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 9 ;
+	 is_chemical = 1 ;
+	}
+#Nitrogen monoxide
+'no' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 11 ;
+	 is_chemical = 1 ;
+	}
 #Aromatic peroxy radical mass mixing ratio
 'AROO2' = {
 	 discipline = 0 ;
@@ -2470,6 +2486,74 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Nitrogen dioxide
+'no2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 5 ;
+	 is_chemical = 1 ;
+	}
+#Sulphur dioxide
+'so2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 8 ;
+	 is_chemical = 1 ;
+	}
+#Carbon monoxide
+'co' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 4 ;
+	 is_chemical = 1 ;
+	}
+#GEMS Ozone
+'go3' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 0 ;
+	 is_chemical = 1 ;
+	}
+#Nitrogen dioxide
+'no2diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 5 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
+#Sulphur dioxide
+'so2diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 8 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
+#Carbon monoxide
+'codiff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 4 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
+#GEMS Ozone
+'go3diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 0 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
 	}
 #Lake total depth
 'dl' = {
