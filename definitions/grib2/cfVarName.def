@@ -4,96 +4,96 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
-	 productDefinitionTemplateNumber = 9 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 scaledValueOfLowerLimit = 1 ;
-	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 5 mm
 'tpg5' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 scaledValueOfLowerLimit = 5 ;
-	 probabilityType = 3 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 40 mm
 'tpg40' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 scaledValueOfLowerLimit = 40 ;
-	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 60 mm
 'tpg60' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 scaledValueOfLowerLimit = 60 ;
-	 probabilityType = 3 ;
-	 scaleFactorOfLowerLimit = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 60 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 80 mm
 'tpg80' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 scaledValueOfLowerLimit = 80 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 0 ;
-	 productDefinitionTemplateNumber = 9 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 100 mm
 'tpg100' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 scaledValueOfLowerLimit = 100 ;
-	 probabilityType = 3 ;
-	 scaleFactorOfLowerLimit = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 100 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 150 mm
 'tpg150' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
-	 scaledValueOfLowerLimit = 150 ;
 	 typeOfFirstFixedSurface = 1 ;
-	 probabilityType = 3 ;
-	 scaleFactorOfLowerLimit = 0 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 150 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 200 mm
 'tpg200' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
-	 scaledValueOfLowerLimit = 200 ;
-	 probabilityType = 3 ;
-	 scaleFactorOfLowerLimit = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 200 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 300 mm
 'tpg300' = {
@@ -101,11 +101,11 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 productDefinitionTemplateNumber = 9 ;
+	 typeOfStatisticalProcessing = 1 ;
 	 scaledValueOfLowerLimit = 3 ;
 	 scaleFactorOfLowerLimit = -2 ;
 	 probabilityType = 3 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 productDefinitionTemplateNumber = 9 ;
 	}
 #Wind speed
 'ws' = {
@@ -118,20 +118,20 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
-	 is_uerra = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 100 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
+	 is_uerra = 1 ;
 	}
 #Wind speed
 'ws' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
-	 scaledValueOfFirstFixedSurface = 200 ;
-	 is_uerra = 1 ;
 	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 is_uerra = 1 ;
 	}
 #Unbalanced component of temperature
 'uctp' = {
@@ -753,7 +753,7 @@
 	 scaleFactorOfSecondWavelength = missing() ;
 	 is_aerosol_optical = 1 ;
 	}
-#Ammonia
+#Ammonia mass mixing ratio
 'nh3' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -761,7 +761,7 @@
 	 constituentType = 9 ;
 	 is_chemical = 1 ;
 	}
-#Nitrogen monoxide
+#Nitrogen monoxide mass mixing ratio
 'no' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -814,8 +814,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
-	 is_chemical = 1 ;
 	 constituentType = 60058 ;
+	 is_chemical = 1 ;
 	}
 #Hydroperoxy aldehydes type 2 mass mixing ratio
 'HPALD' = {
@@ -855,8 +855,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
-	 is_chemical = 1 ;
 	 constituentType = 60029 ;
+	 is_chemical = 1 ;
 	}
 #Column integrated mass density of Ethyne 
 'tc_C2H2' = {
@@ -895,8 +895,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
-	 is_chemical = 1 ;
 	 constituentType = 60058 ;
+	 is_chemical = 1 ;
 	}
 #Column integrated mass density of Hydroperoxy aldehydes type 2 
 'tc_HPALD2' = {
@@ -968,8 +968,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 3 ;
-	 is_chemical = 1 ;
 	 constituentType = 10006 ;
+	 is_chemical = 1 ;
 	}
 #Atmosphere emission mass flux of Hydroperoxy aldehydes type 1 
 'e_HPALD1' = {
@@ -1041,8 +1041,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
-	 is_chemical = 1 ;
 	 constituentType = 10055 ;
+	 is_chemical = 1 ;
 	}
 #Dry deposition velocity of Hydrogen cyanide 
 'dv_HCN' = {
@@ -1081,8 +1081,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 15 ;
-	 is_chemical = 1 ;
 	 constituentType = 60057 ;
+	 is_chemical = 1 ;
 	}
 #-10 degrees C isothermal level (atm)
 'degm10l' = {
@@ -2487,7 +2487,7 @@
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
-#Nitrogen dioxide
+#Nitrogen dioxide mass mixing ratio
 'no2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2495,7 +2495,7 @@
 	 constituentType = 5 ;
 	 is_chemical = 1 ;
 	}
-#Sulphur dioxide
+#Sulphur dioxide mass mixing ratio
 'so2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2503,7 +2503,7 @@
 	 constituentType = 8 ;
 	 is_chemical = 1 ;
 	}
-#Carbon monoxide
+#Carbon monoxide mass mixing ratio
 'co' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2511,7 +2511,7 @@
 	 constituentType = 4 ;
 	 is_chemical = 1 ;
 	}
-#GEMS Ozone
+#Ozone mass mixing ratio (full chemistry scheme)
 'go3' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2519,7 +2519,7 @@
 	 constituentType = 0 ;
 	 is_chemical = 1 ;
 	}
-#Nitrogen dioxide
+#Nitrogen dioxide mass mixing ratio difference
 'no2diff' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2528,7 +2528,7 @@
 	 typeOfGeneratingProcess = 20 ;
 	 is_chemical = 1 ;
 	}
-#Sulphur dioxide
+#Sulphur dioxide mass mixing ratio difference
 'so2diff' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2537,7 +2537,7 @@
 	 typeOfGeneratingProcess = 20 ;
 	 is_chemical = 1 ;
 	}
-#Carbon monoxide
+#Carbon monoxide mass mixing ratio difference
 'codiff' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2546,7 +2546,7 @@
 	 typeOfGeneratingProcess = 20 ;
 	 is_chemical = 1 ;
 	}
-#GEMS Ozone
+#Ozone mass mixing ratio difference (full chemistry scheme)
 'go3diff' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;

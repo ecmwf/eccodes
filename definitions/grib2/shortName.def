@@ -753,7 +753,7 @@
 	 scaleFactorOfSecondWavelength = missing() ;
 	 is_aerosol_optical = 1 ;
 	}
-#Ammonia
+#Ammonia mass mixing ratio
 'nh3' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -761,7 +761,7 @@
 	 constituentType = 9 ;
 	 is_chemical = 1 ;
 	}
-#Nitrogen monoxide
+#Nitrogen monoxide mass mixing ratio
 'no' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2487,7 +2487,7 @@
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
-#Nitrogen dioxide
+#Nitrogen dioxide mass mixing ratio
 'no2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2495,7 +2495,7 @@
 	 constituentType = 5 ;
 	 is_chemical = 1 ;
 	}
-#Sulphur dioxide
+#Sulphur dioxide mass mixing ratio
 'so2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2503,7 +2503,7 @@
 	 constituentType = 8 ;
 	 is_chemical = 1 ;
 	}
-#Carbon monoxide
+#Carbon monoxide mass mixing ratio
 'co' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2511,7 +2511,7 @@
 	 constituentType = 4 ;
 	 is_chemical = 1 ;
 	}
-#GEMS Ozone
+#Ozone mass mixing ratio (full chemistry scheme)
 'go3' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2519,7 +2519,7 @@
 	 constituentType = 0 ;
 	 is_chemical = 1 ;
 	}
-#Nitrogen dioxide
+#Nitrogen dioxide mass mixing ratio difference
 'no2diff' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2528,7 +2528,7 @@
 	 typeOfGeneratingProcess = 20 ;
 	 is_chemical = 1 ;
 	}
-#Sulphur dioxide
+#Sulphur dioxide mass mixing ratio difference
 'so2diff' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2537,7 +2537,7 @@
 	 typeOfGeneratingProcess = 20 ;
 	 is_chemical = 1 ;
 	}
-#Carbon monoxide
+#Carbon monoxide mass mixing ratio difference
 'codiff' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -2546,7 +2546,7 @@
 	 typeOfGeneratingProcess = 20 ;
 	 is_chemical = 1 ;
 	}
-#GEMS Ozone
+#Ozone mass mixing ratio difference (full chemistry scheme)
 'go3diff' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
