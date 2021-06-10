@@ -1190,6 +1190,8 @@ struct grib_file
     char* buffer;
     long refcount;
     grib_file* next;
+    grib_file* pool_file;
+    long pool_file_refcount;
     short id;
 };
 

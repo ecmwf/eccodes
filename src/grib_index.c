@@ -767,7 +767,7 @@ void grib_index_delete(grib_index* index)
     while (file) {
         grib_file* f = file;
         file         = file->next;
-        grib_file_delete(f);
+        grib_file_pool_delete_clone(f);
     }
     grib_context_free(index->context, index);
 }
@@ -1074,7 +1074,6 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
     char buf[1024] = {0,};
     int err = 0;
     grib_file* indfile;
-    grib_file* newfile;
 
     grib_index_key* index_key = NULL;
     grib_handle* h            = NULL;
@@ -1094,11 +1093,7 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
 
     if (!index->files) {
         grib_filesid++;
-        newfile         = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
-        newfile->id     = grib_filesid;
-        newfile->name   = strdup(file->name);
-        newfile->handle = file->handle;
-        index->files    = newfile;
+        index->files = grib_file_pool_create_clone(c, grib_filesid, file);
     }
     else {
         indfile = index->files;
@@ -1111,11 +1106,7 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
         while (indfile->next)
             indfile = indfile->next;
         grib_filesid++;
-        newfile         = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
-        newfile->id     = grib_filesid;
-        newfile->name   = strdup(file->name);
-        newfile->handle = file->handle;
-        indfile->next   = newfile;
+        indfile->next = grib_file_pool_create_clone(c, grib_filesid, file);
     }
 
     fseeko(file->handle, 0, SEEK_SET);

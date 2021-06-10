@@ -1036,6 +1036,8 @@ int grib_file_pool_read(grib_context* c, FILE* fh);
 int grib_file_pool_write(FILE* fh);
 grib_file* grib_file_open(const char* filename, const char* mode, int* err);
 void grib_file_pool_delete_file(grib_file* file);
+grib_file* grib_file_pool_create_clone(grib_context* c, short clone_id, grib_file* file);
+void grib_file_pool_delete_clone(grib_file* clone);
 void grib_file_close(const char* filename, int force, int* err);
 void grib_file_close_all(int* err);
 grib_file* grib_get_file(const char* filename, int* err);
