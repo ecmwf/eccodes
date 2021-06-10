@@ -9,7 +9,7 @@
 ! Get message lengths using two different interfaces
 ! See GRIB-292
 !
-program grib_read_from_file
+program grib_read_from_file_example
   use eccodes
   implicit none
   character(len=32) :: input_grib_file
