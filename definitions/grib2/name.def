@@ -753,6 +753,22 @@
 	 scaleFactorOfSecondWavelength = missing() ;
 	 is_aerosol_optical = 1 ;
 	}
+#Ammonia mass mixing ratio
+'Ammonia mass mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 9 ;
+	 is_chemical = 1 ;
+	}
+#Nitrogen monoxide mass mixing ratio
+'Nitrogen monoxide mass mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 11 ;
+	 is_chemical = 1 ;
+	}
 #Aromatic peroxy radical mass mixing ratio
 'Aromatic peroxy radical mass mixing ratio' = {
 	 discipline = 0 ;
@@ -2470,6 +2486,74 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Nitrogen dioxide mass mixing ratio
+'Nitrogen dioxide mass mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 5 ;
+	 is_chemical = 1 ;
+	}
+#Sulphur dioxide mass mixing ratio
+'Sulphur dioxide mass mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 8 ;
+	 is_chemical = 1 ;
+	}
+#Carbon monoxide mass mixing ratio
+'Carbon monoxide mass mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 4 ;
+	 is_chemical = 1 ;
+	}
+#Ozone mass mixing ratio (full chemistry scheme)
+'Ozone mass mixing ratio (full chemistry scheme)' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 0 ;
+	 is_chemical = 1 ;
+	}
+#Nitrogen dioxide mass mixing ratio difference
+'Nitrogen dioxide mass mixing ratio difference' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 5 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
+#Sulphur dioxide mass mixing ratio difference
+'Sulphur dioxide mass mixing ratio difference' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 8 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
+#Carbon monoxide mass mixing ratio difference
+'Carbon monoxide mass mixing ratio difference' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 4 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
+#Ozone mass mixing ratio difference (full chemistry scheme)
+'Ozone mass mixing ratio difference (full chemistry scheme)' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 0 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
 	}
 #Lake total depth
 'Lake total depth' = {

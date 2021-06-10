@@ -152,13 +152,21 @@ while (<>) {
         my $units_code = get_db_units_code($units);
         my $is_chem = "";
         my $is_aero = "";
+        my $is_srcsink = "";
         if ($aero ne "") {
             $is_aero = "1";
             $is_chem = "";
+            $is_srcsink = "";
         }
         if ($constit ne "") {
             $is_aero = "";
             $is_chem = "1";
+            $is_srcsink = "";
+        }
+        if ($sourceSink ne "") {
+            $is_aero = "";
+            $is_chem = "";
+            $is_srcsink = "1";
         }
         my $centre = $localTV ne "" ? $centre_ecmwf : $centre_wmo;
 
@@ -202,7 +210,7 @@ while (<>) {
         if (! defined $scaledValueWL2 || $scaledValueWL2 ne "") {
             $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,61,$scaledValueWL2,0);
         }
-        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,64,$sourceSink,0)  if ($sourceSink ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,64,$sourceSink,0)  if ($is_srcsink ne "");
 
         # format is only GRIB2 hence grib1 entry=0 and grib2=1
         $dbh->do("insert into param_format(param_id,grib1,grib2) values (?,?,?)",undef,$paramId,0,1);
@@ -252,11 +260,21 @@ sub write_out_file {
 
     print $outfile "  aerosolType = $aero ;\n"         if ($aero ne "");
     print $outfile "  constituentType = $constit ;\n"  if ($constit ne "");
-    print $outfile "  is_aerosol = 1 ;\n"              if ($aero ne "");
-    print $outfile "  is_chemical = 1 ;\n"             if ($constit ne "");
-
+    if ($sourceSink eq "") {
+        print $outfile "  is_aerosol = 1 ;\n"              if ($aero ne "");
+        print $outfile "  is_chemical = 1 ;\n"             if ($constit ne "");
+    } else {
+        print $outfile "  is_chemical_srcsink = 1 ;\n";
+        print $outfile "  sourceSinkChemicalPhysicalProcess = $sourceSink ;\n";
+    }
     print $outfile "  typeOfGeneratingProcess = $typeGen ;\n"  if ($typeGen ne "");
     print $outfile "  localTablesVersion = $localTV ;\n"       if ($localTV ne "");
+
+    print $outfile "  typeOfWavelengthInterval = $typeOfWLInt ;\n"          if ($typeOfWLInt ne "");
+    print $outfile "  scaleFactorOfFirstWavelength = $scaleFactorWL1 ;\n"   if ($scaleFactorWL1 ne "");
+    print $outfile "  scaledValueOfFirstWavelength = $scaledValueWL1 ;\n"   if ($scaledValueWL1 ne "");
+    print $outfile "  scaleFactorOfSecondWavelength = $scaleFactorWL2 ;\n"  if ($scaleFactorWL2 ne "");
+    print $outfile "  scaledValueOfSecondWavelength = $scaledValueWL2 ;\n"  if ($scaledValueWL2 ne "");
 
     print $outfile "}\n";
 }
