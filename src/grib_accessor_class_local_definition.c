@@ -333,8 +333,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             break;
 
         default:
-            grib_context_log(a->context, GRIB_LOG_ERROR, "Invalid localDefinitionNumber %d", localDefinitionNumber);
-            return GRIB_ENCODING_ERROR;
+            grib_context_log(a->context, GRIB_LOG_WARNING, "Set localDefinitionNumber: keeping the same PDTN");
+            productDefinitionTemplateNumberNew = productDefinitionTemplateNumber;
             break;
     }
 
