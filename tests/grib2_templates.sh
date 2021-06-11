@@ -9,7 +9,6 @@
 #
 . ./include.sh
 set -u
-REDIRECT=/dev/null
 
 label="grib2_templates"
 

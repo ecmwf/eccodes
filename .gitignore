@@ -15,9 +15,6 @@ configure
 grib_api.spec
 grib_api.pc
 grib_api_f90.pc
-rpms/eccodes.pc
-rpms/eccodes.spec
-rpms/eccodes_f90.pc
 
 # compiled source #
 ###################

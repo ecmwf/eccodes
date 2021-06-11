@@ -32,8 +32,15 @@ while (<>) {
     #No Title_en    SubTitle_en    CodeFlag    Value    MeaningParameterDescription_en  Note_en UnitComments_en  Status
     #my ($rowid, $title, $subtitle, $codeFlag, $value, $meaning, $note, $unit, $status) = split(/\t/);
     
+    s/Hovmöller/Hovmoller/;
+    s/Carrée/Carree/;
+    s/μm/um/;
+    s/°C/degree C/;
+    s/f\(n\) = C2 × f\(n-1\)/f(n) = C2 * f(n-1)/;
+    s/\(see separate doc or pdf file\)/see separate doc or pdf file/;
+
     my ($title, $subtitle, $codeFlag, $value, $meaning, $note, $unit, $status) = split(/\t/);
-    
+
     if ($title =~ /Code table ([0-9.]+)/) {
         $codetable = $1;
         if ($subtitle =~ /Product [Dd]iscipline (\d+).*parameter category (\d+)/) {
@@ -173,8 +180,11 @@ sub TranslateCodes_Table_4_4 {
 ###################################################################################################
 sub TranslateCodes_Table_4_5 {
     my ($code) = @_;
-    return "sfc"  if ($code eq "1" || $code eq "8" || $code eq "17" || $code eq "18" ||
-            $code eq "101" || $code eq "103" || $code eq "106" || $code eq "177");
+    return "sfc"  if ($code eq "1" || $code eq "7" ||
+            $code eq "8"   || $code eq "17"  || $code eq "18"  ||
+            $code eq "101" || $code eq "103" || $code eq "106" ||
+            $code eq "162" || $code eq "166" || $code eq "174" ||
+            $code eq "177");
     return "pl"   if ($code eq "100");
     return "ml"   if ($code eq "105");
     return "pt"   if ($code eq "107");

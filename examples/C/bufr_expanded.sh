@@ -14,12 +14,11 @@ label="bufr_expanded_test_c"
 
 #Prepare tmp file
 fTmp=${label}.tmp.txt
-rm -f $fTmp | true
+rm -f $fTmp
 
-#-----------------------------------------------------
+#----------------------------------------------------
 # Test reading the expanded values
 #----------------------------------------------------
-  
 f=${data_dir}/bufr/syno_1.bufr
 REDIRECT=/dev/null
 

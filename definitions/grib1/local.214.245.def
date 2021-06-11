@@ -1,20 +1,13 @@
 # (C) Copyright 2005- ECMWF.
 
-# START 1/local.98.245 ----------------------------------------------------------------------
-# LOCAL 214 98 245
+# # Members iformation of
+# # SREPS Short-Range EPS
 #
-#!
-#!       localDefinitionTemplate_245
-#!       ---------------------------
-#!
-#! # Members iformation of
-#! # SREPS Short-Range EPS
-#!
-#! Last update: 20070323
-#!
-#!Description                    Octet   Code    Ksec1   Count
-#!-----------                    -----   ----    -----   -----
-#!
+# Last update: 20070323
+#
+#Description                    Octet   Code    Ksec1   Count
+#-----------                    -----   ----    -----   -----
+#
 #localDefinitionNumber           41      I1      37      -
 #class                           42      I1      38      -
 #type                            43      I1      39      -
@@ -30,7 +23,7 @@
 #Extra_Data_FreeFormat_(0=none)  100     I2      71      -
 #Data_Descriptor_Bytes           102     BYTES   72      Extra_Data_FreeFormat_(0=none)
 #padToAMultipleOf80Bytes         103     PADFROM n/a     80
-#!
+#
 #
 
 template mars_labeling "grib1/mars_labeling.def";

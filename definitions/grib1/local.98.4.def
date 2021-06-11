@@ -1,4 +1,5 @@
 # (C) Copyright 2005- ECMWF.
+# Ocean model data
 
 constant GRIBEXSection1Problem = 0 ;
 
@@ -7,19 +8,16 @@ transient localFlag=1 : hidden ;
 
 constant oceanStream = 1090;
 
-if(marsStream == oceanStream)
-{
- unsigned[2] perturbationNumber : dump ;
+if(marsStream == oceanStream) {
+  unsigned[2] perturbationNumber : dump ;
 }
 
-if(marsStream != oceanStream)
-{
- unsigned[1] perturbationNumber : dump ;
- pad padding_loc4_2(1);
+if(marsStream != oceanStream) {
+  unsigned[1] perturbationNumber : dump ;
+  pad padding_loc4_2(1);
 }
 
 unsigned[1] flagShowingPostAuxiliaryArrayInUse;
-# 'grib1/ocean.1.table';
 
 unsigned[1] systemNumber : dump ;
 alias system=systemNumber;
@@ -39,7 +37,6 @@ unsigned[1] horizontalCoordinateDefinition : dump ;
 unsigned[1] timeUnitFlag : dump ;
 
 unsigned[1] timeCoordinateDefinition : dump ;
-
 
 #
 # Position definition:  mixed coordinates
@@ -105,13 +102,11 @@ unsigned[2] numberInTheAuxiliaryArray : dump ;
 # Horizontal coordinate definition
 #
 
-
 unsigned[4] horizontalCoordinateSupplement[numberInHorizontalCoordinates] : dump;
 
 #
 # Mixed coordinate definition
 #
-
 
 unsigned[4] mixedCoordinateDefinition[numberInMixedCoordinateDefinition] : dump;
 
@@ -119,7 +114,6 @@ unsigned[4] mixedCoordinateDefinition[numberInMixedCoordinateDefinition] : dump;
 # Grid coordinate list
 #
 if (numberInTheGridCoordinateList>0) {
-
   signed[4] gridCoordinate[numberInTheGridCoordinateList] : dump;
 }
 
@@ -135,19 +129,18 @@ unsigned[4] auxiliary[numberInTheAuxiliaryArray] : dump;
 
 constant postAuxiliaryArrayPresent = 1;
 
-if (flagShowingPostAuxiliaryArrayInUse == postAuxiliaryArrayPresent){
-    unsigned[4] sizeOfPostAuxiliaryArrayPlusOne  : dump;
-    meta sizeOfPostAuxiliaryArray evaluate(sizeOfPostAuxiliaryArrayPlusOne - 1);
-	if (sizeOfPostAuxiliaryArray>0) {
-      unsigned[4] postAuxiliary[sizeOfPostAuxiliaryArray] : dump;
-	
-      if (sizeOfPostAuxiliaryArray>3) {
-        meta referenceDate element(postAuxiliary,3);
-      }
-    } else {
-      transient referenceDate=0;
-    }
+if (flagShowingPostAuxiliaryArrayInUse == postAuxiliaryArrayPresent) {
+  unsigned[4] sizeOfPostAuxiliaryArrayPlusOne  : dump;
+  meta sizeOfPostAuxiliaryArray evaluate(sizeOfPostAuxiliaryArrayPlusOne - 1);
+  if (sizeOfPostAuxiliaryArray>0) {
+    unsigned[4] postAuxiliary[sizeOfPostAuxiliaryArray] : dump;
 
+    if (sizeOfPostAuxiliaryArray>3) {
+      meta referenceDate element(postAuxiliary,3);
+    }
+  } else {
+    transient referenceDate=0;
+  }
 }
 alias hdate = dataDate;
 

@@ -14,6 +14,7 @@ GRIB (
       grib_nearest
       grib_precision
       grib_print_data
+      grib_read_from_file
       grib_samples
       grib_set_bitmap
       grib_set_data
@@ -34,6 +35,7 @@ BUFR (
       bufr_read_scatterometer
       bufr_read_synop
       bufr_read_temp
+      bufr_read_tempf
       bufr_set_keys
       bufr_subset
       bufr_read_tropical_cyclone

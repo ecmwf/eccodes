@@ -19,16 +19,19 @@ missingValue = 1e+20  # A value out of range
 
 
 def example(INPUT):
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     while 1:
         gid = codes_grib_new_from_file(f)
         if gid is None:
             break
 
-        # Set the value representing the missing value in the field.
-        # Choose a missingValue that does not correspond to any real value in the data array
-        codes_set(gid, "missingValue", missingValue)
+        bitmapPresent = codes_get(gid, "bitmapPresent")
+
+        if bitmapPresent:
+            # Set the value representing the missing value in the field.
+            # Choose a missingValue that does not correspond to any real value in the data array
+            codes_set(gid, "missingValue", missingValue)
 
         iterid = codes_grib_iterator_new(gid, 0)
 
@@ -42,7 +45,7 @@ def example(INPUT):
 
             sys.stdout.write("- %d - lat=%.6e lon=%.6e value=" % (i, lat, lon))
 
-            if value == missingValue:
+            if bitmapPresent and value == missingValue:
                 print("missing")
             else:
                 print("%.6f" % value)

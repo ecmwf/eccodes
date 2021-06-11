@@ -37,7 +37,7 @@ typedef struct grib_action_gen
     grib_arguments* params;
 } grib_action_gen;
 
-void print_names(grib_action* a)
+static void print_names(grib_action* a)
 {
     while (a) {
         if (a->op && !strcmp(a->op, "label")) {

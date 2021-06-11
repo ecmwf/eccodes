@@ -205,7 +205,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if ((ret = grib_get_long_array_internal(grib_handle_of_accessor(a), self->array, ar, &size)) != GRIB_SUCCESS)
         return ret;
 
-
     ar[self->element] = *val;
 
     if ((ret = grib_set_long_array_internal(grib_handle_of_accessor(a), self->array, ar, size)) != GRIB_SUCCESS)

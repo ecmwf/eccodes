@@ -9,57 +9,56 @@
 !
 ! FORTRAN 90 Implementation: bufr_expanded
 !
-! Description: how to read all the expanded data values from BUFR messages.
+! Description: How to read all the expanded data values from BUFR messages.
 !
 !
 program bufr_expanded
-use eccodes
-implicit none
-integer            :: ifile
-integer            :: iret
-integer            :: ibufr
-integer            :: i
-integer            :: count=0
-integer(kind=4)    :: numberOfValues
-real(kind=8), dimension(:), allocatable       :: values
+   use eccodes
+   implicit none
+   integer            :: ifile
+   integer            :: iret
+   integer            :: ibufr
+   integer            :: i
+   integer            :: count = 0
+   integer(kind=4)    :: numberOfValues
+   real(kind=8), dimension(:), allocatable       :: values
 
-  call codes_open_file(ifile,'../../data/bufr/syno_1.bufr','r')
+   call codes_open_file(ifile, '../../data/bufr/syno_1.bufr', 'r')
 
-  ! The first bufr message is loaded from file,
-  ! ibufr is the bufr id to be used in subsequent calls
-  call codes_bufr_new_from_file(ifile,ibufr,iret)
+   ! The first bufr message is loaded from file,
+   ! ibufr is the bufr id to be used in subsequent calls
+   call codes_bufr_new_from_file(ifile, ibufr, iret)
 
-  do while (iret/=CODES_END_OF_FILE)
+   do while (iret /= CODES_END_OF_FILE)
 
-    write(*,*) 'message: ',count
+      write (*, *) 'message: ', count
 
-    ! We need to instruct ecCodes to expand all the descriptors
-    ! i.e. unpack the data values
-    call codes_set(ibufr,"unpack",1);
+      ! We need to instruct ecCodes to expand all the descriptors
+      ! i.e. unpack the data values
+      call codes_set(ibufr, "unpack", 1); 
+      ! Get the expanded data values
+      call codes_get(ibufr, 'numericValues', values)
 
-    ! Get the expanded data values
-    call codes_get(ibufr,'numericValues',values)
+      numberOfValues = size(values)
 
-    numberOfValues=size(values)
+      do i = 1, numberOfValues
+         write (*, *) '  ', i, values(i)
+      end do
 
-    do i=1,numberOfValues
-        write(*,*) '  ',i,values(i)
-    enddo
+      ! Release the bufr message
+      call codes_release(ibufr)
 
-    ! Release the bufr message
-    call codes_release(ibufr)
+      ! Load the next bufr message
+      call codes_bufr_new_from_file(ifile, ibufr, iret)
 
-    ! Load the next bufr message
-    call codes_bufr_new_from_file(ifile,ibufr,iret)
+      ! Free array
+      deallocate (values)
 
-    ! Free array
-    deallocate(values)
+      count = count + 1
 
-    count=count+1
+   end do
 
-  end do
-
-  ! Close file
-  call codes_close_file(ifile)
+   ! Close file
+   call codes_close_file(ifile)
 
 end program bufr_expanded

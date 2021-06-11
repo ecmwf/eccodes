@@ -136,6 +136,9 @@ static int find(grib_nearest* nearest, grib_handle* h,
         return ret;
     radius = ((double)iradius) / 1000.0;
 
+    /* Compute lat/lon info, create iterator etc if it's the 1st time or different grid.
+     * This is for performance: if the grid has not changed, we only do this once
+     * and reuse for other messages */
     if (!nearest->h || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
         double dummy = 0;
         double olat  = 1.e10;
@@ -183,6 +186,9 @@ static int find(grib_nearest* nearest, grib_handle* h,
     }
     nearest->h = h;
 
+    /* Compute distances if it's the 1st time or different point or different grid.
+     * This is for performance: if the grid and the input point have not changed
+     * we only do this once and reuse for other messages */
     if (!self->distances || (flags & GRIB_NEAREST_SAME_POINT) == 0 || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
         double* lons           = NULL;
         int nlon               = 0;

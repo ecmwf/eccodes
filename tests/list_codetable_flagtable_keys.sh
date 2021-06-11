@@ -17,7 +17,7 @@ TEMP=temp.list_codetable_flagtable_keys.txt
 
 touch $TEMP
 echo "Go through all files in $ECCODES_DEFINITION_PATH ..."
-for file in `find $ECCODES_DEFINITION_PATH/ -name '*.def' -print`; do
+for file in `find $ECCODES_DEFINITION_PATH/ -name '*.def' -print | grep -v grib3/`; do
   ${test_dir}/list_codetable_flagtable_keys $file >> $TEMP
 done
 

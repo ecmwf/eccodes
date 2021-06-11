@@ -11,7 +11,7 @@
 . ./include.sh
 label="grib_dump_debug"
 temp=temp.$label.txt
-
+set -u
 REDIRECT=/dev/null
 
 if [ $HAVE_MEMFS -eq 1 ]; then
@@ -93,5 +93,13 @@ for file in $files; do
       set -e
    fi
 done
+
+# ECC-1247: indicate which keys can have values which are 'missing'
+# ------------------------------------------------------------------
+infile=${data_dir}/sample.grib2
+${tools_dir}/grib_dump -D $infile > $temp
+grep -q "unsigned hoursAfterDataCutoff = 0 (can be missing)" $temp
+grep -q "unsigned iDirectionIncrement = 2000000 (can be missing)" $temp
+
 
 rm -f $temp

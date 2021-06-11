@@ -15,7 +15,6 @@
 
 . ./include.sh
 
-REDIRECT=/dev/null
 
 $EXEC ${test_dir}/grib_bpv_limit ${data_dir}/regular_latlon_surface.grib2 2>/dev/null
 

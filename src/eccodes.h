@@ -44,37 +44,37 @@ Log mode for information for processing information
 
 /* Types */
 #define CODES_TYPE_UNDEFINED GRIB_TYPE_UNDEFINED
-#define CODES_TYPE_LONG GRIB_TYPE_LONG
-#define CODES_TYPE_DOUBLE GRIB_TYPE_DOUBLE
-#define CODES_TYPE_STRING GRIB_TYPE_STRING
-#define CODES_TYPE_BYTES GRIB_TYPE_BYTES
-#define CODES_TYPE_SECTION GRIB_TYPE_SECTION
-#define CODES_TYPE_LABEL GRIB_TYPE_LABEL
-#define CODES_TYPE_MISSING GRIB_TYPE_MISSING
+#define CODES_TYPE_LONG      GRIB_TYPE_LONG
+#define CODES_TYPE_DOUBLE    GRIB_TYPE_DOUBLE
+#define CODES_TYPE_STRING    GRIB_TYPE_STRING
+#define CODES_TYPE_BYTES     GRIB_TYPE_BYTES
+#define CODES_TYPE_SECTION   GRIB_TYPE_SECTION
+#define CODES_TYPE_LABEL     GRIB_TYPE_LABEL
+#define CODES_TYPE_MISSING   GRIB_TYPE_MISSING
 
 /* Missing values */
-#define CODES_MISSING_LONG GRIB_MISSING_LONG
+#define CODES_MISSING_LONG   GRIB_MISSING_LONG
 #define CODES_MISSING_DOUBLE GRIB_MISSING_DOUBLE
 
 /*set spec flags*/
 #define CODES_UTIL_SET_SPEC_FLAGS_ONLY_PACKING GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING
 
 /* Dump option flags*/
-#define CODES_DUMP_FLAG_READ_ONLY GRIB_DUMP_FLAG_READ_ONLY
-#define CODES_DUMP_FLAG_DUMP_OK GRIB_DUMP_FLAG_DUMP_OK
-#define CODES_DUMP_FLAG_VALUES GRIB_DUMP_FLAG_VALUES
-#define CODES_DUMP_FLAG_CODED GRIB_DUMP_FLAG_CODED
-#define CODES_DUMP_FLAG_OCTECT GRIB_DUMP_FLAG_OCTECT
-#define CODES_DUMP_FLAG_ALIASES GRIB_DUMP_FLAG_ALIASES
-#define CODES_DUMP_FLAG_TYPE GRIB_DUMP_FLAG_TYPE
-#define CODES_DUMP_FLAG_HEXADECIMAL GRIB_DUMP_FLAG_HEXADECIMAL
-#define CODES_DUMP_FLAG_NO_DATA GRIB_DUMP_FLAG_NO_DATA
-#define CODES_DUMP_FLAG_ALL_DATA GRIB_DUMP_FLAG_ALL_DATA
+#define CODES_DUMP_FLAG_READ_ONLY      GRIB_DUMP_FLAG_READ_ONLY
+#define CODES_DUMP_FLAG_DUMP_OK        GRIB_DUMP_FLAG_DUMP_OK
+#define CODES_DUMP_FLAG_VALUES         GRIB_DUMP_FLAG_VALUES
+#define CODES_DUMP_FLAG_CODED          GRIB_DUMP_FLAG_CODED
+#define CODES_DUMP_FLAG_OCTET          GRIB_DUMP_FLAG_OCTET
+#define CODES_DUMP_FLAG_ALIASES        GRIB_DUMP_FLAG_ALIASES
+#define CODES_DUMP_FLAG_TYPE           GRIB_DUMP_FLAG_TYPE
+#define CODES_DUMP_FLAG_HEXADECIMAL    GRIB_DUMP_FLAG_HEXADECIMAL
+#define CODES_DUMP_FLAG_NO_DATA        GRIB_DUMP_FLAG_NO_DATA
+#define CODES_DUMP_FLAG_ALL_DATA       GRIB_DUMP_FLAG_ALL_DATA
 #define CODES_DUMP_FLAG_ALL_ATTRIBUTES GRIB_DUMP_FLAG_ALL_ATTRIBUTES
 
 /* codes_nearest flags */
-#define CODES_NEAREST_SAME_GRID GRIB_NEAREST_SAME_GRID
-#define CODES_NEAREST_SAME_DATA GRIB_NEAREST_SAME_DATA
+#define CODES_NEAREST_SAME_GRID  GRIB_NEAREST_SAME_GRID
+#define CODES_NEAREST_SAME_DATA  GRIB_NEAREST_SAME_DATA
 #define CODES_NEAREST_SAME_POINT GRIB_NEAREST_SAME_POINT
 
 /*! Iteration is carried out on all the keys available in the message
@@ -133,7 +133,7 @@ typedef struct grib_key_value_list codes_key_value_list;
 */
 typedef struct grib_handle codes_handle;
 
-/*! GRIB multi field handle,   structure used to build multi fields messages.
+/*! GRIB multi-field handle, structure used to build multi-field messages.
     \ingroup codes_handle
     \struct codes_multi_handle
  */
@@ -312,7 +312,7 @@ int codes_index_select_long(codes_index* index, const char* key, long value);
 int codes_index_select_double(codes_index* index, const char* key, double value);
 
 /**
- *  Select the message subset with key==value. The value is a string. The key must have been created with string type or have string as native type if the type was not explicitly defined in the index creation.
+ * Select the message subset with key==value. The value is a string. The key must have been created with string type or have string as native type if the type was not explicitly defined in the index creation.
  *
  * @param index       : an index created from a file.
  *     The index must have been created with the key in argument.
@@ -323,13 +323,13 @@ int codes_index_select_double(codes_index* index, const char* key, double value)
 int codes_index_select_string(codes_index* index, const char* key, const char* value);
 
 /**
- *  Create a new handle from an index after having selected the key values.
- *  All the keys belonging to the index must be selected before calling this function. Successive calls to this function will return all the handles compatible with the constraints defined selecting the values of the index keys.
+ * Create a new handle from an index after having selected the key values.
+ * All the keys belonging to the index must be selected before calling this function. Successive calls to this function will return all the handles compatible with the constraints defined selecting the values of the index keys.
  * When no more handles are available from the index a NULL pointer is returned and the err variable is set to CODES_END_OF_INDEX.
  *
  * @param index       : an index created from a file.
- * @param err         :  0 if OK, integer value on error. CODES_END_OF_INDEX when no more handles are contained in the index.
- * @return            grib handle.
+ * @param err         : 0 if OK, integer value on error. CODES_END_OF_INDEX when no more handles are contained in the index.
+ * @return            GRIB handle.
  */
 codes_handle* codes_handle_new_from_index(codes_index* index, int* err);
 
@@ -435,7 +435,7 @@ codes_handle* codes_handle_new_from_message(codes_context* c, const void* data, 
 /**
 *  Create a handle from a user message in memory. The message will not be freed at the end.
 *  The message will be copied as soon as a modification is needed.
-*  This function works also with multi field messages.
+*  This function works also with multi-field messages.
 *
 * @param c           : the context from which the handle will be created (NULL for default context)
 * @param data        : the actual message
@@ -685,7 +685,7 @@ int codes_grib_nearest_delete(codes_nearest* nearest);
 * Find the nearest point of a set of points whose latitudes and longitudes
 * are given in the inlats, inlons arrays respectively.
 * If the flag is_lsm is 1 the nearest land point is returned and the
-* grib passed as handle (h) is considered a land sea mask.
+* GRIB passed as handle (h) is considered a land sea mask.
 * The land nearest point is the nearest point with land sea mask value>=0.5.
 * If no nearest land points are found the nearest value is returned.
 * If the flag is_lsm is 0 the nearest point is returned.
@@ -1067,14 +1067,14 @@ void codes_context_set_definitions_path(codes_context* c, const char* path);
 void codes_context_set_samples_path(codes_context* c, const char* path);
 
 /**
-*  Turn on support for multiple fields in single GRIB messages
+*  Turn on support for multi-fields in single GRIB messages
 *
 * @param c            : the context to be modified
 */
 void codes_grib_multi_support_on(codes_context* c);
 
 /**
-*  Turn off support for multiple fields in single GRIB messages
+*  Turn off support for multi-fields in single GRIB messages
 *
 * @param c            : the context to be modified
 */

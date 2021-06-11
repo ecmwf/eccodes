@@ -8534,8 +8534,8 @@
 	 table2Version = 217 ;
 	 indicatorOfParameter = 18 ;
 	}
-#Ammonia
-'Ammonia' = {
+#Ammonia mass mixing ratio
+'Ammonia mass mixing ratio' = {
 	 table2Version = 217 ;
 	 indicatorOfParameter = 19 ;
 	}
@@ -8569,8 +8569,8 @@
 	 table2Version = 217 ;
 	 indicatorOfParameter = 26 ;
 	}
-#Nitrogen monoxide
-'Nitrogen monoxide' = {
+#Nitrogen monoxide mass mixing ratio
+'Nitrogen monoxide mass mixing ratio' = {
 	 table2Version = 217 ;
 	 indicatorOfParameter = 27 ;
 	}
@@ -16124,18 +16124,18 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 100 ;
 	}
-#Nitrogen dioxide
-'Nitrogen dioxide' = {
+#Nitrogen dioxide mass mixing ratio
+'Nitrogen dioxide mass mixing ratio' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 121 ;
 	}
-#Sulphur dioxide
-'Sulphur dioxide' = {
+#Sulphur dioxide mass mixing ratio
+'Sulphur dioxide mass mixing ratio' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 122 ;
 	}
-#Carbon monoxide
-'Carbon monoxide' = {
+#Carbon monoxide mass mixing ratio
+'Carbon monoxide mass mixing ratio' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 123 ;
 	}
@@ -16379,8 +16379,8 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 185 ;
 	}
-#GEMS Ozone
-'GEMS Ozone' = {
+#Ozone mass mixing ratio (full chemistry scheme)
+'Ozone mass mixing ratio (full chemistry scheme)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 203 ;
 	}
@@ -16824,18 +16824,18 @@
 	 table2Version = 211 ;
 	 indicatorOfParameter = 100 ;
 	}
-#Nitrogen dioxide
-'Nitrogen dioxide' = {
+#Nitrogen dioxide mass mixing ratio difference
+'Nitrogen dioxide mass mixing ratio difference' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 121 ;
 	}
-#Sulphur dioxide
-'Sulphur dioxide' = {
+#Sulphur dioxide mass mixing ratio difference
+'Sulphur dioxide mass mixing ratio difference' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 122 ;
 	}
-#Carbon monoxide
-'Carbon monoxide' = {
+#Carbon monoxide mass mixing ratio difference
+'Carbon monoxide mass mixing ratio difference' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 123 ;
 	}
@@ -17079,8 +17079,8 @@
 	 table2Version = 211 ;
 	 indicatorOfParameter = 185 ;
 	}
-#GEMS Ozone
-'GEMS Ozone' = {
+#Ozone mass mixing ratio difference (full chemistry scheme)
+'Ozone mass mixing ratio difference (full chemistry scheme)' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 203 ;
 	}
@@ -17174,8 +17174,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 6 ;
 	}
-#Lake depth
-'Lake depth' = {
+#Lake total depth
+'Lake total depth' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 7 ;
 	}
@@ -17204,13 +17204,13 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 12 ;
 	}
-#Lake ice temperature
-'Lake ice temperature' = {
+#Lake ice surface temperature
+'Lake ice surface temperature' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 13 ;
 	}
-#Lake ice depth
-'Lake ice depth' = {
+#Lake ice total depth
+'Lake ice total depth' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 14 ;
 	}

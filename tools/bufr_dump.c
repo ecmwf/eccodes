@@ -65,11 +65,11 @@ grib_option grib_options[] = {
 const char* tool_description = "Dump the content of a BUFR file in different formats.";
 const char* tool_name        = "bufr_dump";
 const char* tool_usage       = "[options] bufr_file bufr_file ...";
-static int json                   = 0;
-static int dump_descriptors       = 0;
-static char* json_option          = 0;
-static int first_handle           = 1;
-static grib_dumper* dumper        = 0;
+static int json              = 0;
+static int dump_descriptors  = 0;
+static char* json_option     = 0;
+static int first_handle      = 1;
+static grib_dumper* dumper   = 0;
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -125,7 +125,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("O")) {
         options->dump_mode  = "wmo";
         json                = 0;
-        options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTECT | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
+        options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("p")) {
@@ -449,7 +449,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 new_handle = grib_handle_new_from_message(0, buffer, size);
                 Assert(new_handle);
                 /* Replace handle with the new one which has only one subset */
-                h = new_handle;
+                h      = new_handle;
                 hclone = h2; /* to be deleted later */
             }
         }

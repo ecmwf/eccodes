@@ -190,3 +190,117 @@
  parameterCategory = 174 ;
  parameterNumber = 8 ;
 }
+#Direct solar radiation
+'47' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 47 ;
+}
+#Lake total layer temperature
+'228011' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 11 ;
+}
+#Lake mix-layer temperature
+'228008' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 8 ;
+}
+#Lake mix-layer depth
+'228009' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 9 ;
+}
+#Lake bottom temperature
+'228010' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 10 ;
+}
+#Lake shape factor
+'228012' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 12 ;
+}
+#Lake ice surface temperature
+'228013' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 13 ;
+}
+#Lake ice total depth
+'228014' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 14 ;
+}
+#Lake total depth
+'228007' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 7 ;
+}
+#GEMS Ozone
+'210203' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 203 ;
+}
+#GEMS Ozone
+'211203' = {
+ discipline = 192 ;
+ parameterCategory = 211 ;
+ parameterNumber = 203 ;
+}
+#Carbon monoxide
+'210123' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 123 ;
+}
+#Carbon monoxide
+'211123' = {
+ discipline = 192 ;
+ parameterCategory = 211 ;
+ parameterNumber = 123 ;
+}
+#Nitrogen dioxide
+'210121' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 121 ;
+}
+#Nitrogen dioxide
+'211121' = {
+ discipline = 192 ;
+ parameterCategory = 211 ;
+ parameterNumber = 121 ;
+}
+#Sulphur dioxide
+'210122' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 122 ;
+}
+#Sulphur dioxide
+'211122' = {
+ discipline = 192 ;
+ parameterCategory = 211 ;
+ parameterNumber = 122 ;
+}
+#Ammonia
+'217019' = {
+ discipline = 192 ;
+ parameterCategory = 217 ;
+ parameterNumber = 19 ;
+}
+#Nitrogen monoxide
+'217027' = {
+ discipline = 192 ;
+ parameterCategory = 217 ;
+ parameterNumber = 27 ;
+}

@@ -1,5 +1,5 @@
 # Code table 4.243 - Tile class
-0 0 Reserved 
+0 0 Reserved
 1 1 Evergreen broadleaved forest 
 2 2 Deciduous broadleaved closed forest 
 3 3 Deciduous broadleaved open forest 
@@ -39,5 +39,5 @@
 37 37 Closed forest or shrubland permanently flooded 
 38 38 Closed to open grassland regularly flooded 
 39 39 Undefined 
-# 40-32767 Reserved 
+# 40-32767 Reserved
 # 32768- Reserved for local use 

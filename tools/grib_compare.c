@@ -91,6 +91,8 @@ static int global_counter   = 0;
 static int theStart         = -1;
 static int theEnd           = -1;
 
+#define MINIMUM(x, y) ((x) < (y) ? (x) : (y))
+
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 {
     if (*a != *b)
@@ -1071,17 +1073,18 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             }
 
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS) {
-                if (memcmp(uval1, uval2, len1) != 0) {
-                    for (i = 0; i < len1; i++)
+                const size_t len_min = MINIMUM(len1, len2);
+                if (memcmp(uval1, uval2, len_min) != 0) {
+                    for (i = 0; i < len_min; i++)
                         if (uval1[i] != uval2[i]) {
                             printInfo(h1);
                             save_error(c, name);
-                            if (len1 == 1)
+                            if (len_min == 1)
                                 printf("[%s] byte values are different: [%02x] and [%02x]\n",
                                        name, uval1[i], uval2[i]);
                             else
                                 printf("[%s] byte value %d of %ld is different: [%02x] and [%02x]\n",
-                                       name, i, (long)len1, uval1[i], uval2[i]);
+                                       name, i, (long)len_min, uval1[i], uval2[i]);
 
                             err1 = GRIB_VALUE_MISMATCH;
                             break;

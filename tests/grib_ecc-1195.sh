@@ -10,7 +10,7 @@
 
 . ./include.sh
 set -u
-REDIRECT=/dev/null
+
 label="grib_ecc-1195-test"
 temp1=temp.$label.grib
 temp2=temp.$label.txt

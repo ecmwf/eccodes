@@ -75,21 +75,21 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
     int err = 0;
 
-    double missingValue  = 9999;
-    int skip_missing     = 1;
-    char* missing_string = NULL;
-    int i                = 0;
-    grib_values* values  = NULL;
-    grib_iterator* iter  = NULL;
-    char* format_values  = NULL;
+    double missingValue     = 9999;
+    int skip_missing        = 1;
+    char* missing_string    = NULL;
+    int i                   = 0;
+    grib_values* values     = NULL;
+    grib_iterator* iter     = NULL;
+    char* format_values     = NULL;
     char format_latlons[32] = {0,};
     char* default_format_values  = "%.10e";
     char* default_format_latlons = "%9.3f%9.3f";
-    int print_keys       = grib_options_on("p:");
-    long numberOfPoints  = 0;
-    long bitmapPresent   = 0;
-    long* bitmap         = NULL; /* bitmap array */
-    size_t bmp_len       = 0;
+    int print_keys               = grib_options_on("p:");
+    long numberOfPoints          = 0;
+    long bitmapPresent           = 0;
+    long* bitmap                 = NULL; /* bitmap array */
+    size_t bmp_len               = 0;
     double *data_values = 0, *lats = 0, *lons = 0;
     int n       = 0;
     size_t size = 0, num_bytes = 0;
@@ -127,7 +127,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     if (grib_options_on("F:")) {
         format_values = grib_options_get_option("F:");
-    } else {
+    }
+    else {
         format_values = default_format_values;
     }
 
@@ -139,8 +140,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                     str, default_format_latlons);
             exit(1);
         }
-        sprintf(format_latlons, "%s ", str);/* Add a final space to separate from data values */
-    } else {
+        sprintf(format_latlons, "%s ", str); /* Add a final space to separate from data values */
+    }
+    else {
         sprintf(format_latlons, "%s ", default_format_latlons);
     }
 

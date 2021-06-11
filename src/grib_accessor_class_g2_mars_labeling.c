@@ -239,10 +239,12 @@ static int extra_set(grib_accessor* a, long val)
     int is_instant               = -1;
     long is_chemical             = 0;
     long is_chemical_distfn      = 0;
+    long is_chemical_srcsink     = 0;
     long is_aerosol              = 0;
     long is_aerosol_optical      = 0;
 
     grib_get_long(hand, "is_chemical", &is_chemical);
+    grib_get_long(hand, "is_chemical_srcsink", &is_chemical_srcsink);
     grib_get_long(hand, "is_chemical_distfn", &is_chemical_distfn);
     grib_get_long(hand, "is_aerosol", &is_aerosol);
     grib_get_long(hand, "is_aerosol_optical", &is_aerosol_optical);
@@ -414,6 +416,7 @@ static int extra_set(grib_accessor* a, long val)
                     productDefinitionTemplateNumberNew = grib2_select_PDTN(
                         is_eps, is_instant,
                         is_chemical,
+                        is_chemical_srcsink,
                         is_chemical_distfn,
                         is_aerosol,
                         is_aerosol_optical);

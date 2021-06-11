@@ -70,6 +70,12 @@
 1096 wmfm Wave monthly forecast means
 1097 smma Seasonal monthly means anomalies
 1110 seap Sensitive area prediction
+1120 eefh Extended ensemble forecast hindcast
+1121 eehs Extended ensemble forecast hindcast statistics
+1122 eefo Extended ensemble prediction system
+1123 weef Wave extended ensemble forecast
+1124 weeh Wave extended ensemble forecast hindcast
+1125 wees Wave extended ensemble forecast hindcast statistics
 1200 mnfc Real-time
 1201 mnfh Hindcasts
 1202 mnfa Anomalies
