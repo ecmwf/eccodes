@@ -223,9 +223,9 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
             auto h = codes_handle_clone(input.gribHandle(i));
             HandleDeleter hf(h);
 
-            long numberOfValues;
-            GRIB_CALL(codes_get_long(h, "numberOfValues", &numberOfValues));
-            if (size_t(numberOfValues) != field.values(i).size()) {
+            long n;
+            GRIB_CALL(codes_get_long(h, "numberOfDataPoints", &n));
+            if (size_t(n) != field.values(i).size()) {
                 throw exception::UserError("Using 'filter' requires preserving the number of points from input");
             }
 
