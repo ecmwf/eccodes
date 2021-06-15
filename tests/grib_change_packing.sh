@@ -61,6 +61,7 @@ test_packing() {
 # ------------
 input=${data_dir}/spherical_model_level.grib2
 output=`${tools_dir}/grib_set -r -s packingType=spectral_simple $input $temp 2>&1`
+grib_check_key_equals $temp packingType 'spectral_simple'
 # Check no error was posted i.e. output string is empty
 [ -z "$output" ]
 res1=`${tools_dir}/grib_get '-F%.1f' -p avg,enorm $input`
@@ -83,5 +84,14 @@ stats2=`${tools_dir}/grib_get -F%.2f -p skew,kurt $temp`
 # -------------------------
 test_packing $grib1 $packing1
 test_packing $grib2 $packing2
+
+
+# spectral_simple for GRIB1
+# -------------------------
+input=${data_dir}/spherical_model_level.grib1
+${tools_dir}/grib_set -r -s packingType=spectral_simple $input $temp
+grib_check_key_equals $temp packingType 'spectral_simple'
+${tools_dir}/grib_ls -p numberOfCodedValues $temp
+
 
 rm -f $temp
