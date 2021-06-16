@@ -139,18 +139,6 @@
 	 parameterCategory = 217 ;
 	 parameterNumber = 18 ;
 	}
-#Ammonia
-'mass_fraction_of_ammonia_in_air' = {
-	 discipline = 192 ;
-	 parameterCategory = 217 ;
-	 parameterNumber = 19 ;
-	}
-#Nitrogen monoxide
-'mass_fraction_of_nitrogen_monoxide_in_air' = {
-	 discipline = 192 ;
-	 parameterCategory = 217 ;
-	 parameterNumber = 27 ;
-	}
 #Hydroxyl radical
 'mass_fraction_of_hydroxyl_radical_in_air' = {
 	 discipline = 192 ;
@@ -559,24 +547,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 66 ;
 	}
-#Nitrogen dioxide
-'mass_fraction_of_nitrogen_dioxide_in_air' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 121 ;
-	}
-#Sulphur dioxide
-'mass_fraction_of_sulfur_dioxide_in_air' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 122 ;
-	}
-#Carbon monoxide
-'mass_fraction_of_carbon_monoxide_in_air' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 123 ;
-	}
 #Formaldehyde
 'mass_fraction_of_formaldehyde_in_air' = {
 	 discipline = 192 ;
@@ -618,12 +588,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 183 ;
-	}
-#GEMS Ozone
-'mass_fraction_of_ozone_in_air' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 203 ;
 	}
 #GEMS Total column ozone
 'atmosphere_mass_content_of_ozone' = {

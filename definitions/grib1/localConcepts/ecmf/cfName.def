@@ -739,12 +739,12 @@
 	 table2Version = 217 ;
 	 indicatorOfParameter = 18 ;
 	}
-#Ammonia
+#Ammonia mass mixing ratio
 'mass_fraction_of_ammonia_in_air' = {
 	 table2Version = 217 ;
 	 indicatorOfParameter = 19 ;
 	}
-#Nitrogen monoxide
+#Nitrogen monoxide mass mixing ratio
 'mass_fraction_of_nitrogen_monoxide_in_air' = {
 	 table2Version = 217 ;
 	 indicatorOfParameter = 27 ;
@@ -979,17 +979,17 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 66 ;
 	}
-#Nitrogen dioxide
+#Nitrogen dioxide mass mixing ratio
 'mass_fraction_of_nitrogen_dioxide_in_air' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 121 ;
 	}
-#Sulphur dioxide
+#Sulphur dioxide mass mixing ratio
 'mass_fraction_of_sulfur_dioxide_in_air' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 122 ;
 	}
-#Carbon monoxide
+#Carbon monoxide mass mixing ratio
 'mass_fraction_of_carbon_monoxide_in_air' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 123 ;
@@ -1029,7 +1029,7 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 183 ;
 	}
-#GEMS Ozone
+#Ozone mass mixing ratio (full chemistry scheme)
 'mass_fraction_of_ozone_in_air' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 203 ;

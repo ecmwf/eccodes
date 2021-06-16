@@ -8425,12 +8425,6 @@
 	 parameterCategory = 217 ;
 	 parameterNumber = 18 ;
 	}
-#Ammonia
-'Ammonia' = {
-	 discipline = 192 ;
-	 parameterCategory = 217 ;
-	 parameterNumber = 19 ;
-	}
 #Sulfate
 'Sulfate' = {
 	 discipline = 192 ;
@@ -8466,12 +8460,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 217 ;
 	 parameterNumber = 26 ;
-	}
-#Nitrogen monoxide
-'Nitrogen monoxide' = {
-	 discipline = 192 ;
-	 parameterCategory = 217 ;
-	 parameterNumber = 27 ;
 	}
 #Hydroperoxy radical
 'Hydroperoxy radical' = {
@@ -20789,24 +20777,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 100 ;
 	}
-#Nitrogen dioxide
-'Nitrogen dioxide' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 121 ;
-	}
-#Sulphur dioxide
-'Sulphur dioxide' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 122 ;
-	}
-#Carbon monoxide
-'Carbon monoxide' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 123 ;
-	}
 #Formaldehyde
 'Formaldehyde' = {
 	 discipline = 192 ;
@@ -21094,12 +21064,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 185 ;
-	}
-#GEMS Ozone
-'GEMS Ozone' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 203 ;
 	}
 #GEMS Total column ozone
 'GEMS Total column ozone' = {
@@ -21557,24 +21521,6 @@
 	 parameterCategory = 211 ;
 	 parameterNumber = 100 ;
 	}
-#Nitrogen dioxide
-'Nitrogen dioxide' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 121 ;
-	}
-#Sulphur dioxide
-'Sulphur dioxide' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 122 ;
-	}
-#Carbon monoxide
-'Carbon monoxide' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 123 ;
-	}
 #Formaldehyde
 'Formaldehyde' = {
 	 discipline = 192 ;
@@ -21862,12 +21808,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 185 ;
-	}
-#GEMS Ozone
-'GEMS Ozone' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 203 ;
 	}
 #GEMS Total column ozone
 'GEMS Total column ozone' = {
