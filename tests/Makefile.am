@@ -142,6 +142,7 @@ TESTS = definitions.sh \
         grib_ecc-1212.sh \
         grib_efas.sh \
         grib_g1fcperiod.sh \
+        grib_g1monthlydate.sh \
         grib_levtype.sh \
         grib_packing_order.sh \
         grib_sh_spectral_complex.sh \
