@@ -100,6 +100,7 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
         grib_grid_space_view
+        grib_g1monthlydate
         grib_g1fcperiod)
 
     # These tests do require data downloads
