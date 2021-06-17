@@ -35,6 +35,8 @@ TESTS = definitions.sh \
         bufr_dump_encode_C.sh \
         bufr_dump_encode_filter.sh \
         bufr_dump_encode_fortran.sh \
+        bufr_dump_encode_python.sh \
+        bufr_dump_decode_python.sh \
         gts_ls.sh \
         gts_compare.sh \
         gts_get.sh \
