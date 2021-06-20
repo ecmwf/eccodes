@@ -122,8 +122,11 @@ grib_check_key_equals $temp 'mars.origin:s' 'lops'
 
 
 # Extra key in Local Definition 16 for GRIB1. ECC-679
-${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=16,numberOfForecastsInEnsemble=51 $sample_g1 $temp
-grib_check_key_equals $temp 'totalNumber' '51'
+# ----------------------------------------------------
+${tools_dir}/grib_set -s \
+  setLocalDefinition=1,localDefinitionNumber=16,numberOfForecastsInEnsemble=51,verifyingMonth=11 \
+  $sample_g1 $temp
+grib_check_key_equals $temp 'totalNumber,endOfInterval' '51 0'
 
 
 # Local Definition 49 for GRIB1
