@@ -102,7 +102,7 @@ static void remove_accessor(grib_accessor* a)
     s = a->parent;
 
     if (grib_handle_of_accessor(a)->use_trie && *(a->all_names[0]) != '_') {
-        id                                        = grib_hash_keys_get_id(a->context->keys, a->all_names[0]);
+        id = grib_hash_keys_get_id(a->context->keys, a->all_names[0]);
         grib_handle_of_accessor(a)->accessors[id] = NULL;
     }
 
@@ -122,18 +122,15 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 {
     grib_action_remove* a = (grib_action_remove*)act;
 
-
     grib_accessor* ga = NULL;
-
 
     ga = grib_find_accessor(p->h, grib_arguments_get_name(p->h, a->args, 0));
 
-    if (ga)
+    if (ga) {
         remove_accessor(ga);
-
-
-    else {
-        grib_context_log(act->context, GRIB_LOG_DEBUG, "Action_class_remove  : create_accessor_buffer : No accessor named %s to remove ", grib_arguments_get_name(p->h, a->args, 0));
+    } else {
+        grib_context_log(act->context, GRIB_LOG_DEBUG, 
+                         "Action_class_remove  : create_accessor_buffer : No accessor named %s to remove ", grib_arguments_get_name(p->h, a->args, 0));
     }
     return GRIB_SUCCESS;
 }
