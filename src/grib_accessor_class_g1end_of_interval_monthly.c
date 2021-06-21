@@ -167,6 +167,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (!a->dirty)
         return GRIB_SUCCESS;
 
+    DebugAssert(*len == self->number_of_elements);
+
     if ((ret = grib_get_string(grib_handle_of_accessor(a), self->verifyingMonth, verifyingMonth, &slen)) != GRIB_SUCCESS)
         return ret;
 
