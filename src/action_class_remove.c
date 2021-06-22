@@ -130,7 +130,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
         remove_accessor(ga);
     } else {
         grib_context_log(act->context, GRIB_LOG_DEBUG, 
-                         "Action_class_remove  : create_accessor_buffer : No accessor named %s to remove ", grib_arguments_get_name(p->h, a->args, 0));
+                         "Action_class_remove: create_accessor: No accessor named %s to remove", grib_arguments_get_name(p->h, a->args, 0));
     }
     return GRIB_SUCCESS;
 }
