@@ -102,7 +102,6 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
-        grib_grid_space_view
         grib_g1monthlydate
         grib_g1fcperiod)
 
@@ -113,6 +112,7 @@ if( HAVE_BUILD_TOOLS )
         grib_complex
         grib_double_cmp
         grib_change_packing
+        grib_grid_space_view
         bufr_dump_data
         bufr_dump_descriptors
         bufr_dump_subset
