@@ -1100,8 +1100,9 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     }
 
     for (i = 0; i < options->print_keys_count; i++) {
-        size_t len = MAX_STRING_LEN;
-        ret        = GRIB_SUCCESS;
+        size_t len  = MAX_STRING_LEN;
+        int keyType = options->print_keys[i].type;
+        ret         = GRIB_SUCCESS;
 
         if (h->product_kind == PRODUCT_BUFR) {
             /* ECC-236: Do not use grib_is_missing for BUFR */
@@ -1111,9 +1112,9 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                 ret = grib_get_size(h, options->print_keys[i].name, &num_vals);
             }
             if (ret == GRIB_SUCCESS) {
-                if (options->print_keys[i].type == GRIB_TYPE_UNDEFINED)
-                    grib_get_native_type(h, options->print_keys[i].name, &(options->print_keys[i].type));
-                switch (options->print_keys[i].type) {
+                if (keyType == GRIB_TYPE_UNDEFINED)
+                    grib_get_native_type(h, options->print_keys[i].name, &keyType);
+                switch (keyType) {
                     case GRIB_TYPE_STRING:
                         acc = grib_find_accessor(h, options->print_keys[i].name);
                         ret = grib_get_string(h, options->print_keys[i].name, value, &len);
@@ -1154,9 +1155,9 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             }
             else if (ret == GRIB_SUCCESS) {
                 const char* pName = NULL;
-                if (options->print_keys[i].type == GRIB_TYPE_UNDEFINED)
-                    grib_get_native_type(h, options->print_keys[i].name, &(options->print_keys[i].type));
-                switch (options->print_keys[i].type) {
+                if (keyType == GRIB_TYPE_UNDEFINED)
+                    grib_get_native_type(h, options->print_keys[i].name, &keyType);
+                switch (keyType) {
                     case GRIB_TYPE_STRING:
                         pName = options->print_keys[i].name;
                         if (fix_lsdate && strcmp(pName, "date") == 0) { /* ECC-707 */
