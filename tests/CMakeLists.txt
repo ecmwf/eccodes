@@ -86,6 +86,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1230
         grib_ecc-1255
         grib_ecc-1258
+        grib_ecc-1260
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
