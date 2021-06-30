@@ -4059,10 +4059,11 @@ uerra, eswi-enfo:total_cloud_cover_sfc maximum value 96.4844 is not in [100,100]
          {"discipline", GRIB_TYPE_LONG, 0},
          {"parameterCategory", GRIB_TYPE_LONG, 1},
          {"parameterNumber", GRIB_TYPE_LONG, 16},
+         {"typeOfStatisticalProcessing", GRIB_TYPE_LONG, 1},
          {"typeOfFirstFixedSurface", GRIB_TYPE_LONG, 1},
          {NULL, },
       },
-      {&point_in_time, &predefined_level, &has_bitmap},
+      {&from_start, &predefined_level, &has_bitmap},
    },
    {
       "lake_total_layer_temperature_sfc",
