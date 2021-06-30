@@ -70,8 +70,10 @@ if( HAVE_BUILD_TOOLS )
         grib_packing_order
         filter_substr
         grib_uerra
+        grib_element
         grib_2nd_order_numValues
         grib_ecc-136
+        grib_ecc-922
         grib_ecc-966
         grib_ecc-967
         grib_ecc-1150
@@ -80,11 +82,18 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1167
         grib_ecc-1170
         grib_ecc-1195
+        grib_ecc-1212
+        grib_ecc-1230
+        grib_ecc-1255
+        grib_ecc-1258
+        bufr_ecc-1028
         bufr_ecc-1195
+        bufr_ecc-1259
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
         bufr_rdbSubTypes
+        bufr_templates
         grib_efas
         grib_sh_imag
         grib_sh_spectral_complex
@@ -93,7 +102,7 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
-        grib_grid_space_view
+        grib_g1monthlydate
         grib_g1fcperiod)
 
     # These tests do require data downloads
@@ -103,6 +112,7 @@ if( HAVE_BUILD_TOOLS )
         grib_complex
         grib_double_cmp
         grib_change_packing
+        grib_grid_space_view
         bufr_dump_data
         bufr_dump_descriptors
         bufr_dump_subset
@@ -114,9 +124,11 @@ if( HAVE_BUILD_TOOLS )
         bufr_copy
         bufr_count
         bufr_get
-        bufr_filter
+        bufr_filter_misc
+        bufr_filter_extract_subsets
         bufr_filter_extract_datetime
         bufr_filter_extract_area
+        bufr_filter_unpack_pack
         bufr_json_data
         bufr_ls
         bufr_ls_json
@@ -175,6 +187,7 @@ if( HAVE_BUILD_TOOLS )
         grib1to3
         grib2to3
         grib2_templates
+        grib2_chemicals_aerosols
         grib3_templates
         grib_bad
         grib_ls
@@ -215,7 +228,7 @@ if( HAVE_BUILD_TOOLS )
         grib_local_MeteoFrance
         grib_neg_fctime
         codes_split_file
-        grib_mars_types)
+        grib_mars_keys)
 
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_data_reqd bufr_dump_encode_fortran)
@@ -266,7 +279,8 @@ if( HAVE_BUILD_TOOLS )
 
 
     if( HAVE_PYTHON2 AND ENABLE_EXTRA_TESTS )
-        list( APPEND ptests bufr_dump_encode_python bufr_dump_decode_python )
+        list( APPEND ptests bufr_dump_decode_python )
+        # list( APPEND ptests bufr_dump_encode_python )
         foreach( test ${ptests} )
             ecbuild_add_test( TARGET eccodes_t_${test}
                               TYPE SCRIPT

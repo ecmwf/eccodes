@@ -1,4 +1,6 @@
 # (C) Copyright 2005- ECMWF.
+# EPS tubes
+
 constant GRIBEXSection1Problem = 334 - section1Length ;
 
 template mars_labeling "grib1/mars_labeling.def";

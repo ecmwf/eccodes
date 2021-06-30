@@ -16,19 +16,17 @@ label="bufr_read_synop_test_c"
 
 #Define tmp file
 fTmp=${label}".tmp.txt"
-rm -f $fTmp | true
+rm -f $fTmp
 
 #We check "syno_multi.bufr". The path is
 #hardcoded in the example
 
-REDIRECT=/dev/null
-
 #Write the values into a file and compare with reference
-${examples_dir}/c_bufr_read_synop #2> $REDIRECT > $fTmp
+${examples_dir}/c_bufr_read_synop
 
 #TODO: check the output
 
 #cat  $fTmp
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp

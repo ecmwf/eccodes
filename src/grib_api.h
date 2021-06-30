@@ -187,7 +187,7 @@ struct grib_values
 */
 typedef struct grib_handle grib_handle;
 
-/*! Grib multi field handle,   structure used to build multi field GRIB messages.
+/*! Grib multi field handle,   structure used to build multi-field GRIB messages.
     \ingroup grib_handle
  */
 typedef struct grib_multi_handle grib_multi_handle;
@@ -387,7 +387,7 @@ int grib_index_select_string(grib_index* index, const char* key, const char* val
  *
  * @param index       : an index created from a file.
  * @param err         : 0 if OK, integer value on error. GRIB_END_OF_INDEX when no more handles are contained in the index.
- * @return            grib handle.
+ * @return            GRIB handle.
  */
 grib_handle* grib_handle_new_from_index(grib_index* index, int* err);
 
@@ -474,7 +474,7 @@ grib_handle* grib_handle_new_from_message(grib_context* c, const void* data, siz
 /**
 *  Create a handle from a user message in memory. The message will not be freed at the end.
 *  The message will be copied as soon as a modification is needed.
-*  This function works also with multi field messages.
+*  This function works also with multi-field messages.
 *  Note: The data pointer argument may be modified
 *
 * @param c           : the context from which the handle will be created (NULL for default context)
@@ -526,7 +526,7 @@ grib_handle* grib_handle_clone(const grib_handle* h);
 int grib_handle_delete(grib_handle* h);
 
 /**
- *  Create an empty multi field handle.
+ *  Create an empty multi-field handle.
  *  Remember always to delete the multi handle when it is not needed anymore to avoid
  *  memory leaks.
  *
@@ -536,7 +536,7 @@ grib_multi_handle* grib_multi_handle_new(grib_context* c);
 
 /**
  *  Append the sections starting with start_section of the message pointed by h at
- *  the end of the multi field handle mh.
+ *  the end of the multi-field handle mh.
  *  Remember always to delete the multi handle when it is not needed anymore to avoid
  *  memory leaks.
  *
@@ -548,20 +548,20 @@ grib_multi_handle* grib_multi_handle_new(grib_context* c);
 int grib_multi_handle_append(grib_handle* h, int start_section, grib_multi_handle* mh);
 
 /**
- * Delete multi field handle.
+ * Delete multi-field handle.
  *
- * @param mh           : The multi field handle to be deleted.
+ * @param mh          : The multi-field handle to be deleted.
  * @return            0 if OK, integer value on error
  */
 int grib_multi_handle_delete(grib_multi_handle* mh);
 
 /**
- *  Write a multi field handle in a file.
- *  Remember always to delete the multi handle when it is not needed anymore to avoid
+ *  Write a multi-field handle in a file.
+ *  Remember to delete the multi handle when it is not needed anymore to avoid
  *  memory leaks.
  *
- * @param mh           : The multi field handle to be written.
- * @param f            : File on which the file handle is written.
+ * @param mh          : The multi field handle to be written.
+ * @param f           : File on which the file handle is written.
  * @return            0 if OK, integer value on error
  */
 int grib_multi_handle_write(grib_multi_handle* mh, FILE* f);
@@ -1221,21 +1221,21 @@ void grib_context_set_print_proc(grib_context* c, grib_print_proc printp);
 void grib_context_set_logging_proc(grib_context* c, grib_log_proc logp);
 
 /**
-*  Turn on support for multiple fields in single grib messages
+*  Turn on support for multi-fields in single GRIB messages
 *
 * @param c            : the context to be modified
 */
 void grib_multi_support_on(grib_context* c);
 
 /**
-*  Turn off support for multiple fields in single GRIB messages
+*  Turn off support for multi-fields in single GRIB messages
 *
 * @param c            : the context to be modified
 */
 void grib_multi_support_off(grib_context* c);
 
 /**
-*  Reset file handle in multiple field support mode
+*  Reset file handle in multi-field support mode
 *
 * @param c            : the context to be modified
 * @param f            : the file pointer

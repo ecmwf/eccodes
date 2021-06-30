@@ -319,7 +319,12 @@ alias time.stepType=stepType;
 # ECC-457: GRIB1 to GRIB2 conversion
 concept_nofail stepTypeForConversion (unknown, "stepTypeForConversion.def", conceptsDir2, conceptsDir1);
 if (stepTypeForConversion is "accum" ) {
-    alias productDefinitionTemplateNumber=eight;
+    if (productDefinitionTemplateNumber == 1) {
+        alias productDefinitionTemplateNumber=eleven;
+    }
+    else {
+        alias productDefinitionTemplateNumber=eight;
+    }
 }
 
 meta md5Section1 md5(offsetSection1,section1Length);

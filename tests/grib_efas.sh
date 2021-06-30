@@ -50,6 +50,11 @@ grib_check_key_equals $temp2 is_efas,productDefinitionTemplateNumber,typeOfStati
 grib_check_key_equals $temp2 mars.origin 'ecmf'
 grib_check_key_equals $temp2 mars.model  'lisflood'
 
+${tools_dir}/grib_set -s \
+    setLocalDefinition=1,localDefinitionNumber=41,type=fc,inputOriginatingCentre=ecmf,typeOfPostProcessing=10 \
+    $temp1 $temp2
+grib_check_key_equals $temp2 mars.model  'geff'
+
 # Parameter tests
 ${tools_dir}/grib_set -s paramId=260267 $temp2 $temp3
 grib_check_key_equals $temp3 paramId,is_efas,lengthOfTimeRange '260267 1 6'

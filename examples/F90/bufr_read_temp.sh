@@ -16,7 +16,7 @@ label="bufr_read_temp_f"
 
 #Define tmp file
 fTmp=${label}.tmp.txt
-rm -f $fTmp | true
+rm -f $fTmp
 
 # The path to the BUFR file is hardcoded in the example
 
@@ -29,4 +29,3 @@ ${examples_dir}/eccodes_f_bufr_read_temp > $fTmp
 
 #Clean up
 rm -f $fTmp
-

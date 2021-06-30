@@ -1194,7 +1194,6 @@ int codes_bufr_keys_iterator_delete(bufr_keys_iterator* kiter);
 
 /* grib_parse_utils.c */
 int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* uname, char* fname, int fail);
-int grib_accessor_print(grib_accessor* a, const char* name, int type, const char* format, const char* separator, int maxcols, int* newline, FILE* out);
 int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const char* name, int type, const char* format, const char* separator, int maxcols, int* newline, FILE* out);
 int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* uname, int fail, FILE* out);
 grib_action_file* grib_find_action_file(const char* fname, grib_action_file_list* afl);
@@ -1463,6 +1462,7 @@ grib_expression* grib_arguments_get_expression(grib_handle* h, grib_arguments* a
 /* codes_util.c */
 double normalise_longitude_in_degrees(double lon);
 char get_dir_separator_char(void);
+int path_is_regular_file(const char* path);
 int path_is_directory(const char* filename);
 char* codes_getenv(const char* name);
 
@@ -1476,10 +1476,11 @@ int grib_moments(grib_handle* h, double east, double north, double west, double 
 int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
 int grib2_is_PDTN_EPS(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Chemical(long productDefinitionTemplateNumber);
+int grib2_is_PDTN_ChemicalSourceSink(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_ChemicalDistFunc(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
-int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
+int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_srcsink, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
 int grib_is_earth_oblate(grib_handle* h);
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val);

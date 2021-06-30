@@ -59,7 +59,7 @@ echo "\\endverbatim\\n"
 
 # Unpack 
 
-echo "-# To print values from the data section the messages have to be <b>unpacked</b>. To do that we need to set key <i>unapack</i> to 1. This rules_file: \\n"
+echo "-# To print values from the data section the messages have to be <b>unpacked</b>. To do that we need to set key <i>unpack</i> to 1. This rules_file: \\n"
 
 echo "\\verbatim"
 echo "set unpack=1;"

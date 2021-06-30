@@ -4,12 +4,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 scaledValueOfLowerLimit = 100 ;
-	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 0 ;
-	 typeOfFirstFixedSurface = 1 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 100 mm
 'tpg100' = {
@@ -262,12 +262,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 103 ;
-	 lengthOfTimeRange = 24 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
+	 lengthOfTimeRange = 24 ;
 	}
 #Minimum temperature at 2 metres in the last 24 hours
 'mn2t24' = {
@@ -275,11 +275,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
-	 lengthOfTimeRange = 24 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 lengthOfTimeRange = 24 ;
 	}
 #Montgomery potential
 'mont' = {
@@ -3294,8 +3294,8 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
 	 typeOfGeneratingProcess = 20 ;
+	 is_aerosol = 1 ;
 	}
 #Nitrate coarse mode aerosol mass mixing ratio
 'aermr17diff' = {
@@ -3303,8 +3303,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
-	 typeOfGeneratingProcess = 20 ;
 	 aerosolType = 65533 ;
+	 typeOfGeneratingProcess = 20 ;
 	 is_aerosol = 1 ;
 	}
 #Experimental product
@@ -6622,8 +6622,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 192 ;
-	 is_aerosol = 1 ;
 	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
 	}
 #Dry deposition of fine-mode nitrate aerosol
 'aerddpnif' = {
@@ -6640,8 +6640,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 6 ;
-	 is_aerosol = 1 ;
 	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
 	}
 #Sedimentation of fine-mode nitrate aerosol
 'aersdmnif' = {
@@ -6721,10 +6721,10 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
-	 aerosolType = 65534 ;
-	 is_aerosol = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
 	}
 #Vertically integrated mass of coarse-mode nitrate aerosol
 'aermssnic' = {
@@ -6743,12 +6743,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 102 ;
-	 is_aerosol_optical = 1 ;
-	 typeOfWavelengthInterval = 11 ;
 	 scaleFactorOfFirstWavelength = 8 ;
-	 scaledValueOfFirstWavelength = 55 ;
 	 typeOfSizeInterval = 255 ;
 	 aerosolType = 65534 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	 typeOfWavelengthInterval = 11 ;
+	 is_aerosol_optical = 1 ;
 	}
 #Coarse-mode nitrate aerosol optical depth at 550 nm
 'aerodnic' = {
@@ -6756,12 +6756,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 102 ;
+	 scaleFactorOfFirstWavelength = 8 ;
 	 typeOfSizeInterval = 255 ;
 	 aerosolType = 65533 ;
-	 is_aerosol_optical = 1 ;
-	 typeOfWavelengthInterval = 11 ;
-	 scaleFactorOfFirstWavelength = 8 ;
 	 scaledValueOfFirstWavelength = 55 ;
+	 typeOfWavelengthInterval = 11 ;
+	 is_aerosol_optical = 1 ;
 	}
 #Source/gain of ammonium aerosol
 'aersrcam' = {
@@ -6779,6 +6779,42 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 193 ;
 	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Source/gain of biogenic secondary organic aerosol
+'aersrcsoab' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of biogenic secondary organic aerosol
+'aerngtsoab' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Source/gain of anthropogenic secondary organic aerosol
+'aersrcsoaa' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of anthropogenic secondary organic aerosol
+'aerngtsoaa' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 62033 ;
 	 is_aerosol = 1 ;
 	}
 #Experimental product
@@ -8389,12 +8425,6 @@
 	 parameterCategory = 217 ;
 	 parameterNumber = 18 ;
 	}
-#Ammonia
-'nh3' = {
-	 discipline = 192 ;
-	 parameterCategory = 217 ;
-	 parameterNumber = 19 ;
-	}
 #Sulfate
 'so4' = {
 	 discipline = 192 ;
@@ -8430,12 +8460,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 217 ;
 	 parameterNumber = 26 ;
-	}
-#Nitrogen monoxide
-'no' = {
-	 discipline = 192 ;
-	 parameterCategory = 217 ;
-	 parameterNumber = 27 ;
 	}
 #Hydroperoxy radical
 'ho2' = {
@@ -9504,6 +9528,24 @@
 	 discipline = 192 ;
 	 parameterCategory = 217 ;
 	 parameterNumber = 206 ;
+	}
+#Anthropogenic volatile organic compounds mass mixing ratio
+'VOCA' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 65532 ;
+	 is_chemical = 1 ;
+	}
+#Biomass burning volatile organic compounds mass mixing ratio
+'VOCBB' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 65531 ;
+	 is_chemical = 1 ;
 	}
 #Total column hydrogen peroxide
 'tc_h2o2' = {
@@ -10698,6 +10740,24 @@
 	 discipline = 192 ;
 	 parameterCategory = 218 ;
 	 parameterNumber = 206 ;
+	}
+#Column integrated mass density of Anthropogenic volatile organic compounds 
+'tc_VOCA' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 65532 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Biomass burning volatile organic compounds 
+'tc_VOCBB' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 65531 ;
+	 is_chemical = 1 ;
 	}
 #Ozone emissions
 'e_go3' = {
@@ -12019,6 +12079,24 @@
 	 parameterCategory = 219 ;
 	 parameterNumber = 220 ;
 	}
+#Atmosphere emission mass flux of Anthropogenic volatile organic compounds 
+'e_VOCA' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 65532 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Biomass burning volatile organic compounds 
+'e_VOCBB' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 65531 ;
+	 is_chemical = 1 ;
+	}
 #Ozone deposition velocity
 'dv_go3' = {
 	 discipline = 192 ;
@@ -13255,6 +13333,24 @@
 	 parameterCategory = 221 ;
 	 parameterNumber = 206 ;
 	}
+#Dry deposition velocity of Anthropogenic volatile organic compounds 
+'dv_VOCA' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 65532 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Biomass burning volatile organic compounds 
+'dv_VOCBB' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 65531 ;
+	 is_chemical = 1 ;
+	}
 #Total sky direct solar radiation at surface
 'fdir' = {
 	 discipline = 192 ;
@@ -13284,24 +13380,24 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 lengthOfTimeRange = 3 ;
 	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 indicatorOfUnitForTimeRange = 1 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 lengthOfTimeRange = 3 ;
 	}
 #Minimum temperature at 2 metres in the last 3 hours
 'mn2t3' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 indicatorOfUnitForTimeRange = 1 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 3 ;
-	 typeOfFirstFixedSurface = 103 ;
 	}
 #10 metre wind gust in the last 3 hours
 '10fg3' = {
@@ -13350,8 +13446,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
-	 typeOfSecondFixedSurface = 8 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Instantaneous total lightning flash density
 'litoti' = {
@@ -13364,11 +13460,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 1 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 1 ;
 	}
 #Averaged total lightning flash density in the last hour
 'litota1' = {
@@ -13395,11 +13491,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
-	 lengthOfTimeRange = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
-	 typeOfFirstFixedSurface = 1 ;
+	 lengthOfTimeRange = 1 ;
 	}
 #Averaged cloud-to-ground lightning flash density in the last hour
 'licga1' = {
@@ -13412,10 +13508,10 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 3 ;
 	}
 #Averaged total lightning flash density in the last 3 hours
@@ -13431,9 +13527,9 @@
 	 parameterNumber = 4 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 6 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	}
 #Averaged total lightning flash density in the last 6 hours
 'litota6' = {
@@ -13446,11 +13542,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 3 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Averaged cloud-to-ground lightning flash density in the last 3 hours
 'licga3' = {
@@ -13463,11 +13559,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
-	 typeOfStatisticalProcessing = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
-	 lengthOfTimeRange = 6 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 6 ;
 	}
 #Averaged cloud-to-ground lightning flash density in the last 6 hours
 'licga6' = {
@@ -13594,6 +13690,58 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 103 ;
 	}
+#Solar induced Chlorophyll fluorescence at 740nm
+'sif740' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 scaledValueOfFirstWavelength = 740 ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 is_aerosol_optical = 1 ;
+	}
+#Solar induced Chlorophyll fluorescence at 755nm
+'sif755' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 scaledValueOfFirstWavelength = 755 ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 is_aerosol_optical = 1 ;
+	}
+#Solar induced Chlorophyll fluorescence at 771nm
+'sif771' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 scaledValueOfFirstWavelength = 771 ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 is_aerosol_optical = 1 ;
+	}
+#Solar induced Chlorophyll fluorescence at 757nm
+'sif757' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 scaledValueOfFirstWavelength = 757 ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 is_aerosol_optical = 1 ;
+	}
 #Surface solar radiation downward clear-sky
 'ssrdc' = {
 	 discipline = 192 ;
@@ -13635,6 +13783,23 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 255 ;
+	}
+#Time integral of snow evaporation flux
+'tisef' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Surface roughness length for heat
+'srlh' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 200 ;
 	}
 #Stream function gradient
 'strfgrd' = {
@@ -15357,14 +15522,14 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 scaledValueOfLowerLimit = 25 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 probabilityType = 3 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 productDefinitionTemplateNumber = 9 ;
 	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #2 metre temperature less than 273.15 K
 '2tl273' = {
@@ -15377,32 +15542,32 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
-	 scaleFactorOfLowerLimit = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 productDefinitionTemplateNumber = 5 ;
-	 probabilityType = 3 ;
 	 scaledValueOfLowerLimit = 2 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Significant wave height of at least 4 m
 'swhg4' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 101 ;
+	 productDefinitionTemplateNumber = 5 ;
+	 scaledValueOfLowerLimit = 4 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
-	 scaledValueOfLowerLimit = 4 ;
-	 productDefinitionTemplateNumber = 5 ;
-	 typeOfFirstFixedSurface = 101 ;
 	}
 #Significant wave height of at least 6 m
 'swhg6' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
-	 scaledValueOfLowerLimit = 6 ;
-	 productDefinitionTemplateNumber = 5 ;
-	 scaleFactorOfLowerLimit = 0 ;
 	 typeOfFirstFixedSurface = 101 ;
+	 productDefinitionTemplateNumber = 5 ;
+	 scaledValueOfLowerLimit = 6 ;
+	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	}
 #Significant wave height of at least 8 m
@@ -15410,11 +15575,11 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
-	 probabilityType = 3 ;
-	 scaleFactorOfLowerLimit = 0 ;
-	 scaledValueOfLowerLimit = 8 ;
 	 typeOfFirstFixedSurface = 101 ;
 	 productDefinitionTemplateNumber = 5 ;
+	 scaledValueOfLowerLimit = 8 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Mean wave period of at least 8 s
 'mwpg8' = {
@@ -20612,24 +20777,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 100 ;
 	}
-#Nitrogen dioxide
-'no2' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 121 ;
-	}
-#Sulphur dioxide
-'so2' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 122 ;
-	}
-#Carbon monoxide
-'co' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 123 ;
-	}
 #Formaldehyde
 'hcho' = {
 	 discipline = 192 ;
@@ -20917,12 +21064,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 185 ;
-	}
-#GEMS Ozone
-'go3' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 203 ;
 	}
 #GEMS Total column ozone
 'gtco3' = {
@@ -21380,24 +21521,6 @@
 	 parameterCategory = 211 ;
 	 parameterNumber = 100 ;
 	}
-#Nitrogen dioxide
-'no2diff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 121 ;
-	}
-#Sulphur dioxide
-'so2diff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 122 ;
-	}
-#Carbon monoxide
-'codiff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 123 ;
-	}
 #Formaldehyde
 'hchodiff' = {
 	 discipline = 192 ;
@@ -21685,12 +21808,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 185 ;
-	}
-#GEMS Ozone
-'go3diff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 203 ;
 	}
 #GEMS Total column ozone
 'gtco3diff' = {

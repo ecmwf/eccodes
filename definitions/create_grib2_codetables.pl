@@ -180,8 +180,11 @@ sub TranslateCodes_Table_4_4 {
 ###################################################################################################
 sub TranslateCodes_Table_4_5 {
     my ($code) = @_;
-    return "sfc"  if ($code eq "1" || $code eq "8" || $code eq "17" || $code eq "18" ||
-            $code eq "101" || $code eq "103" || $code eq "106" || $code eq "177");
+    return "sfc"  if ($code eq "1" || $code eq "7" ||
+            $code eq "8"   || $code eq "17"  || $code eq "18"  ||
+            $code eq "101" || $code eq "103" || $code eq "106" ||
+            $code eq "162" || $code eq "166" || $code eq "174" ||
+            $code eq "177");
     return "pl"   if ($code eq "100");
     return "ml"   if ($code eq "105");
     return "pt"   if ($code eq "107");

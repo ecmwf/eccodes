@@ -106,17 +106,51 @@ res=`${tools_dir}/grib_get -w count=1 -l 0,0 lfpw.grib1`
 g1files="lfpw.grib1
    gen_ext_spd_2.grib
    gen_ext_spd_3.grib"
-temp_grib1=temp.grib_second_order.grib
+temp1=temp1.grib_second_order.grib
 temp_stat1=temp.grib_second_order.stat1
 temp_stat2=temp.grib_second_order.stat2
 
 for f1 in $g1files; do
     # This does unpack and repack
-    ${tools_dir}/grib_copy -r $f1 $temp_grib1
-    ${tools_dir}/grib_get -n statistics $f1         > $temp_stat1
-    ${tools_dir}/grib_get -n statistics $temp_grib1 > $temp_stat2
+    ${tools_dir}/grib_copy -r $f1 $temp1
+    ${tools_dir}/grib_get -n statistics $f1    > $temp_stat1
+    ${tools_dir}/grib_get -n statistics $temp1 > $temp_stat2
     perl ${test_dir}/number_compare.pl $temp_stat1 $temp_stat2
 done
+
+# GRIB-883
+# ------------
+# Two coded values: Should stay as grid_simple
+temp2=temp2.grib_second_order.grib
+temp3=temp3.grib_second_order.grib
+cat > $test_filter<<EOF
+ set values={ 2.1, 3.4 };
+ write;
+EOF
+${tools_dir}/grib_filter -o $temp2 $test_filter $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -r -s packingType=grid_second_order $temp2 $temp3
+grib_check_key_equals $temp3 packingType grid_simple
+
+# Three coded values: Now we can change to 2nd order
+cat > $test_filter<<EOF
+ set values={ 2.1, 3.4, 8.9 };
+ write;
+EOF
+${tools_dir}/grib_filter -o $temp2 $test_filter $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -r -s packingType=grid_second_order $temp2 $temp3
+grib_check_key_equals $temp3 packingType grid_second_order
+
+
+# ECC-1219: packingType conversion from grid_ieee to grid_second_order
+# ---------------------------------------------------------------------
+if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+    infile=grid_ieee.grib
+    ${tools_dir}/grib_set -r -s packingType=grid_second_order $infile $temp1
+    grib_check_key_equals $temp1 packingType grid_second_order
+    ${tools_dir}/grib_compare -cdata:n -R all=3e-06 $infile $temp1
+fi
+
+# Clean up
 rm -f $temp_stat1 $temp_stat2
-rm -f $temp_grib1 $sec_ord_bmp
+rm -f $temp1 $temp2 $temp3 $sec_ord_bmp
 rm -f $test_filter

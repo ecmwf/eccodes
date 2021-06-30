@@ -10,7 +10,7 @@
 
 . ./include.sh
 set -u
-REDIRECT=/dev/null
+
 label="bufr_ecc-1195-test"
 temp1=temp.$label.bufr
 temp2=temp.$label.txt

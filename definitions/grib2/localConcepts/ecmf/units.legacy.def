@@ -244,3 +244,63 @@
  parameterCategory = 228 ;
  parameterNumber = 7 ;
 }
+#GEMS Ozone
+'kg kg**-1' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 203 ;
+}
+#GEMS Ozone
+'kg kg**-1' = {
+ discipline = 192 ;
+ parameterCategory = 211 ;
+ parameterNumber = 203 ;
+}
+#Carbon monoxide
+'kg kg**-1' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 123 ;
+}
+#Carbon monoxide
+'kg kg**-1' = {
+ discipline = 192 ;
+ parameterCategory = 211 ;
+ parameterNumber = 123 ;
+}
+#Nitrogen dioxide
+'kg kg**-1' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 121 ;
+}
+#Nitrogen dioxide
+'kg kg**-1' = {
+ discipline = 192 ;
+ parameterCategory = 211 ;
+ parameterNumber = 121 ;
+}
+#Sulphur dioxide
+'kg kg**-1' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 122 ;
+}
+#Sulphur dioxide
+'kg kg**-1' = {
+ discipline = 192 ;
+ parameterCategory = 211 ;
+ parameterNumber = 122 ;
+}
+#Ammonia
+'kg kg**-1' = {
+ discipline = 192 ;
+ parameterCategory = 217 ;
+ parameterNumber = 19 ;
+}
+#Nitrogen monoxide
+'kg kg**-1' = {
+ discipline = 192 ;
+ parameterCategory = 217 ;
+ parameterNumber = 27 ;
+}

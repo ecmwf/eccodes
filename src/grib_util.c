@@ -429,6 +429,8 @@ static void print_values(grib_context* c,
     if (c->gribex_mode_on)
         fprintf(stderr, "ECCODES DEBUG grib_util: GRIBEX mode is turned on!\n");
 
+    fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->editionNumber = %ld\n",
+            packing_spec->editionNumber);
     fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->packing = %s\n",
             get_packing_spec_packing_name(packing_spec->packing));
     fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->packing_type = %s\n",
@@ -980,6 +982,16 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         fprintf(stderr, "ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n", input_decimal_scale_factor);
     }
 
+    /* ECC-1201
+       TODO: make sure input packing type is preserved */
+    if (packing_spec->packing == GRIB_UTIL_PACKING_SAME_AS_INPUT &&
+        packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT)
+    {
+        if (STR_EQUAL(input_packing_type, "grid_ieee")) {
+            SET_STRING_VALUE("packingType", input_packing_type);
+        }
+    }
+
     /*if ( (*err=check_values(data_values, data_values_count))!=GRIB_SUCCESS ) {
         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Data values check failed! %s\n", grib_get_error_message(*err));
         goto cleanup;
@@ -1401,8 +1413,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                     SET_STRING_VALUE("packingType", "grid_simple");
                 break;
             case GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX:
-                if (strcmp(input_packing_type, "grid_complex") && !strcmp(input_packing_type, "grid_simple"))
+                if (!STR_EQUAL(input_packing_type, "grid_complex")) {
                     SET_STRING_VALUE("packingType", "grid_complex");
+                    convertEditionEarlier=1;
+                }
                 break;
             case GRIB_UTIL_PACKING_TYPE_JPEG:
                 /* Have to delay JPEG packing:
@@ -1417,11 +1431,11 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                  * Reason 1: It is not available in GRIB1 and so we have to wait until we change edition
                  * Reason 2: It has to be done AFTER we set the data values
                  */
-                if (strcmp(input_packing_type, "grid_ccsds") && !strcmp(input_packing_type, "grid_simple"))
+                if (!STR_EQUAL(input_packing_type, "grid_ccsds"))
                     setCcsdsPacking = 1;
                 break;
             case GRIB_UTIL_PACKING_TYPE_IEEE:
-                if (strcmp(input_packing_type, "grid_ieee") && !strcmp(input_packing_type, "grid_simple"))
+                if ( !STR_EQUAL(input_packing_type, "grid_ieee") )
                     SET_STRING_VALUE("packingType", "grid_ieee");
                 break;
             case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
@@ -2022,6 +2036,17 @@ int grib2_is_PDTN_Chemical(long pdtn)
 }
 
 /* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for
+ * atmospheric chemical constituents with source or sink */
+int grib2_is_PDTN_ChemicalSourceSink(long pdtn)
+{
+    return (
+        pdtn == 76 ||
+        pdtn == 77 ||
+        pdtn == 78 ||
+        pdtn == 79);
+}
+
+/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for
  * atmospheric chemical constituents based on a distribution function */
 int grib2_is_PDTN_ChemicalDistFunc(long pdtn)
 {
@@ -2066,13 +2091,14 @@ int grib2_is_PDTN_AerosolOptical(long pdtn)
  */
 int grib2_select_PDTN(int is_eps, int is_instant,
                       int is_chemical,
+                      int is_chemical_srcsink,
                       int is_chemical_distfn,
                       int is_aerosol,
                       int is_aerosol_optical)
 {
     /* At most one has to be set. All could be 0 */
     /* Unfortunately if PDTN=48 then both aerosol and aerosol_optical can be 1! */
-    const int sum = is_chemical + is_chemical_distfn + is_aerosol + is_aerosol_optical;
+    const int sum = is_chemical + is_chemical_srcsink + is_chemical_distfn + is_aerosol + is_aerosol_optical;
     Assert(sum == 0 || sum == 1 || sum == 2);
 
     if (is_chemical) {
@@ -2087,6 +2113,21 @@ int grib2_select_PDTN(int is_eps, int is_instant,
                 return 40;
             else
                 return 42;
+        }
+    }
+
+    if (is_chemical_srcsink) {
+        if (is_eps) {
+            if (is_instant)
+                return 77;
+            else
+                return 79;
+        }
+        else {
+            if (is_instant)
+                return 76;
+            else
+                return 78;
         }
     }
 

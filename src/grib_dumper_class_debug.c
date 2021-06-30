@@ -191,6 +191,8 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             fprintf(self->dumper.out, "%ld-%ld %s %s = %ld", self->begin, self->theEnd, a->creator->op, a->name, value);
         if (comment)
             fprintf(self->dumper.out, " [%s]", comment);
+        if ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0)
+            fprintf(self->dumper.out, " %s", "(can be missing)");
     }
     if (err)
         fprintf(self->dumper.out, " *** ERR=%d (%s) [grib_dumper_debug::dump_long]", err, grib_get_error_message(err));

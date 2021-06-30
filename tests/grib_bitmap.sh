@@ -11,7 +11,7 @@
 . ./include.sh
 
 REDIRECT=/dev/null
-
+set -u
 grib1=${data_dir}/regular_latlon_surface.grib1
 grib2=${data_dir}/regular_latlon_surface.grib2
 infile=${data_dir}/reduced_gaussian_model_level.grib1
@@ -75,21 +75,38 @@ rm -f $outfile1 $outfile1.dump $outfile $outfile.dump
 
 
 cat > $tempRules<<EOF
-set bitmapPresent=1;
-set missingValue=1111;
-set Ni=6;
-set Nj=2;
-set values={1,2,3,4,5,6,7,1111,1111,8,9,10};
-write ;
+ set bitmapPresent=1;
+ set missingValue=1111;
+ set Ni=6;
+ set Nj=2;
+ set values={1,2,3,4,5,6,7,1111,1111,8,9,10};
+ write ;
 EOF
 
-${tools_dir}/grib_filter -o $temp1 $tempRules $grib1 
+${tools_dir}/grib_filter -o $temp1 $tempRules $grib1
 ${tools_dir}/grib_filter -o $temp2 $tempRules $grib2
 
 ${tools_dir}/grib_get_data -m missing $temp1 > $tempData1
 ${tools_dir}/grib_get_data -m missing $temp2 > $tempData2
 
 diff $tempData1 $tempData2
+rm -f $tempData1 $tempData2
+
+
+# ECC-1233: Allow printing of 'byte' keys e.g., bitmap, section paddings
+# -----------------------------------------------------------------------
+cat > $tempRules<<EOF
+ print " bitmap=[bitmap]";
+ print " padding_local1_1=[padding_local1_1]";
+EOF
+${tools_dir}/grib_filter $tempRules $temp1 > $tempData1
+cat $tempData1
+cat > $tempRef <<EOF
+ bitmap=fe70
+ padding_local1_1=00
+EOF
+diff $tempRef $tempData1
+rm -f  $tempData1 $temp1 $tempRules
 
 # ECC-511: grid_complex_spatial_differencing
 # To convert to simple packing, must pass in bitmapPresent=1
