@@ -11,8 +11,27 @@
 
 . ./include.sh
 
-REDIRECT=/dev/null
+label="pseudo_budg_test"
+set -u
+tempOut=temp.$label.txt
+tempRef=temp.$label.ref
 
-${tools_dir}/grib_ls ${data_dir}/budg > $REDIRECT
-${tools_dir}/grib_dump ${data_dir}/budg > $REDIRECT
+${tools_dir}/grib_ls -j ${data_dir}/budg > $tempOut
+cat > $tempRef << EOF
+{ "messages" : [ 
+  {
+    "identifier": "BUDG",
+    "centre": "ecmf",
+    "levelType": "sfc",
+    "date": 20061204,
+    "stepRange": 0,
+    "parameter": 128
+  }
+]}
+EOF
+diff $tempRef $tempOut
 
+${tools_dir}/grib_dump ${data_dir}/budg
+${tools_dir}/grib_dump -O ${data_dir}/budg
+
+rm -f $tempRef $tempOut
