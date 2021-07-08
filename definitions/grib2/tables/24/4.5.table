@@ -13,9 +13,9 @@
 11 11 Cumulonimbus (CB) base (m)
 12 12 Cumulonimbus (CB) top (m)
 13 13 Lowest level where vertically integrated cloud cover exceeds the specified percentage (cloud base for a given percentage cloud cover) (%)
-14 14 Level of free convection (LFC)
-15 15 Convective condensation level (CCL)
-16 16 Level of neutral buoyancy or equilibrium level (LNB)
+14 14 Level of free convection (LFC) (-)
+15 15 Convective condensation level (CCL) (-)
+16 16 Level of neutral buoyancy or equilibrium level (LNB) (-)
 # 17-19 Reserved 
 20 20 Isothermal level (K)
 21 21 Lowest level where mass density exceeds the specified value (base for a given threshold of mass density) (kg m-3)
@@ -23,7 +23,14 @@
 23 23 Lowest level where air concentration exceeds the specified value (base for a given threshold of air concentration) (Bq m-3)
 24 24 Highest level where air concentration exceeds the specified value (top for a given threshold of air concentration) (Bq m-3)
 25 25 Highest level where radar reflectivity exceeds the specified value (echo top for a given threshold of reflectivity) (dBZ)
-# 26-99 Reserved
+# 26-29 Reserved
+30 30 Specified radius from the center of the Sun (m)
+31 31 Solar photosphere 
+32 32 Ionospheric D-region level 
+33 33 Ionospheric E-region level 
+34 34 Ionospheric F1-region level 
+35 35 Ionospheric F2-region level 
+# 36-99 Reserved
 100 pl Isobaric surface (Pa)
 101 sfc Mean sea level 
 102 102 Specific altitude above mean sea level (m)
@@ -38,7 +45,7 @@
 111 111 Eta level (-)
 112 112 Reserved 
 113 113 Logarithmic hybrid level 
-114 114 Snow level (Numeric)
+114 sol Snow level (Numeric)
 115 115 Sigma height level
 # 116 Reserved
 117 117 Mixed layer depth (m)
@@ -47,8 +54,9 @@
 # 120-149 Reserved 
 150 150 Generalized vertical height coordinate 
 151 sol Soil level (Numeric)
-# 152-159 Reserved
-160 160 Depth below sea level (m)
+152 sol Sea ice level (Numeric)
+# 153-159 Reserved
+160 o2d Depth below sea level (m)
 161 161 Depth below water surface (m)
 162 sfc Lake or river bottom (-)
 163 163 Bottom of sediment layer (-)
@@ -56,9 +64,9 @@
 165 165 Bottom of sediment layer penetrated by thermal wave (-)
 166 sfc Mixing layer (-)
 167 167 Bottom of root zone (-)
-168 168 Ocean model level (Numeric)
-169 169 Ocean level defined by water density (sigma-theta) difference from near-surface to level (kg m-3)
-170 170 Ocean level defined by water potential temperature difference from near-surface to level (K)
+168 o3d Ocean model level (Numeric)
+169 o2d Ocean level defined by water density (sigma-theta) difference from near-surface to level (kg m-3)
+170 o2d Ocean level defined by water potential temperature difference from near-surface to level (K)
 # 171-173 Reserved 
 174 sfc Top surface of ice on sea, lake or river
 175 175 Top surface of ice, under snow cover, on sea, lake or river
