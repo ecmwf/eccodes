@@ -82,4 +82,4 @@ diff -w $tempRef $tempOut
 
 
 # Clean up
-#rm -f $tempGrib $tempFilt $tempOut $tempRef
+rm -f $tempGrib $tempFilt $tempOut $tempRef

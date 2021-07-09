@@ -35,6 +35,8 @@ TESTS = definitions.sh \
         bufr_dump_encode_C.sh \
         bufr_dump_encode_filter.sh \
         bufr_dump_encode_fortran.sh \
+        bufr_dump_encode_python.sh \
+        bufr_dump_decode_python.sh \
         gts_ls.sh \
         gts_compare.sh \
         gts_get.sh \
@@ -142,6 +144,7 @@ TESTS = definitions.sh \
         grib_ecc-1212.sh \
         grib_efas.sh \
         grib_g1fcperiod.sh \
+        grib_g1monthlydate.sh \
         grib_levtype.sh \
         grib_packing_order.sh \
         grib_sh_spectral_complex.sh \
