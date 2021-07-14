@@ -25,6 +25,18 @@ outfile1=$infile.tmp_ccsds.1
 outfile2=$infile.tmp_ccsds.2
 
 rm -f $outfile1 $outfile2
+
+# ECC-1263
+# ---------
+grib2_sample=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
+${tools_dir}/grib_set -s packingType=grid_ccsds $grib2_sample $outfile1
+${tools_dir}/grib_set -d1 $outfile1 $outfile2
+grib_check_key_equals $grib2_sample packingType,const "grid_simple 0"
+grib_check_key_equals $outfile2     packingType,const "grid_ccsds 1"
+rm -f $outfile1 $outfile2
+
+# Change packingType
+# ------------------
 ${tools_dir}/grib_set -r -s packingType=grid_simple $infile $outfile1
 ${tools_dir}/grib_compare -b $BLACKLIST $outfile1 $infile > $REDIRECT
 
