@@ -1,14 +1,16 @@
-# local template 60 : adding refdate and reftime
+# (C) Copyright 2005- ECMWF.
 
-unsigned[1] centuryOfAnalysis = 0 :dump;
-unsigned[1] yearOfAnalysis = 0 : dump;
+# Local definition 60 - Ocean data analysis date and analysis time
+
+unsigned[2] yearOfAnalysis = 0 : dump;
 unsigned[1] monthOfAnalysis = 0 : dump;
 unsigned[1] dayOfAnalysis = 0 : dump;
 unsigned[1] hourOfAnalysis = 0 : dump;
 unsigned[1] minuteOfAnalysis = 0 : dump;
-unsigned[1] secondsOfAnalysis = 0 : dump;
 
-meta dateOfAnalysis  g1date(centuryOfAnalysis,yearOfAnalysis,monthOfAnalysis,dayOfAnalysis) : dump;
+constant secondsOfAnalysis = 0;
+
+meta dateOfAnalysis  g2date(centuryOfAnalysis,yearOfAnalysis,monthOfAnalysis,dayOfAnalysis) : dump;
 meta timeOfAnalysis  time(hourOfAnalysis,minuteOfAnalysis,secondsOfAnalysis) : dump;
 
 #alias mars.refdate = dateOfAnalysis;
