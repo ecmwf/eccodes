@@ -16,6 +16,15 @@ REDIRECT=/dev/null
 cd ${data_dir}
 rm -f local.log
 
+# Check all GRIB2 local def files and definitions/grib2/grib2LocalSectionNumber.98.table
+# Each number should appear in the table
+g2lds=${ECCODES_DEFINITION_PATH}/grib2/local.98.*.def
+for g2ld in $g2lds; do
+    dnum=`echo $g2ld | cut -d. -f3`
+    grep -q "^$dnum" ${ECCODES_DEFINITION_PATH}/grib2/grib2LocalSectionNumber.98.table
+done
+
+
 ${tools_dir}/grib_set -s edition=2,setLocalDefinition=1 reduced_gaussian_model_level.grib1 loc.grib2
 ${tools_dir}/grib_set -s setLocalDefinition=1           reduced_gaussian_model_level.grib1 loc.grib1
 
