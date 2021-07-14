@@ -10,7 +10,7 @@ unsigned[1] minuteOfAnalysis = 0 : dump;
 
 constant secondsOfAnalysis = 0;
 
-meta dateOfAnalysis  g2date(centuryOfAnalysis,yearOfAnalysis,monthOfAnalysis,dayOfAnalysis) : dump;
+meta dateOfAnalysis  g2date(yearOfAnalysis,monthOfAnalysis,dayOfAnalysis) : dump;
 meta timeOfAnalysis  time(hourOfAnalysis,minuteOfAnalysis,secondsOfAnalysis) : dump;
 
 #alias mars.refdate = dateOfAnalysis;
