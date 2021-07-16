@@ -4865,7 +4865,7 @@
   parameterCategory = 2 ;
   parameterNumber = 1 ;
   typeOfFirstFixedSurface = 174 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = missing() ;
   scaleFactorOfFirstFixedSurface = missing() ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -4878,7 +4878,7 @@
   parameterCategory = 2 ;
   parameterNumber = 0 ;
   typeOfFirstFixedSurface = 174 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = missing() ;
   scaleFactorOfFirstFixedSurface = missing() ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -4904,7 +4904,7 @@
   parameterCategory = 2 ;
   parameterNumber = 4 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -4917,7 +4917,7 @@
   parameterCategory = 2 ;
   parameterNumber = 5 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -4930,7 +4930,7 @@
   parameterCategory = 19 ;
   parameterNumber = 1 ;
   typeOfFirstFixedSurface = 174 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = missing() ;
   scaleFactorOfFirstFixedSurface = missing() ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -4943,7 +4943,7 @@
   parameterCategory = 2 ;
   parameterNumber = 8 ;
   typeOfFirstFixedSurface = 174 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = missing() ;
   scaleFactorOfFirstFixedSurface = missing() ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -4956,7 +4956,7 @@
   parameterCategory = 2 ;
   parameterNumber = 6 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -4969,7 +4969,7 @@
   parameterCategory = 3 ;
   parameterNumber = 3 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -4982,7 +4982,7 @@
   parameterCategory = 3 ;
   parameterNumber = 0 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -4995,7 +4995,7 @@
   parameterCategory = 4 ;
   parameterNumber = 14 ;
   typeOfFirstFixedSurface = 20 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 28715 ;
   scaleFactorOfFirstFixedSurface = 2 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5008,7 +5008,7 @@
   parameterCategory = 4 ;
   parameterNumber = 14 ;
   typeOfFirstFixedSurface = 20 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 29015 ;
   scaleFactorOfFirstFixedSurface = 2 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5021,7 +5021,7 @@
   parameterCategory = 4 ;
   parameterNumber = 14 ;
   typeOfFirstFixedSurface = 20 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 29315 ;
   scaleFactorOfFirstFixedSurface = 2 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5034,7 +5034,7 @@
   parameterCategory = 4 ;
   parameterNumber = 14 ;
   typeOfFirstFixedSurface = 20 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 29915 ;
   scaleFactorOfFirstFixedSurface = 2 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5047,7 +5047,7 @@
   parameterCategory = 4 ;
   parameterNumber = 14 ;
   typeOfFirstFixedSurface = 20 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 30115 ;
   scaleFactorOfFirstFixedSurface = 2 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5060,7 +5060,7 @@
   parameterCategory = 191 ;
   parameterNumber = 4 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 5 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5073,7 +5073,7 @@
   parameterCategory = 3 ;
   parameterNumber = 4 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5086,7 +5086,7 @@
   parameterCategory = 3 ;
   parameterNumber = 6 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5099,7 +5099,7 @@
   parameterCategory = 3 ;
   parameterNumber = 5 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5112,7 +5112,7 @@
   parameterCategory = 3 ;
   parameterNumber = 8 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5125,7 +5125,7 @@
   parameterCategory = 3 ;
   parameterNumber = 7 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5138,7 +5138,7 @@
   parameterCategory = 4 ;
   parameterNumber = 14 ;
   typeOfFirstFixedSurface = 169 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 1 ;
   scaleFactorOfFirstFixedSurface = 2 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5151,7 +5151,7 @@
   parameterCategory = 4 ;
   parameterNumber = 14 ;
   typeOfFirstFixedSurface = 169 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 3 ;
   scaleFactorOfFirstFixedSurface = 2 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5164,7 +5164,7 @@
   parameterCategory = 4 ;
   parameterNumber = 14 ;
   typeOfFirstFixedSurface = 169 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 125 ;
   scaleFactorOfFirstFixedSurface = 3 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5177,7 +5177,7 @@
   parameterCategory = 4 ;
   parameterNumber = 14 ;
   typeOfFirstFixedSurface = 170 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 2 ;
   scaleFactorOfFirstFixedSurface = 1 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5190,7 +5190,7 @@
   parameterCategory = 4 ;
   parameterNumber = 14 ;
   typeOfFirstFixedSurface = 170 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 5 ;
   scaleFactorOfFirstFixedSurface = 1 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5281,7 +5281,7 @@
   parameterCategory = 3 ;
   parameterNumber = 1 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5294,7 +5294,7 @@
   parameterCategory = 3 ;
   parameterNumber = 11 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5307,7 +5307,7 @@
   parameterCategory = 3 ;
   parameterNumber = 10 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5320,7 +5320,7 @@
   parameterCategory = 3 ;
   parameterNumber = 9 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5333,7 +5333,7 @@
   parameterCategory = 4 ;
   parameterNumber = 0 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = missing() ;
+  typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
