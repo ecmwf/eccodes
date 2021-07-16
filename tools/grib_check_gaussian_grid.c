@@ -120,7 +120,7 @@ int process_file(const char* filename)
         if (!grid_ok) {
             /*error("ERROR: gridType should be Reduced or Regular Gaussian Grid!\n");*/
             if (verbose)
-                printf(" WARNING: gridType should be Reduced or Regular Gaussian Grid! Ignoring\n");
+                printf(" WARNING: gridType=%s. It should be Reduced or Regular Gaussian Grid! Ignoring\n", gridType);
             grib_handle_delete(h);
             continue;
         }
