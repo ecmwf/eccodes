@@ -84,8 +84,12 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1195
         grib_ecc-1212
         grib_ecc-1230
+        grib_ecc-1255
+        grib_ecc-1258
+        grib_ecc-1260
         bufr_ecc-1028
         bufr_ecc-1195
+        bufr_ecc-1259
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
@@ -99,7 +103,6 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
-        grib_grid_space_view
         grib_g1monthlydate
         grib_g1fcperiod)
 
@@ -110,6 +113,7 @@ if( HAVE_BUILD_TOOLS )
         grib_complex
         grib_double_cmp
         grib_change_packing
+        grib_grid_space_view
         bufr_dump_data
         bufr_dump_descriptors
         bufr_dump_subset

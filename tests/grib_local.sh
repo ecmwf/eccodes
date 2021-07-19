@@ -16,6 +16,16 @@ REDIRECT=/dev/null
 cd ${data_dir}
 rm -f local.log
 
+# Check all GRIB2 local def files and definitions/grib2/grib2LocalSectionNumber.98.table
+# Each number should appear in the table
+g2lds=${ECCODES_DEFINITION_PATH}/grib2/local.98.*.def
+for g2ld in $g2lds; do
+    bname=`basename $g2ld`
+    dnum=`echo $bname | cut -d. -f3`
+    grep -q "^$dnum" ${ECCODES_DEFINITION_PATH}/grib2/grib2LocalSectionNumber.98.table
+done
+
+
 ${tools_dir}/grib_set -s edition=2,setLocalDefinition=1 reduced_gaussian_model_level.grib1 loc.grib2
 ${tools_dir}/grib_set -s setLocalDefinition=1           reduced_gaussian_model_level.grib1 loc.grib1
 
@@ -124,10 +134,10 @@ grib_check_key_equals $temp 'mars.origin:s' 'lops'
 # Extra key in Local Definition 16 for GRIB1. ECC-679
 # ----------------------------------------------------
 ${tools_dir}/grib_set -s \
-  setLocalDefinition=1,localDefinitionNumber=16,numberOfForecastsInEnsemble=51,verifyingMonth=11 \
+   setLocalDefinition=1,localDefinitionNumber=16,numberOfForecastsInEnsemble=51,verifyingMonth=11 \
   $sample_g1 $temp
-grib_check_key_equals $temp 'totalNumber,endOfInterval' '51 0'
-
+grib_check_key_equals $temp 'totalNumber' '51'
+grib_check_key_equals $temp 'yearOfEndOfOverallTimeInterval,monthOfEndOfOverallTimeInterval,dayOfEndOfOverallTimeInterval' '0 11 30'
 
 # Local Definition 49 for GRIB1
 # -----------------------------
