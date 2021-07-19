@@ -121,7 +121,6 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 100 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
-	 is_uerra = 1 ;
 	}
 #Wind speed
 'ws' = {
@@ -131,7 +130,6 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 200 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
-	 is_uerra = 1 ;
 	}
 #Unbalanced component of temperature
 'uctp' = {
@@ -193,7 +191,6 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 typeOfStatisticalProcessing = 2 ;
-	 is_uerra = 1 ;
 	 typeOfFirstFixedSurface = 103 ;
 	}
 #Specific rain water content
@@ -275,18 +272,6 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 typeOfStatisticalProcessing = 2 ;
-	 is_uerra = 1 ;
-	}
-#Minimum temperature at 2 metres since previous post-processing
-'mn2t' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 is_uerra = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
 	}
 #Ozone mass mixing ratio
 'o3' = {
@@ -1107,7 +1092,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
-	 is_uerra = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
@@ -1901,7 +1885,6 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 6 ;
 	 indicatorOfUnitForTimeRange = 1 ;
-	 is_uerra = 0 ;
 	}
 #Evaporation in the last 24 hours
 'eva24' = {
@@ -1912,29 +1895,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 24 ;
-	 is_uerra = 0 ;
-	}
-#Total precipitation in the last 6 hours
-'tp06' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
-	 is_efas = 1 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 lengthOfTimeRange = 6 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	}
-#Total precipitation in the last 24 hours
-'tp24' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
-	 lengthOfTimeRange = 24 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 is_efas = 1 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
 	}
 #Fraction of snow cover
 'fscov' = {
@@ -2702,7 +2662,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 is_uerra = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -2715,7 +2674,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 is_uerra = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -4773,37 +4731,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
 	}
-#Soil Moisture
-'sm' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 22 ;
-	 typeOfSecondFixedSurface = 106 ;
-	 typeOfFirstFixedSurface = 106 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = 2 ;
-	 scaleFactorOfSecondFixedSurface = 1 ;
-	 is_tigge = 1 ;
-	}
 #Soil Temperature
 'st' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
-	}
-#Soil Temperature
-'st' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 2 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 typeOfSecondFixedSurface = 106 ;
-	 scaledValueOfSecondFixedSurface = 2 ;
-	 scaleFactorOfSecondFixedSurface = 1 ;
-	 typeOfFirstFixedSurface = 106 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 is_tigge = 1 ;
 	}
 #Snow depth water equivalent
 'sd' = {
