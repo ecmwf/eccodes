@@ -397,13 +397,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 #endif
         if ((err = grib_set_double_internal(hand, self->reference_value, val[0])) != GRIB_SUCCESS)
             return err;
-        {
-            /* Make sure we can decode it again */
-            double ref = 1e-100;
-            grib_get_double_internal(hand, self->reference_value, &ref);
-            /*printf("%g %g %g\n",reference_value,ref,reference_value-ref);*/
-            Assert(ref == reference_value);
-        }
 
         if ((err = grib_set_long_internal(hand, self->number_of_values, n_vals)) != GRIB_SUCCESS)
             return err;

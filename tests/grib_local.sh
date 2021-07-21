@@ -20,7 +20,8 @@ rm -f local.log
 # Each number should appear in the table
 g2lds=${ECCODES_DEFINITION_PATH}/grib2/local.98.*.def
 for g2ld in $g2lds; do
-    dnum=`echo $g2ld | cut -d. -f3`
+    bname=`basename $g2ld`
+    dnum=`echo $bname | cut -d. -f3`
     grep -q "^$dnum" ${ECCODES_DEFINITION_PATH}/grib2/grib2LocalSectionNumber.98.table
 done
 
