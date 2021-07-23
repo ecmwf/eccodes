@@ -104,6 +104,10 @@ grib_check_key_equals $temp2 mars.hdate,mars.date '20070323 20191213'
 anoffset=`${tools_dir}/grib_get -f -p mars.anoffset $temp2`
 [ "$anoffset" = "not_found" ]
 
+# ECC-1264
+${tools_dir}/grib_set -s localDefinitionNumber=41,yearOfForecast=missing,monthOfForecast=missing $temp1 $temp2
+#${tools_dir}/grib_dump -O $temp2
+
 
 # Clean up
 rm -f $sample $temp1 $temp2 $temp3
