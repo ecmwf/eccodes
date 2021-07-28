@@ -126,7 +126,7 @@ static grib_iarray* grib_iarray_resize_to(grib_iarray* v, size_t newsize)
 
 static grib_iarray* grib_iarray_resize(grib_iarray* v)
 {
-    const int newsize = v->incsize + v->size;
+    const size_t newsize = v->incsize + v->size;
     return grib_iarray_resize_to(v, newsize);
 }
 
