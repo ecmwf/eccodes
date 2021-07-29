@@ -49,7 +49,7 @@ if( HAVE_FORTRAN )
                          GENERATED       grib_f90.f90 eccodes_f90.f90
                          PUBLIC_INCLUDES $<BUILD_INTERFACE:${CMAKE_Fortran_MODULE_DIRECTORY}>
                                          $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>
-                         PRIVATE_LIBS    eccodes )
+                         PRIVATE_LIBS    eccodes ${THREADS_LIBRARIES} )
 
     if( DEFINED ecbuild_VERSION AND NOT ${ecbuild_VERSION} VERSION_LESS 3.1 )
         # Installed module directory is not in the PUBLIC INCLUDES!
