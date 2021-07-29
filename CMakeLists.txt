@@ -274,7 +274,7 @@ if( HAVE_ECCODES_THREADS )
         ecbuild_critical("Pthreads is not supported on your system: thread library found=[${CMAKE_THREAD_LIBS_INIT}]")
     endif()
     set( GRIB_PTHREADS 1 )
-    # set( THREADS_LIBRARIES Threads::Threads )
+    set( ECCODES_PTHREADS_LIBRARIES Threads::Threads ) # ECC-1268
     if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
         set( GRIB_LINUX_PTHREADS 1 )
     endif()
