@@ -138,8 +138,7 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
 }
 
 
-void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionPlan& plan, input::MIRInput& input,
-                         output::MIROutput& output) {
+void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionPlan& plan, output::MIROutput& output) {
     // Packing, accuracy, edition
     packing_.reset(key::packing::PackingFactory::build(param));
 
@@ -149,16 +148,16 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
 
     std::string compatibility;
     if (param.userParametrisation().get("compatibility", compatibility) && !compatibility.empty()) {
-        plan.add(new action::io::Save(param, input, output));
+        plan.add(new action::io::Save(param, output));
         return;
     }
 
     if (!packing_->empty()) {
         if (!plan.empty()) {
-            plan.add(new action::io::Save(param, input, output));
+            plan.add(new action::io::Save(param, output));
         }
         else {
-            plan.add(new action::io::Set(param, input, output));
+            plan.add(new action::io::Set(param, output));
         }
         return;
     }
