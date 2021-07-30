@@ -122,8 +122,10 @@ void GribOutput::estimate(const param::MIRParametrisation& param, api::MIREstima
 
 
 bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParametrisation& param) const {
-    ASSERT(packing_);
-    bool ok = packing_->printParametrisation(out);
+    std::unique_ptr<key::packing::Packing> pack(key::packing::PackingFactory::build(param));
+    ASSERT(pack);
+
+    bool ok = pack->printParametrisation(out);
 
     std::string compatibility;
     if (param.userParametrisation().get("compatibility", compatibility)) {
@@ -140,7 +142,10 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
 
 void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionPlan& plan, output::MIROutput& output) {
     // Packing, accuracy, edition
-    packing_.reset(key::packing::PackingFactory::build(param));
+    std::unique_ptr<key::packing::Packing> pack(key::packing::PackingFactory::build(param));
+    ASSERT(pack);
+
+    pack.reset(key::packing::PackingFactory::build(param));
 
     if (plan.ended()) {
         return;
@@ -152,7 +157,7 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
         return;
     }
 
-    if (!packing_->empty()) {
+    if (!pack->empty()) {
         if (!plan.empty()) {
             plan.add(new action::io::Save(param, output));
         }
@@ -209,6 +214,9 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
     util::MIRStatistics::Timing saveTimer;
     auto timer(ctx.statistics().gribEncodingTimer());
 
+    std::unique_ptr<key::packing::Packing> pack(key::packing::PackingFactory::build(param));
+    ASSERT(pack);
+
     for (size_t i = 0; i < field.dimensions(); i++) {
 
         // Protect ecCodes and set error callback handling (throws)
@@ -258,8 +266,7 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
         repres->fill(info);
 
         // Packing, accuracy, edition
-        ASSERT(packing_);
-        packing_->fill(repres, info);
+        pack->fill(repres, info);
 
         // Extra settings (paramId comes from here)
         for (const auto& k : field.metadata(i)) {
@@ -418,7 +425,7 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
 }
 
 
-size_t GribOutput::set(const param::MIRParametrisation&, context::Context& ctx) {
+size_t GribOutput::set(const param::MIRParametrisation& param, context::Context& ctx) {
     trace::ResourceUsage usage("GribOutput::set");
 
     interpolated_++;
@@ -432,6 +439,9 @@ size_t GribOutput::set(const param::MIRParametrisation&, context::Context& ctx) 
 
     util::MIRStatistics::Timing saveTimer;
     auto timer(ctx.statistics().gribEncodingTimer());
+
+    std::unique_ptr<key::packing::Packing> pack(key::packing::PackingFactory::build(param));
+    ASSERT(pack);
 
     ASSERT(field.dimensions() == 1);
 
@@ -448,8 +458,7 @@ size_t GribOutput::set(const param::MIRParametrisation&, context::Context& ctx) 
         repres::RepresentationHandle repres(field.representation());
 
         // Packing, accuracy, edition
-        ASSERT(packing_);
-        packing_->set(repres, h);
+        pack->set(repres, h);
 
         // Values
         GRIB_CALL(codes_set_double(h, "missingValue", field.missingValue()));
