@@ -141,12 +141,6 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
 
 
 void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionPlan& plan, output::MIROutput& output) {
-    // Packing, accuracy, edition
-    std::unique_ptr<key::packing::Packing> pack(key::packing::PackingFactory::build(param));
-    ASSERT(pack);
-
-    pack.reset(key::packing::PackingFactory::build(param));
-
     if (plan.ended()) {
         return;
     }
@@ -156,6 +150,10 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
         plan.add(new action::io::Save(param, output));
         return;
     }
+
+    // Packing, accuracy, edition
+    std::unique_ptr<key::packing::Packing> pack(key::packing::PackingFactory::build(param));
+    ASSERT(pack);
 
     if (!pack->empty()) {
         if (!plan.empty()) {
