@@ -34,8 +34,11 @@ codetable[2] gridDefinitionTemplateNumber ('3.1.table',masterDir,localDir) =0 : 
 meta gridDefinitionDescription codetable_title(gridDefinitionTemplateNumber);
 
 alias isRotatedGrid=zero;
-
-template gridDefinitionSection "grib2/template.3.[gridDefinitionTemplateNumber:l].def";
+if (gridDefinitionTemplateNumber >= 32768) {
+    template gridDefinitionSection "grib2/local/local.[centreForLocal:l].template.3.[gridDefinitionTemplateNumber:l].def";
+} else {
+    template gridDefinitionSection "grib2/template.3.[gridDefinitionTemplateNumber:l].def";
+}
 
 if(PLPresent){
   if(numberOfOctectsForNumberOfPoints == 1){

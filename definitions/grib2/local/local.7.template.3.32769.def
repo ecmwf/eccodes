@@ -1,0 +1,39 @@
+# (C) Copyright 2005- ECMWF.
+
+# TEMPLATE 3.32769 - Rotate Latitude/Longitude (Arakawa Non-E Staggered grid)
+# See https://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_doc/grib2_temp3-32769.shtml
+
+include "grib2/template.3.shape_of_the_earth.def";
+unsigned[4] Ni : dump;
+unsigned[4] Nj : dump;
+
+unsigned[4] basicAngleOfTheInitialProductionDomain = 0;
+unsigned[4] subdivisionsOfBasicAngle = missing() : can_be_missing;;
+
+signed[4]   latitudeOfFirstGridPoint : edition_specific;
+unsigned[4] longitudeOfFirstGridPoint : edition_specific;
+alias La1 = latitudeOfFirstGridPoint;
+alias Lo1 = longitudeOfFirstGridPoint;
+meta latitudeOfFirstGridPointInDegrees  scale(La1,one,grib2divider,truncateDegrees) : dump;
+meta longitudeOfFirstGridPointInDegrees scale(Lo1,one,grib2divider,truncateDegrees) : dump;
+alias La1InDegrees = latitudeOfFirstGridPointInDegrees;
+alias Lo1InDegrees = longitudeOfFirstGridPointInDegrees;
+
+include "grib2/template.3.resolution_flags.def";
+
+# La2 - centre latitude of grid point
+signed[4]   centreLatitude:  edition_specific;
+unsigned[4] centreLongitude: edition_specific;
+alias La2 = centreLatitude;
+alias Lo2 = centreLongitude;
+meta centreLatitudeInDegrees  scale(centreLatitude,one,grib2divider,truncateDegrees) : dump;
+meta centreLongitudeInDegrees scale(centreLongitude,one,grib2divider,truncateDegrees) : dump;
+alias La2InDegrees = centreLatitudeInDegrees;
+alias Lo2InDegrees = centreLongitudeInDegrees;
+
+unsigned[4] Di : can_be_missing; # Longitudinal direction increment
+unsigned[4] Dj : can_be_missing; # Latitudinal direction increment
+flags[1] scanningMode 'grib2/tables/[tablesVersion]/3.4.table' : edition_specific,no_copy ;
+
+signed[4]   latitudeOfGridPoints : dump;
+unsigned[4] longitudeOfGridPoints: dump;
