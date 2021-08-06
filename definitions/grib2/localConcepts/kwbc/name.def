@@ -1649,3 +1649,279 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 8 ;
 }
+#Simulated Brightness Temperature for AMSRE on Aqua, Channel 10
+'Simulated Brightness Temperature for AMSRE on Aqua, Channel 10' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 11 ;
+}
+#Simulated Brightness Temperature for AMSRE on Aqua, Channel 11
+'Simulated Brightness Temperature for AMSRE on Aqua, Channel 11' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 12 ;
+}
+#Simulated Brightness Temperature for AMSRE on Aqua, Channel 12
+'Simulated Brightness Temperature for AMSRE on Aqua, Channel 12' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 13 ;
+}
+#Simulated Brightness Temperature for AMSRE on Aqua, Channel 9
+'Simulated Brightness Temperature for AMSRE on Aqua, Channel 9' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 10 ;
+}
+#Simulated Brightness Counts for GOES 12, Channel 3
+'Simulated Brightness Counts for GOES 12, Channel 3' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 4 ;
+}
+#Simulated Brightness Counts for GOES 12, Channel 4
+'Simulated Brightness Counts for GOES 12, Channel 4' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 5 ;
+}
+#Simulated Brightness Temperature for GOES 11, Channel 2
+'Simulated Brightness Temperature for GOES 11, Channel 2' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 6 ;
+}
+#Simulated Brightness Temperature for GOES 11, Channel 3
+'Simulated Brightness Temperature for GOES 11, Channel 3' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 7 ;
+}
+#Simulated Brightness Temperature for GOES 11, Channel 4
+'Simulated Brightness Temperature for GOES 11, Channel 4' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 8 ;
+}
+#Simulated Brightness Temperature for GOES 11, Channel 5
+'Simulated Brightness Temperature for GOES 11, Channel 5' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 9 ;
+}
+#Simulated Brightness Temperature for GOES 12, Channel 2
+'Simulated Brightness Temperature for GOES 12, Channel 2' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 0 ;
+}
+#Simulated Brightness Temperature for GOES 12, Channel 3
+'Simulated Brightness Temperature for GOES 12, Channel 3' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 1 ;
+}
+#Simulated Brightness Temperature for GOES 12, Channel 4
+'Simulated Brightness Temperature for GOES 12, Channel 4' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 2 ;
+}
+#Simulated Brightness Temperature for GOES 12, Channel 6
+'Simulated Brightness Temperature for GOES 12, Channel 6' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 3 ;
+}
+#Simulated Brightness Temperature for ABI GOES-16, Band-10
+'Simulated Brightness Temperature for ABI GOES-16, Band-10' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 23 ;
+}
+#Simulated Brightness Temperature for ABI GOES-16, Band-11
+'Simulated Brightness Temperature for ABI GOES-16, Band-11' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 24 ;
+}
+#Simulated Brightness Temperature for ABI GOES-16, Band-12
+'Simulated Brightness Temperature for ABI GOES-16, Band-12' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 25 ;
+}
+#Simulated Brightness Temperature for ABI GOES-16, Band-13
+'Simulated Brightness Temperature for ABI GOES-16, Band-13' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 26 ;
+}
+#Simulated Brightness Temperature for ABI GOES-16, Band-14
+'Simulated Brightness Temperature for ABI GOES-16, Band-14' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 27 ;
+}
+#Simulated Brightness Temperature for ABI GOES-16, Band-15
+'Simulated Brightness Temperature for ABI GOES-16, Band-15' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 28 ;
+}
+#Simulated Brightness Temperature for ABI GOES-16, Band-16
+'Simulated Brightness Temperature for ABI GOES-16, Band-16' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 29 ;
+}
+#Simulated Brightness Temperature for ABI GOES-16, Band-7
+'Simulated Brightness Temperature for ABI GOES-16, Band-7' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 20 ;
+}
+#Simulated Brightness Temperature for ABI GOES-16, Band-8
+'Simulated Brightness Temperature for ABI GOES-16, Band-8' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 21 ;
+}
+#Simulated Brightness Temperature for ABI GOES-16, Band-9
+'Simulated Brightness Temperature for ABI GOES-16, Band-9' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 22 ;
+}
+#Simulated Brightness Temperature for ABI GOES-17, Band-10
+'Simulated Brightness Temperature for ABI GOES-17, Band-10' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 39 ;
+}
+#Simulated Brightness Temperature for ABI GOES-17, Band-11
+'Simulated Brightness Temperature for ABI GOES-17, Band-11' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 40 ;
+}
+#Simulated Brightness Temperature for ABI GOES-17, Band-12
+'Simulated Brightness Temperature for ABI GOES-17, Band-12' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 41 ;
+}
+#Simulated Brightness Temperature for ABI GOES-17, Band-13
+'Simulated Brightness Temperature for ABI GOES-17, Band-13' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 42 ;
+}
+#Simulated Brightness Temperature for ABI GOES-17, Band-14
+'Simulated Brightness Temperature for ABI GOES-17, Band-14' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 43 ;
+}
+#Simulated Brightness Temperature for ABI GOES-17, Band-15
+'Simulated Brightness Temperature for ABI GOES-17, Band-15' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 44 ;
+}
+#Simulated Brightness Temperature for ABI GOES-17, Band-16
+'Simulated Brightness Temperature for ABI GOES-17, Band-16' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 45 ;
+}
+#Simulated Brightness Temperature for ABI GOES-17, Band-7
+'Simulated Brightness Temperature for ABI GOES-17, Band-7' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 36 ;
+}
+#Simulated Brightness Temperature for ABI GOES-17, Band-8
+'Simulated Brightness Temperature for ABI GOES-17, Band-8' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 37 ;
+}
+#Simulated Brightness Temperature for ABI GOES-17, Band-9
+'Simulated Brightness Temperature for ABI GOES-17, Band-9' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 38 ;
+}
+#Simulated Reflectance Factor for ABI GOES-16, Band-1
+'Simulated Reflectance Factor for ABI GOES-16, Band-1' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 14 ;
+}
+#Simulated Reflectance Factor for ABI GOES-16, Band-2
+'Simulated Reflectance Factor for ABI GOES-16, Band-2' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 15 ;
+}
+#Simulated Reflectance Factor for ABI GOES-16, Band-3
+'Simulated Reflectance Factor for ABI GOES-16, Band-3' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 16 ;
+}
+#Simulated Reflectance Factor for ABI GOES-16, Band-4
+'Simulated Reflectance Factor for ABI GOES-16, Band-4' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 17 ;
+}
+#Simulated Reflectance Factor for ABI GOES-16, Band-5
+'Simulated Reflectance Factor for ABI GOES-16, Band-5' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 18 ;
+}
+#Simulated Reflectance Factor for ABI GOES-16, Band-6
+'Simulated Reflectance Factor for ABI GOES-16, Band-6' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 19 ;
+}
+#Simulated Reflectance Factor for ABI GOES-17, Band-1
+'Simulated Reflectance Factor for ABI GOES-17, Band-1' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 30 ;
+}
+#Simulated Reflectance Factor for ABI GOES-17, Band-2
+'Simulated Reflectance Factor for ABI GOES-17, Band-2' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 31 ;
+}
+#Simulated Reflectance Factor for ABI GOES-17, Band-3
+'Simulated Reflectance Factor for ABI GOES-17, Band-3' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 32 ;
+}
+#Simulated Reflectance Factor for ABI GOES-17, Band-4
+'Simulated Reflectance Factor for ABI GOES-17, Band-4' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 33 ;
+}
+#Simulated Reflectance Factor for ABI GOES-17, Band-5
+'Simulated Reflectance Factor for ABI GOES-17, Band-5' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 34 ;
+}
+#Simulated Reflectance Factor for ABI GOES-17, Band-6
+'Simulated Reflectance Factor for ABI GOES-17, Band-6' = {
+  discipline = 3 ;
+  parameterCategory = 192 ;
+  parameterNumber = 35 ;
+}
