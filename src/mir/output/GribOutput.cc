@@ -140,7 +140,7 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
 }
 
 
-void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionPlan& plan, output::MIROutput& output) {
+void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionPlan& plan, MIROutput& output) {
     if (plan.ended()) {
         return;
     }

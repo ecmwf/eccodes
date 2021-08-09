@@ -91,14 +91,7 @@ public:
 };
 
 
-struct GribReorder {
-    enum
-    {
-        iScansNegatively      = 1 << 7,
-        jScansPositively      = 1 << 6,
-        jPointsAreConsecutive = 1 << 5,
-        alternateRowScanning  = 1 << 4
-    };
+void grib_reorder(std::vector<double>& values, long scanningMode, size_t Ni, size_t Nj);
 
-    static void reorder(std::vector<double>& values, long scanningMode, size_t Ni, size_t Nj);
-};
+
+void grib_get_unique_missing_value(const std::vector<double>& values, double& missingValue);

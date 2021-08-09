@@ -77,7 +77,7 @@ LatLon::~LatLon() = default;
 
 
 void LatLon::reorder(long scanningMode, MIRValuesVector& values) const {
-    GribReorder::reorder(values, scanningMode, ni_, nj_);
+    grib_reorder(values, scanningMode, ni_, nj_);
 }
 
 

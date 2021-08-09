@@ -10,14 +10,23 @@
  */
 
 
+#include <algorithm>
 #include <sstream>
 
 #include "mir/util/Grib.h"
 #include "mir/util/Log.h"
 
 
-void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t Ni, size_t Nj) {
+void grib_reorder(std::vector<double>& values, long scanningMode, size_t Ni, size_t Nj) {
     using mir::Log;
+
+    enum
+    {
+        iScansNegatively      = 1 << 7,
+        jScansPositively      = 1 << 6,
+        jPointsAreConsecutive = 1 << 5,
+        alternateRowScanning  = 1 << 4
+    };
 
     auto scanningModeAsString = [](long mode) {
         std::ostringstream os;
@@ -74,9 +83,33 @@ void GribReorder::reorder(std::vector<double>& values, long scanningMode, size_t
     }
 
     std::ostringstream os;
-    os << "LatLon::reorder " << current << " not supported";
+    os << "grib_reorder " << current << " not supported";
     Log::error() << os.str() << std::endl;
     throw mir::exception::SeriousBug(os.str());
+}
+
+
+void grib_get_unique_missing_value(const std::vector<double>& values, double& missingValue) {
+    ASSERT(!values.empty());
+
+    // check if it's unique, otherwise a high then a low value
+    if (std::find(values.begin(), values.end(), missingValue) == values.end()) {
+        return;
+    }
+
+    auto mm = std::minmax_element(values.begin(), values.end());
+
+    missingValue = *(mm.second) + 1.;
+    if (missingValue == missingValue) {
+        return;
+    }
+
+    missingValue = *(mm.first) - 1.;
+    if (missingValue == missingValue) {
+        return;
+    }
+
+    throw mir::exception::SeriousBug("grib_get_unique_missing_value: failed to get a unique missing value.");
 }
 
 
