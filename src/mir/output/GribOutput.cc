@@ -18,6 +18,7 @@
 #include "eckit/config/Resource.h"
 
 #include "mir/action/context/Context.h"
+#include "mir/action/io/Copy.h"
 #include "mir/action/io/Save.h"
 #include "mir/action/io/Set.h"
 #include "mir/action/plan/ActionPlan.h"
@@ -70,11 +71,10 @@ size_t GribOutput::saved() const {
 }
 
 
-size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx) {  // No interpolation performed
-
+size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx) {
     saved_++;
 
-    const input::MIRInput& input = ctx.input();
+    const auto& input = ctx.input();
 
     size_t total = 0;
     for (size_t i = 0; i < input.dimensions(); i++) {
@@ -145,25 +145,22 @@ void GribOutput::prepare(const param::MIRParametrisation& param, action::ActionP
         return;
     }
 
-    std::string compatibility;
-    if (param.userParametrisation().get("compatibility", compatibility) && !compatibility.empty()) {
-        plan.add(new action::io::Save(param, output));
-        return;
-    }
+    auto compatibility_empty = [&param]() {
+        std::string compatibility;
+        param.userParametrisation().get("compatibility", compatibility);
+        return compatibility.empty();
+    };
 
-    // Packing, accuracy, edition
-    std::unique_ptr<key::packing::Packing> pack(key::packing::PackingFactory::build(param));
-    ASSERT(pack);
+    auto packing_empty = [&param]() {
+        std::unique_ptr<key::packing::Packing> pack(key::packing::PackingFactory::build(param));
+        ASSERT(pack);
+        return pack->empty();
+    };
 
-    if (!pack->empty()) {
-        if (!plan.empty()) {
-            plan.add(new action::io::Save(param, output));
-        }
-        else {
-            plan.add(new action::io::Set(param, output));
-        }
-        return;
-    }
+    plan.add(!plan.empty()            ? new action::io::Save(param, output)
+             : !compatibility_empty() ? new action::io::Save(param, output)
+             : !packing_empty()       ? new action::io::Set(param, output)
+                                      : static_cast<action::Action*>(new action::io::Copy(param, output)));
 }
 
 
