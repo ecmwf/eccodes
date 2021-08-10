@@ -130,7 +130,11 @@ while (<>) {
 
     die "Error: paramID \"$paramId\" is not an integer (input row=$lcount)!\n"             if (!is_integer($paramId));
     die "Error: shortName \"$shortName\" has an invalid character (input row=$lcount)!\n"  if ($shortName =~ /[ '"]/);
-    die "Error: name \"$name\" should have uppercase 1st letter or digit (input row=$lcount)!\n"    if ($name !~ /^[A-Z0-9]/);
+    die "Error: name \"$name\" should have uppercase 1st letter or digit (input row=$lcount)!\n"   if ($name !~ /^[A-Z0-9]/);
+    die "Error: typeOfFirstFixedSurface \"$type1\" is not an integer (input row=$lcount)!\tPick a value from Code Table 4.5\n"
+        if ($type1 ne "" && !is_integer($type1));
+    die "Error: typeOfSecondFixedSurface \"$type2\" is not an integer (input row=$lcount)!\tPick a value from Code Table 4.5\n"
+        if ($type2 ne "" && !is_integer($type2));
 
     $units = "~" if ($units eq "");
     $cfVarName = $shortName;
