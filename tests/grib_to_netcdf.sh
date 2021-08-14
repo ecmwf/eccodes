@@ -33,6 +33,8 @@ tempGrib=temp.${label}.grib
 tempNetcdf=temp.${label}.nc
 tempText=temp.${label}.txt
 
+have_netcdf4=0
+
 # Do we have ncdump?
 NC_DUMPER=""
 if command -v "ncdump" >/dev/null 2>&1; then
@@ -49,6 +51,20 @@ if test "x$NC_DUMPER" != "x"; then
     $NC_DUMPER -h $tempNetcdf > $tempText
     grep -q "short tp_0005" $tempText
     grep -q "short tp_0001" $tempText
+fi
+
+echo "Test HDF5 decoding ..."
+# -------------------------
+# Note: this is only available in NetCDF-4. So need to check if the command worked with -k3
+input=${data_dir}/sample.grib2
+set +e
+${tools_dir}/grib_to_netcdf -k3 -o $tempNetcdf $input 2>/dev/null
+stat=$?
+set -e
+if [ $stat -eq 0 ]; then
+    have_netcdf4=1
+    res=`${tools_dir}/grib_get -TA -p identifier,versionNumberOfSuperblock,endOfFileAddress $tempNetcdf`
+    [ "$res" = "HDF5 0 11973" ]
 fi
 
 
@@ -78,8 +94,10 @@ echo "Test creating different kinds; netcdf3 classic and large ..."
 input=${data_dir}/regular_latlon_surface.grib2
 ${tools_dir}/grib_to_netcdf -k 1 -o $tempNetcdf $input >/dev/null
 ${tools_dir}/grib_to_netcdf -k 2 -o $tempNetcdf $input >/dev/null
-#${tools_dir}/grib_to_netcdf -k 3 -o $tempNetcdf $input >/dev/null
-#${tools_dir}/grib_to_netcdf -k 4 -o $tempNetcdf $input >/dev/null
+if [ $have_netcdf4 -eq 1 ]; then
+    ${tools_dir}/grib_to_netcdf -k 3 -o $tempNetcdf $input >/dev/null
+    ${tools_dir}/grib_to_netcdf -k 4 -o $tempNetcdf $input >/dev/null
+fi
 
 echo "Test ECC-1060 ..."
 # ----------------------
