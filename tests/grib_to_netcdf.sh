@@ -63,8 +63,8 @@ stat=$?
 set -e
 if [ $stat -eq 0 ]; then
     have_netcdf4=1
-    res=`${tools_dir}/grib_get -TA -p identifier,versionNumberOfSuperblock,endOfFileAddress $tempNetcdf`
-    [ "$res" = "HDF5 0 11973" ]
+    res=`${tools_dir}/grib_get -TA -p identifier,versionNumberOfSuperblock $tempNetcdf`
+    [ "$res" = "HDF5 0" ]
 fi
 
 
