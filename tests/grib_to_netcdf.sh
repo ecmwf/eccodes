@@ -88,9 +88,8 @@ for dt in $ncf_types; do
     done
 done
 
-echo "Test creating different kinds; netcdf3 classic and large ..."
+echo "Test creating different kinds ..."
 # ------------------------------------------------------------------
-# TODO: enable tests for netcdf4 formats too
 input=${data_dir}/regular_latlon_surface.grib2
 ${tools_dir}/grib_to_netcdf -k 1 -o $tempNetcdf $input >/dev/null
 ${tools_dir}/grib_to_netcdf -k 2 -o $tempNetcdf $input >/dev/null
@@ -98,6 +97,11 @@ if [ $have_netcdf4 -eq 1 ]; then
     ${tools_dir}/grib_to_netcdf -k 3 -o $tempNetcdf $input >/dev/null
     ${tools_dir}/grib_to_netcdf -k 4 -o $tempNetcdf $input >/dev/null
 fi
+
+echo "Test shuffle and deflate ..."
+# ---------------------------------
+input=${data_dir}/sst_globus0083.grib
+${tools_dir}/grib_to_netcdf -s -d9 -k4 -o $tempNetcdf $input
 
 echo "Test ECC-1060 ..."
 # ----------------------
