@@ -100,8 +100,10 @@ fi
 
 echo "Test shuffle and deflate ..."
 # ---------------------------------
-input=${data_dir}/sst_globus0083.grib
-${tools_dir}/grib_to_netcdf -s -d9 -k4 -o $tempNetcdf $input
+if [ $have_netcdf4 -eq 1 ]; then
+    input=${data_dir}/sst_globus0083.grib
+    ${tools_dir}/grib_to_netcdf -s -d9 -k4 -o $tempNetcdf $input
+fi
 
 echo "Test ECC-1060 ..."
 # ----------------------
