@@ -34,4 +34,12 @@ diff $tempRef $tempOut
 ${tools_dir}/grib_dump ${data_dir}/budg
 ${tools_dir}/grib_dump -O ${data_dir}/budg
 
+ms=`${tools_dir}/grib_get -p mars.step ${data_dir}/budg`
+[ "$ms" = "0" ]
+${tools_dir}/grib_set -s mars.step=19 ${data_dir}/budg $tempOut
+${tools_dir}/grib_ls -jm $tempOut
+ms=`${tools_dir}/grib_get -p mars.step $tempOut`
+[ "$ms" = "19" ]
+
+
 rm -f $tempRef $tempOut
