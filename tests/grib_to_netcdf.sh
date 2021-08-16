@@ -53,20 +53,21 @@ if test "x$NC_DUMPER" != "x"; then
     grep -q "short tp_0001" $tempText
 fi
 
-echo "Test HDF5 decoding ..."
-# -------------------------
-# Note: this is only available in NetCDF-4. So need to check if the command worked with -k3
-input=${data_dir}/sample.grib2
-set +e
-${tools_dir}/grib_to_netcdf -k3 -o $tempNetcdf $input 2>/dev/null
-stat=$?
-set -e
-if [ $stat -eq 0 ]; then
-    have_netcdf4=1
-    res=`${tools_dir}/grib_get -TA -p identifier,versionNumberOfSuperblock $tempNetcdf`
-    [ "$res" = "HDF5 0" ]
+if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+    echo "Test HDF5 decoding ..."
+    # ---------------------------
+    # Note: this is only available in NetCDF-4. So need to check if the command worked with -k3
+    input=${data_dir}/sample.grib2
+    set +e
+    ${tools_dir}/grib_to_netcdf -k3 -o $tempNetcdf $input 2>/dev/null
+    stat=$?
+    set -e
+    if [ $stat -eq 0 ]; then
+        have_netcdf4=1
+        res=`${tools_dir}/grib_get -TA -p identifier,versionNumberOfSuperblock $tempNetcdf`
+        [ "$res" = "HDF5 0" ]
+    fi
 fi
-
 
 grib_files="\
  regular_latlon_surface.grib2 \
