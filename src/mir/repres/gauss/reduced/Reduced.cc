@@ -203,13 +203,13 @@ eckit::Fraction Reduced::getSmallestIncrement() const {
 
 Iterator* Reduced::unrotatedIterator() const {
     auto pl = pls();
-    return new gauss::GaussianIterator(latitudes(), std::move(pl), bbox_, N_, Nj_, k_);
+    return new GaussianIterator(latitudes(), std::move(pl), bbox_, N_, Nj_, k_);
 }
 
 
 Iterator* Reduced::rotatedIterator(const util::Rotation& rotation) const {
     auto pl = pls();
-    return new gauss::GaussianIterator(latitudes(), std::move(pl), bbox_, N_, Nj_, k_, rotation);
+    return new GaussianIterator(latitudes(), std::move(pl), bbox_, N_, Nj_, k_, rotation);
 }
 
 
@@ -411,7 +411,7 @@ size_t Reduced::numberOfPoints() const {
     }
 
     size_t total = 0;
-    for (std::unique_ptr<repres::Iterator> iter(iterator()); iter->next();) {
+    for (std::unique_ptr<Iterator> iter(iterator()); iter->next();) {
         total++;
     }
     return total;

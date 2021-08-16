@@ -223,7 +223,7 @@ const Gridded* UnstructuredGrid::croppedRepresentation(const util::BoundingBox& 
     size_t i = 0;
     size_t j = 0;
 
-    std::unique_ptr<repres::Iterator> iter(iterator());
+    std::unique_ptr<Iterator> iter(iterator());
     while (iter->next()) {
         if (bbox.contains(iter->pointUnrotated())) {
             lat.emplace_back(latitudes_[i]);
