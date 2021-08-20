@@ -189,6 +189,17 @@ sample1=$ECCODES_SAMPLES_PATH/sh_ml_grib1.tmpl
 padding=`echo 'print "[padding_grid50_1]";' | ${tools_dir}/grib_filter - $sample1`
 [ "$padding" = "000000000000000000000000000000000000" ]
 
+echo "Test switch statement"
+# --------------------------
+cat >temp.filt <<EOF
+switch (edition) {
+  case 1: print "1";
+  case 2: print "2";
+  default: print "what is this?";assert(0);
+}
+EOF
+${tools_dir}/grib_filter temp.filt $ECCODES_SAMPLES_PATH/GRIB1.tmpl $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
 
 # Clean up
 rm -f temp_filt.grib2 temp.filt
