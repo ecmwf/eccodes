@@ -423,6 +423,7 @@ int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string)
 
     print_math(m);
     printf("\n");
+    grib_math_delete(set->context, m);
     return err;
 }
 
