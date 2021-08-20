@@ -56,7 +56,7 @@ int main(int argc, char** argv)
     set = codes_fieldset_new_from_files(0, filenames, nfiles, keys, nkeys, 0, 0, &err);
     CODES_CHECK(err, 0);
 
-    /* not jet implemented */
+    /* not yet implemented */
     /* err=codes_fieldset_apply_where(set,"(centre=='ecmf') && number==1 || step==6 "); */
     /* CODES_CHECK(err,0); */
 
