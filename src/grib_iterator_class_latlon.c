@@ -134,7 +134,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     grib_iterator_latlon* self = (grib_iterator_latlon*)iter;
     int err                    = 0;
     double jdir;
-    double lat1;
+    double lat1=0, lat2=0, north=0, south=0;
     long jScansPositively;
     long lai;
 
@@ -166,6 +166,8 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     if ((err = grib_get_double_internal(h, s_lat1, &lat1)))
         return err;
+    if ((err = grib_get_double_internal(h, "latitudeLastInDegrees", &lat2)))
+        return err;
     if ((err = grib_get_double_internal(h, s_jdir, &jdir)))
         return err;
     if ((err = grib_get_long_internal(h, s_jScansPos, &jScansPositively)))
@@ -178,22 +180,32 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     /* ECC-984: If jDirectionIncrement is missing, then we cannot use it (See jDirectionIncrementGiven) */
     /* So try to compute the increment */
     if (grib_is_missing(h, s_jdir, &err) && err == GRIB_SUCCESS) {
-        double lat2;
-        if ((err = grib_get_double_internal(h, "latitudeLastInDegrees", &lat2)) == GRIB_SUCCESS) {
-            const long Nj = self->Nj;
-            Assert(Nj > 1);
-            if (lat1 > lat2) {
-                jdir = (lat1 - lat2) / (Nj - 1);
-            }
-            else {
-                jdir = (lat2 - lat1) / (Nj - 1);
-            }
-            grib_context_log(h->context, GRIB_LOG_INFO,
-                             "%s is missing (See jDirectionIncrementGiven). Using value of %.6f obtained from La1, La2 and Nj", s_jdir, jdir);
+        const long Nj = self->Nj;
+        Assert(Nj > 1);
+        if (lat1 > lat2) {
+            jdir = (lat1 - lat2) / (Nj - 1);
         }
+        else {
+            jdir = (lat2 - lat1) / (Nj - 1);
+        }
+        grib_context_log(h->context, GRIB_LOG_INFO,
+                        "%s is missing (See jDirectionIncrementGiven). Using value of %.6f obtained from La1, La2 and Nj", s_jdir, jdir);
     }
-    if (jScansPositively)
+
+    if (jScansPositively) {
+        north = lat2;
+        south = lat1;
         jdir = -jdir;
+    } else {
+        north = lat1;
+        south = lat2;
+    }
+    if (south > north) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "First and last latitudes are inconsistent with scanning order: lat1=%g, lat2=%g jScansPositively=%ld",
+                         lat1, lat2, jScansPositively);
+        return GRIB_WRONG_GRID;
+    }
 
     for (lai = 0; lai < self->Nj; lai++) {
         self->las[lai] = lat1;

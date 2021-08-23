@@ -382,10 +382,20 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
         size_t numCodedVals = 0;
         grib_get_long(h, "bitsPerValue", &bitsPerValue);
         if (bitsPerValue == 0) {
-            if (h->context->debug) {
-                fprintf(stderr, "ECCODES DEBUG grib_set_string packingType: Constant field cannot be encoded in second order. Packing not changed\n");
+            /* ECC-1219: packingType conversion from grid_ieee to grid_second_order */
+            /* Normally having a bitsPerValue of 0 means a constant field but this is 
+             * not so for IEEE packing which can be non-constant but always has bitsPerValue==0!
+             */
+            char input_packing_type[100] = {0,};
+            size_t len = sizeof(input_packing_type);
+            grib_get_string(h, "packingType", input_packing_type, &len);
+            if (strcmp(input_packing_type, "grid_ieee") != 0) {
+                /* If it's not IEEE, then bitsPerValue==0 means constant field */
+                if (h->context->debug) {
+                    fprintf(stderr, "ECCODES DEBUG grib_set_string packingType: Constant field cannot be encoded in second order. Packing not changed\n");
+                }
+                return 0;
             }
-            return 0;
         }
 
         /* GRIB-883: check if there are enough coded values */

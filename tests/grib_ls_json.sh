@@ -103,6 +103,13 @@ for file in ${grib_files}; do
   fi
 done
 
+# ECC-1243: listing the geography namespace
+# -----------------------------------------
+${tools_dir}/grib_ls -j -n geography ${data_dir}/reduced_latlon_surface.grib2 > $tempLog
+if test "x$JSON_CHECK" != "x"; then
+  json_xs -t none < $tempLog
+fi
+
 
 # Clean up
 rm -f $tempLog $tempOut $tempRef

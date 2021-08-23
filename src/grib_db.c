@@ -252,6 +252,7 @@ static int grib_db_column_copy_from_handle(grib_handle* h, grib_db* db, int i)
 }
 
 /* --------------- grib_db functions ------------------*/
+#if 0
 grib_db* grib_db_new_from_files(grib_context* c, char* filenames[],
                                 int nfiles, char** keys, int nkeys, int* err)
 {
@@ -269,7 +270,7 @@ grib_db* grib_db_new_from_files(grib_context* c, char* filenames[],
     }
 
     db = grib_db_new_from_file(c, filenames[0], keys, nkeys, err);
-    if (!db || err != GRIB_SUCCESS)
+    if (!db || *err != GRIB_SUCCESS)
         return db;
 
     *err = GRIB_SUCCESS;
@@ -307,6 +308,7 @@ grib_db* grib_db_new_from_file(grib_context* c, char* filename,
 
     return db;
 }
+#endif
 
 static grib_db* grib_db_create_from_keys(grib_context* c, char** keys, int nkeys, int* err)
 {

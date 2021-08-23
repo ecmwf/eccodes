@@ -667,7 +667,7 @@ static grib_darray* decode_double_array(grib_context* c, unsigned char* data, lo
         }
         for (j = 0; j < self->numberOfSubsets; j++) {
             lval = grib_decode_size_t(data, pos, localWidth);
-            if (grib_is_all_bits_one(lval, localWidth) && canBeMissing) {
+            if (canBeMissing && grib_is_all_bits_one(lval, localWidth)) {
                 dval = GRIB_MISSING_DOUBLE;
             }
             else {
@@ -678,7 +678,7 @@ static grib_darray* decode_double_array(grib_context* c, unsigned char* data, lo
     }
     else {
         /* ECC-428 */
-        if (grib_is_all_bits_one(lval, modifiedWidth) && canBeMissing) {
+        if (canBeMissing && grib_is_all_bits_one(lval, modifiedWidth)) {
             dval = GRIB_MISSING_DOUBLE;
         }
         else {
@@ -809,6 +809,9 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
     nvals = grib_iarray_used_size(self->iss_list);
     if (nvals <= 0)
         return GRIB_NO_VALUES;
+
+    if (!dvalues)
+        return GRIB_ENCODING_ERROR;
 
     set_missing_long_to_double(dvalues);
 
@@ -1093,7 +1096,7 @@ static double decode_double_value(grib_context* c, unsigned char* data, long* po
     }
 
     lval = grib_decode_size_t(data, pos, modifiedWidth);
-    if (grib_is_all_bits_one(lval, modifiedWidth) && canBeMissing) {
+    if (canBeMissing && grib_is_all_bits_one(lval, modifiedWidth)) {
         dval = GRIB_MISSING_DOUBLE;
     }
     else {
@@ -1305,7 +1308,7 @@ static int encode_overridden_reference_value(grib_context* c, grib_accessor_bufr
     grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + numBits);
     err = grib_encode_signed_longb(buff->data, currRefVal, pos, numBits);
     if (err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "encoding overridden reference value %ld for %s (code=%6.6ld)",
+        grib_context_log(c, GRIB_LOG_ERROR, "Encoding overridden reference value %ld for %s (code=%6.6ld)",
                          currRefVal, bd->shortName, bd->code);
     }
     self->refValIndex++;
@@ -1384,7 +1387,7 @@ static int encode_new_replication(grib_context* c, grib_accessor_bufr_data_array
         case 31000:
             if (self->nInputShortReplications >= 0) {
                 if (self->iInputShortReplications >= self->nInputShortReplications) {
-                    grib_context_log(c, GRIB_LOG_ERROR, "array inputShortDelayedDescriptorReplicationFactor: dimension mismatch (nInputShortReplications=%d)",
+                    grib_context_log(c, GRIB_LOG_ERROR, "Array inputShortDelayedDescriptorReplicationFactor: dimension mismatch (nInputShortReplications=%d)",
                                      self->nInputShortReplications);
                     return GRIB_ARRAY_TOO_SMALL;
                 }
@@ -1395,7 +1398,7 @@ static int encode_new_replication(grib_context* c, grib_accessor_bufr_data_array
         case 31001:
             if (self->nInputReplications >= 0) {
                 if (self->iInputReplications >= self->nInputReplications) {
-                    grib_context_log(c, GRIB_LOG_ERROR, "array inputDelayedDescriptorReplicationFactor: dimension mismatch (nInputReplications=%d)",
+                    grib_context_log(c, GRIB_LOG_ERROR, "Array inputDelayedDescriptorReplicationFactor: dimension mismatch (nInputReplications=%d)",
                                      self->nInputReplications);
                     return GRIB_ARRAY_TOO_SMALL;
                 }
@@ -1406,7 +1409,7 @@ static int encode_new_replication(grib_context* c, grib_accessor_bufr_data_array
         case 31002:
             if (self->nInputExtendedReplications >= 0) {
                 if (self->iInputExtendedReplications >= self->nInputExtendedReplications) {
-                    grib_context_log(c, GRIB_LOG_ERROR, "array inputExtendedDelayedDescriptorReplicationFactor: dimension mismatch (nInputExtendedReplications=%d)",
+                    grib_context_log(c, GRIB_LOG_ERROR, "Array inputExtendedDelayedDescriptorReplicationFactor: dimension mismatch (nInputExtendedReplications=%d)",
                                      self->nInputExtendedReplications);
                     return GRIB_ARRAY_TOO_SMALL;
                 }
@@ -1415,7 +1418,7 @@ static int encode_new_replication(grib_context* c, grib_accessor_bufr_data_array
             }
             break;
         default:
-            grib_context_log(c, GRIB_LOG_ERROR, "unsupported descriptor code %ld\n", descriptors[i]->code);
+            grib_context_log(c, GRIB_LOG_ERROR, "Unsupported descriptor code %ld\n", descriptors[i]->code);
             return GRIB_INTERNAL_ERROR;
     }
 
@@ -1467,7 +1470,7 @@ static int encode_element(grib_context* c, grib_accessor_bufr_data_array* self, 
             }
             idx = (int)self->numericValues->v[subsetIndex]->v[elementIndex] / 1000 - 1;
             if (idx < 0 || idx >= self->stringValues->n) {
-                grib_context_log(c, GRIB_LOG_ERROR, "encode_element: %s: Invalid index %d", bd->shortName, idx);
+                grib_context_log(c, GRIB_LOG_ERROR, "encode_element '%s': Invalid index %d", bd->shortName, idx);
                 return GRIB_INVALID_ARGUMENT;
             }
             err = encode_string_value(c, buff, pos, bd, self, self->stringValues->v[idx]->v[0]);
@@ -1478,11 +1481,16 @@ static int encode_element(grib_context* c, grib_accessor_bufr_data_array* self, 
         if (self->compressedData) {
             err = encode_double_array(c, buff, pos, bd, self, self->numericValues->v[elementIndex]);
             if (err) {
-                grib_context_log(c, GRIB_LOG_ERROR, "encoding %s ( code=%6.6ld width=%ld scale=%ld reference=%ld )",
+                grib_darray* varr = self->numericValues->v[elementIndex];
+                grib_context_log(c, GRIB_LOG_ERROR, "Encoding key '%s' ( code=%6.6ld width=%ld scale=%ld reference=%ld )",
                                  bd->shortName, bd->code, bd->width,
                                  bd->scale, bd->reference);
-                for (j = 0; j < grib_darray_used_size(self->numericValues->v[elementIndex]); j++)
-                    grib_context_log(c, GRIB_LOG_ERROR, "value[%d]\t= %g", j, self->numericValues->v[elementIndex]->v[j]);
+                if (varr) {
+                    for (j = 0; j < grib_darray_used_size(varr); j++)
+                        grib_context_log(c, GRIB_LOG_ERROR, "value[%d]\t= %g", j, varr->v[j]);
+                } else {
+                    grib_context_log(c, GRIB_LOG_ERROR, "Empty array: Check the order of keys being set!");
+                }
             }
         }
         else {
@@ -2677,7 +2685,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                         if (associatedFieldSignificanceAccessor) {
                             grib_accessor* newAccessor = grib_accessor_clone(associatedFieldSignificanceAccessor, section, &err);
                             if (err) {
-                                grib_context_log(a->context, GRIB_LOG_ERROR, "unable to clone accessor '%s'\n", associatedFieldSignificanceAccessor->name);
+                                grib_context_log(a->context, GRIB_LOG_ERROR,"Unable to clone accessor '%s'\n", associatedFieldSignificanceAccessor->name);
                                 return err;
                             }
                             grib_accessor_add_attribute(associatedFieldAccessor, newAccessor, 1);

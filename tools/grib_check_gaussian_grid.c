@@ -88,7 +88,7 @@ int process_file(const char* filename)
 
     in = fopen(filename, "r");
     if (!in) {
-        fprintf(stderr, "ERROR: unable to open input file %s\n", filename);
+        fprintf(stderr, "ERROR: unable to open input file '%s'\n", filename);
         exit(1);
     }
 
@@ -120,7 +120,7 @@ int process_file(const char* filename)
         if (!grid_ok) {
             /*error("ERROR: gridType should be Reduced or Regular Gaussian Grid!\n");*/
             if (verbose)
-                printf(" WARNING: gridType should be Reduced or Regular Gaussian Grid! Ignoring\n");
+                printf(" WARNING: gridType=%s. It should be Reduced or Regular Gaussian Grid! Ignoring\n", gridType);
             grib_handle_delete(h);
             continue;
         }
@@ -263,7 +263,7 @@ int main(int argc, char** argv)
             verbose = 1;
         }
         else {
-            /* We have a GRIB file */
+            /* We have a file (not an option) */
             process_file(arg);
         }
     }
