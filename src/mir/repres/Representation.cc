@@ -269,7 +269,7 @@ const Representation* Representation::globalise(data::MIRField& field) const {
     std::vector<double> longitudes;
     longitudes.resize(size);
 
-    std::unique_ptr<repres::Iterator> it(octahedral->iterator());
+    std::unique_ptr<Iterator> it(octahedral->iterator());
     while (it->next()) {
         const auto& p = it->pointUnrotated();
         latitudes.push_back(p.lat().value());
