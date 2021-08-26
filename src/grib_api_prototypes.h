@@ -171,7 +171,7 @@ grib_hash_array_value* grib_double_hash_array_value_new(grib_context* c, const c
 void grib_hash_array_value_delete(grib_context* c, grib_hash_array_value* v);
 
 /* grib_bufr_descriptor.c */
-bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int* err);
+bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err);
 bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d);
 int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor, int code, bufr_descriptor* v);
 void grib_bufr_descriptor_set_reference(bufr_descriptor* v, long reference);
