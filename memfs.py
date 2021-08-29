@@ -117,6 +117,8 @@ for directory in dirs:
 if buffer is not None:
     buffer.close()
 
+assert fcount <= MAX_FCOUNT, fcount
+
 while fcount < MAX_FCOUNT:
     opath = get_outfile_name(output_file_base, fcount)
     print("MEMFS: Generating output:", opath, "(empty)")
