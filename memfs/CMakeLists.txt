@@ -6,6 +6,7 @@ set( generated_c_files
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_004.c
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_005.c
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_006.c
+    ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_007.c
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_final.c)
 
 set( exclude "" )

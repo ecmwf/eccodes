@@ -14,7 +14,7 @@ print("MEMFS: starting")
 # Exclude experimental features e.g. GRIB3 and TAF
 # The BUFR codetables is not used in the engine
 EXCLUDED = ["grib3", "codetables", "taf", "stations"]
-EXPECTED_FCOUNT = 6
+EXPECTED_FCOUNT = 7
 
 pos = 1
 if sys.argv[1] == "-exclude":
@@ -36,7 +36,7 @@ print("Excluding: ", EXCLUDED)
 FILES = {}
 SIZES = {}
 NAMES = []
-CHUNK = 16 * 1024 * 1024  # chunk size in bytes
+CHUNK = 14 * 1024 * 1024  # chunk size in bytes
 
 # Binary to ASCII function. Different in Python 2 and 3
 try:
