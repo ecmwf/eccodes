@@ -10,8 +10,6 @@
 
 . ./include.sh
 
-REDIRECT=/dev/null
-
 grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 label=grib_uerra_test
 tempSample=tempSample.${label}.grib2

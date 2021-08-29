@@ -10,6 +10,45 @@
 
 #include "grib_tools.h"
 
+grib_option grib_options[] = {
+    /*  {id, args, help}, on, command_line, value*/
+    { "r", 0, "Compare files in which the messages are not in the same order. This option is time expensive.\n", 0, 1, 0 },
+    { "b:", 0, 0, 0, 1, 0 },
+    { "d", 0, "Write different messages on files\n", 0, 1, 0 },
+    { "T:", 0, 0, 1, 0, "M" }, /* METAR */
+    { "c:", 0, 0, 0, 1, 0 },
+    { "S:", "start", "First field to be processed.\n", 0, 1, 0 },
+    { "E:", "end", "Last field to be processed.\n", 0, 1, 0 },
+    { "a", 0, "-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n", 0, 1, 0 },
+    { "H", 0, "Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n", 0, 1, 0 },
+    { "R:", 0, 0, 0, 1, 0 },
+    { "A:", 0, 0, 0, 1, 0 },
+    { "P", 0, "Compare data values using the packing error as tolerance.\n", 0, 1, 0 },
+    { "t:", "factor", "Compare data values using factor multiplied by the tolerance specified in options -P -R -A.\n", 0, 1, 0 },
+    { "w:", 0, 0, 0, 1, 0 },
+    { "f", 0, 0, 0, 1, 0 },
+    { "F", 0, 0, 1, 0, 0 },
+    { "q", 0, 0, 1, 0, 0 },
+    { "I", 0, 0, 1, 0, 0 },
+    { "V", 0, 0, 0, 1, 0 },
+    { "7", 0, 0, 0, 1, 0 },
+    { "v", 0, 0, 0, 1, 0 }
+};
+
+int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
+
+const char* tool_description =
+    "Compare METAR messages contained in two files."
+    "\n\tIf some differences are found it fails returning an error code."
+    "\n\tFloating-point values are compared exactly by default, different tolerance can be defined see -P -A -R."
+    "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
+
+const char* tool_name = "metar_compare";
+const char* tool_usage =
+    "[options] "
+    "file file";
+
+
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 {
     if (*a != *b)
@@ -19,25 +58,6 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
         b++;
     }
     return (*a == 0 && *b == 0) ? 0 : 1;
-}
-
-GRIB_INLINE static int grib_inline_rstrcmp(const char* a, const char* b)
-{
-    char* p = (char*)a;
-    char* q = (char*)b;
-    while (*p != 0)
-        p++;
-    while (*q != 0)
-        q++;
-    q--;
-    p--;
-    if (*q != *p)
-        return 1;
-    while ((p != a && q != b) && *(p) == *(q)) {
-        p--;
-        q--;
-    }
-    return (q == b) ? 0 : 1;
 }
 
 typedef double (*compare_double_proc)(double*, double*, double*);
@@ -50,29 +70,32 @@ struct grib_error
     grib_error* next;
 };
 
-grib_error* error_summary;
-
-compare_double_proc compare_double;
-double global_tolerance     = 0;
-int packingCompare          = 0;
-grib_string_list* blocklist = 0;
-int compareAbsolute         = 1;
+static grib_error* error_summary;
+static compare_double_proc compare_double;
+static double global_tolerance     = 0;
+static int packingCompare          = 0;
+static grib_string_list* blocklist = 0;
+static int compareAbsolute         = 1;
 
 static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_options* options);
-static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_handle* h2, const char* name, int type);
-int error               = 0;
-int count               = 0;
-int lastPrint           = 0;
-int force               = 0;
-double maxAbsoluteError = 1e-19;
-int onlyListed          = 1;
-int headerMode          = 0;
-int morein1             = 0;
-int morein2             = 0;
-int listFromCommandLine;
-int verbose            = 0;
-int tolerance_factor   = 1;
-static int write_error = 0;
+static int error               = 0;
+static int count               = 0;
+static int lastPrint           = 0;
+static int force               = 0;
+static double maxAbsoluteError = 1e-19;
+static int onlyListed          = 1;
+static int headerMode          = 0;
+static int morein1             = 0;
+static int morein2             = 0;
+static int listFromCommandLine;
+static int verbose                = 0;
+static int tolerance_factor       = 1;
+static int write_error            = 0;
+static grib_handle* global_handle = NULL;
+static int global_counter         = 0;
+static int start                  = -1;
+static int end                    = -1;
+static int write_count            = 0;
 
 GRIB_INLINE static double compare_double_absolute(double* a, double* b, double* err)
 {
@@ -84,8 +107,6 @@ GRIB_INLINE static double compare_double_absolute(double* a, double* b, double* 
     return ret;
     /* return fabs(*a-*b) > *err ? fabs(*a-*b) : 0; */
 }
-
-static int write_count = 0;
 
 static void write_message(grib_handle* h, const char* str)
 {
@@ -163,49 +184,6 @@ static double relative_error(double a, double b, double err)
 
     return relativeError;
 }
-
-grib_option grib_options[] = {
-    /*  {id, args, help}, on, command_line, value*/
-    { "r", 0, "Compare files in which the messages are not in the same order. This option is time expensive.\n", 0, 1, 0 },
-    { "b:", 0, 0, 0, 1, 0 },
-    { "d", 0, "Write different messages on files\n", 0, 1, 0 },
-    { "T:", 0, 0, 1, 0, "M" }, /* METAR */
-    { "c:", 0, 0, 0, 1, 0 },
-    { "S:", "start", "First field to be processed.\n", 0, 1, 0 },
-    { "E:", "end", "Last field to be processed.\n", 0, 1, 0 },
-    { "a", 0, "-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n", 0, 1, 0 },
-    { "H", 0, "Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n", 0, 1, 0 },
-    { "R:", 0, 0, 0, 1, 0 },
-    { "A:", 0, 0, 0, 1, 0 },
-    { "P", 0, "Compare data values using the packing error as tolerance.\n", 0, 1, 0 },
-    { "t:", "factor", "Compare data values using factor multiplied by the tolerance specified in options -P -R -A.\n", 0, 1, 0 },
-    { "w:", 0, 0, 0, 1, 0 },
-    { "f", 0, 0, 0, 1, 0 },
-    { "F", 0, 0, 1, 0, 0 },
-    { "q", 0, 0, 1, 0, 0 },
-    { "I", 0, 0, 1, 0, 0 },
-    { "V", 0, 0, 0, 1, 0 },
-    { "7", 0, 0, 0, 1, 0 },
-    { "v", 0, 0, 0, 1, 0 }
-};
-
-grib_handle* global_handle = NULL;
-int global_counter         = 0;
-int start                  = -1;
-int end                    = -1;
-
-const char* tool_description =
-    "Compare METAR messages contained in two files."
-    "\n\tIf some differences are found it fails returning an error code."
-    "\n\tFloating-point values are compared exactly by default, different tolerance can be defined see -P -A -R."
-    "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
-
-const char* tool_name = "metar_compare";
-const char* tool_usage =
-    "[options] "
-    "file file";
-
-int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
 int main(int argc, char* argv[])
 {
@@ -816,12 +794,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                 err2          = grib_get_double(h2, "unpackedError", &packingError2);
                 if (packingCompare)
                     value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
-            }
-            else if (!grib_inline_rstrcmp(name, "InDegrees")) {
-                packingError1   = 0.0005;
-                packingError2   = 0.0005;
-                isangle         = 1;
-                value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
             }
             else if (!grib_inline_strcmp(name, "referenceValue")) {
                 packingError1   = 0;

@@ -121,5 +121,6 @@ int main(int argc, char** argv)
         fclose(in);
     }
 
+    grib_context_delete(grib_context_get_default());
     return 0;
 }

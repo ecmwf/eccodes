@@ -30,8 +30,10 @@ else
   set -x
   EXEC=""
   HAVE_MEMFS=0
+  HAVE_PNG=0
   HAVE_EXTRA_TESTS=0
   HAVE_JPEG=0
+  HAVE_AEC=0
 
   if [ -z "${data_dir}" ]
   then

@@ -160,7 +160,6 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     int n                                 = 0;
 
     self->vector = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-
     va = (grib_accessor*)grib_find_accessor(grib_handle_of_accessor(a), self->vector);
     v  = (grib_accessor_abstract_long_vector*)va;
 
@@ -175,6 +174,7 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     size_t size = 0;
+    int err = 0;
     long* vector;
     grib_accessor_long_vector* self       = (grib_accessor_long_vector*)a;
     grib_accessor* va                     = NULL;
@@ -184,10 +184,13 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     v  = (grib_accessor_abstract_long_vector*)va;
 
     /*TODO implement the dirty mechanism to avoid to unpack every time */
-    grib_get_size(grib_handle_of_accessor(a), self->vector, &size);
+    err = grib_get_size(grib_handle_of_accessor(a), self->vector, &size);
+    if (err) return err;
+    DebugAssert(size > 0);
     vector = (long*)grib_context_malloc(a->context, sizeof(long) * size);
-    grib_unpack_long(va, vector, &size);
+    err = grib_unpack_long(va, vector, &size);
     grib_context_free(a->context, vector);
+    if (err) return err;
 
     *val = v->v[self->index];
 

@@ -604,7 +604,8 @@ grib_context* grib_context_new(grib_context* parent)
 #endif /* function removed */
 
 /* GRIB-235: Resolve path to expand symbolic links etc */
-static char* resolve_path(grib_context* c, char* path)
+/* Note: return value is allocated. Client has to free */
+char* codes_resolve_path(grib_context* c, const char* path)
 {
     char* result = NULL;
 #if defined(ECCODES_HAVE_REALPATH)
@@ -638,7 +639,7 @@ static int init_definition_files_dir(grib_context* c)
         return GRIB_NO_DEFINITIONS;
 
     /* Note: strtok modifies its first argument so we copy */
-    strncpy(path, c->grib_definition_files_path, ECC_PATH_MAXLEN);
+    strncpy(path, c->grib_definition_files_path, ECC_PATH_MAXLEN-1);
 
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex_c);
@@ -651,7 +652,7 @@ static int init_definition_files_dir(grib_context* c)
     if (*p != ECC_PATH_DELIMITER_CHAR) {
         /* No delimiter found so this is a single directory */
         c->grib_definition_files_dir        = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
-        c->grib_definition_files_dir->value = resolve_path(c, path);
+        c->grib_definition_files_dir->value = codes_resolve_path(c, path);
     }
     else {
         /* Definitions path contains multiple directories */
@@ -667,7 +668,7 @@ static int init_definition_files_dir(grib_context* c)
                 c->grib_definition_files_dir = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
                 next                         = c->grib_definition_files_dir;
             }
-            next->value = resolve_path(c, dir);
+            next->value = codes_resolve_path(c, dir);
             dir         = strtok(NULL, ECC_PATH_DELIMITER_STR);
         }
     }
@@ -766,6 +767,7 @@ void grib_context_free_persistent(const grib_context* c, void* p)
 
 void grib_context_reset(grib_context* c)
 {
+    size_t i = 0;
     if (!c)
         c = grib_context_get_default();
 
@@ -800,11 +802,31 @@ void grib_context_reset(grib_context* c)
         grib_smart_table_delete(c);
     c->smart_table = NULL;
 
-    if (c->grib_definition_files_dir)
-        grib_context_free(c, c->grib_definition_files_dir);
+    if (c->grib_definition_files_dir) {
+        grib_string_list* next = c->grib_definition_files_dir;
+        grib_string_list* cur  = NULL;
+        while (next) {
+            cur  = next;
+            next = next->next;
+            grib_context_free(c, cur->value);
+            grib_context_free(c, cur);
+        }
+    }
 
     if (c->multi_support_on)
         grib_multi_support_reset(c);
+
+    for (i=0; i < MAX_NUM_CONCEPTS; ++i) {
+        grib_concept_value* cv = c->concepts[i];
+        if (cv) {
+            grib_trie_delete_container(cv->index);
+        }
+        while (cv) {
+            grib_concept_value* n = cv->next;
+            grib_concept_value_delete(c, cv);
+            cv = n;
+        }
+    }
 }
 
 void grib_context_delete(grib_context* c)
@@ -813,7 +835,7 @@ void grib_context_delete(grib_context* c)
         c = grib_context_get_default();
 
     grib_hash_keys_delete(c->keys);
-    grib_trie_delete(c->def_files);
+    /*grib_trie_delete(c->def_files);  TODO:masn */
 
     grib_context_reset(c);
     if (c != &default_grib_context)

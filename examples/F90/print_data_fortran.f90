@@ -13,41 +13,41 @@
 !
 !
 program print_data_fortran
-use eccodes
-implicit none
-integer            :: ifile
-integer            :: igrib
-integer            :: i
-real(kind=8), dimension(:), allocatable       :: values
-real(kind=8)       :: average
-real(kind=8)       :: max
-real(kind=8)       :: min
+   use eccodes
+   implicit none
+   integer            :: ifile
+   integer            :: igrib
+   integer            :: i
+   real(kind=8), dimension(:), allocatable       :: values
+   real(kind=8)       :: average
+   real(kind=8)       :: max
+   real(kind=8)       :: min
 
-  call codes_open_file(ifile, &
-           '../../data/constant_field.grib1','r')
+   call codes_open_file(ifile, &
+                        '../../data/constant_field.grib1', 'r')
 
-  ! A new grib message is loaded from file
-  ! igrib is the grib id to be used in subsequent calls
-  call codes_grib_new_from_file(ifile,igrib)
+   ! A new grib message is loaded from file
+   ! igrib is the grib id to be used in subsequent calls
+   call codes_grib_new_from_file(ifile, igrib)
 
-  call codes_get(igrib,'values',values)
+   call codes_get(igrib, 'values', values)
 
-  do i=1,size(values)
-    write(*,*)'  ',i,values(i)
-  enddo
+   do i = 1, size(values)
+      write (*, *) '  ', i, values(i)
+   end do
 
-  write(*,*)size(values),' values found '
+   write (*, *) size(values), ' values found '
 
-  call codes_get(igrib,'max',max)
-  write(*,*) 'max=',max
-  call codes_get(igrib,'min',min)
-  write(*,*) 'min=',min
-  call codes_get(igrib,'average',average)
-  write(*,*) 'average=',average
+   call codes_get(igrib, 'max', max)
+   write (*, *) 'max=', max
+   call codes_get(igrib, 'min', min)
+   write (*, *) 'min=', min
+   call codes_get(igrib, 'average', average)
+   write (*, *) 'average=', average
 
-  call codes_release(igrib)
+   call codes_release(igrib)
 
-  call codes_close_file(ifile)
+   call codes_close_file(ifile)
 
-  deallocate(values)
+   deallocate (values)
 end program print_data_fortran

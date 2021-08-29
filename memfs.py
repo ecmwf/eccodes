@@ -39,12 +39,11 @@ NAMES = []
 CHUNK = 16 * 1024 * 1024  # chunk size in bytes
 
 # Binary to ASCII function. Different in Python 2 and 3
-if sys.version_info[0] >= 3:
+try:
+    str(b"\x23\x20", "ascii")
     ascii = lambda x: str(x, "ascii")  # Python 3
-    encode = lambda x: x.encode()
-else:
+except:
     ascii = lambda x: str(x)  # Python 2
-    encode = lambda x: x
 
 
 def get_outfile_name(base, count):
@@ -73,7 +72,7 @@ for directory in dirs:
                 fcount += 1
                 opath = get_outfile_name(output_file_base, fcount)
                 print("MEMFS: Generating output:", opath)
-                buffer = open(opath, "wb")
+                buffer = open(opath, "w")
 
             full = "%s/%s" % (dirpath, name)
             _, ext = os.path.splitext(full)
@@ -92,7 +91,7 @@ for directory in dirs:
             FILES[name] = fname
             SIZES[name] = os.path.getsize(full)
 
-            buffer.write(encode("const unsigned char %s[] = {" % (name,)))
+            buffer.write("const unsigned char %s[] = {" % (name,))
 
             with open(full, "rb") as f:
                 i = 0
@@ -106,14 +105,12 @@ for directory in dirs:
                 # e.g. 23 -> 0x23
                 for n in range(0, len(contents_hex), 2):
                     twoChars = ascii(contents_hex[n : n + 2])
-
-                    buffer.write(encode("0x%s," % (twoChars,)))
-
+                    buffer.write("0x%s," % (twoChars,))
                     i += 1
                     if (i % 20) == 0:
-                        buffer.write(encode("\n"))
+                        buffer.write("\n")
 
-            buffer.write(encode("};\n"))
+            buffer.write("};\n")
             if buffer.tell() >= CHUNK:
                 buffer.close()
                 buffer = None

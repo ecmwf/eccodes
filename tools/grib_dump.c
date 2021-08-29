@@ -42,9 +42,9 @@ grib_option grib_options[] = {
 const char* tool_description = "Dump the content of a GRIB file in different formats.";
 const char* tool_name        = "grib_dump";
 const char* tool_usage       = "[options] grib_file grib_file ...";
-static int json                   = 0;
-static int first_handle           = 1;
-static int dump_keys              = 0;
+static int json              = 0;
+static int first_handle      = 1;
+static int dump_keys         = 0;
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -69,7 +69,7 @@ int grib_tool_init(grib_runtime_options* options)
     options->dump_mode = "default";
 
     if (opt > 1) {
-        printf("%s: simultaneous j/O/D options not allowed\n", tool_name);
+        fprintf(stderr, "%s: simultaneous j/O/D options not allowed\n", tool_name);
         exit(1);
     }
 
@@ -90,7 +90,7 @@ int grib_tool_init(grib_runtime_options* options)
 
     if (grib_options_on("O")) {
         options->dump_mode  = "wmo";
-        options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTECT | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
+        options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("D")) {

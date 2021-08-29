@@ -44,7 +44,7 @@ r2=`${tools_dir}/grib_get -n ls $temp`
 [ "$r1" = "$r2" ]
 
 
-echo "Test: ECC-1086..."
+echo "Test: ECC-1086 invalid message ..."
 # -------------------------
 # This file is 179 bytes long. We chop the last byte to create
 # an invalid GRIB message (Final 7777 is 777)
@@ -79,6 +79,16 @@ set -e
 [ $status -ne 0 ]
 count=`${tools_dir}/grib_count $temp`
 [ $count -eq 43 ]
+
+
+echo "Test: ECC-539 input=output ..."
+# -----------------------
+set +e
+${tools_dir}/grib_copy  $temp $temp
+status=$?
+set -e
+[ $status -ne 0 ]
+
 
 #${tools_dir}/grib_copy -w count=1 -X 57143 $input $temp #Last msg
 #r1=`${tools_dir}/grib_get -w count=37 -n ls $input`

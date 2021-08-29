@@ -33,7 +33,6 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-
 static void gauss_first_guess(long trunc, double* vals)
 {
     long i                = 0, numVals;
@@ -4156,14 +4155,15 @@ double geographic_distance_spherical(double radius, double lon1, double lat1, do
     if (lat1 == lat2 && lon1 == lon2) {
         return 0.0; /* the two points are identical */
     }
-
     if (rlon1 >= 360) rlon1 -= 360.0;
     rlon1 = RADIAN(rlon1);
     if (rlon2 >= 360) rlon2 -= 360.0;
     rlon2 = RADIAN(rlon2);
 
     a = sin(rlat1) * sin(rlat2) + cos(rlat1) * cos(rlat2) * cos(rlon2 - rlon1);
-    DebugAssert(a >= -1 && a <= 1);
+    /* ECC-1258: sometimes 'a' can be very slightly outside the range [-1,1] */
+    if (a > 1.0) a = 1.0;
+    if (a < -1.0) a = -1.0;
 
     return radius * acos(a);
 }

@@ -6,7 +6,7 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/include.sh ${CMAKE_CURRENT_BINARY_DIR} )
 
 # Add all the tests
-#############################################
+####################
 if( HAVE_BUILD_TOOLS )
     list( APPEND tests_sanity
           grib_set_pv
@@ -34,7 +34,7 @@ if( HAVE_BUILD_TOOLS )
           grib_count_messages_multi
           grib_copy_namespace
           grib_read_message
-          read_from_file
+          grib_read_from_file
           grib_get_set_uuid
           grib_clone
           bufr_attributes
@@ -48,6 +48,7 @@ if( HAVE_BUILD_TOOLS )
           bufr_read_scatterometer
           bufr_read_synop
           bufr_read_temp
+          bufr_read_tempf
           bufr_read_tropical_cyclone
           bufr_set_keys
           bufr_copy_keys
@@ -74,7 +75,7 @@ else()
           grib_samples
           grib_count_messages
           grib_count_messages_multi
-          read_from_file
+          grib_read_from_file
           grib_clone
           bufr_attributes
           bufr_clone
@@ -86,6 +87,7 @@ else()
           bufr_read_scatterometer
           bufr_read_synop
           bufr_read_temp
+          bufr_read_tempf
           bufr_read_tropical_cyclone
           bufr_set_keys
           bufr_subset
@@ -113,8 +115,15 @@ foreach( tool ${tests_extra} )
                       TEST_DEPENDS    eccodes_download_gribs eccodes_download_bufrs )
 endforeach()
 
+# Test for CCSDS (AEC) packing
+ecbuild_add_test( TARGET          eccodes_f_grib_set_packing
+                  SOURCES         grib_set_packing.f90
+                  LINKER_LANGUAGE Fortran
+                  LIBS            eccodes_f90 eccodes
+                  CONDITION       HAVE_AEC AND HAVE_FORTRAN
+                  COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/grib_set_packing.sh )
+
 # Executables without a shell script
-# TODO
 ecbuild_add_executable( TARGET    eccodes_f_new_from_file
                         NOINSTALL
                         SOURCES   new_from_file.f90

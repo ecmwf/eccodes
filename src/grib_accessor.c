@@ -39,7 +39,7 @@ void grib_accessor_dump(grib_accessor* a, grib_dumper* f)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
 }
 
 int grib_pack_missing(grib_accessor* a)
@@ -52,7 +52,7 @@ int grib_pack_missing(grib_accessor* a)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -66,7 +66,7 @@ int grib_pack_zero(grib_accessor* a)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -80,7 +80,7 @@ int grib_is_missing_internal(grib_accessor* a)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -94,7 +94,7 @@ int grib_pack_double(grib_accessor* a, const double* v, size_t* len)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -108,7 +108,7 @@ int grib_pack_expression(grib_accessor* a, grib_expression* e)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -122,7 +122,7 @@ int grib_pack_string(grib_accessor* a, const char* v, size_t* len)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -136,7 +136,7 @@ int grib_pack_string_array(grib_accessor* a, const char** v, size_t* len)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -150,7 +150,7 @@ int grib_pack_long(grib_accessor* a, const long* v, size_t* len)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -164,7 +164,7 @@ int grib_pack_bytes(grib_accessor* a, const unsigned char* v, size_t* len)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -178,7 +178,7 @@ int grib_unpack_bytes(grib_accessor* a, unsigned char* v, size_t* len)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -191,7 +191,7 @@ int grib_unpack_double_subarray(grib_accessor* a, double* v, size_t start, size_
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -205,7 +205,7 @@ int grib_unpack_double(grib_accessor* a, double* v, size_t* len)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -231,7 +231,7 @@ int grib_unpack_string(grib_accessor* a, char* v, size_t* len)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -244,7 +244,7 @@ int grib_unpack_string_array(grib_accessor* a, char** v, size_t* len)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -309,7 +309,7 @@ int grib_unpack_long(grib_accessor* a, long* v, size_t* len)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -324,7 +324,7 @@ long grib_accessor_get_native_type(grib_accessor* a)
             return c->get_native_type(a);
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -340,7 +340,7 @@ long grib_get_next_position_offset(grib_accessor* a)
             return c->next_offset(a);
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -355,7 +355,7 @@ long grib_string_length(grib_accessor* a)
             return c->string_length(a);
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -370,7 +370,7 @@ long grib_byte_offset(grib_accessor* a)
             return c->byte_offset(a);
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -385,7 +385,7 @@ long grib_byte_count(grib_accessor* a)
             return c->byte_count(a);
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -403,7 +403,7 @@ int grib_value_count(grib_accessor* a, long* count)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -432,7 +432,7 @@ int grib_accessor_notify_change(grib_accessor* a, grib_accessor* changed)
     }
     if (a && a->cclass)
         printf("notify_change not implemented for %s %s\n", a->cclass->name, a->name);
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -507,7 +507,7 @@ void grib_update_size(grib_accessor* a, size_t len)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
 }
 
 int grib_nearest_smaller_value(grib_accessor* a, double val, double* nearest)
@@ -519,7 +519,7 @@ int grib_nearest_smaller_value(grib_accessor* a, double val, double* nearest)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -534,7 +534,7 @@ size_t grib_preferred_size(grib_accessor* a, int from_handle)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -547,7 +547,7 @@ grib_accessor* grib_next_accessor(grib_accessor* a)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return 0;
 }
 
@@ -562,7 +562,7 @@ void grib_resize(grib_accessor* a, size_t new_size)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(0);
+    DebugAssert(0);
     return;
 }
 

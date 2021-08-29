@@ -11,4 +11,5 @@ unsigned[1] SecondOfModelVersion = 0: edition_specific;
 meta modelVersionDate  g2date(YearOfModelVersion,MonthOfModelVersion,DayOfModelVersion) : dump;
 meta modelVersionTime  time(HourOfModelVersion, MinuteOfModelVersion, SecondOfModelVersion) : dump;
 
+remove isHindcast;
 constant isHindcast = 1;

@@ -376,7 +376,7 @@ static int bufr_get_from_table(grib_accessor* a, bufr_descriptor* v)
     v->reference = atol_fast(list[6]);
     v->width     = atol(list[7]);
 
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 int bufr_descriptor_is_marker(bufr_descriptor* d)

@@ -111,7 +111,7 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
     if ((r->read(r->read_data, buffer + already_read, rest, &err) != rest) || err) {
         /*fprintf(stderr, "read_the_rest: r->read failed: %s\n", grib_get_error_message(err));*/
         if (c->debug)
-            fprintf(stderr, "ECCODES DEBUG: read_the_rest: Read failed (Coded length=%lu, Already read=%d)\n",
+            fprintf(stderr, "ECCODES DEBUG read_the_rest: Read failed (Coded length=%lu, Already read=%d)\n",
                     message_length, already_read);
         return err;
     }
@@ -123,7 +123,7 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
          buffer[message_length - 1] != '7'))
     {
         if (c->debug)
-            fprintf(stderr, "ECCODES DEBUG: read_the_rest: No final 7777 at expected location (Coded length=%lu)\n", message_length);
+            fprintf(stderr, "ECCODES DEBUG read_the_rest: No final 7777 at expected location (Coded length=%lu)\n", message_length);
         return GRIB_WRONG_LENGTH;
     }
 
@@ -1724,5 +1724,124 @@ int grib_count_in_filename(grib_context* c, const char* filename, int* n)
     }
     err = grib_count_in_file(c, fp, n);
     fclose(fp);
+    return err;
+}
+
+typedef void* (*decoder_proc)(FILE* f, int headers_only, size_t* size, off_t* offset, int* err);
+
+static decoder_proc get_reader_for_product(ProductKind product)
+{
+    decoder_proc decoder = NULL;
+    if      (product == PRODUCT_GRIB) decoder = &wmo_read_grib_from_file_malloc;
+    else if (product == PRODUCT_BUFR) decoder = &wmo_read_bufr_from_file_malloc;
+    else if (product == PRODUCT_GTS)  decoder = &wmo_read_gts_from_file_malloc;
+    else if (product == PRODUCT_ANY)  decoder = &wmo_read_any_from_file_malloc;
+    return decoder;
+}
+
+static int count_product_in_file(grib_context* c, FILE* f, ProductKind product, int* count)
+{
+    int err = 0;
+    decoder_proc decoder = NULL;
+
+    *count = 0;
+    if (!c) c = grib_context_get_default();
+    decoder = get_reader_for_product(product);
+
+    if (!decoder) {
+        grib_context_log(c, GRIB_LOG_ERROR, "count_product_in_file: not supported for given product");
+        return GRIB_INVALID_ARGUMENT;
+    }
+
+    if (c->multi_support_on && product == PRODUCT_GRIB) {
+        grib_context_log(c, GRIB_LOG_ERROR, "count_product_in_file: Multi-field GRIBs not supported");
+        err = GRIB_NOT_IMPLEMENTED;
+    }
+    else {
+        void* mesg   = NULL;
+        size_t size  = 0;
+        off_t offset = 0;
+        while ((mesg = decoder(f, 0, &size, &offset, &err)) != NULL && err == GRIB_SUCCESS) {
+            grib_context_free(c, mesg);
+            (*count)++;
+        }
+        rewind(f);
+    }
+
+    return err == GRIB_END_OF_FILE ? 0 : err;
+}
+
+int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductKind product, off_t** offsets, int* length, int strict_mode)
+{
+    int err      = 0;
+    void* mesg   = NULL;
+    size_t size  = 0;
+    off_t offset = 0;
+    int num_messages = 0, i = 0;
+    decoder_proc decoder = NULL;
+    FILE* f = NULL;
+
+    decoder = get_reader_for_product(product);
+    if (!decoder) {
+        grib_context_log(c, GRIB_LOG_ERROR, "codes_extract_offsets_malloc: not supported for given product");
+        return GRIB_INVALID_ARGUMENT;
+    }
+    if (!c) c = grib_context_get_default();
+    f = fopen(filename, "rb");
+    if (!f) {
+        grib_context_log(c, GRIB_LOG_ERROR, "codes_extract_offsets_malloc: Unable to read file \"%s\"", filename);
+        perror(filename);
+        return GRIB_IO_PROBLEM;
+    }
+
+    err = count_product_in_file(c, f, product, &num_messages);
+    if (err) {
+        grib_context_log(c, GRIB_LOG_ERROR, "codes_extract_offsets_malloc: Unable to count messages");
+        fclose(f);
+        return err;
+    }
+    *length = num_messages;
+    if (num_messages == 0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "codes_extract_offsets_malloc: No messages in file");
+        fclose(f);
+        return GRIB_INVALID_MESSAGE;
+    }
+    *offsets = (off_t*)calloc(num_messages, sizeof(off_t));
+    if (!*offsets) {
+        fclose(f);
+        return GRIB_OUT_OF_MEMORY;
+    }
+
+    i = 0;
+    while (err != GRIB_END_OF_FILE) {
+        if (i >= num_messages)
+            break;
+
+        mesg = decoder(f, 0, &size, &offset, &err);
+        if (mesg != NULL && err == 0) {
+            (*offsets)[i] = offset;
+            grib_context_free(c, mesg);
+        }
+        if (mesg && err) {
+            if (strict_mode) {
+                grib_context_free(c, mesg);
+                fclose(f);
+                return GRIB_DECODING_ERROR;
+            }
+        }
+        if (!mesg) {
+            if (err != GRIB_END_OF_FILE && err != GRIB_PREMATURE_END_OF_FILE) {
+                /* An error occurred */
+                grib_context_log(c, GRIB_LOG_ERROR, "codes_extract_offsets_malloc: Unable to read message");
+                if (strict_mode) {
+                    fclose(f);
+                    return GRIB_DECODING_ERROR;
+                }
+            }
+        }
+        ++i;
+    }
+
+    fclose(f);
     return err;
 }

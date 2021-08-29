@@ -88,11 +88,11 @@ static void pressure_level(grib_handle*,const parameter*,double,double);
 static void potential_temperature_level(grib_handle*,const parameter*,double,double);
 static void potential_vorticity_level(grib_handle*,const parameter*,double,double);
 
-/* 
-TODO: 
+/*
+TODO:
 - Shape of the earth
 - Levels
- */
+*/
 
 #include "tigge_check.h"
 
@@ -133,7 +133,7 @@ static void warn(const char* name,int a)
         warning++;
     }
 }
- */
+*/
 
 static void save(grib_handle* h, const char *name,FILE* f)
 {
@@ -381,6 +381,7 @@ static void check_validity_datetime(grib_handle* h)
         long validityDate, validityTime;
 
         /* Check only applies to accumulated, max etc. */
+        str_len = 100;
         err = grib_get_string(h, "stepRange", stepRange, &str_len);
         if (err) return;
 
@@ -409,8 +410,7 @@ static void check_range(grib_handle* h,const parameter* p,double min,double max)
     missing = dget(h,"missingValue");
 
     /* See ECC-437 */
-    if(!(get(h,"bitMapIndicator") == 0 && min == missing && max == missing)){
-
+    if (!(get(h,"bitMapIndicator") == 0 && min == missing && max == missing)) {
         if(min < p->min1 || min > p->min2)
         {
             printf("warning: %s, field %d [%s]: %s minimum value %g is not in [%g,%g]\n",file,field,param,
@@ -429,7 +429,6 @@ static void check_range(grib_handle* h,const parameter* p,double min,double max)
             printf("  => [%g,%g]\n",max < p->max1 ? max : p->max1, max > p->max2 ? max : p->max2);
             warning++;
         }
-
     }
 }
 
@@ -506,7 +505,7 @@ static void point_in_time(grib_handle* h,const parameter* p,double min,double ma
             CHECK(eq(h,"indicatorOfUnitOfTimeRange",1));/* Hours */
             CHECK((get(h,"forecastTime") % 3) == 0);  /* Every three hours */
         }
-    } 
+    }
     else if (is_uerra) {
         if(get(h,"indicatorOfUnitOfTimeRange") == 1) /*  hourly */
         {
@@ -753,8 +752,8 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
             CHECK(eq(h,"indicatorOfUnitOfTimeRange",1));/* Hours */
             CHECK((get(h,"forecastTime") % 3) == 0);  /* Every three hours */
         }
-    } 
-    else if (is_uerra) 
+    }
+    else if (is_uerra)
     {
 /*  forecastTime for uerra might be all steps decreased by 1 i.e 0,1,2,3,4,5,8,11...29 too many... */
         if(get(h,"indicatorOfUnitOfTimeRange") == 1)
@@ -762,7 +761,7 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
             CHECK(le(h,"forecastTime",30));
         }
     }
-    else 
+    else
     {
         if(get(h,"indicatorOfUnitOfTimeRange") == 11) /*  six hours */
         {
@@ -805,7 +804,6 @@ static void statistical_process(grib_handle* h,const parameter* p,double min,dou
     {
         CHECK((get(h,"endStep") % 6) == 0); /* Every six hours */
     }
-    
 
     if(get(h,"indicatorOfUnitForTimeRange") == 11)
     {
@@ -1400,8 +1398,6 @@ static void verify(grib_handle* h)
         todo ?? now it's allowed in the code here!
         if(!missing(h,"typeOfStatisticalProcessing"))
           CHECK(ne(h,"stepRange",0));*/
-
-
 }
 
 void validate(const char* path)

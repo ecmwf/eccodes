@@ -1,10 +1,5 @@
 # (C) Copyright 2005- ECMWF.
 
-# START 1/local.98.1 ----------------------------------------------------------------------
-# LOCAL 98 1
-#
-# localDefinitionTemplate_001
-# ---------------------------
 #
 # Description            Octet    Code    Ksec1    Count
 # -----------            -----    ----    -----    -----
@@ -21,31 +16,27 @@
 template mars_labeling "grib1/mars_labeling.def";
 
 unsigned[1] perturbationNumber           : dump;
-if(perturbationNumber != 0)
-{
+if(perturbationNumber != 0) {
   alias number = perturbationNumber;
 }
 
 unsigned[1] numberOfForecastsInEnsemble  : dump;
 pad padding_local1_1(1);
 
-#1->2
+# 1->2
 alias grib2LocalSectionPresent=present;
 constant grib2LocalSectionNumber=1;
 
 if (stepType is "instant" ) {
   if (numberOfForecastsInEnsemble!=0) {
     alias productDefinitionTemplateNumber=epsPoint;
-}
+  }
 } else {
   if (numberOfForecastsInEnsemble!=0) {
     alias productDefinitionTemplateNumber=epsContinous;
-}
+  }
 }
 
 # monthly mean
 #if (timeRangeIndicator==113) {
 #}
-
-
-# END   1/local.98.1 ----------------------------------------------------------------------

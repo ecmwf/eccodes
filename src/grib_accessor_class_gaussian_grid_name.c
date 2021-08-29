@@ -160,7 +160,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 
     long N = 0, Ni = 0, isOctahedral = 0;
     char tmp[MAX_GRIDNAME_LEN] = {0,};
-    size_t length = sizeof(tmp);
+    size_t length = 0;
     int ret       = GRIB_SUCCESS;
 
     if ((ret = grib_get_long_internal(a->parent->h, self->N, &N)) != GRIB_SUCCESS)

@@ -48,8 +48,10 @@ void grib_dependency_add(grib_accessor* observer, grib_accessor* observed)
     grib_dependency* d    = h->dependencies;
     grib_dependency* last = 0;
 
-    /*printf("observe %p %p %s %s\n",(void*)observed,(void*)observer, observed?observed->name:"NULL",
-    observer?observer->name:"NULL");*/
+    /*printf("grib_dependency_add: observe %p %p observed=%s observer=%s\n",
+           (void*)observed, (void*)observer,
+           observed ? observed->name : "NULL",
+           observer ? observer->name : "NULL");*/
 
     if (!observer || !observed) {
         return;
@@ -126,7 +128,7 @@ int grib_dependency_notify_change(grib_accessor* observed)
     d = h->dependencies;
     while (d) {
         if (d->run) {
-            /*printf("grib_dependency_notify_change %s %s %p\n",observed->name,d->observer ? d->observer->name : "?", (void*)d->observer);*/
+            /*printf("grib_dependency_notify_change %s %s %p\n", observed->name, d->observer ? d->observer->name : "?", (void*)d->observer);*/
             if (d->observer && (ret = grib_accessor_notify_change(d->observer, observed)) != GRIB_SUCCESS)
                 return ret;
         }

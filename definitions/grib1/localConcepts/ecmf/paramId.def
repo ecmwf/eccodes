@@ -8534,7 +8534,7 @@
 	 table2Version = 217 ;
 	 indicatorOfParameter = 18 ;
 	}
-#Ammonia
+#Ammonia mass mixing ratio
 '217019' = {
 	 table2Version = 217 ;
 	 indicatorOfParameter = 19 ;
@@ -8569,7 +8569,7 @@
 	 table2Version = 217 ;
 	 indicatorOfParameter = 26 ;
 	}
-#Nitrogen monoxide
+#Nitrogen monoxide mass mixing ratio
 '217027' = {
 	 table2Version = 217 ;
 	 indicatorOfParameter = 27 ;
@@ -16124,17 +16124,17 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 100 ;
 	}
-#Nitrogen dioxide
+#Nitrogen dioxide mass mixing ratio
 '210121' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 121 ;
 	}
-#Sulphur dioxide
+#Sulphur dioxide mass mixing ratio
 '210122' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 122 ;
 	}
-#Carbon monoxide
+#Carbon monoxide mass mixing ratio
 '210123' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 123 ;
@@ -16379,7 +16379,7 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 185 ;
 	}
-#GEMS Ozone
+#Ozone mass mixing ratio (full chemistry scheme)
 '210203' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 203 ;
@@ -16824,17 +16824,17 @@
 	 table2Version = 211 ;
 	 indicatorOfParameter = 100 ;
 	}
-#Nitrogen dioxide
+#Nitrogen dioxide mass mixing ratio difference
 '211121' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 121 ;
 	}
-#Sulphur dioxide
+#Sulphur dioxide mass mixing ratio difference
 '211122' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 122 ;
 	}
-#Carbon monoxide
+#Carbon monoxide mass mixing ratio difference
 '211123' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 123 ;
@@ -17079,7 +17079,7 @@
 	 table2Version = 211 ;
 	 indicatorOfParameter = 185 ;
 	}
-#GEMS Ozone
+#Ozone mass mixing ratio difference (full chemistry scheme)
 '211203' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 203 ;
@@ -17174,7 +17174,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 6 ;
 	}
-#Lake depth
+#Lake total depth
 '228007' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 7 ;
@@ -17204,12 +17204,12 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 12 ;
 	}
-#Lake ice temperature
+#Lake ice surface temperature
 '228013' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 13 ;
 	}
-#Lake ice depth
+#Lake ice total depth
 '228014' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 14 ;

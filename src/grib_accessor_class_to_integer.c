@@ -255,7 +255,7 @@ static int unpack_long(grib_accessor* a, long* v, size_t* len)
     *v = strtol(val, &last, 10);
     /* if (*last) {err=GRIB_WRONG_CONVERSION;} */
 
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static int unpack_double(grib_accessor* a, double* v, size_t* len)

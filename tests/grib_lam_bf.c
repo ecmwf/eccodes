@@ -672,6 +672,8 @@ typedef struct
 {
     int trunc;    /* 77, 88, 99 = truncation type */
     int subtrunc; /* 77, 88, 99 = subtruncation type */
+    int subnsmax;
+    int subnmsmax;
     double* values;
     int len;
     const char* name;
@@ -683,25 +685,37 @@ int main(int argc, char* argv[])
     size_t len;
     const char* grids[] = { "lambert_bf", "mercator_bf", "polar_stereographic_bf" };
     int igrid, itrunc;
-    trunc_t trunc[2];
+    trunc_t trunc[3];
 
     /* Elliptic truncation with diamond subtruncation */
-    trunc[0].trunc    = 88;
-    trunc[0].subtrunc = 99;
-    trunc[0].len      = ILCHAM;
-    trunc[0].values   = (double*)values;
-    trunc[0].name     = "ellipse_diamond";
+    trunc[0].trunc     = 88;
+    trunc[0].subtrunc  = 99;
+    trunc[0].subnsmax  = NSTRON;
+    trunc[0].subnmsmax = NSTRON;
+    trunc[0].len       = ILCHAM;
+    trunc[0].values    = (double*)values;
+    trunc[0].name      = "ellipse_diamond";
 
     /* Rectangle truncation with rectangle subtruncation */
-    trunc[1].trunc    = 77;
-    trunc[1].subtrunc = 77;
-    trunc[1].len      = 4 * (NSMAX + 1) * (NMSMAX + 1);
-    trunc[1].values   = (double*)malloc(sizeof(double) * trunc[1].len);
-    trunc[1].name     = "rectangle_rectangle";
-
+    trunc[1].trunc     = 77;
+    trunc[1].subtrunc  = 77;
+    trunc[1].subnsmax  = NSTRON;
+    trunc[1].subnmsmax = NSTRON;
+    trunc[1].len       = 4 * (NSMAX + 1) * (NMSMAX + 1);
+    trunc[1].values    = (double*)malloc(sizeof(double) * trunc[1].len);
+    trunc[1].name      = "rectangle_rectangle";
     rectfromellipse(trunc[1].values, trunc[0].values, NSMAX, NMSMAX);
 
-    for (itrunc = 0; itrunc < 2; itrunc++) {
+    /* Elliptic truncation with full subtruncation */
+    trunc[2].trunc     = 88;
+    trunc[2].subtrunc  = 88;
+    trunc[2].subnsmax  = NSMAX;
+    trunc[2].subnmsmax = NMSMAX;
+    trunc[2].len       = ILCHAM;
+    trunc[2].values    = (double*)values;
+    trunc[2].name      = "ellipse_full";
+
+    for (itrunc = 0; itrunc < 3; itrunc++) {
         for (igrid = 0; igrid < 3; igrid++) {
             GRIB_CHECK(((h = grib_handle_new_from_samples(NULL, "lambert_bf_grib2")) == NULL), 0);
 
@@ -750,8 +764,8 @@ int main(int argc, char* argv[])
 
             len = strlen("bifourier_complex");
             GRIB_CHECK(grib_set_string(h, "packingType", "bifourier_complex", &len), 0);
-            GRIB_CHECK(grib_set_long(h, "biFourierResolutionSubSetParameterN", NSTRON), 0);
-            GRIB_CHECK(grib_set_long(h, "biFourierResolutionSubSetParameterM", NSTRON), 0);
+            GRIB_CHECK(grib_set_long(h, "biFourierResolutionSubSetParameterN", trunc[itrunc].subnsmax), 0);
+            GRIB_CHECK(grib_set_long(h, "biFourierResolutionSubSetParameterM", trunc[itrunc].subnmsmax), 0);
             GRIB_CHECK(grib_set_long(h, "biFourierSubTruncationType", trunc[itrunc].subtrunc), 0);
             GRIB_CHECK(grib_set_long(h, "biFourierPackingModeForAxes", 1), 0);
             GRIB_CHECK(grib_set_long(h, "unpackedSubsetPrecision", 2), 0);
@@ -787,7 +801,6 @@ int main(int argc, char* argv[])
                 long int LxInMetres, LyInMetres, LuxInMetres, LuyInMetres, LcxInMetres, LcyInMetres;
                 long int nsmax, nmsmax;
                 char geometry[128];
-
 
                 sprintf(f, "lam_bf_%s_%s.grib", grids[igrid], trunc[itrunc].name);
                 fp         = fopen(f, "rb");

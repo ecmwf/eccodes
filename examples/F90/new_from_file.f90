@@ -9,33 +9,32 @@
 !
 !
 program new_from_file
-use eccodes
-  implicit none
-  integer           :: ifile
-  integer           :: iret
-  integer           :: count1=0
+   use eccodes
+   implicit none
+   integer           :: ifile
+   integer           :: iret
+   integer           :: count1 = 0
 
-  ! Message identifier.
-  integer            :: igrib
+   ! Message identifier.
+   integer            :: igrib
 
-  ifile=5
+   ifile = 5
 
-  call codes_open_file(ifile,'../../data/collection.grib1','r')
+   call codes_open_file(ifile, '../../data/collection.grib1', 'r')
 
-  ! Loop on all the messages in a file.
-  call codes_grib_new_from_file(ifile,igrib, iret)
+   ! Loop on all the messages in a file.
+   call codes_grib_new_from_file(ifile, igrib, iret)
 
-  do while (iret==CODES_SUCCESS)
-    count1=count1+1
-    print *, "===== Message #",count1
-    call codes_grib_new_from_file(ifile,igrib, iret)
+   do while (iret == CODES_SUCCESS)
+      count1 = count1 + 1
+      print *, "===== Message #", count1
+      call codes_grib_new_from_file(ifile, igrib, iret)
 
-  end do
-  if (iret /= CODES_END_OF_FILE) then
-    call codes_check(iret,'new_from_file','')
-  endif
+   end do
+   if (iret /= CODES_END_OF_FILE) then
+      call codes_check(iret, 'new_from_file', '')
+   end if
 
-
-  call codes_close_file(ifile)
+   call codes_close_file(ifile)
 
 end program

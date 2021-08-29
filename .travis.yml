@@ -59,7 +59,6 @@ script:
   - mkdir -p ${BUILD_DIR} && cd ${BUILD_DIR}
   - cmake -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR}
           -D ENABLE_FORTRAN=0
-          -D ENABLE_PYTHON=0
           -D ENABLE_NETCDF=1
           -D ENABLE_JPG=1
           -D ENABLE_MEMFS=0

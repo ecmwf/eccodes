@@ -184,14 +184,14 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     *len = size;
 
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 static int value_count(grib_accessor* a, long* count)
 {
     grib_accessor_latlonvalues* self = (grib_accessor_latlonvalues*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
-    int ret;
+    int ret = GRIB_SUCCESS;
     size_t size;
     if ((ret = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "unable to get size of %s", self->values);
@@ -199,5 +199,5 @@ static int value_count(grib_accessor* a, long* count)
     }
 
     *count = 3 * size;
-    return ret;
+    return GRIB_SUCCESS;
 }

@@ -106,9 +106,14 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         if (p) {
             long val = 0;
             int err  = 0;
-            err      = grib_get_long_internal(h, p, &val);
-            if (err)
-                return err;
+            if (h->product_kind == PRODUCT_BUFR) {
+                int ismiss = grib_is_missing(h, p, &err);
+                if (err) return err;
+                *lres = ismiss;
+                return GRIB_SUCCESS;
+            }
+            err = grib_get_long_internal(h, p, &val);
+            if (err) return err;
             /* Note: This does not cope with keys like typeOfSecondFixedSurface
              * which are codetable entries with values like 255: this value is
              * not classed as 'missing'!
@@ -117,8 +122,10 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
             *lres = (val == GRIB_MISSING_LONG);
             return GRIB_SUCCESS;
         }
-        else
+        else {
+            /* No arguments means return the actual integer missing value */
             *lres = GRIB_MISSING_LONG;
+        }
         return GRIB_SUCCESS;
     }
 

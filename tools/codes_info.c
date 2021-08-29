@@ -28,7 +28,7 @@ static void usage_and_exit(const char* progname)
 #define INFO_PRINT_DEFINITION_PATH (1 << 1)
 #define INFO_PRINT_SAMPLES_PATH (1 << 2)
 
-void print_debug_info(grib_context* context)
+static void print_debug_info(grib_context* context)
 {
     int memfs = 0, aec = 0;
 #ifdef HAVE_MEMFS
@@ -44,7 +44,9 @@ void print_debug_info(grib_context* context)
     grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_LIBPNG=%d", HAVE_LIBPNG);
     grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_AEC=%d", aec);
     grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_ECCODES_THREADS=%d", GRIB_PTHREADS);
+#ifdef GRIB_OMP_THREADS
     grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_ECCODES_OMP_THREADS=%d", GRIB_OMP_THREADS);
+#endif
     grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_MEMFS=%d", memfs);
 }
 
@@ -113,7 +115,7 @@ int main(int argc, char* argv[])
             printf("Definition files path can be changed by setting the ECCODES_DEFINITION_PATH environment variable.\n");
         }
 
-        if((path = getenv("ECCODES_EXTRA_DEFINITION_PATH")) != NULL) {
+        if ((path = getenv("ECCODES_EXTRA_DEFINITION_PATH")) != NULL) {
             printf("Environment variable ECCODES_EXTRA_DEFINITION_PATH=%s\n", path);
         }
         printf("\n");
@@ -141,7 +143,7 @@ int main(int argc, char* argv[])
     }
 
     if (print_flags & INFO_PRINT_VERSION)
-        printf("%d.%d.%d ", major, minor, revision);
+        printf("%d.%d.%d", major, minor, revision);
 
     if (print_flags & INFO_PRINT_DEFINITION_PATH) {
         if ((path = codes_getenv("ECCODES_DEFINITION_PATH")) != NULL) {

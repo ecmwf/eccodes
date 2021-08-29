@@ -1,15 +1,12 @@
 # (C) Copyright 2005- ECMWF.
 
 label "CMC local definition (Canada)";
-# START 1/local.54 --------------------------------------------------------------------
-# LOCAL 54
 #
 # CMC localDefinitionTemplate, based on KWBC
 # --------------------------------
 #
 # Description                 Octet    Code    Ksec1    Count
 # -----------                 -----    ----    -----    -----
-#
 # applicationIdentifier       41
 # type                        42
 # identificationNumber        43

@@ -1170,7 +1170,7 @@
 	 indicatorOfParameter = 159 ;
 	}
 #Standard deviation of orography
-'~' = {
+'m' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 160 ;
 	}
@@ -2800,7 +2800,7 @@
 	 indicatorOfParameter = 159 ;
 	}
 #Standard deviation of orography difference
-'~' = {
+'m' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 160 ;
 	}
@@ -8534,7 +8534,7 @@
 	 table2Version = 217 ;
 	 indicatorOfParameter = 18 ;
 	}
-#Ammonia
+#Ammonia mass mixing ratio
 'kg kg**-1' = {
 	 table2Version = 217 ;
 	 indicatorOfParameter = 19 ;
@@ -8569,7 +8569,7 @@
 	 table2Version = 217 ;
 	 indicatorOfParameter = 26 ;
 	}
-#Nitrogen monoxide
+#Nitrogen monoxide mass mixing ratio
 'kg kg**-1' = {
 	 table2Version = 217 ;
 	 indicatorOfParameter = 27 ;
@@ -14150,7 +14150,7 @@
 	 indicatorOfParameter = 159 ;
 	}
 #Standard deviation of orography anomaly
-'~' = {
+'m' = {
 	 table2Version = 171 ;
 	 indicatorOfParameter = 160 ;
 	}
@@ -16124,17 +16124,17 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 100 ;
 	}
-#Nitrogen dioxide
+#Nitrogen dioxide mass mixing ratio
 'kg kg**-1' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 121 ;
 	}
-#Sulphur dioxide
+#Sulphur dioxide mass mixing ratio
 'kg kg**-1' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 122 ;
 	}
-#Carbon monoxide
+#Carbon monoxide mass mixing ratio
 'kg kg**-1' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 123 ;
@@ -16379,7 +16379,7 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 185 ;
 	}
-#GEMS Ozone
+#Ozone mass mixing ratio (full chemistry scheme)
 'kg kg**-1' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 203 ;
@@ -16824,17 +16824,17 @@
 	 table2Version = 211 ;
 	 indicatorOfParameter = 100 ;
 	}
-#Nitrogen dioxide
+#Nitrogen dioxide mass mixing ratio difference
 'kg kg**-1' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 121 ;
 	}
-#Sulphur dioxide
+#Sulphur dioxide mass mixing ratio difference
 'kg kg**-1' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 122 ;
 	}
-#Carbon monoxide
+#Carbon monoxide mass mixing ratio difference
 'kg kg**-1' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 123 ;
@@ -17079,7 +17079,7 @@
 	 table2Version = 211 ;
 	 indicatorOfParameter = 185 ;
 	}
-#GEMS Ozone
+#Ozone mass mixing ratio difference (full chemistry scheme)
 'kg kg**-1' = {
 	 table2Version = 211 ;
 	 indicatorOfParameter = 203 ;
@@ -17174,7 +17174,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 6 ;
 	}
-#Lake depth
+#Lake total depth
 'm' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 7 ;
@@ -17204,12 +17204,12 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 12 ;
 	}
-#Lake ice temperature
+#Lake ice surface temperature
 'K' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 13 ;
 	}
-#Lake ice depth
+#Lake ice total depth
 'm' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 14 ;

@@ -32,8 +32,8 @@ const char* tool_description =
     "Convert a GRIB file to netCDF format."
     "\n\tNote: The GRIB geometry should be a regular lat/lon grid or a regular Gaussian grid"
     "\n\t(the key \"typeOfGrid\" should be \"regular_ll\" or \"regular_gg\")";
-const char* tool_name   = "grib_to_netcdf";
-const char* tool_usage  = "[options] grib_file grib_file ... ";
+const char* tool_name        = "grib_to_netcdf";
+const char* tool_usage       = "[options] grib_file grib_file ... ";
 static char argvString[2048] = {0,};
 
 /*=====================================================================*/
@@ -2245,7 +2245,7 @@ static int def_latlon(int ncid, fieldset* fs)
 {
     int n        = 0;
     size_t nlats = 0, nlons = 0;
-    err e      = 0;
+    err e = 0;
 
     field* g = get_field(fs, 0, expand_mem);
 
@@ -2257,11 +2257,11 @@ static int def_latlon(int ncid, fieldset* fs)
     }
 
     /* Define longitude */
-    n      = (int)nlons;
+    n = (int)nlons;
     set_dimension(ncid, "longitude", n, NC_FLOAT, "degrees_east", "longitude");
 
     /* Define latitude */
-    n      = nlats;
+    n = nlats;
     set_dimension(ncid, "latitude", n, NC_FLOAT, "degrees_north", "latitude");
 
     /* g->purge_header = TRUE; */
@@ -2634,8 +2634,8 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
     }
     */
     DebugAssert(vals);
-    DebugAssert(n>0);
-    if(!vals) return;
+    DebugAssert(n > 0);
+    if (!vals) return;
 
     switch (nctype) {
         case NC_BYTE: {
@@ -2848,7 +2848,7 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
             }
 
             if (nj != count[naxis] || ni != count[naxis + 1]) {
-                grib_context_log(ctx, GRIB_LOG_ERROR, "Grib %d has different resolution\n", i + 1);
+                grib_context_log(ctx, GRIB_LOG_ERROR, "GRIB message %d has different resolution\n", i + 1);
                 grib_context_log(ctx, GRIB_LOG_ERROR, "lat=%ld, long=%ld instead of lat=%ld, long=%ld\n", nj, ni, count[naxis], count[naxis + 1]);
                 exit(1);
             }

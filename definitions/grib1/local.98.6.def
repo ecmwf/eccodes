@@ -1,8 +1,7 @@
 # (C) Copyright 2005- ECMWF.
+# Surface temperature data
 
 template mars_labeling "grib1/mars_labeling.def";
-
-# zeroes
 
 pad padding_loc6_1(2);
 
@@ -12,9 +11,7 @@ unsigned[1] typeOfSSTFieldUsed  : dump;
 
 unsigned[1] countOfICEFieldsUsed  : dump;
 
-
-ICEFieldsUsed list(countOfICEFieldsUsed)
-{
+ICEFieldsUsed list(countOfICEFieldsUsed) {
   unsigned[3] dateOfIceFieldUsed : dump ;
   unsigned[1] satelliteNumber : dump ;
 }
