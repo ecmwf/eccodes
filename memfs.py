@@ -14,17 +14,14 @@ print("MEMFS: starting")
 # Exclude experimental features e.g. GRIB3 and TAF
 # The BUFR codetables is not used in the engine
 EXCLUDED = ["grib3", "codetables", "taf", "stations"]
-EXPECTED_FCOUNT = 7
 
 pos = 1
 if sys.argv[1] == "-exclude":
     product = sys.argv[2]
     if product == "bufr":
         EXCLUDED.append(product)
-        EXPECTED_FCOUNT = 4
     elif product == "grib":
         EXCLUDED.extend(["grib1", "grib2"])
-        EXPECTED_FCOUNT = 2
     else:
         assert False, "Invalid product %s" % product
     pos = 3
@@ -54,7 +51,8 @@ def get_outfile_name(base, count):
 output_file_base = sys.argv[-1]
 
 buffer = None
-fcount = -1
+fcount = 0
+MAX_FCOUNT = 10
 
 for directory in dirs:
 
@@ -69,8 +67,8 @@ for directory in dirs:
         for name in files:
 
             if buffer is None:
-                fcount += 1
                 opath = get_outfile_name(output_file_base, fcount)
+                fcount += 1
                 print("MEMFS: Generating output:", opath)
                 buffer = open(opath, "w")
 
@@ -119,9 +117,15 @@ for directory in dirs:
 if buffer is not None:
     buffer.close()
 
+while fcount < MAX_FCOUNT:
+    opath = get_outfile_name(output_file_base, fcount)
+    print("MEMFS: Generating output:", opath, "(empty)")
+    with open(opath, "w") as f:
+        print("/* empty */", file=f)
+    fcount += 1
+
 # The number of generated C files is hard coded.
 # See memfs/CMakeLists.txt
-assert fcount == EXPECTED_FCOUNT, fcount
 opath = output_file_base + "_final.c"
 print("MEMFS: Generating output:", opath)
 g = open(opath, "w")
