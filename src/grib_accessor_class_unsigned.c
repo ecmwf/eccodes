@@ -235,9 +235,9 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, in
 
         /* Check if value fits into number of bits */
         if (check) {
-            if (v < 0) {
+            if (val[0] < 0) {
                 grib_context_log(a->context, GRIB_LOG_ERROR,
-                                "Key \"%s\": Trying to encode a negative value of %ld for key of type unsigned\n", a->name, v);
+                                "Key \"%s\": Trying to encode a negative value of %ld for key of type unsigned\n", a->name, val[0]);
                 return GRIB_ENCODING_ERROR;
             }
             /* See GRIB-23 and GRIB-262 */
