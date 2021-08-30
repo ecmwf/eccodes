@@ -1,3 +1,8 @@
+list( APPEND memfs_args
+      --count 10
+      --output ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen
+      )
+
 set( generated_c_files
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_000.c
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_001.c
@@ -11,21 +16,21 @@ set( generated_c_files
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_009.c
     ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen_final.c)
 
-set( exclude "" )
 if( NOT HAVE_PRODUCT_BUFR )
-  set( exclude -exclude bufr )
-elseif( NOT HAVE_PRODUCT_GRIB )
-  set( exclude -exclude grib )
+  list( APPEND memfs_args --exclude bufr)
+endif()
+
+if( NOT HAVE_PRODUCT_GRIB )
+  list( APPEND memfs_args --exclude grib)
 endif()
 
 add_custom_command(
   OUTPUT ${generated_c_files}
   COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/memfs.py
-    ${exclude}
+    ${memfs_args}
     ${PROJECT_SOURCE_DIR}/definitions
     ${PROJECT_SOURCE_DIR}/samples
     ${PROJECT_SOURCE_DIR}/ifs_samples
-    ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen
   DEPENDS ${PROJECT_SOURCE_DIR}/memfs.py)
 
 set_source_files_properties(

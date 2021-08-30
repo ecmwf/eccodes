@@ -1,12 +1,54 @@
 #!/usr/bin/env python
 from __future__ import print_function
+
+import argparse
+import binascii
 import os
 import re
 import sys
-import binascii
 import time
 
-assert len(sys.argv) > 2
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "-n",
+    "--count",
+    type=int,
+    default=10,
+    help="Number of files to generate",
+)
+
+parser.add_argument(
+    "-C",
+    "--chunk",
+    type=int,
+    default=16,
+    help="Chunk size (MB)",
+)
+
+parser.add_argument(
+    "-o",
+    "--output",
+    type=str,
+    default="memfs_gen",
+    help="Name of C file to generate",
+)
+
+parser.add_argument(
+    "-e",
+    "--exclude",
+    help="Exclude packages",
+)
+
+parser.add_argument(
+    "dirs",
+    type=str,
+    nargs="+",
+    help="The list of directories to process",
+)
+
+args = parser.parse_args()
+
 
 start = time.time()
 print("MEMFS: starting")
@@ -15,25 +57,23 @@ print("MEMFS: starting")
 # The BUFR codetables is not used in the engine
 EXCLUDED = ["grib3", "codetables", "taf", "stations"]
 
-pos = 1
-if sys.argv[1] == "-exclude":
-    product = sys.argv[2]
-    if product == "bufr":
-        EXCLUDED.append(product)
-    elif product == "grib":
-        EXCLUDED.extend(["grib1", "grib2"])
-    else:
-        assert False, "Invalid product %s" % product
-    pos = 3
+EXCLUDE = {
+    None: [],
+    "bufr": ["bufr"],
+    "grib": ["grib1", "grib2"],
+}
 
-dirs = [os.path.realpath(x) for x in sys.argv[pos:-1]]
+EXCLUDED.extend(EXCLUDE[args.exclude])
+
+
+dirs = [os.path.realpath(x) for x in args.dirs]
 print("Directories: ", dirs)
 print("Excluding: ", EXCLUDED)
 
 FILES = {}
 SIZES = {}
 NAMES = []
-CHUNK = 14 * 1024 * 1024  # chunk size in bytes
+CHUNK = args.chunk * 1024 * 1024  # chunk size in bytes
 
 # Binary to ASCII function. Different in Python 2 and 3
 try:
@@ -48,11 +88,11 @@ def get_outfile_name(base, count):
 
 
 # The last argument is the base name of the generated C file(s)
-output_file_base = sys.argv[-1]
+output_file_base = args.output
 
 buffer = None
 fcount = 0
-MAX_FCOUNT = 10
+MAX_FCOUNT = args.count
 
 for directory in dirs:
 
