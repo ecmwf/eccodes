@@ -117,8 +117,16 @@ grib_check_key_equals $temp section2Length 5
 rm -f $temp
 
 
-# Local Definition 5
-# -----------------------
+# Local Definition 4: Ocean model data
+# ---------------------------------------
+${tools_dir}/grib_set -s \
+  localDefinitionNumber=4,coordinate2Flag=2,averaging1Flag=1,coordinate1Flag=1,coordinate2Start=1234 \
+  $sample_g1 $temp
+grib_check_key_equals $temp "mars.levelist,roundedMarsLevelist:d,roundedMarsLevelist:s" "1 1.234 1.234"
+
+
+# Local Definition 5: Forecast probability data
+# ---------------------------------------------
 sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 temp=temp.grib_local.grib
 ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=5 $sample_g1 $temp.1
@@ -179,6 +187,7 @@ EOF
 
 result=`echo 'print "[ccccIdentifiers]";' | ${tools_dir}/grib_filter - $temp`
 [ "$result" = "kwbc ecmf sabm" ]
+
 
 
 rm -f $temp $temp.1 $temp.2 $temp.3
