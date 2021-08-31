@@ -163,7 +163,9 @@ while fcount < MAX_FCOUNT:
     opath = get_outfile_name(output_file_base, fcount)
     print("MEMFS: Generating output:", opath, "(empty)")
     with open(opath, "w") as f:
-        print("/* empty */", file=f)
+        # ISO compilers issue a warning for an empty translation unit
+        # so add a dummy declaration to suppress this
+        print("struct eccodes_suppress_iso_warning;/* empty */", file=f)
     fcount += 1
 
 # The number of generated C files is hard coded.
