@@ -1,3 +1,5 @@
+# Note: the count 10 of generated C files must match
+#       the 'generated_c_files' list
 list( APPEND memfs_args
       --count 10
       --output ${CMAKE_CURRENT_BINARY_DIR}/memfs_gen
