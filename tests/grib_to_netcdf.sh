@@ -62,9 +62,9 @@ if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
     ${tools_dir}/grib_to_netcdf -k3 -o $tempNetcdf $input 2>/dev/null
     stat=$?
     set -e
-    ${tools_dir}/grib_dump -TA -O $tempNetcdf
     if [ $stat -eq 0 ]; then
         have_netcdf4=1
+        ${tools_dir}/grib_dump -TA -O $tempNetcdf
         res=`${tools_dir}/grib_get -TA -p identifier $tempNetcdf`
         [ "$res" = "HDF5" ]
     fi
