@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
   set=grib_fieldset_new_from_files(0,filenames,nfiles,keys,nkeys,0,0,&err);
   GRIB_CHECK(err,0);
 
-  /* not jet implemented */
+  /* not yet implemented */
   /* err=grib_fieldset_apply_where(set,"(centre=='ecmf') && number==1 || step==6 "); */
   /* GRIB_CHECK(err,0); */
 

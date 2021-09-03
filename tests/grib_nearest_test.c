@@ -21,6 +21,8 @@
 
 #include "eccodes.h"
 
+int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string); /*experimental*/
+
 static void usage(const char* prog)
 {
     printf("Usage: %s [-n] grib_file grib_file ...\n", prog);
@@ -70,6 +72,10 @@ int main(int argc, char** argv)
     nfiles = j;
 
     set = codes_fieldset_new_from_files(0, filenames, nfiles, 0, 0, 0, order_by, &err);
+    CODES_CHECK(err, 0);
+
+    /* grib_fieldset_apply_where not fully implemented*/
+    err=grib_fieldset_apply_where(set, "(centre=='ecmf') && number==1 || step==6");
     CODES_CHECK(err, 0);
 
     printf("ordering by %s\n", order_by);

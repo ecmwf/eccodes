@@ -208,7 +208,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     if (print_keys)
         for (i = 0; i < options->print_keys_count; i++)
-            fprintf(dump_file, ", %s", options->print_keys[i].name);
+            fprintf(dump_file, " %s", options->print_keys[i].name);
 
     fprintf(dump_file, "\n");
 
