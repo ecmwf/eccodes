@@ -92,6 +92,9 @@ input=${data_dir}/spherical_model_level.grib1
 ${tools_dir}/grib_set -r -s packingType=spectral_simple $input $temp
 grib_check_key_equals $temp packingType 'spectral_simple'
 ${tools_dir}/grib_ls -p numberOfCodedValues $temp
+${tools_dir}/grib_ls -n statistics $temp
+stats=`${tools_dir}/grib_get -F%.1f -p average,standardDeviation $temp`
+[ "$stats" = "195.1 12.0" ]
 
 
 rm -f $temp

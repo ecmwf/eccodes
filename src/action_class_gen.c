@@ -131,6 +131,7 @@ static void dump(grib_action* act, FILE* f, int lvl)
     grib_context_print(act->context, f, "%s[%d] %s \n", act->op, a->len, act->name);
 }
 
+#if 0
 #define F(x)                      \
     if (flg & x) {                \
         fprintf(f, "%s=>1,", #x); \
@@ -175,6 +176,11 @@ static void xref(grib_action* act, FILE* f, const char* path)
     grib_arguments_print(act->context, act->default_value, NULL);
 
     fprintf(f, "]}, 'xref::%s'),\n", act->op);
+}
+#endif
+static void xref(grib_action* act, FILE* f, const char* path)
+{
+    Assert(!"xref is disabled");
 }
 
 static int create_accessor(grib_section* p, grib_action* act, grib_loader* loader)

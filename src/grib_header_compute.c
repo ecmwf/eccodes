@@ -193,6 +193,7 @@ static grib_math* readatom(grib_context* c, char** form, int* err)
             p->name = strdup(buf);
             Assert(p->name);
             p->left = 0;
+            p->right = 0;
 
             switch (**form) {
                 case '(':
@@ -252,9 +253,9 @@ static grib_math* readpower(grib_context* c, char** form, int* err)
 {
     grib_math* p = readatom(c, form, err);
 
-
     while (**form == '^' || (**form == '*' && *(*form + 1) == '*')) {
         grib_math* q = (grib_math*)grib_context_malloc(c, sizeof(grib_math));
+        q->right     = 0;
         q->left      = p;
         q->arity     = 2;
 
