@@ -15,5 +15,5 @@ meta timeOfAnalysis  time(hourOfAnalysis,minuteOfAnalysis,secondsOfAnalysis) : d
 
 #alias mars.refdate = dateOfAnalysis;
 #alias mars.reftime = timeOfAnalysis;
-alias mars.andate = dateOfAnalysis;
-alias mars.antime = timeOfAnalysis;
+alias mars.date = dateOfAnalysis;
+alias mars.time = timeOfAnalysis;
