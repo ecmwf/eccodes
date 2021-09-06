@@ -667,7 +667,7 @@ static grib_darray* decode_double_array(grib_context* c, unsigned char* data, lo
         }
         for (j = 0; j < self->numberOfSubsets; j++) {
             lval = grib_decode_size_t(data, pos, localWidth);
-            if (grib_is_all_bits_one(lval, localWidth) && canBeMissing) {
+            if (canBeMissing && grib_is_all_bits_one(lval, localWidth)) {
                 dval = GRIB_MISSING_DOUBLE;
             }
             else {
@@ -678,7 +678,7 @@ static grib_darray* decode_double_array(grib_context* c, unsigned char* data, lo
     }
     else {
         /* ECC-428 */
-        if (grib_is_all_bits_one(lval, modifiedWidth) && canBeMissing) {
+        if (canBeMissing && grib_is_all_bits_one(lval, modifiedWidth)) {
             dval = GRIB_MISSING_DOUBLE;
         }
         else {
@@ -1096,7 +1096,7 @@ static double decode_double_value(grib_context* c, unsigned char* data, long* po
     }
 
     lval = grib_decode_size_t(data, pos, modifiedWidth);
-    if (grib_is_all_bits_one(lval, modifiedWidth) && canBeMissing) {
+    if (canBeMissing && grib_is_all_bits_one(lval, modifiedWidth)) {
         dval = GRIB_MISSING_DOUBLE;
     }
     else {

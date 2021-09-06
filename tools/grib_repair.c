@@ -10,6 +10,8 @@
 
 #include "grib_api_internal.h"
 
+static const char* ENV_VAR = "ECCODES_GRIB_REPAIR_MAX_NUM_MESSAGES";
+
 static void usage(const char* name)
 {
     fprintf(stderr, "Usage: %s in out [bad]\n", name);
@@ -25,8 +27,10 @@ int main(int argc, char** argv)
     char *cout, *cbad;
 
     size_t data_len = SIZE;
-    long count      = 0;
+    unsigned long count = 0;
+    unsigned long MAX_NUM_MESSAGES = 100*1000;
     unsigned char* data;
+    char* sMaxNumMessages = NULL;
 
     if (argc != 3 && argc != 4)
         usage(argv[0]);
@@ -56,14 +60,28 @@ int main(int argc, char** argv)
         bad  = out;
         cbad = cout;
     }
+    
+    sMaxNumMessages = getenv(ENV_VAR);
+    if (sMaxNumMessages) {
+        long lmax = 0;
+        if (string_to_long(sMaxNumMessages, &lmax) == GRIB_SUCCESS) {
+            MAX_NUM_MESSAGES = lmax;
+        }
+    }
 
     for (;;) {
         size_t len = SIZE;
         long ret   = wmo_read_grib_from_file(in, buffer, &len);
         if (ret == GRIB_END_OF_FILE && len == 0)
             break;
+        if (count > MAX_NUM_MESSAGES) {
+            /* ECC-1265 */
+            printf("\nExceeded the maximum number of messages. Limit = %lu.\n", MAX_NUM_MESSAGES);
+            printf("This limit can be overridden by setting the environment variable %s.\n", ENV_VAR);
+            break;
+        }
 
-        printf("GRIB %ld: size: %ld code: %ld (%s)\n", ++count, (long)len, ret, grib_get_error_message(ret));
+        printf("GRIB %lu: size: %ld code: %ld (%s)\n", ++count, (long)len, ret, grib_get_error_message(ret));
 
         switch (ret) {
             case 0:
@@ -80,7 +98,7 @@ int main(int argc, char** argv)
                 len = data_len = SIZE;
                 data           = (unsigned char*)&buffer[0];
                 ret            = grib_read_any_from_memory(NULL, &data, &data_len, buffer, &len);
-                printf("   -> GRIB %ld: size: %ld code: %ld (%s)\n", count, (long)len, ret, grib_get_error_message(ret));
+                printf("   -> GRIB %lu: size: %ld code: %ld (%s)\n", count, (long)len, ret, grib_get_error_message(ret));
                 if (ret == 0) {
                     if (fwrite(buffer, 1, len, bad) != len) {
                         perror(cbad);
