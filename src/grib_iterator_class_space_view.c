@@ -115,7 +115,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     long Xo, Yo, jScansPositively, jPointsAreConsecutive, i;
 
     double major = 0, minor = 0, r_eq, r_pol, height;
-    double lap, lop, orient_angle, angular_size;
+    double lap, lop, angular_size;
     double xp, yp, dx, dy, rx, ry, x, y;
     double cos_x, cos_y, sin_x, sin_y;
     double factor_1, factor_2, tmp1, Sd, Sn, Sxy, S1, S2, S3;
@@ -224,7 +224,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     /*lap *= DEG2RAD;*/
     lop *= DEG2RAD;
 
-    orient_angle = orientationInDegrees;
+    /*orient_angle = orientationInDegrees;*/
     /* if (orient_angle != 0.0) return GRIB_NOT_IMPLEMENTED; */
 
     xp = xpInGridLengths;
