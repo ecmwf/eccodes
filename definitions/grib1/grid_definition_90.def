@@ -3,12 +3,12 @@
 # grib 1 -> 2
 constant gridDefinitionTemplateNumber     = 90;
 
-unsigned[2] Nx  : dump;
+unsigned[2] Nx : dump;
 alias numberOfPointsAlongXAxis = Nx;
 alias Ni = Nx;
 alias geography.Nx=Nx;
 
-unsigned[2] Ny  : dump;
+unsigned[2] Ny : dump;
 alias numberOfPointsAlongYAxis = Ny;
 alias Nj = Ny;
 alias geography.Ny=Ny;
@@ -19,21 +19,20 @@ alias Lap=latitudeOfSubSatellitePoint;
 
 signed[3] longitudeOfSubSatellitePoint ;
 meta geography.longitudeOfSubSatellitePointInDegrees  scale(longitudeOfSubSatellitePoint,oneConstant,grib1divider,truncateDegrees) : dump;
-alias Lap=longitudeOfSubSatellitePoint;
+alias Lop=longitudeOfSubSatellitePoint;
 
 include "grib1/resolution_flags.def";
 
-unsigned[3] dx  : dump;
+unsigned[3] dx : dump;
 alias geography.dx=dx;
 
-unsigned[3] dy  : dump;
+unsigned[3] dy : dump;
 alias geography.dy=dy;
 
-unsigned[2] XpInGridLengths  : dump;
+unsigned[2] XpInGridLengths : dump;
 alias geography.XpInGridLengths=XpInGridLengths;
 
-
-unsigned[2] YpInGridLengths  : dump;
+unsigned[2] YpInGridLengths : dump;
 alias geography.YpInGridLengths=YpInGridLengths;
 
 include "grib1/scanning_mode.def";
@@ -41,15 +40,15 @@ include "grib1/scanning_mode.def";
 unsigned[3] orientationOfTheGrid : edition_specific ;
 meta geography.orientationOfTheGridInDegrees  scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) : dump;
 
-unsigned[3] Nr : can_be_missing,no_copy;
-meta NrInRadiusOfEarth scale(Nr,oneConstant,oneMillionConstant,truncateDegrees) : dump;
-alias altitudeOfTheCameraFromTheEarthsCentreMeasuredInUnitsOfTheEarthsRadius = Nr;
+unsigned[3] NrInRadiusOfEarth : edition_specific,can_be_missing,no_copy;
+alias altitudeOfTheCameraFromTheEarthsCentreMeasuredInUnitsOfTheEarthsRadius = NrInRadiusOfEarth;
+meta NrInRadiusOfEarthScaled scale(NrInRadiusOfEarth,oneConstant,oneMillionConstant,truncateDegrees) : dump;
 
-unsigned[2]  Xo : dump;
+unsigned[2] Xo : dump;
 alias xCoordinateOfOriginOfSectorImage=Xo;
 alias geography.Xo=Xo;
 
-unsigned[2] Yo  : dump;
+unsigned[2] Yo : dump;
 alias yCoordinateOfOriginOfSectorImage=Yo;
 alias geography.Yo=Yo;
 
@@ -75,7 +74,7 @@ iterator space_view(numberOfPoints, missingValue, values, radius,
           longitudeOfSubSatellitePointInDegrees,
           dx, dy, XpInGridLengths, YpInGridLengths,
           orientationOfTheGridInDegrees,
-          NrInRadiusOfEarth, Xo, Yo,
+          NrInRadiusOfEarthScaled, Xo, Yo,
           iScansNegatively, jScansPositively,
           jPointsAreConsecutive, alternativeRowScanning);
 
