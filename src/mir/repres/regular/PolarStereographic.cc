@@ -24,17 +24,7 @@ static RepresentationBuilder<PolarStereographic> __builder("polar_stereographic"
 
 
 PolarStereographic::PolarStereographic(const param::MIRParametrisation& param) :
-    RegularGrid(param, make_projection(param)) {}
-
-
-RegularGrid::Projection PolarStereographic::make_projection(const param::MIRParametrisation& param) {
-
-    // only PROJ-based projection is available
-    auto spec = make_proj_spec(param);
-    ASSERT(!spec.empty());
-
-    return spec;
-}
+    RegularGrid(param, make_proj_spec(param)) {}
 
 
 void PolarStereographic::fill(grib_info& /*info*/) const {

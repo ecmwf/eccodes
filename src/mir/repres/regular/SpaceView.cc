@@ -23,16 +23,7 @@ namespace regular {
 static RepresentationBuilder<SpaceView> __builder("space_view");
 
 
-SpaceView::SpaceView(const param::MIRParametrisation& param) : RegularGrid(param, make_projection(param)) {}
-
-
-RegularGrid::Projection SpaceView::make_projection(const param::MIRParametrisation& param) {
-    // only PROJ-based projection is available
-    auto spec = make_proj_spec(param);
-    ASSERT(!spec.empty());
-
-    return spec;
-}
+SpaceView::SpaceView(const param::MIRParametrisation& param) : RegularGrid(param, make_proj_spec(param)) {}
 
 
 void SpaceView::fill(grib_info& /*info*/) const {

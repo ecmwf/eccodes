@@ -27,7 +27,6 @@ static RepresentationBuilder<Lambert> __builder("lambert");
 
 
 Lambert::Lambert(const param::MIRParametrisation& param) : RegularGrid(param, make_projection(param)) {
-
     long edition = 0;
     param.get("edition", edition);
 
@@ -65,7 +64,6 @@ RegularGrid::Projection Lambert::make_projection(const param::MIRParametrisation
 
 
 void Lambert::fill(grib_info& info) const {
-
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;
 
     ASSERT(x_.size() > 1);

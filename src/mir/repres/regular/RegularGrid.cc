@@ -34,7 +34,6 @@ namespace regular {
 
 
 RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGrid::Projection& projection) {
-
     ASSERT(projection);
 
     shapeOfTheEarthProvided_ = param.get("shapeOfTheEarth", shapeOfTheEarth_ = 6);
@@ -89,7 +88,6 @@ RegularGrid::~RegularGrid() = default;
 
 
 RegularGrid::Projection::Spec RegularGrid::make_proj_spec(const param::MIRParametrisation& param) {
-
     static bool useProjIfAvailable = eckit::Resource<bool>("$MIR_USE_PROJ_IF_AVAILABLE", true);
 
     std::string proj;
@@ -143,7 +141,6 @@ bool RegularGrid::isPeriodicWestEast() const {
 
 
 void RegularGrid::fill(grib_info& info) const {
-
     // GRIB2 encoding of user-provided radius or semi-major/minor axis
     if (info.packing.editionNumber == 2) {
         auto spec = grid_.projection().spec();
@@ -210,7 +207,6 @@ void RegularGrid::validate(const MIRValuesVector& values) const {
 
 
 Iterator* RegularGrid::iterator() const {
-
     class RegularGridIterator : public Iterator {
         Projection projection_;
         const LinearSpacing& x_;
