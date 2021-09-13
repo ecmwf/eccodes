@@ -77,7 +77,7 @@ iterator space_view(numberOfPoints, missingValue, values, radius,
           longitudeOfSubSatellitePointInDegrees,
           dx, dy, XpInGridLengths, YpInGridLengths,
           orientationOfTheGridInDegrees,
-          NrInRadiusOfEarth, Xo, Yo,
+          NrInRadiusOfEarthScaled, Xo, Yo,
           iScansNegatively, jScansPositively,
           jPointsAreConsecutive, alternativeRowScanning);
 
