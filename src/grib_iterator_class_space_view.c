@@ -254,17 +254,19 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     else {
         r_eq = r_pol = radius * 0.001; /*conv to km*/
     }
+
+    if (nrInRadiusOfEarth == 0) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Key %s must be greater than zero", sNrInRadiusOfEarth);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+
     angular_size = 2.0 * asin(1.0 / nrInRadiusOfEarth);
     height       = nrInRadiusOfEarth * r_eq;
 
     lap = latOfSubSatellitePointInDegrees;
     lop = lonOfSubSatellitePointInDegrees;
-    /* lap *= 1e-6; // default scaling factor */
-    /* lop *= 1e-6; */
     if (lap != 0.0)
         return GRIB_NOT_IMPLEMENTED;
-    /*lap *= DEG2RAD;*/
-    /*lop *= DEG2RAD;*/
 
     /*orient_angle = orientationInDegrees;*/
     /* if (orient_angle != 0.0) return GRIB_NOT_IMPLEMENTED; */
@@ -275,7 +277,10 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     y0 = Yo;
 
     /* adjustBadlyEncodedEcmwfGribs(h, &nx, &ny, &dx, &dy, &xp, &yp); */
-
+    if (dx == 0 || dy == 0) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Keys %s and %s must be greater than zero", sDx, sDy);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
     rx = angular_size / dx;
     ry = (r_pol / r_eq) * angular_size / dy;
 
