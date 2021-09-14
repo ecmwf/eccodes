@@ -21,7 +21,7 @@ cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 find_package( ecbuild 3.4 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 
 # Initialise project
-project( eccodes VERSION 2.22.0 LANGUAGES C )
+project( eccodes VERSION 2.24.0 LANGUAGES C )
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
@@ -274,6 +274,7 @@ if( HAVE_ECCODES_THREADS )
         ecbuild_critical("Pthreads is not supported on your system: thread library found=[${CMAKE_THREAD_LIBS_INIT}]")
     endif()
     set( GRIB_PTHREADS 1 )
+    set( ECCODES_PTHREADS_LIBRARIES Threads::Threads ) # ECC-1268
     if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
         set( GRIB_LINUX_PTHREADS 1 )
     endif()

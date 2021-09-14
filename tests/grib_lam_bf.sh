@@ -56,3 +56,6 @@ rm -f lam_bf_polar_stereographic_bf_ellipse_diamond.grib
 rm -f lam_bf_lambert_bf_rectangle_rectangle.grib
 rm -f lam_bf_mercator_bf_rectangle_rectangle.grib
 rm -f lam_bf_polar_stereographic_bf_rectangle_rectangle.grib
+rm -f lam_bf_mercator_bf_ellipse_full.grib
+rm -f lam_bf_polar_stereographic_bf_ellipse_full.grib
+rm -f lam_bf_lambert_bf_ellipse_full.grib

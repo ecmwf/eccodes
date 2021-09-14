@@ -38,8 +38,9 @@ do
   # Generate Python code from BUFR file
   ${tools_dir}/bufr_dump -Dpython $inputBufr > $tempSrc
 
-  $PYTHON $tempSrc $inputBufr
-
+  if test "x$PYTHON" != "x"; then
+    $PYTHON $tempSrc $inputBufr
+  fi
   rm -f $tempSrc
 done
 

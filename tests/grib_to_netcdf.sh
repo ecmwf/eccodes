@@ -33,6 +33,8 @@ tempGrib=temp.${label}.grib
 tempNetcdf=temp.${label}.nc
 tempText=temp.${label}.txt
 
+have_netcdf4=0
+
 # Do we have ncdump?
 NC_DUMPER=""
 if command -v "ncdump" >/dev/null 2>&1; then
@@ -51,6 +53,22 @@ if test "x$NC_DUMPER" != "x"; then
     grep -q "short tp_0001" $tempText
 fi
 
+if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+    echo "Test HDF5 decoding ..."
+    # ---------------------------
+    # Note: this is only available in NetCDF-4. So need to check if the command worked with -k3
+    input=${data_dir}/sample.grib2
+    set +e
+    ${tools_dir}/grib_to_netcdf -k3 -o $tempNetcdf $input 2>/dev/null
+    stat=$?
+    set -e
+    if [ $stat -eq 0 ]; then
+        have_netcdf4=1
+        ${tools_dir}/grib_dump -TA -O $tempNetcdf
+        res=`${tools_dir}/grib_get -TA -p identifier $tempNetcdf`
+        [ "$res" = "HDF5" ]
+    fi
+fi
 
 grib_files="\
  regular_latlon_surface.grib2 \
@@ -72,14 +90,22 @@ for dt in $ncf_types; do
     done
 done
 
-echo "Test creating different kinds; netcdf3 classic and large ..."
+echo "Test creating different kinds ..."
 # ------------------------------------------------------------------
-# TODO: enable tests for netcdf4 formats too
 input=${data_dir}/regular_latlon_surface.grib2
 ${tools_dir}/grib_to_netcdf -k 1 -o $tempNetcdf $input >/dev/null
 ${tools_dir}/grib_to_netcdf -k 2 -o $tempNetcdf $input >/dev/null
-#${tools_dir}/grib_to_netcdf -k 3 -o $tempNetcdf $input >/dev/null
-#${tools_dir}/grib_to_netcdf -k 4 -o $tempNetcdf $input >/dev/null
+if [ $have_netcdf4 -eq 1 ]; then
+    ${tools_dir}/grib_to_netcdf -k 3 -o $tempNetcdf $input >/dev/null
+    ${tools_dir}/grib_to_netcdf -k 4 -o $tempNetcdf $input >/dev/null
+fi
+
+echo "Test shuffle and deflate ..."
+# ---------------------------------
+if [ $have_netcdf4 -eq 1 ]; then
+    input=${data_dir}/sst_globus0083.grib
+    ${tools_dir}/grib_to_netcdf -s -d9 -k4 -o $tempNetcdf $input
+fi
 
 echo "Test ECC-1060 ..."
 # ----------------------

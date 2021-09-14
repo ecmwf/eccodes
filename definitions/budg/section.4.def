@@ -1,11 +1,4 @@
 # (C) Copyright 2005- ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
 
 section_length[3] section4Length ;
 
@@ -37,73 +30,64 @@ unsigned[1] reserved=0 : hidden;
 ibmfloat floatValues[numberOfFloats];
 alias floatVal=floatValues;
 
-if(numberOfBytesPerInteger == 1) { signed[1] integerValues[numberOfIntegers]; }
-if(numberOfBytesPerInteger == 2) { signed[2] integerValues[numberOfIntegers]; }
-if(numberOfBytesPerInteger == 3) { signed[3] integerValues[numberOfIntegers]; }
-if(numberOfBytesPerInteger == 4) { signed[4] integerValues[numberOfIntegers]; }
+if (numberOfBytesPerInteger == 1) { signed[1] integerValues[numberOfIntegers]; }
+if (numberOfBytesPerInteger == 2) { signed[2] integerValues[numberOfIntegers]; }
+if (numberOfBytesPerInteger == 3) { signed[3] integerValues[numberOfIntegers]; }
+if (numberOfBytesPerInteger == 4) { signed[4] integerValues[numberOfIntegers]; }
 
-if(numberOfChars >= 12)
-{
-	ascii[2] marsClass;
-	ascii[2] dummy1;
-	ascii[2] marsType;
-	ascii[2] dummy2;
-	ascii[4] experimentVersionNumber;
+if (numberOfChars >= 12) {
+  ascii[2] marsClass;
+  ascii[2] dummy1;
+  ascii[2] marsType;
+  ascii[2] dummy2;
+  ascii[4] experimentVersionNumber;
 
-	alias expver=experimentVersionNumber;
-    alias marsExpver=experimentVersionNumber;
+  alias expver=experimentVersionNumber;
+  alias marsExpver=experimentVersionNumber;
     
-	constant numberOfRemaininChars  = numberOfChars - 12;
+  constant numberOfRemaininChars  = numberOfChars - 12;
 
-	charValues list(numberOfRemaininChars) {
-		ascii[1] char;
-	}
+  charValues list(numberOfRemaininChars) {
+    ascii[1] char;
+  }
 
+  constant zero = 0;
+  concept isEps(zero)  { 1 = { marsType = "pf"; } }
+  concept isSens(zero) { 1 = { marsType = "sf"; } }
 
-	constant zero = 0;
-	concept isEps(zero)  { 1 = { marsType = "pf"; } }
-	concept isSens(zero) { 1 = { marsType = "sf"; } }
+  constant oper = "oper";
 
-	constant oper = "oper";
+  concept marsStream(oper) {
+    "enfo" = { marsType = "pf"; }
+    "enfo" = { marsType = "cf"; }
+    "sens" = { marsType = "sf"; }
+  }
 
-	concept marsStream(oper) {
-		"enfo" = { marsType = "pf"; }
-		"enfo" = { marsType = "cf"; }
-		"sens" = { marsType = "sf"; }
-	}
+  if (isEps) {
+    constant perturbationNumber = 0;
+    alias mars.number = perturbationNumber;
+  }
 
-	if(isEps)
-	{
-		constant perturbationNumber = 0;
-		alias mars.number = perturbationNumber;
-	}
+  if (isSens) {
+    constant iterationNumber  = 0;
+    constant diagnosticNumber = 0;
+    alias mars.iteration  = iterationNumber;
+    alias mars.diagnostic = diagnosticNumber;
+  }
 
-	if(isSens)
-	{
-		constant iterationNumber  = 0;
-		constant diagnosticNumber = 0;
-		alias mars.iteration  = iterationNumber;
-		alias mars.diagnostic = diagnosticNumber;
-	}
-
-	# This is commented out because some of the BUDG have the wrong info there
-	alias mars.stream = marsStream;
-	alias mars.class   = marsClass;
-	alias mars.type    = marsType;
-	alias mars.expver  = marsExpver;
-
+  # This is commented out because some of the BUDG have the wrong info there
+  alias mars.stream = marsStream;
+  alias mars.class   = marsClass;
+  alias mars.type    = marsType;
+  alias mars.expver  = marsExpver;
 }
 else
 {
-
-	  charValues list(numberOfChars) {
-		ascii[1] char;
-	}
-
+  charValues list(numberOfChars) {
+    ascii[1] char;
+  }
 }
 } else {
-#TODO: decode properly these old data
+  #TODO: decode properly these old data
   section_padding padding;
-  
 }
-

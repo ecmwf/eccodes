@@ -73,6 +73,7 @@ if( HAVE_BUILD_TOOLS )
         grib_element
         grib_2nd_order_numValues
         grib_ecc-136
+        grib_ecc-922
         grib_ecc-966
         grib_ecc-967
         grib_ecc-1150
@@ -83,7 +84,13 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1195
         grib_ecc-1212
         grib_ecc-1230
+        grib_ecc-1255
+        grib_ecc-1258
+        grib_ecc-1260
+        grib_ecc-1271
+        bufr_ecc-1028
         bufr_ecc-1195
+        bufr_ecc-1259
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
@@ -93,11 +100,13 @@ if( HAVE_BUILD_TOOLS )
         grib_sh_imag
         grib_sh_spectral_complex
         pseudo_diag
+        wrap
         grib_levtype
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
-        grib_grid_space_view
+        grib_g1monthlydate
+        grib_g1day_of_the_year_date
         grib_g1fcperiod)
 
     # These tests do require data downloads
@@ -107,6 +116,7 @@ if( HAVE_BUILD_TOOLS )
         grib_complex
         grib_double_cmp
         grib_change_packing
+        grib_grid_space_view
         bufr_dump_data
         bufr_dump_descriptors
         bufr_dump_subset

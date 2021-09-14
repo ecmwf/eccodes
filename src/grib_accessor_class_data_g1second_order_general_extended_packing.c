@@ -1237,6 +1237,22 @@ static int pack_double_old(grib_accessor* a, const double* val, size_t *len)
 }
 #endif
 
+static int get_bits_per_value(grib_handle* h, const char* bits_per_value_str, long* bits_per_value)
+{
+    int err = 0;
+    if ((err = grib_get_long_internal(h, bits_per_value_str, bits_per_value)) != GRIB_SUCCESS)
+        return err;
+
+    if (*bits_per_value == 0) {
+        /* Probably grid_ieee input which is a special case. Note: we cannot check the packingType
+         * because it has already been changed to second order!
+         * We have to take precision=1 for IEEE which is 32bits
+         */
+        *bits_per_value = 32;
+    }
+    return err;
+}
+
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_data_g1second_order_general_extended_packing* self = (grib_accessor_data_g1second_order_general_extended_packing*)a;
@@ -1294,7 +1310,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             min = val[i];
     }
 
-    if ((ret = grib_get_long_internal(handle, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+    /* ECC-1219: packingType conversion from grid_ieee to grid_second_order */
+    if ((ret = get_bits_per_value(handle, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
         return ret;
 
     if ((ret = grib_get_long_internal(handle, self->optimize_scaling_factor, &optimize_scaling_factor)) != GRIB_SUCCESS)

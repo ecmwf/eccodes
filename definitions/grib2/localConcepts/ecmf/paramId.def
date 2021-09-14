@@ -8425,12 +8425,6 @@
 	 parameterCategory = 217 ;
 	 parameterNumber = 18 ;
 	}
-#Ammonia
-'217019' = {
-	 discipline = 192 ;
-	 parameterCategory = 217 ;
-	 parameterNumber = 19 ;
-	}
 #Sulfate
 '217020' = {
 	 discipline = 192 ;
@@ -8466,12 +8460,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 217 ;
 	 parameterNumber = 26 ;
-	}
-#Nitrogen monoxide
-'217027' = {
-	 discipline = 192 ;
-	 parameterCategory = 217 ;
-	 parameterNumber = 27 ;
 	}
 #Hydroperoxy radical
 '217028' = {
@@ -20789,24 +20777,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 100 ;
 	}
-#Nitrogen dioxide
-'210121' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 121 ;
-	}
-#Sulphur dioxide
-'210122' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 122 ;
-	}
-#Carbon monoxide
-'210123' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 123 ;
-	}
 #Formaldehyde
 '210124' = {
 	 discipline = 192 ;
@@ -21094,12 +21064,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 185 ;
-	}
-#GEMS Ozone
-'210203' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 203 ;
 	}
 #GEMS Total column ozone
 '210206' = {
@@ -21557,24 +21521,6 @@
 	 parameterCategory = 211 ;
 	 parameterNumber = 100 ;
 	}
-#Nitrogen dioxide
-'211121' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 121 ;
-	}
-#Sulphur dioxide
-'211122' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 122 ;
-	}
-#Carbon monoxide
-'211123' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 123 ;
-	}
 #Formaldehyde
 '211124' = {
 	 discipline = 192 ;
@@ -21862,12 +21808,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 185 ;
-	}
-#GEMS Ozone
-'211203' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 203 ;
 	}
 #GEMS Total column ozone
 '211206' = {

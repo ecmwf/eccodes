@@ -97,6 +97,48 @@ static int next(grib_iterator* i, double* lat, double* lon, double* val)
     return 1;
 }
 
+#if 0
+static void adjustBadlyEncodedEcmwfGribs(grib_handle* h,
+                                    long* nx, long* ny, double* dx, double* dy, double* xp, double* yp)
+{
+    /* Correct the information provided in the headers of certain satellite imagery that
+     * we have available. This is specific to ECMWF.
+     * Obtained through trial-and-error to get the best match with the coastlines.
+     *
+     * Copied from Magics GribSatelliteInterpretor::AdjustBadlyEncodedGribs()
+     */
+    long centre = 0;
+    int err     = grib_get_long(h, "centre", &centre);
+    if (!err && centre == 98) {
+        int err1 = 0, err2 = 0, err3 = 0;
+        long satelliteIdentifier, channelNumber, functionCode;
+        /* These keys are defined in the ECMWF local definition 24 - Satellite image simulation */
+        err1 = grib_get_long(h, "satelliteIdentifier", &satelliteIdentifier);
+        err2 = grib_get_long(h, "channelNumber", &channelNumber);
+        err3 = grib_get_long(h, "functionCode", &functionCode);
+        if (!err1 && !err2 && !err3) {
+            if (satelliteIdentifier == 54 && channelNumber == 2 && *dx == 1179) { /* Meteosat 7, channel 2 */
+                *nx = *ny = 900;
+                *dx = *dy = 853;
+                *xp = *yp = 450;
+            }
+            else if (satelliteIdentifier == 54 && channelNumber == 3 && *dx == 1179) { /* Meteosat 7, channel 3 */
+                *dx = *dy = 1184;
+                *xp = *yp = 635;
+            }
+            else if (satelliteIdentifier == 259 && channelNumber == 4 && *dx == 1185) { /* GOES-15 (West) channel 4 */
+                *dx = *dy = 880;
+                *xp = *yp = 450;
+            }
+            else if (satelliteIdentifier == 57 && *dx == 1732) { /* MSG (Meteosat second generation), non-HRV channels */
+                *dx = *dy = 1811;
+                *xp = *yp = 928;
+            }
+        }
+    }
+}
+#endif
+
 #define RAD2DEG 57.29577951308232087684 /* 180 over pi */
 #define DEG2RAD 0.01745329251994329576  /* pi over 180 */
 
@@ -115,7 +157,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     long Xo, Yo, jScansPositively, jPointsAreConsecutive, i;
 
     double major = 0, minor = 0, r_eq, r_pol, height;
-    double lap, lop, orient_angle, angular_size;
+    double lap, lop, angular_size;
     double xp, yp, dx, dy, rx, ry, x, y;
     double cos_x, cos_y, sin_x, sin_y;
     double factor_1, factor_2, tmp1, Sd, Sn, Sxy, S1, S2, S3;
@@ -212,27 +254,33 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     else {
         r_eq = r_pol = radius * 0.001; /*conv to km*/
     }
+
+    if (nrInRadiusOfEarth == 0) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Key %s must be greater than zero", sNrInRadiusOfEarth);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+
     angular_size = 2.0 * asin(1.0 / nrInRadiusOfEarth);
     height       = nrInRadiusOfEarth * r_eq;
 
     lap = latOfSubSatellitePointInDegrees;
     lop = lonOfSubSatellitePointInDegrees;
-    lap *= 1e-6; /* default scaling factor */
-    lop *= 1e-6;
     if (lap != 0.0)
         return GRIB_NOT_IMPLEMENTED;
-    /*lap *= DEG2RAD;*/
-    lop *= DEG2RAD;
 
-    orient_angle = orientationInDegrees;
-    if (orient_angle != 0.0)
-        return GRIB_NOT_IMPLEMENTED;
+    /*orient_angle = orientationInDegrees;*/
+    /* if (orient_angle != 0.0) return GRIB_NOT_IMPLEMENTED; */
 
     xp = xpInGridLengths;
     yp = ypInGridLengths;
     x0 = Xo;
     y0 = Yo;
 
+    /* adjustBadlyEncodedEcmwfGribs(h, &nx, &ny, &dx, &dy, &xp, &yp); */
+    if (dx == 0 || dy == 0) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Keys %s and %s must be greater than zero", sDx, sDy);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
     rx = angular_size / dx;
     ry = (r_pol / r_eq) * angular_size / dy;
 
