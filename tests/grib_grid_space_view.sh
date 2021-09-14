@@ -15,9 +15,10 @@ tempFilter="temp.${label}.filt"
 tempGrib="temp.${label}.grib"
 tempOut="temp.${label}.out"
 
+# -----------
+# GRIB2
+# -----------
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-
-# Create a filter
 cat > $tempFilter <<EOF
  set gridType="space_view";
  set Nx=1900;
@@ -42,6 +43,24 @@ fi
 ${tools_dir}/grib_get_data $tempGrib > $tempOut
 
 ${tools_dir}/grib_ls -l 50,0 $tempGrib
+
+# -----------
+# GRIB1
+# -----------
+input=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+cat > $tempFilter <<EOF
+ set gridType="space_view";
+ set Nx=550;
+ set Ny=550;
+ set dx=54;
+ set dy=54;
+ set XpInGridLengths=2750;
+ set YpInGridLengths=2750;
+ set NrInRadiusOfEarth=6610710;
+ write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilter $input
+${tools_dir}/grib_get_data $tempGrib > $tempOut
 
 
 # Clean up

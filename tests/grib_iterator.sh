@@ -9,6 +9,8 @@
 #
 
 . ./include.sh
+set -u
+temp=temp.grib_iterator.grib
 
 files="reduced_latlon_surface.grib1 \
       reduced_gaussian_pressure_level.grib1 \
@@ -32,3 +34,7 @@ done
 # ECC-822: Increase lat/lon decimals using default grib_get_data
 ${tools_dir}/grib_get_data -L%12.6f%11.5f ${data_dir}/regular_latlon_surface.grib2
 
+${tools_dir}/grib_get_data -p shortName,level ${data_dir}/regular_latlon_surface.grib2 > $temp
+grep -q "Latitude Longitude Value shortName level" $temp
+
+rm -f $temp

@@ -12,12 +12,15 @@
 #set -x
 
 REDIRECT=/dev/null
+sample_g1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_640_grib1.tmpl
+sample_g2=$ECCODES_SAMPLES_PATH/reduced_gg_pl_640_grib2.tmpl
 
 cd ${data_dir}
 rm -f local.log
 
 # Check all GRIB2 local def files and definitions/grib2/grib2LocalSectionNumber.98.table
 # Each number should appear in the table
+# -----------------------------------------
 g2lds=${ECCODES_DEFINITION_PATH}/grib2/local.98.*.def
 for g2ld in $g2lds; do
     bname=`basename $g2ld`
@@ -25,11 +28,20 @@ for g2ld in $g2lds; do
     grep -q "^$dnum" ${ECCODES_DEFINITION_PATH}/grib2/grib2LocalSectionNumber.98.table
 done
 
+# Use of subCentre=98 for other centre GRIBs
+# ------------------------------------------
+temp=temp.grib_local.grib
+${tools_dir}/grib_set -s centre=edzw,subCentre=98,setLocalDefinition=1,localDefinitionNumber=1 \
+  $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp
+grib_check_key_equals $temp section2Length,centre,expver,marsClass:i,marsType:i,marsStream:i "17 edzw 0001 1 2 1025"
+rm -f $temp
+
 
 ${tools_dir}/grib_set -s edition=2,setLocalDefinition=1 reduced_gaussian_model_level.grib1 loc.grib2
 ${tools_dir}/grib_set -s setLocalDefinition=1           reduced_gaussian_model_level.grib1 loc.grib1
 
-# conversion 1->2
+# Conversion 1->2
+# ----------------
 for localDefinitionNumber in 1 15 26 30
 do
     ${tools_dir}/grib_set -s localDefinitionNumber=$localDefinitionNumber,perturbationNumber=2,numberOfForecastsInEnsemble=50 loc.grib1 eps.grib1
@@ -45,7 +57,8 @@ do
     ${tools_dir}/grib_compare -e -b param eps.grib1 eps.grib2
 done
 
-#local -> local
+# Local -> local
+# ---------------
 for localStart in 1 7 9 20 25 26 30
 do
     ${tools_dir}/grib_set -s localDefinitionNumber=$localStart loc.grib1 loc1.grib1
@@ -60,7 +73,8 @@ do
     done
 done
 
-#special types/streams
+# Special types/streams
+# ----------------------
 ${tools_dir}/grib_set -s localDefinitionNumber=1,numberOfForecastsInEnsemble=0 loc.grib1 loc1.grib1
 ${tools_dir}/grib_set -s edition=2 loc1.grib1 loc1.grib2
 ${tools_dir}/grib_get -f -p localDefinitionNumber,perturbationNumber loc1.grib2 >> local.log
@@ -78,8 +92,6 @@ rm -f local.log loc.grib1 loc.grib2 loc1.grib1 loc1.grib2 eps.grib1 eps.grib2
 
 # Delete Local Definition
 # -----------------------
-sample_g1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_640_grib1.tmpl
-sample_g2=$ECCODES_SAMPLES_PATH/reduced_gg_pl_640_grib2.tmpl
 temp=temp.grib_local.grib
 grib_check_key_equals $sample_g1 localUsePresent 1
 ${tools_dir}/grib_set -s deleteLocalDefinition=1 $sample_g1 $temp
@@ -105,8 +117,16 @@ grib_check_key_equals $temp section2Length 5
 rm -f $temp
 
 
-# Local Definition 5
-# -----------------------
+# Local Definition 4: Ocean model data
+# ---------------------------------------
+${tools_dir}/grib_set -s \
+  localDefinitionNumber=4,coordinate2Flag=2,averaging1Flag=1,coordinate1Flag=1,coordinate2Start=1234 \
+  $sample_g1 $temp
+grib_check_key_equals $temp "mars.levelist,roundedMarsLevelist:d,roundedMarsLevelist:s" "1 1.234 1.234"
+
+
+# Local Definition 5: Forecast probability data
+# ---------------------------------------------
 sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 temp=temp.grib_local.grib
 ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=5 $sample_g1 $temp.1
@@ -167,6 +187,7 @@ EOF
 
 result=`echo 'print "[ccccIdentifiers]";' | ${tools_dir}/grib_filter - $temp`
 [ "$result" = "kwbc ecmf sabm" ]
+
 
 
 rm -f $temp $temp.1 $temp.2 $temp.3
