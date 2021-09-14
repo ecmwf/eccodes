@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 4.95, Average, accumulation extreme values or other statiscally processed value at a horizontal level or in a horizontal layer at a local time
+# TEMPLATE 4.95, Average, accumulation extreme values or other statistically processed value at a horizontal level or in a horizontal layer at a local time
 
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.generating_process.def"

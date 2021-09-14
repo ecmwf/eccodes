@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# EFAS: Average, accumulation, and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
+# TEMPLATE 4.72, Average, accumulation, and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.postproc.def"

@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# Average, accumulation, extreme values or other statistically processed values of a post-processing individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a local time
+# TEMPLATE 4.98, Average, accumulation, extreme values or other statistically processed values of a post-processing individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a local time
 
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.postproc.def"

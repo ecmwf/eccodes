@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-#  Analysis or forecast at a horizontal level or in a horizontal layer at a local time
+# TEMPLATE 4.93, Analysis or forecast at a horizontal level or in a horizontal layer at a local time
 
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.postproc.def"
