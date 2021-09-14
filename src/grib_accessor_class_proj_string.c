@@ -202,6 +202,8 @@ static int proj_regular_latlon(grib_handle* h, char* result)
 
 static int proj_space_view(grib_handle* h, char* result)
 {
+    return GRIB_NOT_IMPLEMENTED;
+#if 0
     int err        = 0;
     char shape[64] = {0,};
 
@@ -210,6 +212,7 @@ static int proj_space_view(grib_handle* h, char* result)
     /* Experimental: For now do the same as gdalsrsinfo - hard coded values! */
     sprintf(result, "+proj=geos +lon_0=0 +h=35785831 +x_0=0 +y_0=0 %s",  shape);
     return err;
+#endif
 }
 static int proj_albers(grib_handle* h, char* result)
 {
