@@ -16,19 +16,19 @@ import traceback
 
 from eccodes import *
 
-INPUT = '../../data/reduced_latlon_surface.grib1'
+INPUT = "../../data/reduced_latlon_surface.grib1"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     while 1:
         gid = codes_grib_new_from_file(f)
         if gid is None:
             break
 
-        iterid = codes_keys_iterator_new(gid, 'ls')
+        iterid = codes_keys_iterator_new(gid, "ls")
 
         # Different types of keys can be skipped
         # codes_skip_computed(iterid)
@@ -56,7 +56,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

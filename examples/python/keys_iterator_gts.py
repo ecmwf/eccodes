@@ -16,12 +16,12 @@ import traceback
 
 from eccodes import *
 
-INPUT = '../../data/gts.bufr'
+INPUT = "../../data/gts.bufr"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     while 1:
         gid = gts_new_from_file(f)
