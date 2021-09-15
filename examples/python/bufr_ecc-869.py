@@ -3,8 +3,10 @@
 # See ECC-869
 
 from __future__ import print_function
-import traceback
+
 import sys
+import traceback
+
 from eccodes import *
 
 OUTPUT_FILENAME = 'outfile_ecc_869_test.bufr'

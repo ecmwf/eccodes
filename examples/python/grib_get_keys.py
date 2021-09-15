@@ -13,8 +13,10 @@
 #
 
 from __future__ import print_function
-import traceback
+
 import sys
+import traceback
+
 from eccodes import *
 
 INPUT = '../../data/reduced_latlon_surface.grib1'

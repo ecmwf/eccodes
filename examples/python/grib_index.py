@@ -13,9 +13,10 @@
 # a file
 
 from __future__ import print_function
-import traceback
-import sys
+
 import os
+import sys
+import traceback
 
 from eccodes import *
 

@@ -16,8 +16,9 @@
 #
 
 from __future__ import absolute_import
-import traceback
+
 import sys
+import traceback
 
 from eccodes import *
 

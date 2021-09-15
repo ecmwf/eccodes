@@ -8,8 +8,9 @@
 # nor does it submit to any jurisdiction.
 
 from __future__ import print_function
-import traceback
+
 import sys
+import traceback
 
 from eccodes import *
 

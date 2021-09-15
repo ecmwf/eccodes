@@ -19,8 +19,9 @@
 # understand the structure of the messages.
 
 from __future__ import print_function
-import traceback
+
 import sys
+import traceback
 
 from eccodes import *
 

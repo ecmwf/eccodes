@@ -13,12 +13,13 @@
 #
 
 from __future__ import print_function
-import traceback
+
 import sys
+import traceback
+from collections import OrderedDict
+from datetime import date
 
 from eccodes import *
-from datetime import date
-from collections import OrderedDict
 
 INPUT = '../../data/regular_latlon_surface_constant.grib1'
 OUTPUT = 'out.set.grib'

@@ -17,9 +17,10 @@
 #
 
 from __future__ import print_function
-import traceback
-import sys
+
 import collections
+import sys
+import traceback
 
 from eccodes import *
 
