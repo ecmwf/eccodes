@@ -24,6 +24,7 @@ from eccodes import *
 INPUT = '../../data/metar/metar.txt'
 VERBOSE = 1  # verbose error reporting
 
+
 def print_keys(msg_id):
     keys = ['CCCC', 'latitude', 'longitude', 'dateTime',
                 'elevation', 'temperature', 'dewPointTemperature', 'qnh']

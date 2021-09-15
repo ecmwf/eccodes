@@ -21,6 +21,7 @@ from eccodes import *
 
 VERBOSE = 1  # verbose error reporting
 
+
 def parse_date(x):
     return datetime.strptime(x.decode('ascii'), '%Y%m%d')
 

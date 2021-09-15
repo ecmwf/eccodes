@@ -22,6 +22,7 @@ from eccodes import *
 
 VERBOSE = 1  # verbose error reporting
 
+
 def get_key_value(msgid, key):
     v = codes_get(msgid, key)
     if v == CODES_MISSING_DOUBLE or v == CODES_MISSING_LONG:

@@ -173,9 +173,7 @@ def example():
             for k in range(len(memberNumber)):
                 data[k][i] = [lat[k], lon[k], press[k], latWind[k], lonWind[k], wind10m[k]]
 
-
-            # ---------------------------------------- Print the values -------------
-
+        # ---------------------------------------- Print the values -------------
         for m in range(len(memberNumber)):
             print("== Member  %d" % memberNumber[m])
             print("step  latitude  longitude   pressure  latitude   longitude    wind")

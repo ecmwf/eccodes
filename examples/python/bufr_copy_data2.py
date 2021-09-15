@@ -23,29 +23,30 @@ from eccodes import *
 
 VERBOSE = 1  # verbose error reporting
 
+
 def example(input_filename, output_filename):
     f = open(input_filename, 'rb')
     ibufrin = codes_bufr_new_from_file(f)
     f.close()
 
     # Need to unpack to get delayed replications and reference values from input
-    codes_set(ibufrin,'unpack',1)
-    references=codes_get_array(ibufrin,'inputOverriddenReferenceValues')
-    replication=codes_get_array(ibufrin,'delayedDescriptorReplicationFactor')
+    codes_set(ibufrin, 'unpack', 1)
+    references = codes_get_array(ibufrin, 'inputOverriddenReferenceValues')
+    replication = codes_get_array(ibufrin, 'delayedDescriptorReplicationFactor')
 
-    ibufrout=codes_clone(ibufrin)
+    ibufrout = codes_clone(ibufrin)
 
     # Copy over to output
-    codes_set_array(ibufrout,'inputOverriddenReferenceValues',references)
-    codes_set_array(ibufrout,'inputDelayedDescriptorReplicationFactor',replication)
+    codes_set_array(ibufrout, 'inputOverriddenReferenceValues', references)
+    codes_set_array(ibufrout, 'inputDelayedDescriptorReplicationFactor', replication)
     # Keep all original descriptors and add 'meanWindDirectionForSurfaceTo1500M' (011044)
-    ivalues=( 203014, 7030, 7031, 203255, 307080, 11044, )
-    codes_set_array(ibufrout,'unexpandedDescriptors',ivalues)
+    ivalues = (203014, 7030, 7031, 203255, 307080, 11044,)
+    codes_set_array(ibufrout, 'unexpandedDescriptors', ivalues)
 
-    codes_bufr_copy_data ( ibufrin,ibufrout)
+    codes_bufr_copy_data(ibufrin, ibufrout)
 
-    outfile=open(output_filename, 'wb')
-    codes_write(ibufrout,outfile)
+    outfile = open(output_filename, 'wb')
+    codes_write(ibufrout, outfile)
     outfile.close()
 
     codes_release(ibufrin)

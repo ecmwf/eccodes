@@ -26,8 +26,8 @@ def example():
 
     gid = codes_grib_new_from_file(fin)
 
-    assert codes_is_missing(gid, 'Ni') == False
-    assert codes_is_missing(gid, 'Nj') == False
+    assert not codes_is_missing(gid, 'Ni')
+    assert not codes_is_missing(gid, 'Nj')
     nx = codes_get(gid, 'Ni')
     ny = codes_get(gid, 'Nj')
 

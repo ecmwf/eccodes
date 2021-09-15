@@ -11,13 +11,16 @@ from eccodes import *
 
 OUTPUT_FILENAME = 'outfile_ecc_869_test.bufr'
 
+VERBOSE = 1  # verbose error reporting
+
+
 def bufr_encode():
     ibufr = codes_bufr_new_from_samples('BUFR3_local')
-    ivalues = (0, 0, 0, 0 ,)
+    ivalues = (0, 0, 0, 0,)
     codes_set_array(ibufr, 'inputShortDelayedDescriptorReplicationFactor', ivalues)
 
     SIZE_OF_BMP = 41
-    bitMask = [1]*SIZE_OF_BMP
+    bitMask = [1] * SIZE_OF_BMP
     bitMask[0] = 0  # marineObservingPlatformIdentifier
     bitMask[37] = 0  # pressureReducedToMeanSeaLevel
     codes_set_array(ibufr, 'inputDataPresentIndicator', bitMask)
@@ -44,7 +47,7 @@ def bufr_encode():
     codes_set(ibufr, 'localHour', 21)
     codes_set(ibufr, 'localMinute', 4)
     codes_set(ibufr, 'localSecond', 0)
-    codes_set(ibufr, 'ident',' 3101544')
+    codes_set(ibufr, 'ident', ' 3101544')
     codes_set(ibufr, 'rdbtimeDay', 21)
     codes_set(ibufr, 'rdbtimeHour', 21)
     codes_set(ibufr, 'rdbtimeMinute', 26)
@@ -71,15 +74,12 @@ def bufr_encode():
 
     # Create the structure of the data section
     codes_set_array(ibufr, 'unexpandedDescriptors',
-        (315009,
-         222000, 236000,
-         101000 + SIZE_OF_BMP, 31031,
-         33007, 33007)
+        (315009, 222000, 236000, 101000 + SIZE_OF_BMP, 31031, 33007, 33007)
     )
 
     codes_set(ibufr, 'marineObservingPlatformIdentifier', 3101544)
     codes_set(ibufr, 'marineObservingPlatformIdentifier->percentConfidence', 44)
-    codes_set(ibufr, 'longStationName','SIO Lagrangian Drifter Lab')
+    codes_set(ibufr, 'longStationName', 'SIO Lagrangian Drifter Lab')
     codes_set(ibufr, 'dataBuoyType', 1)
     codes_set(ibufr, '#1#timeSignificance', 26)
     codes_set(ibufr, '#1#year', 2018)
@@ -89,7 +89,7 @@ def bufr_encode():
     codes_set(ibufr, '#1#minute', 4)
     codes_set(ibufr, 'latitude', -3.598198000000000008e+01)
     codes_set(ibufr, 'longitude', -4.484317000000000064e+01)
-    codes_set(ibufr, 'platformTransmitterIdNumber',' 300234065315740')
+    codes_set(ibufr, 'platformTransmitterIdNumber', ' 300234065315740')
     codes_set(ibufr, 'dataCollectionLocationSystem', 8)
     codes_set(ibufr, 'directionOfMotionOfMovingObservingPlatform', CODES_MISSING_LONG)
     codes_set(ibufr, 'platformDriftSpeed', CODES_MISSING_DOUBLE)
@@ -122,7 +122,7 @@ def bufr_encode():
 
     outfile = open(OUTPUT_FILENAME, 'wb')
     codes_write(ibufr, outfile)
-    print ("Created output BUFR file ",OUTPUT_FILENAME)
+    print("Created output BUFR file ", OUTPUT_FILENAME)
     codes_release(ibufr)
 
 
@@ -130,7 +130,11 @@ def main():
     try:
         bufr_encode()
     except CodesInternalError as err:
-        traceback.print_exc(file=sys.stderr)
+        if VERBOSE:
+            traceback.print_exc(file=sys.stderr)
+        else:
+            sys.stderr.write(err.msg + '\n')
+
         return 1
 
 
