@@ -1921,6 +1921,7 @@ void grib_index_rewind(grib_index* index)
     index->rewind = 1;
 }
 
+#if 0
 static grib_index_key* search_key(grib_index_key* keys, grib_index_key* to_search)
 {
     if (!keys || !strcmp(keys->name, to_search->name))
@@ -1947,6 +1948,7 @@ int grib_index_search(grib_index* index, grib_index_key* keys)
     grib_index_rewind(index);
     return 0;
 }
+#endif
 
 int codes_index_set_product_kind(grib_index* index, ProductKind product_kind)
 {

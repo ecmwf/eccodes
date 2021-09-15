@@ -142,7 +142,6 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
     grib_dump_string(dumper, a, NULL);
@@ -152,7 +151,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     /* special clim case where each mont have 30 days.. to comply with mars*/
     grib_accessor_g1day_of_the_year_date* self = (grib_accessor_g1day_of_the_year_date*)a;
-
 
     char tmp[1024];
 
@@ -164,7 +162,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     long fullyear         = 0;
     long fake_day_of_year = 0;
 
-
     size_t l;
 
     grib_get_long_internal(grib_handle_of_accessor(a), self->century, &century);
@@ -174,7 +171,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     if (*len < 1)
         return GRIB_BUFFER_TOO_SMALL;
-
 
     fullyear         = ((century - 1) * 100 + year);
     fake_day_of_year = ((month - 1) * 30) + day;
@@ -188,7 +184,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     *len = l;
     strcpy(val, tmp);
-
 
     return GRIB_SUCCESS;
 }

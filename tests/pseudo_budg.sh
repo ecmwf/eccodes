@@ -15,6 +15,7 @@ label="pseudo_budg_test"
 set -u
 tempOut=temp.$label.txt
 tempRef=temp.$label.ref
+tempBud=temp.$label.bud
 
 ${tools_dir}/grib_ls -j ${data_dir}/budg > $tempOut
 cat > $tempRef << EOF
@@ -31,7 +32,20 @@ cat > $tempRef << EOF
 EOF
 diff $tempRef $tempOut
 
+# Set date
+${tools_dir}/grib_set -s date=20170102 ${data_dir}/budg $tempBud
+res=`${tools_dir}/grib_get -p mars.date $tempBud`
+[ "$res" = "20170102" ]
+
 ${tools_dir}/grib_dump ${data_dir}/budg
 ${tools_dir}/grib_dump -O ${data_dir}/budg
 
-rm -f $tempRef $tempOut
+ms=`${tools_dir}/grib_get -p mars.step ${data_dir}/budg`
+[ "$ms" = "0" ]
+${tools_dir}/grib_set -s mars.step=19 ${data_dir}/budg $tempOut
+${tools_dir}/grib_ls -jm $tempOut
+ms=`${tools_dir}/grib_get -p mars.step $tempOut`
+[ "$ms" = "19" ]
+
+
+rm -f $tempRef $tempOut $tempBud
