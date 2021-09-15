@@ -15,8 +15,10 @@
 #              and print the kind of product (e.g. GRIB, BUFR etc)
 
 from __future__ import print_function
-import traceback
+
 import sys
+import traceback
+
 from eccodes import *
 
 VERBOSE = 1  # verbose error reporting

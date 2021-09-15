@@ -7,8 +7,10 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
 from __future__ import print_function
-import traceback
+
 import sys
+import traceback
+
 from eccodes import *
 
 INPUT = '../../data/regular_latlon_surface.grib1'

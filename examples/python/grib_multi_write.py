@@ -9,8 +9,8 @@
 # nor does it submit to any jurisdiction.
 #
 
-import traceback
 import sys
+import traceback
 
 from eccodes import *
 

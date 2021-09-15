@@ -15,8 +15,10 @@
 #
 
 from __future__ import print_function
-import traceback
+
 import sys
+import traceback
+
 from eccodes import *
 
 INPUT = '../../data/bufr/syno_multi.bufr'

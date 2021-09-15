@@ -23,8 +23,10 @@
 # understand the structure of the messages.
 #
 from __future__ import print_function
-import traceback
+
 import sys
+import traceback
+
 import numpy as np
 from eccodes import *
 

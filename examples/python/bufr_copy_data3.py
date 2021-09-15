@@ -15,8 +15,10 @@
 #              In this example we add the WIGOS sequence 301150 to a SYNOP
 #
 from __future__ import print_function
-import traceback
+
 import sys
+import traceback
+
 from eccodes import *
 
 VERBOSE = 1  # verbose error reporting

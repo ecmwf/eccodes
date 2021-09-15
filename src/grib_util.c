@@ -1038,7 +1038,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                     setSecondOrder = 1;
                     break;
                 default:
-                    fprintf(stderr, "invalid packing_spec->packing_type = %ld\n", (long)packing_spec->packing_type);
+                    fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec->packing_type (%ld)\n",
+                            (long)packing_spec->packing_type);
                     *err = GRIB_INTERNAL_ERROR;
                     goto cleanup;
                     break;
@@ -1062,7 +1063,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 break;
 
             default:
-                fprintf(stderr, "invalid packing_spec->accuracy = %ld\n", (long)packing_spec->accuracy);
+                fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec->accuracy (%ld)\n", (long)packing_spec->accuracy);
                 *err = GRIB_INTERNAL_ERROR;
                 goto cleanup;
                 break;
@@ -1079,7 +1080,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         }
 
         if ((*err = grib_set_values(h, values, count)) != 0) {
-            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set values  %s\n", grib_get_error_message(*err));
+            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set values: %s\n", grib_get_error_message(*err));
             for (i = 0; i < count; i++)
                 if (values[i].error) fprintf(stderr, " %s %s\n", values[i].name, grib_get_error_message(values[i].error));
             goto cleanup;
@@ -1144,16 +1145,14 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     } /* flags & GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING */
 
     grid_type = get_grid_type_name(spec->grid_type);
-    if (grid_type == NULL) {
-        fprintf(stderr, "GRIB_UTIL_SET_SPEC: Unknown grid type: %d\n", spec->grid_type);
+    if (!grid_type) {
+        fprintf(stderr, "GRIB_UTIL_SET_SPEC: Unknown spec.grid_type (%d)\n", spec->grid_type);
         *err = GRIB_NOT_IMPLEMENTED;
         return NULL;
     }
-
     SET_STRING_VALUE("gridType", grid_type);
 
     /* The "pl" is given from the template, but "section_copy" will take care of setting the right headers */
-
     {
         switch (spec->grid_type) {
             case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
@@ -1169,10 +1168,9 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
                 if (editionNumber == 1) { /* This grid type is not available in edition 1 */
                     if (h->context->debug == -1)
-                        fprintf(stderr,
-                                "ECCODES DEBUG grib_util: '%s' specified "
-                                "but input is GRIB1. Output must be a higher edition!\n",
-                                grid_type);
+                        fprintf(stderr, "ECCODES DEBUG grib_util: '%s' specified "
+                                    "but input is GRIB1. Output must be a higher edition!\n",
+                                    grid_type);
                     convertEditionEarlier = 1;
                 }
                 sprintf(sample_name, "GRIB%ld", editionNumber);
@@ -1186,7 +1184,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         if (spec->pl && spec->grid_name) {
             /* Cannot have BOTH pl and grid name specified */
-            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set BOTH pl and grid_name.\n");
+            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set BOTH spec.pl and spec.grid_name!\n");
             goto cleanup;
         }
         if (spec->grid_name) {
@@ -1444,7 +1442,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 setSecondOrder = 1;
                 break;
             default:
-                fprintf(stderr, "invalid packing_spec->packing_type = %ld\n", (long)packing_spec->packing_type);
+                fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec.packing_type (%ld)\n", (long)packing_spec->packing_type);
                 *err = GRIB_INTERNAL_ERROR;
                 goto cleanup;
                 break;
@@ -1498,7 +1496,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             break;
 
         default:
-            fprintf(stderr, "invalid packing_spec->accuracy = %ld\n", (long)packing_spec->accuracy);
+            fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec.accuracy (%ld)\n", (long)packing_spec->accuracy);
             grib_handle_delete(h_sample);
             *err = GRIB_INTERNAL_ERROR;
             goto cleanup;
@@ -1539,24 +1537,25 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     /* GRIB-857: Set "pl" array if provided (For reduced Gaussian grids) */
     Assert(spec->pl_size >= 0);
     if (spec->pl && spec->pl_size == 0) {
-        fprintf(stderr, "pl array not NULL but pl_size == 0!\n");
+        fprintf(stderr, "GRIB_UTIL_SET_SPEC: pl array not NULL but pl_size == 0!\n");
         goto cleanup;
     }
     if (spec->pl_size > 0 && spec->pl == NULL) {
-        fprintf(stderr, "pl_size not zero but pl array == NULL!\n");
+        fprintf(stderr, "GRIB_UTIL_SET_SPEC: pl_size not zero but pl array == NULL!\n");
         goto cleanup;
     }
 
     if (spec->pl_size != 0 && (spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)) {
         *err = grib_set_long_array(h_out, "pl", spec->pl, spec->pl_size);
         if (*err) {
-            fprintf(stderr, "SET_GRID_DATA_DESCRIPTION: Cannot set pl  %s\n", grib_get_error_message(*err));
+            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set pl: %s\n", grib_get_error_message(*err));
             goto cleanup;
         }
         if (global_grid) {
             size_t sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (data_values_count != sum) {
-                fprintf(stderr, "invalid reduced gaussian grid: specified as global, data_values_count=%ld but sum of pl array=%ld\n",
+                fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid reduced gaussian grid: "
+                        "specified as global, data_values_count=%ld but sum of pl array=%ld\n",
                         (long)data_values_count, (long)sum);
                 *err = GRIB_WRONG_GRID;
                 goto cleanup;
@@ -1573,7 +1572,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     /* Apply adjustments to bounding box if needed */
     if (expandBoundingBox) {
         if ((*err = expand_bounding_box(h_out, values, count)) != 0) {
-            fprintf(stderr, "SET_GRID_DATA_DESCRIPTION: Cannot expand bounding box: %s\n", grib_get_error_message(*err));
+            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot expand bounding box: %s\n", grib_get_error_message(*err));
             if (h->context->write_on_fail)
                 grib_write_message(h_out, "error.grib", "w");
             goto cleanup;
@@ -1674,7 +1673,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 grib_set_string(h_out, "packingType", "grid_second_order", &slen);
                 *err = grib_set_double_array(h_out, "values", data_values, data_values_count);
                 if (*err != GRIB_SUCCESS) {
-                    fprintf(stderr, "GRIB_UTIL_SET_SPEC: setting data values failed! %s\n", grib_get_error_message(*err));
+                    fprintf(stderr, "GRIB_UTIL_SET_SPEC: setting data values failed: %s\n", grib_get_error_message(*err));
                     goto cleanup;
                 }
             }
@@ -1729,7 +1728,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     }
 
     if ((*err = check_geometry(h_out, spec, data_values_count, global_grid)) != GRIB_SUCCESS) {
-        fprintf(stderr, "GRIB_UTIL_SET_SPEC: Geometry check failed! %s\n", grib_get_error_message(*err));
+        fprintf(stderr, "GRIB_UTIL_SET_SPEC: Geometry check failed: %s\n", grib_get_error_message(*err));
         if (h->context->write_on_fail)
             grib_write_message(h_out, "error.grib", "w");
         goto cleanup;
@@ -1739,7 +1738,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 #if 0
     if ( (*err = check_handle_against_spec(h_out, editionNumber, spec, global_grid)) != GRIB_SUCCESS) {
         grib_context* c=grib_context_get_default();
-        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed! %s\n", grib_get_error_message(*err));
+        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed: %s\n", grib_get_error_message(*err));
         if (editionNumber == 1) {
             fprintf(stderr,"Note: in GRIB edition 1 latitude and longitude values cannot be represented with sub-millidegree precision.\n");
         }

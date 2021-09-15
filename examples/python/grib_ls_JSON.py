@@ -12,10 +12,12 @@
 #
 
 from __future__ import print_function
-import traceback
-import sys
-import os
+
 import getopt
+import os
+import sys
+import traceback
+
 from eccodes import *
 
 VERBOSE = 1  # verbose error reporting

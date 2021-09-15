@@ -11,11 +11,12 @@
 # Description: how to encode flight dataset into BUFR
 
 from __future__ import print_function
-from datetime import datetime
-import traceback
-import numpy as np
-import sys
 
+import sys
+import traceback
+from datetime import datetime
+
+import numpy as np
 from eccodes import *
 
 VERBOSE = 1  # verbose error reporting
