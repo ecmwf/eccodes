@@ -100,11 +100,13 @@ if( HAVE_BUILD_TOOLS )
         grib_sh_imag
         grib_sh_spectral_complex
         pseudo_diag
+        wrap
         grib_levtype
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
         grib_g1monthlydate
+        grib_g1day_of_the_year_date
         grib_g1fcperiod)
 
     # These tests do require data downloads

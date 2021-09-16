@@ -9,31 +9,31 @@
 # nor does it submit to any jurisdiction.
 #
 
-import traceback
-import sys
 import random
+import sys
+import traceback
 
 from eccodes import *
 
-INPUT = '../../data/constant_field.grib1'
-OUTPUT = 'out.clone.grib'
+INPUT = "../../data/constant_field.grib1"
+OUTPUT = "out.clone.grib"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    fin = open(INPUT, 'rb')
-    fout = open(OUTPUT, 'wb')
+    fin = open(INPUT, "rb")
+    fout = open(OUTPUT, "wb")
 
     gid = codes_grib_new_from_file(fin)
 
-    assert codes_is_missing(gid, 'Ni') == False
-    assert codes_is_missing(gid, 'Nj') == False
-    nx = codes_get(gid, 'Ni')
-    ny = codes_get(gid, 'Nj')
+    assert not codes_is_missing(gid, "Ni")
+    assert not codes_is_missing(gid, "Nj")
+    nx = codes_get(gid, "Ni")
+    ny = codes_get(gid, "Nj")
 
     for step in range(0, 24, 6):
         clone_id = codes_clone(gid)
-        codes_set(clone_id, 'step', step)
+        codes_set(clone_id, "step", step)
 
         values = [random.random() for i in range(nx * ny)]
 
@@ -55,7 +55,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

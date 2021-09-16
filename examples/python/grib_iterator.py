@@ -9,13 +9,14 @@
 #
 
 from __future__ import print_function
-import traceback
+
 import sys
+import traceback
 
 from eccodes import *
 
 VERBOSE = 1  # verbose error reporting
-missingValue = 1e+20  # A value out of range
+missingValue = 1e20  # A value out of range
 
 
 def example(INPUT):
@@ -65,7 +66,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

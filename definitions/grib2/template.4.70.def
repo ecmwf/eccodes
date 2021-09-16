@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# EFAS: Analysis or forecast at a horizontal level or in a horizontal layer at a point in time
+# TEMPLATE 4.70, Analysis or forecast at a horizontal level or in a horizontal layer at a point in time
 
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.postproc.def"
