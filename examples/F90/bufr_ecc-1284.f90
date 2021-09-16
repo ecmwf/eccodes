@@ -44,6 +44,7 @@ program bufr_encode
   ! Create the structure of the data section
   call codes_set(ibufr,'unexpandedDescriptors',307022)
 
+  ! Create a string with characters all set to 255 i.e., all bits=1
   missing_string = char(255)//char(255)//char(255)//char(255)//char(255)//char(255)//char(255)//char(255)//char(255)
 
   allocate(svalues(10))
@@ -57,6 +58,7 @@ program bufr_encode
     "LIND-LPTR", &
     "LIND-LPTR", &
     "EPFL-LPTR" /)
+  ! Change some entries to be missing (undefined)
   svalues(3) = missing_string
   svalues(10) = missing_string
   call codes_set_string_array(ibufr,'stationOrSiteName',svalues)

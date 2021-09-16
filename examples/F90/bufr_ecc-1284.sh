@@ -24,6 +24,7 @@ ${examples_dir}/eccodes_f_bufr_ecc-1284 $TEMP_BUFR
 # Plain dump
 # --------------
 ${tools_dir}/bufr_dump -p $TEMP_BUFR > $TEMP_DUMP
+# From the dump output, grab 10 lines after stationOrSiteName
 awk '/stationOrSiteName/{x=NR+10}(NR<=x){print}' $TEMP_DUMP > $TEMP_TEXT
 
 cat > $TEMP_REF << EOF
