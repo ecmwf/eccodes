@@ -675,7 +675,8 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
     int countdiff;
     int isMissing1 = 0, isMissing2 = 0;
 
-    char *sval1 = NULL, *sval2 = NULL;
+//    char *sval1 = NULL, *sval2 = NULL;
+    char **svals1 = NULL, **svals2 = NULL;
     unsigned char *uval1 = NULL, *uval2 = NULL;
     double *dval1 = NULL, *dval2 = NULL;
     long *lval1 = NULL, *lval2 = NULL;
@@ -792,6 +793,49 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
         case GRIB_TYPE_STRING:
             if (verbose)
                 printf(" as string\n");
+
+            svals1 = (char**)grib_context_malloc_clear(handle1->context, len1 * sizeof(char*));
+            svals2 = (char**)grib_context_malloc_clear(handle2->context, len2 * sizeof(char*));
+
+            if ((err1 = grib_get_string_array(handle1, name, svals1, &len1)) != GRIB_SUCCESS) {
+                printInfo(handle1);
+                printf("Oops... cannot get string value of [%s] in %s field: %s\n",
+                       name, first_str, grib_get_error_message(err1));
+                save_error(c, name);
+            }
+            if ((err2 = grib_get_string_array(handle2, name, svals2, &len2)) != GRIB_SUCCESS) {
+                printInfo(handle1);
+                printf("Oops... cannot get string value of [%s] in %s field: %s\n",
+                       name, second_str, grib_get_error_message(err2));
+                save_error(c, name);
+            }
+
+            if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 != len2) {
+                printInfo(handle1);
+                printf("Different size for \"%s\"  [%ld]  [%ld]\n", name, (long)len1, (long)len2);
+                err1 = GRIB_INTERNAL_ERROR;
+                save_error(c, name);
+            }
+            if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
+                int ii;
+                countdiff = 0;
+                for (ii = 0; ii < len1; ii++) {
+                    if (grib_inline_strcmp(svals1[ii], svals2[ii]) != 0) { //lval1[ii] != lval2[ii])
+                        countdiff++;
+                    }
+                }
+
+                if (countdiff) {
+                    printInfo(handle1);
+                    save_error(c, name);
+                    err1 = GRIB_VALUE_MISMATCH;
+                    if (len1 == 1)
+                        printf("string [%s]: [%s] != [%s]\n", name, *svals1, *svals2);
+                    else
+                        printf("string [%s] %d out of %ld different\n", name, countdiff, (long)len1);
+                }
+            }
+#if 0
             /* See ECC-710: It is very slow getting the key length this way */
             /*grib_get_string_length(handle1,name,&len1);*/
             /*grib_get_string_length(handle2,name,&len2);*/
@@ -836,7 +880,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
 
             grib_context_free(handle1->context, sval1);
             grib_context_free(handle2->context, sval2);
-
+#endif
             if (err1)
                 return err1;
             if (err2)
