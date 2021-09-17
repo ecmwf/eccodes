@@ -113,24 +113,6 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
 	}
-#Wind speed
-'ws' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 100 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#Wind speed
-'ws' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 200 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
 #Unbalanced component of temperature
 'uctp' = {
 	 discipline = 0 ;
@@ -182,16 +164,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
-#10 metre wind gust since previous post-processing
-'fg10' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 22 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 typeOfFirstFixedSurface = 103 ;
 	}
 #Specific rain water content
 'crwc' = {
@@ -262,16 +234,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 37 ;
-	}
-#Maximum temperature at 2 metres since previous post-processing
-'mx2t' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 typeOfStatisticalProcessing = 2 ;
 	}
 #Ozone mass mixing ratio
 'o3' = {
@@ -4731,11 +4693,37 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
 	}
+#Soil Moisture
+'sm' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 2 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 is_tigge = 1 ;
+	}
 #Soil Temperature
 'st' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
+	}
+#Soil Temperature
+'st' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 2 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfSecondFixedSurface = 2 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 is_tigge = 1 ;
 	}
 #Snow depth water equivalent
 'sd' = {

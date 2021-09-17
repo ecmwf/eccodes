@@ -16,8 +16,8 @@ constant tablesVersionLatest = 27 : edition_specific;
 constant million = 1000000 : hidden;
 constant grib2divider   = 1000000;
 alias extraDimensionPresent=zero;
-#alias is_tigge = zero;
-#alias is_s2s = zero;
+alias is_tigge = zero;
+alias is_s2s = zero;
 #transient is_efas = 0;
 transient angleSubdivisions=grib2divider;  # micro degrees
 
