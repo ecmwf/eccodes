@@ -10,13 +10,13 @@
 program bufr_encode
   use eccodes
   implicit none
-  integer             :: iret
-  integer             :: outfile
-  integer             :: ibufr
-  integer, parameter  :: max_strsize = 100
+  integer                      :: iret, outfile
+  integer                      :: ibufr
+  integer, parameter           :: max_strsize = 100
+  character (len=1), parameter :: missing_char = char(255)
+  character(9)                 :: missing_string
+  character(len=max_strsize)   :: outfile_name
   character(len=max_strsize) , dimension(:),allocatable   :: svalues
-  character(9)               :: missing_string
-  character(len=max_strsize) :: outfile_name
 
   call getarg(1, outfile_name)
 
@@ -44,8 +44,8 @@ program bufr_encode
   ! Create the structure of the data section
   call codes_set(ibufr,'unexpandedDescriptors',307022)
 
-  ! Create a string with characters all set to 255 i.e., all bits=1
-  missing_string = char(255)//char(255)//char(255)//char(255)//char(255)//char(255)//char(255)//char(255)//char(255)
+  ! Create a string with characters all set to 255 (all bits=1)
+  missing_string = repeat(missing_char, 9)
 
   allocate(svalues(10))
   svalues=(/"ARD2-LPTR", &
