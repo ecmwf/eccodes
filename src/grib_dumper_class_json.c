@@ -381,6 +381,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     size_t size = 0, i = 0;
     grib_context* c = NULL;
     int err         = 0;
+    int is_missing  = 0;
     long count      = 0;
     c               = a->context;
 
@@ -423,9 +424,13 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     fprintf(self->dumper.out, "\n%-*s[", depth, " ");
     depth += 2;
     for (i = 0; i < size - 1; i++) {
-        fprintf(self->dumper.out, "%-*s\"%s\",\n", depth, " ", values[i]);
+        is_missing = grib_is_missing_string(a, (unsigned char*)values[i], strlen(values[i]));
+        if (is_missing) fprintf(self->dumper.out, "%-*s%s,\n", depth, " ", "null");
+        else            fprintf(self->dumper.out, "%-*s\"%s\",\n", depth, " ", values[i]);
     }
-    fprintf(self->dumper.out, "%-*s\"%s\"\n", depth, " ", values[i]);
+    is_missing = grib_is_missing_string(a, (unsigned char*)values[i], strlen(values[i]));
+    if (is_missing) fprintf(self->dumper.out, "%-*s%s", depth, " ", "null");
+    else            fprintf(self->dumper.out, "%-*s\"%s\"", depth, " ", values[i]);
 
     depth -= 2;
     fprintf(self->dumper.out, "\n%-*s]", depth, " ");
