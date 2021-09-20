@@ -20,7 +20,9 @@ temp3=temp3.$label.grib
 # Stream EFAS
 # ---------------------------
 # Create a starting GRIB with a basic local definition for MARS
-${tools_dir}/grib_set -s tablesVersion=19,setLocalDefinition=1,stream=efas $ECCODES_SAMPLES_PATH/GRIB2.tmpl $sample
+# The MARS class must be set to categorise the EFAS parameters as 'hydrological'
+# See key 'datasetForLocal'
+${tools_dir}/grib_set -s tablesVersion=19,setLocalDefinition=1,class=ce,stream=efas $ECCODES_SAMPLES_PATH/GRIB2.tmpl $sample
 
 # Test a non-ensemble, instantaneous field
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=0 $sample $temp1
@@ -48,7 +50,7 @@ grib_check_key_equals $temp2 mars.origin 'ecmf'
 grib_check_key_equals $temp2 mars.model  'lisflood'
 
 ${tools_dir}/grib_set -s \
-    setLocalDefinition=1,localDefinitionNumber=41,class=ce,type=fc,inputOriginatingCentre=ecmf,typeOfPostProcessing=10 \
+    setLocalDefinition=1,localDefinitionNumber=41,type=fc,inputOriginatingCentre=ecmf,typeOfPostProcessing=10 \
     $temp1 $temp2
 grib_check_key_equals $temp2 mars.model  'geff'
 
@@ -60,7 +62,7 @@ ${tools_dir}/grib_set -s paramId=260268 $temp2 $temp3
 grib_check_key_equals $temp3 paramId,lengthOfTimeRange '260268 24'
 
 # Use stepType
-${tools_dir}/grib_set -s localDefinitionNumber=41,class=ce,stepType=accum $sample $temp1
+${tools_dir}/grib_set -s localDefinitionNumber=41,stepType=accum $sample $temp1
 ${tools_dir}/grib_set -s paramId=260267 $temp1 $temp2
 
 # Test anoffset calculation
@@ -73,7 +75,7 @@ grib_check_key_equals $temp1 anoffsetFirst,anoffsetLast,anoffsetFrequency "MISSI
 types="sfo fu go"
 for t in $types; do
   ${tools_dir}/grib_set -s \
-    setLocalDefinition=1,localDefinitionNumber=41,class=ce,type=$t,stepType=accum,stepRange=12-36 \
+    setLocalDefinition=1,localDefinitionNumber=41,type=$t,stepType=accum,stepRange=12-36 \
   $sample $temp1
   ${tools_dir}/grib_set -s paramId=260268 $temp1 $temp2
   grib_check_key_equals $temp2 mars.step 36 # end step (ECC-701)
@@ -84,7 +86,7 @@ done
 types="fc pf cf"
 for t in $types; do
   ${tools_dir}/grib_set -s \
-    setLocalDefinition=1,localDefinitionNumber=41,class=ce,type=$t,stepType=accum,stepRange=12-36 \
+    setLocalDefinition=1,localDefinitionNumber=41,type=$t,stepType=accum,stepRange=12-36 \
   $sample $temp1
   ${tools_dir}/grib_set -s paramId=260268 $temp1 $temp2
   grib_check_key_equals $temp2 mars.step 36 # end step
