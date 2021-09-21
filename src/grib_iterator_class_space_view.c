@@ -228,7 +228,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     /* Orthographic not supported. This happens when Nr (camera altitude) is missing */
     if (grib_is_missing(h, sNrInRadiusOfEarth, &ret)) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Orthographic view (Nr missing) not supported");
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Space View: Orthographic view (Nr missing) not supported");
         return GRIB_NOT_IMPLEMENTED;
     }
     if ((ret = grib_get_double_internal(h, sNrInRadiusOfEarth, &nrInRadiusOfEarth)) != GRIB_SUCCESS)
@@ -256,7 +256,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
 
     if (nrInRadiusOfEarth == 0) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Key %s must be greater than zero", sNrInRadiusOfEarth);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Space View: Key %s must be greater than zero", sNrInRadiusOfEarth);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
 
@@ -265,8 +265,12 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     lap = latOfSubSatellitePointInDegrees;
     lop = lonOfSubSatellitePointInDegrees;
-    if (lap != 0.0)
-        return GRIB_NOT_IMPLEMENTED;
+    if (lap != 0.0) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "Space View: Key '%s' must be 0 (satellite must be located in the equator plane)",
+                         sLatOfSubSatellitePointInDegrees);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
     /*orient_angle = orientationInDegrees;*/
     /* if (orient_angle != 0.0) return GRIB_NOT_IMPLEMENTED; */
@@ -278,7 +282,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     /* adjustBadlyEncodedEcmwfGribs(h, &nx, &ny, &dx, &dy, &xp, &yp); */
     if (dx == 0 || dy == 0) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Keys %s and %s must be greater than zero", sDx, sDy);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Space View: Keys %s and %s must be greater than zero", sDx, sDy);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
     rx = angular_size / dx;
