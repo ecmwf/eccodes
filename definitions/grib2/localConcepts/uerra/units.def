@@ -4,7 +4,18 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
 	 typeOfFirstFixedSurface = 103 ;
+     scaledValueOfFirstFixedSurface = 100 ;
+     scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Wind speed
+'m s**-1' = {
+     discipline = 0 ;
+     parameterCategory = 2 ;
+     parameterNumber = 1 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaledValueOfFirstFixedSurface = 200 ;
+     scaleFactorOfFirstFixedSurface = 0 ;
+    }
 #10 metre wind gust since previous post-processing
 'm s**-1' = {
 	 discipline = 0 ;
