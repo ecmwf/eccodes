@@ -7,6 +7,7 @@
      scaledValueOfFirstFixedSurface = 100 ;
      scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Wind speed
 '10' = {
      discipline = 0 ;
      parameterCategory = 2 ;
