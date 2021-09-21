@@ -38,8 +38,8 @@ concept datasetForLocal(unknown) {
 }
 
 if (!(datasetForLocal is "unknown")) {
-constant conceptsDir2 = "grib2/localConcepts/[datasetForLocal]": hidden;
-constant conceptsDir1 = "grib2": hidden;
+   constant conceptsDir2 = "grib2/localConcepts/[datasetForLocal]": hidden;
+   constant conceptsDir1 = "grib2": hidden;
 }
 
 codetable[2] productDefinitionTemplateNumber('4.0.table',masterDir,localDir) : dump;
