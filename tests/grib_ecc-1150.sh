@@ -13,6 +13,7 @@ set -u
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-1150
 # ECC-1150: keys 'lowerLimit' & 'upperLimit' cannot be MISSING
+# See also ECC-1286
 # ---------------------------------------------------------
 label="grib_ecc-1150-test"
 tempGrib=temp.${label}.grib
@@ -60,12 +61,19 @@ ${tools_dir}/grib_filter $tempFilt $tempGrib
 # Encoding
 # ----------
 temp2=temp2.${label}.grib
-${tools_dir}/grib_set -s upperLimit=missing,lowerLimit=missing $tempGrib $temp2
+${tools_dir}/grib_set -s lowerLimit=missing,upperLimit=missing  $tempGrib $temp2
 grib_check_key_equals $temp2 lowerLimit,upperLimit 'MISSING MISSING'
 grib_check_key_equals $temp2 \
   scaleFactorOfLowerLimit,scaledValueOfLowerLimit,scaleFactorOfUpperLimit,scaledValueOfUpperLimit \
   'MISSING MISSING MISSING MISSING'
-rm -f $temp2
+
+${tools_dir}/grib_set -s lowerLimit=3.14,upperLimit=missing $tempGrib $temp2
+grib_check_key_equals $temp2 lowerLimit,upperLimit '3.14 MISSING'
+
+# Negative values
+${tools_dir}/grib_set -s lowerLimit=-6.6,upperLimit=-1.02 $tempGrib $temp2
+grib_check_key_equals $temp2 scaleFactorOfLowerLimit,scaledValueOfLowerLimit,lowerLimit "1 -66 -6.6"
+grib_check_key_equals $temp2 scaleFactorOfUpperLimit,scaledValueOfUpperLimit,upperLimit "2 -102 -1.02"
 
 # Clean up
-rm -f $tempGrib $tempFilt
+rm -f $tempGrib $tempFilt $temp2
