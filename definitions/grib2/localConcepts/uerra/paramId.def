@@ -4,7 +4,17 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
 	 typeOfFirstFixedSurface = 103 ;
+     scaledValueOfFirstFixedSurface = 100 ;
+     scaleFactorOfFirstFixedSurface = 0 ;
 	}
+'10' = {
+     discipline = 0 ;
+     parameterCategory = 2 ;
+     parameterNumber = 1 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaledValueOfFirstFixedSurface = 200 ;
+     scaleFactorOfFirstFixedSurface = 0 ;
+    }
 #10 metre wind gust since previous post-processing
 '49' = {
 	 discipline = 0 ;
