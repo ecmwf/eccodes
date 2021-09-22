@@ -36,6 +36,7 @@ namespace other {
 static RepresentationBuilder<SpaceView> __builder("space_view");
 
 
+#if 0
 Point2 SpaceView::Projection::xy(const Point2& /*p*/) const {
     NOTIMP;
 }
@@ -49,15 +50,135 @@ Point2 SpaceView::Projection::lonlat(const Point2& /*p*/) const {
 void SpaceView::Projection::hash(eckit::Hash& h) const {
     h << "SpaceView::Projection";
 }
+#endif
 
 
 SpaceView::SpaceView(const param::MIRParametrisation& param) {
     param.get("earthMajorAxis", earthMajorAxis_ = util::Earth::radius());
     param.get("earthMinorAxis", earthMinorAxis_ = util::Earth::radius());
 
+#if 1
+    long nx;
+    long ny;
+    ASSERT(param.get("numberOfPointsAlongXAxis", nx));
+    ASSERT(param.get("numberOfPointsAlongYAxis", ny));
+
+    // Sub-satellite point
+    double Lap;
+    double Lop;
+    ASSERT(param.get("latitudeOfSubSatellitePointInDegrees", Lap));
+    ASSERT(param.get("longitudeOfSubSatellitePointInDegrees", Lop));
+
+    // Apparent diameter of Earth in grid lengths, in X/Y-directions
+    size_t dx;
+    size_t dy;
+    ASSERT(param.get("dx", dx));
+    ASSERT(param.get("dy", dy));
+
+    // X/Y-coordinate of sub-satellite point (in units of 10^-3 grid length expressed as an integer)
+    size_t Xp;
+    size_t Yp;
+    ASSERT(param.get("XpInGridLengths", Xp));
+    ASSERT(param.get("YpInGridLengths", Yp));
+
+    // Angle between the increasing Y-axis and the meridian of the sub-satellite point in the direction of increasing
+    // latitude
+    double orientationOfTheGridInDegrees;
+    ASSERT(param.get("orientationOfTheGridInDegrees", orientationOfTheGridInDegrees));
+
+    // Altitude of the camera from the Earth's centre in units of the Earth's (equatorial) radius
+    double NrInRadiusOfEarth;
+    ASSERT(param.get("NrInRadiusOfEarth", NrInRadiusOfEarth));
+
+    // X/Y-coordinate of origin of sector image
+    size_t xCoordinateOfOriginOfSectorImage;
+    size_t yCoordinateOfOriginOfSectorImage;
+    ASSERT(param.get("xCoordinateOfOriginOfSectorImage", xCoordinateOfOriginOfSectorImage));
+    ASSERT(param.get("yCoordinateOfOriginOfSectorImage", yCoordinateOfOriginOfSectorImage));
+
+    double h = NrInRadiusOfEarth - earthMajorAxis_;
+    ASSERT(h >= 0);
+
+    Projection::Spec spec("type", "proj");
+
+    std::ostringstream str;
+    str << " +proj=geos";
+    str << " +h=" << h;
+    str << " +lon_0=" << Lop;
+    str << " +sweep=y";
+    str << " +a=" << earthMajorAxis_;
+    str << " +b=" << earthMinorAxis_;
+    str << " +type=crs";
+
+    spec.set("proj", str.str());
+    projection_ = {spec};
+
+
+    x_    = {-double(nx)/2,double(nx)/2, nx};
+    y_    = {-double(ny)/2,double(ny)/2, ny};
+    grid_ = {x_, y_, projection_};
+
+    atlas::RectangularDomain range({x_.min(), x_.max()}, {y_.min(), y_.max()}, "meters");
+    auto bbox = projection_.lonlatBoundingBox(range);
+    Log::info() << bbox << std::endl;
+    ASSERT(bbox);
+
+    bbox_ = {bbox.north(), bbox.west(), bbox.south(), bbox.east()};
+
+#else
     // TODO projection_
     double rpol = earthMinorAxis_;
     double req  = earthMajorAxis_;
+
+    size_t Ni;
+    size_t Nj;
+    ASSERT(param.get("numberOfPointsAlongXAxis", Ni) && Ni > 0);
+    ASSERT(param.get("numberOfPointsAlongYAxis", Nj) && Nj > 0);
+
+    // --
+
+    double dx;
+    double dy;
+    double offx;
+    double offy;
+    long xp;
+    long yp;
+    double slat;
+    double slon;
+    ASSERT(param.get("dx", dx));
+    ASSERT(param.get("dy", dy));
+    ASSERT(param.get("xCoordinateOfOriginOfSectorImage", offx));  // Xo
+    ASSERT(param.get("yCoordinateOfOriginOfSectorImage", offy));  // Yo
+    ASSERT(param.get("XpInGridLengths", xp));
+    ASSERT(param.get("YpInGridLengths", yp));
+    ASSERT(param.get("latitudeOfSubSatellitePointInDegrees", slat));
+    ASSERT(param.get("longitudeOfSubSatellitePointInDegrees", slon));
+
+    // --
+
+    double sub_lon = 0;
+
+    double x = 0;
+    double y = 0;
+
+    // --
+
+    double f1 = 42164. * std::cos(x) * std::cos(y);
+    double f2 = std::cos(y) * std::cos(y) + 1.006803 * std::sin(y) * std::sin(y);
+
+    double sd = std::sqrt(f1 * f1 - f2 * 1737121856.);
+    double sn = (f1 - sd) / f2;
+
+    double s1  = 42164. - sn * std::cos(x) * std::cos(y);
+    double s2  = sn * std::sin(x) * std::cos(y);
+    double s3  = -sn * std::sin(y);
+    double sxy = std::sqrt(s1 * s1 + s2 * s2);
+
+    // --
+
+    double lon = std::atan2(s2, s1) + sub_lon;
+    double lat = std::atan2(1.006803 * s3, sxy);
+#endif
 }
 
 
