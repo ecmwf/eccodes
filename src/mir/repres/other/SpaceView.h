@@ -29,15 +29,7 @@ public:
 
     using LinearSpacing = ::atlas::grid::LinearSpacing;
     using PointLonLat   = ::atlas::PointLonLat;
-#if 1
     using Projection   = ::atlas::Projection;
-#else
-    struct Projection {
-        Point2 xy(const Point2&) const;
-        Point2 lonlat(const Point2&) const;
-        void hash(eckit::Hash&) const;
-    };
-#endif
 
     // -- Exceptions
     // None
@@ -80,8 +72,6 @@ private:
     ::atlas::RegularGrid grid_;
     LinearSpacing x_;
     LinearSpacing y_;
-
-    Projection projection_;
 
     // -- Methods
     // None

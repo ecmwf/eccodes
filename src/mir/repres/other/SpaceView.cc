@@ -36,6 +36,11 @@ namespace other {
 static RepresentationBuilder<SpaceView> __builder("space_view");
 
 
+using LinearSpacing = ::atlas::grid::LinearSpacing;
+using PointLonLat   = ::atlas::PointLonLat;
+using Projection    = ::atlas::Projection;
+
+
 #if 0
 Point2 SpaceView::Projection::xy(const Point2& /*p*/) const {
     NOTIMP;
@@ -57,7 +62,6 @@ SpaceView::SpaceView(const param::MIRParametrisation& param) {
     param.get("earthMajorAxis", earthMajorAxis_ = util::Earth::radius());
     param.get("earthMinorAxis", earthMinorAxis_ = util::Earth::radius());
 
-#if 1
     long nx;
     long ny;
     ASSERT(param.get("numberOfPointsAlongXAxis", nx));
@@ -96,7 +100,15 @@ SpaceView::SpaceView(const param::MIRParametrisation& param) {
     ASSERT(param.get("xCoordinateOfOriginOfSectorImage", xCoordinateOfOriginOfSectorImage));
     ASSERT(param.get("yCoordinateOfOriginOfSectorImage", yCoordinateOfOriginOfSectorImage));
 
-    double h = NrInRadiusOfEarth - earthMajorAxis_;
+    bool plusx = true;   // iScansPositively != 0
+    bool plusy = false;  // jScansPositively == 0
+    param.get("iScansPositively", plusx);
+    param.get("jScansPositively", plusy);
+
+    // --
+
+    //    double h = NrInRadiusOfEarth - earthMajorAxis_;
+    double h = 35786000.;  // Meteosat-7 official documentation???
     ASSERT(h >= 0);
 
     Projection::Spec spec("type", "proj");
@@ -111,22 +123,28 @@ SpaceView::SpaceView(const param::MIRParametrisation& param) {
     str << " +type=crs";
 
     spec.set("proj", str.str());
-    projection_ = {spec};
+    Projection projection;
+    projection = {spec};
 
+    double y_max = 5416259.209;
+    double y_min = -5416259.209;
+    double x_min = -5434195.533;
+    double x_max = 5434195.533;
 
-    x_    = {-double(nx)/2,double(nx)/2, nx};
-    y_    = {-double(ny)/2,double(ny)/2, ny};
-    grid_ = {x_, y_, projection_};
+    x_    = {plusx ? x_min : x_max, plusx ? x_max : x_min, nx, true};
+    y_    = {plusy ? y_min : y_max, plusy ? y_max : y_min, ny, true};
+    grid_ = {x_, y_, projection};
 
-    atlas::RectangularDomain range({x_.min(), x_.max()}, {y_.min(), y_.max()}, "meters");
-    auto bbox = projection_.lonlatBoundingBox(range);
-    Log::info() << bbox << std::endl;
-    ASSERT(bbox);
+    auto n = projection.lonlat({(x_max - x_min) / 2., y_max}).lat();
+    auto s = projection.lonlat({(x_max - x_min) / 2., y_min}).lat();
+    auto w = projection.lonlat({x_min, (y_max - y_min) / 2.}).lon();
+    auto e = projection.lonlat({x_max, (y_max - y_min) / 2.}).lon();
 
-    bbox_ = {bbox.north(), bbox.west(), bbox.south(), bbox.east()};
+    bbox_ = {n, w, s, e};
+    Log::info() << bbox_ << std::endl;
 
-#else
-    // TODO projection_
+#if 0
+    // TODO projection
     double rpol = earthMinorAxis_;
     double req  = earthMajorAxis_;
 
@@ -210,7 +228,8 @@ void SpaceView::fill(util::MeshGeneratorParameters& params) const {
 
 
 void SpaceView::reorder(long scanningMode, MIRValuesVector& values) const {
-    grib_reorder(values, scanningMode, y_.size(), x_.size());
+    NOTIMP;
+    //    grib_reorder(values, scanningMode, y_.size(), x_.size());
 }
 
 
@@ -229,7 +248,6 @@ void SpaceView::makeName(std::ostream& out) const {
     h << earthMajorAxis_;
     h << earthMinorAxis_;
     h << grid_;
-    h << projection_;
 
     auto type = grid_.projection().spec().getString("type");
     out << "SpaceView-" << (type.empty() ? "" : type + "-") << h.digest();
@@ -284,7 +302,7 @@ Iterator* SpaceView::iterator() const {
         SpaceViewIterator& operator=(const SpaceViewIterator&) = delete;
     };
 
-    return new SpaceViewIterator(projection_, x_, y_);
+    return new SpaceViewIterator(grid_.projection(), x_, y_);
 }
 
 
