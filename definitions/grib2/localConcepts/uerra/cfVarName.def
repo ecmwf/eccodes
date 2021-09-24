@@ -60,7 +60,7 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	}
-#Evaporation in the last 6 hours
+#Evaporation
 'eva' = {
      discipline = 0 ;
      parameterCategory = 1 ;
@@ -70,7 +70,7 @@
      lengthOfTimeRange = 6 ;
      indicatorOfUnitForTimeRange = 1 ;
     }
-#Evaporation in the last 24 hours
+#Evaporation
 'eva' = {
      discipline = 0 ;
      parameterCategory = 1 ;
