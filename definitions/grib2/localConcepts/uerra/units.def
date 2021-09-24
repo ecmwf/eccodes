@@ -80,3 +80,21 @@
      typeOfStatisticalProcessing = 1 ;
      lengthOfTimeRange = 24 ;
     }
+#2 metre temperature
+'K' = {
+     discipline = 0 ;
+     parameterCategory = 0 ;
+     parameterNumber = 0 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaleFactorOfFirstFixedSurface = 1 ;
+     scaledValueOfFirstFixedSurface = 15 ;
+    }
+#Surface air relative humidity
+'%' = {
+     discipline = 0 ;
+     parameterCategory = 1 ;
+     parameterNumber = 1 ;
+     scaledValueOfFirstFixedSurface = 15 ;
+     scaleFactorOfFirstFixedSurface = 1 ;
+     typeOfFirstFixedSurface = 103 ;
+    }
