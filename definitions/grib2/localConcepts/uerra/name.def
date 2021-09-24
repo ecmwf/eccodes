@@ -25,7 +25,21 @@
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
+     indicatorOfUnitForTimeRange = 1 ;
+     lengthOfTimeRange = 3 ;
 	}
+#10 metre wind gust since previous post-processing
+'10 metre wind gust since previous post-processing' = {
+     discipline = 0 ;
+     parameterCategory = 2 ;
+     parameterNumber = 22 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaledValueOfFirstFixedSurface = 10 ;
+     scaleFactorOfFirstFixedSurface = 0 ;
+     typeOfStatisticalProcessing = 2 ;
+     indicatorOfUnitForTimeRange = 1 ;
+     lengthOfTimeRange = 1 ;
+    }
 #Maximum temperature at 2 metres since previous post-processing
 'Maximum temperature at 2 metres since previous post-processing' = {
 	 discipline = 0 ;
@@ -46,3 +60,23 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Evaporation
+'Evaporation' = {
+     discipline = 0 ;
+     parameterCategory = 1 ;
+     parameterNumber = 79 ;
+     typeOfFirstFixedSurface = 1 ;
+     indicatorOfUnitForTimeRange = 1 ;
+     typeOfStatisticalProcessing = 1 ;
+     lengthOfTimeRange = 6 ;
+    }
+#Evaporation 
+'Evaporation' = {
+     discipline = 0 ;
+     parameterCategory = 1 ;
+     parameterNumber = 79 ;
+     typeOfFirstFixedSurface = 1 ;
+     indicatorOfUnitForTimeRange = 1 ;
+     typeOfStatisticalProcessing = 1 ;
+     lengthOfTimeRange = 24 ;
+    }
