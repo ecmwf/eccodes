@@ -60,6 +60,26 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	}
+#Maximum temperature at 2 metres since previous post-processing
+'mx2t' = {
+     discipline = 0 ;
+     parameterCategory = 0 ;
+     parameterNumber = 0 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaleFactorOfFirstFixedSurface = 1 ;
+     scaledValueOfFirstFixedSurface = 15 ;
+     typeOfStatisticalProcessing = 2 ;
+    }
+#Minimum temperature at 2 metres since previous post-processing
+'mn2t' = {
+     discipline = 0 ;
+     parameterCategory = 0 ;
+     parameterNumber = 0 ;
+     typeOfStatisticalProcessing = 3 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaleFactorOfFirstFixedSurface = 1 ;
+     scaledValueOfFirstFixedSurface = 15 ;
+    }
 #Evaporation
 'eva' = {
      discipline = 0 ;
