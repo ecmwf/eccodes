@@ -59,8 +59,16 @@ void SpaceView::Projection::hash(eckit::Hash& h) const {
 
 
 SpaceView::SpaceView(const param::MIRParametrisation& param) {
-    param.get("earthMajorAxis", earthMajorAxis_ = util::Earth::radius());
-    param.get("earthMinorAxis", earthMinorAxis_ = util::Earth::radius());
+    long earthIsOblate;
+    param.get("earthIsOblate", earthIsOblate);
+    if (earthIsOblate != 0) {
+        ASSERT(param.get("earthMajorAxis", earthMajorAxis_));
+        ASSERT(param.get("earthMinorAxis", earthMinorAxis_));
+    }
+    else {
+        ASSERT(param.get("radius", earthMajorAxis_));
+        earthMinorAxis_ = earthMajorAxis_;
+    }
 
     long nx;
     long ny;
@@ -107,8 +115,10 @@ SpaceView::SpaceView(const param::MIRParametrisation& param) {
 
     // --
 
+    //    double h = NrInRadiusOfEarth;
     //    double h = NrInRadiusOfEarth - earthMajorAxis_;
-    double h = 35786000.;  // Meteosat-7 official documentation???
+    double h = 42164000. - earthMajorAxis_;
+    //    double h = 35786000.;  // Meteosat-7 official documentation???
     ASSERT(h >= 0);
 
     Projection::Spec spec("type", "proj");
@@ -127,14 +137,15 @@ SpaceView::SpaceView(const param::MIRParametrisation& param) {
     projection = {spec};
 
     double y_max = 5416259.209;
-    double y_min = -5416259.209;
-    double x_min = -5434195.533;
+    double y_min = -y_max;
     double x_max = 5434195.533;
+    double x_min = -x_max;
 
     x_    = {plusx ? x_min : x_max, plusx ? x_max : x_min, nx, true};
     y_    = {plusy ? y_min : y_max, plusy ? y_max : y_min, ny, true};
     grid_ = {x_, y_, projection};
 
+#if 0
     auto n = projection.lonlat({(x_max - x_min) / 2., y_max}).lat();
     auto s = projection.lonlat({(x_max - x_min) / 2., y_min}).lat();
     auto w = projection.lonlat({x_min, (y_max - y_min) / 2.}).lon();
@@ -142,6 +153,7 @@ SpaceView::SpaceView(const param::MIRParametrisation& param) {
 
     bbox_ = {n, w, s, e};
     Log::info() << bbox_ << std::endl;
+#endif
 
 #if 0
     // TODO projection
