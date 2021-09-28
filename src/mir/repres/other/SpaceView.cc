@@ -12,10 +12,13 @@
 
 #include "mir/repres/other/SpaceView.h"
 
+#include <cmath>
+#include <functional>
 #include <ostream>
 #include <sstream>
 #include <utility>
 
+#include "eckit/types/FloatCompare.h"
 #include "eckit/utils/MD5.h"
 
 #include "mir/param/MIRParametrisation.h"
@@ -36,29 +39,51 @@ namespace other {
 static RepresentationBuilder<SpaceView> __builder("space_view");
 
 
-using LinearSpacing = ::atlas::grid::LinearSpacing;
-using PointLonLat   = ::atlas::PointLonLat;
-using Projection    = ::atlas::Projection;
+namespace {
 
 
-#if 0
-Point2 SpaceView::Projection::xy(const Point2& /*p*/) const {
-    NOTIMP;
+const double SAT_HEIGHT = 42164.;     //< distance from Earth centre to satellite
+const double R_EQ       = 6378.169;   //< distance from Earth centre to equator
+const double R_POL      = 6356.5838;  //< distance from Earth centre to pole(s)
+const double RR         = (R_POL * R_POL) / (R_EQ * R_EQ);
+
+
+double geometric_maximum(double x_min, const std::function<double(double)>& f, double f_eps = 1.e-9) {
+    if (std::isinf(f(x_min)) != 0) {
+        return x_min;
+    }
+
+    size_t it = 0;
+    auto x    = x_min;
+    for (auto dx = 1., fx = f(x); f_eps < dx; ++it) {
+        auto fx_new = f(x + dx);
+        if (std::isinf(fx_new) != 0 || fx_new < fx) {
+            dx /= 2.;
+        }
+        else {
+            x += dx;
+            fx = fx_new;
+            dx *= 2.;
+        }
+    }
+
+    Log::info() << "it = " << it << std::endl;
+    return x;
 }
 
 
-Point2 SpaceView::Projection::lonlat(const Point2& /*p*/) const {
-    NOTIMP;
+template <typename EXTERNAL_T, typename INTERNAL_T = EXTERNAL_T>
+EXTERNAL_T get(const param::MIRParametrisation& param, const std::string& key) {
+    INTERNAL_T value;
+    ASSERT(param.get(key, value));
+    return static_cast<EXTERNAL_T>(value);
 }
 
-
-void SpaceView::Projection::hash(eckit::Hash& h) const {
-    h << "SpaceView::Projection";
-}
-#endif
+}  // namespace
 
 
 SpaceView::SpaceView(const param::MIRParametrisation& param) {
+#if 0
     long earthIsOblate;
     param.get("earthIsOblate", earthIsOblate);
     if (earthIsOblate != 0) {
@@ -69,146 +94,43 @@ SpaceView::SpaceView(const param::MIRParametrisation& param) {
         ASSERT(param.get("radius", earthMajorAxis_));
         earthMinorAxis_ = earthMajorAxis_;
     }
-
-    long nx;
-    long ny;
-    ASSERT(param.get("numberOfPointsAlongXAxis", nx));
-    ASSERT(param.get("numberOfPointsAlongYAxis", ny));
-
-    // Sub-satellite point
-    double Lap;
-    double Lop;
-    ASSERT(param.get("latitudeOfSubSatellitePointInDegrees", Lap));
-    ASSERT(param.get("longitudeOfSubSatellitePointInDegrees", Lop));
-
-    // Apparent diameter of Earth in grid lengths, in X/Y-directions
-    size_t dx;
-    size_t dy;
-    ASSERT(param.get("dx", dx));
-    ASSERT(param.get("dy", dy));
-
-    // X/Y-coordinate of sub-satellite point (in units of 10^-3 grid length expressed as an integer)
-    size_t Xp;
-    size_t Yp;
-    ASSERT(param.get("XpInGridLengths", Xp));
-    ASSERT(param.get("YpInGridLengths", Yp));
-
-    // Angle between the increasing Y-axis and the meridian of the sub-satellite point in the direction of increasing
-    // latitude
-    double orientationOfTheGridInDegrees;
-    ASSERT(param.get("orientationOfTheGridInDegrees", orientationOfTheGridInDegrees));
-
-    // Altitude of the camera from the Earth's centre in units of the Earth's (equatorial) radius
-    double NrInRadiusOfEarth;
-    ASSERT(param.get("NrInRadiusOfEarth", NrInRadiusOfEarth));
-
-    // X/Y-coordinate of origin of sector image
-    size_t xCoordinateOfOriginOfSectorImage;
-    size_t yCoordinateOfOriginOfSectorImage;
-    ASSERT(param.get("xCoordinateOfOriginOfSectorImage", xCoordinateOfOriginOfSectorImage));
-    ASSERT(param.get("yCoordinateOfOriginOfSectorImage", yCoordinateOfOriginOfSectorImage));
-
-    bool plusx = true;   // iScansPositively != 0
-    bool plusy = false;  // jScansPositively == 0
-    param.get("iScansPositively", plusx);
-    param.get("jScansPositively", plusy);
-
-    // --
-
-    //    double h = NrInRadiusOfEarth;
-    //    double h = NrInRadiusOfEarth - earthMajorAxis_;
-    double h = 42164000. - earthMajorAxis_;
-    //    double h = 35786000.;  // Meteosat-7 official documentation???
-    ASSERT(h >= 0);
-
-    Projection::Spec spec("type", "proj");
-
-    std::ostringstream str;
-    str << " +proj=geos";
-    str << " +h=" << h;
-    str << " +lon_0=" << Lop;
-    str << " +sweep=y";
-    str << " +a=" << earthMajorAxis_;
-    str << " +b=" << earthMinorAxis_;
-    str << " +type=crs";
-
-    spec.set("proj", str.str());
-    Projection projection;
-    projection = {spec};
-
-    double y_max = 5416259.209;
-    double y_min = -y_max;
-    double x_max = 5434195.533;
-    double x_min = -x_max;
-
-    x_    = {plusx ? x_min : x_max, plusx ? x_max : x_min, nx, true};
-    y_    = {plusy ? y_min : y_max, plusy ? y_max : y_min, ny, true};
-    grid_ = {x_, y_, projection};
-
-#if 0
-    auto n = projection.lonlat({(x_max - x_min) / 2., y_max}).lat();
-    auto s = projection.lonlat({(x_max - x_min) / 2., y_min}).lat();
-    auto w = projection.lonlat({x_min, (y_max - y_min) / 2.}).lon();
-    auto e = projection.lonlat({x_max, (y_max - y_min) / 2.}).lon();
-
-    bbox_ = {n, w, s, e};
-    Log::info() << bbox_ << std::endl;
 #endif
 
-#if 0
-    // TODO projection
-    double rpol = earthMinorAxis_;
-    double req  = earthMajorAxis_;
+    auto Nr = get<double>(param, "NrInRadiusOfEarth") * (get<long>(param, "edition") == 1 ? 1e-6 : 1.);
+    ASSERT(Nr > 1.);
+    auto height = (Nr - 1.) * R_EQ;
 
-    size_t Ni;
-    size_t Nj;
-    ASSERT(param.get("numberOfPointsAlongXAxis", Ni) && Ni > 0);
-    ASSERT(param.get("numberOfPointsAlongYAxis", Nj) && Nj > 0);
+    auto slat = get<double>(param, "latitudeOfSubSatellitePointInDegrees");
+    auto slon = get<double>(param, "longitudeOfSubSatellitePointInDegrees");
+    ASSERT(eckit::types::is_approximately_equal(slat, 0.));
 
-    // --
+    std::string str;
+    str += " +proj=geos";
+    str += " +lon_0=" + std::to_string(slon);
+    str += " +h=" + std::to_string(height);
+    str += " +a=" + std::to_string(R_EQ);
+    str += " +b=" + std::to_string(R_POL);
+    str += " +sweep=y";
+    str += " +type=crs";
 
-    double dx;
-    double dy;
-    double offx;
-    double offy;
-    long xp;
-    long yp;
-    double slat;
-    double slon;
-    ASSERT(param.get("dx", dx));
-    ASSERT(param.get("dy", dy));
-    ASSERT(param.get("xCoordinateOfOriginOfSectorImage", offx));  // Xo
-    ASSERT(param.get("yCoordinateOfOriginOfSectorImage", offy));  // Yo
-    ASSERT(param.get("XpInGridLengths", xp));
-    ASSERT(param.get("YpInGridLengths", yp));
-    ASSERT(param.get("latitudeOfSubSatellitePointInDegrees", slat));
-    ASSERT(param.get("longitudeOfSubSatellitePointInDegrees", slon));
+    atlas::Projection proj(atlas::Projection::Spec("type", "proj").set("proj", str));
+    Log::info() << "proj = " << proj << std::endl;
 
-    // --
+    const double eps_ll = 1e-9;
+    const double eps_xy = 1e-3;
 
-    double sub_lon = 0;
+    auto max_y = geometric_maximum(eps_xy, [&proj](const double y) { return proj.lonlat({0, y}).lat(); });
+    auto max_x = geometric_maximum(eps_xy, [&proj](const double x) { return proj.lonlat({x, 0}).lon(); });
 
-    double x = 0;
-    double y = 0;
+    auto n = proj.lonlat({0, max_y}).lat() + eps_ll;
+    auto s = proj.lonlat({0, -max_y}).lat() - eps_ll;
+    auto w = proj.lonlat({-max_x, 0}).lon() - eps_ll;
+    auto e = proj.lonlat({max_x, 0}).lon() + eps_ll;
 
-    // --
-
-    double f1 = 42164. * std::cos(x) * std::cos(y);
-    double f2 = std::cos(y) * std::cos(y) + 1.006803 * std::sin(y) * std::sin(y);
-
-    double sd = std::sqrt(f1 * f1 - f2 * 1737121856.);
-    double sn = (f1 - sd) / f2;
-
-    double s1  = 42164. - sn * std::cos(x) * std::cos(y);
-    double s2  = sn * std::sin(x) * std::cos(y);
-    double s3  = -sn * std::sin(y);
-    double sxy = std::sqrt(s1 * s1 + s2 * s2);
-
-    // --
-
-    double lon = std::atan2(s2, s1) + sub_lon;
-    double lat = std::atan2(1.006803 * s3, sxy);
-#endif
+    util::BoundingBox bbox(n, w, s, e);
+    Log::info() << bbox << std::endl;
+    // {n,w,s,e} = {79.8638572449639, 103.2494202284685, -79.8638572449639, 178.1505797715315};  // slon on
+    // {n,w,s,e} = {79.8638572449639	, 72.19304962052722, -79.8638572449639, 209.2069503794727};  // slon off
 }
 
 

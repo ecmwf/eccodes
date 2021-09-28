@@ -29,7 +29,7 @@ public:
 
     using LinearSpacing = ::atlas::grid::LinearSpacing;
     using PointLonLat   = ::atlas::PointLonLat;
-    using Projection   = ::atlas::Projection;
+    using Projection    = ::atlas::Projection;
 
     // -- Exceptions
     // None
