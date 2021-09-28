@@ -20,14 +20,14 @@ import traceback
 
 from eccodes import *
 
-INPUT = '../../data/index.grib'
+INPUT = "../../data/index.grib"
 VERBOSE = 1  # verbose error reporting
 
 
 def product(*args, **kwds):
     # product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
     # product(range(2), repeat=3) --> 000 001 010 011 100 101 110 111
-    pools = list(map(tuple, args)) * kwds.get('repeat', 1)
+    pools = list(map(tuple, args)) * kwds.get("repeat", 1)
     result = [[]]
     for pool in pools:
         result = [x + [y] for x in result for y in pool]
@@ -54,10 +54,7 @@ def example():
     index_vals = []
 
     for key in index_keys:
-        print("%sSize=%d" % (
-            key,
-            codes_index_get_size(iid, key)
-        ))
+        print("%sSize=%d" % (key, codes_index_get_size(iid, key)))
 
         key_vals = codes_index_get(iid, key)
         print(" ".join(key_vals))
@@ -72,8 +69,9 @@ def example():
             gid = codes_new_from_index(iid)
             if gid is None:
                 break
-            print(" ".join(["%s=%s" % (key, codes_get(gid, key))
-                            for key in index_keys]))
+            print(
+                " ".join(["%s=%s" % (key, codes_get(gid, key)) for key in index_keys])
+            )
             codes_release(gid)
 
     codes_index_release(iid)
@@ -86,7 +84,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

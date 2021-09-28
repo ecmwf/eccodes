@@ -21,16 +21,25 @@ import traceback
 
 from eccodes import *
 
-INPUT = '../../data/metar/metar.txt'
+INPUT = "../../data/metar/metar.txt"
 VERBOSE = 1  # verbose error reporting
 
+
 def print_keys(msg_id):
-    keys = ['CCCC', 'latitude', 'longitude', 'dateTime',
-                'elevation', 'temperature', 'dewPointTemperature', 'qnh']
+    keys = [
+        "CCCC",
+        "latitude",
+        "longitude",
+        "dateTime",
+        "elevation",
+        "temperature",
+        "dewPointTemperature",
+        "qnh",
+    ]
     for key in keys:
         try:
             if codes_is_defined(msg_id, key):
-                print('  %s: %s' % (key, codes_get(msg_id, key)))
+                print("  %s: %s" % (key, codes_get(msg_id, key)))
         except CodesInternalError as err:
             print('Error with key="%s" : %s' % (key, err.msg))
 
@@ -61,7 +70,7 @@ def example1():
 
 def example2():
     # This time read from a string rather than a file.
-    metar_str = 'METAR LQMO 022350Z 09003KT 6000 FEW010 SCT035 BKN060 08/08 Q1003='
+    metar_str = "METAR LQMO 022350Z 09003KT 6000 FEW010 SCT035 BKN060 08/08 Q1003="
 
     # get handle for message
     msg_id = codes_new_from_message(metar_str)
@@ -80,7 +89,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

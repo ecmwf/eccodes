@@ -603,7 +603,7 @@ static int get_native_type(grib_accessor* a)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
     int ret                               = GRIB_TYPE_DOUBLE;
-
+    DebugAssert(self);
     switch (self->type) {
         case BUFR_DESCRIPTOR_TYPE_STRING:
             ret = GRIB_TYPE_STRING;

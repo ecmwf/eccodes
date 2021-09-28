@@ -568,6 +568,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     size_t size = 0, i = 0;
     grib_context* c = a->context;
     int err         = 0;
+    int is_missing  = 0;
     long count      = 0;
     int r           = 0;
     grib_handle* h  = grib_handle_of_accessor(a);
@@ -601,9 +602,13 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 
     fprintf(self->dumper.out, "{");
     for (i = 0; i < size - 1; i++) {
-        fprintf(self->dumper.out, "    \"%s\",\n", values[i]);
+        is_missing = grib_is_missing_string(a, (unsigned char*)values[i], strlen(values[i]));
+        if (is_missing) fprintf(self->dumper.out, "    %s,\n", "MISSING");
+        else            fprintf(self->dumper.out, "    \"%s\",\n", values[i]);
     }
-    fprintf(self->dumper.out, "    \"%s\"\n", values[i]);
+    is_missing = grib_is_missing_string(a, (unsigned char*)values[i], strlen(values[i]));
+    if (is_missing) fprintf(self->dumper.out, "    %s\n", "MISSING");
+    else            fprintf(self->dumper.out, "    \"%s\"\n", values[i]);
 
     fprintf(self->dumper.out, "}\n");
 
