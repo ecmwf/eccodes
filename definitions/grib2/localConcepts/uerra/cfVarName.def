@@ -1,0 +1,120 @@
+#Wind speed
+'ws' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+     scaledValueOfFirstFixedSurface = 100 ;
+     scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Wind speed
+'ws' = {
+     discipline = 0 ;
+     parameterCategory = 2 ;
+     parameterNumber = 1 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaledValueOfFirstFixedSurface = 200 ;
+     scaleFactorOfFirstFixedSurface = 0 ;
+    }
+#10 metre wind gust since previous post-processing
+'fg10' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+     indicatorOfUnitForTimeRange = 1 ;
+     lengthOfTimeRange = 3 ;
+	}
+#10 metre wind gust since previous post-processing
+'fg10' = {
+     discipline = 0 ;
+     parameterCategory = 2 ;
+     parameterNumber = 22 ;
+     scaleFactorOfFirstFixedSurface = 0 ;
+     scaledValueOfFirstFixedSurface = 10 ;
+     typeOfStatisticalProcessing = 2 ;
+     typeOfFirstFixedSurface = 103 ;
+     indicatorOfUnitForTimeRange = 1 ;
+     lengthOfTimeRange = 1 ;
+    }
+#Maximum temperature at 2 metres since previous post-processing
+'mx2t' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Minimum temperature at 2 metres since previous post-processing
+'mn2t' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	}
+#Maximum temperature at 2 metres since previous post-processing
+'mx2t' = {
+     discipline = 0 ;
+     parameterCategory = 0 ;
+     parameterNumber = 0 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaleFactorOfFirstFixedSurface = 1 ;
+     scaledValueOfFirstFixedSurface = 15 ;
+     typeOfStatisticalProcessing = 2 ;
+    }
+#Minimum temperature at 2 metres since previous post-processing
+'mn2t' = {
+     discipline = 0 ;
+     parameterCategory = 0 ;
+     parameterNumber = 0 ;
+     typeOfStatisticalProcessing = 3 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaleFactorOfFirstFixedSurface = 1 ;
+     scaledValueOfFirstFixedSurface = 15 ;
+    }
+#Evaporation
+'eva' = {
+     discipline = 0 ;
+     parameterCategory = 1 ;
+     parameterNumber = 79 ;
+     typeOfFirstFixedSurface = 1 ;
+     typeOfStatisticalProcessing = 1 ;
+     lengthOfTimeRange = 6 ;
+     indicatorOfUnitForTimeRange = 1 ;
+    }
+#Evaporation
+'eva' = {
+     discipline = 0 ;
+     parameterCategory = 1 ;
+     parameterNumber = 79 ;
+     indicatorOfUnitForTimeRange = 1 ;
+     typeOfFirstFixedSurface = 1 ;
+     typeOfStatisticalProcessing = 1 ;
+     lengthOfTimeRange = 24 ;
+    }
+#2 metre temperature
+'t2m' = {
+     discipline = 0 ;
+     parameterCategory = 0 ;
+     parameterNumber = 0 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaledValueOfFirstFixedSurface = 15 ;
+     scaleFactorOfFirstFixedSurface = 1 ;
+    }
+#Surface air relative humidity
+'r2' = {
+     discipline = 0 ;
+     parameterCategory = 1 ;
+     parameterNumber = 1 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaledValueOfFirstFixedSurface = 15 ;
+     scaleFactorOfFirstFixedSurface = 1 ;
+    }

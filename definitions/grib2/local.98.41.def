@@ -38,8 +38,6 @@ unsigned[2] anoffsetLast      = missing(): dump, can_be_missing;
 unsigned[2] anoffsetFrequency = missing(): dump, can_be_missing;
 
 # Boolean
-remove is_efas;
-transient is_efas = 1;
 transient lsdate_bug = 1: hidden; # See ECC-707
 
 # Note: the key typeOfPostProcessing is in the PDTNs 70, 71, 72 and 73

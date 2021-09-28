@@ -113,26 +113,6 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
 	}
-#Wind speed
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 100 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 is_uerra = 1 ;
-	}
-#Wind speed
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 200 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 is_uerra = 1 ;
-	}
 #Unbalanced component of temperature
 'K' = {
 	 discipline = 0 ;
@@ -184,17 +164,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
-#10 metre wind gust since previous post-processing
-'m s**-1' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 22 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 is_uerra = 1 ;
 	}
 #Specific rain water content
 'kg kg**-1' = {
@@ -265,28 +234,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 37 ;
-	}
-#Maximum temperature at 2 metres since previous post-processing
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 is_uerra = 1 ;
-	}
-#Minimum temperature at 2 metres since previous post-processing
-'K' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 is_uerra = 1 ;
 	}
 #Ozone mass mixing ratio
 'kg kg**-1' = {
@@ -1113,7 +1060,6 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 lengthOfTimeRange = 3 ;
-	 is_uerra = 0 ;
 	}
 #Relative humidity with respect to water
 '%' = {
@@ -1901,7 +1847,6 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 6 ;
-	 is_uerra = 0 ;
 	}
 #Evaporation in the last 24 hours
 'kg m**-2' = {
@@ -1912,29 +1857,6 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 24 ;
-	 is_uerra = 0 ;
-	}
-#Total precipitation in the last 6 hours
-'kg m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 lengthOfTimeRange = 6 ;
-	 is_efas = 1 ;
-	}
-#Total precipitation in the last 24 hours
-'kg m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 lengthOfTimeRange = 24 ;
-	 is_efas = 1 ;
 	}
 #Fraction of snow cover
 'Proportion' = {
@@ -2708,7 +2630,6 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 lengthOfTimeRange = 6 ;
-	 is_uerra = 0 ;
 	}
 #Minimum temperature at 2 metres in the last 6 hours
 'K' = {
@@ -2721,7 +2642,6 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 6 ;
-	 is_uerra = 0 ;
 	}
 #Geopotential
 'm**2 s**-2' = {
