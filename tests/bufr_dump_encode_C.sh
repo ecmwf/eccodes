@@ -19,11 +19,11 @@ if [ $HAVE_MEMFS -eq 1 ]; then
 fi
 
 # Create log file
-fLog=${label}".log"
+fLog=temp.${label}".log"
 rm -f $fLog
 
 tempBufr=outfile.bufr
-tempDir=${label}.dir
+tempDir=temp.${label}.dir
 rm -rf $tempDir
 mkdir -p $tempDir
 
@@ -64,7 +64,7 @@ fi
 
 for file in ${bufr_files}
 do
-  tempSrc=$label.$file.c
+  tempSrc=temp.$label.$file.c
   tempExe=$label.$file.exe
 
   # Generate C code from BUFR file
