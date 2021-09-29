@@ -12,23 +12,127 @@
 
 #include "mir/repres/other/SpaceView.h"
 
+#include <algorithm>
 #include <cmath>
 #include <functional>
+#include <limits>
+#include <memory>
 #include <ostream>
+#include <random>
 #include <sstream>
 #include <utility>
 
 #include "eckit/types/FloatCompare.h"
 #include "eckit/utils/MD5.h"
 
+#include "mir/data/MIRField.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Angles.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 #include "mir/util/Log.h"
 #include "mir/util/MeshGeneratorParameters.h"
+
+
+namespace atlas {
+namespace projection {
+namespace detail {
+
+
+class GeostationarySatelliteViewProjection final : public ProjectionImpl {
+public:
+    GeostationarySatelliteViewProjection(const Projection::Spec& spec) :
+        h_(spec.getDouble("h")), a_(spec.getDouble("a")), b_(spec.getDouble("b")), bb_aa_((b_ * b_) / (a_ * a_)) {
+        ATLAS_ASSERT(0. < b_ && b_ <= a_ && a_ < h_);
+    }
+
+    static std::string static_type() { return "geostationary_satellite_view"; }
+
+    std::string type() const override { return static_type(); }
+
+    void xy2lonlat(double* p) const override {
+        // inverse projection
+
+        auto x = p[atlas::XYZ::XX] / h_;
+        auto y = p[atlas::XYZ::YY] / h_;
+
+        p[atlas::LONLAT::LON] = std::numeric_limits<double>::infinity();
+        p[atlas::LONLAT::LAT] = std::numeric_limits<double>::infinity();
+
+        if (!std::isfinite(x) || !std::isfinite(y)) {
+            return;
+        }
+
+        double f1 = (a_ + h_) * std::cos(x) * std::cos(y);
+        double f2 = std::cos(y) * std::cos(y) + std::sin(y) * std::sin(y) / bb_aa_;
+
+        // visibility checks for positive determinant
+        double det = f1 * f1 - 4. * f2 * 434280464.;
+        if (det < 0) {
+            return;
+        }
+
+        double sd = std::sqrt(det);
+        double sn = (f1 - sd) / f2;
+
+        double s1  = (a_ + h_) - sn * std::cos(x) * std::cos(y);
+        double s2  = sn * std::sin(x) * std::cos(y);
+        double s3  = -sn * std::sin(y);
+        double sxy = std::sqrt(s1 * s1 + s2 * s2);
+
+        p[atlas::LONLAT::LON] = 180. / M_PI * std::atan(s2 / s1);
+        p[atlas::LONLAT::LAT] = 180. / M_PI * std::atan(s3 / (sxy * bb_aa_));
+    }
+
+    void lonlat2xy(double* p) const override {
+        // forward projection
+
+        auto lat = p[atlas::LONLAT::LON] * M_PI / 180.;
+        auto lon = p[atlas::LONLAT::LAT] * M_PI / 180.;
+
+        p[atlas::XYZ::XX] = std::numeric_limits<double>::infinity();
+        p[atlas::XYZ::YY] = std::numeric_limits<double>::infinity();
+
+        double c_lat = std::atan(bb_aa_ * std::tan(lat));  //< geocentric latitude
+        double re    = b_ / std::sqrt(1. - (1. - bb_aa_) * std::cos(c_lat) * std::cos(c_lat));
+
+        double rl = re;
+        double r1 = (a_ + h_) - rl * std::cos(c_lat) * std::cos(lon);
+        double r2 = -rl * std::cos(c_lat) * std::sin(lon);
+        double r3 = rl * std::sin(c_lat);
+        double rn = std::sqrt(r1 * r1 + r2 * r2 + r3 * r3);
+
+        // visibility checks for positive dot product between (point, satellite) . (point, Earth centre)
+        auto dot = r1 * rl * std::cos(c_lat) * std::cos(lon) - r2 * r2 - r3 * r3 / bb_aa_;
+        if (dot <= 0) {
+            return;
+        }
+
+        p[atlas::XYZ::XX] = h_ * std::atan(-r2 / r1);
+        p[atlas::XYZ::YY] = h_ * std::asin(-r3 / rn);
+    }
+
+    Jacobian jacobian(const PointLonLat&) const override { NOTIMP; }
+
+    bool strictlyRegional() const override { return false; }
+    RectangularLonLatDomain lonlatBoundingBox(const Domain&) const override { NOTIMP; }
+
+    Spec spec() const override { NOTIMP; }
+    std::string units() const override { NOTIMP; }
+    void hash(eckit::Hash&) const override { NOTIMP; }
+
+private:
+    const double h_;  //< distance from Earth surface to satellite (height)
+    const double a_;  //< distance from Earth centre to equator
+    const double b_;  //< distance from Earth centre to pole(s)
+    const double bb_aa_;
+};
+
+
+}  // namespace detail
+}  // namespace projection
+}  // namespace atlas
 
 
 namespace mir {
@@ -42,22 +146,43 @@ static RepresentationBuilder<SpaceView> __builder("space_view");
 namespace {
 
 
-const double SAT_HEIGHT = 42164.;     //< distance from Earth centre to satellite
-const double R_EQ       = 6378.169;   //< distance from Earth centre to equator
-const double R_POL      = 6356.5838;  //< distance from Earth centre to pole(s)
-const double RR         = (R_POL * R_POL) / (R_EQ * R_EQ);
+double bisection_method(double x_min, double x_max, const std::function<double(double)>& f, double f0 = 0.,
+                        double f_eps = 1.e-9) {
+    static std::random_device rd;
+    static const auto entropy = rd();
+    std::mt19937 gen(entropy);
+    std::uniform_real_distribution<double> dis(x_min, x_max);
+
+    auto xp = dis(gen);
+    while (f(xp) < f0) {
+        xp = dis(gen);
+    }
+
+    auto xm = dis(gen);
+    while (f(xm) > f0) {
+        xm = dis(gen);
+    }
+
+    auto x = (xp + xm) / 2.;
+    for (auto fx = f(x) - f0; !eckit::types::is_approximately_equal(fx, 0., f_eps);
+         x = (xp + xm) / 2., fx = f(x) - f0) {
+        (fx >= 0. ? xp : xm) = x;
+    }
+
+    return x;
+}
 
 
-double geometric_maximum(double x_min, const std::function<double(double)>& f, double f_eps = 1.e-9) {
-    if (std::isinf(f(x_min)) != 0) {
+double geometric_maximum(double x_min, double x_eps, const std::function<double(double)>& f, double f_eps = 1.e-9) {
+    if (!std::isfinite(f(x_min))) {
         return x_min;
     }
 
     size_t it = 0;
     auto x    = x_min;
-    for (auto dx = 1., fx = f(x); f_eps < dx; ++it) {
+    for (auto dx = x_eps, fx = f(x); f_eps < dx && it < 1000; ++it) {
         auto fx_new = f(x + dx);
-        if (std::isinf(fx_new) != 0 || fx_new < fx) {
+        if (!std::isfinite(fx_new) || std::abs(fx_new) < std::abs(fx)) {
             dx /= 2.;
         }
         else {
@@ -67,7 +192,7 @@ double geometric_maximum(double x_min, const std::function<double(double)>& f, d
         }
     }
 
-    Log::info() << "it = " << it << std::endl;
+    Log::info() << "it=" << it << " f(" << x << ")=" << f(x) << std::endl;
     return x;
 }
 
@@ -79,58 +204,161 @@ EXTERNAL_T get(const param::MIRParametrisation& param, const std::string& key) {
     return static_cast<EXTERNAL_T>(value);
 }
 
+
 }  // namespace
 
 
 SpaceView::SpaceView(const param::MIRParametrisation& param) {
-#if 0
-    long earthIsOblate;
-    param.get("earthIsOblate", earthIsOblate);
-    if (earthIsOblate != 0) {
-        ASSERT(param.get("earthMajorAxis", earthMajorAxis_));
-        ASSERT(param.get("earthMinorAxis", earthMinorAxis_));
-    }
-    else {
-        ASSERT(param.get("radius", earthMajorAxis_));
-        earthMinorAxis_ = earthMajorAxis_;
-    }
-#endif
+    // References:
+    // - LRIT/HRIT Global Specification (CGMS 03, Issue 2.6, 12.08.1999)
+    // - MSG Ground Segment LRIT/HRIT Mission Specific Implementation, EUMETSAT Document, (EUM/MSG/SPE/057, Issue 6, 21.
+    // June 2006).
+
+    // const double SAT_HEIGHT = 42164.;     //< distance from Earth centre to satellite
+    // const double R_EQ       = 6378.169;   //< distance from Earth centre to equator
+    // const double R_POL      = 6356.5838;  //< distance from Earth centre to pole(s)
+    // const double RR         = (R_EQ * R_EQ) / (R_POL * R_POL);
+
+    auto earthIsOblate = get<bool>(param, "earthIsOblate");
+    earthMajorAxis_    = get<double>(param, earthIsOblate ? "earthMajorAxis" : "radius");
+    earthMinorAxis_    = earthIsOblate ? get<double>(param, "earthMinorAxis") : earthMajorAxis_;
 
     auto Nr = get<double>(param, "NrInRadiusOfEarth") * (get<long>(param, "edition") == 1 ? 1e-6 : 1.);
     ASSERT(Nr > 1.);
-    auto height = (Nr - 1.) * R_EQ;
+    auto height = (Nr - 1.) * earthMajorAxis_;
 
-    auto slat = get<double>(param, "latitudeOfSubSatellitePointInDegrees");
-    auto slon = get<double>(param, "longitudeOfSubSatellitePointInDegrees");
-    ASSERT(eckit::types::is_approximately_equal(slat, 0.));
+    auto Lap = get<double>(param, "latitudeOfSubSatellitePointInDegrees");
+    auto Lop = get<double>(param, "longitudeOfSubSatellitePointInDegrees");
+    ASSERT(eckit::types::is_approximately_equal(Lap, 0.));
+
+    // auto orientation = get<size_t>(param, "orientationOfTheGridInDegrees");
+    // ASSERT(orientation == 180);
 
     std::string str;
     str += " +proj=geos";
-    str += " +lon_0=" + std::to_string(slon);
-    str += " +h=" + std::to_string(height);
-    str += " +a=" + std::to_string(R_EQ);
-    str += " +b=" + std::to_string(R_POL);
+    str += " +lon_0=" + std::to_string(Lop);
+    str += " +h=" + std::to_string(1e-3 * height);
+    str += " +a=" + std::to_string(1e-3 * earthMajorAxis_);
+    str += " +b=" + std::to_string(1e-3 * earthMinorAxis_);
     str += " +sweep=y";
     str += " +type=crs";
 
     atlas::Projection proj(atlas::Projection::Spec("type", "proj").set("proj", str));
-    Log::info() << "proj = " << proj << std::endl;
+    Log::info() << "proj = " << proj.spec() << std::endl;
 
-    const double eps_ll = 1e-9;
-    const double eps_xy = 1e-3;
+    atlas::Projection::Spec sv_spec("type", "geostationary_satellite_view");
+    sv_spec.set("h", 1e-3 * height);
+    sv_spec.set("a", 1e-3 * earthMajorAxis_);
+    sv_spec.set("b", 1e-3 * earthMinorAxis_);
 
-    auto max_y = geometric_maximum(eps_xy, [&proj](const double y) { return proj.lonlat({0, y}).lat(); });
-    auto max_x = geometric_maximum(eps_xy, [&proj](const double x) { return proj.lonlat({x, 0}).lon(); });
+    atlas::Projection sv(new atlas::projection::detail::GeostationarySatelliteViewProjection(sv_spec));
 
-    auto n = proj.lonlat({0, max_y}).lat() + eps_ll;
-    auto s = proj.lonlat({0, -max_y}).lat() - eps_ll;
-    auto w = proj.lonlat({-max_x, 0}).lon() - eps_ll;
-    auto e = proj.lonlat({max_x, 0}).lon() + eps_ll;
+    auto xp = get<double, long>(param, "XpInGridLengths");
+    auto yp = get<double, long>(param, "YpInGridLengths");
+    auto dx = get<double, long>(param, "dx");
+    auto dy = get<double, long>(param, "dy");
 
-    util::BoundingBox bbox(n, w, s, e);
-    Log::info() << bbox << std::endl;
-    // {n,w,s,e} = {79.8638572449639, 103.2494202284685, -79.8638572449639, 178.1505797715315};  // slon on
-    // {n,w,s,e} = {79.8638572449639	, 72.19304962052722, -79.8638572449639, 209.2069503794727};  // slon off
+    auto Nx = get<int>(param, "numberOfPointsAlongXAxis");
+    auto Ny = get<int>(param, "numberOfPointsAlongYAxis");
+    ASSERT(0 < Nx);
+    ASSERT(0 < Ny);
+
+
+    // scaling coefficients
+    auto angularSize = 2. * std::asin(1. / Nr);  //< apparent angular size of the Earth
+    double cfac      = -dx / angularSize;
+    double lfac      = -dy / angularSize;
+
+
+    for (int ix : {0, Nx / 2, Nx - 1} /*= 0; ix < Nx; ++ix*/) {
+        for (int iy : {0, Ny / 2, Ny - 1} /*= 0; iy < Ny; ++iy*/) {
+            Point2 xy = {(ix - xp) / cfac, (iy - yp) / lfac};
+
+            auto ll1 = proj.lonlat(xy);
+            auto xy1 = proj.xy(ll1);
+            Log::info() << "(x, y) = (" << xy.x() << ", " << xy.y() << ") "
+                        << "(lo, la) = (" << ll1.lon() << ", " << ll1.lat() << ")\n"
+                        << "(x, y) = (" << xy1.x() << ", " << xy1.y() << ")\n." << std::endl;
+
+            auto ll2 = sv.lonlat(xy);
+            auto xy2 = sv.xy(ll2);
+            Log::info() << "(x, y) = (" << xy.x() << ", " << xy.y() << ") "
+                        << "(lo, la) = (" << ll2.lon() << ", " << ll2.lat() << ")\n"
+                        << "(x, y) = (" << xy2.x() << ", " << xy2.y() << ")\n." << std::endl;
+        }
+    }
+
+
+    if (false) {
+        auto xp = get<double, long>(param, "XpInGridLengths") - get<double, long>(param, "Xo");
+        if (!get<bool>(param, "iScansPositively")) {
+            xp = double(Nx - 1) - xp;
+        }
+    }
+
+
+    if (false) {
+        auto yp = get<double, long>(param, "YpInGridLengths") - get<double, long>(param, "Yo");
+        if (!get<bool>(param, "jScansPositively")) {
+            yp = double(Ny - 1) - yp;
+        }
+    }
+
+
+    if (false) {
+        auto rx = angularSize / dx;
+        auto ry = angularSize / dy * (earthMinorAxis_ / earthMajorAxis_);
+
+        for (double iy : {double(0), double(Ny) / 2, double(Ny)} /*= 0; iy < Ny; ++iy*/) {
+            auto y = (iy - yp) * ry;
+
+            for (double ix : {double(0), double(Nx) / 2, double(Nx)} /*= 0; ix < Nx; ++ix*/) {
+                auto x = (ix - xp) * rx;
+
+                auto ll = proj.lonlat({x, y});
+                ll.lon() += Lop;
+
+                Log::info() << "(x, y) = (" << x << ", " << y << ") => " << ll << std::endl;
+            }
+        }
+    }
+
+
+    if (true) {
+        auto max_x = geometric_maximum(1e-3, 1e-3, [&proj](double x) { return proj.lonlat({x, 0}).lon(); });
+        auto max_y = geometric_maximum(1e-3, 1e-3, [&proj](double y) { return proj.lonlat({0, y}).lat(); });
+
+        Log::info() << "max_x (proj) = " << max_x << std::endl;
+        Log::info() << "max_y (proj) = " << max_y << std::endl;
+
+        auto eps = 1e-9;
+        auto n   = std::max({proj.lonlat({0, -max_y}).lat(), proj.lonlat({0, max_y}).lat()}) + eps;
+        auto e   = std::max({proj.lonlat({-max_x, 0}).lon(), proj.lonlat({max_x, 0}).lon()}) + eps;
+        auto s   = -n;
+        auto w   = -e;
+
+        Log::info() << util::BoundingBox(n, w, s, e) << std::endl;
+    }
+
+
+    if (true) {
+        auto max_x = geometric_maximum(1e-3, 1e-3, [&sv](double x) { return sv.lonlat({x, 0}).lon(); });
+        auto max_y = geometric_maximum(1e-3, 1e-3, [&sv](double y) { return sv.lonlat({0, y}).lat(); });
+
+        Log::info() << "max_x (home) = " << max_x << std::endl;
+        Log::info() << "max_y (home) = " << max_y << std::endl;
+
+        auto eps = 1e-9;
+        auto n   = std::max({sv.lonlat({0, -max_y}).lat(), sv.lonlat({0, max_y}).lat()}) + eps;
+        auto e   = std::max({sv.lonlat({-max_x, 0}).lon(), sv.lonlat({max_x, 0}).lon()}) + eps;
+        auto s   = -n;
+        auto w   = -e;
+
+        Log::info() << util::BoundingBox(n, w, s, e) << std::endl;
+    }
+
+
+    Log::info() << "." << std::endl;
 }
 
 
@@ -241,7 +469,7 @@ Iterator* SpaceView::iterator() const {
 
 
 size_t SpaceView::numberOfPoints() const {
-    return x_.size() * y_.size();
+    return 1856 * 1856;  // FIXME x_.size() * y_.size();
 }
 
 
