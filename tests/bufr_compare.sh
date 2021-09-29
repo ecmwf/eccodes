@@ -17,17 +17,17 @@ cd ${data_dir}/bufr
 label="bufr_compare_test"
 
 # Create log file
-fLog=${label}".log"
+fLog=temp.${label}".log"
 rm -f $fLog
 touch $fLog
 
 # Define tmp bufr file
-fBufrTmp=${label}".bufr.tmp"
-fBufrInput1=${label}".bufr.input1"
-fBufrInput2=${label}".bufr.input2"
+fBufrTmp=temp.${label}".bufr"
+fBufrInput1=temp1.in.${label}".bufr"
+fBufrInput2=temp2.in.${label}".bufr"
 
 # Define filter rules file
-fRules=${label}.filter
+fRules=temp.${label}.filter
 
 #----------------------------------------------------
 # Test: comparing same files
