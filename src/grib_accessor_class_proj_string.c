@@ -206,9 +206,17 @@ static int proj_space_view(grib_handle* h, char* result)
 #if 0
     int err        = 0;
     char shape[64] = {0,};
+    double latOfSubSatellitePointInDegrees, lonOfSubSatellitePointInDegrees;
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
+    
+    if ((err = grib_get_double_internal(h, "longitudeOfSubSatellitePointInDegrees", &lonOfSubSatellitePointInDegrees)) != GRIB_SUCCESS)
+        return err;
+
+    sprintf(result, "+proj=geos +lon_0=%lf +h=35785831 +x_0=0 +y_0=0 %s", lonOfSubSatellitePointInDegrees, shape);
+    return err;
+
     /* Experimental: For now do the same as gdalsrsinfo - hard coded values! */
     sprintf(result, "+proj=geos +lon_0=0 +h=35785831 +x_0=0 +y_0=0 %s",  shape);
     return err;

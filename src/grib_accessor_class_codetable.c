@@ -210,6 +210,12 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
 
     /*if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)
     printf("-------- %s type string (%ld)\n",a->name,a->flags);*/
+#ifdef DEBUG
+    if (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
+        grib_context_log(a->context, GRIB_LOG_FATAL, "codetable '%s' has flag can_be_missing!", a->name);
+        Assert(!"codetable with can_be_missing?");
+    }
+#endif
 
     if (a->flags & GRIB_ACCESSOR_FLAG_TRANSIENT) {
         a->length = 0;
