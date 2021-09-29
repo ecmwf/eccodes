@@ -173,14 +173,15 @@ double bisection_method(double x_min, double x_max, const std::function<double(d
 }
 
 
-double geometric_maximum(double x_min, double x_eps, const std::function<double(double)>& f, double f_eps = 1.e-9) {
+double geometric_maximum(double x_min, double x_eps, const std::function<double(double)>& f, double f_eps = 1.e-9,
+                         size_t it_max = 1000) {
     if (!std::isfinite(f(x_min))) {
         return x_min;
     }
 
     size_t it = 0;
     auto x    = x_min;
-    for (auto dx = x_eps, fx = f(x); f_eps < dx && it < 1000; ++it) {
+    for (auto dx = x_eps, fx = f(x); f_eps < dx && it < it_max; ++it) {
         auto fx_new = f(x + dx);
         if (!std::isfinite(fx_new) || std::abs(fx_new) < std::abs(fx)) {
             dx /= 2.;
@@ -194,6 +195,30 @@ double geometric_maximum(double x_min, double x_eps, const std::function<double(
 
     Log::info() << "it=" << it << " f(" << x << ")=" << f(x) << std::endl;
     return x;
+}
+
+
+double maximum_radius(double x_max, double y_max, const atlas::Projection& p, size_t it_max = 1000000) {
+    static std::random_device rd;
+    static const auto entropy = rd();
+    std::mt19937 gen(entropy);
+
+    std::uniform_real_distribution<double> x_dis(-x_max, x_max);
+    std::uniform_real_distribution<double> y_dis(-y_max, y_max);
+
+    double r2 = 0;
+    for (size_t it = 0; it < it_max; ++it) {
+        auto xy = p.xy(p.lonlat({x_dis(gen), y_dis(gen)}));
+
+        if (std::isfinite(xy.x()) && std::isfinite(xy.y())) {
+            auto r2_new = xy.x() * xy.x() + xy.y() * xy.y();
+            if (r2 < r2_new) {
+                r2 = r2_new;
+            }
+        }
+    }
+
+    return std::sqrt(r2);
 }
 
 
@@ -252,6 +277,12 @@ SpaceView::SpaceView(const param::MIRParametrisation& param) {
     sv_spec.set("b", 1e-3 * earthMinorAxis_);
 
     atlas::Projection sv(new atlas::projection::detail::GeostationarySatelliteViewProjection(sv_spec));
+    // Log::info() << "proj = " << proj.spec() << std::endl;
+
+
+    Log::info() << "r = " << maximum_radius(1e4, 1e4, proj) << std::endl;
+    Log::info() << "r = " << maximum_radius(1e4, 1e4, sv) << std::endl;
+
 
     auto xp = get<double, long>(param, "XpInGridLengths");
     auto yp = get<double, long>(param, "YpInGridLengths");
