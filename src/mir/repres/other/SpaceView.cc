@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <fstream>
 #include <functional>
 #include <limits>
 #include <memory>
@@ -261,12 +262,12 @@ SpaceView::SpaceView(const param::MIRParametrisation& param) {
 
     std::string str;
     str += " +proj=geos";
-    str += " +lon_0=" + std::to_string(Lop);
+    str += " +type=crs";
+    str += " +sweep=y";
     str += " +h=" + std::to_string(1e-3 * height);
     str += " +a=" + std::to_string(1e-3 * earthMajorAxis_);
     str += " +b=" + std::to_string(1e-3 * earthMinorAxis_);
-    str += " +sweep=y";
-    str += " +type=crs";
+    str += " +lon_0=" + std::to_string(Lop);
 
     atlas::Projection proj(atlas::Projection::Spec("type", "proj").set("proj", str));
     Log::info() << "proj = " << proj.spec() << std::endl;
@@ -297,27 +298,44 @@ SpaceView::SpaceView(const param::MIRParametrisation& param) {
 
     // scaling coefficients
     auto angularSize = 2. * std::asin(1. / Nr);  //< apparent angular size of the Earth
-    double cfac      = -dx / angularSize;
-    double lfac      = -dy / angularSize;
 
+    double rx = angularSize / dx;  // [radian]
+    double ry = angularSize / dx;  // [radian]
 
-    for (int ix : {0, Nx / 2, Nx - 1} /*= 0; ix < Nx; ++ix*/) {
-        for (int iy : {0, Ny / 2, Ny - 1} /*= 0; iy < Ny; ++iy*/) {
-            Point2 xy = {(ix - xp) / cfac, (iy - yp) / lfac};
+    size_t NN = 100.;
+    std::vector<double> N(NN + 1);
+    std::iota(N.begin(), N.end(), 0);
+    std::for_each(N.begin(), N.end(), [Nx, NN](double& v) { v *= Nx / double(NN); });
 
+    std::ofstream f("out.txt");
+
+    for (int ix = 0; ix < Nx; ++ix) {
+        for (int iy = 0; iy < Ny; ++iy) {
+            Point2 xy = {(ix - xp) * rx, (iy - yp) * ry};
+            xy        = xy * 1e-3 * height;
+
+#if 0
             auto ll1 = proj.lonlat(xy);
             auto xy1 = proj.xy(ll1);
             Log::info() << "(x, y) = (" << xy.x() << ", " << xy.y() << ") "
                         << "(lo, la) = (" << ll1.lon() << ", " << ll1.lat() << ")\n"
                         << "(x, y) = (" << xy1.x() << ", " << xy1.y() << ")\n." << std::endl;
+#endif
 
             auto ll2 = sv.lonlat(xy);
             auto xy2 = sv.xy(ll2);
+#if 0
             Log::info() << "(x, y) = (" << xy.x() << ", " << xy.y() << ") "
-                        << "(lo, la) = (" << ll2.lon() << ", " << ll2.lat() << ")\n"
-                        << "(x, y) = (" << xy2.x() << ", " << xy2.y() << ")\n." << std::endl;
+                        << "(lo, la) = (" << ll2.lon() << ", " << ll2.lat() << ") "
+                        << "(x, y) = (" << xy2.x() << ", " << xy2.y() << ")" << std::endl;
+#endif
+            if (std::isfinite(xy2.x()) && std::isfinite(xy2.y()) && std::isfinite(ll2.lon()) &&
+                std::isfinite(ll2.lat())) {
+                f << ll2.lon() << '\t' << ll2.lat() << '\n';
+            }
         }
     }
+    f.close();
 
 
     if (false) {
@@ -332,25 +350,6 @@ SpaceView::SpaceView(const param::MIRParametrisation& param) {
         auto yp = get<double, long>(param, "YpInGridLengths") - get<double, long>(param, "Yo");
         if (!get<bool>(param, "jScansPositively")) {
             yp = double(Ny - 1) - yp;
-        }
-    }
-
-
-    if (false) {
-        auto rx = angularSize / dx;
-        auto ry = angularSize / dy * (earthMinorAxis_ / earthMajorAxis_);
-
-        for (double iy : {double(0), double(Ny) / 2, double(Ny)} /*= 0; iy < Ny; ++iy*/) {
-            auto y = (iy - yp) * ry;
-
-            for (double ix : {double(0), double(Nx) / 2, double(Nx)} /*= 0; ix < Nx; ++ix*/) {
-                auto x = (ix - xp) * rx;
-
-                auto ll = proj.lonlat({x, y});
-                ll.lon() += Lop;
-
-                Log::info() << "(x, y) = (" << x << ", " << y << ") => " << ll << std::endl;
-            }
         }
     }
 
