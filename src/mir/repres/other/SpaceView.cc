@@ -268,13 +268,14 @@ SpaceView::space_view_t::space_view_t(const param::MIRParametrisation& param) {
 
     auto Nr = get<double>(param, "NrInRadiusOfEarth") * (get<long>(param, "edition") == 1 ? 1e-6 : 1.);
     ASSERT(Nr > 1.);
-    auto h_ = (Nr - 1.) * a;
 
-    auto Lap  = get<double>(param, "latitudeOfSubSatellitePointInDegrees");
-    auto Lop_ = get<double>(param, "longitudeOfSubSatellitePointInDegrees");
+    auto Lap = get<double>(param, "latitudeOfSubSatellitePointInDegrees");
     ASSERT(eckit::types::is_approximately_equal(Lap, 0.));
 
     // ASSERT(get<size_t>(param, "orientationOfTheGridInDegrees") == 180);
+
+    h_   = (Nr - 1.) * a;
+    Lop_ = get<double>(param, "longitudeOfSubSatellitePointInDegrees");
 
 
     // projection
