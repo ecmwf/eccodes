@@ -18,6 +18,11 @@
 #include "mir/util/Types.h"
 
 
+namespace eckit {
+class MD5;
+}
+
+
 namespace mir {
 namespace repres {
 namespace other {
@@ -51,7 +56,8 @@ public:
     SpaceView& operator=(const SpaceView&) = delete;
 
     // -- Methods
-    // None
+
+    static void remove_invalid_values(const param::MIRParametrisation&, MIRValuesVector&);
 
     // -- Overridden methods
     // None
@@ -63,15 +69,32 @@ public:
     // None
 
 private:
+    // -- Types
+
+    struct space_view_t {
+        space_view_t(const param::MIRParametrisation&);
+
+        Projection projection() const { return projection_; }
+        LinearSpacing x() const { return x_; }
+        LinearSpacing y() const { return y_; }
+        double h() const { return h_; }
+        double Lop() const { return Lop_; }
+
+        void hash(eckit::MD5& md5) const;
+
+    private:
+        Projection projection_;
+        LinearSpacing x_;
+        LinearSpacing y_;
+        double h_;
+        double Lop_;
+    };
+
     // -- Members
 
-    double earthMajorAxis_;
-    double earthMinorAxis_;
-
+    space_view_t sv_;
     util::BoundingBox bbox_;
-    ::atlas::RegularGrid grid_;
-    LinearSpacing x_;
-    LinearSpacing y_;
+    size_t numberOfPoints_;
 
     // -- Methods
     // None
@@ -93,7 +116,6 @@ private:
     void print(std::ostream&) const override;
     bool extendBoundingBoxOnIntersect() const override { return true; }
 
-    ::atlas::Grid atlasGrid() const override { return grid_; }
     Iterator* iterator() const override;
     size_t numberOfPoints() const override;
 
