@@ -54,7 +54,60 @@ EXTERNAL_T get(const param::MIRParametrisation& param, const std::string& key) {
 }  // namespace
 
 
-SpaceView::SpaceView(const param::MIRParametrisation& param) : sv_(param) {}
+SpaceView::SpaceView(const param::MIRParametrisation& param) : sv_(param) {
+    auto proj = sv_.projection();
+
+
+    // number of (valid) points
+    numberOfPoints_ = 0;
+    for (auto y : sv_.y()) {
+        for (auto x : sv_.x()) {
+            auto ll = proj.lonlat({x, y});
+            if (std::isfinite(ll.lon()) && std::isfinite(ll.lat())) {
+                ++numberOfPoints_;
+            }
+        }
+    }
+    ASSERT(0 < numberOfPoints_);
+
+
+    // bounding box
+    auto geometric_maximum = [](double x_min, double x_eps, const std::function<double(double)>& f,
+                                double f_eps = 1.e-9, size_t it_max = 1000) {
+        if (!std::isfinite(f(x_min))) {
+            return x_min;
+        }
+
+        size_t it = 0;
+        auto x    = x_min;
+        for (auto dx = x_eps, fx = f(x); f_eps < dx && it < it_max; ++it) {
+            auto fx_new = f(x + dx);
+            if (!std::isfinite(fx_new) || std::abs(fx_new) < std::abs(fx)) {
+                dx /= 2.;
+            }
+            else {
+                x += dx;
+                fx = fx_new;
+                dx *= 2.;
+            }
+        }
+
+        return x;
+    };
+
+    auto eps_xy = 1e-6 * sv_.h();
+    auto eps_ll = 1e-6;
+
+    auto max_y = geometric_maximum(0., eps_xy, [&proj](double y) { return proj.lonlat({0, y}).lat(); });
+    auto n     = proj.lonlat({0, max_y}).lat() + eps_ll;
+    auto s     = -n;
+
+    auto max_x = geometric_maximum(0., eps_xy, [&proj](double x) { return proj.lonlat({x, 0}).lon(); });
+    auto e     = util::normalise_longitude(proj.lonlat({max_x, 0}).lon(), sv_.Lop()) + eps_ll;
+    auto w     = 2. * sv_.Lop() - e;
+
+    bbox_ = {n, w, s, e};
+}
 
 
 SpaceView::~SpaceView() = default;
@@ -91,7 +144,7 @@ void SpaceView::reorder(long, MIRValuesVector&) const {
 
 
 void SpaceView::validate(const MIRValuesVector& values) const {
-    auto count = numberOfPoints();
+    auto count = numberOfPoints_;
 
     Log::debug() << "SpaceView::validate checked " << Log::Pretty(values.size(), {"value"}) << ", iterator counts "
                  << Log::Pretty(count) << " (" << domain() << ")." << std::endl;
@@ -103,14 +156,14 @@ void SpaceView::validate(const MIRValuesVector& values) const {
 void SpaceView::makeName(std::ostream& out) const {
     eckit::MD5 h;
     h << sv_;
-    out << "SpaceView-" << sv_.numberOfPoints();
-    sv_.bbox().makeName(out);
+    out << "SpaceView-" << numberOfPoints_;
+    bbox_.makeName(out);
     out << "-" << h.digest();
 }
 
 
 void SpaceView::print(std::ostream& out) const {
-    out << "SpaceView[projection=" << sv_.projection().spec() << ",bbox=" << sv_.bbox() << "]";
+    out << "SpaceView[projection=" << sv_.projection().spec() << ",bbox=" << bbox_ << "]";
 }
 
 
@@ -120,7 +173,7 @@ Iterator* SpaceView::iterator() const {
         const LinearSpacing x_;
         const LinearSpacing y_;
 
-        const size_t N_;
+        const size_t numberOfPoints_;
         const size_t Nx_;
         const size_t Ny_;
         size_t ix_;
@@ -154,40 +207,39 @@ Iterator* SpaceView::iterator() const {
         }
 
     public:
-        SpaceViewIterator(const space_view_t& sv) :
+        SpaceViewIterator(const space_view_t& sv, size_t numberOfPoints) :
             projection_(sv.projection()),
             x_(sv.x()),
             y_(sv.y()),
-            N_(sv.numberOfPoints()),
+            numberOfPoints_(numberOfPoints),
             Nx_(x_.size()),
             Ny_(y_.size()),
             ix_(0),
             iy_(0),
             count_(0) {}
 
-        ~SpaceViewIterator() override { ASSERT(count_ == N_); }
+        ~SpaceViewIterator() override { ASSERT(count_ == numberOfPoints_); }
 
         SpaceViewIterator(const SpaceViewIterator&) = delete;
         SpaceViewIterator& operator=(const SpaceViewIterator&) = delete;
     };
 
-    return new SpaceViewIterator(sv_);
+    return new SpaceViewIterator(sv_, numberOfPoints_);
 }
 
 
 size_t SpaceView::numberOfPoints() const {
-    return sv_.numberOfPoints();
+    return numberOfPoints_;
 }
 
 
 util::Domain SpaceView::domain() const {
-    auto& bbox = sv_.bbox();
-    return {bbox.north(), bbox.west(), bbox.south(), bbox.east()};
+    return {bbox_.north(), bbox_.west(), bbox_.south(), bbox_.east()};
 }
 
 
 const util::BoundingBox& SpaceView::boundingBox() const {
-    return sv_.bbox();
+    return bbox_;
 }
 
 
@@ -216,10 +268,10 @@ SpaceView::space_view_t::space_view_t(const param::MIRParametrisation& param) {
 
     auto Nr = get<double>(param, "NrInRadiusOfEarth") * (get<long>(param, "edition") == 1 ? 1e-6 : 1.);
     ASSERT(Nr > 1.);
-    auto h = (Nr - 1.) * a;
+    auto h_ = (Nr - 1.) * a;
 
-    auto Lap = get<double>(param, "latitudeOfSubSatellitePointInDegrees");
-    auto Lop = get<double>(param, "longitudeOfSubSatellitePointInDegrees");
+    auto Lap  = get<double>(param, "latitudeOfSubSatellitePointInDegrees");
+    auto Lop_ = get<double>(param, "longitudeOfSubSatellitePointInDegrees");
     ASSERT(eckit::types::is_approximately_equal(Lap, 0.));
 
     // ASSERT(get<size_t>(param, "orientationOfTheGridInDegrees") == 180);
@@ -230,76 +282,26 @@ SpaceView::space_view_t::space_view_t(const param::MIRParametrisation& param) {
     str += " +proj=geos";
     str += " +type=crs";
     str += " +sweep=y";
-    str += " +h=" + std::to_string(h);
+    str += " +h=" + std::to_string(h_);
     str += " +a=" + std::to_string(a);
     str += " +b=" + std::to_string(b);
-    str += " +lon_0=" + std::to_string(Lop);
+    str += " +lon_0=" + std::to_string(Lop_);
 
     projection_ = {Projection::Spec("type", "proj").set("proj", str)};
 
 
     // (x, y) space
-    auto xspace = [Nr, h](double p, double d, size_t N, bool scansPositively) -> LinearSpacing {
-        auto r       = 2. * std::asin(1. / Nr) / d;  //< [radian]
-        double start = -p * r * h;                   // height factor is PROJ-specific
-        double stop  = (double(N) - p - 1.) * r * h;
+    auto xspace = [Nr](double p, double d, size_t N, double h, bool scansPositively) -> LinearSpacing {
+        auto r       = 2. * std::asin(1. / Nr) / d * h;  // [radian m] (height factor is PROJ-specific)
+        double start = -p * r;
+        double stop  = (double(N) - p - 1.) * r;
         return {scansPositively ? start : stop, scansPositively ? stop : start, long(N), true};
     };
 
     x_ = xspace(get<double, long>(param, "XpInGridLengths"), get<double, long>(param, "dx"), get<size_t>(param, "Nx"),
-                get<bool>(param, "iScansPositively"));
+                h_, get<bool>(param, "iScansPositively"));
     y_ = xspace(get<double, long>(param, "YpInGridLengths"), get<double, long>(param, "dy"), get<size_t>(param, "Ny"),
-                get<bool>(param, "jScansPositively"));
-
-
-    // number of (valid) points
-    numberOfPoints_ = 0;
-    for (size_t ix = 0; ix < x_.size(); ++ix) {
-        for (size_t iy = 0; iy < y_.size(); ++iy) {
-            auto ll = projection_.lonlat({x_[ix], y_[iy]});
-            if (std::isfinite(ll.lon()) && std::isfinite(ll.lat())) {
-                ++numberOfPoints_;
-            }
-        }
-    }
-
-
-    // bounding box
-    auto geometric_maximum = [](double x_min, double x_eps, const std::function<double(double)>& f,
-                                double f_eps = 1.e-9, size_t it_max = 1000) {
-        if (!std::isfinite(f(x_min))) {
-            return x_min;
-        }
-
-        size_t it = 0;
-        auto x    = x_min;
-        for (auto dx = x_eps, fx = f(x); f_eps < dx && it < it_max; ++it) {
-            auto fx_new = f(x + dx);
-            if (!std::isfinite(fx_new) || std::abs(fx_new) < std::abs(fx)) {
-                dx /= 2.;
-            }
-            else {
-                x += dx;
-                fx = fx_new;
-                dx *= 2.;
-            }
-        }
-
-        return x;
-    };
-
-    auto eps_xy = 1e-6 * h;
-    auto eps_ll = 1e-6;
-
-    auto max_y = geometric_maximum(0., eps_xy, [this](double y) { return projection_.lonlat({0, y}).lat(); });
-    auto n     = projection_.lonlat({0, max_y}).lat() + eps_ll;
-    auto s     = -n;
-
-    auto max_x = geometric_maximum(0., eps_xy, [this](double x) { return projection_.lonlat({x, 0}).lon(); });
-    auto e     = util::normalise_longitude(projection_.lonlat({max_x, 0}).lon(), Lop) + eps_ll;
-    auto w     = 2. * Lop - e;
-
-    bbox_ = {n, w, s, e};
+                h_, get<bool>(param, "jScansPositively"));
 }
 
 
