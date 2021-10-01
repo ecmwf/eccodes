@@ -294,7 +294,7 @@ SpaceView::space_view_t::space_view_t(const param::MIRParametrisation& param) {
     auto xspace = [Nr](double p, double d, size_t N, double h, bool scansPositively) -> LinearSpacing {
         auto r       = 2. * std::asin(1. / Nr) / d * h;  // [radian m] (height factor is PROJ-specific)
         double start = -p * r;
-        double stop  = (double(N) - p - 1.) * r;
+        double stop  = (double(N) - 1. - p) * r;
         return {scansPositively ? start : stop, scansPositively ? stop : start, long(N), true};
     };
 
