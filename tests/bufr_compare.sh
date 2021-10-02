@@ -232,6 +232,35 @@ grep -q "string \[stationOrSiteName\] 1 out of 3 different" $fLog
 ${tools_dir}/bufr_compare -b stationOrSiteName $fBufrTmp1 $fBufrTmp2
 rm -f $fBufrTmp1 $fBufrTmp2
 
+# Comparing empty string with 'missing'
+${tools_dir}/codes_bufr_filter -o $fBufrTmp1 - $sample <<EOF
+ set numberOfSubsets = 3;
+ set compressedData = 1;
+ set unexpandedDescriptors = { 1015 };
+ set stationOrSiteName = { "", "y", "x" };
+ set pack=1;
+ write;
+EOF
+${tools_dir}/codes_bufr_filter -o $fBufrTmp2 - $sample <<EOF
+ set numberOfSubsets = 3;
+ set compressedData = 1;
+ set unexpandedDescriptors = { 1015 };
+ # stationOrSiteName not set so all entries 'missing'
+ set pack=1;
+ write;
+EOF
+export ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS=1
+set +e
+${tools_dir}/bufr_compare $fBufrTmp1 $fBufrTmp2 >$fLog
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "string \[stationOrSiteName\] 2 out of 3 different" $fLog
+
+${tools_dir}/bufr_compare -b stationOrSiteName $fBufrTmp1 $fBufrTmp2
+unset ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS
+rm -f $fBufrTmp1 $fBufrTmp2
+
 
 # Clean up
 # -------------
