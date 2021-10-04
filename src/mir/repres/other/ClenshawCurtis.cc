@@ -373,6 +373,8 @@ Iterator* ClenshawCurtis::iterator() const {
             return true;
         }
 
+        size_t index() const override { return count_; }
+
         const std::vector<long>& pl_;
         const std::vector<double>& latitudes_;
 

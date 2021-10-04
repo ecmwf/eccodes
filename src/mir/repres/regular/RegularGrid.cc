@@ -37,9 +37,11 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
     ASSERT(projection);
 
     shapeOfTheEarthProvided_ = param.get("shapeOfTheEarth", shapeOfTheEarth_ = 6);
-    param.get("radius", radius_ = util::Earth::radius());
-    param.get("earthMajorAxis", earthMajorAxis_ = radius_);
-    param.get("earthMinorAxis", earthMinorAxis_ = radius_);
+
+    bool earthIsOblate = false;
+    param.get("earthIsOblate", earthIsOblate);
+    param.get(earthIsOblate ? "earthMajorAxis" : "radius", earthMajorAxis_ = util::Earth::radius());
+    param.get(earthIsOblate ? "earthMinorAxis" : "radius", earthMinorAxis_ = util::Earth::radius());
 
     auto get_long_first_key = [](const param::MIRParametrisation& param, const std::vector<std::string>& keys) -> long {
         long value = 0;
@@ -81,6 +83,35 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
     ASSERT(bbox);
 
     bbox_ = {bbox.north(), bbox.west(), bbox.south(), bbox.east()};
+}
+
+
+RegularGrid::RegularGrid(const Projection& projection, const util::BoundingBox& bbox, const LinearSpacing& x,
+                         const LinearSpacing& y) :
+    Gridded(bbox), x_(x), y_(y) {
+    grid_ = {x_, y_, projection};
+
+    firstPointBottomLeft_    = false;
+    shapeOfTheEarthProvided_ = false;
+
+    auto spec = grid_.projection().spec();
+
+    if (spec.has("radius")) {
+        shapeOfTheEarth_ = 1L;
+        earthMajorAxis_ = earthMinorAxis_ = spec.getDouble("radius");
+        return;
+    }
+
+    if (spec.has("semi_major_axis") && spec.has("semi_minor_axis")) {
+        shapeOfTheEarth_ = 7L;
+        earthMajorAxis_  = spec.getDouble("semi_major_axis");
+        earthMinorAxis_  = spec.getDouble("semi_minor_axis");
+        return;
+    }
+
+    std::ostringstream s;
+    s << "RegularGrid: couldn't determine shape of the Earth from projection: " << spec;
+    throw exception::SeriousBug(s.str());
 }
 
 
@@ -149,7 +180,7 @@ void RegularGrid::fill(grib_info& info) const {
             info.extra_set("shapeOfTheEarth", shapeOfTheEarth_);
             switch (shapeOfTheEarth_) {
                 case 1:
-                    info.extra_set("radius", spec.getDouble("radius", radius_));
+                    info.extra_set("radius", spec.getDouble("radius", earthMajorAxis_));
                     break;
                 case 3:
                     info.extra_set("earthMajorAxis", spec.getDouble("semi_major_axis", earthMajorAxis_) / 1000.);
@@ -231,16 +262,21 @@ Iterator* RegularGrid::iterator() const {
                 _lat     = lat(pLonLat_.lat());
                 _lon     = lon(pLonLat_.lon());
 
+                if (i_ > 0 || j_ > 0) {
+                    count_++;
+                }
+
                 if (++i_ == ni_) {
                     i_ = 0;
                     j_++;
                 }
 
-                count_++;
                 return true;
             }
             return false;
         }
+
+        size_t index() const override { return count_; }
 
     public:
         RegularGridIterator(Projection projection, const LinearSpacing& x, const LinearSpacing& y) :
@@ -261,7 +297,6 @@ void RegularGrid::makeName(std::ostream& out) const {
     h << firstPointBottomLeft_;
     if (shapeOfTheEarthProvided_) {
         h << shapeOfTheEarth_;
-        h << radius_;
         h << earthMajorAxis_;
         h << earthMinorAxis_;
     }

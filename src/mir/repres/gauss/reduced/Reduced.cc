@@ -364,14 +364,13 @@ size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue,
     // and even be cached (md5 of iterators)
 
     // Iterator is 'unrotated'
-    std::unique_ptr<Iterator> it(iterator());
-    while (it->next()) {
+    for (const std::unique_ptr<Iterator> it(iterator()); it->next();) {
         const auto& p = it->pointUnrotated();
 
         if (p.lat() != prev_lat) {
             ASSERT(p.lat() < prev_lat);  // Assumes scanning mode
             prev_lat = p.lat();
-            prev_lon = -std::numeric_limits<double>::max();
+            prev_lon = std::numeric_limits<double>::lowest();
 
             col    = &shape[rows++];
             (*col) = 0;
@@ -411,7 +410,7 @@ size_t Reduced::numberOfPoints() const {
     }
 
     size_t total = 0;
-    for (std::unique_ptr<Iterator> iter(iterator()); iter->next();) {
+    for (const std::unique_ptr<Iterator> it(iterator()); it->next();) {
         total++;
     }
     return total;

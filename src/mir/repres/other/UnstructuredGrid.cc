@@ -216,21 +216,19 @@ size_t UnstructuredGrid::numberOfPoints() const {
 
 
 const Gridded* UnstructuredGrid::croppedRepresentation(const util::BoundingBox& bbox) const {
-
     std::vector<double> lat;
     std::vector<double> lon;
 
     size_t i = 0;
     size_t j = 0;
 
-    std::unique_ptr<Iterator> iter(iterator());
-    while (iter->next()) {
+    for (const std::unique_ptr<Iterator> iter(iterator()); iter->next(); ++i) {
         if (bbox.contains(iter->pointUnrotated())) {
-            lat.emplace_back(latitudes_[i]);
-            lon.emplace_back(longitudes_[i]);
+            auto ip = iter->index();
+            lat.emplace_back(latitudes_.at(ip));
+            lon.emplace_back(longitudes_.at(ip));
             ++j;
         }
-        ++i;
     }
 
     if (j < i) {

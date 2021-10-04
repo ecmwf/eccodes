@@ -207,22 +207,22 @@ class ReducedLLIterator : public Iterator {
     }
 
     bool next(Latitude& lat, Longitude& lon) override {
-
         while (j_ < nj_ && i_ < ni_) {
-
             lat = latitude_;
             lon = longitude_;
 
-            i_++;
+            bool contains = domain_.contains(lat, lon);
+            if (contains && (i_ > 0 || j_ > 0)) {
+                count_++;
+            }
+
             longitude_ += inc_west_east_;
 
-            if (i_ == ni_) {
-
-                j_++;
+            if (++i_ == ni_) {
+                ++j_;
+                i_ = 0;
                 latitude_ -= inc_north_south_;
                 longitude_ = west_;
-
-                i_ = 0;
 
                 if (j_ < nj_) {
                     ASSERT(p_ < pl_.size());
@@ -232,13 +232,14 @@ class ReducedLLIterator : public Iterator {
                 }
             }
 
-            if (domain_.contains(lat, lon)) {
-                count_++;
+            if (contains) {
                 return true;
             }
         }
         return false;
     }
+
+    size_t index() const override { return count_; }
 
 public:
     ReducedLLIterator(const std::vector<long>& pl, const util::Domain& dom) :
@@ -261,8 +262,6 @@ public:
         ni_ = size_t(pl_[p_++]);
         ASSERT(ni_ > 1);
         inc_west_east_ = ew_ / (ni_ - (periodic_ ? 0 : 1));
-
-        // Log::debug() << *this << std::endl;
     }
 };
 
