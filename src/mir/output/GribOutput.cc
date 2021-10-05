@@ -264,13 +264,8 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
         pack->fill(repres, info);
 
         // Extra settings (paramId comes from here)
-        for (const auto& k : field.metadata(i)) {
-            long j = info.packing.extra_settings_count++;
-            ASSERT(j < long(sizeof(info.packing.extra_settings) / sizeof(info.packing.extra_settings[0])));
-
-            info.packing.extra_settings[j].name       = k.first.c_str();
-            info.packing.extra_settings[j].type       = CODES_TYPE_LONG;
-            info.packing.extra_settings[j].long_value = k.second;
+        for (auto& k : field.metadata(i)) {
+            info.extra_set(k.first.c_str(), k.second);
         }
 
 
