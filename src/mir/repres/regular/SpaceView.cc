@@ -62,16 +62,19 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
 
 
     // projection
-    std::string str;
-    str += " +proj=geos";
-    str += " +type=crs";
-    str += " +sweep=y";
-    str += " +h=" + std::to_string(h);
-    str += " +a=" + std::to_string(a);
-    str += " +b=" + std::to_string(b);
-    str += " +lon_0=" + std::to_string(Lop);
+    auto proj = [](double h, double a, double b, double lon_0) {
+        std::string str;
+        str += " +proj=geos";
+        str += " +type=crs";
+        str += " +sweep=y";
+        str += " +h=" + std::to_string(h);
+        str += " +a=" + std::to_string(a);
+        str += " +b=" + std::to_string(b);
+        str += " +lon_0=" + std::to_string(lon_0);
+        return str;
+    };
 
-    projection_ = RegularGrid::Projection::Spec("type", "proj").set("proj", str);
+    projection_ = RegularGrid::Projection::Spec("type", "proj").set("proj", proj(h, a, b, Lop));
 
 
     // (x, y) space (the height factor on (rx, ry) is PROJ-specific
@@ -99,13 +102,19 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
 
 
     // bounding box
+    // (projection without lon_0 so range is Greenwich-centred)
+
+    RegularGrid::Projection projection = RegularGrid::Projection::Spec("type", "proj").set("proj", proj(h, a, b, 0));
+
     auto geometric_maximum = [](double x_min, double x_eps, const std::function<double(double)>& f,
                                 double f_eps = 1.e-9, size_t it_max = 1000) {
         size_t it = 0;
         auto x    = x_min;
-        for (auto dx = x_eps, fx = f(x); f_eps < dx && it < it_max; ++it) {
+        auto fx   = f(x);
+
+        for (auto dx = x_eps; f_eps < dx && it < it_max; ++it) {
             auto fx_new = f(x + dx);
-            if (!std::isfinite(fx_new) || std::abs(fx_new) < std::abs(fx)) {
+            if (!std::isfinite(fx_new) || fx_new < fx) {
                 dx /= 2.;
             }
             else {
@@ -115,19 +124,20 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
             }
         }
 
-        return x;
+        ASSERT(0. < fx && fx < 90.);
+        return fx;
     };
 
     auto eps_xy = 1e-6 * h;
     auto eps_ll = 1e-6;
 
-    auto max_y = geometric_maximum(0., eps_xy, [this](double y) { return projection_.lonlat({0, y}).lat(); });
-    auto n     = projection_.lonlat({0, max_y}).lat() + eps_ll;
-    auto s     = -n;
+    auto max_lon = geometric_maximum(0., eps_xy, [&](double x) { return projection.lonlat({x, 0}).lon(); });
+    auto w       = Lop - max_lon - eps_ll;
+    auto e       = Lop + max_lon + eps_ll;
 
-    auto max_x = geometric_maximum(0., eps_xy, [this](double x) { return projection_.lonlat({x, 0}).lon(); });
-    auto e     = util::normalise_longitude(projection_.lonlat({max_x, 0}).lon(), Lop) + eps_ll;
-    auto w     = 2. * Lop - e;
+    auto max_lat = geometric_maximum(0., eps_xy, [&](double y) { return projection.lonlat({0, y}).lat(); });
+    auto n       = max_lat + eps_ll;
+    auto s       = -n;
 
     bbox_ = {n, w, s, e};
 }
@@ -152,6 +162,7 @@ Iterator* SpaceView::iterator() const {
         const Projection projection_;
         const LinearSpacing& x_;
         const LinearSpacing& y_;
+        Longitude w_;
 
         const size_t Nx_;
         const size_t Ny_;
@@ -176,7 +187,7 @@ Iterator* SpaceView::iterator() const {
 
                 if (std::isfinite(ll.lon()) && std::isfinite(ll.lat())) {
                     _lat = lat(ll.lat());
-                    _lon = lon(ll.lon());
+                    _lon = lon(util::normalise_longitude(ll.lon(), w_.value() - 1e-6));
 
                     count_++;
                     return true;
@@ -189,10 +200,11 @@ Iterator* SpaceView::iterator() const {
         size_t index() const override { return Nx_ * iy_ + ix_; }
 
     public:
-        SpaceViewIterator(Projection projection, const LinearSpacing& x, const LinearSpacing& y) :
+        SpaceViewIterator(Projection projection, const LinearSpacing& x, const LinearSpacing& y, Longitude w) :
             projection_(std::move(projection)),
             x_(x),
             y_(y),
+            w_(w),
             Nx_(x_.size()),
             Ny_(y_.size()),
             ix_(0),
@@ -213,7 +225,7 @@ Iterator* SpaceView::iterator() const {
         SpaceViewIterator& operator=(const SpaceViewIterator&) = delete;
     };
 
-    return new SpaceViewIterator(grid_->projection(), x_, y_);
+    return new SpaceViewIterator(grid_->projection(), x_, y_, boundingBox().west());
 }
 
 
