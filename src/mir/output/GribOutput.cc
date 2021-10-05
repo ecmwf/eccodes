@@ -253,8 +253,14 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
         grib_info info;
 
         // missing values
-        info.grid.bitmapPresent = field.hasMissing() ? 1 : 0;
-        info.grid.missingValue  = field.missingValue();
+        if (field.hasMissing() && field.missingValue() == 0.) {
+            info.grid.bitmapPresent = 1L;
+            info.extra_set("missingValue", 0.);  // ecCodes workaround for missingValue==0
+        }
+        else {
+            info.grid.bitmapPresent = field.hasMissing() ? 1L : 0L;
+            info.grid.missingValue  = field.missingValue();
+        }
 
         // Ask representation to update info
         repres::RepresentationHandle repres(field.representation());
