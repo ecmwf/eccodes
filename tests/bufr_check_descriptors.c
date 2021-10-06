@@ -14,13 +14,13 @@
 static const size_t MIN_NUM_COLUMNS = 8;
 
 #define NUMBER(a) (sizeof(a) / sizeof(a[0]))
-static const char* allowed_types[] = {"long", "double", "table", "flag", "string"};
+static const char* allowed_types[] = { "long", "double", "table", "flag", "string" };
 
 static int check_descriptor_type(const char* atype)
 {
     size_t i = 0, numTypes = NUMBER(allowed_types);
-    for(i=0; i<numTypes; ++i) {
-        if (strcmp(atype, allowed_types[i])==0) {
+    for (i = 0; i < numTypes; ++i) {
+        if (strcmp(atype, allowed_types[i]) == 0) {
             return GRIB_SUCCESS;
         }
     }
@@ -33,18 +33,18 @@ int main(int argc, char** argv)
     FILE* fp        = NULL;
     char line[1024] = {0,};
     char** list = NULL;
-    size_t i    = 0, line_number = 0;
-    long lValue = 0;
-    char* str_code = NULL; /* descriptor */
-    char* str_key = NULL;
-    char* str_type = NULL;
+    size_t i = 0, line_number = 0;
+    long lValue     = 0;
+    char* str_code  = NULL; /* descriptor */
+    char* str_key   = NULL;
+    char* str_type  = NULL;
     char* str_scale = NULL;
-    char* str_ref = NULL;
+    char* str_ref   = NULL;
     char* str_width = NULL;
     char* str_units = NULL;
     bufr_descriptor v;
     const size_t maxlen_keyName = sizeof(v.shortName);
-    const size_t maxlen_units = sizeof(v.units);
+    const size_t maxlen_units   = sizeof(v.units);
 
     Assert(argc == 2);
 
@@ -73,13 +73,13 @@ int main(int argc, char** argv)
                     line_number, str_code);
             return 1;
         }
-        str_key = list[1];
+        str_key  = list[1];
         str_type = list[2];
         if (check_descriptor_type(str_type) != GRIB_SUCCESS) {
             fprintf(stderr, "Error on line %lu: descriptor key type '%s' (column 3) is not valid.\n",
                     line_number, str_type);
             fprintf(stderr, "Please choose one of:\n");
-            for(i=0; i< NUMBER(allowed_types); ++i) {
+            for (i = 0; i < NUMBER(allowed_types); ++i) {
                 fprintf(stderr, "\t%s\n", allowed_types[i]);
             }
             return 1;
@@ -96,7 +96,7 @@ int main(int argc, char** argv)
             return 1;
         }
         str_scale = list[5];
-        str_ref = list[6];
+        str_ref   = list[6];
         str_width = list[7];
         if (string_to_long(str_scale, &lValue) != GRIB_SUCCESS) {
             fprintf(stderr, "Error on line %lu: descriptor scale '%s' (column 6) is not numeric.\n",
@@ -114,7 +114,8 @@ int main(int argc, char** argv)
             return 1;
         }
 
-        for (i = 0; list[i] != NULL; ++i) free(list[i]);
+        for (i = 0; list[i] != NULL; ++i)
+            free(list[i]);
         free(list);
     }
 
