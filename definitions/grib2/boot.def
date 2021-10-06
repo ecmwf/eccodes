@@ -18,7 +18,6 @@ constant grib2divider   = 1000000;
 alias extraDimensionPresent=zero;
 alias is_tigge = zero;
 alias is_s2s = zero;
-transient is_efas = 0;
 transient angleSubdivisions=grib2divider;  # micro degrees
 
 meta gts_header gts_header() : no_copy,hidden,read_only;

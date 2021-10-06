@@ -74,7 +74,7 @@ if (extraDim) {
             alias mars.levelist = level;
         }
     }
-    alias mars.levtype  = typeOfFirstFixedSurface;
+    concept mars.levtype (unknown,"marsLevtypeConcept.def",conceptsDir2,conceptsDir1):no_copy;
     # GRIB-372: levelist alias does not pertain to surface parameters
     if (levtype is "sfc") {
         unalias mars.levelist;

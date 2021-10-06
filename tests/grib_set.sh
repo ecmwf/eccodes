@@ -26,8 +26,8 @@ levtype=`${tools_dir}/grib_get -p levtype $outfile`
 centre=`${tools_dir}/grib_get -p centre $outfile`
 [ $centre = "cnmc" ]
 
-levtype=`${tools_dir}/grib_get -p levtype:l $outfile`
-[ $levtype -eq 100 ]
+#levtype=`${tools_dir}/grib_get -p levtype:l $outfile`
+#[ $levtype -eq 100 ]
 
 centre=`${tools_dir}/grib_get -p centre:l $outfile`
 [ $centre -eq 80 ]
@@ -39,7 +39,7 @@ outfile=${data_dir}/set.grib2
 
 rm -f $outfile
 
-${tools_dir}/grib_set -v -p levtype:l,centre:s  -s levtype:l=100,centre:s=cnmc $infile $outfile >$REDIRECT
+${tools_dir}/grib_set -v -p levtype:l,centre:s  -s levtype=pl,centre:s=cnmc $infile $outfile >$REDIRECT
 
 levtype=`${tools_dir}/grib_get -p levtype $outfile`
 [ $levtype = "pl" ]
@@ -47,8 +47,8 @@ levtype=`${tools_dir}/grib_get -p levtype $outfile`
 centre=`${tools_dir}/grib_get -p centre $outfile`
 [ $centre = "cnmc" ]
 
-levtype=`${tools_dir}/grib_get -p levtype:l $outfile`
-[ $levtype -eq 100 ]
+#levtype=`${tools_dir}/grib_get -p levtype:l $outfile`
+#[ $levtype -eq 100 ]
 
 centre=`${tools_dir}/grib_get -p centre:l $outfile`
 [ $centre -eq 80 ]
