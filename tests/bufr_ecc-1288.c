@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
     FILE* in = NULL;
     codes_handle* h = NULL;
     int err = 0;
-    size_t slen = 0;
+    size_t i = 0, slen = 0;
     char buf[1024] = {0,};
     char** strArray    = NULL; /* array of strings */
 
@@ -45,6 +45,9 @@ int main(int argc, char* argv[])
     assert( slen == 40 );
     assert( strcmp(strArray[0], "ABCDEFHIJ0123456789ABCDEFGHIJ0123456789ABCD ") == 0 );
     codes_handle_delete(h);
+
+    for (i = 0; i < slen; ++i) free(strArray[i]);
+    free(strArray);
 
     fclose(in);
     return 0;
