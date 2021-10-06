@@ -1,6 +1,10 @@
 #include "eccodes.h"
 #include <assert.h>
 
+#ifndef HAVE_FSEEKO
+#define fseeko fseek
+#endif
+
 const char* KEY = "encryptedShipOrMobileLandStationIdentifier";
 
 int main(int argc, char* argv[])
