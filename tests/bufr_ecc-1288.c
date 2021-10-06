@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
     codes_handle* h = NULL;
     int err = 0;
     size_t slen = 0;
-    char buf[256] = {0,};
+    char buf[1024] = {0,};
     char** strArray    = NULL; /* array of strings */
 
     const char* infile = argv[1];
