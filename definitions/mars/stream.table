@@ -106,8 +106,8 @@
 1246 espd Ensemble supplementary data
 1247 lwda Long window daily archive
 1248 lwwv Long window wave
-1249 elda Ensemble Long window Data Assimilation
-1250 ewla Ensemble Wave Long window data Assimilation
+1249 elda Ensemble Long window data assimilation
+1250 ewla Ensemble Wave Long window data assimilation
 1251 wamd Wave monthly means of daily means
 1252 gfas Global fire assimilation system
 2231 cnrm Meteo France climate centre
