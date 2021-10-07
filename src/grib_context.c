@@ -811,6 +811,7 @@ void grib_context_reset(grib_context* c)
             grib_context_free(c, cur->value);
             grib_context_free(c, cur);
         }
+        c->grib_definition_files_dir=0;
     }
 
     if (c->multi_support_on)
@@ -831,15 +832,27 @@ void grib_context_reset(grib_context* c)
 
 void grib_context_delete(grib_context* c)
 {
+    size_t i = 0;
     if (!c)
         c = grib_context_get_default();
 
     grib_hash_keys_delete(c->keys);
-    /*grib_trie_delete(c->def_files);  TODO:masn */
+    /* grib_trie_delete(c->def_files);  TODO:masn */
 
     grib_context_reset(c);
+    
     if (c != &default_grib_context)
         grib_context_free_persistent(&default_grib_context, c);
+
+    for(i=0; i<MAX_NUM_HASH_ARRAY; ++i)
+        c->hash_array[i] = NULL;
+    c->hash_array_count = 0;
+    grib_itrie_delete(c->hash_array_index);
+    c->hash_array_index=0;
+    grib_trie_delete(c->expanded_descriptors);
+    c->expanded_descriptors=0;
+
+    c->inited = 0;
 }
 
 void codes_bufr_multi_element_constant_arrays_on(grib_context* c)

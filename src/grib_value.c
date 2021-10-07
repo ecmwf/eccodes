@@ -599,7 +599,9 @@ int grib_is_missing_string(grib_accessor* a, unsigned char* x, size_t len)
         }
     }
 
-    ret = (a == NULL || ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) && ret == 1)) ? 1 : 0;
+    if (!a) return ret;
+
+    ret = ( ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) && ret == 1) ) ? 1 : 0;
     return ret;
 }
 

@@ -110,7 +110,7 @@ static grib_trie* load_list(grib_context* c, grib_expression* e, int* err)
         return NULL;
     }
     else {
-        grib_context_log(c, GRIB_LOG_DEBUG, "found def file %s", filename);
+        grib_context_log(c, GRIB_LOG_DEBUG, "is_in_list: found def file %s", filename);
     }
     list = (grib_trie*)grib_trie_get(c->lists, filename);
     if (list) {

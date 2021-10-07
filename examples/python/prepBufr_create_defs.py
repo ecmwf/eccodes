@@ -7,11 +7,11 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
-import traceback
-import sys
+import getopt
 import os
 import re
-import getopt
+import sys
+import traceback
 
 from eccodes import *
 

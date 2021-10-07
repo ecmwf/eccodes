@@ -57,8 +57,12 @@ alias totalNumber=numberOfForecastsInEnsemble;
 
 unsigned[4] indexingDate: dump; # MARS archiving date (YYYYMMDD)
 unsigned[2] indexingTime: dump; # MARS archiving time (HHMM)
+transient indexingTimeHH = indexingTime/100 : hidden;
+transient indexingTimeMM = indexingTime - 100 * indexingTimeHH : hidden;
+meta indexingTimeHHMM sprintf("%.2d%.2d",indexingTimeHH,indexingTimeMM);
+
 alias mars.date = indexingDate;
-alias mars.time = indexingTime;
+alias mars.time = indexingTimeHHMM;
 
 # spareSetToZero
 pad padding_loc12_1(50);

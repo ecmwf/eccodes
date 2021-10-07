@@ -17,7 +17,7 @@ echo "-# When a key is not used all the bits of its value should be set to 1 to 
 \\verbatim
 >grib_set -s scaleFactorOfFirstFixedSurface=missing,scaledValueOfFirstFixedSurface=MISSING ../data/regular_latlon_surface.grib2 out.grib2
 \\endverbatim\\n
-Since some values can not be set to missing you can get an error for those keys.\\n"
+Since some values cannot be set to missing you can get an error for those keys.\\n"
 
 echo "-# To set scaleFactorOfSecondFixedSurface to missing only for the fields for which scaleFactorOfSecondFixedSurface is not missing: \\n
 \\verbatim 

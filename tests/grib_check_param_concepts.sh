@@ -18,9 +18,13 @@
 # ----------------------------------------------------
 $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/paramId.def
 $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def
+$EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/uerra/paramId.def
+$EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/hydro/paramId.def
 
 $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/shortName.def
 $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/shortName.def
+$EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/uerra/shortName.def
+$EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/hydro/shortName.def
 
 
 # Check the group: name.def paramId.def shortName.def units.def cfVarName.def
@@ -51,6 +55,9 @@ defs_dirs="
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/lfpw
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/lowm
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/rjtd
+
+ $ECCODES_DEFINITION_PATH/grib2/localConcepts/uerra
+ $ECCODES_DEFINITION_PATH/grib2/localConcepts/hydro
 
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/egrr
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/ekmi

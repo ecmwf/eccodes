@@ -14,11 +14,11 @@
 label="bufr_dump_decode_fortran_test"
 
 # Create log file
-fLog=${label}".log"
+fLog=temp.${label}".log"
 rm -f $fLog
 
 tempBufr=outfile.bufr
-tempDir=${label}.dir
+tempDir=temp.${label}.dir
 rm -rf $tempDir
 mkdir -p $tempDir
 
@@ -51,8 +51,8 @@ fi
 
 for file in ${bufr_files}
 do
-  tempSrc=$label.$file.f90
-  tempExe=$label.$file.exe
+  tempSrc=temp.$label.$file.f90
+  tempExe=temp.$label.$file.exe
   filePath=${data_dir}/bufr/$file
 
   # Generate F90 code from BUFR file

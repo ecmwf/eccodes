@@ -38,7 +38,7 @@
 111 111 Eta level (-)
 112 112 Reserved 
 113 113 Logarithmic hybrid level 
-114 sol Snow level (Numeric)
+114 114 Snow level (Numeric)
 115 115 Sigma height level
 # 116 Reserved
 117 117 Mixed layer depth (m)
@@ -56,9 +56,9 @@
 165 165 Bottom of sediment layer penetrated by thermal wave (-)
 166 sfc Mixing layer (-)
 167 167 Bottom of root zone (-)
-168 o3d Ocean model level (Numeric)
-169 o2d Ocean level defined by water density (sigma-theta) difference from near-surface to level (kg m-3)
-170 o2d Ocean level defined by water potential temperature difference from near-surface to level (K)
+168 168 Ocean model level (Numeric)
+169 169 Ocean level defined by water density (sigma-theta) difference from near-surface to level (kg m-3)
+170 170 Ocean level defined by water potential temperature difference from near-surface to level (K)
 # 171-173 Reserved 
 174 sfc Top surface of ice on sea, lake or river
 175 175 Top surface of ice, under snow cover, on sea, lake or river

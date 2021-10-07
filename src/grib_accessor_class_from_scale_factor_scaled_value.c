@@ -189,6 +189,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     int64_t value = 0, prev_value = 0;
     double exact        = *val; /*the input*/
     const float epsilon = float_epsilon();
+    int is_negative = 0;
     unsigned long maxval_value, maxval_factor; /*maximum allowable values*/
     grib_accessor *accessor_factor, *accessor_value;
 
@@ -217,9 +218,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     maxval_value  = (1UL << (accessor_value->length * 8)) - 2;  /* exclude missing */
     maxval_factor = (1UL << (accessor_factor->length * 8)) - 2; /* exclude missing */
 
-    Assert(exact > 0);
-
     /* Loop until we find a close enough approximation. Keep the last good values */
+    if (exact < 0) {
+        is_negative = 1;
+        exact *= -1;
+    }
     factor = prev_factor = 0;
     value = prev_value = round(exact);
     while (!is_approximately_equal(exact, eval_value_factor(value, factor), epsilon) &&
@@ -234,6 +237,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
         prev_factor = factor;
         prev_value  = value;
+    }
+
+    if (is_negative) {
+        value *= -1;
     }
 
     if ((ret = grib_set_long_internal(hand, self->scaleFactor, factor)) != GRIB_SUCCESS)

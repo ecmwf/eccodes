@@ -16,8 +16,9 @@
 
 
 from __future__ import print_function
-import traceback
+
 import sys
+import traceback
 
 from eccodes import *
 
@@ -26,7 +27,7 @@ VERBOSE = 1  # verbose error reporting
 
 def example(INPUT):
     # open bufr file
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     cnt = 0
 
@@ -41,7 +42,7 @@ def example(INPUT):
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(bufr, 'unpack', 1)
+        codes_set(bufr, "unpack", 1)
 
         # get BUFR key iterator
         iterid = codes_bufr_keys_iterator_new(bufr)
@@ -71,7 +72,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

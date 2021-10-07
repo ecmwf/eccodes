@@ -116,14 +116,6 @@ if ( ((section1Length > 21) or setCalendarId > 0) and deleteCalendarId == 0) {
   template calendarIdentification "grib2/template.1.[calendarIdentificationTemplateNumber:l].def";
 }
 
-concept is_uerra(zero) {
-   '1' = {productionStatusOfProcessedData=10;}
-   '1' = {productionStatusOfProcessedData=11;}
-   '1' = {productionStatusOfProcessedData=9;}
-   '1' = {productionStatusOfProcessedData=8;}
-   '0' = {dummy=1;}
-}
-
 constant conceptsMasterDir="grib2" : hidden;
 constant conceptsLocalDirAll="grib2/localConcepts/[centre:s]" : hidden;
 constant conceptsLocalDirECMF="grib2/localConcepts/ecmf" : hidden;

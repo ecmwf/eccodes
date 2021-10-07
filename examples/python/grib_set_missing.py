@@ -9,31 +9,31 @@
 # nor does it submit to any jurisdiction.
 #
 
-import traceback
 import sys
+import traceback
 
 from eccodes import *
 
-INPUT = '../../data/tigge/tigge_ecmf_pl_t.grib'
-OUTPUT = 'out.p_set_missing.grib'
+INPUT = "../../data/tigge/tigge_ecmf_pl_t.grib"
+OUTPUT = "out.p_set_missing.grib"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    fin = open(INPUT, 'rb')
-    fout = open(OUTPUT, 'wb')
+    fin = open(INPUT, "rb")
+    fout = open(OUTPUT, "wb")
 
     gid = codes_grib_new_from_file(fin)
 
     codes_set_long(gid, "scaledValueOfFirstFixedSurface", 15)
     codes_set_long(gid, "scaleFactorOfFirstFixedSurface", 1)
     level = codes_get_double(gid, "level")
-    assert (level == 1.5)
+    assert level == 1.5
 
     # set type of level to surface
-    codes_set(gid, 'typeOfFirstFixedSurface', 'sfc')
-    codes_set_missing(gid, 'scaleFactorOfFirstFixedSurface')
-    codes_set_missing(gid, 'scaledValueOfFirstFixedSurface')
+    codes_set(gid, "typeOfFirstFixedSurface", "sfc")
+    codes_set_missing(gid, "scaleFactorOfFirstFixedSurface")
+    codes_set_missing(gid, "scaledValueOfFirstFixedSurface")
 
     codes_write(gid, fout)
 
@@ -49,7 +49,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

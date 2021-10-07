@@ -30,6 +30,7 @@ list(APPEND test_bins
     grib_optimize_scaling_sh
     grib_ecc-386
     bufr_ecc-517
+    bufr_ecc-1288
     bufr_get_element
     bufr_extract_headers
     extract_offsets
@@ -84,9 +85,9 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1195
         grib_ecc-1212
         grib_ecc-1230
-        grib_ecc-1255
         grib_ecc-1258
         grib_ecc-1260
+        grib_ecc-1261
         grib_ecc-1271
         bufr_ecc-1028
         bufr_ecc-1195
@@ -316,6 +317,12 @@ if( HAVE_BUILD_TOOLS )
                       CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_ecc-197.sh
                       TEST_DEPENDS eccodes_download_bufrs )
+    ecbuild_add_test( TARGET eccodes_t_bufr_ecc-1288
+                      TYPE SCRIPT
+                      CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_ecc-1288.sh
+                      TEST_DEPENDS eccodes_download_bufrs )
+
 
     if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
         ecbuild_add_executable( TARGET    grib_encode_pthreads

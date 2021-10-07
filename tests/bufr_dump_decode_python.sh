@@ -14,10 +14,10 @@
 label="bufr_dump_decode_python_test"
 
 # Create log file
-fLog=${label}".log"
+fLog=temp.${label}".log"
 rm -f $fLog
 
-tempDir=${label}.dir
+tempDir=temp.${label}.dir
 mkdir -p $tempDir
 cd $tempDir
 
@@ -28,7 +28,7 @@ bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 for file in ${bufr_files}
 do
   inputBufr=${data_dir}/bufr/$file
-  tempSrc=$label.$file.py
+  tempSrc=temp.$label.$file.py
 
   # Too large for this test
   if [ "$file" = "ias1_240.bufr" ]; then

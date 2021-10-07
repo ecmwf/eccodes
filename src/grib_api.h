@@ -1423,7 +1423,7 @@ int grib_points_get_values(grib_handle* h, grib_points* points, double* val);
 
 typedef struct grib_util_grid_spec
 {
-    int grid_type;
+    int grid_type; /* e.g. GRIB_UTIL_GRID_SPEC_REGULAR_LL etc */
 
     /* Grid */
     long Ni;
@@ -1450,18 +1450,18 @@ typedef struct grib_util_grid_spec
     /* Gaussian number */
     long N;
 
-    /* bitmap */
+    /* Bitmap */
     long bitmapPresent;
-    double missingValue;
+    double missingValue; /* 0 means use the default */
 
-    /* pl list for reduced */
+    /* 'pl' array for reduced Gaussian grids */
     const long* pl;
     long pl_size;
 
     /* Spherical harmonics */
     long truncation;
 
-    /* polar stereographic */
+    /* Polar stereographic */
     double orientationOfTheGridInDegrees;
     long DyInMetres;
     long DxInMetres;
@@ -1470,7 +1470,7 @@ typedef struct grib_util_grid_spec
 
 typedef struct grib_util_grid_spec2
 {
-    int grid_type;
+    int grid_type;  /* e.g. GRIB_UTIL_GRID_SPEC_REGULAR_LL etc */
     const char* grid_name; /* e.g. N320 */
 
     /* Grid */
@@ -1499,18 +1499,18 @@ typedef struct grib_util_grid_spec2
     /* Gaussian number */
     long N;
 
-    /* bitmap */
+    /* Bitmap */
     long bitmapPresent;
-    double missingValue;
+    double missingValue;  /* 0 means use the default */
 
-    /* pl list for reduced */
+    /* 'pl' array for reduced Gaussian grids */
     const long* pl;
     long pl_size;
 
     /* Spherical harmonics */
     long truncation;
 
-    /* polar stereographic */
+    /* Polar stereographic */
     double orientationOfTheGridInDegrees;
     long DyInMetres;
     long DxInMetres;

@@ -800,7 +800,7 @@ s2s/ammc: warning: s2s.mx2t6_20151224_26.grib2, field 47 [surface_air_maximum_te
 
    - TBD: the problem is that for tigge/tigge-lam there are cumulated parameters from step 0 and
           the limits for e.g. 0-3 period should be very different to ones for e.g. 0-120 even
-          the value is divided by the period lenght in hours!
+          the value is divided by the period length in hours!
 */
 
    {

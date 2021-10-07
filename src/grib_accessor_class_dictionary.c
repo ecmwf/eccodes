@@ -210,7 +210,7 @@ static grib_trie* load_dictionary(grib_context* c, grib_accessor* a, int* err)
         return NULL;
     }
     else {
-        grib_context_log(c, GRIB_LOG_DEBUG, "found def file %s", filename);
+        grib_context_log(c, GRIB_LOG_DEBUG, "dictionary: found def file %s", filename);
     }
     dictionary = (grib_trie*)grib_trie_get(c->lists, dictName);
     if (dictionary) {
