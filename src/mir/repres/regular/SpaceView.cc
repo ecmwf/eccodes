@@ -15,13 +15,15 @@
 #include <algorithm>
 #include <cmath>
 #include <functional>
+#include <limits>
 #include <ostream>
+#include <string>
+#include <vector>
 
 #include "eckit/types/FloatCompare.h"
 
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
-#include "mir/util/Angles.h"
 #include "mir/util/Exceptions.h"
 
 
@@ -63,15 +65,11 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
 
     // projection
     auto proj = [](double h, double a, double b, double lon_0) {
-        std::string str;
-        str += " +proj=geos";
-        str += " +type=crs";
-        str += " +sweep=y";
-        str += " +h=" + std::to_string(h);
-        str += " +a=" + std::to_string(a);
-        str += " +b=" + std::to_string(b);
-        str += " +lon_0=" + std::to_string(lon_0);
-        return str;
+        auto _h = " +h=" + std::to_string(h);
+        auto _l = eckit::types::is_approximately_equal(lon_0, 0.) ? "" : " +lon_0=" + std::to_string(lon_0);
+        auto _e = eckit::types::is_approximately_equal(a, b) ? " +R=" + std::to_string(a)
+                                                             : " +a=" + std::to_string(a) + " +b=" + std::to_string(b);
+        return "+proj=geos +type=crs +sweep=y" + _h + _l + _e;
     };
 
     projection_ = RegularGrid::Projection::Spec("type", "proj").set("proj", proj(h, a, b, Lop));
@@ -81,31 +79,60 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
     Nx_ = get<long>(param, "Nx");
     ASSERT(1 < Nx_);
 
-    Ny_ = get<long>(param, "Ny");
-    ASSERT(1 < Ny_);
-
     auto ip = get<bool>(param, "iScansPositively");
     auto xp = get<double, long>(param, "XpInGridLengths");
     auto dx = get<double, long>(param, "dx");
+    ASSERT(dx > 0);
+
     auto rx = 2. * std::asin(1. / Nr) / dx * h;
 
     (ip ? xa_ : xb_) = rx * (-xp);
     (ip ? xb_ : xa_) = rx * (-xp + double(Nx_ - 1));
 
+    Ny_ = get<long>(param, "Ny");
+    ASSERT(1 < Ny_);
+
     auto jp = get<bool>(param, "jScansPositively");
     auto yp = get<double, long>(param, "YpInGridLengths");
     auto dy = get<double, long>(param, "dy");
+    ASSERT(dy > 0);
+
     auto ry = 2. * std::asin(1. / Nr) / dy * h;
 
     (jp ? ya_ : yb_) = ry * (-yp);
     (jp ? yb_ : ya_) = ry * (-yp + double(Ny_ - 1));
 
 
-    // bounding box
-    // (projection without lon_0 so range is Greenwich-centred)
+    // longest element diagonal, a multiple of a reference central element diagonal (avoiding distortion)
+    LongestElementDiagonal_ =
+        20. * util::Earth::distance(projection_.lonlat({-rx / 2, ry / 2}), projection_.lonlat({rx / 2, -ry / 2}));
+    ASSERT(0. < LongestElementDiagonal_);
 
+
+    // pre-calculate (lon, lat) coordinates
+    // (projection without lon_0 so range is Greenwich-centred)
     RegularGrid::Projection projection = RegularGrid::Projection::Spec("type", "proj").set("proj", proj(h, a, b, 0));
 
+    lonlat_.resize(Nx_ * Ny_);
+    size_t index = 0;
+    for (auto& _y : y()) {
+        for (auto& _x : x()) {
+            auto& ll = lonlat_[index++];
+            ll       = projection.lonlat({_x, _y});
+            if (std::isfinite(ll.lon()) && std::isfinite(ll.lat())) {
+                ASSERT(-90. < ll.lon() && ll.lon() < 90.);
+                ASSERT(-90. < ll.lat() && ll.lat() < 90.);
+
+                ll.lon() += Lop;
+            }
+            else {
+                ll = {std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
+            }
+        }
+    }
+
+
+    // bounding box
     auto geometric_maximum = [](double x_min, double x_eps, const std::function<double(double)>& f,
                                 double f_eps = 1.e-9, size_t it_max = 1000) {
         size_t it = 0;
@@ -159,37 +186,22 @@ void SpaceView::fill(grib_info& /*info*/) const {
 
 Iterator* SpaceView::iterator() const {
     class SpaceViewIterator : public Iterator {
-        const Projection projection_;
-        const LinearSpacing& x_;
-        const LinearSpacing& y_;
-        Longitude w_;
-
-        const size_t Nx_;
-        const size_t Ny_;
-        size_t ix_;
-        size_t iy_;
+        const std::vector<PointLonLat>& lonlat_;
         size_t count_;
 
         void print(std::ostream& out) const override {
             out << "SpaceViewIterator[";
             Iterator::print(out);
-            out << ",ix=" << ix_ << ",iy=" << iy_ << ",count=" << index() << "]";
+            out << ",count=" << count_ << "]";
         }
 
         bool next(Latitude& _lat, Longitude& _lon) override {
-            while (iy_ < Ny_ && ix_ < Nx_) {
-                auto ll = projection_.lonlat({x_[ix_], y_[iy_]});
-
-                if (++ix_ == Nx_) {
-                    ix_ = 0;
-                    iy_++;
-                }
-
-                if (std::isfinite(ll.lon()) && std::isfinite(ll.lat())) {
+            while (count_ < lonlat_.size()) {
+                // only one of (lon, lat) needs to be checked
+                auto& ll = lonlat_[count_++];
+                if (std::isfinite(ll.lon())) {
                     _lat = lat(ll.lat());
-                    _lon = lon(util::normalise_longitude(ll.lon(), w_.value() - 1e-6));
-
-                    count_++;
+                    _lon = lon(ll.lon());
                     return true;
                 }
             }
@@ -197,35 +209,22 @@ Iterator* SpaceView::iterator() const {
             return false;
         }
 
-        size_t index() const override { return Nx_ * iy_ + ix_; }
+        size_t index() const override { return count_; }
 
     public:
-        SpaceViewIterator(Projection projection, const LinearSpacing& x, const LinearSpacing& y, Longitude w) :
-            projection_(std::move(projection)),
-            x_(x),
-            y_(y),
-            w_(w),
-            Nx_(x_.size()),
-            Ny_(y_.size()),
-            ix_(0),
-            iy_(0),
-            count_(0) {
-            for (auto ll = projection_.lonlat({x_[ix_], y_[iy_]}); !std::isfinite(ll.lon()) || !std::isfinite(ll.lat());
-                 ll      = projection_.lonlat({x_[ix_], y_[iy_]})) {
-                if (++ix_ == Nx_) {
-                    ix_ = 0;
-                    if (++iy_ == Ny_) {
-                        break;
-                    }
-                }
-            }
-        }
+        SpaceViewIterator(const std::vector<PointLonLat>& lonlat) : lonlat_(lonlat), count_(0) {}
 
         SpaceViewIterator(const SpaceViewIterator&) = delete;
         SpaceViewIterator& operator=(const SpaceViewIterator&) = delete;
     };
 
-    return new SpaceViewIterator(grid_->projection(), x_, y_, boundingBox().west());
+    return new SpaceViewIterator(lonlat_);
+}
+
+
+bool SpaceView::getLongestElementDiagonal(double& d) const {
+    d = LongestElementDiagonal_;
+    return true;
 }
 
 
