@@ -8,3 +8,5 @@ alias mars.time = timeOfAnalysis;
 alias mars.offsetdate = dataDate;
 alias mars.offsettime = dataTime;
 
+unalias mars.step;
+alias mars.step = stepRange;
