@@ -1,7 +1,6 @@
 # Concept typeOfLevel 
 'surface'                      = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=255;}
 'entireAtmosphere'             = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=8;}
-'entireOcean'                  = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=9;}
 'cloudBase'                    = {typeOfFirstFixedSurface=2;   typeOfSecondFixedSurface=255;}
 'cloudTop'                     = {typeOfFirstFixedSurface=3;   typeOfSecondFixedSurface=255;}
 'isothermZero'                 = {typeOfFirstFixedSurface=4;   typeOfSecondFixedSurface=255;}
