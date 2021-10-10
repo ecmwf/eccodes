@@ -36,7 +36,9 @@ def verify_table(table, filename):
     if table == "D":
         raise NotImplementedError("Table D verification: Not yet implemented.")
 
-    data = np.genfromtxt(filename, comments="#", dtype=str, delimiter="|")
+    data = np.genfromtxt(
+        filename, comments="#", dtype=str, delimiter="|", usecols=np.arange(0, 8)
+    )
 
     # If there is only 1 row, then we get a plain list and not list of lists
     if len(data.shape) == 1:
@@ -48,9 +50,7 @@ def verify_table(table, filename):
         numcols = len(a_row)
         if numcols < MIN_NUM_COLUMNS:
             print(f"{a_row}")
-            print(
-                f"Error in line {linenum}: Number of columns (={numcols}) < required miniumum (={MIN_NUM_COLUMNS})"
-            )
+            print(f"Error in line {linenum}: Column count (={numcols}) < required miniumum (={MIN_NUM_COLUMNS})")
             return 1
         a_code = a_row[0]
         a_key = a_row[1]
