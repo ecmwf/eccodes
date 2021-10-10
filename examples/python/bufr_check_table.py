@@ -12,10 +12,9 @@
 
 from __future__ import print_function
 
-import getopt
 import os
 import sys
-import traceback
+
 import numpy as np
 
 MIN_NUM_COLUMNS = 8
@@ -49,13 +48,11 @@ def verify_table(table, filename):
         linenum = 1 + i
         numcols = len(a_row)
         if numcols < MIN_NUM_COLUMNS:
-            print(f"{a_row}")
             print(f"Error in line {linenum}: Column count (={numcols}) < required miniumum (={MIN_NUM_COLUMNS})")
             return 1
         a_code = a_row[0]
         a_key = a_row[1]
         a_type = a_row[2]
-        a_unit = a_row[4]
         a_scale = a_row[5]
         a_ref = a_row[6]
         a_width = a_row[7]
@@ -63,12 +60,8 @@ def verify_table(table, filename):
             print(f"Error in line {linenum}: Code '{a_code}' (column 1) is not numeric")
             return 1
         if len(a_code) != LEN_DESCRIPTOR:
-            print(
-                f"Error in line {linenum}: Code '{a_code}' (column 1) should be {LEN_DESCRIPTOR} digits long"
-            )
-            print(
-                f"\tAll descriptors have a F-X-Y structure: 1 digit for F, 2 for X and 3 for Y"
-            )
+            print(f"Error in line {linenum}: Code '{a_code}' (column 1) should be {LEN_DESCRIPTOR} digits long")
+            print("\tAll descriptor codes (FXY) must have 1 digit for F, 2 for X and 3 for Y")
             return 1
         if not a_key:
             print(f"Error in line {linenum}: Key '{a_key}' (column 2) is not valid")
@@ -77,19 +70,13 @@ def verify_table(table, filename):
             print(f"\tPlease choose from: {ALLOWED_TYPES}")
             return 1
         if not isNumeric(a_scale):
-            print(
-                f"Error in line {linenum}: Scale '{a_scale}' (column 6) is not numeric"
-            )
+            print(f"Error in line {linenum}: Scale '{a_scale}' (column 6) is not numeric")
             return 1
         if not isNumeric(a_ref):
-            print(
-                f"Error in line {linenum}: Reference '{a_ref}' (column 7) is not numeric"
-            )
+            print(f"Error in line {linenum}: Reference '{a_ref}' (column 7) is not numeric")
             return 1
         if not isNumeric(a_width):
-            print(
-                f"Error in line {linenum}: Width '{a_width}' (column 8) is not numeric"
-            )
+            print(f"Error in line {linenum}: Width '{a_width}' (column 8) is not numeric")
             return 1
 
     print("All OK")
@@ -117,7 +104,7 @@ def main():
         assert False, "Invalid option. Specify -B or -D"
     filename = sys.argv[2]
 
-    print(f"Processing {filename}")
+    print(f"Processing {filename}: Table{table}")
     status = verify_table(table, filename)
     return status
 
