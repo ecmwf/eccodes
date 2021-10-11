@@ -26,6 +26,7 @@
 #include "mir/repres/Iterator.h"
 #include "mir/util/Angles.h"
 #include "mir/util/Exceptions.h"
+#include "mir/util/Trace.h"
 
 
 namespace mir {
@@ -57,7 +58,7 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
 
     auto h = (Nr - 1.) * a;
 
-    auto Lop = get<double>(param, "longitudeOfSubSatellitePointInDegrees");
+    Lop_     = get<double>(param, "longitudeOfSubSatellitePointInDegrees");
     auto Lap = get<double>(param, "latitudeOfSubSatellitePointInDegrees");
     ASSERT(eckit::types::is_approximately_equal(Lap, 0.));
 
@@ -73,8 +74,8 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
         return "+proj=geos +type=crs +sweep=y" + _h + _l + _e;
     };
 
-    projection_ = RegularGrid::Projection::Spec("type", "proj").set("proj", proj(h, a, b, Lop));
-
+    projection_          = RegularGrid::Projection::Spec("type", "proj").set("proj", proj(h, a, b, Lop_));
+    projectionGreenwich_ = RegularGrid::Projection::Spec("type", "proj").set("proj", proj(h, a, b, 0));
 
     // (x, y) space
     Nx_ = get<long>(param, "Nx");
@@ -110,29 +111,6 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
     ASSERT(0. < LongestElementDiagonal_);
 
 
-    // pre-calculate (lon, lat) coordinates
-    // (projection without lon_0 so range is Greenwich-centred)
-    RegularGrid::Projection projection = RegularGrid::Projection::Spec("type", "proj").set("proj", proj(h, a, b, 0));
-
-    lonlat_.resize(Nx_ * Ny_);
-    size_t index = 0;
-    for (auto& _y : y()) {
-        for (auto& _x : x()) {
-            auto& ll = lonlat_[index++];
-            ll       = projection.lonlat({_x, _y});
-            if (std::isfinite(ll.lon()) && std::isfinite(ll.lat())) {
-                ASSERT(-90. < ll.lon() && ll.lon() < 90.);
-                ASSERT(-90. < ll.lat() && ll.lat() < 90.);
-
-                ll.lon() += Lop;
-            }
-            else {
-                ll = {std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
-            }
-        }
-    }
-
-
     // bounding box
 #if 1
     // [1] page 25, solution of s_d^2=0, restrained at x=0 (lon) and y=0 (lat). Note: uses a, b, height defined there
@@ -141,8 +119,8 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
     auto n = 90. - util::radian_to_degree(0.151347) + eps_ll;
     auto s = -n;
 
-    auto e = 90. - util::radian_to_degree(0.151853) + eps_ll + Lop;
-    auto w = 2. * Lop - e;
+    auto e = 90. - util::radian_to_degree(0.151853) + eps_ll + Lop_;
+    auto w = 2. * Lop_ - e;
 #else
     auto geometric_maximum = [](double x_min, double x_eps, const std::function<double(double)>& f,
                                 double f_eps = 1.e-9, size_t it_max = 1000) {
@@ -169,16 +147,46 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
     auto eps_xy = 1e-6 * h;
     auto eps_ll = 1e-6;
 
-    auto max_lon = geometric_maximum(0., eps_xy, [&](double x) { return projection.lonlat({x, 0}).lon(); });
-    auto w       = Lop - max_lon - eps_ll;
-    auto e       = Lop + max_lon + eps_ll;
+    auto max_lon = geometric_maximum(0., eps_xy, [&](double x) { return projectionGreenwich_.lonlat({x, 0}).lon(); });
+    auto w       = Lop_ - max_lon - eps_ll;
+    auto e       = Lop_ + max_lon + eps_ll;
 
-    auto max_lat = geometric_maximum(0., eps_xy, [&](double y) { return projection.lonlat({0, y}).lat(); });
+    auto max_lat = geometric_maximum(0., eps_xy, [&](double y) { return projectionGreenwich_.lonlat({0, y}).lat(); });
     auto n       = max_lat + eps_ll;
     auto s       = -n;
 #endif
 
     bbox_ = {n, w, s, e};
+}
+
+
+const std::vector<RegularGrid::PointLonLat>& SpaceViewInternal::lonlat() const {
+    if (lonlat_.empty()) {
+        trace::Timer timer("SpaceView: pre-calculate (lon, lat) coordinates", Log::debug());
+
+        ASSERT(projectionGreenwich_);  // Greenwich-centred (avoids PROJ normalisation)
+        lonlat_.resize(Nx_ * Ny_);
+
+        size_t index = 0;
+        for (auto& _y : y()) {
+            for (auto& _x : x()) {
+                auto& ll = lonlat_[index++];
+                ll       = projectionGreenwich_.lonlat({_x, _y});
+                if (std::isfinite(ll.lon()) && std::isfinite(ll.lat())) {
+                    ASSERT(-90. < ll.lon() && ll.lon() < 90.);
+                    ASSERT(-90. < ll.lat() && ll.lat() < 90.);
+
+                    ll.lon() += Lop_;
+                }
+                else {
+                    ll = {std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()};
+                }
+            }
+        }
+    }
+
+    ASSERT(!lonlat_.empty());
+    return lonlat_;
 }
 
 
@@ -230,7 +238,7 @@ Iterator* SpaceView::iterator() const {
         SpaceViewIterator& operator=(const SpaceViewIterator&) = delete;
     };
 
-    return new SpaceViewIterator(lonlat_);
+    return new SpaceViewIterator(lonlat());
 }
 
 
