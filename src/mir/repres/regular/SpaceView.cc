@@ -24,6 +24,7 @@
 
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
+#include "mir/util/Angles.h"
 #include "mir/util/Exceptions.h"
 
 
@@ -75,7 +76,7 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
     projection_ = RegularGrid::Projection::Spec("type", "proj").set("proj", proj(h, a, b, Lop));
 
 
-    // (x, y) space (the height factor on (rx, ry) is PROJ-specific
+    // (x, y) space
     Nx_ = get<long>(param, "Nx");
     ASSERT(1 < Nx_);
 
@@ -84,7 +85,7 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
     auto dx = get<double, long>(param, "dx");
     ASSERT(dx > 0);
 
-    auto rx = 2. * std::asin(1. / Nr) / dx * h;
+    auto rx = 2. * std::asin(1. / Nr) / dx * h;  // (height factor is PROJ-specific)
 
     (ip ? xa_ : xb_) = rx * (-xp);
     (ip ? xb_ : xa_) = rx * (-xp + double(Nx_ - 1));
@@ -97,7 +98,7 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
     auto dy = get<double, long>(param, "dy");
     ASSERT(dy > 0);
 
-    auto ry = 2. * std::asin(1. / Nr) / dy * h;
+    auto ry = 2. * std::asin(1. / Nr) / dy * h;  // (height factor is PROJ-specific)
 
     (jp ? ya_ : yb_) = ry * (-yp);
     (jp ? yb_ : ya_) = ry * (-yp + double(Ny_ - 1));
@@ -133,6 +134,16 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
 
 
     // bounding box
+#if 1
+    // [1] page 25, solution of s_d^2=0, restrained at x=0 (lon) and y=0 (lat). Note: uses a, b, height defined there
+    auto eps_ll = 1e-6;
+
+    auto n = 90. - util::radian_to_degree(0.151347) + eps_ll;
+    auto s = -n;
+
+    auto e = 90. - util::radian_to_degree(0.151853) + eps_ll + Lop;
+    auto w = 2. * Lop - e;
+#else
     auto geometric_maximum = [](double x_min, double x_eps, const std::function<double(double)>& f,
                                 double f_eps = 1.e-9, size_t it_max = 1000) {
         size_t it = 0;
@@ -165,6 +176,7 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
     auto max_lat = geometric_maximum(0., eps_xy, [&](double y) { return projection.lonlat({0, y}).lat(); });
     auto n       = max_lat + eps_ll;
     auto s       = -n;
+#endif
 
     bbox_ = {n, w, s, e};
 }
