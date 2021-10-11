@@ -154,11 +154,12 @@ util::Domain IrregularLatlon::domain() const {
 
 
 class IrregularLatlonIterator : public Iterator {
-    size_t count_;
     size_t i_;
     size_t ni_;
     size_t j_;
     size_t nj_;
+    size_t count_;
+    bool first_;
 
     const std::vector<double>& latitudes_;
     const std::vector<double>& longitudes_;
@@ -175,7 +176,10 @@ class IrregularLatlonIterator : public Iterator {
                 lat = latitudes_[j_];
                 lon = longitudes_[i_];
 
-                if (i_ > 0 || j_ > 0) {
+                if (first_) {
+                    first_ = false;
+                }
+                else {
                     count_++;
                 }
 
@@ -196,11 +200,12 @@ public:
     // TODO: Consider keeping a reference on the latitudes and bbox, to avoid copying
 
     IrregularLatlonIterator(const std::vector<double>& latitudes, const std::vector<double>& longitudes) :
-        count_(0),
         i_(0),
         ni_(longitudes.size()),
         j_(0),
         nj_(latitudes.size()),
+        count_(0),
+        first_(true),
         latitudes_(latitudes),
         longitudes_(longitudes) {}
 

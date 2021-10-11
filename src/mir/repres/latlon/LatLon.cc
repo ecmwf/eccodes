@@ -288,7 +288,8 @@ LatLon::LatLonIterator::LatLonIterator(size_t ni, size_t nj, Latitude north, Lon
     ns_(increments.south_north().latitude().fraction()),
     i_(0),
     j_(0),
-    count_(0) {
+    count_(0),
+    first_(true) {
     lat_      = north_;
     lon_      = west_;
     latValue_ = lat_;
@@ -317,7 +318,10 @@ bool LatLon::LatLonIterator::next(Latitude& lat, Longitude& lon) {
 
             lon_ += we_;
 
-            if (i_ > 0 || j_ > 0) {
+            if (first_) {
+                first_ = false;
+            }
+            else {
                 count_++;
             }
 

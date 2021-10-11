@@ -197,6 +197,7 @@ class ReducedLLIterator : public Iterator {
     size_t p_;
 
     size_t count_;
+    bool first_;
     bool periodic_;
 
     void print(std::ostream& out) const override {
@@ -212,7 +213,7 @@ class ReducedLLIterator : public Iterator {
             lon = longitude_;
 
             bool contains = domain_.contains(lat, lon);
-            if (contains && (i_ > 0 || j_ > 0)) {
+            if (contains && !first_) {
                 count_++;
             }
 
@@ -233,6 +234,7 @@ class ReducedLLIterator : public Iterator {
             }
 
             if (contains) {
+                first_ = false;
                 return true;
             }
         }
@@ -255,6 +257,7 @@ public:
         j_(0),
         p_(0),
         count_(0),
+        first_(true),
         periodic_(dom.isPeriodicWestEast()) {
 
         ASSERT(nj_ > 1);

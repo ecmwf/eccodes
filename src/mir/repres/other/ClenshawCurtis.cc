@@ -325,7 +325,7 @@ Iterator* ClenshawCurtis::iterator() const {
     struct ClenshawCurtisIterator : public Iterator {
 
         ClenshawCurtisIterator(const std::vector<long>& pl, const std::vector<double>& latitudes) :
-            pl_(pl), latitudes_(latitudes), i_(0), j_(0), count_(0) {
+            pl_(pl), latitudes_(latitudes), i_(0), j_(0), count_(0), first_(true) {
             ASSERT(pl.size() == latitudes.size());
 
             nj_ = pl.size();
@@ -355,7 +355,13 @@ Iterator* ClenshawCurtis::iterator() const {
 
             lat = lat_;
             lon = lon_;
-            count_++;
+
+            if (first_) {
+                first_ = false;
+            }
+            else {
+                count_++;
+            }
 
             if (++i_ < ni_) {
                 lon_ += inc_;
@@ -383,6 +389,7 @@ Iterator* ClenshawCurtis::iterator() const {
         size_t i_;
         size_t j_;
         size_t count_;
+        bool first_;
 
         eckit::Fraction inc_;
     };
