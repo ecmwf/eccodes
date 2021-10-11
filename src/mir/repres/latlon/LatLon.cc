@@ -297,7 +297,8 @@ LatLon::LatLonIterator::LatLonIterator(size_t ni, size_t nj, Latitude north, Lon
 
 
 LatLon::LatLonIterator::~LatLonIterator() {
-    ASSERT(count_ == ni_ * nj_);
+    auto count = count_ + (i_ > 0 || j_ > 0 ? 1 : 0);
+    ASSERT(count == ni_ * nj_);
 }
 
 
@@ -313,17 +314,23 @@ bool LatLon::LatLonIterator::next(Latitude& lat, Longitude& lon) {
         if (i_ < ni_) {
             lat = latValue_;
             lon = lonValue_;
+
             lon_ += we_;
-            i_++;
-            if (i_ == ni_) {
+
+            if (i_ > 0 || j_ > 0) {
+                count_++;
+            }
+
+            if (++i_ == ni_) {
                 j_++;
                 i_ = 0;
                 lat_ -= ns_;
                 lon_      = west_;
                 latValue_ = lat_;
             }
+
             lonValue_ = lon_;
-            count_++;
+
             return true;
         }
     }

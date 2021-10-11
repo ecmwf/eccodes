@@ -55,6 +55,7 @@ private:
     void operator=(const grib_info&) = delete;
 
     std::vector<std::string> strings_;
+    const size_t extra_settings_size_;
 };
 
 

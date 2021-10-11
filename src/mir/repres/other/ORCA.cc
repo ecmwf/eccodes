@@ -128,6 +128,8 @@ Iterator* ORCA::iterator() const {
             return false;
         }
 
+        size_t index() const override { return count_; }
+
     public:
         ORCAIterator(::atlas::Grid grid) :
             grid_(grid), lonlat_(grid.lonlat()), it_(lonlat_.begin()), count_(0), total_(size_t(grid.size())) {}

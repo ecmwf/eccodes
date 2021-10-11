@@ -12,8 +12,6 @@
 
 #include "mir/repres/regular/LambertAzimuthalEqualArea.h"
 
-#include <string>
-
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
@@ -42,7 +40,7 @@ RegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::
     double radius;
     ASSERT(param.get("standardParallelInDegrees", standardParallel));
     ASSERT(param.get("centralLongitudeInDegrees", centralLongitude));
-    param.get("radius", radius = ::atlas::util::Earth::radius());
+    param.get("radius", radius = util::Earth::radius());
 
     return Projection::Spec("type", "lambert_azimuthal_equal_area")
         .set("standard_parallel", standardParallel)
@@ -52,7 +50,6 @@ RegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::
 
 
 void LambertAzimuthalEqualArea::fill(grib_info& info) const {
-
     info.grid.grid_type        = CODES_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
     info.packing.editionNumber = 2;
 

@@ -45,6 +45,8 @@ Iterator* RotatedLL::iterator() const {
         }
         bool next(Latitude& lat, Longitude& lon) override { return LatLonIterator::next(lat, lon); }
 
+        size_t index() const override { return count_; }
+
     public:
         RotatedLLIterator(size_t ni, size_t nj, Latitude north, Longitude west, const util::Increments& increments,
                           const util::Rotation& rotation) :
