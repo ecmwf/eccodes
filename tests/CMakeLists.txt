@@ -134,6 +134,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_filter_extract_datetime
         bufr_filter_extract_area
         bufr_filter_unpack_pack
+        bufr_indexing
         bufr_json_data
         bufr_ls
         bufr_ls_json
