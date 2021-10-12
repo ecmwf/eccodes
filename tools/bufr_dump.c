@@ -197,6 +197,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
         int err              = 0;
         grib_context* c      = grib_context_get_default();
         const char* filename = options->current_infile->name;
+        json = 0;
 
         err = grib_index_dump_file(stdout, filename);
         if (err) {

@@ -29,8 +29,6 @@ Index keys:
 key name = stormIdentifier
 values = 27W, 70E, 71W
 Index count = 3
-
-]}
 EOF
 
 diff $tempRef $tempOut
