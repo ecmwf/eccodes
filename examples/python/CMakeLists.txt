@@ -18,7 +18,7 @@ foreach( tool ${test_bins} )
    ecbuild_add_executable( TARGET    p_${tool}
                            NOINSTALL
                            SOURCES   ${tool}.c
-                           CONDITION HAVE_PYTHON
+                           CONDITION HAVE_PYTHON2
                            LIBS      eccodes )
    list( APPEND ptools  p_${tool} )
 endforeach()
@@ -102,11 +102,9 @@ else()
     )
 endif()
 
-# The high level python test requires new features in the unittest
+# Some tests require new features
 # which are only there for python 2.7 onwards
-if( HAVE_PYTHON AND PYTHON_VERSION_STRING VERSION_GREATER "2.7" )
-    #ecbuild_info("Python examples: Adding test for High-level Pythonic Interface")
-    list( APPEND tests_extra high_level_api )
+if( HAVE_PYTHON2 AND PYTHON_VERSION_STRING VERSION_GREATER "2.7" )
     list( APPEND tests_extra grib_set_keys ) # Uses OrderedDict
 endif()
 
@@ -115,7 +113,7 @@ foreach( test ${tests_basic} )
                       TYPE       SCRIPT
                       DEPENDS    ${ptools}
                       COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                      CONDITION  HAVE_PYTHON
+                      CONDITION  HAVE_PYTHON2
                       ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} )
 endforeach()
 foreach( test ${tests_extra} )
@@ -123,7 +121,7 @@ foreach( test ${tests_extra} )
                       TYPE       SCRIPT
                       DEPENDS    ${ptools}
                       COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                      CONDITION  HAVE_PYTHON AND ENABLE_EXTRA_TESTS
+                      CONDITION  HAVE_PYTHON2 AND ENABLE_EXTRA_TESTS
                       ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
                       TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs eccodes_download_bufrs )
 endforeach()
@@ -133,7 +131,7 @@ ecbuild_add_test( TARGET eccodes_p_bufr_encode_flight_test
                   TYPE       SCRIPT
                   DEPENDS    ${ptools}
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_flight.sh
-                  CONDITION  HAVE_PYTHON AND ENABLE_EXTRA_TESTS AND HAVE_BUILD_TOOLS
+                  CONDITION  HAVE_PYTHON2 AND ENABLE_EXTRA_TESTS AND HAVE_BUILD_TOOLS
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
                   RESOURCES   flight_data.csv
                   TEST_DEPENDS eccodes_download_bufrs )
@@ -143,6 +141,6 @@ ecbuild_add_test( TARGET eccodes_p_grib_ccsds_test
                   TYPE       SCRIPT
                   DEPENDS    ${ptools}
                   COMMAND    ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
-                  CONDITION  HAVE_PYTHON AND HAVE_AEC AND ENABLE_EXTRA_TESTS
+                  CONDITION  HAVE_PYTHON2 AND HAVE_AEC AND ENABLE_EXTRA_TESTS
                   ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE}
                   TEST_DEPENDS eccodes_download_gribs )

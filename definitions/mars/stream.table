@@ -70,6 +70,12 @@
 1096 wmfm Wave monthly forecast means
 1097 smma Seasonal monthly means anomalies
 1110 seap Sensitive area prediction
+1120 eefh Extended ensemble forecast hindcast
+1121 eehs Extended ensemble forecast hindcast statistics
+1122 eefo Extended ensemble prediction system
+1123 weef Wave extended ensemble forecast
+1124 weeh Wave extended ensemble forecast hindcast
+1125 wees Wave extended ensemble forecast hindcast statistics
 1200 mnfc Real-time
 1201 mnfh Hindcasts
 1202 mnfa Anomalies
@@ -100,8 +106,8 @@
 1246 espd Ensemble supplementary data
 1247 lwda Long window daily archive
 1248 lwwv Long window wave
-1249 elda Ensemble Long window Data Assimilation
-1250 ewla Ensemble Wave Long window data Assimilation
+1249 elda Ensemble Long window data assimilation
+1250 ewla Ensemble Wave Long window data assimilation
 1251 wamd Wave monthly means of daily means
 1252 gfas Global fire assimilation system
 2231 cnrm Meteo France climate centre

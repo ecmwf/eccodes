@@ -1,4 +1,5 @@
 # (C) Copyright 2005- ECMWF.
+# MARS labelling or ensemble forecast data
 
 constant GRIBEXSection1Problem = 52 - section1Length ;
 
@@ -19,31 +20,31 @@ if (stepType is "instant" ) {
     if (type is "em" || type is "es" ) {
       alias productDefinitionTemplateNumber=epsStatisticsPoint;
     } else {
-  		if (numberOfForecastsInEnsemble!=0) {
-			if ((perturbationNumber/2)*2 == perturbationNumber) {
-				alias typeOfEnsembleForecast=two;
-			} else {
-				alias typeOfEnsembleForecast=three;
-			}
-			alias productDefinitionTemplateNumber=epsPoint;
-		} else {
-			alias productDefinitionTemplateNumber=zero;
-		}
-	}
+        if (numberOfForecastsInEnsemble!=0) {
+            if ((perturbationNumber/2)*2 == perturbationNumber) {
+                alias typeOfEnsembleForecast=two;
+            } else {
+                alias typeOfEnsembleForecast=three;
+            }
+            alias productDefinitionTemplateNumber=epsPoint;
+        } else {
+            alias productDefinitionTemplateNumber=zero;
+        }
+    }
 } else {
     if (type is "em" || type is "es" ) {
       alias productDefinitionTemplateNumber=epsStatisticsContinous;
     } else {
-		if (numberOfForecastsInEnsemble!=0) {
-			if ((perturbationNumber/2)*2 == perturbationNumber) {
-				alias typeOfEnsembleForecast=two;
-			} else {
-				alias typeOfEnsembleForecast=three;
-			}
-			alias productDefinitionTemplateNumber=epsContinous;
-		} else {
-			alias productDefinitionTemplateNumber=eight;
-		}
+        if (numberOfForecastsInEnsemble!=0) {
+            if ((perturbationNumber/2)*2 == perturbationNumber) {
+                alias typeOfEnsembleForecast=two;
+            } else {
+                alias typeOfEnsembleForecast=three;
+            }
+            alias productDefinitionTemplateNumber=epsContinous;
+        } else {
+            alias productDefinitionTemplateNumber=eight;
+        }
     }
 }
 

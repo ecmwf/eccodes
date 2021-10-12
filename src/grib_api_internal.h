@@ -1094,7 +1094,7 @@ struct grib_context
     int hash_array_count;
     grib_hash_array_value* hash_array[MAX_NUM_HASH_ARRAY];
     grib_trie* def_files;
-    grib_string_list* blacklist;
+    grib_string_list* blocklist;
     int ieee_packing;
     int bufrdc_mode;
     int bufr_set_to_missing_if_out_of_range;
@@ -1541,7 +1541,7 @@ struct grib_smart_table
 };
 
 
-#if GRIB_TIMER
+#if ECCODES_TIMER
 typedef struct grib_timer
 {
     struct timeval start_;

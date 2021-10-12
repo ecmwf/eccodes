@@ -75,7 +75,6 @@ tigge_ecmf_sfc_10v.grib
 tigge_ecmf_sfc_2d.grib
 tigge_ecmf_sfc_2t.grib
 tigge_ecmf_sfc_cap.grib
-tigge_ecmf_sfc_cape.grib
 tigge_ecmf_sfc_mn2t6.grib
 tigge_ecmf_sfc_msl.grib
 tigge_ecmf_sfc_mx2t6.grib
@@ -134,11 +133,8 @@ tigge_kwbc_pv_pt.grib
 tigge_kwbc_pv_u.grib
 tigge_kwbc_pv_v.grib
 tigge_kwbc_sfc_10u.grib
-tigge_kwbc_sfc_10v.grib
 tigge_kwbc_sfc_2d.grib
-tigge_kwbc_sfc_2t.grib
 tigge_kwbc_sfc_cap.grib
-tigge_kwbc_sfc_cape.grib
 tigge_kwbc_sfc_ci.grib
 tigge_kwbc_sfc_lsm.grib
 tigge_kwbc_sfc_mn2t6.grib
@@ -169,7 +165,6 @@ tigge_lfpw_sfc_10u.grib
 tigge_lfpw_sfc_10v.grib
 tigge_lfpw_sfc_2d.grib
 tigge_lfpw_sfc_2t.grib
-tigge_lfpw_sfc_cap.grib
 tigge_lfpw_sfc_cape.grib
 tigge_lfpw_sfc_mn2t6.grib
 tigge_lfpw_sfc_msl.grib

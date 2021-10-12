@@ -17,15 +17,15 @@ cd ${data_dir}/bufr
 label="bufr_dump_encode_filter_test"
 
 # Create log file
-fLog=${label}".log"
+fLog=temp.${label}".log"
 rm -f $fLog
 touch $fLog
 
 # Define tmp bufr file
-fBufrTmp=${label}".bufr.tmp"
+fBufrTmp=temp.${label}".bufr"
 
 # Define filter rules file
-fRules=${label}.filter
+fRules=temp.${label}.filter
 
 #-----------------------------------------------------------
 # NOTE: not all of our BUFR files pass this test. bufr_filter is limited

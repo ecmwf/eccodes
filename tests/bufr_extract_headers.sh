@@ -60,6 +60,14 @@ r=`${test_dir}/bufr_extract_headers centre ${data_dir}/bufr/PraticaTemp.bufr`
 r=`${test_dir}/bufr_extract_headers centre ${data_dir}/bufr/israel_observations_2017041010.bufr`
 [ "$r" = "234" ]
 
+# Check all centres with an abbreviation
+centre_table=${ECCODES_DEFINITION_PATH}/common/c-11.table
+centres=`awk 'NR > 1 {print $2}' < $centre_table`
+for c in $centres; do
+    ${tools_dir}/bufr_set -s centre=$c $ECCODES_SAMPLES_PATH/BUFR4.tmpl $temp1
+    r=`${test_dir}/bufr_extract_headers centre $temp1`
+    [ "$r" = "$c" ]
+done
 
 # Test rdbSubtype
 # ---------------
@@ -195,13 +203,18 @@ tropical_cyclone.bufr
 tros_31.bufr
 "
 
-KEYS='localLongitude1,localLatitude1,localLongitude2,localLatitude2,localNumberOfObservations,satelliteID'
+KEYS='localLongitude1,localLatitude1,localLongitude2,localLatitude2,localNumberOfObservations,satelliteID,restricted'
 for bf in ${bufr_files}; do
     input=${data_dir}/bufr/$bf
     $EXEC ${test_dir}/bufr_extract_headers $KEYS $input > $temp1
     ${tools_dir}/bufr_get            -f -p $KEYS $input > $temp2
     diff $temp1 $temp2
 done
+
+# Test restricted
+${tools_dir}/bufr_set -s restricted=1 ${data_dir}/bufr/aaen_55.bufr $temp1
+r=`$EXEC ${test_dir}/bufr_extract_headers restricted $temp1`
+[ "$r" = "1" ]
 
 
 echo "Test with invalid inputs..."

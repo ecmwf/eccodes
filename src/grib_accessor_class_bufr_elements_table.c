@@ -240,7 +240,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
         goto the_end;
     }
     else {
-        grib_context_log(c, GRIB_LOG_DEBUG, "found def file %s", filename);
+        grib_context_log(c, GRIB_LOG_DEBUG, "bufr_elements_table: found def file %s", filename);
     }
 
     dictionary = (grib_trie*)grib_trie_get(c->lists, dictName);
@@ -376,7 +376,7 @@ static int bufr_get_from_table(grib_accessor* a, bufr_descriptor* v)
     v->reference = atol_fast(list[6]);
     v->width     = atol(list[7]);
 
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 int bufr_descriptor_is_marker(bufr_descriptor* d)
@@ -407,7 +407,7 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
     v = (bufr_descriptor*)grib_context_malloc_clear(c, sizeof(bufr_descriptor));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_bufr_descriptor_new unable to allocate %d bytes\n", sizeof(bufr_descriptor));
+                         "accessor_bufr_elements_table_get_descriptor: unable to allocate %ld bytes\n", sizeof(bufr_descriptor));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }

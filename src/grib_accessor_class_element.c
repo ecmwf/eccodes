@@ -165,7 +165,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     ar = (long*)grib_context_malloc_clear(c, size * sizeof(long));
     if (!ar) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %d bytes", size * sizeof(long));
+        grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %ld bytes", size * sizeof(long));
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -198,13 +198,12 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     ar = (long*)grib_context_malloc_clear(c, size * sizeof(long));
     if (!ar) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %d bytes", size * sizeof(long));
+        grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %ld bytes", size * sizeof(long));
         return GRIB_OUT_OF_MEMORY;
     }
 
     if ((ret = grib_get_long_array_internal(grib_handle_of_accessor(a), self->array, ar, &size)) != GRIB_SUCCESS)
         return ret;
-
 
     ar[self->element] = *val;
 

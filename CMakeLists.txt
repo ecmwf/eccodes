@@ -16,20 +16,12 @@
 #
 #       -DCMAKE_MODULE_PATH=/path/to/ecbuild/cmake
 
-cmake_minimum_required( VERSION 3.6 FATAL_ERROR )
+cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 
-project( eccodes VERSION 2.19.0 LANGUAGES C )
+find_package( ecbuild 3.4 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 
-set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild/cmake" )
-
-include( ecbuild_system NO_POLICY_SCOPE )
-
-ecbuild_requires_macro_version( 2.7.2 )
-
-###############################################################################
-# local project
-
-ecbuild_declare_project()
+# Initialise project
+project( eccodes VERSION 2.24.0 LANGUAGES C )
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
@@ -77,6 +69,9 @@ ecbuild_add_option( FEATURE PRODUCT_GRIB
 ecbuild_add_option( FEATURE PRODUCT_BUFR
     DESCRIPTION "Support for the product BUFR"
     DEFAULT ON )
+if( NOT HAVE_PRODUCT_GRIB AND NOT HAVE_PRODUCT_BUFR )
+    ecbuild_critical("Cannot disable both GRIB and BUFR! Please specify just one option")
+endif()
 
 ecbuild_add_option( FEATURE EXAMPLES
     DESCRIPTION "Build the examples"
@@ -117,15 +112,20 @@ ecbuild_add_option( FEATURE NETCDF
     REQUIRED_PACKAGES NetCDF
     NO_TPL )
 
+find_package( AEC )
 ecbuild_add_option( FEATURE AEC
     DESCRIPTION "Support for Adaptive Entropy Coding"
     DEFAULT OFF
-    REQUIRED_PACKAGES AEC )
+    CONDITION AEC_FOUND )
 
-ecbuild_add_option( FEATURE PYTHON
+ecbuild_find_python( VERSION 2.6 NO_LIBS )
+find_package( NumPy )
+ecbuild_add_option( FEATURE PYTHON2
     DESCRIPTION "Build the ecCodes Python2 interface (deprecated)"
     DEFAULT OFF
-    REQUIRED_PACKAGES "Python VERSION 2.6 NO_LIBS" NumPy )
+    #CONDITION Python_FOUND AND NumPy_FOUND
+    CONDITION PYTHON_FOUND AND NUMPY_FOUND
+    )
 # For Python2 we build our own bindings (using SWIG) in the build directory
 # but for Python3 one has to add the eccodes from pip3 AFTER the install
 if( PYTHON_VERSION_MAJOR EQUAL 3 )
@@ -151,7 +151,6 @@ endif()
 ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
-    CONDITION ECCODES_HAVE_FMEMOPEN OR ECCODES_HAVE_FUNOPEN OR (EC_OS_NAME MATCHES "windows")
     REQUIRED_PACKAGES PythonInterp )
 
 #if( HAVE_MEMFS AND "${CMAKE_C_COMPILER_ID}" STREQUAL "Cray")
@@ -182,7 +181,7 @@ ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
 
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "Enable memory management" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "Enable memory alignment"  DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE GRIB_TIMER          DESCRIPTION "Enable timer" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE TIMER               DESCRIPTION "Enable timer" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable POSIX threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable OMP threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "Enable extended regression testing" DEFAULT OFF ADVANCED )
@@ -209,11 +208,11 @@ if( ENABLE_JPG )
     #       which can affect future package discovery if not undone by the caller.
     #       The current CMAKE_PREFIX_PATH is backed up as _CMAKE_PREFIX_PATH
     #
-    set(CMAKE_WARN_DEPRECATED OFF) # Suppress deprecation message
-    ecbuild_add_extra_search_paths( jasper )
+    #set(CMAKE_WARN_DEPRECATED OFF) # Suppress deprecation message
+    #ecbuild_add_extra_search_paths( jasper )
     find_package( Jasper )
-    set(CMAKE_PREFIX_PATH ${_CMAKE_PREFIX_PATH})    # Restore CMAKE_PREFIX_PATH
-    set(CMAKE_WARN_DEPRECATED ON)  # Remove suppression
+    #set(CMAKE_PREFIX_PATH ${_CMAKE_PREFIX_PATH})    # Restore CMAKE_PREFIX_PATH
+    #set(CMAKE_WARN_DEPRECATED ON)  # Remove suppression
 
     find_package( OpenJPEG )
 
@@ -241,10 +240,10 @@ endif()
 ###############################################################################
 # other options
 
-if( HAVE_GRIB_TIMER )
-    set( GRIB_TIMER 1 )
+if( HAVE_TIMER )
+    set( ECCODES_TIMER 1 )
 else()
-    set( GRIB_TIMER 0 )
+    set( ECCODES_TIMER 0 )
 endif()
 
 set( IS_BIG_ENDIAN 0 )
@@ -275,6 +274,7 @@ if( HAVE_ECCODES_THREADS )
         ecbuild_critical("Pthreads is not supported on your system: thread library found=[${CMAKE_THREAD_LIBS_INIT}]")
     endif()
     set( GRIB_PTHREADS 1 )
+    set( ECCODES_PTHREADS_LIBRARIES Threads::Threads ) # ECC-1268
     if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
         set( GRIB_LINUX_PTHREADS 1 )
     endif()
@@ -426,10 +426,10 @@ add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
 ecbuild_dont_pack( DIRS
-     concepts tests.ecmwf doxygen confluence examples.dev templates parameters java
-     perl config m4 rpms gaussian_experimental gribex examples/F77
-     examples/extra examples/deprecated bamboo fortran/fortranCtypes tigge/tools
-     share/eccodes  .settings )
+     experimental doxygen confluence tests/tests.ecmwf
+     config m4 examples/F77
+     examples/examples.dev examples/extra examples/deprecated bamboo
+     fortran/fortranCtypes tigge/tools share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
 
@@ -446,18 +446,6 @@ if( HAVE_FORTRAN )
     list( APPEND ECCODES_LIBRARIES eccodes_f90 )
 endif()
 
-# Bundle
-if( NOT PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME )
-  set( ECCODES_FOUND            TRUE PARENT_SCOPE )
-  set( ECCODES_DEFINITIONS      ${ECCODES_DEFINITIONS}  PARENT_SCOPE )# includes already TPL definitions
-  set( ECCODES_INCLUDE_DIRS     ${ECCODES_INCLUDE_DIRS} ${ECCODES_EXTRA_INCLUDE_DIRS} PARENT_SCOPE )
-  set( ECCODES_LIBRARIES        ${ECCODES_LIBRARIES}    ${ECCODES_EXTRA_LIBRARIES} PARENT_SCOPE )
-  set( ECCODES_INSTALL_EXTRA_TOOLS  ${ECCODES_INSTALL_EXTRA_TOOLS} PARENT_SCOPE )
-  set( ECCODES_DEFINITION_PATH  ${CMAKE_BINARY_DIR}/${ECCODES_DEFINITION_SUFF}  PARENT_SCOPE )
-  set( ECCODES_SAMPLES_PATH     ${CMAKE_BINARY_DIR}/${ECCODES_SAMPLES_SUFF}     PARENT_SCOPE )
-  set( ECCODES_IFS_SAMPLES_PATH ${CMAKE_BINARY_DIR}/${ECCODES_IFS_SAMPLES_SUFF} PARENT_SCOPE )
-endif()
-
 # pkg-config
 ecbuild_pkgconfig(
   NAME           eccodes
@@ -467,7 +455,7 @@ ecbuild_pkgconfig(
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
   VARIABLES      HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                 HAVE_NETCDF HAVE_PYTHON HAVE_FORTRAN HAVE_PNG HAVE_AEC
+                 HAVE_NETCDF HAVE_PYTHON2 HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
 if( HAVE_FORTRAN )
   ecbuild_pkgconfig(
@@ -479,7 +467,7 @@ if( HAVE_FORTRAN )
                         ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
     VARIABLES           HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                         HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                        HAVE_NETCDF HAVE_PYTHON HAVE_PNG HAVE_AEC
+                        HAVE_NETCDF HAVE_PYTHON2 HAVE_PNG HAVE_AEC
   )
 endif()
 
@@ -498,11 +486,11 @@ ecbuild_print_summary()
 
 ecbuild_info("")
 ecbuild_info("   +--------------------------+")
-ecbuild_info("   |  ecCodes version ${ECCODES_VERSION}  |")
+ecbuild_info("   |  ecCodes version ${eccodes_VERSION}  |")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("")
 
-if( HAVE_PYTHON )
+if( HAVE_PYTHON2 )
   ecbuild_deprecate("Python2 support is deprecated and will be discontinued")
 endif()
 

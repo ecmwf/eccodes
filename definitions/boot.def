@@ -11,7 +11,8 @@ constant definitionFilesVersion="2.0.0.0" : hidden;
 constant internalVersion=30 : hidden;
 meta checkInternalVersion check_internal_version(internalVersion) : hidden;
 
-UseEcmfConventions = getenv("ECCODES_USE_ECMF_CONVENTIONS","1") :hidden ;
+# ECC-806: Local concepts precedence order
+transient preferLocalConcepts = 0 : hidden;
 
 constant defaultTypeOfLevel="unknown" : hidden;
 
@@ -23,7 +24,6 @@ if (gribDataQualityChecks) {
 # GRIBEX special boustrophedonic mode. See GRIB-472
 # If the environment variable is not defined, the key will be 0
 GRIBEX_boustrophedonic = getenv("ECCODES_GRIBEX_BOUSTROPHEDONIC","0")  :hidden;
-
 
 constant zero=0 : hidden;
 constant one=1 : hidden;

@@ -1,5 +1,5 @@
-codetable[2] tiggeModel 'grib2/local/[localSubSectionCentre:l]/models.table';
-codetable[2] tiggeCentre 'grib2/local/[localSubSectionCentre:l]/centres.table';
+codetable[2] tiggeModel 'grib3/local/[localSubSectionCentre:l]/models.table';
+codetable[2] tiggeCentre 'grib3/local/[localSubSectionCentre:l]/centres.table';
 concept tiggeLAMName {
   "MOGREPS-MO- EUA" = {tiggeCentre=0;tiggeModel=0;}
   "AEMet-SREPS-MM-EUAT"= {tiggeCentre=1;tiggeModel=1;}

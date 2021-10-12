@@ -1,4 +1,4 @@
-# bashrc to be used for running tests on windows.
+# bashrc to be used for running tests on Microsoft Windows.
 # In order for the functions to be usable by the tests, we need to use the -i option.
 # Typical usage:
 #   bash --rcfile windows_testing.bashrc -ci "some/test/script.sh"

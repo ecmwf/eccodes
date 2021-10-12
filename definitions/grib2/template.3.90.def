@@ -14,10 +14,10 @@ alias numberOfPointsAlongYAxis  = Ny;
 alias geography.Ny=Ny;
 
 #  Lap - latitude of sub-satellite point
-signed[4] latitudeOfSubSatellitePoint ;
+signed[4] latitudeOfSubSatellitePoint;
 
 #  Lop - longitude of sub-satellite point
-signed[4] longitudeOfSubSatellitePoint ;
+signed[4] longitudeOfSubSatellitePoint;
 
 meta geography.latitudeOfSubSatellitePointInDegrees   scale(latitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
 meta geography.longitudeOfSubSatellitePointInDegrees   scale(longitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
@@ -57,6 +57,7 @@ meta geography.orientationOfTheGridInDegrees
 unsigned[4] Nr : edition_specific,can_be_missing,no_copy;
 alias altitudeOfTheCameraFromTheEarthsCentreMeasuredInUnitsOfTheEarthsRadius = Nr;
 meta geography.NrInRadiusOfEarth scale(Nr,oneConstant,oneMillionConstant,truncateDegrees) : dump;
+alias NrInRadiusOfEarthScaled=NrInRadiusOfEarth;
 
 #  Xo - X-coordinate of origin of sector image
 unsigned[4] Xo  : dump;
@@ -76,7 +77,7 @@ iterator space_view(numberOfPoints, missingValue, values, radius,
           longitudeOfSubSatellitePointInDegrees,
           dx, dy, XpInGridLengths, YpInGridLengths,
           orientationOfTheGridInDegrees,
-          NrInRadiusOfEarth, Xo, Yo,
+          NrInRadiusOfEarthScaled, Xo, Yo,
           iScansNegatively, jScansPositively,
           jPointsAreConsecutive, alternativeRowScanning);
 

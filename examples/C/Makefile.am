@@ -13,7 +13,7 @@ TESTS = grib_iterator.sh \
         large_grib1.sh \
         grib_get_data.sh \
         grib_sections_copy.sh \
-        set_missing.sh \
+        grib_set_missing.sh \
         grib_clone.sh \
         grib_set_pv.sh \
         grib_set_bitmap.sh \
@@ -29,6 +29,7 @@ TESTS = grib_iterator.sh \
         bufr_keys_iterator.sh \
         bufr_missing.sh \
         bufr_read_temp.sh \
+        bufr_copy_data.sh \
         get_product_kind.sh
 
 noinst_PROGRAMS  = c_grib_nearest \
@@ -37,7 +38,7 @@ noinst_PROGRAMS  = c_grib_nearest \
                    c_grib_get_keys \
                    c_grib_print_data \
                    c_grib_set_keys \
-                   c_set_missing \
+                   c_grib_set_missing \
                    c_grib_keys_iterator \
                    c_grib_set_data \
                    c_grib_index \
@@ -71,6 +72,7 @@ noinst_PROGRAMS  = c_grib_nearest \
                    c_bufr_set_keys \
                    c_bufr_missing \
                    c_bufr_read_temp \
+                   c_bufr_copy_data \
                    c_get_product_kind
 
 #bin_PROGRAMS            = grib_nearest_multiple
@@ -84,7 +86,7 @@ c_grib_multi_write_SOURCES     = grib_multi_write.c
 c_grib_get_keys_SOURCES        = grib_get_keys.c
 c_grib_print_data_SOURCES      = grib_print_data.c
 c_grib_set_keys_SOURCES        = grib_set_keys.c
-c_set_missing_SOURCES          = set_missing.c
+c_grib_set_missing_SOURCES     = grib_set_missing.c
 c_grib_index_SOURCES           = grib_index.c
 c_grib_set_bitmap_SOURCES      = grib_set_bitmap.c
 c_grib_multi_SOURCES           = grib_multi.c
@@ -112,6 +114,7 @@ c_bufr_read_header_SOURCES     = bufr_read_header.c
 c_bufr_read_scatterometer_SOURCES = bufr_read_scatterometer.c
 c_bufr_read_synop_SOURCES      = bufr_read_synop.c
 c_bufr_read_temp_SOURCES       = bufr_read_temp.c
+c_bufr_copy_data_SOURCES       = bufr_copy_data.c
 c_bufr_set_keys_SOURCES        = bufr_set_keys.c
 c_bufr_subset_SOURCES          = bufr_subset.c
 c_get_product_kind_SOURCES     = get_product_kind.c

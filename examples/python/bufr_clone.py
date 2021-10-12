@@ -16,22 +16,23 @@
 #
 
 from __future__ import absolute_import
-import traceback
+
 import sys
+import traceback
 
 from eccodes import *
 
-INPUT = '../../data/bufr/syno_1.bufr'
-OUTPUT = 'bufr_clone_test_p.clone.bufr'
+INPUT = "../../data/bufr/syno_1.bufr"
+OUTPUT = "bufr_clone_test_p.clone.bufr"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
     # open BUFR file
-    fin = open(INPUT, 'rb')
+    fin = open(INPUT, "rb")
 
     # open output BUFR file
-    fout = open(OUTPUT, 'wb')
+    fout = open(OUTPUT, "wb")
 
     # get handle for message
     bufr = codes_bufr_new_from_file(fin)
@@ -43,7 +44,7 @@ def example():
         clone_id = codes_clone(bufr)
 
         # this is the place where you may wish to modify the clone
-        codes_set(clone_id, 'bufrHeaderCentre', centre)
+        codes_set(clone_id, "bufrHeaderCentre", centre)
 
         # write the cloned message to a file
         codes_write(clone_id, fout)
@@ -65,7 +66,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

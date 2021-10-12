@@ -14,7 +14,7 @@ label="bufr_clone_test_f"
 
 #Prepare tmp file
 fBufrTmp=${label}.clone.bufr
-rm -f $fBufrTmp | true
+rm -f $fBufrTmp
 
 #We clone a bufr file with multiple messages.
 f=${data_dir}/bufr/syno_multi.bufr
@@ -30,11 +30,10 @@ ${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT
 
 #Check if clone is different
 if [ $? -eq 0 ]; then
-   echo "cloning produced identical files " >&2
-   exit 1
+  echo "cloning produced identical files " >&2
+  exit 1
 fi
-
 set -e
 
 #Clean up
-rm -f ${fBufrTmp} | true
+rm -f ${fBufrTmp}

@@ -10,7 +10,7 @@
 
 #include "grib_api_internal.h"
 
-#if GRIB_TIMER
+#if ECCODES_TIMER
 
 #ifndef ECCODES_ON_WINDOWS
 #include <sys/time.h>

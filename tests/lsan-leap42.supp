@@ -1,3 +1,4 @@
 leak:process_elements
 leak:tests/bufr_ecc-517.c
+leak:tests/bufr_ecc-1288.c
 leak:src/action_class_rename.c

@@ -28,14 +28,6 @@ static void usage(const char* prog)
     printf("Usage: %s [-v] infile\n", prog);
     exit(1);
 }
-static int file_exists(const char* path)
-{
-    struct stat s;
-    int stat_val = stat(path, &s);
-    if (stat_val != 0)
-        return 0; /*error doing stat*/
-    return S_ISREG(s.st_mode);
-}
 
 /* If rdbSubtype can be extracted, return GRIB_SUCCESS otherwise error code. */
 /* If BUFR message does not have an ECMWF local section, set rdbSubtype to -1 */
@@ -137,7 +129,7 @@ static int split_file_by_subtype(FILE* in, const char* filename, unsigned long* 
                 sprintf(ofilename, OUTPUT_FILENAME_SUBTYPE, rdbSubtype);
 
             if (verbose) {
-                if (!file_exists(ofilename))
+                if (!path_is_regular_file(ofilename))
                     printf("Writing output to %s\n", ofilename);
             }
             out = fopen(ofilename, "ab");

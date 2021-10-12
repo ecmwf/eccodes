@@ -333,7 +333,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     }
 
     options->requested_print_keys_count = MAX_KEYS;
-    ret = parse_keyval_string(tool_name, karg, 0, GRIB_TYPE_UNDEFINED,
+    ret                                 = parse_keyval_string(tool_name, karg, 0, GRIB_TYPE_UNDEFINED,
                               options->requested_print_keys, &(options->requested_print_keys_count));
     if (ret == GRIB_INVALID_ARGUMENT)
         usage();
@@ -437,7 +437,8 @@ char* grib_options_get_args(char* id)
             if (grib_options[i].args != NULL) {
                 free(err);
                 return grib_options[i].args;
-            } else {
+            }
+            else {
                 break;
             }
         }
@@ -447,7 +448,8 @@ char* grib_options_get_args(char* id)
             if (grib_options_help_list[i].args != NULL) {
                 free(err);
                 return (char*)grib_options_help_list[i].args;
-            } else {
+            }
+            else {
                 return err;
             }
         }

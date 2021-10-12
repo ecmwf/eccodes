@@ -18,8 +18,8 @@
   !> @param nbytes      number of bytes to be read
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   interface grib_read_from_file
-      module procedure grib_read_from_file_int4
-      module procedure grib_read_from_file_char
+    module procedure grib_read_from_file_int4
+    module procedure grib_read_from_file_char
   end interface grib_read_from_file
 
   !> Reads nbytes bytes into the buffer from a file opened with grib_open_file.
@@ -34,10 +34,10 @@
   !> @param nbytes      number of bytes to be read
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   interface grib_read_bytes
-      module procedure grib_read_bytes_int4
-      module procedure grib_read_bytes_char
-      module procedure grib_read_bytes_real8
-      module procedure grib_read_bytes_real4
+    module procedure grib_read_bytes_int4
+    module procedure grib_read_bytes_char
+    module procedure grib_read_bytes_real8
+    module procedure grib_read_bytes_real4
   end interface grib_read_bytes
 
   !> Write nbytes bytes from the buffer in a file opened with grib_open_file.
@@ -52,10 +52,10 @@
   !> @param nbytes      number of bytes to be written
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   interface grib_write_bytes
-      module procedure grib_write_bytes_int4
-      module procedure grib_write_bytes_char
-      module procedure grib_write_bytes_real8
-      module procedure grib_write_bytes_real4
+    module procedure grib_write_bytes_int4
+    module procedure grib_write_bytes_char
+    module procedure grib_write_bytes_real8
+    module procedure grib_write_bytes_real4
   end interface grib_write_bytes
 
   !> Get the size of a coded message.

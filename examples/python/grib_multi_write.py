@@ -9,19 +9,19 @@
 # nor does it submit to any jurisdiction.
 #
 
-import traceback
 import sys
+import traceback
 
 from eccodes import *
 
-INPUT = '../../data/sample.grib2'
-OUTPUT = 'out.mw.grib'
+INPUT = "../../data/sample.grib2"
+OUTPUT = "out.mw.grib"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    fin = open(INPUT, 'rb')
-    fout = open(OUTPUT, 'wb')
+    fin = open(INPUT, "rb")
+    fout = open(OUTPUT, "wb")
 
     gid = codes_grib_new_from_file(fin)
 
@@ -46,7 +46,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

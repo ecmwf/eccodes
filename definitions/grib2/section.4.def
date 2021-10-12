@@ -1,6 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
 transient timeRangeIndicator=0 : no_copy,hidden;
+transient is_localtime=0 : no_copy,hidden;
 
 position offsetSection4;
 section_length[4] section4Length ;
@@ -8,7 +9,7 @@ meta section4Pointer section_pointer(offsetSection4,section4Length,4);
 
 unsigned[1] numberOfSection = 4:read_only;
 
-unsigned[2] NV  : dump ;
+unsigned[2] NV : dump ;
 alias numberOfVerticalCoordinateValues=NV ;
 alias numberOfCoordinatesValues=NV;
 # For table 4.5, code 150 Generalized vertical height coordinate
@@ -20,6 +21,25 @@ transient neitherPresent = 0;
 
 if (centre==7 || centre==46) {
    alias disableGrib1LocalSection=one;
+}
+
+concept datasetForLocal(unknown) {
+#  "tigge"   = {productionStatusOfProcessedData=4;}
+#  "tigge"   = {productionStatusOfProcessedData=5;}
+#  "s2s"     = {productionStatusOfProcessedData=6;}
+#  "s2s"     = {productionStatusOfProcessedData=7;}
+  "hydro"   = {marsClass="ce";} # EFAS/GLOFAS
+  "hydro"   = {marsClass="ul";} #ULYSSES
+  "uerra"   = {productionStatusOfProcessedData=8;} # UERRA
+  "uerra"   = {productionStatusOfProcessedData=9;} # UERRA
+  "uerra"   = {productionStatusOfProcessedData=10;} # CARRA/CERRA
+  "uerra"   = {productionStatusOfProcessedData=11;} # CARRA/CERRA
+  "unknown" = { dummy=1; }
+}
+
+if (!(datasetForLocal is "unknown")) {
+   constant conceptsDir2 = "grib2/localConcepts/[datasetForLocal]": hidden;
+   constant conceptsDir1 = "grib2": hidden;
 }
 
 codetable[2] productDefinitionTemplateNumber('4.0.table',masterDir,localDir) : dump;
@@ -48,7 +68,7 @@ if (defined(typeOfFirstFixedSurface)) {
 
 if (genVertHeightCoords) {
    # Generalized vertical height coordinate case
-   ieeefloat nlev  : dump ;
+   ieeefloat nlev : dump ;
    ieeefloat numberOfVGridUsed : dump;
    byte[16] uuidOfVGrid : dump;
 
@@ -72,7 +92,6 @@ else {
    concept_nofail deletePV(unknown) {
       "1" = { PVPresent=0; NV=0; }
    }
-
 }
 
 meta md5Section4 md5(offsetSection4,section4Length);

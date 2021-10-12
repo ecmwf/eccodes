@@ -71,5 +71,7 @@ int main(int argc, char* argv[])
     }
     codes_bufr_keys_iterator_delete(kiter);
     codes_handle_delete(h);
+    codes_context_delete(codes_context_get_default());
+
     return 0;
 }

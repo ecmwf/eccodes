@@ -14,7 +14,7 @@ label="bufr_threads_ecc-604"
 temp_dir=tempdir.${label}
 
 NUM_THREADS=3
-NUM_ITER=10
+NUM_ITER=5
 OUTPUT=output
 PROG="${test_dir}/bufr_threads_ecc-604"
 

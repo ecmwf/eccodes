@@ -15,7 +15,7 @@ label="bufr_keys_iterator_test_f"
 
 #Define tmp file
 fTmp=${label}".tmp.txt"
-rm -f $fTmp | true
+rm -f $fTmp
 
 REDIRECT=/dev/null
 
@@ -29,4 +29,4 @@ ${examples_dir}/eccodes_f_bufr_keys_iterator #2> $REDIRECT > $fTmp
 #cat  $fTmp
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp

@@ -20,7 +20,7 @@ const char* tool_description =
     "\tWarning: THIS TOOL IS STILL EXPERIMENTAL";
 const char* tool_name  = "bufr_index_build";
 const char* tool_usage = "[options] file file ... ";
-grib_index* idx             = NULL;
+grib_index* idx        = NULL;
 char* keys;
 char* default_keys = "mars";
 

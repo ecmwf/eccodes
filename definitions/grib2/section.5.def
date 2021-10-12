@@ -2,26 +2,21 @@
 
 position offsetBSection5;
 
-# START grib2::section
 # SECTION 5, DATA REPRESENTATION SECTION
-#  Length of section in octets
 
-# (nn)
 position offsetSection5;
 section_length[4] section5Length ;
 
 meta section5 section_pointer(offsetSection5,section5Length,5);
 
-#  Number of section
 unsigned[1] numberOfSection =5 : read_only;
 
-#  Number of data points where one or more values are specified in Section 7 when a bit map is present,
-#  total number of data pints when a bit map is absent.
-unsigned[4] numberOfValues  : dump;
+# Number of data points where one or more values are specified in Section 7 when a bit map is present,
+# total number of data pints when a bit map is absent.
+unsigned[4] numberOfValues : dump;
 alias numberOfCodedValues=numberOfValues;
 alias numberOfEffectiveValues=numberOfValues;
 
-#  Data Representation Template Number
 codetable[2] dataRepresentationTemplateNumber ('5.0.table',masterDir,localDir) : edition_specific;
 
 concept packingType (unknown) {

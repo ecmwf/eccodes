@@ -216,6 +216,7 @@ static int global_depth = -1;
 #endif
 
 #define BUFR_DESCRIPTORS_ARRAY_USED_SIZE(v) ((v)->n)
+#define SILENT 1
 
 static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded,
                      change_coding_params* ccp, int* err)
@@ -273,7 +274,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
 
             inner_unexpanded = grib_bufr_descriptors_array_new(c, DESC_SIZE_INIT, DESC_SIZE_INCR);
             for (i = 0; i < size; i++) {
-                vv               = grib_bufr_descriptor_new(self->tablesAccessor, v[i], err);
+                vv               = grib_bufr_descriptor_new(self->tablesAccessor, v[i], !SILENT, err);
                 inner_unexpanded = grib_bufr_descriptors_array_push(inner_unexpanded, vv);
             }
             grib_context_free(c, v);
@@ -396,7 +397,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
             DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded, u);
             size = 1;
             if (ccp->associatedFieldWidth && u->X != 31) {
-                bufr_descriptor* au = grib_bufr_descriptor_new(self->tablesAccessor, 999999, err);
+                bufr_descriptor* au = grib_bufr_descriptor_new(self->tablesAccessor, 999999, !SILENT, err);
                 au->width           = ccp->associatedFieldWidth;
                 grib_bufr_descriptor_set_scale(au, 0);
                 strcpy(au->shortName, "associatedField");
@@ -646,7 +647,7 @@ static int expand(grib_accessor* a)
     if (expanded) {
         self->expanded = expanded;
         grib_context_free(c, u);
-        return err;
+        return GRIB_SUCCESS;
     }
 
     if (!self->tablesAccessor) {
@@ -658,8 +659,12 @@ static int expand(grib_accessor* a)
     unexpanded_copy      = grib_bufr_descriptors_array_new(c, unexpandedSize, DESC_SIZE_INCR);
     operator206yyy_width = 0;
     for (i = 0; i < unexpandedSize; i++) {
-        bufr_descriptor* aDescriptor1 = grib_bufr_descriptor_new(self->tablesAccessor, u[i], &err);
-        bufr_descriptor* aDescriptor2 = grib_bufr_descriptor_new(self->tablesAccessor, u[i], &err);
+        bufr_descriptor *aDescriptor1, *aDescriptor2;
+        /* ECC-1274: clear error and only issue msg once */
+        err = 0;
+        aDescriptor1 = grib_bufr_descriptor_new(self->tablesAccessor, u[i], SILENT, &err);
+        err = 0;
+        aDescriptor2 = grib_bufr_descriptor_new(self->tablesAccessor, u[i], !SILENT, &err);
 
         /* ECC-433: Operator 206YYY */
         if (aDescriptor1->F == 2 && aDescriptor1->X == 6) {

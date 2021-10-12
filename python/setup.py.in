@@ -66,7 +66,7 @@ if shared_libs == 'OFF':
 
 
 setup(name='eccodes',
-      version='@ECCODES_VERSION_STR@',
+      version='@eccodes_VERSION_STR@',
       author='ECMWF',
       author_email='Software.Support@ecmwf.int',
       description="""Python interface for ecCodes""",
@@ -74,4 +74,4 @@ setup(name='eccodes',
       url='https://confluence.ecmwf.int/display/ECC/ecCodes+Home',
       download_url='https://confluence.ecmwf.int/display/ECC/Releases',
       ext_modules=[Extension('gribapi._gribapi_swig', **attdict)],
-      packages=['eccodes', 'eccodes.high_level', 'gribapi'])
+      packages=['eccodes', 'gribapi'])

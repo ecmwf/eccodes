@@ -54,11 +54,21 @@ char get_dir_separator_char(void)
     return DIR_SEPARATOR_CHAR;
 }
 
-/* Return 1 if the filepath is a directory, 0 otherwise */
-int path_is_directory(const char* filename)
+/* Return 1 if the filepath is a regular file, 0 otherwise */
+int path_is_regular_file(const char* path)
 {
     struct stat s;
-    int stat_val = stat(filename, &s);
+    int stat_val = stat(path, &s);
+    if (stat_val != 0)
+        return 0; /*error doing stat*/
+    return S_ISREG(s.st_mode); /* 1 if it's a regular file */
+}
+
+/* Return 1 if the filepath is a directory, 0 otherwise */
+int path_is_directory(const char* path)
+{
+    struct stat s;
+    int stat_val = stat(path, &s);
     if (stat_val == 0) {
         if (S_ISDIR(s.st_mode)) {
             return 1;

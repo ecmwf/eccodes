@@ -8,20 +8,13 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- *
- * Description: grib index
- *
- */
-
 #include "grib_api_internal.h"
 
-#define UNDEF_LONG -99999
+#define UNDEF_LONG   -99999
 #define UNDEF_DOUBLE -99999
 
 #define NULL_MARKER 0
 #define NOT_NULL_MARKER 255
-
 
 /* #if GRIB_PTHREADS */
 #if 0
@@ -57,7 +50,6 @@ static void init()
 }
 #endif
 
-
 static const char* mars_keys =
     "mars.date,mars.time,mars.expver,mars.stream,mars.class,mars.type,"
     "mars.step,mars.param,mars.levtype,mars.levelist,mars.number,mars.iteration,"
@@ -68,6 +60,7 @@ static const char* mars_keys =
 /* See GRIB-32: start off ID with -1 as it is incremented before being used */
 static int grib_filesid = -1;
 static int index_count;
+static long values_count = 0;
 
 static char* get_key(char** keys, int* type)
 {
@@ -80,7 +73,6 @@ static char* get_key(char** keys, int* type)
     p     = *keys;
     while (*p == ' ')
         p++;
-
 
     while (*p != 0 && *p != ':' && *p != ',')
         p++;
@@ -249,7 +241,7 @@ static grib_index_key* grib_index_new_key(grib_context* c, grib_index_key* keys,
     next = (grib_index_key*)grib_context_malloc_clear(c, sizeof(grib_index_key));
     if (!next) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "unable to allocate %d bytes",
+                         "unable to allocate %ld bytes",
                          sizeof(grib_index_key));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
@@ -257,7 +249,7 @@ static grib_index_key* grib_index_new_key(grib_context* c, grib_index_key* keys,
     values = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
     if (!values) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "unable to allocate %d bytes",
+                         "unable to allocate %ld bytes",
                          sizeof(grib_string_list));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
@@ -602,7 +594,6 @@ static void grib_index_key_delete(grib_context* c, grib_index_key* keys)
     grib_context_free(c, keys);
 }
 
-static long values_count = 0;
 static grib_string_list* grib_read_key_values(grib_context* c, FILE* fh, int* err)
 {
     grib_string_list* values;
@@ -997,8 +988,8 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err)
 int grib_index_search_same(grib_index* index, grib_handle* h)
 {
     int err        = 0;
-    char buf[1024] = {0,};
-    size_t buflen = 1024;
+    char buf[STRING_VALUE_LEN] = {0,};
+    size_t buflen = STRING_VALUE_LEN;
     grib_index_key* keys;
     long lval   = 0;
     double dval = 0.0;
@@ -1016,7 +1007,7 @@ int grib_index_search_same(grib_index* index, grib_handle* h)
             if (err)
                 keys->type = GRIB_TYPE_STRING;
         }
-        buflen = 1024;
+        buflen = STRING_VALUE_LEN;
         switch (keys->type) {
             case GRIB_TYPE_STRING:
                 err = grib_get_string(h, keys->name, buf, &buflen);
@@ -1403,7 +1394,6 @@ int grib_index_add_file(grib_index* index, const char* filename)
         err=grib_get_long(h,"totalLength",&length);
         if (err) return err;
         field->length=length;
-
 
         if (field_tree->field) {
             grib_field* pfield=field_tree->field;
@@ -1931,6 +1921,7 @@ void grib_index_rewind(grib_index* index)
     index->rewind = 1;
 }
 
+#if 0
 static grib_index_key* search_key(grib_index_key* keys, grib_index_key* to_search)
 {
     if (!keys || !strcmp(keys->name, to_search->name))
@@ -1957,6 +1948,7 @@ int grib_index_search(grib_index* index, grib_index_key* keys)
     grib_index_rewind(index);
     return 0;
 }
+#endif
 
 int codes_index_set_product_kind(grib_index* index, ProductKind product_kind)
 {

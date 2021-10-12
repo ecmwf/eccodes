@@ -15,8 +15,10 @@
 #
 
 from __future__ import print_function
-import traceback
+
 import sys
+import traceback
+
 from eccodes import *
 
 VERBOSE = 1  # verbose error reporting
@@ -24,10 +26,10 @@ VERBOSE = 1  # verbose error reporting
 
 def example():
     if len(sys.argv) < 2:
-        print('Usage: ', sys.argv[0], ' file', file=sys.stderr)
+        print("Usage: ", sys.argv[0], " file", file=sys.stderr)
         sys.exit(1)
 
-    f = open(sys.argv[1], 'rb')
+    f = open(sys.argv[1], "rb")
     while 1:
         ident = codes_grib_new_from_file(f)
         if ident is None:
@@ -47,7 +49,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

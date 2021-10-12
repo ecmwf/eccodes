@@ -328,11 +328,13 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
     values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
     err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
-    if (err)
+    if (err) {
+        grib_context_free(a->context, values);
         return err;
+    }
     *val = values[idx];
     grib_context_free(a->context, values);
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static int unpack_double(grib_accessor* a, double* values, size_t* len)
@@ -532,7 +534,6 @@ static void grib_split_long_groups(grib_handle* hand, grib_context* c, long* num
     long* localWidths;
     long* localFirstOrderValues;
     int maxNumberOfGroups = *numberOfGroups * 2;
-
 
     /* the widthOfLengths is the same for all the groupLengths and therefore if
         few big groups are present all the groups have to be coded with a large number
@@ -1236,6 +1237,22 @@ static int pack_double_old(grib_accessor* a, const double* val, size_t *len)
 }
 #endif
 
+static int get_bits_per_value(grib_handle* h, const char* bits_per_value_str, long* bits_per_value)
+{
+    int err = 0;
+    if ((err = grib_get_long_internal(h, bits_per_value_str, bits_per_value)) != GRIB_SUCCESS)
+        return err;
+
+    if (*bits_per_value == 0) {
+        /* Probably grid_ieee input which is a special case. Note: we cannot check the packingType
+         * because it has already been changed to second order!
+         * We have to take precision=1 for IEEE which is 32bits
+         */
+        *bits_per_value = 32;
+    }
+    return err;
+}
+
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_data_g1second_order_general_extended_packing* self = (grib_accessor_data_g1second_order_general_extended_packing*)a;
@@ -1293,7 +1310,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             min = val[i];
     }
 
-    if ((ret = grib_get_long_internal(handle, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+    /* ECC-1219: packingType conversion from grid_ieee to grid_second_order */
+    if ((ret = get_bits_per_value(handle, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
         return ret;
 
     if ((ret = grib_get_long_internal(handle, self->optimize_scaling_factor, &optimize_scaling_factor)) != GRIB_SUCCESS)
@@ -1889,7 +1907,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     grib_context_free(a->context, groupWidths);
     grib_context_free(a->context, firstOrderValues);
 
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 static void destroy(grib_context* context, grib_accessor* a)
