@@ -41,7 +41,7 @@ static void init_bits_all_one()
         *(--v) = ~(cmask << --size);
 }
 
-int grib_is_all_bits_one(long val, long nbits)
+int grib_is_all_bits_one(int64_t val, long nbits)
 {
     if (!bits_all_one.inited)
         init_bits_all_one();
