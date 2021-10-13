@@ -357,10 +357,16 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
         if (err) {
             size_t i = 0, concept_count = 0;
             long dummy = 0, editionNumber = 0;
+            char centre_s[32] = {0,};
+            size_t centre_len = sizeof(centre_s);
             char* all_concept_vals[MAX_NUM_CONCEPT_VALUES] = {NULL,}; /* sorted array containing concept values */
             grib_concept_value* pCon = concepts;
 
             grib_context_log(h->context, GRIB_LOG_ERROR, "concept: no match for %s=%s", act->name, name);
+            if (grib_get_long(h, "edition", &editionNumber) == GRIB_SUCCESS &&
+                grib_get_string(h, "centre", centre_s, &centre_len) == GRIB_SUCCESS) {
+                grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle edition=%ld, centre=%s", editionNumber, centre_s);
+            }
             if (strcmp(act->name, "paramId") == 0 && string_to_long(name, &dummy) == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_ERROR,
                                  "Please check the Parameter Database 'https://apps.ecmwf.int/codes/grib/param-db/?id=%s'", name);
@@ -368,9 +374,6 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
             if (strcmp(act->name, "shortName") == 0) {
                 grib_context_log(h->context, GRIB_LOG_ERROR,
                                  "Please check the Parameter Database 'https://apps.ecmwf.int/codes/grib/param-db/'");
-            }
-            if (grib_get_long(h, "edition", &editionNumber) == GRIB_SUCCESS) {
-                grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle edition=%ld", editionNumber);
             }
 
             /* Create a list of all possible values for this concept and sort it */
