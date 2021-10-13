@@ -62,7 +62,7 @@ int main(int argc, char** argv)
     }
 
     /* turn on support for multi-field messages */
-    codes_grib_multi_support_on(0);
+    codes_grib_multi_support_on(NULL);
 
     for (i = 1; i < COUNT; ++i) {
         printf("Pass %d: \n", i);
