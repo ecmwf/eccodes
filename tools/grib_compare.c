@@ -1178,14 +1178,15 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
             if (blocklisted(options->compare[i].name))
                 continue;
             if (options->compare[i].type == GRIB_NAMESPACE) {
+                int num_keys_in_namespace = 0;
                 iter = grib_keys_iterator_new(h1, 0, options->compare[i].name);
                 if (!iter) {
-                    printf("ERROR: unable to get keys iterator\n");
+                    printf("ERROR: unable to get keys iterator for namespace \"%s\".\n", options->compare[i].name);
                     exit(1);
                 }
                 while (grib_keys_iterator_next(iter)) {
                     name = grib_keys_iterator_get_name(iter);
-                    /*printf("----- comparing %s\n",name);*/
+                    num_keys_in_namespace++;
 
                     if (blocklisted(name))
                         continue;
@@ -1193,6 +1194,9 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
                         err++;
                 }
                 grib_keys_iterator_delete(iter);
+                if (num_keys_in_namespace == 0) {
+                    printf("ERROR: namespace \"%s\" does not contain any key.\n", options->compare[i].name);
+                }
             }
             else {
                 if (compare_values(options, h1, h2, options->compare[i].name, options->compare[i].type))
