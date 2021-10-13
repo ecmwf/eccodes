@@ -52,14 +52,14 @@ int main(int argc, char** argv)
     CODES_CHECK(err, 0);
     CODES_CHECK(codes_get_long(h, "edition", &edition), 0);
     if (edition != 2) {
-        fprintf(stderr, "ERROR: Input grib must be edition 2 for multi fields\n");
+        fprintf(stderr, "ERROR: Input grib must be edition 2 for multi-fields\n");
         exit(1);
     }
 
-    /* create a new empty multi field handle */
-    mh = codes_grib_multi_handle_new(0);
+    /* create a new empty multi-field handle */
+    mh = codes_grib_multi_handle_new(NULL);
     if (!mh) {
-        fprintf(stderr, "ERROR: Unable to create multi field handle\n");
+        fprintf(stderr, "ERROR: Unable to create multi-field handle\n");
         exit(1);
     }
 
@@ -78,7 +78,7 @@ int main(int argc, char** argv)
         exit(1);
     }
 
-    /* write multi fields handle to output file */
+    /* write multi-field handle to output file */
     codes_grib_multi_handle_write(mh, of);
     fclose(of);
 
