@@ -870,7 +870,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
             }
             else {
                 /* Array of strings */
-                size_t i = 0;
+                size_t ii = 0;
                 svals1   = (char**)grib_context_malloc_clear(handle1->context, len1 * sizeof(char*));
                 svals2   = (char**)grib_context_malloc_clear(handle2->context, len2 * sizeof(char*));
 
@@ -894,7 +894,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                     save_error(c, name);
                 }
                 if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
-                    size_t ii;
                     countdiff = 0;
                     for (ii = 0; ii < len1; ii++) {
                         if (strings_are_different(handle1, handle2, name, svals1[ii], svals2[ii], len1, len2)) {
@@ -911,8 +910,8 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                             printf("string [%s] %d out of %ld different\n", name, countdiff, (long)len1);
                     }
                 }
-                for (i = 0; i < len1; ++i) grib_context_free(c, svals1[i]);
-                for (i = 0; i < len2; ++i) grib_context_free(c, svals2[i]);
+                for (ii = 0; ii < len1; ++ii) grib_context_free(c, svals1[ii]);
+                for (ii = 0; ii < len2; ++ii) grib_context_free(c, svals2[ii]);
                 grib_context_free(handle1->context, svals1);
                 grib_context_free(handle1->context, svals2);
             }
