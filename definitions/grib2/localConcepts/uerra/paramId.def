@@ -41,6 +41,15 @@
 	 typeOfStatisticalProcessing = 2 ;
 	 lengthOfTimeRange = 1 ;
 	}
+#2 metre temperature
+'167' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 15 ;
+	 scaleFactorOfFirstFixedSurface = 1 ;
+	}
 #Maximum temperature at 2 metres since previous post-processing
 '201' = {
 	 discipline = 0 ;
@@ -50,16 +59,6 @@
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
-	}
-#Minimum temperature at 2 metres since previous post-processing
-'202' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfStatisticalProcessing = 3 ;
 	}
 #Maximum temperature at 2 metres since previous post-processing
 '201' = {
@@ -77,9 +76,28 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
+#Minimum temperature at 2 metres since previous post-processing
+'202' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 15 ;
 	 scaleFactorOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
+	}
+#2 metre relative humidity
+'260242' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 15 ;
+	 scaleFactorOfFirstFixedSurface = 1 ;
 	}
 #Evaporation
 '260259' = {
@@ -100,22 +118,4 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 24 ;
-	}
-#2 metre temperature
-'167' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 15 ;
-	 scaleFactorOfFirstFixedSurface = 1 ;
-	}
-#Surface air relative humidity
-'260242' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaledValueOfFirstFixedSurface = 15 ;
-	 scaleFactorOfFirstFixedSurface = 1 ;
-	}
+}
