@@ -62,14 +62,14 @@ grib_option grib_options[] = {
     /* {"x",0,0,0,1,0} */
 };
 
-const char* grib_tool_description = "Dump the content of a BUFR file in different formats.";
-const char* grib_tool_name        = "bufr_dump";
-const char* grib_tool_usage       = "[options] bufr_file bufr_file ...";
-static int json                   = 0;
-static int dump_descriptors       = 0;
-static char* json_option          = 0;
-static int first_handle           = 1;
-static grib_dumper* dumper        = 0;
+const char* tool_description = "Dump the content of a BUFR file in different formats.";
+const char* tool_name        = "bufr_dump";
+const char* tool_usage       = "[options] bufr_file bufr_file ...";
+static int json              = 0;
+static int dump_descriptors  = 0;
+static char* json_option     = 0;
+static int first_handle      = 1;
+static grib_dumper* dumper   = 0;
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -108,7 +108,7 @@ int grib_tool_init(grib_runtime_options* options)
     options->strict    = 1; /* Must set here as bufr_dump has its own -S option */
 
     if (opt > 1) {
-        printf("%s: simultaneous j/C/O options not allowed\n", grib_tool_name);
+        printf("%s: simultaneous j/C/O options not allowed\n", tool_name);
         exit(1);
     }
 
@@ -116,7 +116,7 @@ int grib_tool_init(grib_runtime_options* options)
         options->dump_mode = "json";
         json_option        = grib_options_get_option("j:");
         if (strlen(json_option) > 1 || (json_option[0] != 's' && json_option[0] != 'f' && json_option[0] != 'a')) {
-            printf("%s: Invalid JSON option %s\n", grib_tool_name, json_option);
+            printf("%s: Invalid JSON option %s\n", tool_name, json_option);
             exit(1);
         }
         json = 1;
@@ -125,7 +125,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("O")) {
         options->dump_mode  = "wmo";
         json                = 0;
-        options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTECT | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
+        options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("p")) {
@@ -186,6 +186,33 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 {
     if (!options->current_infile->name)
         return 0;
+
+    Assert(file);
+    exit_if_input_is_directory(tool_name, file->name);
+
+    /*
+     * Dumping of index files
+     */
+    if (is_index_file(options->current_infile->name)) {
+        int err              = 0;
+        grib_context* c      = grib_context_get_default();
+        const char* filename = options->current_infile->name;
+        json = 0;
+
+        err = grib_index_dump_file(stdout, filename);
+        if (err) {
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: Could not dump index file \"%s\".\n%s\n",
+                             tool_name,
+                             filename,
+                             grib_get_error_message(err));
+            exit(1);
+        }
+        /* Since there are no BUFR messages, we have to stop tool exiting in case there
+         * are more index files */
+        options->fail = 0;
+        return 0;
+    }
+
     if (json)
         return 0;
 
@@ -423,7 +450,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 new_handle = grib_handle_new_from_message(0, buffer, size);
                 Assert(new_handle);
                 /* Replace handle with the new one which has only one subset */
-                h = new_handle;
+                h      = new_handle;
                 hclone = h2; /* to be deleted later */
             }
         }

@@ -13,16 +13,16 @@ set -x
 
 cd ${data_dir}/bufr
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_dump_decode_filter_test"
 
-#Create log file
-fLog=${label}".log"
+# Create log file
+fLog=temp.${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define filter rules file
-fRules=${label}.filter
+# Define filter rules file
+fRules=temp.${label}.filter
 
 #-----------------------------------------------------------
 # NOTE: not all of our BUFR files pass this test. bufr_filter is limited

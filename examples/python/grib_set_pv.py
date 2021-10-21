@@ -9,8 +9,8 @@
 # nor does it submit to any jurisdiction.
 #
 
-import traceback
 import sys
+import traceback
 
 from eccodes import *
 
@@ -23,20 +23,20 @@ def example():
     """
     # read the coefficients from file
     pv = []
-    for line in open('../../data/60_model_levels'):
-        pv.extend([float(x) for x in line.strip().split('\t')])
+    for line in open("../../data/60_model_levels"):
+        pv.extend([float(x) for x in line.strip().split("\t")])
 
     numberOfLevels = 60
     numberOfCoefficients = 2 * (numberOfLevels + 1)
-    assert (len(pv) == numberOfCoefficients)
+    assert len(pv) == numberOfCoefficients
 
-    fout = open('grib_set_pv.py.temp.grib', 'wb')
-    gid = codes_grib_new_from_samples('reduced_gg_sfc_grib1')
+    fout = open("grib_set_pv.py.temp.grib", "wb")
+    gid = codes_grib_new_from_samples("reduced_gg_sfc_grib1")
 
-    codes_set(gid, 'typeOfLevel', 'hybrid')
-    codes_set(gid, 'level', 2)
-    codes_set(gid, 'PVPresent', 1)
-    codes_set_array(gid, 'pv', pv)
+    codes_set(gid, "typeOfLevel", "hybrid")
+    codes_set(gid, "level", 2)
+    codes_set(gid, "PVPresent", 1)
+    codes_set_array(gid, "pv", pv)
 
     codes_write(gid, fout)
 
@@ -51,10 +51,10 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

@@ -1,5 +1,5 @@
-constant default_min_val = -1e9 : double_type, hidden;
-constant default_max_val = +1e9 : double_type, hidden;
+constant default_min_val = -1e13 : double_type, hidden;
+constant default_max_val = +1e13 : double_type, hidden;
 
 concept param_value_min(default_min_val) {
     -150 = { paramId=165; }
@@ -52,7 +52,7 @@ concept param_value_min(default_min_val) {
     -4 = { paramId=151145; }
     0 = { paramId=151219; }
     160 = { paramId=34; }
-    0 = { paramId=31; }
+    -0.00001 = { paramId=31; }
     0 = { paramId=174098; }
     0 = { paramId=140229; }
     120 = { paramId=235; }
@@ -104,7 +104,7 @@ concept param_value_max(default_max_val) {
     1500 = { paramId=151163; }
     3.5 = { paramId=151131; }
     5 = { paramId=260259; }
-    350000 = { paramId=129; }
+    3500000 = { paramId=129; }
     35000 = { paramId=156; }
     100 = { paramId=3075; }
     1 = { paramId=172; }

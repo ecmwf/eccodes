@@ -11,17 +11,17 @@ position startOfHeaders;
 ascii[4] identifier = `WRAP`: dump;
 alias ls.identifier=identifier;
 
-uint64   totalLength : dump;
-uint8    version  = 1 : dump;
-uint8    spare;
+uint64  totalLength : dump;
+uint8   version  = 1 : dump;
+uint8   spare;
 
-template  metadata "wrap/metadata.[version].def";
+template metadata "wrap/metadata.[version].def";
 
-position   endOfHeadersMarker;
+position endOfHeadersMarker;
 
 constant dataLength = (totalLength - endOfHeadersMarker - 4);
 blob data[dataLength]  : dump;
 
-ascii[4]  endMark = `7777`  : dump;
+ascii[4] endMark = `7777`  : dump;
 
-position   totalLength;
+position totalLength;

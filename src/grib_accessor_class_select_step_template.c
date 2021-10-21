@@ -262,7 +262,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
                 productDefinitionTemplateNumberNew = 46;
                 break;
             case 45: /* EPS aerosol */
-                productDefinitionTemplateNumberNew = 47;
+                /*productDefinitionTemplateNumberNew = 47;   PDT deprecated */
+                productDefinitionTemplateNumberNew = 85;
                 break;
             case 57: /* non-EPS chemical distrib func */
                 productDefinitionTemplateNumberNew = 67;

@@ -207,6 +207,7 @@ static int apply_thinning(grib_accessor* a)
         if (nsubsets != 0) {
             subsets_ar = grib_iarray_get_array(subsets);
             ret        = grib_set_long_array(h, self->extractSubsetList, subsets_ar, nsubsets);
+            grib_context_free(c, subsets_ar);
             if (ret)
                 return ret;
 
@@ -218,6 +219,7 @@ static int apply_thinning(grib_accessor* a)
             if (ret)
                 return ret;
         }
+        grib_iarray_delete(subsets);
     }
     else {
         return GRIB_NOT_IMPLEMENTED;
@@ -237,9 +239,5 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if (err)
         return err;
 
-    err = grib_set_long(a->parent->h, self->doExtractSubsets, 1);
-    if (err)
-        return err;
-
-    return err;
+    return grib_set_long(a->parent->h, self->doExtractSubsets, 1);
 }

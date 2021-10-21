@@ -1,4 +1,5 @@
 # (C) Copyright 2005- ECMWF.
+# Extreme forecast index data
 
 template mars_labeling "grib1/mars_labeling.def";
 

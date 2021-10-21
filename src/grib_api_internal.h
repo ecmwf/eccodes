@@ -820,8 +820,8 @@ struct bufr_descriptor
     int Y;
     int type;
     /*char* name;   Not needed: All usage commented out. See ECC-489 */
-    char* shortName;
-    char* units;
+    char shortName[128];
+    char units[128];
     long scale;
     double factor;
     long reference;
@@ -1094,7 +1094,7 @@ struct grib_context
     int hash_array_count;
     grib_hash_array_value* hash_array[MAX_NUM_HASH_ARRAY];
     grib_trie* def_files;
-    grib_string_list* blacklist;
+    grib_string_list* blocklist;
     int ieee_packing;
     int bufrdc_mode;
     int bufr_set_to_missing_if_out_of_range;
@@ -1393,6 +1393,8 @@ struct grib_index
     grib_field_list* current;
     grib_file* files;
     int count;
+    ProductKind product_kind;
+    int unpack_bufr; /* Only meaningful for product_kind of BUFR */
 };
 
 /* header compute */
@@ -1539,7 +1541,7 @@ struct grib_smart_table
 };
 
 
-#if GRIB_TIMER
+#if ECCODES_TIMER
 typedef struct grib_timer
 {
     struct timeval start_;

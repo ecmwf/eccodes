@@ -420,7 +420,7 @@ int grib_encode_size_tb(unsigned char* p, size_t val, long* bitp, long nb)
 #if OMP_PACKING
 #include "grib_bits_any_endian_omp.c"
 #elif VECTOR
-#include "grib_bits_any_endian_vector.c"
+#include "grib_bits_any_endian_vector.c"  /* Experimental */
 #else
 #include "grib_bits_any_endian_simple.c"
 #endif

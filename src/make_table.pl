@@ -114,7 +114,7 @@ foreach my $version (@versions)
    $s->execute;
 
    my $out="local_table_2_version_$version";
-   open(G,">$out") or die "can not write to $out";
+   open(G,">$out") or die "cannot write to $out";
 
    while(my (@x) = $s->fetchrow_array)
    {

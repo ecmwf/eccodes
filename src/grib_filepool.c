@@ -255,6 +255,7 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
             GRIB_MUTEX_UNLOCK(&mutex1);
             return NULL;
         }
+        if (file->mode) free(file->mode);
         file->mode = strdup(mode);
         if (file_pool.context->io_buffer_size) {
 #ifdef POSIX_MEMALIGN

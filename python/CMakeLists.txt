@@ -1,4 +1,4 @@
-if( HAVE_PYTHON )
+if( HAVE_PYTHON2 )
 
     #find_package( SWIG )
     #if( SWIG_FOUND )
@@ -37,7 +37,7 @@ if( HAVE_PYTHON )
     set( _gribapi_swig "gribapi/_gribapi_swig${CMAKE_SHARED_LIBRARY_SUFFIX}" )
     # Build the extension module for use in build tree with RPATH pointing to the build tree
     add_custom_command( OUTPUT ${_gribapi_swig}
-                        COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext --inplace --rpath ${CMAKE_BINARY_DIR}/lib
+                        COMMAND ${PYTHON_EXECUTABLE} setup.py build_ext --inplace --rpath ${CMAKE_BINARY_DIR}/${INSTALL_LIB_DIR}
                         DEPENDS grib_interface.h grib_interface.c swig_wrap_numpy.c setup.py.in eccodes )
     add_custom_target(eccodes_build_swig_wrapper ALL DEPENDS ${_gribapi_swig})
 
@@ -61,10 +61,11 @@ ${PYTHON_EXECUTABLE} setup.py build_ext --rpath ${CMAKE_INSTALL_PREFIX}/${INSTAL
                                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})")
 
     # Library installation directory override
+    # INSTALL_LIB_DIR = lib or lib64
     if( NOT INSTALL_LIB_DIR STREQUAL lib )
       execute_process( COMMAND ${PYTHON_EXECUTABLE} -c "from __future__ import print_function; import sys; print(sys.version[:3], end='')"
                        OUTPUT_VARIABLE PYVER )
-      set( __install_lib "--install-lib=${ECCODES_FULL_INSTALL_LIB_DIR}/python${PYVER}/site-packages" )
+      set( __install_lib "--install-lib=${eccodes_FULL_INSTALL_LIB_DIR}/python${PYVER}/site-packages" )
     endif()
 
     # Call distutils for installation

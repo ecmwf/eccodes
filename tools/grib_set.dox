@@ -59,7 +59,7 @@
 \verbatim
 >grib_set -s scaleFactorOfFirstFixedSurface=missing,scaledValueOfFirstFixedSurface=MISSING ../data/regular_latlon_surface.grib2 out.grib2
 \endverbatim\n
-Since some values can not be set to missing you can get an error for those keys.\n
+Since some values cannot be set to missing you can get an error for those keys.\n
 -# To set scaleFactorOfSecondFixedSurface to missing only for the fields for which scaleFactorOfSecondFixedSurface is not missing: \n
 \verbatim 
 >grib_set -s scaleFactorOfSecondFixedSurface=missing -w scaleFactorOfSecondFixedSurface!=missing tigge_pf_ecmwf.grib2 out.grib2

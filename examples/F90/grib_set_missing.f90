@@ -7,46 +7,45 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!
-!  Description: how to set missing a key value.
+!  Description: How to set missing a key value.
 !
 !
 !
 program set
-  use eccodes
-  implicit none
-  integer              :: infile,outfile
-  integer              :: igrib, Ni, is_missing
+   use eccodes
+   implicit none
+   integer              :: infile, outfile
+   integer              :: igrib, Ni, is_missing
 
-  infile=5
-  outfile=6
+   infile = 5
+   outfile = 6
 
-  call codes_open_file(infile, &
-       '../../data/reduced_gaussian_pressure_level.grib2','r')
+   call codes_open_file(infile, &
+                        '../../data/reduced_gaussian_pressure_level.grib2', 'r')
 
-  call codes_open_file(outfile, &
-       'f_out_surface_level.grib2','w')
+   call codes_open_file(outfile, &
+                        'f_out_surface_level.grib2', 'w')
 
-  !     a new grib message is loaded from file
-  !     igrib is the grib id to be used in subsequent calls
-  call codes_grib_new_from_file(infile,igrib)
+   !     a new grib message is loaded from file
+   !     igrib is the grib id to be used in subsequent calls
+   call codes_grib_new_from_file(infile, igrib)
 
-  call codes_set(igrib,'typeOfFirstFixedSurface','sfc')
-  call codes_set_missing(igrib,'scaleFactorOfFirstFixedSurface')
-  call codes_set_missing(igrib,'scaledValueOfFirstFixedSurface')
+   call codes_set(igrib, 'typeOfFirstFixedSurface', 'sfc')
+   call codes_set_missing(igrib, 'scaleFactorOfFirstFixedSurface')
+   call codes_set_missing(igrib, 'scaledValueOfFirstFixedSurface')
 
-  ! See GRIB-490
-  call codes_get(igrib, 'Ni', Ni)
-  call codes_is_missing(igrib,'Ni',is_missing)
-  if ( is_missing == 0 ) then
-    ! Ni should be missing in gribs with Reduced Gaussian grids
-    call codes_check(-2, 'Ni_should_be_missing', '')
-  endif
-  call codes_set(igrib, 'Ni', Ni)
+   ! See GRIB-490
+   call codes_get(igrib, 'Ni', Ni)
+   call codes_is_missing(igrib, 'Ni', is_missing)
+   if (is_missing == 0) then
+      ! Ni should be missing in gribs with Reduced Gaussian grids
+      call codes_check(-2, 'Ni_should_be_missing', '')
+   end if
+   call codes_set(igrib, 'Ni', Ni)
 
-  call codes_write(igrib,outfile)
-  call codes_release(igrib)
-  call codes_close_file(infile)
-  call codes_close_file(outfile)
+   call codes_write(igrib, outfile)
+   call codes_release(igrib)
+   call codes_close_file(infile)
+   call codes_close_file(outfile)
 
 end program set

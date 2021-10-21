@@ -10,7 +10,6 @@
 
 . ./include.sh
 
-REDIRECT=/dev/null
 
 temp1=temp1.calendar.$$
 temp2=temp2.calendar.$$

@@ -224,12 +224,12 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     else if ((ret = grib_get_long_internal(hand, self->i_increment, &v[n++])) != GRIB_SUCCESS)
         return ret;
 
-    if (!self->j_increment)
+    if (!self->j_increment) {
         v[n++] = GRIB_MISSING_LONG;
-    else if (self->j_increment)
+    } else {
         if ((ret = grib_get_long_internal(hand, self->j_increment, &v[n++])) != GRIB_SUCCESS)
             return ret;
-
+    }
     for (i = 0; i < n; i++)
         if (v[i] == GRIB_MISSING_LONG)
             val[i] = GRIB_MISSING_DOUBLE;

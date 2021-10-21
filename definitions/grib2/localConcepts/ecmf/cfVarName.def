@@ -245,12 +245,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 46 ;
 	}
-#Direct solar radiation
-'dsrp' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 47 ;
-	}
 #Magnitude of turbulent surface stress
 'magss' = {
 	 discipline = 192 ;
@@ -394,18 +388,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 74 ;
-	}
-#Total column cloud liquid water
-'tclw' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 78 ;
-	}
-#Total column cloud ice water
-'tciw' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 79 ;
 	}
 #Experimental product
 'p80.128' = {
@@ -709,10 +691,10 @@
 	}
 #Snow depth
 'sd' = {
+	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 11 ;
-	 unitsFactor = 1000 ;
+	 parameterNumber = 254 ;
 	}
 #Large-scale precipitation
 'lsp' = {
@@ -829,12 +811,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 174 ;
-	}
-#Top net solar radiation
-'tsr' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 178 ;
 	}
 #Evaporation
 'e' = {
@@ -1120,12 +1096,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 237 ;
-	}
-#Temperature of snow layer
-'tsn' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 238 ;
 	}
 #Convective snowfall
 'csf' = {
@@ -3316,6 +3286,26 @@
 	 discipline = 192 ;
 	 parameterCategory = 211 ;
 	 parameterNumber = 120 ;
+	}
+#Nitrate fine mode aerosol mass mixing ratio
+'aermr16diff' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 65534 ;
+	 is_aerosol = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Nitrate coarse mode aerosol mass mixing ratio
+'aermr17diff' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	 aerosolType = 65533 ;
+	 is_aerosol = 1 ;
 	}
 #Experimental product
 'p1.212' = {
@@ -6788,7 +6778,43 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 193 ;
+	 is_aerosol = 1 ;
 	 aerosolType = 62003 ;
+	}
+#Source/gain of biogenic secondary organic aerosol
+'aersrcsoab' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62032 ;
+	}
+#Negative fixer of biogenic secondary organic aerosol
+'aerngtsoab' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62032 ;
+	}
+#Source/gain of anthropogenic secondary organic aerosol
+'aersrcsoaa' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 192 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Negative fixer of anthropogenic secondary organic aerosol
+'aerngtsoaa' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 193 ;
+	 aerosolType = 62033 ;
 	 is_aerosol = 1 ;
 	}
 #Experimental product
@@ -8399,12 +8425,6 @@
 	 parameterCategory = 217 ;
 	 parameterNumber = 18 ;
 	}
-#Ammonia
-'nh3' = {
-	 discipline = 192 ;
-	 parameterCategory = 217 ;
-	 parameterNumber = 19 ;
-	}
 #Sulfate
 'so4' = {
 	 discipline = 192 ;
@@ -8440,12 +8460,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 217 ;
 	 parameterNumber = 26 ;
-	}
-#Nitrogen monoxide
-'no' = {
-	 discipline = 192 ;
-	 parameterCategory = 217 ;
-	 parameterNumber = 27 ;
 	}
 #Hydroperoxy radical
 'ho2' = {
@@ -9514,6 +9528,24 @@
 	 discipline = 192 ;
 	 parameterCategory = 217 ;
 	 parameterNumber = 206 ;
+	}
+#Anthropogenic volatile organic compounds mass mixing ratio
+'VOCA' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 65532 ;
+	 is_chemical = 1 ;
+	}
+#Biomass burning volatile organic compounds mass mixing ratio
+'VOCBB' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 65531 ;
+	 is_chemical = 1 ;
 	}
 #Total column hydrogen peroxide
 'tc_h2o2' = {
@@ -10708,6 +10740,24 @@
 	 discipline = 192 ;
 	 parameterCategory = 218 ;
 	 parameterNumber = 206 ;
+	}
+#Column integrated mass density of Anthropogenic volatile organic compounds 
+'tc_VOCA' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 65532 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Biomass burning volatile organic compounds 
+'tc_VOCBB' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 is_chemical = 1 ;
+	 constituentType = 65531 ;
 	}
 #Ozone emissions
 'e_go3' = {
@@ -12029,6 +12079,24 @@
 	 parameterCategory = 219 ;
 	 parameterNumber = 220 ;
 	}
+#Atmosphere emission mass flux of Anthropogenic volatile organic compounds 
+'e_VOCA' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 is_chemical = 1 ;
+	 constituentType = 65532 ;
+	}
+#Atmosphere emission mass flux of Biomass burning volatile organic compounds 
+'e_VOCBB' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 65531 ;
+	 is_chemical = 1 ;
+	}
 #Ozone deposition velocity
 'dv_go3' = {
 	 discipline = 192 ;
@@ -13265,6 +13333,24 @@
 	 parameterCategory = 221 ;
 	 parameterNumber = 206 ;
 	}
+#Dry deposition velocity of Anthropogenic volatile organic compounds 
+'dv_VOCA' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 65532 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Biomass burning volatile organic compounds 
+'dv_VOCBB' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 65531 ;
+	 is_chemical = 1 ;
+	}
 #Total sky direct solar radiation at surface
 'fdir' = {
 	 discipline = 192 ;
@@ -13604,6 +13690,58 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 103 ;
 	}
+#Solar induced Chlorophyll fluorescence at 740nm
+'sif740' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 scaledValueOfFirstWavelength = 740 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 is_aerosol_optical = 1 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	}
+#Solar induced Chlorophyll fluorescence at 755nm
+'sif755' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 scaledValueOfFirstWavelength = 755 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 is_aerosol_optical = 1 ;
+	}
+#Solar induced Chlorophyll fluorescence at 771nm
+'sif771' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 is_aerosol_optical = 1 ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 scaledValueOfFirstWavelength = 771 ;
+	}
+#Solar induced Chlorophyll fluorescence at 757nm
+'sif757' = {
+	 localTablesVersion = 1 ;
+	 discipline = 4 ;
+	 parameterCategory = 8 ;
+	 parameterNumber = 254 ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 is_aerosol_optical = 1 ;
+	 scaledValueOfFirstWavelength = 757 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 typeOfWavelengthInterval = 11 ;
+	}
 #Surface solar radiation downward clear-sky
 'ssrdc' = {
 	 discipline = 192 ;
@@ -13645,6 +13783,23 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 255 ;
+	}
+#Time integral of snow evaporation flux
+'tisef' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Surface roughness length for heat
+'srlh' = {
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 200 ;
 	}
 #Stream function gradient
 'strfgrd' = {
@@ -20622,24 +20777,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 100 ;
 	}
-#Nitrogen dioxide
-'no2' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 121 ;
-	}
-#Sulphur dioxide
-'so2' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 122 ;
-	}
-#Carbon monoxide
-'co' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 123 ;
-	}
 #Formaldehyde
 'hcho' = {
 	 discipline = 192 ;
@@ -20927,12 +21064,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 185 ;
-	}
-#GEMS Ozone
-'go3' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 203 ;
 	}
 #GEMS Total column ozone
 'gtco3' = {
@@ -21390,24 +21521,6 @@
 	 parameterCategory = 211 ;
 	 parameterNumber = 100 ;
 	}
-#Nitrogen dioxide
-'no2diff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 121 ;
-	}
-#Sulphur dioxide
-'so2diff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 122 ;
-	}
-#Carbon monoxide
-'codiff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 123 ;
-	}
 #Formaldehyde
 'hchodiff' = {
 	 discipline = 192 ;
@@ -21696,12 +21809,6 @@
 	 parameterCategory = 211 ;
 	 parameterNumber = 185 ;
 	}
-#GEMS Ozone
-'go3diff' = {
-	 discipline = 192 ;
-	 parameterCategory = 211 ;
-	 parameterNumber = 203 ;
-	}
 #GEMS Total column ozone
 'gtco3diff' = {
 	 discipline = 192 ;
@@ -21797,54 +21904,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 6 ;
-	}
-#Lake depth
-'dl' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 7 ;
-	}
-#Lake mix-layer temperature
-'lmlt' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 8 ;
-	}
-#Lake mix-layer depth
-'lmld' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 9 ;
-	}
-#Lake bottom temperature
-'lblt' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 10 ;
-	}
-#Lake total layer temperature
-'ltlt' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 11 ;
-	}
-#Lake shape factor
-'lshf' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 12 ;
-	}
-#Lake ice temperature
-'lict' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 13 ;
-	}
-#Lake ice depth
-'licd' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 14 ;
 	}
 #Minimum vertical gradient of refractivity inside trapping layer
 'dndzn' = {

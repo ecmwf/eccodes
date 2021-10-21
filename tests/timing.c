@@ -16,7 +16,7 @@
 #define NUMBER(a) (sizeof(a)/sizeof(a[0]))
 
 #ifdef HAVE_LIBEMOS
-#if GRIB_TIMER
+#if ECCODES_TIMER
 
 extern void grsrnd_(flong*);
 extern void gribex_(flong*, flong*, flong*, double*, flong*, double*, flong*, double*,

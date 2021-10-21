@@ -280,7 +280,7 @@ const char* grib_get_package_name()
     return "ecCodes";
 }
 
-#define DEFAULT_FILE_POOL_MAX_OPENED_FILES 200
+#define DEFAULT_FILE_POOL_MAX_OPENED_FILES 0
 
 static grib_context default_grib_context = {
     0,               /* inited                     */
@@ -354,7 +354,7 @@ static grib_context default_grib_context = {
     0, /* hash_array_count           */
     {0,},                                 /* hash_array                 */
     0,                                 /* def_files                  */
-    0,                                 /* blacklist                  */
+    0,                                 /* blocklist                  */
     0,                                 /* ieee_packing               */
     0,                                 /* bufrdc_mode                */
     0,                                 /* bufr_set_to_missing_if_out_of_range */
@@ -425,19 +425,19 @@ grib_context* grib_context_get_default()
         _set_fmode(_O_BINARY);
 #endif
 
-        default_grib_context.inited                = 1;
-        default_grib_context.io_buffer_size        = io_buffer_size ? atoi(io_buffer_size) : 0;
-        default_grib_context.no_big_group_split    = no_big_group_split ? atoi(no_big_group_split) : 0;
-        default_grib_context.no_spd                = no_spd ? atoi(no_spd) : 0;
-        default_grib_context.keep_matrix           = keep_matrix ? atoi(keep_matrix) : 1;
-        default_grib_context.write_on_fail         = write_on_fail ? atoi(write_on_fail) : 0;
-        default_grib_context.no_abort              = no_abort ? atoi(no_abort) : 0;
-        default_grib_context.debug                 = debug ? atoi(debug) : 0;
-        default_grib_context.gribex_mode_on        = gribex ? atoi(gribex) : 0;
+        default_grib_context.inited = 1;
+        default_grib_context.io_buffer_size = io_buffer_size ? atoi(io_buffer_size) : 0;
+        default_grib_context.no_big_group_split = no_big_group_split ? atoi(no_big_group_split) : 0;
+        default_grib_context.no_spd = no_spd ? atoi(no_spd) : 0;
+        default_grib_context.keep_matrix = keep_matrix ? atoi(keep_matrix) : 1;
+        default_grib_context.write_on_fail = write_on_fail ? atoi(write_on_fail) : 0;
+        default_grib_context.no_abort = no_abort ? atoi(no_abort) : 0;
+        default_grib_context.debug = debug ? atoi(debug) : 0;
+        default_grib_context.gribex_mode_on = gribex ? atoi(gribex) : 0;
         default_grib_context.large_constant_fields = large_constant_fields ? atoi(large_constant_fields) : 0;
-        default_grib_context.ieee_packing          = ieee_packing ? atoi(ieee_packing) : 0;
-        default_grib_context.grib_samples_path     = codes_getenv("ECCODES_SAMPLES_PATH");
-        default_grib_context.log_stream            = stderr;
+        default_grib_context.ieee_packing = ieee_packing ? atoi(ieee_packing) : 0;
+        default_grib_context.grib_samples_path = codes_getenv("ECCODES_SAMPLES_PATH");
+        default_grib_context.log_stream = stderr;
         if (!log_stream) {
             default_grib_context.log_stream = stderr;
         }
@@ -538,21 +538,18 @@ grib_context* grib_context_get_default()
                          default_grib_context.grib_samples_path);
 
         default_grib_context.keys_count = 0;
-        default_grib_context.keys       = grib_hash_keys_new(&(default_grib_context),
-                                                       &(default_grib_context.keys_count));
+        default_grib_context.keys       = grib_hash_keys_new(&(default_grib_context), &(default_grib_context.keys_count));
 
-        default_grib_context.concepts_index                      = grib_itrie_new(&(default_grib_context),
-                                                             &(default_grib_context.concepts_count));
-        default_grib_context.hash_array_index                    = grib_itrie_new(&(default_grib_context),
-                                                               &(default_grib_context.hash_array_count));
-        default_grib_context.def_files                           = grib_trie_new(&(default_grib_context));
-        default_grib_context.lists                               = grib_trie_new(&(default_grib_context));
-        default_grib_context.classes                             = grib_trie_new(&(default_grib_context));
-        default_grib_context.bufrdc_mode                         = bufrdc_mode ? atoi(bufrdc_mode) : 0;
+        default_grib_context.concepts_index = grib_itrie_new(&(default_grib_context), &(default_grib_context.concepts_count));
+        default_grib_context.hash_array_index = grib_itrie_new(&(default_grib_context), &(default_grib_context.hash_array_count));
+        default_grib_context.def_files = grib_trie_new(&(default_grib_context));
+        default_grib_context.lists = grib_trie_new(&(default_grib_context));
+        default_grib_context.classes = grib_trie_new(&(default_grib_context));
+        default_grib_context.bufrdc_mode = bufrdc_mode ? atoi(bufrdc_mode) : 0;
         default_grib_context.bufr_set_to_missing_if_out_of_range = bufr_set_to_missing_if_out_of_range ? atoi(bufr_set_to_missing_if_out_of_range) : 0;
-        default_grib_context.bufr_multi_element_constant_arrays  = bufr_multi_element_constant_arrays ? atoi(bufr_multi_element_constant_arrays) : 0;
-        default_grib_context.grib_data_quality_checks            = grib_data_quality_checks ? atoi(grib_data_quality_checks) : 0;
-        default_grib_context.file_pool_max_opened_files          = file_pool_max_opened_files ? atoi(file_pool_max_opened_files) : DEFAULT_FILE_POOL_MAX_OPENED_FILES;
+        default_grib_context.bufr_multi_element_constant_arrays = bufr_multi_element_constant_arrays ? atoi(bufr_multi_element_constant_arrays) : 0;
+        default_grib_context.grib_data_quality_checks = grib_data_quality_checks ? atoi(grib_data_quality_checks) : 0;
+        default_grib_context.file_pool_max_opened_files = file_pool_max_opened_files ? atoi(file_pool_max_opened_files) : DEFAULT_FILE_POOL_MAX_OPENED_FILES;
     }
 
     GRIB_MUTEX_UNLOCK(&mutex_c);
@@ -607,12 +604,11 @@ grib_context* grib_context_new(grib_context* parent)
 #endif /* function removed */
 
 /* GRIB-235: Resolve path to expand symbolic links etc */
-static char* resolve_path(grib_context* c, char* path)
+/* Note: return value is allocated. Client has to free */
+char* codes_resolve_path(grib_context* c, const char* path)
 {
     char* result = NULL;
-#ifdef ECCODES_ON_WINDOWS
-    result = grib_context_strdup(c, path);
-#else
+#if defined(ECCODES_HAVE_REALPATH)
     char resolved[ECC_PATH_MAXLEN + 1];
     if (!realpath(path, resolved)) {
         result = grib_context_strdup(c, path); /* Failed to resolve. Use original path */
@@ -620,7 +616,10 @@ static char* resolve_path(grib_context* c, char* path)
     else {
         result = grib_context_strdup(c, resolved);
     }
+#else
+    result = grib_context_strdup(c, path);
 #endif
+
     return result;
 }
 
@@ -640,7 +639,7 @@ static int init_definition_files_dir(grib_context* c)
         return GRIB_NO_DEFINITIONS;
 
     /* Note: strtok modifies its first argument so we copy */
-    strncpy(path, c->grib_definition_files_path, ECC_PATH_MAXLEN);
+    strncpy(path, c->grib_definition_files_path, ECC_PATH_MAXLEN-1);
 
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex_c);
@@ -653,7 +652,7 @@ static int init_definition_files_dir(grib_context* c)
     if (*p != ECC_PATH_DELIMITER_CHAR) {
         /* No delimiter found so this is a single directory */
         c->grib_definition_files_dir        = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
-        c->grib_definition_files_dir->value = resolve_path(c, path);
+        c->grib_definition_files_dir->value = codes_resolve_path(c, path);
     }
     else {
         /* Definitions path contains multiple directories */
@@ -669,7 +668,7 @@ static int init_definition_files_dir(grib_context* c)
                 c->grib_definition_files_dir = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
                 next                         = c->grib_definition_files_dir;
             }
-            next->value = resolve_path(c, dir);
+            next->value = codes_resolve_path(c, dir);
             dir         = strtok(NULL, ECC_PATH_DELIMITER_STR);
         }
     }
@@ -768,6 +767,7 @@ void grib_context_free_persistent(const grib_context* c, void* p)
 
 void grib_context_reset(grib_context* c)
 {
+    size_t i = 0;
     if (!c)
         c = grib_context_get_default();
 
@@ -802,24 +802,57 @@ void grib_context_reset(grib_context* c)
         grib_smart_table_delete(c);
     c->smart_table = NULL;
 
-    if (c->grib_definition_files_dir)
-        grib_context_free(c, c->grib_definition_files_dir);
+    if (c->grib_definition_files_dir) {
+        grib_string_list* next = c->grib_definition_files_dir;
+        grib_string_list* cur  = NULL;
+        while (next) {
+            cur  = next;
+            next = next->next;
+            grib_context_free(c, cur->value);
+            grib_context_free(c, cur);
+        }
+        c->grib_definition_files_dir=0;
+    }
 
     if (c->multi_support_on)
         grib_multi_support_reset(c);
+
+    for (i=0; i < MAX_NUM_CONCEPTS; ++i) {
+        grib_concept_value* cv = c->concepts[i];
+        if (cv) {
+            grib_trie_delete_container(cv->index);
+        }
+        while (cv) {
+            grib_concept_value* n = cv->next;
+            grib_concept_value_delete(c, cv);
+            cv = n;
+        }
+    }
 }
 
 void grib_context_delete(grib_context* c)
 {
+    size_t i = 0;
     if (!c)
         c = grib_context_get_default();
 
     grib_hash_keys_delete(c->keys);
-    grib_trie_delete(c->def_files);
+    /* grib_trie_delete(c->def_files);  TODO:masn */
 
     grib_context_reset(c);
+    
     if (c != &default_grib_context)
         grib_context_free_persistent(&default_grib_context, c);
+
+    for(i=0; i<MAX_NUM_HASH_ARRAY; ++i)
+        c->hash_array[i] = NULL;
+    c->hash_array_count = 0;
+    grib_itrie_delete(c->hash_array_index);
+    c->hash_array_index=0;
+    grib_trie_delete(c->expanded_descriptors);
+    c->expanded_descriptors=0;
+
+    c->inited = 0;
 }
 
 void codes_bufr_multi_element_constant_arrays_on(grib_context* c)

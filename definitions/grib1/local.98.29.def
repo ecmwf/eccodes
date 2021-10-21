@@ -1,4 +1,5 @@
 # (C) Copyright 2005- ECMWF.
+# COSMO clustering information
 
 constant GRIBEXSection1Problem = 960 - section1Length ;
 
@@ -23,14 +24,14 @@ unsigned[1] numberOfStepsUsedForClustering : dump  ;
 pad padding_loc29_2(10);
 
 listOfEnsembleForecastNumbers list(numberOfForecastsInCluster){
-      unsigned[4] baseDateEPS : dump;
-      unsigned[2] baseTimeEPS : dump;
-      unsigned[1] number : dump;
+  unsigned[4] baseDateEPS : dump;
+  unsigned[2] baseTimeEPS : dump;
+  unsigned[1] number : dump;
 }
 
 listOfParametersUsedForClustering list(numberOfParametersUsedForClustering){
-      unsigned[1] parameterCode;
-      unsigned[1] tableCode;
+  unsigned[1] parameterCode;
+  unsigned[1] tableCode;
 }
 
 unsigned[2] pressureLevel[numberOfPressureLevelsUsedForClustering] : dump;
@@ -38,7 +39,7 @@ unsigned[2] pressureLevel[numberOfPressureLevelsUsedForClustering] : dump;
 # Name_change old=step new=stepForClustering
 unsigned[2] stepForClustering[numberOfStepsUsedForClustering] : dump;
 
-#spareToEnsureFixedLength        -   PADTO   n/a 960
+#spareToEnsureFixedLength - PADTO   n/a 960
 padto padding_loc29_3(offsetSection1 + 960);
 
 alias number = clusterNumber;

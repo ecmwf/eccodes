@@ -4,96 +4,96 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
-	 productDefinitionTemplateNumber = 9 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 scaledValueOfLowerLimit = 1 ;
-	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 5 mm
 'tpg5' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 scaledValueOfLowerLimit = 5 ;
-	 probabilityType = 3 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 40 mm
 'tpg40' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 typeOfFirstFixedSurface = 1 ;
 	 scaledValueOfLowerLimit = 40 ;
-	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 60 mm
 'tpg60' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 scaledValueOfLowerLimit = 60 ;
-	 probabilityType = 3 ;
-	 scaleFactorOfLowerLimit = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 60 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 80 mm
 'tpg80' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 scaledValueOfLowerLimit = 80 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 0 ;
-	 productDefinitionTemplateNumber = 9 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 100 mm
 'tpg100' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 scaledValueOfLowerLimit = 100 ;
-	 probabilityType = 3 ;
-	 scaleFactorOfLowerLimit = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 100 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 150 mm
 'tpg150' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
-	 scaledValueOfLowerLimit = 150 ;
 	 typeOfFirstFixedSurface = 1 ;
-	 probabilityType = 3 ;
-	 scaleFactorOfLowerLimit = 0 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 150 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 200 mm
 'tpg200' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
-	 scaledValueOfLowerLimit = 200 ;
-	 probabilityType = 3 ;
-	 scaleFactorOfLowerLimit = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
+	 scaledValueOfLowerLimit = 200 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 300 mm
 'tpg300' = {
@@ -101,37 +101,17 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 productDefinitionTemplateNumber = 9 ;
+	 typeOfStatisticalProcessing = 1 ;
 	 scaledValueOfLowerLimit = 3 ;
 	 scaleFactorOfLowerLimit = -2 ;
 	 probabilityType = 3 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 productDefinitionTemplateNumber = 9 ;
 	}
 #Wind speed
 'ws' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
-	}
-#Wind speed
-'ws' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 is_uerra = 1 ;
-	 scaledValueOfFirstFixedSurface = 100 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	}
-#Wind speed
-'ws' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 scaledValueOfFirstFixedSurface = 200 ;
-	 is_uerra = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Unbalanced component of temperature
 'uctp' = {
@@ -176,16 +156,14 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	}
-#10 metre wind gust since previous post-processing
-'fg10' = {
+#Direct solar radiation
+'dsrp' = {
 	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 22 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 is_uerra = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Specific rain water content
 'crwc' = {
@@ -205,6 +183,22 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 32 ;
 	}
+#Total column cloud liquid water
+'tclw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column cloud ice water
+'tciw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 70 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
 #Surface solar radiation downwards
 'ssrd' = {
 	 discipline = 0 ;
@@ -221,6 +215,14 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Top net solar radiation
+'tsr' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Eastward turbulent surface stress
 'ewss' = {
 	 discipline = 0 ;
@@ -232,28 +234,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 37 ;
-	}
-#Maximum temperature at 2 metres since previous post-processing
-'mx2t' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 is_uerra = 1 ;
-	}
-#Minimum temperature at 2 metres since previous post-processing
-'mn2t' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
-	 typeOfStatisticalProcessing = 3 ;
-	 is_uerra = 1 ;
-	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 2 ;
 	}
 #Ozone mass mixing ratio
 'o3' = {
@@ -276,6 +256,12 @@
 	 parameterNumber = 6 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Temperature of snow layer
+'tsn' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 28 ;
 	}
 #Specific cloud liquid water content
 'clwc' = {
@@ -470,10 +456,29 @@
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
+	 typeOfSecondFixedSurface = 255 ;
 	 scaledValueOfFirstFixedSurface = 1 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	 typeOfFirstFixedSurface = 169 ;
+	}
+#2 metre specific humidity
+'sh2' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
 	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Volcanic sulfur dioxide mass mixing ratio
+'VSO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 8 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #Ammonium aerosol mass mixing ratio
 'aermr18' = {
@@ -500,12 +505,65 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 102 ;
-	 typeOfWavelengthInterval = 11 ;
 	 scaleFactorOfFirstWavelength = 8 ;
 	 scaledValueOfFirstWavelength = 55 ;
 	 typeOfSizeInterval = 255 ;
 	 aerosolType = 62003 ;
 	 is_aerosol_optical = 1 ;
+	 typeOfWavelengthInterval = 11 ;
+	}
+#Biogenic secondary organic aerosol mass mixing ratio
+'aermr19' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Anthropogenic secondary organic aerosol mass mixing ratio
+'aermr20' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Volcanic sulfur dioxide mass mixing ratio increment
+'VSO2diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 8 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Ammonium aerosol mass mixing ratio
+'aermr18diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 typeOfGeneratingProcess = 20 ;
+	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
+	}
+#Biogenic secondary organic aerosol mass mixing ratio increment
+'aermr19diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	}
+#Anthropogenic secondary organic aerosol mass mixing ratio increment
+'aermr20diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_aerosol = 1 ;
+	 typeOfGeneratingProcess = 20 ;
+	 aerosolType = 62033 ;
 	}
 #Dry deposition of ammonium aerosol
 'aerddpam' = {
@@ -549,6 +607,430 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 aerosolType = 62003 ;
 	}
+#Dry deposition of biogenic secondary organic aerosol
+'aerddpsoab' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 12 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62032 ;
+	}
+#Sedimentation of biogenic secondary organic aerosol
+'aersdmsoab' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of biogenic secondary organic aerosol by large-scale precipitation
+'aerwdlsoab' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of biogenic secondary organic aerosol by convective precipitation
+'aerwdcsoab' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
+	}
+#Vertically integrated mass of biogenic secondary organic aerosol
+'aermsssoab' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62032 ;
+	}
+#Dry deposition of anthropogenic secondary organic aerosol
+'aerddpsoaa' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 12 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Sedimentation of anthropogenic secondary organic aerosol
+'aersdmsoaa' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of anthropogenic secondary organic aerosol by large-scale precipitation
+'aerwdlsoaa' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Wet deposition of anthropogenic secondary organic aerosol by convective precipitation
+'aerwdcsoaa' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	 is_aerosol = 1 ;
+	 aerosolType = 62033 ;
+	}
+#Vertically integrated mass of anthropogenic secondary organic aerosol
+'aermsssoaa' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
+	}
+#Secondary organic aerosol optical depth at 550 nm
+'soaod550' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 102 ;
+	 scaleFactorOfFirstWavelength = 9 ;
+	 aerosolType = 62012 ;
+	 scaledValueOfFirstWavelength = 550 ;
+	 scaledValueOfSecondWavelength = missing() ;
+	 typeOfWavelengthInterval = 11 ;
+	 scaleFactorOfSecondWavelength = missing() ;
+	 is_aerosol_optical = 1 ;
+	}
+#Ammonia mass mixing ratio
+'nh3' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 9 ;
+	 is_chemical = 1 ;
+	}
+#Nitrogen monoxide mass mixing ratio
+'no' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 11 ;
+	 is_chemical = 1 ;
+	}
+#Aromatic peroxy radical mass mixing ratio
+'AROO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 60029 ;
+	 is_chemical = 1 ;
+	}
+#Ethyne mass mixing ratio
+'C2H2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 10010 ;
+	 is_chemical = 1 ;
+	}
+#Acetonitrile mass mixing ratio
+'CH3CN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 10007 ;
+	 is_chemical = 1 ;
+	}
+#Methyl peroxy nitrate mass mixing ratio
+'CH3O2NO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 10055 ;
+	 is_chemical = 1 ;
+	}
+#Hydrogen cyanide mass mixing ratio
+'HCN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 10006 ;
+	 is_chemical = 1 ;
+	}
+#Hydroperoxy aldehydes type 1 mass mixing ratio
+'HPALD1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 60058 ;
+	 is_chemical = 1 ;
+	}
+#Hydroperoxy aldehydes type 2 mass mixing ratio
+'HPALD' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 60059 ;
+	 is_chemical = 1 ;
+	}
+#Isoprene peroxy type B mass mixing ratio
+'ISOPBO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 60056 ;
+	 is_chemical = 1 ;
+	}
+#Isoprene peroxy type D mass mixing ratio
+'ISOPDO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 60057 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Volcanic sulfur dioxide 
+'tc_VSO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 8 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Column integrated mass density of Aromatic peroxy radical 
+'tc_AROO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 60029 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Ethyne 
+'tc_C2H2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 10010 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Acetonitrile 
+'tc_CH3CN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 10007 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Methyl peroxy nitrate 
+'tc_CH3O2NO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 10055 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Hydrogen cyanide 
+'tc_HCN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 10006 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Hydroperoxy aldehydes type 1 
+'tc_HPALD1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 60058 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Hydroperoxy aldehydes type 2 
+'tc_HPALD2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 60059 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Isoprene peroxy type B 
+'tc_ISOPBO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 60056 ;
+	 is_chemical = 1 ;
+	}
+#Column integrated mass density of Isoprene peroxy type D 
+'tc_ISOPDO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 constituentType = 60057 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Volcanic sulfur dioxide 
+'e_VSO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 8 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Atmosphere emission mass flux of Aromatic peroxy radical 
+'e_AROO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 60029 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Ethyne 
+'e_C2H2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 10010 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Acetonitrile 
+'e_CH3CN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 10007 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Methyl peroxy nitrate 
+'e_CH3O2NO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 10055 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Hydrogen cyanide 
+'e_HCN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 10006 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Hydroperoxy aldehydes type 1 
+'e_HPALD1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 60058 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Hydroperoxy aldehydes type 2 
+'e_HPALD2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 60059 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Isoprene peroxy type B 
+'e_ISOPBO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 60056 ;
+	 is_chemical = 1 ;
+	}
+#Atmosphere emission mass flux of Isoprene peroxy type D 
+'e_ISOPDO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 60057 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Volcanic sulfur dioxide 
+'dv_VSO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 8 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Dry deposition velocity of Aromatic peroxy radical 
+'dv_AROO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 60029 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Ethyne 
+'dv_C2H2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 10010 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Acetonitrile 
+'dv_CH3CN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 10007 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Methyl peroxy nitrate 
+'dv_CH3O2NO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 10055 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Hydrogen cyanide 
+'dv_HCN' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 10006 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Hydroperoxy aldehydes type 1 
+'dv_HPALD1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 60058 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Hydroperoxy aldehydes type 2 
+'dv_HPALD2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 60059 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Isoprene peroxy type B 
+'dv_ISOPBO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 60056 ;
+	 is_chemical = 1 ;
+	}
+#Dry deposition velocity of Isoprene peroxy type D 
+'dv_ISOPDO2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 constituentType = 60057 ;
+	 is_chemical = 1 ;
+	}
 #-10 degrees C isothermal level (atm)
 'degm10l' = {
 	 discipline = 0 ;
@@ -572,7 +1054,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
-	 is_uerra = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
@@ -640,6 +1121,20 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
+	}
+#Liquid water content in snow pack
+'lwcs' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 23 ;
+	}
+#Tropopause pressure
+'trpp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 7 ;
+	 typeOfSecondFixedSurface = 255 ;
 	}
 #Height of convective cloud top
 'hcct' = {
@@ -795,6 +1290,15 @@
 	 typeOfSecondFixedSurface = 106 ;
 	 scaledValueOfSecondFixedSurface = 10 ;
 	}
+#Atmosphere emission mass flux of Methane from Wetlands
+'e_WLCH4' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 2 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 10 ;
+	}
 #Convective precipitation
 'cp' = {
 	 discipline = 0 ;
@@ -808,6 +1312,69 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
+	}
+#Mixed-layer CAPE in the lowest 50 hPa
+'mlcape50' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 5000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CIN in the lowest 50 hPa
+'mlcin50' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 5000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CAPE in the lowest 100 hPa
+'mlcape100' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 10000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Mixed-layer CIN in the lowest 100 hPa
+'mlcin100' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 18 ;
+	 scaledValueOfFirstFixedSurface = 10000 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Most-unstable CAPE
+'mucape' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	}
+#Most-unstable CIN
+'mucin' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	}
+#Departure level of the most unstable parcel expressed as Pressure
+'mudlp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 17 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
 	}
 #200 metre U wind component
 'u200' = {
@@ -943,6 +1510,60 @@
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time integral of rain flux
+'tirf' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 65 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of surface eastward momentum flux
+'tisemf' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of surface northward momentum flux
+'tisnmf' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of surface latent heat evaporation flux
+'tislhef' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 30 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of surface latent heat sublimation flux
+'tislhsf' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 31 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integral of evapotranspiration flux
+'tietrf' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 39 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Cross sectional area of flow in channel
 'chcross' = {
 	 discipline = 1 ;
@@ -1047,6 +1668,106 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
+#Latitude
+'lat' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	}
+#Longitude
+'lon' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	}
+#Latitude on T grid
+'tlat' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 1 ;
+	}
+#Longitude on T grid
+'tlon' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 1 ;
+	}
+#Latitude on U grid
+'ulat' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 2 ;
+	}
+#Longitude on U grid
+'ulon' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 2 ;
+	}
+#Latitude on V grid
+'vlat' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 3 ;
+	}
+#Longitude on V grid
+'vlon' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 3 ;
+	}
+#Latitude on W grid
+'wlat' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 4 ;
+	}
+#Longitude on W grid
+'wlon' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 4 ;
+	}
+#Latitude on F grid
+'flat' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 1 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 5 ;
+	}
+#Longitude on F grid
+'flon' = {
+	 discipline = 0 ;
+	 parameterCategory = 191 ;
+	 parameterNumber = 2 ;
+	 gridDefinitionTemplateNumber = 101 ;
+	 numberOfGridInReference = 5 ;
+	}
+#Total column graupel
+'tcolg' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 74 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
 #2 metre relative humidity
 'r2' = {
 	 discipline = 0 ;
@@ -1126,7 +1847,6 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 6 ;
 	 indicatorOfUnitForTimeRange = 1 ;
-	 is_uerra = 0 ;
 	}
 #Evaporation in the last 24 hours
 'eva24' = {
@@ -1137,29 +1857,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 24 ;
-	 is_uerra = 0 ;
-	}
-#Total precipitation in the last 6 hours
-'tp06' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
-	 is_efas = 1 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 lengthOfTimeRange = 6 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	}
-#Total precipitation in the last 24 hours
-'tp24' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
-	 lengthOfTimeRange = 24 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 is_efas = 1 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
 	}
 #Fraction of snow cover
 'fscov' = {
@@ -1409,6 +2106,115 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 23 ;
 	}
+#Keetch-Byram drought index
+'kbdi' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 12 ;
+	}
+#Drought factor (as defined by the Australian forest service)
+'drtmrk' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	}
+#Rate of spread (as defined by the Australian forest service)
+'rosmrk' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	}
+#Fire danger index (as defined by the Australian forest service)
+'fdimrk' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 15 ;
+	}
+#Spread component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'scnfdr' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 16 ;
+	}
+#Burning index (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'buinfdr' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 17 ;
+	}
+#Ignition component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'icnfdr' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	}
+#Energy release component (as defined by the U.S Forest Service National Fire-Danger Rating System)
+'ercnfdr' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 19 ;
+	}
+#Volumetric soil ice
+'vsi' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 38 ;
+	}
+#Time integral of total solid precipitation flux
+'titspf' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 128 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#10 metre eastward wind gust since previous post-processing
+'efg10' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 23 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#10 metre northward wind gust since previous post-processing
+'nfg10' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Fog
+'fog' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 50 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Sea ice surface temperature
+'sist' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Snow on ice total depth
+'sitd' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
 #Universal thermal climate index
 'utci' = {
 	 discipline = 20 ;
@@ -1603,6 +2409,136 @@
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Nitrogen dioxide mass mixing ratio
+'no2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 5 ;
+	 is_chemical = 1 ;
+	}
+#Sulphur dioxide mass mixing ratio
+'so2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 8 ;
+	 is_chemical = 1 ;
+	}
+#Carbon monoxide mass mixing ratio
+'co' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 4 ;
+	 is_chemical = 1 ;
+	}
+#Ozone mass mixing ratio (full chemistry scheme)
+'go3' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 0 ;
+	 is_chemical = 1 ;
+	}
+#Nitrogen dioxide mass mixing ratio difference
+'no2diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 5 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
+#Sulphur dioxide mass mixing ratio difference
+'so2diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 8 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
+#Carbon monoxide mass mixing ratio difference
+'codiff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 4 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
+#Ozone mass mixing ratio difference (full chemistry scheme)
+'go3diff' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 0 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_chemical = 1 ;
+	}
+#Lake total depth
+'dl' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 162 ;
+	}
+#Lake mix-layer temperature
+'lmlt' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 166 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Lake mix-layer depth
+'lmld' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 166 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Lake bottom temperature
+'lblt' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 162 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Lake total layer temperature
+'ltlt' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 162 ;
+	}
+#Lake shape factor
+'lshf' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 10 ;
+	}
+#Lake ice surface temperature
+'lict' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	}
+#Lake ice total depth
+'licd' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	}
 #100 metre U wind component
 'u100' = {
 	 discipline = 0 ;
@@ -1688,7 +2624,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 is_uerra = 0 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -1701,7 +2636,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 is_uerra = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
@@ -3796,7 +4730,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Snow Fall water equivalent
 'sf' = {

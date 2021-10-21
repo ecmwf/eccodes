@@ -1,8 +1,9 @@
 # (C) Copyright 2005- ECMWF.
+# 4D variational increments
 
 constant GRIBEXSection1Problem = 52 - section1Length ;
 
-# 1 -> 2
+# 1->2
 alias grib2LocalSectionPresent=present;
 constant grib2LocalSectionNumber=20;
 

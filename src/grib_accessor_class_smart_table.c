@@ -407,19 +407,24 @@ void grib_smart_table_delete(grib_context* c)
         int k;
 
         for (i = 0; i < t->numberOfEntries; i++) {
-            grib_context_free_persistent(c, t->entries[i].abbreviation);
+            if (t->entries[i].abbreviation)
+                grib_context_free_persistent(c, t->entries[i].abbreviation);
             for (k = 0; k < MAX_SMART_TABLE_COLUMNS; k++) {
                 if (t->entries[i].column[k])
                     grib_context_free_persistent(c, t->entries[i].column[k]);
             }
-            grib_context_free_persistent(c, &(t->entries[i]));
         }
+        grib_context_free_persistent(c, t->entries);
         grib_context_free_persistent(c, t->filename[0]);
         if (t->filename[1])
             grib_context_free_persistent(c, t->filename[1]);
+        if (t->filename[2])
+            grib_context_free_persistent(c, t->filename[2]);
         grib_context_free_persistent(c, t->recomposed_name[0]);
         if (t->recomposed_name[1])
             grib_context_free_persistent(c, t->recomposed_name[1]);
+        if (t->recomposed_name[2])
+            grib_context_free_persistent(c, t->recomposed_name[2]);
         grib_context_free_persistent(c, t);
         t = s;
     }
@@ -534,7 +539,7 @@ static int value_count(grib_accessor* a, long* count)
         return err;
 
     *count = self->tableCodesSize;
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static void destroy(grib_context* context, grib_accessor* a)
@@ -570,6 +575,13 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     err = get_table_codes(a);
     if (err)
         return 0;
+
+    if (*len < self->tableCodesSize) {
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         " wrong size (%ld) for %s it contains %d values ", *len, a->name, self->tableCodesSize);
+        *len = 0;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
 
     for (i = 0; i < self->tableCodesSize; i++)
         val[i] = self->tableCodes[i];

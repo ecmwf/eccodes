@@ -1,8 +1,9 @@
 ecCodes
 =======
 
-[![Linux & macOS: master](https://img.shields.io/travis/ecmwf/eccodes/master.svg?label=Linux-and-macOS-master)](https://travis-ci.org/ecmwf/eccodes/branches)
-[![Linux & macOS: develop](https://img.shields.io/travis/ecmwf/eccodes/develop.svg?label=Linux-and-macOS-dev)](https://travis-ci.org/ecmwf/eccodes/branches)
+[![Linux & macOS: master](https://img.shields.io/github/workflow/status/ecmwf/eccodes/ci/master?label=Linux-and-macOS-master)](https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Amaster)
+[![Linux & macOS: develop](https://img.shields.io/github/workflow/status/ecmwf/eccodes/ci/develop?label=Linux-and-macOS-develop)](https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Adevelop)
+
 [![Windows: master](https://img.shields.io/appveyor/ci/ecmwf/eccodes/master.svg?label=Windows-master)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/master)
 [![Windows: develop](https://img.shields.io/appveyor/ci/ecmwf/eccodes/develop.svg?label=Windows-dev)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/develop)
 
@@ -33,7 +34,7 @@ INSTALLATION
    tar -xzf eccodes-x.y.z-Source.tar.gz
    ```
 
-3. Create a separate directory where to build ecCodes:
+3. Create a separate directory to build ecCodes:
    ```
    mkdir build
    cd build

@@ -8,22 +8,23 @@
 # nor does it submit to any jurisdiction.
 
 from __future__ import print_function
-import traceback
+
 import sys
+import traceback
 
 from eccodes import *
 
-INPUT = '../../data/ccsds.grib2'
+INPUT = "../../data/ccsds.grib2"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     keys = [
-        'ccsdsFlags',
-        'ccsdsBlockSize',
-        'bitsPerValue',
+        "ccsdsFlags",
+        "ccsdsBlockSize",
+        "bitsPerValue",
     ]
 
     while 1:
@@ -33,7 +34,7 @@ def example():
 
         for key in keys:
             try:
-                print('  %s: %s' % (key, codes_get(gid, key)))
+                print("  %s: %s" % (key, codes_get(gid, key)))
             except CodesInternalError as err:
                 print('Error with key="%s" : %s' % (key, err.msg))
 
@@ -49,7 +50,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

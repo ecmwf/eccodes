@@ -1,16 +1,8 @@
 # (C) Copyright 2005- ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
-
 
 # START 2/template.3.140 ----------------------------------------------------------------------
 # TEMPLATE 3.140, Lambert azimuthal equal area projection
-include "grib2/template.3.shape_of_the_earth.def";
+include "grib3/template.3.shape_of_the_earth.def";
 
 #  Nx - number of points along X-axis
 unsigned[4] numberOfPointsAlongXAxis : dump  ;
@@ -41,7 +33,7 @@ signed[4] centralLongitudeInMicrodegrees  : dump;
 alias centralLongitude=centralLongitudeInMicrodegrees;
 
 #  Resolution and component flag
-flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : dump ;
+flags[1] resolutionAndComponentFlags 'grib3/tables/[tablesVersion]/3.3.table' : dump ;
 
 #  Dx - X-direction grid length in millimetres
 unsigned[4] xDirectionGridLengthInMillimetres  : dump ;
@@ -51,7 +43,7 @@ alias Dx  = xDirectionGridLengthInMillimetres ;
 unsigned[4] yDirectionGridLengthInMillimetres  : dump ;
 alias Dy  = yDirectionGridLengthInMillimetres ;
 
-include "grib2/template.3.scanning_mode.def";
+include "grib3/template.4.scanning_mode.def";
 
 iterator lambert_azimuthal_equal_area(numberOfPoints,missingValue,values,
           radius,Nx,Ny,

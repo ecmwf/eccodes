@@ -235,14 +235,14 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, in
 
         /* Check if value fits into number of bits */
         if (check) {
-            const long nbits = self->nbytes * 8;
+            if (val[0] < 0) {
+                grib_context_log(a->context, GRIB_LOG_ERROR,
+                                "Key \"%s\": Trying to encode a negative value of %ld for key of type unsigned\n", a->name, val[0]);
+                return GRIB_ENCODING_ERROR;
+            }
             /* See GRIB-23 and GRIB-262 */
             if (!value_is_missing(v)) {
-                if (v < 0) {
-                    grib_context_log(a->context, GRIB_LOG_ERROR,
-                                     "Key \"%s\": Trying to encode a negative value of %ld for key of type unsigned\n", a->name, v);
-                    return GRIB_ENCODING_ERROR;
-                }
+                const long nbits = self->nbytes * 8;
                 if (nbits < 33) {
                     unsigned long maxval = (1UL << nbits) - 1;
                     if (maxval > 0 && v > maxval) { /* See ECC-1002 */

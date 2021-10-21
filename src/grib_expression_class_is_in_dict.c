@@ -111,7 +111,7 @@ static grib_trie* load_dictionary(grib_context* c, grib_expression* e, int* err)
         return NULL;
     }
     else {
-        grib_context_log(c, GRIB_LOG_DEBUG, "found def file %s", filename);
+        grib_context_log(c, GRIB_LOG_DEBUG, "is_in_dict: found def file %s", filename);
     }
     dictionary = (grib_trie*)grib_trie_get(c->lists, filename);
     if (dictionary) {

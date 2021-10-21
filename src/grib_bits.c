@@ -30,6 +30,12 @@ long GRIB_MASK = -1; /* Mask of sword bits */
     ((b) == max_nbits ? GRIB_MASK : (~(GRIB_MASK << (b)) << (max_nbits - ((q) + (b)))))
 
 
+#define VALUE_SIZE_T(p, q, b) \
+    (((b) == max_nbits_size_t ? GRIB_MASK : ~(GRIB_MASK << (b))) & ((p) >> (max_nbits_size_t - ((q) + (b)))))
+
+#define MASKVALUE_SIZE_T(q, b) \
+    ((b) == max_nbits_size_t ? GRIB_MASK : (~(GRIB_MASK << (b)) << (max_nbits_size_t - ((q) + (b)))))
+
 static const unsigned long dmasks[] = {
     0xFF,
     0xFE,
@@ -149,7 +155,7 @@ void grib_set_bit(unsigned char* p, long bitp, int val)
 
 long grib_decode_signed_longb(const unsigned char* p, long* bitp, long nbits)
 {
-    int sign = grib_get_bit(p, *bitp);
+    const int sign = grib_get_bit(p, *bitp);
     long val = 0;
 
     Assert(nbits <= max_nbits);
@@ -166,7 +172,7 @@ long grib_decode_signed_longb(const unsigned char* p, long* bitp, long nbits)
 
 int grib_encode_signed_longb(unsigned char* p, long val, long* bitp, long nb)
 {
-    short sign = val < 0;
+    const short sign = val < 0;
 
     Assert(nb <= max_nbits);
 

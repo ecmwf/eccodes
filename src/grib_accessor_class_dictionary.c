@@ -210,7 +210,7 @@ static grib_trie* load_dictionary(grib_context* c, grib_accessor* a, int* err)
         return NULL;
     }
     else {
-        grib_context_log(c, GRIB_LOG_DEBUG, "found def file %s", filename);
+        grib_context_log(c, GRIB_LOG_DEBUG, "dictionary: found def file %s", filename);
     }
     dictionary = (grib_trie*)grib_trie_get(c->lists, dictName);
     if (dictionary) {
@@ -368,7 +368,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     *val = atol(buffer);
     *len = 1;
 
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
@@ -384,5 +384,5 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     *val = atof(buffer);
     *len = 1;
 
-    return err;
+    return GRIB_SUCCESS;
 }

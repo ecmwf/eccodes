@@ -10,7 +10,7 @@
 
 . ./include.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_dump_encode_C_test"
 
 if [ $HAVE_MEMFS -eq 1 ]; then
@@ -18,12 +18,12 @@ if [ $HAVE_MEMFS -eq 1 ]; then
     unset ECCODES_SAMPLES_PATH
 fi
 
-#Create log file
-fLog=${label}".log"
+# Create log file
+fLog=temp.${label}".log"
 rm -f $fLog
 
 tempBufr=outfile.bufr
-tempDir=${label}.dir
+tempDir=temp.${label}.dir
 rm -rf $tempDir
 mkdir -p $tempDir
 
@@ -64,7 +64,7 @@ fi
 
 for file in ${bufr_files}
 do
-  tempSrc=$label.$file.c
+  tempSrc=temp.$label.$file.c
   tempExe=$label.$file.exe
 
   # Generate C code from BUFR file

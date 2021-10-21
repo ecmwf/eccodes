@@ -110,7 +110,7 @@
 110 110 None Secondary wave period s
 111 111 None Net short-wave radiation flux (surface) W m**-2
 112 112 None Net long-wave radiation flux (surface) W m**-2
-113 113 None Net short-wave radiation flux(atmosph.top) W m**-2
+113 113 None Net short-wave radiationflux(atmosph.top) W m**-2
 114 114 None Net long-wave radiation flux(atmosph.top) W m**-2
 115 115 None Long-wave radiation flux W m**-2
 116 116 None Short-wave radiation flux W m**-2

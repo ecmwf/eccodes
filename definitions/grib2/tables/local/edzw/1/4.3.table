@@ -12,5 +12,6 @@
 203 203 nudgecast
 204 204 product derived by statistical model
 205 205 deterministic forecast on ensemble mean(DOM)
+206 206 time filtered bias
 220 220 postprocessing
 255 255  Missing

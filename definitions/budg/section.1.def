@@ -1,11 +1,4 @@
 # (C) Copyright 2005- ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
 
 section_length[3] section1Length ;
 
@@ -31,26 +24,17 @@ alias ls.levelType=indicatorOfTypeOfLevel;
 # NOTE 6 NOT FOUND
 unsigned[1] yearOfCentury ;
 
-#  Month
 unsigned[1] month ;
-
-#  Day
 unsigned[1] day;
-
-#  Hour
 unsigned[1] hour ;
-
-#  Minute
 unsigned[1] minute ;
-
 
 transient second  = 0;
 meta      dataDate    budgdate(yearOfCentury,month,day);
-alias ls.date=dataDate;
+alias     ls.date=dataDate;
 meta      dataTime    time(hour,minute,second);
 
 meta julianDay julian_day(dataDate,hour,minute,second) : edition_specific;
-
 
 #  Indicator of unit of time range
 codetable[1] indicatorOfUnitOfTimeRange 'grib1/4.table';
@@ -59,13 +43,13 @@ codetable[1] indicatorOfUnitOfTimeRange 'grib1/4.table';
 # (number of time units)
 unsigned[1] periodOfTime ;
 
-alias   P1 =  periodOfTime ;
+alias P1 = periodOfTime ;
 
 #  P2 - Period of time
 # (number of time units)
 unsigned[1] periodOfTimeIntervals ;
 
-alias   P2 =  periodOfTimeIntervals ;
+alias P2 = periodOfTimeIntervals ;
 
 codetable[1] timeRangeIndicator 'grib1/5.table';
 

@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# Local definition 41 - The European Flood Awareness System
+# Local definition 41 - The Flood Awareness System
 
 # isFillup can be 0, 1 or missing
 # When it is 0, it means "Water Balance"
@@ -8,11 +8,13 @@ unsigned[1] isFillup = missing() : dump, can_be_missing;
 alias local.isFillup = isFillup;
 
 # Forecast Reference Date and Time
-unsigned[2] yearOfForecast   = year   : dump;
-unsigned[1] monthOfForecast  = month  : dump;
-unsigned[1] dayOfForecast    = day    : dump;
-unsigned[1] hourOfForecast   = hour   : dump;
-unsigned[1] minuteOfForecast = minute : dump;
+# ECC-1264: When isFillup is missing, these should also be set to missing
+# and dateOfForecast, timeOfForecast, anoffset are not relevant
+unsigned[2] yearOfForecast   = year   : dump, can_be_missing;
+unsigned[1] monthOfForecast  = month  : dump, can_be_missing;
+unsigned[1] dayOfForecast    = day    : dump, can_be_missing;
+unsigned[1] hourOfForecast   = hour   : dump, can_be_missing;
+unsigned[1] minuteOfForecast = minute : dump, can_be_missing;
 constant    secondOfForecast = 0;
 meta dateOfForecast  g2date(yearOfForecast,monthOfForecast, dayOfForecast) : dump;
 meta timeOfForecast  time  (hourOfForecast,minuteOfForecast,secondOfForecast) : dump;
@@ -29,27 +31,34 @@ meta _anoffset round(diffInHours, 10): dump,long_type;
 transient anoffset = _anoffset; # needed to force anoffset to be integer
 alias local.anoffset = anoffset;
 
+
 # ECC-662
 unsigned[2] anoffsetFirst     = missing(): dump, can_be_missing;
 unsigned[2] anoffsetLast      = missing(): dump, can_be_missing;
 unsigned[2] anoffsetFrequency = missing(): dump, can_be_missing;
 
 # Boolean
-transient is_efas = 1;
 transient lsdate_bug = 1: hidden; # See ECC-707
 
 # Note: the key typeOfPostProcessing is in the PDTNs 70, 71, 72 and 73
 concept efas_post_proc {
-  "unknown"           = { typeOfPostProcessing=0  ; }
-  "lisflood"          = { typeOfPostProcessing=1  ; }
-  "lisflood_eric"     = { typeOfPostProcessing=2  ; }
-  "lisflood_season"   = { typeOfPostProcessing=3  ; }
-  "lisflood_merged"   = { typeOfPostProcessing=4  ; }
-  "ericha"            = { typeOfPostProcessing=51 ; }
-  "htessel_lisflood"  = { typeOfPostProcessing=101; }
-  "htessel_eric"      = { typeOfPostProcessing=102; }
-  "htessel_camaflood" = { typeOfPostProcessing=103; }
-  "epic"              = { typeOfPostProcessing=152; }
+  "unknown"           = { typeOfPostProcessing = 0; }
+  "lisflood"          = { typeOfPostProcessing = 1; }
+  "lisflood_eric"     = { typeOfPostProcessing = 2; }
+  "lisflood_season"   = { typeOfPostProcessing = 3; }
+  "lisflood_merged"   = { typeOfPostProcessing = 4; }
+  "lisflood_global"   = { typeOfPostProcessing = 5; }
+  "geff"              = { typeOfPostProcessing = 10; }
+  "ericha"            = { typeOfPostProcessing = 51; }
+  "htessel_lisflood"  = { typeOfPostProcessing = 101; }
+  "htessel_eric"      = { typeOfPostProcessing = 102; }
+  "htessel_camaflood" = { typeOfPostProcessing = 103; }
+  "epic"              = { typeOfPostProcessing = 152; }
+  "jules_mrm"         = { typeOfPostProcessing = 201; }
+  "htessel_mrm"       = { typeOfPostProcessing = 202; }
+  "mhm_mrm"           = { typeOfPostProcessing = 203; }
+  "pcrg_mrm"          = { typeOfPostProcessing = 204; }
+  "meteogrid"         = { typeOfPostProcessing = 205; }
   "unknown"           = { dummy = 1; }
 } : hidden;
 

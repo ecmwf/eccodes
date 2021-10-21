@@ -2,10 +2,9 @@
 !
 ! This software is licensed under the terms of the Apache Licence Version 2.0
 ! which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-! 
+!
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-
 
   !> Get the distinct values of the key in argument contained in the index. The key must belong to the index.
   !>
@@ -22,8 +21,8 @@
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   interface grib_index_get
     module procedure grib_index_get_int, &
-                     grib_index_get_string, &
-                     grib_index_get_real8
+      grib_index_get_string, &
+      grib_index_get_real8
   end interface grib_index_get
 
   !> Get the number of distinct values of the key in argument contained in the index. The key must belong to the index.
@@ -40,10 +39,10 @@
   !> @param size       number of distinct values of the key in the index
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   interface grib_index_get_size
-    module procedure  grib_index_get_size_int
+    module procedure grib_index_get_size_int
   end interface grib_index_get_size
-                                 
-  !> Select the message subset with key==value. 
+
+  !> Select the message subset with key==value.
   !>
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
@@ -58,8 +57,8 @@
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   interface grib_index_select
     module procedure grib_index_select_int, &
-                     grib_index_select_string, &
-                     grib_index_select_real8
+      grib_index_select_string, &
+      grib_index_select_real8
   end interface grib_index_select
 
   !> Get the value for a key from a message.
@@ -94,15 +93,14 @@
   !> @param[out] status    GRIB_SUCCESS if OK, integer value on error
   interface grib_get
     module procedure grib_get_int, &
-                     grib_get_real4, &
-                     grib_get_real8, &
-                     grib_get_string, &
-                     grib_get_int_array, &
-                     grib_get_byte_array, &
-                     grib_get_real4_array, &
-                     grib_get_real8_array
+      grib_get_real4, &
+      grib_get_real8, &
+      grib_get_string, &
+      grib_get_int_array, &
+      grib_get_byte_array, &
+      grib_get_real4_array, &
+      grib_get_real8_array
   end interface grib_get
-
 
   !> Get the size of an array key.
   !>
@@ -117,7 +115,7 @@
   !> @param size       size of the array key
   !> @param status     GRIB_SUCCESS if OK, integer value on error
   interface grib_get_size
-      module procedure  grib_get_size_int 
+    module procedure grib_get_size_int
   end interface grib_get_size
 
   !> Set the value for a key in a message.
@@ -145,16 +143,16 @@
   !> @param[out] status     GRIB_SUCCESS if OK, integer value on error
   interface grib_set
     module procedure grib_set_int, &
-                     grib_set_real4, &
-                     grib_set_real8, &
-                     grib_set_string, &
-                     grib_set_int_array, &
-                     grib_set_byte_array, &
-                     grib_set_real4_array, &
-                     grib_set_real8_array
+      grib_set_real4, &
+      grib_set_real8, &
+      grib_set_string, &
+      grib_set_int_array, &
+      grib_set_byte_array, &
+      grib_set_real4_array, &
+      grib_set_real8_array
   end interface grib_set
 
   interface grib_set_force
     module procedure grib_set_force_real4_array, &
-                     grib_set_force_real8_array
+      grib_set_force_real8_array
   end interface grib_set_force

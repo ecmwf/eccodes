@@ -40,3 +40,51 @@
  parameterCategory = 151 ;
  parameterNumber = 163 ;
 }
+#Top net solar radiation
+'toa_net_upward_shortwave_flux' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 178 ;
+}
+#Temperature of snow layer
+'temperature_in_surface_snow' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 238 ;
+}
+#GEMS Ozone
+'mass_fraction_of_ozone_in_air' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 203 ;
+}
+#Carbon monoxide
+'mass_fraction_of_carbon_monoxide_in_air' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 123 ;
+}
+#Nitrogen dioxide
+'mass_fraction_of_nitrogen_dioxide_in_air' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 121 ;
+}
+#Sulphur dioxide
+'mass_fraction_of_sulfur_dioxide_in_air' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 122 ;
+}
+#Ammonia
+'mass_fraction_of_ammonia_in_air' = {
+ discipline = 192 ;
+ parameterCategory = 217 ;
+ parameterNumber = 19 ;
+}
+#Nitrogen monoxide
+'mass_fraction_of_nitrogen_monoxide_in_air' = {
+ discipline = 192 ;
+ parameterCategory = 217 ;
+ parameterNumber = 27 ;
+}

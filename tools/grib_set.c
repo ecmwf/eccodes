@@ -46,12 +46,12 @@ grib_option grib_options[] = {
     { "v", 0, 0, 0, 1, 0 }
 };
 
-const char* grib_tool_description =
+const char* tool_description =
     "Sets key/value pairs in the input GRIB file and writes"
     "\n\teach message to the output_grib_file."
     "\n\tIt fails when an error occurs (e.g. key not found).";
-const char* grib_tool_name  = "grib_set";
-const char* grib_tool_usage = "[options] grib_file grib_file ... output_grib_file";
+const char* tool_name  = "grib_set";
+const char* tool_usage = "[options] grib_file grib_file ... output_grib_file";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
@@ -127,8 +127,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
         if (options->set_values_count != 0) {
             err = grib_set_values(h, options->set_values, options->set_values_count);
-            if (err != GRIB_SUCCESS && options->fail)
+            if (err != GRIB_SUCCESS && options->fail) {
+                free(v);
                 exit(err);
+            }
         }
 
         if (options->repack) {
@@ -169,7 +171,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     int err = 0;
     grib_file_close_all(&err);
     if (err != GRIB_SUCCESS) {
-        perror(grib_tool_name);
+        perror(tool_name);
         exit(err);
     }
 

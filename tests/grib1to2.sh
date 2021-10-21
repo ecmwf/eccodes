@@ -80,6 +80,15 @@ if [ -x "${tools_dir}/grib_check_gaussian_grid" ]; then
     ${tools_dir}/grib_check_gaussian_grid $input $output
 fi
 
+
+echo "ECC-811 Check shapeOfTheEarth..."
+# ---------------------------------------------------
+sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_set -s edition=2 $sample_g1 $output
+grib_check_key_equals $sample_g1 shapeOfTheEarth 0
+grib_check_key_equals $output    shapeOfTheEarth 0
+
+
 rm -f $output
 
 #sed "s:toolsdir:${tools_dir}/:" ${tools_dir}/grib1to2.txt > ${tools_dir}/grib1to2.test

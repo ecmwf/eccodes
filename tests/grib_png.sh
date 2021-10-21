@@ -42,3 +42,12 @@ for file in $files; do
 
   rm -f $temp $temp1 $temp2
 done
+
+# Conversion from IEEE to PNG
+infile=${data_dir}/grid_ieee.grib
+${tools_dir}/grib_set -r -s packingType=grid_png $infile $temp
+# TODO: check results
+grib_check_key_equals $temp packingType grid_png
+
+
+rm -f $temp

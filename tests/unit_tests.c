@@ -1475,7 +1475,6 @@ static void test_concept_condition_strings()
 
     err = get_concept_condition_string(h, "gridType", NULL, result);
     Assert(!err);
-    /*printf("%s\n", result);*/
     Assert(strcmp(result, "gridDefinitionTemplateNumber=0,PLPresent=0") == 0);
 
     err = get_concept_condition_string(h, "stepType", NULL, result);
@@ -1485,7 +1484,7 @@ static void test_concept_condition_strings()
     grib_handle_delete(h);
 }
 
-void test_trimming()
+static void test_trimming()
 {
     char a[] = " Standing  ";
     char b[] = "  Weeping ";

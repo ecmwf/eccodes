@@ -9,8 +9,8 @@
 # nor does it submit to any jurisdiction.
 #
 
-import traceback
 import sys
+import traceback
 
 from eccodes import *
 
@@ -18,8 +18,8 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    f = open(sys.argv[1], 'rb')
-    fout = open(sys.argv[2], 'wb')
+    f = open(sys.argv[1], "rb")
+    fout = open(sys.argv[2], "wb")
 
     while 1:
         gid = codes_grib_new_from_file(f)
@@ -45,7 +45,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

@@ -173,6 +173,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* una
     return GRIB_SUCCESS;
 }
 
+#if 0
 int grib_accessor_print(grib_accessor* a, const char* name, int type, const char* format,
                         const char* separator, int maxcols, int* newline, FILE* out)
 {
@@ -296,13 +297,13 @@ int grib_accessor_print(grib_accessor* a, const char* name, int type, const char
     }
     return ret;
 }
+#endif
 
 int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const char* name,
                               int type, const char* format, const char* separator, int maxcols, int* newline, FILE* out)
 {
-    size_t size = 0, len = 0, replen = 0;
-    char* sval               = NULL;
-    char* p                  = NULL;
+    size_t size = 0, len = 0, replen = 0, j = 0;
+    unsigned char* bval      = NULL;
     double* dval             = 0;
     long* lval               = 0;
     char** cvals             = NULL;
@@ -313,6 +314,7 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
     char long_format[]       = "%ld";   /* default format for printing integer keys */
     char default_separator[] = " ";
     grib_accessor* a         = al->accessor;
+    DebugAssert(a);
 
     /* Number of columns specified as 0 means print on ONE line i.e. num cols = infinity */
     if (maxcols == 0)
@@ -336,14 +338,14 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
                 }
             }
             else {
-                int i    = 0;
                 int cols = 0;
+                j = 0;
                 cvals    = (char**)grib_context_malloc_clear(h->context, sizeof(char*) * size);
                 grib_accessors_list_unpack_string(al, cvals, &size);
-                for (i = 0; i < size; i++) {
+                for (j = 0; j < size; j++) {
                     *newline = 1;
-                    fprintf(out, "%s", cvals[i]);
-                    if (i < size - 1)
+                    fprintf(out, "%s", cvals[j]);
+                    if (j < size - 1)
                         fprintf(out, "%s", myseparator);
                     cols++;
                     if (cols >= maxcols) {
@@ -351,6 +353,7 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
                         *newline = 1;
                         cols     = 0;
                     }
+                    grib_context_free(h->context, cvals[j]);
                 }
             }
             grib_context_free(h->context, cvals);
@@ -363,12 +366,12 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
             if (size == 1)
                 fprintf(out, myformat, dval[0]);
             else {
-                int i    = 0;
                 int cols = 0;
-                for (i = 0; i < size; i++) {
+                j = 0;
+                for (j = 0; j < size; j++) {
                     *newline = 1;
-                    fprintf(out, myformat, dval[i]);
-                    if (i < size - 1)
+                    fprintf(out, myformat, dval[j]);
+                    if (j < size - 1)
                         fprintf(out, "%s", myseparator);
                     cols++;
                     if (cols >= maxcols) {
@@ -388,12 +391,12 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
             if (size == 1)
                 fprintf(out, myformat, lval[0]);
             else {
-                int i    = 0;
                 int cols = 0;
-                for (i = 0; i < size; i++) {
+                j = 0;
+                for (j = 0; j < size; j++) {
                     *newline = 1;
-                    fprintf(out, myformat, lval[i]);
-                    if (i < size - 1)
+                    fprintf(out, myformat, lval[j]);
+                    if (j < size - 1)
                         fprintf(out, "%s", myseparator);
                     cols++;
                     if (cols >= maxcols) {
@@ -407,13 +410,13 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
             break;
         case GRIB_TYPE_BYTES:
             replen = a->length;
-            sval   = (char*)grib_context_malloc(h->context, replen * sizeof(char));
-            ret    = grib_unpack_string(al->accessor, sval, &replen);
-            p      = sval;
-            while ((replen--) > 0)
-                fprintf(out, "%c", *(p++));
-            grib_context_free(h->context, sval);
-            *newline = 0;
+            bval   = (unsigned char*)grib_context_malloc(h->context, replen * sizeof(unsigned char));
+            ret    = grib_unpack_bytes(al->accessor, bval, &replen);
+            for (j = 0; j < replen; j++) {
+                fprintf(out, "%02x", bval[j]);
+            }
+            grib_context_free(h->context, bval);
+            *newline = 1;
             break;
         default:
             grib_context_log(h->context, GRIB_LOG_WARNING,
@@ -485,6 +488,7 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
                 case ']':
                     loc[mode] = 0;
                     mode      = -1;
+                    if (al) grib_accessors_list_delete(h->context, al);
                     al        = grib_find_accessors_list(h, loc); /* This allocates memory */
                     if (!al) {
                         if (!fail) {
@@ -731,7 +735,8 @@ static int parse(grib_context* gc, const char* filename)
     parse_file = 0;
 
     if (err)
-        grib_context_log(gc, GRIB_LOG_ERROR, "Parsing error %d > %s\n", err, filename);
+        grib_context_log(gc, GRIB_LOG_ERROR, "Parsing error: %s, file: %s\n",
+                grib_get_error_message(err), filename);
 
     GRIB_MUTEX_UNLOCK(&mutex_parse);
     return err;
