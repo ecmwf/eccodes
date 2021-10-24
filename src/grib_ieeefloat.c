@@ -522,8 +522,10 @@ int grib_ieee_encode_array(grib_context* c, double* val, size_t nvals, int bytes
                            unsigned char* buf)
 {
     int err = 0, i = 0, j = 0;
+#if IEEE_LE
     unsigned char s4[4];
     unsigned char s8[8];
+#endif
     float fval   = 0;
     double* pval = val;
 

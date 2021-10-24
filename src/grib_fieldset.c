@@ -593,7 +593,7 @@ static grib_order_by* grib_fieldset_new_order_by(grib_context* c, const char* ob
             p++;
         mode = mode_default;
         if (p != t2) {
-            while (*p == ' ' && *p != '\0')
+            while (*p == ' ')
                 p++;
             if (*p != '\0') {
                 *(p - 1) = '\0';
@@ -683,12 +683,12 @@ int grib_fieldset_add(grib_fieldset* set, char* filename)
                     return ret;
             }
             offset                       = 0;
-            ret                          = grib_get_double(h, "offset", &offset);
+            grib_get_double(h, "offset", &offset);
             set->fields[set->size]       = (grib_field*)grib_context_malloc_clear(c, sizeof(grib_field));
             set->fields[set->size]->file = file;
             file->refcount++;
             set->fields[set->size]->offset = (off_t)offset;
-            ret                            = grib_get_long(h, "totalLength", &length);
+            grib_get_long(h, "totalLength", &length);
             set->fields[set->size]->length = length;
             set->filter->el[set->size]     = set->size;
             set->order->el[set->size]      = set->size;
@@ -897,7 +897,7 @@ static void grib_fieldset_delete_fields(grib_fieldset* set)
 static void grib_trim(char** x)
 {
     char* p = 0;
-    while (**x == ' ' && **x != '\0')
+    while (**x == ' ')
         (*x)++;
     if (**x == '\0')
         return;

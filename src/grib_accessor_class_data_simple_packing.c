@@ -532,7 +532,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     grib_accessor_data_simple_packing* self = (grib_accessor_data_simple_packing*)a;
     grib_handle* gh                         = grib_handle_of_accessor(a);
 
-    size_t i;
+    size_t i = 0;
     size_t n_vals = *len;
     int err       = 0;
     int last;

@@ -1838,8 +1838,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     size     = (lengthOfSecondOrderValues + 7) / 8;
     sizebits = lengthOfSecondOrderValues;
 
-    /* padding section 4 to an even number of octets*/
-    size      = (size + offsetBeforeData - offsetSection4) % 2 ? size + 1 : size;
+    /* padding section 4 to an even number of octets */
+    size      = ((size + offsetBeforeData - offsetSection4) % 2) ? size + 1 : size;
     half_byte = 8 * size - sizebits;
     if ((ret = grib_set_long_internal(handle, self->half_byte, half_byte)) != GRIB_SUCCESS)
         return ret;

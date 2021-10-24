@@ -704,15 +704,13 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     fprintf(self->dumper.out, "    \"%s\" /)\n", values[size - 1]);
 
     if (self->isLeaf == 0) {
+        char* prefix;
+        int dofree = 0;
+
         if ((r = compute_bufr_key_rank(h, self->keys, a->name)) != 0)
             fprintf(self->dumper.out, "  call codes_set_string_array(ibufr,'#%d#%s',svalues)\n", r, a->name);
         else
             fprintf(self->dumper.out, "  call codes_set_string_array(ibufr,'%s',svalues)\n", a->name);
-    }
-
-    if (self->isLeaf == 0) {
-        char* prefix;
-        int dofree = 0;
 
         if (r != 0) {
             prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
