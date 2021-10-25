@@ -156,7 +156,7 @@ grib_accessor* grib_accessor_get_attribute(grib_accessor* a, const char* name);
 grib_accessors_list* grib_accessors_list_create(grib_context* c);
 void grib_accessors_list_push(grib_accessors_list* al, grib_accessor* a, int rank);
 grib_accessors_list* grib_accessors_list_last(grib_accessors_list* al);
-grib_accessors_list* grib_accessors_list_find(grib_accessors_list* al, grib_accessor* a);
+grib_accessors_list* grib_accessors_list_find(grib_accessors_list* al, const grib_accessor* a);
 void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al);
 
 /* grib_concept.c */
@@ -314,7 +314,7 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
 /* grib_accessor_class_bufr_has_delayed_replication.c */
 
 /* grib_accessor_class_apply_operators.c */
-size_t compute_size_AO(long* descriptors, size_t numberOfDescriptors);
+size_t compute_size_AO(const long* descriptors, size_t numberOfDescriptors);
 
 /* grib_accessor_class_non_alpha.c */
 

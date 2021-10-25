@@ -135,7 +135,7 @@ char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t
     unsigned char c;
     unsigned char* p;
     char* s                 = string;
-    unsigned char mask[]    = { 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
+    const unsigned char mask[] = { 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
     int remainderComplement = 8 - remainder;
 
     if (numberOfCharacters == 0)

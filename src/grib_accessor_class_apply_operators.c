@@ -259,7 +259,7 @@ static int get_native_type(grib_accessor* a)
     return type;
 }
 
-size_t compute_size_AO(long* descriptors, size_t numberOfDescriptors)
+size_t compute_size_AO(const long* descriptors, size_t numberOfDescriptors)
 {
     int i            = 0;
     size_t sizeAO    = numberOfDescriptors;
