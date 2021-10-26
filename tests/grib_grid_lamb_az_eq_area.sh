@@ -32,16 +32,17 @@ set scaleFactorOfRadiusOfSphericalEarth=0;
 set scaledValueOfRadiusOfSphericalEarth=6378388;
 set numberOfValues=100;
 set latitudeOfFirstGridPointInDegrees = 67.575;
-set longitudeOfFirstGridPointInDegrees = -33.4944;
+set longitudeOfFirstGridPointInDegrees = 326.5056;
 set Dx = 5000000;
 set Dy = 5000000;
 set standardParallel = 48000000;
 set centralLongitude = 9000000;
-write "lamb_az_eq_area.grib2";
+write;
 EOF
 
 # Use this filter and the input GRIB to create a new GRIB
-${tools_dir}/grib_filter $FILTER_FILE $GRIB_INFILE
+rm -f "$GRIB_OUTFILE"
+${tools_dir}/grib_filter -o $GRIB_OUTFILE $FILTER_FILE $GRIB_INFILE
 if [ ! -f "$GRIB_OUTFILE" ]; then
    echo Failed to create output GRIB from filter >&2
    exit 1
@@ -60,4 +61,5 @@ ${tools_dir}/grib_ls -l 67,-33,1 $GRIB_OUTFILE
 
 
 # Clean up
-rm -f $FILTER_FILE $GRIB_OUTFILE $DATA_OUTFILE
+rm -f $FILTER_FILE $DATA_OUTFILE
+#rm -f $GRIB_OUTFILE
