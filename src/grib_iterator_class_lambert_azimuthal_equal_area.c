@@ -112,18 +112,18 @@ static int next(grib_iterator* i, double* lat, double* lon, double* val)
 #define RAD2DEG 57.29577951308232087684 /* 180 over pi */
 #define DEG2RAD 0.01745329251994329576  /* pi over 180 */
 
-# define P00 .33333333333333333333 /*   1 /     3 */
-# define P01 .17222222222222222222 /*  31 /   180 */
-# define P02 .10257936507936507937 /* 517 /  5040 */
-# define P10 .06388888888888888888 /*  23 /   360 */
-# define P11 .06640211640211640212 /* 251 /  3780 */
-# define P20 .01677689594356261023 /* 761 / 45360 */
+#define P00 .33333333333333333333 /*   1 /     3 */
+#define P01 .17222222222222222222 /*  31 /   180 */
+#define P02 .10257936507936507937 /* 517 /  5040 */
+#define P10 .06388888888888888888 /*  23 /   360 */
+#define P11 .06640211640211640212 /* 251 /  3780 */
+#define P20 .01677689594356261023 /* 761 / 45360 */
 
 void pj_authset(double es, double* APA)
 {
     double t;
     APA[0] = es * P00;
-    t = es * es;
+    t      = es * es;
     APA[0] += t * P01;
     APA[1] = t * P10;
     t *= es;
@@ -131,10 +131,10 @@ void pj_authset(double es, double* APA)
     APA[1] += t * P11;
     APA[2] = t * P20;
 }
-double pj_authlat(double beta, double *APA)
+double pj_authlat(double beta, double* APA)
 {
-    double t = beta+beta;
-    return(beta + APA[0] * sin(t) + APA[1] * sin(t+t) + APA[2] * sin(t+t+t));
+    double t = beta + beta;
+    return (beta + APA[0] * sin(t) + APA[1] * sin(t + t) + APA[2] * sin(t + t + t));
 }
 
 static double pj_qsfn(double sinphi, double e, double one_es)
@@ -143,7 +143,7 @@ static double pj_qsfn(double sinphi, double e, double one_es)
     const double EPSILON = 1.0e-7;
 
     if (e >= EPSILON) {
-        con = e * sinphi;
+        con  = e * sinphi;
         div1 = 1.0 - con * con;
         div2 = 1.0 + con;
 
@@ -151,8 +151,9 @@ static double pj_qsfn(double sinphi, double e, double one_es)
         if (div1 == 0.0 || div2 == 0.0)
             return HUGE_VAL;
 
-        return (one_es * (sinphi / div1 - (.5 / e) * log ((1. - con) / div2 )));
-    } else
+        return (one_es * (sinphi / div1 - (.5 / e) * log((1. - con) / div2)));
+    }
+    else
         return (sinphi + sinphi);
 }
 
@@ -168,33 +169,33 @@ static int init_oblate(grib_handle* h,
     double *lats, *lons;
     long i, j;
     double x0, y0, x, y;
-    double coslam, sinlam, sinphi, sinphi_,  q, sinb=0.0, cosb=0.0, b=0.0, cosb2;//fwd
+    double coslam, sinlam, sinphi, sinphi_, q, sinb = 0.0, cosb = 0.0, b = 0.0, cosb2;  //fwd
     double Q__qp = 0, Q__rq = 0, Q__mmf = 0, Q__cosb1, Q__sinb1, Q__dd, Q__xmf, Q__ymf, t;
     double e, es, temp, one_es;
     double false_easting;  /* x offset in meters */
     double false_northing; /* y offset in meters */
-    double latRad=0, lonRad=0, latDeg, lonDeg;
+    double latRad = 0, lonRad = 0, latDeg, lonDeg;
     double APA[3] = {0,};
     double xFirst, yFirst;
-    
-    Dx         = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
-    Dy         = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
+
+    Dx = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
+    Dy = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
 
     //temp = earthMinorAxisInMetres/earthMajorAxisInMetres;
     //es = 1.0 - temp * temp;
-    temp = (earthMajorAxisInMetres - earthMinorAxisInMetres)/earthMajorAxisInMetres;
-    es = 2*temp - temp*temp;
+    temp   = (earthMajorAxisInMetres - earthMinorAxisInMetres) / earthMajorAxisInMetres;
+    es     = 2 * temp - temp * temp;
     one_es = 1.0 - es;
-    e = sqrt(es);
-printf("latFirstInRadians=%g,  lonFirstInRadians=%g\n", latFirstInRadians, lonFirstInRadians);
+    e      = sqrt(es);
+    //printf("latFirstInRadians=%g,  lonFirstInRadians=%g\n", latFirstInRadians, lonFirstInRadians);
     coslam = cos(lonFirstInRadians - centralLongitudeInRadians);  //cos(lp.lam);
     sinlam = sin(lonFirstInRadians - centralLongitudeInRadians);
-    sinphi = sin(latFirstInRadians); //  sin(lp.phi);
-    q = pj_qsfn(sinphi, e, one_es);
-    
+    sinphi = sin(latFirstInRadians);  //  sin(lp.phi);
+    q      = pj_qsfn(sinphi, e, one_es);
+
     //----------- setp start
     t = fabs(standardParallelInRadians);
-    if (t > M_PI_2 + EPS10 ) {
+    if (t > M_PI_2 + EPS10) {
         return GRIB_GEOCALCULUS_PROBLEM;
     }
     //if (fabs(t - M_HALFPI) < EPS10)
@@ -203,22 +204,22 @@ printf("latFirstInRadians=%g,  lonFirstInRadians=%g\n", latFirstInRadians, lonFi
     //    Q->mode = EQUIT;
     //else
     //    Q->mode = OBLIQ;
-    Q__qp = pj_qsfn(1.0, e, one_es);
+    Q__qp  = pj_qsfn(1.0, e, one_es);
     Q__mmf = 0.5 / one_es;
-    pj_authset(es, APA); // sets up APA array
-    Q__rq = sqrt(0.5 * Q__qp);
-    sinphi_ = sin(standardParallelInRadians); //  (P->phi0);
+    pj_authset(es, APA);  // sets up APA array
+    Q__rq    = sqrt(0.5 * Q__qp);
+    sinphi_  = sin(standardParallelInRadians);  //  (P->phi0);
     Q__sinb1 = pj_qsfn(sinphi_, e, one_es) / Q__qp;
     Q__cosb1 = sqrt(1.0 - Q__sinb1 * Q__sinb1);
-    Q__dd = cos(standardParallelInRadians) / (sqrt(1. - es * sinphi_ * sinphi_) * Q__rq * Q__cosb1);
-    Q__ymf = (Q__xmf = Q__rq) / Q__dd;
+    Q__dd    = cos(standardParallelInRadians) / (sqrt(1. - es * sinphi_ * sinphi_) * Q__rq * Q__cosb1);
+    Q__ymf   = (Q__xmf = Q__rq) / Q__dd;
     Q__xmf *= Q__dd;
     //----------- setup end
 
-    sinb = q/Q__qp;
+    sinb  = q / Q__qp;
     cosb2 = 1.0 - sinb * sinb;
-    cosb = cosb2 > 0 ? sqrt(cosb2) : 0;
-    b = 1. + Q__sinb1 * sinb + Q__cosb1 * cosb * coslam;
+    cosb  = cosb2 > 0 ? sqrt(cosb2) : 0;
+    b     = 1. + Q__sinb1 * sinb + Q__cosb1 * cosb * coslam;
     if (fabs(b) < EPS10) {
         return GRIB_GEOCALCULUS_PROBLEM;
     }
@@ -246,31 +247,32 @@ printf("latFirstInRadians=%g,  lonFirstInRadians=%g\n", latFirstInRadians, lonFi
 
     /* Populate the lat and lon arrays */
     {
-        xFirst = x0; yFirst = y0;
-        y = yFirst;
+        xFirst = x0;
+        yFirst = y0;
+        y      = yFirst;
         for (j = 0; j < ny; j++) {
-            x  = xFirst;
+            x = xFirst;
             for (i = 0; i < nx; i++) {
-                double cCe, sCe, q, rho, ab=0.0,  lp__lam, lp__phi,  xy_x=x , xy_y = y;
+                double cCe, sCe, q, rho, ab = 0.0, lp__lam, lp__phi, xy_x = x, xy_y = y;
                 xy_x /= Q__dd;
                 xy_y *= Q__dd;
                 rho = hypot(xy_x, xy_y);
-                Assert(rho >= EPS10); // TODO
+                Assert(rho >= EPS10);  // TODO
                 sCe = 2. * asin(.5 * rho / Q__rq);
                 cCe = cos(sCe);
                 sCe = sin(sCe);
                 xy_x *= sCe;
                 // if oblique
-                ab = cCe * Q__sinb1 + xy_y * sCe * Q__cosb1 / rho;
+                ab   = cCe * Q__sinb1 + xy_y * sCe * Q__cosb1 / rho;
                 xy_y = rho * Q__cosb1 * cCe - xy_y * Q__sinb1 * sCe;
                 // else
                 //ab = xy.y * sCe / rho;
                 //xy.y = rho * cCe;
-                lp__lam = atan2(xy_x, xy_y); //longitude
-                lp__phi = pj_authlat(asin(ab), APA); // latitude
+                lp__lam = atan2(xy_x, xy_y);          //longitude
+                lp__phi = pj_authlat(asin(ab), APA);  // latitude
                 //printf("lp__phi=%g,  lp__lam=%g\n", lp__phi, lp__lam);
                 //printf("lp__phi=%g,  lp__lam=%g\n", lp__phi * RAD2DEG, lp__lam* RAD2DEG);
-                
+
                 *lats = lp__phi * RAD2DEG;
                 *lons = lp__lam * RAD2DEG;
                 //rho = sqrt(x * x + ysq);
@@ -290,10 +292,10 @@ printf("latFirstInRadians=%g,  lonFirstInRadians=%g\n", latFirstInRadians, lonFi
                 lats++;
 
                 //x += Dx;
-                x += Dx/earthMajorAxisInMetres;
+                x += Dx / earthMajorAxisInMetres;
             }
             //y += Dy;
-            y += Dy/earthMajorAxisInMetres;
+            y += Dy / earthMajorAxisInMetres;
         }
     }
 
@@ -340,7 +342,7 @@ printf("latFirstInRadians=%g,  lonFirstInRadians=%g\n", latFirstInRadians, lonFi
             self->lats[index] = latDeg;
         }
     }
-#endif   
+#endif
     //grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert Azimuthal Equal Area only supported for spherical earth.");
     //return GRIB_GEOCALCULUS_PROBLEM;
     return GRIB_SUCCESS;
@@ -531,7 +533,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     lonFirstInRadians         = lonFirstInDegrees * d2r;
     centralLongitudeInRadians = centralLongitudeInDegrees * d2r;
     standardParallelInRadians = standardParallelInDegrees * d2r;
-//printf("latFirstInDegrees=%g, lonFirstInDegrees=%g\n",latFirstInDegrees,lonFirstInDegrees);
+    //printf("latFirstInDegrees=%g, lonFirstInDegrees=%g\n",latFirstInDegrees,lonFirstInDegrees);
     if (is_oblate) {
         err = init_oblate(h, self, iter->nv, nx, ny,
                           Dx, Dy, earthMinorAxisInMetres, earthMajorAxisInMetres,
