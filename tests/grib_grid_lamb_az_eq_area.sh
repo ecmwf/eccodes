@@ -27,9 +27,11 @@ set Nx = 10;
 set Ny = 10;
 set values={2};
 set numberOfDataPoints=100;
-set shapeOfTheEarth=1;
+
+set shapeOfTheEarth=1; # Earth assumed spherical with radius specified (in m) by data producer 
 set scaleFactorOfRadiusOfSphericalEarth=0;
 set scaledValueOfRadiusOfSphericalEarth=6378388;
+
 set numberOfValues=100;
 set latitudeOfFirstGridPointInDegrees = 67.575;
 set longitudeOfFirstGridPointInDegrees = 326.5056;
@@ -62,4 +64,4 @@ ${tools_dir}/grib_ls -l 67,-33,1 $GRIB_OUTFILE
 
 # Clean up
 rm -f $FILTER_FILE $DATA_OUTFILE
-#rm -f $GRIB_OUTFILE
+rm -f $GRIB_OUTFILE
