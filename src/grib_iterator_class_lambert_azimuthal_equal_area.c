@@ -531,7 +531,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     lonFirstInRadians         = lonFirstInDegrees * d2r;
     centralLongitudeInRadians = centralLongitudeInDegrees * d2r;
     standardParallelInRadians = standardParallelInDegrees * d2r;
-printf("latFirstInDegrees=%g, lonFirstInDegrees=%g\n",latFirstInDegrees,lonFirstInDegrees);
+//printf("latFirstInDegrees=%g, lonFirstInDegrees=%g\n",latFirstInDegrees,lonFirstInDegrees);
     if (is_oblate) {
         err = init_oblate(h, self, iter->nv, nx, ny,
                           Dx, Dy, earthMinorAxisInMetres, earthMajorAxisInMetres,
