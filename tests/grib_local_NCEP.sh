@@ -13,7 +13,7 @@
 temp=output.grib_local_NCEP.grib
 sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
-grib_set -s centre=kwbc,discipline=3,parameterCategory=192,parameterNumber=35 $sample $temp
+${tools_dir}/grib_set -s centre=kwbc,discipline=3,parameterCategory=192,parameterNumber=35 $sample $temp
 
 grib_check_key_equals $temp paramId,shortName '7001339 SRFA176'
 
