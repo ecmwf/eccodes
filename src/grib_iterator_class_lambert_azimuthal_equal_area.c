@@ -169,7 +169,7 @@ static int init_oblate(grib_handle* h,
     double *lats, *lons;
     long i, j;
     double x0, y0, x, y;
-    double coslam, sinlam, sinphi, sinphi_, q, sinb = 0.0, cosb = 0.0, b = 0.0, cosb2;  //fwd
+    double coslam, sinlam, sinphi, sinphi_, q, sinb = 0.0, cosb = 0.0, b = 0.0, cosb2;
     double Q__qp = 0, Q__rq = 0, Q__mmf = 0, Q__cosb1, Q__sinb1, Q__dd, Q__xmf, Q__ymf, t;
     double e, es, temp, one_es;
     double false_easting;  /* x offset in meters */
@@ -181,40 +181,37 @@ static int init_oblate(grib_handle* h,
     Dx = iScansNegatively == 0 ? Dx / 1000 : -Dx / 1000;
     Dy = jScansPositively == 1 ? Dy / 1000 : -Dy / 1000;
 
-    //temp = earthMinorAxisInMetres/earthMajorAxisInMetres;
-    //es = 1.0 - temp * temp;
     temp   = (earthMajorAxisInMetres - earthMinorAxisInMetres) / earthMajorAxisInMetres;
     es     = 2 * temp - temp * temp;
     one_es = 1.0 - es;
     e      = sqrt(es);
-    //printf("latFirstInRadians=%g,  lonFirstInRadians=%g\n", latFirstInRadians, lonFirstInRadians);
-    coslam = cos(lonFirstInRadians - centralLongitudeInRadians);  //cos(lp.lam);
+    
+    coslam = cos(lonFirstInRadians - centralLongitudeInRadians);  /* cos(lp.lam) */
     sinlam = sin(lonFirstInRadians - centralLongitudeInRadians);
-    sinphi = sin(latFirstInRadians);  //  sin(lp.phi);
+    sinphi = sin(latFirstInRadians);  /* sin(lp.phi) */
     q      = pj_qsfn(sinphi, e, one_es);
 
-    //----------- setp start
     t = fabs(standardParallelInRadians);
     if (t > M_PI_2 + EPS10) {
         return GRIB_GEOCALCULUS_PROBLEM;
     }
-    //if (fabs(t - M_HALFPI) < EPS10)
-    //    Q->mode = P->phi0 < 0. ? S_POLE : N_POLE;
-    //else if (fabs(t) < EPS10)
-    //    Q->mode = EQUIT;
-    //else
-    //    Q->mode = OBLIQ;
+    /* if (fabs(t - M_HALFPI) < EPS10)
+        Q->mode = P->phi0 < 0. ? S_POLE : N_POLE;
+       else if (fabs(t) < EPS10)
+        Q->mode = EQUIT;
+       else
+        Q->mode = OBLIQ;
+    */
     Q__qp  = pj_qsfn(1.0, e, one_es);
     Q__mmf = 0.5 / one_es;
-    pj_authset(es, APA);  // sets up APA array
+    pj_authset(es, APA);  /* sets up APA array */
     Q__rq    = sqrt(0.5 * Q__qp);
-    sinphi_  = sin(standardParallelInRadians);  //  (P->phi0);
+    sinphi_  = sin(standardParallelInRadians);  /*  (P->phi0); */
     Q__sinb1 = pj_qsfn(sinphi_, e, one_es) / Q__qp;
     Q__cosb1 = sqrt(1.0 - Q__sinb1 * Q__sinb1);
     Q__dd    = cos(standardParallelInRadians) / (sqrt(1. - es * sinphi_ * sinphi_) * Q__rq * Q__cosb1);
     Q__ymf   = (Q__xmf = Q__rq) / Q__dd;
     Q__xmf *= Q__dd;
-    //----------- setup end
 
     sinb  = q / Q__qp;
     cosb2 = 1.0 - sinb * sinb;
@@ -225,11 +222,9 @@ static int init_oblate(grib_handle* h,
     }
     b = sqrt(2.0 / b);
 
-    // OBLIQUE
+    /* OBLIQUE */
     y0 = Q__ymf * b * (Q__cosb1 * sinb - Q__sinb1 * cosb * coslam);
     x0 = Q__xmf * b * cosb * sinlam;
-    //y0 *= earthMajorAxisInMetres;
-    //x0 *= earthMajorAxisInMetres;
 
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
@@ -257,92 +252,32 @@ static int init_oblate(grib_handle* h,
                 xy_x /= Q__dd;
                 xy_y *= Q__dd;
                 rho = hypot(xy_x, xy_y);
-                Assert(rho >= EPS10);  // TODO(masn): check
+                Assert(rho >= EPS10);   /* TODO(masn): check */
                 sCe = 2. * asin(.5 * rho / Q__rq);
                 cCe = cos(sCe);
                 sCe = sin(sCe);
                 xy_x *= sCe;
-                // if oblique
+                /* if oblique */
                 ab   = cCe * Q__sinb1 + xy_y * sCe * Q__cosb1 / rho;
                 xy_y = rho * Q__cosb1 * cCe - xy_y * Q__sinb1 * sCe;
-                // else
-                //ab = xy.y * sCe / rho;
-                //xy.y = rho * cCe;
-                lp__lam = atan2(xy_x, xy_y);          //longitude
-                lp__phi = pj_authlat(asin(ab), APA);  // latitude
-                //printf("lp__phi=%g,  lp__lam=%g\n", lp__phi, lp__lam);
-                //printf("lp__phi=%g,  lp__lam=%g\n", lp__phi * RAD2DEG, lp__lam* RAD2DEG);
+                /*  else
+                    ab = xy.y * sCe / rho;
+                    xy.y = rho * cCe;
+                */
+                lp__lam = atan2(xy_x, xy_y);          /* longitude */
+                lp__phi = pj_authlat(asin(ab), APA);  /* latitude */
 
                 *lats = lp__phi * RAD2DEG;
                 *lons = (lp__lam + centralLongitudeInRadians) * RAD2DEG;
 
-                //rho = sqrt(x * x + ysq);
-                //if (rho > epsilon) {
-                //    c     = 2 * asin(rho / (2.0 * radius));
-                //    cosc  = cos(c);
-                //    sinc  = sin(c);
-                //    *lats = asin(cosc * sinphi1 + y * sinc * cosphi1 / rho) / d2r;
-                //    *lons = (lambda0 + atan2(x * sinc, rho * cosphi1 * cosc - y * sinphi1 * sinc)) / d2r;
-                //}
-                //else {
-                //    *lats = phi1 / d2r;
-                //    *lons = lambda0 / d2r;
-                //}
-                //if (*lons < 0)  *lons += 360;
                 lons++;
                 lats++;
 
-                //x += Dx;
                 x += Dx / earthMajorAxisInMetres;
             }
-            //y += Dy;
             y += Dy / earthMajorAxisInMetres;
         }
     }
-
-#if 0
-    false_easting  = x0;
-    false_northing = y0;
-    for (j = 0; j < ny; j++) {
-        y = j * Dy;
-        for (i = 0; i < nx; i++) {
-            double cCe, sCe, q, rho, ab=0.0,  lp__lam, lp__phi,  xy_x,xy_y;
-            const int index = i + j * nx;
-
-            x = i * Dx;
-            xy_x = x;
-            xy_y = y;
-            /* Inverse projection to convert from x,y to lat,lon */
-            //_x = x - false_easting;
-            //_y = rh - y + false_northing;
-            // calculate latRad and lonRad
-            xy_x /= Q__dd;
-            xy_y *=  Q__dd;
-            rho = hypot(xy_x, xy_y);
-            Assert(rho >= EPS10);
-            sCe = 2. * asin(.5 * rho / Q__rq);
-            cCe = cos(sCe);
-            sCe = sin(sCe);
-            xy_x *= sCe;
-            // if oblique
-            ab = cCe * Q__sinb1 + xy_y * sCe * Q__cosb1 / rho;
-            xy_y = rho * Q__cosb1 * cCe - xy_y * Q__sinb1 * sCe;
-            // else
-            //ab = xy.y * sCe / rho;
-            //xy.y = rho * cCe;
-            
-            lp__lam = atan2(xy_x, xy_y); //longitude
-            lp__phi = pj_authlat(asin(ab), APA); // latitude
-            printf("lp__phi=%g,  lp__lam=%g\n", lp__phi, lp__lam);
-
-            latDeg = latRad * RAD2DEG;  /* Convert to degrees */
-            lonDeg = lonRad * RAD2DEG;
-            lonDeg = normalise_longitude_in_degrees(lonDeg);
-            self->lons[index] = lonDeg;
-            self->lats[index] = latDeg;
-        }
-    }
-#endif
 
     return GRIB_SUCCESS;
 }
@@ -365,8 +300,8 @@ static int init_sphere(grib_handle* h,
     const double epsilon = 1.0e-20;
     const double d2r     = acos(0.0) / 90.0;
 
-    lambda0 = centralLongitudeInRadians;  // / 1000000;
-    phi1    = standardParallelInRadians;  // / 1000000;
+    lambda0 = centralLongitudeInRadians;
+    phi1    = standardParallelInRadians;
 
     cosphi1 = cos(phi1);
     sinphi1 = sin(phi1);
@@ -532,7 +467,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     lonFirstInRadians         = lonFirstInDegrees * d2r;
     centralLongitudeInRadians = centralLongitudeInDegrees * d2r;
     standardParallelInRadians = standardParallelInDegrees * d2r;
-    //printf("latFirstInDegrees=%g, lonFirstInDegrees=%g\n",latFirstInDegrees,lonFirstInDegrees);
+
     if (is_oblate) {
         err = init_oblate(h, self, iter->nv, nx, ny,
                           Dx, Dy, earthMinorAxisInMetres, earthMajorAxisInMetres,
