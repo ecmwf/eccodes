@@ -170,11 +170,9 @@ static int init_oblate(grib_handle* h,
     long i, j;
     double x0, y0, x, y;
     double coslam, sinlam, sinphi, sinphi_, q, sinb = 0.0, cosb = 0.0, b = 0.0, cosb2;
-    double Q__qp = 0, Q__rq = 0, Q__mmf = 0, Q__cosb1, Q__sinb1, Q__dd, Q__xmf, Q__ymf, t;
+    double Q__qp = 0, Q__rq = 0, Q__cosb1, Q__sinb1, Q__dd, Q__xmf, Q__ymf, t;
+    /* double Q__mmf = 0; */
     double e, es, temp, one_es;
-    double false_easting;  /* x offset in meters */
-    double false_northing; /* y offset in meters */
-    double latRad = 0, lonRad = 0, latDeg, lonDeg;
     double APA[3] = {0,};
     double xFirst, yFirst;
 
@@ -185,10 +183,10 @@ static int init_oblate(grib_handle* h,
     es     = 2 * temp - temp * temp;
     one_es = 1.0 - es;
     e      = sqrt(es);
-    
-    coslam = cos(lonFirstInRadians - centralLongitudeInRadians);  /* cos(lp.lam) */
+
+    coslam = cos(lonFirstInRadians - centralLongitudeInRadians); /* cos(lp.lam) */
     sinlam = sin(lonFirstInRadians - centralLongitudeInRadians);
-    sinphi = sin(latFirstInRadians);  /* sin(lp.phi) */
+    sinphi = sin(latFirstInRadians); /* sin(lp.phi) */
     q      = pj_qsfn(sinphi, e, one_es);
 
     t = fabs(standardParallelInRadians);
@@ -203,10 +201,10 @@ static int init_oblate(grib_handle* h,
         Q->mode = OBLIQ;
     */
     Q__qp  = pj_qsfn(1.0, e, one_es);
-    Q__mmf = 0.5 / one_es;
-    pj_authset(es, APA);  /* sets up APA array */
+    /* Q__mmf = 0.5 / one_es;  ----  TODO(masn): do I need this? */
+    pj_authset(es, APA); /* sets up APA array */
     Q__rq    = sqrt(0.5 * Q__qp);
-    sinphi_  = sin(standardParallelInRadians);  /*  (P->phi0); */
+    sinphi_  = sin(standardParallelInRadians); /*  (P->phi0); */
     Q__sinb1 = pj_qsfn(sinphi_, e, one_es) / Q__qp;
     Q__cosb1 = sqrt(1.0 - Q__sinb1 * Q__sinb1);
     Q__dd    = cos(standardParallelInRadians) / (sqrt(1. - es * sinphi_ * sinphi_) * Q__rq * Q__cosb1);
@@ -248,11 +246,11 @@ static int init_oblate(grib_handle* h,
         for (j = 0; j < ny; j++) {
             x = xFirst;
             for (i = 0; i < nx; i++) {
-                double cCe, sCe, q, rho, ab = 0.0, lp__lam, lp__phi, xy_x = x, xy_y = y;
+                double cCe, sCe, rho, ab = 0.0, lp__lam, lp__phi, xy_x = x, xy_y = y;
                 xy_x /= Q__dd;
                 xy_y *= Q__dd;
                 rho = hypot(xy_x, xy_y);
-                Assert(rho >= EPS10);   /* TODO(masn): check */
+                Assert(rho >= EPS10); /* TODO(masn): check */
                 sCe = 2. * asin(.5 * rho / Q__rq);
                 cCe = cos(sCe);
                 sCe = sin(sCe);
@@ -264,8 +262,8 @@ static int init_oblate(grib_handle* h,
                     ab = xy.y * sCe / rho;
                     xy.y = rho * cCe;
                 */
-                lp__lam = atan2(xy_x, xy_y);          /* longitude */
-                lp__phi = pj_authlat(asin(ab), APA);  /* latitude */
+                lp__lam = atan2(xy_x, xy_y);         /* longitude */
+                lp__phi = pj_authlat(asin(ab), APA); /* latitude */
 
                 *lats = lp__phi * RAD2DEG;
                 *lons = (lp__lam + centralLongitudeInRadians) * RAD2DEG;
