@@ -257,7 +257,7 @@ static int init_oblate(grib_handle* h,
                 xy_x /= Q__dd;
                 xy_y *= Q__dd;
                 rho = hypot(xy_x, xy_y);
-                Assert(rho >= EPS10);  // TODO
+                Assert(rho >= EPS10);  // TODO(masn): check
                 sCe = 2. * asin(.5 * rho / Q__rq);
                 cCe = cos(sCe);
                 sCe = sin(sCe);
@@ -274,7 +274,8 @@ static int init_oblate(grib_handle* h,
                 //printf("lp__phi=%g,  lp__lam=%g\n", lp__phi * RAD2DEG, lp__lam* RAD2DEG);
 
                 *lats = lp__phi * RAD2DEG;
-                *lons = lp__lam * RAD2DEG;
+                *lons = (lp__lam + centralLongitudeInRadians) * RAD2DEG;
+
                 //rho = sqrt(x * x + ysq);
                 //if (rho > epsilon) {
                 //    c     = 2 * asin(rho / (2.0 * radius));
@@ -318,7 +319,7 @@ static int init_oblate(grib_handle* h,
             xy_x /= Q__dd;
             xy_y *=  Q__dd;
             rho = hypot(xy_x, xy_y);
-            Assert(rho >= EPS10); // TODO
+            Assert(rho >= EPS10);
             sCe = 2. * asin(.5 * rho / Q__rq);
             cCe = cos(sCe);
             sCe = sin(sCe);
@@ -334,7 +335,6 @@ static int init_oblate(grib_handle* h,
             lp__phi = pj_authlat(asin(ab), APA); // latitude
             printf("lp__phi=%g,  lp__lam=%g\n", lp__phi, lp__lam);
 
-
             latDeg = latRad * RAD2DEG;  /* Convert to degrees */
             lonDeg = lonRad * RAD2DEG;
             lonDeg = normalise_longitude_in_degrees(lonDeg);
@@ -343,8 +343,7 @@ static int init_oblate(grib_handle* h,
         }
     }
 #endif
-    //grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert Azimuthal Equal Area only supported for spherical earth.");
-    //return GRIB_GEOCALCULUS_PROBLEM;
+
     return GRIB_SUCCESS;
 }
 
