@@ -51,5 +51,13 @@ Idx	lat	lon	dist
 EOF
 diff $tempRef $temp
 
+# ECC-1295: regular lat/lon on ellipsoid
+# ----------------------------------------
+sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s shapeOfTheEarth=5 $sample2 $temp
+grib_check_key_equals $sample2 earthIsOblate 0
+grib_check_key_equals $temp    earthIsOblate 1
+${tools_dir}/grib_ls -l 0,0 $temp
+
 # Clean up
 rm -f $temp $tempRef
