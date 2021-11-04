@@ -766,8 +766,8 @@ static int descriptor_get_min_max(bufr_descriptor* bd, long width, long referenc
                                   double* minAllowed, double* maxAllowed)
 {
     /* Maximum value is allowed to be the largest number (all bits 1) which means it's MISSING */
-    unsigned long max1 = (1UL << width) - 1; /* Highest value for number with 'width' bits */
-    DebugAssert(width > 0 && width <= 32);
+    size_t max1 = (1ULL << width) - 1; /* Highest value for number with 'width' bits */
+    DebugAssert(width > 0 && width < 64);
 
     *maxAllowed = (max1 + reference) * factor;
     *minAllowed = reference * factor;
