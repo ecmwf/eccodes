@@ -232,7 +232,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
     int ret = 0, kk = 0, ii = 0, jj = 0;
     size_t nvalues = 0;
     long iradius;
-    double radius;
+    double radius; /* radius in km */
 
     grib_iterator* iter = NULL;
     double lat = 0, lon = 0;
@@ -248,14 +248,24 @@ static int find(grib_nearest* nearest, grib_handle* h,
         return ret;
     nearest->values_count = nvalues;
 
-    if (grib_is_missing(h, self->radius, &ret)) {
-        grib_context_log(h->context, GRIB_LOG_DEBUG, "Key '%s' is missing", self->radius);
-        return ret ? ret : GRIB_GEOCALCULUS_PROBLEM;
+    /* We need the radius to calculate the nearest distance. For an oblate earth
+       approximate this using the average of the semimajor and semiminor axes */
+    if ((ret = grib_get_long(h, self->radius, &iradius)) == GRIB_SUCCESS) {
+        if (grib_is_missing(h, self->radius, &ret) || iradius == GRIB_MISSING_LONG) {
+            grib_context_log(h->context, GRIB_LOG_DEBUG, "Key '%s' is missing", self->radius);
+            return GRIB_GEOCALCULUS_PROBLEM;
+        }
+        radius = ((double)iradius) / 1000.0;
     }
-
-    if ((ret = grib_get_long(h, self->radius, &iradius)) != GRIB_SUCCESS)
-        return ret;
-    radius = ((double)iradius) / 1000.0;
+    else {
+        double minor = 0, major = 0;
+        if ((ret = grib_get_double_internal(h, "earthMinorAxisInMetres", &minor)) != GRIB_SUCCESS) return ret;
+        if ((ret = grib_get_double_internal(h, "earthMajorAxisInMetres", &major)) != GRIB_SUCCESS) return ret;
+        if (grib_is_missing(h, "earthMinorAxisInMetres", &ret)) return GRIB_GEOCALCULUS_PROBLEM;
+        if (grib_is_missing(h, "earthMajorAxisInMetres", &ret)) return GRIB_GEOCALCULUS_PROBLEM;
+        radius = (major + minor) / 2.0;
+        radius = radius / 1000.0;
+    }
 
     /* Compute lat/lon info, create iterator etc if it's the 1st time or different grid.
      * This is for performance: if the grid has not changed, we only do this once

@@ -13,6 +13,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef ECCODES_ON_WINDOWS
+#include <stdint.h>
+#endif
+
 #if GRIB_PTHREADS
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -45,16 +49,16 @@ typedef struct bits_all_one_t
 {
     int inited;
     int size;
-    long v[128];
+    int64_t v[128];
 } bits_all_one_t;
 
 static bits_all_one_t bits_all_one = { 0, 0, {0,} };
 
 static void init_bits_all_one()
 {
-    int size            = sizeof(long) * 8;
-    long* v             = 0;
-    unsigned long cmask = -1;
+    int size            = sizeof(int64_t) * 8;
+    int64_t* v             = 0;
+    uint64_t cmask = -1;
     DebugAssert(!bits_all_one.inited);
 
     bits_all_one.size   = size;
@@ -78,7 +82,7 @@ static void init_bits_all_one_if_needed()
         init_bits_all_one();
     GRIB_MUTEX_UNLOCK(&mutex);
 }
-int grib_is_all_bits_one(long val, long nbits)
+int grib_is_all_bits_one(int64_t val, long nbits)
 {
     /*if (!bits_all_one.inited) init_bits_all_one();*/
     init_bits_all_one_if_needed();
@@ -301,7 +305,7 @@ int grib_encode_unsigned_long(unsigned char* p, unsigned long val, long* bitp, l
  * Note: On x64 Micrsoft Windows a "long" is 32 bits but "size_t" is 64 bits
  */
 #define BIT_MASK_SIZE_T(x) \
-    (((x) == max_nbits_size_t) ? (size_t)-1UL : (1UL << (x)) - 1)
+    (((x) == max_nbits_size_t) ? (size_t)-1ULL : (1ULL << (x)) - 1)
 
 size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
 {
