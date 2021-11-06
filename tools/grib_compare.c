@@ -46,7 +46,7 @@ const char* tool_description =
 const char* tool_name  = "grib_compare";
 const char* tool_usage = "[options] grib_file1 grib_file2";
 
-typedef double (*compare_double_proc)(double*, double*, double);
+typedef double (*compare_double_proc)(const double*, const double*, double);
 static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_options* options);
 
 typedef struct grib_error grib_error;
@@ -124,7 +124,7 @@ GRIB_INLINE static int grib_inline_rstrcmp(const char* a, const char* b)
 }
 
 /* Returns 0 when the values are considered the same */
-static double compare_double_absolute(double* a, double* b, double tolerance)
+static double compare_double_absolute(const double* a, const double* b, double tolerance)
 {
     double ret = 0;
     double d   = fabs(*a - *b);
@@ -136,7 +136,7 @@ static double compare_double_absolute(double* a, double* b, double tolerance)
 }
 
 /* Returns 0 when the values are considered the same */
-static double compare_double_relative(double* a, double* b, double tolerance)
+static double compare_double_relative(const double* a, const double* b, double tolerance)
 {
     double relativeError;
 
