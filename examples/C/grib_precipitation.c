@@ -35,7 +35,6 @@ int main(int argc, char** argv)
 {
     int err        = 0, i;
     double* values = NULL;
-    double max, min, average;
     size_t values_len = 0;
 
     FILE* in = NULL;

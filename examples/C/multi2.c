@@ -35,7 +35,7 @@ static void read_data(FILE* fp, int num_msgs)
     long stepRange  = 0;
     codes_handle* h = NULL;
 
-    printf("File offset start = %lu\n", ftello(fp));
+    printf("File offset start = %ld\n", ftello(fp));
     for (i = 0; i < num_msgs; ++i) {
         h = codes_handle_new_from_file(0, fp, PRODUCT_GRIB, &err);
         CODES_CHECK(err, 0);
