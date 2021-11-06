@@ -295,7 +295,6 @@ int grib_nearest_find_generic(
     double inlat, double inlon, unsigned long flags,
 
     const char* values_keyname,
-    const char* radius_keyname,
     const char* Ni_keyname,
     const char* Nj_keyname,
     double** out_lats,
