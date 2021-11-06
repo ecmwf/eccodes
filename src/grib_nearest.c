@@ -97,6 +97,37 @@ int grib_nearest_delete(grib_nearest* i)
     return 0;
 }
 
+/* Get the radius in kilometres for nearest neighbour distance calculations */
+/* For an ellipsoid, approximate the radius using the average of the semimajor and semiminor axes */
+int grib_nearest_get_radius(grib_handle* h, double* radiusInKm)
+{
+    int err = 0;
+    long lRadiusInMetres;
+    double result = 0;
+    const char* s_radius = "radius";
+    const char* s_minor = "earthMinorAxisInMetres";
+    const char* s_major = "earthMajorAxisInMetres";
+
+    if ((err = grib_get_long(h, s_radius, &lRadiusInMetres)) == GRIB_SUCCESS) {
+        if (grib_is_missing(h, s_radius, &err) || lRadiusInMetres == GRIB_MISSING_LONG) {
+            grib_context_log(h->context, GRIB_LOG_DEBUG, "Key 'radius' is missing");
+            return GRIB_GEOCALCULUS_PROBLEM;
+        }
+        result = ((double)lRadiusInMetres) / 1000.0;
+    }
+    else {
+        double minor = 0, major = 0;
+        if ((err = grib_get_double_internal(h, s_minor, &minor)) != GRIB_SUCCESS) return err;
+        if ((err = grib_get_double_internal(h, s_major, &major)) != GRIB_SUCCESS) return err;
+        if (grib_is_missing(h, s_minor, &err)) return GRIB_GEOCALCULUS_PROBLEM;
+        if (grib_is_missing(h, s_major, &err)) return GRIB_GEOCALCULUS_PROBLEM;
+        result = (major + minor) / 2.0;
+        result = result / 1000.0;
+    }
+    *radiusInKm = result;
+    return GRIB_SUCCESS;
+}
+
 void grib_binary_search(double xx[], const unsigned long n, double x,
                         int* ju, int* jl)
 {
@@ -278,7 +309,7 @@ int grib_nearest_find_generic(
 {
     int ret = 0, i = 0;
     size_t nvalues = 0, nneighbours = 0;
-    double radiusInMetres, radiusInKm;
+    double radiusInKm;
     grib_iterator* iter = NULL;
     double lat = 0, lon = 0;
 
@@ -291,21 +322,8 @@ int grib_nearest_find_generic(
         return ret;
     nearest->values_count = nvalues;
 
-    /* We need the radius to calculate the nearest distance. For an oblate earth
-       approximate this using the average of the semimajor and semiminor axes */
-    if ((ret = grib_get_double(h, radius_keyname, &radiusInMetres)) == GRIB_SUCCESS &&
-        !grib_is_missing(h, radius_keyname, &ret)) {
-        radiusInKm = radiusInMetres / 1000.0;
-    }
-    else {
-        double minor = 0, major = 0;
-        if ((ret = grib_get_double_internal(h, "earthMinorAxisInMetres", &minor)) != GRIB_SUCCESS) return ret;
-        if ((ret = grib_get_double_internal(h, "earthMajorAxisInMetres", &major)) != GRIB_SUCCESS) return ret;
-        if (grib_is_missing(h, "earthMinorAxisInMetres", &ret)) return GRIB_GEOCALCULUS_PROBLEM;
-        if (grib_is_missing(h, "earthMajorAxisInMetres", &ret)) return GRIB_GEOCALCULUS_PROBLEM;
-        radiusInMetres = (major + minor) / 2;
-        radiusInKm     = radiusInMetres / 1000.0;
-    }
+    if ((ret = grib_nearest_get_radius(h, &radiusInKm)) != GRIB_SUCCESS)
+        return ret;
 
     neighbours = (PointStore*)grib_context_malloc(nearest->context, nvalues * sizeof(PointStore));
     for (i = 0; i < nvalues; ++i) {
