@@ -1,3 +1,6 @@
+#ifdef ECCODES_ON_WINDOWS
+#include <stdint.h>
+#endif
 
 /* action.c */
 void grib_dump(grib_action* a, FILE* f, int l);
@@ -1377,11 +1380,11 @@ grib_box* grib_box_factory(grib_handle* h, grib_arguments* args);
 int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
 int grib_nearest_init(grib_nearest* i, grib_handle* h, grib_arguments* args);
 int grib_nearest_delete(grib_nearest* i);
+int grib_nearest_get_radius(grib_handle* h, double* radiusInKm);
 void grib_binary_search(double xx[], const unsigned long n, double x, int* ju, int* jl);
 int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
 int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
-    const char*  values_keyname, const char* radius_keyname,
-    const char* Ni_keyname, const char* Nj_keyname,
+    const char*  values_keyname, const char* Ni_keyname, const char* Nj_keyname,
     double**     out_lats,
     int*         out_lats_count,
     double**     out_lons,
@@ -1550,7 +1553,7 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value, 
 const char* grib_get_git_sha1(void);
 
 /* grib_bits_any_endian.c */
-int grib_is_all_bits_one(long val, long nbits);
+int grib_is_all_bits_one(int64_t val, long nbits);
 int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberOfCharacters, const char* string);
 char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t numberOfCharacters, char* string);
 unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long nbits);

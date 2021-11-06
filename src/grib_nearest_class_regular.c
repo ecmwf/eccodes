@@ -108,13 +108,10 @@ static int find(grib_nearest* nearest, grib_handle* h,
     grib_nearest_regular* self = (grib_nearest_regular*) nearest;
     int ret=0,kk=0,ii=0,jj=0;
     size_t nvalues=0;
+    double radiusInKm;
 
-    long iradius;
-    double radius;
-
-    if( (ret =  grib_get_long(h,self->radius,&iradius))!= GRIB_SUCCESS)
+    if ((ret = grib_nearest_get_radius(h, &radiusInKm)) != GRIB_SUCCESS)
         return ret;
-    radius=((double)iradius)/1000.0;
 
     if (!nearest->h || (flags & GRIB_NEAREST_SAME_DATA)==0 || nearest->h!=h) {
         grib_iterator* iter=NULL;
@@ -231,8 +228,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
     grib_nearest_regular* self = (grib_nearest_regular*)nearest;
     int ret = 0, kk = 0, ii = 0, jj = 0;
     size_t nvalues = 0;
-    long iradius;
-    double radius;
+    double radiusInKm;
 
     grib_iterator* iter = NULL;
     double lat = 0, lon = 0;
@@ -248,14 +244,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
         return ret;
     nearest->values_count = nvalues;
 
-    if (grib_is_missing(h, self->radius, &ret)) {
-        grib_context_log(h->context, GRIB_LOG_DEBUG, "Key '%s' is missing", self->radius);
-        return ret ? ret : GRIB_GEOCALCULUS_PROBLEM;
-    }
-
-    if ((ret = grib_get_long(h, self->radius, &iradius)) != GRIB_SUCCESS)
+    if ((ret = grib_nearest_get_radius(h, &radiusInKm)) != GRIB_SUCCESS)
         return ret;
-    radius = ((double)iradius) / 1000.0;
 
     /* Compute lat/lon info, create iterator etc if it's the 1st time or different grid.
      * This is for performance: if the grid has not changed, we only do this once
@@ -414,7 +404,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         for (jj = 0; jj < 2; jj++) {
             for (ii = 0; ii < 2; ii++) {
                 self->k[kk]         = self->i[ii] + self->lons_count * self->j[jj];
-                self->distances[kk] = geographic_distance_spherical(radius, inlon, inlat,
+                self->distances[kk] = geographic_distance_spherical(radiusInKm, inlon, inlat,
                                                             self->lons[self->i[ii]], self->lats[self->j[jj]]);
                 kk++;
             }

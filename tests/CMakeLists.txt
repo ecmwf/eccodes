@@ -233,6 +233,7 @@ if( HAVE_BUILD_TOOLS )
         grib_dump_debug
         grib_dump_json
         grib_local_MeteoFrance
+        grib_local_NCEP
         grib_neg_fctime
         codes_split_file
         grib_mars_keys)
