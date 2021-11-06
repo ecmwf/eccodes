@@ -131,7 +131,7 @@ static void pj_authset(double es, double* APA)
     APA[1] += t * P11;
     APA[2] = t * P20;
 }
-static double pj_authlat(double beta, double* APA)
+static double pj_authlat(double beta, const double* APA)
 {
     double t = beta + beta;
     return (beta + APA[0] * sin(t) + APA[1] * sin(t + t) + APA[2] * sin(t + t + t));
