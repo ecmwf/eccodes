@@ -248,7 +248,7 @@ static int unpack_long(grib_accessor* a, long* v, size_t* len)
         return err;
 
     i = 0;
-    while (val[i] == ' ' && val[i] != 0 && i < l - 1)
+    while (i < l - 1 && val[i] == ' ')
         i++;
 
     if (val[i] == 0) {

@@ -59,7 +59,7 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
     return (*a == 0 && *b == 0) ? 0 : 1;
 }
 
-typedef double (*compare_double_proc)(double*, double*, double*);
+typedef double (*compare_double_proc)(const double*, const double*, const double*);
 
 typedef struct grib_error grib_error;
 struct grib_error
@@ -136,7 +136,7 @@ static void release_keys_list()
     }
 }
 
-GRIB_INLINE static double compare_double_absolute(double* a, double* b, double* err)
+GRIB_INLINE static double compare_double_absolute(const double* a, const double* b, const double* err)
 {
     double ret = 0;
     double d   = fabs(*a - *b);
@@ -183,7 +183,7 @@ static void write_messages(grib_handle* handle1, grib_handle* handle2)
     write_message(handle2, "error2");
 }
 
-static double compare_double_relative(double* a, double* b, double* err)
+static double compare_double_relative(const double* a, const double* b, const double* err)
 {
     double relativeError;
 

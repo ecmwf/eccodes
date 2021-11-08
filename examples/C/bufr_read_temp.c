@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
 
         for (i = 0; i < sigt_len; i++) {
             printf("%3lu %6.0f %6.0f %.1f %.1f\n",
-                   i + 1, sigt_pres[i], sigt_geo[i], sigt_t[i], sigt_td[i]);
+                   (unsigned long)(i + 1), sigt_pres[i], sigt_geo[i], sigt_t[i], sigt_td[i]);
         }
 
         /* Delete handle */

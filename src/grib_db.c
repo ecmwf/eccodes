@@ -638,7 +638,7 @@ static grib_order_by* grib_db_new_order_by(grib_context* c, char* obstr)
             p++;
         mode = mode_default;
         if (p != t2) {
-            while (*p == ' ' && *p != '\0')
+            while (*p == ' ')
                 p++;
             if (*p != '\0') {
                 *(p - 1) = '\0';
@@ -906,7 +906,7 @@ static void grib_db_delete_fields(grib_fieldset* set)
 static void grib_trim(char** x)
 {
     char* p = 0;
-    while (**x == ' ' && **x != '\0')
+    while (**x == ' ')
         (*x)++;
     if (**x == '\0')
         return;

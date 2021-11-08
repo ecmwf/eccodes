@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
             }
             else {
                 /* for arrays */
-                printf("(array of %lu)\n", klen);
+                printf("(array of %lu)\n", (unsigned long)klen);
             }
         }
 

@@ -789,7 +789,7 @@ grib_accessors_list* grib_accessors_list_last(grib_accessors_list* al)
     return al->last;
 }
 
-grib_accessors_list* grib_accessors_list_find(grib_accessors_list* al, grib_accessor* a)
+grib_accessors_list* grib_accessors_list_find(grib_accessors_list* al, const grib_accessor* a)
 {
     grib_accessors_list* last = al;
     grib_accessors_list* next = al->next;

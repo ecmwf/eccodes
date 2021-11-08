@@ -17,7 +17,7 @@ int grib_decode_long_array(const unsigned char* p, long* bitp, long nbits, size_
 {
     long i                   = 0;
     long countOfLeftmostBits = 0, leftmostBits = 0;
-    long startBit, startByte;
+    long startBit;
     long remainingBits = nbits;
     long* pp           = (long*)p;
     int inited         = 0;
@@ -84,7 +84,7 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long nbits, dou
 {
     long i                   = 0;
     long countOfLeftmostBits = 0, leftmostBits = 0;
-    long startBit, startByte;
+    long startBit;
     long remainingBits = nbits;
     long* pp           = (long*)p;
     int inited         = 0;

@@ -91,7 +91,7 @@ static void init_class(grib_iterator_class* c)
 }
 /* END_CLASS_IMP */
 
-static void binary_search(double xx[], const unsigned long n, double x, unsigned long* j);
+static void binary_search(const double xx[], const unsigned long n, double x, unsigned long* j);
 
 static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
 {
@@ -164,7 +164,7 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
     return ret;
 }
 
-static void binary_search(double xx[], const unsigned long n, double x, unsigned long* j)
+static void binary_search(const double xx[], const unsigned long n, double x, unsigned long* j)
 {
     /*This routine works only on descending ordered arrays*/
 #define EPSILON 1e-3

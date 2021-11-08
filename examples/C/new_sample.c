@@ -232,7 +232,7 @@ int main(int argc, char** argv)
     size    = 496;
     vdouble = (double*)calloc(size, sizeof(double));
     if (!vdouble) {
-        fprintf(stderr, "failed to allocate %lu bytes\n", size * sizeof(double));
+        fprintf(stderr, "failed to allocate %lu bytes\n", (unsigned long)(size * sizeof(double)));
         exit(1);
     }
 

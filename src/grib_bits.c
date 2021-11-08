@@ -176,14 +176,13 @@ int grib_encode_signed_longb(unsigned char* p, long val, long* bitp, long nb)
 
     Assert(nb <= max_nbits);
 
-    if (sign)
+    if (sign) {
         val = -val;
-
-    if (sign)
         grib_set_bit_on(p, bitp);
-    else
+    }
+    else {
         grib_set_bit_off(p, bitp);
-
+    }
     return grib_encode_unsigned_longb(p, val, bitp, nb - 1);
 }
 

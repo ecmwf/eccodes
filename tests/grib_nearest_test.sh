@@ -54,10 +54,35 @@ diff $tempRef $temp
 # ECC-1295: regular lat/lon on ellipsoid
 # ----------------------------------------
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s shapeOfTheEarth=2 $sample2 $temp
+grib_check_key_equals $sample2 earthIsOblate 0
+grib_check_key_equals $temp    earthIsOblate 1
+${tools_dir}/grib_ls -l 0,0 $temp
+
+# reduced lat/lon on ellipsoid
+# ----------------------------------------
+sample2=$ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl
+${tools_dir}/grib_set -s shapeOfTheEarth=4 $sample2 $temp
+grib_check_key_equals $sample2 earthIsOblate 0
+grib_check_key_equals $temp    earthIsOblate 1
+${tools_dir}/grib_ls -l 0,0 $temp
+
+# regular gaussian on ellipsoid
+# ----------------------------------------
+sample2=$ECCODES_SAMPLES_PATH/regular_gg_pl_grib2.tmpl
 ${tools_dir}/grib_set -s shapeOfTheEarth=5 $sample2 $temp
 grib_check_key_equals $sample2 earthIsOblate 0
 grib_check_key_equals $temp    earthIsOblate 1
 ${tools_dir}/grib_ls -l 0,0 $temp
+
+# reduced gaussian on ellipsoid
+# ----------------------------------------
+sample2=$ECCODES_SAMPLES_PATH/reduced_gg_pl_48_grib2.tmpl
+${tools_dir}/grib_set -s shapeOfTheEarth=5 $sample2 $temp
+grib_check_key_equals $sample2 earthIsOblate 0
+grib_check_key_equals $temp    earthIsOblate 1
+${tools_dir}/grib_ls -l 0,0 $temp
+
 
 # Clean up
 rm -f $temp $tempRef

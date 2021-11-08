@@ -110,14 +110,6 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
     return (*a == 0 && *b == 0) ? 0 : 1;
 }
 
-typedef struct string_count string_count;
-struct string_count
-{
-    char* value;
-    int count;
-    string_count* next;
-};
-
 static int depth = 0;
 
 static void init_class(grib_dumper_class* c) {}
