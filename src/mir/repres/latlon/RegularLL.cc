@@ -101,25 +101,19 @@ bool RegularLL::sameAs(const Representation& other) const {
 }
 
 const RegularLL* RegularLL::croppedRepresentation(const util::BoundingBox& bbox) const {
-    // Called by AreaCropper::execute and Gridded2GriddedInterpolation::execute
-
-    const PointLatLon reference(bbox_.south(), bbox_.west());
-
-    return new RegularLL(increments_, bbox, reference);
+    return new RegularLL(increments_, bbox, reference_);
 }
 
 util::BoundingBox RegularLL::extendBoundingBox(const util::BoundingBox& bbox) const {
     using iterator::detail::RegularIterator;
-
-    const PointLatLon reference(bbox_.south(), bbox_.west());
 
     auto sn = increments_.south_north().latitude().fraction();
     auto we = increments_.west_east().longitude().fraction();
     ASSERT(sn > 0);
     ASSERT(we > 0);
 
-    auto shift_sn = (reference.lat().fraction() / sn).decimalPart() * sn;
-    auto shift_we = (reference.lon().fraction() / we).decimalPart() * we;
+    auto shift_sn = (reference_.lat().fraction() / sn).decimalPart() * sn;
+    auto shift_we = (reference_.lon().fraction() / we).decimalPart() * we;
 
     // adjust West/East to include bbox's West/East ('outwards')
     Longitude w = bbox.west();
