@@ -63,21 +63,17 @@ void RotatedLL::print(std::ostream& out) const {
 }
 
 atlas::Grid RotatedLL::atlasGrid() const {
-
-    // NOTE: for non-shifted/shifted grid, yspace uses bounding box
+    // NOTE: yspace uses bounding box and not the domain
     // (this works together with the Atlas RectangularDomain cropping)
     const util::Domain dom = domain();
-    double n               = bbox_.north().value();
-    double s               = bbox_.south().value();
-    double w               = dom.west().value();
-    double e               = dom.east().value();
 
-    using atlas::StructuredGrid;
-    using atlas::grid::LinearSpacing;
-    StructuredGrid::XSpace xspace(LinearSpacing(w, e, long(ni_), !dom.isPeriodicWestEast()));
-    StructuredGrid::YSpace yspace(LinearSpacing(n, s, long(nj_)));
+    atlas::StructuredGrid::XSpace xspace(
+        atlas::grid::LinearSpacing(dom.west().value(), dom.east().value(), long(ni_), !dom.isPeriodicWestEast()));
 
-    StructuredGrid unrotatedGrid(xspace, yspace, StructuredGrid::Projection(), dom);
+    atlas::StructuredGrid::YSpace yspace(
+        atlas::grid::LinearSpacing(bbox_.north().value(), bbox_.south().value(), long(nj_)));
+
+    atlas::StructuredGrid unrotatedGrid(xspace, yspace, {}, dom);
     return rotation_.rotate(unrotatedGrid);
 }
 
@@ -99,7 +95,6 @@ void RotatedLL::makeName(std::ostream& out) const {
 }
 
 bool RotatedLL::sameAs(const Representation& other) const {
-
     auto o = dynamic_cast<const RotatedLL*>(&other);
     return (o != nullptr) && (rotation_ == o->rotation_) && LatLon::sameAs(other);
 }

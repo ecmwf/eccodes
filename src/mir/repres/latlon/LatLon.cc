@@ -39,8 +39,8 @@ namespace latlon {
 LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
     Gridded(parametrisation), increments_(parametrisation), reference_(bbox_.south(), bbox_.west()), ni_(0), nj_(0) {
     correctBoundingBox(bbox_, ni_, nj_, increments_, reference_);
-    ASSERT(ni_);
-    ASSERT(nj_);
+    ASSERT(ni_ != 0);
+    ASSERT(nj_ != 0);
 
     // confirm Ni/Nj from parametrisation (input)
     size_t ni = 0;
@@ -65,8 +65,8 @@ LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
 LatLon::LatLon(const util::Increments& increments, const util::BoundingBox& bbox, const PointLatLon& reference) :
     Gridded(bbox), increments_(increments), reference_(reference), ni_(0), nj_(0) {
     correctBoundingBox(bbox_, ni_, nj_, increments_, reference_);
-    ASSERT(ni_);
-    ASSERT(nj_);
+    ASSERT(ni_ != 0);
+    ASSERT(nj_ != 0);
 }
 
 
