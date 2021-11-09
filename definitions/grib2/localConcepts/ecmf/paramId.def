@@ -2873,24 +2873,6 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 60 ;
 	}
-#Particulate matter d < 1 um
-'210072' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 72 ;
-	}
-#Particulate matter d < 2.5 um
-'210073' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 73 ;
-	}
-#Particulate matter d < 10 um
-'210074' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 74 ;
-	}
 #Wildfire viewing angle of observation
 '210079' = {
 	 discipline = 192 ;

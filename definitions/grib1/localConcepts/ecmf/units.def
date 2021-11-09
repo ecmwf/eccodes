@@ -3989,17 +3989,17 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 60 ;
 	}
-#Particulate matter d < 1 um
+#Particulate matter d <= 1 um
 'kg m**-3' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 72 ;
 	}
-#Particulate matter d < 2.5 um
+#Particulate matter d <= 2.5 um
 'kg m**-3' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 73 ;
 	}
-#Particulate matter d < 10 um
+#Particulate matter d <= 10 um
 'kg m**-3' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 74 ;

@@ -689,17 +689,17 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 97 ;
 	}
-#Particulate matter d < 1 um
+#Particulate matter d <= 1 um
 'mass_concentration_of_pm1_ambient_aerosol_particles_in_air' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 72 ;
 	}
-#Particulate matter d < 2.5 um
+#Particulate matter d <= 2.5 um
 'mass_concentration_of_pm2p5_ambient_aerosol_particles_in_air' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 73 ;
 	}
-#Particulate matter d < 10 um
+#Particulate matter d <= 10 um
 'mass_concentration_of_pm10_ambient_aerosol_particles_in_air' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 74 ;

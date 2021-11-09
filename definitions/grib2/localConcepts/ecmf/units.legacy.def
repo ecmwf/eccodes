@@ -304,3 +304,21 @@
  parameterCategory = 217 ;
  parameterNumber = 27 ;
 }
+#Particulate matter d <= 1 um
+'kg m**-3' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 72 ;
+}
+#Particulate matter d <= 2.5 um
+'kg m**-3' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 73 ;
+}
+#Particulate matter d <= 10 um
+'kg m**-3' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 74 ;
+}

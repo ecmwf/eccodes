@@ -471,6 +471,45 @@
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Particulate matter d <= 1 um
+'pm1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	 scaleFactorOfSecondSize = missing() ;
+	 scaledValueOfFirstSize = 1 ;
+	 scaleFactorOfFirstSize = 6 ;
+	 typeOfSizeInterval = 5 ;
+	 aerosolType = 62026 ;
+	 scaledValueOfSecondSize = missing() ;
+	 is_aerosol = 1 ;
+	}
+#Particulate matter d <= 2.5 um
+'pm2p5' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	 scaleFactorOfSecondSize = missing() ;
+	 scaledValueOfFirstSize = 25 ;
+	 scaleFactorOfFirstSize = 7 ;
+	 typeOfSizeInterval = 5 ;
+	 aerosolType = 62026 ;
+	 scaledValueOfSecondSize = missing() ;
+	 is_aerosol = 1 ;
+	}
+#Particulate matter d <= 10 um
+'pm10' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	 scaleFactorOfSecondSize = missing() ;
+	 scaledValueOfFirstSize = 10 ;
+	 scaleFactorOfFirstSize = 6 ;
+	 typeOfSizeInterval = 5 ;
+	 aerosolType = 62026 ;
+	 scaledValueOfSecondSize = missing() ;
+	 is_aerosol = 1 ;
+	}
 #Volcanic sulfur dioxide mass mixing ratio
 'VSO2' = {
 	 discipline = 0 ;
