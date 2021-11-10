@@ -97,6 +97,10 @@ ${tools_dir}/grib_set -s is_aerosol=1 $tempSample $temp
 grib_check_key_equals $temp productDefinitionTemplateNumber '45'
 grib_check_key_equals $temp aerosolType,typeOfSizeInterval '0 0'
 
+# Keys firstSize and secondSize
+${tools_dir}/grib_set -s paramId=210072 $tempSample $temp
+${tools_dir}/grib_ls -p firstSize,secondSize $temp
+
 
 rm -f $tempSample
 rm -f $temp
