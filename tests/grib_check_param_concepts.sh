@@ -10,6 +10,7 @@
 
 . ./include.sh
 
+label="grib_check_param_concepts_test"
 #
 # Do various checks on the concepts files
 #
@@ -25,7 +26,6 @@ $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/g
 $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/shortName.def
 $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/uerra/shortName.def
 $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/hydro/shortName.def
-
 
 # Check the group: name.def paramId.def shortName.def units.def cfVarName.def
 # ----------------------------------------------------------------------------
@@ -69,3 +69,25 @@ for dir in $defs_dirs; do
   cd $dir
   $CHECK_DEFS
 done
+
+cd $test_dir
+
+# -------------------------------
+echo "ECMWF legacy parameters..."
+# -------------------------------
+ECMF_DIR=$ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf
+
+tempDir=temp.${label}.dir
+rm -fr $tempDir
+mkdir -p $tempDir
+cd $tempDir
+cp $ECMF_DIR/cfName.legacy.def    cfName.def
+cp $ECMF_DIR/cfVarName.legacy.def cfVarName.def
+cp $ECMF_DIR/name.legacy.def      name.def
+cp $ECMF_DIR/paramId.legacy.def   paramId.def
+cp $ECMF_DIR/shortName.legacy.def shortName.def
+cp $ECMF_DIR/units.legacy.def     units.def
+$CHECK_DEFS
+
+cd $test_dir
+rm -fr $tempDir
