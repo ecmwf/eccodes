@@ -21,6 +21,7 @@
 
 #include "mir/data/MIRField.h"
 #include "mir/iterator/detail/RegularIterator.h"
+#include "mir/key/Area.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/param/SameParametrisation.h"
 #include "mir/util/Domain.h"
@@ -420,15 +421,12 @@ bool LatLon::samePoints(const param::MIRParametrisation& user, const param::MIRP
         return false;
     }
 
-    std::vector<double> area;
-    if (user.get("area", area)) {
-        ASSERT_KEYWORD_AREA_SIZE(area.size());
-
+    util::BoundingBox bboxUser;
+    if (key::Area::get(user, bboxUser)) {
         util::Increments inc(field);
         size_t ni = 0;
         size_t nj = 0;
 
-        util::BoundingBox bboxUser(area[0], area[1], area[2], area[3]);
         correctBoundingBox(bboxUser, ni, nj, inc, {bboxUser.south(), bboxUser.west()});
 
         util::BoundingBox bboxField(field);

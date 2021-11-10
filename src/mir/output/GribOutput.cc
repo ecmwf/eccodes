@@ -26,6 +26,7 @@
 #include "mir/compat/GribCompatibility.h"
 #include "mir/data/MIRField.h"
 #include "mir/input/MIRInput.h"
+#include "mir/key/Area.h"
 #include "mir/key/packing/Packing.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Gridded.h"
@@ -392,10 +393,8 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
 
         static bool checkArea = eckit::Resource<bool>("$MIR_CHECK_AREA", false);
         if (checkArea) {
-            std::vector<double> v;
-            if (param.userParametrisation().get("area", v) && v.size() == 4) {
-
-                util::BoundingBox user(v[0], v[1], v[2], v[3]);
+            util::BoundingBox user;
+            if (key::Area::get(param.userParametrisation(), user)) {
 
                 util::BoundingBox before(
                     info.grid.latitudeOfFirstGridPointInDegrees, info.grid.longitudeOfFirstGridPointInDegrees,
