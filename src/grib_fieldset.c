@@ -711,13 +711,13 @@ static int grib_fieldset_resize(grib_fieldset* set, size_t newsize)
     int err = 0;
 
     err = grib_fieldset_resize_fields(set, newsize);
-    if (err != 0)
+    if (err)
         return err;
-    grib_fieldset_resize_int_array(set->order, newsize);
-    if (err != 0)
+    err = grib_fieldset_resize_int_array(set->order, newsize);
+    if (err)
         return err;
-    grib_fieldset_resize_int_array(set->filter, newsize);
-    if (err != 0)
+    err = grib_fieldset_resize_int_array(set->filter, newsize);
+    if (err)
         return err;
 
     set->fields_array_size = newsize;

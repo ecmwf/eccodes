@@ -221,17 +221,14 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
     grib_smart_table* t    = NULL;
     grib_smart_table* next = NULL;
     char* filename         = 0;
-    char name[2048]        = {0,};
     char recomposed[1024] = {0,};
     char localRecomposed[1024] = {0,};
     char* localFilename        = 0;
     char extraRecomposed[1024] = {0,};
     char* extraFilename  = 0;
-    char localName[2048] = {0,};
     char masterDir[1024] = {0,};
     char localDir[1024] = {0,};
     char extraDir[1024] = {0,};
-    char extraTable[2048] = {0,};
     size_t len = 1024;
 
     if (self->masterDir != NULL) {
@@ -249,6 +246,7 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
     }
 
     if (*masterDir != 0) {
+        char name[2048] = {0,};
         sprintf(name, "%s/%s", masterDir, self->tablename);
         grib_recompose_name(h, NULL, name, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
@@ -259,12 +257,14 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
     }
 
     if (*localDir != 0) {
+        char localName[2048] = {0,};
         sprintf(localName, "%s/%s", localDir, self->tablename);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
     }
 
     if (*extraDir != 0) {
+        char extraTable[2048] = {0,};
         sprintf(extraTable, "%s/%s", extraDir, self->extraTable);
         grib_recompose_name(h, NULL, extraTable, extraRecomposed, 0);
         extraFilename = grib_context_full_defs_path(c, extraRecomposed);
@@ -313,7 +313,7 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
     int numberOfColumns;
     int code;
 
-    grib_context_log(c, GRIB_LOG_DEBUG, "Loading code table form %s", filename);
+    grib_context_log(c, GRIB_LOG_DEBUG, "Loading code table from %s", filename);
 
     f = codes_fopen(filename, "r");
     if (!f)
@@ -358,11 +358,6 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
         while (*p != '\0' && *p != '|')
             p++;
 
-        if (!p) {
-            grib_context_log(c, GRIB_LOG_ERROR, "Invalid entry in file %s: line %d", filename, lineNumber);
-            continue; /* skip this line */
-        }
-
         *p = 0;
 
         code = atol(s);
@@ -372,10 +367,6 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
         while (*p != '\0' && *p != '|')
             p++;
 
-        if (!p) {
-            grib_context_log(c, GRIB_LOG_ERROR, "Invalid entry in file %s: line %d", filename, lineNumber);
-            continue; /* skip this line */
-        }
         *p = 0;
 
         numberOfColumns = 0;
