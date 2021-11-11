@@ -253,7 +253,7 @@ The grib_index is the structure giving indexed access to messages in a file.
 typedef struct grib_index grib_index;
 
 /**
- *  Create a new index form a file. The file is indexed with the keys in argument.
+ *  Create a new index from a file. The file is indexed with the keys in argument.
  *
  * @param c           : context  (NULL for default context)
  * @param filename    : name of the file of messages to be indexed
