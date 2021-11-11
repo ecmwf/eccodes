@@ -130,7 +130,7 @@ bufr_descriptors_array* grib_bufr_descriptors_array_append(bufr_descriptors_arra
     }
 
     grib_bufr_descriptors_array_delete(ar);
-    ar = 0;
+    /* ar = 0; */
 
     return v;
 }

@@ -460,6 +460,6 @@ void grib_file_delete(grib_file* file)
         free(file->buffer);
     }
     grib_context_free(file->context, file);
-    file = NULL;
+    /* file = NULL; */
     GRIB_MUTEX_UNLOCK(&mutex1);
 }
