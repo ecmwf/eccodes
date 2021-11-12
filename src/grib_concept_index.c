@@ -57,8 +57,8 @@ static void index_entry_delete(grib_context* c, grib_concept_index_entry* entry)
 
 static int index_insert_entry(grib_concept_index* index, grib_concept_index_entry* entry, void* object)
 {
-    int err                       = 0;
-    int found                     = 0;
+    int err = 0;
+    int found;
     grib_conditions_tree* cur     = index->conditions;
     grib_conditions_tree* prev    = index->conditions;
     grib_concept_index_keys* keys = index->keys;
@@ -76,8 +76,7 @@ static int index_insert_entry(grib_concept_index* index, grib_concept_index_entr
 
         if (!found) {
             cur->next = grib_context_malloc_clear_persistent(index->context, sizeof(grib_conditions_tree));
-            if (!cur->next)
-                grib_context_log(index->context, GRIB_LOG_FATAL, "index_insert_entry unable to allocate");
+            Assert(cur->next);
             cur = cur->next;
         }
 

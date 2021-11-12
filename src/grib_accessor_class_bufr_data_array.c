@@ -2206,7 +2206,9 @@ static void grib_convert_to_attribute(grib_accessor* a)
     }
 }
 
-static grib_iarray* set_subset_list(grib_context* c, grib_accessor_bufr_data_array* self, long onlySubset, long startSubset, long endSubset, long* subsetList, size_t subsetListSize)
+static grib_iarray* set_subset_list(
+        grib_context* c, grib_accessor_bufr_data_array* self,
+        long onlySubset, long startSubset, long endSubset, const long* subsetList, size_t subsetListSize)
 {
     grib_iarray* list = grib_iarray_new(c, self->numberOfSubsets, 10);
     long s;

@@ -299,8 +299,10 @@ static void set_bitmap_number(long* descriptors, int* useDefinedBitmap, size_t* 
     }
 }
 
-static void computeDelayedReplication(grib_accessor_apply_operators* self,
-                                      long* delayedReplication, long* delayedReplicationIndex, long delayedReplicationCount, long index)
+static void computeDelayedReplication(
+        grib_accessor_apply_operators* self,
+        long* delayedReplication,
+        const long* delayedReplicationIndex, long delayedReplicationCount, long index)
 {
     long i = 0;
     for (i = 0; i < delayedReplicationCount; i++) {

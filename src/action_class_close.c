@@ -112,7 +112,7 @@ static int execute(grib_action* act, grib_handle* h)
     if (file)
         grib_file_pool_delete_file(file);
 
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static void dump(grib_action* act, FILE* f, int lvl)

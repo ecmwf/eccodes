@@ -233,7 +233,7 @@ static int notify_change(grib_action* act, grib_accessor* notified,
 
     grib_update_paddings(old_section);
 
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static grib_action* reparse(grib_action* a, grib_accessor* acc, int* doit)
