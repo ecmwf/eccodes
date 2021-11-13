@@ -617,13 +617,13 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 201 ;
 	}
-#Latitude of Presure Point
+#Latitude of Pressure Point
 'lapp' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 202 ;
 	}
-#Longitude of Presure Point
+#Longitude of Pressure Point
 'lopp' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -1367,13 +1367,13 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 221 ;
 	}
-#Water Vapor Flux Convergance (Vertical Int)
+#Water Vapor Flux Convergence (Vertical Int)
 'wvconv' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 222 ;
 	}
-#Water Condensate Flux Convergance (Vertical Int)
+#Water Condensate Flux Convergence (Vertical Int)
 'wcconv' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -1583,7 +1583,7 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 193 ;
 	}
-#Barotropic Kinectic Energy
+#Barotropic Kinetic Energy
 'bkeng' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;

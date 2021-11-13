@@ -6025,8 +6025,8 @@
 	 parameterCategory = 215 ;
 	 parameterNumber = 94 ;
 	}
-#Antropogenic (black carbon, organic matter, sulphate) aerosol optical thickness at 532 nm
-'Antropogenic (black carbon, organic matter, sulphate) aerosol optical thickness at 532 nm' = {
+#Anthropogenic (black carbon, organic matter, sulphate) aerosol optical thickness at 532 nm
+'Anthropogenic (black carbon, organic matter, sulphate) aerosol optical thickness at 532 nm' = {
 	 discipline = 192 ;
 	 parameterCategory = 215 ;
 	 parameterNumber = 95 ;
