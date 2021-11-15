@@ -193,6 +193,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     long chemical                                = -1;
     long aerosol                                 = -1;
     long chemical_distfn                         = -1;
+    long chemical_srcsink                        = -1;
     long aerosol_optical                         = -1;
     char stepType[15]                            = {0,};
     size_t slen               = 15;
@@ -219,6 +220,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     grib_get_long(hand, self->grib2LocalSectionNumber, &grib2LocalSectionNumber);
     grib_get_long(hand, "is_chemical", &chemical);
     grib_get_long(hand, "is_chemical_distfn", &chemical_distfn);
+    grib_get_long(hand, "is_chemical_srcsink", &chemical_srcsink);
     grib_get_long(hand, "is_aerosol", &aerosol);
     grib_get_long(hand, "is_aerosol_optical", &aerosol_optical);
     if (chemical == 1 && aerosol == 1) {
@@ -383,6 +385,26 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         }
     }
 
+    /* Adjust for atmospheric chemical constituents with source or sink */
+    if (chemical_srcsink == 1) {
+        if (eps == 1) {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew = 77;
+            }
+            else {
+                productDefinitionTemplateNumberNew = 79;
+            }
+        }
+        else {
+            if (isInstant) {
+                productDefinitionTemplateNumberNew = 76;
+            }
+            else {
+                productDefinitionTemplateNumberNew = 78;
+            }
+        }
+    }
+
     /* Adjust for aerosols */
     if (aerosol == 1) {
         if (eps == 1) {
@@ -418,6 +440,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     }
 
     if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
+        if (a->context->debug) {
+            fprintf(stderr, "ECCODES DEBUG grib_accessor_local_definition: ldNumber=%d, newPDTN=%ld\n",
+                   localDefinitionNumber, productDefinitionTemplateNumberNew);
+        }
         if (tooEarly)
             grib_set_long(hand, self->productDefinitionTemplateNumberInternal, productDefinitionTemplateNumberNew);
         else

@@ -101,6 +101,10 @@ grib_check_key_equals $temp aerosolType,typeOfSizeInterval '0 0'
 ${tools_dir}/grib_set -s paramId=210072 $tempSample $temp
 ${tools_dir}/grib_ls -p firstSize,secondSize $temp
 
+# ECC-1303: GRIB2: Setting localDefinitionNumber=1 on chemical source/sink
+${tools_dir}/grib_set -s paramId=228104,setLocalDefinition=1,localDefinitionNumber=1 $sample2 $temp
+grib_check_key_equals $temp paramId,productDefinitionTemplateNumber,is_chemical_srcsink '228104 76 1'
+
 
 rm -f $tempSample
 rm -f $temp
