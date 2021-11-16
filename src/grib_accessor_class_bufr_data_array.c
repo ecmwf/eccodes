@@ -1509,7 +1509,8 @@ static int encode_element(grib_context* c, grib_accessor_bufr_data_array* self, 
 }
 
 static int encode_replication(grib_context* c, grib_accessor_bufr_data_array* self, int subsetIndex,
-                              grib_buffer* buff, unsigned char* data, long* pos, int i, long elementIndex, grib_darray* dval, long* numberOfRepetitions)
+                              grib_buffer* buff, unsigned char* data, long* pos, int i, long elementIndex,
+                              grib_darray* dval, long* numberOfRepetitions)
 {
     /* Assert( buff->data == data); */
     if (self->compressedData) {
@@ -1523,7 +1524,8 @@ static int encode_replication(grib_context* c, grib_accessor_bufr_data_array* se
     return encode_element(c, self, subsetIndex, buff, data, pos, i, 0, elementIndex, dval, 0);
 }
 
-static int build_bitmap(grib_accessor_bufr_data_array* self, unsigned char* data, long* pos, int iel, grib_iarray* elementsDescriptorsIndex, int iBitmapOperator)
+static int build_bitmap(grib_accessor_bufr_data_array* self, unsigned char* data, long* pos,
+                        int iel, grib_iarray* elementsDescriptorsIndex, int iBitmapOperator)
 {
     int bitmapSize = 0, iDelayedReplication = 0;
     int i, localReference, width, bitmapEndElementsDescriptorsIndex;
@@ -1651,7 +1653,8 @@ static int consume_bitmap(grib_accessor_bufr_data_array* self, int iBitmapOperat
     return GRIB_SUCCESS;
 }
 
-static int build_bitmap_new_data(grib_accessor_bufr_data_array* self, unsigned char* data, long* pos, int iel, grib_iarray* elementsDescriptorsIndex, int iBitmapOperator)
+static int build_bitmap_new_data(grib_accessor_bufr_data_array* self, unsigned char* data, long* pos,
+                                 int iel, grib_iarray* elementsDescriptorsIndex, int iBitmapOperator)
 {
     int bitmapSize = 0, iDelayedReplication = 0;
     int i, bitmapEndElementsDescriptorsIndex;
@@ -1736,6 +1739,7 @@ static int build_bitmap_new_data(grib_accessor_bufr_data_array* self, unsigned c
     return GRIB_SUCCESS;
 }
 
+/* ECC-1304: Will return an index if successful. In case of an error, a negative number is returned e.g. GRIB_WRONG_BITMAP_SIZE */
 static int get_next_bitmap_descriptor_index_new_bitmap(grib_accessor_bufr_data_array* self, grib_iarray* elementsDescriptorsIndex, int compressedData)
 {
     int i;
@@ -1773,6 +1777,7 @@ static int get_next_bitmap_descriptor_index_new_bitmap(grib_accessor_bufr_data_a
     return elementsDescriptorsIndex->v[self->bitmapCurrentElementsDescriptorsIndex];
 }
 
+/* ECC-1304: Will return an index if successful. In case of an error, a negative number is returned e.g. GRIB_WRONG_BITMAP_SIZE */
 static int get_next_bitmap_descriptor_index(grib_accessor_bufr_data_array* self, grib_iarray* elementsDescriptorsIndex, grib_darray* numericValues)
 {
     int i;
@@ -3144,6 +3149,10 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
                             /*replaced/retained values marker operator*/
                             if (descriptors[i]->Y == 255) {
                                 index = get_next_bitmap_descriptor_index(self, elementsDescriptorsIndex, dval);
+                                if (index < 0) { /* Return value is an error code not an index */
+                                    err = index;
+                                    return err;
+                                }
                                 err   = codec_element(c, self, iss, buffer, data, &pos, index, 0, elementIndex, dval, sval);
                                 if (err)
                                     return err;
@@ -3164,6 +3173,10 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
                         case 23:
                             if (descriptors[i]->Y == 255) {
                                 index = get_next_bitmap_descriptor_index(self, elementsDescriptorsIndex, dval);
+                                if (index < 0) { /* Return value is an error code not an index */
+                                    err = index;
+                                    return err;
+                                }
                                 err   = codec_element(c, self, iss, buffer, data, &pos, index, 0, elementIndex, dval, sval);
                                 if (err)
                                     return err;
@@ -3201,6 +3214,10 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
                             /*difference statistical values marker operator*/
                             if (descriptors[i]->Y == 255) {
                                 index         = get_next_bitmap_descriptor_index(self, elementsDescriptorsIndex, dval);
+                                if (index < 0) { /* Return value is an error code not an index */
+                                    err = index;
+                                    return err;
+                                }
                                 bd            = grib_bufr_descriptor_clone(self->expanded->v[index]);
                                 bd->reference = -grib_power(bd->width, 2);
                                 bd->width++;
