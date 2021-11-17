@@ -120,9 +120,9 @@ if ($SANITY_CHECK) {
         die "Error: paramId=$paramId is not an integer (line ", $lcount+1, ")\n" if (!is_integer($paramId));
 
         my $x = $dbh->selectrow_array("select * from param.param where id = ?",undef,$paramId);
-        die "Error: paramId=$x already exists (line ", $lcount+1, ")\n" if (defined $x);
+        die "Error: paramId=$x exists in the database (line ", $lcount+1, ")\n" if (defined $x);
         $x = $dbh->selectrow_array("select shortName from param.param where shortName = ?",undef,$shortName);
-        die "Error: shortName=$x already exists (line ", $lcount+1, ")\n" if (defined $x);
+        die "Error: shortName=$x exists in the database (line ", $lcount+1, ")\n" if (defined $x);
     }
     print "\nSanity checking completed. $lcount rows checked. No errors.\nExiting.\n";
     exit 0;
