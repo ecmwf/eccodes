@@ -84,7 +84,8 @@ if ($WRITE_TO_FILES) {
     create_or_append(\*OUT_UNITS,     "$UNITS_FILENAME");
     create_or_append(\*OUT_CFVARNAME, "$CFVARNAME_FILENAME");
 }
-if ($WRITE_TO_PARAMDB) {
+if ($WRITE_TO_PARAMDB || $SANITY_CHECK) {
+    print "Connecting to database ...\n";
     $dbh = DBI->connect("dbi:mysql(RaiseError=>1):database=$db;host=$host",$user,$pass) or die $DBI::errstr;
 }
 
@@ -107,7 +108,7 @@ if ($SANITY_CHECK) {
         $x = $dbh->selectrow_array("select shortName from param.param where shortName = ?",undef,$shortName);
         die "Error: shortName=$x already exists (line ", $lcount+1, ")\n" if (defined $x);
     }
-    print "Sanity checking completed. $lcount rows checked. No errors\n";
+    print "Sanity checking completed. $lcount rows checked. No errors. Exiting.\n";
     exit 0;
 }
 
