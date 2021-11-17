@@ -22,12 +22,24 @@ use strict;
 use warnings;
 use DBI;
 use Time::localtime;
-
-$ARGV[0] or die "USAGE: $0 input.tsv\n";
+use Getopt::Long;
 
 my $SANITY_CHECK     = 0;
 my $WRITE_TO_FILES   = 1;
 my $WRITE_TO_PARAMDB = 0; # Be careful. Fill in $contactId before proceeding
+
+# Process arguments. Must be at least one file
+if (scalar @ARGV < 1) {
+  &usage;
+}
+my $result = GetOptions (
+  "s" => \$SANITY_CHECK,
+  "f" => \$WRITE_TO_FILES,
+  "p" => \$WRITE_TO_PARAMDB
+  );
+
+$ARGV[0] or &usage;
+
 
 my ($paramId, $shortName, $name, $units, $cfVarName, $interpol);
 my ($discipline, $pcategory, $pnumber, $type1, $type2, $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2);
@@ -318,4 +330,16 @@ sub create_or_append {
 sub is_integer {
     my $val = shift;
     return ($val =~ /^\d+$/);
+}
+
+sub usage {
+   print <<USAGE;
+
+Usage: $0 [-s] [-f] [-p] file.tsv
+       -s  Perform sanity checks and exit
+       -f  Write out def files (paramId.def, name.def etc)
+       -p  Write to Parameter Database (Be careful!)
+
+USAGE
+   exit 1
 }
