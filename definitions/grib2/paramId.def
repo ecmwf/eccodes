@@ -1376,7 +1376,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#Time-integrated dry deposition mass flux of All hydroxy-peroxides products of the reaction of hydrox
+#Time-integrated dry deposition mass flux of all hydroxy-peroxides products of the reaction of hydrox
 '222161' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1826,7 +1826,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#Time-integrated wet deposition mass flux of Hydroperoxy aldehydes type 1 
+#Time-integrated wet deposition mass flux of Hydroperoxy aldehydes type 1
 '223227' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
