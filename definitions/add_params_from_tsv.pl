@@ -206,6 +206,10 @@ while (<>) {
         $dbh->do("insert into param(id,shortName,name,units_id,insert_date,update_date,contact) values (?,?,?,?,?,?,?)",undef,
             $paramId, $shortName, $name , $units_code, $today_date, $today_date, $contactId);
 
+        # Check what we inserted did actually go in
+        my $x = $dbh->selectrow_array("select shortName from param.param where shortName = ?",undef,$shortName);
+        die "Insertion of $paramId did not work - problem with shortName $shortName\n" if (! defined $x);
+
         # Table 'grib' columns: param_id  edition  centre  attribute_id  attribute_value  param_version
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,4, $discipline,0);
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,8, $pcategory,0);
