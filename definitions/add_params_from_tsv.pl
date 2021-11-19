@@ -92,6 +92,10 @@ my $today_date = sprintf("%04d-%02d-%02d", $tm->year+1900, ($tm->mon)+1, $tm->md
 if ($WRITE_TO_PARAMDB || $SANITY_CHECK) {
     print "Connecting to database ...\n";
     $dbh = DBI->connect("dbi:mysql(RaiseError=>1):database=$db;host=$host",$user,$pass) or die $DBI::errstr;
+    # STRICT_TRANS_TABLES:
+    # Strict mode controls how MySQL handles invalid or missing values in data-change statements such as INSERT or UPDATE.
+    # A value can be invalid for several reasons e.g., it might have the wrong data type for the column, or it might be out of range.
+    $dbh->do( q{SET sql_mode = 'STRICT_TRANS_TABLES'} );
 }
 
 my $first = 1;
@@ -204,7 +208,7 @@ while (<>) {
         die "Error: No contact ID provided\n" if (!$contactId);
         print "Inserting paramId $paramId (centre=$centre) ...\n";
         $dbh->do("insert into param(id,shortName,name,units_id,insert_date,update_date,contact) values (?,?,?,?,?,?,?)",undef,
-            $paramId, $shortName, $name , $units_code, $today_date, $today_date, $contactId);
+            $paramId, $shortName, $name , $units_code, $today_date, $today_date, $contactId) or die $dbh->errstr;
 
         # Check what we inserted did actually go in
         my $x = $dbh->selectrow_array("select shortName from param.param where shortName = ?",undef,$shortName);
