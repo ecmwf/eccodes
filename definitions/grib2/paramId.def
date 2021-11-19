@@ -1070,6 +1070,780 @@
 	 constituentType = 60057 ;
 	 is_chemical = 1 ;
 	}
+#Time-integrated dry deposition mass flux of Ozone
+'222001' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 0 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Hydrogen peroxide
+'222003' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 19 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Carbon monoxide
+'222005' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 4 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Nitric acid
+'222006' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 17 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Methyl peroxide
+'222007' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10005 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Formaldehyde
+'222008' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 7 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Aldehydes
+'222012' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 60018 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Peroxyacetyl nitrate
+'222013' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10013 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Peroxides
+'222014' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 60019 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Organic nitrates
+'222015' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 60020 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Isoprene
+'222016' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10017 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Sulphur dioxide
+'222017' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Ammonia
+'222019' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 9 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Sulfate
+'222020' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 22 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Ammonium
+'222021' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Methyl glyoxal
+'222023' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10025 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Nitrogen monoxide
+'222027' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 11 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Hydroperoxy radical
+'222028' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 14 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Methylperoxy radical
+'222029' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10001 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Nitrogen dioxide
+'222031' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 5 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Nitrate radical
+'222032' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 13 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Dinitrogen pentoxide
+'222033' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 15 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Pernitric acid
+'222034' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 18 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Methanol
+'222042' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10004 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Formic acid
+'222043' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10005 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Methacrylic acid
+'222044' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10027 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Ethane
+'222045' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10008 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Ethanol
+'222046' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10011 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Methacrolein
+'222050' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10028 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Acetone
+'222052' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10029 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Nitrous acid
+'222086' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 16 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Glycolaldehyde
+'222101' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10033 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Glyoxal
+'222107' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10038 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Hydroxyacetone
+'222118' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10041 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of All hydroxy-peroxides products of the reaction of hydrox
+'222161' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 60032 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Acetonitrile
+'222224' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10007 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated dry deposition mass flux of Hydrogen cyanide
+'222226' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 constituentType = 10006 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Ozone
+'223001' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 0 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Hydrogen peroxide
+'223003' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 19 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Nitric acid
+'223006' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 17 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Methyl peroxide
+'223007' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10005 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Formaldehyde
+'223008' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 7 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Aldehydes
+'223012' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 60018 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Peroxyacetyl nitrate
+'223013' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10013 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Peroxides
+'223014' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 60019 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Organic nitrates
+'223015' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 60020 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Isoprene
+'223016' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10017 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Sulphur dioxide
+'223017' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Ammonia
+'223019' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 9 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Sulfate
+'223020' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 22 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Ammonium
+'223021' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Methane sulfonic acid
+'223022' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10024 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Methyl glyoxal
+'223023' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10025 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Carbon monoxide
+'223025' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 4 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Lead
+'223026' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 30296 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Nitrogen monoxide
+'223027' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 11 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Hydroperoxy radical
+'223028' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 14 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Methylperoxy radical
+'223029' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10001 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Nitrogen dioxide
+'223031' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 5 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Nitrate radical
+'223032' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 13 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Dinitrogen pentoxide
+'223033' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 15 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Pernitric acid
+'223034' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 18 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Methanol
+'223042' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10004 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Formic acid
+'223043' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10005 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Methacrylic acid
+'223044' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10027 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Ethane
+'223045' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10008 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Ethanol
+'223046' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10011 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Methacrolein
+'223050' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10028 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Acetone
+'223052' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10029 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Chlorine nitrate
+'223064' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 30 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Hypochlorous acid
+'223065' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 29 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Hydrogen bromide
+'223068' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 35 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Hypobromous acid
+'223070' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 36 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Nitrous acid
+'223086' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 16 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Toluene and less reactive aromatics
+'223099' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10022 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Xylene and more reactive aromatics
+'223100' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10023 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Glycolaldehyde
+'223101' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10033 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Glyoxal
+'223107' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10038 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Hydroxyacetone
+'223118' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10041 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of all hydroxy-peroxides products of the reaction of hydrox
+'223161' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 60032 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Bromine nitrate
+'223194' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 37 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Hydrogen chloride
+'223200' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 20001 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Acetonitrile
+'223224' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10007 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Hydrogen cyanide
+'223226' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10006 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Hydroperoxy aldehydes type 1 
+'223227' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10058 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
+#Time-integrated wet deposition mass flux of Hydroperoxy aldehydes type 2
+'223228' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 constituentType = 10059 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical = 1 ;
+	}
 #-10 degrees C isothermal level (atm)
 '228020' = {
 	 discipline = 0 ;
