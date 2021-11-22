@@ -1376,8 +1376,8 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#Time-integrated dry deposition mass flux of all hydroxy-peroxides products of the reaction of hydrox
-'Time-integrated dry deposition mass flux of all hydroxy-peroxides products of the reaction of hydrox' = {
+#Time-integrated dry deposition mass flux of all hydroxy-peroxides products of the reaction of hydroxy-isoprene adducts with O2
+'Time-integrated dry deposition mass flux of all hydroxy-peroxides products of the reaction of hydroxy-isoprene adducts with O2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 6 ;
@@ -1781,8 +1781,8 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#Time-integrated wet deposition mass flux of all hydroxy-peroxides products of the reaction of hydrox
-'Time-integrated wet deposition mass flux of all hydroxy-peroxides products of the reaction of hydrox' = {
+#Time-integrated wet deposition mass flux of all hydroxy-peroxides products of the reaction of hydroxy-isoprene adducts with O2
+'Time-integrated wet deposition mass flux of all hydroxy-peroxides products of the reaction of hydroxy-isoprene adducts with O2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 7 ;
