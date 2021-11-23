@@ -28,6 +28,7 @@ list(APPEND test_bins
     grib_2nd_order_numValues
     grib_optimize_scaling
     grib_optimize_scaling_sh
+    grib_set_force
     grib_ecc-386
     bufr_ecc-517
     bufr_ecc-1288
@@ -175,6 +176,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1001
         grib_ecc-1030
         grib_set_bytes
+        grib_set_force
         bufr_ecc-556
         gts_get
         gts_ls
