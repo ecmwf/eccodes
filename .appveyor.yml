@@ -89,6 +89,7 @@ build_script:
 
 test_script:
   - cmd: codes_info
+# Note: With ENABLE_MEMFS=1, there will be no installed definition files/samples
 #  - cmd: for /F "tokens=* USEBACKQ" %%F IN (`codes_info -s`) DO (ls %%F)
 #  - cmd: for /F "tokens=* USEBACKQ" %%F IN (`codes_info -d`) DO (ls %%F)
 
