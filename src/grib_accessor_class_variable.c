@@ -214,6 +214,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_variable* self = (grib_accessor_variable*)a;
+    const double dval = *val;
 
     if (*len != 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name, 1);
@@ -221,11 +222,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    self->dval = *val;
-    if (*val < (double)LONG_MIN || *val > (double)LONG_MAX)
+    self->dval = dval;
+    if (dval < (double)LONG_MIN || dval > (double)LONG_MAX)
         self->type = GRIB_TYPE_DOUBLE;
     else
-        self->type = ((long)*val == *val) ? GRIB_TYPE_LONG : GRIB_TYPE_DOUBLE;
+        self->type = ((long)dval == dval) ? GRIB_TYPE_LONG : GRIB_TYPE_DOUBLE;
 
     return GRIB_SUCCESS;
 }
