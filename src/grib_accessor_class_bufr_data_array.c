@@ -1861,7 +1861,9 @@ static grib_accessor* create_attribute_variable(char* name, grib_section* sectio
         case GRIB_TYPE_STRING:
             if (!sval)
                 return NULL;
-            len = strlen(sval);
+            /* Performance: No need for len=strlen(sval). It's not used. */
+            /* See grib_accessor_class_variable.c, pack_string() */
+            len = 0;
             grib_pack_string(a, sval, &len);
             break;
     }
