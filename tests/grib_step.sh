@@ -12,19 +12,23 @@
 
 REDIRECT=/dev/null
 
-templog=${data_dir}/log.step.$$
-rm -f ${templog}
+label=grib_step_test
+tempGrb=${data_dir}/temp.$label.out.grib
+templog=${data_dir}/temp.$label.log
+rm -f $templog $tempGrb
+
 for i in 0 10
 do
   for s in 0 1200 600 6000
   do
     for key in stepRange:s startStep endStep
 	do
-      rm -f ${data_dir}/out.grib
-      ${tools_dir}/grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib
-#      echo grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib
-#      grib_get -p step,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib 
-      ${tools_dir}/grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib >> ${templog}
+      rm -f $tempGrb
+      ${tools_dir}/grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb
+      #echo grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb
+      #grib_get -p step,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb 
+      ${tools_dir}/grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l \
+                            ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb >> ${templog}
 	done
   done
 done
@@ -33,25 +37,27 @@ i=5
 key=stepRange:s
 for s in "0-24" "600-1200" "24-48" "36-66"
 do
-   ${tools_dir}/grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib
-#   echo grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib
-#   grib_ls -p step,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib 
-   ${tools_dir}/grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l ${data_dir}/timeRangeIndicator_${i}.grib ${data_dir}/out.grib >> ${templog}
+   ${tools_dir}/grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb
+   #echo grib_set -s ${key}=$s ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb
+   #grib_ls -p step,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb 
+   ${tools_dir}/grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l \
+                         ${data_dir}/timeRangeIndicator_${i}.grib $tempGrb >> ${templog}
 done
 
-rm -f ${data_dir}/out.grib
+rm -f $tempGrb
 
 # test added for ifs stepType=max,min
-${tools_dir}/grib_set -s stepType=max,startStep=3,endStep=6 ${data_dir}/reduced_gaussian_model_level.grib1 ${data_dir}/out.grib
-${tools_dir}/grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l ${data_dir}/reduced_gaussian_model_level.grib1 ${data_dir}/out.grib >> ${templog}
+${tools_dir}/grib_set -s stepType=max,startStep=3,endStep=6 ${data_dir}/reduced_gaussian_model_level.grib1 $tempGrb
+${tools_dir}/grib_get -p mars.step,stepRange,startStep,endStep,P1,P2,timeRangeIndicator,indicatorOfUnitOfTimeRange:l \
+                      ${data_dir}/reduced_gaussian_model_level.grib1 $tempGrb >> ${templog}
 
-rm -f ${data_dir}/out.grib
+rm -f $tempGrb
 
-diff ${templog} ${data_dir}/step.log
+diff ${data_dir}/step.log ${templog}
 
 (${tools_dir}/grib_filter ${data_dir}/step_grib1.filter ${data_dir}/timeRangeIndicator_0.grib > ${templog}) 2>$REDIRECT
 
-diff ${templog} ${data_dir}/step_grib1.log
+diff ${data_dir}/step_grib1.log ${templog}
 
 rm -f ${templog}
 
