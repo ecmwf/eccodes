@@ -38,16 +38,17 @@ static void print_debug_info(grib_context* context)
     aec = 1;
 #endif
     grib_context_log(context, GRIB_LOG_DEBUG, "Git SHA1=%s", grib_get_git_sha1());
-    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_JPEG=%d", HAVE_JPEG);
-    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_LIBJASPER=%d", HAVE_LIBJASPER);
-    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_LIBOPENJPEG=%d", HAVE_JPEG);
-    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_LIBPNG=%d", HAVE_LIBPNG);
-    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_AEC=%d", aec);
-    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_ECCODES_THREADS=%d", GRIB_PTHREADS);
+    grib_context_log(context, GRIB_LOG_DEBUG, "Features:");
+    grib_context_log(context, GRIB_LOG_DEBUG, " HAVE_JPEG=%d", HAVE_JPEG);
+    grib_context_log(context, GRIB_LOG_DEBUG, " HAVE_LIBJASPER=%d", HAVE_LIBJASPER);
+    grib_context_log(context, GRIB_LOG_DEBUG, " HAVE_LIBOPENJPEG=%d", HAVE_JPEG);
+    grib_context_log(context, GRIB_LOG_DEBUG, " HAVE_LIBPNG=%d", HAVE_LIBPNG);
+    grib_context_log(context, GRIB_LOG_DEBUG, " HAVE_AEC=%d", aec);
+    grib_context_log(context, GRIB_LOG_DEBUG, " HAVE_ECCODES_THREADS=%d", GRIB_PTHREADS);
 #ifdef GRIB_OMP_THREADS
-    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_ECCODES_OMP_THREADS=%d", GRIB_OMP_THREADS);
+    grib_context_log(context, GRIB_LOG_DEBUG, " HAVE_ECCODES_OMP_THREADS=%d", GRIB_OMP_THREADS);
 #endif
-    grib_context_log(context, GRIB_LOG_DEBUG, "HAVE_MEMFS=%d", memfs);
+    grib_context_log(context, GRIB_LOG_DEBUG, " HAVE_MEMFS=%d", memfs);
 }
 
 int main(int argc, char* argv[])
