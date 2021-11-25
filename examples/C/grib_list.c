@@ -45,6 +45,7 @@ int main(int argc, char** argv)
     h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     if (h == NULL) {
         fprintf(stderr, "Error: unable to create handle from file %s\n", filename);
+        return 1;
     }
 
     CODES_CHECK(codes_get_long(h, "numberOfContributingSpectralBands", &numberOfContributingSpectralBands), 0);

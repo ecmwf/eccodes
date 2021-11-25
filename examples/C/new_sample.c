@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     h = codes_grib_handle_new_from_samples(NULL, "GRIB2");
     if (!h) {
         fprintf(stderr, "Cannot create grib handle\n");
-        exit(1);
+        return 1;
     }
 
     CODES_CHECK(codes_set_long(h, "parametersVersion", 1), 0);

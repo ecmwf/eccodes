@@ -50,7 +50,7 @@ int main(int argc, char** argv)
     h = codes_grib_handle_new_from_samples(0, sample_filename);
     if (h == NULL) {
         fprintf(stderr, "Error: unable to create handle from sample file %s\n", sample_filename);
-        exit(1);
+        return 1;
     }
 
     /* Here we're changing the data values only, so the number of values */

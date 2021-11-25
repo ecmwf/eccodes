@@ -51,6 +51,7 @@ int main(int argc, char** argv)
     h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     if (h == NULL) {
         fprintf(stderr, "Error: unable to create handle from file %s\n", infile);
+        return 1;
     }
 
     CODES_CHECK(codes_set_string(h, "typeOfFirstFixedSurface", str, &str_len), 0);
@@ -60,7 +61,7 @@ int main(int argc, char** argv)
     /* See GRIB-490 */
     CODES_CHECK(codes_get_long(h, "Ni", &Ni), 0);
     is_missing = codes_is_missing(h, "Ni", &err);
-    CODES_CHECK(err, 0);
+    assert(!err);
     if (is_missing != 1) assert(!"Ni should be missing");
     CODES_CHECK(codes_set_long(h, "Ni", Ni), 0);
 

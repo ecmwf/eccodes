@@ -61,6 +61,7 @@ int main(int argc, char** argv)
     h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     if (h == NULL) {
         fprintf(stderr, "Error: unable to create handle from file %s\n", infile);
+        return 1;
     }
 
     CODES_CHECK(codes_set_long(h, "PVPresent", 1), 0);
