@@ -2689,14 +2689,14 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 28 ;
 	}
-#Specific rain water content (convection)
-'Specific rain water content (convection)' = {
+#Specific rain water content (convective)
+'Specific rain water content (convective)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 144 ;
 	}
-#Specific snow water content (convection)
-'Specific snow water content (convection)' = {
+#Specific snow water content (convective)
+'Specific snow water content (convective)' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 145 ;
