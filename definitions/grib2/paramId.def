@@ -2689,6 +2689,18 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 28 ;
 	}
+#Specific rain water content (convection)
+'260292' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 144 ;
+	}
+#Specific snow water content (convection)
+'260293' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 145 ;
+	}
 #Precipitation type (most severe) in the last 1 hour
 '260318' = {
 	 discipline = 0 ;
