@@ -2701,6 +2701,12 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 145 ;
 	}
+#Glacier mask
+'Proportion' = {
+	 discipline = 2 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 0 ;
+	}
 #Precipitation type (most severe) in the last 1 hour
 'code table (4.201)' = {
 	 discipline = 0 ;
