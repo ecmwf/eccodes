@@ -2817,6 +2817,111 @@
 	 typeOfFirstFixedSurface = 177 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Evapotranspiration rate
+'Evapotranspiration rate' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 39 ;
+	}
+#Time-mean evapotranspiration rate in the last 24h
+'Time-mean evapotranspiration rate in the last 24h' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 39 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 24 ;
+	}
+#Potential evapotranspiration rate
+'Potential evapotranspiration rate' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 40 ;
+	}
+#Time-integrated potential evapotranspiration rate in the last 24h
+'Time-integrated potential evapotranspiration rate in the last 24h' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 40 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 lengthOfTimeRange = 24 ;
+	}
+#Time-mean potential evapotranspiration rate in the last 24h
+'Time-mean potential evapotranspiration rate in the last 24h' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 40 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 24 ;
+	}
+#Time-mean volumetric soil moisture
+'Time-mean volumetric soil moisture' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 25 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 24 ;
+	}
+#Water runoff and drainage rate
+'Water runoff and drainage rate' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 42 ;
+	}
+#Time-integrated water runoff and drainage rate in the last 24h
+'Time-integrated water runoff and drainage rate in the last 24h' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 42 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 lengthOfTimeRange = 24 ;
+	}
+#Time-mean water runoff and drainage rate in the last 24h
+'Time-mean water runoff and drainage rate in the last 24h' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 42 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 24 ;
+	}
+#Time-mean snow depth water equivalent
+'Time-mean snow depth water equivalent' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 60 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 24 ;
+	}
+#Time-mean skin temperature
+'Time-mean skin temperature' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 24 ;
+	}
+#Snow melt rate
+'Snow melt rate' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 41 ;
+	}
+#Time-integrated snow melt rate in the last 24h
+'Time-integrated snow melt rate in the last 24h' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 41 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 lengthOfTimeRange = 24 ;
+	}
 #Cloudy brightness temperature
 'Cloudy brightness temperature' = {
 	 discipline = 3 ;
