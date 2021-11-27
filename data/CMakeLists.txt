@@ -35,7 +35,6 @@ list(APPEND other_files
     multi_step.txt
     no_bitmap.diff
     read_any.ok
-    scan_x_regular_gg_5_7_good.dump
     scan_x_regular_ll_5_4_good.dump
     scan_x_regular_ll_5_7_good.dump
     scan_x_regular_ll_8_4_good.dump
