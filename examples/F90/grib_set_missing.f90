@@ -34,7 +34,7 @@ program set
    call codes_set_missing(igrib, 'scaleFactorOfFirstFixedSurface')
    call codes_set_missing(igrib, 'scaledValueOfFirstFixedSurface')
 
-   ! See GRIB-490
+   ! see GRIB-490
    call codes_get(igrib, 'Ni', Ni)
    call codes_is_missing(igrib, 'Ni', is_missing)
    if (is_missing == 0) then

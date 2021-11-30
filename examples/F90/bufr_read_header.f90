@@ -7,7 +7,6 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FORTRAN 90 implementation: bufr_read_header
 !
 ! Description: How to read the header of BUFR messages.
 !

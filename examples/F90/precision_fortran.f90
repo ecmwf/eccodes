@@ -28,34 +28,34 @@ program precision
    call codes_open_file(outfile, &
                         '../../data/regular_latlon_surface_prec.grib1', 'w')
 
-   !     a new grib message is loaded from file
-   !     igrib is the grib id to be used in subsequent calls
+   ! a new grib message is loaded from file
+   ! igrib is the grib id to be used in subsequent calls
    call codes_grib_new_from_file(infile, igrib)
 
-   !     bitsPerValue before changing the packing parameters
+   ! bitsPerValue before changing the packing parameters
    call codes_get(igrib, 'bitsPerValue', bitsPerValue1)
 
-   !     get the size of the values array
+   ! get the size of the values array
    call codes_get_size(igrib, "values", size)
 
    allocate (values1(size), stat=iret)
    allocate (values2(size), stat=iret)
-   !     get data values before changing the packing parameters*/
+   ! get data values before changing the packing parameters*/
    call codes_get(igrib, "values", values1)
 
-   !     setting decimal precision=2 means that 2 decimal digits
-   !     are preserved when packing.
+   ! setting decimal precision=2 means that 2 decimal digits
+   ! are preserved when packing.
    decimalPrecision = 2
    call codes_set(igrib, "setDecimalPrecision", &
                   decimalPrecision)
 
-   !     bitsPerValue after changing the packing parameters
+   ! bitsPerValue after changing the packing parameters
    call codes_get(igrib, "bitsPerValue", bitsPerValue2)
 
-   !     get data values after changing the packing parameters
+   ! get data values after changing the packing parameters
    call codes_get(igrib, "values", values2)
 
-   !     computing error
+   ! computing error
    maxa = 0
    maxr = 0
    maxv = values2(1)
@@ -78,7 +78,7 @@ program precision
    write (*, *) "old number of bits per value=", bitsPerValue1
    write (*, *) "new number of bits per value=", bitsPerValue2
 
-   !     write modified message to a file
+   ! write modified message to a file
    call codes_write(igrib, outfile)
 
    call codes_release(igrib)

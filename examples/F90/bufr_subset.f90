@@ -7,8 +7,6 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FORTRAN 90 implementation: bufr_subset
-!
 ! Description: how to read data values from a given subset of a BUFR message.
 !
 !
@@ -22,7 +20,7 @@ program bufr_subset
    integer(kind=4)    :: numberOfSubsets
    integer(kind=4)    :: blockNumber, stationNumber
    character(100)     :: key
-!real(kind=8)       :: t2m
+   !real(kind=8)      :: t2m
 
    call codes_open_file(ifile, '../../data/bufr/synop_multi_subset.bufr', 'r')
 

@@ -7,7 +7,6 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FORTRAN 90 Implementation: get_product_kind
 !
 ! Description: how to process a file containing a mix of messages
 !              and print the kind of product (e.g. GRIB, BUFR etc)

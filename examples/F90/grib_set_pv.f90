@@ -63,7 +63,7 @@ program grib_set_pv
    ! write modified message to a file
    call codes_write(igrib, outfile)
 
-   ! Free memory
+   ! free memory
    call codes_release(igrib)
    deallocate (pv)
 

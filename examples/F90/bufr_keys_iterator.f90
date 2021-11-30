@@ -7,8 +7,6 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FORTRAN 90 implementation: bufr_keys_iterator
-!
 !
 ! Description: How to use keys_iterator functions and the
 !              codes_bufr_keys_iterator structure to get all the available

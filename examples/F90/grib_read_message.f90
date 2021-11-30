@@ -20,16 +20,16 @@ program grib_read_message
    call codes_open_file(ifile, '../../data/index.grib', 'r')
    call codes_open_file(ofile, 'out.readmsg.grib', 'w')
 
-! a grib message is read from file into buffer
+   ! a GRIB message is read from file into buffer
    len1 = size(buffer)*4
    call codes_read_from_file(ifile, buffer, len1, iret)
 
    do while (iret /= CODES_END_OF_FILE)
 
-!   a new grib message is created from buffer
+      ! a new GRIB message is created from buffer
       call codes_new_from_message(igrib, buffer)
 
-!   get as a integer
+      ! get as a integer
       call codes_get(igrib, 'step', step)
       write (*, *) 'step=', step
 
@@ -40,7 +40,7 @@ program grib_read_message
 
       call codes_write_bytes(ofile, buffer, len1)
 
-!   a grib message is read from file into buffer
+      ! a message is read from file into buffer
       len1 = size(buffer)*4
       call codes_read_from_file(ifile, buffer, len1, iret)
 

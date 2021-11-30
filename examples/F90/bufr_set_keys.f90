@@ -6,7 +6,6 @@
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
-!  FORTRAN 90 implementation: bufr_set_keys
 !
 !  Description: How to set different type of keys in BUFR messages.
 !

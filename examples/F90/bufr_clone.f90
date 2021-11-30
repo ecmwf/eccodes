@@ -6,7 +6,6 @@
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
-!  FORTRAN 90 implementation: bufr_clone
 !
 !  Description: How to create a new BUFR message by cloning
 !               an existing message.
