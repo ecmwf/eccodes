@@ -47,10 +47,11 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    /* create a new handle from a message in a file */
+    /* create a new GRIB handle from a message in a file */
     h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     if (h == NULL) {
         fprintf(stderr, "Error: unable to create handle from file %s\n", infile);
+        fclose(out);
         return 1;
     }
 

@@ -17,15 +17,17 @@ int main()
 {
     const int ni = 2880;
     const int nj = 2880;
+    size_t numbytes = 0;
     double* values;
     int i                = 0;
     codes_handle* h      = NULL;
     const char* filename = "bigfile.grib";
 
-    values = (double*)malloc(ni * nj * sizeof(double));
+    numbytes = ni * nj * sizeof(double);
+    values = (double*)malloc(numbytes);
     if (!values) {
-        printf("Malloc failed - requested %lu bytes\n", ni * nj * sizeof(double));
-        exit(1);
+        printf("Malloc failed - requested %lu bytes\n", (unsigned long)numbytes);
+        return 1;
     }
 
     for (i = 0; i < ni * nj; i++) {
