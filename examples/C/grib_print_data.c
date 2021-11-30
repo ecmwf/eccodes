@@ -73,7 +73,7 @@ int main(int argc, char** argv)
     printf("max=%.10e min=%.10e average=%.10e\n", max, min, average);
 
     {
-        /* Example of accessing specific elements from data values  */
+        /* example of accessing specific elements from data values  */
         double vals_arr[3] = { 0, 0, 0 };
         const int NUM      = 3;
         int index_arr[3];

@@ -58,8 +58,8 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        /* This is the place where you may wish to modify the clone */
-        /* E.g.
+        /* this is the place where you may wish to modify the clone */
+        /* e.g.
            CODES_CHECK(codes_set_long(clone_handle, "centre", 250),0);
            etc...
          */

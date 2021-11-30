@@ -24,7 +24,7 @@ int main()
 
     values = (double*)malloc(ni * nj * sizeof(double));
     if (!values) {
-        printf("Malloc failed\n");
+        printf("Malloc failed - requested %lu bytes\n", ni * nj * sizeof(double));
         exit(1);
     }
 

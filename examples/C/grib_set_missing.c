@@ -58,7 +58,7 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_set_missing(h, "scaleFactorOfFirstFixedSurface"), 0);
     CODES_CHECK(codes_set_missing(h, "scaledValueOfFirstFixedSurface"), 0);
 
-    /* See GRIB-490 */
+    /* see GRIB-490 */
     CODES_CHECK(codes_get_long(h, "Ni", &Ni), 0);
     is_missing = codes_is_missing(h, "Ni", &err);
     assert(!err);

@@ -42,14 +42,14 @@ int main(int argc, char* argv[])
 
     printf("indexing...\n");
 
-    /* Create an index given set of keys*/
+    /* create an index given set of keys*/
     index = codes_index_new(0, "shortName,level,number,step", &ret);
     if (ret) {
         fprintf(stderr, "Error: %s\n", codes_get_error_message(ret));
         exit(ret);
     }
 
-    /* Indexes a file */
+    /* indexes a file */
     ret = codes_index_add_file(index, infile);
     if (ret) {
         fprintf(stderr, "Error: %s\n", codes_get_error_message(ret));

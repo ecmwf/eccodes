@@ -76,7 +76,7 @@ int main(int argc, char** argv)
     /* set the values (the bitmap will be automatically built) */
     CODES_CHECK(codes_set_double_array(h, "values", values, values_len), 0);
 
-    /* Sanity checks */
+    /* sanity checks */
     CODES_CHECK(codes_get_long(h, "numberOfDataPoints", &num_of_data_points), 0);
     CODES_CHECK(codes_get_long(h, "numberOfCodedValues", &num_of_coded_values), 0);
     CODES_CHECK(codes_get_long(h, "numberOfMissing", &num_of_missing), 0);
