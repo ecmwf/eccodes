@@ -1,6 +1,6 @@
 name: ci
 
-# Controls when the action will run
+# Controls when the workflow will run
 on:
 
   # Trigger the workflow on all pushes, except on tag creation
@@ -17,64 +17,15 @@ on:
   workflow_dispatch: ~
 
 jobs:
+
+  # Calls a reusable CI workflow to build & test the current repository.
+  #   It will pull in all needed dependencies and produce a code coverage report on success.
   ci:
     name: ci
-    strategy:
-      matrix:
-        name:
-        - gnu-10@ubuntu-20.04
-        - clang-12@ubuntu-20.04
-        - gnu-10@ubuntu-18.04
-        - clang-9@ubuntu-18.04
-        - gnu-10@macos-10.15
-        - clang-12@macos-10.15
-        include:
-        - name: gnu-10@ubuntu-20.04
-          os: ubuntu-20.04
-          compiler: gnu-10
-          compiler_cc: gcc-10
-          compiler_fc: gfortran-10
-        - name: clang-12@ubuntu-20.04
-          os: ubuntu-20.04
-          compiler: clang-12
-          compiler_cc: clang-12
-          compiler_fc: gfortran-10
-        - name: gnu-10@ubuntu-18.04
-          os: ubuntu-18.04
-          compiler: gnu-10
-          compiler_cc: gcc-10
-          compiler_fc: gfortran-10
-        - name: clang-9@ubuntu-18.04
-          os: ubuntu-18.04
-          compiler: clang-9
-          compiler_cc: clang-9
-          compiler_fc: gfortran-9
-        - name: gnu-10@macos-10.15
-          os: macos-10.15
-          compiler: gnu-10
-          compiler_cc: gcc-10
-          compiler_fc: gfortran-10
-        - name: clang-12@macos-10.15
-          os: macos-10.15
-          compiler: clang-12
-          compiler_cc: ~
-          compiler_cxx: ~
-          compiler_fc: gfortran-10
-    runs-on: ${{ matrix.os }}
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
-
-    - name: Build & Test
-      id: build-test
-      uses: ecmwf-actions/build-package@v1
-      with:
+    uses: ecmwf-actions/reusable-workflows/.github/workflows/ci.yml@v1
+    with:
+      codecov_upload: true
+      build_package_inputs: |
         self_coverage: true
         dependencies: ecmwf/ecbuild
         dependency_branch: develop
-
-    - name: Codecov Upload
-      if: steps.build-test.outputs.coverage_file && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop')
-      uses: codecov/codecov-action@v2
-      with:
-        files: ${{ steps.build-test.outputs.coverage_file }}
