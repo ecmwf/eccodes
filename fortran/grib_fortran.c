@@ -163,7 +163,8 @@ static l_bufr_keys_iterator* bufr_keys_iterator_set = NULL;
 static grib_oarray* binary_messages = NULL;
 static grib_oarray* info_messages = NULL;
 
-static char* cast_char(char* buf, char* fortstr,int len)
+/* Convert from Fortran string to C string - chop at first space character */
+static char* cast_char(char* buf, char* fortstr, int len)
 {
     char *p,*end;
     if (len == 0 || fortstr == NULL) return NULL;
@@ -180,7 +181,8 @@ static char* cast_char(char* buf, char* fortstr,int len)
     return buf;
 }
 
-static char* cast_char_no_cut(char* buf, char* fortstr,int len)
+/* Convert from Fortran string to C string - non chopping version */
+static char* cast_char_no_cut(char* buf, char* fortstr, int len)
 {
     if (len == 0 || fortstr == NULL) return NULL;
     memcpy(buf,fortstr,len);
@@ -189,7 +191,7 @@ static char* cast_char_no_cut(char* buf, char* fortstr,int len)
     return buf;
 }
 
-static void czstr_to_fortran(char* str,int len)
+static void czstr_to_fortran(char* str, int len)
 {
     char *p,*end;
     p=str; end=str+len-1;
@@ -2857,7 +2859,12 @@ int grib_f_index_select_string_(int* gid, char* key, char* val, int len, int val
     char bufval[1024];
 
     if(!h) return GRIB_INVALID_GRIB;
-    return grib_index_select_string(h, cast_char(buf,key,len), cast_char(bufval,val,vallen));
+
+    /* ECC-1316 */
+    cast_char_no_cut(bufval,val,vallen);
+    rtrim( bufval );
+
+    return grib_index_select_string(h, cast_char(buf,key,len), bufval);
 }
 int grib_f_index_select_string__(int* gid, char* key, char* val, int len, int vallen){
     return grib_f_index_select_string_(gid,key,val,len,vallen);
