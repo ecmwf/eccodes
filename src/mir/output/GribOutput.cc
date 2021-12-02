@@ -206,8 +206,8 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
 
     size_t total = 0;
 
-//    util::MIRStatistics::Timing saveTimer;
-//    auto timer(ctx.statistics().gribEncodingTimer());
+    util::MIRStatistics::Timing saveTimer;
+    auto timer(ctx.statistics().gribEncodingTimer());
 
     std::unique_ptr<key::packing::Packing> pack(key::packing::PackingFactory::build(param));
     ASSERT(pack);
@@ -382,7 +382,7 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
         GRIB_CALL(codes_check_message_footer(message, size, PRODUCT_GRIB));
 
         {  // Remove
-//            auto timing(ctx.statistics().saveTimer());
+            auto timing(ctx.statistics().saveTimer());
             out(message, size, true);
         }
 
@@ -414,7 +414,7 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
         }
     }
 
-//    ctx.statistics().gribEncodingTiming() -= saveTimer;
+    ctx.statistics().gribEncodingTiming() -= saveTimer;
 
     return total;
 }
@@ -432,8 +432,8 @@ size_t GribOutput::set(const param::MIRParametrisation& param, context::Context&
 
     size_t total = 0;
 
-//    util::MIRStatistics::Timing saveTimer;
-//    auto timer(ctx.statistics().gribEncodingTimer());
+    util::MIRStatistics::Timing saveTimer;
+    auto timer(ctx.statistics().gribEncodingTimer());
 
     std::unique_ptr<key::packing::Packing> pack(key::packing::PackingFactory::build(param));
     ASSERT(pack);
@@ -469,14 +469,14 @@ size_t GribOutput::set(const param::MIRParametrisation& param, context::Context&
         GRIB_CALL(codes_check_message_footer(message, size, PRODUCT_GRIB));
 
         {  // Remove
-//            auto timing(ctx.statistics().saveTimer());
+            auto timing(ctx.statistics().saveTimer());
             out(message, size, true);
         }
 
         total += size;
     }
 
-//    ctx.statistics().gribEncodingTiming() -= saveTimer;
+    ctx.statistics().gribEncodingTiming() -= saveTimer;
 
     return total;
 }
