@@ -627,8 +627,7 @@ static grib_order_by* grib_db_new_order_by(grib_context* c, char* obstr)
     ob->mode  = 0;
     ob->next  = 0;
 
-    if (z)
-        t1 = strtok(z, ",");
+    t1 = strtok(z, ",");
 
     while (t1) {
         grib_trim(&t1);
