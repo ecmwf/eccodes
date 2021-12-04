@@ -133,7 +133,7 @@ cleanup:
     return err;
 }
 
-int grib_openjpeg_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* val, size_t* n_vals)
+int grib_openjpeg_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* val, const size_t* n_vals)
 {
     int err = GRIB_SUCCESS;
     int i;
@@ -448,7 +448,7 @@ cleanup:
     return err;
 }
 
-int grib_openjpeg_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* val, size_t* n_vals)
+int grib_openjpeg_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* val, const size_t* n_vals)
 {
     int err = GRIB_SUCCESS;
     int i;
@@ -545,7 +545,7 @@ cleanup:
 
 #else /* No OpenJPEG */
 
-int grib_openjpeg_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* val, size_t* n_vals)
+int grib_openjpeg_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* val, size_t* n_vals)
 {
     grib_context_log(c, GRIB_LOG_ERROR, "grib_openjpeg_encoding.c: OpenJPEG JPEG support not enabled.");
     return GRIB_FUNCTIONALITY_NOT_ENABLED;

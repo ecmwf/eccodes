@@ -698,7 +698,7 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper);
 
 /* grib_openjpeg_encoding.c */
 int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper);
-int grib_openjpeg_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* val, size_t* n_vals);
+int grib_openjpeg_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* val, const size_t* n_vals);
 
 /* action_class_set_missing.c */
 grib_action* grib_action_create_set_missing(grib_context* context, const char* name);
@@ -1535,10 +1535,10 @@ double grib_op_lt_d(double a, double b);
 double grib_op_gt_d(double a, double b);
 double grib_op_ge_d(double a, double b);
 double grib_op_le_d(double a, double b);
-const char* grib_binop_long_proc_name(grib_binop_long_proc proc);
-const char* grib_binop_double_proc_name(grib_binop_double_proc proc);
-const char* grib_unop_long_proc_name(grib_unop_long_proc proc);
-const char* grib_unop_double_proc_name(grib_unop_double_proc proc);
+const char* grib_binop_long_proc_name(const grib_binop_long_proc proc);
+const char* grib_binop_double_proc_name(const grib_binop_double_proc proc);
+const char* grib_unop_long_proc_name(const grib_unop_long_proc proc);
+const char* grib_unop_double_proc_name(const grib_unop_double_proc proc);
 
 /* codes_memfs.c */
 FILE* codes_fopen(const char* name, const char* mode);
