@@ -136,6 +136,7 @@ double grib_op_le_d(double a, double b)
     return a <= b;
 }
 
+#if 0
 #define LOOKUP(a)      \
     if (proc == a) {   \
         return "&" #a; \
@@ -204,3 +205,4 @@ const char* grib_unop_double_proc_name(const grib_unop_double_proc proc)
     Assert(0);
     return NULL;
 }
+#endif
