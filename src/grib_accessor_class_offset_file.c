@@ -143,7 +143,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     *val = (double)grib_handle_of_accessor(a)->offset;
     *len = 1;
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 static int unpack_string(grib_accessor* a, char* v, size_t* len)
@@ -159,12 +159,12 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     l = strlen(repres) + 1;
 
     if (l > *len) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s ", a->name);
-
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s",
+                         a->name);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }
-    grib_context_log(a->context, GRIB_LOG_DEBUG, "grib_accessor_long: Casting double %s to string  ", a->name);
+    grib_context_log(a->context, GRIB_LOG_DEBUG, "grib_accessor_long: Casting double %s to string", a->name);
 
     *len = l;
 
