@@ -42,9 +42,9 @@ RegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::
         return spec;
     }
 
-    double standardParallel;
-    double centralLongitude;
-    double radius;
+    double standardParallel = 0.;
+    double centralLongitude = 0.;
+    double radius           = 0.;
     ASSERT(param.get("standardParallelInDegrees", standardParallel));
     ASSERT(param.get("centralLongitudeInDegrees", centralLongitude));
     param.get("radius", radius = util::Earth::radius());
@@ -84,8 +84,9 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
 
 
 const Representation* LambertAzimuthalEqualArea::croppedRepresentation(const util::BoundingBox& bbox) const {
-    auto mm         = minmax_ij(bbox);
-    auto Ni         = x_.size();
+    auto mm = minmax_ij(bbox);
+    auto Ni = x_.size();
+
     auto projection = grid_.projection();
     ASSERT(projection);
 
@@ -98,17 +99,13 @@ const Representation* LambertAzimuthalEqualArea::croppedRepresentation(const uti
                 return projection.xy(PointLonLat{latlon[1], latlon[0]});
             }
         }
-
         throw exception::UserError("LambertAzimuthalEqualArea::croppedRepresentation: cannot find first point");
     }(mm.first.i, mm.first.j);
 
-    auto Nx = long(mm.second.i - mm.first.i + 1);
-    auto Ny = long(mm.second.j - mm.first.j + 1);
-    auto Dx = x_.size() > 1 ? x_[1] - x_[0] : 0.;
-    auto Dy = y_.size() > 1 ? y_[1] - y_[0] : 0.;
+    auto x = linspace(first.x(), x_.step(), long(mm.second.i - mm.first.i + 1), xPlus_);
+    auto y = linspace(first.y(), y_.step(), long(mm.second.j - mm.first.j + 1), yPlus_);
 
-    return new LambertAzimuthalEqualArea(projection, bbox, linspace(first.x(), Dx, Nx, xPlus_),
-                                         linspace(first.y(), Dy, Ny, yPlus_), shape_);
+    return new LambertAzimuthalEqualArea(projection, bbox, x, y, shape_);
 }
 
 

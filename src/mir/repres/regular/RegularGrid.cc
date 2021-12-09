@@ -37,7 +37,7 @@ namespace regular {
 
 
 RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGrid::Projection& projection) :
-    shape_(param) {
+    shape_(param), xPlus_(true), yPlus_(false), firstPointBottomLeft_(false) {
     ASSERT(projection);
 
     auto get_long_first_key = [](const param::MIRParametrisation& param, const std::vector<std::string>& keys) -> long {
@@ -62,21 +62,15 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
     Point2 firstLL;
     ASSERT(param.get("latitudeOfFirstGridPointInDegrees", firstLL[LLCOORDS::LAT]));
     ASSERT(param.get("longitudeOfFirstGridPointInDegrees", firstLL[LLCOORDS::LON]));
+    auto first = projection.xy(firstLL);
 
-    xPlus_ = true;   // iScansPositively != 0
-    yPlus_ = false;  // jScansPositively == 0
-    param.get("iScansPositively", xPlus_);
-    param.get("jScansPositively", yPlus_);
-    param.get("first_point_bottom_left", firstPointBottomLeft_ = false);
-    if (firstPointBottomLeft_) {
-        xPlus_ = true;
-        yPlus_ = true;
-    }
+    param.get("iScansPositively", xPlus_);  // iScansPositively != 0
+    param.get("jScansPositively", yPlus_);  // jScansPositively == 0
+    param.get("first_point_bottom_left", firstPointBottomLeft_);
 
-    Point2 first = projection.xy(firstLL);
-    x_           = linspace(first.x(), grid[0], nx, xPlus_);
-    y_           = linspace(first.y(), grid[1], ny, yPlus_);
-    grid_        = {x_, y_, projection};
+    x_    = linspace(first.x(), grid[0], nx, firstPointBottomLeft_ || xPlus_);
+    y_    = linspace(first.y(), grid[1], ny, firstPointBottomLeft_ || yPlus_);
+    grid_ = {x_, y_, projection};
 
     atlas::RectangularDomain range({x_.min(), x_.max()}, {y_.min(), y_.max()}, "meters");
     auto bbox = projection.lonlatBoundingBox(range);
@@ -88,8 +82,9 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
 
 RegularGrid::RegularGrid(const Projection& projection, const util::BoundingBox& bbox, const LinearSpacing& x,
                          const LinearSpacing& y, const util::Shape& shape) :
-    Gridded(bbox), x_(x), y_(y), shape_(shape), firstPointBottomLeft_(false) {
+    Gridded(bbox), x_(x), y_(y), shape_(shape), xPlus_(true), yPlus_(false), firstPointBottomLeft_(false) {
     grid_ = {x_, y_, projection};
+
     if (!shape_.provided) {
         shape_ = {grid_.projection().spec()};
     }
@@ -289,6 +284,8 @@ Iterator* RegularGrid::iterator() const {
     public:
         RegularGridIterator(Projection projection, const LinearSpacing& x, const LinearSpacing& y) :
             projection_(std::move(projection)), x_(x), y_(y), ni_(x.size()), nj_(y.size()), i_(0), j_(0), count_(0) {}
+        ~RegularGridIterator() override = default;
+
         RegularGridIterator(const RegularGridIterator&) = delete;
         RegularGridIterator& operator=(const RegularGridIterator&) = delete;
     };
