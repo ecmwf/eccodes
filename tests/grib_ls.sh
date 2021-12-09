@@ -95,4 +95,8 @@ ${tools_dir}/grib_ls -n data      $ECCODES_SAMPLES_PATH/GRIB1.tmpl
 grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB1.tmpl angleSubdivisions 1000
 grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB2.tmpl angleSubdivisions 1000000
 
+# Print 'offset' key as string
+${tools_dir}/grib_ls -p offset:s tigge_cf_ecmwf.grib2
+
+
 rm -f $temp_ls
