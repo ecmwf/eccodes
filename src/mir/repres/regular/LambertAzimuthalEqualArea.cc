@@ -13,6 +13,7 @@
 #include "mir/repres/regular/LambertAzimuthalEqualArea.h"
 
 #include "mir/param/MIRParametrisation.h"
+#include "mir/repres/Iterator.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 
@@ -27,6 +28,12 @@ static RepresentationBuilder<LambertAzimuthalEqualArea> __builder("lambert_azimu
 
 LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const param::MIRParametrisation& param) :
     RegularGrid(param, make_projection(param)) {}
+
+
+LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const Projection& projection, const util::BoundingBox& bbox,
+                                                     const LinearSpacing& x, const LinearSpacing& y,
+                                                     const util::Shape& shape) :
+    RegularGrid(projection, bbox, x, y, shape) {}
 
 
 RegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::MIRParametrisation& param) {
@@ -73,6 +80,35 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
 
     // some extra keys are edition-specific, so parent call is here
     RegularGrid::fill(info);
+}
+
+
+const Representation* LambertAzimuthalEqualArea::croppedRepresentation(const util::BoundingBox& bbox) const {
+    auto mm         = minmax_ij(bbox);
+    auto Ni         = x_.size();
+    auto projection = grid_.projection();
+    ASSERT(projection);
+
+    auto first = [this, projection, Ni](size_t firsti, size_t firstj) -> Point2 {
+        for (std::unique_ptr<Iterator> it(iterator()); it->next();) {
+            auto i = it->index() % Ni;
+            auto j = it->index() / Ni;
+            if (i == firsti && j == firstj) {
+                auto& latlon = *(*it);
+                return projection.xy(PointLonLat{latlon[1], latlon[0]});
+            }
+        }
+
+        throw exception::UserError("LambertAzimuthalEqualArea::croppedRepresentation: cannot find first point");
+    }(mm.first.i, mm.first.j);
+
+    auto Nx = long(mm.second.i - mm.first.i + 1);
+    auto Ny = long(mm.second.j - mm.first.j + 1);
+    auto Dx = x_.size() > 1 ? x_[1] - x_[0] : 0.;
+    auto Dy = y_.size() > 1 ? y_[1] - y_[0] : 0.;
+
+    return new LambertAzimuthalEqualArea(projection, bbox, linspace(first.x(), Dx, Nx, xPlus_),
+                                         linspace(first.y(), Dy, Ny, yPlus_), shape_);
 }
 
 

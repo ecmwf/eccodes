@@ -12,6 +12,9 @@
 
 #include "mir/repres/regular/RegularGrid.h"
 
+#include <algorithm>
+#include <cmath>
+#include <memory>
 #include <ostream>
 #include <sstream>
 
@@ -33,15 +36,9 @@ namespace repres {
 namespace regular {
 
 
-RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGrid::Projection& projection) {
+RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGrid::Projection& projection) :
+    shape_(param) {
     ASSERT(projection);
-
-    shapeOfTheEarthProvided_ = param.get("shapeOfTheEarth", shapeOfTheEarth_ = 6);
-
-    bool earthIsOblate = false;
-    param.get("earthIsOblate", earthIsOblate);
-    param.get(earthIsOblate ? "earthMajorAxis" : "radius", earthMajorAxis_ = util::Earth::radius());
-    param.get(earthIsOblate ? "earthMinorAxis" : "radius", earthMinorAxis_ = util::Earth::radius());
 
     auto get_long_first_key = [](const param::MIRParametrisation& param, const std::vector<std::string>& keys) -> long {
         long value = 0;
@@ -66,17 +63,20 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
     ASSERT(param.get("latitudeOfFirstGridPointInDegrees", firstLL[LLCOORDS::LAT]));
     ASSERT(param.get("longitudeOfFirstGridPointInDegrees", firstLL[LLCOORDS::LON]));
 
-    bool plusx = true;   // iScansPositively != 0
-    bool plusy = false;  // jScansPositively == 0
-    param.get("iScansPositively", plusx);
-    param.get("jScansPositively", plusy);
+    xPlus_ = true;   // iScansPositively != 0
+    yPlus_ = false;  // jScansPositively == 0
+    param.get("iScansPositively", xPlus_);
+    param.get("jScansPositively", yPlus_);
+    param.get("first_point_bottom_left", firstPointBottomLeft_ = false);
+    if (firstPointBottomLeft_) {
+        xPlus_ = true;
+        yPlus_ = true;
+    }
 
     Point2 first = projection.xy(firstLL);
-    param.get("first_point_bottom_left", firstPointBottomLeft_ = false);
-
-    x_    = {first.x(), first.x() + grid[0] * double(firstPointBottomLeft_ || plusx ? nx - 1 : 1 - nx), nx};
-    y_    = {first.y(), first.y() + grid[1] * double(firstPointBottomLeft_ || plusy ? ny - 1 : 1 - ny), ny};
-    grid_ = {x_, y_, projection};
+    x_           = linspace(first.x(), grid[0], nx, xPlus_);
+    y_           = linspace(first.y(), grid[1], ny, yPlus_);
+    grid_        = {x_, y_, projection};
 
     atlas::RectangularDomain range({x_.min(), x_.max()}, {y_.min(), y_.max()}, "meters");
     auto bbox = projection.lonlatBoundingBox(range);
@@ -87,31 +87,12 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
 
 
 RegularGrid::RegularGrid(const Projection& projection, const util::BoundingBox& bbox, const LinearSpacing& x,
-                         const LinearSpacing& y) :
-    Gridded(bbox), x_(x), y_(y) {
+                         const LinearSpacing& y, const util::Shape& shape) :
+    Gridded(bbox), x_(x), y_(y), shape_(shape), firstPointBottomLeft_(false) {
     grid_ = {x_, y_, projection};
-
-    firstPointBottomLeft_    = false;
-    shapeOfTheEarthProvided_ = false;
-
-    auto spec = grid_.projection().spec();
-
-    if (spec.has("radius")) {
-        shapeOfTheEarth_ = 1L;
-        earthMajorAxis_ = earthMinorAxis_ = spec.getDouble("radius");
-        return;
+    if (!shape_.provided) {
+        shape_ = {grid_.projection().spec()};
     }
-
-    if (spec.has("semi_major_axis") && spec.has("semi_minor_axis")) {
-        shapeOfTheEarth_ = 7L;
-        earthMajorAxis_  = spec.getDouble("semi_major_axis");
-        earthMinorAxis_  = spec.getDouble("semi_minor_axis");
-        return;
-    }
-
-    std::ostringstream s;
-    s << "RegularGrid: couldn't determine shape of the Earth from projection: " << spec;
-    throw exception::SeriousBug(s.str());
 }
 
 
@@ -145,6 +126,41 @@ RegularGrid::Projection::Spec RegularGrid::make_proj_spec(const param::MIRParame
 }
 
 
+RegularGrid::LinearSpacing RegularGrid::linspace(double start, double step, long num, bool plus) {
+    return {start, start + step * double(plus ? num - 1 : 1 - num), num};
+}
+
+
+std::pair<RegularGrid::ij_t, RegularGrid::ij_t> RegularGrid::minmax_ij(const util::BoundingBox& bbox) const {
+    auto Ni = x_.size();
+    auto Nj = y_.size();
+
+    ij_t max{0, 0};
+    ij_t min{Ni, Nj};
+
+    bool first = true;
+    for (std::unique_ptr<Iterator> it(iterator()); it->next();) {
+        if (bbox.contains(*(*it))) {
+            auto i = it->index() % Ni;
+            auto j = it->index() / Ni;
+            if (first) {
+                first = false;
+                max = min = {i, j};
+                continue;
+            }
+
+            max.i = std::max(max.i, i);
+            max.j = std::max(max.j, j);
+            min.i = std::min(min.i, i);
+            min.j = std::min(min.j, j);
+        }
+    }
+
+    ASSERT_NONEMPTY_AREA_CROP("RegularGrid::minmax_ij", min.i <= max.i && min.j <= max.j);
+    return {min, max};
+}
+
+
 void RegularGrid::print(std::ostream& out) const {
     out << "RegularGrid[x=" << x_.spec() << ",y=" << y_.spec() << ",projection=" << grid_.projection().spec()
         << ",firstPointBottomLeft=" << firstPointBottomLeft_ << ",bbox=" << bbox_ << "]";
@@ -152,6 +168,26 @@ void RegularGrid::print(std::ostream& out) const {
 
 
 bool RegularGrid::extendBoundingBoxOnIntersect() const {
+    return true;
+}
+
+
+bool RegularGrid::crop(util::BoundingBox& bbox, util::AreaCropperMapping& mapping) const {
+    auto mm = minmax_ij(bbox);
+    auto Ni = x_.size();
+    auto N  = (mm.second.i - mm.first.i + 1) * (mm.second.j - mm.first.j + 1);
+    mapping.clear();
+    mapping.reserve(N);
+
+    for (std::unique_ptr<Iterator> it(iterator()); it->next();) {
+        auto i = it->index() % Ni;
+        auto j = it->index() / Ni;
+        if (mm.first.i <= i && i <= mm.second.i && mm.first.j <= j && j <= mm.second.j) {
+            mapping.push_back(it->index());
+        }
+    }
+    ASSERT(mapping.size() == N);
+
     return true;
 }
 
@@ -172,37 +208,9 @@ bool RegularGrid::isPeriodicWestEast() const {
 
 
 void RegularGrid::fill(grib_info& info) const {
-    // GRIB2 encoding of user-provided radius or semi-major/minor axis
+    // GRIB2 encoding of user-provided shape
     if (info.packing.editionNumber == 2) {
-        auto spec = grid_.projection().spec();
-
-        if (shapeOfTheEarthProvided_) {
-            info.extra_set("shapeOfTheEarth", shapeOfTheEarth_);
-            switch (shapeOfTheEarth_) {
-                case 1:
-                    info.extra_set("radius", spec.getDouble("radius", earthMajorAxis_));
-                    break;
-                case 3:
-                    info.extra_set("earthMajorAxis", spec.getDouble("semi_major_axis", earthMajorAxis_) / 1000.);
-                    info.extra_set("earthMinorAxis", spec.getDouble("semi_minor_axis", earthMinorAxis_) / 1000.);
-                    break;
-                case 7:
-                    info.extra_set("earthMajorAxis", spec.getDouble("semi_major_axis", earthMajorAxis_));
-                    info.extra_set("earthMinorAxis", spec.getDouble("semi_minor_axis", earthMinorAxis_));
-                    break;
-                default:
-                    break;
-            }
-        }
-        else if (spec.has("radius")) {
-            info.extra_set("shapeOfTheEarth", 1L);
-            info.extra_set("radius", spec.getDouble("radius"));
-        }
-        else if (spec.has("semi_major_axis") && spec.has("semi_minor_axis")) {
-            info.extra_set("shapeOfTheEarth", 7L);
-            info.extra_set("earthMajorAxis", spec.getDouble("semi_major_axis"));
-            info.extra_set("earthMinorAxis", spec.getDouble("semi_minor_axis"));
-        }
+        shape_.fill(info, grid_.projection().spec());
     }
 
     // scanningMode
@@ -295,10 +303,10 @@ void RegularGrid::makeName(std::ostream& out) const {
     h << x_.spec();
     h << y_.spec();
     h << firstPointBottomLeft_;
-    if (shapeOfTheEarthProvided_) {
-        h << shapeOfTheEarth_;
-        h << earthMajorAxis_;
-        h << earthMinorAxis_;
+    if (shape_.provided) {
+        h << shape_.code;
+        h << shape_.a;
+        h << shape_.b;
     }
     auto type = grid_.projection().spec().getString("type");
     out << "RegularGrid-" << (type.empty() ? "" : type + "-") << h.digest();

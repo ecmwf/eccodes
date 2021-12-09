@@ -196,7 +196,7 @@ const std::vector<RegularGrid::PointLonLat>& SpaceViewInternal::lonlat() const {
 SpaceView::SpaceView(const param::MIRParametrisation& param) :
     detail::SpaceViewInternal(param),
     RegularGrid(SpaceViewInternal::projection_, SpaceViewInternal::bbox_, SpaceViewInternal::x(),
-                SpaceViewInternal::y()) {}
+                SpaceViewInternal::y(), shape_) {}
 
 
 void SpaceView::fill(grib_info& /*info*/) const {
