@@ -222,7 +222,6 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_extract_datetime_subsets.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_extract_subsets.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_group.c" />
-    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_has_delayed_replication.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_simple_thinning.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_string_values.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_bytes.c" />
@@ -238,14 +237,12 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_count_missing.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_count_total.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_2order_packing.c" />
-    <ClCompile Include="..\..\..\src\grib_accessor_class_data_2order_packing_count.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_apply_bitmap.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_apply_boustrophedonic.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_apply_boustrophedonic_bitmap.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_apply_gdsnotpresent.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_ccsds_packing.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_complex_packing.c" />
-    <ClCompile Include="..\..\..\src\grib_accessor_class_data_constant_field.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_dummy_field.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_g1complex_packing.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_g1secondary_bitmap.c" />
@@ -290,11 +287,9 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1monthlydate.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1number_of_coded_values_sh_complex.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1number_of_coded_values_sh_simple.c" />
-    <ClCompile Include="..\..\..\src\grib_accessor_class_g1param.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1step_range.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1verificationdate.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1_half_byte_codeflag.c" />
-    <ClCompile Include="..\..\..\src\grib_accessor_class_g1_increment.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1_message_length.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1_section4_length.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g2bitmap.c" />
@@ -305,7 +300,6 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_g2latlon.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g2level.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g2lon.c" />
-    <ClCompile Include="..\..\..\src\grib_accessor_class_g2step.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g2step_range.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g2_aerosol.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g2_chemical.c" />
@@ -429,8 +423,6 @@
     <ClCompile Include="..\..\..\src\grib_box.c" />
     <ClCompile Include="..\..\..\src\grib_box_class.c" />
     <ClCompile Include="..\..\..\src\grib_box_class_gen.c" />
-    <ClCompile Include="..\..\..\src\grib_box_class_reduced_gaussian.c" />
-    <ClCompile Include="..\..\..\src\grib_box_class_regular_gaussian.c" />
     <ClCompile Include="..\..\..\src\grib_buffer.c" />
     <ClCompile Include="..\..\..\src\grib_bufr_descriptor.c" />
     <ClCompile Include="..\..\..\src\grib_bufr_descriptors_array.c" />
