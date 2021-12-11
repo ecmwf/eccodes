@@ -413,8 +413,6 @@ int grib_g1_step_apply_units(long* start, long* theEnd, long* step_unit, long* P
 
 /* grib_accessor_class_g1param.c */
 
-/* grib_accessor_class_g1p1p2.c */
-
 /* grib_accessor_class_g1_increment.c */
 
 /* grib_accessor_class_latlon_increment.c */

@@ -93,7 +93,6 @@
 { "g1monthlydate", &grib_accessor_class_g1monthlydate, },
 { "g1number_of_coded_values_sh_complex", &grib_accessor_class_g1number_of_coded_values_sh_complex, },
 { "g1number_of_coded_values_sh_simple", &grib_accessor_class_g1number_of_coded_values_sh_simple, },
-{ "g1p1p2", &grib_accessor_class_g1p1p2, },
 { "g1param", &grib_accessor_class_g1param, },
 { "g1step_range", &grib_accessor_class_g1step_range, },
 { "g1verificationdate", &grib_accessor_class_g1verificationdate, },

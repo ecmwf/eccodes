@@ -290,7 +290,6 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1monthlydate.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1number_of_coded_values_sh_complex.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1number_of_coded_values_sh_simple.c" />
-    <ClCompile Include="..\..\..\src\grib_accessor_class_g1p1p2.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1param.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1step_range.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1verificationdate.c" />

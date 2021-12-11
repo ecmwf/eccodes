@@ -93,7 +93,6 @@ extern grib_accessor_class* grib_accessor_class_g1forecastmonth;
 extern grib_accessor_class* grib_accessor_class_g1monthlydate;
 extern grib_accessor_class* grib_accessor_class_g1number_of_coded_values_sh_complex;
 extern grib_accessor_class* grib_accessor_class_g1number_of_coded_values_sh_simple;
-extern grib_accessor_class* grib_accessor_class_g1p1p2;
 extern grib_accessor_class* grib_accessor_class_g1param;
 extern grib_accessor_class* grib_accessor_class_g1step_range;
 extern grib_accessor_class* grib_accessor_class_g1verificationdate;

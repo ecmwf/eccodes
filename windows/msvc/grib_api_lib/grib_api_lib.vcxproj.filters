@@ -408,9 +408,6 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1number_of_coded_values_sh_simple.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\grib_accessor_class_g1p1p2.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1param.c">
       <Filter>Source Files</Filter>
     </ClCompile>

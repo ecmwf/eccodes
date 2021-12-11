@@ -118,7 +118,6 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_message_copy.c \
 	grib_accessor_class_dictionary.c \
 	grib_accessor_class_g1param.c \
-	grib_accessor_class_g1p1p2.c \
 	grib_accessor_class_g1_increment.c \
 	grib_accessor_class_latlon_increment.c \
 	grib_accessor_class_g2date.c \
