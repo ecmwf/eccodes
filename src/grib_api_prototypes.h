@@ -314,8 +314,6 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
 
 /* grib_accessor_class_unpack_bufr_values.c */
 
-/* grib_accessor_class_bufr_has_delayed_replication.c */
-
 /* grib_accessor_class_apply_operators.c */
 size_t compute_size_AO(const long* descriptors, size_t numberOfDescriptors);
 
@@ -411,19 +409,11 @@ int grib_g1_step_apply_units(long* start, long* theEnd, long* step_unit, long* P
 
 /* grib_accessor_class_dictionary.c */
 
-/* grib_accessor_class_g1param.c */
-
-/* grib_accessor_class_g1p1p2.c */
-
-/* grib_accessor_class_g1_increment.c */
-
 /* grib_accessor_class_latlon_increment.c */
 
 /* grib_accessor_class_g2date.c */
 
 /* grib_accessor_class_g2level.c */
-
-/* grib_accessor_class_g2step.c */
 
 /* grib_accessor_class_g2end_step.c */
 
@@ -603,8 +593,6 @@ int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s
 
 /* grib_accessor_class_data_shsimple_packing.c */
 
-/* grib_accessor_class_data_constant_field.c */
-
 /* grib_accessor_class_data_dummy_field.c */
 
 /* grib_2order_packer_simple.c */
@@ -625,8 +613,6 @@ void accessor_variable_set_type(grib_accessor* a, int type);
 /* grib_accessor_class_data_g2complex_packing.c */
 
 /* grib_accessor_class_data_2order_packing.c */
-
-/* grib_accessor_class_data_2order_packing_count.c */
 
 /* grib_accessor_class_data_g1second_order_row_by_row_packing.c */
 
@@ -1371,10 +1357,6 @@ void grib_points_delete(grib_points* points);
 grib_box* grib_box_factory(grib_handle* h, grib_arguments* args);
 
 /* grib_box_class_gen.c */
-
-/* grib_box_class_regular_gaussian.c */
-
-/* grib_box_class_reduced_gaussian.c */
 
 /* grib_nearest.c */
 int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);

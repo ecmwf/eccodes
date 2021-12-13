@@ -192,9 +192,6 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_group.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_has_delayed_replication.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_simple_thinning.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -243,9 +240,6 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_2order_packing.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\grib_accessor_class_data_2order_packing_count.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_apply_bitmap.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -262,9 +256,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_complex_packing.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\grib_accessor_class_data_constant_field.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\grib_accessor_class_data_dummy_field.c">
@@ -369,9 +360,6 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1_half_byte_codeflag.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\grib_accessor_class_g1_increment.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1_message_length.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -406,12 +394,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1number_of_coded_values_sh_simple.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\grib_accessor_class_g1p1p2.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\grib_accessor_class_g1param.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\grib_accessor_class_g1step_range.c">
@@ -454,9 +436,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\grib_accessor_class_g2lon.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\grib_accessor_class_g2step.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\grib_accessor_class_g2step_range.c">
@@ -805,12 +784,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\grib_box_class_gen.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\grib_box_class_reduced_gaussian.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\grib_box_class_regular_gaussian.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\grib_buffer.c">
