@@ -27,8 +27,7 @@ namespace repres {
 namespace gauss {
 namespace regular {
 
-Regular::Regular(const param::MIRParametrisation& parametrisation) : Gaussian(parametrisation), Ni_(0), Nj_(0) {
-
+Regular::Regular(const param::MIRParametrisation& parametrisation) : Gaussian(parametrisation), k_(0), Ni_(0), Nj_(0) {
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox_.north();
     Latitude s = bbox_.south();
@@ -47,7 +46,7 @@ Regular::Regular(const param::MIRParametrisation& parametrisation) : Gaussian(pa
 }
 
 Regular::Regular(size_t N, const util::BoundingBox& bbox, double angularPrecision) :
-    Gaussian(N, bbox, angularPrecision), Ni_(0), Nj_(0) {
+    Gaussian(N, bbox, angularPrecision), k_(0), Ni_(0), Nj_(0) {
 
     // adjust latitudes, longitudes and re-set bounding box
     Latitude n = bbox.north();
@@ -200,8 +199,8 @@ atlas::Grid Regular::atlasGrid() const {
 void Regular::setNiNj() {
     ASSERT(N_);
 
-    const eckit::Fraction inc = getSmallestIncrement();
-    const auto& lats          = latitudes();
+    const auto inc   = getSmallestIncrement();
+    const auto& lats = latitudes();
 
     const Longitude& west = bbox_.west();
     const Longitude& east = bbox_.east();
@@ -209,16 +208,17 @@ void Regular::setNiNj() {
     const Latitude& north = bbox_.north();
 
     Ni_ = N_ * 4;
+
     if (east - west + inc < Longitude::GLOBE) {
 
-        eckit::Fraction w = west.fraction();
-        auto Nw           = (w / inc).integralPart();
+        auto w  = west.fraction();
+        auto Nw = (w / inc).integralPart();
         if (Nw * inc < w) {
             Nw += 1;
         }
 
-        eckit::Fraction e = east.fraction();
-        auto Ne           = (e / inc).integralPart();
+        auto e  = east.fraction();
+        auto Ne = (e / inc).integralPart();
         if (Ne * inc > e) {
             Ne -= 1;
         }
@@ -229,12 +229,20 @@ void Regular::setNiNj() {
         ASSERT(2 <= Ni_ && Ni_ <= N_ * 4);
     }
 
+    k_  = 0;
     Nj_ = N_ * 2;
+
     if (north < lats.front() || south > lats.back()) {
         Nj_ = 0;
         for (Latitude lat : lats) {
-            if (south <= lat && lat <= north) {
+            if (north < lat && !angleApproximatelyEqual(north, lat)) {
+                ++k_;
+            }
+            else if (south <= lat || angleApproximatelyEqual(south, lat)) {
                 ++Nj_;
+            }
+            else {
+                break;
             }
         }
         ASSERT(Nj_ > 0);

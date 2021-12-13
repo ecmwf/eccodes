@@ -48,7 +48,7 @@ bool RotatedGG::sameAs(const Representation& other) const {
 
 Iterator* RotatedGG::iterator() const {
     std::vector<long> pl(N_ * 2, long(4 * N_));
-    return new gauss::GaussianIterator(latitudes(), std::move(pl), bbox_, N_, Nj_, 0, rotation_);
+    return new gauss::GaussianIterator(latitudes(), std::move(pl), bbox_, N_, Nj_, k_, rotation_);
 }
 
 
