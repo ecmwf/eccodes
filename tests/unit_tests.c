@@ -51,9 +51,8 @@ static void test_get_build_date()
 {
     const char* bdate = codes_get_build_date();
     Assert(bdate != NULL);
-    /* Should be of the format YYYY.MM.DD or not implemented */
-    Assert( STR_EQUAL(bdate, "date not implemented") ||
-            isdigit(bdate[0]) );
+    /* Should be of the format YYYY.MM.DD or empty (not implemented) */
+    Assert( strlen(bdate) == 0 || isdigit(bdate[0]) );
     printf("Testing: test_get_build_date... %s\n", bdate);
 }
 
