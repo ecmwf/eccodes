@@ -40,9 +40,9 @@ extern "C" {
 
 #if IS_BIG_ENDIAN
 #if GRIB_MEM_ALIGN
-#define FAST_BIG_ENDIAN 0
-#else
 #define FAST_BIG_ENDIAN 1
+#else
+#define FAST_BIG_ENDIAN 0
 #endif
 #endif
 
