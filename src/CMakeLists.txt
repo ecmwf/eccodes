@@ -408,6 +408,7 @@ list( APPEND grib_api_extra_srcs
     grib_bits_ibmpow_opt.c
     minmax_val.c )
 
+ecbuild_get_date(eccodes_BUILD_DATE)
 configure_file( grib_api_version.c.in grib_api_version.c @ONLY )
 configure_file( eccodes_version.h.in eccodes_version.h @ONLY )
 

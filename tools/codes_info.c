@@ -38,6 +38,7 @@ static void print_debug_info(grib_context* context)
     aec = 1;
 #endif
     grib_context_log(context, GRIB_LOG_DEBUG, "Git SHA1=%s", grib_get_git_sha1());
+    grib_context_log(context, GRIB_LOG_DEBUG, "Build date=%s", codes_get_build_date());
     grib_context_log(context, GRIB_LOG_DEBUG, "Features:");
     grib_context_log(context, GRIB_LOG_DEBUG, " HAVE_JPEG=%d", HAVE_JPEG);
     grib_context_log(context, GRIB_LOG_DEBUG, " HAVE_LIBJASPER=%d", HAVE_LIBJASPER);

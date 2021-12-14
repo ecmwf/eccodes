@@ -11,6 +11,8 @@
 #include <assert.h>
 #include "grib_api_internal.h"
 
+#define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
+
 int assertion_caught = 0;
 
 typedef enum
@@ -43,6 +45,16 @@ static void test_get_git_sha1()
     const char* sha1 = grib_get_git_sha1();
     Assert(sha1 != NULL);
     printf("Testing: test_get_git_sha1... %s\n", sha1);
+}
+
+static void test_get_build_date()
+{
+    const char* bdate = codes_get_build_date();
+    Assert(bdate != NULL);
+    /* Should be of the format YYYY.MM.DD or not implemented */
+    Assert( STR_EQUAL(bdate, "date not implemented") ||
+            isdigit(bdate[0]) );
+    printf("Testing: test_get_build_date... %s\n", bdate);
 }
 
 static void test_grib_nearest_smaller_ibmfloat()
@@ -1520,6 +1532,7 @@ int main(int argc, char** argv)
     test_trimming();
 
     test_get_git_sha1();
+    test_get_build_date();
 
     test_concept_condition_strings();
 
