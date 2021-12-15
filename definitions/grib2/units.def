@@ -4561,7 +4561,7 @@
 	 parameterNumber = 5 ;
 	}
 #Storm relative helicity
-'J kg**-1' = {
+'m**2 s**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 8 ;
