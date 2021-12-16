@@ -26,8 +26,8 @@ if (centre==7 || centre==46) {
 concept datasetForLocal(unknown) {
 #  "tigge"   = {productionStatusOfProcessedData=4;}
 #  "tigge"   = {productionStatusOfProcessedData=5;}
-#  "s2s"     = {productionStatusOfProcessedData=6;}
-#  "s2s"     = {productionStatusOfProcessedData=7;}
+  "s2s"     = {productionStatusOfProcessedData=6;}
+  "s2s"     = {productionStatusOfProcessedData=7;}
   "hydro"   = {marsClass="ce";} # EFAS/GLOFAS
   "hydro"   = {marsClass="ul";} #ULYSSES
   "uerra"   = {productionStatusOfProcessedData=8;} # UERRA
