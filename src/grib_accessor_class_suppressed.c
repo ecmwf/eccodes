@@ -147,15 +147,15 @@ static void log_message(grib_accessor* a)
 {
     grib_accessor_suppressed* self = (grib_accessor_suppressed*)a;
     int i                          = 0;
+    grib_handle* hand              = grib_handle_of_accessor(a);
 
     grib_context_log(a->context, GRIB_LOG_ERROR,
-                     "key %s is unavailable in this version.", a->name);
+                     "key '%s' is unavailable in this version.", a->name);
     grib_context_log(a->context, GRIB_LOG_ERROR,
-                     "Please use the following keys:");
-    while (grib_arguments_get_name(grib_handle_of_accessor(a), self->args, i)) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "\t- %s",
-                         grib_arguments_get_name(grib_handle_of_accessor(a), self->args, i));
+                     "Please use the following key(s):");
+    while (grib_arguments_get_name(hand, self->args, i)) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "\t- %s",
+                         grib_arguments_get_name(hand, self->args, i));
         i++;
     }
 }
@@ -163,37 +163,37 @@ static void log_message(grib_accessor* a)
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     log_message(a);
-    return GRIB_NOT_IMPLEMENTED;
+    return GRIB_NOT_FOUND;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     log_message(a);
-    return GRIB_NOT_IMPLEMENTED;
+    return GRIB_NOT_FOUND;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     log_message(a);
-    return GRIB_NOT_IMPLEMENTED;
+    return GRIB_NOT_FOUND;
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
-    /*log_message(a);*/
-    return GRIB_NOT_IMPLEMENTED;
+    log_message(a);
+    return GRIB_NOT_FOUND;
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     log_message(a);
-    return GRIB_NOT_IMPLEMENTED;
+    return GRIB_NOT_FOUND;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     log_message(a);
-    return GRIB_NOT_IMPLEMENTED;
+    return GRIB_NOT_FOUND;
 }
 
 static int value_count(grib_accessor* a, long* count)
