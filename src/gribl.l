@@ -261,7 +261,7 @@ IDENT     {IDENT1}|{IDENT2}|{IDENT3}|{IDENT4}|{IDENT5}
 
 
 {IDENT}       { yylval.str = strdup(yytext); return IDENT; }
-{NUMB}        { yylval.lval = atol((const char *)yytext); return INTEGER; }
+{NUMB}        { yylval.lval = (long)atoll((const char *)yytext); return INTEGER; }
 {NSIGNED}     { yylval.lval = atol((const char *)yytext); return INTEGER; }
 {FLOAT1}      { yylval.dval = atof((const char *)yytext); return FLOAT; }
 {FLOAT2}      { yylval.dval = atof((const char *)yytext); return FLOAT; }

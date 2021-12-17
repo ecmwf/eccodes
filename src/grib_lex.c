@@ -2163,7 +2163,7 @@ YY_RULE_SETUP
 case 129:
 YY_RULE_SETUP
 #line 264 "gribl.l"
-{ grib_yylval.lval = atol((const char *)grib_yytext); return INTEGER; }
+{ grib_yylval.lval = (long)atoll((const char *)grib_yytext); return INTEGER; }
 	YY_BREAK
 case 130:
 YY_RULE_SETUP
