@@ -84,7 +84,7 @@ TESTS = definitions.sh \
         grib_change_scanning.sh \
         julian.sh \
         grib_statistics.sh \
-        grib_tigge.sh \
+        grib_tigge_check.sh \
         grib_uerra.sh \
         grib_tigge_conversions1.sh \
         grib_tigge_conversions2.sh \

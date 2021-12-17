@@ -234,7 +234,7 @@ if( HAVE_BUILD_TOOLS )
         grib_multi_from_message
         grib_change_scanning
         grib_statistics
-        grib_tigge
+        grib_tigge_check
         read_any
         grib_dump
         grib_dump_debug
