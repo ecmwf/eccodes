@@ -5665,37 +5665,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
 	}
-#Soil Moisture
-'sm' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 22 ;
-	 typeOfSecondFixedSurface = 106 ;
-	 typeOfFirstFixedSurface = 106 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = 2 ;
-	 scaleFactorOfSecondFixedSurface = 1 ;
-	 is_tigge = 1 ;
-	}
 #Soil Temperature
 'st' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
-	}
-#Soil Temperature
-'st' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 2 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 typeOfSecondFixedSurface = 106 ;
-	 scaledValueOfSecondFixedSurface = 2 ;
-	 scaleFactorOfSecondFixedSurface = 1 ;
-	 typeOfFirstFixedSurface = 106 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 is_tigge = 1 ;
 	}
 #Snow depth water equivalent
 'sd' = {
