@@ -142,7 +142,7 @@ static void init_class(grib_accessor_class* c)
 /* END_CLASS_IMP */
 
 /*
-static const unsigned long nbits[32]={
+static const size_t nbits[32]={
         0x1, 0x2, 0x4, 0x8, 0x10, 0x20,
         0x40, 0x80, 0x100, 0x200, 0x400, 0x800,
         0x1000, 0x2000, 0x4000, 0x8000, 0x10000, 0x20000,
@@ -151,7 +151,7 @@ static const unsigned long nbits[32]={
         0x40000000, 0x80000000
 };
 */
-static const unsigned long nbits[64] = {
+static const size_t nbits[64] = {
     0x1, 0x2, 0x4, 0x8,
     0x10, 0x20, 0x40, 0x80,
     0x100, 0x200, 0x400, 0x800,
@@ -170,11 +170,11 @@ static const unsigned long nbits[64] = {
     0x1000000000000000, 0x2000000000000000, 0x4000000000000000, 0x8000000000000000
 };
 
-static int number_of_bits(unsigned long x, long* result)
+static int number_of_bits(size_t x, long* result)
 {
-    const unsigned long* n = nbits;
-    const int count        = sizeof(nbits) / sizeof(nbits[0]);
-    *result                = 0;
+    const size_t* n = nbits;
+    const int count = sizeof(nbits) / sizeof(nbits[0]);
+    *result         = 0;
     while (x >= *n) {
         n++;
         (*result)++;
@@ -255,7 +255,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     /* self->bitsPerValue=(long)ceil(log((double)((max-min)*d+1))/log(2.0))-binaryScaleFactor; */
     /* See GRIB-540 for why we use ceil */
-    ret = number_of_bits((unsigned long)ceil((fabs(max - min) * b * d)), &(self->bitsPerValue));
+    ret = number_of_bits((size_t)ceil((fabs(max - min) * b * d)), &(self->bitsPerValue));
     if (ret != GRIB_SUCCESS)
         return ret;
     *val = self->bitsPerValue;

@@ -8,7 +8,7 @@
 !
 !  Fortran 90  Implementation: print_data_fortran
 !
-!  Description: prints all the data contained in a grib file
+!  Description: prints all the data contained in a GRIB file
 !
 !
 !
@@ -23,11 +23,10 @@ program print_data_fortran
    real(kind=8)       :: max
    real(kind=8)       :: min
 
-   call codes_open_file(ifile, &
-                        '../../data/constant_field.grib1', 'r')
+   call codes_open_file(ifile, '../../data/constant_field.grib1', 'r')
 
-   ! A new grib message is loaded from file
-   ! igrib is the grib id to be used in subsequent calls
+   ! A new GRIB message is loaded from file
+   ! igrib is the GRIB id to be used in subsequent calls
    call codes_grib_new_from_file(ifile, igrib)
 
    call codes_get(igrib, 'values', values)

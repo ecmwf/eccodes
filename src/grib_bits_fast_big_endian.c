@@ -41,7 +41,7 @@ static void init_bits_all_one()
         *(--v) = ~(cmask << --size);
 }
 
-int grib_is_all_bits_one(long val, long nbits)
+int grib_is_all_bits_one(int64_t val, long nbits)
 {
     if (!bits_all_one.inited)
         init_bits_all_one();
@@ -90,7 +90,7 @@ char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t
     unsigned char c;
     unsigned char* p;
     char* s                 = string;
-    unsigned char mask[]    = { 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
+    const unsigned char mask[]    = { 0, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE };
     int remainderComplement = 8 - remainder;
 
     if (numberOfCharacters == 0)

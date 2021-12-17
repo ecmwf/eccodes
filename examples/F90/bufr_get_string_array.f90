@@ -7,7 +7,6 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FORTRAN 90 Implementation: bufr_get_string_array
 !
 ! Description: How to get an array of strings from a BUFR message.
 

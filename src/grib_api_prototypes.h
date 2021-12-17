@@ -1,3 +1,6 @@
+#ifdef ECCODES_ON_WINDOWS
+#include <stdint.h>
+#endif
 
 /* action.c */
 void grib_dump(grib_action* a, FILE* f, int l);
@@ -156,7 +159,7 @@ grib_accessor* grib_accessor_get_attribute(grib_accessor* a, const char* name);
 grib_accessors_list* grib_accessors_list_create(grib_context* c);
 void grib_accessors_list_push(grib_accessors_list* al, grib_accessor* a, int rank);
 grib_accessors_list* grib_accessors_list_last(grib_accessors_list* al);
-grib_accessors_list* grib_accessors_list_find(grib_accessors_list* al, grib_accessor* a);
+grib_accessors_list* grib_accessors_list_find(grib_accessors_list* al, const grib_accessor* a);
 void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al);
 
 /* grib_concept.c */
@@ -311,10 +314,8 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
 
 /* grib_accessor_class_unpack_bufr_values.c */
 
-/* grib_accessor_class_bufr_has_delayed_replication.c */
-
 /* grib_accessor_class_apply_operators.c */
-size_t compute_size_AO(long* descriptors, size_t numberOfDescriptors);
+size_t compute_size_AO(const long* descriptors, size_t numberOfDescriptors);
 
 /* grib_accessor_class_non_alpha.c */
 
@@ -408,19 +409,11 @@ int grib_g1_step_apply_units(long* start, long* theEnd, long* step_unit, long* P
 
 /* grib_accessor_class_dictionary.c */
 
-/* grib_accessor_class_g1param.c */
-
-/* grib_accessor_class_g1p1p2.c */
-
-/* grib_accessor_class_g1_increment.c */
-
 /* grib_accessor_class_latlon_increment.c */
 
 /* grib_accessor_class_g2date.c */
 
 /* grib_accessor_class_g2level.c */
-
-/* grib_accessor_class_g2step.c */
 
 /* grib_accessor_class_g2end_step.c */
 
@@ -600,8 +593,6 @@ int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s
 
 /* grib_accessor_class_data_shsimple_packing.c */
 
-/* grib_accessor_class_data_constant_field.c */
-
 /* grib_accessor_class_data_dummy_field.c */
 
 /* grib_2order_packer_simple.c */
@@ -622,8 +613,6 @@ void accessor_variable_set_type(grib_accessor* a, int type);
 /* grib_accessor_class_data_g2complex_packing.c */
 
 /* grib_accessor_class_data_2order_packing.c */
-
-/* grib_accessor_class_data_2order_packing_count.c */
 
 /* grib_accessor_class_data_g1second_order_row_by_row_packing.c */
 
@@ -695,7 +684,7 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper);
 
 /* grib_openjpeg_encoding.c */
 int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper);
-int grib_openjpeg_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* val, size_t* n_vals);
+int grib_openjpeg_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* val, const size_t* n_vals);
 
 /* action_class_set_missing.c */
 grib_action* grib_action_create_set_missing(grib_context* context, const char* name);
@@ -1369,19 +1358,15 @@ grib_box* grib_box_factory(grib_handle* h, grib_arguments* args);
 
 /* grib_box_class_gen.c */
 
-/* grib_box_class_regular_gaussian.c */
-
-/* grib_box_class_reduced_gaussian.c */
-
 /* grib_nearest.c */
 int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
 int grib_nearest_init(grib_nearest* i, grib_handle* h, grib_arguments* args);
 int grib_nearest_delete(grib_nearest* i);
+int grib_nearest_get_radius(grib_handle* h, double* radiusInKm);
 void grib_binary_search(double xx[], const unsigned long n, double x, int* ju, int* jl);
 int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
 int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
-    const char*  values_keyname, const char* radius_keyname,
-    const char* Ni_keyname, const char* Nj_keyname,
+    const char*  values_keyname, const char* Ni_keyname, const char* Nj_keyname,
     double**     out_lats,
     int*         out_lats_count,
     double**     out_lons,
@@ -1532,10 +1517,6 @@ double grib_op_lt_d(double a, double b);
 double grib_op_gt_d(double a, double b);
 double grib_op_ge_d(double a, double b);
 double grib_op_le_d(double a, double b);
-const char* grib_binop_long_proc_name(grib_binop_long_proc proc);
-const char* grib_binop_double_proc_name(grib_binop_double_proc proc);
-const char* grib_unop_long_proc_name(grib_unop_long_proc proc);
-const char* grib_unop_double_proc_name(grib_unop_double_proc proc);
 
 /* codes_memfs.c */
 FILE* codes_fopen(const char* name, const char* mode);
@@ -1548,9 +1529,10 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value, 
 
 /* grib_api_version.c */
 const char* grib_get_git_sha1(void);
+const char* codes_get_build_date(void);
 
 /* grib_bits_any_endian.c */
-int grib_is_all_bits_one(long val, long nbits);
+int grib_is_all_bits_one(int64_t val, long nbits);
 int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberOfCharacters, const char* string);
 char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t numberOfCharacters, char* string);
 unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long nbits);

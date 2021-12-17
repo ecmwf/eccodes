@@ -20,16 +20,13 @@ program get_data
    integer(4)        :: numberOfPoints
    logical            :: is_missing_value
    integer            :: count1 = 0, count2 = 0, bitmapPresent = 0, bmp_len = 0
-
-   ! Message identifier.
-   integer            :: igrib
+   integer            :: igrib  ! message identifier
 
    ifile = 5
 
-   call codes_open_file(ifile, &
-                        '../../data/reduced_latlon_surface.grib1', 'R')
+   call codes_open_file(ifile, '../../data/reduced_latlon_surface.grib1', 'r')
 
-   ! Loop on all the messages in a file.
+   ! loop on all the messages in a file.
    call codes_grib_new_from_file(ifile, igrib, iret)
 
    do while (iret /= CODES_END_OF_FILE)
@@ -51,12 +48,12 @@ program get_data
       call codes_grib_get_data(igrib, lats, lons, values)
 
       do i = 1, numberOfPoints
-         ! Consult bitmap to see if the i'th value is missing
+         ! consult bitmap to see if the i'th value is missing
          is_missing_value = .false.
          if (bitmapPresent == 1 .and. bitmap(i) == 0) then
             is_missing_value = .true.
          end if
-         ! Only print non-missing values
+         ! only print non-missing values
          if (.not. is_missing_value) then
             print *, lats(i), lons(i), values(i)
             count2 = count2 + 1

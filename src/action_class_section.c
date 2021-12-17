@@ -159,6 +159,7 @@ static int notify_change(grib_action* act, grib_accessor* notified,
     loader.init_accessor = grib_init_accessor_from_handle;
 
     if (h->kid != NULL) {
+        /* grib_handle_delete(tmp_handle); */
         return GRIB_INTERNAL_ERROR;
     }
 
@@ -180,14 +181,17 @@ static int notify_change(grib_action* act, grib_accessor* notified,
             /*err = GRIB_SUCCESS;*/
         }
         else {
+            grib_handle_delete(tmp_handle);
+            h->kid = NULL; /* ECC-1314: must set to NULL for grib_handle_delete(h) to work */
             return err;
         }
     }
 
     err = grib_section_adjust_sizes(tmp_handle->root, 1, 0);
-    if (err)
+    if (err) {
+        /* grib_handle_delete(tmp_handle); h->kid = NULL; */
         return err;
-
+    }
     grib_section_post_init(tmp_handle->root);
 
     /* grib_recompute_sections_lengths(tmp_handle->root); */
@@ -233,7 +237,7 @@ static int notify_change(grib_action* act, grib_accessor* notified,
 
     grib_update_paddings(old_section);
 
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static grib_action* reparse(grib_action* a, grib_accessor* acc, int* doit)

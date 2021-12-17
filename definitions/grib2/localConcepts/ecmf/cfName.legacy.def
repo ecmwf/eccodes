@@ -88,3 +88,21 @@
  parameterCategory = 217 ;
  parameterNumber = 27 ;
 }
+#Particulate matter d <= 1 um
+'mass_concentration_of_pm1_ambient_aerosol_particles_in_air' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 72 ;
+}
+#Particulate matter d <= 2.5 um
+'mass_concentration_of_pm2p5_ambient_aerosol_particles_in_air' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 73 ;
+}
+#Particulate matter d <= 10 um
+'mass_concentration_of_pm10_ambient_aerosol_particles_in_air' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 74 ;
+}

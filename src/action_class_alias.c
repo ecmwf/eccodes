@@ -218,11 +218,14 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
     hand = grib_handle_of_accessor(x);
     if (hand->use_trie) {
         id = grib_hash_keys_get_id(x->context->keys, act->name);
+        hand->accessors[id] = x;
 
-        if (hand->accessors[id] != x) {
-            /*x->same=hand->accessors[id];*/
-            hand->accessors[id] = x;
-        }
+        /*
+         if (hand->accessors[id] != x) {
+           x->same=hand->accessors[id];
+           hand->accessors[id] = x;
+         }
+        */
     }
 
     i = 0;

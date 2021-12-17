@@ -17,7 +17,7 @@
 
 const char* tool_description =
     "Build an index file for a set of input BUFR files.\n"
-    "\tWarning: THIS TOOL IS NOT YET IMPLEMENTED";
+    "\tWarning: THIS TOOL IS STILL EXPERIMENTAL";
 const char* tool_name  = "bufr_index_build";
 const char* tool_usage = "[options] file file ... ";
 grib_index* idx        = NULL;

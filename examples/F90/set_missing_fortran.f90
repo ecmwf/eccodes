@@ -24,8 +24,8 @@ program set
    call codes_open_file(outfile, &
                         'out_surface_level.grib2', 'w')
 
-   !     a new grib message is loaded from file
-   !     igrib is the grib id to be used in subsequent calls
+   ! A new GRIB message is loaded from file
+   ! igrib is the GRIB id to be used in subsequent calls
    call codes_grib_new_from_file(infile, igrib)
 
    call codes_set(igrib, 'typeOfFirstFixedSurface', 'sfc')

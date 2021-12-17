@@ -31,14 +31,14 @@ static void usage(char* progname);
 
 int main(int argc, char* argv[])
 {
-    /* To skip read only and computed keys
-     unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_SKIP_READ_ONLY |
+    /* to skip read only and computed keys
+       unsigned long key_iterator_filter_flags=CODES_KEYS_ITERATOR_SKIP_READ_ONLY |
                                              CODES_KEYS_ITERATOR_SKIP_COMPUTED;
      */
     unsigned long key_iterator_filter_flags = CODES_KEYS_ITERATOR_ALL_KEYS |
                                               CODES_KEYS_ITERATOR_SKIP_DUPLICATES;
 
-    /* Choose a namespace. E.g. "ls", "time", "parameter", "geography", "statistics" */
+    /* choose a namespace. E.g. "ls", "time", "parameter", "geography", "statistics" */
     const char* name_space = "ls";
 
     /* name_space=NULL to get all the keys */
@@ -65,10 +65,6 @@ int main(int argc, char* argv[])
         codes_keys_iterator* kiter = NULL;
         msg_count++;
         printf("-- GRIB N. %d --\n", msg_count);
-        if (!h) {
-            fprintf(stderr, "Error: Unable to create grib handle\n");
-            exit(1);
-        }
 
         kiter = codes_keys_iterator_new(h, key_iterator_filter_flags, name_space);
         if (!kiter) {
@@ -83,7 +79,7 @@ int main(int argc, char* argv[])
             CODES_CHECK(codes_get_string(h, name, value, &vlen), name);
             printf("%s = %s\n", name, value);
 
-            /* Alternative way of getting the string value */
+            /* alternative way of getting the string value */
             CODES_CHECK(codes_keys_iterator_get_string(kiter, value, &vlen), 0);
         }
 

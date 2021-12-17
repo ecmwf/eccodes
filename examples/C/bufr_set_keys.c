@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    /* loop over the messages in the bufr file */
+    /* loop over the messages in the BUFR file */
     while ((h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err)) != NULL || err != CODES_SUCCESS) {
         if (h == NULL) {
             fprintf(stderr, "Error: unable to create handle for message %d\n", cnt);
@@ -68,8 +68,8 @@ int main(int argc, char* argv[])
           i.e. unpack the data values */
         /*CODES_CHECK(codes_set_long(h,"unpack",1),0);*/
 
-        /* This is the place where you may wish to modify the message*/
-        /*E.g. we change the centre  */
+        /* this is the place where you may wish to modify the message */
+        /* e.g. we change the centre  */
 
         /* set bufrHeaderCentre */
         longVal = 222;

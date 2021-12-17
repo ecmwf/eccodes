@@ -8,10 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.sh
-$EXEC ${test_dir}/julian > ${data_dir}/julian.out
 
-diff ${data_dir}/julian.out ${data_dir}/julian.out.good
+label=julian_test
+temp=temp.$label.txt
 
-rm -f ${data_dir}/julian.out
+$EXEC ${test_dir}/julian > $temp
+
+diff ${data_dir}/julian.out.good $temp
+
+rm -f $temp

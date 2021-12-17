@@ -28,6 +28,7 @@ list(APPEND test_bins
     grib_2nd_order_numValues
     grib_optimize_scaling
     grib_optimize_scaling_sh
+    grib_set_force
     grib_ecc-386
     bufr_ecc-517
     bufr_ecc-1288
@@ -72,6 +73,7 @@ if( HAVE_BUILD_TOOLS )
         filter_substr
         grib_uerra
         grib_element
+        grib_suppressed
         grib_2nd_order_numValues
         grib_ecc-136
         grib_ecc-922
@@ -89,9 +91,14 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1260
         grib_ecc-1261
         grib_ecc-1271
+        grib_ecc-1315
+        grib_ecc-1322
+        grib_ecc-1319
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
+        bufr_ecc-1290
+        bufr_ecc-1304
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
@@ -134,6 +141,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_filter_extract_datetime
         bufr_filter_extract_area
         bufr_filter_unpack_pack
+        bufr_indexing
         bufr_json_data
         bufr_ls
         bufr_ls_json
@@ -159,6 +167,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-875
         bufr_ecc-887
         bufr_ecc-1187
+        bufr_ecc-1305
         grib_ecc-490
         grib_ecc-756
         grib_ecc-806
@@ -171,6 +180,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1001
         grib_ecc-1030
         grib_set_bytes
+        grib_set_force
         bufr_ecc-556
         gts_get
         gts_ls
@@ -225,12 +235,13 @@ if( HAVE_BUILD_TOOLS )
         grib_multi_from_message
         grib_change_scanning
         grib_statistics
-        grib_tigge
+        grib_tigge_check
         read_any
         grib_dump
         grib_dump_debug
         grib_dump_json
         grib_local_MeteoFrance
+        grib_local_NCEP
         grib_neg_fctime
         codes_split_file
         grib_mars_keys)

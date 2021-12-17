@@ -87,6 +87,45 @@
 	 scaledValueOfFirstFixedSurface = 1 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
+#Particulate matter d <= 1 um
+'mass_concentration_of_pm1_ambient_aerosol_particles_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	 scaleFactorOfSecondSize = missing() ;
+	 scaledValueOfFirstSize = 1 ;
+	 scaleFactorOfFirstSize = 6 ;
+	 typeOfSizeInterval = 5 ;
+	 aerosolType = 62026 ;
+	 scaledValueOfSecondSize = missing() ;
+	 is_aerosol = 1 ;
+	}
+#Particulate matter d <= 2.5 um
+'mass_concentration_of_pm2p5_ambient_aerosol_particles_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	 scaleFactorOfSecondSize = missing() ;
+	 scaledValueOfFirstSize = 25 ;
+	 scaleFactorOfFirstSize = 7 ;
+	 typeOfSizeInterval = 5 ;
+	 aerosolType = 62026 ;
+	 scaledValueOfSecondSize = missing() ;
+	 is_aerosol = 1 ;
+	}
+#Particulate matter d <= 10 um
+'mass_concentration_of_pm10_ambient_aerosol_particles_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	 scaleFactorOfSecondSize = missing() ;
+	 scaledValueOfFirstSize = 10 ;
+	 scaleFactorOfFirstSize = 6 ;
+	 typeOfSizeInterval = 5 ;
+	 aerosolType = 62026 ;
+	 scaledValueOfSecondSize = missing() ;
+	 is_aerosol = 1 ;
+	}
 #Ammonia mass mixing ratio
 'mass_fraction_of_ammonia_in_air' = {
 	 discipline = 0 ;

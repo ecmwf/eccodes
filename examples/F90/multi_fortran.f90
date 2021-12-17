@@ -23,10 +23,10 @@ program multi
 
    call codes_open_file(ifile, '../../data/multi.grib2', 'r')
 
-   ! turn on support for multi fields messages */
+   ! Turn on support for multi-field messages */
    call codes_grib_multi_support_on()
 
-   ! turn off support for multi fields messages */
+   ! Turn off support for multi-field messages */
    !call codes_grib_multi_support_off()
 
    call codes_grib_new_from_file(ifile, igrib)

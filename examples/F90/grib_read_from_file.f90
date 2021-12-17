@@ -20,7 +20,7 @@ program grib_read_from_file_example
                       99186, 97517, 97466, 99307, 98460, 101491, 99361, 100292, 96838, &
                       91093, 83247, 78244, 74872, 72663, 69305, 69881, 68572/)
 
-  ! Get the grib message length using two different interfaces
+  ! get the GRIB message length using two different interfaces
   call read_using_size_t()
   call read_using_integer()
   print *, 'Passed'

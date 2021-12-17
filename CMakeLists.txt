@@ -21,7 +21,7 @@ cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 find_package( ecbuild 3.4 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 
 # Initialise project
-project( eccodes VERSION 2.24.0 LANGUAGES C )
+project( eccodes VERSION 2.25.0 LANGUAGES C )
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
@@ -183,7 +183,7 @@ ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "Enable memory manag
 ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "Enable memory alignment"  DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE TIMER               DESCRIPTION "Enable timer" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable POSIX threads" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable OMP threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable OpenMP threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "Enable extended regression testing" DEFAULT OFF ADVANCED )
 
 ###############################################################################
@@ -285,11 +285,11 @@ endif()
 
 # Cannot have both options
 if( HAVE_ECCODES_THREADS AND HAVE_ECCODES_OMP_THREADS )
-    ecbuild_critical("Cannot enable both POSIX threads and OMP! Please specify just one option")
+    ecbuild_critical("Cannot enable both POSIX threads and OpenMP! Please specify just one option")
 endif()
 
-ecbuild_info(" GRIB_PTHREADS=${GRIB_PTHREADS}")
-ecbuild_info(" GRIB_OMP_THREADS=${GRIB_OMP_THREADS}")
+ecbuild_info(" POSIX THREADS = ${GRIB_PTHREADS}")
+ecbuild_info(" OpenMP THREADS= ${GRIB_OMP_THREADS}")
 
 set( GRIB_MEM_ALIGN 0 )
 if( ENABLE_ALIGN_MEMORY )

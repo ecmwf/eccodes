@@ -53,6 +53,10 @@ static int scale_factor_missing(const char* value)
     return 0;
 }
 
+/*
+ * key      = paramId or shortName
+ * filename = paramId.def or shortName.def
+*/
 static int grib_check_param_concepts(const char* key, const char* filename)
 {
     grib_concept_value* concept_value = grib_parse_concept_file(NULL, filename);
@@ -62,15 +66,15 @@ static int grib_check_param_concepts(const char* key, const char* filename)
     while (concept_value) {
         grib_concept_condition* concept_condition = concept_value->conditions;
         /* Convention:
-         * -1 key not present
-         * 0  key present and not missing
-         * 1  key present and missing
+         *  -1 key not present
+         *  0  key present and not missing
+         *  1  key present and missing
          */
         int scaleFactor1Missing = -1, scaleFactor2Missing = -1;
         int scaledValue1Missing = -1, scaledValue2Missing = -1;
         int type1Missing = -1, type2Missing = -1;
         int err = 0;
-        /* concept_value->name is the value of the key e.g. 151163 */
+        /* concept_value->name is the value of the key (e.g. 151163 or sst) */
         while (concept_condition) {
             char condition_value[512] = {0,};
             grib_expression* expression = concept_condition->expression;

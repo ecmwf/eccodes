@@ -46,7 +46,7 @@ const char* tool_description =
 const char* tool_name  = "grib_compare";
 const char* tool_usage = "[options] grib_file1 grib_file2";
 
-typedef double (*compare_double_proc)(double*, double*, double);
+typedef double (*compare_double_proc)(const double*, const double*, double);
 static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_options* options);
 
 typedef struct grib_error grib_error;
@@ -82,7 +82,8 @@ static int onlyListed          = 1;
 static int headerMode          = 0;
 static int morein1             = 0;
 static int morein2             = 0;
-static int listFromCommandLine;
+static int listFromCommandLine = 0;
+static int editionIndependent  = 0;
 static int verbose             = 0;
 static double tolerance_factor = 1;
 
@@ -124,7 +125,7 @@ GRIB_INLINE static int grib_inline_rstrcmp(const char* a, const char* b)
 }
 
 /* Returns 0 when the values are considered the same */
-static double compare_double_absolute(double* a, double* b, double tolerance)
+static double compare_double_absolute(const double* a, const double* b, double tolerance)
 {
     double ret = 0;
     double d   = fabs(*a - *b);
@@ -136,7 +137,7 @@ static double compare_double_absolute(double* a, double* b, double tolerance)
 }
 
 /* Returns 0 when the values are considered the same */
-static double compare_double_relative(double* a, double* b, double tolerance)
+static double compare_double_relative(const double* a, const double* b, double tolerance)
 {
     double relativeError;
 
@@ -215,6 +216,9 @@ int grib_tool_init(grib_runtime_options* options)
     listFromCommandLine = 0;
     if (grib_options_on("c:") || grib_options_on("e"))
         listFromCommandLine = 1;
+
+    if (grib_options_on("e"))
+        editionIndependent = 1;
 
     if (grib_options_on("a"))
         onlyListed = 0;
@@ -1178,14 +1182,15 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
             if (blocklisted(options->compare[i].name))
                 continue;
             if (options->compare[i].type == GRIB_NAMESPACE) {
+                int num_keys_in_namespace = 0;
                 iter = grib_keys_iterator_new(h1, 0, options->compare[i].name);
                 if (!iter) {
-                    printf("ERROR: unable to get keys iterator\n");
+                    printf("ERROR: unable to get keys iterator for namespace \"%s\".\n", options->compare[i].name);
                     exit(1);
                 }
                 while (grib_keys_iterator_next(iter)) {
                     name = grib_keys_iterator_get_name(iter);
-                    /*printf("----- comparing %s\n",name);*/
+                    num_keys_in_namespace++;
 
                     if (blocklisted(name))
                         continue;
@@ -1193,6 +1198,9 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
                         err++;
                 }
                 grib_keys_iterator_delete(iter);
+                if (num_keys_in_namespace == 0 && !editionIndependent) {
+                    printf("ERROR: namespace \"%s\" does not contain any key.\n", options->compare[i].name);
+                }
             }
             else {
                 if (compare_values(options, h1, h2, options->compare[i].name, options->compare[i].type))

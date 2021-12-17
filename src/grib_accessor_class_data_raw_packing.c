@@ -219,8 +219,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     double* values = (double*)val;
     size_t inlen   = *len;
 
-    int free_buffer = 0;
-    int free_values = 0;
+    /*int free_buffer = 0;
+     *int free_values = 0;*/
 
     int code = GRIB_SUCCESS;
 
@@ -261,10 +261,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     code = grib_ieee_encode_array(a->context, values, inlen, bytes, buffer);
 
 clean_up:
-    if (free_buffer)
-        free(buffer);
-    if (free_values)
-        free(values);
+    /*if (free_buffer)
+     *  free(buffer);
+     * if (free_values)
+     *  free(values);
+    */
 
     grib_buffer_replace(a, buffer, bufsize, 1, 1);
 

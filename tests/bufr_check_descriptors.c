@@ -12,6 +12,7 @@
 #include "grib_api_internal.h"
 
 static const size_t MIN_NUM_COLUMNS = 8;
+static const size_t NUM_DESCRIPTOR_DIGITS = 6; /* FXY */
 
 #define NUMBER(a) (sizeof(a) / sizeof(a[0]))
 static const char* allowed_types[] = { "long", "double", "table", "flag", "string" };
@@ -71,6 +72,11 @@ int main(int argc, char** argv)
         if (string_to_long(str_code, &lValue) != GRIB_SUCCESS) {
             fprintf(stderr, "Error on line %lu: descriptor code '%s' (column 1) is not numeric.\n",
                     line_number, str_code);
+            return 1;
+        }
+        if (strlen(str_code) != NUM_DESCRIPTOR_DIGITS) {
+            fprintf(stderr, "Error on line %lu: descriptor code '%s' (column 1) is not %lu digits.\n",
+                    line_number, str_code, NUM_DESCRIPTOR_DIGITS);
             return 1;
         }
         str_key  = list[1];

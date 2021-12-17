@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 {
     FILE* in = NULL;
 
-    /* Message handle. Required in all the eccodes calls acting on a message.*/
+    /* message handle. Required in all the ecCodes calls acting on a message.*/
     codes_handle* h = NULL;
 
     double *sigt_pres = NULL, *sigt_geo = NULL, *sigt_t = NULL;
@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    /* Loop over the messages in the bufr file */
+    /* loop over the messages in the BUFR file */
     while ((h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err)) != NULL || err != CODES_SUCCESS) {
         if (h == NULL) {
             fprintf(stderr, "Error: unable to create handle for message %d\n", cnt);
@@ -61,11 +61,11 @@ int main(int argc, char* argv[])
 
         printf("message: %d\n", cnt);
 
-        /* We need to instruct ecCodes to expand the descriptors
-           i.e. unpack the data values */
+        /* we need to instruct ecCodes to expand the descriptors
+           i.e., unpack the data values */
         CODES_CHECK(codes_set_long(h, "unpack", 1), 0);
 
-        /* In what follows we rely on the fact that for
+        /* in what follows we rely on the fact that for
          * temperature significant levels the value of key
          * verticalSoundingSignificance is 4 (see flag table 8001 for details).
          *
@@ -76,9 +76,9 @@ int main(int argc, char* argv[])
          * condition: verticalSoundingSignificance=4.
          */
 
-        /* Get the number of the temperature significant levels.*/
+        /* get the number of the temperature significant levels.*/
 
-        /* We find out the number of temperature significant levels by
+        /* we find out the number of temperature significant levels by
          * counting how many pressure values we have on these levels.*/
 
         sprintf(key_name, "/verticalSoundingSignificance=4/pressure");
@@ -86,22 +86,22 @@ int main(int argc, char* argv[])
 
         printf("Number of T significant levels: %lu\n", (unsigned long)sigt_len);
 
-        /* Allocate memory for the values to be read. Each
+        /* allocate memory for the values to be read. Each
          * parameter must have the same number of values. */
         sigt_pres = (double*)malloc(sigt_len * sizeof(double));
         sigt_geo  = (double*)malloc(sigt_len * sizeof(double));
         sigt_t    = (double*)malloc(sigt_len * sizeof(double));
         sigt_td   = (double*)malloc(sigt_len * sizeof(double));
 
-        /* Get pressure */
+        /* get pressure */
         sprintf(key_name, "/verticalSoundingSignificance=4/pressure");
         len = sigt_len;
         CODES_CHECK(codes_get_double_array(h, key_name, sigt_pres, &len), 0);
 
-        /* Get geopotential */
+        /* get geopotential */
         sprintf(key_name, "/verticalSoundingSignificance=4/nonCoordinateGeopotential");
 
-        /* Check the size */
+        /* check the size */
         CODES_CHECK(codes_get_size(h, key_name, &len), 0);
         if (len != sigt_len) {
             fprintf(stderr, "Error: inconsistent number of geopotential values found!\n");
@@ -109,44 +109,42 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        /* Get the values */
+        /* get the values */
         CODES_CHECK(codes_get_double_array(h, key_name, sigt_geo, &len), 0);
 
-        /* Get temperature */
-        if (len != sigt_len) { /* Check the size */
+        /* get temperature */
+        if (len != sigt_len) { /* check the size */
             fprintf(stderr, "Error: inconsistent number of temperature values found!\n");
             free_memory(sigt_pres, sigt_geo, sigt_t, sigt_td);
             return 1;
         }
 
-        /* Get the values */
+        /* get the values */
         sprintf(key_name, "/verticalSoundingSignificance=4/airTemperature");
         CODES_CHECK(codes_get_double_array(h, key_name, sigt_t, &len), 0);
 
-        /* Get dew point */
-        if (len != sigt_len) { /* Check the size */
+        /* get dew point */
+        if (len != sigt_len) { /* check the size */
             fprintf(stderr, "Error: inconsistent number of dewpoint temperature values found!\n");
             free_memory(sigt_pres, sigt_geo, sigt_t, sigt_td);
             return 1;
         }
 
-        /* Get the values */
+        /* get the values */
         sprintf(key_name, "/verticalSoundingSignificance=4/dewpointTemperature");
         CODES_CHECK(codes_get_double_array(h, key_name, sigt_td, &len), 0);
 
-        /* Print the values */
+        /* print the values */
         printf("lev  pres    geo    t    td\n");
         printf("-------------------------------\n");
 
         for (i = 0; i < sigt_len; i++) {
             printf("%3lu %6.0f %6.0f %.1f %.1f\n",
-                   i + 1, sigt_pres[i], sigt_geo[i], sigt_t[i], sigt_td[i]);
+                   (unsigned long)(i + 1), sigt_pres[i], sigt_geo[i], sigt_t[i], sigt_td[i]);
         }
 
-        /* Delete handle */
+        /* release memory */
         codes_handle_delete(h);
-
-        /* Release memory */
         free_memory(sigt_pres, sigt_geo, sigt_t, sigt_td);
 
         cnt++;

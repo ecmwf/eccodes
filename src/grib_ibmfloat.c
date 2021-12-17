@@ -89,7 +89,7 @@ static void init_table_if_needed()
     GRIB_MUTEX_UNLOCK(&mutex)
 }
 
-static void binary_search(double xx[], const unsigned long n, double x, unsigned long* j)
+static void binary_search(const double xx[], const unsigned long n, double x, unsigned long* j)
 {
     /*These routine works only on ascending ordered arrays*/
     unsigned long ju, jm, jl;

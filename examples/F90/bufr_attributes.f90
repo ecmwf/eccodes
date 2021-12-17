@@ -7,7 +7,6 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FORTRAN 90 Implementation: bufr_attributes
 !
 ! Description: How to read attributes of keys in BUFR messages.
 !
@@ -25,21 +24,21 @@ program bufr_attributes
 
    call codes_open_file(ifile, '../../data/bufr/syno_multi.bufr', 'r')
 
-! the first bufr message is loaded from file
-! ibufr is the bufr id to be used in subsequent calls
+   ! the first BUFR message is loaded from file
+   ! ibufr is the BUFR id to be used in subsequent calls
    call codes_bufr_new_from_file(ifile, ibufr, iret)
 
    do while (iret /= CODES_END_OF_FILE)
 
-      ! Get and print some keys form the BUFR header
+      ! Get and print some keys from the BUFR header
       write (*, *) 'message: ', count
 
       ! We need to instruct ecCodes to expand all the descriptors
       ! i.e. unpack the data values
       call codes_set(ibufr, "unpack", 1); 
       ! ----------------------------------------------------------------
-      !  We will read the value and all the attributes available for
-      !  the 2m temperature.
+      ! We will read the value and all the attributes available for
+      ! the 2m temperature.
       ! ----------------------------------------------------------------
 
       ! Get the element's value as as real
@@ -67,9 +66,9 @@ program bufr_attributes
       write (*, *) '  airTemperatureAt2M->width:', iVal
 
       ! -------------------------------------------------------------------
-      !  The 2m temperature data element in this message has an associated
-      !  field: percentConfidence. Its value and attributes can be accessed
-      !  in a similar manner as was shown above for 2m temperature.
+      ! The 2m temperature data element in this message has an associated
+      ! field: percentConfidence. Its value and attributes can be accessed
+      ! in a similar manner as was shown above for 2m temperature.
       ! -------------------------------------------------------------------
 
       ! Get the element's value as as real
@@ -96,10 +95,10 @@ program bufr_attributes
       call codes_get(ibufr, 'airTemperatureAt2M->percentConfidence->width', iVal); 
       write (*, *) '  airTemperatureAt2M->percentConfidence->width:', iVal
 
-      ! Release the bufr message
+      ! Release the BUFR message
       call codes_release(ibufr)
 
-      ! Load the next bufr message
+      ! Load the next BUFR message
       call codes_bufr_new_from_file(ifile, ibufr, iret)
 
       count = count + 1

@@ -22,12 +22,24 @@ use strict;
 use warnings;
 use DBI;
 use Time::localtime;
-
-$ARGV[0] or die "USAGE: $0 input.tsv\n";
+use Getopt::Long;
 
 my $SANITY_CHECK     = 0;
 my $WRITE_TO_FILES   = 1;
 my $WRITE_TO_PARAMDB = 0; # Be careful. Fill in $contactId before proceeding
+
+# Process arguments. Must be at least one file
+if (scalar @ARGV < 1) {
+  &usage;
+}
+my $result = GetOptions (
+  "s" => \$SANITY_CHECK,
+  "f" => \$WRITE_TO_FILES,
+  "p" => \$WRITE_TO_PARAMDB
+  );
+
+$ARGV[0] or &usage;
+
 
 my ($paramId, $shortName, $name, $units, $cfVarName, $interpol);
 my ($discipline, $pcategory, $pnumber, $type1, $type2, $scaledValue1, $scaleFactor1, $scaledValue2, $scaleFactor2);
@@ -77,21 +89,21 @@ my $CFVARNAME_FILENAME = "cfVarName.def";
 my $tm = localtime;
 my $today_date = sprintf("%04d-%02d-%02d", $tm->year+1900, ($tm->mon)+1, $tm->mday);
 
-if ($WRITE_TO_FILES) {
-    create_or_append(\*OUT_PARAMID,   "$PARAMID_FILENAME");
-    create_or_append(\*OUT_SHORTNAME, "$SHORTNAME_FILENAME");
-    create_or_append(\*OUT_NAME,      "$NAME_FILENAME");
-    create_or_append(\*OUT_UNITS,     "$UNITS_FILENAME");
-    create_or_append(\*OUT_CFVARNAME, "$CFVARNAME_FILENAME");
-}
-if ($WRITE_TO_PARAMDB) {
+if ($WRITE_TO_PARAMDB || $SANITY_CHECK) {
+    print "Connecting to database ...\n";
     $dbh = DBI->connect("dbi:mysql(RaiseError=>1):database=$db;host=$host",$user,$pass) or die $DBI::errstr;
+    # STRICT_TRANS_TABLES:
+    # Strict mode controls how MySQL handles invalid or missing values in data-change statements such as INSERT or UPDATE.
+    # A value can be invalid for several reasons e.g., it might have the wrong data type for the column, or it might be out of range.
+    $dbh->do( q{SET sql_mode = 'STRICT_TRANS_TABLES'} );
 }
 
 my $first = 1;
 my $lcount = 0;
 
 if ($SANITY_CHECK) {
+    my %map_sn = ();   # map of shortNames
+    my %map_pid = ();  # map of paramIds
     print "Checking sanity: uniqueness of paramId and shortName keys ...\n";
     while (<>) {
         chomp;
@@ -102,14 +114,32 @@ if ($SANITY_CHECK) {
         }
         $lcount++;
         ($paramId, $shortName) = split(/\t/);
+
+        die "Error: shortName=$shortName is duplicated (line ", $lcount+1, ")\n" if (exists $map_sn{$shortName});
+        $map_sn{$shortName}++; # increment count in shortName map
+
+        die "Error: paramId=$paramId is duplicated (line ", $lcount+1, ")\n" if (exists $map_pid{$paramId});
+        $map_pid{$paramId}++; # increment count in paramId map
+
+        die "Error: paramId=$paramId is not an integer (line ", $lcount+1, ")\n" if (!is_integer($paramId));
+
         my $x = $dbh->selectrow_array("select * from param.param where id = ?",undef,$paramId);
-        die "Error: paramId=$x already exists (line ", $lcount+1, ")\n" if (defined $x);
+        die "Error: paramId=$x exists in the database (line ", $lcount+1, ")\n" if (defined $x);
         $x = $dbh->selectrow_array("select shortName from param.param where shortName = ?",undef,$shortName);
-        die "Error: shortName=$x already exists (line ", $lcount+1, ")\n" if (defined $x);
+        die "Error: shortName=$x exists in the database (line ", $lcount+1, ")\n" if (defined $x);
     }
-    print "Sanity checking completed. $lcount rows checked. No errors\n";
+    print "\nSanity checking completed. $lcount rows checked. No errors.\nExiting.\n";
     exit 0;
 }
+
+if ($WRITE_TO_FILES) {
+    create_or_append(\*OUT_PARAMID,   "$PARAMID_FILENAME");
+    create_or_append(\*OUT_SHORTNAME, "$SHORTNAME_FILENAME");
+    create_or_append(\*OUT_NAME,      "$NAME_FILENAME");
+    create_or_append(\*OUT_UNITS,     "$UNITS_FILENAME");
+    create_or_append(\*OUT_CFVARNAME, "$CFVARNAME_FILENAME");
+}
+
 
 while (<>) {
     chomp;
@@ -178,7 +208,11 @@ while (<>) {
         die "Error: No contact ID provided\n" if (!$contactId);
         print "Inserting paramId $paramId (centre=$centre) ...\n";
         $dbh->do("insert into param(id,shortName,name,units_id,insert_date,update_date,contact) values (?,?,?,?,?,?,?)",undef,
-            $paramId, $shortName, $name , $units_code, $today_date, $today_date, $contactId);
+            $paramId, $shortName, $name , $units_code, $today_date, $today_date, $contactId) or die $dbh->errstr;
+
+        # Check what we inserted did actually go in
+        my $x = $dbh->selectrow_array("select shortName from param.param where shortName = ?",undef,$shortName);
+        die "Insertion of $paramId did not work - problem with shortName $shortName\n" if (! defined $x);
 
         # Table 'grib' columns: param_id  edition  centre  attribute_id  attribute_value  param_version
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,4, $discipline,0);
@@ -317,4 +351,16 @@ sub create_or_append {
 sub is_integer {
     my $val = shift;
     return ($val =~ /^\d+$/);
+}
+
+sub usage {
+   print <<USAGE;
+
+Usage: $0 [-s] [-f] [-p] file.tsv
+       -s  Perform sanity checks and exit
+       -f  Write out def files (paramId.def, name.def etc)
+       -p  Write to Parameter Database (Be careful!)
+
+USAGE
+   exit 1
 }

@@ -214,6 +214,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_variable* self = (grib_accessor_variable*)a;
+    const double dval = *val;
 
     if (*len != 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name, 1);
@@ -221,11 +222,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    self->dval = *val;
-    if (*val < (double)LONG_MIN || *val > (double)LONG_MAX)
+    self->dval = dval;
+    if (dval < (double)LONG_MIN || dval > (double)LONG_MAX)
         self->type = GRIB_TYPE_DOUBLE;
     else
-        self->type = ((long)*val == *val) ? GRIB_TYPE_LONG : GRIB_TYPE_DOUBLE;
+        self->type = ((long)dval == dval) ? GRIB_TYPE_LONG : GRIB_TYPE_DOUBLE;
 
     return GRIB_SUCCESS;
 }
@@ -313,7 +314,9 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     slen = strlen(p) + 1;
     if (*len < slen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Variable unpack_string Wrong size for %s it is %d bytes big (len=%d)", a->name, slen, *len);
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "Variable unpack_string. Wrong size for %s, it is %d bytes long (len=%d)",
+                         a->name, slen, *len);
         *len = slen;
         return GRIB_BUFFER_TOO_SMALL;
     }

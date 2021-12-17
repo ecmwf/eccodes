@@ -54,14 +54,14 @@ int main(int argc, char* argv[])
     CODES_CHECK(err, 0);
     fclose(in);
 
-    /* The sections for the "what" argument are:
-     *  CODES_SECTION_PRODUCT
-     *  CODES_SECTION_GRID
-     *  CODES_SECTION_LOCAL
-     *  CODES_SECTION_DATA
-     *  CODES_SECTION_BITMAP
-     * One can bitwise-OR them to have more than one section copied
-     * E.g. what = CODES_SECTION_PRODUCT | CODES_SECTION_LOCAL;
+    /* the sections for the "what" argument are:
+     *   CODES_SECTION_PRODUCT
+     *   CODES_SECTION_GRID
+     *   CODES_SECTION_LOCAL
+     *   CODES_SECTION_DATA
+     *   CODES_SECTION_BITMAP
+     * one can bitwise-OR them to have more than one section copied
+     * e.g. what = CODES_SECTION_PRODUCT | CODES_SECTION_LOCAL;
      */
     for (i = 0; i < strlen(what_str); ++i) {
         if (what_str[i] == 'p') {
@@ -85,11 +85,10 @@ int main(int argc, char* argv[])
             what |= CODES_SECTION_BITMAP;
         }
         else if (isspace(what_str[i]) || what_str[i] == ',') {
-            /* Ignore spaces and comma separator */
+            /* ignore spaces and comma separator */
         }
         else {
-            fprintf(stderr, "Invalid option: '%c'.  Ignoring.\n",
-                    what_str[i]);
+            fprintf(stderr, "Invalid option: '%c'.  Ignoring.\n", what_str[i]);
         }
     }
 

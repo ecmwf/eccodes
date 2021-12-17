@@ -24,13 +24,13 @@ program set
 
    call codes_grib_new_from_file(infile, igrib)
 
-   ! Individual ensemble forecast
+   ! individual ensemble forecast
    call codes_set(igrib, 'productDefinitionTemplateNumber', 11)
 
-   ! Select level type as Generalized Vertical Height Coordinate
+   ! select level type as Generalized Vertical Height Coordinate
    call codes_set(igrib, 'typeOfLevel', 'generalVertical')
 
-   ! Now set keys specific to this level type
+   ! now set keys specific to this level type
    call codes_set(igrib, 'nlev', 12.21)
    call codes_set(igrib, 'numberOfVGridUsed', 13.55)
 

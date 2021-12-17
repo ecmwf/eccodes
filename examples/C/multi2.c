@@ -35,7 +35,7 @@ static void read_data(FILE* fp, int num_msgs)
     long stepRange  = 0;
     codes_handle* h = NULL;
 
-    printf("File offset start = %lu\n", ftello(fp));
+    printf("File offset start = %ld\n", ftello(fp));
     for (i = 0; i < num_msgs; ++i) {
         h = codes_handle_new_from_file(0, fp, PRODUCT_GRIB, &err);
         CODES_CHECK(err, 0);
@@ -62,7 +62,7 @@ int main(int argc, char** argv)
     }
 
     /* turn on support for multi-field messages */
-    codes_grib_multi_support_on(0);
+    codes_grib_multi_support_on(NULL);
 
     for (i = 1; i < COUNT; ++i) {
         printf("Pass %d: \n", i);

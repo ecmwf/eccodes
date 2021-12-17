@@ -202,7 +202,7 @@ The codes_index is the structure giving indexed access to messages in a file.
 typedef struct grib_index codes_index;
 
 /**
- *  Create a new index form a file. The file is indexed with the keys in argument.
+ *  Create a new index from a file. The file is indexed with the keys in argument.
  *
  * @param c           : context  (NULL for default context)
  * @param filename    : name of the file of messages to be indexed
@@ -1105,6 +1105,8 @@ long codes_get_api_version(void);
 *  @return character string with SHA1 identifier
 */
 const char* codes_get_git_sha1(void);
+
+const char* codes_get_build_date(void);
 
 /**
 *  Get the package name

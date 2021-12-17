@@ -75,7 +75,6 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_bufr_extract_datetime_subsets.c \
 	grib_accessor_class_group.c \
 	grib_accessor_class_unpack_bufr_values.c \
-	grib_accessor_class_bufr_has_delayed_replication.c \
 	grib_accessor_class_apply_operators.c \
 	grib_accessor_class_non_alpha.c \
 	grib_accessor_class_g1bitmap.c \
@@ -117,13 +116,9 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_mars_step.c \
 	grib_accessor_class_message_copy.c \
 	grib_accessor_class_dictionary.c \
-	grib_accessor_class_g1param.c \
-	grib_accessor_class_g1p1p2.c \
-	grib_accessor_class_g1_increment.c \
 	grib_accessor_class_latlon_increment.c \
 	grib_accessor_class_g2date.c \
 	grib_accessor_class_g2level.c \
-	grib_accessor_class_g2step.c \
 	grib_accessor_class_g2end_step.c \
 	grib_accessor_class_g2latlon.c \
 	grib_accessor_class_g2lon.c \
@@ -212,7 +207,6 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_data_g1simple_packing.c \
 	grib_accessor_class_data_g1shsimple_packing.c \
 	grib_accessor_class_data_shsimple_packing.c \
-	grib_accessor_class_data_constant_field.c \
 	grib_accessor_class_data_dummy_field.c \
 	grib_2order_packer_simple.c \
 	grib_accessor_class_variable.c \
@@ -222,7 +216,6 @@ libeccodes_la_prototypes= \
 	grib_accessor_class_data_g2shsimple_packing.c \
 	grib_accessor_class_data_g2complex_packing.c \
 	grib_accessor_class_data_2order_packing.c \
-	grib_accessor_class_data_2order_packing_count.c \
 	grib_accessor_class_data_g1second_order_row_by_row_packing.c \
 	grib_accessor_class_data_g1second_order_constant_width_packing.c \
 	grib_accessor_class_data_g1second_order_general_packing.c \
@@ -351,8 +344,6 @@ libeccodes_la_prototypes= \
 	grib_box.c \
 	grib_box_class.c \
 	grib_box_class_gen.c \
-	grib_box_class_regular_gaussian.c \
-	grib_box_class_reduced_gaussian.c \
 	grib_nearest.c \
 	grib_nearest_class.c \
 	grib_nearest_class_gen.c \

@@ -160,7 +160,7 @@ static size_t preferred_size(grib_accessor* a, int from_handle)
     /* printf("EVEN %ld %ld\n",(long) a->offset,(long) offset);*/
     seclen = a->offset - offset;
 
-    return seclen % 2 ? 1 : 0;
+    return (seclen % 2) ? 1 : 0;
 }
 
 static void init(grib_accessor* a, const long len, grib_arguments* args)

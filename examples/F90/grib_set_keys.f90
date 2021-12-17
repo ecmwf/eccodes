@@ -23,20 +23,20 @@ program set
    call codes_open_file(infile, '../../data/regular_latlon_surface_constant.grib1', 'r')
    call codes_open_file(outfile, 'out.set.grib1', 'w')
 
-   ! A new GRIB message is loaded from file
-   ! igrib is the grib id to be used in subsequent calls
+   ! a new GRIB message is loaded from file
+   ! igrib is the GRIB id to be used in subsequent calls
    call codes_grib_new_from_file(infile, igrib)
 
    call codes_set(igrib, 'dataDate', date1)
    call codes_set(igrib, 'type', marsType)
 
-   !     set centre as a integer */
+   ! set centre as a integer */
    call codes_set(igrib, 'centre', centre)
 
-   ! Check if it is correct in the actual GRIB message
+   ! check if it is correct in the actual GRIB message
    call check_settings(igrib)
 
-   ! Write modified message to a file
+   ! write modified message to a file
    call codes_write(igrib, outfile)
 
    call codes_release(igrib)

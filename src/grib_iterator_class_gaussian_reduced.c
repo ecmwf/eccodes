@@ -128,7 +128,7 @@ static size_t count_subarea_points(grib_handle* h, get_reduced_row_proc get_redu
 }
 
 /* Search for 'x' in the array 'xx' (the index of last element being 'n') and return index in 'j' */
-static void binary_search(double xx[], const unsigned long n, double x, long* j)
+static void binary_search(const double xx[], const unsigned long n, double x, long* j)
 {
     /*This routine works only on descending ordered arrays*/
 #define EPSILON 1e-3
@@ -164,8 +164,8 @@ static int iterate_reduced_gaussian_subarea_legacy(grib_iterator* iter, grib_han
     double d       = 0;
     long ilon_first, ilon_last, i;
     grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
-    get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;
-    get_reduced_row                      = &grib_get_reduced_row_legacy; /* legacy algorithm */
+    /*get_reduced_row_proc get_reduced_row = &grib_get_reduced_row;*/
+    get_reduced_row_proc get_reduced_row   = &grib_get_reduced_row_legacy; /* legacy algorithm */
 
     if (h->context->debug) {
         const size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);

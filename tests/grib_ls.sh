@@ -79,7 +79,7 @@ type=`${tools_dir}/grib_get -wcount=1 -p typeOfLevel test_uuid.grib2`
 [ "$type" = "generalVertical" ]
 
 # GRIB-213 nearest with land-sea mask
-temp_ls=test.grib-213.temp
+temp_ls=temp.grib_ls.grib-213.txt
 ${tools_dir}/grib_ls -l 85,13,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$temp_ls
 grep -q 'Point chosen #3 index=21 .* distance=11\.' $temp_ls
 
@@ -95,4 +95,12 @@ ${tools_dir}/grib_ls -n data      $ECCODES_SAMPLES_PATH/GRIB1.tmpl
 grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB1.tmpl angleSubdivisions 1000
 grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB2.tmpl angleSubdivisions 1000000
 
+# Print 'offset' key as string and integer
+temp1=temp.grib_ls.1.txt
+temp2=temp.grib_ls.2.txt
+${tools_dir}/grib_ls -p offset:s tigge_cf_ecmwf.grib2 > $temp1
+${tools_dir}/grib_ls -p offset:i tigge_cf_ecmwf.grib2 > $temp2
+diff $temp1 $temp2
+
+rm -f $temp1 $temp2
 rm -f $temp_ls

@@ -39,7 +39,3 @@ for f in `echo $files`; do
             $PROJ_TOOL $ps
     fi
 done
-
-# Reminder
-keysfile=${proj_dir}/tests/keys
-grep -q projTargetString $keysfile

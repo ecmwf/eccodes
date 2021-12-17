@@ -5,6 +5,9 @@ alias typeOfIntervalForFirstAndSecondSize=typeOfSizeInterval;
 
 # Size in metres
 signed[1] scaleFactorOfFirstSize : dump;
-signed[4] scaledValueOfFirstSize :dump;
+signed[4] scaledValueOfFirstSize : dump;
 signed[1] scaleFactorOfSecondSize = missing() : can_be_missing,dump;
 signed[4] scaledValueOfSecondSize = missing() : can_be_missing,dump;
+
+meta firstSize  from_scale_factor_scaled_value(scaleFactorOfFirstSize, scaledValueOfFirstSize);
+meta secondSize from_scale_factor_scaled_value(scaleFactorOfSecondSize, scaledValueOfSecondSize): can_be_missing;

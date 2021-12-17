@@ -40,7 +40,7 @@ unsigned[2] anoffsetFrequency = missing(): dump, can_be_missing;
 # Boolean
 transient lsdate_bug = 1: hidden; # See ECC-707
 
-# Note: the key typeOfPostProcessing is in the PDTNs 70, 71, 72 and 73
+# Note: the key typeOfPostProcessing is in the PDTNs 70, 71, 72, 73, 93, 94, 95, or 96
 concept efas_post_proc {
   "unknown"           = { typeOfPostProcessing = 0; }
   "lisflood"          = { typeOfPostProcessing = 1; }

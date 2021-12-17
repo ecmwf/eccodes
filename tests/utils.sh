@@ -22,10 +22,10 @@ grib_check_key_equals()
    a_expected=$3
    a_result=`${tools_dir}/grib_get -p $a_key $a_file`
    if [ "$a_result" != "$a_expected" ]; then
-      echo "File:     $a_file"
-      echo "Key(s):   $a_key"
-      echo "Expected: $a_expected"
-      echo "Result:   $a_result"
+      echo "File:     '$a_file'"
+      echo "Key(s):   '$a_key'"
+      echo "Expected: '$a_expected'"
+      echo "Result:   '$a_result'"
       exit 1
    fi
 }

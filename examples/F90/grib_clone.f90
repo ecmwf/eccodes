@@ -7,8 +7,6 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!  FORTRAN 90 Implementation: grib_clone
-!
 !  Description: How to create a new GRIB message by cloning
 !               an existing message.
 !

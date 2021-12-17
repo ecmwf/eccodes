@@ -29,7 +29,7 @@ program sample
    indicatorOfParameter = 61
    decimalPrecision = 2
 
-   ! A new grib message is loaded from an existing sample.
+   ! a new GRIB message is loaded from an existing sample.
    ! Samples are searched in a default sample path (use codes_info
    ! to see where that is). The default sample path can be changed by
    ! setting the environment variable ECCODES_SAMPLES_PATH

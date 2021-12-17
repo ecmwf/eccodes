@@ -869,7 +869,7 @@ static const char *const grib_yytname[] =
   "hash_array_block", "case_list", "case_value", "switch_block",
   "concept_value", "concept_conditions", "concept_condition",
   "hash_array_value", "string_or_ident", "atom", "power", "factor", "term",
-  "condition", "conjonction", "disjonction", "expression", "rule",
+  "condition", "conjunction", "disjunction", "expression", "rule",
   "rule_entry", "rule_entries", "fact", "conditional_rule", "rules", YY_NULLPTR
 };
 #endif
@@ -2368,7 +2368,7 @@ grib_yyreduce:
     {
   case 2:
 #line 262 "griby.y"
-                          { grib_parser_all_actions = 0;grib_parser_concept=0; 
+                  { grib_parser_all_actions = 0;grib_parser_concept=0; 
                             grib_parser_hash_array=0;grib_parser_rules=0; }
 #line 2374 "y.tab.c"
     break;
@@ -2406,7 +2406,7 @@ grib_yyreduce:
 
   case 9:
 #line 276 "griby.y"
-                  { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,0,(grib_yyvsp[0].dval));}
+                 { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,0,(grib_yyvsp[0].dval));}
 #line 2411 "y.tab.c"
     break;
 
@@ -2430,7 +2430,7 @@ grib_yyreduce:
 
   case 13:
 #line 282 "griby.y"
-                 { (grib_yyval.svalue)=grib_sarray_push(grib_parser_context,0,(grib_yyvsp[0].str));}
+                { (grib_yyval.svalue)=grib_sarray_push(grib_parser_context,0,(grib_yyvsp[0].str));}
 #line 2435 "y.tab.c"
     break;
 
@@ -2442,7 +2442,7 @@ grib_yyreduce:
 
   case 15:
 #line 287 "griby.y"
-                          { (grib_yyval.ivalue)=grib_iarray_push(0,(grib_yyvsp[0].lval));}
+                         { (grib_yyval.ivalue)=grib_iarray_push(0,(grib_yyvsp[0].lval));}
 #line 2447 "y.tab.c"
     break;
 
@@ -2484,7 +2484,7 @@ grib_yyreduce:
 
   case 36:
 #line 321 "griby.y"
-                          { (grib_yyval.explist) = grib_arguments_new(grib_parser_context,(grib_yyvsp[0].exp),NULL); }
+                     { (grib_yyval.explist) = grib_arguments_new(grib_parser_context,(grib_yyvsp[0].exp),NULL); }
 #line 2489 "y.tab.c"
     break;
 
@@ -3199,7 +3199,7 @@ grib_yyreduce:
 
   case 148:
 #line 657 "griby.y"
-                               { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[-2].str),(grib_yyvsp[0].exp),0); free((grib_yyvsp[-2].str)); }
+                              { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[-2].str),(grib_yyvsp[0].exp),0); free((grib_yyvsp[-2].str)); }
 #line 3204 "y.tab.c"
     break;
 
@@ -3217,7 +3217,7 @@ grib_yyreduce:
 
   case 152:
 #line 666 "griby.y"
-                { (grib_yyval.explist) = NULL ;}
+               { (grib_yyval.explist) = NULL ;}
 #line 3222 "y.tab.c"
     break;
 
@@ -3229,7 +3229,7 @@ grib_yyreduce:
 
   case 154:
 #line 670 "griby.y"
-                      { (grib_yyval.lval) = 0 ; }
+                     { (grib_yyval.lval) = 0 ; }
 #line 3234 "y.tab.c"
     break;
 
@@ -3331,25 +3331,25 @@ grib_yyreduce:
 
   case 172:
 #line 694 "griby.y"
-                                                                { (grib_yyval.act) = grib_action_create_list(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act)); free((grib_yyvsp[-7].str)); }
+                                                               { (grib_yyval.act) = grib_action_create_list(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act)); free((grib_yyvsp[-7].str)); }
 #line 3336 "y.tab.c"
     break;
 
   case 173:
 #line 697 "griby.y"
-                                                            { (grib_yyval.act) = grib_action_create_while(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act));  }
+                                                           { (grib_yyval.act) = grib_action_create_while(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act));  }
 #line 3342 "y.tab.c"
     break;
 
   case 174:
 #line 700 "griby.y"
-                                                                   { (grib_yyval.act) = grib_action_create_trigger(grib_parser_context,(grib_yyvsp[-4].explist),(grib_yyvsp[-1].act));  }
+                                                                  { (grib_yyval.act) = grib_action_create_trigger(grib_parser_context,(grib_yyvsp[-4].explist),(grib_yyvsp[-1].act));  }
 #line 3348 "y.tab.c"
     break;
 
   case 175:
 #line 703 "griby.y"
-                                                         { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-4].str)); }
+                                                        { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-4].str)); }
 #line 3354 "y.tab.c"
     break;
 
@@ -3403,7 +3403,7 @@ grib_yyreduce:
 
   case 184:
 #line 712 "griby.y"
-                                                    { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-4].str)); }
+                                                     { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-4].str)); }
 #line 3408 "y.tab.c"
     break;
 
@@ -3463,7 +3463,7 @@ grib_yyreduce:
 
   case 196:
 #line 731 "griby.y"
-                                                                  { (grib_yyval.act) = grib_action_create_hash_array(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].hash_array_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-4].str)); }
+                                                                 { (grib_yyval.act) = grib_action_create_hash_array(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].hash_array_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-4].str)); }
 #line 3468 "y.tab.c"
     break;
 
@@ -3481,7 +3481,7 @@ grib_yyreduce:
 
   case 200:
 #line 739 "griby.y"
-                                               { (grib_yyval.case_value) = grib_case_new(grib_parser_context,(grib_yyvsp[-2].explist),(grib_yyvsp[0].act));  }
+                                              { (grib_yyval.case_value) = grib_case_new(grib_parser_context,(grib_yyvsp[-2].explist),(grib_yyvsp[0].act));  }
 #line 3486 "y.tab.c"
     break;
 
@@ -3505,7 +3505,7 @@ grib_yyreduce:
 
   case 204:
 #line 748 "griby.y"
-                                                         {
+                                                      {
 	  				(grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].concept_condition)); free((grib_yyvsp[-4].str));}
 #line 3511 "y.tab.c"
     break;
@@ -3539,7 +3539,7 @@ grib_yyreduce:
 
   case 210:
 #line 762 "griby.y"
-                                               { (grib_yyval.concept_condition) = grib_concept_condition_new(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].exp),0); free((grib_yyvsp[-3].str)); }
+                                            { (grib_yyval.concept_condition) = grib_concept_condition_new(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].exp),0); free((grib_yyvsp[-3].str)); }
 #line 3544 "y.tab.c"
     break;
 
@@ -3551,7 +3551,7 @@ grib_yyreduce:
 
   case 212:
 #line 767 "griby.y"
-                                                     {
+                                                    {
 	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].ivalue)); free((grib_yyvsp[-4].str));}
 #line 3557 "y.tab.c"
     break;
@@ -3565,19 +3565,19 @@ grib_yyreduce:
 
   case 214:
 #line 773 "griby.y"
-                                                                { (grib_yyval.exp) = new_accessor_expression(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-3].lval),(grib_yyvsp[-1].lval));  free((grib_yyvsp[-5].str)); }
+                                                              { (grib_yyval.exp) = new_accessor_expression(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-3].lval),(grib_yyvsp[-1].lval)); free((grib_yyvsp[-5].str)); }
 #line 3570 "y.tab.c"
     break;
 
   case 215:
 #line 774 "griby.y"
-                                                                          { (grib_yyval.exp) = new_accessor_expression(grib_parser_context,(grib_yyvsp[0].str),0,0); free((grib_yyvsp[0].str)); }
+                                          { (grib_yyval.exp) = new_accessor_expression(grib_parser_context,(grib_yyvsp[0].str),0,0); free((grib_yyvsp[0].str)); }
 #line 3576 "y.tab.c"
     break;
 
   case 216:
 #line 775 "griby.y"
-                                                                 { (grib_yyval.exp) = new_sub_string_expression(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-3].lval),(grib_yyvsp[-1].lval));  free((grib_yyvsp[-5].str)); }
+                                                                { (grib_yyval.exp) = new_sub_string_expression(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-3].lval),(grib_yyvsp[-1].lval)); free((grib_yyvsp[-5].str)); }
 #line 3582 "y.tab.c"
     break;
 
@@ -3637,13 +3637,13 @@ grib_yyreduce:
 
   case 227:
 #line 792 "griby.y"
-                                    { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_pow,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                          { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_pow,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3642 "y.tab.c"
     break;
 
   case 229:
 #line 796 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_mul,&grib_op_mul_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                            { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_mul,&grib_op_mul_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3648 "y.tab.c"
     break;
 
@@ -3709,7 +3709,7 @@ grib_yyreduce:
 
   case 241:
 #line 810 "griby.y"
-                                    { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_add,&grib_op_add_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                         { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_add,&grib_op_add_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3714 "y.tab.c"
     break;
 
@@ -3721,7 +3721,7 @@ grib_yyreduce:
 
   case 244:
 #line 815 "griby.y"
-                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_gt,&grib_op_gt_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                                { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_gt,&grib_op_gt_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3726 "y.tab.c"
     break;
 
@@ -3769,19 +3769,19 @@ grib_yyreduce:
 
   case 253:
 #line 831 "griby.y"
-                                        { (grib_yyval.exp) = new_logical_and_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
+                                       { (grib_yyval.exp) = new_logical_and_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
 #line 3774 "y.tab.c"
     break;
 
   case 255:
 #line 835 "griby.y"
-                                            { (grib_yyval.exp) = new_logical_or_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp));}
+                                        { (grib_yyval.exp) = new_logical_or_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp));}
 #line 3780 "y.tab.c"
     break;
 
   case 260:
 #line 849 "griby.y"
-                                       { (grib_yyval.rule_entry) = grib_new_rule_entry(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].exp)); free((grib_yyvsp[-3].str)); }
+                                      { (grib_yyval.rule_entry) = grib_new_rule_entry(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].exp)); free((grib_yyvsp[-3].str)); }
 #line 3786 "y.tab.c"
     break;
 
@@ -4078,11 +4078,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
     return _reverse_hash_array(v,r);
 }
 
-
 static grib_hash_array_value* reverse_hash_array(grib_hash_array_value* r)
 {
     return _reverse_hash_array(r,NULL);
 }
-
-
-

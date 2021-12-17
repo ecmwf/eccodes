@@ -28,13 +28,13 @@ program print_data
                        '../../data/regular_latlon_surface_constant.grib1', 'r')
 
    ! A new GRIB message is loaded from file
-   ! igrib is the grib id to be used in subsequent calls
+   ! igrib is the GRIB id to be used in subsequent calls
    call grib_new_from_file(ifile, igrib)
 
-   ! Get the size of the values array
+   ! get the size of the values array
    call grib_get_size(igrib, 'values', numPoints)
 
-   ! Get data values
+   ! get data values
    print *, 'number of points ', numPoints
 
    call grib_get(igrib, 'values', values_static)

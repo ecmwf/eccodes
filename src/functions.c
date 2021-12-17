@@ -136,11 +136,12 @@ double grib_op_le_d(double a, double b)
     return a <= b;
 }
 
+#if 0
 #define LOOKUP(a)      \
     if (proc == a) {   \
         return "&" #a; \
     }
-const char* grib_binop_long_proc_name(grib_binop_long_proc proc)
+const char* grib_binop_long_proc_name(const grib_binop_long_proc proc)
 {
     if (!proc)
         return "NULL";
@@ -165,7 +166,7 @@ const char* grib_binop_long_proc_name(grib_binop_long_proc proc)
     return NULL;
 }
 
-const char* grib_binop_double_proc_name(grib_binop_double_proc proc)
+const char* grib_binop_double_proc_name(const grib_binop_double_proc proc)
 {
     if (!proc)
         return "NULL";
@@ -184,7 +185,7 @@ const char* grib_binop_double_proc_name(grib_binop_double_proc proc)
     return NULL;
 }
 
-const char* grib_unop_long_proc_name(grib_unop_long_proc proc)
+const char* grib_unop_long_proc_name(const grib_unop_long_proc proc)
 {
     if (!proc)
         return "NULL";
@@ -195,7 +196,7 @@ const char* grib_unop_long_proc_name(grib_unop_long_proc proc)
     return NULL;
 }
 
-const char* grib_unop_double_proc_name(grib_unop_double_proc proc)
+const char* grib_unop_double_proc_name(const grib_unop_double_proc proc)
 {
     if (!proc)
         return "NULL";
@@ -204,3 +205,4 @@ const char* grib_unop_double_proc_name(grib_unop_double_proc proc)
     Assert(0);
     return NULL;
 }
+#endif

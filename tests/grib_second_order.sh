@@ -150,6 +150,15 @@ if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
     ${tools_dir}/grib_compare -cdata:n -R all=3e-06 $infile $temp1
 fi
 
+# Second order doesn't have a proper representation for constant fields
+# So we change the packing type to grid_simple
+# ---------------------------------------------------------------------
+infile=gen_ext_spd_2.grib
+grib_check_key_equals $infile packingType grid_second_order
+${tools_dir}/grib_set -d1 $infile $temp1
+grib_check_key_equals $temp1 packingType grid_simple
+
+
 # Clean up
 rm -f $temp_stat1 $temp_stat2
 rm -f $temp1 $temp2 $temp3 $sec_ord_bmp

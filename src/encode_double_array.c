@@ -21,7 +21,7 @@ static void encode_double_array_common(int numBits, long packStart, long datasiz
     unsigned int ival;
     int cbits, jbits;
     unsigned int c;
-    static unsigned int mask[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };
+    static const unsigned int mask[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };
 
     /* code from gribw routine flist2bitstream */
 

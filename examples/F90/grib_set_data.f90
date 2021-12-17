@@ -25,15 +25,15 @@ program set_data
    call getarg(1, outfile_name)
    call codes_open_file(outfile, outfile_name, 'w')
 
-   ! Note: the full name of the sample file is "regular_ll_pl_grib1.tmpl"
-   ! Sample files are stored in the samples directory (use codes_info to
-   ! see where that is).  The default sample path can be changed by
+   ! note: the full name of the sample file is "regular_ll_pl_grib1.tmpl"
+   ! sample files are stored in the samples directory (use codes_info to
+   ! see where that is). The default sample path can be changed by
    ! setting the environment variable ECCODES_SAMPLES_PATH
    call codes_grib_new_from_samples(igrib, 'regular_ll_pl_grib1')
 
-   ! Here we're changing the data values only, so the number of values
+   ! here we're changing the data values only, so the number of values
    ! will be the same as the sample GRIB.
-   ! But if your data array has a different size, then specify the grid geometry
+   ! but if your data array has a different size, then specify the grid geometry
    ! (e.g. keys Ni, Nj etc) and set the correct number of data values
    call codes_get_size(igrib, 'values', numberOfValues)
 

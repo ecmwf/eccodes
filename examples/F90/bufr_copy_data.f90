@@ -7,7 +7,6 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FORTRAN 90 implementation: bufr_copy_data
 !
 ! Description: How to copy all the values in the data section that are present in the same
 !              position in the data tree and with the same number of values to the output handle

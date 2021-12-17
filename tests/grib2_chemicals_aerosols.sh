@@ -11,8 +11,9 @@
 . ./include.sh
 set -u
 
-label="grib_ecc-1224-test"
+label="grib2_chemicals_aerosols_test"
 temp=temp.$label
+temp1=temp.$label.1
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 latest=`${tools_dir}/grib_get -p tablesVersionLatest $sample2`
@@ -97,6 +98,21 @@ ${tools_dir}/grib_set -s is_aerosol=1 $tempSample $temp
 grib_check_key_equals $temp productDefinitionTemplateNumber '45'
 grib_check_key_equals $temp aerosolType,typeOfSizeInterval '0 0'
 
+# Keys firstSize and secondSize
+${tools_dir}/grib_set -s paramId=210072 $tempSample $temp
+${tools_dir}/grib_ls -p firstSize,secondSize $temp
 
+# ECC-1303: Setting localDefinitionNumber=1 on chemical source/sink
+# ------------------------------------------------------------------
+${tools_dir}/grib_set -s paramId=228104,setLocalDefinition=1,localDefinitionNumber=1 $sample2 $temp
+grib_check_key_equals $temp paramId,productDefinitionTemplateNumber,is_chemical_srcsink,localUsePresent '228104 76 1 1'
+
+${tools_dir}/grib_set -s stepType=accum,paramId=228104 $sample2 $temp
+grib_check_key_equals $temp shortName,productDefinitionTemplateNumber,is_chemical_srcsink 'e_WLCH4 78 1'
+${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=1 $temp $temp1
+${tools_dir}/grib_compare -b totalLength,numberOfSection $temp $temp1
+grib_check_key_equals $temp1 localUsePresent 1
+
+# Clean up
 rm -f $tempSample
-rm -f $temp
+rm -f $temp $temp1
