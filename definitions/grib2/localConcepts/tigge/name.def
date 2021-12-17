@@ -22,3 +22,46 @@
      scaledValueOfSecondFixedSurface = 2 ;
      scaleFactorOfSecondFixedSurface = 1 ;
     }
+#Maximum temperature at 2 metres in the last 6 hours
+'Maximum temperature at 2 metres in the last 6 hours' = {
+     discipline = 0 ;
+     parameterCategory = 0 ;
+     parameterNumber = 0 ;
+     typeOfFirstFixedSurface = 103 ;
+     typeOfStatisticalProcessing = 2 ;
+     scaleFactorOfFirstFixedSurface = 1 ;
+     scaledValueOfFirstFixedSurface = 15 ;
+     indicatorOfUnitForTimeRange = 1 ;
+     lengthOfTimeRange = 6 ;
+    }
+#Minimum temperature at 2 metres in the last 6 hours
+'Minimum temperature at 2 metres in the last 6 hours' = {
+     discipline = 0 ;
+     parameterCategory = 0 ;
+     parameterNumber = 0 ;
+     typeOfStatisticalProcessing = 3 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaleFactorOfFirstFixedSurface = 1 ;
+     scaledValueOfFirstFixedSurface = 15 ;
+     indicatorOfUnitForTimeRange = 1 ;
+     lengthOfTimeRange = 6 ;
+    }
+#2 metre temperature
+'2 metre temperature' = {
+     discipline = 0 ;
+     parameterCategory = 0 ;
+     parameterNumber = 0 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaleFactorOfFirstFixedSurface = 1 ;
+     scaledValueOfFirstFixedSurface = 15 ;
+    }
+#2 metre dewpoint temperature
+'2 metre dewpoint temperature' = {
+     discipline = 0 ;
+     parameterCategory = 0 ;
+     parameterNumber = 6 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaleFactorOfFirstFixedSurface = 1 ;
+     scaledValueOfFirstFixedSurface = 15 ;
+    }
+
