@@ -261,7 +261,7 @@ static int read_GRIB(reader* r)
                 total_length = length;
                 /* length=8+sec1len + sec2len+sec3len+11; */
                 length = i;
-                err    = r->seek(r->read_data, total_length - length - 1);
+                err    = r->seek(r->read_data, (off_t)total_length - (off_t)length - 1);
             }
             else if (length & 0x800000) {
                 /* Large GRIBs */
@@ -972,7 +972,7 @@ static int read_any_gts(reader* r)
                 magic |= c;
                 magic &= 0xffffffff;
                 if (magic == theEnd) {
-                    r->seek(r->read_data, already_read - message_size);
+                    r->seek(r->read_data, (off_t)already_read - (off_t)message_size);
                     buffer = (unsigned char*)r->alloc(r->alloc_data, &message_size, &err);
                     if (!buffer)
                         return GRIB_OUT_OF_MEMORY;
@@ -1020,7 +1020,7 @@ static int read_any_taf(reader* r)
             while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
                 message_size++;
                 if (c == '=') {
-                    r->seek(r->read_data, already_read - message_size);
+                    r->seek(r->read_data, (off_t)already_read - (off_t)message_size);
                     buffer = (unsigned char*)r->alloc(r->alloc_data, &message_size, &err);
                     if (!buffer)
                         return GRIB_OUT_OF_MEMORY;
@@ -1072,7 +1072,7 @@ static int read_any_metar(reader* r)
                 while (r->read(r->read_data, &c, 1, &err) == 1 && err == 0) {
                     message_size++;
                     if (c == '=') {
-                        r->seek(r->read_data, already_read - message_size);
+                        r->seek(r->read_data, (off_t)already_read - (off_t)message_size);
                         buffer = (unsigned char*)r->alloc(r->alloc_data, &message_size, &err);
                         if (!buffer)
                             return GRIB_OUT_OF_MEMORY;
