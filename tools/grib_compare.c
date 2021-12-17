@@ -82,7 +82,8 @@ static int onlyListed          = 1;
 static int headerMode          = 0;
 static int morein1             = 0;
 static int morein2             = 0;
-static int listFromCommandLine;
+static int listFromCommandLine = 0;
+static int editionIndependent  = 0;
 static int verbose             = 0;
 static double tolerance_factor = 1;
 
@@ -215,6 +216,9 @@ int grib_tool_init(grib_runtime_options* options)
     listFromCommandLine = 0;
     if (grib_options_on("c:") || grib_options_on("e"))
         listFromCommandLine = 1;
+
+    if (grib_options_on("e"))
+        editionIndependent = 1;
 
     if (grib_options_on("a"))
         onlyListed = 0;
@@ -1194,7 +1198,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
                         err++;
                 }
                 grib_keys_iterator_delete(iter);
-                if (num_keys_in_namespace == 0) {
+                if (num_keys_in_namespace == 0 && !editionIndependent) {
                     printf("ERROR: namespace \"%s\" does not contain any key.\n", options->compare[i].name);
                 }
             }
