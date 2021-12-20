@@ -29,9 +29,9 @@ meta swapScanningY change_scanning_direction( values,Ni,Nj,
 alias swapScanningLat = swapScanningY;
 
 if (jPointsAreConsecutive) {
-	alias numberOfRows=Ni;
-	alias numberOfColumns=Nj;
+    alias numberOfRows=Ni;
+    alias numberOfColumns=Nj;
 } else {
-	alias numberOfRows=Nj;
-	alias numberOfColumns=Ni;
+    alias numberOfRows=Nj;
+    alias numberOfColumns=Ni;
 }

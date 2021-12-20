@@ -1,7 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
 # moved here to allow different bitsPerValue in second order packing
-unsigned[1] bitsPerValue : dump ;
+unsigned[1] bitsPerValue : dump;
 alias numberOfBitsContainingEachPackedValue = bitsPerValue;
 
 # For grib1 -> grib2
@@ -11,15 +11,15 @@ alias numberOfBitsContainingEachPackedValue = bitsPerValue;
 constant PUnset = -32767;
 
  unsigned[2] N     : read_only,dump;
- signed[2] P  = PUnset ;
+ signed[2] P  = PUnset;
  
  unsigned[1] JS=0  : dump;
  unsigned[1] KS=0  : dump;
  unsigned[1] MS=0  : dump;
 
- alias subSetJ=JS  ;
- alias subSetK=KS  ;
- alias subSetM=MS  ;
+ alias subSetJ=JS;
+ alias subSetK=KS;
+ alias subSetM=MS;
 
  constant GRIBEXShBugPresent = 1;
  transient computeLaplacianOperator=0;
@@ -29,9 +29,9 @@ constant PUnset = -32767;
 
  if (localUsePresent) {
    if (changed(localDefinitionNumber)) {
-     transient TS = 0 ;
+     transient TS = 0;
      meta TScalc spectral_truncation(JS,KS,MS,TS) : read_only,hidden;
-     meta Nassigned octect_number(N,4*TScalc) : hidden ;
+     meta Nassigned octect_number(N,4*TScalc) : hidden;
    }
  }
 
@@ -64,7 +64,7 @@ constant PUnset = -32767;
 
       halfByte,
       N,packingType,spectral_ieee,precision
- ) : dump ;
+ ) : dump;
 
  meta data.packedValues data_sh_packed(
       section4Length,
