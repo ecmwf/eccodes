@@ -40,8 +40,11 @@ int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue
     for (i = 0; i < n_vals; i++) {
         /* read at least enough bits (byte by byte) from input */
         long bitsToRead = bitsPerValue;
-        long ret        = 0;
+        unsigned long ret        = 0;
+        unsigned long ret_carry_up = 0;
         while (bitsToRead > 0) {
+            ret_carry_up <<= 8;
+            ret_carry_up |= (ret >> (max_nbits - 8));
             ret <<= 8;
             /*   ret += p[pi];         */
             /*   Assert( (ret & p[pi]) == 0 ); */
@@ -55,9 +58,10 @@ int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue
         /* bitsToRead might now be negative (too many bits read) */
         /* remove those which are too much */
         ret >>= -1 * bitsToRead;
+        if (bitsToRead < 0) ret |= (ret_carry_up << (max_nbits - (-1 * bitsToRead)));
         /* remove leading bits (from previous value) */
         ret &= mask;
-        val[i] = ret;
+        val[i] = (long)ret;
 
         usefulBitsInByte = -1 * bitsToRead; /* prepare for next round */
         if (usefulBitsInByte > 0) {
@@ -85,6 +89,7 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerVal
 {
     long i               = 0;
     unsigned long lvalue = 0;
+    unsigned long lvalue_carry_up = 0;
     double x;
 
 #if 0
@@ -134,9 +139,12 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerVal
             /* value read as long */
             long bitsToRead = 0;
             lvalue          = 0;
+            lvalue_carry_up = 0;
             bitsToRead      = bitsPerValue;
             /* read one byte after the other to lvalue until >= bitsPerValue are read */
             while (bitsToRead > 0) {
+                lvalue_carry_up <<= 8;
+                lvalue_carry_up |= (lvalue >> (max_nbits - 8));
                 lvalue <<= 8;
                 lvalue += p[pi];
                 pi++;
@@ -146,6 +154,7 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerVal
             *bitp += bitsPerValue;
             /* bitsToRead is now <= 0, remove the last bits */
             lvalue >>= -1 * bitsToRead;
+            if (bitsToRead < 0) lvalue |= (lvalue_carry_up << (max_nbits - (-1 * bitsToRead)));
             /* set leading bits to 0 - removing bits used for previous number */
             lvalue &= mask;
 

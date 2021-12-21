@@ -178,6 +178,7 @@ char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t
 unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long nbits)
 {
     unsigned long ret    = 0;
+    unsigned long ret_carry_up = 0;
     long oc              = *bitp / 8;
     unsigned long mask   = 0;
     long pi              = 0;
@@ -222,6 +223,8 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
     /* read at least enough bits (byte by byte) from input */
     bitsToRead = nbits;
     while (bitsToRead > 0) {
+        ret_carry_up <<= 8;
+        ret_carry_up |= (ret >> (max_nbits - 8));
         ret <<= 8;
         /*   ret += p[pi];     */
         DebugAssert((ret & p[pi]) == 0);
@@ -235,6 +238,7 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
     /* bitsToRead might now be negative (too many bits read) */
     /* remove those which are too much */
     ret >>= -1 * bitsToRead;
+    if (bitsToRead < 0) ret |= (ret_carry_up << (max_nbits - (-1 * bitsToRead)));
     /* remove leading bits (from previous value) */
     ret &= mask;
     /* printf("%d %d\n", ret2, ret);*/
@@ -310,6 +314,7 @@ int grib_encode_unsigned_long(unsigned char* p, unsigned long val, long* bitp, l
 size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
 {
     size_t ret           = 0;
+    size_t ret_carry_up  = 0;
     long oc              = *bitp / 8;
     size_t mask          = 0;
     long pi              = 0;
@@ -346,6 +351,8 @@ size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
     /* read at least enough bits (byte by byte) from input */
     bitsToRead = nbits;
     while (bitsToRead > 0) {
+        ret_carry_up <<= 8;
+        ret_carry_up |= (ret >> (max_nbits_size_t - 8));
         ret <<= 8;
         /*   ret += p[pi];     */
         DebugAssert((ret & p[pi]) == 0);
@@ -359,6 +366,7 @@ size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
     /* bitsToRead might now be negative (too many bits read) */
     /* remove those which are too much */
     ret >>= -1 * bitsToRead;
+    if (bitsToRead < 0) ret |= (ret_carry_up << (max_nbits_size_t - (-1 * bitsToRead)));
     /* remove leading bits (from previous value) */
     ret &= mask;
 
