@@ -1,0 +1,15 @@
+#Sea ice area fraction
+'ci' = {
+     discipline = 10 ;
+     parameterCategory = 2 ;
+     parameterNumber = 0 ;
+    }
+#2 metre dewpoint temperature
+'2d' = {
+     discipline = 0 ;
+     parameterCategory = 0 ;
+     parameterNumber = 6 ;
+     typeOfFirstFixedSurface = 103 ;
+     scaledValueOfFirstFixedSurface = 2 ;
+     scaleFactorOfFirstFixedSurface = 0 ;
+    }

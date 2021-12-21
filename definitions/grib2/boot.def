@@ -16,7 +16,6 @@ constant tablesVersionLatest = 28 : edition_specific;
 constant million = 1000000 : hidden;
 constant grib2divider   = 1000000;
 alias extraDimensionPresent=zero;
-alias is_s2s = zero;
 transient angleSubdivisions=grib2divider;  # micro degrees
 
 meta gts_header gts_header() : no_copy,hidden,read_only;
