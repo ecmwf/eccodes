@@ -12,7 +12,6 @@ extern grib_accessor_class* grib_accessor_class_bits_per_value;
 extern grib_accessor_class* grib_accessor_class_blob;
 extern grib_accessor_class* grib_accessor_class_box;
 extern grib_accessor_class* grib_accessor_class_budgdate;
-extern grib_accessor_class* grib_accessor_class_bufr_clear_tables;
 extern grib_accessor_class* grib_accessor_class_bufr_data_array;
 extern grib_accessor_class* grib_accessor_class_bufr_data_element;
 extern grib_accessor_class* grib_accessor_class_bufr_elements_table;

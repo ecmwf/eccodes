@@ -168,9 +168,6 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_budgdate.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_clear_tables.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_data_array.c">
       <Filter>Source Files</Filter>
     </ClCompile>
