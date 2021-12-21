@@ -75,3 +75,15 @@ else
   # set -u
 fi
 
+ECCODES_ON_LINUX_32BIT=0
+if ( uname -s | grep -qi "linux")
+then
+  if which getconf
+  then
+     if test x`getconf LONG_BIT` == x32
+     then
+        ECCODES_ON_LINUX_32BIT=1
+     fi
+  fi
+fi
+
