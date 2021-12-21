@@ -19,7 +19,7 @@ if (preferLocalConcepts) {
 
 transient productionStatusOfProcessedData=0;
 position offsetSection1;
-section_length[3] section1Length ;
+section_length[3] section1Length;
 meta section1Pointer section_pointer(offsetSection1,section1Length,1);
 constant wrongPadding=0;
 
@@ -42,12 +42,12 @@ alias ls.centre = centre;
 
 #  Generating process identification number
 # (allocated by originating centre)
-unsigned[1] generatingProcessIdentifier : dump ;
+unsigned[1] generatingProcessIdentifier : dump;
 alias generatingProcessIdentificationNumber=generatingProcessIdentifier;
 alias process=generatingProcessIdentifier;
 
-unsigned[1] gridDefinition = 255 : edition_specific ;
-flags[1] section1Flags 'grib1/1.table' = 128 : hidden ; # = section 2 present
+unsigned[1] gridDefinition = 255 : edition_specific;
+flags[1] section1Flags 'grib1/1.table' = 128 : hidden; # = section 2 present
 
 alias centreForTable2=centre;
 
@@ -113,11 +113,11 @@ if( indicatorOfTypeOfLevel == 109 ||
     alias mars.levelist = level;
 }
 
-unsigned[1] yearOfCentury : edition_specific ;
-unsigned[1] month  ;
-unsigned[1] day ;
-unsigned[1] hour  ;
-unsigned[1] minute  ;
+unsigned[1] yearOfCentury : edition_specific;
+unsigned[1] month;
+unsigned[1] day;
+unsigned[1] hour;
+unsigned[1] minute;
 transient second = 0;
 
 codetable[1] unitOfTimeRange 'grib1/4.table' = 1 : edition_specific;
@@ -136,7 +136,7 @@ unsigned[2] numberIncludedInAverage;
 meta mybits bits(numberIncludedInAverage,0,12);
 
 unsigned[1] numberMissingFromAveragesOrAccumulations;
-unsigned[1] centuryOfReferenceTimeOfData ;
+unsigned[1] centuryOfReferenceTimeOfData;
 
 codetable[1] subCentre 'grib1/0.[centre].table' : dump;
 
@@ -179,7 +179,7 @@ transient setLocalDefinition= 0 : no_copy;
 transient optimizeScaleFactor = 0;
 
 meta dataDate   g1date(centuryOfReferenceTimeOfData,yearOfCentury,month,day) : dump;
-meta year       evaluate(dataDate / 10000) ;
+meta year       evaluate(dataDate / 10000);
 
 meta dataTime   time(hour,minute,second) : dump;
 meta julianDay  julian_day(dataDate,hour,minute,second) : edition_specific;
@@ -195,18 +195,18 @@ concept_nofail stepType (timeRangeIndicator, "stepType.def", conceptsDir2, conce
 #alias timeIncrement=zero;
 
 #if (timeRangeIndicator==113) {
-#    alias lengthOfTimeRange=numberIncludedInAverage;
-#    alias indicatorOfUnitForTimeRange=unitOfTimeRange;
-#    alias indicatorOfUnitForTimeIncrement=unitOfTimeRange;
-#    alias timeIncrement=P2;
-#    alias forecastTime=P1;
+#  alias lengthOfTimeRange=numberIncludedInAverage;
+#  alias indicatorOfUnitForTimeRange=unitOfTimeRange;
+#  alias indicatorOfUnitForTimeIncrement=unitOfTimeRange;
+#  alias timeIncrement=P2;
+#  alias forecastTime=P1;
 #}
 
 #if (stepType is "accum") {
-#        transient accumulationRange=P2-P1;
-#        alias lengthOfTimeRange=accumulationRange;
-#        alias forecastTime=P1;
-#        alias indicatorOfUnitForTimeRange=unitOfTimeRange;
+#  transient accumulationRange=P2-P1;
+#  alias lengthOfTimeRange=accumulationRange;
+#  alias forecastTime=P1;
+#  alias indicatorOfUnitForTimeRange=unitOfTimeRange;
 #}
 
 #conversion 1->2
