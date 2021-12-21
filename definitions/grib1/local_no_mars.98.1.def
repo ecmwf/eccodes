@@ -54,7 +54,3 @@ if (stepType is "instant" ) {
 		}
     }
 }
-
-# monthly mean
-#if (timeRangeIndicator==113) {
-#}
