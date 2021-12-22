@@ -120,9 +120,12 @@ res=`${tools_dir}/grib_get -p decimalScaleFactor,bitsPerValue ${data_dir}/gfs.c2
 # Test increasing bits per value
 input=${data_dir}/sample.grib2
 temp=temp.grib_bitsPerValue.grib
-MAX_BPV=58
+MAX_BPV=63
 if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
-    MAX_BPV=26
+    MAX_BPV=31
+fi
+if [ $ECCODES_ON_LINUX_32BIT -eq 1 ] ; then
+    MAX_BPV=31
 fi
 stats1=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg,sd $input`
 grib_check_key_equals $input 'bitsPerValue,packingType' '16 grid_simple'
