@@ -18,23 +18,29 @@
 #include "omp.h"
 #endif
 
-#define mask1(i) (1UL << i)
+#define mask1(i) ((uint64_t)1 << i)
 #define test(n, i) !!((n)&mask1(i))
 
-long GRIB_MASK = -1; /* Mask of sword bits */
+uint64_t GRIB_MASK = -1; /* Mask of sword bits */
 
 #define VALUE(p, q, b) \
-    (((b) == max_nbits ? GRIB_MASK : ~(GRIB_MASK << (b))) & ((p) >> (max_nbits - ((q) + (b)))))
+    (((b) == max_nbits ? (unsigned long)GRIB_MASK : ~((unsigned long)GRIB_MASK << (b))) & ((p) >> (max_nbits - ((q) + (b)))))
 
 #define MASKVALUE(q, b) \
-    ((b) == max_nbits ? GRIB_MASK : (~(GRIB_MASK << (b)) << (max_nbits - ((q) + (b)))))
+    ((b) == max_nbits ? (unsigned long)GRIB_MASK : (~((unsigned long)GRIB_MASK << (b)) << (max_nbits - ((q) + (b)))))
 
 
 #define VALUE_SIZE_T(p, q, b) \
-    (((b) == max_nbits_size_t ? GRIB_MASK : ~(GRIB_MASK << (b))) & ((p) >> (max_nbits_size_t - ((q) + (b)))))
+    (((b) == max_nbits_size_t ? (size_t)GRIB_MASK : ~((size_t)GRIB_MASK << (b))) & ((p) >> (max_nbits_size_t - ((q) + (b)))))
 
 #define MASKVALUE_SIZE_T(q, b) \
-    ((b) == max_nbits_size_t ? GRIB_MASK : (~(GRIB_MASK << (b)) << (max_nbits_size_t - ((q) + (b)))))
+    ((b) == max_nbits_size_t ? (size_t)GRIB_MASK : (~((size_t)GRIB_MASK << (b)) << (max_nbits_size_t - ((q) + (b)))))
+
+#define VALUE_UINT64_T(p, q, b) \
+    (((b) == 64 ? GRIB_MASK : ~(GRIB_MASK << (b))) & ((p) >> (64 - ((q) + (b)))))
+
+#define MASKVALUE_UINT64_T(q, b) \
+    ((b) == 64 ? GRIB_MASK : (~(GRIB_MASK << (b)) << (64 - ((q) + (b)))))
 
 static const unsigned long dmasks[] = {
     0xFF,

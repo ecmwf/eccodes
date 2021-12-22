@@ -1536,8 +1536,10 @@ char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t
 unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long nbits);
 int grib_encode_unsigned_long(unsigned char* p, unsigned long val, long* bitp, long nbits);
 size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits);
+uint64_t grib_decode_uint64_t(const unsigned char* p, long* bitp, long nbits);
 int grib_encode_unsigned_longb(unsigned char* p, unsigned long val, long* bitp, long nb);
 int grib_encode_size_tb(unsigned char* p, size_t val, long* bitp, long nb);
+int grib_encode_uint64_tb(unsigned char* p, uint64_t val, long* bitp, long nb);
 
 
 /* grib_bits_any_endian_simple.c */

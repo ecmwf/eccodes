@@ -16,6 +16,7 @@
 #ifdef ECCODES_ON_WINDOWS
 #include <stdint.h>
 #endif
+#include <inttypes.h>
 
 #if GRIB_PTHREADS
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
@@ -365,6 +366,71 @@ size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
     return ret;
 }
 
+#define BIT_MASK_UINT64_T(x) \
+    (((x) == 64) ? (uint64_t)-1 : ((uint64_t)1 << (x)) - 1)
+
+uint64_t grib_decode_uint64_t(const unsigned char* p, long* bitp, long nbits)
+{
+    uint64_t ret           = 0;
+    uint64_t ret_carry_up  = 0;
+    long oc              = *bitp / 8;
+    uint64_t mask          = 0;
+    long pi              = 0;
+    int usefulBitsInByte = 0;
+    long bitsToRead      = 0;
+
+    if (nbits == 0)
+        return 0;
+
+    if (nbits > 64) {
+        int bits = nbits;
+        int mod  = bits % 64;
+
+        if (mod != 0) {
+            int e = grib_decode_uint64_t(p, bitp, mod);
+            Assert(e == 0);
+            bits -= mod;
+        }
+
+        while (bits > 64) {
+            int e = grib_decode_uint64_t(p, bitp, 64);
+            Assert(e == 0);
+            bits -= 64;
+        }
+
+        return grib_decode_uint64_t(p, bitp, bits);
+    }
+
+    mask = BIT_MASK_UINT64_T(nbits);
+    /* pi: position of bitp in p[]. >>3 == /8 */
+    pi = oc;
+    /* number of useful bits in current byte */
+    usefulBitsInByte = 8 - (*bitp & 7);
+    /* read at least enough bits (byte by byte) from input */
+    bitsToRead = nbits;
+    while (bitsToRead > 0) {
+        ret_carry_up <<= 8;
+        ret_carry_up |= (ret >> (64-8));
+        ret <<= 8;
+        /*   ret += p[pi];     */
+        DebugAssert((ret & p[pi]) == 0);
+        ret = ret | p[pi];
+        pi++;
+        bitsToRead -= usefulBitsInByte;
+        usefulBitsInByte = 8;
+    }
+    *bitp += nbits;
+
+    /* bitsToRead might now be negative (too many bits read) */
+    /* remove those which are too much */
+    ret >>= -1 * bitsToRead;
+    if (bitsToRead < 0) ret |= (ret_carry_up << (64 - (-1 * bitsToRead)));
+    /* remove leading bits (from previous value) */
+    ret &= mask;
+
+    return ret;
+}
+
 int grib_encode_unsigned_longb(unsigned char* p, unsigned long val, long* bitp, long nb)
 {
     long i = 0;
@@ -420,6 +486,33 @@ int grib_encode_size_tb(unsigned char* p, size_t val, long* bitp, long nb)
     }
     return GRIB_SUCCESS;
 }
+
+int grib_encode_uint64_tb(unsigned char* p, uint64_t val, long* bitp, long nb)
+{
+    long i = 0;
+
+    if (nb > 64) {
+        fprintf(stderr, "Number of bits (%ld) exceeds maximum number of bits (%d)\n", nb, 64);
+        Assert(0);
+    }
+#ifdef DEBUG
+    {
+        uint64_t maxV = grib_power(nb, 2);
+        if (val > maxV) {
+            fprintf(stderr, "grib_encode_uint64_tb: Value=%"PRIu64", but number of bits=%"PRIu64"!\n", val, nb);
+            Assert(0);
+        }
+    }
+#endif
+    for (i = nb - 1; i >= 0; i--) {
+        if (test(val, i))
+            grib_set_bit_on(p, bitp);
+        else
+            grib_set_bit_off(p, bitp);
+    }
+    return GRIB_SUCCESS;
+}
+
 
 #if OMP_PACKING
 #include "grib_bits_any_endian_omp.c"
