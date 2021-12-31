@@ -347,10 +347,9 @@ static int pack_string_array(grib_accessor* a, const char** v, size_t* len)
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    char* str                             = NULL;
-    char* p                               = 0;
-    size_t slen                           = 0;
-    char sval[100]                        = {0,};
+    char* str   = NULL;
+    char* p     = 0;
+    size_t slen = 0;
     double dval = 0;
     size_t dlen = 1;
 
@@ -358,6 +357,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     grib_context* c = a->context;
 
     if (self->type != BUFR_DESCRIPTOR_TYPE_STRING) {
+        char sval[32] = {0,};
         unpack_double(a, &dval, &dlen);
         sprintf(sval, "%g", dval);
         slen = strlen(sval);
@@ -383,7 +383,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         str = grib_context_strdup(c, self->stringValues->v[idx]->v[0]);
     }
 
-    if (str == 0 || strlen(str) == 0) {
+    if (str == NULL || strlen(str) == 0) {
         grib_context_free(c, str);
         *len = 0;
         *val = 0;

@@ -133,8 +133,8 @@ static void init_class(grib_accessor_class* c)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    grib_handle* h         = grib_handle_of_accessor(a);
-    h->bufr_elements_table = NULL;
+    //grib_handle* h         = grib_handle_of_accessor(a);
+    //h->bufr_elements_table = NULL;
     return GRIB_SUCCESS;
 }
 
