@@ -11,7 +11,6 @@ constant one = 1 : hidden ;
 constant million = 1000000 : hidden;
 constant grib3divider   = 1000000;
 alias extraDimensionPresent=zero;
-alias is_tigge = zero;
 
 transient angleSubdivisions=grib3divider;  # micro degrees
 
