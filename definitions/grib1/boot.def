@@ -20,7 +20,7 @@ constant epsStatisticsContinous=12 : hidden;
 
 meta headersOnly headers_only();
 
-#template      section_0 "grib1/section.0.def"   ;
+#template      section_0 "grib1/section.0.def";
 
 meta gts_header gts_header() : no_copy,hidden,read_only;
 meta gts_TTAAii gts_header(20,6) : no_copy,hidden,read_only;
@@ -30,24 +30,24 @@ meta gts_ddhh00 gts_header(32,6) : no_copy,hidden,read_only;
 ascii[4] identifier  = "GRIB" : read_only,hidden;
 
 constant offsetSection0=0;
-constant section0Length=8 ;
+constant section0Length=8;
 meta section0Pointer section_pointer(offsetSection0,section0Length,0);
 
 # Due to a trick done by GRIBEX to support large GRIBs, we need a special treatment
 # of the message length and of the section4 length, so instead of
-# section_length[3] totalLength                     ;
+# section_length[3] totalLength;
 # we get:
-g1_message_length[3] totalLength(section4Length) ;
+g1_message_length[3] totalLength(section4Length);
 position startOfHeaders;
 unsigned[1] editionNumber = 1 : edition_specific,dump;
 
-template      section_1 "grib1/section.1.def"   ;
+template      section_1 "grib1/section.1.def";
 
 alias ls.edition = editionNumber;
 
 # Note flagbit numbers 7 to 0, while wmo is 1 to 8
 flagbit gridDescriptionSectionPresent(section1Flags,7) = 1;
-meta GDSPresent gds_is_present(gridDescriptionSectionPresent,gridDefinition,bitmapPresent,values): dump ;
+meta GDSPresent gds_is_present(gridDescriptionSectionPresent,gridDefinition,bitmapPresent,values): dump;
 #alias GDSPresent = gridDescriptionSectionPresent;
 
 flagbit bitmapPresent(section1Flags,6) :dump;
@@ -57,7 +57,7 @@ alias missingValuesPresent=bitmapPresent : read_only;
 transient angleSubdivisions=1000;  # milli degrees
 
 if(gridDescriptionSectionPresent){
-  template section_2 "grib1/section.2.def"     ;
+  template section_2 "grib1/section.2.def";
 } else {
   template predefined_grid "grib1/predefined_grid.def";
 }
