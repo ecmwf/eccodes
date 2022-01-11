@@ -26,28 +26,30 @@
 
 #include "eccodes.h"
 
+/* Returns 1 if the bit at 'pos' in 'var' is set. The counting starts at 0 */
 #define BTEST(var, pos) ((var) & (1 << (pos)))
 
-static int get_double_array(codes_handle* h, const char* key, double** arr)
+/* Helper function to fill a double array with values of 'key'. Client must free memory */
+static int get_double_array(codes_handle* h, const char* key, double** arr, size_t* size)
 {
-    size_t size = 0;
-    CODES_CHECK(codes_get_size(h, key, &size), 0);
-    *arr = (double*)malloc(size * sizeof(double));
-    return codes_get_double_array(h, key, *arr, &size);
+    CODES_CHECK(codes_get_size(h, key, size), 0);
+    *arr = (double*)malloc(*size * sizeof(double));
+    return codes_get_double_array(h, key, *arr, size);
 }
-static int get_long_array(codes_handle* h, const char* key, long** arr)
+
+/* Helper function to fill an integer (=long) array with values of 'key'. Client must free memory */
+static int get_long_array(codes_handle* h, const char* key, long** arr, size_t* size)
 {
-    size_t size = 0;
-    CODES_CHECK(codes_get_size(h, key, &size), 0);
-    *arr = (long*)malloc(size * sizeof(long));
-    return codes_get_long_array(h, key, *arr, &size);
+    CODES_CHECK(codes_get_size(h, key, size), 0);
+    *arr = (long*)malloc(*size * sizeof(long));
+    return codes_get_long_array(h, key, *arr, size);
 }
 
 int main(int argc, char* argv[])
 {
     FILE* in = NULL;
 
-    /* message handle. Required in all the ecCodes calls acting on a message.*/
+    /* Message handle. Required in all the ecCodes calls acting on a message.*/
     codes_handle* h = NULL;
 
     double *lat = NULL, *lon = NULL, *presVal = NULL, *zVal = NULL;
@@ -74,7 +76,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    /* loop over the messages in the BUFR file */
+    /* Loop over the messages in the BUFR file */
     while ((h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err)) != NULL || err != CODES_SUCCESS) {
         count++;
         if (h == NULL) {
@@ -82,8 +84,7 @@ int main(int argc, char* argv[])
             continue;
         }
 
-        /* we need to instruct ecCodes to expand the descriptors
-           i.e., unpack the data values */
+        /* We need to instruct ecCodes to expand the descriptors i.e., unpack the data values */
         CODES_CHECK(codes_set_long(h, "unpack", 1), 0);
 
         /* In our BUFR message verticalSoundingSignificance is always followed by
@@ -111,13 +112,9 @@ int main(int argc, char* argv[])
         err = codes_get_long(h, "second", &second);
         if (err) second = 0;
 
-        CODES_CHECK(codes_get_size(h, "latitude", &sizelats), 0);
-        lat = (double*)malloc(sizelats * sizeof(double));
-        CODES_CHECK(codes_get_double_array(h, "latitude", lat, &sizelats), 0);
+        err = get_double_array(h, "latitude", &lat, &sizelats);
 
-        CODES_CHECK(codes_get_size(h, "longitude", &size), 0);
-        lon = (double*)malloc(size * sizeof(double));
-        CODES_CHECK(codes_get_double_array(h, "longitude", lon, &size), 0);
+        err = get_double_array(h, "longitude", &lon, &size);
 
         status_ht = codes_get_double(h, "heightOfStationGroundAboveMeanSeaLevel", &htg);
         if (status_ht) htg = -999.0;
@@ -125,7 +122,7 @@ int main(int argc, char* argv[])
         if (status_ht) htp = -999.0;
 
         CODES_CHECK(codes_get_long(h, "radiosondeType", &sondeType), 0);
-        err = codes_get_double(h, "heightOfStation", &htec); /*Height from WMO list (BUFR)*/
+        err = codes_get_double(h, "heightOfStation", &htec); /* Height from WMO list (BUFR) */
         if (!err && htg == -999.0) htg = htec;
 
         ymd = year * 10000 + month * 100 + day;
@@ -140,27 +137,21 @@ int main(int argc, char* argv[])
         if (err) balloonwt = 0;
 
         /* Ascent (skip incomplete reports for now) */
-        CODES_CHECK(codes_get_size(h, "timePeriod", &size), 0);
-        timeVal = (long*)malloc(size * sizeof(long));
-        err     = codes_get_long_array(h, "timePeriod", timeVal, &size);
+        err     = get_long_array(h, "timePeriod", &timeVal, &size);
         if (err) {
             printf("Ob: %d %s %ld %ld %g %g %g %g %ld\n",
                    count, statid, ymd, hms, lat[0], lon[0], htg, htp, sondeType);
             printf("Missing times - skip\n");
             llskip = 1;
         }
-        CODES_CHECK(codes_get_size(h, "pressure", &size), 0);
-        presVal = (double*)malloc(size * sizeof(double));
-        err     = codes_get_double_array(h, "pressure", presVal, &size);
+        err = get_double_array(h, "pressure", &presVal, &size);
         if (err) {
             printf("Ob: %d %s %ld %ld %g %g %g %g %ld\n",
                    count, statid, ymd, hms, lat[0], lon[0], htg, htp, sondeType);
             printf("Missing pressures - skip\n");
             llskip = 1;
         }
-        CODES_CHECK(codes_get_size(h, "nonCoordinateGeopotentialHeight", &size), 0);
-        zVal = (double*)malloc(size * sizeof(double));
-        err  = codes_get_double_array(h, "nonCoordinateGeopotentialHeight", zVal, &size);
+        err = get_double_array(h, "nonCoordinateGeopotentialHeight", &zVal, &size);
         if (err) {
             printf("Ob: %d %s %ld %ld %g %g %g %g %ld\n",
                    count, statid, ymd, hms, lat[0], lon[0], htg, htp, sondeType);
@@ -169,15 +160,13 @@ int main(int argc, char* argv[])
         }
 
         if (!llskip) {
-            err = get_double_array(h, "latitudeDisplacement", &dlatVal);
-            err = get_double_array(h, "longitudeDisplacement", &dlonVal);
-            err = get_long_array(h, "extendedVerticalSoundingSignificance", &vssVal);
-            err = get_double_array(h, "airTemperature", &tVal);
-            err = get_double_array(h, "dewpointTemperature", &tdVal);
-            err = get_double_array(h, "windDirection", &wdirVal);
-            err = get_double_array(h, "windSpeed", &wspVal);
-
-            CODES_CHECK(codes_get_size(h, "windSpeed", &sizews), 0);
+            err = get_double_array(h, "latitudeDisplacement", &dlatVal, &size);
+            err = get_double_array(h, "longitudeDisplacement", &dlonVal, &size);
+            err = get_long_array(h, "extendedVerticalSoundingSignificance", &vssVal, &size);
+            err = get_double_array(h, "airTemperature", &tVal, &size);
+            err = get_double_array(h, "dewpointTemperature", &tdVal, &size);
+            err = get_double_array(h, "windDirection", &wdirVal, &size);
+            err = get_double_array(h, "windSpeed", &wspVal, &sizews);
 
             /* Print the values */
             printf("Ob: %7d %s %ld %ld %7.3f %7.3f %7.1f %7.1f %4ld %5lu\n",
@@ -192,7 +181,7 @@ int main(int argc, char* argv[])
             for (i = 0; i < sizews; ++i) {
                 long iflag = vssVal[i];
                 if (!llstdonly || BTEST(iflag, 16)) {
-                    printf("%5ld %6ld %7.3f %7.3f %9.1f %8.1f %8.2f %8.2f %8.2f %8.2f %8ld\n",
+                    printf("%5lu %6ld %7.3f %7.3f %9.1f %8.1f %8.2f %8.2f %8.2f %8.2f %8ld\n",
                            i + 1, timeVal[i],
                            dlatVal[i], dlonVal[i],
                            presVal[i], zVal[i], tVal[i], tdVal[i],
@@ -201,7 +190,7 @@ int main(int argc, char* argv[])
             }
         }
 
-        /* release memory */
+        /* Release memory */
         free(lat);
         free(lon);
         free(timeVal);
