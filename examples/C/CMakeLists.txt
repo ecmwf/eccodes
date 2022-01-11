@@ -42,6 +42,7 @@ list( APPEND test_bins
       bufr_read_scatterometer
       bufr_read_synop
       bufr_read_temp
+      bufr_read_tempf
       bufr_set_keys
       bufr_subset
       mars_param
@@ -97,6 +98,7 @@ if( HAVE_BUILD_TOOLS )
        bufr_read_scatterometer
        bufr_read_synop
        bufr_read_temp
+       bufr_read_tempf
        bufr_set_keys
        bufr_subset
        get_product_kind)
@@ -129,6 +131,7 @@ else()
        bufr_read_scatterometer
        bufr_read_synop
        bufr_read_temp
+       bufr_read_tempf
        bufr_set_keys
        bufr_subset
        get_product_kind)
