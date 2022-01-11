@@ -10,7 +10,7 @@
 
 . ./include.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_read_tempf_f"
 tempOut=temp.${label}.txt
 tempRef=temp.${label}.ref

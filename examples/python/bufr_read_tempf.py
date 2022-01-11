@@ -1,5 +1,5 @@
 #
-# Copyright 2005- ECMWF.
+# (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -28,6 +28,7 @@ import sys
 import traceback
 
 import numpy as np
+
 from eccodes import *
 
 INPUT = "../../data/bufr/PraticaTemp.bufr"
@@ -37,7 +38,7 @@ VERBOSE = 1  # verbose error reporting
 def example():
     # open BUFR file
     f = open(INPUT, "rb")
-    llstdonly = 1
+    llstdonly = 1  # If 1 then list standard levels only, 0 list all levels
     cnt = 0
     # loop over the messages in the file
     while 1:
@@ -57,9 +58,13 @@ def example():
         codes_set(bufr, "unpack", 1)
         # get header information from the message
         try:
-            sid = codes_get(bufr, "aircraftRegistrationNumberOrOtherIdentification")
+            dropid = codes_get(bufr, "aircraftRegistrationNumberOrOtherIdentification")
         except Exception:
-            sid = "UNKNOWN"
+            dropid = "UNKNOWN "
+        try:
+            shipid = codes_get(bufr, "shipOrMobileLandStationIdentifier")
+        except Exception:
+            shipid = "UNKNOWN "
 
         statid = "00000   "
         try:
@@ -70,20 +75,30 @@ def example():
         except Exception:
             statid = "00000   "
         if statid == "00000   ":
-            statid = sid[0:8]
+            statid = shipid[0:8]
+        if statid == "UNKNOWN ":
+            statid = dropid[0:8]
 
         # subtype = codes_get(bufr,'rdbSubtype')
         sondetype = codes_get(bufr, "radiosondeType")
+        if sondetype == CODES_MISSING_LONG:
+            sondetype = 0
         slat = codes_get_array(bufr, "latitude")
         slon = codes_get_array(bufr, "longitude")
+        slat = np.where(slat != CODES_MISSING_DOUBLE, slat, np.nan)
+        slon = np.where(slon != CODES_MISSING_DOUBLE, slon, np.nan)
         try:
             htg = codes_get(bufr, "heightOfStationGroundAboveMeanSeaLevel")
+            if htg == CODES_MISSING_DOUBLE:
+                htg = np.nan
         except Exception:
-            htg = -999.0
+            htg = np.nan
         try:
             htp = codes_get(bufr, "heightOfBarometerAboveMeanSeaLevel")
+            if htp == CODES_MISSING_DOUBLE:
+                htp = np.nan
         except Exception:
-            htp = -999.0
+            htp = np.nan
         year = codes_get(bufr, "year")
         month = codes_get(bufr, "month")
         day = codes_get(bufr, "day")
@@ -91,8 +106,10 @@ def example():
         minute = codes_get(bufr, "minute")
         try:
             second = codes_get(bufr, "second")
+            if second == CODES_MISSING_LONG:
+                second = 0
         except Exception:
-            second = 0.0
+            second = 0
         date = str.format("%i%.2i%.2i" % (year, month, day))
         time = str.format("%.2i%.2i%.2i" % (hour, minute, second))
         try:
@@ -101,7 +118,7 @@ def example():
             codes_release(bufr)
             continue
         print(
-            "Ob: %7i %s %s %s %7.3f %8.3f %6.1f %6.1f %3i %4i"
+            "Ob: %7i %8s %s %s %7.3f %8.3f %6.1f %6.1f %3i %4i"
             % (
                 cnt,
                 statid,
@@ -127,9 +144,14 @@ def example():
             htec = codes_get(
                 bufr, "heightOfStation"
             )  # Height from WMO list (appended by ECMWF)
-            print("WMO list lat, lon, ht: %7.3f %8.3f %6.1f" % (slat[1], slon[1], htec))
+            if htec == CODES_MISSING_LONG:
+                htec = np.nan
+            print(
+                "WMO list lat, lon, ht: %s %7.3f %8.3f %6.1f"
+                % (statid, slat[1], slon[1], htec)
+            )
         except Exception:
-            htec = 0
+            htec = np.nan
 
         # get all the timePeriods
         dtime = codes_get_array(bufr, "timePeriod")
@@ -156,14 +178,14 @@ def example():
         dewt = np.where(dewt != CODES_MISSING_DOUBLE, dewt, np.nan)
         windd = np.where(windd != CODES_MISSING_LONG, windd, np.nan)
         windsp = np.where(windsp != CODES_MISSING_DOUBLE, windsp, np.nan)
-        geopoth = np.where(geopoth != CODES_MISSING_DOUBLE, geopoth, np.nan)
+        geopoth = np.where(geopoth != CODES_MISSING_LONG, geopoth, np.nan)
         pressure = np.where(pressure != CODES_MISSING_DOUBLE, pressure, np.nan)
         # pressure = np.where(pressure > -1e10, pressure, np.nan)
         print(
             "level  dtime   dlat   dlon pressure geopotH airTemp  dewPtT windDir  windSp  signif"
         )
         for i in range(0, len(windsp)):
-            if (not llstdonly) or vsSignif[i] != 65536:
+            if llstdonly and vsSignif[i] != 65536:
                 continue
             print(
                 "%5i %6.1f %6.3f %6.3f %8.1f %7.1f %7.2f %7.2f %7.2f %7.2f %7i"
@@ -185,6 +207,7 @@ def example():
         codes_release(bufr)
     # close the file
     f.close()
+    print("Finishing normally. Number of BUFR records read: ", cnt)
 
 
 def main():
