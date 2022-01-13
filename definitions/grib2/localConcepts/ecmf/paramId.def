@@ -922,9 +922,11 @@
 	}
 #Runoff
 '205' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 205 ;
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 201 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Total column ozone
 '206' = {
