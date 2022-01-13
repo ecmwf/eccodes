@@ -53,7 +53,7 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
     auto a             = get<double>(param, earthIsOblate ? "earthMajorAxis" : "radius");
     auto b             = earthIsOblate ? get<double>(param, "earthMinorAxis") : a;
 
-    auto Nr = get<double>(param, "NrInRadiusOfEarth") * (get<long>(param, "edition") == 1 ? 1e-6 : 1.);
+    auto Nr = get<double>(param, "NrInRadiusOfEarthScaled");
     ASSERT(Nr > 1.);
 
     auto h = (Nr - 1.) * a;
