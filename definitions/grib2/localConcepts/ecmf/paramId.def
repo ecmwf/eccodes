@@ -671,12 +671,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 128 ;
 	}
-#Total column water vapour
-'137' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 137 ;
-	}
 #Soil temperature level 1
 '139' = {
 	 discipline = 192 ;
