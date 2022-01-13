@@ -4158,12 +4158,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 13 ;
 	}
-#Total column integrated water vapour
-'260057' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 64 ;
-	}
 #Rain precipitation rate
 '260058' = {
 	 discipline = 0 ;

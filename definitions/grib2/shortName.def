@@ -4158,12 +4158,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 13 ;
 	}
-#Total column integrated water vapour
-'tciwv' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 64 ;
-	}
 #Rain precipitation rate
 'rprate' = {
 	 discipline = 0 ;

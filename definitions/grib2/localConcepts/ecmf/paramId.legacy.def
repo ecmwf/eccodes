@@ -328,7 +328,7 @@
  parameterCategory = 128 ;
  parameterNumber = 205 ;
 }
-#Total column water vapour
+#Total column vertically-integrated water vapour
 '137' = {
  discipline = 192 ;
  parameterCategory = 128 ;
