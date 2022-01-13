@@ -199,6 +199,12 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Total column vertically-integrated water vapour
+'Total column vertically-integrated water vapour' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 64 ;
+	}
 #Surface solar radiation downwards
 'Surface solar radiation downwards' = {
 	 discipline = 0 ;
