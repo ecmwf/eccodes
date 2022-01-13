@@ -328,3 +328,9 @@
  parameterCategory = 128 ;
  parameterNumber = 205 ;
 }
+#Total column water vapour
+'kg m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 137 ;
+}
