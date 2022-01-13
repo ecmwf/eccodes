@@ -50,13 +50,15 @@ do
 
 done
 
-echo "ECC-457 ECMWF total precipitation..."
-# -----------------------------------------
+echo "ECC-457,ECC-1298 ECMWF total precipitation..."
+# ---------------------------------------------------
 input=${data_dir}/tp_ecmwf.grib
 output=temp.grib1to2.grib
 ${tools_dir}/grib_set -s edition=2 $input $output
 res=`${tools_dir}/grib_get -w count=1 -p edition,paramId,units $output`
-[ "$res" = "2 228228 kg m**-2" ]
+[ "$res" = "2 228 m" ]
+res=`${tools_dir}/grib_get -w count=1 -p stepType $output`
+[ "$res" = "accum" ]
 rm -f $output
 
 

@@ -1044,12 +1044,13 @@
 	}
 #Total precipitation
 '228' = {
+	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
+	 parameterNumber = 193 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 unitsFactor = 1000 ;
 	}
 #Instantaneous eastward turbulent surface stress
 '229' = {
