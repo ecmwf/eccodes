@@ -26,3 +26,6 @@
 
 # sund
 "accum" = {indicatorOfParameter=189;gribTablesVersionNo=128;centre=98;}
+
+# runoff
+"accum" = {indicatorOfParameter=205;gribTablesVersionNo=128;centre=98;}
