@@ -91,6 +91,18 @@ grib_check_key_equals $sample_g1 shapeOfTheEarth 0
 grib_check_key_equals $output    shapeOfTheEarth 0
 
 
+echo "ECC-1329: GRIB: Cannot convert runoff (paramId=205)"
+# --------------------------------------------------------
+temp1="temp1.grib1to2.grib1"
+temp2="temp2.grib1to2.grib2"
+${tools_dir}/grib_set -s paramId=205,P1=240,marsType=fc $sample_g1 $temp1
+${tools_dir}/grib_set -s edition=2 $temp1 $temp2
+grib_check_key_equals $temp2 discipline,stepType,shortName,paramId '2 accum ro 205'
+# Fix the stepRange too - TODO
+${tools_dir}/grib_set -s edition=2,startStep=0 $temp1 $temp2
+grib_check_key_equals $temp2 stepType,stepRange 'accum 0-240'
+rm -f $temp1 $temp2
+
 rm -f $output
 
 #sed "s:toolsdir:${tools_dir}/:" ${tools_dir}/grib1to2.txt > ${tools_dir}/grib1to2.test
