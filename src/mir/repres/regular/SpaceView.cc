@@ -162,7 +162,7 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
 
 const std::vector<RegularGrid::PointLonLat>& SpaceViewInternal::lonlat() const {
     if (lonlat_.empty()) {
-        trace::Timer timer("SpaceView: pre-calculate (lon, lat) coordinates", Log::debug());
+        trace::Timer timer("SpaceView: pre-calculate (lon, lat) coordinates");
 
         ASSERT(projectionGreenwich_);  // Greenwich-centred (avoids PROJ normalisation)
         lonlat_.resize(Nx_ * Ny_);

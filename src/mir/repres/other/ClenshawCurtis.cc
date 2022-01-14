@@ -198,7 +198,7 @@ const std::vector<double>& ClenshawCurtis::latitudes(size_t N) {
 
     auto k = ml->find(N);
     if (k == ml->end()) {
-        trace::Timer timer("ClenshawCurtis latitudes " + std::to_string(N), Log::debug());
+        trace::Timer timer("ClenshawCurtis latitudes " + std::to_string(N));
 
         // calculate latitudes and save in map
         auto& lats = (*ml)[N];
