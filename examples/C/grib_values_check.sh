@@ -11,7 +11,7 @@
 . ./include.sh
 
 #Define a common label for all the tmp files
-label="values_check_c"
+label="grib_values_check_c"
 tempOut=${label}.tmp.out
 tempErr=${label}.tmp.err
 tempRef=${label}.tmp.ref
@@ -23,7 +23,7 @@ Error: "levelll" Key/value not found
 EOF
 
 # Input file path is hard coded in the example
-${examples_dir}/c_values_check 2> $tempErr 1> $tempOut
+${examples_dir}/c_grib_values_check 2> $tempErr 1> $tempOut
 
 # Compare output with the reference
 diff $tempRef $tempErr

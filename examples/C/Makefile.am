@@ -43,7 +43,7 @@ noinst_PROGRAMS  = c_grib_nearest \
                    c_grib_set_data \
                    c_grib_index \
                    c_mars_param \
-                   c_values_check \
+                   c_grib_values_check \
                    c_box \
                    c_grib_multi \
                    c_multi2 \
@@ -80,7 +80,7 @@ noinst_PROGRAMS  = c_grib_nearest \
 c_box_SOURCES                  = box.c
 c_grib_set_data_SOURCES        = grib_set_data.c
 c_mars_param_SOURCES           = mars_param.c
-c_values_check_SOURCES         = values_check.c
+c_grib_values_check_SOURCES    = grib_values_check.c
 c_grib_nearest_SOURCES         = grib_nearest.c
 c_grib_multi_write_SOURCES     = grib_multi_write.c
 c_grib_get_keys_SOURCES        = grib_get_keys.c
