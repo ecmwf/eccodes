@@ -16,17 +16,17 @@ tempOut=${label}.tmp.out
 tempErr=${label}.tmp.err
 tempRef=${label}.tmp.ref
 
-
 cat > $tempRef <<EOF
 Error: "level" Value is different
 Error: "levelll" Key/value not found
 EOF
 
-# Input file path is hard coded in the example
-${examples_dir}/c_grib_values_check 2> $tempErr 1> $tempOut
+# Input GRIB file path is hard coded in the example
+${examples_dir}/c_grib_values_check > $tempOut
 
 # Compare output with the reference
-diff $tempRef $tempErr
+cat $tempOut
+diff $tempRef $tempOut
 
 # Clean up
 rm -f $tempRef $tempErr $tempOut
