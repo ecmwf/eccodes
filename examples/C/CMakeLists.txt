@@ -86,6 +86,7 @@ if( HAVE_BUILD_TOOLS )
        grib_nearest_multiple
        grib_multi
        grib_set_missing
+       values_check
        bufr_attributes
        bufr_copy_data
        bufr_clone
