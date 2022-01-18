@@ -869,12 +869,12 @@
 	 table2Version = 160 ;
 	 indicatorOfParameter = 136 ;
 	}
-#Total column water vapour
+#Total column vertically-integrated water vapour
 'kg m**-2' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 137 ;
 	}
-#Total column water vapour
+#Total column vertically-integrated water vapour
 'kg m**-2' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 137 ;

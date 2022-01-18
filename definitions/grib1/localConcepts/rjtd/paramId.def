@@ -85,7 +85,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 39 ;
 	}
-#Total column water vapour
+#Total column vertically-integrated water vapour
 '137' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 54 ;

@@ -199,6 +199,12 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Total column vertically-integrated water vapour
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 64 ;
+	}
 #Surface solar radiation downwards
 'J m**-2' = {
 	 discipline = 0 ;
@@ -4152,12 +4158,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 13 ;
 	}
-#Total column integrated water vapour
-'kg m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 64 ;
-	}
 #Rain precipitation rate
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
@@ -4561,7 +4561,7 @@
 	 parameterNumber = 5 ;
 	}
 #Storm relative helicity
-'J kg**-1' = {
+'m**2 s**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 8 ;

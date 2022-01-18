@@ -38,12 +38,15 @@
 'soilLayer'               = {typeOfFirstFixedSurface=151; typeOfSecondFixedSurface=151;}
 # In the case of Generalized vertical height coordinates, NV must be 6
 'generalVertical'         = {genVertHeightCoords=1; typeOfFirstFixedSurface=150; NV=6;}
-'generalVerticalLayer'    = {genVertHeightCoords=1; typeOfFirstFixedSurface=150; typeOfSecondFixedSurface=150; NV=6;}
+'generalVerticalLayer'    = {genVertHeightCoords=1; typeOfFirstFixedSurface=150;
+                             typeOfSecondFixedSurface=150; NV=6;}
 'depthBelowSea'           = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=255;}
-'oceanSurface'            = {typeOfFirstFixedSurface=160; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=0; typeOfSecondFixedSurface=255;}
+'oceanSurface'            = {typeOfFirstFixedSurface=160; scaleFactorOfFirstFixedSurface=0;
+                             scaledValueOfFirstFixedSurface=0; typeOfSecondFixedSurface=255;}
 'oceanLayer'              = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=160;}
 'entireAtmosphere'        = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=8;}
 'entireOcean'             = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=9;}
+'entireLake'              = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=162;}
 'snow'                    = {typeOfFirstFixedSurface=114; typeOfSecondFixedSurface=255;}
 'snowLayer'               = {typeOfFirstFixedSurface=114; typeOfSecondFixedSurface=114;}
 'seaIce'                  = {typeOfFirstFixedSurface=152; typeOfSecondFixedSurface=255;}
