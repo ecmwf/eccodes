@@ -13,6 +13,7 @@
 #include "mir/repres/regular/LambertAzimuthalEqualArea.h"
 
 #include "mir/param/MIRParametrisation.h"
+#include "mir/repres/Iterator.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
 
@@ -29,15 +30,21 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const param::MIRParametrisa
     RegularGrid(param, make_projection(param)) {}
 
 
+LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const Projection& projection, const util::BoundingBox& bbox,
+                                                     const LinearSpacing& x, const LinearSpacing& y,
+                                                     const util::Shape& shape) :
+    RegularGrid(projection, bbox, x, y, shape) {}
+
+
 RegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::MIRParametrisation& param) {
     auto spec = make_proj_spec(param);
     if (!spec.empty()) {
         return spec;
     }
 
-    double standardParallel;
-    double centralLongitude;
-    double radius;
+    double standardParallel = 0.;
+    double centralLongitude = 0.;
+    double radius           = 0.;
     ASSERT(param.get("standardParallelInDegrees", standardParallel));
     ASSERT(param.get("centralLongitudeInDegrees", centralLongitude));
     param.get("radius", radius = util::Earth::radius());
@@ -73,6 +80,32 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
 
     // some extra keys are edition-specific, so parent call is here
     RegularGrid::fill(info);
+}
+
+
+const Representation* LambertAzimuthalEqualArea::croppedRepresentation(const util::BoundingBox& bbox) const {
+    auto mm = minmax_ij(bbox);
+    auto Ni = x_.size();
+
+    auto projection = grid_.projection();
+    ASSERT(projection);
+
+    auto first = [this, projection, Ni](size_t firsti, size_t firstj) -> Point2 {
+        for (std::unique_ptr<Iterator> it(iterator()); it->next();) {
+            auto i = it->index() % Ni;
+            auto j = it->index() / Ni;
+            if (i == firsti && j == firstj) {
+                auto& latlon = *(*it);
+                return projection.xy(PointLonLat{latlon[1], latlon[0]});
+            }
+        }
+        throw exception::UserError("LambertAzimuthalEqualArea::croppedRepresentation: cannot find first point");
+    }(mm.first.i, mm.first.j);
+
+    auto x = linspace(first.x(), x_.step(), long(mm.second.i - mm.first.i + 1), xPlus_);
+    auto y = linspace(first.y(), y_.step(), long(mm.second.j - mm.first.j + 1), yPlus_);
+
+    return new LambertAzimuthalEqualArea(projection, bbox, x, y, shape_);
 }
 
 
