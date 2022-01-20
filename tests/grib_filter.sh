@@ -11,10 +11,12 @@
 . ./include.sh
 
 REDIRECT=/dev/null
+tempFilt="temp.grib_filter.filt"
+tempGrib="temp_filt.grib2"
 
 if [ -f ${data_dir}/geavg.t12z.pgrbaf108 ]; then
    tmpdata=grib_api.$$.grib
-   rm -f $tmpdata
+#    rm -f $tmpdata
    ${tools_dir}/grib_filter ${data_dir}/filter_rules ${data_dir}/geavg.t12z.pgrbaf108 > $REDIRECT
    rm -f $tmpdata
 fi
@@ -76,15 +78,15 @@ numlines=`${tools_dir}/grib_filter  ${data_dir}/formatint.rules  $ECCODES_SAMPLE
 
 echo "Test conversion from grib1 to grib2 'Generalized vertical height coordinates'"
 # --------------------------------------------------------------------------------
-cat >temp.filt <<EOF
+cat >$tempFilt <<EOF
  set edition=2;
  set typeOfLevel="generalVertical";
  set nlev=41.0;
  write;
 EOF
 
-${tools_dir}/grib_filter -o temp_filt.grib2 temp.filt $ECCODES_SAMPLES_PATH/sh_ml_grib1.tmpl
-result=`${tools_dir}/grib_get -p typeOfFirstFixedSurface,NV,nlev temp_filt.grib2`
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $ECCODES_SAMPLES_PATH/sh_ml_grib1.tmpl
+result=`${tools_dir}/grib_get -p typeOfFirstFixedSurface,NV,nlev $tempGrib`
 [ "$result" = "150 6 41" ]
 
 echo "Test GRIB-394: grib_filter arithmetic operators not correct for floating point values"
@@ -120,7 +122,7 @@ ${tools_dir}/grib_filter  ${data_dir}/binop.rules $ECCODES_SAMPLES_PATH/gg_sfc_g
 
 echo "Test GRIB-526: grib_filter very picky about format of floats"
 # ----------------------------------------------------------------
-cat >temp.filt <<EOF
+cat >$tempFilt <<EOF
  set values = {
    -1000.0,
    3.1e5,
@@ -129,13 +131,13 @@ cat >temp.filt <<EOF
    .4,
    45. };
 EOF
-${tools_dir}/grib_filter temp.filt $ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB1.tmpl
 
 
 echo "Test reading from stdin"
 # ----------------------------
-echo 'set centre="kwbc";write;' | ${tools_dir}/grib_filter -o temp_filt.grib2 - $ECCODES_SAMPLES_PATH/GRIB2.tmpl
-result=`${tools_dir}/grib_get -p centre temp_filt.grib2`
+echo 'set centre="kwbc";write;' | ${tools_dir}/grib_filter -o $tempGrib - $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+result=`${tools_dir}/grib_get -p centre $tempGrib`
 [ "$result" = "kwbc" ]
 
 
@@ -159,29 +161,28 @@ rm -f temp.out.gfilter.*.grib
 
 echo "Test ECC-648: Set codetable key to array"
 # ---------------------------------------------
-cat >temp.filt <<EOF
+cat >$tempFilt <<EOF
  set productDefinitionTemplateNumber = 11;
  set numberOfTimeRange = 3;
  set typeOfStatisticalProcessing = {3, 1, 2};
  write;
 EOF
-${tools_dir}/grib_filter -o temp_filt.grib2 temp.filt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
-stats=`echo 'print "[typeOfStatisticalProcessing]";' | ${tools_dir}/grib_filter - temp_filt.grib2`
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+stats=`echo 'print "[typeOfStatisticalProcessing]";' | ${tools_dir}/grib_filter - $tempGrib`
 [ "$stats" = "3 1 2" ]
 
 
 echo "Test 'append'"
 # -------------------
-cp ${data_dir}/tigge_pf_ecmwf.grib2  temp_filt.grib2 # now has 38 msgs
-${tools_dir}/grib_count temp_filt.grib2
-cat > temp.filt <<EOF
-  append "temp_filt.grib2";
+cp ${data_dir}/tigge_pf_ecmwf.grib2  $tempGrib # now has 38 msgs
+${tools_dir}/grib_count $tempGrib
+cat > $tempFilt <<EOF
+  append "$tempGrib";
 EOF
-${tools_dir}/grib_filter temp.filt ${data_dir}/tigge_pf_ecmwf.grib2 # should end up with 38*2 msgs
-${tools_dir}/grib_count temp_filt.grib2
-count=`${tools_dir}/grib_count temp_filt.grib2`
+${tools_dir}/grib_filter $tempFilt ${data_dir}/tigge_pf_ecmwf.grib2 # should end up with 38*2 msgs
+${tools_dir}/grib_count $tempGrib
+count=`${tools_dir}/grib_count $tempGrib`
 [ $count -eq 76 ]
-
 
 echo "Test ECC-1233"
 # ------------------
@@ -191,16 +192,28 @@ padding=`echo 'print "[padding_grid50_1]";' | ${tools_dir}/grib_filter - $sample
 
 echo "Test switch statement"
 # --------------------------
-cat >temp.filt <<EOF
+cat >$tempFilt <<EOF
 switch (edition) {
   case 1: print "1";
   case 2: print "2";
   default: print "what is this?";assert(0);
 }
 EOF
-${tools_dir}/grib_filter temp.filt $ECCODES_SAMPLES_PATH/GRIB1.tmpl $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB1.tmpl $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+
+echo "Test MISSING"
+# -----------------
+input="${data_dir}/reduced_gaussian_pressure_level.grib2"
+grib_check_key_equals $input scaleFactorOfFirstFixedSurface 0
+cat >$tempFilt <<EOF
+  set scaleFactorOfFirstFixedSurface = MISSING; # has to be uppercase
+  write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
+grib_check_key_equals $tempGrib scaleFactorOfFirstFixedSurface MISSING
 
 
 # Clean up
-rm -f temp_filt.grib2 temp.filt
+rm -f $tempGrib $tempFilt
 rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules
