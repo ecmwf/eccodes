@@ -51,7 +51,7 @@ args = parser.parse_args()
 
 
 start = time.time()
-print("MEMFS: starting")
+print("MEMFS: Starting")
 
 # Exclude experimental features e.g. GRIB3 and TAF
 # The BUFR codetables is not used in the engine
@@ -67,8 +67,8 @@ EXCLUDED.extend(EXCLUDE[args.exclude])
 
 
 dirs = [os.path.realpath(x) for x in args.dirs]
-print("Directories: ", dirs)
-print("Excluding: ", EXCLUDED)
+print("MEMFS: Directories: ", dirs)
+print("MEMFS: Excluding: ", EXCLUDED)
 
 FILES = {}
 SIZES = {}
@@ -201,6 +201,5 @@ for line in f.readlines():
         print(line, file=g)
 
 
-print("Finished")
 
-print("MEMFS: done", time.time() - start)
+print("MEMFS: Done", time.time() - start)
