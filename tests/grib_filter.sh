@@ -11,8 +11,9 @@
 . ./include.sh
 
 REDIRECT=/dev/null
-tempFilt="temp.grib_filter.filt"
-tempGrib="temp_filt.grib2"
+label="grib_filter_test"
+tempFilt="temp.$label.filt"
+tempGrib="temp.$label.grib"
 
 if [ -f ${data_dir}/geavg.t12z.pgrbaf108 ]; then
    tmpdata=grib_api.$$.grib
