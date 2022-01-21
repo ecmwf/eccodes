@@ -45,6 +45,15 @@ static int get_long_array(codes_handle* h, const char* key, long** arr, size_t* 
     return codes_get_long_array(h, key, *arr, size);
 }
 
+/* Reset dimension of input array to 'newsize' and fill with 'fillValue' */
+static void realloc_and_fill(double** arr, size_t newsize, double fillValue)
+{
+    size_t i;
+    free(*arr);
+    *arr = (double*)malloc(newsize * sizeof(double));
+    for(i=0; i<newsize; +i) *arr[i] = fillValue;
+}
+
 int main(int argc, char* argv[])
 {
     FILE* in = NULL;
@@ -57,7 +66,7 @@ int main(int argc, char* argv[])
     double *tVal = NULL, *tdVal = NULL, *wspVal = NULL, *wdirVal = NULL;
     double htg, htp, htec = 0, balloonwt;
     int err         = 0;
-    int status_rsno = 0, status_ht = 0;
+    int status_rsno = 0, status_ht = 0, status_airt = 0, status_dewt = 0, status_p = 0;
     int count     = 0;
     int llskip    = 0;
     int llstdonly = 1; /* Set True to list standard levels only */
@@ -67,6 +76,7 @@ int main(int argc, char* argv[])
     long *timeVal = NULL, *vssVal = NULL;
     const char* infile = "../../data/bufr/PraticaTemp.bufr";
     char statid[128]   = {0,};
+    char dropid[128]   = {0,};
     char rsnumber[16] = {0,};
     char rssoftware[16] = {0,};
 
@@ -93,13 +103,12 @@ int main(int argc, char* argv[])
         llskip = 0;
 
         size = 1024;
+        err  = codes_get_string(h, "aircraftRegistrationNumberOrOtherIdentification", dropid, &size);
+        if (err) strcpy(dropid, "UNKNOWN");
+        size = 1024;
         err  = codes_get_string(h, "shipOrMobileLandStationIdentifier", statid, &size);
-        if (err) {
-            strcpy(statid, "UNKNOWN");
-        } else {
-            if (codes_is_missing(h, "shipOrMobileLandStationIdentifier", &err))
-                strcpy(statid, "MISSING");
-        }
+        if (err) strcpy(statid, dropid);
+
         CODES_CHECK(codes_get_long(h, "blockNumber", &blockNumber), 0);
         CODES_CHECK(codes_get_long(h, "stationNumber", &stationNumber), 0);
         if (blockNumber < 99 && stationNumber < 1000)
@@ -136,7 +145,7 @@ int main(int argc, char* argv[])
         err = codes_get_double(h, "weightOfBalloon", &balloonwt);
         if (err) balloonwt = 0;
 
-        /* Ascent (skip incomplete reports for now) */
+        /* Ascent (skip reports without dtime array for now) */
         err     = get_long_array(h, "timePeriod", &timeVal, &size);
         if (err) {
             printf("Ob: %d %s %ld %ld %g %g %g %g %ld\n",
@@ -144,30 +153,30 @@ int main(int argc, char* argv[])
             printf("Missing times - skip\n");
             llskip = 1;
         }
-        err = get_double_array(h, "pressure", &presVal, &size);
-        if (err) {
-            printf("Ob: %d %s %ld %ld %g %g %g %g %ld\n",
-                   count, statid, ymd, hms, lat[0], lon[0], htg, htp, sondeType);
-            printf("Missing pressures - skip\n");
-            llskip = 1;
-        }
-        err = get_double_array(h, "nonCoordinateGeopotentialHeight", &zVal, &size);
-        if (err) {
-            printf("Ob: %d %s %ld %ld %g %g %g %g %ld\n",
-                   count, statid, ymd, hms, lat[0], lon[0], htg, htp, sondeType);
-            printf("Missing heights - skip\n");
-            llskip = 1;
-        }
+        status_p = get_double_array(h, "pressure", &presVal, &size);
+        status_ht = get_double_array(h, "nonCoordinateGeopotentialHeight", &zVal, &size);
 
         if (!llskip) {
             err = get_double_array(h, "latitudeDisplacement", &dlatVal, &size);
             err = get_double_array(h, "longitudeDisplacement", &dlonVal, &size);
             err = get_long_array(h, "extendedVerticalSoundingSignificance", &vssVal, &size);
-            err = get_double_array(h, "airTemperature", &tVal, &size);
-            err = get_double_array(h, "dewpointTemperature", &tdVal, &size);
+            status_airt = get_double_array(h, "airTemperature", &tVal, &size);
+            status_dewt = get_double_array(h, "dewpointTemperature", &tdVal, &size);
             err = get_double_array(h, "windDirection", &wdirVal, &size);
             err = get_double_array(h, "windSpeed", &wspVal, &sizews);
 
+            if (status_p != CODES_SUCCESS) {
+                realloc_and_fill(&presVal, sizews, -999999999.0);
+            }
+            if (status_ht != CODES_SUCCESS) {
+                realloc_and_fill(&zVal, sizews, -999999999.0);
+            }
+            if (status_airt != CODES_SUCCESS) {
+                realloc_and_fill(&tVal, sizews, -999999999.0);
+            }
+            if (status_dewt != CODES_SUCCESS) {
+                realloc_and_fill(&tdVal, sizews, -999999999.0);
+            }
             /* Print the values */
             printf("Ob: %7d %s %ld %ld %7.3f %7.3f %7.1f %7.1f %4ld %5lu\n",
                    count, statid, ymd, hms, lat[0], lon[0], htg, htp, sondeType, sizews);
@@ -175,7 +184,7 @@ int main(int argc, char* argv[])
                 printf("RS number/software/balloonwt: %s %s %7.3f\n", rsnumber, rssoftware, balloonwt);
             }
             if (status_ht == CODES_SUCCESS && sizelats > 1) {
-                printf("WMO list lat, lon, ht: %g %g %g\n", lat[1], lon[1], htec);
+                printf("WMO list lat, lon, ht: %s %g %g %g\n", statid, lat[1], lon[1], htec);
             }
             printf("level  dtime    dlat   dlon   pressure  geopotH  airTemp   dewPtT  windDir   windSp   signif\n");
             for (i = 0; i < sizews; ++i) {
@@ -207,5 +216,6 @@ int main(int argc, char* argv[])
     }
 
     fclose(in);
+    printf("Finishing normally. Number of BUFR records read: %d\n", count);
     return 0;
 }
