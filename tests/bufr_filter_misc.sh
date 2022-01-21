@@ -648,9 +648,11 @@ cat >$fRules <<EOF
 EOF
 
 ${tools_dir}/codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+res=`${tools_dir}/bufr_get -p bufrTemplate $fOut`
+[ "$res" = "synopLand" ]
 ${tools_dir}/bufr_compare $fOut $fRef #2>> $fLog 1>> $fLog
 
-rm -f $fOut 
+rm -f $fOut
 
 fOut="airep.bufr.out"
 fRef="airep.bufr.out.ref"
@@ -661,6 +663,8 @@ cat >$fRules <<EOF
 EOF
 
 ${tools_dir}/codes_bufr_filter -o $fOut $fRules $f 2>> $fLog 1>> $fLog
+res=`${tools_dir}/bufr_get -p bufrTemplate $fOut`
+[ "$res" = "aircraftReportWithSecondsAndPressure" ]
 ${tools_dir}/bufr_compare $fOut $fRef #2>> $fLog 1>> $fLog
 
 rm -f $fOut 

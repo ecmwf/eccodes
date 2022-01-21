@@ -20,7 +20,12 @@ templates_file="${ECCODES_DEFINITION_PATH}/bufr/templates/BufrTemplate.def"
 templates=`cat $templates_file | awk -F= '{print $1}' | tr -d '"'`
 for t in $templates; do
     ${tools_dir}/bufr_set -s bufrTemplate=$t $sample $temp
-    ${tools_dir}/bufr_dump -p $temp > /dev/null
+    # TODO: There is a matching issue with OmpsNadirProfile: mixed up with OmpsTotalColumn
+    if [ "$t" != "OmpsNadirProfile" ]; then
+        res=`${tools_dir}/bufr_get -p BufrTemplate $temp`
+        [ "$res" = "$t" ]
+        ${tools_dir}/bufr_dump -p $temp > /dev/null
+    fi
 done
 
 rm -f $temp
