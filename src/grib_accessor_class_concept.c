@@ -214,7 +214,7 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
 /* Return 1 (=True) or 0 (=False) */
 static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition* c)
 {
-    long* val;
+    long* val = NULL;
     size_t size = 0, i;
     int ret; /* Boolean */
     int err = 0;
@@ -226,9 +226,10 @@ static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition*
     val = (long*)grib_context_malloc_clear(h->context, sizeof(long) * size);
 
     err = grib_get_long_array(h, c->name, val, &size);
-    if (err)
+    if (err) {
+        grib_context_free(h->context, val);
         return FALSE;
-
+    }
     ret = TRUE;
     for (i = 0; i < size; i++) {
         if (val[i] != c->iarray->v[i]) {
@@ -237,6 +238,7 @@ static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition*
         }
     }
 
+    grib_context_free(h->context, val);
     return ret;
 }
 
