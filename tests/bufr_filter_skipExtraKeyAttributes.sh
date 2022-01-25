@@ -20,7 +20,7 @@ tempFilt=temp.${label}.filter
 tempRef=temp.${label}.ref
 tempOut=temp.${label}.txt
 
-input="ship_14.bufr"
+input="ship_13.bufr"
 
 # Decode fully including extra attributes
 # ---------------------------------------
