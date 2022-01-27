@@ -63,5 +63,22 @@ for a_typeOfLevel in $typeOfLevels; do
     check_levtype $levtype
 done
 
+# Also check specific cases
+# --------------------------
+# Sea ice surface temperature
+${tools_dir}/grib_set -s paramId=260649 $sample_grib2 $temp
+grib_check_key_equals $temp levtype o2d
+# Snow on ice total depth
+${tools_dir}/grib_set -s paramId=260650 $sample_grib2 $temp
+grib_check_key_equals $temp levtype o2d
+
+# Lake ice surface temperature
+${tools_dir}/grib_set -s paramId=228013 $sample_grib2 $temp
+grib_check_key_equals $temp levtype sfc
+# Lake ice total depth
+${tools_dir}/grib_set -s paramId=228014 $sample_grib2 $temp
+grib_check_key_equals $temp levtype sfc
+
+
 
 rm -f $temp
