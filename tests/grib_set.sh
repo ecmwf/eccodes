@@ -39,7 +39,7 @@ outfile=${data_dir}/set.grib2
 
 rm -f $outfile
 
-${tools_dir}/grib_set -v -p levtype:l,centre:s  -s levtype=pl,centre:s=cnmc $infile $outfile >$REDIRECT
+${tools_dir}/grib_set -v -p levtype:l,centre:s  -s typeOfLevel=isobaricInhPa,centre:s=cnmc $infile $outfile >$REDIRECT
 
 levtype=`${tools_dir}/grib_get -p levtype $outfile`
 [ $levtype = "pl" ]
