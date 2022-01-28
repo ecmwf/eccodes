@@ -110,6 +110,7 @@ if( HAVE_BUILD_TOOLS )
         pseudo_diag
         wrap
         grib_levtype
+        grib_typeOfLevel
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
