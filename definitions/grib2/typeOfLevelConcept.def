@@ -65,5 +65,4 @@
 'iceTopUnderSnowOnWater'       = {typeOfFirstFixedSurface=175; typeOfSecondFixedSurface=255;}
 'iceLayerUnderSnowOnWater'     = {typeOfFirstFixedSurface=175; typeOfSecondFixedSurface=176;}
 'iceBottomOnWater'             = {typeOfFirstFixedSurface=176; typeOfSecondFixedSurface=255;}
-'indefiniteSoilDepth'            = {typeOfFirstFixedSurface=177; typeOfSecondFixedSurface=255;}
-
+'indefiniteSoilDepth'          = {typeOfFirstFixedSurface=177; typeOfSecondFixedSurface=255;}
