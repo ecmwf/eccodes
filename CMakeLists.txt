@@ -306,6 +306,11 @@ if( IEEE_LE )
     set( IEEE_BE 0 )
 endif()
 
+set( ECCODES_ON_LINUX_32BIT 0 )
+if( EC_OS_NAME MATCHES "linux" AND EC_OS_BITS EQUAL "32" )
+    set( ECCODES_ON_LINUX_32BIT 1 )
+endif()
+
 set( ECCODES_ON_WINDOWS 0 )
 if( EC_OS_NAME MATCHES "windows" )
     # Symbols need to be explicitly exported on Windows so we can link to dlls.

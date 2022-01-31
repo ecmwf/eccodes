@@ -1024,6 +1024,7 @@ int grib_points_get_values(grib_handle* h, grib_points* points, double* val)
 {
     int i, ret;
     grib_accessor* a = NULL;
+    fprintf(stderr, "Warning: The grib_points_get_values function is deprecated and will be removed later.");
 
     a = grib_find_accessor(h, "values");
 

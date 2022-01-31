@@ -51,7 +51,7 @@ static void realloc_and_fill(double** arr, size_t newsize, double fillValue)
     size_t i;
     free(*arr);
     *arr = (double*)malloc(newsize * sizeof(double));
-    for(i=0; i<newsize; +i) *arr[i] = fillValue;
+    for(i=0; i<newsize; ++i) *arr[i] = fillValue;
 }
 
 int main(int argc, char* argv[])

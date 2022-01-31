@@ -47,7 +47,6 @@ list( APPEND test_bins
       bufr_subset
       mars_param
       grib_values_check
-      box
       multi2
       large_grib1
       get_product_kind)

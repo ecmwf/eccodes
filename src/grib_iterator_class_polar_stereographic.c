@@ -188,12 +188,6 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     if ((ret = grib_get_long_internal(h, s_alternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS)
         return ret;
 
-    if (alternativeRowScanning) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Polar stereographic not supported when alternativeRowScanning=1 "
-                                                     "i.e., When adjacent rows scan in the opposite direction");
-        return GRIB_GEOCALCULUS_PROBLEM;
-    }
-
     centralLongitude = centralLongitudeInDegrees * DEG2RAD;
     centralLatitude  = centralLatitudeInDegrees * DEG2RAD;
     lonFirst         = lonFirstInDegrees * DEG2RAD;
@@ -258,8 +252,9 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
     lats = self->lats;
     lons = self->lons;
-    Dx   = iScansNegatively == 0 ? Dx : -Dx;
-    Dy   = jScansPositively == 1 ? Dy : -Dy;
+    /* These will be processed later in transform_iterator_data() */
+    /* Dx = iScansNegatively == 0 ? Dx : -Dx; */
+    /* Dy = jScansPositively == 1 ? Dy : -Dy; */
 
     y = 0;
     for (j = 0; j < ny; j++) {
@@ -358,6 +353,11 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
 #endif
     iter->e = -1;
+
+    /* Apply the scanning mode flags which may require data array to be transformed */
+    ret = transform_iterator_data(h, iter->data,
+                                  iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
+                                  iter->nv, nx, ny);
 
     return ret;
 }
