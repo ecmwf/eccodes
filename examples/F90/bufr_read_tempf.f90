@@ -27,7 +27,7 @@ program bufr_read_tempf
   integer            :: iflag
   integer            :: status_id, status_ht, status_time = 0, status_p
   integer            :: status_airt, status_dewt
-  integer            :: status_rsno, status_rssoft, status_balloonwt, statid_missing
+  integer            :: status_rsno, status_rssoft, status_balloonwt
   integer(kind=4)    :: sizews
   integer(kind=4)    :: blockNumber, stationNumber
   integer(kind=4)    :: ymd, hms
