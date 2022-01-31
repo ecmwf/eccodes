@@ -47,11 +47,11 @@ namespace output {
 static util::recursive_mutex local_mutex;
 
 
-#define X(a) Log::debug() << "  GRIB encoding: " << #a << " = " << a << std::endl
+#define X(a) Log::debug() << "  GRIB encoding: " << #a << " = " << (a) << std::endl
 #define Y(a) oss << " " << #a << "=" << a
 
 
-void eccodes_assertion(const char* message) {
+[[noreturn]] void eccodes_assertion(const char* message) {
     throw exception::SeriousBug(message);
 }
 
@@ -79,7 +79,7 @@ size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx)
 
     size_t total = 0;
     for (size_t i = 0; i < input.dimensions(); i++) {
-        auto h = input.gribHandle(i);  // Base class throws if input cannot provide handle
+        auto* h = input.gribHandle(i);  // Base class throws if input cannot provide handle
         ASSERT(h);
 
         const void* message;
@@ -133,7 +133,7 @@ bool GribOutput::printParametrisation(std::ostream& out, const param::MIRParamet
         out << (ok ? "," : "") << "compatibility=" << compatibility;
         ok = true;
 
-        auto& c = compat::GribCompatibility::lookup(compatibility);
+        const auto& c = compat::GribCompatibility::lookup(compatibility);
         c.printParametrisation(out, param);
     }
 
@@ -185,7 +185,7 @@ bool GribOutput::sameParametrisation(const param::MIRParametrisation& param1,
     }
 
     if (!compatibility1.empty()) {
-        auto& c = compat::GribCompatibility::lookup(compatibility1);
+        const auto& c = compat::GribCompatibility::lookup(compatibility1);
         if (!c.sameParametrisation(param1, param2)) {
             return false;
         }
@@ -223,7 +223,7 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
         if (param.userParametrisation().has("filter")) {
 
             // Make sure handle deleted even in case of exception
-            auto h = codes_handle_clone(input.gribHandle(i));
+            auto* h = codes_handle_clone(input.gribHandle(i));
             HandleDeleter hf(h);
 
             long n;
@@ -249,7 +249,7 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
             continue;
         }
 
-        auto h = input.gribHandle(field.handle(i));  // Base class throws if input cannot provide handle
+        auto* h = input.gribHandle(field.handle(i));  // Base class throws if input cannot provide handle
 
         grib_info info;
 
@@ -271,7 +271,7 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
         pack->fill(repres, info);
 
         // Extra settings (paramId comes from here)
-        for (auto& k : field.metadata(i)) {
+        for (const auto& k : field.metadata(i)) {
             info.extra_set(k.first.c_str(), k.second);
         }
 
@@ -285,7 +285,7 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
 
         std::string compatibility;
         if (param.userParametrisation().get("compatibility", compatibility)) {
-            auto& c = compat::GribCompatibility::lookup(compatibility);
+            const auto& c = compat::GribCompatibility::lookup(compatibility);
             c.execute(*this, param, h, info);
         }
 
@@ -348,11 +348,11 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
         }
 
 
-        auto& values = field.values(i);
-        int flags    = 0;
-        int err      = 0;
+        const auto& values = field.values(i);
+        int flags          = 0;
+        int err            = 0;
 
-        auto result = codes_grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
+        auto* result = codes_grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
         HandleDeleter hf(result);  // Make sure handle deleted even in case of exception
 
 
@@ -447,7 +447,7 @@ size_t GribOutput::set(const param::MIRParametrisation& param, context::Context&
         codes_set_codes_assertion_failed_proc(&eccodes_assertion);
 
         // Make sure handle deleted even in case of exception
-        auto h = codes_handle_clone(input.gribHandle(field.handle(i)));
+        auto* h = codes_handle_clone(input.gribHandle(field.handle(i)));
         HandleDeleter hf(h);
 
         repres::RepresentationHandle repres(field.representation());

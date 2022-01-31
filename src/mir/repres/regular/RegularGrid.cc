@@ -317,7 +317,7 @@ bool RegularGrid::sameAs(const Representation& other) const {
         return str.str();
     };
 
-    auto o = dynamic_cast<const RegularGrid*>(&other);
+    const auto* o = dynamic_cast<const RegularGrid*>(&other);
     return (o != nullptr) && name(*this) == name(*o);
 }
 

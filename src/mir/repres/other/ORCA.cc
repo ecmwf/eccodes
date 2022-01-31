@@ -52,7 +52,7 @@ ORCA::~ORCA() = default;
 
 
 bool ORCA::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const ORCA*>(&other);
+    const auto* o = dynamic_cast<const ORCA*>(&other);
     return (o != nullptr) && spec_.getString("uid") == o->spec_.getString("uid");
 }
 

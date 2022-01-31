@@ -92,7 +92,7 @@ void RegularLL::makeName(std::ostream& out) const {
 }
 
 bool RegularLL::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const RegularLL*>(&other);
+    const auto* o = dynamic_cast<const RegularLL*>(&other);
     return (o != nullptr) && LatLon::sameAs(other);
 }
 
@@ -201,7 +201,7 @@ std::string RegularLL::factory() const {
 }
 
 
-static RepresentationBuilder<RegularLL> regularLL("regular_ll");
+static const RepresentationBuilder<RegularLL> regularLL("regular_ll");
 
 
 }  // namespace latlon

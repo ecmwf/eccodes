@@ -63,7 +63,7 @@ void Classic::makeName(std::ostream& out) const {
 
 
 bool Classic::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const Classic*>(&other);
+    const auto* o = dynamic_cast<const Classic*>(&other);
     return (o != nullptr) && Reduced::sameAs(other);
 }
 

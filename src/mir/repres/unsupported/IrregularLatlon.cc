@@ -126,7 +126,7 @@ void IrregularLatlon::makeName(std::ostream& out) const {
 
 
 bool IrregularLatlon::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const IrregularLatlon*>(&other);
+    const auto* o = dynamic_cast<const IrregularLatlon*>(&other);
     return (o != nullptr) && (latitudes_ == o->latitudes_) && (longitudes_ == o->longitudes_);
 }
 
@@ -252,7 +252,7 @@ atlas::Grid IrregularLatlon::atlasGrid() const {
 }
 
 
-static RepresentationBuilder<IrregularLatlon> irregularLatlon("irregular_latlon");
+static const RepresentationBuilder<IrregularLatlon> irregularLatlon("irregular_latlon");
 
 
 }  // namespace repres

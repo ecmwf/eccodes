@@ -20,7 +20,7 @@ namespace repres {
 namespace regular {
 
 
-static RepresentationBuilder<Mercator> __builder("mercator");
+static const RepresentationBuilder<Mercator> __builder("mercator");
 
 
 Mercator::Mercator(const param::MIRParametrisation& param) : RegularGrid(param, make_proj_spec(param)) {}

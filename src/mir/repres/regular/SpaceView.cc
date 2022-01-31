@@ -34,7 +34,7 @@ namespace repres {
 namespace regular {
 
 
-static RepresentationBuilder<SpaceView> __builder("space_view");
+static const RepresentationBuilder<SpaceView> __builder("space_view");
 
 
 namespace detail {

@@ -45,7 +45,7 @@ namespace repres {
 namespace other {
 
 
-static RepresentationBuilder<ClenshawCurtis> __representation("reduced_cc");
+static const RepresentationBuilder<ClenshawCurtis> __representation("reduced_cc");
 
 static util::once_flag once;
 static util::recursive_mutex* mtx                 = nullptr;
@@ -117,7 +117,7 @@ ClenshawCurtis::~ClenshawCurtis() = default;
 
 
 bool ClenshawCurtis::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const ClenshawCurtis*>(&other);
+    const auto* o = dynamic_cast<const ClenshawCurtis*>(&other);
     return (o != nullptr) && (N_ == o->N_) && (pl_ == o->pl_) && (domain() == o->domain());
 }
 

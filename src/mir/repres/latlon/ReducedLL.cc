@@ -113,7 +113,7 @@ bool ReducedLL::getLongestElementDiagonal(double& d) const {
 }
 
 bool ReducedLL::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const ReducedLL*>(&other);
+    const auto* o = dynamic_cast<const ReducedLL*>(&other);
     return (o != nullptr) && (bbox_ == o->bbox_) && (pl_ == o->pl_);
 }
 
@@ -324,7 +324,7 @@ std::vector<util::GridBox> ReducedLL::gridBoxes() const {
 }
 
 
-static RepresentationBuilder<ReducedLL> reducedLL("reduced_ll");
+static const RepresentationBuilder<ReducedLL> reducedLL("reduced_ll");
 
 
 }  // namespace latlon

@@ -199,7 +199,7 @@ std::string SphericalHarmonics::factory() const {
 }
 
 
-static RepresentationBuilder<SphericalHarmonics> sphericalHarmonics("sh");
+static const RepresentationBuilder<SphericalHarmonics> sphericalHarmonics("sh");
 
 
 }  // namespace sh
