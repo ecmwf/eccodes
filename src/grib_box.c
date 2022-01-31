@@ -20,6 +20,7 @@
 grib_points* grib_box_get_points(grib_box* box, double north, double west, double south, double east, int* err)
 {
     grib_box_class* c = box->cclass;
+    fprintf(stderr, "Warning: The grib_box_get_points function is deprecated and will be removed later.");
     while (c) {
         grib_box_class* s = c->super ? *(c->super) : NULL;
         if (c->get_points) {

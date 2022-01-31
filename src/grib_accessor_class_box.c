@@ -151,6 +151,8 @@ grib_box* grib_box_new(grib_handle* h, int* error)
     a                     = grib_find_accessor(h, "BOX");
     na                    = (grib_accessor_box*)a;
 
+    fprintf(stderr, "Warning: The grib_box_new function is deprecated and will be removed later.");
+
     if (!a)
         return NULL;
 

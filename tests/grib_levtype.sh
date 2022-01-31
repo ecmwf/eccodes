@@ -51,4 +51,12 @@ for lt in $levtypes; do
     fi
 done
 
+# ECC-1328
+params='228007 228011'
+for p in $params; do
+    ${tools_dir}/grib_set -s paramId=$p $sample2 $tempGrib
+    grib_check_key_equals $tempGrib 'mars.levtype,typeOfLevel' 'sfc entireLake'
+done
+
+
 rm -f $tempGrib

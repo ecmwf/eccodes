@@ -66,9 +66,6 @@ if(missing(Ni)){
        latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
        N,pl,Nj);
    nearest reduced(values,radius,Nj,pl);
-   box reduced_gaussian(latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
-          latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
-          N,pl);
 
    #meta sumPlArray sum(pl);
    #meta dataGlobal evaluate( sumPlArray == (numberOfValues+numberOfMissing) );
@@ -78,9 +75,6 @@ if(missing(Ni)){
             latitudeFirstInDegrees, latitudeLastInDegrees,
             N,jScansPositively);
    nearest regular(values,radius,Ni,Nj);
- #  box regular_gaussian(latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
- #         latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
- #         DiInDegrees,Ni,N,iScansNegatively,jScansPositively);
 }
 
 meta latLonValues latlonvalues(values);
