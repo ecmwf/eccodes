@@ -50,13 +50,15 @@ do
 
 done
 
-echo "ECC-457 ECMWF total precipitation..."
-# -----------------------------------------
+echo "ECC-457,ECC-1298 ECMWF total precipitation..."
+# ---------------------------------------------------
 input=${data_dir}/tp_ecmwf.grib
 output=temp.grib1to2.grib
 ${tools_dir}/grib_set -s edition=2 $input $output
 res=`${tools_dir}/grib_get -w count=1 -p edition,paramId,units $output`
-[ "$res" = "2 228228 kg m**-2" ]
+[ "$res" = "2 228 m" ]
+res=`${tools_dir}/grib_get -w count=1 -p stepType $output`
+[ "$res" = "accum" ]
 rm -f $output
 
 
@@ -88,6 +90,18 @@ ${tools_dir}/grib_set -s edition=2 $sample_g1 $output
 grib_check_key_equals $sample_g1 shapeOfTheEarth 0
 grib_check_key_equals $output    shapeOfTheEarth 0
 
+
+echo "ECC-1329: GRIB: Cannot convert runoff (paramId=205)"
+# --------------------------------------------------------
+temp1="temp1.grib1to2.grib1"
+temp2="temp2.grib1to2.grib2"
+${tools_dir}/grib_set -s paramId=205,P1=240,marsType=fc $sample_g1 $temp1
+${tools_dir}/grib_set -s edition=2 $temp1 $temp2
+grib_check_key_equals $temp2 discipline,stepType,shortName,paramId '2 accum ro 205'
+# Fix the stepRange too - TODO
+${tools_dir}/grib_set -s edition=2,startStep=0 $temp1 $temp2
+grib_check_key_equals $temp2 stepType,stepRange 'accum 0-240'
+rm -f $temp1 $temp2
 
 rm -f $output
 

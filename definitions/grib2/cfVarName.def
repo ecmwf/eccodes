@@ -199,6 +199,12 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Total column vertically-integrated water vapour
+'tcwv' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 64 ;
+	}
 #Surface solar radiation downwards
 'ssrd' = {
 	 discipline = 0 ;
@@ -4151,12 +4157,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 13 ;
-	}
-#Total column integrated water vapour
-'tciwv' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 64 ;
 	}
 #Rain precipitation rate
 'rprate' = {

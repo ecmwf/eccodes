@@ -16,7 +16,7 @@ temp=temp.$label.grib
 
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
-lev_types="
+typeOfLevels="
 surface
 tropopause
 nominalTop
@@ -48,20 +48,37 @@ seaIceLayer"
 ok_levtypes="hhl ml o2d pl pt pv sfc sol"
 check_levtype()
 {
-  _arg=$1
-  result=1
-  for n in $ok_levtypes; do
-    if [ "$_arg" = "$n" ]; then result=0; break; fi
-  done
-  return $result
+    _arg=$1
+    result=1
+    for n in $ok_levtypes; do
+        if [ "$_arg" = "$n" ]; then result=0; break; fi
+    done
+    return $result
 }
 
 
-for lt in $lev_types; do
-    ${tools_dir}/grib_set -s tablesVersion=27,typeOfLevel=$lt $sample_grib2 $temp
-    ltype=`${tools_dir}/grib_get -p mars.levtype $temp`
-    check_levtype $ltype
+for a_typeOfLevel in $typeOfLevels; do
+    ${tools_dir}/grib_set -s tablesVersion=27,typeOfLevel=$a_typeOfLevel $sample_grib2 $temp
+    levtype=`${tools_dir}/grib_get -p mars.levtype $temp`
+    check_levtype $levtype
 done
+
+# Also check specific cases
+# --------------------------
+# Sea ice surface temperature
+${tools_dir}/grib_set -s paramId=260649 $sample_grib2 $temp
+grib_check_key_equals $temp levtype o2d
+# Snow on ice total depth
+${tools_dir}/grib_set -s paramId=260650 $sample_grib2 $temp
+grib_check_key_equals $temp levtype o2d
+
+# Lake ice surface temperature
+${tools_dir}/grib_set -s paramId=228013 $sample_grib2 $temp
+grib_check_key_equals $temp levtype sfc
+# Lake ice total depth
+${tools_dir}/grib_set -s paramId=228014 $sample_grib2 $temp
+grib_check_key_equals $temp levtype sfc
+
 
 
 rm -f $temp

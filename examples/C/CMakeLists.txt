@@ -42,10 +42,11 @@ list( APPEND test_bins
       bufr_read_scatterometer
       bufr_read_synop
       bufr_read_temp
+      bufr_read_tempf
       bufr_set_keys
       bufr_subset
       mars_param
-      values_check
+      grib_values_check
       box
       multi2
       large_grib1
@@ -85,6 +86,7 @@ if( HAVE_BUILD_TOOLS )
        grib_nearest_multiple
        grib_multi
        grib_set_missing
+       grib_values_check
        bufr_attributes
        bufr_copy_data
        bufr_clone
@@ -97,6 +99,7 @@ if( HAVE_BUILD_TOOLS )
        bufr_read_scatterometer
        bufr_read_synop
        bufr_read_temp
+       bufr_read_tempf
        bufr_set_keys
        bufr_subset
        get_product_kind)
@@ -129,6 +132,7 @@ else()
        bufr_read_scatterometer
        bufr_read_synop
        bufr_read_temp
+       bufr_read_tempf
        bufr_set_keys
        bufr_subset
        get_product_kind)
