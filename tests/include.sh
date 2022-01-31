@@ -20,8 +20,9 @@ else
   echo
   echo "TEST: $0"
 
-  # Only Unix supported
+  # Only Unix 64bit supported
   ECCODES_ON_WINDOWS=0
+  ECCODES_ON_LINUX_32BIT=0
 
   data_dir=""
   # save current working dir
