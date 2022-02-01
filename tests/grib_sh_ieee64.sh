@@ -10,6 +10,12 @@
 
 . ./include.sh
 
+
+# Note: grib_ieee64_to_long/grib_long_to_ieee64 function needs the system
+#       sizeof(long) == sizeof(double).
+#       So on Windows and 32bit Linux, this test is disabled.
+
+
 if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     echo "$0: This test is currently disabled on Windows"
     exit 0
