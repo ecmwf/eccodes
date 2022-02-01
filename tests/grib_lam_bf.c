@@ -686,6 +686,7 @@ int main(int argc, char* argv[])
     const char* grids[] = { "lambert_bf", "mercator_bf", "polar_stereographic_bf" };
     int igrid, itrunc;
     trunc_t trunc[3];
+    long unpackedSubsetPrecision = 0;
 
     /* Elliptic truncation with diamond subtruncation */
     trunc[0].trunc     = 88;
@@ -772,7 +773,6 @@ int main(int argc, char* argv[])
                ieee_floats=2 means bytes=8 and grib_long_to_ieee64 is used, which is supported
                only when sizeof(double) == sizeof(long)
             */
-            long unpackedSubsetPrecision;
             if (sizeof(double) == sizeof(long))
                   unpackedSubsetPrecision = 2;
             else
