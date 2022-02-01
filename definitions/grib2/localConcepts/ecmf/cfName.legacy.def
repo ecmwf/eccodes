@@ -106,3 +106,9 @@
  parameterCategory = 210 ;
  parameterNumber = 74 ;
 }
+#Total column vertically-integrated water vapour
+'lwe_thickness_of_atmosphere_mass_content_of_water_vapor' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 137 ;
+}

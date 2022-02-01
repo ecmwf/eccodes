@@ -110,6 +110,7 @@ if( HAVE_BUILD_TOOLS )
         pseudo_diag
         wrap
         grib_levtype
+        grib_typeOfLevel
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
@@ -141,6 +142,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_filter_extract_datetime
         bufr_filter_extract_area
         bufr_filter_unpack_pack
+        bufr_filter_skipExtraKeyAttributes
         bufr_indexing
         bufr_json_data
         bufr_ls
