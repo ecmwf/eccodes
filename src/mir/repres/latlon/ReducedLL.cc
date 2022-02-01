@@ -58,7 +58,7 @@ void ReducedLL::makeName(std::ostream& out) const {
     out << "RLL" << pl_.size() << "-";
 
     eckit::MD5 md5;
-    for (auto& j : pl_) {
+    for (const auto& j : pl_) {
         md5 << j;
     }
 
@@ -68,7 +68,7 @@ void ReducedLL::makeName(std::ostream& out) const {
 
 size_t ReducedLL::numberOfPoints() const {
     size_t total = 0;
-    for (auto& j : pl_) {
+    for (const auto& j : pl_) {
         total += size_t(j);
     }
     return total;
@@ -117,7 +117,7 @@ bool ReducedLL::sameAs(const Representation& other) const {
     return (o != nullptr) && (bbox_ == o->bbox_) && (pl_ == o->pl_);
 }
 
-void ReducedLL::fill(grib_info&) const {
+void ReducedLL::fill(grib_info& /*unused*/) const {
     NOTIMP;
 }
 

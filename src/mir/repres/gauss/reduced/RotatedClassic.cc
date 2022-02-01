@@ -42,7 +42,7 @@ void RotatedClassic::makeName(std::ostream& out) const {
 }
 
 
-bool RotatedClassic::sameAs(const Representation&) const {
+bool RotatedClassic::sameAs(const Representation& /*unused*/) const {
     NOTIMP;
 }
 

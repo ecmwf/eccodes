@@ -95,7 +95,7 @@ const Representation* LambertAzimuthalEqualArea::croppedRepresentation(const uti
             auto i = it->index() % Ni;
             auto j = it->index() / Ni;
             if (i == firsti && j == firstj) {
-                auto& latlon = *(*it);
+                const auto& latlon = *(*it);
                 return projection.xy(PointLonLat{latlon[1], latlon[0]});
             }
         }

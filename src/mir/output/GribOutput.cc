@@ -72,7 +72,7 @@ size_t GribOutput::saved() const {
 }
 
 
-size_t GribOutput::copy(const param::MIRParametrisation&, context::Context& ctx) {
+size_t GribOutput::copy(const param::MIRParametrisation& /*unused*/, context::Context& ctx) {
     saved_++;
 
     const auto& input = ctx.input();
@@ -482,7 +482,7 @@ size_t GribOutput::set(const param::MIRParametrisation& param, context::Context&
 }
 
 
-void GribOutput::fill(grib_handle*, grib_info&) const {}
+void GribOutput::fill(grib_handle* /*unused*/, grib_info& /*unused*/) const {}
 
 
 #undef Y

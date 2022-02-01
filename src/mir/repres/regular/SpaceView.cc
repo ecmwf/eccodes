@@ -236,7 +236,9 @@ Iterator* SpaceView::iterator() const {
         ~SpaceViewIterator() override = default;
 
         SpaceViewIterator(const SpaceViewIterator&) = delete;
+        SpaceViewIterator(SpaceViewIterator&&)      = delete;
         SpaceViewIterator& operator=(const SpaceViewIterator&) = delete;
+        SpaceViewIterator& operator=(SpaceViewIterator&&) = delete;
     };
 
     return new SpaceViewIterator(lonlat());

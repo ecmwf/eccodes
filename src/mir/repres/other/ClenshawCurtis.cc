@@ -126,7 +126,7 @@ atlas::Grid ClenshawCurtis::atlasGrid() const {
 #if defined(mir_HAVE_ATLAS)
     using grid_t = atlas::StructuredGrid;
 
-    auto& lats = latitudes();
+    const auto& lats = latitudes();
     ASSERT(!lats.empty());
 
     grid_t::XSpace x({0., 360.}, pl_, false);
@@ -157,7 +157,7 @@ bool ClenshawCurtis::extendBoundingBoxOnIntersect() const {
 std::vector<double> ClenshawCurtis::calculateUnrotatedGridBoxLatitudeEdges() const {
 
     // grid-box edge latitudes are the latitude midpoints
-    auto& lats = latitudes();
+    const auto& lats = latitudes();
     ASSERT(!lats.empty());
 
     std::vector<double> edges;
@@ -280,7 +280,7 @@ std::vector<util::GridBox> ClenshawCurtis::gridBoxes() const {
 
 
 size_t ClenshawCurtis::numberOfPoints() const {
-    return size_t(std::accumulate(pl_.begin(), pl_.end(), 0));
+    return size_t(std::accumulate(pl_.begin(), pl_.end(), 0L));
 }
 
 
@@ -290,7 +290,7 @@ bool ClenshawCurtis::getLongestElementDiagonal(double& d) const {
     // latitudes closest/furthest from equator and longitude furthest from
     // Greenwich
 
-    auto& lats = latitudes();
+    const auto& lats = latitudes();
 
     d = 0.;
     for (size_t j = 1; j < pl_.size(); ++j) {
@@ -339,8 +339,12 @@ Iterator* ClenshawCurtis::iterator() const {
             inc_ = increment(long(ni_));
         }
 
+        ~ClenshawCurtisIterator() override = default;
+
         ClenshawCurtisIterator(const ClenshawCurtisIterator&) = delete;
+        ClenshawCurtisIterator(ClenshawCurtisIterator&&)      = delete;
         void operator=(const ClenshawCurtisIterator&) = delete;
+        void operator=(ClenshawCurtisIterator&&) = delete;
 
         void print(std::ostream& out) const override {
             out << "ClenshawCurtisIterator[";

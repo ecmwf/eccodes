@@ -42,7 +42,7 @@ void RotatedOctahedral::makeName(std::ostream& out) const {
 }
 
 
-bool RotatedOctahedral::sameAs(const Representation&) const {
+bool RotatedOctahedral::sameAs(const Representation& /*unused*/) const {
     NOTIMP;
 }
 
