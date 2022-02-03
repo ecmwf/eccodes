@@ -1003,7 +1003,6 @@ long grib_date_to_julian(long ddate);
 
 /* grib_fieldset.c */
 int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type);
-int grib_fieldset_column_copy_from_handle(grib_handle* h, grib_fieldset* set, int i);
 grib_fieldset* grib_fieldset_new_from_files(grib_context* c, char* filenames[], int nfiles, char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
 int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string);
 int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string);
