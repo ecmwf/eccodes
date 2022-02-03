@@ -750,11 +750,20 @@ static bufr_keys_iterator* get_bufr_keys_iterator(int keys_iterator_id)
 
 static int clear_file(int file_id)
 {
+    int err = 0;
     l_grib_file* current = file_set;
     while(current){
         if(current->id == file_id){
             current->id = -(current->id);
-            if (current->f) fclose(current->f);
+            if (current->f) {
+                err = fclose(current->f);
+                if (err) {
+                    int ioerr = errno;
+                    grib_context* c = grib_context_get_default();
+                    grib_context_log(c,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),"IO ERROR: %s",strerror(ioerr));
+                    return GRIB_IO_PROBLEM;
+                }
+            }
             if (current->buffer) free(current->buffer);
             return GRIB_SUCCESS;
         }
