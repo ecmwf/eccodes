@@ -322,3 +322,15 @@
  parameterCategory = 210 ;
  parameterNumber = 74 ;
 }
+#Runoff
+'ro' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 205 ;
+}
+#Total column vertically-integrated water vapour
+'tcwv' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 137 ;
+}

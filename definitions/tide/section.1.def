@@ -1,11 +1,4 @@
 # (C) Copyright 2005- ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
 
 section_length[3] section1Length ;
 unsigned[1] gribTablesVersionNo ;
@@ -24,33 +17,18 @@ codetable[1] indicatorOfTypeOfLevel 'grib1/3.table' : string_type,edition_specif
 alias ls.levelType = indicatorOfTypeOfLevel;
 codetable[2] heightPressureEtcOfLevels 'grib1/3.table';
 
-#  Year of century
-# NOTE 6 NOT FOUND
-unsigned[1] yearOfCentury ;
-
-#  Month
-unsigned[1] month ;
-
-#  Day
+unsigned[1] yearOfCentury;
+unsigned[1] month;
 unsigned[1] day;
+unsigned[1] hour;
+unsigned[1] minute;
 
-#  Hour
-unsigned[1] hour ;
-
-#  Minute
-unsigned[1] minute ;
-
-#  Indicator of unit of time range
 codetable[1] indicatorOfUnitOfTimeRange 'grib1/4.table';
 
-#  P1 - Period of time
-# (number of time units)
+#  P1 - Period of time (number of time units)
 unsigned[1] periodOfTime ;
 
-alias   P1  = periodOfTime ;
+alias P1 = periodOfTime ;
 
-#  P2 - Period of time
-# (number of time units)
+#  P2 - Period of time (number of time units)
 unsigned[1] periodOfTimeIntervals ;
-
-

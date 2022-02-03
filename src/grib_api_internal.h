@@ -903,7 +903,7 @@ struct grib_handle
     long missingValueLong;
     double missingValueDouble;
     ProductKind product_kind;
-    grib_trie* bufr_elements_table;
+    /* grib_trie* bufr_elements_table; */
 };
 
 struct grib_multi_handle

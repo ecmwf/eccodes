@@ -277,8 +277,6 @@ size_t grib_viarray_used_size(grib_viarray* v);
 
 /* grib_accessor_class_bits_per_value.c */
 
-/* grib_accessor_class_bufr_clear_tables.c */
-
 /* grib_accessor_class_bufr_data_array.c */
 grib_vsarray* accessor_bufr_data_array_get_stringValues(grib_accessor* a);
 grib_accessors_list* accessor_bufr_data_array_get_dataAccessors(grib_accessor* a);

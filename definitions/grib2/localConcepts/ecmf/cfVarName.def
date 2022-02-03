@@ -671,12 +671,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 128 ;
 	}
-#Total column water vapour
-'tcwv' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 137 ;
-	}
 #Soil temperature level 1
 'stl1' = {
 	 discipline = 192 ;
@@ -922,9 +916,11 @@
 	}
 #Runoff
 'ro' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 205 ;
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 201 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Total column ozone
 'tco3' = {
@@ -1042,12 +1038,13 @@
 	}
 #Total precipitation
 'tp' = {
+	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
+	 parameterNumber = 193 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
-	 unitsFactor = 1000 ;
 	}
 #Instantaneous eastward turbulent surface stress
 'iews' = {

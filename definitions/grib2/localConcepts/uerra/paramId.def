@@ -90,6 +90,12 @@
 	 scaleFactorOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	}
+#Total column integrated water vapour
+'260057' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 64 ;
+	}
 #2 metre relative humidity
 '260242' = {
 	 discipline = 0 ;

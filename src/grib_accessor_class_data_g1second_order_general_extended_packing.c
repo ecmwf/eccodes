@@ -1248,7 +1248,12 @@ static int get_bits_per_value(grib_handle* h, const char* bits_per_value_str, lo
          * because it has already been changed to second order!
          * We have to take precision=1 for IEEE which is 32bits
          */
-        *bits_per_value = 32;
+        /* Note: on a 32bit system, the most significant bit is for signedness, so we have to drop one bit */
+        if (sizeof(long) == 4) {
+            *bits_per_value = 31;
+        } else {
+            *bits_per_value = 32;
+        }
     }
     return err;
 }

@@ -522,16 +522,20 @@ void codes_get_reduced_row_p(long pl, double lon_first, double lon_last, long* n
 
 grib_box* codes_box_new(grib_handle* h, int* error)
 {
+    /* This function is deprecated and will later be removed */
     return grib_box_new(h, error);
 }
 grib_points* codes_box_get_points(grib_box* box, double north, double west, double south, double east, int* err)
 {
+    /* This function is deprecated and will later be removed */
     return grib_box_get_points(box, north, west, south, east, err);
 }
 int codes_points_get_values(grib_handle* h, grib_points* points, double* val)
 {
+    /* This function is deprecated and will later be removed */
     return grib_points_get_values(h, points, val);
 }
+
 void codes_context_delete(grib_context* c)
 {
     grib_context_delete(c);

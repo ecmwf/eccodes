@@ -199,6 +199,12 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Total column vertically-integrated water vapour
+'tcwv' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 64 ;
+	}
 #Surface solar radiation downwards
 'ssrd' = {
 	 discipline = 0 ;
@@ -4152,12 +4158,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 13 ;
 	}
-#Total column integrated water vapour
-'tciwv' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 64 ;
-	}
 #Rain precipitation rate
 'rprate' = {
 	 discipline = 0 ;
@@ -5665,37 +5665,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
 	}
-#Soil Moisture
-'sm' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 22 ;
-	 typeOfFirstFixedSurface = 106 ;
-	 typeOfSecondFixedSurface = 106 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = 2 ;
-	 scaleFactorOfSecondFixedSurface = 1 ;
-	 is_tigge = 1 ;
-	}
 #Soil Temperature
 'st' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
-	}
-#Soil Temperature
-'st' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 106 ;
-	 typeOfSecondFixedSurface = 106 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = 2 ;
-	 scaleFactorOfSecondFixedSurface = 1 ;
-	 is_tigge = 1 ;
 	}
 #Snow depth water equivalent
 'sd' = {

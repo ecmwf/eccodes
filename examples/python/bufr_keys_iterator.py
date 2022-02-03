@@ -30,6 +30,7 @@ def example(INPUT):
     f = open(INPUT, "rb")
 
     cnt = 0
+    subset = 0
 
     # loop for the messages in the file
     while 1:
@@ -51,7 +52,11 @@ def example(INPUT):
         while codes_bufr_keys_iterator_next(iterid):
             # print key name
             keyname = codes_bufr_keys_iterator_get_name(iterid)
-            print("  %s" % keyname)
+            if keyname == "subsetNumber":
+                subset += 1
+                print("  Subset: %d" % subset)
+            else:
+                print("  %s" % keyname)
 
         # delete the key iterator
         codes_bufr_keys_iterator_delete(iterid)
