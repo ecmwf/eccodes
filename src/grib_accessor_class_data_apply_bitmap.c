@@ -361,8 +361,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             err = grib_set_long_internal(hand, self->binary_scale_factor, 0);
     }
 
-    
-
     return err;
 }
 
