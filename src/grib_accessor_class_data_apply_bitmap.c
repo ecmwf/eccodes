@@ -326,8 +326,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             grib_set_long_internal(hand, self->number_of_data_points, *len);
         
         err = grib_set_double_array_internal(hand, self->coded_values, val, *len);
-        //if (self->number_of_data_points)
-        //    grib_set_long_internal(hand, self->number_of_data_points, *len);
         return err;
     }
 
