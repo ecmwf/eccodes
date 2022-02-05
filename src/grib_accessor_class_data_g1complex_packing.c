@@ -204,6 +204,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (*len == 0)
         return GRIB_NO_VALUES;
 
+#if 0
+    /* TODO: spectral_ieee does not work */
     if (c->ieee_packing && self->ieee_packing) {
         long precision = c->ieee_packing == 32 ? 1 : 2;
         size_t lenstr  = strlen(self->ieee_packing);
@@ -220,6 +222,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         grib_context_free(c, precision_s);
         return grib_set_double_array(h, "values", val, *len);
     }
+#endif
 
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->sub_j, &sub_j)) != GRIB_SUCCESS)
         return ret;
