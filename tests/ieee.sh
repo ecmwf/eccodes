@@ -118,15 +118,16 @@ ${tools_dir}/grib_compare   -c data:n          $infile $temp
 
 echo "Test raw packing on GRIB1 with bitmap..."
 # ---------------------------------------------
-# TODO: This test is currently failing
-# grib1 with a bitmap -> raw packing
 infile=${data_dir}/reduced_latlon_surface.grib1
 grib_check_key_equals $infile numberOfMissing 98701
 ${tools_dir}/grib_set -r -s packingType=grid_ieee $infile $temp
 ${tools_dir}/grib_get -p numberOfEffectiveValues,numberOfValues,numberOfMissing $temp
 stats1=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $infile`
 stats2=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $temp`
-# [ "$stats1" = "$stats2" ]
+[ "$stats1" = "$stats2" ]
+ECCODES_GRIB_IEEE_PACKING=32 ${tools_dir}/grib_copy -r $infile $temp
+stats2=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $temp`
+[ "$stats1" = "$stats2" ]
 
 
 echo "Test changing precision ..."
