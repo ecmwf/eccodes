@@ -37,7 +37,7 @@ list(APPEND test_bins
     extract_offsets
     bufr_check_descriptors
     grib_sh_ieee64
-    ieee
+    grib_ieee
     grib_set_bytes
     grib_packing_order
     grib_sh_imag
@@ -193,7 +193,7 @@ if( HAVE_BUILD_TOOLS )
         metar_dump
         metar_compare
         bufr_set
-        ieee
+        grib_ieee
         grib_sh_ieee64
         grib_optimize_scaling
         grib_optimize_scaling_sh
