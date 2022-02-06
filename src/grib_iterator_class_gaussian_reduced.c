@@ -190,7 +190,7 @@ static int iterate_reduced_gaussian_subarea_legacy(grib_iterator* iter, grib_han
             if (iter->e >= iter->nv) {
                 size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
                 grib_context_log(h->context, GRIB_LOG_ERROR,
-                                 "Reduced Gaussian iterator (sub-area legacy). Num points=%ld, size(values)=%ld", np, iter->nv);
+                                 "Reduced Gaussian Geoiterator (sub-area legacy). Num points=%ld, size(values)=%ld", np, iter->nv);
                 return GRIB_WRONG_GRID;
             }
 
@@ -251,7 +251,7 @@ static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib
                 /* Only print error message on the second pass */
                 size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
                 grib_context_log(h->context, GRIB_LOG_ERROR,
-                                 "Reduced Gaussian iterator (sub-area). Num points=%ld, size(values)=%ld", np, iter->nv);
+                                 "Reduced Gaussian Geoiterator (sub-area). Num points=%ld, size(values)=%ld", np, iter->nv);
                 return GRIB_WRONG_GRID;
             }
             self->los[iter->e] = lon2;

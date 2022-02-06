@@ -98,8 +98,10 @@ static double* pointer_to_data(unsigned int i, unsigned int j,
     return NULL;
 }
 
-/* Apply the scanning mode flags which may require data array to be transformed */
-/* to standard west-to-east (+i) south-to-north (+j) mode */
+/* Apply the scanning mode flags which may require data array to be transformed
+ * to standard west-to-east (+i) south-to-north (+j) mode.
+ * The data array passed in should have 'numPoints' elements.
+*/
 int transform_iterator_data(grib_context* context, double* data,
                             long iScansNegatively, long jScansPositively,
                             long jPointsAreConsecutive, long alternativeRowScanning,
@@ -118,11 +120,11 @@ int transform_iterator_data(grib_context* context, double* data,
 
     if (!iScansNegatively && !jScansPositively && !jPointsAreConsecutive && !alternativeRowScanning &&
         nx > 0 && ny > 0) {
-        /* regular grid +i -j: convert from we:ns to we:sn */
+        /* Regular grid +i -j: convert from we:ns to we:sn */
         size_t row_size = ((size_t)nx) * sizeof(double);
         data2           = (double*)grib_context_malloc(context, row_size);
         if (!data2) {
-            grib_context_log(context, GRIB_LOG_ERROR, "Error allocating %ld bytes", row_size);
+            grib_context_log(context, GRIB_LOG_ERROR, "Geoiterator data: Error allocating %ld bytes", row_size);
             return GRIB_OUT_OF_MEMORY;
         }
         for (iy = 0; iy < ny / 2; iy++) {
@@ -135,18 +137,18 @@ int transform_iterator_data(grib_context* context, double* data,
     }
 
     if (nx < 1 || ny < 1) {
-        grib_context_log(context, GRIB_LOG_ERROR, "Invalid values for Nx and/or Ny");
+        grib_context_log(context, GRIB_LOG_ERROR, "Geoiterator data: Invalid values for Nx and/or Ny");
         return GRIB_GEOCALCULUS_PROBLEM;
     }
     data2 = (double*)grib_context_malloc(context, numPoints * sizeof(double));
     if (!data2) {
-        grib_context_log(context, GRIB_LOG_ERROR, "Error allocating %ld bytes", numPoints * sizeof(double));
+        grib_context_log(context, GRIB_LOG_ERROR, "Geoiterator data: Error allocating %ld bytes", numPoints * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     pData0 = data2;
     for (iy = 0; iy < ny; iy++) {
         long deltaX = 0;
-        pData1      = pointer_to_data(0, iy, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning, nx, ny, data);
+        pData1 = pointer_to_data(0, iy, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning, nx, ny, data);
         if (!pData1) {
             grib_context_free(context, data2);
             return GRIB_GEOCALCULUS_PROBLEM;
@@ -191,13 +193,13 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return err;
 
     if (numberOfPoints != dli) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s != size(%s) (%ld!=%ld)",
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator: %s != size(%s) (%ld!=%ld)",
                          s_numPoints, s_rawData, numberOfPoints, dli);
         return GRIB_WRONG_GRID;
     }
     iter->nv = dli;
     if (iter->nv == 0) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "size(%s) is %ld", s_rawData, dli);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator: size(%s) is %ld", s_rawData, dli);
         return GRIB_WRONG_GRID;
     }
     iter->data = (double*)grib_context_malloc(h->context, (iter->nv) * sizeof(double));

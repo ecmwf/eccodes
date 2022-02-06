@@ -205,12 +205,12 @@ static int init_sphere(grib_handle* h,
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert conformal Geoiterator: Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert conformal Geoiterator: Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -302,7 +302,7 @@ static int init_oblate(grib_handle* h,
     } else {
         con = latFirstInRadians * ns;
         if (con <= 0) {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "Point cannot be projected");
+            grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert conformal Geoiterator: Point cannot be projected");
             return GRIB_GEOCALCULUS_PROBLEM;
         }
         rh1 = 0;
@@ -316,12 +316,12 @@ static int init_oblate(grib_handle* h,
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert conformal Geoiterator: Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert conformal Geoiterator: Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -351,7 +351,8 @@ static int init_oblate(grib_handle* h,
                 ts     = pow((rh1 / (earthMajorAxisInMetres * F)), con);
                 latRad = compute_phi(e, ts, &err);
                 if (err) {
-                    grib_context_log(h->context, GRIB_LOG_ERROR, "Failed to compute the latitude angle, phi2, for the inverse");
+                    grib_context_log(h->context, GRIB_LOG_ERROR,
+                                     "Lambert conformal Geoiterator: Failed to compute the latitude angle, phi2, for the inverse");
                     grib_context_free(h->context, self->lats);
                     grib_context_free(h->context, self->lons);
                     return err;
@@ -414,7 +415,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
 
     if (iter->nv != nx * ny) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Wrong number of points (%ld!=%ldx%ld)", iter->nv, nx, ny);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Lambert conformal Geoiterator: Wrong number of points (%ld!=%ldx%ld)", iter->nv, nx, ny);
         return GRIB_WRONG_GRID;
     }
 
@@ -446,7 +447,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     /* Standard Parallels cannot be equal and on opposite sides of the equator */
     if (fabs(Latin1InDegrees + Latin2InDegrees) < EPSILON) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "Cannot have equal latitudes for standard parallels on opposite sides of equator");
+                         "Lambert conformal Geoiterator: Cannot have equal latitudes for standard parallels on opposite sides of equator");
         return GRIB_WRONG_GRID;
     }
 

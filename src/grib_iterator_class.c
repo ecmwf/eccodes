@@ -9,9 +9,8 @@
  */
 
 /***************************************************************************
- *   Jean Baptiste Filippi - 01.11.2005                                                           *
- *   Enrico Fucile
- *                                                                         *
+ *   Jean Baptiste Filippi - 01.11.2005                                    *
+ *   Enrico Fucile                                                         *
  ***************************************************************************/
 
 #include "grib_api_internal.h"
@@ -47,12 +46,12 @@ grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsig
             *ret                   = grib_iterator_init(it, h, args);
             if (*ret == GRIB_SUCCESS)
                 return it;
-            grib_context_log(h->context, GRIB_LOG_DEBUG, "grib_iterator_factory: error %d instantiating iterator %s", *ret, table[i].type);
+            grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: error %d instantiating iterator %s", *ret, table[i].type);
             grib_iterator_delete(it);
             return NULL;
         }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "grib_iterator_factory : Unknown type : %s for iterator", type);
+    grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Unknown type : %s for iterator", type);
 
     return NULL;
 }

@@ -162,7 +162,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return ret;
 
     if (iter->nv != nx * ny) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Wrong number of points (%ld!=%ldx%ld)", iter->nv, nx, ny);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Polar stereographic Geoiterator: Wrong number of points (%ld!=%ldx%ld)", iter->nv, nx, ny);
         return GRIB_WRONG_GRID;
     }
     if ((ret = grib_get_double_internal(h, s_latFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS)
@@ -242,12 +242,12 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
     self->lats = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", iter->nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Polar stereographic Geoiterator: Error allocating %ld bytes", iter->nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     self->lons = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", iter->nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Polar stereographic Geoiterator: Error allocating %ld bytes", iter->nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     lats = self->lats;

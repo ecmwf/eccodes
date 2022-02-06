@@ -171,7 +171,7 @@ static int init_mercator(grib_handle* h,
 
     /* Forward projection: convert lat,lon to x,y */
     if (fabs(fabs(latFirstInRadians) - M_PI_2) <= EPSILON) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Mercator: Transformation cannot be computed at the poles");
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Mercator Geoiterator: Transformation cannot be computed at the poles");
         return GRIB_GEOCALCULUS_PROBLEM;
     }
     else {
@@ -186,12 +186,12 @@ static int init_mercator(grib_handle* h,
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Mercator Geoiterator: Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Mercator Geoiterator: Error allocating %ld bytes", nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -210,7 +210,7 @@ static int init_mercator(grib_handle* h,
             ts     = exp(-_y / (earthMajorAxisInMetres * m1));
             latRad = compute_phi(e, ts, &err);
             if (err) {
-                grib_context_log(h->context, GRIB_LOG_ERROR, "Mercator: Failed to compute the latitude angle, phi2, for the inverse");
+                grib_context_log(h->context, GRIB_LOG_ERROR, "Mercator Geoiterator: Failed to compute the latitude angle, phi2, for the inverse");
                 grib_context_free(h->context, self->lats);
                 grib_context_free(h->context, self->lons);
                 return err;
@@ -270,7 +270,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
 
     if (iter->nv != ni * nj) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Wrong number of points (%ld!=%ldx%ld)", iter->nv, ni, nj);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Mercator Geoiterator: Wrong number of points (%ld!=%ldx%ld)", iter->nv, ni, nj);
         return GRIB_WRONG_GRID;
     }
 
