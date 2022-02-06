@@ -34,7 +34,7 @@ static const struct table_entry table[] = {
 grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* ret)
 {
     int i;
-    char* type = (char*)grib_arguments_get_name(h, args, 0);
+    const char* type = (char*)grib_arguments_get_name(h, args, 0);
 
     for (i = 0; i < NUMBER(table); i++)
         if (strcmp(type, table[i].type) == 0) {
@@ -46,12 +46,13 @@ grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsig
             *ret                   = grib_iterator_init(it, h, args);
             if (*ret == GRIB_SUCCESS)
                 return it;
-            grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: error %d instantiating iterator %s", *ret, table[i].type);
+            grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Error instantiating iterator %s (%s)",
+                             table[i].type, grib_get_error_message(*ret));
             grib_iterator_delete(it);
             return NULL;
         }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Unknown type : %s for iterator", type);
+    grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Unknown type: %s for iterator", type);
 
     return NULL;
 }
