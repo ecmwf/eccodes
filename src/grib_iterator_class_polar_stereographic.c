@@ -355,7 +355,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     iter->e = -1;
 
     /* Apply the scanning mode flags which may require data array to be transformed */
-    ret = transform_iterator_data(h, iter->data,
+    ret = transform_iterator_data(h->context, iter->data,
                                   iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
                                   iter->nv, nx, ny);
 

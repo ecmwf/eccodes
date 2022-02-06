@@ -1413,7 +1413,7 @@ grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsig
 /* grib_iterator_class_latlon_reduced.c */
 
 /* grib_iterator_class_gen.c */
-int transform_iterator_data(grib_handle* h, double* data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);
+int transform_iterator_data(grib_context* c, double* data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);
 
 /* grib_iterator_class_latlon.c */
 

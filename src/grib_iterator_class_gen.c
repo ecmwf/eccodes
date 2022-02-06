@@ -79,7 +79,8 @@ static void init_class(grib_iterator_class* c)
  * Return pointer to data at (i,j) (Fortran convention)
  */
 static double* pointer_to_data(unsigned int i, unsigned int j,
-                               long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning,
+                               long iScansNegatively, long jScansPositively,
+                               long jPointsAreConsecutive, long alternativeRowScanning,
                                unsigned int nx, unsigned int ny, double* data)
 {
     /* Regular grid */
@@ -98,8 +99,8 @@ static double* pointer_to_data(unsigned int i, unsigned int j,
 }
 
 /* Apply the scanning mode flags which may require data array to be transformed */
-/* to standard west-to-east south-to-north mode */
-int transform_iterator_data(grib_handle* h, double* data,
+/* to standard west-to-east (+i) south-to-north (+j) mode */
+int transform_iterator_data(grib_context* context, double* data,
                             long iScansNegatively, long jScansPositively,
                             long jPointsAreConsecutive, long alternativeRowScanning,
                             size_t numPoints, long nx, long ny)
@@ -113,13 +114,15 @@ int transform_iterator_data(grib_handle* h, double* data,
         return GRIB_SUCCESS;
     }
 
+    if (!context) context = grib_context_get_default();
+
     if (!iScansNegatively && !jScansPositively && !jPointsAreConsecutive && !alternativeRowScanning &&
         nx > 0 && ny > 0) {
         /* regular grid +i -j: convert from we:ns to we:sn */
         size_t row_size = ((size_t)nx) * sizeof(double);
-        data2           = (double*)grib_context_malloc(h->context, row_size);
+        data2           = (double*)grib_context_malloc(context, row_size);
         if (!data2) {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", row_size);
+            grib_context_log(context, GRIB_LOG_ERROR, "Error allocating %ld bytes", row_size);
             return GRIB_OUT_OF_MEMORY;
         }
         for (iy = 0; iy < ny / 2; iy++) {
@@ -127,28 +130,32 @@ int transform_iterator_data(grib_handle* h, double* data,
             memcpy(data + iy * nx, data + (ny - 1 - iy) * ((size_t)nx), row_size);
             memcpy(data + (ny - 1 - iy) * ((size_t)nx), data2, row_size);
         }
-        grib_context_free(h->context, data2);
+        grib_context_free(context, data2);
         return GRIB_SUCCESS;
     }
 
     if (nx < 1 || ny < 1) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid values for Nx and/or Ny");
+        grib_context_log(context, GRIB_LOG_ERROR, "Invalid values for Nx and/or Ny");
         return GRIB_GEOCALCULUS_PROBLEM;
     }
-    data2 = (double*)grib_context_malloc(h->context, numPoints * sizeof(double));
+    data2 = (double*)grib_context_malloc(context, numPoints * sizeof(double));
     if (!data2) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", numPoints * sizeof(double));
+        grib_context_log(context, GRIB_LOG_ERROR, "Error allocating %ld bytes", numPoints * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     pData0 = data2;
     for (iy = 0; iy < ny; iy++) {
         long deltaX = 0;
         pData1      = pointer_to_data(0, iy, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning, nx, ny, data);
-        if (!pData1)
+        if (!pData1) {
+            grib_context_free(context, data2);
             return GRIB_GEOCALCULUS_PROBLEM;
+        }
         pData2 = pointer_to_data(1, iy, iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning, nx, ny, data);
-        if (!pData2)
+        if (!pData2) {
+            grib_context_free(context, data2);
             return GRIB_GEOCALCULUS_PROBLEM;
+        }
         deltaX = pData2 - pData1;
         for (ix = 0; ix < nx; ix++) {
             *pData0++ = *pData1;
@@ -156,7 +163,7 @@ int transform_iterator_data(grib_handle* h, double* data,
         }
     }
     memcpy(data, data2, ((size_t)numPoints) * sizeof(double));
-    grib_context_free(h->context, data2);
+    grib_context_free(context, data2);
 
     return GRIB_SUCCESS;
 }
