@@ -993,7 +993,7 @@ int grib_index_search_same(grib_index* index, grib_handle* h)
     grib_index_key* keys;
     long lval   = 0;
     double dval = 0.0;
-    grib_context* c;
+    grib_context* c = NULL;
 
     if (!index)
         return GRIB_NULL_INDEX;
@@ -1883,8 +1883,7 @@ grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
                                                                       sizeof(grib_field_list));
         if (!index->fieldset) {
             grib_context_log(index->context, GRIB_LOG_ERROR,
-                             "unable to allocate %d bytes",
-                             sizeof(grib_field_list));
+                             "unable to allocate %lu bytes", sizeof(grib_field_list));
             return NULL;
         }
         index->current = index->fieldset;

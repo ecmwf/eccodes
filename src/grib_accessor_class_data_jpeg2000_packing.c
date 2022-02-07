@@ -473,7 +473,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
 
     if (width * height != *len) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "grib_accessor_class_data_jpeg2000_packing pack_double: width=%ld height=%ld len=%d."
+                         "grib_accessor_class_data_jpeg2000_packing pack_double: width=%ld height=%ld len=%ld."
                          " width*height should equal len!",
                          (long)width, (long)height, (long)*len);
         return GRIB_INTERNAL_ERROR;

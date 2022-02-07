@@ -209,7 +209,7 @@ static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t* len)
     long offset = grib_byte_offset(a);
 
     if (*len < (size_t)length) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it is %d bytes long\n", a->name, length);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it is %ld bytes long\n", a->name, length);
         *len = length;
         return GRIB_ARRAY_TOO_SMALL;
     }

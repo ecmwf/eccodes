@@ -784,7 +784,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     self->dirty = 1;
 
     if (*len != bt->n_vals_bif) {
-        grib_context_log(gh->context, GRIB_LOG_ERROR, "BIFOURIER_PACKING : wrong number of values, expected %d - got %d", bt->n_vals_bif, *len);
+        grib_context_log(gh->context, GRIB_LOG_ERROR, "BIFOURIER_PACKING: wrong number of values, expected %lu - got %lu",
+                bt->n_vals_bif, *len);
         ret = GRIB_INTERNAL_ERROR;
         goto cleanup;
     }

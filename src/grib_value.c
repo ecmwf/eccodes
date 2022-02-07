@@ -467,7 +467,7 @@ int grib_set_bytes_internal(grib_handle* h, const char* name, const unsigned cha
             return grib_dependency_notify_change(a);
         }
 
-        grib_context_log(h->context, GRIB_LOG_ERROR, "unable to set %s=%ld as bytes (%s)",
+        grib_context_log(h->context, GRIB_LOG_ERROR, "unable to set %s=%s as bytes (%s)",
                          name, val, grib_get_error_message(ret));
         return ret;
     }

@@ -819,7 +819,7 @@ static int grib_fieldset_resize_int_array(grib_int_array* a, size_t newsize)
     el = (int*)grib_context_realloc(a->context, a->el, newsize);
     if (!el) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "grib_fieldset_resize_int_array : Cannot malloc %d bytes",
+                         "grib_fieldset_resize_int_array: Cannot malloc %lu bytes",
                          newsize);
         return GRIB_OUT_OF_MEMORY;
     }
@@ -863,7 +863,7 @@ static int grib_fieldset_resize_fields(grib_fieldset* set, size_t newsize)
     fields = (grib_field**)grib_context_realloc(set->context, set->fields, newsize * sizeof(grib_field*));
     if (!fields) {
         grib_context_log(set->context, GRIB_LOG_ERROR,
-                         "grib_fieldset_resize_fields : Cannot malloc %d bytes",
+                         "grib_fieldset_resize_fields: Cannot malloc %lu bytes",
                          newsize * sizeof(grib_field*));
         return GRIB_OUT_OF_MEMORY;
     }

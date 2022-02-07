@@ -169,7 +169,8 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     grib_handle* hand = grib_handle_of_accessor(a);
 
     if (len[0] < (a->length + 1)) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%d) for %s it contains %d values ", len[0], a->name, a->length + 1);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s it contains %ld values",
+                len[0], a->name, a->length + 1);
         len[0] = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -186,7 +187,8 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     int i             = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
     if (len[0] > (a->length) + 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "pack_string: Wrong size (%d) for %s it contains %d values ", len[0], a->name, a->length + 1);
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                "pack_string: Wrong size (%lu) for %s it contains %ld values", len[0], a->name, a->length + 1);
         len[0] = 0;
         return GRIB_BUFFER_TOO_SMALL;
     }
