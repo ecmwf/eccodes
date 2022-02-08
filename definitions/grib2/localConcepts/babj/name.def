@@ -1,0 +1,737 @@
+# Manually generated according to CRA40 reanalyses datasets.
+# Created by Jianglizhi, Fujian Institue of Meteorology Sciences, Feb 8 2022.
+#Best (4 layer) lifted index (K)
+'Best (4 layer) lifted index' = {
+   discipline = 0 ;
+   parameterCategory = 7 ;
+   parameterNumber = 193 ;
+}
+
+#5-wave geopotential height (gpm)
+'5-wave geopotential height' = {
+   discipline = 0 ;
+   parameterCategory = 3 ;
+   parameterNumber = 193 ;
+}
+
+#Absolute vorticity (s-1)
+'Absolute vorticity' = {
+   discipline = 0 ;
+   parameterCategory = 2 ;
+   parameterNumber = 10 ;
+}
+
+#Aerodynamic conductance (m s-1)
+'Aerodynamic conductance' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 228 ;
+}
+
+#Convective precipitation (kg m-2)
+'Convective precipitation' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 10 ;
+}
+
+#Albedo (%)
+'Albedo' = {
+   discipline = 0 ;
+   parameterCategory = 19 ;
+   parameterNumber = 1 ;
+}
+
+#Total precipitation (kg m-2)
+'Total precipitation' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 8 ;
+}
+
+#Apparent temperature (K)
+'Apparent temperature' = {
+   discipline = 0 ;
+   parameterCategory = 0 ;
+   parameterNumber = 21 ;
+}
+
+#Brightness temperature (K)
+'Brightness temperature' = {
+   discipline = 0 ;
+   parameterCategory = 4 ;
+   parameterNumber = 4 ;
+}
+
+#Convective available potential energy (J kg-1)
+'Convective available potential energy' = {
+   discipline = 0 ;
+   parameterCategory = 7 ;
+   parameterNumber = 6 ;
+}
+
+#Clear sky UV-B downward solar flux (W m-2)
+'Clear sky UV-B downward solar flux' = {
+   discipline = 0 ;
+   parameterCategory = 4 ;
+   parameterNumber = 195 ;
+}
+
+#Categorical freezing rain (yes=1; no=0) (non-dim)
+'Categorical freezing rain (yes=1; no=0)' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 193 ;
+}
+
+#Categorical ice pellets (yes=1; no=0) (non-dim)
+'Categorical ice pellets (yes=1; no=0)' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 194 ;
+}
+
+#Convective inhibition (J kg-1)
+'Convective inhibition' = {
+   discipline = 0 ;
+   parameterCategory = 7 ;
+   parameterNumber = 7 ;
+}
+
+#Plant canopy surface water (kg m-2)
+'Plant canopy surface water' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 196 ;
+}
+
+#Percent frozen precipitation (%)
+'Percent frozen precipitation' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 39 ;
+}
+
+#Convective precipitation rate (kg m-2 s-1)
+'Convective precipitation rate' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 196 ;
+}
+
+#Categorical rain (yes=1; no=0) (non-dim)
+'Categorical rain (yes=1; no=0)' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 192 ;
+}
+
+#Clear sky downward long wave flux (W m-2)
+'Clear sky downward long wave flux' = {
+   discipline = 0 ;
+   parameterCategory = 5 ;
+   parameterNumber = 196 ;
+}
+
+#Clear sky downward solar flux (W m-2)
+'Clear sky downward solar flux' = {
+   discipline = 0 ;
+   parameterCategory = 4 ;
+   parameterNumber = 196 ;
+}
+
+#Categorical snow (yes=1; no=0) (non-dim)
+'Categorical snow (yes=1; no=0)' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 195 ;
+}
+
+#Clear sky upward long wave flux (W m-2)
+'Clear sky upward long wave flux' = {
+   discipline = 0 ;
+   parameterCategory = 5 ;
+   parameterNumber = 195 ;
+}
+
+#Clear sky upward solar flux (W m-2)
+'Clear sky upward solar flux' = {
+   discipline = 0 ;
+   parameterCategory = 4 ;
+   parameterNumber = 198 ;
+}
+
+#Cloud water (kg m-2)
+'Cloud water' = {
+   discipline = 0 ;
+   parameterCategory = 6 ;
+   parameterNumber = 6 ;
+}
+
+#Cloud work function (J kg-1)
+'Cloud work function' = {
+   discipline = 0 ;
+   parameterCategory = 6 ;
+   parameterNumber = 193 ;
+}
+
+#Downward long-wave radiation flux (W m-2)
+'Downward long-wave radiation flux' = {
+   discipline = 0 ;
+   parameterCategory = 5 ;
+   parameterNumber = 192 ;
+}
+
+#Dew point temperature (K)
+'Dew point temperature' = {
+   discipline = 0 ;
+   parameterCategory = 0 ;
+   parameterNumber = 6 ;
+}
+
+#Downward short-wave radiation flux (W m-2)
+'Downward short-wave radiation flux' = {
+   discipline = 0 ;
+   parameterCategory = 4 ;
+   parameterNumber = 192 ;
+}
+
+#UV-B downward solar flux (W m-2)
+'UV-B downward solar flux' = {
+   discipline = 0 ;
+   parameterCategory = 4 ;
+   parameterNumber = 194 ;
+}
+
+#Direct evaporation from bare soil (W m-2)
+'Direct evaporation from bare soil' = {
+   discipline = 2 ;
+   parameterCategory = 3 ;
+   parameterNumber = 198 ;
+}
+
+#Canopy water evaporation (W m-2)
+'Canopy water evaporation' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 229 ;
+}
+
+#Field capacity (fraction)
+'Field capacity' = {
+   discipline = 2 ;
+   parameterCategory = 3 ;
+   parameterNumber = 203 ;
+}
+
+#Frictional velocity (m s-1)
+'Frictional velocity' = {
+   discipline = 0 ;
+   parameterCategory = 2 ;
+   parameterNumber = 197 ;
+}
+
+#Ground heat flux (W m-2)
+'Ground heat flux' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 193 ;
+}
+
+#Wind speed (gust) (m s-1)
+'Wind speed (gust)' = {
+   discipline = 0 ;
+   parameterCategory = 2 ;
+   parameterNumber = 22 ;
+}
+
+#Geopotential height (gpm)
+'Geopotential height' = {
+   discipline = 0 ;
+   parameterCategory = 3 ;
+   parameterNumber = 5 ;
+}
+
+#Haines index (Numeric)
+'Haines index' = {
+   discipline = 2 ;
+   parameterCategory = 4 ;
+   parameterNumber = 2 ;
+}
+
+#Storm relative helicity (m2 s-2)
+'Storm relative helicity' = {
+   discipline = 0 ;
+   parameterCategory = 7 ;
+   parameterNumber = 8 ;
+}
+
+#Planetary boundary layer height (m)
+'Planetary boundary layer height' = {
+   discipline = 0 ;
+   parameterCategory = 3 ;
+   parameterNumber = 196 ;
+}
+
+#ICAO standard atmosphere reference height (m)
+'ICAO standard atmosphere reference height' = {
+   discipline = 0 ;
+   parameterCategory = 3 ;
+   parameterNumber = 3 ;
+}
+
+#Ice cover (Proportion)
+'Ice cover' = {
+   discipline = 10 ;
+   parameterCategory = 2 ;
+   parameterNumber = 0 ;
+}
+
+#Ice thickness (m)
+'Ice thickness' = {
+   discipline = 10 ;
+   parameterCategory = 2 ;
+   parameterNumber = 1 ;
+}
+
+#Land cover (1=land, 0=sea) (Proportion)
+'Land cover (1=land, 0=sea)' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 0 ;
+}
+
+#Surface lifted index (K)
+'Surface lifted index' = {
+   discipline = 0 ;
+   parameterCategory = 7 ;
+   parameterNumber = 192 ;
+}
+
+#Latent heat net flux (W m-2)
+'Latent heat net flux' = {
+   discipline = 0 ;
+   parameterCategory = 0 ;
+   parameterNumber = 10 ;
+}
+
+#Montgomery stream function (m2 s-2)
+'Montgomery stream function' = {
+   discipline = 0 ;
+   parameterCategory = 2 ;
+   parameterNumber = 6 ;
+}
+
+#MSLP (ETA model reduction) (Pa)
+'MSLP (ETA model reduction)' = {
+   discipline = 0 ;
+   parameterCategory = 3 ;
+   parameterNumber = 192 ;
+}
+
+#Near IR beam downward solar flux (W m-2)
+'Near IR beam downward solar flux' = {
+   discipline = 0 ;
+   parameterCategory = 4 ;
+   parameterNumber = 202 ;
+}
+
+#Large-scale precipitation (non-convective) (kg m-2)
+'Large-scale precipitation (non-convective)' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 9 ;
+}
+
+#Near IR diffuse downward solar flux (W m-2)
+'Near IR diffuse downward solar flux' = {
+   discipline = 0 ;
+   parameterCategory = 4 ;
+   parameterNumber = 203 ;
+}
+
+#Potential evaporation rate (W m-2)
+'Potential evaporation rate' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 200 ;
+}
+
+#Parcel lifted index (to 500 hpa) (K)
+'Parcel lifted index (to 500 hpa)' = {
+   discipline = 0 ;
+   parameterCategory = 7 ;
+   parameterNumber = 0 ;
+}
+
+#Pressure of level from which parcel was lifted (Pa)
+'Pressure of level from which parcel was lifted' = {
+   discipline = 0 ;
+   parameterCategory = 3 ;
+   parameterNumber = 200 ;
+}
+
+#Potential temperature (K)
+'Potential temperature' = {
+   discipline = 0 ;
+   parameterCategory = 0 ;
+   parameterNumber = 2 ;
+}
+
+#Precipitation rate (kg m-2 s-1)
+'Precipitation rate' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 7 ;
+}
+
+#Pressure (Pa)
+'Pressure' = {
+   discipline = 0 ;
+   parameterCategory = 3 ;
+   parameterNumber = 0 ;
+}
+
+#Pressure reduced to MSL (Pa)
+'Pressure reduced to MSL' = {
+   discipline = 0 ;
+   parameterCategory = 3 ;
+   parameterNumber = 1 ;
+}
+
+#Potential vorticity (K m2 kg-1 s-1)
+'Potential vorticity' = {
+   discipline = 0 ;
+   parameterCategory = 2 ;
+   parameterNumber = 14 ;
+}
+
+#Precipitable water (kg m-2)
+'Precipitable water' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 3 ;
+}
+
+#Maximum specific humidity at 2m (kg kg-1)
+'Maximum specific humidity at 2m' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 219 ;
+}
+
+#Minimum specific humidity at 2m (kg kg-1)
+'Minimum specific humidity at 2m' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 220 ;
+}
+
+#Relative humidity (%)
+'Relative humidity' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 1 ;
+}
+
+#Sublimation (evaporation from snow) (W m-2)
+'Sublimation (evaporation from snow)' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 212 ;
+}
+
+#Surface roughness (m)
+'Surface roughness' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 1 ;
+}
+
+#Exchange coefficient ((kg m-3) (m s-1))
+'Exchange coefficient' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 195 ;
+}
+
+#Sensible heat net flux (W m-2)
+'Sensible heat net flux' = {
+   discipline = 0 ;
+   parameterCategory = 0 ;
+   parameterNumber = 11 ;
+}
+
+#Surface slope type (Index)
+'Surface slope type' = {
+   discipline = 2 ;
+   parameterCategory = 3 ;
+   parameterNumber = 194 ;
+}
+
+#Snow depth (m)
+'Snow depth' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 11 ;
+}
+
+#Snow phase change heat flux (W m-2)
+'Snow phase change heat flux' = {
+   discipline = 0 ;
+   parameterCategory = 0 ;
+   parameterNumber = 16 ;
+}
+
+#Snow cover (%)
+'Snow cover' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 42 ;
+}
+
+#Liquid volumetric soil moisture (non frozen) (Proportion)
+'Liquid volumetric soil moisture (non frozen)' = {
+   discipline = 2 ;
+   parameterCategory = 3 ;
+   parameterNumber = 192 ;
+}
+
+#Soil moisture content (kg m-2)
+'Soil moisture content' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 3 ;
+}
+
+#Volumetric soil moisture content (Fraction)
+'Volumetric soil moisture content' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 192 ;
+}
+
+#Soil type (Code Table 4.213)
+'Soil type' = {
+   discipline = 2 ;
+   parameterCategory = 3 ;
+   parameterNumber = 0 ;
+}
+
+#Specific humidity (kg kg-1)
+'Specific humidity' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 0 ;
+}
+
+#Storm surface runoff (kg m-2)
+'Storm surface runoff' = {
+   discipline = 1 ;
+   parameterCategory = 0 ;
+   parameterNumber = 193 ;
+}
+
+#Sunshine duration (s)
+'Sunshine duration' = {
+   discipline = 0 ;
+   parameterCategory = 6 ;
+   parameterNumber = 201 ;
+}
+
+#Total cloud cover (%)
+'Total cloud cover' = {
+   discipline = 0 ;
+   parameterCategory = 6 ;
+   parameterNumber = 1 ;
+}
+
+#Maximum temperature (K)
+'Maximum temperature' = {
+   discipline = 0 ;
+   parameterCategory = 0 ;
+   parameterNumber = 4 ;
+}
+
+#Minimum temperature (K)
+'Minimum temperature' = {
+   discipline = 0 ;
+   parameterCategory = 0 ;
+   parameterNumber = 5 ;
+}
+
+#Temperature (K)
+'Temperature' = {
+   discipline = 0 ;
+   parameterCategory = 0 ;
+   parameterNumber = 0 ;
+}
+
+#Total ozone (Dobson)
+'Total ozone' = {
+   discipline = 0 ;
+   parameterCategory = 14 ;
+   parameterNumber = 0 ;
+}
+
+#Transpiration (W m-2)
+'Transpiration' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 230 ;
+}
+
+#Soil temperature (K)
+'Soil temperature' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 2 ;
+}
+
+#Momentum flux, u-component (N m-2)
+'Momentum flux, u-component' = {
+   discipline = 0 ;
+   parameterCategory = 2 ;
+   parameterNumber = 17 ;
+}
+
+#U-component of wind (m s-1)
+'U-component of wind' = {
+   discipline = 0 ;
+   parameterCategory = 2 ;
+   parameterNumber = 2 ;
+}
+
+#Zonal flux of gravity wave stress (N m-2)
+'Zonal flux of gravity wave stress' = {
+   discipline = 0 ;
+   parameterCategory = 3 ;
+   parameterNumber = 194 ;
+}
+
+#Upward long-wave radiation flux (W m-2)
+'Upward long-wave radiation flux' = {
+   discipline = 0 ;
+   parameterCategory = 5 ;
+   parameterNumber = 193 ;
+}
+
+#U-component storm motion (m s-1)
+'U-component storm motion' = {
+   discipline = 0 ;
+   parameterCategory = 2 ;
+   parameterNumber = 194 ;
+}
+
+#Upward short-wave radiation flux (W m-2)
+'Upward short-wave radiation flux' = {
+   discipline = 0 ;
+   parameterCategory = 4 ;
+   parameterNumber = 193 ;
+}
+
+#Visible beam downward solar flux (W m-2)
+'Visible beam downward solar flux' = {
+   discipline = 0 ;
+   parameterCategory = 4 ;
+   parameterNumber = 200 ;
+}
+
+#Visible diffuse downward solar flux (W m-2)
+'Visible diffuse downward solar flux' = {
+   discipline = 0 ;
+   parameterCategory = 4 ;
+   parameterNumber = 201 ;
+}
+
+#Vegetation (%)
+'Vegetation' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 4 ;
+}
+
+#Momentum flux, v-component (N m-2)
+'Momentum flux, v-component' = {
+   discipline = 0 ;
+   parameterCategory = 2 ;
+   parameterNumber = 18 ;
+}
+
+#V-component of wind (m s-1)
+'V-component of wind' = {
+   discipline = 0 ;
+   parameterCategory = 2 ;
+   parameterNumber = 3 ;
+}
+
+#Vegetation type (Integer (0-13))
+'Vegetation type' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 198 ;
+}
+
+#Meridional flux of gravity wave stress (N m-2)
+'Meridional flux of gravity wave stress' = {
+   discipline = 0 ;
+   parameterCategory = 3 ;
+   parameterNumber = 195 ;
+}
+
+#Visibility (m)
+'Visibility' = {
+   discipline = 0 ;
+   parameterCategory = 19 ;
+   parameterNumber = 0 ;
+}
+
+#Ventilation rate (m2 s-1)
+'Ventilation rate' = {
+   discipline = 0 ;
+   parameterCategory = 2 ;
+   parameterNumber = 224 ;
+}
+
+#V-component storm motion (m s-1)
+'V-component storm motion' = {
+   discipline = 0 ;
+   parameterCategory = 2 ;
+   parameterNumber = 195 ;
+}
+
+#Vertical velocity (pressure) (Pa s-1)
+'Vertical velocity (pressure)' = {
+   discipline = 0 ;
+   parameterCategory = 2 ;
+   parameterNumber = 8 ;
+}
+
+#Vertical speed shear (s-1)
+'Vertical speed shear' = {
+   discipline = 0 ;
+   parameterCategory = 2 ;
+   parameterNumber = 192 ;
+}
+
+#Water runoff (kg m-2)
+'Water runoff' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 5 ;
+}
+
+#Water equivalent of accumulated snow depth (kg m-2)
+'Water equivalent of accumulated snow depth' = {
+   discipline = 0 ;
+   parameterCategory = 1 ;
+   parameterNumber = 13 ;
+}
+
+#Wilting point (Fraction)
+'Wilting point' = {
+   discipline = 2 ;
+   parameterCategory = 0 ;
+   parameterNumber = 201 ;
+}
+
