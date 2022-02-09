@@ -115,6 +115,20 @@ ECCODES_GRIB_IEEE_PACKING=32 ${tools_dir}/grib_copy -r $infile $temp
 grib_check_key_equals $temp packingType grid_ieee
 ${tools_dir}/grib_compare   -c data:n          $infile $temp
 
+#### All combinations: with/without bitmap, grib1/2, 32/64bits
+editions="1 2"
+precisions="32 64"
+inputs="reduced_latlon_surface.grib regular_latlon_surface.grib"
+for edition in $editions; do
+    for prec in $precisions; do
+        for input in $inputs; do
+            infile=${data_dir}/$input$edition
+            ECCODES_GRIB_IEEE_PACKING=$prec ${tools_dir}/grib_copy -r $infile $temp
+            grib_check_key_equals $temp packingType grid_ieee
+            ${tools_dir}/grib_compare   -c data:n -R all=6e-8  $infile $temp
+        done
+    done
+done
 
 echo "Test raw packing on GRIB1 with bitmap..."
 # ---------------------------------------------
