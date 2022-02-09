@@ -1447,6 +1447,7 @@ int path_is_regular_file(const char* path);
 int path_is_directory(const char* filename);
 char* codes_getenv(const char* name);
 int codes_check_grib_ieee_packing_value(int value);
+int codes_flush_sync_close_file(FILE* f);
 
 /* grib_util.c */
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);

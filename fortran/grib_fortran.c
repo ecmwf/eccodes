@@ -82,6 +82,12 @@ static void init()
 }
 #endif
 
+typedef enum FileMode {
+    FILE_MODE_READ,
+    FILE_MODE_WRITE,
+    FILE_MODE_APPEND
+} FileMode;
+
 int GRIB_NULL=-1;
 int GRIB_NULL_NEAREST=-1;
 /*extern int errno;*/
@@ -92,6 +98,7 @@ struct l_grib_file {
     FILE* f;
     char* buffer;
     int id;
+    int mode; /* enum FileMode */
     l_grib_file* next;
 };
 
@@ -218,28 +225,35 @@ static void fort_char_clean(char* str,int len)
     *p=' ';
 }
 
-static int push_file(FILE* f,char* buffer)
+/* Note: the open_mode argument will be all lowercase. See grib_f_open_file_ */
+static int push_file(FILE* f, const char* open_mode, char* buffer)
 {
     l_grib_file* current  = file_set;
     l_grib_file* previous = file_set;
     l_grib_file* the_new      = NULL;
     int myindex = MIN_FILE_ID;
+    FileMode fmode = FILE_MODE_READ;
+
+    if (strcmp(open_mode, "w") == 0) fmode = FILE_MODE_WRITE;
+    else if (strcmp(open_mode, "a") == 0) fmode = FILE_MODE_APPEND;
 
     if(!file_set){
         file_set = (l_grib_file*)malloc(sizeof(l_grib_file));
         Assert(file_set);
-        file_set->id   = myindex;
-        file_set->f    = f;
-        file_set->buffer =buffer;
-        file_set->next = NULL;
+        file_set->id     = myindex;
+        file_set->f      = f;
+        file_set->mode   = fmode;
+        file_set->buffer = buffer;
+        file_set->next   = NULL;
         return myindex;
     }
 
     while(current){
         if(current->id < 0){
             current->id = -(current->id);
-            current->f    = f;
-            current->buffer    = buffer;
+            current->f      = f;
+            current->mode   = fmode;
+            current->buffer = buffer;
             return current->id ;
         } else{
             myindex++;
@@ -250,11 +264,12 @@ static int push_file(FILE* f,char* buffer)
 
     the_new = (l_grib_file*)malloc(sizeof(l_grib_file));
     Assert(the_new);
-    the_new->id   = myindex;
-    the_new->f    = f;
-    the_new->buffer    = buffer;
-    the_new->next = current;
-    previous->next = the_new;
+    the_new->id     = myindex;
+    the_new->f      = f;
+    the_new->mode   = fmode;
+    the_new->buffer = buffer;
+    the_new->next   = current;
+    previous->next  = the_new;
     return myindex;
 }
 
@@ -756,7 +771,10 @@ static int clear_file(int file_id)
         if(current->id == file_id){
             current->id = -(current->id);
             if (current->f) {
-                err = fclose(current->f);
+                if (current->mode == FILE_MODE_WRITE || current->mode == FILE_MODE_APPEND)
+                    err = codes_flush_sync_close_file(current->f);
+                else
+                    err = fclose(current->f);
                 if (err) {
                     int ioerr = errno;
                     grib_context* c = grib_context_get_default();
@@ -1049,7 +1067,7 @@ int grib_f_open_file_(int* fid, char* name , char* op, int lname, int lop) {
 #endif
             setvbuf(f,iobuf,_IOFBF,context->io_buffer_size);
         }
-        *fid = push_file(f,iobuf);
+        *fid = push_file(f, oper, iobuf);
         ret=GRIB_SUCCESS;
     }
     return ret;

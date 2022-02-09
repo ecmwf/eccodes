@@ -325,7 +325,7 @@ int grib_write_message(const grib_handle* h, const char* file, const char* mode)
         fclose(fh);
         return GRIB_IO_PROBLEM;
     }
-    if (fclose(fh) != 0) {
+    if (codes_flush_sync_close_file(fh) != GRIB_SUCCESS) {
         perror(file);
         return GRIB_IO_PROBLEM;
     }
