@@ -50,7 +50,7 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Geopotential Height
+#Geopotential height
 'geopotential_height' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 7 ;
@@ -166,7 +166,7 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Geopotential Height
+#Geopotential height
 'geopotential_height' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 7 ;
@@ -282,7 +282,7 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Geopotential Height
+#Geopotential height
 'geopotential_height' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 7 ;

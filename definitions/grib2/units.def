@@ -3713,7 +3713,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 13 ;
 	}
-#Geopotential Height
+#Geopotential height
 'gpm' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
@@ -5659,13 +5659,13 @@
 	 parameterNumber = 5 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
-#Soil Moisture
+#Soil moisture
 'kg m**-3' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
 	}
-#Soil Temperature
+#Soil temperature
 'K' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
