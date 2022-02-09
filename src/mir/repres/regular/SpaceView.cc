@@ -53,7 +53,7 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
     auto a             = get<double>(param, earthIsOblate ? "earthMajorAxis" : "radius");
     auto b             = earthIsOblate ? get<double>(param, "earthMinorAxis") : a;
 
-    auto Nr = get<double>(param, "NrInRadiusOfEarth") * (get<long>(param, "edition") == 1 ? 1e-6 : 1.);
+    auto Nr = get<double>(param, "NrInRadiusOfEarthScaled");
     ASSERT(Nr > 1.);
 
     auto h = (Nr - 1.) * a;
@@ -162,14 +162,14 @@ SpaceViewInternal::SpaceViewInternal(const param::MIRParametrisation& param) {
 
 const std::vector<RegularGrid::PointLonLat>& SpaceViewInternal::lonlat() const {
     if (lonlat_.empty()) {
-        trace::Timer timer("SpaceView: pre-calculate (lon, lat) coordinates", Log::debug());
+        trace::Timer timer("SpaceView: pre-calculate (lon, lat) coordinates");
 
         ASSERT(projectionGreenwich_);  // Greenwich-centred (avoids PROJ normalisation)
         lonlat_.resize(Nx_ * Ny_);
 
         size_t index = 0;
-        for (auto& _y : y()) {
-            for (auto& _x : x()) {
+        for (const auto& _y : y()) {
+            for (const auto& _x : x()) {
                 auto& ll = lonlat_[index++];
                 ll       = projectionGreenwich_.lonlat({_x, _y});
                 if (std::isfinite(ll.lon()) && std::isfinite(ll.lat())) {
@@ -196,7 +196,7 @@ const std::vector<RegularGrid::PointLonLat>& SpaceViewInternal::lonlat() const {
 SpaceView::SpaceView(const param::MIRParametrisation& param) :
     detail::SpaceViewInternal(param),
     RegularGrid(SpaceViewInternal::projection_, SpaceViewInternal::bbox_, SpaceViewInternal::x(),
-                SpaceViewInternal::y()) {}
+                SpaceViewInternal::y(), {param}) {}
 
 
 void SpaceView::fill(grib_info& /*info*/) const {
@@ -218,7 +218,7 @@ Iterator* SpaceView::iterator() const {
         bool next(Latitude& _lat, Longitude& _lon) override {
             while (count_ < lonlat_.size()) {
                 // only one of (lon, lat) needs to be checked
-                auto& ll = lonlat_[count_++];
+                const auto& ll = lonlat_[count_++];
                 if (std::isfinite(ll.lon())) {
                     _lat = lat(ll.lat());
                     _lon = lon(ll.lon());
@@ -233,6 +233,7 @@ Iterator* SpaceView::iterator() const {
 
     public:
         SpaceViewIterator(const std::vector<PointLonLat>& lonlat) : lonlat_(lonlat), count_(0) {}
+        ~SpaceViewIterator() override = default;
 
         SpaceViewIterator(const SpaceViewIterator&) = delete;
         SpaceViewIterator& operator=(const SpaceViewIterator&) = delete;

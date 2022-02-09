@@ -200,6 +200,13 @@ bool Representation::extendBoundingBoxOnIntersect() const {
 }
 
 
+bool Representation::crop(util::BoundingBox&, util::AreaCropperMapping&) const {
+    std::ostringstream os;
+    os << "Representation::crop() not implemented for " << *this;
+    throw exception::SeriousBug(os.str());
+}
+
+
 size_t Representation::truncation() const {
     std::ostringstream os;
     os << "Representation::truncation() not implemented for " << *this;
