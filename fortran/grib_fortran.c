@@ -98,7 +98,7 @@ struct l_grib_file {
     FILE* f;
     char* buffer;
     int id;
-    int mode; /* enum FileMode */
+    FileMode mode;
     l_grib_file* next;
 };
 
