@@ -130,3 +130,13 @@ char* codes_getenv(const char* name)
     }
     return result;
 }
+
+int codes_check_grib_ieee_packing_value(int value)
+{
+    grib_context* c = grib_context_get_default();
+    if (value != 32 && value != 64) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Invalid value for ECCODES_GRIB_IEEE_PACKING: should be 32 or 64");
+        return GRIB_INVALID_ARGUMENT;
+    }
+    return GRIB_SUCCESS;
+}

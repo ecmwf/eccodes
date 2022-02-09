@@ -130,6 +130,19 @@ for edition in $editions; do
     done
 done
 
+echo "Test ECC-1345: env. var value should be checked..."
+# -------------------------------------------------------
+tempErr=temp.grib_ieee.txt
+set +e
+# Should fail. Only 32 and 64 are valid
+infile=${data_dir}/regular_latlon_surface.grib2
+ECCODES_GRIB_IEEE_PACKING=16 ${tools_dir}/grib_copy -r $infile $temp 2>$tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid value for ECCODES_GRIB_IEEE_PACKING: should be 32 or 64" $tempErr
+rm -f $tempErr
+
 echo "Test raw packing on GRIB1 with bitmap..."
 # ---------------------------------------------
 infile=${data_dir}/reduced_latlon_surface.grib1
