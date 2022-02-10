@@ -13,6 +13,10 @@
 # This file does not have a bitmap
 infile=${data_dir}/regular_latlon_surface.grib1
 
+# Clean environment before we begin
+unset GRIB_IEEE_PACKING
+unset ECCODES_GRIB_IEEE_PACKING
+
 shdata=${data_dir}/spherical_model_level.grib1
 suff=_ieee_test.grib1
 outsimple=simple$suff
@@ -45,15 +49,14 @@ ${tools_dir}/grib_set -r -s packingType=grid_ieee $outsimple $out32
 ${tools_dir}/grib_filter r.filter $out32 > $out32.txt
 diff $out32.txt ${data_dir}/ieee_test.good
 
-GRIB_IEEE_PACKING=32
-export GRIB_IEEE_PACKING
+export GRIB_IEEE_PACKING=32
 ${tools_dir}/grib_filter -o $out32 w.filter $infile
 ${tools_dir}/grib_filter r.filter $out32 > $out32.txt
 diff $out32.txt ${data_dir}/ieee_test.good
 grib_check_key_equals $out32 'packingType,precision' 'grid_ieee 1'
 
-GRIB_IEEE_PACKING=64
-export GRIB_IEEE_PACKING
+
+export GRIB_IEEE_PACKING=64
 ${tools_dir}/grib_filter -o $out64 w.filter $infile
 ${tools_dir}/grib_filter r.filter $out64 > $out64.txt
 diff $out64.txt ${data_dir}/ieee_test.good
@@ -71,6 +74,9 @@ ${tools_dir}/grib_set -r -s packingType=grid_ieee $shdata ${shdata}_ieee
 ${tools_dir}/grib_filter r.filter ${shdata}_ieee > $shdata.txt
 diff $shdata.txt $shdata.good
 rm -f ${shdata}_ieee
+
+unset GRIB_IEEE_PACKING
+unset ECCODES_GRIB_IEEE_PACKING
 
 
 echo "Test ECC-1075: grib_dump error on GRIB1 with raw packing"
