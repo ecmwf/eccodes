@@ -371,7 +371,7 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
         size = grib_byte_count((grib_accessor*)self) * 8;
     }
 
-    size = (1UL << size); /* 2^size */
+    size = (1ULL << size); /* 2^size - 64bits */
 
     t = (grib_codetable*)grib_context_malloc_clear_persistent(c, sizeof(grib_codetable) +
                                                                      (size - 1) * sizeof(code_table_entry));
@@ -783,10 +783,8 @@ static int get_native_type(grib_accessor* a)
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
-    long rlen                     = 0;
-
-    unsigned long i   = 0;
-    long pos          = a->offset * 8;
+    long rlen = 0, i = 0;
+    long pos = a->offset * 8;
     grib_handle* hand = NULL;
 
 #ifdef DEBUG
