@@ -176,6 +176,7 @@ int codes_flush_sync_close_file(FILE* f)
         return err;
     }
 
+#if defined(ECCODES_HAVE_FSYNC)
     err = fsync(fd);
     while (err < 0 && errno == EINTR) {
         err = fsync(fd);
@@ -184,6 +185,8 @@ int codes_flush_sync_close_file(FILE* f)
         grib_context_log(c, GRIB_LOG_PERROR, "Cannot fsync file");
         return GRIB_IO_PROBLEM;
     }
+#endif
+
     err = fclose(f);
     if (err) {
         grib_context_log(c, GRIB_LOG_PERROR, "Call to fclose failed");
