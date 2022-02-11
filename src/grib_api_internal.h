@@ -38,6 +38,7 @@ extern "C" {
 #define GRIB_INLINE
 #endif
 
+/* See ECC-670 */
 #if IS_BIG_ENDIAN
 #if GRIB_MEM_ALIGN
 #define FAST_BIG_ENDIAN 1
