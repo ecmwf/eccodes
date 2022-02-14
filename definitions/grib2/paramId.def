@@ -3145,22 +3145,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 255 ;
 	}
-#Sea ice surface temperature
-'260649' = {
-	 discipline = 10 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 8 ;
-	 typeOfFirstFixedSurface = 174 ;
-	 typeOfSecondFixedSurface = 255 ;
-	}
-#Snow on ice total depth
-'260650' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 11 ;
-	 typeOfFirstFixedSurface = 174 ;
-	 typeOfSecondFixedSurface = 255 ;
-	}
 #Universal thermal climate index
 '261001' = {
 	 discipline = 20 ;
