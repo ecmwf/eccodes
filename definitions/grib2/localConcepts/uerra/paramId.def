@@ -125,3 +125,26 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 24 ;
 }
+#Sea-ice thickness
+'174098' = {
+     discipline = 10 ;
+     parameterCategory = 2 ;
+     parameterNumber = 1 ;
+     typeOfFirstFixedSurface = 160 ;
+     typeOfSecondFixedSurface = 255 ;
+     scaledValueOfFirstFixedSurface = 0 ;
+     scaleFactorOfFirstFixedSurface = 0 ;
+    }
+#Ice temperature
+'260239' = {
+     discipline = 10 ;
+     parameterCategory = 2 ;
+     parameterNumber = 8 ;
+    }
+#Deviation of sea level from mean
+'260240' = {
+     discipline = 10 ;
+     parameterCategory = 3 ;
+     parameterNumber = 1 ;
+    }
+

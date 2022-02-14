@@ -423,18 +423,6 @@
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 0 ;
 	}
-#Mean sea water potential temperature in the upper 300 m
-'151126' = {
-	 discipline = 10 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 18 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 160 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = 300 ;
-	 scaleFactorOfSecondFixedSurface = 0 ;
-	}
 #Mean sea water temperature in the upper 300 m
 '151127' = {
 	 discipline = 10 ;
@@ -446,26 +434,6 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 300 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
-	}
-#Sea surface practical salinity
-'151219' = {
-	 discipline = 10 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#Ocean mixed layer thickness defined by sigma theta 0.01 kg/m3
-'151225' = {
-	 discipline = 10 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 14 ;
-	 typeOfFirstFixedSurface = 169 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 1 ;
-	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
 #2 metre specific humidity
 '174096' = {
@@ -3339,53 +3307,11 @@
 	 parameterNumber = 3 ;
 	 typeOfFirstFixedSurface = 160 ;
 	}
-#Sea surface height
-'151145' = {
-	 discipline = 10 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	}
-#Depth of 20C isotherm
-'151163' = {
-	 discipline = 10 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 14 ;
-	 typeOfFirstFixedSurface = 20 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 29315 ;
-	 scaleFactorOfFirstFixedSurface = 2 ;
-	}
-#Average salinity in the upper 300m
-'151175' = {
-	 discipline = 10 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 21 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 160 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = 300 ;
-	 scaleFactorOfSecondFixedSurface = 0 ;
-	}
 #Surface runoff
 '174008' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 34 ;
-	}
-#Sea-ice thickness
-'174098' = {
-	 discipline = 10 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Nitrogen dioxide mass mixing ratio
 '210121' = {
@@ -5238,18 +5164,6 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 9 ;
 	}
-#Ice temperature
-'260239' = {
-	 discipline = 10 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 8 ;
-	}
-#Deviation of sea level from mean
-'260240' = {
-	 discipline = 10 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 1 ;
-	}
 #Seconds prior to initial reference time (defined in Section 1)
 '260241' = {
 	 discipline = 10 ;
@@ -5466,12 +5380,6 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 2 ;
 	}
-#Main thermocline depth
-'3069' = {
-	 discipline = 10 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 0 ;
-	}
 #Main thermocline anomaly
 '3070' = {
 	 discipline = 10 ;
@@ -5502,12 +5410,6 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 10 ;
 	}
-#Ice thickness
-'3092' = {
-	 discipline = 10 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	}
 #Direction of ice drift
 '3093' = {
 	 discipline = 10 ;
@@ -5519,24 +5421,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 3 ;
-	}
-#U-component of ice drift
-'3095' = {
-	 discipline = 10 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 4 ;
-	}
-#V-component of ice drift
-'3096' = {
-	 discipline = 10 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 5 ;
-	}
-#Ice growth rate
-'3097' = {
-	 discipline = 10 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 6 ;
 	}
 #Ice divergence
 '3098' = {
@@ -5731,7 +5615,7 @@
   parameterCategory = 2 ;
   parameterNumber = 1 ;
   typeOfFirstFixedSurface = 174 ;
-  typeOfSecondFixedSurface = 255 ;
+  typeOfSecondFixedSurface = 176 ;
   scaledValueOfFirstFixedSurface = missing() ;
   scaleFactorOfFirstFixedSurface = missing() ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -5751,9 +5635,21 @@
 }
 #Sea ice snow thickness
 '262002' = {
-  discipline = 0 ;
-  parameterCategory = 1 ;
-  parameterNumber = 11 ;
+  discipline = 10 ;
+  parameterCategory = 2 ;
+  parameterNumber = 192 ;
+  typeOfFirstFixedSurface = 174 ;
+  typeOfSecondFixedSurface = 173 ;
+  scaledValueOfFirstFixedSurface = missing() ;
+  scaleFactorOfFirstFixedSurface = missing() ;
+  scaledValueOfSecondFixedSurface = missing() ;
+  scaleFactorOfSecondFixedSurface = missing() ;
+}
+#X-component of sea ice velocity
+'262003' = {
+  discipline = 10 ;
+  parameterCategory = 2 ;
+  parameterNumber = 4 ;
   typeOfFirstFixedSurface = 174 ;
   typeOfSecondFixedSurface = 176 ;
   scaledValueOfFirstFixedSurface = missing() ;
@@ -5761,35 +5657,23 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Sea ice x velocity
-'262003' = {
-  discipline = 10 ;
-  parameterCategory = 2 ;
-  parameterNumber = 4 ;
-  typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = 255 ;
-  scaledValueOfFirstFixedSurface = 0 ;
-  scaleFactorOfFirstFixedSurface = 0 ;
-  scaledValueOfSecondFixedSurface = missing() ;
-  scaleFactorOfSecondFixedSurface = missing() ;
-}
-#Sea ice y velocity
+#Y-component of sea ice velocity
 '262004' = {
   discipline = 10 ;
   parameterCategory = 2 ;
   parameterNumber = 5 ;
-  typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = 255 ;
-  scaledValueOfFirstFixedSurface = 0 ;
-  scaleFactorOfFirstFixedSurface = 0 ;
+  typeOfFirstFixedSurface = 174 ;
+  typeOfSecondFixedSurface = 176 ;
+  scaledValueOfFirstFixedSurface = missing() ;
+  scaleFactorOfFirstFixedSurface = missing() ;
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
 #Sea ice albedo
 '262005' = {
-  discipline = 0 ;
-  parameterCategory = 19 ;
-  parameterNumber = 1 ;
+  discipline = 10 ;
+  parameterCategory = 2 ;
+  parameterNumber = 14 ;
   typeOfFirstFixedSurface = 174 ;
   typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = missing() ;
@@ -5809,15 +5693,15 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Ice growth
+#Sea ice growth
 '262007' = {
   discipline = 10 ;
   parameterCategory = 2 ;
   parameterNumber = 6 ;
-  typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = 255 ;
-  scaledValueOfFirstFixedSurface = 0 ;
-  scaleFactorOfFirstFixedSurface = 0 ;
+  typeOfFirstFixedSurface = 174 ;
+  typeOfSecondFixedSurface = 176 ;
+  scaledValueOfFirstFixedSurface = missing() ;
+  scaleFactorOfFirstFixedSurface = missing() ;
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
@@ -5845,7 +5729,7 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Depth of 14C isotherm
+#Depth of 14 C isotherm
 '262102' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -5857,7 +5741,7 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Depth of 17C isotherm
+#Depth of 17 C isotherm
 '262103' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -5869,7 +5753,7 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Depth of 20C isotherm
+#Depth of 20 C isotherm
 '262104' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -5881,7 +5765,7 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Depth of 26C isotherm
+#Depth of 26 C isotherm
 '262105' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -5893,7 +5777,7 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Depth of 28C isotherm
+#Depth of 28 C isotherm
 '262106' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -5953,7 +5837,7 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Y component of surface stress
+#Y-component of surface stress
 '262111' = {
   discipline = 10 ;
   parameterCategory = 3 ;
@@ -5965,7 +5849,7 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#X component of surface stress
+#X-component of surface stress
 '262112' = {
   discipline = 10 ;
   parameterCategory = 3 ;
@@ -5977,7 +5861,7 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Ocean mixed layer depth defind by sigme theta 0.01 kg m-3
+#Ocean mixed layer depth defined by sigma theta 0.01 kg m-3
 '262113' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -5989,7 +5873,7 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Ocean mixed layer depth defind by sigme theta 0.03 kg m-3
+#Ocean mixed layer depth defined by sigma theta 0.03 kg m-3
 '262114' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6001,7 +5885,7 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Ocean mixed layer depth defind by sigme theta 0.125 kg m-3
+#Ocean mixed layer depth defined by sigma theta 0.125 kg m-3
 '262115' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6013,7 +5897,7 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Ocean mixed layer depth  defined by temperature 0.2 C
+#Ocean mixed layer depth defined by temperature 0.2 C
 '262116' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6025,7 +5909,7 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Ocean mixed layer depth  defined by temperature 0.5 C
+#Ocean mixed layer depth defined by temperature 0.5 C
 '262117' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6037,7 +5921,7 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Integral of sea water practical salinity in the upper 300m
+#Vertically-integrated sea water practical salinity in the upper 300 m
 '262118' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6049,7 +5933,7 @@
   scaledValueOfSecondFixedSurface = 300 ;
   scaleFactorOfSecondFixedSurface = 0 ;
 }
-#Integral of sea water practical salinity in the upper 700m
+#Vertically-integrated sea water practical salinity in the upper 700 m
 '262119' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6061,7 +5945,7 @@
   scaledValueOfSecondFixedSurface = 700 ;
   scaleFactorOfSecondFixedSurface = 0 ;
 }
-#Integral of sea water practical salinity in the total water column
+#Total column sea water practical salinity
 '262120' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6073,7 +5957,7 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Water column integrated heat content in the upper 300 m
+#Vertically-integrated heat content in the upper 300 m
 '262121' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6085,7 +5969,7 @@
   scaledValueOfSecondFixedSurface = 300 ;
   scaleFactorOfSecondFixedSurface = 0 ;
 }
-#Water column integrated heat content in the upper 700m
+#Vertically-integrated heat content in the upper 700 m
 '262122' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6097,13 +5981,13 @@
   scaledValueOfSecondFixedSurface = 700 ;
   scaleFactorOfSecondFixedSurface = 0 ;
 }
-#Water column integrated heat content in the total water column
+#Total column of heat content
 '262123' = {
   discipline = 10 ;
   parameterCategory = 4 ;
   parameterNumber = 22 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = 160 ;
+  typeOfSecondFixedSurface = 9 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
@@ -6193,7 +6077,7 @@
   typeOfFirstFixedSurface = 168 ;
   typeOfSecondFixedSurface = 168 ;
 }
-#Y component of sea water velocity
+#Y-component of sea water velocity
 '262503' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6201,7 +6085,7 @@
   typeOfFirstFixedSurface = 168 ;
   typeOfSecondFixedSurface = 168 ;
 }
-#X component of sea water velocity
+#X-component of sea water velocity
 '262504' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6233,20 +6117,20 @@
   typeOfFirstFixedSurface = 168 ;
   typeOfSecondFixedSurface = 168 ;
 }
-#Sea ice thickness
+#Time-mean sea ice thickness
 '263000' = {
   discipline = 10 ;
   parameterCategory = 2 ;
   parameterNumber = 1 ;
   typeOfFirstFixedSurface = 174 ;
-  typeOfSecondFixedSurface = 255 ;
+  typeOfSecondFixedSurface = 176 ;
   scaledValueOfFirstFixedSurface = missing() ;
   scaleFactorOfFirstFixedSurface = missing() ;
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Sea ice area fraction
+#Time-mean sea ice area fraction
 '263001' = {
   discipline = 10 ;
   parameterCategory = 2 ;
@@ -6259,11 +6143,24 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Sea ice snow thickness
+#Time-mean sea ice snow thickness
 '263002' = {
-  discipline = 0 ;
-  parameterCategory = 1 ;
-  parameterNumber = 11 ;
+  discipline = 10 ;
+  parameterCategory = 2 ;
+  parameterNumber = 192 ;
+  typeOfFirstFixedSurface = 174 ;
+  typeOfSecondFixedSurface = 173 ;
+  scaledValueOfFirstFixedSurface = missing() ;
+  scaleFactorOfFirstFixedSurface = missing() ;
+  scaledValueOfSecondFixedSurface = missing() ;
+  scaleFactorOfSecondFixedSurface = missing() ;
+  typeOfStatisticalProcessing = 0 ;
+}
+#Time-mean X-component of sea ice velocity
+'263003' = {
+  discipline = 10 ;
+  parameterCategory = 2 ;
+  parameterNumber = 4 ;
   typeOfFirstFixedSurface = 174 ;
   typeOfSecondFixedSurface = 176 ;
   scaledValueOfFirstFixedSurface = missing() ;
@@ -6272,37 +6169,24 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Sea ice x velocity
-'263003' = {
-  discipline = 10 ;
-  parameterCategory = 2 ;
-  parameterNumber = 4 ;
-  typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = 255 ;
-  scaledValueOfFirstFixedSurface = 0 ;
-  scaleFactorOfFirstFixedSurface = 0 ;
-  scaledValueOfSecondFixedSurface = missing() ;
-  scaleFactorOfSecondFixedSurface = missing() ;
-  typeOfStatisticalProcessing = 0 ;
-}
-#Sea ice y velocity
+#Time-mean Y-component of sea ice velocity
 '263004' = {
   discipline = 10 ;
   parameterCategory = 2 ;
   parameterNumber = 5 ;
-  typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = 255 ;
-  scaledValueOfFirstFixedSurface = 0 ;
-  scaleFactorOfFirstFixedSurface = 0 ;
+  typeOfFirstFixedSurface = 174 ;
+  typeOfSecondFixedSurface = 176 ;
+  scaledValueOfFirstFixedSurface = missing() ;
+  scaleFactorOfFirstFixedSurface = missing() ;
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Sea ice albedo
+#Time-mean sea ice albedo
 '263005' = {
-  discipline = 0 ;
-  parameterCategory = 19 ;
-  parameterNumber = 1 ;
+  discipline = 10 ;
+  parameterCategory = 2 ;
+  parameterNumber = 14 ;
   typeOfFirstFixedSurface = 174 ;
   typeOfSecondFixedSurface = 255 ;
   scaledValueOfFirstFixedSurface = missing() ;
@@ -6311,7 +6195,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Sea ice surface temperature
+#Time-mean sea ice surface temperature
 '263006' = {
   discipline = 10 ;
   parameterCategory = 2 ;
@@ -6324,20 +6208,20 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Ice growth
+#Time-mean sea ice growth
 '263007' = {
   discipline = 10 ;
   parameterCategory = 2 ;
   parameterNumber = 6 ;
-  typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = 255 ;
-  scaledValueOfFirstFixedSurface = 0 ;
-  scaleFactorOfFirstFixedSurface = 0 ;
+  typeOfFirstFixedSurface = 174 ;
+  typeOfSecondFixedSurface = 176 ;
+  scaledValueOfFirstFixedSurface = missing() ;
+  scaleFactorOfFirstFixedSurface = missing() ;
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Sea surface salinity
+#Time-mean sea surface salinity
 '263100' = {
   discipline = 10 ;
   parameterCategory = 3 ;
@@ -6350,7 +6234,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Sea surface temperature
+#Time-mean sea surface temperature
 '263101' = {
   discipline = 10 ;
   parameterCategory = 3 ;
@@ -6363,7 +6247,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Depth of 14C isotherm
+#Time-mean depth of 14 C isotherm
 '263102' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6376,7 +6260,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Depth of 17C isotherm
+#Time-mean depth of 17 C isotherm
 '263103' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6389,7 +6273,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Depth of 20C isotherm
+#Time-mean depth of 20 C isotherm
 '263104' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6402,7 +6286,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Depth of 26C isotherm
+#Time-mean depth of 26 C isotherm
 '263105' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6415,7 +6299,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Depth of 28C isotherm
+#Time-mean depth of 28 C isotherm
 '263106' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6428,7 +6312,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Barotropic stream function
+#Time-mean barotropic stream function
 '263107' = {
   discipline = 10 ;
   parameterCategory = 191 ;
@@ -6441,7 +6325,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Surface downward heat flux
+#Time-mean surface downward heat flux
 '263108' = {
   discipline = 10 ;
   parameterCategory = 3 ;
@@ -6454,7 +6338,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Northward surface stress
+#Time-mean northward surface stress
 '263109' = {
   discipline = 10 ;
   parameterCategory = 3 ;
@@ -6467,7 +6351,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Eastward surface stress
+#Time-mean eastward surface stress
 '263110' = {
   discipline = 10 ;
   parameterCategory = 3 ;
@@ -6480,7 +6364,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Y component of surface stress
+#Time mean Y-component of surface stress
 '263111' = {
   discipline = 10 ;
   parameterCategory = 3 ;
@@ -6493,7 +6377,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#X component of surface stress
+#Time-mean X-component of surface stress
 '263112' = {
   discipline = 10 ;
   parameterCategory = 3 ;
@@ -6506,7 +6390,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Ocean mixed layer depth defind by sigme theta 0.01 kg m-3
+#Time-mean ocean mixed layer depth defined by sigma theta 0.01 kg m-3
 '263113' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6519,7 +6403,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Ocean mixed layer depth defind by sigme theta 0.03 kg m-3
+#Time-mean ocean mixed layer depth defined by sigma theta 0.03 kg m-3
 '263114' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6532,7 +6416,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Ocean mixed layer depth defind by sigme theta 0.125 kg m-3
+#Time-mean ocean mixed layer depth defined by sigma theta 0.125 kg m-3
 '263115' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6545,7 +6429,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Ocean mixed layer depth  defined by temperature 0.2 C
+#Time-mean ocean mixed layer depth defined by temperature 0.2 C
 '263116' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6558,7 +6442,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Ocean mixed layer depth  defined by temperature 0.5 C
+#Time-mean ocean mixed layer depth defined by temperature 0.5 C
 '263117' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6571,7 +6455,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Integral of sea water practical salinity in the upper 300m
+#Time-mean vertically-integrated sea water practical salinity in the upper 300 m
 '263118' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6584,7 +6468,7 @@
   scaleFactorOfSecondFixedSurface = 0 ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Integral of sea water practical salinity in the upper 700m
+#Time-mean vertically-integrated sea water practical salinity in the upper 700 m
 '263119' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6597,7 +6481,7 @@
   scaleFactorOfSecondFixedSurface = 0 ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Integral of sea water practical salinity in the total water column
+#Time-mean total column sea water practical salinity
 '263120' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6610,7 +6494,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Water column integrated heat content in the upper 300 m
+#Time-mean vertically-integrated heat content in the upper 300 m
 '263121' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6623,7 +6507,7 @@
   scaleFactorOfSecondFixedSurface = 0 ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Water column integrated heat content in the upper 700m
+#Time-mean vertically-integrated heat content in the upper 700 m
 '263122' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6636,20 +6520,20 @@
   scaleFactorOfSecondFixedSurface = 0 ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Water column integrated heat content in the total water column
+#Time-mean total column heat content
 '263123' = {
   discipline = 10 ;
   parameterCategory = 4 ;
   parameterNumber = 22 ;
   typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = 160 ;
+  typeOfSecondFixedSurface = 9 ;
   scaledValueOfFirstFixedSurface = 0 ;
   scaleFactorOfFirstFixedSurface = 0 ;
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Sea surface height
+#Time-mean sea surface height
 '263124' = {
   discipline = 10 ;
   parameterCategory = 3 ;
@@ -6662,7 +6546,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Steric change in sea surface height
+#Time-mean steric change in sea surface height
 '263125' = {
   discipline = 10 ;
   parameterCategory = 3 ;
@@ -6675,7 +6559,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Halosteric change in sea surface height
+#Time-mean halosteric change in sea surface height
 '263126' = {
   discipline = 10 ;
   parameterCategory = 3 ;
@@ -6688,7 +6572,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Thermosteric change in sea surface height
+#Time-mean thermosteric change in sea surface height
 '263127' = {
   discipline = 10 ;
   parameterCategory = 3 ;
@@ -6701,7 +6585,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Thermocline depth
+#Time-mean thermocline depth
 '263128' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6714,7 +6598,7 @@
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Sea water practical salinity
+#Time-mean sea water practical salinity
 '263500' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6723,7 +6607,7 @@
   typeOfSecondFixedSurface = 168 ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Sea water potential temperature
+#Time-mean sea water potential temperature
 '263501' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6732,7 +6616,7 @@
   typeOfSecondFixedSurface = 168 ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Sea water sigma theta
+#Time-mean sea water sigma theta
 '263502' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6741,7 +6625,7 @@
   typeOfSecondFixedSurface = 168 ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Y component of sea water velocity
+#Time-mean Y-component of sea water velocity
 '263503' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6750,7 +6634,7 @@
   typeOfSecondFixedSurface = 168 ;
   typeOfStatisticalProcessing = 0 ;
 }
-#X component of sea water velocity
+#Time-mean X-component of sea water velocity
 '263504' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6759,7 +6643,7 @@
   typeOfSecondFixedSurface = 168 ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Northward sea water velocity
+#Time-mean northward sea water velocity
 '263505' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6768,7 +6652,7 @@
   typeOfSecondFixedSurface = 168 ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Eastward sea water velocity
+#Time-mean eastward sea water velocity
 '263506' = {
   discipline = 10 ;
   parameterCategory = 4 ;
@@ -6777,7 +6661,7 @@
   typeOfSecondFixedSurface = 168 ;
   typeOfStatisticalProcessing = 0 ;
 }
-#Upward sea water velocity
+#Time-mean upward sea water velocity
 '263507' = {
   discipline = 10 ;
   parameterCategory = 4 ;
