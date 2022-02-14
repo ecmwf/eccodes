@@ -5148,12 +5148,6 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 9 ;
 	}
-#Deviation of sea level from mean
-'m' = {
-	 discipline = 10 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 1 ;
-	}
 #Seconds prior to initial reference time (defined in Section 1)
 's' = {
 	 discipline = 10 ;
