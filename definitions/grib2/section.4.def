@@ -30,6 +30,7 @@ concept datasetForLocal(unknown) {
   "s2s"     = {productionStatusOfProcessedData=7;}
   "hydro"   = {marsClass="ce";} # EFAS/GLOFAS
   "hydro"   = {marsClass="ul";} #ULYSSES
+  "fire"    = {marsClass="gw";} # Global Wildfire awareness system
   "uerra"   = {productionStatusOfProcessedData=8;} # UERRA
   "uerra"   = {productionStatusOfProcessedData=9;} # UERRA
   "uerra"   = {productionStatusOfProcessedData=10;} # CARRA/CERRA
