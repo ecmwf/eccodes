@@ -36,6 +36,8 @@
      typeOfSecondFixedSurface = 255 ;
      scaledValueOfFirstFixedSurface = 0 ;
      scaleFactorOfFirstFixedSurface = 0 ;
+     scaledValueOfSecondFixedSurface = missing() ;
+     scaleFactorOfSecondFixedSurface = missing() ;
      typeOfStatisticalProcessing = 0 ;
     }
 #Depth of 20C isotherm
@@ -47,6 +49,8 @@
      typeOfSecondFixedSurface = 255 ;
      scaledValueOfFirstFixedSurface = 29315 ;
      scaleFactorOfFirstFixedSurface = 2 ;
+     scaledValueOfSecondFixedSurface = missing() ;
+     scaleFactorOfSecondFixedSurface = missing() ;
      typeOfStatisticalProcessing = 0 ;
     }
 #Average salinity in the upper 300m
@@ -71,6 +75,8 @@
      typeOfSecondFixedSurface = 255 ;
      scaledValueOfFirstFixedSurface = 0 ;
      scaleFactorOfFirstFixedSurface = 0 ;
+     scaledValueOfSecondFixedSurface = missing() ;
+     scaleFactorOfSecondFixedSurface = missing() ;
      typeOfStatisticalProcessing = 0 ;
     }
 #Ocean mixed layer thickness defined by sigma theta 0.01 kg/m3
@@ -82,6 +88,8 @@
      typeOfSecondFixedSurface = 255 ;
      scaledValueOfFirstFixedSurface = 1 ;
      scaleFactorOfFirstFixedSurface = 2 ;
+     scaledValueOfSecondFixedSurface = missing() ;
+     scaleFactorOfSecondFixedSurface = missing() ;
      typeOfStatisticalProcessing = 0 ;
     }
 #Sea-ice thickness
@@ -93,5 +101,7 @@
      typeOfSecondFixedSurface = 255 ;
      scaledValueOfFirstFixedSurface = 0 ;
      scaleFactorOfFirstFixedSurface = 0 ;
+     scaledValueOfSecondFixedSurface = missing() ;
+     scaleFactorOfSecondFixedSurface = missing() ;
      typeOfStatisticalProcessing = 0 ;
     }
