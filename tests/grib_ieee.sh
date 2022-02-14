@@ -10,7 +10,13 @@
 
 . ./include.sh
 
+# This file does not have a bitmap
 infile=${data_dir}/regular_latlon_surface.grib1
+
+# Clean environment before we begin
+unset GRIB_IEEE_PACKING
+unset ECCODES_GRIB_IEEE_PACKING
+
 shdata=${data_dir}/spherical_model_level.grib1
 suff=_ieee_test.grib1
 outsimple=simple$suff
@@ -34,32 +40,31 @@ cat > r.filter <<EOF
 print "[values%g]";
 EOF
 
-${tools_dir}/grib_filter -o $outsimple w.filter $infile 
+${tools_dir}/grib_filter -o $outsimple w.filter $infile
 
 ${tools_dir}/grib_filter r.filter $outsimple > $outsimple.txt
 diff $outsimple.txt ${data_dir}/ieee_test.good
 
 ${tools_dir}/grib_set -r -s packingType=grid_ieee $outsimple $out32
-${tools_dir}/grib_filter r.filter $out32 > $out32.txt 
+${tools_dir}/grib_filter r.filter $out32 > $out32.txt
 diff $out32.txt ${data_dir}/ieee_test.good
 
-GRIB_IEEE_PACKING=32
-export GRIB_IEEE_PACKING
-${tools_dir}/grib_filter -o $out32 w.filter $infile 
-${tools_dir}/grib_filter r.filter $out32 > $out32.txt 
+export GRIB_IEEE_PACKING=32
+${tools_dir}/grib_filter -o $out32 w.filter $infile
+${tools_dir}/grib_filter r.filter $out32 > $out32.txt
 diff $out32.txt ${data_dir}/ieee_test.good
 grib_check_key_equals $out32 'packingType,precision' 'grid_ieee 1'
 
-GRIB_IEEE_PACKING=64
-export GRIB_IEEE_PACKING
-${tools_dir}/grib_filter -o $out64 w.filter $infile 
-${tools_dir}/grib_filter r.filter $out64 > $out64.txt 
+
+export GRIB_IEEE_PACKING=64
+${tools_dir}/grib_filter -o $out64 w.filter $infile
+${tools_dir}/grib_filter r.filter $out64 > $out64.txt
 diff $out64.txt ${data_dir}/ieee_test.good
 grib_check_key_equals $out64 'packingType,precision' 'grid_ieee 2'
 
 
 rm -f $outsimple $out32 $out64 $out32.txt $out64.txt
-rm -f ${data_dir}/$outsimple.txt ${data_dir}/$out32.txt ${data_dir}/$out64.txt 
+rm -f ${data_dir}/$outsimple.txt ${data_dir}/$out32.txt ${data_dir}/$out64.txt
 rm -f w.filter $outsimple.txt
 
 ${tools_dir}/grib_filter r.filter $shdata > $shdata.txt
@@ -69,6 +74,9 @@ ${tools_dir}/grib_set -r -s packingType=grid_ieee $shdata ${shdata}_ieee
 ${tools_dir}/grib_filter r.filter ${shdata}_ieee > $shdata.txt
 diff $shdata.txt $shdata.good
 rm -f ${shdata}_ieee
+
+unset GRIB_IEEE_PACKING
+unset ECCODES_GRIB_IEEE_PACKING
 
 
 echo "Test ECC-1075: grib_dump error on GRIB1 with raw packing"
@@ -97,19 +105,62 @@ stats2=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $temp`
 grib_check_key_equals $temp numberOfEffectiveValues,numberOfValues,numberOfMissing '214661 214661 98701'
 grib_check_key_equals $temp totalLength 899004
 
+echo "Test ECCODES_GRIB_IEEE_PACKING on GRIB2 with bitmap..."
+# ------------------------------------------------------------
+infile=${data_dir}/reduced_latlon_surface.grib2
+grib_check_key_equals $infile bitmapPresent 1
+ECCODES_GRIB_IEEE_PACKING=32 ${tools_dir}/grib_copy -r $infile $temp
+grib_check_key_equals $temp packingType grid_ieee
+${tools_dir}/grib_compare -c data:n -R all=6e-8 $infile $temp
 
+echo "Test ECCODES_GRIB_IEEE_PACKING on GRIB2 without bitmap..."
+# --------------------------------------------------------------
+infile=${data_dir}/regular_latlon_surface.grib2
+grib_check_key_equals $infile bitmapPresent 0
+ECCODES_GRIB_IEEE_PACKING=32 ${tools_dir}/grib_copy -r $infile $temp
+grib_check_key_equals $temp packingType grid_ieee
+${tools_dir}/grib_compare   -c data:n          $infile $temp
+
+#### All combinations: with/without bitmap, grib1/2, 32/64bits
+editions="1 2"
+precisions="32 64"
+inputs="reduced_latlon_surface.grib regular_latlon_surface.grib"
+for edition in $editions; do
+    for prec in $precisions; do
+        for input in $inputs; do
+            infile=${data_dir}/$input$edition
+            ECCODES_GRIB_IEEE_PACKING=$prec ${tools_dir}/grib_copy -r $infile $temp
+            grib_check_key_equals $temp packingType grid_ieee
+            ${tools_dir}/grib_compare   -c data:n -R all=6e-8  $infile $temp
+        done
+    done
+done
+
+echo "Test ECC-1345: env. var value should be checked..."
+# -------------------------------------------------------
+tempErr=temp.grib_ieee.txt
+set +e
+# Should fail. Only 32 and 64 are valid
+infile=${data_dir}/regular_latlon_surface.grib2
+ECCODES_GRIB_IEEE_PACKING=16 ${tools_dir}/grib_copy -r $infile $temp 2>$tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid value for ECCODES_GRIB_IEEE_PACKING: should be 32 or 64" $tempErr
+rm -f $tempErr
 
 echo "Test raw packing on GRIB1 with bitmap..."
 # ---------------------------------------------
-# TODO: This test is currently failing
-# grib1 with a bitmap -> raw packing
 infile=${data_dir}/reduced_latlon_surface.grib1
 grib_check_key_equals $infile numberOfMissing 98701
 ${tools_dir}/grib_set -r -s packingType=grid_ieee $infile $temp
 ${tools_dir}/grib_get -p numberOfEffectiveValues,numberOfValues,numberOfMissing $temp
 stats1=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $infile`
 stats2=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $temp`
-# [ "$stats1" = "$stats2" ]
+[ "$stats1" = "$stats2" ]
+ECCODES_GRIB_IEEE_PACKING=32 ${tools_dir}/grib_copy -r $infile $temp
+stats2=`${tools_dir}/grib_get -M -F%.3f -p min,max,avg $temp`
+[ "$stats1" = "$stats2" ]
 
 
 echo "Test changing precision ..."

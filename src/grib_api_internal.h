@@ -38,6 +38,7 @@ extern "C" {
 #define GRIB_INLINE
 #endif
 
+/* See ECC-670 */
 #if IS_BIG_ENDIAN
 #if GRIB_MEM_ALIGN
 #define FAST_BIG_ENDIAN 1
@@ -1095,7 +1096,7 @@ struct grib_context
     grib_hash_array_value* hash_array[MAX_NUM_HASH_ARRAY];
     grib_trie* def_files;
     grib_string_list* blocklist;
-    int ieee_packing;
+    int ieee_packing; /* 32 or 64 */
     int bufrdc_mode;
     int bufr_set_to_missing_if_out_of_range;
     int bufr_multi_element_constant_arrays;

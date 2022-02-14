@@ -186,7 +186,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     rlen = count;
 
     if (*len < rlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, " wrong size for %s it contains %d values ", a->name, rlen);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %lu values", a->name, rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }

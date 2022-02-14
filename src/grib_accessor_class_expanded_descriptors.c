@@ -762,7 +762,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         expandedSize = BUFR_DESCRIPTORS_ARRAY_USED_SIZE(self->expanded);
         if (*len < expandedSize) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             " wrong size (%ld) for %s it contains %d values ", *len, a->name, expandedSize);
+                             "Wrong size (%ld) for %s, it contains %lu values", *len, a->name, expandedSize);
             *len = 0;
             return GRIB_ARRAY_TOO_SMALL;
         }
@@ -789,7 +789,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     if (*len < rlen) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         " wrong size (%ld) for %s it contains %d values ", *len, a->name, rlen);
+                         "Wrong size (%ld) for %s, it contains %lu values", *len, a->name, rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }

@@ -314,32 +314,35 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long i                                = 0;
     long j                                = 0;
     double missing_value                  = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_context* ctxt = a->context;
 
     if (*len == 0)
         return GRIB_NO_VALUES;
 
-    if (!grib_find_accessor(grib_handle_of_accessor(a), self->bitmap)) {
-        err = grib_set_double_array_internal(grib_handle_of_accessor(a), self->coded_values, val, *len);
+    if (!grib_find_accessor(hand, self->bitmap)) {
         /*printf("SETTING TOTAL number_of_data_points %s %ld\n",self->number_of_data_points,*len);*/
         if (self->number_of_data_points)
-            grib_set_long_internal(grib_handle_of_accessor(a), self->number_of_data_points, *len);
+            grib_set_long_internal(hand, self->number_of_data_points, *len);
+        
+        err = grib_set_double_array_internal(hand, self->coded_values, val, *len);
         return err;
     }
 
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(a), self->missing_value, &missing_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(hand, self->missing_value, &missing_value)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_set_double_array_internal(grib_handle_of_accessor(a), self->bitmap, val, bmaplen)) != GRIB_SUCCESS)
+    if ((err = grib_set_double_array_internal(hand, self->bitmap, val, bmaplen)) != GRIB_SUCCESS)
         return err;
 
     coded_n_vals = *len;
 
     if (coded_n_vals < 1) {
-        err = grib_set_double_array_internal(grib_handle_of_accessor(a), self->coded_values, NULL, 0);
+        err = grib_set_double_array_internal(hand, self->coded_values, NULL, 0);
         return err;
     }
 
-    coded_vals = (double*)grib_context_malloc_clear(a->context, coded_n_vals * sizeof(double));
+    coded_vals = (double*)grib_context_malloc_clear(ctxt, coded_n_vals * sizeof(double));
     if (!coded_vals)
         return GRIB_OUT_OF_MEMORY;
 
@@ -349,15 +352,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
     }
 
-    err = grib_set_double_array_internal(grib_handle_of_accessor(a), self->coded_values, coded_vals, j);
+    err = grib_set_double_array_internal(hand, self->coded_values, coded_vals, j);
+    grib_context_free(ctxt, coded_vals);
     if (j == 0) {
         if (self->number_of_values)
-            err = grib_set_long_internal(grib_handle_of_accessor(a), self->number_of_values, 0);
+            err = grib_set_long_internal(hand, self->number_of_values, 0);
         if (self->binary_scale_factor)
-            err = grib_set_long_internal(grib_handle_of_accessor(a), self->binary_scale_factor, 0);
+            err = grib_set_long_internal(hand, self->binary_scale_factor, 0);
     }
-
-    grib_context_free(a->context, coded_vals);
 
     return err;
 }

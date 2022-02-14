@@ -1381,7 +1381,7 @@ static int encode_new_replication(grib_context* c, grib_accessor_bufr_data_array
     int err                       = 0;
     unsigned long repetitions     = 1;
     bufr_descriptor** descriptors = self->expanded->v;
-    /* Assert( buff->data==data); */
+    DebugAssert( buff->data == data );
 
     switch (descriptors[i]->code) {
         case 31000:
@@ -1425,6 +1425,7 @@ static int encode_new_replication(grib_context* c, grib_accessor_bufr_data_array
     grib_context_log(c, GRIB_LOG_DEBUG, "BUFR data encoding replication: \twidth=%ld pos=%ld ulength=%ld ulength_bits=%ld",
                      (long)descriptors[i]->width, (long)*pos, (long)buff->ulength, (long)buff->ulength_bits);
     grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + descriptors[i]->width);
+    data = buff->data; /* ECC-1347 */
     grib_encode_unsigned_longb(data, repetitions, pos, descriptors[i]->width);
 
     *numberOfRepetitions = repetitions;

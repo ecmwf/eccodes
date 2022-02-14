@@ -94,8 +94,8 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Geopotential Height
-'Geopotential Height' = {
+#Geopotential height
+'Geopotential height' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 7 ;
 	}
@@ -668,13 +668,13 @@
 	 indicatorOfParameter = 7 ;
 	 indicatorOfTypeOfLevel = 1 ;
 	}
-#Soil Moisture
-'Soil Moisture' = {
+#Soil moisture
+'Soil moisture' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 86 ;
 	}
-#Soil Temperature
-'Soil Temperature' = {
+#Soil temperature
+'Soil temperature' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 85 ;
 	}
@@ -790,8 +790,8 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Geopotential Height
-'Geopotential Height' = {
+#Geopotential height
+'Geopotential height' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 7 ;
 	}
@@ -1349,13 +1349,13 @@
 	 indicatorOfParameter = 7 ;
 	 indicatorOfTypeOfLevel = 1 ;
 	}
-#Soil Moisture
-'Soil Moisture' = {
+#Soil moisture
+'Soil moisture' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 86 ;
 	}
-#Soil Temperature
-'Soil Temperature' = {
+#Soil temperature
+'Soil temperature' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 85 ;
 	}
@@ -1471,8 +1471,8 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Geopotential Height
-'Geopotential Height' = {
+#Geopotential height
+'Geopotential height' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 7 ;
 	}
@@ -2030,13 +2030,13 @@
 	 indicatorOfParameter = 7 ;
 	 indicatorOfTypeOfLevel = 1 ;
 	}
-#Soil Moisture
-'Soil Moisture' = {
+#Soil moisture
+'Soil moisture' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 86 ;
 	}
-#Soil Temperature
-'Soil Temperature' = {
+#Soil temperature
+'Soil temperature' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 85 ;
 	}

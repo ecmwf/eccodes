@@ -1003,7 +1003,6 @@ long grib_date_to_julian(long ddate);
 
 /* grib_fieldset.c */
 int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type);
-int grib_fieldset_column_copy_from_handle(grib_handle* h, grib_fieldset* set, int i);
 grib_fieldset* grib_fieldset_new_from_files(grib_context* c, char* filenames[], int nfiles, char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
 int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string);
 int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string);
@@ -1414,7 +1413,7 @@ grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsig
 /* grib_iterator_class_latlon_reduced.c */
 
 /* grib_iterator_class_gen.c */
-int transform_iterator_data(grib_handle* h, double* data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);
+int transform_iterator_data(grib_context* c, double* data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);
 
 /* grib_iterator_class_latlon.c */
 
@@ -1447,6 +1446,8 @@ char get_dir_separator_char(void);
 int path_is_regular_file(const char* path);
 int path_is_directory(const char* filename);
 char* codes_getenv(const char* name);
+int codes_check_grib_ieee_packing_value(int value);
+int codes_flush_sync_close_file(FILE* f);
 
 /* grib_util.c */
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);

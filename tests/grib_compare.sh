@@ -9,7 +9,8 @@
 #
 
 . ./include.sh
-
+set -u
+label="grib_compare_test"
 REDIRECT=/dev/null
 
 infile="${data_dir}/regular_latlon_surface.grib1"
@@ -25,15 +26,15 @@ ${tools_dir}/grib_compare -b indicatorOfParameter,paramId,shortName $infile $out
 # ----------------------------------------
 infile=${data_dir}/v.grib2
 for i in 1 2 3; do
-  ${tools_dir}/grib_copy -wcount=$i $infile temp_comp.$i
+  ${tools_dir}/grib_copy -wcount=$i $infile temp.$label.$i
 done
-cat temp_comp.1 temp_comp.2 temp_comp.3 > temp_comp.123
-cat temp_comp.3 temp_comp.2 temp_comp.1 > temp_comp.321
+cat temp.$label.2 temp.$label.1 temp.$label.3 > temp.$label.213
+cat temp.$label.3 temp.$label.2 temp.$label.1 > temp.$label.321
 
 # Compare files in which the messages are not in the same order
-${tools_dir}/grib_compare -r temp_comp.123 temp_comp.321
+${tools_dir}/grib_compare -r temp.$label.213 temp.$label.321
 
-rm -f temp_comp.1 temp_comp.2 temp_comp.3 temp_comp.123 temp_comp.321
+rm -f temp.$label.1 temp.$label.2 temp.$label.3 temp.$label.213 temp.$label.321
 
 # ----------------------------------------
 # GRIB-797: test last argument being a directory

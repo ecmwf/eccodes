@@ -82,6 +82,8 @@ static void init_class(grib_iterator_class* c)
 }
 /* END_CLASS_IMP */
 
+#define ITER "Polar stereographic Geoiterator"
+
 static int next(grib_iterator* i, double* lat, double* lon, double* val)
 {
     grib_iterator_polar_stereographic* self = (grib_iterator_polar_stereographic*)i;
@@ -150,7 +152,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     const char* s_alternativeRowScanning = grib_arguments_get_name(h, args, self->carg++);
 
     if (grib_is_earth_oblate(h)) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Polar stereographic only supported for spherical earth.");
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only supported for spherical earth.", ITER);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
 
@@ -162,7 +164,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return ret;
 
     if (iter->nv != nx * ny) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Wrong number of points (%ld!=%ldx%ld)", iter->nv, nx, ny);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%ld!=%ldx%ld)", ITER, iter->nv, nx, ny);
         return GRIB_WRONG_GRID;
     }
     if ((ret = grib_get_double_internal(h, s_latFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS)
@@ -242,12 +244,12 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
     self->lats = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", iter->nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %ld bytes", ITER, iter->nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     self->lons = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", iter->nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %ld bytes", ITER, iter->nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     lats = self->lats;
@@ -355,7 +357,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     iter->e = -1;
 
     /* Apply the scanning mode flags which may require data array to be transformed */
-    ret = transform_iterator_data(h, iter->data,
+    ret = transform_iterator_data(h->context, iter->data,
                                   iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
                                   iter->nv, nx, ny);
 

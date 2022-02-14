@@ -78,7 +78,7 @@ grib_files="\
  regular_gaussian_surface.grib1 \
  missing.grib2"
 
-ncf_types="NC_SHORT NC_INT NC_FLOAT NC_DOUBLE"
+ncf_types="NC_INT NC_FLOAT NC_DOUBLE"
 
 # Go thru all the specified GRIB files and convert them to NetCDF
 for dt in $ncf_types; do

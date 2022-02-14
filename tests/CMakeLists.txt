@@ -37,7 +37,7 @@ list(APPEND test_bins
     extract_offsets
     bufr_check_descriptors
     grib_sh_ieee64
-    ieee
+    grib_ieee
     grib_set_bytes
     grib_packing_order
     grib_sh_imag
@@ -99,6 +99,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1259
         bufr_ecc-1290
         bufr_ecc-1304
+        bufr_ecc-1347
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
@@ -193,7 +194,7 @@ if( HAVE_BUILD_TOOLS )
         metar_dump
         metar_compare
         bufr_set
-        ieee
+        grib_ieee
         grib_sh_ieee64
         grib_optimize_scaling
         grib_optimize_scaling_sh

@@ -182,6 +182,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
     double units_bias                         = 0.0;
     double* val                               = (double*)cval;
     int i;
+    grib_context* c            = a->context;
 
     if (*len == 0) {
         grib_buffer_replace(a, NULL, 0, 1, 1);
@@ -216,6 +217,22 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
         for (i = 0; i < n_vals; i++)
             val[i] += units_bias;
 
+    /* IEEE packing */
+    if (c->ieee_packing) {
+        grib_handle* h = grib_handle_of_accessor(a);
+        long precision = 0; /* Either 1(=32 bits) or 2(=64 bits) */
+        size_t lenstr  = 10;
+        if ((ret = codes_check_grib_ieee_packing_value(c->ieee_packing)) != GRIB_SUCCESS)
+            return ret;
+        precision = c->ieee_packing == 32 ? 1 : 2;
+        if ((ret = grib_set_string(h, "packingType", "grid_ieee", &lenstr)) != GRIB_SUCCESS)
+            return ret;
+        if ((ret = grib_set_long(h, "precision", precision)) != GRIB_SUCCESS)
+            return ret;
+
+        return grib_set_double_array(h, "values", val, *len);
+    }
+
     if (super != grib_accessor_class_data_g2simple_packing) {
         /* Normal case: parent not same as me! */
         ret = super->pack_double(a, val, len);
@@ -244,8 +261,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->bits_per_value, &bits_per_value)) !=
-        GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
         return ret;
 
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)

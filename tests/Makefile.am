@@ -42,7 +42,7 @@ TESTS = definitions.sh \
         gts_get.sh \
         metar_ls.sh \
         metar_dump.sh \
-        ieee.sh \
+        grib_ieee.sh \
         grib1to2.sh \
         grib1to3.sh \
         unit_tests.sh \

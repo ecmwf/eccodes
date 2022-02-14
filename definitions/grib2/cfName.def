@@ -308,7 +308,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 13 ;
 	}
-#Geopotential Height
+#Geopotential height
 'geopotential_height' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;

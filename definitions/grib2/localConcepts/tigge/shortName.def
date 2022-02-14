@@ -41,7 +41,7 @@
 	 scaledValueOfFirstFixedSurface = 15 ;
 	 scaleFactorOfFirstFixedSurface = 1 ;
 	}
-#Soil Moisture
+#Soil moisture
 'sm' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -53,7 +53,7 @@
 	 scaledValueOfSecondFixedSurface = 2 ;
 	 scaleFactorOfSecondFixedSurface = 1 ;
 	}
-#Soil Temperature
+#Soil temperature
 'st' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;

@@ -172,7 +172,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     /* We ignore the 'seconds' in our time calculation! */
     if (second != 0) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "Truncating time: non-zero seconds(%d) ignored", second);
+                         "Truncating time: non-zero seconds(%ld) ignored", second);
     }
 
     if (*len < 1)

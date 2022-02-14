@@ -281,7 +281,7 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
         next = next->next;
     }
 
-    size = (1UL << self->widthOfCode); /* 2 ^ self->widthOfCode */
+    size = (1ULL << self->widthOfCode); /* 2 ^ self->widthOfCode - 64 bits */
 
     t                  = (grib_smart_table*)grib_context_malloc_clear_persistent(c, sizeof(grib_smart_table));
     t->entries         = (grib_smart_table_entry*)grib_context_malloc_clear_persistent(c, size * sizeof(grib_smart_table_entry));
@@ -569,7 +569,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     if (*len < self->tableCodesSize) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         " wrong size (%ld) for %s it contains %d values ", *len, a->name, self->tableCodesSize);
+                         "Wrong size (%lu) for %s it contains %lu values", *len, a->name, self->tableCodesSize);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }

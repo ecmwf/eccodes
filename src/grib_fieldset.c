@@ -223,7 +223,7 @@ static int grib_fieldset_columns_resize(grib_fieldset* set, size_t newsize)
     return GRIB_SUCCESS;
 }
 
-int grib_fieldset_column_copy_from_handle(grib_handle* h, grib_fieldset* set, int i)
+static int grib_fieldset_column_copy_from_handle(grib_handle* h, grib_fieldset* set, int i)
 {
     int err     = 0;
     long lval   = 0;
@@ -333,7 +333,7 @@ static grib_fieldset* grib_fieldset_create_from_keys(grib_context* c, char** key
     set   = (grib_fieldset*)grib_context_malloc_clear(c, msize);
     if (!set) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_fieldset_create : Cannot malloc %ld bytes", msize);
+                         "grib_fieldset_create_from_keys: Cannot malloc %lu bytes", msize);
         return NULL;
     }
 
@@ -357,7 +357,7 @@ static grib_fieldset* grib_fieldset_create_from_keys(grib_context* c, char** key
 
     set->columns = (grib_column*)grib_context_malloc_clear(c, sizeof(grib_column) * nkeys);
     if (!set->columns) {
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_fieldset_new_query: memory allocation error");
+        grib_context_log(c, GRIB_LOG_ERROR, "grib_fieldset_create_from_keys: memory allocation error");
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
@@ -602,7 +602,7 @@ static grib_order_by* grib_fieldset_new_order_by(grib_context* c, const char* ob
                 else if (strncmp(p, "desc", 4) == 0)
                     mode = GRIB_ORDER_BY_DESC;
                 else
-                    grib_context_log(c, GRIB_LOG_ERROR, "Invalid sort specifier: %s", p);
+                    grib_context_log(c, GRIB_LOG_ERROR, "grib_fieldset_new_order_by: Invalid sort specifier: %s", p);
             }
             grib_trim(&p);
         }
@@ -819,7 +819,7 @@ static int grib_fieldset_resize_int_array(grib_int_array* a, size_t newsize)
     el = (int*)grib_context_realloc(a->context, a->el, newsize);
     if (!el) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "grib_fieldset_resize_int_array : Cannot malloc %d bytes",
+                         "grib_fieldset_resize_int_array: Cannot malloc %lu bytes",
                          newsize);
         return GRIB_OUT_OF_MEMORY;
     }
@@ -863,7 +863,7 @@ static int grib_fieldset_resize_fields(grib_fieldset* set, size_t newsize)
     fields = (grib_field**)grib_context_realloc(set->context, set->fields, newsize * sizeof(grib_field*));
     if (!fields) {
         grib_context_log(set->context, GRIB_LOG_ERROR,
-                         "grib_fieldset_resize_fields : Cannot malloc %d bytes",
+                         "grib_fieldset_resize_fields: Cannot malloc %lu bytes",
                          newsize * sizeof(grib_field*));
         return GRIB_OUT_OF_MEMORY;
     }
@@ -931,6 +931,7 @@ static int grib_fieldset_set_order_by(grib_fieldset* set, grib_order_by* ob)
         }
         if (next->idkey == -1) {
             grib_context_log(set->context, GRIB_LOG_ERROR,
+                             "grib_fieldset_set_order_by: "
                              "Unable to apply the order by. Key missing from the fieldset.\n");
             return GRIB_MISSING_KEY;
         }

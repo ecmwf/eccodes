@@ -192,7 +192,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->T, &T)) != GRIB_SUCCESS) {
         if (Tc == -1)
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "%s. Spectral Truncation Type Unknown: %s=%d %s=%d %s=%d \n",
+                             "%s. Spectral Truncation Type Unknown: %s=%ld %s=%ld %s=%ld",
                              a->name, self->J, J, self->K, K, self->M, M);
         Tc = 0;
         grib_set_long(grib_handle_of_accessor(a), self->T, Tc);

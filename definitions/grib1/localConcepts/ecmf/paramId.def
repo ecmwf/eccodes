@@ -1134,7 +1134,7 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 155 ;
 	}
-#Geopotential Height
+#Geopotential height
 '156' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 156 ;
@@ -17239,7 +17239,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 19 ;
 	}
-#Soil Moisture
+#Soil moisture
 '228039' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 39 ;
@@ -17254,7 +17254,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 132 ;
 	}
-#Soil Temperature
+#Soil temperature
 '228139' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 139 ;

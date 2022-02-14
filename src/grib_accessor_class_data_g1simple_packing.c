@@ -236,15 +236,20 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
                 val[i] += units_bias;
 
         if (c->ieee_packing && self->ieee_packing) {
-            long precision = c->ieee_packing == 32 ? 1 : 2;
+            long precision = 0; /* Either 1(=32 bits) or 2(=64 bits) */
             size_t lenstr  = strlen(self->ieee_packing);
+            if ((ret = codes_check_grib_ieee_packing_value(c->ieee_packing)) != GRIB_SUCCESS)
+                return ret;
 
             packingType_s  = grib_context_strdup(c, self->packingType);
             ieee_packing_s = grib_context_strdup(c, self->ieee_packing);
             precision_s    = grib_context_strdup(c, self->precision);
+            precision = c->ieee_packing == 32 ? 1 : 2;
 
-            grib_set_string(h, packingType_s, ieee_packing_s, &lenstr);
-            grib_set_long(h, precision_s, precision);
+            if ((ret = grib_set_string(h, packingType_s, ieee_packing_s, &lenstr)) != GRIB_SUCCESS)
+                return ret;
+            if ((ret = grib_set_long(h, precision_s, precision)) != GRIB_SUCCESS)
+                return ret;
 
             grib_context_free(c, packingType_s);
             grib_context_free(c, ieee_packing_s);
