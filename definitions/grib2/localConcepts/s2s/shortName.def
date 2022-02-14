@@ -28,16 +28,14 @@
 }
 #Sea surface height
 'zos' = {
-  discipline = 10 ;
-  parameterCategory = 3 ;
-  parameterNumber = 1 ;
-  typeOfFirstFixedSurface = 160 ;
-  typeOfSecondFixedSurface = 255 ;
-  scaledValueOfFirstFixedSurface = 0 ;
-  scaleFactorOfFirstFixedSurface = 0 ;
-  scaledValueOfSecondFixedSurface = missing() ;
-  scaleFactorOfSecondFixedSurface = missing() ;
-}
+     discipline = 10 ;
+     parameterCategory = 3 ;
+     parameterNumber = 1 ;
+     typeOfFirstFixedSurface = 160 ;
+     typeOfSecondFixedSurface = 255 ;
+     scaledValueOfFirstFixedSurface = 0 ;
+     scaleFactorOfFirstFixedSurface = 0 ;
+    }
 #Depth of 20C isotherm
 't20d' = {
      discipline = 10 ;
@@ -90,4 +88,3 @@
      scaledValueOfFirstFixedSurface = 0 ;
      scaleFactorOfFirstFixedSurface = 0 ;
     }
-
