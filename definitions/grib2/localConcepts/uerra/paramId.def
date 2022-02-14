@@ -135,16 +135,19 @@
      scaledValueOfFirstFixedSurface = 0 ;
      scaleFactorOfFirstFixedSurface = 0 ;
     }
-#Ice temperature
-'260239' = {
+#Sea ice surface temperature
+'260649' = {
      discipline = 10 ;
      parameterCategory = 2 ;
      parameterNumber = 8 ;
+     typeOfFirstFixedSurface = 174 ;
+     typeOfSecondFixedSurface = 255 ;
     }
-#Deviation of sea level from mean
-'260240' = {
-     discipline = 10 ;
-     parameterCategory = 3 ;
-     parameterNumber = 1 ;
+#Snow on ice total depth
+'260650' = {
+     discipline = 0 ;
+     parameterCategory = 1 ;
+     parameterNumber = 11 ;
+     typeOfFirstFixedSurface = 174 ;
+     typeOfSecondFixedSurface = 255 ;
     }
-
