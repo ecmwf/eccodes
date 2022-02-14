@@ -117,7 +117,7 @@ ecbuild_add_option( FEATURE NETCDF
 find_package( AEC )
 ecbuild_add_option( FEATURE AEC
     DESCRIPTION "Support for Adaptive Entropy Coding"
-    DEFAULT OFF
+    DEFAULT ON
     CONDITION AEC_FOUND )
 
 ecbuild_find_python( VERSION 2.6 NO_LIBS )
