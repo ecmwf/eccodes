@@ -15,3 +15,5 @@ module unload libemos
 module unload metview
 
 module load cmake/3.16.5
+module load aec
+
