@@ -142,6 +142,10 @@
      parameterNumber = 8 ;
      typeOfFirstFixedSurface = 174 ;
      typeOfSecondFixedSurface = 255 ;
+  scaledValueOfFirstFixedSurface = missing() ;
+  scaleFactorOfFirstFixedSurface = missing() ;
+  scaledValueOfSecondFixedSurface = missing() ;
+  scaleFactorOfSecondFixedSurface = missing() ;
     }
 #Snow on ice total depth
 'sitd' = {
