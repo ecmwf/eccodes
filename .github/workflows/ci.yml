@@ -27,5 +27,7 @@ jobs:
       codecov_upload: true
       build_package_inputs: |
         self_coverage: true
-        dependencies: ecmwf/ecbuild
+        dependencies: |
+          ecmwf/ecbuild
+          MathisRosenhauer/libaec
         dependency_branch: develop
