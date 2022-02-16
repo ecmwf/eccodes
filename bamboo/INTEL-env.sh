@@ -16,5 +16,6 @@ module unload netcdf4
 module list
 
 module load cmake/3.16.5
+module load aec
 
 module switch gnu intel/17.0.3

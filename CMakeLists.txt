@@ -115,9 +115,12 @@ ecbuild_add_option( FEATURE NETCDF
     NO_TPL )
 
 find_package( AEC )
+if(NOT DEFINED ENABLE_AEC AND NOT AEC_FOUND)
+  ecbuild_critical("AEC support is highly recommended from ecCodes >= 2.25.0\nTo force build without it use -DENABLE_AEC=OFF")
+endif()
 ecbuild_add_option( FEATURE AEC
     DESCRIPTION "Support for Adaptive Entropy Coding"
-    DEFAULT OFF
+    DEFAULT ON
     CONDITION AEC_FOUND )
 
 ecbuild_find_python( VERSION 2.6 NO_LIBS )

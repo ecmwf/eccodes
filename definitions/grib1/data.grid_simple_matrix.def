@@ -75,8 +75,8 @@ if(matrixOfValues == 0)
                decimalScaleFactor,
                optimizeScaleFactor,
                halfByte,
-               packingType,
-               grid_ieee
+               packingType
+               #grid_ieee
         ) : read_only;
             alias data.packedValues = codedValues;
         meta values data_apply_bitmap(codedValues,bitmap,missingValue,binaryScaleFactor) : dump;
