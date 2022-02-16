@@ -10,25 +10,58 @@
 
 . ./include.sh
 
+label="grib_tigge_check_test"
 REDIRECT=/dev/null
+TEMP=temp.$label.tigge
 
 dir="${data_dir}/tigge/"
 
-# check tigge global
-for file in ${dir}tigge_*.grib
-do
+# Parameter 168: at 2m and 1.5m above ground
+# -------------------------------------------
+sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_filter -o $TEMP - $sample_g2 << EOF
+ set centre = "ammc";
+ set productionStatusOfProcessedData=4; # TIGGE
+ set discipline=0;
+ set parameterCategory=0;
+ set parameterNumber=6;
+ set typeOfFirstFixedSurface=103;
+ set scaledValueOfFirstFixedSurface=15;
+ set scaleFactorOfFirstFixedSurface=1;
+ write;
+EOF
+grib_check_key_equals $TEMP paramId 168
+
+${tools_dir}/grib_filter -o $TEMP - $sample_g2 << EOF
+ set centre = "ammc";
+ set productionStatusOfProcessedData=4; # TIGGE
+ set discipline=0;
+ set parameterCategory=0;
+ set parameterNumber=6;
+ set typeOfFirstFixedSurface=103;
+ set scaledValueOfFirstFixedSurface=2;
+ set scaleFactorOfFirstFixedSurface=0;
+ write;
+EOF
+grib_check_key_equals $TEMP paramId 168
+
+
+# Check tigge global
+# ------------------
+for file in ${dir}tigge_*.grib; do
    ${tigge_dir}/tigge_check ${file} 2> $REDIRECT > $REDIRECT
 done
 
-# check tigge-lam
-for file in ${dir}tiggelam_*.grib
-do
+# Check tigge-lam
+# ------------------
+for file in ${dir}tiggelam_*.grib; do
    ${tigge_dir}/tigge_check -l ${file} 2> $REDIRECT > $REDIRECT
 done
 
 
 # Test non-TIGGE files too. We now expect tigge_check to fail!
 # All the GRIB files in the samples are non-TIGGE
+# -------------------------------------------------------------
 for file in ${ECCODES_SAMPLES_PATH}/regular_*.tmpl; do
    set +e
    ${tigge_dir}/tigge_check ${file} 2> $REDIRECT > $REDIRECT
@@ -40,13 +73,15 @@ for file in ${ECCODES_SAMPLES_PATH}/regular_*.tmpl; do
    fi
 done
 
+
 # GRIB-531
-TEMP=temp.$$.tigge
+# ---------
 ${tools_dir}/grib_get -nparameter ${data_dir}/tigge_pf_ecmwf.grib2 > $TEMP
 diff ${data_dir}/tigge_pf_ecmwf.grib2.ref $TEMP
 
-# GRIB-205. Changing productionStatusOfProcessedData should not change
-# anything else
+# GRIB-205. Changing productionStatusOfProcessedData
+# should not change anything else
+# ---------------------------------------------------
 input=${dir}/tigge_ecmf_sfc_sd.grib
 ${tools_dir}/grib_set -s productionStatusOfProcessedData=5 $input $TEMP
 ${tools_dir}/grib_compare -bproductionStatusOfProcessedData $input $TEMP
