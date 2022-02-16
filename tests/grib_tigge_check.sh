@@ -30,7 +30,7 @@ ${tools_dir}/grib_filter -o $TEMP - $sample_g2 << EOF
  set scaleFactorOfFirstFixedSurface=1;
  write;
 EOF
-grib_check_key_equals $TEMP paramId 168
+grib_check_key_equals $TEMP paramId,shortName '168 2d'
 
 ${tools_dir}/grib_filter -o $TEMP - $sample_g2 << EOF
  set centre = "ammc";
@@ -43,7 +43,7 @@ ${tools_dir}/grib_filter -o $TEMP - $sample_g2 << EOF
  set scaleFactorOfFirstFixedSurface=0;
  write;
 EOF
-grib_check_key_equals $TEMP paramId 168
+grib_check_key_equals $TEMP paramId,shortName '168 2d'
 
 
 # Check tigge global
