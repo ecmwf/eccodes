@@ -305,6 +305,12 @@ sub write_out_file {
     # Optional keys
     print $outfile "  typeOfFirstFixedSurface = $type1 ;\n"                if ($type1 ne "");
     print $outfile "  typeOfSecondFixedSurface = $type2 ;\n"               if ($type2 ne "");
+
+    $scaledValue1 = "missing()" if (! defined $scaledValue1);
+    $scaledValue2 = "missing()" if (! defined $scaledValue2);
+    $scaleFactor1 = "missing()" if (! defined $scaleFactor1);
+    $scaleFactor2 = "missing()" if (! defined $scaleFactor2);
+
     print $outfile "  scaledValueOfFirstFixedSurface = $scaledValue1 ;\n"  if ($scaledValue1 ne "");
     print $outfile "  scaleFactorOfFirstFixedSurface = $scaleFactor1 ;\n"  if ($scaleFactor1 ne "");
     print $outfile "  scaledValueOfSecondFixedSurface = $scaledValue2 ;\n" if ($scaledValue2 ne "");
