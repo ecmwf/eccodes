@@ -29,5 +29,5 @@ jobs:
         self_coverage: true
         dependencies: |
           ecmwf/ecbuild
-          libaec
+          MathisRosenhauer/libaec@master
         dependency_branch: develop
