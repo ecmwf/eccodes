@@ -10,21 +10,27 @@
 
 . ./include.sh
 
+label="grib_ccsds_test"
 REDIRECT=/dev/null
-
-# Disable if autotools being used
-src_config=${src_dir}/config.h
-if [ -f ${src_config} ]; then
-  exit 0
-fi
 
 BLACKLIST="totalLength,section5Length,section7Length,dataRepresentationTemplateNumber"
 
 infile=${data_dir}/ccsds.grib2
-outfile1=$infile.tmp_ccsds.1
-outfile2=$infile.tmp_ccsds.2
+outfile1=temp.$label.1
+outfile2=temp.$label.2
 
 rm -f $outfile1 $outfile2
+
+# Use the sample file with CCSDS packing
+# ---------------------------------------
+sample_ccsds=$ECCODES_SAMPLES_PATH/ccsds_grib2.tmpl
+${tools_dir}/grib_filter -o $outfile1 - $sample_ccsds << EOF
+  set values = { 55.0161, 99.7008 };
+  write;
+EOF
+grib_check_key_equals $outfile1 packingType grid_ccsds
+stats=`${tools_dir}/grib_get -M -F%.4f -p min,max $outfile1`
+[ "$stats" = "55.0161 99.7008" ]
 
 # ECC-1263
 # ---------
