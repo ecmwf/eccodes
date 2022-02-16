@@ -5617,19 +5617,6 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
 }
-#Snow thickness over sea ice
-'m' = {
-  discipline = 10 ;
-  parameterCategory = 2 ;
-  parameterNumber = 192 ;
-  typeOfFirstFixedSurface = 173 ;
-  typeOfSecondFixedSurface = 175 ;
-  scaledValueOfFirstFixedSurface = missing() ;
-  scaleFactorOfFirstFixedSurface = missing() ;
-  scaledValueOfSecondFixedSurface = missing() ;
-  scaleFactorOfSecondFixedSurface = missing() ;
-  localTablesVersion = 1 ;
-}
 #X-component of sea ice velocity
 'm s**-1' = {
   discipline = 10 ;
@@ -6127,20 +6114,6 @@
   scaledValueOfSecondFixedSurface = missing() ;
   scaleFactorOfSecondFixedSurface = missing() ;
   typeOfStatisticalProcessing = 0 ;
-}
-#Time-mean snow thickness over sea ice
-'m' = {
-  discipline = 10 ;
-  parameterCategory = 2 ;
-  parameterNumber = 192 ;
-  typeOfFirstFixedSurface = 173 ;
-  typeOfSecondFixedSurface = 175 ;
-  scaledValueOfFirstFixedSurface = missing() ;
-  scaleFactorOfFirstFixedSurface = missing() ;
-  scaledValueOfSecondFixedSurface = missing() ;
-  scaleFactorOfSecondFixedSurface = missing() ;
-  typeOfStatisticalProcessing = 0 ;
-  localTablesVersion = 1 ;
 }
 #Time-mean X-component of sea ice velocity
 'm s**-1' = {
