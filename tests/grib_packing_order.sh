@@ -24,6 +24,7 @@ temp_jpeg2=${label}".jpeg2.tmp"
 temp_png1=${label}".png1.tmp"
 temp_png2=${label}".png2.tmp"
 temp_ieee1=${label}".ieee1.tmp"
+temp_ieee2=${label}".ieee2.tmp"
 
 # Simple Packing
 # ----------------
@@ -72,12 +73,20 @@ if [ $HAVE_JPEG -eq 1 ]; then
     ${tools_dir}/grib_compare $temp_jpeg1 $temp_jpeg2
 
     ${tools_dir}/grib_compare -c data:n $temp_simple1 $temp_jpeg1
+
+    ${tools_dir}/grib_ls -n statistics $temp_jpeg1
 fi
 
 # IEEE
 # ------------
-# tests/grib_packing_order grid_ieee values_before_packing_type x2 # Does not work
+#tests/grib_packing_order grid_ieee values_before_packing_type x2 # Does not work
 $EXEC ${test_dir}/grib_packing_order grid_ieee packing_type_before_values $temp_ieee1
+$EXEC ${test_dir}/grib_packing_order grid_ieee values_before_packing_type $temp_ieee2
+
+${tools_dir}/grib_ls -n statistics $temp_ieee1 $temp_ieee2
+# TODO
+# ${tools_dir}/grib_compare $temp_ieee1 $temp_ieee2
+
 # No point comparing with grid_simple as grid_ieee will be closer to the actual values
 # and less lossy
 
@@ -87,4 +96,4 @@ rm -f $temp_second1 $temp_second2
 rm -f $temp_png1 $temp_png2
 rm -f $temp_ccsds1 $temp_ccsds2
 rm -f $temp_jpeg1 $temp_jpeg2
-rm -f $temp_ieee1
+rm -f $temp_ieee1 $temp_ieee2
