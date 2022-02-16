@@ -25,7 +25,7 @@ use Time::localtime;
 use Getopt::Long;
 
 my $SANITY_CHECK     = 0;
-my $WRITE_TO_FILES   = 1;
+my $WRITE_TO_FILES   = 0;
 my $WRITE_TO_PARAMDB = 0; # Be careful. Fill in $contactId before proceeding
 
 # Process arguments. Must be at least one file
@@ -174,6 +174,11 @@ while (<>) {
     $scaleFactorWL2 = undef if ($scaleFactorWL2 =~ /missing/);
     $scaledValueWL2 = undef if ($scaledValueWL2 =~ /missing/);
 
+    $scaledValue1 = undef if ($scaledValue1 =~ /missing/);
+    $scaleFactor1 = undef if ($scaleFactor1 =~ /missing/);
+    $scaledValue2 = undef if ($scaledValue2 =~ /missing/);
+    $scaleFactor2 = undef if ($scaleFactor2 =~ /missing/);
+
     if ($WRITE_TO_FILES) {
         write_out_file(\*OUT_PARAMID,   $name, $paramId);
         write_out_file(\*OUT_SHORTNAME, $name, $shortName);
@@ -220,10 +225,20 @@ while (<>) {
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,5, $pnumber,0);
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,6, $type1,0)        if ($type1 ne "");
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,13,$type2,0)        if ($type2 ne "");
-        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,9, $scaledValue1,0) if ($scaledValue1 ne "");
-        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,7, $scaleFactor1,0) if ($scaleFactor1 ne "");
-        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,14,$scaledValue2,0) if ($scaledValue2 ne "");
-        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,15,$scaleFactor2,0) if ($scaleFactor2 ne "");
+
+        # Either missing or has a value
+        if (! defined $scaledValue1 || $scaledValue1 ne "") {
+            $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,9, $scaledValue1,0);
+        }
+        if (! defined $scaleFactor1 || $scaleFactor1 ne "") {
+            $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,7, $scaleFactor1,0);
+        }
+        if (! defined $scaledValue2 || $scaledValue2 ne "") {
+            $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,14,$scaledValue2,0);
+        }
+        if (! defined $scaleFactor2 || $scaleFactor2 ne "") {
+            $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,15,$scaleFactor2,0);
+        }
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,11,$stat,0)         if ($stat ne "");
 
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,46,$aero,0)         if ($aero ne "");
