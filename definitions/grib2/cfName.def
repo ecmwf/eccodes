@@ -164,6 +164,18 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
+#Sea surface height
+'sea_surface_height_above_geoid' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
 #Eastward sea water velocity
 'eastward_sea_water_velocity' = {
 	 discipline = 10 ;
