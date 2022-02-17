@@ -48,7 +48,7 @@
 150 150 Generalized vertical height coordinate 
 151 sol Soil level (Numeric)
 # 152-159 Reserved
-160 160 Depth below sea level (m)
+160 o2d Depth below sea level (m)
 161 161 Depth below water surface (m)
 162 sfc Lake or river bottom (-)
 163 163 Bottom of sediment layer (-)
