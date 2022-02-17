@@ -3223,6 +3223,54 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
 	}
+#Wet bulb globe temperature
+'wbgt' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 2 ;
+	}
+#Globe temperature
+'gt' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	}
+#Humidex
+'hmdx' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 4 ;
+	}
+#Effective temperature
+'efft' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 5 ;
+	}
+#Normal effective temperature
+'nefft' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 6 ;
+	}
+#Standard effective temperature
+'sefft' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 7 ;
+	}
+#Physiological equivalent temperature
+'peqt' = {
+	 discipline = 20 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 8 ;
+	}
+#Saturation water vapour pressure
+'swvp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 32 ;
+	}
 #Sea ice thickness
 'sithick' = {
 	 discipline = 10 ;
