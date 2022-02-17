@@ -113,7 +113,7 @@ if ($SANITY_CHECK) {
             next;
         }
         $lcount++;
-        ($paramId, $shortName) = split(/\t/);
+        ($paramId, $shortName, $name, $units) = split(/\t/);
 
         die "Error: shortName=$shortName is duplicated (line ", $lcount+1, ")\n" if (exists $map_sn{$shortName});
         $map_sn{$shortName}++; # increment count in shortName map
@@ -125,6 +125,10 @@ if ($SANITY_CHECK) {
 
         my $x = $dbh->selectrow_array("select * from param.param where id = ?",undef,$paramId);
         die "Error: paramId=$x exists in the database (line ", $lcount+1, ")\n" if (defined $x);
+
+        # Will die if it fails
+        get_db_units_code($units);
+
         $x = $dbh->selectrow_array("select shortName from param.param where shortName = ?",undef,$shortName);
         die "Error: shortName=$x exists in the database (line ", $lcount+1, ")\n" if (defined $x);
     }
@@ -211,7 +215,7 @@ while (<>) {
 
         die "Error: Both aerosolType and constituentType cannot be set!" if ($constit ne "" && $aero ne "");
         die "Error: No contact ID provided\n" if (!$contactId);
-        print "Inserting paramId $paramId (centre=$centre) ...\n";
+        print "Inserting paramId $paramId (centre=" . centre_as_str($centre) . ") ...\n";
         $dbh->do("insert into param(id,shortName,name,units_id,insert_date,update_date,contact) values (?,?,?,?,?,?,?)",undef,
             $paramId, $shortName, $name , $units_code, $today_date, $today_date, $contactId) or die $dbh->errstr;
 
@@ -283,6 +287,12 @@ if ($WRITE_TO_PARAMDB) {
 }
 
 # -------------------------------------------------------------------
+sub centre_as_str {
+    my $cc = shift;
+    return "WMO"   if ($cc eq $centre_wmo);
+    return "ECMWF" if ($cc eq $centre_ecmwf);
+    return "Unknown";
+}
 sub get_db_units_code {
     my $u = shift;
     my $unit_id = $dbh->selectrow_array("select id from units where name = ?",undef,$u);
