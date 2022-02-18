@@ -20,6 +20,11 @@ grib_check_key_equals $temp "mars.date,monthlyVerificationDate" "20060301 200603
 
 ${tools_dir}/grib_dump $temp
 
+# Date as string with month names
+${tools_dir}/grib_set -s yearOfCentury=255 $sample_g1 $temp
+grib_check_key_equals $temp "dataDate:s" "mar-16"
+
+
 
 # Clean up
 rm -f $temp
