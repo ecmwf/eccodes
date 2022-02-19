@@ -150,21 +150,23 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 {
     double val = 0;
     size_t l   = 1;
-    char repres[1024];
+    char repres[1024] = {0,};
+    int err = 0;
 
-    grib_unpack_double(a, &val, &l);
+    err = grib_unpack_double(a, &val, &l);
+    if (err)
+        return err;
 
     sprintf(repres, "%.0f", val);
 
     l = strlen(repres) + 1;
-
     if (l > *len) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s",
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_offset: unpack_string: Buffer too small for %s",
                          a->name);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }
-    grib_context_log(a->context, GRIB_LOG_DEBUG, "grib_accessor_long: Casting double %s to string", a->name);
+    grib_context_log(a->context, GRIB_LOG_DEBUG, "grib_accessor_offset: Casting double %s to string", a->name);
 
     *len = l;
 
