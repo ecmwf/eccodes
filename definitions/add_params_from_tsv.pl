@@ -388,6 +388,8 @@ sub usage {
    print <<USAGE;
 
 Usage: $0 [-s] [-f] [-p] file.tsv
+       Input has to be a tab-separated values (TSV) file
+
        -s  Perform sanity checks and exit
        -f  Write out def files (paramId.def, name.def etc)
        -p  Write to Parameter Database (Be careful!)
