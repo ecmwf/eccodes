@@ -10,3 +10,5 @@ codetable[2] inputOriginatingCentre 'common/c-11.table' : dump,edition_specific,
 
 # This identifies which post-processing technique was used. This is defined by the originating centre
 unsigned[1]  typeOfPostProcessing                        : dump,edition_specific;
+
+concept postProcessing (unknown,"postProcessingConcept.def",conceptsDir2,conceptsDir1):no_copy;
