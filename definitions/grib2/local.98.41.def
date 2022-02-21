@@ -62,14 +62,6 @@ concept efas_post_proc {
   "unknown"           = { dummy = 1; }
 } : hidden;
 
-#Domain. Missing, local or global
-#codetable[1] efasDomain "grib2/tables/local/ecmf/efas_domain.table" = 255 : dump, string_type;
-#unsigned[1] efas_domain = missing() : can_be_missing, dump;
-#concept efasDomain(unknown) {
-#  "local"   = { efas_domain = 0; }
-#  "global"  = { efas_domain = 1; }
-#} : hidden;
-
 # Model Cycle Date/Time
 # This is the date of the new official implementation of the EFAS cycle.
 unsigned[2] yearOfModelVersion    = 0 : dump;
@@ -80,22 +72,3 @@ unsigned[1] minuteOfModelVersion  = 0 : dump;
 constant    secondOfModelVersion  = 0;
 meta dateOfModelVersion  g2date(yearOfModelVersion, monthOfModelVersion, dayOfModelVersion) : dump;
 meta timeOfModelVersion  time  (hourOfModelVersion, minuteOfModelVersion, secondOfModelVersion) : dump;
-
-# Note: the key inputOriginatingCentre is in the PDTNs 70, 71, 72 and 73
-#concept efas_forecast {
-#  "griddedobs" = { inputOriginatingCentre=98; marsType = "an"; }
-#  # "reanalysis" = { inputOriginatingCentre=98; marsType = "an"; }
-#
-#  "hres" = { inputOriginatingCentre=98; marsType = "fc"; } # deterministic
-#  "ens"  = { inputOriginatingCentre=98; marsType = "pf"; } # ensemble
-#  "ens"  = { inputOriginatingCentre=98; marsType = "cf"; } # ensemble
-#
-# DWD rules
-#  "global"  = { inputOriginatingCentre=78; inputProcessIdentifier = 1; }
-#  "lam"     = { inputOriginatingCentre=78; inputProcessIdentifier = 2; }
-#
-# TODO: For now anything coming from cnmc (COSMO) is local area
-#  "lam"     = { inputOriginatingCentre=80; }
-#
-#  "unknown" = { dummy = 1; }
-#} : hidden;
