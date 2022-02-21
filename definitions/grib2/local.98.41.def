@@ -40,28 +40,6 @@ unsigned[2] anoffsetFrequency = missing(): dump, can_be_missing;
 # Boolean
 transient lsdate_bug = 1: hidden; # See ECC-707
 
-# Note: the key typeOfPostProcessing is in the PDTNs 70, 71, 72, 73, 93, 94, 95, or 96
-concept efas_post_proc {
-  "unknown"           = { typeOfPostProcessing = 0; }
-  "lisflood"          = { typeOfPostProcessing = 1; }
-  "lisflood_eric"     = { typeOfPostProcessing = 2; }
-  "lisflood_season"   = { typeOfPostProcessing = 3; }
-  "lisflood_merged"   = { typeOfPostProcessing = 4; }
-  "lisflood_global"   = { typeOfPostProcessing = 5; }
-  "geff"              = { typeOfPostProcessing = 10; }
-  "ericha"            = { typeOfPostProcessing = 51; }
-  "htessel_lisflood"  = { typeOfPostProcessing = 101; }
-  "htessel_eric"      = { typeOfPostProcessing = 102; }
-  "htessel_camaflood" = { typeOfPostProcessing = 103; }
-  "epic"              = { typeOfPostProcessing = 152; }
-  "jules_mrm"         = { typeOfPostProcessing = 201; }
-  "htessel_mrm"       = { typeOfPostProcessing = 202; }
-  "mhm_mrm"           = { typeOfPostProcessing = 203; }
-  "pcrg_mrm"          = { typeOfPostProcessing = 204; }
-  "meteogrid"         = { typeOfPostProcessing = 205; }
-  "unknown"           = { dummy = 1; }
-} : hidden;
-
 #Domain. Missing, local or global
 #codetable[1] efasDomain "grib2/tables/local/ecmf/efas_domain.table" = 255 : dump, string_type;
 #unsigned[1] efas_domain = missing() : can_be_missing, dump;
