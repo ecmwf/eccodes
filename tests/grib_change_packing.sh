@@ -5,7 +5,9 @@
 
 . ./include.sh
 
-#set -x
+label="grib_change_packing_test"
+temp=temp.$label.grib
+rm -f $temp
 
 grib1=${data_dir}/reduced_latlon_surface_constant.grib1
 grib2=${data_dir}/reduced_latlon_surface_constant.grib2
@@ -25,8 +27,6 @@ if [ $HAVE_JPEG -eq 1 ]; then
     packing2="grid_jpeg "$packing2
 fi
 
-temp=temp.change_packing.grib
-rm -f $temp
 
 # --- test changing the packing
 # arg 1    : input grib file
@@ -97,4 +97,19 @@ stats=`${tools_dir}/grib_get -F%.1f -p average,standardDeviation $temp`
 [ "$stats" = "195.1 12.0" ]
 
 
-rm -f $temp
+# ECC-1352: Check CCSDS
+# ----------------------------
+temp_err=temp.$label.err
+if [ $HAVE_AEC -eq 0 ]; then
+    # Check we get an error if we try to decode this packing
+    [ -f "${data_dir}/ccsds.grib2" ]
+    set +e
+    ${tools_dir}/grib_get -p min,max ${data_dir}/ccsds.grib2 2>$temp_err
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "CCSDS support not enabled. Please rebuild with -DENABLE_AEC=ON" $temp_err
+fi
+
+
+rm -f $temp $temp_err

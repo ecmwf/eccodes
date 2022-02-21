@@ -36,15 +36,31 @@ ${tools_dir}/grib_compare -r temp.$label.213 temp.$label.321
 
 rm -f temp.$label.1 temp.$label.2 temp.$label.3 temp.$label.213 temp.$label.321
 
-# ----------------------------------------
+# ----------------------------------------------
 # GRIB-797: test last argument being a directory
-# ----------------------------------------
-temp_dir=tempdir.grib_compare
+# ----------------------------------------------
+temp_dir=tempdir.$label
 rm -rf $temp_dir
 mkdir $temp_dir
 cp $infile $temp_dir
 ${tools_dir}/grib_compare $infile  $temp_dir
 rm -rf $temp_dir
+
+# ----------------------------------------
+# ECC-1350: First arg is a directory
+# ----------------------------------------
+temp_dir=tempdir.$label
+temp_err=temp.$label.err
+rm -rf $temp_dir
+mkdir $temp_dir
+set +e
+${tools_dir}/grib_compare $temp_dir $temp_dir 2>$temp_err
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "ERROR:.*Is a directory" $temp_err
+rm -rf $temp_dir
+
 
 # ----------------------------------------
 # ECC-245: blacklist and 2nd order packing

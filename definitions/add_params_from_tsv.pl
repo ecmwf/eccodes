@@ -25,7 +25,7 @@ use Time::localtime;
 use Getopt::Long;
 
 my $SANITY_CHECK     = 0;
-my $WRITE_TO_FILES   = 1;
+my $WRITE_TO_FILES   = 0;
 my $WRITE_TO_PARAMDB = 0; # Be careful. Fill in $contactId before proceeding
 
 # Process arguments. Must be at least one file
@@ -113,7 +113,7 @@ if ($SANITY_CHECK) {
             next;
         }
         $lcount++;
-        ($paramId, $shortName) = split(/\t/);
+        ($paramId, $shortName, $name, $units) = split(/\t/);
 
         die "Error: shortName=$shortName is duplicated (line ", $lcount+1, ")\n" if (exists $map_sn{$shortName});
         $map_sn{$shortName}++; # increment count in shortName map
@@ -125,6 +125,10 @@ if ($SANITY_CHECK) {
 
         my $x = $dbh->selectrow_array("select * from param.param where id = ?",undef,$paramId);
         die "Error: paramId=$x exists in the database (line ", $lcount+1, ")\n" if (defined $x);
+
+        # Will die if it fails
+        get_db_units_code($units);
+
         $x = $dbh->selectrow_array("select shortName from param.param where shortName = ?",undef,$shortName);
         die "Error: shortName=$x exists in the database (line ", $lcount+1, ")\n" if (defined $x);
     }
@@ -174,6 +178,11 @@ while (<>) {
     $scaleFactorWL2 = undef if ($scaleFactorWL2 =~ /missing/);
     $scaledValueWL2 = undef if ($scaledValueWL2 =~ /missing/);
 
+    $scaledValue1 = undef if ($scaledValue1 =~ /missing/);
+    $scaleFactor1 = undef if ($scaleFactor1 =~ /missing/);
+    $scaledValue2 = undef if ($scaledValue2 =~ /missing/);
+    $scaleFactor2 = undef if ($scaleFactor2 =~ /missing/);
+
     if ($WRITE_TO_FILES) {
         write_out_file(\*OUT_PARAMID,   $name, $paramId);
         write_out_file(\*OUT_SHORTNAME, $name, $shortName);
@@ -206,7 +215,7 @@ while (<>) {
 
         die "Error: Both aerosolType and constituentType cannot be set!" if ($constit ne "" && $aero ne "");
         die "Error: No contact ID provided\n" if (!$contactId);
-        print "Inserting paramId $paramId (centre=$centre) ...\n";
+        print "Inserting paramId $paramId (centre=" . centre_as_str($centre) . ") ...\n";
         $dbh->do("insert into param(id,shortName,name,units_id,insert_date,update_date,contact) values (?,?,?,?,?,?,?)",undef,
             $paramId, $shortName, $name , $units_code, $today_date, $today_date, $contactId) or die $dbh->errstr;
 
@@ -220,10 +229,20 @@ while (<>) {
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,5, $pnumber,0);
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,6, $type1,0)        if ($type1 ne "");
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,13,$type2,0)        if ($type2 ne "");
-        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,9, $scaledValue1,0) if ($scaledValue1 ne "");
-        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,7, $scaleFactor1,0) if ($scaleFactor1 ne "");
-        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,14,$scaledValue2,0) if ($scaledValue2 ne "");
-        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,15,$scaleFactor2,0) if ($scaleFactor2 ne "");
+
+        # Either missing or has a value
+        if (! defined $scaledValue1 || $scaledValue1 ne "") {
+            $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,9, $scaledValue1,0);
+        }
+        if (! defined $scaleFactor1 || $scaleFactor1 ne "") {
+            $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,7, $scaleFactor1,0);
+        }
+        if (! defined $scaledValue2 || $scaledValue2 ne "") {
+            $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,14,$scaledValue2,0);
+        }
+        if (! defined $scaleFactor2 || $scaleFactor2 ne "") {
+            $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,15,$scaleFactor2,0);
+        }
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,11,$stat,0)         if ($stat ne "");
 
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,46,$aero,0)         if ($aero ne "");
@@ -268,6 +287,12 @@ if ($WRITE_TO_PARAMDB) {
 }
 
 # -------------------------------------------------------------------
+sub centre_as_str {
+    my $cc = shift;
+    return "WMO"   if ($cc eq $centre_wmo);
+    return "ECMWF" if ($cc eq $centre_ecmwf);
+    return "Unknown";
+}
 sub get_db_units_code {
     my $u = shift;
     my $unit_id = $dbh->selectrow_array("select id from units where name = ?",undef,$u);
@@ -290,6 +315,12 @@ sub write_out_file {
     # Optional keys
     print $outfile "  typeOfFirstFixedSurface = $type1 ;\n"                if ($type1 ne "");
     print $outfile "  typeOfSecondFixedSurface = $type2 ;\n"               if ($type2 ne "");
+
+    $scaledValue1 = "missing()" if (! defined $scaledValue1);
+    $scaledValue2 = "missing()" if (! defined $scaledValue2);
+    $scaleFactor1 = "missing()" if (! defined $scaleFactor1);
+    $scaleFactor2 = "missing()" if (! defined $scaleFactor2);
+
     print $outfile "  scaledValueOfFirstFixedSurface = $scaledValue1 ;\n"  if ($scaledValue1 ne "");
     print $outfile "  scaleFactorOfFirstFixedSurface = $scaleFactor1 ;\n"  if ($scaleFactor1 ne "");
     print $outfile "  scaledValueOfSecondFixedSurface = $scaledValue2 ;\n" if ($scaledValue2 ne "");
@@ -357,6 +388,8 @@ sub usage {
    print <<USAGE;
 
 Usage: $0 [-s] [-f] [-p] file.tsv
+       Input has to be a tab-separated values (TSV) file
+
        -s  Perform sanity checks and exit
        -f  Write out def files (paramId.def, name.def etc)
        -p  Write to Parameter Database (Be careful!)

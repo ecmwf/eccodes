@@ -13860,6 +13860,33 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 200 ;
 	}
+#Snow thickness over sea ice
+'sisnthick' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 173 ;
+	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Time-mean snow thickness over sea ice
+'avg_sisnthick' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 173 ;
+	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Stream function gradient
 'strfgrd' = {
 	 discipline = 192 ;

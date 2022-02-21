@@ -9,9 +9,11 @@ add_subdirectory(gts)
 
 file(READ "grib_data_files.txt" files_to_download)
 string(REGEX REPLACE "\n" ";" files_to_download "${files_to_download}")
-if( HAVE_AEC )
-    list(APPEND files_to_download ccsds.grib2)
-endif()
+
+# Download the CCSDS file even if HAVE_AEC feature is disabled.
+# This is for testing (See ECC-1352)
+list(APPEND files_to_download ccsds.grib2)
+
 
 if( ENABLE_EXTRA_TESTS )
     # Download all data files

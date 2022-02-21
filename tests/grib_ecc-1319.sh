@@ -12,8 +12,10 @@
 set -u
 
 label="grib_ecc-1319-test"
-temp=temp.$label.grib
 
+temp=temp.$label.grib
+temp1=temp1.$label.grib
+temp2=temp2.$label.grib
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 typeOfLevels="
@@ -65,12 +67,13 @@ done
 
 # Also check specific cases
 # --------------------------
-# Sea ice surface temperature
-${tools_dir}/grib_set -s paramId=260649 $sample_grib2 $temp
-grib_check_key_equals $temp levtype o2d
-# Snow on ice total depth
-${tools_dir}/grib_set -s paramId=260650 $sample_grib2 $temp
-grib_check_key_equals $temp levtype o2d
+# 260649 = Sea ice surface temperature (UERRA)
+${tools_dir}/grib_set -s productionStatusOfProcessedData=8 $sample_grib2 $temp1
+${tools_dir}/grib_set -s paramId=260649 $temp1 $temp2
+grib_check_key_equals $temp2 levtype sfc
+# 260650 = Snow on ice total depth (UERRA)
+${tools_dir}/grib_set -s paramId=260650 $temp1 $temp2
+grib_check_key_equals $temp2 levtype sfc
 
 # Lake ice surface temperature
 ${tools_dir}/grib_set -s paramId=228013 $sample_grib2 $temp
@@ -81,4 +84,4 @@ grib_check_key_equals $temp levtype sfc
 
 
 
-rm -f $temp
+rm -f $temp $temp1 $temp2

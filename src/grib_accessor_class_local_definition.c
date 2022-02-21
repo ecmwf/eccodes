@@ -325,6 +325,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         case 28:  /* COSMO local area EPS */
         case 38:  /* 4D variational increments for long window 4Dvar system */
         case 39:  /* 4DVar model errors for long window 4Dvar system */
+        case 60:  /* Ocean data analysis */
         case 192: /* Multiple ECMWF local definitions */
             if (isInstant) {
                 productDefinitionTemplateNumberNew = 0;

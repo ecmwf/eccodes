@@ -26,9 +26,6 @@ levtype=`${tools_dir}/grib_get -p levtype $outfile`
 centre=`${tools_dir}/grib_get -p centre $outfile`
 [ $centre = "cnmc" ]
 
-#levtype=`${tools_dir}/grib_get -p levtype:l $outfile`
-#[ $levtype -eq 100 ]
-
 centre=`${tools_dir}/grib_get -p centre:l $outfile`
 [ $centre -eq 80 ]
 
@@ -105,6 +102,16 @@ ${tools_dir}/grib_set -s centre=0 $outfile $outfile
 status=$?
 set -e
 [ $status -ne 0 ]
+
+# offsetValuesBy
+# ------------------
+input=${data_dir}/reduced_latlon_surface.grib2
+${tools_dir}/grib_set -s offsetValuesBy=0.5  $input $temp
+
+max=`${tools_dir}/grib_get -F%.3f -p max $input`
+[ "$max" = "12.597" ]
+max=`${tools_dir}/grib_get -F%.3f -p max $temp`
+[ "$max" = "13.097" ]
 
 
 rm -f $outfile $temp
