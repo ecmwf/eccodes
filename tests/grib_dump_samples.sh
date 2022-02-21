@@ -14,6 +14,8 @@
 label="grib_dump_samples_test"
 temp=${label}".temp"
 
+sample_ccsds="$ECCODES_SAMPLES_PATH/ccsds_grib2.tmpl"
+
 # Test selected sample GRIB files
 samples="
     GRIB1.tmpl
@@ -25,9 +27,10 @@ samples="
     regular_ll_sfc_grib1.tmpl
     regular_ll_sfc_grib2.tmpl
 "
-for file in $samples; do
-  sf="$ECCODES_SAMPLES_PATH/$file"
-  ${tools_dir}/grib_dump -O $sf >/dev/null
+
+for sfile in $samples; do
+  sample="$ECCODES_SAMPLES_PATH/$sfile"
+  ${tools_dir}/grib_dump -O $sample >/dev/null
 done
 
 # Test grib_dump with -t option
@@ -37,5 +40,16 @@ grep -q "codetable (int) typeOfSecondFixedSurface" $temp
 grep -q "ieeefloat (double) referenceValue" $temp
 grep -q "unsigned (int) numberOfSection" $temp
 
+# Extra tests for CCSDS
+if [ $HAVE_AEC -eq 1 ]; then
+    ${tools_dir}/grib_dump -O $sample_ccsds >/dev/null
+    rm -f $temp
+    echo 'set values = { 55.0161, 66.666, 99.7008 };write;' |\
+         ${tools_dir}/grib_filter -o $temp - $sample_ccsds
+    grib_check_key_equals $temp packingType,numberOfValues 'grid_ccsds 3'
+    stats=`${tools_dir}/grib_get -M -F%.4f -p min,max $temp`
+    [ "$stats" = "55.0161 99.7008" ]
+    ${tools_dir}/grib_dump -O $temp
+fi
 
 rm -f $temp
