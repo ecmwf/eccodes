@@ -61,7 +61,7 @@ if(matrixOfValues == 0)
 		# For grib1 -> grib2
 		constant bitMapIndicator = 0;
 
-        meta codedValues data_g1simple_packing (           
+        meta codedValues data_g1simple_packing(
                section4Length,
                offsetBeforeData,
                offsetSection4,

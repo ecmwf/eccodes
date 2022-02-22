@@ -61,7 +61,7 @@ alias levelType=indicatorOfTypeOfLevel;
 
 transient pressureUnits="hPa";
 
-concept_nofail typeOfLevelECMF      (unknown,         "typeOfLevel.def",conceptsMasterDir,conceptsLocalDirECMF); 
+concept_nofail typeOfLevelECMF      (unknown,         "typeOfLevel.def",conceptsMasterDir,conceptsLocalDirECMF);
 concept_nofail vertical.typeOfLevel (typeOfLevelECMF, "typeOfLevel.def",conceptsDir2,conceptsDir1);
 
 when ( typeOfLevel is "isobaricInPa" ) { set pressureUnits="Pa"; }
@@ -129,7 +129,7 @@ unsigned[1] P1 : edition_specific;
 unsigned[1] P2 : edition_specific;
 
 # Local comes before Master to give precedence to the local, centre-specific table
-codetable[1] timeRangeIndicator ('5.table',tablesLocalDir,tablesMasterDir) = 1 : dump,edition_specific; 
+codetable[1] timeRangeIndicator ('5.table',tablesLocalDir,tablesMasterDir) = 1 : dump,edition_specific;
 
 unsigned[2] numberIncludedInAverage;
 
@@ -255,7 +255,7 @@ if(((section1Length > 40) or new() or setLocalDefinition> 0) and deleteLocalDefi
 {
   constant localUsePresent = 1 : edition_specific;
   alias grib2LocalSectionPresent=present;
-  
+
   if( (centre == ECMWF) or
       (centre != ECMWF and
         subCentre == ECMWF))
@@ -279,7 +279,7 @@ if(((section1Length > 40) or new() or setLocalDefinition> 0) and deleteLocalDefi
         # Other centres
         pad reservedNeedNotBePresent(12);
         template_nofail  localDefinition  "grib1/local.[centre:l].def";
-    
+
         section_padding localExtensionPadding : read_only;
     }
   }
