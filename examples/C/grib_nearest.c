@@ -90,5 +90,9 @@ int main(int argc, char** argv)
 
     if (set) codes_fieldset_delete(set);
 
+    for (i = 0; i < nfiles; i++)
+        free(filenames[i]);
+    free(filenames);
+
     return 0;
 }
