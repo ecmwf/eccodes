@@ -42,7 +42,7 @@ int main(int argc, char** argv)
     double values[4] = {0,};
     double distances[4] = {0,};
     int indexes[4] = {0,};
-    char* order_by = "param,step";
+    char* order_by = "param,step:i";
 
     size_t size = 4;
     double lat = -40, lon = 15;
@@ -63,7 +63,6 @@ int main(int argc, char** argv)
 
     printf("\nordering by %s\n", order_by);
     printf("\n%d fields in the fieldset\n", codes_fieldset_count(set));
-    printf("n,step,param\n");
 
     mode  = CODES_NEAREST_SAME_GRID | CODES_NEAREST_SAME_POINT;
     count = 1;
@@ -73,7 +72,7 @@ int main(int argc, char** argv)
         len = 20;
         CODES_CHECK(codes_get_string(h, "shortName", param, &len), 0);
 
-        printf("%d %ld %s  ", count, step, param);
+        printf("Msg #%d, step=%ld, param=%s", count, step, param);
         if (!nearest) nearest = codes_grib_nearest_new(h, &err);
         CODES_CHECK(err, 0);
         CODES_CHECK(codes_grib_nearest_find(nearest, h, lat, lon, mode, lats, lons, values, distances, indexes, &size), 0);
