@@ -23,10 +23,10 @@
 #  LIBAEC_PATH
 #  libaec_PATH
 
-find_path( AEC_INCLUDE_DIR szlib.h
+find_path( AEC_INCLUDE_DIR libaec.h
            PATHS ${AEC_DIR} ${AEC_PATH} ${LIBAEC_DIR} ${libaec_DIR} ${LIBAEC_PATH} ${libaec_PATH} ENV AEC_DIR ENV AEC_PATH ENV LIBAEC_DIR ENV libaec_DIR ENV LIBAEC_PATH ENV libaec_PATH
            PATH_SUFFIXES include include/aec NO_DEFAULT_PATH )
-find_path( AEC_INCLUDE_DIR szlib.h PATH_SUFFIXES include include/aec )
+find_path( AEC_INCLUDE_DIR libaec.h PATH_SUFFIXES include include/aec )
 
 find_library( AEC_LIBRARY  NAMES aec
               PATHS ${AEC_DIR} ${AEC_PATH} ${LIBAEC_DIR} ${libaec_DIR} ${LIBAEC_PATH} ${libaec_PATH} ENV AEC_DIR ENV AEC_PATH ENV LIBAEC_DIR ENV libaec_DIR ENV LIBAEC_PATH ENV libaec_PATH
