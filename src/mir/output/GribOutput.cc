@@ -289,7 +289,7 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
             c.execute(*this, param, h, info);
         }
 
-        if (Log::debug()) {
+        if (Log::debug_active()) {
             auto p(Log::debug().precision(12));
             X(info.grid.grid_type);
             X(info.grid.Ni);
