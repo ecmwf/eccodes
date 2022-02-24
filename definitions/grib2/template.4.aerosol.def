@@ -2,3 +2,4 @@
 
 # Atmospheric chemical or physical constituent type
 codetable[2] aerosolType ('4.233.table',masterDir,localDir) : dump;
+meta aerosolTypeName codetable_title(aerosolType);
