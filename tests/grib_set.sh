@@ -18,7 +18,7 @@ temp=temp.grib_set.out
 
 rm -f $outfile
 
-${tools_dir}/grib_set -v -p levtype,centre,levtype:l,centre:l -s levtype=pl,centre=80 $infile $outfile >$REDIRECT
+${tools_dir}/grib_set -v -p levtype,centre,levtype,centre:l -s levtype=pl,centre=80 $infile $outfile >$REDIRECT
 
 levtype=`${tools_dir}/grib_get -p levtype $outfile`
 [ $levtype = "pl" ]
@@ -36,16 +36,13 @@ outfile=${data_dir}/set.grib2
 
 rm -f $outfile
 
-${tools_dir}/grib_set -v -p levtype:l,centre:s  -s typeOfLevel=isobaricInhPa,centre:s=cnmc $infile $outfile >$REDIRECT
+${tools_dir}/grib_set -v -p levtype:s,centre:s  -s typeOfLevel=isobaricInhPa,centre:s=cnmc $infile $outfile >$REDIRECT
 
 levtype=`${tools_dir}/grib_get -p levtype $outfile`
 [ $levtype = "pl" ]
 
 centre=`${tools_dir}/grib_get -p centre $outfile`
 [ $centre = "cnmc" ]
-
-#levtype=`${tools_dir}/grib_get -p levtype:l $outfile`
-#[ $levtype -eq 100 ]
 
 centre=`${tools_dir}/grib_get -p centre:l $outfile`
 [ $centre -eq 80 ]
