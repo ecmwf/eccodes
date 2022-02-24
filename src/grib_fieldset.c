@@ -44,13 +44,10 @@ static grib_fieldset* grib_fieldset_create_from_order_by(grib_context* c, grib_o
 static int grib_fieldset_resize(grib_fieldset* set, size_t newsize);
 static void grib_trim(char** x);
 static grib_order_by* grib_fieldset_new_order_by(grib_context* c, const char* z);
-static int grib_fieldset_compare(grib_fieldset* set, int* i, int* j);
 static void grib_fieldset_sort(grib_fieldset* set, int beg, int theEnd);
-static int grib_fieldset_columns_resize(grib_fieldset* set, size_t newsize);
 static grib_int_array* grib_fieldset_create_int_array(grib_context* c, size_t size);
 static int grib_fieldset_resize_int_array(grib_int_array* a, size_t newsize);
 static void grib_fieldset_delete_int_array(grib_int_array* f);
-static void grib_fieldset_delete_columns(grib_fieldset* set);
 static grib_field** grib_fieldset_create_fields(grib_context* c, size_t size);
 static void grib_fieldset_delete_fields(grib_fieldset* set);
 static int grib_fieldset_resize_fields(grib_fieldset* set, size_t newsize);
@@ -60,7 +57,7 @@ static int grib_fieldset_set_order_by(grib_fieldset* set, grib_order_by* ob);
 /* --------------- grib_column functions ------------------*/
 int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type)
 {
-    grib_column* column = 0;
+    grib_column* column = NULL;
     grib_context* c;
     int err = 0;
 
@@ -69,38 +66,34 @@ int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type)
 
     c = set->context;
 
-    set->columns[id].errors = (int*)grib_context_malloc_clear(c,
-                                                              sizeof(int) * GRIB_START_ARRAY_SIZE);
+    set->columns[id].errors = (int*)grib_context_malloc_clear(c, sizeof(int) * GRIB_START_ARRAY_SIZE);
 
     switch (type) {
         case GRIB_TYPE_LONG:
-            set->columns[id].long_values = (long*)grib_context_malloc_clear(c,
-                                                                            sizeof(long) * GRIB_START_ARRAY_SIZE);
+            set->columns[id].long_values = (long*)grib_context_malloc_clear(c, sizeof(long) * GRIB_START_ARRAY_SIZE);
             if (!set->columns[id].long_values) {
                 grib_context_log(c, GRIB_LOG_ERROR,
-                                 "grib_fieldset_new_column : Cannot malloc %ld bytes",
+                                 "grib_fieldset_new_column: Cannot malloc %ld bytes",
                                  sizeof(long) * GRIB_START_ARRAY_SIZE);
                 err = GRIB_OUT_OF_MEMORY;
                 return err;
             }
             break;
         case GRIB_TYPE_DOUBLE:
-            set->columns[id].double_values = (double*)grib_context_malloc_clear(c,
-                                                                                sizeof(double) * GRIB_START_ARRAY_SIZE);
+            set->columns[id].double_values = (double*)grib_context_malloc_clear(c, sizeof(double) * GRIB_START_ARRAY_SIZE);
             if (!set->columns[id].double_values) {
                 grib_context_log(c, GRIB_LOG_ERROR,
-                                 "grib_fieldset_new_column : Cannot malloc %ld bytes",
+                                 "grib_fieldset_new_column: Cannot malloc %ld bytes",
                                  sizeof(double) * GRIB_START_ARRAY_SIZE);
                 err = GRIB_OUT_OF_MEMORY;
                 return err;
             }
             break;
         case GRIB_TYPE_STRING:
-            set->columns[id].string_values = (char**)grib_context_malloc_clear(c,
-                                                                               sizeof(char*) * GRIB_START_ARRAY_SIZE);
+            set->columns[id].string_values = (char**)grib_context_malloc_clear(c, sizeof(char*) * GRIB_START_ARRAY_SIZE);
             if (!set->columns[id].string_values) {
                 grib_context_log(c, GRIB_LOG_ERROR,
-                                 "grib_fieldset_new_column : Cannot malloc %ld bytes",
+                                 "grib_fieldset_new_column: Cannot malloc %ld bytes",
                                  sizeof(char*) * GRIB_START_ARRAY_SIZE);
                 err = GRIB_OUT_OF_MEMORY;
                 return err;
@@ -108,7 +101,7 @@ int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type)
             break;
         default:
             grib_context_log(c, GRIB_LOG_ERROR,
-                             "grib_fieldset_new_column : unknown column type %d", type);
+                             "grib_fieldset_new_column: Unknown column type %d", type);
             grib_context_free(c, column);
             return err;
     }
@@ -146,7 +139,7 @@ static void grib_fieldset_delete_columns(grib_fieldset* set)
                 break;
             default:
                 grib_context_log(c, GRIB_LOG_ERROR,
-                                 "grib_fieldset_new_column : unknown column type %d", set->columns[i].type);
+                                 "grib_fieldset_new_column: Unknown column type %d", set->columns[i].type);
         }
         grib_context_free(c, set->columns[i].errors);
         grib_context_free(c, set->columns[i].name);
@@ -178,7 +171,8 @@ static int grib_fieldset_columns_resize(grib_fieldset* set, size_t newsize)
                                                        newsize * sizeof(long));
                 if (!newlongs) {
                     grib_context_log(c, GRIB_LOG_ERROR,
-                                     "grib_fieldset_columns_resize : Cannot malloc %ld bytes", newsize - set->columns[i].values_array_size);
+                                     "grib_fieldset_columns_resize: Cannot malloc %ld bytes",
+                                     newsize - set->columns[i].values_array_size);
                     return GRIB_OUT_OF_MEMORY;
                 }
                 else
@@ -189,7 +183,8 @@ static int grib_fieldset_columns_resize(grib_fieldset* set, size_t newsize)
                                                            newsize * sizeof(double));
                 if (!newdoubles) {
                     grib_context_log(c, GRIB_LOG_ERROR,
-                                     "grib_fieldset_columns_resize : Cannot malloc %ld bytes", newsize - set->columns[i].values_array_size);
+                                     "grib_fieldset_columns_resize: Cannot malloc %ld bytes",
+                                     newsize - set->columns[i].values_array_size);
                     return GRIB_OUT_OF_MEMORY;
                 }
                 else
@@ -200,7 +195,8 @@ static int grib_fieldset_columns_resize(grib_fieldset* set, size_t newsize)
                                                           newsize * sizeof(char*));
                 if (!newstrings) {
                     grib_context_log(c, GRIB_LOG_ERROR,
-                                     "grib_fieldset_columns_resize : Cannot malloc %ld bytes", newsize - set->columns[i].values_array_size);
+                                     "grib_fieldset_columns_resize: Cannot malloc %ld bytes",
+                                     newsize - set->columns[i].values_array_size);
                     return GRIB_OUT_OF_MEMORY;
                 }
                 else
@@ -210,7 +206,7 @@ static int grib_fieldset_columns_resize(grib_fieldset* set, size_t newsize)
         newerrors = (int*)grib_context_realloc(c, set->columns[i].errors, newsize * sizeof(int));
         if (!newerrors) {
             grib_context_log(c, GRIB_LOG_ERROR,
-                             "grib_fieldset_columns_resize : Cannot malloc %ld bytes",
+                             "grib_fieldset_columns_resize: Cannot malloc %ld bytes",
                              newsize * sizeof(int));
             return GRIB_OUT_OF_MEMORY;
         }
@@ -266,7 +262,7 @@ grib_fieldset* grib_fieldset_new_from_files(grib_context* c, char* filenames[],
     int ret           = GRIB_SUCCESS;
     grib_order_by* ob = NULL;
 
-    grib_fieldset* set = 0;
+    grib_fieldset* set = NULL;
 
     if (!c)
         c = grib_context_get_default();
@@ -318,7 +314,7 @@ grib_fieldset* grib_fieldset_new_from_files(grib_context* c, char* filenames[],
 static grib_fieldset* grib_fieldset_create_from_keys(grib_context* c, char** keys, int nkeys,
                                                      int* err)
 {
-    grib_fieldset* set = 0;
+    grib_fieldset* set = NULL;
     size_t msize = 0, size = 0;
     int i            = 0;
     int type         = 0;
@@ -414,7 +410,7 @@ static grib_fieldset* grib_fieldset_create_from_order_by(grib_context* c, grib_o
 int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string)
 {
     int err      = GRIB_NOT_IMPLEMENTED;
-    grib_math* m = 0;
+    grib_math* m = NULL;
 
     if (!set)
         return GRIB_INVALID_ARGUMENT;
@@ -457,9 +453,9 @@ static int grib_fieldset_compare(grib_fieldset* set, int* i, int* j)
     int ret           = 0;
     double d          = 0;
     int idkey         = 0;
-    grib_order_by* ob = 0;
+    grib_order_by* ob = NULL;
     int ii = 0, jj = 0;
-    int* order = 0;
+    int* order = NULL;
 
     if (!set || !set->order_by)
         return GRIB_INVALID_ARGUMENT;
@@ -560,7 +556,7 @@ static grib_order_by* grib_fieldset_new_order_by(grib_context* c, const char* ob
 {
     char *t1 = 0, *t2 = 0, *p = 0;
     int id  = 0;
-    char* z = 0;
+    char* z = NULL;
     int mode, mode_default = GRIB_ORDER_BY_ASC;
     grib_order_by *ob, *sob;
 
@@ -628,7 +624,7 @@ static grib_order_by* grib_fieldset_new_order_by(grib_context* c, const char* ob
 
 void grib_fieldset_delete(grib_fieldset* set)
 {
-    grib_context* c = 0;
+    grib_context* c = NULL;
     if (!set)
         return;
 
@@ -649,12 +645,12 @@ int grib_fieldset_add(grib_fieldset* set, char* filename)
     int ret        = GRIB_SUCCESS;
     int err        = 0;
     int i          = 0;
-    grib_handle* h = 0;
+    grib_handle* h = NULL;
     /* int nkeys; */
     grib_file* file;
     double offset   = 0;
     long length     = 0;
-    grib_context* c = 0;
+    grib_context* c = NULL;
 
     if (!set || !filename)
         return GRIB_INVALID_ARGUMENT;
@@ -749,8 +745,8 @@ int grib_fieldset_count(grib_fieldset* set)
 
 grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err)
 {
-    grib_handle* h    = 0;
-    grib_field* field = 0;
+    grib_handle* h    = NULL;
+    grib_field* field = NULL;
     *err              = GRIB_SUCCESS;
     if (!set) {
         *err = GRIB_INVALID_ARGUMENT;
@@ -786,7 +782,7 @@ static grib_int_array* grib_fieldset_create_int_array(grib_context* c, size_t si
 
     if (!a) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_fieldset_create_int_array : Cannot malloc %ld bytes",
+                         "grib_fieldset_create_int_array: Cannot malloc %ld bytes",
                          sizeof(grib_int_array));
         return NULL;
     }
@@ -794,7 +790,7 @@ static grib_int_array* grib_fieldset_create_int_array(grib_context* c, size_t si
     a->el = (int*)grib_context_malloc_clear(c, sizeof(int) * size);
     if (!a->el) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_fieldset_create_int_array : Cannot malloc %ld bytes",
+                         "grib_fieldset_create_int_array: Cannot malloc %ld bytes",
                          sizeof(int) * size);
         return NULL;
     }
@@ -896,7 +892,7 @@ static void grib_fieldset_delete_fields(grib_fieldset* set)
 
 static void grib_trim(char** x)
 {
-    char* p = 0;
+    char* p = NULL;
     while (**x == ' ')
         (*x)++;
     if (**x == '\0')
