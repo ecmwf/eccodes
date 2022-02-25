@@ -2467,9 +2467,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
     self->dataAccessors = grib_accessors_list_create(c);
 
     if (self->dataAccessorsTrie) {
-        //printf("DBG create_keys::  grib_trie_with_rank_delete...\n");
-        //grib_trie_with_rank_delete(self->dataAccessorsTrie);
-        /* ECC-989 */
+        /* ECC-989: do not call grib_trie_with_rank_delete */
         grib_trie_with_rank_delete_container(self->dataAccessorsTrie);
     }
     self->dataAccessorsTrie = grib_trie_with_rank_new(c);
@@ -2659,7 +2657,6 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                 grib_pack_long(asn, &subsetNumber, &len);
 
                 grib_push_accessor(asn, section->block);
-                //printf("DBG Pushin acc=%s into dataAccessorsTrie\n", asn->name);
                 rank = grib_data_accessors_trie_push(self->dataAccessorsTrie, asn);
                 grib_accessors_list_push(self->dataAccessors, asn, rank);
             }
@@ -2683,7 +2680,6 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                     newAccessor->name          = aname;
                     grib_sarray_push(a->context, self->tempStrings, aname);
                     grib_push_accessor(newAccessor, groupSection->block);
-                    //printf("DBG Pushin newAccessor=%s into dataAccessorsTrie\n", newAccessor->name);
                     rank = grib_data_accessors_trie_push(self->dataAccessorsTrie, newAccessor);
                     grib_accessors_list_push(self->dataAccessors, newAccessor, rank);
                 }
@@ -2725,7 +2721,6 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                         }
                         if (add_key) {
                             grib_push_accessor(elementAccessor, section->block);
-                            //printf("DBG Pushin elementAccessor=%s into dataAccessorsTrie\n", elementAccessor->name);
                             rank = grib_data_accessors_trie_push(self->dataAccessorsTrie, elementAccessor);
                             grib_accessors_list_push(self->dataAccessors, elementAccessor, rank);
                             lastAccessorInList = grib_accessors_list_last(self->dataAccessors);
@@ -3473,9 +3468,8 @@ static void destroy(grib_context* c, grib_accessor* a)
     if (self->dataAccessors)
         grib_accessors_list_delete(c, self->dataAccessors);
     if (self->dataAccessorsTrie) {
-        //printf("DBG destroy -> self->dataAccessorsTrie \n");
         grib_trie_with_rank_delete_container(self->dataAccessorsTrie);
-        self->dataAccessorsTrie = 0;
+        self->dataAccessorsTrie = NULL;
     }
     if (self->tempStrings) {
         grib_sarray_delete_content(c, self->tempStrings);
