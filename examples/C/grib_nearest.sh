@@ -20,38 +20,38 @@ ${examples_dir}/c_grib_nearest $input > $tempTxt
 
 cat > $tempRef <<EOF
 
-ordering by param,step:i
+ordering by shortName,step:i
 
 5 fields in the fieldset
-Msg #1, step=0, param=msl
+Msg #1, step=0, shortName=msl
 Idx	lat	lon	dist	val
 58017	-40.85	15.30	97.627	101524
 58016	-40.85	14.40	107.078	101570
 57617	-39.95	15.30	26.1625	101655
 57616	-39.95	14.40	51.4303	101669
 
-Msg #2, step=6, param=msl
+Msg #2, step=6, shortName=msl
 Idx	lat	lon	dist	val
 58017	-40.85	15.30	97.627	101547
 58016	-40.85	14.40	107.078	101605
 57617	-39.95	15.30	26.1625	101589
 57616	-39.95	14.40	51.4303	101641
 
-Msg #3, step=12, param=msl
+Msg #3, step=12, shortName=msl
 Idx	lat	lon	dist	val
 58017	-40.85	15.30	97.627	101606
 58016	-40.85	14.40	107.078	101623
 57617	-39.95	15.30	26.1625	101652
 57616	-39.95	14.40	51.4303	101678
 
-Msg #4, step=18, param=msl
+Msg #4, step=18, shortName=msl
 Idx	lat	lon	dist	val
 58017	-40.85	15.30	97.627	101507
 58016	-40.85	14.40	107.078	101486
 57617	-39.95	15.30	26.1625	101573
 57616	-39.95	14.40	51.4303	101571
 
-Msg #5, step=24, param=msl
+Msg #5, step=24, shortName=msl
 Idx	lat	lon	dist	val
 58017	-40.85	15.30	97.627	101379
 58016	-40.85	14.40	107.078	101372
