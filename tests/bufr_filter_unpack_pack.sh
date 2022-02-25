@@ -57,5 +57,14 @@ for f in $files; do
   rm -f $temp
 done
 
+# ECC-989: Valgrind error: setting 'unpack=1' before setting unexpandedDescriptors
+# ---------------------------------------------------------------------------------
+f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
+cat > $fRules <<EOF
+ set unpack=1;
+ set unexpandedDescriptors={4025};
+EOF
+${tools_dir}/codes_bufr_filter $fRules $f
+
 
 rm -f $fRules $fLog $temp
