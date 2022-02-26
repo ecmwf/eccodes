@@ -645,7 +645,7 @@ void grib_fieldset_delete(grib_fieldset* set)
     grib_context_free(c, set);
 }
 
-int grib_fieldset_add(grib_fieldset* set, char* filename)
+int grib_fieldset_add(grib_fieldset* set, const char* filename)
 {
     int ret        = GRIB_SUCCESS;
     int err        = 0;

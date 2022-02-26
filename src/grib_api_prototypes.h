@@ -1008,7 +1008,7 @@ int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string);
 int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string);
 void grib_fieldset_delete_order_by(grib_context* c, grib_order_by* order_by);
 void grib_fieldset_delete(grib_fieldset* set);
-int grib_fieldset_add(grib_fieldset* set, char* filename);
+int grib_fieldset_add(grib_fieldset* set, const char* filename);
 void grib_fieldset_rewind(grib_fieldset* set);
 grib_handle* grib_fieldset_next_handle(grib_fieldset* set, int* err);
 int grib_fieldset_count(const grib_fieldset* set);
