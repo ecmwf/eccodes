@@ -82,21 +82,21 @@ void grib_oarray_delete(grib_context* c, grib_oarray* v)
     grib_context_free(c, v);
 }
 
-void grib_oarray_delete_content(grib_context* c, grib_oarray* v)
-{
-    int i;
-    if (!v || !v->v)
-        return;
-    if (!c)
-        c = grib_context_get_default();
-    for (i = 0; i < v->n; i++) {
-        if (v->v[i]) {
-            grib_context_free(c, v->v[i]);
-            v->v[i] = 0;
-        }
-    }
-    v->n = 0;
-}
+// void grib_oarray_delete_content(grib_context* c, grib_oarray* v)
+// {
+//     int i;
+//     if (!v || !v->v)
+//         return;
+//     if (!c)
+//         c = grib_context_get_default();
+//     for (i = 0; i < v->n; i++) {
+//         if (v->v[i]) {
+//             grib_context_free(c, v->v[i]);
+//             v->v[i] = 0;
+//         }
+//     }
+//     v->n = 0;
+// }
 
 void** grib_oarray_get_array(grib_context* c, grib_oarray* v)
 {
