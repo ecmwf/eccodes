@@ -1011,7 +1011,7 @@ void grib_fieldset_delete(grib_fieldset* set);
 int grib_fieldset_add(grib_fieldset* set, char* filename);
 void grib_fieldset_rewind(grib_fieldset* set);
 grib_handle* grib_fieldset_next_handle(grib_fieldset* set, int* err);
-int grib_fieldset_count(grib_fieldset* set);
+int grib_fieldset_count(const grib_fieldset* set);
 grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err);
 
 /* grib_filepool.c */

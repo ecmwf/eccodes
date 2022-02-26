@@ -187,7 +187,7 @@ void codes_fieldset_delete(codes_fieldset* set);
 void codes_fieldset_rewind(codes_fieldset* set);
 int codes_fieldset_apply_order_by(codes_fieldset* set, const char* order_by_string);
 codes_handle* codes_fieldset_next_handle(codes_fieldset* set, int* err);
-int codes_fieldset_count(codes_fieldset* set);
+int codes_fieldset_count(const codes_fieldset* set);
 int codes_values_check(codes_handle* h, codes_values* values, int count);
 
 /*! \defgroup codes_index The indexing feature
