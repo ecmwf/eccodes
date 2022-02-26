@@ -37,7 +37,7 @@ int main(int argc, char** argv)
     if (argc != 3) usage(argv[0]);
 
     nkeys    = sizeof(keys) / sizeof(*keys);
-    order_by = strdup(argv[1]);
+    order_by = argv[1];
 
     nfiles    = argc - 2;
     filenames = (char**)malloc(sizeof(char*) * nfiles);
@@ -45,8 +45,6 @@ int main(int argc, char** argv)
         filenames[i] = (char*)strdup(argv[i + 2]);
 
     set = grib_fieldset_new_from_files(0, filenames, nfiles, keys, nkeys, 0, 0, &err);
-    //set = grib_fieldset_new_from_files(0, filenames, nfiles, keys, nkeys, 0, order_by, &err);
-    //set = grib_fieldset_new_from_files(0, filenames, nfiles, 0, 0, 0, order_by, &err);//works
     GRIB_CHECK(err, 0);
 
     /* not yet implemented */
@@ -74,6 +72,9 @@ int main(int argc, char** argv)
 
     grib_fieldset_delete(set);
     grib_handle_delete(h);
+    for (i = 0; i < nfiles; i++)
+        free(filenames[i]);
+    free(filenames);
 
     return 0;
 }
