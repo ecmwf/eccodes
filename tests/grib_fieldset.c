@@ -13,9 +13,9 @@
 
 #include "grib_api.h"
 
-void usage(char* prog)
+static void usage(const char* prog)
 {
-    printf("Usage: %s order_by grib_file grib_file ...\n", prog);
+    fprintf(stderr, "Usage: %s order_by grib_file grib_file ...\n", prog);
     exit(1);
 }
 
