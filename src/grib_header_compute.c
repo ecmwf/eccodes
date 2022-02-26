@@ -445,9 +445,9 @@ void grib_math_delete(grib_context* c, grib_math* m)
 
 grib_math* grib_math_new(grib_context* c, const char* formula, int* err)
 {
-    grib_math* x;
-    char* f     = 0;
-    char* fsave = 0;
+    grib_math* x = NULL;
+    char* f      = NULL;
+    char* fsave  = NULL;
 
     *err = 0;
 
@@ -467,6 +467,7 @@ grib_math* grib_math_new(grib_context* c, const char* formula, int* err)
     if (*f) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "grib_math_new : Part of the formula was not processed: '%s'", f);
+        *err = GRIB_INVALID_ARGUMENT;
         return NULL;
     }
 
