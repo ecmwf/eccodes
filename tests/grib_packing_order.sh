@@ -33,14 +33,6 @@ $EXEC ${test_dir}/grib_packing_order grid_simple values_before_packing_type $tem
 grib_check_key_equals $temp_simple1 packingType grid_simple
 ${tools_dir}/grib_compare $temp_simple1 $temp_simple2
 
-# Second order Packing: TODO
-# ---------------------------
-$EXEC ${test_dir}/grib_packing_order grid_second_order packing_type_before_values $temp_second1
-$EXEC ${test_dir}/grib_packing_order grid_second_order values_before_packing_type $temp_second2
-grib_check_key_equals $temp_second1 packingType grid_second_order
-#${tools_dir}/grib_compare $temp_second1 $temp_second2
-${tools_dir}/grib_compare -c data:n $temp_simple1 $temp_second1
-# $temp_second2 is still not correct
 
 # PNG Packing
 # -------------
@@ -89,6 +81,18 @@ ${tools_dir}/grib_ls -n statistics $temp_ieee1 $temp_ieee2
 
 # No point comparing with grid_simple as grid_ieee will be closer to the actual values
 # and less lossy
+
+
+
+# Second order Packing: TODO
+# ---------------------------
+$EXEC ${test_dir}/grib_packing_order grid_second_order packing_type_before_values $temp_second1
+$EXEC ${test_dir}/grib_packing_order grid_second_order values_before_packing_type $temp_second2
+grib_check_key_equals $temp_second1 packingType grid_second_order
+#${tools_dir}/grib_compare $temp_second1 $temp_second2
+${tools_dir}/grib_compare -c data:n $temp_simple1 $temp_second1
+# $temp_second2 is still not correct
+
 
 # Clean up
 rm -f $temp_simple1 $temp_simple2
