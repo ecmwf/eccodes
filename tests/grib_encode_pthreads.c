@@ -89,7 +89,7 @@ static int encode_file(char* input_file, char* output_file)
         GRIB_CHECK(grib_set_long(clone_handle, "bitsPerValue", 16), 0);
 
         /*GRIB_CHECK(grib_set_string(clone_handle, "packingType", "grid_ccsds", &str_len), 0);*/
-        GRIB_CHECK(grib_set_string(clone_handle, "packingType", "grid_simple", &str_len), 0);
+        /*GRIB_CHECK(grib_set_string(clone_handle, "packingType", "grid_simple", &str_len), 0);*/
 
         GRIB_CHECK(grib_set_double_array(clone_handle, "values", values, values_len), 0);
 
@@ -118,7 +118,7 @@ void do_stuff(void* arg)
     int i;
 
     for (i = 0; i < FILES_PER_ITERATION; i++) {
-        sprintf(output_file, "temp.grib_encode_pthreads.out_%d-%d.grib", (int)number, i);
+        sprintf(output_file, "temp.grib_encode_pthreads_test.out_%d-%d.grib", (int)number, i);
         encode_file(INPUT_FILE, output_file);
     }
 }
