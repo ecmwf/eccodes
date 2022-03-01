@@ -54,7 +54,6 @@ static int encode_file(char* input_file, char* output_file)
     grib_handle* source_handle = NULL;
     const void* buffer         = NULL;
     int err                    = 0;
-    size_t str_len = 0;
 
     FILE* in  = fopen(input_file, "rb");
     FILE* out = fopen(output_file, "wb");
