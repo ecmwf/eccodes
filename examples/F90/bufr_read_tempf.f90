@@ -26,7 +26,8 @@ program bufr_read_tempf
   integer            :: i, count = 0
   integer            :: iflag
   integer            :: status_id, status_ht, status_time = 0, status_p
-  integer            :: status_rsno, status_rssoft, status_balloonwt, statid_missing
+  integer            :: status_airt, status_dewt
+  integer            :: status_rsno, status_rssoft, status_balloonwt
   integer(kind=4)    :: sizews
   integer(kind=4)    :: blockNumber, stationNumber
   integer(kind=4)    :: ymd, hms
@@ -38,7 +39,7 @@ program bufr_read_tempf
   real(kind=8), dimension(:), allocatable :: lat, lon
   real(kind=8), dimension(:), allocatable :: timeVal, dlatVal, dlonVal, vssVal
   real(kind=8), dimension(:), allocatable :: presVal, zVal, tVal, tdVal, wdirVal, wspVal
-  character(len=128) :: statid
+  character(len=128) :: statid, dropid
   character(len=16)  :: rsnumber
   character(len=16)  :: rssoftware
 
@@ -49,7 +50,7 @@ program bufr_read_tempf
   call codes_bufr_new_from_file(ifile, ibufr, iret)
 
   ! loop through all messages in the file
-  do while (iret /= CODES_END_OF_FILE .AND. status_time == CODES_SUCCESS)
+  do while (iret /= CODES_END_OF_FILE)
 
     ! Can check the template used
     ! call codes_get(ibufr,'unexpandedDescriptors',descriptors)
@@ -67,10 +68,12 @@ program bufr_read_tempf
     llskip = .False.
 
     ! Metadata:
+    call codes_get(ibufr, 'aircraftRegistrationNumberOrOtherIdentification', dropid, status_id)
+    IF (status_id /= CODES_SUCCESS) dropid = "UNKNOWN "
     call codes_get(ibufr, 'shipOrMobileLandStationIdentifier', statid, status_id)
-    IF (status_id /= CODES_SUCCESS) statid = "UNKNOWN"
-    call codes_is_missing(ibufr, 'shipOrMobileLandStationIdentifier', statid_missing)
-    IF (statid_missing == 1) statid = "MISSING"
+    IF (status_id /= CODES_SUCCESS) statid = dropid
+    ! call codes_is_missing(ibufr, 'shipOrMobileLandStationIdentifier', statid_missing)
+    ! IF (statid_missing == 1) statid = "MISSING"
     call codes_get(ibufr, 'blockNumber', blockNumber)
     call codes_get(ibufr, 'stationNumber', stationNumber)
     IF (blockNumber <= 99.0 .AND. stationNumber <= 1000) write (statid, '(I2.2,I3.3,3X)') blockNumber, stationNumber
@@ -98,7 +101,7 @@ program bufr_read_tempf
     call codes_get(ibufr, 'weightOfBalloon', balloonwt, status_balloonwt)
     IF (status_balloonwt /= CODES_SUCCESS) balloonwt = 0.0
 
-    ! Ascent (skip incomplete reports for now)
+    ! Ascent (skip reports without dtime array for now)
     call codes_get(ibufr, 'timePeriod', timeVal, status_time)
     IF (status_time /= CODES_SUCCESS) THEN
       write (*, '(A,I7,A,A8,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ', count, &
@@ -107,41 +110,44 @@ program bufr_read_tempf
       llskip = .True.
     END IF
     call codes_get(ibufr, 'pressure', presVal, status_p)
-    IF (status_p /= CODES_SUCCESS) THEN
-      write (*, '(A,I7,A,A8,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ', count, &
-        ' ', statid, ymd, hms, lat(1), lon(1), htg, htp, INT(sondeType)
-      write (*, '(A)') 'Missing pressures - skip'
-      llskip = .True.
-    END IF
     call codes_get(ibufr, 'nonCoordinateGeopotentialHeight', zVal, status_ht)
-    IF (status_ht /= CODES_SUCCESS) THEN
-      write (*, '(A,I7,A,A8,I9,I7.6,F9.3,F10.3,2F7.1,I4)') 'Ob: ', count, &
-        ' ', statid, ymd, hms, lat(1), lon(1), htg, htp, INT(sondeType)
-      write (*, '(A)') 'Missing heights - skip'
-      llskip = .True.
-    END IF
-    ! IF (blockNumber /= 17 .OR. stationNumber /= 196) llskip=.True.  ! FIX
-    ! IF (blockNumber /= 17.0) llskip=.True.  ! FIX
 
     IF (.NOT. llskip) THEN
       call codes_get(ibufr, 'latitudeDisplacement', dlatVal)
       call codes_get(ibufr, 'longitudeDisplacement', dlonVal)
       call codes_get(ibufr, 'extendedVerticalSoundingSignificance', vssVal)
-      call codes_get(ibufr, 'airTemperature', tVal)
-      call codes_get(ibufr, 'dewpointTemperature', tdVal)
+      call codes_get(ibufr, 'airTemperature', tVal, status_airt)
+      call codes_get(ibufr, 'dewpointTemperature', tdVal, status_dewt)
       call codes_get(ibufr, 'windDirection', wdirVal)
       call codes_get(ibufr, 'windSpeed', wspVal)
 
       ! ---- Array sizes (pressure size can be larger - wind shear levels)
       sizews = size(wspVal)
 
+      IF (status_p /= CODES_SUCCESS) THEN
+        allocate(presVal(sizews))
+        presVal(:) = -999999999.0
+      END IF
+      IF (status_ht /= CODES_SUCCESS) THEN
+        allocate(zVal(sizews))
+        zVal(:) = -999999999.0
+      END IF
+      IF (status_airt /= CODES_SUCCESS) THEN
+        allocate(tVal(sizews))
+        tVal(:) = -999999999.0
+      END IF
+      IF (status_dewt /= CODES_SUCCESS) THEN
+        allocate(tdVal(sizews))
+        tdVal(:) = -999999999.0
+      END IF
+
       ! ---- Print the values --------------------------------
       write (*, '(A,I7,A,A8,I9,I7.6,F9.3,F10.3,2F7.1,I4,I5)') 'Ob: ', count, &
         ' ', statid, ymd, hms, lat(1), lon(1), htg, htp, INT(sondeType), sizews
       IF (status_rsno == CODES_SUCCESS) write (*, '(A,A,A,F7.3)') &
         'RS number/software/balloonwt: ', rsnumber, rssoftware, balloonwt
-      IF (status_ht == CODES_SUCCESS .AND. SIZE(lat) > 1) write (*, '(A,F9.3,F10.3,F7.1)') &
-        'WMO list lat, lon, ht: ', lat(2), lon(2), htec
+      IF (status_ht == CODES_SUCCESS .AND. SIZE(lat) > 1) write (*, '(A,A,F9.3,F10.3,F7.1)') &
+        'WMO list lat, lon, ht: ', statid, lat(2), lon(2), htec
       write (*, '(A)') 'level  dtime   dlat   dlon pressure geopotH airTemp  dewPtT windDir  windSp  signif'
       do i = 1, sizews
         iflag = vssVal(i)
@@ -166,7 +172,6 @@ program bufr_read_tempf
     IF (ALLOCATED(lat)) deallocate (lat)
     IF (ALLOCATED(lon)) deallocate (lon)
 
-    ! 999 CONTINUE
     ! release the BUFR message
     call codes_release(ibufr)
 
@@ -176,5 +181,6 @@ program bufr_read_tempf
   end do
 
   call codes_close_file(ifile)
+  print*, 'Finishing normally. Number of BUFR records read: ', count
 
 end program bufr_read_tempf

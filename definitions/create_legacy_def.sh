@@ -1,6 +1,27 @@
 :
 set -eu
 
+# Usage:
+#  create_legacy_def.sh $paramId
+#
+# This script will insert the local ECMWF GRIB2 representation
+# for that paramId into the files:
+#   definitions/grib2/localConcepts/ecmf/paramId.legacy.def
+#   definitions/grib2/localConcepts/ecmf/shortName.legacy.def
+#   etc
+# This is normally run for those GRIB2 parameters which had
+# a local ECMWF representation which later acquired a standard
+# WMO one. We want to be able to match the old encoding to the
+# paramId but when we write out a field, we want to use the new
+# standard WMO encoding.
+#
+# Assumptions:
+#  The ecCodes tools grib_set and grib_get are available
+#  The legacy encoding has discipline = 192
+#  The parameterCategory = $paramId / 1000
+#  The parameterNumber = $paramId - parameterCategory*1000
+#
+
 pid=$1
 
 sample2=samples/GRIB2.tmpl
@@ -46,5 +67,5 @@ output_def "$name" "$units"     $dis $cat $num >> $defs/units.legacy.def
 output_def "$name" "$cfVarName" $dis $cat $num >> $defs/cfVarName.legacy.def
 output_def "$name" "$cfName"    $dis $cat $num >> $defs/cfName.legacy.def
 
-echo "Files updated"
+echo "Files updated. Check directory $defs"
 rm -f $temp

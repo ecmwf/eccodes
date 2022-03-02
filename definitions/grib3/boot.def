@@ -11,8 +11,7 @@ constant one = 1 : hidden ;
 constant million = 1000000 : hidden;
 constant grib3divider   = 1000000;
 alias extraDimensionPresent=zero;
-alias is_tigge = zero;
-alias is_s2s = zero;
+
 transient angleSubdivisions=grib3divider;  # micro degrees
 
 meta gts_header gts_header() : no_copy,hidden,read_only;

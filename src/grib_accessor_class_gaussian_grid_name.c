@@ -158,7 +158,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 {
     grib_accessor_gaussian_grid_name* self = (grib_accessor_gaussian_grid_name*)a;
 
-    long N = 0, Ni = 0, isOctahedral = 0;
+    long N = 0, Ni = 0;
     char tmp[MAX_GRIDNAME_LEN] = {0,};
     size_t length = 0;
     int ret       = GRIB_SUCCESS;
@@ -167,20 +167,21 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         return ret;
     if ((ret = grib_get_long_internal(a->parent->h, self->Ni, &Ni)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(a->parent->h, self->isOctahedral, &isOctahedral)) != GRIB_SUCCESS)
-        return ret;
 
     if (Ni == GRIB_MISSING_LONG) {
-        /* reduced gaussian grid */
+        /* Reduced gaussian grid */
+        long isOctahedral = 0;
+        if ((ret = grib_get_long_internal(a->parent->h, self->isOctahedral, &isOctahedral)) != GRIB_SUCCESS)
+            return ret;
         if (isOctahedral == 1) {
             sprintf(tmp, "O%ld", N);
         }
         else {
-            sprintf(tmp, "N%ld", N);
+            sprintf(tmp, "N%ld", N); /* Classic */
         }
     }
     else {
-        /* regular gaussian grid */
+        /* Regular gaussian grid */
         sprintf(tmp, "F%ld", N);
     }
     length = strlen(tmp) + 1;

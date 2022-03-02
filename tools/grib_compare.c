@@ -252,6 +252,9 @@ int grib_tool_init(grib_runtime_options* options)
         context->blocklist = blocklist;
     }
 
+    /* Check 1st file is not a directory */
+    exit_if_input_is_directory(tool_name, options->infile_extra->name);
+
     if (grib_options_on("r")) {
         char* filename[1];
         filename[0]      = options->infile_extra->name; /* First file */

@@ -11,6 +11,6 @@
 9 9 Smaller or equal second limit 
 10 10 Between first and second limit. The range includes the second limit but not the first limit 
 11 11 Equal to first limit. 
-# 12-191 Reserved 
-# 192-254 Reserved for local use 
+# 12-191 Reserved
+# 192-254 Reserved for local use
 255 missing Missing 

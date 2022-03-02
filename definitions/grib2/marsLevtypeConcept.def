@@ -43,6 +43,8 @@
 'o2d'  = {typeOfFirstFixedSurface=169; typeOfSecondFixedSurface=255;}
 'o2d'  = {typeOfFirstFixedSurface=170; typeOfSecondFixedSurface=255;}
 'o2d'  = {typeOfFirstFixedSurface=171; typeOfSecondFixedSurface=255;}
+'o2d'  = {typeOfFirstFixedSurface=173; typeOfSecondFixedSurface=255;}
+'o2d'  = {typeOfFirstFixedSurface=173; typeOfSecondFixedSurface=175;}
 'o2d'  = {typeOfFirstFixedSurface=174; typeOfSecondFixedSurface=255;}
 'sfc'  = {typeOfFirstFixedSurface=174; typeOfSecondFixedSurface=255; discipline=1;}
 'o2d'  = {typeOfFirstFixedSurface=175; typeOfSecondFixedSurface=255;}

@@ -7,8 +7,6 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FORTRAN 90 implementation: bufr_keys_iterator
-!
 !
 ! Description: How to use keys_iterator functions and the
 !              codes_bufr_keys_iterator structure to get all the available
@@ -23,6 +21,7 @@ program bufr_keys_iterator
    integer            :: count = 0
    character(len=256) :: key
    integer            :: kiter
+   integer            :: subset = 1
 
    call codes_open_file(ifile, '../../data/bufr/syno_1.bufr', 'r')
 
@@ -53,7 +52,12 @@ program bufr_keys_iterator
       do while (iret == CODES_SUCCESS)
          ! Print key name
          call codes_bufr_keys_iterator_get_name(kiter, key)
-         write (*, *) '  ', trim(key)
+         if (key == 'subsetNumber') then
+            write (*, *) '  Subset ', subset
+            subset = subset + 1
+         else
+            write (*, *) '  ', trim(key)
+         end if
 
          ! Get next key
          call codes_bufr_keys_iterator_next(kiter, iret)

@@ -30,4 +30,4 @@ ${tools_dir}/grib_compare -c data:n $tempSimple $tempCCSDS
 ${tools_dir}/grib_compare -c data:n $tempSimple $tempSecond
 
 
-rm -f $tempSimple $tempCCSDS
+rm -f $tempSimple $tempCCSDS $tempSecond

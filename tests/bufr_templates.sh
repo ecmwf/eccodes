@@ -17,9 +17,17 @@ temp=${label}.bufr
 sample=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 
 templates_file="${ECCODES_DEFINITION_PATH}/bufr/templates/BufrTemplate.def"
-templates=`cat $templates_file | awk -F= '{print $1}' | tr -d '"'`
+
+# TODO: There is a matching issue with OmpsNadirProfile: mixed up with OmpsTotalColumn.
+#       So exclude that one
+templates=`cat $templates_file | awk -F= '{print $1}' | tr -d '"' | grep -v OmpsNadirProfile`
+
+
+# Note: bufrTemplate and BufrTemplate are the same key
 for t in $templates; do
     ${tools_dir}/bufr_set -s bufrTemplate=$t $sample $temp
+    res=`${tools_dir}/bufr_get -p BufrTemplate $temp`
+    [ "$res" = "$t" ]
     ${tools_dir}/bufr_dump -p $temp > /dev/null
 done
 

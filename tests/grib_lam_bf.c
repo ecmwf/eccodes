@@ -686,6 +686,7 @@ int main(int argc, char* argv[])
     const char* grids[] = { "lambert_bf", "mercator_bf", "polar_stereographic_bf" };
     int igrid, itrunc;
     trunc_t trunc[3];
+    long unpackedSubsetPrecision = 0;
 
     /* Elliptic truncation with diamond subtruncation */
     trunc[0].trunc     = 88;
@@ -768,7 +769,15 @@ int main(int argc, char* argv[])
             GRIB_CHECK(grib_set_long(h, "biFourierResolutionSubSetParameterM", trunc[itrunc].subnmsmax), 0);
             GRIB_CHECK(grib_set_long(h, "biFourierSubTruncationType", trunc[itrunc].subtrunc), 0);
             GRIB_CHECK(grib_set_long(h, "biFourierPackingModeForAxes", 1), 0);
-            GRIB_CHECK(grib_set_long(h, "unpackedSubsetPrecision", 2), 0);
+            /* "unpackedSubsetPrecision" value is used for "ieee_floats".
+               ieee_floats=2 means bytes=8 and grib_long_to_ieee64 is used, which is supported
+               only when sizeof(double) == sizeof(long)
+            */
+            if (sizeof(double) == sizeof(long))
+                  unpackedSubsetPrecision = 2;
+            else
+                  unpackedSubsetPrecision = 1;
+            GRIB_CHECK(grib_set_long(h, "unpackedSubsetPrecision", unpackedSubsetPrecision), 0);
 
             len = trunc[itrunc].len;
             GRIB_CHECK(grib_set_double_array(h, "values", trunc[itrunc].values, len), 0);

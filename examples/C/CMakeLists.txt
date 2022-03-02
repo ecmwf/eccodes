@@ -18,12 +18,8 @@ list( APPEND test_bins
       grib_set_missing
       grib_keys_iterator
       grib_set_data
-      mars_param
-      values_check
-      box
       grib_nearest_multiple
       grib_multi
-      multi2
       grib_multi_write
       grib_precision
       grib_set_pv
@@ -31,11 +27,9 @@ list( APPEND test_bins
       grib_get_data
       grib_sections_copy
       grib_iterator_bitmap
-      large_grib1
       grib_clone
       grib_copy_message
       grib_ensemble_index
-      get_product_kind
       bufr_copy_data
       bufr_attributes
       bufr_clone
@@ -48,8 +42,14 @@ list( APPEND test_bins
       bufr_read_scatterometer
       bufr_read_synop
       bufr_read_temp
+      bufr_read_tempf
       bufr_set_keys
-      bufr_subset )
+      bufr_subset
+      mars_param
+      grib_values_check
+      multi2
+      large_grib1
+      get_product_kind)
 
 foreach( tool ${test_bins} )
     ecbuild_add_executable( TARGET    c_${tool}
@@ -82,9 +82,11 @@ if( HAVE_BUILD_TOOLS )
        grib_set_bitmap
        grib_list
        grib_get_data
+       grib_nearest
        grib_nearest_multiple
        grib_multi
        grib_set_missing
+       grib_values_check
        bufr_attributes
        bufr_copy_data
        bufr_clone
@@ -97,6 +99,7 @@ if( HAVE_BUILD_TOOLS )
        bufr_read_scatterometer
        bufr_read_synop
        bufr_read_temp
+       bufr_read_tempf
        bufr_set_keys
        bufr_subset
        get_product_kind)
@@ -129,6 +132,7 @@ else()
        bufr_read_scatterometer
        bufr_read_synop
        bufr_read_temp
+       bufr_read_tempf
        bufr_set_keys
        bufr_subset
        get_product_kind)

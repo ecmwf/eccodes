@@ -187,7 +187,7 @@ void codes_fieldset_delete(codes_fieldset* set);
 void codes_fieldset_rewind(codes_fieldset* set);
 int codes_fieldset_apply_order_by(codes_fieldset* set, const char* order_by_string);
 codes_handle* codes_fieldset_next_handle(codes_fieldset* set, int* err);
-int codes_fieldset_count(codes_fieldset* set);
+int codes_fieldset_count(const codes_fieldset* set);
 int codes_values_check(codes_handle* h, codes_values* values, int count);
 
 /*! \defgroup codes_index The indexing feature
@@ -1106,6 +1106,8 @@ long codes_get_api_version(void);
 */
 const char* codes_get_git_sha1(void);
 
+const char* codes_get_build_date(void);
+
 /**
 *  Get the package name
 *
@@ -1229,9 +1231,9 @@ int codes_get_product_kind(const codes_handle* h, ProductKind* product_kind);
 int codes_check_message_header(const void* bytes, size_t length, ProductKind product);
 int codes_check_message_footer(const void* bytes, size_t length, ProductKind product);
 
-codes_box* codes_box_new(codes_handle* h, int* error);
-codes_points* codes_box_get_points(codes_box* box, double north, double west, double south, double east, int* err);
-int codes_points_get_values(codes_handle* h, codes_points* points, double* val);
+codes_box* codes_box_new(codes_handle* h, int* error) ECCODES_DEPRECATED;
+codes_points* codes_box_get_points(codes_box* box, double north, double west, double south, double east, int* err) ECCODES_DEPRECATED;
+int codes_points_get_values(codes_handle* h, codes_points* points, double* val) ECCODES_DEPRECATED;
 
 /* --------------------------------------- */
 

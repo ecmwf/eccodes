@@ -680,7 +680,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         err = number_of_bits((unsigned long)ceil(fabs(max - min)), &bits_per_value);
         if (err) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "Range of values too large. Try a smaller value for decimal precision (less than %d)",
+                             "Range of values too large. Try a smaller value for decimal precision (less than %ld)",
                              decimal_scale_factor);
             return err;
         }

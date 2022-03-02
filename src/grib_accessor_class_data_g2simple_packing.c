@@ -220,8 +220,11 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
     /* IEEE packing */
     if (c->ieee_packing) {
         grib_handle* h = grib_handle_of_accessor(a);
-        long precision = c->ieee_packing == 32 ? 1 : 2;
+        long precision = 0; /* Either 1(=32 bits) or 2(=64 bits) */
         size_t lenstr  = 10;
+        if ((ret = codes_check_grib_ieee_packing_value(c->ieee_packing)) != GRIB_SUCCESS)
+            return ret;
+        precision = c->ieee_packing == 32 ? 1 : 2;
         if ((ret = grib_set_string(h, "packingType", "grid_ieee", &lenstr)) != GRIB_SUCCESS)
             return ret;
         if ((ret = grib_set_long(h, "precision", precision)) != GRIB_SUCCESS)

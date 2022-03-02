@@ -371,7 +371,7 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
         size = grib_byte_count((grib_accessor*)self) * 8;
     }
 
-    size = (1UL << size); /* 2^size */
+    size = (1ULL << size); /* 2^size - 64bits */
 
     t = (grib_codetable*)grib_context_malloc_clear_persistent(c, sizeof(grib_codetable) +
                                                                      (size - 1) * sizeof(code_table_entry));
@@ -427,8 +427,8 @@ static int grib_load_codetable(grib_context* c, const char* filename,
         int code                = 0;
         char abbreviation[1024] = {0,};
         char title[1024] = {0,};
-        char* q               = abbreviation;
-        char* r               = title;
+        char* pAbbrev         = abbreviation;
+        char* pTitle          = title;
         char* units           = 0;
         char unknown[]        = "unknown";
         char* last_open_paren = NULL;
@@ -477,9 +477,9 @@ static int grib_load_codetable(grib_context* c, const char* filename,
         while (*p != '\0') {
             if (isspace(*p))
                 break;
-            *q++ = *p++;
+            *pAbbrev++ = *p++;
         }
-        *q = 0;
+        *pAbbrev = 0;
         while (*p != '\0' && isspace(*p))
             p++;
 
@@ -487,9 +487,9 @@ static int grib_load_codetable(grib_context* c, const char* filename,
         while (*p != '\0') {
             if (last_open_paren && p >= last_open_paren && *p == '(')
                 break;
-            *r++ = *p++;
+            *pTitle++ = *p++;
         }
-        *r = 0;
+        *pTitle = 0;
 
         /* units at the end */
         if (last_open_paren) {
@@ -506,6 +506,7 @@ static int grib_load_codetable(grib_context* c, const char* filename,
 
         Assert(*abbreviation);
         Assert(*title);
+        rtrim(title); /* ECC-1315 */
 
         if (t->entries[code].abbreviation != NULL) {
             grib_context_log(c, GRIB_LOG_WARNING, "code_table_entry: duplicate code in %s: %d (table size=%ld)", filename, code, size);
@@ -782,10 +783,8 @@ static int get_native_type(grib_accessor* a)
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
-    long rlen                     = 0;
-
-    unsigned long i   = 0;
-    long pos          = a->offset * 8;
+    long rlen = 0, i = 0;
+    long pos = a->offset * 8;
     grib_handle* hand = NULL;
 
 #ifdef DEBUG
@@ -803,7 +802,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     }
 
     if (*len < rlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, " wrong size (%ld) for %s it contains %d values ", *len, a->name, rlen);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%lu) for %s, it contains %ld values",
+                *len, a->name, rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }

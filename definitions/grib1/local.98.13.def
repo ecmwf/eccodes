@@ -112,7 +112,7 @@ if(localFlag == 3)
   alias system = systemNumber;
   alias method = methodNumber;
   alias refdate = referenceDate;
- 
+
   alias mars._leg_number = legNumber;
 }
 
@@ -143,7 +143,7 @@ if(localFlag == 4)
    alias baseTimeOfThisLeg = legBaseTime;
    unsigned[1] legNumber : dump;
    unsigned[1] oceanAtmosphereCoupling : dump;
-   
+
    # Hours
    unsigned[2] offsetToEndOf4DvarWindow : dump;
    alias anoffset=offsetToEndOf4DvarWindow;

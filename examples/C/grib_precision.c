@@ -62,6 +62,7 @@ int main(int argc, char** argv)
     h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     if (h == NULL) {
         fprintf(stderr, "Error: unable to create handle from file %s\n", infile);
+        fclose(out);
         return 1;
     }
 
@@ -78,7 +79,7 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_get_double_array(h, "values", values1, &size), 0);
 
     /* changing decimal precision to 2 means that 2 decimal digits
-     are preserved when packing.  */
+       are preserved when packing.  */
     decimalPrecision = 2;
     CODES_CHECK(codes_set_long(h, "changeDecimalPrecision", decimalPrecision), 0);
 

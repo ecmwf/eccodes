@@ -240,7 +240,7 @@ void grib_fieldset_delete(grib_fieldset* set);
 void grib_fieldset_rewind(grib_fieldset* set);
 int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string);
 grib_handle* grib_fieldset_next_handle(grib_fieldset* set, int* err);
-int grib_fieldset_count(grib_fieldset* set);
+int grib_fieldset_count(const grib_fieldset* set);
 int grib_values_check(grib_handle* h, grib_values* values, int count);
 
 /*! \defgroup grib_index The grib_index
@@ -1399,6 +1399,7 @@ struct grib_points
     size_t size;
 };
 
+/* These box functions are deprecated and will later be removed */
 grib_box* grib_box_new(grib_handle* h, int* error);
 grib_points* grib_box_get_points(grib_box* box, double north, double west, double south, double east, int* err);
 int grib_points_get_values(grib_handle* h, grib_points* points, double* val);

@@ -668,7 +668,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     n_vals = (pen_j + 1) * (pen_j + 2);
 
     if (*len != n_vals) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "COMPLEX_PACKING : wrong number of values, expected %d - got %d", n_vals, *len);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "COMPLEX_PACKING: wrong number of values, expected %ld - got %lu",
+                n_vals, *len);
         return GRIB_INTERNAL_ERROR;
     }
 

@@ -63,9 +63,10 @@ def generate_tables(INPUT, what):
             codes_release(bufr)
             continue
         if codes_get(bufr, "numberOfSubsets") == 0:
-            # print('BUFR message number of subsets == 0. Ignoring')
+            # When we reach a message whose number of subsets == 0, we're done.
+            # All messages after this one encode observations (not tables)
             codes_release(bufr)
-            continue
+            break
 
         if DEBUG:
             print(f"Processing message {cnt+1}")

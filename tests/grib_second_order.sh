@@ -143,12 +143,26 @@ grib_check_key_equals $temp3 packingType grid_second_order
 
 # ECC-1219: packingType conversion from grid_ieee to grid_second_order
 # ---------------------------------------------------------------------
+if [ $ECCODES_ON_LINUX_32BIT -eq 1 ] ; then
+    ALLOWED_ERROR=7e-06
+else
+    ALLOWED_ERROR=3e-06
+fi
 if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
     infile=grid_ieee.grib
     ${tools_dir}/grib_set -r -s packingType=grid_second_order $infile $temp1
     grib_check_key_equals $temp1 packingType grid_second_order
-    ${tools_dir}/grib_compare -cdata:n -R all=3e-06 $infile $temp1
+    ${tools_dir}/grib_compare -cdata:n -R all=$ALLOWED_ERROR $infile $temp1
 fi
+
+# Second order doesn't have a proper representation for constant fields
+# So we change the packing type to grid_simple
+# ---------------------------------------------------------------------
+infile=gen_ext_spd_2.grib
+grib_check_key_equals $infile packingType grid_second_order
+${tools_dir}/grib_set -d1 $infile $temp1
+grib_check_key_equals $temp1 packingType grid_simple
+
 
 # Clean up
 rm -f $temp_stat1 $temp_stat2

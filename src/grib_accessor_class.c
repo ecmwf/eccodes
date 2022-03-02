@@ -185,7 +185,7 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
         if (!p->h->buffer->growable) {
             if (!p->h->partial)
                 grib_context_log(p->h->context, GRIB_LOG_ERROR,
-                                 "Creating (%s)%s of %s at offset %d-%d over message boundary (%d)",
+                                 "Creating (%s)%s of %s at offset %ld-%ld over message boundary (%lu)",
                                  p->owner ? p->owner->name : "", a->name,
                                  creator->op, a->offset,
                                  a->offset + a->length,

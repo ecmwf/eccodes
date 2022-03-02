@@ -23,7 +23,7 @@ static double epsilon()
     return e;
 }
 
-static int range()
+static int vrange()
 {
     return (int)(log(DBL_MAX) / log(10)) - 1;
 }
@@ -71,7 +71,7 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value,
     int inumax, inutil;
     long jdec, ie;
     int irep;
-    int RANGE      = range();
+    int RANGE      = vrange();
     double EPSILON = epsilon();
     double pa      = pmax - pmin;
 

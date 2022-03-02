@@ -38,6 +38,7 @@ if( HAVE_BUILD_TOOLS )
           grib_read_from_file
           grib_get_set_uuid
           grib_clone
+          grib_ecc-1316
           bufr_attributes
           bufr_copy_data
           bufr_clone

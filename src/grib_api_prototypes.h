@@ -277,8 +277,6 @@ size_t grib_viarray_used_size(grib_viarray* v);
 
 /* grib_accessor_class_bits_per_value.c */
 
-/* grib_accessor_class_bufr_clear_tables.c */
-
 /* grib_accessor_class_bufr_data_array.c */
 grib_vsarray* accessor_bufr_data_array_get_stringValues(grib_accessor* a);
 grib_accessors_list* accessor_bufr_data_array_get_dataAccessors(grib_accessor* a);
@@ -313,8 +311,6 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
 /* grib_accessor_class_group.c */
 
 /* grib_accessor_class_unpack_bufr_values.c */
-
-/* grib_accessor_class_bufr_has_delayed_replication.c */
 
 /* grib_accessor_class_apply_operators.c */
 size_t compute_size_AO(const long* descriptors, size_t numberOfDescriptors);
@@ -411,19 +407,11 @@ int grib_g1_step_apply_units(long* start, long* theEnd, long* step_unit, long* P
 
 /* grib_accessor_class_dictionary.c */
 
-/* grib_accessor_class_g1param.c */
-
-/* grib_accessor_class_g1p1p2.c */
-
-/* grib_accessor_class_g1_increment.c */
-
 /* grib_accessor_class_latlon_increment.c */
 
 /* grib_accessor_class_g2date.c */
 
 /* grib_accessor_class_g2level.c */
-
-/* grib_accessor_class_g2step.c */
 
 /* grib_accessor_class_g2end_step.c */
 
@@ -603,8 +591,6 @@ int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s
 
 /* grib_accessor_class_data_shsimple_packing.c */
 
-/* grib_accessor_class_data_constant_field.c */
-
 /* grib_accessor_class_data_dummy_field.c */
 
 /* grib_2order_packer_simple.c */
@@ -625,8 +611,6 @@ void accessor_variable_set_type(grib_accessor* a, int type);
 /* grib_accessor_class_data_g2complex_packing.c */
 
 /* grib_accessor_class_data_2order_packing.c */
-
-/* grib_accessor_class_data_2order_packing_count.c */
 
 /* grib_accessor_class_data_g1second_order_row_by_row_packing.c */
 
@@ -698,7 +682,7 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper);
 
 /* grib_openjpeg_encoding.c */
 int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper);
-int grib_openjpeg_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* val, size_t* n_vals);
+int grib_openjpeg_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* val, const size_t* n_vals);
 
 /* action_class_set_missing.c */
 grib_action* grib_action_create_set_missing(grib_context* context, const char* name);
@@ -1019,16 +1003,15 @@ long grib_date_to_julian(long ddate);
 
 /* grib_fieldset.c */
 int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type);
-int grib_fieldset_column_copy_from_handle(grib_handle* h, grib_fieldset* set, int i);
 grib_fieldset* grib_fieldset_new_from_files(grib_context* c, char* filenames[], int nfiles, char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
 int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string);
 int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string);
 void grib_fieldset_delete_order_by(grib_context* c, grib_order_by* order_by);
 void grib_fieldset_delete(grib_fieldset* set);
-int grib_fieldset_add(grib_fieldset* set, char* filename);
+int grib_fieldset_add(grib_fieldset* set, const char* filename);
 void grib_fieldset_rewind(grib_fieldset* set);
 grib_handle* grib_fieldset_next_handle(grib_fieldset* set, int* err);
-int grib_fieldset_count(grib_fieldset* set);
+int grib_fieldset_count(const grib_fieldset* set);
 grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err);
 
 /* grib_filepool.c */
@@ -1372,10 +1355,6 @@ grib_box* grib_box_factory(grib_handle* h, grib_arguments* args);
 
 /* grib_box_class_gen.c */
 
-/* grib_box_class_regular_gaussian.c */
-
-/* grib_box_class_reduced_gaussian.c */
-
 /* grib_nearest.c */
 int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
 int grib_nearest_init(grib_nearest* i, grib_handle* h, grib_arguments* args);
@@ -1434,7 +1413,7 @@ grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsig
 /* grib_iterator_class_latlon_reduced.c */
 
 /* grib_iterator_class_gen.c */
-int transform_iterator_data(grib_handle* h, double* data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);
+int transform_iterator_data(grib_context* c, double* data, long iScansNegatively, long jScansPositively, long jPointsAreConsecutive, long alternativeRowScanning, size_t numPoints, long nx, long ny);
 
 /* grib_iterator_class_latlon.c */
 
@@ -1467,6 +1446,8 @@ char get_dir_separator_char(void);
 int path_is_regular_file(const char* path);
 int path_is_directory(const char* filename);
 char* codes_getenv(const char* name);
+int codes_check_grib_ieee_packing_value(int value);
+int codes_flush_sync_close_file(FILE* f);
 
 /* grib_util.c */
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);
@@ -1535,10 +1516,6 @@ double grib_op_lt_d(double a, double b);
 double grib_op_gt_d(double a, double b);
 double grib_op_ge_d(double a, double b);
 double grib_op_le_d(double a, double b);
-const char* grib_binop_long_proc_name(grib_binop_long_proc proc);
-const char* grib_binop_double_proc_name(grib_binop_double_proc proc);
-const char* grib_unop_long_proc_name(grib_unop_long_proc proc);
-const char* grib_unop_double_proc_name(grib_unop_double_proc proc);
 
 /* codes_memfs.c */
 FILE* codes_fopen(const char* name, const char* mode);
@@ -1551,6 +1528,7 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value, 
 
 /* grib_api_version.c */
 const char* grib_get_git_sha1(void);
+const char* codes_get_build_date(void);
 
 /* grib_bits_any_endian.c */
 int grib_is_all_bits_one(int64_t val, long nbits);

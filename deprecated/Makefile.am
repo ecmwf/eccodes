@@ -46,7 +46,6 @@ EXTRA_DIST = README AUTHORS NOTICE LICENSE ChangeLog version.sh html \
 		data/spherical_model_level.grib1_32.good \
 		data/spherical_model_level.grib1.good \
 		data/statistics.out.good \
-		data/scan_x_regular_gg_5_7_good.dump \
 		data/scan_x_regular_ll_5_4_good.dump \
 		data/scan_x_regular_ll_5_7_good.dump \
 		data/scan_x_regular_ll_8_4_good.dump \

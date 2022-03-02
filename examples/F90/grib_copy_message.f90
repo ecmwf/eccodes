@@ -22,7 +22,7 @@ program copy
    character(len=32)                  :: product_kind
 
    call codes_open_file(infile, '../../data/constant_field.grib1', 'r')
-   call codes_open_file(outfile, 'out.copy.grib1', 'w')
+   call codes_open_file(outfile, 'out.copy.grib1', 'W')
 
    ! A new GRIB message is loaded from file
    ! igrib_in is the GRIB id to be used in subsequent calls

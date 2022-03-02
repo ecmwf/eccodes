@@ -31,7 +31,6 @@ transient numberOfPackedValues = numberOfValues - 1 : no_copy;
               numberOfValues
             ) ;
 
-                                
 meta packingError simple_packing_error(bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;
 meta unpackedError simple_packing_error(zero,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;
 

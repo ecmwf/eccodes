@@ -484,7 +484,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     iter->e = -1;
 
-    return err;
+    return GRIB_SUCCESS;
 }
 
 static int destroy(grib_iterator* i)

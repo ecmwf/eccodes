@@ -19,16 +19,15 @@ grib_rule_entry* grib_new_rule_entry(grib_context* c, const char* name, grib_exp
 }
 
 #if 0
-/* new GCC compiler v4.5.0 complains function is defined but not used*/
+/* GCC compiler complains function is defined but not used*/
 static void grib_rule_entry_delete(grib_context* c,grib_rule_entry* e)
 {
-	if(e)
-	{
-		grib_context_free_persistent(c,e->name);
-		grib_rule_entry_delete(c,e->next);
-		grib_context_free_persistent(c,e);
+    if(e) {
+        grib_context_free_persistent(c,e->name);
+        grib_rule_entry_delete(c,e->next);
+        grib_context_free_persistent(c,e);
 
-	}
+    }
 }
 #endif
 

@@ -10,7 +10,6 @@
 !  Description: Prints all the data contained in a GRIB file
 !
 !
-!
 program print_data
    use eccodes
    implicit none
@@ -24,17 +23,16 @@ program print_data
    real(kind=8)       :: the_max
    real(kind=8)       :: the_min
 
-   call codes_open_file(ifile, &
-                        '../../data/constant_field.grib1', 'r')
+   call codes_open_file(ifile, '../../data/constant_field.grib1', 'r')
 
-   ! A new GRIB message is loaded from file
+   ! a new GRIB message is loaded from file
    ! igrib is the grib id to be used in subsequent calls
    call codes_grib_new_from_file(ifile, igrib)
 
-   ! Get the size of the values array
+   ! get the size of the values array
    call codes_get_size(igrib, 'values', numPoints)
 
-   ! Get data values
+   ! get data values
    print *, 'number of points ', numPoints
    allocate (values(numPoints), stat=iret)
 

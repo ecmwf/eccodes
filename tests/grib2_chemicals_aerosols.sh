@@ -113,6 +113,24 @@ ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=1 $temp $tem
 ${tools_dir}/grib_compare -b totalLength,numberOfSection $temp $temp1
 grib_check_key_equals $temp1 localUsePresent 1
 
+# Check local ECMWF chemicals/aerosols
+# ------------------------------------
+${tools_dir}/grib_set -s paramId=217232 $sample2 $temp
+${tools_dir}/grib_dump -O -p constituentType $temp > $temp1
+grep -q "Biomass burning volatile organic compounds .*grib2/tables/local/ecmf/1/4.230.table" $temp1
+
+${tools_dir}/grib_set -s paramId=219231 $sample2 $temp
+${tools_dir}/grib_dump -O -p constituentType $temp > $temp1
+grep -q "Anthropogenic volatile organic compounds .*grib2/tables/local/ecmf/1/4.230.table" $temp1
+
+${tools_dir}/grib_set -s paramId=211248 $sample2 $temp
+${tools_dir}/grib_dump -O -p aerosolType $temp > $temp1
+grep -q "Nitrate Coarse Mode .*grib2/tables/local/ecmf/1/4.233.table" $temp1
+
+${tools_dir}/grib_set -s paramId=215189 $sample2 $temp
+${tools_dir}/grib_dump -O -p aerosolType $temp > $temp1
+grep -q "Nitrate Fine Mode .*grib2/tables/local/ecmf/1/4.233.table" $temp1
+grib_check_key_equals $temp aerosolTypeName "Nitrate Fine Mode"
+
 # Clean up
-rm -f $tempSample
-rm -f $temp $temp1
+rm -f $tempSample $temp $temp1

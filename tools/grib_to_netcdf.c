@@ -29,11 +29,11 @@
 #endif
 
 const char* tool_description =
-    "Convert a GRIB file to netCDF format."
+    "Convert GRIB file(s) to netCDF format."
     "\n\tNote: The GRIB geometry should be a regular lat/lon grid or a regular Gaussian grid"
     "\n\t(the key \"typeOfGrid\" should be \"regular_ll\" or \"regular_gg\")";
 const char* tool_name        = "grib_to_netcdf";
-const char* tool_usage       = "[options] grib_file grib_file ... ";
+const char* tool_usage       = "[options] -o output_file grib_file grib_file ... ";
 static char argvString[2048] = {0,};
 
 /*=====================================================================*/
@@ -2136,7 +2136,7 @@ static nc_type translate_nctype(const char* name)
     if (strcmp(name, "NC_DOUBLE") == 0)
         return NC_DOUBLE;
 
-    grib_context_log(ctx, GRIB_LOG_ERROR, "Unknown NetCDF type '%s'. Using NC_SHORT", name);
+    grib_context_log(ctx, GRIB_LOG_ERROR, "Unknown netCDF type '%s'. Using NC_SHORT", name);
     return NC_SHORT;
 }
 
@@ -2516,7 +2516,7 @@ static int nc_put_att_type(int ncid, int varid, const char* name, nc_type nctype
             break;
         }
         default:
-            grib_context_log(ctx, GRIB_LOG_ERROR, "nc_put_att_type(...): Unknown netcdf type '%d'", nctype);
+            grib_context_log(ctx, GRIB_LOG_ERROR, "nc_put_att_type(...): Unknown netCDF type '%d'", nctype);
             break;
     }
     return r;
@@ -2542,7 +2542,7 @@ static int nc_put_vara_type(int ncid, int varid, const size_t start[], const siz
             r = nc_put_vara_double(ncid, varid, start, count, (double*)valuesp);
             break;
         default:
-            grib_context_log(ctx, GRIB_LOG_ERROR, "nc_put_vara_type(...): Unknown netcdf type '%d'", nctype);
+            grib_context_log(ctx, GRIB_LOG_ERROR, "nc_put_vara_type(...): Unknown netCDF type '%d'", nctype);
             break;
     }
     return r;
@@ -2614,7 +2614,7 @@ static void scale_bitmap(double* vals, long n, void* data, dataset_t* subset)
         }
 
         default:
-            grib_context_log(ctx, GRIB_LOG_ERROR, "scale(...): Unknown netcdf type %d", nctype);
+            grib_context_log(ctx, GRIB_LOG_ERROR, "scale(...): Unknown netCDF type %d", nctype);
             break;
     }
 }
@@ -2701,7 +2701,7 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
         }
 
         default:
-            grib_context_log(ctx, GRIB_LOG_ERROR, "scale(...): Unknown netcdf type %d", nctype);
+            grib_context_log(ctx, GRIB_LOG_ERROR, "scale(...): Unknown netCDF type %d", nctype);
             break;
     }
 }
@@ -2939,7 +2939,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
     if (e != GRIB_SUCCESS)
         return e;
 
-    /* Define netcdf dimensions */
+    /* Define netCDF dimensions */
     for (i = 0; i < naxis; ++i) {
         int nctype       = NC_INT;
         const char* axis = get_axis(h, i);
@@ -3079,7 +3079,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
             check_err("nc_def_var_deflate", stat, __LINE__);
 #else
             (void)chunks;
-            grib_context_log(ctx, GRIB_LOG_ERROR, "Deflate option only supported in NetCDF4");
+            grib_context_log(ctx, GRIB_LOG_ERROR, "Deflate option only supported in netCDF4");
 #endif
         }
         if (subsets[i].scale) {
@@ -3264,7 +3264,7 @@ static int fill_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid)
     grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: Put latitude/longitude values");
     put_latlon(ncid, fs);
 
-    /* Put netcdf axis values */
+    /* Put netCDF axis values */
     grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: Put netcdf axis values");
     for (i = 0; i < naxis; ++i) {
         int j               = 0;
@@ -3860,7 +3860,7 @@ static boolean check_dimension_name(const char* dim)
 static int get_creation_mode(int option_kind)
 {
     /* Return the mode flag for nc_create based   */
-    /* on the kind of netcdf user wants to create */
+    /* on the kind of netCDF user wants to create */
     int creation_mode = NC_CLOBBER;
     switch (option_kind) {
         case NC_FORMAT_CLASSIC:
@@ -3882,7 +3882,7 @@ static int get_creation_mode(int option_kind)
 #else
         case NC_FORMAT_NETCDF4:
         case NC_FORMAT_NETCDF4_CLASSIC:
-            grib_context_log(ctx, GRIB_LOG_ERROR, "%s not built with netcdf4, cannot create netCDF-4 files.", tool_name);
+            grib_context_log(ctx, GRIB_LOG_ERROR, "%s not built with netCDF4, cannot create netCDF-4 files.", tool_name);
             exit(1);
             break;
 #endif
@@ -3905,7 +3905,7 @@ grib_option grib_options[] = {
       0, 1, "NC_SHORT" },
     { "T", 0, "Don't use time of validity.\n", 0, 1, 0 },
     { "f", 0, 0, 0, 1, 0 },
-    { "o:", "output file", "\n\t\tThe name of the netcdf file.\n", 1, 1, 0 },
+    { "o:", "output_file", "\n\t\tThe name of the netCDF output file.\n", 1, 1, 0 },
     { "V", 0, 0, 0, 1, 0 },
     { "M", 0, 0, 0, 1, 0 },
     { "k:", "kind",
@@ -4305,7 +4305,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     /* In case there is only 1 DATE+TIME+STEP, set at least 1 time as axis */
     set_always_a_time(dims, data_r);
 
-    /* Create netcdf file */
+    /* Create netCDF file */
 
     printf("%s: Creating netCDF file '%s'\n", tool_name, options->outfile->name);
     printf("%s: NetCDF library version: %s\n", tool_name, nc_inq_libvers());
@@ -4318,7 +4318,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         check_err(msg, stat, __LINE__);
     }
 
-    /* Define netcdf dataset */
+    /* Define netCDF dataset */
     err = define_netcdf_dimensions(dims, fs, ncid, subsets, count, data_r);
     if (err != GRIB_SUCCESS) {
         stat = nc_close(ncid);

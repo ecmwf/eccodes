@@ -10,21 +10,17 @@
 
 . ./include.sh
 
+label="grib_ccsds_test"
 REDIRECT=/dev/null
-
-# Disable if autotools being used
-src_config=${src_dir}/config.h
-if [ -f ${src_config} ]; then
-  exit 0
-fi
 
 BLACKLIST="totalLength,section5Length,section7Length,dataRepresentationTemplateNumber"
 
 infile=${data_dir}/ccsds.grib2
-outfile1=$infile.tmp_ccsds.1
-outfile2=$infile.tmp_ccsds.2
+outfile1=temp.$label.1
+outfile2=temp.$label.2
 
 rm -f $outfile1 $outfile2
+
 
 # ECC-1263
 # ---------
@@ -93,6 +89,16 @@ ${tools_dir}/grib_set -r -s packingType=grid_ccsds $infile $outfile1
 grib_check_key_equals $outfile1 packingType grid_ccsds
 ${tools_dir}/grib_set -r -s packingType=grid_simple $infile $outfile2
 ${tools_dir}/grib_compare -c data:n $outfile1 $outfile2
+
+# ECC-1352: Additional tests for bitsPerValue
+# --------------------------------------------
+infile=${data_dir}/sample.grib2
+${tools_dir}/grib_set -r -s setBitsPerValue=16,packingType=grid_ccsds $infile $outfile1
+${tools_dir}/grib_set -r -s setBitsPerValue=24,packingType=grid_ccsds $infile $outfile2
+grib_check_key_equals $outfile1 packingType grid_ccsds
+grib_check_key_equals $outfile2 packingType grid_ccsds
+${tools_dir}/grib_compare -b $BLACKLIST  $infile   $outfile1
+${tools_dir}/grib_compare -c data:n      $outfile1 $outfile2
 
 
 # Clean up

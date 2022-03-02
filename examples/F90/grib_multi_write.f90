@@ -7,7 +7,6 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!
 !  Description: How to create a multi-field message in memory and write
 !               it to a file. The multi-field messages can be created
 !               only in GRIB edition 2.

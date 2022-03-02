@@ -139,58 +139,52 @@
 
 template mars_labeling "grib1/mars_labeling.def";
 
-unsigned[1] perturbationNumber : dump ;
+unsigned[1] perturbationNumber : dump;
 alias number = perturbationNumber;
 
 unsigned[1] numberOfForecastsInEnsemble  : dump;
 
-#
-# EXPERIMENT
-#
-ascii[4]    '************_EXPERIMENT_************' ;
-ascii[8]    'Experiment_Identifier' ;
-ascii[8]    'Sub-Experiment_Identifier' ;
+ascii[4]    '************_EXPERIMENT_************';
+ascii[8]    'Experiment_Identifier';
+ascii[8]    'Sub-Experiment_Identifier';
 
-#
-# PRODUCT
-#
-ascii[4]    '************_PRODUCT_***************' ;
-unsigned[1]  Original_CodeTable_2_Version_Number  : dump ;
+ascii[4]    '************_PRODUCT_***************';
+unsigned[1]  Original_CodeTable_2_Version_Number  : dump;
 unsigned[1]  Original_Parameter_Iden_CodeTable2   : dump;
-ascii[8]    'Original_Parameter_Identifier' ;
-ascii[8]    'Product_Identifier' ;
+ascii[8]    'Original_Parameter_Identifier';
+ascii[8]    'Product_Identifier';
 
 # Thresholds and Distributions
-unsigned[2]  Threshold_Or_Distribution_0_no_1_yes  : dump ;
-ascii[4]    'Threshold_Or_Distribution_Units' ;
-unsigned[4]  At_least__Or_Distribut_Proportion_Of  : dump ;
-unsigned[4]  Less_Than_Or_To_Overall_Distribution  : dump ;
+unsigned[2]  Threshold_Or_Distribution_0_no_1_yes  : dump;
+ascii[4]    'Threshold_Or_Distribution_Units';
+unsigned[4]  At_least__Or_Distribut_Proportion_Of  : dump;
+unsigned[4]  Less_Than_Or_To_Overall_Distribution  : dump;
 
 pad padding_loc244_1(40);
 
-ascii[4]    '************_ENSEMBLE_**************' ;
-unsigned[2]  Number_Combination_Ensembles_1_none  : dump ;
-unsigned[1]  Show_Combination_Ensem_E2_0_no_1_yes  : dump ;
-unsigned[1]  Show_Combination_Ensem_E3_0_no_1_yes  : dump ;
-unsigned[1]  Show_Combination_Ensem_E4_0_no_1_yes  : dump ;
+ascii[4]    '************_ENSEMBLE_**************';
+unsigned[2]  Number_Combination_Ensembles_1_none  : dump;
+unsigned[1]  Show_Combination_Ensem_E2_0_no_1_yes  : dump;
+unsigned[1]  Show_Combination_Ensem_E3_0_no_1_yes  : dump;
+unsigned[1]  Show_Combination_Ensem_E4_0_no_1_yes  : dump;
 
 pad padding_loc244_2(7);
 
 unsigned[2]  Total_Number_Members_Used  : dump;
-unsigned[2]  Total_Number_Members_Possible : dump ;
-unsigned[2]  Total_Number_Members_Missing : dump ;
-unsigned[2]  Ensemble_Combination_Number : dump ;
-ascii[8]    'Ensemble_Identifier' ;
-unsigned[2]  Local_Number_Members_Used : dump ;
-unsigned[2]  Local_Number_Members_Possible : dump ;
-unsigned[2]  Local_Number_Members_Missing : dump ;
+unsigned[2]  Total_Number_Members_Possible : dump;
+unsigned[2]  Total_Number_Members_Missing : dump;
+unsigned[2]  Ensemble_Combination_Number : dump;
+ascii[8]    'Ensemble_Identifier';
+unsigned[2]  Local_Number_Members_Used : dump;
+unsigned[2]  Local_Number_Members_Possible : dump;
+unsigned[2]  Local_Number_Members_Missing : dump;
 
 listMembersUsed list(Local_Number_Members_Used){
- ascii[4]    'Used_Model_LBC' ;
+ ascii[4]    'Used_Model_LBC';
 }
 
 listMembersMissing list(Local_Number_Members_Missing){
- ascii[4]    'Missing_Model_LBC' ;
+ ascii[4]    'Missing_Model_LBC';
 }
 
 #
@@ -198,29 +192,29 @@ listMembersMissing list(Local_Number_Members_Missing){
 #
 
 if (Show_Combination_Ensem_E2_0_no_1_yes == 1){
- unsigned[2]  Ensemble_Combinat_Number_0_none_E2 : dump  ;
- ascii[8]    'Ensemble_Identifier_E2' ;
- unsigned[2]  Local_Number_Members_Used_E2 : dump  ;
- unsigned[2]  Local_Number_Members_Possible_E2 : dump  ;
- unsigned[2]  Local_Number_Members_Missing_E2 : dump  ;
+ unsigned[2]  Ensemble_Combinat_Number_0_none_E2 : dump;
+ ascii[8]    'Ensemble_Identifier_E2';
+ unsigned[2]  Local_Number_Members_Used_E2 : dump;
+ unsigned[2]  Local_Number_Members_Possible_E2 : dump;
+ unsigned[2]  Local_Number_Members_Missing_E2 : dump;
  unsigned[3]  Date_E2   : dump;
  unsigned[1]  Hour_E2   : dump;
  unsigned[1]  Minute_E2   : dump;
- unsigned[2]  Time_Range_One_E2  : dump ;
+ unsigned[2]  Time_Range_One_E2  : dump;
  unsigned[2]  Time_Range_Two_E2   : dump;
 
  listMembersUsed2 list(Local_Number_Members_Used_E2){
-  ascii[4]    'Used_Model_LBC_E2' ;
+  ascii[4]    'Used_Model_LBC_E2';
  }
 
  listMembersMissing2 list(Local_Number_Members_Missing_E2){
-  ascii[4]    'Missing_Model_LBC_E2' ;
+  ascii[4]    'Missing_Model_LBC_E2';
  }
 }
 
 if (Show_Combination_Ensem_E3_0_no_1_yes == 1){
- unsigned[2]  Ensemble_Combinat_Number_0_none_E3 : dump  ;
- ascii[8]    'Ensemble_Identifier_E3' ;
+ unsigned[2]  Ensemble_Combinat_Number_0_none_E3 : dump;
+ ascii[8]    'Ensemble_Identifier_E3';
  unsigned[2]  Local_Number_Members_Used_E3   : dump;
  unsigned[2]  Local_Number_Members_Possible_E3   : dump;
  unsigned[2]  Local_Number_Members_Missing_E3   : dump;
@@ -231,39 +225,39 @@ if (Show_Combination_Ensem_E3_0_no_1_yes == 1){
  unsigned[2]  Time_Range_Two_E3   : dump;
 
  listMembersUsed3 list(Local_Number_Members_Used_E3){
-  ascii[4]    'Used_Model_LBC_E3' ;
+  ascii[4]    'Used_Model_LBC_E3';
  }
 
  listMembersMissing3 list(Local_Number_Members_Missing_E3){
-  ascii[4]    'Missing_Model_LBC_E3' ;
+  ascii[4]    'Missing_Model_LBC_E3';
  }
 }
 
 if (Show_Combination_Ensem_E4_0_no_1_yes == 1){
- unsigned[2]  Ensemble_Combinat_Number_0_none_E4  : dump ;
- ascii[8]    'Ensemble_Identifier_E4' ;
+ unsigned[2]  Ensemble_Combinat_Number_0_none_E4  : dump;
+ ascii[8]    'Ensemble_Identifier_E4';
  unsigned[2]  Local_Number_Members_Used_E4   : dump;
  unsigned[2]  Local_Number_Members_Possible_E4   : dump;
  unsigned[2]  Local_Number_Members_Missing_E4   : dump;
  unsigned[3]  Date_E4   : dump;
  unsigned[1]  Hour_E4   : dump;
  unsigned[1]  Minute_E4   : dump;
- unsigned[2]  Time_Range_One_E4  : dump ;
+ unsigned[2]  Time_Range_One_E4  : dump;
  unsigned[2]  Time_Range_Two_E4   : dump;
 
  listMembersUsed4 list(Local_Number_Members_Used_E4){
-  ascii[4]    'Used_Model_LBC_E4' ;
+  ascii[4]    'Used_Model_LBC_E4';
  }
 
  listMembersMissing4 list(Local_Number_Members_Missing_E4){
-  ascii[4]    'Missing_Model_LBC_E4' ;
+  ascii[4]    'Missing_Model_LBC_E4';
  }
 }
 
 #
 # EXTRA INFORMATION like 191
 #
-ascii[4]    '*********_EXTRA_DATA_***************' ;
+ascii[4]    '*********_EXTRA_DATA_***************';
 unsigned[2]  Extra_Data_FreeFormat_0_none   : dump;
 position offsetFreeFormData;
 unsigned[1] freeFormData[Extra_Data_FreeFormat_0_none]  : dump;

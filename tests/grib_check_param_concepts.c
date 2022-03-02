@@ -59,10 +59,14 @@ static int scale_factor_missing(const char* value)
 */
 static int grib_check_param_concepts(const char* key, const char* filename)
 {
+    int isLocal = 0;
     grib_concept_value* concept_value = grib_parse_concept_file(NULL, filename);
     if (!concept_value)
         return GRIB_IO_PROBLEM;
 
+    if (strstr(filename, "/localConcepts/")) {
+        isLocal = 1;
+    }
     while (concept_value) {
         grib_concept_condition* concept_condition = concept_value->conditions;
         /* Convention:
@@ -97,6 +101,11 @@ static int grib_check_param_concepts(const char* key, const char* filename)
                 fprintf(stderr, "%s %s: Unknown class name: '%s'\n",
                         key, concept_value->name, expression->cclass->name);
                 Assert(0);
+            }
+            if (!isLocal && strcmp(condition_name, "localTablesVersion") == 0) {
+                fprintf(stderr, "%s %s: Cannot have localTablesVersion key in WMO file %s!\n",
+                        key, concept_value->name, filename);
+                return GRIB_INVALID_KEY_VALUE;
             }
             if (strcmp(condition_name, "typeOfFirstFixedSurface") == 0) {
                 type1Missing = type_of_surface_missing(condition_name, condition_value);

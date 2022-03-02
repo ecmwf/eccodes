@@ -660,7 +660,7 @@ static int unpack_string_array(grib_accessor* a, char** val, size_t* len)
 
     if (*len < self->expandedAOSize) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         " wrong size (%ld) for %s it contains %d values ", *len, a->name, self->expandedAOSize);
+                         "Wrong size (%lu) for %s, it contains %lu values", *len, a->name, self->expandedAOSize);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -726,7 +726,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     if (*len < self->expandedAOSize) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         " wrong size (%ld) for %s it contains %d values ", *len, a->name, self->expandedAOSize);
+                         "Wrong size (%lu) for %s it contains %lu values", *len, a->name, self->expandedAOSize);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -784,7 +784,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     if (*len < self->expandedAOSize) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         " wrong size (%ld) for %s it contains %d values ", *len, a->name, self->expandedAOSize);
+                         "Wrong size (%lu) for %s it contains %lu values", *len, a->name, self->expandedAOSize);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }

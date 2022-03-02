@@ -18,8 +18,7 @@ program grib_get_pv
    integer                         :: PVPresent, nb_pv
    real, dimension(:), allocatable :: pv
 
-   call codes_open_file(infile, &
-                        '../../data/reduced_gaussian_model_level.grib1', 'r')
+   call codes_open_file(infile, '../../data/reduced_gaussian_model_level.grib1', 'r')
 
    ! A new grib message is loaded from file
    ! igrib is the grib id to be used in subsequent calls

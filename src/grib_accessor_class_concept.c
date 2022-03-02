@@ -140,6 +140,9 @@ static void init_class(grib_accessor_class* c)
 
 #define MAX_CONCEPT_STRING_LENGTH 255
 
+#define FALSE 0
+#define TRUE  1
+
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
@@ -163,11 +166,12 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     grib_dump_string(dumper, a, NULL);
 }
 
+/* Return 1 (=True) or 0 (=False) */
 static int concept_condition_expression_true(grib_handle* h, grib_concept_condition* c)
 {
     long lval;
     long lres      = 0;
-    int ok         = 0;
+    int ok         = FALSE; /* Boolean */
     int err        = 0;
     const int type = grib_expression_native_type(h, c->expression);
 
@@ -207,34 +211,38 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
     return ok;
 }
 
+/* Return 1 (=True) or 0 (=False) */
 static int concept_condition_iarray_true(grib_handle* h, grib_concept_condition* c)
 {
-    long* val;
+    long* val = NULL;
     size_t size = 0, i;
-    int ret;
+    int ret; /* Boolean */
     int err = 0;
 
     err = grib_get_size(h, c->name, &size);
-    if (err == 0 || size != grib_iarray_used_size(c->iarray))
-        return 0;
+    if (err || size != grib_iarray_used_size(c->iarray))
+        return FALSE;
 
     val = (long*)grib_context_malloc_clear(h->context, sizeof(long) * size);
 
     err = grib_get_long_array(h, c->name, val, &size);
-    if (err == 0)
-        return 0;
-
-    ret = 1;
+    if (err) {
+        grib_context_free(h->context, val);
+        return FALSE;
+    }
+    ret = TRUE;
     for (i = 0; i < size; i++) {
         if (val[i] != c->iarray->v[i]) {
-            ret = 0;
+            ret = FALSE;
             break;
         }
     }
 
+    grib_context_free(h->context, val);
     return ret;
 }
 
+/* Return 1 (=True) or 0 (=False) */
 static int concept_condition_true(grib_handle* h, grib_concept_condition* c)
 {
     if (c->expression == NULL)
@@ -527,9 +535,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     *val = atol(p);
     *len = 1;
-#if 0
+#ifdef DEBUG
     /* ECC-980: Changes reverted because of side-effects!
-     * e.g. marsType being a codetable and concept! see ifsParam
+     * e.g. marsType being a codetable and concept! see ifsParam.
+     * Keep this check in DEBUG mode only
      */
     {
         char *endptr;
@@ -631,7 +640,9 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     slen = strlen(p) + 1;
     if (*len < slen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Variable unpack_string. Wrong size for %s, it is %d bytes big (len=%d)", a->name, slen, *len);
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                        "Concept unpack_string. Wrong size for %s, value='%s' which requires %lu bytes (len=%lu)",
+                         a->name, p, slen, *len);
         *len = slen;
         return GRIB_BUFFER_TOO_SMALL;
     }

@@ -7,7 +7,6 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-! FORTRAN 90 Implementation: bufr_expanded
 !
 ! Description: How to read all the expanded data values from BUFR messages.
 !

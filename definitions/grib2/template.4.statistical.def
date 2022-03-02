@@ -74,7 +74,7 @@ if (numberOfTimeRange == 1 || numberOfTimeRange == 2) {
   meta endStep g2end_step(
     startStep,
     stepUnits,
-    
+
     year,
     month,
     day,
@@ -94,7 +94,7 @@ if (numberOfTimeRange == 1 || numberOfTimeRange == 2) {
     typeOfTimeIncrement,
     numberOfTimeRange
   ) : dump,no_copy;
-  
+
   meta stepRange g2step_range(startStep,endStep): dump;
 } else {
   constant stepType  = "multiple steps";

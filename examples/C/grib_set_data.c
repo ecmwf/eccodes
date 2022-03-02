@@ -38,7 +38,8 @@ int main(int argc, char** argv)
     /* see where that is).  The default sample path can be changed by       */
     /* setting the environment variable ECCODES_SAMPLES_PATH                */
     const char* sample_filename = "regular_ll_pl_grib1";
-    /* Here is how you can get the samples path */
+
+    /* here is how you can get the samples path */
     const char* samples_path = codes_samples_path(NULL);
     codes_handle* h          = NULL;
     double d, e;
@@ -53,7 +54,7 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    /* Here we're changing the data values only, so the number of values */
+    /* here we're changing the data values only, so the number of values */
     /* will be the same as the sample GRIB. */
     /* But if your data array has a different size, then specify the grid geometry */
     /* (e.g. keys Ni, Nj etc) and set the correct number of data values */

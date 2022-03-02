@@ -7,7 +7,6 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!
 !  Description: How to set a bitmap in a GRIB message
 !               to encode missing values in the data
 !
@@ -34,11 +33,11 @@ program set_bitmap
 
    call codes_open_file(outfile, 'out.set_bitmap_f.grib', 'w')
 
-   ! A new grib message is loaded from file
-   ! igrib is the grib id to be used in subsequent calls
+   ! a new GRIB message is loaded from file
+   ! igrib is the GRIB id to be used in subsequent calls
    call codes_grib_new_from_file(infile, igrib)
 
-   ! The missingValue is not coded in the message.
+   ! the missingValue is not coded in the message.
    ! It is a value we define as a placeholder for a missing value
    ! at a point in the grid.
    ! It should be chosen so that it cannot be confused

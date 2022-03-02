@@ -217,7 +217,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     rlen = count;
 
     if (*len < rlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, " wrong size for %s it contains %d values ", a->name, rlen);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %lu values", a->name, rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -295,7 +295,16 @@ static int compare(grib_accessor* a, grib_accessor* b)
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     char* theEnd = NULL;
-    long v       = strtol(val, &theEnd, 10);
+    long v = 0;
+
+#if 0
+    /* Requires more work e.g. filter */
+    if (strcmp_nocase(val, "missing")==0) {
+        return pack_missing(a);
+    }
+#endif
+
+    v = strtol(val, &theEnd, 10);
     if (theEnd) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "trying to pack \"%s\" as long", val);
         return GRIB_WRONG_TYPE;

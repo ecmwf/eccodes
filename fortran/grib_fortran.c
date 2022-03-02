@@ -82,6 +82,12 @@ static void init()
 }
 #endif
 
+typedef enum FileMode {
+    FILE_MODE_READ,
+    FILE_MODE_WRITE,
+    FILE_MODE_APPEND
+} FileMode;
+
 int GRIB_NULL=-1;
 int GRIB_NULL_NEAREST=-1;
 /*extern int errno;*/
@@ -92,6 +98,7 @@ struct l_grib_file {
     FILE* f;
     char* buffer;
     int id;
+    FileMode mode;
     l_grib_file* next;
 };
 
@@ -163,7 +170,8 @@ static l_bufr_keys_iterator* bufr_keys_iterator_set = NULL;
 static grib_oarray* binary_messages = NULL;
 static grib_oarray* info_messages = NULL;
 
-static char* cast_char(char* buf, char* fortstr,int len)
+/* Convert from Fortran string to C string - chop at first space character */
+static char* cast_char(char* buf, char* fortstr, int len)
 {
     char *p,*end;
     if (len == 0 || fortstr == NULL) return NULL;
@@ -180,7 +188,8 @@ static char* cast_char(char* buf, char* fortstr,int len)
     return buf;
 }
 
-static char* cast_char_no_cut(char* buf, char* fortstr,int len)
+/* Convert from Fortran string to C string - non chopping version */
+static char* cast_char_no_cut(char* buf, char* fortstr, int len)
 {
     if (len == 0 || fortstr == NULL) return NULL;
     memcpy(buf,fortstr,len);
@@ -189,7 +198,7 @@ static char* cast_char_no_cut(char* buf, char* fortstr,int len)
     return buf;
 }
 
-static void czstr_to_fortran(char* str,int len)
+static void czstr_to_fortran(char* str, int len)
 {
     char *p,*end;
     p=str; end=str+len-1;
@@ -216,28 +225,35 @@ static void fort_char_clean(char* str,int len)
     *p=' ';
 }
 
-static int push_file(FILE* f,char* buffer)
+/* Note: the open_mode argument will be all lowercase. See grib_f_open_file_ */
+static int push_file(FILE* f, const char* open_mode, char* buffer)
 {
     l_grib_file* current  = file_set;
     l_grib_file* previous = file_set;
     l_grib_file* the_new      = NULL;
     int myindex = MIN_FILE_ID;
+    FileMode fmode = FILE_MODE_READ;
+
+    if (strcmp(open_mode, "w") == 0) fmode = FILE_MODE_WRITE;
+    else if (strcmp(open_mode, "a") == 0) fmode = FILE_MODE_APPEND;
 
     if(!file_set){
         file_set = (l_grib_file*)malloc(sizeof(l_grib_file));
         Assert(file_set);
-        file_set->id   = myindex;
-        file_set->f    = f;
-        file_set->buffer =buffer;
-        file_set->next = NULL;
+        file_set->id     = myindex;
+        file_set->f      = f;
+        file_set->mode   = fmode;
+        file_set->buffer = buffer;
+        file_set->next   = NULL;
         return myindex;
     }
 
     while(current){
         if(current->id < 0){
             current->id = -(current->id);
-            current->f    = f;
-            current->buffer    = buffer;
+            current->f      = f;
+            current->mode   = fmode;
+            current->buffer = buffer;
             return current->id ;
         } else{
             myindex++;
@@ -248,11 +264,12 @@ static int push_file(FILE* f,char* buffer)
 
     the_new = (l_grib_file*)malloc(sizeof(l_grib_file));
     Assert(the_new);
-    the_new->id   = myindex;
-    the_new->f    = f;
-    the_new->buffer    = buffer;
-    the_new->next = current;
-    previous->next = the_new;
+    the_new->id     = myindex;
+    the_new->f      = f;
+    the_new->mode   = fmode;
+    the_new->buffer = buffer;
+    the_new->next   = current;
+    previous->next  = the_new;
     return myindex;
 }
 
@@ -748,11 +765,23 @@ static bufr_keys_iterator* get_bufr_keys_iterator(int keys_iterator_id)
 
 static int clear_file(int file_id)
 {
+    int err = 0;
     l_grib_file* current = file_set;
     while(current){
         if(current->id == file_id){
             current->id = -(current->id);
-            if (current->f) fclose(current->f);
+            if (current->f) {
+                if (current->mode == FILE_MODE_WRITE || current->mode == FILE_MODE_APPEND)
+                    err = codes_flush_sync_close_file(current->f);
+                else
+                    err = fclose(current->f);
+                if (err) {
+                    int ioerr = errno;
+                    grib_context* c = grib_context_get_default();
+                    grib_context_log(c,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),"IO ERROR: %s",strerror(ioerr));
+                    return GRIB_IO_PROBLEM;
+                }
+            }
             if (current->buffer) free(current->buffer);
             return GRIB_SUCCESS;
         }
@@ -1038,7 +1067,7 @@ int grib_f_open_file_(int* fid, char* name , char* op, int lname, int lop) {
 #endif
             setvbuf(f,iobuf,_IOFBF,context->io_buffer_size);
         }
-        *fid = push_file(f,iobuf);
+        *fid = push_file(f, oper, iobuf);
         ret=GRIB_SUCCESS;
     }
     return ret;
@@ -2857,7 +2886,12 @@ int grib_f_index_select_string_(int* gid, char* key, char* val, int len, int val
     char bufval[1024];
 
     if(!h) return GRIB_INVALID_GRIB;
-    return grib_index_select_string(h, cast_char(buf,key,len), cast_char(bufval,val,vallen));
+
+    /* ECC-1316 */
+    cast_char_no_cut(bufval,val,vallen);
+    rtrim( bufval );
+
+    return grib_index_select_string(h, cast_char(buf,key,len), bufval);
 }
 int grib_f_index_select_string__(int* gid, char* key, char* val, int len, int vallen){
     return grib_f_index_select_string_(gid,key,val,len,vallen);

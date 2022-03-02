@@ -1,4 +1,15 @@
 #!/usr/bin/env python
+
+#
+# (C) Copyright 2005- ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
+#
 from __future__ import print_function
 
 import argparse
@@ -51,7 +62,7 @@ args = parser.parse_args()
 
 
 start = time.time()
-print("MEMFS: starting")
+print("MEMFS: Starting")
 
 # Exclude experimental features e.g. GRIB3 and TAF
 # The BUFR codetables is not used in the engine
@@ -67,8 +78,8 @@ EXCLUDED.extend(EXCLUDE[args.exclude])
 
 
 dirs = [os.path.realpath(x) for x in args.dirs]
-print("Directories: ", dirs)
-print("Excluding: ", EXCLUDED)
+print("MEMFS: Directories: ", dirs)
+print("MEMFS: Excluding: ", EXCLUDED)
 
 FILES = {}
 SIZES = {}
@@ -201,6 +212,5 @@ for line in f.readlines():
         print(line, file=g)
 
 
-print("Finished")
-
-print("MEMFS: done", time.time() - start)
+elapsed = time.time() - start
+print("MEMFS: Done in %.2f seconds" % elapsed)

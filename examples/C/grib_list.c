@@ -51,11 +51,11 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_get_long(h, "numberOfContributingSpectralBands", &numberOfContributingSpectralBands), 0);
     assert(numberOfContributingSpectralBands == 3);
 
-    /* Shrink NB to 2 */
+    /* shrink NB to 2 */
     numberOfContributingSpectralBands = 2;
     CODES_CHECK(codes_set_long(h, "numberOfContributingSpectralBands", numberOfContributingSpectralBands), 0);
 
-    /* Expand NB to 9 */
+    /* expand NB to 9 */
     numberOfContributingSpectralBands = 9;
     CODES_CHECK(codes_set_long(h, "numberOfContributingSpectralBands", numberOfContributingSpectralBands), 0);
 
