@@ -114,5 +114,12 @@ max=`${tools_dir}/grib_get -F%.3f -p max $temp`
 # ---------------------------------------------------
 ${tools_dir}/grib_set -s month:s=6 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp
 grib_check_key_equals $temp month 6
+# Now try an illegal value: a string that cannot be converted to an integer
+set +e
+${tools_dir}/grib_set -s month=BAD $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp
+status=$?
+set -e
+[ $status -ne 0 ]
+
 
 rm -f $outfile $temp
