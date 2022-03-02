@@ -85,8 +85,8 @@ bool IrregularLatlon::getLongestElementDiagonal(double& d) const {
     d = 0.;
     for (size_t j = 1; j < latitudes_.size(); ++j) {
         const bool away(std::abs(latitudes_[j - 1]) > std::abs(latitudes_[j]));
-        auto& latAwayFromEquator(latitudes_[away ? j - 1 : j]);
-        auto& latCloserToEquator(latitudes_[away ? j : j - 1]);
+        const auto& latAwayFromEquator(latitudes_[away ? j - 1 : j]);
+        const auto& latCloserToEquator(latitudes_[away ? j : j - 1]);
 
         d = std::max(d, util::Earth::distance(atlas::PointLonLat(0., latCloserToEquator),
                                               atlas::PointLonLat(we, latAwayFromEquator)));
@@ -126,12 +126,12 @@ void IrregularLatlon::makeName(std::ostream& out) const {
 
 
 bool IrregularLatlon::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const IrregularLatlon*>(&other);
+    const auto* o = dynamic_cast<const IrregularLatlon*>(&other);
     return (o != nullptr) && (latitudes_ == o->latitudes_) && (longitudes_ == o->longitudes_);
 }
 
 
-void IrregularLatlon::fill(grib_info&) const {
+void IrregularLatlon::fill(grib_info& /*unused*/) const {
     NOTIMP;
 }
 
@@ -213,6 +213,11 @@ public:
         auto count = count_ + (i_ > 0 || j_ > 0 ? 1 : 0);
         ASSERT(count == ni_ * nj_);
     }
+
+    IrregularLatlonIterator(const IrregularLatlonIterator&) = delete;
+    IrregularLatlonIterator(IrregularLatlonIterator&&)      = delete;
+    IrregularLatlonIterator& operator=(const IrregularLatlonIterator&) = delete;
+    IrregularLatlonIterator& operator=(IrregularLatlonIterator&&) = delete;
 };
 
 
@@ -252,7 +257,7 @@ atlas::Grid IrregularLatlon::atlasGrid() const {
 }
 
 
-static RepresentationBuilder<IrregularLatlon> irregularLatlon("irregular_latlon");
+static const RepresentationBuilder<IrregularLatlon> irregularLatlon("irregular_latlon");
 
 
 }  // namespace repres

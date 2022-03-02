@@ -44,7 +44,7 @@ void FromPL::makeName(std::ostream& out) const {
 
 
 bool FromPL::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const FromPL*>(&other);
+    const auto* o = dynamic_cast<const FromPL*>(&other);
     return (o != nullptr) && (pls() == o->pls()) && Reduced::sameAs(other);
 }
 

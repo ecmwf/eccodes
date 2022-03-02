@@ -122,7 +122,7 @@ void Regular::correctWestEast(Longitude& w, Longitude& e) const {
 }
 
 bool Regular::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const Regular*>(&other);
+    const auto* o = dynamic_cast<const Regular*>(&other);
     return (o != nullptr) && (N_ == o->N_) && (bbox_ == o->bbox_);
 }
 

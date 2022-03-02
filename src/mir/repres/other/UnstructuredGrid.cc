@@ -160,7 +160,7 @@ void UnstructuredGrid::makeName(std::ostream& out) const {
 
 
 bool UnstructuredGrid::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const UnstructuredGrid*>(&other);
+    const auto* o = dynamic_cast<const UnstructuredGrid*>(&other);
     return (o != nullptr) && (latitudes_ == o->latitudes_) && (longitudes_ == o->longitudes_);
 }
 
@@ -292,8 +292,8 @@ bool UnstructuredGrid::extendBoundingBoxOnIntersect() const {
 }
 
 
-static RepresentationBuilder<UnstructuredGrid> triangular_grid("triangular_grid");
-static RepresentationBuilder<UnstructuredGrid> unstructured_grid("unstructured_grid");
+static const RepresentationBuilder<UnstructuredGrid> triangular_grid("triangular_grid");
+static const RepresentationBuilder<UnstructuredGrid> unstructured_grid("unstructured_grid");
 
 
 }  // namespace other

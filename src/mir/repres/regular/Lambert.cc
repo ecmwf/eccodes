@@ -23,7 +23,7 @@ namespace repres {
 namespace regular {
 
 
-static RepresentationBuilder<Lambert> __builder("lambert");
+static const RepresentationBuilder<Lambert> __builder("lambert");
 
 
 Lambert::Lambert(const param::MIRParametrisation& param) : RegularGrid(param, make_projection(param)) {

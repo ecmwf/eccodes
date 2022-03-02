@@ -111,7 +111,7 @@ void LatLon::makeName(std::ostream& out) const {
 
 
 bool LatLon::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const LatLon*>(&other);
+    const auto* o = dynamic_cast<const LatLon*>(&other);
     return (o != nullptr) && (bbox_ == o->bbox_) && (increments_ == o->increments_);
 }
 
@@ -209,7 +209,7 @@ Representation* LatLon::globalise(data::MIRField& field) const {
 }
 
 
-const LatLon* LatLon::croppedRepresentation(const util::BoundingBox&) const {
+const LatLon* LatLon::croppedRepresentation(const util::BoundingBox& /*unused*/) const {
     std::ostringstream os;
     os << "LatLon::croppedRepresentation() not implemented for " << *this;
     throw exception::SeriousBug(os.str());
@@ -434,8 +434,8 @@ bool LatLon::samePoints(const param::MIRParametrisation& user, const param::MIRP
 
         PointLatLon ref{bboxField.south(), bboxField.west()};
 
-        for (auto& lat : {bboxUser.south(), bboxUser.north()}) {
-            for (auto& lon : {bboxUser.east(), bboxUser.west()}) {
+        for (const auto& lat : {bboxUser.south(), bboxUser.north()}) {
+            for (const auto& lon : {bboxUser.east(), bboxUser.west()}) {
                 if (inc.isShifted({ref.lat() - lat, ref.lon() - lon})) {
                     return false;
                 }

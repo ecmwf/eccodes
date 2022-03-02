@@ -95,7 +95,7 @@ void RotatedLL::makeName(std::ostream& out) const {
 }
 
 bool RotatedLL::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const RotatedLL*>(&other);
+    const auto* o = dynamic_cast<const RotatedLL*>(&other);
     return (o != nullptr) && (rotation_ == o->rotation_) && LatLon::sameAs(other);
 }
 
@@ -109,7 +109,7 @@ std::string RotatedLL::factory() const {
 }
 
 
-static RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll");
+static const RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll");
 
 
 }  // namespace latlon

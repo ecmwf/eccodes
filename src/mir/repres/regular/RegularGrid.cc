@@ -42,7 +42,7 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
 
     auto get_long_first_key = [](const param::MIRParametrisation& param, const std::vector<std::string>& keys) -> long {
         long value = 0;
-        for (auto& key : keys) {
+        for (const auto& key : keys) {
             if (param.get(key, value)) {
                 return value;
             }
@@ -224,7 +224,7 @@ bool RegularGrid::includesSouthPole() const {
 }
 
 
-void RegularGrid::reorder(long, MIRValuesVector&) const {
+void RegularGrid::reorder(long /*scanningMode*/, MIRValuesVector& /*unused*/) const {
     // do not reorder, iterator is doing the right thing
     // FIXME this function should not be overriding to do nothing
 }
@@ -287,7 +287,9 @@ Iterator* RegularGrid::iterator() const {
         ~RegularGridIterator() override = default;
 
         RegularGridIterator(const RegularGridIterator&) = delete;
+        RegularGridIterator(RegularGridIterator&&)      = delete;
         RegularGridIterator& operator=(const RegularGridIterator&) = delete;
+        RegularGridIterator& operator=(RegularGridIterator&&) = delete;
     };
 
     return new RegularGridIterator(grid_.projection(), x_, y_);
@@ -317,7 +319,7 @@ bool RegularGrid::sameAs(const Representation& other) const {
         return str.str();
     };
 
-    auto o = dynamic_cast<const RegularGrid*>(&other);
+    const auto* o = dynamic_cast<const RegularGrid*>(&other);
     return (o != nullptr) && name(*this) == name(*o);
 }
 

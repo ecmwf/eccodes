@@ -41,7 +41,7 @@ void RotatedGG::print(std::ostream& out) const {
 
 
 bool RotatedGG::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const RotatedGG*>(&other);
+    const auto* o = dynamic_cast<const RotatedGG*>(&other);
     return (o != nullptr) && (rotation_ == o->rotation_) && Regular::sameAs(other);
 }
 
@@ -81,7 +81,7 @@ atlas::Grid RotatedGG::atlasGrid() const {
 }
 
 
-static RepresentationBuilder<RotatedGG> rotatedGG("rotated_gg");
+static const RepresentationBuilder<RotatedGG> rotatedGG("rotated_gg");
 
 
 }  // namespace regular

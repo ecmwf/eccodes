@@ -20,7 +20,7 @@ namespace repres {
 namespace regular {
 
 
-static RepresentationBuilder<PolarStereographic> __builder("polar_stereographic");
+static const RepresentationBuilder<PolarStereographic> __builder("polar_stereographic");
 
 
 PolarStereographic::PolarStereographic(const param::MIRParametrisation& param) :

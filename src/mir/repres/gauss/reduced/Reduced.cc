@@ -66,7 +66,7 @@ Reduced::Reduced(const param::MIRParametrisation& parametrisation) : Gaussian(pa
     ASSERT(parametrisation.get("pl", pl));
 
     // if pl isn't global (from file!) insert leading/trailing 0's
-    auto& lats = latitudes();
+    const auto& lats = latitudes();
     if (n < lats.front() || s > lats.back()) {
         size_t k  = 0;
         size_t nj = 0;
@@ -140,7 +140,7 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e) const {
         bool first = true;
         std::set<long> NiTried;
 
-        auto& pl = pls();
+        const auto& pl = pls();
         for (size_t j = k_; j < k_ + Nj_; ++j) {
 
             // crop longitude-wise, track distinct attempts
@@ -184,7 +184,7 @@ void Reduced::correctWestEast(Longitude& w, Longitude& e) const {
 
 
 bool Reduced::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const Reduced*>(&other);
+    const auto* o = dynamic_cast<const Reduced*>(&other);
     return (o != nullptr) && Gaussian::sameAs(other);
 }
 
@@ -193,8 +193,8 @@ eckit::Fraction Reduced::getSmallestIncrement() const {
     ASSERT(N_);
     using distance_t = std::make_signed<size_t>::type;
 
-    auto& pl   = pls();
-    auto maxpl = *std::max_element(pl.begin() + distance_t(k_), pl.begin() + distance_t(k_ + Nj_));
+    const auto& pl = pls();
+    auto maxpl     = *std::max_element(pl.begin() + distance_t(k_), pl.begin() + distance_t(k_ + Nj_));
     ASSERT(maxpl >= 2);
 
     return Longitude::GLOBE.fraction() / maxpl;
@@ -239,10 +239,10 @@ void Reduced::setNj(std::vector<long> pl, const Latitude& s, const Latitude& n) 
     k_  = 0;
     Nj_ = N_ * 2;
 
-    auto& lats = latitudes();
+    const auto& lats = latitudes();
     if (n < lats.front() || s > lats.back()) {
         Nj_ = 0;
-        for (auto& lat : lats) {
+        for (const auto& lat : lats) {
             Latitude ll(lat);
             if (n < ll && !angleApproximatelyEqual(n, ll)) {
                 ++k_;
@@ -266,7 +266,7 @@ void Reduced::fill(grib_info& info) const {
 
     // See copy_spec_from_ksec.c in libemos for info
 
-    auto& pl = pls();
+    const auto& pl = pls();
 
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_REDUCED_GG;
     info.grid.Nj        = long(Nj_);
@@ -284,7 +284,7 @@ void Reduced::fill(grib_info& info) const {
 
 void Reduced::estimate(api::MIREstimation& estimation) const {
     Gaussian::estimate(estimation);
-    auto& pl = pls();
+    const auto& pl = pls();
     estimation.pl(pl.size());
 }
 
@@ -301,8 +301,8 @@ std::vector<util::GridBox> Reduced::gridBoxes() const {
     std::vector<util::GridBox> r;
     r.reserve(numberOfPoints());
 
-    bool periodic = isPeriodicWestEast();
-    auto& pl      = pls();
+    bool periodic  = isPeriodicWestEast();
+    const auto& pl = pls();
 
     for (size_t j = k_; j < k_ + Nj_; ++j) {
         ASSERT(pl[j] > 0);
@@ -405,8 +405,8 @@ size_t Reduced::frame(MIRValuesVector& values, size_t size, double missingValue,
 
 size_t Reduced::numberOfPoints() const {
     if (isGlobal()) {
-        auto& pl = pls();
-        return size_t(std::accumulate(pl.begin(), pl.end(), 0));
+        const auto& pl = pls();
+        return size_t(std::accumulate(pl.begin(), pl.end(), 0L));
     }
 
     size_t total = 0;
@@ -423,8 +423,8 @@ bool Reduced::getLongestElementDiagonal(double& d) const {
     // latitudes closest/furthest from equator and longitude furthest from
     // Greenwich
 
-    auto& pl   = pls();
-    auto& lats = latitudes();
+    const auto& pl   = pls();
+    const auto& lats = latitudes();
 
     d = 0.;
     for (size_t j = k_ + 1; j < k_ + Nj_; ++j) {
@@ -457,7 +457,7 @@ util::BoundingBox Reduced::extendBoundingBox(const util::BoundingBox& bbox) cons
         bool first = true;
         std::set<long> NiTried;
 
-        auto& pl = pls();
+        const auto& pl = pls();
         for (size_t j = k_; j < k_ + Nj_; ++j) {
 
             // extend longitude-wise, track distinct attempts

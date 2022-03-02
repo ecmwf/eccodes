@@ -47,7 +47,7 @@ void RotatedFromPL::makeName(std::ostream& out) const {
 
 
 bool RotatedFromPL::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const RotatedFromPL*>(&other);
+    const auto* o = dynamic_cast<const RotatedFromPL*>(&other);
     return (o != nullptr) && (rotation_ == o->rotation_) && FromPL::sameAs(other);
 }
 
@@ -80,7 +80,7 @@ const Gridded* RotatedFromPL::croppedRepresentation(const util::BoundingBox& bbo
 }
 
 
-static RepresentationBuilder<RotatedFromPL> rotatedFromPL("reduced_rotated_gg");
+static const RepresentationBuilder<RotatedFromPL> rotatedFromPL("reduced_rotated_gg");
 
 
 }  // namespace reduced

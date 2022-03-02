@@ -64,7 +64,7 @@ std::vector<util::GridBox> Representation::gridBoxes() const {
 }
 
 
-void Representation::estimate(api::MIREstimation&) const {
+void Representation::estimate(api::MIREstimation& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::estimate() not implemented for " << *this;
     throw exception::SeriousBug(os.str());
@@ -97,42 +97,43 @@ bool Representation::includesSouthPole() const {
 }
 
 
-void Representation::validate(const MIRValuesVector&) const {
+void Representation::validate(const MIRValuesVector& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::validate() not implemented for " << *this;
     throw exception::SeriousBug(os.str());
 }
 
 
-void Representation::fill(grib_info&) const {
+void Representation::fill(grib_info& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::fill(grib_info&) not implemented for " << *this;
     throw exception::SeriousBug(os.str());
 }
 
 
-void Representation::fill(api::MIRJob&) const {
+void Representation::fill(api::MIRJob& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::fill(api::MIRJob&) not implemented for " << *this;
     throw exception::SeriousBug(os.str());
 }
 
 
-void Representation::fill(util::MeshGeneratorParameters&) const {
+void Representation::fill(util::MeshGeneratorParameters& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::fill(util::MeshGeneratorParameters&) not implemented for " << *this;
     throw exception::SeriousBug(os.str());
 }
 
 
-const Representation* Representation::croppedRepresentation(const util::BoundingBox&) const {
+const Representation* Representation::croppedRepresentation(const util::BoundingBox& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::croppedRepresentation() not implemented for " << *this;
     throw exception::SeriousBug(os.str());
 }
 
 
-const Representation* Representation::truncate(size_t, const MIRValuesVector&, MIRValuesVector&) const {
+const Representation* Representation::truncate(size_t /*unused*/, const MIRValuesVector& /*unused*/,
+                                               MIRValuesVector& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::truncate() not implemented for " << *this;
     throw exception::SeriousBug(os.str());
@@ -151,14 +152,14 @@ const std::string& Representation::uniqueName() const {
 }
 
 
-void Representation::makeName(std::ostream&) const {
+void Representation::makeName(std::ostream& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::makeName(std::ostream& out) not implemented for " << *this;
     throw exception::SeriousBug(os.str());
 }
 
 
-bool Representation::sameAs(const Representation&) const {
+bool Representation::sameAs(const Representation& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::sameAs() not implemented for " << *this;
     throw exception::SeriousBug(os.str());
@@ -186,7 +187,7 @@ const util::BoundingBox& Representation::boundingBox() const {
 }
 
 
-util::BoundingBox Representation::extendBoundingBox(const util::BoundingBox&) const {
+util::BoundingBox Representation::extendBoundingBox(const util::BoundingBox& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::extendBoundingBox() not implemented for " << *this;
     throw exception::SeriousBug(os.str());
@@ -200,7 +201,7 @@ bool Representation::extendBoundingBoxOnIntersect() const {
 }
 
 
-bool Representation::crop(util::BoundingBox&, util::AreaCropperMapping&) const {
+bool Representation::crop(util::BoundingBox& /*unused*/, util::AreaCropperMapping& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::crop() not implemented for " << *this;
     throw exception::SeriousBug(os.str());
@@ -221,19 +222,19 @@ size_t Representation::numberOfPoints() const {
 }
 
 
-bool Representation::getLongestElementDiagonal(double&) const {
+bool Representation::getLongestElementDiagonal(double& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::getLongestElementDiagonal() not implemented for " << *this;
     throw exception::SeriousBug(os.str());
 }
 
 
-void Representation::comparison(std::string&) const {
+void Representation::comparison(std::string& /*unused*/) const {
     // do nothing
 }
 
 
-size_t Representation::frame(MIRValuesVector&, size_t, double, bool) const {
+size_t Representation::frame(MIRValuesVector& /*unused*/, size_t /*unused*/, double /*unused*/, bool /*unused*/) const {
     std::ostringstream os;
     os << "Representation::frame() not implemented for " << *this;
     throw exception::SeriousBug(os.str());
@@ -245,7 +246,7 @@ std::string Representation::factory() const {
     throw exception::SeriousBug(os.str());
 }
 
-void Representation::reorder(long, MIRValuesVector&) const {
+void Representation::reorder(long /*unused*/, MIRValuesVector& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::reorder() not implemented for " << *this;
     throw exception::SeriousBug(os.str());

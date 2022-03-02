@@ -34,7 +34,7 @@ namespace repres {
 namespace regular {
 
 
-static RepresentationBuilder<SpaceView> __builder("space_view");
+static const RepresentationBuilder<SpaceView> __builder("space_view");
 
 
 namespace detail {
@@ -236,7 +236,9 @@ Iterator* SpaceView::iterator() const {
         ~SpaceViewIterator() override = default;
 
         SpaceViewIterator(const SpaceViewIterator&) = delete;
+        SpaceViewIterator(SpaceViewIterator&&)      = delete;
         SpaceViewIterator& operator=(const SpaceViewIterator&) = delete;
+        SpaceViewIterator& operator=(SpaceViewIterator&&) = delete;
     };
 
     return new SpaceViewIterator(lonlat());

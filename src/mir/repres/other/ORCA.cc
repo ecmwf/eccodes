@@ -52,7 +52,7 @@ ORCA::~ORCA() = default;
 
 
 bool ORCA::sameAs(const Representation& other) const {
-    auto o = dynamic_cast<const ORCA*>(&other);
+    const auto* o = dynamic_cast<const ORCA*>(&other);
     return (o != nullptr) && spec_.getString("uid") == o->spec_.getString("uid");
 }
 
@@ -76,7 +76,7 @@ void ORCA::fill(grib_info& info) const {
     info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 
-    for (auto& key : grib_keys) {
+    for (const auto& key : grib_keys) {
         auto value = spec_.getString(key.first);
         info.extra_set(key.second.c_str(), value.c_str());
     }
@@ -84,8 +84,8 @@ void ORCA::fill(grib_info& info) const {
 
 
 void ORCA::makeName(std::ostream& out) const {
-    auto sep = "";
-    for (auto& key : grib_keys) {
+    const auto* sep = "";
+    for (const auto& key : grib_keys) {
         out << sep << spec_.getString(key.first);
         sep = "_";
     }
@@ -147,8 +147,12 @@ Iterator* ORCA::iterator() const {
             count_(0),
             first_(true) {}
 
+        ~ORCAIterator() override = default;
+
         ORCAIterator(const ORCAIterator&) = delete;
+        ORCAIterator(ORCAIterator&&)      = delete;
         ORCAIterator& operator=(const ORCAIterator&) = delete;
+        ORCAIterator& operator=(ORCAIterator&&) = delete;
     };
     return new ORCAIterator(atlasGridRef());
 }
