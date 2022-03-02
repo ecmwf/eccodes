@@ -294,8 +294,7 @@ static int compare(grib_accessor* a, grib_accessor* b)
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
-    char* theEnd = NULL;
-    long v = 0;
+    long v = 0; /* The converted value */
 
 #if 0
     /* Requires more work e.g. filter */
@@ -304,9 +303,9 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     }
 #endif
 
-    v = strtol(val, &theEnd, 10);
-    if (theEnd) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "trying to pack \"%s\" as long", val);
+    if (string_to_long(val, &v) != GRIB_SUCCESS) {
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                "Trying to pack \"%s\" as long. String cannot be converted to an integer", val);
         return GRIB_WRONG_TYPE;
     }
     return grib_pack_long(a, &v, len);

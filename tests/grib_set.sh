@@ -110,5 +110,9 @@ max=`${tools_dir}/grib_get -F%.3f -p max $input`
 max=`${tools_dir}/grib_get -F%.3f -p max $temp`
 [ "$max" = "13.097" ]
 
+# ECC-1359: string that can be converted to an integer
+# ---------------------------------------------------
+${tools_dir}/grib_set -s month:s=6 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp
+grib_check_key_equals $temp month 6
 
 rm -f $outfile $temp
