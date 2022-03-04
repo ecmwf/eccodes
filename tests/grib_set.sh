@@ -103,23 +103,38 @@ set -e
 # offsetValuesBy
 # ------------------
 input=${data_dir}/reduced_latlon_surface.grib2
-${tools_dir}/grib_set -s offsetValuesBy=0.5  $input $temp
+${tools_dir}/grib_set -s offsetValuesBy=0.5  $input $outfile
 
 max=`${tools_dir}/grib_get -F%.3f -p max $input`
 [ "$max" = "12.597" ]
-max=`${tools_dir}/grib_get -F%.3f -p max $temp`
+max=`${tools_dir}/grib_get -F%.3f -p max $outfile`
 [ "$max" = "13.097" ]
 
 # ECC-1359: string that can be converted to an integer
 # ---------------------------------------------------
-${tools_dir}/grib_set -s month:s=6 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp
-grib_check_key_equals $temp month 6
+${tools_dir}/grib_set -s month:s=6 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $outfile
+grib_check_key_equals $outfile month 6
 # Now try an illegal value: a string that cannot be converted to an integer
 set +e
-${tools_dir}/grib_set -s month=BAD $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp
+${tools_dir}/grib_set -s month=BAD $ECCODES_SAMPLES_PATH/GRIB2.tmpl $outfile 2> $temp
 status=$?
 set -e
 [ $status -ne 0 ]
+grep -q "String cannot be converted to an integer" $temp
 
 
+# ECC-1363: Does not fail for invalid value for key of type 'double'
+# ------------------------------------------------------------------
+${tools_dir}/grib_set -s angleOfRotation:s=10.66 $ECCODES_SAMPLES_PATH/rotated_ll_sfc_grib2.tmpl $outfile
+grib_check_key_equals $outfile angleOfRotation 10.66
+# Now try an illegal value: a string that cannot be converted to an integer
+set +e
+${tools_dir}/grib_set -s angleOfRotation=BAD $ECCODES_SAMPLES_PATH/rotated_ll_sfc_grib2.tmpl $outfile 2>$temp
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "String cannot be converted to a double" $temp
+
+
+# Clean up
 rm -f $outfile $temp
