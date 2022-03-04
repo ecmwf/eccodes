@@ -24790,6 +24790,9 @@ typedef enum {
     VALUES_BEFORE_PACKING_TYPE
 } PackingStage;
 
+
+#define EPSILON 1e-5
+
 int main(int argc, char** argv)
 {
     size_t values_len = sizeof(values)/sizeof(values[0]);
@@ -24799,6 +24802,7 @@ int main(int argc, char** argv)
     PackingStage packing_stage;
     char* packing_type;
     char* outfile_name;
+    int check = 1;
 
     if (argc != 4) usage(argv[0]);
     
@@ -24815,6 +24819,10 @@ int main(int argc, char** argv)
     printf("Using sample_filename = %s\n", sample_filename);
     h = codes_grib_handle_new_from_samples(0, sample_filename);
     assert(h);
+    
+    if (strcmp(packing_type, "grid_second_order")==0 && packing_stage == VALUES_BEFORE_PACKING_TYPE) {
+        check = 0; /* TDOD */
+    }
 
     CODES_CHECK(codes_set_long(h, "bitsPerValue", 16), 0);
     if (packing_stage == PACKING_TYPE_BEFORE_VALUES) {
@@ -24831,7 +24839,25 @@ int main(int argc, char** argv)
     }
     
     CODES_CHECK(codes_write_message(h, outfile_name, "w"), 0);
-    codes_handle_delete(h);
 
+    printf("%s checks on decoded values '%s' (%s) ...\n",
+            (check?"Doing":"Skipping"), packing_type, argv[2]);
+    if (check) {
+        size_t i = 0;
+        double* vals = (double*)malloc(sizeof(double) * values_len);
+        GRIB_CHECK(grib_get_double_array(h, "values", vals, &values_len), 0);
+        for (i = 0; i < values_len; i++) {
+            const double diff = fabs(values[i] - vals[i]);
+            if (diff > EPSILON) {
+                fprintf(stderr, "Unpacked value different: i=%lu values[i]=%.7f vals[i]=%.7f\n",
+                        i, values[i], vals[i]);
+                return 1;
+            }
+        }
+        free(vals);
+    }
+
+    codes_handle_delete(h);
+    printf("All done\n");
     return 0;
 }

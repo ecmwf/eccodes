@@ -240,7 +240,7 @@ void grib_fieldset_delete(grib_fieldset* set);
 void grib_fieldset_rewind(grib_fieldset* set);
 int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string);
 grib_handle* grib_fieldset_next_handle(grib_fieldset* set, int* err);
-int grib_fieldset_count(grib_fieldset* set);
+int grib_fieldset_count(const grib_fieldset* set);
 int grib_values_check(grib_handle* h, grib_values* values, int count);
 
 /*! \defgroup grib_index The grib_index

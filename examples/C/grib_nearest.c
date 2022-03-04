@@ -35,14 +35,14 @@ int main(int argc, char** argv)
     int i               = 0;
     codes_fieldset* set = NULL;
     codes_handle* h     = NULL;
-    char param[20]      = {0,};
+    char shortName[20]      = {0,};
     size_t len     = 20;
     double lats[4] = {0,};
     double lons[4] = {0,};
     double values[4] = {0,};
     double distances[4] = {0,};
     int indexes[4] = {0,};
-    char* order_by = "param,step:i";
+    char* order_by = "shortName,step:i";
 
     size_t size = 4;
     double lat = -40, lon = 15;
@@ -70,9 +70,9 @@ int main(int argc, char** argv)
     while ((h = codes_fieldset_next_handle(set, &err)) != NULL) {
         CODES_CHECK(codes_get_long(h, "step", &step), 0);
         len = 20;
-        CODES_CHECK(codes_get_string(h, "shortName", param, &len), 0);
+        CODES_CHECK(codes_get_string(h, "shortName", shortName, &len), 0);
 
-        printf("Msg #%d, step=%ld, param=%s", count, step, param);
+        printf("Msg #%d, step=%ld, shortName=%s", count, step, shortName);
         if (!nearest) nearest = codes_grib_nearest_new(h, &err);
         CODES_CHECK(err, 0);
         CODES_CHECK(codes_grib_nearest_find(nearest, h, lat, lon, mode, lats, lons, values, distances, indexes, &size), 0);

@@ -214,7 +214,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_handle* hand = grib_handle_of_accessor(a);
 
     int err = GRIB_SUCCESS, i = 0;
-    size_t buflen = grib_byte_count(a);
+    size_t buflen = 0;
     struct aec_stream strm;
     double bscale      = 0;
     double dscale      = 0;
@@ -260,9 +260,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-    bscale = grib_power(binary_scale_factor, 2);
-    dscale = grib_power(-decimal_scale_factor, 10);
-
     /* TODO: This should be called upstream */
     if (*len < n_vals)
         return GRIB_ARRAY_TOO_SMALL;
@@ -275,6 +272,10 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
+    bscale = grib_power(binary_scale_factor, 2);
+    dscale = grib_power(-decimal_scale_factor, 10);
+
+    buflen = grib_byte_count(a);
     buf = (unsigned char*)hand->buffer->data;
     buf += grib_byte_offset(a);
 

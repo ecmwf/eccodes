@@ -101,5 +101,12 @@ ${tools_dir}/grib_compare -b $BLACKLIST  $infile   $outfile1
 ${tools_dir}/grib_compare -c data:n      $outfile1 $outfile2
 
 
+# ECC-1362
+# ---------
+infile=${data_dir}/ccsds_szip.grib2
+res=`${tools_dir}/grib_get '-F%.3f' -p min,max,avg $infile`
+[ "$res" = "-180.000 180.000 -0.044" ]
+
+
 # Clean up
 rm -f $outfile1 $outfile2
