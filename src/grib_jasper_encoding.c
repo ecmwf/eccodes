@@ -270,7 +270,7 @@ cleanup:
 
 #else
 
-int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* val, size_t* n_vals)
+int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* val, const size_t* n_vals)
 {
     grib_context_log(c, GRIB_LOG_ERROR,
                      "grib_accessor_data_jpeg2000_packing: JasPer JPEG support not enabled.");
