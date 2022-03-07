@@ -62,7 +62,7 @@ static void ecc_jasper_cleanup()
 #endif
 }
 
-int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* values, const size_t* no_values)
+int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* values, const size_t* n_vals)
 {
     /* jas_setdbglevel(99999); */
     jas_image_t* image   = NULL;
@@ -115,7 +115,7 @@ int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen
         goto cleanup;
     }
 
-    Assert(p->height_ * p->width_ == *no_values);
+    Assert(p->height_ * p->width_ == *n_vals);
 
     k = 0;
     for (i = 0; i < p->height_; i++)
@@ -270,7 +270,7 @@ cleanup:
 
 #else
 
-int grib_jasper_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* val, size_t* n_vals)
+int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* val, size_t* n_vals)
 {
     grib_context_log(c, GRIB_LOG_ERROR,
                      "grib_accessor_data_jpeg2000_packing: JasPer JPEG support not enabled.");
