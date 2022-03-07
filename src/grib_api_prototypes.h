@@ -675,9 +675,7 @@ bufr_descriptors_array* grib_accessor_class_expanded_descriptors_get_expanded(gr
 /* grib_accessor_class_md5.c */
 
 /* grib_jasper_encoding.c */
-int grib_jasper_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* values, size_t* no_values);
-int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper);
-int grib_jasper_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* val, size_t* n_vals);
+int grib_jasper_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* values, const size_t* no_values);
 int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper);
 
 /* grib_openjpeg_encoding.c */
