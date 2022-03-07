@@ -219,7 +219,6 @@ size_t grib_sarray_used_size(grib_sarray* v);
 grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize);
 grib_oarray* grib_oarray_push(grib_context* c, grib_oarray* v, void* val);
 void grib_oarray_delete(grib_context* c, grib_oarray* v);
-//void grib_oarray_delete_content(grib_context* c, grib_oarray* v);
 void** grib_oarray_get_array(grib_context* c, grib_oarray* v);
 void* grib_oarray_get(grib_oarray* v, int i);
 size_t grib_oarray_used_size(grib_oarray* v);
@@ -1122,8 +1121,6 @@ void* grib_trie_get(grib_trie* t, const char* key);
 /* grib_trie_with_rank.c */
 grib_trie_with_rank* grib_trie_with_rank_new(grib_context* c);
 void grib_trie_with_rank_delete_container(grib_trie_with_rank* t);
-//void grib_trie_with_rank_delete(grib_trie_with_rank* t);
-//void grib_trie_with_rank_clear(grib_trie_with_rank* t);
 int grib_trie_with_rank_insert(grib_trie_with_rank* t, const char* key, void* data);
 void* grib_trie_with_rank_get(grib_trie_with_rank* t, const char* key, int rank);
 
