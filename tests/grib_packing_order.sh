@@ -71,17 +71,18 @@ fi
 
 # IEEE
 # ------------
-#tests/grib_packing_order grid_ieee values_before_packing_type x2 # Does not work
-$EXEC ${test_dir}/grib_packing_order grid_ieee packing_type_before_values $temp_ieee1
-$EXEC ${test_dir}/grib_packing_order grid_ieee values_before_packing_type $temp_ieee2
+if [ $HAVE_EXTRA_TESTS -eq 1 ]; then
+    #tests/grib_packing_order grid_ieee values_before_packing_type x2 # Does not work
+    $EXEC ${test_dir}/grib_packing_order grid_ieee packing_type_before_values $temp_ieee1
+    $EXEC ${test_dir}/grib_packing_order grid_ieee values_before_packing_type $temp_ieee2
 
-${tools_dir}/grib_ls -n statistics $temp_ieee1 $temp_ieee2
-# TODO
-# ${tools_dir}/grib_compare $temp_ieee1 $temp_ieee2
+    ${tools_dir}/grib_ls -n statistics $temp_ieee1 $temp_ieee2
+    # TODO
+    # ${tools_dir}/grib_compare $temp_ieee1 $temp_ieee2
 
-# No point comparing with grid_simple as grid_ieee will be closer to the actual values
-# and less lossy
-
+    # No point comparing with grid_simple as grid_ieee will be closer to the actual values
+    # and less lossy
+fi
 
 
 # Second order Packing: TODO
