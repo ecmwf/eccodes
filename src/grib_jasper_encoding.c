@@ -62,7 +62,7 @@ static void ecc_jasper_cleanup()
 #endif
 }
 
-int grib_jasper_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* values, const size_t* no_values)
+int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* values, const size_t* no_values)
 {
     /* jas_setdbglevel(99999); */
     jas_image_t* image   = NULL;
