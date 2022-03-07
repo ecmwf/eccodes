@@ -40,7 +40,7 @@ static jas_image_t* ecc_jasper_decode(jas_stream_t *in)
 #endif
 }
 
-static int ecc_jasper_encode(jas_image_t *image, jas_stream_t *jpcstream, const char *optstr)
+static int ecc_jasper_encode(jas_image_t *image, jas_stream_t *jpcstream, char *optstr)
 {
 #if JASPER_VERSION_MAJOR == 3
     const int fmt = jas_image_strtofmt("jpc");
@@ -67,6 +67,7 @@ int grib_jasper_decode(grib_context* c, unsigned char* buf, size_t* buflen, doub
     jas_matrix_t* matrix = NULL;
     jas_image_cmpt_t* p;
     int i, j, k;
+    int jaserr = 0; /* 0 means success */
 
     ecc_jasper_initialise();
 
@@ -99,7 +100,11 @@ int grib_jasper_decode(grib_context* c, unsigned char* buf, size_t* buflen, doub
         goto cleanup;
     }
 
-    jas_image_readcmpt(image, 0, 0, 0, jas_image_width(image), jas_image_height(image), matrix);
+    jaserr = jas_image_readcmpt(image, 0, 0, 0, jas_image_width(image), jas_image_height(image), matrix);
+    if (jaserr) {
+        code = GRIB_DECODING_ERROR;
+        goto cleanup;
+    }
 
     Assert(p->height_ * p->width_ == *no_values);
 
@@ -124,7 +129,7 @@ cleanup:
 int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
 {
     int code = GRIB_SUCCESS;
-    int jaserr;
+    int jaserr = 0;
 
     char opts[MAXOPTSSIZE];
     double reference_value = helper->reference_value;
@@ -217,8 +222,8 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
     jpcstream = jas_stream_memopen((char*)helper->jpeg_buffer, helper->buffer_size);
 
     jaserr = ecc_jasper_encode(&image, jpcstream, opts);
-    if (jaserr != 0) {
-        /* increase the number of guard bits */
+    if (jaserr) {
+        /* Failed to encode. Increase the number of guard bits */
         strcat(opts, "\nnumgbits=4");
         grib_context_log(c, GRIB_LOG_ERROR, "JASPER: error %d, increasing the number of guard bits", jaserr);
         jas_stream_close(istream);
@@ -232,7 +237,7 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
         jaserr       = ecc_jasper_encode(&image, jpcstream, opts);
     }
 
-    if (jaserr != 0) {
+    if (jaserr) {
         grib_context_log(c, GRIB_LOG_ERROR, "JASPER: error %d", jaserr);
         code = GRIB_ENCODING_ERROR;
         goto cleanup;
