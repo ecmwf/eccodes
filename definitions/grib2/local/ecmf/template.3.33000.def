@@ -2,15 +2,13 @@
 # See https://healpix.jpl.nasa.gov/pdf/intro.pdf
 
 include "grib2/template.3.shape_of_the_earth.def";
-include "grib2/template.3.grid.def";
 
-# Di - i direction increment
-unsigned[4] iDirectionIncrement : can_be_missing;
-alias Di = iDirectionIncrement;
+include "grib2/template.3.resolution_flags.def"
 
 # Number of grid points along one side of one of the 12 base resolution pixels (>=1)
-unsigned[4] nside : dump;
+unsigned[4] nside: dump;
 alias N=nside;
+alias numerOfSides=nside;
 alias geography.nside=nside;
 
 # Ordering convention of points. Default = ring
@@ -22,32 +20,3 @@ concept orderingConvention(unknown) {
 } : dump;
 
 include "grib2/template.3.scanning_mode.def";
-
-modify Ni: can_be_missing,dump;
-
-meta g2grid g2grid(
-    latitudeOfFirstGridPoint,
-    longitudeOfFirstGridPoint,
-    latitudeOfLastGridPoint,
-    longitudeOfLastGridPoint,
-    iDirectionIncrement,
-    null,
-    basicAngleOfTheInitialProductionDomain,
-    subdivisionsOfBasicAngle);
-
-meta geography.latitudeOfFirstGridPointInDegrees   g2latlon(g2grid,0) : dump;
-meta geography.longitudeOfFirstGridPointInDegrees  g2latlon(g2grid,1) : dump;
-meta geography.latitudeOfLastGridPointInDegrees    g2latlon(g2grid,2) : dump;
-meta geography.longitudeOfLastGridPointInDegrees   g2latlon(g2grid,3) : dump;
-meta geography.iDirectionIncrementInDegrees        g2latlon(g2grid,4,iDirectionIncrementGiven): can_be_missing,dump;
-
-alias xFirst=longitudeOfFirstGridPointInDegrees;
-alias yFirst=latitudeOfFirstGridPointInDegrees;
-alias xLast=longitudeOfLastGridPointInDegrees;
-alias yLast=latitudeOfLastGridPointInDegrees;
-
-alias latitudeFirstInDegrees  = latitudeOfFirstGridPointInDegrees;
-alias longitudeFirstInDegrees = longitudeOfFirstGridPointInDegrees;
-alias latitudeLastInDegrees   = latitudeOfLastGridPointInDegrees;
-alias longitudeLastInDegrees  = longitudeOfLastGridPointInDegrees;
-alias DiInDegrees             = iDirectionIncrementInDegrees;

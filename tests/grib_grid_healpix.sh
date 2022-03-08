@@ -19,13 +19,13 @@ input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 # Create a filter
 cat > $tempFilter <<EOF
- set centre = 98; # local ECMWF grid
- set localTablesVersion = 1;
+ #set centre = 98; # local ECMWF grid
+ #set localTablesVersion = 1;
 
+ # Note: setting the gridType will also set centre=98 and
+ #       localTablesVersion=1
  set gridType = "healpix";
  set nside = 1200;
- 
- set Ni=missing(); # should we even have this key?
 
  write;
 EOF
