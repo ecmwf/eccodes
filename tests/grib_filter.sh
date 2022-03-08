@@ -208,11 +208,13 @@ echo "Test MISSING"
 input="${data_dir}/reduced_gaussian_pressure_level.grib2"
 grib_check_key_equals $input scaleFactorOfFirstFixedSurface 0
 cat >$tempFilt <<EOF
-  set scaleFactorOfFirstFixedSurface = MISSING; # has to be uppercase
+  set scaleFactorOfFirstFixedSurface = MISSING;   # has to be uppercase
+  set scaledValueOfFirstFixedSurface = missing(); # has to have parens
   write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
 grib_check_key_equals $tempGrib scaleFactorOfFirstFixedSurface MISSING
+grib_check_key_equals $tempGrib scaledValueOfFirstFixedSurface MISSING
 
 
 # Clean up
