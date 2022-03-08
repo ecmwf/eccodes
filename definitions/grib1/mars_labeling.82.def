@@ -1,17 +1,14 @@
 #########################
-#
 # author: Sebastien Villaume (SMHI)
 # created: 6 Oct 2011
 # modified: 13 Sep 2013
 #
 #########################
-
 constant conceptsMasterMarsDir="mars" : hidden;
 constant conceptsLocalMarsDirAll="mars/[centre:s]" : hidden;
 
 # Base MARS keywors
 ##########################
-
 alias mars.class   = marsClass;
 alias mars.type   = marsType;
 alias mars.stream = marsStream;
@@ -21,7 +18,6 @@ alias mars.domain = globalDomain;
 
 # local section 82
 #########################
-
 ### nothing needed here...
 
 # Local section 83
