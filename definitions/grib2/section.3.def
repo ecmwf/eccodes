@@ -111,6 +111,8 @@ concept gridType {
  "mercator_bf"             = { gridDefinitionTemplateNumber=61; PLPresent=0; }
  "polar_stereographic_bf"  = { gridDefinitionTemplateNumber=62; PLPresent=0; }
 
+ "healpix" = { centre=98; gridDefinitionTemplateNumber=33000; PLPresent=0; }
+
  "ncep_32769" = { centre=7; gridDefinitionTemplateNumber=32769; PLPresent=0; }
 
  "unknown"               = {PLPresent=0;}

@@ -263,6 +263,7 @@ if( HAVE_BUILD_TOOLS )
         list(APPEND tests_data_reqd bufr_dump_encode_C)
         list(APPEND tests_data_reqd bufr_dump_decode_C)
         list(APPEND tests_no_data_reqd list_codetable_flagtable_keys)
+        list(APPEND tests_no_data_reqd grib_grid_healpix)
     endif()
 
     # These tests do not require any data downloads
