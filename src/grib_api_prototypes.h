@@ -1239,7 +1239,7 @@ int grib_get_double(const grib_handle* h, const char* name, double* val);
 int grib_get_double_element_internal(grib_handle* h, const char* name, int i, double* val);
 int grib_get_double_element(const grib_handle* h, const char* name, int i, double* val);
 int grib_points_get_values(grib_handle* h, grib_points* points, double* val);
-int grib_get_double_elements(const grib_handle* h, const char* name, int* index_array, long len, double* val_array);
+int grib_get_double_elements(const grib_handle* h, const char* name, const int* index_array, long len, double* val_array);
 int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t* length);
 int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* length);
 int grib_get_bytes_internal(const grib_handle* h, const char* name, unsigned char* val, size_t* length);

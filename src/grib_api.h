@@ -809,12 +809,12 @@ int grib_get_double_element(const grib_handle* h, const char* key, int i, double
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param i           : zero-based array of indexes
+* @param index_array : zero-based array of indexes
 * @param size        : size of the i and value arrays
 * @param value       : the double array for the data values
 * @return            0 if OK, integer value on error
 */
-int grib_get_double_elements(const grib_handle* h, const char* key, int* i, long size, double* value);
+int grib_get_double_elements(const grib_handle* h, const char* key, const int* index_array, long size, double* value);
 
 /**
 *  Get a string value from a key, if several keys of the same name are present, the last one is returned

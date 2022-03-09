@@ -1040,7 +1040,7 @@ int grib_points_get_values(grib_handle* h, grib_points* points, double* val)
     return GRIB_SUCCESS;
 }
 
-int grib_get_double_elements(const grib_handle* h, const char* name, int* index_array, long len, double* val_array)
+int grib_get_double_elements(const grib_handle* h, const char* name, const int* index_array, long len, double* val_array)
 {
     double* values = 0;
     int err        = 0;
