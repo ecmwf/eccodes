@@ -19,4 +19,5 @@ concept orderingConvention(unknown) {
  "nested" = { ordering = 1; }
 } : dump;
 
-include "grib2/template.3.scanning_mode.def";
+# No scanning mode needed; healpix is a standardized way of ordering points
+# include "grib2/template.3.scanning_mode.def";

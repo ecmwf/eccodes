@@ -30,6 +30,7 @@ cat > $tempFilter <<EOF
  write;
 EOF
 
+cat $tempFilter
 # Use filter on input to create a new HEALPix GRIB
 ${tools_dir}/grib_filter -o $tempGrib $tempFilter $input
 if [ ! -f "$tempGrib" ]; then
