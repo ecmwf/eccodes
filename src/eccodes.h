@@ -779,12 +779,12 @@ int codes_get_double(const codes_handle* h, const char* key, double* value);
 int codes_get_double_element(const codes_handle* h, const char* key, int i, double* value);
 
 /**
-*  Get as double array the elements of the "key" array whose indexes are listed in the input array i
+*  Get as double array the elements of the "key" array whose indexes are listed in the input array "index_array"
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
 * @param index_array : zero-based array of indexes
-* @param size        : size of the i and value arrays
+* @param size        : size of the index_array and value arrays
 * @param value       : the double array for the data values
 * @return            0 if OK, integer value on error
 */
