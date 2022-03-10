@@ -19,15 +19,14 @@ input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 # Create a filter
 cat > $tempFilter <<EOF
- #set centre = 98; # local ECMWF grid
- #set localTablesVersion = 1;
+  #set centre = 98; # local ECMWF grid
+  #set localTablesVersion = 1;
 
- # Note: setting the gridType will also set centre=98 and
- #       localTablesVersion=1
- set gridType = "healpix";
- set nside = 1200;
-
- write;
+  # Note: setting the gridType will also set centre=98 and
+  #       localTablesVersion=1
+  set gridType = "healpix";
+  set numberOfSides = 1200;
+  write;
 EOF
 
 cat $tempFilter
@@ -37,7 +36,7 @@ if [ ! -f "$tempGrib" ]; then
    echo 'Failed to create output GRIB from filter' >&2
    exit 1
 fi
-grib_check_key_equals $tempGrib gridType,orderingConvention,N                          'healpix ring 1200'
+grib_check_key_equals $tempGrib gridType,orderingConvention,N,nside                    'healpix ring 1200 1200'
 grib_check_key_equals $tempGrib gridDefinitionTemplateNumber,gridDefinitionDescription '33000 HEALPix grid'
 
 ${tools_dir}/grib_dump -O -p section_3 $tempGrib
