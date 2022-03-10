@@ -8,7 +8,7 @@ include "grib2/template.3.resolution_flags.def"
 # Number of grid points along one side of one of the 12 base resolution pixels (>=1)
 unsigned[4] nside: dump;
 alias N=nside;
-alias numerOfSides=nside;
+alias numberOfSides=nside;
 alias geography.nside=nside;
 
 # Ordering convention of points. Default = ring
