@@ -27,6 +27,27 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
     return (*a == 0 && *b == 0) ? 0 : 1;
 }
 
+/* Debug utility function to track GRIB packing/repacking issues */
+static void print_debug_info__set_double_array(grib_handle* h, const char* func, const char* name, const double* val, size_t length)
+{
+    size_t N = 5, i = 0;
+    double minVal = DBL_MAX, maxVal = -DBL_MAX;
+    Assert( h->context->debug );
+
+    if (length <= N)
+        N = length;
+    fprintf(stderr, "ECCODES DEBUG %s key=%s %lu values (", func, name, (unsigned long)length);
+    for (i = 0; i < N; ++i)
+        fprintf(stderr, "%g, ", val[i]);
+    if (N >= length) fprintf(stderr, " ) ");
+    else fprintf(stderr, "...) ");
+    for (i = 0; i < length; ++i) {
+        if (val[i] < minVal) minVal = val[i];
+        if (val[i] > maxVal) maxVal = val[i];
+    }
+    fprintf(stderr, "min=%g, max=%g\n",minVal,maxVal);
+}
+
 int grib_set_expression(grib_handle* h, const char* name, grib_expression* e)
 {
     grib_accessor* a = grib_find_accessor(h, name);
@@ -708,8 +729,9 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
 {
     int ret = 0;
 
-    if (h->context->debug)
-        fprintf(stderr, "ECCODES DEBUG grib_set_double_array_internal key=%s %ld values\n", name, (long)length);
+    if (h->context->debug) {
+        print_debug_info__set_double_array(h, "grib_set_double_array_internal", name, val, length);
+    }
 
     if (length == 0) {
         grib_accessor* a = grib_find_accessor(h, name);
@@ -732,26 +754,7 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
     size_t i = 0;
 
     if (h->context->debug) {
-        size_t N = 5;
-        /*double minVal = DBL_MAX, maxVal = -DBL_MAX;*/
-        if (length <= N)
-            N = length;
-        fprintf(stderr, "ECCODES DEBUG grib_set_double_array key=%s %ld values (", name, (long)length);
-        for (i = 0; i < N; ++i)
-            fprintf(stderr, " %g,", val[i]);
-        if (N >= length) fprintf(stderr, " )\n");
-        else fprintf(stderr, " ... )\n");
-        /*
-        * if (N >= length)
-        *    fprintf(stderr, " )\t");
-        * else
-        *     fprintf(stderr, " ... )\t");
-        * for (i = 0; i < length; ++i) {
-        *     if (val[i] < minVal) minVal = val[i];
-        *     if (val[i] > maxVal) maxVal = val[i];
-        * }
-        * fprintf(stderr, "min=%g, max=%g\n",minVal,maxVal);
-        */
+        print_debug_info__set_double_array(h, "__grib_set_double_array", name, val, length);
     }
 
     if (length == 0) {
@@ -1037,7 +1040,7 @@ int grib_points_get_values(grib_handle* h, grib_points* points, double* val)
     return GRIB_SUCCESS;
 }
 
-int grib_get_double_elements(const grib_handle* h, const char* name, int* index_array, long len, double* val_array)
+int grib_get_double_elements(const grib_handle* h, const char* name, const int* index_array, long len, double* val_array)
 {
     double* values = 0;
     int err        = 0;

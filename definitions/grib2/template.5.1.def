@@ -16,7 +16,7 @@ unsigned[4] numberOfCodedValues;
 # NR - first dimension (rows)
 unsigned[2] firstDimension;
 
-alias NR  = firstDimension;
+alias NR = firstDimension;
 # NC - second dimension (columns)
 unsigned[2] secondDimension;
 
@@ -47,12 +47,12 @@ ieeefloat coefsSecond[NC2]; # TODO: find proper names
 alias data.coefsFirst = coefsFirst;
 alias data.coefsSecond=coefsSecond;
 
-if(matrixBitmapsPresent == 1) {
+if (matrixBitmapsPresent == 1) {
   constant datumSize             = NC*NR;
   constant secondaryBitmapsCount = numberOfValues + 0;
   constant secondaryBitmapsSize  = secondaryBitmapsCount/8;
 
-  transient numberOfDataMatrices  = numberOfDataPoints/datumSize;
+  transient numberOfDataMatrices = numberOfDataPoints/datumSize;
 
   position offsetBBitmap;
   meta secondaryBitmaps g2bitmap(
@@ -63,7 +63,7 @@ if(matrixBitmapsPresent == 1) {
           numberOfCodedValues ,
           dummy) : read_only;
 
-  meta bitmap  data_g2secondary_bitmap(primaryBitmap,
+  meta bitmap data_g2secondary_bitmap(primaryBitmap,
       secondaryBitmaps,
       missingValue,datumSize,numberOfDataPoints) : read_only;
 }
