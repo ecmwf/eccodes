@@ -1,4 +1,4 @@
-"unknown"           = { typeOfPostProcessing = 0; }
+# For template.4.postproc.def
 "lisflood"          = { typeOfPostProcessing = 1; }
 "lisflood_eric"     = { typeOfPostProcessing = 2; }
 "lisflood_season"   = { typeOfPostProcessing = 3; }
@@ -15,4 +15,3 @@
 "mhm_mrm"           = { typeOfPostProcessing = 203; }
 "pcrg_mrm"          = { typeOfPostProcessing = 204; }
 "meteogrid"         = { typeOfPostProcessing = 205; }
-

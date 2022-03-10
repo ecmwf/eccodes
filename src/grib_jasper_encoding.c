@@ -18,18 +18,67 @@
 #undef PACKAGE_TARNAME
 #undef PACKAGE_VERSION
 #include "jasper/jasper.h"
-
 #define MAXOPTSSIZE 1024
 
-int grib_jasper_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* values, size_t* no_values)
+static int ecc_jasper_initialise()
 {
-    /*jas_setdbglevel(99999);*/
+#if JASPER_VERSION_MAJOR == 3
+    int jaserr = 0;
+    jas_conf_clear();
+    jas_conf_set_max_mem_usage(jas_get_total_mem_size());
+    jaserr = jas_init_library();
+    if (jaserr) return jaserr;
+    jaserr = jas_init_thread();
+    if (jaserr) return jaserr;
+#endif
+    return 0;
+}
+
+static jas_image_t* ecc_jasper_decode(jas_stream_t *in)
+{
+#if JASPER_VERSION_MAJOR == 3
+    /* Second argument (=fmt) < 0 means "If possible, try to determine the format of the input data" */
+    return jas_image_decode(in, -1, 0);
+#else
+    return jpc_decode(in, NULL);
+#endif
+}
+
+static int ecc_jasper_encode(jas_image_t *image, jas_stream_t *jpcstream, char *optstr)
+{
+#if JASPER_VERSION_MAJOR == 3
+    const int fmt = jas_image_strtofmt("jpc");
+    return jas_image_encode(image, jpcstream, fmt, optstr);
+#else
+    return jpc_encode(image, jpcstream, optstr);
+#endif
+}
+
+static void ecc_jasper_cleanup()
+{
+#if JASPER_VERSION_MAJOR == 3
+    jas_cleanup_thread();
+    jas_cleanup_library();
+#endif
+}
+
+int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* values, const size_t* n_vals)
+{
+    /* jas_setdbglevel(99999); */
     jas_image_t* image   = NULL;
     jas_stream_t* jpeg   = NULL;
     int code             = GRIB_SUCCESS;
     jas_matrix_t* matrix = NULL;
     jas_image_cmpt_t* p;
     int i, j, k;
+    int jaserr = 0; /* 0 means success */
+
+    jaserr = ecc_jasper_initialise();
+    if (jaserr) {
+        grib_context_log(c, GRIB_LOG_ERROR, "grib_jasper_decode: Failed to initialize JasPer library. JasPer error %d", jaserr);
+        code = GRIB_DECODING_ERROR;
+        goto cleanup;
+    }
 
     jpeg = jas_stream_memopen((char*)buf, *buflen);
     if (!jpeg) {
@@ -37,9 +86,9 @@ int grib_jasper_decode(grib_context* c, unsigned char* buf, size_t* buflen, doub
         goto cleanup;
     }
 
-    grib_context_log(c, GRIB_LOG_DEBUG, "grib_jasper_decode: Jasper version %s", jas_getversion());
+    grib_context_log(c, GRIB_LOG_DEBUG, "grib_jasper_decode: JasPer version %s", jas_getversion());
 
-    image = jpc_decode(jpeg, NULL);
+    image = ecc_jasper_decode(jpeg);
     if (!image) {
         code = GRIB_DECODING_ERROR;
         goto cleanup;
@@ -54,15 +103,19 @@ int grib_jasper_decode(grib_context* c, unsigned char* buf, size_t* buflen, doub
     }
 
     matrix = jas_matrix_create(jas_image_height(image), jas_image_width(image));
-
     if (!matrix) {
         code = GRIB_DECODING_ERROR;
         goto cleanup;
     }
 
-    jas_image_readcmpt(image, 0, 0, 0, jas_image_width(image), jas_image_height(image), matrix);
+    jaserr = jas_image_readcmpt(image, 0, 0, 0, jas_image_width(image), jas_image_height(image), matrix);
+    if (jaserr) {
+        grib_context_log(c, GRIB_LOG_ERROR, "grib_jasper_decode: Failed to read JasPer component data. JasPer error %d", jaserr);
+        code = GRIB_DECODING_ERROR;
+        goto cleanup;
+    }
 
-    Assert(p->height_ * p->width_ == *no_values);
+    Assert(p->height_ * p->width_ == *n_vals);
 
     k = 0;
     for (i = 0; i < p->height_; i++)
@@ -77,6 +130,7 @@ cleanup:
         jas_image_destroy(image);
     if (jpeg)
         jas_stream_close(jpeg);
+    ecc_jasper_cleanup();
 
     return code;
 }
@@ -84,7 +138,7 @@ cleanup:
 int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
 {
     int code = GRIB_SUCCESS;
-    int jaserr;
+    int jaserr = 0;
 
     char opts[MAXOPTSSIZE];
     double reference_value = helper->reference_value;
@@ -156,7 +210,7 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
         }
     }
 
-    /*jas_init();*/
+    ecc_jasper_initialise();
 
     opts[0] = 0;
 
@@ -166,7 +220,7 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
     }
 
     Assert(cmpt.width_ * cmpt.height_ * cmpt.cps_ == buflen);
-    grib_context_log(c, GRIB_LOG_DEBUG, "grib_jasper_encode: Jasper version %s", jas_getversion());
+    grib_context_log(c, GRIB_LOG_DEBUG, "grib_jasper_encode: JasPer version %s", jas_getversion());
 
     pcmpt        = &cmpt;
     image.cmpts_ = &pcmpt;
@@ -175,12 +229,12 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
     cmpt.stream_ = istream;
 
     jpcstream = jas_stream_memopen((char*)helper->jpeg_buffer, helper->buffer_size);
-    jaserr    = jpc_encode(&image, jpcstream, opts);
 
-    if (jaserr != 0) {
-        /* increase the number of guard bits */
+    jaserr = ecc_jasper_encode(&image, jpcstream, opts);
+    if (jaserr) {
+        /* Failed to encode. Increase the number of guard bits */
         strcat(opts, "\nnumgbits=4");
-        grib_context_log(c, GRIB_LOG_ERROR, "JASPER: error %d, increasing the number of guard bits", jaserr);
+        grib_context_log(c, GRIB_LOG_ERROR, "grib_jasper_encode: JasPer error %d, increasing the number of guard bits", jaserr);
         jas_stream_close(istream);
         istream = 0;
         jas_stream_close(jpcstream);
@@ -189,11 +243,11 @@ int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
         istream      = jas_stream_memopen((char*)encoded, buflen);
         cmpt.stream_ = istream;
         jpcstream    = jas_stream_memopen((char*)helper->jpeg_buffer, helper->buffer_size);
-        jaserr       = jpc_encode(&image, jpcstream, opts);
+        jaserr       = ecc_jasper_encode(&image, jpcstream, opts);
     }
 
-    if (jaserr != 0) {
-        grib_context_log(c, GRIB_LOG_ERROR, "JASPER: error %d", jaserr);
+    if (jaserr) {
+        grib_context_log(c, GRIB_LOG_ERROR, "grib_jasper_encode: Failed to encode. JasPer error %d", jaserr);
         code = GRIB_ENCODING_ERROR;
         goto cleanup;
     }
@@ -210,23 +264,23 @@ cleanup:
         jas_stream_close(istream);
     if (jpcstream)
         jas_stream_close(jpcstream);
-
+    ecc_jasper_cleanup();
     return code;
 }
 
 #else
 
-int grib_jasper_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* val, size_t* n_vals)
+int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* val, const size_t* n_vals)
 {
     grib_context_log(c, GRIB_LOG_ERROR,
-                     "grib_accessor_data_jpeg2000_packing: Jasper JPEG support not enabled.");
+                     "grib_accessor_data_jpeg2000_packing: JasPer JPEG support not enabled.");
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper)
 {
     grib_context_log(c, GRIB_LOG_ERROR,
-                     "grib_accessor_data_jpeg2000_packing: Jasper JPEG support not enabled.");
+                     "grib_accessor_data_jpeg2000_packing: JasPer JPEG support not enabled.");
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 

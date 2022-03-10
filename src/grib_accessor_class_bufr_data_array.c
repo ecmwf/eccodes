@@ -2467,7 +2467,8 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
     self->dataAccessors = grib_accessors_list_create(c);
 
     if (self->dataAccessorsTrie) {
-        grib_trie_with_rank_delete(self->dataAccessorsTrie);
+        /* ECC-989: do not call grib_trie_with_rank_delete */
+        grib_trie_with_rank_delete_container(self->dataAccessorsTrie);
     }
     self->dataAccessorsTrie = grib_trie_with_rank_new(c);
 
@@ -3466,8 +3467,10 @@ static void destroy(grib_context* c, grib_accessor* a)
     self_clear(c, self);
     if (self->dataAccessors)
         grib_accessors_list_delete(c, self->dataAccessors);
-    if (self->dataAccessorsTrie)
+    if (self->dataAccessorsTrie) {
         grib_trie_with_rank_delete_container(self->dataAccessorsTrie);
+        self->dataAccessorsTrie = NULL;
+    }
     if (self->tempStrings) {
         grib_sarray_delete_content(c, self->tempStrings);
         grib_sarray_delete(c, self->tempStrings);

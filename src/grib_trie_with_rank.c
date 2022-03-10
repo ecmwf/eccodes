@@ -382,8 +382,9 @@ void grib_trie_with_rank_delete_container(grib_trie_with_rank* t)
     GRIB_MUTEX_UNLOCK(&mutex);
 }
 
-/*
-static void grib_trie_with_rank_delete_list(grib_context* c,grib_trie_with_rank_list *list) {
+#if 0
+static void grib_trie_with_rank_delete_list(grib_context* c,grib_trie_with_rank_list *list)
+{
   grib_trie_with_rank_list* next=list;
   grib_trie_with_rank_list* p;
   while (next) {
@@ -393,7 +394,6 @@ static void grib_trie_with_rank_delete_list(grib_context* c,grib_trie_with_rank_
     grib_context_free( c, p );
   }
 }
-*/
 
 void grib_trie_with_rank_delete(grib_trie_with_rank* t)
 {
@@ -434,7 +434,6 @@ void grib_trie_with_rank_clear(grib_trie_with_rank* t)
     }
 }
 
-/*
 static void grib_trie_with_rank_insert_in_list(grib_trie_with_rank* t,void* data) {
   if (t->list==NULL) {
     t->list=grib_context_malloc_clear(t->context,sizeof(grib_trie_with_rank_list));
@@ -448,7 +447,7 @@ static void grib_trie_with_rank_insert_in_list(grib_trie_with_rank* t,void* data
     t->last_list->rank++;
   }
 }
-*/
+#endif
 
 int grib_trie_with_rank_insert(grib_trie_with_rank* t, const char* key, void* data)
 {

@@ -47,7 +47,7 @@ if (typeOfSecondFixedSurface == 255) {
     scaledValueOfSecondFixedSurface,
     pressureUnits)  :dump;
     alias level=topLevel;  # (see GRIB-725)
-    
+
 }
 alias ls.level=level;
 alias vertical.level=level;

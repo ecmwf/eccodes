@@ -535,9 +535,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     *val = atol(p);
     *len = 1;
-#if 0
+#ifdef DEBUG
     /* ECC-980: Changes reverted because of side-effects!
-     * e.g. marsType being a codetable and concept! see ifsParam
+     * e.g. marsType being a codetable and concept! see ifsParam.
+     * Keep this check in DEBUG mode only
      */
     {
         char *endptr;

@@ -170,8 +170,7 @@ static int init_sphere(grib_handle* h,
                        double Dx, double Dy, double radius,
                        double latFirstInRadians, double lonFirstInRadians,
                        double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
-                       double LaDInRadians,
-                       long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
+                       double LaDInRadians)
 {
     int i, j;
     double f, n, rho, rho0, angle, x0, y0, x, y, tmp, tmp2;
@@ -474,8 +473,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
                           LoVInDegrees,
                           Dx, Dy, radius,
                           latFirstInRadians, lonFirstInRadians,
-                          LoVInRadians, Latin1InRadians, Latin2InRadians, LaDInRadians,
-                          iScansNegatively, jScansPositively, jPointsAreConsecutive);
+                          LoVInRadians, Latin1InRadians, Latin2InRadians, LaDInRadians);
     }
     if (err) return err;
 

@@ -49,7 +49,7 @@ if(bitmapPresent)   {
 
    ): read_only;
    alias data.packedValues = codedValues;
-   
+
    if (boustrophedonicOrdering)
    {
       if (GRIBEX_boustrophedonic)

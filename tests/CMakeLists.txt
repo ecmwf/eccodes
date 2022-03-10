@@ -16,6 +16,7 @@ list(APPEND test_bins
     read_any
     julian
     grib_indexing
+    grib_fieldset
     grib_multi_from_message
     grib_read_index
     unit_tests
@@ -215,6 +216,7 @@ if( HAVE_BUILD_TOOLS )
         grib_nearest_test
         pseudo_budg
         grib_gridType
+        grib_fieldset
         grib_octahedral
         grib_grid_mercator
         grib_global

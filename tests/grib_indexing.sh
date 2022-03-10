@@ -94,8 +94,6 @@ diff $tempRef $tempOut
 ${tools_dir}/grib_index_build -N -k mars.levtype -o $tempIndex ${data_dir}/tigge_cf_ecmwf.grib2 |\
    grep -q "mars.levtype = { sfc, pl, pv, pt }"
 
-#${tools_dir}/grib_index_build -N -k mars.levtype:i -o $tempIndex ${data_dir}/tigge_cf_ecmwf.grib2 |\
-#   grep -q "mars.levtype = { 103, 1, 106, 100, 101, 8, 109, 107 }"
 
 echo "grib_compare with index files..."
 # ------------------------------------

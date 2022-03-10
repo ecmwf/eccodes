@@ -219,7 +219,6 @@ size_t grib_sarray_used_size(grib_sarray* v);
 grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize);
 grib_oarray* grib_oarray_push(grib_context* c, grib_oarray* v, void* val);
 void grib_oarray_delete(grib_context* c, grib_oarray* v);
-void grib_oarray_delete_content(grib_context* c, grib_oarray* v);
 void** grib_oarray_get_array(grib_context* c, grib_oarray* v);
 void* grib_oarray_get(grib_oarray* v, int i);
 size_t grib_oarray_used_size(grib_oarray* v);
@@ -675,14 +674,12 @@ bufr_descriptors_array* grib_accessor_class_expanded_descriptors_get_expanded(gr
 /* grib_accessor_class_md5.c */
 
 /* grib_jasper_encoding.c */
-int grib_jasper_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* values, size_t* no_values);
-int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper);
-int grib_jasper_decode(grib_context* c, unsigned char* buf, size_t* buflen, double* val, size_t* n_vals);
+int grib_jasper_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* values, const size_t* n_vals);
 int grib_jasper_encode(grib_context* c, j2k_encode_helper* helper);
 
 /* grib_openjpeg_encoding.c */
+int grib_openjpeg_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* values, const size_t* n_vals);
 int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper);
-int grib_openjpeg_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* val, const size_t* n_vals);
 
 /* action_class_set_missing.c */
 grib_action* grib_action_create_set_missing(grib_context* context, const char* name);
@@ -714,7 +711,6 @@ grib_index* grib_index_read(grib_context* c, const char* filename, int* err);
 int grib_index_search_same(grib_index* index, grib_handle* h);
 int grib_index_add_file(grib_index* index, const char* filename);
 int _codes_index_add_file(grib_index* index, const char* filename, int message_type);
-int grib_index_add_file(grib_index* index, const char* filename);
 grib_index* grib_index_new_from_file(grib_context* c, const char* filename, const char* keys, int* err);
 int grib_index_get_size(const grib_index* index, const char* key, size_t* size);
 int grib_index_get_string(const grib_index* index, const char* key, char** values, size_t* size);
@@ -815,14 +811,6 @@ void grib_timer_print(grib_timer* t);
 void grib_timer_partial_rate(grib_timer* t, double start, long total);
 void grib_print_all_timers(void);
 void grib_reset_all_timers(void);
-grib_timer* grib_get_timer(grib_context* c, const char* name, const char* statname, int elapsed);
-int grib_timer_start(grib_timer* t);
-int grib_timer_stop(grib_timer* t, long total);
-double grib_timer_value(grib_timer* t);
-void grib_timer_print(grib_timer* t);
-void grib_timer_partial_rate(grib_timer* t, double start, long total);
-void grib_print_all_timers(void);
-void grib_reset_all_timers(void);
 
 /* grib_ibmfloat.c */
 unsigned long grib_ibm_to_long(double x);
@@ -841,15 +829,10 @@ double grib_ieeefloat_error(double x);
 double grib_long_to_ieee(unsigned long x);
 unsigned long grib_ieee_nearest_smaller_to_long(double x);
 int grib_nearest_smaller_ieee_float(double a, double* ret);
-double grib_ieeefloat_error(double x);
-double grib_long_to_ieee(unsigned long x);
-int grib_nearest_smaller_ieee_float(double a, double* x);
-unsigned long grib_ieee_to_long(double x);
+
 unsigned long grib_ieee64_to_long(double x);
 double grib_long_to_ieee64(unsigned long x);
 int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val);
-int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val);
-int grib_ieee_encode_array(grib_context* c, double* val, size_t nvals, int bytes, unsigned char* buf);
 int grib_ieee_encode_array(grib_context* c, double* val, size_t nvals, int bytes, unsigned char* buf);
 
 /* grib_accessor_class_reference_value_error.c */
@@ -1008,10 +991,10 @@ int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string);
 int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string);
 void grib_fieldset_delete_order_by(grib_context* c, grib_order_by* order_by);
 void grib_fieldset_delete(grib_fieldset* set);
-int grib_fieldset_add(grib_fieldset* set, char* filename);
+int grib_fieldset_add(grib_fieldset* set, const char* filename);
 void grib_fieldset_rewind(grib_fieldset* set);
 grib_handle* grib_fieldset_next_handle(grib_fieldset* set, int* err);
-int grib_fieldset_count(grib_fieldset* set);
+int grib_fieldset_count(const grib_fieldset* set);
 grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err);
 
 /* grib_filepool.c */
@@ -1138,8 +1121,6 @@ void* grib_trie_get(grib_trie* t, const char* key);
 /* grib_trie_with_rank.c */
 grib_trie_with_rank* grib_trie_with_rank_new(grib_context* c);
 void grib_trie_with_rank_delete_container(grib_trie_with_rank* t);
-void grib_trie_with_rank_delete(grib_trie_with_rank* t);
-void grib_trie_with_rank_clear(grib_trie_with_rank* t);
 int grib_trie_with_rank_insert(grib_trie_with_rank* t, const char* key, void* data);
 void* grib_trie_with_rank_get(grib_trie_with_rank* t, const char* key, int rank);
 

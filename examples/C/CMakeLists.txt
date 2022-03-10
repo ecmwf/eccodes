@@ -82,6 +82,7 @@ if( HAVE_BUILD_TOOLS )
        grib_set_bitmap
        grib_list
        grib_get_data
+       grib_nearest
        grib_nearest_multiple
        grib_multi
        grib_set_missing

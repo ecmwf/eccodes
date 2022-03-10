@@ -21,16 +21,6 @@ outfile2=temp.$label.2
 
 rm -f $outfile1 $outfile2
 
-# Use the sample file with CCSDS packing
-# ---------------------------------------
-sample_ccsds=$ECCODES_SAMPLES_PATH/ccsds_grib2.tmpl
-${tools_dir}/grib_filter -o $outfile1 - $sample_ccsds << EOF
-  set values = { 55.0161, 99.7008 };
-  write;
-EOF
-grib_check_key_equals $outfile1 packingType grid_ccsds
-stats=`${tools_dir}/grib_get -M -F%.4f -p min,max $outfile1`
-[ "$stats" = "55.0161 99.7008" ]
 
 # ECC-1263
 # ---------
@@ -109,6 +99,13 @@ grib_check_key_equals $outfile1 packingType grid_ccsds
 grib_check_key_equals $outfile2 packingType grid_ccsds
 ${tools_dir}/grib_compare -b $BLACKLIST  $infile   $outfile1
 ${tools_dir}/grib_compare -c data:n      $outfile1 $outfile2
+
+
+# ECC-1362
+# ---------
+infile=${data_dir}/ccsds_szip.grib2
+res=`${tools_dir}/grib_get '-F%.3f' -p min,max,avg $infile`
+[ "$res" = "-180.000 180.000 -0.044" ]
 
 
 # Clean up

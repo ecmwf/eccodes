@@ -48,7 +48,7 @@ include "grib2/template.3.scanning_mode.def";
 unsigned[4] Di : edition_specific,no_copy;
 alias iDirectionIncrementGridLength = Di;
 meta geography.DiInMetres scale(Di,oneConstant,hundred,truncateDegrees) : dump;
-    
+
 # Dj - j-direction increment length in units of 10-2 m
 unsigned[4] Dj : edition_specific,no_copy;
 alias jDirectionIncrementGridLength = Dj;

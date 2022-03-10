@@ -89,7 +89,7 @@ grib_handle* codes_fieldset_next_handle(grib_fieldset* set, int* err)
 {
     return grib_fieldset_next_handle(set, err);
 }
-int codes_fieldset_count(grib_fieldset* set)
+int codes_fieldset_count(const grib_fieldset* set)
 {
     return grib_fieldset_count(set);
 }

@@ -1472,7 +1472,8 @@ static void test_concept_condition_strings()
 {
     int err           = 0;
     char result[1024] = {0,};
-    grib_handle* h = grib_handle_new_from_samples(0, "GRIB2");
+    grib_context* context = NULL;
+    grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
 
     printf("Testing: test_concept_condition_strings...\n");
 
@@ -1508,6 +1509,8 @@ static void test_trimming()
     char* pD = d;
     char* pE = e;
 
+    printf("Testing: test_trimming...\n");
+
     lrtrim(&pA, 0, 1); /*right only*/
     assert( strcmp(pA, " Standing")==0 );
 
@@ -1524,6 +1527,18 @@ static void test_trimming()
     assert( strcmp(pE, "Apostle In Triumph")==0 );
 }
 
+static void test_gribex_mode()
+{
+    grib_context* c = grib_context_get_default();
+    printf("Testing: test_gribex_mode...\n");
+
+    assert( grib_get_gribex_mode(c) == 0 ); /* default is OFF */
+    grib_gribex_mode_on(c);
+    assert( grib_get_gribex_mode(c) == 1 );
+    grib_gribex_mode_off(c);
+    assert( grib_get_gribex_mode(c) == 0 );
+}
+
 int main(int argc, char** argv)
 {
     /*printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());*/
@@ -1532,6 +1547,7 @@ int main(int argc, char** argv)
 
     test_get_git_sha1();
     test_get_build_date();
+    test_gribex_mode();
 
     test_concept_condition_strings();
 

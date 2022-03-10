@@ -21,7 +21,7 @@ cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 find_package( ecbuild 3.4 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 
 # Initialise project
-project( eccodes VERSION 2.25.0 LANGUAGES C )
+project( eccodes VERSION 2.26.0 LANGUAGES C )
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
@@ -116,7 +116,10 @@ ecbuild_add_option( FEATURE NETCDF
 
 find_package( AEC )
 if(NOT DEFINED ENABLE_AEC AND NOT AEC_FOUND)
-  ecbuild_critical("AEC (Adaptive Entropy Coding) support is highly recommended from ecCodes >= 2.25.0\nTo force the build without it, use -DENABLE_AEC=OFF")
+  ecbuild_critical("AEC library was not found.\n"
+                   "AEC (Adaptive Entropy Coding) provides the WMO GRIB CCSDS compression and decompression of data. "
+                   "This is highly recommended from ecCodes >= 2.25.0"
+                   "\nTo force the build without it, use -DENABLE_AEC=OFF")
 endif()
 ecbuild_add_option( FEATURE AEC
     DESCRIPTION "Support for Adaptive Entropy Coding"

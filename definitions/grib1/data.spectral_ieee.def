@@ -89,7 +89,7 @@ constant PUnset = -32767;
       subSetJ,
       subSetK,
       subSetM,
-      
+
       pentagonalResolutionParameterJ,
       pentagonalResolutionParameterK,
       pentagonalResolutionParameterM
@@ -118,7 +118,7 @@ constant PUnset = -32767;
       subSetJ,
       subSetK,
       subSetM,
-      
+
       pentagonalResolutionParameterJ,
       pentagonalResolutionParameterK,
       pentagonalResolutionParameterM

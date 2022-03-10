@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <assert.h>
 #include "eccodes.h"
 
 int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string); /*experimental*/
@@ -75,8 +75,8 @@ int main(int argc, char** argv)
     CODES_CHECK(err, 0);
 
     /* grib_fieldset_apply_where not fully implemented*/
-    err=grib_fieldset_apply_where(set, "(centre=='ecmf') && number==1 || step==6");
-    CODES_CHECK(err, 0);
+    err = grib_fieldset_apply_where(set, "(centre=='ecmf') && number==1 || step==6");
+    assert(err == CODES_NOT_IMPLEMENTED);
 
     printf("ordering by %s\n", order_by);
     printf("%d fields in the fieldset\n", codes_fieldset_count(set));

@@ -31,7 +31,9 @@ static grib_options_help grib_options_help_list[] = {
       "\n\t\tAll the keys in this list are skipped in the comparison. Bit-by-bit compare on.\n" },
     { "B:", "'order by' directive",
       "\n\t\tOrder by. The output will be ordered according to the 'order by' directive."
-      "\n\t\tExample: \"step:i asc, centre desc\" (step numeric ascending and centre descending)\n" },
+      "\n\t\tExample: \"step:i asc, centre desc\" (step numeric ascending and centre descending)"
+      "\n\t\tDefault sort mode is 'asc'\n"
+    },
     { "c:", "key[:i|d|s|n],key[:i|d|s|n],...",
       "\n\t\tOnly the listed keys or namespaces (:n) are compared. The optional letter after the colon is used "
       "\n\t\tto force the type in the comparison: i->integer, d->float, s->string, n->namespace."
