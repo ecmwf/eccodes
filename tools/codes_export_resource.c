@@ -9,61 +9,94 @@
  */
 
 #include "grib_api_internal.h"
-#include <assert.h>
 
-static int fail_on_error    = 1;
-static const char* toolname = NULL;
+typedef enum ResourceType
+{
+    UNKNOWN,
+    SAMPLE,
+    DEFINITION
+} ResourceType;
 
 static void usage(const char* prog)
 {
-    printf("Usage: %s [-s | -d] path\n", prog);
+    printf("Usage: %s [-s | -d] resource_path out_file\n", prog);
     exit(1);
 }
 
+#define SIZE (1024 * 1024)
 int main(int argc, char* argv[])
 {
-    char* path        = NULL;
-    char* full        = NULL;
-    char* option      = NULL;
-    char* resource    = NULL;
-    int verbose       = 0;
-    int export_sample = 0, export_definition = 0;
-    grib_context* c = grib_context_get_default();
+    char* resource_path        = NULL;
+    char* resource_name        = NULL;
+    ResourceType resource_type = UNKNOWN;
+    char* full_path            = NULL;
+    char* out_file             = NULL;
+    char* option               = NULL;
+    grib_context* c            = grib_context_get_default();
+    FILE* fin                  = NULL;
+    FILE* fout                 = NULL;
+    char buffer[SIZE]          = {0,};
+    size_t bytes = 0;
 
-    toolname = argv[0];
-    option   = argv[1];
-    path     = argv[2];
+    if (argc != 4) usage(argv[0]);
 
-    if (argc != 3) usage(toolname);
+    option        = argv[1];
+    resource_path = argv[2];
+    out_file      = argv[3];
 
     if (strcmp(option, "-s") == 0) {
-        export_sample = 1;
-        resource = "sample";
-    } else if (strcmp(option, "-d") == 0) {
-        export_definition = 1;
-        resource = "definition";
-    } else {
+        resource_type = SAMPLE;
+        resource_name = "sample";
+    }
+    else if (strcmp(option, "-d") == 0) {
+        resource_type = DEFINITION;
+        resource_name = "definition";
+    }
+    else {
         fprintf(stderr, "Invalid option: Specify either -s or -d\n");
         return 1;
     }
 
-    if (export_sample) {
-        char* t = strstr(path, ".tmpl");
+    if (resource_type == SAMPLE) {
+        char* t = strstr(resource_path, ".tmpl");
         if (t) {
             *t = 0;  // get rid of the sample file extension
         }
-        full = grib_external_template_path(c, path);
+        full_path = grib_external_template_path(c, resource_path);
     }
-    else if (export_definition) {
-        full = grib_context_full_defs_path(c, path);
+    else if (resource_type == DEFINITION) {
+        full_path = grib_context_full_defs_path(c, resource_path);
     }
-    if (!full) {
-        fprintf(stderr, "Failed to export %s: %s\n", resource, path);
+    if (!full_path) {
+        fprintf(stderr, "Failed to export %s: %s\n", resource_name, resource_path);
         return 1;
     }
-    printf("full = %s\n", full);
-    assert(path_is_regular_file(full));
-    grib_context_free(c, full);
+
+    fout = fopen(out_file, "wb");
+    if (!fout) {
+        perror(out_file);
+        fprintf(stderr, "Failed to open output file %s\n", out_file);
+        return 1;
+    }
+    fin = codes_fopen(full_path, "r");
+    if (!fin) {
+        fprintf(stderr, "Failed to open resource %s\n", full_path);
+        return 1;
+    }
+    /* write resource to fout */
+    while (0 < (bytes = fread(buffer, 1, sizeof(buffer), fin)))
+        fwrite(buffer, 1, bytes, fout);
+
+    if (fclose(fin) != 0) {
+        fprintf(stderr, "Call to fclose failed (input)\n");
+        return 1;
+    }
+    if (fclose(fout) != 0) {
+        fprintf(stderr, "Call to fclose failed (output)\n");
+        return 1;
+    }
+
+    grib_context_free(c, full_path);
 
     return 0;
 }
