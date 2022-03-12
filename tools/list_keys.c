@@ -29,7 +29,7 @@ typedef struct grib_action_list
     grib_action* block_list;
 } grib_action_list;
 
-void print_names(grib_action* a)
+static void print_names(grib_action* a)
 {
     while (a) {
         if (a->op && !strcmp(a->op, "label")) {
