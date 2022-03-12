@@ -25,8 +25,9 @@ cmp $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp
 
 # IFS Samples
 # ----------------
-ECCODES_SAMPLES_PATH=/MEMFS/ifs_samples/grib1_mlgrib2  ${tools_dir}/codes_export_resource  -s gg_ml.tmpl $temp
-
+if [ $HAVE_MEMFS -eq 1 ]; then
+    ECCODES_SAMPLES_PATH=/MEMFS/ifs_samples/grib1_mlgrib2  ${tools_dir}/codes_export_resource  -s gg_ml.tmpl $temp
+fi
 
 # Definition files
 # ----------------
