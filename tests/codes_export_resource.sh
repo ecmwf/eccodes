@@ -14,7 +14,7 @@ label="codes_export_resource_test"
 temp=temp.$label
 
 # Sample files
-# --------------
+# ----------------
 f='GRIB2.tmpl'
 ${tools_dir}/codes_export_resource -s $f $temp
 cmp $ECCODES_SAMPLES_PATH/$f $temp
@@ -22,6 +22,11 @@ cmp $ECCODES_SAMPLES_PATH/$f $temp
 # Use the shortened form
 ${tools_dir}/codes_export_resource -s GRIB2 $temp
 cmp $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp
+
+# IFS Samples
+# ----------------
+ECCODES_SAMPLES_PATH=/MEMFS/ifs_samples/grib1_mlgrib2  ${tools_dir}/codes_export_resource  -s gg_ml.tmpl $temp
+
 
 # Definition files
 # ----------------
@@ -32,6 +37,22 @@ cmp $ECCODES_DEFINITION_PATH/$f $temp
 f='common/c-11.table'
 ${tools_dir}/codes_export_resource -d $f $temp
 cmp $ECCODES_DEFINITION_PATH/$f $temp
+
+
+# Failing cases
+# ----------------
+set +e
+${tools_dir}/codes_export_resource -d nonexistent $temp
+status=$?
+set -e
+[ $status -eq 1 ]
+
+set +e
+${tools_dir}/codes_export_resource -s nonexistent $temp
+status=$?
+set -e
+[ $status -eq 1 ]
+
 
 
 # Clean up
