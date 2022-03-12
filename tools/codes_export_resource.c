@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
     if (resource_type == SAMPLE) {
         char* t = strstr(resource_path, ".tmpl");
         if (t) {
-            *t = '\0';  // get rid of sample file extension (if there)
+            *t = '\0';  /* get rid of sample file extension (if there) */
         }
         full_path = grib_external_template_path(c, resource_path);
     }
