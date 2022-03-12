@@ -111,7 +111,7 @@ static char* try_template_path(grib_context* c, const char* dir, const char* nam
 
     sprintf(path, "%s/%s.tmpl", dir, name);
 
-    if (codes_access(path, R_OK) == 0) {
+    if (codes_access(path, F_OK) == 0) {
         return grib_context_strdup(c, path);
     }
 
