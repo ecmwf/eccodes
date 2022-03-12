@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
     if (resource_type == SAMPLE) {
         char* t = strstr(resource_path, ".tmpl");
         if (t) {
-            *t = 0;  // get rid of the sample file extension
+            *t = '\0';  // get rid of sample file extension (if there)
         }
         full_path = grib_external_template_path(c, resource_path);
     }
@@ -68,24 +68,27 @@ int main(int argc, char* argv[])
         full_path = grib_context_full_defs_path(c, resource_path);
     }
     if (!full_path) {
-        fprintf(stderr, "Failed to export %s: %s\n", resource_name, resource_path);
+        fprintf(stderr, "Failed to access %s: '%s'\n", resource_name, resource_path);
         return 1;
     }
 
     fout = fopen(out_file, "wb");
     if (!fout) {
-        perror(out_file);
-        fprintf(stderr, "Failed to open output file %s\n", out_file);
+        fprintf(stderr, "Failed to open output file '%s'\n", out_file);
         return 1;
     }
     fin = codes_fopen(full_path, "r");
     if (!fin) {
-        fprintf(stderr, "Failed to open resource %s\n", full_path);
+        fprintf(stderr, "Failed to open resource '%s'\n", full_path);
         return 1;
     }
-    /* write resource to fout */
-    while (0 < (bytes = fread(buffer, 1, sizeof(buffer), fin)))
-        fwrite(buffer, 1, bytes, fout);
+    /* write resource bytes to fout */
+    while (0 < (bytes = fread(buffer, 1, sizeof(buffer), fin))) {
+        if (fwrite(buffer, 1, bytes, fout) != bytes) {
+            fprintf(stderr, "Failed to write out bytes\n");
+            return 1;
+        }
+    }
 
     if (fclose(fin) != 0) {
         fprintf(stderr, "Call to fclose failed (input)\n");
