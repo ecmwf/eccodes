@@ -11,7 +11,7 @@
 #include "grib_api_internal.h"
 
 #ifdef HAVE_MEMFS
-/* These two functions are implemented in the generated C file memfs.c in the build area */
+/* These two functions are implemented in the generated C file memfs_gen_final.c in the build area */
 /* See the memfs.py Python generator */
 int codes_memfs_exists(const char* path);
 FILE* codes_memfs_open(const char* path);
@@ -20,7 +20,7 @@ FILE* codes_fopen(const char* name, const char* mode)
 {
     FILE* f;
 
-    if (strcmp(mode, "r") != 0) {
+    if (strcmp(mode, "r") != 0) { /* Not reading */
         return fopen(name, mode);
     }
 
@@ -34,6 +34,7 @@ FILE* codes_fopen(const char* name, const char* mode)
 
 int codes_access(const char* name, int mode)
 {
+    /* F_OK tests for the existence of the file  */
     if (mode != F_OK) {
         return access(name, mode);
     }
@@ -46,7 +47,7 @@ int codes_access(const char* name, int mode)
 }
 
 #else
-
+/* No MEMFS */
 FILE* codes_fopen(const char* name, const char* mode)
 {
     return fopen(name, mode);
