@@ -12,7 +12,7 @@
 
 typedef void (*getproc)(FILE*, grib_handle*, const char*, const char*);
 
-void get_long(FILE* f, grib_handle* h, const char* name, const char* arg)
+static void get_long(FILE* f, grib_handle* h, const char* name, const char* arg)
 {
     const char* key = arg ? arg : name;
     long value;
@@ -20,7 +20,7 @@ void get_long(FILE* f, grib_handle* h, const char* name, const char* arg)
     fprintf(f, "\"%s\":%ld\n", name, value);
 }
 
-void get_param(FILE* f, grib_handle* h, const char* name, const char* arg)
+static void get_param(FILE* f, grib_handle* h, const char* name, const char* arg)
 {
     const char* key = "indicatorOfParameter";
     long value;
@@ -28,7 +28,7 @@ void get_param(FILE* f, grib_handle* h, const char* name, const char* arg)
     fprintf(f, "\"%s\":%ld\n", name, value - 131 + 2);
 }
 
-void get_iso_ref_date(FILE* f, grib_handle* h, const char* name, const char* arg)
+static void get_iso_ref_date(FILE* f, grib_handle* h, const char* name, const char* arg)
 {
     long year;
     long month;
