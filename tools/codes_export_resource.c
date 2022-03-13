@@ -101,5 +101,7 @@ int main(int argc, char* argv[])
 
     grib_context_free(c, full_path);
 
+    printf("Resource written out to file '%s'.\n", out_file);
+
     return 0;
 }
