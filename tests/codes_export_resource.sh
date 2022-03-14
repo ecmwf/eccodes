@@ -15,13 +15,14 @@ temp=temp.$label
 
 # Sample files
 # ----------------
+${tools_dir}/codes_export_resource -s GRIB2 $temp
+cmp $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp
+
+# ECC-1369: Include the extension
 f='GRIB2.tmpl'
 ${tools_dir}/codes_export_resource -s $f $temp
 cmp $ECCODES_SAMPLES_PATH/$f $temp
 
-# Use the shortened form
-${tools_dir}/codes_export_resource -s GRIB2 $temp
-cmp $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp
 
 # IFS Samples
 # ----------------
