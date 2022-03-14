@@ -55,7 +55,10 @@ static grib_handle* try_template(grib_context* c, const char* dir, const char* n
     grib_handle* g = NULL;
     int err        = 0;
 
-    sprintf(path, "%s/%s.tmpl", dir, name);
+    if (string_ends_with(name, ".tmpl"))
+        sprintf(path, "%s/%s", dir, name);
+    else
+        sprintf(path, "%s/%s.tmpl", dir, name);
 
     if (c->debug) {
         fprintf(stderr, "ECCODES DEBUG try_template path='%s'\n", path);
@@ -83,7 +86,10 @@ static grib_handle* try_bufr_template(grib_context* c, const char* dir, const ch
     grib_handle* g = NULL;
     int err        = 0;
 
-    sprintf(path, "%s/%s.tmpl", dir, name);
+    if (string_ends_with(name, ".tmpl"))
+        sprintf(path, "%s/%s", dir, name);
+    else
+        sprintf(path, "%s/%s.tmpl", dir, name);
 
     if (c->debug) {
         fprintf(stderr, "ECCODES DEBUG try_template path='%s'\n", path);
@@ -108,8 +114,10 @@ static grib_handle* try_bufr_template(grib_context* c, const char* dir, const ch
 static char* try_template_path(grib_context* c, const char* dir, const char* name)
 {
     char path[2048];
-
-    sprintf(path, "%s/%s.tmpl", dir, name);
+    if (string_ends_with(name, ".tmpl"))
+        sprintf(path, "%s/%s", dir, name);
+    else
+        sprintf(path, "%s/%s.tmpl", dir, name);
 
     if (codes_access(path, F_OK) == 0) {
         return grib_context_strdup(c, path);

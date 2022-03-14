@@ -58,10 +58,6 @@ int main(int argc, char* argv[])
     }
 
     if (resource_type == SAMPLE) {
-        char* t = strstr(resource_path, ".tmpl");
-        if (t) {
-            *t = '\0';  /* get rid of sample file extension (if there) */
-        }
         full_path = grib_external_template_path(c, resource_path);
     }
     else if (resource_type == DEFINITION) {
@@ -101,7 +97,7 @@ int main(int argc, char* argv[])
 
     grib_context_free(c, full_path);
 
-    printf("Resource written out to file '%s'.\n", out_file);
+    printf("Resource exported to file '%s'.\n", out_file);
 
     return 0;
 }
