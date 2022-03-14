@@ -502,7 +502,7 @@ grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param sample_name : the name of the sample file (without the .tmpl extension)
+ * @param sample_name : the name of the GRIB sample file
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
 grib_handle* grib_handle_new_from_samples(grib_context* c, const char* sample_name);

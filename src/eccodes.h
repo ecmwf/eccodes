@@ -462,7 +462,7 @@ codes_handle* codes_handle_new_from_message_copy(codes_context* c, const void* d
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param sample_name : the name of the sample file (without the .tmpl extension)
+ * @param sample_name : the name of the GRIB sample file
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
 codes_handle* codes_grib_handle_new_from_samples(codes_context* c, const char* sample_name);
@@ -472,7 +472,7 @@ codes_handle* codes_grib_handle_new_from_samples(codes_context* c, const char* s
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param sample_name : the name of the sample file (without the .tmpl extension)
+ * @param sample_name : the name of the BUFR sample file
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
 codes_handle* codes_bufr_handle_new_from_samples(codes_context* c, const char* sample_name);
