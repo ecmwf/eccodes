@@ -61,7 +61,7 @@ static grib_handle* try_product_template(grib_context* c, ProductKind product_ki
         sprintf(path, "%s/%s.tmpl", dir, name);
 
     if (c->debug) {
-        fprintf(stderr, "ECCODES DEBUG try_product_template path='%s'\n", path);
+        fprintf(stderr, "ECCODES DEBUG try_product_template product=%s, path='%s'\n", codes_get_product_name(product_kind), path);
     }
 
     if (codes_access(path, F_OK) == 0) {

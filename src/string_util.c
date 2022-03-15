@@ -170,3 +170,41 @@ int count_char_in_string(const char* str, char c)
     }
     return count;
 }
+
+const char* codes_get_product_name(ProductKind product)
+{
+    switch (product) {
+        case PRODUCT_GRIB:
+            return "GRIB";
+        case PRODUCT_BUFR:
+            return "BUFR";
+        case PRODUCT_METAR:
+            return "METAR";
+        case PRODUCT_GTS:
+            return "GTS";
+        case PRODUCT_TAF:
+            return "TAF";
+        case PRODUCT_ANY:
+            return "ANY";
+    }
+    return "unknown";
+}
+
+const char* grib_get_type_name(int type)
+{
+    switch (type) {
+        case GRIB_TYPE_LONG:
+            return "long";
+        case GRIB_TYPE_STRING:
+            return "string";
+        case GRIB_TYPE_BYTES:
+            return "bytes";
+        case GRIB_TYPE_DOUBLE:
+            return "double";
+        case GRIB_TYPE_LABEL:
+            return "label";
+        case GRIB_TYPE_SECTION:
+            return "section";
+    }
+    return "unknown";
+}
