@@ -5,6 +5,39 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
 	}
+#Maximum temperature at 2 metres in the last 6 hours
+'mx2t6' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 15 ;
+	 scaleFactorOfFirstFixedSurface = 1 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 lengthOfTimeRange = 6 ;
+	}
+#Minimum temperature at 2 metres in the last 6 hours
+'mn2t6' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 15 ;
+	 scaleFactorOfFirstFixedSurface = 1 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 lengthOfTimeRange = 6 ;
+	}
+#2 metre temperature
+'t2m' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 15 ;
+	 scaleFactorOfFirstFixedSurface = 1 ;
+	}
 #2 metre dewpoint temperature
 'd2m' = {
 	 discipline = 0 ;
@@ -27,6 +60,32 @@
      scaleFactorOfSecondFixedSurface = 0 ;
      typeOfStatisticalProcessing = 0 ;
 }
+#Sea surface practical salinity
+'sos' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Ocean mixed layer thickness defined by sigma theta 0.01 kg/m3
+'mlotst010' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 169 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 1 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Sea surface height
 'zos' = {
      discipline = 10 ;
@@ -64,32 +123,6 @@
      scaleFactorOfFirstFixedSurface = 0 ;
      scaledValueOfSecondFixedSurface = 300 ;
      scaleFactorOfSecondFixedSurface = 0 ;
-     typeOfStatisticalProcessing = 0 ;
-    }
-#Sea surface practical salinity
-'sos' = {
-     discipline = 10 ;
-     parameterCategory = 3 ;
-     parameterNumber = 3 ;
-     typeOfFirstFixedSurface = 160 ;
-     typeOfSecondFixedSurface = 255 ;
-     scaledValueOfFirstFixedSurface = 0 ;
-     scaleFactorOfFirstFixedSurface = 0 ;
-     scaledValueOfSecondFixedSurface = missing() ;
-     scaleFactorOfSecondFixedSurface = missing() ;
-     typeOfStatisticalProcessing = 0 ;
-    }
-#Ocean mixed layer thickness defined by sigma theta 0.01 kg/m3
-'mlotst010' = {
-     discipline = 10 ;
-     parameterCategory = 4 ;
-     parameterNumber = 14 ;
-     typeOfFirstFixedSurface = 169 ;
-     typeOfSecondFixedSurface = 255 ;
-     scaledValueOfFirstFixedSurface = 1 ;
-     scaleFactorOfFirstFixedSurface = 2 ;
-     scaledValueOfSecondFixedSurface = missing() ;
-     scaleFactorOfSecondFixedSurface = missing() ;
      typeOfStatisticalProcessing = 0 ;
     }
 #Sea-ice thickness
