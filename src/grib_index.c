@@ -1065,6 +1065,8 @@ static grib_handle* new_message_from_file(int message_type, grib_context* c, FIL
     return NULL;
 }
 
+#define MAX_NUM_KEYS 40
+
 int _codes_index_add_file(grib_index* index, const char* filename, int message_type)
 {
     double dval;
@@ -1130,7 +1132,6 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
         {
             char* envsetkeys = getenv("ECCODES_INDEX_SET_KEYS");
             if (envsetkeys) {
-                const int MAX_NUM_KEYS = 40;
                 grib_values set_values[MAX_NUM_KEYS];
                 int set_values_count = MAX_NUM_KEYS;
                 int error = parse_keyval_string(NULL, envsetkeys, 1, GRIB_TYPE_UNDEFINED,
