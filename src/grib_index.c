@@ -1126,7 +1126,25 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
         field_tree          = index->fields;
         index_key->value[0] = 0;
         message_count++;
-        
+
+        {
+            char* envsetkeys = getenv("ECCODES_INDEX_SET_KEYS");
+            if (envsetkeys) {
+                const int MAX_NUM_KEYS = 40;
+                grib_values set_values[MAX_NUM_KEYS];
+                int set_values_count = MAX_NUM_KEYS;
+                int error = parse_keyval_string(NULL, envsetkeys, 1, GRIB_TYPE_UNDEFINED,
+                        set_values, &set_values_count);
+                if (!error && set_values_count != 0) {
+                    err = grib_set_values(h, set_values, set_values_count);
+                    if (err) {
+                        grib_context_log(c, GRIB_LOG_ERROR,"codes_index_add_file: unable to set %s\n", envsetkeys);
+                        return err;
+                    }
+                }
+            }
+        }
+
         if (index->product_kind == PRODUCT_BUFR && index->unpack_bufr) {
             err = grib_set_long(h, "unpack", 1);
             if (err) {
