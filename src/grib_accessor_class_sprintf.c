@@ -17,7 +17,7 @@
    SUPER      = grib_accessor_class_ascii
    IMPLEMENTS = pack_string;unpack_string;value_count
    IMPLEMENTS = init;string_length
-   MEMBERS= grib_arguments* args  
+   MEMBERS= grib_arguments* args
    END_CLASS_DEF
 
  */

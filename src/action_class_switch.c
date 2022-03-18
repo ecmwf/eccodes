@@ -20,7 +20,7 @@
    CLASS      = action
    SUPER      = action_class_section
    IMPLEMENTS = destroy
-   IMPLEMENTS = xref   
+   IMPLEMENTS = xref
    IMPLEMENTS = execute
    MEMBERS    = grib_arguments* args
    MEMBERS    = grib_case *Case
