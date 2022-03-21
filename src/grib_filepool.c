@@ -278,6 +278,51 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
     return file;
 }
 
+grib_file* grib_file_pool_create_clone(grib_context* c, short clone_id, grib_file* pool_file)
+{
+    if(pool_file)
+    {
+        grib_file* newfile          = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
+        newfile->id                 = clone_id;
+        newfile->name               = strdup(pool_file->name);
+        newfile->handle             = pool_file->handle;
+        newfile->pool_file          = pool_file;
+        newfile->pool_file_refcount = 0;
+
+        GRIB_MUTEX_INIT_ONCE(&once, &init);
+        GRIB_MUTEX_LOCK(&mutex1);
+
+        ++pool_file->pool_file_refcount;
+
+        GRIB_MUTEX_UNLOCK(&mutex1);
+
+        return newfile;
+    }
+    else
+        return 0;
+}
+
+void grib_file_pool_delete_clone(grib_file* cloned_file)
+{
+    grib_file* pool_file = cloned_file->pool_file;
+    if(pool_file)
+    {
+        GRIB_MUTEX_INIT_ONCE(&once, &init);
+        GRIB_MUTEX_LOCK(&mutex1);
+        if(pool_file->pool_file_refcount > 0)
+        {
+            --pool_file->pool_file_refcount;
+
+            if (pool_file->pool_file_refcount == 0)
+                grib_file_pool_delete_file(pool_file);
+        }
+
+        GRIB_MUTEX_UNLOCK(&mutex1);
+    }
+
+    grib_file_delete(cloned_file);
+}
+
 void grib_file_pool_delete_file(grib_file* file)
 {
     grib_file* prev = NULL;
@@ -287,6 +332,7 @@ void grib_file_pool_delete_file(grib_file* file)
     if (file == file_pool.first) {
         file_pool.first   = file->next;
         file_pool.current = file->next;
+        file_pool.size--;
     }
     else {
         prev              = file_pool.first;
@@ -299,10 +345,13 @@ void grib_file_pool_delete_file(grib_file* file)
         DebugAssert(prev);
         if (prev) {
             prev->next = file->next;
+            file_pool.size--;
         }
     }
 
     if (file->handle) {
+        fclose(file->handle);
+        file->handle = NULL;
         file_pool.number_of_opened_files--;
     }
     grib_file_delete(file);
@@ -425,12 +474,14 @@ grib_file* grib_file_new(grib_context* c, const char* name, int* err)
     next_id++;
     GRIB_MUTEX_UNLOCK(&mutex1);
 
-    file->mode     = 0;
-    file->handle   = 0;
-    file->refcount = 0;
-    file->context  = c;
-    file->next     = 0;
-    file->buffer   = 0;
+    file->mode               = 0;
+    file->handle             = 0;
+    file->refcount           = 0;
+    file->context            = c;
+    file->next               = 0;
+    file->pool_file          = 0;
+    file->pool_file_refcount = 0;
+    file->buffer             = 0;
     return file;
 }
 
