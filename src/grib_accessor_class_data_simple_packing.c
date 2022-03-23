@@ -387,7 +387,8 @@ static int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned c
     /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
 
     /* ECC-941 */
-    {
+    if (!a->context->ieee_packing) {
+        /* Must turn off this check when the environment variable ECCODES_GRIB_IEEE_PACKING is on */
         long offsetAfterData = 0;
         err                  = grib_get_long(gh, "offsetAfterData", &offsetAfterData);
         if (!err && offsetAfterData > offsetBeforeData) {

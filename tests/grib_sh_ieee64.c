@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     double zval[ILCHAM];
     int m, n, k;
 
-    GRIB_CHECK(((h = grib_handle_new_from_samples(NULL, "sh_ml_grib2")) == NULL), 0);
+    GRIB_CHECK(((h = grib_handle_new_from_samples(NULL, "sh_ml_grib2.tmpl")) == NULL), 0);
 
     /* Meteo-France settings */
     GRIB_CHECK(grib_set_long(h, "centre", 85), 0);

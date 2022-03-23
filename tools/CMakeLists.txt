@@ -41,6 +41,7 @@ list( APPEND ecc_tools_binaries_extra
              gg_sub_area_check
              grib_repair
              grib_to_json
+             codes_export_resource
              grib_check_gaussian_grid
              bufr_split_by_rdbSubtype )
 

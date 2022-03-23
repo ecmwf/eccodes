@@ -1168,7 +1168,8 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
                     return err;
             }
             if (err && err != GRIB_NOT_FOUND) {
-                grib_context_log(c, GRIB_LOG_ERROR, "unable to create index. \"%s\": %s", index_key->name, grib_get_error_message(err));
+                grib_context_log(c, GRIB_LOG_ERROR, "unable to create index. key=\"%s\" (message #%lu): %s",
+                                 index_key->name, message_count, grib_get_error_message(err));
                 return err;
             }
 

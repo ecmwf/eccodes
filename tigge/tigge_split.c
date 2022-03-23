@@ -64,7 +64,6 @@ static long get(grib_handle *h,const char* what)
     {
         fprintf(stderr,"%s, field %d [%s]: cannot get %s: %s\n",file,field,param,what,grib_get_error_message(e));
         exit(1);
-        val = -1;
     }
     return val;
 }

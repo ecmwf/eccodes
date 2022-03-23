@@ -144,14 +144,18 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 grib_box* grib_box_new(grib_handle* h, int* error)
 {
+    grib_context_log(grib_context_get_default(), GRIB_LOG_ERROR,
+            "The grib_box_new function is deprecated and will be removed later.");
+    *error = GRIB_INTERNAL_ERROR;
+    return NULL;
+
+#if 0
     grib_accessor* a      = NULL;
     grib_accessor_box* na = NULL;
     grib_box* n           = NULL;
     *error                = GRIB_NOT_IMPLEMENTED;
     a                     = grib_find_accessor(h, "BOX");
     na                    = (grib_accessor_box*)a;
-
-    fprintf(stderr, "Warning: The grib_box_new function is deprecated and will be removed later.");
 
     if (!a)
         return NULL;
@@ -162,4 +166,5 @@ grib_box* grib_box_new(grib_handle* h, int* error)
         *error = GRIB_SUCCESS;
 
     return n;
+#endif
 }

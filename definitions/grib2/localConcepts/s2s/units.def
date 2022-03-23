@@ -5,6 +5,39 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
 	}
+#Maximum temperature at 2 metres in the last 6 hours
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 15 ;
+	 scaleFactorOfFirstFixedSurface = 1 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 lengthOfTimeRange = 6 ;
+	}
+#Minimum temperature at 2 metres in the last 6 hours
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 15 ;
+	 scaleFactorOfFirstFixedSurface = 1 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 lengthOfTimeRange = 6 ;
+	}
+#2 metre temperature
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 15 ;
+	 scaleFactorOfFirstFixedSurface = 1 ;
+	}
 #2 metre dewpoint temperature
 'K' = {
 	 discipline = 0 ;
@@ -13,6 +46,15 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#2 metre dewpoint temperature
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 15 ;
+	 scaleFactorOfFirstFixedSurface = 1 ;
 	}
 #Mean sea water potential temperature in the upper 300 m
 'K' = {

@@ -151,7 +151,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         printf(" }\n");
         the_keys = the_keys->next;
     }
-    printf("--- %d messages indexed\n", idx->count);
+    printf("--- %d message(s) indexed\n", idx->count);
 
     if (idx->count)
         grib_index_write(idx, options->outfile->name);

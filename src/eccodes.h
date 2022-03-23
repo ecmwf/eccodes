@@ -462,7 +462,7 @@ codes_handle* codes_handle_new_from_message_copy(codes_context* c, const void* d
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param sample_name : the name of the sample file (without the .tmpl extension)
+ * @param sample_name : the name of the GRIB sample file
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
 codes_handle* codes_grib_handle_new_from_samples(codes_context* c, const char* sample_name);
@@ -472,7 +472,7 @@ codes_handle* codes_grib_handle_new_from_samples(codes_context* c, const char* s
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param sample_name : the name of the sample file (without the .tmpl extension)
+ * @param sample_name : the name of the BUFR sample file
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
 codes_handle* codes_bufr_handle_new_from_samples(codes_context* c, const char* sample_name);
@@ -779,16 +779,16 @@ int codes_get_double(const codes_handle* h, const char* key, double* value);
 int codes_get_double_element(const codes_handle* h, const char* key, int i, double* value);
 
 /**
-*  Get as double array the elements of the "key" array whose indexes are listed in the input array i
+*  Get as double array the elements of the "key" array whose indexes are listed in the input array "index_array"
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param i           : zero-based array of indexes
-* @param size        : size of the i and value arrays
+* @param index_array : zero-based array of indexes
+* @param size        : size of the index_array and value arrays
 * @param value       : the double array for the data values
 * @return            0 if OK, integer value on error
 */
-int codes_get_double_elements(const codes_handle* h, const char* key, int* i, long size, double* value);
+int codes_get_double_elements(const codes_handle* h, const char* key, const int* index_array, long size, double* value);
 
 /**
 *  Get a string value from a key, if several keys of the same name are present, the last one is returned

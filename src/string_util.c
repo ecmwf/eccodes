@@ -148,15 +148,15 @@ int string_to_long(const char* input, long* output)
     return GRIB_SUCCESS;
 }
 
-/* Return 1 if str1 ends with str2, 0 otherwise */
-int string_ends_with(const char* str1, const char* str2)
+/* Return 1 if 's' ends with 'suffix', 0 otherwise */
+int string_ends_with(const char* s, const char* suffix)
 {
-    const size_t len1 = strlen(str1);
-    const size_t len2 = strlen(str2);
+    const size_t len1 = strlen(s);
+    const size_t len2 = strlen(suffix);
     if (len2 > len1)
         return 0;
 
-    if (strcmp(&str1[len1 - len2], str2) == 0)
+    if (strcmp(&s[len1 - len2], suffix) == 0)
         return 1;
     return 0;
 }
@@ -169,4 +169,42 @@ int count_char_in_string(const char* str, char c)
         if (str[i] == c) count++;
     }
     return count;
+}
+
+const char* codes_get_product_name(ProductKind product)
+{
+    switch (product) {
+        case PRODUCT_GRIB:
+            return "GRIB";
+        case PRODUCT_BUFR:
+            return "BUFR";
+        case PRODUCT_METAR:
+            return "METAR";
+        case PRODUCT_GTS:
+            return "GTS";
+        case PRODUCT_TAF:
+            return "TAF";
+        case PRODUCT_ANY:
+            return "ANY";
+    }
+    return "unknown";
+}
+
+const char* grib_get_type_name(int type)
+{
+    switch (type) {
+        case GRIB_TYPE_LONG:
+            return "long";
+        case GRIB_TYPE_STRING:
+            return "string";
+        case GRIB_TYPE_BYTES:
+            return "bytes";
+        case GRIB_TYPE_DOUBLE:
+            return "double";
+        case GRIB_TYPE_LABEL:
+            return "label";
+        case GRIB_TYPE_SECTION:
+            return "section";
+    }
+    return "unknown";
 }
