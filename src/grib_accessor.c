@@ -600,25 +600,6 @@ int grib_compare_accessors(grib_accessor* a1, grib_accessor* a2, int compare_fla
     return ret;
 }
 
-const char* grib_get_type_name(int type)
-{
-    switch (type) {
-        case GRIB_TYPE_LONG:
-            return "long";
-        case GRIB_TYPE_STRING:
-            return "string";
-        case GRIB_TYPE_BYTES:
-            return "bytes";
-        case GRIB_TYPE_DOUBLE:
-            return "double";
-        case GRIB_TYPE_LABEL:
-            return "label";
-        case GRIB_TYPE_SECTION:
-            return "section";
-    }
-    return "unknown";
-}
-
 /*
 int grib_accessor_clear_attributes(grib_accessor* a)
 {

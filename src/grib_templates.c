@@ -49,16 +49,19 @@ grib_handle* grib_internal_sample(grib_context* c,const char* name)
 #define ECC_PATH_DELIMITER_CHAR ':'
 #endif
 
-static grib_handle* try_template(grib_context* c, const char* dir, const char* name)
+static grib_handle* try_product_template(grib_context* c, ProductKind product_kind, const char* dir, const char* name)
 {
     char path[1024];
     grib_handle* g = NULL;
     int err        = 0;
 
-    sprintf(path, "%s/%s.tmpl", dir, name);
+    if (string_ends_with(name, ".tmpl"))
+        sprintf(path, "%s/%s", dir, name);
+    else
+        sprintf(path, "%s/%s.tmpl", dir, name);
 
     if (c->debug) {
-        fprintf(stderr, "ECCODES DEBUG try_template path='%s'\n", path);
+        fprintf(stderr, "ECCODES DEBUG try_product_template product=%s, path='%s'\n", codes_get_product_name(product_kind), path);
     }
 
     if (codes_access(path, F_OK) == 0) {
@@ -67,37 +70,14 @@ static grib_handle* try_template(grib_context* c, const char* dir, const char* n
             grib_context_log(c, GRIB_LOG_PERROR, "cannot open %s", path);
             return NULL;
         }
-        g = grib_handle_new_from_file(c, f, &err);
-        if (!g) {
-            grib_context_log(c, GRIB_LOG_ERROR, "cannot create GRIB handle from %s", path);
+        if (product_kind == PRODUCT_BUFR) {
+            g = codes_bufr_handle_new_from_file(c, f, &err);
+        } else {
+            /* Note: Pseudo GRIBs like DIAG and BUDG also come here */
+            g = grib_handle_new_from_file(c, f, &err);
         }
-        fclose(f);
-    }
-
-    return g;
-}
-
-static grib_handle* try_bufr_template(grib_context* c, const char* dir, const char* name)
-{
-    char path[1024];
-    grib_handle* g = NULL;
-    int err        = 0;
-
-    sprintf(path, "%s/%s.tmpl", dir, name);
-
-    if (c->debug) {
-        fprintf(stderr, "ECCODES DEBUG try_template path='%s'\n", path);
-    }
-
-    if (codes_access(path, F_OK) == 0) {
-        FILE* f = codes_fopen(path, "r");
-        if (!f) {
-            grib_context_log(c, GRIB_LOG_PERROR, "cannot open %s", path);
-            return NULL;
-        }
-        g = codes_bufr_handle_new_from_file(c, f, &err);
         if (!g) {
-            grib_context_log(c, GRIB_LOG_ERROR, "cannot create BUFR handle from %s", path);
+            grib_context_log(c, GRIB_LOG_ERROR, "cannot create handle from %s", path);
         }
         fclose(f);
     }
@@ -108,10 +88,12 @@ static grib_handle* try_bufr_template(grib_context* c, const char* dir, const ch
 static char* try_template_path(grib_context* c, const char* dir, const char* name)
 {
     char path[2048];
+    if (string_ends_with(name, ".tmpl"))
+        sprintf(path, "%s/%s", dir, name);
+    else
+        sprintf(path, "%s/%s.tmpl", dir, name);
 
-    sprintf(path, "%s/%s.tmpl", dir, name);
-
-    if (codes_access(path, R_OK) == 0) {
+    if (codes_access(path, F_OK) == 0) {
         return grib_context_strdup(c, path);
     }
 
@@ -131,7 +113,7 @@ grib_handle* grib_external_template(grib_context* c, const char* name)
     while (*base) {
         if (*base == ECC_PATH_DELIMITER_CHAR) {
             *p = 0;
-            g  = try_template(c, buffer, name);
+            g  = try_product_template(c, PRODUCT_GRIB, buffer, name);
             if (g)
                 return g;
             p = buffer;
@@ -141,7 +123,7 @@ grib_handle* grib_external_template(grib_context* c, const char* name)
     }
 
     *p       = 0;
-    return g = try_template(c, buffer, name);
+    return g = try_product_template(c, PRODUCT_GRIB, buffer, name);
 }
 
 grib_handle* bufr_external_template(grib_context* c, const char* name)
@@ -157,7 +139,7 @@ grib_handle* bufr_external_template(grib_context* c, const char* name)
     while (*base) {
         if (*base == ECC_PATH_DELIMITER_CHAR) {
             *p = 0;
-            g  = try_bufr_template(c, buffer, name);
+            g  = try_product_template(c, PRODUCT_BUFR, buffer, name);
             if (g)
                 return g;
             p = buffer;
@@ -167,11 +149,11 @@ grib_handle* bufr_external_template(grib_context* c, const char* name)
     }
 
     *p = 0;
-    g  = try_bufr_template(c, buffer, name);
+    g  = try_product_template(c, PRODUCT_BUFR, buffer, name);
     return g;
 }
 
-char* grib_external_template_path(grib_context* c, const char* name)
+char* get_external_template_path(grib_context* c, const char* name)
 {
     const char* base = c->grib_samples_path;
     char buffer[1024];

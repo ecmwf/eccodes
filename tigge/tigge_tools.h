@@ -12,5 +12,6 @@
 #define TIGGE_TOOLS_H
 
 void scan(const char* name);
+void validate(const char* path);
 
 #endif

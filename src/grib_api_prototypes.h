@@ -147,7 +147,6 @@ size_t grib_preferred_size(grib_accessor* a, int from_handle);
 grib_accessor* grib_next_accessor(grib_accessor* a);
 void grib_resize(grib_accessor* a, size_t new_size);
 int grib_compare_accessors(grib_accessor* a1, grib_accessor* a2, int compare_flags);
-const char* grib_get_type_name(int type);
 int grib_accessor_add_attribute(grib_accessor* a, grib_accessor* attr, int nest_if_clash);
 int grib_accessor_replace_attribute(grib_accessor* a, grib_accessor* attr);
 int grib_accessor_delete_attribute(grib_accessor* a, const char* name);
@@ -1190,7 +1189,7 @@ long grib_get_decimal_scale_fact(double max, double min, long bpval, long binary
 /*grib_handle *grib_internal_sample(grib_context *c, const char *name);*/
 grib_handle* grib_external_template(grib_context* c, const char* name);
 grib_handle* bufr_external_template(grib_context* c, const char* name);
-char* grib_external_template_path(grib_context* c, const char* name);
+char* get_external_template_path(grib_context* c, const char* name);
 
 /* grib_dependency.c */
 grib_handle* grib_handle_of_accessor(const grib_accessor* a);
@@ -1466,6 +1465,9 @@ char** string_split(char* inputString, const char* delimiter);
 int string_to_long(const char* input, long* output);
 int string_ends_with(const char* str1, const char* str2);
 int count_char_in_string(const char* str, char c);
+const char* codes_get_product_name(ProductKind product);
+const char* grib_get_type_name(int type);
+
 
 /* functions.c */
 long grib_op_eq(long a, long b);

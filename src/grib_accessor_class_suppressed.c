@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-/* 
+/*
    This is used by make_class.pl
 
    START_CLASS_DEF
@@ -20,7 +20,7 @@
    IMPLEMENTS = pack_long;unpack_long
    IMPLEMENTS = pack_double;unpack_double
    IMPLEMENTS = init
-   MEMBERS= grib_arguments* args  
+   MEMBERS= grib_arguments* args
    END_CLASS_DEF
 
  */

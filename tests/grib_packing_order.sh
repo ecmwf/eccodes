@@ -82,6 +82,12 @@ if [ $HAVE_EXTRA_TESTS -eq 1 ]; then
 
     # No point comparing with grid_simple as grid_ieee will be closer to the actual values
     # and less lossy
+
+    # TODO: Test with environment variable
+    #       Disabled for now. Need to investigate valgrind error
+    #ECCODES_GRIB_IEEE_PACKING=32 \
+    #   $EXEC ${test_dir}/grib_packing_order grid_simple packing_type_before_values $temp_ieee1
+    #grib_check_key_equals $temp_ieee1 packingType grid_ieee
 fi
 
 

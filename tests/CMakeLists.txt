@@ -401,6 +401,12 @@ if( HAVE_BUILD_TOOLS )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_split_by_rdbSubtype.sh
                       TEST_DEPENDS eccodes_download_bufrs )
 
+    ecbuild_add_test( TARGET eccodes_t_codes_export_resource
+                      TYPE SCRIPT
+                      CONDITION ECCODES_INSTALL_EXTRA_TOOLS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/codes_export_resource.sh )
+
+
     # Performance test. Must have -DENABLE_TIMER=ON
     ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
                       TYPE SCRIPT

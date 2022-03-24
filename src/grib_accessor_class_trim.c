@@ -151,7 +151,7 @@ static void init(grib_accessor* a, const long l, grib_arguments* arg)
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     grib_accessor_trim* self = (grib_accessor_trim*)a;
-    
+
     int err        = 0;
     grib_handle* h = grib_handle_of_accessor(a);
     char input[256] = {0,};
@@ -171,7 +171,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     char input[256] = {0,};
-    
+
     size_t inputLen = 256;
     char buf[256]   = {0,};
     char* pBuf = NULL;
@@ -186,7 +186,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 
     if ((err = grib_get_string(h, self->input, input, &inputLen)) != GRIB_SUCCESS)
         return err;
-    
+
     sprintf(buf, "%s", val);
     pBuf = buf;
     lrtrim(&pBuf, self->trim_left, self->trim_right);

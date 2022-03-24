@@ -502,7 +502,7 @@ grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param sample_name : the name of the sample file (without the .tmpl extension)
+ * @param sample_name : the name of the GRIB sample file
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
 grib_handle* grib_handle_new_from_samples(grib_context* c, const char* sample_name);
@@ -805,12 +805,12 @@ int grib_get_double(const grib_handle* h, const char* key, double* value);
 int grib_get_double_element(const grib_handle* h, const char* key, int i, double* value);
 
 /**
-*  Get as double array the elements of the "key" array whose indexes are listed in the input array i
+*  Get as double array the elements of the "key" array whose indexes are listed in the input array "index_array"
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
 * @param index_array : zero-based array of indexes
-* @param size        : size of the i and value arrays
+* @param size        : size of the index_array and value arrays
 * @param value       : the double array for the data values
 * @return            0 if OK, integer value on error
 */

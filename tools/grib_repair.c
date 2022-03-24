@@ -60,7 +60,7 @@ int main(int argc, char** argv)
         bad  = out;
         cbad = cout;
     }
-    
+
     sMaxNumMessages = getenv(ENV_VAR);
     if (sMaxNumMessages) {
         long lmax = 0;
