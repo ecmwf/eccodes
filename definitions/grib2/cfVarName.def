@@ -1085,7 +1085,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 6 ;
-	 constituentType = 10005 ;
+	 constituentType = 10002 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
@@ -1409,7 +1409,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 7 ;
-	 constituentType = 10005 ;
+	 constituentType = 10002 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
