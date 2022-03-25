@@ -43,11 +43,14 @@ file="aaen_55.bufr"
 export ECCODES_DEBUG=1
 
 # By default debug output goes to stderr
-${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file 2>&1 | grep -q "parsing include file"
+${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file > $fLog 2>&1 
+grep -q "parsing include file" $fLog
 
 # Redirect it to stdout
+rm $fLog
 export ECCODES_LOG_STREAM=stdout
-${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file | grep -q "parsing include file"
+${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file > $fLog
+grep -q "parsing include file" $fLog
 
 unset ECCODES_DEBUG
 unset ECCODES_LOG_STREAM

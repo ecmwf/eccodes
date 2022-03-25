@@ -13,7 +13,7 @@
 OUTPUT=all_codetable_flagtable_keys.txt
 TEMP=temp.list_codetable_flagtable_keys.txt
 
-[ -z "$ECCODES_DEFINITION_PATH" ] | ECCODES_DEFINITION_PATH=`${tools_dir}/codes_info -d`
+[ -z "$ECCODES_DEFINITION_PATH" ] || ECCODES_DEFINITION_PATH=`${tools_dir}/codes_info -d`
 
 touch $TEMP
 echo "Go through all files in $ECCODES_DEFINITION_PATH ..."

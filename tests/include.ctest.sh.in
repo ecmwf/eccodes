@@ -1,4 +1,6 @@
 set -ea
+set -o pipefail
+
 # For CMake
 
 # Unset any environment variable that could interfere with tests

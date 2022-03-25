@@ -90,7 +90,8 @@ done
 # GRIB-943: centre code table
 # ----------------------------
 ${tools_dir}/grib_set -s centre=289 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $outfile
-${tools_dir}/grib_dump -O $outfile | grep -q 'centre = 289.*Zambia'
+${tools_dir}/grib_dump -O $outfile > $temp
+grep -q 'centre = 289.*Zambia' $temp
 
 # ECC-539: avoid output being the same as input
 # -----------------------------------------------
