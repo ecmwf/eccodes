@@ -1,5 +1,7 @@
 set -ea
-set -o pipefail
+
+# Not all Unix shells support this unfortunately
+#set -o pipefail
 
 # For CMake
 
