@@ -2882,13 +2882,13 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 118 ;
 	}
-#Mean altitude of maximum injection
+#Mean height of maximum injection
 'mami' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 119 ;
 	}
-#Altitude of plume top
+#Plume top height above surface
 'apt' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
@@ -3140,7 +3140,7 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 241 ;
 	}
-#Altitude of plume bottom
+#Plume bottom height above surface
 'apb' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;

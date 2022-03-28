@@ -4014,13 +4014,13 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 118 ;
 	}
-#Mean altitude of maximum injection
-'Mean altitude of maximum injection' = {
+#Mean height of maximum injection
+'Mean height of maximum injection' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 119 ;
 	}
-#Altitude of plume top
-'Altitude of plume top' = {
+#Plume top height above surface
+'Plume top height above surface' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 120 ;
 	}
@@ -4209,8 +4209,8 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 241 ;
 	}
-#Altitude of plume bottom
-'Altitude of plume bottom' = {
+#Plume bottom height above surface
+'Plume bottom height above surface' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 242 ;
 	}
