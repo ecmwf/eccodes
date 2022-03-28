@@ -128,6 +128,7 @@ alias typeOfPacking=packingType;
 if( binaryScaleFactor == -32767) {
   unsigned[1] bitsPerValue : dump ;
   alias numberOfBitsContainingEachPackedValue = bitsPerValue;
+  alias accuracy = bitsPerValue;
 
   constant dataRepresentationTemplateNumber = 0;
   constant bitMapIndicator = 0;

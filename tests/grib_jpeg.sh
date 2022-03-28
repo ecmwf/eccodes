@@ -12,12 +12,6 @@
 
 REDIRECT=/dev/null
 
-# Disable if autotools being used
-src_config=${src_dir}/config.h
-if [ -f ${src_config} ]; then
-  exit 0
-fi
-
 BLACKLIST="totalLength,section5Length,section7Length,dataRepresentationTemplateNumber,typeOfPacking"
 
 do_tests()
@@ -30,6 +24,8 @@ do_tests()
 
     # Test dump
     ${tools_dir}/grib_dump -Da $infile >/dev/null 2>&1
+
+    grib_check_key_equals $infile accuracy 14
 
     ${tools_dir}/grib_set -s packingType=grid_simple $infile $outfile1
     ${tools_dir}/grib_compare -P -b $BLACKLIST,typeOfCompressionUsed,targetCompressionRatio $infile $outfile1 > $REDIRECT

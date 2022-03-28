@@ -3,6 +3,7 @@
 # moved here to allow different bitsPerValue in second order packing
 unsigned[1] bitsPerValue : dump;
 alias numberOfBitsContainingEachPackedValue = bitsPerValue;
+alias accuracy = bitsPerValue;
 
 # For grib1 -> grib2
 
