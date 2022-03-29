@@ -9,7 +9,9 @@
 #
 
 . ./include.sh
-#set -x
+set -u
+
+label="grib_change_scanning"
 
 editions="1 2"
 gridTypes="regular_ll rotated_ll" 
@@ -74,5 +76,46 @@ EOF
   done
 done
 
-rm -f ${data_dir}/scan1.grib ${data_dir}/scan.grib
+# alternativeRowScanning
+# -----------------------
+tempFilt=temp.$label.filt
+tempGribA=temp.$label.A.grib
+tempGribB=temp.$label.B.grib
+tempText=temp.$label.txt
+tempRef=temp.$label.ref
 
+cat > $tempFilt <<EOF
+  set Nj = 2;
+  set latitudeOfFirstGridPointInDegrees = 60;
+  set latitudeOfLastGridPointInDegrees  = 59;
+  set Ni = 3;
+  set longitudeOfFirstGridPointInDegrees = 0;
+  set longitudeOfLastGridPointInDegrees  = 2;
+  set DjInDegrees = 1;
+  set DiInDegrees = 1;
+
+  set alternativeRowScanning = 1;
+  set values={ 12, 13, 14, 15, 16, 17 };
+  write;
+EOF
+
+${tools_dir}/grib_filter -o $tempGribA $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s swapScanningAlternativeRows=1 $tempGribA $tempGribB
+grib_check_key_equals $tempGribB alternativeRowScanning 0
+
+${tools_dir}/grib_get_data -F "%.2f" $tempGribB > $tempText
+cat > $tempRef << EOF
+Latitude Longitude Value
+   60.000    0.000 12.00
+   60.000    1.000 13.00
+   60.000    2.000 14.00
+   59.000    0.000 17.00
+   59.000    1.000 16.00
+   59.000    2.000 15.00
+EOF
+diff $tempRef $tempText
+
+
+# Clean up
+rm -f $tempFilt $tempGribA $tempGribB $tempRef $tempText
+rm -f ${data_dir}/scan1.grib ${data_dir}/scan.grib

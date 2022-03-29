@@ -155,12 +155,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     int err = 0;
     grib_accessor_change_alternative_row_scanning* self = (grib_accessor_change_alternative_row_scanning*)a;
-    grib_context* c                                     = a->context;
-    grib_handle* h                                      = grib_handle_of_accessor(a);
-    long i, j, jr, theEnd, Ni, Nj, k, kp;
-    long alternativeRowScanning                         = 0;
-    size_t size                                         = 0;
-    double* values                                      = NULL;
+    grib_context* c = a->context;
+    grib_handle* h  = grib_handle_of_accessor(a);
+    long i, j, jr, theEnd, Ni, Nj, k, kp, alternativeRowScanning;
+    size_t size = 0;
+    double* values = NULL;
     double tmp = 0.0;
 
     if (*val == 0)
@@ -191,7 +190,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         return err;
     }
 
-    theEnd = (Ni + 0.5) / 2;
+    theEnd = Ni / 2;
     for (j = 0; j < Nj; j++) {
         jr = Ni * j;
         for (i = 0; i < theEnd; i++) {
