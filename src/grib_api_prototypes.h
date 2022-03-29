@@ -347,6 +347,8 @@ void grib_update_paddings(grib_section* s);
 
 /* grib_accessor_class_change_scanning_direction.c */
 
+/* grib_accessor_class_change_scanning_direction.c */
+
 /* grib_accessor_class_check_internal_version.c */
 
 /* grib_accessor_class_codeflag.c */

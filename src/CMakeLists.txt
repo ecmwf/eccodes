@@ -85,6 +85,7 @@ list( APPEND grib_api_srcs
     grib_accessor_class_validity_time.c
     grib_accessor_class_bytes.c
     grib_accessor_class.c
+    grib_accessor_class_change_alternative_row_scanning.c
     grib_accessor_class_change_scanning_direction.c
     grib_accessor_class_check_internal_version.c
     grib_accessor_class_codeflag.c
