@@ -165,11 +165,20 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if (*val == 0)
         return 0;
 
+    /* Make sure Ni / Nj are not missing */
+    if (grib_is_missing(h, self->Ni, &err) && !err) {
+        grib_context_log(c, GRIB_LOG_ERROR, "change_alternative_row_scanning: Key %s cannot be 'missing'!", self->Ni);
+        return GRIB_WRONG_GRID;
+    }
+    if (grib_is_missing(h, self->Nj, &err) && !err) {
+        grib_context_log(c, GRIB_LOG_ERROR, "change_alternative_row_scanning: Key %s cannot be 'missing'!", self->Nj);
+        return GRIB_WRONG_GRID;
+    }
+
     if ((err = grib_get_long_internal(h, self->Ni, &Ni)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_long_internal(h, self->Nj, &Nj)) != GRIB_SUCCESS)
         return err;
-
     if ((err = grib_get_long_internal(h, self->alternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS)
         return err;
 

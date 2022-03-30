@@ -115,6 +115,12 @@ Latitude Longitude Value
 EOF
 diff $tempRef $tempText
 
+# It must fail when Ni=missing (reduced grids)
+set +e
+${tools_dir}/grib_set -s swapScanningAlternativeRows=1 $ECCODES_SAMPLES_PATH/reduced_gg_pl_96_grib2.tmpl $tempGribB 2>/dev/null
+status=$?
+set -e
+[ $status -ne 0 ]
 
 # Clean up
 rm -f $tempFilt $tempGribA $tempGribB $tempRef $tempText
