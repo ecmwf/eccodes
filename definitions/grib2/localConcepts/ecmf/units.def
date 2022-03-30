@@ -16370,7 +16370,7 @@
 	 parameterNumber = 221 ;
 	}
 #Wave spectral directional width
-'dimensionless' = {
+'radians' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 222 ;
@@ -16388,7 +16388,7 @@
 	 parameterNumber = 224 ;
 	}
 #Wave spectral directional width for wind waves
-'dimensionless' = {
+'radians' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 225 ;
@@ -16406,7 +16406,7 @@
 	 parameterNumber = 227 ;
 	}
 #Wave spectral directional width for swell
-'dimensionless' = {
+'radians' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 228 ;
