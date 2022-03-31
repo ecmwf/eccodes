@@ -30,16 +30,18 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 /* Debug utility function to track GRIB packing/repacking issues */
 static void print_debug_info__set_double_array(grib_handle* h, const char* func, const char* name, const double* val, size_t length)
 {
-    size_t N = 5, i = 0;
+    size_t N = 7, i = 0;
     double minVal = DBL_MAX, maxVal = -DBL_MAX;
     Assert( h->context->debug );
 
     if (length <= N)
         N = length;
     fprintf(stderr, "ECCODES DEBUG %s key=%s %lu values (", func, name, (unsigned long)length);
-    for (i = 0; i < N; ++i)
-        fprintf(stderr, "%g, ", val[i]);
-    if (N >= length) fprintf(stderr, " ) ");
+    for (i = 0; i < N; ++i) {
+        if (i != 0) fprintf(stderr,", ");
+        fprintf(stderr, "%g", val[i]);
+    }
+    if (N >= length) fprintf(stderr, ") ");
     else fprintf(stderr, "...) ");
     for (i = 0; i < length; ++i) {
         if (val[i] < minVal) minVal = val[i];
