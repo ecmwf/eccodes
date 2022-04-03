@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 OUTPUT=temp.ecc-517.bufr
 TEMP=temp.ecc-517.txt

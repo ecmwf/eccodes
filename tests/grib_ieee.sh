@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # This file does not have a bitmap
 infile=${data_dir}/regular_latlon_surface.grib1

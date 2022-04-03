@@ -3,7 +3,7 @@
 # --- check nothing bombs when changing packing
 # ---  for now limited to just a few packing schemes
 
-. ./include.sh
+. ./include.ctest.sh
 
 label="grib_change_packing_test"
 temp=temp.$label.grib

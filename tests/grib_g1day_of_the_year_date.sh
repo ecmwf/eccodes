@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 label="grib_g1day_of_the_year_date"
 sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
