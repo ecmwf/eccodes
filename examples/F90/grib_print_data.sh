@@ -7,7 +7,7 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-. ./include.sh
+. ./include.ctest.sh
 
 ${examples_dir}/eccodes_f_grib_print_data | grep '99200 *values found'
 ${examples_dir}/eccodes_f_grib_print_data_static | grep '496 *values found'

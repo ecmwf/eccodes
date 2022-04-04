@@ -7,7 +7,7 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-. ./include.sh
+. ./include.ctest.sh
 
 
 uuid=`${tools_dir}/grib_get -w count=1 -p uuidOfVGrid:s ${data_dir}/test_uuid.grib2`

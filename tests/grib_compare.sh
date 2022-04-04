@@ -59,7 +59,7 @@ status=$?
 set -e
 [ $status -eq 1 ]
 grep -q "ERROR:.*Is a directory" $temp_err
-rm -rf $temp_dir
+rm -rf $temp_dir $temp_err
 
 
 # ----------------------------------------
