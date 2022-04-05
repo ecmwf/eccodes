@@ -22,16 +22,24 @@ use strict;
 
 #Product Discipline 0 - Meteorological products, parameter category 16: forecast radar imagery
 
+my $EXPECTED_COLUMN_COUNT = 9; # As of v29; May 2022
 my $recnum = 0;
-my $codetable; my $discipline; my $category; my $filename;
+my $codetable;
+my $discipline;
+my $category;
+my $filename;
+
 while (<>) {
     ++$recnum;
-    next if ($recnum==1);
+    if ($recnum == 1) {
+        my @columns = split(/\t/);
+        my $column_count = @columns;
+        if ($column_count != $EXPECTED_COLUMN_COUNT) {
+            die "Error: Incorrect column count on first row. Expected $EXPECTED_COLUMN_COUNT but found $column_count!\n";
+        }
+        next;
+    }
 
-    # OLD FORMAT had initial "No" column
-    #No Title_en    SubTitle_en    CodeFlag    Value    MeaningParameterDescription_en  Note_en UnitComments_en  Status
-    #my ($rowid, $title, $subtitle, $codeFlag, $value, $meaning, $note, $unit, $status) = split(/\t/);
-    
     s/Hovmöller/Hovmoller/;
     s/Carrée/Carree/;
     s/μm/um/;
@@ -39,7 +47,7 @@ while (<>) {
     s/f\(n\) = C2 × f\(n-1\)/f(n) = C2 * f(n-1)/;
     s/\(see separate doc or pdf file\)/see separate doc or pdf file/;
 
-    my ($title, $subtitle, $codeFlag, $value, $meaning, $note, $unit, $status) = split(/\t/);
+    my ($title, $subtitle, $codeFlag, $value, $meaning, $note, $noteID, $unit, $status) = split(/\t/);
 
     if ($title =~ /Code table ([0-9.]+)/) {
         $codetable = $1;
