@@ -849,8 +849,12 @@ void grib_skip_check(grib_runtime_options* options, grib_handle* h)
             options->skip = 1;
             while (v) {
                 if (!to_skip(h, v, &ret)) {
-                    if (!strcmp(v->name, "count") && !v->next)
+                    if (!strcmp(v->name, "count") && !v->next) {
+                        /* We have count=XX and nothing after that so we can
+                         * skip every other message after it
+                         */
                         options->skip_all = 1;
+                    }
                     options->skip = 0;
                     break;
                 }

@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 for file in `find ${ECCODES_DEFINITION_PATH}/bufr/ -name 'element.table' -print`
 do

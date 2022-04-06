@@ -2882,13 +2882,13 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 118 ;
 	}
-#Mean altitude of maximum injection
+#Mean height of maximum injection
 'm' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
 	 parameterNumber = 119 ;
 	}
-#Altitude of plume top
+#Plume top height above surface
 'm' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
@@ -3140,7 +3140,7 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 241 ;
 	}
-#Altitude of plume bottom
+#Plume bottom height above surface
 'm' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
@@ -16370,7 +16370,7 @@
 	 parameterNumber = 221 ;
 	}
 #Wave spectral directional width
-'dimensionless' = {
+'radians' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 222 ;
@@ -16388,7 +16388,7 @@
 	 parameterNumber = 224 ;
 	}
 #Wave spectral directional width for wind waves
-'dimensionless' = {
+'radians' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 225 ;
@@ -16406,7 +16406,7 @@
 	 parameterNumber = 227 ;
 	}
 #Wave spectral directional width for swell
-'dimensionless' = {
+'radians' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 228 ;

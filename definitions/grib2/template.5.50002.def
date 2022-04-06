@@ -3,15 +3,16 @@
 ieeefloat   referenceValue  : no_copy;
 meta referenceValueError reference_value_error(referenceValue,ieee);
 
-signed[2]   binaryScaleFactor : no_copy;
+signed[2] binaryScaleFactor : no_copy;
 
-signed[2]   decimalScaleFactor :no_copy;
+signed[2] decimalScaleFactor :no_copy;
 
 # Try different values of binaryScaleFactor and decimalScaleFactor to reduce packing error
 transient optimizeScaleFactor = 0;
 
-unsigned[1] bitsPerValue ;
-unsigned[1] widthOfFirstOrderValues :no_copy ;
+unsigned[1] bitsPerValue;
+alias accuracy = bitsPerValue;
+unsigned[1] widthOfFirstOrderValues :no_copy;
 
 unsigned [4] numberOfGroups : no_copy;
 unsigned [4] numberOfSecondOrderPackedValues : no_copy;
@@ -24,6 +25,6 @@ flagbit boustrophedonicOrdering(secondOrderFlags,7) = 0;
 alias boustrophedonic=boustrophedonicOrdering;
 
 if (orderOfSPD) {
-	 unsigned[1] widthOfSPD ;
-	 meta SPD spd(widthOfSPD,orderOfSPD) : read_only;
+  unsigned[1] widthOfSPD ;
+  meta SPD spd(widthOfSPD,orderOfSPD) : read_only;
 }

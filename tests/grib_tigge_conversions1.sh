@@ -12,7 +12,7 @@
 # ---   using the new features of grib_compare that allows
 # ---   namespace comparison
 
-. ./include.sh
+. ./include.ctest.sh
 
 REDIRECT=/dev/null
 

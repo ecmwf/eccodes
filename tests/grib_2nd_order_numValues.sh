@@ -8,6 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 $EXEC $test_dir/grib_2nd_order_numValues

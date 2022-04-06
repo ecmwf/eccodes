@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 label="grib_ccsds_test"
 REDIRECT=/dev/null
@@ -29,6 +29,7 @@ ${tools_dir}/grib_set -s packingType=grid_ccsds $grib2_sample $outfile1
 ${tools_dir}/grib_set -d1 $outfile1 $outfile2
 grib_check_key_equals $grib2_sample packingType,const "grid_simple 0"
 grib_check_key_equals $outfile2     packingType,const "grid_ccsds 1"
+grib_check_key_equals $outfile2     accuracy 16
 rm -f $outfile1 $outfile2
 
 # Change packingType
@@ -77,6 +78,7 @@ ${tools_dir}/grib_compare -c data:n $outfile1 $outfile2
 # ECC-477: redundant error message during conversion
 # ---------------------------------------------------
 infile=${data_dir}/ccsds.grib2
+grib_check_key_equals $infile accuracy 14
 rm -f $outfile2
 ${tools_dir}/grib_set -r -s packingType=grid_simple $infile $outfile1 >$outfile2 2>&1
 # there should be no error messages printed (to stdout or stderr)

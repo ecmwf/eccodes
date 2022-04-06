@@ -7,7 +7,7 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-. ./include.sh
+. ./include.ctest.sh
 
 ${examples_dir}/eccodes_f_grib_set_keys > /dev/null
 res=`${tools_dir}/grib_get -p centre out.set.grib1`

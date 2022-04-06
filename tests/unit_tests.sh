@@ -9,5 +9,5 @@
 #
 
 
-. ./include.sh
+. ./include.ctest.sh
 $EXEC ${test_dir}/unit_tests

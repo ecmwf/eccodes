@@ -7,7 +7,7 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-. ./include.sh
+. ./include.ctest.sh
 
 ${examples_dir}/c_grib_keys_iterator ${data_dir}/reduced_latlon_surface.grib1 > /dev/null
 

@@ -224,6 +224,7 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_simple_thinning.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_string_values.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_bytes.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_change_alternative_row_scanning.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_change_scanning_direction.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_check_internal_version.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_codeflag.c" />

@@ -23,7 +23,7 @@
    IMPLEMENTS = create_accessor
    IMPLEMENTS = dump
    IMPLEMENTS = destroy
-   IMPLEMENTS = xref   
+   IMPLEMENTS = xref
    IMPLEMENTS = reparse;execute
    MEMBERS    = grib_expression *expression
    MEMBERS    = grib_action     *block_true

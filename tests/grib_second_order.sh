@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 workdir=`pwd`
 REDIRECT=/dev/null
@@ -87,6 +87,7 @@ sec_ord_bmp=sec_ord_bmp.$$.grib1
 
 # Convert to second order packing
 ${tools_dir}/grib_set -r -s packingType=grid_second_order gen_bitmap.grib $sec_ord_bmp
+grib_check_key_equals $sec_ord_bmp accuracy 4
 # Check there are missing values
 nums=`${tools_dir}/grib_get -p numberOfDataPoints,numberOfCodedValues,numberOfMissing $sec_ord_bmp`
 [ "$nums" = "5969 4 5965" ]
@@ -129,7 +130,7 @@ cat > $test_filter<<EOF
 EOF
 ${tools_dir}/grib_filter -o $temp2 $test_filter $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -r -s packingType=grid_second_order $temp2 $temp3
-grib_check_key_equals $temp3 packingType grid_simple
+grib_check_key_equals $temp3 packingType,accuracy 'grid_simple 24'
 
 # Three coded values: Now we can change to 2nd order
 cat > $test_filter<<EOF
@@ -138,7 +139,7 @@ cat > $test_filter<<EOF
 EOF
 ${tools_dir}/grib_filter -o $temp2 $test_filter $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -r -s packingType=grid_second_order $temp2 $temp3
-grib_check_key_equals $temp3 packingType grid_second_order
+grib_check_key_equals $temp3 packingType,accuracy 'grid_second_order 24'
 
 
 # ECC-1219: packingType conversion from grid_ieee to grid_second_order

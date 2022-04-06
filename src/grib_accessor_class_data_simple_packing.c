@@ -30,8 +30,8 @@
    IMPLEMENTS = value_count
    MEMBERS=int edition
    MEMBERS=const char*  units_factor
-   MEMBERS=const char*  units_bias  
-   MEMBERS=const char*  changing_precision  
+   MEMBERS=const char*  units_bias
+   MEMBERS=const char*  changing_precision
    MEMBERS=const char*  number_of_values
    MEMBERS=const char*  bits_per_value
    MEMBERS=const char*  reference_value

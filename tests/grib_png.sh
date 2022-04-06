@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 REDIRECT=/dev/null
 label="grib_png"
@@ -48,6 +48,7 @@ infile=${data_dir}/grid_ieee.grib
 ${tools_dir}/grib_set -r -s packingType=grid_png $infile $temp
 # TODO: check results
 grib_check_key_equals $temp packingType grid_png
+grib_check_key_equals $temp accuracy 0
 
 
 rm -f $temp

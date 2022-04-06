@@ -3415,7 +3415,7 @@
 	 indicatorOfParameter = 105 ;
 	}
 #Wave directional width of first swell partition
-'dimensionless' = {
+'radians' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 106 ;
 	}
@@ -3425,7 +3425,7 @@
 	 indicatorOfParameter = 107 ;
 	}
 #Wave directional width of second swell partition
-'dimensionless' = {
+'radians' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 108 ;
 	}
@@ -3435,7 +3435,7 @@
 	 indicatorOfParameter = 109 ;
 	}
 #Wave directional width of third swell partition
-'dimensionless' = {
+'radians' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 110 ;
 	}
@@ -4014,12 +4014,12 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 118 ;
 	}
-#Mean altitude of maximum injection
+#Mean height of maximum injection
 'm' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 119 ;
 	}
-#Altitude of plume top
+#Plume top height above surface
 'm' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 120 ;
@@ -4209,7 +4209,7 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 241 ;
 	}
-#Altitude of plume bottom
+#Plume bottom height above surface
 'm' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 242 ;
@@ -12325,7 +12325,7 @@
 	 indicatorOfParameter = 221 ;
 	}
 #Wave spectral directional width
-'dimensionless' = {
+'radians' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 222 ;
 	}
@@ -12340,7 +12340,7 @@
 	 indicatorOfParameter = 224 ;
 	}
 #Wave spectral directional width for wind waves
-'dimensionless' = {
+'radians' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 225 ;
 	}
@@ -12355,7 +12355,7 @@
 	 indicatorOfParameter = 227 ;
 	}
 #Wave spectral directional width for swell
-'dimensionless' = {
+'radians' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 228 ;
 	}

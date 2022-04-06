@@ -19,14 +19,14 @@
   IMPLEMENTS = init;dump
   MEMBERS = const char* start_step
   MEMBERS = const char* unit
-  
+
   MEMBERS = const char* year
   MEMBERS = const char* month
   MEMBERS = const char* day
   MEMBERS = const char* hour
   MEMBERS = const char* minute
   MEMBERS = const char* second
-  
+
   MEMBERS = const char* year_of_end_of_interval
   MEMBERS = const char* month_of_end_of_interval
   MEMBERS = const char* day_of_end_of_interval
