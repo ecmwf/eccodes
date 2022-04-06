@@ -83,12 +83,11 @@ int onlyListed          = 1;
 int headerMode          = 0;
 int morein1             = 0;
 int morein2             = 0;
-int listFromCommandLine;
-int verbose            = 0;
-int tolerance_factor   = 1;
-static int write_error = 0;
-
-static int write_count = 0;
+int listFromCommandLine = 0;
+int verbose             = 0;
+double tolerance_factor = 1;
+static int write_error  = 0;
+static int write_count  = 0;
 
 grib_handle* global_handle = NULL;
 int counter                = 0;
@@ -242,7 +241,7 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (grib_options_on("t:"))
-        tolerance_factor = atoi(grib_options_get_option("t:"));
+        tolerance_factor = atof(grib_options_get_option("t:"));
 
     {
         /* Check for 2nd file being a directory. If so, we assume user is comparing to a file */

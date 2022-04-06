@@ -321,7 +321,7 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (grib_options_on("T:"))
-        tolerance_factor = atoi(grib_options_get_option("T:"));
+        tolerance_factor = atof(grib_options_get_option("T:"));
 
     if (grib_options_on("R:")) {
         char* sarg               = grib_options_get_option("R:");
