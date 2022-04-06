@@ -297,7 +297,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
         grib_handle_delete(h);
     }
 
-    if (set->size==0) fprintf(stderr, "no messages found in fieldset\n");
+    if (set->size==0) fprintf(stderr, "No messages found in fieldset\n");
     grib_tool_finalise_action(options);
 
     grib_fieldset_delete(set);
@@ -821,7 +821,7 @@ static int to_skip(grib_handle* h, grib_values* v, int* err)
             ret    = (lvalue == v->equal) ? 0 : 1;
             break;
         default:
-            fprintf(dump_file, "invalid type for %s\n", v->name);
+            fprintf(dump_file, "ERROR: Invalid type for %s\n", v->name);
             exit(1);
     }
 
@@ -1002,7 +1002,7 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
     if (type == GRIB_TYPE_UNDEFINED) {
         ret = grib_get_native_type(h, key_name, &type);
         if (ret != GRIB_SUCCESS) {
-            fprintf(dump_file, "Could not determine type for %s\n", key_name);
+            fprintf(dump_file, "ERROR: Could not determine type for %s\n", key_name);
             exit(1);
         }
     }
@@ -1032,7 +1032,7 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
         ret = grib_get_string(h, key_name, value_str, &len);
     }
     else {
-        fprintf(dump_file, "invalid format option for %s\n", key_name);
+        fprintf(dump_file, "ERROR: Invalid format option for %s\n", key_name);
         exit(1);
     }
 
@@ -1040,7 +1040,7 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
         if (ret == GRIB_NOT_FOUND) {
             sprintf(value_str, "not_found");
         } else {
-            fprintf(dump_file, "Failed to get value for key %s\n", key_name);
+            fprintf(dump_file, "ERROR: Failed to get value for key %s\n", key_name);
             exit(1);
         }
     }
@@ -1147,7 +1147,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                         ret = grib_get_string(h, options->print_keys[i].name, value, &len);
                         break;
                     default:
-                        fprintf(dump_file, "Could not determine type for %s\n", options->print_keys[i].name);
+                        fprintf(dump_file, "ERROR: Could not determine type for %s\n", options->print_keys[i].name);
                         exit(1);
                 }
             }
@@ -1190,7 +1190,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                         ret = grib_get_string(h, options->print_keys[i].name, value, &len);
                         break;
                     default:
-                        fprintf(dump_file, "invalid format option for %s\n", options->print_keys[i].name);
+                        fprintf(dump_file, "ERROR: Invalid format option for %s\n", options->print_keys[i].name);
                         exit(1);
                 }
             }
@@ -1258,7 +1258,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             the_index = options->index;
             if (the_index >= size) {
                 fprintf(dump_file, "\n");
-                fprintf(stderr, "invalid index value %d (should be between 0 and %d)\n",
+                fprintf(stderr, "ERROR: Invalid index value %d (should be between 0 and %d)\n",
                         options->index, (int)(size - 1));
                 exit(1);
             }
