@@ -73,6 +73,7 @@ if( HAVE_BUILD_TOOLS )
         grib_packing_order
         filter_substr
         grib_uerra
+        grib_fire
         grib_element
         grib_suppressed
         grib_2nd_order_numValues
