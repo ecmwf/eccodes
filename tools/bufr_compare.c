@@ -100,11 +100,11 @@ static int onlyListed          = 1;
 static int headerMode          = 0;
 static int morein1             = 0;
 static int morein2             = 0;
-static int listFromCommandLine;
-static int verbose          = 0;
-static int tolerance_factor = 1;
-static int write_error      = 0;
-static int write_count      = 0;
+static int listFromCommandLine = 0;
+static int verbose             = 0;
+static double tolerance_factor = 1;
+static int write_error         = 0;
+static int write_count         = 0;
 
 static grib_handle* global_handle = NULL;
 static int counter                = 0;
@@ -360,7 +360,7 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (grib_options_on("t:"))
-        tolerance_factor = atoi(grib_options_get_option("t:"));
+        tolerance_factor = atof(grib_options_get_option("t:"));
 
     if (grib_options_on("R:")) {
         char* sarg               = grib_options_get_option("R:");
