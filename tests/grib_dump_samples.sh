@@ -52,4 +52,13 @@ if [ $HAVE_AEC -eq 1 ]; then
     ${tools_dir}/grib_dump -O $temp
 fi
 
+# Check ifs_samples/grib1_mlgrib2_ccsds
+# Those that are GRIB2 and for grid-point data must be CCSDS packed
+g2_samples="gg_ml.tmpl gg_sfc_grib2.tmpl"
+for s in $g2_samples; do
+    sf=${proj_dir}/ifs_samples/grib1_mlgrib2_ccsds/$s
+    grib_check_key_equals $sf "edition,packingType" "2 grid_ccsds"
+done
+
+
 rm -f $temp
