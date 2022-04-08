@@ -10,17 +10,20 @@ use strict;
 # cd to that directory:
 #  cd definitions/grib2/tables/xx
 # Run this script on that TSV file:
-#  perl create_codetables.pl < /path/to/CodeFlag.txt.tsv
+#  perl create_grib2_codetables.pl < /path/to/CodeFlag.txt.tsv
 # This should create all the *.table files
 # ------------------------------------------------------------------------
 
-# Types of title_en
-# Code table 0.0 - Discipline of processed data in the GRIB message, number of GRIB Master table
-# Code table 4.1 - Parameter category by product discipline  --> "Product discipline 0 - XXX"
-# Code table 4.2 - Parameter number by product discipline and parameter category  --> "Product discipline 0 - YY, parameter category 0: XX"
-# Flag table 3.9 - Numbering order of diamonds as seen from the corresponding pole
-
-#Product Discipline 0 - Meteorological products, parameter category 16: forecast radar imagery
+# The WMO CSV file should have the following columns
+#   Title_en
+#   SubTitle_en
+#   CodeFlag
+#   Value
+#   MeaningParameterDescription_en
+#   Note_en
+#   noteIDs
+#   UnitComments_en
+#   Status
 
 my $EXPECTED_COLUMN_COUNT = 9; # As of v29; May 2022
 my $recnum = 0;
@@ -55,12 +58,12 @@ while (<>) {
             $discipline = $1;
             $category = $2;
             $filename = "$codetable.$discipline.$category.table";
-            WriteFile($filename, $title, $codeFlag, $meaning, $unit);
+            WriteFile($filename, $subtitle, $codeFlag, $meaning, $unit);
         }
         elsif ($subtitle =~ /Product discipline (\d+)/) {
             $discipline = $1;
             $filename = "$codetable.$discipline.table";
-            WriteFile($filename, $title, $codeFlag, $meaning, $unit);
+            WriteFile($filename, $subtitle, $codeFlag, $meaning, $unit);
         }
         elsif ($subtitle eq "") {
             $filename = "$codetable.table";
