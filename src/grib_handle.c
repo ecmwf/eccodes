@@ -1524,11 +1524,11 @@ static int grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsign
 
 static void grib2_build_message(grib_context* context, unsigned char* sections[], size_t sections_len[], void** data, size_t* len)
 {
-    int i            = 0;
-    char* theEnd     = "7777";
-    unsigned char* p = 0;
-    size_t msglen    = 0;
-    long bitp        = 64;
+    int i              = 0;
+    const char* theEnd = "7777";
+    unsigned char* p   = 0;
+    size_t msglen      = 0;
+    long bitp          = 64;
     if (!sections[0]) {
         *data = NULL;
         return;

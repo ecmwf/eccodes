@@ -47,7 +47,7 @@ static void init()
 
 struct table_entry
 {
-    char* type;
+    const char* type;
     grib_accessor_class** cclass;
 };
 

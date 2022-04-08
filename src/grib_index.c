@@ -828,7 +828,7 @@ int grib_index_write(grib_index* index, const char* filename)
     int err = 0;
     FILE* fh;
     grib_file* files;
-    char* identifier = NULL;
+    const char* identifier = NULL;
 
     fh = fopen(filename, "w");
     if (!fh) {
