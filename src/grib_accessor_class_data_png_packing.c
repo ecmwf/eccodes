@@ -536,8 +536,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     Assert(bits_per_value % 8 == 0);
 #endif
     bits8   = (bits_per_value + 7) / 8 * 8;
-    encoded = grib_context_buffer_malloc_clear(a->context, bits8 / 8 * n_vals);
-
+    encoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, bits8 / 8 * n_vals);
     if (!encoded) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
@@ -558,7 +557,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     /* buflen = n_vals*(bits_per_value/8); */
     grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "grib_accessor_data_png_packing : pack_double : packing %s, %d values", a->name, n_vals);
-    buf = grib_context_buffer_malloc_clear(a->context, buflen);
+    buf = (unsigned char*)grib_context_buffer_malloc_clear(a->context, buflen);
 
     if (!buf) {
         err = GRIB_OUT_OF_MEMORY;
@@ -628,9 +627,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     /*bytes=bit_depth/8;*/
     bytes = bits8 / 8;
 
-    rows = grib_context_buffer_malloc_clear(a->context, sizeof(png_bytep) * height);
-    /*rows  = malloc(height*sizeof(png_bytep));*/
-    Assert(rows);
+    rows = (png_bytepp)grib_context_buffer_malloc_clear(a->context, sizeof(png_bytep) * height);
+    if (!rows) {
+        err = GRIB_OUT_OF_MEMORY;
+        goto cleanup;
+    }
+
     for (j = 0; j < height; j++)
         rows[j] = &encoded[j * width * bytes];
 
