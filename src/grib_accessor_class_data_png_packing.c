@@ -187,7 +187,7 @@ static int value_count(grib_accessor* a, long* n_vals)
 
 #if HAVE_LIBPNG
 
-#include "png.h"
+#include <png.h>
 
 typedef struct png_read_callback_data
 {
