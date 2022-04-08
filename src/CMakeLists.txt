@@ -434,7 +434,7 @@ ecbuild_add_library( TARGET    eccodes
                               # griby.c gribl.c
                               ${eccodes_src_files}
                      #PRIVATE_LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
-                     PRIVATE_INCLUDES "${AEC_INCLUDE_DIRS}"
+                     PRIVATE_INCLUDES "${AEC_INCLUDE_DIRS}" "${PNG_INCLUDE_DIRS}"
                      PRIVATE_LIBS ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${AEC_LIBRARIES} ${PNG_LIBRARIES}
                      PUBLIC_LIBS  ${CMATH_LIBRARIES} ${THREADS_LIBRARIES}
                      TEMPLATES ${eccodes_extra_src_files}
