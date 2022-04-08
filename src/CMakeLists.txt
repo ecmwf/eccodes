@@ -8,7 +8,7 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 #
-list( APPEND grib_api_srcs
+list( APPEND eccodes_src_files
     grib_api.h
     eccodes.h
     action.c
@@ -398,7 +398,7 @@ list( APPEND grib_api_srcs
     # We ship our own generated lex/yacc C files
     grib_yacc.c  grib_lex.c )
 
-list( APPEND grib_api_extra_srcs
+list( APPEND eccodes_extra_src_files
     grib_bits_fast_big_endian.c grib_bits_any_endian.c
     grib_bits_fast_big_endian_vector.c grib_bits_any_endian_vector.c
     grib_bits_fast_big_endian_simple.c grib_bits_any_endian_simple.c
@@ -432,12 +432,12 @@ endif()
 ecbuild_add_library( TARGET    eccodes
                      SOURCES   ${CMAKE_CURRENT_BINARY_DIR}/grib_api_version.c
                               # griby.c gribl.c
-                              ${grib_api_srcs}
+                              ${eccodes_src_files}
                      #PRIVATE_LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
                      PRIVATE_INCLUDES "${AEC_INCLUDE_DIRS}"
                      PRIVATE_LIBS ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${AEC_LIBRARIES} ${PNG_LIBRARIES}
                      PUBLIC_LIBS  ${CMATH_LIBRARIES} ${THREADS_LIBRARIES}
-                     TEMPLATES ${grib_api_extra_srcs}
+                     TEMPLATES ${eccodes_extra_src_files}
                      INSTALL_HEADERS_LIST
                               grib_api.h
                               eccodes.h
