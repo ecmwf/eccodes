@@ -42,7 +42,7 @@ int main(int argc, char** argv)
     double values[4] = {0,};
     double distances[4] = {0,};
     int indexes[4] = {0,};
-    char* order_by = "shortName,step:i";
+    const char* order_by = "shortName,step:i";
 
     size_t size = 4;
     double lat = -40, lon = 15;

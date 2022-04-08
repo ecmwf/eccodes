@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     const char* infile     = "../data/bufr/mhen_55.bufr";
     const char* key_name   = "#5#brightnessTemperature";
     const double tolerance = 1e-6;
-    ProductKind prod_kind  = 0;
+    ProductKind prod_kind  = PRODUCT_ANY;
 
     in = fopen(infile, "rb");
     assert(in);
