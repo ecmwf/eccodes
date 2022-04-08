@@ -588,7 +588,7 @@ struct grib_section
 struct grib_iterator_class
 {
     grib_iterator_class** super;
-    char* name;
+    const char* name;
     size_t size;
 
     int inited;
@@ -606,7 +606,7 @@ struct grib_iterator_class
 struct grib_nearest_class
 {
     grib_nearest_class** super;
-    char* name;
+    const char* name;
     size_t size;
 
     int inited;
@@ -621,7 +621,7 @@ struct grib_nearest_class
 struct grib_box_class
 {
     grib_box_class** super;
-    char* name;
+    const char* name;
     size_t size;
     int inited;
     box_init_class_proc init_class;
@@ -658,7 +658,7 @@ struct grib_dumper
 struct grib_dumper_class
 {
     grib_dumper_class** super;
-    char* name;
+    const char* name;
     size_t size;
     int inited;
     dumper_init_class_proc init_class;
