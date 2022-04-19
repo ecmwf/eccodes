@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     long step;
     char** filenames;
     size_t nkeys, nfiles, i=0;
-    char* keys[] = { "step:i", "date", "paramId", "levelType" };
+    const char* keys[] = { "step:i", "date", "paramId", "levelType" };
     grib_fieldset* set = NULL;
     grib_handle* h = NULL;
     char param[20] = {0,};
