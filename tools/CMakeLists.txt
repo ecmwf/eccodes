@@ -9,20 +9,20 @@
 # nor does it submit to any jurisdiction.
 #
 
-list( APPEND grib_tools_sources
+list( APPEND ecc_tools_sources
              grib_tools.c
              grib_options.c
              grib_tools.h )
 
 if( EC_OS_NAME MATCHES "windows" )
-  list( APPEND grib_tools_sources wingetopt.c )
+  list( APPEND ecc_tools_sources wingetopt.c )
 endif()
 
 # tools library
-ecbuild_add_library( TARGET    grib_tools
+ecbuild_add_library( TARGET    ecc_tools
                      TYPE      STATIC
                      NOINSTALL
-                     SOURCES   ${grib_tools_sources}
+                     SOURCES   ${ecc_tools_sources}
                      PRIVATE_LIBS      eccodes )
 
 # tools binaries
@@ -50,7 +50,7 @@ foreach( tool ${ecc_tools_binaries} )
     # here we use the fact that each tool has only one C file that matches its name
     ecbuild_add_executable( TARGET     ${tool}
                             SOURCES    ${tool}.c
-                            LIBS       grib_tools )
+                            LIBS       ecc_tools )
 endforeach()
 
 # Install extra tools
@@ -59,35 +59,35 @@ foreach( tool ${ecc_tools_binaries_extra} )
     ecbuild_add_executable( TARGET     ${tool}
                             SOURCES    ${tool}.c
                             CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
-                            LIBS       grib_tools )
+                            LIBS       ecc_tools )
 endforeach()
 
 # grib_count/bufr_count etc. Same source code, different executable names
 ecbuild_add_executable( TARGET     grib_count
                         SOURCES    codes_count.c
-                        LIBS       grib_tools )
+                        LIBS       ecc_tools )
 ecbuild_add_executable( TARGET     bufr_count
                         SOURCES    codes_count.c
-                        LIBS       grib_tools )
+                        LIBS       ecc_tools )
 ecbuild_add_executable( TARGET     gts_count
                         SOURCES    codes_count.c
-                        LIBS       grib_tools )
+                        LIBS       ecc_tools )
 
 # grib to netcdf is optional
 ecbuild_add_executable( TARGET     grib_to_netcdf
                         SOURCES    grib_to_netcdf.c
                         CONDITION  HAVE_NETCDF
-                        LIBS       grib_tools NetCDF::NetCDF_C )
+                        LIBS       ecc_tools NetCDF::NetCDF_C )
 
 
 ecbuild_add_executable( TARGET     grib_list_keys
                         SOURCES    list_keys.c
                         CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
-                        LIBS       grib_tools )
+                        LIBS       ecc_tools )
 
 ecbuild_add_executable( TARGET     codes_bufr_filter
                         SOURCES    bufr_filter.c
-                        LIBS       grib_tools )
+                        LIBS       ecc_tools )
 
 
 # grib1to2 script needs to be generated before installation
