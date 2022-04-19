@@ -516,7 +516,7 @@ grib_box* grib_box_new(grib_handle* h, int* error);
 
 /* grib_accessor_class_lookup.c */
 
-/* grib_accessor_class_octect_number.c */
+/* grib_accessor_class_octet_number.c */
 
 /* grib_accessor_class_headers_only.c */
 

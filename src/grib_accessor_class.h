@@ -154,7 +154,7 @@ extern grib_accessor_class* grib_accessor_class_number_of_points_gaussian;
 extern grib_accessor_class* grib_accessor_class_number_of_values;
 extern grib_accessor_class* grib_accessor_class_number_of_values_data_raw_packing;
 extern grib_accessor_class* grib_accessor_class_octahedral_gaussian;
-extern grib_accessor_class* grib_accessor_class_octect_number;
+extern grib_accessor_class* grib_accessor_class_octet_number;
 extern grib_accessor_class* grib_accessor_class_offset_file;
 extern grib_accessor_class* grib_accessor_class_offset_values;
 extern grib_accessor_class* grib_accessor_class_pack_bufr_values;

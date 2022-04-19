@@ -42,22 +42,22 @@ static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
 
-typedef struct grib_accessor_octect_number
+typedef struct grib_accessor_octet_number
 {
     grib_accessor att;
     /* Members defined in gen */
     /* Members defined in long */
-    /* Members defined in octect_number */
+    /* Members defined in octet_number */
     const char* left;
     long right;
-} grib_accessor_octect_number;
+} grib_accessor_octet_number;
 
 extern grib_accessor_class* grib_accessor_class_long;
 
-static grib_accessor_class _grib_accessor_class_octect_number = {
+static grib_accessor_class _grib_accessor_class_octet_number = {
     &grib_accessor_class_long,           /* super                     */
-    "octect_number",                     /* name                      */
-    sizeof(grib_accessor_octect_number), /* size                      */
+    "octet_number",                     /* name                      */
+    sizeof(grib_accessor_octet_number), /* size                      */
     0,                                   /* inited */
     &init_class,                         /* init_class */
     &init,                               /* init                      */
@@ -98,7 +98,7 @@ static grib_accessor_class _grib_accessor_class_octect_number = {
 };
 
 
-grib_accessor_class* grib_accessor_class_octect_number = &_grib_accessor_class_octect_number;
+grib_accessor_class* grib_accessor_class_octet_number = &_grib_accessor_class_octet_number;
 
 
 static void init_class(grib_accessor_class* c)
@@ -139,7 +139,7 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
-    grib_accessor_octect_number* self = (grib_accessor_octect_number*)a;
+    grib_accessor_octet_number* self = (grib_accessor_octet_number*)a;
     int n                             = 0;
 
     self->left  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
@@ -150,7 +150,7 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    grib_accessor_octect_number* self = (grib_accessor_octect_number*)a;
+    grib_accessor_octet_number* self = (grib_accessor_octet_number*)a;
     int ret                           = 0;
     long offset;
 

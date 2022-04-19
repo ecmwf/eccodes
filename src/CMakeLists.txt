@@ -152,7 +152,7 @@ list( APPEND eccodes_src_files
     grib_accessor_class_long.c
     grib_accessor_class_lookup.c
     grib_accessor_class_octahedral_gaussian.c
-    grib_accessor_class_octect_number.c
+    grib_accessor_class_octet_number.c
     grib_accessor_class_headers_only.c
     grib_accessor_class_padding.c
     grib_accessor_class_pad.c

@@ -354,7 +354,7 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_number_of_values.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_number_of_values_data_raw_packing.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_octahedral_gaussian.c" />
-    <ClCompile Include="..\..\..\src\grib_accessor_class_octect_number.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_octet_number.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_offset_file.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_offset_values.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_pack_bufr_values.c" />
