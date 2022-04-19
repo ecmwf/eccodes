@@ -405,7 +405,7 @@ static grib_fieldset* grib_fieldset_create_from_order_by(grib_context* c, grib_o
     }
 
     set = grib_fieldset_create_from_keys(c, keys, nkeys, err);
-    grib_context_free(c, keys);
+    grib_context_free(c, (char*)keys);
 
     return set;
 }
