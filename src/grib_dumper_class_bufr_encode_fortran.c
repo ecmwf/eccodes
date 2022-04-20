@@ -938,7 +938,7 @@ static void header(grib_dumper* d, grib_handle* h)
     }
     fprintf(self->dumper.out, "  call codes_bufr_new_from_samples(ibufr,'%s',iret)\n", sampleName);
     fprintf(self->dumper.out, "  if (iret/=CODES_SUCCESS) then\n");
-    fprintf(self->dumper.out, "    print *,'ERROR creating BUFR from %s'\n", sampleName);
+    fprintf(self->dumper.out, "    print *,'ERROR: Failed to create BUFR from %s'\n", sampleName);
     fprintf(self->dumper.out, "    stop 1\n");
     fprintf(self->dumper.out, "  endif\n");
 }
