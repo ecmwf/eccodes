@@ -453,7 +453,7 @@ int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string
     return err;
 }
 
-static int grib_fieldset_compare(grib_fieldset* set, int* i, int* j)
+static int grib_fieldset_compare(grib_fieldset* set, const int* i, const int* j)
 {
     int ret           = 0;
     double d          = 0;

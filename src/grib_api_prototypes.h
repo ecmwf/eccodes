@@ -198,7 +198,6 @@ size_t grib_bufr_descriptors_array_used_size(bufr_descriptors_array* v);
 
 /* grib_darray.c */
 void grib_darray_print(const char* title, const grib_darray* darray);
-grib_darray* grib_darray_new_from_array(grib_context* c, double* a, size_t size);
 grib_darray* grib_darray_new(grib_context* c, size_t size, size_t incsize);
 grib_darray* grib_darray_push(grib_context* c, grib_darray* v, double val);
 void grib_darray_delete(grib_context* c, grib_darray* v);
@@ -224,7 +223,6 @@ size_t grib_oarray_used_size(grib_oarray* v);
 
 /* grib_iarray.c */
 void grib_iarray_print(const char* title, const grib_iarray* iarray);
-grib_iarray* grib_iarray_new_from_array(grib_context* c, long* a, size_t size);
 grib_iarray* grib_iarray_new(grib_context* c, size_t size, size_t incsize);
 long grib_iarray_pop(grib_iarray* a);
 long grib_iarray_pop_front(grib_iarray* a);
@@ -395,7 +393,6 @@ void grib_codetable_delete(grib_context* c);
 
 /* grib_accessor_class_g1step_range.c */
 int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd);
-int grib_g1_step_apply_units(long* start, long* theEnd, long* step_unit, long* P1, long* P2, long* unit, const int max, const int instant);
 
 /* grib_accessor_class_g2step_range.c */
 
