@@ -422,7 +422,9 @@
 30294 30294 Cs-137 Equivalent EquCs137
 30295 30295 Carbon-13 C-13
 30296 30296 Lead Pb
-# 30297-39999 Reserved
+30297 30297 Tellurium 131 Te-131
+30298 30298 Neodymium 137 Nd-137
+# 30299-39999 Reserved
 40000 40000 Singlet sigma oxygen (dioxygen (sigma singlet)) O2
 40001 40001 Singlet delta oxygen (dioxygen (delta singlet)) O2
 40002 40002 Singlet excited oxygen atom O(1D)
@@ -449,12 +451,12 @@
 60018 60018 Organic aldehydes RCHO
 60019 60019 Organic peroxides ROOH
 60020 60020 Organic nitrates RNO3
-60021 60021 Ethers ROR
-60022 60022 Amines NRRR
-60023 60023 Ketones RC(O)R
-60024 60024 Dicarbonyls unsaturated RC(O)CH2C(O)R
-60025 60025 Hydroxy dicarbonyls unsaturated RC(O)CHOHC(O)R
-60026 60026 Hydroxy ketones RC(OH)C(O)R
+60021 60021 Ethers ROR'
+60022 60022 Amines NRR'R''
+60023 60023 Ketones RC(O)R'
+60024 60024 Dicarbonyls unsaturated RC(O)CH2C(O)R'
+60025 60025 Hydroxy dicarbonyls unsaturated RC(O)CHOHC(O)R'
+60026 60026 Hydroxy ketones RC(OH)C(O)R'
 60027 60027 Oxides Ox
 60028 60028 Peroxyacyl nitrates RC(O)OONO2
 60029 60029 Aromatic peroxide radical (Aryl dioxydanyl radicals) ArOO*
