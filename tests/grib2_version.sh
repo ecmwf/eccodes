@@ -31,6 +31,16 @@ if [ "$latest" != "$highest_num" ]; then
     exit 1
 fi
 
+
+# Check table 1.0
+# Check it has the latest with description matching "Version implemented on DD MM YYYY"
+tempText=temp.$label.txt
+${tools_dir}/grib_set -s tablesVersion=$latest $sample2 $temp
+${tools_dir}/grib_dump -O -p tablesVersion $temp > $tempText
+grep -q "Version implemented on" $tempText
+rm -f $tempText
+
+
 # Also grib1 to grib2 conversion should set the official version, not the highest
 ${tools_dir}/grib_set -s edition=2 $sample1 $temp
 tablesVersion=`${tools_dir}/grib_get -p tablesVersion $temp`
