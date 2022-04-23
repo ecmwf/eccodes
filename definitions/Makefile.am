@@ -14477,8 +14477,7 @@ dist_definitionsgrib2_tables_10_DATA = \
 	grib2/tables/10/5.7.table\
 	grib2/tables/10/5.8.table\
 	grib2/tables/10/5.9.table\
-	grib2/tables/10/6.0.table\
-	grib2/tables/10/stepType.table
+	grib2/tables/10/6.0.table
 
 definitionsgrib2_tables_11dir = @ECCODES_DEFINITION_PATH@/grib2/tables/11
 dist_definitionsgrib2_tables_11_DATA = \
@@ -14598,8 +14597,7 @@ dist_definitionsgrib2_tables_11_DATA = \
 	grib2/tables/11/5.7.table\
 	grib2/tables/11/5.8.table\
 	grib2/tables/11/5.9.table\
-	grib2/tables/11/6.0.table\
-	grib2/tables/11/stepType.table
+	grib2/tables/11/6.0.table
 
 definitionsgrib2_tables_12dir = @ECCODES_DEFINITION_PATH@/grib2/tables/12
 dist_definitionsgrib2_tables_12_DATA = \
@@ -14721,8 +14719,7 @@ dist_definitionsgrib2_tables_12_DATA = \
 	grib2/tables/12/5.7.table\
 	grib2/tables/12/5.8.table\
 	grib2/tables/12/5.9.table\
-	grib2/tables/12/6.0.table\
-	grib2/tables/12/stepType.table
+	grib2/tables/12/6.0.table
 
 definitionsgrib2_tables_13dir = @ECCODES_DEFINITION_PATH@/grib2/tables/13
 dist_definitionsgrib2_tables_13_DATA = \
@@ -14845,8 +14842,7 @@ dist_definitionsgrib2_tables_13_DATA = \
 	grib2/tables/13/5.7.table\
 	grib2/tables/13/5.8.table\
 	grib2/tables/13/5.9.table\
-	grib2/tables/13/6.0.table\
-	grib2/tables/13/stepType.table
+	grib2/tables/13/6.0.table
 
 definitionsgrib2_tables_14dir = @ECCODES_DEFINITION_PATH@/grib2/tables/14
 dist_definitionsgrib2_tables_14_DATA = \
@@ -14972,8 +14968,7 @@ dist_definitionsgrib2_tables_14_DATA = \
 	grib2/tables/14/5.7.table\
 	grib2/tables/14/5.8.table\
 	grib2/tables/14/5.9.table\
-	grib2/tables/14/6.0.table\
-	grib2/tables/14/stepType.table
+	grib2/tables/14/6.0.table
 
 definitionsgrib2_tables_15dir = @ECCODES_DEFINITION_PATH@/grib2/tables/15
 dist_definitionsgrib2_tables_15_DATA = \
@@ -15099,8 +15094,7 @@ dist_definitionsgrib2_tables_15_DATA = \
 	grib2/tables/15/5.50002.table\
 	grib2/tables/15/5.6.table\
 	grib2/tables/15/5.7.table\
-	grib2/tables/15/6.0.table\
-	grib2/tables/15/stepType.table
+	grib2/tables/15/6.0.table
 
 definitionsgrib2_tables_16dir = @ECCODES_DEFINITION_PATH@/grib2/tables/16
 dist_definitionsgrib2_tables_16_DATA = \
@@ -15231,8 +15225,7 @@ dist_definitionsgrib2_tables_16_DATA = \
 	grib2/tables/16/5.50002.table\
 	grib2/tables/16/5.6.table\
 	grib2/tables/16/5.7.table\
-	grib2/tables/16/6.0.table\
-	grib2/tables/16/stepType.table
+	grib2/tables/16/6.0.table
 
 definitionsgrib2_tables_17dir = @ECCODES_DEFINITION_PATH@/grib2/tables/17
 dist_definitionsgrib2_tables_17_DATA = \
@@ -15363,8 +15356,7 @@ dist_definitionsgrib2_tables_17_DATA = \
 	grib2/tables/17/5.50002.table\
 	grib2/tables/17/5.6.table\
 	grib2/tables/17/5.7.table\
-	grib2/tables/17/6.0.table\
-	grib2/tables/17/stepType.table
+	grib2/tables/17/6.0.table
 
 definitionsgrib2_tables_18dir = @ECCODES_DEFINITION_PATH@/grib2/tables/18
 dist_definitionsgrib2_tables_18_DATA = \
@@ -15495,8 +15487,7 @@ dist_definitionsgrib2_tables_18_DATA = \
 	grib2/tables/18/5.50002.table\
 	grib2/tables/18/5.6.table\
 	grib2/tables/18/5.7.table\
-	grib2/tables/18/6.0.table\
-	grib2/tables/18/stepType.table
+	grib2/tables/18/6.0.table
 
 definitionsgrib2_tables_19dir = @ECCODES_DEFINITION_PATH@/grib2/tables/19
 dist_definitionsgrib2_tables_19_DATA = \
@@ -15627,8 +15618,7 @@ dist_definitionsgrib2_tables_19_DATA = \
 	grib2/tables/19/5.50002.table\
 	grib2/tables/19/5.6.table\
 	grib2/tables/19/5.7.table\
-	grib2/tables/19/6.0.table\
-	grib2/tables/19/stepType.table
+	grib2/tables/19/6.0.table
 
 definitionsgrib2_tables_2dir = @ECCODES_DEFINITION_PATH@/grib2/tables/2
 dist_definitionsgrib2_tables_2_DATA = \
@@ -15864,8 +15854,7 @@ dist_definitionsgrib2_tables_20_DATA = \
 	grib2/tables/20/5.50002.table\
 	grib2/tables/20/5.6.table\
 	grib2/tables/20/5.7.table\
-	grib2/tables/20/6.0.table\
-	grib2/tables/20/stepType.table
+	grib2/tables/20/6.0.table
 
 definitionsgrib2_tables_21dir = @ECCODES_DEFINITION_PATH@/grib2/tables/21
 dist_definitionsgrib2_tables_21_DATA = \
@@ -15999,8 +15988,7 @@ dist_definitionsgrib2_tables_21_DATA = \
 	grib2/tables/21/5.50002.table\
 	grib2/tables/21/5.6.table\
 	grib2/tables/21/5.7.table\
-	grib2/tables/21/6.0.table\
-	grib2/tables/21/stepType.table
+	grib2/tables/21/6.0.table
 
 definitionsgrib2_tables_3dir = @ECCODES_DEFINITION_PATH@/grib2/tables/3
 dist_definitionsgrib2_tables_3_DATA = \
@@ -16106,8 +16094,7 @@ dist_definitionsgrib2_tables_3_DATA = \
 	grib2/tables/3/5.7.table\
 	grib2/tables/3/5.8.table\
 	grib2/tables/3/5.9.table\
-	grib2/tables/3/6.0.table\
-	grib2/tables/3/stepType.table
+	grib2/tables/3/6.0.table
 
 definitionsgrib2_tables_4dir = @ECCODES_DEFINITION_PATH@/grib2/tables/4
 dist_definitionsgrib2_tables_4_DATA = \
@@ -16470,8 +16457,7 @@ dist_definitionsgrib2_tables_4_DATA = \
 	grib2/tables/4/5.7.table\
 	grib2/tables/4/5.8.table\
 	grib2/tables/4/5.9.table\
-	grib2/tables/4/6.0.table\
-	grib2/tables/4/stepType.table
+	grib2/tables/4/6.0.table
 
 definitionsgrib2_tables_5dir = @ECCODES_DEFINITION_PATH@/grib2/tables/5
 dist_definitionsgrib2_tables_5_DATA = \
@@ -16840,8 +16826,7 @@ dist_definitionsgrib2_tables_5_DATA = \
 	grib2/tables/5/5.7.table\
 	grib2/tables/5/5.8.table\
 	grib2/tables/5/5.9.table\
-	grib2/tables/5/6.0.table\
-	grib2/tables/5/stepType.table
+	grib2/tables/5/6.0.table
 
 definitionsgrib2_tables_6dir = @ECCODES_DEFINITION_PATH@/grib2/tables/6
 dist_definitionsgrib2_tables_6_DATA = \
@@ -17212,8 +17197,7 @@ dist_definitionsgrib2_tables_6_DATA = \
 	grib2/tables/6/5.7.table\
 	grib2/tables/6/5.8.table\
 	grib2/tables/6/5.9.table\
-	grib2/tables/6/6.0.table\
-	grib2/tables/6/stepType.table
+	grib2/tables/6/6.0.table
 
 definitionsgrib2_tables_7dir = @ECCODES_DEFINITION_PATH@/grib2/tables/7
 dist_definitionsgrib2_tables_7_DATA = \
@@ -17585,8 +17569,7 @@ dist_definitionsgrib2_tables_7_DATA = \
 	grib2/tables/7/5.7.table\
 	grib2/tables/7/5.8.table\
 	grib2/tables/7/5.9.table\
-	grib2/tables/7/6.0.table\
-	grib2/tables/7/stepType.table
+	grib2/tables/7/6.0.table
 
 definitionsgrib2_tables_8dir = @ECCODES_DEFINITION_PATH@/grib2/tables/8
 dist_definitionsgrib2_tables_8_DATA = \
@@ -17960,8 +17943,7 @@ dist_definitionsgrib2_tables_8_DATA = \
 	grib2/tables/8/5.7.table\
 	grib2/tables/8/5.8.table\
 	grib2/tables/8/5.9.table\
-	grib2/tables/8/6.0.table\
-	grib2/tables/8/stepType.table
+	grib2/tables/8/6.0.table
 
 definitionsgrib2_tables_9dir = @ECCODES_DEFINITION_PATH@/grib2/tables/9
 dist_definitionsgrib2_tables_9_DATA = \
@@ -18338,8 +18320,7 @@ dist_definitionsgrib2_tables_9_DATA = \
 	grib2/tables/9/5.7.table\
 	grib2/tables/9/5.8.table\
 	grib2/tables/9/5.9.table\
-	grib2/tables/9/6.0.table\
-	grib2/tables/9/stepType.table
+	grib2/tables/9/6.0.table
 
 definitionsgrib2_tables_local_ecmfdir = @ECCODES_DEFINITION_PATH@/grib2/tables/local/ecmf
 dist_definitionsgrib2_tables_local_ecmf_DATA = \
