@@ -21,12 +21,12 @@
  static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
  static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
  static void init() {
-	pthread_mutexattr_t attr;
-	pthread_mutexattr_init(&attr);
-	pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-	pthread_mutex_init(&mutex1,&attr);
-	pthread_mutex_init(&mutex2,&attr);
-	pthread_mutexattr_destroy(&attr);
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&mutex1,&attr);
+    pthread_mutex_init(&mutex2,&attr);
+    pthread_mutexattr_destroy(&attr);
  }
  /* #elif GRIB_OMP_THREADS */
  static int once = 0;

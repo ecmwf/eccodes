@@ -90,7 +90,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
     grib_expression_functor* e = (grib_expression_functor*)g;
 
     /*
-	TODO: needs OO code here
+    TODO: needs OO code here
      */
     if (strcmp(e->name, "lookup") == 0) {
         return GRIB_SUCCESS;
