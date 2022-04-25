@@ -161,6 +161,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-288
         bufr_ecc-313
         bufr_ecc-616
+        bufr_ecc-680
         bufr_ecc-686
         bufr_ecc-690
         bufr_ecc-379

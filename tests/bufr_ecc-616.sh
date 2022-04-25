@@ -11,8 +11,8 @@
 . ./include.ctest.sh
 
 # ---------------------------------------------------------
-# This is the test for the JIRA issue ECC-616.
-# It tests encoding a BUFR file which uses the operator 203YYY.
+# This is the test for the JIRA issue ECC-616:
+# Cannot extract subsets when operator 203YYY is present
 # ---------------------------------------------------------
 label="bufr_ecc-616-test"
 tempRules=temp.${label}.filter
