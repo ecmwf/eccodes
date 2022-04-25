@@ -183,7 +183,8 @@ static int process_file(const char* filename)
 
             GRIB_CHECK(grib_get_long(h, "interpretationOfNumberOfPoints", &interpretationOfNumberOfPoints), 0);
             if (interpretationOfNumberOfPoints != 1) {
-                error(filename, msg_num, "For a reduced grid, interpretationOfNumberOfPoints should be 1\n");
+                error(filename, msg_num, "For a reduced grid, interpretationOfNumberOfPoints should be 1 "
+                                         "(See Code Table 3.11)\n");
             }
 
             GRIB_CHECK(grib_get_size(h, "pl", &pl_len), 0);
