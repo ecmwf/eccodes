@@ -61,7 +61,7 @@ unsigned char _grib_template_GRIB2[] = {
 };
 
 static grib_templates templates[] = {
-	{"GRIB1", _grib_template_GRIB1, 107,},
-	{"GRIB2", _grib_template_GRIB2, 184,},
+    {"GRIB1", _grib_template_GRIB1, 107,},
+    {"GRIB2", _grib_template_GRIB2, 184,},
 };
 #endif

@@ -373,7 +373,6 @@ list( APPEND eccodes_src_files
     grib_iterator_factory.h
     grib_nearest_class.h
     grib_nearest_factory.h
-    grib_templates.h
     grib_yacc.h
     md5.h
     md5.c
