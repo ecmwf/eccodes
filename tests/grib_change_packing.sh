@@ -86,6 +86,16 @@ stats2=`${tools_dir}/grib_get -F%.2f -p skew,kurt $temp`
 [ "$stats1" = "$stats2" ]
 
 
+# Test 'accuracy' key
+# -----------------------
+input=${data_dir}/reduced_gaussian_model_level.grib1
+${tools_dir}/grib_set -r -s packingType=grid_ieee,accuracy=64 $input $temp
+grib_check_key_equals $temp precision '2'
+stats1=`${tools_dir}/grib_get -F%.2f -p skew,kurt $input`
+stats2=`${tools_dir}/grib_get -F%.2f -p skew,kurt $temp`
+[ "$stats1" = "$stats2" ]
+
+
 # Change grib packing test
 # -------------------------
 test_packing $grib1 $packing1
