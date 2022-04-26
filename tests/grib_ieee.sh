@@ -175,8 +175,12 @@ stats1=`${tools_dir}/grib_get -M -F%.3f -p skew,kurt $infile`
 stats2=`${tools_dir}/grib_get -M -F%.3f -p skew,kurt $temp`
 [ "$stats1" = "$stats2" ]
 
+# The same thing but use 'accuracy' instead of 'precision'
+temp2=temp2.grib_ieee.grib
+${tools_dir}/grib_set -r -s accuracy=64 $infile $temp2
+cmp $temp $temp2
 
-
+rm -f $temp2
 rm -f $temp
 
 ##################################
