@@ -1391,4 +1391,39 @@ EOF
 
 diff ${f}.log.ref ${f}.log 
 
+
+#-----------------------------------------------------------
+# Test: change ref val using operator 203YYY
+#-----------------------------------------------------------
+# Normally min. temperature = -99
+#          max. nonlinearInverseSpectralWidth = 655.35
+#          min. shortestOceanWavelengthOnSpectralResolution = 0
+f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
+cat > $fRules <<EOF
+ set masterTablesVersionNumber = 37;
+ set inputOverriddenReferenceValues = { -100, 10000, -100 };
+ set unexpandedDescriptors = { 
+        203015,   12023, 42008, 42007,   203255, 
+                  12023, 42008, 42007,
+        203000 };
+ # Now setting out-of-range values will work
+ set temperature = -100;
+ set nonlinearInverseSpectralWidth = 755;
+ set shortestOceanWavelengthOnSpectralResolution = -1;
+ set pack=1;
+ write;
+EOF
+
+${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f > ${f}.log
+${tools_dir}/bufr_get -s unpack=1 \
+   -p temperature,nonlinearInverseSpectralWidth,shortestOceanWavelengthOnSpectralResolution \
+   $f.out > $f.log
+
+cat > $f.log.ref <<EOF
+-100 755 -1
+EOF
+diff $f.log.ref $f.log
+
+
+
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
