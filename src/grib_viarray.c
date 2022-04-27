@@ -16,6 +16,20 @@
 
 #include "grib_api_internal.h"
 
+/* For debugging purposes */
+void grib_viarray_print(const char* title, const grib_viarray* viarray)
+{
+    size_t i;
+    char text[100] = {0,};
+    Assert(viarray);
+    printf("%s: viarray.n=%lu\n", title, (unsigned long)viarray->n);
+    for (i = 0; i < viarray->n; i++) {
+        sprintf(text, " viarray->v[%lu]", (unsigned long)i);
+        grib_iarray_print(text, viarray->v[i]);
+    }
+    printf("\n");
+}
+
 grib_viarray* grib_viarray_new(grib_context* c, size_t size, size_t incsize)
 {
     grib_viarray* v = NULL;
