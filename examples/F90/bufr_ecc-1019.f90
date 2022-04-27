@@ -9,11 +9,9 @@
 program operator_3_test
   use eccodes
   implicit none
-  integer                                       :: iret
-  integer                                       :: outfile
-  integer                                       :: ibufr
-  integer(kind=4), dimension(:), allocatable    :: ivalues
-  character(len=100)   :: outfile_name
+  integer                                    :: iret, outfile, ibufr
+  integer(kind=4), dimension(:), allocatable :: ivalues
+  character(len=100)                         :: outfile_name
 
   call getarg(1, outfile_name)
 
@@ -32,8 +30,7 @@ program operator_3_test
   ivalues=(/ 2,2,2 /)
   call codes_set(ibufr,'inputExtendedDelayedDescriptorReplicationFactor',ivalues)
   deallocate(ivalues)
-  
-  call codes_set(ibufr,'edition',4)
+
   call codes_set(ibufr,'masterTableNumber',0)
   call codes_set(ibufr,'bufrHeaderCentre',254)
   call codes_set(ibufr,'bufrHeaderSubCentre',0)
@@ -57,6 +54,7 @@ program operator_3_test
 
   allocate(ivalues(7))
   ivalues = (/ 203015,025052,203255,025052,101000,031002,014046 /)
+  ! ivalues = (/                      025052,101000,031002,014046 /)
   call codes_set(ibufr,'unexpandedDescriptors',ivalues,iret)
   if (iret /= CODES_SUCCESS) then
     write(*,*)'codes_set failed for the unexpandedDescriptors'
@@ -64,8 +62,8 @@ program operator_3_test
   endif
 
   deallocate(ivalues)
-
-  call codes_set(ibufr,'log10OfPrincipalComponentsNormalizedFitToData',1.1)
+  ! Negative values can now be encoded
+  call codes_set(ibufr, 'log10OfPrincipalComponentsNormalizedFitToData', -1.1)
 
   allocate(ivalues(3))
   ivalues = 0

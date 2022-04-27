@@ -29,7 +29,7 @@ EOF
 cat $TEMP_TEXT
 
 cat > $TEMP_REF << EOF
- log3=1.1
+ log3=-1.1
  ref=-16383 -16383 -16383
  scR1=0
  scR2=0
