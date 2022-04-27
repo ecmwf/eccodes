@@ -13,11 +13,7 @@
 # Define a common label for all the tmp files
 label="bufr_dump_data_test"
 
-# Create log file
 fLog=${label}".log"
-rm -f $fLog
-
-# Define tmp bufr files
 fJsonTmp=${label}".json.tmp"
 
 if [ $HAVE_MEMFS -eq 1 ]; then
@@ -35,6 +31,14 @@ for file in ${bufr_files}; do
   ${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file >/dev/null
 done
 
+
+# Check "subsetNumber" key is in the dump for uncompressed
+# BUFRs with numberOfSubsets > 1
+files='delayed_repl_01.bufr synop_multi_subset.bufr'
+for f in $files; do
+  ${tools_dir}/bufr_dump -p ${data_dir}/bufr/$f > $fLog
+  grep -q "^subsetNumber=[1-9]" $fLog
+done
 
 #==============================================
 # Testing output when ECCODES_DEBUG is enabled
