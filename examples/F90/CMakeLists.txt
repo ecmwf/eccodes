@@ -11,6 +11,7 @@ if( HAVE_BUILD_TOOLS )
           grib_set_pv
           grib_set_data
           bufr_ecc-1284
+          bufr_ecc-1019
           grib_ecc-671 )
     list( APPEND tests_extra
           grib_index
