@@ -3091,8 +3091,6 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
                                 }
                             }
                             /*grib_iarray_push(elementsDescriptorsIndex,i);*/
-                            //if (decoding)
-                            //    push_zero_element(self, dval);
                             break;
 
                         case 5: /* Signify character */
@@ -3330,18 +3328,16 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
 
         if (flag != PROCESS_ENCODE) {
             grib_viarray_push(c, self->elementsDescriptorsIndex, elementsDescriptorsIndex);
-            //grib_iarray_print("process_elements::elementsDescriptorsIndex", elementsDescriptorsIndex);
+            /*grib_iarray_print("DBG process_elements::elementsDescriptorsIndex", elementsDescriptorsIndex);*/
         }
         if (decoding && !self->compressedData) {
             grib_vdarray_push(c, self->numericValues, dval);
-            //grib_darray_print("process_elements::dval", dval);
+            /*grib_darray_print("DBG process_elements::dval", dval);*/
         }
     } /* for all subsets */
 
-    /*if (c->debug)*/
-    //printf("\n\n"); //??
-    //grib_vdarray_print("process_elements: self->numericValues",            self->numericValues);
-    //grib_viarray_print("process_elements: self->elementsDescriptorsIndex", self->elementsDescriptorsIndex);
+    /*grib_vdarray_print("DBG process_elements: self->numericValues",            self->numericValues);*/
+    /*grib_viarray_print("DBG process_elements: self->elementsDescriptorsIndex", self->elementsDescriptorsIndex);*/
 
     if (decoding) {
         err                 = create_keys(a, 0, 0, 0);
