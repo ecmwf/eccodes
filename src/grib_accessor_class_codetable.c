@@ -575,7 +575,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
     if (table && value >= 0 && value < table->size) {
         if (table->entries[value].abbreviation) {
-            int b = atol(table->entries[value].abbreviation);
+            long b = atol(table->entries[value].abbreviation);
             if (b == value)
                 strcpy(comment, table->entries[value].title);
             else
