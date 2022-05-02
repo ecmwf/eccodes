@@ -19,10 +19,12 @@ tempLog=temp.${label}.log
 tempSupp=temp.${label}.supp
 tempFilt=temp.${label}.filt
 
+set +u
 if test "x$ECCODES_TEST_WITH_VALGRIND" = "x"; then
   echo "Environment variable ECCODES_TEST_WITH_VALGRIND not defined. Test disabled"
   exit 0
 fi
+set -u
 
 # The presence of ECCODES_TEST_WITH_VALGRIND environment variable redefines
 # tools_dir so we reset it to its original
