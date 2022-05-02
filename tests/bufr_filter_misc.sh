@@ -1389,8 +1389,8 @@ userDateTimeStart=2457896.88347 userDateStart=20170523 userTimeStart=91212 20170
 userDateTimeStart=2457896.88347 userDateStart=20170523 userTimeStart=91212 20170523091212
 EOF
 
-diff ${f}.log.ref ${f}.log 
-
+diff ${f}.log.ref ${f}.log
+rm -f $f.log ${f}.log.ref
 
 #-----------------------------------------------------------
 # Test: change ref val using operator 203YYY
