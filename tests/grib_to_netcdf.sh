@@ -22,12 +22,6 @@ if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     export PATH=$PATH:$CONDA_PREFIX/Library/bin
 fi
 
-# Disable if autotools being used
-src_config=${src_dir}/config.h
-if [ -f ${src_config} ]; then
-    exit 0
-fi
-
 label="grib_to_netcdf_test"
 tempGrib=temp.${label}.grib
 tempNetcdf=temp.${label}.nc
