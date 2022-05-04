@@ -363,7 +363,7 @@ list( APPEND eccodes_src_files
     grib_accessor_class.h
     grib_accessor_factory.h
     grib_api_internal.h
-    grib_api_prototypes.h
+    eccodes_prototypes.h
     grib_box_class.h
     grib_box_factory.h
     grib_dumper_class.h

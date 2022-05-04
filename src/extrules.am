@@ -12,7 +12,7 @@ grib_errors.c : grib_errors.txt errors.pl
 	cmp -s ../python/gribapi/errors.py errors.py.new || (mv errors.py.new ../python/gribapi/errors.py)
 
 
-proto:;-chmod +w grib_api_prototypes.h; mkptypes -A $(libeccodes_la_prototypes) $(libeccodes_extra_prototypes) > temp && mv temp grib_api_prototypes.h;rm -f temp
+proto:;-chmod +w eccodes_prototypes.h; mkptypes -A $(libeccodes_la_prototypes) $(libeccodes_extra_prototypes) > temp && mv temp eccodes_prototypes.h;rm -f temp
 
 test:all;(cd ../tests; make tests)
 

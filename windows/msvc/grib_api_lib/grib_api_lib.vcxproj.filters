@@ -1121,7 +1121,7 @@
     <ClInclude Include="..\..\..\src\grib_api_internal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\grib_api_prototypes.h">
+    <ClInclude Include="..\..\..\src\eccodes_prototypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\grib_dumper_class.h">

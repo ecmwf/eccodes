@@ -541,7 +541,7 @@
     <ClInclude Include="..\..\..\src\grib_accessor_factory.h" />
     <ClInclude Include="..\..\..\src\grib_api.h" />
     <ClInclude Include="..\..\..\src\grib_api_internal.h" />
-    <ClInclude Include="..\..\..\src\grib_api_prototypes.h" />
+    <ClInclude Include="..\..\..\src\eccodes_prototypes.h" />
     <ClInclude Include="..\..\..\src\grib_dumper_class.h" />
     <ClInclude Include="..\..\..\src\grib_dumper_factory.h" />
     <ClInclude Include="..\..\..\src\grib_emoslib.h" />

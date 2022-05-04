@@ -397,7 +397,7 @@ CLEANFILES = libeccodes.la
 noinst_HEADERS = grib_api_internal.h \
                  md5.h \
                  grib_emoslib.h \
-                 grib_api_prototypes.h \
+                 eccodes_prototypes.h \
                  grib_dumper_class.h \
                  errors.pl \
                  grib_dumper_factory.h \
