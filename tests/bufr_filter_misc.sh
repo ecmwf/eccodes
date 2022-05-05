@@ -1393,7 +1393,7 @@ diff ${f}.log.ref ${f}.log
 rm -f $f.log ${f}.log.ref
 
 #-----------------------------------------------------------
-# Test: change ref val using operator 203YYY
+# Test: change reference val using operator 203YYY
 #-----------------------------------------------------------
 # Normally min. temperature = -99
 #          max. nonlinearInverseSpectralWidth = 655.35
@@ -1407,14 +1407,14 @@ cat > $fRules <<EOF
                   12023, 42008, 42007,
         203000 };
  # Now setting out-of-range values will work
- set temperature = -100;
- set nonlinearInverseSpectralWidth = 755;
- set shortestOceanWavelengthOnSpectralResolution = -1;
+ set temperature = -100;  # code 012023
+ set nonlinearInverseSpectralWidth = 755; # code 042008
+ set shortestOceanWavelengthOnSpectralResolution = -1; # code 042007
  set pack=1;
  write;
 EOF
 
-${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f > ${f}.log
+${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
 ${tools_dir}/bufr_get -s unpack=1 \
    -p temperature,nonlinearInverseSpectralWidth,shortestOceanWavelengthOnSpectralResolution \
    $f.out > $f.log
@@ -1424,6 +1424,20 @@ cat > $f.log.ref <<EOF
 EOF
 diff $f.log.ref $f.log
 
+# Try with one element
+cat > $fRules <<EOF
+ set masterTablesVersionNumber = 37;
+ set inputOverriddenReferenceValues = { -150 };
+ set unexpandedDescriptors = { 
+        203015, 12023,  203255, 12023, 203000 };
+ set temperature = -101;
+ set pack=1;
+ write;
+EOF
+${tools_dir}/codes_bufr_filter -o $f.out $fRules $f
+res=`${tools_dir}/bufr_get -s unpack=1 -p temperature $f.out`
+[ "$res" = "-101" ]
 
 
+# Clean up
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
