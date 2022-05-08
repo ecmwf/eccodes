@@ -59,9 +59,9 @@ if (numberOfForecastsUsedInLocalTime == 1) {
 
   # need something here to compute the diff between date time of *OfForecastUsedInLocalTime and the local time defined in section 1 (dataDate and dataTime)
   # this would be the offset (step) used to index data in mars as mars.step
-  meta dateTimeOfForecastUsedInLocalTime julian_date(yearOfForecastUsedInLocalTime, monthOfForecastUsedInLocalTime, dayOfForecastUsedInLocalTime,
-                                                     hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime) : hidden;
-  meta dateTimeOfLocalTime               julian_date(dataDate, dataTime) : hidden;
+  #meta dateTimeOfForecastUsedInLocalTime julian_date(yearOfForecastUsedInLocalTime, monthOfForecastUsedInLocalTime, dayOfForecastUsedInLocalTime,
+  #                                                   hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime) : hidden;
+  #meta dateTimeOfLocalTime               julian_date(dataDate, dataTime) : hidden;
 
   meta jd1 julian_day(dateOfForecastUsedInLocalTime,
                       hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime);
