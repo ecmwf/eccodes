@@ -27,9 +27,10 @@ rm -f $outfile1 $outfile2
 grib2_sample=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
 ${tools_dir}/grib_set -s packingType=grid_ccsds $grib2_sample $outfile1
 ${tools_dir}/grib_set -d1 $outfile1 $outfile2
+# $outfile2 is now a ccsds constant field
 grib_check_key_equals $grib2_sample packingType,const "grid_simple 0"
 grib_check_key_equals $outfile2     packingType,const "grid_ccsds 1"
-grib_check_key_equals $outfile2     accuracy 16
+grib_check_key_equals $outfile2     accuracy 0
 rm -f $outfile1 $outfile2
 
 # Change packingType
