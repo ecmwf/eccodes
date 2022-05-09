@@ -400,6 +400,15 @@ static int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned c
                 return GRIB_DECODING_ERROR;
             }
         }
+#if 0
+        if (offsetBeforeData == offsetAfterData) {
+            /* Crazy case: Constant field with bitsPerValue > 0 */
+            for (i = 0; i < n_vals; i++)
+                val[i] = reference_value;
+            *len = n_vals;
+            return GRIB_SUCCESS;
+        }
+#endif
     }
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,
