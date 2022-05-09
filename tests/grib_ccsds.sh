@@ -33,6 +33,11 @@ grib_check_key_equals $outfile2     packingType,const "grid_ccsds 1"
 grib_check_key_equals $outfile2     accuracy 0
 rm -f $outfile1 $outfile2
 
+# ECC-1387
+# --------
+echo 'set values={6, 6, 6};write;' | ${tools_dir}/grib_filter -o $outfile2 - ${data_dir}/ccsds.grib2
+grib_check_key_equals $outfile2 referenceValue,bitsPerValue '6 0'
+
 # Change packingType
 # ------------------
 ${tools_dir}/grib_set -r -s packingType=grid_simple $infile $outfile1
