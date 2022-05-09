@@ -401,7 +401,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
         if ((err = grib_set_long_internal(hand, self->number_of_values, n_vals)) != GRIB_SUCCESS)
             return err;
-        bits_per_value = 0;
+        bits_per_value = 0; /* ECC-1387 */
         if ((err = grib_set_long_internal(hand, self->bits_per_value, bits_per_value)) != GRIB_SUCCESS)
             return err;
 
