@@ -828,7 +828,7 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
             if (*v > maxAllowed || *v < minAllowed) {
                 if (dont_fail_if_out_of_range) {
                     fprintf(stderr,
-                            "ECCODES WARNING :  encode_double_array: %s (%06d). Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
+                            "ECCODES WARNING :  encode_double_array: %s (%06ld). Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
                             " Setting it to missing value\n",
                             bd->shortName, bd->code, *v, minAllowed, maxAllowed);
                     grib_set_bits_on(buff->data, pos, modifiedWidth);
@@ -890,7 +890,7 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
             /* Turn out-of-range values into 'missing' */
             if (*v != GRIB_MISSING_DOUBLE && (*v < minAllowed || *v > maxAllowed)) {
                 fprintf(stderr,
-                        "ECCODES WARNING :  encode_double_array: %s (%06d). Value at index %ld (%g) out of range (minAllowed=%g, maxAllowed=%g)."
+                        "ECCODES WARNING :  encode_double_array: %s (%06ld). Value at index %ld (%g) out of range (minAllowed=%g, maxAllowed=%g)."
                         " Setting it to missing value\n",
                         bd->shortName, bd->code, (long)ii, *v, minAllowed, maxAllowed);
                 *v = GRIB_MISSING_DOUBLE;
@@ -1015,7 +1015,7 @@ static int encode_double_value(grib_context* c, grib_buffer* buff, long* pos, bu
     else if (value > maxAllowed || value < minAllowed) {
         if (dont_fail_if_out_of_range) {
             fprintf(stderr,
-                    "ECCODES WARNING :  encode_double_value: %s (%06d). Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
+                    "ECCODES WARNING :  encode_double_value: %s (%06ld). Value (%g) out of range (minAllowed=%g, maxAllowed=%g)."
                     " Setting it to missing value\n",
                     bd->shortName, bd->code, value, minAllowed, maxAllowed);
             /* Ignore the bad value and instead use 'missing' */
