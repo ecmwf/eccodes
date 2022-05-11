@@ -7,7 +7,6 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-. ./include.ctest.sh
 set -e
 
 if [ -z "$ECCODES_DEFINITION_PATH" ]; then
@@ -22,8 +21,8 @@ fi
 
 set +x
 touch tmp$$
-echo "Go through all files in $ECCODES_DEFINITION_PATH ..."
-for file in `find $ECCODES_DEFINITION_PATH -name '*.def' -print`
+echo "Process all files in $ECCODES_DEFINITION_PATH using $GRIB_LIST_KEYS ..."
+for file in `find $ECCODES_DEFINITION_PATH/ -name '*.def' -print`
 do
   ${GRIB_LIST_KEYS} $file >> tmp$$  
 done
