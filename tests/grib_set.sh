@@ -137,5 +137,20 @@ set -e
 grep -q "String cannot be converted to a double" $temp
 
 
+# Strict option
+# ---------------
+# There is only one field in this file with shortName=2t
+input=${data_dir}/tigge_cf_ecmwf.grib2
+# This copies all messages to the output changing one of them
+${tools_dir}/grib_set -w shortName=2t -s offsetValuesBy=0.5  $input $outfile
+count=`${tools_dir}/grib_count $outfile`
+[ $count -eq 43 ]
+# Now we copy only what was changed
+${tools_dir}/grib_set -w shortName=2t -S -s offsetValuesBy=0.5  $input $outfile
+count=`${tools_dir}/grib_count $outfile`
+[ $count -eq 1 ]
+grib_check_key_equals $outfile shortName '2t'
+
+
 # Clean up
 rm -f $outfile $temp
