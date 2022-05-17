@@ -365,16 +365,16 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This package is the <b>Python</b> interface to <a class="el" href="namespaceec_codes.html" title="This package is the Python interface to ecCodes. ">ecCodes</a>. </p>
-<p>It offers almost one to one bindings to the C API functions.</p>
-<p>The Python interface to <a class="el" href="namespaceec_codes.html" title="This package is the Python interface to ecCodes. ">ecCodes</a> uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package as the container of choice for the possible arrays of values that can be encoded/decoded in and from a grib message. Numpy is a package used for scientific computing in Python and an efficient container for generic data.</p>
-<p>The Python interface can be enabled/disabled from CMake by using the following flag:<br/>
+<p>It offers almost one-to-one bindings to the C API functions.</p>
+<p>The Python interface to <a class="el" href="namespaceec_codes.html" title="This package is the Python interface to ecCodes. ">ecCodes</a> uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package as the container of choice for the possible arrays of values that can be encoded/decoded in and from a message. Numpy is a package used for scientific computing in Python and an efficient container for generic data.</p>
+<p>The Python interface can be added via:<br/>
  </p>
-<div class="fragment"><div class="line">    -DENABLE_PYTHON=ON</div>
+<div class="fragment"><div class="line">    pip3 install eccodes</div>
 <div class="line">or</div>
-<div class="line">    -DENABLE_PYTHON=OFF</div>
+<div class="line">    pip3 install --install-option="--prefix=/path/to/where/you/install/eccodes" eccodes</div>
 </div><!-- fragment --><p>When this is enabed, then the system Python will be used to build the interface.</p>
 <p><em>Requirements:</em> </p>
-<pre class="fragment">- Python 2.6 or higher
+<pre class="fragment">- Python 3.5 or higher
 - NumPy</pre> </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="af4a4c95465d2026ad549920b07150bab"></a>
 <div class="memitem">
