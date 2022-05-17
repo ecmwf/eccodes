@@ -9,7 +9,7 @@
 #
 
 set -x
-. ./include.sh
+. ./include.ctest.sh
 
 
 # Define a common label for all the tmp files

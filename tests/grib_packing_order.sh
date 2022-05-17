@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 set -u
 REDIRECT=/dev/null
 label="grib_packing_order"
@@ -71,17 +71,24 @@ fi
 
 # IEEE
 # ------------
-#tests/grib_packing_order grid_ieee values_before_packing_type x2 # Does not work
-$EXEC ${test_dir}/grib_packing_order grid_ieee packing_type_before_values $temp_ieee1
-$EXEC ${test_dir}/grib_packing_order grid_ieee values_before_packing_type $temp_ieee2
+if [ $HAVE_EXTRA_TESTS -eq 1 ]; then
+    #tests/grib_packing_order grid_ieee values_before_packing_type x2 # Does not work
+    $EXEC ${test_dir}/grib_packing_order grid_ieee packing_type_before_values $temp_ieee1
+    $EXEC ${test_dir}/grib_packing_order grid_ieee values_before_packing_type $temp_ieee2
 
-${tools_dir}/grib_ls -n statistics $temp_ieee1 $temp_ieee2
-# TODO
-# ${tools_dir}/grib_compare $temp_ieee1 $temp_ieee2
+    ${tools_dir}/grib_ls -n statistics $temp_ieee1 $temp_ieee2
+    # TODO
+    # ${tools_dir}/grib_compare $temp_ieee1 $temp_ieee2
 
-# No point comparing with grid_simple as grid_ieee will be closer to the actual values
-# and less lossy
+    # No point comparing with grid_simple as grid_ieee will be closer to the actual values
+    # and less lossy
 
+    # TODO: Test with environment variable
+    #       Disabled for now. Need to investigate valgrind error
+    #ECCODES_GRIB_IEEE_PACKING=32 \
+    #   $EXEC ${test_dir}/grib_packing_order grid_simple packing_type_before_values $temp_ieee1
+    #grib_check_key_equals $temp_ieee1 packingType grid_ieee
+fi
 
 
 # Second order Packing: TODO

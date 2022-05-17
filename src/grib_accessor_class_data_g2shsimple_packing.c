@@ -21,6 +21,7 @@
    IMPLEMENTS = pack_double
    IMPLEMENTS = value_count
    MEMBERS=const char*  numberOfValues
+   MEMBERS=const char*  numberOfDataPoints
    END_CLASS_DEF
  */
 
@@ -50,6 +51,7 @@ typedef struct grib_accessor_data_g2shsimple_packing
     int dirty;
     /* Members defined in data_g2shsimple_packing */
     const char* numberOfValues;
+    const char* numberOfDataPoints;
 } grib_accessor_data_g2shsimple_packing;
 
 extern grib_accessor_class* grib_accessor_class_data_shsimple_packing;
@@ -140,7 +142,8 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
 {
     grib_accessor_data_g2shsimple_packing* self = (grib_accessor_data_g2shsimple_packing*)a;
 
-    self->numberOfValues = grib_arguments_get_name(grib_handle_of_accessor(a), args, 2);
+    self->numberOfValues     = grib_arguments_get_name(grib_handle_of_accessor(a), args, 2);
+    self->numberOfDataPoints = grib_arguments_get_name(grib_handle_of_accessor(a), args, 3);
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
@@ -213,6 +216,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     *len = n_vals;
 
     if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->numberOfValues, (long)n_vals)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->numberOfDataPoints, (long)n_vals)) != GRIB_SUCCESS)
         return err;
 
     return err;

@@ -10,7 +10,7 @@
 
 # Tests for WRAP
 
-. ./include.sh
+. ./include.ctest.sh
 label="wrap-test"
 tempOut=temp.${label}.out
 tempTxt=temp.${label}.txt

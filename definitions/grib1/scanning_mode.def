@@ -28,6 +28,8 @@ meta swapScanningY change_scanning_direction( values,Ni,Nj,
                  yFirst,yLast,y) : edition_specific,hidden,no_copy;
 alias swapScanningLat = swapScanningY;
 
+transient swapScanningAlternativeRows = 0; # Not available in grib1
+
 if (jPointsAreConsecutive) {
     alias numberOfRows=Ni;
     alias numberOfColumns=Nj;

@@ -69,7 +69,7 @@ void codes_check(const char* call, const char* file, int line, int e, const char
 
 /* Fieldsets */
 /******************************************************************************/
-grib_fieldset* codes_fieldset_new_from_files(grib_context* c, char* filenames[], int nfiles, char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err)
+grib_fieldset* codes_fieldset_new_from_files(grib_context* c, char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err)
 {
     return grib_fieldset_new_from_files(c, filenames, nfiles, keys, nkeys, where_string, order_by_string, err);
 }
@@ -341,9 +341,9 @@ int codes_get_double_element(const grib_handle* h, const char* key, int i, doubl
 {
     return grib_get_double_element(h, key, i, value);
 }
-int codes_get_double_elements(const grib_handle* h, const char* key, int* i, long size, double* value)
+int codes_get_double_elements(const grib_handle* h, const char* key, const int* index_array, long size, double* value)
 {
-    return grib_get_double_elements(h, key, i, size, value);
+    return grib_get_double_elements(h, key, index_array, size, value);
 }
 int codes_get_string(const grib_handle* h, const char* key, char* mesg, size_t* length)
 {

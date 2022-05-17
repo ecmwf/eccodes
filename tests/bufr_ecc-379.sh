@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-379 (Also ECC-830)
@@ -40,7 +40,7 @@ ${tools_dir}/codes_bufr_filter -o $tempOut $tempRules $BufrFile 2>$tempText
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q 'longitude. Maximum value (value\[0\]=500) out of range' $tempText
+grep -q 'longitude (006001). Maximum value (value\[0\]=500) out of range' $tempText
 
 # Now set environment variable to turn out-of-range values into 'missing'
 export ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE=1

@@ -116,7 +116,7 @@ static void aliases(grib_dumper* d, grib_accessor* a)
         return;
 
     if (a->all_names[1]) {
-        char* sep = "";
+        const char* sep = "";
         fprintf(self->dumper.out, " ( ALIASES: ");
 
         for (i = 1; i < MAX_ACCESSOR_NAMES; i++) {

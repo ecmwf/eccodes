@@ -24816,7 +24816,7 @@ int main(int argc, char** argv)
 
     outfile_name = argv[3];
 
-    printf("Using sample_filename = %s\n", sample_filename);
+    fprintf(stderr,"Using sample_filename = %s\n", sample_filename);
     h = codes_grib_handle_new_from_samples(0, sample_filename);
     assert(h);
     
@@ -24826,21 +24826,21 @@ int main(int argc, char** argv)
 
     CODES_CHECK(codes_set_long(h, "bitsPerValue", 16), 0);
     if (packing_stage == PACKING_TYPE_BEFORE_VALUES) {
-        printf("Set packingType to %s\n", packing_type);
+        fprintf(stderr,"Set packingType to %s\n", packing_type);
         CODES_CHECK(codes_set_string(h, "packingType", packing_type, &str_len), 0);
     }
     
-    printf("Set values. values_len=%lu\n", (unsigned long)values_len);
+    fprintf(stderr,"Set values. values_len=%lu\n", (unsigned long)values_len);
     CODES_CHECK(codes_set_double_array(h, "values", values, values_len), 0);
     
     if (packing_stage == VALUES_BEFORE_PACKING_TYPE) {
-        printf("Set packingType to %s\n", packing_type);
+        fprintf(stderr, "Set packingType to %s\n", packing_type);
         CODES_CHECK(codes_set_string(h, "packingType", packing_type, &str_len), 0);
     }
     
     CODES_CHECK(codes_write_message(h, outfile_name, "w"), 0);
 
-    printf("%s checks on decoded values '%s' (%s) ...\n",
+    fprintf(stderr, "%s checks on decoded values '%s' (%s) ...\n",
             (check?"Doing":"Skipping"), packing_type, argv[2]);
     if (check) {
         size_t i = 0;
@@ -24849,15 +24849,24 @@ int main(int argc, char** argv)
         for (i = 0; i < values_len; i++) {
             const double diff = fabs(values[i] - vals[i]);
             if (diff > EPSILON) {
-                fprintf(stderr, "Unpacked value different: i=%lu values[i]=%.7f vals[i]=%.7f\n",
+                fprintf(stderr, "Unpacked value different at i=%lu: original=%.7f decoded=%.7f\n",
                         i, values[i], vals[i]);
                 return 1;
             }
+        }
+        if (strcmp(packing_type, "grid_simple")==0 || strcmp(packing_type, "grid_ieee")==0) {
+            double calc = 0;
+            long offsetAfterData = 0, offsetBeforeData = 0;
+            GRIB_CHECK(grib_get_long(h, "offsetAfterData",  &offsetAfterData), 0);
+            GRIB_CHECK(grib_get_long(h, "offsetBeforeData", &offsetBeforeData), 0);
+            calc = (offsetAfterData - offsetBeforeData) * 8.0 / values_len;
+            printf("bitsPerValue calculated as = (offsetAfterData - offsetBeforeData)*8/numValues = %g\n", calc);
+            assert( calc == 16 || calc == 32 || calc == 64 );
         }
         free(vals);
     }
 
     codes_handle_delete(h);
-    printf("All done\n");
+    fprintf(stderr,"All done\n");
     return 0;
 }

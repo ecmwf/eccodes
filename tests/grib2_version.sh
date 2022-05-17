@@ -7,7 +7,7 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
-. ./include.sh
+. ./include.ctest.sh
 set -u
 
 label="grib2_version"
@@ -30,6 +30,16 @@ if [ "$latest" != "$highest_num" ]; then
     echo "The GRIB2 key tablesVersionLatest = $latest but the highest number in $tables_dir is $highest_num"
     exit 1
 fi
+
+
+# Check table 1.0
+# Check it has the latest with description matching "Version implemented on DD MM YYYY"
+tempText=temp.$label.txt
+${tools_dir}/grib_set -s tablesVersion=$latest $sample2 $temp
+${tools_dir}/grib_dump -O -p tablesVersion $temp > $tempText
+grep -q "Version implemented on" $tempText
+rm -f $tempText
+
 
 # Also grib1 to grib2 conversion should set the official version, not the highest
 ${tools_dir}/grib_set -s edition=2 $sample1 $temp

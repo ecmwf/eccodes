@@ -28,7 +28,7 @@ int exit_on_error = 1; /* By default exit if any check fails */
 int verbose       = 0; /* By default quiet unless errors */
 int error_count   = 0;
 
-int DBL_EQUAL(double d1, double d2, double tolerance)
+static int DBL_EQUAL(double d1, double d2, double tolerance)
 {
     return fabs(d1 - d2) <= tolerance;
 }
@@ -46,7 +46,7 @@ static void usage(const char* prog)
 }
 
 /* Print an error message and optionally die */
-void error(const char* filename, int msg_num, const char* fmt, ...)
+static void error(const char* filename, int msg_num, const char* fmt, ...)
 {
     char buf[1024] = {0,};
     va_list list;
@@ -64,7 +64,7 @@ void error(const char* filename, int msg_num, const char* fmt, ...)
     }
 }
 
-double get_precision(long edition)
+static double get_precision(long edition)
 {
     if (edition == 1)
         return 1.0 / 1000.0; /* milli degrees */
@@ -74,7 +74,7 @@ double get_precision(long edition)
     return 0.0;
 }
 
-int process_file(const char* filename)
+static int process_file(const char* filename)
 {
     int err = 0, msg_num = 0;
     grib_handle* h = NULL;
@@ -169,15 +169,22 @@ int process_file(const char* filename)
             int pl_sum = 0, max_pl = 0, is_missing_Ni = 0, is_missing_Di = 0;
             size_t i = 0, pl_len = 0;
             long is_octahedral = 0;
+            long interpretationOfNumberOfPoints = 0;
             is_missing_Ni      = grib_is_missing(h, "Ni", &err);
             assert(err == GRIB_SUCCESS);
             is_missing_Di = grib_is_missing(h, "iDirectionIncrement", &err);
             assert(err == GRIB_SUCCESS);
             if (!is_missing_Ni) {
-                error(filename, msg_num, "For a reduced gaussian grid Ni should be missing\n");
+                error(filename, msg_num, "For a reduced grid, Ni should be missing\n");
             }
             if (!is_missing_Di) {
-                error(filename, msg_num, "For a reduced gaussian grid iDirectionIncrement should be missing\n");
+                error(filename, msg_num, "For a reduced grid, iDirectionIncrement should be missing\n");
+            }
+
+            GRIB_CHECK(grib_get_long(h, "interpretationOfNumberOfPoints", &interpretationOfNumberOfPoints), 0);
+            if (interpretationOfNumberOfPoints != 1) {
+                error(filename, msg_num, "For a reduced grid, interpretationOfNumberOfPoints should be 1 "
+                                         "(See Code Table 3.11)\n");
             }
 
             GRIB_CHECK(grib_get_size(h, "pl", &pl_len), 0);

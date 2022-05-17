@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 files="regular_latlon_surface.grib2 regular_latlon_surface.grib1"
 

@@ -420,9 +420,10 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-int grib_g1_step_apply_units(long* start, long* theEnd, long* step_unit,
-                             long* P1, long* P2, long* unit,
-                             const int max, const int instant)
+static int grib_g1_step_apply_units(
+        const long* start, const long* theEnd, const long* step_unit,
+        long* P1, long* P2, long* unit,
+        const int max, const int instant)
 {
     int j = 0;
     long start_sec, end_sec;

@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 label=grib_uerra_test

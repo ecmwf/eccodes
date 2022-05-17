@@ -321,8 +321,7 @@ static int unpack_double(grib_accessor* a, double* v, size_t* len)
         grib_unpack_string(a, val, &l);
 
         *v = strtod(val, &last);
-
-        if (*last == 0) {
+        if (*last == 0) { /* conversion of string to double worked */
             grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting string %s to long", a->name);
             return GRIB_SUCCESS;
         }
@@ -515,7 +514,14 @@ static int pack_string(grib_accessor* a, const char* v, size_t* len)
 {
     if (a->cclass->pack_double && a->cclass->pack_double != &pack_double) {
         size_t l   = 1;
-        double val = atof(v);
+        char* endPtr = NULL; /* for error handling */
+        double val = strtod(v, &endPtr);
+        if (*endPtr) {
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                             "pack_string: Invalid value (%s) for %s. String cannot be converted to a double",
+                             v, a->name);
+            return GRIB_WRONG_TYPE;
+        }
         return grib_pack_double(a, &val, &l);
     }
 
@@ -525,8 +531,7 @@ static int pack_string(grib_accessor* a, const char* v, size_t* len)
         return grib_pack_long(a, &val, &l);
     }
 
-    grib_context_log(a->context, GRIB_LOG_ERROR,
-                     "Should not grib_pack %s as string", a->name);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Should not pack '%s' as string", a->name);
     return GRIB_NOT_IMPLEMENTED;
 }
 

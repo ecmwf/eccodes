@@ -11,6 +11,7 @@ meta numberOfGroups evaluate(codedNumberOfFirstOrderPackedValues + 65536 * extra
 
 unsigned[1] groupWidth :dump;
 meta bitsPerValue second_order_bits_per_value(values,binaryScaleFactor,decimalScaleFactor);
+alias accuracy = bitsPerValue;
 
 position offsetBeforeData;
 

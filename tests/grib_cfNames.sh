@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 set -u
 label="grib_cfNames_test"
 temp=temp.${label}
@@ -36,6 +36,12 @@ grib_check_key_equals $temp cfName surface_upward_sensible_heat_flux
 
 ${tools_dir}/grib_set -s indicatorOfParameter=121,table2Version=1 $sample1 $temp
 grib_check_key_equals $temp cfName surface_upward_latent_heat_flux
+
+${tools_dir}/grib_set -s indicatorOfParameter=145,table2Version=151 $sample1 $temp
+grib_check_key_equals $temp cfName sea_surface_height_above_geoid
+
+${tools_dir}/grib_set -s indicatorOfParameter=163,table2Version=151 $sample1 $temp
+grib_check_key_equals $temp cfName depth_of_isosurface_of_sea_water_potential_temperature
 
 
 ${tools_dir}/grib_set -s paramId=151154 $sample1 $temp

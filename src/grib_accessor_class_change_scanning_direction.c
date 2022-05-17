@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/************************************
- *   Enrico Fucile
- ************************************/
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -169,7 +165,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* args)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    int ret = 0;
+    int err = 0;
     long i, j, jr, theEnd, Ni, Nj, k, kp;
     double tmp;
     long iScansNegatively                         = 0;
@@ -185,23 +181,33 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if (*val == 0)
         return 0;
 
-    if ((ret = grib_get_long_internal(h, self->Ni, &Ni)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(h, self->Nj, &Nj)) != GRIB_SUCCESS)
-        return ret;
+    /* Make sure Ni / Nj are not missing */
+    if (grib_is_missing(h, self->Ni, &err) && !err) {
+        grib_context_log(c, GRIB_LOG_ERROR, "change_scanning_direction: Key %s cannot be 'missing'!", self->Ni);
+        return GRIB_WRONG_GRID;
+    }
+    if (grib_is_missing(h, self->Nj, &err) && !err) {
+        grib_context_log(c, GRIB_LOG_ERROR, "change_scanning_direction: Key %s cannot be 'missing'!", self->Nj);
+        return GRIB_WRONG_GRID;
+    }
 
-    if ((ret = grib_get_long_internal(h, self->i_scans_negatively, &iScansNegatively)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(h, self->j_scans_positively, &jScansPositively)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_internal(h, self->Ni, &Ni)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(h, self->Nj, &Nj)) != GRIB_SUCCESS)
+        return err;
 
-    if ((ret = grib_get_double_internal(h, self->first, &first)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_double_internal(h, self->last, &last)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_internal(h, self->i_scans_negatively, &iScansNegatively)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(h, self->j_scans_positively, &jScansPositively)) != GRIB_SUCCESS)
+        return err;
 
-    if ((ret = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_double_internal(h, self->first, &first)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(h, self->last, &last)) != GRIB_SUCCESS)
+        return err;
+
+    if ((err = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS)
+        return err;
 
     if (size > Ni * Nj) {
         grib_context_log(c, GRIB_LOG_ERROR, "change_scanning_direction: wrong values size!=Ni*Nj (%ld!=%ld*%ld)", size, Ni, Nj);
@@ -212,13 +218,16 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if (!values)
         return GRIB_OUT_OF_MEMORY;
 
-    if ((ret = grib_get_double_array_internal(h, self->values, values, &size)) != GRIB_SUCCESS) {
+    if ((err = grib_get_double_array_internal(h, self->values, values, &size)) != GRIB_SUCCESS) {
         grib_context_free(c, values);
-        return ret;
+        return err;
     }
 
+    Assert(self->axis);
+    Assert(strcmp(self->axis, "x") == 0 || strcmp(self->axis, "y") == 0);
+
     if (self->axis[0] == 'x') {
-        theEnd = (Ni + 0.5) / 2;
+        theEnd = Ni / 2;
         for (j = 0; j < Nj; j++) {
             jr = Ni * j;
             for (i = 0; i < theEnd; i++) {
@@ -230,12 +239,12 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             }
         }
         iScansNegatively = !iScansNegatively;
-        if ((ret = grib_set_long_internal(h, self->i_scans_negatively, iScansNegatively)) != GRIB_SUCCESS)
-            return ret;
+        if ((err = grib_set_long_internal(h, self->i_scans_negatively, iScansNegatively)) != GRIB_SUCCESS)
+            return err;
     }
     else {
         long kpj;
-        theEnd = (Nj + 0.5) / 2;
+        theEnd = Nj / 2;
         for (i = 0; i < Ni; i++) {
             kpj = Ni * (Nj - 1);
             for (j = 0; j < theEnd; j++) {
@@ -247,20 +256,20 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             }
         }
         jScansPositively = !jScansPositively;
-        if ((ret = grib_set_long_internal(h, self->j_scans_positively, jScansPositively)) != GRIB_SUCCESS)
-            return ret;
+        if ((err = grib_set_long_internal(h, self->j_scans_positively, jScansPositively)) != GRIB_SUCCESS)
+            return err;
     }
 
-    if ((ret = grib_set_double_array_internal(h, self->values, values, size)) != GRIB_SUCCESS) {
+    if ((err = grib_set_double_array_internal(h, self->values, values, size)) != GRIB_SUCCESS) {
         grib_context_free(c, values);
-        return ret;
+        return err;
     }
 
-    if ((ret = grib_set_double_internal(h, self->first, last)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_set_double_internal(h, self->first, last)) != GRIB_SUCCESS)
+        return err;
 
-    if ((ret = grib_set_double_internal(h, self->last, first)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_set_double_internal(h, self->last, first)) != GRIB_SUCCESS)
+        return err;
 
     grib_context_free(c, values);
 

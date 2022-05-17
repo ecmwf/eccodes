@@ -17,7 +17,7 @@
 
 struct table_entry
 {
-    char* type;
+    const char* type;
     grib_box_class** cclass;
 };
 

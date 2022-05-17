@@ -263,7 +263,7 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
                 grib_context_log(file->context, GRIB_LOG_FATAL, "posix_memalign unable to allocate io_buffer\n");
             }
 #else
-            file->buffer = (void*)malloc(file_pool.context->io_buffer_size);
+            file->buffer = (char*)malloc(file_pool.context->io_buffer_size);
             if (!file->buffer) {
                 grib_context_log(file->context, GRIB_LOG_FATAL, "Unable to allocate io_buffer\n");
             }

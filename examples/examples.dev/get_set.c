@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
   if (h) {
     /* dump key/values pairs according the option_flags and with
      * the "serialize" style. Other available styles are:
-     *  - "debug"   Dump all keys with octect position
+     *  - "debug"   Dump all keys with octet position
      *  - "c_code"  Dump C code to build the grib file from scratch
      */
     grib_dump_content(h,stdout,"serialize",option_flags,NULL);

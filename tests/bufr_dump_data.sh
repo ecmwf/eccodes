@@ -8,16 +8,12 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # Define a common label for all the tmp files
 label="bufr_dump_data_test"
 
-# Create log file
 fLog=${label}".log"
-rm -f $fLog
-
-# Define tmp bufr files
 fJsonTmp=${label}".json.tmp"
 
 if [ $HAVE_MEMFS -eq 1 ]; then
@@ -36,6 +32,14 @@ for file in ${bufr_files}; do
 done
 
 
+# Check "subsetNumber" key is in the dump for uncompressed
+# BUFRs with numberOfSubsets > 1
+files='delayed_repl_01.bufr synop_multi_subset.bufr'
+for f in $files; do
+  ${tools_dir}/bufr_dump -p ${data_dir}/bufr/$f > $fLog
+  grep -q "^subsetNumber=[1-9]" $fLog
+done
+
 #==============================================
 # Testing output when ECCODES_DEBUG is enabled
 #==============================================
@@ -43,11 +47,14 @@ file="aaen_55.bufr"
 export ECCODES_DEBUG=1
 
 # By default debug output goes to stderr
-${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file 2>&1 | grep -q "parsing include file"
+${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file > $fLog 2>&1 
+grep -q "parsing include file" $fLog
 
 # Redirect it to stdout
+rm $fLog
 export ECCODES_LOG_STREAM=stdout
-${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file | grep -q "parsing include file"
+${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file > $fLog
+grep -q "parsing include file" $fLog
 
 unset ECCODES_DEBUG
 unset ECCODES_LOG_STREAM

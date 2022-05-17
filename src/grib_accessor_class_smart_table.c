@@ -281,7 +281,10 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
         next = next->next;
     }
 
-    size = (1ULL << self->widthOfCode); /* 2 ^ self->widthOfCode - 64 bits */
+    /* Note: self->widthOfCode is chosen so that 2^width is bigger than the maximum descriptor code,
+     * which for BUFR4 is the Table C operator 243255
+     */
+    size = (1ULL << self->widthOfCode); /* = 2^self->widthOfCode (as a 64 bit number) */
 
     t                  = (grib_smart_table*)grib_context_malloc_clear_persistent(c, sizeof(grib_smart_table));
     t->entries         = (grib_smart_table_entry*)grib_context_malloc_clear_persistent(c, size * sizeof(grib_smart_table_entry));
@@ -309,9 +312,7 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
 {
     char line[1024] = {0,};
     FILE* f = NULL;
-    int lineNumber;
-    int numberOfColumns;
-    int code;
+    int lineNumber, numberOfColumns, code;
 
     grib_context_log(c, GRIB_LOG_DEBUG, "Loading code table from %s", filename);
 
@@ -360,7 +361,7 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
 
         *p = 0;
 
-        code = atol(s);
+        code = atoi(s);
 
         p++;
         s = p;
@@ -370,12 +371,14 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
         *p = 0;
 
         numberOfColumns = 0;
+        /* The highest possible descriptor code must fit into t->numberOfEntries */
+        DebugAssert(code < t->numberOfEntries);
         while (*s) {
             char* tcol = t->entries[code].column[numberOfColumns];
             if ( tcol ) grib_context_free_persistent(c, tcol);
             t->entries[code].column[numberOfColumns] = grib_context_strdup_persistent(c, s);
             numberOfColumns++;
-            Assert(numberOfColumns < MAX_SMART_TABLE_COLUMNS);
+            DebugAssert(numberOfColumns < MAX_SMART_TABLE_COLUMNS);
 
             p++;
             s = p;

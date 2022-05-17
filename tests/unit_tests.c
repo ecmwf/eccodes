@@ -1527,6 +1527,21 @@ static void test_trimming()
     assert( strcmp(pE, "Apostle In Triumph")==0 );
 }
 
+static void test_string_ends_with()
+{
+    printf("Testing: test_string_ends_with...\n");
+    assert( string_ends_with("GRIB2.tmpl", "tmpl") == 1 );
+    assert( string_ends_with("GRIB2.tmpl", ".tmpl") == 1 );
+    assert( string_ends_with("", "") == 1 );
+    assert( string_ends_with(".", ".") == 1 );
+    assert( string_ends_with("Bam", "") == 1 );
+
+    assert( string_ends_with("GRIB2.tmpl", "tmp") == 0 );
+    assert( string_ends_with("GRIB2.tmpl", "tmpl0") == 0 );
+    assert( string_ends_with("GRIB2.tmpl", "1.tmpl") == 0 );
+    assert( string_ends_with("GRIB2.tmpl", " ") == 0 );
+}
+
 static void test_gribex_mode()
 {
     grib_context* c = grib_context_get_default();
@@ -1544,6 +1559,7 @@ int main(int argc, char** argv)
     /*printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());*/
     
     test_trimming();
+    test_string_ends_with();
 
     test_get_git_sha1();
     test_get_build_date();

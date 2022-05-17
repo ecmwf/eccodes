@@ -224,6 +224,7 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_simple_thinning.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_bufr_string_values.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_bytes.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_change_alternative_row_scanning.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_change_scanning_direction.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_check_internal_version.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_codeflag.c" />
@@ -353,7 +354,7 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_number_of_values.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_number_of_values_data_raw_packing.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_octahedral_gaussian.c" />
-    <ClCompile Include="..\..\..\src\grib_accessor_class_octect_number.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_octet_number.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_offset_file.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_offset_values.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_pack_bufr_values.c" />
@@ -540,7 +541,7 @@
     <ClInclude Include="..\..\..\src\grib_accessor_factory.h" />
     <ClInclude Include="..\..\..\src\grib_api.h" />
     <ClInclude Include="..\..\..\src\grib_api_internal.h" />
-    <ClInclude Include="..\..\..\src\grib_api_prototypes.h" />
+    <ClInclude Include="..\..\..\src\eccodes_prototypes.h" />
     <ClInclude Include="..\..\..\src\grib_dumper_class.h" />
     <ClInclude Include="..\..\..\src\grib_dumper_factory.h" />
     <ClInclude Include="..\..\..\src\grib_emoslib.h" />

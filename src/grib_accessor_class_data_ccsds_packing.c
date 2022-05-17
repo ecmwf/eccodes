@@ -214,7 +214,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_handle* hand = grib_handle_of_accessor(a);
 
     int err = GRIB_SUCCESS, i = 0;
-    size_t buflen = grib_byte_count(a);
+    size_t buflen = 0;
     struct aec_stream strm;
     double bscale      = 0;
     double dscale      = 0;
@@ -260,9 +260,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-    bscale = grib_power(binary_scale_factor, 2);
-    dscale = grib_power(-decimal_scale_factor, 10);
-
     /* TODO: This should be called upstream */
     if (*len < n_vals)
         return GRIB_ARRAY_TOO_SMALL;
@@ -275,6 +272,10 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
+    bscale = grib_power(binary_scale_factor, 2);
+    dscale = grib_power(-decimal_scale_factor, 10);
+
+    buflen = grib_byte_count(a);
     buf = (unsigned char*)hand->buffer->data;
     buf += grib_byte_offset(a);
 
@@ -288,7 +289,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     bits8   = ((bits_per_value + 7) / 8) * 8;
     size    = n_vals * ((bits_per_value + 7) / 8);
-    decoded = grib_context_buffer_malloc_clear(a->context, size);
+    decoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, size);
     if (!decoded) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
@@ -400,7 +401,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
         if ((err = grib_set_long_internal(hand, self->number_of_values, n_vals)) != GRIB_SUCCESS)
             return err;
-        bits_per_value = 0;
+        bits_per_value = 0; /* ECC-1387 */
         if ((err = grib_set_long_internal(hand, self->bits_per_value, bits_per_value)) != GRIB_SUCCESS)
             return err;
 
@@ -433,7 +434,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     divisor             = grib_power(-binary_scale_factor, 2);
 
     bits8   = (bits_per_value + 7) / 8 * 8;
-    encoded = grib_context_buffer_malloc_clear(a->context, bits8 / 8 * n_vals);
+    encoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, bits8 / 8 * n_vals);
 
     if (!encoded) {
         err = GRIB_OUT_OF_MEMORY;
@@ -458,7 +459,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         "CCSDS pack_double: packing %s, %d values", a->name, n_vals);
 
     buflen += 10240;
-    buf = grib_context_buffer_malloc_clear(a->context, buflen);
+    buf = (unsigned char*)grib_context_buffer_malloc_clear(a->context, buflen);
 
     if (!buf) {
         err = GRIB_OUT_OF_MEMORY;

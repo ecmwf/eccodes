@@ -235,7 +235,7 @@ typedef struct bufr_descriptor bufr_descriptor;
 typedef struct bufr_descriptors_array bufr_descriptors_array;
 typedef struct bufr_descriptors_map_list bufr_descriptors_map_list;
 
-grib_fieldset* grib_fieldset_new_from_files(grib_context* c, char* filenames[], int nfiles, char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
+grib_fieldset* grib_fieldset_new_from_files(grib_context* c, char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
 void grib_fieldset_delete(grib_fieldset* set);
 void grib_fieldset_rewind(grib_fieldset* set);
 int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string);
@@ -502,7 +502,7 @@ grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param sample_name : the name of the sample file (without the .tmpl extension)
+ * @param sample_name : the name of the GRIB sample file
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
 grib_handle* grib_handle_new_from_samples(grib_context* c, const char* sample_name);
@@ -805,16 +805,16 @@ int grib_get_double(const grib_handle* h, const char* key, double* value);
 int grib_get_double_element(const grib_handle* h, const char* key, int i, double* value);
 
 /**
-*  Get as double array the elements of the "key" array whose indexes are listed in the input array i
+*  Get as double array the elements of the "key" array whose indexes are listed in the input array "index_array"
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param i           : zero-based array of indexes
-* @param size        : size of the i and value arrays
+* @param index_array : zero-based array of indexes
+* @param size        : size of the index_array and value arrays
 * @param value       : the double array for the data values
 * @return            0 if OK, integer value on error
 */
-int grib_get_double_elements(const grib_handle* h, const char* key, int* i, long size, double* value);
+int grib_get_double_elements(const grib_handle* h, const char* key, const int* index_array, long size, double* value);
 
 /**
 *  Get a string value from a key, if several keys of the same name are present, the last one is returned

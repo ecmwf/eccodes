@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 #set -x
 
@@ -173,8 +173,15 @@ ${tools_dir}/bufr_set -s ident=' AB CD ' $f $fBufrTmp
 result=`${tools_dir}/bufr_get -p ident $fBufrTmp`
 [ "$result" = "AB CD" ]
 
-
 # ${tools_dir}/bufr_compare $f $fBufrTmp
+
+
+#-----------------------------------------------------------
+# ECC-1359: string that can be converted to an integer
+# ----------------------------------------------------------
+${tools_dir}/bufr_set -s messageLength:s=333 $ECCODES_SAMPLES_PATH/BUFR4_local.tmpl $fBufrTmp
+result=`${tools_dir}/bufr_get -p messageLength $fBufrTmp`
+[ "$result" = "333" ]
 
 # Clean up
 rm -f $fLog 

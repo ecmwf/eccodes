@@ -27,6 +27,7 @@ meta countOfGroupLengths sum(groupLengths);
 transient numberOfCodedValues=countOfGroupLengths+orderOfSPD;
 #transient numberOfCodedValues=countOfGroupLengths;
 meta bitsPerValue second_order_bits_per_value(codedValues,binaryScaleFactor,decimalScaleFactor);
+alias accuracy = bitsPerValue;
 
 
 position offsetBeforeData;

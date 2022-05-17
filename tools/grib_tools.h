@@ -7,6 +7,9 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
+#ifndef GRIB_TOOLS_H
+#define GRIB_TOOLS_H
+
 
 #ifdef __gnu_hurd__
 #define _FILE_OFFSET_BITS 64 /* 64-bit offsets off_t not the default on Hurd/i386 */
@@ -17,9 +20,6 @@
 #ifndef ECCODES_ON_WINDOWS
 #include <unistd.h>
 #endif
-
-#ifndef GRIB_TOOLS_H
-#define GRIB_TOOLS_H
 
 #ifndef S_IFMT
 #define S_IFMT 0170000 /*  type of file */
@@ -208,4 +208,4 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 int grib_no_handle_action(grib_runtime_options* options, int err);
 int exit_if_input_is_directory(const char* toolname, const char* filename);
 
-#endif
+#endif /* GRIB_TOOLS_H */

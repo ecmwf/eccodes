@@ -7,7 +7,7 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-. ./include.sh
+. ./include.ctest.sh
 
 input="../../data/index.grib"
 ${examples_dir}/c_grib_ensemble_index $input

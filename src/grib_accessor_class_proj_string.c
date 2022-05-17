@@ -210,7 +210,7 @@ static int proj_space_view(grib_handle* h, char* result)
 
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
-    
+
     if ((err = grib_get_double_internal(h, "longitudeOfSubSatellitePointInDegrees", &lonOfSubSatellitePointInDegrees)) != GRIB_SUCCESS)
         return err;
 

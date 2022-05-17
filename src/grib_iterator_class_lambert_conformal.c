@@ -110,8 +110,8 @@ static double adjust_lon_radians(double lon)
 
 /* Function to compute the latitude angle, phi2, for the inverse
  * From the book "Map Projections-A Working Manual-John P. Snyder (1987)"
- * Equation (7–9) involves rapidly converging iteration: Calculate t from (15-11)
- * Then, assuming an initial trial phi equal to (pi/2 - 2*arctan t) in the right side of equation (7–9),
+ * Equation (7-9) involves rapidly converging iteration: Calculate t from (15-11)
+ * Then, assuming an initial trial phi equal to (pi/2 - 2*arctan t) in the right side of equation (7-9),
  * calculate phi on the left side. Substitute the calculated phi) into the right side,
  * calculate a new phi, etc., until phi does not change significantly from the preceding trial value of phi
  */
@@ -170,8 +170,7 @@ static int init_sphere(grib_handle* h,
                        double Dx, double Dy, double radius,
                        double latFirstInRadians, double lonFirstInRadians,
                        double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
-                       double LaDInRadians,
-                       long iScansNegatively, long jScansPositively, long jPointsAreConsecutive)
+                       double LaDInRadians)
 {
     int i, j;
     double f, n, rho, rho0, angle, x0, y0, x, y, tmp, tmp2;
@@ -474,8 +473,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
                           LoVInDegrees,
                           Dx, Dy, radius,
                           latFirstInRadians, lonFirstInRadians,
-                          LoVInRadians, Latin1InRadians, Latin2InRadians, LaDInRadians,
-                          iScansNegatively, jScansPositively, jPointsAreConsecutive);
+                          LoVInRadians, Latin1InRadians, Latin2InRadians, LaDInRadians);
     }
     if (err) return err;
 

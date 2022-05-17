@@ -3,7 +3,6 @@
 # Configure the file which all CMake tests will include
 configure_file( include.ctest.sh.in  include.ctest.sh @ONLY )
 
-execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/include.sh ${CMAKE_CURRENT_BINARY_DIR} )
 execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/utils.sh   ${CMAKE_CURRENT_BINARY_DIR} )
 execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/number_compare.pl ${CMAKE_CURRENT_BINARY_DIR} )
 
@@ -73,6 +72,7 @@ if( HAVE_BUILD_TOOLS )
         grib_packing_order
         filter_substr
         grib_uerra
+        grib_fire
         grib_element
         grib_suppressed
         grib_2nd_order_numValues
@@ -161,6 +161,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-288
         bufr_ecc-313
         bufr_ecc-616
+        bufr_ecc-680
         bufr_ecc-686
         bufr_ecc-690
         bufr_ecc-379
@@ -399,6 +400,12 @@ if( HAVE_BUILD_TOOLS )
                       CONDITION ENABLE_EXTRA_TESTS AND ECCODES_INSTALL_EXTRA_TOOLS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_split_by_rdbSubtype.sh
                       TEST_DEPENDS eccodes_download_bufrs )
+
+    ecbuild_add_test( TARGET eccodes_t_codes_export_resource
+                      TYPE SCRIPT
+                      CONDITION ECCODES_INSTALL_EXTRA_TOOLS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/codes_export_resource.sh )
+
 
     # Performance test. Must have -DENABLE_TIMER=ON
     ecbuild_add_test( TARGET eccodes_t_grib_ecc-386

@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 set -u
 label="grib_compare_test"
 REDIRECT=/dev/null
@@ -59,7 +59,7 @@ status=$?
 set -e
 [ $status -eq 1 ]
 grep -q "ERROR:.*Is a directory" $temp_err
-rm -rf $temp_dir
+rm -rf $temp_dir $temp_err
 
 
 # ----------------------------------------

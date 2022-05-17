@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 
 # Note: grib_ieee64_to_long/grib_long_to_ieee64 function needs the system

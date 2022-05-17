@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # This file does not have a bitmap
 infile=${data_dir}/regular_latlon_surface.grib1
@@ -53,14 +53,14 @@ export GRIB_IEEE_PACKING=32
 ${tools_dir}/grib_filter -o $out32 w.filter $infile
 ${tools_dir}/grib_filter r.filter $out32 > $out32.txt
 diff $out32.txt ${data_dir}/ieee_test.good
-grib_check_key_equals $out32 'packingType,precision' 'grid_ieee 1'
+grib_check_key_equals $out32 'packingType,precision,accuracy' 'grid_ieee 1 32'
 
 
 export GRIB_IEEE_PACKING=64
 ${tools_dir}/grib_filter -o $out64 w.filter $infile
 ${tools_dir}/grib_filter r.filter $out64 > $out64.txt
 diff $out64.txt ${data_dir}/ieee_test.good
-grib_check_key_equals $out64 'packingType,precision' 'grid_ieee 2'
+grib_check_key_equals $out64 'packingType,precision,accuracy' 'grid_ieee 2 64'
 
 
 rm -f $outsimple $out32 $out64 $out32.txt $out64.txt
@@ -175,8 +175,12 @@ stats1=`${tools_dir}/grib_get -M -F%.3f -p skew,kurt $infile`
 stats2=`${tools_dir}/grib_get -M -F%.3f -p skew,kurt $temp`
 [ "$stats1" = "$stats2" ]
 
+# The same thing but use 'accuracy' instead of 'precision'
+temp2=temp2.grib_ieee.grib
+${tools_dir}/grib_set -r -s accuracy=64 $infile $temp2
+cmp $temp $temp2
 
-
+rm -f $temp2
 rm -f $temp
 
 ##################################

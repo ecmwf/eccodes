@@ -40,14 +40,6 @@ unsigned[2] anoffsetFrequency = missing(): dump, can_be_missing;
 # Boolean
 transient lsdate_bug = 1: hidden; # See ECC-707
 
-#Domain. Missing, local or global
-#codetable[1] efasDomain "grib2/tables/local/ecmf/efas_domain.table" = 255 : dump, string_type;
-#unsigned[1] efas_domain = missing() : can_be_missing, dump;
-#concept efasDomain(unknown) {
-#  "local"   = { efas_domain = 0; }
-#  "global"  = { efas_domain = 1; }
-#} : hidden;
-
 # Model Cycle Date/Time
 # This is the date of the new official implementation of the EFAS cycle.
 unsigned[2] yearOfModelVersion    = 0 : dump;

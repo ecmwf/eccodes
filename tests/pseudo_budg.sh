@@ -9,7 +9,7 @@
 #
 
 
-. ./include.sh
+. ./include.ctest.sh
 
 label="pseudo_budg_test"
 set -u

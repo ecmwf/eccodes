@@ -100,7 +100,7 @@ def main():
         print("Error: ", err)
         usage()
         return 1
-    except GribInternalError as err:
+    except CodesInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

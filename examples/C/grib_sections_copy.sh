@@ -7,7 +7,7 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-. ./include.sh
+. ./include.ctest.sh
 
 REGUL_GRID_FILE=${proj_dir}/samples/regular_ll_sfc_grib2.tmpl
 GAUSS_GRID_FILE=${proj_dir}/samples/reduced_gg_pl_640_grib2.tmpl

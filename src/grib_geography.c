@@ -4182,11 +4182,11 @@ double geographic_distance_ellipsoid(double major, double minor, double lon1, do
     double sinDlon = sin(deltaLon/2.0);
     double sin2Dlat = sinDlat*sinDlat;
     double sin2Dlon = sinDlon*sinDlon;
-    
+
     double a = sin2Dlat + cos(rlat1) * cos(rlat2) * sin2Dlon;
     double c = 2 * atan2(sqrt(a), sqrt(1.0-a));
     double f = (major - minor)/major; /*flattening*/
-    
+
     double latr1 = atan( (1.0-f)*tan(rlat1) ); /*Reduced latitude1*/
     double latr2 = atan( (1.0-f)*tan(rlat2) ); /*Reduced latitude2*/
     double P = (latr1+latr2)/2;
@@ -4197,14 +4197,14 @@ double geographic_distance_ellipsoid(double major, double minor, double lon1, do
     double cos2Q = cosQ*cosQ;
     double cosc2 = cos(c/2);
     double cos2c2 = cosc2*cosc2;
-    
+
     double sinQ = sin(Q);
     double sin2Q = sinQ*sinQ;
     double cosP = cos(P);
     double cos2P = cosP*cosP;
     double sinc2 = sin(c/2);
     double sin2c2 = sinc2*sinc2;
-    
+
     double X = (c - sin(c))* sin2P * cos2Q / cos2c2;
     double Y = (c + sin(c))*sin2Q*cos2P/sin2c2;
     double dist = major * (c - f*(X+Y)/2);

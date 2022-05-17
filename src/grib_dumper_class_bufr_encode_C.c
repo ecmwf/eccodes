@@ -890,7 +890,7 @@ static void header(grib_dumper* d, grib_handle* h)
 
     fprintf(self->dumper.out, "  h = codes_bufr_handle_new_from_samples(NULL, sampleName);\n");
     fprintf(self->dumper.out, "  if (h == NULL) {\n");
-    fprintf(self->dumper.out, "    fprintf(stderr, \"ERROR creating BUFR from %%s\\n\", sampleName);\n");
+    fprintf(self->dumper.out, "    fprintf(stderr, \"ERROR: Failed to create BUFR from %%s\\n\", sampleName);\n");
     fprintf(self->dumper.out, "    return 1;\n");
     fprintf(self->dumper.out, "  }\n");
 }
@@ -907,16 +907,16 @@ static void footer(grib_dumper* d, grib_handle* h)
 
     /*fprintf(self->dumper.out,"  fout = fopen(\"outfile.bufr\", \"w\");");*/
     fprintf(self->dumper.out, "  if (!fout) {\n");
-    fprintf(self->dumper.out, "    fprintf(stderr, \"Failed to open (%s) output file.\\n\");\n", (d->count == 1 ? "create" : "append"));
+    fprintf(self->dumper.out, "    fprintf(stderr, \"ERROR: Failed to open output file 'outfile.bufr' for writing.\\n\");\n");
     fprintf(self->dumper.out, "    return 1;\n");
     fprintf(self->dumper.out, "  }\n");
     fprintf(self->dumper.out, "  CODES_CHECK(codes_get_message(h,&buffer,&size),0);\n");
     fprintf(self->dumper.out, "  if (fwrite(buffer,1,size,fout) != size) {\n");
-    fprintf(self->dumper.out, "    fprintf(stderr, \"Failed to write data.\\n\");\n");
+    fprintf(self->dumper.out, "    fprintf(stderr, \"ERROR: Failed to write data.\\n\");\n");
     fprintf(self->dumper.out, "    return 1;\n");
     fprintf(self->dumper.out, "  }\n");
     fprintf(self->dumper.out, "  if (fclose(fout)!=0) {\n");
-    fprintf(self->dumper.out, "    fprintf(stderr, \"Failed to close file handle.\\n\");\n");
+    fprintf(self->dumper.out, "    fprintf(stderr, \"ERROR: Failed to close output file handle.\\n\");\n");
     fprintf(self->dumper.out, "    return 1;\n");
     fprintf(self->dumper.out, "  }\n");
     fprintf(self->dumper.out, "  \n");
