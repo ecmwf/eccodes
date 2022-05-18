@@ -206,7 +206,6 @@ ${tools_dir}/grib_set -s scaleValuesBy=1000 $sample_ccsds $tempGrib2 2>$tempErr
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "maximum (1000) is more than the allowable limit" $tempErr
 
 
 # Clean up
