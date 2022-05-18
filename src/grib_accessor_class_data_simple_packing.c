@@ -570,10 +570,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     minmax_val(val + 1, n_vals - 1, &min, &max);
 #else
     for (i = 1; i < n_vals; i++) {
-        if (val[i] > max)
-            max = val[i];
-        else if (val[i] < min)
-            min = val[i];
+        if (val[i] > max)      max = val[i];
+        else if (val[i] < min) min = val[i];
     }
 #endif
     if ((err = grib_check_data_values_range(gh, min, max)) != GRIB_SUCCESS) {
