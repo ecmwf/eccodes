@@ -39,7 +39,7 @@ static void print_debug_info__set_double_array(grib_handle* h, const char* func,
     fprintf(stderr, "ECCODES DEBUG %s key=%s %lu values (", func, name, (unsigned long)length);
     for (i = 0; i < N; ++i) {
         if (i != 0) fprintf(stderr,", ");
-        fprintf(stderr, "%g", val[i]);
+        fprintf(stderr, "%.10g", val[i]);
     }
     if (N >= length) fprintf(stderr, ") ");
     else fprintf(stderr, "...) ");
@@ -47,7 +47,7 @@ static void print_debug_info__set_double_array(grib_handle* h, const char* func,
         if (val[i] < minVal) minVal = val[i];
         if (val[i] > maxVal) maxVal = val[i];
     }
-    fprintf(stderr, "min=%g, max=%g\n",minVal,maxVal);
+    fprintf(stderr, "min=%.10g, max=%.10g\n",minVal,maxVal);
 }
 
 int grib_set_expression(grib_handle* h, const char* name, grib_expression* e)
@@ -147,7 +147,7 @@ int grib_set_double_internal(grib_handle* h, const char* name, double val)
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        fprintf(stderr, "ECCODES DEBUG grib_set_double_internal %s=%g\n", name, val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_double_internal %s=%.10g\n", name, val);
 
     if (a) {
         ret = grib_pack_double(a, &val, &l);
@@ -348,9 +348,9 @@ int grib_set_double(grib_handle* h, const char* name, double val)
     if (a) {
         if (h->context->debug) {
             if (strcmp(name, a->name)!=0)
-                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%g (a->name=%s)\n", name, val, a->name);
+                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%.10g (a->name=%s)\n", name, val, a->name);
             else
-                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%g\n", name, val);
+                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%.10g\n", name, val);
         }
 
         if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
