@@ -2207,6 +2207,28 @@ int grib_is_earth_oblate(grib_handle* h)
     return 0;
 }
 
+int grib_check_data_values_range(grib_handle* h, const double min_val, const double max_val)
+{
+    int result        = GRIB_SUCCESS;
+    grib_context* ctx = h->context;
+
+    if (!(min_val < DBL_MAX && min_val > -DBL_MAX)) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Minimum value out of range: %g", min_val);
+        return GRIB_ENCODING_ERROR;
+    }
+    if (!(max_val < DBL_MAX && max_val > -DBL_MAX)) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Maximum value out of range: %g", max_val);
+        return GRIB_ENCODING_ERROR;
+    }
+
+    /* Data Quality checks */
+    if (ctx->grib_data_quality_checks) {
+        result = grib_util_grib_data_quality_check(h, min_val, max_val);
+    }
+
+    return result;
+}
+
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val)
 {
     int err                        = 0;
