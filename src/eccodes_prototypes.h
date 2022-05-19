@@ -1324,10 +1324,7 @@ grib_expression* new_string_expression(grib_context* c, const char* value);
 grib_expression* new_sub_string_expression(grib_context* c, const char* value, size_t start, size_t length);
 
 /* grib_box.c */
-grib_points* grib_box_get_points(grib_box* box, double north, double west, double south, double east, int* err);
 int grib_box_init(grib_box* box, grib_handle* h, grib_arguments* args);
-int grib_box_delete(grib_box* box);
-grib_points* grib_points_new(grib_context* c, size_t size);
 void grib_points_delete(grib_points* points);
 
 /* grib_box_class.c */

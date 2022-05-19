@@ -1399,11 +1399,6 @@ struct grib_points
     size_t size;
 };
 
-/* These box functions are deprecated and will later be removed */
-grib_box* grib_box_new(grib_handle* h, int* error);
-grib_points* grib_box_get_points(grib_box* box, double north, double west, double south, double east, int* err);
-int grib_points_get_values(grib_handle* h, grib_points* points, double* val);
-
 
 /* --------------------------------------- */
 #define GRIB_UTIL_GRID_SPEC_REGULAR_LL 1

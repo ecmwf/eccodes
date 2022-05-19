@@ -1231,9 +1231,6 @@ int codes_get_product_kind(const codes_handle* h, ProductKind* product_kind);
 int codes_check_message_header(const void* bytes, size_t length, ProductKind product);
 int codes_check_message_footer(const void* bytes, size_t length, ProductKind product);
 
-codes_box* codes_box_new(codes_handle* h, int* error) ECCODES_DEPRECATED;
-codes_points* codes_box_get_points(codes_box* box, double north, double west, double south, double east, int* err) ECCODES_DEPRECATED;
-int codes_points_get_values(codes_handle* h, codes_points* points, double* val) ECCODES_DEPRECATED;
 
 /* --------------------------------------- */
 

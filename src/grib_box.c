@@ -17,14 +17,14 @@
 #include "grib_api_internal.h"
 
 
+#if 0
 grib_points* grib_box_get_points(grib_box* box, double north, double west, double south, double east, int* err)
 {
     grib_context_log(grib_context_get_default(), GRIB_LOG_ERROR,
-            "The grib_box_get_points function is deprecated and will be removed later.");
+            "The grib_box_get_points function is deprecated.");
     *err = GRIB_INTERNAL_ERROR;
     return NULL;
 
-#if 0
     grib_box_class* c = box->cclass;
     while (c) {
         grib_box_class* s = c->super ? *(c->super) : NULL;
@@ -35,8 +35,8 @@ grib_points* grib_box_get_points(grib_box* box, double north, double west, doubl
     }
     Assert(0);
     return 0;
-#endif
 }
+#endif
 
 
 /* For this one, ALL init are called */
@@ -82,6 +82,7 @@ int grib_box_delete(grib_box* box)
     return 0;
 }
 
+#if 0
 grib_points* grib_points_new(grib_context* c, size_t size)
 {
     grib_points* points = (grib_points*)grib_context_malloc_clear(c, sizeof(grib_points));
@@ -96,6 +97,7 @@ grib_points* grib_points_new(grib_context* c, size_t size)
 
     return points;
 }
+#endif
 
 void grib_points_delete(grib_points* points)
 {
