@@ -505,7 +505,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'open_file', '('//filename//')')
+      call grib_check(iret, 'open_file', '('// trim(filename) //')')
     end if
   end subroutine grib_open_file
 

@@ -1037,7 +1037,7 @@ int grib_f_open_file_(int* fid, char* name , char* op, int lname, int lop) {
     char fname[1024];
     int ret=GRIB_SUCCESS;
     char* iobuf=NULL;
-    /*TODO Proper context passed as external parameter */
+    char* trimmed = NULL; /* filename trimmed */
     grib_context* context=grib_context_get_default();
 
     cast_char(oper,op,lop);
@@ -1046,10 +1046,12 @@ int grib_f_open_file_(int* fid, char* name , char* op, int lname, int lop) {
 
     while (*p != '\0') { *p=tolower(*p);p++;}
 
-    f = fopen(cast_char(fname,name,lname),oper);
+    trimmed = cast_char_no_cut(fname,name,lname); /* ECC-1392 */
+    rtrim( trimmed );
+    f = fopen(trimmed, oper);
     if(!f) {
         ioerr=errno;
-        grib_context_log(context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),"IO ERROR: %s: %s",strerror(ioerr),cast_char(fname,name,lname));
+        grib_context_log(context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),"IO ERROR: %s: '%s'",strerror(ioerr),trimmed);
         *fid = -1;
         ret=GRIB_IO_PROBLEM;
     } else {
@@ -3439,7 +3441,9 @@ void grib_f_check_(int* err,char* call,char* str,int lencall,int lenstr){
     grib_context* c=grib_context_get_default();
     if ( *err == GRIB_SUCCESS || *err == GRIB_END_OF_FILE ) return;
     cast_char(bufcall,call,lencall);
-    cast_char(bufstr,str,lenstr);
+    /* ECC-1392 */
+    cast_char_no_cut(bufstr,str,lenstr);
+
     grib_context_log(c,GRIB_LOG_ERROR,"%s: %s %s",
             bufcall,bufstr,grib_get_error_message(*err));
     exit(*err);
