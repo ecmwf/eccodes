@@ -69,7 +69,7 @@ int grib_box_init(grib_box* box, grib_handle* h, grib_arguments* args)
 }
 
 /* For this one, ALL destroy are called */
-
+#if 0
 int grib_box_delete(grib_box* box)
 {
     grib_box_class* c = box->cclass;
@@ -81,6 +81,7 @@ int grib_box_delete(grib_box* box)
     }
     return 0;
 }
+#endif
 
 #if 0
 grib_points* grib_points_new(grib_context* c, size_t size)
