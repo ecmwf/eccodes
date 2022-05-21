@@ -84,7 +84,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     char* format_values     = NULL;
     char format_latlons[32] = {0,};
     char* default_format_values  = "%.10e";
-    char* default_format_latlons = "%9.3f%9.3f";
+    const char* default_format_latlons = "%9.3f%9.3f";
     int print_keys               = grib_options_on("p:");
     long numberOfPoints          = 0;
     long bitmapPresent           = 0;
@@ -305,7 +305,7 @@ static grib_values* get_key_values(grib_runtime_options* options, grib_handle* h
     int i                      = 0;
     int ret                    = 0;
     char value[MAX_STRING_LEN] = {0,};
-    char* notfound = "not found";
+    const char* notfound = "not found";
 
     for (i = 0; i < options->print_keys_count; i++) {
         size_t len = MAX_STRING_LEN;

@@ -427,6 +427,14 @@ if( HAVE_MEMFS )
     list(APPEND ECCODES_EXTRA_LIBRARIES eccodes_memfs)
 endif()
 
+if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+    foreach( _src ${eccodes_src_files} )
+        get_filename_component( _ext ${_src} EXT )
+        if( _ext STREQUAL ".c" )
+            set_source_files_properties( ${_src} PROPERTIES LANGUAGE CXX )
+        endif()
+    endforeach()
+endif()
 
 ecbuild_add_library( TARGET    eccodes
                      SOURCES   ${CMAKE_CURRENT_BINARY_DIR}/grib_api_version.c

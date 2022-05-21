@@ -65,6 +65,13 @@ ecbuild_info("Operating system=${CMAKE_SYSTEM} (${EC_OS_BITS} bits)")
 ###############################################################################
 # some variables/options of this project
 
+ecbuild_add_option( FEATURE EXPERIMENTAL_BUILD_WITH_CXX
+    DESCRIPTION "Build ecCodes with a C++ compiler (Experimental)"
+    DEFAULT OFF )
+if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+    enable_language( CXX )
+endif()
+
 ecbuild_add_option( FEATURE PRODUCT_GRIB
     DESCRIPTION "Support for the product GRIB"
     DEFAULT ON )
@@ -515,3 +522,9 @@ ecbuild_info("   | bindings from PyPI with:             |")
 ecbuild_info("   |   $ pip3 install eccodes             |")
 ecbuild_info("   +--------------------------------------+")
 ecbuild_info("")
+
+if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+    ecbuild_warn("Please note:\n"
+                 "The option of building with C++ is currently experimental."
+                 "Do not use in operations.")
+endif()
