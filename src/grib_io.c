@@ -1139,15 +1139,15 @@ size_t stdio_read(void* data, void* buf, size_t len, int* err)
 }
 
 /*================== */
-typedef struct user_buffer
+typedef struct user_buffer_t
 {
     void* user_buffer;
     size_t buffer_size;
-} user_buffer;
+} user_buffer_t;
 
 static void* user_provider_buffer(void* data, size_t* length, int* err)
 {
-    user_buffer* u = (user_buffer*)data;
+    user_buffer_t* u = (user_buffer_t*)data;
     *length        = u->buffer_size;
     return u->user_buffer;
 }
@@ -1155,7 +1155,7 @@ static void* user_provider_buffer(void* data, size_t* length, int* err)
 static int _wmo_read_any_from_file(FILE* f, void* buffer, size_t* len, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
 {
     int err;
-    user_buffer u;
+    user_buffer_t u;
     reader r;
 
     u.user_buffer = buffer;
@@ -1195,7 +1195,7 @@ int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len)
 int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len)
 {
     int err;
-    user_buffer u;
+    user_buffer_t u;
     reader r;
 
     u.user_buffer = buffer;
@@ -1220,7 +1220,7 @@ int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len)
 int wmo_read_taf_from_file(FILE* f, void* buffer, size_t* len)
 {
     int err;
-    user_buffer u;
+    user_buffer_t u;
     reader r;
 
     u.user_buffer = buffer;
@@ -1244,7 +1244,7 @@ int wmo_read_taf_from_file(FILE* f, void* buffer, size_t* len)
 int wmo_read_metar_from_file(FILE* f, void* buffer, size_t* len)
 {
     int err;
-    user_buffer u;
+    user_buffer_t u;
     reader r;
 
     u.user_buffer = buffer;
@@ -1320,7 +1320,7 @@ int wmo_read_any_from_stream(void* stream_data, long (*stream_proc)(void*, void*
 {
     int err;
     stream_struct s;
-    user_buffer u;
+    user_buffer_t u;
     reader r;
 
     s.stream_data = stream_data;
@@ -1523,7 +1523,7 @@ static void* context_allocate_buffer(void* data, size_t* length, int* err)
 int grib_read_any_headers_only_from_file(grib_context* ctx, FILE* f, void* buffer, size_t* len)
 {
     int err;
-    user_buffer u;
+    user_buffer_t u;
     reader r;
 
     u.user_buffer = buffer;
@@ -1549,7 +1549,7 @@ int grib_read_any_headers_only_from_file(grib_context* ctx, FILE* f, void* buffe
 int grib_read_any_from_file(grib_context* ctx, FILE* f, void* buffer, size_t* len)
 {
     int err;
-    user_buffer u;
+    user_buffer_t u;
     reader r;
     off_t offset;
 
@@ -1652,7 +1652,7 @@ int grib_read_any_from_memory(grib_context* ctx, unsigned char** data, size_t* d
 {
     int err;
     memory_read_data m;
-    user_buffer u;
+    user_buffer_t u;
     reader r;
 
     m.data     = *data;
