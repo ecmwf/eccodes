@@ -21,7 +21,7 @@ int getopt(int argc, char* argv[], const char* optstring)
 {
     static char* next = 0;
     char c;
-    char* cp;
+    const char* cp;
     if (optind == 0)
         next = 0;
 
