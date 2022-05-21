@@ -19,7 +19,12 @@ if( EC_OS_NAME MATCHES "windows" )
 endif()
 
 if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
-    set_source_files_properties(${ecc_tools_sources} PROPERTIES LANGUAGE CXX)
+    foreach( _src ${ecc_tools_sources} )
+        get_filename_component( _ext ${_src} EXT )
+        if( _ext STREQUAL ".c" )
+            set_source_files_properties(${_src} PROPERTIES LANGUAGE CXX)
+        endif()
+    endforeach()
 endif()
 
 # tools library
