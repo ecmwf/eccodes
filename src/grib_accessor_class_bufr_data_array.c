@@ -1835,7 +1835,7 @@ static void push_zero_element(grib_accessor_bufr_data_array* self, grib_darray* 
     }
 }
 
-static grib_accessor* create_attribute_variable(char* name, grib_section* section, int type, char* sval, double dval, long lval, unsigned long flags)
+static grib_accessor* create_attribute_variable(const char* name, grib_section* section, int type, char* sval, double dval, long lval, unsigned long flags)
 {
     grib_accessor* a    = NULL;
     grib_action creator = {0,};
@@ -1845,7 +1845,7 @@ static grib_accessor* create_attribute_variable(char* name, grib_section* sectio
     creator.flags      = GRIB_ACCESSOR_FLAG_READ_ONLY | flags;
     creator.set        = 0;
 
-    creator.name = name;
+    creator.name = (char*)name;
     a            = grib_accessor_factory(section, &creator, 0, NULL);
     a->parent    = NULL;
     a->h         = section->h;
