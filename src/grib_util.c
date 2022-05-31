@@ -2229,6 +2229,26 @@ int grib_check_data_values_range(grib_handle* h, const double min_val, const dou
     return result;
 }
 
+/* Return true(1) if large constant fields are to be created, otherwise false(0) */
+int grib_producing_large_constant_fields(grib_handle* h, int edition)
+{
+    /* First check if the transient key is set */
+    grib_context* c                 = h->context;
+    long produceLargeConstantFields = 0;
+    if (grib_get_long(h, "produceLargeConstantFields", &produceLargeConstantFields) == GRIB_SUCCESS &&
+        produceLargeConstantFields != 0) {
+        return 1;
+    }
+
+    if (c->gribex_mode_on == 1 && edition == 1) {
+        return 1;
+    }
+
+    /* Finally check the environment variable via the context */
+    return c->large_constant_fields;
+}
+
+
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val)
 {
     int err                        = 0;

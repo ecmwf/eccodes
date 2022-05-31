@@ -474,27 +474,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 #undef restrict
 #endif
 
-/* Return true(1) if large constant fields are to be created, otherwise false(0) */
-static int producing_large_constant_fields(grib_handle* h, int edition)
-{
-    /* First check if the transient key is set */
-    grib_context* c                 = h->context;
-    long produceLargeConstantFields = 0;
-    if (grib_get_long(h, "produceLargeConstantFields", &produceLargeConstantFields) == GRIB_SUCCESS &&
-        produceLargeConstantFields != 0) {
-        return 1;
-    }
-
-    if (c->gribex_mode_on == 1 && edition == 1) {
-        return 1;
-    }
-
-    /* Finally check the environment variable via the context */
-    return c->large_constant_fields;
-}
-
 #if 0
-static int producing_large_constant_fields(const grib_context* c, grib_handle* h, int edition)
+static int grib_producing_large_constant_fields(const grib_context* c, grib_handle* h, int edition)
 {
     /* GRIB-802: If override key is set, ignore env. var and produce compressed fields */
     if (c->large_constant_fields) {  /* This is set by the environment variable */
@@ -597,7 +578,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             Assert(ref == reference_value);
         }
 
-        large_constant_fields = producing_large_constant_fields(gh, self->edition);
+        large_constant_fields = grib_producing_large_constant_fields(gh, self->edition);
         if (large_constant_fields) {
             if ((err = grib_set_long_internal(gh, self->binary_scale_factor, 0)) != GRIB_SUCCESS)
                 return err;

@@ -1444,6 +1444,7 @@ int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemic
 size_t sum_of_pl_array(const long* pl, size_t plsize);
 int grib_is_earth_oblate(grib_handle* h);
 int grib_check_data_values_range(grib_handle* h, const double min_val, const double max_val);
+int grib_producing_large_constant_fields(grib_handle* h, int edition);
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val);
 
 /* bufr_util.c */
