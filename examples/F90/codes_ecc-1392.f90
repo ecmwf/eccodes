@@ -11,7 +11,7 @@ program codes_ecc_1392
     use eccodes
     implicit none
 
-    integer           :: ifile, igrib
+    integer           :: ifile
     character(len=60) :: inputfile
     
     call getarg(1, inputfile)
