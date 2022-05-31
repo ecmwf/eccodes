@@ -127,5 +127,20 @@ if [ $HAVE_AEC -eq 0 ]; then
     grep -q "CCSDS support not enabled. Please rebuild with -DENABLE_AEC=ON" $temp_err
 fi
 
+# Large constant fields
+# -----------------------
+input=${data_dir}/sample.grib2
+ECCODES_GRIB_LARGE_CONSTANT_FIELDS=0 ${tools_dir}/grib_set -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section7Length '1 0 5'
+
+ECCODES_GRIB_LARGE_CONSTANT_FIELDS=1 ${tools_dir}/grib_set -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section7Length '1 16 997'
+
+${tools_dir}/grib_set -s produceLargeConstantFields=0 -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section7Length '1 0 5'
+
+${tools_dir}/grib_set -s produceLargeConstantFields=1 -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section7Length '1 16 997'
+
 
 rm -f $temp $temp_err
