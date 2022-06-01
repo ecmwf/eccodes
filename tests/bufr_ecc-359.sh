@@ -14,7 +14,7 @@
 # This is the test for the JIRA issue ECC-359.
 # It tests calling 'pack=1' and nothing else!
 # ---------------------------------------------------------
-label="bufr_ecc_359_test"
+label="bufr_ecc-359_test"
 
 tempOut=temp.${label}.out
 BufrFile=$ECCODES_SAMPLES_PATH/BUFR4.tmpl

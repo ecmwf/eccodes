@@ -14,7 +14,7 @@
 # This is the test for the JIRA issue ECC-765.
 # BUFR decoding memory leaks
 # ---------------------------------------------------------
-label="bufr_ecc-765-test"
+label="bufr_ecc-765_test"
 tempLog=temp.${label}.log
 tempSupp=temp.${label}.supp
 tempFilt=temp.${label}.filt

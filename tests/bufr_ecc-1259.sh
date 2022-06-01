@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 set -u
 REDIRECT=/dev/null
-label="bufr_ecc-1259-test"
+label="bufr_ecc-1259_test"
 
 tempBufr=temp.$label.bufr
 tempFilt=temp.$label.filt

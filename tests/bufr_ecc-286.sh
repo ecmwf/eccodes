@@ -15,7 +15,7 @@
 # It tests setting a key which starts with a digit
 # ---------------------------------------------------------
 cd ${data_dir}/bufr
-label="bufr_ecc_286_test"
+label="bufr_ecc-286_test"
 
 tempRules=temp.${label}.filter
 tempOut=temp.${label}.out

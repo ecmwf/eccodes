@@ -14,7 +14,7 @@
 # This is the test for the JIRA issue ECC-313.
 # It tests decoding a BUFR file which uses the operator 203YYY.
 # ---------------------------------------------------------
-label="bufr_ecc-313-test"
+label="bufr_ecc-313_test"
 tempRules=temp.${label}.filter
 tempOut=temp.${label}.txt
 tempRef=temp.${label}.ref

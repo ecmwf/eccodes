@@ -15,7 +15,7 @@
 # It tests bufr_compare with a blacklist with rank
 # ---------------------------------------------------------
 cd ${data_dir}/bufr
-label="bufr_ecc_393_test"
+label="bufr_ecc-393_test"
 
 tempRules=temp.${label}.filter
 tempOut=temp.${label}.bufr

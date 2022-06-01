@@ -15,7 +15,7 @@
 # It tests bufr_compare with a relative tolerance
 # ---------------------------------------------------------
 cd ${data_dir}/bufr
-label="bufr_ecc_288_test"
+label="bufr_ecc-288_test"
 
 tempRules=temp.${label}.filter
 tempOut=temp.${label}.out
