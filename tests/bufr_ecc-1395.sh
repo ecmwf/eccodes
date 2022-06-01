@@ -10,14 +10,15 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
 label="bufr_ecc-1395_test"
-temp=temp.$label
+
 tempBufr=temp.$label.bufr
 tempFilt=temp.$label.filt
 tempOut=temp.$label.out
 
 sample_bufr4=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+
+rm -f $tempBufr
 
 # Pick a descriptor that does not exist in version 19
 cat > $tempFilt <<EOF
@@ -27,11 +28,14 @@ cat > $tempFilt <<EOF
 EOF
 
 set +e
-${tools_dir}/bufr_filter -o $tempBufr $tempFilt $sample_bufr4 # > $tempOut
+${tools_dir}/bufr_filter -o $tempBufr $tempFilt $sample_bufr4 > $tempOut 2>&1
 status=$?
 set -e
+[ $status -ne 0 ]
 
-# TODO check status
+[ ! -f "$tempBufr" ]
+
+grep -q "unable to get descriptor 025195" $tempOut
 
 
-rm -f $tempFilt $tempBufr $tempOut
+rm -f $tempFilt $tempOut
