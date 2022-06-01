@@ -142,5 +142,12 @@ grib_check_key_equals $temp const,bitsPerValue,section7Length '1 0 5'
 ${tools_dir}/grib_set -s produceLargeConstantFields=1 -d1 $input $temp
 grib_check_key_equals $temp const,bitsPerValue,section7Length '1 16 997'
 
+# GRIB1: when GRIBEX mode is enabled, we also get a large constant field
+input=${data_dir}/simple.grib
+${tools_dir}/grib_set -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section4Length '1 0 12'
+ECCODES_GRIBEX_MODE_ON=1 ${tools_dir}/grib_set -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section4Length '1 12 8966'
+
 
 rm -f $temp $temp_err
