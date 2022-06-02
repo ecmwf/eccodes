@@ -119,12 +119,16 @@ int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberO
         *bitOffset += numberOfCharacters * 8;
         return err;
     }
-
+    DebugAssert(remainderComplement >= 0);
     for (i = 0; i < numberOfCharacters; i++) {
         c = ((*s) >> remainder) & ~mask[remainder];
         *p |= c;
         p++;
-        *p = ((*s) << remainderComplement) & mask[remainder];
+        /* See ECC-1396: left-shift operator is undefined on a negative number */
+        if (*s > 0)
+            *p = ((*s) << remainderComplement) & mask[remainder];
+        else
+            *p = (*s) & mask[remainder];
         s++;
     }
     *bitOffset += numberOfCharacters * 8;
@@ -153,6 +157,7 @@ char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t
         return string;
     }
 
+    DebugAssert(remainderComplement >= 0);
     for (i = 0; i < numberOfCharacters; i++) {
         c = (*p) << remainder;
         p++;
