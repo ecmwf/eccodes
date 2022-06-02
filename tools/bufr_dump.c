@@ -104,7 +104,7 @@ int grib_tool_init(grib_runtime_options* options)
 {
     int opt = grib_options_on("C") + grib_options_on("O");
 
-    options->dump_mode = "default";
+    options->dump_mode = (char*)"default";
     options->strict    = 1; /* Must set here as bufr_dump has its own -S option */
 
     if (opt > 1) {
@@ -113,7 +113,7 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (grib_options_on("j:")) {
-        options->dump_mode = "json";
+        options->dump_mode = (char*)"json";
         json_option        = grib_options_get_option("j:");
         if (strlen(json_option) > 1 || (json_option[0] != 's' && json_option[0] != 'f' && json_option[0] != 'a')) {
             printf("%s: Invalid JSON option %s\n", tool_name, json_option);
@@ -123,13 +123,13 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (grib_options_on("O")) {
-        options->dump_mode  = "wmo";
+        options->dump_mode  = (char*)"wmo";
         json                = 0;
         options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("p")) {
-        options->dump_mode = "bufr_simple";
+        options->dump_mode = (char*)"bufr_simple";
         json               = 0;
     }
 
@@ -240,7 +240,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
     return 0;
 }
 
-static char* get_dumper_name(grib_runtime_options* options)
+static const char* get_dumper_name(grib_runtime_options* options)
 {
     if (grib_options_on("E:")) {
         /* Dumper for ENCODING */
@@ -306,7 +306,7 @@ static void bufr_dump_descriptors(grib_handle* h)
     char** array_names      = NULL;
     char** array_abbrevs    = NULL;
     char** array_units      = NULL;
-    char* the_key           = "expandedDescriptors";
+    const char* the_key     = "expandedDescriptors";
 
     GRIB_CHECK_NOLINE(grib_get_size(h, the_key, &size_desc), 0);
     array_descriptors = (long*)malloc(size_desc * sizeof(long));
