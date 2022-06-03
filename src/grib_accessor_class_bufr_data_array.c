@@ -1846,8 +1846,8 @@ static grib_accessor* create_attribute_variable(const char* name, grib_section* 
     grib_accessor* a    = NULL;
     grib_action creator = {0,};
     size_t len;
-    creator.op         = "variable";
-    creator.name_space = "";
+    creator.op         = (char*)"variable";
+    creator.name_space = (char*)"";
     creator.flags      = GRIB_ACCESSOR_FLAG_READ_ONLY | flags;
     creator.set        = 0;
 
@@ -1971,15 +1971,15 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
     grib_action operatorCreator = {0,};
     grib_accessor* elementAccessor = NULL;
     grib_action creator            = {0,};
-    creator.op         = "bufr_data_element";
-    creator.name_space = "";
+    creator.op         = (char*)"bufr_data_element";
+    creator.name_space = (char*)"";
     creator.set        = 0;
 
-    operatorCreator.op         = "variable";
-    operatorCreator.name_space = "";
+    operatorCreator.op         = (char*)"variable";
+    operatorCreator.name_space = (char*)"";
     operatorCreator.flags      = GRIB_ACCESSOR_FLAG_READ_ONLY;
     operatorCreator.set        = 0;
-    operatorCreator.name       = "operator";
+    operatorCreator.name       = (char*)"operator";
 
     if (attribute) {
         DebugAssert(attribute->parent == NULL);
@@ -2460,9 +2460,9 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
     int add_dump_flag = 1, count = 0;
     /*int forceGroupClosure=0;*/
 
-    creatorGroup.op         = "bufr_group";
-    creatorGroup.name       = "groupNumber";
-    creatorGroup.name_space = "";
+    creatorGroup.op         = (char*)"bufr_group";
+    creatorGroup.name       = (char*)"groupNumber";
+    creatorGroup.name_space = (char*)"";
     creatorGroup.flags      = GRIB_ACCESSOR_FLAG_DUMP;
     creatorGroup.set        = 0;
 
@@ -2651,12 +2651,12 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                 long subsetNumber     = iss + 1;
                 size_t len            = 1;
                 grib_action creatorsn = {0,};
-                creatorsn.op         = "variable";
-                creatorsn.name_space = "";
+                creatorsn.op         = (char*)"variable";
+                creatorsn.name_space = (char*)"";
                 creatorsn.flags      = GRIB_ACCESSOR_FLAG_READ_ONLY | GRIB_ACCESSOR_FLAG_DUMP;
                 creatorsn.set        = 0;
 
-                creatorsn.name = "subsetNumber";
+                creatorsn.name = (char*)"subsetNumber";
                 asn            = grib_accessor_factory(section, &creatorsn, 0, NULL);
                 accessor_variable_set_type(asn, GRIB_TYPE_LONG);
                 grib_pack_long(asn, &subsetNumber, &len);

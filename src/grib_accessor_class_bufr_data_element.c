@@ -167,10 +167,10 @@ static grib_accessor* make_clone(grib_accessor* a, grib_section* s, int* err)
     char* copied_name = NULL;
     int i;
     grib_action creator = {0,};
-    creator.op         = "bufr_data_element";
-    creator.name_space = "";
+    creator.op         = (char*)"bufr_data_element";
+    creator.name_space = (char*)"";
     creator.set        = 0;
-    creator.name       = "unknown";
+    creator.name       = (char*)"unknown";
     if (strcmp(a->cclass->name, "bufr_data_element")) {
         grib_context_log(a->context, GRIB_LOG_FATAL, "wrong accessor type: '%s' should be '%s'", a->cclass->name, "bufr_data_element");
     }

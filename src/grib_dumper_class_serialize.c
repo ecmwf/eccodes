@@ -315,7 +315,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     int last             = 0;
     int columns          = 4;
     char* values_format  = NULL;
-    char* default_format = "%.16e";
+    char* default_format = (char*)"%.16e";
     char* columns_str    = NULL;
     size_t len           = 0;
     char* pc             = NULL;
