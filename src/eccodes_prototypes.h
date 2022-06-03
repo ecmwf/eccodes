@@ -1219,7 +1219,7 @@ int grib_set_missing_internal(grib_handle* h, const char* name);
 int grib_set_missing(grib_handle* h, const char* name);
 int grib_is_missing_long(grib_accessor* a, long x);
 int grib_is_missing_double(grib_accessor* a, double x);
-int grib_is_missing_string(grib_accessor* a, unsigned char* x, size_t len);
+int grib_is_missing_string(grib_accessor* a, const unsigned char* x, size_t len);
 int grib_accessor_is_missing(grib_accessor* a, int* err);
 int grib_is_missing(const grib_handle* h, const char* name, int* err);
 int grib_is_defined(const grib_handle* h, const char* name);
@@ -1337,7 +1337,7 @@ int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat,
 int grib_nearest_init(grib_nearest* i, grib_handle* h, grib_arguments* args);
 int grib_nearest_delete(grib_nearest* i);
 int grib_nearest_get_radius(grib_handle* h, double* radiusInKm);
-void grib_binary_search(double xx[], const unsigned long n, double x, int* ju, int* jl);
+void grib_binary_search(const double xx[], const unsigned long n, double x, int* ju, int* jl);
 int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
 int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
     const char*  values_keyname, const char* Ni_keyname, const char* Nj_keyname,

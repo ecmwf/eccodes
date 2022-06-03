@@ -19,7 +19,7 @@ typedef enum
     eROUND_ANGLE_DOWN
 } RoundingPolicy;
 
-static void set_total_length(unsigned char* buffer, long* section_length, long* section_offset, int edition, size_t totalLength)
+static void set_total_length(unsigned char* buffer, long* section_length, const long* section_offset, int edition, size_t totalLength)
 {
     long off;
     switch (edition) {

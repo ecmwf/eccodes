@@ -604,7 +604,7 @@ int grib_is_missing_double(grib_accessor* a, double x)
     return ret;
 }
 
-int grib_is_missing_string(grib_accessor* a, unsigned char* x, size_t len)
+int grib_is_missing_string(grib_accessor* a, const unsigned char* x, size_t len)
 {
     /* For a string value to be missing, every character has to be */
     /* all 1's (i.e. 0xFF) */
