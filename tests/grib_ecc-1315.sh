@@ -9,9 +9,9 @@
 #
 
 . ./include.ctest.sh
-set -u
+
 REDIRECT=/dev/null
-label="grib_ecc-1313-test"
+label="grib_ecc-1313_test"
 tempOut=temp.$label.text
 tempRef=temp.$label.ref
 tempFilt=temp.$label.filt

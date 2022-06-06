@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="grib_ecc-1271-test"
+label="grib_ecc-1271_test"
 temp=temp.$label
 
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl

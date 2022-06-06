@@ -9,12 +9,12 @@
 #
 
 . ./include.ctest.sh
-set -u
+
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-873.
 # It tests grib_ls with the ordering option '-B'
 # ---------------------------------------------------------
-label="grib_ecc-873-test"
+label="grib_ecc-873_test"
 tempRef=temp.${label}.ref
 tempOut=temp.${label}.out
 

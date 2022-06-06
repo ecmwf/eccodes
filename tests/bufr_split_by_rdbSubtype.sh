@@ -9,7 +9,6 @@
 #
 
 . ./include.ctest.sh
-set -u
 
 # Define a common label for all the tmp files
 label="bufr_split_by_rdbSubtype"

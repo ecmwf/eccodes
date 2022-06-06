@@ -12,7 +12,7 @@
 . ./include.ctest.sh
 
 label="pseudo_budg_test"
-set -u
+
 tempOut=temp.$label.txt
 tempRef=temp.$label.ref
 tempBud=temp.$label.bud

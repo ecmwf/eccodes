@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 . ./include.ctest.sh
-set -u
+
 
 label="grib2_version"
 if [ ! -d "$ECCODES_DEFINITION_PATH" ]; then

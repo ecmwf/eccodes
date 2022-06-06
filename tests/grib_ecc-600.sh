@@ -9,12 +9,12 @@
 #
 
 . ./include.ctest.sh
-set -u
+
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-600.
 # Nearest neighbour for rotated lat/lon grids.
 # ---------------------------------------------------------
-label="grib_ecc-600-test"
+label="grib_ecc-600_test"
 tempOut=temp.${label}.out
 tempGrib=temp.${label}.grib
 

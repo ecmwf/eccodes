@@ -9,9 +9,8 @@
 #
 
 . ./include.ctest.sh
-set -u
 
-label="grib_ecc-1319-test"
+label="grib_ecc-1319_test"
 
 temp=temp.$label.grib
 temp1=temp1.$label.grib

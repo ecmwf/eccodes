@@ -10,7 +10,6 @@
 
 . ./include.ctest.sh
 
-set -u
 label="bufr_templates_test"
 
 temp=${label}.bufr

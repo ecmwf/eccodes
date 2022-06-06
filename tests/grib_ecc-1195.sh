@@ -9,9 +9,8 @@
 #
 
 . ./include.ctest.sh
-set -u
 
-label="grib_ecc-1195-test"
+label="grib_ecc-1195_test"
 temp1=temp.$label.grib
 temp2=temp.$label.txt
 sample_grib1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl

@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 
 REDIRECT=/dev/null
-set -u
+
 label="grib_set_force_test"
 
 tempInput=temp.$label.input.grib2
