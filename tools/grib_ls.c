@@ -322,6 +322,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
 
         if (json_latlon) {
+            int istart = 0;
+            int iend   = LATLON_SIZE;
             const char* s       = "\n[\n";
             double missingValue = 9999;
             char value[MAX_STRING_LEN];
@@ -336,7 +338,11 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             else
                 printf("\"nearest\"");
             printf("\n, \"neighbours\" : ");
-            for (i = 0; i < LATLON_SIZE; i++) {
+            if (options->latlon_mode == 1) {
+                istart = options->latlon_idx;
+                iend = istart + 1;
+            }
+            for (i = istart; i < iend; i++) {
                 printf("%s", s);
                 len = MAX_STRING_LEN;
                 printf(
