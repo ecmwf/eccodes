@@ -9,7 +9,6 @@
 #
 
 . ./include.ctest.sh
-set -u
 
 label="grib2_chemicals_aerosols_test"
 temp=temp.$label

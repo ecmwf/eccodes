@@ -9,7 +9,7 @@
 #
 
 . ./include.ctest.sh
-set -u
+
 label="grib_compare_test"
 REDIRECT=/dev/null
 

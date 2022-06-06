@@ -9,9 +9,8 @@
 #
 
 . ./include.ctest.sh
-set -u
 
-label="grib_suppressed-test"
+label="grib_suppressed_test"
 
 tempErr=temp.${label}.err
 tempFilt=temp.${label}.filt

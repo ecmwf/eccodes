@@ -9,14 +9,14 @@
 #
 
 . ./include.ctest.sh
-set -u
+
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-922
 # grib_get_data should fail on incorrectly coded grid
 # ---------------------------------------------------------
 
 REDIRECT=/dev/null
-label="grib_ecc-922-test"
+label="grib_ecc-922_test"
 temp=temp.$label
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 

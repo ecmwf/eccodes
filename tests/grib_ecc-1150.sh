@@ -9,13 +9,13 @@
 #
 
 . ./include.ctest.sh
-set -u
+
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-1150
 # ECC-1150: keys 'lowerLimit' & 'upperLimit' cannot be MISSING
 # See also ECC-1286
 # ---------------------------------------------------------
-label="grib_ecc-1150-test"
+label="grib_ecc-1150_test"
 tempGrib=temp.${label}.grib
 tempFilt=temp.${label}.filt
 

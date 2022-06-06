@@ -9,9 +9,8 @@
 #
 
 . ./include.ctest.sh
-set -u
 
-label="grib_ecc-1212-test"
+label="grib_ecc-1212_test"
 tempGrib=temp.$label.grib
 tempFilt=temp.$label.filt
 tempOut=temp.$label.out

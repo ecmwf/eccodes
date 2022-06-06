@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 label="grib_dump_debug"
 temp=temp.$label.txt
-set -u
+
 REDIRECT=/dev/null
 
 if [ $HAVE_MEMFS -eq 1 ]; then

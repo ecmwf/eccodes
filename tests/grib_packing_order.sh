@@ -9,7 +9,7 @@
 #
 
 . ./include.ctest.sh
-set -u
+
 REDIRECT=/dev/null
 label="grib_packing_order"
 temp=${label}".grib.tmp"

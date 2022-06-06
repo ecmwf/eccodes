@@ -9,7 +9,7 @@
 #
 
 . ./include.ctest.sh
-set -u
+
 label="grib_cfNames_test"
 temp=temp.${label}
 sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl

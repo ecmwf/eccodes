@@ -9,12 +9,12 @@
 #
 
 . ./include.ctest.sh
-set -u
+
 # --------------------------------------------
 # This is the test for the JIRA issue ECC-806
 # Local definitions precedence order
 # --------------------------------------------
-label="grib_ecc-806-test"
+label="grib_ecc-806_test"
 tempGrb=temp.${label}.grb
 tempOut=temp.${label}.txt
 tempErr=temp.${label}.err

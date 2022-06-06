@@ -9,7 +9,6 @@
 #
 
 . ./include.ctest.sh
-set -u
 
 label="grib_change_scanning"
 

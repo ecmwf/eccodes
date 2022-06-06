@@ -11,7 +11,7 @@
 # Tests for WRAP
 
 . ./include.ctest.sh
-label="wrap-test"
+label="wrap_test"
 tempOut=temp.${label}.out
 tempTxt=temp.${label}.txt
 tempRef=temp.${label}.ref
