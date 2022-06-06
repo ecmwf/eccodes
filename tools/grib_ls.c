@@ -331,7 +331,11 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             printf("%s", new_handle);
             printf("{\n");
             print_key_values(options, h);
-            printf("\n, \"selected\" : %d", options->latlon_idx);
+            if (options->latlon_mode == 4) {
+                printf("\n, \"selected\" : %d", options->latlon_idx);
+            } else {
+                printf("\n");
+            }
             printf(", \"method\" : ");
             if (options->latlon_mask)
                 printf("\"nearest_land\"");
