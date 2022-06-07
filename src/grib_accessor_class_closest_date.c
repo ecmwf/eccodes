@@ -256,7 +256,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_datetime_to_julian(yearLocal, monthLocal, dayLocal, hourLocal, minuteLocal, secondLocal, &jLocal);
     for(i=0; i< size; ++i) {
         double jval = 0, diff = 0;
-        grib_datetime_to_julian(yearArray[i], monthArray[i], dayArray[i], hourArray[i], minuteArray[i], secondArray[i], &jval);
+        grib_datetime_to_julian(yearArray[i], monthArray[i], dayArray[i],
+                                hourArray[i], minuteArray[i], secondArray[i], &jval);
         diff = jLocal - jval;
         if (diff >= 0 && diff < minDiff) {
             minDiff = diff;
@@ -265,8 +266,17 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     }
     if (*val == -1) {
         grib_context_log(c, GRIB_LOG_ERROR, "Failed to find a date/time amongst forecasts used in local time");
-        return GRIB_DECODING_ERROR;
+        err = GRIB_DECODING_ERROR;
+        goto cleanup;
     }
 
-    return GRIB_SUCCESS;
+cleanup:
+    grib_context_free(c, yearArray);
+    grib_context_free(c, monthArray);
+    grib_context_free(c, dayArray);
+    grib_context_free(c, hourArray);
+    grib_context_free(c, minuteArray);
+    grib_context_free(c, secondArray);
+
+    return err;
 }
