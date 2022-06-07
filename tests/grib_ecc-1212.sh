@@ -80,5 +80,36 @@ cat $tempOut
 diff -w $tempRef $tempOut
 
 
+# numberOfForecastsUsedInLocalTime > 1
+# ------------------------------------
+cat > $tempFilt <<EOF
+    set tablesVersion=27;
+    set localTablesVersion = 1;
+    set typeOfProcessedData = "fc";
+
+    set significanceOfReferenceTime = 4;
+    set year = 2022;
+    set month = 6;
+    set day = 7;
+    set hour = 7;
+
+    set productDefinitionTemplateNumber = 88;
+    set numberOfForecastsUsedInLocalTime = 3;
+    set forecastTime = 24;
+
+    set localTimeMethod = 1;
+    set yearOfForecastUsedInLocalTime  = {2022, 2022, 2022};
+    set monthOfForecastUsedInLocalTime = {12, 6, 5};
+    set dayOfForecastUsedInLocalTime   = {7, 7, 5};
+    set hourOfForecastUsedInLocalTime  = {6, 3, 12};
+
+    write;
+EOF
+
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
+grib_check_key_equals $tempGrib selectedFcIndex,step '1 4'
+grib_check_key_equals $tempGrib mars.date,mars.time  '20220607 300'
+
+
 # Clean up
 rm -f $tempGrib $tempFilt $tempOut $tempRef
