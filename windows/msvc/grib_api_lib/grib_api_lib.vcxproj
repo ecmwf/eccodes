@@ -227,6 +227,7 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_change_alternative_row_scanning.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_change_scanning_direction.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_check_internal_version.c" />
+    <ClCompile Include="..\..\..\src\grib_accessor_class_closest_date.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_codeflag.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_codetable.c" />
     <ClCompile Include="..\..\..\src\grib_accessor_class_codetable_title.c" />

@@ -207,6 +207,9 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_check_internal_version.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\grib_accessor_class_closest_date.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\grib_accessor_class_codeflag.c">
       <Filter>Source Files</Filter>
     </ClCompile>

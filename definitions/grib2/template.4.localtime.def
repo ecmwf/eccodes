@@ -85,24 +85,26 @@ if (numberOfForecastsUsedInLocalTime > 1) {
     yearOfForecastUsedInLocalTime, monthOfForecastUsedInLocalTime, dayOfForecastUsedInLocalTime,
     hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime):hidden;
 
-  meta selectedYear   element(yearOfForecastUsedInLocalTime, selectedIndex);
-  meta selectedMonth  element(monthOfForecastUsedInLocalTime, selectedIndex);
-  meta selectedDay    element(dayOfForecastUsedInLocalTime, selectedIndex);
-  meta selectedHour   element(hourOfForecastUsedInLocalTime, selectedIndex);
-  meta selectedMinute element(minuteOfForecastUsedInLocalTime, selectedIndex);
-  meta selectedSecond element(secondOfForecastUsedInLocalTime, selectedIndex);
-  meta dateOfForecastUsedInLocalTime g2date(selectedYear, selectedMonth, selectedDay);
-  meta timeOfForecastUsedInLocalTime time(selectedHour, selectedMinute, selectedSecond);
+  if (selectedIndex >=0 && selectedIndex < numberOfForecastsUsedInLocalTime) {
+    meta selectedYear   element(yearOfForecastUsedInLocalTime, selectedIndex);
+    meta selectedMonth  element(monthOfForecastUsedInLocalTime, selectedIndex);
+    meta selectedDay    element(dayOfForecastUsedInLocalTime, selectedIndex);
+    meta selectedHour   element(hourOfForecastUsedInLocalTime, selectedIndex);
+    meta selectedMinute element(minuteOfForecastUsedInLocalTime, selectedIndex);
+    meta selectedSecond element(secondOfForecastUsedInLocalTime, selectedIndex);
+    meta dateOfForecastUsedInLocalTime g2date(selectedYear, selectedMonth, selectedDay);
+    meta timeOfForecastUsedInLocalTime time(selectedHour, selectedMinute, selectedSecond);
   
-  meta jdLocal    julian_day(dataDate, hour,minute,second); #section 1
-  meta jdSelected julian_day(dateOfForecastUsedInLocalTime, selectedHour, selectedMinute, selectedSecond);
+    meta jdLocal    julian_day(dataDate, hour,minute,second); #section 1
+    meta jdSelected julian_day(dateOfForecastUsedInLocalTime, selectedHour, selectedMinute, selectedSecond);
   
-  transient diffInDays = (jdLocal - jdSelected) : hidden;  # float
-  transient diffInHours = (diffInDays * 1440 + 0.5)/60 : hidden;
-  meta _endStep  round(diffInHours, 10): dump, long_type;
-  transient endStep = _endStep; # needed to force it to be integer
+    transient diffInDays = (jdLocal - jdSelected) : hidden;  # float
+    transient diffInHours = (diffInDays * 1440 + 0.5)/60 : hidden;
+    meta _endStep  round(diffInHours, 10): dump, long_type;
+    transient endStep = _endStep; # needed to force it to be integer
 
-  alias mars.date = dateOfForecastUsedInLocalTime : dump;
-  alias mars.time = timeOfForecastUsedInLocalTime : dump;
-  alias mars.step = endStep;
+    alias mars.date = dateOfForecastUsedInLocalTime : dump;
+    alias mars.time = timeOfForecastUsedInLocalTime : dump;
+    alias mars.step = endStep;
+  }
 }

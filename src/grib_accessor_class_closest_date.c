@@ -186,6 +186,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     return ret;
 }
 
+/* Sets val to the 'index' of the closes date */
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     int err = 0;
@@ -194,7 +195,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     long ymdLocal, hmsLocal, yearLocal, monthLocal, dayLocal, hourLocal, minuteLocal, secondLocal;
     double jLocal = 0;
     double minDiff = DBL_MAX;
-    size_t i = 0, minIndex = 0;
+    size_t i = 0;
     size_t size = 0; /* number of elements in the array keys - should be = numberOfForecastsUsedInLocalTime */
 
     /* These relate to the forecast dates and times in Section 4 */
@@ -203,6 +204,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_accessor_closest_date* self = (grib_accessor_closest_date*)a;
     grib_handle* h = grib_handle_of_accessor(a);
     grib_context* c = a->context;
+    *val = -1; /* initialise to an invalid index */
 
     if ((err = grib_get_long_internal(h, self->numForecasts, &num_forecasts)) != GRIB_SUCCESS) return err;
     Assert(num_forecasts > 1);
@@ -215,8 +217,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     dayLocal = ymdLocal;
 
     if ((err= grib_get_long(h, self->timeLocal, &hmsLocal)) != GRIB_SUCCESS) return err;
-    hourLocal = hmsLocal / 10000;
-    hmsLocal %= 10000;
+    hourLocal = hmsLocal / 100;
+    hmsLocal %= 100;
     minuteLocal = hmsLocal / 100;
     hmsLocal %= 100;
     secondLocal = hmsLocal;
@@ -256,37 +258,15 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         double jval = 0, diff = 0;
         grib_datetime_to_julian(yearArray[i], monthArray[i], dayArray[i], hourArray[i], minuteArray[i], secondArray[i], &jval);
         diff = jLocal - jval;
-        if (diff >0 && diff < minDiff) {
+        if (diff >= 0 && diff < minDiff) {
             minDiff = diff;
-            minIndex = i;
+            *val = i;
         }
     }
-    *val = minIndex;
-    //*val = 1;
+    if (*val == -1) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Failed to find a date/time amongst forecasts used in local time");
+        return GRIB_DECODING_ERROR;
+    }
+
     return GRIB_SUCCESS;
-    //return GRIB_NOT_IMPLEMENTED;
-#if 0
-    ret = grib_get_long_internal(grib_handle_of_accessor(a), self->date, &date);
-    if (ret != GRIB_SUCCESS)
-        return ret;
-    ret = grib_get_long_internal(grib_handle_of_accessor(a), self->hour, &hour);
-    if (ret != GRIB_SUCCESS)
-        return ret;
-    ret = grib_get_long_internal(grib_handle_of_accessor(a), self->minute, &minute);
-    if (ret != GRIB_SUCCESS)
-        return ret;
-    ret = grib_get_long_internal(grib_handle_of_accessor(a), self->second, &second);
-    if (ret != GRIB_SUCCESS)
-        return ret;
-
-    year = date / 10000;
-    date %= 10000;
-    month = date / 100;
-    date %= 100;
-    day = date;
-
-    ret = grib_datetime_to_julian(year, month, day, hour, minute, second, val);
-
-    return ret;
-#endif
 }
