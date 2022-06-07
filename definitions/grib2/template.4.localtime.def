@@ -85,8 +85,6 @@ if (numberOfForecastsUsedInLocalTime > 1) {
     yearOfForecastUsedInLocalTime, monthOfForecastUsedInLocalTime, dayOfForecastUsedInLocalTime,
     hourOfForecastUsedInLocalTime, minuteOfForecastUsedInLocalTime, secondOfForecastUsedInLocalTime):hidden;
 
-  #transient selectedIndex = 1;
-
   meta selectedYear   element(yearOfForecastUsedInLocalTime, selectedIndex);
   meta selectedMonth  element(monthOfForecastUsedInLocalTime, selectedIndex);
   meta selectedDay    element(dayOfForecastUsedInLocalTime, selectedIndex);
