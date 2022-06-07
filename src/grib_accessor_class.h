@@ -26,6 +26,7 @@ extern grib_accessor_class* grib_accessor_class_bytes;
 extern grib_accessor_class* grib_accessor_class_change_alternative_row_scanning;
 extern grib_accessor_class* grib_accessor_class_change_scanning_direction;
 extern grib_accessor_class* grib_accessor_class_check_internal_version;
+extern grib_accessor_class* grib_accessor_class_closest_date;
 extern grib_accessor_class* grib_accessor_class_codeflag;
 extern grib_accessor_class* grib_accessor_class_codetable;
 extern grib_accessor_class* grib_accessor_class_codetable_title;

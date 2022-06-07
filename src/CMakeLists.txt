@@ -129,6 +129,7 @@ list( APPEND eccodes_src_files
     grib_accessor_class_ifs_param.c
     grib_accessor_class_julian_day.c
     grib_accessor_class_julian_date.c
+    grib_accessor_class_closest_date.c
     grib_accessor_class_latlonvalues.c
     grib_accessor_class_latitudes.c
     grib_accessor_class_longitudes.c
