@@ -2717,6 +2717,24 @@
 	 typeOfStatisticalProcessing = 101 ;
 	 lengthOfTimeRange = 3 ;
 	}
+#Precipitation type (most severe) in the last 6 hours
+'260338' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 19 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 100 ;
+	 lengthOfTimeRange = 6 ;
+	}
+#Precipitation type (most frequent) in the last 6 hours
+'260339' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 19 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 101 ;
+	 lengthOfTimeRange = 6 ;
+	}
 #Soil temperature
 '260360' = {
 	 discipline = 2 ;
