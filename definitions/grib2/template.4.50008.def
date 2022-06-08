@@ -1,0 +1,43 @@
+include "grib2/template.4.parameter.def"
+include "grib2/template.4.generating_process.def"
+unsigned[2] hoursAfterDataCutoff = missing() : edition_specific,can_be_missing;
+alias hoursAfterReferenceTimeOfDataCutoff=hoursAfterDataCutoff;
+unsigned[1]  minutesAfterDataCutoff = missing() : edition_specific,can_be_missing;
+alias minutesAfterReferenceTimeOfDataCutoff=minutesAfterDataCutoff;
+codetable[1] indicatorOfUnitOfTimeRange ('4.4.table',masterDir,localDir)  : dump;
+alias defaultStepUnits = one; # 1 means Hour. See code table 4.4
+signed[4] forecastTime  : dump;
+codetable[1] typeOfFirstFixedSurface ('4.5.table',masterDir,localDir) : dump,no_copy,edition_specific,string_type;
+meta unitsOfFirstFixedSurface codetable_units(typeOfFirstFixedSurface) : dump;
+meta nameOfFirstFixedSurface codetable_title(typeOfFirstFixedSurface) : dump;
+signed[1] scaleFactorOfFirstFixedSurface = missing()  : can_be_missing,dump,no_copy,edition_specific;
+unsigned[4] scaledValueOfFirstFixedSurface = missing()  : can_be_missing,dump,no_copy,edition_specific;
+codetable[1] typeOfSecondFixedSurface ('4.5.table',masterDir,localDir) = 255 : dump,no_copy,edition_specific;
+meta unitsOfSecondFixedSurface codetable_units(typeOfSecondFixedSurface) : dump;
+meta nameOfSecondFixedSurface codetable_title(typeOfSecondFixedSurface) : dump;
+signed[1] scaleFactorOfSecondFixedSurface = missing() : can_be_missing,dump,no_copy,edition_specific;
+unsigned[4] scaledValueOfSecondFixedSurface = missing() : can_be_missing,dump,no_copy,edition_specific;
+unsigned[2] yearOfEndOfOverallTimeInterval =0 : edition_specific;
+unsigned[1] monthOfEndOfOverallTimeInterval =0 : edition_specific;
+unsigned[1] dayOfEndOfOverallTimeInterval =0 : edition_specific;
+unsigned[1] hourOfEndOfOverallTimeInterval =0 : edition_specific;
+unsigned[1] minuteOfEndOfOverallTimeInterval =0 : edition_specific;
+unsigned[1] secondOfEndOfOverallTimeInterval =0 : edition_specific;
+unsigned[1]  numberOfTimeRange = 1 : edition_specific;
+alias n =  numberOfTimeRange;
+unsigned[4] numberOfMissingInStatisticalProcess = 0  : edition_specific;
+alias totalNumberOfDataValuesMissingInStatisticalProcess=numberOfMissingInStatisticalProcess;
+statisticalProcessesList list(numberOfTimeRange)
+{
+  codetable[1] typeOfStatisticalProcessing ('4.10.table',masterDir,localDir) : edition_specific;
+  codetable[1]  typeOfTimeIncrement ('4.11.table',masterDir,localDir) = 2 : edition_specific;
+  alias typeOfTimeIncrementBetweenSuccessiveFieldsUsedInTheStatisticalProcessing=typeOfTimeIncrement;
+  codetable[1]  indicatorOfUnitForTimeRange ('4.4.table',masterDir,localDir) =1 ;
+  unsigned[4] lengthOfTimeRange=0 ;
+  codetable[1]  indicatorOfUnitForTimeIncrement ('4.4.table',masterDir,localDir)=255 ;
+  unsigned[4] timeIncrement=0 ;
+  alias timeIncrementBetweenSuccessiveFields=timeIncrement;
+}
+byte[8] radarSiteOperationMode  : dump;
+byte[8] rainConversionIndexOperationMode  : dump;
+byte[8] rainGagueOperationMode  : dump;
