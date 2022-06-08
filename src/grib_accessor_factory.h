@@ -62,6 +62,7 @@
 { "data_jpeg2000_packing", &grib_accessor_class_data_jpeg2000_packing, },
 { "data_png_packing", &grib_accessor_class_data_png_packing, },
 { "data_raw_packing", &grib_accessor_class_data_raw_packing, },
+{ "data_run_length_packing", &grib_accessor_class_data_run_length_packing, },
 { "data_secondary_bitmap", &grib_accessor_class_data_secondary_bitmap, },
 { "data_sh_packed", &grib_accessor_class_data_sh_packed, },
 { "data_sh_unpacked", &grib_accessor_class_data_sh_unpacked, },
