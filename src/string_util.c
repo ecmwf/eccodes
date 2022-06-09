@@ -208,3 +208,30 @@ const char* grib_get_type_name(int type)
     }
     return "unknown";
 }
+
+/* Replace all occurrences of character in string.
+*  Returns pointer to the NUL byte at the end of 's'
+*/
+char *string_replace_char(char *s, char old, char new)
+{
+    for (; *s; ++s)
+        if (*s == old)
+            *s = new;
+    return s;
+}
+
+/* Remove all instances of character 'c' from 'str' */
+void string_remove_char(char * str, char c)
+{
+    size_t i, j;
+    size_t len = strlen(str);
+    for(i=0; i<len; i++) {
+        if(str[i] == c) {
+            for(j=i; j<len; j++) {
+                str[j] = str[j+1];
+            }
+            len--;
+            i--;
+        }
+    }
+}

@@ -10,6 +10,12 @@
 
 . ./include.ctest.sh
 
+label="bufr_json_data_test"
+tempRules=temp.${label}.filter
+tempOut=temp.${label}.txt
+tempBufr=temp.${label}.bufr
+
+
 REDIRECT=/dev/null
 
 cd ${data_dir}/bufr
@@ -62,3 +68,20 @@ done
 # ECC-272
 file=aaen_55.bufr
 ${tools_dir}/bufr_dump -jf $file | grep -q -w channelRadiance
+
+
+# ECC-1401: BUFR: bufr_dump generates invalid JSON
+cat > $tempRules <<EOF
+    set unexpandedDescriptors = { 1015 };
+    set stationOrSiteName = 'Contains "bad" chars';
+    set pack = 1;
+    write;
+EOF
+${tools_dir}/codes_bufr_filter -o $tempBufr $tempRules $ECCODES_SAMPLES_PATH/BUFR4.tmpl
+${tools_dir}/bufr_dump $tempBufr > $tempOut
+if test "x$JSON_CHECK" != "x"; then
+    json_xs -t none < $tempOut
+fi
+
+
+rm -f $tempRules $tempOut $tempBufr

@@ -1466,7 +1466,8 @@ int string_ends_with(const char* str1, const char* str2);
 int count_char_in_string(const char* str, char c);
 const char* codes_get_product_name(ProductKind product);
 const char* grib_get_type_name(int type);
-
+char* string_replace_char(char *str, char old, char new);
+void string_remove_char(char * str, char c);
 
 /* functions.c */
 long grib_op_eq(long a, long b);
