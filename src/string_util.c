@@ -212,11 +212,11 @@ const char* grib_get_type_name(int type)
 /* Replace all occurrences of character in string.
 *  Returns pointer to the NUL byte at the end of 's'
 */
-char *string_replace_char(char *s, char old, char new)
+char *string_replace_char(char *s, char oldc, char newc)
 {
     for (; *s; ++s)
-        if (*s == old)
-            *s = new;
+        if (*s == oldc)
+            *s = newc;
     return s;
 }
 
