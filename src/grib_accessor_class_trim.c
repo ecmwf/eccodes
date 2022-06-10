@@ -161,7 +161,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     err = grib_get_string(h, self->input, input, &size);
     if (err) return err;
 
-    lrtrim(&pInput, self->trim_left, self->trim_right);
+    string_lrtrim(&pInput, self->trim_left, self->trim_right);
     sprintf(val, "%s", pInput); 
     size = strlen(val);
     *len = size + 1;
@@ -189,7 +189,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 
     sprintf(buf, "%s", val);
     pBuf = buf;
-    lrtrim(&pBuf, self->trim_left, self->trim_right);
+    string_lrtrim(&pBuf, self->trim_left, self->trim_right);
 
     return grib_pack_string(inputAccesstor, pBuf, len);
 }

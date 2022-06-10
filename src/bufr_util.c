@@ -282,7 +282,7 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
         }
         temp[i] = '\0';
         pTemp = temp;
-        lrtrim(&pTemp, 1, 1); /* Trim left and right */
+        string_lrtrim(&pTemp, 1, 1); /* Trim left and right */
         strncpy(hdr->ident, pTemp, IDENT_LEN - 1);
     }
 

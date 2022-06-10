@@ -27,7 +27,7 @@ int strcmp_nocase(const char* s1, const char* s2)
 }
 
 /* Strip whitespace from the end of a string */
-void rtrim(char* s)
+void string_rtrim(char* s)
 {
     size_t len = 0;
     if (!s)
@@ -38,7 +38,7 @@ void rtrim(char* s)
     s[len] = '\0';
 }
 
-void lrtrim(char** x, int do_left, int do_right)
+void string_lrtrim(char** x, int do_left, int do_right)
 {
     DebugAssert(do_left || do_right);
     if (do_left) {
@@ -161,7 +161,7 @@ int string_ends_with(const char* s, const char* suffix)
     return 0;
 }
 
-int count_char_in_string(const char* str, char c)
+int string_count_char(const char* str, char c)
 {
     int i = 0, count = 0;
     DebugAssert(str);
