@@ -1047,7 +1047,7 @@ int grib_f_open_file_(int* fid, char* name , char* op, int lname, int lop) {
     while (*p != '\0') { *p=tolower(*p);p++;}
 
     trimmed = cast_char_no_cut(fname,name,lname); /* ECC-1392 */
-    rtrim( trimmed );
+    string_rtrim( trimmed );
     f = fopen(trimmed, oper);
     if(!f) {
         ioerr=errno;
@@ -2891,7 +2891,7 @@ int grib_f_index_select_string_(int* gid, char* key, char* val, int len, int val
 
     /* ECC-1316 */
     cast_char_no_cut(bufval,val,vallen);
-    rtrim( bufval );
+    string_rtrim( bufval );
 
     return grib_index_select_string(h, cast_char(buf,key,len), bufval);
 }
@@ -3257,7 +3257,7 @@ int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen
     for (i=0;i<lsize;i++) {
         cval[i]=(char*)grib_context_malloc_clear(c,sizeof(char)* (*slen+1));
         cast_char_no_cut(cval[i],p,*slen);
-        rtrim( cval[i] ); /* trim spaces at end of string */
+        string_rtrim( cval[i] ); /* trim spaces at end of string */
         p+= *slen;
     }
     err = grib_set_string_array(h, cast_char(buf,key,len), (const char **)cval, lsize);
@@ -3327,7 +3327,7 @@ int grib_f_set_string_(int* gid, char* key, char* val, int len, int len2){
     /* So do not use cast_char. cast_char_no_cut does not stop at first space */
     val_str = cast_char_no_cut(buf2,val,len2);
     if (val_str && !is_all_spaces(val_str)) {
-        rtrim( val_str ); /* trim spaces at end of string */
+        string_rtrim( val_str ); /* trim spaces at end of string */
     }
 
     return grib_set_string(h, cast_char(buf,key,len), val_str, &lsize);

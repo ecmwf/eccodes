@@ -1457,16 +1457,17 @@ int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err);
 
 /* string_util.c */
 int strcmp_nocase(const char* s1, const char* s2);
-void rtrim(char* s);
-void lrtrim(char** x, int do_left, int do_right);
+void string_rtrim(char* s);
+void string_lrtrim(char** x, int do_left, int do_right);
 const char* extract_filename(const char* filepath);
 char** string_split(char* inputString, const char* delimiter);
 int string_to_long(const char* input, long* output);
 int string_ends_with(const char* str1, const char* str2);
-int count_char_in_string(const char* str, char c);
+int string_count_char(const char* str, char c);
 const char* codes_get_product_name(ProductKind product);
 const char* grib_get_type_name(int type);
-
+char* string_replace_char(char *str, char oldc, char newc);
+void string_remove_char(char * str, char c);
 
 /* functions.c */
 long grib_op_eq(long a, long b);

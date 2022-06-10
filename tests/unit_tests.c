@@ -1511,19 +1511,19 @@ static void test_trimming()
 
     printf("Testing: test_trimming...\n");
 
-    lrtrim(&pA, 0, 1); /*right only*/
+    string_lrtrim(&pA, 0, 1); /*right only*/
     assert( strcmp(pA, " Standing")==0 );
 
-    lrtrim(&pB, 1, 0); /*left only*/
+    string_lrtrim(&pB, 1, 0); /*left only*/
     assert( strcmp(pB, "Weeping ")==0 );
 
-    lrtrim(&pC, 1, 1); /*both ends*/
+    string_lrtrim(&pC, 1, 1); /*both ends*/
     assert( strcmp(pC, "Silhouette")==0 );
 
-    lrtrim(&pD, 1, 1); /*make sure other spaces are not removed*/
+    string_lrtrim(&pD, 1, 1); /*make sure other spaces are not removed*/
     assert( strcmp(pD, "The Forest Of October")==0 );
 
-    lrtrim(&pE, 1, 1); /* Other chars */
+    string_lrtrim(&pE, 1, 1); /* Other chars */
     assert( strcmp(pE, "Apostle In Triumph")==0 );
 }
 
