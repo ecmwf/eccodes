@@ -92,15 +92,15 @@ grib_check_key_equals $sec_ord_bmp accuracy 4
 nums=`${tools_dir}/grib_get -p numberOfDataPoints,numberOfCodedValues,numberOfMissing $sec_ord_bmp`
 [ "$nums" = "5969 4 5965" ]
 
-#res=`${tools_dir}/grib_get -l 33,88.5 $sec_ord_bmp`
-#[ "$res" = "9999 5.51552 9999 9999 " ]
+res=`${tools_dir}/grib_get -l 33,88.5 $sec_ord_bmp`
+[ "$res" = "9999 5.51552 9999 9999 " ]
 
 res=`${tools_dir}/grib_get -l 28.5,90 $sec_ord_bmp`
 [ "$res" = "3.51552 9999 5.26552 9999 " ]
 
 # GRIB-203 nearest on M-F second order boustrophedonic
-res=`${tools_dir}/grib_get -w count=1 -l 0,0 lfpw.grib1`
-#[ "$res" = "20560.7 20563.4 20554.7 20559.5 " ]
+res=`${tools_dir}/grib_get -w count=1 -l 0,0,1 lfpw.grib1`
+[ "$res" = "20563.4  " ]
 
 # Unpack/pack test for second order grib1 data
 # --------------------------------------------

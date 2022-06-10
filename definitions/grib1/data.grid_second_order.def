@@ -31,7 +31,7 @@ alias accuracy = bitsPerValue;
 
 
 position offsetBeforeData;
-if(bitmapPresent)   {
+if(bitmapPresent) {
    meta codedValues data_g1second_order_general_extended_packing(
 	#simple_packing args
      section4Length,
@@ -91,7 +91,7 @@ if(bitmapPresent)   {
 } else {
    if (boustrophedonicOrdering) {
 
-	   meta codedValues data_g1second_order_general_extended_packing(
+	   meta numericValues data_g1second_order_general_extended_packing(
 		#simple_packing args
 		 section4Length,
 		 offsetBeforeData,
@@ -127,9 +127,9 @@ if(bitmapPresent)   {
 		 widthOfSPD,
 		 orderOfSPD,
 		 numberOfPoints
-
 		 ) : read_only;
-		 meta values data_apply_boustrophedonic(codedValues,numberOfRows,numberOfColumns,numberOfPoints,pl) : dump;
+		 meta values data_apply_boustrophedonic(numericValues,numberOfRows,numberOfColumns,numberOfPoints,pl) : dump;
+         alias data.codedValues = values;
 	} else {
 	   meta values data_g1second_order_general_extended_packing(
 		#simple_packing args
