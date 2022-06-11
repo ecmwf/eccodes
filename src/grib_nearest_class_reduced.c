@@ -93,6 +93,8 @@ static void init_class(grib_nearest_class* c)
 }
 /* END_CLASS_IMP */
 
+#define NUM_NEIGHBOURS 4
+
 static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
 {
     grib_nearest_reduced* self = (grib_nearest_reduced*)nearest;
@@ -102,7 +104,7 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
     self->legacy               = -1;
     if (!self->j)
         return GRIB_OUT_OF_MEMORY;
-    self->k = (int*)grib_context_malloc(nearest->context, 4 * sizeof(int));
+    self->k = (int*)grib_context_malloc(nearest->context, NUM_NEIGHBOURS * sizeof(int));
     if (!self->k)
         return GRIB_OUT_OF_MEMORY;
     grib_get_long(h, "global", &self->global);
@@ -255,7 +257,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         }
 
         if (!self->distances)
-            self->distances = (double*)grib_context_malloc(nearest->context, 4 * sizeof(double));
+            self->distances = (double*)grib_context_malloc(nearest->context, NUM_NEIGHBOURS * sizeof(double));
         if (!self->distances)
             return GRIB_OUT_OF_MEMORY;
 
@@ -424,14 +426,20 @@ static int find(grib_nearest* nearest, grib_handle* h,
     }
 
     kk = 0;
+    if (values) {
+        /* See ECC-1403 and ECC-499 */
+        /* Performance: Decode the field once and get all 4 values */
+        grib_get_double_elements(h, self->values_key, self->k, NUM_NEIGHBOURS, values);
+    }
     for (jj = 0; jj < 2; jj++) {
         for (ii = 0; ii < 2; ii++) {
             distances[kk] = self->distances[kk];
             outlats[kk]   = self->lats[self->j[jj]];
             outlons[kk]   = self->lons[self->k[kk]];
-            if (values) { /* ECC-499 */
-                grib_get_double_element_internal(h, self->values_key, self->k[kk], &(values[kk]));
-            }
+            /*if (values) {
+             *    grib_get_double_element_internal(h, self->values_key, self->k[kk], &(values[kk]));
+             *}
+             */
             indexes[kk] = self->k[kk];
             kk++;
         }
