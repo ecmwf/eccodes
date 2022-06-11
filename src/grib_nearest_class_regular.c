@@ -429,6 +429,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
      */
 
     if (values) {
+        /* See ECC-1403 and ECC-499 */
+        /* Performance: Decode the field once and get all 4 values */
         grib_get_double_elements(h, self->values_key, self->k, NUM_NEIGHBOURS, values);
     }
 
@@ -444,9 +446,11 @@ static int find(grib_nearest* nearest, grib_handle* h,
                 outlats[kk] = new_lat;
                 outlons[kk] = new_lon;
             }
-            //if (values) { /* ECC-499 */
-            //    grib_get_double_element_internal(h, self->values_key, self->k[kk], &(values[kk]));
-            //}
+            /* See ECC-1403 and ECC-499
+             * if (values) {
+             *   grib_get_double_element_internal(h, self->values_key, self->k[kk], &(values[kk]));
+             *}
+             */
             /* Using the brute force approach described above */
             /* Assert(self->k[kk] < nvalues); */
             /* values[kk]=nearest->values[self->k[kk]]; */
