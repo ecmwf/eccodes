@@ -90,8 +90,8 @@ if(bitmapPresent) {
    }
 } else {
    if (boustrophedonicOrdering) {
-
-	   meta numericValues data_g1second_order_general_extended_packing(
+     # See ECC-1402
+     meta numericValues data_g1second_order_general_extended_packing(
 		#simple_packing args
 		 section4Length,
 		 offsetBeforeData,
@@ -126,8 +126,7 @@ if(bitmapPresent) {
 		 SPD,
 		 widthOfSPD,
 		 orderOfSPD,
-		 numberOfPoints
-		 ) : read_only;
+		 numberOfPoints) : read_only;
 		 meta values data_apply_boustrophedonic(numericValues,numberOfRows,numberOfColumns,numberOfPoints,pl) : dump;
          alias data.codedValues = values;
 	} else {
@@ -166,12 +165,10 @@ if(bitmapPresent) {
 		 SPD,
 		 widthOfSPD,
 		 orderOfSPD,
-		 numberOfPoints
-
-		 ) : dump;
+		 numberOfPoints) : dump;
 		 alias codedValues=values;
 	}
-   alias data.packedValues = values;
+    alias data.packedValues = values;
 }
 
 meta packingError simple_packing_error(bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue,ibm) : no_copy;
