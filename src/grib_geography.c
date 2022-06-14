@@ -3951,7 +3951,8 @@ static int get_precomputed_latitudes_N640(double* lats)
 }
 
 /* 'trunc' is the Gaussian number (or order) */
-/* i.e. Number of parallels between a pole and the equator */
+/* i.e. Number of parallels between a pole and the equator. */
+/* The provided 'lats' array should have allocated 2*trunc elements */
 static int _grib_get_gaussian_latitudes(long trunc, double* lats)
 {
     long jlat, iter, legi;
@@ -3959,7 +3960,7 @@ static int _grib_get_gaussian_latitudes(long trunc, double* lats)
     double mem1, mem2, conv;
     double denom     = 0.0;
     double precision = 1.0E-14;
-    long nlat        = trunc * 2;
+    const long nlat  = trunc * 2;
 
     rad2deg = 180.0 / M_PI;
 
