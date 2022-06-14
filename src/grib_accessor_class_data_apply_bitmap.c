@@ -17,7 +17,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = init
-   IMPLEMENTS = unpack_double;unpack_double_element
+   IMPLEMENTS = unpack_double;unpack_double_element;unpack_double_element_set
    IMPLEMENTS = pack_double
    IMPLEMENTS = value_count
    IMPLEMENTS = dump;get_native_type
@@ -48,6 +48,7 @@ static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
+static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
 typedef struct grib_accessor_data_apply_bitmap
 {
@@ -102,7 +103,7 @@ static grib_accessor_class _grib_accessor_class_data_apply_bitmap = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     &unpack_double_element,      /* unpack only ith value */
-    0,  /* unpack a given set of elements */
+    &unpack_double_element_set,  /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -137,7 +138,6 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -304,6 +304,67 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     grib_context_free(a->context, bvals);
 
     return grib_get_double_element_internal(grib_handle_of_accessor(a), self->coded_values, cidx, val);
+}
+
+static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
+    grib_accessor_data_apply_bitmap* self = (grib_accessor_data_apply_bitmap*)a;
+    int err = 0, all_missing = 1;
+    size_t cidx        = 0; /* index into the coded_values array */
+    size_t* cidx_array = NULL; /* array of indexes into the coded_values */
+    double missing_value = 0;
+    double* bvals        = NULL;
+    size_t n_vals = 0, i = 0, j = 0;
+    long nn = 0;
+
+    err    = grib_value_count(a, &nn);
+    n_vals = nn;
+    if (err) return err;
+
+    if (!grib_find_accessor(grib_handle_of_accessor(a), self->bitmap))
+        return grib_get_double_element_set_internal(grib_handle_of_accessor(a), self->coded_values, index_array, len, val_array);
+
+    if ((err = grib_get_double_internal(grib_handle_of_accessor(a), self->missing_value, &missing_value)) != GRIB_SUCCESS)
+        return err;
+
+    err = grib_get_double_element_set_internal(grib_handle_of_accessor(a), self->bitmap, index_array, len, val_array);
+    if (err) return err;
+    for (i = 0; i < len; i++) {
+        if (val_array[i] == 0) val_array[i] = missing_value;
+        else all_missing = 0;
+    }
+//     for (i = 0; i < len; i++) {
+//         if ((err = grib_get_double_element_internal(grib_handle_of_accessor(a), self->bitmap, index_array[i], val_array + i)) != GRIB_SUCCESS)
+//             return err;
+//         if (val_array[i] == 0) val_array[i] = missing_value;
+//         else all_missing = 0;
+//     }
+
+    if (all_missing) {
+        return GRIB_SUCCESS;
+    }
+
+    bvals = (double*)grib_context_malloc(a->context, n_vals * sizeof(double));
+    if (bvals == NULL) return GRIB_OUT_OF_MEMORY;
+
+    if ((err = grib_get_double_array_internal(grib_handle_of_accessor(a), self->bitmap, bvals, &n_vals)) != GRIB_SUCCESS)
+        return err;
+
+    cidx_array = (size_t*)grib_context_malloc(a->context, len * sizeof(size_t));
+    for (i = 0; i < len; i++) {
+        cidx = 0;
+        for (j = 0; j < index_array[i]; j++) {
+            cidx += bvals[j];
+        }
+        cidx_array[i] = cidx;
+    }
+    err = grib_get_double_element_set_internal(grib_handle_of_accessor(a), self->coded_values, cidx_array, len, val_array);
+    if (err) return err;
+
+    grib_context_free(a->context, bvals);
+    grib_context_free(a->context, cidx_array);
+
+    return GRIB_SUCCESS;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)

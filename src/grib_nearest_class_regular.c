@@ -23,9 +23,9 @@
    MEMBERS    = double* lons
    MEMBERS    = int  lons_count
    MEMBERS    = double* distances
-   MEMBERS    = int* k
-   MEMBERS    = int* i
-   MEMBERS    = int* j
+   MEMBERS    = size_t* k
+   MEMBERS    = size_t* i
+   MEMBERS    = size_t* j
    MEMBERS    = const char* Ni
    MEMBERS    = const char* Nj
    END_CLASS_DEF
@@ -61,9 +61,9 @@ typedef struct grib_nearest_regular{
     double* lons;
     int  lons_count;
     double* distances;
-    int* k;
-    int* i;
-    int* j;
+    size_t* k;
+    size_t* i;
+    size_t* j;
     const char* Ni;
     const char* Nj;
 } grib_nearest_regular;
@@ -97,8 +97,8 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
     grib_nearest_regular* self = (grib_nearest_regular*)nearest;
     self->Ni                   = grib_arguments_get_name(h, args, self->cargs++);
     self->Nj                   = grib_arguments_get_name(h, args, self->cargs++);
-    self->i                    = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
-    self->j                    = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
+    self->i                    = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
+    self->j                    = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     return 0;
 }
 
@@ -401,7 +401,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
         if (!self->distances)
             self->distances = (double*)grib_context_malloc(nearest->context, NUM_NEIGHBOURS * sizeof(double));
         if (!self->k)
-            self->k = (int*)grib_context_malloc(nearest->context, NUM_NEIGHBOURS * sizeof(int));
+            self->k = (size_t*)grib_context_malloc(nearest->context, NUM_NEIGHBOURS * sizeof(size_t));
         kk = 0;
         for (jj = 0; jj < 2; jj++) {
             for (ii = 0; ii < 2; ii++) {
@@ -430,7 +430,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
     if (values) {
         /* See ECC-1403 and ECC-499 */
         /* Performance: Decode the field once and get all 4 values */
-        grib_get_double_elements(h, self->values_key, self->k, NUM_NEIGHBOURS, values);
+        if ((ret = grib_get_double_element_set(h, self->values_key, self->k, NUM_NEIGHBOURS, values)) != GRIB_SUCCESS)
+            return ret;
     }
 
     for (jj = 0; jj < 2; jj++) {

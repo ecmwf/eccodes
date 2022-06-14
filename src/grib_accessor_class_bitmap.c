@@ -17,7 +17,7 @@
    SUPER      = grib_accessor_class_bytes
 
    IMPLEMENTS = next_offset
-   IMPLEMENTS = unpack_double;unpack_double_element
+   IMPLEMENTS = unpack_double;unpack_double_element;unpack_double_element_set
    IMPLEMENTS = unpack_long
    IMPLEMENTS = unpack_string
    IMPLEMENTS = init;dump;update_size
@@ -48,6 +48,7 @@ static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
+static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
 typedef struct grib_accessor_bitmap
 {
@@ -101,7 +102,7 @@ static grib_accessor_class _grib_accessor_class_bitmap = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     &unpack_double_element,      /* unpack only ith value */
-    0,  /* unpack a given set of elements */
+    &unpack_double_element_set,  /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -135,7 +136,6 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -270,6 +270,14 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     pos += idx;
     *val = (double)grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, &pos, 1);
 
+    return GRIB_SUCCESS;
+}
+static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
+    size_t i = 0;
+    for (i=0; i<len; ++i) {
+        unpack_double_element(a, index_array[i], val_array + i);
+    }
     return GRIB_SUCCESS;
 }
 

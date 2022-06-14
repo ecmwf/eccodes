@@ -21,8 +21,8 @@
    MEMBERS    = int  lats_count
    MEMBERS    = double* lons
    MEMBERS    = double* distances
-   MEMBERS    = int* k
-   MEMBERS    = int* j
+   MEMBERS    = size_t* k
+   MEMBERS    = size_t* j
    MEMBERS    = const char* Nj
    MEMBERS    = const char* pl
    MEMBERS    = long global
@@ -61,8 +61,8 @@ typedef struct grib_nearest_reduced{
     int  lats_count;
     double* lons;
     double* distances;
-    int* k;
-    int* j;
+    size_t* k;
+    size_t* j;
     const char* Nj;
     const char* pl;
     long global;
@@ -99,11 +99,11 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
     grib_nearest_reduced* self = (grib_nearest_reduced*)nearest;
     self->Nj                   = grib_arguments_get_name(h, args, self->cargs++);
     self->pl                   = grib_arguments_get_name(h, args, self->cargs++);
-    self->j                    = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
+    self->j                    = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     self->legacy               = -1;
     if (!self->j)
         return GRIB_OUT_OF_MEMORY;
-    self->k = (int*)grib_context_malloc(nearest->context, NUM_NEIGHBOURS * sizeof(int));
+    self->k = (size_t*)grib_context_malloc(nearest->context, NUM_NEIGHBOURS * sizeof(size_t));
     if (!self->k)
         return GRIB_OUT_OF_MEMORY;
     grib_get_long(h, "global", &self->global);
@@ -428,7 +428,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
     if (values) {
         /* See ECC-1403 and ECC-499 */
         /* Performance: Decode the field once and get all 4 values */
-        ret = grib_get_double_elements(h, self->values_key, self->k, NUM_NEIGHBOURS, values);
+        ret = grib_get_double_element_set(h, self->values_key, self->k, NUM_NEIGHBOURS, values);
         if (ret != GRIB_SUCCESS) return ret;
     }
     for (jj = 0; jj < 2; jj++) {

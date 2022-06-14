@@ -128,8 +128,7 @@ int grib_nearest_get_radius(grib_handle* h, double* radiusInKm)
     return GRIB_SUCCESS;
 }
 
-void grib_binary_search(const double xx[], const unsigned long n, double x,
-                        int* ju, int* jl)
+void grib_binary_search(const double xx[], size_t n, double x, size_t* ju, size_t* jl)
 {
     size_t jm     = 0;
     int ascending = 0;
@@ -339,7 +338,7 @@ int grib_nearest_find_generic(
         double min_dist  = 1e10;
         size_t the_index = 0;
         int ilat = 0, ilon = 0;
-        int idx_upper = 0, idx_lower = 0;
+        size_t idx_upper = 0, idx_lower = 0;
         double lat1 = 0, lat2 = 0;     /* inlat will be between these */
         const double LAT_DELTA = 10.0; /* in degrees */
 

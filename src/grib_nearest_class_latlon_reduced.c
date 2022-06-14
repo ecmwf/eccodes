@@ -21,8 +21,8 @@
    MEMBERS    = int  lats_count
    MEMBERS    = double* lons
    MEMBERS    = double* distances
-   MEMBERS    = int* k
-   MEMBERS    = int* j
+   MEMBERS    = size_t* k
+   MEMBERS    = size_t* j
    MEMBERS    = const char* Nj
    MEMBERS    = const char* pl
    MEMBERS    = const char* lonFirst
@@ -59,8 +59,8 @@ typedef struct grib_nearest_latlon_reduced{
     int  lats_count;
     double* lons;
     double* distances;
-    int* k;
-    int* j;
+    size_t* k;
+    size_t* j;
     const char* Nj;
     const char* pl;
     const char* lonFirst;
@@ -95,10 +95,10 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
     self->pl                          = grib_arguments_get_name(h, args, self->cargs++);
     self->lonFirst                    = grib_arguments_get_name(h, args, self->cargs++);
     self->lonLast                     = grib_arguments_get_name(h, args, self->cargs++);
-    self->j                           = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
+    self->j                           = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     if (!self->j)
         return GRIB_OUT_OF_MEMORY;
-    self->k = (int*)grib_context_malloc(nearest->context, 4 * sizeof(int));
+    self->k = (size_t*)grib_context_malloc(nearest->context, 4 * sizeof(size_t));
     if (!self->k)
         return GRIB_OUT_OF_MEMORY;
 

@@ -307,7 +307,13 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
 static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
 {
-    return GRIB_INVALID_ARGUMENT;
+    int err = 0;
+    size_t i = 0;
+    for (i=0; i<len; ++i) {
+        if ((err = unpack_double_element(a, index_array[i], val_array+i)) != GRIB_SUCCESS)
+            return err;
+    }
+    return GRIB_SUCCESS;
 }
 
 static int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned char* buf, long pos, size_t n_vals)

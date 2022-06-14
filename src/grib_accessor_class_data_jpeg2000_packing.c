@@ -19,7 +19,7 @@
    IMPLEMENTS = init
    IMPLEMENTS = unpack_double
    IMPLEMENTS = pack_double
-   IMPLEMENTS = unpack_double_element
+   IMPLEMENTS = unpack_double_element;unpack_double_element_set
    IMPLEMENTS = value_count
    MEMBERS=const char*   type_of_compression_used
    MEMBERS=const char*   target_compression_ratio
@@ -50,6 +50,7 @@ static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
+static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
 typedef struct grib_accessor_data_jpeg2000_packing
 {
@@ -124,7 +125,7 @@ static grib_accessor_class _grib_accessor_class_data_jpeg2000_packing = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     &unpack_double_element,      /* unpack only ith value */
-    0,  /* unpack a given set of elements */
+    &unpack_double_element_set,  /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -161,7 +162,6 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -302,7 +302,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         *len = n_vals;
         return GRIB_SUCCESS;
     }
-
+//printf("dbg.....\tjpeg unpack\n");
     buf = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
     buf += grib_byte_offset(a);
 
@@ -598,6 +598,34 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
         return err;
     }
     *val = values[idx];
+    grib_context_free(a->context, values);
+    return GRIB_SUCCESS;
+}
+
+static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
+    size_t size = 0, i = 0;
+    double* values;
+    int err = 0;
+
+    /* GRIB-564: The index idx relates to codedValues NOT values! */
+    err = grib_get_size(grib_handle_of_accessor(a), "codedValues", &size);
+    if (err)
+        return err;
+
+    for (i = 0; i < len; i++) {
+        if (index_array[i] > size) return GRIB_INVALID_NEAREST;
+    }
+
+    values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
+    err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
+    if (err) {
+        grib_context_free(a->context, values);
+        return err;
+    }
+    for (i = 0; i < len; i++) {
+        val_array[i] = values[index_array[i]];
+    }
     grib_context_free(a->context, values);
     return GRIB_SUCCESS;
 }
