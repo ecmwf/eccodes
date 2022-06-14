@@ -9,9 +9,9 @@
  */
 
 /***************************************************************************
- *   Jean Baptiste Filippi - 01.11.2005                                                           *
- *   Enrico Fucile
- *                                                                         *
+ *   Jean Baptiste Filippi - 01.11.2005                                    *
+ *   Enrico Fucile                                                         *
+ *   Shahram Najm                                                          *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -20,7 +20,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    IMPLEMENTS = unpack_long;pack_long; clear
-   IMPLEMENTS = unpack_double;pack_double;unpack_double_element
+   IMPLEMENTS = unpack_double;pack_double;unpack_double_element;unpack_double_element_set
    IMPLEMENTS = unpack_string;pack_string
    IMPLEMENTS = unpack_string_array;pack_string_array
    IMPLEMENTS = unpack_bytes;pack_bytes
@@ -74,6 +74,7 @@ static size_t preferred_size(grib_accessor*, int);
 static grib_accessor* next(grib_accessor*, int);
 static int compare(grib_accessor*, grib_accessor*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
+static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 static int unpack_double_subarray(grib_accessor*, double* val, size_t start, size_t len);
 static int clear(grib_accessor*);
 static grib_accessor* make_clone(grib_accessor*, grib_section*, int*);
@@ -86,46 +87,47 @@ typedef struct grib_accessor_gen
 
 
 static grib_accessor_class _grib_accessor_class_gen = {
-    0,                         /* super                     */
-    "gen",                     /* name                      */
-    sizeof(grib_accessor_gen), /* size                      */
-    0,                         /* inited */
-    &init_class,               /* init_class */
-    &init,                     /* init                      */
-    0,                         /* post_init                      */
-    &destroy,                  /* free mem                       */
-    &dump,                     /* describes himself         */
-    &next_offset,              /* get length of section     */
-    &string_length,            /* get length of string      */
-    &value_count,              /* get number of values      */
-    &byte_count,               /* get number of bytes      */
-    &byte_offset,              /* get offset to bytes           */
-    &get_native_type,          /* get native type               */
-    &sub_section,              /* get sub_section                */
-    0,                         /* grib_pack procedures long      */
-    &is_missing,               /* grib_pack procedures long      */
-    &pack_long,                /* grib_pack procedures long      */
-    &unpack_long,              /* grib_unpack procedures long    */
-    &pack_double,              /* grib_pack procedures double    */
-    &unpack_double,            /* grib_unpack procedures double  */
-    &pack_string,              /* grib_pack procedures string    */
-    &unpack_string,            /* grib_unpack procedures string  */
-    &pack_string_array,        /* grib_pack array procedures string    */
-    &unpack_string_array,      /* grib_unpack array procedures string  */
-    &pack_bytes,               /* grib_pack procedures bytes     */
-    &unpack_bytes,             /* grib_unpack procedures bytes   */
-    &pack_expression,          /* pack_expression */
-    &notify_change,            /* notify_change   */
-    &update_size,              /* update_size   */
-    &preferred_size,           /* preferred_size   */
-    0,                         /* resize   */
-    0,                         /* nearest_smaller_value */
-    &next,                     /* next accessor    */
-    &compare,                  /* compare vs. another accessor   */
-    &unpack_double_element,    /* unpack only ith value          */
-    &unpack_double_subarray,   /* unpack a subarray         */
-    &clear,                    /* clear          */
-    &make_clone,               /* clone accessor          */
+    0,                      /* super */
+    "gen",                      /* name */
+    sizeof(grib_accessor_gen),  /* size */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    &init,                       /* init */
+    0,                  /* post_init */
+    &destroy,                    /* free mem */
+    &dump,                       /* describes himself */
+    &next_offset,                /* get length of section */
+    &string_length,              /* get length of string */
+    &value_count,                /* get number of values */
+    &byte_count,                 /* get number of bytes */
+    &byte_offset,                /* get offset to bytes */
+    &get_native_type,            /* get native type */
+    &sub_section,                /* get sub_section */
+    0,               /* grib_pack procedures long */
+    &is_missing,                 /* grib_pack procedures long */
+    &pack_long,                  /* grib_pack procedures long */
+    &unpack_long,                /* grib_unpack procedures long */
+    &pack_double,                /* grib_pack procedures double */
+    &unpack_double,              /* grib_unpack procedures double */
+    &pack_string,                /* grib_pack procedures string */
+    &unpack_string,              /* grib_unpack procedures string */
+    &pack_string_array,          /* grib_pack array procedures string */
+    &unpack_string_array,        /* grib_unpack array procedures string */
+    &pack_bytes,                 /* grib_pack procedures bytes */
+    &unpack_bytes,               /* grib_unpack procedures bytes */
+    &pack_expression,            /* pack_expression */
+    &notify_change,              /* notify_change */
+    &update_size,                /* update_size */
+    &preferred_size,             /* preferred_size */
+    0,                     /* resize */
+    0,      /* nearest_smaller_value */
+    &next,                       /* next accessor */
+    &compare,                    /* compare vs. another accessor */
+    &unpack_double_element,      /* unpack only ith value */
+    &unpack_double_element_set,  /* unpack a given set of elements */
+    &unpack_double_subarray,     /* unpack a subarray */
+    &clear,                      /* clear */
+    &make_clone,                 /* clone accessor */
 };
 
 
@@ -633,6 +635,11 @@ static int is_missing(grib_accessor* a)
 }
 
 static int unpack_double_element(grib_accessor* a, size_t i, double* val)
+{
+    return GRIB_NOT_IMPLEMENTED;
+}
+
+static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

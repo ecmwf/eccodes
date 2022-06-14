@@ -37,22 +37,21 @@ or edit "iterator.class" and rerun ./make_class.pl
 */
 
 
-static void init_class(grib_iterator_class*);
+static void init_class              (grib_iterator_class*);
 
-static int init(grib_iterator* i, grib_handle*, grib_arguments*);
+static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
 
 
-typedef struct grib_iterator_gaussian
-{
-    grib_iterator it;
+typedef struct grib_iterator_gaussian{
+  grib_iterator it;
     /* Members defined in gen */
     long carg;
     const char* missingValue;
     /* Members defined in regular */
-    double* las;
-    double* los;
-    long Ni;
-    long Nj;
+    double   *las;
+    double   *los;
+    long      Ni;
+    long      Nj;
     long iScansNegatively;
     long isRotated;
     double angleOfRotation;
@@ -66,17 +65,17 @@ typedef struct grib_iterator_gaussian
 extern grib_iterator_class* grib_iterator_class_regular;
 
 static grib_iterator_class _grib_iterator_class_gaussian = {
-    &grib_iterator_class_regular,   /* super                     */
-    "gaussian",                     /* name                      */
-    sizeof(grib_iterator_gaussian), /* size of instance          */
-    0,                              /* inited */
-    &init_class,                    /* init_class */
-    &init,                          /* constructor               */
-    0,                              /* destructor                */
-    0,                              /* Next Value                */
-    0,                              /*  Previous Value           */
-    0,                              /* Reset the counter         */
-    0,                              /* has next values           */
+    &grib_iterator_class_regular,                    /* super                     */
+    "gaussian",                    /* name                      */
+    sizeof(grib_iterator_gaussian),/* size of instance          */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    &init,                     /* constructor               */
+    0,                  /* destructor                */
+    0,                     /* Next Value                */
+    0,                 /*  Previous Value           */
+    0,                    /* Reset the counter         */
+    0,                 /* has next values           */
 };
 
 grib_iterator_class* grib_iterator_class_gaussian = &_grib_iterator_class_gaussian;
@@ -84,10 +83,10 @@ grib_iterator_class* grib_iterator_class_gaussian = &_grib_iterator_class_gaussi
 
 static void init_class(grib_iterator_class* c)
 {
-    c->next     = (*(c->super))->next;
-    c->previous = (*(c->super))->previous;
-    c->reset    = (*(c->super))->reset;
-    c->has_next = (*(c->super))->has_next;
+    c->next    =    (*(c->super))->next;
+    c->previous    =    (*(c->super))->previous;
+    c->reset    =    (*(c->super))->reset;
+    c->has_next    =    (*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
 

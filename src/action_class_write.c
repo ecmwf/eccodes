@@ -36,39 +36,38 @@ or edit "action.class" and rerun ./make_class.pl
 
 */
 
-static void init_class(grib_action_class*);
-static void dump(grib_action* d, FILE*, int);
-static void destroy(grib_context*, grib_action*);
-static int execute(grib_action* a, grib_handle* h);
+static void init_class      (grib_action_class*);
+static void dump            (grib_action* d, FILE*,int);
+static void destroy         (grib_context*,grib_action*);
+static int execute(grib_action* a,grib_handle* h);
 
 
-typedef struct grib_action_write
-{
-    grib_action act;
+typedef struct grib_action_write {
+    grib_action          act;  
     /* Members defined in write */
-    char* name;
+    char *name;
     int append;
     int padtomultiple;
 } grib_action_write;
 
 
 static grib_action_class _grib_action_class_write = {
-    0,                         /* super                     */
-    "action_class_write",      /* name                      */
-    sizeof(grib_action_write), /* size                      */
-    0,                         /* inited */
-    &init_class,               /* init_class */
-    0,                         /* init                      */
-    &destroy,                  /* destroy */
+    0,                              /* super                     */
+    "action_class_write",                              /* name                      */
+    sizeof(grib_action_write),            /* size                      */
+    0,                                   /* inited */
+    &init_class,                         /* init_class */
+    0,                               /* init                      */
+    &destroy,                            /* destroy */
 
-    &dump, /* dump                      */
-    0,     /* xref                      */
+    &dump,                               /* dump                      */
+    0,                               /* xref                      */
 
-    0, /* create_accessor*/
+    0,             /* create_accessor*/
 
-    0,        /* notify_change */
-    0,        /* reparse */
-    &execute, /* execute */
+    0,                            /* notify_change */
+    0,                            /* reparse */
+    &execute,                            /* execute */
 };
 
 grib_action_class* grib_action_class_write = &_grib_action_class_write;

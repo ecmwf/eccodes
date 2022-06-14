@@ -44,22 +44,21 @@ or edit "nearest.class" and rerun ./make_class.pl
 */
 
 
-static void init_class(grib_nearest_class*);
+static void init_class              (grib_nearest_class*);
 
-static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args);
-static int find(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
-static int destroy(grib_nearest* nearest);
+static int init               (grib_nearest* nearest,grib_handle* h,grib_arguments* args);
+static int find(grib_nearest* nearest, grib_handle* h,double inlat, double inlon, unsigned long flags, double* outlats,double* outlons, double *values,double *distances, int *indexes,size_t *len);
+static int destroy            (grib_nearest* nearest);
 
-typedef struct grib_nearest_reduced
-{
-    grib_nearest nearest;
+typedef struct grib_nearest_reduced{
+  grib_nearest nearest;
     /* Members defined in gen */
     const char* values_key;
     const char* radius;
     int cargs;
     /* Members defined in reduced */
     double* lats;
-    int lats_count;
+    int  lats_count;
     double* lons;
     double* distances;
     int* k;
@@ -69,20 +68,20 @@ typedef struct grib_nearest_reduced
     long global;
     double lon_first;
     double lon_last;
-    int legacy; /* -1, 0 or 1 */
+    int legacy;
 } grib_nearest_reduced;
 
 extern grib_nearest_class* grib_nearest_class_gen;
 
 static grib_nearest_class _grib_nearest_class_reduced = {
-    &grib_nearest_class_gen,      /* super                     */
-    "reduced",                    /* name                      */
-    sizeof(grib_nearest_reduced), /* size of instance          */
-    0,                            /* inited */
-    &init_class,                  /* init_class */
-    &init,                        /* constructor               */
-    &destroy,                     /* destructor                */
-    &find,                        /* find nearest              */
+    &grib_nearest_class_gen,                         /* super */
+    "reduced",                         /* name */
+    sizeof(grib_nearest_reduced),      /* size of instance */
+    0,                              /* inited */
+    &init_class,                    /* init_class */
+    &init,                          /* constructor */
+    &destroy,                       /* destructor */
+    &find,                          /* find nearest */
 };
 
 grib_nearest_class* grib_nearest_class_reduced = &_grib_nearest_class_reduced;
@@ -429,7 +428,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
     if (values) {
         /* See ECC-1403 and ECC-499 */
         /* Performance: Decode the field once and get all 4 values */
-        grib_get_double_elements(h, self->values_key, self->k, NUM_NEIGHBOURS, values);
+        ret = grib_get_double_elements(h, self->values_key, self->k, NUM_NEIGHBOURS, values);
+        if (ret != GRIB_SUCCESS) return ret;
     }
     for (jj = 0; jj < 2; jj++) {
         for (ii = 0; ii < 2; ii++) {

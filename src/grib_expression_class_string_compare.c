@@ -39,44 +39,43 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 
-static void init_class(grib_expression_class*);
+static void init_class              (grib_expression_class*);
 
-static void destroy(grib_context*, grib_expression* e);
+static void        destroy(grib_context*,grib_expression* e);
 
-static void print(grib_context*, grib_expression*, grib_handle*);
-static void add_dependency(grib_expression* e, grib_accessor* observer);
+static void        print(grib_context*,grib_expression*,grib_handle*);
+static void        add_dependency(grib_expression* e, grib_accessor* observer);
 
-static int native_type(grib_expression*, grib_handle*);
+static int        native_type(grib_expression*,grib_handle*);
 
-static int evaluate_long(grib_expression*, grib_handle*, long*);
-static int evaluate_double(grib_expression*, grib_handle*, double*);
+static int        evaluate_long(grib_expression*,grib_handle*,long*);
+static int      evaluate_double(grib_expression*,grib_handle*,double*);
 
-typedef struct grib_expression_string_compare
-{
-    grib_expression base;
+typedef struct grib_expression_string_compare{
+  grib_expression base;
     /* Members defined in string_compare */
-    grib_expression* left;
-    grib_expression* right;
+    grib_expression *left;
+    grib_expression *right;
 } grib_expression_string_compare;
 
 
 static grib_expression_class _grib_expression_class_string_compare = {
-    0,                                      /* super                     */
-    "string_compare",                       /* name                      */
-    sizeof(grib_expression_string_compare), /* size of instance          */
-    0,                                      /* inited */
-    &init_class,                            /* init_class */
-    0,                                      /* constructor               */
-    &destroy,                               /* destructor                */
-    &print,
-    &add_dependency,
+    0,                    /* super                     */
+    "string_compare",                    /* name                      */
+    sizeof(grib_expression_string_compare),/* size of instance          */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    0,                     /* constructor               */
+    &destroy,                  /* destructor                */
+    &print,                 
+    &add_dependency,       
 
-    &native_type,
-    0,
+	&native_type,
+	0,
 
-    &evaluate_long,
-    &evaluate_double,
-    0,
+	&evaluate_long,
+	&evaluate_double,
+	0,
 };
 
 grib_expression_class* grib_expression_class_string_compare = &_grib_expression_class_string_compare;

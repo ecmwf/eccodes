@@ -35,28 +35,27 @@ or edit "box.class" and rerun ./make_class.pl
 */
 
 
-static void init_class(grib_box_class*);
+static void init_class              (grib_box_class*);
 
-static int init(grib_box* box, grib_handle* h, grib_arguments* args);
-static grib_points* get_points(grib_box* box, double north, double west, double south, double east, int* err);
-static int destroy(grib_box* box);
+static int init               (grib_box* box,grib_handle* h,grib_arguments* args);
+static grib_points* get_points(grib_box* box, double north, double west, double south,double east,int *err);
+static int destroy            (grib_box* box);
 
-typedef struct grib_box_gen
-{
-    grib_box box;
+typedef struct grib_box_gen{
+  grib_box box;
     /* Members defined in gen */
 } grib_box_gen;
 
 
 static grib_box_class _grib_box_class_gen = {
-    0,                    /* super                     */
-    "gen",                /* name                      */
-    sizeof(grib_box_gen), /* size of instance          */
-    0,                    /* inited */
-    &init_class,          /* init_class */
-    &init,                /* constructor               */
-    &destroy,             /* destructor                */
-    &get_points,          /* get points           */
+    0,                         /* super                     */
+    "gen",                         /* name                      */
+    sizeof(grib_box_gen),      /* size of instance          */
+    0,                              /* inited */
+    &init_class,                    /* init_class */
+    &init,                          /* constructor               */
+    &destroy,                       /* destructor                */
+    &get_points,                    /* get points           */
 };
 
 grib_box_class* grib_box_class_gen = &_grib_box_class_gen;

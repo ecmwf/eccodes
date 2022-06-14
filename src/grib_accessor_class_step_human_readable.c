@@ -50,46 +50,47 @@ typedef struct grib_accessor_step_human_readable
 extern grib_accessor_class* grib_accessor_class_gen;
 
 static grib_accessor_class _grib_accessor_class_step_human_readable = {
-    &grib_accessor_class_gen,                      /* super                     */
-    "step_human_readable",                      /* name                      */
-    sizeof(grib_accessor_step_human_readable),  /* size                      */
+    &grib_accessor_class_gen,                      /* super */
+    "step_human_readable",                      /* name */
+    sizeof(grib_accessor_step_human_readable),  /* size */
     0,                           /* inited */
     &init_class,                 /* init_class */
-    &init,                       /* init                      */
-    0,                  /* post_init                      */
-    0,                    /* free mem                       */
-    0,                       /* describes himself         */
-    0,                /* get length of section     */
-    0,              /* get length of string      */
-    0,                /* get number of values      */
-    0,                 /* get number of bytes      */
-    0,                /* get offset to bytes           */
-    &get_native_type,            /* get native type               */
-    0,                /* get sub_section                */
-    0,               /* grib_pack procedures long      */
-    0,                 /* grib_pack procedures long      */
-    0,                  /* grib_pack procedures long      */
-    0,                /* grib_unpack procedures long    */
-    0,                /* grib_pack procedures double    */
-    0,              /* grib_unpack procedures double  */
-    0,                /* grib_pack procedures string    */
-    &unpack_string,              /* grib_unpack procedures string  */
-    0,          /* grib_pack array procedures string    */
-    0,        /* grib_unpack array procedures string  */
-    0,                 /* grib_pack procedures bytes     */
-    0,               /* grib_unpack procedures bytes   */
+    &init,                       /* init */
+    0,                  /* post_init */
+    0,                    /* free mem */
+    0,                       /* describes himself */
+    0,                /* get length of section */
+    0,              /* get length of string */
+    0,                /* get number of values */
+    0,                 /* get number of bytes */
+    0,                /* get offset to bytes */
+    &get_native_type,            /* get native type */
+    0,                /* get sub_section */
+    0,               /* grib_pack procedures long */
+    0,                 /* grib_pack procedures long */
+    0,                  /* grib_pack procedures long */
+    0,                /* grib_unpack procedures long */
+    0,                /* grib_pack procedures double */
+    0,              /* grib_unpack procedures double */
+    0,                /* grib_pack procedures string */
+    &unpack_string,              /* grib_unpack procedures string */
+    0,          /* grib_pack array procedures string */
+    0,        /* grib_unpack array procedures string */
+    0,                 /* grib_pack procedures bytes */
+    0,               /* grib_unpack procedures bytes */
     0,            /* pack_expression */
-    0,              /* notify_change   */
-    0,                /* update_size   */
-    0,             /* preferred_size   */
-    0,                     /* resize   */
+    0,              /* notify_change */
+    0,                /* update_size */
+    0,             /* preferred_size */
+    0,                     /* resize */
     0,      /* nearest_smaller_value */
-    0,                       /* next accessor    */
-    0,                    /* compare vs. another accessor   */
-    0,      /* unpack only ith value          */
-    0,     /* unpack a subarray         */
-    0,                      /* clear          */
-    0,                 /* clone accessor          */
+    0,                       /* next accessor */
+    0,                    /* compare vs. another accessor */
+    0,      /* unpack only ith value */
+    0,  /* unpack a given set of elements */
+    0,     /* unpack a subarray */
+    0,                      /* clear */
+    0,                 /* clone accessor */
 };
 
 
@@ -125,6 +126,7 @@ static void init_class(grib_accessor_class* c)
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
     c->unpack_double_element    =    (*(c->super))->unpack_double_element;
+    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;

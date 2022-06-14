@@ -32,23 +32,22 @@ or edit "iterator.class" and rerun ./make_class.pl
 */
 
 
-static void init_class(grib_iterator_class*);
+static void init_class              (grib_iterator_class*);
 
-static int init(grib_iterator* i, grib_handle*, grib_arguments*);
-static int next(grib_iterator* i, double* lat, double* lon, double* val);
+static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
+static int next               (grib_iterator* i, double *lat, double *lon, double *val);
 
 
-typedef struct grib_iterator_latlon
-{
-    grib_iterator it;
+typedef struct grib_iterator_latlon{
+  grib_iterator it;
     /* Members defined in gen */
     long carg;
     const char* missingValue;
     /* Members defined in regular */
-    double* las;
-    double* los;
-    long Ni;
-    long Nj;
+    double   *las;
+    double   *los;
+    long      Ni;
+    long      Nj;
     long iScansNegatively;
     long isRotated;
     double angleOfRotation;
@@ -62,17 +61,17 @@ typedef struct grib_iterator_latlon
 extern grib_iterator_class* grib_iterator_class_regular;
 
 static grib_iterator_class _grib_iterator_class_latlon = {
-    &grib_iterator_class_regular, /* super                     */
-    "latlon",                     /* name                      */
-    sizeof(grib_iterator_latlon), /* size of instance          */
-    0,                            /* inited */
-    &init_class,                  /* init_class */
-    &init,                        /* constructor               */
-    0,                            /* destructor                */
-    &next,                        /* Next Value                */
-    0,                            /*  Previous Value           */
-    0,                            /* Reset the counter         */
-    0,                            /* has next values           */
+    &grib_iterator_class_regular,                    /* super                     */
+    "latlon",                    /* name                      */
+    sizeof(grib_iterator_latlon),/* size of instance          */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    &init,                     /* constructor               */
+    0,                  /* destructor                */
+    &next,                     /* Next Value                */
+    0,                 /*  Previous Value           */
+    0,                    /* Reset the counter         */
+    0,                 /* has next values           */
 };
 
 grib_iterator_class* grib_iterator_class_latlon = &_grib_iterator_class_latlon;
@@ -80,9 +79,9 @@ grib_iterator_class* grib_iterator_class_latlon = &_grib_iterator_class_latlon;
 
 static void init_class(grib_iterator_class* c)
 {
-    c->previous = (*(c->super))->previous;
-    c->reset    = (*(c->super))->reset;
-    c->has_next = (*(c->super))->has_next;
+    c->previous    =    (*(c->super))->previous;
+    c->reset    =    (*(c->super))->reset;
+    c->has_next    =    (*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
 

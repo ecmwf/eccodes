@@ -37,36 +37,35 @@ or edit "action.class" and rerun ./make_class.pl
 
 */
 
-static void init_class(grib_action_class*);
-static void xref(grib_action* d, FILE* f, const char* path);
-static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor* observed);
-static grib_action* reparse(grib_action* a, grib_accessor* acc, int* doit);
+static void init_class      (grib_action_class*);
+static void xref            (grib_action* d, FILE* f,const char* path);
+static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed);
+static grib_action* reparse(grib_action* a,grib_accessor* acc,int *doit);
 
 
-typedef struct grib_action_section
-{
-    grib_action act;
+typedef struct grib_action_section {
+    grib_action          act;  
     /* Members defined in section */
 } grib_action_section;
 
 
 static grib_action_class _grib_action_class_section = {
-    0,                           /* super                     */
-    "action_class_section",      /* name                      */
-    sizeof(grib_action_section), /* size                      */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    0,                           /* init                      */
-    0,                           /* destroy */
+    0,                              /* super                     */
+    "action_class_section",                              /* name                      */
+    sizeof(grib_action_section),            /* size                      */
+    0,                                   /* inited */
+    &init_class,                         /* init_class */
+    0,                               /* init                      */
+    0,                            /* destroy */
 
-    0,     /* dump                      */
-    &xref, /* xref                      */
+    0,                               /* dump                      */
+    &xref,                               /* xref                      */
 
-    0, /* create_accessor*/
+    0,             /* create_accessor*/
 
-    &notify_change, /* notify_change */
-    &reparse,       /* reparse */
-    0,              /* execute */
+    &notify_change,                            /* notify_change */
+    &reparse,                            /* reparse */
+    0,                            /* execute */
 };
 
 grib_action_class* grib_action_class_section = &_grib_action_class_section;
