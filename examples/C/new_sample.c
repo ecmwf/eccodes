@@ -25,7 +25,8 @@ int main(int argc, char** argv)
         exit(1);
     }
 
-    h = codes_grib_handle_new_from_samples(NULL, "GRIB2");
+    /* h = codes_grib_handle_new_from_samples(NULL, "GRIB2"); */
+    h = codes_handle_new_from_samples(NULL, "GRIB2");
     if (!h) {
         fprintf(stderr, "Cannot create grib handle\n");
         return 1;
@@ -363,10 +364,7 @@ int main(int argc, char** argv)
 
     CODES_CHECK(codes_set_double_array(h, "values", vdouble, size), 0);
     free(vdouble);
-    CODES_CHECK(codes_set_long(h, "dirty_statistics", 1), 0);
-    CODES_CHECK(codes_set_long(h, "changeDecimalPrecision", 0), 0);
-    CODES_CHECK(codes_set_long(h, "decimalPrecision", 0), 0);
-    CODES_CHECK(codes_set_long(h, "setBitsPerValue", 0), 0);
+
     /* Save the message */
 
     f = fopen(argv[1], "wb");
