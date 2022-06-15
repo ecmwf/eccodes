@@ -1187,10 +1187,7 @@ long grib_get_bits_per_value(double max, double min, long binary_scale_factor);
 long grib_get_decimal_scale_fact(double max, double min, long bpval, long binary_scale);
 
 /* grib_templates.c */
-/*grib_handle *grib_internal_sample(grib_context *c, const char *name);*/
-grib_handle* codes_external_template(grib_context* c, const char* name);
-grib_handle* grib_external_template(grib_context* c, const char* name);
-grib_handle* bufr_external_template(grib_context* c, const char* name);
+grib_handle* codes_external_template(grib_context* c, ProductKind product_kind, const char* name);
 char* get_external_template_path(grib_context* c, const char* name);
 
 /* grib_dependency.c */
