@@ -136,7 +136,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         /* Do a very basic sanity check */
         const char* str = grib_options_get_option("L:");
         if (string_count_char(str, '%') != 2) {
-            fprintf(stderr, "ERROR: Invalid lats/lons format option \"%s\".\nThe default is: \"%s\"\n",
+            fprintf(stderr, "ERROR: Invalid lats/lons format option \"%s\".\n"
+                    "       The default is: \"%s\"."
+                    " For higher precision, try: \"%%12.6f%%12.6f\"\n",
                     str, default_format_latlons);
             exit(1);
         }
