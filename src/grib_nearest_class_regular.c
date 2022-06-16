@@ -323,8 +323,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
             return ret;
         }
         while (grib_iterator_next(iter, &lat, &lon, &dummy)) {
-            if (olat != lat) {
-                Assert(ilat < self->lats_count);
+            if (ilat < self->lats_count && olat != lat) {
+                /* Assert(ilat < self->lats_count); */
                 self->lats[ilat++] = lat;
                 olat               = lat;
             }
