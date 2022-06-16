@@ -220,6 +220,10 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
         self->los[loi] = lon1;
         lon1 += idir;
     }
+    /* ECC-1406: Due to rounding, errors can accumulate.
+     * So we ensure the last longitude is longitudeOfLastGridPointInDegrees
+    */
+    self->los[Ni-1] = lon2;
 
     return ret;
 }
