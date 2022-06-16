@@ -9,56 +9,51 @@
  */
 
 #include <assert.h>
-#include "eccodes.h"
+#include "grib_api_internal.h"
 
 typedef struct sample_t {
     const char*  sample_name;
+    const char*  expected_ID;
     ProductKind  expected_kind;
 } sample_t;
 
 static sample_t samples[] = {
-    {"GRIB1", PRODUCT_GRIB},
-    {"GRIB2", PRODUCT_GRIB},
-    {"reduced_gg_pl_256_grib1", PRODUCT_GRIB},
-    {"reduced_gg_pl_256_grib2", PRODUCT_GRIB},
-    {"sh_ml_grib1.tmpl", PRODUCT_GRIB},
-    {"sh_ml_grib2.tmpl", PRODUCT_GRIB},
+    {"GRIB1",                   "GRIB", PRODUCT_GRIB},
+    {"GRIB2",                   "GRIB", PRODUCT_GRIB},
+    {"reduced_gg_pl_256_grib1", "GRIB", PRODUCT_GRIB},
+    {"reduced_gg_pl_256_grib2", "GRIB", PRODUCT_GRIB},
+    {"sh_ml_grib1.tmpl",        "GRIB", PRODUCT_GRIB},
+    {"sh_ml_grib2.tmpl",        "GRIB", PRODUCT_GRIB},
 
-    {"diag", PRODUCT_GRIB}, /* pseudo GRIBs */
-    {"budg", PRODUCT_GRIB},
+    {"diag", "DIAG", PRODUCT_GRIB}, /* pseudo GRIBs */
+    {"budg", "BUDG", PRODUCT_GRIB},
 
-    {"BUFR4_local_satellite", PRODUCT_BUFR},
-    {"BUFR4_local", PRODUCT_BUFR},
-    {"BUFR4", PRODUCT_BUFR},
-    {"BUFR3", PRODUCT_BUFR}
+    {"BUFR4_local_satellite", "BUFR", PRODUCT_BUFR},
+    {"BUFR4_local",           "BUFR", PRODUCT_BUFR},
+    {"BUFR4",                 "BUFR", PRODUCT_BUFR},
+    {"BUFR3",                 "BUFR", PRODUCT_BUFR}
 };
 
 #define NUMBER(a) sizeof(a)/sizeof(a[0])
 
 int main(int argc, char** argv)
 {
-    codes_handle* h = NULL;
+    grib_handle* h = NULL;
     size_t i = 0;
 
     for (i=0; i<NUMBER(samples); ++i) {
         const char* name = samples[i].sample_name;
-        char kindstr[254] = {0,};
+        char identifier[254] = {0,};
         size_t len = 254;
 
         printf("Testing codes_handle_new_from_samples on %s\n", name);
         h = codes_handle_new_from_samples(0, name);
         assert(h);
+        assert(samples[i].expected_kind == h->product_kind);
 
-        CODES_CHECK(codes_get_string(h, "kindOfProduct", kindstr, &len), 0);
-        if (samples[i].expected_kind == PRODUCT_GRIB) {
-            assert( strcmp(kindstr, "GRIB")==0 ||
-                    strcmp(kindstr, "DIAG")==0 ||
-                    strcmp(kindstr, "BUDG")==0 );
-        }
-        if (samples[i].expected_kind == PRODUCT_BUFR) {
-            assert( strcmp(kindstr, "BUFR")==0 );
-        }
-        codes_handle_delete(h);
+        GRIB_CHECK(grib_get_string(h, "identifier", identifier, &len), 0);
+        assert( strcmp(samples[i].expected_ID, identifier) == 0 );
+        grib_handle_delete(h);
     }
 
     fprintf(stderr,"All done\n");
