@@ -77,7 +77,7 @@ static grib_handle* try_product_template(grib_context* c, ProductKind product_ki
             char* mesg   = NULL;
             size_t size  = 0;
             off_t offset = 0;
-            mesg = wmo_read_any_from_file_malloc(f, 0, &size, &offset, &err);
+            mesg = (char*)wmo_read_any_from_file_malloc(f, 0, &size, &offset, &err);
             if (mesg && !err) {
                 Assert(size > 4);
                 if (strncmp(mesg, "GRIB", 4) == 0 || strncmp(mesg, "DIAG", 4) == 0 || strncmp(mesg, "BUDG", 4) == 0) {
