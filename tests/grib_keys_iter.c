@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include <unistd.h>
 
 #include "eccodes.h"
 
@@ -20,7 +19,8 @@ int main(int argc, char* argv[])
         codes_keys_iterator* kiter = NULL;
 
         /* Use namespace of NULL to get ALL keys */
-        kiter = codes_keys_iterator_new(h, 0, /*namespace=*/NULL);
+        /* Set flags to 0 to not filter any keys */
+        kiter = codes_keys_iterator_new(h, /*flags=*/0, /*namespace=*/NULL);
         assert(kiter);
 
         while (codes_keys_iterator_next(kiter)) {
