@@ -1026,6 +1026,7 @@ void grib_empty_section(grib_context* c, grib_section* b);
 void grib_section_delete(grib_context* c, grib_section* b);
 int grib_handle_delete(grib_handle* h);
 grib_handle* grib_new_handle(grib_context* c);
+grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name);
 grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name);
 grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* name);
 int grib_write_message(const grib_handle* h, const char* file, const char* mode);
@@ -1187,9 +1188,7 @@ long grib_get_bits_per_value(double max, double min, long binary_scale_factor);
 long grib_get_decimal_scale_fact(double max, double min, long bpval, long binary_scale);
 
 /* grib_templates.c */
-/*grib_handle *grib_internal_sample(grib_context *c, const char *name);*/
-grib_handle* grib_external_template(grib_context* c, const char* name);
-grib_handle* bufr_external_template(grib_context* c, const char* name);
+grib_handle* codes_external_template(grib_context* c, ProductKind product_kind, const char* name);
 char* get_external_template_path(grib_context* c, const char* name);
 
 /* grib_dependency.c */

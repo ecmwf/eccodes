@@ -36,6 +36,7 @@ list(APPEND test_bins
     bufr_extract_headers
     extract_offsets
     bufr_check_descriptors
+    codes_new_from_samples
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes
@@ -95,6 +96,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1315
         grib_ecc-1322
         grib_ecc-1319
+        grib_ecc-1406
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
@@ -245,6 +247,7 @@ if( HAVE_BUILD_TOOLS )
         grib_statistics
         grib_tigge_check
         read_any
+        codes_new_from_samples
         grib_dump
         grib_dump_debug
         grib_dump_json
