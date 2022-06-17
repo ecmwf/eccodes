@@ -20,6 +20,7 @@ list(APPEND test_bins
     grib_read_index
     unit_tests
     bufr_keys_iter
+    grib_keys_iter
     gauss_sub
     grib_nearest_test
     grib_util_set_spec
@@ -154,6 +155,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ls_json
         bufr_change_edition
         bufr_keys_iter
+        grib_keys_iter
         bufr_get_element
         bufr_wmo_tables
         bufr_extract_headers
