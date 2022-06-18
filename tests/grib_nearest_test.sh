@@ -82,5 +82,24 @@ grib_check_key_equals $temp    earthIsOblate 1
 ${tools_dir}/grib_ls -l 0,0 $temp
 
 
+# IEEE regular lat/lon
+# ----------------------------------------
+input_grb=${data_dir}/grid_ieee.grib
+${tools_dir}/grib_get -F%.3g -l 70,345.2,1 $input_grb > $temp
+grep -q "3.24e-08" $temp
+${tools_dir}/grib_get -l 70,345.2,1 $input_grb > $temp
+grep -q "Grid Point chosen #4 index=0 " $temp
+
+# CCDSDS regular lat/lon
+# ----------------------------------------
+if [ $HAVE_AEC -eq 1 ]; then
+    input_grb=${data_dir}/ccsds.grib2
+    ${tools_dir}/grib_get -l 79.0,203.0,1 $input_grb > $temp
+    grep -q "103484" $temp
+    ${tools_dir}/grib_ls -l 79.0,203.0,1 $input_grb > $temp
+    grep -q "Grid Point chosen #2 index=4163 " $temp
+fi
+
+
 # Clean up
 rm -f $temp $tempRef
