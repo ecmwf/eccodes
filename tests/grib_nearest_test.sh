@@ -83,15 +83,6 @@ grib_check_key_equals $tempGrib earthIsOblate 1
 ${tools_dir}/grib_ls -l 0,0 $tempGrib
 
 
-# GRIB2 Complex packing regular lat/lon
-# ----------------------------------------
-input_grb=${data_dir}/sample.grib2
-${tools_dir}/grib_set -r -s packingType=grid_complex $input_grb $tempGrib
-${tools_dir}/grib_get -F%3.6g -l 0,0,1 $tempGrib > $temp
-grep -q "300.119" $temp
-${tools_dir}/grib_ls -l 0,0,1 $tempGrib > $temp
-grep -q "Grid Point chosen #2 index=480 " $temp
-
 
 # IEEE regular lat/lon
 # ----------------------------------------
@@ -100,6 +91,7 @@ ${tools_dir}/grib_get -F%.3g -l 70,345.2,1 $input_grb > $temp
 grep -q "3.24e-08" $temp
 ${tools_dir}/grib_ls -l 70,345.2,1 $input_grb > $temp
 grep -q "Grid Point chosen #4 index=0 " $temp
+
 
 # CCDSDS regular lat/lon
 # ----------------------------------------
@@ -110,6 +102,17 @@ if [ $HAVE_AEC -eq 1 ]; then
     ${tools_dir}/grib_ls -l 79.0,203.0,1 $input_grb > $temp
     grep -q "Grid Point chosen #2 index=4163 " $temp
 fi
+
+
+# GRIB2 Complex packing regular lat/lon
+# ----------------------------------------
+input_grb=${data_dir}/sample.grib2
+${tools_dir}/grib_set -r -s packingType=grid_complex $input_grb $tempGrib
+${tools_dir}/grib_get -F%3.6g -l 0,0,1 $tempGrib > $temp
+grep -q "300.119" $temp
+${tools_dir}/grib_ls -l 0,0,1 $tempGrib > $temp
+grep -q "Grid Point chosen #2 index=480 " $temp
+
 
 
 # Clean up

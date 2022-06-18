@@ -290,9 +290,8 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     int bytes                            = 0;
     size_t nvals                         = 0;
     long inlen                           = grib_byte_count(a);
-    long pos;
-
-    long precision = 0;
+    long pos                             = 0;
+    long precision                       = 0;
 
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->precision, &precision)) != GRIB_SUCCESS)
         return ret;
@@ -330,6 +329,11 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
 static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
 {
-    Assert(!"unpack_double_element_set: raw packing ");
-    return GRIB_DECODING_ERROR;
+    int err = 0;
+    size_t i = 0;
+    for (i=0; i<len; ++i) {
+        if ((err = unpack_double_element(a, index_array[i], val_array+i)) != GRIB_SUCCESS)
+            return err;
+    }
+    return GRIB_SUCCESS;
 }
