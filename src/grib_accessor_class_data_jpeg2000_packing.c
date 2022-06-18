@@ -589,7 +589,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     if (err)
         return err;
     if (idx > size)
-        return GRIB_INVALID_NEAREST;
+        return GRIB_INVALID_ARGUMENT;
 
     values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
     err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
@@ -608,13 +608,13 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
     double* values;
     int err = 0;
 
-    /* GRIB-564: The index idx relates to codedValues NOT values! */
+    /* GRIB-564: The indexes in index_array relate to codedValues NOT values! */
     err = grib_get_size(grib_handle_of_accessor(a), "codedValues", &size);
     if (err)
         return err;
 
     for (i = 0; i < len; i++) {
-        if (index_array[i] > size) return GRIB_INVALID_NEAREST;
+        if (index_array[i] > size) return GRIB_INVALID_ARGUMENT;
     }
 
     values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));

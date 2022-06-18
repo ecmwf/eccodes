@@ -19,7 +19,7 @@
    IMPLEMENTS = init
    IMPLEMENTS = unpack_double
    IMPLEMENTS = pack_double
-   IMPLEMENTS = unpack_double_element
+   IMPLEMENTS = unpack_double_element;unpack_double_element_set
    IMPLEMENTS = value_count
    MEMBERS=const char*   number_of_values
    MEMBERS=const char*   reference_value
@@ -53,6 +53,7 @@ static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
+static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
 typedef struct grib_accessor_data_ccsds_packing
 {
@@ -116,7 +117,7 @@ static grib_accessor_class _grib_accessor_class_data_ccsds_packing = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     &unpack_double_element,      /* unpack only ith value */
-    0,  /* unpack a given set of elements */
+    &unpack_double_element_set,  /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -153,7 +154,6 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -582,7 +582,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     if (err)
         return err;
     if (idx > size)
-        return GRIB_INVALID_NEAREST;
+        return GRIB_INVALID_ARGUMENT;
 
     values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
     err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
@@ -593,6 +593,12 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     *val = values[idx];
     grib_context_free(a->context, values);
     return GRIB_SUCCESS;
+}
+
+static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
+    Assert(!"unpack_double_element_set: ccsds packing ");
+    return GRIB_DECODING_ERROR;
 }
 
 #else
@@ -614,6 +620,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
+    print_error_feature_not_enabled(a->context);
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
+}
+static int unpack_double_element_set(grib_accessor*, const size_t*, size_t, double*)
 {
     print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
