@@ -273,7 +273,6 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     int err = 0;
 
     /* GRIB-564: The index idx relates to codedValues NOT values! */
-
     err = grib_get_size(a->parent->h, "codedValues", &size);
     if (err)
         return err;
@@ -293,10 +292,31 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
 static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
 {
-    Assert(!"unpack_double_element_set: apply boustrophedonic packing ");
-    return GRIB_DECODING_ERROR;
-}
+    size_t size = 0, i = 0;
+    double* values;
+    int err = 0;
 
+    /* GRIB-564: The indexes in index_array relate to codedValues NOT values! */
+    err = grib_get_size(grib_handle_of_accessor(a), "codedValues", &size);
+    if (err)
+        return err;
+
+    for (i = 0; i < len; i++) {
+        if (index_array[i] > size) return GRIB_INVALID_ARGUMENT;
+    }
+
+    values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
+    err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
+    if (err) {
+        grib_context_free(a->context, values);
+        return err;
+    }
+    for (i = 0; i < len; i++) {
+        val_array[i] = values[index_array[i]];
+    }
+    grib_context_free(a->context, values);
+    return GRIB_SUCCESS;
+}
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
