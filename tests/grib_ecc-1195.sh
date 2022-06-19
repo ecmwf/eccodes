@@ -8,10 +8,9 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
 
-label="grib_ecc-1195-test"
+label="grib_ecc-1195_test"
 temp1=temp.$label.grib
 temp2=temp.$label.txt
 sample_grib1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl

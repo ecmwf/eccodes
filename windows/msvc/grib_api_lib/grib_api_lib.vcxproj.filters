@@ -207,6 +207,9 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_check_internal_version.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\grib_accessor_class_closest_date.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\grib_accessor_class_codeflag.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -585,7 +588,7 @@
     <ClCompile Include="..\..\..\src\grib_accessor_class_octahedral_gaussian.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\grib_accessor_class_octect_number.c">
+    <ClCompile Include="..\..\..\src\grib_accessor_class_octet_number.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\grib_accessor_class_offset_file.c">
@@ -1121,7 +1124,7 @@
     <ClInclude Include="..\..\..\src\grib_api_internal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\grib_api_prototypes.h">
+    <ClInclude Include="..\..\..\src\eccodes_prototypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\grib_dumper_class.h">

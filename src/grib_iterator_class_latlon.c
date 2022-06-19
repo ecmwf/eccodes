@@ -211,6 +211,10 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         self->las[lai] = lat1;
         lat1 -= jdir;
     }
+    /* ECC-1406: Due to rounding, errors can accumulate.
+     * So we ensure the last latitude is latitudeOfLastGridPointInDegrees
+    */
+    self->las[self->Nj-1] = lat2;
 
     iter->e = -1;
     return err;

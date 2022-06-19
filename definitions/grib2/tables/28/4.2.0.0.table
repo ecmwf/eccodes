@@ -33,5 +33,5 @@
 31 31 Latent heat net flux due to sublimation (W m-2)
 32 32 Wet-bulb potential temperature (K)
 # 33-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing

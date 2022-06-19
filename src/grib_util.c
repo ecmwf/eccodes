@@ -19,7 +19,7 @@ typedef enum
     eROUND_ANGLE_DOWN
 } RoundingPolicy;
 
-static void set_total_length(unsigned char* buffer, long* section_length, long* section_offset, int edition, size_t totalLength)
+static void set_total_length(unsigned char* buffer, long* section_length, const long* section_offset, int edition, size_t totalLength)
 {
     long off;
     switch (edition) {
@@ -2206,6 +2206,48 @@ int grib_is_earth_oblate(grib_handle* h)
     }
     return 0;
 }
+
+int grib_check_data_values_range(grib_handle* h, const double min_val, const double max_val)
+{
+    int result        = GRIB_SUCCESS;
+    grib_context* ctx = h->context;
+
+    if (!(min_val < DBL_MAX && min_val > -DBL_MAX)) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Minimum value out of range: %g", min_val);
+        return GRIB_ENCODING_ERROR;
+    }
+    if (!(max_val < DBL_MAX && max_val > -DBL_MAX)) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Maximum value out of range: %g", max_val);
+        return GRIB_ENCODING_ERROR;
+    }
+
+    /* Data Quality checks */
+    if (ctx->grib_data_quality_checks) {
+        result = grib_util_grib_data_quality_check(h, min_val, max_val);
+    }
+
+    return result;
+}
+
+/* Return true(1) if large constant fields are to be created, otherwise false(0) */
+int grib_producing_large_constant_fields(grib_handle* h, int edition)
+{
+    /* First check if the transient key is set */
+    grib_context* c                 = h->context;
+    long produceLargeConstantFields = 0;
+    if (grib_get_long(h, "produceLargeConstantFields", &produceLargeConstantFields) == GRIB_SUCCESS &&
+        produceLargeConstantFields != 0) {
+        return 1;
+    }
+
+    if (c->gribex_mode_on == 1 && edition == 1) {
+        return 1;
+    }
+
+    /* Finally check the environment variable via the context */
+    return c->large_constant_fields;
+}
+
 
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val)
 {

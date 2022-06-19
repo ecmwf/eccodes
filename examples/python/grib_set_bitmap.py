@@ -15,7 +15,7 @@ from eccodes import *
 
 INPUT = "../../data/regular_latlon_surface.grib1"
 OUTPUT = "out.set_bitmap_p.grib"
-MISSING = 9999
+MISSING = 1.0e36
 VERBOSE = 1  # verbose error reporting
 
 

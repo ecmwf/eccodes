@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 label="bufr_rdbSubTypes"
 fBufr3Input=$ECCODES_SAMPLES_PATH/BUFR3_local.tmpl

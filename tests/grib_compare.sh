@@ -8,8 +8,8 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
+
 label="grib_compare_test"
 REDIRECT=/dev/null
 
@@ -59,7 +59,7 @@ status=$?
 set -e
 [ $status -eq 1 ]
 grep -q "ERROR:.*Is a directory" $temp_err
-rm -rf $temp_dir
+rm -rf $temp_dir $temp_err
 
 
 # ----------------------------------------
@@ -148,7 +148,33 @@ EOF
 diff $reffile $outfile
 rm -f $reffile
 
+
+# ----------------------------------------
+# Test -R overriding "referenceValueError"
+# ----------------------------------------
+sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+echo 'set values = { 9.99999957911723157871e-26 }; write;' | ${tools_dir}/grib_filter -o $temp1 - $sample_g2
+echo 'set values = { 1.00000001954148137826e-25 }; write;' | ${tools_dir}/grib_filter -o $temp2 - $sample_g2
+# Plain grib_compare uses the referenceValueError as tolerance and will see the files as identical
+${tools_dir}/grib_compare $temp1 $temp2
+
+# Use relative error of 0 for all keys. Now comparison detects the difference
+set +e
+${tools_dir}/grib_compare -Rall=0 $temp1 $temp2 2>$outfile
+status=$?
+set -e
+[ $status -eq 1 ]
+
+# Now use relative error of 0 for the referenceValue only
+set +e
+${tools_dir}/grib_compare -R referenceValue=0 $temp1 $temp2
+status=$?
+set -e
+[ $status -eq 1 ]
+
+
+
 # Clean up
-# --------------
+# ---------
 rm -f $temp1 $temp2
 rm -f $outfile

@@ -28,7 +28,8 @@ void grib_iarray_print(const char* title, const grib_iarray* iarray)
     printf("\n");
 }
 
-grib_iarray* grib_iarray_new_from_array(grib_context* c, long* a, size_t size)
+#if 0
+grib_iarray* grib_iarray_new_from_array(grib_context* c, long* src_array, size_t size)
 {
     size_t i;
     grib_iarray* v;
@@ -38,12 +39,13 @@ grib_iarray* grib_iarray_new_from_array(grib_context* c, long* a, size_t size)
 
     v = grib_iarray_new(c, size, 100);
     for (i = 0; i < size; i++)
-        v->v[i] = a[i];
+        v->v[i] = src_array[i];
     v->n                   = size;
     v->number_of_pop_front = 0;
     v->context             = c;
     return v;
 }
+#endif
 
 grib_iarray* grib_iarray_new(grib_context* c, size_t size, size_t incsize)
 {

@@ -239,9 +239,6 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
         dictionary = NULL;
         goto the_end;
     }
-    else {
-        grib_context_log(c, GRIB_LOG_DEBUG, "bufr_elements_table: found def file %s", filename);
-    }
 
     dictionary = (grib_trie*)grib_trie_get(c->lists, dictName);
     if (dictionary) {

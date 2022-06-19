@@ -3,7 +3,7 @@
 # --- check nothing bombs when changing packing
 # ---  for now limited to just a few packing schemes
 
-. ./include.sh
+. ./include.ctest.sh
 
 label="grib_change_packing_test"
 temp=temp.$label.grib
@@ -45,11 +45,14 @@ test_packing() {
 
         ${tools_dir}/grib_set -r -s packingType=$packing $grib $temp
         result=`${tools_dir}/grib_get -p packingType $temp`
-        
+
         if [ "$result" != "$packing" ]; then
             echo "Setting packing did not go right"
             exit 1
         fi
+
+        result=`${tools_dir}/grib_get -p accuracy $temp`
+        [ $result -eq 0 -o $result -eq 32 -o $result -eq 64 ]
 
         shift
     done
@@ -62,6 +65,7 @@ test_packing() {
 input=${data_dir}/spherical_model_level.grib2
 output=`${tools_dir}/grib_set -r -s packingType=spectral_simple $input $temp 2>&1`
 grib_check_key_equals $temp packingType 'spectral_simple'
+grib_check_key_equals $temp accuracy 16
 # Check no error was posted i.e. output string is empty
 [ -z "$output" ]
 res1=`${tools_dir}/grib_get '-F%.1f' -p avg,enorm $input`
@@ -74,7 +78,19 @@ rm -f $temp
 # -----------------------
 input=${data_dir}/grid_ieee.grib
 ${tools_dir}/grib_set -r -s packingType=grid_simple $input $temp
+grib_check_key_equals $input accuracy 32
 grib_check_key_equals $temp packingType 'grid_simple'
+grib_check_key_equals $temp accuracy 24
+stats1=`${tools_dir}/grib_get -F%.2f -p skew,kurt $input`
+stats2=`${tools_dir}/grib_get -F%.2f -p skew,kurt $temp`
+[ "$stats1" = "$stats2" ]
+
+
+# Test 'accuracy' key
+# -----------------------
+input=${data_dir}/reduced_gaussian_model_level.grib1
+${tools_dir}/grib_set -r -s packingType=grid_ieee,accuracy=64 $input $temp
+grib_check_key_equals $temp precision '2'
 stats1=`${tools_dir}/grib_get -F%.2f -p skew,kurt $input`
 stats2=`${tools_dir}/grib_get -F%.2f -p skew,kurt $temp`
 [ "$stats1" = "$stats2" ]
@@ -110,6 +126,28 @@ if [ $HAVE_AEC -eq 0 ]; then
     [ $status -ne 0 ]
     grep -q "CCSDS support not enabled. Please rebuild with -DENABLE_AEC=ON" $temp_err
 fi
+
+# Large constant fields
+# -----------------------
+input=${data_dir}/sample.grib2
+ECCODES_GRIB_LARGE_CONSTANT_FIELDS=0 ${tools_dir}/grib_set -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section7Length '1 0 5'
+
+ECCODES_GRIB_LARGE_CONSTANT_FIELDS=1 ${tools_dir}/grib_set -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section7Length '1 16 997'
+
+${tools_dir}/grib_set -s produceLargeConstantFields=0 -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section7Length '1 0 5'
+
+${tools_dir}/grib_set -s produceLargeConstantFields=1 -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section7Length '1 16 997'
+
+# GRIB1: when GRIBEX mode is enabled, we also get a large constant field
+input=${data_dir}/simple.grib
+${tools_dir}/grib_set -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section4Length '1 0 12'
+ECCODES_GRIBEX_MODE_ON=1 ${tools_dir}/grib_set -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section4Length '1 12 8966'
 
 
 rm -f $temp $temp_err

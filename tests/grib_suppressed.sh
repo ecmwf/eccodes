@@ -8,10 +8,9 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
 
-label="grib_suppressed-test"
+label="grib_suppressed_test"
 
 tempErr=temp.${label}.err
 tempFilt=temp.${label}.filt

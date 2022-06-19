@@ -8,14 +8,14 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-197.
 # It tests decoding a BUFR file which cannot be done unless
 # we extend the definitions to include extra files
 # ---------------------------------------------------------
-label="bufr_ecc-197-test"
+label="bufr_ecc-197_test"
 
 input=${data_dir}/bufr/vos308014_v3_26.bufr
 TEMP=${label}.temp

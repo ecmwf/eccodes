@@ -8,13 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 set -u
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-984
 # grib_get_data: missing jDirectionIncrement produces huge values
 # ---------------------------------------------------------
-label="grib_ecc-984-test"
+label="grib_ecc-984_test"
 tempGrb=temp.${label}.grb
 tempOut=temp.${label}.txt
 tempErr=temp.${label}.err

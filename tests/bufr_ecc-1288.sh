@@ -8,14 +8,14 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-1288.
 # It tests decoding a BUFR file which cannot be done unless
 # we extend the definitions to include extra files
 # ---------------------------------------------------------
-label="bufr_ecc-1288-test"
+label="bufr_ecc-1288_test"
 
 TEMP=${label}.temp
 LOG=${label}.log

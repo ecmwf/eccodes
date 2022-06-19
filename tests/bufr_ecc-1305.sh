@@ -8,10 +8,10 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 set -u
 REDIRECT=/dev/null
-label="bufr_ecc-1305-test"
+label="bufr_ecc-1305_test"
 temp=temp.$label
 
 # Check the operator name is printed

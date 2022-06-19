@@ -62,7 +62,7 @@
 60 60 Snow depth water equivalent (kg m-2)
 61 61 Snow density (kg m-3)
 62 62 Snow evaporation (kg m-2)
-63 63 Reserved 
+63 63 Reserved
 64 64 Total column integrated water vapour (kg m-2)
 65 65 Rain precipitation rate (kg m-2 s-1)
 66 66 Snow precipitation rate (kg m-2 s-1)
@@ -142,7 +142,7 @@
 140 140 Effective aspect ratio of graupel (-)
 141 141 Effective aspect ratio of hail (-)
 142 142 Effective aspect ratio of subgrid ice clouds (-)
-143 143 Potential evaporation rate (kg m–2 s–1)
+143 143 Potential evaporation rate (kg m-2 s-1)
 144 144 Specific rain water content (convective) (kg kg-1)
 145 145 Specific snow water content (convective) (kg kg-1)
 146 146 Cloud ice precipitation rate (kg m-2 s-1)
@@ -150,5 +150,5 @@
 148 148 Snow evaporation rate (kg m-2 s-1)
 149 149 Cloud water mixing ratio (kg kg-1)
 # 149-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing

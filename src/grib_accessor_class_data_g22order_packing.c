@@ -343,7 +343,7 @@ static int spatial_difference (grib_context *c, unsigned long* vals, long  len, 
 }
 #endif
 
-static int post_process(grib_context* c, long* vals, long len, long order, long bias, unsigned long extras[2])
+static int post_process(grib_context* c, long* vals, long len, long order, long bias, const unsigned long extras[2])
 {
     unsigned long last, penultimate, j = 0;
     Assert(order > 0);

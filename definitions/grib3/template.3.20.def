@@ -29,7 +29,7 @@ meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoin
 alias Lo1 =  longitudeOfFirstGridPoint;
 
 #  Resolution and component flag
-flags[1] resolutionAndComponentFlags 'grib3/tables/[tablesVersion]/3.3.table' : dump;
+flags[1] resolutionAndComponentFlags 'grib3/tables/[tablesVersion]/4.1.table' : dump;
 
 #  LaD - Latitude where Dx and Dy are specified
 signed[4] LaD  : edition_specific;

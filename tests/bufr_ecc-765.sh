@@ -8,21 +8,23 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-765.
 # BUFR decoding memory leaks
 # ---------------------------------------------------------
-label="bufr_ecc-765-test"
+label="bufr_ecc-765_test"
 tempLog=temp.${label}.log
 tempSupp=temp.${label}.supp
 tempFilt=temp.${label}.filt
 
+set +u
 if test "x$ECCODES_TEST_WITH_VALGRIND" = "x"; then
   echo "Environment variable ECCODES_TEST_WITH_VALGRIND not defined. Test disabled"
   exit 0
 fi
+set -u
 
 # The presence of ECCODES_TEST_WITH_VALGRIND environment variable redefines
 # tools_dir so we reset it to its original

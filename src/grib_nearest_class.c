@@ -22,7 +22,7 @@
 
 struct table_entry
 {
-    char* type;
+    const char* type;
     grib_nearest_class** cclass;
 };
 

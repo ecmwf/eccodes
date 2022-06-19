@@ -12,7 +12,7 @@
 # ---   check if retrieving data through grib_get_double_array and
 # ---   grib_get_double_element provides the same result
 
-. ./include.sh
+. ./include.ctest.sh
 
 infile=${data_dir}/grid_ieee.grib
 

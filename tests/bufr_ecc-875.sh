@@ -8,13 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-875
 # bufr_copy with -g option to copy the GTS header
 # ---------------------------------------------------------
-label="bufr_ecc-875-test"
+label="bufr_ecc-875_test"
 tempOut=temp.${label}.out
 tempRef=temp.${label}.ref
 tempBufr=temp.${label}.bufr

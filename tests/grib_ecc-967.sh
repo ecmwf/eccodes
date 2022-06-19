@@ -8,13 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
+
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-967.
 # GRIB2: Fallback if tables version > latest installed version
 # ---------------------------------------------------------
-label="grib_ecc-967-test"
+label="grib_ecc-967_test"
 temp=temp.${label}.grib
 
 # Pick a master tables version number way to big!

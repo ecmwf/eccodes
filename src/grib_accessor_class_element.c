@@ -172,10 +172,16 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     if ((ret = grib_get_long_array_internal(grib_handle_of_accessor(a), self->array, ar, &size)) != GRIB_SUCCESS)
         return ret;
 
-    if (self->element >= size)
-        return GRIB_INTERNAL_ERROR;
+    if (self->element < 0 || self->element >= size) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Invalid element %ld for array '%s'. Value must be between 0 and %lu",
+                self->element, self->array, size - 1);
+        ret = GRIB_INVALID_ARGUMENT;
+        goto the_end;
+    }
+
     *val = ar[self->element];
 
+the_end:
     grib_context_free(c, ar);
     return ret;
 }

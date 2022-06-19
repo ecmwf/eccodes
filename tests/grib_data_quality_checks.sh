@@ -8,8 +8,8 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
+
 # ---------------------------------------------------------
 # Tests for data quality checks
 # ---------------------------------------------------------
@@ -22,6 +22,7 @@ tempGrib2=temp.${label}.grib2
 
 sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+sample_ccsds=$ECCODES_SAMPLES_PATH/ccsds_grib2.tmpl
 
 # Start with clean environment
 unset ECCODES_GRIB_DATA_QUALITY_CHECKS
@@ -194,7 +195,17 @@ ${tools_dir}/grib_set -s paramId=260509,scaleValuesBy=1000 $sample_g2 $tempGrib2
 status=$?
 set -e
 [ $status -ne 0 ]
+unset ECCODES_EXTRA_DEFINITION_PATH
 
+
+# Check CCSDS encoding too
+# -------------------------
+export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
+set +e
+${tools_dir}/grib_set -s scaleValuesBy=1000 $sample_ccsds $tempGrib2 2>$tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
 
 
 # Clean up

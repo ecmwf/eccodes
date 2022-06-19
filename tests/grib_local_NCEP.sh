@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 temp=output.grib_local_NCEP.grib
 sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl

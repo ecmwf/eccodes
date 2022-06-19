@@ -8,14 +8,14 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
+
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-979.
 # Directly setting keys that use the accessor
 #   from_scale_factor_scaled_value
 # ---------------------------------------------------------
-label="grib_ecc-979-test"
+label="grib_ecc-979_test"
 temp=temp.${label}
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 

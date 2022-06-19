@@ -31,8 +31,8 @@ static void encode_double_array_common(int numBits, long packStart, long datasiz
         /* note float -> unsigned int .. truncate */
         ival = (unsigned int)((data[i] - zref) * factor + 0.5);
         /*
-	if ( ival > max_nbpv_pow2 ) ival = max_nbpv_pow2;
-	if ( ival < 0 ) ival = 0;
+    if ( ival > max_nbpv_pow2 ) ival = max_nbpv_pow2;
+    if ( ival < 0 ) ival = 0;
          */
         jbits = numBits;
         while (cbits <= jbits) {

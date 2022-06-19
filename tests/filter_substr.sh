@@ -8,8 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
 
 label="filter_substr_test"
 temp=temp.$label.txt

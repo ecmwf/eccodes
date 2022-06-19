@@ -6,7 +6,6 @@ list( APPEND ifs_samples_${_basedir}
       ${CMAKE_CURRENT_SOURCE_DIR}/gg_ml.tmpl
       ${CMAKE_CURRENT_SOURCE_DIR}/gg_sfc.tmpl
       ${CMAKE_CURRENT_SOURCE_DIR}/sh_ml.tmpl
-      ${CMAKE_CURRENT_SOURCE_DIR}/sh_sfc.tmpl
-      ${ECCODES_SAMPLES_FILES} )
+      ${CMAKE_CURRENT_SOURCE_DIR}/sh_sfc.tmpl )
 
 install_samples( ifs_samples_${_basedir} ${_destination_install} ${_destination_build} )

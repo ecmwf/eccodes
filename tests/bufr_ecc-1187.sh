@@ -8,13 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-1187
 # BUFR: codes_set_missing()
 # ---------------------------------------------------------
-label="bufr_ecc-1187-test"
+label="bufr_ecc-1187_test"
 tempOut=temp.${label}.out
 tempRules=temp.${label}.filter
 

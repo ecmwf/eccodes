@@ -8,8 +8,9 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-#set -x
+. ./include.ctest.sh
+
+label="grib_change_scanning"
 
 editions="1 2"
 gridTypes="regular_ll rotated_ll" 
@@ -74,5 +75,52 @@ EOF
   done
 done
 
-rm -f ${data_dir}/scan1.grib ${data_dir}/scan.grib
+# alternativeRowScanning
+# -----------------------
+tempFilt=temp.$label.filt
+tempGribA=temp.$label.A.grib
+tempGribB=temp.$label.B.grib
+tempText=temp.$label.txt
+tempRef=temp.$label.ref
 
+cat > $tempFilt <<EOF
+  set Nj = 2;
+  set latitudeOfFirstGridPointInDegrees = 60;
+  set latitudeOfLastGridPointInDegrees  = 59;
+  set Ni = 3;
+  set longitudeOfFirstGridPointInDegrees = 0;
+  set longitudeOfLastGridPointInDegrees  = 2;
+  set DjInDegrees = 1;
+  set DiInDegrees = 1;
+
+  set alternativeRowScanning = 1;
+  set values={ 12, 13, 14, 15, 16, 17 };
+  write;
+EOF
+
+${tools_dir}/grib_filter -o $tempGribA $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s swapScanningAlternativeRows=1 $tempGribA $tempGribB
+grib_check_key_equals $tempGribB alternativeRowScanning 0
+
+${tools_dir}/grib_get_data -F "%.2f" $tempGribB > $tempText
+cat > $tempRef << EOF
+Latitude Longitude Value
+   60.000    0.000 12.00
+   60.000    1.000 13.00
+   60.000    2.000 14.00
+   59.000    0.000 17.00
+   59.000    1.000 16.00
+   59.000    2.000 15.00
+EOF
+diff $tempRef $tempText
+
+# It must fail when Ni=missing (reduced grids)
+set +e
+${tools_dir}/grib_set -s swapScanningAlternativeRows=1 $ECCODES_SAMPLES_PATH/reduced_gg_pl_96_grib2.tmpl $tempGribB 2>/dev/null
+status=$?
+set -e
+[ $status -ne 0 ]
+
+# Clean up
+rm -f $tempFilt $tempGribA $tempGribB $tempRef $tempText
+rm -f ${data_dir}/scan1.grib ${data_dir}/scan.grib

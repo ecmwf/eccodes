@@ -47,7 +47,7 @@ const char* tool_description =
     "some keys.\n\tIt does not fail when a key is not found.";
 const char* tool_name   = "grib_ls";
 const char* tool_usage  = "[options] grib_file grib_file ...";
-static char* new_handle = "";
+static const char* new_handle = "";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 static double lat      = 0;
@@ -219,7 +219,7 @@ static void print_key_values(grib_runtime_options* options, grib_handle* h)
 {
     int i;
     int ret       = 0;
-    char* s       = "\"keys\" : {";
+    const char* s = "\"keys\" : {";
     double dvalue = 0;
     long lvalue   = 0;
     char value[MAX_STRING_LEN];
@@ -322,21 +322,31 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
 
         if (json_latlon) {
-            char* s             = "\n[\n";
+            int istart = 0;
+            int iend   = LATLON_SIZE;
+            const char* s       = "\n[\n";
             double missingValue = 9999;
             char value[MAX_STRING_LEN];
             size_t len = MAX_STRING_LEN;
             printf("%s", new_handle);
             printf("{\n");
             print_key_values(options, h);
-            printf("\n, \"selected\" : %d", options->latlon_idx);
+            if (options->latlon_mode == 4) {
+                printf("\n, \"selected\" : %d", options->latlon_idx);
+            } else {
+                printf("\n");
+            }
             printf(", \"method\" : ");
             if (options->latlon_mask)
                 printf("\"nearest_land\"");
             else
                 printf("\"nearest\"");
             printf("\n, \"neighbours\" : ");
-            for (i = 0; i < LATLON_SIZE; i++) {
+            if (options->latlon_mode == 1) {
+                istart = options->latlon_idx;
+                iend = istart + 1;
+            }
+            for (i = istart; i < iend; i++) {
                 printf("%s", s);
                 len = MAX_STRING_LEN;
                 printf(

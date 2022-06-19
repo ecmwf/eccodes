@@ -8,8 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
 
 label="grib2_chemicals_aerosols_test"
 temp=temp.$label
@@ -17,6 +16,15 @@ temp1=temp.$label.1
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 latest=`${tools_dir}/grib_get -p tablesVersionLatest $sample2`
+
+# Check latest chemical/aerosol code tables
+# -----------------------------------------
+${tools_dir}/grib_set -s tablesVersion=$latest,paramId=217224  $sample2 $temp
+grib_check_key_equals $temp constituentTypeName "Aceto nitrile CH3CN"
+
+${tools_dir}/grib_set -s tablesVersion=$latest,paramId=210249  $sample2 $temp
+grib_check_key_equals $temp aerosolTypeName "Ammonium dry"
+
 
 # =============================
 # Deterministic instantaneous

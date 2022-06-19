@@ -7,7 +7,7 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-. ./include.sh
+. ./include.ctest.sh
 
 tempSimple=temp.f_grib_set_packing.simple.grib
 tempSecond=temp.f_grib_set_packing.second.grib

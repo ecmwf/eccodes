@@ -8,10 +8,10 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 REDIRECT=/dev/null
-set -u
+
 grib1=${data_dir}/regular_latlon_surface.grib1
 grib2=${data_dir}/regular_latlon_surface.grib2
 infile=${data_dir}/reduced_gaussian_model_level.grib1

@@ -30,7 +30,7 @@ int main(int argc, char** argv)
     FILE* in = NULL;
     int err  = 0;
     double lat, lon, value;
-    double missingValue = 1e+20; /* a value out of range */
+    double missingValue = 1.0e36; /* a value out of range */
     int n               = 0;
     long bitmapPresent  = 0;
     char* filename      = NULL;

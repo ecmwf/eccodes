@@ -8,8 +8,8 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
+
 REDIRECT=/dev/null
 label="grib_packing_order"
 temp=${label}".grib.tmp"

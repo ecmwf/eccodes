@@ -1085,7 +1085,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 6 ;
-	 constituentType = 10005 ;
+	 constituentType = 10002 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
@@ -1409,7 +1409,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 7 ;
-	 constituentType = 10005 ;
+	 constituentType = 10002 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
@@ -2716,6 +2716,24 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 101 ;
 	 lengthOfTimeRange = 3 ;
+	}
+#Precipitation type (most severe) in the last 6 hours
+'code table (4.201)' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 19 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 100 ;
+	 lengthOfTimeRange = 6 ;
+	}
+#Precipitation type (most frequent) in the last 6 hours
+'code table (4.201)' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 19 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 101 ;
+	 lengthOfTimeRange = 6 ;
 	}
 #Soil temperature
 'K' = {

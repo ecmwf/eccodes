@@ -8,13 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
+
 # --------------------------------------------
 # This is the test for the JIRA issue ECC-806
 # Local definitions precedence order
 # --------------------------------------------
-label="grib_ecc-806-test"
+label="grib_ecc-806_test"
 tempGrb=temp.${label}.grb
 tempOut=temp.${label}.txt
 tempErr=temp.${label}.err

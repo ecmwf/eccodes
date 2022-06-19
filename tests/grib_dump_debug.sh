@@ -8,10 +8,10 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 label="grib_dump_debug"
 temp=temp.$label.txt
-set -u
+
 REDIRECT=/dev/null
 
 if [ $HAVE_MEMFS -eq 1 ]; then

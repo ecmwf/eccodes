@@ -646,6 +646,10 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     self->empty = 0;
 
     err = grib_unpack_string(a, value, &size);
+    if (err) {
+        fprintf(self->dumper.out, " *** ERR=%d (%s) [dump_string on '%s']", err, grib_get_error_message(err), acc_name);
+        return;
+    }
     Assert(size < MAX_STRING_SIZE);
     p   = value;
     r   = compute_bufr_key_rank(h, self->keys, acc_name);
@@ -656,6 +660,8 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     while (*p) {
         if (!isprint(*p))
             *p = '.';
+        if (*p == '"')
+            *p = '\''; /* ECC-1401 */
         p++;
     }
 

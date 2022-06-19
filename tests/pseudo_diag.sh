@@ -10,8 +10,8 @@
 
 # Tests for Pseudo-GRIB format "DIAG"
 
-. ./include.sh
-label="pseudo-diag-test"
+. ./include.ctest.sh
+label="pseudo_diag_test"
 tempOut=temp.${label}.out
 tempTxt=temp.${label}.txt
 tempRef=temp.${label}.ref

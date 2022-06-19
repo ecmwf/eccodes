@@ -400,6 +400,15 @@ static int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned c
                 return GRIB_DECODING_ERROR;
             }
         }
+#if 0
+        if (offsetBeforeData == offsetAfterData) {
+            /* Crazy case: Constant field with bitsPerValue > 0 */
+            for (i = 0; i < n_vals; i++)
+                val[i] = reference_value;
+            *len = n_vals;
+            return GRIB_SUCCESS;
+        }
+#endif
     }
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,
@@ -465,27 +474,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 #undef restrict
 #endif
 
-/* Return true(1) if large constant fields are to be created, otherwise false(0) */
-static int producing_large_constant_fields(grib_handle* h, int edition)
-{
-    /* First check if the transient key is set */
-    grib_context* c                 = h->context;
-    long produceLargeConstantFields = 0;
-    if (grib_get_long(h, "produceLargeConstantFields", &produceLargeConstantFields) == GRIB_SUCCESS &&
-        produceLargeConstantFields != 0) {
-        return 1;
-    }
-
-    if (c->gribex_mode_on == 1 && edition == 1) {
-        return 1;
-    }
-
-    /* Finally check the environment variable via the context */
-    return c->large_constant_fields;
-}
-
 #if 0
-static int producing_large_constant_fields(const grib_context* c, grib_handle* h, int edition)
+static int grib_producing_large_constant_fields(const grib_context* c, grib_handle* h, int edition)
 {
     /* GRIB-802: If override key is set, ignore env. var and produce compressed fields */
     if (c->large_constant_fields) {  /* This is set by the environment variable */
@@ -506,28 +496,6 @@ static int producing_large_constant_fields(const grib_context* c, grib_handle* h
 }
 #endif
 
-static int check_range(grib_handle* h, const double min_val, const double max_val)
-{
-    int result        = GRIB_SUCCESS;
-    grib_context* ctx = h->context;
-
-    if (!(min_val < DBL_MAX && min_val > -DBL_MAX)) {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "Minimum value out of range: %g", min_val);
-        return GRIB_ENCODING_ERROR;
-    }
-    if (!(max_val < DBL_MAX && max_val > -DBL_MAX)) {
-        grib_context_log(ctx, GRIB_LOG_ERROR, "Maximum value out of range: %g", max_val);
-        return GRIB_ENCODING_ERROR;
-    }
-
-    /* Data Quality checks */
-    if (ctx->grib_data_quality_checks) {
-        result = grib_util_grib_data_quality_check(h, min_val, max_val);
-    }
-
-    return result;
-}
-
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_data_simple_packing* self = (grib_accessor_data_simple_packing*)a;
@@ -536,7 +504,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     size_t i = 0;
     size_t n_vals = *len;
     int err       = 0;
-    int last;
     double reference_value        = 0;
     long binary_scale_factor      = 0;
     long bits_per_value           = 0;
@@ -560,8 +527,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return GRIB_NO_VALUES;
     }
 
-    if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) !=
-        GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
         return err;
 
     if (*len == 0)
@@ -571,10 +537,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(gh, self->optimize_scaling_factor, &optimize_scaling_factor)) != GRIB_SUCCESS)
         return err;
-    /*
-     * check we don't encode bpv > max(ulong)-1 as it is
-     * not currently supported by the algorithm
-     */
+
+    /* check we don't encode bpv > max(ulong)-1 as it is not currently supported by the algorithm */
     if (bits_per_value > (sizeof(long) * 8 - 1)) {
         return GRIB_INVALID_BPV;
     }
@@ -587,13 +551,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     minmax_val(val + 1, n_vals - 1, &min, &max);
 #else
     for (i = 1; i < n_vals; i++) {
-        if (val[i] > max)
-            max = val[i];
-        else if (val[i] < min)
-            min = val[i];
+        if (val[i] > max)      max = val[i];
+        else if (val[i] < min) min = val[i];
     }
 #endif
-    if ((err = check_range(gh, min, max)) != GRIB_SUCCESS) {
+    if ((err = grib_check_data_values_range(gh, min, max)) != GRIB_SUCCESS) {
         return err;
     }
 
@@ -601,12 +563,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (max == min) {
         int large_constant_fields = 0;
         if (grib_get_nearest_smaller_value(gh, self->reference_value, val[0], &reference_value) != GRIB_SUCCESS) {
-            grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+            grib_context_log(a->context, GRIB_LOG_ERROR, "unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
-        if ((err = grib_set_double_internal(gh, self->reference_value, reference_value)) !=
-            GRIB_SUCCESS)
+        if ((err = grib_set_double_internal(gh, self->reference_value, reference_value)) != GRIB_SUCCESS)
             return err;
 
         {
@@ -618,19 +578,16 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             Assert(ref == reference_value);
         }
 
-        large_constant_fields = producing_large_constant_fields(gh, self->edition);
+        large_constant_fields = grib_producing_large_constant_fields(gh, self->edition);
         if (large_constant_fields) {
-            if ((err = grib_set_long_internal(gh, self->binary_scale_factor, 0)) !=
-                GRIB_SUCCESS)
+            if ((err = grib_set_long_internal(gh, self->binary_scale_factor, 0)) != GRIB_SUCCESS)
                 return err;
 
-            if ((err = grib_set_long_internal(gh, self->decimal_scale_factor, 0)) !=
-                GRIB_SUCCESS)
+            if ((err = grib_set_long_internal(gh, self->decimal_scale_factor, 0)) != GRIB_SUCCESS)
                 return err;
 
             if (bits_per_value == 0) {
-                if ((err = grib_set_long_internal(gh, self->bits_per_value, 16)) !=
-                    GRIB_SUCCESS)
+                if ((err = grib_set_long_internal(gh, self->bits_per_value, 16)) != GRIB_SUCCESS)
                     return err;
             }
 
@@ -638,8 +595,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
         else {
             bits_per_value = 0;
-            if ((err = grib_set_long_internal(gh, self->bits_per_value, bits_per_value)) !=
-                GRIB_SUCCESS)
+            if ((err = grib_set_long_internal(gh, self->bits_per_value, bits_per_value)) != GRIB_SUCCESS)
                 return err;
 
             return GRIB_CONSTANT_FIELD;
@@ -652,8 +608,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if ((err = grib_get_long_internal(gh, self->changing_precision, &changing_precision)) != GRIB_SUCCESS)
         return err;
 
-    /* the packing parameters are not properly defined
-       this is a safe way of fixing the problem */
+    /* the packing parameters are not properly defined, this is a safe way of fixing the problem */
     if (changing_precision == 0 && bits_per_value == 0 && decimal_scale_factor_get == 0) {
         grib_context_log(a->context, GRIB_LOG_WARNING,
                          "%s==0 and %s==0 (setting %s=24)",
@@ -662,14 +617,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                          self->bits_per_value);
 
         bits_per_value = 24;
-        if ((err = grib_set_long_internal(gh, self->bits_per_value,
-                                          bits_per_value)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->bits_per_value, bits_per_value)) != GRIB_SUCCESS)
             return err;
     }
 
     if (bits_per_value == 0 || (binary_scale_factor == 0 && decimal_scale_factor_get != 0)) {
-        /* decimal_scale_factor is given, binary_scale_factor=0
-           and bits_per_value is computed */
+        /* decimal_scale_factor is given, binary_scale_factor=0 and bits_per_value is computed */
         binary_scale_factor  = 0;
         decimal_scale_factor = decimal_scale_factor_get;
         decimal              = grib_power(decimal_scale_factor, 10);
@@ -685,9 +638,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                              decimal_scale_factor);
             return err;
         }
-        /*printf("bits_per_value=%ld\n",bits_per_value);*/
-        if ((err = grib_set_long_internal(gh, self->bits_per_value, bits_per_value)) !=
-            GRIB_SUCCESS)
+
+        if ((err = grib_set_long_internal(gh, self->bits_per_value, bits_per_value)) != GRIB_SUCCESS)
             return err;
         if (grib_get_nearest_smaller_value(gh, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
@@ -697,12 +649,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         /* divisor=1; */
     }
     else {
-        last = 127;
+        int last = 127;  /* 'last' should be a parameter coming from a definitions file */
         if (c->gribex_mode_on && self->edition == 1)
             last = 99;
-        /* bits_per_value is given and decimal_scale_factor
-           and binary_scale_factor are calcualated
-         */
+        /* bits_per_value is given and decimal_scale_factor and binary_scale_factor are calcualated */
         if (max == min) {
             binary_scale_factor = 0;
             /* divisor=1; */
@@ -714,7 +664,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
         else if (optimize_scaling_factor) {
             int compat_gribex = c->gribex_mode_on && self->edition == 1;
-
             if ((err = grib_optimize_decimal_factor(a, self->reference_value,
                                                     max, min, bits_per_value,
                                                     compat_gribex, 1,
@@ -724,7 +673,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         else {
             /* printf("max=%g reference_value=%g grib_power(-last,2)=%g decimal_scale_factor=%ld bits_per_value=%ld\n",
                max,reference_value,grib_power(-last,2),decimal_scale_factor,bits_per_value);*/
-            /* last must be a parameter coming from the def file*/
             range        = (max - min);
             unscaled_min = min;
             unscaled_max = max;
@@ -749,26 +697,20 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
             if (grib_get_nearest_smaller_value(gh, self->reference_value,
                                                min, &reference_value) != GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR,
-                                 "unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+                grib_context_log(a->context, GRIB_LOG_ERROR, "unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
                 return GRIB_INTERNAL_ERROR;
             }
 
             binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
-            if (err)
-                return err;
+            if (err) return err;
         }
     }
 
-    if ((err = grib_set_double_internal(gh, self->reference_value, reference_value)) !=
-        GRIB_SUCCESS)
+    if ((err = grib_set_double_internal(gh, self->reference_value, reference_value)) != GRIB_SUCCESS)
         return err;
-
-    if ((err = grib_set_long_internal(gh, self->changing_precision, 0)) !=
-        GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(gh, self->changing_precision, 0)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_set_long_internal(gh, self->binary_scale_factor, binary_scale_factor)) !=
-        GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(gh, self->binary_scale_factor, binary_scale_factor)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_set_long_internal(gh, self->decimal_scale_factor, decimal_scale_factor)) != GRIB_SUCCESS)
         return err;

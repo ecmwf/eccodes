@@ -21,12 +21,12 @@
  static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
  static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
  static void init() {
-	pthread_mutexattr_t attr;
-	pthread_mutexattr_init(&attr);
-	pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-	pthread_mutex_init(&mutex1,&attr);
-	pthread_mutex_init(&mutex2,&attr);
-	pthread_mutexattr_destroy(&attr);
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&mutex1,&attr);
+    pthread_mutex_init(&mutex2,&attr);
+    pthread_mutexattr_destroy(&attr);
  }
  /* #elif GRIB_OMP_THREADS */
  static int once = 0;
@@ -248,6 +248,29 @@ static grib_handle* grib_handle_create(grib_handle* gl, grib_context* c, const v
     return gl;
 }
 
+grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name)
+{
+    grib_handle* g = 0;
+    if (c == NULL)
+        c = grib_context_get_default();
+    grib_context_set_handle_file_count(c, 0);
+    grib_context_set_handle_total_count(c, 0);
+
+    if (c->debug) {
+        fprintf(stderr, "ECCODES DEBUG codes_handle_new_from_samples '%s'\n", name);
+    }
+
+    g = codes_external_template(c, PRODUCT_ANY, name);
+    if (!g)
+        grib_context_log(c, GRIB_LOG_ERROR,
+                         "Unable to load sample file '%s.tmpl'\n"
+                         "                   from %s\n"
+                         "                   (ecCodes Version=%s)",
+                         name, c->grib_samples_path, ECCODES_VERSION_STR);
+
+    return g;
+}
+
 grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name)
 {
     grib_handle* g = 0;
@@ -264,7 +287,7 @@ grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name)
         fprintf(stderr, "ECCODES DEBUG grib_handle_new_from_samples '%s'\n", name);
     }
 
-    g = grib_external_template(c, name);
+    g = codes_external_template(c, PRODUCT_GRIB, name);
     if (!g)
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load GRIB sample file '%s.tmpl'\n"
@@ -283,15 +306,11 @@ grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* nam
     grib_context_set_handle_file_count(c, 0);
     grib_context_set_handle_total_count(c, 0);
 
-    /*
-     *  g = grib_internal_sample(c,name);
-     *  if(g) return g;
-     */
     if (c->debug) {
         fprintf(stderr, "ECCODES DEBUG bufr_handle_new_from_samples '%s'\n", name);
     }
 
-    g = bufr_external_template(c, name);
+    g = codes_external_template(c, PRODUCT_BUFR, name);
     if (!g)
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load BUFR sample file '%s.tmpl'\n"
@@ -1524,11 +1543,11 @@ static int grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsign
 
 static void grib2_build_message(grib_context* context, unsigned char* sections[], size_t sections_len[], void** data, size_t* len)
 {
-    int i            = 0;
-    char* theEnd     = "7777";
-    unsigned char* p = 0;
-    size_t msglen    = 0;
-    long bitp        = 64;
+    int i              = 0;
+    const char* theEnd = "7777";
+    unsigned char* p   = 0;
+    size_t msglen      = 0;
+    long bitp          = 64;
     if (!sections[0]) {
         *data = NULL;
         return;

@@ -8,14 +8,14 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-690.
 # Decoding NOAA GOES message percent confidence values
 # which do not have a bitmap.
 # ---------------------------------------------------------
-label="bufr_ecc-690-test"
+label="bufr_ecc-690_test"
 tempRules=temp.${label}.filter
 tempOut=temp.${label}.txt
 tempBufr=temp.${label}.bufr

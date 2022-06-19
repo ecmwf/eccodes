@@ -151,6 +151,10 @@ static int skip(grib_keys_iterator* kiter)
         mark_seen(kiter, kiter->current->name);
     }
 
+    /* ECC-1410 */
+    if (kiter->current->all_names[0] == NULL)
+        return 1;
+
     return 0;
 }
 

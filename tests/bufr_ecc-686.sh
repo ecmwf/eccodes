@@ -8,13 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-686.
 # It tests changing the subtype in the ECMWF local section
 # ---------------------------------------------------------
-label="bufr_ecc-686-test"
+label="bufr_ecc-686_test"
 tempRules=temp.${label}.filter
 tempBufr=temp.${label}.bufr
 

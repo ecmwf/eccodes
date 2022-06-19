@@ -89,7 +89,7 @@ static int morein1             = 0;
 static int morein2             = 0;
 static int listFromCommandLine;
 static int verbose                = 0;
-static int tolerance_factor       = 1;
+static double tolerance_factor    = 1;
 static int write_error            = 0;
 static grib_handle* global_handle = NULL;
 static int global_counter         = 0;

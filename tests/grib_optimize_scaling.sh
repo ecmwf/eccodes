@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     echo "$0: This test is currently disabled on Windows"

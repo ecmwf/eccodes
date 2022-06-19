@@ -21,7 +21,7 @@ cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 find_package( ecbuild 3.4 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 
 # Initialise project
-project( eccodes VERSION 2.26.0 LANGUAGES C )
+project( eccodes VERSION 2.27.0 LANGUAGES C )
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
@@ -64,6 +64,13 @@ ecbuild_info("Operating system=${CMAKE_SYSTEM} (${EC_OS_BITS} bits)")
 
 ###############################################################################
 # some variables/options of this project
+
+ecbuild_add_option( FEATURE EXPERIMENTAL_BUILD_WITH_CXX
+    DESCRIPTION "Build ecCodes with a C++ compiler (Experimental)"
+    DEFAULT OFF )
+if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+    enable_language( CXX )
+endif()
 
 ecbuild_add_option( FEATURE PRODUCT_GRIB
     DESCRIPTION "Support for the product GRIB"
@@ -440,7 +447,7 @@ add_subdirectory( ifs_samples ) # must come after samples
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
 ecbuild_dont_pack( DIRS
      experimental deprecated doxygen confluence tests/tests.ecmwf
-     config m4 examples/F77 src/deprecated tools/deprecated
+     config m4 examples/F77 src/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
      examples/examples.dev examples/extra examples/deprecated bamboo
      fortran/fortranCtypes tigge/tools share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
@@ -515,3 +522,9 @@ ecbuild_info("   | bindings from PyPI with:             |")
 ecbuild_info("   |   $ pip3 install eccodes             |")
 ecbuild_info("   +--------------------------------------+")
 ecbuild_info("")
+
+if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+    ecbuild_warn("Please note:\n"
+                 "The option of building with C++ is currently experimental."
+                 "Do not use in operations.")
+endif()

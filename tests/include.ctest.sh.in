@@ -1,5 +1,9 @@
 set -ea
-# For CMake
+
+. ./utils.sh
+
+# Not all Unix shells support this unfortunately
+#set -o pipefail
 
 # Unset any environment variable that could interfere with tests
 unset ECCODES_EXTRA_DEFINITION_PATH
@@ -50,6 +54,8 @@ test_dir=@PROJECT_BINARY_DIR@/tests
 samp_dir="@CMAKE_BINARY_DIR@/@ECCODES_SAMPLES_SUFF@"
 ECCODES_SAMPLES_PATH=${samp_dir}
 export ECCODES_SAMPLES_PATH
+
+set -u
 
 # Options
 HAVE_PRODUCT_BUFR=@HAVE_PRODUCT_BUFR@

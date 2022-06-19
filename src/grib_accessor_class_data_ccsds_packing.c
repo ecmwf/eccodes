@@ -289,7 +289,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     bits8   = ((bits_per_value + 7) / 8) * 8;
     size    = n_vals * ((bits_per_value + 7) / 8);
-    decoded = grib_context_buffer_malloc_clear(a->context, size);
+    decoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, size);
     if (!decoded) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
@@ -381,6 +381,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         else if (val[i] < min) min = val[i];
     }
 
+    if ((err = grib_check_data_values_range(hand, min, max)) != GRIB_SUCCESS) {
+        return err;
+    }
+
     if (min == max) {
         is_constant_field = 1;
     } else {
@@ -396,10 +400,18 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             Assert(val[i] == val[0]);
         }
 #endif
-        if ((err = grib_set_double_internal(hand, self->reference_value, val[0])) != GRIB_SUCCESS)
+        if (grib_get_nearest_smaller_value(hand, self->reference_value, val[0], &reference_value) != GRIB_SUCCESS) {
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                             "CCSDS pack_double: unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+            return GRIB_INTERNAL_ERROR;
+        }
+        if ((err = grib_set_double_internal(hand, self->reference_value, reference_value)) != GRIB_SUCCESS)
             return err;
 
         if ((err = grib_set_long_internal(hand, self->number_of_values, n_vals)) != GRIB_SUCCESS)
+            return err;
+        bits_per_value = 0; /* ECC-1387 */
+        if ((err = grib_set_long_internal(hand, self->bits_per_value, bits_per_value)) != GRIB_SUCCESS)
             return err;
 
         grib_buffer_replace(a, NULL, 0, 1, 1);
@@ -410,28 +422,67 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->number_of_data_points, &number_of_data_points)) != GRIB_SUCCESS)
         return err;
 
-    d = grib_power(decimal_scale_factor, 10);
-    min *= d;
-    max *= d;
+    if (bits_per_value == 0 || (binary_scale_factor == 0 && decimal_scale_factor != 0)) {
+        d = grib_power(decimal_scale_factor, 10);
+        min *= d;
+        max *= d;
 
-    if (grib_get_nearest_smaller_value(hand, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
-            "CCSDS pack_double: unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
-        return GRIB_INTERNAL_ERROR;
+        if (grib_get_nearest_smaller_value(hand, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                "CCSDS pack_double: unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+            return GRIB_INTERNAL_ERROR;
+        }
+
+        if (reference_value > min) {
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                "CCSDS pack_double: reference_value=%g min_value=%g diff=%g", reference_value, min, reference_value - min);
+            DebugAssert(reference_value <= min);
+            return GRIB_INTERNAL_ERROR;
+        }
     }
+    else {
+        int last = 127;  /* last must be a parameter coming from the def file*/
+        double range = 0;
+        double minrange = 0, maxrange = 0;
+        double unscaled_max = 0;
+        double unscaled_min = 0;
+        double f = 0;
+        double decimal = 1;
 
-    if (reference_value > min) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
-            "CCSDS pack_double: reference_value=%g min_value=%g diff=%g", reference_value, min, reference_value - min);
-        DebugAssert(reference_value <= min);
-        return GRIB_INTERNAL_ERROR;
+        range        = (max - min);
+        unscaled_min = min;
+        unscaled_max = max;
+        f            = (grib_power(bits_per_value, 2) - 1);
+        minrange     = grib_power(-last, 2) * f;
+        maxrange     = grib_power(last, 2) * f;
+
+        while (range < minrange) {
+            decimal_scale_factor += 1;
+            decimal *= 10;
+            min   = unscaled_min * decimal;
+            max   = unscaled_max * decimal;
+            range = (max - min);
+        }
+        while (range > maxrange) {
+            decimal_scale_factor -= 1;
+            decimal /= 10;
+            min   = unscaled_min * decimal;
+            max   = unscaled_max * decimal;
+            range = (max - min);
+        }
+        if (grib_get_nearest_smaller_value(hand, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                                 "CCSDS pack_double: unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+            return GRIB_INTERNAL_ERROR;
+        }
+        d = grib_power(decimal_scale_factor, 10);
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
     divisor             = grib_power(-binary_scale_factor, 2);
 
     bits8   = (bits_per_value + 7) / 8 * 8;
-    encoded = grib_context_buffer_malloc_clear(a->context, bits8 / 8 * n_vals);
+    encoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, bits8 / 8 * n_vals);
 
     if (!encoded) {
         err = GRIB_OUT_OF_MEMORY;
@@ -442,7 +493,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     p      = encoded;
     for (i = 0; i < n_vals; i++) {
         long blen                  = bits8;
-        unsigned long unsigned_val = (unsigned long)((((val[i] * d) - (reference_value)) * divisor) + 0.5);
+        unsigned long unsigned_val = (unsigned long)((((val[i] * d) - reference_value) * divisor) + 0.5);
         while (blen >= 8) {
             blen -= 8;
             *p = (unsigned_val >> blen);
@@ -452,11 +503,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
     /* buflen = n_vals*(bits_per_value/8);*/
 
-    grib_context_log(a->context, GRIB_LOG_DEBUG,
-        "CCSDS pack_double: packing %s, %d values", a->name, n_vals);
+    grib_context_log(a->context, GRIB_LOG_DEBUG,"CCSDS pack_double: packing %s, %d values", a->name, n_vals);
 
     buflen += 10240;
-    buf = grib_context_buffer_malloc_clear(a->context, buflen);
+    buf = (unsigned char*)grib_context_buffer_malloc_clear(a->context, buflen);
 
     if (!buf) {
         err = GRIB_OUT_OF_MEMORY;

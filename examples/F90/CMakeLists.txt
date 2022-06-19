@@ -3,15 +3,16 @@
 # Configure the file which all CMake tests will include
 configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 
-execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/include.sh ${CMAKE_CURRENT_BINARY_DIR} )
 
 # Add all the tests
 ####################
 if( HAVE_BUILD_TOOLS )
     list( APPEND tests_sanity
+          codes_ecc-1392
           grib_set_pv
           grib_set_data
           bufr_ecc-1284
+          bufr_ecc-1019
           grib_ecc-671 )
     list( APPEND tests_extra
           grib_index

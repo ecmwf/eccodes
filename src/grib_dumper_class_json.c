@@ -484,7 +484,12 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     self->empty = 0;
 
     err = grib_unpack_string(a, value, &size);
-    Assert(size < MAX_STRING_SIZE);
+    if (err) {
+        sprintf(value, " *** ERR=%d (%s) [dump_string on '%s']",
+                err, grib_get_error_message(err), a->name);
+    } else {
+        Assert(size < MAX_STRING_SIZE);
+    }
     p = value;
     if (grib_is_missing_string(a, (unsigned char*)value, size)) {
         is_missing = 1;
@@ -493,6 +498,8 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     while (*p) {
         if (!isprint(*p))
             *p = '.';
+        if (*p == '"')
+            *p = '\''; /* ECC-1401 */
         p++;
     }
 

@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # Define a common label for all the tmp files
 label="grib_dump_samples_test"
@@ -51,5 +51,14 @@ if [ $HAVE_AEC -eq 1 ]; then
     [ "$stats" = "55.0161 99.7008" ]
     ${tools_dir}/grib_dump -O $temp
 fi
+
+# Check ifs_samples/grib1_mlgrib2_ccsds
+# Those that are GRIB2 and for grid-point data must be CCSDS packed
+g2_samples="gg_ml.tmpl gg_sfc_grib2.tmpl"
+for s in $g2_samples; do
+    sf=${proj_dir}/ifs_samples/grib1_mlgrib2_ccsds/$s
+    grib_check_key_equals $sf "edition,packingType" "2 grid_ccsds"
+done
+
 
 rm -f $temp

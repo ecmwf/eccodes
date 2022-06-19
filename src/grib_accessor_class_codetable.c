@@ -506,7 +506,7 @@ static int grib_load_codetable(grib_context* c, const char* filename,
 
         Assert(*abbreviation);
         Assert(*title);
-        rtrim(title); /* ECC-1315 */
+        string_rtrim(title); /* ECC-1315 */
 
         if (t->entries[code].abbreviation != NULL) {
             grib_context_log(c, GRIB_LOG_WARNING, "code_table_entry: duplicate code in %s: %d (table size=%ld)", filename, code, size);
@@ -575,7 +575,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
     if (table && value >= 0 && value < table->size) {
         if (table->entries[value].abbreviation) {
-            int b = atol(table->entries[value].abbreviation);
+            long b = atol(table->entries[value].abbreviation);
             if (b == value)
                 strcpy(comment, table->entries[value].title);
             else

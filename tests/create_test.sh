@@ -15,7 +15,7 @@ fi
 TEST_TITLE="$1"
 
 # Check label is unique
-grep -q "label=\"$TEST_TITLE\"" $TEST_DIR/*.sh
+grep -i -q "label=\"$TEST_TITLE\"" $TEST_DIR/*.sh
 if [ $? -eq 0 ]; then
   echo "ERROR: Test label \"$TEST_TITLE\" seems to already exist!"
   grep -l "label=\"$TEST_TITLE\"" $TEST_DIR/*.sh # Show results
@@ -33,10 +33,10 @@ cat <<EOF
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 set -u
 REDIRECT=/dev/null
-label="prod_${TEST_TITLE}-test"
+label="prod_${TEST_TITLE}_test"  # Change prod to bufr or grib etc
 temp=temp.\$label
 sample_grib1=\$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 sample_grib2=\$ECCODES_SAMPLES_PATH/GRIB2.tmpl

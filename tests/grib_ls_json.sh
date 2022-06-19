@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 tempLog=temp.grib_ls_json.log
 tempOut=temp.grib_ls_json.txt

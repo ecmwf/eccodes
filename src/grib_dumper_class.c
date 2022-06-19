@@ -16,7 +16,7 @@
 
 struct table_entry
 {
-    char* type;
+    const char* type;
     grib_dumper_class** cclass;
 };
 

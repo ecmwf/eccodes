@@ -8,14 +8,14 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-288
 # It tests bufr_compare with a relative tolerance
 # ---------------------------------------------------------
 cd ${data_dir}/bufr
-label="bufr_ecc_288_test"
+label="bufr_ecc-288_test"
 
 tempRules=temp.${label}.filter
 tempOut=temp.${label}.out

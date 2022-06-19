@@ -44,7 +44,6 @@ static int grib_db_columns_resize(grib_db* db, size_t newsize);
 static int grib_db_column_copy_from_handle(grib_handle* h, grib_db* db, int i);
 static grib_db* grib_db_create_from_keys(grib_context* c, char** keys, int nkeys, int* err);
 static void grib_fieldset* grib_db_fieldset_create(grib_db* db, int* err);
-static int grib_fieldset_compare(grib_fieldset* set, int* i, int* j);
 static void grib_db_sort(grib_set* set, int beg, int theEnd);
 static grib_order_by* grib_db_new_order_by(grib_context* c, char* obstr);
 static void grib_db_delete_order_by(grib_context* c, grib_order_by* order_by);
@@ -496,6 +495,7 @@ int grib_db_apply_order_by(grib_fieldset* set)
     return err;
 }
 
+#if 0
 static int grib_fieldset_compare(grib_fieldset* set, int* i, int* j)
 {
     int ret           = 0;
@@ -549,6 +549,7 @@ static int grib_fieldset_compare(grib_fieldset* set, int* i, int* j)
 
     return ret;
 }
+#endif
 
 static void grib_db_sort(grib_set* set, int beg, int theEnd)
 {

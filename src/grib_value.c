@@ -30,22 +30,24 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 /* Debug utility function to track GRIB packing/repacking issues */
 static void print_debug_info__set_double_array(grib_handle* h, const char* func, const char* name, const double* val, size_t length)
 {
-    size_t N = 5, i = 0;
+    size_t N = 7, i = 0;
     double minVal = DBL_MAX, maxVal = -DBL_MAX;
     Assert( h->context->debug );
 
     if (length <= N)
         N = length;
     fprintf(stderr, "ECCODES DEBUG %s key=%s %lu values (", func, name, (unsigned long)length);
-    for (i = 0; i < N; ++i)
-        fprintf(stderr, "%g, ", val[i]);
-    if (N >= length) fprintf(stderr, " ) ");
+    for (i = 0; i < N; ++i) {
+        if (i != 0) fprintf(stderr,", ");
+        fprintf(stderr, "%.10g", val[i]);
+    }
+    if (N >= length) fprintf(stderr, ") ");
     else fprintf(stderr, "...) ");
     for (i = 0; i < length; ++i) {
         if (val[i] < minVal) minVal = val[i];
         if (val[i] > maxVal) maxVal = val[i];
     }
-    fprintf(stderr, "min=%g, max=%g\n",minVal,maxVal);
+    fprintf(stderr, "min=%.10g, max=%.10g\n",minVal,maxVal);
 }
 
 int grib_set_expression(grib_handle* h, const char* name, grib_expression* e)
@@ -145,7 +147,7 @@ int grib_set_double_internal(grib_handle* h, const char* name, double val)
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        fprintf(stderr, "ECCODES DEBUG grib_set_double_internal %s=%g\n", name, val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_double_internal %s=%.10g\n", name, val);
 
     if (a) {
         ret = grib_pack_double(a, &val, &l);
@@ -346,9 +348,9 @@ int grib_set_double(grib_handle* h, const char* name, double val)
     if (a) {
         if (h->context->debug) {
             if (strcmp(name, a->name)!=0)
-                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%g (a->name=%s)\n", name, val, a->name);
+                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%.10g (a->name=%s)\n", name, val, a->name);
             else
-                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%g\n", name, val);
+                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%.10g\n", name, val);
         }
 
         if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
@@ -602,7 +604,7 @@ int grib_is_missing_double(grib_accessor* a, double x)
     return ret;
 }
 
-int grib_is_missing_string(grib_accessor* a, unsigned char* x, size_t len)
+int grib_is_missing_string(grib_accessor* a, const unsigned char* x, size_t len)
 {
     /* For a string value to be missing, every character has to be */
     /* all 1's (i.e. 0xFF) */

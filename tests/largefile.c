@@ -8,7 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "config.h"
 #include "grib_api_internal.h"
 
 #ifndef ECCODES_ON_WINDOWS

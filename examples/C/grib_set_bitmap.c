@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     size_t values_len = 0, size = 0;
     long num_of_data_points = 0, num_of_coded_values = 0, num_of_missing = 0;
     double* values;
-    double missing  = 9999;
+    const double missing  = 1.0e36;
 
     in = fopen(infile, "rb");
     if (!in) {

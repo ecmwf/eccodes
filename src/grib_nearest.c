@@ -128,7 +128,7 @@ int grib_nearest_get_radius(grib_handle* h, double* radiusInKm)
     return GRIB_SUCCESS;
 }
 
-void grib_binary_search(double xx[], const unsigned long n, double x,
+void grib_binary_search(const double xx[], const unsigned long n, double x,
                         int* ju, int* jl)
 {
     size_t jm     = 0;

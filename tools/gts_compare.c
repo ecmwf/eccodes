@@ -83,12 +83,11 @@ int onlyListed          = 1;
 int headerMode          = 0;
 int morein1             = 0;
 int morein2             = 0;
-int listFromCommandLine;
-int verbose            = 0;
-int tolerance_factor   = 1;
-static int write_error = 0;
-
-static int write_count = 0;
+int listFromCommandLine = 0;
+int verbose             = 0;
+double tolerance_factor = 1;
+static int write_error  = 0;
+static int write_count  = 0;
 
 grib_handle* global_handle = NULL;
 int counter                = 0;

@@ -1,5 +1,13 @@
 # tigge
 
+if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+    set_source_files_properties(tigge_tools.c PROPERTIES LANGUAGE CXX)
+    set_source_files_properties(tigge_check.c PROPERTIES LANGUAGE CXX)
+    if( ECCODES_INSTALL_EXTRA_TOOLS )
+        set_source_files_properties(tigge_name.c tigge_accumulations.c tigge_split.c PROPERTIES LANGUAGE CXX)
+    endif()
+endif()
+
 # library
 ecbuild_add_library(TARGET    tigge_tools
                     TYPE      STATIC

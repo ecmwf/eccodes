@@ -27,7 +27,7 @@ int main(int argc, char** argv)
     const char* filename = "../../data/reduced_latlon_surface.grib1";
     codes_handle* h      = NULL;
     long numberOfPoints  = 0;
-    const double missing = 9999.0;
+    const double missing = 1.0e36;
     double *lats, *lons, *values; /* arrays */
 
     in = fopen(filename, "rb");

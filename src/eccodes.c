@@ -69,7 +69,7 @@ void codes_check(const char* call, const char* file, int line, int e, const char
 
 /* Fieldsets */
 /******************************************************************************/
-grib_fieldset* codes_fieldset_new_from_files(grib_context* c, char* filenames[], int nfiles, char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err)
+grib_fieldset* codes_fieldset_new_from_files(grib_context* c, char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err)
 {
     return grib_fieldset_new_from_files(c, filenames, nfiles, keys, nkeys, where_string, order_by_string, err);
 }
@@ -518,22 +518,6 @@ void codes_get_reduced_row(long pl, double lon_first, double lon_last, long* npo
 void codes_get_reduced_row_p(long pl, double lon_first, double lon_last, long* npoints, double* olon_first, double* olon_last)
 {
     grib_get_reduced_row_p(pl, lon_first, lon_last, npoints, olon_first, olon_last);
-}
-
-grib_box* codes_box_new(grib_handle* h, int* error)
-{
-    /* This function is deprecated and will later be removed */
-    return grib_box_new(h, error);
-}
-grib_points* codes_box_get_points(grib_box* box, double north, double west, double south, double east, int* err)
-{
-    /* This function is deprecated and will later be removed */
-    return grib_box_get_points(box, north, west, south, east, err);
-}
-int codes_points_get_values(grib_handle* h, grib_points* points, double* val)
-{
-    /* This function is deprecated and will later be removed */
-    return grib_points_get_values(h, points, val);
 }
 
 void codes_context_delete(grib_context* c)

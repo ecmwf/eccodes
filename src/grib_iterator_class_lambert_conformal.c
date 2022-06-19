@@ -110,8 +110,8 @@ static double adjust_lon_radians(double lon)
 
 /* Function to compute the latitude angle, phi2, for the inverse
  * From the book "Map Projections-A Working Manual-John P. Snyder (1987)"
- * Equation (7–9) involves rapidly converging iteration: Calculate t from (15-11)
- * Then, assuming an initial trial phi equal to (pi/2 - 2*arctan t) in the right side of equation (7–9),
+ * Equation (7-9) involves rapidly converging iteration: Calculate t from (15-11)
+ * Then, assuming an initial trial phi equal to (pi/2 - 2*arctan t) in the right side of equation (7-9),
  * calculate phi on the left side. Substitute the calculated phi) into the right side,
  * calculate a new phi, etc., until phi does not change significantly from the preceding trial value of phi
  */

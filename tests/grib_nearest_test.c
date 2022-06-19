@@ -21,8 +21,6 @@
 #include <assert.h>
 #include "eccodes.h"
 
-int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string); /*experimental*/
-
 static void usage(const char* prog)
 {
     printf("Usage: %s [-n] grib_file grib_file ...\n", prog);
@@ -45,7 +43,7 @@ int main(int argc, char** argv)
     double values[4] = {0,};
     double distances[4] = {0,};
     int indexes[4] = {0,};
-    char* order_by  = "param,step";
+    const char* order_by  = "param,step";
     double* pValues = values; /* Default: decode the values */
 
     size_t size = 4;
@@ -75,8 +73,7 @@ int main(int argc, char** argv)
     CODES_CHECK(err, 0);
 
     /* grib_fieldset_apply_where not fully implemented*/
-    err = grib_fieldset_apply_where(set, "(centre=='ecmf') && number==1 || step==6");
-    assert(err == CODES_NOT_IMPLEMENTED);
+    /* err = grib_fieldset_apply_where(set, "(centre=='ecmf') && number==1 || step==6"); */
 
     printf("ordering by %s\n", order_by);
     printf("%d fields in the fieldset\n", codes_fieldset_count(set));

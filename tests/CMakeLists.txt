@@ -3,7 +3,6 @@
 # Configure the file which all CMake tests will include
 configure_file( include.ctest.sh.in  include.ctest.sh @ONLY )
 
-execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/include.sh ${CMAKE_CURRENT_BINARY_DIR} )
 execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/utils.sh   ${CMAKE_CURRENT_BINARY_DIR} )
 execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/number_compare.pl ${CMAKE_CURRENT_BINARY_DIR} )
 
@@ -21,6 +20,7 @@ list(APPEND test_bins
     grib_read_index
     unit_tests
     bufr_keys_iter
+    grib_keys_iter
     gauss_sub
     grib_nearest_test
     grib_util_set_spec
@@ -37,6 +37,7 @@ list(APPEND test_bins
     bufr_extract_headers
     extract_offsets
     bufr_check_descriptors
+    codes_new_from_samples
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes
@@ -73,6 +74,7 @@ if( HAVE_BUILD_TOOLS )
         grib_packing_order
         filter_substr
         grib_uerra
+        grib_fire
         grib_element
         grib_suppressed
         grib_2nd_order_numValues
@@ -95,12 +97,14 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1315
         grib_ecc-1322
         grib_ecc-1319
+        grib_ecc-1406
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
         bufr_ecc-1290
         bufr_ecc-1304
         bufr_ecc-1347
+        bufr_ecc-1395
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
@@ -151,6 +155,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ls_json
         bufr_change_edition
         bufr_keys_iter
+        grib_keys_iter
         bufr_get_element
         bufr_wmo_tables
         bufr_extract_headers
@@ -161,6 +166,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-288
         bufr_ecc-313
         bufr_ecc-616
+        bufr_ecc-680
         bufr_ecc-686
         bufr_ecc-690
         bufr_ecc-379
@@ -183,6 +189,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1000
         grib_ecc-1001
         grib_ecc-1030
+        grib_ecc-1397
         grib_set_bytes
         grib_set_force
         bufr_ecc-556
@@ -242,6 +249,7 @@ if( HAVE_BUILD_TOOLS )
         grib_statistics
         grib_tigge_check
         read_any
+        codes_new_from_samples
         grib_dump
         grib_dump_debug
         grib_dump_json

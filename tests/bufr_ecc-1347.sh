@@ -8,11 +8,11 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 set -u
 
-label="bufr_ecc-1347-test"
+label="bufr_ecc-1347_test"
 tempBufr=temp.$label.bufr
 tempFilt=temp.$label.filter
 

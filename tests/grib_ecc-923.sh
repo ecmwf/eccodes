@@ -8,13 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 set -u
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-923.
 # Mismatched count not reported as difference by grib_compare
 # ---------------------------------------------------------
-label="grib_ecc-923-test"
+label="grib_ecc-923_test"
 tempOut=temp.${label}.out
 tempGrib1=temp.1.${label}.grib
 tempGrib2=temp.2.${label}.grib

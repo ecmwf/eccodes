@@ -8,11 +8,11 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 set -u
 
 REDIRECT=/dev/null
-label="bufr_ecc-1304-test"
+label="bufr_ecc-1304_test"
 
 tempBufr=temp.$label.bufr
 tempFilt=temp.$label.filt

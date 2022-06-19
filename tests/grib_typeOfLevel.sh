@@ -8,8 +8,8 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
+
 label="grib_typeOfLevel_test"
 temp=temp.$label.txt
 

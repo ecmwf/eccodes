@@ -364,7 +364,7 @@ static int condition_true(grib_accessor* a, codes_condition* condition)
     return ret;
 }
 
-static void search_from_accessors_list(grib_accessors_list* al, grib_accessors_list* end, const char* name, grib_accessors_list* result)
+static void search_from_accessors_list(grib_accessors_list* al, const grib_accessors_list* end, const char* name, grib_accessors_list* result)
 {
     char attribute_name[200] = {0,};
     grib_accessor* accessor_result = 0;

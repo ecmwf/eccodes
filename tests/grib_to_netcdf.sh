@@ -7,7 +7,7 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-. ./include.sh
+. ./include.ctest.sh
 
 if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     # m2-bash messes with the system path.
@@ -20,12 +20,6 @@ if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     # It is not obvious why this behaviour exists.
     # We add this directory back to the path manually.
     export PATH=$PATH:$CONDA_PREFIX/Library/bin
-fi
-
-# Disable if autotools being used
-src_config=${src_dir}/config.h
-if [ -f ${src_config} ]; then
-    exit 0
 fi
 
 label="grib_to_netcdf_test"

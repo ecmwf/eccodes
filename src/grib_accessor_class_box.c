@@ -142,6 +142,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     grib_dump_label(dumper, a, NULL);
 }
 
+#if 0
 grib_box* grib_box_new(grib_handle* h, int* error)
 {
     grib_context_log(grib_context_get_default(), GRIB_LOG_ERROR,
@@ -149,7 +150,6 @@ grib_box* grib_box_new(grib_handle* h, int* error)
     *error = GRIB_INTERNAL_ERROR;
     return NULL;
 
-#if 0
     grib_accessor* a      = NULL;
     grib_accessor_box* na = NULL;
     grib_box* n           = NULL;
@@ -166,5 +166,5 @@ grib_box* grib_box_new(grib_handle* h, int* error)
         *error = GRIB_SUCCESS;
 
     return n;
-#endif
 }
+#endif

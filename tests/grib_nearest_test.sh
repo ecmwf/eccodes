@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 label="grib_nearest_test"
 temp=$label.temp
@@ -19,7 +19,6 @@ input_grb=${data_dir}/reduced_gaussian_pressure_level.grib1
 # --------------------------------------
 $EXEC ${test_dir}/grib_nearest_test $input_grb > $temp
 cat > $tempRef <<EOF
-((((centre)==(ecmf))&&((number)==(1)))||((step)==(6)))
 ordering by param,step
 1 fields in the fieldset
 n,step,param
@@ -37,7 +36,6 @@ diff $tempRef $temp
 # ----------------------------------------
 $EXEC ${test_dir}/grib_nearest_test -n $input_grb > $temp
 cat > $tempRef <<EOF
-((((centre)==(ecmf))&&((number)==(1)))||((step)==(6)))
 ordering by param,step
 1 fields in the fieldset
 n,step,param

@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 TEMP_ERR=temp.grib_set_bytes.log
 TEMP_OUT=temp.grib_set_bytes.grib
 
