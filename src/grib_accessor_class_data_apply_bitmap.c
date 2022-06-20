@@ -263,13 +263,13 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 {
     grib_accessor_data_apply_bitmap* self = (grib_accessor_data_apply_bitmap*)a;
+    grib_handle* gh      = grib_handle_of_accessor(a);
     int err = 0, i = 0;
     size_t cidx          = 0;
     double missing_value = 0;
     double* bvals        = NULL;
     size_t n_vals        = 0;
     long nn              = 0;
-    grib_handle* gh      = grib_handle_of_accessor(a);
 
     err    = grib_value_count(a, &nn);
     n_vals = nn;
@@ -310,8 +310,8 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
 {
     grib_accessor_data_apply_bitmap* self = (grib_accessor_data_apply_bitmap*)a;
+    grib_handle* gh = grib_handle_of_accessor(a);
     int err = 0, all_missing = 1;
-    grib_handle* gh      = grib_handle_of_accessor(a);
     size_t cidx        = 0; /* index into the coded_values array */
     size_t* cidx_array = NULL; /* array of indexes into the coded_values */
     double* cval_array = NULL; /* array of values of the coded_values */

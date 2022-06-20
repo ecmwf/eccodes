@@ -348,11 +348,12 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
     grib_accessor_data_apply_boustrophedonic_bitmap* self = (grib_accessor_data_apply_boustrophedonic_bitmap*)a;
     grib_handle* gh                                       = grib_handle_of_accessor(a);
     int err = 0, all_missing = 1;
-    size_t cidx        = 0;    /* index into the coded_values array */
+    size_t cidx        = 0; /* index into the coded_values array */
     size_t* cidx_array = NULL; /* array of indexes into the coded_values */
+    double* cval_array = NULL; /* array of values of the coded_values */
     double missing_value = 0;
     double* bvals        = NULL;
-    size_t n_vals = 0, i = 0, j = 0;
+    size_t n_vals = 0, i = 0, j = 0, idx = 0, count_1s = 0, ci = 0;
     long nn = 0;
 
     err    = grib_value_count(a, &nn);
@@ -368,33 +369,56 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
     err = grib_get_double_element_set_internal(gh, self->bitmap, index_array, len, val_array);
     if (err) return err;
     for (i = 0; i < len; i++) {
-        if (val_array[i] == 0) val_array[i] = missing_value;
-        else all_missing = 0;
+        if (val_array[i] == 0) {
+            val_array[i] = missing_value;
+        } else {
+            all_missing = 0;
+            count_1s++;
+        }
     }
 
     if (all_missing) {
         return GRIB_SUCCESS;
     }
 
+    /* At this point val_array contains entries which are either missing_value or 1 */
+    /* Now we need to dig into the codes values with index array of count_1s */
+
     bvals = (double*)grib_context_malloc(a->context, n_vals * sizeof(double));
-    if (bvals == NULL) return GRIB_OUT_OF_MEMORY;
+    if (!bvals) return GRIB_OUT_OF_MEMORY;
 
     if ((err = grib_get_double_array_internal(gh, self->bitmap, bvals, &n_vals)) != GRIB_SUCCESS)
         return err;
 
-    cidx_array = (size_t*)grib_context_malloc(a->context, len * sizeof(size_t));
+    cidx_array = (size_t*)grib_context_malloc(a->context, count_1s * sizeof(size_t));
+    cval_array = (double*)grib_context_malloc(a->context, count_1s * sizeof(double));
+    
+    ci = 0;
     for (i = 0; i < len; i++) {
-        cidx = 0;
-        for (j = 0; j < index_array[i]; j++) {
-            cidx += bvals[j];
+        if (val_array[i] == 1) {
+            idx = index_array[i];
+            cidx = 0;
+            for (j = 0; j < idx; j++) {
+                cidx += bvals[j];
+            }
+            Assert(ci < count_1s);
+            cidx_array[ci++] = cidx;
         }
-        cidx_array[i] = cidx;
     }
-    err = grib_get_double_element_set_internal(gh, self->coded_values, cidx_array, len, val_array);
+    err = grib_get_double_element_set_internal(gh, self->coded_values, cidx_array, count_1s, cval_array);
     if (err) return err;
+
+    /* Transfer from cval_array to our result val_array */
+    ci = 0;
+    for (i = 0; i < len; i++) {
+        if (val_array[i] == 1) {
+            val_array[i] = cval_array[ci++];
+        }
+    }
 
     grib_context_free(a->context, bvals);
     grib_context_free(a->context, cidx_array);
+    grib_context_free(a->context, cval_array);
 
     return GRIB_SUCCESS;
 }
