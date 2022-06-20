@@ -576,13 +576,28 @@ cleanup:
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 {
     /* The index idx relates to codedValues NOT values! */
+    grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    int err = 0;
     size_t size    = 0;
+    long bits_per_value = 0;
+    double reference_value = 0;
     double* values = NULL;
-    int err        = grib_get_size(grib_handle_of_accessor(a), "codedValues", &size);
-    if (err)
+
+    if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
         return err;
-    if (idx > size)
-        return GRIB_INVALID_ARGUMENT;
+    if ((err = grib_get_double_internal(hand, self->reference_value, &reference_value)) != GRIB_SUCCESS)
+        return err;
+
+    /* Special case of constant field */
+    if (bits_per_value == 0) {
+        *val = reference_value;
+        return GRIB_SUCCESS;
+    }
+
+    err = grib_get_size(hand, "codedValues", &size);
+    if (err) return err;
+    if (idx > size) return GRIB_INVALID_ARGUMENT;
 
     values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
     err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
@@ -597,9 +612,26 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
 static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
 {
+    grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
     size_t size = 0, i = 0;
-    double* values;
+    double* values = NULL;
     int err = 0;
+    long bits_per_value = 0;
+    double reference_value = 0;
+
+    if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(hand, self->reference_value, &reference_value)) != GRIB_SUCCESS)
+        return err;
+
+    /* Special case of constant field */
+    if (bits_per_value == 0) {
+        for (i = 0; i < len; i++) {
+            val_array[i] = reference_value;
+        }
+        return GRIB_SUCCESS;
+    }
 
     /* GRIB-564: The indexes in index_array relate to codedValues NOT values! */
     err = grib_get_size(grib_handle_of_accessor(a), "codedValues", &size);

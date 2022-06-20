@@ -238,14 +238,12 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     if (err)
         return err;
 
-    if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) !=
-        GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
         return err;
 
     self->dirty = 0;
 
-    if ((err = grib_get_double_internal(gh, self->reference_value, &reference_value)) !=
-        GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(gh, self->reference_value, &reference_value)) != GRIB_SUCCESS)
         return err;
 
     if ((err = grib_get_long_internal(gh, self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
@@ -255,7 +253,6 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
         return err;
 
     /* Special case */
-
     if (bits_per_value == 0) {
         *val = reference_value;
         return GRIB_SUCCESS;
@@ -339,8 +336,7 @@ static int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned c
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) !=
-        GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
         return err;
 
     /*
@@ -368,8 +364,7 @@ static int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned c
 
     self->dirty = 0;
 
-    if ((err = grib_get_double_internal(gh, self->reference_value, &reference_value)) !=
-        GRIB_SUCCESS)
+    if ((err = grib_get_double_internal(gh, self->reference_value, &reference_value)) != GRIB_SUCCESS)
         return err;
 
     if ((err = grib_get_long_internal(gh, self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
