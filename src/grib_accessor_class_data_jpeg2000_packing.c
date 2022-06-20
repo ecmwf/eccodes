@@ -302,7 +302,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         *len = n_vals;
         return GRIB_SUCCESS;
     }
-//printf("dbg.....\tjpeg unpack\n");
+
     buf = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
     buf += grib_byte_offset(a);
 

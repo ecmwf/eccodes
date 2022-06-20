@@ -345,8 +345,58 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
 static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
 {
-    Assert(!"unpack_double_element_set: apply boustrophedonic bmp packing ");
-    return GRIB_DECODING_ERROR;
+    grib_accessor_data_apply_boustrophedonic_bitmap* self = (grib_accessor_data_apply_boustrophedonic_bitmap*)a;
+    grib_handle* gh                                       = grib_handle_of_accessor(a);
+    int err = 0, all_missing = 1;
+    size_t cidx        = 0;    /* index into the coded_values array */
+    size_t* cidx_array = NULL; /* array of indexes into the coded_values */
+    double missing_value = 0;
+    double* bvals        = NULL;
+    size_t n_vals = 0, i = 0, j = 0;
+    long nn = 0;
+
+    err    = grib_value_count(a, &nn);
+    n_vals = nn;
+    if (err) return err;
+
+    if (!grib_find_accessor(gh, self->bitmap))
+        return grib_get_double_element_set_internal(gh, self->coded_values, index_array, len, val_array);
+
+    if ((err = grib_get_double_internal(gh, self->missing_value, &missing_value)) != GRIB_SUCCESS)
+        return err;
+
+    err = grib_get_double_element_set_internal(gh, self->bitmap, index_array, len, val_array);
+    if (err) return err;
+    for (i = 0; i < len; i++) {
+        if (val_array[i] == 0) val_array[i] = missing_value;
+        else all_missing = 0;
+    }
+
+    if (all_missing) {
+        return GRIB_SUCCESS;
+    }
+
+    bvals = (double*)grib_context_malloc(a->context, n_vals * sizeof(double));
+    if (bvals == NULL) return GRIB_OUT_OF_MEMORY;
+
+    if ((err = grib_get_double_array_internal(gh, self->bitmap, bvals, &n_vals)) != GRIB_SUCCESS)
+        return err;
+
+    cidx_array = (size_t*)grib_context_malloc(a->context, len * sizeof(size_t));
+    for (i = 0; i < len; i++) {
+        cidx = 0;
+        for (j = 0; j < index_array[i]; j++) {
+            cidx += bvals[j];
+        }
+        cidx_array[i] = cidx;
+    }
+    err = grib_get_double_element_set_internal(gh, self->coded_values, cidx_array, len, val_array);
+    if (err) return err;
+
+    grib_context_free(a->context, bvals);
+    grib_context_free(a->context, cidx_array);
+
+    return GRIB_SUCCESS;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
