@@ -101,6 +101,11 @@ if [ $HAVE_AEC -eq 1 ]; then
     grep -q "103484" $temp
     ${tools_dir}/grib_ls -l 79.0,203.0,1 $input_grb > $temp
     grep -q "Grid Point chosen #2 index=4163 " $temp
+
+    # Constant field
+    input_grb=${samp_dir}/ccsds_grib2.tmpl
+    ${tools_dir}/grib_get -l 0,0,1 $input_grb > $temp
+    grep -q "1" $temp
 fi
 
 
