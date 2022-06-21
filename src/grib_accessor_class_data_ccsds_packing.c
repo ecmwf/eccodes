@@ -678,7 +678,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-static int unpack_double_element_set(grib_accessor*, const size_t*, size_t, double*)
+static int unpack_double_element_set(grib_accessor* a, const size_t*, size_t, double*)
 {
     print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
