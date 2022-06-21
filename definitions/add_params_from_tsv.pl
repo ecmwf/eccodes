@@ -126,6 +126,9 @@ if ($SANITY_CHECK) {
         my $x = $dbh->selectrow_array("select * from param.param where id = ?",undef,$paramId);
         die "Error: paramId=$x exists in the database (line ", $lcount+1, ")\n" if (defined $x);
 
+        die "Error: Name '$name': ends in space" if ($name =~ / $/);
+        die "Error: Name '$name': starts with space" if ($name =~ /^ /);
+
         # Will die if it fails
         get_db_units_code($units);
 
