@@ -1025,6 +1025,28 @@ int grib_get_double_element(const grib_handle* h, const char* name, int i, doubl
     return GRIB_NOT_FOUND;
 }
 
+int grib_get_double_element_set_internal(grib_handle* h, const char* name, const size_t* index_array, size_t len, double* val_array)
+{
+    int ret = grib_get_double_element_set(h, name, index_array, len, val_array);
+
+    if (ret != GRIB_SUCCESS)
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "unable to get %s as double element set (%s)",
+                         name, grib_get_error_message(ret));
+
+    return ret;
+}
+
+int grib_get_double_element_set(const grib_handle* h, const char* name, const size_t* index_array, size_t len, double* val_array)
+{
+    grib_accessor* acc = grib_find_accessor(h, name);
+
+    if (acc) {
+        return grib_unpack_double_element_set(acc, index_array, len, val_array);
+    }
+    return GRIB_NOT_FOUND;
+}
+
 int grib_points_get_values(grib_handle* h, grib_points* points, double* val)
 {
     int i, ret;

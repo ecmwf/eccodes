@@ -36,38 +36,37 @@ or edit "action.class" and rerun ./make_class.pl
 
 */
 
-static void init_class(grib_action_class*);
-static void dump(grib_action* d, FILE*, int);
-static void xref(grib_action* d, FILE* f, const char* path);
-static void destroy(grib_context*, grib_action*);
-static int create_accessor(grib_section*, grib_action*, grib_loader*);
+static void init_class      (grib_action_class*);
+static void dump            (grib_action* d, FILE*,int);
+static void xref            (grib_action* d, FILE* f,const char* path);
+static void destroy         (grib_context*,grib_action*);
+static int create_accessor(grib_section*,grib_action*,grib_loader*);
 
 
-typedef struct grib_action_remove
-{
-    grib_action act;
+typedef struct grib_action_remove {
+    grib_action          act;  
     /* Members defined in remove */
     grib_arguments* args;
 } grib_action_remove;
 
 
 static grib_action_class _grib_action_class_remove = {
-    0,                          /* super                     */
-    "action_class_remove",      /* name                      */
-    sizeof(grib_action_remove), /* size                      */
-    0,                          /* inited */
-    &init_class,                /* init_class */
-    0,                          /* init                      */
-    &destroy,                   /* destroy */
+    0,                              /* super                     */
+    "action_class_remove",                              /* name                      */
+    sizeof(grib_action_remove),            /* size                      */
+    0,                                   /* inited */
+    &init_class,                         /* init_class */
+    0,                               /* init                      */
+    &destroy,                            /* destroy */
 
-    &dump, /* dump                      */
-    &xref, /* xref                      */
+    &dump,                               /* dump                      */
+    &xref,                               /* xref                      */
 
-    &create_accessor, /* create_accessor*/
+    &create_accessor,             /* create_accessor*/
 
-    0, /* notify_change */
-    0, /* reparse */
-    0, /* execute */
+    0,                            /* notify_change */
+    0,                            /* reparse */
+    0,                            /* execute */
 };
 
 grib_action_class* grib_action_class_remove = &_grib_action_class_remove;

@@ -17,7 +17,7 @@
    SUPER      = grib_accessor_class_bytes
 
    IMPLEMENTS = next_offset
-   IMPLEMENTS = unpack_double;unpack_double_element
+   IMPLEMENTS = unpack_double;unpack_double_element;unpack_double_element_set
    IMPLEMENTS = unpack_long
    IMPLEMENTS = unpack_string
    IMPLEMENTS = init;dump;update_size
@@ -48,6 +48,7 @@ static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
+static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
 typedef struct grib_accessor_bitmap
 {
@@ -64,46 +65,47 @@ typedef struct grib_accessor_bitmap
 extern grib_accessor_class* grib_accessor_class_bytes;
 
 static grib_accessor_class _grib_accessor_class_bitmap = {
-    &grib_accessor_class_bytes,   /* super                     */
-    "bitmap",                     /* name                      */
-    sizeof(grib_accessor_bitmap), /* size                      */
-    0,                            /* inited */
-    &init_class,                  /* init_class */
-    &init,                        /* init                      */
-    0,                            /* post_init                      */
-    0,                            /* free mem                       */
-    &dump,                        /* describes himself         */
-    &next_offset,                 /* get length of section     */
-    0,                            /* get length of string      */
-    0,                            /* get number of values      */
-    0,                            /* get number of bytes      */
-    0,                            /* get offset to bytes           */
-    0,                            /* get native type               */
-    0,                            /* get sub_section                */
-    0,                            /* grib_pack procedures long      */
-    0,                            /* grib_pack procedures long      */
-    0,                            /* grib_pack procedures long      */
-    &unpack_long,                 /* grib_unpack procedures long    */
-    0,                            /* grib_pack procedures double    */
-    &unpack_double,               /* grib_unpack procedures double  */
-    0,                            /* grib_pack procedures string    */
-    &unpack_string,               /* grib_unpack procedures string  */
-    0,                            /* grib_pack array procedures string    */
-    0,                            /* grib_unpack array procedures string  */
-    0,                            /* grib_pack procedures bytes     */
-    0,                            /* grib_unpack procedures bytes   */
-    0,                            /* pack_expression */
-    0,                            /* notify_change   */
-    &update_size,                 /* update_size   */
-    0,                            /* preferred_size   */
-    0,                            /* resize   */
-    0,                            /* nearest_smaller_value */
-    0,                            /* next accessor    */
-    0,                            /* compare vs. another accessor   */
-    &unpack_double_element,       /* unpack only ith value          */
-    0,                            /* unpack a subarray         */
-    0,                            /* clear          */
-    0,                            /* clone accessor          */
+    &grib_accessor_class_bytes,                      /* super */
+    "bitmap",                      /* name */
+    sizeof(grib_accessor_bitmap),  /* size */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    &init,                       /* init */
+    0,                  /* post_init */
+    0,                    /* free mem */
+    &dump,                       /* describes himself */
+    &next_offset,                /* get length of section */
+    0,              /* get length of string */
+    0,                /* get number of values */
+    0,                 /* get number of bytes */
+    0,                /* get offset to bytes */
+    0,            /* get native type */
+    0,                /* get sub_section */
+    0,               /* grib_pack procedures long */
+    0,                 /* grib_pack procedures long */
+    0,                  /* grib_pack procedures long */
+    &unpack_long,                /* grib_unpack procedures long */
+    0,                /* grib_pack procedures double */
+    &unpack_double,              /* grib_unpack procedures double */
+    0,                /* grib_pack procedures string */
+    &unpack_string,              /* grib_unpack procedures string */
+    0,          /* grib_pack array procedures string */
+    0,        /* grib_unpack array procedures string */
+    0,                 /* grib_pack procedures bytes */
+    0,               /* grib_unpack procedures bytes */
+    0,            /* pack_expression */
+    0,              /* notify_change */
+    &update_size,                /* update_size */
+    0,             /* preferred_size */
+    0,                     /* resize */
+    0,      /* nearest_smaller_value */
+    0,                       /* next accessor */
+    0,                    /* compare vs. another accessor */
+    &unpack_double_element,      /* unpack only ith value */
+    &unpack_double_element_set,  /* unpack a given set of elements */
+    0,     /* unpack a subarray */
+    0,                      /* clear */
+    0,                 /* clone accessor */
 };
 
 
@@ -112,31 +114,31 @@ grib_accessor_class* grib_accessor_class_bitmap = &_grib_accessor_class_bitmap;
 
 static void init_class(grib_accessor_class* c)
 {
-    c->string_length          = (*(c->super))->string_length;
-    c->value_count            = (*(c->super))->value_count;
-    c->byte_count             = (*(c->super))->byte_count;
-    c->byte_offset            = (*(c->super))->byte_offset;
-    c->get_native_type        = (*(c->super))->get_native_type;
-    c->sub_section            = (*(c->super))->sub_section;
-    c->pack_missing           = (*(c->super))->pack_missing;
-    c->is_missing             = (*(c->super))->is_missing;
-    c->pack_long              = (*(c->super))->pack_long;
-    c->pack_double            = (*(c->super))->pack_double;
-    c->pack_string            = (*(c->super))->pack_string;
-    c->pack_string_array      = (*(c->super))->pack_string_array;
-    c->unpack_string_array    = (*(c->super))->unpack_string_array;
-    c->pack_bytes             = (*(c->super))->pack_bytes;
-    c->unpack_bytes           = (*(c->super))->unpack_bytes;
-    c->pack_expression        = (*(c->super))->pack_expression;
-    c->notify_change          = (*(c->super))->notify_change;
-    c->preferred_size         = (*(c->super))->preferred_size;
-    c->resize                 = (*(c->super))->resize;
-    c->nearest_smaller_value  = (*(c->super))->nearest_smaller_value;
-    c->next                   = (*(c->super))->next;
-    c->compare                = (*(c->super))->compare;
-    c->unpack_double_subarray = (*(c->super))->unpack_double_subarray;
-    c->clear                  = (*(c->super))->clear;
-    c->make_clone             = (*(c->super))->make_clone;
+    c->string_length    =    (*(c->super))->string_length;
+    c->value_count    =    (*(c->super))->value_count;
+    c->byte_count    =    (*(c->super))->byte_count;
+    c->byte_offset    =    (*(c->super))->byte_offset;
+    c->get_native_type    =    (*(c->super))->get_native_type;
+    c->sub_section    =    (*(c->super))->sub_section;
+    c->pack_missing    =    (*(c->super))->pack_missing;
+    c->is_missing    =    (*(c->super))->is_missing;
+    c->pack_long    =    (*(c->super))->pack_long;
+    c->pack_double    =    (*(c->super))->pack_double;
+    c->pack_string    =    (*(c->super))->pack_string;
+    c->pack_string_array    =    (*(c->super))->pack_string_array;
+    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
+    c->pack_bytes    =    (*(c->super))->pack_bytes;
+    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
+    c->pack_expression    =    (*(c->super))->pack_expression;
+    c->notify_change    =    (*(c->super))->notify_change;
+    c->preferred_size    =    (*(c->super))->preferred_size;
+    c->resize    =    (*(c->super))->resize;
+    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
+    c->next    =    (*(c->super))->next;
+    c->compare    =    (*(c->super))->compare;
+    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
+    c->clear    =    (*(c->super))->clear;
+    c->make_clone    =    (*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -268,6 +270,14 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     pos += idx;
     *val = (double)grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, &pos, 1);
 
+    return GRIB_SUCCESS;
+}
+static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
+    size_t i = 0;
+    for (i=0; i<len; ++i) {
+        unpack_double_element(a, index_array[i], val_array + i);
+    }
     return GRIB_SUCCESS;
 }
 

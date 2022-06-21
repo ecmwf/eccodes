@@ -95,6 +95,12 @@ nums=`${tools_dir}/grib_get -p numberOfDataPoints,numberOfCodedValues,numberOfMi
 res=`${tools_dir}/grib_get -l 33,88.5 $sec_ord_bmp`
 [ "$res" = "9999 5.51552 9999 9999 " ]
 
+res=`${tools_dir}/grib_get -l 30,90.0 $sec_ord_bmp`
+[ "$res" = "5.26552 9999 9999 9999 " ]
+
+res=`${tools_dir}/grib_get -l 28.5,87 $sec_ord_bmp`
+[ "$res" = "9999 2.51552 9999 9999 " ]
+
 res=`${tools_dir}/grib_get -l 28.5,90 $sec_ord_bmp`
 [ "$res" = "3.51552 9999 5.26552 9999 " ]
 

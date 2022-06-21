@@ -38,43 +38,42 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 
-static void init_class(grib_expression_class*);
+static void init_class              (grib_expression_class*);
 
-static void destroy(grib_context*, grib_expression* e);
+static void        destroy(grib_context*,grib_expression* e);
 
-static void print(grib_context*, grib_expression*, grib_handle*);
-static void add_dependency(grib_expression* e, grib_accessor* observer);
+static void        print(grib_context*,grib_expression*,grib_handle*);
+static void        add_dependency(grib_expression* e, grib_accessor* observer);
 
-static int native_type(grib_expression*, grib_handle*);
+static int        native_type(grib_expression*,grib_handle*);
 
-static int evaluate_long(grib_expression*, grib_handle*, long*);
+static int        evaluate_long(grib_expression*,grib_handle*,long*);
 
-typedef struct grib_expression_functor
-{
-    grib_expression base;
+typedef struct grib_expression_functor{
+  grib_expression base;
     /* Members defined in functor */
-    char* name;
-    grib_arguments* args;
+    char *name;
+    grib_arguments *args;
 } grib_expression_functor;
 
 
 static grib_expression_class _grib_expression_class_functor = {
-    0,                               /* super                     */
-    "functor",                       /* name                      */
-    sizeof(grib_expression_functor), /* size of instance          */
-    0,                               /* inited */
-    &init_class,                     /* init_class */
-    0,                               /* constructor               */
-    &destroy,                        /* destructor                */
-    &print,
-    &add_dependency,
+    0,                    /* super                     */
+    "functor",                    /* name                      */
+    sizeof(grib_expression_functor),/* size of instance          */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    0,                     /* constructor               */
+    &destroy,                  /* destructor                */
+    &print,                 
+    &add_dependency,       
 
-    &native_type,
-    0,
+	&native_type,
+	0,
 
-    &evaluate_long,
-    0,
-    0,
+	&evaluate_long,
+	0,
+	0,
 };
 
 grib_expression_class* grib_expression_class_functor = &_grib_expression_class_functor;

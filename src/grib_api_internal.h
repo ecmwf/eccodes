@@ -310,7 +310,10 @@ typedef void (*accessor_destroy_proc)(grib_context*, grib_accessor*);
 
 typedef int (*accessor_unpack_long_proc)(grib_accessor*, long*, size_t* len);
 typedef int (*accessor_unpack_double_proc)(grib_accessor*, double*, size_t* len);
+
 typedef int (*accessor_unpack_double_element_proc)(grib_accessor*, size_t, double*);
+typedef int (*accessor_unpack_double_element_set_proc)(grib_accessor*, const size_t*, size_t, double*);
+
 typedef int (*accessor_unpack_double_subarray_proc)(grib_accessor*, double*, size_t, size_t);
 typedef int (*accessor_unpack_string_proc)(grib_accessor*, char*, size_t* len);
 typedef int (*accessor_unpack_string_array_proc)(grib_accessor*, char**, size_t* len);
@@ -974,6 +977,7 @@ struct grib_accessor_class
     accessor_next_proc next;
     accessor_compare_proc compare;
     accessor_unpack_double_element_proc unpack_double_element;
+    accessor_unpack_double_element_set_proc unpack_double_element_set;
     accessor_unpack_double_subarray_proc unpack_double_subarray;
     accessor_clear_proc clear;
     accessor_clone_proc make_clone;

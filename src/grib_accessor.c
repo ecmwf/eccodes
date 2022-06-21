@@ -221,6 +221,22 @@ int grib_unpack_double_element(grib_accessor* a, size_t i, double* v)
     return GRIB_NOT_IMPLEMENTED;
 }
 
+/* Get the values for the indices passed in.
+ * The length of the 'index_array' argument should be 'len' and 'val_array' should also contain at least 'len' elements
+ */
+int grib_unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
+    grib_accessor_class* c = a->cclass;
+    DebugAssert(len > 0);
+    while (c) {
+        if (c->unpack_double_element_set) {
+            return c->unpack_double_element_set(a, index_array, len, val_array);
+        }
+        c = c->super ? *(c->super) : NULL;
+    }
+    return GRIB_NOT_IMPLEMENTED;
+}
+
 int grib_unpack_string(grib_accessor* a, char* v, size_t* len)
 {
     grib_accessor_class* c = a->cclass;
