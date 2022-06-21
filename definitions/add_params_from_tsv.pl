@@ -268,6 +268,7 @@ while (<>) {
             $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,61,$scaledValueWL2,0);
         }
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,64,$sourceSink,0)  if ($is_srcsink ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,65,1,0)  if ($is_srcsink eq "1");
 
         # format is only GRIB2 hence grib1 entry=0 and grib2=1
         $dbh->do("insert into param_format(param_id,grib1,grib2) values (?,?,?)",undef,$paramId,0,1);
