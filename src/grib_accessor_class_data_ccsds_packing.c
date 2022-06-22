@@ -600,7 +600,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     if (idx > size) return GRIB_INVALID_ARGUMENT;
 
     values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
-    err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
+    err    = grib_get_double_array(hand, "codedValues", values, &size);
     if (err) {
         grib_context_free(a->context, values);
         return err;
