@@ -17,10 +17,17 @@ cd ${data_dir}
 
 # ECC-1410
 f='tigge/tiggelam_cnmc_sfc.grib'
-$EXEC ${test_dir}/grib_keys_iter $f
+$EXEC ${test_dir}/grib_keys_iter $f > /dev/null
 
-for f in *grib *grib[12] tigge/*grib; do
-    $EXEC ${test_dir}/grib_keys_iter $f > $tempOut
+grib_files=`cat ${data_dir}/grib_data_files.txt`
+for f in ${grib_files}; do
+    ${test_dir}/grib_keys_iter $f > $tempOut
+done
+
+cd ${data_dir}/tigge
+tigge_files=`cat ${data_dir}/tigge/tigge_data_files.txt`
+for f in ${tigge_files}; do
+    ${test_dir}/grib_keys_iter $f > $tempOut
 done
 
 rm -f $tempOut
