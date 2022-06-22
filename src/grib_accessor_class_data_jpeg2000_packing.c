@@ -178,15 +178,16 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
 {
     const char* user_lib                      = NULL;
     grib_accessor_data_jpeg2000_packing* self = (grib_accessor_data_jpeg2000_packing*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     self->jpeg_lib                 = 0;
-    self->type_of_compression_used = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->target_compression_ratio = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->ni                       = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->nj                       = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->list_defining_points     = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->number_of_data_points    = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->scanning_mode            = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
+    self->type_of_compression_used = grib_arguments_get_name(hand, args, self->carg++);
+    self->target_compression_ratio = grib_arguments_get_name(hand, args, self->carg++);
+    self->ni                       = grib_arguments_get_name(hand, args, self->carg++);
+    self->nj                       = grib_arguments_get_name(hand, args, self->carg++);
+    self->list_defining_points     = grib_arguments_get_name(hand, args, self->carg++);
+    self->number_of_data_points    = grib_arguments_get_name(hand, args, self->carg++);
+    self->scanning_mode            = grib_arguments_get_name(hand, args, self->carg++);
     self->edition                  = 2;
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 
@@ -579,20 +580,34 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 {
-    size_t size;
-    double* values;
+    grib_accessor_data_jpeg2000_packing* self = (grib_accessor_data_jpeg2000_packing*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    size_t size = 0;
+    double* values = NULL;
     int err = 0;
+    double reference_value = 0;
+    long bits_per_value = 0;
+
+    if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(hand, self->reference_value, &reference_value)) != GRIB_SUCCESS)
+        return err;
+
+    /* Special case of constant field */
+    if (bits_per_value == 0) {
+        *val = reference_value;
+        return GRIB_SUCCESS;
+    }
 
     /* GRIB-564: The index idx relates to codedValues NOT values! */
-
-    err = grib_get_size(grib_handle_of_accessor(a), "codedValues", &size);
+    err = grib_get_size(hand, "codedValues", &size);
     if (err)
         return err;
     if (idx > size)
         return GRIB_INVALID_ARGUMENT;
 
     values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
-    err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
+    err    = grib_get_double_array(hand, "codedValues", values, &size);
     if (err) {
         grib_context_free(a->context, values);
         return err;
@@ -604,21 +619,36 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
 static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
 {
+    grib_accessor_data_jpeg2000_packing* self = (grib_accessor_data_jpeg2000_packing*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
     size_t size = 0, i = 0;
-    double* values;
+    double* values = NULL;
     int err = 0;
+    double reference_value = 0;
+    long bits_per_value = 0;
+
+    if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(hand, self->reference_value, &reference_value)) != GRIB_SUCCESS)
+        return err;
+
+    /* Special case of constant field */
+    if (bits_per_value == 0) {
+        for (i = 0; i < len; i++)
+            val_array[i] = reference_value;
+        return GRIB_SUCCESS;
+    }
 
     /* GRIB-564: The indexes in index_array relate to codedValues NOT values! */
-    err = grib_get_size(grib_handle_of_accessor(a), "codedValues", &size);
-    if (err)
-        return err;
+    err = grib_get_size(hand, "codedValues", &size);
+    if (err) return err;
 
     for (i = 0; i < len; i++) {
         if (index_array[i] > size) return GRIB_INVALID_ARGUMENT;
     }
 
     values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
-    err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
+    err    = grib_get_double_array(hand, "codedValues", values, &size);
     if (err) {
         grib_context_free(a->context, values);
         return err;
