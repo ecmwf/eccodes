@@ -742,19 +742,31 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
 
 #else
 
-static int unpack_double(grib_accessor* a, double* val, size_t* len)
+static void print_error_feature_not_enabled(grib_context* c)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR,
+    grib_context_log(c, GRIB_LOG_ERROR,
                      "grib_accessor_data_png_packing: PNG support not enabled. "
                      "Please rebuild with -DENABLE_PNG=ON");
-    return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
+static int unpack_double(grib_accessor* a, double* val, size_t* len)
+{
+    print_error_feature_not_enabled(a->context);
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
+}
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR,
-                     "grib_accessor_data_png_packing: PNG support not enabled. "
-                     "Please rebuild with -DENABLE_PNG=ON");
+    print_error_feature_not_enabled(a->context);
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
+}
+static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
+    print_error_feature_not_enabled(a->context);
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
+}
+static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
+    print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
