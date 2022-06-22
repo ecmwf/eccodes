@@ -21,6 +21,7 @@
    IMPLEMENTS = unpack_double
    IMPLEMENTS = pack_double
    IMPLEMENTS = value_count
+   IMPLEMENTS = unpack_double_element;unpack_double_element_set
    MEMBERS=const char*   number_of_values
    MEMBERS=const char*   reference_value
    MEMBERS=const char*   binary_scale_factor
@@ -51,6 +52,8 @@ static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
+static int unpack_double_element(grib_accessor*, size_t i, double* val);
+static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
 typedef struct grib_accessor_data_png_packing
 {
@@ -114,8 +117,8 @@ static grib_accessor_class _grib_accessor_class_data_png_packing = {
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
-    0,      /* unpack only ith value */
-    0,  /* unpack a given set of elements */
+    &unpack_double_element,      /* unpack only ith value */
+    &unpack_double_element_set,  /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -152,8 +155,6 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element    =    (*(c->super))->unpack_double_element;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -218,7 +219,6 @@ static void png_flush_callback(png_structp png)
 {
     /* Empty */
 }
-
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
@@ -323,7 +323,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     png_read_png(png, info, PNG_TRANSFORM_IDENTITY, NULL);
 
     Assert(callback_data.offset == callback_data.length);
-
 
     rows = png_get_rows(png, info);
 
@@ -432,14 +431,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
 
     /* Special case */
-
     if (*len == 0) {
         grib_buffer_replace(a, NULL, 0, 1, 1);
         return GRIB_SUCCESS;
     }
 
     is_constant_field = is_constant(val, n_vals);
-    if (!is_constant_field && bits_per_value==0) {
+    if (!is_constant_field && bits_per_value == 0) {
         /* A non-constant field with bitsPerValue==0! */
         bits_per_value = 24; /* Set sane value */
     }
@@ -660,6 +658,88 @@ cleanup:
 
     return err;
 }
+
+static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
+    /* The index idx relates to codedValues NOT values! */
+    grib_accessor_data_png_packing* self = (grib_accessor_data_png_packing*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    int err = 0;
+    size_t size    = 0;
+    double reference_value    = 0;
+    long bits_per_value       = 0;
+    double* values = NULL;
+
+    if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(hand, self->reference_value, &reference_value)) != GRIB_SUCCESS)
+        return err;
+
+    /* Special case of constant field */
+    if (bits_per_value == 0) {
+        *val = reference_value;
+        return GRIB_SUCCESS;
+    }
+    err = grib_get_size(hand, "codedValues", &size);
+    if (err) return err;
+    if (idx > size) return GRIB_INVALID_ARGUMENT;
+
+    values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
+    err    = grib_get_double_array(hand, "codedValues", values, &size);
+    if (err) {
+        grib_context_free(a->context, values);
+        return err;
+    }
+    *val = values[idx];
+    grib_context_free(a->context, values);
+    return GRIB_SUCCESS;
+}
+
+static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
+    /* The index idx relates to codedValues NOT values! */
+    grib_accessor_data_png_packing* self = (grib_accessor_data_png_packing*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    int err = 0;
+    size_t size = 0, i = 0;
+    double reference_value    = 0;
+    long bits_per_value       = 0;
+    double* values = NULL;
+
+    if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(hand, self->reference_value, &reference_value)) != GRIB_SUCCESS)
+        return err;
+
+    /* Special case of constant field */
+    if (bits_per_value == 0) {
+        for (i = 0; i < len; i++) {
+            val_array[i] = reference_value;
+        }
+        return GRIB_SUCCESS;
+    }
+
+    err = grib_get_size(grib_handle_of_accessor(a), "codedValues", &size);
+    if (err)
+        return err;
+
+    for (i = 0; i < len; i++) {
+        if (index_array[i] > size) return GRIB_INVALID_ARGUMENT;
+    }
+
+    values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
+    err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
+    if (err) {
+        grib_context_free(a->context, values);
+        return err;
+    }
+    for (i = 0; i < len; i++) {
+        val_array[i] = values[index_array[i]];
+    }
+    grib_context_free(a->context, values);
+    return GRIB_SUCCESS;
+}
+
 #else
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
