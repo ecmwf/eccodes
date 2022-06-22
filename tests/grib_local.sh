@@ -189,5 +189,15 @@ result=`echo 'print "[ccccIdentifiers]";' | ${tools_dir}/grib_filter - $temp`
 [ "$result" = "kwbc ecmf sabm" ]
 
 
+# ECC-1413: Local Definition 38
+# --------------------------------
+${tools_dir}/grib_set -s \
+   setLocalDefinition=1,localDefinitionNumber=38,type=4i,stream=elda,iterationNumber=23 \
+   $sample_g2 $temp
+grib_check_key_equals $temp 'mars.iteration' '23'
+${tools_dir}/grib_ls -jm $temp > $temp.1
+grep -q "iteration.* 23" $temp.1
 
+
+# Clean up
 rm -f $temp $temp.1 $temp.2 $temp.3
