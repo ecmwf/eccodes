@@ -430,6 +430,16 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
             return 0;
         }
     }
+    if ( !grib_inline_strcmp(name, "packingType") &&
+            (strcmp(val, "grid_simple")==0 || strcmp(val, "grid_ccsds")==0) ) {
+        char input_packing_type[100] = {0,};
+        size_t len = sizeof(input_packing_type);
+        grib_get_string(h, "packingType", input_packing_type, &len);
+        if (strcmp(input_packing_type, "grid_ieee") == 0) {
+            ret = grib_set_long(h, "bitsPerValue", 32); // TODO
+            if (ret) return ret;
+        }
+    }
 
     a = grib_find_accessor(h, name);
 

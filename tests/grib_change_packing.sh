@@ -80,7 +80,7 @@ input=${data_dir}/grid_ieee.grib
 ${tools_dir}/grib_set -r -s packingType=grid_simple $input $temp
 grib_check_key_equals $input accuracy 32
 grib_check_key_equals $temp packingType 'grid_simple'
-grib_check_key_equals $temp accuracy 24
+grib_check_key_equals $temp accuracy,bitsPerValue '32 32'
 stats1=`${tools_dir}/grib_get -F%.2f -p skew,kurt $input`
 stats2=`${tools_dir}/grib_get -F%.2f -p skew,kurt $temp`
 [ "$stats1" = "$stats2" ]
