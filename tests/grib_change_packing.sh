@@ -85,6 +85,14 @@ stats1=`${tools_dir}/grib_get -F%.2f -p skew,kurt $input`
 stats2=`${tools_dir}/grib_get -F%.2f -p skew,kurt $temp`
 [ "$stats1" = "$stats2" ]
 
+# 64bit IEEE - We can only do max. 32 with CCSDS
+input=${data_dir}/reduced_gaussian_model_level.grib2
+${tools_dir}/grib_set -r -s packingType=grid_ieee,precision=2  $input $temp
+grib_check_key_equals $temp packingType,accuracy 'grid_ieee 64'
+${tools_dir}/grib_set -r -s packingType=grid_simple $temp $temp.simple
+grib_check_key_equals $temp.simple packingType,accuracy 'grid_simple 32'
+rm -f $temp.simple
+
 
 # Test 'accuracy' key
 # -----------------------

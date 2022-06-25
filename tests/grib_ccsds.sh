@@ -120,6 +120,14 @@ grib_check_key_equals $outfile1 packingType grid_ccsds
 ${tools_dir}/grib_set -r -s packingType=grid_simple $infile $outfile2
 ${tools_dir}/grib_compare -c data:n $outfile1 $outfile2
 
+# 64bit IEEE - We can only do max. 32 with CCSDS
+infile=${data_dir}/reduced_gaussian_model_level.grib2
+${tools_dir}/grib_set -r -s packingType=grid_ieee,precision=2  $infile $outfile1
+grib_check_key_equals $outfile1 packingType,accuracy 'grid_ieee 64'
+${tools_dir}/grib_set -r -s packingType=grid_ccsds $outfile1 $outfile2
+grib_check_key_equals $outfile2 packingType,accuracy 'grid_ccsds 32'
+
+
 # ECC-1352: Additional tests for bitsPerValue
 # --------------------------------------------
 infile=${data_dir}/sample.grib2
