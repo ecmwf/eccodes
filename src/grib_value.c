@@ -419,8 +419,8 @@ static int process_packingType_change(grib_handle* h, const char* keyname, const
                     if (h->context->debug) {
                         fprintf(stderr, "ECCODES DEBUG grib_set_string packingType: "
                                 "Constant field cannot be encoded in second order. Packing not changed\n");
-                        return 1; /* Dealt with - no further action needed */
                     }
+                    return 1; /* Dealt with - no further action needed */
                 }
             }
             /* GRIB-883: check if there are enough coded values */
