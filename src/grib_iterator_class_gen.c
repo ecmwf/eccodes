@@ -228,5 +228,7 @@ static long has_next(grib_iterator* iter)
 {
     if (iter->data == NULL)
         return 0;
-    return iter->nv - iter->e;
+    if (iter->e >= (long)(iter->nv - 1))
+        return 0;
+    return 1;
 }
