@@ -21,6 +21,19 @@ tempFilt=temp.${label}.filt
 
 in=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
+set_lowerLimit_and_check()
+{
+    _llim=$1
+    _sfac=$2
+    _sval=$3
+
+    ${tools_dir}/grib_set -s lowerLimit=$_llim $tempGrib $temp2
+    grib_check_key_equals $temp2 \
+       scaleFactorOfLowerLimit,scaledValueOfLowerLimit,lowerLimit \
+       "$_sfac $_sval $_llim"
+}
+
+
 # Decoding: Lower limit
 # ----------------------
 ${tools_dir}/grib_set -s \
@@ -74,6 +87,26 @@ grib_check_key_equals $temp2 lowerLimit,upperLimit '3.14 MISSING'
 ${tools_dir}/grib_set -s lowerLimit=-6.6,upperLimit=-1.02 $tempGrib $temp2
 grib_check_key_equals $temp2 scaleFactorOfLowerLimit,scaledValueOfLowerLimit,lowerLimit "1 -66 -6.6"
 grib_check_key_equals $temp2 scaleFactorOfUpperLimit,scaledValueOfUpperLimit,upperLimit "2 -102 -1.02"
+
+#                        input  factor value
+set_lowerLimit_and_check 550        0  550
+set_lowerLimit_and_check -99        0  -99
+set_lowerLimit_and_check 6.77       2  677
+set_lowerLimit_and_check 0.001      3  1
+set_lowerLimit_and_check -6.6       1  -66
+set_lowerLimit_and_check -1.02      2  -102
+set_lowerLimit_and_check 3e-05      5  3
+set_lowerLimit_and_check -3.9e-05   6  -39
+
+#set_lowerLimit_and_check 3.14e-06    6  314
+#set_lowerLimit_and_check 3.14e-07    7  314
+#set_lowerLimit_and_check 3e-08       8  3
+#set_lowerLimit_and_check 1.0e-10     10 1
+#set_lowerLimit_and_check 0.03e-06    8  3
+#set_lowerLimit_and_check 3.14e-09    11 314
+#set_lowerLimit_and_check -3.1456e-09 13 -31456
+#set_lowerLimit_and_check 0.0000123   7  123
+
 
 # Clean up
 rm -f $tempGrib $tempFilt $temp2
