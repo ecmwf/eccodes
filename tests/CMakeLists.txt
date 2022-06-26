@@ -21,6 +21,7 @@ list(APPEND test_bins
     unit_tests
     bufr_keys_iter
     grib_keys_iter
+    grib_geo_iter
     gauss_sub
     grib_nearest_test
     grib_util_set_spec
@@ -156,6 +157,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_change_edition
         bufr_keys_iter
         grib_keys_iter
+        grib_geo_iter
         bufr_get_element
         bufr_wmo_tables
         bufr_extract_headers
