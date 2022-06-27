@@ -70,6 +70,9 @@ temp2=grib_compare_temp2.grib
 ${tools_dir}/grib_copy -w count=25 ${data_dir}/lfpw.grib1 $temp1
 ${tools_dir}/grib_copy -w count=30 ${data_dir}/lfpw.grib1 $temp2
 
+# Compare only message headers
+${tools_dir}/grib_compare -H -b level,totalLength $temp1 $temp2
+
 # This should fail but not crash! so check exit code is not 134
 set +e
 ${tools_dir}/grib_compare -b firstOrderValues $temp1 $temp2 >/dev/null
