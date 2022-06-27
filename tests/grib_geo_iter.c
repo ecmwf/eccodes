@@ -10,9 +10,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 
-#include "grib_api.h"
+#include "grib_api_internal.h"
 
 int main(int argc, char** argv)
 {
@@ -25,23 +24,23 @@ int main(int argc, char** argv)
     grib_iterator* iter          = NULL;
 
     h = grib_handle_new_from_samples(0, sample_filename);
-    assert(h);
+    Assert(h);
 
     iter = grib_iterator_new(h, 0, &err);
-    assert(!err);
-    assert(iter);
+    Assert(!err);
+    Assert(iter);
 
-    assert(grib_iterator_has_next(iter));
+    Assert(grib_iterator_has_next(iter));
     n = 0;
 
     while (grib_iterator_next(iter, &lat, &lon, &value)) {
         if (n < numberOfDataPoints - 1)
-            assert(grib_iterator_has_next(iter));
+            Assert(grib_iterator_has_next(iter));
         n++;
     }
-    assert(n == numberOfDataPoints);
+    Assert(n == numberOfDataPoints);
 
-    assert(grib_iterator_has_next(iter) == 0);
+    Assert(grib_iterator_has_next(iter) == 0);
 
     grib_iterator_delete(iter);
 
