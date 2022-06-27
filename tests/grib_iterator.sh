@@ -37,4 +37,10 @@ ${tools_dir}/grib_get_data -L%12.6f%11.5f ${data_dir}/regular_latlon_surface.gri
 ${tools_dir}/grib_get_data -p shortName,level ${data_dir}/regular_latlon_surface.grib2 > $temp
 grep -q "Latitude Longitude Value shortName level" $temp
 
+
+# Run on a spectral field - should just print out its values
+${tools_dir}/grib_get_data "$samp_dir/sh_ml_grib2.tmpl"
+
+
+# Clean up
 rm -f $temp
