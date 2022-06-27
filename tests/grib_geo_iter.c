@@ -14,15 +14,8 @@
 
 #include "grib_api.h"
 
-static void usage(const char* prog)
-{
-    printf("Usage: %s grib_file\n", prog);
-    exit(1);
-}
-
 int main(int argc, char** argv)
 {
-    FILE* in = NULL;
     int err  = 0;
     double lat, lon, value;
     int n                        = 0;
