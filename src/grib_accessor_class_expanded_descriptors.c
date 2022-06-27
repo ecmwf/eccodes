@@ -363,7 +363,8 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
                 uidx     = grib_bufr_descriptors_array_get(expanded, idx);
                 if (size > 100) {
                     grib_context_log(c, GRIB_LOG_ERROR,
-                                     "Delayed replication %06ld: Too many elements (%lu)", uidx->code, size);
+                                     "Delayed replication %06ld: Too many elements (%lu). "
+                            "Hint: This may be due to associated field descriptors", uidx->code, size);
                     *err = GRIB_DECODING_ERROR;
                     return;
                 }
