@@ -360,7 +360,7 @@ static void bufr_dump_descriptors(grib_handle* h)
     while (i < size_desc) {
         const long desc = array_descriptors[i];
         if (desc == 999999) {
-            printf("%06ld\t\t\n", desc);
+            printf("%06ld\t\tASSOCIATED FIELD\n", desc);
         }
         else {
             char* abbr  = array_abbrevs[j];
