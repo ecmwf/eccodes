@@ -17,6 +17,15 @@ sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 latest=`${tools_dir}/grib_get -p tablesVersionLatest $sample2`
 
+# ECC-1417: Replace key aerosolType with constituentType
+# ------------------------------------------------------
+${tools_dir}/grib_set -s tablesVersion=$latest,paramId=210072 $sample2 $temp
+grib_check_key_equals $temp aerosolType         62026
+grib_check_key_equals $temp aerosolTypeName     'Particulate matter'
+grib_check_key_equals $temp constituentType     62026
+grib_check_key_equals $temp constituentTypeName 'Particulate matter'
+
+
 # Check latest chemical/aerosol code tables
 # -----------------------------------------
 ${tools_dir}/grib_set -s tablesVersion=$latest,paramId=217224  $sample2 $temp
