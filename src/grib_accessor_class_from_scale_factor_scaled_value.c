@@ -246,7 +246,10 @@ static int get_scaled_value_and_scale_factor_algorithm2(
     if (is_negative) {
         value *= -1;
     }
-    
+
+    if (value == 0)
+        return GRIB_INTERNAL_ERROR;
+
     *ret_factor = factor;
     *ret_value = value;
     
@@ -259,7 +262,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     /* Evaluate self->scaleFactor and self->scaledValue from input double '*val' */
     grib_accessor_from_scale_factor_scaled_value* self = (grib_accessor_from_scale_factor_scaled_value*)a;
     grib_handle* hand                                  = grib_handle_of_accessor(a);
-    int ret                                            = 0;
+    int err                                            = 0;
     int64_t factor = 0;
     int64_t value = 0;
     double exact        = *val; /*the input*/
@@ -267,18 +270,18 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     grib_accessor *accessor_factor, *accessor_value;
 
     if (exact == 0) {
-        if ((ret = grib_set_long_internal(hand, self->scaleFactor, 0)) != GRIB_SUCCESS)
-            return ret;
-        if ((ret = grib_set_long_internal(hand, self->scaledValue, 0)) != GRIB_SUCCESS)
-            return ret;
+        if ((err = grib_set_long_internal(hand, self->scaleFactor, 0)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_set_long_internal(hand, self->scaledValue, 0)) != GRIB_SUCCESS)
+            return err;
         return GRIB_SUCCESS;
     }
 
     if (exact == GRIB_MISSING_DOUBLE) {
-        if ((ret = grib_set_missing(hand, self->scaleFactor)) != GRIB_SUCCESS)
-            return ret;
-        if ((ret = grib_set_missing(hand, self->scaledValue)) != GRIB_SUCCESS)
-            return ret;
+        if ((err = grib_set_missing(hand, self->scaleFactor)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_set_missing(hand, self->scaledValue)) != GRIB_SUCCESS)
+            return err;
         return GRIB_SUCCESS;
     }
 
@@ -291,19 +294,19 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     maxval_value  = (1UL << (accessor_value->length * 8)) - 2;  /* exclude missing */
     maxval_factor = (1UL << (accessor_factor->length * 8)) - 2; /* exclude missing */
 
-    ret = get_scaled_value_and_scale_factor_algorithm1(exact, maxval_value, maxval_factor, &value, &factor);
-    if (ret) {
-        ret = get_scaled_value_and_scale_factor_algorithm2(exact, maxval_value, maxval_factor, &value, &factor);
-        if (ret) {
+    err = get_scaled_value_and_scale_factor_algorithm1(exact, maxval_value, maxval_factor, &value, &factor);
+    if (err) {
+        err = get_scaled_value_and_scale_factor_algorithm2(exact, maxval_value, maxval_factor, &value, &factor);
+        if (err) {
             grib_context_log(a->context, GRIB_LOG_ERROR, "Failed to compute %s and %s from %g", self->scaleFactor, self->scaledValue, exact);
-            return ret;
+            return err;
         }
     }
 
-    if ((ret = grib_set_long_internal(hand, self->scaleFactor, factor)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_set_long_internal(hand, self->scaledValue, value)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_set_long_internal(hand, self->scaleFactor, factor)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(hand, self->scaledValue, value)) != GRIB_SUCCESS)
+        return err;
 
     return GRIB_SUCCESS;
 }
@@ -311,23 +314,23 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_from_scale_factor_scaled_value* self = (grib_accessor_from_scale_factor_scaled_value*)a;
-    int ret                                            = 0;
+    int err                                            = 0;
     long scaleFactor                                   = 0;
     long scaledValue                                   = 0;
     grib_handle* hand                                  = grib_handle_of_accessor(a);
 
-    if ((ret = grib_get_long_internal(hand, self->scaleFactor, &scaleFactor)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(hand, self->scaledValue, &scaledValue)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_internal(hand, self->scaleFactor, &scaleFactor)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(hand, self->scaledValue, &scaledValue)) != GRIB_SUCCESS)
+        return err;
 
-    if (grib_is_missing(hand, self->scaledValue, &ret) && ret == GRIB_SUCCESS) {
+    if (grib_is_missing(hand, self->scaledValue, &err) && err == GRIB_SUCCESS) {
         *val = GRIB_MISSING_DOUBLE;
         *len = 1;
         return GRIB_SUCCESS;
     } else {
         /* ECC-966: If scale factor is missing, print error and treat it as zero (as a fallback) */
-        if (grib_is_missing(hand, self->scaleFactor, &ret) && ret == GRIB_SUCCESS) {
+        if (grib_is_missing(hand, self->scaleFactor, &err) && err == GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
                     "unpack_double for %s: %s is missing! Using zero instead", a->name, self->scaleFactor);
             scaleFactor = 0;
@@ -348,24 +351,24 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         scaleFactor--;
     }
 
-    if (ret == GRIB_SUCCESS)
+    if (err == GRIB_SUCCESS)
         *len = 1;
 
-    return ret;
+    return err;
 }
 
 static int is_missing(grib_accessor* a)
 {
     grib_accessor_from_scale_factor_scaled_value* self = (grib_accessor_from_scale_factor_scaled_value*)a;
-    int ret                                            = 0;
+    int err                                            = 0;
     long scaleFactor                                   = 0;
     long scaledValue                                   = 0;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->scaleFactor, &scaleFactor)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->scaleFactor, &scaleFactor)) != GRIB_SUCCESS)
+        return err;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->scaledValue, &scaledValue)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->scaledValue, &scaledValue)) != GRIB_SUCCESS)
+        return err;
 
     return ((scaleFactor == GRIB_MISSING_LONG) || (scaledValue == GRIB_MISSING_LONG));
 }
