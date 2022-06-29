@@ -191,6 +191,8 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     char masterDir[1024] = {0,};
     char localDir[1024] = {0,};
     char dictName[1024] = {0,};
+    char masterRecomposed[1024] = {0,}; /*e.g. bufr/tables/0/wmo/36/element.table */
+    char localRecomposed[1024]  = {0,}; /*e.g. bufr/tables/0/local/0/98/0/element.table */
     char* localFilename   = 0;
     char** list           = 0;
     char** cached_list    = 0;
@@ -214,17 +216,15 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
 
     if (*masterDir != 0) {
         char name[4096] = {0,};
-        char recomposed[4096] = {0,};
         sprintf(name, "%s/%s", masterDir, self->dictionary);
-        grib_recompose_name(h, NULL, name, recomposed, 0);
-        filename = grib_context_full_defs_path(c, recomposed);
+        grib_recompose_name(h, NULL, name, masterRecomposed, 0);
+        filename = grib_context_full_defs_path(c, masterRecomposed);
     }
     else {
         filename = grib_context_full_defs_path(c, self->dictionary);
     }
 
     if (*localDir != 0) {
-        char localRecomposed[1024] = {0,};
         char localName[2048] = {0,};
         sprintf(localName, "%s/%s", localDir, self->dictionary);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
@@ -236,8 +236,10 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     }
 
     if (!filename) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to find def file %s", self->dictionary);
-        *err       = GRIB_FILE_NOT_FOUND;
+        grib_context_log(c, GRIB_LOG_ERROR, "unable to find definition file %s", self->dictionary);
+        if (strlen(masterRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG,"master path=%s", masterRecomposed);
+        if (strlen(localRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG, "local path=%s", localRecomposed);
+        *err = GRIB_FILE_NOT_FOUND;
         dictionary = NULL;
         goto the_end;
     }
