@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
 #include <math.h>
 #ifdef ECCODES_ON_WINDOWS
@@ -191,9 +186,6 @@ static int get_scaled_value_and_scale_factor_algorithm1(
     int64_t value = 0;
 
     factor = floor(log10(maximum_value)) - floor(log10(input < 0 ? -input : input));
-    if (factor > maximum_factor) {
-        return GRIB_INTERNAL_ERROR;
-    }
     value = (int64_t)round(input * pow(10, factor));
     while ((value % 10 == 0) && (factor > 0)) {
         value /= 10;
@@ -201,7 +193,7 @@ static int get_scaled_value_and_scale_factor_algorithm1(
     }
     if (value >= maximum_value)
         return GRIB_INTERNAL_ERROR;
-    if (factor >= maximum_factor)
+    if (factor > maximum_factor)
         return GRIB_INTERNAL_ERROR;
 
     *ret_factor = factor;
@@ -258,7 +250,7 @@ static int get_scaled_value_and_scale_factor_algorithm2(
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
-    /* See ECC-979 */
+    /* See ECC-979 and ECC-1416 */
     /* Evaluate self->scaleFactor and self->scaledValue from input double '*val' */
     grib_accessor_from_scale_factor_scaled_value* self = (grib_accessor_from_scale_factor_scaled_value*)a;
     grib_handle* hand                                  = grib_handle_of_accessor(a);
@@ -267,7 +259,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     int64_t value = 0;
     double exact        = *val; /*the input*/
     int64_t maxval_value, maxval_factor; /*maximum allowable values*/
-    grib_accessor *accessor_factor, *accessor_value;
+    int value_accessor_num_bits = 0, factor_accessor_num_bits = 0;
+    grib_accessor *factor_accessor, *value_accessor;
 
     if (exact == 0) {
         if ((err = grib_set_long_internal(hand, self->scaleFactor, 0)) != GRIB_SUCCESS)
@@ -285,14 +278,19 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    accessor_factor = grib_find_accessor(hand, self->scaleFactor);
-    accessor_value  = grib_find_accessor(hand, self->scaledValue);
-    if (!accessor_factor || !accessor_value) {
+    factor_accessor = grib_find_accessor(hand, self->scaleFactor);
+    value_accessor  = grib_find_accessor(hand, self->scaledValue);
+    if (!factor_accessor || !value_accessor) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Could not access keys %s and %s", self->scaleFactor, self->scaledValue);
         return GRIB_ENCODING_ERROR;
     }
-    maxval_value  = (1UL << (accessor_value->length * 8)) - 2;  /* exclude missing */
-    maxval_factor = (1UL << (accessor_factor->length * 8)) - 2; /* exclude missing */
+    value_accessor_num_bits  = value_accessor->length * 8;
+    factor_accessor_num_bits = factor_accessor->length * 8;
+    maxval_value  = (1UL << value_accessor_num_bits) - 2;  /* exclude missing */
+    maxval_factor = (1UL << factor_accessor_num_bits) - 2; /* exclude missing */
+    if (strcmp(factor_accessor->cclass->name,"signed")==0) {
+        maxval_factor = (1UL << (factor_accessor_num_bits - 1)) - 1;
+    }
 
     err = get_scaled_value_and_scale_factor_algorithm1(exact, maxval_value, maxval_factor, &value, &factor);
     if (err) {
@@ -360,14 +358,14 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 static int is_missing(grib_accessor* a)
 {
     grib_accessor_from_scale_factor_scaled_value* self = (grib_accessor_from_scale_factor_scaled_value*)a;
-    int err                                            = 0;
-    long scaleFactor                                   = 0;
-    long scaledValue                                   = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    int err = 0;
+    long scaleFactor = 0, scaledValue = 0;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->scaleFactor, &scaleFactor)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(hand, self->scaleFactor, &scaleFactor)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->scaledValue, &scaledValue)) != GRIB_SUCCESS)
+    if ((err = grib_get_long_internal(hand, self->scaledValue, &scaledValue)) != GRIB_SUCCESS)
         return err;
 
     return ((scaleFactor == GRIB_MISSING_LONG) || (scaledValue == GRIB_MISSING_LONG));
