@@ -9395,12 +9395,6 @@ static const struct grib_keys_hash wordlist[] =
     {"AEC_DATA_PREPROCESS_OPTION_MASK",9}
   };
 
-#ifdef __GNUC__
-__inline
-#if defined __GNUC_STDC_INLINE__ || defined __GNUC_GNU_INLINE__
-__attribute__ ((__gnu_inline__))
-#endif
-#endif
 const struct grib_keys_hash *
 grib_keys_hash_get (const char *str, unsigned int len)
 {
