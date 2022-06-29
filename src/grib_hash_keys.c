@@ -42,10 +42,10 @@ struct grib_keys_hash { char* name; int id;};
 /* maximum key range = 32420, duplicates = 0 */
 
 #ifdef __GNUC__
-
+__inline
 #else
 #ifdef __cplusplus
-
+inline
 #endif
 #endif
 static unsigned int
@@ -9395,6 +9395,12 @@ static const struct grib_keys_hash wordlist[] =
     {"AEC_DATA_PREPROCESS_OPTION_MASK",9}
   };
 
+#ifdef __GNUC__
+__inline
+#if defined __GNUC_STDC_INLINE__ || defined __GNUC_GNU_INLINE__
+__attribute__ ((__gnu_inline__))
+#endif
+#endif
 const struct grib_keys_hash *
 grib_keys_hash_get (const char *str, unsigned int len)
 {
