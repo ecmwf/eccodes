@@ -32,7 +32,7 @@ int main(int argc, char** argv)
     char* fname = 0;
     float lat, lon;
     double *vlat, *vlon;
-    int npoints = 0, i = 0, n = 0;
+    long npoints = 0, i = 0, n = 0;
     grib_handle* h;
     double *outlats, *outlons, *values, *lsm_values, *distances;
     size_t* indexes;
@@ -53,42 +53,42 @@ int main(int argc, char** argv)
 
     vlat = (double*)malloc(npoints * sizeof(double));
     if (!vlat) {
-        printf("unable to allocate %d bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
         exit(1);
     }
     vlon = (double*)malloc(npoints * sizeof(double));
     if (!vlon) {
-        printf("unable to allocate %d bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
         exit(1);
     }
     outlats = (double*)malloc(npoints * sizeof(double));
     if (!outlats) {
-        printf("unable to allocate %d bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
         exit(1);
     }
     outlons = (double*)malloc(npoints * sizeof(double));
     if (!outlons) {
-        printf("unable to allocate %d bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
         exit(1);
     }
     values = (double*)malloc(npoints * sizeof(double));
     if (!values) {
-        printf("unable to allocate %d bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
         exit(1);
     }
     lsm_values = (double*)malloc(npoints * sizeof(double));
     if (!lsm_values) {
-        printf("unable to allocate %d bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
         exit(1);
     }
     distances = (double*)malloc(npoints * sizeof(double));
     if (!distances) {
-        printf("unable to allocate %d bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
         exit(1);
     }
     indexes = (size_t*)malloc(npoints * sizeof(double));
     if (!indexes) {
-        printf("unable to allocate %d bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
         exit(1);
     }
 

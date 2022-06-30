@@ -189,7 +189,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int ret = 0, i = 0;
+    int ret = 0;
     int nfiles            = 1;
     const char orderby[]  = "md5Headers";
     grib_context* context = grib_context_get_default();
@@ -240,6 +240,7 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (grib_options_on("b:")) {
+        int i;
         grib_string_list* next = 0;
         blocklist              = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
         blocklist->value       = grib_context_strdup(context, options->set_values[0].name);
@@ -281,6 +282,7 @@ int grib_tool_init(grib_runtime_options* options)
     global_tolerance = 0;
     compare_double   = &compare_double_absolute;
     if (grib_options_on("R:")) {
+        int i;
         global_tolerance = 0;
         for (i = 0; i < options->tolerance_count; i++) {
             if (!strcmp((options->tolerance[i]).name, "all")) {
@@ -533,8 +535,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     while ((handle1 = grib_handle_new_from_file(c, options->infile_extra->file, &err))) {
         morein1++;
-        if (handle1)
-            grib_handle_delete(handle1);
+        grib_handle_delete(handle1);
     }
 
     error += morein1 + morein2;
