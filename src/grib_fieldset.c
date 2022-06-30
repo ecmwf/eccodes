@@ -254,7 +254,7 @@ static int grib_fieldset_column_copy_from_handle(grib_handle* h, grib_fieldset* 
 }
 
 /* --------------- grib_fieldset functions ------------------*/
-grib_fieldset* grib_fieldset_new_from_files(grib_context* c, char* filenames[],
+grib_fieldset* grib_fieldset_new_from_files(grib_context* c, const char* filenames[],
                                             int nfiles, const char** keys, int nkeys,
                                             const char* where_string, const char* order_by_string, int* err)
 {
