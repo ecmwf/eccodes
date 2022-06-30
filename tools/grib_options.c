@@ -402,7 +402,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     return GRIB_SUCCESS;
 }
 
-char* grib_options_get_help(char* id)
+const char* grib_options_get_help(const char* id)
 {
     int i      = 0;
     char msg[] = "ERROR: help not found for option ";
@@ -424,7 +424,7 @@ char* grib_options_get_help(char* id)
     return err;
 }
 
-char* grib_options_get_args(char* id)
+const char* grib_options_get_args(const char* id)
 {
     int i        = 0;
     char empty[] = "";
