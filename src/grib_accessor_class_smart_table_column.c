@@ -269,14 +269,12 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     }
 
     code = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
-    if (!code) {
-        grib_context_log(a->context, GRIB_LOG_FATAL,
-                         "unable to allocate %ld bytes", (long)size);
-        return GRIB_OUT_OF_MEMORY;
-    }
+    if (!code) return GRIB_OUT_OF_MEMORY;
 
-    if ((err = grib_unpack_long((grib_accessor*)tableAccessor, code, &size)) != GRIB_SUCCESS)
+    if ((err = grib_unpack_long((grib_accessor*)tableAccessor, code, &size)) != GRIB_SUCCESS) {
+        grib_context_free(a->context, code);
         return err;
+    }
 
     table = tableAccessor->table;
 
