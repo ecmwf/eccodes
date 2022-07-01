@@ -66,5 +66,10 @@ cat > $fRules <<EOF
 EOF
 ${tools_dir}/codes_bufr_filter $fRules $f
 
+# Other expanded stuff
+# ---------------------
+f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
+echo 'print "[expandedOriginalReferences:i]";' | ${tools_dir}/codes_bufr_filter - $f
 
+# Clean up
 rm -f $fRules $fLog $temp
