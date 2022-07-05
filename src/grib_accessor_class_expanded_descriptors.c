@@ -243,10 +243,13 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
     int k, j, i;
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
     size_t size                              = 0;
-    long* v                                  = NULL;
+    long* v_array                            = NULL;
     bufr_descriptor* u                       = NULL;
     bufr_descriptor* vv                      = NULL;
-    bufr_descriptor** ur                     = NULL;
+    /* 'ur' is the array of bufr_descriptor pointers - max size is X (from FXY) which is 6 bits 
+     * so we do not need to go to the heap
+     */
+    bufr_descriptor* ur[65]                  = {0,};
     bufr_descriptor* urc                     = NULL;
     int idx;
     bufr_descriptor* u0                      = NULL;
@@ -286,17 +289,17 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
             grib_bufr_descriptor_delete(u);
             if (*err)
                 goto cleanup;
-            v    = (long*)grib_context_malloc_clear(c, sizeof(long) * size);
-            *err = grib_get_long_array(hand, self->sequence, v, &size);
+            v_array = (long*)grib_context_malloc_clear(c, sizeof(long) * size);
+            *err = grib_get_long_array(hand, self->sequence, v_array, &size);
             if (*err)
                 goto cleanup;
 
             inner_unexpanded = grib_bufr_descriptors_array_new(c, DESC_SIZE_INIT, DESC_SIZE_INCR);
             for (i = 0; i < size; i++) {
-                vv               = grib_bufr_descriptor_new(self->tablesAccessor, v[i], !SILENT, err);
+                vv               = grib_bufr_descriptor_new(self->tablesAccessor, v_array[i], !SILENT, err);
                 inner_unexpanded = grib_bufr_descriptors_array_push(inner_unexpanded, vv);
             }
-            grib_context_free(c, v);
+            grib_context_free(c, v_array);
             inner_expanded = do_expand(a, inner_unexpanded, ccp, err);
             if (*err)
                 return;
@@ -372,6 +375,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
                 size++;
             }
             else {
+                /* replication with fixed number of descriptors (non-delayed) */
                 DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded, u);
 #if MYDEBUG
                 for (idepth = 0; idepth < global_depth; idepth++)
@@ -380,7 +384,8 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
 #endif
                 grib_bufr_descriptor_delete(u);
                 size = us->X * us->Y;
-                ur   = (bufr_descriptor**)grib_context_malloc_clear(c, us->X * sizeof(bufr_descriptor*));
+
+                memset(ur, 0, us->X);
                 for (j = 0; j < us->X; j++) {
                     DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded, ur[j]);
 #if MYDEBUG
@@ -402,7 +407,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
                 }
                 for (i = 0; i < us->X; i++)
                     grib_bufr_descriptor_delete(ur[i]);
-                grib_context_free(c, ur);
+
                 inner_expanded = do_expand(a, inner_unexpanded, ccp, err);
                 if (*err)
                     return;
@@ -646,6 +651,7 @@ static int expand(grib_accessor* a)
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Unexpanded size is zero!", a->name);
         return GRIB_DECODING_ERROR;
     }
+    
     u = (long*)grib_context_malloc_clear(c, sizeof(long) * unexpandedSize);
     if (!u) {
         err = GRIB_OUT_OF_MEMORY;
