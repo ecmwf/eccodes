@@ -246,9 +246,8 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
     long* v_array                            = NULL;
     bufr_descriptor* u                       = NULL;
     bufr_descriptor* vv                      = NULL;
-    /* 'ur' is the array of bufr_descriptor pointers - max size is X (from FXY) which is 6 bits 
-     * so we do not need to go to the heap
-     */
+    /* ECC-1422: 'ur' is the array of bufr_descriptor pointers for replications.
+     * Its max size is X (from FXY) which is 6 bits so no need for malloc */
     bufr_descriptor* ur[65]                  = {0,};
     bufr_descriptor* urc                     = NULL;
     int idx;
@@ -384,8 +383,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
 #endif
                 grib_bufr_descriptor_delete(u);
                 size = us->X * us->Y;
-
-                memset(ur, 0, us->X);
+                memset(ur, 0, us->X); /* ECC-1422 */
                 for (j = 0; j < us->X; j++) {
                     DESCRIPTORS_POP_FRONT_OR_RETURN(unexpanded, ur[j]);
 #if MYDEBUG
