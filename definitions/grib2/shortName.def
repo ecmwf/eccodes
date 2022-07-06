@@ -2682,7 +2682,7 @@
 	 parameterNumber = 0 ;
 	}
 #Precipitation type (most severe) in the last 1 hour
-'sev_ptype1h' = {
+'ptype_sev1h' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -2691,7 +2691,7 @@
 	 lengthOfTimeRange = 1 ;
 	}
 #Precipitation type (most severe) in the last 3 hours
-'sev_ptype3h' = {
+'ptype_sev3h' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -2700,7 +2700,7 @@
 	 lengthOfTimeRange = 3 ;
 	}
 #Precipitation type (most frequent) in the last 1 hour
-'freq_ptype1h' = {
+'ptype_freq1h' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
@@ -2709,13 +2709,31 @@
 	 lengthOfTimeRange = 1 ;
 	}
 #Precipitation type (most frequent) in the last 3 hours
-'freq_ptype3h' = {
+'ptype_freq3h' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 19 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 101 ;
 	 lengthOfTimeRange = 3 ;
+	}
+#Precipitation type (most severe) in the last 6 hours
+'ptype_sev6h' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 19 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 100 ;
+	 lengthOfTimeRange = 6 ;
+	}
+#Precipitation type (most frequent) in the last 6 hours
+'ptype_freq6h' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 19 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 101 ;
+	 lengthOfTimeRange = 6 ;
 	}
 #Soil temperature
 'sot' = {
