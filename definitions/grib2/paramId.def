@@ -3289,6 +3289,12 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 32 ;
 	}
+#Wet-bulb potential temperature
+'261022' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 32 ;
+	}
 #Sea ice thickness
 '262000' = {
 	 discipline = 10 ;
