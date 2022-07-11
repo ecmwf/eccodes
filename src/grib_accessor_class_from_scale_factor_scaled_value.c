@@ -21,6 +21,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_double
    IMPLEMENTS = unpack_double;pack_double;is_missing
+   IMPLEMENTS = value_count
    IMPLEMENTS = init
    MEMBERS=const char*    scaleFactor
    MEMBERS=const char*    scaledValue
@@ -41,6 +42,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int is_missing(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
+static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
 
@@ -68,7 +70,7 @@ static grib_accessor_class _grib_accessor_class_from_scale_factor_scaled_value =
     0,                       /* describes himself */
     0,                /* get length of section */
     0,              /* get length of string */
-    0,                /* get number of values */
+    &value_count,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
     0,            /* get native type */
@@ -109,7 +111,6 @@ static void init_class(grib_accessor_class* c)
     c->dump    =    (*(c->super))->dump;
     c->next_offset    =    (*(c->super))->next_offset;
     c->string_length    =    (*(c->super))->string_length;
-    c->value_count    =    (*(c->super))->value_count;
     c->byte_count    =    (*(c->super))->byte_count;
     c->byte_offset    =    (*(c->super))->byte_offset;
     c->get_native_type    =    (*(c->super))->get_native_type;
@@ -147,7 +148,7 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     grib_handle* hand                                  = grib_handle_of_accessor(a);
 
     self->scaleFactor = grib_arguments_get_name(hand, c, n++);
-    self->scaledValue = grib_arguments_get_name(hand, c, n++);
+    self->scaledValue = grib_arguments_get_name(hand, c, n++); /* Can be scalar or array */
 
     /* ECC-979: Allow user to encode */
     /* a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
@@ -244,7 +245,7 @@ static int get_scaled_value_and_scale_factor_algorithm2(
 
     *ret_factor = factor;
     *ret_value = value;
-    
+
     return GRIB_SUCCESS;
 }
 
@@ -312,45 +313,75 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_from_scale_factor_scaled_value* self = (grib_accessor_from_scale_factor_scaled_value*)a;
-    int err                                            = 0;
-    long scaleFactor                                   = 0;
-    long scaledValue                                   = 0;
-    grib_handle* hand                                  = grib_handle_of_accessor(a);
+    int err = 0;
+    long scaleFactor = 0, scaledValue = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_context* c = a->context;
+    size_t vsize = 0;
 
     if ((err = grib_get_long_internal(hand, self->scaleFactor, &scaleFactor)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(hand, self->scaledValue, &scaledValue)) != GRIB_SUCCESS)
+
+    if ((err = grib_get_size(hand, self->scaledValue, &vsize)) != GRIB_SUCCESS)
         return err;
 
-    if (grib_is_missing(hand, self->scaledValue, &err) && err == GRIB_SUCCESS) {
-        *val = GRIB_MISSING_DOUBLE;
-        *len = 1;
-        return GRIB_SUCCESS;
-    } else {
-        /* ECC-966: If scale factor is missing, print error and treat it as zero (as a fallback) */
-        if (grib_is_missing(hand, self->scaleFactor, &err) && err == GRIB_SUCCESS) {
-            grib_context_log(a->context, GRIB_LOG_ERROR,
-                    "unpack_double for %s: %s is missing! Using zero instead", a->name, self->scaleFactor);
-            scaleFactor = 0;
+    if (vsize == 1) {
+        if ((err = grib_get_long_internal(hand, self->scaledValue, &scaledValue)) != GRIB_SUCCESS)
+            return err;
+
+        if (grib_is_missing(hand, self->scaledValue, &err) && err == GRIB_SUCCESS) {
+            *val = GRIB_MISSING_DOUBLE;
+            *len = 1;
+            return GRIB_SUCCESS;
+        } else {
+            /* ECC-966: If scale factor is missing, print error and treat it as zero (as a fallback) */
+            if (grib_is_missing(hand, self->scaleFactor, &err) && err == GRIB_SUCCESS) {
+                grib_context_log(a->context, GRIB_LOG_ERROR,
+                        "unpack_double for %s: %s is missing! Using zero instead", a->name, self->scaleFactor);
+                scaleFactor = 0;
+            }
         }
-    }
 
-    *val = scaledValue;
+        *val = scaledValue;
 
-    /* The formula is:
-     *  real_value = scaled_value / pow(10, scale_factor)
-     */
-    while (scaleFactor < 0) {
-        *val *= 10;
-        scaleFactor++;
-    }
-    while (scaleFactor > 0) {
-        *val /= 10;
-        scaleFactor--;
-    }
+        /* The formula is:
+         *  real_value = scaled_value / pow(10, scale_factor)
+         */
+        while (scaleFactor < 0) {
+            *val *= 10;
+            scaleFactor++;
+        }
+        while (scaleFactor > 0) {
+            *val /= 10;
+            scaleFactor--;
+        }
 
-    if (err == GRIB_SUCCESS)
-        *len = 1;
+        if (err == GRIB_SUCCESS)
+            *len = 1;
+    } else {
+        size_t i;
+        long* lvalues = (long*)grib_context_malloc(c, vsize * sizeof(long));
+        if (!lvalues)
+            return GRIB_OUT_OF_MEMORY;
+        if ((err = grib_get_long_array_internal(hand, self->scaledValue, lvalues, &vsize)) != GRIB_SUCCESS) {
+            grib_context_free(c, lvalues);
+            return err;
+        }
+        for (i = 0; i < vsize; i++) {
+            long sf = scaleFactor;
+            val[i] = lvalues[i];
+            while (sf < 0) {
+                val[i] *= 10;
+                sf++;
+            }
+            while (sf > 0) {
+                val[i] /= 10;
+                sf--;
+            }
+        }
+        *len = vsize;
+        grib_context_free(c, lvalues);
+    }
 
     return err;
 }
@@ -369,4 +400,17 @@ static int is_missing(grib_accessor* a)
         return err;
 
     return ((scaleFactor == GRIB_MISSING_LONG) || (scaledValue == GRIB_MISSING_LONG));
+}
+
+static int value_count(grib_accessor* a, long* len)
+{
+    grib_accessor_from_scale_factor_scaled_value* self = (grib_accessor_from_scale_factor_scaled_value*)a;
+    int err = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    size_t vsize;
+
+    if ((err = grib_get_size(hand, self->scaledValue, &vsize)) != GRIB_SUCCESS)
+        return err;
+    *len = (long)vsize;
+    return GRIB_SUCCESS;
 }
