@@ -39,6 +39,7 @@ list(APPEND test_bins
     extract_offsets
     bufr_check_descriptors
     codes_new_from_samples
+    codes_set_samples_path
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes
@@ -252,6 +253,7 @@ if( HAVE_BUILD_TOOLS )
         grib_tigge_check
         read_any
         codes_new_from_samples
+        codes_set_samples_path
         grib_dump
         grib_dump_debug
         grib_dump_json
