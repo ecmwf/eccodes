@@ -10,11 +10,8 @@
 
 . ./include.ctest.sh
 
-if [ $HAVE_MEMFS -eq 1 ]; then
-    unset ECCODES_SAMPLES_PATH
-fi
-
+unset ECCODES_SAMPLES_PATH
 IFS_SAMPLES_ROOT=${proj_dir}/ifs_samples
 
 # Load the given sample (arg1) which resides in the ifs_samples dir (arg2)
-$EXEC ${test_dir}/codes_set_samples_path "gg_ml" "$IFS_SAMPLES_ROOT/grib1_mlgrib2" 2>/dev/null
+$EXEC ${test_dir}/codes_set_samples_path "gg_ml" "$IFS_SAMPLES_ROOT/grib1_mlgrib2"
