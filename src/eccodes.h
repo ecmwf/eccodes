@@ -156,7 +156,6 @@ typedef struct grib_iterator codes_iterator;
     \struct codes_nearest
 */
 typedef struct grib_nearest codes_nearest;
-typedef struct grib_box codes_box;
 typedef struct grib_points codes_points;
 
 /*! Codes keys iterator. Iterator over keys.
