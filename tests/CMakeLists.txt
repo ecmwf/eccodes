@@ -76,6 +76,7 @@ if( HAVE_BUILD_TOOLS )
         grib_packing_order
         filter_substr
         grib_uerra
+        grib_s2s
         grib_fire
         grib_element
         grib_suppressed
