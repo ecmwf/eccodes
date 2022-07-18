@@ -224,6 +224,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     size_t n_vals      = 0;
     size_t size        = 0;
     unsigned char* decoded = NULL;
+    /*unsigned char* p       = NULL;*/
     long pos               = 0;
     long nn                = 0;
 
@@ -310,7 +311,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     /* printf("bscale=%g dscale=%g reference_value=%g\n",bscale,dscale,reference_value); */
     pos = 0;
 #if 0
-    p   = decoded;
+    p = decoded;
     for (i = 0; i < n_vals; i++) {
         val[i] = (double)(((grib_decode_unsigned_long(p, &pos, bits8) * bscale) + reference_value) * dscale);
     }
