@@ -1477,8 +1477,17 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     switch (packing_spec->accuracy) {
         case GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT: {
             long bitsPerValue = 0;
-            Assert(grib_get_long(h, "bitsPerValue", &bitsPerValue) == 0);
-            SET_LONG_VALUE("bitsPerValue", bitsPerValue);
+            if ((packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE ||
+                 packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_CCSDS)      &&
+                strcmp(input_packing_type, "grid_ieee")==0)
+            {
+                SET_LONG_VALUE("bitsPerValue", 32);
+            }
+            else
+            {
+                Assert(grib_get_long(h, "bitsPerValue", &bitsPerValue) == 0);
+                SET_LONG_VALUE("bitsPerValue", bitsPerValue);
+            }
         } break;
 
         case GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES:
