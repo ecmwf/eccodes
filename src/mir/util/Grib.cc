@@ -11,6 +11,7 @@
 
 
 #include <algorithm>
+#include <cstring>
 #include <sstream>
 
 #include "mir/util/Grib.h"
@@ -114,19 +115,17 @@ void grib_get_unique_missing_value(const std::vector<double>& values, double& mi
 
 
 grib_info::grib_info() :
-    grid{
-        0,
-    },
-    packing{
-        0,
-    },
-    extra_settings_size_(sizeof(packing.extra_settings) / sizeof(packing.extra_settings[0])) {
+    grid{}, packing{}, extra_settings_size_(sizeof(packing.extra_settings) / sizeof(packing.extra_settings[0])) {
+    // NOTE low-level initialisation only necessary for C interface
+    std::memset(&grid, 0, sizeof(grid));
+    std::memset(&packing, 0, sizeof(packing));
+
     strings_.reserve(extra_settings_size_);
 }
 
 
 void grib_info::extra_set(const char* key, long value) {
-    auto j = size_t(packing.extra_settings_count++);
+    auto j = static_cast<size_t>(packing.extra_settings_count++);
     ASSERT(j < extra_settings_size_);
 
     auto& set      = packing.extra_settings[j];
@@ -137,7 +136,7 @@ void grib_info::extra_set(const char* key, long value) {
 
 
 void grib_info::extra_set(const char* key, double value) {
-    auto j = size_t(packing.extra_settings_count++);
+    auto j = static_cast<size_t>(packing.extra_settings_count++);
     ASSERT(j < extra_settings_size_);
 
     auto& set        = packing.extra_settings[j];
@@ -148,7 +147,7 @@ void grib_info::extra_set(const char* key, double value) {
 
 
 void grib_info::extra_set(const char* key, const char* value) {
-    auto j = size_t(packing.extra_settings_count++);
+    auto j = static_cast<size_t>(packing.extra_settings_count++);
     ASSERT(j < extra_settings_size_);
 
     auto& set = packing.extra_settings[j];
