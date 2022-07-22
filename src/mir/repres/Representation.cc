@@ -104,23 +104,23 @@ void Representation::validate(const MIRValuesVector& /*unused*/) const {
 }
 
 
-void Representation::fill(grib_info& /*unused*/) const {
+void Representation::fillGrib(grib_info& /*unused*/) const {
     std::ostringstream os;
-    os << "Representation::fill(grib_info&) not implemented for " << *this;
+    os << "Representation::fillGrib(grib_info&) not implemented for " << *this;
     throw exception::SeriousBug(os.str());
 }
 
 
-void Representation::fill(api::MIRJob& /*unused*/) const {
+void Representation::fillJob(api::MIRJob& /*unused*/) const {
     std::ostringstream os;
-    os << "Representation::fill(api::MIRJob&) not implemented for " << *this;
+    os << "Representation::fillJob(api::MIRJob&) not implemented for " << *this;
     throw exception::SeriousBug(os.str());
 }
 
 
-void Representation::fill(util::MeshGeneratorParameters& /*unused*/) const {
+void Representation::fillMeshGen(util::MeshGeneratorParameters& /*unused*/) const {
     std::ostringstream os;
-    os << "Representation::fill(util::MeshGeneratorParameters&) not implemented for " << *this;
+    os << "Representation::fillMeshGen(util::MeshGeneratorParameters&) not implemented for " << *this;
     throw exception::SeriousBug(os.str());
 }
 

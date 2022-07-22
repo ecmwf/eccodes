@@ -85,21 +85,21 @@ void LatLon::print(std::ostream& out) const {
 }
 
 
-void LatLon::fill(grib_info& info) const {
+void LatLon::fillGrib(grib_info& info) const {
     // See copy_spec_from_ksec.c in libemos for info
     // Warning: scanning mode not considered
 
     info.grid.Ni = long(ni_);
     info.grid.Nj = long(nj_);
 
-    increments_.fill(info);
-    bbox_.fill(info);
+    increments_.fillGrib(info);
+    bbox_.fillGrib(info);
 }
 
 
-void LatLon::fill(api::MIRJob& job) const {
-    increments_.fill(job);
-    bbox_.fill(job);
+void LatLon::fillJob(api::MIRJob& job) const {
+    increments_.fillJob(job);
+    bbox_.fillJob(job);
 }
 
 
@@ -221,7 +221,7 @@ bool LatLon::extendBoundingBoxOnIntersect() const {
 }
 
 
-void LatLon::fill(util::MeshGeneratorParameters& params) const {
+void LatLon::fillMeshGen(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
         params.meshGenerator_ = "structured";
     }

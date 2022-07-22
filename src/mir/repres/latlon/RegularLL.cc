@@ -75,16 +75,16 @@ atlas::Grid RegularLL::atlasGrid() const {
     return atlas::StructuredGrid(xspace, yspace, {}, dom);
 }
 
-void RegularLL::fill(grib_info& info) const {
-    LatLon::fill(info);
+void RegularLL::fillGrib(grib_info& info) const {
+    LatLon::fillGrib(info);
 
     // See copy_spec_from_ksec.c in libemos for info
     // Warning: scanning mode not considered
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_REGULAR_LL;
 }
 
-void RegularLL::fill(api::MIRJob& job) const {
-    LatLon::fill(job);
+void RegularLL::fillJob(api::MIRJob& job) const {
+    LatLon::fillJob(job);
 }
 
 void RegularLL::makeName(std::ostream& out) const {

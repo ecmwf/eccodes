@@ -77,16 +77,16 @@ atlas::Grid RotatedLL::atlasGrid() const {
     return rotation_.rotate(unrotatedGrid);
 }
 
-void RotatedLL::fill(grib_info& info) const {
-    LatLon::fill(info);
+void RotatedLL::fillGrib(grib_info& info) const {
+    LatLon::fillGrib(info);
 
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_ROTATED_LL;
-    rotation_.fill(info);
+    rotation_.fillGrib(info);
 }
 
-void RotatedLL::fill(api::MIRJob& job) const {
-    LatLon::fill(job);
-    rotation_.fill(job);
+void RotatedLL::fillJob(api::MIRJob& job) const {
+    LatLon::fillJob(job);
+    rotation_.fillJob(job);
 }
 
 void RotatedLL::makeName(std::ostream& out) const {

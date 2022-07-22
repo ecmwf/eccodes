@@ -57,16 +57,16 @@ Iterator* RotatedFromPL::iterator() const {
 }
 
 
-void RotatedFromPL::fill(grib_info& info) const {
-    FromPL::fill(info);
-    rotation_.fill(info);
+void RotatedFromPL::fillGrib(grib_info& info) const {
+    FromPL::fillGrib(info);
+    rotation_.fillGrib(info);
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
 }
 
 
-void RotatedFromPL::fill(api::MIRJob& job) const {
-    FromPL::fill(job);
-    rotation_.fill(job);
+void RotatedFromPL::fillJob(api::MIRJob& job) const {
+    FromPL::fillJob(job);
+    rotation_.fillJob(job);
 }
 
 

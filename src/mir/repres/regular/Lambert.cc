@@ -63,7 +63,7 @@ RegularGrid::Projection Lambert::make_projection(const param::MIRParametrisation
 }
 
 
-void Lambert::fill(grib_info& info) const {
+void Lambert::fillGrib(grib_info& info) const {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;
 
     ASSERT(x_.size() > 1);
@@ -94,7 +94,7 @@ void Lambert::fill(grib_info& info) const {
     }
 
     // some extra keys are edition-specific, so parent call is here
-    RegularGrid::fill(info);
+    RegularGrid::fillGrib(info);
 }
 
 

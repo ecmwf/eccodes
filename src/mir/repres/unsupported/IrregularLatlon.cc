@@ -131,12 +131,12 @@ bool IrregularLatlon::sameAs(const Representation& other) const {
 }
 
 
-void IrregularLatlon::fill(grib_info& /*unused*/) const {
+void IrregularLatlon::fillGrib(grib_info& /*unused*/) const {
     NOTIMP;
 }
 
 
-void IrregularLatlon::fill(util::MeshGeneratorParameters& params) const {
+void IrregularLatlon::fillMeshGen(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
         params.meshGenerator_ = "delaunay";
     }
@@ -214,10 +214,10 @@ public:
         ASSERT(count == ni_ * nj_);
     }
 
-    IrregularLatlonIterator(const IrregularLatlonIterator&) = delete;
-    IrregularLatlonIterator(IrregularLatlonIterator&&)      = delete;
+    IrregularLatlonIterator(const IrregularLatlonIterator&)            = delete;
+    IrregularLatlonIterator(IrregularLatlonIterator&&)                 = delete;
     IrregularLatlonIterator& operator=(const IrregularLatlonIterator&) = delete;
-    IrregularLatlonIterator& operator=(IrregularLatlonIterator&&) = delete;
+    IrregularLatlonIterator& operator=(IrregularLatlonIterator&&)      = delete;
 };
 
 

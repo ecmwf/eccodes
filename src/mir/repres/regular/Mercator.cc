@@ -26,7 +26,7 @@ static const RepresentationBuilder<Mercator> __builder("mercator");
 Mercator::Mercator(const param::MIRParametrisation& param) : RegularGrid(param, make_proj_spec(param)) {}
 
 
-void Mercator::fill(grib_info& /*info*/) const {
+void Mercator::fillGrib(grib_info& /*info*/) const {
     NOTIMP;
 }
 

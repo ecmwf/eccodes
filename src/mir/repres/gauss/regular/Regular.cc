@@ -62,7 +62,7 @@ Regular::Regular(size_t N, const util::BoundingBox& bbox, double angularPrecisio
     setNiNj();
 }
 
-void Regular::fill(grib_info& info) const {
+void Regular::fillGrib(grib_info& info) const {
 
     // See copy_spec_from_ksec.c in libemos for info
 
@@ -73,11 +73,11 @@ void Regular::fill(grib_info& info) const {
     info.grid.Ni                           = long(Ni_);
     info.grid.Nj                           = long(Nj_);
 
-    bbox_.fill(info);
+    bbox_.fillGrib(info);
 }
 
-void Regular::fill(api::MIRJob& job) const {
-    Gaussian::fill(job);
+void Regular::fillJob(api::MIRJob& job) const {
+    Gaussian::fillJob(job);
     job.set("grid", "F" + std::to_string(N_));
 }
 

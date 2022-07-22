@@ -63,16 +63,16 @@ void RotatedGG::makeName(std::ostream& out) const {
 }
 
 
-void RotatedGG::fill(grib_info& info) const {
-    Regular::fill(info);
-    rotation_.fill(info);
+void RotatedGG::fillGrib(grib_info& info) const {
+    Regular::fillGrib(info);
+    rotation_.fillGrib(info);
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_ROTATED_GG;
 }
 
 
-void RotatedGG::fill(api::MIRJob& job) const {
-    Regular::fill(job);
-    rotation_.fill(job);
+void RotatedGG::fillJob(api::MIRJob& job) const {
+    Regular::fillJob(job);
+    rotation_.fillJob(job);
 }
 
 

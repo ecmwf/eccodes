@@ -199,7 +199,7 @@ SpaceView::SpaceView(const param::MIRParametrisation& param) :
                 SpaceViewInternal::y(), {param}) {}
 
 
-void SpaceView::fill(grib_info& /*info*/) const {
+void SpaceView::fillGrib(grib_info& /*info*/) const {
     NOTIMP;
 }
 
@@ -235,10 +235,10 @@ Iterator* SpaceView::iterator() const {
         SpaceViewIterator(const std::vector<PointLonLat>& lonlat) : lonlat_(lonlat), count_(0) {}
         ~SpaceViewIterator() override = default;
 
-        SpaceViewIterator(const SpaceViewIterator&) = delete;
-        SpaceViewIterator(SpaceViewIterator&&)      = delete;
+        SpaceViewIterator(const SpaceViewIterator&)            = delete;
+        SpaceViewIterator(SpaceViewIterator&&)                 = delete;
         SpaceViewIterator& operator=(const SpaceViewIterator&) = delete;
-        SpaceViewIterator& operator=(SpaceViewIterator&&) = delete;
+        SpaceViewIterator& operator=(SpaceViewIterator&&)      = delete;
     };
 
     return new SpaceViewIterator(lonlat());

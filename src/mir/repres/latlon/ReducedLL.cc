@@ -117,12 +117,12 @@ bool ReducedLL::sameAs(const Representation& other) const {
     return (o != nullptr) && (bbox_ == o->bbox_) && (pl_ == o->pl_);
 }
 
-void ReducedLL::fill(grib_info& /*unused*/) const {
+void ReducedLL::fillGrib(grib_info& /*unused*/) const {
     NOTIMP;
 }
 
-void ReducedLL::fill(api::MIRJob& job) const {
-    bbox_.fill(job);
+void ReducedLL::fillJob(api::MIRJob& job) const {
+    bbox_.fillJob(job);
     job.set("pl", pl_);
     job.set("Nj", pl_.size());
     NOTIMP;
@@ -142,7 +142,7 @@ atlas::Grid ReducedLL::atlasGrid() const {
 #endif
 }
 
-void ReducedLL::fill(util::MeshGeneratorParameters& params) const {
+void ReducedLL::fillMeshGen(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
         params.meshGenerator_ = "structured";
     }

@@ -202,10 +202,10 @@ bool RegularGrid::isPeriodicWestEast() const {
 }
 
 
-void RegularGrid::fill(grib_info& info) const {
+void RegularGrid::fillGrib(grib_info& info) const {
     // GRIB2 encoding of user-provided shape
     if (info.packing.editionNumber == 2) {
-        shape_.fill(info, grid_.projection().spec());
+        shape_.fillGrib(info, grid_.projection().spec());
     }
 
     // scanningMode
@@ -286,10 +286,10 @@ Iterator* RegularGrid::iterator() const {
             projection_(std::move(projection)), x_(x), y_(y), ni_(x.size()), nj_(y.size()), i_(0), j_(0), count_(0) {}
         ~RegularGridIterator() override = default;
 
-        RegularGridIterator(const RegularGridIterator&) = delete;
-        RegularGridIterator(RegularGridIterator&&)      = delete;
+        RegularGridIterator(const RegularGridIterator&)            = delete;
+        RegularGridIterator(RegularGridIterator&&)                 = delete;
         RegularGridIterator& operator=(const RegularGridIterator&) = delete;
-        RegularGridIterator& operator=(RegularGridIterator&&) = delete;
+        RegularGridIterator& operator=(RegularGridIterator&&)      = delete;
     };
 
     return new RegularGridIterator(grid_.projection(), x_, y_);
@@ -324,7 +324,7 @@ bool RegularGrid::sameAs(const Representation& other) const {
 }
 
 
-void RegularGrid::fill(util::MeshGeneratorParameters& params) const {
+void RegularGrid::fillMeshGen(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
         params.meshGenerator_ = "structured";
     }

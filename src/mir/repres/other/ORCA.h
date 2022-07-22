@@ -93,8 +93,8 @@ private:
     size_t numberOfPoints() const override;
     void makeName(std::ostream&) const override;
 
-    void fill(grib_info&) const override;
-    void fill(util::MeshGeneratorParameters&) const override;
+    void fillGrib(grib_info&) const override;
+    void fillMeshGen(util::MeshGeneratorParameters&) const override;
 
     bool includesNorthPole() const override { return true; }
     bool includesSouthPole() const override { return true; }

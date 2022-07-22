@@ -46,13 +46,13 @@ Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox, double angularPr
 }
 
 
-void Octahedral::fill(grib_info& info) const {
-    Reduced::fill(info);
+void Octahedral::fillGrib(grib_info& info) const {
+    Reduced::fillGrib(info);
 }
 
 
-void Octahedral::fill(api::MIRJob& job) const {
-    Reduced::fill(job);
+void Octahedral::fillJob(api::MIRJob& job) const {
+    Reduced::fillJob(job);
     job.set("grid", "O" + std::to_string(N_));
 }
 
@@ -74,8 +74,8 @@ atlas::Grid Octahedral::atlasGrid() const {
 }
 
 
-void Octahedral::fill(util::MeshGeneratorParameters& params) const {
-    Gaussian::fill(params);
+void Octahedral::fillMeshGen(util::MeshGeneratorParameters& params) const {
+    Gaussian::fillMeshGen(params);
     params.set("triangulate", true);
 }
 

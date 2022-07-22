@@ -56,7 +56,7 @@ RegularGrid::Projection LambertAzimuthalEqualArea::make_projection(const param::
 }
 
 
-void LambertAzimuthalEqualArea::fill(grib_info& info) const {
+void LambertAzimuthalEqualArea::fillGrib(grib_info& info) const {
     info.grid.grid_type        = CODES_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA;
     info.packing.editionNumber = 2;
 
@@ -79,7 +79,7 @@ void LambertAzimuthalEqualArea::fill(grib_info& info) const {
     info.extra_set("centralLongitudeInDegrees", reference[LLCOORDS::LON]);
 
     // some extra keys are edition-specific, so parent call is here
-    RegularGrid::fill(info);
+    RegularGrid::fillGrib(info);
 }
 
 

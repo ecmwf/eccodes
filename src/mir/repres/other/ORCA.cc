@@ -72,7 +72,7 @@ size_t ORCA::numberOfPoints() const {
 }
 
 
-void ORCA::fill(grib_info& info) const {
+void ORCA::fillGrib(grib_info& info) const {
     info.grid.grid_type        = GRIB_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 
@@ -149,10 +149,10 @@ Iterator* ORCA::iterator() const {
 
         ~ORCAIterator() override = default;
 
-        ORCAIterator(const ORCAIterator&) = delete;
-        ORCAIterator(ORCAIterator&&)      = delete;
+        ORCAIterator(const ORCAIterator&)            = delete;
+        ORCAIterator(ORCAIterator&&)                 = delete;
         ORCAIterator& operator=(const ORCAIterator&) = delete;
-        ORCAIterator& operator=(ORCAIterator&&) = delete;
+        ORCAIterator& operator=(ORCAIterator&&)      = delete;
     };
     return new ORCAIterator(atlasGridRef());
 }
@@ -168,7 +168,7 @@ atlas::Grid ORCA::atlasGrid() const {
 }
 
 
-void ORCA::fill(util::MeshGeneratorParameters& params) const {
+void ORCA::fillMeshGen(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
         params.meshGenerator_ = "orca";
     }

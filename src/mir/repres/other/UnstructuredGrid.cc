@@ -165,19 +165,19 @@ bool UnstructuredGrid::sameAs(const Representation& other) const {
 }
 
 
-void UnstructuredGrid::fill(grib_info& info) const {
+void UnstructuredGrid::fillGrib(grib_info& info) const {
     info.grid.grid_type        = CODES_UTIL_GRID_SPEC_UNSTRUCTURED;
     info.packing.editionNumber = 2;
 }
 
 
-void UnstructuredGrid::fill(api::MIRJob& job) const {
+void UnstructuredGrid::fillJob(api::MIRJob& job) const {
     job.set("latitudes", latitudes_);
     job.set("longitudes", longitudes_);
 }
 
 
-void UnstructuredGrid::fill(util::MeshGeneratorParameters& params) const {
+void UnstructuredGrid::fillMeshGen(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
         params.meshGenerator_ = "delaunay";
     }

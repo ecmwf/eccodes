@@ -262,7 +262,7 @@ void Reduced::setNj(std::vector<long> pl, const Latitude& s, const Latitude& n) 
 }
 
 
-void Reduced::fill(grib_info& info) const {
+void Reduced::fillGrib(grib_info& info) const {
 
     // See copy_spec_from_ksec.c in libemos for info
 
@@ -278,7 +278,7 @@ void Reduced::fill(grib_info& info) const {
         ASSERT(pl[i] > 0);
     }
 
-    bbox_.fill(info);
+    bbox_.fillGrib(info);
 }
 
 
@@ -333,8 +333,8 @@ std::vector<util::GridBox> Reduced::gridBoxes() const {
 }
 
 
-void Reduced::fill(api::MIRJob& job) const {
-    Gaussian::fill(job);
+void Reduced::fillJob(api::MIRJob& job) const {
+    Gaussian::fillJob(job);
     job.set("pl", pls());
 }
 

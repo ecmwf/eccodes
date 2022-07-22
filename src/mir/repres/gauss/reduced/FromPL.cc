@@ -49,13 +49,13 @@ bool FromPL::sameAs(const Representation& other) const {
 }
 
 
-void FromPL::fill(grib_info& info) const {
-    Reduced::fill(info);
+void FromPL::fillGrib(grib_info& info) const {
+    Reduced::fillGrib(info);
 }
 
 
-void FromPL::fill(api::MIRJob& job) const {
-    Reduced::fill(job);
+void FromPL::fillJob(api::MIRJob& job) const {
+    Reduced::fillJob(job);
 }
 
 

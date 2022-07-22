@@ -45,13 +45,13 @@ Classic::Classic(size_t N, const util::BoundingBox& bbox, double angularPrecisio
 }
 
 
-void Classic::fill(grib_info& info) const {
-    Reduced::fill(info);
+void Classic::fillGrib(grib_info& info) const {
+    Reduced::fillGrib(info);
 }
 
 
-void Classic::fill(api::MIRJob& job) const {
-    Reduced::fill(job);
+void Classic::fillJob(api::MIRJob& job) const {
+    Reduced::fillJob(job);
     job.set("grid", "N" + std::to_string(N_));
 }
 

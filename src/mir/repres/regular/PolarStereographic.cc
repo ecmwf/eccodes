@@ -27,7 +27,7 @@ PolarStereographic::PolarStereographic(const param::MIRParametrisation& param) :
     RegularGrid(param, make_proj_spec(param)) {}
 
 
-void PolarStereographic::fill(grib_info& /*info*/) const {
+void PolarStereographic::fillGrib(grib_info& /*info*/) const {
     NOTIMP;
 }
 

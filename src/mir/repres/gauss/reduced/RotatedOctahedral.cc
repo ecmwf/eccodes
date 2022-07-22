@@ -52,16 +52,16 @@ Iterator* RotatedOctahedral::iterator() const {
 }
 
 
-void RotatedOctahedral::fill(grib_info& info) const {
-    Octahedral::fill(info);
-    rotation_.fill(info);
+void RotatedOctahedral::fillGrib(grib_info& info) const {
+    Octahedral::fillGrib(info);
+    rotation_.fillGrib(info);
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_REDUCED_ROTATED_GG;
 }
 
 
-void RotatedOctahedral::fill(api::MIRJob& job) const {
-    Octahedral::fill(job);
-    rotation_.fill(job);
+void RotatedOctahedral::fillJob(api::MIRJob& job) const {
+    Octahedral::fillJob(job);
+    rotation_.fillJob(job);
 }
 
 

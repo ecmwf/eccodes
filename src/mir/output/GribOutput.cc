@@ -265,7 +265,7 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
 
         // Ask representation to update info
         repres::RepresentationHandle repres(field.representation());
-        repres->fill(info);
+        repres->fillGrib(info);
 
         // Packing, accuracy, edition
         pack->fill(repres, info);
