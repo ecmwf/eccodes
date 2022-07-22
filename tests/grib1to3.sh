@@ -12,7 +12,7 @@
 
 REDIRECT=/dev/null
 
-label="grib1to3"
+label="grib1to3_test"
 temp=temp.$label.grib3
 sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 ${tools_dir}/grib_set -s editionNumber=3 $sample_g1 $temp

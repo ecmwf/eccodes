@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="grib_g1fcperiod"
+label="grib_g1fcperiod_test"
 sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 temp=temp.$label.grib
 

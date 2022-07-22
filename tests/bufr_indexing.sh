@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="bufr_indexing"
+label="bufr_indexing_test"
 tempIndex=temp.$label.$$.idx
 tempOut=temp.$label.$$.out
 tempRef=temp.$label.$$.ref
