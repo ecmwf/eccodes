@@ -62,7 +62,8 @@ endforeach()
 if( HAVE_BUILD_TOOLS )
 
     # These tests do not require any data downloads
-    list(APPEND tests_no_data_reqd
+    # and are generally quick
+    list(APPEND tests_basic
         unit_tests
         julian
         grib_dump_samples
@@ -111,12 +112,9 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-359
         bufr_ecc-517
         bufr_rdbSubTypes
-        bufr_templates
         grib_efas
         grib_sh_imag
         grib_sh_spectral_complex
-        pseudo_diag
-        wrap
         grib_levtype
         grib_typeOfLevel
         grib_grid_unstructured
@@ -126,14 +124,16 @@ if( HAVE_BUILD_TOOLS )
         grib_g1day_of_the_year_date
         grib_g1fcperiod)
 
-    # These tests do require data downloads
-    list(APPEND tests_data_reqd
+    # These tests require data downloads
+    # and/or take much longer
+    list(APPEND tests_extra
         grib_data_quality_checks
         grib_bpv_limit
         grib_complex
         grib_double_cmp
         grib_change_packing
         grib_grid_space_view
+        bufr_templates
         bufr_dump_data
         bufr_dump_descriptors
         bufr_dump_subset
@@ -200,6 +200,8 @@ if( HAVE_BUILD_TOOLS )
         gts_ls
         gts_count
         gts_compare
+        wrap
+        pseudo_diag
         metar_ls
         metar_get
         metar_dump
@@ -264,21 +266,21 @@ if( HAVE_BUILD_TOOLS )
         grib_mars_keys)
 
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
-        list(APPEND tests_data_reqd bufr_dump_encode_fortran)
-        list(APPEND tests_data_reqd bufr_dump_decode_fortran)
+        list(APPEND tests_extra bufr_dump_encode_fortran)
+        list(APPEND tests_extra bufr_dump_decode_fortran)
     endif()
     if( ENABLE_EXTRA_TESTS )
-        list(APPEND tests_data_reqd grib_util_set_spec)
-        list(APPEND tests_data_reqd grib_padding)
-        list(APPEND tests_data_reqd grib_tigge_conversions1)
-        list(APPEND tests_data_reqd grib_tigge_conversions2)
-        list(APPEND tests_data_reqd bufr_dump_encode_C)
-        list(APPEND tests_data_reqd bufr_dump_decode_C)
-        list(APPEND tests_no_data_reqd list_codetable_flagtable_keys)
+        list(APPEND tests_extra grib_util_set_spec)
+        list(APPEND tests_extra grib_padding)
+        list(APPEND tests_extra grib_tigge_conversions1)
+        list(APPEND tests_extra grib_tigge_conversions2)
+        list(APPEND tests_extra bufr_dump_encode_C)
+        list(APPEND tests_extra bufr_dump_decode_C)
+        list(APPEND tests_extra list_codetable_flagtable_keys)
     endif()
 
     # These tests do not require any data downloads
-    foreach( test ${tests_no_data_reqd} )
+    foreach( test ${tests_basic} )
         ecbuild_add_test( TARGET  eccodes_t_${test}
                           TYPE    SCRIPT
                           LABELS  "sanity"
@@ -293,7 +295,7 @@ if( HAVE_BUILD_TOOLS )
     # Note: making the test dependent on the grib files (with DEPENDS)
     #       means they will be downloaded at "make" time
     #       rather than when you do "ctest". Use TEST_DEPENDS instead
-    foreach( test ${tests_data_reqd} )
+    foreach( test ${tests_extra} )
         ecbuild_add_test( TARGET eccodes_t_${test}
                       TYPE SCRIPT
                       CONDITION ENABLE_EXTRA_TESTS
