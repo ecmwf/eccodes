@@ -62,6 +62,7 @@ diff ${data_dir}/step_grib1.log ${templog}
 rm -f ${templog}
 
 # GRIB-180
+# ------------
 # Set PDT 4.8 where you can find the EndOfOverallTimeInterval keys
 grib2File=${data_dir}/reduced_latlon_surface_constant.grib2
 ${tools_dir}/grib_set -sproductDefinitionTemplateNumber=8 $grib2File ${grib2File}.p8tmp
@@ -81,6 +82,7 @@ hourEnd=$1; dayEnd=$2
 
 
 # ECC-134 case-sensitivity
+# --------------------------
 grib1_sample=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 temp=temp.step.$$.grib
@@ -93,6 +95,7 @@ unit=`${tools_dir}/grib_get -p indicatorOfUnitOfTimeRange $temp`
 [ "$unit" = "3" ]
 
 # m is for Minute (code 0)
+# -------------------------
 ${tools_dir}/grib_set -s indicatorOfUnitOfTimeRange=m $grib1_sample $temp
 unit=`${tools_dir}/grib_get -p unitOfTimeRange $temp`
 [ "$unit" = "0" ]
@@ -101,9 +104,18 @@ unit=`${tools_dir}/grib_get -p indicatorOfUnitOfTimeRange $temp`
 [ "$unit" = "0" ]
 
 # ECC-457
+# ---------
 input=${data_dir}/tp_ecmwf.grib
 stepRange=`${tools_dir}/grib_get -w count=1 -p stepRange,startStep,endStep,stepType $input`
 [ "$stepRange" = "12 12 12 instant" ]
 
+# ECC-1430: stepType: 'severity' and 'mode'
+# -----------------------------------------
+${tools_dir}/grib_set -s stepType=severity,paramId=260318 $grib2_sample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalProcessing '8 100'
+${tools_dir}/grib_set -s stepType=mode,paramId=260320     $grib2_sample $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalProcessing '8 101'
+
+# Clean up
 rm -f $temp
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib
