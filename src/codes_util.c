@@ -130,3 +130,67 @@ char* codes_getenv(const char* name)
     }
     return result;
 }
+
+int codes_check_grib_ieee_packing_value(int value)
+{
+    grib_context* c = grib_context_get_default();
+    if (value != 32 && value != 64) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Invalid value for ECCODES_GRIB_IEEE_PACKING: should be 32 or 64");
+        return GRIB_INVALID_ARGUMENT;
+    }
+    return GRIB_SUCCESS;
+}
+
+/* Note: To be called in cases where we are WRITING a file (Do not call when reading) */
+int codes_flush_sync_close_file(FILE* f)
+{
+    int err = 0;
+    int fd  = 0;
+    grib_context* c = grib_context_get_default();
+    Assert(f);
+
+    fd = fileno(f);
+    if (fd == -1) {
+        grib_context_log(c, GRIB_LOG_PERROR, "fileno() error: invalid stream");
+        return GRIB_IO_PROBLEM;
+    }
+
+#if 0
+#ifdef HAVE_FCNTL_H
+    /* Heavy handed way of getting the file access mode: only proceed if writing */
+    val = fcntl(fd, F_GETFL, 0);
+    if (val < 0) {
+        grib_context_log(c, GRIB_LOG_PERROR, "Call to fcntl failed");
+        return err;
+    }
+    if ((val & O_ACCMODE) != O_WRONLY) {
+        /* File is not being written */
+        return GRIB_SUCCESS;
+    }
+#endif
+#endif
+
+    err = fflush(f);
+    if (err) {
+        grib_context_log(c, GRIB_LOG_PERROR, "Call to fflush failed");
+        return err;
+    }
+
+#if defined(ECCODES_HAVE_FSYNC)
+    err = fsync(fd);
+    while (err < 0 && errno == EINTR) {
+        err = fsync(fd);
+    }
+    if (err < 0) {
+        grib_context_log(c, GRIB_LOG_PERROR, "Cannot fsync file");
+        return GRIB_IO_PROBLEM;
+    }
+#endif
+
+    err = fclose(f);
+    if (err) {
+        grib_context_log(c, GRIB_LOG_PERROR, "Call to fclose failed");
+        return err;
+    }
+    return GRIB_SUCCESS;
+}
