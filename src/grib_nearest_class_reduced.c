@@ -130,14 +130,57 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
 
 typedef void (*get_reduced_row_proc)(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last);
 
+static int find_global(grib_nearest* nearest, grib_handle* h,
+                double inlat, double inlon, unsigned long flags,
+                double* outlats, double* outlons, double* values,
+                double* distances, int* indexes, size_t* len);
+
 static int is_legacy(grib_handle* h)
 {
     long is_legacy = 0;
     return (grib_get_long(h, "legacyGaussSubarea", &is_legacy) == GRIB_SUCCESS && is_legacy == 1);
 }
 
-/* Old implementation in src/deprecated/grib_nearest_class_reduced.old */
+
 static int find(grib_nearest* nearest, grib_handle* h,
+                double inlat, double inlon, unsigned long flags,
+                double* outlats, double* outlons, double* values,
+                double* distances, int* indexes, size_t* len)
+{
+    int err = 0;
+    grib_nearest_reduced* self = (grib_nearest_reduced*)nearest;
+
+    if (self->global) {
+        err = find_global(nearest, h,
+                inlat, inlon, flags,
+                outlats, outlons, values,
+                distances, indexes, len);
+    }
+    else
+    {
+        /* ECC-762, ECC-1432: Use brute force generic algorithm
+         * for reduced grid subareas. Review in the future
+        */
+        int lons_count = 0; /*dummy*/
+
+        err = grib_nearest_find_generic(
+            nearest, h, inlat, inlon, flags,
+            self->values_key,
+            "Ni",
+            self->Nj,
+            &(self->lats),
+            &(self->lats_count),
+            &(self->lons),
+            &(lons_count),
+            &(self->distances),
+            outlats, outlons,
+            values, distances, indexes, len);
+    }
+    return err;
+}
+
+/* Old implementation in src/deprecated/grib_nearest_class_reduced.old */
+static int find_global(grib_nearest* nearest, grib_handle* h,
                 double inlat, double inlon, unsigned long flags,
                 double* outlats, double* outlons, double* values,
                 double* distances, int* indexes, size_t* len)
