@@ -49,6 +49,10 @@ list(APPEND test_bins
     grib_lam_bf
     grib_lam_gp)
 
+if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
+    list(APPEND test_bins grib_ecc-1431)
+endif()
+
 foreach( tool ${test_bins} )
     # here we use the fact that each tool has only one C file that matches its name
     ecbuild_add_executable( TARGET    ${tool}
@@ -265,6 +269,9 @@ if( HAVE_BUILD_TOOLS )
         codes_split_file
         grib_mars_keys)
 
+    if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
+        list(APPEND tests_extra grib_ecc-1431)
+    endif()
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra bufr_dump_encode_fortran)
         list(APPEND tests_extra bufr_dump_decode_fortran)
