@@ -68,6 +68,8 @@ if (numberOfTimeRange == 1 || numberOfTimeRange == 2) {
     "ratio"   = {typeOfStatisticalProcessing=9;}
     "stdanom" = {typeOfStatisticalProcessing=10;}
     "sum"     = {typeOfStatisticalProcessing=11;}
+    "severity" = {typeOfStatisticalProcessing=100;}
+    "mode"     = {typeOfStatisticalProcessing=101;}
   }
   meta startStep step_in_units(forecastTime,indicatorOfUnitOfTimeRange,stepUnits,
     indicatorOfUnitForTimeRange,lengthOfTimeRange) : no_copy;

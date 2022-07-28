@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="grib_dump_json"
+label="grib_dump_json_test"
 temp=${label}".temp.json"
 
 REDIRECT=/dev/null

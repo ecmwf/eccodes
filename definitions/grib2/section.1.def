@@ -93,6 +93,8 @@ concept stepType {
     "ratio"   = {selectStepTemplateInterval=1; stepTypeInternal="ratio";}
     "stdanom" = {selectStepTemplateInterval=1; stepTypeInternal="stdanom";}
     "sum"     = {selectStepTemplateInterval=1; stepTypeInternal="sum";}
+    "severity" = {selectStepTemplateInterval=1; stepTypeInternal="severity";}
+    "mode"    = {selectStepTemplateInterval=1; stepTypeInternal="mode";}
 }
 
 # 0=atmospheric chemical constituents

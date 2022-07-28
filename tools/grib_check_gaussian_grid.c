@@ -144,7 +144,7 @@ static int process_file(const char* filename)
         }
 
         if (lon1 != 0) {
-            error(filename, msg_num, "latitudeOfFirstGridPointInDegrees=%f but should be 0\n", lon1);
+            error(filename, msg_num, "longitudeOfFirstGridPointInDegrees=%f but should be 0\n", lon1);
         }
         expected_lon2 = 360.0 - 360.0 / (4 * N);
 

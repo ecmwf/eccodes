@@ -9,7 +9,7 @@
 
 . ./include.ctest.sh
 
-label="grib_check_gaussian_grids"
+label="grib_check_gaussian_grids_test"
 temp=temp.$label.grib
 
 

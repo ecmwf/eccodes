@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="grib_indexing"
+label="grib_indexing_test"
 temp=temp.$label.index.out
 infile=${data_dir}/index.grib
 

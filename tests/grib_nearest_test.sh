@@ -119,6 +119,22 @@ ${tools_dir}/grib_ls -l 0,0,1 $tempGrib > $temp
 grep -q "Grid Point chosen #2 index=480 " $temp
 
 
+# Subarea: Reduced Gaussian grid
+# ------------------------------
+input_grb=${data_dir}/reduced_gaussian_sub_area.grib1
+${tools_dir}/grib_get -F%3.6g -l 89.656,220,1 $input_grb > $temp
+grep -q "274.038" $temp
+${tools_dir}/grib_ls -l 89.656,220,1 $input_grb > $temp
+grep -q "Grid Point chosen #1 index=0 " $temp
+
+${tools_dir}/grib_ls -l 0.225,399.6,1 $input_grb > $temp
+grep -q "Grid Point chosen #1 index=53563 " $temp
+
+${tools_dir}/grib_get -F%3.6g -l 11.91,366.3,1 $input_grb > $temp
+grep -q "299.632" $temp
+${tools_dir}/grib_ls -l 11.91,366.3,1 $input_grb > $temp
+grep -q "Grid Point chosen #1 index=43089 " $temp
+
 
 # Clean up
 rm -f $temp $tempRef $tempGrib

@@ -342,10 +342,7 @@ int grib_nearest_find_generic(
         double lat1 = 0, lat2 = 0;     /* inlat will be between these */
         const double LAT_DELTA = 10.0; /* in degrees */
 
-        if (grib_is_missing(h, Ni_keyname, &ret)) {
-            grib_context_log(h->context, GRIB_LOG_DEBUG, "Key '%s' is missing", Ni_keyname);
-            return ret ? ret : GRIB_GEOCALCULUS_PROBLEM;
-        }
+        /* Note: If this is being called for a REDUCED grid, its Ni will be missing */
 
         if (grib_is_missing(h, Nj_keyname, &ret)) {
             grib_context_log(h->context, GRIB_LOG_DEBUG, "Key '%s' is missing", Nj_keyname);

@@ -9,7 +9,7 @@
 #
 
 . ./include.ctest.sh
-label="grib_dump_debug"
+label="grib_dump_debug_test"
 temp=temp.$label.txt
 
 REDIRECT=/dev/null

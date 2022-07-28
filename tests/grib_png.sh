@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="grib_png"
+label="grib_png_test"
 temp=${label}".grib.tmp"
 temp1=${label}".1.tmp"
 temp2=${label}".2.tmp"

@@ -105,7 +105,7 @@ static grib_options_help grib_options_help_list[] = {
     { "T:", "T | B | M | A", "Message type. T->GTS, B->BUFR, M->METAR (Experimental), A->Any (Experimental).\n\t\t\t\tThe input file is interpreted according to the message type.\n" },
     { "V", 0, "Version.\n" },
     { "W:", "width", "\n\t\tMinimum width of each column in output. Default is 10.\n" },
-    { "X:", "offset", "\n\t\tInput file offset in bytes. Processing of the input file will start from \"offset\".\n" },
+    { "X:", "offset", "\n\t\tInput file offset in bytes. Processing of the input file will start from the given offset.\n" },
     { "x", 0, "Fast parsing option, only headers are loaded.\n" },
     { "k:", "key1,key2,...",
       "\n\t\tSpecify a list of keys to index on. By default the input files are indexed on the MARS keys."
