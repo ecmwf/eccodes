@@ -510,7 +510,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,"CCSDS pack_double: packing %s, %d values", a->name, n_vals);
 
-    buflen += 10240;
+    /*ECC-1431: GRIB2: CCSDS encoding failure AEC_STREAM_ERROR*/
+    buflen = buflen * 67.0/64 + 257;
     buf = (unsigned char*)grib_context_buffer_malloc_clear(a->context, buflen);
 
     if (!buf) {
