@@ -306,8 +306,12 @@ int grib_nearest_smaller_ieee_float(double a, double* ret)
 
     init_table_if_needed();
 
-    if (a > ieee_table.vmax)
+    if (a > ieee_table.vmax) {
+        grib_context* c = grib_context_get_default();
+        grib_context_log(c, GRIB_LOG_ERROR,
+                "Number is too large: x=%e > xmax=%e (IEEE float)", a, ieee_table.vmax);
         return GRIB_INTERNAL_ERROR;
+    }
 
     l    = grib_ieee_nearest_smaller_to_long(a);
     *ret = grib_long_to_ieee(l);

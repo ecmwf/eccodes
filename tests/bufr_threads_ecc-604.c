@@ -3,7 +3,6 @@
  */
 #include <time.h>
 #include <pthread.h>
-#include <assert.h>
 #include <unistd.h>
 
 #include "eccodes.h"
@@ -26,13 +25,13 @@ static int encode_file(char* template_file, char* output_file)
     int err                     = 0;
     long numSubsets             = 0;
 
-    assert(template_file);
+    Assert(template_file);
     in = fopen(template_file, "rb");
-    assert(in);
+    Assert(in);
     if (opt_write) {
-        assert(output_file);
+        Assert(output_file);
         out = fopen(output_file, "wb");
-        assert(out);
+        Assert(out);
     }
 
     /* loop over the messages in the source BUFR and clone them */
@@ -41,7 +40,7 @@ static int encode_file(char* template_file, char* output_file)
 
         if (opt_clone) {
             h = codes_handle_clone(source_handle);
-            assert(h);
+            Assert(h);
         }
 
         CODES_CHECK(codes_get_long(h, "numberOfSubsets", &numSubsets), 0);

@@ -8,8 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api.h"
-#include <assert.h>
+#include "grib_api_internal.h"
 
 #include "grib_sh_values.h" /* array 'values' defined here*/
 
@@ -49,7 +48,7 @@ int main(int argc, char* argv[])
     fout = fopen(TEMPFILE, "wb");
     GRIB_CHECK(grib_get_message(h, &buffer, &size), 0);
     if (fwrite(buffer, 1, size, fout) != size) {
-        assert(!"Failed to write data");
+        Assert(!"Failed to write data");
     }
     fclose(fout);
     
@@ -80,8 +79,8 @@ int main(int argc, char* argv[])
     
     /* Read in the saved GRIB file */
     printf("Load values from saved file and compare....\n");
-    fin = fopen(TEMPFILE, "rb"); assert(fin);
-    h = grib_handle_new_from_file(0, fin, &err); assert(h);
+    fin = fopen(TEMPFILE, "rb"); Assert(fin);
+    h = grib_handle_new_from_file(0, fin, &err); Assert(h);
     GRIB_CHECK(grib_get_double_array(h, "values", zval, &len), 0);
     for (i = 0; i < ILCHAM; ++i) {
         const double diff = fabs(zval[i] - values[i]);

@@ -8,11 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 
-#include "eccodes.h"
+#include "grib_api_internal.h"
 
 /*
  * Start off with an input GRIB which already has a bitmap (which we do not change)
@@ -151,50 +149,50 @@ int main(int argc, char** argv)
     const char* outfile = NULL;
     FILE* in            = NULL;
     FILE* out           = NULL;
-    codes_handle* h     = NULL;
+    grib_handle* h      = NULL;
     const void* buffer  = NULL;
     const char* mode    = NULL;
 
-    assert(argc == 4);
+    Assert(argc == 4);
 
     mode    = argv[1]; /*all_values or coded_values*/
     infile  = argv[2];
     outfile = argv[3];
 
     in = fopen(infile, "rb");
-    assert(in);
+    Assert(in);
     out = fopen(outfile, "wb");
-    assert(out);
+    Assert(out);
 
-    while ((h = codes_handle_new_from_file(NULL, in, PRODUCT_GRIB, &err)) != NULL || err != CODES_SUCCESS) {
+    while ((h = grib_handle_new_from_file(NULL, in, &err)) != NULL || err != GRIB_SUCCESS) {
         long numberOfDataPoints = 0;
-        CODES_CHECK(codes_get_long(h, "numberOfDataPoints", &numberOfDataPoints), 0);
+        GRIB_CHECK(grib_get_long(h, "numberOfDataPoints", &numberOfDataPoints), 0);
 
         if (strcmp(mode, "all_values") == 0) {
             double missing            = 9999;
             const size_t num_all_vals = sizeof(values) / sizeof(values[0]);
 
-            assert(num_all_vals == numberOfDataPoints); /*Sanity check*/
-            CODES_CHECK(codes_set_long(h, "bitmapPresent", 1), 0);
-            CODES_CHECK(codes_set_double(h, "missingValue", missing), 0);
+            Assert(num_all_vals == numberOfDataPoints); /*Sanity check*/
+            GRIB_CHECK(grib_set_long(h, "bitmapPresent", 1), 0);
+            GRIB_CHECK(grib_set_double(h, "missingValue", missing), 0);
             printf("Fully specified: %ld values\n", num_all_vals);
-            CODES_CHECK(codes_set_double_array(h, "values", values, num_all_vals), 0);
+            GRIB_CHECK(grib_set_double_array(h, "values", values, num_all_vals), 0);
         }
         else {
             const size_t num_coded_vals = sizeof(codedValues) / sizeof(codedValues[0]);
-            assert(strcmp(mode, "coded_values") == 0);
-            assert(num_coded_vals < numberOfDataPoints); /*Sanity check*/
+            Assert(strcmp(mode, "coded_values") == 0);
+            Assert(num_coded_vals < numberOfDataPoints); /*Sanity check*/
             printf("Partially specified: %ld values\n", num_coded_vals);
-            CODES_CHECK(codes_set_force_double_array(h, "codedValues", codedValues, num_coded_vals), 0);
+            GRIB_CHECK(grib_set_force_double_array(h, "codedValues", codedValues, num_coded_vals), 0);
         }
 
         /* Write out the new GRIB */
-        CODES_CHECK(codes_get_message(h, &buffer, &size), 0);
+        GRIB_CHECK(grib_get_message(h, &buffer, &size), 0);
         if (fwrite(buffer, 1, size, out) != size) {
             perror(outfile);
             exit(1);
         }
-        codes_handle_delete(h);
+        grib_handle_delete(h);
     }
     printf("Wrote %s\n", outfile);
     fclose(in);

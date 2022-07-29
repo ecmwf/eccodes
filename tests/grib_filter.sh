@@ -227,7 +227,7 @@ cat >$tempFilt <<EOF
   print "pl_scaled=[pl_scaled%.2f]";
 EOF
 ${tools_dir}/grib_filter $tempFilt $input > $tempOut
-cat $tempOut
+
 cat >$tempRef <<EOF
 pl_scaled=2.00 2.70 3.60 4.00 4.50 5.00 6.00 6.40 
 7.20 7.50 8.00 9.00 9.00 9.60 10.00 10.80 
@@ -240,6 +240,21 @@ pl_scaled=2.00 2.70 3.60 4.00 4.50 5.00 6.00 6.40
 
 EOF
 diff $tempRef $tempOut
+
+
+echo "Test IEEE float overflow"
+# -----------------------------------------
+input="${samp_dir}/GRIB2.tmpl"
+cat >$tempFilt <<EOF
+  set values={ 5.4e100 };
+  write;
+EOF
+set +e
+${tools_dir}/grib_filter $tempFilt $input 2> $tempOut
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "ECCODES ERROR.*Number is too large" $tempOut
 
 
 # Clean up

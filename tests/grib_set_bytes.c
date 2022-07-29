@@ -10,8 +10,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
-#include "eccodes.h"
+
+#include "grib_api_internal.h"
 
 int main(int argc, char** argv)
 {
@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     const char* infile  = "../data/test_uuid.grib2";
     FILE* out           = NULL;
     const char* outfile = "temp.grib_set_bytes.grib";
-    codes_handle* h     = NULL;
+    grib_handle* h     = NULL;
     const void* buffer  = NULL;
 
     unsigned char uuid_short[] = { /* not enough bytes */
@@ -48,30 +48,30 @@ int main(int argc, char** argv)
     size_t uuid_long_len = sizeof (uuid_long);
 
     in = fopen(infile, "rb");
-    assert(in);
+    Assert(in);
     out = fopen(outfile, "wb");
-    assert(out);
+    Assert(out);
 
-    h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
-    assert(h);
+    h = grib_handle_new_from_file(0, in, &err);
+    Assert(h);
 
     /* The uuidOfVGrid key is 16 bytes long */
-    err = codes_set_bytes(h, "uuidOfVGrid", uuid_short, &uuid_short_len);
-    assert(err == CODES_BUFFER_TOO_SMALL);
-    err = codes_set_bytes(h, "uuidOfVGrid", uuid_long, &uuid_long_len);
-    assert(err == CODES_BUFFER_TOO_SMALL);
+    err = grib_set_bytes(h, "uuidOfVGrid", uuid_short, &uuid_short_len);
+    Assert(err == GRIB_BUFFER_TOO_SMALL);
+    err = grib_set_bytes(h, "uuidOfVGrid", uuid_long, &uuid_long_len);
+    Assert(err == GRIB_BUFFER_TOO_SMALL);
 
     /* This one should work */
-    err = codes_set_bytes(h, "uuidOfVGrid", uuid_good, &uuid_good_len);
-    assert(err == 0);
+    err = grib_set_bytes(h, "uuidOfVGrid", uuid_good, &uuid_good_len);
+    Assert(err == 0);
 
-    CODES_CHECK(codes_get_message(h, &buffer, &size), 0);
+    GRIB_CHECK(grib_get_message(h, &buffer, &size), 0);
     if (fwrite(buffer, 1, size, out) != size) {
         perror(argv[1]);
         exit(1);
     }
 
-    codes_handle_delete(h);
+    grib_handle_delete(h);
     fclose(in);
     fclose(out);
     return 0;
