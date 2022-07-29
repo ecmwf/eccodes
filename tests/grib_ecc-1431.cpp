@@ -8,21 +8,25 @@
 #include <limits>
 
 typedef std::numeric_limits<double> dbl;
+typedef std::numeric_limits<float> flt;
 
-typedef struct Bounds {
-    double lower;
-    double upper;
-} Bounds;
+struct Range {
+    double min;
+    double max;
+};
 
 int main(int argc, char** argv) {
-    std::vector<Bounds> bounds;
-    bounds.push_back({1e+100, 1e+99});  /* fails */
-    bounds.push_back({1e+10, 1e+9});
-    bounds.push_back({1e+1, 1e+0});
-    bounds.push_back({1e-0, 1e-1});
-    bounds.push_back({1e-1, 1e-2});
-    bounds.push_back({1e-10, 1e-11});
-    bounds.push_back({1e-180, 1e-181});
+    std::vector<Range> ranges;
+    ranges.push_back({flt::max()/10  , flt::max()     } );
+    ranges.push_back({flt::max()/100 , flt::max()/10  } );
+    ranges.push_back({1e+9           , 1e+10          } );
+    ranges.push_back({1e+0           , 1e+1           } );
+    ranges.push_back({1e-1           , 1e-0           } );
+    ranges.push_back({1e-2           , 1e-1           } );
+    ranges.push_back({1e-11          , 1e-10          } );
+    ranges.push_back({flt::min()*10  , flt::min()*100 } );
+    ranges.push_back({flt::min()     , flt::min()*10  } );
+    ranges.push_back({flt::min()     , flt::max()     } );
 
     std::vector<size_t> values_lens = {
         1, 
@@ -33,17 +37,18 @@ int main(int argc, char** argv) {
     };
 
     int err;
+
     std::default_random_engine re;
     size_t grid_simple_values_len = 0;
     size_t grid_ccsds_values_len = 0;
     std::string packing_type = "";
-    size_t size = packing_type.size();
+    size_t size = 0;
 
-    for (const auto in_values_len: values_lens) {
-        for (const auto bound: bounds) {
-            Assert(bound.upper <= bound.lower);
-            std::cout << "Testing: " << in_values_len << " " << bound.lower << " " << bound.upper << std::endl;
-            std::uniform_real_distribution<double> unif(bound.lower, bound.upper);
+    for (const size_t in_values_len: values_lens) {
+        for (const Range range: ranges) {
+            Assert(range.min < range.max);
+            std::cout << "Testing: " << in_values_len << " " << range.min << " " << range.max << std::endl;
+            std::uniform_real_distribution<double> unif(range.min, range.max);
 
             codes_handle* handle = codes_grib_handle_new_from_samples(0, "reduced_gg_pl_128_grib2");
             double* in_values = new double[in_values_len];
@@ -74,13 +79,12 @@ int main(int argc, char** argv) {
             if ((err = codes_set_double_array(handle, "values", grid_simple_values, grid_simple_values_len)) != 0) {
                 Assert(!"CCSDS encoding failed");
             }
-
             if ((err = codes_get_double_array(handle, "values", grid_ccsds_values, &grid_ccsds_values_len)) != 0) {
                 Assert(!"CCSDS decoding failed");
             }
             Assert(grid_ccsds_values_len == grid_simple_values_len);
 
-            /* Compare grid_ccsds and grid_simple buffers */
+            /* Test buffers */
             for (size_t i; i < grid_ccsds_values_len; ++i) {
                 if (grid_ccsds_values[i] != grid_simple_values[i]) {
                     std::cout.precision(dbl::max_digits10);
