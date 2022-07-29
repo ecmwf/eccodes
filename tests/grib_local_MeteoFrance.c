@@ -8,8 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api.h"
-#include <assert.h>
+#include "grib_api_internal.h"
+
 /*
  * Test FA conversion to grib_api
  * philippe.marguinaud@meteo.fr 02/2016
@@ -849,7 +849,7 @@ int main(int argc, char* argv[])
     size_t len     = 0;
     const char* outfile;
 
-    assert(argc == 2);
+    Assert(argc == 2);
     outfile = argv[1];
 
     GRIB_CHECK(((h = grib_handle_new_from_samples(NULL, "regular_ll_pl_grib2")) == NULL), 0);

@@ -3,10 +3,9 @@
  */
 #include <time.h>
 #include <pthread.h>
-#include <assert.h>
 #include <unistd.h>
 
-#include "grib_api.h"
+#include "grib_api_internal.h"
 
 /* These are passed in via argv */
 static size_t NUM_THREADS         = 0;
@@ -26,10 +25,10 @@ static int encode_file(char* template_file, char* output_file)
     double* values;
 
     in = fopen(template_file, "rb");
-    assert(in);
+    Assert(in);
     if (opt_write && output_file) {
         out = fopen(output_file, "wb");
-        assert(out);
+        Assert(out);
     }
 
     /* loop over the messages in the source GRIB and clone them */
@@ -41,7 +40,7 @@ static int encode_file(char* template_file, char* output_file)
 
         if (opt_clone) {
             h = grib_handle_clone(source_handle);
-            assert(h);
+            Assert(h);
         }
 
         GRIB_CHECK(grib_get_size(h, "values", &values_len), 0);

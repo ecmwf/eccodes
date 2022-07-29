@@ -12,7 +12,6 @@
  * Check GRIB2 parameter concept file e.g. shortName.def, paramId.def
  */
 
-#include <assert.h>
 #include "grib_api_internal.h"
 
 typedef struct grib_expression_long {
@@ -154,7 +153,7 @@ int main(int argc, char** argv)
     const char* concepts_key      = argv[1];
     const char* concepts_filename = argv[2];
 
-    assert(argc == 3);
+    Assert(argc == 3);
     err = grib_check_param_concepts(concepts_key, concepts_filename);
     if (err) return err;
 
