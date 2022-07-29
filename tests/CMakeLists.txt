@@ -8,7 +8,7 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 
 # Build the executables used by test scripts
 ################################################
-list(APPEND test_bins
+list(APPEND test_c_bins
     list_codetable_flagtable_keys
     grib_bpv_limit
     grib_double_cmp
@@ -49,17 +49,28 @@ list(APPEND test_bins
     grib_lam_bf
     grib_lam_gp)
 
-if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
-    list(APPEND test_bins grib_ecc-1431)
-endif()
-
-foreach( tool ${test_bins} )
+foreach( tool ${test_c_bins} )
     # here we use the fact that each tool has only one C file that matches its name
     ecbuild_add_executable( TARGET    ${tool}
                             NOINSTALL
                             SOURCES   ${tool}.c
                             LIBS      eccodes )
 endforeach()
+
+if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+    if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
+        list(APPEND test_cpp_bins grib_ecc-1431)
+    endif()
+
+    foreach( tool ${test_cpp_bins} )
+        # here we use the fact that each tool has only one C file that matches its name
+        ecbuild_add_executable( TARGET    ${tool}
+            NOINSTALL
+            SOURCES   ${tool}.cpp
+            LIBS      eccodes )
+    endforeach()
+endif()
+
 
 # Now add each test (shell scripts)
 #################################################
