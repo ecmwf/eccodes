@@ -13,7 +13,7 @@ typedef std::numeric_limits<double> dbl;
 typedef struct Bounds {
     double lower;
     double upper;
-} Bound;
+} Bounds;
 
 int main(int argc, char** argv) {
     std::vector<Bounds> bounds;
