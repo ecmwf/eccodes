@@ -8,8 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api.h"
-#include <assert.h>
+#include "grib_api_internal.h"
 
 #define EPSILON 1e-12
 #define DBL_EQUAL(a, b) (fabs((a) - (b)) <= (EPSILON)*fabs((a)))
@@ -75,16 +74,16 @@ static void Test0()
     sec   = 24;
 
     grib_datetime_to_julian(year, month, day, hour, min, sec, &jd);
-    assert(DBL_EQUAL(jd, 2378891.268333));
+    Assert(DBL_EQUAL(jd, 2378891.268333));
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n", year, month, day, hour, min, sec, jd);
 
     grib_julian_to_datetime(jd, &year, &month, &day, &hour, &min, &sec);
-    assert(year == 1801);
-    assert(month == 1);
-    assert(day == 30);
-    assert(hour == 18);
-    assert(min == 26);
-    assert(sec == 24);
+    Assert(year == 1801);
+    Assert(month == 1);
+    Assert(day == 30);
+    Assert(hour == 18);
+    Assert(min == 26);
+    Assert(sec == 24);
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n", year, month, day, hour, min, sec, jd);
 }
 
@@ -103,16 +102,16 @@ static void Test1()
     sec   = 24;
 
     grib_datetime_to_julian(year, month, day, hour, min, sec, &jd);
-    assert(DBL_EQUAL(jd, 2436116.31));
+    Assert(DBL_EQUAL(jd, 2436116.31));
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n", year, month, day, hour, min, sec, jd);
 
     grib_julian_to_datetime(jd, &year, &month, &day, &hour, &min, &sec);
-    assert(year == 1957);
-    assert(month == 10);
-    assert(day == 4);
-    assert(hour == 19);
-    assert(min == 26);
-    assert(sec == 24);
+    Assert(year == 1957);
+    Assert(month == 10);
+    Assert(day == 4);
+    Assert(hour == 19);
+    Assert(min == 26);
+    Assert(sec == 24);
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n", year, month, day, hour, min, sec, jd);
 }
 
@@ -150,7 +149,7 @@ static void Test2()
 
         if (!DBL_EQUAL(jd, jds[i])) {
             fprintf(stderr, "i=%d:  Got: %f, expected: %f\n", i, jd, jds[i]);
-            assert(0);
+            Assert(0);
         }
 
         jdl  = (long)(jd + 0.5);

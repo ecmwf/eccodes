@@ -8,8 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include <assert.h>
-#include "eccodes.h"
+#include "grib_api_internal.h"
 
 /* Values taken from an actual IFS forecast run for paramId=133 (Specific humidity) */
 const double values[] = {
@@ -24797,7 +24796,7 @@ int main(int argc, char** argv)
 {
     size_t values_len = sizeof(values)/sizeof(values[0]);
     const char* sample_filename = "gg_sfc_grib2";
-    codes_handle* h = NULL;
+    grib_handle* h = NULL;
     size_t str_len  = 0;
     PackingStage packing_stage;
     char* packing_type;
@@ -24817,28 +24816,28 @@ int main(int argc, char** argv)
     outfile_name = argv[3];
 
     fprintf(stderr,"Using sample_filename = %s\n", sample_filename);
-    h = codes_grib_handle_new_from_samples(0, sample_filename);
-    assert(h);
+    h = grib_handle_new_from_samples(0, sample_filename);
+    Assert(h);
     
     if (strcmp(packing_type, "grid_second_order")==0 && packing_stage == VALUES_BEFORE_PACKING_TYPE) {
         check = 0; /* TDOD */
     }
 
-    CODES_CHECK(codes_set_long(h, "bitsPerValue", 16), 0);
+    GRIB_CHECK(grib_set_long(h, "bitsPerValue", 16), 0);
     if (packing_stage == PACKING_TYPE_BEFORE_VALUES) {
         fprintf(stderr,"Set packingType to %s\n", packing_type);
-        CODES_CHECK(codes_set_string(h, "packingType", packing_type, &str_len), 0);
+        GRIB_CHECK(grib_set_string(h, "packingType", packing_type, &str_len), 0);
     }
     
     fprintf(stderr,"Set values. values_len=%lu\n", (unsigned long)values_len);
-    CODES_CHECK(codes_set_double_array(h, "values", values, values_len), 0);
+    GRIB_CHECK(grib_set_double_array(h, "values", values, values_len), 0);
     
     if (packing_stage == VALUES_BEFORE_PACKING_TYPE) {
         fprintf(stderr, "Set packingType to %s\n", packing_type);
-        CODES_CHECK(codes_set_string(h, "packingType", packing_type, &str_len), 0);
+        GRIB_CHECK(grib_set_string(h, "packingType", packing_type, &str_len), 0);
     }
     
-    CODES_CHECK(codes_write_message(h, outfile_name, "w"), 0);
+    GRIB_CHECK(grib_write_message(h, outfile_name, "w"), 0);
 
     fprintf(stderr, "%s checks on decoded values '%s' (%s) ...\n",
             (check?"Doing":"Skipping"), packing_type, argv[2]);
@@ -24861,12 +24860,12 @@ int main(int argc, char** argv)
             GRIB_CHECK(grib_get_long(h, "offsetBeforeData", &offsetBeforeData), 0);
             calc = (offsetAfterData - offsetBeforeData) * 8.0 / values_len;
             printf("bitsPerValue calculated as = (offsetAfterData - offsetBeforeData)*8/numValues = %g\n", calc);
-            assert( calc == 16 || calc == 32 || calc == 64 );
+            Assert( calc == 16 || calc == 32 || calc == 64 );
         }
         free(vals);
     }
 
-    codes_handle_delete(h);
+    grib_handle_delete(h);
     fprintf(stderr,"All done\n");
     return 0;
 }
