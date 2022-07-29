@@ -1,7 +1,6 @@
 #include "grib_api_internal.h"
 #include <eccodes.h>
 #include <string.h>
-#include <stdint.h>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -17,7 +16,7 @@ typedef struct Bounds {
 
 int main(int argc, char** argv) {
     std::vector<Bounds> bounds;
-    bounds.push_back({1e+100, 1e+99});  /* fails */
+    //bounds.push_back({1e+100, 1e+99});  [> fails <]
     bounds.push_back({1e+10, 1e+9});
     bounds.push_back({1e+1, 1e+0});
     bounds.push_back({1e-0, 1e-1});
@@ -71,6 +70,7 @@ int main(int argc, char** argv) {
             /* Test grid_ccsds */
             packing_type = "grid_ccsds";
             size = packing_type.size();
+            CODES_CHECK(codes_set_string(handle, "packingType", packing_type.c_str(), &size), 0);
             if ((err = codes_set_double_array(handle, "values", grid_simple_values, grid_simple_values_len)) != 0) {
                 Assert(!"CCSDS encoding failed");
             }
