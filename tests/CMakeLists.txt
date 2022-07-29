@@ -280,7 +280,7 @@ if( HAVE_BUILD_TOOLS )
         codes_split_file
         grib_mars_keys)
 
-    if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
+    if( HAVE_AEC AND ENABLE_EXTRA_TESTS AND HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
         list(APPEND tests_extra grib_ecc-1431)
     endif()
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
