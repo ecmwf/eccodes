@@ -38,7 +38,7 @@
 #include "mir/util/MeshGeneratorParameters.h"
 #include "mir/util/Types.h"
 
-#if defined(mir_HAVE_ATLAS)
+#if mir_HAVE_ATLAS
 #include "mir/key/grid/ORCAPattern.h"
 #include "mir/repres/other/ORCA.h"
 #endif
@@ -301,7 +301,7 @@ static const RepresentationBuilder<UnstructuredGrid> unstructured_grid("unstruct
 
 template <>
 Representation* RepresentationBuilder<other::UnstructuredGrid>::make(const param::MIRParametrisation& param) {
-#if defined(mir_HAVE_ATLAS)
+#if mir_HAVE_ATLAS
     // specially-named unstructured grids
     std::string grid;
     if (param.get("grid", grid)) {

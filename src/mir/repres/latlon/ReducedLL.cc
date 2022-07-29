@@ -129,7 +129,7 @@ void ReducedLL::fillJob(api::MIRJob& job) const {
 }
 
 atlas::Grid ReducedLL::atlasGrid() const {
-#if defined(mir_HAVE_ATLAS)
+#if mir_HAVE_ATLAS
     const util::Domain dom = domain();
     auto N                 = long(pl_.size());
 
