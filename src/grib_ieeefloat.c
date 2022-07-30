@@ -42,7 +42,7 @@ static void init()
 }
 #endif
 
-#if 1
+/* See old implementation in src/deprecated/grib_ieeefloat.c */
 
 typedef struct ieee_table_t ieee_table_t;
 
@@ -318,129 +318,10 @@ int grib_nearest_smaller_ieee_float(double a, double* ret)
     return GRIB_SUCCESS;
 }
 
-#else
-/* old code to be deleted */
-
-double grib_ieeefloat_error(double x)
-{
-    return 0;
-}
-
-double grib_long_to_ieee(unsigned long x)
-{
-    unsigned long s = x & 0x80000000;
-    unsigned long c = (x & 0x7f800000) >> 23;
-    unsigned long m;
-    double val;
-    long e;
-
-    if (x == 0)
-        return 0;
-    Assert(c != 255);
-
-    if (c == 0) {
-        m = x & 0x007fffff;
-        e = -126 - 23;
-    }
-    else {
-        m = (x & 0x007fffff) | (1 << 23);
-        e = c - 127 - 23;
-    }
-
-    val = m;
-
-    while (e < 0) {
-        val /= 2.0;
-        e++;
-    }
-    while (e > 0) {
-        val *= 2.0;
-        e--;
-    }
-
-    if (s)
-        val = -val;
-
-    return val;
-}
-
-int grib_nearest_smaller_ieee_float(double a, double* x)
-{
-    double e = grib_long_to_ieee(grib_ieee_to_long(a));
-    double b = a;
-
-    /* printf("----> a=%g e=%g e-a=%g\n",a,e,e-a); */
-
-    if (e > b) {
-        unsigned long ub = grib_ieee_to_long(b);
-        unsigned long ue;
-        while (e > b) {
-            /* printf("a=%g e=%g e-a=%g\n",a,e,e-a); */
-            a -= (e - a);
-            e = grib_long_to_ieee(grib_ieee_to_long(a));
-        }
-        ue = grib_ieee_to_long(e);
-        Assert((ue - ub) == 1);
-    }
-
-    Assert(b >= e);
-    *x = e;
-    return GRIB_SUCCESS;
-}
-
-unsigned long grib_ieee_to_long(double x)
-{
-    /* double y = x; */
-    unsigned long s = 0;
-    unsigned long m;
-    long p          = 0;
-    unsigned long e = 0;
-
-    if (x == 0)
-        return 0;
-
-    if (x < 0) {
-        s = 1;
-        x = -x;
-    }
-    while (x < 2) {
-        x *= 2;
-        p--;
-    }
-
-    while (x >= 2) {
-        x /= 2;
-        p++;
-    }
-
-    if (p > 127) {
-        /* Overflow */
-        e = 255;
-        m = 0;
-    }
-    else if (p < -126) {
-        /* int i; */
-        e = 0;
-        /* printf("p=%ld x=%g %ld\n",p,x,p+126+23); */
-        m = x * grib_power(p + 126 + 23, 2);
-    }
-    else {
-        e = p + 127;
-        m = x * (1 << 23);
-        m &= 0x007fffff;
-    }
-
-    m = (s << 31) | (e << 23) | m;
-
-    return m;
-}
-
-#endif
-
 #ifdef IEEE
 
 
-/* 
+/*
  * To make these two routines consistent to grib_ieee_to_long and grib_long_to_ieee,
  * we should not do any byte swapping but rather perform a raw copy.
  * Byte swapping is actually implemented in grib_decode_unsigned_long and
