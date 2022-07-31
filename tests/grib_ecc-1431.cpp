@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
             Assert(grid_ccsds_values_len == grid_simple_values_len);
 
             /* Test buffers */
-            for (size_t i; i < grid_ccsds_values_len; ++i) {
+            for (size_t i = 0; i < grid_ccsds_values_len; ++i) {
                 if (grid_ccsds_values[i] != grid_simple_values[i]) {
                     std::cout.precision(dbl::max_digits10);
                     std::cout << "Test failed: " << grid_ccsds_values[i] << " != " <<  grid_simple_values[i] << std::endl;
