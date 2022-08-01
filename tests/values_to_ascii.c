@@ -8,14 +8,13 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include <assert.h>
 #include <stdio.h>
 
 #ifndef ECCODES_ON_WINDOWS
 #include <unistd.h>
 #endif
 
-#include "grib_api.h"
+#include "grib_api_internal.h"
 
 int main(int argc, char** argv)
 {

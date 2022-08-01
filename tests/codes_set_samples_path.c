@@ -8,7 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include <assert.h>
 #include "grib_api_internal.h"
 
 /* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */

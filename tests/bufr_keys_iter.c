@@ -9,6 +9,7 @@
  */
 
 #include "eccodes.h"
+#undef NDEBUG
 #include <assert.h>
 
 static void usage(const char* prog)

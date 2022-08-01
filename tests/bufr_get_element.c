@@ -9,6 +9,7 @@
  */
 
 #include "eccodes.h"
+#undef NDEBUG
 #include <assert.h>
 
 static void compare_doubles(const double d1, const double d2, const double epsilon)
