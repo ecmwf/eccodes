@@ -9,9 +9,8 @@
 #
 
 . ./include.ctest.sh
-set -u
-REDIRECT=/dev/null
-label="grib_ECC-1431_test"  # Change prod to bufr or grib etc
+
+label="grib_ecc-1431_test"
 temp=temp.$label
 
 $EXEC $test_dir/grib_ecc-1431
