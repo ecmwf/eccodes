@@ -70,6 +70,9 @@ ecbuild_add_option( FEATURE EXPERIMENTAL_BUILD_WITH_CXX
     DEFAULT OFF )
 if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
     enable_language( CXX )
+    if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Cray" )
+        set(CMAKE_CXX_FLAGS "-hstd=c++11 ${CMAKE_CXX_FLAGS}")
+    endif()
 endif()
 
 ecbuild_add_option( FEATURE PRODUCT_GRIB
