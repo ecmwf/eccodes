@@ -10,9 +10,9 @@
 
 . ./include.ctest.sh
 
-label="grib_ecc-1431_test"
+label="grib_ecc-1433_test"
 temp=temp.$label
 
-$EXEC $test_dir/grib_ecc-1431
+$EXEC $test_dir/grib_ecc-1433
 
 rm -f $temp
