@@ -12,6 +12,7 @@
 #include <eccodes.h>
 #include <string.h>
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <string>
 #include <random>
@@ -44,16 +45,16 @@ void test_full()
     // TODO
     // The test fails for the following ranges
     // These tests can be performed when the problem is solved with small values.
-    // ranges.push_back({flt::min()*10  , flt::min()*100 } );
-    // ranges.push_back({flt::min()     , flt::min()*10  } );
-    // ranges.push_back({flt::min()     , flt::max()     } );
+    ranges.push_back({ flt::min() * 10, flt::min() * 100 });
+    ranges.push_back({ flt::min(), flt::min() * 10 });
+    ranges.push_back({ flt::min(), flt::max() });
 
     std::vector<size_t> values_lens = {
         1,
         10,
         100,
         100000,
-        10000000,
+        //10000000,
     };
 
     int err;
@@ -67,8 +68,12 @@ void test_full()
     for (const size_t in_values_len : values_lens) {
         for (const Range range : ranges) {
             Assert(range.min < range.max);
-            std::cout << "Testing: " << in_values_len << " " << range.min << " " << range.max << std::endl;
-            std::uniform_real_distribution<double> unif(range.min, range.max);
+            std::cout << "Testing: "
+                      << "n_vals : " << std::setw(7) << in_values_len
+                      << " range(" << std::scientific << std::setw(12) << range.min << ", " << std::setw(12) << range.max << ") "
+                      << std::endl;
+            std::uniform_real_distribution<double>
+                unif(range.min, range.max);
 
             codes_handle* handle       = codes_grib_handle_new_from_samples(0, "reduced_gg_pl_128_grib2");
             double* in_values          = new double[in_values_len];
@@ -135,9 +140,9 @@ void test_simplified()
     // TODO
     // The test fails for the following ranges
     // These tests can be performed when the problem is solved with small values.
-    // ranges.push_back({flt::min()*10  , flt::min()*100 } );
-    // ranges.push_back({flt::min()     , flt::min()*10  } );
-    // ranges.push_back({flt::min()     , flt::max()     } );
+    ranges.push_back({ flt::min() * 10, flt::min() * 100 });
+    ranges.push_back({ flt::min(), flt::min() * 10 });
+    ranges.push_back({ flt::min(), flt::max() });
 
     std::vector<size_t> values_lens = {
         1,
@@ -172,12 +177,12 @@ void test_simplified()
             }
 
             // Test grid_ccsds
-            packing_type = "grid_ccsds";
+            packing_type = "grid_simple";
             size         = packing_type.size();
-            CODES_CHECK(codes_set_string(handle, "packingType", packing_type.c_str(), &size), 0);
             if ((err = codes_set_double_array(handle, "values", in_values, in_values_len)) != 0) {
                 Assert(!"CCSDS encoding failed");
             }
+            CODES_CHECK(codes_set_string(handle, "packingType", packing_type.c_str(), &size), 0);
             if ((err = codes_get_double_array(handle, "values", grid_ccsds_values, &grid_ccsds_values_len)) != 0) {
                 Assert(!"CCSDS decoding failed");
             }
@@ -205,7 +210,7 @@ void test_simplified()
 
 int main(int argc, char** argv)
 {
-    test_simplified();
-    //test_full();
+    //test_simplified();
+    test_full();
     return 0;
 }
