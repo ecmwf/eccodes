@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/sh
 # (C) Copyright 2005- ECMWF.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
