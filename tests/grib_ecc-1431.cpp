@@ -42,9 +42,6 @@ void test_full()
     ranges.push_back({ 1e-1, 1e-0 });
     ranges.push_back({ 1e-2, 1e-1 });
     ranges.push_back({ 1e-11, 1e-10 });
-    // TODO
-    // The test fails for the following ranges
-    // These tests can be performed when the problem is solved with small values.
     ranges.push_back({ flt::min() * 10, flt::min() * 100 });
     ranges.push_back({ flt::min(), flt::min() * 10 });
     ranges.push_back({ flt::min(), flt::max() });
@@ -54,7 +51,6 @@ void test_full()
         10,
         100,
         100000,
-        //10000000,
     };
 
     int err;
@@ -137,9 +133,6 @@ void test_simplified()
     ranges.push_back({ 1e-1, 1e-0 });
     ranges.push_back({ 1e-2, 1e-1 });
     ranges.push_back({ 1e-11, 1e-10 });
-    // TODO
-    // The test fails for the following ranges
-    // These tests can be performed when the problem is solved with small values.
     ranges.push_back({ flt::min() * 10, flt::min() * 100 });
     ranges.push_back({ flt::min(), flt::min() * 10 });
     ranges.push_back({ flt::min(), flt::max() });
@@ -177,7 +170,7 @@ void test_simplified()
             }
 
             // Test grid_ccsds
-            packing_type = "grid_simple";
+            packing_type = "grid_ccsds";
             size         = packing_type.size();
             if ((err = codes_set_double_array(handle, "values", in_values, in_values_len)) != 0) {
                 Assert(!"CCSDS encoding failed");
