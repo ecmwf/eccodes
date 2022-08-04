@@ -334,3 +334,69 @@
  parameterCategory = 128 ;
  parameterNumber = 137 ;
 }
+#Total precipitation of at least 100 mm
+'Total precipitation of at least 100 mm' = {
+ discipline = 192 ;
+ parameterCategory = 131 ;
+ parameterNumber = 85 ;
+}
+#Mean zero-crossing wave period
+'Mean zero-crossing wave period' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 221 ;
+}
+#Peak wave period
+'Peak wave period' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 231 ;
+}
+#Instantaneous total lightning flash density
+'Instantaneous total lightning flash density' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 50 ;
+}
+#Averaged total lightning flash density in the last hour
+'Averaged total lightning flash density in the last hour' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 51 ;
+}
+#Instantaneous cloud-to-ground lightning flash density
+'Instantaneous cloud-to-ground lightning flash density' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 52 ;
+}
+#Averaged cloud-to-ground lightning flash density in the last hour
+'Averaged cloud-to-ground lightning flash density in the last hour' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 53 ;
+}
+#Averaged total lightning flash density in the last 3 hours
+'Averaged total lightning flash density in the last 3 hours' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 57 ;
+}
+#Averaged total lightning flash density in the last 6 hours
+'Averaged total lightning flash density in the last 6 hours' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 58 ;
+}
+#Averaged cloud-to-ground lightning flash density in the last 3 hours
+'Averaged cloud-to-ground lightning flash density in the last 3 hours' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 59 ;
+}
+#Averaged cloud-to-ground lightning flash density in the last 6 hours
+'Averaged cloud-to-ground lightning flash density in the last 6 hours' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 60 ;
+}
