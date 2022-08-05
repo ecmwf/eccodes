@@ -11,9 +11,9 @@ concept shortNameLegacyECMF(defaultShortName,"shortName.legacy.def",conceptsMast
 concept shortNameECMF (shortNameLegacyECMF,"shortName.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,dump;
 concept ls.shortName (shortNameECMF,"shortName.def",conceptsDir2,conceptsDir1): no_copy,dump;
 
-concept unitsLegacyECMF(defaultName,"units.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden;
-concept unitsECMF (unitsLegacyECMF,"units.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy;
-concept units (unitsECMF,"units.def",conceptsDir2,conceptsDir1): no_copy;
+concept unitsLegacyECMF(defaultName,"units.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,hidden,read_only;
+concept unitsECMF (unitsLegacyECMF,"units.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy, read_only;
+concept units (unitsECMF,"units.def",conceptsDir2,conceptsDir1): no_copy, read_only;
 
 concept nameLegacyECMF(defaultName,"name.legacy.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,dump,hidden;
 concept nameECMF(nameLegacyECMF,"name.def",conceptsMasterDir,conceptsLocalDirECMF): no_copy,dump;
