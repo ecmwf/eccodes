@@ -31,6 +31,7 @@
 #include "mir/key/grid/Grid.h"
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
+#include "mir/util/CheckDuplicatePoints.h"
 #include "mir/util/Domain.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
@@ -58,7 +59,7 @@ UnstructuredGrid::UnstructuredGrid(const param::MIRParametrisation& parametrisat
     }
     ASSERT(latitudes_.size() == longitudes_.size());
 
-    check("UnstructuredGrid from MIRParametrisation", latitudes_, longitudes_);
+    util::check_duplicate_points("UnstructuredGrid from MIRParametrisation", latitudes_, longitudes_, parametrisation);
 }
 
 
@@ -98,7 +99,7 @@ UnstructuredGrid::UnstructuredGrid(const eckit::PathName& path) {
         }
     }
 
-    check("UnstructuredGrid from " + path.asString(), latitudes_, longitudes_);
+    util::check_duplicate_points("UnstructuredGrid from " + path.asString(), latitudes_, longitudes_);
 }
 
 
@@ -106,7 +107,7 @@ void UnstructuredGrid::save(const eckit::PathName& path, const std::vector<doubl
                             const std::vector<double>& longitudes, bool binary) {
     Log::info() << "UnstructuredGrid::save " << path << std::endl;
 
-    check("UnstructuredGrid save to " + path.asString(), latitudes, longitudes);
+    util::check_duplicate_points("UnstructuredGrid::save to " + path.asString(), latitudes, longitudes);
 
     ASSERT(latitudes.size() == longitudes.size());
     if (binary) {
@@ -133,6 +134,7 @@ UnstructuredGrid::UnstructuredGrid(const std::vector<double>& latitudes, const s
                                    const util::BoundingBox& bbox) :
     Gridded(bbox), latitudes_(latitudes), longitudes_(longitudes) {
     ASSERT(latitudes_.size() == longitudes_.size());
+    util::check_duplicate_points("UnstructuredGrid from arguments", latitudes_, longitudes_);
 }
 
 
@@ -260,30 +262,6 @@ bool UnstructuredGrid::includesNorthPole() const {
 
 bool UnstructuredGrid::includesSouthPole() const {
     return bbox_.south() == Latitude::SOUTH_POLE;
-}
-
-
-void UnstructuredGrid::check(const std::string& title, const std::vector<double>& latitudes,
-                             const std::vector<double>& longitudes) {
-    static bool checkDuplicatePoints = eckit::Resource<bool>("$MIR_CHECK_DUPLICATE_POINTS", true);
-    if (!checkDuplicatePoints) {
-        return;
-    }
-
-    ASSERT(latitudes.size() == longitudes.size());
-    ASSERT(!longitudes.empty());
-
-    std::set<std::pair<double, double>> seen;
-    size_t count = latitudes.size();
-
-    for (size_t i = 0; i < count; ++i) {
-        std::pair<double, double> p(latitudes[i], longitudes[i]);
-        if (!seen.insert(p).second) {
-            std::ostringstream oss;
-            oss << title << ": duplicate point lat=" << latitudes[i] << ", lon=" << longitudes[i];
-            throw exception::UserError(oss.str());
-        }
-    }
 }
 
 
