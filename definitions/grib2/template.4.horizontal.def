@@ -82,8 +82,10 @@ if (extraDim) {
     }
 }
 
-# See ECC-854
-if(typeOfFirstFixedSurface == 151 && typeOfSecondFixedSurface == 151) {
+# See ECC-854, ECC-1435
+if( (typeOfFirstFixedSurface == 151 && typeOfSecondFixedSurface == 151) ||
+    (typeOfFirstFixedSurface == 152 && typeOfSecondFixedSurface == 152) ||
+    (typeOfFirstFixedSurface == 114 && typeOfSecondFixedSurface == 114) ) {
     alias mars.levelist = bottomLevel;
 }
 

@@ -334,3 +334,69 @@
  parameterCategory = 128 ;
  parameterNumber = 137 ;
 }
+#Total precipitation of at least 100 mm
+'tpg100' = {
+ discipline = 192 ;
+ parameterCategory = 131 ;
+ parameterNumber = 85 ;
+}
+#Mean zero-crossing wave period
+'mp2' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 221 ;
+}
+#Peak wave period
+'pp1d' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 231 ;
+}
+#Instantaneous total lightning flash density
+'litoti' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 50 ;
+}
+#Averaged total lightning flash density in the last hour
+'litota1' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 51 ;
+}
+#Instantaneous cloud-to-ground lightning flash density
+'licgi' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 52 ;
+}
+#Averaged cloud-to-ground lightning flash density in the last hour
+'licga1' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 53 ;
+}
+#Averaged total lightning flash density in the last 3 hours
+'litota3' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 57 ;
+}
+#Averaged total lightning flash density in the last 6 hours
+'litota6' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 58 ;
+}
+#Averaged cloud-to-ground lightning flash density in the last 3 hours
+'licga3' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 59 ;
+}
+#Averaged cloud-to-ground lightning flash density in the last 6 hours
+'licga6' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 60 ;
+}

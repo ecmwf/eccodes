@@ -235,10 +235,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     switch (localDefinitionNumber) {
         case 0:
-        case 300:
             productDefinitionTemplateNumberNew = productDefinitionTemplateNumber;
             break;
 
+        case 300:
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                             "Invalid localDefinitionNumber %d. This local definition has been deprecated.",
+                             localDefinitionNumber);
+            return GRIB_ENCODING_ERROR;
         case 500:
             productDefinitionTemplateNumberNew = 0;
             break;
