@@ -162,10 +162,91 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     grib_dump_long(dumper, a, NULL);
 }
 
-static int unpack_long(grib_accessor* a, long* val, size_t* len)
+static int calculate_fcmonth(grib_accessor* a, 
+        long verification_yearmonth,
+        long base_date, long day, long hour, long* result)
 {
-    int ret                             = 0;
+    long base_yearmonth         = 0;
+
+    long vyear  = 0;
+    long vmonth = 0;
+    long byear  = 0;
+    long bmonth = 0;
+
+    long fcmonth           = 0;
+    long gribForecastMonth = 0;
+
+    base_yearmonth = base_date / 100;
+
+    vyear  = verification_yearmonth / 100;
+    vmonth = verification_yearmonth % 100;
+    byear  = base_yearmonth / 100;
+    bmonth = base_yearmonth % 100;
+
+    fcmonth = (vyear - byear) * 12 + (vmonth - bmonth);
+    if (day == 1 && hour == 0)
+        fcmonth++;
+
+    if (gribForecastMonth != 0 && gribForecastMonth != fcmonth) {
+        *result = gribForecastMonth;
+        return GRIB_SUCCESS;
+    }
+
+    *result = fcmonth;
+    return GRIB_SUCCESS;
+}
+
+static int unpack_long_edition2(grib_accessor* a, long* val, size_t* len)
+{
+    int err = 0;
     grib_accessor_g1forecastmonth* self = (grib_accessor_g1forecastmonth*)a;
+    grib_handle* h = grib_handle_of_accessor(a);
+    long dataDate, dataTime;
+    long verification_yearmonth;
+    long hour, minute, second, year, month, day;
+    long hour2, minute2, second2, year2, month2, day2;
+    long forecastTime, indicatorOfUnitOfTimeRange;
+    double jul_base, jul2, dstep;
+
+    if ((err = grib_get_long(h, "year",  &year))  != GRIB_SUCCESS) return err;
+    if ((err = grib_get_long(h, "month", &month)) != GRIB_SUCCESS) return err;
+    if ((err = grib_get_long(h, "day",   &day))   != GRIB_SUCCESS) return err;
+    if ((err = grib_get_long(h, "hour",   &hour))   != GRIB_SUCCESS) return err;
+    if ((err = grib_get_long(h, "minute", &minute)) != GRIB_SUCCESS) return err;
+    if ((err = grib_get_long(h, "second", &second)) != GRIB_SUCCESS) return err;
+
+    if ((err = grib_get_long_internal(h, "dataDate", &dataDate)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(h, "dataTime", &dataTime)) != GRIB_SUCCESS)
+        return err;
+
+    if ((err = grib_get_long_internal(h, "forecastTime", &forecastTime)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(h, "indicatorOfUnitOfTimeRange", &indicatorOfUnitOfTimeRange)) != GRIB_SUCCESS)
+        return err;
+    Assert(indicatorOfUnitOfTimeRange == 1); /* must be hour */
+
+    if ((err = grib_datetime_to_julian(year, month, day, hour, minute, second, &jul_base)) != GRIB_SUCCESS)
+        return err;
+
+    dstep = (((double)forecastTime) * 3600) / 86400; /* as a fraction of a day */
+    jul2 = jul_base + dstep;
+
+    if ((err = grib_julian_to_datetime(jul2, &year2, &month2, &day2, &hour2, &minute2, &second2)) != GRIB_SUCCESS)
+        return err;
+
+    verification_yearmonth = year2*100 + month2;
+    if ((err = calculate_fcmonth(a, verification_yearmonth, dataDate, day, hour, val)) != GRIB_SUCCESS)
+        return err;
+
+    return GRIB_SUCCESS;
+}
+
+static int unpack_long_edition1(grib_accessor* a, long* val, size_t* len)
+{
+    int ret = 0;
+    grib_accessor_g1forecastmonth* self = (grib_accessor_g1forecastmonth*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     long verification_yearmonth = 0;
     long base_yearmonth         = 0;
@@ -222,6 +303,23 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     *val = fcmonth;
 
     return GRIB_SUCCESS;
+}
+
+static int unpack_long(grib_accessor* a, long* val, size_t* len)
+{
+    int ret = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    long edition = 0;
+
+    if ((ret = grib_get_long(hand, "edition", &edition)) != GRIB_SUCCESS)
+        return ret;
+
+    if (edition == 1)
+        return unpack_long_edition1(a, val, len);
+    if (edition == 2)
+        return unpack_long_edition2(a, val, len);
+
+    return GRIB_UNSUPPORTED_EDITION;
 }
 
 /* TODO: Check for a valid date */
