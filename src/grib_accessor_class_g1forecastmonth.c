@@ -199,7 +199,6 @@ static int calculate_fcmonth(grib_accessor* a,
 static int unpack_long_edition2(grib_accessor* a, long* val, size_t* len)
 {
     int err = 0;
-    grib_accessor_g1forecastmonth* self = (grib_accessor_g1forecastmonth*)a;
     grib_handle* h = grib_handle_of_accessor(a);
     long dataDate, dataTime;
     long verification_yearmonth;
@@ -246,7 +245,6 @@ static int unpack_long_edition1(grib_accessor* a, long* val, size_t* len)
 {
     int ret = 0;
     grib_accessor_g1forecastmonth* self = (grib_accessor_g1forecastmonth*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
 
     long verification_yearmonth = 0;
     long base_yearmonth         = 0;
