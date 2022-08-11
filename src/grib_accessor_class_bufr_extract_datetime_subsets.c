@@ -157,7 +157,8 @@ static int get_native_type(grib_accessor* a)
 /* Convert input date to Julian number. If date is invalid, return -1 */
 static double date_to_julian(long year, long month, long day, long hour, long minute, double second)
 {
-    double result = 0;
+    double result = 0; /* Julian number in units of days */
+
     /* For validating the date/time, we specify seconds as an integer */
     long lSecond = (long)second;
     grib_datetime_to_julian(year, month, day, hour, minute, lSecond, &result);
