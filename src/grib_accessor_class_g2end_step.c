@@ -561,7 +561,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if (err != GRIB_SUCCESS)
         return err;
 
-    dstep = (((double)(*val)) * u2s[unit]) / u2s[2];
+    dstep = (((double)(*val)) * u2s[unit]) / u2s[2]; /* in days */
     dend += dstep;
 
     err = grib_julian_to_datetime(dend, &year_of_end_of_interval, &month_of_end_of_interval,
