@@ -1418,6 +1418,7 @@ const char* grib_arguments_get_string(grib_handle* h, grib_arguments* args, int 
 long grib_arguments_get_long(grib_handle* h, grib_arguments* args, int n);
 double grib_arguments_get_double(grib_handle* h, grib_arguments* args, int n);
 grib_expression* grib_arguments_get_expression(grib_handle* h, grib_arguments* args, int n);
+int grib_arguments_get_count(grib_arguments* args);
 
 /* codes_util.c */
 double normalise_longitude_in_degrees(double lon);
