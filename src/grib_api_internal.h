@@ -1170,7 +1170,6 @@ struct grib_arguments
 {
     struct grib_arguments* next;
     grib_expression* expression;
-    char value[80];
 };
 
 

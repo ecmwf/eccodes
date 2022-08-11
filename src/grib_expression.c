@@ -255,3 +255,13 @@ grib_expression* grib_arguments_get_expression(grib_handle* h, grib_arguments* a
 
     return args->expression;
 }
+
+int grib_arguments_get_count(grib_arguments* args)
+{
+    int n = 0;
+    while (args) {
+        args = args->next;
+        n++;
+    }
+    return n;
+}
