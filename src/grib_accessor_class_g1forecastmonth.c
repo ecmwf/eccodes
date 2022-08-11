@@ -174,7 +174,6 @@ static int calculate_fcmonth(grib_accessor* a,
     long byear  = 0;
     long bmonth = 0;
     long fcmonth           = 0;
-    long gribForecastMonth = 0;
 
     base_yearmonth = base_date / 100;
 
@@ -186,11 +185,6 @@ static int calculate_fcmonth(grib_accessor* a,
     fcmonth = (vyear - byear) * 12 + (vmonth - bmonth);
     if (day == 1 && hour == 0)
         fcmonth++;
-
-    if (gribForecastMonth != 0 && gribForecastMonth != fcmonth) {
-        *result = gribForecastMonth;
-        return GRIB_SUCCESS;
-    }
 
     *result = fcmonth;
     return GRIB_SUCCESS;
@@ -243,52 +237,39 @@ static int unpack_long_edition2(grib_accessor* a, long* val, size_t* len)
 
 static int unpack_long_edition1(grib_accessor* a, long* val, size_t* len)
 {
-    int ret = 0;
+    int err = 0;
     grib_accessor_g1forecastmonth* self = (grib_accessor_g1forecastmonth*)a;
 
     long verification_yearmonth = 0;
-    long base_yearmonth         = 0;
     long base_date              = 0;
     long day                    = 0;
     long hour                   = 0;
-
-    long vyear  = 0;
-    long vmonth = 0;
-    long byear  = 0;
-    long bmonth = 0;
-
-    long fcmonth           = 0;
     long gribForecastMonth = 0;
     long check             = 0;
+    long fcmonth           = 0;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a),
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(a),
                                       self->verification_yearmonth, &verification_yearmonth)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->base_date, &base_date)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->day, &day)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->hour, &hour)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->fcmonth, &gribForecastMonth)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->check, &check)) != GRIB_SUCCESS)
-        return ret;
+        return err;
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->base_date, &base_date)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->day, &day)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->hour, &hour)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->fcmonth, &gribForecastMonth)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->check, &check)) != GRIB_SUCCESS)
+        return err;
 
-    base_yearmonth = base_date / 100;
+    if ((err = calculate_fcmonth(a, verification_yearmonth, base_date, day, hour, val)) != GRIB_SUCCESS)
+        return err;
 
-    vyear  = verification_yearmonth / 100;
-    vmonth = verification_yearmonth % 100;
-    byear  = base_yearmonth / 100;
-    bmonth = base_yearmonth % 100;
-
-    fcmonth = (vyear - byear) * 12 + (vmonth - bmonth);
-    if (day == 1 && hour == 0)
-        fcmonth++;
-
+    /* Verification - compare gribForecastMonth with fcmonth */
+    fcmonth = *val;
     if (gribForecastMonth != 0 && gribForecastMonth != fcmonth) {
         if (check) {
-            grib_context_log(a->context, GRIB_LOG_FATAL, "%s=%ld (%s-%s)=%ld", self->fcmonth,
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s=%ld (%s-%s)=%ld", self->fcmonth,
                              gribForecastMonth, self->base_date, self->verification_yearmonth, fcmonth);
             Assert(gribForecastMonth == fcmonth);
         }
@@ -298,19 +279,17 @@ static int unpack_long_edition1(grib_accessor* a, long* val, size_t* len)
         }
     }
 
-    *val = fcmonth;
-
     return GRIB_SUCCESS;
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    int ret = 0;
+    int err = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
     long edition = 0;
 
-    if ((ret = grib_get_long(hand, "edition", &edition)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long(hand, "edition", &edition)) != GRIB_SUCCESS)
+        return err;
 
     if (edition == 1)
         return unpack_long_edition1(a, val, len);
