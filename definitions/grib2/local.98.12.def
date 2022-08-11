@@ -16,9 +16,7 @@ alias mars.date = indexingDate;
 alias mars.time = indexingTimeHHMM;
 
 # ECC-1425
-# -----------
-meta marsForecastMonth g1forecastmonth(verifyingMonth,dataDate,day,hour,forecastMonth,one): read_only;
+meta marsForecastMonth g1forecastmonth(dataDate, forecastTime): read_only;
 alias mars.fcmonth = marsForecastMonth;
-# -----------
 
 pad padding_loc12_1(50);

@@ -147,14 +147,17 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_g1forecastmonth* self = (grib_accessor_g1forecastmonth*)a;
-    int n                               = 0;
-
-    self->verification_yearmonth = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->base_date              = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->day                    = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->hour                   = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->fcmonth                = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->check                  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    grib_handle* h = grib_handle_of_accessor(a);
+    int n = 0;
+    const int count = grib_arguments_get_count(c);
+    if (count == 6) { /* GRIB1 case -- this needs to be refactored */
+        self->verification_yearmonth = grib_arguments_get_name(h, c, n++);
+        self->base_date              = grib_arguments_get_name(h, c, n++);
+        self->day                    = grib_arguments_get_name(h, c, n++);
+        self->hour                   = grib_arguments_get_name(h, c, n++);
+        self->fcmonth                = grib_arguments_get_name(h, c, n++);
+        self->check                  = grib_arguments_get_name(h, c, n++);
+    }
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -163,16 +166,13 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 }
 
 static int calculate_fcmonth(grib_accessor* a, 
-        long verification_yearmonth,
-        long base_date, long day, long hour, long* result)
+        long verification_yearmonth, long base_date, long day, long hour, long* result)
 {
     long base_yearmonth         = 0;
-
     long vyear  = 0;
     long vmonth = 0;
     long byear  = 0;
     long bmonth = 0;
-
     long fcmonth           = 0;
     long gribForecastMonth = 0;
 
@@ -200,10 +200,9 @@ static int unpack_long_edition2(grib_accessor* a, long* val, size_t* len)
 {
     int err = 0;
     grib_handle* h = grib_handle_of_accessor(a);
-    long dataDate, dataTime;
-    long verification_yearmonth;
-    long hour, minute, second, year, month, day;
-    long hour2, minute2, second2, year2, month2, day2;
+    long dataDate, verification_yearmonth;
+    long year, month, day, hour, minute, second;
+    long year2, month2, day2, hour2, minute2, second2;
     long forecastTime, indicatorOfUnitOfTimeRange;
     double jul_base, jul2, dstep;
 
@@ -216,14 +215,15 @@ static int unpack_long_edition2(grib_accessor* a, long* val, size_t* len)
 
     if ((err = grib_get_long_internal(h, "dataDate", &dataDate)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long_internal(h, "dataTime", &dataTime)) != GRIB_SUCCESS)
-        return err;
 
     if ((err = grib_get_long_internal(h, "forecastTime", &forecastTime)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_long_internal(h, "indicatorOfUnitOfTimeRange", &indicatorOfUnitOfTimeRange)) != GRIB_SUCCESS)
         return err;
-    Assert(indicatorOfUnitOfTimeRange == 1); /* must be hour */
+    if (indicatorOfUnitOfTimeRange != 1) { /* must be hour */
+        grib_context_log(a->context, GRIB_LOG_ERROR, "indicatorOfUnitOfTimeRange must be 1 (hour)");
+        return GRIB_DECODING_ERROR;
+    }
 
     if ((err = grib_datetime_to_julian(year, month, day, hour, minute, second, &jul_base)) != GRIB_SUCCESS)
         return err;
