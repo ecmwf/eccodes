@@ -1,4 +1,5 @@
-#!/usr/local/bin/perl56 -I/usr/local/lib/metaps/perl
+#!/usr/bin/env perl
+
 use strict;
 use File::Path ;
 use File::Basename ;
