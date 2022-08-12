@@ -1,4 +1,4 @@
-/* C code produced by gperf version 3.0.4 */
+/* ANSI-C code produced by gperf version 3.1 */
 /* Command-line: gperf -C -W classes -t -G -H grib_accessor_classes_get_id -N grib_accessor_classes_hash -m 1 -j 1 accessor_class_list.gperf  */
 /* Computed positions: -k'1-2,5,7,11' */
 
@@ -26,7 +26,7 @@
       && ('w' == 119) && ('x' == 120) && ('y' == 121) && ('z' == 122) \
       && ('{' == 123) && ('|' == 124) && ('}' == 125) && ('~' == 126))
 /* The character set is not based on ISO-646.  */
-error "gperf generated tables don't work with this execution character set. Please report a bug to <bug-gnu-gperf@gnu.org>."
+#error "gperf generated tables don't work with this execution character set. Please report a bug to <bug-gperf@gnu.org>."
 #endif
 
 #line 1 "accessor_class_list.gperf"
@@ -52,7 +52,7 @@ struct accessor_class_hash { char *name; grib_accessor_class **cclass;};
 #endif
 #endif
 static unsigned int
-grib_accessor_classes_get_id (const char *str, unsigned int len)
+grib_accessor_classes_get_id (register const char *str, register size_t len)
 {
   static const unsigned short asso_values[] =
     {
@@ -83,7 +83,7 @@ grib_accessor_classes_get_id (const char *str, unsigned int len)
       832, 832, 832, 832, 832, 832, 832, 832, 832, 832,
       832, 832, 832, 832, 832, 832
     };
-  register int hval = len;
+  register unsigned int hval = len;
 
   switch (hval)
     {
@@ -705,19 +705,18 @@ static const struct accessor_class_hash classes[] =
   };
 
 static const struct accessor_class_hash *
-grib_accessor_classes_hash (const char *str, unsigned int len)
+grib_accessor_classes_hash (register const char *str, register size_t len)
 {
-    register const int key = grib_accessor_classes_get_id (str, len);
- 
+    register unsigned int key = grib_accessor_classes_get_id (str, len);
+
 #ifdef DEBUG
     {
-        const char *s;
+        register const char *s;
         Assert( len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH );
-        Assert( key <= MAX_HASH_VALUE && key >= 0 );
+        Assert( key <= MAX_HASH_VALUE );
         s = classes[key].name;
-        Assert( *str == *s && strcmp(str + 1, s + 1)==0 );
+        Assert( *str == *s && strcmp (str + 1, s + 1)==0 );
     }
 #endif
- 
     return &classes[key];
 }
