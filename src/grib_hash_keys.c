@@ -1,4 +1,4 @@
-/* C code produced by gperf version 3.0.4 */
+/* ANSI-C code produced by gperf version 3.1 */
 /* Command-line: gperf -l -C -I -t -G -H hash_keys -N grib_keys_hash_get -m 3 ../tests/keys  */
 /* Computed positions: -k'1-16,19-20,23-26,28,$' */
 
@@ -26,7 +26,7 @@
       && ('w' == 119) && ('x' == 120) && ('y' == 121) && ('z' == 122) \
       && ('{' == 123) && ('|' == 124) && ('}' == 125) && ('~' == 126))
 /* The character set is not based on ISO-646.  */
-error "gperf generated tables don't work with this execution character set. Please report a bug to <bug-gnu-gperf@gnu.org>."
+#error "gperf generated tables don't work with this execution character set. Please report a bug to <bug-gperf@gnu.org>."
 #endif
 
 
@@ -49,7 +49,7 @@ inline
 #endif
 #endif
 static unsigned int
-hash_keys (const char *str, unsigned int len)
+hash_keys (register const char *str, register size_t len)
 {
   static const unsigned short asso_values[] =
     {
@@ -80,7 +80,7 @@ hash_keys (const char *str, unsigned int len)
       32423, 32423, 32423, 32423, 32423, 32423, 32423, 32423, 32423, 32423,
       32423, 32423, 32423, 32423, 32423, 32423, 32423, 32423, 32423
     };
-  register int hval = len;
+  register unsigned int hval = len;
 
   switch (hval)
     {
@@ -9396,13 +9396,13 @@ static const struct grib_keys_hash wordlist[] =
   };
 
 const struct grib_keys_hash *
-grib_keys_hash_get (const char *str, unsigned int len)
+grib_keys_hash_get (register const char *str, register size_t len)
 {
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
     {
-      register int key = hash_keys (str, len);
+      register unsigned int key = hash_keys (str, len);
 
-      if (key <= MAX_HASH_VALUE && key >= 0)
+      if (key <= MAX_HASH_VALUE)
         if (len == lengthtable[key])
           {
             register const char *s = wordlist[key].name;

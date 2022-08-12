@@ -1,4 +1,4 @@
-#!/usr/bin/ksh
+#!/bin/sh
 set -xe
 
 cd ../tests
@@ -22,3 +22,4 @@ gperf -l -C -I -t -G -H hash_keys -N grib_keys_hash_get -m 3  ../tests/keys |\
 
 cat grib_itrie_keys.c >> grib_hash_keys.c
 
+echo ALL DONE

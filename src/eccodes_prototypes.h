@@ -1076,7 +1076,7 @@ void grib_math_delete(grib_context* c, grib_math* m);
 grib_math* grib_math_new(grib_context* c, const char* formula, int* err);
 
 /* grib_hash_keys.c */
-const struct grib_keys_hash* grib_keys_hash_get(const char* str, unsigned int len);
+const struct grib_keys_hash* grib_keys_hash_get(register const char *str, register size_t len);
 grib_itrie* grib_hash_keys_new(grib_context* c, int* count);
 void grib_hash_keys_delete(grib_itrie* t);
 int grib_hash_keys_get_id(grib_itrie* t, const char* key);
