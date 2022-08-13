@@ -213,7 +213,7 @@ cleanup:
     return err;
 }
 
-#else /* OPENJPEG VERSION 2 */
+#else /* OPENJPEG VERSION 2 - macro OPJ_VERSION_MAJOR is defined */
 
 /* OpenJPEG 2.1 version of grib_openjpeg_encoding.c */
 
@@ -364,7 +364,6 @@ int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper)
 
     /* initialize image component */
     cmptparm.prec = helper->bits_per_value;
-    cmptparm.bpp  = helper->bits_per_value; /* Not sure about this one and the previous. What is the difference? */
     cmptparm.sgnd = 0;
     cmptparm.dx   = 1;
     cmptparm.dy   = 1;
