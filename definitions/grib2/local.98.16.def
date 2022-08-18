@@ -8,4 +8,3 @@ alias local.methodNumber=methodNumber;
 
 # ECC-1425
 meta marsForecastMonth g1forecastmonth(dataDate, forecastTime): read_only;
-alias mars.fcmonth = marsForecastMonth;
